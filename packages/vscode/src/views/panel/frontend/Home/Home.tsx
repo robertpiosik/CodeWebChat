@@ -107,12 +107,18 @@ export const Home: React.FC<Props> = (props) => {
             full_mode_height_ref.current = current_mode_height
           }
 
-          const height_to_use = is_mode_sticky ? full_mode_height_ref.current : current_mode_height
+          const height_to_use = is_mode_sticky
+            ? full_mode_height_ref.current
+            : current_mode_height
 
           set_is_mode_sticky(top > responses_height + height_to_use + 4)
         }}
       >
-        <div className={styles.content}>
+        <div
+          className={cn(styles.content, {
+            [styles['content--sticky']]: is_mode_sticky
+          })}
+        >
           <div className={styles.inner}>
             {props.response_history.length > 0 && (
               <div className={styles.inner__responses} ref={responses_ref}>
@@ -135,22 +141,23 @@ export const Home: React.FC<Props> = (props) => {
             )}
 
             <div
-              className={cn(styles['inner__mode-wrapper'], {
-                [styles['inner__mode-wrapper--sticky']]: is_mode_sticky
+              className={cn(styles.inner__mode, {
+                [styles['inner__mode--sticky']]: is_mode_sticky
               })}
-              style={{
-                minHeight: is_mode_sticky ? full_mode_height_ref.current : undefined
-              }}
+              ref={mode_ref}
             >
-              <div
-                className={cn(styles.inner__mode, {
-                  [styles['inner__mode--sticky']]: is_mode_sticky
-                })}
-                ref={mode_ref}
-              >
-                <ModeButton pre="Autofill" label="Chatbots" on_click={props.on_chatbots_click} is_compact={is_mode_sticky} />
-                <ModeButton pre="Make" label="API calls" on_click={props.on_api_calls_click} is_compact={is_mode_sticky} />
-              </div>
+              <ModeButton
+                pre="Autofill"
+                label="Chatbots"
+                on_click={props.on_chatbots_click}
+                is_compact={is_mode_sticky}
+              />
+              <ModeButton
+                pre="Make"
+                label="API calls"
+                on_click={props.on_api_calls_click}
+                is_compact={is_mode_sticky}
+              />
             </div>
 
             <Separator height={8} />
