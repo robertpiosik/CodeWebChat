@@ -11,6 +11,7 @@ import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { post_message } from '../utils/post_message'
 import { ItemInPreview } from '@shared/types/file-in-preview'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
+import { Task } from '@shared/types/task'
 
 export const use_panel = (vscode: any) => {
   const [active_view, set_active_view] = useState<'home' | 'main'>('home')
@@ -110,6 +111,7 @@ export const use_panel = (vscode: any) => {
   const [presets_collapsed_by_web_mode, set_presets_collapsed_by_web_mode] =
     useState<{ [mode in WebPromptType]?: boolean }>({})
   const [is_timeline_collapsed, set_is_timeline_collapsed] = useState(false)
+  const [are_tasks_collapsed, set_are_tasks_collapsed] = useState(false)
   const [
     is_preview_ongoing_modal_visible,
     set_is_preview_ongoing_modal_visible
@@ -119,6 +121,7 @@ export const use_panel = (vscode: any) => {
     set_configurations_collapsed_by_api_mode
   ] = useState<{ [mode in ApiPromptType]?: boolean }>({})
 
+  const [tasks, set_tasks] = useState<Record<string, Task[]>>({})
   const handle_instructions_change = (
     value: string,
     mode: 'ask' | 'edit-context' | 'no-context' | 'code-completions'
@@ -148,6 +151,30 @@ export const use_panel = (vscode: any) => {
     }
   }
 
+  const handle_tasks_change = (root: string, updated_tasks: Task[]) => {
+    const new_tasks = { ...tasks, [root]: updated_tasks }
+    set_tasks(new_tasks)
+    post_message(vscode, {
+      command: 'SAVE_TASKS',
+      tasks: new_tasks
+    })
+  }
+
+  const handle_task_delete = (root: string, timestamp: number) => {
+    post_message(vscode, {
+      command: 'DELETE_TASK',
+      root,
+      timestamp
+    })
+  }
+
+  const handle_task_copy = (text: string) => {
+    post_message(vscode, {
+      command: 'COPY_TASK',
+      text
+    })
+  }
+
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
@@ -175,6 +202,7 @@ export const use_panel = (vscode: any) => {
           message.configurations_collapsed_by_api_mode
         )
         set_is_timeline_collapsed(message.is_timeline_collapsed)
+        set_are_tasks_collapsed(message.are_tasks_collapsed)
       } else if (message.command === 'CHECKPOINTS') {
         set_checkpoints(message.checkpoints)
       } else if (message.command == 'EDITOR_STATE_CHANGED') {
@@ -279,6 +307,8 @@ export const use_panel = (vscode: any) => {
         set_can_undo(message.can_undo)
       } else if (message.command == 'SHOW_PREVIEW_ONGOING_MODAL') {
         set_is_preview_ongoing_modal_visible(true)
+      } else if (message.command == 'TASKS') {
+        set_tasks(message.tasks)
       }
     }
     window.addEventListener('message', handle_message)
@@ -299,7 +329,8 @@ export const use_panel = (vscode: any) => {
       { command: 'GET_COLLAPSED_STATES' },
       { command: 'GET_CHECKPOINTS' },
       { command: 'REQUEST_CURRENTLY_OPEN_FILE_TEXT' },
-      { command: 'REQUEST_CAN_UNDO' }
+      { command: 'REQUEST_CAN_UNDO' },
+      { command: 'GET_TASKS' }
     ]
     initial_messages.forEach((message) => post_message(vscode, message))
 
@@ -320,6 +351,15 @@ export const use_panel = (vscode: any) => {
     post_message(vscode, {
       command: 'SAVE_COMPONENT_COLLAPSED_STATE',
       component: 'timeline',
+      is_collapsed
+    })
+  }
+
+  const handle_tasks_collapsed_change = (is_collapsed: boolean) => {
+    set_are_tasks_collapsed(is_collapsed)
+    post_message(vscode, {
+      command: 'SAVE_COMPONENT_COLLAPSED_STATE',
+      component: 'tasks',
       is_collapsed
     })
   }
@@ -485,8 +525,13 @@ export const use_panel = (vscode: any) => {
       ? (configurations_collapsed_by_api_mode[api_prompt_type] ?? false)
       : false,
     is_timeline_collapsed,
+    are_tasks_collapsed,
     is_preview_ongoing_modal_visible,
     set_is_preview_ongoing_modal_visible,
+    tasks,
+    handle_tasks_change,
+    handle_task_delete,
+    handle_task_copy,
     handle_instructions_change,
     edit_preset_back_click_handler,
     edit_preset_save_handler,
@@ -496,6 +541,7 @@ export const use_panel = (vscode: any) => {
     handle_mode_change,
     handle_presets_collapsed_change,
     handle_timeline_collapsed_change,
+    handle_tasks_collapsed_change,
     handle_configurations_collapsed_change,
     handle_remove_response_history_item,
     handle_discard_user_changes_in_preview

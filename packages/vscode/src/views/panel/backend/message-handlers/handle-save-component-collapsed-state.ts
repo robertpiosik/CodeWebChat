@@ -1,4 +1,5 @@
 import {
+  ARE_TASKS_COLLAPSED_STATE_KEY,
   get_configurations_collapsed_state_key,
   get_presets_collapsed_state_key,
   IS_TIMELINE_COLLAPSED_STATE_KEY
@@ -26,5 +27,11 @@ export const handle_save_component_collapsed_state = async (
       IS_TIMELINE_COLLAPSED_STATE_KEY,
       message.is_collapsed
     )
+  } else if (message.component == 'tasks') {
+    await panel_provider.context.globalState.update(
+      ARE_TASKS_COLLAPSED_STATE_KEY,
+      message.is_collapsed
+    )
   }
 }
+

@@ -2,6 +2,7 @@ import { EditFormat } from '@shared/types/edit-format'
 import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Preset } from '@shared/types/preset'
+import { Task } from '@shared/types/task'
 import { Mode } from './main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 
@@ -354,7 +355,7 @@ export interface GetCollapsedStatesMessage extends BaseMessage {
 
 export interface SaveComponentCollapsedStateMessage extends BaseMessage {
   command: 'SAVE_COMPONENT_COLLAPSED_STATE'
-  component: 'presets' | 'configurations' | 'timeline'
+  component: 'presets' | 'configurations' | 'timeline' | 'tasks'
   is_collapsed: boolean
   mode?: WebPromptType | ApiPromptType
 }
@@ -404,6 +405,26 @@ export interface RequestCanUndoMessage extends BaseMessage {
 export interface PreviewSwitchChoiceMessage extends BaseMessage {
   command: 'PREVIEW_SWITCH_CHOICE'
   choice?: 'Switch'
+}
+
+export interface GetTasksMessage extends BaseMessage {
+  command: 'GET_TASKS'
+}
+
+export interface SaveTasksMessage extends BaseMessage {
+  command: 'SAVE_TASKS'
+  tasks: Record<string, Task[]>
+}
+
+export interface DeleteTaskMessage extends BaseMessage {
+  command: 'DELETE_TASK'
+  root: string
+  timestamp: number
+}
+
+export interface CopyTaskMessage extends BaseMessage {
+  command: 'COPY_TASK'
+  text: string
 }
 
 export type FrontendMessage =
@@ -481,6 +502,10 @@ export type FrontendMessage =
   | ClearAllCheckpointsMessage
   | RequestCanUndoMessage
   | PreviewSwitchChoiceMessage
+  | GetTasksMessage
+  | SaveTasksMessage
+  | DeleteTaskMessage
+  | CopyTaskMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -703,6 +728,7 @@ export interface CollapsedStatesMessage extends BaseMessage {
   command: 'COLLAPSED_STATES'
   presets_collapsed_by_web_mode: { [mode in WebPromptType]?: boolean }
   configurations_collapsed_by_api_mode: { [mode in ApiPromptType]?: boolean }
+  are_tasks_collapsed: boolean
   is_timeline_collapsed: boolean
 }
 
@@ -718,6 +744,11 @@ export interface CurrentlyOpenFileTextMessage extends BaseMessage {
 
 export interface ShowPreviewOngoingModalMessage extends BaseMessage {
   command: 'SHOW_PREVIEW_ONGOING_MODAL'
+}
+
+export interface TasksMessage extends BaseMessage {
+  command: 'TASKS'
+  tasks: Record<string, Task[]>
 }
 
 export type BackendMessage =
@@ -764,3 +795,4 @@ export type BackendMessage =
   | CheckpointsMessage
   | CurrentlyOpenFileTextMessage
   | ShowPreviewOngoingModalMessage
+  | TasksMessage

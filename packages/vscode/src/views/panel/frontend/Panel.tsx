@@ -97,8 +97,14 @@ export const Panel = () => {
     handle_configurations_collapsed_change,
     is_timeline_collapsed,
     handle_timeline_collapsed_change,
+    are_tasks_collapsed,
+    handle_tasks_collapsed_change,
     handle_remove_response_history_item,
-    handle_discard_user_changes_in_preview
+    tasks,
+    handle_tasks_change,
+    handle_task_delete,
+    handle_discard_user_changes_in_preview,
+    handle_task_copy
   } = use_panel(vscode)
 
   const [checkpoint_to_edit, set_checkpoint_to_edit] = useState<
@@ -344,12 +350,18 @@ export const Panel = () => {
                 }}
                 is_timeline_collapsed={is_timeline_collapsed}
                 on_timeline_collapsed_change={handle_timeline_collapsed_change}
+                are_tasks_collapsed={are_tasks_collapsed}
+                on_tasks_collapsed_change={handle_tasks_collapsed_change}
                 on_delete_checkpoint={(timestamp) => {
                   post_message(vscode, {
                     command: 'DELETE_CHECKPOINT',
                     timestamp
                   })
                 }}
+                tasks={tasks}
+                on_tasks_change={handle_tasks_change}
+                on_task_delete={handle_task_delete}
+                on_task_copy={handle_task_copy}
               />
             </div>
           </Layout>

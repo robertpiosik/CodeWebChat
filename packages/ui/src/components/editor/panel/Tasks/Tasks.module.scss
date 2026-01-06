@@ -1,3 +1,9 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 .tasks {
   display: flex;
   flex-direction: column;
@@ -5,9 +11,8 @@
 
 .item {
   display: flex;
-  padding: 8px 12px;
-  gap: 10px;
-  border-bottom: 1px solid var(--cwc-border-color-dimmed);
+  padding: 1px 12px 4px 10px;
+  gap: 4px;
   position: relative;
 
   &:hover {
@@ -18,48 +23,56 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    justify-content: space-between;
     width: 20px;
     flex-shrink: 0;
     padding-top: 2px;
-  }
-
-  &__drag-handle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: grab;
-    opacity: var(--drag-handle-opacity);
-    width: 15px;
-    height: 15px;
-
-    &:active {
-      cursor: grabbing;
-    }
+    padding-bottom: 2px;
   }
 
   &__right {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    min-width: 0;
-    gap: 2px;
   }
 
   &__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 11px;
-    color: var(--cwc-text-color-dimmed);
+
     margin-bottom: 2px;
   }
 
-  &__edit {
-    cursor: pointer;
+  &__time {
+    font-size: 11px;
+    color: var(--cwc-text-color-dimmed);
+    &--checked {
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+  }
 
+  &__actions {
+    display: flex;
+    opacity: 0;
+    pointer-events: none;
+
+    &--visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  &:hover &__actions {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  &__delete {
     &:hover {
-      color: var(--vscode-icon-foreground);
+      color: var(--vscode-errorForeground);
+      opacity: 1;
     }
   }
 
@@ -79,4 +92,76 @@
       opacity: 0.5;
     }
   }
+}
+
+.add-button {
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  height: 15px;
+  width: 15px;
+  color: var(--vscode-checkbox-foreground);
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+
+  &:focus {
+    outline: none;
+  }
+
+  &::before {
+    font-family: 'codicon';
+    font-size: 13px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.5;
+  }
+
+  &--add {
+    margin: 6px 0;
+    &::before {
+      content: '\ea60';
+    }
+  }
+
+  &--indent::before {
+    content: '\ebf9';
+  }
+
+  &--collapse::before {
+    font-size: 16px;
+    content: '\eab4';
+  }
+
+  &--expand::before {
+    font-size: 16px;
+    content: '\eab6';
+  }
+
+  &:hover::before {
+    opacity: 1;
+  }
+}
+
+.empty {
+  padding: 8px 12px;
+  font-size: 11px;
+  color: var(--cwc-text-color-dimmed);
+  font-style: italic;
+}
+
+.indent-guide {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: var(
+    --vscode-tree-indentGuidesStroke,
+    var(--cwc-border-color-dimmed)
+  );
+  pointer-events: none;
 }

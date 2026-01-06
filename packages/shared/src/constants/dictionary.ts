@@ -7,6 +7,8 @@ export const dictionary = {
 
   information_message: {
     ALL_CHECKPOINTS_CLEARED: 'All checkpoints have been cleared.',
+    TASK_DELETED: 'Task deleted.',
+    TASK_COPIED_TO_CLIPBOARD: 'Task copied to clipboard.',
     ALL_CHECKED_FILES_UNCAHNGED_SINCE_COMMIT: (
       folder_name: string,
       commit_hash: string

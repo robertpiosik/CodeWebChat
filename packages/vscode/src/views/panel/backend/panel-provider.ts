@@ -71,8 +71,12 @@ import {
   handle_save_component_collapsed_state,
   handle_undo,
   handle_delete_checkpoint,
-  handle_request_can_undo
-} from './message-handlers'
+  handle_request_can_undo,
+  handle_copy_task
+} from './message-handlers' // Assuming handle-get-tasks and handle-save-tasks are here
+import { handle_get_tasks } from './message-handlers/handle-get-tasks'
+import { handle_save_tasks } from './message-handlers/handle-save-tasks'
+import { handle_delete_task } from './message-handlers/handle-delete-task'
 import {
   API_EDIT_FORMAT_STATE_KEY,
   API_MODE_STATE_KEY,
@@ -621,6 +625,14 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             if (this.preview_switch_choice_resolver) {
               this.preview_switch_choice_resolver(message.choice)
             }
+          } else if (message.command === 'GET_TASKS') {
+            await handle_get_tasks(this)
+          } else if (message.command === 'SAVE_TASKS') {
+            await handle_save_tasks(this, message)
+          } else if (message.command === 'DELETE_TASK') {
+            await handle_delete_task(this, message)
+          } else if (message.command === 'COPY_TASK') {
+            await handle_copy_task(message)
           } else if (message.command == 'REQUEST_CAN_UNDO') {
             handle_request_can_undo(this)
           }

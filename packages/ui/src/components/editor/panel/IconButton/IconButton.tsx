@@ -4,6 +4,7 @@ import cn from 'classnames'
 type Props = {
   codicon_icon: string
   on_click?: (e: any) => void
+  on_mouse_down?: (e: any) => void
   href?: string
   title?: string
   label?: string
@@ -25,6 +26,7 @@ export const IconButton: React.FC<Props> = (props) => {
         className={cn(styles['icon-button'], {
           [styles['with-label']]: !!props.label
         })}
+        onMouseDown={props.on_mouse_down}
         title={props.title}
         target="_blank"
         rel="noopener noreferrer"
@@ -39,6 +41,7 @@ export const IconButton: React.FC<Props> = (props) => {
         className={cn(styles['icon-button'], {
           [styles['with-label']]: !!props.label
         })}
+        onMouseDown={props.on_mouse_down}
         onClick={props.on_click}
         title={props.title}
       >

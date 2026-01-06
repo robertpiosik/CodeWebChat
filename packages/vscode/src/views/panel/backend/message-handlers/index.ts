@@ -54,3 +54,8 @@ export * from './handle-delete-checkpoint'
 export * from './handle-clear-all-checkpoints'
 export * from './handle-discard-user-changes-in-preview'
 export * from './handle-request-can-undo'
+export * from './handle-get-tasks'
+export * from './handle-save-tasks'
+export * from './handle-delete-task'
+export * from './handle-copy-task'
+

@@ -6,6 +6,7 @@ import { Icon } from '../../common/Icon'
 import { Button } from '../../common/Button'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { ListHeader } from '../ListHeader'
+import { SimpleCheckbox } from '../../common/SimpleCheckbox'
 
 export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   'AI Studio': 'AI_STUDIO',
@@ -255,9 +256,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     (item, index) => item.id != sortable_list[index].id
                   )
 
-                if (!has_order_changed) {
-                  return
-                }
+                if (!has_order_changed) return
 
                 // Handle normal preset/group reordering
                 const new_visible_presets = new_state.map(
@@ -460,14 +459,11 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         )}
                       {preset.chatbot &&
                         preset_indices_in_group.has(preset.original_index) && (
-                          <input
-                            type="checkbox"
-                            className={styles.checkbox}
+                          <SimpleCheckbox
                             checked={!!preset.is_selected}
-                            onChange={() =>
+                            on_change={() =>
                               props.on_toggle_selected_preset(preset.name!)
                             }
-                            onClick={(e) => e.stopPropagation()}
                             title="Select for multi-initialization"
                           />
                         )}

@@ -1,4 +1,5 @@
 import {
+  ARE_TASKS_COLLAPSED_STATE_KEY,
   get_configurations_collapsed_state_key,
   get_presets_collapsed_state_key,
   IS_TIMELINE_COLLAPSED_STATE_KEY
@@ -39,6 +40,10 @@ export const handle_get_collapsed_states = (
     ),
     is_timeline_collapsed: panel_provider.context.globalState.get<boolean>(
       IS_TIMELINE_COLLAPSED_STATE_KEY,
+      false
+    ),
+    are_tasks_collapsed: panel_provider.context.globalState.get<boolean>(
+      ARE_TASKS_COLLAPSED_STATE_KEY,
       false
     )
   })

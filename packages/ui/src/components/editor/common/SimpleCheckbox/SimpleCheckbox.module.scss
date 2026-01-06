@@ -1,0 +1,37 @@
+.checkbox {
+  appearance: none;
+  height: 15px;
+  width: 15px;
+  color: var(--vscode-checkbox-foreground);
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin: 0;
+
+  &:focus {
+    outline: none;
+  }
+
+  &::before {
+    font-family: 'codicon';
+    content: '\eab2';
+    font-size: 13px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.3;
+  }
+
+  &:checked::before {
+    opacity: 1;
+  }
+
+  &:hover::before {
+    opacity: 0.5;
+  }
+
+  &:checked:hover::before {
+    opacity: 1;
+  }
+}

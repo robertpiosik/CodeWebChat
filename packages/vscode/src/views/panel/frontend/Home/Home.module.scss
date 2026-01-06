@@ -118,6 +118,18 @@
     gap: 6px;
     width: 100%;
   }
+
+  &__tasks {
+    width: 100%;
+  }
+
+  &__tasks-header {
+    padding: 10px 12px 2px 12px;
+    font-size: 10px;
+    font-weight: bold;
+    color: var(--cwc-text-color-dimmed);
+    opacity: 0.8;
+  }
 }
 
 .bottom {

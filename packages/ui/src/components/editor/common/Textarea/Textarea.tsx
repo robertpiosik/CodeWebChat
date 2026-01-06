@@ -22,7 +22,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, Props>(
     const set_ref = React.useCallback(
       (node: HTMLTextAreaElement | null) => {
         internal_ref.current = node
-        if (typeof ref === 'function') {
+        if (typeof ref == 'function') {
           ref(node)
         } else if (ref) {
           ref.current = node
@@ -42,7 +42,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, Props>(
     }, [])
 
     const handle_key_down = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      if (e.key == 'Enter' && !e.shiftKey) {
+      if ((e.key == 'Enter' || e.key == 'Escape') && !e.shiftKey) {
         e.preventDefault()
         e.currentTarget.blur()
       }

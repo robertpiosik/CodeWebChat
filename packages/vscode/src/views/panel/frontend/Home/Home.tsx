@@ -11,6 +11,9 @@ import { Separator } from '@ui/components/editor/panel/Separator'
 import { ListHeader } from '@ui/components/editor/panel/ListHeader'
 import { use_translation } from '@/views/i18n/use-translation'
 import { IconButton } from '@ui/components/editor/panel/IconButton'
+import { Tasks } from '@ui/components/editor/panel/Tasks'
+import { Task } from '@shared/types/task'
+import { use_tasks } from './hooks/use-tasks'
 
 type Props = {
   vscode: any
@@ -30,10 +33,25 @@ type Props = {
   on_delete_checkpoint: (timestamp: number) => void
   is_timeline_collapsed: boolean
   on_timeline_collapsed_change: (is_collapsed: boolean) => void
+  are_tasks_collapsed: boolean
+  on_tasks_collapsed_change: (is_collapsed: boolean) => void
+  tasks: Record<string, Task[]>
+  on_tasks_change: (root: string, tasks: Task[]) => void
+  on_task_delete: (root: string, timestamp: number) => void
+  on_task_copy: (text: string) => void
 }
 
 export const Home: React.FC<Props> = (props) => {
   const { t } = use_translation()
+
+  const {
+    handle_reorder,
+    handle_change,
+    handle_add,
+    handle_add_subtask,
+    handle_delete,
+    handle_copy
+  } = use_tasks(props.on_tasks_change, props.on_task_delete, props.on_task_copy)
 
   const handle_settings_click = () => {
     post_message(props.vscode, {
@@ -110,7 +128,78 @@ export const Home: React.FC<Props> = (props) => {
                 on_click={props.on_api_calls_click}
               />
             </div>
+
             <Separator height={8} />
+
+            <ListHeader
+              title="Tasks"
+              is_collapsed={props.are_tasks_collapsed}
+              on_toggle_collapsed={() =>
+                props.on_tasks_collapsed_change(!props.are_tasks_collapsed)
+              }
+              actions={
+                <IconButton
+                  codicon_icon="add"
+                  title="Add Task"
+                  on_click={(e) => {
+                    e.stopPropagation()
+                    const roots = Object.keys(props.tasks)
+                    if (roots.length > 0) {
+                      handle_add(roots[0], props.tasks[roots[0]], 'top')
+                      if (props.are_tasks_collapsed) {
+                        props.on_tasks_collapsed_change(false)
+                      }
+                    }
+                  }}
+                />
+              }
+            />
+            {!props.are_tasks_collapsed &&
+              Object.entries(props.tasks)
+                .filter(([_, tasks]) => tasks.length)
+                .map(([workspace_root_folder, tasks], _, entries) => (
+                  <div
+                    key={workspace_root_folder}
+                    className={styles.inner__tasks}
+                  >
+                    {entries.length > 1 && (
+                      <div className={styles['inner__tasks-header']}>
+                        {workspace_root_folder.split(/[\\/]/).pop() ||
+                          workspace_root_folder}
+                      </div>
+                    )}
+                    <Tasks
+                      tasks={tasks}
+                      on_reorder={(new_tasks) =>
+                        handle_reorder(workspace_root_folder, new_tasks)
+                      }
+                      on_change={(updated_task) => {
+                        handle_change(
+                          workspace_root_folder,
+                          tasks,
+                          updated_task
+                        )
+                      }}
+                      on_add={() => {
+                        handle_add(workspace_root_folder, tasks)
+                      }}
+                      on_add_subtask={(parent_task) => {
+                        handle_add_subtask(
+                          workspace_root_folder,
+                          tasks,
+                          parent_task
+                        )
+                      }}
+                      on_delete={(timestamp) => {
+                        handle_delete(workspace_root_folder, timestamp)
+                      }}
+                      on_copy={(text) => {
+                        handle_copy(text)
+                      }}
+                    />
+                  </div>
+                ))}
+
             <ListHeader
               title="Timeline"
               is_collapsed={props.is_timeline_collapsed}
