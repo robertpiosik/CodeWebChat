@@ -137,27 +137,10 @@ export const Home: React.FC<Props> = (props) => {
               on_toggle_collapsed={() =>
                 props.on_tasks_collapsed_change(!props.are_tasks_collapsed)
               }
-              actions={
-                <IconButton
-                  codicon_icon="add"
-                  title="Add Task"
-                  on_click={(e) => {
-                    e.stopPropagation()
-                    const roots = Object.keys(props.tasks)
-                    if (roots.length > 0) {
-                      handle_add(roots[0], props.tasks[roots[0]], 'top')
-                      if (props.are_tasks_collapsed) {
-                        props.on_tasks_collapsed_change(false)
-                      }
-                    }
-                  }}
-                />
-              }
             />
             {!props.are_tasks_collapsed &&
-              Object.entries(props.tasks)
-                .filter(([_, tasks]) => tasks.length)
-                .map(([workspace_root_folder, tasks], _, entries) => (
+              Object.entries(props.tasks).map(
+                ([workspace_root_folder, tasks], _, entries) => (
                   <div
                     key={workspace_root_folder}
                     className={styles.inner__tasks}
@@ -198,7 +181,8 @@ export const Home: React.FC<Props> = (props) => {
                       }}
                     />
                   </div>
-                ))}
+                )
+              )}
 
             <ListHeader
               title="Timeline"

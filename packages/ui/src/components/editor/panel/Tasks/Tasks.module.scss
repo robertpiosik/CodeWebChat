@@ -11,7 +11,7 @@
 
 .item {
   display: flex;
-  padding: 1px 12px 4px 10px;
+  padding: 1px 12px 6px 10px;
   gap: 4px;
   position: relative;
 
@@ -26,7 +26,7 @@
     justify-content: space-between;
     width: 20px;
     flex-shrink: 0;
-    padding-top: 2px;
+    padding-top: 5px;
     padding-bottom: 2px;
   }
 
@@ -42,6 +42,12 @@
     align-items: center;
 
     margin-bottom: 2px;
+  }
+
+  &__header-left {
+    display: flex;
+    align-items: center;
+    padding-top: 3px;
   }
 
   &__time {

@@ -118,15 +118,17 @@ export const Tasks: React.FC<Props> = (props) => {
 
         <div className={styles.item__right}>
           <div className={styles.item__header}>
-            <span
-              className={cn(styles.item__time, {
-                [styles['item__time--checked']]: is_visually_checked
-              })}
-            >
-              {dayjs(task.created_at).fromNow()}
-              {has_children &&
-                ` · ${checked_children_count}/${task.children!.length}`}
-            </span>
+            <div className={styles['item__header-left']}>
+              <span
+                className={cn(styles.item__time, {
+                  [styles['item__time--checked']]: is_visually_checked
+                })}
+              >
+                {dayjs(task.created_at).fromNow()}
+                {has_children &&
+                  ` · ${checked_children_count}/${task.children!.length}`}
+              </span>
+            </div>
             <div
               className={cn(styles.item__actions, {
                 [styles['item__actions--visible']]: is_editing
