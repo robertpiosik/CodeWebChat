@@ -42,6 +42,9 @@ export const Tasks: React.FC<Props> = (props) => {
   const [editing_timestamp, set_editing_timestamp] = useState<number | null>(
     null
   )
+  const [last_copied_timestamp, set_last_copied_timestamp] = useState<
+    number | null
+  >(null)
   const prevent_edit_ref = useRef(false)
 
   const tree = useMemo(() => add_ids(props.tasks), [props.tasks])
@@ -61,6 +64,7 @@ export const Tasks: React.FC<Props> = (props) => {
     depth: number
   ) => {
     const is_editing = editing_timestamp == task.created_at
+    const is_copied = last_copied_timestamp == task.created_at
     const has_children = task.children && task.children.length > 0
 
     const checked_children_count = has_children
@@ -69,7 +73,9 @@ export const Tasks: React.FC<Props> = (props) => {
 
     return (
       <div
-        className={styles.item}
+        className={cn(styles.item, {
+          [styles['item--copied']]: is_copied
+        })}
         style={{ paddingLeft: `${10 + depth * 20}px` }}
       >
         {[...Array(depth)].map((_, i) => (
@@ -140,8 +146,9 @@ export const Tasks: React.FC<Props> = (props) => {
                   on_click={(e) => {
                     e.stopPropagation()
                     props.on_copy(task.text)
+                    set_last_copied_timestamp(task.created_at)
                   }}
-                  title="Copy task text"
+                  title="Copy Task"
                 />
               )}
               <IconButton

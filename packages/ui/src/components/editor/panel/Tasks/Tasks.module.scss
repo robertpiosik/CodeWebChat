@@ -19,6 +19,10 @@
     background-color: var(--vscode-list-hoverBackground);
   }
 
+  &--copied {
+    background-color: var(--vscode-list-inactiveSelectionBackground);
+  }
+
   &__left {
     display: flex;
     flex-direction: column;
@@ -40,7 +44,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-
+cursor: grab;
     margin-bottom: 2px;
   }
 
@@ -48,6 +52,7 @@
     display: flex;
     align-items: center;
     padding-top: 3px;
+    
   }
 
   &__time {

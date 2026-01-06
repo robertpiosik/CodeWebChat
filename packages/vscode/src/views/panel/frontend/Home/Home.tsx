@@ -45,6 +45,7 @@ type Props = {
 export const Home: React.FC<Props> = (props) => {
   const { t } = use_translation()
   const [is_mode_sticky, set_is_mode_sticky] = useState(false)
+  const full_mode_height_ref = useRef<number>(0)
   const responses_ref = useRef<HTMLDivElement>(null)
   const mode_ref = useRef<HTMLDivElement>(null)
 
@@ -100,8 +101,15 @@ export const Home: React.FC<Props> = (props) => {
       <Scrollable
         on_scroll={(top) => {
           const responses_height = responses_ref.current?.clientHeight || 0
-          const mode_height = mode_ref.current?.clientHeight || 0
-          set_is_mode_sticky(top > responses_height + mode_height + 4)
+          const current_mode_height = mode_ref.current?.offsetHeight || 0
+
+          if (!is_mode_sticky && current_mode_height > 0) {
+            full_mode_height_ref.current = current_mode_height
+          }
+
+          const height_to_use = is_mode_sticky ? full_mode_height_ref.current : current_mode_height
+
+          set_is_mode_sticky(top > responses_height + height_to_use + 4)
         }}
       >
         <div className={styles.content}>
@@ -127,23 +135,22 @@ export const Home: React.FC<Props> = (props) => {
             )}
 
             <div
-              className={cn(styles.inner__mode, {
-                [styles['inner__mode--sticky']]: is_mode_sticky
+              className={cn(styles['inner__mode-wrapper'], {
+                [styles['inner__mode-wrapper--sticky']]: is_mode_sticky
               })}
-              ref={mode_ref}
+              style={{
+                minHeight: is_mode_sticky ? full_mode_height_ref.current : undefined
+              }}
             >
-              <ModeButton
-                pre="Autofill"
-                label="Chatbots"
-                on_click={props.on_chatbots_click}
-                is_compact={is_mode_sticky}
-              />
-              <ModeButton
-                pre="Make"
-                label="API calls"
-                on_click={props.on_api_calls_click}
-                is_compact={is_mode_sticky}
-              />
+              <div
+                className={cn(styles.inner__mode, {
+                  [styles['inner__mode--sticky']]: is_mode_sticky
+                })}
+                ref={mode_ref}
+              >
+                <ModeButton pre="Autofill" label="Chatbots" on_click={props.on_chatbots_click} is_compact={is_mode_sticky} />
+                <ModeButton pre="Make" label="API calls" on_click={props.on_api_calls_click} is_compact={is_mode_sticky} />
+              </div>
             </div>
 
             <Separator height={8} />

@@ -81,22 +81,25 @@
     margin: 0;
   }
 
-  &__mode {
-    display: flex;
-    position: relative;
-    background-color: var(--vscode-sideBar-background);
-    border-radius: 10px;
-    border: 1px solid var(--cwc-border-color);
-    overflow: hidden;
+  &__mode-wrapper {
     margin: 0 12px;
-    z-index: 10;
+    z-index: 1;
 
     &--sticky {
       position: sticky;
       top: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      animation: stickyFadeIn var(--transition-duration-150) var(--transition-timing-function)
+      animation: stickyFadeIn var(--transition-duration-150)
+        var(--transition-timing-function);
     }
+  }
+
+  &__mode {
+    position: relative;
+    display: flex;
+    background-color: var(--vscode-sideBar-background);
+    border-radius: 10px;
+    border: 1px solid var(--cwc-border-color);
+    overflow: hidden;
 
     > button {
       flex: 1;
@@ -112,6 +115,14 @@
       height: 35px;
       background-color: var(--cwc-border-color-dimmed);
       pointer-events: none;
+    }
+
+    &--sticky {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+      &::after {
+        height: 20px;
+      }
     }
   }
 
