@@ -135,13 +135,6 @@ Generate meaningful summaries of changes adhering to your style.
 
 **Code Web Chat operates exclusively on your machine.** Your code and instructions are sent directly to chatbots via editor-browser communication channel run on local Websockets. For API tools, model providers are called directly.
 
-## Community
-
-If you have a question, or want to help others, you're always welcome in our community.
-
-- [Discord server](https://discord.gg/KJySXsrSX5)
-- [GitHub Discussions](https://github.com/robertpiosik/CodeWebChat/discussions)
-
 ## Contributing
 
 All contributions are welcome. Feel free to submit pull requests, feature requests and bug reports.
