@@ -130,6 +130,27 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     []
   )
 
+  // Prevents pasting html or images
+  const handle_paste = useCallback(
+    (e: React.ClipboardEvent<HTMLDivElement>) => {
+      e.preventDefault()
+      const text = e.clipboardData.getData('text/plain')
+
+      const selection = window.getSelection()
+      if (!selection || !selection.rangeCount) return
+      const range = selection.getRangeAt(0)
+      range.deleteContents()
+      const text_node = document.createTextNode(text)
+      range.insertNode(text_node)
+      range.setStartAfter(text_node)
+      range.setEndAfter(text_node)
+      selection.removeAllRanges()
+      selection.addRange(range)
+      input_ref.current?.dispatchEvent(new Event('input', { bubbles: true }))
+    },
+    []
+  )
+
   const is_mac = use_is_mac()
 
   const highlighted_html = useMemo(() => {
@@ -302,6 +323,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           onInput={handle_input_change}
           onKeyDown={handle_key_down}
           onCopy={handle_copy}
+          onPaste={handle_paste}
           onClick={handle_input_click}
           onMouseDown={handle_mouse_down}
           onDragStart={handle_drag_start}
