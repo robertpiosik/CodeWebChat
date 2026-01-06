@@ -131,7 +131,6 @@ export const apply_diff = (params: {
     let replace_chunks = []
 
     let inside_replace_block = false
-    let has_context_lines = false
 
     for (let i = 0; i < patch_lines_normalized.length; i++) {
       const line = patch_lines_normalized[i]
@@ -146,7 +145,6 @@ export const apply_diff = (params: {
         search_chunks = []
         replace_chunks = []
         inside_replace_block = false
-        has_context_lines = false
       }
 
       if (line.startsWith('-') || line.startsWith('~')) {
@@ -161,7 +159,6 @@ export const apply_diff = (params: {
 
           search_chunks = []
           replace_chunks = []
-          has_context_lines = false
         }
 
         if (line.startsWith('--')) {
@@ -177,10 +174,8 @@ export const apply_diff = (params: {
         // Also replace unchanged lines
         if (line.startsWith('~nnn')) {
           replace_chunks.push(line_original.replace(/^~nnn/, '') + '\n')
-          has_context_lines = true
         } else if (line.startsWith('~')) {
           replace_chunks.push(line_original.replace(/^~/, '') + '\n')
-          has_context_lines = true
         }
 
         continue

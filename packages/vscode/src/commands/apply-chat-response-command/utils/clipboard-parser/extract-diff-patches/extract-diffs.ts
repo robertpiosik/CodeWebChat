@@ -259,12 +259,15 @@ const process_collected_patch_lines = (params: {
   patch_lines_array: string[]
   is_single_root: boolean
 }): Diff | null => {
-  const joined_patch_text_for_checks = params.patch_lines_array.join('\n')
+  const lines = [...params.patch_lines_array]
+  while (lines.length > 0 && lines[lines.length - 1].trim() === '') {
+    lines.pop()
+  }
+
+  const joined_patch_text_for_checks = lines.join('\n')
   if (joined_patch_text_for_checks.trim() == '') return null
 
-  const { from_path, to_path } = extract_paths_from_lines(
-    params.patch_lines_array
-  )
+  const { from_path, to_path } = extract_paths_from_lines(lines)
 
   const is_new_file = from_path == '/dev/null'
   const is_deleted_file = to_path == '/dev/null'
@@ -283,15 +286,15 @@ const process_collected_patch_lines = (params: {
       message: 'Could not extract file path from collected patch lines.',
       data: {
         clipboard_start: joined_patch_text_for_checks.substring(0, 200),
-        lines_count: params.patch_lines_array.length
+        lines_count: lines.length
       }
     })
     return null
   }
 
-  const patch_start_idx = find_patch_start_index(params.patch_lines_array)
+  const patch_start_idx = find_patch_start_index(lines)
   let content_str = build_patch_content({
-    lines: params.patch_lines_array,
+    lines,
     file_path,
     patch_start_index: patch_start_idx,
     is_single_root: params.is_single_root
