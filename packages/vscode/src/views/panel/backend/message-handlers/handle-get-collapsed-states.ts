@@ -38,11 +38,11 @@ export const handle_get_collapsed_states = (
         )
       ])
     ),
-    is_timeline_collapsed: panel_provider.context.globalState.get<boolean>(
+    is_timeline_collapsed: panel_provider.context.workspaceState.get<boolean>(
       IS_TIMELINE_COLLAPSED_STATE_KEY,
       false
     ),
-    are_tasks_collapsed: panel_provider.context.globalState.get<boolean>(
+    are_tasks_collapsed: panel_provider.context.workspaceState.get<boolean>(
       ARE_TASKS_COLLAPSED_STATE_KEY,
       false
     )

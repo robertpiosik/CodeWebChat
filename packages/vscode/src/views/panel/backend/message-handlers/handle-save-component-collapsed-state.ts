@@ -23,15 +23,14 @@ export const handle_save_component_collapsed_state = async (
       message.is_collapsed
     )
   } else if (message.component == 'timeline') {
-    await panel_provider.context.globalState.update(
+    await panel_provider.context.workspaceState.update(
       IS_TIMELINE_COLLAPSED_STATE_KEY,
       message.is_collapsed
     )
   } else if (message.component == 'tasks') {
-    await panel_provider.context.globalState.update(
+    await panel_provider.context.workspaceState.update(
       ARE_TASKS_COLLAPSED_STATE_KEY,
       message.is_collapsed
     )
   }
 }
-
