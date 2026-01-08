@@ -165,6 +165,17 @@ export async function activate(context: vscode.ExtensionContext) {
           })
         }
       }
+    ),
+    vscode.commands.registerCommand(
+      'codeWebChat.openInIntegratedTerminal',
+      async (item: any) => {
+        if (item && item.resourceUri) {
+          const terminal = vscode.window.createTerminal({
+            cwd: item.resourceUri.fsPath
+          })
+          terminal.show()
+        }
+      }
     )
   )
 }

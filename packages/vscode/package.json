@@ -307,6 +307,12 @@
         "command": "codeWebChat.setRange",
         "title": "Set Range",
         "category": "Code Web Chat"
+      },
+      {
+        "command": "codeWebChat.openInIntegratedTerminal",
+        "title": "Open in Integrated Terminal",
+        "category": "Code Web Chat",
+        "icon": "$(terminal)"
       }
     ],
     "menus": {
@@ -537,6 +543,11 @@
           "command": "codeWebChat.setRange",
           "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
           "group": "1_modification@6"
+        },
+        {
+          "command": "codeWebChat.openInIntegratedTerminal",
+          "when": "view == codeWebChatViewWorkspace && (viewItem == workspaceRoot || viewItem == directory)",
+          "group": "1_modification@7"
         },
         {
           "command": "codeWebChat.newFile",
