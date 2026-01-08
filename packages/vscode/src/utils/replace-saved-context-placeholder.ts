@@ -2,10 +2,14 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
 import { SavedContext } from '@/types/context'
-import { SAVED_CONTEXTS_STATE_KEY } from '@/constants/state-keys'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { resolve_glob_patterns } from '@/commands/apply-context-command/helpers/applying'
+import { load_contexts_for_workspace } from '@/commands/apply-context-command/helpers/saving/global-storage-utils'
+import {
+  get_contexts_file_path,
+  load_contexts_from_file
+} from '@/commands/apply-context-command/helpers/saving/context-file-utils'
 
 async function get_file_content_as_xml(
   file_path: string,
@@ -43,37 +47,17 @@ const get_context = (
   workspace_root: string
 ): SavedContext | undefined => {
   if (source == 'WorkspaceState') {
-    const internal_contexts: SavedContext[] =
-      context.workspaceState.get(SAVED_CONTEXTS_STATE_KEY, []) || []
+    const internal_contexts = load_contexts_for_workspace(
+      context,
+      workspace_root
+    )
     return internal_contexts.find((c) => c.name == name)
   } else {
     // JSON
-    const contexts_file_path = path.join(
-      workspace_root,
-      '.vscode',
-      'contexts.json'
-    )
-    if (fs.existsSync(contexts_file_path)) {
-      try {
-        const content = fs.readFileSync(contexts_file_path, 'utf8')
-        const parsed = JSON.parse(content)
-        if (Array.isArray(parsed)) {
-          const file_contexts = parsed.filter(
-            (item): item is SavedContext =>
-              typeof item == 'object' &&
-              item !== null &&
-              typeof item.name == 'string' &&
-              Array.isArray(item.paths) &&
-              item.paths.every((p: any) => typeof p == 'string')
-          )
-          return file_contexts.find((c) => c.name == name)
-        }
-      } catch (e) {
-        /* ignore */
-      }
-    }
+    const contexts_file_path = get_contexts_file_path(workspace_root)
+    const file_contexts = load_contexts_from_file(contexts_file_path)
+    return file_contexts.find((c) => c.name == name)
   }
-  return undefined
 }
 
 export const replace_saved_context_placeholder = async (params: {
