@@ -21,7 +21,6 @@ import LMArena from '../../../../assets/icons/lmarena.svg'
 import Mistral from '../../../../assets/icons/mistral.svg'
 import OpenRouter from '../../../../assets/icons/openrouter.svg'
 import OpenWebUI from '../../../../assets/icons/open-webui.svg'
-import Perplexity from '../../../../assets/icons/perplexity.svg'
 import Qwen from '../../../../assets/icons/qwen.svg'
 import Together from '../../../../assets/icons/together.svg'
 import Reddit from '../../../../assets/icons/reddit.svg'
@@ -54,7 +53,6 @@ export namespace Icon {
     | 'MISTRAL'
     | 'OPENROUTER'
     | 'OPEN_WEBUI'
-    | 'PERPLEXITY'
     | 'QWEN'
     | 'TOGETHER'
     | 'REDDIT'
@@ -139,9 +137,6 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
       break
     case 'OPEN_WEBUI':
       icon = <OpenWebUI />
-      break
-    case 'PERPLEXITY':
-      icon = <Perplexity />
       break
     case 'QWEN':
       icon = <Qwen />

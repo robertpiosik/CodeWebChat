@@ -24,7 +24,6 @@ export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   LMArena: 'LMARENA',
   'Open WebUI': 'OPEN_WEBUI',
   OpenRouter: 'OPENROUTER',
-  Perplexity: 'PERPLEXITY',
   Qwen: 'QWEN',
   Together: 'TOGETHER',
   Yuanbao: 'YUANBAO',

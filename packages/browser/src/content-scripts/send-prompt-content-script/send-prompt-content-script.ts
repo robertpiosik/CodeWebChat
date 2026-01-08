@@ -21,7 +21,6 @@ import {
   together,
   github_copilot,
   hugging_chat,
-  perplexity,
   z_ai
 } from './chatbots'
 
@@ -82,9 +81,6 @@ const is_doubao = current_url.startsWith(doubao_url)
 const kimi_url = 'https://www.kimi.com/'
 const is_kimi = current_url.startsWith(kimi_url)
 
-const perplexity_url = 'https://www.perplexity.ai/'
-const is_perplexity = current_url.startsWith(perplexity_url)
-
 const together_url = 'https://chat.together.ai/'
 const is_together = current_url.startsWith(together_url)
 
@@ -127,8 +123,6 @@ if (is_ai_studio) {
   chatbot = yuanbao
 } else if (is_doubao) {
   chatbot = doubao
-} else if (is_perplexity) {
-  chatbot = perplexity
 } else if (is_kimi) {
   chatbot = kimi
 } else if (is_together) {

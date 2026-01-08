@@ -178,32 +178,6 @@ export const CHATBOTS = {
       'disable-reasoning': 'Disable reasoning (for hybrid models)'
     }
   } as Chatbot,
-  Perplexity: {
-    url: 'https://www.perplexity.ai/',
-    supports_url_override: true,
-    url_override_label: 'Space URL',
-    supported_options: {
-      'with-reasoning': 'With reasoning',
-      search: 'Search'
-    },
-    models: {
-      'gpt-5.2': { label: 'GPT-5.2' },
-      'claude-opus-4.5': { label: 'Claude Opus 4.5' },
-      'gemini-3-pro': {
-        label: 'Gemini 3 Pro',
-        disabled_options: ['with-reasoning']
-      },
-      'gemini-3-flash': {
-        label: 'Gemini 3 Flash'
-      },
-      'grok-4.1': { label: 'Grok 4.1' },
-      'kimi-k2-thinking': {
-        label: 'Kimi K2 Thinking',
-        disabled_options: ['with-reasoning']
-      },
-      'claude-sonnet-4.5': { label: 'Claude Sonnet 4.5' }
-    }
-  } as Chatbot,
   Qwen: {
     url: 'https://chat.qwen.ai/',
     supports_url_override: true,

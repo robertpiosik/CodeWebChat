@@ -742,22 +742,18 @@
             },
             {
               "name": "(16)",
-              "chatbot": "Perplexity"
-            },
-            {
-              "name": "(17)",
               "chatbot": "Qwen"
             },
             {
-              "name": "(18)",
+              "name": "(17)",
               "chatbot": "Together"
             },
             {
-              "name": "(19)",
+              "name": "(18)",
               "chatbot": "Yuanbao"
             },
             {
-              "name": "(20)",
+              "name": "(19)",
               "chatbot": "Z.AI"
             },
             {}
@@ -914,22 +910,18 @@
             },
             {
               "name": "(16)",
-              "chatbot": "Perplexity"
-            },
-            {
-              "name": "(17)",
               "chatbot": "Qwen"
             },
             {
-              "name": "(18)",
+              "name": "(17)",
               "chatbot": "Together"
             },
             {
-              "name": "(19)",
+              "name": "(18)",
               "chatbot": "Yuanbao"
             },
             {
-              "name": "(20)",
+              "name": "(19)",
               "chatbot": "Z.AI"
             },
             {}
@@ -1086,22 +1078,18 @@
             },
             {
               "name": "(16)",
-              "chatbot": "Perplexity"
-            },
-            {
-              "name": "(17)",
               "chatbot": "Qwen"
             },
             {
-              "name": "(18)",
+              "name": "(17)",
               "chatbot": "Together"
             },
             {
-              "name": "(19)",
+              "name": "(18)",
               "chatbot": "Yuanbao"
             },
             {
-              "name": "(20)",
+              "name": "(19)",
               "chatbot": "Z.AI"
             },
             {}
@@ -1230,22 +1218,18 @@
             },
             {
               "name": "(16)",
-              "chatbot": "Perplexity"
-            },
-            {
-              "name": "(17)",
               "chatbot": "Qwen"
             },
             {
-              "name": "(18)",
+              "name": "(17)",
               "chatbot": "Together"
             },
             {
-              "name": "(19)",
+              "name": "(18)",
               "chatbot": "Yuanbao"
             },
             {
-              "name": "(20)",
+              "name": "(19)",
               "chatbot": "Z.AI"
             },
             {}

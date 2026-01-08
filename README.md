@@ -76,7 +76,6 @@ Like all of Code Web Chat, the extension is [open-source](https://github.com/rob
 - Mistral
 - Open WebUI
 - OpenRouter
-- Perplexity
 - Qwen
 - Together
 - Yuanbao
