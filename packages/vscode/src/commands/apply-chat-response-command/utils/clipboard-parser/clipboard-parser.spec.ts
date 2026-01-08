@@ -1726,6 +1726,28 @@ describe('clipboard-parser', () => {
       })
     })
 
+    it('parses a mix of a rename one-liner and a diff', () => {
+      const test_case = 'diff-mix-rename-one-liner-and-diff'
+      const text = load_test_case_file('diffs', test_case, `${test_case}.txt`)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/old.ts',
+        new_file_path: 'src/new.ts',
+        content: load_test_case_file('diffs', test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/index.ts',
+        content: load_test_case_file('diffs', test_case, '2-file.txt')
+      })
+    })
+
     it('parses multiple files with text between the markdown code blocks', () => {
       const test_case = 'text-between'
       const text = load_test_case_file(
@@ -2079,4 +2101,3 @@ describe('clipboard-parser', () => {
     })
   })
 })
-

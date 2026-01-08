@@ -497,7 +497,7 @@ const convert_code_block_to_new_file_diff = (params: {
   }
 }
 
-const process_text_for_deleted_files = (params: {
+const process_text_for_file_operations = (params: {
   lines: string[]
   is_single_root: boolean
 }): DiffOrTextBlock[] => {
@@ -505,22 +505,25 @@ const process_text_for_deleted_files = (params: {
   let current_text_lines: string[] = []
 
   const deleted_file_header_regex = /^###\s+Deleted file:\s*`([^`]+)`/
+  const renamed_file_header_regex =
+    /^###\s+Renamed file:\s*`([^`]+)`\s*\(old\)\s*`([^`]+)`\s*\(new\)/
 
   for (const line of params.lines) {
     const trimmed_line = line.trim()
     if (trimmed_line === '<files>' || trimmed_line === '</files>') {
       continue
     }
-    const match = trimmed_line.match(deleted_file_header_regex)
+    const deleted_match = trimmed_line.match(deleted_file_header_regex)
+    const renamed_match = trimmed_line.match(renamed_file_header_regex)
 
-    if (match && match[1]) {
+    if (deleted_match && deleted_match[1]) {
       const text_content = current_text_lines.join('\n').trim()
       if (text_content) {
         items.push({ type: 'text', content: text_content })
       }
       current_text_lines = []
 
-      const raw_file_path = normalize_path(match[1])
+      const raw_file_path = normalize_path(deleted_match[1])
       const { workspace_name, relative_path } = extract_workspace_and_path({
         raw_file_path,
         is_single_root_folder_workspace: params.is_single_root
@@ -532,6 +535,41 @@ const process_text_for_deleted_files = (params: {
         workspace_name,
         content
       })
+    } else if (renamed_match && renamed_match[1] && renamed_match[2]) {
+      const text_content = current_text_lines.join('\n').trim()
+      if (text_content) {
+        items.push({ type: 'text', content: text_content })
+      }
+      current_text_lines = []
+
+      const raw_old_path = normalize_path(renamed_match[1])
+      const raw_new_path = normalize_path(renamed_match[2])
+
+      const old_info = extract_workspace_and_path({
+        raw_file_path: raw_old_path,
+        is_single_root_folder_workspace: params.is_single_root
+      })
+      const new_info = extract_workspace_and_path({
+        raw_file_path: raw_new_path,
+        is_single_root_folder_workspace: params.is_single_root
+      })
+
+      const content = `--- a/${old_info.relative_path}\n+++ b/${old_info.relative_path}\n`
+
+      const patch: Diff = {
+        type: 'diff',
+        file_path: old_info.relative_path,
+        workspace_name: old_info.workspace_name,
+        new_file_path: new_info.relative_path,
+        content
+      }
+      if (
+        new_info.workspace_name &&
+        new_info.workspace_name !== old_info.workspace_name
+      ) {
+        patch.workspace_name = new_info.workspace_name
+      }
+      items.push(patch)
     } else {
       current_text_lines.push(line)
     }
@@ -709,7 +747,7 @@ const extract_all_code_block_patches = (params: {
 
     if (block.type == 'diff' || block.type == 'patch') {
       const text_before_lines = lines.slice(last_block_end + 1, block.start)
-      const preceding_items = process_text_for_deleted_files({
+      const preceding_items = process_text_for_file_operations({
         lines: text_before_lines,
         is_single_root: params.is_single_root
       })
@@ -747,7 +785,7 @@ const extract_all_code_block_patches = (params: {
                 block.start
               )
               items.push(
-                ...process_text_for_deleted_files({
+                ...process_text_for_file_operations({
                   lines: text_before_lines,
                   is_single_root: params.is_single_root
                 })
@@ -774,7 +812,7 @@ const extract_all_code_block_patches = (params: {
       if (patch) {
         const text_before_lines = lines.slice(last_block_end + 1, block.start)
         items.push(
-          ...process_text_for_deleted_files({
+          ...process_text_for_file_operations({
             lines: text_before_lines,
             is_single_root: params.is_single_root
           })
@@ -805,7 +843,7 @@ const extract_all_code_block_patches = (params: {
   if (last_block_end < lines.length - 1) {
     const remaining_lines = lines.slice(last_block_end + 1)
     items.push(
-      ...process_text_for_deleted_files({
+      ...process_text_for_file_operations({
         lines: remaining_lines,
         is_single_root: params.is_single_root
       })
