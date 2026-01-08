@@ -5,6 +5,7 @@ import { undo_files } from './file-operations'
 import { preview } from './preview'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { update_undo_button_state } from './state-manager'
+import { mark_task_as_completed_if_matches_prompt } from '@/utils/tasks-utils'
 
 export let ongoing_preview_cleanup_promise: Promise<void> | null = null
 
@@ -105,6 +106,20 @@ export const preview_handler = async (params: {
           history: []
         })
       }
+
+      if (params.raw_instructions) {
+        const updated_tasks = mark_task_as_completed_if_matches_prompt(
+          params.context,
+          params.raw_instructions
+        )
+        if (updated_tasks) {
+          params.panel_provider.send_message({
+            command: 'TASKS',
+            tasks: updated_tasks
+          })
+        }
+      }
+
       update_undo_button_state({
         context: params.context,
         panel_provider: params.panel_provider,

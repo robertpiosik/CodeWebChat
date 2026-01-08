@@ -12,11 +12,11 @@ export type SortableTask = Task & {
 type TaskGroupProps = {
   items: SortableTask[]
   on_reorder: (items: SortableTask[]) => void
-  render_item: (
-    task: Task,
-    is_visually_checked: boolean,
+  render_item: (params: {
+    task: Task
+    is_visually_checked: boolean
     depth: number
-  ) => React.ReactNode
+  }) => React.ReactNode
   className?: string
   on_add?: () => void
   get_on_add_subtask?: (parent: Task) => () => void
@@ -41,7 +41,7 @@ export const TaskGroup: React.FC<TaskGroupProps> = (props) => {
           const is_visually_checked = parent_checked || item.is_checked
           return (
             <div key={item.id}>
-              {props.render_item(item, is_visually_checked, depth)}
+              {props.render_item({ task: item, is_visually_checked, depth })}
               {item.children &&
                 item.children.length > 0 &&
                 !item.is_collapsed && (
@@ -56,7 +56,9 @@ export const TaskGroup: React.FC<TaskGroupProps> = (props) => {
                     render_item={props.render_item}
                     className={props.className}
                     on_add={
-                      props.get_on_add_subtask ? props.get_on_add_subtask(item) : undefined
+                      props.get_on_add_subtask
+                        ? props.get_on_add_subtask(item)
+                        : undefined
                     }
                     get_on_add_subtask={props.get_on_add_subtask}
                     parent_checked={is_visually_checked}

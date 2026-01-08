@@ -1,30 +1,12 @@
-import * as fs from 'fs'
-import * as path from 'path'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { Task } from '@shared/types/task'
-
-const GLOBAL_TASKS_FILENAME = 'tasks.json'
+import { load_all_tasks } from '@/utils/tasks-utils'
 
 export const handle_get_tasks = async (
   panel_provider: PanelProvider
 ): Promise<void> => {
   const workspace_roots = panel_provider.workspace_provider.getWorkspaceRoots()
-
-  const file_path = path.join(
-    panel_provider.context.globalStorageUri.fsPath,
-    GLOBAL_TASKS_FILENAME
-  )
-
-  let all_data: Record<string, Task[]> = {}
-
-  try {
-    if (fs.existsSync(file_path)) {
-      const content = fs.readFileSync(file_path, 'utf8')
-      all_data = JSON.parse(content)
-    }
-  } catch (error) {
-    console.error('Error loading global tasks:', error)
-  }
+  const all_data = load_all_tasks(panel_provider.context)
 
   const tasks: Record<string, Task[]> = {}
 

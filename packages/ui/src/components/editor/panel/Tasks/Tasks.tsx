@@ -62,17 +62,17 @@ export const Tasks: React.FC<Props> = (props) => {
     props.on_change({ ...rest, is_checked: checked })
   }
 
-  const render_item = (
-    task: Task,
-    is_visually_checked: boolean,
+  const render_item = (params: {
+    task: Task
+    is_visually_checked: boolean
     depth: number
-  ) => {
-    const is_editing = editing_timestamp == task.created_at
-    const is_copied = last_copied_timestamp == task.created_at
-    const has_children = task.children && task.children.length > 0
+  }) => {
+    const is_editing = editing_timestamp == params.task.created_at
+    const is_copied = last_copied_timestamp == params.task.created_at
+    const has_children = params.task.children && params.task.children.length > 0
 
     const checked_children_count = has_children
-      ? task.children!.filter((child) => child.is_checked).length
+      ? params.task.children!.filter((child) => child.is_checked).length
       : 0
 
     return (
@@ -80,9 +80,9 @@ export const Tasks: React.FC<Props> = (props) => {
         className={cn(styles.item, {
           [styles['item--copied']]: is_copied
         })}
-        style={{ paddingLeft: `${10 + depth * 20}px` }}
+        style={{ paddingLeft: `${10 + params.depth * 20}px` }}
       >
-        {[...Array(depth)].map((_, i) => (
+        {[...Array(params.depth)].map((_, i) => (
           <div
             key={i}
             className={styles['indent-guide']}
@@ -91,15 +91,15 @@ export const Tasks: React.FC<Props> = (props) => {
         ))}
         <div className={styles.item__left}>
           <SimpleCheckbox
-            checked={task.is_checked}
-            on_change={(checked) => handle_check_change(task, checked)}
+            checked={params.task.is_checked}
+            on_change={(checked) => handle_check_change(params.task, checked)}
           />
 
           <button
             className={cn(
               styles['add-button'],
               has_children
-                ? task.is_collapsed
+                ? params.task.is_collapsed
                   ? styles['add-button--expand']
                   : styles['add-button--collapse']
                 : styles['add-button--indent']
@@ -107,18 +107,18 @@ export const Tasks: React.FC<Props> = (props) => {
             onClick={(e) => {
               e.stopPropagation()
               if (has_children) {
-                const { id, ...rest } = task as SortableTask
+                const { id, ...rest } = params.task as SortableTask
                 props.on_change({
                   ...rest,
-                  is_collapsed: !task.is_collapsed
+                  is_collapsed: !params.task.is_collapsed
                 })
               } else {
-                props.on_add_subtask?.(task)
+                props.on_add_subtask?.(params.task)
               }
             }}
             title={
               has_children
-                ? task.is_collapsed
+                ? params.task.is_collapsed
                   ? 'Expand'
                   : 'Collapse'
                 : 'Add subtask'
@@ -131,12 +131,12 @@ export const Tasks: React.FC<Props> = (props) => {
             <div className={styles['item__header-left']}>
               <span
                 className={cn(styles.item__time, {
-                  [styles['item__time--checked']]: is_visually_checked
+                  [styles['item__time--checked']]: params.is_visually_checked
                 })}
               >
-                {dayjs(task.created_at).fromNow()}
+                {dayjs(params.task.created_at).fromNow()}
                 {has_children &&
-                  ` · ${checked_children_count}/${task.children!.length}`}
+                  ` · ${checked_children_count}/${params.task.children!.length}`}
               </span>
             </div>
             <div
@@ -144,13 +144,13 @@ export const Tasks: React.FC<Props> = (props) => {
                 [styles['item__actions--visible']]: is_editing
               })}
             >
-              {task.text && (
+              {params.task.text && (
                 <IconButton
                   codicon_icon="copy"
                   on_click={(e) => {
                     e.stopPropagation()
-                    props.on_copy(task.text)
-                    set_last_copied_timestamp(task.created_at)
+                    props.on_copy(params.task.text)
+                    set_last_copied_timestamp(params.task.created_at)
                   }}
                   title="Copy Task"
                 />
@@ -161,7 +161,9 @@ export const Tasks: React.FC<Props> = (props) => {
                   is_editing ? (e) => e.preventDefault() : undefined
                 }
                 on_click={() =>
-                  set_editing_timestamp(is_editing ? null : task.created_at)
+                  set_editing_timestamp(
+                    is_editing ? null : params.task.created_at
+                  )
                 }
                 title={is_editing ? 'Save task' : 'Edit task'}
               />
@@ -169,7 +171,7 @@ export const Tasks: React.FC<Props> = (props) => {
                 codicon_icon="trash"
                 on_click={(e) => {
                   e.stopPropagation()
-                  props.on_delete(task.created_at)
+                  props.on_delete(params.task.created_at)
                 }}
                 title="Delete task"
               />
@@ -178,9 +180,9 @@ export const Tasks: React.FC<Props> = (props) => {
 
           {is_editing ? (
             <Textarea
-              value={task.text}
+              value={params.task.text}
               on_change={(value) => {
-                const { id, ...rest } = task as any
+                const { id, ...rest } = params.task as any
                 props.on_change({ ...rest, text: value })
               }}
               autofocus
@@ -195,13 +197,13 @@ export const Tasks: React.FC<Props> = (props) => {
           ) : (
             <div
               className={cn(styles.item__text, {
-                [styles['item__text--checked']]: is_visually_checked,
-                [styles['item__text--placeholder']]: !task.text
+                [styles['item__text--checked']]: params.is_visually_checked,
+                [styles['item__text--placeholder']]: !params.task.text
               })}
               onMouseDown={() => {
                 if (
                   editing_timestamp !== null &&
-                  editing_timestamp !== task.created_at
+                  editing_timestamp !== params.task.created_at
                 ) {
                   prevent_edit_ref.current = true
                   setTimeout(() => {
@@ -211,10 +213,10 @@ export const Tasks: React.FC<Props> = (props) => {
               }}
               onClick={() => {
                 if (prevent_edit_ref.current) return
-                set_editing_timestamp(task.created_at)
+                set_editing_timestamp(params.task.created_at)
               }}
             >
-              {task.text || 'Click to add text...'}
+              {params.task.text || 'Click to add text...'}
             </div>
           )}
         </div>
