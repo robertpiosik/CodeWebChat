@@ -26,7 +26,7 @@ Works with VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
 
 Coding agents address this limitation via so-called tool calling. The model starts each task from a clean slate, deciding by itself what files are necessary based on the provided instructions. This puts pressure on your prompting skills and on model itself because file-collecting self-dialogue is a complexity added to the primary task.
 
-**CWC proposes an alternative approach through context engineering.** Pick files and be certain what the model gets to see. Guide the model with files, write simple instructions and get edits in seconds with accuracy that can't get any better!
+**CWC proposes an alternative approach through context engineering.** Guide the model with files, write simple instructions and get edits in seconds with accuracy that can't get any better!
 
 With files sorted by update recency, CWC helps utilize **[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks**—consistently **save up to 90% on input tokens**, while reserving the more expensive output tokens for task-focused reasoning and code changes you're looking for.
 
