@@ -24,7 +24,7 @@ export const handle_workspace_state_source = async (
   on_context_selected: () => void
 ): Promise<'back' | void> => {
   try {
-    const workspace_root = workspace_provider.getWorkspaceRoot()
+    const workspace_root = workspace_provider.get_workspace_roots()[0]
     if (!workspace_root) {
       vscode.window.showErrorMessage(dictionary.error_message.NO_WORKSPACE_ROOT)
       return

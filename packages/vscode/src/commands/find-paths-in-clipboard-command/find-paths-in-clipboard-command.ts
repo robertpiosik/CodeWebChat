@@ -36,7 +36,7 @@ export function find_paths_in_clipboard_command(
           return
         }
 
-        const workspace_roots = workspace_provider.getWorkspaceRoots()
+        const workspace_roots = workspace_provider.get_workspace_roots()
         const absolute_paths: string[] = []
 
         const workspace_map = new Map<string, string>()

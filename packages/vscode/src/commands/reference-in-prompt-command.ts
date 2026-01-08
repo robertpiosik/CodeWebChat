@@ -45,7 +45,7 @@ export const reference_in_prompt_command = (params: {
 
       let relative_path = path.relative(workspace_root, file_path)
 
-      if (params.workspace_provider.getWorkspaceRoots().length > 1) {
+      if (params.workspace_provider.get_workspace_roots().length > 1) {
         const workspace_name =
           params.workspace_provider.get_workspace_name(workspace_root)
         relative_path = path.join(workspace_name, relative_path)

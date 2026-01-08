@@ -44,7 +44,7 @@ export const apply_context_command = (
           return
         }
 
-        const workspace_root = workspace_provider.getWorkspaceRoot()
+        const workspace_root = workspace_provider.get_workspace_roots()[0]
         if (!workspace_root) {
           vscode.window.showErrorMessage(
             dictionary.error_message.NO_WORKSPACE_ROOT

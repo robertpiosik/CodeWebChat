@@ -20,7 +20,7 @@ export class FilesCollector {
     this.open_editors_provider = open_editors_provider
     this.websites_provider = websites_provider
 
-    this.workspace_roots = workspace_provider.getWorkspaceRoots()
+    this.workspace_roots = workspace_provider.get_workspace_roots()
   }
 
   async collect_files(params?: {

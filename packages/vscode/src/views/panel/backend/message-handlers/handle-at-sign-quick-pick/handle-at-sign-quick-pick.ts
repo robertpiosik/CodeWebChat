@@ -97,7 +97,7 @@ const browse_all_files = async (
 const at_sign_quick_pick = async (params: {
   workspace_provider: WorkspaceProvider
 }): Promise<string | undefined> => {
-  const workspace_roots = params.workspace_provider.getWorkspaceRoots()
+  const workspace_roots = params.workspace_provider.get_workspace_roots()
 
   const format_path = (p: string) => {
     let relative_path = p

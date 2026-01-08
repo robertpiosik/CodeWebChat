@@ -15,7 +15,7 @@ import { display_token_count } from '@/utils/display-token-count'
 import { TokenCalculator } from './modules/token-calculator'
 
 export interface IWorkspaceProvider {
-  getWorkspaceRoots(): string[]
+  get_workspace_roots(): string[]
   get_workspace_root_for_file(file_path: string): string | undefined
   get_workspace_name(root_path: string): string
   get_range(filePath: string): string | undefined
@@ -287,13 +287,8 @@ export class WorkspaceProvider
     return open_uris
   }
 
-  public getWorkspaceRoots(): string[] {
+  public get_workspace_roots(): string[] {
     return this._workspace_roots
-  }
-
-  // For backward compatibility - returns the first workspace root
-  public getWorkspaceRoot(): string {
-    return this._workspace_roots.length > 0 ? this._workspace_roots[0] : ''
   }
 
   public get_workspace_name(root_path: string): string {

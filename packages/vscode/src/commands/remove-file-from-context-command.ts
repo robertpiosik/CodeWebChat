@@ -23,7 +23,7 @@ export const remove_file_from_context_command = (
         return
       }
 
-      const workspace_roots = workspace_provider.getWorkspaceRoots()
+      const workspace_roots = workspace_provider.get_workspace_roots()
       let files_to_show = current_checked
       let show_workspace_prefix = workspace_roots.length > 1
 

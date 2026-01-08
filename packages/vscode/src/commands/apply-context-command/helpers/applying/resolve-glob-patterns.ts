@@ -10,7 +10,7 @@ export const resolve_glob_patterns = async (
 ): Promise<string[]> => {
   const all_files_in_cache = new Set<string>()
 
-  for (const root of workspace_provider.getWorkspaceRoots()) {
+  for (const root of workspace_provider.get_workspace_roots()) {
     const files = await workspace_provider.find_all_files(root)
     files.forEach((file) => all_files_in_cache.add(file))
   }

@@ -16,7 +16,7 @@ export const add_file_to_context_command = (
   return vscode.commands.registerCommand(
     'codeWebChat.addFileToContext',
     async () => {
-      const workspace_roots = workspace_provider.getWorkspaceRoots()
+      const workspace_roots = workspace_provider.get_workspace_roots()
       if (workspace_roots.length === 0) {
         return
       }

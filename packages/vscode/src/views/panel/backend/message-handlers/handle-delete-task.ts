@@ -17,7 +17,7 @@ export const handle_delete_task = async (
 ): Promise<void> => {
   const broadcast_tasks = (all_data: Record<string, Task[]>) => {
     const workspace_roots =
-      panel_provider.workspace_provider.getWorkspaceRoots()
+      panel_provider.workspace_provider.get_workspace_roots()
     const tasks: Record<string, Task[]> = {}
     for (const root of workspace_roots) {
       tasks[root] = all_data[root] || []

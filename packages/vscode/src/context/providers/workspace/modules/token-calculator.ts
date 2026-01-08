@@ -69,7 +69,7 @@ export class TokenCalculator implements vscode.Disposable {
         // Cache file might not exist yet or be corrupt
       }
 
-      for (const root of this._provider.getWorkspaceRoots()) {
+      for (const root of this._provider.get_workspace_roots()) {
         if (this._token_cache[root]) {
           current_global_cache[root] = this._token_cache[root]
         }
@@ -220,7 +220,7 @@ export class TokenCalculator implements vscode.Disposable {
         const relative_path = path
           .relative(workspace_root, file_path)
           .replace(/\\/g, '/')
-        if (this._provider.getWorkspaceRoots().length > 1) {
+        if (this._provider.get_workspace_roots().length > 1) {
           const workspace_name =
             this._provider.get_workspace_name(workspace_root)
           content_xml = `<file path="${workspace_name}/${relative_path}">\n<![CDATA[\n${content}\n]]>\n</file>\n`

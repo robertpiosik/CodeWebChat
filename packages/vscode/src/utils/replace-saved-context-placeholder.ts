@@ -78,7 +78,7 @@ export const replace_saved_context_placeholder = async (params: {
     const source = match[1] as 'WorkspaceState' | 'JSON'
     const name = match[2]
 
-    const workspace_root = params.workspace_provider.getWorkspaceRoot()
+    const workspace_root = params.workspace_provider.get_workspace_roots()[0]
     if (!workspace_root) {
       vscode.window.showErrorMessage(dictionary.error_message.NO_WORKSPACE_ROOT)
       continue

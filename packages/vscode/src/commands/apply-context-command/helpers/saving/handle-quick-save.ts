@@ -22,7 +22,7 @@ export const handle_quick_save = async (
   const existing = quick_saves[slot]
 
   if (existing) {
-    const primary_workspace_root = workspace_provider.getWorkspaceRoot()!
+    const primary_workspace_root = workspace_provider.get_workspace_roots()[0]!
     await apply_saved_context(
       existing,
       primary_workspace_root,

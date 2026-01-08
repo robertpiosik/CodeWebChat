@@ -495,7 +495,7 @@ export const replace_context_at_commit_symbol = async (params: {
         // If we are here, file has changed (modified, new, or deleted)
         // Add its historical content to the archive.
         const display_path =
-          params.workspace_provider.getWorkspaceRoots().length > 1
+          params.workspace_provider.get_workspace_roots().length > 1
             ? `${folder_name}/${relative_path.replace(/\\/g, '/')}`
             : relative_path.replace(/\\/g, '/')
 

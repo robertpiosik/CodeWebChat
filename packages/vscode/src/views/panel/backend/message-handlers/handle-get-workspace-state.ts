@@ -5,6 +5,6 @@ export const handle_get_workspace_state = (
 ): void => {
   panel_provider.send_message({
     command: 'WORKSPACE_STATE',
-    folder_count: panel_provider.workspace_provider.getWorkspaceRoots().length
+    folder_count: panel_provider.workspace_provider.get_workspace_roots().length
   })
 }

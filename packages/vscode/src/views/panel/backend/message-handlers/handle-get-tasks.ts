@@ -5,7 +5,8 @@ import { load_all_tasks } from '@/utils/tasks-utils'
 export const handle_get_tasks = async (
   panel_provider: PanelProvider
 ): Promise<void> => {
-  const workspace_roots = panel_provider.workspace_provider.getWorkspaceRoots()
+  const workspace_roots =
+    panel_provider.workspace_provider.get_workspace_roots()
   const all_data = load_all_tasks(panel_provider.context)
 
   const tasks: Record<string, Task[]> = {}

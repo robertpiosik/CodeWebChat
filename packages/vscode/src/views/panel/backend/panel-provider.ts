@@ -369,7 +369,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public send_context_files() {
     const workspace_files = this.workspace_provider.get_checked_files()
 
-    const is_multi_root = this.workspace_provider.getWorkspaceRoots().length > 1
+    const is_multi_root =
+      this.workspace_provider.get_workspace_roots().length > 1
 
     const file_paths = workspace_files.map((file_path) => {
       const workspace_root =
@@ -689,7 +690,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             content_xml = `<file path="${file_path}">\n<![CDATA[\n${text}\n]]>\n</file>\n`
           } else {
             const relative_path = path.relative(workspace_root, file_path)
-            if (this.workspace_provider.getWorkspaceRoots().length > 1) {
+            if (this.workspace_provider.get_workspace_roots().length > 1) {
               const workspace_name =
                 this.workspace_provider.get_workspace_name(workspace_root)
               content_xml = `<file path="${workspace_name}/${relative_path}">\n<![CDATA[\n${text}\n]]>\n</file>\n`
