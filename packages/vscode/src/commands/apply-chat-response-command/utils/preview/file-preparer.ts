@@ -35,9 +35,7 @@ export const prepare_files_from_original_states = async (params: {
     let current_content = ''
     try {
       if (fs.existsSync(sanitized_file_path)) {
-        const document =
-          await vscode.workspace.openTextDocument(sanitized_file_path)
-        current_content = document.getText()
+        current_content = fs.readFileSync(sanitized_file_path, 'utf8')
       }
     } catch (error) {
       continue
