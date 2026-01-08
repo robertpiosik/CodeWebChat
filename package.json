@@ -12,7 +12,7 @@
     "typescript": "^5.8.3"
   },
   "scripts": {
-    "prepare": "husky",
+    "preinstall": "husky",
     "test": "jest",
     "test:watch": "jest --watch"
   },
