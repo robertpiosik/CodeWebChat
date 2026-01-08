@@ -9,7 +9,7 @@ Works with VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
 👉️ **Construct coding prompts for...**
 
 - Chatbots—_ChatGPT, Gemini, Claude, Grok, DeepSeek, etc._
-- Model providers—_Gemini API, OpenRouter, local Ollama, etc._
+- APIs—_Gemini API, OpenRouter, local Ollama, etc._
 
 👉️ **Apply responses**—edits integration with checkpoints for state restoration \
 👉️ **Fully featured**—refactorings, code completions, commit messages, and more \
