@@ -9,6 +9,7 @@ import cn from 'classnames'
 import { Task } from '@shared/types/task'
 import { IconButton } from '../IconButton'
 import { TaskGroup, SortableTask } from './components/TaskGroup'
+import { use_auto_focus_new_task } from './hooks/use-auto-focus-new-task'
 
 dayjs.extend(relativeTime)
 
@@ -58,6 +59,8 @@ export const Tasks: React.FC<Props> = (props) => {
     number | null
   >(null)
   const prevent_edit_ref = useRef(false)
+
+  use_auto_focus_new_task(props.tasks, set_editing_timestamp)
 
   const structure_signature = useMemo(
     () => get_structure_signature(props.tasks),
