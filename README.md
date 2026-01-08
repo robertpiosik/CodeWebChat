@@ -24,7 +24,7 @@ Works with VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
 
 **LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't _imagine_ how the correct output should look like _before_ their context is filled with files.
 
-Coding agents address this limitation via so-called tool calling. The model starts each task from a clean slate, deciding by itselft what files are necessary based on the provided instructions. This puts pressure on your prompting skills and effort, also on model itself because file-collecting self-dialogue is a complexity added to the primary task.
+Coding agents address this limitation via so-called tool calling. The model starts each task from a clean slate, deciding by itself what files are necessary based on the provided instructions. This puts pressure on your prompting skills and on model itself because file-collecting self-dialogue is a complexity added to the primary task.
 
 **CWC proposes an alternative approach through context engineering.** Pick files and be certain what the model gets to see. Type simpler instructions and get edits in seconds with accuracy that can't get any better!
 
