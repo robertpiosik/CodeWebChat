@@ -43,7 +43,14 @@ export const reference_in_prompt_command = (params: {
         )
       }
 
-      const relative_path = path.relative(workspace_root, file_path)
+      let relative_path = path.relative(workspace_root, file_path)
+
+      if (params.workspace_provider.getWorkspaceRoots().length > 1) {
+        const workspace_name =
+          params.workspace_provider.get_workspace_name(workspace_root)
+        relative_path = path.join(workspace_name, relative_path)
+      }
+
       const reference_text = `\`${relative_path}\``
 
       params.panel_provider.add_text_at_cursor_position(reference_text)
