@@ -37,6 +37,18 @@ const remove_ids = (tasks: SortableTask[]): Task[] => {
   }))
 }
 
+const get_structure_signature = (tasks: Task[]): string => {
+  return tasks
+    .map(
+      (t) =>
+        `${t.created_at}` +
+        (t.children && t.children.length > 0
+          ? `[${get_structure_signature(t.children)}]`
+          : '')
+    )
+    .join(',')
+}
+
 export const Tasks: React.FC<Props> = (props) => {
   use_periodic_re_render(60 * 1000)
   const [editing_timestamp, set_editing_timestamp] = useState<number | null>(
@@ -47,9 +59,16 @@ export const Tasks: React.FC<Props> = (props) => {
   >(null)
   const prevent_edit_ref = useRef(false)
 
+  const structure_signature = useMemo(
+    () => get_structure_signature(props.tasks),
+    [props.tasks]
+  )
+
+  // Reset copied highlight only on structural changes to tasks
+  // so it stays highlighted when set as done by response preview.
   useEffect(() => {
     set_last_copied_timestamp(null)
-  }, [props.tasks])
+  }, [structure_signature])
 
   const tree = useMemo(() => add_ids(props.tasks), [props.tasks])
 
