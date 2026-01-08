@@ -1,5 +1,4 @@
 import * as fs from 'fs'
-import * as vscode from 'vscode'
 import * as crypto from 'crypto'
 import * as path from 'path'
 import * as os from 'os'
