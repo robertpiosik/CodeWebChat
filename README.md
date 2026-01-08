@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 
-CWC makes it easy to construct coding prompts for chatbots/APIs and integrate suggested edits. Start using [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt) (also called [gems](https://gemini.google/pl/overview/gems) or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)) with the prompt autofill feature and never copy and paste again!
+CWC makes it easy to construct coding prompts for chatbots/APIs and integrate suggested edits. Start using [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt) (also called [gems](https://gemini.google/pl/overview/gems) or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)) with autofill or send API calls for complete edits in seconds!
 
 Works with VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
 
@@ -22,11 +22,11 @@ Works with VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
 
 ## Introduction
 
-**LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't _imagine_ how the correct output should look like _before_ their context is filled with files.
+**LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't imagine how the correct output should look like before their context window is filled with files.
 
-Coding agents address this limitation via so-called tool calling. The model starts each task from a clean slate, deciding by itself what files are necessary based on the provided instructions. This puts pressure on your prompting skills and on model itself because file-collecting self-dialogue is a complexity added to the primary task.
+Coding agents (Cursor, Claude Code, etc.) address this limitation via technique called tool calling. The model starts each task from a clean slate, by analyzing your instructions (usually a plan) it tries to navigate the codebase to include all necessary files in the context window. This puts pressure on your effort put into the prompt and on the model itself because the file-collecting self-dialogue is a complexity added on top of the primary task.
 
-**CWC proposes an alternative approach through context engineering.** Guide the model with files, write simple instructions and get edits in seconds with accuracy that can't get any better!
+**CWC's approach is through context engineering.** Guide the model directly with files, write simple instructions and get edits in seconds with accuracy that can't get any better!
 
 With files sorted by update recency, CWC helps utilize **[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks**—consistently **save up to 90% on input tokens**, while reserving the more expensive output tokens for task-focused reasoning and code changes you're looking for.
 
