@@ -10,6 +10,7 @@ export type FileInPreview = {
   content?: string
   proposed_content?: string
   apply_failed?: boolean
+  ai_content?: string
 }
 
 export type TextContentInPreview = {

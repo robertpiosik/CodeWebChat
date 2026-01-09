@@ -25,6 +25,11 @@ type Props = {
     file_path: string
     workspace_name?: string
   }) => void
+  on_preview_ai_code?: (file: {
+    file_path: string
+    workspace_name?: string
+    content: string
+  }) => void
   raw_instructions?: string
 }
 
@@ -213,6 +218,20 @@ export const ResponsePreview: FC<Props> = (props) => {
                             }}
                           />
                         )}
+                      {file.apply_failed && file.ai_content && (
+                        <IconButton
+                          codicon_icon="open-preview"
+                          title="Preview AI code"
+                          on_click={(e) => {
+                            e.stopPropagation()
+                            props.on_preview_ai_code?.({
+                              file_path: file.file_path,
+                              workspace_name: file.workspace_name,
+                              content: file.ai_content!
+                            })
+                          }}
+                        />
+                      )}
                       {file.file_state != 'new' &&
                         file.file_state != 'deleted' && (
                           <IconButton

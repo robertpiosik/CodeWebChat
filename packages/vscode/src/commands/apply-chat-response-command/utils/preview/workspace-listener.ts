@@ -114,9 +114,6 @@ export const setup_workspace_listeners = (
           diff_stats.lines_added
         changed_file_in_preview.previewable_file.lines_removed =
           diff_stats.lines_removed
-        if (changed_file_in_preview.previewable_file.apply_failed) {
-          changed_file_in_preview.previewable_file.apply_failed = false
-        }
         if (changed_file_in_preview.previewable_file.is_checked) {
           changed_file_in_preview.previewable_file.content = new_content
         }

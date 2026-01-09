@@ -59,7 +59,10 @@ export const process_chat_response = async (
         return {
           ...state,
           ai_content:
-            file_in_preview?.proposed_content ?? file_in_preview?.content,
+            file_in_preview?.content ??
+            file_in_preview?.proposed_content ??
+            file_in_preview?.ai_content,
+          proposed_content: file_in_preview?.proposed_content,
           is_checked: file_in_preview?.is_checked,
           apply_failed: file_in_preview?.apply_failed
         }

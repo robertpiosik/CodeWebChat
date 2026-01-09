@@ -72,7 +72,8 @@ import {
   handle_undo,
   handle_delete_checkpoint,
   handle_request_can_undo,
-  handle_copy_task
+  handle_copy_task,
+  handle_preview_ai_code
 } from './message-handlers' // Assuming handle-get-tasks and handle-save-tasks are here
 import { handle_get_tasks } from './message-handlers/handle-get-tasks'
 import { handle_save_tasks } from './message-handlers/handle-save-tasks'
@@ -634,6 +635,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_delete_task(this, message)
           } else if (message.command === 'COPY_TASK') {
             await handle_copy_task(message)
+          } else if (message.command == 'PREVIEW_AI_CODE') {
+            await handle_preview_ai_code(this, message)
           } else if (message.command == 'REQUEST_CAN_UNDO') {
             handle_request_can_undo(this)
           }

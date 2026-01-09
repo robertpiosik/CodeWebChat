@@ -82,9 +82,10 @@ export const prepare_files_from_original_states = async (params: {
       diff_application_method: state.diff_application_method,
       proposed_content: state.apply_failed
         ? state.content
-        : (state.ai_content ?? current_content),
+        : (state.proposed_content ?? state.ai_content ?? current_content),
       is_checked: state.is_checked ?? true,
-      apply_failed: state.apply_failed
+      apply_failed: state.apply_failed,
+      ai_content: state.ai_content
     }
 
     prepared_files.push({

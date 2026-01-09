@@ -10,6 +10,13 @@ export interface BaseMessage {
   command: string
 }
 
+export interface PreviewAiCodeMessage extends BaseMessage {
+  command: 'PREVIEW_AI_CODE'
+  file_path: string
+  workspace_name?: string
+  content: string
+}
+
 export type ApiToolConfiguration = {
   id: string
   provider_type: string
@@ -506,6 +513,7 @@ export type FrontendMessage =
   | SaveTasksMessage
   | DeleteTaskMessage
   | CopyTaskMessage
+  | PreviewAiCodeMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {

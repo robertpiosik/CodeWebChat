@@ -224,7 +224,8 @@ export const apply_chat_response_command = (params: {
                 diff_application_method: state.diff_application_method,
                 content: current_content,
                 is_checked: true,
-                apply_failed: state.apply_failed
+                apply_failed: state.apply_failed,
+                ai_content: state.ai_content
               })
 
               if (state.file_path_to_restore) {
