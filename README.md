@@ -24,11 +24,11 @@ Works with VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
 
 **LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't imagine how the correct output should look like before their context window is filled with files.
 
-Coding agents (Cursor, Claude Code, etc.) address this limitation via technique called tool calling. The model starts each task from a clean slate, by analyzing your instructions it navigates the codebase to include all necessary files in the context window. While natural language interface for programming may sound appealing, the technology doesn't offer reliability, speed, and cost-efficiency, critial in day-to-day work.
+Coding agents (Cursor, Claude Code, etc.) address this limitation via technique called tool calling. The model starts each task from a clean slate, by analyzing your instructions it navigates the codebase to include all necessary files in the context window. While going all-in with natural language interface for programming may sound appealing, the technology doesn't offer reliability critial in day-to-day work.
 
-Because contents of the context window determine output quality, Code Web Chat is designed in a way **the model is guided with known set of files**, allowing simpler, task focused instructions, and predictable costs.
+Because contents of the context window determine output quality, Code Web Chat is designed in a way **the model is guided with known set of files**, enabling simpler, task focused instructions.
 
-With files sorted by update recency, CWC helps utilize **[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks**—consistently **save up to 90% on input tokens**, while reserving the more expensive output tokens for edits you're looking for.
+With files sorted by update recency, CWC helps utilize **[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks**—consistently **save up to 90% on input tokens**, while spending the more expensive output tokens directly on edits you're looking for.
 
 **Example message:**
 
