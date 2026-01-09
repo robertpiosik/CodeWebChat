@@ -24,11 +24,11 @@ Works with VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
 
 **LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't imagine how the correct output should look like before their context window is filled with files.
 
-Coding agents (Cursor, Claude Code, etc.) address this limitation via technique called tool calling. The model starts each task from a clean slate, by analyzing your instructions (usually a plan) it tries to navigate the codebase to include all necessary files in the context window. This puts pressure on your effort put into the prompt and on the model itself because the file-collecting self-dialogue is a complexity added on top of the primary task.
+Coding agents (Cursor, Claude Code, etc.) address this limitation via technique called tool calling. The model starts each task from a clean slate, by analyzing your instructions it navigates the codebase to include all necessary files in the context window. While natural language interface for programming may sound appealing, the technology doesn't offer reliability, speed, and cost-efficiency, critial in day-to-day work.
 
-**CWC's approach is through context engineering.** Guide the model directly with files, write simple instructions and get edits in seconds with accuracy that can't get any better!
+Because contents of the context window determine output quality, Code Web Chat is designed in a way **the model is guided with known set of files**, allowing simpler, task focused instructions, and predictable costs.
 
-With files sorted by update recency, CWC helps utilize **[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks**—consistently **save up to 90% on input tokens**, while reserving the more expensive output tokens for task-focused reasoning and code changes you're looking for.
+With files sorted by update recency, CWC helps utilize **[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks**—consistently **save up to 90% on input tokens**, while reserving the more expensive output tokens for edits you're looking for.
 
 **Example message:**
 
