@@ -225,7 +225,7 @@ export const use_panel = (vscode: any) => {
           const items = current_items ?? []
           const existing_file_index = items.findIndex(
             (f) =>
-              f.type === 'file' &&
+              f.type == 'file' &&
               f.file_path == message.file.file_path &&
               f.workspace_name == message.file.workspace_name
           )
@@ -233,7 +233,7 @@ export const use_panel = (vscode: any) => {
           if (existing_file_index != -1) {
             const new_items = [...items]
             const existing_item = items[existing_file_index]
-            if (existing_item.type === 'file') {
+            if (existing_item.type == 'file') {
               new_items[existing_file_index] = {
                 ...message.file,
                 is_checked: existing_item.is_checked
