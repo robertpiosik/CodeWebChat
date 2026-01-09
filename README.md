@@ -48,7 +48,7 @@ Whenever showing a new, updated, renamed, or deleted file, provide a brief expla
 Implement a subtract function.
 ```
 
-Once the response is ready, changes can be integrated in a fully revertible way.
+Once the response is ready, edits can be integrated in a fully revertible way.
 
 ## Enabling autofill
 
