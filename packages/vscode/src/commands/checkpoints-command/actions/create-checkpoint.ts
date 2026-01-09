@@ -239,7 +239,8 @@ export const create_checkpoint = async (
         panel_provider.send_message({
           command: 'SHOW_PROGRESS',
           title: 'Creating checkpoint...',
-          cancellable: false
+          cancellable: false,
+          show_elapsed_time: false
         })
       }, 500)
 
