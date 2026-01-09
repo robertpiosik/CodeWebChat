@@ -143,7 +143,8 @@ export const ResponsePreview: FC<Props> = (props) => {
                   key={index}
                   className={cn(styles.list__file, {
                     [styles['list__file--selected']]:
-                      index == last_clicked_file_index
+                      index == last_clicked_file_index,
+                    [styles['list__file--failed']]: file.apply_failed
                   })}
                   onClick={() => {
                     set_last_clicked_file_index(index)
@@ -157,7 +158,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                     file.diff_application_method == 'search_and_replace'
                       ? '\nUsed aggressive fallback method. Call Intelligent Update API tool, if needed.'
                       : ''
-                  }`}
+                  }${file.apply_failed ? '\nFailed to apply changes. Call Intelligent Update API tool.' : ''}`}
                 >
                   <div className={styles['list__file__left']}>
                     {files_in_preview.length > 1 && (
@@ -183,6 +184,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                       <span>
                         {file.diff_application_method == 'search_and_replace' &&
                           '⚠ '}
+                        {file.apply_failed && '❌ '}
                         {file_name}
                       </span>
 
@@ -214,7 +216,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                       {file.file_state != 'new' &&
                         file.file_state != 'deleted' && (
                           <IconButton
-                            codicon_icon="sparkle"
+                            codicon_icon="edit-sparkle"
                             title={`Call Intelligent Update API tool${
                               file.diff_application_method == 'recount'
                                 ? ' (fallback used: git apply with --recount flag)'

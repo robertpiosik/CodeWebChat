@@ -223,7 +223,8 @@ export const apply_chat_response_command = (params: {
                 lines_removed: diff_stats.lines_removed,
                 diff_application_method: state.diff_application_method,
                 content: current_content,
-                is_checked: true
+                is_checked: true,
+                apply_failed: state.apply_failed
               })
 
               if (state.file_path_to_restore) {

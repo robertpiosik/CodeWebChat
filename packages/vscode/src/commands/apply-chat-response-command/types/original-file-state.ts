@@ -9,4 +9,5 @@ export type OriginalFileState = {
   file_state?: 'new' | 'deleted'
   is_checked?: boolean
   ai_content?: string
+  apply_failed?: boolean
 }

@@ -78,6 +78,10 @@
       background-color: var(--vscode-list-inactiveSelectionBackground);
     }
 
+    &--failed {
+      border-color: var(--vscode-inputValidation-errorBorder) !important;
+    }
+
     &__left {
       display: flex;
       align-items: center;
