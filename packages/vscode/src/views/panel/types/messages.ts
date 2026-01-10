@@ -10,8 +10,8 @@ export interface BaseMessage {
   command: string
 }
 
-export interface PreviewAiCodeMessage extends BaseMessage {
-  command: 'PREVIEW_AI_CODE'
+export interface PreviewGeneratedCodeMessage extends BaseMessage {
+  command: 'PREVIEW_GENERATED_CODE'
   file_path: string
   workspace_name?: string
   content: string
@@ -434,6 +434,16 @@ export interface CopyTaskMessage extends BaseMessage {
   text: string
 }
 
+export interface UpdateFileProgressMessage extends BaseMessage {
+  command: 'UPDATE_FILE_PROGRESS'
+  file_path: string
+  workspace_name?: string
+  is_applying: boolean
+  apply_status?: 'waiting' | 'thinking' | 'receiving' | 'done' | 'retrying'
+  apply_progress?: number
+  apply_tokens_per_second?: number
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -513,7 +523,8 @@ export type FrontendMessage =
   | SaveTasksMessage
   | DeleteTaskMessage
   | CopyTaskMessage
-  | PreviewAiCodeMessage
+  | PreviewGeneratedCodeMessage
+  | UpdateFileProgressMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -804,3 +815,4 @@ export type BackendMessage =
   | CurrentlyOpenFileTextMessage
   | ShowPreviewOngoingModalMessage
   | TasksMessage
+  | UpdateFileProgressMessage

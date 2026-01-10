@@ -73,11 +73,11 @@ import {
   handle_delete_checkpoint,
   handle_request_can_undo,
   handle_copy_task,
-  handle_preview_ai_code
-} from './message-handlers' // Assuming handle-get-tasks and handle-save-tasks are here
-import { handle_get_tasks } from './message-handlers/handle-get-tasks'
-import { handle_save_tasks } from './message-handlers/handle-save-tasks'
-import { handle_delete_task } from './message-handlers/handle-delete-task'
+  handle_preview_generated_code,
+  handle_get_tasks,
+  handle_save_tasks,
+  handle_delete_task
+} from './message-handlers'
 import {
   API_EDIT_FORMAT_STATE_KEY,
   API_MODE_STATE_KEY,
@@ -627,16 +627,16 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             if (this.preview_switch_choice_resolver) {
               this.preview_switch_choice_resolver(message.choice)
             }
-          } else if (message.command === 'GET_TASKS') {
+          } else if (message.command == 'GET_TASKS') {
             await handle_get_tasks(this)
-          } else if (message.command === 'SAVE_TASKS') {
+          } else if (message.command == 'SAVE_TASKS') {
             await handle_save_tasks(this, message)
-          } else if (message.command === 'DELETE_TASK') {
+          } else if (message.command == 'DELETE_TASK') {
             await handle_delete_task(this, message)
-          } else if (message.command === 'COPY_TASK') {
+          } else if (message.command == 'COPY_TASK') {
             await handle_copy_task(message)
-          } else if (message.command == 'PREVIEW_AI_CODE') {
-            await handle_preview_ai_code(this, message)
+          } else if (message.command == 'PREVIEW_GENERATED_CODE') {
+            await handle_preview_generated_code(message)
           } else if (message.command == 'REQUEST_CAN_UNDO') {
             handle_request_can_undo(this)
           }

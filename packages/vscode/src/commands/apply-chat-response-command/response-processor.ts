@@ -360,7 +360,6 @@ export const process_chat_response = async (
 
     let selected_mode_label:
       | 'Fast replace'
-      | 'Intelligent update'
       | 'Conflict markers'
       | 'Truncated'
       | undefined = undefined
@@ -458,47 +457,6 @@ export const process_chat_response = async (
         function_name: 'process_chat_response',
         message: 'Conflict markers handler finished.',
         data: { success: result.success }
-      })
-    } else if (selected_mode_label == 'Intelligent update') {
-      const api_providers_manager = new ModelProvidersManager(context)
-
-      const config_result = await get_intelligent_update_config(
-        api_providers_manager,
-        false,
-        context
-      )
-
-      if (!config_result) {
-        return null
-      }
-
-      const { provider, config: intelligent_update_config } = config_result
-
-      let endpoint_url = ''
-      if (provider.type == 'built-in') {
-        const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]
-        endpoint_url = provider_info.base_url
-      } else {
-        endpoint_url = provider.base_url
-      }
-
-      final_original_states = await handle_intelligent_update({
-        endpoint_url,
-        api_key: provider.api_key,
-        config: intelligent_update_config,
-        chat_response,
-        context: context,
-        is_single_root_folder_workspace,
-        panel_provider
-      })
-
-      if (final_original_states) {
-        operation_success = true
-      }
-      Logger.info({
-        function_name: 'process_chat_response',
-        message: 'Intelligent update handler finished.',
-        data: { success: operation_success }
       })
     } else {
       Logger.error({

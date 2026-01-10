@@ -547,9 +547,9 @@ export const Panel = () => {
                     workspace_name: file.workspace_name
                   })
                 }}
-                on_preview_ai_code={(file) => {
+                on_preview_generated_code={(file) => {
                   post_message(vscode, {
-                    command: 'PREVIEW_AI_CODE',
+                    command: 'PREVIEW_GENERATED_CODE',
                     file_path: file.file_path,
                     workspace_name: file.workspace_name,
                     content: file.content

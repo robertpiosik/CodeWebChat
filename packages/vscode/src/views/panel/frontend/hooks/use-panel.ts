@@ -95,7 +95,6 @@ export const use_panel = (vscode: any) => {
   const [currently_open_file_text, set_currently_open_file_text] = useState<
     string | undefined
   >(undefined)
-  useState<string | undefined>(undefined)
   const [mode, set_mode] = useState<Mode>()
   const [web_prompt_type, set_web_mode] = useState<WebPromptType>()
   const [api_prompt_type, set_api_mode] = useState<ApiPromptType>()
@@ -122,6 +121,7 @@ export const use_panel = (vscode: any) => {
   ] = useState<{ [mode in ApiPromptType]?: boolean }>({})
 
   const [tasks, set_tasks] = useState<Record<string, Task[]>>({})
+
   const handle_instructions_change = (
     value: string,
     mode: 'ask' | 'edit-context' | 'no-context' | 'code-completions'
@@ -236,13 +236,43 @@ export const use_panel = (vscode: any) => {
             if (existing_item.type == 'file') {
               new_items[existing_file_index] = {
                 ...message.file,
-                is_checked: existing_item.is_checked
+                is_checked: existing_item.is_checked,
+                is_applying: existing_item.is_applying,
+                apply_status: existing_item.apply_status,
+                apply_progress: existing_item.apply_progress,
+                apply_tokens_per_second: existing_item.apply_tokens_per_second
               }
             }
             return new_items
           } else {
             return [...items, { ...message.file, is_checked: true }]
           }
+        })
+      } else if (message.command == 'UPDATE_FILE_PROGRESS') {
+        set_items_to_review((current_items) => {
+          const items = current_items ?? []
+          const existing_file_index = items.findIndex(
+            (f) =>
+              f.type == 'file' &&
+              f.file_path == message.file_path &&
+              f.workspace_name == message.workspace_name
+          )
+
+          if (existing_file_index != -1) {
+            const new_items = [...items]
+            const existing_item = items[existing_file_index]
+            if (existing_item.type == 'file') {
+              new_items[existing_file_index] = {
+                ...existing_item,
+                is_applying: message.is_applying,
+                apply_status: message.apply_status,
+                apply_progress: message.apply_progress,
+                apply_tokens_per_second: message.apply_tokens_per_second
+              }
+            }
+            return new_items
+          }
+          return items
         })
       } else if (message.command == 'RESPONSE_PREVIEW_FINISHED') {
         set_items_to_review(undefined)

@@ -11,6 +11,10 @@ export type FileInPreview = {
   proposed_content?: string
   apply_failed?: boolean
   ai_content?: string
+  is_applying?: boolean
+  apply_status?: 'waiting' | 'thinking' | 'receiving' | 'done' | 'retrying'
+  apply_progress?: number
+  apply_tokens_per_second?: number
 }
 
 export type TextContentInPreview = {

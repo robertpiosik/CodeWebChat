@@ -130,45 +130,66 @@ export const handle_intelligent_update_file_in_preview = async (
     cancel_token_source
   )
 
-  let thinking_reported = false
-  let resolve_thinking: () => void
-  const thinking_promise = new Promise<void>((resolve) => {
-    resolve_thinking = resolve
+  panel_provider.send_message({
+    command: 'UPDATE_FILE_PROGRESS',
+    file_path,
+    workspace_name,
+    is_applying: true,
+    apply_status: 'waiting'
   })
 
   const on_thinking_chunk = () => {
-    if (!thinking_reported) {
-      thinking_reported = true
-      resolve_thinking()
-    }
+    panel_provider.send_message({
+      command: 'UPDATE_FILE_PROGRESS',
+      file_path,
+      workspace_name,
+      is_applying: true,
+      apply_status: 'thinking'
+    })
   }
-
-  let receiving_reported = false
-  let resolve_receiving: () => void
-  const receiving_promise = new Promise<void>((resolve) => {
-    resolve_receiving = resolve
-  })
 
   // Track progress based on original file length
   const original_file_size = file_state.content.length
   const estimated_total_tokens = Math.ceil(original_file_size / 4)
-  let current_progress = 0
-  let current_tokens_per_second = 0
 
   const on_chunk = (tokens_per_second: number, total_tokens: number) => {
-    if (!receiving_reported) {
-      receiving_reported = true
-      resolve_receiving()
-    }
-
-    current_tokens_per_second = tokens_per_second
-
+    let progress = 0
     if (estimated_total_tokens > 0) {
-      current_progress = Math.min(
+      progress = Math.min(
         Math.round((total_tokens / estimated_total_tokens) * 100),
         100
       )
     }
+
+    panel_provider.send_message({
+      command: 'UPDATE_FILE_PROGRESS',
+      file_path,
+      workspace_name,
+      is_applying: true,
+      apply_status: 'receiving',
+      apply_progress: progress,
+      apply_tokens_per_second: tokens_per_second
+    })
+  }
+
+  const on_retry_attempt = () => {
+    panel_provider.send_message({
+      command: 'UPDATE_FILE_PROGRESS',
+      file_path,
+      workspace_name,
+      is_applying: true,
+      apply_status: 'thinking'
+    })
+  }
+
+  const on_retry = () => {
+    panel_provider.send_message({
+      command: 'UPDATE_FILE_PROGRESS',
+      file_path,
+      workspace_name,
+      is_applying: true,
+      apply_status: 'retrying'
+    })
   }
 
   const content_promise = process_file({
@@ -183,121 +204,24 @@ export const handle_intelligent_update_file_in_preview = async (
     instruction: instructions,
     cancel_token: cancel_token_source.token,
     on_chunk,
-    on_thinking_chunk
+    on_thinking_chunk,
+    on_retry_attempt,
+    on_retry
   })
 
   try {
-    await vscode.window.withProgress(
-      {
-        location: vscode.ProgressLocation.Notification,
-        title: dictionary.api_call.WAITING_FOR_RESPONSE,
-        cancellable: true
-      },
-      async (progress, token) => {
-        token.onCancellationRequested(() => {
-          cancel_token_source.cancel('User cancelled the operation')
-        })
-
-        let wait_time = 0
-        const wait_timer = setInterval(() => {
-          progress.report({
-            message: `${(wait_time / 10).toFixed(1)}s`
-          })
-          wait_time++
-        }, 100)
-
-        await Promise.race([
-          content_promise,
-          thinking_promise,
-          receiving_promise
-        ])
-        clearInterval(wait_timer)
-      }
-    )
-
-    if (thinking_reported && !receiving_reported) {
-      await vscode.window.withProgress(
-        {
-          location: vscode.ProgressLocation.Notification,
-          title: dictionary.api_call.THINKING,
-          cancellable: true
-        },
-        async (progress, token) => {
-          token.onCancellationRequested(() => {
-            cancel_token_source.cancel('User cancelled the operation')
-          })
-
-          let thinking_time = 0
-          const thinking_timer = setInterval(() => {
-            progress.report({
-              message: `${(thinking_time / 10).toFixed(1)}s`
-            })
-            thinking_time++
-          }, 100)
-
-          try {
-            await Promise.race([content_promise, receiving_promise])
-          } finally {
-            clearInterval(thinking_timer)
-          }
-        }
-      )
-    }
-
-    if (receiving_reported) {
-      await vscode.window.withProgress(
-        {
-          location: vscode.ProgressLocation.Notification,
-          title: dictionary.api_call.RECEIVING_RESPONSE,
-          cancellable: true
-        },
-        async (progress, token) => {
-          token.onCancellationRequested(() => {
-            cancel_token_source.cancel('User cancelled the operation')
-          })
-
-          let last_reported_progress = 0
-          let last_reported_tps = -1 // Use -1 to ensure the first report goes through
-
-          const progress_timer = setInterval(() => {
-            if (
-              current_progress > last_reported_progress ||
-              current_tokens_per_second !== last_reported_tps
-            ) {
-              const message =
-                current_tokens_per_second > 0
-                  ? `${current_tokens_per_second} tokens/s`
-                  : 'Receiving'
-
-              progress.report({
-                message: message,
-                increment: current_progress - last_reported_progress
-              })
-              last_reported_progress = current_progress
-              last_reported_tps = current_tokens_per_second
-            }
-          }, 100)
-
-          try {
-            await content_promise
-
-            // Ensure we report 100% at the end
-            if (last_reported_progress < 100) {
-              progress.report({
-                message: 'Complete',
-                increment: 100 - last_reported_progress
-              })
-            }
-          } finally {
-            clearInterval(progress_timer)
-          }
-        }
-      )
-    }
-
     const updated_content = await content_promise
 
     if (updated_content) {
+      panel_provider.send_message({
+        command: 'UPDATE_FILE_PROGRESS',
+        file_path,
+        workspace_name,
+        is_applying: true,
+        apply_status: 'done',
+        apply_progress: 100
+      })
+
       // Preserve trailing newline from original file
       const original_ends_with_newline = file_state.content.endsWith('\n')
       const updated_ends_with_newline = updated_content.endsWith('\n')
@@ -339,5 +263,11 @@ export const handle_intelligent_update_file_in_preview = async (
     if (index > -1) {
       panel_provider.intelligent_update_cancel_token_sources.splice(index, 1)
     }
+    panel_provider.send_message({
+      command: 'UPDATE_FILE_PROGRESS',
+      file_path,
+      workspace_name,
+      is_applying: false
+    })
   }
 }
