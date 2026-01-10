@@ -61,8 +61,8 @@ describe('clipboard-parser', () => {
       })
     })
 
-    it('parses files and inline code blocks', () => {
-      const test_case = 'inline-file'
+    it('parses conflict with inline file where the first code block contains a merge conflict and the second is an inline file', () => {
+      const test_case = 'conflict-with-inline-file'
       const text = load_test_case_file(
         'standard',
         test_case,
@@ -81,7 +81,11 @@ describe('clipboard-parser', () => {
       })
       expect(result[1]).toMatchObject({
         type: 'inline-file',
-        content: load_test_case_file('standard', test_case, '2-inline-file.txt')
+        content: load_test_case_file(
+          'standard',
+          test_case,
+          '2-conflict-with-inline-file.txt'
+        )
       })
     })
 
