@@ -84,6 +84,12 @@ export const preview = async (params: {
       for (const item of clipboard_items) {
         if (item.type == 'text') {
           items_for_preview.push({ type: 'text', content: item.content })
+        } else if (item.type == 'inline-file') {
+          items_for_preview.push({
+            type: 'inline-file',
+            content: item.content,
+            language: item.language
+          })
         } else if (
           item.type == 'file' ||
           item.type == 'diff' ||

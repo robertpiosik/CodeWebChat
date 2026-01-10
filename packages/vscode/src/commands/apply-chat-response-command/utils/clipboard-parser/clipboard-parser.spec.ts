@@ -61,6 +61,30 @@ describe('clipboard-parser', () => {
       })
     })
 
+    it('parses files and inline code blocks', () => {
+      const test_case = 'inline-file'
+      const text = load_test_case_file(
+        'standard',
+        test_case,
+        `${test_case}.txt`
+      )
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'file',
+        file_path: 'src/hello-world.ts',
+        content: load_test_case_file('standard', test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'inline-file',
+        content: load_test_case_file('standard', test_case, '2-inline-file.txt')
+      })
+    })
+
     it('parses multiple files including one with empty content', () => {
       const test_case = 'empty-file'
       const text = load_test_case_file(
@@ -917,25 +941,6 @@ describe('clipboard-parser', () => {
       })
     })
 
-    it('does not extract file path from backticks when there is intermediate text before code block', () => {
-      const test_case = 'path-in-backticks-with-intermediate-text'
-      const text = load_test_case_file(
-        'standard',
-        test_case,
-        `${test_case}.txt`
-      )
-      const result = parse_response({
-        response: text,
-        is_single_root_folder_workspace: true
-      })
-
-      expect(result).toHaveLength(1)
-      expect(result[0]).toMatchObject({
-        type: 'text',
-        content: load_test_case_file('standard', test_case, '1-text.txt').trim()
-      })
-    })
-
     it('extracts file path from commented backticks even with intermediate text before code block', () => {
       const test_case = 'path-in-backticks-comment-with-intermediate-text'
       const text = load_test_case_file(
@@ -1760,15 +1765,14 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result).toHaveLength(5)
+      expect(result).toHaveLength(11)
       expect(result[0]).toMatchObject({
         type: 'text',
         content: load_test_case_file('standard', test_case, '1-text.txt')
       })
       expect(result[1]).toMatchObject({
-        type: 'file',
-        file_path: 'src/lorem.ts',
-        content: load_test_case_file('standard', test_case, '2-file.txt')
+        type: 'inline-file',
+        content: load_test_case_file('standard', test_case, '2-inline-file.txt')
       })
       expect(result[2]).toMatchObject({
         type: 'text',
@@ -1776,12 +1780,41 @@ describe('clipboard-parser', () => {
       })
       expect(result[3]).toMatchObject({
         type: 'file',
-        file_path: 'src/ipsum.ts',
+        file_path: 'src/lorem.ts',
         content: load_test_case_file('standard', test_case, '4-file.txt')
       })
       expect(result[4]).toMatchObject({
         type: 'text',
         content: load_test_case_file('standard', test_case, '5-text.txt')
+      })
+      expect(result[5]).toMatchObject({
+        type: 'inline-file',
+        content: load_test_case_file('standard', test_case, '6-inline-file.txt')
+      })
+      expect(result[6]).toMatchObject({
+        type: 'text',
+        content: load_test_case_file('standard', test_case, '7-text.txt')
+      })
+      expect(result[7]).toMatchObject({
+        type: 'file',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file('standard', test_case, '8-file.txt')
+      })
+      expect(result[8]).toMatchObject({
+        type: 'text',
+        content: load_test_case_file('standard', test_case, '9-text.txt')
+      })
+      expect(result[9]).toMatchObject({
+        type: 'inline-file',
+        content: load_test_case_file(
+          'standard',
+          test_case,
+          '10-inline-file.txt'
+        )
+      })
+      expect(result[10]).toMatchObject({
+        type: 'text',
+        content: load_test_case_file('standard', test_case, '11-text.txt')
       })
     })
 

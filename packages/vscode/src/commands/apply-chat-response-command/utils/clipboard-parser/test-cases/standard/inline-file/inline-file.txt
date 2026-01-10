@@ -1,0 +1,9 @@
+### Updated file: `src/hello-world.ts`
+
+```typescript
+console.log('Hello world!')
+```
+
+```ts
+console.log('Welcome!')
+```

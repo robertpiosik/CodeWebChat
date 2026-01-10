@@ -22,4 +22,13 @@ export type TextContentInPreview = {
   content: string
 }
 
-export type ItemInPreview = FileInPreview | TextContentInPreview
+export type InlineFileInPreview = {
+  type: 'inline-file'
+  content: string
+  language?: string
+}
+
+export type ItemInPreview =
+  | FileInPreview
+  | TextContentInPreview
+  | InlineFileInPreview

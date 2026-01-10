@@ -4,7 +4,7 @@ import cn from 'classnames'
 import styles from './ResponsePreview.module.scss'
 import { Checkbox } from '../../common/Checkbox'
 import { IconButton } from '../IconButton/IconButton'
-import { TextItem } from './components'
+import { TextItem, InlineFileItem } from './components'
 import { Scrollable } from '../Scrollable'
 
 type Props = {
@@ -157,7 +157,7 @@ export const ResponsePreview: FC<Props> = (props) => {
         )}
         <div className={styles.list}>
           {props.items.map((item, index) => {
-            if ('file_path' in item) {
+            if (item.type == 'file') {
               const file = item
               const message_obj = (() => {
                 if (file.apply_failed) {
@@ -342,7 +342,19 @@ export const ResponsePreview: FC<Props> = (props) => {
                   )}
                 </div>
               )
-            } else {
+            } else if (item.type == 'inline-file') {
+              return (
+                <InlineFileItem
+                  key={index}
+                  content={item.content}
+                  language={item.language}
+                  is_expanded={expanded_text_items.has(index)}
+                  on_toggle={(element) =>
+                    toggle_expanded_text_item(index, element)
+                  }
+                />
+              )
+            } else if (item.type == 'text') {
               return (
                 <TextItem
                   key={index}
