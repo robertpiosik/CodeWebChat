@@ -267,7 +267,11 @@ export const use_panel = (vscode: any) => {
                 is_applying: message.is_applying,
                 apply_status: message.apply_status,
                 apply_progress: message.apply_progress,
-                apply_tokens_per_second: message.apply_tokens_per_second
+                apply_tokens_per_second: message.apply_tokens_per_second,
+                fixed_with_intelligent_update:
+                  message.apply_status === 'done'
+                    ? true
+                    : existing_item.fixed_with_intelligent_update
               }
             }
             return new_items

@@ -146,6 +146,13 @@ export const WithText = () => (
         content:
           'Another text item explaining something with **markdown**.\n\n*   List item 1\n*   List item 2\n\n`some code here`'
       },
+      {
+        type: 'file',
+        file_path: 'src/components/ErrorComponent.tsx',
+        apply_failed: true,
+        lines_added: 5,
+        lines_removed: 2
+      },
       ...files_using_fallbacks
     ]}
   />

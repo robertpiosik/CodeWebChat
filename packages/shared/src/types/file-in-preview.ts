@@ -15,6 +15,7 @@ export type FileInPreview = {
   apply_status?: 'waiting' | 'thinking' | 'receiving' | 'done' | 'retrying'
   apply_progress?: number
   apply_tokens_per_second?: number
+  fixed_with_intelligent_update?: boolean
 }
 
 export type TextContentInPreview = {

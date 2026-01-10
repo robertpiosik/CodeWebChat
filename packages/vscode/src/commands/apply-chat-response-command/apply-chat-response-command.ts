@@ -225,7 +225,9 @@ export const apply_chat_response_command = (params: {
                 content: current_content,
                 is_checked: true,
                 apply_failed: state.apply_failed,
-                ai_content: state.ai_content
+                ai_content: state.ai_content,
+                fixed_with_intelligent_update:
+                  state.fixed_with_intelligent_update
               })
 
               if (state.file_path_to_restore) {

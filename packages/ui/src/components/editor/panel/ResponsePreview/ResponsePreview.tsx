@@ -33,6 +33,35 @@ type Props = {
   raw_instructions?: string
 }
 
+type FileMessage =
+  | { type: 'success'; text: string }
+  | { type: 'error'; text: string; has_fix: boolean }
+  | { type: 'warning'; text: string; has_fix: boolean }
+
+const get_file_message = (file: FileInPreview): FileMessage | null => {
+  if (file.fixed_with_intelligent_update) {
+    return {
+      type: 'success',
+      text: 'Fixed with Intelligent Update.'
+    }
+  }
+  if (file.apply_failed) {
+    return {
+      type: 'error',
+      text: 'Failed to apply changes.',
+      has_fix: true
+    }
+  }
+  if (file.diff_application_method == 'search_and_replace') {
+    return {
+      type: 'warning',
+      text: 'Used aggressive fallback method.',
+      has_fix: true
+    }
+  }
+  return null
+}
+
 export const ResponsePreview: FC<Props> = (props) => {
   const [last_clicked_file_index, set_last_clicked_file_index] = useState(
     props.items.findIndex((i) => i.type == 'file')
@@ -105,15 +134,15 @@ export const ResponsePreview: FC<Props> = (props) => {
     if (!file.is_applying) return null
 
     let status_text = ''
-    if (file.apply_status === 'waiting') status_text = 'Waiting...'
-    else if (file.apply_status === 'thinking') status_text = 'Thinking...'
-    else if (file.apply_status === 'retrying') status_text = 'Retrying...'
-    else if (file.apply_status === 'receiving') {
+    if (file.apply_status == 'waiting') status_text = 'Waiting...'
+    else if (file.apply_status == 'thinking') status_text = 'Thinking...'
+    else if (file.apply_status == 'retrying') status_text = 'Retrying...'
+    else if (file.apply_status == 'receiving') {
       const progress = file.apply_progress ?? 0
       const tps = file.apply_tokens_per_second
       status_text = `${progress}%`
       if (tps) status_text += ` (${tps} t/s)`
-    } else if (file.apply_status === 'done') status_text = 'Done'
+    } else if (file.apply_status == 'done') status_text = 'Done'
 
     return (
       <div className={styles['list__item__progress']}>
@@ -159,21 +188,7 @@ export const ResponsePreview: FC<Props> = (props) => {
           {props.items.map((item, index) => {
             if (item.type == 'file') {
               const file = item
-              const message_obj = (() => {
-                if (file.apply_failed) {
-                  return {
-                    text: 'Failed to apply changes. Edit manually or use the Intelligent Update API tool.',
-                    type: 'error'
-                  } as const
-                }
-                if (file.diff_application_method == 'search_and_replace') {
-                  return {
-                    text: 'Used aggressive fallback method. Call Intelligent Update API tool, if needed.',
-                    type: 'warning'
-                  } as const
-                }
-                return null
-              })()
+              const message_obj = get_file_message(file)
               const last_slash_index = file.file_path.lastIndexOf('/')
               const file_name = file.file_path.substring(last_slash_index + 1)
               const dir_path =
@@ -186,7 +201,9 @@ export const ResponsePreview: FC<Props> = (props) => {
                     className={cn(styles['list__item__file'], {
                       [styles['list__item__file--selected']]:
                         index == last_clicked_file_index,
-                      [styles['list__item__file--failed']]: file.apply_failed
+                      [styles['list__item__file--error']]: file.apply_failed,
+                      [styles['list__item__file--warning']]:
+                        file.diff_application_method == 'search_and_replace'
                     })}
                     onClick={() => {
                       set_last_clicked_file_index(index)
@@ -219,12 +236,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                             file.file_state == 'deleted'
                         })}
                       >
-                        <span>
-                          {file.diff_application_method ==
-                            'search_and_replace' && '⚠ '}
-                          {file.apply_failed && '⚠ '}
-                          {file_name}
-                        </span>
+                        <span>{file_name}</span>
 
                         <span>
                           {props.has_multiple_workspaces && file.workspace_name
@@ -269,23 +281,17 @@ export const ResponsePreview: FC<Props> = (props) => {
                                 }}
                               />
                             )}
-                            {file.file_state != 'new' &&
-                              file.file_state != 'deleted' && (
-                                <IconButton
-                                  codicon_icon="edit-sparkle"
-                                  title={
-                                    'Edit file using Intelligent Update API tool'
-                                  }
-                                  on_click={(e) => {
-                                    e.stopPropagation()
-                                    set_last_clicked_file_index(index)
-                                    props.on_intelligent_update({
-                                      file_path: file.file_path,
-                                      workspace_name: file.workspace_name
-                                    })
-                                  }}
-                                />
-                              )}
+                            <IconButton
+                              codicon_icon="sparkle"
+                              title="Fix now with Intelligent Update API tool"
+                              on_click={(e) => {
+                                e.stopPropagation()
+                                props.on_intelligent_update({
+                                  file_path: file.file_path,
+                                  workspace_name: file.workspace_name
+                                })
+                              }}
+                            />
                             <IconButton
                               codicon_icon="go-to-file"
                               title="Go to file"
@@ -332,12 +338,34 @@ export const ResponsePreview: FC<Props> = (props) => {
                     <div
                       className={cn(styles['list__message'], {
                         [styles['list__message--error']]:
-                          message_obj.type === 'error',
+                          message_obj.type == 'error',
                         [styles['list__message--warning']]:
-                          message_obj.type === 'warning'
+                          message_obj.type == 'warning'
                       })}
                     >
-                      {message_obj.text}
+                      <div className={styles['list__message__content']}>
+                        {message_obj.type == 'error' && (
+                          <span className="codicon codicon-error" />
+                        )}
+                        {message_obj.type == 'warning' && (
+                          <span className="codicon codicon-warning" />
+                        )}
+                        <span>{message_obj.text}</span>
+                      </div>
+                      {'has_fix' in message_obj && message_obj.has_fix && (
+                        <div
+                          className={styles['list__message__fix']}
+                          onClick={() =>
+                            props.on_intelligent_update({
+                              file_path: file.file_path,
+                              workspace_name: file.workspace_name
+                            })
+                          }
+                        >
+                          <span className="codicon codicon-sparkle" />
+                          <span>Fix now</span>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
