@@ -1,9 +1,13 @@
 ### Updated file: `src/hello-world.ts`
 
 ```typescript
+<<<<<<< SEARCH
 console.log('Hello world!')
+=======
+console.log('Hello world 2!')
+>>>>>>> REPLACE
 ```
 
-```ts
+```typescript
 console.log('Welcome!')
 ```

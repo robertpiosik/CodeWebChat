@@ -333,7 +333,22 @@ export const parse_multiple_files = (params: {
               current_workspace_name = undefined
               last_seen_file_path_comment = null
             } else if (header_path_already_used) {
-              current_block_mode = 'append'
+              const file_key = `${current_workspace_name || ''}:${current_file_name}`
+              const existing_file = file_ref_map.get(file_key)
+              const has_conflict_markers =
+                existing_file &&
+                existing_file.content.includes('<<<<<<<') &&
+                existing_file.content.includes('>>>>>>>') &&
+                existing_file.content.includes('=======')
+
+              if (has_conflict_markers) {
+                current_block_mode = 'append'
+              } else {
+                current_file_name = ''
+                current_workspace_name = undefined
+                last_seen_file_path_comment = null
+                current_block_mode = 'overwrite'
+              }
             } else {
               current_block_mode = 'overwrite'
               header_path_already_used = true
@@ -787,6 +802,19 @@ export const parse_multiple_files = (params: {
         state = 'TEXT'
 
         const cleaned_content = current_content
+
+        if (current_block_mode === 'append' && current_file_name) {
+          const file_key = `${current_workspace_name || ''}:${current_file_name}`
+          const existing_file = file_ref_map.get(file_key)
+          if (
+            existing_file &&
+            existing_file.content.includes('<<<<<<<') &&
+            !cleaned_content.includes('<<<<<<<')
+          ) {
+            current_file_name = ''
+            current_workspace_name = undefined
+          }
+        }
 
         create_or_update_file_item({
           file_name: current_file_name,
