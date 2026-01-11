@@ -10,10 +10,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const config = [
   // Extension Configuration (Node.js environment)
   (env, argv) => {
-    const isProduction = argv.mode == 'production'
+    const is_production = argv.mode == 'production'
     return {
       name: 'extension',
-      mode: isProduction ? 'production' : 'development',
+      mode: is_production ? 'production' : 'development',
       target: 'node',
       entry: {
         extension: './src/extension.ts',
@@ -25,7 +25,7 @@ const config = [
         libraryTarget: 'commonjs2',
         devtoolModuleFilenameTemplate: '../[resource-path]'
       },
-      devtool: isProduction ? false : 'eval-source-map', // Use 'eval-source-map' for faster dev builds and good debugging
+      devtool: is_production ? false : 'eval-source-map', // Use 'eval-source-map' for faster dev builds and good debugging
       cache: {
         type: 'filesystem',
         buildDependencies: {
@@ -70,7 +70,7 @@ const config = [
               from: '../../README.md',
               to: '../README.md',
               transform(content) {
-                return content.toString().split('\n').slice(4).join('\n')
+                return content.toString().split('\n').slice(21).join('\n')
               }
             }
           ]
