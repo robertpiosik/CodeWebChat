@@ -12,7 +12,9 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 </p>
 
-**CWC** is a free and open-source, fully-featured AI coding extension **designed for speed**. Manage context like a pro and get accurate edits in seconds using VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
+**CWC** is a free and open-source, fully-featured AI coding extension **designed for speed**. Guide the model with context, write simpler instructions and get responses you're looking for in seconds.
+
+Built for VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
 
 👉️ **Construct simple coding prompts for...**
 
@@ -20,7 +22,7 @@
 - APIs—_Gemini API, OpenRouter, local Ollama, etc._
 
 👉️ **Apply responses**—edits integration with checkpoints for state restoration \
-👉️ **Fully featured**—code completions with any model, commit messages, and more \
+👉️ **Fully-featured**—code completions with any model, commit messages, and more \
 🫰 **Cost-efficient**—zero-overhead prompts with smart file ordering for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching)
 
 <p>
