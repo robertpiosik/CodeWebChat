@@ -12,7 +12,7 @@ Works with VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
 - APIs—_Gemini API, OpenRouter, local Ollama, etc._
 
 👉️ **Apply responses**—edits integration with checkpoints for state restoration \
-👉️ **Fully featured**—code completions with reasoning models, commit messages, and more \
+👉️ **Fully featured**—code completions with any model, commit messages, and more \
 🌱 **Sustainable AI coding**—designed for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks \
 ❤️ **Free and open-source**—released under the GPL-3.0 license
 
