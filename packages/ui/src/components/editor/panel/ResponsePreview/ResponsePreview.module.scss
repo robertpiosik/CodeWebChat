@@ -6,17 +6,54 @@
 }
 
 .info {
-  padding: 4px 7px;
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
   color: var(--vscode-descriptionForeground);
   font-size: 12px;
   border: 1px solid var(--vscode-sideBarSectionHeader-border);
-  opacity: var(--dimmed-opacity);
   margin: 0 12px;
   border-radius: 8px;
+  overflow: hidden;
 
-  > span {
-    vertical-align: middle;
+  &--error {
+    border-color: var(--vscode-errorForeground);
+    color: var(--vscode-errorForeground);
+  }
+
+  &--warning {
+    border-color: var(--vscode-inputValidation-warningBorder);
+    color: var(--vscode-inputValidation-warningBorder);
+  }
+
+  &__content {
+    gap: 6px;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 4px 0 4px 7px;
+
+    > span:first-child {
+      font-size: 12px;
+      transform: translateY(2px);
+      margin-right: 4px;
+    }
+  }
+
+  &__action {
+    display: flex;
     font-size: 12px;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+    color: var(--vscode-textLink-foreground);
+    padding: 0 7px 0 4px;
+
+    &:hover {
+      background-color: var(--vscode-list-hoverBackground);
+    }
   }
 }
 
@@ -136,6 +173,8 @@
 
       &__actions {
         display: none;
+        align-items: center;
+        gap: 4px;
       }
 
       &__line-numbers {
@@ -178,6 +217,7 @@
     }
 
     &__content {
+      flex: 1;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -191,18 +231,22 @@
       }
     }
 
-    &__fix {
+    &__actions {
       display: flex;
-      font-size: 12px;
-      align-items: center;
-      gap: 4px;
-      cursor: pointer;
-      white-space: nowrap;
-      color: var(--vscode-textLink-foreground);
-      padding: 0 6px 0 3px;
 
-      &:hover {
-        background-color: var(--vscode-list-hoverBackground);
+      &__item {
+        display: flex;
+        font-size: 12px;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+        white-space: nowrap;
+        color: var(--vscode-textLink-foreground);
+        padding: 0 6px 0 3px;
+
+        &:hover {
+          background-color: var(--vscode-list-hoverBackground);
+        }
       }
     }
   }

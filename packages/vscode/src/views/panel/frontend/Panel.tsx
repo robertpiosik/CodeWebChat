@@ -500,7 +500,10 @@ export const Panel = () => {
                   is_accept_disabled={
                     items_to_preview.filter(
                       (f) => f.type == 'file' && f.is_checked
-                    ).length == 0
+                    ).length == 0 ||
+                    items_to_preview.some(
+                      (f) => f.type == 'file' && f.is_applying
+                    )
                   }
                 />
               }

@@ -100,6 +100,9 @@ const InteractiveResponsePreview = (props: any) => {
       on_focus_file={log_action('on_focus_file')}
       on_go_to_file={log_action('on_go_to_file')}
       on_intelligent_update={log_action('on_intelligent_update')}
+      on_discard_user_changes={log_action('on_discard_user_changes')}
+      on_preview_generated_code={log_action('on_preview_generated_code')}
+      on_fix_all_failed={log_action('on_fix_all_failed')}
     />
   )
 }

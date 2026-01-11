@@ -21,45 +21,45 @@ type Props = {
     workspace_name?: string
     is_checked: boolean
   }) => void
-  on_discard_user_changes?: (file: {
+  on_discard_user_changes: (file: {
     file_path: string
     workspace_name?: string
   }) => void
-  on_preview_generated_code?: (file: {
+  on_preview_generated_code: (file: {
     file_path: string
     workspace_name?: string
     content: string
   }) => void
+  on_fix_all_failed: () => void
   raw_instructions?: string
 }
 
 type FileMessage =
   | { type: 'success'; text: string }
-  | { type: 'error'; text: string; has_fix: boolean }
-  | { type: 'warning'; text: string; has_fix: boolean }
+  | { type: 'error'; text: string; show_actions: boolean }
+  | { type: 'warning'; text: string; show_actions: boolean }
 
 const get_file_message = (file: FileInPreview): FileMessage | null => {
   if (file.fixed_with_intelligent_update) {
     return {
       type: 'success',
-      text: 'Fixed with Intelligent Update.'
+      text: 'Fixed with successfully'
     }
-  }
-  if (file.apply_failed) {
+  } else if (file.apply_failed) {
     return {
       type: 'error',
-      text: 'Failed to apply changes.',
-      has_fix: true
+      text: 'Failed to apply changes',
+      show_actions: true
     }
-  }
-  if (file.diff_application_method == 'search_and_replace') {
+  } else if (file.diff_application_method == 'search_and_replace') {
     return {
       type: 'warning',
-      text: 'Used aggressive fallback method.',
-      has_fix: true
+      text: 'Used aggressive fallback method',
+      show_actions: true
     }
+  } else {
+    return null
   }
-  return null
 }
 
 export const ResponsePreview: FC<Props> = (props) => {
@@ -120,6 +120,14 @@ export const ResponsePreview: FC<Props> = (props) => {
     [files_in_preview]
   )
 
+  const error_count = useMemo(
+    () =>
+      files_in_preview.filter(
+        (f) => f.apply_failed && !f.fixed_with_intelligent_update
+      ).length,
+    [files_in_preview]
+  )
+
   const get_instructions_font_size_class = (text: string): string => {
     const length = text.length
     if (length < 80) {
@@ -146,8 +154,8 @@ export const ResponsePreview: FC<Props> = (props) => {
 
     return (
       <div className={styles['list__item__progress']}>
-        <span className="codicon codicon-loading codicon-modifier-spin" />
         <span>{status_text}</span>
+        <span className="codicon codicon-loading codicon-modifier-spin" />
       </div>
     )
   }
@@ -173,15 +181,48 @@ export const ResponsePreview: FC<Props> = (props) => {
             {props.raw_instructions}
           </div>
         )}
+        {error_count > 0 && (
+          <div
+            className={cn(styles.info, styles['info--error'])}
+            title={
+              files_in_preview.length > 1
+                ? `${error_count} of ${files_in_preview.length} files failed to apply changes`
+                : 'Failed to apply changes to the file'
+            }
+          >
+            <div className={styles.info__content}>
+              <span className="codicon codicon-error" />
+              <span>
+                {files_in_preview.length > 1
+                  ? `${error_count} of ${files_in_preview.length} files failed to apply changes`
+                  : 'Failed to apply changes to the file'}
+              </span>
+            </div>
+            <div
+              className={styles.info__action}
+              onClick={() => props.on_fix_all_failed()}
+            >
+              <span className="codicon codicon-sparkle" />
+              <span>Fix all</span>
+            </div>
+          </div>
+        )}
         {aggressive_fallback_count > 0 && (
-          <div className={styles.info}>
-            {files_in_preview.length > 1
-              ? `${aggressive_fallback_count} of ${files_in_preview.length} files`
-              : 'The file'}{' '}
-            required an aggressive fallback diff integration method, which may
-            lead to inaccuracies. Looks off? Click{' '}
-            <span className="codicon codicon-sparkle" /> action to fix a file
-            with the Intelligent Update API tool.
+          <div
+            className={cn(styles.info, styles['info--warning'])}
+            title={`${
+              files_in_preview.length > 1
+                ? `${aggressive_fallback_count} of ${files_in_preview.length} files`
+                : 'The file'
+            }{' '}
+            used aggressive fallback method`}
+          >
+            <div className={styles.info__content}>
+              <span className="codicon codicon-warning" />
+              {files_in_preview.length > 1
+                ? `${aggressive_fallback_count} of ${files_in_preview.length} files used aggressive fallback method`
+                : 'The file used aggressive fallback method'}
+            </div>
           </div>
         )}
         <div className={styles.list}>
@@ -201,7 +242,9 @@ export const ResponsePreview: FC<Props> = (props) => {
                     className={cn(styles['list__item__file'], {
                       [styles['list__item__file--selected']]:
                         index == last_clicked_file_index,
-                      [styles['list__item__file--error']]: file.apply_failed,
+                      [styles['list__item__file--error']]:
+                        file.apply_failed &&
+                        !file.fixed_with_intelligent_update,
                       [styles['list__item__file--warning']]:
                         file.diff_application_method == 'search_and_replace'
                     })}
@@ -260,7 +303,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                                   title="Discard user changes"
                                   on_click={(e) => {
                                     e.stopPropagation()
-                                    props.on_discard_user_changes?.({
+                                    props.on_discard_user_changes({
                                       file_path: file.file_path,
                                       workspace_name: file.workspace_name
                                     })
@@ -273,7 +316,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                                 title="Preview generated code"
                                 on_click={(e) => {
                                   e.stopPropagation()
-                                  props.on_preview_generated_code?.({
+                                  props.on_preview_generated_code({
                                     file_path: file.file_path,
                                     workspace_name: file.workspace_name,
                                     content: file.ai_content!
@@ -283,7 +326,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                             )}
                             <IconButton
                               codicon_icon="sparkle"
-                              title="Fix now with Intelligent Update API tool"
+                              title="Fix with Intelligent Update API tool"
                               on_click={(e) => {
                                 e.stopPropagation()
                                 props.on_intelligent_update({
@@ -344,6 +387,9 @@ export const ResponsePreview: FC<Props> = (props) => {
                       })}
                     >
                       <div className={styles['list__message__content']}>
+                        {message_obj.type == 'success' && (
+                          <span className="codicon codicon-check" />
+                        )}
                         {message_obj.type == 'error' && (
                           <span className="codicon codicon-error" />
                         )}
@@ -352,20 +398,46 @@ export const ResponsePreview: FC<Props> = (props) => {
                         )}
                         <span>{message_obj.text}</span>
                       </div>
-                      {'has_fix' in message_obj && message_obj.has_fix && (
-                        <div
-                          className={styles['list__message__fix']}
-                          onClick={() =>
-                            props.on_intelligent_update({
-                              file_path: file.file_path,
-                              workspace_name: file.workspace_name
-                            })
-                          }
-                        >
-                          <span className="codicon codicon-sparkle" />
-                          <span>Fix now</span>
-                        </div>
-                      )}
+                      {'show_actions' in message_obj &&
+                        message_obj.show_actions && (
+                          <div className={styles['list__message__actions']}>
+                            {file.ai_content && (
+                              <div
+                                className={
+                                  styles['list__message__actions__item']
+                                }
+                                onClick={() =>
+                                  props.on_preview_generated_code({
+                                    file_path: file.file_path,
+                                    workspace_name: file.workspace_name,
+                                    content: file.ai_content!
+                                  })
+                                }
+                                title="Preview generated code"
+                              >
+                                <span className="codicon codicon-open-preview" />
+                                <span>Preview</span>
+                              </div>
+                            )}
+                            {!file.is_applying && (
+                              <div
+                                className={
+                                  styles['list__message__actions__item']
+                                }
+                                onClick={() =>
+                                  props.on_intelligent_update({
+                                    file_path: file.file_path,
+                                    workspace_name: file.workspace_name
+                                  })
+                                }
+                                title={'Fix with Intelligent Update API tool'}
+                              >
+                                <span className="codicon codicon-sparkle" />
+                                <span>Fix</span>
+                              </div>
+                            )}
+                          </div>
+                        )}
                     </div>
                   )}
                 </div>

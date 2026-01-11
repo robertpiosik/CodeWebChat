@@ -250,6 +250,7 @@ export const use_panel = (vscode: any) => {
         })
       } else if (message.command == 'UPDATE_FILE_PROGRESS') {
         set_items_to_review((current_items) => {
+          if (!current_items) return undefined
           const items = current_items ?? []
           const existing_file_index = items.findIndex(
             (f) =>

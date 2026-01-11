@@ -361,10 +361,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   }
 
   public cancel_all_intelligent_updates() {
-    this.intelligent_update_cancel_token_sources.forEach((source) =>
-      source.cancel('Preview finished.')
-    )
+    const sources = [...this.intelligent_update_cancel_token_sources]
     this.intelligent_update_cancel_token_sources = []
+    sources.forEach((source) => source.cancel('Preview finished.'))
   }
 
   public send_context_files() {
