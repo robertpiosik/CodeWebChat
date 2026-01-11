@@ -20,36 +20,6 @@ Works with VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />
 </p>
 
-## Introduction
-
-**LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't imagine how the correct output should look like before their context window is filled with files.
-
-Coding agents (Cursor, Claude Code, etc.) address this limitation via technique called tool calling. The system starts each task from a clean slate, by analyzing your instructions it navigates the codebase to include all necessary files in the context window. While going all-in with natural language interface for programming may sound appealing, these systems don't offer short feedback loops critial in day-to-day work, or cost-efficiency allowing sustainable mass adoption.
-
-Because contents of the context window determine output quality, Code Web Chat is designed in a way **the model is guided with known set of files**, enabling simple, task-focused instructions and complete edits in seconds!
-
-With files sorted by update recency, CWC helps utilize **[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks**—consistently **save up to 90% on input tokens**, while spending the more expensive output tokens directly on edits you're looking for.
-
-**Example message:**
-
-```
-<system>
-Whenever showing a new, updated, renamed, or deleted file, provide a brief explanation...
-</system>
-<files>
-  <file path="src/calculator.ts">
-  export const addNumbers = (a: number, b: number) => a + b;
-  </file>
-  ...
-</files>
-<system>
-Whenever showing a new, updated, renamed, or deleted file, provide a brief explanation...
-</system>
-Implement a subtract function.
-```
-
-Once the response is ready, edits can be integrated in a fully revertible way.
-
 ## Enabling autofill
 
 Install the zero-setup Connector extension in your favorite browser and never copy and paste again!
