@@ -9,6 +9,13 @@ export type FileInPreview = {
   diff_application_method?: 'recount' | 'search_and_replace'
   content?: string
   proposed_content?: string
+  apply_failed?: boolean
+  ai_content?: string
+  is_applying?: boolean
+  apply_status?: 'waiting' | 'thinking' | 'receiving' | 'done' | 'retrying'
+  apply_progress?: number
+  apply_tokens_per_second?: number
+  fixed_with_intelligent_update?: boolean
 }
 
 export type TextContentInPreview = {
@@ -16,4 +23,13 @@ export type TextContentInPreview = {
   content: string
 }
 
-export type ItemInPreview = FileInPreview | TextContentInPreview
+export type InlineFileInPreview = {
+  type: 'inline-file'
+  content: string
+  language?: string
+}
+
+export type ItemInPreview =
+  | FileInPreview
+  | TextContentInPreview
+  | InlineFileInPreview

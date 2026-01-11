@@ -31,7 +31,18 @@ export interface TextItem {
   content: string
 }
 
-export type ClipboardItem = FileItem | DiffItem | CompletionItem | TextItem
+export interface InlineFileItem {
+  type: 'inline-file'
+  content: string
+  language?: string
+}
+
+export type ClipboardItem =
+  | FileItem
+  | DiffItem
+  | CompletionItem
+  | TextItem
+  | InlineFileItem
 
 export const extract_workspace_and_path = (params: {
   raw_file_path: string

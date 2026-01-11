@@ -223,7 +223,11 @@ export const apply_chat_response_command = (params: {
                 lines_removed: diff_stats.lines_removed,
                 diff_application_method: state.diff_application_method,
                 content: current_content,
-                is_checked: true
+                is_checked: true,
+                apply_failed: state.apply_failed,
+                ai_content: state.ai_content,
+                fixed_with_intelligent_update:
+                  state.fixed_with_intelligent_update
               })
 
               if (state.file_path_to_restore) {
@@ -371,10 +375,48 @@ export const apply_chat_response_command = (params: {
 
 async function restore_tab_groups(saved_state: SavedTabGroups): Promise<void> {
   try {
-    // Close all current tabs first
+    const current_editors: SavedEditorState[] = []
+    for (const tab_group of vscode.window.tabGroups.all) {
+      for (const tab of tab_group.tabs) {
+        if (tab.input instanceof vscode.TabInputText) {
+          current_editors.push({
+            uri: tab.input.uri.toString(),
+            view_column: tab_group.viewColumn,
+            is_active: tab.isActive
+          })
+        }
+      }
+    }
+
+    const are_states_equal =
+      current_editors.length == saved_state.editors.length &&
+      current_editors.every((editor, index) => {
+        const saved = saved_state.editors[index]
+        return (
+          editor.uri == saved.uri && editor.view_column == saved.view_column
+        )
+      })
+
+    if (are_states_equal) {
+      if (saved_state.active_editor_uri) {
+        const current_active_uri =
+          vscode.window.activeTextEditor?.document.uri.toString()
+        if (current_active_uri != saved_state.active_editor_uri) {
+          try {
+            const active_uri = vscode.Uri.parse(saved_state.active_editor_uri)
+            await vscode.window.showTextDocument(active_uri, {
+              preserveFocus: false
+            })
+          } catch (error) {
+            console.error('Failed to restore active editor focus:', error)
+          }
+        }
+      }
+      return
+    }
+
     await vscode.commands.executeCommand('workbench.action.closeAllEditors')
 
-    // Reopen saved editors in their original view columns
     for (const editor of saved_state.editors) {
       try {
         const uri = vscode.Uri.parse(editor.uri)
@@ -384,12 +426,10 @@ async function restore_tab_groups(saved_state: SavedTabGroups): Promise<void> {
           preserveFocus: !editor.is_active
         })
       } catch (error) {
-        // File might have been deleted or is no longer accessible
         console.error(`Failed to restore editor for ${editor.uri}:`, error)
       }
     }
 
-    // Restore active editor focus if it was saved
     if (saved_state.active_editor_uri) {
       try {
         const active_uri = vscode.Uri.parse(saved_state.active_editor_uri)

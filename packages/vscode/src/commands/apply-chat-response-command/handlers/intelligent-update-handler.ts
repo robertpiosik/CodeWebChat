@@ -14,8 +14,8 @@ import {
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { process_file } from '@/utils/intelligent-update-utils'
-import { FileProgress } from '@/views/panel/types/messages'
 import { parse_multiple_files } from '../utils/clipboard-parser/parsers'
+import { FileProgress } from '@/views/panel/types/messages'
 
 export const handle_intelligent_update = async (params: {
   endpoint_url: string

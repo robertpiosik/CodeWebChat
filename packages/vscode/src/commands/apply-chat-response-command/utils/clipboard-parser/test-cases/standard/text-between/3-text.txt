@@ -1,5 +1,1 @@
 Lorem ipsum.
-```typescript
-console.log('hello');
-```
-Lorem ipsum.

@@ -227,7 +227,7 @@ export const apply_diff = (params: {
           search_replace_block.search_lines.length == 0 &&
           previous_found_index == 0
         ) {
-          search_replace_block.search_block_start_index = -1 // insert at the start of the file
+          search_replace_block.search_block_start_index = -1
           found = true
         } else {
           const chunk = original_code_lines_normalized.slice(
@@ -239,7 +239,6 @@ export const apply_diff = (params: {
 
           if (chunk_string == search_string) {
             if (previous_found_index > chunk[0].key) {
-              // This should never happen
               throw new Error('Found index is less than previous found index')
             }
 
@@ -253,7 +252,7 @@ export const apply_diff = (params: {
       }
 
       if (!found) {
-        search_replace_block.search_block_start_index = -2 // Not found
+        search_replace_block.search_block_start_index = -2
 
         throw new Error(`Search block not found: ${search_string}`)
       }
@@ -268,7 +267,7 @@ export const apply_diff = (params: {
 
     for (const block of valid_blocks) {
       const start_index =
-        block.get_start_index() == -1 ? 0 : block.get_start_index() // When -1, insert at the start of the file
+        block.get_start_index() == -1 ? 0 : block.get_start_index()
       const search_count = block.get_search_count()
       const replacement_content = block.replace_lines
 

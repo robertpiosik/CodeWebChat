@@ -355,7 +355,7 @@ const handle_new_file_patch = async (
     })
     // Attempt cleanup if file was created but something went wrong.
     if (fs.existsSync(safe_path)) await fs.promises.unlink(safe_path)
-    return { success: false }
+    return { success: false, original_states }
   }
 }
 
@@ -424,7 +424,7 @@ const handle_deleted_file_patch = async (
       message: 'Failed to delete file from patch.',
       data: { error: error.message, file_path }
     })
-    return { success: false }
+    return { success: false, original_states }
   }
 }
 
@@ -448,10 +448,11 @@ export const apply_git_patch = async (
 
   let closed_files: vscode.Uri[] = []
   const temp_file = path.join(workspace_path, '.tmp_patch')
+  let original_states: OriginalFileState[] | undefined
 
   try {
     const file_paths = extract_file_paths_from_patch(patch_content)
-    const original_states = await store_original_file_states(
+    original_states = await store_original_file_states(
       patch_content,
       workspace_path
     )
@@ -566,6 +567,6 @@ export const apply_git_patch = async (
       data: { error, workspace_path }
     })
 
-    return { success: false }
+    return { success: false, original_states }
   }
 }

@@ -23,6 +23,10 @@ export let discard_user_changes_in_preview:
   | ((file: { file_path: string; workspace_name?: string }) => Promise<void>)
   | undefined
 
+export let set_file_fixed_with_intelligent_update:
+  | ((file: { file_path: string; workspace_name?: string }) => void)
+  | undefined
+
 const recalculate_history_item_totals = (item: ResponseHistoryItem) => {
   if (!item.files) {
     item.lines_added = 0
@@ -653,6 +657,10 @@ export const setup_workspace_listeners = (
       return
     }
 
+    if (file_to_discard.previewable_file.fixed_with_intelligent_update) {
+      file_to_discard.previewable_file.fixed_with_intelligent_update = false
+    }
+
     const proposed = file_to_discard.previewable_file.proposed_content
 
     await vscode.workspace.fs.writeFile(
@@ -756,6 +764,17 @@ export const setup_workspace_listeners = (
     }
   }
 
+  set_file_fixed_with_intelligent_update = ({ file_path, workspace_name }) => {
+    const file = prepared_files.find(
+      (f) =>
+        f.previewable_file.file_path == file_path &&
+        f.previewable_file.workspace_name == workspace_name
+    )
+    if (file) {
+      file.previewable_file.fixed_with_intelligent_update = true
+    }
+  }
+
   const dispose = () => {
     file_will_delete_listener.dispose()
     text_document_change_listener.dispose()
@@ -764,6 +783,7 @@ export const setup_workspace_listeners = (
     file_renamed_listener.dispose()
     toggle_file_preview_state = undefined
     discard_user_changes_in_preview = undefined
+    set_file_fixed_with_intelligent_update = undefined
   }
 
   return { dispose }

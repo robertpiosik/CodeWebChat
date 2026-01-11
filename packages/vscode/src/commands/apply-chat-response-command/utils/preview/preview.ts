@@ -16,6 +16,7 @@ import { ItemInPreview } from '@shared/types/file-in-preview'
 export { response_preview_promise_resolve } from './vscode-ui'
 export { toggle_file_preview_state } from './workspace-listener'
 export { discard_user_changes_in_preview } from './workspace-listener'
+export { set_file_fixed_with_intelligent_update } from './workspace-listener'
 
 export const preview = async (params: {
   original_states: OriginalFileState[]
@@ -84,6 +85,12 @@ export const preview = async (params: {
       for (const item of clipboard_items) {
         if (item.type == 'text') {
           items_for_preview.push({ type: 'text', content: item.content })
+        } else if (item.type == 'inline-file') {
+          items_for_preview.push({
+            type: 'inline-file',
+            content: item.content,
+            language: item.language
+          })
         } else if (
           item.type == 'file' ||
           item.type == 'diff' ||

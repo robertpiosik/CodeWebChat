@@ -11,7 +11,8 @@ const base_files = [
     type: 'file',
     file_path: 'src/components/Button/Button.tsx',
     lines_added: 10,
-    lines_removed: 2
+    lines_removed: 2,
+    ai_content: 'export const Button = () => <button>Click me</button>'
   },
   {
     type: 'file',
@@ -40,7 +41,8 @@ const files_using_fallbacks = [
     file_path: 'src/old-component.tsx',
     file_state: 'deleted',
     lines_added: 0,
-    lines_removed: 100
+    lines_removed: 100,
+    ai_content: ''
   },
   {
     type: 'file',
@@ -100,6 +102,9 @@ const InteractiveResponsePreview = (props: any) => {
       on_focus_file={log_action('on_focus_file')}
       on_go_to_file={log_action('on_go_to_file')}
       on_intelligent_update={log_action('on_intelligent_update')}
+      on_discard_user_changes={log_action('on_discard_user_changes')}
+      on_preview_generated_code={log_action('on_preview_generated_code')}
+      on_fix_all_failed={log_action('on_fix_all_failed')}
     />
   )
 }
@@ -145,6 +150,14 @@ export const WithText = () => (
         type: 'text',
         content:
           'Another text item explaining something with **markdown**.\n\n*   List item 1\n*   List item 2\n\n`some code here`'
+      },
+      {
+        type: 'file',
+        file_path: 'src/components/ErrorComponent.tsx',
+        apply_failed: true,
+        lines_added: 5,
+        lines_removed: 2,
+        ai_content: 'export const ErrorComponent = () => <div>Error</div>'
       },
       ...files_using_fallbacks
     ]}

@@ -2,6 +2,7 @@ import { extract_path_from_line_of_code } from '@shared/utils/extract-path-from-
 import {
   FileItem,
   TextItem,
+  InlineFileItem,
   extract_workspace_and_path,
   has_real_code
 } from '../clipboard-parser'
@@ -118,7 +119,7 @@ const create_or_update_file_item = (params: {
   content: string
   workspace_name: string | undefined
   file_ref_map: Map<string, FileItem>
-  results: (FileItem | TextItem)[]
+  results: (FileItem | TextItem | InlineFileItem)[]
   mode?: 'overwrite' | 'append'
   renamed_from?: string
 }): void => {
@@ -178,7 +179,7 @@ const create_or_update_file_item = (params: {
 
 const flush_text_block = (params: {
   text_block: string
-  results: (FileItem | TextItem)[]
+  results: (FileItem | TextItem | InlineFileItem)[]
 }): void => {
   const { text_block, results } = params
 
@@ -194,7 +195,7 @@ const flush_text_block = (params: {
 export const parse_multiple_files = (params: {
   response: string
   is_single_root_folder_workspace: boolean
-}): (FileItem | TextItem)[] => {
+}): (FileItem | TextItem | InlineFileItem)[] => {
   const file_content_result = parse_file_content_only(params)
   if (file_content_result) {
     if (file_content_result.type === 'file') {
@@ -205,7 +206,7 @@ export const parse_multiple_files = (params: {
     return [file_content_result]
   }
 
-  const results: (FileItem | TextItem)[] = []
+  const results: (FileItem | TextItem | InlineFileItem)[] = []
   const file_ref_map = new Map<string, FileItem>()
   let current_text_block = ''
 
@@ -221,6 +222,7 @@ export const parse_multiple_files = (params: {
   let backtick_nesting_level = 0
   let last_seen_file_path_comment: string | null = null
   let last_seen_file_path_was_header = false
+  let last_seen_header_was_persistent = false
   let header_path_already_used = false
   let current_block_mode: 'overwrite' | 'append' = 'overwrite'
   let is_markdown_container_block = false
@@ -247,6 +249,7 @@ export const parse_multiple_files = (params: {
         if (extracted_filename) {
           last_seen_file_path_comment = extracted_filename
           last_seen_file_path_was_header = false
+          last_seen_header_was_persistent = false
           header_path_already_used = false
         }
 
@@ -325,8 +328,27 @@ export const parse_multiple_files = (params: {
           current_file_name_was_comment = false
 
           if (last_seen_file_path_was_header) {
-            if (header_path_already_used) {
-              current_block_mode = 'append'
+            if (header_path_already_used && !last_seen_header_was_persistent) {
+              current_file_name = ''
+              current_workspace_name = undefined
+              last_seen_file_path_comment = null
+            } else if (header_path_already_used) {
+              const file_key = `${current_workspace_name || ''}:${current_file_name}`
+              const existing_file = file_ref_map.get(file_key)
+              const has_conflict_markers =
+                existing_file &&
+                existing_file.content.includes('<<<<<<<') &&
+                existing_file.content.includes('>>>>>>>') &&
+                existing_file.content.includes('=======')
+
+              if (has_conflict_markers) {
+                current_block_mode = 'append'
+              } else {
+                current_file_name = ''
+                current_workspace_name = undefined
+                last_seen_file_path_comment = null
+                current_block_mode = 'overwrite'
+              }
             } else {
               current_block_mode = 'overwrite'
               header_path_already_used = true
@@ -412,6 +434,7 @@ export const parse_multiple_files = (params: {
 
         last_seen_file_path_comment = renamed_file_match[2]
         last_seen_file_path_was_header = true
+        last_seen_header_was_persistent = true
         header_path_already_used = false
 
         continue
@@ -544,6 +567,9 @@ export const parse_multiple_files = (params: {
           }
 
           last_seen_file_path_was_header = is_header_line
+          if (is_header_line) {
+            last_seen_header_was_persistent = /updated|new|renamed/i.test(line)
+          }
           header_path_already_used = false
         }
       } else {
@@ -777,6 +803,19 @@ export const parse_multiple_files = (params: {
 
         const cleaned_content = current_content
 
+        if (current_block_mode === 'append' && current_file_name) {
+          const file_key = `${current_workspace_name || ''}:${current_file_name}`
+          const existing_file = file_ref_map.get(file_key)
+          if (
+            existing_file &&
+            existing_file.content.includes('<<<<<<<') &&
+            !cleaned_content.includes('<<<<<<<')
+          ) {
+            current_file_name = ''
+            current_workspace_name = undefined
+          }
+        }
+
         create_or_update_file_item({
           file_name: current_file_name,
           content: cleaned_content,
@@ -789,18 +828,17 @@ export const parse_multiple_files = (params: {
 
         renamed_from_path = undefined
         if (!current_file_name) {
-          const raw_code_block = [
-            `\`\`\`${current_language}`,
-            current_content,
-            '```'
-          ].join('\n')
-
-          results.push({ type: 'text', content: raw_code_block })
+          results.push({
+            type: 'inline-file',
+            content: current_content,
+            language: current_language
+          })
         }
 
         if (current_file_name && !current_content.trim()) {
           last_seen_file_path_comment = current_file_name
           last_seen_file_path_was_header = false
+          last_seen_header_was_persistent = false
           header_path_already_used = false
         }
 
@@ -1030,7 +1068,7 @@ export const parse_multiple_files = (params: {
     })
   }
 
-  const merged_results: (FileItem | TextItem)[] = []
+  const merged_results: (FileItem | TextItem | InlineFileItem)[] = []
   for (const result of results) {
     if (merged_results.length > 0) {
       const last = merged_results[merged_results.length - 1]

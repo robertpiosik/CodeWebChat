@@ -500,7 +500,10 @@ export const Panel = () => {
                   is_accept_disabled={
                     items_to_preview.filter(
                       (f) => f.type == 'file' && f.is_checked
-                    ).length == 0
+                    ).length == 0 ||
+                    items_to_preview.some(
+                      (f) => f.type == 'file' && f.is_applying
+                    )
                   }
                 />
               }
@@ -545,6 +548,19 @@ export const Panel = () => {
                     command: 'INTELLIGENT_UPDATE_FILE_IN_PREVIEW',
                     file_path: file.file_path,
                     workspace_name: file.workspace_name
+                  })
+                }}
+                on_preview_generated_code={(file) => {
+                  post_message(vscode, {
+                    command: 'PREVIEW_GENERATED_CODE',
+                    file_path: file.file_path,
+                    workspace_name: file.workspace_name,
+                    content: file.content
+                  })
+                }}
+                on_fix_all_failed={() => {
+                  post_message(vscode, {
+                    command: 'FIX_ALL_FAILED_FILES'
                   })
                 }}
               />

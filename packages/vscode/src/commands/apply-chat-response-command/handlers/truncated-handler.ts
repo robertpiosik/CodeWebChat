@@ -164,9 +164,8 @@ function process_truncated_content(
       // If found, we advance current_original_idx to the end of that match.
       // This allows the block to "consume" original code, avoiding duplication.
 
-      const search_window_size = 10 // How many lines of suffix to check
+      const search_window_size = 10
       const suffix_lines = block.lines.slice(-search_window_size)
-      // We need at least one line that is unique enough? Let's try finding the block end.
 
       // Heuristic: Find the first occurrence of this suffix in Original after current_original_idx
       let found_match = false
@@ -195,13 +194,13 @@ function process_truncated_content(
       // Truncation block
       // We need to fill from current_original_idx up to the start of the Next Block.
 
-      let fill_end_idx = original_lines.length // Default to end of file
+      let fill_end_idx = original_lines.length
 
       if (i + 1 < blocks.length) {
         const next_block = blocks[i + 1]
         if (next_block.type === 'code') {
           // Find where the next block starts in original
-          const prefix_lines = next_block.lines.slice(0, 10) // Check first 10 lines
+          const prefix_lines = next_block.lines.slice(0, 10)
           let found_next = false
 
           for (let len = prefix_lines.length; len >= 1; len--) {
@@ -219,13 +218,6 @@ function process_truncated_content(
           }
 
           if (!found_next) {
-            // If we can't find the next block, we don't know where to stop filling.
-            // This usually happens if the next block is entirely new code inserted after truncation.
-            // We assume the truncation goes to the end, or we just stop here?
-            // "Stop here" means we delete everything until end of file?
-            // "End" means we keep everything?
-            // Safety fallback: If we can't find next anchor, assume we keep until end?
-            // But next block is appended after. So: Keep Original + Append Next Block.
             fill_end_idx = original_lines.length
           }
         }

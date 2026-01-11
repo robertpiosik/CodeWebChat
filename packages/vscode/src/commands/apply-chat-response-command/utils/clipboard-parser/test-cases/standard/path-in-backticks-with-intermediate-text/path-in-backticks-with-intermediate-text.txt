@@ -1,5 +1,0 @@
-`src/main.py`
-Some other text here.
-```python
-print("hello")
-```
