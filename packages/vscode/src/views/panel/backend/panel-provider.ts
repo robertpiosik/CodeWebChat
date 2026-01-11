@@ -76,7 +76,8 @@ import {
   handle_preview_generated_code,
   handle_get_tasks,
   handle_save_tasks,
-  handle_delete_task
+  handle_delete_task,
+  handle_fix_all_failed_files
 } from './message-handlers'
 import {
   API_EDIT_FORMAT_STATE_KEY,
@@ -638,6 +639,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_preview_generated_code(message)
           } else if (message.command == 'REQUEST_CAN_UNDO') {
             handle_request_can_undo(this)
+          } else if (message.command == 'FIX_ALL_FAILED_FILES') {
+            await handle_fix_all_failed_files(this)
           }
         } catch (error: any) {
           Logger.error({

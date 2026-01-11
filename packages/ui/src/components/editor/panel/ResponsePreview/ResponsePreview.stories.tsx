@@ -11,7 +11,8 @@ const base_files = [
     type: 'file',
     file_path: 'src/components/Button/Button.tsx',
     lines_added: 10,
-    lines_removed: 2
+    lines_removed: 2,
+    ai_content: 'export const Button = () => <button>Click me</button>'
   },
   {
     type: 'file',
@@ -40,7 +41,8 @@ const files_using_fallbacks = [
     file_path: 'src/old-component.tsx',
     file_state: 'deleted',
     lines_added: 0,
-    lines_removed: 100
+    lines_removed: 100,
+    ai_content: ''
   },
   {
     type: 'file',
@@ -154,7 +156,8 @@ export const WithText = () => (
         file_path: 'src/components/ErrorComponent.tsx',
         apply_failed: true,
         lines_added: 5,
-        lines_removed: 2
+        lines_removed: 2,
+        ai_content: 'export const ErrorComponent = () => <div>Error</div>'
       },
       ...files_using_fallbacks
     ]}

@@ -321,6 +321,10 @@ export interface IntelligentUpdateFileInPreviewMessage extends BaseMessage {
   workspace_name?: string
 }
 
+export interface FixAllFailedFilesMessage extends BaseMessage {
+  command: 'FIX_ALL_FAILED_FILES'
+}
+
 export interface CommitChangesMessage extends BaseMessage {
   command: 'COMMIT_CHANGES'
 }
@@ -500,6 +504,7 @@ export type FrontendMessage =
   | RequestGitStateMessage
   | IntelligentUpdateFileInPreviewMessage
   | UpdateLastUsedPresetMessage
+  | FixAllFailedFilesMessage
   | CommitChangesMessage
   | ProceedWithCommitMessage
   | AcceptCommitMessage
