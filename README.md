@@ -14,7 +14,7 @@
 
 **Code Web Chat is a free and open-source AI coding extension designed for speed**. Built for VS Code family of editors (Cursor, Antigravity, VSCodium, etc.). Saves you money and time.
 
-👉️ **Construct simple coding prompts for...**
+👉️ **Simple coding prompts for...**
 
 - Chatbots—_ChatGPT, Gemini, Claude, Grok, DeepSeek, etc._
 - APIs—_Gemini API, OpenRouter, local Ollama, etc._
