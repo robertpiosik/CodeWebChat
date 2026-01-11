@@ -2,19 +2,16 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 
-CWC makes AI coding with chatbots/APIs fast. A perfect companion for [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt) (also called [gems](https://gemini.google/pl/overview/gems) or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)).
+**Code Web Chat** is a free and open-source, fully-featured AI coding extension **designed for speed**. Works with VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
 
-Works with VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
-
-👉️ **Construct coding prompts for...**
+👉️ **Construct simple coding prompts for...**
 
 - Chatbots—_ChatGPT, Gemini, Claude, Grok, DeepSeek, etc._
 - APIs—_Gemini API, OpenRouter, local Ollama, etc._
 
 👉️ **Apply responses**—edits integration with checkpoints for state restoration \
 👉️ **Fully featured**—code completions with any model, commit messages, and more \
-🌱 **Sustainable AI coding**—designed for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks \
-❤️ **Free and open-source**—released under the GPL-3.0 license
+🫰 **Cost-efficient**—zero-overhead prompts with smart file ordering for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching)
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />
