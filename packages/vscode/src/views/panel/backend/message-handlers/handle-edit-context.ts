@@ -53,7 +53,7 @@ const get_edit_context_config = async (
 
   if (config_id !== undefined) {
     selected_config =
-      edit_context_configs.find((c) => get_tool_config_id(c) === config_id) ||
+      edit_context_configs.find((c) => get_tool_config_id(c) == config_id) ||
       null
     if (selected_config) {
       context.workspaceState.update(
@@ -127,9 +127,7 @@ const get_edit_context_config = async (
       )
 
     const items = quick_pick.items as (vscode.QuickPickItem & { id: string })[]
-    const last_selected_item = items.find(
-      (item) => item.id === last_selected_id
-    )
+    const last_selected_item = items.find((item) => item.id == last_selected_id)
 
     if (last_selected_item) {
       quick_pick.activeItems = [last_selected_item]

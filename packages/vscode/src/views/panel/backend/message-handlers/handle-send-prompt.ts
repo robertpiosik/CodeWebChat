@@ -264,7 +264,10 @@ async function show_preset_quick_pick(params: {
   >()
 
   const recents_key = get_recently_used_presets_or_groups_key(mode)
-  const recent_names = context.globalState.get<string[]>(recents_key, [])
+  const recent_names =
+    context.workspaceState.get<string[]>(recents_key) ??
+    context.globalState.get<string[]>(recents_key) ??
+    []
 
   if (recent_names.length == 0) {
     vscode.window.showWarningMessage(
@@ -388,11 +391,14 @@ async function show_preset_quick_pick(params: {
           const name_to_save = selected.preset_name
           const recents_key = get_recently_used_presets_or_groups_key(mode)
           const recents =
-            context.globalState.get<string[]>(recents_key, []) ?? []
+            context.workspaceState.get<string[]>(recents_key) ??
+            context.globalState.get<string[]>(recents_key) ??
+            []
           const newRecents = [
             name_to_save,
             ...recents.filter((r) => r != name_to_save)
           ].slice(0, 10)
+          context.workspaceState.update(recents_key, newRecents)
           context.globalState.update(recents_key, newRecents)
           do_resolve({ preset_names: [selected.preset_name] })
         }
@@ -421,11 +427,14 @@ async function show_preset_quick_pick(params: {
           update_last_used_preset_or_group({ panel_provider, group_name })
           const recents_key = get_recently_used_presets_or_groups_key(mode)
           const recents =
-            context.globalState.get<string[]>(recents_key, []) ?? []
+            context.workspaceState.get<string[]>(recents_key) ??
+            context.globalState.get<string[]>(recents_key) ??
+            []
           const newRecents = [
             group_name,
             ...recents.filter((r) => r !== group_name)
           ].slice(0, 10)
+          context.workspaceState.update(recents_key, newRecents)
           context.globalState.update(recents_key, newRecents)
           do_resolve({ preset_names })
         }
@@ -585,7 +594,10 @@ async function resolve_presets(params: {
     params.group_name === undefined
   ) {
     // Try to use last selection if "Send" button is clicked without specific preset/group
-    const recents = params.context.globalState.get<string[]>(recents_key, [])
+    const recents =
+      params.context.workspaceState.get<string[]>(recents_key) ??
+      params.context.globalState.get<string[]>(recents_key) ??
+      []
     const last_selected_name = recents[0]
     if (last_selected_name) {
       const item = all_presets.find((p) => p.name === last_selected_name)
