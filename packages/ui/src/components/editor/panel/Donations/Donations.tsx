@@ -147,9 +147,8 @@ export const Donations: React.FC<DonationsProps> = (props) => {
       <Scrollable>
         <div className={styles.container}>
           <div className={styles.about}>
-            Hi there! Your donation supports my mission to help build a
-            sustainable future for AI coding, providing free and open-source,
-            prompt caching friendly tooling for everyone. Thank you.
+            Donating is a great way to show your support for the project. Thank
+            you!
           </div>
           <div className={styles.sponsors}>
             <Fieldset
