@@ -292,7 +292,7 @@ async function show_preset_quick_pick(params: {
         const preset = item
         const is_unnamed = !preset.name || /^\(\d+\)$/.test(preset.name.trim())
         const chatbot_models =
-          CHATBOTS[preset.chatbot as keyof typeof CHATBOTS].models
+          CHATBOTS[preset.chatbot as keyof typeof CHATBOTS]?.models
         const model = preset.model
           ? chatbot_models?.[preset.model]?.label || preset.model
           : ''
