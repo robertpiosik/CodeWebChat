@@ -1,8 +1,18 @@
-# Code Web Chat
+<p align="center">
+  <a href="https://codeweb.chat">
+    <picture>
+      <source srcset="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/logo-dark.png" media="(prefers-color-scheme: dark)">
+      <source srcset="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/logo-light.png" media="(prefers-color-scheme: light)">
+      <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/logo-light.png" alt="OpenCode logo" width="200" height="200">
+    </picture>
+  </a>
+</p>
+<p align="center">Fast AI coding with chatbots/APIs</p>
+<p align="center">
+  <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
+</p>
 
-<a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
-
-**Code Web Chat** is a free and open-source, fully-featured AI coding extension **designed for speed**. Works with VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
+**CWC** is a free and open-source, fully-featured AI coding extension **designed for speed**. Works with VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
 
 👉️ **Construct simple coding prompts for...**
 
