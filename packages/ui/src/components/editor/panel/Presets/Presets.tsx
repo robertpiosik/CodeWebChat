@@ -319,7 +319,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     >
                       <div className={styles.presets__item__left}>
                         <div
-                          className={styles.presets__item__left__drag_handle}
+                          className={styles['presets__item__left__drag-handle']}
                         >
                           <span className="codicon codicon-gripper" />
                         </div>
@@ -441,7 +441,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   >
                     <div className={styles.presets__item__left}>
                       <div
-                        className={styles.presets__item__left__drag_handle}
+                        className={styles['presets__item__left__drag-handle']}
                         onClick={(e) => {
                           e.stopPropagation()
                         }}
