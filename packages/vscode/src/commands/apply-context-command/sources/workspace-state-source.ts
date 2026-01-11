@@ -35,6 +35,11 @@ export const handle_workspace_state_source = async (
       workspace_root
     )
 
+    const sync_button = {
+      iconPath: new vscode.ThemeIcon('sync'),
+      tooltip: 'Update with currently selected files'
+    }
+
     const edit_button = {
       iconPath: new vscode.ThemeIcon('edit'),
       tooltip: 'Rename'
@@ -60,7 +65,7 @@ export const handle_workspace_state_source = async (
         })
 
         contexts.forEach((context, index) => {
-          const buttons = [edit_button, delete_button]
+          const buttons = [sync_button, edit_button, delete_button]
 
           const description = `${context.paths.length} ${
             context.paths.length == 1 ? 'path' : 'paths'
@@ -203,6 +208,43 @@ export const handle_workspace_state_source = async (
           const item = event.item as vscode.QuickPickItem & {
             context: SavedContext
             index: number
+          }
+
+          if (event.button === sync_button) {
+            const context = item.context
+            const checked_files = workspace_provider.get_checked_files()
+            const files_by_workspace = group_files_by_workspace(checked_files)
+            let all_prefixed_paths: string[] = []
+
+            for (const [root, files] of files_by_workspace.entries()) {
+              if (files.length === 0) continue
+              const condensed_paths = condense_paths(
+                files,
+                root,
+                workspace_provider
+              )
+              const relative_paths = condensed_paths.map((p) =>
+                p.replace(/\\/g, '/')
+              )
+              const prefixed_paths = add_workspace_prefix(relative_paths, root)
+              all_prefixed_paths = [...all_prefixed_paths, ...prefixed_paths]
+            }
+            all_prefixed_paths.sort((a, b) => a.localeCompare(b))
+
+            const updated_contexts = internal_contexts.map((c) =>
+              c.name === context.name ? { ...c, paths: all_prefixed_paths } : c
+            )
+            save_contexts_for_workspace(
+              extension_context,
+              workspace_root,
+              updated_contexts
+            )
+            vscode.window.showInformationMessage(
+              dictionary.information_message.CONTEXT_SAVED_SUCCESSFULLY
+            )
+            quick_pick.hide()
+            resolve(undefined)
+            return
           }
 
           if (event.button === edit_button) {

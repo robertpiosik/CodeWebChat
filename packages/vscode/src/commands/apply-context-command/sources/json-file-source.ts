@@ -72,6 +72,11 @@ export const handle_json_file_source = async (
       await load_and_merge_file_contexts()
     const workspace_folders = vscode.workspace.workspaceFolders || []
 
+    const sync_button = {
+      iconPath: new vscode.ThemeIcon('sync'),
+      tooltip: 'Update with currently selected files'
+    }
+
     const edit_button = {
       iconPath: new vscode.ThemeIcon('edit'),
       tooltip: 'Rename'
@@ -81,7 +86,7 @@ export const handle_json_file_source = async (
       tooltip: 'Delete'
     }
     const open_file_button = {
-      iconPath: new vscode.ThemeIcon('file'),
+      iconPath: new vscode.ThemeIcon('go-to-file'),
       tooltip: 'Open contexts.json'
     }
 
@@ -123,7 +128,7 @@ export const handle_json_file_source = async (
               label: context.name,
               description,
               context: context,
-              buttons: [edit_button, delete_button]
+              buttons: [sync_button, edit_button, delete_button]
             })
           }
         }
@@ -223,6 +228,53 @@ export const handle_json_file_source = async (
       if (selection.triggeredButton) {
         const item = selection
         const old_name = item.context.name
+
+        if (selection.triggeredButton === sync_button) {
+          const context_name = item.context.name
+          const checked_files = workspace_provider.get_checked_files()
+          const files_by_workspace = group_files_by_workspace(checked_files)
+
+          const current_roots = context_to_roots.get(context_name) || []
+          const all_roots = new Set([
+            ...current_roots,
+            ...files_by_workspace.keys()
+          ])
+
+          for (const root of all_roots) {
+            const files = files_by_workspace.get(root) || []
+            const p = get_contexts_file_path(root)
+
+            if (files.length === 0 && !fs.existsSync(p)) continue
+
+            if (files.length > 0) {
+              const dir = path.dirname(p)
+              if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true })
+            }
+
+            let contexts = load_contexts_from_file(p)
+            contexts = contexts.filter((c) => c.name !== context_name)
+
+            if (files.length > 0) {
+              const condensed_paths = condense_paths(
+                files,
+                root,
+                workspace_provider
+              )
+              const relative_paths = condensed_paths.map((p) =>
+                p.replace(/\\/g, '/')
+              )
+              contexts.unshift({
+                name: context_name,
+                paths: relative_paths
+              })
+            }
+            await save_contexts_to_file(contexts, p)
+          }
+          vscode.window.showInformationMessage(
+            dictionary.information_message.CONTEXT_SAVED_SUCCESSFULLY
+          )
+          return
+        }
 
         if (selection.triggeredButton === edit_button) {
           active_dialog_count++
