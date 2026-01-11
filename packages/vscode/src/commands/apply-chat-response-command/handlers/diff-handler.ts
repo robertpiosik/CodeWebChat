@@ -485,10 +485,20 @@ export const apply_git_patch = async (
     // Attempt 1: git apply with --recount
     if (!success) {
       try {
-        await execAsync(
-          `git apply --whitespace=fix --ignore-whitespace --recount "${temp_file}"`,
-          { cwd: workspace_path }
+        const contains_python_file = file_paths.some((path) =>
+          path.toLowerCase().endsWith('.py')
         )
+        const flags = [
+          '--whitespace=fix',
+          contains_python_file ? '' : '--ignore-whitespace',
+          '--recount'
+        ]
+          .filter(Boolean)
+          .join(' ')
+
+        await execAsync(`git apply ${flags} "${temp_file}"`, {
+          cwd: workspace_path
+        })
         success = true
         diff_application_method = 'recount'
         Logger.info({
