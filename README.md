@@ -85,6 +85,10 @@ Generate meaningful summaries of changes adhering to your style.
 > [!TIP]
 > Get started with [Google](https://aistudio.google.com/api-keys) model provider. Gemini 3.0 Flash is excellent at long context and _diff_ editing.
 
+## Enterprise security
+
+**Code Web Chat operates exclusively on your machine.** Your code and instructions are sent directly to chatbots via editor-browser communication channel run on local Websockets. For API tools, model providers are called directly.
+
 ## Commands
 
 ### Code completions
@@ -107,10 +111,6 @@ Generate meaningful summaries of changes adhering to your style.
 - `Code Web Chat: Copy Context` - Copy XML-formatted checked files from the Workspace view to the clipboard.
 - `Code Web Chat: Copy Context of Open Editors` - Copy XML-formatted checked files from the Open Editors view to the clipboard.
 - `Code Web Chat: Find Paths in Clipboard` - Select files based on paths found in the clipboard text.
-
-## Enterprise security
-
-**Code Web Chat operates exclusively on your machine.** Your code and instructions are sent directly to chatbots via editor-browser communication channel run on local Websockets. For API tools, model providers are called directly.
 
 ## Contributing
 
