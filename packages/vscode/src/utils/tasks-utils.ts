@@ -125,6 +125,7 @@ export const mark_task_as_completed_if_matches_prompt = (
   if (Object.keys(all_tasks).length === 0) return null
 
   let file_changed = false
+  const relevant_tasks: Record<string, Task[]> = {}
 
   const process_tasks = (tasks: Task[]) => {
     for (const task of tasks) {
@@ -143,13 +144,14 @@ export const mark_task_as_completed_if_matches_prompt = (
       const tasks = all_tasks[folder.uri.fsPath]
       if (tasks) {
         process_tasks(tasks)
+        relevant_tasks[folder.uri.fsPath] = tasks
       }
     })
   }
 
   if (file_changed) {
     save_all_tasks(context, all_tasks)
-    return all_tasks
+    return relevant_tasks
   }
 
   return null
