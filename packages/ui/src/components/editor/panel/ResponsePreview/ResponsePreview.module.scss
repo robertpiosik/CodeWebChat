@@ -39,6 +39,10 @@
       transform: translateY(2px);
       margin-right: 4px;
     }
+
+    &--without-button {
+      padding-right: 7px;
+    }
   }
 
   &__action {
