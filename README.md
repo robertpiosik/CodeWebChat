@@ -12,9 +12,7 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 </p>
 
-**CWC is a free and open-source, fully-featured AI coding extension designed for speed**. It helps you build faster, squash bugs, and understand unfamiliar code.
-
-Built for VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
+**CWC is a free and open-source, fully-featured AI coding extension designed for speed**. Built for VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
 
 👉️ **Construct simple coding prompts for...**
 
