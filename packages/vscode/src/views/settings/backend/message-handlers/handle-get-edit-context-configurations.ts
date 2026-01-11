@@ -14,9 +14,6 @@ const create_description = (config: ToolConfig): string => {
   if (config.reasoning_effort) {
     description_parts.push(`${config.reasoning_effort}`)
   }
-  if (config.instructions_placement == 'below-only') {
-    description_parts.push('cache-enabled')
-  }
   return description_parts.join(' · ')
 }
 

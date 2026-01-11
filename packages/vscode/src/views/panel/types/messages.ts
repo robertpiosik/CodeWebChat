@@ -22,8 +22,9 @@ export type ApiToolConfiguration = {
   provider_type: string
   provider_name: string
   model: string
-  temperature: number
+  temperature?: number
   reasoning_effort?: string
+  max_concurrency?: number
   is_default?: boolean
   is_pinned?: boolean
 }
