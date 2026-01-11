@@ -3,7 +3,13 @@
     <picture>
       <source srcset="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/logo-dark.png" media="(prefers-color-scheme: dark)">
       <source srcset="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/logo-light.png" media="(prefers-color-scheme: light)">
-      <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/logo-light.png" alt="OpenCode logo" width="200" height="200">
+      <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/logo-light.png" alt="Logo" width="160" height="160">
+    </picture>
+    <br />
+    <picture>
+      <source srcset="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/code-web-chat-dark.png" media="(prefers-color-scheme: dark)">
+      <source srcset="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/code-web-chat-light.png" media="(prefers-color-scheme: light)">
+      <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/code-web-chat-light.png" alt="Code Web Chat" width="280" >
     </picture>
   </a>
 </p>
