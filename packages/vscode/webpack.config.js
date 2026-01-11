@@ -70,7 +70,7 @@ const config = [
               from: '../../README.md',
               to: '../README.md',
               transform(content) {
-                return content.toString().split('\n').slice(21).join('\n')
+                return content.toString().split('\n').slice(13).join('\n')
               }
             }
           ]
