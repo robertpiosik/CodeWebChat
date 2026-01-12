@@ -33,7 +33,7 @@ With its focus on context engineering, Code Web Chat positions itself as an alte
 
 Although taking care about composition of the context window requires effort, it's rewarded with fast, accurate responses.
 
-## Enabling autofill
+## Enabling autofill in browser
 
 Install the zero-setup Connector extension in your favorite browser and never copy and paste again!
 
@@ -73,26 +73,23 @@ Like all of Code Web Chat, the extension is [open-source](https://github.com/rob
 > [!NOTE]
 > Use [port forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) on port _55155_ when using remote machine via SSH.
 
-## API Tools
+## API tools for common tasks
 
 **🛠️ Edit Context** \
-Modify, create or delete files based on natural language instructions.
+Work on your codebase with natural language instructions.
 
 **🛠️ Code Completions** \
-Get accurate code-at-cursor from state-of-the-art reasoning models.
+Get accurate code at cursor from reasoning models.
 
 **🛠️ Intelligent Update** \
-Handle the compact "truncated" edit format and malformed diffs.
+Fix malformed AI responses.
 
 **🛠️ Commit Messages** \
-Generate meaningful summaries of changes adhering to your style.
-
-> [!TIP]
-> Get started with [Google](https://aistudio.google.com/api-keys) model provider. Gemini 3.0 Flash is excellent at long context and _diff_ editing.
+Meaningful summaries of changes adhering to your style.
 
 ## Enterprise security
 
-**Code Web Chat operates exclusively on your machine.** Your code and instructions are sent directly to chatbots via editor-browser communication channel run on local Websockets. For API tools, model providers are called directly.
+**Code Web Chat operates exclusively on your machine.** Your prompts are sent directly to chatbots via editor-browser communication channel run on local Websockets. For API tools, model providers are called directly.
 
 ## Commands
 
