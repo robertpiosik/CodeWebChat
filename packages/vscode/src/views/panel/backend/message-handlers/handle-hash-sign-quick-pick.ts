@@ -2,11 +2,9 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { MODE } from '@/views/panel/types/main-view-mode'
 import * as vscode from 'vscode'
 import { execSync } from 'child_process'
-import * as path from 'path'
-import * as fs from 'fs'
 import { dictionary } from '@shared/constants/dictionary'
-import { SAVED_CONTEXTS_STATE_KEY } from '@/constants/state-keys'
-import { SavedContext } from '@/types/context'
+import { load_contexts_for_workspace } from '@/commands/apply-context-command/helpers/saving'
+import { load_and_merge_file_contexts } from '@/commands/apply-context-command/sources'
 
 const selection_label = '$(list-flat) Selection'
 const changes_label = '$(git-pull-request-draft) Changes'
@@ -300,39 +298,15 @@ const handle_commit_item = async (
 const handle_saved_context_item = async (
   context: vscode.ExtensionContext
 ): Promise<string | 'continue' | undefined> => {
-  const workspace_root = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
-  if (!workspace_root) {
+  const workspace_folders = vscode.workspace.workspaceFolders || []
+  if (workspace_folders.length === 0) {
     vscode.window.showErrorMessage(dictionary.error_message.NO_WORKSPACE_ROOT)
     return undefined
   }
+  const workspace_root = workspace_folders[0].uri.fsPath
 
-  const internal_contexts: SavedContext[] =
-    context.workspaceState.get(SAVED_CONTEXTS_STATE_KEY, []) || []
-
-  const contexts_file_path = path.join(
-    workspace_root,
-    '.vscode',
-    'contexts.json'
-  )
-  let file_contexts: SavedContext[] = []
-  if (fs.existsSync(contexts_file_path)) {
-    try {
-      const content = fs.readFileSync(contexts_file_path, 'utf8')
-      const parsed = JSON.parse(content)
-      if (Array.isArray(parsed)) {
-        file_contexts = parsed.filter(
-          (item: any): item is SavedContext =>
-            typeof item == 'object' &&
-            item !== null &&
-            typeof item.name == 'string' &&
-            Array.isArray(item.paths) &&
-            item.paths.every((p: any) => typeof p == 'string')
-        )
-      }
-    } catch (e) {
-      /* ignore */
-    }
-  }
+  const internal_contexts = load_contexts_for_workspace(context, workspace_root)
+  const { merged: file_contexts } = await load_and_merge_file_contexts()
 
   const source_options: (vscode.QuickPickItem & {
     value: 'WorkspaceState' | 'JSON'
