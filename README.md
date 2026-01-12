@@ -19,9 +19,9 @@ Code Web Chat is a free and open-source AI coding extension designed for _speed_
 - Chatbots—_ChatGPT, Gemini, Claude, Grok, DeepSeek, etc._
 - APIs—_Gemini API, OpenRouter, local Ollama, etc._
 
-👉️ **Apply responses**—edits integration with checkpoints for state restoration \
-👉️ **Fully-featured**—code completions with any model, commit messages, and more \
-🫰 **Cost-efficient**—zero-overhead prompts with smart file ordering for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching)
+👉️ **Apply responses**—interactive edits integration with checkpoints \
+👉️ **Fully-featured**—code completions, commit messages, and more \
+🫰 **Cost-efficient**—zero-overhead prompts optimized for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching)
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />
