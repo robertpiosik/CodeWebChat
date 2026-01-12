@@ -67,8 +67,8 @@ export const apply_context_command = (
         })
 
         const open_file_button = {
-          iconPath: new vscode.ThemeIcon('file'),
-          tooltip: 'Open the file'
+          iconPath: new vscode.ThemeIcon('go-to-file'),
+          tooltip: 'Open contexts.json'
         }
 
         main_quick_pick_options.push({
@@ -158,7 +158,6 @@ export const apply_context_command = (
                   const picked = await vscode.window.showQuickPick(
                     workspace_folders.map((f) => ({
                       label: f.name,
-                      description: f.uri.fsPath,
                       folder: f
                     })),
                     { placeHolder: 'Select workspace folder' }

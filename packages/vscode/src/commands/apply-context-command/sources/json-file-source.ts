@@ -106,7 +106,7 @@ export const handle_json_file_source = async (
 
         if (file_contexts.length > 0) {
           items.push({
-            label: 'entries',
+            label: 'entries (A-Z)',
             kind: vscode.QuickPickItemKind.Separator
           })
 
@@ -169,7 +169,6 @@ export const handle_json_file_source = async (
                 const picked = await vscode.window.showQuickPick(
                   folders.map((f) => ({
                     label: f.name,
-                    description: f.uri.fsPath,
                     folder: f
                   })),
                   { placeHolder: 'Select workspace folder' }

@@ -26,6 +26,12 @@ export const LAST_REFACTOR_INSTRUCTION_SOURCE_STATE_KEY =
   'last-refactor-instruction-source'
 export const LAST_REFACTOR_INSTRUCTION_STATE_KEY = 'last-refactor-instruction'
 
+export const LAST_SELECTED_SYMBOL_STATE_KEY = 'last-selected-symbol'
+export const LAST_SELECTED_CONTEXT_SOURCE_IN_SYMBOLS_QUICK_PICK_STATE_KEY =
+  'last-selected-context-source-in-symbols-quick-pick'
+export const LAST_SELECTED_REPOSITORY_IN_SYMBOLS_QUCK_PICK_STATE_KEY =
+  'last-selected-repository-in-symbols-quick-pick'
+
 export const CHECKPOINTS_STATE_KEY = 'checkpoints'
 export const TEMPORARY_CHECKPOINT_STATE_KEY = 'temporary-checkpoint'
 export const CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY =
