@@ -8,10 +8,10 @@ import {
   ask_for_new_context_name,
   group_files_by_workspace,
   condense_paths,
-  add_workspace_prefix,
   resolve_unique_context_name,
   load_contexts_for_workspace,
-  save_contexts_for_workspace
+  save_contexts_for_workspace,
+  load_and_merge_global_contexts
 } from '../helpers/saving'
 
 const LABEL_NEW_ENTRY = '$(add) New entry...'
@@ -24,16 +24,11 @@ export const handle_workspace_state_source = async (
   on_context_selected: () => void
 ): Promise<'back' | void> => {
   try {
-    const workspace_root = workspace_provider.get_workspace_roots()[0]
-    if (!workspace_root) {
-      vscode.window.showErrorMessage(dictionary.error_message.NO_WORKSPACE_ROOT)
-      return
+    const refresh_contexts = () => {
+      return load_and_merge_global_contexts(extension_context)
     }
 
-    let internal_contexts: SavedContext[] = load_contexts_for_workspace(
-      extension_context,
-      workspace_root
-    )
+    let { merged: internal_contexts, context_to_roots } = refresh_contexts()
 
     const sync_button = {
       iconPath: new vscode.ThemeIcon('sync'),
@@ -44,6 +39,7 @@ export const handle_workspace_state_source = async (
       iconPath: new vscode.ThemeIcon('edit'),
       tooltip: 'Rename'
     }
+
     const delete_button = {
       iconPath: new vscode.ThemeIcon('trash'),
       tooltip: 'Delete'
@@ -64,12 +60,25 @@ export const handle_workspace_state_source = async (
           kind: vscode.QuickPickItemKind.Separator
         })
 
+        const is_multi_root =
+          (vscode.workspace.workspaceFolders || []).length > 1
+
         contexts.forEach((context, index) => {
           const buttons = [sync_button, edit_button, delete_button]
-
-          const description = `${context.paths.length} ${
-            context.paths.length == 1 ? 'path' : 'paths'
+          const roots = context_to_roots.get(context.name) || []
+          let description = `${context.paths.length} path${
+            context.paths.length === 1 ? '' : 's'
           }`
+
+          if (roots.length > 0 && (roots.length > 1 || is_multi_root)) {
+            const workspace_names = roots.map((root) => {
+              const folder = vscode.workspace.getWorkspaceFolder(
+                vscode.Uri.file(root)
+              )
+              return folder?.name || 'unknown'
+            })
+            description += ` · ${workspace_names.join(', ')}`
+          }
 
           items.push({
             label: context.name,
@@ -91,6 +100,7 @@ export const handle_workspace_state_source = async (
 
     let active_dialog_count = 0
     let go_back_after_delete = false
+
     const quick_pick_promise = new Promise<
       | 'back'
       | (vscode.QuickPickItem & {
@@ -137,49 +147,49 @@ export const handle_workspace_state_source = async (
               return
             }
 
-            const files_by_workspace = group_files_by_workspace(checked_files)
-            let all_prefixed_paths: string[] = []
-
-            for (const [root, files] of files_by_workspace.entries()) {
-              if (files.length === 0) continue
-              const condensed_paths = condense_paths(
-                files,
-                root,
-                workspace_provider
-              )
-              const relative_paths = condensed_paths.map((p) =>
-                p.replace(/\\/g, '/')
-              )
-              const prefixed_paths = add_workspace_prefix(relative_paths, root)
-              all_prefixed_paths = [...all_prefixed_paths, ...prefixed_paths]
-            }
-
-            all_prefixed_paths.sort((a, b) => a.localeCompare(b))
-
             const existing_names = internal_contexts.map((c) => c.name)
             const unique_name = resolve_unique_context_name(
               name,
               existing_names
             )
 
-            const new_context: SavedContext = {
-              name: unique_name,
-              paths: all_prefixed_paths
+            const files_by_workspace = group_files_by_workspace(checked_files)
+
+            for (const [root, files] of files_by_workspace.entries()) {
+              if (files.length === 0) continue
+
+              const condensed_paths = condense_paths(
+                files,
+                root,
+                workspace_provider
+              )
+              // Store relative paths without prefixes in the per-root storage
+              const relative_paths = condensed_paths.map((p) =>
+                p.replace(/\\/g, '/')
+              )
+
+              const root_contexts = load_contexts_for_workspace(
+                extension_context,
+                root
+              )
+              root_contexts.unshift({
+                name: unique_name,
+                paths: relative_paths
+              })
+              save_contexts_for_workspace(
+                extension_context,
+                root,
+                root_contexts
+              )
             }
-
-            const updated_contexts = [new_context, ...internal_contexts]
-
-            save_contexts_for_workspace(
-              extension_context,
-              workspace_root,
-              updated_contexts
-            )
-            internal_contexts = updated_contexts
 
             vscode.window.showInformationMessage(
               dictionary.information_message.CONTEXT_SAVED_SUCCESSFULLY
             )
 
+            const reloaded = refresh_contexts()
+            internal_contexts = reloaded.merged
+            context_to_roots = reloaded.context_to_roots
             quick_pick.items = create_quick_pick_items(internal_contexts)
             quick_pick.value = ''
             quick_pick.show()
@@ -214,36 +224,53 @@ export const handle_workspace_state_source = async (
             const context = item.context
             const checked_files = workspace_provider.get_checked_files()
             const files_by_workspace = group_files_by_workspace(checked_files)
-            let all_prefixed_paths: string[] = []
 
-            for (const [root, files] of files_by_workspace.entries()) {
-              if (files.length === 0) continue
-              const condensed_paths = condense_paths(
-                files,
+            const current_roots = context_to_roots.get(context.name) || []
+            const all_roots = new Set([
+              ...current_roots,
+              ...files_by_workspace.keys()
+            ])
+
+            for (const root of all_roots) {
+              let root_contexts = load_contexts_for_workspace(
+                extension_context,
+                root
+              )
+              // Remove existing for this name
+              root_contexts = root_contexts.filter(
+                (c) => c.name !== context.name
+              )
+
+              const files = files_by_workspace.get(root)
+              if (files && files.length > 0) {
+                const condensed_paths = condense_paths(
+                  files,
+                  root,
+                  workspace_provider
+                )
+                const relative_paths = condensed_paths.map((p) =>
+                  p.replace(/\\/g, '/')
+                )
+                root_contexts.unshift({
+                  name: context.name,
+                  paths: relative_paths
+                })
+              }
+              save_contexts_for_workspace(
+                extension_context,
                 root,
-                workspace_provider
+                root_contexts
               )
-              const relative_paths = condensed_paths.map((p) =>
-                p.replace(/\\/g, '/')
-              )
-              const prefixed_paths = add_workspace_prefix(relative_paths, root)
-              all_prefixed_paths = [...all_prefixed_paths, ...prefixed_paths]
             }
-            all_prefixed_paths.sort((a, b) => a.localeCompare(b))
 
-            const updated_contexts = internal_contexts.map((c) =>
-              c.name === context.name ? { ...c, paths: all_prefixed_paths } : c
-            )
-            save_contexts_for_workspace(
-              extension_context,
-              workspace_root,
-              updated_contexts
-            )
             vscode.window.showInformationMessage(
               dictionary.information_message.CONTEXT_SAVED_SUCCESSFULLY
             )
-            quick_pick.hide()
-            resolve(undefined)
+            const reloaded = refresh_contexts()
+            internal_contexts = reloaded.merged
+            context_to_roots = reloaded.context_to_roots
+            quick_pick.items = create_quick_pick_items(internal_contexts)
+            quick_pick.show()
             return
           }
 
@@ -304,23 +331,28 @@ export const handle_workspace_state_source = async (
 
             if (new_name && new_name != 'back') {
               const trimmed_name = new_name
-
               if (trimmed_name != item.context.name) {
-                const updated_contexts = internal_contexts.map((c) =>
-                  c.name == item.context.name ? { ...c, name: trimmed_name } : c
-                )
+                const roots = context_to_roots.get(item.context.name) || []
+                for (const root of roots) {
+                  const root_contexts = load_contexts_for_workspace(
+                    extension_context,
+                    root
+                  )
+                  const updated = root_contexts.map((c) =>
+                    c.name === item.context.name
+                      ? { ...c, name: trimmed_name }
+                      : c
+                  )
+                  save_contexts_for_workspace(extension_context, root, updated)
+                }
 
-                save_contexts_for_workspace(
-                  extension_context,
-                  workspace_root,
-                  updated_contexts
-                )
-                internal_contexts = updated_contexts
                 name_to_highlight = trimmed_name
+                const reloaded = refresh_contexts()
+                internal_contexts = reloaded.merged
+                context_to_roots = reloaded.context_to_roots
               }
             }
 
-            // Always refresh and show the quick pick, even if cancelled
             quick_pick.items = create_quick_pick_items(internal_contexts)
             const active_item = quick_pick.items.find(
               (i) => i.label == name_to_highlight
@@ -335,19 +367,35 @@ export const handle_workspace_state_source = async (
           if (event.button === delete_button) {
             const current_timestamp = Date.now()
             active_deletion_timestamp = current_timestamp
-            const deleted_context = item.context
             const deleted_context_name = item.context.name
-            const deleted_index = item.index
 
-            const updated_contexts = internal_contexts.filter(
-              (c) => c.name != deleted_context_name
-            )
-            save_contexts_for_workspace(
-              extension_context,
-              workspace_root,
-              updated_contexts
-            )
-            internal_contexts = updated_contexts
+            const snapshot = new Map<string, SavedContext>()
+            const roots = context_to_roots.get(deleted_context_name) || []
+
+            for (const root of roots) {
+              const root_contexts = load_contexts_for_workspace(
+                extension_context,
+                root
+              )
+              const found = root_contexts.find(
+                (c) => c.name === deleted_context_name
+              )
+              if (found) {
+                snapshot.set(root, found)
+                const new_contexts = root_contexts.filter(
+                  (c) => c.name !== deleted_context_name
+                )
+                save_contexts_for_workspace(
+                  extension_context,
+                  root,
+                  new_contexts
+                )
+              }
+            }
+
+            const reloaded = refresh_contexts()
+            internal_contexts = reloaded.merged
+            context_to_roots = reloaded.context_to_roots
             quick_pick.items = create_quick_pick_items(internal_contexts)
 
             active_dialog_count++
@@ -369,17 +417,26 @@ export const handle_workspace_state_source = async (
             }
 
             if (choice == 'Undo') {
-              internal_contexts.splice(deleted_index, 0, deleted_context)
-              save_contexts_for_workspace(
-                extension_context,
-                workspace_root,
-                internal_contexts
-              )
+              for (const [root, saved] of snapshot.entries()) {
+                const root_contexts = load_contexts_for_workspace(
+                  extension_context,
+                  root
+                )
+                root_contexts.unshift(saved)
+                save_contexts_for_workspace(
+                  extension_context,
+                  root,
+                  root_contexts
+                )
+              }
               vscode.window.showInformationMessage(
                 dictionary.information_message.RESTORED_CONTEXT(
                   deleted_context_name
                 )
               )
+              const reloaded_undo = refresh_contexts()
+              internal_contexts = reloaded_undo.merged
+              context_to_roots = reloaded_undo.context_to_roots
               quick_pick.items = create_quick_pick_items(internal_contexts)
             }
 
@@ -423,19 +480,25 @@ export const handle_workspace_state_source = async (
       return
     }
 
-    const updated_contexts = internal_contexts.filter(
-      (c) => c.name !== context_to_apply.name
-    )
-    updated_contexts.unshift(context_to_apply)
-    save_contexts_for_workspace(
-      extension_context,
-      workspace_root,
-      updated_contexts
-    )
+    // Move to top (Recent) for all involved roots
+    const roots = context_to_roots.get(context_to_apply.name) || []
+    for (const root of roots) {
+      const root_contexts = load_contexts_for_workspace(extension_context, root)
+      const found_idx = root_contexts.findIndex(
+        (c) => c.name === context_to_apply.name
+      )
+      if (found_idx !== -1) {
+        const [moved] = root_contexts.splice(found_idx, 1)
+        root_contexts.unshift(moved)
+        save_contexts_for_workspace(extension_context, root, root_contexts)
+      }
+    }
 
+    // Apply using the merged context (which has prefixes for multi-root)
+    const primary_workspace_root = workspace_provider.get_workspace_roots()[0]!
     await apply_saved_context(
       context_to_apply,
-      workspace_root,
+      primary_workspace_root,
       workspace_provider,
       extension_context
     )

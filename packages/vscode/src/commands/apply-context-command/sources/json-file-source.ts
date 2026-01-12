@@ -59,6 +59,8 @@ export const load_and_merge_file_contexts = async (): Promise<{
     context_to_roots.set(name, data.roots)
   }
 
+  merged.sort((a, b) => a.name.localeCompare(b.name))
+
   return { merged, context_to_roots }
 }
 
@@ -108,13 +110,15 @@ export const handle_json_file_source = async (
             kind: vscode.QuickPickItemKind.Separator
           })
 
+          const is_multi_root = workspace_folders.length > 1
+
           for (const context of file_contexts) {
             const roots = context_to_roots.get(context.name) || []
             let description = `${context.paths.length} path${
               context.paths.length === 1 ? '' : 's'
             }`
 
-            if (roots.length > 1) {
+            if (roots.length > 0 && (roots.length > 1 || is_multi_root)) {
               const workspace_names = roots.map((root) => {
                 const folder = workspace_folders.find(
                   (f) => f.uri.fsPath === root

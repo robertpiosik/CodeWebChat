@@ -17,7 +17,7 @@ import {
 import {
   load_all_contexts,
   get_contexts_file_path,
-  load_contexts_for_workspace
+  load_and_merge_global_contexts
 } from './helpers/saving'
 import { handle_quick_save } from './helpers/saving/handle-quick-save'
 
@@ -44,18 +44,9 @@ export const apply_context_command = (
           return
         }
 
-        const workspace_root = workspace_provider.get_workspace_roots()[0]
-        if (!workspace_root) {
-          vscode.window.showErrorMessage(
-            dictionary.error_message.NO_WORKSPACE_ROOT
-          )
-          return
-        }
-
-        const internal_contexts: SavedContext[] = load_contexts_for_workspace(
-          extension_context,
-          workspace_root
-        )
+        // Load merged contexts for display count
+        const { merged: internal_contexts } =
+          load_and_merge_global_contexts(extension_context)
 
         const file_contexts_map = await load_all_contexts()
         let file_contexts_count = 0

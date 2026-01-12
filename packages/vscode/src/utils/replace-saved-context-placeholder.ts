@@ -4,12 +4,9 @@ import * as fs from 'fs'
 import { SavedContext } from '@/types/context'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { dictionary } from '@shared/constants/dictionary'
-import { resolve_glob_patterns } from '@/commands/apply-context-command/helpers/applying'
-import { load_contexts_for_workspace } from '@/commands/apply-context-command/helpers/saving/global-storage-utils'
-import {
-  get_contexts_file_path,
-  load_contexts_from_file
-} from '@/commands/apply-context-command/helpers/saving/context-file-utils'
+import { resolve_context_paths } from '@/commands/apply-context-command/helpers/applying'
+import { load_and_merge_global_contexts } from '@/commands/apply-context-command/helpers/saving/global-storage-utils'
+import { load_and_merge_file_contexts } from '@/commands/apply-context-command/sources/json-file-source'
 
 async function get_file_content_as_xml(
   file_path: string,
@@ -40,23 +37,18 @@ async function get_file_content_as_xml(
   }
 }
 
-const get_context = (
+const get_context = async (
   source: 'WorkspaceState' | 'JSON',
   name: string,
-  context: vscode.ExtensionContext,
-  workspace_root: string
-): SavedContext | undefined => {
+  context: vscode.ExtensionContext
+): Promise<SavedContext | undefined> => {
   if (source == 'WorkspaceState') {
-    const internal_contexts = load_contexts_for_workspace(
-      context,
-      workspace_root
-    )
-    return internal_contexts.find((c) => c.name == name)
+    const { merged } = load_and_merge_global_contexts(context)
+    return merged.find((c) => c.name == name)
   } else {
     // JSON
-    const contexts_file_path = get_contexts_file_path(workspace_root)
-    const file_contexts = load_contexts_from_file(contexts_file_path)
-    return file_contexts.find((c) => c.name == name)
+    const { merged } = await load_and_merge_file_contexts()
+    return merged.find((c) => c.name == name)
   }
 }
 
@@ -84,12 +76,7 @@ export const replace_saved_context_placeholder = async (params: {
       continue
     }
 
-    const saved_context = get_context(
-      source,
-      name,
-      params.context,
-      workspace_root
-    )
+    const saved_context = await get_context(source, name, params.context)
 
     if (!saved_context) {
       vscode.window.showWarningMessage(
@@ -99,35 +86,9 @@ export const replace_saved_context_placeholder = async (params: {
       continue
     }
 
-    // This logic is from apply-context-command.ts
-    const workspace_folders = vscode.workspace.workspaceFolders || []
-    const workspace_map = new Map<string, string>()
-    for (const folder of workspace_folders) {
-      workspace_map.set(folder.name, folder.uri.fsPath)
-    }
-
-    const absolute_paths = saved_context.paths.map((prefixed_path) => {
-      const is_exclude = prefixed_path.startsWith('!')
-      const path_part = is_exclude ? prefixed_path.substring(1) : prefixed_path
-      let resolved_path_part: string
-      if (path_part.includes(':')) {
-        const [prefix, relative_path] = path_part.split(':', 2)
-        const root = workspace_map.get(prefix)
-        if (root) {
-          resolved_path_part = path.join(root, relative_path)
-        } else {
-          resolved_path_part = path.join(workspace_root, relative_path)
-        }
-      } else {
-        resolved_path_part = path.isAbsolute(path_part)
-          ? path_part
-          : path.join(workspace_root, path_part)
-      }
-      return is_exclude ? `!${resolved_path_part}` : resolved_path_part
-    })
-
-    const resolved_paths = await resolve_glob_patterns(
-      absolute_paths,
+    const resolved_paths = await resolve_context_paths(
+      saved_context,
+      workspace_root,
       params.workspace_provider
     )
 

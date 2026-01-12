@@ -1,9 +1,10 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { MODE } from '@/views/panel/types/main-view-mode'
 import * as vscode from 'vscode'
+import * as path from 'path'
 import { execSync } from 'child_process'
 import { dictionary } from '@shared/constants/dictionary'
-import { load_contexts_for_workspace } from '@/commands/apply-context-command/helpers/saving'
+import { load_and_merge_global_contexts } from '@/commands/apply-context-command/helpers/saving'
 import { load_and_merge_file_contexts } from '@/commands/apply-context-command/sources'
 
 const selection_label = '$(list-flat) Selection'
@@ -303,10 +304,11 @@ const handle_saved_context_item = async (
     vscode.window.showErrorMessage(dictionary.error_message.NO_WORKSPACE_ROOT)
     return undefined
   }
-  const workspace_root = workspace_folders[0].uri.fsPath
 
-  const internal_contexts = load_contexts_for_workspace(context, workspace_root)
-  const { merged: file_contexts } = await load_and_merge_file_contexts()
+  const { merged: internal_contexts, context_to_roots: internal_roots } =
+    load_and_merge_global_contexts(context)
+  const { merged: file_contexts, context_to_roots: file_roots } =
+    await load_and_merge_file_contexts()
 
   const source_options: (vscode.QuickPickItem & {
     value: 'WorkspaceState' | 'JSON'
@@ -390,11 +392,29 @@ const handle_saved_context_item = async (
 
   const contexts_to_use =
     source == 'WorkspaceState' ? internal_contexts : file_contexts
+  const roots_map = source == 'WorkspaceState' ? internal_roots : file_roots
 
-  const context_items = contexts_to_use.map((ctx) => ({
-    label: ctx.name,
-    description: `${ctx.paths.length} path${ctx.paths.length == 1 ? '' : 's'}`
-  }))
+  const is_multi_root = workspace_folders.length > 1
+
+  const context_items = contexts_to_use.map((ctx) => {
+    const roots = roots_map.get(ctx.name) || []
+    let description = `${ctx.paths.length} path${
+      ctx.paths.length == 1 ? '' : 's'
+    }`
+
+    if (roots.length > 0 && (roots.length > 1 || is_multi_root)) {
+      const workspace_names = roots.map((root) => {
+        const folder = workspace_folders.find((f) => f.uri.fsPath === root)
+        return folder?.name || path.basename(root)
+      })
+      description += ` · ${workspace_names.join(', ')}`
+    }
+
+    return {
+      label: ctx.name,
+      description
+    }
+  })
 
   const quick_pick = vscode.window.createQuickPick()
   quick_pick.items = context_items
