@@ -43,7 +43,7 @@ const get_file_message = (file: FileInPreview): FileMessage | null => {
   if (file.fixed_with_intelligent_update) {
     return {
       type: 'success',
-      text: 'Fixed with successfully'
+      text: 'Fixed successfully'
     }
   } else if (file.apply_failed) {
     return {
@@ -115,7 +115,9 @@ export const ResponsePreview: FC<Props> = (props) => {
   const aggressive_fallback_count = useMemo(
     () =>
       files_in_preview.filter(
-        (f) => f.diff_application_method == 'search_and_replace'
+        (f) =>
+          f.diff_application_method == 'search_and_replace' &&
+          !f.fixed_with_intelligent_update
       ).length,
     [files_in_preview]
   )
@@ -203,7 +205,7 @@ export const ResponsePreview: FC<Props> = (props) => {
               onClick={() => props.on_fix_all_failed()}
             >
               <span className="codicon codicon-sparkle" />
-              <span>Fix all</span>
+              <span>{error_count > 1 ? 'Fix all' : 'Fix'}</span>
             </div>
           </div>
         )}
@@ -250,7 +252,8 @@ export const ResponsePreview: FC<Props> = (props) => {
                         file.apply_failed &&
                         !file.fixed_with_intelligent_update,
                       [styles['list__item__file--warning']]:
-                        file.diff_application_method == 'search_and_replace'
+                        file.diff_application_method == 'search_and_replace' &&
+                        !file.fixed_with_intelligent_update
                     })}
                     onClick={() => {
                       set_last_clicked_file_index(index)
@@ -405,7 +408,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                       {'show_actions' in message_obj &&
                         message_obj.show_actions && (
                           <div className={styles['list__message__actions']}>
-                            {file.ai_content && (
+                            {file.ai_content && !file.is_applying && (
                               <div
                                 className={
                                   styles['list__message__actions__item']

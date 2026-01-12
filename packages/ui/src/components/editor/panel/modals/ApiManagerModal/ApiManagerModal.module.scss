@@ -7,7 +7,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
-  padding: 0 12px 48px 12px;
+  padding: 0 12px 48px 8px;
   pointer-events: none;
 }
 
@@ -17,7 +17,7 @@
   position: relative;
   pointer-events: all;
   z-index: 1;
-  border-radius: 12px;
+  border-radius: 8px;
   color: var(--vscode-quickInput-foreground);
   background-color: var(--vscode-quickInput-background);
   border: 1px solid var(--vscode-focusBorder);
@@ -35,7 +35,7 @@
   text-transform: uppercase;
   display: flex;
   align-items: center;
-  padding: 0 10px;
+  padding: 0 8px;
   height: 28px;
   transform: translateY(3px);
   transition: transform var(--transition-duration-250)
@@ -70,7 +70,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 4px;
-    padding: 0 10px;
+    padding: 0 8px;
     height: 22px;
     width: 100%;
   }

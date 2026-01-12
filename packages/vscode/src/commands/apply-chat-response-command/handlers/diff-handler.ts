@@ -476,6 +476,7 @@ export const apply_git_patch = async (
     let success = false
     let diff_application_method: 'recount' | 'search_and_replace' | undefined =
       undefined
+    let applied_content: string | undefined
 
     if (patch_info.is_renaming) {
       // Skip git apply and fallbacks, renaming here is a base case where no content is changing, just paths. File is already copied.
@@ -521,7 +522,7 @@ export const apply_git_patch = async (
       try {
         const file_path_safe = create_safe_path(workspace_path, file_paths[0])
         if (file_path_safe == null) throw new Error('File path is null')
-        await process_diff({
+        applied_content = await process_diff({
           file_path: file_path_safe,
           diff_path_patch: temp_file
         })
@@ -540,6 +541,17 @@ export const apply_git_patch = async (
       await process_modified_files(file_paths, workspace_path)
       await reopen_closed_files(closed_files)
       await vscode.workspace.fs.delete(vscode.Uri.file(temp_file))
+
+      if (original_states && applied_content && file_paths.length > 0) {
+        const processed_path = file_paths[0]
+        const state = original_states.find(
+          (s) => s.file_path === processed_path
+        )
+        if (state) {
+          state.proposed_content = applied_content
+        }
+      }
+
       return {
         success: true,
         original_states: original_states,

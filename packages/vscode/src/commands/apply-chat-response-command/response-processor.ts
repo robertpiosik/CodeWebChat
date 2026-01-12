@@ -59,9 +59,9 @@ export const process_chat_response = async (
         return {
           ...state,
           ai_content:
-            file_in_preview?.content ??
+            file_in_preview?.ai_content ??
             file_in_preview?.proposed_content ??
-            file_in_preview?.ai_content,
+            file_in_preview?.content,
           proposed_content: file_in_preview?.proposed_content,
           is_checked: file_in_preview?.is_checked,
           apply_failed: file_in_preview?.apply_failed,
@@ -219,6 +219,9 @@ export const process_chat_response = async (
         if (result.diff_application_method && result.original_states) {
           for (const state of result.original_states) {
             state.diff_application_method = result.diff_application_method
+            if (result.diff_application_method == 'search_and_replace') {
+              state.ai_content = patch.content
+            }
           }
         }
         if (result.original_states) {
@@ -236,9 +239,10 @@ export const process_chat_response = async (
         }
       } else {
         if (result.original_states) {
-          result.original_states.forEach((state) => {
+          for (const state of result.original_states) {
             state.apply_failed = true
-          })
+            state.ai_content = patch.content
+          }
           all_original_states = all_original_states.concat(
             result.original_states
           )

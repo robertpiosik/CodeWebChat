@@ -28,7 +28,7 @@ class SearchBlock {
 export const process_diff = async (params: {
   file_path: string
   diff_path_patch: string
-}): Promise<void> => {
+}): Promise<string> => {
   const file_content = fs.readFileSync(params.file_path, 'utf8')
   const diff_patch_content = fs.readFileSync(params.diff_path_patch, 'utf8')
 
@@ -46,6 +46,7 @@ export const process_diff = async (params: {
       function_name: 'process_diff',
       message: 'File saved successfully'
     })
+    return result
   } catch (error) {
     throw new Error('Failed to save file after applying diff patch')
   }
