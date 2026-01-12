@@ -60,7 +60,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
         <div className={styles.configurations__item__left}>
           {!is_dragging_disabled && (
             <div
-              className={styles.configurations__item__left__drag_handle}
+              className={styles['configurations__item__left__drag-handle']}
               onClick={(e) => e.stopPropagation()}
             >
               <span className="codicon codicon-gripper" />
