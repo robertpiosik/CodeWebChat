@@ -46,6 +46,15 @@ export const handle_delete_task = async (
   save_all_tasks(panel_provider.context, all_data)
   broadcast_tasks(all_data)
 
+  const is_empty = (task: Task): boolean => {
+    if (task.text.trim().length > 0) return false
+    return (task.children || []).every(is_empty)
+  }
+
+  if (is_empty(task_info.task)) {
+    return
+  }
+
   // 3. Undo prompt
   const selection = await vscode.window.showInformationMessage(
     dictionary.information_message.TASK_DELETED,
