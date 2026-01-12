@@ -27,6 +27,12 @@ Code Web Chat is a free and open-source AI coding extension designed for _speed_
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />
 </p>
 
+## Introduction
+
+With its focus on context engineering, Code Web Chat positions itself as an alternative to coding agents. We believe that including files in context based on keyword/semantic search is an overly-optimistic approach that may make the model reason about wrong things, possibly causing regressions. These could be especially hard to fix with the very approach that created them.
+
+Although taking care about composition of the context window requires effort, we're rewarded with instant, accurate responses.
+
 ## Enabling autofill
 
 Install the zero-setup Connector extension in your favorite browser and never copy and paste again!
