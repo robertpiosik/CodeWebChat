@@ -35,7 +35,7 @@ These could be especially hard to fix with the very approach that created them.
 
 Although taking care of the context window requires effort, it eventually becomes second nature.
 
-Start coding with AI in a way that foster codebase understanding and gets you fast and accurate responses.
+Code with AI in a way that foster codebase understanding and gets you fast and accurate responses!
 
 ## Enabling autofill in browser
 
