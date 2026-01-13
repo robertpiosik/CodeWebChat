@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import styles from './Home.module.scss'
 import { Scrollable } from '@ui/components/editor/panel/Scrollable'
 import { Timeline } from '@ui/components/editor/panel/Timeline'
@@ -45,9 +45,33 @@ type Props = {
 export const Home: React.FC<Props> = (props) => {
   const { t } = use_translation()
   const [is_mode_sticky, set_is_mode_sticky] = useState(false)
+  const [is_timeline_reached, set_is_timeline_reached] = useState(true)
   const full_mode_height_ref = useRef<number>(0)
   const responses_ref = useRef<HTMLDivElement>(null)
   const mode_ref = useRef<HTMLDivElement>(null)
+  const timeline_ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const is_above_viewport =
+          entry.boundingClientRect.top <
+          (entry.rootBounds?.height ?? window.innerHeight) / 2
+        set_is_timeline_reached(entry.isIntersecting || is_above_viewport)
+      },
+      {
+        threshold: 0.1
+      }
+    )
+
+    if (timeline_ref.current) {
+      observer.observe(timeline_ref.current)
+    }
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
 
   const {
     handle_reorder,
@@ -75,6 +99,15 @@ export const Home: React.FC<Props> = (props) => {
     post_message(props.vscode, {
       command: 'CLEAR_ALL_CHECKPOINTS'
     } as FrontendMessage)
+  }
+
+  const handle_scroll_to_timeline = () => {
+    if (timeline_ref.current) {
+      timeline_ref.current.style.scrollMarginTop = '55px'
+      timeline_ref.current.scrollIntoView({
+        behavior: 'smooth'
+      })
+    }
   }
 
   return (
@@ -247,6 +280,7 @@ export const Home: React.FC<Props> = (props) => {
                 ))}
 
             <ListHeader
+              ref={timeline_ref}
               title="Timeline"
               is_collapsed={props.is_timeline_collapsed}
               on_toggle_collapsed={() =>
@@ -317,6 +351,22 @@ export const Home: React.FC<Props> = (props) => {
           </div>
         </div>
       </Scrollable>
+
+      {!is_timeline_reached && is_mode_sticky && (
+        <button
+          className={styles['scroll-to-timeline']}
+          onClick={handle_scroll_to_timeline}
+        >
+          <span
+            className={cn(
+              'codicon',
+              'codicon-arrow-down',
+              styles['scroll-to-timeline__icon']
+            )}
+          />
+          <span>Scroll to timeline</span>
+        </button>
+      )}
     </>
   )
 }
