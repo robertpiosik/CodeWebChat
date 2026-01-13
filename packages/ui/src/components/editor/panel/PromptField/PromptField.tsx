@@ -19,7 +19,6 @@ import {
   map_display_pos_to_raw_pos,
   map_raw_pos_to_display_pos
 } from './utils/position-mapping'
-import { dictionary } from '@shared/constants/dictionary'
 import { Tooltip } from './components'
 
 export type EditFormat = 'whole' | 'truncated' | 'diff' | 'before-after'
@@ -60,7 +59,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const input_ref = useRef<HTMLDivElement>(null)
   const [caret_position, set_caret_position] = useState(0)
   const [should_show_ghost_text, set_should_show_ghost_text] = useState(false)
-  const [show_at_sign_tooltip, set_show_at_sign_tooltip] = useState(false)
   const [show_submit_tooltip, set_show_submit_tooltip] = useState(false)
   const [is_text_selecting, set_is_text_selecting] = useState(false)
   const [is_focused, set_is_focused] = useState(false)
@@ -263,9 +261,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     is_history_enabled
   ])
 
-  const has_no_context =
-    !props.context_file_paths || props.context_file_paths.length == 0
-
   const edit_format_shortcuts: Record<EditFormat, string> = useMemo(() => {
     const modifier = is_mac ? '⌥' : 'Alt+'
     return {
@@ -363,17 +358,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             }
           }}
         >
-          {show_at_sign_tooltip && (
-            <Tooltip
-              message={dictionary.warning_message.NOTHING_SELECTED_IN_CONTEXT.replace(
-                '.',
-                ''
-              )}
-              align="left"
-              offset={8}
-              is_warning
-            />
-          )}
           {props.last_choice_button_title && show_submit_tooltip && (
             <Tooltip
               message={props.last_choice_button_title}
@@ -388,15 +372,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             }}
           >
             <button
-              onMouseEnter={() => {
-                if (has_no_context) {
-                  set_show_at_sign_tooltip(true)
-                }
-              }}
               onClick={() => {
                 props.on_at_sign_click()
               }}
-              onMouseLeave={() => set_show_at_sign_tooltip(false)}
               className={cn(styles['footer__left__button'])}
               title="Reference File"
             >
@@ -446,6 +424,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       : format == 'before-after'
                         ? 'before/after'
                         : format
+
                     const is_selected = props.edit_format == format
                     const should_underline = is_alt_pressed && !is_selected
 
