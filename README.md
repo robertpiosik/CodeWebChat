@@ -29,7 +29,7 @@ Code Web Chat (CWC) is a free and open-source AI coding extension designed for _
 
 ## Introduction
 
-**With its focus on context engineering, Code Web Chat addresses pitfalls of coding agents.**
+**With its focus on context engineering, CWC addresses pitfalls of coding agents.**
 
 We believe that automatic inclusion of files in the context window based on keyword/semantic search is an overly-optimistic approach that may make the model reason about wrong things, possibly leading to regressions. These could be overwhelmingly hard to fix with the very approach that created them.
 
@@ -44,7 +44,7 @@ Install the zero-setup Connector extension in your favorite browser and never co
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
 
-Like all of Code Web Chat, the extension is [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser) and works with minimal permissions for your absolute privacy and security.
+Like all of CWC, the extension is [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser) and works with minimal permissions for your absolute privacy and security.
 
 **List of supported chatbots:**
 
