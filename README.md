@@ -29,9 +29,7 @@ Code Web Chat (CWC) is a free and open-source AI coding extension designed for _
 
 ## Introduction
 
-With its focus on context engineering, Code Web Chat addresses pitfalls of coding agents. We believe that automatic inclusion files in the context window based on keyword/semantic search is an overly-optimistic approach that may make the model reason about wrong things, possibly leading to regressions.
-
-These could be especially hard to fix with the very approach that created them.
+With its focus on context engineering, Code Web Chat addresses pitfalls of coding agents. We believe that automatic inclusion of files in the context window based on keyword/semantic search is an overly-optimistic approach that may make the model reason about wrong things, possibly leading to regressions. These could be overwhelmingly hard to fix with the very approach that created them.
 
 Although taking care of the context window requires effort, it eventually becomes second nature.
 
