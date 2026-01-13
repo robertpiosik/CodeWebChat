@@ -79,6 +79,7 @@ type Props = {
   context_size_warning_threshold: number
   gemini_user_id: number | null
   ai_studio_user_id: number | null
+  send_with_shift_enter: boolean
   are_automatic_checkpoints_disabled: boolean
   checkpoint_lifespan: number
   edit_format_instructions: EditFormatInstructions
@@ -101,6 +102,7 @@ type Props = {
   on_checkpoint_lifespan_change: (hours: number) => void
   on_gemini_user_id_change: (id: number | null) => void
   on_ai_studio_user_id_change: (id: number | null) => void
+  on_send_with_shift_enter_change: (enabled: boolean) => void
   on_clear_checks_in_workspace_behavior_change: (
     value: 'ignore-open-editors' | 'uncheck-all'
   ) => void
@@ -288,6 +290,10 @@ export const Home: React.FC<Props> = (props) => {
           context_size_warning_threshold={props.context_size_warning_threshold}
           on_context_size_warning_threshold_change={
             props.on_context_size_warning_threshold_change
+          }
+          send_with_shift_enter={props.send_with_shift_enter}
+          on_send_with_shift_enter_change={
+            props.on_send_with_shift_enter_change
           }
           clear_checks_in_workspace_behavior={
             props.clear_checks_in_workspace_behavior

@@ -26,6 +26,7 @@ import {
   handle_get_ai_studio_user_id,
   handle_get_intelligent_update_configurations,
   handle_get_model_providers,
+  handle_get_send_with_shift_enter,
   handle_get_checkpoint_lifespan,
   handle_reorder_code_completions_configurations,
   handle_reorder_commit_messages_configurations,
@@ -44,6 +45,7 @@ import {
   handle_update_edit_format_instructions,
   handle_update_gemini_user_id,
   handle_update_ai_studio_user_id,
+  handle_update_send_with_shift_enter,
   handle_upsert_configuration,
   handle_open_ignore_patterns_settings
 } from './message-handlers'
@@ -207,6 +209,10 @@ export class SettingsProvider {
           await handle_update_ai_studio_user_id(message)
         } else if (message.command == 'GET_CHECKPOINT_LIFESPAN') {
           await handle_get_checkpoint_lifespan(this)
+        } else if (message.command == 'GET_SEND_WITH_SHIFT_ENTER') {
+          await handle_get_send_with_shift_enter(this)
+        } else if (message.command == 'UPDATE_SEND_WITH_SHIFT_ENTER') {
+          await handle_update_send_with_shift_enter(message)
         } else if (
           message.command == 'GET_ARE_AUTOMATIC_CHECKPOINTS_DISABLED'
         ) {
@@ -253,6 +259,7 @@ export class SettingsProvider {
           void handle_get_checkpoint_lifespan(this)
           void handle_get_gemini_user_id(this)
           void handle_get_ai_studio_user_id(this)
+          void handle_get_send_with_shift_enter(this)
         }
       })
     )

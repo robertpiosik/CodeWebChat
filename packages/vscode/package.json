@@ -633,6 +633,12 @@
           "scope": "resource",
           "default": false
         },
+        "codeWebChat.sendWithShiftEnter": {
+          "type": "boolean",
+          "scope": "resource",
+          "default": false,
+          "description": "If enabled, use Shift+Enter to send messages and Enter to insert a new line."
+        },
         "codeWebChat.clearChecksInWorkspaceBehavior": {
           "type": "string",
           "enum": [

@@ -104,7 +104,7 @@ export const use_ghost_text = ({
       } else {
         ghost_text_debounce_timer_ref.current = setTimeout(() => {
           set_ghost_text(potential_ghost_text)
-        }, 500)
+        }, 200)
       }
     } else {
       set_ghost_text('')

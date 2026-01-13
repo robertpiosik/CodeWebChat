@@ -55,7 +55,7 @@ export const get_highlighted_text = (params: {
   if (params.is_in_code_completions_mode) {
     const regex = new RegExp(`(${saved_context_regex_part})`, 'g')
     const parts = params.text.split(regex)
-    return parts
+    const result = parts
       .map((part) => {
         const saved_context_match = part.match(
           /^#SavedContext:(WorkspaceState|JSON)\s+"([^"]+)"$/
@@ -79,6 +79,10 @@ export const get_highlighted_text = (params: {
         return process_text_part_for_files(part, params.context_file_paths)
       })
       .join('')
+    if (params.text.endsWith('\n')) {
+      return result + '<br data-role="trailing-break">'
+    }
+    return result
   }
 
   const commit_regex_part =
@@ -89,7 +93,7 @@ export const get_highlighted_text = (params: {
   )
   const parts = params.text.split(regex)
 
-  return parts
+  const result = parts
     .map((part) => {
       if (part == '#Selection') {
         const className = cn(styles['keyword'], styles['keyword--selection'], {
@@ -162,4 +166,9 @@ export const get_highlighted_text = (params: {
       return process_text_part_for_files(part, params.context_file_paths)
     })
     .join('')
+
+  if (params.text.endsWith('\n')) {
+    return result + '<br data-role="trailing-break">'
+  }
+  return result
 }

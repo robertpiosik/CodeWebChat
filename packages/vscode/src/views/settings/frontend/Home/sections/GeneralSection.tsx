@@ -19,8 +19,10 @@ const CLEAR_CHECKS_OPTIONS: Dropdown.Option<ClearChecksBehavior>[] = [
 type Props = {
   context_size_warning_threshold: number
   are_automatic_checkpoints_disabled: boolean
+  send_with_shift_enter: boolean
   checkpoint_lifespan: number
   on_automatic_checkpoints_toggle: (disabled: boolean) => void
+  on_send_with_shift_enter_change: (enabled: boolean) => void
   on_checkpoint_lifespan_change: (hours: number) => void
   clear_checks_in_workspace_behavior: ClearChecksBehavior
   edit_format_instructions: EditFormatInstructions
@@ -124,6 +126,16 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 on_change={set_context_size_warning_threshold}
                 on_blur={handle_context_size_warning_threshold_blur}
                 max_width={100}
+              />
+            }
+          />
+          <Item
+            title="Send with Shift+Enter"
+            description="Use Shift+Enter to send messages and Enter to insert a new line."
+            slot_right={
+              <Toggler
+                is_on={props.send_with_shift_enter}
+                on_toggle={props.on_send_with_shift_enter_change}
               />
             }
           />
@@ -261,7 +273,10 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             slot_right={
               <TextButton
                 on_click={() =>
-                  set_instructions_visibility((prev) => ({ ...prev, diff: !prev.diff }))
+                  set_instructions_visibility((prev) => ({
+                    ...prev,
+                    diff: !prev.diff
+                  }))
                 }
               >
                 {instructions_visibility.diff ? 'Hide' : 'Show'}

@@ -274,6 +274,10 @@ export interface ResponsePreviewMessage extends BaseMessage {
   created_at?: number
 }
 
+export interface GetSendWithShiftEnterMessage extends BaseMessage {
+  command: 'GET_SEND_WITH_SHIFT_ENTER'
+}
+
 export interface ToggleFileInPreviewMessage extends BaseMessage {
   command: 'TOGGLE_FILE_IN_PREVIEW'
   file_path: string
@@ -496,6 +500,7 @@ export type FrontendMessage =
   | GetVersionMessage
   | RequestCurrentlyOpenFileTextMessage
   | ResponsePreviewMessage
+  | GetSendWithShiftEnterMessage
   | ToggleFileInPreviewMessage
   | DiscardUserChangesInPreviewMessage
   | FocusOnFileInPreviewMessage
@@ -661,6 +666,11 @@ export interface ContextFilesMessage extends BaseMessage {
   file_paths: string[]
 }
 
+export interface SendWithShiftEnterMessage extends BaseMessage {
+  command: 'SEND_WITH_SHIFT_ENTER'
+  enabled: boolean
+}
+
 export interface ResponsePreviewStartedMessage extends BaseMessage {
   command: 'RESPONSE_PREVIEW_STARTED'
   items: ItemInPreview[]
@@ -800,6 +810,7 @@ export type BackendMessage =
   | ApiPromptTypeMessage
   | VersionMessage
   | ContextFilesMessage
+  | SendWithShiftEnterMessage
   | CanUndoChangedMessage
   | ResetApplyButtonTemporaryDisabledStateMessage
   | ResponsePreviewStartedMessage

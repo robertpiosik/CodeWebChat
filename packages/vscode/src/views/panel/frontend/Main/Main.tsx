@@ -48,6 +48,7 @@ type Props = {
   context_file_paths: string[]
   presets_collapsed: boolean
   on_presets_collapsed_change: (is_collapsed: boolean) => void
+  send_with_shift_enter: boolean
   configurations_collapsed: boolean
   on_configurations_collapsed_change: (is_collapsed: boolean) => void
   currently_open_file_text?: string
@@ -728,6 +729,7 @@ export const Main: React.FC<Props> = (props) => {
       on_response_history_item_remove={props.on_response_history_item_remove}
       context_file_paths={props.context_file_paths}
       presets_collapsed={props.presets_collapsed}
+      send_with_shift_enter={props.send_with_shift_enter}
       on_presets_collapsed_change={props.on_presets_collapsed_change}
       configurations_collapsed={props.configurations_collapsed}
       on_configurations_collapsed_change={

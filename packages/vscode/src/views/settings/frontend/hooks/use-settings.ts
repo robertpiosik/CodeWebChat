@@ -53,6 +53,9 @@ export const use_settings = (vscode: any) => {
   const [ai_studio_user_id, set_ai_studio_user_id] = useState<
     number | null | undefined
   >(undefined)
+  const [send_with_shift_enter, set_send_with_shift_enter] = useState<
+    boolean | undefined
+  >(undefined)
   const [
     clear_checks_in_workspace_behavior,
     set_clear_checks_in_workspace_behavior
@@ -74,6 +77,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_CHECKPOINT_LIFESPAN' })
     post_message(vscode, { command: 'GET_GEMINI_USER_ID' })
     post_message(vscode, { command: 'GET_AI_STUDIO_USER_ID' })
+    post_message(vscode, { command: 'GET_SEND_WITH_SHIFT_ENTER' })
     post_message(vscode, { command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR' })
   }, [vscode])
 
@@ -122,6 +126,9 @@ export const use_settings = (vscode: any) => {
           break
         case 'AI_STUDIO_USER_ID':
           set_ai_studio_user_id(message.aiStudioUserId)
+          break
+        case 'SEND_WITH_SHIFT_ENTER':
+          set_send_with_shift_enter(message.enabled)
           break
         case 'CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR':
           set_clear_checks_in_workspace_behavior(message.value)
@@ -290,6 +297,12 @@ export const use_settings = (vscode: any) => {
       aiStudioUserId
     })
 
+  const handle_send_with_shift_enter_change = (enabled: boolean) =>
+    post_message(vscode, {
+      command: 'UPDATE_SEND_WITH_SHIFT_ENTER',
+      enabled
+    })
+
   const handle_clear_checks_in_workspace_behavior_change = (
     value: 'ignore-open-editors' | 'uncheck-all'
   ) =>
@@ -318,6 +331,7 @@ export const use_settings = (vscode: any) => {
     checkpoint_lifespan,
     gemini_user_id,
     ai_studio_user_id,
+    send_with_shift_enter,
     clear_checks_in_workspace_behavior,
     handle_reorder_providers,
     handle_add_provider,
@@ -341,6 +355,7 @@ export const use_settings = (vscode: any) => {
     handle_checkpoint_lifespan_change,
     handle_gemini_user_id_change,
     handle_ai_studio_user_id_change,
+    handle_send_with_shift_enter_change,
     handle_clear_checks_in_workspace_behavior_change
   }
 }

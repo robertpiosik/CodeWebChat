@@ -83,6 +83,7 @@ export const Panel = () => {
     can_undo,
     context_file_paths,
     presets_collapsed,
+    send_with_shift_enter,
     is_preview_ongoing_modal_visible,
     set_is_preview_ongoing_modal_visible,
     configurations_collapsed,
@@ -280,6 +281,7 @@ export const Panel = () => {
                 context_size_warning_threshold={context_size_warning_threshold}
                 context_file_paths={context_file_paths}
                 presets_collapsed={presets_collapsed}
+                send_with_shift_enter={send_with_shift_enter}
                 on_presets_collapsed_change={handle_presets_collapsed_change}
                 configurations_collapsed={configurations_collapsed}
                 on_configurations_collapsed_change={

@@ -86,6 +86,7 @@ type Props = {
   context_file_paths: string[]
   presets_collapsed: boolean
   on_presets_collapsed_change: (is_collapsed: boolean) => void
+  send_with_shift_enter: boolean
   configurations_collapsed: boolean
   on_configurations_collapsed_change: (is_collapsed: boolean) => void
   currently_open_file_text?: string
@@ -199,6 +200,7 @@ export const MainView: React.FC<Props> = (props) => {
             is_connected={props.is_connected}
             is_in_code_completions_mode={is_in_code_completions_prompt_type}
             has_active_selection={props.has_active_selection}
+            send_with_shift_enter={props.send_with_shift_enter}
             has_active_editor={props.has_active_editor}
             on_caret_position_change={props.on_caret_position_change}
             caret_position_to_set={props.caret_position_to_set}

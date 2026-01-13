@@ -41,6 +41,7 @@ export type PromptFieldProps = {
   on_at_sign_click: () => void
   on_hash_sign_click: () => void
   on_curly_braces_click: () => void
+  send_with_shift_enter?: boolean
   caret_position_to_set?: number
   on_caret_position_set?: () => void
   focus_key?: number
@@ -58,6 +59,7 @@ export type PromptFieldProps = {
 export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const input_ref = useRef<HTMLDivElement>(null)
   const [caret_position, set_caret_position] = useState(0)
+  const [should_show_ghost_text, set_should_show_ghost_text] = useState(false)
   const [show_at_sign_tooltip, set_show_at_sign_tooltip] = useState(false)
   const [show_submit_tooltip, set_show_submit_tooltip] = useState(false)
   const [is_text_selecting, set_is_text_selecting] = useState(false)
@@ -80,7 +82,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const { ghost_text, handle_accept_ghost_text } = use_ghost_text({
     value: props.value,
     input_ref,
-    is_focused,
+    is_focused: is_focused && should_show_ghost_text,
     currently_open_file_text: props.currently_open_file_text,
     caret_position
   })
@@ -105,6 +107,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
   const handle_mouse_down = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
+      set_should_show_ghost_text(false)
       mouse_down_pos_ref.current = { x: e.clientX, y: e.clientY }
 
       const handle_mouse_move = (move_e: MouseEvent) => {
@@ -310,6 +313,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           <button
             className={cn(styles['clear-button'], 'codicon', 'codicon-close')}
             onClick={() => {
+              set_should_show_ghost_text(false)
               handle_clear()
               input_ref.current?.focus()
             }}
@@ -320,8 +324,14 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           ref={input_ref}
           contentEditable={true}
           suppressContentEditableWarning={true}
-          onInput={handle_input_change}
-          onKeyDown={handle_key_down}
+          onInput={(e) => {
+            set_should_show_ghost_text(true)
+            handle_input_change(e)
+          }}
+          onKeyDown={(e) => {
+            set_should_show_ghost_text(true)
+            handle_key_down(e)
+          }}
           onCopy={handle_copy}
           onPaste={handle_paste}
           onClick={handle_input_click}

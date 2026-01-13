@@ -151,6 +151,15 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     })
   }
 
+  private _send_send_with_shift_enter() {
+    const config = vscode.workspace.getConfiguration('codeWebChat')
+    const enabled = config.get<boolean>('sendWithShiftEnter', false)
+    this.send_message({
+      command: 'SEND_WITH_SHIFT_ENTER',
+      enabled
+    })
+  }
+
   public send_currently_open_file_text() {
     const active_editor = vscode.window.activeTextEditor
     this.send_message({
@@ -265,6 +274,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
         if (event.affectsConfiguration('codeWebChat.isTimelineCollapsed')) {
           handle_get_collapsed_states(this)
+        }
+
+        if (event.affectsConfiguration('codeWebChat.sendWithShiftEnter')) {
+          this._send_send_with_shift_enter()
         }
       }
     )
@@ -502,6 +515,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             this.send_currently_open_file_text()
           } else if (message.command == 'REPLACE_PRESETS') {
             await handle_replace_presets(this, message)
+          } else if (message.command == 'GET_SEND_WITH_SHIFT_ENTER') {
+            this._send_send_with_shift_enter()
           } else if (message.command == 'UPDATE_PRESET') {
             await handle_update_preset(this, message, webview_view)
           } else if (message.command == 'DELETE_PRESET_GROUP_OR_SEPARATOR') {

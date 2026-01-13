@@ -963,9 +963,30 @@ export const use_handlers = (
       return
     }
 
-    if (key == 'Enter' && !shiftKey) {
-      e.preventDefault()
-      handle_submit(e)
+    if (key == 'Enter') {
+      if (props.send_with_shift_enter) {
+        if (shiftKey) {
+          e.preventDefault()
+          handle_submit(e)
+        } else {
+          e.preventDefault()
+          const selection = window.getSelection()
+          if (!selection || !selection.rangeCount || !input_ref.current) return
+
+          const range = selection.getRangeAt(0)
+          range.deleteContents()
+          const text_node = document.createTextNode('\n')
+          range.insertNode(text_node)
+          range.setStartAfter(text_node)
+          range.setEndAfter(text_node)
+          selection.removeAllRanges()
+          selection.addRange(range)
+          input_ref.current.dispatchEvent(new Event('input', { bubbles: true }))
+        }
+      } else if (!shiftKey) {
+        e.preventDefault()
+        handle_submit(e)
+      }
       return
     }
 

@@ -220,6 +220,15 @@ export interface UpdateAiStudioUserIdMessage {
   aiStudioUserId: number | null
 }
 
+export interface GetSendWithShiftEnterMessage {
+  command: 'GET_SEND_WITH_SHIFT_ENTER'
+}
+
+export interface UpdateSendWithShiftEnterMessage {
+  command: 'UPDATE_SEND_WITH_SHIFT_ENTER'
+  enabled: boolean
+}
+
 export interface GetClearChecksInWorkspaceBehaviorMessage {
   command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
 }
@@ -276,6 +285,8 @@ export type FrontendMessage =
   | UpdateGeminiUserIdMessage
   | GetAiStudioUserIdMessage
   | UpdateAiStudioUserIdMessage
+  | GetSendWithShiftEnterMessage
+  | UpdateSendWithShiftEnterMessage
   | GetClearChecksInWorkspaceBehaviorMessage
   | UpdateClearChecksInWorkspaceBehaviorMessage
   | UpsertConfigurationMessage
@@ -350,6 +361,11 @@ export interface AiStudioUserIdMessage {
   aiStudioUserId: number | null
 }
 
+export interface SendWithShiftEnterMessage {
+  command: 'SEND_WITH_SHIFT_ENTER'
+  enabled: boolean
+}
+
 export interface ClearChecksInWorkspaceBehaviorMessage {
   command: 'CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
   value: 'ignore-open-editors' | 'uncheck-all'
@@ -375,5 +391,6 @@ export type BackendMessage =
   | CheckpointLifespanMessage
   | GeminiUserIdMessage
   | AiStudioUserIdMessage
+  | SendWithShiftEnterMessage
   | ClearChecksInWorkspaceBehaviorMessage
   | ShowSectionMessage

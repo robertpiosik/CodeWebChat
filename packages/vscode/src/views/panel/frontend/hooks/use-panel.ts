@@ -109,6 +109,7 @@ export const use_panel = (vscode: any) => {
   const [context_file_paths, set_context_file_paths] = useState<string[]>([])
   const [presets_collapsed_by_web_mode, set_presets_collapsed_by_web_mode] =
     useState<{ [mode in WebPromptType]?: boolean }>({})
+  const [send_with_shift_enter, set_send_with_shift_enter] = useState(false)
   const [is_timeline_collapsed, set_is_timeline_collapsed] = useState(false)
   const [are_tasks_collapsed, set_are_tasks_collapsed] = useState(false)
   const [
@@ -211,6 +212,8 @@ export const use_panel = (vscode: any) => {
         set_has_active_selection(message.has_selection)
       } else if (message.command == 'CONTEXT_FILES') {
         set_context_file_paths(message.file_paths)
+      } else if (message.command == 'SEND_WITH_SHIFT_ENTER') {
+        set_send_with_shift_enter(message.enabled)
       } else if (message.command == 'CURRENTLY_OPEN_FILE_TEXT') {
         set_currently_open_file_text(message.text)
       } else if (message.command == 'RESPONSE_PREVIEW_STARTED') {
@@ -361,6 +364,7 @@ export const use_panel = (vscode: any) => {
       { command: 'GET_WORKSPACE_STATE' },
       { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' },
       { command: 'REQUEST_GIT_STATE' },
+      { command: 'GET_SEND_WITH_SHIFT_ENTER' },
       { command: 'GET_COLLAPSED_STATES' },
       { command: 'GET_CHECKPOINTS' },
       { command: 'REQUEST_CURRENTLY_OPEN_FILE_TEXT' },
@@ -556,6 +560,7 @@ export const use_panel = (vscode: any) => {
     presets_collapsed: web_prompt_type
       ? (presets_collapsed_by_web_mode[web_prompt_type] ?? false)
       : false,
+    send_with_shift_enter,
     configurations_collapsed: api_prompt_type
       ? (configurations_collapsed_by_api_mode[api_prompt_type] ?? false)
       : false,
