@@ -2,9 +2,7 @@ import { FC, useRef, useState, useMemo } from 'react'
 import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
 import cn from 'classnames'
 import styles from './ResponsePreview.module.scss'
-import { Checkbox } from '../../common/Checkbox'
-import { IconButton } from '../IconButton/IconButton'
-import { TextItem, InlineFileItem } from './components'
+import { TextItem, InlineFileItem, FileItem } from './components'
 import { Scrollable } from '../Scrollable'
 
 type Props = {
@@ -32,34 +30,6 @@ type Props = {
   }) => void
   on_fix_all_failed: () => void
   raw_instructions?: string
-}
-
-type FileMessage =
-  | { type: 'success'; text: string }
-  | { type: 'error'; text: string; show_actions: boolean }
-  | { type: 'warning'; text: string; show_actions: boolean }
-
-const get_file_message = (file: FileInPreview): FileMessage | null => {
-  if (file.fixed_with_intelligent_update) {
-    return {
-      type: 'success',
-      text: 'Fixed successfully'
-    }
-  } else if (file.apply_failed) {
-    return {
-      type: 'error',
-      text: 'Failed to apply changes',
-      show_actions: true
-    }
-  } else if (file.diff_application_method == 'search_and_replace') {
-    return {
-      type: 'warning',
-      text: 'Used aggressive fallback method',
-      show_actions: true
-    }
-  } else {
-    return null
-  }
 }
 
 export const ResponsePreview: FC<Props> = (props) => {
@@ -140,28 +110,6 @@ export const ResponsePreview: FC<Props> = (props) => {
     return ''
   }
 
-  const render_apply_progress = (file: FileInPreview) => {
-    if (!file.is_applying) return null
-
-    let status_text = ''
-    if (file.apply_status == 'waiting') status_text = 'Waiting...'
-    else if (file.apply_status == 'thinking') status_text = 'Thinking...'
-    else if (file.apply_status == 'retrying') status_text = 'Retrying...'
-    else if (file.apply_status == 'receiving') {
-      const progress = file.apply_progress ?? 0
-      const tps = file.apply_tokens_per_second
-      status_text = `${progress}%`
-      if (tps) status_text += ` (${tps} t/s)`
-    } else if (file.apply_status == 'done') status_text = 'Done'
-
-    return (
-      <div className={styles['list__item__progress']}>
-        <span>{status_text}</span>
-        <span className="codicon codicon-loading codicon-modifier-spin" />
-      </div>
-    )
-  }
-
   return (
     <Scrollable
       ref={scrollable_ref}
@@ -235,219 +183,53 @@ export const ResponsePreview: FC<Props> = (props) => {
           {props.items.map((item, index) => {
             if (item.type == 'file') {
               const file = item
-              const message_obj = get_file_message(file)
-              const last_slash_index = file.file_path.lastIndexOf('/')
-              const file_name = file.file_path.substring(last_slash_index + 1)
-              const dir_path =
-                last_slash_index > -1
-                  ? file.file_path.substring(0, last_slash_index)
-                  : ''
               return (
-                <div key={index} className={styles['list__item']}>
-                  <div
-                    className={cn(styles['list__item__file'], {
-                      [styles['list__item__file--selected']]:
-                        index == last_clicked_file_index,
-                      [styles['list__item__file--error']]:
-                        file.apply_failed &&
-                        !file.fixed_with_intelligent_update,
-                      [styles['list__item__file--warning']]:
-                        file.diff_application_method == 'search_and_replace' &&
-                        !file.fixed_with_intelligent_update
-                    })}
-                    onClick={() => {
-                      set_last_clicked_file_index(index)
-                      props.on_focus_file({
-                        file_path: file.file_path,
-                        workspace_name: file.workspace_name
-                      })
-                    }}
-                    role="button"
-                    title={file.file_path}
-                  >
-                    <div className={styles['list__item__file__left']}>
-                      {files_in_preview.length > 1 && (
-                        <Checkbox
-                          checked={file.is_checked}
-                          on_change={(checked) => {
-                            props.on_toggle_file({
-                              file_path: file.file_path,
-                              workspace_name: file.workspace_name,
-                              is_checked: checked
-                            })
-                          }}
-                        />
-                      )}
-                      <div
-                        className={cn(styles['list__item__file__left__label'], {
-                          [styles['list__item__file__left__label--new']]:
-                            file.file_state == 'new',
-                          [styles['list__item__file__left__label--deleted']]:
-                            file.file_state == 'deleted'
-                        })}
-                      >
-                        <span>{file_name}</span>
-
-                        <span>
-                          {props.has_multiple_workspaces && file.workspace_name
-                            ? `${file.workspace_name}${dir_path ? '/' : ''}`
-                            : ''}
-                          {dir_path}
-                        </span>
-                      </div>
-                    </div>
-                    <div className={styles['list__item__file__right']}>
-                      {file.is_applying ? (
-                        render_apply_progress(file)
-                      ) : (
-                        <>
-                          <div className={styles['list__item__file__actions']}>
-                            {file.content !== undefined &&
-                              file.proposed_content !== undefined &&
-                              file.content !== file.proposed_content && (
-                                <IconButton
-                                  codicon_icon="discard"
-                                  title="Discard user changes"
-                                  on_click={(e) => {
-                                    e.stopPropagation()
-                                    props.on_discard_user_changes({
-                                      file_path: file.file_path,
-                                      workspace_name: file.workspace_name
-                                    })
-                                  }}
-                                />
-                              )}
-                            {file.ai_content && (
-                              <IconButton
-                                codicon_icon="open-preview"
-                                title="Preview generated code"
-                                on_click={(e) => {
-                                  e.stopPropagation()
-                                  props.on_preview_generated_code({
-                                    file_path: file.file_path,
-                                    workspace_name: file.workspace_name,
-                                    content: file.ai_content!
-                                  })
-                                }}
-                              />
-                            )}
-                            <IconButton
-                              codicon_icon="sparkle"
-                              title="Fix with Intelligent Update API tool"
-                              on_click={(e) => {
-                                e.stopPropagation()
-                                props.on_intelligent_update({
-                                  file_path: file.file_path,
-                                  workspace_name: file.workspace_name
-                                })
-                              }}
-                            />
-                            <IconButton
-                              codicon_icon="go-to-file"
-                              title="Go to file"
-                              on_click={(e) => {
-                                e.stopPropagation()
-                                props.on_go_to_file({
-                                  file_path: file.file_path,
-                                  workspace_name: file.workspace_name
-                                })
-                              }}
-                            />
-                          </div>
-                          <div
-                            className={styles['list__item__file__line-numbers']}
-                          >
-                            {file.file_state != 'deleted' && (
-                              <span
-                                className={
-                                  styles[
-                                    'list__item__file__line-numbers__added'
-                                  ]
-                                }
-                              >
-                                +{file.lines_added}
-                              </span>
-                            )}
-                            {file.file_state != 'new' && (
-                              <span
-                                className={
-                                  styles[
-                                    'list__item__file__line-numbers__removed'
-                                  ]
-                                }
-                              >
-                                -{file.lines_removed}
-                              </span>
-                            )}
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                  {message_obj && (
-                    <div
-                      className={cn(styles['list__message'], {
-                        [styles['list__message--error']]:
-                          message_obj.type == 'error',
-                        [styles['list__message--warning']]:
-                          message_obj.type == 'warning'
-                      })}
-                    >
-                      <div className={styles['list__message__content']}>
-                        {message_obj.type == 'success' && (
-                          <span className="codicon codicon-check" />
-                        )}
-                        {message_obj.type == 'error' && (
-                          <span className="codicon codicon-error" />
-                        )}
-                        {message_obj.type == 'warning' && (
-                          <span className="codicon codicon-warning" />
-                        )}
-                        <span>{message_obj.text}</span>
-                      </div>
-                      {'show_actions' in message_obj &&
-                        message_obj.show_actions && (
-                          <div className={styles['list__message__actions']}>
-                            {file.ai_content && !file.is_applying && (
-                              <div
-                                className={
-                                  styles['list__message__actions__item']
-                                }
-                                onClick={() =>
-                                  props.on_preview_generated_code({
-                                    file_path: file.file_path,
-                                    workspace_name: file.workspace_name,
-                                    content: file.ai_content!
-                                  })
-                                }
-                                title="Preview generated code"
-                              >
-                                <span className="codicon codicon-open-preview" />
-                                <span>Preview</span>
-                              </div>
-                            )}
-                            {!file.is_applying && (
-                              <div
-                                className={
-                                  styles['list__message__actions__item']
-                                }
-                                onClick={() =>
-                                  props.on_intelligent_update({
-                                    file_path: file.file_path,
-                                    workspace_name: file.workspace_name
-                                  })
-                                }
-                                title={'Fix with Intelligent Update API tool'}
-                              >
-                                <span className="codicon codicon-sparkle" />
-                                <span>Fix</span>
-                              </div>
-                            )}
-                          </div>
-                        )}
-                    </div>
-                  )}
-                </div>
+                <FileItem
+                  key={index}
+                  file={file}
+                  is_selected={index === last_clicked_file_index}
+                  has_multiple_workspaces={props.has_multiple_workspaces}
+                  total_files_count={files_in_preview.length}
+                  on_click={() => {
+                    set_last_clicked_file_index(index)
+                    props.on_focus_file({
+                      file_path: file.file_path,
+                      workspace_name: file.workspace_name
+                    })
+                  }}
+                  on_toggle={(checked) =>
+                    props.on_toggle_file({
+                      file_path: file.file_path,
+                      workspace_name: file.workspace_name,
+                      is_checked: checked
+                    })
+                  }
+                  on_discard_user_changes={() =>
+                    props.on_discard_user_changes({
+                      file_path: file.file_path,
+                      workspace_name: file.workspace_name
+                    })
+                  }
+                  on_preview_generated_code={() =>
+                    props.on_preview_generated_code({
+                      file_path: file.file_path,
+                      workspace_name: file.workspace_name,
+                      content: file.ai_content!
+                    })
+                  }
+                  on_intelligent_update={() =>
+                    props.on_intelligent_update({
+                      file_path: file.file_path,
+                      workspace_name: file.workspace_name
+                    })
+                  }
+                  on_go_to_file={() =>
+                    props.on_go_to_file({
+                      file_path: file.file_path,
+                      workspace_name: file.workspace_name
+                    })
+                  }
+                />
               )
             } else if (item.type == 'inline-file') {
               return (

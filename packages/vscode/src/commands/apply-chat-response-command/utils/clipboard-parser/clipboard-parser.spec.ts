@@ -1735,6 +1735,30 @@ describe('clipboard-parser', () => {
       })
     })
 
+    it('parses a mix of text, non-diff code blocks, and diff blocks', () => {
+      const test_case = 'diff-non-diff-code-blocks'
+      const text = load_test_case_file('diffs', test_case, `${test_case}.txt`)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(3)
+      expect(result[0]).toMatchObject({
+        type: 'text',
+        content: load_test_case_file('diffs', test_case, '1-text.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'inline-file',
+        content: load_test_case_file('diffs', test_case, '2-inline-file.txt')
+      })
+      expect(result[2]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/index.ts',
+        content: load_test_case_file('diffs', test_case, '3-file.txt')
+      })
+    })
+
     it('parses a mix of a rename one-liner and a diff', () => {
       const test_case = 'diff-mix-rename-one-liner-and-diff'
       const text = load_test_case_file('diffs', test_case, `${test_case}.txt`)
@@ -1983,12 +2007,21 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result).toHaveLength(2)
+      expect(result).toHaveLength(4)
       expect(result[0]).toMatchObject({
         type: 'text',
-        content: load_test_case_file('diffs', test_case, '1-text.txt')
+        content: 'Lorem ipsum.'
       })
       expect(result[1]).toMatchObject({
+        type: 'inline-file',
+        content: 'pnpm add -D prettier',
+        language: 'bash'
+      })
+      expect(result[2]).toMatchObject({
+        type: 'text',
+        content: 'Lorem ipsum.'
+      })
+      expect(result[3]).toMatchObject({
         type: 'diff',
         file_path: 'src/index.ts',
         content: load_test_case_file('diffs', test_case, '2-file.txt')

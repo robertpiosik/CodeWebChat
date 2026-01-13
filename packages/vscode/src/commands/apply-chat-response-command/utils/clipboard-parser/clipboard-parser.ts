@@ -1,5 +1,8 @@
-import { extract_diffs } from './extract-diff-patches'
-import { parse_code_completion, parse_multiple_files } from './parsers'
+import {
+  extract_diffs,
+  parse_code_completion,
+  parse_multiple_files
+} from './parsers'
 
 export interface FileItem {
   type: 'file'

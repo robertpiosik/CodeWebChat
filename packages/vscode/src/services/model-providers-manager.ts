@@ -35,7 +35,7 @@ export const get_tool_config_id = (config: ToolConfig): string => {
     config.model,
     config.temperature,
     config.reasoning_effort ?? '',
-    config.max_concurrency ?? '',
+    config.max_concurrency ?? ''
   ]
     .filter((v) => v !== null && v !== undefined)
     .join(':')

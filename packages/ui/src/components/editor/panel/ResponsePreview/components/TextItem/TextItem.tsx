@@ -1,16 +1,15 @@
 import { FC, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
-import styles from './InlineFileItem.module.scss'
-import { IconButton } from '../../IconButton'
+import styles from './TextItem.module.scss'
+import { IconButton } from '../../../IconButton'
 
 type Props = {
   content: string
-  language?: string
   is_expanded: boolean
   on_toggle: (element: HTMLDivElement) => void
 }
 
-export const InlineFileItem: FC<Props> = (props) => {
+export const TextItem: FC<Props> = (props) => {
   const header_ref = useRef<HTMLDivElement>(null)
   const mouse_moved = useRef(false)
   const has_selection = useRef(false)
@@ -40,8 +39,6 @@ export const InlineFileItem: FC<Props> = (props) => {
     }
   }
 
-  const markdown_content = `\`\`\`${props.language || ''}\n${props.content}\n\`\`\``
-
   return (
     <div className={styles.container}>
       <div
@@ -64,7 +61,7 @@ export const InlineFileItem: FC<Props> = (props) => {
           onMouseMove={handle_mouse_move}
           onMouseUp={handle_mouse_up}
         >
-          <ReactMarkdown>{markdown_content}</ReactMarkdown>
+          <ReactMarkdown>{props.content}</ReactMarkdown>
           <div
             className={styles.text__collapse}
             onClick={() => {

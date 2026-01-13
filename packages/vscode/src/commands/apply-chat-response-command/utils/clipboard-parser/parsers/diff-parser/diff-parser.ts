@@ -1,264 +1,27 @@
 import { Logger } from '@shared/utils/logger'
-import { extract_path_from_line_of_code } from '@shared/utils/extract-path-from-line-of-code'
-import { extract_workspace_and_path } from '../clipboard-parser'
+import {
+  DiffItem,
+  InlineFileItem,
+  TextItem,
+  extract_workspace_and_path
+} from '../../clipboard-parser'
+import {
+  normalize_path,
+  is_valid_file_path,
+  find_file_path_before_block,
+  remove_path_line_from_text_block,
+  normalize_header_line,
+  extract_paths_from_lines,
+  find_patch_start_index,
+  format_hunk_headers
+} from './helpers'
 
-export type Diff = {
-  type: 'diff'
-  file_path: string
-  content: string
-  workspace_name?: string
-  new_file_path?: string
-}
-
-type TextBlock = {
-  type: 'text'
-  content: string
-}
-
-export type DiffOrTextBlock = Diff | TextBlock
-
-const normalize_path = (path: string): string => {
-  return path.replace(/\\/g, '/')
-}
-
-const strip_quotes = (path: string): string => {
-  if (path.startsWith('"') && path.endsWith('"')) {
-    return path.substring(1, path.length - 1)
-  }
-  return path
-}
-
-const is_valid_file_path = (potential_path: string): boolean => {
-  return (
-    !potential_path.endsWith('/') &&
-    !potential_path.endsWith('\\') &&
-    (potential_path.includes('.') || potential_path.includes('/')) &&
-    !potential_path.includes(' ') &&
-    /[a-zA-Z0-9]/.test(potential_path)
-  )
-}
-
-const extract_path_from_potential_string = (line: string) => {
-  let extracted = extract_path_from_line_of_code(line)
-
-  if (!extracted) {
-    const xml_match = line.match(/^<[^>]+>([^<]+)<\/[^>]+>$/)
-    if (xml_match && xml_match[1]) {
-      const potential_path = xml_match[1].trim()
-      if (
-        potential_path &&
-        (potential_path.includes('/') ||
-          potential_path.includes('\\') ||
-          potential_path.includes('.')) &&
-        !potential_path.includes(' ')
-      ) {
-        extracted = potential_path
-      }
-    }
-  }
-
-  if (!extracted) {
-    let potential_path = line
-    if (potential_path.endsWith(':')) {
-      potential_path = potential_path.slice(0, -1).trim()
-    }
-    const backtick_match = potential_path.match(/`([^`]+)`/)
-    if (backtick_match && backtick_match[1]) {
-      potential_path = backtick_match[1]
-    }
-
-    if (
-      potential_path &&
-      (potential_path.includes('/') ||
-        potential_path.includes('\\') ||
-        potential_path.includes('.')) &&
-      !potential_path.endsWith('.') &&
-      /^[a-zA-Z0-9_./@-]+$/.test(potential_path)
-    ) {
-      extracted = potential_path
-    }
-  }
-
-  return extracted
-}
-
-const extract_path_with_xml_fallback = (line: string) => {
-  let extracted = extract_path_from_line_of_code(line)
-
-  if (!extracted) {
-    const xml_match = line.match(/^<[^>]+>([^<]+)<\/[^>]+>$/)
-    if (xml_match && xml_match[1]) {
-      const potential_path = xml_match[1].trim()
-      if (
-        potential_path &&
-        (potential_path.includes('/') ||
-          potential_path.includes('\\') ||
-          potential_path.includes('.')) &&
-        !potential_path.includes(' ')
-      ) {
-        extracted = potential_path
-      }
-    }
-  }
-
-  if (!extracted) {
-    const match = line.match(/`([^`]+)`/)
-    if (match && match[1]) {
-      const potential_path = match[1]
-      if (
-        potential_path.includes('/') ||
-        potential_path.includes('\\') ||
-        potential_path.includes('.')
-      ) {
-        extracted = potential_path
-      }
-    }
-  }
-
-  return extracted
-}
-
-const find_file_path_before_block = (params: {
-  lines: string[]
-  block_start: number
-  is_single_root: boolean
-  max_lines_back?: number
-}): { file_path?: string; workspace_name?: string } => {
-  const max_back = params.max_lines_back || 5
-  let candidate: { file_path?: string; workspace_name?: string } | undefined
-
-  for (
-    let j = params.block_start - 1;
-    j >= Math.max(0, params.block_start - max_back);
-    j--
-  ) {
-    const prev_line = params.lines[j].trim()
-    if (!prev_line) continue
-
-    const extracted = extract_path_with_xml_fallback(prev_line)
-
-    if (extracted) {
-      if (extracted.endsWith('/') || extracted.endsWith('\\')) {
-        continue
-      }
-
-      const { workspace_name } = extract_workspace_and_path({
-        raw_file_path: extracted,
-        is_single_root_folder_workspace: params.is_single_root
-      })
-
-      // If we find a heading with a path, it takes precedence over anything below it
-      if (prev_line.startsWith('###')) {
-        return { file_path: extracted, workspace_name }
-      }
-
-      if (!candidate) {
-        candidate = { file_path: extracted, workspace_name }
-      }
-    }
-  }
-
-  return candidate || {}
-}
-
-const remove_path_line_from_text_block = (params: {
-  text_item: TextBlock
-  target_file_path: string
-  is_single_root: boolean
-}): void => {
-  const content_lines = params.text_item.content.split('\n')
-  let path_line_index = -1
-
-  for (let i = content_lines.length - 1; i >= 0; i--) {
-    const line = content_lines[i].trim()
-    if (line == '') continue
-
-    const extracted = extract_path_from_potential_string(line)
-
-    if (extracted) {
-      const { relative_path } = extract_workspace_and_path({
-        raw_file_path: extracted,
-        is_single_root_folder_workspace: params.is_single_root
-      })
-      if (relative_path === params.target_file_path) {
-        if (line.startsWith('###')) {
-          path_line_index = i
-        }
-        break
-      }
-    }
-  }
-
-  if (path_line_index > -1) {
-    const new_content_lines = content_lines.filter(
-      (_, index) => index !== path_line_index
-    )
-
-    const collapsed_lines: string[] = []
-    for (const line of new_content_lines) {
-      if (
-        line.trim() == '' &&
-        collapsed_lines.length > 0 &&
-        collapsed_lines[collapsed_lines.length - 1].trim() === ''
-      ) {
-        continue
-      }
-      collapsed_lines.push(line)
-    }
-    const new_content = collapsed_lines.join('\n').trim()
-
-    params.text_item.content = new_content
-  }
-}
-
-const normalize_header_line = (params: {
-  line: string
-  is_single_root: boolean
-}): string => {
-  const processed_line = params.line.replace(/\s+\d{4}-\d{2}-\d{2}.*$/, '')
-
-  if (processed_line.startsWith('--- ')) {
-    let path_part = strip_quotes(processed_line.substring(4).trim())
-    if (path_part.startsWith('a/')) {
-      path_part = path_part.substring(2)
-    }
-    if (params.is_single_root === false) {
-      path_part = extract_workspace_and_path({
-        raw_file_path: path_part,
-        is_single_root_folder_workspace: params.is_single_root
-      }).relative_path
-    }
-
-    if (path_part == '/dev/null') {
-      return '--- /dev/null'
-    }
-    return `--- a/${path_part}`
-  }
-
-  if (processed_line.startsWith('+++ ')) {
-    let path_part = strip_quotes(processed_line.substring(4).trim())
-    if (path_part.startsWith('b/')) {
-      path_part = path_part.substring(2)
-    }
-    if (params.is_single_root === false) {
-      path_part = extract_workspace_and_path({
-        raw_file_path: path_part,
-        is_single_root_folder_workspace: params.is_single_root
-      }).relative_path
-    }
-    if (path_part == '/dev/null') {
-      return '+++ /dev/null'
-    }
-    return `+++ b/${path_part}`
-  }
-
-  return processed_line
-}
+type DiffParserItem = DiffItem | TextItem | InlineFileItem
 
 const process_collected_patch_lines = (params: {
   patch_lines_array: string[]
   is_single_root: boolean
-}): Diff | null => {
+}): DiffItem | null => {
   const lines = [...params.patch_lines_array]
   while (lines.length > 0 && lines[lines.length - 1].trim() === '') {
     lines.pop()
@@ -321,7 +84,7 @@ const process_collected_patch_lines = (params: {
     is_single_root_folder_workspace: params.is_single_root
   })
 
-  const patch: Diff = {
+  const patch: DiffItem = {
     type: 'diff',
     file_path: relative_path,
     workspace_name,
@@ -347,7 +110,7 @@ const convert_code_block_to_new_file_diff = (params: {
   lines: string[]
   is_single_root: boolean
   file_path_hint?: string
-}): Diff | null => {
+}): DiffItem | null => {
   if (params.lines.length == 0 && !params.file_path_hint) {
     return null
   }
@@ -500,8 +263,8 @@ const convert_code_block_to_new_file_diff = (params: {
 const process_text_for_file_operations = (params: {
   lines: string[]
   is_single_root: boolean
-}): DiffOrTextBlock[] => {
-  const items: DiffOrTextBlock[] = []
+}): DiffParserItem[] => {
+  const items: DiffParserItem[] = []
   let current_text_lines: string[] = []
 
   const deleted_file_header_regex = /^###\s+Deleted file:\s*`([^`]+)`/
@@ -556,7 +319,7 @@ const process_text_for_file_operations = (params: {
 
       const content = `--- a/${old_info.relative_path}\n+++ b/${old_info.relative_path}\n`
 
-      const patch: Diff = {
+      const patch: DiffItem = {
         type: 'diff',
         file_path: old_info.relative_path,
         workspace_name: old_info.workspace_name,
@@ -584,8 +347,8 @@ const process_text_for_file_operations = (params: {
 const extract_all_code_block_patches = (params: {
   normalized_text: string
   is_single_root: boolean
-}): DiffOrTextBlock[] => {
-  const items: DiffOrTextBlock[] = []
+}): DiffParserItem[] => {
+  const items: DiffParserItem[] = []
   const lines = params.normalized_text.split('\n')
 
   const code_block_regex = /^```(\w*)/
@@ -681,7 +444,7 @@ const extract_all_code_block_patches = (params: {
   }
   code_blocks.push(...xml_blocks)
   code_blocks.sort((a, b) => a.start - b.start)
-  const diff_block_patches = new Map<number, Diff[]>()
+  const diff_block_patches = new Map<number, DiffItem[]>()
 
   for (let i = 0; i < code_blocks.length; i++) {
     const block = code_blocks[i]
@@ -836,6 +599,25 @@ const extract_all_code_block_patches = (params: {
         }
         items.push(patch)
         last_block_end = block.end
+      } else {
+        const text_before_lines = lines.slice(last_block_end + 1, block.start)
+        items.push(
+          ...process_text_for_file_operations({
+            lines: text_before_lines,
+            is_single_root: params.is_single_root
+          })
+        )
+
+        const content = block_lines.join('\n')
+        // Treated as an inline file (code snippet) since it's not a diff or a new file with a path
+        if (content.trim() != '') {
+          items.push({
+            type: 'inline-file',
+            content,
+            language: block.type
+          })
+        }
+        last_block_end = block.end
       }
     }
   }
@@ -863,8 +645,8 @@ const extract_all_code_block_patches = (params: {
 const parse_multiple_raw_patches = (params: {
   all_lines: string[]
   is_single_root: boolean
-}): Diff[] => {
-  const patches: Diff[] = []
+}): DiffItem[] => {
+  const patches: DiffItem[] = []
   let current_patch_lines: string[] = []
 
   for (const line of params.all_lines) {
@@ -921,10 +703,10 @@ const parse_multiple_raw_patches = (params: {
 }
 
 const filter_last_diff_per_file = (
-  items: DiffOrTextBlock[]
-): DiffOrTextBlock[] => {
+  items: DiffParserItem[]
+): DiffParserItem[] => {
   const seen_files = new Set<string>()
-  const result: DiffOrTextBlock[] = []
+  const result: DiffParserItem[] = []
 
   for (let i = items.length - 1; i >= 0; i--) {
     const item = items[i]
@@ -944,7 +726,7 @@ const filter_last_diff_per_file = (
 export const extract_diffs = (params: {
   clipboard_text: string
   is_single_root: boolean
-}): DiffOrTextBlock[] => {
+}): DiffParserItem[] => {
   const normalized_text = params.clipboard_text.replace(/\r\n/g, '\n')
   const lines = normalized_text.split('\n')
 
@@ -959,7 +741,7 @@ export const extract_diffs = (params: {
     xml_file_tag_start_regex.test(line.trim())
   )
 
-  let items: DiffOrTextBlock[]
+  let items: DiffParserItem[]
   if (uses_code_blocks || uses_xml_blocks) {
     items = extract_all_code_block_patches({
       normalized_text,
@@ -974,56 +756,7 @@ export const extract_diffs = (params: {
   return filter_last_diff_per_file(items)
 }
 
-export const extract_paths_from_lines = (
-  lines: string[]
-): { from_path?: string; to_path?: string } => {
-  let from_path: string | undefined
-  let to_path: string | undefined
-
-  for (const line of lines) {
-    const git_diff_match = line.match(/^diff --git a\/(.+?) b\/(.+)$/)
-    if (git_diff_match) {
-      if (git_diff_match[2]) to_path = git_diff_match[2]
-      if (git_diff_match[1]) from_path = git_diff_match[1]
-    }
-    const from_match = line.match(/^--- (?:a\/|"a\/)?([^\t"]+)"?(?:\t.*)?$/)
-    if (from_match && from_match[1]) from_path = from_match[1]
-    const to_match = line.match(/^\+\+\+ (?:b\/|"b\/)?([^\t"]+)"?(?:\t.*)?$/)
-    if (to_match && to_match[1]) to_path = to_match[1]
-  }
-  return { from_path, to_path }
-}
-
-const find_patch_start_index = (lines: string[]): number => {
-  for (let i = 0; i < lines.length; i++) {
-    if (lines[i].startsWith('+++ ')) {
-      for (let j = i - 1; j >= 0; j--) {
-        if (lines[j].startsWith('--- ')) {
-          if (j > 0 && lines[j - 1].startsWith('diff --git')) {
-            return j
-          }
-          return j
-        }
-      }
-      break
-    }
-  }
-
-  for (let i = 0; i < lines.length; i++) {
-    if (lines[i].startsWith('diff --git')) {
-      for (let j = i + 1; j < lines.length; j++) {
-        if (lines[j].startsWith('--- ')) {
-          return j
-        }
-        if (lines[j].startsWith('diff --git') || lines[j].startsWith('@@')) {
-          break
-        }
-      }
-    }
-  }
-
-  return -1
-}
+export { extract_paths_from_lines }
 
 const build_patch_content = (params: {
   lines: string[]
@@ -1144,26 +877,4 @@ const build_patch_content = (params: {
   }
 
   return patch_content
-}
-
-const format_hunk_headers = (lines: string[]): string[] => {
-  const formatted_lines: string[] = []
-  for (const line of lines) {
-    const hunk_match = line.match(/^(@@ -\d+(?:,\d+)? \+\d+(?:,\d+)? @@)(.*)$/)
-    if (hunk_match && hunk_match[2].trim() != '') {
-      formatted_lines.push(hunk_match[1])
-      if (hunk_match[2].length > 0) {
-        formatted_lines.push(hunk_match[2])
-      }
-    } else if (line.startsWith('@@') && !hunk_match) {
-      const context = line.substring(2).trim()
-      formatted_lines.push('@@ -0,0 +0,0 @@')
-      if (context) {
-        formatted_lines.push(' ' + context)
-      }
-    } else {
-      formatted_lines.push(line)
-    }
-  }
-  return formatted_lines
 }

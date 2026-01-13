@@ -9,7 +9,12 @@ export const Default = () => {
   const [checked, set_checked] = useState(false)
 
   return (
-    <div style={{ padding: '20px', background: 'var(--vscode-sideBar-background)' }}>
+    <div
+      style={{
+        padding: '20px',
+        background: 'var(--vscode-sideBar-background)'
+      }}
+    >
       <SimpleCheckbox
         checked={checked}
         on_change={set_checked}

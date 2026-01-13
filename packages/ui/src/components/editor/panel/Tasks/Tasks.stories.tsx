@@ -38,7 +38,12 @@ const initialTasks: Task[] = [
     is_checked: true,
     created_at: Date.now() - 1000 * 60 * 60 * 2, // 2 hours ago
     children: [
-      { text: 'Write unit tests for the fix', is_checked: true, created_at: Date.now() - 1000 * 60 * 60, children: [] }
+      {
+        text: 'Write unit tests for the fix',
+        is_checked: true,
+        created_at: Date.now() - 1000 * 60 * 60,
+        children: []
+      }
     ]
   },
   {
@@ -51,7 +56,8 @@ const initialTasks: Task[] = [
 
 const update_in_tree = (tasks: Task[], updated: Task): Task[] => {
   return tasks.map((t) => {
-    if (t.created_at === updated.created_at) return { ...updated, children: t.children }
+    if (t.created_at === updated.created_at)
+      return { ...updated, children: t.children }
     if (t.children)
       return { ...t, children: update_in_tree(t.children, updated) }
     return t
