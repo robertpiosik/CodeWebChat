@@ -37,12 +37,13 @@
   align-items: center;
   padding: 0 8px;
   height: 28px;
-  transform: translateY(2px);
+  transform: translateY(3px);
   transition: transform var(--transition-duration-250)
     var(--transition-timing-function);
 
   &--scrolled {
     transform: unset;
+    transform: translateY(1px);
   }
 }
 
@@ -116,11 +117,6 @@
     align-items: center;
     right: 0;
     top: 0;
-    background: linear-gradient(
-      to left,
-      var(--vscode-quickInput-background) 56%,
-      transparent
-    );
     padding-left: 30px;
     pointer-events: none;
     padding-right: 8px;
