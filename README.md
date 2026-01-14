@@ -21,7 +21,8 @@ Code Web Chat (CWC) is a free and open-source AI coding extension designed for s
 
 👉️ **Apply responses**—interactive edits integration with checkpoints \
 👉️ **Fully-featured**—code completions, commit messages, and more \
-🫰 **Cost-efficient**—zero-overhead prompts optimized for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching)
+🫰 **Cost-efficient**—zero-overhead prompts optimized for [caching](https://platform.openai.com/docs/guides/prompt-caching) \
+✋ **Privacy-first**—zero telemetry, operates on your machine
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />
