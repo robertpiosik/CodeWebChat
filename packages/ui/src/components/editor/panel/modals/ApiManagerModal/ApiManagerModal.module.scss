@@ -37,7 +37,7 @@
   align-items: center;
   padding: 0 8px;
   height: 28px;
-  transform: translateY(3px);
+  transform: translateY(2px);
   transition: transform var(--transition-duration-250)
     var(--transition-timing-function);
 
@@ -57,6 +57,10 @@
   flex-direction: column;
   width: 100%;
   position: relative;
+
+  &:nth-child(even) {
+    background-color: var(--vscode-list-hoverBackground);
+  }
 
   &__top {
     display: flex;
@@ -154,5 +158,9 @@
         opacity: 1;
       }
     }
+  }
+
+  &:nth-child(odd) &__close {
+    background: transparent;
   }
 }
