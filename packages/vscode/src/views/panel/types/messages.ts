@@ -727,6 +727,9 @@ export interface ShowApiManagerProgressMessage extends BaseMessage {
   cancellable?: boolean
   show_elapsed_time?: boolean
   delay_visibility?: boolean
+  provider_name: string
+  model?: string
+  reasoning_effort?: string
 }
 
 export interface HideApiManagerProgressMessage extends BaseMessage {

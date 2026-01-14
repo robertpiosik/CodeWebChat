@@ -95,9 +95,10 @@ export const FileItem: FC<Props> = ({
             file.apply_failed && !file.fixed_with_intelligent_update,
           [styles['file--warning']]:
             file.diff_application_method == 'search_and_replace' &&
-            !file.fixed_with_intelligent_update
+            !file.fixed_with_intelligent_update,
+          [styles['file--deleted']]: file.file_state === 'deleted'
         })}
-        onClick={on_click}
+        onClick={file.file_state === 'deleted' ? undefined : on_click}
         role="button"
         title={file.file_path}
       >
@@ -150,14 +151,16 @@ export const FileItem: FC<Props> = ({
                     }}
                   />
                 )}
-                <IconButton
-                  codicon_icon="sparkle"
-                  title="Fix with Intelligent Update API tool"
-                  on_click={(e) => {
-                    e.stopPropagation()
-                    on_intelligent_update()
-                  }}
-                />
+                {file.file_state != 'new' && file.file_state != 'deleted' && (
+                  <IconButton
+                    codicon_icon="sparkle"
+                    title="Fix with Intelligent Update API tool"
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      on_intelligent_update()
+                    }}
+                  />
+                )}
                 <IconButton
                   codicon_icon="go-to-file"
                   title="Go to file"

@@ -23,6 +23,7 @@
   margin: 0 12px;
   height: 34px;
   border-radius: 8px;
+  cursor: pointer;
 
   &:hover {
     background-color: var(--vscode-list-hoverBackground);
@@ -35,6 +36,10 @@
 
   &--selected {
     background-color: var(--vscode-list-inactiveSelectionBackground);
+  }
+
+  &--deleted {
+    cursor: default !important;
   }
 
   &--error {

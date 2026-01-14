@@ -38,6 +38,9 @@ export const use_panel = (vscode: any) => {
         tokens_per_second?: number
         total_tokens?: number
         cancellable?: boolean
+        provider_name: string
+        model?: string
+        reasoning_effort?: string
       }
     >
   >({})
@@ -309,7 +312,10 @@ export const use_panel = (vscode: any) => {
             total_tokens: message.total_tokens,
             cancellable: message.cancellable ?? true,
             show_elapsed_time: message.show_elapsed_time,
-            delay_visibility: message.delay_visibility
+            delay_visibility: message.delay_visibility,
+            provider_name: message.provider_name,
+            model: message.model,
+            reasoning_effort: message.reasoning_effort
           }
         }))
       } else if (message.command == 'HIDE_API_MANAGER_PROGRESS') {

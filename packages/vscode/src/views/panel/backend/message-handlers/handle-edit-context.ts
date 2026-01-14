@@ -3,7 +3,8 @@ import { FilesCollector } from '@/utils/files-collector'
 import { Logger } from '@shared/utils/logger'
 import {
   ModelProvidersManager,
-  get_tool_config_id
+  get_tool_config_id,
+  Provider
 } from '@/services/model-providers-manager'
 import axios from 'axios'
 import { PROVIDERS } from '@shared/constants/providers'
@@ -37,7 +38,7 @@ const get_edit_context_config = async (
   context: vscode.ExtensionContext,
   panel_provider: PanelProvider,
   config_id?: string
-): Promise<{ provider: any; config: any } | undefined> => {
+): Promise<{ provider: Provider; config: ToolConfig } | undefined> => {
   const edit_context_configs =
     await api_providers_manager.get_edit_context_tool_configs()
 
@@ -84,13 +85,18 @@ const get_edit_context_config = async (
     if (last_selected_id) {
       selected_config =
         edit_context_configs.find(
-          (c) => get_tool_config_id(c) === last_selected_id
+          (c) => get_tool_config_id(c) == last_selected_id
         ) || null
     }
   }
 
   if (!selected_config || show_quick_pick) {
-    const create_items = async () => {
+    type Item = vscode.QuickPickItem & {
+      config: ToolConfig
+      index: number
+      id: string
+    }
+    const create_items = async (): Promise<Item[]> => {
       return edit_context_configs.map((config: ToolConfig, index) => {
         const description_parts = [config.provider_name]
         if (config.temperature != null) {
@@ -113,7 +119,7 @@ const get_edit_context_config = async (
       })
     }
 
-    const quick_pick = vscode.window.createQuickPick()
+    const quick_pick = vscode.window.createQuickPick<Item>()
     quick_pick.items = await create_items()
     quick_pick.placeholder = 'Select configuration'
     quick_pick.matchOnDescription = true
@@ -126,7 +132,7 @@ const get_edit_context_config = async (
         LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY
       )
 
-    const items = quick_pick.items as (vscode.QuickPickItem & { id: string })[]
+    const items = quick_pick.items
     const last_selected_item = items.find((item) => item.id == last_selected_id)
 
     if (last_selected_item) {
@@ -135,13 +141,13 @@ const get_edit_context_config = async (
       quick_pick.activeItems = [items[0]]
     }
 
-    return new Promise<{ provider: any; config: any } | undefined>(
+    return new Promise<{ provider: Provider; config: ToolConfig } | undefined>(
       (resolve) => {
         let accepted = false
 
         quick_pick.onDidAccept(async () => {
           accepted = true
-          const selected = quick_pick.selectedItems[0] as any
+          const selected = quick_pick.selectedItems[0]
           quick_pick.hide()
 
           if (!selected) {
@@ -395,7 +401,10 @@ const perform_context_editing = async (params: {
       const result = await params.panel_provider.api_manager.get({
         endpoint_url,
         api_key: provider.api_key,
-        body
+        body,
+        provider_name: edit_context_config.provider_name,
+        model: edit_context_config.model,
+        reasoning_effort: edit_context_config.reasoning_effort
       })
 
       if (result) {

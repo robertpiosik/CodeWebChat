@@ -11,6 +11,9 @@ type Props = {
     total_tokens?: number
     show_elapsed_time?: boolean
     delay_visibility?: boolean
+    provider_name: string
+    model?: string
+    reasoning_effort?: string
   }[]
   on_cancel: (id: string) => void
 }
@@ -96,36 +99,44 @@ export const ApiManagerModal: React.FC<Props> = (props) => {
                 return null
               }
 
+              const description_parts = [item.provider_name]
+              if (item.reasoning_effort) {
+                description_parts.push(item.reasoning_effort)
+              }
+              const description = description_parts.join(' · ')
+
               return (
                 <div key={item.id} className={styles.item}>
-                  <div className={styles.item__content}>
-                    <div className={styles.item__title}>{item.title}</div>
-                    <div className={styles.item__right}>
+                  <div className={styles.item__top}>
+                    <div className={styles.item__top__left}>
+                      <span>{item.model}</span>
+                      <span>{description}</span>
+                    </div>
+                    <div className={styles.item__close}>
+                      <button
+                        className={styles.item__close__button}
+                        onClick={() => props.on_cancel(item.id)}
+                      />
+                    </div>
+                  </div>
+                  <div className={styles.item__bottom}>
+                    <div className={styles.item__bottom__status}>
+                      {item.title}
+                    </div>
+                    <div className={styles.item__bottom__right}>
                       {item.tokens_per_second !== undefined && (
-                        <div className={styles['tokens-per-second']}>
+                        <div>
                           {format_tokens(item.tokens_per_second)}{' '}
                           {window_width < 340 ? 't/s' : 'tokens/s'}
                         </div>
                       )}
                       {item.total_tokens !== undefined && (
-                        <div className={styles['tokens-per-second']}>
-                          ({format_tokens(item.total_tokens)})
-                        </div>
+                        <div>({format_tokens(item.total_tokens)})</div>
                       )}
                       {item.show_elapsed_time !== false && (
-                        <div className={styles['elapsed-time']}>
-                          {(elapsed_ms / 1000).toFixed(1)}s
-                        </div>
+                        <div>{(elapsed_ms / 1000).toFixed(1)}s</div>
                       )}
                     </div>
-                  </div>
-                  <div className={styles.item__abort}>
-                    <button
-                      className={styles.item__abort__button}
-                      onClick={() => props.on_cancel(item.id)}
-                    >
-                      Abort
-                    </button>
                   </div>
                 </div>
               )

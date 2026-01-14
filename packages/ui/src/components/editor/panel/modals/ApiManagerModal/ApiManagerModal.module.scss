@@ -54,77 +54,105 @@
 
 .item {
   display: flex;
-  position: relative;
+  flex-direction: column;
   width: 100%;
+  position: relative;
 
-  &:hover {
-    background-color: var(--vscode-list-hoverBackground);
-
-    & .item__abort {
-      visibility: visible;
-    }
-  }
-
-  &__content {
+  &__top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 4px;
-    padding: 0 8px;
+    padding: 0 12px 0 8px;
     height: 22px;
-    width: 100%;
+    position: relative;
+
+    &__left {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      line-height: 1.2;
+
+      > span:nth-child(2) {
+        color: var(--vscode-descriptionForeground);
+        margin-left: 0.5em;
+        font-size: 0.9em;
+      }
+    }
   }
 
-  &__title {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  &__right {
+  &__bottom {
     display: flex;
     align-items: center;
-    gap: 4px;
-    flex-shrink: 0;
+    justify-content: space-between;
+    padding: 0 12px 0 8px;
+    height: 18px;
     font-size: 11px;
+    color: var(--vscode-descriptionForeground);
+
+    &__status {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      margin-right: 8px;
+    }
+
+    &__right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      font-variant-numeric: tabular-nums;
+    }
   }
 
-  &__abort {
+  &__close {
     position: absolute;
     display: flex;
     height: 100%;
     align-items: center;
-    right: 8px;
-    font-size: 12px;
+    right: 0;
+    top: 0;
     background: linear-gradient(
       to left,
-      var(--vscode-list-hoverBackground) 56%,
+      var(--vscode-quickInput-background) 56%,
       transparent
     );
     padding-left: 30px;
-    visibility: hidden;
     pointer-events: none;
+    padding-right: 8px;
 
     &__button {
-      display: flex;
+      appearance: none;
       pointer-events: all;
       background: none;
       border: none;
       padding: 0;
+      margin: 0;
+      height: 15px;
+      width: 15px;
+      color: var(--vscode-checkbox-foreground);
+      position: relative;
       cursor: pointer;
-      color: var(--vscode-gitDecoration-deletedResourceForeground);
-      opacity: var(--dimmed-opacity);
+      flex-shrink: 0;
 
-      &:hover {
+      &:focus {
+        outline: none;
+      }
+
+      &::before {
+        font-family: 'codicon';
+        font-size: 13px;
+        content: '\ea76';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0.5;
+      }
+
+      &:hover::before {
         opacity: 1;
       }
     }
   }
-}
-
-.elapsed-time,
-.tokens-per-second {
-  color: var(--vscode-descriptionForeground);
-  font-size: 11px;
-  font-variant-numeric: tabular-nums;
 }

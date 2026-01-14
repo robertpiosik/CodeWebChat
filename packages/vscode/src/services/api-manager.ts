@@ -22,6 +22,9 @@ export class ApiManager {
     api_key?: string
     body: any
     request_id?: string
+    provider_name: string
+    model?: string
+    reasoning_effort?: string
   }): Promise<{ response: string; thoughts?: string } | null> {
     const request_id = params.request_id || randomUUID()
     const cancel_token_source = axios.CancelToken.source()
@@ -65,7 +68,10 @@ export class ApiManager {
       this.panel_provider.send_message({
         command: 'SHOW_API_MANAGER_PROGRESS',
         id: request_id,
-        title: 'Waiting...'
+        title: 'Waiting...',
+        provider_name: params.provider_name,
+        model: params.model,
+        reasoning_effort: params.reasoning_effort
       })
 
       if (previous_waiting && previous_waiting.body_hash === body_hash) {
@@ -82,7 +88,10 @@ export class ApiManager {
           this.panel_provider.send_message({
             command: 'SHOW_API_MANAGER_PROGRESS',
             id: request_id,
-            title: 'Thinking...'
+            title: 'Thinking...',
+            provider_name: params.provider_name,
+            model: params.model,
+            reasoning_effort: params.reasoning_effort
           })
         },
         on_chunk: (tokens_per_second, total_tokens) => {
@@ -92,7 +101,10 @@ export class ApiManager {
             id: request_id,
             title: 'Receiving...',
             tokens_per_second,
-            total_tokens
+            total_tokens,
+            provider_name: params.provider_name,
+            model: params.model,
+            reasoning_effort: params.reasoning_effort
           })
         }
       })
