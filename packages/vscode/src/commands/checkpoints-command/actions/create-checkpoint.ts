@@ -242,7 +242,7 @@ export const create_checkpoint = async (
           cancellable: false,
           show_elapsed_time: false
         })
-      }, 500)
+      }, 1000)
 
       await create_checkpoint_task()
     } finally {
