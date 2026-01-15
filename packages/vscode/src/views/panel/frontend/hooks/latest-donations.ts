@@ -77,7 +77,13 @@ export const use_latest_donations = () => {
   }, [viewing_donations, fetch_donations])
 
   const on_fetch_next_page = useCallback(async () => {
-    if (is_fetching_next || !has_more) {
+    if (
+      is_fetching_next ||
+      !has_more ||
+      is_fetching ||
+      is_revalidating ||
+      !fetched_once
+    ) {
       return
     }
     set_is_fetching_next(true)
@@ -110,7 +116,14 @@ export const use_latest_donations = () => {
     } finally {
       set_is_fetching_next(false)
     }
-  }, [is_fetching_next, has_more, page])
+  }, [
+    is_fetching_next,
+    has_more,
+    page,
+    is_fetching,
+    is_revalidating,
+    fetched_once
+  ])
 
   return {
     viewing_donations,
