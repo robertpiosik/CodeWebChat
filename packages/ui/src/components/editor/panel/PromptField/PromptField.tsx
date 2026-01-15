@@ -170,22 +170,23 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
   useEffect(() => {
     if (input_ref.current && input_ref.current.innerHTML !== highlighted_html) {
-      let selection_start = 0
+      const selection = window.getSelection()
+      const should_restore_caret =
+        document.activeElement === input_ref.current &&
+        selection &&
+        selection.rangeCount > 0 &&
+        selection.anchorNode &&
+        input_ref.current.contains(selection.anchorNode)
 
-      if (is_focused) {
-        selection_start = get_caret_position_from_div(input_ref.current)
-      } else {
-        selection_start = map_raw_pos_to_display_pos(
-          props.value.length,
-          props.value,
-          props.context_file_paths ?? []
-        )
-      }
-
+      const selection_start = should_restore_caret
+        ? get_caret_position_from_div(input_ref.current)
+        : 0
       input_ref.current.innerHTML = highlighted_html
-      set_caret_position_for_div(input_ref.current, selection_start)
+      if (should_restore_caret) {
+        set_caret_position_for_div(input_ref.current, selection_start)
+      }
     }
-  }, [highlighted_html, is_focused, props.value, props.context_file_paths])
+  }, [highlighted_html])
 
   useEffect(() => {
     if (input_ref.current) {
@@ -227,14 +228,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
       }
     }
   }, [props.focus_and_select_key])
-
-  useEffect(() => {
-    const input_element = input_ref.current
-    if (input_element) {
-      const is_focused = document.activeElement === input_element
-      if (!is_focused) input_element.focus()
-    }
-  }, [props.value])
 
   useEffect(() => {
     const on_selection_change = () => {

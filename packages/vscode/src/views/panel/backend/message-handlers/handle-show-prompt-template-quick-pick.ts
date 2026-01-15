@@ -352,9 +352,6 @@ export const handle_show_prompt_template_quick_pick = async (
         }
 
         await set_instructions(prompt_text)
-        panel_provider.send_message({
-          command: 'FOCUS_PROMPT_FIELD'
-        })
       }
     }),
     templates_quick_pick.onDidChangeValue((value) => {
