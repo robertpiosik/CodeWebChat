@@ -105,7 +105,7 @@ export const Panel = () => {
     handle_tasks_change,
     handle_task_delete,
     handle_discard_user_changes_in_preview,
-    handle_task_copy
+    handle_task_forward
   } = use_panel(vscode)
 
   const [checkpoint_to_edit, set_checkpoint_to_edit] = useState<
@@ -363,7 +363,7 @@ export const Panel = () => {
                 tasks={tasks}
                 on_tasks_change={handle_tasks_change}
                 on_task_delete={handle_task_delete}
-                on_task_copy={handle_task_copy}
+                on_task_forward={handle_task_forward}
               />
             </div>
           </Layout>

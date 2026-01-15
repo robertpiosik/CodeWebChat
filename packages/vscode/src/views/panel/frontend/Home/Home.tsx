@@ -40,7 +40,7 @@ type Props = {
   tasks: Record<string, Task[]>
   on_tasks_change: (root: string, tasks: Task[]) => void
   on_task_delete: (root: string, timestamp: number) => void
-  on_task_copy: (text: string) => void
+  on_task_forward: (text: string) => void
 }
 
 export const Home: React.FC<Props> = (props) => {
@@ -56,8 +56,12 @@ export const Home: React.FC<Props> = (props) => {
     handle_add,
     handle_add_subtask,
     handle_delete,
-    handle_copy
-  } = use_tasks(props.on_tasks_change, props.on_task_delete, props.on_task_copy)
+    handle_forward
+  } = use_tasks(
+    props.on_tasks_change,
+    props.on_task_delete,
+    props.on_task_forward
+  )
 
   const { is_timeline_reached, timeline_ref, handle_scroll_to_timeline } =
     use_timeline_scroll()
@@ -242,8 +246,8 @@ export const Home: React.FC<Props> = (props) => {
                         on_delete={(timestamp) => {
                           handle_delete(workspace_root_folder, timestamp)
                         }}
-                        on_copy={(text) => {
-                          handle_copy(text)
+                        on_forward={(text) => {
+                          handle_forward(text)
                         }}
                       />
                     )}

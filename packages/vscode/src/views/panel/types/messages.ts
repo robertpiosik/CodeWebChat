@@ -434,11 +434,6 @@ export interface DeleteTaskMessage extends BaseMessage {
   timestamp: number
 }
 
-export interface CopyTaskMessage extends BaseMessage {
-  command: 'COPY_TASK'
-  text: string
-}
-
 export interface UpdateFileProgressMessage extends BaseMessage {
   command: 'UPDATE_FILE_PROGRESS'
   file_path: string
@@ -528,7 +523,6 @@ export type FrontendMessage =
   | GetTasksMessage
   | SaveTasksMessage
   | DeleteTaskMessage
-  | CopyTaskMessage
   | PreviewGeneratedCodeMessage
   | UpdateFileProgressMessage
 

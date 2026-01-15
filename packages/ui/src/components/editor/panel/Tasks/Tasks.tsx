@@ -19,7 +19,7 @@ type Props = {
   on_change: (task: Task) => void
   on_add: () => void
   on_add_subtask?: (parent_task: Task) => void
-  on_copy: (text: string) => void
+  on_forward: (text: string) => void
   on_delete: (created_at: number) => void
 }
 
@@ -55,9 +55,6 @@ export const Tasks: React.FC<Props> = (props) => {
   const [editing_timestamp, set_editing_timestamp] = useState<number | null>(
     null
   )
-  const [last_copied_timestamp, set_last_copied_timestamp] = useState<
-    number | null
-  >(null)
   const prevent_edit_ref = useRef(false)
 
   use_auto_focus_new_task(props.tasks, set_editing_timestamp)
@@ -66,12 +63,6 @@ export const Tasks: React.FC<Props> = (props) => {
     () => get_structure_signature(props.tasks),
     [props.tasks]
   )
-
-  // Reset copied highlight only on structural changes to tasks
-  // so it stays highlighted when set as done by response preview.
-  useEffect(() => {
-    set_last_copied_timestamp(null)
-  }, [structure_signature])
 
   const tree = useMemo(() => add_ids(props.tasks), [props.tasks])
 
@@ -90,7 +81,6 @@ export const Tasks: React.FC<Props> = (props) => {
     depth: number
   }) => {
     const is_editing = editing_timestamp == params.task.created_at
-    const is_copied = last_copied_timestamp == params.task.created_at
     const has_children = params.task.children && params.task.children.length > 0
 
     const checked_children_count = has_children
@@ -99,9 +89,7 @@ export const Tasks: React.FC<Props> = (props) => {
 
     return (
       <div
-        className={cn(styles.item, {
-          [styles['item--copied']]: is_copied
-        })}
+        className={styles.item}
         style={{ paddingLeft: `${10 + params.depth * 20}px` }}
       >
         {[...Array(params.depth)].map((_, i) => (
@@ -168,13 +156,12 @@ export const Tasks: React.FC<Props> = (props) => {
             >
               {params.task.text && (
                 <IconButton
-                  codicon_icon="copy"
+                  codicon_icon="forward"
                   on_click={(e) => {
                     e.stopPropagation()
-                    props.on_copy(params.task.text)
-                    set_last_copied_timestamp(params.task.created_at)
+                    props.on_forward(params.task.text)
                   }}
-                  title="Copy Task"
+                  title="Use"
                 />
               )}
               <IconButton
@@ -187,7 +174,7 @@ export const Tasks: React.FC<Props> = (props) => {
                     is_editing ? null : params.task.created_at
                   )
                 }
-                title={is_editing ? 'Save task' : 'Edit task'}
+                title={is_editing ? 'Done' : 'Edit'}
               />
               <IconButton
                 codicon_icon="trash"
@@ -195,7 +182,7 @@ export const Tasks: React.FC<Props> = (props) => {
                   e.stopPropagation()
                   props.on_delete(params.task.created_at)
                 }}
-                title="Delete task"
+                title="Delete"
               />
             </div>
           </div>

@@ -73,7 +73,6 @@ import {
   handle_undo,
   handle_delete_checkpoint,
   handle_request_can_undo,
-  handle_copy_task,
   handle_preview_generated_code,
   handle_get_tasks,
   handle_save_tasks,
@@ -648,8 +647,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_save_tasks(this, message)
           } else if (message.command == 'DELETE_TASK') {
             await handle_delete_task(this, message)
-          } else if (message.command == 'COPY_TASK') {
-            await handle_copy_task(message)
           } else if (message.command == 'PREVIEW_GENERATED_CODE') {
             await handle_preview_generated_code(message)
           } else if (message.command == 'REQUEST_CAN_UNDO') {
