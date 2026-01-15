@@ -47,7 +47,8 @@ import {
   handle_update_ai_studio_user_id,
   handle_update_send_with_shift_enter,
   handle_upsert_configuration,
-  handle_open_ignore_patterns_settings
+  handle_open_ignore_patterns_settings,
+  handle_open_allow_patterns_settings
 } from './message-handlers'
 
 export class SettingsProvider {
@@ -233,6 +234,8 @@ export class SettingsProvider {
           await vscode.commands.executeCommand('workbench.action.openSettings')
         } else if (message.command == 'OPEN_IGNORE_PATTERNS_SETTINGS') {
           await handle_open_ignore_patterns_settings()
+        } else if (message.command == 'OPEN_ALLOW_PATTERNS_SETTINGS') {
+          await handle_open_allow_patterns_settings()
         } else if (message.command == 'UPSERT_CONFIGURATION') {
           await handle_upsert_configuration(this, message)
         }

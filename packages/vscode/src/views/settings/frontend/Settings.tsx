@@ -125,6 +125,9 @@ export const Settings = () => {
       on_open_ignore_patterns_settings={
         settings_hook.handle_open_ignore_patterns_settings
       }
+      on_open_allow_patterns_settings={
+        settings_hook.handle_open_allow_patterns_settings
+      }
       on_reorder_providers={settings_hook.handle_reorder_providers}
       on_add_provider={settings_hook.handle_add_provider}
       on_delete_provider={settings_hook.handle_delete_provider}

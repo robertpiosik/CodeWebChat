@@ -35,6 +35,7 @@ type Props = {
   ) => void
   on_open_editor_settings: () => void
   on_open_ignore_patterns_settings: () => void
+  on_open_allow_patterns_settings: () => void
   on_stuck_change: (is_stuck: boolean) => void
 }
 
@@ -112,6 +113,15 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             description="Glob patterns that you don't want to place in .gitignore files."
             slot_right={
               <TextButton on_click={props.on_open_ignore_patterns_settings}>
+                Open settings file
+              </TextButton>
+            }
+          />
+          <Item
+            title="Allow patterns"
+            description="Glob patterns that you want to include despite being ignored by .gitignore."
+            slot_right={
+              <TextButton on_click={props.on_open_allow_patterns_settings}>
                 Open settings file
               </TextButton>
             }

@@ -45,7 +45,8 @@ export class WorkspaceProvider
   private _checked_items: Map<string, vscode.TreeItemCheckboxState> = new Map()
   private _checked_timestamps: Map<string, number> = new Map()
   private _combined_gitignore = ignore()
-  private _user_ignore: Ignore = ignore()
+  private _user_ignore_patterns: Ignore = ignore()
+  private _user_allow_patterns: Ignore = ignore()
   private _watcher: vscode.FileSystemWatcher
   private _ranges_watcher: vscode.FileSystemWatcher
   private _gitignore_watcher: vscode.FileSystemWatcher
@@ -89,7 +90,10 @@ export class WorkspaceProvider
 
     this._config_change_handler = vscode.workspace.onDidChangeConfiguration(
       (event) => {
-        if (event.affectsConfiguration('codeWebChat.ignorePatterns')) {
+        if (
+          event.affectsConfiguration('codeWebChat.ignorePatterns') ||
+          event.affectsConfiguration('codeWebChat.allowPatterns')
+        ) {
           this._load_ignore_patterns()
           this._uncheck_ignored_files()
           this.refresh()
@@ -1346,19 +1350,29 @@ export class WorkspaceProvider
       return true
     }
 
+    if (this._user_allow_patterns.ignores(relative_path)) {
+      return false
+    }
+
     return this._combined_gitignore.ignores(relative_path)
   }
 
   private _load_ignore_patterns() {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const patterns = config.get<string[]>('ignorePatterns')
-    this._user_ignore = ignore()
+    this._user_ignore_patterns = ignore()
     if (patterns) {
-      this._user_ignore.add(patterns)
+      this._user_ignore_patterns.add(patterns)
     }
 
-    this._user_ignore.add(IGNORE_PATTERNS)
-    this._user_ignore.add('node_modules')
+    this._user_ignore_patterns.add(IGNORE_PATTERNS)
+    this._user_ignore_patterns.add('node_modules')
+
+    const allow_patterns = config.get<string[]>('allowPatterns')
+    this._user_allow_patterns = ignore()
+    if (allow_patterns) {
+      this._user_allow_patterns.add(allow_patterns)
+    }
 
     // Clear token caches since exclusions have changed
     this._token_calculator.clear_caches()
@@ -1369,10 +1383,16 @@ export class WorkspaceProvider
     if (!workspace_root) {
       // To handle files outside of a workspace, we can only check filename patterns
       const basename = path.basename(file_path)
-      return this._user_ignore.ignores(basename)
+      if (this._user_allow_patterns.ignores(basename)) {
+        return false
+      }
+      return this._user_ignore_patterns.ignores(basename)
     }
     const relative_path = path.relative(workspace_root, file_path)
-    return this._user_ignore.ignores(relative_path)
+    if (this._user_allow_patterns.ignores(relative_path)) {
+      return false
+    }
+    return this._user_ignore_patterns.ignores(relative_path)
   }
 
   public is_partially_checked(path: string): boolean {

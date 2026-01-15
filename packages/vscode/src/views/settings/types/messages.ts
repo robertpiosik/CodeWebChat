@@ -175,6 +175,10 @@ export interface OpenIgnorePatternsSettingsMessage {
   command: 'OPEN_IGNORE_PATTERNS_SETTINGS'
 }
 
+export interface OpenAllowPatternsSettingsMessage {
+  command: 'OPEN_ALLOW_PATTERNS_SETTINGS'
+}
+
 export interface GetContextSizeWarningThresholdMessage {
   command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD'
 }
@@ -292,6 +296,7 @@ export type FrontendMessage =
   | UpsertConfigurationMessage
   | OpenEditorSettingsMessage
   | OpenIgnorePatternsSettingsMessage
+  | OpenAllowPatternsSettingsMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface ModelProvidersMessage {

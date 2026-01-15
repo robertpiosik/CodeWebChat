@@ -108,6 +108,7 @@ type Props = {
   ) => void
   on_open_editor_settings: () => void
   on_open_ignore_patterns_settings: () => void
+  on_open_allow_patterns_settings: () => void
   on_add_provider: () => void
   on_delete_provider: (provider_name: string) => void
   on_edit_provider: (provider_name: string) => void
@@ -316,6 +317,9 @@ export const Home: React.FC<Props> = (props) => {
           on_open_editor_settings={props.on_open_editor_settings}
           on_open_ignore_patterns_settings={
             props.on_open_ignore_patterns_settings
+          }
+          on_open_allow_patterns_settings={
+            props.on_open_allow_patterns_settings
           }
           on_stuck_change={general_on_stuck_change}
         />

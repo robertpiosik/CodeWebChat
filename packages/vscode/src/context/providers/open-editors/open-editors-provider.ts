@@ -50,7 +50,10 @@ export class OpenEditorsProvider
 
     this._config_change_handler = vscode.workspace.onDidChangeConfiguration(
       (event) => {
-        if (event.affectsConfiguration('codeWebChat.ignorePatterns')) {
+        if (
+          event.affectsConfiguration('codeWebChat.ignorePatterns') ||
+          event.affectsConfiguration('codeWebChat.allowPatterns')
+        ) {
           this._uncheck_ignored_files()
           this.refresh()
         }

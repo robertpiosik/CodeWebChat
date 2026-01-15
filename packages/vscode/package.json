@@ -654,6 +654,13 @@
             "type": "string"
           }
         },
+        "codeWebChat.allowPatterns": {
+          "type": "array",
+          "scope": "resource",
+          "items": {
+            "type": "string"
+          }
+        },
         "codeWebChat.editFormatInstructionsWhole": {
           "type": "string",
           "scope": "resource"
