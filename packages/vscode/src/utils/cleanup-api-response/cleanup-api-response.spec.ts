@@ -18,7 +18,7 @@ describe('cleanup_api_response', () => {
   })
 
   it('should handle a complex file without modification', () => {
-    const test_case = 'complex-file'
+    const test_case = 'markdown-block'
     const content = load_test_case_file(test_case, 'input.txt')
     const expected = load_test_case_file(test_case, 'expected.txt')
     expect(cleanup_api_response({ content })).toBe(expected)

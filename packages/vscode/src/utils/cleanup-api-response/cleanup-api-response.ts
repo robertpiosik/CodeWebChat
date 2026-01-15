@@ -4,7 +4,7 @@
  * Used by intelligent update/code completions command.
  */
 export const cleanup_api_response = (params: { content: string }): string => {
-  let content = params.content
+  let content = params.content.trim()
   let changed = true
 
   if (content.startsWith('<think>')) {
