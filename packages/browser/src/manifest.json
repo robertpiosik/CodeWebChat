@@ -4,7 +4,7 @@
   "name": "Code Web Chat Connector",
   "short_name": "CWC",
   "description": "CWC makes it easy to construct coding prompts for chatbots and APIs.",
-  "version": "1.85.0",
+  "version": "1.86.0",
   "homepage_url": "https://github.com/robertpiosik/CodeWebChat",
   "icons": {
     "16": "icons/icon-16.png",
