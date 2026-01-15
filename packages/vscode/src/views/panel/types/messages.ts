@@ -124,10 +124,6 @@ export interface SaveHistoryMessage extends BaseMessage {
   mode: 'ask' | 'edit-context' | 'no-context' | 'code-completions'
 }
 
-export interface GetCurrentTokenCountMessage extends BaseMessage {
-  command: 'GET_CURRENT_TOKEN_COUNT'
-}
-
 export interface GetContextSizeWarningThresholdMessage extends BaseMessage {
   command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD'
 }
@@ -469,7 +465,6 @@ export type FrontendMessage =
   | GetHistoryMessage
   | GetResponseHistoryMessage
   | SaveHistoryMessage
-  | GetCurrentTokenCountMessage
   | GetContextSizeWarningThresholdMessage
   | UpdatePresetMessage
   | DeletePresetGroupOrSeparatorMessage

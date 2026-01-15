@@ -433,9 +433,6 @@ export const use_panel = (vscode: any) => {
       command: 'SAVE_WEB_MODE',
       mode: new_mode
     })
-    post_message(vscode, {
-      command: 'GET_CURRENT_TOKEN_COUNT'
-    })
   }
 
   const handle_api_prompt_type_change = (new_mode: ApiPromptType) => {
@@ -445,9 +442,6 @@ export const use_panel = (vscode: any) => {
     post_message(vscode, {
       command: 'SAVE_API_MODE',
       mode: new_mode
-    })
-    post_message(vscode, {
-      command: 'GET_CURRENT_TOKEN_COUNT'
     })
   }
 

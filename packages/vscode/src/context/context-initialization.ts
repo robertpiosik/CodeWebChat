@@ -16,7 +16,6 @@ import {
   CONTEXT_CHECKED_URLS_STATE_KEY,
   CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY,
   DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY,
-  SAVED_CONTEXTS_STATE_KEY,
   RANGES_STATE_KEY,
   type DuplicateWorkspaceContext
 } from '../constants/state-keys'
@@ -82,12 +81,6 @@ const restore_duplicated_workspace_context = async (
             duplicated_context.ranges
           )
         }
-        if (duplicated_context.saved_contexts) {
-          await context.workspaceState.update(
-            SAVED_CONTEXTS_STATE_KEY,
-            duplicated_context.saved_contexts
-          )
-        }
         if (duplicated_context.open_editors) {
           for (const editor_info of duplicated_context.open_editors) {
             try {
@@ -150,8 +143,12 @@ export const context_initialization = async (
   const update_view_badges = async () => {
     let context_token_count = 0
     if (context_provider && context_view) {
-      context_token_count =
+      const files_count =
         await workspace_provider.get_checked_files_token_count()
+      const websites_count =
+        websites_provider.get_checked_websites_token_count()
+      context_token_count = files_count + websites_count
+
       workspace_view.badge = {
         value: round_token_count_for_badge(context_token_count),
         tooltip: context_token_count
@@ -160,7 +157,7 @@ export const context_initialization = async (
       }
       context_view.badge = undefined
     }
-    token_count_emitter.emit('token-count-updated')
+    token_count_emitter.emit('token-count-updated', context_token_count)
   }
 
   const shared_state = SharedFileState.get_instance()

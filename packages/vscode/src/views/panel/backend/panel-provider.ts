@@ -43,6 +43,7 @@ import {
   handle_at_sign_quick_pick,
   handle_get_mode_web,
   handle_save_mode_web,
+  handle_save_mode,
   handle_get_mode_api,
   handle_save_mode_api,
   handle_get_mode,
@@ -89,6 +90,7 @@ import {
   INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
   LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
   LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY,
+  PANEL_MODE_STATE_KEY,
   WEB_MODE_STATE_KEY,
   get_recently_used_presets_or_groups_key
 } from '@/constants/state-keys'
@@ -210,6 +212,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       this.context.workspaceState.get<EditFormat>(API_EDIT_FORMAT_STATE_KEY) ??
       this.context.globalState.get<EditFormat>(API_EDIT_FORMAT_STATE_KEY) ??
       'whole'
+    this.mode =
+      this.context.workspaceState.get<Mode>(PANEL_MODE_STATE_KEY) ??
+      this.context.globalState.get<Mode>(PANEL_MODE_STATE_KEY) ??
+      MODE.WEB
 
     this.web_prompt_type = this.context.workspaceState.get<WebPromptType>(
       WEB_MODE_STATE_KEY,
@@ -282,9 +288,13 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       }
     )
 
-    token_count_emitter.on('token-count-updated', () => {
+    token_count_emitter.on('token-count-updated', (token_count: number) => {
       if (this._webview_view) {
-        this.calculate_token_count()
+        this.send_message({
+          command: 'TOKEN_COUNT_UPDATED',
+          token_count
+        })
+
         this.send_context_files()
       }
     })
@@ -347,13 +357,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         vscode.window.activeTextEditor &&
         event.document === vscode.window.activeTextEditor.document
       ) {
-        if (
-          (this.mode == MODE.WEB &&
-            this.web_prompt_type == 'code-completions') ||
-          (this.mode == MODE.API && this.api_prompt_type == 'code-completions')
-        ) {
-          this.calculate_token_count()
-        }
         this.send_currently_open_file_text()
       }
     })
@@ -507,8 +510,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             handle_request_editor_state(this)
           } else if (message.command == 'REQUEST_EDITOR_SELECTION_STATE') {
             handle_request_editor_selection_state(this)
-          } else if (message.command == 'GET_CURRENT_TOKEN_COUNT') {
-            this.calculate_token_count()
           } else if (message.command == 'GET_CONTEXT_SIZE_WARNING_THRESHOLD') {
             this._send_context_size_warning_threshold()
           } else if (message.command == 'REQUEST_CURRENTLY_OPEN_FILE_TEXT') {
@@ -579,8 +580,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'CARET_POSITION_CHANGED') {
             this.caret_position = message.caret_position
           } else if (message.command == 'SAVE_MODE') {
-            this.mode = message.mode
-            this.calculate_token_count()
+            await handle_save_mode(this, message)
           } else if (message.command == 'GET_MODE') {
             handle_get_mode(this)
           } else if (message.command == 'GET_VERSION') {
@@ -669,78 +669,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         }
       }
     )
-  }
-
-  public calculate_token_count() {
-    if (this.mode == MODE.WEB && this.web_prompt_type == 'no-context') {
-      this.send_message({
-        command: 'TOKEN_COUNT_UPDATED',
-        token_count: 0
-      })
-      return
-    }
-
-    const active_editor = vscode.window.activeTextEditor
-
-    const is_code_completions_mode =
-      (this.mode == MODE.WEB && this.web_prompt_type == 'code-completions') ||
-      (this.mode == MODE.API && this.api_prompt_type == 'code-completions')
-
-    Promise.all([
-      this.workspace_provider.get_checked_files_token_count({
-        exclude_file_path:
-          is_code_completions_mode && active_editor
-            ? active_editor.document.uri.fsPath
-            : undefined
-      }),
-      this.websites_provider.get_checked_websites_token_count()
-    ])
-      .then(([workspace_tokens, websites_tokens]) => {
-        let current_token_count = workspace_tokens + websites_tokens
-
-        if (active_editor && is_code_completions_mode) {
-          const document = active_editor.document
-          const text = document.getText()
-          const file_path = document.uri.fsPath
-          const workspace_root =
-            this.workspace_provider.get_workspace_root_for_file(file_path)
-          let content_xml = ''
-
-          if (!workspace_root) {
-            content_xml = `<file path="${file_path}">\n<![CDATA[\n${text}\n]]>\n</file>\n`
-          } else {
-            const relative_path = path.relative(workspace_root, file_path)
-            if (this.workspace_provider.get_workspace_roots().length > 1) {
-              const workspace_name =
-                this.workspace_provider.get_workspace_name(workspace_root)
-              content_xml = `<file path="${workspace_name}/${relative_path}">\n<![CDATA[\n${text}\n]]>\n</file>\n`
-            } else {
-              content_xml = `<file path="${relative_path}">\n<![CDATA[\n${text}\n]]>\n</file>\n`
-            }
-          }
-          const file_token_count = Math.floor(content_xml.length / 4)
-          current_token_count += file_token_count
-        }
-
-        this.send_message({
-          command: 'TOKEN_COUNT_UPDATED',
-          token_count: current_token_count
-        })
-      })
-      .catch((error) => {
-        Logger.error({
-          function_name: 'calculate_token_count',
-          message: 'Error calculating token count',
-          data: error
-        })
-        vscode.window.showErrorMessage(
-          dictionary.error_message.ERROR_CALCULATING_TOKEN_COUNT(error.message)
-        )
-        this.send_message({
-          command: 'TOKEN_COUNT_UPDATED',
-          token_count: 0
-        })
-      })
   }
 
   public send_presets_to_webview(_: vscode.Webview) {

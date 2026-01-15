@@ -160,7 +160,6 @@ export const Main: React.FC<Props> = (props) => {
     const initial_messages: FrontendMessage[] = [
       { command: 'GET_PRESETS' },
       { command: 'GET_HISTORY' },
-      { command: 'GET_CURRENT_TOKEN_COUNT' },
       { command: 'GET_INSTRUCTIONS' },
       { command: 'GET_EDIT_FORMAT' },
       { command: 'GET_EDIT_FORMAT_INSTRUCTIONS' },
