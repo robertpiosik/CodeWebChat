@@ -53,91 +53,78 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
       inner_content += reconstruct_raw_value_from_node(child)
     }
 
-    switch (el.dataset.type) {
-      case 'file-keyword': {
-        const path = el.dataset.path
-        if (!path) return ''
-        const filename = path.split('/').pop() || path
-        const index = inner_content.indexOf(filename)
-        if (index !== -1) {
-          const prefix = inner_content.substring(0, index)
-          const suffix = inner_content.substring(index + filename.length)
-          return `${prefix}\`${path}\`${suffix}`
-        }
-        break
+    if (el.dataset.type == 'file-keyword') {
+      const path = el.dataset.path
+      if (!path) return ''
+      const filename = path.split('/').pop() || path
+      const index = inner_content.indexOf(filename)
+      if (index !== -1) {
+        const prefix = inner_content.substring(0, index)
+        const suffix = inner_content.substring(index + filename.length)
+        return `${prefix}\`${path}\`${suffix}`
       }
-      case 'changes-keyword': {
-        const branchName = el.dataset.branchName
-        if (!branchName) return ''
-        const expected_text = `Diff with ${branchName}`
-        const index = inner_content.indexOf(expected_text)
-        if (index !== -1) {
-          const prefix = inner_content.substring(0, index)
-          const suffix = inner_content.substring(index + expected_text.length)
-          return `${prefix}#Changes:${branchName}${suffix}`
-        }
-        break
+    } else if (el.dataset.type == 'changes-keyword') {
+      const branchName = el.dataset.branchName
+      if (!branchName) return ''
+      const expected_text = `Diff with ${branchName}`
+      const index = inner_content.indexOf(expected_text)
+      if (index !== -1) {
+        const prefix = inner_content.substring(0, index)
+        const suffix = inner_content.substring(index + expected_text.length)
+        return `${prefix}#Changes:${branchName}${suffix}`
       }
-      case 'saved-context-keyword': {
-        const contextType = el.dataset.contextType
-        const contextName = el.dataset.contextName
-        if (!contextType || !contextName) return ''
-        const expected_text = `Context "${contextName}"`
-        const index = inner_content.indexOf(expected_text)
-        if (index !== -1) {
-          const prefix = inner_content.substring(0, index)
-          const suffix = inner_content.substring(index + expected_text.length)
-          return `${prefix}#SavedContext:${contextType} "${contextName}"${suffix}`
-        }
-        break
+    } else if (el.dataset.type == 'saved-context-keyword') {
+      const contextType = el.dataset.contextType
+      const contextName = el.dataset.contextName
+      if (!contextType || !contextName) return ''
+      const expected_text = `Context "${contextName}"`
+      const index = inner_content.indexOf(expected_text)
+      if (index !== -1) {
+        const prefix = inner_content.substring(0, index)
+        const suffix = inner_content.substring(index + expected_text.length)
+        return `${prefix}#SavedContext:${contextType} "${contextName}"${suffix}`
       }
-      case 'selection-keyword': {
-        const expected_text = 'Selection'
-        const index = inner_content.indexOf(expected_text)
-        if (index !== -1) {
-          const prefix = inner_content.substring(0, index)
-          const suffix = inner_content.substring(index + expected_text.length)
-          return `${prefix}#Selection${suffix}`
-        }
-        break
+    } else if (el.dataset.type == 'selection-keyword') {
+      const expected_text = 'Selection'
+      const index = inner_content.indexOf(expected_text)
+      if (index !== -1) {
+        const prefix = inner_content.substring(0, index)
+        const suffix = inner_content.substring(index + expected_text.length)
+        return `${prefix}#Selection${suffix}`
       }
-      case 'commit-keyword': {
-        const repo_name = el.dataset.repoName
-        const commit_hash = el.dataset.commitHash
-        const commit_message = el.dataset.commitMessage
-        if (!repo_name || !commit_hash || commit_message === undefined) {
-          return ''
-        }
-        const short_hash = commit_hash.substring(0, 7)
-        const index = inner_content.indexOf(short_hash)
-        if (index !== -1) {
-          const prefix = inner_content.substring(0, index)
-          const suffix = inner_content.substring(index + short_hash.length)
-          return `${prefix}#Commit:${repo_name}:${commit_hash} "${commit_message.replace(
-            /"/g,
-            '\\"'
-          )}"${suffix}`
-        }
-        break
+    } else if (el.dataset.type == 'commit-keyword') {
+      const repo_name = el.dataset.repoName
+      const commit_hash = el.dataset.commitHash
+      const commit_message = el.dataset.commitMessage
+      if (!repo_name || !commit_hash || commit_message === undefined) {
+        return ''
       }
-      case 'contextatcommit-keyword': {
-        const repo_name = el.dataset.repoName
-        const commit_hash = el.dataset.commitHash
-        const commit_message = el.dataset.commitMessage
-        if (!repo_name || !commit_hash || commit_message === undefined) {
-          return ''
-        }
-        const short_hash = commit_hash.substring(0, 7)
-        const index = inner_content.indexOf(short_hash)
-        if (index !== -1) {
-          const prefix = inner_content.substring(0, index)
-          const suffix = inner_content.substring(index + short_hash.length)
-          return `${prefix}#ContextAtCommit:${repo_name}:${commit_hash} "${commit_message.replace(
-            /"/g,
-            '\\"'
-          )}"${suffix}`
-        }
-        break
+      const short_hash = commit_hash.substring(0, 7)
+      const index = inner_content.indexOf(short_hash)
+      if (index !== -1) {
+        const prefix = inner_content.substring(0, index)
+        const suffix = inner_content.substring(index + short_hash.length)
+        return `${prefix}#Commit:${repo_name}:${commit_hash} "${commit_message.replace(
+          /"/g,
+          '\\"'
+        )}"${suffix}`
+      }
+    } else if (el.dataset.type == 'contextatcommit-keyword') {
+      const repo_name = el.dataset.repoName
+      const commit_hash = el.dataset.commitHash
+      const commit_message = el.dataset.commitMessage
+      if (!repo_name || !commit_hash || commit_message === undefined) {
+        return ''
+      }
+      const short_hash = commit_hash.substring(0, 7)
+      const index = inner_content.indexOf(short_hash)
+      if (index !== -1) {
+        const prefix = inner_content.substring(0, index)
+        const suffix = inner_content.substring(index + short_hash.length)
+        return `${prefix}#ContextAtCommit:${repo_name}:${commit_hash} "${commit_message.replace(
+          /"/g,
+          '\\"'
+        )}"${suffix}`
       }
     }
 
@@ -241,98 +228,67 @@ export const use_handlers = (
 
   const handle_keyword_deletion_by_click = (keyword_element: HTMLElement) => {
     const keyword_type = keyword_element.dataset.type
-    switch (keyword_type) {
-      case 'file-keyword': {
-        const file_path = keyword_element.dataset.path
-        if (!file_path || !props.context_file_paths?.includes(file_path)) return
+    if (keyword_type === 'file-keyword') {
+      const file_path = keyword_element.dataset.path
+      if (!file_path || !props.context_file_paths?.includes(file_path)) return
 
-        const search_pattern = `\`${file_path}\``
-        const start_index = props.value.indexOf(search_pattern)
+      const search_pattern = `\`${file_path}\``
+      const start_index = props.value.indexOf(search_pattern)
 
-        if (start_index !== -1) {
-          apply_keyword_deletion(
-            start_index,
-            start_index + search_pattern.length
-          )
-        }
-        break
+      if (start_index !== -1) {
+        apply_keyword_deletion(start_index, start_index + search_pattern.length)
       }
-      case 'changes-keyword': {
-        const branch_name = keyword_element.dataset.branchName
-        if (!branch_name) return
+    } else if (keyword_type === 'changes-keyword') {
+      const branch_name = keyword_element.dataset.branchName
+      if (!branch_name) return
 
-        const search_pattern = `#Changes:${branch_name}`
-        const start_index = props.value.indexOf(search_pattern)
+      const search_pattern = `#Changes:${branch_name}`
+      const start_index = props.value.indexOf(search_pattern)
 
-        if (start_index !== -1) {
-          apply_keyword_deletion(
-            start_index,
-            start_index + search_pattern.length
-          )
-        }
-        break
+      if (start_index !== -1) {
+        apply_keyword_deletion(start_index, start_index + search_pattern.length)
       }
-      case 'saved-context-keyword': {
-        const context_type = keyword_element.dataset.contextType
-        const context_name = keyword_element.dataset.contextName
-        if (!context_type || !context_name) return
+    } else if (keyword_type === 'saved-context-keyword') {
+      const context_type = keyword_element.dataset.contextType
+      const context_name = keyword_element.dataset.contextName
+      if (!context_type || !context_name) return
 
-        const search_pattern = `#SavedContext:${context_type} "${context_name}"`
-        const start_index = props.value.indexOf(search_pattern)
+      const search_pattern = `#SavedContext:${context_type} "${context_name}"`
+      const start_index = props.value.indexOf(search_pattern)
 
-        if (start_index !== -1) {
-          apply_keyword_deletion(
-            start_index,
-            start_index + search_pattern.length
-          )
-        }
-        break
+      if (start_index !== -1) {
+        apply_keyword_deletion(start_index, start_index + search_pattern.length)
       }
-      case 'selection-keyword': {
-        const search_pattern = '#Selection'
-        const start_index = props.value.indexOf(search_pattern)
+    } else if (keyword_type === 'selection-keyword') {
+      const search_pattern = '#Selection'
+      const start_index = props.value.indexOf(search_pattern)
 
-        if (start_index !== -1) {
-          apply_keyword_deletion(
-            start_index,
-            start_index + search_pattern.length
-          )
-        }
-        break
+      if (start_index !== -1) {
+        apply_keyword_deletion(start_index, start_index + search_pattern.length)
       }
-      case 'commit-keyword': {
-        const repo_name = keyword_element.dataset.repoName
-        const commit_hash = keyword_element.dataset.commitHash
-        const commit_message = keyword_element.dataset.commitMessage
-        if (!repo_name || !commit_hash || commit_message === undefined) return
+    } else if (keyword_type === 'commit-keyword') {
+      const repo_name = keyword_element.dataset.repoName
+      const commit_hash = keyword_element.dataset.commitHash
+      const commit_message = keyword_element.dataset.commitMessage
+      if (!repo_name || !commit_hash || commit_message === undefined) return
 
-        const search_pattern = `#Commit:${repo_name}:${commit_hash} "${commit_message.replace(/"/g, '\\"')}"`
-        const start_index = props.value.indexOf(search_pattern)
+      const search_pattern = `#Commit:${repo_name}:${commit_hash} "${commit_message.replace(/"/g, '\\"')}"`
+      const start_index = props.value.indexOf(search_pattern)
 
-        if (start_index !== -1) {
-          apply_keyword_deletion(
-            start_index,
-            start_index + search_pattern.length
-          )
-        }
-        break
+      if (start_index !== -1) {
+        apply_keyword_deletion(start_index, start_index + search_pattern.length)
       }
-      case 'contextatcommit-keyword': {
-        const repo_name = keyword_element.dataset.repoName
-        const commit_hash = keyword_element.dataset.commitHash
-        const commit_message = keyword_element.dataset.commitMessage
-        if (!repo_name || !commit_hash || commit_message === undefined) return
+    } else if (keyword_type === 'contextatcommit-keyword') {
+      const repo_name = keyword_element.dataset.repoName
+      const commit_hash = keyword_element.dataset.commitHash
+      const commit_message = keyword_element.dataset.commitMessage
+      if (!repo_name || !commit_hash || commit_message === undefined) return
 
-        const search_pattern = `#ContextAtCommit:${repo_name}:${commit_hash} "${commit_message.replace(/"/g, '\\"')}"`
-        const start_index = props.value.indexOf(search_pattern)
+      const search_pattern = `#ContextAtCommit:${repo_name}:${commit_hash} "${commit_message.replace(/"/g, '\\"')}"`
+      const start_index = props.value.indexOf(search_pattern)
 
-        if (start_index !== -1) {
-          apply_keyword_deletion(
-            start_index,
-            start_index + search_pattern.length
-          )
-        }
-        break
+      if (start_index !== -1) {
+        apply_keyword_deletion(start_index, start_index + search_pattern.length)
       }
     }
   }
