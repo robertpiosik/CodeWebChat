@@ -14,15 +14,15 @@
 
 Code Web Chat (CWC) is a free and open-source AI coding extension designed for speed and privacy, built for VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
 
-👉️ **Construct coding prompts for...**
+✍️ **Construct coding prompts for...**
 
 - Chatbots—_ChatGPT, Gemini, Claude, Grok, DeepSeek, etc._
 - APIs—_Gemini API, OpenRouter, local Ollama, etc._
 
-👉️ **Apply responses**—interactive edits integration with checkpoints \
-👉️ **Fully-featured**—code completions, commit messages, and more \
-🫰 **Cost-efficient**—zero-overhead prompts optimized for [caching](https://platform.openai.com/docs/guides/prompt-caching) \
-✋ **Privacy-first**—zero telemetry, operates on your machine
+💅 **Apply responses**—interactive edits integration with checkpoints for state restoration \
+🤙 **Fully-featured**—API tools for code completions, commit messages, and more \
+🫰 **Cost-efficient**—zero-overhead prompts optimized for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching) \
+✋ **Privacy-first**—zero telemetry, operates 100% on your machine
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />
