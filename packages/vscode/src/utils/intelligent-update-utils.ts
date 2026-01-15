@@ -64,13 +64,9 @@ export const get_intelligent_update_config = async (
       'Select the Intelligent Update API tool configuration'
     quick_pick.matchOnDescription = true
 
-    const last_selected_id =
-      context.workspaceState.get<string>(
-        LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY
-      ) ??
-      context.globalState.get<string>(
-        LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY
-      )
+    const last_selected_id = context.workspaceState.get<string>(
+      LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY
+    )
     const last_selected_item = items.find((item) => item.id == last_selected_id)
 
     if (last_selected_item) {
@@ -91,10 +87,6 @@ export const get_intelligent_update_config = async (
           }
 
           context.workspaceState.update(
-            LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY,
-            selected.id
-          )
-          context.globalState.update(
             LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY,
             selected.id
           )

@@ -10,7 +10,10 @@ import {
 import { Logger } from '@shared/utils/logger'
 import he from 'he'
 import { PROVIDERS } from '@shared/constants/providers'
-import { LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
+import {
+  LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
+  RECENTLY_USED_CODE_COMPLETION_CONFIG_IDS_STATE_KEY
+} from '@/constants/state-keys'
 import { ToolConfig } from '@/services/model-providers-manager'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
@@ -38,10 +41,6 @@ const show_inline_completion = async (params: {
   const change_listener = vscode.workspace.onDidChangeTextDocument(
     async (e) => {
       if (e.document === document) {
-        await vscode.commands.executeCommand(
-          'editor.action.formatDocument',
-          document.uri
-        )
         controller.dispose()
         change_listener.dispose()
       }
@@ -88,13 +87,9 @@ const get_code_completion_config = async (
     if (default_config) {
       selected_config = default_config
     } else {
-      const last_selected_id =
-        context.workspaceState.get<string>(
-          LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
-        ) ??
-        context.globalState.get<string>(
-          LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
-        )
+      const last_selected_id = context.workspaceState.get<string>(
+        LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
+      )
       if (last_selected_id) {
         selected_config =
           code_completions_configs.find(
@@ -109,7 +104,33 @@ const get_code_completion_config = async (
 
   if (!selected_config || show_quick_pick) {
     const create_items = () => {
-      return code_completions_configs.map((config: ToolConfig, index) => {
+      const recent_ids =
+        context.workspaceState.get<string[]>(
+          RECENTLY_USED_CODE_COMPLETION_CONFIG_IDS_STATE_KEY
+        ) || []
+
+      const matched_recent_configs: ToolConfig[] = []
+      const remaining_configs: ToolConfig[] = []
+
+      code_completions_configs.forEach((config) => {
+        const id = get_tool_config_id(config)
+        if (recent_ids.includes(id)) {
+          matched_recent_configs.push(config)
+        } else {
+          remaining_configs.push(config)
+        }
+      })
+
+      matched_recent_configs.sort((a, b) => {
+        const id_a = get_tool_config_id(a)
+        const id_b = get_tool_config_id(b)
+        return recent_ids.indexOf(id_a) - recent_ids.indexOf(id_b)
+      })
+
+      const recent_configs = matched_recent_configs
+      const other_configs = remaining_configs
+
+      const map_config_to_item = (config: ToolConfig) => {
         const description_parts = [config.provider_name]
         if (config.temperature != null) {
           description_parts.push(`${config.temperature}`)
@@ -118,14 +139,41 @@ const get_code_completion_config = async (
           description_parts.push(`${config.reasoning_effort}`)
         }
 
+        const buttons: vscode.QuickInputButton[] = []
+
         return {
           label: config.model,
           description: description_parts.join(' · '),
+          buttons,
           config,
-          index,
           id: get_tool_config_id(config)
         }
-      })
+      }
+
+      const items: (vscode.QuickPickItem & {
+        config?: ToolConfig
+        id?: string
+      })[] = []
+
+      if (recent_configs.length > 0) {
+        items.push({
+          label: 'recently used',
+          kind: vscode.QuickPickItemKind.Separator
+        })
+        items.push(...recent_configs.map(map_config_to_item))
+      }
+
+      if (other_configs.length > 0) {
+        if (recent_configs.length > 0) {
+          items.push({
+            label: 'other configurations',
+            kind: vscode.QuickPickItemKind.Separator
+          })
+        }
+        items.push(...other_configs.map(map_config_to_item))
+      }
+
+      return items
     }
 
     const quick_pick = vscode.window.createQuickPick()
@@ -133,23 +181,22 @@ const get_code_completion_config = async (
     quick_pick.placeholder = 'Select code completions configuration'
     quick_pick.matchOnDescription = true
 
-    const last_selected_id =
-      context.workspaceState.get<string>(
-        LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
-      ) ??
-      context.globalState.get<string>(
-        LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
-      )
+    const last_selected_id = context.workspaceState.get<string>(
+      LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
+    )
 
     const items = quick_pick.items as (vscode.QuickPickItem & { id: string })[]
-    const last_selected_item = items.find(
-      (item) => item.id === last_selected_id
-    )
+    const last_selected_item = items.find((item) => item.id == last_selected_id)
 
     if (last_selected_item) {
       quick_pick.activeItems = [last_selected_item]
     } else if (items.length > 0) {
-      quick_pick.activeItems = [items[0]]
+      const first_selectable = items.find(
+        (i) => i.kind !== vscode.QuickPickItemKind.Separator
+      )
+      if (first_selectable) {
+        quick_pick.activeItems = [first_selectable]
+      }
     }
 
     return new Promise<{ provider: any; config: any } | undefined>(
@@ -158,7 +205,7 @@ const get_code_completion_config = async (
           const selected = quick_pick.selectedItems[0] as any
           quick_pick.hide()
 
-          if (!selected) {
+          if (!selected || !selected.config) {
             resolve(undefined)
             return
           }
@@ -167,9 +214,15 @@ const get_code_completion_config = async (
             LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
             selected.id
           )
-          context.globalState.update(
-            LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
-            selected.id
+
+          let recents =
+            context.workspaceState.get<string[]>(
+              RECENTLY_USED_CODE_COMPLETION_CONFIG_IDS_STATE_KEY
+            ) || []
+          recents = [selected.id, ...recents.filter((id) => id != selected.id)]
+          context.workspaceState.update(
+            RECENTLY_USED_CODE_COMPLETION_CONFIG_IDS_STATE_KEY,
+            recents
           )
 
           if (panel_provider) {

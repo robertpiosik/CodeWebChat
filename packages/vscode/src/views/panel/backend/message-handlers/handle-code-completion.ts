@@ -49,10 +49,6 @@ const get_code_completion_config = async (
         LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
         config_id
       )
-      context.globalState.update(
-        LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
-        config_id
-      )
 
       if (panel_provider) {
         panel_provider.send_message({
@@ -63,13 +59,9 @@ const get_code_completion_config = async (
       }
     }
   } else if (!show_quick_pick) {
-    const last_selected_id =
-      context.workspaceState.get<string>(
-        LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
-      ) ??
-      context.globalState.get<string>(
-        LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
-      )
+    const last_selected_id = context.workspaceState.get<string>(
+      LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
+    )
     if (last_selected_id) {
       selected_config =
         code_completions_configs.find(
@@ -161,13 +153,9 @@ const get_code_completion_config = async (
     quick_pick.placeholder = 'Select code completions configuration'
     quick_pick.matchOnDescription = true
 
-    const last_selected_id =
-      context.workspaceState.get<string>(
-        LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
-      ) ??
-      context.globalState.get<string>(
-        LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
-      )
+    const last_selected_id = context.workspaceState.get<string>(
+      LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
+    )
 
     const items = quick_pick.items as (vscode.QuickPickItem & { id: string })[]
     const last_selected_item = items.find(
@@ -200,19 +188,12 @@ const get_code_completion_config = async (
             LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
             selected.id
           )
-          context.globalState.update(
-            LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
-            selected.id
-          )
 
           let recents =
             context.workspaceState.get<string[]>(
               RECENTLY_USED_CODE_COMPLETION_CONFIG_IDS_STATE_KEY
             ) || []
-          recents = [
-            selected.id,
-            ...recents.filter((id) => id != selected.id)
-          ].slice(0, 10)
+          recents = [selected.id, ...recents.filter((id) => id != selected.id)]
           context.workspaceState.update(
             RECENTLY_USED_CODE_COMPLETION_CONFIG_IDS_STATE_KEY,
             recents
