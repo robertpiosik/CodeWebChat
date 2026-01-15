@@ -113,14 +113,17 @@ export const CHATBOTS = {
     models: {
       'gpt-5-mini': { label: 'GPT-5 mini' },
       'grok-code-fast-1': { label: 'Grok Code Fast 1' },
+      'gemini-3-flash': { label: 'Gemini 3 Flash' },
+      'claude-haiku-4.5': { label: 'Claude Haiku 4.5' },
       'gpt-4.1': { label: 'GPT-4.1' },
       'gpt-4o': { label: 'GPT-4o' },
-      'claude-haiku-4.5': { label: 'Claude Haiku 4.5' },
       'gpt-5': { label: 'GPT-5' },
+      'gpt-5.1': { label: 'GPT-5.1' },
+      'gpt-5.2': { label: 'GPT-5.2' },
       'claude-sonnet-4': { label: 'Claude Sonnet 4' },
       'claude-sonnet-4.5': { label: 'Claude Sonnet 4.5' },
-      'claude-opus-4.1': { label: 'Claude Opus 4.1' },
-      'gemini-2.5-pro': { label: 'Gemini 2.5 Pro' }
+      'claude-opus-4.5': { label: 'Claude Opus 4.5' },
+      'gemini-3-pro': { label: 'Gemini 3 Pro' }
     }
   } as Chatbot,
   Grok: {
@@ -133,7 +136,7 @@ export const CHATBOTS = {
       auto: { label: 'Auto' },
       fast: { label: 'Fast' },
       expert: { label: 'Expert' },
-      'grok-4-1': { label: 'Grok 4.1' },
+      'grok-4-1-thinking': { label: 'Grok 4.1 Thinking' },
       heavy: { label: 'Heavy' }
     }
   } as Chatbot,
