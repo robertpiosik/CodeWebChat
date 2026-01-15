@@ -65,6 +65,11 @@ export const PINNED_HISTORY_CODE_COMPLETIONS_STATE_KEY =
   'pinned-history-code-completions'
 export const PINNED_HISTORY_NO_CONTEXT_STATE_KEY = 'pinned-history-no-context'
 
+export const RECENTLY_USED_CODE_COMPLETION_CONFIG_IDS_STATE_KEY =
+  'recently-used-code-completion-config-ids'
+export const RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY =
+  'recently-used-edit-context-config-ids'
+
 export const get_presets_collapsed_state_key = (web_prompt_type: string) =>
   `presets-collapsed-${web_prompt_type}`
 export const get_configurations_collapsed_state_key = (

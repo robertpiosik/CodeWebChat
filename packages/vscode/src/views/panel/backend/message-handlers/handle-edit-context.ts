@@ -10,7 +10,8 @@ import axios from 'axios'
 import { PROVIDERS } from '@shared/constants/providers'
 import {
   API_EDIT_FORMAT_STATE_KEY,
-  LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY
+  LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY,
+  RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY
 } from '@/constants/state-keys'
 import { EditFormat } from '@shared/types/edit-format'
 import { ToolConfig } from '@/services/model-providers-manager'
@@ -92,12 +93,37 @@ const get_edit_context_config = async (
 
   if (!selected_config || show_quick_pick) {
     type Item = vscode.QuickPickItem & {
-      config: ToolConfig
-      index: number
-      id: string
+      config?: ToolConfig
+      id?: string
     }
     const create_items = async (): Promise<Item[]> => {
-      return edit_context_configs.map((config: ToolConfig, index) => {
+      const recent_ids =
+        context.workspaceState.get<string[]>(
+          RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY
+        ) || []
+
+      const matched_recent_configs: ToolConfig[] = []
+      const remaining_configs: ToolConfig[] = []
+
+      edit_context_configs.forEach((config) => {
+        const id = get_tool_config_id(config)
+        if (recent_ids.includes(id)) {
+          matched_recent_configs.push(config)
+        } else {
+          remaining_configs.push(config)
+        }
+      })
+
+      matched_recent_configs.sort((a, b) => {
+        const idA = get_tool_config_id(a)
+        const idB = get_tool_config_id(b)
+        return recent_ids.indexOf(idA) - recent_ids.indexOf(idB)
+      })
+
+      const recent_configs = matched_recent_configs
+      const other_configs = remaining_configs
+
+      const map_config_to_item = (config: ToolConfig) => {
         const description_parts = [config.provider_name]
         if (config.temperature != null) {
           description_parts.push(`${config.temperature}`)
@@ -113,10 +139,31 @@ const get_edit_context_config = async (
           description: description_parts.join(' · '),
           buttons,
           config,
-          index,
           id: get_tool_config_id(config)
         }
-      })
+      }
+
+      const items: Item[] = []
+
+      if (recent_configs.length > 0) {
+        items.push({
+          label: 'recently used',
+          kind: vscode.QuickPickItemKind.Separator
+        })
+        items.push(...recent_configs.map(map_config_to_item))
+      }
+
+      if (other_configs.length > 0) {
+        if (recent_configs.length > 0) {
+          items.push({
+            label: 'other configurations',
+            kind: vscode.QuickPickItemKind.Separator
+          })
+        }
+        items.push(...other_configs.map(map_config_to_item))
+      }
+
+      return items
     }
 
     const quick_pick = vscode.window.createQuickPick<Item>()
@@ -138,7 +185,12 @@ const get_edit_context_config = async (
     if (last_selected_item) {
       quick_pick.activeItems = [last_selected_item]
     } else if (items.length > 0) {
-      quick_pick.activeItems = [items[0]]
+      const first_selectable = items.find(
+        (i) => i.kind !== vscode.QuickPickItemKind.Separator
+      )
+      if (first_selectable) {
+        quick_pick.activeItems = [first_selectable]
+      }
     }
 
     return new Promise<{ provider: Provider; config: ToolConfig } | undefined>(
@@ -150,7 +202,7 @@ const get_edit_context_config = async (
           const selected = quick_pick.selectedItems[0]
           quick_pick.hide()
 
-          if (!selected) {
+          if (!selected || !selected.config) {
             resolve(undefined)
             return
           }
@@ -164,11 +216,24 @@ const get_edit_context_config = async (
             selected.id
           )
 
+          let recents =
+            context.workspaceState.get<string[]>(
+              RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY
+            ) || []
+          recents = [
+            selected.id!,
+            ...recents.filter((id) => id !== selected.id)
+          ].slice(0, 10)
+          context.workspaceState.update(
+            RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY,
+            recents
+          )
+
           if (panel_provider) {
             panel_provider.send_message({
               command: 'SELECTED_CONFIGURATION_CHANGED',
               mode: 'edit-context',
-              id: selected.id
+              id: selected.id!
             })
           }
 
