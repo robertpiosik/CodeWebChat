@@ -25,7 +25,7 @@ export const Fieldset: React.FC<Props> = ({
           onClick={on_toggle_collapsed}
           role="button"
         >
-          <span>{label}</span>
+          <span className={styles['fieldset__label__text']}>{label}</span>
           <span
             className={cn('codicon', {
               'codicon-chevron-down': !is_collapsed,

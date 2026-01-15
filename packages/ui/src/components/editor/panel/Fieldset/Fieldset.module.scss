@@ -18,10 +18,8 @@
       cursor: pointer;
     }
 
-    &__left {
-      display: flex;
-      align-items: center;
-      gap: 4px;
+    &__text {
+      transform: translateY(1px);
     }
   }
 

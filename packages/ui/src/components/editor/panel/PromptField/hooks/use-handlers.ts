@@ -679,47 +679,6 @@ export const use_handlers = (
   const handle_key_down = (e: React.KeyboardEvent<HTMLDivElement>) => {
     const { key, shiftKey } = e
 
-    // Handle arrow-right when ghost text is present
-    if (key === 'ArrowRight' && ghost_text && !shiftKey) {
-      const selection = window.getSelection()
-      if (
-        selection &&
-        selection.rangeCount > 0 &&
-        selection.isCollapsed &&
-        input_ref.current
-      ) {
-        const range = selection.getRangeAt(0)
-        const ghost_node = input_ref.current.querySelector(
-          'span[data-type="ghost-text"]'
-        )
-
-        // Check if caret is right before the ghost text node
-        if (ghost_node) {
-          const { startContainer, startOffset } = range
-
-          let is_before_ghost = false
-
-          if (startContainer === ghost_node.previousSibling) {
-            if (startContainer.nodeType === Node.TEXT_NODE) {
-              is_before_ghost =
-                startOffset === startContainer.textContent?.length
-            }
-          } else if (startContainer === ghost_node.parentNode) {
-            const ghost_index = Array.from(startContainer.childNodes).indexOf(
-              ghost_node as ChildNode
-            )
-            is_before_ghost = startOffset === ghost_index
-          }
-
-          if (is_before_ghost) {
-            e.preventDefault()
-            on_accept_ghost_text()
-            return
-          }
-        }
-      }
-    }
-
     if ((e.ctrlKey || e.metaKey) && !shiftKey && key.toLowerCase() == 'c') {
       const selection = window.getSelection()
       if (!selection || selection.rangeCount === 0 || selection.isCollapsed) {
