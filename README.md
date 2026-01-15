@@ -127,4 +127,4 @@ All contributions are welcome. Feel free to submit pull requests, feature reques
 
 Copyright © 2025 [Robert Piosik](https://x.com/robertpiosik) \
 E-mail: robertpiosik@gmail.com \
-Telegram: @robertpiosik
+Telegram: robertpiosik
