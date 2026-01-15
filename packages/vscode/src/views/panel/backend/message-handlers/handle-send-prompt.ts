@@ -83,6 +83,26 @@ export const handle_send_prompt = async (params: {
       preset_name: params.preset_name,
       group_name: params.group_name
     })
+
+    const name_to_save = params.preset_name || params.group_name
+    if (name_to_save) {
+      const mode = params.panel_provider.web_prompt_type
+      const recents_key = get_recently_used_presets_or_groups_key(mode)
+      const context = params.panel_provider.context
+
+      const recents =
+        context.workspaceState.get<string[]>(recents_key) ??
+        context.globalState.get<string[]>(recents_key) ??
+        []
+
+      const new_recents = [
+        name_to_save,
+        ...recents.filter((r) => r != name_to_save)
+      ].slice(0, 10)
+
+      context.workspaceState.update(recents_key, new_recents)
+      context.globalState.update(recents_key, new_recents)
+    }
   }
 
   await vscode.workspace.saveAll()
