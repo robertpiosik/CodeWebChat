@@ -170,11 +170,22 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
   useEffect(() => {
     if (input_ref.current && input_ref.current.innerHTML !== highlighted_html) {
-      const selection_start = get_caret_position_from_div(input_ref.current)
+      let selection_start = 0
+
+      if (is_focused) {
+        selection_start = get_caret_position_from_div(input_ref.current)
+      } else {
+        selection_start = map_raw_pos_to_display_pos(
+          props.value.length,
+          props.value,
+          props.context_file_paths ?? []
+        )
+      }
+
       input_ref.current.innerHTML = highlighted_html
       set_caret_position_for_div(input_ref.current, selection_start)
     }
-  }, [highlighted_html])
+  }, [highlighted_html, is_focused, props.value, props.context_file_paths])
 
   useEffect(() => {
     if (input_ref.current) {

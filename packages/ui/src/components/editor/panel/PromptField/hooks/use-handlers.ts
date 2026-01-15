@@ -227,10 +227,10 @@ export const use_handlers = (
     let leading_part = props.value.substring(0, start_pos)
     let trailing_part = props.value.substring(end_pos)
 
-    if (leading_part.endsWith(' ')) {
-      leading_part = leading_part.slice(0, -1)
-    } else if (trailing_part.startsWith(' ')) {
+    if (trailing_part.startsWith(' ')) {
       trailing_part = trailing_part.substring(1)
+    } else if (leading_part.endsWith(' ')) {
+      leading_part = leading_part.slice(0, -1)
     }
 
     const new_value = leading_part + trailing_part

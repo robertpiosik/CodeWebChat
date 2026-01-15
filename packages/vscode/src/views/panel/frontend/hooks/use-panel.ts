@@ -174,16 +174,8 @@ export const use_panel = (vscode: any) => {
 
   const handle_task_forward = (text: string) => {
     handle_instructions_change(text, 'edit-context')
-
-    if (mode == MODE.WEB) {
-      handle_web_prompt_type_change('edit-context')
-    } else {
-      handle_api_prompt_type_change('edit-context')
-    }
-
     set_active_view('main')
     set_main_view_scroll_reset_key((k) => k + 1)
-    set_chat_input_focus_and_select_key((k) => k + 1)
   }
 
   useEffect(() => {
