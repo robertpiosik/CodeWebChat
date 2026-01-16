@@ -1,0 +1,7 @@
+SELECT * FROM users;
+SELECT id, name
+FROM items
+WHERE active = 1;
+SELECT 'String with -- comment inside';
+SELECT "Identifier with /* block */ inside";
+SELECT 'Escaped '' quote';

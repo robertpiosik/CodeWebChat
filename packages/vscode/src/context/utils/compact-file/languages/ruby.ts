@@ -1,4 +1,4 @@
-export const compact_python = (content: string): string => {
+export const compact_ruby = (content: string): string => {
   const lines = content.split(/\r?\n/)
   const result: string[] = []
   let skip_indent_threshold = -1
@@ -30,15 +30,11 @@ export const compact_python = (content: string): string => {
           i += 2
           continue
         }
-        // Check for end of string (handling triple quotes)
-        if (
-          char === in_string[0] &&
-          (in_string.length === 1 ||
-            line.substring(i, i + in_string.length) === in_string)
-        ) {
+        // Check for end of string
+        if (char === in_string) {
           processed_line += in_string
-          i += in_string.length
           in_string = false
+          i++
           continue
         }
         processed_line += char
@@ -46,10 +42,9 @@ export const compact_python = (content: string): string => {
       } else {
         // Start of String
         if (char == '"' || char === "'") {
-          const is_triple = line.substring(i, i + 3) === char.repeat(3)
-          in_string = is_triple ? char.repeat(3) : char
-          processed_line += in_string
-          i += in_string.length
+          in_string = char
+          processed_line += char
+          i++
           continue
         }
         // Start of Comment
@@ -64,16 +59,13 @@ export const compact_python = (content: string): string => {
     const trimmed = processed_line.trim()
     if (!trimmed) continue
 
-    // 4. Check for Block Start to Strip
-    if (trimmed.endsWith(':')) {
-      // Keep 'class', strip others (def, if, while, etc.)
-      const is_keeper = /^class\s/.test(trimmed)
-      if (!is_keeper) {
-        result.push(processed_line)
-        result.push(line.substring(0, current_indent) + '    ' + '# ...')
-        skip_indent_threshold = current_indent
-        continue
-      }
+    // 4. Check for Block Start to Strip (def)
+    // We only strip 'def' methods that span multiple lines (don't end with 'end')
+    if (/^def\b/.test(trimmed) && !/\bend\s*$/.test(trimmed)) {
+      result.push(processed_line)
+      result.push(line.substring(0, current_indent) + '  ' + '# ...')
+      skip_indent_threshold = current_indent
+      continue
     }
 
     result.push(processed_line)

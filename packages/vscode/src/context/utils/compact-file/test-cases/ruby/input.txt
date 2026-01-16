@@ -1,0 +1,27 @@
+# Basic Ruby Class
+class Calculator
+  # Initialize the value
+  def initialize(start_value = 0)
+    @value = start_value
+    puts "Initialized" # Inline comment
+  end
+
+  def add(n)
+    @value += n
+  end
+
+  # A one-liner method should not be stripped in a weird way
+  def value; @value; end
+end
+
+module MathUtils
+  def self.double(x)
+    x * 2
+  end
+end
+
+# Top level method
+def main
+  calc = Calculator.new
+  calc.add(5)
+end

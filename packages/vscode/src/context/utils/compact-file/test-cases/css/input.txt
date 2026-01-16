@@ -1,0 +1,33 @@
+/* Header Styles */
+header {
+  background: #333;
+  color: white; /* Inline comment */
+  padding: 1rem;
+}
+
+/*
+  Layout
+  Styles
+*/
+@media (min-width: 768px) {
+  header {
+    height: 60px;
+  }
+  .sidebar {
+    display: block;
+    width: 250px;
+  }
+}
+
+.card {
+  border: 1px solid #ddd;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

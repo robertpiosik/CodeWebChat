@@ -81,4 +81,19 @@ describe('compact_file', () => {
     const { input, expected } = load_test_case('python', '.')
     expect(compact_file(input, '.py')).toBe(expected)
   })
+
+  it('should strip ruby method bodies', () => {
+    const { input, expected } = load_test_case('ruby', '.')
+    expect(compact_file(input, '.rb')).toBe(expected)
+  })
+
+  it('should strip css bodies', () => {
+    const { input, expected } = load_test_case('css', '.')
+    expect(compact_file(input, '.css')).toBe(expected)
+  })
+
+  it('should strip sql comments', () => {
+    const { input, expected } = load_test_case('sql', '.')
+    expect(compact_file(input, '.sql')).toBe(expected)
+  })
 })

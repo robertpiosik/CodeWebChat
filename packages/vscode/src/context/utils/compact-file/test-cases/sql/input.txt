@@ -1,0 +1,15 @@
+-- Select all users
+SELECT * FROM users;
+
+/*
+  Complex query
+  with multiple lines
+*/
+SELECT id, name -- inline comment
+FROM items
+WHERE active = 1;
+
+-- String handling
+SELECT 'String with -- comment inside';
+SELECT "Identifier with /* block */ inside";
+SELECT 'Escaped '' quote';

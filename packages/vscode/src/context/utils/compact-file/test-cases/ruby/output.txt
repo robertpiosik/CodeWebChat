@@ -1,0 +1,17 @@
+class Calculator
+  def initialize(start_value = 0)
+    # ...
+  end
+  def add(n)
+    # ...
+  end
+  def value; @value; end
+end
+module MathUtils
+  def self.double(x)
+    # ...
+  end
+end
+def main
+  # ...
+end
