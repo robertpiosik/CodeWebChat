@@ -170,19 +170,10 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
   useEffect(() => {
     if (input_ref.current && input_ref.current.innerHTML !== highlighted_html) {
-      const selection = window.getSelection()
-      const should_restore_caret =
-        document.activeElement === input_ref.current &&
-        selection &&
-        selection.rangeCount > 0 &&
-        selection.anchorNode &&
-        input_ref.current.contains(selection.anchorNode)
-
-      const selection_start = should_restore_caret
-        ? get_caret_position_from_div(input_ref.current)
-        : 0
+      const is_focused = document.activeElement === input_ref.current
+      const selection_start = get_caret_position_from_div(input_ref.current)
       input_ref.current.innerHTML = highlighted_html
-      if (should_restore_caret) {
+      if (is_focused) {
         set_caret_position_for_div(input_ref.current, selection_start)
       }
     }

@@ -37,8 +37,7 @@ const add_subtask_to_tree = (
 
 export const use_tasks = (
   on_tasks_change: (root: string, tasks: Task[]) => void,
-  on_task_delete: (root: string, timestamp: number) => void,
-  on_task_forward: (text: string) => void
+  on_task_delete: (root: string, timestamp: number) => void
 ) => {
   const handle_reorder = (root: string, new_tasks: Task[]) => {
     on_tasks_change(root, new_tasks)
@@ -82,16 +81,11 @@ export const use_tasks = (
     on_task_delete(root, timestamp)
   }
 
-  const handle_forward = (text: string) => {
-    on_task_forward(text)
-  }
-
   return {
     handle_reorder,
     handle_change,
     handle_add,
     handle_add_subtask,
-    handle_delete,
-    handle_forward
+    handle_delete
   }
 }

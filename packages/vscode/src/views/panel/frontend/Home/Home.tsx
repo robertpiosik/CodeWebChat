@@ -55,13 +55,8 @@ export const Home: React.FC<Props> = (props) => {
     handle_change,
     handle_add,
     handle_add_subtask,
-    handle_delete,
-    handle_forward
-  } = use_tasks(
-    props.on_tasks_change,
-    props.on_task_delete,
-    props.on_task_forward
-  )
+    handle_delete
+  } = use_tasks(props.on_tasks_change, props.on_task_delete)
 
   const { is_timeline_reached, timeline_ref, handle_scroll_to_timeline } =
     use_timeline_scroll()
@@ -247,7 +242,7 @@ export const Home: React.FC<Props> = (props) => {
                           handle_delete(workspace_root_folder, timestamp)
                         }}
                         on_forward={(text) => {
-                          handle_forward(text)
+                          props.on_task_forward(text)
                         }}
                       />
                     )}
