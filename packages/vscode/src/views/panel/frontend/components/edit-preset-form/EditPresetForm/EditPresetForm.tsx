@@ -342,7 +342,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
             <Field
               label={chatbot_config?.url_override_label || 'URL override'}
               html_for="new-url"
-              info="Keep all related chats in one place."
+              info="Use a smart workspace for your coding tasks."
             >
               <Input
                 id="new-url"

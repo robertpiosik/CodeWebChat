@@ -1,5 +1,5 @@
 import styles from './Tasks.module.scss'
-import React, { useState, useEffect, useRef, useMemo } from 'react'
+import React, { useState, useRef, useMemo } from 'react'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { SimpleCheckbox } from '../../common/SimpleCheckbox'
@@ -55,6 +55,9 @@ export const Tasks: React.FC<Props> = (props) => {
   const [editing_timestamp, set_editing_timestamp] = useState<number | null>(
     null
   )
+  const [forwarded_timestamp, set_forwarded_timestamp] = useState<
+    number | null
+  >(null)
   const prevent_edit_ref = useRef(false)
 
   use_auto_focus_new_task(props.tasks, set_editing_timestamp)
@@ -82,6 +85,7 @@ export const Tasks: React.FC<Props> = (props) => {
   }) => {
     const is_editing = editing_timestamp == params.task.created_at
     const has_children = params.task.children && params.task.children.length > 0
+    const is_forwarded = forwarded_timestamp == params.task.created_at
 
     const checked_children_count = has_children
       ? params.task.children!.filter((child) => child.is_checked).length
@@ -89,7 +93,9 @@ export const Tasks: React.FC<Props> = (props) => {
 
     return (
       <div
-        className={styles.item}
+        className={cn(styles.item, {
+          [styles['item--forwarded']]: is_forwarded
+        })}
         style={{ paddingLeft: `${10 + params.depth * 20}px` }}
       >
         {[...Array(params.depth)].map((_, i) => (
@@ -160,6 +166,7 @@ export const Tasks: React.FC<Props> = (props) => {
                   on_click={(e) => {
                     e.stopPropagation()
                     props.on_forward(params.task.text)
+                    set_forwarded_timestamp(params.task.created_at)
                   }}
                   title="Use"
                 />
