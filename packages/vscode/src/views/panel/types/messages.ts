@@ -577,6 +577,7 @@ export interface EditorSelectionChangedMessage extends BaseMessage {
 export interface GitStateChangedMessage extends BaseMessage {
   command: 'GIT_STATE_CHANGED'
   has_changes_to_commit: boolean
+  has_some_git_repositories: boolean
 }
 
 export interface ChatHistoryMessage extends BaseMessage {

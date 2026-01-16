@@ -80,6 +80,7 @@ export const Panel = () => {
     set_chat_input_focus_and_select_key,
     context_size_warning_threshold,
     has_changes_to_commit,
+    has_some_git_repositories,
     can_undo,
     context_file_paths,
     presets_collapsed,
@@ -224,6 +225,7 @@ export const Panel = () => {
           <Layout
             on_donate_click={() => set_viewing_donations(true)}
             are_links_dimmed={active_view == 'main'}
+            has_some_git_repositories={has_some_git_repositories}
           >
             <div
               className={cn(styles.content, {

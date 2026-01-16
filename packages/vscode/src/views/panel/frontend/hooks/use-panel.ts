@@ -108,6 +108,8 @@ export const use_panel = (vscode: any) => {
     useState<number>()
   const [has_changes_to_commit, set_has_changes_to_commit] =
     useState<boolean>(false)
+  const [has_some_git_repositories, set_has_some_git_repositories] =
+    useState<boolean>(true)
   const [can_undo, set_can_undo] = useState<boolean>(false)
   const [context_file_paths, set_context_file_paths] = useState<string[]>([])
   const [presets_collapsed_by_web_mode, set_presets_collapsed_by_web_mode] =
@@ -346,6 +348,7 @@ export const use_panel = (vscode: any) => {
         set_context_size_warning_threshold(message.threshold)
       } else if (message.command == 'GIT_STATE_CHANGED') {
         set_has_changes_to_commit(message.has_changes_to_commit)
+        set_has_some_git_repositories(message.has_some_git_repositories)
       } else if (message.command == 'CAN_UNDO_CHANGED') {
         set_can_undo(message.can_undo)
       } else if (message.command == 'SHOW_PREVIEW_ONGOING_MODAL') {
@@ -554,6 +557,7 @@ export const use_panel = (vscode: any) => {
     set_chat_input_focus_and_select_key,
     context_size_warning_threshold,
     has_changes_to_commit,
+    has_some_git_repositories,
     can_undo,
     context_file_paths,
     presets_collapsed: web_prompt_type

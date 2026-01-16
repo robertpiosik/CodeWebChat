@@ -763,7 +763,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       )
       this.send_message({
         command: 'GIT_STATE_CHANGED',
-        has_changes_to_commit: has_changes
+        has_changes_to_commit: has_changes,
+        has_some_git_repositories: git.repositories.length > 0
       })
     } catch (error) {
       Logger.warn({
