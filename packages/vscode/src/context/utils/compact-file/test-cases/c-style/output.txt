@@ -1,0 +1,35 @@
+function test() {
+  // ...
+}
+const str = "String with \"// quote";
+function add(a, b) {
+  // ...
+}
+class Calculator {
+constructor() {
+    // ...
+  }
+add(n) {
+    // ...
+  }
+}
+interface Item {
+id: string;
+name: string;
+}
+const double = (x) => {
+  // ...
+}
+const config = {
+env: "production",
+debug: false
+};
+const str = "/* this is not a comment */";
+const str = "// this is not a comment";
+const str = '// this is not a comment';
+const str = `// this is not a comment`;
+const a = 1;  const b = 2;
+const a = 1;
+const b = 2;
+const a = 1;
+const b = 2;

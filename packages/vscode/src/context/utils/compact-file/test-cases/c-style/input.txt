@@ -1,0 +1,60 @@
+function test() {
+  const url = "http://example.com"; // URL with //
+  /* Start block
+  End block */
+  return `Result: ${url}`;
+}
+
+const str = "String with \"// quote"; // real comment
+
+function add(a, b) {
+  return a + b;
+}
+
+class Calculator {
+  constructor() {
+    this.value = 0;
+  }
+
+  add(n) {
+    this.value += n;
+  }
+}
+
+interface Item {
+  id: string;
+  name: string;
+}
+
+const double = (x) => {
+  return x * 2;
+}
+
+const config = {
+  env: "production",
+  debug: false
+};
+
+// comment
+/* block */
+
+const str = "/* this is not a comment */";
+
+const str = "// this is not a comment";
+
+const str = '// this is not a comment';
+
+const str = `// this is not a comment`;
+
+const a = 1; /* comment */ const b = 2;
+
+      const a = 1;
+      /*
+        This is a multi-line
+        comment
+      */
+      const b = 2;
+
+      const a = 1; // This is a comment
+      // This is a full line comment
+      const b = 2;

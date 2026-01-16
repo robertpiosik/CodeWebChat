@@ -1,0 +1,31 @@
+import React from 'react';
+
+interface Props {
+  title: string;
+}
+
+export const MyComponent: React.FC<Props> = ({ title }) => {
+  // This comment goes away
+  const [count, setCount] = React.useState(0);
+
+  return (
+    <div className="container">
+       {/* Block comment */}
+       <h1>{title}</h1>
+       <button onClick={() => setCount(count + 1)}>
+         Click me
+       </button>
+    </div>
+  );
+}
+
+// Another component
+function Header() {
+  return <header>Header</header>;
+}
+
+class OldComponent extends React.Component {
+  render() {
+    return <div>Old</div>;
+  }
+}
