@@ -233,6 +233,15 @@ export interface UpdateSendWithShiftEnterMessage {
   enabled: boolean
 }
 
+export interface GetCheckNewFilesMessage {
+  command: 'GET_CHECK_NEW_FILES'
+}
+
+export interface UpdateCheckNewFilesMessage {
+  command: 'UPDATE_CHECK_NEW_FILES'
+  enabled: boolean
+}
+
 export interface GetClearChecksInWorkspaceBehaviorMessage {
   command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
 }
@@ -291,6 +300,8 @@ export type FrontendMessage =
   | UpdateAiStudioUserIdMessage
   | GetSendWithShiftEnterMessage
   | UpdateSendWithShiftEnterMessage
+  | GetCheckNewFilesMessage
+  | UpdateCheckNewFilesMessage
   | GetClearChecksInWorkspaceBehaviorMessage
   | UpdateClearChecksInWorkspaceBehaviorMessage
   | UpsertConfigurationMessage
@@ -371,6 +382,11 @@ export interface SendWithShiftEnterMessage {
   enabled: boolean
 }
 
+export interface CheckNewFilesMessage {
+  command: 'CHECK_NEW_FILES'
+  enabled: boolean
+}
+
 export interface ClearChecksInWorkspaceBehaviorMessage {
   command: 'CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
   value: 'ignore-open-editors' | 'uncheck-all'
@@ -397,5 +413,6 @@ export type BackendMessage =
   | GeminiUserIdMessage
   | AiStudioUserIdMessage
   | SendWithShiftEnterMessage
+  | CheckNewFilesMessage
   | ClearChecksInWorkspaceBehaviorMessage
   | ShowSectionMessage

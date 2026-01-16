@@ -37,6 +37,7 @@ export const Settings = () => {
       settings_hook.gemini_user_id !== undefined &&
       settings_hook.ai_studio_user_id !== undefined &&
       settings_hook.send_with_shift_enter !== undefined &&
+      settings_hook.check_new_files !== undefined &&
       settings_hook.clear_checks_in_workspace_behavior !== undefined
     )
   }, [settings_hook])
@@ -80,6 +81,7 @@ export const Settings = () => {
       gemini_user_id={settings_hook.gemini_user_id!}
       ai_studio_user_id={settings_hook.ai_studio_user_id!}
       send_with_shift_enter={settings_hook.send_with_shift_enter!}
+      check_new_files={settings_hook.check_new_files!}
       clear_checks_in_workspace_behavior={
         settings_hook.clear_checks_in_workspace_behavior!
       }
@@ -121,6 +123,7 @@ export const Settings = () => {
       on_send_with_shift_enter_change={
         settings_hook.handle_send_with_shift_enter_change
       }
+      on_check_new_files_change={settings_hook.handle_check_new_files_change}
       on_open_editor_settings={settings_hook.handle_open_editor_settings}
       on_open_ignore_patterns_settings={
         settings_hook.handle_open_ignore_patterns_settings

@@ -20,9 +20,11 @@ type Props = {
   context_size_warning_threshold: number
   are_automatic_checkpoints_disabled: boolean
   send_with_shift_enter: boolean
+  check_new_files: boolean
   checkpoint_lifespan: number
   on_automatic_checkpoints_toggle: (disabled: boolean) => void
   on_send_with_shift_enter_change: (enabled: boolean) => void
+  on_check_new_files_change: (enabled: boolean) => void
   on_checkpoint_lifespan_change: (hours: number) => void
   clear_checks_in_workspace_behavior: ClearChecksBehavior
   edit_format_instructions: EditFormatInstructions
@@ -136,6 +138,16 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 on_change={set_context_size_warning_threshold}
                 on_blur={handle_context_size_warning_threshold_blur}
                 max_width={100}
+              />
+            }
+          />
+          <Item
+            title="Check New Files"
+            description="Automatically include newly created files in context."
+            slot_right={
+              <Toggler
+                is_on={props.check_new_files}
+                on_toggle={props.on_check_new_files_change}
               />
             }
           />

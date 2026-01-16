@@ -12,6 +12,7 @@ import {
   handle_delete_intelligent_update_configuration,
   handle_delete_model_provider,
   handle_edit_custom_model_provider,
+  handle_get_check_new_files,
   handle_get_clear_checks_in_workspace_behavior,
   handle_get_are_automatic_checkpoints_disabled,
   handle_get_code_completions_configurations,
@@ -36,6 +37,7 @@ import {
   handle_set_default_code_completions_configuration,
   handle_set_default_commit_messages_configuration,
   handle_set_default_intelligent_update_configuration,
+  handle_update_check_new_files,
   handle_update_clear_checks_in_workspace_behavior,
   handle_update_are_automatic_checkpoints_disabled,
   handle_update_commit_message_instructions,
@@ -214,6 +216,10 @@ export class SettingsProvider {
           await handle_get_send_with_shift_enter(this)
         } else if (message.command == 'UPDATE_SEND_WITH_SHIFT_ENTER') {
           await handle_update_send_with_shift_enter(message)
+        } else if (message.command == 'GET_CHECK_NEW_FILES') {
+          await handle_get_check_new_files(this)
+        } else if (message.command == 'UPDATE_CHECK_NEW_FILES') {
+          await handle_update_check_new_files(message)
         } else if (
           message.command == 'GET_ARE_AUTOMATIC_CHECKPOINTS_DISABLED'
         ) {
@@ -263,6 +269,7 @@ export class SettingsProvider {
           void handle_get_gemini_user_id(this)
           void handle_get_ai_studio_user_id(this)
           void handle_get_send_with_shift_enter(this)
+          void handle_get_check_new_files(this)
         }
       })
     )

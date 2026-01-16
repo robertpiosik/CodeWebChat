@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
   "description": "Fast AI coding with chatbots/APIs (CWC)",
-  "version": "1.736.0",
+  "version": "1.737.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
@@ -633,11 +633,14 @@
           "scope": "resource",
           "default": false
         },
+        "codeWebChat.checkNewFiles": {
+          "type": "boolean",
+          "default": true
+        },
         "codeWebChat.sendWithShiftEnter": {
           "type": "boolean",
           "scope": "resource",
-          "default": false,
-          "description": "If enabled, use Shift+Enter to send messages and Enter to insert a new line."
+          "default": false
         },
         "codeWebChat.clearChecksInWorkspaceBehavior": {
           "type": "string",

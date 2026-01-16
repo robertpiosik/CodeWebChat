@@ -367,25 +367,31 @@ export class WorkspaceProvider
       // Ignore if file was deleted quickly
     }
 
+    const check_new_files = vscode.workspace
+      .getConfiguration('codeWebChat')
+      .get<boolean>('checkNewFiles')
+
     if (
       !this.is_excluded(is_directory ? relative_path + '/' : relative_path) &&
       !this.is_ignored_by_patterns(created_file_path)
     ) {
-      this._checked_items.set(
-        created_file_path,
-        vscode.TreeItemCheckboxState.Checked
-      )
-      this._checked_timestamps.set(
-        created_file_path,
-        Math.floor(Date.now() / 1000)
-      )
-
-      if (is_directory) {
-        await this._update_directory_check_state(
+      if (check_new_files) {
+        this._checked_items.set(
           created_file_path,
-          vscode.TreeItemCheckboxState.Checked,
-          false
+          vscode.TreeItemCheckboxState.Checked
         )
+        this._checked_timestamps.set(
+          created_file_path,
+          Math.floor(Date.now() / 1000)
+        )
+
+        if (is_directory) {
+          await this._update_directory_check_state(
+            created_file_path,
+            vscode.TreeItemCheckboxState.Checked,
+            false
+          )
+        }
       }
 
       let dir_path = parent_dir

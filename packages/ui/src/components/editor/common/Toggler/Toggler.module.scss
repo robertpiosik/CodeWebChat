@@ -32,7 +32,7 @@
   left: 3px;
   bottom: 3px;
   background-color: var(--vscode-input-foreground);
-  transition: 0.4s;
+  transition: var(--transition-duration-150);
   border-radius: 50%;
 }
 
