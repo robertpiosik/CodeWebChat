@@ -157,6 +157,19 @@
   }
 }
 
+.add-row {
+  position: relative;
+  display: flex;
+
+  &:hover {
+    background-color: var(--vscode-list-hoverBackground);
+
+    .add-button::before {
+      opacity: 1;
+    }
+  }
+}
+
 .empty {
   padding: 8px 12px;
   font-size: 11px;

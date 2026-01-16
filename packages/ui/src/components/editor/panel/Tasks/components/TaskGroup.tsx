@@ -70,7 +70,7 @@ export const TaskGroup: React.FC<TaskGroupProps> = (props) => {
         })}
       </ReactSortable>
       {props.on_add && (
-        <div style={{ position: 'relative', display: 'flex' }}>
+        <div className={styles['add-row']} onClick={props.on_add}>
           {[...Array(depth)].map((_, i) => (
             <div
               key={i}
@@ -80,7 +80,6 @@ export const TaskGroup: React.FC<TaskGroupProps> = (props) => {
           ))}
           <button
             className={cn(styles['add-button'], styles['add-button--add'])}
-            onClick={props.on_add}
             style={{ marginLeft: `${13 + depth * 20}px` }}
             title="Add task"
           />

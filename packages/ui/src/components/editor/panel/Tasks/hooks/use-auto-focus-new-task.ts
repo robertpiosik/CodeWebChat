@@ -10,9 +10,12 @@ export const use_auto_focus_new_task = (
 
   useEffect(() => {
     const current_ids = new Set<number>()
+    const id_to_task = new Map<number, Task>()
+
     const collect_ids = (t: Task[]) => {
       t.forEach((task) => {
         current_ids.add(task.created_at)
+        id_to_task.set(task.created_at, task)
         if (task.children) collect_ids(task.children)
       })
     }
@@ -29,7 +32,10 @@ export const use_auto_focus_new_task = (
     )
 
     if (added_ids.length === 1) {
-      set_editing_timestamp(added_ids[0])
+      const new_task = id_to_task.get(added_ids[0])
+      if (new_task && new_task.text === '') {
+        set_editing_timestamp(added_ids[0])
+      }
     }
 
     prev_ids_ref.current = current_ids
