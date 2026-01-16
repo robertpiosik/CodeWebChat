@@ -1,0 +1,12 @@
+def add(a, b):
+    return a + b
+
+class Calculator:
+    def __init__(self):
+        self.value = 0
+
+    def add(self, n):
+        self.value += n
+
+# This comment should be removed
+x = 1

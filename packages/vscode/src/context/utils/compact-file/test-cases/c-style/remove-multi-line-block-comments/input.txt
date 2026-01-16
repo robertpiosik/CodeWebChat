@@ -1,0 +1,6 @@
+      const a = 1;
+      /*
+        This is a multi-line
+        comment
+      */
+      const b = 2;

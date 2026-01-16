@@ -1,0 +1,3 @@
+      const a = 1; // This is a comment
+      // This is a full line comment
+      const b = 2;

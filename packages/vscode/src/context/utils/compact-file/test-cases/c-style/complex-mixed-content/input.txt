@@ -1,0 +1,6 @@
+function test() {
+  const url = "http://example.com"; // URL with //
+  /* Start block
+  End block */
+  return `Result: ${url}`;
+}
