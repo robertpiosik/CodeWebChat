@@ -71,7 +71,7 @@ export const set_range_command = (
       const current_range = file_range_value || state_range_value
 
       const new_range = await vscode.window.showInputBox({
-        prompt: `Set range of lines for ${path.basename(file_path)}`,
+        prompt: `Set a range of lines to include in the context`,
         title: 'Range',
         placeHolder: 'e.g., 100-300 400- -500 or empty to clear',
         value: current_range,
