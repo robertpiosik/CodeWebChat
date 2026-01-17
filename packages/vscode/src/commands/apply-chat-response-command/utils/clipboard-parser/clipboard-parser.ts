@@ -67,27 +67,6 @@ export const extract_workspace_and_path = (params: {
   return { relative_path: file_path }
 }
 
-export const has_real_code = (content: string): boolean => {
-  if (content.trim() == '') {
-    return false
-  }
-  const lines = content.split('\n')
-  const non_comment_lines = lines.filter((line) => {
-    const trimmed = line.trim()
-    return (
-      trimmed != '' &&
-      !trimmed.startsWith('// ...') &&
-      !trimmed.startsWith('# ...') &&
-      !trimmed.startsWith('/* ...') &&
-      !trimmed.startsWith('* ...') &&
-      !trimmed.startsWith('-- ...') &&
-      !trimmed.startsWith('<!-- ...')
-    )
-  })
-
-  return non_comment_lines.length > 0
-}
-
 export const parse_response = (params: {
   response: string
   is_single_root_folder_workspace?: boolean

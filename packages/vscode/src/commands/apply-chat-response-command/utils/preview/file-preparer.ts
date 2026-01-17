@@ -32,8 +32,10 @@ export const prepare_files_from_original_states = async (params: {
     }
 
     let current_content = ''
+    let file_exists = false
     try {
       if (fs.existsSync(sanitized_file_path)) {
+        file_exists = true
         current_content = fs.readFileSync(sanitized_file_path, 'utf8')
       }
     } catch (error) {
@@ -63,9 +65,7 @@ export const prepare_files_from_original_states = async (params: {
     })
     const is_deleted =
       state.file_state == 'deleted' ||
-      (state.file_state != 'new' &&
-        current_content == '' &&
-        state.content != '')
+      (state.file_state != 'new' && !file_exists && state.content != '')
 
     const previewable_file: PreviewableFile = {
       type: 'file',

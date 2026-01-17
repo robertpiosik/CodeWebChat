@@ -184,8 +184,10 @@ export const apply_chat_response_command = (params: {
               }
 
               let current_content = ''
+              let file_exists = false
               try {
                 if (fs.existsSync(sanitized_file_path)) {
+                  file_exists = true
                   const document =
                     await vscode.workspace.openTextDocument(sanitized_file_path)
                   current_content = document.getText()
@@ -205,9 +207,7 @@ export const apply_chat_response_command = (params: {
               total_lines_removed += diff_stats.lines_removed
 
               const is_deleted =
-                state.file_state != 'new' &&
-                current_content == '' &&
-                state.content != ''
+                state.file_state != 'new' && !file_exists && state.content != ''
 
               files_for_history.push({
                 type: 'file',

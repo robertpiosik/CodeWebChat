@@ -193,77 +193,38 @@ export const handle_fast_replace = async (
 
       try {
         if (file_exists) {
-          if (file.content == '') {
-            const file_uri = vscode.Uri.file(safe_path)
-            const document = await vscode.workspace.openTextDocument(file_uri)
-            const original_content = document.getText()
-            original_states.push({
-              file_path: file.file_path,
-              content: original_content,
-              workspace_name: file.workspace_name,
-              file_state: 'deleted'
-            })
-
-            const tabs_to_close: vscode.Tab[] = []
-            for (const tab_group of vscode.window.tabGroups.all) {
-              tabs_to_close.push(
-                ...tab_group.tabs.filter((tab) => {
-                  const tab_uri = (tab.input as any)?.uri as
-                    | vscode.Uri
-                    | undefined
-                  return tab_uri && tab_uri.fsPath === safe_path
-                })
-              )
-            }
-
-            if (tabs_to_close.length > 0) {
-              await vscode.window.tabGroups.close(tabs_to_close)
-            }
-
-            fs.unlinkSync(safe_path)
-            Logger.info({
-              function_name: 'handle_fast_replace',
-              message: 'File deleted due to empty content',
-              data: safe_path
-            })
-            await remove_directory_if_empty({
-              dir_path: path.dirname(safe_path),
-              workspace_root
-            })
-          } else {
-            const file_uri = vscode.Uri.file(safe_path)
-            const document = await vscode.workspace.openTextDocument(file_uri)
-            const original_content = document.getText()
-            original_states.push({
-              file_path: file.file_path,
-              content: original_content,
-              workspace_name: file.workspace_name
-            })
-            const editor = await vscode.window.showTextDocument(document)
-            let final_content = file.content
-            if (
-              original_content.endsWith('\n') &&
-              !final_content.endsWith('\n')
-            ) {
-              final_content += '\n'
-            }
-            await editor.edit((edit) => {
-              edit.replace(
-                new vscode.Range(
-                  document.positionAt(0),
-                  document.positionAt(document.getText().length)
-                ),
-                final_content
-              )
-            })
-
-            await document.save()
-            Logger.info({
-              function_name: 'handle_fast_replace',
-              message: 'Existing file replaced and saved',
-              data: safe_path
-            })
+          const file_uri = vscode.Uri.file(safe_path)
+          const document = await vscode.workspace.openTextDocument(file_uri)
+          const original_content = document.getText()
+          original_states.push({
+            file_path: file.file_path,
+            content: original_content,
+            workspace_name: file.workspace_name
+          })
+          const editor = await vscode.window.showTextDocument(document)
+          let final_content = file.content
+          if (
+            original_content.endsWith('\n') &&
+            !final_content.endsWith('\n')
+          ) {
+            final_content += '\n'
           }
+          await editor.edit((edit) => {
+            edit.replace(
+              new vscode.Range(
+                document.positionAt(0),
+                document.positionAt(document.getText().length)
+              ),
+              final_content
+            )
+          })
+
+          await document.save()
+          Logger.info({
+            function_name: 'handle_fast_replace',
+            message: 'Existing file replaced and saved',
+            data: safe_path
+          })
         } else {
           original_states.push({
             file_path: file.file_path,
@@ -271,9 +232,6 @@ export const handle_fast_replace = async (
             file_state: 'new',
             workspace_name: file.workspace_name
           })
-          if (file.content == '') {
-            continue
-          }
           const directory = path.dirname(safe_path)
           if (!fs.existsSync(directory)) {
             try {

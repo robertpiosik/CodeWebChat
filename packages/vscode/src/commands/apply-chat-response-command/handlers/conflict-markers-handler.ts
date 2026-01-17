@@ -102,9 +102,7 @@ export const handle_conflict_markers = async (
               file.content
             )
           } else {
-            if (file.content !== '') {
-              new_content = file.content
-            }
+            new_content = file.content
           }
 
           const tabs_to_close: vscode.Tab[] = []
@@ -129,31 +127,21 @@ export const handle_conflict_markers = async (
             workspace_root
           })
 
-          if (new_content.trim() == '') {
-            original_states.push({
-              file_path: file.file_path,
-              content: rename_source_content,
-              workspace_name: file.workspace_name,
-              file_path_to_restore: file.renamed_from,
-              file_state: 'deleted'
-            })
-          } else {
-            const directory = path.dirname(safe_path)
-            if (!fs.existsSync(directory)) {
-              await fs.promises.mkdir(directory, { recursive: true })
-            }
-            await vscode.workspace.fs.writeFile(
-              vscode.Uri.file(safe_path),
-              Buffer.from(new_content, 'utf8')
-            )
-
-            original_states.push({
-              file_path: file.file_path,
-              content: rename_source_content,
-              workspace_name: file.workspace_name,
-              file_path_to_restore: file.renamed_from
-            })
+          const directory = path.dirname(safe_path)
+          if (!fs.existsSync(directory)) {
+            await fs.promises.mkdir(directory, { recursive: true })
           }
+          await vscode.workspace.fs.writeFile(
+            vscode.Uri.file(safe_path),
+            Buffer.from(new_content, 'utf8')
+          )
+
+          original_states.push({
+            file_path: file.file_path,
+            content: rename_source_content,
+            workspace_name: file.workspace_name,
+            file_path_to_restore: file.renamed_from
+          })
         } catch (error) {
           failed_files.push(file)
         }
@@ -166,49 +154,18 @@ export const handle_conflict_markers = async (
             file.content
           )
 
-          if (current_content.trim() == '') {
-            const tabs_to_close: vscode.Tab[] = []
-            for (const tab_group of vscode.window.tabGroups.all) {
-              tabs_to_close.push(
-                ...tab_group.tabs.filter((tab) => {
-                  const tab_uri = (tab.input as any)?.uri as
-                    | vscode.Uri
-                    | undefined
-                  return tab_uri && tab_uri.fsPath === safe_path
-                })
-              )
-            }
-
-            if (tabs_to_close.length > 0) {
-              await vscode.window.tabGroups.close(tabs_to_close)
-            }
-
-            await vscode.workspace.fs.delete(vscode.Uri.file(safe_path))
-            await remove_directory_if_empty({
-              dir_path: path.dirname(safe_path),
-              workspace_root
-            })
-
-            original_states.push({
-              file_path: file.file_path,
-              content: original_content,
-              workspace_name: file.workspace_name,
-              file_state: 'deleted'
-            })
-          } else {
-            if (current_content !== original_content) {
-              await vscode.workspace.fs.writeFile(
-                vscode.Uri.file(safe_path),
-                Buffer.from(current_content, 'utf8')
-              )
-            }
-
-            original_states.push({
-              file_path: file.file_path,
-              content: original_content,
-              workspace_name: file.workspace_name
-            })
+          if (current_content !== original_content) {
+            await vscode.workspace.fs.writeFile(
+              vscode.Uri.file(safe_path),
+              Buffer.from(current_content, 'utf8')
+            )
           }
+
+          original_states.push({
+            file_path: file.file_path,
+            content: original_content,
+            workspace_name: file.workspace_name
+          })
 
           Logger.info({
             function_name: 'handle_conflict_markers',
@@ -224,16 +181,6 @@ export const handle_conflict_markers = async (
           failed_files.push(file)
         }
       } else if (!file_exists) {
-        if (file.content == '') {
-          original_states.push({
-            file_path: file.file_path,
-            content: '',
-            file_state: 'new',
-            workspace_name: file.workspace_name
-          })
-          continue
-        }
-
         try {
           const directory = path.dirname(safe_path)
           if (!fs.existsSync(directory)) {
@@ -270,61 +217,30 @@ export const handle_conflict_markers = async (
           const document = await vscode.workspace.openTextDocument(safe_path)
           const original_content = document.getText()
 
-          if (file.content.trim() == '') {
-            const tabs_to_close: vscode.Tab[] = []
-            for (const tab_group of vscode.window.tabGroups.all) {
-              tabs_to_close.push(
-                ...tab_group.tabs.filter((tab) => {
-                  const tab_uri = (tab.input as any)?.uri as
-                    | vscode.Uri
-                    | undefined
-                  return tab_uri && tab_uri.fsPath === safe_path
-                })
-              )
-            }
-
-            if (tabs_to_close.length > 0) {
-              await vscode.window.tabGroups.close(tabs_to_close)
-            }
-
-            await vscode.workspace.fs.delete(vscode.Uri.file(safe_path))
-            await remove_directory_if_empty({
-              dir_path: path.dirname(safe_path),
-              workspace_root
-            })
-
-            original_states.push({
-              file_path: file.file_path,
-              content: original_content,
-              workspace_name: file.workspace_name,
-              file_state: 'deleted'
-            })
-          } else {
-            const editor = await vscode.window.showTextDocument(document)
-            let final_content = file.content
-            if (
-              original_content.endsWith('\n') &&
-              !final_content.endsWith('\n')
-            ) {
-              final_content += '\n'
-            }
-            await editor.edit((edit) => {
-              edit.replace(
-                new vscode.Range(
-                  document.positionAt(0),
-                  document.positionAt(document.getText().length)
-                ),
-                final_content
-              )
-            })
-            await document.save()
-
-            original_states.push({
-              file_path: file.file_path,
-              content: original_content,
-              workspace_name: file.workspace_name
-            })
+          const editor = await vscode.window.showTextDocument(document)
+          let final_content = file.content
+          if (
+            original_content.endsWith('\n') &&
+            !final_content.endsWith('\n')
+          ) {
+            final_content += '\n'
           }
+          await editor.edit((edit) => {
+            edit.replace(
+              new vscode.Range(
+                document.positionAt(0),
+                document.positionAt(document.getText().length)
+              ),
+              final_content
+            )
+          })
+          await document.save()
+
+          original_states.push({
+            file_path: file.file_path,
+            content: original_content,
+            workspace_name: file.workspace_name
+          })
         } catch (error: any) {
           Logger.error({
             function_name: 'handle_conflict_markers',

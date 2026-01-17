@@ -1,9 +1,5 @@
 import { extract_path_from_line_of_code } from '@shared/utils/extract-path-from-line-of-code'
-import {
-  FileItem,
-  extract_workspace_and_path,
-  has_real_code
-} from '../clipboard-parser'
+import { FileItem, extract_workspace_and_path } from '../clipboard-parser'
 
 export const parse_file_content_only = (params: {
   response: string
@@ -77,14 +73,10 @@ export const parse_file_content_only = (params: {
   const content = lines.slice(content_start_index).join('\n')
   const cleaned_content = content
 
-  if (has_real_code(cleaned_content)) {
-    return {
-      type: 'file',
-      file_path: relative_path,
-      content: cleaned_content,
-      workspace_name: workspace_name
-    }
+  return {
+    type: 'file',
+    file_path: relative_path,
+    content: cleaned_content,
+    workspace_name: workspace_name
   }
-
-  return null
 }

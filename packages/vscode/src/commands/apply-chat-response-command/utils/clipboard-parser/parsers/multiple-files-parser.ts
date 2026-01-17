@@ -3,8 +3,7 @@ import {
   FileItem,
   TextItem,
   InlineFileItem,
-  extract_workspace_and_path,
-  has_real_code
+  extract_workspace_and_path
 } from '../clipboard-parser'
 import { parse_file_content_only } from './file-content-only-parser'
 
@@ -143,7 +142,6 @@ const create_or_update_file_item = (params: {
 
   if (file_ref_map.has(file_key)) {
     const existing_file = file_ref_map.get(file_key)!
-    const had_content_before = has_real_code(existing_file.content)
 
     if (mode === 'append') {
       existing_file.content = existing_file.content + '\n' + processed_content
@@ -153,16 +151,6 @@ const create_or_update_file_item = (params: {
 
     if (renamed_from) {
       existing_file.renamed_from = renamed_from
-    }
-
-    const has_content_now = has_real_code(existing_file.content)
-
-    if (!had_content_before && has_content_now) {
-      const index = results.indexOf(existing_file)
-      if (index > -1) {
-        results.splice(index, 1)
-        results.push(existing_file)
-      }
     }
   } else {
     const new_file: FileItem = {

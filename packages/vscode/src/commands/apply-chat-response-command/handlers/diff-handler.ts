@@ -237,43 +237,7 @@ async function process_modified_files(
       continue
     }
 
-    if (fs.existsSync(safe_path)) {
-      const document = await vscode.workspace.openTextDocument(safe_path)
-      if (document.getText().trim() == '') {
-        try {
-          const uri = vscode.Uri.file(safe_path)
-          const text_editors = vscode.window.visibleTextEditors.filter(
-            (editor) => editor.document.uri.toString() == uri.toString()
-          )
-          for (const editor of text_editors) {
-            await vscode.window.showTextDocument(editor.document, {
-              preview: false,
-              preserveFocus: false
-            })
-            await vscode.commands.executeCommand(
-              'workbench.action.closeActiveEditor'
-            )
-          }
-
-          fs.unlinkSync(safe_path)
-          Logger.info({
-            function_name: 'process_modified_files',
-            message: 'File was empty after patch, removed from disk.',
-            data: { file_path }
-          })
-          await remove_directory_if_empty({
-            dir_path: path.dirname(safe_path),
-            workspace_root: workspace_path
-          })
-        } catch (error) {
-          Logger.error({
-            function_name: 'process_modified_files',
-            message: 'Error deleting empty file',
-            data: { file_path, error }
-          })
-        }
-      }
-    } else {
+    if (!fs.existsSync(safe_path)) {
       Logger.info({
         function_name: 'process_modified_files',
         message:
