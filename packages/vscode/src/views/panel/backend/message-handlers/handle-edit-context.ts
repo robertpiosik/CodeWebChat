@@ -438,6 +438,7 @@ export const handle_edit_context = async (
     ]
 
     let error_occurred = false
+    let was_cancelled = false
 
     const promises = Array.from({ length: message.invocation_count }).map(
       async () => {
@@ -472,7 +473,10 @@ export const handle_edit_context = async (
             return true
           }
         } catch (error) {
-          if (axios.isCancel(error)) return false
+          if (axios.isCancel(error)) {
+            was_cancelled = true
+            return false
+          }
           Logger.error({
             function_name: 'handle_edit_context',
             message: 'edit context task error',
@@ -492,7 +496,7 @@ export const handle_edit_context = async (
 
     const results = await Promise.all(promises)
 
-    if (error_occurred) return
+    if (error_occurred || was_cancelled) return
 
     if (results.some((r) => r)) {
       return

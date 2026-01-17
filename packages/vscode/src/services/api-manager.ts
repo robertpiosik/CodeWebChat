@@ -116,13 +116,14 @@ export class ApiManager {
           message: 'API call cancelled by user'
         })
         throw error
+      } else {
+        Logger.error({
+          function_name: 'get',
+          message: 'API call error',
+          data: error
+        })
       }
 
-      Logger.error({
-        function_name: 'get',
-        message: 'API call error',
-        data: error
-      })
       return null
     } finally {
       // Unblock anyone waiting for this request if it was the one in the chain
