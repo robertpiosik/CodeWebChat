@@ -159,4 +159,11 @@ export class ApiManager {
       this.cancel_token_sources.delete(request_id)
     }
   }
+
+  public cancel_all_requests() {
+    this.cancel_token_sources.forEach((source) => {
+      source.cancel('Cancelled by user.')
+    })
+    this.cancel_token_sources.clear()
+  }
 }

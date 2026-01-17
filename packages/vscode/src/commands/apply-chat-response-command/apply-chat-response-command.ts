@@ -20,6 +20,7 @@ import { process_chat_response, CommandArgs } from './response-processor'
 import { Checkpoint } from '../checkpoints-command/types'
 import { CHECKPOINTS_STATE_KEY } from '@/constants/state-keys'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
+import { ApiManager } from '@/services/api-manager'
 
 let in_progress = false
 let placeholder_created_at_for_update: number | undefined
@@ -39,6 +40,7 @@ export const apply_chat_response_command = (params: {
   context: vscode.ExtensionContext
   panel_provider: PanelProvider
   workspace_provider: WorkspaceProvider
+  api_manager: ApiManager
 }) => {
   return vscode.commands.registerCommand(
     'codeWebChat.applyChatResponse',
@@ -307,6 +309,7 @@ export const apply_chat_response_command = (params: {
           })
 
           if (changes_accepted) {
+            params.api_manager.cancel_all_requests()
             if (before_checkpoint) {
               const checkpoints =
                 params.context.workspaceState.get<Checkpoint[]>(
