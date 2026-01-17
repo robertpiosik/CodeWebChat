@@ -136,7 +136,6 @@ export const handle_restore_preview = async (
           try {
             const file_uri = vscode.Uri.file(safe_path)
             const document = await vscode.workspace.openTextDocument(file_uri)
-            const editor = await vscode.window.showTextDocument(document)
             let final_content = file.content
             if (
               original_content.endsWith('\n') &&
@@ -144,15 +143,16 @@ export const handle_restore_preview = async (
             ) {
               final_content += '\n'
             }
-            await editor.edit((edit) => {
-              edit.replace(
-                new vscode.Range(
-                  document.positionAt(0),
-                  document.positionAt(document.getText().length)
-                ),
-                final_content
-              )
-            })
+            const edit = new vscode.WorkspaceEdit()
+            edit.replace(
+              document.uri,
+              new vscode.Range(
+                document.positionAt(0),
+                document.positionAt(document.getText().length)
+              ),
+              final_content
+            )
+            await vscode.workspace.applyEdit(edit)
 
             await document.save()
             Logger.info({
@@ -202,8 +202,6 @@ export const handle_restore_preview = async (
               message: 'New file created',
               data: safe_path
             })
-            const document = await vscode.workspace.openTextDocument(safe_path)
-            await vscode.window.showTextDocument(document, { preview: false })
           } catch (error) {
             Logger.error({
               function_name: 'handle_restore_preview',

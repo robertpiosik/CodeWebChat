@@ -152,8 +152,6 @@ export const create_file_if_needed = async (params: {
       message: 'File created',
       data: safe_path
     })
-    const document = await vscode.workspace.openTextDocument(safe_path)
-    await vscode.window.showTextDocument(document, { preview: false })
     return true
   } catch (error) {
     Logger.error({
@@ -227,10 +225,6 @@ const relocate_file = async (params: {
       dir_path: path.dirname(old_safe_path),
       workspace_root: params.workspace_root
     })
-
-    // Open the file at new location
-    const document = await vscode.workspace.openTextDocument(new_safe_path)
-    await vscode.window.showTextDocument(document)
 
     Logger.info({
       function_name: 'relocate_file',

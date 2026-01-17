@@ -200,8 +200,6 @@ export const handle_conflict_markers = async (
           }
 
           await fs.promises.writeFile(safe_path, content_to_write, 'utf8')
-          const document = await vscode.workspace.openTextDocument(safe_path)
-          await vscode.window.showTextDocument(document, { preview: false })
 
           original_states.push({
             file_path: file.file_path,
@@ -217,7 +215,6 @@ export const handle_conflict_markers = async (
           const document = await vscode.workspace.openTextDocument(safe_path)
           const original_content = document.getText()
 
-          const editor = await vscode.window.showTextDocument(document)
           let final_content = file.content
           if (
             original_content.endsWith('\n') &&
@@ -225,15 +222,16 @@ export const handle_conflict_markers = async (
           ) {
             final_content += '\n'
           }
-          await editor.edit((edit) => {
-            edit.replace(
-              new vscode.Range(
-                document.positionAt(0),
-                document.positionAt(document.getText().length)
-              ),
-              final_content
-            )
-          })
+          const edit = new vscode.WorkspaceEdit()
+          edit.replace(
+            document.uri,
+            new vscode.Range(
+              document.positionAt(0),
+              document.positionAt(document.getText().length)
+            ),
+            final_content
+          )
+          await vscode.workspace.applyEdit(edit)
           await document.save()
 
           original_states.push({
