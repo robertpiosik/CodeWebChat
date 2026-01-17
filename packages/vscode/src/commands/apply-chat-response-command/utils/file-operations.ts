@@ -248,7 +248,7 @@ export const apply_file_relocations = async (
 ): Promise<void> => {
   if (
     !vscode.workspace.workspaceFolders ||
-    vscode.workspace.workspaceFolders.length === 0
+    vscode.workspace.workspaceFolders.length == 0
   ) {
     return
   }

@@ -378,7 +378,7 @@ function apply_conflict_markers_to_content(
 
       const index = current_content.indexOf(search_text, cursor)
 
-      if (index === -1) {
+      if (index == -1) {
         throw new Error(
           `Could not find content to replace for conflict marker. Context:\n${search_text.slice(0, 100)}...`
         )

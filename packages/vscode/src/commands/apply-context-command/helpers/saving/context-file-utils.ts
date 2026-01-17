@@ -92,7 +92,7 @@ export const save_contexts_to_file = async (
       fs.mkdirSync(dir_path, { recursive: true })
     }
 
-    if (contexts.length === 0) {
+    if (contexts.length == 0) {
       if (fs.existsSync(file_path)) {
         fs.unlinkSync(file_path)
       }

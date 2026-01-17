@@ -31,7 +31,7 @@ export const use_auto_focus_new_task = (
       (id) => !prev_ids_ref.current.has(id)
     )
 
-    if (added_ids.length === 1) {
+    if (added_ids.length == 1) {
       const new_task = id_to_task.get(added_ids[0])
       if (new_task && new_task.text === '') {
         set_editing_timestamp(added_ids[0])

@@ -46,7 +46,7 @@ export const handle_quick_save = async (
   let all_prefixed_paths: string[] = []
 
   for (const [root, files] of files_by_workspace.entries()) {
-    if (files.length === 0) continue
+    if (files.length == 0) continue
     const condensed_paths = condense_paths(files, root, workspace_provider)
     const relative_paths = condensed_paths.map((p) => p.replace(/\\/g, '/'))
     const prefixed_paths = add_workspace_prefix(relative_paths, root)

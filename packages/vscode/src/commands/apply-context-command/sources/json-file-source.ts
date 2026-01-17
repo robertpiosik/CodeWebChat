@@ -115,7 +115,7 @@ export const handle_json_file_source = async (
           for (const context of file_contexts) {
             const roots = context_to_roots.get(context.name) || []
             let description = `${context.paths.length} path${
-              context.paths.length === 1 ? '' : 's'
+              context.paths.length == 1 ? '' : 's'
             }`
 
             if (roots.length > 0 && (roots.length > 1 || is_multi_root)) {
@@ -162,7 +162,7 @@ export const handle_json_file_source = async (
             const folders = vscode.workspace.workspaceFolders
             if (folders && folders.length > 0) {
               let file_path: string | undefined
-              if (folders.length === 1) {
+              if (folders.length == 1) {
                 file_path = get_contexts_file_path(folders[0].uri.fsPath)
               } else {
                 active_dialog_count++
@@ -208,7 +208,7 @@ export const handle_json_file_source = async (
         })
 
         quick_pick.onDidHide(() => {
-          if (active_dialog_count === 0) {
+          if (active_dialog_count == 0) {
             resolve_once('back')
           }
         })
@@ -247,7 +247,7 @@ export const handle_json_file_source = async (
             const files = files_by_workspace.get(root) || []
             const p = get_contexts_file_path(root)
 
-            if (files.length === 0 && !fs.existsSync(p)) continue
+            if (files.length == 0 && !fs.existsSync(p)) continue
 
             if (files.length > 0) {
               const dir = path.dirname(p)
@@ -353,7 +353,7 @@ export const handle_json_file_source = async (
 
       if (selection.label === LABEL_NEW_ENTRY) {
         const checked_files = workspace_provider.get_checked_files()
-        if (checked_files.length === 0) {
+        if (checked_files.length == 0) {
           active_dialog_count++
           await vscode.window.showWarningMessage(
             dictionary.warning_message.NOTHING_IN_CONTEXT_TO_SAVE
@@ -373,7 +373,7 @@ export const handle_json_file_source = async (
 
         const files_by_workspace = group_files_by_workspace(checked_files)
         for (const [root, files] of files_by_workspace.entries()) {
-          if (files.length === 0) continue
+          if (files.length == 0) continue
           const p = get_contexts_file_path(root)
           const dir = path.dirname(p)
           if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true })

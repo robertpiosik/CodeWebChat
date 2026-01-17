@@ -39,7 +39,7 @@ export const handle_fix_all_failed_files = async (
     (s) => s.apply_failed && !s.fixed_with_intelligent_update
   )
 
-  if (failed_files.length === 0) {
+  if (failed_files.length == 0) {
     return
   }
 

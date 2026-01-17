@@ -657,7 +657,7 @@ export class WorkspaceProvider
       return this._get_files_and_directories(dir_path, true)
     }
 
-    if (this._workspace_roots.length === 1) {
+    if (this._workspace_roots.length == 1) {
       return this._get_files_and_directories(this._workspace_roots[0], true)
     } else {
       return this._get_workspace_folder_items(true)
@@ -753,7 +753,7 @@ export class WorkspaceProvider
 
   private _resolve_state_path(key: string): string | undefined {
     // If single root, assume relative path
-    if (this._workspace_roots.length === 1) {
+    if (this._workspace_roots.length == 1) {
       return path.join(this._workspace_roots[0], key)
     }
 

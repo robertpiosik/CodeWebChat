@@ -458,7 +458,7 @@ const extract_all_code_block_patches = (params: {
         )
         const xml_path_regex = /<[\w-]+\s+path=["']([^"']+)["']([^>]*)>/
         const non_empty_lines = prev_block_lines.filter((l) => l.trim() != '')
-        if (non_empty_lines.length === 1) {
+        if (non_empty_lines.length == 1) {
           const match = non_empty_lines[0].match(xml_path_regex)
           if (match && match[1]) {
             file_path_hint = match[1]

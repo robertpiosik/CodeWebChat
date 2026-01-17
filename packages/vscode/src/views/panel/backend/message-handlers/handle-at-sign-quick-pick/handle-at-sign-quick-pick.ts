@@ -65,7 +65,7 @@ const browse_all_files = async (
 
     items.sort((a, b) => {
       const label_diff = natural_sort(a.label, b.label)
-      if (label_diff !== 0) return label_diff
+      if (label_diff != 0) return label_diff
       return natural_sort(a.description || '', b.description || '')
     })
 

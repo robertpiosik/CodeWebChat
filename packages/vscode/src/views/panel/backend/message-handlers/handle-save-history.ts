@@ -38,7 +38,7 @@ export const handle_save_history = async (
   }
   if (key) {
     const text_history: string[] = message.messages
-    if (text_history.length === 0) {
+    if (text_history.length == 0) {
       await panel_provider.context.workspaceState.update(key, [])
       return
     }

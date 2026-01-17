@@ -68,7 +68,7 @@ const handle_changes_item = async (): Promise<
 
     const branch_items: vscode.QuickPickItem[] = []
 
-    if (workspace_with_branches.length === 1) {
+    if (workspace_with_branches.length == 1) {
       const { branches } = workspace_with_branches[0]
       branch_items.push(
         ...branches.map((branch) => ({
@@ -337,7 +337,7 @@ const handle_saved_context_item = async (
 ): Promise<string | 'continue' | undefined> => {
   try {
     const workspace_folders = vscode.workspace.workspaceFolders || []
-    if (workspace_folders.length === 0) {
+    if (workspace_folders.length == 0) {
       vscode.window.showErrorMessage(dictionary.error_message.NO_WORKSPACE_ROOT)
       return undefined
     }
@@ -354,7 +354,7 @@ const handle_saved_context_item = async (
       source_options.push({
         label: 'Workspace State',
         description: `${internal_contexts.length} context${
-          internal_contexts.length === 1 ? '' : 's'
+          internal_contexts.length == 1 ? '' : 's'
         }`,
         value: 'WorkspaceState'
       })

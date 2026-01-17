@@ -247,7 +247,7 @@ function find_line_sequence(
   sequence: string[],
   start_idx: number
 ): number {
-  if (sequence.length === 0) return -1
+  if (sequence.length == 0) return -1
   if (start_idx >= lines.length) return -1
 
   for (let i = start_idx; i <= lines.length - sequence.length; i++) {

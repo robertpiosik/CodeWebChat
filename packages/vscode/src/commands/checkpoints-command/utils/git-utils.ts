@@ -65,7 +65,7 @@ export const get_git_diff = async (
         maxBuffer: 50 * 1024 * 1024 // 50MB max
       })
     } catch (e: any) {
-      if (e.status === 1 && e.stdout) {
+      if (e.status == 1 && e.stdout) {
         // Exit code 1 means there are differences, which is not an error for us.
         diff = e.stdout.toString()
       } else {
@@ -99,7 +99,7 @@ export const get_git_diff = async (
         )
         untracked_diff += file_diff
       } catch (err: any) {
-        if (err.status === 1 && err.stdout) {
+        if (err.status == 1 && err.stdout) {
           // The diff output is in stdout of the error object
           untracked_diff += err.stdout.toString()
         } else {

@@ -1,6 +1,6 @@
 export const get_caret_position_from_div = (element: HTMLElement): number => {
   const selection = window.getSelection()
-  if (!selection || selection.rangeCount === 0) {
+  if (!selection || selection.rangeCount == 0) {
     return 0
   }
   const range = selection.getRangeAt(0)

@@ -275,7 +275,7 @@ export const context_initialization = async (
         if (!open_editors_provider) return
         const checked_files = open_editors_provider.get_checked_files()
 
-        if (checked_files.length === 0) {
+        if (checked_files.length == 0) {
           vscode.window.showWarningMessage(
             dictionary.warning_message.NO_OPEN_EDITORS_SELECTED
           )

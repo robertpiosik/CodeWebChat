@@ -145,7 +145,7 @@ export const set_range_command = (
         if (file_ranges[relative_path]) {
           delete file_ranges[relative_path]
           try {
-            if (Object.keys(file_ranges).length === 0) {
+            if (Object.keys(file_ranges).length == 0) {
               await fs.unlink(ranges_file_path).catch(() => {})
             } else {
               await fs.writeFile(
@@ -246,7 +246,7 @@ export const set_range_command = (
           if (file_ranges[relative_path]) {
             delete file_ranges[relative_path]
             try {
-              if (Object.keys(file_ranges).length === 0) {
+              if (Object.keys(file_ranges).length == 0) {
                 await fs.unlink(ranges_file_path).catch(() => {})
               } else {
                 await fs.writeFile(

@@ -503,7 +503,7 @@ export const replace_context_at_commit_symbol = async (params: {
       }
     }
 
-    if (files_in_repo.length > 0 && files_content.length === 0) {
+    if (files_in_repo.length > 0 && files_content.length == 0) {
       vscode.window.showInformationMessage(
         dictionary.information_message.ALL_CHECKED_FILES_UNCAHNGED_SINCE_COMMIT(
           folder_name,

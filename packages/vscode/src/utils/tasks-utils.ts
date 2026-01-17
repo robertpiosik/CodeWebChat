@@ -122,7 +122,7 @@ export const mark_task_as_completed_if_matches_prompt = (
   if (!prompt_text.trim()) return null
 
   const all_tasks = load_all_tasks(context)
-  if (Object.keys(all_tasks).length === 0) return null
+  if (Object.keys(all_tasks).length == 0) return null
 
   let file_changed = false
   const relevant_tasks: Record<string, Task[]> = {}

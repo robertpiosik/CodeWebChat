@@ -75,7 +75,7 @@ export const handle_upsert_configuration = async (
       (c) => get_tool_config_id(c) == configuration_id
     )
 
-    if (config_index === -1) {
+    if (config_index == -1) {
       vscode.window.showErrorMessage(
         dictionary.error_message.CONFIGURATION_NOT_FOUND
       )

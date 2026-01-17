@@ -25,7 +25,7 @@ export const handle_unstaged_files_source = async (
       return
     }
 
-    if (git_api.repositories.length === 0) {
+    if (git_api.repositories.length == 0) {
       vscode.window.showInformationMessage(
         dictionary.information_message.NO_GIT_REPOSITORY_FOUND_IN_WORKSPACE
       )
@@ -39,7 +39,7 @@ export const handle_unstaged_files_source = async (
       })
     }
 
-    if (unstaged_file_paths.length === 0) {
+    if (unstaged_file_paths.length == 0) {
       vscode.window.showInformationMessage(
         dictionary.information_message.NO_UNSTAGED_FILES_FOUND
       )
@@ -88,7 +88,7 @@ export const handle_unstaged_files_source = async (
       }`
     })
 
-    if (!selected_items || selected_items.length === 0) {
+    if (!selected_items || selected_items.length == 0) {
       return
     }
 

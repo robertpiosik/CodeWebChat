@@ -176,7 +176,7 @@ export const handle_proceed_with_commit = async (
     panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
     return
   }
-  if (files_to_stage.length === 0) {
+  if (files_to_stage.length == 0) {
     panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
     return
   }

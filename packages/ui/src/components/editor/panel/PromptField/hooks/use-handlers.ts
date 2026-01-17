@@ -295,8 +295,7 @@ export const use_handlers = (
 
   const handle_copy = (e: React.ClipboardEvent<HTMLDivElement>) => {
     const selection = window.getSelection()
-    if (!selection || selection.rangeCount === 0 || selection.isCollapsed)
-      return
+    if (!selection || selection.rangeCount == 0 || selection.isCollapsed) return
 
     const range = selection.getRangeAt(0)
     const input_element = input_ref.current
@@ -579,7 +578,7 @@ export const use_handlers = (
     if (
       !input_ref.current ||
       !selection ||
-      selection.rangeCount === 0 ||
+      selection.rangeCount == 0 ||
       !selection.isCollapsed
     ) {
       return
@@ -648,7 +647,7 @@ export const use_handlers = (
   ) => {
     const active_history = props.chat_history
 
-    if (active_history.length === 0) return
+    if (active_history.length == 0) return
 
     e.preventDefault()
 
@@ -669,7 +668,7 @@ export const use_handlers = (
         const new_index = history_index - 1
         set_history_index(new_index)
         update_and_set_caret(active_history[new_index])
-      } else if (history_index === 0) {
+      } else if (history_index == 0) {
         set_history_index(-1)
         update_and_set_caret('')
       }
@@ -681,7 +680,7 @@ export const use_handlers = (
 
     if ((e.ctrlKey || e.metaKey) && !shiftKey && key.toLowerCase() == 'c') {
       const selection = window.getSelection()
-      if (!selection || selection.rangeCount === 0 || selection.isCollapsed) {
+      if (!selection || selection.rangeCount == 0 || selection.isCollapsed) {
         e.preventDefault()
         props.on_copy()
         return
@@ -846,7 +845,7 @@ export const use_handlers = (
       if (e.ctrlKey || e.metaKey) {
         e.preventDefault()
         const raw_pos = raw_caret_pos_ref.current
-        if (raw_pos === 0) return
+        if (raw_pos == 0) return
 
         const value = props.value
         let i = raw_pos - 1

@@ -50,11 +50,11 @@ export const parse_code_completion = (params: {
     }
   }
 
-  if (code_block_start_index === -1) {
+  if (code_block_start_index == -1) {
     return null
   }
 
-  if (code_block_end_index === -1) {
+  if (code_block_end_index == -1) {
     code_block_end_index = lines.length - 1
   }
 

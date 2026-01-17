@@ -291,7 +291,7 @@ export const checkpoints_command = (params: {
               params.context.workspaceState.get<Checkpoint>(
                 TEMPORARY_CHECKPOINT_STATE_KEY
               )
-            if (checkpoints.length === 0 && !temp_checkpoint) {
+            if (checkpoints.length == 0 && !temp_checkpoint) {
               vscode.window.showInformationMessage(
                 dictionary.information_message.NOTHING_TO_DELETE
               )

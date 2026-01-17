@@ -28,7 +28,7 @@ export const resolve_paths = (
     }
 
     // No prefix or unknown prefix
-    if (workspace_roots.length === 1) {
+    if (workspace_roots.length == 1) {
       resolved_paths.push(path.join(workspace_roots[0], p))
     } else {
       // Ambiguous in multi-root if no prefix. Try to find if file exists in any root.

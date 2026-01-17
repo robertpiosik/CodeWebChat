@@ -164,7 +164,7 @@ const handle_get_tab_data = async (
         code: 'document.documentElement.outerHTML'
       })
 
-      if (!results || results.length === 0 || !results[0]) {
+      if (!results || results.length == 0 || !results[0]) {
         throw new Error('Failed to get page content')
       }
 

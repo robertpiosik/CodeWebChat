@@ -48,7 +48,7 @@ export const doubao: Chatbot = {
       return
     }
     const menu_items = portal.querySelectorAll('li[role="menuitem"]')
-    if (menu_items.length === 0) {
+    if (menu_items.length == 0) {
       report_initialization_error({
         function_name: 'doubao.set_options',
         log_message: 'Options menu items not found'

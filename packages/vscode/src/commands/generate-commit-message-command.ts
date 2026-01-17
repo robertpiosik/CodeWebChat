@@ -15,7 +15,7 @@ export function generate_commit_message_command(
       if (!repository) return
 
       await repository.status()
-      const was_empty_stage = (repository.state.indexChanges || []).length === 0
+      const was_empty_stage = (repository.state.indexChanges || []).length == 0
 
       const diff = await prepare_staged_changes(repository)
 

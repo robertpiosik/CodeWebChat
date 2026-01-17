@@ -34,7 +34,7 @@ export const compact_c_style = (
       if (is_in_string) {
         if (char == '\\') {
           // Handle escaped characters inside string
-          if (skip_body_depth === 0) {
+          if (skip_body_depth == 0) {
             processed_line += char + (next_char || '')
           }
           last_code_buffer += char + (next_char || '')
@@ -44,7 +44,7 @@ export const compact_c_style = (
         if (char === is_in_string) {
           is_in_string = false
         }
-        if (skip_body_depth === 0) {
+        if (skip_body_depth == 0) {
           processed_line += char
         }
         last_code_buffer += char
@@ -55,7 +55,7 @@ export const compact_c_style = (
       // Start of String
       if (char == '"' || char === "'" || char == '`') {
         is_in_string = char
-        if (skip_body_depth === 0) {
+        if (skip_body_depth == 0) {
           processed_line += char
         }
         last_code_buffer += char

@@ -713,7 +713,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               )
               if (
                 first_group_index > 0 ||
-                (first_group_index === -1 && presets_for_mode.length > 0)
+                (first_group_index == -1 && presets_for_mode.length > 0)
               ) {
                 selected_name = last_selected
               }

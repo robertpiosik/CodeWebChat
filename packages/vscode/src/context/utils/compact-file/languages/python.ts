@@ -33,7 +33,7 @@ export const compact_python = (content: string): string => {
         // Check for end of string (handling triple quotes)
         if (
           char === in_string[0] &&
-          (in_string.length === 1 ||
+          (in_string.length == 1 ||
             line.substring(i, i + in_string.length) === in_string)
         ) {
           processed_line += in_string

@@ -38,7 +38,7 @@ export const check_parent_folder_command = (
         current_dir = path.dirname(current_dir)
       }
 
-      if (folders.length === 0) {
+      if (folders.length == 0) {
         vscode.window.showInformationMessage('No parent folders found.')
         return
       }

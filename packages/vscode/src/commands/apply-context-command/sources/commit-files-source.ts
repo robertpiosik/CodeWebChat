@@ -118,7 +118,7 @@ export const handle_commit_files_source = async (
       })
       .filter((f) => f.exists)
 
-    if (valid_files.length === 0) {
+    if (valid_files.length == 0) {
       vscode.window.showInformationMessage(
         'No valid existing files found from this commit.'
       )
@@ -138,7 +138,7 @@ export const handle_commit_files_source = async (
       title: `Files modified in ${selected_commit.hash.substring(0, 7)}`
     })
 
-    if (!selected_files || selected_files.length === 0) {
+    if (!selected_files || selected_files.length == 0) {
       return
     }
 

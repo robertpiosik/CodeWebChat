@@ -67,7 +67,7 @@ export const handle_workspace_state_source = async (
           const buttons = [sync_button, edit_button, delete_button]
           const roots = context_to_roots.get(context.name) || []
           let description = `${context.paths.length} path${
-            context.paths.length === 1 ? '' : 's'
+            context.paths.length == 1 ? '' : 's'
           }`
 
           if (roots.length > 0 && (roots.length > 1 || is_multi_root)) {
@@ -128,7 +128,7 @@ export const handle_workspace_state_source = async (
 
           if (selectedItem.label === LABEL_NEW_ENTRY) {
             const checked_files = workspace_provider.get_checked_files()
-            if (checked_files.length === 0) {
+            if (checked_files.length == 0) {
               active_dialog_count++
               await vscode.window.showWarningMessage(
                 dictionary.warning_message.NOTHING_IN_CONTEXT_TO_SAVE
@@ -156,7 +156,7 @@ export const handle_workspace_state_source = async (
             const files_by_workspace = group_files_by_workspace(checked_files)
 
             for (const [root, files] of files_by_workspace.entries()) {
-              if (files.length === 0) continue
+              if (files.length == 0) continue
 
               const condensed_paths = condense_paths(
                 files,
@@ -440,7 +440,7 @@ export const handle_workspace_state_source = async (
               quick_pick.items = create_quick_pick_items(internal_contexts)
             }
 
-            if (internal_contexts.length === 0) {
+            if (internal_contexts.length == 0) {
               await vscode.window.showInformationMessage(
                 dictionary.information_message
                   .NO_SAVED_CONTEXTS_IN_WORKSPACE_STATE

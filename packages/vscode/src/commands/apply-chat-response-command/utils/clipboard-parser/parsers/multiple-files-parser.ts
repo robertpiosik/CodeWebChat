@@ -676,7 +676,7 @@ export const parse_multiple_files = (params: {
 
       if (trimmed_line.startsWith('```') && trimmed_line !== '```') {
         if (
-          backtick_nesting_level === 1 &&
+          backtick_nesting_level == 1 &&
           current_file_name &&
           current_content.trim() === '' &&
           !current_file_name_was_comment &&
@@ -709,7 +709,7 @@ export const parse_multiple_files = (params: {
         }
       } else if (
         trimmed_line === '```' &&
-        backtick_nesting_level === 1 &&
+        backtick_nesting_level == 1 &&
         current_content.trim() === '' &&
         i > 0 &&
         lines[i - 1].trim() !== '' &&
@@ -725,7 +725,7 @@ export const parse_multiple_files = (params: {
         backtick_nesting_level++
       } else if (
         trimmed_line === '```' &&
-        backtick_nesting_level === 1 &&
+        backtick_nesting_level == 1 &&
         (current_language === 'markdown' || current_language === 'md') &&
         !last_seen_file_path_was_header &&
         ((current_content.trim() === '' &&
@@ -749,7 +749,7 @@ export const parse_multiple_files = (params: {
         let should_close = true
         if (
           trimmed_line === '```' &&
-          backtick_nesting_level === 1 &&
+          backtick_nesting_level == 1 &&
           current_file_name &&
           current_content.trim() === '' &&
           i + 1 < lines.length &&

@@ -3,7 +3,7 @@ import * as path from 'path'
 
 export const handle_open_allow_patterns_settings = async (): Promise<void> => {
   const workspaceFolders = vscode.workspace.workspaceFolders
-  if (!workspaceFolders || workspaceFolders.length === 0) {
+  if (!workspaceFolders || workspaceFolders.length == 0) {
     return
   }
 

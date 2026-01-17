@@ -25,7 +25,7 @@ export const use_drag_drop = ({
 
   const handle_drag_start = (e: React.DragEvent<HTMLDivElement>) => {
     const selection = window.getSelection()
-    if (!selection || selection.rangeCount === 0 || selection.isCollapsed) {
+    if (!selection || selection.rangeCount == 0 || selection.isCollapsed) {
       e.preventDefault()
       return
     }

@@ -31,7 +31,7 @@ export async function get_git_repository(
   const git_api = git_extension.exports.getAPI(1)
   const repositories: GitRepository[] = git_api.repositories
 
-  if (!repositories || repositories.length === 0) {
+  if (!repositories || repositories.length == 0) {
     vscode.window.showErrorMessage(
       dictionary.error_message.NO_GIT_REPOSITORY_FOUND
     )
@@ -47,7 +47,7 @@ export async function get_git_repository(
     }
   }
 
-  if (repositories.length === 1) {
+  if (repositories.length == 1) {
     return repositories[0]
   }
 
@@ -62,7 +62,7 @@ export async function get_git_repository(
       ? repositories_with_changes
       : repositories
 
-  if (repositories_to_show.length === 1) {
+  if (repositories_to_show.length == 1) {
     return repositories_to_show[0]
   }
 
@@ -93,7 +93,7 @@ export async function prepare_staged_changes(
   const staged_changes = repository.state.indexChanges || []
 
   if (
-    staged_changes.length === 0 &&
+    staged_changes.length == 0 &&
     repository.state.workingTreeChanges.length > 0
   ) {
     const files_to_stage = repository.state.workingTreeChanges.map(
@@ -112,7 +112,7 @@ export async function prepare_staged_changes(
     cwd: repository.rootUri.fsPath
   }).toString()
 
-  if (!diff || diff.length === 0) {
+  if (!diff || diff.length == 0) {
     vscode.window.showInformationMessage(
       dictionary.information_message.NO_CHANGES_TO_COMMIT
     )
