@@ -57,7 +57,6 @@ type Props = {
   api_edit_format: EditFormat
   on_chat_edit_format_change: (edit_format: EditFormat) => void
   on_api_edit_format_change: (edit_format: EditFormat) => void
-  edit_format_instructions: Record<EditFormat, string>
   on_presets_reorder: (reordered_presets: Preset[]) => void
   on_preset_edit: (preset_name: string) => void
   on_duplicate_preset_group_or_separator: (index: number) => void
@@ -231,7 +230,6 @@ export const MainView: React.FC<Props> = (props) => {
                 ? props.on_chat_edit_format_change
                 : props.on_api_edit_format_change
             }
-            edit_format_instructions={props.edit_format_instructions}
             context_file_paths={props.context_file_paths}
             on_go_to_file={props.on_go_to_file}
             currently_open_file_text={props.currently_open_file_text}

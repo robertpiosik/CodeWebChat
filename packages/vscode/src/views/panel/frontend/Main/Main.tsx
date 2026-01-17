@@ -77,8 +77,6 @@ export const Main: React.FC<Props> = (props) => {
     useState<string[]>()
   const [token_count, set_token_count] = useState<number>(0)
   const [chat_edit_format, set_chat_edit_format] = useState<EditFormat>()
-  const [edit_format_instructions, set_edit_format_instructions] =
-    useState<Record<EditFormat, string>>()
   const [api_edit_format, set_api_edit_format] = useState<EditFormat>()
   const [caret_position_to_set, set_caret_position_to_set] = useState<
     number | undefined
@@ -137,9 +135,6 @@ export const Main: React.FC<Props> = (props) => {
           set_chat_edit_format(message.chat_edit_format)
           set_api_edit_format(message.api_edit_format)
           break
-        case 'EDIT_FORMAT_INSTRUCTIONS':
-          set_edit_format_instructions(message.instructions)
-          break
         case 'SELECTED_PRESET_OR_GROUP_CHANGED':
           set_selected_preset_or_group_name_by_mode((prev) => ({
             ...prev,
@@ -162,7 +157,6 @@ export const Main: React.FC<Props> = (props) => {
       { command: 'GET_HISTORY' },
       { command: 'GET_INSTRUCTIONS' },
       { command: 'GET_EDIT_FORMAT' },
-      { command: 'GET_EDIT_FORMAT_INSTRUCTIONS' },
       { command: 'GET_API_TOOL_CONFIGURATIONS' }
     ]
     initial_messages.forEach((message) => post_message(props.vscode, message))
@@ -650,8 +644,7 @@ export const Main: React.FC<Props> = (props) => {
     is_in_code_completions_mode === undefined ||
     instructions === undefined ||
     chat_edit_format === undefined ||
-    api_edit_format === undefined ||
-    edit_format_instructions === undefined
+    api_edit_format === undefined
   ) {
     return <></>
   }
@@ -698,7 +691,6 @@ export const Main: React.FC<Props> = (props) => {
       on_api_prompt_type_change={props.on_api_prompt_type_change}
       chat_edit_format={chat_edit_format}
       api_edit_format={api_edit_format}
-      edit_format_instructions={edit_format_instructions}
       on_chat_edit_format_change={handle_chat_edit_format_change}
       on_api_edit_format_change={handle_api_edit_format_change}
       on_presets_reorder={handle_presets_reorder}

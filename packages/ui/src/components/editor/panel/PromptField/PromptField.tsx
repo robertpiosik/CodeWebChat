@@ -49,7 +49,6 @@ export type PromptFieldProps = {
   show_edit_format_selector?: boolean
   edit_format?: EditFormat
   on_edit_format_change?: (format: EditFormat) => void
-  edit_format_instructions?: Record<EditFormat, string>
   context_file_paths?: string[]
   currently_open_file_text?: string
   invocation_count: number
@@ -467,9 +466,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                             ]]: is_selected
                           }
                         )}
-                        title={`Edit format instructions to include with the prompt ${edit_format_shortcuts[format]}\n\n${
-                          props.edit_format_instructions?.[format]
-                        }`}
+                        title={`Edit format instructions to include with the prompt ${edit_format_shortcuts[format]}`}
                         onClick={() => props.on_edit_format_change?.(format)}
                         onMouseEnter={() => set_hovered_edit_format(format)}
                         onMouseLeave={() => set_hovered_edit_format(null)}

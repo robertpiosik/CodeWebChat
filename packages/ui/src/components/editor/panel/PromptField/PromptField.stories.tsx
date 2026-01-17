@@ -235,12 +235,6 @@ export const WithEditFormatSelector = () => {
       show_edit_format_selector={true}
       edit_format={edit_format}
       on_edit_format_change={set_edit_format}
-      edit_format_instructions={{
-        whole: 'Use the whole...',
-        truncated: 'Use truncated...',
-        'before-after': 'Use before and after...',
-        diff: 'Use diff...'
-      }}
       context_file_paths={[]}
       invocation_count={1}
       on_invocation_count_change={set_edit_format as any} // Mocking for demo
