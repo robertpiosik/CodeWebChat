@@ -274,7 +274,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 8px;
+    gap: 5px;
     pointer-events: none;
 
     &__edit-format {
@@ -318,6 +318,18 @@
           font-weight: 500;
           opacity: 1;
         }
+      }
+    }
+
+    &__invocation-count {
+      position: relative;
+      pointer-events: all;
+      display: flex;
+      align-items: center;
+
+      &__button {
+        font-size: 11px !important;
+        padding: 0 4px !important;
       }
     }
 

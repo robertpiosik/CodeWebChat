@@ -495,7 +495,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               panel_provider: this,
               preset_name: message.preset_name,
               group_name: message.group_name,
-              show_quick_pick: message.show_quick_pick
+              show_quick_pick: message.show_quick_pick,
+              invocation_count: message.invocation_count
             })
           } else if (message.command == 'PREVIEW_PRESET') {
             await handle_preview_preset(this, message)

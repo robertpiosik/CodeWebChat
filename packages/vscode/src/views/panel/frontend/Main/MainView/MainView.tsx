@@ -15,6 +15,7 @@ import { ApiToolConfiguration } from '@/views/panel/types/messages'
 import { use_last_choice_button_title } from './hooks/use-last-choice-button-title'
 import { ContextUtilisation as UiContextUtilisation } from '@ui/components/editor/panel/ContextUtilisation'
 import { Header } from './components/Header'
+import { use_invocation_counts } from './hooks/use-invocation-counts'
 
 type Props = {
   scroll_reset_key: number
@@ -22,6 +23,7 @@ type Props = {
     preset_name?: string
     group_name?: string
     show_quick_pick?: boolean
+    invocation_count: number
   }) => void
   copy_to_clipboard: (preset_name?: string) => void
   on_show_home: () => void
@@ -70,10 +72,10 @@ type Props = {
   on_caret_position_change: (caret_position: number) => void
   mode: Mode
   on_mode_change: (value: Mode) => void
-  on_edit_context_click: () => void
-  on_edit_context_with_quick_pick_click: () => void
-  on_code_completion_click: () => void
-  on_code_completion_with_quick_pick_click: () => void
+  on_edit_context_click: (invocation_count: number) => void
+  on_edit_context_with_quick_pick_click: (invocation_count: number) => void
+  on_code_completion_click: (invocation_count: number) => void
+  on_code_completion_with_quick_pick_click: (invocation_count: number) => void
   caret_position_to_set?: number
   on_caret_position_set?: () => void
   chat_input_focus_and_select_key: number
@@ -106,30 +108,40 @@ export const MainView: React.FC<Props> = (props) => {
   const is_in_no_context_prompt_type =
     props.mode == MODE.WEB && props.web_prompt_type == 'no-context'
 
+  const { current_invocation_count, handle_invocation_count_change } =
+    use_invocation_counts({
+      mode: props.mode,
+      web_prompt_type: props.web_prompt_type,
+      api_prompt_type: props.api_prompt_type
+    })
+
   const handle_input_change = (value: string) => {
     props.set_instructions(value)
   }
 
   const handle_submit = async () => {
     if (props.mode == MODE.WEB) {
-      props.initialize_chats({})
+      props.initialize_chats({ invocation_count: current_invocation_count })
     } else {
       if (is_in_code_completions_prompt_type) {
-        props.on_code_completion_click()
+        props.on_code_completion_click(current_invocation_count)
       } else {
-        props.on_edit_context_click()
+        props.on_edit_context_click(current_invocation_count)
       }
     }
   }
 
   const handle_submit_with_control = async () => {
     if (props.mode == MODE.WEB) {
-      props.initialize_chats({ show_quick_pick: true })
+      props.initialize_chats({
+        show_quick_pick: true,
+        invocation_count: current_invocation_count
+      })
     } else {
       if (is_in_code_completions_prompt_type) {
-        props.on_code_completion_with_quick_pick_click()
+        props.on_code_completion_with_quick_pick_click(current_invocation_count)
       } else {
-        props.on_edit_context_with_quick_pick_click()
+        props.on_edit_context_with_quick_pick_click(current_invocation_count)
       }
     }
   }
@@ -223,6 +235,8 @@ export const MainView: React.FC<Props> = (props) => {
             context_file_paths={props.context_file_paths}
             on_go_to_file={props.on_go_to_file}
             currently_open_file_text={props.currently_open_file_text}
+            invocation_count={current_invocation_count}
+            on_invocation_count_change={handle_invocation_count_change}
           />
           <UiContextUtilisation
             current_context_size={props.token_count}
@@ -251,11 +265,15 @@ export const MainView: React.FC<Props> = (props) => {
               on_preset_click={(preset_name) =>
                 props.initialize_chats({
                   preset_name,
-                  show_quick_pick: false
+                  show_quick_pick: false,
+                  invocation_count: current_invocation_count
                 })
               }
               on_group_click={(group_name) =>
-                props.initialize_chats({ group_name })
+                props.initialize_chats({
+                  group_name,
+                  invocation_count: current_invocation_count
+                })
               }
               on_preset_copy={props.copy_to_clipboard}
               on_preset_edit={props.on_preset_edit}

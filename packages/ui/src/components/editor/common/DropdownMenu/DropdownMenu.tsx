@@ -6,6 +6,7 @@ export namespace DropdownMenu {
     label: string
     shortcut?: string
     on_click: () => void
+    checked?: boolean
     is_selected?: boolean
   }
 
@@ -50,8 +51,13 @@ export const DropdownMenu: React.FC<DropdownMenu.Props> = (props) => {
                   item.label
                 )}
               </span>
-              {item.shortcut && (
-                <span className={styles.shortcut}>{item.shortcut}</span>
+              {(item.shortcut || item.checked) && (
+                <div className={styles.item__right}>
+                  {item.checked && <span className="codicon codicon-check" />}
+                  {item.shortcut && (
+                    <span className={styles.shortcut}>{item.shortcut}</span>
+                  )}
+                </div>
               )}
             </div>
           )

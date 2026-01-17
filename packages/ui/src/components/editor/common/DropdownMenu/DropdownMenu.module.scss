@@ -6,7 +6,7 @@
   z-index: 2;
   width: max-content;
   text-align: left;
-  min-width: 100%;
+  min-width: max(100%, 80px);
 
   &__inner {
     background-color: var(--vscode-quickInput-background);
@@ -33,6 +33,12 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
   &:hover,

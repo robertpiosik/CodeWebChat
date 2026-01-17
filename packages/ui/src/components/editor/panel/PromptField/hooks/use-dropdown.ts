@@ -50,6 +50,7 @@ export const use_dropdown = ({
   return {
     is_dropdown_open,
     toggle_dropdown,
+    close_dropdown,
     dropdown_ref,
     handle_copy_click,
     handle_select_click

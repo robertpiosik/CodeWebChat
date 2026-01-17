@@ -326,12 +326,14 @@ export const Main: React.FC<Props> = (props) => {
     preset_name?: string
     group_name?: string
     show_quick_pick?: boolean
+    invocation_count: number
   }) => {
     post_message(props.vscode, {
       command: 'SEND_PROMPT',
       preset_name: params.preset_name,
       group_name: params.group_name,
-      show_quick_pick: params.show_quick_pick
+      show_quick_pick: params.show_quick_pick,
+      invocation_count: params.invocation_count
     })
 
     update_chat_history(instructions)
@@ -494,34 +496,39 @@ export const Main: React.FC<Props> = (props) => {
     return ''
   }
 
-  const handle_edit_context_click = () => {
+  const handle_edit_context_click = (invocation_count: number) => {
     const instruction = get_current_instructions()
 
     post_message(props.vscode, {
       command: 'EDIT_CONTEXT',
-      use_quick_pick: false
+      use_quick_pick: false,
+      invocation_count
     })
 
     update_chat_history(instruction)
   }
 
-  const handle_edit_context_with_quick_pick_click = () => {
+  const handle_edit_context_with_quick_pick_click = (
+    invocation_count: number
+  ) => {
     const instruction = get_current_instructions()
 
     post_message(props.vscode, {
       command: 'EDIT_CONTEXT',
-      use_quick_pick: true
+      use_quick_pick: true,
+      invocation_count
     })
 
     update_chat_history(instruction)
   }
 
-  const handle_code_completion_click = () => {
+  const handle_code_completion_click = (invocation_count: number) => {
     const instruction = get_current_instructions()
 
     post_message(props.vscode, {
       command: 'CODE_COMPLETION',
-      use_quick_pick: false
+      use_quick_pick: false,
+      invocation_count
     })
 
     if (instruction.trim()) {
@@ -529,12 +536,15 @@ export const Main: React.FC<Props> = (props) => {
     }
   }
 
-  const handle_code_completion_with_quick_pick_click = () => {
+  const handle_code_completion_with_quick_pick_click = (
+    invocation_count: number
+  ) => {
     const instruction = get_current_instructions()
 
     post_message(props.vscode, {
       command: 'CODE_COMPLETION',
-      use_quick_pick: true
+      use_quick_pick: true,
+      invocation_count
     })
 
     if (instruction.trim()) {
@@ -575,13 +585,15 @@ export const Main: React.FC<Props> = (props) => {
       post_message(props.vscode, {
         command: 'EDIT_CONTEXT',
         use_quick_pick: false,
-        config_id: id
+        config_id: id,
+        invocation_count: 1
       })
     } else if (props.api_prompt_type == 'code-completions') {
       post_message(props.vscode, {
         command: 'CODE_COMPLETION',
         use_quick_pick: false,
-        config_id: id
+        config_id: id,
+        invocation_count: 1
       })
     }
 

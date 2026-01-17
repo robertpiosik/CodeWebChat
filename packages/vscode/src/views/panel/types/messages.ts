@@ -94,6 +94,7 @@ export interface SendPromptMessage extends BaseMessage {
   preset_name?: string
   group_name?: string
   show_quick_pick?: boolean
+  invocation_count: number
 }
 
 export interface CopyPromptMessage extends BaseMessage {
@@ -195,12 +196,14 @@ export interface EditContextMessage extends BaseMessage {
   command: 'EDIT_CONTEXT'
   use_quick_pick: boolean
   config_id?: string
+  invocation_count: number
 }
 
 export interface CodeCompletionMessage extends BaseMessage {
   command: 'CODE_COMPLETION'
   use_quick_pick: boolean
   config_id?: string
+  invocation_count: number
 }
 
 export interface ShowAtSignQuickPickMessage extends BaseMessage {

@@ -6,7 +6,6 @@ import { parse_response, FileItem, DiffItem } from './utils/clipboard-parser'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
-import { Diff } from './utils/clipboard-parser/extract-diff-patches'
 import { apply_git_patch } from './handlers/diff-handler'
 import { apply_file_relocations } from './utils/file-operations'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
@@ -23,6 +22,7 @@ import {
   handle_truncated_edit,
   is_truncation_line
 } from './handlers/truncated-handler'
+import { Diff } from 'diff'
 
 export type PreviewData = {
   original_states: OriginalFileState[]
@@ -197,7 +197,7 @@ export const process_chat_response = async (
 
     let all_original_states: OriginalFileState[] = []
     const applied_patches: {
-      patch: Diff
+      patch: DiffItem
       original_states: OriginalFileState[]
       diff_application_method?: 'recount' | 'search_and_replace'
     }[] = []

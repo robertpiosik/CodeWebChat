@@ -29,6 +29,7 @@ export const handle_send_prompt = async (params: {
   preset_name?: string
   group_name?: string
   show_quick_pick?: boolean
+  invocation_count: number
 }): Promise<void> => {
   if (
     params.panel_provider.mode == MODE.WEB &&
@@ -150,13 +151,13 @@ export const handle_send_prompt = async (params: {
         : '<missing_text>'
     }${payload.after}\n${main_instructions}`
 
-    const chats = resolved_preset_names.map((preset_name) => {
-      return {
+    const chats = resolved_preset_names.flatMap((preset_name) => {
+      return Array.from({ length: params.invocation_count }).map(() => ({
         text,
         preset_name,
         raw_instructions: completion_instructions,
         mode: params.panel_provider.web_prompt_type
-      }
+      }))
     })
 
     params.panel_provider.websocket_server_instance.initialize_chats({
@@ -172,7 +173,7 @@ export const handle_send_prompt = async (params: {
       no_context: params.panel_provider.web_prompt_type == 'no-context'
     })
 
-    const chats = await Promise.all(
+    const prepared_chats = await Promise.all(
       resolved_preset_names.map(async (preset_name) => {
         let instructions = apply_preset_affixes_to_instruction({
           instruction: current_instructions,
@@ -254,6 +255,10 @@ export const handle_send_prompt = async (params: {
               : undefined
         }
       })
+    )
+
+    const chats = prepared_chats.flatMap((chat) =>
+      Array.from({ length: params.invocation_count }).map(() => ({ ...chat }))
     )
 
     params.panel_provider.websocket_server_instance.initialize_chats({

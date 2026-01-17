@@ -52,6 +52,8 @@ export type PromptFieldProps = {
   edit_format_instructions?: Record<EditFormat, string>
   context_file_paths?: string[]
   currently_open_file_text?: string
+  invocation_count: number
+  on_invocation_count_change: (count: number) => void
   on_go_to_file?: (file_path: string) => void
 }
 
@@ -62,6 +64,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [show_submit_tooltip, set_show_submit_tooltip] = useState(false)
   const [is_text_selecting, set_is_text_selecting] = useState(false)
   const [is_focused, set_is_focused] = useState(false)
+  const [is_invocation_dropdown_open, set_is_invocation_dropdown_open] =
+    useState(false)
   const [hovered_edit_format, set_hovered_edit_format] =
     useState<EditFormat | null>(null)
   const { is_alt_pressed, handle_container_key_down } = use_keyboard_shortcuts({
@@ -73,10 +77,12 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const {
     is_dropdown_open,
     toggle_dropdown,
+    close_dropdown,
     dropdown_ref,
     handle_copy_click,
     handle_select_click
   } = use_dropdown(props)
+  const invocation_dropdown_ref = useRef<HTMLDivElement>(null)
   const { ghost_text, handle_accept_ghost_text } = use_ghost_text({
     value: props.value,
     input_ref,
@@ -206,6 +212,26 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
       input_ref.current.focus()
     }
   }, [props.focus_key])
+
+  useEffect(() => {
+    if (input_ref.current) {
+      const handle_click_outside = (event: MouseEvent) => {
+        if (
+          invocation_dropdown_ref.current &&
+          !invocation_dropdown_ref.current.contains(event.target as Node)
+        ) {
+          set_is_invocation_dropdown_open(false)
+        }
+      }
+
+      if (is_invocation_dropdown_open) {
+        document.addEventListener('mousedown', handle_click_outside)
+      }
+      return () => {
+        document.removeEventListener('mousedown', handle_click_outside)
+      }
+    }
+  }, [is_invocation_dropdown_open])
 
   useEffect(() => {
     if (input_ref.current) {
@@ -493,6 +519,37 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               {(!props.is_web_mode ||
                 (props.is_web_mode && props.is_connected)) && (
                 <>
+                  <div
+                    className={styles['footer__right__invocation-count']}
+                    ref={invocation_dropdown_ref}
+                  >
+                    <button
+                      className={cn(
+                        styles['footer__right__submit__button'],
+                        styles['footer__right__invocation-count__button']
+                      )}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        set_is_invocation_dropdown_open((prev) => !prev)
+                        close_dropdown()
+                      }}
+                      title="Invocation count"
+                    >
+                      {props.invocation_count}×
+                    </button>
+                    {is_invocation_dropdown_open && (
+                      <DropdownMenu
+                        items={[1, 2, 3, 4, 5].map((count) => ({
+                          label: `${count}×`,
+                          checked: count == props.invocation_count,
+                          on_click: () => {
+                            props.on_invocation_count_change(count)
+                            set_is_invocation_dropdown_open(false)
+                          }
+                        }))}
+                      />
+                    )}
+                  </div>
                   <button
                     className={cn(
                       styles['footer__right__submit__button'],
@@ -509,7 +566,10 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       styles['footer__right__submit__button'],
                       styles['footer__right__submit__button--chevron']
                     )}
-                    onClick={toggle_dropdown}
+                    onClick={() => {
+                      toggle_dropdown()
+                      set_is_invocation_dropdown_open(false)
+                    }}
                     title="More actions"
                   >
                     <span

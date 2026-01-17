@@ -264,6 +264,7 @@ const perform_code_completion = async (params: {
   completion_instructions?: string
   config_id?: string
   panel_provider: PanelProvider
+  invocation_count: number
 }): Promise<void> => {
   const api_providers_manager = new ModelProvidersManager(params.context)
 
@@ -348,7 +349,6 @@ const perform_code_completion = async (params: {
       )
       return
     }
-    const request_id = randomUUID()
     const document = editor.document
     const position = editor.selection.active
 
@@ -406,58 +406,59 @@ const perform_code_completion = async (params: {
       code_completions_config.reasoning_effort
     )
 
-    const cursor_listener = vscode.window.onDidChangeTextEditorSelection(
-      (e) => {
-        if (e.textEditor === editor) {
-          params.panel_provider.api_manager.cancel_api_call(request_id)
+    let error_occurred = false
+
+    const promises = Array.from({ length: params.invocation_count }).map(
+      async () => {
+        const request_id = randomUUID()
+
+        try {
+          const result = await params.panel_provider.api_manager.get({
+            endpoint_url,
+            api_key: provider.api_key,
+            body,
+            request_id,
+            provider_name: code_completions_config.provider_name,
+            model: code_completions_config.model,
+            reasoning_effort: code_completions_config.reasoning_effort
+          })
+
+          if (result) {
+            await vscode.commands.executeCommand(
+              'codeWebChat.applyChatResponse',
+              {
+                response: result.response,
+                raw_instructions: completion_instructions,
+                original_editor_state: {
+                  file_path: document.uri.fsPath,
+                  position: {
+                    line: position.line,
+                    character: position.character
+                  }
+                }
+              }
+            )
+          }
+        } catch (err: any) {
+          if (axios.isCancel(err)) {
+            return
+          }
+          Logger.error({
+            function_name: 'perform_code_completion',
+            message: 'code completion error',
+            data: err
+          })
+          if (!error_occurred) {
+            vscode.window.showErrorMessage(
+              dictionary.error_message.CODE_COMPLETION_ERROR
+            )
+            error_occurred = true
+          }
         }
       }
     )
 
-    let response_for_apply: string | undefined
-
-    try {
-      const result = await params.panel_provider.api_manager.get({
-        endpoint_url,
-        api_key: provider.api_key,
-        body,
-        request_id,
-        provider_name: code_completions_config.provider_name,
-        model: code_completions_config.model,
-        reasoning_effort: code_completions_config.reasoning_effort
-      })
-
-      if (result) {
-        response_for_apply = result.response
-      }
-    } catch (err: any) {
-      if (axios.isCancel(err)) {
-        return
-      }
-      Logger.error({
-        function_name: 'perform_code_completion',
-        message: 'code completion error',
-        data: err
-      })
-      vscode.window.showErrorMessage(
-        dictionary.error_message.CODE_COMPLETION_ERROR
-      )
-    } finally {
-      cursor_listener.dispose()
-    }
-
-    if (response_for_apply) {
-      await vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
-        response: response_for_apply,
-        original_editor_state: {
-          file_path: document.uri.fsPath,
-          position: {
-            line: position.line,
-            character: position.character
-          }
-        }
-      })
-    }
+    await Promise.all(promises)
   } else {
     vscode.window.showWarningMessage(dictionary.warning_message.NO_EDITOR_OPEN)
   }
@@ -475,6 +476,7 @@ export const handle_code_completion = async (
     show_quick_pick: message.use_quick_pick,
     completion_instructions: panel_provider.code_completion_instructions,
     config_id: message.config_id,
-    panel_provider: panel_provider
+    panel_provider: panel_provider,
+    invocation_count: message.invocation_count
   })
 }

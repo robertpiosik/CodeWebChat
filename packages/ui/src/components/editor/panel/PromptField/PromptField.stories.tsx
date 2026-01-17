@@ -24,6 +24,10 @@ export const Empty = () => (
     on_submit_with_control={() => console.log('Submitted with control')}
     context_file_paths={[]}
     on_curly_braces_click={() => {}}
+    invocation_count={1}
+    on_invocation_count_change={(count) =>
+      console.log('Invocation count changed:', count)
+    }
   />
 )
 
@@ -46,6 +50,10 @@ export const WithText = () => (
     on_submit_with_control={() => console.log('Submitted with control')}
     context_file_paths={[]}
     on_curly_braces_click={() => {}}
+    invocation_count={1}
+    on_invocation_count_change={(count) =>
+      console.log('Invocation count changed:', count)
+    }
   />
 )
 
@@ -68,6 +76,10 @@ export const LongText = () => (
     on_submit_with_control={() => console.log('Submitted with control')}
     context_file_paths={[]}
     on_curly_braces_click={() => {}}
+    invocation_count={1}
+    on_invocation_count_change={(count) =>
+      console.log('Invocation count changed:', count)
+    }
   />
 )
 
@@ -89,6 +101,10 @@ export const WithPlaceholderSavedContext = () => (
     is_web_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     context_file_paths={[]}
+    invocation_count={1}
+    on_invocation_count_change={(count) =>
+      console.log('Invocation count changed:', count)
+    }
     on_curly_braces_click={() => {}}
   />
 )
@@ -111,6 +127,10 @@ export const WithPlaceholderSelection = () => (
     is_web_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     context_file_paths={[]}
+    invocation_count={1}
+    on_invocation_count_change={(count) =>
+      console.log('Invocation count changed:', count)
+    }
     on_curly_braces_click={() => {}}
   />
 )
@@ -133,6 +153,10 @@ export const WithCommit = () => (
     is_web_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     context_file_paths={[]}
+    invocation_count={1}
+    on_invocation_count_change={(count) =>
+      console.log('Invocation count changed:', count)
+    }
     on_curly_braces_click={() => {}}
   />
 )
@@ -155,6 +179,10 @@ export const WithCommitWithQuotes = () => (
     is_web_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     context_file_paths={[]}
+    invocation_count={1}
+    on_invocation_count_change={(count) =>
+      console.log('Invocation count changed:', count)
+    }
     on_curly_braces_click={() => {}}
   />
 )
@@ -176,6 +204,10 @@ export const WithContextAtCommit = () => (
     is_web_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     context_file_paths={[]}
+    invocation_count={1}
+    on_invocation_count_change={(count) =>
+      console.log('Invocation count changed:', count)
+    }
     on_curly_braces_click={() => {}}
   />
 )
@@ -210,6 +242,8 @@ export const WithEditFormatSelector = () => {
         diff: 'Use diff...'
       }}
       context_file_paths={[]}
+      invocation_count={1}
+      on_invocation_count_change={set_edit_format as any} // Mocking for demo
     />
   )
 }
@@ -234,5 +268,9 @@ export const WithFilePaths = () => (
     on_curly_braces_click={() => {}}
     on_go_to_file={(path) => console.log('Go to file:', path)}
     context_file_paths={['path/to/my/file.ts']}
+    invocation_count={1}
+    on_invocation_count_change={(count) =>
+      console.log('Invocation count changed:', count)
+    }
   />
 )
