@@ -7,6 +7,9 @@
         if (a < b) {
             console.log("<div>");
         }
+        function test() {
+            console.log("test");
+        }
     </script>
     <style>
         /* CSS Comment */

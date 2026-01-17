@@ -1,7 +1,4 @@
-export const compact_c_style = (
-  content: string,
-  should_strip_bodies: boolean
-): string => {
+export const compact_c_style = (content: string): string => {
   // Split by newline to process line by line, handling both LF and CRLF
   const lines = content.split(/\r?\n/)
   const result: string[] = []
@@ -76,7 +73,7 @@ export const compact_c_style = (
       }
 
       // Handle Function Body Stripping
-      if (should_strip_bodies && char == '{') {
+      if (char == '{') {
         if (skip_body_depth > 0) {
           // Already skipping, just deepen the level
           skip_body_depth++
@@ -86,8 +83,9 @@ export const compact_c_style = (
         } else {
           // Check if we should preserve this block (class, interface, etc.)
           // We look at last_code_buffer for keywords
+          // We also want to preserve control flow (if, for, while, etc.)
           const is_keeper =
-            /(^|\s)(class|interface|enum|namespace|type)(\s|$)/.test(
+            /(^|\s)(class|interface|enum|namespace|type|if|else|for|while|do|switch|try|catch|finally)(\s|$)/.test(
               last_code_buffer
             )
           // Also preserve object literals (preceded by = or :)
@@ -96,8 +94,7 @@ export const compact_c_style = (
           if (!is_keeper && !is_object_literal) {
             // Start skipping
             skip_body_depth = 1
-            const indent = processed_line.match(/^\s*/)?.[0] || ''
-            processed_line += `{\n${indent}  // ...\n${indent}}`
+            processed_line += `{\n// ...\n}`
             last_code_buffer += '{}'
             i++
             continue
@@ -106,7 +103,7 @@ export const compact_c_style = (
             last_code_buffer = ''
           }
         }
-      } else if (should_strip_bodies && char == '}') {
+      } else if (char == '}') {
         if (skip_body_depth > 0) {
           skip_body_depth--
           last_code_buffer += char

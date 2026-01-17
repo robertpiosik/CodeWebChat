@@ -6,6 +6,9 @@
 if (a < b) {
 console.log("<div>");
 }
+function test() {
+// ...
+}
 </script>
 <style>
 body {}

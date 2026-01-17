@@ -19,7 +19,24 @@ export const compact_file = (content: string, extension: string): string => {
     return compact_sql(content)
   } else if (['.html', '.htm'].includes(extension)) {
     return compact_html(content)
+  } else if (
+    [
+      '.ts',
+      '.js',
+      '.c',
+      '.cpp',
+      '.cs',
+      '.java',
+      '.php',
+      '.go',
+      '.rs',
+      '.swift',
+      '.kt',
+      '.dart'
+    ].includes(extension)
+  ) {
+    return compact_c_style(content)
   } else {
-    return compact_c_style(content, true)
+    return content
   }
 }

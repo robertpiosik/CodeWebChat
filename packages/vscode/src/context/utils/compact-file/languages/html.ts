@@ -43,7 +43,7 @@ export const compact_html = (content: string): string => {
     const { open, content } = scripts[parseInt(idx)]
     // Treat as C-style but do NOT strip bodies (preserve logic, just strip comments)
     // as scripts in HTML are often minimal or structural.
-    const compacted = compact_c_style(content, false).trim()
+    const compacted = compact_c_style(content).trim()
     return `${open}\n${compacted}\n</script>`
   })
 

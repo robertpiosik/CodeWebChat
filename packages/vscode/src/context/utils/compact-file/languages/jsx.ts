@@ -95,8 +95,7 @@ export const compact_jsx = (content: string): string => {
           if (!is_keeper && !is_object_literal) {
             // Start skipping
             skip_body_depth = 1
-            const indent = processed_line.match(/^\s*/)?.[0] || ''
-            processed_line += `{\n${indent}  // ...\n${indent}}`
+            processed_line += `{\n// ...\n}`
             last_code_buffer += '{}'
             i++
             continue
