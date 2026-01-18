@@ -1,6 +1,10 @@
 import * as vscode from 'vscode'
 import { exec } from 'child_process'
 import { Logger } from '@shared/utils/logger'
+import * as crypto from 'crypto'
+import * as fs from 'fs/promises'
+import * as os from 'os'
+import * as path from 'path'
 
 const execAsync = (command: string, options: any): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -55,64 +59,107 @@ export const get_git_diff = async (
   workspace_folder: vscode.WorkspaceFolder
 ): Promise<string | null> => {
   try {
-    let diff = ''
-    try {
-      // Add --binary to handle binary files correctly.
-      // execAsync will reject if there are differences (exit code 1), so we catch it.
-      diff = await execAsync('git diff --binary HEAD', {
-        cwd: workspace_folder.uri.fsPath,
+    const cwd = workspace_folder.uri.fsPath
+    const tmp_dir = os.tmpdir()
+
+    // Get list of changed tracked files
+    const tracked_files_output = await execAsync(
+      'git diff -z --name-only HEAD',
+      {
+        cwd,
         encoding: 'utf8',
         maxBuffer: 50 * 1024 * 1024 // 50MB max
-      })
-    } catch (e: any) {
-      if (e.status == 1 && e.stdout) {
-        // Exit code 1 means there are differences, which is not an error for us.
-        diff = e.stdout.toString()
-      } else {
-        // Other exit codes indicate a real error.
-        throw e
       }
-    }
-
-    const untracked_files = (
-      await execAsync('git ls-files --others --exclude-standard', {
-        cwd: workspace_folder.uri.fsPath,
-        encoding: 'utf8'
-      })
     )
-      .trim()
-      .split('\n')
+    const tracked_files = tracked_files_output
+      .split('\0')
       .filter((f) => f.length > 0)
 
-    let untracked_diff = ''
-    for (const file of untracked_files) {
+    // Get list of untracked files
+    const untracked_files_output = await execAsync(
+      'git ls-files -z --others --exclude-standard',
+      {
+        cwd,
+        encoding: 'utf8'
+      }
+    )
+    const untracked_files = untracked_files_output
+      .split('\0')
+      .filter((f) => f.length > 0)
+
+    const all_files = [
+      ...tracked_files.map((f) => ({ file: f, is_untracked: false })),
+      ...untracked_files.map((f) => ({ file: f, is_untracked: true }))
+    ]
+
+    let total_diff = ''
+
+    for (const { file, is_untracked } of all_files) {
+      const absolute_path = path.join(cwd, file)
+      let mtime = 0
+
       try {
-        // Use git diff to create a patch for the new file, which handles binary files correctly.
-        // execAsync will throw if there are differences, but the diff will be in stdout.
-        const file_diff = await execAsync(
-          `git diff --no-index --binary /dev/null "${file}"`,
-          {
-            cwd: workspace_folder.uri.fsPath,
-            encoding: 'utf8',
-            maxBuffer: 50 * 1024 * 1024
-          }
-        )
-        untracked_diff += file_diff
+        const stats = await fs.stat(absolute_path)
+        mtime = Math.floor(stats.mtimeMs)
+      } catch {
+        // File might be deleted or inaccessible
+      }
+
+      let diff_chunk = ''
+      let cache_path = ''
+
+      if (mtime > 0) {
+        const path_hash = crypto
+          .createHash('md5')
+          .update(absolute_path)
+          .digest('hex')
+        const cache_filename = `cwc-checkpoint-cache-${path_hash}-${mtime}.txt`
+        cache_path = path.join(tmp_dir, cache_filename)
+
+        try {
+          const cached_diff = await fs.readFile(cache_path, 'utf8')
+          total_diff += cached_diff
+          continue
+        } catch {
+          // Cache miss
+        }
+      }
+
+      try {
+        const cmd = is_untracked
+          ? `git diff --no-index --binary /dev/null "${file}"`
+          : `git diff --binary HEAD -- "${file}"`
+
+        diff_chunk = await execAsync(cmd, {
+          cwd,
+          encoding: 'utf8',
+          maxBuffer: 50 * 1024 * 1024
+        })
       } catch (err: any) {
-        if (err.status == 1 && err.stdout) {
-          // The diff output is in stdout of the error object
-          untracked_diff += err.stdout.toString()
+        if (err.status === 1 && err.stdout) {
+          diff_chunk = err.stdout.toString()
         } else {
           Logger.warn({
             function_name: 'get_git_diff',
-            message: `Could not create diff for untracked file: ${file}`,
+            message: `Could not create diff for file: ${file}`,
             data: err
           })
         }
       }
+
+      if (diff_chunk) {
+        total_diff += diff_chunk
+        if (mtime > 0 && cache_path) {
+          try {
+            await fs.writeFile(cache_path, diff_chunk, 'utf8')
+          } catch (e) {
+            // Ignore cache write errors
+          }
+        }
+      }
     }
 
-    return diff + untracked_diff
+    return total_diff
   } catch (error) {
     Logger.error({
       function_name: 'get_git_diff',
