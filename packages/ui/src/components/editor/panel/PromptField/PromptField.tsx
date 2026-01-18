@@ -344,7 +344,23 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             handle_input_change(e)
           }}
           onKeyDown={(e) => {
-            set_should_show_ghost_text(true)
+            if (e.key == 'ArrowRight') {
+              set_should_show_ghost_text(false)
+              const ghost_text_node = input_ref.current?.querySelector(
+                'span[data-type="ghost-text"]'
+              )
+              if (ghost_text_node && !e.ctrlKey && !e.altKey && !e.metaKey) {
+                ghost_text_node.remove()
+                e.preventDefault()
+                const selection = window.getSelection()
+                if (selection) {
+                  const type = e.shiftKey ? 'extend' : 'move'
+                  selection.modify(type, 'forward', 'character')
+                }
+              }
+            } else {
+              set_should_show_ghost_text(true)
+            }
             handle_key_down(e)
           }}
           onCopy={handle_copy}
@@ -432,10 +448,10 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                 {(['whole', 'truncated', 'before-after', 'diff'] as const).map(
                   (format, index) => {
                     const is_compact =
-                      (format === 'before-after' && compact_step >= 1) ||
-                      (format === 'truncated' && compact_step >= 2) ||
-                      (format === 'whole' && compact_step >= 3) ||
-                      (format === 'diff' && compact_step >= 4)
+                      (format == 'before-after' && compact_step >= 1) ||
+                      (format == 'truncated' && compact_step >= 2) ||
+                      (format == 'whole' && compact_step >= 3) ||
+                      (format == 'diff' && compact_step >= 4)
 
                     const button_text = is_compact
                       ? format == 'before-after'
@@ -449,10 +465,10 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                     const should_underline = is_alt_pressed && !is_selected
 
                     let ref = null
-                    if (format === 'whole') ref = format_whole_ref
-                    if (format === 'truncated') ref = format_truncated_ref
-                    if (format === 'before-after') ref = format_before_after_ref
-                    if (format === 'diff') ref = format_diff_ref
+                    if (format == 'whole') ref = format_whole_ref
+                    if (format == 'truncated') ref = format_truncated_ref
+                    if (format == 'before-after') ref = format_before_after_ref
+                    if (format == 'diff') ref = format_diff_ref
 
                     return (
                       <button

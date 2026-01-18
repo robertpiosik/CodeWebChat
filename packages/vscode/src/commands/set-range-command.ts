@@ -211,7 +211,7 @@ export const set_range_command = (
       if (new_range) {
         const formatted_range = new_range.trim().split(/\s+/).join(' ')
 
-        if (save_location === 'file') {
+        if (save_location == 'file') {
           file_ranges[relative_path] = formatted_range
           try {
             await fs.mkdir(path.dirname(ranges_file_path), { recursive: true })

@@ -187,13 +187,13 @@ export const handle_upsert_configuration = async (
 
     const selected_option = selected_item.label
 
-    if (selected_option === 'Model Provider') {
+    if (selected_option == 'Model Provider') {
       const new_provider = await edit_provider_for_config(providers_manager)
       if (new_provider) {
         updated_config.provider_name = new_provider.provider_name
         updated_config.provider_type = new_provider.provider_type
       }
-    } else if (selected_option === 'Model') {
+    } else if (selected_option == 'Model') {
       const new_model = await edit_model_for_config(
         updated_config,
         providers_manager,
@@ -202,7 +202,7 @@ export const handle_upsert_configuration = async (
       if (new_model !== undefined) {
         updated_config.model = new_model
       }
-    } else if (selected_option === 'Advanced') {
+    } else if (selected_option == 'Advanced') {
       // eslint-disable-next-line no-constant-condition
       while (true) {
         const advanced_items: vscode.QuickPickItem[] = []
@@ -262,19 +262,19 @@ export const handle_upsert_configuration = async (
 
         if (!selected_advanced) break
 
-        if (selected_advanced.label === 'Temperature') {
+        if (selected_advanced.label == 'Temperature') {
           const new_temp = await edit_temperature_for_config(updated_config)
           if (new_temp !== undefined) {
             updated_config.temperature =
               new_temp === null ? undefined : new_temp
           }
-        } else if (selected_advanced.label === 'Reasoning Effort') {
+        } else if (selected_advanced.label == 'Reasoning Effort') {
           const new_effort = await edit_reasoning_effort_for_config()
           if (new_effort !== undefined) {
             updated_config.reasoning_effort =
               new_effort === null ? undefined : (new_effort as any)
           }
-        } else if (selected_advanced.label === 'Max Concurrency') {
+        } else if (selected_advanced.label == 'Max Concurrency') {
           const new_concurrency =
             await edit_max_concurrency_for_config(updated_config)
           if (new_concurrency !== undefined) {

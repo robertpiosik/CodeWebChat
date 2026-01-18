@@ -35,7 +35,7 @@ export const PresetsSection = forwardRef<HTMLDivElement, Props>(
     }, [props.ai_studio_user_id])
 
     const handle_gemini_user_id_blur = () => {
-      if (gemini_user_id_str === '') {
+      if (gemini_user_id_str == '') {
         props.on_gemini_user_id_change(null)
         return
       }
@@ -46,7 +46,7 @@ export const PresetsSection = forwardRef<HTMLDivElement, Props>(
     }
 
     const handle_ai_studio_user_id_blur = () => {
-      if (ai_studio_user_id_str === '') {
+      if (ai_studio_user_id_str == '') {
         props.on_ai_studio_user_id_change(null)
         return
       }

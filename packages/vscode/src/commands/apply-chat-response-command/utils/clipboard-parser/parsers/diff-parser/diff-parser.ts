@@ -23,7 +23,7 @@ const process_collected_patch_lines = (params: {
   is_single_root: boolean
 }): DiffItem | null => {
   const lines = [...params.patch_lines_array]
-  while (lines.length > 0 && lines[lines.length - 1].trim() === '') {
+  while (lines.length > 0 && lines[lines.length - 1].trim() == '') {
     lines.pop()
   }
 
@@ -273,7 +273,7 @@ const process_text_for_file_operations = (params: {
 
   for (const line of params.lines) {
     const trimmed_line = line.trim()
-    if (trimmed_line === '<files>' || trimmed_line === '</files>') {
+    if (trimmed_line == '<files>' || trimmed_line == '</files>') {
       continue
     }
     const deleted_match = trimmed_line.match(deleted_file_header_regex)
@@ -710,7 +710,7 @@ const filter_last_diff_per_file = (
 
   for (let i = items.length - 1; i >= 0; i--) {
     const item = items[i]
-    if (item.type === 'diff') {
+    if (item.type == 'diff') {
       const file_key = `${item.workspace_name || ''}:${item.file_path}`
       if (!seen_files.has(file_key)) {
         seen_files.add(file_key)
@@ -808,7 +808,7 @@ const build_patch_content = (params: {
         const is_new_file_content =
           content_lines.length > 0 &&
           content_lines.every(
-            (line) => line.startsWith('+') || line.trim() === ''
+            (line) => line.startsWith('+') || line.trim() == ''
           )
 
         if (is_new_file_content) {
@@ -851,7 +851,7 @@ const build_patch_content = (params: {
       const content_lines = params.lines
       const is_new_file =
         content_lines.length > 0 &&
-        content_lines.every((l) => l.startsWith('+') || l.trim() === '')
+        content_lines.every((l) => l.startsWith('+') || l.trim() == '')
 
       let body = params.lines.join('\n')
       if (is_new_file) {

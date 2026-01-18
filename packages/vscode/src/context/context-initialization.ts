@@ -330,7 +330,7 @@ export const context_initialization = async (
           }
         }
 
-        if (context_text === '') return
+        if (context_text == '') return
 
         context_text = `<files>\n${context_text}</files>\n`
         await vscode.env.clipboard.writeText(context_text)

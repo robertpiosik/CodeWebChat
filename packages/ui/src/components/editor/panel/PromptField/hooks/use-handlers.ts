@@ -222,13 +222,13 @@ export const use_handlers = (
 
     const new_value = leading_part + trailing_part
     const new_raw_cursor_pos = leading_part.length
-    has_modified_current_entry_ref.current = new_value !== ''
+    has_modified_current_entry_ref.current = new_value != ''
     update_value(new_value, new_raw_cursor_pos)
   }
 
   const handle_keyword_deletion_by_click = (keyword_element: HTMLElement) => {
     const keyword_type = keyword_element.dataset.type
-    if (keyword_type === 'file-keyword') {
+    if (keyword_type == 'file-keyword') {
       const file_path = keyword_element.dataset.path
       if (!file_path || !props.context_file_paths?.includes(file_path)) return
 
@@ -238,7 +238,7 @@ export const use_handlers = (
       if (start_index !== -1) {
         apply_keyword_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (keyword_type === 'changes-keyword') {
+    } else if (keyword_type == 'changes-keyword') {
       const branch_name = keyword_element.dataset.branchName
       if (!branch_name) return
 
@@ -248,7 +248,7 @@ export const use_handlers = (
       if (start_index !== -1) {
         apply_keyword_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (keyword_type === 'saved-context-keyword') {
+    } else if (keyword_type == 'saved-context-keyword') {
       const context_type = keyword_element.dataset.contextType
       const context_name = keyword_element.dataset.contextName
       if (!context_type || !context_name) return
@@ -259,14 +259,14 @@ export const use_handlers = (
       if (start_index !== -1) {
         apply_keyword_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (keyword_type === 'selection-keyword') {
+    } else if (keyword_type == 'selection-keyword') {
       const search_pattern = '#Selection'
       const start_index = props.value.indexOf(search_pattern)
 
       if (start_index !== -1) {
         apply_keyword_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (keyword_type === 'commit-keyword') {
+    } else if (keyword_type == 'commit-keyword') {
       const repo_name = keyword_element.dataset.repoName
       const commit_hash = keyword_element.dataset.commitHash
       const commit_message = keyword_element.dataset.commitMessage
@@ -278,7 +278,7 @@ export const use_handlers = (
       if (start_index !== -1) {
         apply_keyword_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (keyword_type === 'contextatcommit-keyword') {
+    } else if (keyword_type == 'contextatcommit-keyword') {
       const repo_name = keyword_element.dataset.repoName
       const commit_hash = keyword_element.dataset.commitHash
       const commit_message = keyword_element.dataset.commitMessage
@@ -378,7 +378,7 @@ export const use_handlers = (
     const caret_position = get_caret_position_from_div(currentTarget)
     const char_before_caret = new_display_value.charAt(caret_position - 1)
 
-    has_modified_current_entry_ref.current = new_raw_value !== ''
+    has_modified_current_entry_ref.current = new_raw_value != ''
     update_value(new_raw_value)
 
     if (char_before_caret == '@') {
@@ -430,7 +430,7 @@ export const use_handlers = (
     let start_of_path = -1
     const end_of_path = raw_pos - 1
 
-    if (end_of_path >= 0 && props.value[end_of_path] === '`') {
+    if (end_of_path >= 0 && props.value[end_of_path] == '`') {
       const text_before = props.value.substring(0, end_of_path)
       start_of_path = text_before.lastIndexOf('`')
     }
@@ -657,13 +657,13 @@ export const use_handlers = (
       update_value(value, value.length)
     }
 
-    if (e.key === 'ArrowUp') {
+    if (e.key == 'ArrowUp') {
       if (history_index < active_history.length - 1) {
         const new_index = history_index + 1
         set_history_index(new_index)
         update_and_set_caret(active_history[new_index])
       }
-    } else if (e.key === 'ArrowDown') {
+    } else if (e.key == 'ArrowDown') {
       if (history_index > 0) {
         const new_index = history_index - 1
         set_history_index(new_index)
@@ -869,7 +869,7 @@ export const use_handlers = (
         const new_start_pos = i + 1
         const new_value =
           value.substring(0, new_start_pos) + value.substring(raw_pos)
-        has_modified_current_entry_ref.current = new_value !== ''
+        has_modified_current_entry_ref.current = new_value != ''
         update_value(new_value, new_start_pos)
         return
       }

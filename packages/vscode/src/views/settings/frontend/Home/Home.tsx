@@ -220,7 +220,7 @@ export const Home: React.FC<Props> = (props) => {
   }, [props.edit_context_system_instructions])
 
   const handle_commit_message_auto_accept_after_blur = () => {
-    if (commit_message_auto_accept_after_str === '') {
+    if (commit_message_auto_accept_after_str == '') {
       props.on_commit_message_auto_accept_after_change(null)
       return
     }

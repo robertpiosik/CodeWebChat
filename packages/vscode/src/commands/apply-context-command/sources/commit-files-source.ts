@@ -78,7 +78,7 @@ export const handle_commit_files_source = async (
       quick_pick.show()
     })
 
-    if (selected_commit === 'back') {
+    if (selected_commit == 'back') {
       return 'back'
     }
 
@@ -208,7 +208,7 @@ export const handle_commit_files_source = async (
           choice.label
         )
 
-        if (choice.label === 'Merge') {
+        if (choice.label == 'Merge') {
           paths_to_apply = [
             ...new Set([...currently_checked, ...selected_paths])
           ]

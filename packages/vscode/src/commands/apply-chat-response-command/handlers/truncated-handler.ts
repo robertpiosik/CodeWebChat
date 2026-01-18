@@ -156,7 +156,7 @@ function process_truncated_content(
   for (let i = 0; i < blocks.length; i++) {
     const block = blocks[i]
 
-    if (block.type === 'code') {
+    if (block.type == 'code') {
       output_lines.push(...block.lines)
 
       // Try to sync with original to handle replacements (context consumption)
@@ -198,7 +198,7 @@ function process_truncated_content(
 
       if (i + 1 < blocks.length) {
         const next_block = blocks[i + 1]
-        if (next_block.type === 'code') {
+        if (next_block.type == 'code') {
           // Find where the next block starts in original
           const prefix_lines = next_block.lines.slice(0, 10)
           let found_next = false

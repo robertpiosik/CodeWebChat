@@ -435,7 +435,7 @@ export const handle_intelligent_update = async (params: {
       data: error
     })
 
-    if (error.message !== 'Operation cancelled' && !axios.isCancel(error)) {
+    if (error.message != 'Operation cancelled' && !axios.isCancel(error)) {
       vscode.window.showErrorMessage(
         dictionary.error_message.ERROR_DURING_PROCESSING(error.message)
       )

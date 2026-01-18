@@ -57,7 +57,7 @@ const browse_all_files = async (
 
       return {
         label: filename,
-        description: dir_path === '.' ? '' : dir_path,
+        description: dir_path == '.' ? '' : dir_path,
         full_path: normalized_path,
         absolute_path: p
       }
@@ -122,7 +122,7 @@ const at_sign_quick_pick = async (params: {
       format_path,
       false
     )
-    if (browsed_item && browsed_item !== 'back') {
+    if (browsed_item && browsed_item != 'back') {
       await add_to_context_if_needed(
         params.workspace_provider,
         browsed_item.absolute_path
@@ -226,14 +226,14 @@ const at_sign_quick_pick = async (params: {
       break
     }
 
-    if (choice.full_path === 'BROWSE_ALL_FILES') {
+    if (choice.full_path == 'BROWSE_ALL_FILES') {
       const browsed_item = await browse_all_files(
         params.workspace_provider,
         workspace_roots,
         format_path,
         true
       )
-      if (browsed_item === 'back') {
+      if (browsed_item == 'back') {
         continue // Go back to the main quick pick
       } else if (browsed_item) {
         await add_to_context_if_needed(

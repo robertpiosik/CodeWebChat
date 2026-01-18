@@ -109,7 +109,7 @@ export class ModelProvidersManager {
       const provider_configs = providers.map((p) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const config: any = { type: p.type, name: p.name }
-        if (p.type === 'custom') {
+        if (p.type == 'custom') {
           config.baseUrl = p.base_url
         }
         return config

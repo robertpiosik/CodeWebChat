@@ -349,7 +349,7 @@ export const apply_context_command = (
                 workspace_provider,
                 extension_context
               )
-              if (result === 'back') {
+              if (result == 'back') {
                 show_other_menu = true
                 continue
               }

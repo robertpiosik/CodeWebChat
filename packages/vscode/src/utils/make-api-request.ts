@@ -295,7 +295,7 @@ export const make_api_request = async (params: {
                 if (json_string && json_string !== DONE_TOKEN) {
                   const json_data = JSON.parse(json_string)
                   const content = json_data.choices?.[0]?.delta?.content
-                  if (typeof content === 'string') {
+                  if (typeof content == 'string') {
                     process_content(content)
                   }
                 }

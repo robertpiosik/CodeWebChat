@@ -30,7 +30,7 @@ export const handle_delete_code_completions_configuration = async (
     'Delete'
   )
 
-  if (confirmation !== 'Delete') {
+  if (confirmation != 'Delete') {
     return
   }
 

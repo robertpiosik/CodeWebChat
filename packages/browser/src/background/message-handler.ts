@@ -156,7 +156,7 @@ const handle_get_tab_data = async (
     let html = ''
 
     // (Firefox uses browserAction, Chrome uses action)
-    const is_firefox = typeof browser.browserAction !== 'undefined'
+    const is_firefox = typeof browser.browserAction != 'undefined'
 
     if (is_firefox && tab.id) {
       // Firefox: Use the older tabs.executeScript API (MV2 style)

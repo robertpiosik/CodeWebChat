@@ -245,7 +245,7 @@ export const handle_edit_custom_model_provider = async (
       if (trimmed_api_key === current_api_key) {
         continue
       }
-      if (trimmed_api_key === '' && current_api_key) {
+      if (trimmed_api_key == '' && current_api_key) {
         const confirmation = await vscode.window.showWarningMessage(
           dictionary.warning_message.CONFIRM_CLEAR_API_KEY(
             provider_to_edit.name
@@ -253,7 +253,7 @@ export const handle_edit_custom_model_provider = async (
           { modal: true },
           'Clear API Key'
         )
-        if (confirmation !== 'Clear API Key') {
+        if (confirmation != 'Clear API Key') {
           continue
         }
       }

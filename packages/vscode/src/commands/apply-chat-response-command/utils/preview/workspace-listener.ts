@@ -86,7 +86,7 @@ export const setup_workspace_listeners = (
     (event) => {
       const promise = Promise.all(
         event.files.map(async (uri) => {
-          if (uri.scheme !== 'file') return
+          if (uri.scheme != 'file') return
           try {
             const content = (await vscode.workspace.fs.readFile(uri)).toString()
             deleted_files_content_cache.set(uri.fsPath, content)
@@ -181,7 +181,7 @@ export const setup_workspace_listeners = (
         const temp_filename = `cwc-${hash}.tmp`
         const temp_file_path = path.join(os.tmpdir(), temp_filename)
         const is_deleted =
-          !is_new && new_content === '' && original_content !== ''
+          !is_new && new_content == '' && original_content != ''
 
         const previewable_file: PreviewableFile = {
           type: 'file',
@@ -320,7 +320,7 @@ export const setup_workspace_listeners = (
   const file_created_listener = vscode.workspace.onDidCreateFiles(
     async (event) => {
       for (const uri of event.files) {
-        if (uri.scheme !== 'file') continue
+        if (uri.scheme != 'file') continue
 
         const workspace_folder = vscode.workspace.getWorkspaceFolder(uri)
         if (!workspace_folder) continue
@@ -408,7 +408,7 @@ export const setup_workspace_listeners = (
   const file_renamed_listener = vscode.workspace.onDidRenameFiles(
     async (event) => {
       for (const { oldUri, newUri } of event.files) {
-        if (oldUri.scheme !== 'file' || newUri.scheme !== 'file') continue
+        if (oldUri.scheme != 'file' || newUri.scheme != 'file') continue
 
         // Skip directories (best effort)
         try {
@@ -716,7 +716,7 @@ export const setup_workspace_listeners = (
         file_to_toggle.content_to_restore = current_content
       }
 
-      if (file_to_toggle.previewable_file.file_state === 'new') {
+      if (file_to_toggle.previewable_file.file_state == 'new') {
         try {
           if (fs.existsSync(file_to_toggle.sanitized_path)) {
             await vscode.workspace.fs.delete(
@@ -735,7 +735,7 @@ export const setup_workspace_listeners = (
         )
       }
     } else {
-      if (file_to_toggle.previewable_file.file_state === 'deleted') {
+      if (file_to_toggle.previewable_file.file_state == 'deleted') {
         try {
           if (fs.existsSync(file_to_toggle.sanitized_path)) {
             await vscode.workspace.fs.delete(

@@ -117,7 +117,7 @@ export const delete_checkpoint_with_undo = async (params: {
     current_active_op &&
     current_active_op.timestamp === operation.timestamp
   ) {
-    if (choice === 'Undo') {
+    if (choice == 'Undo') {
       const current_checkpoints =
         context.workspaceState.get<Checkpoint[]>(CHECKPOINTS_STATE_KEY, []) ??
         []
@@ -145,7 +145,7 @@ export const delete_checkpoint_with_undo = async (params: {
       set_active_operation(null)
       return false
     }
-  } else if (choice === 'Undo') {
+  } else if (choice == 'Undo') {
     on_before_show_message?.()
     await vscode.window.showInformationMessage(
       dictionary.information_message.COULD_NOT_UNDO_ANOTHER_CHECKPOINT_DELETED

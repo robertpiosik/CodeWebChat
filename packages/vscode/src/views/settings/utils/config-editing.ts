@@ -320,7 +320,7 @@ export const edit_temperature_for_config = async (
     value: config.temperature?.toString() ?? '',
     prompt: 'Enter a value between 0 and 2. Leave empty to unset.',
     validateInput: (value) => {
-      if (value.trim() === '') {
+      if (value.trim() == '') {
         return null
       }
       const num = parseFloat(value)
@@ -331,7 +331,7 @@ export const edit_temperature_for_config = async (
     }
   })
   if (new_temp_str === undefined) return undefined
-  if (new_temp_str.trim() === '') return null
+  if (new_temp_str.trim() == '') return null
   return parseFloat(new_temp_str)
 }
 

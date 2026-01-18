@@ -491,7 +491,7 @@ export const Panel = () => {
                   }}
                   on_accept={() => {
                     const accepted_files = items_to_preview.filter(
-                      (f) => f.type === 'file' && f.is_checked
+                      (f) => f.type == 'file' && f.is_checked
                     ) as FileInPreview[]
                     set_response_history([])
                     set_selected_history_item_created_at(undefined)

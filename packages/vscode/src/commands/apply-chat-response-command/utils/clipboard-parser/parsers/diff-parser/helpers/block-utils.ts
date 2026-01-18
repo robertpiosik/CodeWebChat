@@ -85,7 +85,7 @@ export const remove_path_line_from_text_block = (params: {
       if (
         line.trim() == '' &&
         collapsed_lines.length > 0 &&
-        collapsed_lines[collapsed_lines.length - 1].trim() === ''
+        collapsed_lines[collapsed_lines.length - 1].trim() == ''
       ) {
         continue
       }

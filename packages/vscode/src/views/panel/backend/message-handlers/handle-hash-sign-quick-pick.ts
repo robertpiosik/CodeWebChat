@@ -124,7 +124,7 @@ const handle_changes_item = async (): Promise<
       quick_pick.show()
     })
 
-    if (selected_branch && selected_branch !== 'back') {
+    if (selected_branch && selected_branch != 'back') {
       return `#Changes:${selected_branch.label} `
     }
 
@@ -225,7 +225,7 @@ const handle_commit_item = async (
           quick_pick.show()
         })
 
-        if (!picked_folder || picked_folder === 'back') return 'continue'
+        if (!picked_folder || picked_folder == 'back') return 'continue'
 
         await context.workspaceState.update(
           LAST_SELECTED_REPOSITORY_IN_SYMBOLS_QUCK_PICK_STATE_KEY,
@@ -308,7 +308,7 @@ const handle_commit_item = async (
         quick_pick.show()
       })
 
-      if (!selected_commit || selected_commit === 'back') {
+      if (!selected_commit || selected_commit == 'back') {
         if (git_folders.length > 1) {
           continue
         }
@@ -431,7 +431,7 @@ const handle_saved_context_item = async (
           quick_pick.show()
         })
 
-        if (!selection || selection === 'back') return 'continue'
+        if (!selection || selection == 'back') return 'continue'
 
         await context.workspaceState.update(
           LAST_SELECTED_CONTEXT_SOURCE_IN_SYMBOLS_QUICK_PICK_STATE_KEY,
@@ -523,7 +523,7 @@ const handle_saved_context_item = async (
       })
 
       // Fix: Treat undefined (Esc) same as 'back' to navigate up one level
-      if (!selected_context || selected_context === 'back') {
+      if (!selected_context || selected_context == 'back') {
         if (source_options.length > 1) {
           continue
         }

@@ -94,7 +94,7 @@ export const prepare_files_from_original_states = async (params: {
       sanitized_path: sanitized_file_path,
       original_content: original_content_for_diff,
       temp_file_path,
-      file_exists: state.file_state !== 'new'
+      file_exists: state.file_state != 'new'
     })
 
     if (state.file_path_to_restore) {

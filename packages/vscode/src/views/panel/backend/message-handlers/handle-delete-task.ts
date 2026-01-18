@@ -61,7 +61,7 @@ export const handle_delete_task = async (
     'Undo'
   )
 
-  if (selection === 'Undo') {
+  if (selection == 'Undo') {
     // 4. Restore
     all_data = load_all_tasks(panel_provider.context) // Reload to get latest state
     const current_root_tasks = all_data[message.root] || []

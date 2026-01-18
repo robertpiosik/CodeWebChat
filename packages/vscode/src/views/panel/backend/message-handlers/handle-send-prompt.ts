@@ -250,7 +250,7 @@ export const handle_send_prompt = async (params: {
           raw_instructions: current_instructions,
           mode: params.panel_provider.web_prompt_type,
           edit_format:
-            params.panel_provider.web_prompt_type === 'edit-context'
+            params.panel_provider.web_prompt_type == 'edit-context'
               ? params.panel_provider.chat_edit_format
               : undefined
         }

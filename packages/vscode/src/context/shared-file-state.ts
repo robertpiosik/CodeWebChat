@@ -76,7 +76,7 @@ export class SharedFileState {
       const open_editor_uris = this.get_open_editor_uris()
       const open_editor_paths = open_editor_uris.map((uri) => uri.fsPath)
 
-      if (this._synchronizing_provider === 'workspace') {
+      if (this._synchronizing_provider == 'workspace') {
         for (const file of open_editor_paths) {
           const is_checked_in_workspace =
             this.is_file_checked_in_workspace(file)
@@ -99,7 +99,7 @@ export class SharedFileState {
             }
           }
         }
-      } else if (this._synchronizing_provider === 'openEditors') {
+      } else if (this._synchronizing_provider == 'openEditors') {
         const open_editor_paths_set = new Set(open_editor_paths)
 
         // Preserve checked state for files that are not open in editors

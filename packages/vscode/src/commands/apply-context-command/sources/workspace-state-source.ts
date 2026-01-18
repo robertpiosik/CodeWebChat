@@ -142,7 +142,7 @@ export const handle_workspace_state_source = async (
             const name = await ask_for_new_context_name(true)
             active_dialog_count--
 
-            if (!name || name === 'back') {
+            if (!name || name == 'back') {
               quick_pick.show()
               return
             }
@@ -407,7 +407,7 @@ export const handle_workspace_state_source = async (
             active_dialog_count--
 
             if (active_deletion_timestamp !== current_timestamp) {
-              if (choice === 'Undo') {
+              if (choice == 'Undo') {
                 vscode.window.showInformationMessage(
                   'Could not undo as another context was deleted.'
                 )
@@ -460,7 +460,7 @@ export const handle_workspace_state_source = async (
     const selected = await quick_pick_promise
     if (!selected) return
 
-    if (selected === 'back') {
+    if (selected == 'back') {
       return 'back'
     }
 

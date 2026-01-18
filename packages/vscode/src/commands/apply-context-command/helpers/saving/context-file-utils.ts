@@ -15,16 +15,16 @@ export const flatten_contexts = (
   if (!Array.isArray(items)) return result
 
   for (const item of items) {
-    if (typeof item !== 'object' || item === null) continue
+    if (typeof item != 'object' || item === null) continue
 
     const name = item.name
-    if (typeof name !== 'string' || !name) continue
+    if (typeof name != 'string' || !name) continue
 
     const current_name = parent_name ? `${parent_name}/${name}` : name
 
     if (
       Array.isArray(item.paths) &&
-      item.paths.every((p: any) => typeof p === 'string')
+      item.paths.every((p: any) => typeof p == 'string')
     ) {
       result.push({
         name: current_name,

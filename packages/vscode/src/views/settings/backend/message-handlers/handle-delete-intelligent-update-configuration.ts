@@ -30,7 +30,7 @@ export const handle_delete_intelligent_update_configuration = async (
     'Delete'
   )
 
-  if (confirmation !== 'Delete') {
+  if (confirmation != 'Delete') {
     return
   }
 

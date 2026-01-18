@@ -19,7 +19,7 @@ export const handle_delete_model_provider = async (
     'Delete'
   )
 
-  if (confirmation !== 'Delete') {
+  if (confirmation != 'Delete') {
     return
   }
 

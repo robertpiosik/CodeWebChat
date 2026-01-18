@@ -25,7 +25,7 @@ async function create_group(
 
   let new_name = ''
   let copy_number = 0
-  while (new_name === '' || current_presets.some((p) => p.name == new_name)) {
+  while (new_name == '' || current_presets.some((p) => p.name == new_name)) {
     new_name = `(${copy_number++})`
   }
 
@@ -67,7 +67,7 @@ async function create_separator(
   const new_separator = {} as ConfigPresetFormat
 
   let updated_presets: ConfigPresetFormat[]
-  if (options.placement === 'top') {
+  if (options.placement == 'top') {
     updated_presets = [new_separator, ...current_presets]
   } else {
     updated_presets = [...current_presets, new_separator]
@@ -104,7 +104,7 @@ async function create_preset(
   }
 
   let updated_presets: ConfigPresetFormat[]
-  if (options.placement === 'top') {
+  if (options.placement == 'top') {
     updated_presets = [new_preset, ...current_presets]
   } else {
     const last_group_or_separator = [...current_presets]

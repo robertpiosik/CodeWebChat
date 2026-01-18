@@ -42,7 +42,7 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
         <div className={styles['col-base-url']}>{provider.baseUrl}</div>
       </div>
       <div className={styles['col-actions']}>
-        {provider.type === 'custom' && (
+        {provider.type == 'custom' && (
           <IconButton
             codicon_icon="edit"
             on_click={() => props.on_edit_provider(provider.name)}

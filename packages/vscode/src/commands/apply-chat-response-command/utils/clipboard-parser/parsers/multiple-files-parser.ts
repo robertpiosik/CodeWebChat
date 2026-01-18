@@ -35,7 +35,7 @@ const strip_markdown_code_block = (content: string): string => {
   if (
     lines.length >= 2 &&
     lines[0].trim().startsWith('```') &&
-    lines[lines.length - 1].trim() === '```'
+    lines[lines.length - 1].trim() == '```'
   ) {
     return lines.slice(1, -1).join('\n')
   }
@@ -78,7 +78,7 @@ const process_conflict_markers = (content: string): string => {
           const parts: string[][] = []
           let currentPart: string[] = []
           for (const l of blockLines) {
-            if (l.trim() === '...') {
+            if (l.trim() == '...') {
               parts.push(currentPart)
               currentPart = []
             } else {
@@ -143,7 +143,7 @@ const create_or_update_file_item = (params: {
   if (file_ref_map.has(file_key)) {
     const existing_file = file_ref_map.get(file_key)!
 
-    if (mode === 'append') {
+    if (mode == 'append') {
       existing_file.content = existing_file.content + '\n' + processed_content
     } else {
       existing_file.content = processed_content
@@ -186,7 +186,7 @@ export const parse_multiple_files = (params: {
 }): (FileItem | TextItem | InlineFileItem)[] => {
   const file_content_result = parse_file_content_only(params)
   if (file_content_result) {
-    if (file_content_result.type === 'file') {
+    if (file_content_result.type == 'file') {
       file_content_result.content = process_conflict_markers(
         file_content_result.content
       )
@@ -519,7 +519,7 @@ export const parse_multiple_files = (params: {
                   } else {
                     let all_intermediate_lines_empty = true
                     for (let k = i + 1; k < j; k++) {
-                      if (lines[k].trim() !== '') {
+                      if (lines[k].trim() != '') {
                         all_intermediate_lines_empty = false
                         break
                       }
@@ -639,7 +639,7 @@ export const parse_multiple_files = (params: {
           if (
             trimmed_current_content.startsWith('```') &&
             trimmed_current_content.endsWith('```') &&
-            line.trim() !== ''
+            line.trim() != ''
           ) {
             const final_content = strip_markdown_code_block(
               trimmed_current_content
@@ -674,11 +674,11 @@ export const parse_multiple_files = (params: {
 
       const trimmed_line = line.trim()
 
-      if (trimmed_line.startsWith('```') && trimmed_line !== '```') {
+      if (trimmed_line.startsWith('```') && trimmed_line != '```') {
         if (
           backtick_nesting_level == 1 &&
           current_file_name &&
-          current_content.trim() === '' &&
+          current_content.trim() == '' &&
           !current_file_name_was_comment &&
           !xml_file_mode
         ) {
@@ -702,17 +702,17 @@ export const parse_multiple_files = (params: {
         }
         backtick_nesting_level++
         if (
-          (current_language == 'markdown' || current_language === 'md') &&
+          (current_language == 'markdown' || current_language == 'md') &&
           backtick_nesting_level > 1
         ) {
           is_markdown_container_block = true
         }
       } else if (
-        trimmed_line === '```' &&
+        trimmed_line == '```' &&
         backtick_nesting_level == 1 &&
-        current_content.trim() === '' &&
+        current_content.trim() == '' &&
         i > 0 &&
-        lines[i - 1].trim() !== '' &&
+        lines[i - 1].trim() != '' &&
         lines[i - 1].trim().startsWith('```') &&
         (() => {
           for (let j = i + 1; j < lines.length; j++) {
@@ -724,15 +724,13 @@ export const parse_multiple_files = (params: {
       ) {
         backtick_nesting_level++
       } else if (
-        trimmed_line === '```' &&
+        trimmed_line == '```' &&
         backtick_nesting_level == 1 &&
-        (current_language === 'markdown' || current_language === 'md') &&
+        (current_language == 'markdown' || current_language == 'md') &&
         !last_seen_file_path_was_header &&
-        ((current_content.trim() === '' &&
-          i > 0 &&
-          lines[i - 1].trim() !== '') ||
+        ((current_content.trim() == '' && i > 0 && lines[i - 1].trim() != '') ||
           (i > 0 &&
-            (lines[i - 1].trim() === '' ||
+            (lines[i - 1].trim() == '' ||
               (current_file_name.endsWith('.md') &&
                 lines[i - 1].trim().endsWith('```'))))) &&
         (() => {
@@ -748,12 +746,12 @@ export const parse_multiple_files = (params: {
       } else if (trimmed_line.endsWith('```')) {
         let should_close = true
         if (
-          trimmed_line === '```' &&
+          trimmed_line == '```' &&
           backtick_nesting_level == 1 &&
           current_file_name &&
-          current_content.trim() === '' &&
+          current_content.trim() == '' &&
           i + 1 < lines.length &&
-          lines[i + 1].trim() !== '' &&
+          lines[i + 1].trim() != '' &&
           !lines[i + 1].trim().startsWith('```')
         ) {
           should_close = false
@@ -791,7 +789,7 @@ export const parse_multiple_files = (params: {
 
         const cleaned_content = current_content
 
-        if (current_block_mode === 'append' && current_file_name) {
+        if (current_block_mode == 'append' && current_file_name) {
           const file_key = `${current_workspace_name || ''}:${current_file_name}`
           const existing_file = file_ref_map.get(file_key)
           if (
@@ -1023,7 +1021,7 @@ export const parse_multiple_files = (params: {
 
         if (
           is_first_content_line &&
-          line.trim() !== '' &&
+          line.trim() != '' &&
           !line.trim().startsWith('```')
         ) {
           is_first_content_line = false

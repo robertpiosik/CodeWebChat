@@ -708,7 +708,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           const recents = this.context.globalState.get<string[]>(key, [])
           const last_selected = recents[0]
           if (last_selected) {
-            if (last_selected === 'Ungrouped') {
+            if (last_selected == 'Ungrouped') {
               const first_group_index = presets_for_mode.findIndex(
                 (p) => !p.chatbot
               )

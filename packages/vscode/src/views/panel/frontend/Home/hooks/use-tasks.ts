@@ -59,7 +59,7 @@ export const use_tasks = (
       children: []
     }
     const new_list =
-      placement === 'top' ? [new_task, ...tasks] : [...tasks, new_task]
+      placement == 'top' ? [new_task, ...tasks] : [...tasks, new_task]
     on_tasks_change(root, new_list)
   }
 

@@ -96,9 +96,9 @@ export const FileItem: FC<Props> = ({
           [styles['file--warning']]:
             file.diff_application_method == 'search_and_replace' &&
             !file.fixed_with_intelligent_update,
-          [styles['file--deleted']]: file.file_state === 'deleted'
+          [styles['file--deleted']]: file.file_state == 'deleted'
         })}
-        onClick={file.file_state === 'deleted' ? undefined : on_click}
+        onClick={file.file_state == 'deleted' ? undefined : on_click}
         role="button"
         title={file.file_path}
       >

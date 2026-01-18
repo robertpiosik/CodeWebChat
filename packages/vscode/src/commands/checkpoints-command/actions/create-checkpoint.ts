@@ -37,7 +37,7 @@ export const create_checkpoint = async (
     const are_automatic_checkpoints_disabled = vscode.workspace
       .getConfiguration('codeWebChat')
       .get<boolean>('areAutomaticCheckpointsDisabled', false)
-    const is_automatic_checkpoint = title !== 'Created by user'
+    const is_automatic_checkpoint = title != 'Created by user'
 
     if (are_automatic_checkpoints_disabled && is_automatic_checkpoint) {
       Logger.info({

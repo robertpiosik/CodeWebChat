@@ -208,7 +208,7 @@ export const use_panel = (vscode: any) => {
         )
         set_is_timeline_collapsed(message.is_timeline_collapsed)
         set_are_tasks_collapsed(message.are_tasks_collapsed)
-      } else if (message.command === 'CHECKPOINTS') {
+      } else if (message.command == 'CHECKPOINTS') {
         set_checkpoints(message.checkpoints)
       } else if (message.command == 'EDITOR_STATE_CHANGED') {
         set_has_active_editor(message.has_active_editor)
@@ -277,7 +277,7 @@ export const use_panel = (vscode: any) => {
                 apply_progress: message.apply_progress,
                 apply_tokens_per_second: message.apply_tokens_per_second,
                 fixed_with_intelligent_update:
-                  message.apply_status === 'done'
+                  message.apply_status == 'done'
                     ? true
                     : existing_item.fixed_with_intelligent_update
               }

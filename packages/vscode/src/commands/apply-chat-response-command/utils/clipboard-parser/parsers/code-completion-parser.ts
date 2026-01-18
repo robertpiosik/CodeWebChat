@@ -62,7 +62,7 @@ export const parse_code_completion = (params: {
   let completion_info = null
 
   for (let k = code_block_start_index - 1; k >= 0; k--) {
-    if (lines[k].trim() === '') continue
+    if (lines[k].trim() == '') continue
     const info = extract_path_and_position(lines[k])
     if (info) {
       header_index = k

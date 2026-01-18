@@ -730,7 +730,7 @@ export class WorkspaceProvider
           this._file_ranges.set(absolutePath, range)
         }
       } catch (e) {
-        if ((e as NodeJS.ErrnoException).code !== 'ENOENT') {
+        if ((e as NodeJS.ErrnoException).code != 'ENOENT') {
           console.error(`Error loading ranges from ${ranges_file_path}`, e)
         }
       }

@@ -30,7 +30,7 @@ export const handle_delete_edit_context_configuration = async (
     'Delete'
   )
 
-  if (confirmation !== 'Delete') {
+  if (confirmation != 'Delete') {
     return
   }
   const updated_configs = original_configs.filter(
