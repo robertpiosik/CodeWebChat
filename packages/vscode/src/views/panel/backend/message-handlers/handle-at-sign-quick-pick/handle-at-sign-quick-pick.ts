@@ -296,4 +296,8 @@ export const handle_at_sign_quick_pick = async (
   } else {
     panel_provider.add_text_at_cursor_position(replacement)
   }
+
+  panel_provider.send_message({
+    command: 'FOCUS_PROMPT_FIELD'
+  })
 }

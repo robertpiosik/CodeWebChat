@@ -45,33 +45,6 @@ export const handle_show_prompt_template_quick_pick = async (
   let prompt_templates =
     config.get<PromptTemplate[]>(prompt_templates_key, []) || []
 
-  const set_instructions = async (text: string) => {
-    switch (mode) {
-      case 'ask':
-        panel_provider.ask_instructions = text
-        break
-      case 'edit-context':
-        panel_provider.edit_instructions = text
-        break
-      case 'no-context':
-        panel_provider.no_context_instructions = text
-        break
-      case 'code-completions':
-        panel_provider.code_completion_instructions = text
-        break
-      default:
-        return
-    }
-
-    panel_provider.send_message({
-      command: 'INSTRUCTIONS',
-      ask: panel_provider.ask_instructions,
-      edit_context: panel_provider.edit_instructions,
-      no_context: panel_provider.no_context_instructions,
-      code_completions: panel_provider.code_completion_instructions
-    })
-  }
-
   let is_editing_template = false
 
   const templates_quick_pick = vscode.window.createQuickPick<
@@ -351,7 +324,10 @@ export const handle_show_prompt_template_quick_pick = async (
           }
         }
 
-        await set_instructions(prompt_text)
+        panel_provider.add_text_at_cursor_position(prompt_text)
+        panel_provider.send_message({
+          command: 'FOCUS_PROMPT_FIELD'
+        })
       }
     }),
     templates_quick_pick.onDidChangeValue((value) => {
