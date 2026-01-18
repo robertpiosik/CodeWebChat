@@ -21,6 +21,8 @@ export const DropdownMenu: React.FC<DropdownMenu.Props> = (props) => {
   const [is_preselection_respected, set_is_preselection_respected] =
     useState<boolean>(true)
 
+  const has_any_checked = props.items.some((item) => item.checked)
+
   return (
     <div className={styles.menu} style={{ maxWidth: props.max_width }}>
       <div className={styles.menu__inner}>
@@ -39,24 +41,29 @@ export const DropdownMenu: React.FC<DropdownMenu.Props> = (props) => {
                 set_is_preselection_respected(false)
               }}
             >
-              <span className={styles.item__label}>
-                {should_underline ? (
-                  <>
-                    <span className={styles.underlined}>
-                      {item.label.substring(0, 1)}
-                    </span>
-                    {item.label.substring(1)}
-                  </>
-                ) : (
-                  item.label
+              <div className={styles.item__left}>
+                {has_any_checked && (
+                  <span
+                    className="codicon codicon-check"
+                    style={{ visibility: item.checked ? 'visible' : 'hidden' }}
+                  />
                 )}
-              </span>
-              {(item.shortcut || item.checked) && (
-                <div className={styles.item__right}>
-                  {item.checked && <span className="codicon codicon-check" />}
-                  {item.shortcut && (
-                    <span className={styles.shortcut}>{item.shortcut}</span>
+                <span className={styles.item__label}>
+                  {should_underline ? (
+                    <>
+                      <span className={styles.underlined}>
+                        {item.label.substring(0, 1)}
+                      </span>
+                      {item.label.substring(1)}
+                    </>
+                  ) : (
+                    item.label
                   )}
+                </span>
+              </div>
+              {item.shortcut && (
+                <div className={styles.item__right}>
+                  <span className={styles.shortcut}>{item.shortcut}</span>
                 </div>
               )}
             </div>

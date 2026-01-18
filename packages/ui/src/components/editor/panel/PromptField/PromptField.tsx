@@ -67,11 +67,19 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     useState(false)
   const [hovered_edit_format, set_hovered_edit_format] =
     useState<EditFormat | null>(null)
+
+  const toggle_invocation_dropdown = useCallback(() => {
+    set_is_invocation_dropdown_open((prev) => !prev)
+  }, [])
+
   const { is_alt_pressed, handle_container_key_down } = use_keyboard_shortcuts({
     show_edit_format_selector: props.show_edit_format_selector,
     on_edit_format_change: props.on_edit_format_change,
     on_search_click: props.on_search_click,
-    on_copy: props.on_copy
+    on_copy: props.on_copy,
+    on_invocation_count_change: props.on_invocation_count_change,
+    is_invocation_dropdown_open,
+    on_toggle_invocation_dropdown: toggle_invocation_dropdown
   })
   const {
     is_dropdown_open,
@@ -546,7 +554,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         set_is_invocation_dropdown_open((prev) => !prev)
                         close_dropdown()
                       }}
-                      title="Invocation count"
+                      title={`Invocation count ${is_mac ? '(⌥X 1-5)' : '(Alt+X 1-5)'}`}
                     >
                       {props.invocation_count}×
                     </button>
@@ -555,6 +563,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         items={[1, 2, 3, 4, 5].map((count) => ({
                           label: `${count}×`,
                           checked: count == props.invocation_count,
+                          shortcut: is_mac ? `⌥X ${count}` : `Alt+X ${count}`,
                           on_click: () => {
                             props.on_invocation_count_change(count)
                             set_is_invocation_dropdown_open(false)

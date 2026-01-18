@@ -7,41 +7,95 @@ type UseKeyboardShortcutsParams = Pick<
   | 'on_edit_format_change'
   | 'on_search_click'
   | 'on_copy'
->
+  | 'on_invocation_count_change'
+> & {
+  on_toggle_invocation_dropdown?: () => void
+  is_invocation_dropdown_open?: boolean
+}
 
 export const use_keyboard_shortcuts = (params: UseKeyboardShortcutsParams) => {
   const [is_alt_pressed, set_is_alt_pressed] = useState(false)
+
+  const {
+    on_toggle_invocation_dropdown,
+    is_invocation_dropdown_open,
+    on_invocation_count_change
+  } = params
 
   useEffect(() => {
     const handle_key_down = (e: KeyboardEvent) => {
       if (e.key == 'Alt') set_is_alt_pressed(true)
 
       if (
+        on_toggle_invocation_dropdown &&
+        e.code == 'KeyX' &&
         e.altKey &&
         !e.shiftKey &&
         !e.ctrlKey &&
-        !e.metaKey &&
-        params.show_edit_format_selector &&
-        params.on_edit_format_change
+        !e.metaKey
       ) {
-        let format: EditFormat | undefined
+        e.preventDefault()
+        on_toggle_invocation_dropdown()
+        return
+      }
+
+      if (
+        is_invocation_dropdown_open &&
+        on_invocation_count_change &&
+        !e.altKey &&
+        !e.ctrlKey &&
+        !e.metaKey &&
+        !e.shiftKey
+      ) {
+        let count = 0
         switch (e.code) {
-          case 'KeyW':
-            format = 'whole'
+          case 'Digit1':
+            count = 1
             break
-          case 'KeyT':
-            format = 'truncated'
+          case 'Digit2':
+            count = 2
             break
-          case 'KeyB':
-            format = 'before-after'
+          case 'Digit3':
+            count = 3
             break
-          case 'KeyD':
-            format = 'diff'
+          case 'Digit4':
+            count = 4
+            break
+          case 'Digit5':
+            count = 5
             break
         }
-        if (format) {
+
+        if (count > 0) {
           e.preventDefault()
-          params.on_edit_format_change(format)
+          on_invocation_count_change(count)
+          on_toggle_invocation_dropdown?.()
+          return
+        }
+      }
+
+      if (e.altKey && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
+        if (params.show_edit_format_selector && params.on_edit_format_change) {
+          let format: EditFormat | undefined
+          switch (e.code) {
+            case 'KeyW':
+              format = 'whole'
+              break
+            case 'KeyT':
+              format = 'truncated'
+              break
+            case 'KeyB':
+              format = 'before-after'
+              break
+            case 'KeyD':
+              format = 'diff'
+              break
+          }
+          if (format) {
+            e.preventDefault()
+            params.on_edit_format_change(format)
+            return
+          }
         }
       }
     }
@@ -59,7 +113,13 @@ export const use_keyboard_shortcuts = (params: UseKeyboardShortcutsParams) => {
       window.removeEventListener('keyup', handle_key_up)
       window.removeEventListener('blur', handle_blur)
     }
-  }, [params.show_edit_format_selector, params.on_edit_format_change])
+  }, [
+    params.show_edit_format_selector,
+    params.on_edit_format_change,
+    on_invocation_count_change,
+    on_toggle_invocation_dropdown,
+    is_invocation_dropdown_open
+  ])
 
   const handle_container_key_down = (
     e: React.KeyboardEvent<HTMLDivElement>

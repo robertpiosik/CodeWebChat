@@ -6,7 +6,7 @@
   z-index: 2;
   width: max-content;
   text-align: left;
-  min-width: max(100%, 80px);
+  min-width: max(100%, 110px);
 
   &__inner {
     background-color: var(--vscode-quickInput-background);
@@ -28,6 +28,18 @@
   color: var(--vscode-quickInput-foreground);
   white-space: nowrap;
   border-radius: 4px;
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow: hidden;
+    flex: 1;
+    min-width: 0;
+    > span {
+      font-size: 14px !important;
+    }
+  }
 
   &__label {
     overflow: hidden;
