@@ -64,8 +64,9 @@
 }
 
 .shortcut {
-  color: var(--vscode-descriptionForeground);
+  opacity: var(--dimmed-opacity);
   font-size: 12px;
+  font-variant-numeric: tabular-nums;
 }
 
 .underlined {
