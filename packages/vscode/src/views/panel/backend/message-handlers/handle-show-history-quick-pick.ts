@@ -148,7 +148,7 @@ export const handle_show_history_quick_pick = async (
     }
   } else if (pinned_history.length > 0) {
     const first_pinned_item_index = items.findIndex(
-      (item) => item.kind !== vscode.QuickPickItemKind.Separator
+      (item) => item.kind != vscode.QuickPickItemKind.Separator
     )
     if (first_pinned_item_index != -1) {
       quick_pick.activeItems = [items[first_pinned_item_index]]

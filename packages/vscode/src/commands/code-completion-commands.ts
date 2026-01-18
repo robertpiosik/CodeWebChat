@@ -192,7 +192,7 @@ const get_code_completion_config = async (
       quick_pick.activeItems = [last_selected_item]
     } else if (items.length > 0) {
       const first_selectable = items.find(
-        (i) => i.kind !== vscode.QuickPickItemKind.Separator
+        (i) => i.kind != vscode.QuickPickItemKind.Separator
       )
       if (first_selectable) {
         quick_pick.activeItems = [first_selectable]

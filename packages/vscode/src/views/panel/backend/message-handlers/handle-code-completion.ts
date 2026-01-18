@@ -166,7 +166,7 @@ const get_code_completion_config = async (
       quick_pick.activeItems = [last_selected_item]
     } else if (items.length > 0) {
       const first_selectable = items.find(
-        (i) => i.kind !== vscode.QuickPickItemKind.Separator
+        (i) => i.kind != vscode.QuickPickItemKind.Separator
       )
       if (first_selectable) {
         quick_pick.activeItems = [first_selectable]
@@ -255,51 +255,28 @@ const get_code_completion_config = async (
   }
 }
 
-const perform_code_completion = async (params: {
-  file_tree_provider: any
-  open_editors_provider: any
-  context: vscode.ExtensionContext
-  with_completion_instructions: boolean
-  show_quick_pick?: boolean
-  completion_instructions?: string
-  config_id?: string
-  panel_provider: PanelProvider
-  invocation_count: number
-}): Promise<void> => {
-  const api_providers_manager = new ModelProvidersManager(params.context)
-
-  let completion_instructions: string | undefined =
-    params.completion_instructions
-  if (params.with_completion_instructions && !completion_instructions) {
-    const last_value =
-      params.context.workspaceState.get<string>(
-        'last-completion-instructions'
-      ) || ''
-    completion_instructions = await vscode.window.showInputBox({
-      placeHolder: 'Enter completion instructions',
-      prompt: 'E.g. "Include explanatory comments".',
-      value: last_value
-    })
-
-    if (completion_instructions === undefined) return
-
-    await params.context.workspaceState.update(
-      'last-completion-instructions',
-      completion_instructions || ''
-    )
-  }
+export const handle_code_completion = async (
+  panel_provider: PanelProvider,
+  message: CodeCompletionMessage
+): Promise<void> => {
+  const api_providers_manager = new ModelProvidersManager(
+    panel_provider.context
+  )
+  const completion_instructions = panel_provider.code_completion_instructions
 
   const config_result = await get_code_completion_config(
     api_providers_manager,
-    params.show_quick_pick,
-    params.context,
-    params.config_id,
-    params.panel_provider
+    message.use_quick_pick,
+    panel_provider.context,
+    message.config_id,
+    panel_provider
   )
 
   if (!config_result) {
     return
   }
+
+  panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
 
   const { provider, config: code_completions_config } = config_result
 
@@ -308,7 +285,7 @@ const perform_code_completion = async (params: {
       dictionary.error_message.API_PROVIDER_NOT_SPECIFIED_FOR_CODE_COMPLETIONS
     )
     Logger.warn({
-      function_name: 'perform_code_completion',
+      function_name: 'handle_code_completion',
       message: 'API provider is not specified for Code Completions tool.'
     })
     return
@@ -317,7 +294,7 @@ const perform_code_completion = async (params: {
       dictionary.error_message.MODEL_NOT_SPECIFIED_FOR_CODE_COMPLETIONS
     )
     Logger.warn({
-      function_name: 'perform_code_completion',
+      function_name: 'handle_code_completion',
       message: 'Model is not specified for Code Completions tool.'
     })
     return
@@ -331,7 +308,7 @@ const perform_code_completion = async (params: {
         dictionary.error_message.BUILT_IN_PROVIDER_NOT_FOUND(provider.name)
       )
       Logger.warn({
-        function_name: 'perform_code_completion',
+        function_name: 'handle_code_completion',
         message: `Built-in provider "${provider.name}" not found.`
       })
       return
@@ -368,8 +345,8 @@ const perform_code_completion = async (params: {
     )
 
     const files_collector = new FilesCollector(
-      params.file_tree_provider,
-      params.open_editors_provider
+      panel_provider.workspace_provider,
+      panel_provider.open_editors_provider
     )
 
     const context_text = await files_collector.collect_files({
@@ -408,12 +385,12 @@ const perform_code_completion = async (params: {
 
     let error_occurred = false
 
-    const promises = Array.from({ length: params.invocation_count }).map(
+    const promises = Array.from({ length: message.invocation_count }).map(
       async () => {
         const request_id = randomUUID()
 
         try {
-          const result = await params.panel_provider.api_manager.get({
+          const result = await panel_provider.api_manager.get({
             endpoint_url,
             api_key: provider.api_key,
             body,
@@ -444,7 +421,7 @@ const perform_code_completion = async (params: {
             return
           }
           Logger.error({
-            function_name: 'perform_code_completion',
+            function_name: 'handle_code_completion',
             message: 'code completion error',
             data: err
           })
@@ -462,21 +439,4 @@ const perform_code_completion = async (params: {
   } else {
     vscode.window.showWarningMessage(dictionary.warning_message.NO_EDITOR_OPEN)
   }
-}
-
-export const handle_code_completion = async (
-  panel_provider: PanelProvider,
-  message: CodeCompletionMessage
-): Promise<void> => {
-  perform_code_completion({
-    file_tree_provider: panel_provider.workspace_provider,
-    open_editors_provider: panel_provider.open_editors_provider,
-    context: panel_provider.context,
-    with_completion_instructions: false,
-    show_quick_pick: message.use_quick_pick,
-    completion_instructions: panel_provider.code_completion_instructions,
-    config_id: message.config_id,
-    panel_provider: panel_provider,
-    invocation_count: message.invocation_count
-  })
 }

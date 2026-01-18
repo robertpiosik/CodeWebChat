@@ -174,7 +174,7 @@ const get_edit_context_config = async (
       quick_pick.activeItems = [last_selected_item]
     } else if (items.length > 0) {
       const first_selectable = items.find(
-        (i) => i.kind !== vscode.QuickPickItemKind.Separator
+        (i) => i.kind != vscode.QuickPickItemKind.Separator
       )
       if (first_selectable) {
         quick_pick.activeItems = [first_selectable]
@@ -358,6 +358,8 @@ export const handle_edit_context = async (
     if (!config_result) {
       return
     }
+
+    panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
 
     const { provider, config: edit_context_config } = config_result
 
