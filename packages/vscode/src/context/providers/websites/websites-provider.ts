@@ -5,6 +5,7 @@ import { display_token_count } from '../../../utils/display-token-count'
 
 export class WebsiteItem extends vscode.TreeItem {
   public readonly token_count: number
+  public readonly compact_token_count: number
 
   constructor(
     public readonly title: string,
@@ -17,7 +18,10 @@ export class WebsiteItem extends vscode.TreeItem {
     super(title, vscode.TreeItemCollapsibleState.None)
 
     const content_xml = `<document title="${title}">\n<![CDATA[\n${content}\n]]>\n</document>\n`
+
     this.token_count = Math.floor(content_xml.length / 4)
+    this.compact_token_count = this.token_count
+
     const formatted_token_count = display_token_count(this.token_count)
     this.tooltip = `${title} - About ${formatted_token_count} tokens`
     this.description = formatted_token_count

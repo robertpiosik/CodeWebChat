@@ -1161,6 +1161,146 @@
             }
           }
         },
+        "codeWebChat.chatPresetsForPruneContext": {
+          "type": "array",
+          "default": [
+            {
+              "name": "Popular"
+            },
+            {
+              "name": "(1)",
+              "chatbot": "ChatGPT"
+            },
+            {
+              "name": "(2)",
+              "chatbot": "Claude"
+            },
+            {
+              "name": "(3)",
+              "chatbot": "Gemini"
+            },
+            {
+              "name": "(4)",
+              "chatbot": "Grok"
+            },
+            {
+              "name": "(5)",
+              "chatbot": "DeepSeek"
+            },
+            {},
+            {
+              "name": "Others"
+            },
+            {
+              "name": "(6)",
+              "chatbot": "AI Studio",
+              "systemInstructions": "You're a helpful coding assistant."
+            },
+            {
+              "name": "(7)",
+              "chatbot": "Copilot"
+            },
+            {
+              "name": "(8)",
+              "chatbot": "Doubao"
+            },
+            {
+              "name": "(9)",
+              "chatbot": "GitHub Copilot"
+            },
+            {
+              "name": "(10)",
+              "chatbot": "HuggingChat"
+            },
+            {
+              "name": "(11)",
+              "chatbot": "Kimi"
+            },
+            {
+              "name": "(12)",
+              "chatbot": "LMArena"
+            },
+            {
+              "name": "(13)",
+              "chatbot": "Mistral"
+            },
+            {
+              "name": "(14)",
+              "chatbot": "Open WebUI"
+            },
+            {
+              "name": "(15)",
+              "chatbot": "OpenRouter"
+            },
+            {
+              "name": "(16)",
+              "chatbot": "Qwen"
+            },
+            {
+              "name": "(17)",
+              "chatbot": "Together"
+            },
+            {
+              "name": "(18)",
+              "chatbot": "Yuanbao"
+            },
+            {
+              "name": "(19)",
+              "chatbot": "Z.AI"
+            },
+            {}
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "chatbot": {
+                "type": "string"
+              },
+              "model": {
+                "type": "string"
+              },
+              "options": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "temperature": {
+                "type": "number"
+              },
+              "topP": {
+                "type": "number"
+              },
+              "systemInstructions": {
+                "type": "string"
+              },
+              "port": {
+                "type": "number"
+              },
+              "newUrl": {
+                "type": "string"
+              },
+              "thinkingBudget": {
+                "type": "number"
+              },
+              "reasoningEffort": {
+                "type": "string"
+              },
+              "isSelected": {
+                "type": "boolean"
+              },
+              "isCollapsed": {
+                "type": "boolean"
+              },
+              "isPinned": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
         "codeWebChat.chatPresetsForNoContext": {
           "type": "array",
           "default": [
@@ -1401,6 +1541,24 @@
             ]
           }
         },
+        "codeWebChat.promptTemplatesForPruneContext": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "template": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "template"
+            ]
+          }
+        },
         "codeWebChat.modelProviders": {
           "type": "array",
           "default": [],
@@ -1448,6 +1606,44 @@
           }
         },
         "codeWebChat.configurationsForCodeCompletions": {
+          "type": "array",
+          "scope": "resource",
+          "default": [],
+          "items": {
+            "type": "object",
+            "properties": {
+              "providerName": {
+                "type": "string"
+              },
+              "model": {
+                "type": "string"
+              },
+              "temperature": {
+                "type": "number"
+              },
+              "reasoningEffort": {
+                "type": "string",
+                "enum": [
+                  "none",
+                  "low",
+                  "medium",
+                  "high"
+                ]
+              },
+              "isDefault": {
+                "type": "boolean"
+              },
+              "isPinned": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "providerName",
+              "model"
+            ]
+          }
+        },
+        "codeWebChat.configurationsForPruneContext": {
           "type": "array",
           "scope": "resource",
           "default": [],

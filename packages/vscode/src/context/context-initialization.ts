@@ -143,8 +143,9 @@ export const context_initialization = async (
   const update_view_badges = async () => {
     let context_token_count = 0
     if (context_provider && context_view) {
-      const files_count =
+      const files_count = (
         await workspace_provider.get_checked_files_token_count()
+      ).total
       const websites_count =
         websites_provider.get_checked_websites_token_count()
       context_token_count = files_count + websites_count

@@ -287,7 +287,7 @@ export class OpenEditorsProvider
       }
 
       const range = this._workspace_provider.get_range(file_path)
-      const token_count =
+      const tokens =
         this._workspace_provider.get_cached_token_count(file_path) ||
         (await this._workspace_provider.calculate_file_tokens(file_path))
 
@@ -299,7 +299,9 @@ export class OpenEditorsProvider
         checkbox_state,
         false,
         true,
-        token_count,
+        tokens.total,
+        tokens.compact,
+        undefined,
         undefined,
         description,
         false,

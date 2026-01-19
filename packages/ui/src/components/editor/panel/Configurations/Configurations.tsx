@@ -16,7 +16,7 @@ export namespace Configurations {
   }
 
   export type Props = {
-    api_prompt_type: 'edit-context' | 'code-completions'
+    api_prompt_type: 'edit-context' | 'code-completions' | 'prune-context'
     configurations: Configuration[]
     on_configuration_click: (id: string) => void
     on_reorder?: (configurations: Configuration[]) => void

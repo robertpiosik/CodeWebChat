@@ -54,6 +54,8 @@ export const handle_send_prompt = async (params: {
       current_instructions = params.panel_provider.edit_instructions
     } else if (params.panel_provider.web_prompt_type == 'no-context') {
       current_instructions = params.panel_provider.no_context_instructions
+    } else if (params.panel_provider.web_prompt_type == 'prune-context') {
+      current_instructions = params.panel_provider.prune_context_instructions
     }
   }
 

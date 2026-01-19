@@ -3,4 +3,9 @@ export type WebPromptType =
   | 'edit-context'
   | 'code-completions'
   | 'no-context'
-export type ApiPromptType = 'edit-context' | 'code-completions'
+  | 'prune-context'
+
+export type ApiPromptType =
+  | 'edit-context'
+  | 'code-completions'
+  | 'prune-context'

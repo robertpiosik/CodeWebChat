@@ -95,6 +95,9 @@ export const use_panel = (vscode: any) => {
   >()
   const [code_completions_instructions, set_code_completions_instructions] =
     useState<string | undefined>(undefined)
+  const [prune_context_instructions, set_prune_context_instructions] = useState<
+    string | undefined
+  >(undefined)
   const [currently_open_file_text, set_currently_open_file_text] = useState<
     string | undefined
   >(undefined)
@@ -130,13 +133,19 @@ export const use_panel = (vscode: any) => {
 
   const handle_instructions_change = (
     value: string,
-    mode: 'ask' | 'edit-context' | 'no-context' | 'code-completions'
+    mode:
+      | 'ask'
+      | 'edit-context'
+      | 'no-context'
+      | 'code-completions'
+      | 'prune-context'
   ) => {
     if (mode == 'ask') set_ask_instructions(value)
     else if (mode == 'edit-context') set_edit_instructions(value)
     else if (mode == 'no-context') set_no_context_instructions(value)
     else if (mode == 'code-completions')
       set_code_completions_instructions(value)
+    else if (mode == 'prune-context') set_prune_context_instructions(value)
 
     post_message(vscode, {
       command: 'SAVE_INSTRUCTIONS',
@@ -191,6 +200,7 @@ export const use_panel = (vscode: any) => {
         set_edit_instructions(message.edit_context)
         set_no_context_instructions(message.no_context)
         set_code_completions_instructions(message.code_completions)
+        set_prune_context_instructions(message.prune_context)
       } else if (message.command == 'CONNECTION_STATUS') {
         set_is_connected(message.connected)
       } else if (message.command == 'VERSION') {
@@ -548,6 +558,7 @@ export const use_panel = (vscode: any) => {
     has_active_editor,
     has_active_selection,
     code_completions_instructions,
+    prune_context_instructions,
     currently_open_file_text,
     mode,
     web_prompt_type,

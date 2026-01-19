@@ -59,7 +59,12 @@ export interface GetInstructionsMessage extends BaseMessage {
 export interface SaveInstructionsMessage extends BaseMessage {
   command: 'SAVE_INSTRUCTIONS'
   instruction: string
-  mode: 'ask' | 'edit-context' | 'no-context' | 'code-completions'
+  mode:
+    | 'ask'
+    | 'edit-context'
+    | 'no-context'
+    | 'code-completions'
+    | 'prune-context'
 }
 
 export interface GetEditFormat extends BaseMessage {
@@ -122,7 +127,12 @@ export interface GetResponseHistoryMessage extends BaseMessage {
 export interface SaveHistoryMessage extends BaseMessage {
   command: 'SAVE_HISTORY'
   messages: string[]
-  mode: 'ask' | 'edit-context' | 'no-context' | 'code-completions'
+  mode:
+    | 'ask'
+    | 'edit-context'
+    | 'no-context'
+    | 'code-completions'
+    | 'prune-context'
 }
 
 export interface GetContextSizeWarningThresholdMessage extends BaseMessage {
@@ -201,6 +211,13 @@ export interface EditContextMessage extends BaseMessage {
 
 export interface CodeCompletionMessage extends BaseMessage {
   command: 'CODE_COMPLETION'
+  use_quick_pick: boolean
+  config_id?: string
+  invocation_count: number
+}
+
+export interface PruneContextMessage extends BaseMessage {
+  command: 'PRUNE_CONTEXT'
   use_quick_pick: boolean
   config_id?: string
   invocation_count: number
@@ -480,6 +497,7 @@ export type FrontendMessage =
   | EditContextMessage
   | CancelApiRequestMessage
   | CodeCompletionMessage
+  | PruneContextMessage
   | ShowAtSignQuickPickMessage
   | ShowHashSignQuickPickMessage
   | SaveWebModeMessage
@@ -536,6 +554,7 @@ export interface InstructionsMessage extends BaseMessage {
   edit_context: string
   no_context: string
   code_completions: string
+  prune_context: string
   caret_position?: number
 }
 
@@ -589,6 +608,7 @@ export interface ChatHistoryMessage extends BaseMessage {
   edit_context: string[]
   no_context: string[]
   code_completions: string[]
+  prune_context: string[]
 }
 
 export interface ResponseHistoryMessage extends BaseMessage {

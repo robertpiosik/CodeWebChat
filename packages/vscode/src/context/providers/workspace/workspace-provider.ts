@@ -813,11 +813,15 @@ export class WorkspaceProvider
     return sorted_indices.map((i) => lines[i - 1]).join('\n')
   }
 
-  public get_cached_token_count(file_path: string): number | undefined {
+  public get_cached_token_count(
+    file_path: string
+  ): { total: number; compact: number } | undefined {
     return this._token_calculator.get_cached_token_count(file_path)
   }
 
-  public async calculate_file_tokens(file_path: string): Promise<number> {
+  public async calculate_file_tokens(
+    file_path: string
+  ): Promise<{ total: number; compact: number }> {
     return this._token_calculator.calculate_file_tokens(file_path)
   }
 
@@ -930,11 +934,11 @@ export class WorkspaceProvider
           }
         }
 
-        const token_count = is_directory
+        const tokens = is_directory
           ? await this._token_calculator.calculate_directory_tokens(full_path)
           : await this._token_calculator.calculate_file_tokens(full_path)
 
-        const selected_token_count = is_directory
+        const selected_tokens = is_directory
           ? await this._token_calculator.calculate_directory_selected_tokens(
               full_path
             )
@@ -952,8 +956,10 @@ export class WorkspaceProvider
           checkbox_state,
           is_symbolic_link,
           false,
-          token_count,
-          selected_token_count,
+          tokens.total,
+          tokens.compact,
+          selected_tokens?.total,
+          selected_tokens?.compact,
           undefined,
           false,
           range
@@ -1444,7 +1450,7 @@ export class WorkspaceProvider
 
   public async get_checked_files_token_count(options?: {
     exclude_file_path?: string
-  }): Promise<number> {
+  }): Promise<{ total: number; compact: number }> {
     return this._token_calculator.get_checked_files_token_count(options)
   }
 
@@ -1556,7 +1562,9 @@ export class FileItem extends vscode.TreeItem {
     public isSymbolicLink: boolean = false,
     public isOpenFile: boolean = false,
     public tokenCount?: number,
+    public compactTokenCount?: number,
     public selectedTokenCount?: number,
+    public selectedCompactTokenCount?: number,
     description?: string,
     public isWorkspaceRoot: boolean = false,
     public range?: string

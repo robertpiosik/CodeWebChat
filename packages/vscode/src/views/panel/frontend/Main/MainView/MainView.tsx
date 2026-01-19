@@ -75,6 +75,8 @@ type Props = {
   on_edit_context_with_quick_pick_click: (invocation_count: number) => void
   on_code_completion_click: (invocation_count: number) => void
   on_code_completion_with_quick_pick_click: (invocation_count: number) => void
+  on_prune_context_click: (invocation_count: number) => void
+  on_prune_context_with_quick_pick_click: (invocation_count: number) => void
   caret_position_to_set?: number
   on_caret_position_set?: () => void
   chat_input_focus_and_select_key: number
@@ -100,6 +102,10 @@ export const MainView: React.FC<Props> = (props) => {
     (props.mode == MODE.WEB && props.web_prompt_type == 'code-completions') ||
     (props.mode == MODE.API && props.api_prompt_type == 'code-completions')
 
+  const is_in_prune_context_prompt_type =
+    (props.mode == MODE.WEB && props.web_prompt_type == 'prune-context') ||
+    (props.mode == MODE.API && props.api_prompt_type == 'prune-context')
+
   const show_edit_format_selector =
     (props.mode == MODE.WEB && props.web_prompt_type == 'edit-context') ||
     (props.mode == MODE.API && props.api_prompt_type == 'edit-context')
@@ -124,6 +130,8 @@ export const MainView: React.FC<Props> = (props) => {
     } else {
       if (is_in_code_completions_prompt_type) {
         props.on_code_completion_click(current_invocation_count)
+      } else if (is_in_prune_context_prompt_type) {
+        props.on_prune_context_click(current_invocation_count)
       } else {
         props.on_edit_context_click(current_invocation_count)
       }
@@ -139,6 +147,8 @@ export const MainView: React.FC<Props> = (props) => {
     } else {
       if (is_in_code_completions_prompt_type) {
         props.on_code_completion_with_quick_pick_click(current_invocation_count)
+      } else if (is_in_prune_context_prompt_type) {
+        props.on_prune_context_with_quick_pick_click(current_invocation_count)
       } else {
         props.on_edit_context_with_quick_pick_click(current_invocation_count)
       }

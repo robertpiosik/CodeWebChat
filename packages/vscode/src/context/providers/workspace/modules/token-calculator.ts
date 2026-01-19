@@ -4,6 +4,7 @@ import * as path from 'path'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import type { IWorkspaceProvider } from '../workspace-provider'
+import { compact_file } from '../../../utils/compact-file/compact-file'
 
 type TokenCountsCache = {
   [workspace_root: string]: {
@@ -12,6 +13,7 @@ type TokenCountsCache = {
       [file_path: string]: {
         modified_at: number
         token_count: number
+        compact_token_count?: number
       }
     }
   }
@@ -23,8 +25,12 @@ const TOKEN_CACHE_FILE_NAME = 'token-count-cache.json'
 
 export class TokenCalculator implements vscode.Disposable {
   private _file_token_counts: Map<string, number> = new Map()
+  private _file_compact_token_counts: Map<string, number> = new Map()
   private _directory_token_counts: Map<string, number> = new Map()
+  private _directory_compact_token_counts: Map<string, number> = new Map()
   private _directory_selected_token_counts: Map<string, number> = new Map()
+  private _directory_selected_compact_token_counts: Map<string, number> =
+    new Map()
   private _token_cache: TokenCountsCache = {}
   private _token_cache_update_timeout: NodeJS.Timeout | null = null
   private _has_token_counts_cache_updated_once = false
@@ -139,45 +145,71 @@ export class TokenCalculator implements vscode.Disposable {
       this._provider.get_workspace_root_for_file(changed_file_path)
     if (!workspace_root) {
       this._file_token_counts.delete(changed_file_path)
+      this._file_compact_token_counts.delete(changed_file_path)
       return
     }
 
     this._file_token_counts.delete(changed_file_path)
+    this._file_compact_token_counts.delete(changed_file_path)
 
     let dir_path = path.dirname(changed_file_path)
     while (dir_path.startsWith(workspace_root)) {
       this._directory_token_counts.delete(dir_path)
+      this._directory_compact_token_counts.delete(dir_path)
       this._directory_selected_token_counts.delete(dir_path)
+      this._directory_selected_compact_token_counts.delete(dir_path)
       dir_path = path.dirname(dir_path)
     }
   }
 
   public invalidate_directory_counts(dir_path: string): void {
     this._directory_token_counts.delete(dir_path)
+    this._directory_compact_token_counts.delete(dir_path)
     this._directory_selected_token_counts.delete(dir_path)
+    this._directory_selected_compact_token_counts.delete(dir_path)
   }
 
   public invalidate_directory_selected_count(dir_path: string): void {
     this._directory_selected_token_counts.delete(dir_path)
+    this._directory_selected_compact_token_counts.delete(dir_path)
   }
 
   public clear_caches(): void {
     this._file_token_counts.clear()
+    this._file_compact_token_counts.clear()
     this._directory_token_counts.clear()
+    this._directory_compact_token_counts.clear()
     this._directory_selected_token_counts.clear()
+    this._directory_selected_compact_token_counts.clear()
   }
 
   public clear_selected_counts(): void {
     this._directory_selected_token_counts.clear()
+    this._directory_selected_compact_token_counts.clear()
   }
 
-  public get_cached_token_count(file_path: string): number | undefined {
-    return this._file_token_counts.get(file_path)
+  public get_cached_token_count(
+    file_path: string
+  ): { total: number; compact: number } | undefined {
+    const total = this._file_token_counts.get(file_path)
+    const compact = this._file_compact_token_counts.get(file_path)
+    if (total !== undefined && compact !== undefined) {
+      return { total, compact }
+    }
+    return undefined
   }
 
-  public async calculate_file_tokens(file_path: string): Promise<number> {
-    if (this._file_token_counts.has(file_path)) {
-      return this._file_token_counts.get(file_path)!
+  public async calculate_file_tokens(
+    file_path: string
+  ): Promise<{ total: number; compact: number }> {
+    if (
+      this._file_token_counts.has(file_path) &&
+      this._file_compact_token_counts.has(file_path)
+    ) {
+      return {
+        total: this._file_token_counts.get(file_path)!,
+        compact: this._file_compact_token_counts.get(file_path)!
+      }
     }
 
     const workspace_root = this._provider.get_workspace_root_for_file(file_path)
@@ -194,8 +226,13 @@ export class TokenCalculator implements vscode.Disposable {
         ) {
           const tokens =
             this._token_cache[workspace_root].files[file_path].token_count
+          const compact_tokens =
+            this._token_cache[workspace_root].files[file_path]
+              .compact_token_count || tokens // Fallback for old cache
+
           this._file_token_counts.set(file_path, tokens)
-          return tokens
+          this._file_compact_token_counts.set(file_path, compact_tokens)
+          return { total: tokens, compact: compact_tokens }
         }
       } catch {
         // Continue to calculate if stat fails
@@ -209,28 +246,34 @@ export class TokenCalculator implements vscode.Disposable {
         content = this._provider.apply_range_to_content(content, range)
       }
 
-      let content_xml = ''
-
-      if (!workspace_root) {
-        content_xml = `<file path="${file_path.replace(
-          /\\/g,
-          '/'
-        )}">\n<![CDATA[\n${content}\n]]>\n</file>\n`
-      } else {
-        const relative_path = path
-          .relative(workspace_root, file_path)
-          .replace(/\\/g, '/')
-        if (this._provider.get_workspace_roots().length > 1) {
-          const workspace_name =
-            this._provider.get_workspace_name(workspace_root)
-          content_xml = `<file path="${workspace_name}/${relative_path}">\n<![CDATA[\n${content}\n]]>\n</file>\n`
+      const wrap_content = (text: string) => {
+        if (!workspace_root) {
+          return `<file path="${file_path.replace(
+            /\\/g,
+            '/'
+          )}">\n<![CDATA[\n${text}\n]]>\n</file>\n`
         } else {
-          content_xml = `<file path="${relative_path}">\n<![CDATA[\n${content}\n]]>\n</file>\n`
+          const relative_path = path
+            .relative(workspace_root, file_path)
+            .replace(/\\/g, '/')
+          if (this._provider.get_workspace_roots().length > 1) {
+            const workspace_name =
+              this._provider.get_workspace_name(workspace_root)
+            return `<file path="${workspace_name}/${relative_path}">\n<![CDATA[\n${text}\n]]>\n</file>\n`
+          } else {
+            return `<file path="${relative_path}">\n<![CDATA[\n${text}\n]]>\n</file>\n`
+          }
         }
       }
 
-      const token_count = Math.floor(content_xml.length / 4)
+      const token_count = Math.floor(wrap_content(content).length / 4)
+      const compact_content = compact_file(content, path.extname(file_path))
+      const compact_token_count = Math.floor(
+        wrap_content(compact_content).length / 4
+      )
+
       this._file_token_counts.set(file_path, token_count)
+      this._file_compact_token_counts.set(file_path, compact_token_count)
 
       if (workspace_root && !range && mtime > 0) {
         if (
@@ -244,33 +287,42 @@ export class TokenCalculator implements vscode.Disposable {
         }
         this._token_cache[workspace_root].files[file_path] = {
           modified_at: mtime,
-          token_count: token_count
+          token_count: token_count,
+          compact_token_count: compact_token_count
         }
         this._token_cache[workspace_root].modified_at = Date.now()
         this._update_token_counts_cache()
       }
 
-      return token_count
+      return { total: token_count, compact: compact_token_count }
     } catch (error) {
       Logger.error({
         function_name: 'calculate_file_tokens',
         message: `Error calculating tokens for ${file_path}`,
         data: error
       })
-      return 0
+      return { total: 0, compact: 0 }
     }
   }
 
-  public async calculate_directory_tokens(dir_path: string): Promise<number> {
-    if (this._directory_token_counts.has(dir_path)) {
-      return this._directory_token_counts.get(dir_path)!
+  public async calculate_directory_tokens(
+    dir_path: string
+  ): Promise<{ total: number; compact: number }> {
+    if (
+      this._directory_token_counts.has(dir_path) &&
+      this._directory_compact_token_counts.has(dir_path)
+    ) {
+      return {
+        total: this._directory_token_counts.get(dir_path)!,
+        compact: this._directory_compact_token_counts.get(dir_path)!
+      }
     }
 
     try {
       const workspace_root =
         this._provider.get_workspace_root_for_file(dir_path)
       if (!workspace_root) {
-        return 0
+        return { total: 0, compact: 0 }
       }
 
       const relative_dir_path = path.relative(workspace_root, dir_path)
@@ -280,13 +332,15 @@ export class TokenCalculator implements vscode.Disposable {
         )
       ) {
         this._directory_token_counts.set(dir_path, 0)
-        return 0
+        this._directory_compact_token_counts.set(dir_path, 0)
+        return { total: 0, compact: 0 }
       }
 
       const entries = await fs.promises.readdir(dir_path, {
         withFileTypes: true
       })
       let total_tokens = 0
+      let total_compact_tokens = 0
 
       for (const entry of entries) {
         const full_path = path.join(dir_path, entry.name)
@@ -321,40 +375,53 @@ export class TokenCalculator implements vscode.Disposable {
 
         if (is_directory && !is_broken_link) {
           // Recurse into subdirectory (including resolved symlinks that are directories)
-          total_tokens += await this.calculate_directory_tokens(full_path)
+          const counts = await this.calculate_directory_tokens(full_path)
+          total_tokens += counts.total
+          total_compact_tokens += counts.compact
         } else if (
           entry.isFile() ||
           (is_symbolic_link && !is_broken_link && !is_directory)
         ) {
           // Add file tokens (including resolved symlinks that are files)
-          total_tokens += await this.calculate_file_tokens(full_path)
+          const counts = await this.calculate_file_tokens(full_path)
+          total_tokens += counts.total
+          total_compact_tokens += counts.compact
         }
       }
 
       this._directory_token_counts.set(dir_path, total_tokens)
+      this._directory_compact_token_counts.set(dir_path, total_compact_tokens)
 
-      return total_tokens
+      return { total: total_tokens, compact: total_compact_tokens }
     } catch (error) {
       Logger.error({
         function_name: 'calculate_directory_tokens',
         message: `Error calculating tokens for directory ${dir_path}`,
         data: error
       })
-      return 0
+      return { total: 0, compact: 0 }
     }
   }
 
   public async calculate_directory_selected_tokens(
     dir_path: string
-  ): Promise<number> {
+  ): Promise<{ total: number; compact: number }> {
     if (!dir_path) {
-      return 0
+      return { total: 0, compact: 0 }
     }
-    if (this._directory_selected_token_counts.has(dir_path)) {
-      return this._directory_selected_token_counts.get(dir_path)!
+    if (
+      this._directory_selected_token_counts.has(dir_path) &&
+      this._directory_selected_compact_token_counts.has(dir_path)
+    ) {
+      return {
+        total: this._directory_selected_token_counts.get(dir_path)!,
+        compact: this._directory_selected_compact_token_counts.get(dir_path)!
+      }
     }
 
     let selected_tokens = 0
+    let selected_compact_tokens = 0
+
     try {
       const workspace_root =
         this._provider.get_workspace_root_for_file(dir_path)
@@ -363,7 +430,7 @@ export class TokenCalculator implements vscode.Disposable {
           function_name: 'calculate_directory_selected_tokens',
           message: `No workspace root found for directory ${dir_path}`
         })
-        return 0
+        return { total: 0, compact: 0 }
       }
 
       const relative_dir_path = path.relative(workspace_root, dir_path)
@@ -373,7 +440,8 @@ export class TokenCalculator implements vscode.Disposable {
         )
       ) {
         this._directory_selected_token_counts.set(dir_path, 0)
-        return 0
+        this._directory_selected_compact_token_counts.set(dir_path, 0)
+        return { total: 0, compact: 0 }
       }
 
       const entries = await fs.promises.readdir(dir_path, {
@@ -407,14 +475,20 @@ export class TokenCalculator implements vscode.Disposable {
 
         if (entry_is_directory) {
           if (checkbox_state === vscode.TreeItemCheckboxState.Checked) {
-            selected_tokens += await this.calculate_directory_tokens(full_path)
+            const counts = await this.calculate_directory_tokens(full_path)
+            selected_tokens += counts.total
+            selected_compact_tokens += counts.compact
           } else if (this._provider.is_partially_checked(full_path)) {
-            selected_tokens +=
+            const counts =
               await this.calculate_directory_selected_tokens(full_path)
+            selected_tokens += counts.total
+            selected_compact_tokens += counts.compact
           }
         } else {
           if (checkbox_state === vscode.TreeItemCheckboxState.Checked) {
-            selected_tokens += await this.calculate_file_tokens(full_path)
+            const counts = await this.calculate_file_tokens(full_path)
+            selected_tokens += counts.total
+            selected_compact_tokens += counts.compact
           }
         }
       }
@@ -424,17 +498,21 @@ export class TokenCalculator implements vscode.Disposable {
         message: `Error calculating selected tokens for dir ${dir_path}`,
         data: error
       })
-      return 0
+      return { total: 0, compact: 0 }
     }
     this._directory_selected_token_counts.set(dir_path, selected_tokens)
-    return selected_tokens
+    this._directory_selected_compact_token_counts.set(
+      dir_path,
+      selected_compact_tokens
+    )
+    return { total: selected_tokens, compact: selected_compact_tokens }
   }
 
   public async get_checked_files_token_count(options?: {
     exclude_file_path?: string
-  }): Promise<number> {
+  }): Promise<{ total: number; compact: number }> {
     const checked_files = this._provider.get_checked_files()
-    let total = 0
+    const result = { total: 0, compact: 0 }
 
     for (const file_path of checked_files) {
       try {
@@ -447,10 +525,12 @@ export class TokenCalculator implements vscode.Disposable {
 
         if (fs.statSync(file_path).isFile()) {
           if (this._file_token_counts.has(file_path)) {
-            total += this._file_token_counts.get(file_path)!
+            result.total += this._file_token_counts.get(file_path)!
+            result.compact += this._file_compact_token_counts.get(file_path)!
           } else {
             const count = await this.calculate_file_tokens(file_path)
-            total += count
+            result.total += count.total
+            result.compact += count.compact
           }
         }
       } catch (error) {
@@ -462,7 +542,7 @@ export class TokenCalculator implements vscode.Disposable {
       }
     }
 
-    return total
+    return result
   }
 
   public dispose(): void {

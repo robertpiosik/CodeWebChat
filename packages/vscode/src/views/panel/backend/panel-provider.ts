@@ -77,7 +77,8 @@ import {
   handle_get_tasks,
   handle_save_tasks,
   handle_delete_task,
-  handle_fix_all_failed_files
+  handle_fix_all_failed_files,
+  handle_prune_context
 } from './message-handlers'
 import {
   API_EDIT_FORMAT_STATE_KEY,
@@ -85,6 +86,7 @@ import {
   CHAT_EDIT_FORMAT_STATE_KEY,
   INSTRUCTIONS_ASK_STATE_KEY,
   INSTRUCTIONS_CODE_COMPLETIONS_STATE_KEY,
+  INSTRUCTIONS_PRUNE_CONTEXT_STATE_KEY,
   INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY,
   INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
   LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
@@ -116,6 +118,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public edit_instructions: string = ''
   public no_context_instructions: string = ''
   public code_completion_instructions: string = ''
+  public prune_context_instructions: string = ''
   public web_prompt_type: WebPromptType
   public chat_edit_format: EditFormat
   public api_edit_format: EditFormat
@@ -202,6 +205,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       INSTRUCTIONS_CODE_COMPLETIONS_STATE_KEY,
       ''
     )
+    this.prune_context_instructions = this.context.workspaceState.get<string>(
+      INSTRUCTIONS_PRUNE_CONTEXT_STATE_KEY,
+      ''
+    )
 
     this.chat_edit_format =
       this.context.workspaceState.get<EditFormat>(CHAT_EDIT_FORMAT_STATE_KEY) ??
@@ -242,6 +249,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           'codeWebChat.chatPresetsForAskAboutContext',
           'codeWebChat.chatPresetsForEditContext',
           'codeWebChat.chatPresetsForCodeAtCursor',
+          'codeWebChat.chatPresetsForPruneContext',
           'codeWebChat.chatPresetsForNoContext'
         ]
         if (all_preset_keys.some((key) => event.affectsConfiguration(key))) {
@@ -268,7 +276,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
         const all_api_config_keys = [
           'codeWebChat.configurationsForEditContext',
-          'codeWebChat.configurationsForCodeCompletions'
+          'codeWebChat.configurationsForCodeCompletions',
+          'codeWebChat.configurationsForPruneContext'
         ]
 
         if (
@@ -371,6 +380,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         return 'chatPresetsForEditContext'
       case 'code-completions':
         return 'chatPresetsForCodeAtCursor'
+      case 'prune-context':
+        return 'codeWebChat.chatPresetsForPruneContext'
       case 'no-context':
         return 'chatPresetsForNoContext'
     }
@@ -544,6 +555,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_edit_context(this, message)
           } else if (message.command == 'CODE_COMPLETION') {
             await handle_code_completion(this, message)
+          } else if (message.command == 'PRUNE_CONTEXT') {
+            await handle_prune_context(this, message)
           } else if (message.command == 'SHOW_HISTORY_QUICK_PICK') {
             await handle_show_history_quick_pick(this)
           } else if (message.command == 'SHOW_PROMPT_TEMPLATE_QUICK_PICK') {
@@ -675,12 +688,14 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       'ask',
       'edit-context',
       'code-completions',
+      'prune-context',
       'no-context'
     ]
     const mode_to_config_key: Record<WebPromptType, string> = {
       ask: 'chatPresetsForAskAboutContext',
       'edit-context': 'chatPresetsForEditContext',
       'code-completions': 'chatPresetsForCodeAtCursor',
+      'prune-context': 'codeWebChat.chatPresetsForPruneContext',
       'no-context': 'chatPresetsForNoContext'
     }
     const all_presets = Object.fromEntries(
@@ -873,7 +888,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public add_text_at_cursor_position(text: string, chars_to_remove_before = 0) {
     const is_in_code_completions_mode =
       (this.mode == MODE.WEB && this.web_prompt_type == 'code-completions') ||
-      (this.mode == MODE.API && this.api_prompt_type == 'code-completions')
+      (this.mode == MODE.API && this.api_prompt_type == 'code-completions') ||
+      (this.mode == MODE.WEB && this.web_prompt_type == 'prune-context') ||
+      (this.mode == MODE.API && this.api_prompt_type == 'prune-context')
 
     let current_instructions = ''
     let new_instructions = ''
@@ -895,6 +912,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         break
       case 'code-completions':
         current_instructions = this.code_completion_instructions
+        break
+      case 'prune-context':
+        current_instructions = this.prune_context_instructions
         break
       default:
         return
@@ -924,6 +944,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       case 'code-completions':
         this.code_completion_instructions = new_instructions
         break
+      case 'prune-context':
+        this.prune_context_instructions = new_instructions
+        break
     }
 
     this.caret_position = new_caret_position
@@ -934,6 +957,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       edit_context: this.edit_instructions,
       no_context: this.no_context_instructions,
       code_completions: this.code_completion_instructions,
+      prune_context: this.prune_context_instructions,
       caret_position: this.caret_position
     })
   }

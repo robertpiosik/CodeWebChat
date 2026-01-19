@@ -40,7 +40,7 @@ Code with AI in a way that foster codebase understanding and gets you fast and a
 
 ## Enabling autofill in browser
 
-Install the zero-setup Connector extension in your favorite browser and never copy and paste again!
+Start using [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt) (also called [gems](https://gemini.google/pl/overview/gems) or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)) without a tedious copy and paste!
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
