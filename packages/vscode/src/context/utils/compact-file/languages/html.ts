@@ -31,8 +31,8 @@ export const compact_html = (content: string): string => {
   const lines = processed.split(/\r?\n/)
   const compacted_lines: string[] = []
   for (const line of lines) {
-    const trimmed = line.trim()
-    if (trimmed) {
+    const trimmed = line.trimEnd()
+    if (trimmed.trim()) {
       compacted_lines.push(trimmed)
     }
   }
@@ -43,7 +43,7 @@ export const compact_html = (content: string): string => {
     const { open, content } = scripts[parseInt(idx)]
     // Treat as C-style but do NOT strip bodies (preserve logic, just strip comments)
     // as scripts in HTML are often minimal or structural.
-    const compacted = compact_c_style(content).trim()
+    const compacted = compact_c_style(content).trimEnd()
     return `${open}\n${compacted}\n</script>`
   })
 
@@ -51,7 +51,7 @@ export const compact_html = (content: string): string => {
   processed = processed.replace(/___STYLE_(\d+)___/g, (_, idx) => {
     const { open, content } = styles[parseInt(idx)]
     // Compact CSS (strips bodies/properties usually)
-    const compacted = compact_css(content).trim()
+    const compacted = compact_css(content).trimEnd()
     return `${open}\n${compacted}\n</style>`
   })
 

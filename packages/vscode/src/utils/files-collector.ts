@@ -4,6 +4,7 @@ import { WorkspaceProvider } from '../context/providers/workspace/workspace-prov
 import { WebsitesProvider } from '../context/providers/websites/websites-provider'
 import { natural_sort } from '@/utils/natural-sort'
 import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
+import { compact_file } from '../context/utils/compact-file/compact-file'
 
 export class FilesCollector {
   private workspace_provider: WorkspaceProvider
@@ -27,6 +28,7 @@ export class FilesCollector {
     exclude_path?: string
     additional_paths?: string[]
     no_context?: boolean
+    compact?: boolean
   }): Promise<string> {
     const additional_paths = (params?.additional_paths ?? []).map((p) => {
       if (this.workspace_roots.length > 0) {
@@ -89,6 +91,10 @@ export class FilesCollector {
             content,
             range
           )
+        }
+
+        if (params?.compact) {
+          content = compact_file(content, path.extname(file_path))
         }
 
         const workspace_root = this._get_workspace_root_for_file(file_path)

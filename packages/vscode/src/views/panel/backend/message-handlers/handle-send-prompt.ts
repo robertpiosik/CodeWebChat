@@ -9,7 +9,10 @@ import {
   replace_context_at_commit_symbol,
   replace_commit_symbol
 } from '@/views/panel/backend/utils/replace-git-symbols'
-import { code_completion_instructions_for_panel } from '@/constants/instructions'
+import {
+  code_completion_instructions_for_panel,
+  prune_context_instructions
+} from '@/constants/instructions'
 import { get_recently_used_presets_or_groups_key } from '@/constants/state-keys'
 import { ConfigPresetFormat } from '../utils/preset-format-converters'
 import { MODE } from '@/views/panel/types/main-view-mode'
@@ -172,7 +175,8 @@ export const handle_send_prompt = async (params: {
 
     const context_text = await files_collector.collect_files({
       additional_paths,
-      no_context: params.panel_provider.web_prompt_type == 'no-context'
+      no_context: params.panel_provider.web_prompt_type == 'no-context',
+      compact: params.panel_provider.web_prompt_type == 'prune-context'
     })
 
     const prepared_chats = await Promise.all(
@@ -236,6 +240,8 @@ export const handle_send_prompt = async (params: {
           if (edit_format_instructions) {
             system_instructions_xml = `<system>\n${edit_format_instructions}\n</system>`
           }
+        } else if (params.panel_provider.web_prompt_type == 'prune-context') {
+          system_instructions_xml = prune_context_instructions
         }
 
         return {
@@ -500,16 +506,16 @@ async function resolve_presets(params: {
     params.panel_provider.web_prompt_type == 'code-completions'
 
   let current_instructions = ''
-  if (is_in_code_completions_mode) {
+  if (params.panel_provider.web_prompt_type == 'code-completions') {
     current_instructions = params.panel_provider.code_completion_instructions
-  } else {
-    if (params.panel_provider.web_prompt_type == 'ask') {
-      current_instructions = params.panel_provider.ask_instructions
-    } else if (params.panel_provider.web_prompt_type == 'edit-context') {
-      current_instructions = params.panel_provider.edit_instructions
-    } else if (params.panel_provider.web_prompt_type == 'no-context') {
-      current_instructions = params.panel_provider.no_context_instructions
-    }
+  } else if (params.panel_provider.web_prompt_type == 'ask') {
+    current_instructions = params.panel_provider.ask_instructions
+  } else if (params.panel_provider.web_prompt_type == 'edit-context') {
+    current_instructions = params.panel_provider.edit_instructions
+  } else if (params.panel_provider.web_prompt_type == 'no-context') {
+    current_instructions = params.panel_provider.no_context_instructions
+  } else if (params.panel_provider.web_prompt_type == 'prune-context') {
+    current_instructions = params.panel_provider.prune_context_instructions
   }
 
   const get_is_preset_disabled = (preset: ConfigPresetFormat) =>

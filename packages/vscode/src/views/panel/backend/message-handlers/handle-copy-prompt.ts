@@ -8,7 +8,10 @@ import {
   replace_context_at_commit_symbol
 } from '@/views/panel/backend/utils/replace-git-symbols'
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
-import { code_completion_instructions_for_panel } from '@/constants/instructions'
+import {
+  code_completion_instructions_for_panel,
+  prune_context_instructions
+} from '@/constants/instructions'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import { MODE } from '@/views/panel/types/main-view-mode'
 import { dictionary } from '@shared/constants/dictionary'
@@ -41,14 +44,14 @@ export const handle_copy_prompt = async (params: {
     })
   }
 
-  const is_in_code_completions_mode =
+  const is_in_code_completions_prompt_type =
     (params.panel_provider.mode == MODE.WEB &&
       params.panel_provider.web_prompt_type == 'code-completions') ||
     (params.panel_provider.mode == MODE.API &&
       params.panel_provider.api_prompt_type == 'code-completions')
 
   if (
-    is_in_code_completions_mode &&
+    is_in_code_completions_prompt_type &&
     active_editor &&
     !active_editor.selection.isEmpty
   ) {
@@ -59,7 +62,7 @@ export const handle_copy_prompt = async (params: {
     return
   }
 
-  if (is_in_code_completions_mode && active_editor) {
+  if (is_in_code_completions_prompt_type && active_editor) {
     const document = active_editor.document
     const position = active_editor.selection.active
     const active_path = document.uri.fsPath
@@ -90,9 +93,16 @@ export const handle_copy_prompt = async (params: {
     const text = `${system_instructions}\n<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}${missing_text_tag}${text_after_cursor}\n]]>\n</file>\n</files>\n${system_instructions}`
 
     vscode.env.clipboard.writeText(text.trim())
-  } else if (!is_in_code_completions_mode) {
+  } else if (!is_in_code_completions_prompt_type) {
+    const is_in_prune_context_prompt_type =
+      (params.panel_provider.mode == MODE.WEB &&
+        params.panel_provider.web_prompt_type == 'prune-context') ||
+      (params.panel_provider.mode == MODE.API &&
+        params.panel_provider.api_prompt_type == 'prune-context')
+
     const context_text = await files_collector.collect_files({
-      no_context: params.panel_provider.web_prompt_type == 'no-context'
+      no_context: params.panel_provider.web_prompt_type == 'no-context',
+      compact: is_in_prune_context_prompt_type
     })
 
     const instructions = replace_selection_placeholder(final_instruction)
@@ -127,6 +137,7 @@ export const handle_copy_prompt = async (params: {
     }
 
     let system_instructions_xml = ''
+
     if (params.panel_provider.web_prompt_type == 'edit-context') {
       const edit_format =
         params.panel_provider.mode == MODE.WEB
@@ -150,6 +161,8 @@ export const handle_copy_prompt = async (params: {
       if (edit_format_instructions) {
         system_instructions_xml = `<system>\n${edit_format_instructions}\n</system>`
       }
+    } else if (is_in_prune_context_prompt_type) {
+      system_instructions_xml = prune_context_instructions
     }
 
     const text = context_text

@@ -8,6 +8,10 @@ export const compact_c_style = (content: string): string => {
   let last_code_buffer = ''
 
   for (const line of lines) {
+    // Capture indentation for use in body stripping
+    const indent_match = line.match(/^\s*/)
+    const current_indent = indent_match ? indent_match[0] : ''
+
     let processed_line = ''
     let i = 0
     let is_in_string: false | '"' | "'" | '`' = false
@@ -85,7 +89,7 @@ export const compact_c_style = (content: string): string => {
           // We look at last_code_buffer for keywords
           // We also want to preserve control flow (if, for, while, etc.)
           const is_keeper =
-            /(^|\s)(class|interface|enum|namespace|type|if|else|for|while|do|switch|try|catch|finally)(\s|$)/.test(
+            /(^|\s)(class|interface|enum|namespace|type|if|else|for|while|do|switch|try|catch|finally|import|export)(\s|$)/.test(
               last_code_buffer
             )
           // Also preserve object literals (preceded by = or :)
@@ -94,7 +98,7 @@ export const compact_c_style = (content: string): string => {
           if (!is_keeper && !is_object_literal) {
             // Start skipping
             skip_body_depth = 1
-            processed_line += `{\n// ...\n}`
+            processed_line += `{\n${current_indent}  // ...\n${current_indent}}`
             last_code_buffer += '{}'
             i++
             continue
@@ -124,7 +128,7 @@ export const compact_c_style = (content: string): string => {
     // If a line contained only comments, it becomes empty and is skipped.
     const trimmed = processed_line.trim()
     if (trimmed) {
-      result.push(trimmed)
+      result.push(processed_line.trimEnd())
     }
 
     // Add a space to buffer for newline to avoid concatenation issues (e.g. "class Foo" + "{")

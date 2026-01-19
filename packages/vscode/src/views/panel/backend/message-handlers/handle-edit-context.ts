@@ -26,6 +26,7 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { EditContextMessage } from '@/views/panel/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
+import { prune_context_instructions } from '@/constants/instructions'
 import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
@@ -333,7 +334,10 @@ export const handle_edit_context = async (
     })
   }
 
-  const collected_files = await files_collector.collect_files()
+  const is_prune_context = panel_provider.api_prompt_type == 'prune-context'
+  const collected_files = await files_collector.collect_files({
+    compact: is_prune_context
+  })
 
   if (!collected_files) {
     vscode.window.showWarningMessage(
@@ -410,7 +414,9 @@ export const handle_edit_context = async (
       config.get<string>(instructions_key) || default_instructions
 
     let system_instructions_xml = ''
-    if (edit_format_instructions) {
+    if (is_prune_context) {
+      system_instructions_xml = prune_context_instructions
+    } else if (edit_format_instructions) {
       system_instructions_xml = `<system>\n${edit_format_instructions}\n</system>`
     }
 

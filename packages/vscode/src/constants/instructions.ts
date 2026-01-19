@@ -25,10 +25,12 @@ export const intelligent_update_instructions =
 export const commit_message_instructions =
   "Write a brief and precise summary for the changes, limited to a single sentence, if possible and nothing else. Because the summary will be used for a commit message, don't use any markdown formatting. Use an imperative tone to ensure clarity and focus on the primary change or purpose."
 
-export const optimize_context_instructions = (instructions: string) =>
-  `Optimistically list relevant files to accomplish following task: ${instructions}
+export const prune_context_instructions = `Find relevant files for the task.
 <system>
-Your response must list paths one under another, and show nothing else, e.g.:
+Your response must begin with a markdown heading, then list paths relevant for the task one under another. Example:
+
+### Relevant files:
+
 - \`src/hello.ts\`
 - \`src/welcome.ts\`
 </system>`

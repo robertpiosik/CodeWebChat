@@ -391,7 +391,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       case 'code-completions':
         return 'chatPresetsForCodeAtCursor'
       case 'prune-context':
-        return 'codeWebChat.chatPresetsForPruneContext'
+        return 'chatPresetsForPruneContext'
       case 'no-context':
         return 'chatPresetsForNoContext'
     }

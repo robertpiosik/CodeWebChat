@@ -4,7 +4,8 @@ import {
   INSTRUCTIONS_ASK_STATE_KEY,
   INSTRUCTIONS_CODE_COMPLETIONS_STATE_KEY,
   INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY,
-  INSTRUCTIONS_NO_CONTEXT_STATE_KEY
+  INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
+  INSTRUCTIONS_PRUNE_CONTEXT_STATE_KEY
 } from '@/constants/state-keys'
 
 export const handle_save_instructions = async (
@@ -35,6 +36,12 @@ export const handle_save_instructions = async (
     panel_provider.code_completion_instructions = instruction
     await panel_provider.context.workspaceState.update(
       INSTRUCTIONS_CODE_COMPLETIONS_STATE_KEY,
+      instruction
+    )
+  } else if (mode == 'prune-context') {
+    panel_provider.prune_context_instructions = instruction
+    await panel_provider.context.workspaceState.update(
+      INSTRUCTIONS_PRUNE_CONTEXT_STATE_KEY,
       instruction
     )
   } else {

@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Test</title>
-<script>
-if (a < b) {
-console.log("<div>");
-}
-function test() {
-// ...
-}
+    <title>Test</title>
+    <script>
+        if (a < b) {
+            console.log("<div>");
+        }
+        function test() {
+          // ...
+        }
 </script>
-<style>
-body {}
+    <style>
+        body {}
 </style>
 </head>
 <body>
-<div class="container">
-<span class="">Value</span>
-</div>
+    <div class="container">
+        <span class="">Value</span>
+    </div>
 </body>
 </html>

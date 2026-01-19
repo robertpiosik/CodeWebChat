@@ -72,7 +72,7 @@ export const compact_sql = (content: string): string => {
 
     const trimmed = processed_line.trim()
     if (trimmed) {
-      result.push(trimmed)
+      result.push(processed_line.trimEnd())
     }
   }
 

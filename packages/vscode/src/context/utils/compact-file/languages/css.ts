@@ -120,7 +120,7 @@ export const compact_css = (content: string): string => {
     // If a line contained only comments, it becomes empty and is skipped.
     const trimmed = processed_line.trim()
     if (trimmed) {
-      result.push(trimmed)
+      result.push(processed_line.trimEnd())
     }
 
     // Add a space to buffer for newline

@@ -29,3 +29,8 @@ class OldComponent extends React.Component {
     return <div>Old</div>;
   }
 }
+
+import {
+  useState,
+  useEffect
+} from 'react';

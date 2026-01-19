@@ -58,3 +58,13 @@ const a = 1; /* comment */ const b = 2;
       const a = 1; // This is a comment
       // This is a full line comment
       const b = 2;
+
+import {
+  Readable,
+  Writable
+} from 'stream';
+
+export {
+  foo,
+  bar
+};

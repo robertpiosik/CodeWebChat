@@ -1,10 +1,10 @@
 header {}
 @media (min-width: 768px) {
-header {}
-.sidebar {}
+  header {}
+  .sidebar {}
 }
 .card {}
 @keyframes slideIn {
-from {}
-to {}
+  from {}
+  to {}
 }

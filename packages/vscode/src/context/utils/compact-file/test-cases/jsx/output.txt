@@ -1,15 +1,19 @@
 import React from 'react';
 interface Props {
-title: string;
+  title: string;
 }
 export const MyComponent: React.FC<Props> = ({ title }) => {
-// ...
+  // ...
 }
 function Header() {
-// ...
+  // ...
 }
 class OldComponent extends React.Component {
-render() {
-// ...
+  render() {
+    // ...
+  }
 }
-}
+import {
+  useState,
+  useEffect
+} from 'react';
