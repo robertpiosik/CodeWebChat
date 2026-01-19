@@ -10,6 +10,8 @@ import {
   PINNED_HISTORY_CODE_COMPLETIONS_STATE_KEY,
   PINNED_HISTORY_EDIT_STATE_KEY,
   PINNED_HISTORY_NO_CONTEXT_STATE_KEY,
+  HISTORY_PRUNE_CONTEXT_STATE_KEY,
+  PINNED_HISTORY_PRUNE_CONTEXT_STATE_KEY,
   HistoryEntry
 } from '@/constants/state-keys'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
@@ -49,6 +51,10 @@ export const handle_show_history_quick_pick = async (
     case 'no-context':
       history_key = HISTORY_NO_CONTEXT_STATE_KEY
       pinned_history_key = PINNED_HISTORY_NO_CONTEXT_STATE_KEY
+      break
+    case 'prune-context':
+      history_key = HISTORY_PRUNE_CONTEXT_STATE_KEY
+      pinned_history_key = PINNED_HISTORY_PRUNE_CONTEXT_STATE_KEY
       break
   }
 
@@ -169,6 +175,9 @@ export const handle_show_history_quick_pick = async (
       case 'code-completions':
         panel_provider.code_completion_instructions = text
         break
+      case 'prune-context':
+        panel_provider.prune_context_instructions = text
+        break
       default:
         return
     }
@@ -178,7 +187,8 @@ export const handle_show_history_quick_pick = async (
       ask: panel_provider.ask_instructions,
       edit_context: panel_provider.edit_instructions,
       no_context: panel_provider.no_context_instructions,
-      code_completions: panel_provider.code_completion_instructions
+      code_completions: panel_provider.code_completion_instructions,
+      prune_context: panel_provider.prune_context_instructions
     })
   }
 

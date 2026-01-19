@@ -45,6 +45,7 @@ export type CodeCompletionsConfigs = ToolConfig[]
 export type EditContextConfigs = ToolConfig[]
 export type IntelligentUpdateConfigs = ToolConfig[]
 export type CommitMessagesConfigs = ToolConfig[]
+export type PruneContextConfigs = ToolConfig[]
 
 export class ModelProvidersManager {
   private _providers: Provider[] = []
@@ -421,6 +422,18 @@ export class ModelProvidersManager {
     )
   }
 
+  public async get_prune_context_tool_configs(): Promise<PruneContextConfigs> {
+    await this._load_promise
+    return this._get_tool_configs_from_settings('configurationsForPruneContext')
+  }
+
+  public async save_prune_context_tool_configs(configs: PruneContextConfigs) {
+    await this._save_tool_configs_to_settings(
+      'configurationsForPruneContext',
+      configs
+    )
+  }
+
   public async update_provider_name_in_configs(params: {
     old_name: string
     new_name: string
@@ -432,7 +445,8 @@ export class ModelProvidersManager {
       'configurationsForCodeCompletions',
       'configurationsForEditContext',
       'configurationsForIntelligentUpdate',
-      'configurationsForCommitMessages'
+      'configurationsForCommitMessages',
+      'configurationsForPruneContext'
     ]
 
     for (const key of settings_keys) {

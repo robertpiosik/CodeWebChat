@@ -71,6 +71,7 @@ export const Panel = () => {
     has_active_editor,
     has_active_selection,
     code_completions_instructions,
+    prune_context_instructions,
     currently_open_file_text,
     mode,
     web_prompt_type,
@@ -126,6 +127,7 @@ export const Panel = () => {
     no_context_instructions === undefined ||
     !version ||
     code_completions_instructions === undefined ||
+    prune_context_instructions === undefined ||
     mode === undefined ||
     web_prompt_type === undefined ||
     is_connected === undefined ||
@@ -254,6 +256,7 @@ export const Panel = () => {
                 edit_instructions={edit_instructions}
                 no_context_instructions={no_context_instructions}
                 code_completions_instructions={code_completions_instructions}
+                prune_context_instructions={prune_context_instructions}
                 set_instructions={handle_instructions_change}
                 mode={mode}
                 web_prompt_type={web_prompt_type}

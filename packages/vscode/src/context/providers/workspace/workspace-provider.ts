@@ -66,6 +66,15 @@ export class WorkspaceProvider
   public gitignore_initialization: Promise<void>
   public ranges_initialization: Promise<void>
 
+  private _use_compact_token_count: boolean = false
+
+  public set_use_compact_token_count(use_compact: boolean): void {
+    if (this._use_compact_token_count != use_compact) {
+      this._use_compact_token_count = use_compact
+      this.refresh()
+    }
+  }
+
   constructor(
     workspace_folders: vscode.WorkspaceFolder[],
     private _context: vscode.ExtensionContext
@@ -523,8 +532,12 @@ export class WorkspaceProvider
 
     element.checkboxState = checkbox_state
 
-    const total_token_count = element.tokenCount
-    const selected_token_count = element.selectedTokenCount
+    const total_token_count = this._use_compact_token_count
+      ? element.compactTokenCount
+      : element.tokenCount
+    const selected_token_count = this._use_compact_token_count
+      ? element.selectedCompactTokenCount
+      : element.selectedTokenCount
 
     const formatted_total =
       total_token_count !== undefined && total_token_count > 0
@@ -700,11 +713,12 @@ export class WorkspaceProvider
             vscode.TreeItemCheckboxState.Unchecked,
           false, // Is not symbolic link
           false, // Is not open file
-          total_tokens,
-          selected_tokens,
+          total_tokens.total,
+          total_tokens.compact,
+          selected_tokens.total,
+          selected_tokens.compact,
           undefined,
-          true, // Is workspace root
-          undefined
+          true // Is workspace root
         )
       )
       if (context_view) {

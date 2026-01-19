@@ -142,6 +142,14 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     this.api_manager = api_manager
   }
 
+  private _update_providers_compact_mode() {
+    const is_prune_context =
+      (this.mode === MODE.WEB && this.web_prompt_type === 'prune-context') ||
+      (this.mode === MODE.API && this.api_prompt_type === 'prune-context')
+    this.workspace_provider.set_use_compact_token_count(is_prune_context)
+    this.open_editors_provider.set_use_compact_token_count(is_prune_context)
+  }
+
   public async send_checkpoints() {
     const checkpoints = await get_checkpoints(this.context)
     this.send_message({
@@ -231,6 +239,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       API_MODE_STATE_KEY,
       'edit-context'
     )
+
+    this._update_providers_compact_mode()
 
     vscode.window.onDidChangeWindowState(async (e) => {
       if (e.focused) {
@@ -580,10 +590,12 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_toggle_pinned_api_tool_configuration(this, message)
           } else if (message.command == 'SAVE_WEB_MODE') {
             await handle_save_mode_web(this, message.mode)
+            this._update_providers_compact_mode()
           } else if (message.command == 'GET_API_MODE') {
             handle_get_mode_api(this)
           } else if (message.command == 'SAVE_API_MODE') {
             await handle_save_mode_api(this, message.mode)
+            this._update_providers_compact_mode()
           } else if (message.command == 'GET_EDIT_FORMAT_INSTRUCTIONS') {
             handle_get_edit_format_instructions(this)
           } else if (message.command == 'GET_EDIT_FORMAT') {
@@ -594,6 +606,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             this.caret_position = message.caret_position
           } else if (message.command == 'SAVE_MODE') {
             await handle_save_mode(this, message)
+            this._update_providers_compact_mode()
           } else if (message.command == 'GET_MODE') {
             handle_get_mode(this)
           } else if (message.command == 'GET_VERSION') {
@@ -695,7 +708,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       ask: 'chatPresetsForAskAboutContext',
       'edit-context': 'chatPresetsForEditContext',
       'code-completions': 'chatPresetsForCodeAtCursor',
-      'prune-context': 'codeWebChat.chatPresetsForPruneContext',
+      'prune-context': 'chatPresetsForPruneContext',
       'no-context': 'chatPresetsForNoContext'
     }
     const all_presets = Object.fromEntries(

@@ -29,6 +29,14 @@ export class OpenEditorsProvider
   private _shared_state: SharedFileState
   private _config_change_handler: vscode.Disposable
   private _workspace_provider: WorkspaceProvider
+  private _use_compact_token_count: boolean = false
+
+  public set_use_compact_token_count(use_compact: boolean): void {
+    if (this._use_compact_token_count != use_compact) {
+      this._use_compact_token_count = use_compact
+      this.refresh()
+    }
+  }
 
   constructor(
     workspace_folders: vscode.WorkspaceFolder[],
@@ -184,7 +192,9 @@ export class OpenEditorsProvider
 
     element.checkboxState = checkbox_state
 
-    const token_count = element.tokenCount
+    const token_count = this._use_compact_token_count
+      ? element.compactTokenCount
+      : element.tokenCount
 
     let final_description = element.description || ''
 

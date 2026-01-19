@@ -7,7 +7,9 @@ import {
   PINNED_HISTORY_ASK_STATE_KEY,
   PINNED_HISTORY_CODE_COMPLETIONS_STATE_KEY,
   PINNED_HISTORY_EDIT_STATE_KEY,
-  PINNED_HISTORY_NO_CONTEXT_STATE_KEY
+  PINNED_HISTORY_NO_CONTEXT_STATE_KEY,
+  HISTORY_PRUNE_CONTEXT_STATE_KEY,
+  PINNED_HISTORY_PRUNE_CONTEXT_STATE_KEY
 } from '@/constants/state-keys'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { SaveHistoryMessage } from '@/views/panel/types/messages'
@@ -34,6 +36,10 @@ export const handle_save_history = async (
     case 'code-completions':
       key = HISTORY_CODE_COMPLETIONS_STATE_KEY
       pinned_key = PINNED_HISTORY_CODE_COMPLETIONS_STATE_KEY
+      break
+    case 'prune-context':
+      key = HISTORY_PRUNE_CONTEXT_STATE_KEY
+      pinned_key = PINNED_HISTORY_PRUNE_CONTEXT_STATE_KEY
       break
   }
   if (key) {

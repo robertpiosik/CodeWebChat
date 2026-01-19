@@ -8,6 +8,7 @@ export const handle_get_instructions = (
     ask: panel_provider.ask_instructions,
     edit_context: panel_provider.edit_instructions,
     no_context: panel_provider.no_context_instructions,
-    code_completions: panel_provider.code_completion_instructions
+    code_completions: panel_provider.code_completion_instructions,
+    prune_context: panel_provider.prune_context_instructions
   })
 }
