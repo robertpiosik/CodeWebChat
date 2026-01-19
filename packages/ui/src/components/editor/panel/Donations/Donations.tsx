@@ -147,8 +147,8 @@ export const Donations: React.FC<DonationsProps> = (props) => {
       <Scrollable>
         <div className={styles.container}>
           <div className={styles.about}>
-            Donating is a great way to show your support for the project. Thank
-            you.
+            Hey there! Donating is a great way to show your support for the
+            project. Thank you.
           </div>
           <div className={styles.sponsors}>
             <Fieldset
