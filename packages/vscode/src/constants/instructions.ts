@@ -12,10 +12,14 @@ Your response must begin with a markdown heading identifying the file and the cu
     row + 1
   }:${
     column + 1
-  })". Always refer to the symbol "<missing_text>" as "cursor position" and "replacement" as "completion". Example:\n### Code completion: \`src/index.ts\` (25:5)
+  })". Always refer to the symbol "<missing_text>" as "cursor position" and "replacement" as "completion". Example:
+
+### Code completion: \`${file_path}\` (${row + 1}:${column + 1})
+
 \`\`\`typescript
 !== undefined
 \`\`\`
+
 The variable is possibly not defined.
 </system>`
 
