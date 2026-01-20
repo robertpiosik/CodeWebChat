@@ -30,7 +30,6 @@ export const compact_ruby = (content: string): string => {
           i += 2
           continue
         }
-        // Check for end of string
         if (char === in_string) {
           processed_line += in_string
           in_string = false
@@ -40,14 +39,12 @@ export const compact_ruby = (content: string): string => {
         processed_line += char
         i++
       } else {
-        // Start of String
         if (char == '"' || char === "'") {
           in_string = char
           processed_line += char
           i++
           continue
         }
-        // Start of Comment
         if (char == '#') {
           break // Ignore rest of line
         }

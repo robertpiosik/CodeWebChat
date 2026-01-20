@@ -10,18 +10,14 @@ type TokenCountsCache = {
   [workspace_root: string]: {
     modified_at: number
     files: {
-      [file_path: string]: {
-        modified_at: number
-        token_count: number
-        compact_token_count?: number
-      }
+      [file_path: string]: [number, number, number]
     }
   }
 }
 
 const SHOW_COUNTING_NOTIFICATION_DELAY_MS = 3000
 
-const TOKEN_CACHE_FILE_NAME = 'token-count-cache.json'
+const TOKEN_CACHE_FILE_NAME = 'token-counts-cache.json'
 
 export class TokenCalculator implements vscode.Disposable {
   private _file_token_counts: Map<string, number> = new Map()
@@ -32,6 +28,7 @@ export class TokenCalculator implements vscode.Disposable {
   private _directory_selected_compact_token_counts: Map<string, number> =
     new Map()
   private _token_cache: TokenCountsCache = {}
+  private _session_cache: TokenCountsCache = {}
   private _token_cache_update_timeout: NodeJS.Timeout | null = null
   private _has_token_counts_cache_updated_once = false
 
@@ -76,8 +73,8 @@ export class TokenCalculator implements vscode.Disposable {
       }
 
       for (const root of this._provider.get_workspace_roots()) {
-        if (this._token_cache[root]) {
-          current_global_cache[root] = this._token_cache[root]
+        if (this._session_cache[root]) {
+          current_global_cache[root] = this._session_cache[root]
         }
       }
 
@@ -107,7 +104,29 @@ export class TokenCalculator implements vscode.Disposable {
           data: error
         })
       }
-    }, 10000)
+    }, 5000)
+  }
+
+  private _update_session_cache(
+    workspace_root: string,
+    relative_path: string,
+    mtime: number,
+    token_count: number,
+    compact_token_count: number
+  ): void {
+    if (!this._session_cache[workspace_root]) {
+      this._session_cache[workspace_root] = {
+        modified_at: Date.now(),
+        files: {}
+      }
+    }
+    this._session_cache[workspace_root].files[relative_path] = [
+      mtime,
+      token_count,
+      compact_token_count
+    ]
+    this._session_cache[workspace_root].modified_at = Date.now()
+    this._update_token_counts_cache()
   }
 
   public async with_token_counting_notification<T>(
@@ -219,19 +238,32 @@ export class TokenCalculator implements vscode.Disposable {
     if (workspace_root && !range) {
       try {
         const stats = await fs.promises.stat(file_path)
-        mtime = stats.mtimeMs
+        mtime = Math.floor(stats.mtimeMs)
+        const relative_path = path
+          .relative(workspace_root, file_path)
+          .replace(/\\/g, '/')
+
+        const cached_file =
+          this._token_cache[workspace_root]?.files?.[relative_path]
+
         if (
-          this._token_cache[workspace_root]?.files?.[file_path]?.modified_at ==
-          mtime
+          cached_file &&
+          Array.isArray(cached_file) &&
+          cached_file[0] == mtime
         ) {
-          const tokens =
-            this._token_cache[workspace_root].files[file_path].token_count
-          const compact_tokens =
-            this._token_cache[workspace_root].files[file_path]
-              .compact_token_count || tokens // Fallback for old cache
+          const tokens = cached_file[1]
+          const compact_tokens = cached_file[2]
 
           this._file_token_counts.set(file_path, tokens)
           this._file_compact_token_counts.set(file_path, compact_tokens)
+
+          this._update_session_cache(
+            workspace_root,
+            relative_path,
+            mtime,
+            tokens,
+            compact_tokens
+          )
           return { total: tokens, compact: compact_tokens }
         }
       } catch {
@@ -285,13 +317,25 @@ export class TokenCalculator implements vscode.Disposable {
             files: {}
           }
         }
-        this._token_cache[workspace_root].files[file_path] = {
-          modified_at: mtime,
-          token_count: token_count,
-          compact_token_count: compact_token_count
-        }
+
+        const relative_path = path
+          .relative(workspace_root, file_path)
+          .replace(/\\/g, '/')
+
+        this._token_cache[workspace_root].files[relative_path] = [
+          mtime,
+          token_count,
+          compact_token_count
+        ]
         this._token_cache[workspace_root].modified_at = Date.now()
-        this._update_token_counts_cache()
+
+        this._update_session_cache(
+          workspace_root,
+          relative_path,
+          mtime,
+          token_count,
+          compact_token_count
+        )
       }
 
       return { total: token_count, compact: compact_token_count }

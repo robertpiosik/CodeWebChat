@@ -1,0 +1,41 @@
+// Variables
+$primary-color: #333;
+$spacing: 16px;
+
+/* Block Component */
+.block {
+  padding: $spacing;
+  background-color: white;
+
+  // Element
+  &__element {
+    color: $primary-color;
+    font-weight: bold;
+
+    // Modifier
+    &--modifier {
+      color: red;
+      text-decoration: underline;
+    }
+  }
+
+  /* Deep nesting */
+  &__footer {
+    @include flex-center;
+    margin-top: auto;
+
+    a {
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
+// Map definition (should ideally be stripped or kept minimal, but structural)
+$theme: (
+  light: #fff,
+  dark: #000
+);
+
+@import 'mixins';

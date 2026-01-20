@@ -1,0 +1,17 @@
+.block {
+  &__element {
+    &--modifier {
+    }
+  }
+  &__footer {
+    a {
+      &:hover {
+      }
+    }
+  }
+}
+$theme: (
+  light: #fff,
+  dark: #000
+);
+@import 'mixins';

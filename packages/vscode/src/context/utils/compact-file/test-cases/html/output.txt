@@ -11,7 +11,7 @@
         }
 </script>
     <style>
-        body {}
+        body { color: red; }
 </style>
 </head>
 <body>

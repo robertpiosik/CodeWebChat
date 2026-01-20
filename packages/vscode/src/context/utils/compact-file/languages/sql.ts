@@ -12,7 +12,6 @@ export const compact_sql = (content: string): string => {
       const char = line[i]
       const next_char = line[i + 1]
 
-      // Handle Block Comments
       if (is_in_block_comment) {
         if (char == '*' && next_char == '/') {
           is_in_block_comment = false
@@ -23,7 +22,6 @@ export const compact_sql = (content: string): string => {
         continue
       }
 
-      // Handle Strings
       if (is_in_string) {
         // specific SQL escape: double quote to escape quote (e.g. 'Don''t')
         if (char === is_in_string && next_char === is_in_string) {
@@ -45,7 +43,6 @@ export const compact_sql = (content: string): string => {
         continue
       }
 
-      // Start of String
       if (char == '"' || char === "'") {
         is_in_string = char
         processed_line += char
@@ -53,19 +50,16 @@ export const compact_sql = (content: string): string => {
         continue
       }
 
-      // Start of Line Comment
       if (char == '-' && next_char == '-') {
         break // Ignore the rest of the line
       }
 
-      // Start of Block Comment
       if (char == '/' && next_char == '*') {
         is_in_block_comment = true
         i += 2
         continue
       }
 
-      // Regular character
       processed_line += char
       i++
     }

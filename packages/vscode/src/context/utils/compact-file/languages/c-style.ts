@@ -20,7 +20,6 @@ export const compact_c_style = (content: string): string => {
       const char = line[i]
       const next_char = line[i + 1]
 
-      // Handle Block Comments
       if (is_in_block_comment) {
         if (char == '*' && next_char == '/') {
           is_in_block_comment = false
@@ -31,10 +30,8 @@ export const compact_c_style = (content: string): string => {
         continue
       }
 
-      // Handle Strings (ignore comments inside strings)
       if (is_in_string) {
         if (char == '\\') {
-          // Handle escaped characters inside string
           if (skip_body_depth == 0) {
             processed_line += char + (next_char || '')
           }
@@ -53,7 +50,6 @@ export const compact_c_style = (content: string): string => {
         continue
       }
 
-      // Start of String
       if (char == '"' || char === "'" || char == '`') {
         is_in_string = char
         if (skip_body_depth == 0) {
@@ -64,12 +60,10 @@ export const compact_c_style = (content: string): string => {
         continue
       }
 
-      // Start of Line Comment
       if (char == '/' && next_char == '/') {
         break // Ignore the rest of the line
       }
 
-      // Start of Block Comment
       if (char == '/' && next_char == '*') {
         is_in_block_comment = true
         i += 2
@@ -96,7 +90,6 @@ export const compact_c_style = (content: string): string => {
           const is_object_literal = /(=|:)\s*$/.test(last_code_buffer.trimEnd())
 
           if (!is_keeper && !is_object_literal) {
-            // Start skipping
             skip_body_depth = 1
             processed_line += `{\n${current_indent}  // ...\n${current_indent}}`
             last_code_buffer += '{}'
@@ -116,7 +109,6 @@ export const compact_c_style = (content: string): string => {
         }
       }
 
-      // Regular character
       if (skip_body_depth == 0) {
         processed_line += char
       }

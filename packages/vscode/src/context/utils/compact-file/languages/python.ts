@@ -44,7 +44,6 @@ export const compact_python = (content: string): string => {
         processed_line += char
         i++
       } else {
-        // Start of String
         if (char == '"' || char === "'") {
           const is_triple = line.substring(i, i + 3) === char.repeat(3)
           in_string = is_triple ? char.repeat(3) : char
@@ -52,7 +51,6 @@ export const compact_python = (content: string): string => {
           i += in_string.length
           continue
         }
-        // Start of Comment
         if (char == '#') {
           break // Ignore rest of line
         }

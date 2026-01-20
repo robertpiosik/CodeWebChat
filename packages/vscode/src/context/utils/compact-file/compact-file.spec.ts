@@ -46,6 +46,11 @@ describe('compact_file', () => {
     expect(compact_file(input, '.css')).toBe(expected)
   })
 
+  it('should handle scss with nested BEM', () => {
+    const { input, expected } = load_test_case('scss', '.')
+    expect(compact_file(input, '.scss')).toBe(expected)
+  })
+
   it('should strip sql comments', () => {
     const { input, expected } = load_test_case('sql', '.')
     expect(compact_file(input, '.sql')).toBe(expected)

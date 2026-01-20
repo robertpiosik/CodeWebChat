@@ -151,7 +151,7 @@ export const Default = () => {
         on_add={handle_add}
         on_add_subtask={handle_add_subtask}
         on_delete={handle_delete}
-        on_copy={handle_copy}
+        on_forward={() => {}}
       />
     </div>
   )
@@ -178,7 +178,7 @@ export const NoReorder = () => {
         on_add={() => {}}
         on_add_subtask={() => {}}
         on_delete={() => {}}
-        on_copy={(text) => console.log('Copied:', text)}
+        on_forward={() => {}}
       />
     </div>
   )

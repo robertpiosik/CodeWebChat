@@ -131,7 +131,7 @@ export const hugging_chat: Chatbot = {
         get_chat_turn: (f) => f.closest('div[data-message-role="assistant"]'),
         perform_copy: (f) => {
           const copy_button = f.querySelector(
-            'button:nth-child(3)'
+            'button:nth-child(2)'
           ) as HTMLElement
           if (!copy_button) {
             report_initialization_error({
@@ -142,7 +142,7 @@ export const hugging_chat: Chatbot = {
           }
           copy_button.click()
         },
-        insert_button: (f, b) => f.insertBefore(b, f.children[1])
+        insert_button: (f, b) => f.insertBefore(b, f.children[0])
       })
     }
 
