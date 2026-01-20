@@ -139,9 +139,43 @@ export const process_chat_response = async (
 
     quick_pick_items.sort((a, b) => natural_sort(a.label, b.label))
 
-    const selected_items = await vscode.window.showQuickPick(quick_pick_items, {
-      canPickMany: true,
-      placeHolder: 'Confirm context pruning'
+    const quick_pick = vscode.window.createQuickPick()
+    quick_pick.items = quick_pick_items
+    quick_pick.selectedItems = quick_pick_items.filter((i) => i.picked)
+    quick_pick.canSelectMany = true
+    quick_pick.title = 'Context Pruning'
+    quick_pick.placeholder = 'Confirm file selection'
+    quick_pick.buttons = [
+      { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
+    ]
+
+    const selected_items = await new Promise<
+      readonly vscode.QuickPickItem[] | undefined
+    >((resolve) => {
+      let is_accepted = false
+      const disposables: vscode.Disposable[] = []
+
+      disposables.push(
+        quick_pick.onDidTriggerButton((button) => {
+          if (button.tooltip == 'Close') {
+            quick_pick.hide()
+            resolve(undefined)
+          }
+        }),
+        quick_pick.onDidAccept(() => {
+          is_accepted = true
+          resolve(quick_pick.selectedItems)
+          quick_pick.hide()
+        }),
+        quick_pick.onDidHide(() => {
+          if (!is_accepted) {
+            resolve(undefined)
+          }
+          disposables.forEach((d) => d.dispose())
+          quick_pick.dispose()
+        })
+      )
+      quick_pick.show()
     })
 
     if (selected_items && selected_items.length > 0) {
@@ -160,7 +194,7 @@ export const process_chat_response = async (
 
       if (files_to_check.length > 0) {
         await workspace_provider.set_checked_files(files_to_check)
-        vscode.window.showInformationMessage(`Context updated successfully.`)
+        vscode.window.showInformationMessage(`Context pruned successfully.`)
       }
     }
 

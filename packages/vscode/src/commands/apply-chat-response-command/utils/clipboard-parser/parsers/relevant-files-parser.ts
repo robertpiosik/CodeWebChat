@@ -7,7 +7,7 @@ export const parse_relevant_files = (params: {
   let start_index = -1
 
   for (let i = 0; i < lines.length; i++) {
-    if (lines[i].trim().match(/^###\s+Relevant files/i)) {
+    if (lines[i].trim().match(/^\*\*Relevant files:\*\*/i)) {
       start_index = i
       break
     }

@@ -196,7 +196,12 @@ const main = async () => {
       client_id: number
       raw_instructions?: string
       edit_format?: string
-      mode?: 'ask' | 'edit-context' | 'code-completions' | 'no-context'
+      mode?:
+        | 'ask'
+        | 'edit-context'
+        | 'code-completions'
+        | 'no-context'
+        | 'prune-context'
     }
 
     if (!stored_data) {
@@ -231,7 +236,8 @@ const main = async () => {
     if (
       chatbot?.inject_apply_response_button &&
       (stored_data.mode == 'edit-context' ||
-        stored_data.mode == 'code-completions')
+        stored_data.mode == 'code-completions' ||
+        stored_data.mode == 'prune-context')
     ) {
       sessionStorage.setItem(
         session_data_key,
