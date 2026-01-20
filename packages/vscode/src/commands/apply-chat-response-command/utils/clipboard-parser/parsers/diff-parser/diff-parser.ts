@@ -22,7 +22,10 @@ const process_collected_patch_lines = (params: {
   patch_lines_array: string[]
   is_single_root: boolean
 }): DiffItem | null => {
-  const lines = [...params.patch_lines_array]
+  let lines = [...params.patch_lines_array]
+
+  lines = lines.filter((l) => l.length > 0)
+
   while (lines.length > 0 && lines[lines.length - 1].trim() == '') {
     lines.pop()
   }
