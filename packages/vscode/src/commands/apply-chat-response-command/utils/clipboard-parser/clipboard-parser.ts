@@ -1,10 +1,11 @@
 import {
   extract_diffs,
   parse_code_completion,
-  parse_multiple_files
+  parse_multiple_files,
+  parse_relevant_files
 } from './parsers'
 
-export interface FileItem {
+export type FileItem = {
   type: 'file'
   file_path: string
   content: string
@@ -12,7 +13,7 @@ export interface FileItem {
   renamed_from?: string
 }
 
-export interface DiffItem {
+export type DiffItem = {
   type: 'diff'
   file_path: string
   content: string
@@ -20,7 +21,7 @@ export interface DiffItem {
   new_file_path?: string
 }
 
-export interface CompletionItem {
+export type CompletionItem = {
   type: 'completion'
   file_path: string
   content: string
@@ -29,12 +30,17 @@ export interface CompletionItem {
   workspace_name?: string
 }
 
-export interface TextItem {
+export type RelevantFilesItem = {
+  type: 'relevant-files'
+  file_paths: string[]
+}
+
+export type TextItem = {
   type: 'text'
   content: string
 }
 
-export interface InlineFileItem {
+export type InlineFileItem = {
   type: 'inline-file'
   content: string
   language?: string
@@ -46,6 +52,7 @@ export type ClipboardItem =
   | CompletionItem
   | TextItem
   | InlineFileItem
+  | RelevantFilesItem
 
 export const extract_workspace_and_path = (params: {
   raw_file_path: string
@@ -73,12 +80,19 @@ export const parse_response = (params: {
 }): ClipboardItem[] => {
   const is_single_root_folder_workspace =
     params.is_single_root_folder_workspace ?? true
+
   const code_completion_items = parse_code_completion({
     response: params.response,
     is_single_root_folder_workspace
   })
+
   if (code_completion_items && code_completion_items.length > 0) {
     return code_completion_items
+  }
+
+  const relevant_files = parse_relevant_files({ response: params.response })
+  if (relevant_files) {
+    return [relevant_files]
   }
 
   const processed_response = params.response.replace(/``````/g, '```\n```')

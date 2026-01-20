@@ -1,8 +1,14 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
+import * as path from 'path'
 import { OriginalFileState } from './types/original-file-state'
 import { handle_restore_preview } from './handlers/restore-preview-handler'
-import { parse_response, FileItem, DiffItem } from './utils/clipboard-parser'
+import {
+  parse_response,
+  FileItem,
+  DiffItem,
+  RelevantFilesItem
+} from './utils/clipboard-parser'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
@@ -22,7 +28,8 @@ import {
   handle_truncated_edit,
   is_truncation_line
 } from './handlers/truncated-handler'
-import { Diff } from 'diff'
+import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
+import { natural_sort } from '@/utils/natural-sort'
 
 export type PreviewData = {
   original_states: OriginalFileState[]
@@ -45,7 +52,8 @@ export const process_chat_response = async (
   args: CommandArgs | undefined,
   chat_response: string,
   context: vscode.ExtensionContext,
-  panel_provider: PanelProvider
+  panel_provider: PanelProvider,
+  workspace_provider: WorkspaceProvider
 ): Promise<PreviewData | null> => {
   if (args?.files_with_content) {
     const result = await handle_restore_preview(args.files_with_content)
@@ -92,83 +100,72 @@ export const process_chat_response = async (
     is_single_root_folder_workspace
   })
 
-  if (clipboard_items.some((item) => item.type == 'completion')) {
-    const completion = clipboard_items.find(
-      (item) => item.type == 'completion'
-    )!
-    const workspace_map = new Map<string, string>()
-    vscode.workspace.workspaceFolders!.forEach((folder) => {
-      workspace_map.set(folder.name, folder.uri.fsPath)
-    })
-    const default_workspace = vscode.workspace.workspaceFolders![0].uri.fsPath
-    let workspace_root = default_workspace
-    if (
-      completion.workspace_name &&
-      workspace_map.has(completion.workspace_name)
-    ) {
-      workspace_root = workspace_map.get(completion.workspace_name)!
-    }
-    const safe_path = create_safe_path(workspace_root, completion.file_path)
-    if (!safe_path || !fs.existsSync(safe_path)) {
-      vscode.window.showErrorMessage(
-        dictionary.error_message.FILE_NOT_FOUND(completion.file_path)
-      )
-      Logger.warn({
-        function_name: 'process_chat_response',
-        message: 'File not found for code completion.',
-        data: { file_path: completion.file_path, safe_path }
-      })
-      return null
-    }
+  if (clipboard_items.some((item) => item.type == 'relevant-files')) {
+    const relevant_files_item = clipboard_items.find(
+      (item) => item.type == 'relevant-files'
+    ) as RelevantFilesItem
 
-    const document = await vscode.workspace.openTextDocument(safe_path)
-    const original_content = document.getText()
-    const line_index = completion.line - 1
-    const char_index = completion.character - 1
-
-    if (
-      line_index < 0 ||
-      char_index < 0 ||
-      line_index >= document.lineCount ||
-      char_index > document.lineAt(line_index).text.length
-    ) {
-      vscode.window.showErrorMessage(
-        dictionary.error_message.INVALID_POSITION_FOR_CODE_COMPLETION(
-          completion.file_path
-        )
-      )
-      return null
-    }
-
-    const position_offset = document.offsetAt(
-      new vscode.Position(line_index, char_index)
+    const current_checked_files = workspace_provider.get_checked_files()
+    const relevant_paths_normalized = new Set(
+      relevant_files_item.file_paths.map((p) => p.replace(/\\/g, '/'))
     )
-    const new_content =
-      original_content.slice(0, position_offset) +
-      completion.content +
-      original_content.slice(position_offset)
 
-    if (!args) args = {}
-    if (!args.original_editor_state) {
-      args.original_editor_state = {
-        file_path: safe_path,
-        position: {
-          line: line_index,
-          character: char_index
+    const quick_pick_items: {
+      label: string
+      picked: boolean
+      description?: string
+    }[] = relevant_files_item.file_paths.map((path) => ({
+      label: path,
+      picked: true
+    }))
+
+    for (const file_path of current_checked_files) {
+      const workspace_root =
+        workspace_provider.get_workspace_root_for_file(file_path)
+      if (workspace_root) {
+        const relative_path = path
+          .relative(workspace_root, file_path)
+          .replace(/\\/g, '/')
+        if (!relevant_paths_normalized.has(relative_path)) {
+          if (!quick_pick_items.some((item) => item.label == relative_path)) {
+            quick_pick_items.push({
+              label: relative_path,
+              picked: false
+            })
+          }
         }
       }
     }
 
-    clipboard_items = [
-      {
-        type: 'file',
-        file_path: completion.file_path,
-        content: new_content,
-        workspace_name: completion.workspace_name
+    quick_pick_items.sort((a, b) => natural_sort(a.label, b.label))
+
+    const selected_items = await vscode.window.showQuickPick(quick_pick_items, {
+      canPickMany: true,
+      placeHolder: 'Confirm context pruning'
+    })
+
+    if (selected_items && selected_items.length > 0) {
+      const workspace_roots = workspace_provider.get_workspace_roots()
+      const files_to_check: string[] = []
+
+      for (const selection of selected_items) {
+        for (const root of workspace_roots) {
+          const potential_path = path.join(root, selection.label)
+          if (fs.existsSync(potential_path)) {
+            files_to_check.push(potential_path)
+            break
+          }
+        }
       }
-    ]
-  }
-  if (clipboard_items.some((item) => item.type == 'diff')) {
+
+      if (files_to_check.length > 0) {
+        await workspace_provider.set_checked_files(files_to_check)
+        vscode.window.showInformationMessage(`Context updated successfully.`)
+      }
+    }
+
+    return null
+  } else if (clipboard_items.some((item) => item.type == 'diff')) {
     const patches = clipboard_items.filter(
       (item): item is DiffItem => item.type == 'diff'
     )
@@ -291,6 +288,83 @@ export const process_chat_response = async (
 
     return null
   } else {
+    if (clipboard_items.some((item) => item.type == 'completion')) {
+      const completion = clipboard_items.find(
+        (item) => item.type == 'completion'
+      )!
+      const workspace_map = new Map<string, string>()
+      vscode.workspace.workspaceFolders!.forEach((folder) => {
+        workspace_map.set(folder.name, folder.uri.fsPath)
+      })
+      const default_workspace = vscode.workspace.workspaceFolders![0].uri.fsPath
+      let workspace_root = default_workspace
+      if (
+        completion.workspace_name &&
+        workspace_map.has(completion.workspace_name)
+      ) {
+        workspace_root = workspace_map.get(completion.workspace_name)!
+      }
+      const safe_path = create_safe_path(workspace_root, completion.file_path)
+      if (!safe_path || !fs.existsSync(safe_path)) {
+        vscode.window.showErrorMessage(
+          dictionary.error_message.FILE_NOT_FOUND(completion.file_path)
+        )
+        Logger.warn({
+          function_name: 'process_chat_response',
+          message: 'File not found for code completion.',
+          data: { file_path: completion.file_path, safe_path }
+        })
+        return null
+      }
+
+      const document = await vscode.workspace.openTextDocument(safe_path)
+      const original_content = document.getText()
+      const line_index = completion.line - 1
+      const char_index = completion.character - 1
+
+      if (
+        line_index < 0 ||
+        char_index < 0 ||
+        line_index >= document.lineCount ||
+        char_index > document.lineAt(line_index).text.length
+      ) {
+        vscode.window.showErrorMessage(
+          dictionary.error_message.INVALID_POSITION_FOR_CODE_COMPLETION(
+            completion.file_path
+          )
+        )
+        return null
+      }
+
+      const position_offset = document.offsetAt(
+        new vscode.Position(line_index, char_index)
+      )
+      const new_content =
+        original_content.slice(0, position_offset) +
+        completion.content +
+        original_content.slice(position_offset)
+
+      if (!args) args = {}
+      if (!args.original_editor_state) {
+        args.original_editor_state = {
+          file_path: safe_path,
+          position: {
+            line: line_index,
+            character: char_index
+          }
+        }
+      }
+
+      clipboard_items = [
+        {
+          type: 'file',
+          file_path: completion.file_path,
+          content: new_content,
+          workspace_name: completion.workspace_name
+        }
+      ]
+    }
+
     const files = clipboard_items.filter(
       (item): item is FileItem => item.type == 'file'
     )

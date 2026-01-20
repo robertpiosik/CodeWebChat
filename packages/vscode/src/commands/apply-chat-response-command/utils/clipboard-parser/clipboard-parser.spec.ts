@@ -1016,6 +1016,21 @@ describe('clipboard-parser', () => {
         content: 'Lorem ipsum.'
       })
     })
+
+    it('parses relevant files list', () => {
+      const test_case = 'relevant-files'
+      const text = load_test_case_file('relevant-files', `${test_case}.txt`)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'relevant-files',
+        file_paths: ['src/hello.ts', 'src/welcome.ts']
+      })
+    })
   })
 
   describe('parse_response fallback to single file without blocks', () => {

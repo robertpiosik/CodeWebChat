@@ -151,7 +151,8 @@ export const apply_chat_response_command = (params: {
           args,
           chat_response,
           params.context,
-          params.panel_provider
+          params.panel_provider,
+          params.workspace_provider
         )
 
         if (preview_data) {

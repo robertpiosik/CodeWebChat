@@ -31,9 +31,9 @@ export const commit_message_instructions =
 
 export const prune_context_instructions = `Find relevant files for the task.
 <system>
-Your response must begin with a markdown heading, then list paths relevant for the task one under another. Example:
+Your response must begin with a markdown heading "### Relevant files", then list paths relevant for the task one under another. Don't send anything else. Example:
 
-### Relevant files:
+### Relevant files
 
 - \`src/hello.ts\`
 - \`src/welcome.ts\`
