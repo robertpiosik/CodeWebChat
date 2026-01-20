@@ -129,8 +129,8 @@ function process_truncated_content(
   new_text: string,
   original_text: string
 ): string {
-  const new_lines = new_text.split('\n')
-  const original_lines = original_text.split('\n')
+  const new_lines = new_text.split(/\r?\n/)
+  const original_lines = original_text.split(/\r?\n/)
 
   const blocks: { type: 'code' | 'truncation'; lines: string[] }[] = []
   let buffer: string[] = []
@@ -250,10 +250,23 @@ function find_line_sequence(
   if (sequence.length == 0) return -1
   if (start_idx >= lines.length) return -1
 
+  // First pass: exact match (checking for correct indentation)
   for (let i = start_idx; i <= lines.length - sequence.length; i++) {
     let match = true
     for (let j = 0; j < sequence.length; j++) {
-      if (lines[i + j].trim() !== sequence[j].trim()) {
+      if (lines[i + j] != sequence[j]) {
+        match = false
+        break
+      }
+    }
+    if (match) return i
+  }
+
+  // Second pass: loose match (trim)
+  for (let i = start_idx; i <= lines.length - sequence.length; i++) {
+    let match = true
+    for (let j = 0; j < sequence.length; j++) {
+      if (lines[i + j].trim() != sequence[j].trim()) {
         match = false
         break
       }
