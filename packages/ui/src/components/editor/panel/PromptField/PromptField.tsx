@@ -306,7 +306,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     format_truncated_ref,
     format_before_after_ref,
     format_diff_ref
-  } = use_edit_format_compacting()
+  } = use_edit_format_compacting(props.show_edit_format_selector)
 
   return (
     <div className={styles.container}>

@@ -1,7 +1,7 @@
 import { useRef, useLayoutEffect } from 'react'
 import { use_compacting } from '@shared/hooks'
 
-export const use_edit_format_compacting = () => {
+export const use_edit_format_compacting = (is_visible?: boolean) => {
   const { container_ref, compact_step, report_width } = use_compacting(4)
   const format_whole_ref = useRef<HTMLButtonElement>(null)
   const format_truncated_ref = useRef<HTMLButtonElement>(null)
@@ -27,7 +27,7 @@ export const use_edit_format_compacting = () => {
 
       report_width(width, compact_step)
     }
-  }, [compact_step, report_width])
+  }, [compact_step, report_width, is_visible])
 
   return {
     container_ref,
