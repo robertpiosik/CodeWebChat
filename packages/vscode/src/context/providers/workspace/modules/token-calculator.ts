@@ -6,11 +6,17 @@ import { Logger } from '@shared/utils/logger'
 import type { IWorkspaceProvider } from '../workspace-provider'
 import { compact_file } from '../../../utils/compact-file/compact-file'
 
+type TokenData = [number, number, number]
+
+type TokenCacheNode = {
+  [key: string]: TokenCacheNode | TokenData
+}
+
 type TokenCountsCache = {
   [workspace_root: string]: {
     modified_at: number
     files: {
-      [file_path: string]: [number, number, number]
+      [file_path: string]: TokenData
     }
   }
 }
@@ -44,7 +50,14 @@ export class TokenCalculator implements vscode.Disposable {
       const storage_path = this._context.globalStorageUri.fsPath
       const cache_path = path.join(storage_path, TOKEN_CACHE_FILE_NAME)
       const content = await fs.promises.readFile(cache_path, 'utf8')
-      this._token_cache = JSON.parse(content)
+      const raw_cache = JSON.parse(content)
+      this._token_cache = {}
+      for (const root in raw_cache) {
+        this._token_cache[root] = {
+          modified_at: raw_cache[root].modified_at,
+          files: this._flatten_tree(raw_cache[root].files || {})
+        }
+      }
     } catch (error) {
       this._token_cache = {}
     }
@@ -60,21 +73,33 @@ export class TokenCalculator implements vscode.Disposable {
     this._token_cache_update_timeout = setTimeout(async () => {
       const storage_path = this._context.globalStorageUri.fsPath
       const cache_path = path.join(storage_path, TOKEN_CACHE_FILE_NAME)
-      let current_global_cache: TokenCountsCache = {}
+      const current_global_cache: TokenCountsCache = {}
 
       try {
         if (!fs.existsSync(storage_path)) {
           await fs.promises.mkdir(storage_path, { recursive: true })
         }
         const content = await fs.promises.readFile(cache_path, 'utf8')
-        current_global_cache = JSON.parse(content)
+        const raw_cache = JSON.parse(content)
+        for (const root in raw_cache) {
+          current_global_cache[root] = {
+            modified_at: raw_cache[root].modified_at,
+            files: this._flatten_tree(raw_cache[root].files || {})
+          }
+        }
       } catch {
         // Cache file might not exist yet or be corrupt
       }
 
       for (const root of this._provider.get_workspace_roots()) {
         if (this._session_cache[root]) {
-          current_global_cache[root] = this._session_cache[root]
+          current_global_cache[root] = {
+            modified_at: this._session_cache[root].modified_at,
+            files: {
+              ...(current_global_cache[root]?.files || {}),
+              ...this._session_cache[root].files
+            }
+          }
         }
       }
 
@@ -86,11 +111,16 @@ export class TokenCalculator implements vscode.Disposable {
         }
       }
 
+      const cache_to_write: any = {}
+      for (const root in current_global_cache) {
+        cache_to_write[root] = {
+          modified_at: current_global_cache[root].modified_at,
+          files: this._build_tree(current_global_cache[root].files)
+        }
+      }
+
       try {
-        await fs.promises.writeFile(
-          cache_path,
-          JSON.stringify(current_global_cache)
-        )
+        await fs.promises.writeFile(cache_path, JSON.stringify(cache_to_write))
 
         Logger.info({
           function_name: '_update_token_counts_cache',
@@ -593,5 +623,52 @@ export class TokenCalculator implements vscode.Disposable {
     if (this._token_cache_update_timeout) {
       clearTimeout(this._token_cache_update_timeout)
     }
+  }
+
+  private _flatten_tree(
+    node: TokenCacheNode,
+    prefix: string = ''
+  ): { [file_path: string]: TokenData } {
+    const result: { [file_path: string]: TokenData } = {}
+
+    for (const key in node) {
+      const value = node[key]
+      const new_path = prefix ? `${prefix}/${key}` : key
+
+      if (Array.isArray(value)) {
+        result[new_path] = value as TokenData
+      } else {
+        const flat_children = this._flatten_tree(
+          value as TokenCacheNode,
+          new_path
+        )
+        Object.assign(result, flat_children)
+      }
+    }
+
+    return result
+  }
+
+  private _build_tree(files: {
+    [file_path: string]: TokenData
+  }): TokenCacheNode {
+    const root: TokenCacheNode = {}
+
+    for (const [file_path, data] of Object.entries(files)) {
+      const parts = file_path.split('/')
+      let current = root
+
+      for (let i = 0; i < parts.length - 1; i++) {
+        const part = parts[i]
+        if (!current[part] || Array.isArray(current[part])) {
+          current[part] = {}
+        }
+        current = current[part] as TokenCacheNode
+      }
+
+      current[parts[parts.length - 1]] = data
+    }
+
+    return root
   }
 }
