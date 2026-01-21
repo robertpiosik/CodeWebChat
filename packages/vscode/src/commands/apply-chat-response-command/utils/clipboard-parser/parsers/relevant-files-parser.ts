@@ -3,23 +3,20 @@ import { RelevantFilesItem } from '../clipboard-parser'
 export const parse_relevant_files = (params: {
   response: string
 }): RelevantFilesItem | null => {
-  const lines = params.response.split('\n')
-  let start_index = -1
+  const trimmed_response = params.response.trim()
+  const lines = trimmed_response.split('\n')
 
-  for (let i = 0; i < lines.length; i++) {
-    if (lines[i].trim().match(/^\*\*Relevant files:\*\*/i)) {
-      start_index = i
-      break
-    }
+  if (lines.length == 0) {
+    return null
   }
 
-  if (start_index == -1) {
+  if (!lines[0].trim().match(/^\*\*Relevant files:\*\*/i)) {
     return null
   }
 
   const file_paths: string[] = []
 
-  for (let i = start_index + 1; i < lines.length; i++) {
+  for (let i = 1; i < lines.length; i++) {
     const line = lines[i].trim()
     if (line == '') continue
 
