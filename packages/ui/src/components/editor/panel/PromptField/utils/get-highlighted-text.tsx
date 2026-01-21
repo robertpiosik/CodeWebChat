@@ -28,7 +28,7 @@ const process_text_part_for_files = (
           return `<span class="${cn(
             styles['keyword'],
             styles['keyword--file']
-          )}" contentEditable="false" data-type="file-keyword" data-path="${escape_html(
+          )}" data-type="file-keyword" data-path="${escape_html(
             file_path
           )}" title="${escape_html(file_path)}"><span class="${
             styles['keyword__icon']
@@ -78,7 +78,7 @@ export const get_highlighted_text = (params: {
         return `<span class="${cn(
           styles['keyword'],
           styles['keyword--pasted-lines']
-        )}" contentEditable="false" data-type="pasted-lines-keyword" data-path="${escape_html(
+        )}" data-type="pasted-lines-keyword" data-path="${escape_html(
           path
         )}" data-content="${escape_html(content)}"><span class="${
           styles['keyword__icon']
@@ -96,14 +96,14 @@ export const get_highlighted_text = (params: {
           : `Selection: ${params.current_selection
               .substring(0, 100)
               .replace(/\n/g, ' ')}...`
-        return `<span class="${className}" contentEditable="false" data-type="selection-keyword" title="${escape_html(title)}"><span class="${styles['keyword__icon']}" data-role="keyword-icon"></span><span class="${styles['keyword__text']}" data-role="keyword-text">Selection</span></span>`
+        return `<span class="${className}" data-type="selection-keyword" title="${escape_html(title)}"><span class="${styles['keyword__icon']}" data-role="keyword-icon"></span><span class="${styles['keyword__text']}" data-role="keyword-text">Selection</span></span>`
       }
       if (part && /^#Changes:[^\s,;:!?]+$/.test(part)) {
         const branch_name = part.substring('#Changes:'.length)
         return `<span class="${cn(
           styles['keyword'],
           styles['keyword--changes']
-        )}" contentEditable="false" data-type="changes-keyword" data-branch-name="${escape_html(
+        )}" data-type="changes-keyword" data-branch-name="${escape_html(
           branch_name
         )}"><span class="${
           styles['keyword__icon']
@@ -122,7 +122,7 @@ export const get_highlighted_text = (params: {
         return `<span class="${cn(
           styles['keyword'],
           styles['keyword--saved-context']
-        )}" contentEditable="false" data-type="saved-context-keyword" data-context-type="${context_type}" data-context-name="${escape_html(
+        )}" data-type="saved-context-keyword" data-context-type="${context_type}" data-context-name="${escape_html(
           context_name
         )}"><span class="${
           styles['keyword__icon']
@@ -144,7 +144,7 @@ export const get_highlighted_text = (params: {
         return `<span class="${cn(
           styles['keyword'],
           styles[`keyword--${symbol.toLowerCase()}`]
-        )}" contentEditable="false" data-type="${symbol.toLowerCase()}-keyword" data-repo-name="${escape_html(
+        )}" data-type="${symbol.toLowerCase()}-keyword" data-repo-name="${escape_html(
           repo_name
         )}" data-commit-hash="${escape_html(
           commit_hash

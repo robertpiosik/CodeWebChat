@@ -104,6 +104,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     handle_key_down,
     is_history_enabled,
     handle_copy,
+    handle_paste,
     handle_input_click
   } = use_handlers(props, input_ref, ghost_text, handle_accept_ghost_text)
   const { handle_drag_start, handle_drag_over, handle_drop, handle_drag_end } =
@@ -142,49 +143,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
       document.addEventListener('mouseup', handle_mouse_up)
     },
     []
-  )
-
-  // Prevents pasting html or images
-  const handle_paste = useCallback(
-    (e: React.ClipboardEvent<HTMLDivElement>) => {
-      e.preventDefault()
-      const text = e.clipboardData.getData('text/plain')
-      const selection = window.getSelection()
-      if (!selection || !selection.rangeCount) return
-      const range = selection.getRangeAt(0)
-
-      let text_to_insert = text
-      if (
-        props.current_selection &&
-        text === props.current_selection &&
-        props.currently_open_file_path
-      ) {
-        text_to_insert = `<fragment path="${props.currently_open_file_path}">\n${text}\n</fragment>`
-        let has_space_after = false
-        if (range.endContainer.nodeType === Node.TEXT_NODE) {
-          const content = range.endContainer.textContent || ''
-          if (
-            range.endOffset < content.length &&
-            /\s/.test(content[range.endOffset])
-          ) {
-            has_space_after = true
-          }
-        }
-        if (!has_space_after) {
-          text_to_insert += ' '
-        }
-      }
-
-      range.deleteContents()
-      const text_node = document.createTextNode(text_to_insert)
-      range.insertNode(text_node)
-      range.setStartAfter(text_node)
-      range.setEndAfter(text_node)
-      selection.removeAllRanges()
-      selection.addRange(range)
-      input_ref.current?.dispatchEvent(new Event('input', { bubbles: true }))
-    },
-    [props.current_selection, props.currently_open_file_path]
   )
 
   const is_mac = use_is_mac()

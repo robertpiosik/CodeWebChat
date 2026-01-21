@@ -58,7 +58,7 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
       if (!path) return ''
       const filename = path.split('/').pop() || path
       const index = inner_content.indexOf(filename)
-      if (index !== -1) {
+      if (index != -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + filename.length)
         return `${prefix}\`${path}\`${suffix}`
@@ -68,7 +68,7 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
       if (!branchName) return ''
       const expected_text = `Diff with ${branchName}`
       const index = inner_content.indexOf(expected_text)
-      if (index !== -1) {
+      if (index != -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + expected_text.length)
         return `${prefix}#Changes:${branchName}${suffix}`
@@ -79,7 +79,7 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
       if (!contextType || !contextName) return ''
       const expected_text = `Context "${contextName}"`
       const index = inner_content.indexOf(expected_text)
-      if (index !== -1) {
+      if (index != -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + expected_text.length)
         return `${prefix}#SavedContext:${contextType} "${contextName}"${suffix}`
@@ -87,7 +87,7 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
     } else if (el.dataset.type == 'selection-keyword') {
       const expected_text = 'Selection'
       const index = inner_content.indexOf(expected_text)
-      if (index !== -1) {
+      if (index != -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + expected_text.length)
         return `${prefix}#Selection${suffix}`
@@ -101,7 +101,7 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
       }
       const short_hash = commit_hash.substring(0, 7)
       const index = inner_content.indexOf(short_hash)
-      if (index !== -1) {
+      if (index != -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + short_hash.length)
         return `${prefix}#Commit:${repo_name}:${commit_hash} "${commit_message.replace(
@@ -357,6 +357,71 @@ export const use_handlers = (
     e.clipboardData.setData('text/plain', raw_text_slice)
   }
 
+  const handle_paste = (e: React.ClipboardEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    const text = e.clipboardData.getData('text/plain')
+    const selection = window.getSelection()
+    if (!selection || !selection.rangeCount || !input_ref.current) return
+    const range = selection.getRangeAt(0)
+    const input_element = input_ref.current
+
+    if (!input_element.contains(range.startContainer)) return
+
+    const pre_selection_range = document.createRange()
+    pre_selection_range.selectNodeContents(input_element)
+    pre_selection_range.setEnd(range.startContainer, range.startOffset)
+    const display_start = pre_selection_range.toString().length
+
+    pre_selection_range.setEnd(range.endContainer, range.endOffset)
+    const display_end = pre_selection_range.toString().length
+
+    const raw_start = map_display_pos_to_raw_pos(
+      display_start,
+      props.value,
+      props.context_file_paths ?? []
+    )
+    const raw_end = map_display_pos_to_raw_pos(
+      display_end,
+      props.value,
+      props.context_file_paths ?? []
+    )
+
+    let text_to_insert = text
+    let caret_offset_adjustment = 0
+
+    if (
+      props.current_selection &&
+      text === props.current_selection &&
+      props.currently_open_file_path
+    ) {
+      text_to_insert = `<fragment path="${props.currently_open_file_path}">\n${text}\n</fragment>`
+
+      let has_space_after = false
+      if (raw_end < props.value.length) {
+        const char_after = props.value[raw_end]
+        if (/\s/.test(char_after)) {
+          has_space_after = true
+        }
+      }
+
+      if (!has_space_after) {
+        text_to_insert += ' '
+      } else {
+        caret_offset_adjustment = 1
+      }
+    }
+
+    const new_value =
+      props.value.substring(0, raw_start) +
+      text_to_insert +
+      props.value.substring(raw_end)
+    const new_caret_pos =
+      raw_start + text_to_insert.length + caret_offset_adjustment
+
+    has_modified_current_entry_ref.current = true
+    update_value(new_value, new_caret_pos)
+  }
+
   const handle_input_click = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement
     const icon_element = target.closest('[data-role="keyword-icon"]')
@@ -567,17 +632,22 @@ export const use_handlers = (
     return false
   }
 
-  const handle_pasted_lines_keyword_deletion = (
-    raw_pos: number,
-    context_file_paths: string[]
-  ): boolean => {
+  const handle_pasted_lines_keyword_deletion = (raw_pos: number): boolean => {
     const text_before_cursor = props.value.substring(0, raw_pos)
-    const match = text_before_cursor.match(
-      /<fragment path="[^"]+">\n[\s\S]*?\n<\/fragment>$/
-    )
 
-    if (match) {
-      const start_of_match = raw_pos - match[0].length
+    const regex = /<fragment path="[^"]+">\n[\s\S]*?\n<\/fragment>/g
+    let match
+    let last_match: RegExpExecArray | null = null
+
+    while ((match = regex.exec(text_before_cursor)) !== null) {
+      last_match = match
+    }
+
+    if (
+      last_match &&
+      last_match.index + last_match[0].length === text_before_cursor.length
+    ) {
+      const start_of_match = last_match.index
       const new_value =
         props.value.substring(0, start_of_match) +
         props.value.substring(raw_pos)
@@ -623,7 +693,7 @@ export const use_handlers = (
     }
 
     if (el.dataset.type == 'pasted-lines-keyword') {
-      return handle_pasted_lines_keyword_deletion(raw_pos, context_file_paths)
+      return handle_pasted_lines_keyword_deletion(raw_pos)
     }
 
     return false
@@ -982,6 +1052,7 @@ export const use_handlers = (
     is_history_enabled,
     handle_clear,
     handle_copy,
+    handle_paste,
     handle_input_click
   }
 }
