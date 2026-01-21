@@ -10,7 +10,8 @@ import {
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
 import {
   code_completion_instructions_for_panel,
-  prune_context_instructions
+  prune_context_instructions,
+  prune_context_format
 } from '@/constants/instructions'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import { MODE } from '@/views/panel/types/main-view-mode'
@@ -200,7 +201,7 @@ export const handle_copy_prompt = async (params: {
         system_instructions_xml = `<system>\n${edit_format_instructions}\n</system>`
       }
     } else if (is_in_prune_context_prompt_type) {
-      system_instructions_xml = prune_context_instructions
+      system_instructions_xml = `${prune_context_instructions}\n${prune_context_format}`
     }
 
     const text = context_text

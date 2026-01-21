@@ -685,6 +685,11 @@
           "scope": "resource",
           "default": "You're a helpful coding assistant. Don't explain changes in inline comments."
         },
+        "codeWebChat.pruneContextInstructions": {
+          "type": "string",
+          "scope": "resource",
+          "default": "Find all files building modules the task touches (including tests, type definitions, etc.)."
+        },
         "codeWebChat.chatPresetsForAskAboutContext": {
           "type": "array",
           "default": [

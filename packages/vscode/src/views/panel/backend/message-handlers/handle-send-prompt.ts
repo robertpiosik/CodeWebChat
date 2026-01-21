@@ -11,7 +11,8 @@ import {
 } from '@/views/panel/backend/utils/replace-git-symbols'
 import {
   code_completion_instructions_for_panel,
-  prune_context_instructions
+  prune_context_instructions,
+  prune_context_format
 } from '@/constants/instructions'
 import { get_recently_used_presets_or_groups_key } from '@/constants/state-keys'
 import { ConfigPresetFormat } from '../utils/preset-format-converters'
@@ -279,7 +280,7 @@ export const handle_send_prompt = async (params: {
             system_instructions_xml = `<system>\n${edit_format_instructions}\n</system>`
           }
         } else if (params.panel_provider.web_prompt_type == 'prune-context') {
-          system_instructions_xml = prune_context_instructions
+          system_instructions_xml = `${prune_context_instructions}\n${prune_context_format}`
         }
 
         return {

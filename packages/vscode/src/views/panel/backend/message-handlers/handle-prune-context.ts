@@ -24,7 +24,10 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { PruneContextMessage } from '@/views/panel/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
-import { prune_context_instructions } from '@/constants/instructions'
+import {
+  prune_context_instructions,
+  prune_context_format
+} from '@/constants/instructions'
 
 const get_prune_context_config = async (
   api_providers_manager: ModelProvidersManager,
@@ -380,7 +383,7 @@ export const handle_prune_context = async (
 
     const files = `<files>${collected_files}\n</files>`
 
-    const system_instructions_xml = prune_context_instructions
+    const system_instructions_xml = `${prune_context_instructions}\n${prune_context_format}`
 
     const content = `${system_instructions_xml}\n${files}\n${system_instructions_xml}\n${processed_instructions}`
 

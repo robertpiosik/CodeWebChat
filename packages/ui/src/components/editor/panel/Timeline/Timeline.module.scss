@@ -95,12 +95,11 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        font-weight: 500;
       }
     }
 
     &__description {
-      font-size: 12px;
-      color: var(--cwc-text-color-dimmed);
       display: -webkit-box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;

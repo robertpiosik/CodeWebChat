@@ -29,12 +29,16 @@ export const intelligent_update_instructions =
 export const commit_message_instructions =
   "Write a brief and precise summary for the changes, limited to a single sentence, if possible and nothing else. Because the summary will be used for a commit message, don't use any markdown formatting. Use an imperative tone to ensure clarity and focus on the primary change or purpose."
 
-export const prune_context_instructions = `Find all files building modules the task touches (including tests, type definitions, etc.).
-<system>
+export const prune_context_instructions =
+  'Find all files building modules the task touches (including tests, type definitions, etc.).'
+
+export const prune_context_format = `<system>
+
 Your response must begin with "**Relevant files:**", then list paths one under another. Don't send anything else. Example:
 
 **Relevant files:**
 
 - \`src/hello.ts\`
 - \`src/welcome.ts\`
+
 </system>`
