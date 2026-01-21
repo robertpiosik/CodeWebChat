@@ -68,7 +68,7 @@ export const Panel = () => {
     ask_about_context_instructions,
     edit_context_instructions,
     no_context_instructions,
-    has_active_editor,
+    currently_open_file_path,
     current_selection,
     code_at_cursor_instructions,
     prune_context_instructions,
@@ -132,7 +132,7 @@ export const Panel = () => {
     web_prompt_type === undefined ||
     is_connected === undefined ||
     api_prompt_type === undefined ||
-    has_active_editor === undefined ||
+    currently_open_file_path === undefined ||
     current_selection === undefined ||
     workspace_folder_count === undefined ||
     context_size_warning_threshold === undefined
@@ -175,8 +175,8 @@ export const Panel = () => {
     (!has_affixes &&
       !has_instructions &&
       web_prompt_type != 'code-completions') ||
-    (web_prompt_type == 'code-completions' &&
-      (!has_active_editor || !!current_selection))
+    (web_prompt_type === 'code-completions' &&
+      (!currently_open_file_path || !!current_selection))
 
   const handle_apply_click = () => {
     post_message(vscode, {
@@ -262,7 +262,7 @@ export const Panel = () => {
                 web_prompt_type={web_prompt_type}
                 api_prompt_type={api_prompt_type}
                 on_mode_change={handle_mode_change}
-                has_active_editor={has_active_editor}
+                currently_open_file_path={currently_open_file_path}
                 current_selection={current_selection}
                 on_web_prompt_type_change={handle_web_prompt_type_change}
                 on_api_prompt_type_change={handle_api_prompt_type_change}
@@ -391,7 +391,7 @@ export const Panel = () => {
                       !is_connected
                         ? 'Unable to preview when not connected'
                         : web_prompt_type == 'code-completions' &&
-                            !has_active_editor
+                            !currently_open_file_path
                           ? 'Cannot preview in code completion mode without an active editor'
                           : web_prompt_type == 'code-completions' &&
                               !!current_selection

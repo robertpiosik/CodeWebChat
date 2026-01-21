@@ -28,7 +28,7 @@ const process_text_part_for_files = (
           return `<span class="${cn(
             styles['keyword'],
             styles['keyword--file']
-          )}" data-type="file-keyword" data-path="${escape_html(
+          )}" contentEditable="false" data-type="file-keyword" data-path="${escape_html(
             file_path
           )}" title="${escape_html(file_path)}"><span class="${
             styles['keyword__icon']
@@ -54,14 +54,39 @@ export const get_highlighted_text = (params: {
 
   const commit_regex_part =
     '#(?:Commit|ContextAtCommit):[^:]+:[^\\s"]+\\s+"(?:\\\\.|[^"\\\\])*"'
+
+  const fragment_regex_part =
+    '<fragment path="[^"]+">\\n[\\s\\S]*?\\n<\\/fragment>'
+
   const regex = new RegExp(
-    `(#Selection|#Changes:[^\\s,;:!?]+|${saved_context_regex_part}|${commit_regex_part})`,
+    `(${fragment_regex_part}|#Selection|#Changes:[^\\s,;:!?]+|${saved_context_regex_part}|${commit_regex_part})`,
     'g'
   )
   const parts = params.text.split(regex)
 
   const result = parts
     .map((part) => {
+      const fragment_match = part.match(
+        /^<fragment path="([^"]+)">\n([\s\S]*?)\n<\/fragment>$/
+      )
+      if (part && fragment_match) {
+        const path = fragment_match[1]
+        const content = fragment_match[2]
+        const line_count = content.split('\n').length
+        const lines_text = line_count === 1 ? 'line' : 'lines'
+
+        return `<span class="${cn(
+          styles['keyword'],
+          styles['keyword--pasted-lines']
+        )}" contentEditable="false" data-type="pasted-lines-keyword" data-path="${escape_html(
+          path
+        )}" data-content="${escape_html(content)}"><span class="${
+          styles['keyword__icon']
+        }" data-role="keyword-icon"></span><span class="${
+          styles['keyword__text']
+        }" data-role="keyword-text">Pasted ${line_count} ${lines_text}</span></span>`
+      }
+
       if (part == '#Selection') {
         const className = cn(styles['keyword'], styles['keyword--selection'], {
           [styles['keyword--selection-error']]: !params.current_selection
@@ -71,14 +96,14 @@ export const get_highlighted_text = (params: {
           : `Selection: ${params.current_selection
               .substring(0, 100)
               .replace(/\n/g, ' ')}...`
-        return `<span class="${className}" data-type="selection-keyword" title="${escape_html(title)}"><span class="${styles['keyword__icon']}" data-role="keyword-icon"></span><span class="${styles['keyword__text']}" data-role="keyword-text">Selection</span></span>`
+        return `<span class="${className}" contentEditable="false" data-type="selection-keyword" title="${escape_html(title)}"><span class="${styles['keyword__icon']}" data-role="keyword-icon"></span><span class="${styles['keyword__text']}" data-role="keyword-text">Selection</span></span>`
       }
       if (part && /^#Changes:[^\s,;:!?]+$/.test(part)) {
         const branch_name = part.substring('#Changes:'.length)
         return `<span class="${cn(
           styles['keyword'],
           styles['keyword--changes']
-        )}" data-type="changes-keyword" data-branch-name="${escape_html(
+        )}" contentEditable="false" data-type="changes-keyword" data-branch-name="${escape_html(
           branch_name
         )}"><span class="${
           styles['keyword__icon']
@@ -97,7 +122,7 @@ export const get_highlighted_text = (params: {
         return `<span class="${cn(
           styles['keyword'],
           styles['keyword--saved-context']
-        )}" data-type="saved-context-keyword" data-context-type="${context_type}" data-context-name="${escape_html(
+        )}" contentEditable="false" data-type="saved-context-keyword" data-context-type="${context_type}" data-context-name="${escape_html(
           context_name
         )}"><span class="${
           styles['keyword__icon']
@@ -119,7 +144,7 @@ export const get_highlighted_text = (params: {
         return `<span class="${cn(
           styles['keyword'],
           styles[`keyword--${symbol.toLowerCase()}`]
-        )}" data-type="${symbol.toLowerCase()}-keyword" data-repo-name="${escape_html(
+        )}" contentEditable="false" data-type="${symbol.toLowerCase()}-keyword" data-repo-name="${escape_html(
           repo_name
         )}" data-commit-hash="${escape_html(
           commit_hash

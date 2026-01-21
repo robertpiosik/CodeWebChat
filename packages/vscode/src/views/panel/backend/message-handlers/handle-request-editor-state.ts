@@ -5,6 +5,6 @@ export const handle_request_editor_state = (
 ): void => {
   panel_provider.send_message({
     command: 'EDITOR_STATE_CHANGED',
-    has_active_editor: panel_provider.has_active_editor
+    currently_open_file_path: panel_provider.currently_open_file_path
   })
 }

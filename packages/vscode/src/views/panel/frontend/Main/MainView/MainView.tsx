@@ -44,7 +44,7 @@ type Props = {
   ) => void
   on_toggle_pinned_configuration: (id: string) => void
   on_manage_configurations: () => void
-  has_active_editor: boolean
+  currently_open_file_path?: string
   current_selection: string
   chat_history: string[]
   token_count: number
@@ -222,7 +222,7 @@ export const MainView: React.FC<Props> = (props) => {
             is_in_code_completions_mode={is_in_code_completions_prompt_type}
             current_selection={props.current_selection}
             send_with_shift_enter={props.send_with_shift_enter}
-            has_active_editor={props.has_active_editor}
+            currently_open_file_path={props.currently_open_file_path}
             on_caret_position_change={props.on_caret_position_change}
             caret_position_to_set={props.caret_position_to_set}
             on_caret_position_set={props.on_caret_position_set}

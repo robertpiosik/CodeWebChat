@@ -8,7 +8,7 @@ export const map_display_pos_to_raw_pos = (
   let last_raw_index = 0
 
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"([^"]+)")|(#(?:Commit|ContextAtCommit):[^:]+:([^\s"]+)\s+"(?:\\.|[^"\\])*")/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"([^"]+)")|(#(?:Commit|ContextAtCommit):[^:]+:([^\s"]+)\s+"(?:\\.|[^"\\])*")|(<fragment path="[^"]+">\n([\s\S]*?)\n<\/fragment>)/g
   let match
 
   while ((match = regex.exec(raw_text)) !== null) {
@@ -19,6 +19,8 @@ export const map_display_pos_to_raw_pos = (
     const context_name = match[5]
     const commit_keyword = match[6]
     const commit_hash = match[7]
+    const fragment_keyword = match[8]
+    const fragment_content = match[9]
 
     let is_replacement_match = false
     let display_match_length = 0
@@ -40,6 +42,11 @@ export const map_display_pos_to_raw_pos = (
     } else if (commit_keyword) {
       const short_hash = commit_hash.substring(0, 7)
       display_match_length = short_hash.length
+      is_replacement_match = true
+    } else if (fragment_keyword) {
+      const line_count = fragment_content.split('\n').length
+      const lines_text = line_count === 1 ? 'line' : 'lines'
+      display_match_length = `Pasted ${line_count} ${lines_text}`.length
       is_replacement_match = true
     }
 
@@ -85,7 +92,7 @@ export const map_raw_pos_to_display_pos = (
   let last_raw_index = 0
 
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"([^"]+)")|(#(?:Commit|ContextAtCommit):[^:]+:([^\s"]+)\s+"(?:\\.|[^"\\])*")/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"([^"]+)")|(#(?:Commit|ContextAtCommit):[^:]+:([^\s"]+)\s+"(?:\\.|[^"\\])*")|(<fragment path="[^"]+">\n([\s\S]*?)\n<\/fragment>)/g
   let match
 
   while ((match = regex.exec(raw_text)) !== null) {
@@ -96,6 +103,8 @@ export const map_raw_pos_to_display_pos = (
     const context_name = match[5]
     const commit_keyword = match[6]
     const commit_hash = match[7]
+    const fragment_keyword = match[8]
+    const fragment_content = match[9]
 
     let is_replacement_match = false
     let display_match_length = 0
@@ -117,6 +126,11 @@ export const map_raw_pos_to_display_pos = (
     } else if (commit_keyword) {
       const short_hash = commit_hash.substring(0, 7)
       display_match_length = short_hash.length
+      is_replacement_match = true
+    } else if (fragment_keyword) {
+      const line_count = fragment_content.split('\n').length
+      const lines_text = line_count === 1 ? 'line' : 'lines'
+      display_match_length = `Pasted ${line_count} ${lines_text}`.length
       is_replacement_match = true
     }
 

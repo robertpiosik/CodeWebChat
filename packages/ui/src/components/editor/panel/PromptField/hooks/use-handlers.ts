@@ -21,7 +21,7 @@ const getKeywordRanges = (
   const ranges: { start: number; end: number }[] = []
   // This regex is a combination of all keyword types
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+")|(#(?:Commit|ContextAtCommit):[^:]+:[^\s"]+\s+"(?:\\.|[^"\\])*")/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+")|(#(?:Commit|ContextAtCommit):[^:]+:[^\s"]+\s+"(?:\\.|[^"\\])*")|(<fragment path="[^"]+">\n[\s\S]*?\n<\/fragment>)/g
 
   let match
   while ((match = regex.exec(text)) !== null) {
@@ -126,6 +126,23 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
           '\\"'
         )}"${suffix}`
       }
+    } else if (el.dataset.type == 'pasted-lines-keyword') {
+      const path = el.dataset.path
+      const content = el.dataset.content
+      if (!path || content === undefined) return ''
+
+      const line_count = content.split('\n').length
+      const lines_text = line_count == 1 ? 'line' : 'lines'
+      const label = `Pasted ${line_count} ${lines_text}`
+      const index = inner_content.indexOf(label)
+
+      if (index != -1) {
+        const prefix = inner_content.substring(0, index)
+        const suffix = inner_content.substring(index + label.length)
+        return `${prefix}<fragment path="${path}">\n${content}\n</fragment>${suffix}`
+      }
+
+      return `<fragment path="${path}">\n${content}\n</fragment>`
     }
 
     return inner_content
@@ -285,6 +302,20 @@ export const use_handlers = (
       if (!repo_name || !commit_hash || commit_message === undefined) return
 
       const search_pattern = `#ContextAtCommit:${repo_name}:${commit_hash} "${commit_message.replace(/"/g, '\\"')}"`
+      const start_index = props.value.indexOf(search_pattern)
+
+      if (start_index !== -1) {
+        apply_keyword_deletion(start_index, start_index + search_pattern.length)
+      }
+    } else if (keyword_type == 'pasted-lines-keyword') {
+      const path = keyword_element.dataset.path
+      const content = keyword_element.dataset.content
+      if (!path || content === undefined) return
+
+      // Since we can't reliably search for multiline content with indexOf easily if formatting varies,
+      // and we just clicked a specific element, we might need a better way.
+      // However, we construct exact strings.
+      const search_pattern = `<fragment path="${path}">\n${content}\n</fragment>`
       const start_index = props.value.indexOf(search_pattern)
 
       if (start_index !== -1) {
@@ -536,6 +567,27 @@ export const use_handlers = (
     return false
   }
 
+  const handle_pasted_lines_keyword_deletion = (
+    raw_pos: number,
+    context_file_paths: string[]
+  ): boolean => {
+    const text_before_cursor = props.value.substring(0, raw_pos)
+    const match = text_before_cursor.match(
+      /<fragment path="[^"]+">\n[\s\S]*?\n<\/fragment>$/
+    )
+
+    if (match) {
+      const start_of_match = raw_pos - match[0].length
+      const new_value =
+        props.value.substring(0, start_of_match) +
+        props.value.substring(raw_pos)
+      const new_raw_cursor_pos = start_of_match
+      update_value(new_value, new_raw_cursor_pos)
+      return true
+    }
+    return false
+  }
+
   const handle_keyword_deletion_by_backspace = (
     el: HTMLElement,
     display_pos: number
@@ -568,6 +620,10 @@ export const use_handlers = (
       el.dataset.type == 'contextatcommit-keyword'
     ) {
       return handle_commit_keyword_deletion(raw_pos, context_file_paths)
+    }
+
+    if (el.dataset.type == 'pasted-lines-keyword') {
+      return handle_pasted_lines_keyword_deletion(raw_pos, context_file_paths)
     }
 
     return false
@@ -607,7 +663,8 @@ export const use_handlers = (
           parent.dataset.type == 'selection-keyword' ||
           parent.dataset.type == 'saved-context-keyword' ||
           parent.dataset.type == 'commit-keyword' ||
-          parent.dataset.type == 'contextatcommit-keyword'
+          parent.dataset.type == 'contextatcommit-keyword' ||
+          parent.dataset.type == 'pasted-lines-keyword'
         ) {
           const rangeAfter = document.createRange()
           rangeAfter.selectNodeContents(parent)
@@ -632,7 +689,8 @@ export const use_handlers = (
         el.dataset.type == 'selection-keyword' ||
         el.dataset.type == 'saved-context-keyword' ||
         el.dataset.type == 'commit-keyword' ||
-        el.dataset.type == 'contextatcommit-keyword'
+        el.dataset.type == 'contextatcommit-keyword' ||
+        el.dataset.type == 'pasted-lines-keyword'
       ) {
         const display_pos = get_caret_position_from_div(input_ref.current)
         if (handle_keyword_deletion_by_backspace(el, display_pos)) {

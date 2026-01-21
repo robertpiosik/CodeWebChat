@@ -86,8 +86,8 @@ export const use_panel = (vscode: any) => {
   const [no_context_instructions, set_no_context_instructions] = useState<
     string | undefined
   >()
-  const [has_active_editor, set_has_active_editor] = useState<
-    boolean | undefined
+  const [currently_open_file_path, set_currently_open_file_path] = useState<
+    string | undefined
   >()
   const [current_selection, set_current_selection] = useState<string>('')
   const [code_at_cursor_instructions, set_code_at_cursor_instructions] =
@@ -217,7 +217,7 @@ export const use_panel = (vscode: any) => {
       } else if (message.command == 'CHECKPOINTS') {
         set_checkpoints(message.checkpoints)
       } else if (message.command == 'EDITOR_STATE_CHANGED') {
-        set_has_active_editor(message.has_active_editor)
+        set_currently_open_file_path(message.currently_open_file_path)
       } else if (message.command == 'EDITOR_SELECTION_CHANGED') {
         set_current_selection(message.current_selection)
       } else if (message.command == 'CONTEXT_FILES') {
@@ -551,7 +551,7 @@ export const use_panel = (vscode: any) => {
     ask_about_context_instructions,
     edit_context_instructions,
     no_context_instructions,
-    has_active_editor,
+    currently_open_file_path,
     current_selection,
     code_at_cursor_instructions,
     prune_context_instructions,

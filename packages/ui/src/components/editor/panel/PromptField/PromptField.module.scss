@@ -217,6 +217,10 @@
     content: '\eb84';
   }
 
+  &--pasted-lines &__icon::before {
+    content: '\eb84';
+  }
+
   &--selection-error {
     background-color: color-mix(
       in srgb,
@@ -352,7 +356,6 @@
         gap: 3px;
         height: 20px;
         border-radius: 5px;
-        pointer-events: all;
 
         > svg {
           width: 10px;

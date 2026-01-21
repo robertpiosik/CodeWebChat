@@ -15,7 +15,7 @@ export const Empty = () => (
     is_connected={true}
     is_in_code_completions_mode={false}
     current_selection=""
-    has_active_editor={true}
+    currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}
@@ -41,7 +41,7 @@ export const WithText = () => (
     is_connected={true}
     is_in_code_completions_mode={false}
     current_selection=""
-    has_active_editor={true}
+    currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}
@@ -67,7 +67,7 @@ export const LongText = () => (
     is_connected={true}
     is_in_code_completions_mode={false}
     current_selection=""
-    has_active_editor={true}
+    currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}
@@ -92,8 +92,8 @@ export const WithPlaceholderSavedContext = () => (
     on_copy={() => console.log('Copied')}
     is_connected={true}
     is_in_code_completions_mode={false}
-    has_active_editor={true}
     current_selection=""
+    currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
@@ -118,8 +118,8 @@ export const WithPlaceholderSelection = () => (
     on_copy={() => console.log('Copied')}
     is_connected={true}
     is_in_code_completions_mode={false}
-    has_active_editor={true}
     current_selection="Selected text content"
+    currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
@@ -144,8 +144,8 @@ export const WithCommit = () => (
     on_copy={() => console.log('Copied')}
     is_connected={true}
     is_in_code_completions_mode={false}
-    has_active_editor={true}
     current_selection=""
+    currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
@@ -170,8 +170,8 @@ export const WithCommitWithQuotes = () => (
     on_copy={() => console.log('Copied')}
     is_connected={true}
     is_in_code_completions_mode={false}
-    has_active_editor={true}
     current_selection=""
+    currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
@@ -195,8 +195,8 @@ export const WithContextAtCommit = () => (
     on_copy={() => console.log('Copied')}
     is_connected={true}
     is_in_code_completions_mode={false}
-    has_active_editor={true}
     current_selection=""
+    currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
@@ -224,7 +224,7 @@ export const WithEditFormatSelector = () => {
       is_connected={true}
       is_in_code_completions_mode={false}
       current_selection=""
-      has_active_editor={true}
+      currently_open_file_path="/path/to/file"
       on_caret_position_change={(pos) => console.log('Caret position:', pos)}
       is_web_mode={false}
       on_at_sign_click={() => console.log('@ clicked')}
@@ -252,7 +252,7 @@ export const WithFilePaths = () => (
     is_connected={true}
     is_in_code_completions_mode={false}
     current_selection=""
-    has_active_editor={true}
+    currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}

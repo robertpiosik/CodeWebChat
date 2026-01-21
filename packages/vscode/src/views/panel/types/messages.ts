@@ -588,7 +588,7 @@ export interface ApiToolConfigurationsMessage extends BaseMessage {
 
 export interface EditorStateChangedMessage extends BaseMessage {
   command: 'EDITOR_STATE_CHANGED'
-  has_active_editor: boolean
+  currently_open_file_path?: string
 }
 
 export interface EditorSelectionChangedMessage extends BaseMessage {

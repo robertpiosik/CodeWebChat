@@ -111,7 +111,7 @@ import { dictionary } from '@shared/constants/dictionary'
 export class PanelProvider implements vscode.WebviewViewProvider {
   private _webview_view: vscode.WebviewView | undefined
   private _config_listener: vscode.Disposable | undefined
-  public has_active_editor: boolean = false
+  public currently_open_file_path?: string
   public current_selection: string = ''
   public caret_position: number = 0
   public ask_about_context_instructions: string = ''
@@ -318,13 +318,15 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     this.context.subscriptions.push(this._config_listener)
 
     const update_editor_state = () => {
-      const has_active_editor = !!vscode.window.activeTextEditor
-      if (has_active_editor != this.has_active_editor) {
-        this.has_active_editor = has_active_editor
+      const active_editor = vscode.window.activeTextEditor
+      const current_file_path = active_editor?.document.uri.fsPath
+
+      if (current_file_path != this.currently_open_file_path) {
+        this.currently_open_file_path = current_file_path
         if (this._webview_view) {
           this.send_message({
             command: 'EDITOR_STATE_CHANGED',
-            has_active_editor: has_active_editor
+            currently_open_file_path: current_file_path
           })
         }
       }

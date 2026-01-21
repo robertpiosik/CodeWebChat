@@ -33,7 +33,6 @@ export type PromptFieldProps = {
   is_connected: boolean
   is_in_code_completions_mode: boolean
   current_selection: string
-  has_active_editor: boolean
   on_caret_position_change: (caret_position: number) => void
   is_web_mode: boolean
   on_search_click: () => void
@@ -50,6 +49,7 @@ export type PromptFieldProps = {
   edit_format?: EditFormat
   on_edit_format_change?: (format: EditFormat) => void
   context_file_paths?: string[]
+  currently_open_file_path?: string
   currently_open_file_text?: string
   invocation_count: number
   on_invocation_count_change: (count: number) => void
@@ -149,12 +149,34 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     (e: React.ClipboardEvent<HTMLDivElement>) => {
       e.preventDefault()
       const text = e.clipboardData.getData('text/plain')
-
       const selection = window.getSelection()
       if (!selection || !selection.rangeCount) return
       const range = selection.getRangeAt(0)
+
+      let text_to_insert = text
+      if (
+        props.current_selection &&
+        text === props.current_selection &&
+        props.currently_open_file_path
+      ) {
+        text_to_insert = `<fragment path="${props.currently_open_file_path}">\n${text}\n</fragment>`
+        let has_space_after = false
+        if (range.endContainer.nodeType === Node.TEXT_NODE) {
+          const content = range.endContainer.textContent || ''
+          if (
+            range.endOffset < content.length &&
+            /\s/.test(content[range.endOffset])
+          ) {
+            has_space_after = true
+          }
+        }
+        if (!has_space_after) {
+          text_to_insert += ' '
+        }
+      }
+
       range.deleteContents()
-      const text_node = document.createTextNode(text)
+      const text_node = document.createTextNode(text_to_insert)
       range.insertNode(text_node)
       range.setStartAfter(text_node)
       range.setEndAfter(text_node)
@@ -162,7 +184,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
       selection.addRange(range)
       input_ref.current?.dispatchEvent(new Event('input', { bubbles: true }))
     },
-    []
+    [props.current_selection, props.currently_open_file_path]
   )
 
   const is_mac = use_is_mac()
@@ -315,7 +337,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         </div>
       )}
 
-      {props.is_in_code_completions_mode && !props.has_active_editor && (
+      {props.is_in_code_completions_mode && !props.currently_open_file_path && (
         <div className={styles.error}>
           <div className={styles.error__inner}>Place cursor for completion</div>
         </div>
@@ -325,7 +347,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         className={cn(styles.container__inner, {
           [styles['container__inner--disabled']]:
             props.is_in_code_completions_mode &&
-            (!!props.current_selection || !props.has_active_editor),
+            (!!props.current_selection || !props.currently_open_file_path),
           [styles['container__inner--selecting']]: is_text_selecting
         })}
         onKeyDown={handle_container_key_down}
