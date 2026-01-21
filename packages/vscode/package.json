@@ -687,8 +687,7 @@
         },
         "codeWebChat.pruneContextInstructions": {
           "type": "string",
-          "scope": "resource",
-          "default": "Find all files building modules the task touches (including tests, type definitions, etc.)."
+          "scope": "resource"
         },
         "codeWebChat.chatPresetsForAskAboutContext": {
           "type": "array",

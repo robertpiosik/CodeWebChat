@@ -418,7 +418,12 @@ export const handle_edit_context = async (
 
     let system_instructions_xml = ''
     if (is_prune_context) {
-      system_instructions_xml = `${prune_context_instructions}\n${prune_context_format}`
+      const config_prune_instructions = config.get<string>(
+        'pruneContextInstructions'
+      )
+      const instructions_to_use =
+        config_prune_instructions || prune_context_instructions
+      system_instructions_xml = `${instructions_to_use}\n${prune_context_format}`
     } else if (edit_format_instructions) {
       system_instructions_xml = `<system>\n${edit_format_instructions}\n</system>`
     }

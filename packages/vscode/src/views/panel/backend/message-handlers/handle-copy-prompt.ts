@@ -201,7 +201,13 @@ export const handle_copy_prompt = async (params: {
         system_instructions_xml = `<system>\n${edit_format_instructions}\n</system>`
       }
     } else if (is_in_prune_context_prompt_type) {
-      system_instructions_xml = `${prune_context_instructions}\n${prune_context_format}`
+      const config = vscode.workspace.getConfiguration('codeWebChat')
+      const config_prune_instructions = config.get<string>(
+        'pruneContextInstructions'
+      )
+      const instructions_to_use =
+        config_prune_instructions || prune_context_instructions
+      system_instructions_xml = `${instructions_to_use}\n${prune_context_format}`
     }
 
     const text = context_text

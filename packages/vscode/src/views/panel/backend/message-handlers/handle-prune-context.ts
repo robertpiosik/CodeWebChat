@@ -383,7 +383,13 @@ export const handle_prune_context = async (
 
     const files = `<files>${collected_files}\n</files>`
 
-    const system_instructions_xml = `${prune_context_instructions}\n${prune_context_format}`
+    const config = vscode.workspace.getConfiguration('codeWebChat')
+    const config_prune_instructions = config.get<string>(
+      'pruneContextInstructions'
+    )
+    const instructions_to_use =
+      config_prune_instructions || prune_context_instructions
+    const system_instructions_xml = `${instructions_to_use}\n${prune_context_format}`
 
     const content = `${system_instructions_xml}\n${files}\n${system_instructions_xml}\n${processed_instructions}`
 
