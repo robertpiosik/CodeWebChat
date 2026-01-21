@@ -327,7 +327,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     format_truncated_ref,
     format_before_after_ref,
     format_diff_ref
-  } = use_edit_format_compacting(props.show_edit_format_selector)
+  } = use_edit_format_compacting()
 
   return (
     <div className={styles.container}>
@@ -467,93 +467,93 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               e.stopPropagation()
             }}
           >
-            {props.show_edit_format_selector && (
-              <div
-                className={styles['footer__right__edit-format']}
-                ref={container_ref}
-              >
-                {(['whole', 'truncated', 'before-after', 'diff'] as const).map(
-                  (format, index) => {
-                    const is_compact =
-                      (format == 'before-after' && compact_step >= 1) ||
-                      (format == 'truncated' && compact_step >= 2) ||
-                      (format == 'whole' && compact_step >= 3) ||
-                      (format == 'diff' && compact_step >= 4)
+            <div
+              className={styles['footer__right__edit-format']}
+              ref={container_ref}
+              style={{
+                display: props.show_edit_format_selector ? 'flex' : 'none'
+              }}
+            >
+              {(['whole', 'truncated', 'before-after', 'diff'] as const).map(
+                (format) => {
+                  const is_compact =
+                    (format == 'before-after' && compact_step >= 1) ||
+                    (format == 'truncated' && compact_step >= 2) ||
+                    (format == 'whole' && compact_step >= 3) ||
+                    (format == 'diff' && compact_step >= 4)
 
-                    const button_text = is_compact
-                      ? format == 'before-after'
-                        ? 'b/a'
-                        : format.charAt(0)
-                      : format == 'before-after'
-                        ? 'before/after'
-                        : format
+                  const button_text = is_compact
+                    ? format == 'before-after'
+                      ? 'b/a'
+                      : format.charAt(0)
+                    : format == 'before-after'
+                      ? 'before/after'
+                      : format
 
-                    const is_selected = props.edit_format == format
-                    const should_underline = is_alt_pressed && !is_selected
+                  const is_selected = props.edit_format == format
+                  const should_underline = is_alt_pressed && !is_selected
 
-                    let ref = null
-                    if (format == 'whole') ref = format_whole_ref
-                    if (format == 'truncated') ref = format_truncated_ref
-                    if (format == 'before-after') ref = format_before_after_ref
-                    if (format == 'diff') ref = format_diff_ref
+                  let ref = null
+                  if (format == 'whole') ref = format_whole_ref
+                  if (format == 'truncated') ref = format_truncated_ref
+                  if (format == 'before-after') ref = format_before_after_ref
+                  if (format == 'diff') ref = format_diff_ref
 
-                    return (
-                      <button
-                        ref={ref}
-                        key={format}
-                        className={cn(
-                          styles['footer__right__edit-format__button'],
-                          {
-                            [styles[
-                              'footer__right__edit-format__button--selected'
-                            ]]: is_selected
+                  return (
+                    <button
+                      ref={ref}
+                      key={format}
+                      className={cn(
+                        styles['footer__right__edit-format__button'],
+                        {
+                          [styles[
+                            'footer__right__edit-format__button--selected'
+                          ]]: is_selected
+                        }
+                      )}
+                      title={`Edit format instructions to include with the prompt ${edit_format_shortcuts[format]}`}
+                      onClick={() => props.on_edit_format_change?.(format)}
+                      onMouseEnter={() => set_hovered_edit_format(format)}
+                      onMouseLeave={() => set_hovered_edit_format(null)}
+                    >
+                      {is_compact && hovered_edit_format == format && (
+                        <Tooltip
+                          message={
+                            format == 'before-after'
+                              ? 'Before and After'
+                              : format.charAt(0).toUpperCase() + format.slice(1)
                           }
-                        )}
-                        title={`Edit format instructions to include with the prompt ${edit_format_shortcuts[format]}`}
-                        onClick={() => props.on_edit_format_change?.(format)}
-                        onMouseEnter={() => set_hovered_edit_format(format)}
-                        onMouseLeave={() => set_hovered_edit_format(null)}
+                          align="center"
+                        />
+                      )}
+                      <span
+                        className={
+                          styles['footer__right__edit-format__button__spacer']
+                        }
                       >
-                        {is_compact && hovered_edit_format == format && (
-                          <Tooltip
-                            message={
-                              format == 'before-after'
-                                ? 'Before and After'
-                                : format.charAt(0).toUpperCase() +
-                                  format.slice(1)
-                            }
-                            align="center"
-                          />
+                        {button_text}
+                      </span>
+                      <span
+                        className={
+                          styles['footer__right__edit-format__button__text']
+                        }
+                      >
+                        {should_underline ? (
+                          <>
+                            <span className={styles['underlined']}>
+                              {button_text.charAt(0)}
+                            </span>
+                            {button_text.substring(1)}
+                          </>
+                        ) : (
+                          button_text
                         )}
-                        <span
-                          className={
-                            styles['footer__right__edit-format__button__spacer']
-                          }
-                        >
-                          {button_text}
-                        </span>
-                        <span
-                          className={
-                            styles['footer__right__edit-format__button__text']
-                          }
-                        >
-                          {should_underline ? (
-                            <>
-                              <span className={styles['underlined']}>
-                                {button_text.charAt(0)}
-                              </span>
-                              {button_text.substring(1)}
-                            </>
-                          ) : (
-                            button_text
-                          )}
-                        </span>
-                      </button>
-                    )
-                  }
-                )}
-              </div>
-            )}
+                      </span>
+                    </button>
+                  )
+                }
+              )}
+            </div>
 
             <div className={styles['footer__right__submit']} ref={dropdown_ref}>
               {(!props.is_web_mode ||
