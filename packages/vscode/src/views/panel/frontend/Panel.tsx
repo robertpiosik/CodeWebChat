@@ -132,7 +132,6 @@ export const Panel = () => {
     web_prompt_type === undefined ||
     is_connected === undefined ||
     api_prompt_type === undefined ||
-    currently_open_file_path === undefined ||
     current_selection === undefined ||
     workspace_folder_count === undefined ||
     context_size_warning_threshold === undefined
