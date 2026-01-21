@@ -18,6 +18,13 @@ import { CodeCompletionMessage } from '@/views/panel/types/messages'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { dictionary } from '@shared/constants/dictionary'
 import { randomUUID } from 'crypto'
+import { replace_selection_placeholder } from '../utils/replace-selection-symbol'
+import {
+  replace_changes_symbol,
+  replace_commit_symbol,
+  replace_context_at_commit_symbol
+} from '../utils/replace-git-symbols'
+import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
 
 const get_code_completion_config = async (
   api_providers_manager: ModelProvidersManager,
@@ -262,7 +269,7 @@ export const handle_code_completion = async (
   const api_providers_manager = new ModelProvidersManager(
     panel_provider.context
   )
-  const completion_instructions = panel_provider.code_completion_instructions
+  const completion_instructions = panel_provider.code_at_cursor_instructions
 
   const config_result = await get_code_completion_config(
     api_providers_manager,
@@ -344,6 +351,43 @@ export const handle_code_completion = async (
       position.character
     )
 
+    let processed_completion_instructions = completion_instructions
+
+    if (processed_completion_instructions.includes('#Selection')) {
+      processed_completion_instructions = replace_selection_placeholder(
+        processed_completion_instructions
+      )
+    }
+
+    if (processed_completion_instructions.includes('#Changes:')) {
+      processed_completion_instructions = await replace_changes_symbol({
+        instruction: processed_completion_instructions
+      })
+    }
+
+    if (processed_completion_instructions.includes('#Commit:')) {
+      processed_completion_instructions = await replace_commit_symbol({
+        instruction: processed_completion_instructions
+      })
+    }
+
+    if (processed_completion_instructions.includes('#ContextAtCommit:')) {
+      processed_completion_instructions =
+        await replace_context_at_commit_symbol({
+          instruction: processed_completion_instructions,
+          workspace_provider: panel_provider.workspace_provider
+        })
+    }
+
+    if (processed_completion_instructions.includes('#SavedContext:')) {
+      processed_completion_instructions =
+        await replace_saved_context_placeholder({
+          instruction: processed_completion_instructions,
+          context: panel_provider.context,
+          workspace_provider: panel_provider.workspace_provider
+        })
+    }
+
     const files_collector = new FilesCollector(
       panel_provider.workspace_provider,
       panel_provider.open_editors_provider
@@ -359,8 +403,8 @@ export const handle_code_completion = async (
     }
 
     const content = `${main_instructions}\n${payload.before}${
-      completion_instructions
-        ? `<missing_text>${completion_instructions}</missing_text>`
+      processed_completion_instructions
+        ? `<missing_text>${processed_completion_instructions}</missing_text>`
         : '<missing_text>'
     }${payload.after}\n${main_instructions}`
 
@@ -405,7 +449,7 @@ export const handle_code_completion = async (
               'codeWebChat.applyChatResponse',
               {
                 response: result.response,
-                raw_instructions: completion_instructions,
+                raw_instructions: processed_completion_instructions,
                 original_editor_state: {
                   file_path: document.uri.fsPath,
                   position: {

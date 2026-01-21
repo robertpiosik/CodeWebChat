@@ -86,8 +86,46 @@ export const handle_copy_prompt = async (params: {
       position.line,
       position.character
     )
-    const missing_text_tag = final_instruction
-      ? `<missing_text>${final_instruction}</missing_text>`
+
+    let processed_completion_instructions = final_instruction
+
+    if (processed_completion_instructions.includes('#Selection')) {
+      processed_completion_instructions = replace_selection_placeholder(
+        processed_completion_instructions
+      )
+    }
+
+    if (processed_completion_instructions.includes('#Changes:')) {
+      processed_completion_instructions = await replace_changes_symbol({
+        instruction: processed_completion_instructions
+      })
+    }
+
+    if (processed_completion_instructions.includes('#Commit:')) {
+      processed_completion_instructions = await replace_commit_symbol({
+        instruction: processed_completion_instructions
+      })
+    }
+
+    if (processed_completion_instructions.includes('#ContextAtCommit:')) {
+      processed_completion_instructions =
+        await replace_context_at_commit_symbol({
+          instruction: processed_completion_instructions,
+          workspace_provider: params.panel_provider.workspace_provider
+        })
+    }
+
+    if (processed_completion_instructions.includes('#SavedContext:')) {
+      processed_completion_instructions =
+        await replace_saved_context_placeholder({
+          instruction: processed_completion_instructions,
+          context: params.panel_provider.context,
+          workspace_provider: params.panel_provider.workspace_provider
+        })
+    }
+
+    const missing_text_tag = processed_completion_instructions
+      ? `<missing_text>${processed_completion_instructions}</missing_text>`
       : '<missing_text>'
 
     const text = `${system_instructions}\n<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}${missing_text_tag}${text_after_cursor}\n]]>\n</file>\n</files>\n${system_instructions}`

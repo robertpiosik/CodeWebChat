@@ -25,6 +25,9 @@ export const use_settings = (vscode: any) => {
   const [intelligent_update_configs, set_intelligent_update_configs] = useState<
     ConfigurationForClient[] | undefined
   >(undefined)
+  const [prune_context_configs, set_prune_context_configs] = useState<
+    ConfigurationForClient[] | undefined
+  >(undefined)
   const [commit_message_instructions, set_commit_message_instructions] =
     useState<string | undefined>(undefined)
   const [
@@ -72,6 +75,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_EDIT_CONTEXT_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_INTELLIGENT_UPDATE_CONFIGURATIONS' })
+    post_message(vscode, { command: 'GET_PRUNE_CONTEXT_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER' })
     post_message(vscode, { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' })
@@ -106,6 +110,9 @@ export const use_settings = (vscode: any) => {
           break
         case 'INTELLIGENT_UPDATE_CONFIGURATIONS':
           set_intelligent_update_configs(message.configurations)
+          break
+        case 'PRUNE_CONTEXT_CONFIGURATIONS':
+          set_prune_context_configs(message.configurations)
           break
         case 'COMMIT_MESSAGE_INSTRUCTIONS':
           set_commit_message_instructions(message.instructions)
@@ -338,6 +345,8 @@ export const use_settings = (vscode: any) => {
     set_edit_context_configs,
     intelligent_update_configs,
     set_intelligent_update_configs,
+    prune_context_configs,
+    set_prune_context_configs,
     commit_message_instructions,
     commit_message_auto_accept_after,
     edit_context_system_instructions,

@@ -92,9 +92,7 @@ export const Main: React.FC<Props> = (props) => {
 
   const is_in_code_completions_mode =
     (props.mode == MODE.WEB && props.web_prompt_type == 'code-completions') ||
-    (props.mode == MODE.API && props.api_prompt_type == 'code-completions') ||
-    (props.mode == MODE.WEB && props.web_prompt_type == 'prune-context') ||
-    (props.mode == MODE.API && props.api_prompt_type == 'prune-context')
+    (props.mode == MODE.API && props.api_prompt_type == 'code-completions')
 
   useEffect(() => {
     const handle_message = async (event: MessageEvent) => {

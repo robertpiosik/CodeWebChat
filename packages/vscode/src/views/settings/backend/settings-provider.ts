@@ -11,6 +11,7 @@ import {
   handle_delete_edit_context_configuration,
   handle_delete_intelligent_update_configuration,
   handle_delete_model_provider,
+  handle_delete_prune_context_configuration,
   handle_edit_custom_model_provider,
   handle_get_check_new_files,
   handle_get_clear_checks_in_workspace_behavior,
@@ -27,6 +28,7 @@ import {
   handle_get_ai_studio_user_id,
   handle_get_intelligent_update_configurations,
   handle_get_model_providers,
+  handle_get_prune_context_configurations,
   handle_get_send_with_shift_enter,
   handle_get_checkpoint_lifespan,
   handle_reorder_code_completions_configurations,
@@ -34,6 +36,7 @@ import {
   handle_reorder_edit_context_configurations,
   handle_reorder_intelligent_update_configurations,
   handle_reorder_model_providers,
+  handle_reorder_prune_context_configurations,
   handle_set_default_code_completions_configuration,
   handle_set_default_commit_messages_configuration,
   handle_set_default_intelligent_update_configuration,
@@ -168,6 +171,12 @@ export class SettingsProvider {
             this,
             message
           )
+        } else if (message.command == 'GET_PRUNE_CONTEXT_CONFIGURATIONS') {
+          await handle_get_prune_context_configurations(this)
+        } else if (message.command == 'REORDER_PRUNE_CONTEXT_CONFIGURATIONS') {
+          await handle_reorder_prune_context_configurations(this, message)
+        } else if (message.command == 'DELETE_PRUNE_CONTEXT_CONFIGURATION') {
+          await handle_delete_prune_context_configuration(this, message)
         } else if (message.command == 'GET_COMMIT_MESSAGES_CONFIGURATIONS') {
           await handle_get_commit_messages_configurations(this)
         } else if (
@@ -260,6 +269,7 @@ export class SettingsProvider {
           void handle_get_edit_context_system_instructions(this)
           void handle_get_edit_format_instructions(this)
           void handle_get_intelligent_update_configurations(this)
+          void handle_get_prune_context_configurations(this)
           void handle_get_context_size_warning_threshold(this)
           void handle_get_commit_message_instructions(this)
           void handle_get_commit_message_auto_accept_after(this)

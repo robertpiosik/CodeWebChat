@@ -170,7 +170,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const highlighted_html = useMemo(() => {
     return get_highlighted_text({
       text: props.value,
-      is_in_code_completions_mode: props.is_in_code_completions_mode,
       has_active_selection: props.has_active_selection,
       context_file_paths: props.context_file_paths ?? []
     })
@@ -424,15 +423,13 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             >
               <Icon variant="AT_SIGN" />
             </button>
-            {!props.is_in_code_completions_mode && (
-              <button
-                onClick={props.on_hash_sign_click}
-                className={cn(styles['footer__left__button'])}
-                title="Insert Symbol"
-              >
-                <Icon variant="HASH_SIGN" />
-              </button>
-            )}
+            <button
+              onClick={props.on_hash_sign_click}
+              className={cn(styles['footer__left__button'])}
+              title="Insert Symbol"
+            >
+              <Icon variant="HASH_SIGN" />
+            </button>
             <button
               onClick={props.on_curly_braces_click}
               className={cn(styles['footer__left__button'])}

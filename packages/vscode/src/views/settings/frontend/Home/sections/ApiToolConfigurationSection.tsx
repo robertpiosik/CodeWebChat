@@ -6,6 +6,7 @@ type ToolName =
   | 'COMMIT_MESSAGES'
   | 'EDIT_CONTEXT'
   | 'INTELLIGENT_UPDATE'
+  | 'PRUNE_CONTEXT'
 
 type ToolConfigurationsSectionProps = {
   tool_name: ToolName

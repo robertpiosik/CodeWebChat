@@ -5,10 +5,10 @@ export const handle_get_instructions = (
 ): void => {
   panel_provider.send_message({
     command: 'INSTRUCTIONS',
-    ask: panel_provider.ask_instructions,
-    edit_context: panel_provider.edit_instructions,
+    ask: panel_provider.ask_about_context_instructions,
+    edit_context: panel_provider.edit_context_instructions,
     no_context: panel_provider.no_context_instructions,
-    code_completions: panel_provider.code_completion_instructions,
+    code_completions: panel_provider.code_at_cursor_instructions,
     prune_context: panel_provider.prune_context_instructions
   })
 }

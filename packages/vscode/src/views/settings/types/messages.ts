@@ -26,6 +26,7 @@ export type ToolType =
   | 'commit-messages'
   | 'edit-context'
   | 'intelligent-update'
+  | 'prune-context'
 
 // === FROM FRONTEND TO BACKEND ===
 export interface GetModelProvidersMessage {
@@ -106,6 +107,20 @@ export interface DeleteIntelligentUpdateConfigurationMessage {
 export interface SetDefaultIntelligentUpdateConfigurationMessage {
   command: 'SET_DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION'
   configuration_id: string | null
+}
+
+export interface GetPruneContextConfigurationsMessage {
+  command: 'GET_PRUNE_CONTEXT_CONFIGURATIONS'
+}
+
+export interface ReorderPruneContextConfigurationsMessage {
+  command: 'REORDER_PRUNE_CONTEXT_CONFIGURATIONS'
+  configurations: ConfigurationForClient[]
+}
+
+export interface DeletePruneContextConfigurationMessage {
+  command: 'DELETE_PRUNE_CONTEXT_CONFIGURATION'
+  configuration_id: string
 }
 
 export interface GetCommitMessagesConfigurationsMessage {
@@ -275,6 +290,9 @@ export type FrontendMessage =
   | ReorderIntelligentUpdateConfigurationsMessage
   | DeleteIntelligentUpdateConfigurationMessage
   | SetDefaultIntelligentUpdateConfigurationMessage
+  | GetPruneContextConfigurationsMessage
+  | ReorderPruneContextConfigurationsMessage
+  | DeletePruneContextConfigurationMessage
   | GetCommitMessagesConfigurationsMessage
   | ReorderCommitMessagesConfigurationsMessage
   | DeleteCommitMessagesConfigurationMessage
@@ -325,6 +343,10 @@ export interface EditContextConfigurationsMessage {
 }
 export interface IntelligentUpdateConfigurationsMessage {
   command: 'INTELLIGENT_UPDATE_CONFIGURATIONS'
+  configurations: ConfigurationForClient[]
+}
+export interface PruneContextConfigurationsMessage {
+  command: 'PRUNE_CONTEXT_CONFIGURATIONS'
   configurations: ConfigurationForClient[]
 }
 export interface CommitMessagesConfigurationsMessage {
@@ -402,6 +424,7 @@ export type BackendMessage =
   | CodeCompletionsConfigurationsMessage
   | EditContextConfigurationsMessage
   | IntelligentUpdateConfigurationsMessage
+  | PruneContextConfigurationsMessage
   | CommitMessagesConfigurationsMessage
   | CommitMessageInstructionsMessage
   | CommitMessageAutoAcceptAfterMessage

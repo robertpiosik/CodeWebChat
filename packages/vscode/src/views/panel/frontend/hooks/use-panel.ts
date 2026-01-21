@@ -78,10 +78,9 @@ export const use_panel = (vscode: any) => {
     useState<number>()
   const [is_connected, set_is_connected] = useState<boolean>()
   const [updated_preset, set_updated_preset] = useState<Preset>()
-  const [ask_instructions, set_ask_instructions] = useState<
-    string | undefined
-  >()
-  const [edit_instructions, set_edit_instructions] = useState<
+  const [ask_about_context_instructions, set_ask_about_context_instructions] =
+    useState<string | undefined>()
+  const [edit_context_instructions, set_edit_context_instructions] = useState<
     string | undefined
   >()
   const [no_context_instructions, set_no_context_instructions] = useState<
@@ -93,7 +92,7 @@ export const use_panel = (vscode: any) => {
   const [has_active_selection, set_has_active_selection] = useState<
     boolean | undefined
   >()
-  const [code_completions_instructions, set_code_completions_instructions] =
+  const [code_at_cursor_instructions, set_code_at_cursor_instructions] =
     useState<string | undefined>(undefined)
   const [prune_context_instructions, set_prune_context_instructions] = useState<
     string | undefined
@@ -140,11 +139,10 @@ export const use_panel = (vscode: any) => {
       | 'code-completions'
       | 'prune-context'
   ) => {
-    if (mode == 'ask') set_ask_instructions(value)
-    else if (mode == 'edit-context') set_edit_instructions(value)
+    if (mode == 'ask') set_ask_about_context_instructions(value)
+    else if (mode == 'edit-context') set_edit_context_instructions(value)
     else if (mode == 'no-context') set_no_context_instructions(value)
-    else if (mode == 'code-completions')
-      set_code_completions_instructions(value)
+    else if (mode == 'code-completions') set_code_at_cursor_instructions(value)
     else if (mode == 'prune-context') set_prune_context_instructions(value)
 
     post_message(vscode, {
@@ -196,10 +194,10 @@ export const use_panel = (vscode: any) => {
         set_updating_preset(undefined)
         set_updated_preset(undefined)
       } else if (message.command == 'INSTRUCTIONS') {
-        set_ask_instructions(message.ask)
-        set_edit_instructions(message.edit_context)
+        set_ask_about_context_instructions(message.ask)
+        set_edit_context_instructions(message.edit_context)
         set_no_context_instructions(message.no_context)
-        set_code_completions_instructions(message.code_completions)
+        set_code_at_cursor_instructions(message.code_completions)
         set_prune_context_instructions(message.prune_context)
       } else if (message.command == 'CONNECTION_STATUS') {
         set_is_connected(message.connected)
@@ -552,12 +550,12 @@ export const use_panel = (vscode: any) => {
     is_connected,
     updated_preset,
     set_updated_preset,
-    ask_instructions,
-    edit_instructions,
+    ask_about_context_instructions,
+    edit_context_instructions,
     no_context_instructions,
     has_active_editor,
     has_active_selection,
-    code_completions_instructions,
+    code_at_cursor_instructions,
     prune_context_instructions,
     currently_open_file_text,
     mode,

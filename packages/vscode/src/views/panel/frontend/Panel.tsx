@@ -65,12 +65,12 @@ export const Panel = () => {
     is_connected,
     updated_preset,
     set_updated_preset,
-    ask_instructions,
-    edit_instructions,
+    ask_about_context_instructions,
+    edit_context_instructions,
     no_context_instructions,
     has_active_editor,
     has_active_selection,
-    code_completions_instructions,
+    code_at_cursor_instructions,
     prune_context_instructions,
     currently_open_file_text,
     mode,
@@ -122,11 +122,11 @@ export const Panel = () => {
     use_latest_donations()
 
   if (
-    ask_instructions === undefined ||
-    edit_instructions === undefined ||
+    ask_about_context_instructions === undefined ||
+    edit_context_instructions === undefined ||
     no_context_instructions === undefined ||
     !version ||
-    code_completions_instructions === undefined ||
+    code_at_cursor_instructions === undefined ||
     prune_context_instructions === undefined ||
     mode === undefined ||
     web_prompt_type === undefined ||
@@ -158,11 +158,11 @@ export const Panel = () => {
 
   const get_current_instructions = () => {
     if (is_for_code_completions) {
-      return code_completions_instructions
+      return code_at_cursor_instructions
     }
     const prompt_type = mode == MODE.WEB ? web_prompt_type : api_prompt_type
-    if (prompt_type == 'ask') return ask_instructions
-    if (prompt_type == 'edit-context') return edit_instructions
+    if (prompt_type == 'ask') return ask_about_context_instructions
+    if (prompt_type == 'edit-context') return edit_context_instructions
     if (prompt_type == 'no-context') return no_context_instructions
     return ''
   }
@@ -252,10 +252,10 @@ export const Panel = () => {
                 on_show_home={() => {
                   set_active_view('home')
                 }}
-                ask_instructions={ask_instructions}
-                edit_instructions={edit_instructions}
+                ask_instructions={ask_about_context_instructions}
+                edit_instructions={edit_context_instructions}
                 no_context_instructions={no_context_instructions}
-                code_completions_instructions={code_completions_instructions}
+                code_completions_instructions={code_at_cursor_instructions}
                 prune_context_instructions={prune_context_instructions}
                 set_instructions={handle_instructions_change}
                 mode={mode}

@@ -49,12 +49,13 @@ export const handle_send_prompt = async (params: {
     params.panel_provider.web_prompt_type == 'code-completions'
 
   if (is_in_code_completions_mode) {
-    current_instructions = params.panel_provider.code_completion_instructions
+    current_instructions = params.panel_provider.code_at_cursor_instructions
   } else {
     if (params.panel_provider.web_prompt_type == 'ask') {
-      current_instructions = params.panel_provider.ask_instructions
+      current_instructions =
+        params.panel_provider.ask_about_context_instructions
     } else if (params.panel_provider.web_prompt_type == 'edit-context') {
-      current_instructions = params.panel_provider.edit_instructions
+      current_instructions = params.panel_provider.edit_context_instructions
     } else if (params.panel_provider.web_prompt_type == 'no-context') {
       current_instructions = params.panel_provider.no_context_instructions
     } else if (params.panel_provider.web_prompt_type == 'prune-context') {
@@ -131,7 +132,44 @@ export const handle_send_prompt = async (params: {
     )
 
     const completion_instructions =
-      params.panel_provider.code_completion_instructions
+      params.panel_provider.code_at_cursor_instructions
+
+    let processed_completion_instructions = completion_instructions
+
+    if (processed_completion_instructions.includes('#Selection')) {
+      processed_completion_instructions = replace_selection_placeholder(
+        processed_completion_instructions
+      )
+    }
+
+    if (processed_completion_instructions.includes('#Changes:')) {
+      processed_completion_instructions = await replace_changes_symbol({
+        instruction: processed_completion_instructions
+      })
+    }
+
+    if (processed_completion_instructions.includes('#Commit:')) {
+      processed_completion_instructions = await replace_commit_symbol({
+        instruction: processed_completion_instructions
+      })
+    }
+
+    if (processed_completion_instructions.includes('#ContextAtCommit:')) {
+      processed_completion_instructions =
+        await replace_context_at_commit_symbol({
+          instruction: processed_completion_instructions,
+          workspace_provider: params.panel_provider.workspace_provider
+        })
+    }
+
+    if (processed_completion_instructions.includes('#SavedContext:')) {
+      processed_completion_instructions =
+        await replace_saved_context_placeholder({
+          instruction: processed_completion_instructions,
+          context: params.panel_provider.context,
+          workspace_provider: params.panel_provider.workspace_provider
+        })
+    }
 
     const context_text = await files_collector.collect_files({
       exclude_path: active_path
@@ -151,8 +189,8 @@ export const handle_send_prompt = async (params: {
     }
 
     const text = `${main_instructions}\n${payload.before}${
-      completion_instructions
-        ? `<missing_text>${completion_instructions}</missing_text>`
+      processed_completion_instructions
+        ? `<missing_text>${processed_completion_instructions}</missing_text>`
         : '<missing_text>'
     }${payload.after}\n${main_instructions}`
 
@@ -160,7 +198,7 @@ export const handle_send_prompt = async (params: {
       return Array.from({ length: params.invocation_count }).map(() => ({
         text,
         preset_name,
-        raw_instructions: completion_instructions,
+        raw_instructions: processed_completion_instructions,
         mode: params.panel_provider.web_prompt_type
       }))
     })
@@ -507,11 +545,11 @@ async function resolve_presets(params: {
 
   let current_instructions = ''
   if (params.panel_provider.web_prompt_type == 'code-completions') {
-    current_instructions = params.panel_provider.code_completion_instructions
+    current_instructions = params.panel_provider.code_at_cursor_instructions
   } else if (params.panel_provider.web_prompt_type == 'ask') {
-    current_instructions = params.panel_provider.ask_instructions
+    current_instructions = params.panel_provider.ask_about_context_instructions
   } else if (params.panel_provider.web_prompt_type == 'edit-context') {
-    current_instructions = params.panel_provider.edit_instructions
+    current_instructions = params.panel_provider.edit_context_instructions
   } else if (params.panel_provider.web_prompt_type == 'no-context') {
     current_instructions = params.panel_provider.no_context_instructions
   } else if (params.panel_provider.web_prompt_type == 'prune-context') {

@@ -25,6 +25,7 @@ type NavItem =
   | 'edit-context'
   | 'code-completions'
   | 'intelligent-update'
+  | 'prune-context'
   | 'commit-messages'
 
 type NavConfigItem =
@@ -61,6 +62,11 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   },
   {
     type: 'item',
+    id: 'prune-context',
+    label: 'settings.sidebar.prune-context'
+  },
+  {
+    type: 'item',
     id: 'commit-messages',
     label: 'settings.sidebar.commit-messages'
   }
@@ -74,6 +80,7 @@ type Props = {
   edit_context_configs: ConfigurationForClient[]
   edit_context_system_instructions: string
   intelligent_update_configs: ConfigurationForClient[]
+  prune_context_configs: ConfigurationForClient[]
   commit_message_instructions: string
   commit_message_auto_accept_after: number | null
   context_size_warning_threshold: number
@@ -91,6 +98,7 @@ type Props = {
   set_edit_context_configs: (configs: ConfigurationForClient[]) => void
   set_code_completions_configs: (configs: ConfigurationForClient[]) => void
   set_intelligent_update_configs: (configs: ConfigurationForClient[]) => void
+  set_prune_context_configs: (configs: ConfigurationForClient[]) => void
   set_commit_messages_configs: (configs: ConfigurationForClient[]) => void
   on_context_size_warning_threshold_change: (threshold: number) => void
   on_commit_instructions_change: (instructions: string) => void
@@ -139,6 +147,7 @@ export const Home: React.FC<Props> = (props) => {
     'edit-context': null,
     'code-completions': null,
     'intelligent-update': null,
+    'prune-context': null,
     'commit-messages': null
   })
   const [commit_instructions, set_commit_instructions] = useState('')
@@ -188,6 +197,10 @@ export const Home: React.FC<Props> = (props) => {
   )
   const intelligent_update_on_stuck_change = useCallback(
     (is_stuck: boolean) => handle_stuck_change('intelligent-update', is_stuck),
+    [handle_stuck_change]
+  )
+  const prune_context_on_stuck_change = useCallback(
+    (is_stuck: boolean) => handle_stuck_change('prune-context', is_stuck),
     [handle_stuck_change]
   )
   const commit_messages_on_stuck_change = useCallback(
@@ -447,6 +460,28 @@ export const Home: React.FC<Props> = (props) => {
               on_unset_default={() =>
                 props.on_unset_default_config('INTELLIGENT_UPDATE')
               }
+            />
+          </Group>
+        </Section>
+        <Section
+          ref={(el) => (section_refs.current['prune-context'] = el)}
+          group="API Tool"
+          title="Prune Context"
+          subtitle="Automatically reduce context size by summarizing or removing less relevant information."
+          on_stuck_change={prune_context_on_stuck_change}
+        >
+          <Group>
+            <ApiToolConfigurationSection
+              configurations={props.prune_context_configs}
+              set_configurations={props.set_prune_context_configs}
+              tool_name="PRUNE_CONTEXT"
+              can_have_default={false}
+              on_add={() => props.on_add_config('PRUNE_CONTEXT')}
+              on_reorder={(reordered) =>
+                props.on_reorder_configs('PRUNE_CONTEXT', reordered)
+              }
+              on_edit={(id) => props.on_edit_config('PRUNE_CONTEXT', id)}
+              on_delete={(id) => props.on_delete_config('PRUNE_CONTEXT', id)}
             />
           </Group>
         </Section>

@@ -164,16 +164,16 @@ export const handle_show_history_quick_pick = async (
   const set_instructions = async (text: string) => {
     switch (mode) {
       case 'ask':
-        panel_provider.ask_instructions = text
+        panel_provider.ask_about_context_instructions = text
         break
       case 'edit-context':
-        panel_provider.edit_instructions = text
+        panel_provider.edit_context_instructions = text
         break
       case 'no-context':
         panel_provider.no_context_instructions = text
         break
       case 'code-completions':
-        panel_provider.code_completion_instructions = text
+        panel_provider.code_at_cursor_instructions = text
         break
       case 'prune-context':
         panel_provider.prune_context_instructions = text
@@ -184,10 +184,10 @@ export const handle_show_history_quick_pick = async (
 
     panel_provider.send_message({
       command: 'INSTRUCTIONS',
-      ask: panel_provider.ask_instructions,
-      edit_context: panel_provider.edit_instructions,
+      ask: panel_provider.ask_about_context_instructions,
+      edit_context: panel_provider.edit_context_instructions,
       no_context: panel_provider.no_context_instructions,
-      code_completions: panel_provider.code_completion_instructions,
+      code_completions: panel_provider.code_at_cursor_instructions,
       prune_context: panel_provider.prune_context_instructions
     })
   }

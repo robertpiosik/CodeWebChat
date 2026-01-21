@@ -41,6 +41,8 @@ export const dictionary = {
       'No matching files found in workspace for the paths in clipboard.',
     NO_CODE_COMPLETIONS_CONFIGURATIONS_FOUND:
       'No "Code Completions" configurations found. Please add one in the settings.',
+    NO_PRUNE_CONTEXT_CONFIGURATIONS_FOUND:
+      'No "Prune Context" configurations found. Please add one in the settings.',
     NO_RECENT_CHANGES_TO_UNDO:
       'No recent changes found to undo or changes were already undone.',
     CONTEXT_COPIED_TO_CLIPBOARD: 'Context copied to clipboard.',

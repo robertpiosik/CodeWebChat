@@ -427,6 +427,28 @@ export class ModelProvidersManager {
     return this._get_tool_configs_from_settings('configurationsForPruneContext')
   }
 
+  public async get_default_prune_context_config(): Promise<
+    ToolConfig | undefined
+  > {
+    await this._load_promise
+    const default_config = this._get_default_tool_config_from_settings(
+      'configurationsForPruneContext'
+    )
+    if (default_config) return default_config
+
+    const configs = await this.get_prune_context_tool_configs()
+    if (configs.length == 1) return configs[0]
+
+    return undefined
+  }
+
+  public async set_default_prune_context_config(config: ToolConfig | null) {
+    await this._set_default_tool_config_in_settings(
+      'configurationsForPruneContext',
+      config
+    )
+  }
+
   public async save_prune_context_tool_configs(configs: PruneContextConfigs) {
     await this._save_tool_configs_to_settings(
       'configurationsForPruneContext',

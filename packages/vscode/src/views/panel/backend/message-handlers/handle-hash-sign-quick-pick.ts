@@ -547,6 +547,7 @@ const handle_saved_context_item = async (
 const hash_sign_quick_pick = async (params: {
   context: vscode.ExtensionContext
   is_for_code_completions: boolean
+  is_prune_context: boolean
 }): Promise<string | undefined> => {
   let items: vscode.QuickPickItem[] = [
     {
@@ -571,8 +572,12 @@ const hash_sign_quick_pick = async (params: {
     }
   ]
 
-  if (params.is_for_code_completions) {
-    items = items.filter((item) => item.label === saved_context_label)
+  if (params.is_prune_context) {
+    items = items.filter(
+      (item) =>
+        item.label !== context_at_commit_label &&
+        item.label !== saved_context_label
+    )
   }
 
   const last_selected_symbol = params.context.workspaceState.get<string>(
@@ -663,9 +668,16 @@ export const handle_hash_sign_quick_pick = async (
   context: vscode.ExtensionContext,
   is_for_code_completions: boolean
 ): Promise<void> => {
+  const is_prune_context =
+    (panel_provider.mode == MODE.WEB &&
+      panel_provider.web_prompt_type == 'prune-context') ||
+    (panel_provider.mode == MODE.API &&
+      panel_provider.api_prompt_type == 'prune-context')
+
   const replacement = await hash_sign_quick_pick({
     context,
-    is_for_code_completions
+    is_for_code_completions,
+    is_prune_context
   })
 
   if (!replacement) {
@@ -682,13 +694,15 @@ export const handle_hash_sign_quick_pick = async (
       ? panel_provider.web_prompt_type
       : panel_provider.api_prompt_type
   if (mode == 'ask') {
-    current_text = panel_provider.ask_instructions
+    current_text = panel_provider.ask_about_context_instructions
   } else if (mode == 'edit-context') {
-    current_text = panel_provider.edit_instructions
+    current_text = panel_provider.edit_context_instructions
   } else if (mode == 'no-context') {
     current_text = panel_provider.no_context_instructions
   } else if (mode == 'code-completions') {
-    current_text = panel_provider.code_completion_instructions
+    current_text = panel_provider.code_at_cursor_instructions
+  } else if (mode == 'prune-context') {
+    current_text = panel_provider.prune_context_instructions
   }
 
   const is_after_hash_sign = current_text

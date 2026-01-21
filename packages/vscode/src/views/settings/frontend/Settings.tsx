@@ -11,6 +11,7 @@ type NavItem =
   | 'code-completions'
   | 'edit-context'
   | 'intelligent-update'
+  | 'prune-context'
   | 'commit-messages'
 
 const vscode = acquireVsCodeApi()
@@ -28,6 +29,7 @@ export const Settings = () => {
       settings_hook.edit_context_configs !== undefined &&
       settings_hook.edit_context_system_instructions !== undefined &&
       settings_hook.intelligent_update_configs !== undefined &&
+      settings_hook.prune_context_configs !== undefined &&
       settings_hook.commit_message_instructions !== undefined &&
       settings_hook.commit_message_auto_accept_after !== undefined &&
       settings_hook.context_size_warning_threshold !== undefined &&
@@ -66,6 +68,7 @@ export const Settings = () => {
         settings_hook.edit_context_system_instructions!
       }
       intelligent_update_configs={settings_hook.intelligent_update_configs!}
+      prune_context_configs={settings_hook.prune_context_configs!}
       context_size_warning_threshold={
         settings_hook.context_size_warning_threshold!
       }
@@ -92,6 +95,7 @@ export const Settings = () => {
       set_intelligent_update_configs={
         settings_hook.set_intelligent_update_configs
       }
+      set_prune_context_configs={settings_hook.set_prune_context_configs}
       on_context_size_warning_threshold_change={
         settings_hook.handle_context_size_warning_threshold_change
       }

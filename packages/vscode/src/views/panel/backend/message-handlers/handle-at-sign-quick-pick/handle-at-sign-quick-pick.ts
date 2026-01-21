@@ -279,13 +279,15 @@ export const handle_at_sign_quick_pick = async (
       ? panel_provider.web_prompt_type
       : panel_provider.api_prompt_type
   if (mode == 'ask') {
-    current_text = panel_provider.ask_instructions
+    current_text = panel_provider.ask_about_context_instructions
   } else if (mode == 'edit-context') {
-    current_text = panel_provider.edit_instructions
+    current_text = panel_provider.edit_context_instructions
   } else if (mode == 'no-context') {
     current_text = panel_provider.no_context_instructions
   } else if (mode == 'code-completions') {
-    current_text = panel_provider.code_completion_instructions
+    current_text = panel_provider.code_at_cursor_instructions
+  } else if (mode == 'prune-context') {
+    current_text = panel_provider.prune_context_instructions
   }
 
   const is_after_at_sign = current_text

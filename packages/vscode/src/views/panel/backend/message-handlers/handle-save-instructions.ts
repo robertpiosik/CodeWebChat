@@ -15,13 +15,13 @@ export const handle_save_instructions = async (
   const { mode, instruction } = message
 
   if (mode == 'ask') {
-    panel_provider.ask_instructions = instruction
+    panel_provider.ask_about_context_instructions = instruction
     await panel_provider.context.workspaceState.update(
       INSTRUCTIONS_ASK_STATE_KEY,
       instruction
     )
   } else if (mode == 'edit-context') {
-    panel_provider.edit_instructions = instruction
+    panel_provider.edit_context_instructions = instruction
     await panel_provider.context.workspaceState.update(
       INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY,
       instruction
@@ -33,7 +33,7 @@ export const handle_save_instructions = async (
       instruction
     )
   } else if (mode == 'code-completions') {
-    panel_provider.code_completion_instructions = instruction
+    panel_provider.code_at_cursor_instructions = instruction
     await panel_provider.context.workspaceState.update(
       INSTRUCTIONS_CODE_COMPLETIONS_STATE_KEY,
       instruction

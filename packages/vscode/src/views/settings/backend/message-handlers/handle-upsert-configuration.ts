@@ -62,6 +62,13 @@ export const handle_upsert_configuration = async (
       advanced_options = ['Temperature', 'Reasoning Effort', 'Max Concurrency']
       advanced_details = 'Temperature, Reasoning Effort, Max Concurrency...'
       break
+    case 'prune-context':
+      get_configs = () => providers_manager.get_prune_context_tool_configs()
+      save_configs = (configs) =>
+        providers_manager.save_prune_context_tool_configs(configs)
+      advanced_options = ['Temperature', 'Reasoning Effort']
+      advanced_details = 'Temperature, Reasoning Effort...'
+      break
   }
 
   const configs = await get_configs()

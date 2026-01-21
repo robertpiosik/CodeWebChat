@@ -37,13 +37,13 @@ export const handle_preview_preset = async (
   let text_to_send: string
   let current_instructions = ''
   if (panel_provider.web_prompt_type == 'ask') {
-    current_instructions = panel_provider.ask_instructions
+    current_instructions = panel_provider.ask_about_context_instructions
   } else if (panel_provider.web_prompt_type == 'edit-context') {
-    current_instructions = panel_provider.edit_instructions
+    current_instructions = panel_provider.edit_context_instructions
   } else if (panel_provider.web_prompt_type == 'no-context') {
     current_instructions = panel_provider.no_context_instructions
   } else if (panel_provider.web_prompt_type == 'code-completions') {
-    current_instructions = panel_provider.code_completion_instructions
+    current_instructions = panel_provider.code_at_cursor_instructions
   }
 
   if (panel_provider.web_prompt_type == 'code-completions' && active_editor) {
@@ -68,8 +68,45 @@ export const handle_preview_preset = async (
     const system_instructions =
       config.get<string>('chatCodeCompletionsInstructions') || ''
 
-    const missing_text_tag = current_instructions
-      ? `<missing_text>${current_instructions}</missing_text>`
+    let processed_completion_instructions = current_instructions
+
+    if (processed_completion_instructions.includes('#Selection')) {
+      processed_completion_instructions = replace_selection_placeholder(
+        processed_completion_instructions
+      )
+    }
+
+    if (processed_completion_instructions.includes('#Changes:')) {
+      processed_completion_instructions = await replace_changes_symbol({
+        instruction: processed_completion_instructions
+      })
+    }
+
+    if (processed_completion_instructions.includes('#Commit:')) {
+      processed_completion_instructions = await replace_commit_symbol({
+        instruction: processed_completion_instructions
+      })
+    }
+
+    if (processed_completion_instructions.includes('#ContextAtCommit:')) {
+      processed_completion_instructions =
+        await replace_context_at_commit_symbol({
+          instruction: processed_completion_instructions,
+          workspace_provider: panel_provider.workspace_provider
+        })
+    }
+
+    if (processed_completion_instructions.includes('#SavedContext:')) {
+      processed_completion_instructions =
+        await replace_saved_context_placeholder({
+          instruction: processed_completion_instructions,
+          context: panel_provider.context,
+          workspace_provider: panel_provider.workspace_provider
+        })
+    }
+
+    const missing_text_tag = processed_completion_instructions
+      ? `<missing_text>${processed_completion_instructions}</missing_text>`
       : '<missing_text>'
 
     text_to_send = `${system_instructions}\n<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}${missing_text_tag}${text_after_cursor}\n]]>\n</file>\n</files>\n${system_instructions}`

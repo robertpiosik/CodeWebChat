@@ -114,10 +114,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public has_active_editor: boolean = false
   public has_active_selection: boolean = false
   public caret_position: number = 0
-  public ask_instructions: string = ''
-  public edit_instructions: string = ''
+  public ask_about_context_instructions: string = ''
+  public edit_context_instructions: string = ''
   public no_context_instructions: string = ''
-  public code_completion_instructions: string = ''
+  public code_at_cursor_instructions: string = ''
   public prune_context_instructions: string = ''
   public web_prompt_type: WebPromptType
   public chat_edit_format: EditFormat
@@ -144,8 +144,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
   private _update_providers_compact_mode() {
     const is_prune_context =
-      (this.mode === MODE.WEB && this.web_prompt_type === 'prune-context') ||
-      (this.mode === MODE.API && this.api_prompt_type === 'prune-context')
+      (this.mode == MODE.WEB && this.web_prompt_type == 'prune-context') ||
+      (this.mode == MODE.API && this.api_prompt_type == 'prune-context')
     this.workspace_provider.set_use_compact_token_count(is_prune_context)
     this.open_editors_provider.set_use_compact_token_count(is_prune_context)
   }
@@ -197,19 +197,17 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       }
     })
 
-    this.edit_instructions = this.context.workspaceState.get<string>(
+    this.edit_context_instructions = this.context.workspaceState.get<string>(
       INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY,
       ''
     )
-    this.ask_instructions = this.context.workspaceState.get<string>(
-      INSTRUCTIONS_ASK_STATE_KEY,
-      ''
-    )
+    this.ask_about_context_instructions =
+      this.context.workspaceState.get<string>(INSTRUCTIONS_ASK_STATE_KEY, '')
     this.no_context_instructions = this.context.workspaceState.get<string>(
       INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
       ''
     )
-    this.code_completion_instructions = this.context.workspaceState.get<string>(
+    this.code_at_cursor_instructions = this.context.workspaceState.get<string>(
       INSTRUCTIONS_CODE_COMPLETIONS_STATE_KEY,
       ''
     )
@@ -901,9 +899,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public add_text_at_cursor_position(text: string, chars_to_remove_before = 0) {
     const is_in_code_completions_mode =
       (this.mode == MODE.WEB && this.web_prompt_type == 'code-completions') ||
-      (this.mode == MODE.API && this.api_prompt_type == 'code-completions') ||
-      (this.mode == MODE.WEB && this.web_prompt_type == 'prune-context') ||
-      (this.mode == MODE.API && this.api_prompt_type == 'prune-context')
+      (this.mode == MODE.API && this.api_prompt_type == 'code-completions')
 
     let current_instructions = ''
     let new_instructions = ''
@@ -915,16 +911,16 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
     switch (mode) {
       case 'ask':
-        current_instructions = this.ask_instructions
+        current_instructions = this.ask_about_context_instructions
         break
       case 'edit-context':
-        current_instructions = this.edit_instructions
+        current_instructions = this.edit_context_instructions
         break
       case 'no-context':
         current_instructions = this.no_context_instructions
         break
       case 'code-completions':
-        current_instructions = this.code_completion_instructions
+        current_instructions = this.code_at_cursor_instructions
         break
       case 'prune-context':
         current_instructions = this.prune_context_instructions
@@ -946,16 +942,16 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
     switch (mode) {
       case 'ask':
-        this.ask_instructions = new_instructions
+        this.ask_about_context_instructions = new_instructions
         break
       case 'edit-context':
-        this.edit_instructions = new_instructions
+        this.edit_context_instructions = new_instructions
         break
       case 'no-context':
         this.no_context_instructions = new_instructions
         break
       case 'code-completions':
-        this.code_completion_instructions = new_instructions
+        this.code_at_cursor_instructions = new_instructions
         break
       case 'prune-context':
         this.prune_context_instructions = new_instructions
@@ -966,10 +962,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
     this.send_message({
       command: 'INSTRUCTIONS',
-      ask: this.ask_instructions,
-      edit_context: this.edit_instructions,
+      ask: this.ask_about_context_instructions,
+      edit_context: this.edit_context_instructions,
       no_context: this.no_context_instructions,
-      code_completions: this.code_completion_instructions,
+      code_completions: this.code_at_cursor_instructions,
       prune_context: this.prune_context_instructions,
       caret_position: this.caret_position
     })

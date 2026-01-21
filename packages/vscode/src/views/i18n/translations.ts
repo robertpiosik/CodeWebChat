@@ -10,6 +10,7 @@ export const translations = {
     'settings.sidebar.edit-context': 'Edit Context',
     'settings.sidebar.code-completions': 'Code Completions',
     'settings.sidebar.intelligent-update': 'Intelligent Update',
+    'settings.sidebar.prune-context': 'Prune Context',
     'settings.sidebar.commit-messages': 'Commit Messages'
   },
   pl: {
