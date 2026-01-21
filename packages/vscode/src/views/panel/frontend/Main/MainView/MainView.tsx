@@ -45,7 +45,7 @@ type Props = {
   on_toggle_pinned_configuration: (id: string) => void
   on_manage_configurations: () => void
   has_active_editor: boolean
-  has_active_selection: boolean
+  current_selection: string
   chat_history: string[]
   token_count: number
   context_size_warning_threshold: number
@@ -220,7 +220,7 @@ export const MainView: React.FC<Props> = (props) => {
             is_web_mode={props.mode == MODE.WEB}
             is_connected={props.is_connected}
             is_in_code_completions_mode={is_in_code_completions_prompt_type}
-            has_active_selection={props.has_active_selection}
+            current_selection={props.current_selection}
             send_with_shift_enter={props.send_with_shift_enter}
             has_active_editor={props.has_active_editor}
             on_caret_position_change={props.on_caret_position_change}

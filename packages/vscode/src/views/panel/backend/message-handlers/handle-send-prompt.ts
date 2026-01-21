@@ -561,7 +561,7 @@ async function resolve_presets(params: {
       (!params.panel_provider.websocket_server_instance.is_connected_with_browser() ||
         (is_in_code_completions_mode &&
           (!params.panel_provider.has_active_editor ||
-            params.panel_provider.has_active_selection)) ||
+            !!params.panel_provider.current_selection)) ||
         (!is_in_code_completions_mode &&
           !(
             current_instructions ||

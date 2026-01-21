@@ -112,7 +112,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   private _webview_view: vscode.WebviewView | undefined
   private _config_listener: vscode.Disposable | undefined
   public has_active_editor: boolean = false
-  public has_active_selection: boolean = false
+  public current_selection: string = ''
   public caret_position: number = 0
   public ask_about_context_instructions: string = ''
   public edit_context_instructions: string = ''
@@ -337,13 +337,16 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     update_editor_state()
 
     vscode.window.onDidChangeTextEditorSelection((event) => {
-      const has_selection = !event.textEditor.selection.isEmpty
-      if (has_selection != this.has_active_selection) {
-        this.has_active_selection = has_selection
+      const selection = event.textEditor.selection
+      const current_selection = !selection.isEmpty
+        ? event.textEditor.document.getText(selection)
+        : ''
+      if (current_selection != this.current_selection) {
+        this.current_selection = current_selection
         if (this._webview_view) {
           this.send_message({
             command: 'EDITOR_SELECTION_CHANGED',
-            has_selection: has_selection
+            current_selection
           })
         }
       }
@@ -351,14 +354,17 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
     const update_selection_state = () => {
       const active_text_editor = vscode.window.activeTextEditor
-      const has_selection = active_text_editor
-        ? !active_text_editor.selection.isEmpty
-        : false
-      this.has_active_selection = has_selection
+      const selection = active_text_editor?.selection
+      const current_selection =
+        active_text_editor && selection && !selection.isEmpty
+          ? active_text_editor.document.getText(selection)
+          : ''
+
+      this.current_selection = current_selection
       if (this._webview_view) {
         this.send_message({
           command: 'EDITOR_SELECTION_CHANGED',
-          has_selection: has_selection
+          current_selection
         })
       }
     }

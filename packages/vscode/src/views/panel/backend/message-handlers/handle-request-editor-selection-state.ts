@@ -5,6 +5,6 @@ export const handle_request_editor_selection_state = (
 ): void => {
   panel_provider.send_message({
     command: 'EDITOR_SELECTION_CHANGED',
-    has_selection: panel_provider.has_active_selection
+    current_selection: panel_provider.current_selection
   })
 }

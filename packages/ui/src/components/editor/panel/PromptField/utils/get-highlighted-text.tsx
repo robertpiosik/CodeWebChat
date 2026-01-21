@@ -46,7 +46,7 @@ const process_text_part_for_files = (
 
 export const get_highlighted_text = (params: {
   text: string
-  has_active_selection: boolean
+  current_selection: string
   context_file_paths: string[]
 }): string => {
   const saved_context_regex_part =
@@ -64,12 +64,14 @@ export const get_highlighted_text = (params: {
     .map((part) => {
       if (part == '#Selection') {
         const className = cn(styles['keyword'], styles['keyword--selection'], {
-          [styles['keyword--selection-error']]: !params.has_active_selection
+          [styles['keyword--selection-error']]: !params.current_selection
         })
-        const title = !params.has_active_selection
+        const title = !params.current_selection
           ? 'Missing text selection'
-          : ''
-        return `<span class="${className}" data-type="selection-keyword" title="${title}"><span class="${styles['keyword__icon']}" data-role="keyword-icon"></span><span class="${styles['keyword__text']}" data-role="keyword-text">Selection</span></span>`
+          : `Selection: ${params.current_selection
+              .substring(0, 100)
+              .replace(/\n/g, ' ')}...`
+        return `<span class="${className}" data-type="selection-keyword" title="${escape_html(title)}"><span class="${styles['keyword__icon']}" data-role="keyword-icon"></span><span class="${styles['keyword__text']}" data-role="keyword-text">Selection</span></span>`
       }
       if (part && /^#Changes:[^\s,;:!?]+$/.test(part)) {
         const branch_name = part.substring('#Changes:'.length)

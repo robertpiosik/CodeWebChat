@@ -593,7 +593,7 @@ export interface EditorStateChangedMessage extends BaseMessage {
 
 export interface EditorSelectionChangedMessage extends BaseMessage {
   command: 'EDITOR_SELECTION_CHANGED'
-  has_selection: boolean
+  current_selection: string
 }
 
 export interface GitStateChangedMessage extends BaseMessage {

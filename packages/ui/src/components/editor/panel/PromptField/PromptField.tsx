@@ -32,7 +32,7 @@ export type PromptFieldProps = {
   on_copy: () => void
   is_connected: boolean
   is_in_code_completions_mode: boolean
-  has_active_selection: boolean
+  current_selection: string
   has_active_editor: boolean
   on_caret_position_change: (caret_position: number) => void
   is_web_mode: boolean
@@ -170,13 +170,13 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const highlighted_html = useMemo(() => {
     return get_highlighted_text({
       text: props.value,
-      has_active_selection: props.has_active_selection,
+      current_selection: props.current_selection,
       context_file_paths: props.context_file_paths ?? []
     })
   }, [
     props.value,
     props.is_in_code_completions_mode,
-    props.has_active_selection,
+    props.current_selection,
     props.context_file_paths
   ])
 
@@ -309,7 +309,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
   return (
     <div className={styles.container}>
-      {props.has_active_selection && props.is_in_code_completions_mode && (
+      {!!props.current_selection && props.is_in_code_completions_mode && (
         <div className={styles.error}>
           <div className={styles.error__inner}>Remove text selection</div>
         </div>
@@ -325,7 +325,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         className={cn(styles.container__inner, {
           [styles['container__inner--disabled']]:
             props.is_in_code_completions_mode &&
-            (props.has_active_selection || !props.has_active_editor),
+            (!!props.current_selection || !props.has_active_editor),
           [styles['container__inner--selecting']]: is_text_selecting
         })}
         onKeyDown={handle_container_key_down}

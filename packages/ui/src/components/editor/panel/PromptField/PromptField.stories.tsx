@@ -14,7 +14,7 @@ export const Empty = () => (
     on_copy={() => console.log('Copied')}
     is_connected={true}
     is_in_code_completions_mode={false}
-    has_active_selection={false}
+    current_selection=""
     has_active_editor={true}
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
@@ -40,7 +40,7 @@ export const WithText = () => (
     on_copy={() => console.log('Copied')}
     is_connected={true}
     is_in_code_completions_mode={false}
-    has_active_selection={false}
+    current_selection=""
     has_active_editor={true}
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
@@ -66,7 +66,7 @@ export const LongText = () => (
     on_copy={() => console.log('Copied')}
     is_connected={true}
     is_in_code_completions_mode={false}
-    has_active_selection={false}
+    current_selection=""
     has_active_editor={true}
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
@@ -93,7 +93,7 @@ export const WithPlaceholderSavedContext = () => (
     is_connected={true}
     is_in_code_completions_mode={false}
     has_active_editor={true}
-    has_active_selection={false}
+    current_selection=""
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
@@ -119,7 +119,7 @@ export const WithPlaceholderSelection = () => (
     is_connected={true}
     is_in_code_completions_mode={false}
     has_active_editor={true}
-    has_active_selection={true}
+    current_selection="Selected text content"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
@@ -145,7 +145,7 @@ export const WithCommit = () => (
     is_connected={true}
     is_in_code_completions_mode={false}
     has_active_editor={true}
-    has_active_selection={false}
+    current_selection=""
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
@@ -171,7 +171,7 @@ export const WithCommitWithQuotes = () => (
     is_connected={true}
     is_in_code_completions_mode={false}
     has_active_editor={true}
-    has_active_selection={false}
+    current_selection=""
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
@@ -196,7 +196,7 @@ export const WithContextAtCommit = () => (
     is_connected={true}
     is_in_code_completions_mode={false}
     has_active_editor={true}
-    has_active_selection={false}
+    current_selection=""
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
@@ -223,7 +223,7 @@ export const WithEditFormatSelector = () => {
       on_copy={() => console.log('Copied')}
       is_connected={true}
       is_in_code_completions_mode={false}
-      has_active_selection={false}
+      current_selection=""
       has_active_editor={true}
       on_caret_position_change={(pos) => console.log('Caret position:', pos)}
       is_web_mode={false}
@@ -251,7 +251,7 @@ export const WithFilePaths = () => (
     on_copy={() => console.log('Copied')}
     is_connected={true}
     is_in_code_completions_mode={false}
-    has_active_selection={false}
+    current_selection=""
     has_active_editor={true}
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}

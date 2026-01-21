@@ -89,9 +89,7 @@ export const use_panel = (vscode: any) => {
   const [has_active_editor, set_has_active_editor] = useState<
     boolean | undefined
   >()
-  const [has_active_selection, set_has_active_selection] = useState<
-    boolean | undefined
-  >()
+  const [current_selection, set_current_selection] = useState<string>('')
   const [code_at_cursor_instructions, set_code_at_cursor_instructions] =
     useState<string | undefined>(undefined)
   const [prune_context_instructions, set_prune_context_instructions] = useState<
@@ -221,7 +219,7 @@ export const use_panel = (vscode: any) => {
       } else if (message.command == 'EDITOR_STATE_CHANGED') {
         set_has_active_editor(message.has_active_editor)
       } else if (message.command == 'EDITOR_SELECTION_CHANGED') {
-        set_has_active_selection(message.has_selection)
+        set_current_selection(message.current_selection)
       } else if (message.command == 'CONTEXT_FILES') {
         set_context_file_paths(message.file_paths)
       } else if (message.command == 'SEND_WITH_SHIFT_ENTER') {
@@ -554,7 +552,7 @@ export const use_panel = (vscode: any) => {
     edit_context_instructions,
     no_context_instructions,
     has_active_editor,
-    has_active_selection,
+    current_selection,
     code_at_cursor_instructions,
     prune_context_instructions,
     currently_open_file_text,

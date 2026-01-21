@@ -47,7 +47,7 @@ type Props = {
   on_web_prompt_type_change: (mode: WebPromptType) => void
   on_api_prompt_type_change: (mode: ApiPromptType) => void
   has_active_editor: boolean
-  has_active_selection: boolean
+  current_selection: string
   chat_input_focus_and_select_key: number
   chat_input_focus_key: number
   context_size_warning_threshold: number
@@ -739,7 +739,7 @@ export const Main: React.FC<Props> = (props) => {
       }
       on_quick_action_click={handle_quick_action_click}
       has_active_editor={props.has_active_editor}
-      has_active_selection={props.has_active_selection}
+      current_selection={props.current_selection}
       chat_history={current_history || []}
       token_count={token_count}
       web_prompt_type={props.web_prompt_type}
