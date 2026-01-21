@@ -342,6 +342,12 @@ export interface IntelligentUpdateFileInPreviewMessage extends BaseMessage {
   workspace_name?: string
 }
 
+export interface CancelIntelligentUpdateFileInPreviewMessage extends BaseMessage {
+  command: 'CANCEL_INTELLIGENT_UPDATE_FILE_IN_PREVIEW'
+  file_path: string
+  workspace_name?: string
+}
+
 export interface FixAllFailedFilesMessage extends BaseMessage {
   command: 'FIX_ALL_FAILED_FILES'
 }
@@ -520,6 +526,7 @@ export type FrontendMessage =
   | GetWorkspaceStateMessage
   | RequestGitStateMessage
   | IntelligentUpdateFileInPreviewMessage
+  | CancelIntelligentUpdateFileInPreviewMessage
   | UpdateLastUsedPresetMessage
   | FixAllFailedFilesMessage
   | CommitChangesMessage

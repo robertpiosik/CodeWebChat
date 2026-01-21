@@ -11,6 +11,16 @@
   color: var(--vscode-descriptionForeground);
   margin-right: 4px;
   white-space: nowrap;
+
+  &__cancel {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--vscode-textLink-foreground);
+    }
+  }
 }
 
 .file {

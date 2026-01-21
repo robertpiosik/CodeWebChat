@@ -78,7 +78,8 @@ import {
   handle_save_tasks,
   handle_delete_task,
   handle_fix_all_failed_files,
-  handle_prune_context
+  handle_prune_context,
+  handle_cancel_intelligent_update_file_in_preview
 } from './message-handlers'
 import {
   API_EDIT_FORMAT_STATE_KEY,
@@ -124,7 +125,11 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public api_edit_format: EditFormat
   public api_prompt_type: ApiPromptType
   public mode: Mode = MODE.WEB
-  public intelligent_update_cancel_token_sources: CancelTokenSource[] = []
+  public intelligent_update_cancel_token_sources: {
+    source: CancelTokenSource
+    file_path: string
+    workspace_name?: string
+  }[] = []
   public api_call_cancel_token_source: CancelTokenSource | null = null
   public api_manager!: ApiManager
   public commit_was_staged_by_script: boolean = false
@@ -406,7 +411,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public cancel_all_intelligent_updates() {
     const sources = [...this.intelligent_update_cancel_token_sources]
     this.intelligent_update_cancel_token_sources = []
-    sources.forEach((source) => source.cancel('Preview finished.'))
+    sources.forEach((item) => item.source.cancel('Preview finished.'))
   }
 
   public send_context_files() {
@@ -637,6 +642,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_discard_user_changes_in_preview(message)
           } else if (message.command == 'INTELLIGENT_UPDATE_FILE_IN_PREVIEW') {
             await handle_intelligent_update_file_in_preview(this, message)
+          } else if (
+            message.command == 'CANCEL_INTELLIGENT_UPDATE_FILE_IN_PREVIEW'
+          ) {
+            handle_cancel_intelligent_update_file_in_preview(this, message)
           } else if (message.command == 'RESPONSE_PREVIEW') {
             await handle_response_preview(message)
           } else if (message.command == 'REMOVE_RESPONSE_HISTORY_ITEM') {

@@ -127,9 +127,11 @@ export const handle_intelligent_update_file_in_preview = async (
   if (!safe_path) return
 
   const cancel_token_source = axios.CancelToken.source()
-  panel_provider.intelligent_update_cancel_token_sources.push(
-    cancel_token_source
-  )
+  panel_provider.intelligent_update_cancel_token_sources.push({
+    source: cancel_token_source,
+    file_path,
+    workspace_name
+  })
 
   panel_provider.send_message({
     command: 'UPDATE_FILE_PROGRESS',
@@ -265,8 +267,8 @@ export const handle_intelligent_update_file_in_preview = async (
     }
   } finally {
     const index =
-      panel_provider.intelligent_update_cancel_token_sources.indexOf(
-        cancel_token_source
+      panel_provider.intelligent_update_cancel_token_sources.findIndex(
+        (s) => s.source === cancel_token_source
       )
     if (index > -1) {
       panel_provider.intelligent_update_cancel_token_sources.splice(index, 1)

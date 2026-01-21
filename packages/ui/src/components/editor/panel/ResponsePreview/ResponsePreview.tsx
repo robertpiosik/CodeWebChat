@@ -14,6 +14,10 @@ type Props = {
     file_path: string
     workspace_name?: string
   }) => void
+  on_cancel_intelligent_update: (file: {
+    file_path: string
+    workspace_name?: string
+  }) => void
   on_toggle_file: (file: {
     file_path: string
     workspace_name?: string
@@ -219,6 +223,12 @@ export const ResponsePreview: FC<Props> = (props) => {
                   }
                   on_intelligent_update={() =>
                     props.on_intelligent_update({
+                      file_path: file.file_path,
+                      workspace_name: file.workspace_name
+                    })
+                  }
+                  on_cancel_intelligent_update={() =>
+                    props.on_cancel_intelligent_update({
                       file_path: file.file_path,
                       workspace_name: file.workspace_name
                     })

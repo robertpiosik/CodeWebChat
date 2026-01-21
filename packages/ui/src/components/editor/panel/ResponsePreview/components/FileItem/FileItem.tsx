@@ -15,6 +15,7 @@ type Props = {
   on_discard_user_changes: () => void
   on_preview_generated_code: () => void
   on_intelligent_update: () => void
+  on_cancel_intelligent_update: () => void
   on_go_to_file: () => void
 }
 
@@ -56,6 +57,7 @@ export const FileItem: FC<Props> = ({
   on_discard_user_changes,
   on_preview_generated_code,
   on_intelligent_update,
+  on_cancel_intelligent_update,
   on_go_to_file
 }) => {
   const message_obj = get_file_message(file)
@@ -82,6 +84,18 @@ export const FileItem: FC<Props> = ({
       <div className={styles.progress}>
         <span>{status_text}</span>
         <span className="codicon codicon-loading codicon-modifier-spin" />
+        {file.apply_status !== 'done' && (
+          <div
+            className={styles.progress__cancel}
+            onClick={(e) => {
+              e.stopPropagation()
+              on_cancel_intelligent_update()
+            }}
+            title="Cancel"
+          >
+            <span className="codicon codicon-close" />
+          </div>
+        )}
       </div>
     )
   }
