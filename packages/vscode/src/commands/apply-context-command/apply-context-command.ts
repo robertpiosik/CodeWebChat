@@ -12,7 +12,8 @@ import {
   handle_unstaged_files_source,
   handle_json_file_source,
   handle_workspace_state_source,
-  handle_commit_files_source
+  handle_commit_files_source,
+  handle_keyword_search_source
 } from './sources'
 import {
   load_all_contexts,
@@ -257,7 +258,11 @@ export const apply_context_command = (
             show_other_menu = false
 
             const other_quick_pick_options: (vscode.QuickPickItem & {
-              value?: 'clipboard' | 'unstaged' | 'commit_files'
+              value?:
+                | 'clipboard'
+                | 'unstaged'
+                | 'commit_files'
+                | 'keyword_search'
             })[] = [
               {
                 label: 'Scan the clipboard for valid paths',
@@ -270,12 +275,20 @@ export const apply_context_command = (
               {
                 label: 'Files of a commit...',
                 value: 'commit_files'
+              },
+              {
+                label: 'Keyword search...',
+                value: 'keyword_search'
               }
             ]
 
             const other_quick_pick = vscode.window.createQuickPick<
               vscode.QuickPickItem & {
-                value?: 'clipboard' | 'unstaged' | 'commit_files'
+                value?:
+                  | 'clipboard'
+                  | 'unstaged'
+                  | 'commit_files'
+                  | 'keyword_search'
               }
             >()
             other_quick_pick.title = 'Context Sources'
@@ -295,7 +308,11 @@ export const apply_context_command = (
             const other_selection = await new Promise<
               | 'back'
               | (vscode.QuickPickItem & {
-                  value?: 'clipboard' | 'unstaged' | 'commit_files'
+                  value?:
+                    | 'clipboard'
+                    | 'unstaged'
+                    | 'commit_files'
+                    | 'keyword_search'
                 })
               | undefined
             >((resolve) => {
@@ -350,6 +367,15 @@ export const apply_context_command = (
                 extension_context
               )
               if (result == 'back') {
+                show_other_menu = true
+                continue
+              }
+              return
+            }
+            if (other_selection.value == 'keyword_search') {
+              const result =
+                await handle_keyword_search_source(workspace_provider)
+              if (result === 'back') {
                 show_other_menu = true
                 continue
               }

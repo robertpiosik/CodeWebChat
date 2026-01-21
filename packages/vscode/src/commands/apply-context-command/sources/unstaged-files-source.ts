@@ -67,7 +67,7 @@ export const handle_unstaged_files_source = async (
         const token_count =
           await workspace_provider.calculate_file_tokens(file_path)
 
-        const formatted_token_count = display_token_count(token_count)
+        const formatted_token_count = display_token_count(token_count.total)
 
         return {
           label: path.basename(file_path),
