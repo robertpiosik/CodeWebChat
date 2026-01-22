@@ -25,6 +25,14 @@ import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 
 export type EditFormat = 'whole' | 'truncated' | 'diff' | 'before-after'
 
+export type SelectionState = {
+  text: string
+  start_line: number
+  start_col: number
+  end_line: number
+  end_col: number
+}
+
 export type PromptFieldProps = {
   value: string
   chat_history: string[]
@@ -34,7 +42,7 @@ export type PromptFieldProps = {
   on_copy: () => void
   is_connected: boolean
   prompt_type: WebPromptType | ApiPromptType
-  current_selection: string
+  current_selection?: SelectionState | null
   on_caret_position_change: (caret_position: number) => void
   is_web_mode: boolean
   on_search_click: () => void
@@ -58,6 +66,7 @@ export type PromptFieldProps = {
   on_go_to_file: (file_path: string) => void
   prune_context_instructions_prefix: string
   on_prune_context_instructions_prefix_change: (value: string) => void
+  on_pasted_lines_click: (path: string, start?: string, end?: string) => void
 }
 
 export const PromptField: React.FC<PromptFieldProps> = (props) => {

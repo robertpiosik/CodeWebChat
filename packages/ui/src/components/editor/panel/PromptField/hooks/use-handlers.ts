@@ -21,7 +21,7 @@ const getKeywordRanges = (
   const ranges: { start: number; end: number }[] = []
   // This regex is a combination of all keyword types
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+")|(#(?:Commit|ContextAtCommit):[^:]+:[^\s"]+\s+"(?:\\.|[^"\\])*")|(<fragment path="[^"]+">\n[\s\S]*?\n<\/fragment>)/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+")|(#(?:Commit|ContextAtCommit):[^:]+:[^\s"]+\s+"(?:\\.|[^"\\])*")|(<fragment path="[^"]+"(?: [^>]+)?>\n[\s\S]*?\n<\/fragment>)/g
 
   let match
   while ((match = regex.exec(text)) !== null) {
@@ -129,7 +129,13 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
     } else if (el.dataset.type == 'pasted-lines-keyword') {
       const path = el.dataset.path
       const content = el.dataset.content
+      const start = el.dataset.start
+      const end = el.dataset.end
       if (!path || content === undefined) return ''
+
+      let attributes = `path="${path}"`
+      if (start) attributes += ` start="${start}"`
+      if (end) attributes += ` end="${end}"`
 
       const line_count = content.split('\n').length
       const lines_text = line_count == 1 ? 'line' : 'lines'
@@ -139,10 +145,10 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
       if (index != -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + label.length)
-        return `${prefix}<fragment path="${path}">\n${content}\n</fragment>${suffix}`
+        return `${prefix}<fragment ${attributes}>\n${content}\n</fragment>${suffix}`
       }
 
-      return `<fragment path="${path}">\n${content}\n</fragment>`
+      return `<fragment ${attributes}>\n${content}\n</fragment>`
     }
 
     return inner_content
@@ -310,12 +316,18 @@ export const use_handlers = (
     } else if (keyword_type == 'pasted-lines-keyword') {
       const path = keyword_element.dataset.path
       const content = keyword_element.dataset.content
+      const start = keyword_element.dataset.start
+      const end = keyword_element.dataset.end
       if (!path || content === undefined) return
+
+      let attributes = `path="${path}"`
+      if (start) attributes += ` start="${start}"`
+      if (end) attributes += ` end="${end}"`
 
       // Since we can't reliably search for multiline content with indexOf easily if formatting varies,
       // and we just clicked a specific element, we might need a better way.
       // However, we construct exact strings.
-      const search_pattern = `<fragment path="${path}">\n${content}\n</fragment>`
+      const search_pattern = `<fragment ${attributes}>\n${content}\n</fragment>`
       const start_index = props.value.indexOf(search_pattern)
 
       if (start_index !== -1) {
@@ -391,10 +403,12 @@ export const use_handlers = (
 
     if (
       props.current_selection &&
-      text === props.current_selection &&
+      text == props.current_selection.text &&
       props.currently_open_file_path
     ) {
-      text_to_insert = `<fragment path="${props.currently_open_file_path}">\n${text}\n</fragment>`
+      const { start_line, start_col, end_line, end_col } =
+        props.current_selection
+      text_to_insert = `<fragment path="${props.currently_open_file_path}" start="${start_line}:${start_col}" end="${end_line}:${end_col}">\n${text}\n</fragment>`
 
       let has_space_after = false
       if (raw_end < props.value.length) {
@@ -447,6 +461,18 @@ export const use_handlers = (
         const file_path = file_keyword_element.getAttribute('title')
         if (file_path) {
           props.on_go_to_file(file_path)
+        }
+      }
+
+      const pasted_lines_keyword_element = text_element.closest<HTMLElement>(
+        '[data-type="pasted-lines-keyword"]'
+      )
+      if (pasted_lines_keyword_element) {
+        const path = pasted_lines_keyword_element.dataset.path
+        const start = pasted_lines_keyword_element.dataset.start
+        const end = pasted_lines_keyword_element.dataset.end
+        if (path) {
+          props.on_pasted_lines_click(path, start, end)
         }
       }
 
@@ -635,7 +661,7 @@ export const use_handlers = (
   const handle_pasted_lines_keyword_deletion = (raw_pos: number): boolean => {
     const text_before_cursor = props.value.substring(0, raw_pos)
 
-    const regex = /<fragment path="[^"]+">\n[\s\S]*?\n<\/fragment>/g
+    const regex = /<fragment path="[^"]+"(?: [^>]+)?>\n[\s\S]*?\n<\/fragment>/g
     let match
     let last_match: RegExpExecArray | null = null
 

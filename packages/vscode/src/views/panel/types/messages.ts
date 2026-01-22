@@ -17,6 +17,14 @@ export interface PreviewGeneratedCodeMessage extends BaseMessage {
   content: string
 }
 
+export type SelectionState = {
+  text: string
+  start_line: number
+  start_col: number
+  end_line: number
+  end_col: number
+}
+
 export type ApiToolConfiguration = {
   id: string
   provider_type: string
@@ -318,6 +326,13 @@ export interface GoToFileMessage extends BaseMessage {
   file_path: string
 }
 
+export interface OpenFileAndSelectMessage extends BaseMessage {
+  command: 'OPEN_FILE_AND_SELECT'
+  file_path: string
+  start?: string
+  end?: string
+}
+
 export interface ShowDiffMessage extends BaseMessage {
   command: 'SHOW_DIFF'
   file_path: string
@@ -532,6 +547,7 @@ export type FrontendMessage =
   | FocusOnFileInPreviewMessage
   | GoToFileMessage
   | ShowDiffMessage
+  | OpenFileAndSelectMessage
   | GetWorkspaceStateMessage
   | RequestGitStateMessage
   | IntelligentUpdateFileInPreviewMessage
@@ -611,7 +627,7 @@ export interface EditorStateChangedMessage extends BaseMessage {
 
 export interface EditorSelectionChangedMessage extends BaseMessage {
   command: 'EDITOR_SELECTION_CHANGED'
-  current_selection: string
+  current_selection: SelectionState | null
 }
 
 export interface GitStateChangedMessage extends BaseMessage {

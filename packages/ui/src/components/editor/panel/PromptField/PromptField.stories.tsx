@@ -14,7 +14,7 @@ export const Empty = () => (
     on_copy={() => console.log('Copied')}
     is_connected={true}
     prompt_type="edit-context"
-    current_selection=""
+    current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
@@ -32,6 +32,9 @@ export const Empty = () => (
     prune_context_instructions_prefix=""
     on_prune_context_instructions_prefix_change={(val) =>
       console.log('Prune prefix changed:', val)
+    }
+    on_pasted_lines_click={(path, start, end) =>
+      console.log('Pasted lines clicked:', path, start, end)
     }
   />
 )
@@ -45,7 +48,7 @@ export const WithText = () => (
     on_copy={() => console.log('Copied')}
     is_connected={true}
     prompt_type="edit-context"
-    current_selection=""
+    current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
@@ -63,6 +66,9 @@ export const WithText = () => (
     prune_context_instructions_prefix=""
     on_prune_context_instructions_prefix_change={(val) =>
       console.log('Prune prefix changed:', val)
+    }
+    on_pasted_lines_click={(path, start, end) =>
+      console.log('Pasted lines clicked:', path, start, end)
     }
   />
 )
@@ -76,7 +82,7 @@ export const LongText = () => (
     on_copy={() => console.log('Copied')}
     is_connected={true}
     prompt_type="edit-context"
-    current_selection=""
+    current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
@@ -94,6 +100,9 @@ export const LongText = () => (
     prune_context_instructions_prefix=""
     on_prune_context_instructions_prefix_change={(val) =>
       console.log('Prune prefix changed:', val)
+    }
+    on_pasted_lines_click={(path, start, end) =>
+      console.log('Pasted lines clicked:', path, start, end)
     }
   />
 )
@@ -107,7 +116,7 @@ export const WithPlaceholderSavedContext = () => (
     on_copy={() => console.log('Copied')}
     is_connected={true}
     prompt_type="edit-context"
-    current_selection=""
+    current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_search_click={() => console.log('Search clicked')}
@@ -125,6 +134,9 @@ export const WithPlaceholderSavedContext = () => (
     prune_context_instructions_prefix=""
     on_prune_context_instructions_prefix_change={(val) =>
       console.log('Prune prefix changed:', val)
+    }
+    on_pasted_lines_click={(path, start, end) =>
+      console.log('Pasted lines clicked:', path, start, end)
     }
   />
 )
@@ -138,7 +150,13 @@ export const WithPlaceholderSelection = () => (
     on_copy={() => console.log('Copied')}
     is_connected={true}
     prompt_type="edit-context"
-    current_selection="Selected text content"
+    current_selection={{
+      text: 'Selected text content',
+      start_line: 1,
+      start_col: 1,
+      end_line: 1,
+      end_col: 22
+    }}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_search_click={() => console.log('Search clicked')}
@@ -156,6 +174,9 @@ export const WithPlaceholderSelection = () => (
     prune_context_instructions_prefix=""
     on_prune_context_instructions_prefix_change={(val) =>
       console.log('Prune prefix changed:', val)
+    }
+    on_pasted_lines_click={(path, start, end) =>
+      console.log('Pasted lines clicked:', path, start, end)
     }
   />
 )
@@ -169,7 +190,7 @@ export const WithCommit = () => (
     on_copy={() => console.log('Copied')}
     is_connected={true}
     prompt_type="edit-context"
-    current_selection=""
+    current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_search_click={() => console.log('Search clicked')}
@@ -187,6 +208,9 @@ export const WithCommit = () => (
     prune_context_instructions_prefix=""
     on_prune_context_instructions_prefix_change={(val) =>
       console.log('Prune prefix changed:', val)
+    }
+    on_pasted_lines_click={(path, start, end) =>
+      console.log('Pasted lines clicked:', path, start, end)
     }
   />
 )
@@ -200,7 +224,7 @@ export const WithCommitWithQuotes = () => (
     on_copy={() => console.log('Copied')}
     is_connected={true}
     prompt_type="edit-context"
-    current_selection=""
+    current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_search_click={() => console.log('Search clicked')}
@@ -218,6 +242,9 @@ export const WithCommitWithQuotes = () => (
     prune_context_instructions_prefix=""
     on_prune_context_instructions_prefix_change={(val) =>
       console.log('Prune prefix changed:', val)
+    }
+    on_pasted_lines_click={(path, start, end) =>
+      console.log('Pasted lines clicked:', path, start, end)
     }
   />
 )
@@ -230,7 +257,7 @@ export const WithContextAtCommit = () => (
     on_copy={() => console.log('Copied')}
     is_connected={true}
     prompt_type="edit-context"
-    current_selection=""
+    current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_search_click={() => console.log('Search clicked')}
@@ -248,6 +275,9 @@ export const WithContextAtCommit = () => (
     prune_context_instructions_prefix=""
     on_prune_context_instructions_prefix_change={(val) =>
       console.log('Prune prefix changed:', val)
+    }
+    on_pasted_lines_click={(path, start, end) =>
+      console.log('Pasted lines clicked:', path, start, end)
     }
   />
 )
@@ -263,7 +293,7 @@ export const WithEditFormatSelector = () => {
       on_copy={() => console.log('Copied')}
       is_connected={true}
       prompt_type="edit-context"
-      current_selection=""
+      current_selection={null}
       currently_open_file_path="/path/to/file"
       on_caret_position_change={(pos) => console.log('Caret position:', pos)}
       is_web_mode={false}
@@ -283,6 +313,9 @@ export const WithEditFormatSelector = () => {
       on_prune_context_instructions_prefix_change={(val) =>
         console.log('Prune prefix changed:', val)
       }
+      on_pasted_lines_click={(path, start, end) =>
+        console.log('Pasted lines clicked:', path, start, end)
+      }
     />
   )
 }
@@ -296,7 +329,7 @@ export const WithFilePaths = () => (
     on_copy={() => console.log('Copied')}
     is_connected={true}
     prompt_type="edit-context"
-    current_selection=""
+    current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
@@ -314,6 +347,9 @@ export const WithFilePaths = () => (
     prune_context_instructions_prefix=""
     on_prune_context_instructions_prefix_change={(val) =>
       console.log('Prune prefix changed:', val)
+    }
+    on_pasted_lines_click={(path, start, end) =>
+      console.log('Pasted lines clicked:', path, start, end)
     }
   />
 )

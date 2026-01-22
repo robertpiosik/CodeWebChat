@@ -239,6 +239,20 @@
     content: '\eb84';
   }
 
+  &--pasted-lines &__text {
+    cursor: pointer;
+  }
+
+  &--pasted-lines &__text {
+    &:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--vscode-charts-blue) 30%,
+        transparent
+      );
+    }
+  }
+
   &--selection-error {
     background-color: color-mix(
       in srgb,

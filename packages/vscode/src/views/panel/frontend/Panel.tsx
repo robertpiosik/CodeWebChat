@@ -209,6 +209,19 @@ export const Panel = () => {
     })
   }
 
+  const handle_pasted_lines_click = (
+    path: string,
+    start?: string,
+    end?: string
+  ) => {
+    post_message(vscode, {
+      command: 'OPEN_FILE_AND_SELECT',
+      file_path: path,
+      start,
+      end
+    })
+  }
+
   const layout_context_value = {
     can_undo,
     has_changes_to_commit,
@@ -294,6 +307,7 @@ export const Panel = () => {
                 on_configurations_collapsed_change={
                   handle_configurations_collapsed_change
                 }
+                on_pasted_lines_click={handle_pasted_lines_click}
                 currently_open_file_text={currently_open_file_text}
                 prune_context_instructions_prefix={
                   prune_context_instructions_prefix

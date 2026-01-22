@@ -81,8 +81,10 @@ import {
   handle_prune_context,
   handle_cancel_intelligent_update_file_in_preview,
   handle_get_prune_context_instructions_prefix,
-  handle_save_prune_context_instructions_prefix
+  handle_save_prune_context_instructions_prefix,
+  handle_open_file_and_select
 } from './message-handlers'
+import { SelectionState } from '../types/messages'
 import {
   API_EDIT_FORMAT_STATE_KEY,
   API_MODE_STATE_KEY,
@@ -115,7 +117,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   private _webview_view: vscode.WebviewView | undefined
   private _config_listener: vscode.Disposable | undefined
   public currently_open_file_path?: string
-  public current_selection: string = ''
+  public current_selection: SelectionState | null = null
   public caret_position: number = 0
   public ask_about_context_instructions: string = ''
   public edit_context_instructions: string = ''
@@ -355,15 +357,27 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
     vscode.window.onDidChangeTextEditorSelection((event) => {
       const selection = event.textEditor.selection
-      const current_selection = !selection.isEmpty
-        ? event.textEditor.document.getText(selection)
-        : ''
-      if (current_selection != this.current_selection) {
-        this.current_selection = current_selection
+      let new_selection: SelectionState | null = null
+
+      if (!selection.isEmpty) {
+        new_selection = {
+          text: event.textEditor.document.getText(selection),
+          start_line: selection.start.line + 1,
+          start_col: selection.start.character + 1,
+          end_line: selection.end.line + 1,
+          end_col: selection.end.character + 1
+        }
+      }
+
+      const has_changed =
+        (this.current_selection?.text ?? null) !== (new_selection?.text ?? null)
+
+      if (has_changed) {
+        this.current_selection = new_selection
         if (this._webview_view) {
           this.send_message({
             command: 'EDITOR_SELECTION_CHANGED',
-            current_selection
+            current_selection: new_selection
           })
         }
       }
@@ -372,16 +386,23 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     const update_selection_state = () => {
       const active_text_editor = vscode.window.activeTextEditor
       const selection = active_text_editor?.selection
-      const current_selection =
-        active_text_editor && selection && !selection.isEmpty
-          ? active_text_editor.document.getText(selection)
-          : ''
+      let new_selection: SelectionState | null = null
 
-      this.current_selection = current_selection
+      if (active_text_editor && selection && !selection.isEmpty) {
+        new_selection = {
+          text: active_text_editor.document.getText(selection),
+          start_line: selection.start.line + 1,
+          start_col: selection.start.character + 1,
+          end_line: selection.end.line + 1,
+          end_col: selection.end.character + 1
+        }
+      }
+
+      this.current_selection = new_selection
       if (this._webview_view) {
         this.send_message({
           command: 'EDITOR_SELECTION_CHANGED',
-          current_selection
+          current_selection: new_selection
         })
       }
     }
@@ -642,6 +663,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             )
           } else if (message.command == 'GO_TO_FILE') {
             handle_go_to_file(message)
+          } else if (message.command == 'OPEN_FILE_AND_SELECT') {
+            handle_open_file_and_select(message)
           } else if (message.command == 'SHOW_DIFF') {
             await handle_show_diff(message)
           } else if (message.command == 'FOCUS_ON_FILE_IN_PREVIEW') {

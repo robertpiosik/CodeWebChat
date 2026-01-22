@@ -8,7 +8,8 @@ import {
   BackendMessage,
   ApiToolConfigurationsMessage,
   PresetsMessage,
-  FrontendMessage
+  FrontendMessage,
+  SelectionState
 } from '@/views/panel/types/messages'
 import { ApiToolConfiguration } from '@/views/panel/types/messages'
 import { post_message } from '../utils/post_message'
@@ -47,7 +48,7 @@ type Props = {
   on_web_prompt_type_change: (mode: WebPromptType) => void
   on_api_prompt_type_change: (mode: ApiPromptType) => void
   currently_open_file_path?: string
-  current_selection: string
+  current_selection?: SelectionState | null
   chat_input_focus_and_select_key: number
   chat_input_focus_key: number
   context_size_warning_threshold: number
@@ -58,6 +59,7 @@ type Props = {
   configurations_collapsed: boolean
   on_configurations_collapsed_change: (is_collapsed: boolean) => void
   currently_open_file_text?: string
+  on_pasted_lines_click: (path: string, start?: string, end?: string) => void
   are_keyboard_shortcuts_disabled: boolean
   prune_context_instructions_prefix: string
   on_prune_context_instructions_prefix_change: (prefix: string) => void
@@ -807,6 +809,7 @@ export const Main: React.FC<Props> = (props) => {
         props.on_configurations_collapsed_change
       }
       on_go_to_file={handle_go_to_file}
+      on_pasted_lines_click={props.on_pasted_lines_click}
       currently_open_file_text={props.currently_open_file_text}
       are_keyboard_shortcuts_disabled={props.are_keyboard_shortcuts_disabled}
       prune_context_instructions_prefix={

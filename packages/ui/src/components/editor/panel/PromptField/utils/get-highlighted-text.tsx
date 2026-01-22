@@ -1,5 +1,6 @@
 import cn from 'classnames'
 import styles from '../PromptField.module.scss'
+import { SelectionState } from '../PromptField'
 
 const escape_html = (str: string): string => {
   if (!str) return ''
@@ -46,7 +47,7 @@ const process_text_part_for_files = (
 
 export const get_highlighted_text = (params: {
   text: string
-  current_selection: string
+  current_selection?: SelectionState | null
   context_file_paths: string[]
 }): string => {
   const saved_context_regex_part =
@@ -56,7 +57,7 @@ export const get_highlighted_text = (params: {
     '#(?:Commit|ContextAtCommit):[^:]+:[^\\s"]+\\s+"(?:\\\\.|[^"\\\\])*"'
 
   const fragment_regex_part =
-    '<fragment path="[^"]+">\\n[\\s\\S]*?\\n<\\/fragment>'
+    '<fragment path="[^"]+"(?: [^>]+)?>\\n[\\s\\S]*?\\n<\\/fragment>'
 
   const regex = new RegExp(
     `(${fragment_regex_part}|#Selection|#Changes:[^\\s,;:!?]+|${saved_context_regex_part}|${commit_regex_part})`,
@@ -67,11 +68,13 @@ export const get_highlighted_text = (params: {
   const result = parts
     .map((part) => {
       const fragment_match = part.match(
-        /^<fragment path="([^"]+)">\n([\s\S]*?)\n<\/fragment>$/
+        /^<fragment path="([^"]+)"(?: start="([^"]+)")?(?: end="([^"]+)")?>\n([\s\S]*?)\n<\/fragment>$/
       )
       if (part && fragment_match) {
         const path = fragment_match[1]
-        const content = fragment_match[2]
+        const start = fragment_match[2]
+        const end = fragment_match[3]
+        const content = fragment_match[4]
         const line_count = content.split('\n').length
         const lines_text = line_count === 1 ? 'line' : 'lines'
 
@@ -80,7 +83,9 @@ export const get_highlighted_text = (params: {
           styles['keyword--pasted-lines']
         )}" data-type="pasted-lines-keyword" data-path="${escape_html(
           path
-        )}" data-content="${escape_html(content)}"><span class="${
+        )}" data-content="${escape_html(content)}"${
+          start ? ` data-start="${escape_html(start)}"` : ''
+        }${end ? ` data-end="${escape_html(end)}"` : ''}><span class="${
           styles['keyword__icon']
         }" data-role="keyword-icon"></span><span class="${
           styles['keyword__text']
@@ -93,7 +98,7 @@ export const get_highlighted_text = (params: {
         })
         const title = !params.current_selection
           ? 'Missing text selection'
-          : `Selection: ${params.current_selection
+          : `Selection: ${params.current_selection.text
               .substring(0, 100)
               .replace(/\n/g, ' ')}...`
         return `<span class="${className}" data-type="selection-keyword" title="${escape_html(title)}"><span class="${styles['keyword__icon']}" data-role="keyword-icon"></span><span class="${styles['keyword__text']}" data-role="keyword-text">Selection</span></span>`

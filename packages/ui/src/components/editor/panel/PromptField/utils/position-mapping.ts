@@ -8,7 +8,7 @@ export const map_display_pos_to_raw_pos = (
   let last_raw_index = 0
 
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"([^"]+)")|(#(?:Commit|ContextAtCommit):[^:]+:([^\s"]+)\s+"(?:\\.|[^"\\])*")|(<fragment path="[^"]+">\n([\s\S]*?)\n<\/fragment>)/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"([^"]+)")|(#(?:Commit|ContextAtCommit):[^:]+:([^\s"]+)\s+"(?:\\.|[^"\\])*")|(<fragment path="[^"]+"(?: [^>]+)?>\n([\s\S]*?)\n<\/fragment>)/g
   let match
 
   while ((match = regex.exec(raw_text)) !== null) {
@@ -92,7 +92,7 @@ export const map_raw_pos_to_display_pos = (
   let last_raw_index = 0
 
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"([^"]+)")|(#(?:Commit|ContextAtCommit):[^:]+:([^\s"]+)\s+"(?:\\.|[^"\\])*")|(<fragment path="[^"]+">\n([\s\S]*?)\n<\/fragment>)/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"([^"]+)")|(#(?:Commit|ContextAtCommit):[^:]+:([^\s"]+)\s+"(?:\\.|[^"\\])*")|(<fragment path="[^"]+"(?: [^>]+)?>\n([\s\S]*?)\n<\/fragment>)/g
   let match
 
   while ((match = regex.exec(raw_text)) !== null) {

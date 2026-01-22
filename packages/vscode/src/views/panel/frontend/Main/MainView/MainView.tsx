@@ -16,7 +16,7 @@ import { use_last_choice_button_title } from './hooks/use-last-choice-button-tit
 import { ContextUtilisation as UiContextUtilisation } from '@ui/components/editor/panel/ContextUtilisation'
 import { Header } from './components/Header'
 import { use_invocation_counts } from './hooks/use-invocation-counts'
-import { prune_context_instructions_prefix } from '@/constants/instructions'
+import { SelectionState } from '@/views/panel/types/messages'
 
 type Props = {
   scroll_reset_key: number
@@ -46,7 +46,7 @@ type Props = {
   on_toggle_pinned_configuration: (id: string) => void
   on_manage_configurations: () => void
   currently_open_file_path?: string
-  current_selection: string
+  current_selection?: SelectionState | null
   chat_history: string[]
   token_count: number
   context_size_warning_threshold: number
@@ -95,6 +95,7 @@ type Props = {
   on_configurations_collapsed_change: (is_collapsed: boolean) => void
   currently_open_file_text?: string
   on_go_to_file: (file_path: string) => void
+  on_pasted_lines_click: (path: string, start?: string, end?: string) => void
   are_keyboard_shortcuts_disabled: boolean
   prune_context_instructions_prefix: string
   on_prune_context_instructions_prefix_change: (prefix: string) => void
@@ -250,6 +251,7 @@ export const MainView: React.FC<Props> = (props) => {
             context_file_paths={props.context_file_paths}
             on_go_to_file={props.on_go_to_file}
             currently_open_file_text={props.currently_open_file_text}
+            on_pasted_lines_click={props.on_pasted_lines_click}
             invocation_count={current_invocation_count}
             on_invocation_count_change={handle_invocation_count_change}
             prune_context_instructions_prefix={

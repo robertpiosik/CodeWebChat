@@ -3,7 +3,8 @@ import { Preset } from '@shared/types/preset'
 import {
   BackendMessage,
   FileProgress,
-  FrontendMessage
+  FrontendMessage,
+  SelectionState
 } from '../../types/messages'
 import { Checkpoint } from '../../types/messages'
 import { Mode, MODE } from '../../types/main-view-mode'
@@ -89,7 +90,8 @@ export const use_panel = (vscode: any) => {
   const [currently_open_file_path, set_currently_open_file_path] = useState<
     string | undefined
   >()
-  const [current_selection, set_current_selection] = useState<string>('')
+  const [current_selection, set_current_selection] =
+    useState<SelectionState | null>(null)
   const [code_at_cursor_instructions, set_code_at_cursor_instructions] =
     useState<string | undefined>(undefined)
   const [prune_context_instructions, set_prune_context_instructions] = useState<
