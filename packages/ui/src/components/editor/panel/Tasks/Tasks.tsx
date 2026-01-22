@@ -58,14 +58,10 @@ export const Tasks: React.FC<Props> = (props) => {
   const [forwarded_timestamp, set_forwarded_timestamp] = useState<
     number | null
   >(null)
+  const [copied_timestamp, set_copied_timestamp] = useState<number | null>(null)
   const prevent_edit_ref = useRef(false)
 
   use_auto_focus_new_task(props.tasks, set_editing_timestamp)
-
-  const structure_signature = useMemo(
-    () => get_structure_signature(props.tasks),
-    [props.tasks]
-  )
 
   const tree = useMemo(() => add_ids(props.tasks), [props.tasks])
 
@@ -169,6 +165,31 @@ export const Tasks: React.FC<Props> = (props) => {
                     set_forwarded_timestamp(params.task.created_at)
                   }}
                   title="Use"
+                />
+              )}
+              {params.task.text && (
+                <IconButton
+                  codicon_icon={
+                    copied_timestamp == params.task.created_at
+                      ? 'check'
+                      : 'copy'
+                  }
+                  style={
+                    copied_timestamp == params.task.created_at
+                      ? { cursor: 'default' }
+                      : undefined
+                  }
+                  on_click={(e) => {
+                    e.stopPropagation()
+                    navigator.clipboard.writeText(params.task.text)
+                    set_copied_timestamp(params.task.created_at)
+                    setTimeout(() => {
+                      set_copied_timestamp((prev) =>
+                        prev === params.task.created_at ? null : prev
+                      )
+                    }, 2000)
+                  }}
+                  title="Copy"
                 />
               )}
               <IconButton

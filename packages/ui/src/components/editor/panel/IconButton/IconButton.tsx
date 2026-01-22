@@ -8,6 +8,7 @@ type Props = {
   href?: string
   title?: string
   label?: string
+  style?: React.CSSProperties
 }
 
 export const IconButton: React.FC<Props> = (props) => {
@@ -29,6 +30,7 @@ export const IconButton: React.FC<Props> = (props) => {
         onMouseDown={props.on_mouse_down}
         title={props.title}
         target="_blank"
+        style={props.style}
         rel="noopener noreferrer"
       >
         {label_element}
@@ -44,6 +46,7 @@ export const IconButton: React.FC<Props> = (props) => {
         onMouseDown={props.on_mouse_down}
         onClick={props.on_click}
         title={props.title}
+        style={props.style}
       >
         {label_element}
         {icon_element}
