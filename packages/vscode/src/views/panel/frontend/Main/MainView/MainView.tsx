@@ -95,6 +95,7 @@ type Props = {
   currently_open_file_text?: string
   on_go_to_file: (file_path: string) => void
   are_keyboard_shortcuts_disabled: boolean
+  prune_context_instructions: string
 }
 
 export const MainView: React.FC<Props> = (props) => {
@@ -219,7 +220,11 @@ export const MainView: React.FC<Props> = (props) => {
             on_curly_braces_click={props.on_curly_braces_click}
             is_web_mode={props.mode == MODE.WEB}
             is_connected={props.is_connected}
-            is_in_code_completions_mode={is_in_code_completions_prompt_type}
+            prompt_type={
+              props.mode == MODE.WEB
+                ? props.web_prompt_type
+                : props.api_prompt_type
+            }
             current_selection={props.current_selection}
             send_with_shift_enter={props.send_with_shift_enter}
             currently_open_file_path={props.currently_open_file_path}
@@ -245,6 +250,7 @@ export const MainView: React.FC<Props> = (props) => {
             currently_open_file_text={props.currently_open_file_text}
             invocation_count={current_invocation_count}
             on_invocation_count_change={handle_invocation_count_change}
+            prune_context_instructions={props.prune_context_instructions}
           />
           <UiContextUtilisation
             current_context_size={props.token_count}

@@ -13,7 +13,7 @@ export const Empty = () => (
     on_submit={() => console.log('Submitted')}
     on_copy={() => console.log('Copied')}
     is_connected={true}
-    is_in_code_completions_mode={false}
+    prompt_type="edit-context"
     current_selection=""
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
@@ -28,6 +28,7 @@ export const Empty = () => (
     on_invocation_count_change={(count) =>
       console.log('Invocation count changed:', count)
     }
+    prune_context_instructions=""
   />
 )
 
@@ -39,7 +40,7 @@ export const WithText = () => (
     on_submit={() => console.log('Submitted')}
     on_copy={() => console.log('Copied')}
     is_connected={true}
-    is_in_code_completions_mode={false}
+    prompt_type="edit-context"
     current_selection=""
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
@@ -54,6 +55,7 @@ export const WithText = () => (
     on_invocation_count_change={(count) =>
       console.log('Invocation count changed:', count)
     }
+    prune_context_instructions=""
   />
 )
 
@@ -65,7 +67,7 @@ export const LongText = () => (
     on_submit={() => console.log('Submitted')}
     on_copy={() => console.log('Copied')}
     is_connected={true}
-    is_in_code_completions_mode={false}
+    prompt_type="edit-context"
     current_selection=""
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
@@ -80,6 +82,7 @@ export const LongText = () => (
     on_invocation_count_change={(count) =>
       console.log('Invocation count changed:', count)
     }
+    prune_context_instructions=""
   />
 )
 
@@ -91,7 +94,7 @@ export const WithPlaceholderSavedContext = () => (
     on_submit={() => console.log('Submitted')}
     on_copy={() => console.log('Copied')}
     is_connected={true}
-    is_in_code_completions_mode={false}
+    prompt_type="edit-context"
     current_selection=""
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
@@ -106,6 +109,7 @@ export const WithPlaceholderSavedContext = () => (
       console.log('Invocation count changed:', count)
     }
     on_curly_braces_click={() => {}}
+    prune_context_instructions=""
   />
 )
 
@@ -117,7 +121,7 @@ export const WithPlaceholderSelection = () => (
     on_submit={() => console.log('Submitted')}
     on_copy={() => console.log('Copied')}
     is_connected={true}
-    is_in_code_completions_mode={false}
+    prompt_type="edit-context"
     current_selection="Selected text content"
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
@@ -132,6 +136,7 @@ export const WithPlaceholderSelection = () => (
       console.log('Invocation count changed:', count)
     }
     on_curly_braces_click={() => {}}
+    prune_context_instructions=""
   />
 )
 
@@ -143,7 +148,7 @@ export const WithCommit = () => (
     on_submit={() => console.log('Submitted')}
     on_copy={() => console.log('Copied')}
     is_connected={true}
-    is_in_code_completions_mode={false}
+    prompt_type="edit-context"
     current_selection=""
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
@@ -158,6 +163,7 @@ export const WithCommit = () => (
       console.log('Invocation count changed:', count)
     }
     on_curly_braces_click={() => {}}
+    prune_context_instructions=""
   />
 )
 
@@ -169,7 +175,7 @@ export const WithCommitWithQuotes = () => (
     on_submit={() => console.log('Submitted')}
     on_copy={() => console.log('Copied')}
     is_connected={true}
-    is_in_code_completions_mode={false}
+    prompt_type="edit-context"
     current_selection=""
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
@@ -184,6 +190,7 @@ export const WithCommitWithQuotes = () => (
       console.log('Invocation count changed:', count)
     }
     on_curly_braces_click={() => {}}
+    prune_context_instructions=""
   />
 )
 export const WithContextAtCommit = () => (
@@ -194,7 +201,7 @@ export const WithContextAtCommit = () => (
     on_submit={() => console.log('Submitted')}
     on_copy={() => console.log('Copied')}
     is_connected={true}
-    is_in_code_completions_mode={false}
+    prompt_type="edit-context"
     current_selection=""
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
@@ -209,6 +216,7 @@ export const WithContextAtCommit = () => (
       console.log('Invocation count changed:', count)
     }
     on_curly_braces_click={() => {}}
+    prune_context_instructions=""
   />
 )
 
@@ -222,7 +230,7 @@ export const WithEditFormatSelector = () => {
       on_submit={() => console.log('Submitted')}
       on_copy={() => console.log('Copied')}
       is_connected={true}
-      is_in_code_completions_mode={false}
+      prompt_type="edit-context"
       current_selection=""
       currently_open_file_path="/path/to/file"
       on_caret_position_change={(pos) => console.log('Caret position:', pos)}
@@ -238,6 +246,7 @@ export const WithEditFormatSelector = () => {
       context_file_paths={[]}
       invocation_count={1}
       on_invocation_count_change={set_edit_format as any} // Mocking for demo
+      prune_context_instructions=""
     />
   )
 }
@@ -250,7 +259,7 @@ export const WithFilePaths = () => (
     on_submit={() => console.log('Submitted')}
     on_copy={() => console.log('Copied')}
     is_connected={true}
-    is_in_code_completions_mode={false}
+    prompt_type="edit-context"
     current_selection=""
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
@@ -266,5 +275,6 @@ export const WithFilePaths = () => (
     on_invocation_count_change={(count) =>
       console.log('Invocation count changed:', count)
     }
+    prune_context_instructions=""
   />
 )

@@ -807,6 +807,7 @@ export const Main: React.FC<Props> = (props) => {
       on_go_to_file={handle_go_to_file}
       currently_open_file_text={props.currently_open_file_text}
       are_keyboard_shortcuts_disabled={props.are_keyboard_shortcuts_disabled}
+      prune_context_instructions={props.prune_context_instructions}
     />
   )
 }

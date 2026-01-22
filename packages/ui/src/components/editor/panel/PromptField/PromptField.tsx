@@ -20,6 +20,7 @@ import {
   map_raw_pos_to_display_pos
 } from './utils/position-mapping'
 import { Tooltip } from './components'
+import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 
 export type EditFormat = 'whole' | 'truncated' | 'diff' | 'before-after'
 
@@ -31,7 +32,7 @@ export type PromptFieldProps = {
   on_submit_with_control: () => void
   on_copy: () => void
   is_connected: boolean
-  is_in_code_completions_mode: boolean
+  prompt_type: WebPromptType | ApiPromptType
   current_selection: string
   on_caret_position_change: (caret_position: number) => void
   is_web_mode: boolean
@@ -54,6 +55,7 @@ export type PromptFieldProps = {
   invocation_count: number
   on_invocation_count_change: (count: number) => void
   on_go_to_file?: (file_path: string) => void
+  prune_context_instructions: string
 }
 
 export const PromptField: React.FC<PromptFieldProps> = (props) => {
@@ -155,7 +157,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     })
   }, [
     props.value,
-    props.is_in_code_completions_mode,
+    props.prompt_type,
     props.current_selection,
     props.context_file_paths
   ])
@@ -251,7 +253,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   }, [props.on_caret_position_change, props.value, props.context_file_paths])
 
   const placeholder = useMemo(() => {
-    if (props.is_in_code_completions_mode) {
+    if (props.prompt_type == 'code-at-cursor') {
       if (props.chat_history.length > 0 && is_history_enabled) {
         return 'Completion instructions (⇅ for history)'
       } else {
@@ -262,11 +264,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     return props.chat_history.length > 0 && is_history_enabled
       ? 'Type something (⇅ for history)'
       : 'Type something'
-  }, [
-    props.is_in_code_completions_mode,
-    props.chat_history,
-    is_history_enabled
-  ])
+  }, [props.prompt_type, props.chat_history, is_history_enabled])
 
   const edit_format_shortcuts: Record<EditFormat, string> = useMemo(() => {
     const modifier = is_mac ? '⌥' : 'Alt+'
@@ -289,22 +287,25 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
   return (
     <div className={styles.container}>
-      {!!props.current_selection && props.is_in_code_completions_mode && (
+      {!!props.current_selection && props.prompt_type == 'code-at-cursor' && (
         <div className={styles.error}>
           <div className={styles.error__inner}>Remove text selection</div>
         </div>
       )}
 
-      {props.is_in_code_completions_mode && !props.currently_open_file_path && (
-        <div className={styles.error}>
-          <div className={styles.error__inner}>Place cursor for completion</div>
-        </div>
-      )}
+      {props.prompt_type == 'code-at-cursor' &&
+        !props.currently_open_file_path && (
+          <div className={styles.error}>
+            <div className={styles.error__inner}>
+              Place cursor for completion
+            </div>
+          </div>
+        )}
 
       <div
         className={cn(styles.container__inner, {
           [styles['container__inner--disabled']]:
-            props.is_in_code_completions_mode &&
+            props.prompt_type == 'code-at-cursor' &&
             (!!props.current_selection || !props.currently_open_file_path),
           [styles['container__inner--selecting']]: is_text_selecting
         })}
