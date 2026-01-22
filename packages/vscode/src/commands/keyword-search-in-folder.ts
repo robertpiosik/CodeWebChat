@@ -198,13 +198,25 @@ export const keyword_search_in_folder_command = (
 
         const selected_paths = selected_items.map((item) => item.file_path)
         const currently_checked = workspace_provider.get_checked_files()
-        let paths_to_apply = selected_paths
 
-        if (currently_checked.length > 0) {
+        const files_outside_search_folder = currently_checked.filter((file) => {
+          const relative = path.relative(folder_path, file)
+          return relative.startsWith('..') || path.isAbsolute(relative)
+        })
+
+        let paths_to_apply = [...files_outside_search_folder, ...selected_paths]
+
+        const files_inside_search_folder = currently_checked.filter((file) => {
+          const relative = path.relative(folder_path, file)
+          return !relative.startsWith('..') && !path.isAbsolute(relative)
+        })
+
+        if (files_inside_search_folder.length > 0) {
           const selected_paths_set = new Set(selected_paths)
-          const all_current_files_in_new_context = currently_checked.every(
-            (file) => selected_paths_set.has(file)
-          )
+          const all_current_files_in_new_context =
+            files_inside_search_folder.every((file) =>
+              selected_paths_set.has(file)
+            )
 
           if (!all_current_files_in_new_context) {
             const quick_pick_options = [
@@ -274,7 +286,9 @@ export const keyword_search_in_folder_command = (
 
         await workspace_provider.set_checked_files(paths_to_apply)
         vscode.window.showInformationMessage(
-          dictionary.information_message.SELECTED_FILES(paths_to_apply.length)
+          dictionary.information_message.SELECTED_FILES(
+            paths_to_apply.length - files_outside_search_folder.length
+          )
         )
       } catch (error) {
         vscode.window.showErrorMessage(
