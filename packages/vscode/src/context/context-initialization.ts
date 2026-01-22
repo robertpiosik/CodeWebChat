@@ -143,9 +143,11 @@ export const context_initialization = async (
   const update_view_badges = async () => {
     let context_token_count = 0
     if (context_provider && context_view) {
-      const files_count = (
+      const token_counts =
         await workspace_provider.get_checked_files_token_count()
-      ).total
+      const files_count = workspace_provider.use_compact_token_count
+        ? token_counts.compact
+        : token_counts.total
       const websites_count =
         websites_provider.get_checked_websites_token_count()
       context_token_count = files_count + websites_count
@@ -447,6 +449,9 @@ export const context_initialization = async (
     websites_provider.onDidChangeTreeData(() => {
       update_view_badges()
       update_websites_view_message()
+    }),
+    workspace_provider.onDidChangeTreeData(() => {
+      update_view_badges()
     })
   )
 

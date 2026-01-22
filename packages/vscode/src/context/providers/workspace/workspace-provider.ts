@@ -66,12 +66,11 @@ export class WorkspaceProvider
   public gitignore_initialization: Promise<void>
   public ranges_initialization: Promise<void>
   private _change_event_dispatch_timeout: NodeJS.Timeout | null = null
-
-  private _use_compact_token_count: boolean = false
+  public use_compact_token_count: boolean = false
 
   public set_use_compact_token_count(use_compact: boolean): void {
-    if (this._use_compact_token_count != use_compact) {
-      this._use_compact_token_count = use_compact
+    if (this.use_compact_token_count != use_compact) {
+      this.use_compact_token_count = use_compact
       this.refresh()
     }
   }
@@ -547,10 +546,10 @@ export class WorkspaceProvider
 
     element.checkboxState = checkbox_state
 
-    const total_token_count = this._use_compact_token_count
+    const total_token_count = this.use_compact_token_count
       ? element.compactTokenCount
       : element.tokenCount
-    const selected_token_count = this._use_compact_token_count
+    const selected_token_count = this.use_compact_token_count
       ? element.selectedCompactTokenCount
       : element.selectedTokenCount
 
