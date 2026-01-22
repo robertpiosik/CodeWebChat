@@ -137,11 +137,6 @@
         "icon": "$(checklist)"
       },
       {
-        "command": "codeWebChat.findPathsInClipboard",
-        "title": "%codeWebChat.findPathsInClipboard.title%",
-        "category": "Code Web Chat"
-      },
-      {
         "command": "codeWebChat.checkAll",
         "title": "Check All",
         "category": "Code Web Chat",

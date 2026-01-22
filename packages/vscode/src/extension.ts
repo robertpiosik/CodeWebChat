@@ -16,7 +16,6 @@ import {
   remove_file_from_context_command,
   code_completion_commands,
   close_editor_command,
-  find_paths_in_clipboard_command,
   checkpoints_command,
   close_all_editors_command,
   save_all_command,
@@ -130,7 +129,6 @@ export async function activate(context: vscode.ExtensionContext) {
     remove_file_from_context_command(workspace_provider),
     set_range_command(workspace_provider, context),
     check_parent_folder_command(workspace_provider),
-    find_paths_in_clipboard_command(workspace_provider),
     duplicate_workspace_command(workspace_provider, websites_provider, context),
     open_url_command({
       command: 'codeWebChat.openRepository',

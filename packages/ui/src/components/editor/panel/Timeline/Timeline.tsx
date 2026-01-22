@@ -1,12 +1,9 @@
 import styles from './Timeline.module.scss'
 import cn from 'classnames'
 import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
-import { use_periodic_re_render } from '../../../../hooks/use-periodic-re-render'
 import { IconButton } from '../IconButton/IconButton'
 
-dayjs.extend(relativeTime)
 dayjs.extend(localizedFormat)
 
 export type TimelineItemProps = {
@@ -33,9 +30,6 @@ export const Timeline: React.FC<Props> = ({
   on_delete,
   on_edit
 }) => {
-  // Re-render every minute to update the relative time of the timeline items.
-  use_periodic_re_render(60 * 1000)
-
   return (
     <div className={styles.timeline}>
       {items.map((item) => (
@@ -48,7 +42,7 @@ export const Timeline: React.FC<Props> = ({
             className={styles.item__time}
             title={dayjs(item.timestamp).format('LLLL')}
           >
-            {dayjs(item.timestamp).fromNow()}
+            {dayjs(item.timestamp).format('h:mm A')}
           </div>
           <div className={styles.item__connector}>
             <div className={styles.item__marker}>

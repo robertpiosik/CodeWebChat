@@ -258,16 +258,8 @@ export const apply_context_command = (
             show_other_menu = false
 
             const other_quick_pick_options: (vscode.QuickPickItem & {
-              value?:
-                | 'clipboard'
-                | 'unstaged'
-                | 'commit_files'
-                | 'keyword_search'
+              value?: 'unstaged' | 'commit_files' | 'keyword_search'
             })[] = [
-              {
-                label: 'Scan the clipboard for valid paths',
-                value: 'clipboard'
-              },
               {
                 label: 'Unstaged files',
                 value: 'unstaged'
@@ -284,11 +276,7 @@ export const apply_context_command = (
 
             const other_quick_pick = vscode.window.createQuickPick<
               vscode.QuickPickItem & {
-                value?:
-                  | 'clipboard'
-                  | 'unstaged'
-                  | 'commit_files'
-                  | 'keyword_search'
+                value?: 'unstaged' | 'commit_files' | 'keyword_search'
               }
             >()
             other_quick_pick.title = 'Context Sources'
@@ -308,11 +296,7 @@ export const apply_context_command = (
             const other_selection = await new Promise<
               | 'back'
               | (vscode.QuickPickItem & {
-                  value?:
-                    | 'clipboard'
-                    | 'unstaged'
-                    | 'commit_files'
-                    | 'keyword_search'
+                  value?: 'unstaged' | 'commit_files' | 'keyword_search'
                 })
               | undefined
             >((resolve) => {
@@ -351,12 +335,6 @@ export const apply_context_command = (
 
             last_other_selection_value = other_selection.value
 
-            if (other_selection.value == 'clipboard') {
-              await vscode.commands.executeCommand(
-                'codeWebChat.findPathsInClipboard'
-              )
-              return
-            }
             if (other_selection.value == 'unstaged') {
               await handle_unstaged_files_source(workspace_provider)
               return
@@ -373,9 +351,11 @@ export const apply_context_command = (
               return
             }
             if (other_selection.value == 'keyword_search') {
-              const result =
-                await handle_keyword_search_source(workspace_provider)
-              if (result === 'back') {
+              const result = await handle_keyword_search_source(
+                workspace_provider,
+                extension_context
+              )
+              if (result == 'back') {
                 show_other_menu = true
                 continue
               }
