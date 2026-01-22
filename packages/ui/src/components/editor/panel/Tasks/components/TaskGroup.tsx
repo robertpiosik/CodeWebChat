@@ -36,6 +36,8 @@ export const TaskGroup: React.FC<TaskGroupProps> = (props) => {
         className={props.className}
         animation={150}
         group="tasks"
+        filter="textarea"
+        preventOnFilter={false}
       >
         {props.items.map((item) => {
           const is_visually_checked = parent_checked || item.is_checked
