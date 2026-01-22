@@ -107,7 +107,9 @@ export const Panel = () => {
     handle_tasks_change,
     handle_task_delete,
     handle_discard_user_changes_in_preview,
-    handle_task_forward
+    handle_task_forward,
+    prune_context_instructions_prefix,
+    handle_prune_context_instructions_prefix_change
   } = use_panel(vscode)
 
   const [checkpoint_to_edit, set_checkpoint_to_edit] = useState<
@@ -293,6 +295,12 @@ export const Panel = () => {
                   handle_configurations_collapsed_change
                 }
                 currently_open_file_text={currently_open_file_text}
+                prune_context_instructions_prefix={
+                  prune_context_instructions_prefix
+                }
+                on_prune_context_instructions_prefix_change={
+                  handle_prune_context_instructions_prefix_change
+                }
               />
             </div>
             <div

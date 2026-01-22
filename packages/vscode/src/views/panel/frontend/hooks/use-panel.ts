@@ -127,6 +127,10 @@ export const use_panel = (vscode: any) => {
   ] = useState<{ [mode in ApiPromptType]?: boolean }>({})
 
   const [tasks, set_tasks] = useState<Record<string, Task[]>>({})
+  const [
+    prune_context_instructions_prefix,
+    set_prune_context_instructions_prefix
+  ] = useState<string>('')
 
   const handle_instructions_change = (
     value: string,
@@ -183,6 +187,14 @@ export const use_panel = (vscode: any) => {
     handle_instructions_change(text, 'edit-context')
     set_active_view('main')
     set_main_view_scroll_reset_key((k) => k + 1)
+  }
+
+  const handle_prune_context_instructions_prefix_change = (prefix: string) => {
+    set_prune_context_instructions_prefix(prefix)
+    post_message(vscode, {
+      command: 'SAVE_PRUNE_CONTEXT_INSTRUCTIONS_PREFIX',
+      prefix
+    })
   }
 
   useEffect(() => {
@@ -361,6 +373,8 @@ export const use_panel = (vscode: any) => {
         set_is_preview_ongoing_modal_visible(true)
       } else if (message.command == 'TASKS') {
         set_tasks(message.tasks)
+      } else if (message.command == 'PRUNE_CONTEXT_INSTRUCTIONS_PREFIX') {
+        set_prune_context_instructions_prefix(message.prefix)
       }
     }
     window.addEventListener('message', handle_message)
@@ -383,7 +397,8 @@ export const use_panel = (vscode: any) => {
       { command: 'GET_CHECKPOINTS' },
       { command: 'REQUEST_CURRENTLY_OPEN_FILE_TEXT' },
       { command: 'REQUEST_CAN_UNDO' },
-      { command: 'GET_TASKS' }
+      { command: 'GET_TASKS' },
+      { command: 'GET_PRUNE_CONTEXT_INSTRUCTIONS_PREFIX' }
     ]
     initial_messages.forEach((message) => post_message(vscode, message))
 
@@ -582,6 +597,7 @@ export const use_panel = (vscode: any) => {
     handle_tasks_change,
     handle_task_delete,
     handle_task_forward,
+    prune_context_instructions_prefix,
     handle_instructions_change,
     edit_preset_back_click_handler,
     edit_preset_save_handler,
@@ -594,6 +610,7 @@ export const use_panel = (vscode: any) => {
     handle_tasks_collapsed_change,
     handle_configurations_collapsed_change,
     handle_remove_response_history_item,
-    handle_discard_user_changes_in_preview
+    handle_discard_user_changes_in_preview,
+    handle_prune_context_instructions_prefix_change
   }
 }

@@ -1,4 +1,5 @@
 import { useRef, useEffect, useMemo, useState, useCallback } from 'react'
+import TextareaAutosize from 'react-textarea-autosize'
 import styles from './PromptField.module.scss'
 import cn from 'classnames'
 import { Icon } from '../../common/Icon'
@@ -9,6 +10,7 @@ import { use_ghost_text } from './hooks/use-ghost-text'
 import { use_drag_drop } from './hooks/use-drag-drop'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 import { use_edit_format_compacting } from './hooks/use-edit-format-compacting'
+import { use_prune_context_instructions } from './hooks/use-prune-context-instructions'
 import { DropdownMenu } from '../../common/DropdownMenu'
 import { use_is_mac } from '@shared/hooks'
 import {
@@ -54,8 +56,9 @@ export type PromptFieldProps = {
   currently_open_file_text?: string
   invocation_count: number
   on_invocation_count_change: (count: number) => void
-  on_go_to_file?: (file_path: string) => void
-  prune_context_instructions: string
+  on_go_to_file: (file_path: string) => void
+  prune_context_instructions_prefix: string
+  on_prune_context_instructions_prefix_change: (value: string) => void
 }
 
 export const PromptField: React.FC<PromptFieldProps> = (props) => {
@@ -69,6 +72,14 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     useState(false)
   const [hovered_edit_format, set_hovered_edit_format] =
     useState<EditFormat | null>(null)
+
+  const { prune_instructions, set_prune_instructions } =
+    use_prune_context_instructions({
+      prune_context_instructions_prefix:
+        props.prune_context_instructions_prefix,
+      on_prune_context_instructions_prefix_change:
+        props.on_prune_context_instructions_prefix_change
+    })
 
   const toggle_invocation_dropdown = useCallback(() => {
     set_is_invocation_dropdown_open((prev) => !prev)
@@ -312,60 +323,72 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         onKeyDown={handle_container_key_down}
         onClick={() => input_ref.current?.focus()}
       >
-        {props.value && (
-          <button
-            className={cn(styles['clear-button'], 'codicon', 'codicon-close')}
-            onClick={() => {
-              set_should_show_ghost_text(false)
-              handle_clear()
-              input_ref.current?.focus()
+        {props.prompt_type == 'prune-context' && (
+          <TextareaAutosize
+            className={styles['prune-context-prefix']}
+            value={prune_instructions}
+            onChange={(e) => {
+              set_prune_instructions(e.target.value)
             }}
-            title="Clear"
+            onClick={(e) => e.stopPropagation()}
           />
         )}
-        <div
-          ref={input_ref}
-          contentEditable={true}
-          suppressContentEditableWarning={true}
-          onInput={(e) => {
-            set_should_show_ghost_text(true)
-            handle_input_change(e)
-          }}
-          onKeyDown={(e) => {
-            if (e.key == 'ArrowRight') {
-              set_should_show_ghost_text(false)
-              const ghost_text_node = input_ref.current?.querySelector(
-                'span[data-type="ghost-text"]'
-              )
-              if (ghost_text_node && !e.ctrlKey && !e.altKey && !e.metaKey) {
-                ghost_text_node.remove()
-                e.preventDefault()
-                const selection = window.getSelection()
-                if (selection) {
-                  const type = e.shiftKey ? 'extend' : 'move'
-                  selection.modify(type, 'forward', 'character')
-                }
-              }
-            } else {
+        <div className={styles['input-wrapper']}>
+          {props.value && (
+            <button
+              className={cn(styles['clear-button'], 'codicon', 'codicon-close')}
+              onClick={() => {
+                set_should_show_ghost_text(false)
+                handle_clear()
+                input_ref.current?.focus()
+              }}
+              title="Clear"
+            />
+          )}
+          <div
+            ref={input_ref}
+            contentEditable={true}
+            suppressContentEditableWarning={true}
+            onInput={(e) => {
               set_should_show_ghost_text(true)
-            }
-            handle_key_down(e)
-          }}
-          onCopy={handle_copy}
-          onPaste={handle_paste}
-          onClick={handle_input_click}
-          onMouseDown={handle_mouse_down}
-          onDragStart={handle_drag_start}
-          onDrop={handle_drop}
-          onDragOver={handle_drag_over}
-          onDragEnd={handle_drag_end}
-          onFocus={() => set_is_focused(true)}
-          onBlur={() => set_is_focused(false)}
-          className={cn(styles.input, {
-            [styles['input--empty']]: !props.value
-          })}
-          data-placeholder={placeholder}
-        />
+              handle_input_change(e)
+            }}
+            onKeyDown={(e) => {
+              if (e.key == 'ArrowRight') {
+                set_should_show_ghost_text(false)
+                const ghost_text_node = input_ref.current?.querySelector(
+                  'span[data-type="ghost-text"]'
+                )
+                if (ghost_text_node && !e.ctrlKey && !e.altKey && !e.metaKey) {
+                  ghost_text_node.remove()
+                  e.preventDefault()
+                  const selection = window.getSelection()
+                  if (selection) {
+                    const type = e.shiftKey ? 'extend' : 'move'
+                    selection.modify(type, 'forward', 'character')
+                  }
+                }
+              } else {
+                set_should_show_ghost_text(true)
+              }
+              handle_key_down(e)
+            }}
+            onCopy={handle_copy}
+            onPaste={handle_paste}
+            onClick={handle_input_click}
+            onMouseDown={handle_mouse_down}
+            onDragStart={handle_drag_start}
+            onDrop={handle_drop}
+            onDragOver={handle_drag_over}
+            onDragEnd={handle_drag_end}
+            onFocus={() => set_is_focused(true)}
+            onBlur={() => set_is_focused(false)}
+            className={cn(styles.input, {
+              [styles['input--empty']]: !props.value
+            })}
+            data-placeholder={placeholder}
+          />
+        </div>
 
         <div
           className={styles.footer}

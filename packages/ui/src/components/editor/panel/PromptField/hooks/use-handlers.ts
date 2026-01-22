@@ -445,7 +445,7 @@ export const use_handlers = (
       )
       if (file_keyword_element) {
         const file_path = file_keyword_element.getAttribute('title')
-        if (file_path && props.on_go_to_file) {
+        if (file_path) {
           props.on_go_to_file(file_path)
         }
       }

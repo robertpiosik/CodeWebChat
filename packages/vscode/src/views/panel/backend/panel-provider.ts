@@ -79,7 +79,9 @@ import {
   handle_delete_task,
   handle_fix_all_failed_files,
   handle_prune_context,
-  handle_cancel_intelligent_update_file_in_preview
+  handle_cancel_intelligent_update_file_in_preview,
+  handle_get_prune_context_instructions_prefix,
+  handle_save_prune_context_instructions_prefix
 } from './message-handlers'
 import {
   API_EDIT_FORMAT_STATE_KEY,
@@ -305,6 +307,14 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
         if (event.affectsConfiguration('codeWebChat.sendWithShiftEnter')) {
           this._send_send_with_shift_enter()
+        }
+
+        if (
+          event.affectsConfiguration(
+            'codeWebChat.pruneContextInstructionsPrefix'
+          )
+        ) {
+          handle_get_prune_context_instructions_prefix(this)
         }
       }
     )
@@ -695,6 +705,14 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             handle_request_can_undo(this)
           } else if (message.command == 'FIX_ALL_FAILED_FILES') {
             await handle_fix_all_failed_files(this)
+          } else if (
+            message.command == 'GET_PRUNE_CONTEXT_INSTRUCTIONS_PREFIX'
+          ) {
+            handle_get_prune_context_instructions_prefix(this)
+          } else if (
+            message.command == 'SAVE_PRUNE_CONTEXT_INSTRUCTIONS_PREFIX'
+          ) {
+            await handle_save_prune_context_instructions_prefix(message.prefix)
           }
         } catch (error: any) {
           Logger.error({

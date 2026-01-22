@@ -27,7 +27,7 @@ import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { EditContextMessage } from '@/views/panel/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
 import {
-  prune_context_instructions,
+  prune_context_instructions_prefix,
   prune_context_format
 } from '@/constants/instructions'
 import {
@@ -418,11 +418,11 @@ export const handle_edit_context = async (
 
     let system_instructions_xml = ''
     if (is_prune_context) {
-      const config_prune_instructions = config.get<string>(
-        'pruneContextInstructions'
+      const config_prune_instructions_prefix = config.get<string>(
+        'pruneContextInstructionsPrefix'
       )
       const instructions_to_use =
-        config_prune_instructions || prune_context_instructions
+        config_prune_instructions_prefix || prune_context_instructions_prefix
       system_instructions_xml = `${instructions_to_use}\n${prune_context_format}`
     } else if (edit_format_instructions) {
       system_instructions_xml = `<system>\n${edit_format_instructions}\n</system>`

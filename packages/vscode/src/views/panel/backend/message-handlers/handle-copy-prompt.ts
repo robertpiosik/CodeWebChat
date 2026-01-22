@@ -10,7 +10,7 @@ import {
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
 import {
   code_completion_instructions_for_panel,
-  prune_context_instructions,
+  prune_context_instructions_prefix,
   prune_context_format
 } from '@/constants/instructions'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
@@ -202,11 +202,11 @@ export const handle_copy_prompt = async (params: {
       }
     } else if (is_in_prune_context_prompt_type) {
       const config = vscode.workspace.getConfiguration('codeWebChat')
-      const config_prune_instructions = config.get<string>(
-        'pruneContextInstructions'
+      const config_prune_instructions_prefix = config.get<string>(
+        'pruneContextInstructionsPrefix'
       )
       const instructions_to_use =
-        config_prune_instructions || prune_context_instructions
+        config_prune_instructions_prefix || prune_context_instructions_prefix
       system_instructions_xml = `${instructions_to_use}\n${prune_context_format}`
     }
 

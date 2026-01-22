@@ -11,7 +11,7 @@ import {
 } from '@/views/panel/backend/utils/replace-git-symbols'
 import {
   code_completion_instructions_for_panel,
-  prune_context_instructions,
+  prune_context_instructions_prefix,
   prune_context_format
 } from '@/constants/instructions'
 import { get_recently_used_presets_or_groups_key } from '@/constants/state-keys'
@@ -281,11 +281,12 @@ export const handle_send_prompt = async (params: {
           }
         } else if (params.panel_provider.web_prompt_type == 'prune-context') {
           const config = vscode.workspace.getConfiguration('codeWebChat')
-          const config_prune_instructions = config.get<string>(
-            'pruneContextInstructions'
+          const config_prune_instructions_prefix = config.get<string>(
+            'pruneContextInstructionsPrefix'
           )
           const instructions_to_use =
-            config_prune_instructions || prune_context_instructions
+            config_prune_instructions_prefix ||
+            prune_context_instructions_prefix
           system_instructions_xml = `${instructions_to_use}\n${prune_context_format}`
         }
 

@@ -685,7 +685,7 @@
           "scope": "resource",
           "default": "You're a helpful coding assistant. Don't explain changes in inline comments."
         },
-        "codeWebChat.pruneContextInstructions": {
+        "codeWebChat.pruneContextInstructionsPrefix": {
           "type": "string",
           "scope": "resource"
         },

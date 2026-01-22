@@ -95,7 +95,8 @@ type Props = {
   currently_open_file_text?: string
   on_go_to_file: (file_path: string) => void
   are_keyboard_shortcuts_disabled: boolean
-  prune_context_instructions: string
+  prune_context_instructions_prefix: string
+  on_prune_context_instructions_prefix_change: (prefix: string) => void
 }
 
 export const MainView: React.FC<Props> = (props) => {
@@ -250,7 +251,12 @@ export const MainView: React.FC<Props> = (props) => {
             currently_open_file_text={props.currently_open_file_text}
             invocation_count={current_invocation_count}
             on_invocation_count_change={handle_invocation_count_change}
-            prune_context_instructions={props.prune_context_instructions}
+            prune_context_instructions_prefix={
+              props.prune_context_instructions_prefix
+            }
+            on_prune_context_instructions_prefix_change={
+              props.on_prune_context_instructions_prefix_change
+            }
           />
           <UiContextUtilisation
             current_context_size={props.token_count}

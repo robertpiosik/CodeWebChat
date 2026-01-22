@@ -470,6 +470,15 @@ export interface UpdateFileProgressMessage extends BaseMessage {
   apply_tokens_per_second?: number
 }
 
+export interface GetPruneContextInstructionsPrefixMessage extends BaseMessage {
+  command: 'GET_PRUNE_CONTEXT_INSTRUCTIONS_PREFIX'
+}
+
+export interface SavePruneContextInstructionsPrefixMessage extends BaseMessage {
+  command: 'SAVE_PRUNE_CONTEXT_INSTRUCTIONS_PREFIX'
+  prefix: string
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -553,6 +562,8 @@ export type FrontendMessage =
   | DeleteTaskMessage
   | PreviewGeneratedCodeMessage
   | UpdateFileProgressMessage
+  | GetPruneContextInstructionsPrefixMessage
+  | SavePruneContextInstructionsPrefixMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -809,6 +820,11 @@ export interface TasksMessage extends BaseMessage {
   tasks: Record<string, Task[]>
 }
 
+export interface PruneContextInstructionsPrefixMessage extends BaseMessage {
+  command: 'PRUNE_CONTEXT_INSTRUCTIONS_PREFIX'
+  prefix: string
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | FocusPromptFieldMessage
@@ -856,3 +872,4 @@ export type BackendMessage =
   | ShowPreviewOngoingModalMessage
   | TasksMessage
   | UpdateFileProgressMessage
+  | PruneContextInstructionsPrefixMessage

@@ -28,7 +28,11 @@ export const Empty = () => (
     on_invocation_count_change={(count) =>
       console.log('Invocation count changed:', count)
     }
-    prune_context_instructions=""
+    on_go_to_file={(path) => console.log('Go to file:', path)}
+    prune_context_instructions_prefix=""
+    on_prune_context_instructions_prefix_change={(val) =>
+      console.log('Prune prefix changed:', val)
+    }
   />
 )
 
@@ -55,7 +59,11 @@ export const WithText = () => (
     on_invocation_count_change={(count) =>
       console.log('Invocation count changed:', count)
     }
-    prune_context_instructions=""
+    on_go_to_file={(path) => console.log('Go to file:', path)}
+    prune_context_instructions_prefix=""
+    on_prune_context_instructions_prefix_change={(val) =>
+      console.log('Prune prefix changed:', val)
+    }
   />
 )
 
@@ -82,7 +90,11 @@ export const LongText = () => (
     on_invocation_count_change={(count) =>
       console.log('Invocation count changed:', count)
     }
-    prune_context_instructions=""
+    on_go_to_file={(path) => console.log('Go to file:', path)}
+    prune_context_instructions_prefix=""
+    on_prune_context_instructions_prefix_change={(val) =>
+      console.log('Prune prefix changed:', val)
+    }
   />
 )
 
@@ -108,8 +120,12 @@ export const WithPlaceholderSavedContext = () => (
     on_invocation_count_change={(count) =>
       console.log('Invocation count changed:', count)
     }
+    on_go_to_file={(path) => console.log('Go to file:', path)}
     on_curly_braces_click={() => {}}
-    prune_context_instructions=""
+    prune_context_instructions_prefix=""
+    on_prune_context_instructions_prefix_change={(val) =>
+      console.log('Prune prefix changed:', val)
+    }
   />
 )
 
@@ -135,8 +151,12 @@ export const WithPlaceholderSelection = () => (
     on_invocation_count_change={(count) =>
       console.log('Invocation count changed:', count)
     }
+    on_go_to_file={(path) => console.log('Go to file:', path)}
     on_curly_braces_click={() => {}}
-    prune_context_instructions=""
+    prune_context_instructions_prefix=""
+    on_prune_context_instructions_prefix_change={(val) =>
+      console.log('Prune prefix changed:', val)
+    }
   />
 )
 
@@ -162,8 +182,12 @@ export const WithCommit = () => (
     on_invocation_count_change={(count) =>
       console.log('Invocation count changed:', count)
     }
+    on_go_to_file={(path) => console.log('Go to file:', path)}
     on_curly_braces_click={() => {}}
-    prune_context_instructions=""
+    prune_context_instructions_prefix=""
+    on_prune_context_instructions_prefix_change={(val) =>
+      console.log('Prune prefix changed:', val)
+    }
   />
 )
 
@@ -189,8 +213,12 @@ export const WithCommitWithQuotes = () => (
     on_invocation_count_change={(count) =>
       console.log('Invocation count changed:', count)
     }
+    on_go_to_file={(path) => console.log('Go to file:', path)}
     on_curly_braces_click={() => {}}
-    prune_context_instructions=""
+    prune_context_instructions_prefix=""
+    on_prune_context_instructions_prefix_change={(val) =>
+      console.log('Prune prefix changed:', val)
+    }
   />
 )
 export const WithContextAtCommit = () => (
@@ -215,8 +243,12 @@ export const WithContextAtCommit = () => (
     on_invocation_count_change={(count) =>
       console.log('Invocation count changed:', count)
     }
+    on_go_to_file={(path) => console.log('Go to file:', path)}
     on_curly_braces_click={() => {}}
-    prune_context_instructions=""
+    prune_context_instructions_prefix=""
+    on_prune_context_instructions_prefix_change={(val) =>
+      console.log('Prune prefix changed:', val)
+    }
   />
 )
 
@@ -246,7 +278,11 @@ export const WithEditFormatSelector = () => {
       context_file_paths={[]}
       invocation_count={1}
       on_invocation_count_change={set_edit_format as any} // Mocking for demo
-      prune_context_instructions=""
+      on_go_to_file={(path) => console.log('Go to file:', path)}
+      prune_context_instructions_prefix=""
+      on_prune_context_instructions_prefix_change={(val) =>
+        console.log('Prune prefix changed:', val)
+      }
     />
   )
 }
@@ -275,6 +311,9 @@ export const WithFilePaths = () => (
     on_invocation_count_change={(count) =>
       console.log('Invocation count changed:', count)
     }
-    prune_context_instructions=""
+    prune_context_instructions_prefix=""
+    on_prune_context_instructions_prefix_change={(val) =>
+      console.log('Prune prefix changed:', val)
+    }
   />
 )

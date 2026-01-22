@@ -25,7 +25,7 @@ import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { PruneContextMessage } from '@/views/panel/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
 import {
-  prune_context_instructions,
+  prune_context_instructions_prefix,
   prune_context_format
 } from '@/constants/instructions'
 
@@ -384,11 +384,11 @@ export const handle_prune_context = async (
     const files = `<files>${collected_files}\n</files>`
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const config_prune_instructions = config.get<string>(
-      'pruneContextInstructions'
+    const config_prune_instructions_prefix = config.get<string>(
+      'pruneContextInstructionsPrefix'
     )
     const instructions_to_use =
-      config_prune_instructions || prune_context_instructions
+      config_prune_instructions_prefix || prune_context_instructions_prefix
     const system_instructions_xml = `${instructions_to_use}\n${prune_context_format}`
 
     const content = `${system_instructions_xml}\n${files}\n${system_instructions_xml}\n${processed_instructions}`

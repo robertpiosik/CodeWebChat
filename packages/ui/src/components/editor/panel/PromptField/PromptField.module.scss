@@ -34,6 +34,10 @@
   }
 }
 
+.input-wrapper {
+  position: relative;
+}
+
 .error {
   position: absolute;
   z-index: 2;
@@ -89,6 +93,20 @@
 
   & [data-type='ghost-text']::before {
     content: '\200B';
+  }
+}
+
+.prune-context-prefix {
+  padding: var(--padding);
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid var(--cwc-border-color);
+  resize: none;
+  color: var(--vscode-descriptionForeground);
+  overflow: hidden;
+
+  &:focus {
+    outline: none;
   }
 }
 
