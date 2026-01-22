@@ -81,11 +81,13 @@ export const get_highlighted_text = (params: {
         return `<span class="${cn(
           styles['keyword'],
           styles['keyword--pasted-lines']
-        )}" data-type="pasted-lines-keyword" data-path="${escape_html(
-          path
-        )}" data-content="${escape_html(content)}"${
-          start ? ` data-start="${escape_html(start)}"` : ''
-        }${end ? ` data-end="${escape_html(end)}"` : ''}><span class="${
+        )}" data-type="pasted-lines-keyword" title="${escape_html(
+          content
+        )}" data-path="${escape_html(path)}" data-content="${escape_html(
+          content
+        )}"${start ? ` data-start="${escape_html(start)}"` : ''}${
+          end ? ` data-end="${escape_html(end)}"` : ''
+        }><span class="${
           styles['keyword__icon']
         }" data-role="keyword-icon"></span><span class="${
           styles['keyword__text']
@@ -98,10 +100,14 @@ export const get_highlighted_text = (params: {
         })
         const title = !params.current_selection
           ? 'Missing text selection'
-          : `Selection: ${params.current_selection.text
-              .substring(0, 100)
-              .replace(/\n/g, ' ')}...`
-        return `<span class="${className}" data-type="selection-keyword" title="${escape_html(title)}"><span class="${styles['keyword__icon']}" data-role="keyword-icon"></span><span class="${styles['keyword__text']}" data-role="keyword-text">Selection</span></span>`
+          : params.current_selection.text
+        return `<span class="${className}" data-type="selection-keyword" title="${escape_html(
+          title
+        )}"><span class="${
+          styles['keyword__icon']
+        }" data-role="keyword-icon"></span><span class="${
+          styles['keyword__text']
+        }" data-role="keyword-text">Selection</span></span>`
       }
       if (part && /^#Changes:[^\s,;:!?]+$/.test(part)) {
         const branch_name = part.substring('#Changes:'.length)
