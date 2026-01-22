@@ -56,14 +56,12 @@ export namespace Presets {
     presets: Preset[]
     on_preset_click: (preset_name: string) => void
     on_group_click: (group_name: string) => void
-    on_create_preset_group_or_separator: (options?: {
-      placement?: 'top' | 'bottom'
-    }) => void
+    on_create: (options?: { placement?: 'top' | 'bottom' }) => void
     on_preset_copy: (name: string) => void
     on_presets_reorder: (reordered_presets: Preset[]) => void
     on_preset_edit: (name: string) => void
-    on_duplicate_preset_group_or_separator: (index: number) => void
-    on_delete_preset_group_or_separator: (index: number) => void
+    on_duplicate: (index: number) => void
+    on_delete: (index: number) => void
     on_toggle_selected_preset: (name: string) => void
     on_toggle_preset_pinned: (name: string) => void
     on_toggle_group_collapsed: (name: string) => void
@@ -206,7 +204,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     title="Duplicate"
                     on_click={(e) => {
                       e.stopPropagation()
-                      props.on_duplicate_preset_group_or_separator(index)
+                      props.on_duplicate(index)
                     }}
                   />
                   <IconButton
@@ -222,7 +220,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     title="Delete"
                     on_click={(e) => {
                       e.stopPropagation()
-                      props.on_delete_preset_group_or_separator(index)
+                      props.on_delete(index)
                     }}
                   />
                 </div>
@@ -242,7 +240,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             codicon_icon="add"
             on_click={(e) => {
               e.stopPropagation()
-              props.on_create_preset_group_or_separator({ placement: 'top' })
+              props.on_create({ placement: 'top' })
             }}
             title="Create New..."
           />
@@ -338,9 +336,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                           title="Duplicate"
                           on_click={(e) => {
                             e.stopPropagation()
-                            props.on_duplicate_preset_group_or_separator(
-                              preset.original_index!
-                            )
+                            props.on_duplicate(preset.original_index!)
                           }}
                         />
                         <IconButton
@@ -348,9 +344,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                           title="Delete"
                           on_click={(e) => {
                             e.stopPropagation()
-                            props.on_delete_preset_group_or_separator(
-                              preset.original_index!
-                            )
+                            props.on_delete(preset.original_index!)
                           }}
                         />
                       </div>
@@ -539,9 +533,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         title="Duplicate"
                         on_click={(e) => {
                           e.stopPropagation()
-                          props.on_duplicate_preset_group_or_separator(
-                            preset.original_index!
-                          )
+                          props.on_duplicate(preset.original_index!)
                         }}
                       />
                       <IconButton
@@ -557,9 +549,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         title="Delete"
                         on_click={(e) => {
                           e.stopPropagation()
-                          props.on_delete_preset_group_or_separator(
-                            preset.original_index!
-                          )
+                          props.on_delete(preset.original_index!)
                         }}
                       />
                     </div>
@@ -571,7 +561,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
           <div className={styles.footer}>
             <Button
               on_click={() =>
-                props.on_create_preset_group_or_separator({
+                props.on_create({
                   placement: 'bottom'
                 })
               }

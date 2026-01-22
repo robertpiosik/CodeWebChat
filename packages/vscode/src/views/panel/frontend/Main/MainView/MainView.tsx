@@ -282,9 +282,7 @@ export const MainView: React.FC<Props> = (props) => {
                 props.web_prompt_type == 'code-at-cursor'
               }
               presets={props.presets}
-              on_create_preset_group_or_separator={
-                props.on_create_preset_group_or_separator
-              }
+              on_create={props.on_create_preset_group_or_separator}
               on_preset_click={(preset_name) =>
                 props.initialize_chats({
                   preset_name,
@@ -301,12 +299,8 @@ export const MainView: React.FC<Props> = (props) => {
               on_preset_copy={props.copy_to_clipboard}
               on_preset_edit={props.on_preset_edit}
               on_presets_reorder={props.on_presets_reorder}
-              on_duplicate_preset_group_or_separator={
-                props.on_duplicate_preset_group_or_separator
-              }
-              on_delete_preset_group_or_separator={
-                props.on_delete_preset_group_or_separator
-              }
+              on_duplicate={props.on_duplicate_preset_group_or_separator}
+              on_delete={props.on_delete_preset_group_or_separator}
               on_toggle_selected_preset={props.on_toggle_selected_preset}
               on_toggle_preset_pinned={props.on_toggle_preset_pinned}
               on_toggle_group_collapsed={props.on_toggle_group_collapsed}

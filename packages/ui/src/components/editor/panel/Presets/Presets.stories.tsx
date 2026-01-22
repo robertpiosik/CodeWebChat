@@ -62,7 +62,7 @@ export const Primary = () => {
       on_group_click={(name) => {
         console.log('on_group_click', name)
       }}
-      on_create_preset_group_or_separator={(options) => {
+      on_create={(options) => {
         console.log('on_create_preset_group_or_separator', options)
       }}
       on_preset_copy={(name) => console.log('on_preset_copy', name)}
@@ -70,10 +70,10 @@ export const Primary = () => {
         console.log('on_presets_reorder', reordered)
       }
       on_preset_edit={(name) => console.log('on_preset_edit', name)}
-      on_duplicate_preset_group_or_separator={(index) =>
+      on_duplicate={(index) =>
         console.log('on_duplicate_preset_group_or_separator', index)
       }
-      on_delete_preset_group_or_separator={(index) =>
+      on_delete={(index) =>
         console.log('on_delete_preset_group_or_separator', index)
       }
       on_toggle_selected_preset={(name) =>
