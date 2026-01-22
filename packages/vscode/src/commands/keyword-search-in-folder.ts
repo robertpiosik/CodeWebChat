@@ -21,10 +21,9 @@ export const keyword_search_in_folder_command = (
 
       try {
         const input_box = vscode.window.createInputBox()
-        input_box.title = `Keyword Search in ${path.basename(folder_path)}`
+        input_box.title = 'Keyword Search'
         input_box.prompt = 'Enter keywords separated by comma'
         input_box.placeholder = 'e.g. user, login, auth'
-        input_box.ignoreFocusOut = true
 
         const keywords_input = await new Promise<string | undefined>(
           (resolve) => {
@@ -34,7 +33,7 @@ export const keyword_search_in_folder_command = (
             disposables.push(
               input_box.onDidAccept(() => {
                 const value = input_box.value.trim()
-                if (value.length === 0) {
+                if (value.length == 0) {
                   input_box.validationMessage =
                     'Please enter at least one keyword'
                   return

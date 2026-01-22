@@ -242,15 +242,20 @@ export const handle_workspace_state_source = async (
               )
 
               const files = files_by_workspace.get(root)
-              if (files && files.length > 0) {
-                const condensed_paths = condense_paths(
-                  files,
-                  root,
-                  workspace_provider
-                )
-                const relative_paths = condensed_paths.map((p) =>
-                  p.replace(/\\/g, '/')
-                )
+              if ((files && files.length > 0) || current_roots.includes(root)) {
+                let relative_paths: string[] = []
+
+                if (files && files.length > 0) {
+                  const condensed_paths = condense_paths(
+                    files,
+                    root,
+                    workspace_provider
+                  )
+                  relative_paths = condensed_paths.map((p) =>
+                    p.replace(/\\/g, '/')
+                  )
+                }
+
                 root_contexts.unshift({
                   name: context.name,
                   paths: relative_paths

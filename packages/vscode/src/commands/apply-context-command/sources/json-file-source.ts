@@ -257,15 +257,20 @@ export const handle_json_file_source = async (
             let contexts = load_contexts_from_file(p)
             contexts = contexts.filter((c) => c.name !== context_name)
 
-            if (files.length > 0) {
-              const condensed_paths = condense_paths(
-                files,
-                root,
-                workspace_provider
-              )
-              const relative_paths = condensed_paths.map((p) =>
-                p.replace(/\\/g, '/')
-              )
+            if (files.length > 0 || current_roots.includes(root)) {
+              let relative_paths: string[] = []
+
+              if (files.length > 0) {
+                const condensed_paths = condense_paths(
+                  files,
+                  root,
+                  workspace_provider
+                )
+                relative_paths = condensed_paths.map((p) =>
+                  p.replace(/\\/g, '/')
+                )
+              }
+
               contexts.unshift({
                 name: context_name,
                 paths: relative_paths

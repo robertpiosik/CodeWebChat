@@ -2,11 +2,7 @@ import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
 import { WorkspaceProvider } from '../../context/providers/workspace/workspace-provider'
-import {
-  LAST_APPLY_CONTEXT_OPTION_STATE_KEY,
-  QUICK_SAVES_STATE_KEY
-} from '../../constants/state-keys'
-import { SavedContext } from '@/types/context'
+import { LAST_APPLY_CONTEXT_OPTION_STATE_KEY } from '../../constants/state-keys'
 import { dictionary } from '@shared/constants/dictionary'
 import {
   handle_unstaged_files_source,
@@ -20,7 +16,6 @@ import {
   get_contexts_file_path,
   load_and_merge_global_contexts
 } from './helpers/saving'
-import { handle_quick_save } from './helpers/saving/handle-quick-save'
 
 export const apply_context_command = (
   workspace_provider: WorkspaceProvider | undefined,
@@ -85,29 +80,6 @@ export const apply_context_command = (
           label: 'Other...',
           value: 'other'
         })
-
-        main_quick_pick_options.push({
-          label: 'quick saves',
-          kind: vscode.QuickPickItemKind.Separator,
-          value: 'separator'
-        } as any)
-
-        const quick_saves = extension_context.workspaceState.get<
-          Record<number, SavedContext>
-        >(QUICK_SAVES_STATE_KEY, {})
-        for (let i = 1; i <= 3; i++) {
-          const is_saved = !!quick_saves[i]
-          main_quick_pick_options.push({
-            label: `Quick save slot ${i}`,
-            description: is_saved
-              ? `${quick_saves[i].paths.length} paths`
-              : 'empty',
-            value: `quick_save_${i}`,
-            buttons: is_saved
-              ? [{ iconPath: new vscode.ThemeIcon('trash'), tooltip: 'Clear' }]
-              : []
-          })
-        }
 
         const main_quick_pick = vscode.window.createQuickPick<
           vscode.QuickPickItem & {
@@ -187,20 +159,6 @@ export const apply_context_command = (
                   await vscode.window.showTextDocument(doc)
                   main_quick_pick.hide()
                 }
-              }
-            }),
-            main_quick_pick.onDidTriggerItemButton(async (e) => {
-              if (e.item.value.startsWith('quick_save_')) {
-                const slot = parseInt(e.item.value.split('_')[2])
-                const current = extension_context.workspaceState.get<
-                  Record<number, SavedContext>
-                >(QUICK_SAVES_STATE_KEY, {})
-                delete current[slot]
-                await extension_context.workspaceState.update(
-                  QUICK_SAVES_STATE_KEY,
-                  current
-                )
-                resolve({ ...e.item, triggeredButton: e.button })
               }
             }),
             main_quick_pick.onDidAccept(() => {
@@ -362,14 +320,6 @@ export const apply_context_command = (
               return
             }
           }
-        } else if (main_selection.value.startsWith('quick_save_')) {
-          const slot = parseInt(main_selection.value.split('_')[2])
-          await handle_quick_save(
-            slot,
-            workspace_provider,
-            extension_context,
-            on_context_selected
-          )
         }
       }
     }
