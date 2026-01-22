@@ -190,7 +190,6 @@ export const use_panel = (vscode: any) => {
   }
 
   const handle_prune_context_instructions_prefix_change = (prefix: string) => {
-    set_prune_context_instructions_prefix(prefix)
     post_message(vscode, {
       command: 'SAVE_PRUNE_CONTEXT_INSTRUCTIONS_PREFIX',
       prefix
@@ -485,7 +484,8 @@ export const use_panel = (vscode: any) => {
     if (new_mode == MODE.API && web_prompt_type) {
       if (
         web_prompt_type == 'edit-context' ||
-        web_prompt_type == 'code-at-cursor'
+        web_prompt_type == 'code-at-cursor' ||
+        web_prompt_type == 'prune-context'
       ) {
         handle_api_prompt_type_change(web_prompt_type)
       }

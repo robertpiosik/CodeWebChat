@@ -400,71 +400,51 @@ export const handle_prune_context = async (
       }
     ]
 
-    let error_occurred = false
-    let was_cancelled = false
+    const body: { [key: string]: any } = {
+      messages,
+      model: prune_context_config.model,
+      temperature: prune_context_config.temperature
+    }
 
-    const promises = Array.from({ length: message.invocation_count }).map(
-      async () => {
-        const body: { [key: string]: any } = {
-          messages,
-          model: prune_context_config.model,
-          temperature: prune_context_config.temperature
-        }
-
-        apply_reasoning_effort(
-          body,
-          provider,
-          prune_context_config.reasoning_effort
-        )
-
-        try {
-          const result = await panel_provider.api_manager.get({
-            endpoint_url,
-            api_key: provider.api_key,
-            body,
-            provider_name: prune_context_config.provider_name,
-            model: prune_context_config.model,
-            reasoning_effort: prune_context_config.reasoning_effort
-          })
-
-          if (result) {
-            vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
-              response: result.response,
-              raw_instructions: instructions
-            })
-            return true
-          }
-        } catch (error) {
-          if (axios.isCancel(error)) {
-            was_cancelled = true
-            return false
-          }
-          Logger.error({
-            function_name: 'handle_prune_context',
-            message: 'prune context task error',
-            data: error
-          })
-          if (!error_occurred) {
-            vscode.window.showErrorMessage(
-              'Prune context error. See console for details.'
-            )
-            error_occurred = true
-          }
-          return false
-        }
-        return false
-      }
+    apply_reasoning_effort(
+      body,
+      provider,
+      prune_context_config.reasoning_effort
     )
 
-    const results = await Promise.all(promises)
+    try {
+      const result = await panel_provider.api_manager.get({
+        endpoint_url,
+        api_key: provider.api_key,
+        body,
+        provider_name: prune_context_config.provider_name,
+        model: prune_context_config.model,
+        reasoning_effort: prune_context_config.reasoning_effort
+      })
 
-    if (error_occurred || was_cancelled) return
-
-    if (results.some((r) => r)) {
+      if (result) {
+        vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
+          response: result.response,
+          raw_instructions: instructions
+        })
+        return
+      }
+    } catch (error) {
+      if (axios.isCancel(error)) {
+        return
+      }
+      Logger.error({
+        function_name: 'handle_prune_context',
+        message: 'prune context task error',
+        data: error
+      })
+      vscode.window.showErrorMessage(
+        'Prune context error. See console for details.'
+      )
       return
-    } else {
-      should_show_quick_pick = true
-      current_config_id = undefined
     }
+
+    should_show_quick_pick = true
+    current_config_id = undefined
   }
 }

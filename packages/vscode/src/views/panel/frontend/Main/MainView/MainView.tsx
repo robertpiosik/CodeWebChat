@@ -16,6 +16,7 @@ import { use_last_choice_button_title } from './hooks/use-last-choice-button-tit
 import { ContextUtilisation as UiContextUtilisation } from '@ui/components/editor/panel/ContextUtilisation'
 import { Header } from './components/Header'
 import { use_invocation_counts } from './hooks/use-invocation-counts'
+import { prune_context_instructions_prefix } from '@/constants/instructions'
 
 type Props = {
   scroll_reset_key: number

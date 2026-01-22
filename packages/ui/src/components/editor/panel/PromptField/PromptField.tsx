@@ -10,7 +10,6 @@ import { use_ghost_text } from './hooks/use-ghost-text'
 import { use_drag_drop } from './hooks/use-drag-drop'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 import { use_edit_format_compacting } from './hooks/use-edit-format-compacting'
-import { use_prune_context_instructions } from './hooks/use-prune-context-instructions'
 import { DropdownMenu } from '../../common/DropdownMenu'
 import { use_is_mac } from '@shared/hooks'
 import {
@@ -73,13 +72,13 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [hovered_edit_format, set_hovered_edit_format] =
     useState<EditFormat | null>(null)
 
-  const { prune_instructions, set_prune_instructions } =
-    use_prune_context_instructions({
-      prune_context_instructions_prefix:
-        props.prune_context_instructions_prefix,
-      on_prune_context_instructions_prefix_change:
-        props.on_prune_context_instructions_prefix_change
-    })
+  const [prune_instructions, set_prune_instructions] = useState(
+    props.prune_context_instructions_prefix
+  )
+
+  useEffect(() => {
+    set_prune_instructions(props.prune_context_instructions_prefix)
+  }, [props.prune_context_instructions_prefix])
 
   const toggle_invocation_dropdown = useCallback(() => {
     set_is_invocation_dropdown_open((prev) => !prev)
@@ -330,6 +329,14 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             onChange={(e) => {
               set_prune_instructions(e.target.value)
             }}
+            onBlur={(e) => {
+              props.on_prune_context_instructions_prefix_change(
+                prune_instructions
+              )
+              if (!e.target.value) {
+                set_prune_instructions(props.prune_context_instructions_prefix)
+              }
+            }}
             onClick={(e) => e.stopPropagation()}
           />
         )}
@@ -541,38 +548,42 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               {(!props.is_web_mode ||
                 (props.is_web_mode && props.is_connected)) && (
                 <>
-                  <div
-                    className={styles['footer__right__invocation-count']}
-                    ref={invocation_dropdown_ref}
-                  >
-                    <button
-                      className={cn(
-                        styles['footer__right__submit__button'],
-                        styles['footer__right__invocation-count__button']
-                      )}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        set_is_invocation_dropdown_open((prev) => !prev)
-                        close_dropdown()
-                      }}
-                      title={`Invocation count ${is_mac ? '(⌥X 1-5)' : '(Alt+X 1-5)'}`}
+                  {!(
+                    props.prompt_type == 'prune-context' && !props.is_web_mode
+                  ) && (
+                    <div
+                      className={styles['footer__right__invocation-count']}
+                      ref={invocation_dropdown_ref}
                     >
-                      {props.invocation_count}×
-                    </button>
-                    {is_invocation_dropdown_open && (
-                      <DropdownMenu
-                        items={[1, 2, 3, 4, 5].map((count) => ({
-                          label: `${count}×`,
-                          checked: count == props.invocation_count,
-                          shortcut: is_mac ? `⌥X ${count}` : `Alt+X ${count}`,
-                          on_click: () => {
-                            props.on_invocation_count_change(count)
-                            set_is_invocation_dropdown_open(false)
-                          }
-                        }))}
-                      />
-                    )}
-                  </div>
+                      <button
+                        className={cn(
+                          styles['footer__right__submit__button'],
+                          styles['footer__right__invocation-count__button']
+                        )}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          set_is_invocation_dropdown_open((prev) => !prev)
+                          close_dropdown()
+                        }}
+                        title={`Invocation count ${is_mac ? '(⌥X 1-5)' : '(Alt+X 1-5)'}`}
+                      >
+                        {props.invocation_count}×
+                      </button>
+                      {is_invocation_dropdown_open && (
+                        <DropdownMenu
+                          items={[1, 2, 3, 4, 5].map((count) => ({
+                            label: `${count}×`,
+                            checked: count == props.invocation_count,
+                            shortcut: is_mac ? `⌥X ${count}` : `Alt+X ${count}`,
+                            on_click: () => {
+                              props.on_invocation_count_change(count)
+                              set_is_invocation_dropdown_open(false)
+                            }
+                          }))}
+                        />
+                      )}
+                    </div>
+                  )}
                   <button
                     className={cn(
                       styles['footer__right__submit__button'],
