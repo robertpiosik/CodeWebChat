@@ -65,6 +65,7 @@ export class WorkspaceProvider
   private _file_workspace_map: Map<string, string> = new Map()
   public gitignore_initialization: Promise<void>
   public ranges_initialization: Promise<void>
+  private _change_event_dispatch_timeout: NodeJS.Timeout | null = null
 
   private _use_compact_token_count: boolean = false
 
@@ -184,6 +185,18 @@ export class WorkspaceProvider
     return matching_root
   }
 
+  private _dispatch_change_events(): void {
+    if (this._change_event_dispatch_timeout) {
+      clearTimeout(this._change_event_dispatch_timeout)
+    }
+
+    this._change_event_dispatch_timeout = setTimeout(() => {
+      this._on_did_change_checked_files.fire()
+      this.refresh()
+      this._change_event_dispatch_timeout = null
+    }, 500)
+  }
+
   private _uncheck_ignored_files(): void {
     const checked_files = this.get_all_checked_paths()
 
@@ -204,7 +217,7 @@ export class WorkspaceProvider
     }
 
     if (files_to_uncheck.length > 0) {
-      this._on_did_change_checked_files.fire()
+      this._dispatch_change_events()
     }
   }
 
@@ -219,6 +232,9 @@ export class WorkspaceProvider
     }
     if (this._refresh_timeout) {
       clearTimeout(this._refresh_timeout)
+    }
+    if (this._change_event_dispatch_timeout) {
+      clearTimeout(this._change_event_dispatch_timeout)
     }
 
     this._token_calculator.dispose()
@@ -410,7 +426,7 @@ export class WorkspaceProvider
         dir_path = path.dirname(dir_path)
       }
 
-      this._on_did_change_checked_files.fire()
+      this._dispatch_change_events()
     }
 
     let dir_path = parent_dir
@@ -521,8 +537,7 @@ export class WorkspaceProvider
           })
       }
     }
-    this.refresh()
-    this._on_did_change_checked_files.fire()
+    this._dispatch_change_events()
   }
 
   async getTreeItem(element: FileItem): Promise<vscode.TreeItem> {
@@ -1031,8 +1046,7 @@ export class WorkspaceProvider
       dir_path = path.dirname(dir_path)
     }
 
-    this._on_did_change_checked_files.fire()
-    this.refresh()
+    this._dispatch_change_events()
   }
 
   private async _update_parent_state(dir_path: string): Promise<void> {
@@ -1315,8 +1329,7 @@ export class WorkspaceProvider
       }
     }
 
-    this.refresh()
-    this._on_did_change_checked_files.fire()
+    this._dispatch_change_events()
   }
 
   // Load .gitignore from all levels of the workspace
@@ -1458,8 +1471,7 @@ export class WorkspaceProvider
       }
     }
 
-    this.refresh()
-    this._on_did_change_checked_files.fire()
+    this._dispatch_change_events()
   }
 
   public async get_checked_files_token_count(options?: {

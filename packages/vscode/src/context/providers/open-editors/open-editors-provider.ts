@@ -30,6 +30,7 @@ export class OpenEditorsProvider
   private _config_change_handler: vscode.Disposable
   private _workspace_provider: WorkspaceProvider
   private _use_compact_token_count: boolean = false
+  private _change_event_dispatch_timeout: NodeJS.Timeout | null = null
 
   public set_use_compact_token_count(use_compact: boolean): void {
     if (this._use_compact_token_count != use_compact) {
@@ -83,6 +84,18 @@ export class OpenEditorsProvider
     this.refresh()
   }
 
+  private _dispatch_change_events(): void {
+    if (this._change_event_dispatch_timeout) {
+      clearTimeout(this._change_event_dispatch_timeout)
+    }
+
+    this._change_event_dispatch_timeout = setTimeout(() => {
+      this._on_did_change_checked_files.fire()
+      this.refresh()
+      this._change_event_dispatch_timeout = null
+    }, 500)
+  }
+
   private _is_file_in_any_workspace(file_path: string): boolean {
     return this._workspace_roots.some((root) => file_path.startsWith(root))
   }
@@ -105,7 +118,7 @@ export class OpenEditorsProvider
     }
 
     if (files_to_uncheck.length > 0) {
-      this._on_did_change_checked_files.fire()
+      this._dispatch_change_events()
     }
   }
 
@@ -154,6 +167,9 @@ export class OpenEditorsProvider
     this._tab_change_handler.dispose()
     this._config_change_handler.dispose()
     this._on_did_change_checked_files.dispose()
+    if (this._change_event_dispatch_timeout) {
+      clearTimeout(this._change_event_dispatch_timeout)
+    }
   }
 
   refresh(): void {
@@ -357,8 +373,7 @@ export class OpenEditorsProvider
       await this._open_file_in_non_preview_mode(item.resourceUri)
     }
 
-    this._on_did_change_checked_files.fire()
-    this.refresh()
+    this._dispatch_change_events()
   }
 
   clear_checks(): void {
@@ -373,11 +388,7 @@ export class OpenEditorsProvider
       this._checked_items.set(file_path, vscode.TreeItemCheckboxState.Unchecked)
     }
 
-    // Fire the event with undefined to force full tree refresh
-    this._on_did_change_tree_data.fire(undefined)
-
-    // Fire the checked files change event to trigger synchronization with workspace view
-    this._on_did_change_checked_files.fire()
+    this._dispatch_change_events()
   }
 
   async check_all(): Promise<void> {
@@ -397,11 +408,7 @@ export class OpenEditorsProvider
       }
     }
 
-    // Fire the event with undefined to force full tree refresh
-    this._on_did_change_tree_data.fire(undefined)
-
-    // Fire the checked files change event to trigger synchronization with workspace view
-    this._on_did_change_checked_files.fire()
+    this._dispatch_change_events()
   }
 
   get_checked_files(): string[] {
@@ -431,10 +438,7 @@ export class OpenEditorsProvider
       }
     }
 
-    this.refresh()
-
-    // Fire the checked files change event to trigger synchronization
-    this._on_did_change_checked_files.fire()
+    this._dispatch_change_events()
   }
 
   is_initialized(): boolean {
