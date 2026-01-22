@@ -41,11 +41,11 @@ import {
   handle_get_edit_format,
   handle_get_edit_format_instructions,
   handle_at_sign_quick_pick,
-  handle_get_mode_web,
-  handle_save_mode_web,
+  handle_get_web_prompt_type,
+  handle_save_web_prompt_type,
   handle_save_mode,
-  handle_get_mode_api,
-  handle_save_mode_api,
+  handle_get_api_prompt_type,
+  handle_save_api_prompt_type,
   handle_get_mode,
   handle_get_workspace_state,
   handle_get_version,
@@ -395,11 +395,11 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     const mode =
       this.mode == MODE.API ? this.api_prompt_type : this.web_prompt_type
     switch (mode) {
-      case 'ask':
+      case 'ask-about-context':
         return 'chatPresetsForAskAboutContext'
       case 'edit-context':
         return 'chatPresetsForEditContext'
-      case 'code-completions':
+      case 'code-at-cursor':
         return 'chatPresetsForCodeAtCursor'
       case 'prune-context':
         return 'chatPresetsForPruneContext'
@@ -582,8 +582,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_show_history_quick_pick(this)
           } else if (message.command == 'SHOW_PROMPT_TEMPLATE_QUICK_PICK') {
             await handle_show_prompt_template_quick_pick(this)
-          } else if (message.command == 'GET_WEB_MODE') {
-            handle_get_mode_web(this)
+          } else if (message.command == 'GET_WEB_PROMPT_TYPE') {
+            handle_get_web_prompt_type(this)
           } else if (message.command == 'CANCEL_API_REQUEST') {
             if (this.api_call_cancel_token_source) {
               this.api_call_cancel_token_source.cancel('Cancelled by user.')
@@ -599,13 +599,13 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             message.command == 'TOGGLE_PINNED_API_TOOL_CONFIGURATION'
           ) {
             await handle_toggle_pinned_api_tool_configuration(this, message)
-          } else if (message.command == 'SAVE_WEB_MODE') {
-            await handle_save_mode_web(this, message.mode)
+          } else if (message.command == 'SAVE_WEB_PROMPT_TYPE') {
+            await handle_save_web_prompt_type(this, message.mode)
             this._update_providers_compact_mode()
-          } else if (message.command == 'GET_API_MODE') {
-            handle_get_mode_api(this)
-          } else if (message.command == 'SAVE_API_MODE') {
-            await handle_save_mode_api(this, message.mode)
+          } else if (message.command == 'GET_API_PROMPT_TYPE') {
+            handle_get_api_prompt_type(this)
+          } else if (message.command == 'SAVE_API_PROMPT_TYPE') {
+            await handle_save_api_prompt_type(this, message.mode)
             this._update_providers_compact_mode()
           } else if (message.command == 'GET_EDIT_FORMAT_INSTRUCTIONS') {
             handle_get_edit_format_instructions(this)
@@ -712,23 +712,23 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
   public send_presets_to_webview(_: vscode.Webview) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const web_modes: WebPromptType[] = [
-      'ask',
+    const web_prompt_types: WebPromptType[] = [
+      'ask-about-context',
       'edit-context',
-      'code-completions',
+      'code-at-cursor',
       'prune-context',
       'no-context'
     ]
     const mode_to_config_key: Record<WebPromptType, string> = {
-      ask: 'chatPresetsForAskAboutContext',
+      'ask-about-context': 'chatPresetsForAskAboutContext',
       'edit-context': 'chatPresetsForEditContext',
-      'code-completions': 'chatPresetsForCodeAtCursor',
+      'code-at-cursor': 'chatPresetsForCodeAtCursor',
       'prune-context': 'chatPresetsForPruneContext',
       'no-context': 'chatPresetsForNoContext'
     }
     const all_presets = Object.fromEntries(
-      web_modes.map((mode) => {
-        const presets_config_key = mode_to_config_key[mode]
+      web_prompt_types.map((prompt_type) => {
+        const presets_config_key = mode_to_config_key[prompt_type]
         const presets_config =
           config.get<ConfigPresetFormat[]>(presets_config_key, []) || []
         const presets_ui = presets_config
@@ -737,17 +737,17 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               !preset_config.chatbot || CHATBOTS[preset_config.chatbot]
           )
           .map((preset_config) => config_preset_to_ui_format(preset_config))
-        return [mode, presets_ui]
+        return [prompt_type, presets_ui]
       })
     ) as { [T in WebPromptType]: Preset[] }
     this.send_message({
       command: 'PRESETS',
       presets: all_presets,
       selected_preset_or_group_name_by_mode: Object.fromEntries(
-        web_modes.map((mode) => {
-          const presets_for_mode = all_presets[mode]
+        web_prompt_types.map((prompt_type) => {
+          const presets_for_mode = all_presets[prompt_type]
           let selected_name: string | undefined = undefined
-          const key = get_recently_used_presets_or_groups_key(mode)
+          const key = get_recently_used_presets_or_groups_key(prompt_type)
           const recents = this.context.globalState.get<string[]>(key, [])
           const last_selected = recents[0]
           if (last_selected) {
@@ -765,14 +765,14 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               selected_name = last_selected
             }
           }
-          return [mode, selected_name]
+          return [prompt_type, selected_name]
         })
       ),
       selected_configuration_id_by_mode: {
         'edit-context': this.context.workspaceState.get<string>(
           LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY
         ),
-        'code-completions': this.context.workspaceState.get<string>(
+        'code-at-cursor': this.context.workspaceState.get<string>(
           LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
         )
       }
@@ -915,19 +915,19 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
   public add_text_at_cursor_position(text: string, chars_to_remove_before = 0) {
     const is_in_code_completions_mode =
-      (this.mode == MODE.WEB && this.web_prompt_type == 'code-completions') ||
-      (this.mode == MODE.API && this.api_prompt_type == 'code-completions')
+      (this.mode == MODE.WEB && this.web_prompt_type == 'code-at-cursor') ||
+      (this.mode == MODE.API && this.api_prompt_type == 'code-at-cursor')
 
     let current_instructions = ''
     let new_instructions = ''
     const mode: WebPromptType | ApiPromptType = is_in_code_completions_mode
-      ? 'code-completions'
+      ? 'code-at-cursor'
       : this.mode == MODE.WEB
         ? this.web_prompt_type
         : this.api_prompt_type
 
     switch (mode) {
-      case 'ask':
+      case 'ask-about-context':
         current_instructions = this.ask_about_context_instructions
         break
       case 'edit-context':
@@ -936,7 +936,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       case 'no-context':
         current_instructions = this.no_context_instructions
         break
-      case 'code-completions':
+      case 'code-at-cursor':
         current_instructions = this.code_at_cursor_instructions
         break
       case 'prune-context':
@@ -958,7 +958,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     new_instructions = new_instructions.replace(/  +/g, ' ')
 
     switch (mode) {
-      case 'ask':
+      case 'ask-about-context':
         this.ask_about_context_instructions = new_instructions
         break
       case 'edit-context':
@@ -967,7 +967,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       case 'no-context':
         this.no_context_instructions = new_instructions
         break
-      case 'code-completions':
+      case 'code-at-cursor':
         this.code_at_cursor_instructions = new_instructions
         break
       case 'prune-context':
@@ -979,10 +979,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
     this.send_message({
       command: 'INSTRUCTIONS',
-      ask: this.ask_about_context_instructions,
+      ask_about_context: this.ask_about_context_instructions,
       edit_context: this.edit_context_instructions,
       no_context: this.no_context_instructions,
-      code_completions: this.code_at_cursor_instructions,
+      code_at_cursor: this.code_at_cursor_instructions,
       prune_context: this.prune_context_instructions,
       caret_position: this.caret_position
     })

@@ -28,10 +28,10 @@ export const handle_get_history = (panel_provider: PanelProvider): void => {
 
   panel_provider.send_message({
     command: 'CHAT_HISTORY',
-    ask: ask_history.map((h) => h.text),
+    ask_about_context: ask_history.map((h) => h.text),
     edit_context: edit_history.map((h) => h.text),
     no_context: no_context_history.map((h) => h.text),
-    code_completions: code_completions_history.map((h) => h.text),
+    code_at_cursor: code_completions_history.map((h) => h.text),
     prune_context: prune_context_history.map((h) => h.text)
   })
 }

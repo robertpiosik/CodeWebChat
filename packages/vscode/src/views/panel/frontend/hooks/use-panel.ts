@@ -131,16 +131,16 @@ export const use_panel = (vscode: any) => {
   const handle_instructions_change = (
     value: string,
     mode:
-      | 'ask'
+      | 'ask-about-context'
       | 'edit-context'
       | 'no-context'
-      | 'code-completions'
+      | 'code-at-cursor'
       | 'prune-context'
   ) => {
-    if (mode == 'ask') set_ask_about_context_instructions(value)
+    if (mode == 'ask-about-context') set_ask_about_context_instructions(value)
     else if (mode == 'edit-context') set_edit_context_instructions(value)
     else if (mode == 'no-context') set_no_context_instructions(value)
-    else if (mode == 'code-completions') set_code_at_cursor_instructions(value)
+    else if (mode == 'code-at-cursor') set_code_at_cursor_instructions(value)
     else if (mode == 'prune-context') set_prune_context_instructions(value)
 
     post_message(vscode, {
@@ -192,10 +192,10 @@ export const use_panel = (vscode: any) => {
         set_updating_preset(undefined)
         set_updated_preset(undefined)
       } else if (message.command == 'INSTRUCTIONS') {
-        set_ask_about_context_instructions(message.ask)
+        set_ask_about_context_instructions(message.ask_about_context)
         set_edit_context_instructions(message.edit_context)
         set_no_context_instructions(message.no_context)
-        set_code_at_cursor_instructions(message.code_completions)
+        set_code_at_cursor_instructions(message.code_at_cursor)
         set_prune_context_instructions(message.prune_context)
       } else if (message.command == 'CONNECTION_STATUS') {
         set_is_connected(message.connected)
@@ -370,8 +370,8 @@ export const use_panel = (vscode: any) => {
       { command: 'GET_RESPONSE_HISTORY' },
       { command: 'GET_VERSION' },
       { command: 'GET_MODE' },
-      { command: 'GET_WEB_MODE' },
-      { command: 'GET_API_MODE' },
+      { command: 'GET_WEB_PROMPT_TYPE' },
+      { command: 'GET_API_PROMPT_TYPE' },
       { command: 'GET_CONNECTION_STATUS' },
       { command: 'REQUEST_EDITOR_STATE' },
       { command: 'REQUEST_EDITOR_SELECTION_STATE' },
@@ -438,7 +438,7 @@ export const use_panel = (vscode: any) => {
     set_chat_input_focus_and_select_key((k) => k + 1)
     set_main_view_scroll_reset_key((k) => k + 1)
     post_message(vscode, {
-      command: 'SAVE_WEB_MODE',
+      command: 'SAVE_WEB_PROMPT_TYPE',
       mode: new_mode
     })
   }
@@ -448,7 +448,7 @@ export const use_panel = (vscode: any) => {
     set_chat_input_focus_and_select_key((k) => k + 1)
     set_main_view_scroll_reset_key((k) => k + 1)
     post_message(vscode, {
-      command: 'SAVE_API_MODE',
+      command: 'SAVE_API_PROMPT_TYPE',
       mode: new_mode
     })
   }
@@ -470,7 +470,7 @@ export const use_panel = (vscode: any) => {
     if (new_mode == MODE.API && web_prompt_type) {
       if (
         web_prompt_type == 'edit-context' ||
-        web_prompt_type == 'code-completions'
+        web_prompt_type == 'code-at-cursor'
       ) {
         handle_api_prompt_type_change(web_prompt_type)
       }

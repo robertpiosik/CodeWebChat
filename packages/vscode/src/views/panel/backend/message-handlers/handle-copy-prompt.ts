@@ -47,9 +47,9 @@ export const handle_copy_prompt = async (params: {
 
   const is_in_code_completions_prompt_type =
     (params.panel_provider.mode == MODE.WEB &&
-      params.panel_provider.web_prompt_type == 'code-completions') ||
+      params.panel_provider.web_prompt_type == 'code-at-cursor') ||
     (params.panel_provider.mode == MODE.API &&
-      params.panel_provider.api_prompt_type == 'code-completions')
+      params.panel_provider.api_prompt_type == 'code-at-cursor')
 
   if (
     is_in_code_completions_prompt_type &&

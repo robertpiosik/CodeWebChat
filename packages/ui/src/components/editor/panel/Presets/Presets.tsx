@@ -44,9 +44,9 @@ export namespace Presets {
 
   export type Props = {
     web_prompt_type:
-      | 'ask'
+      | 'ask-about-context'
       | 'edit-context'
-      | 'code-completions'
+      | 'code-at-cursor'
       | 'no-context'
       | 'prune-context'
     is_connected: boolean

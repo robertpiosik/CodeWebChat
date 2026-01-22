@@ -693,13 +693,13 @@ export const handle_hash_sign_quick_pick = async (
     panel_provider.mode == MODE.WEB
       ? panel_provider.web_prompt_type
       : panel_provider.api_prompt_type
-  if (mode == 'ask') {
+  if (mode == 'ask-about-context') {
     current_text = panel_provider.ask_about_context_instructions
   } else if (mode == 'edit-context') {
     current_text = panel_provider.edit_context_instructions
   } else if (mode == 'no-context') {
     current_text = panel_provider.no_context_instructions
-  } else if (mode == 'code-completions') {
+  } else if (mode == 'code-at-cursor') {
     current_text = panel_provider.code_at_cursor_instructions
   } else if (mode == 'prune-context') {
     current_text = panel_provider.prune_context_instructions

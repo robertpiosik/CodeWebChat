@@ -47,12 +47,12 @@ export const handle_send_prompt = async (params: {
 
   let current_instructions = ''
   const is_in_code_completions_mode =
-    params.panel_provider.web_prompt_type == 'code-completions'
+    params.panel_provider.web_prompt_type == 'code-at-cursor'
 
   if (is_in_code_completions_mode) {
     current_instructions = params.panel_provider.code_at_cursor_instructions
   } else {
-    if (params.panel_provider.web_prompt_type == 'ask') {
+    if (params.panel_provider.web_prompt_type == 'ask-about-context') {
       current_instructions =
         params.panel_provider.ask_about_context_instructions
     } else if (params.panel_provider.web_prompt_type == 'edit-context') {
@@ -548,12 +548,12 @@ async function resolve_presets(params: {
   const presets_config_key = params.panel_provider.get_presets_config_key()
   const all_presets = config.get<ConfigPresetFormat[]>(presets_config_key, [])
   const is_in_code_completions_mode =
-    params.panel_provider.web_prompt_type == 'code-completions'
+    params.panel_provider.web_prompt_type == 'code-at-cursor'
 
   let current_instructions = ''
-  if (params.panel_provider.web_prompt_type == 'code-completions') {
+  if (params.panel_provider.web_prompt_type == 'code-at-cursor') {
     current_instructions = params.panel_provider.code_at_cursor_instructions
-  } else if (params.panel_provider.web_prompt_type == 'ask') {
+  } else if (params.panel_provider.web_prompt_type == 'ask-about-context') {
     current_instructions = params.panel_provider.ask_about_context_instructions
   } else if (params.panel_provider.web_prompt_type == 'edit-context') {
     current_instructions = params.panel_provider.edit_context_instructions

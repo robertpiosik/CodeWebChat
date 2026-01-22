@@ -34,10 +34,10 @@ type Props = {
   set_instructions: (
     value: string,
     mode:
-      | 'ask'
+      | 'ask-about-context'
       | 'edit-context'
       | 'no-context'
-      | 'code-completions'
+      | 'code-at-cursor'
       | 'prune-context'
   ) => void
   mode: Mode
@@ -91,8 +91,8 @@ export const Main: React.FC<Props> = (props) => {
   >()
 
   const is_in_code_completions_mode =
-    (props.mode == MODE.WEB && props.web_prompt_type == 'code-completions') ||
-    (props.mode == MODE.API && props.api_prompt_type == 'code-completions')
+    (props.mode == MODE.WEB && props.web_prompt_type == 'code-at-cursor') ||
+    (props.mode == MODE.API && props.api_prompt_type == 'code-at-cursor')
 
   useEffect(() => {
     const handle_message = async (event: MessageEvent) => {
@@ -113,10 +113,10 @@ export const Main: React.FC<Props> = (props) => {
           )
           break
         case 'CHAT_HISTORY':
-          set_ask_history(message.ask || [])
+          set_ask_history(message.ask_about_context || [])
           set_edit_history(message.edit_context || [])
           set_no_context_history(message.no_context || [])
-          set_code_completions_history(message.code_completions || [])
+          set_code_completions_history(message.code_at_cursor || [])
           set_prune_context_history(message.prune_context || [])
           break
         case 'TOKEN_COUNT_UPDATED':
@@ -126,14 +126,17 @@ export const Main: React.FC<Props> = (props) => {
           props.on_preset_edit(message.preset)
           break
         case 'INSTRUCTIONS':
-          if (message.ask !== undefined)
-            props.set_instructions(message.ask, 'ask')
+          if (message.ask_about_context !== undefined)
+            props.set_instructions(
+              message.ask_about_context,
+              'ask-about-context'
+            )
           if (message.edit_context !== undefined)
             props.set_instructions(message.edit_context, 'edit-context')
           if (message.no_context !== undefined)
             props.set_instructions(message.no_context, 'no-context')
-          if (message.code_completions !== undefined)
-            props.set_instructions(message.code_completions, 'code-completions')
+          if (message.code_at_cursor !== undefined)
+            props.set_instructions(message.code_at_cursor, 'code-at-cursor')
           if (message.prune_context !== undefined)
             props.set_instructions(message.prune_context, 'prune-context')
           if (
@@ -188,7 +191,7 @@ export const Main: React.FC<Props> = (props) => {
     let history: string[] | undefined
     let set_history: React.Dispatch<React.SetStateAction<string[] | undefined>>
 
-    if (current_prompt_type == 'ask') {
+    if (current_prompt_type == 'ask-about-context') {
       history = ask_history
       set_history = set_ask_history
     } else if (current_prompt_type == 'edit-context') {
@@ -197,7 +200,7 @@ export const Main: React.FC<Props> = (props) => {
     } else if (current_prompt_type == 'no-context') {
       history = no_context_history
       set_history = set_no_context_history
-    } else if (current_prompt_type == 'code-completions') {
+    } else if (current_prompt_type == 'code-at-cursor') {
       history = code_completions_history
       set_history = set_code_completions_history
     } else if (current_prompt_type == 'prune-context') {
@@ -499,7 +502,8 @@ export const Main: React.FC<Props> = (props) => {
     } else if (current_prompt_type == 'prune-context') {
       return props.prune_context_instructions
     }
-    if (current_prompt_type == 'ask') return props.ask_instructions
+    if (current_prompt_type == 'ask-about-context')
+      return props.ask_instructions
     if (current_prompt_type == 'edit-context') return props.edit_instructions
     if (current_prompt_type == 'no-context')
       return props.no_context_instructions
@@ -628,7 +632,7 @@ export const Main: React.FC<Props> = (props) => {
         config_id: id,
         invocation_count: 1
       })
-    } else if (props.api_prompt_type == 'code-completions') {
+    } else if (props.api_prompt_type == 'code-at-cursor') {
       post_message(props.vscode, {
         command: 'CODE_COMPLETION',
         use_quick_pick: false,
@@ -662,13 +666,13 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const instructions =
-    current_prompt_type == 'ask'
+    current_prompt_type == 'ask-about-context'
       ? props.ask_instructions
       : current_prompt_type == 'edit-context'
         ? props.edit_instructions
         : current_prompt_type == 'no-context'
           ? props.no_context_instructions
-          : current_prompt_type == 'code-completions'
+          : current_prompt_type == 'code-at-cursor'
             ? props.code_completions_instructions
             : current_prompt_type == 'prune-context'
               ? props.prune_context_instructions
@@ -679,13 +683,13 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   let current_history: string[] | undefined
-  if (current_prompt_type == 'ask') {
+  if (current_prompt_type == 'ask-about-context') {
     current_history = ask_history
   } else if (current_prompt_type == 'edit-context') {
     current_history = edit_history
   } else if (current_prompt_type == 'no-context') {
     current_history = no_context_history
-  } else if (current_prompt_type == 'code-completions') {
+  } else if (current_prompt_type == 'code-at-cursor') {
     current_history = code_completions_history
   } else if (current_prompt_type == 'prune-context') {
     current_history = prune_context_history

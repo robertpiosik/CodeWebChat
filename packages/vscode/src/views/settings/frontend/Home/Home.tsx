@@ -81,7 +81,6 @@ type Props = {
   edit_context_system_instructions: string
   intelligent_update_configs: ConfigurationForClient[]
   prune_context_configs: ConfigurationForClient[]
-  prune_context_instructions: string
   commit_message_instructions: string
   commit_message_auto_accept_after: number | null
   context_size_warning_threshold: number
@@ -101,7 +100,6 @@ type Props = {
   set_intelligent_update_configs: (configs: ConfigurationForClient[]) => void
   set_prune_context_configs: (configs: ConfigurationForClient[]) => void
   set_commit_messages_configs: (configs: ConfigurationForClient[]) => void
-  on_prune_context_instructions_change: (instructions: string) => void
   on_context_size_warning_threshold_change: (threshold: number) => void
   on_commit_instructions_change: (instructions: string) => void
   on_commit_message_auto_accept_after_change: (seconds: number | null) => void
@@ -158,8 +156,6 @@ export const Home: React.FC<Props> = (props) => {
     set_commit_message_auto_accept_after_str
   ] = useState('')
   const [edit_context_instructions, set_edit_context_instructions] =
-    useState('')
-  const [prune_context_instructions, set_prune_context_instructions] =
     useState('')
   const [stuck_sections, set_stuck_sections] = useState(new Set<NavItem>())
 
@@ -235,10 +231,6 @@ export const Home: React.FC<Props> = (props) => {
   useEffect(() => {
     set_edit_context_instructions(props.edit_context_system_instructions || '')
   }, [props.edit_context_system_instructions])
-
-  useEffect(() => {
-    set_prune_context_instructions(props.prune_context_instructions || '')
-  }, [props.prune_context_instructions])
 
   const handle_commit_message_auto_accept_after_blur = () => {
     if (commit_message_auto_accept_after_str == '') {
@@ -479,21 +471,6 @@ export const Home: React.FC<Props> = (props) => {
           on_stuck_change={prune_context_on_stuck_change}
         >
           <Group>
-            <Item
-              title="Instructions"
-              description="Instructions for identifying files relevant to the task."
-              slot_below={
-                <Textarea
-                  value={prune_context_instructions}
-                  on_change={set_prune_context_instructions}
-                  on_blur={() =>
-                    props.on_prune_context_instructions_change(
-                      prune_context_instructions
-                    )
-                  }
-                />
-              }
-            />
             <ApiToolConfigurationSection
               configurations={props.prune_context_configs}
               set_configurations={props.set_prune_context_configs}

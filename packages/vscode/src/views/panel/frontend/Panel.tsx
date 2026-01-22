@@ -152,15 +152,16 @@ export const Panel = () => {
   }
 
   const is_for_code_completions =
-    (mode == MODE.WEB && web_prompt_type == 'code-completions') ||
-    (mode == MODE.API && api_prompt_type == 'code-completions')
+    (mode == MODE.WEB && web_prompt_type == 'code-at-cursor') ||
+    (mode == MODE.API && api_prompt_type == 'code-at-cursor')
 
   const get_current_instructions = () => {
     if (is_for_code_completions) {
       return code_at_cursor_instructions
     }
     const prompt_type = mode == MODE.WEB ? web_prompt_type : api_prompt_type
-    if (prompt_type == 'ask') return ask_about_context_instructions
+    if (prompt_type == 'ask-about-context')
+      return ask_about_context_instructions
     if (prompt_type == 'edit-context') return edit_context_instructions
     if (prompt_type == 'no-context') return no_context_instructions
     return ''
@@ -173,8 +174,8 @@ export const Panel = () => {
     !is_connected ||
     (!has_affixes &&
       !has_instructions &&
-      web_prompt_type != 'code-completions') ||
-    (web_prompt_type === 'code-completions' &&
+      web_prompt_type != 'code-at-cursor') ||
+    (web_prompt_type === 'code-at-cursor' &&
       (!currently_open_file_path || !!current_selection))
 
   const handle_apply_click = () => {
@@ -389,15 +390,15 @@ export const Panel = () => {
                     title={
                       !is_connected
                         ? 'Unable to preview when not connected'
-                        : web_prompt_type == 'code-completions' &&
+                        : web_prompt_type == 'code-at-cursor' &&
                             !currently_open_file_path
                           ? 'Cannot preview in code completion mode without an active editor'
-                          : web_prompt_type == 'code-completions' &&
+                          : web_prompt_type == 'code-at-cursor' &&
                               !!current_selection
                             ? 'Unable to work with text selection'
                             : !has_affixes &&
                                 !has_instructions &&
-                                web_prompt_type != 'code-completions'
+                                web_prompt_type != 'code-at-cursor'
                               ? 'Enter instructions or affixes to preview'
                               : ''
                     }

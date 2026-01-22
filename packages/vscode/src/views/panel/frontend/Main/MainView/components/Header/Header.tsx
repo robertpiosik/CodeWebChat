@@ -6,7 +6,10 @@ import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Dropdown as UiDropdown } from '@ui/components/editor/panel/Dropdown'
 import { IconButton as UiIconButton } from '@ui/components/editor/panel/IconButton'
 import styles from './Header.module.scss'
-import { api_mode_labels, web_mode_labels } from '../../modes'
+import {
+  api_prompt_type_labels,
+  web_prompt_type_labels
+} from '../../prompt-type-labels'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 import { use_translation } from '@/views/i18n/use-translation'
 
@@ -71,7 +74,7 @@ export const Header: React.FC<Props> = (props) => {
         >
           {props.mode == MODE.WEB && (
             <UiDropdown
-              options={Object.entries(web_mode_labels).map(
+              options={Object.entries(web_prompt_type_labels).map(
                 ([value, label]) => ({
                   value: value as WebPromptType,
                   label,
@@ -93,7 +96,7 @@ export const Header: React.FC<Props> = (props) => {
           )}
           {props.mode == MODE.API && (
             <UiDropdown
-              options={Object.entries(api_mode_labels).map(
+              options={Object.entries(api_prompt_type_labels).map(
                 ([value, label]) => ({
                   value: value as ApiPromptType,
                   label,

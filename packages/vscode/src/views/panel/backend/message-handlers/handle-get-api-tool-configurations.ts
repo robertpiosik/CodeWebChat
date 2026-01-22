@@ -44,7 +44,7 @@ export const handle_get_api_tool_configurations = async (
       ...config,
       id: get_tool_config_id(config)
     })),
-    'code-completions': code_completions_configs.map((config) => ({
+    'code-at-cursor': code_completions_configs.map((config) => ({
       ...config,
       id: get_tool_config_id(config),
       is_default: is_config_default(config, default_code_completions_config)

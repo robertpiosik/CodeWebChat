@@ -60,10 +60,10 @@ export interface SaveInstructionsMessage extends BaseMessage {
   command: 'SAVE_INSTRUCTIONS'
   instruction: string
   mode:
-    | 'ask'
+    | 'ask-about-context'
     | 'edit-context'
     | 'no-context'
-    | 'code-completions'
+    | 'code-at-cursor'
     | 'prune-context'
 }
 
@@ -128,10 +128,10 @@ export interface SaveHistoryMessage extends BaseMessage {
   command: 'SAVE_HISTORY'
   messages: string[]
   mode:
-    | 'ask'
+    | 'ask-about-context'
     | 'edit-context'
     | 'no-context'
-    | 'code-completions'
+    | 'code-at-cursor'
     | 'prune-context'
 }
 
@@ -242,21 +242,21 @@ export interface CancelApiManagerRequestMessage extends BaseMessage {
   id: string
 }
 
-export interface GetWebModeMessage extends BaseMessage {
-  command: 'GET_WEB_MODE'
+export interface GetWebPromptTypeMessage extends BaseMessage {
+  command: 'GET_WEB_PROMPT_TYPE'
 }
 
-export interface SaveWebModeMessage extends BaseMessage {
-  command: 'SAVE_WEB_MODE'
+export interface SaveWebPromptTypeMessage extends BaseMessage {
+  command: 'SAVE_WEB_PROMPT_TYPE'
   mode: WebPromptType
 }
 
-export interface GetApiModeMessage extends BaseMessage {
-  command: 'GET_API_MODE'
+export interface GetApiPromptTypeMessage extends BaseMessage {
+  command: 'GET_API_PROMPT_TYPE'
 }
 
-export interface SaveApiModeMessage extends BaseMessage {
-  command: 'SAVE_API_MODE'
+export interface SaveApiPromptTypeMessage extends BaseMessage {
+  command: 'SAVE_API_PROMPT_TYPE'
   mode: ApiPromptType
 }
 
@@ -506,11 +506,11 @@ export type FrontendMessage =
   | PruneContextMessage
   | ShowAtSignQuickPickMessage
   | ShowHashSignQuickPickMessage
-  | SaveWebModeMessage
+  | SaveWebPromptTypeMessage
   | CancelApiManagerRequestMessage
-  | GetWebModeMessage
-  | GetApiModeMessage
-  | SaveApiModeMessage
+  | GetWebPromptTypeMessage
+  | GetApiPromptTypeMessage
+  | SaveApiPromptTypeMessage
   | GetApiToolConfigurationsMessage
   | ReorderApiToolConfigurationsMessage
   | TogglePinnedApiToolConfigurationMessage
@@ -557,10 +557,10 @@ export type FrontendMessage =
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
   command: 'INSTRUCTIONS'
-  ask: string
+  ask_about_context: string
   edit_context: string
   no_context: string
-  code_completions: string
+  code_at_cursor: string
   prune_context: string
   caret_position?: number
 }
@@ -611,10 +611,10 @@ export interface GitStateChangedMessage extends BaseMessage {
 
 export interface ChatHistoryMessage extends BaseMessage {
   command: 'CHAT_HISTORY'
-  ask: string[]
+  ask_about_context: string[]
   edit_context: string[]
   no_context: string[]
-  code_completions: string[]
+  code_at_cursor: string[]
   prune_context: string[]
 }
 

@@ -1,7 +1,7 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { WebPromptType } from '@shared/types/prompt-types'
 
-export const handle_save_mode_web = async (
+export const handle_save_web_prompt_type = async (
   panel_provider: PanelProvider,
   mode: WebPromptType
 ): Promise<void> => {

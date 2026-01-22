@@ -15,7 +15,7 @@ export const handle_toggle_pinned_api_tool_configuration = async (
   let configs
   if (mode == 'edit-context') {
     configs = await providers_manager.get_edit_context_tool_configs()
-  } else if (mode == 'code-completions') {
+  } else if (mode == 'code-at-cursor') {
     configs = await providers_manager.get_code_completions_tool_configs()
   } else if (mode == 'prune-context') {
     configs = await providers_manager.get_prune_context_tool_configs()
@@ -30,7 +30,7 @@ export const handle_toggle_pinned_api_tool_configuration = async (
 
   if (mode == 'edit-context') {
     await providers_manager.save_edit_context_tool_configs(configs)
-  } else if (mode == 'code-completions') {
+  } else if (mode == 'code-at-cursor') {
     await providers_manager.save_code_completions_tool_configs(configs)
   } else if (mode == 'prune-context') {
     await providers_manager.save_prune_context_tool_configs(configs)

@@ -21,7 +21,7 @@ export const handle_save_history = async (
   let key: string | undefined
   let pinned_key: string | undefined
   switch (message.mode) {
-    case 'ask':
+    case 'ask-about-context':
       key = HISTORY_ASK_STATE_KEY
       pinned_key = PINNED_HISTORY_ASK_STATE_KEY
       break
@@ -33,7 +33,7 @@ export const handle_save_history = async (
       key = HISTORY_NO_CONTEXT_STATE_KEY
       pinned_key = PINNED_HISTORY_NO_CONTEXT_STATE_KEY
       break
-    case 'code-completions':
+    case 'code-at-cursor':
       key = HISTORY_CODE_COMPLETIONS_STATE_KEY
       pinned_key = PINNED_HISTORY_CODE_COMPLETIONS_STATE_KEY
       break

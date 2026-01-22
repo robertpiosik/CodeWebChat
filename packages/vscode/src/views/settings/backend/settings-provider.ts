@@ -29,7 +29,6 @@ import {
   handle_get_intelligent_update_configurations,
   handle_get_model_providers,
   handle_get_prune_context_configurations,
-  handle_get_prune_context_instructions,
   handle_get_send_with_shift_enter,
   handle_get_checkpoint_lifespan,
   handle_reorder_code_completions_configurations,
@@ -49,7 +48,6 @@ import {
   handle_update_context_size_warning_threshold,
   handle_update_edit_context_system_instructions,
   handle_update_edit_format_instructions,
-  handle_update_prune_context_instructions,
   handle_update_gemini_user_id,
   handle_update_ai_studio_user_id,
   handle_update_send_with_shift_enter,
@@ -179,10 +177,6 @@ export class SettingsProvider {
           await handle_reorder_prune_context_configurations(this, message)
         } else if (message.command == 'DELETE_PRUNE_CONTEXT_CONFIGURATION') {
           await handle_delete_prune_context_configuration(this, message)
-        } else if (message.command == 'GET_PRUNE_CONTEXT_INSTRUCTIONS') {
-          await handle_get_prune_context_instructions(this)
-        } else if (message.command == 'UPDATE_PRUNE_CONTEXT_INSTRUCTIONS') {
-          await handle_update_prune_context_instructions(message)
         } else if (message.command == 'GET_COMMIT_MESSAGES_CONFIGURATIONS') {
           await handle_get_commit_messages_configurations(this)
         } else if (
@@ -276,7 +270,6 @@ export class SettingsProvider {
           void handle_get_edit_format_instructions(this)
           void handle_get_intelligent_update_configurations(this)
           void handle_get_prune_context_configurations(this)
-          void handle_get_prune_context_instructions(this)
           void handle_get_context_size_warning_threshold(this)
           void handle_get_commit_message_instructions(this)
           void handle_get_commit_message_auto_accept_after(this)

@@ -7,6 +7,6 @@ export const handle_manage_configurations = async (
   const section =
     message.api_prompt_type == 'edit-context'
       ? 'edit-context'
-      : 'code-completions'
+      : 'code-at-cursor'
   await vscode.commands.executeCommand('codeWebChat.settings', section)
 }

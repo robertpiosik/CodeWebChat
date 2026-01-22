@@ -25,13 +25,13 @@ export const handle_show_prompt_template_quick_pick = async (
 
   let prompt_templates_key: string | undefined
   switch (mode) {
-    case 'ask':
+    case 'ask-about-context':
       prompt_templates_key = 'promptTemplatesForAskAboutContext'
       break
     case 'edit-context':
       prompt_templates_key = 'promptTemplatesForEditContext'
       break
-    case 'code-completions':
+    case 'code-at-cursor':
       prompt_templates_key = 'promptTemplatesForCodeAtCursor'
       break
     case 'no-context':

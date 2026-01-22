@@ -1,7 +1,7 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { ApiPromptType } from '@shared/types/prompt-types'
 
-export const handle_save_mode_api = async (
+export const handle_save_api_prompt_type = async (
   panel_provider: PanelProvider,
   mode: ApiPromptType
 ): Promise<void> => {

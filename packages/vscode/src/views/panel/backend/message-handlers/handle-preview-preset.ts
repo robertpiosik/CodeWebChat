@@ -36,17 +36,17 @@ export const handle_preview_preset = async (
 
   let text_to_send: string
   let current_instructions = ''
-  if (panel_provider.web_prompt_type == 'ask') {
+  if (panel_provider.web_prompt_type == 'ask-about-context') {
     current_instructions = panel_provider.ask_about_context_instructions
   } else if (panel_provider.web_prompt_type == 'edit-context') {
     current_instructions = panel_provider.edit_context_instructions
   } else if (panel_provider.web_prompt_type == 'no-context') {
     current_instructions = panel_provider.no_context_instructions
-  } else if (panel_provider.web_prompt_type == 'code-completions') {
+  } else if (panel_provider.web_prompt_type == 'code-at-cursor') {
     current_instructions = panel_provider.code_at_cursor_instructions
   }
 
-  if (panel_provider.web_prompt_type == 'code-completions' && active_editor) {
+  if (panel_provider.web_prompt_type == 'code-at-cursor' && active_editor) {
     const document = active_editor.document
     const position = active_editor.selection.active
 
@@ -110,7 +110,7 @@ export const handle_preview_preset = async (
       : '<missing_text>'
 
     text_to_send = `${system_instructions}\n<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}${missing_text_tag}${text_after_cursor}\n]]>\n</file>\n</files>\n${system_instructions}`
-  } else if (panel_provider.web_prompt_type != 'code-completions') {
+  } else if (panel_provider.web_prompt_type != 'code-at-cursor') {
     let instructions = apply_preset_affixes_to_instruction({
       instruction: current_instructions,
       preset_name: message.preset.name!,

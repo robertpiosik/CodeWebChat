@@ -36,7 +36,7 @@ export const handle_show_history_quick_pick = async (
 
   let history_key: string | undefined, pinned_history_key: string | undefined
   switch (mode) {
-    case 'ask':
+    case 'ask-about-context':
       history_key = HISTORY_ASK_STATE_KEY
       pinned_history_key = PINNED_HISTORY_ASK_STATE_KEY
       break
@@ -44,7 +44,7 @@ export const handle_show_history_quick_pick = async (
       history_key = HISTORY_EDIT_STATE_KEY
       pinned_history_key = PINNED_HISTORY_EDIT_STATE_KEY
       break
-    case 'code-completions':
+    case 'code-at-cursor':
       history_key = HISTORY_CODE_COMPLETIONS_STATE_KEY
       pinned_history_key = PINNED_HISTORY_CODE_COMPLETIONS_STATE_KEY
       break
@@ -163,7 +163,7 @@ export const handle_show_history_quick_pick = async (
 
   const set_instructions = async (text: string) => {
     switch (mode) {
-      case 'ask':
+      case 'ask-about-context':
         panel_provider.ask_about_context_instructions = text
         break
       case 'edit-context':
@@ -172,7 +172,7 @@ export const handle_show_history_quick_pick = async (
       case 'no-context':
         panel_provider.no_context_instructions = text
         break
-      case 'code-completions':
+      case 'code-at-cursor':
         panel_provider.code_at_cursor_instructions = text
         break
       case 'prune-context':
@@ -184,10 +184,10 @@ export const handle_show_history_quick_pick = async (
 
     panel_provider.send_message({
       command: 'INSTRUCTIONS',
-      ask: panel_provider.ask_about_context_instructions,
+      ask_about_context: panel_provider.ask_about_context_instructions,
       edit_context: panel_provider.edit_context_instructions,
       no_context: panel_provider.no_context_instructions,
-      code_completions: panel_provider.code_at_cursor_instructions,
+      code_at_cursor: panel_provider.code_at_cursor_instructions,
       prune_context: panel_provider.prune_context_instructions
     })
   }

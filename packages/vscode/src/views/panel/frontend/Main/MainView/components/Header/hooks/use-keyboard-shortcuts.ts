@@ -2,7 +2,10 @@ import { useEffect } from 'react'
 import { use_is_mac } from '@shared/hooks'
 import { MODE, Mode } from '@/views/panel/types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
-import { api_mode_labels, web_mode_labels } from '../../../modes'
+import {
+  api_prompt_type_labels,
+  web_prompt_type_labels
+} from '../../../prompt-type-labels'
 
 type UseKeyboardShortcutsParams = {
   mode: Mode
@@ -76,7 +79,7 @@ export const use_keyboard_shortcuts = ({
       const key = event.code.replace('Key', '').toLowerCase()
 
       if (mode == MODE.WEB) {
-        for (const [value, label] of Object.entries(web_mode_labels)) {
+        for (const [value, label] of Object.entries(web_prompt_type_labels)) {
           if (label.toLowerCase().startsWith(key)) {
             on_web_prompt_type_change(value as WebPromptType)
             event.preventDefault()
@@ -84,7 +87,7 @@ export const use_keyboard_shortcuts = ({
           }
         }
       } else if (mode == MODE.API) {
-        for (const [value, label] of Object.entries(api_mode_labels)) {
+        for (const [value, label] of Object.entries(api_prompt_type_labels)) {
           if (label.toLowerCase().startsWith(key)) {
             on_api_prompt_type_change(value as ApiPromptType)
             event.preventDefault()

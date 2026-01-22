@@ -30,7 +30,7 @@ export const handle_reorder_api_tool_configurations = async (
     if (reordered_configs.length === current_configs.length) {
       await providers_manager.save_edit_context_tool_configs(reordered_configs)
     }
-  } else if (message.mode == 'code-completions') {
+  } else if (message.mode == 'code-at-cursor') {
     const current_configs =
       await providers_manager.get_code_completions_tool_configs()
     const reordered_configs = reordered_ids

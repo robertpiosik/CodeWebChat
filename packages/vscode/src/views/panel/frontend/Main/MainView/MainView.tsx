@@ -99,8 +99,8 @@ type Props = {
 
 export const MainView: React.FC<Props> = (props) => {
   const is_in_code_completions_prompt_type =
-    (props.mode == MODE.WEB && props.web_prompt_type == 'code-completions') ||
-    (props.mode == MODE.API && props.api_prompt_type == 'code-completions')
+    (props.mode == MODE.WEB && props.web_prompt_type == 'code-at-cursor') ||
+    (props.mode == MODE.API && props.api_prompt_type == 'code-at-cursor')
 
   const is_in_prune_context_prompt_type =
     (props.mode == MODE.WEB && props.web_prompt_type == 'prune-context') ||
@@ -264,7 +264,7 @@ export const MainView: React.FC<Props> = (props) => {
               has_instructions={!!props.instructions}
               has_context={props.token_count > 0}
               is_in_code_completions_mode={
-                props.web_prompt_type == 'code-completions'
+                props.web_prompt_type == 'code-at-cursor'
               }
               presets={props.presets}
               on_create_preset_group_or_separator={

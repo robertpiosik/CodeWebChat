@@ -123,15 +123,6 @@ export interface DeletePruneContextConfigurationMessage {
   configuration_id: string
 }
 
-export interface GetPruneContextInstructionsMessage {
-  command: 'GET_PRUNE_CONTEXT_INSTRUCTIONS'
-}
-
-export interface UpdatePruneContextInstructionsMessage {
-  command: 'UPDATE_PRUNE_CONTEXT_INSTRUCTIONS'
-  instructions: string
-}
-
 export interface GetCommitMessagesConfigurationsMessage {
   command: 'GET_COMMIT_MESSAGES_CONFIGURATIONS'
 }
@@ -302,8 +293,6 @@ export type FrontendMessage =
   | GetPruneContextConfigurationsMessage
   | ReorderPruneContextConfigurationsMessage
   | DeletePruneContextConfigurationMessage
-  | GetPruneContextInstructionsMessage
-  | UpdatePruneContextInstructionsMessage
   | GetCommitMessagesConfigurationsMessage
   | ReorderCommitMessagesConfigurationsMessage
   | DeleteCommitMessagesConfigurationMessage
@@ -359,11 +348,6 @@ export interface IntelligentUpdateConfigurationsMessage {
 export interface PruneContextConfigurationsMessage {
   command: 'PRUNE_CONTEXT_CONFIGURATIONS'
   configurations: ConfigurationForClient[]
-}
-
-export interface PruneContextInstructionsMessage {
-  command: 'PRUNE_CONTEXT_INSTRUCTIONS'
-  instructions: string
 }
 
 export interface CommitMessagesConfigurationsMessage {
@@ -442,7 +426,6 @@ export type BackendMessage =
   | EditContextConfigurationsMessage
   | IntelligentUpdateConfigurationsMessage
   | PruneContextConfigurationsMessage
-  | PruneContextInstructionsMessage
   | CommitMessagesConfigurationsMessage
   | CommitMessageInstructionsMessage
   | CommitMessageAutoAcceptAfterMessage

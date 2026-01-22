@@ -1,11 +1,8 @@
 export type WebPromptType =
-  | 'ask'
+  | 'ask-about-context'
   | 'edit-context'
-  | 'code-completions'
+  | 'code-at-cursor'
   | 'no-context'
   | 'prune-context'
 
-export type ApiPromptType =
-  | 'edit-context'
-  | 'code-completions'
-  | 'prune-context'
+export type ApiPromptType = 'edit-context' | 'code-at-cursor' | 'prune-context'

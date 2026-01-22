@@ -28,9 +28,6 @@ export const use_settings = (vscode: any) => {
   const [prune_context_configs, set_prune_context_configs] = useState<
     ConfigurationForClient[] | undefined
   >(undefined)
-  const [prune_context_instructions, set_prune_context_instructions] = useState<
-    string | undefined
-  >(undefined)
   const [commit_message_instructions, set_commit_message_instructions] =
     useState<string | undefined>(undefined)
   const [
@@ -79,7 +76,6 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_INTELLIGENT_UPDATE_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_PRUNE_CONTEXT_CONFIGURATIONS' })
-    post_message(vscode, { command: 'GET_PRUNE_CONTEXT_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER' })
     post_message(vscode, { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' })
@@ -117,9 +113,6 @@ export const use_settings = (vscode: any) => {
           break
         case 'PRUNE_CONTEXT_CONFIGURATIONS':
           set_prune_context_configs(message.configurations)
-          break
-        case 'PRUNE_CONTEXT_INSTRUCTIONS':
-          set_prune_context_instructions(message.instructions)
           break
         case 'COMMIT_MESSAGE_INSTRUCTIONS':
           set_commit_message_instructions(message.instructions)
@@ -253,12 +246,6 @@ export const use_settings = (vscode: any) => {
     } as FrontendMessage)
   }
 
-  const handle_prune_context_instructions_change = (instructions: string) =>
-    post_message(vscode, {
-      command: 'UPDATE_PRUNE_CONTEXT_INSTRUCTIONS',
-      instructions
-    })
-
   const handle_commit_instructions_change = (instructions: string) =>
     post_message(vscode, {
       command: 'UPDATE_COMMIT_MESSAGE_INSTRUCTIONS',
@@ -360,7 +347,6 @@ export const use_settings = (vscode: any) => {
     set_intelligent_update_configs,
     prune_context_configs,
     set_prune_context_configs,
-    prune_context_instructions,
     commit_message_instructions,
     commit_message_auto_accept_after,
     edit_context_system_instructions,
@@ -384,7 +370,6 @@ export const use_settings = (vscode: any) => {
     handle_delete_config,
     handle_set_default_config,
     handle_unset_default_config,
-    handle_prune_context_instructions_change,
     handle_commit_instructions_change,
     handle_commit_message_auto_accept_after_change,
     handle_edit_context_system_instructions_change,

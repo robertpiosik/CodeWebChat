@@ -10,18 +10,18 @@ import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 export const handle_get_collapsed_states = (
   panel_provider: PanelProvider
 ): void => {
-  const WEB_MODES: WebPromptType[] = [
-    'ask',
+  const WEB_PROMPT_TYPES: WebPromptType[] = [
+    'ask-about-context',
     'edit-context',
-    'code-completions',
+    'code-at-cursor',
     'no-context'
   ]
-  const API_MODES: ApiPromptType[] = ['edit-context', 'code-completions']
+  const API_PROMPT_TYPES: ApiPromptType[] = ['edit-context', 'code-at-cursor']
 
   panel_provider.send_message({
     command: 'COLLAPSED_STATES',
     presets_collapsed_by_web_mode: Object.fromEntries(
-      WEB_MODES.map((mode) => [
+      WEB_PROMPT_TYPES.map((mode) => [
         mode,
         panel_provider.context.globalState.get<boolean>(
           get_presets_collapsed_state_key(mode),
@@ -30,7 +30,7 @@ export const handle_get_collapsed_states = (
       ])
     ),
     configurations_collapsed_by_api_mode: Object.fromEntries(
-      API_MODES.map((mode) => [
+      API_PROMPT_TYPES.map((mode) => [
         mode,
         panel_provider.context.globalState.get<boolean>(
           get_configurations_collapsed_state_key(mode),

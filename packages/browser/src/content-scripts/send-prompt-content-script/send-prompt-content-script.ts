@@ -197,9 +197,9 @@ const main = async () => {
       raw_instructions?: string
       edit_format?: string
       mode?:
-        | 'ask'
+        | 'ask-about-context'
         | 'edit-context'
-        | 'code-completions'
+        | 'code-at-cursor'
         | 'no-context'
         | 'prune-context'
     }
@@ -236,7 +236,7 @@ const main = async () => {
     if (
       chatbot?.inject_apply_response_button &&
       (stored_data.mode == 'edit-context' ||
-        stored_data.mode == 'code-completions' ||
+        stored_data.mode == 'code-at-cursor' ||
         stored_data.mode == 'prune-context')
     ) {
       sessionStorage.setItem(
