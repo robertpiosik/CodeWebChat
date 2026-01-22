@@ -304,6 +304,11 @@
         "category": "Code Web Chat"
       },
       {
+        "command": "codeWebChat.keywordSearchInFolder",
+        "title": "Keyword Search...",
+        "category": "Code Web Chat"
+      },
+      {
         "command": "codeWebChat.openInIntegratedTerminal",
         "title": "Open in Integrated Terminal",
         "category": "Code Web Chat",
@@ -382,6 +387,14 @@
         },
         {
           "command": "codeWebChat.referenceInPrompt",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.findInFolder",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.keywordSearchInFolder",
           "when": "false"
         },
         {
@@ -568,6 +581,11 @@
           "command": "codeWebChat.referenceInPrompt",
           "when": "view == codeWebChatViewWorkspace || view == codeWebChatViewContext",
           "group": "1_modification@3"
+        },
+        {
+          "command": "codeWebChat.keywordSearchInFolder",
+          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
+          "group": "1_modification@3.5"
         },
         {
           "command": "codeWebChat.findInFolder",
