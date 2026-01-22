@@ -30,7 +30,7 @@ import {
   generate_commit_message_command,
   set_range_command,
   check_parent_folder_command,
-  keyword_search_in_folder_command
+  check_all_with_keywords_command
 } from './commands'
 import {
   get_checkpoints,
@@ -131,7 +131,7 @@ export async function activate(context: vscode.ExtensionContext) {
     set_range_command(workspace_provider, context),
     check_parent_folder_command(workspace_provider),
     duplicate_workspace_command(workspace_provider, websites_provider, context),
-    keyword_search_in_folder_command(workspace_provider, context),
+    check_all_with_keywords_command(workspace_provider, context),
     open_url_command({
       command: 'codeWebChat.openRepository',
       url: 'https://github.com/robertpiosik/CodeWebChat'

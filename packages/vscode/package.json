@@ -304,8 +304,8 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.keywordSearchInFolder",
-        "title": "Keyword Search...",
+        "command": "codeWebChat.checkAllWithKeywords",
+        "title": "Check All with Keywords...",
         "category": "Code Web Chat"
       },
       {
@@ -394,7 +394,7 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.keywordSearchInFolder",
+          "command": "codeWebChat.checkAllWithKeywords",
           "when": "false"
         },
         {
@@ -583,7 +583,7 @@
           "group": "1_modification@3"
         },
         {
-          "command": "codeWebChat.keywordSearchInFolder",
+          "command": "codeWebChat.checkAllWithKeywords",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
           "group": "1_modification@3.5"
         },

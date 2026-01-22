@@ -6,12 +6,12 @@ import { Logger } from '@shared/utils/logger'
 import { LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY } from '../constants/state-keys'
 import { dictionary } from '@shared/constants/dictionary'
 
-export const keyword_search_in_folder_command = (
+export const check_all_with_keywords_command = (
   workspace_provider: WorkspaceProvider,
   extension_context: vscode.ExtensionContext
 ) => {
   return vscode.commands.registerCommand(
-    'codeWebChat.keywordSearchInFolder',
+    'codeWebChat.checkAllWithKeywords',
     async (item: any) => {
       if (!item || !item.resourceUri) {
         return
@@ -297,7 +297,7 @@ export const keyword_search_in_folder_command = (
           }`
         )
         Logger.error({
-          function_name: 'keyword_search_in_folder_command',
+          function_name: 'check_all_with_keywords_command',
           message: 'Error searching keywords in folder',
           data: error
         })

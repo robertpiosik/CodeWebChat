@@ -6,7 +6,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY } from '../../../constants/state-keys'
 
-export const handle_keyword_search_source = async (
+export const handle_check_all_with_keywords_source = async (
   workspace_provider: WorkspaceProvider,
   extension_context: vscode.ExtensionContext
 ): Promise<'back' | void> => {
@@ -306,7 +306,7 @@ export const handle_keyword_search_source = async (
       `Search failed: ${error instanceof Error ? error.message : String(error)}`
     )
     Logger.error({
-      function_name: 'handle_keyword_search_source',
+      function_name: 'handle_check_all_with_keywords_source',
       message: 'Error searching keywords',
       data: error
     })
