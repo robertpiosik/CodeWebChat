@@ -6,7 +6,6 @@ import { Home } from './Home/Home'
 
 type NavItem =
   | 'general'
-  | 'presets'
   | 'model-providers'
   | 'code-completions'
   | 'edit-context'

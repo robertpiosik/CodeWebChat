@@ -15,12 +15,10 @@ import {
   EditFormatInstructions
 } from '@/views/settings/types/messages'
 import { GeneralSection } from './sections/GeneralSection'
-import { PresetsSection } from './sections/PresetsSection'
 import { use_translation, TranslationKey } from '@/views/i18n/use-translation'
 
 type NavItem =
   | 'general'
-  | 'presets'
   | 'model-providers'
   | 'edit-context'
   | 'code-completions'
@@ -37,11 +35,6 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
     type: 'item',
     id: 'general',
     label: 'settings.sidebar.general'
-  },
-  {
-    type: 'item',
-    id: 'presets',
-    label: 'settings.sidebar.presets'
   },
   {
     type: 'item',
@@ -142,7 +135,6 @@ export const Home: React.FC<Props> = (props) => {
   const scroll_container_ref = useRef<HTMLDivElement>(null)
   const section_refs = useRef<Record<NavItem, HTMLDivElement | null>>({
     general: null,
-    presets: null,
     'model-providers': null,
     'edit-context': null,
     'code-completions': null,
@@ -177,10 +169,6 @@ export const Home: React.FC<Props> = (props) => {
 
   const general_on_stuck_change = useCallback(
     (is_stuck: boolean) => handle_stuck_change('general', is_stuck),
-    [handle_stuck_change]
-  )
-  const presets_on_stuck_change = useCallback(
-    (is_stuck: boolean) => handle_stuck_change('presets', is_stuck),
     [handle_stuck_change]
   )
   const model_providers_on_stuck_change = useCallback(
@@ -338,20 +326,16 @@ export const Home: React.FC<Props> = (props) => {
           on_open_allow_patterns_settings={
             props.on_open_allow_patterns_settings
           }
-          on_stuck_change={general_on_stuck_change}
-        />
-        <PresetsSection
-          ref={(el) => (section_refs.current['presets'] = el)}
           gemini_user_id={props.gemini_user_id}
           ai_studio_user_id={props.ai_studio_user_id}
           on_gemini_user_id_change={props.on_gemini_user_id_change}
           on_ai_studio_user_id_change={props.on_ai_studio_user_id_change}
-          on_stuck_change={presets_on_stuck_change}
+          on_stuck_change={general_on_stuck_change}
         />
         <Section
           ref={(el) => (section_refs.current['model-providers'] = el)}
           title="Model Providers"
-          subtitle="Manage your model providers here. Add, edit, reorder, or delete providers as needed."
+          subtitle="Manage your API keys for use with API tools."
           on_stuck_change={model_providers_on_stuck_change}
         >
           <Group>
@@ -409,7 +393,7 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['code-completions'] = el)}
           group="API Tool"
           title="Code Completions"
-          subtitle="Get accurate code-at-cursor from state-of-the-art reasoning models."
+          subtitle="Get accurate inline code snippets from state-of-the-art reasoning models."
           on_stuck_change={code_completions_on_stuck_change}
         >
           <Group>
@@ -437,7 +421,7 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['intelligent-update'] = el)}
           group="API Tool"
           title="Intelligent Update"
-          subtitle={`Handle "truncated" edit format and malformed diffs.`}
+          subtitle={`Integrate changes from malformed markdown code blocks.`}
           on_stuck_change={intelligent_update_on_stuck_change}
         >
           <Group>

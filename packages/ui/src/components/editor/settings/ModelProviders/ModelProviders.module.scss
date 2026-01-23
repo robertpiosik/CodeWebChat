@@ -6,7 +6,7 @@
 
 .toolbar {
   display: flex;
-  padding: 0 8px 8px 8px;
+  padding: 0 10px 8px 10px;
   align-items: center;
   gap: 8px;
 }
@@ -26,14 +26,6 @@
     background-color: var(--vscode-welcomePage-tileBackground);
   }
 
-  .col-actions {
-    visibility: hidden;
-  }
-
-  &:hover .col-actions {
-    visibility: visible;
-  }
-
   &__content {
     flex: 1;
     display: flex;
@@ -50,7 +42,7 @@
 }
 
 .col-drag {
-  width: 33px;
+  width: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -60,7 +52,7 @@
   flex: 1 1 25%;
 }
 .col-api-key {
-  flex: 1 1 25%;
+  width: 50px;
 }
 .col-base-url {
   flex: 1 1 45%;
@@ -70,6 +62,8 @@
   justify-content: flex-end;
   gap: 8px;
   padding-right: 8px;
+  width: 60px;
+  flex-shrink: 0;
 }
 
 .empty-message {

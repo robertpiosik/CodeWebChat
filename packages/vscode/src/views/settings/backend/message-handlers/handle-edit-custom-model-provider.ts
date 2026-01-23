@@ -60,6 +60,12 @@ export const handle_edit_custom_model_provider = async (
       quick_pick.title = `Edit "${provider_to_edit.name}" Model Provider`
       quick_pick.placeholder = 'Select a property to edit'
 
+      const close_button: vscode.QuickInputButton = {
+        iconPath: new vscode.ThemeIcon('close'),
+        tooltip: 'Close'
+      }
+      quick_pick.buttons = [close_button]
+
       let is_accepted = false
       const disposables: vscode.Disposable[] = []
 
@@ -76,6 +82,11 @@ export const handle_edit_custom_model_provider = async (
             | undefined
           resolve(selected?.id)
           quick_pick.hide()
+        }),
+        quick_pick.onDidTriggerButton((button) => {
+          if (button === close_button) {
+            quick_pick.hide()
+          }
         }),
         quick_pick.onDidHide(() => {
           if (!is_accepted) {

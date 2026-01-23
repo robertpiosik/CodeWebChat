@@ -136,6 +136,11 @@ export const handle_add_model_provider = async (
     quick_pick.title = 'Add New Model Provider'
     quick_pick.placeholder =
       'Choose a predefined provider or create a custom one'
+    const close_button: vscode.QuickInputButton = {
+      iconPath: new vscode.ThemeIcon('close'),
+      tooltip: 'Close'
+    }
+    quick_pick.buttons = [close_button]
 
     return new Promise<boolean>((resolve) => {
       let is_accepted = false
@@ -160,6 +165,12 @@ export const handle_add_model_provider = async (
               selected_api_provider_id as keyof typeof PROVIDERS
             )
           )
+        }
+      })
+
+      quick_pick.onDidTriggerButton((button) => {
+        if (button === close_button) {
+          quick_pick.hide()
         }
       })
 

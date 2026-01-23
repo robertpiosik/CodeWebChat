@@ -31,7 +31,11 @@ export const initial_select_provider = async (
         vscode.window.createQuickPick<(typeof provider_items)[0]>()
       quick_pick.items = provider_items
       quick_pick.title = 'Model Providers'
-      quick_pick.buttons = [vscode.QuickInputButtons.Back]
+      const close_button: vscode.QuickInputButton = {
+        iconPath: new vscode.ThemeIcon('close'),
+        tooltip: 'Close'
+      }
+      quick_pick.buttons = [close_button]
       let accepted = false
       const disposables: vscode.Disposable[] = []
 
@@ -42,7 +46,7 @@ export const initial_select_provider = async (
           quick_pick.hide()
         }),
         quick_pick.onDidTriggerButton((button) => {
-          if (button === vscode.QuickInputButtons.Back) {
+          if (button === close_button) {
             quick_pick.hide()
           }
         }),

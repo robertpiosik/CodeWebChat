@@ -22,6 +22,10 @@ type Props = {
   send_with_shift_enter: boolean
   check_new_files: boolean
   checkpoint_lifespan: number
+  gemini_user_id: number | null
+  ai_studio_user_id: number | null
+  on_gemini_user_id_change: (id: number | null) => void
+  on_ai_studio_user_id_change: (id: number | null) => void
   on_automatic_checkpoints_toggle: (disabled: boolean) => void
   on_send_with_shift_enter_change: (enabled: boolean) => void
   on_check_new_files_change: (enabled: boolean) => void
@@ -46,6 +50,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
     const [context_size_warning_threshold, set_context_size_warning_threshold] =
       useState('')
     const [checkpoint_lifespan_str, set_checkpoint_lifespan_str] = useState('')
+    const [gemini_user_id_str, set_gemini_user_id_str] = useState('')
+    const [ai_studio_user_id_str, set_ai_studio_user_id_str] = useState('')
     const [instructions, set_instructions] = useState<EditFormatInstructions>({
       whole: '',
       truncated: '',
@@ -70,6 +76,23 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
     }, [props.checkpoint_lifespan])
 
     useEffect(() => {
+      set_gemini_user_id_str(
+        props.gemini_user_id === null || props.gemini_user_id === undefined
+          ? ''
+          : String(props.gemini_user_id)
+      )
+    }, [props.gemini_user_id])
+
+    useEffect(() => {
+      set_ai_studio_user_id_str(
+        props.ai_studio_user_id === null ||
+          props.ai_studio_user_id === undefined
+          ? ''
+          : String(props.ai_studio_user_id)
+      )
+    }, [props.ai_studio_user_id])
+
+    useEffect(() => {
       if (props.edit_format_instructions) {
         set_instructions(props.edit_format_instructions)
       }
@@ -86,6 +109,28 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
       const num_hours = parseInt(checkpoint_lifespan_str, 10)
       if (!isNaN(num_hours) && num_hours > 0) {
         props.on_checkpoint_lifespan_change(num_hours)
+      }
+    }
+
+    const handle_gemini_user_id_blur = () => {
+      if (gemini_user_id_str == '') {
+        props.on_gemini_user_id_change(null)
+        return
+      }
+      const num_id = parseInt(gemini_user_id_str, 10)
+      if (!isNaN(num_id) && num_id >= 0) {
+        props.on_gemini_user_id_change(num_id)
+      }
+    }
+
+    const handle_ai_studio_user_id_blur = () => {
+      if (ai_studio_user_id_str == '') {
+        props.on_ai_studio_user_id_change(null)
+        return
+      }
+      const num_id = parseInt(ai_studio_user_id_str, 10)
+      if (!isNaN(num_id) && num_id >= 0) {
+        props.on_ai_studio_user_id_change(num_id)
       }
     }
 
@@ -315,6 +360,34 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                   on_blur={handle_instructions_blur}
                 />
               )
+            }
+          />
+        </Group>
+        <Group title="Presets">
+          <Item
+            title="Gemini User ID"
+            description="Run Gemini chatbot as non-default user. Check URL for the numeric ID."
+            slot_right={
+              <Input
+                type="number"
+                value={gemini_user_id_str}
+                on_change={set_gemini_user_id_str}
+                on_blur={handle_gemini_user_id_blur}
+                max_width={60}
+              />
+            }
+          />
+          <Item
+            title="AI Studio User ID"
+            description="Run AI Studio chatbot as non-default user. Check URL for the numeric ID."
+            slot_right={
+              <Input
+                type="number"
+                value={ai_studio_user_id_str}
+                on_change={set_ai_studio_user_id_str}
+                on_blur={handle_ai_studio_user_id_blur}
+                max_width={60}
+              />
             }
           />
         </Group>

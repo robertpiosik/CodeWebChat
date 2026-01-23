@@ -79,6 +79,7 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
           on_click={props.on_add}
           title="New configuration"
         />
+        <div style={{ flex: 1 }} />
         {props.on_unset_default && has_default && (
           <TextButton on_click={props.on_unset_default}>
             Unset default
