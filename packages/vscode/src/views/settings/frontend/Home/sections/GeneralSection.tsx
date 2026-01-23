@@ -97,7 +97,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
       <Section
         ref={ref}
         title="General"
-        subtitle="Configure your experience with CWC."
+        subtitle="Configure your experience."
         on_stuck_change={props.on_stuck_change}
       >
         <Group>

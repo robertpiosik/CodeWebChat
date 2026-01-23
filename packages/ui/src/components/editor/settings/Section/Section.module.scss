@@ -43,13 +43,8 @@
   }
 
   &__group {
-    position: absolute;
-    top: 38px;
-    background-color: var(--vscode-button-background);
-    color: var(--vscode-button-foreground);
-    font-size: 12px;
-    border-radius: 999px;
-    padding: 2px 8px;
+    font-weight: 400;
+    color: var(--vscode-textLink-foreground);
   }
 
   &__title {
