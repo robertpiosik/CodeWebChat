@@ -27,7 +27,13 @@ export const apply_context_command = (
     async () => {
       let show_main_menu = true
       let last_main_selection_value = extension_context.workspaceState.get<
-        'internal' | 'file' | 'other' | string | undefined
+        | 'internal'
+        | 'file'
+        | 'unstaged'
+        | 'commit_files'
+        | 'check_all_with_keywords'
+        | string
+        | undefined
       >(LAST_APPLY_CONTEXT_OPTION_STATE_KEY)
 
       while (show_main_menu) {
@@ -51,7 +57,13 @@ export const apply_context_command = (
         }
 
         const main_quick_pick_options: (vscode.QuickPickItem & {
-          value: 'internal' | 'file' | 'other' | string
+          value:
+            | 'internal'
+            | 'file'
+            | 'unstaged'
+            | 'commit_files'
+            | 'check_all_with_keywords'
+            | string
         })[] = []
 
         main_quick_pick_options.push({
@@ -77,13 +89,29 @@ export const apply_context_command = (
         })
 
         main_quick_pick_options.push({
-          label: 'Other...',
-          value: 'other'
+          label: 'Unstaged files',
+          value: 'unstaged'
+        })
+
+        main_quick_pick_options.push({
+          label: 'Files of a commit...',
+          value: 'commit_files'
+        })
+
+        main_quick_pick_options.push({
+          label: 'Check all with keywords...',
+          value: 'check_all_with_keywords'
         })
 
         const main_quick_pick = vscode.window.createQuickPick<
           vscode.QuickPickItem & {
-            value: 'internal' | 'file' | 'other' | string
+            value:
+              | 'internal'
+              | 'file'
+              | 'unstaged'
+              | 'commit_files'
+              | 'check_all_with_keywords'
+              | string
           }
         >()
         main_quick_pick.title = 'Context Sources'
@@ -103,7 +131,13 @@ export const apply_context_command = (
 
         const main_selection = await new Promise<
           | (vscode.QuickPickItem & {
-              value: 'internal' | 'file' | 'other' | string
+              value:
+                | 'internal'
+                | 'file'
+                | 'unstaged'
+                | 'commit_files'
+                | 'check_all_with_keywords'
+                | string
               triggeredButton?: vscode.QuickInputButton
             })
           | undefined
@@ -208,120 +242,24 @@ export const apply_context_command = (
           if (result == 'back') {
             show_main_menu = true
           }
-        } else if (main_selection.value == 'other') {
-          let show_other_menu = true
-          let last_other_selection_value: string | undefined
-
-          while (show_other_menu) {
-            show_other_menu = false
-
-            const other_quick_pick_options: (vscode.QuickPickItem & {
-              value?: 'unstaged' | 'commit_files' | 'check_all_with_keywords'
-            })[] = [
-              {
-                label: 'Unstaged files',
-                value: 'unstaged'
-              },
-              {
-                label: 'Files of a commit...',
-                value: 'commit_files'
-              },
-              {
-                label: 'Check all with keywords...',
-                value: 'check_all_with_keywords'
-              }
-            ]
-
-            const other_quick_pick = vscode.window.createQuickPick<
-              vscode.QuickPickItem & {
-                value?: 'unstaged' | 'commit_files' | 'check_all_with_keywords'
-              }
-            >()
-            other_quick_pick.title = 'Context Sources'
-            other_quick_pick.items = other_quick_pick_options
-            other_quick_pick.placeholder = 'Select other option'
-            other_quick_pick.buttons = [vscode.QuickInputButtons.Back]
-
-            if (last_other_selection_value) {
-              const active_item = other_quick_pick_options.find(
-                (opt) => opt.value === last_other_selection_value
-              )
-              if (active_item) {
-                other_quick_pick.activeItems = [active_item]
-              }
-            }
-
-            const other_selection = await new Promise<
-              | 'back'
-              | (vscode.QuickPickItem & {
-                  value?:
-                    | 'unstaged'
-                    | 'commit_files'
-                    | 'check_all_with_keywords'
-                })
-              | undefined
-            >((resolve) => {
-              let is_accepted = false
-              let did_trigger_back = false
-              const disposables: vscode.Disposable[] = []
-
-              disposables.push(
-                other_quick_pick.onDidTriggerButton((button) => {
-                  if (button === vscode.QuickInputButtons.Back) {
-                    did_trigger_back = true
-                    other_quick_pick.hide()
-                    resolve('back')
-                  }
-                }),
-                other_quick_pick.onDidAccept(() => {
-                  is_accepted = true
-                  resolve(other_quick_pick.selectedItems[0])
-                  other_quick_pick.hide()
-                }),
-                other_quick_pick.onDidHide(() => {
-                  if (!is_accepted && !did_trigger_back) {
-                    resolve('back')
-                  }
-                  disposables.forEach((d) => d.dispose())
-                  other_quick_pick.dispose()
-                })
-              )
-              other_quick_pick.show()
-            })
-
-            if (!other_selection || other_selection == 'back') {
-              show_main_menu = true
-              break
-            }
-
-            last_other_selection_value = other_selection.value
-
-            if (other_selection.value == 'unstaged') {
-              await handle_unstaged_files_source(workspace_provider)
-              return
-            }
-            if (other_selection.value == 'commit_files') {
-              const result = await handle_commit_files_source(
-                workspace_provider,
-                extension_context
-              )
-              if (result == 'back') {
-                show_other_menu = true
-                continue
-              }
-              return
-            }
-            if (other_selection.value == 'check_all_with_keywords') {
-              const result = await handle_check_all_with_keywords_source(
-                workspace_provider,
-                extension_context
-              )
-              if (result == 'back') {
-                show_other_menu = true
-                continue
-              }
-              return
-            }
+        } else if (main_selection.value == 'unstaged') {
+          await handle_unstaged_files_source(workspace_provider)
+          return
+        } else if (main_selection.value == 'commit_files') {
+          const result = await handle_commit_files_source(
+            workspace_provider,
+            extension_context
+          )
+          if (result == 'back') {
+            show_main_menu = true
+          }
+        } else if (main_selection.value == 'check_all_with_keywords') {
+          const result = await handle_check_all_with_keywords_source(
+            workspace_provider,
+            extension_context
+          )
+          if (result == 'back') {
+            show_main_menu = true
           }
         }
       }
