@@ -30,7 +30,6 @@ export class OpenEditorsProvider
   private _config_change_handler: vscode.Disposable
   private _workspace_provider: WorkspaceProvider
   private _use_compact_token_count: boolean = false
-  private _change_event_dispatch_timeout: NodeJS.Timeout | null = null
 
   public set_use_compact_token_count(use_compact: boolean): void {
     if (this._use_compact_token_count != use_compact) {
@@ -85,15 +84,8 @@ export class OpenEditorsProvider
   }
 
   private _dispatch_change_events(): void {
-    if (this._change_event_dispatch_timeout) {
-      clearTimeout(this._change_event_dispatch_timeout)
-    }
-
-    this._change_event_dispatch_timeout = setTimeout(() => {
-      this._on_did_change_checked_files.fire()
-      this.refresh()
-      this._change_event_dispatch_timeout = null
-    }, 500)
+    this._on_did_change_checked_files.fire()
+    this.refresh()
   }
 
   private _is_file_in_any_workspace(file_path: string): boolean {
@@ -167,9 +159,6 @@ export class OpenEditorsProvider
     this._tab_change_handler.dispose()
     this._config_change_handler.dispose()
     this._on_did_change_checked_files.dispose()
-    if (this._change_event_dispatch_timeout) {
-      clearTimeout(this._change_event_dispatch_timeout)
-    }
   }
 
   refresh(): void {

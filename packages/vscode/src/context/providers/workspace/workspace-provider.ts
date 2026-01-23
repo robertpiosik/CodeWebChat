@@ -65,7 +65,6 @@ export class WorkspaceProvider
   private _file_workspace_map: Map<string, string> = new Map()
   public gitignore_initialization: Promise<void>
   public ranges_initialization: Promise<void>
-  private _change_event_dispatch_timeout: NodeJS.Timeout | null = null
   public use_compact_token_count: boolean = false
 
   public set_use_compact_token_count(use_compact: boolean): void {
@@ -185,15 +184,8 @@ export class WorkspaceProvider
   }
 
   private _dispatch_change_events(): void {
-    if (this._change_event_dispatch_timeout) {
-      clearTimeout(this._change_event_dispatch_timeout)
-    }
-
-    this._change_event_dispatch_timeout = setTimeout(() => {
-      this._on_did_change_checked_files.fire()
-      this.refresh()
-      this._change_event_dispatch_timeout = null
-    }, 500)
+    this._on_did_change_checked_files.fire()
+    this.refresh()
   }
 
   private _uncheck_ignored_files(): void {
@@ -231,9 +223,6 @@ export class WorkspaceProvider
     }
     if (this._refresh_timeout) {
       clearTimeout(this._refresh_timeout)
-    }
-    if (this._change_event_dispatch_timeout) {
-      clearTimeout(this._change_event_dispatch_timeout)
     }
 
     this._token_calculator.dispose()
