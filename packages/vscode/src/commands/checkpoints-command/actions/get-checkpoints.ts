@@ -27,6 +27,11 @@ export const remove_old_checkpoints = async (
     }
   }
 
+  if (checkpoints_to_keep.length >= 100) {
+    const overflow = checkpoints_to_keep.splice(99)
+    checkpoints_to_remove.push(...overflow)
+  }
+
   // Delete old checkpoint files
   for (const checkpoint of checkpoints_to_remove) {
     try {
