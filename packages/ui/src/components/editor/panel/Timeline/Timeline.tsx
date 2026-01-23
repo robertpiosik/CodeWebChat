@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import styles from './Timeline.module.scss'
 import cn from 'classnames'
 import dayjs from 'dayjs'
@@ -30,9 +31,17 @@ export const Timeline: React.FC<Props> = ({
   on_delete,
   on_edit
 }) => {
+  const [local_items, set_local_items] = useState(items)
+  const [locked, set_locked] = useState(false)
+
+  useEffect(() => {
+    set_local_items(items)
+    set_locked(false)
+  }, [items])
+
   return (
     <div className={styles.timeline}>
-      {items.map((item) => (
+      {local_items.map((item) => (
         <div
           key={item.id}
           className={styles.item}
@@ -70,7 +79,16 @@ export const Timeline: React.FC<Props> = ({
                   title={item.is_starred ? 'Unstar' : 'Star'}
                   on_click={(e) => {
                     e.stopPropagation()
-                    on_toggle_starred?.(item.id)
+                    if (locked) return
+                    set_locked(true)
+                    set_local_items((prev) =>
+                      prev.map((i) =>
+                        i.id == item.id
+                          ? { ...i, is_starred: !i.is_starred }
+                          : i
+                      )
+                    )
+                    on_toggle_starred(item.id)
                   }}
                 />
                 {on_edit && item.can_edit && (
