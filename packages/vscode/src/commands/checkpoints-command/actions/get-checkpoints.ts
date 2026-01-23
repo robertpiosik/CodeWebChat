@@ -20,7 +20,7 @@ export const remove_old_checkpoints = async (
   const checkpoints_to_remove: Checkpoint[] = []
 
   for (const checkpoint of checkpoints) {
-    if (checkpoint.timestamp < cutoff_time && !checkpoint.is_starred) {
+    if (checkpoint.timestamp < cutoff_time) {
       checkpoints_to_remove.push(checkpoint)
     } else {
       checkpoints_to_keep.push(checkpoint)
