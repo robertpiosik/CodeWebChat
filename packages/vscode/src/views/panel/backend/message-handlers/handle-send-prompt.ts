@@ -91,26 +91,6 @@ export const handle_send_prompt = async (params: {
       preset_name: params.preset_name,
       group_name: params.group_name
     })
-
-    const name_to_save = params.preset_name || params.group_name
-    if (name_to_save) {
-      const mode = params.panel_provider.web_prompt_type
-      const recents_key = get_recently_used_presets_or_groups_key(mode)
-      const context = params.panel_provider.context
-
-      const recents =
-        context.workspaceState.get<string[]>(recents_key) ??
-        context.globalState.get<string[]>(recents_key) ??
-        []
-
-      const new_recents = [
-        name_to_save,
-        ...recents.filter((r) => r != name_to_save)
-      ].slice(0, 10)
-
-      context.workspaceState.update(recents_key, new_recents)
-      context.globalState.update(recents_key, new_recents)
-    }
   }
 
   await vscode.workspace.saveAll()
@@ -468,18 +448,6 @@ async function show_preset_quick_pick(params: {
             preset_name: selected.preset_name,
             group_name: group_name
           })
-          const name_to_save = selected.preset_name
-          const recents_key = get_recently_used_presets_or_groups_key(mode)
-          const recents =
-            context.workspaceState.get<string[]>(recents_key) ??
-            context.globalState.get<string[]>(recents_key) ??
-            []
-          const newRecents = [
-            name_to_save,
-            ...recents.filter((r) => r != name_to_save)
-          ].slice(0, 10)
-          context.workspaceState.update(recents_key, newRecents)
-          context.globalState.update(recents_key, newRecents)
           do_resolve({ preset_names: [selected.preset_name] })
         }
       } else if (selected.group_name) {
@@ -505,17 +473,6 @@ async function show_preset_quick_pick(params: {
 
         if (preset_names.length > 0) {
           update_last_used_preset_or_group({ panel_provider, group_name })
-          const recents_key = get_recently_used_presets_or_groups_key(mode)
-          const recents =
-            context.workspaceState.get<string[]>(recents_key) ??
-            context.globalState.get<string[]>(recents_key) ??
-            []
-          const newRecents = [
-            group_name,
-            ...recents.filter((r) => r !== group_name)
-          ].slice(0, 10)
-          context.workspaceState.update(recents_key, newRecents)
-          context.globalState.update(recents_key, newRecents)
           do_resolve({ preset_names })
         }
       } else {

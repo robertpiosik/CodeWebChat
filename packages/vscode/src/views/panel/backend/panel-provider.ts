@@ -789,7 +789,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           const presets_for_mode = all_presets[prompt_type]
           let selected_name: string | undefined = undefined
           const key = get_recently_used_presets_or_groups_key(prompt_type)
-          const recents = this.context.globalState.get<string[]>(key, [])
+          const recents =
+            this.context.workspaceState.get<string[]>(key) ??
+            this.context.globalState.get<string[]>(key, [])
           const last_selected = recents[0]
           if (last_selected) {
             if (last_selected == 'Ungrouped') {
