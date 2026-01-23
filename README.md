@@ -7,12 +7,14 @@
     </picture>
   </a>
 </p>
-<h3 align="center">Fast AI coding with chatbots/APIs</h3>
+<h3 align="center">Blazing fast AI coding with chatbots/APIs</h3>
 <p align="center">
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 </p>
 
-Code Web Chat (CWC) is a free and open-source AI coding IDE extension designed for speed and privacy, built independently for VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
+Code Web Chat is a free and open-source AI coding toolkit **designed for speed and privacy**. You can use CWC in **VS Code** family of editors (Cursor, Antigravity, VSCodium, etc.) for a **much faster and cheaper\*** development experience.
+
+<small>\* Compared to coding agents.</small>
 
 ✍️ **Construct coding prompts for...**
 
@@ -32,13 +34,15 @@ Code Web Chat (CWC) is a free and open-source AI coding IDE extension designed f
 
 **With its focus on context engineering, CWC addresses pitfalls of coding agents.**
 
-We believe that tool-calling based search for files is a bad, context-polluting design caused by an inherent characteristics of the model, that is, its inability to know about a file's purpose before reading it. That may make the model reason about wrong things, possibly leading to regressions. These could be overwhelmingly hard to fix with the very approach that created them.
+We believe that context management based on tool-calling is inherently flawed. Because the model can't know about a keyword-matched file's purpose until it's read the context window gets inevitably polluted. That may make the model reason about wrong things, possibly leading to regressions. These could be overwhelmingly hard to fix with the very approach that created them.
 
-Taking care about context window may sound time consuming, but CWC's _Prune Context_ prompt type will help you find what's needed in seconds.
+CWC proposes a non-agentic workflow, where context is picked ticking checkboxes. With this level of control your instructions are simple and edits accurate.
 
-With the non-agentic approach simple instructions just work and the model is easy to guide with examples.
+Foster codebase understanding.
 
-Code with AI in a way that foster codebase understanding and gets you fast and accurate edits!
+Make code reviews a piece of cake.
+
+Enter the flow and have fun!
 
 ## Enabling autofill in browser
 
