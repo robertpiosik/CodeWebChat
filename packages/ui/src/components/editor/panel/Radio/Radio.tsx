@@ -1,4 +1,4 @@
-import { FC, ChangeEvent, MouseEvent } from 'react'
+import { FC } from 'react'
 import styles from './Radio.module.scss'
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 }
 
 export const Radio: FC<Props> = (props) => {
-  const handle_change = (e: ChangeEvent<HTMLInputElement>) => {
+  const handle_change = () => {
     props.on_change()
   }
 
@@ -23,6 +23,9 @@ export const Radio: FC<Props> = (props) => {
       className={styles.radio}
       checked={props.checked}
       onChange={handle_change}
+      onClick={(e) => {
+        e.stopPropagation()
+      }}
       disabled={props.disabled}
       title={props.title}
     />

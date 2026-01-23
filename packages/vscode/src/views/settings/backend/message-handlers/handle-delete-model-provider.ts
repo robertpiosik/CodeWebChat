@@ -12,10 +12,13 @@ export const handle_delete_model_provider = async (
   const provider_name_to_delete = message.provider_name
 
   const confirmation = await vscode.window.showWarningMessage(
-    dictionary.warning_message.CONFIRM_DELETE_MODEL_PROVIDER(
-      provider_name_to_delete
-    ),
-    { modal: true },
+    dictionary.warning_message.PLEASE_CONFIRM,
+    {
+      modal: true,
+      detail: dictionary.warning_message.CONFIRM_DELETE_MODEL_PROVIDER(
+        provider_name_to_delete
+      )
+    },
     'Delete'
   )
 

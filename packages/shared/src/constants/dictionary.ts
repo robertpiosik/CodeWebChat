@@ -83,7 +83,6 @@ export const dictionary = {
     NO_HISTORY_FOR_MODE: 'No history to show for the current mode.',
     NO_TEXT_SELECTED_FOR_SELECTION_PLACEHOLDER:
       'No text selected for #Selection placeholder.',
-    PLEASE_CONFIRM: 'Please confirm',
     NOTHING_TO_DELETE: 'Nothing to delete.',
     RESTORED_CONTEXT: (context_name: string) =>
       `Restored context "${context_name}".`,
@@ -112,6 +111,7 @@ export const dictionary = {
   },
 
   warning_message: {
+    PLEASE_CONFIRM: 'Please confirm',
     SKIPPING_INVALID_PATH: (file_path: string) =>
       `Skipping applying change to invalid path: ${file_path}.`,
     CODE_COMPLETIONS_NO_SELECTION:

@@ -44,8 +44,8 @@ export const handle_delete_preset_group_or_separator = async (
     const display_item_name = is_unnamed ? 'Unnamed' : item_name!
 
     const delete_button = 'Delete'
-    const result = await vscode.window.showInformationMessage(
-      dictionary.information_message.PLEASE_CONFIRM,
+    const result = await vscode.window.showWarningMessage(
+      dictionary.warning_message.PLEASE_CONFIRM,
       {
         modal: true,
         detail: is_unnamed

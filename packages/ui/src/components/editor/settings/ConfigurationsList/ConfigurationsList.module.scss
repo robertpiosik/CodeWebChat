@@ -1,14 +1,13 @@
 .container {
   display: flex;
   flex-direction: column;
-  padding-top: 12px;
 }
 
 .toolbar {
   display: flex;
-  padding: 0 10px 8px 10px;
+  padding: 12px 12px 8px 12px;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
 }
 
 .list {
@@ -20,7 +19,9 @@
 .row {
   display: flex;
   align-items: center;
-  height: 36px;
+  height: 40px;
+  gap: 12px;
+  padding: 0 12px;
 
   &:nth-child(even) {
     background-color: var(--vscode-welcomePage-tileBackground);
@@ -28,13 +29,17 @@
 
   &__content {
     flex: 1;
-    padding: 0 12px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 
     .default-icon {
       margin-right: 0.5em;
+    }
+
+    > span:first-child:hover {
+      text-decoration: underline;
+      cursor: pointer;
     }
 
     > span:last-child {
@@ -69,7 +74,7 @@
 }
 
 .col-drag {
-  width: 40px;
+  padding: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -79,5 +84,4 @@
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  padding-right: 8px;
 }

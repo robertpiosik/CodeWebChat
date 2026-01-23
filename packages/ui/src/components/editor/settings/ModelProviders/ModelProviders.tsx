@@ -2,6 +2,7 @@ import styles from './ModelProviders.module.scss'
 import { ReactSortable } from 'react-sortablejs'
 import cn from 'classnames'
 import { IconButton } from '../../panel/IconButton'
+import { Button } from '../../common/Button'
 
 export namespace ModelProviders {
   export type Provider = {
@@ -57,7 +58,7 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
           />
         )}
         <IconButton
-          codicon_icon="trash"
+          codicon_icon="remove"
           on_click={() => props.on_delete_provider(provider.name)}
           title="Delete provider"
         />
@@ -68,11 +69,7 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
   return (
     <div className={styles.container}>
       <div className={styles.toolbar}>
-        <IconButton
-          codicon_icon="add"
-          on_click={props.on_add_provider}
-          title="New provider"
-        />
+        <Button on_click={props.on_add_provider}>New Provider...</Button>
       </div>
       <div className={styles.list}>
         {props.providers.length > 0 ? (

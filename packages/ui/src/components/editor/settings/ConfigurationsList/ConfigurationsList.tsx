@@ -4,6 +4,7 @@ import { Radio } from '../../panel/Radio'
 import { ReactSortable } from 'react-sortablejs'
 import { IconButton } from '../../panel/IconButton'
 import { TextButton } from '../TextButton'
+import { Button } from '../../common/Button'
 
 export namespace ConfigurationsList {
   export type Configuration = {
@@ -32,7 +33,11 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
   const has_default = props.configurations.some((c) => c.is_default)
 
   const render_item = (config: ConfigurationsList.Configuration) => (
-    <div key={config.id} className={styles.row}>
+    <div
+      key={config.id}
+      className={styles.row}
+      onClick={() => props.on_edit(config.id)}
+    >
       {sortable && (
         <div className={cn(styles['drag-handle'], styles['col-drag'])}>
           <span className="codicon codicon-gripper" />
@@ -53,18 +58,14 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
         <span>{config.description}</span>
       </div>
       <div className={styles['col-actions']}>
-        {props.on_edit && (
-          <IconButton
-            codicon_icon="edit"
-            title="Edit configuration"
-            on_click={() => props.on_edit?.(config.id)}
-          />
-        )}
         {props.on_delete && (
           <IconButton
-            codicon_icon="trash"
+            codicon_icon="remove"
             title="Delete configuration"
-            on_click={() => props.on_delete?.(config.id)}
+            on_click={(e) => {
+              e.stopPropagation()
+              props.on_delete(config.id)
+            }}
           />
         )}
       </div>
@@ -74,12 +75,7 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
   return (
     <div className={styles.container}>
       <div className={styles.toolbar}>
-        <IconButton
-          codicon_icon="add"
-          on_click={props.on_add}
-          title="New configuration"
-        />
-        <div style={{ flex: 1 }} />
+        <Button on_click={props.on_add}>New Configuration...</Button>
         {props.on_unset_default && has_default && (
           <TextButton on_click={props.on_unset_default}>
             Unset default
