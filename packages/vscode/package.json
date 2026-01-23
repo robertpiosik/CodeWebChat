@@ -632,14 +632,11 @@
           "default": 5
         },
         "codeWebChat.contextSizeWarningThreshold": {
-          "type": "number",
-          "default": 60000
+          "type": "number"
         },
         "codeWebChat.checkpointLifespan": {
           "type": "number",
-          "scope": "resource",
-          "default": 48,
-          "minimum": 1
+          "scope": "resource"
         },
         "codeWebChat.areAutomaticCheckpointsDisabled": {
           "type": "boolean",

@@ -5,6 +5,6 @@ export const handle_get_checkpoint_lifespan = async (
   provider: SettingsProvider
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const hours = config.get<number>('checkpointLifespan', 48)
+  const hours = config.get<number>('checkpointLifespan', 24)
   provider.postMessage({ command: 'CHECKPOINT_LIFESPAN', hours })
 }
