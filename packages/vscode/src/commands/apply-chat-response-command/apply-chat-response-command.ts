@@ -338,7 +338,7 @@ export const apply_chat_response_command = (params: {
                     err
                   )
                 }
-                checkpoint_to_update.title = 'Before response accepted'
+                checkpoint_to_update.title = 'Response accepted'
                 checkpoint_to_update.response_history = history_for_checkpoint
                 checkpoint_to_update.response_preview_item_created_at =
                   created_at_for_preview

@@ -32,7 +32,7 @@ export const handle_accept_commit_message = async (
 
     await repository.status()
 
-    const title = 'Committed changes'
+    const title = 'New commit'
     const description = commit_message
     await create_checkpoint(
       panel_provider.workspace_provider,
