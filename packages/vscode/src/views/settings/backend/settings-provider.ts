@@ -12,19 +12,15 @@ import {
   handle_get_check_new_files,
   handle_get_clear_checks_in_workspace_behavior,
   handle_get_are_automatic_checkpoints_disabled,
-  handle_get_code_completions_configurations,
+  handle_get_configurations,
   handle_get_commit_message_instructions,
   handle_get_commit_message_auto_accept_after,
-  handle_get_commit_messages_configurations,
   handle_get_context_size_warning_threshold,
-  handle_get_edit_context_configurations,
   handle_get_edit_context_system_instructions,
   handle_get_edit_format_instructions,
   handle_get_gemini_user_id,
   handle_get_ai_studio_user_id,
-  handle_get_intelligent_update_configurations,
   handle_get_model_providers,
-  handle_get_prune_context_configurations,
   handle_get_send_with_shift_enter,
   handle_get_checkpoint_lifespan,
   handle_reorder_code_completions_configurations,
@@ -123,7 +119,7 @@ export class SettingsProvider {
         } else if (message.command == 'CHANGE_MODEL_PROVIDER_KEY') {
           await handle_change_model_provider_key(this, message)
         } else if (message.command == 'GET_CODE_COMPLETIONS_CONFIGURATIONS') {
-          await handle_get_code_completions_configurations(this)
+          await handle_get_configurations(this, 'code-completions')
         } else if (
           message.command == 'REORDER_CODE_COMPLETIONS_CONFIGURATIONS'
         ) {
@@ -139,7 +135,7 @@ export class SettingsProvider {
         ) {
           await handle_set_default_code_completions_configuration(this, message)
         } else if (message.command == 'GET_EDIT_CONTEXT_CONFIGURATIONS') {
-          await handle_get_edit_context_configurations(this)
+          await handle_get_configurations(this, 'edit-context')
         } else if (message.command == 'REORDER_EDIT_CONTEXT_CONFIGURATIONS') {
           await handle_reorder_edit_context_configurations(this, message)
         } else if (message.command == 'DELETE_EDIT_CONTEXT_CONFIGURATION') {
@@ -159,7 +155,7 @@ export class SettingsProvider {
         } else if (message.command == 'UPDATE_EDIT_FORMAT_INSTRUCTIONS') {
           await handle_update_edit_format_instructions(message)
         } else if (message.command == 'GET_INTELLIGENT_UPDATE_CONFIGURATIONS') {
-          await handle_get_intelligent_update_configurations(this)
+          await handle_get_configurations(this, 'intelligent-update')
         } else if (
           message.command == 'REORDER_INTELLIGENT_UPDATE_CONFIGURATIONS'
         ) {
@@ -180,7 +176,7 @@ export class SettingsProvider {
             message
           )
         } else if (message.command == 'GET_PRUNE_CONTEXT_CONFIGURATIONS') {
-          await handle_get_prune_context_configurations(this)
+          await handle_get_configurations(this, 'prune-context')
         } else if (message.command == 'REORDER_PRUNE_CONTEXT_CONFIGURATIONS') {
           await handle_reorder_prune_context_configurations(this, message)
         } else if (message.command == 'DELETE_PRUNE_CONTEXT_CONFIGURATION') {
@@ -190,7 +186,7 @@ export class SettingsProvider {
             'prune-context'
           )
         } else if (message.command == 'GET_COMMIT_MESSAGES_CONFIGURATIONS') {
-          await handle_get_commit_messages_configurations(this)
+          await handle_get_configurations(this, 'commit-messages')
         } else if (
           message.command == 'REORDER_COMMIT_MESSAGES_CONFIGURATIONS'
         ) {
@@ -279,13 +275,13 @@ export class SettingsProvider {
       vscode.workspace.onDidChangeConfiguration((e) => {
         if (e.affectsConfiguration('codeWebChat')) {
           void handle_get_model_providers(this)
-          void handle_get_code_completions_configurations(this)
-          void handle_get_commit_messages_configurations(this)
-          void handle_get_edit_context_configurations(this)
+          void handle_get_configurations(this, 'code-completions')
+          void handle_get_configurations(this, 'commit-messages')
+          void handle_get_configurations(this, 'edit-context')
           void handle_get_edit_context_system_instructions(this)
           void handle_get_edit_format_instructions(this)
-          void handle_get_intelligent_update_configurations(this)
-          void handle_get_prune_context_configurations(this)
+          void handle_get_configurations(this, 'intelligent-update')
+          void handle_get_configurations(this, 'prune-context')
           void handle_get_context_size_warning_threshold(this)
           void handle_get_commit_message_instructions(this)
           void handle_get_commit_message_auto_accept_after(this)

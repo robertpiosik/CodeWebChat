@@ -60,7 +60,7 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
       <div className={styles['col-actions']}>
         {props.on_delete && (
           <IconButton
-            codicon_icon="remove"
+            codicon_icon="trash"
             title="Delete configuration"
             on_click={(e) => {
               e.stopPropagation()

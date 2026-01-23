@@ -58,7 +58,7 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
           />
         )}
         <IconButton
-          codicon_icon="remove"
+          codicon_icon="trash"
           on_click={() => props.on_delete_provider(provider.name)}
           title="Delete provider"
         />
