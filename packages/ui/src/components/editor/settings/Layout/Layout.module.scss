@@ -7,10 +7,6 @@
   @media (min-width: 770px) {
     --sidebar-width: 180px;
   }
-
-  [data-simplebar]:not(.simplebar-dragging) .simplebar-content-wrapper {
-    scroll-behavior: smooth;
-  }
 }
 
 .sidebar {
