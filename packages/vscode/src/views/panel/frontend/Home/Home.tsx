@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import styles from './Home.module.scss'
 import { Scrollable } from '@ui/components/editor/panel/Scrollable'
 import { Timeline } from '@ui/components/editor/panel/Timeline'
@@ -20,6 +20,7 @@ import { use_timeline_scroll } from './hooks/use-timeline-scroll'
 type Props = {
   vscode: any
   is_active: boolean
+  on_go_forward: () => void
   on_chatbots_click: () => void
   on_api_calls_click: () => void
   version: string
@@ -49,6 +50,17 @@ export const Home: React.FC<Props> = (props) => {
   const full_mode_height_ref = useRef<number>(0)
   const responses_ref = useRef<HTMLDivElement>(null)
   const mode_ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handle_mouse_up = (event: MouseEvent) => {
+      if (props.is_active && event.button == 4) {
+        props.on_go_forward()
+      }
+    }
+
+    window.addEventListener('mouseup', handle_mouse_up)
+    return () => window.removeEventListener('mouseup', handle_mouse_up)
+  }, [props.is_active, props.on_go_forward])
 
   const {
     handle_reorder,

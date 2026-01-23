@@ -233,7 +233,7 @@ export const Panel = () => {
   }
 
   const are_keyboard_shortcuts_disabled =
-    !!updating_preset || !!items_to_preview
+    !!updating_preset || !!items_to_preview || active_view != 'main'
 
   return (
     <LayoutContext.Provider value={layout_context_value}>
@@ -325,6 +325,7 @@ export const Panel = () => {
               <Home
                 vscode={vscode}
                 is_active={active_view == 'home'}
+                on_go_forward={() => set_active_view('main')}
                 on_chatbots_click={() => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
