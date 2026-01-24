@@ -8,7 +8,7 @@ export const map_display_pos_to_raw_pos = (
   let last_raw_index = 0
 
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"([^"]+)")|(#(?:Commit|ContextAtCommit):[^:]+:([^\s"]+)\s+"(?:\\.|[^"\\])*")|(<fragment path="[^"]+"(?: [^>]+)?>\n([\s\S]*?)\n<\/fragment>)/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"([^"]+)")|(#(?:Commit|ContextAtCommit):[^:]+:([^\s"]+)\s+"(?:\\.|[^"\\])*")|(<fragment path="[^"]+"(?: [^>]+)?>\n([\s\S]*?)\n<\/fragment>)|(#Skill:[^:]+:[^:]+:[^\s]+)/g
   let match
 
   while ((match = regex.exec(raw_text)) !== null) {
@@ -21,6 +21,7 @@ export const map_display_pos_to_raw_pos = (
     const commit_hash = match[7]
     const fragment_keyword = match[8]
     const fragment_content = match[9]
+    const skill_keyword = match[10]
 
     let is_replacement_match = false
     let display_match_length = 0
@@ -47,6 +48,11 @@ export const map_display_pos_to_raw_pos = (
       const line_count = fragment_content.split('\n').length
       const lines_text = line_count === 1 ? 'line' : 'lines'
       display_match_length = `Pasted ${line_count} ${lines_text}`.length
+      is_replacement_match = true
+    } else if (skill_keyword) {
+      const parts = skill_keyword.split(':')
+      const skill_name = parts[parts.length - 1]
+      display_match_length = skill_name.length
       is_replacement_match = true
     }
 
@@ -78,7 +84,6 @@ export const map_display_pos_to_raw_pos = (
     last_raw_index = regex.lastIndex
   }
 
-  // Cursor is in the text after all matches
   return raw_pos + (display_pos - current_display_pos)
 }
 
@@ -92,7 +97,7 @@ export const map_raw_pos_to_display_pos = (
   let last_raw_index = 0
 
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"([^"]+)")|(#(?:Commit|ContextAtCommit):[^:]+:([^\s"]+)\s+"(?:\\.|[^"\\])*")|(<fragment path="[^"]+"(?: [^>]+)?>\n([\s\S]*?)\n<\/fragment>)/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"([^"]+)")|(#(?:Commit|ContextAtCommit):[^:]+:([^\s"]+)\s+"(?:\\.|[^"\\])*")|(<fragment path="[^"]+"(?: [^>]+)?>\n([\s\S]*?)\n<\/fragment>)|(#Skill:[^:]+:[^:]+:[^\s]+)/g
   let match
 
   while ((match = regex.exec(raw_text)) !== null) {
@@ -105,6 +110,7 @@ export const map_raw_pos_to_display_pos = (
     const commit_hash = match[7]
     const fragment_keyword = match[8]
     const fragment_content = match[9]
+    const skill_keyword = match[10]
 
     let is_replacement_match = false
     let display_match_length = 0
@@ -131,6 +137,11 @@ export const map_raw_pos_to_display_pos = (
       const line_count = fragment_content.split('\n').length
       const lines_text = line_count === 1 ? 'line' : 'lines'
       display_match_length = `Pasted ${line_count} ${lines_text}`.length
+      is_replacement_match = true
+    } else if (skill_keyword) {
+      const parts = skill_keyword.split(':')
+      const skill_name = parts[parts.length - 1]
+      display_match_length = skill_name.length
       is_replacement_match = true
     }
 

@@ -59,8 +59,10 @@ export const get_highlighted_text = (params: {
   const fragment_regex_part =
     '<fragment path="[^"]+"(?: [^>]+)?>\\n[\\s\\S]*?\\n<\\/fragment>'
 
+  const skill_regex_part = '#Skill:[^:]+:[^:]+:[^\\s]+'
+
   const regex = new RegExp(
-    `(${fragment_regex_part}|#Selection|#Changes:[^\\s,;:!?]+|${saved_context_regex_part}|${commit_regex_part})`,
+    `(${fragment_regex_part}|#Selection|#Changes:[^\\s,;:!?]+|${saved_context_regex_part}|${commit_regex_part}|${skill_regex_part})`,
     'g'
   )
   const parts = params.text.split(regex)
@@ -166,6 +168,27 @@ export const get_highlighted_text = (params: {
         }" data-role="keyword-icon"></span><span class="${
           styles['keyword__text']
         }" data-role="keyword-text">${escape_html(short_hash)}</span></span>`
+      }
+
+      const skill_match = part.match(/^#Skill:([^:]+):(.+):([^\s:]+)$/)
+      if (part && skill_match) {
+        const agent = skill_match[1]
+        const repo = skill_match[2]
+        const skill_name = skill_match[3]
+        return `<span class="${cn(
+          styles['keyword'],
+          styles['keyword--skill']
+        )}" data-type="skill-keyword" data-agent="${escape_html(
+          agent
+        )}" data-repo="${escape_html(repo)}" data-skill-name="${escape_html(
+          skill_name
+        )}" title="Skill: ${escape_html(skill_name)} (${escape_html(
+          agent
+        )})"><span class="${
+          styles['keyword__icon']
+        }" data-role="keyword-icon"></span><span class="${
+          styles['keyword__text']
+        }" data-role="keyword-text">${escape_html(skill_name)}</span></span>`
       }
 
       return process_text_part_for_files(part, params.context_file_paths)

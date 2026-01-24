@@ -21,7 +21,7 @@ const getKeywordRanges = (
   const ranges: { start: number; end: number }[] = []
   // This regex is a combination of all keyword types
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+")|(#(?:Commit|ContextAtCommit):[^:]+:[^\s"]+\s+"(?:\\.|[^"\\])*")|(<fragment path="[^"]+"(?: [^>]+)?>\n[\s\S]*?\n<\/fragment>)/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+")|(#(?:Commit|ContextAtCommit):[^:]+:[^\s"]+\s+"(?:\\.|[^"\\])*")|(<fragment path="[^"]+"(?: [^>]+)?>\n[\s\S]*?\n<\/fragment>)|(#Skill:[^:]+:[^:]+:[^\s]+)/g
 
   let match
   while ((match = regex.exec(text)) !== null) {
@@ -149,6 +149,18 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
       }
 
       return `<fragment ${attributes}>\n${content}\n</fragment>`
+    } else if (el.dataset.type == 'skill-keyword') {
+      const agent = el.dataset.agent
+      const repo = el.dataset.repo
+      const skillName = el.dataset.skillName
+      if (!agent || !repo || !skillName) return ''
+
+      const index = inner_content.indexOf(skillName)
+      if (index != -1) {
+        const prefix = inner_content.substring(0, index)
+        const suffix = inner_content.substring(index + skillName.length)
+        return `${prefix}#Skill:${agent}:${repo}:${skillName}${suffix}`
+      }
     }
 
     return inner_content
@@ -308,6 +320,18 @@ export const use_handlers = (
       if (!repo_name || !commit_hash || commit_message === undefined) return
 
       const search_pattern = `#ContextAtCommit:${repo_name}:${commit_hash} "${commit_message.replace(/"/g, '\\"')}"`
+      const start_index = props.value.indexOf(search_pattern)
+
+      if (start_index !== -1) {
+        apply_keyword_deletion(start_index, start_index + search_pattern.length)
+      }
+    } else if (keyword_type == 'skill-keyword') {
+      const agent = keyword_element.dataset.agent
+      const repo = keyword_element.dataset.repo
+      const skillName = keyword_element.dataset.skillName
+      if (!agent || !repo || !skillName) return
+
+      const search_pattern = `#Skill:${agent}:${repo}:${skillName}`
       const start_index = props.value.indexOf(search_pattern)
 
       if (start_index !== -1) {
@@ -658,6 +682,22 @@ export const use_handlers = (
     return false
   }
 
+  const handle_skill_keyword_deletion = (raw_pos: number): boolean => {
+    const text_before_cursor = props.value.substring(0, raw_pos)
+    const match = text_before_cursor.match(/#Skill:[^:]+:[^:]+:[^\s]+$/)
+
+    if (match) {
+      const start_of_match = raw_pos - match[0].length
+      const new_value =
+        props.value.substring(0, start_of_match) +
+        props.value.substring(raw_pos)
+      const new_raw_cursor_pos = start_of_match
+      update_value(new_value, new_raw_cursor_pos)
+      return true
+    }
+    return false
+  }
+
   const handle_pasted_lines_keyword_deletion = (raw_pos: number): boolean => {
     const text_before_cursor = props.value.substring(0, raw_pos)
 
@@ -718,6 +758,10 @@ export const use_handlers = (
       return handle_commit_keyword_deletion(raw_pos, context_file_paths)
     }
 
+    if (el.dataset.type == 'skill-keyword') {
+      return handle_skill_keyword_deletion(raw_pos)
+    }
+
     if (el.dataset.type == 'pasted-lines-keyword') {
       return handle_pasted_lines_keyword_deletion(raw_pos)
     }
@@ -760,7 +804,8 @@ export const use_handlers = (
           parent.dataset.type == 'saved-context-keyword' ||
           parent.dataset.type == 'commit-keyword' ||
           parent.dataset.type == 'contextatcommit-keyword' ||
-          parent.dataset.type == 'pasted-lines-keyword'
+          parent.dataset.type == 'pasted-lines-keyword' ||
+          parent.dataset.type == 'skill-keyword'
         ) {
           const rangeAfter = document.createRange()
           rangeAfter.selectNodeContents(parent)
@@ -786,7 +831,8 @@ export const use_handlers = (
         el.dataset.type == 'saved-context-keyword' ||
         el.dataset.type == 'commit-keyword' ||
         el.dataset.type == 'contextatcommit-keyword' ||
-        el.dataset.type == 'pasted-lines-keyword'
+        el.dataset.type == 'pasted-lines-keyword' ||
+        el.dataset.type == 'skill-keyword'
       ) {
         const display_pos = get_caret_position_from_div(input_ref.current)
         if (handle_keyword_deletion_by_backspace(el, display_pos)) {

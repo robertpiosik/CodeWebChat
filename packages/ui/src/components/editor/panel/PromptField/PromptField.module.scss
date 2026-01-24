@@ -216,6 +216,10 @@
     }
   }
 
+  &--skill &__icon::before {
+    content: '\ec59';
+  }
+
   &--changes &__icon::before {
     content: '\ebdb';
   }

@@ -8,6 +8,7 @@ import {
   replace_context_at_commit_symbol
 } from '@/views/panel/backend/utils/replace-git-symbols'
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
+import { replace_skill_symbol } from '@/views/panel/backend/utils/replace-skill-symbol'
 import {
   code_completion_instructions_for_panel,
   prune_context_instructions_prefix,
@@ -125,6 +126,12 @@ export const handle_copy_prompt = async (params: {
         })
     }
 
+    if (processed_completion_instructions.includes('#Skill:')) {
+      processed_completion_instructions = await replace_skill_symbol({
+        instruction: processed_completion_instructions
+      })
+    }
+
     const missing_text_tag = processed_completion_instructions
       ? `<missing_text>${processed_completion_instructions}</missing_text>`
       : '<missing_text>'
@@ -172,6 +179,12 @@ export const handle_copy_prompt = async (params: {
         instruction: processed_instructions,
         context: params.panel_provider.context,
         workspace_provider: params.panel_provider.workspace_provider
+      })
+    }
+
+    if (processed_instructions.includes('#Skill:')) {
+      processed_instructions = await replace_skill_symbol({
+        instruction: processed_instructions
       })
     }
 

@@ -25,6 +25,7 @@ import {
   replace_context_at_commit_symbol
 } from '../utils/replace-git-symbols'
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
+import { replace_skill_symbol } from '../utils/replace-skill-symbol'
 
 const get_code_completion_config = async (
   api_providers_manager: ModelProvidersManager,
@@ -386,6 +387,12 @@ export const handle_code_completion = async (
           context: panel_provider.context,
           workspace_provider: panel_provider.workspace_provider
         })
+    }
+
+    if (processed_completion_instructions.includes('#Skill:')) {
+      processed_completion_instructions = await replace_skill_symbol({
+        instruction: processed_completion_instructions
+      })
     }
 
     const files_collector = new FilesCollector(

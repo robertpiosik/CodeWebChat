@@ -23,6 +23,7 @@ import {
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
 import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-symbol'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { replace_skill_symbol } from '@/views/panel/backend/utils/replace-skill-symbol'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { EditContextMessage } from '@/views/panel/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
@@ -334,6 +335,12 @@ export const handle_edit_context = async (
       instruction: processed_instructions,
       context: panel_provider.context,
       workspace_provider: panel_provider.workspace_provider
+    })
+  }
+
+  if (processed_instructions.includes('#Skill:')) {
+    processed_instructions = await replace_skill_symbol({
+      instruction: processed_instructions
     })
   }
 

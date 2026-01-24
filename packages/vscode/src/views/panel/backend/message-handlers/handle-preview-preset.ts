@@ -10,6 +10,7 @@ import {
   replace_commit_symbol
 } from '@/views/panel/backend/utils/replace-git-symbols'
 import { Preset } from '@shared/types/preset'
+import { replace_skill_symbol } from '@/views/panel/backend/utils/replace-skill-symbol'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import { dictionary } from '@shared/constants/dictionary'
 import {
@@ -105,6 +106,12 @@ export const handle_preview_preset = async (
         })
     }
 
+    if (processed_completion_instructions.includes('#Skill:')) {
+      processed_completion_instructions = await replace_skill_symbol({
+        instruction: processed_completion_instructions
+      })
+    }
+
     const missing_text_tag = processed_completion_instructions
       ? `<missing_text>${processed_completion_instructions}</missing_text>`
       : '<missing_text>'
@@ -161,6 +168,12 @@ export const handle_preview_preset = async (
         instruction: processed_instructions,
         context: panel_provider.context,
         workspace_provider: panel_provider.workspace_provider
+      })
+    }
+
+    if (processed_instructions.includes('#Skill:')) {
+      processed_instructions = await replace_skill_symbol({
+        instruction: processed_instructions
       })
     }
 
