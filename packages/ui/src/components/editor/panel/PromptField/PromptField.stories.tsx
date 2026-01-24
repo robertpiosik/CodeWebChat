@@ -36,6 +36,7 @@ export const Empty = () => (
     on_pasted_lines_click={(path, start, end) =>
       console.log('Pasted lines clicked:', path, start, end)
     }
+    on_open_url={(url) => console.log('Open URL:', url)}
   />
 )
 
@@ -70,6 +71,7 @@ export const WithText = () => (
     on_pasted_lines_click={(path, start, end) =>
       console.log('Pasted lines clicked:', path, start, end)
     }
+    on_open_url={(url) => console.log('Open URL:', url)}
   />
 )
 
@@ -104,6 +106,7 @@ export const LongText = () => (
     on_pasted_lines_click={(path, start, end) =>
       console.log('Pasted lines clicked:', path, start, end)
     }
+    on_open_url={(url) => console.log('Open URL:', url)}
   />
 )
 
@@ -138,6 +141,7 @@ export const WithPlaceholderSavedContext = () => (
     on_pasted_lines_click={(path, start, end) =>
       console.log('Pasted lines clicked:', path, start, end)
     }
+    on_open_url={(url) => console.log('Open URL:', url)}
   />
 )
 
@@ -178,6 +182,7 @@ export const WithPlaceholderSelection = () => (
     on_pasted_lines_click={(path, start, end) =>
       console.log('Pasted lines clicked:', path, start, end)
     }
+    on_open_url={(url) => console.log('Open URL:', url)}
   />
 )
 
@@ -212,6 +217,7 @@ export const WithCommit = () => (
     on_pasted_lines_click={(path, start, end) =>
       console.log('Pasted lines clicked:', path, start, end)
     }
+    on_open_url={(url) => console.log('Open URL:', url)}
   />
 )
 
@@ -246,6 +252,7 @@ export const WithCommitWithQuotes = () => (
     on_pasted_lines_click={(path, start, end) =>
       console.log('Pasted lines clicked:', path, start, end)
     }
+    on_open_url={(url) => console.log('Open URL:', url)}
   />
 )
 export const WithContextAtCommit = () => (
@@ -279,6 +286,7 @@ export const WithContextAtCommit = () => (
     on_pasted_lines_click={(path, start, end) =>
       console.log('Pasted lines clicked:', path, start, end)
     }
+    on_open_url={(url) => console.log('Open URL:', url)}
   />
 )
 
@@ -316,6 +324,7 @@ export const WithEditFormatSelector = () => {
       on_pasted_lines_click={(path, start, end) =>
         console.log('Pasted lines clicked:', path, start, end)
       }
+      on_open_url={(url) => console.log('Open URL:', url)}
     />
   )
 }
@@ -351,5 +360,6 @@ export const WithFilePaths = () => (
     on_pasted_lines_click={(path, start, end) =>
       console.log('Pasted lines clicked:', path, start, end)
     }
+    on_open_url={(url) => console.log('Open URL:', url)}
   />
 )

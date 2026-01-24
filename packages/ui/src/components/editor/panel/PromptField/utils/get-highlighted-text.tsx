@@ -175,6 +175,15 @@ export const get_highlighted_text = (params: {
         const agent = skill_match[1]
         const repo = skill_match[2]
         const skill_name = skill_match[3]
+        let title = `Skill: ${skill_name} (${agent})`
+
+        if (repo && repo != 'local') {
+          const parts = repo.split(':')
+          if (parts.length == 2) {
+            title = `${parts[0]}/${parts[1]}`
+          }
+        }
+
         return `<span class="${cn(
           styles['keyword'],
           styles['keyword--skill']
@@ -182,9 +191,7 @@ export const get_highlighted_text = (params: {
           agent
         )}" data-repo="${escape_html(repo)}" data-skill-name="${escape_html(
           skill_name
-        )}" title="Skill: ${escape_html(skill_name)} (${escape_html(
-          agent
-        )})"><span class="${
+        )}" title="${escape_html(title)}"><span class="${
           styles['keyword__icon']
         }" data-role="keyword-icon"></span><span class="${
           styles['keyword__text']

@@ -494,6 +494,11 @@ export interface SavePruneContextInstructionsPrefixMessage extends BaseMessage {
   prefix: string
 }
 
+export interface OpenExternalUrlMessage extends BaseMessage {
+  command: 'OPEN_EXTERNAL_URL'
+  url: string
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -580,6 +585,7 @@ export type FrontendMessage =
   | UpdateFileProgressMessage
   | GetPruneContextInstructionsPrefixMessage
   | SavePruneContextInstructionsPrefixMessage
+  | OpenExternalUrlMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {

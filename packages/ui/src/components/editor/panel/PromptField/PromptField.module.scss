@@ -220,6 +220,18 @@
     content: '\ec59';
   }
 
+  &--skill &__text {
+    cursor: pointer;
+
+    &:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--vscode-charts-blue) 30%,
+        transparent
+      );
+    }
+  }
+
   &--changes &__icon::before {
     content: '\ebdb';
   }

@@ -500,6 +500,23 @@ export const use_handlers = (
         }
       }
 
+      const skill_keyword_element = text_element.closest<HTMLElement>(
+        '[data-type="skill-keyword"]'
+      )
+      if (skill_keyword_element) {
+        const repo = skill_keyword_element.dataset.repo
+        const skill_name = skill_keyword_element.dataset.skillName
+
+        if (repo && repo != 'local' && skill_name) {
+          const parts = repo.split(':')
+          if (parts.length == 2) {
+            const [user, repo_name] = parts
+            const url = `https://skills.sh/${user}/${repo_name}/${skill_name}`
+            props.on_open_url(url)
+          }
+        }
+      }
+
       if (input_ref.current) {
         input_ref.current.focus()
       }

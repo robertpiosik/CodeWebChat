@@ -63,6 +63,7 @@ type Props = {
   are_keyboard_shortcuts_disabled: boolean
   prune_context_instructions_prefix: string
   on_prune_context_instructions_prefix_change: (prefix: string) => void
+  on_open_url: (url: string) => void
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -818,6 +819,7 @@ export const Main: React.FC<Props> = (props) => {
       on_prune_context_instructions_prefix_change={
         props.on_prune_context_instructions_prefix_change
       }
+      on_open_url={props.on_open_url}
     />
   )
 }

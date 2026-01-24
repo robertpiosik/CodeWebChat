@@ -96,6 +96,7 @@ type Props = {
   currently_open_file_text?: string
   on_go_to_file: (file_path: string) => void
   on_pasted_lines_click: (path: string, start?: string, end?: string) => void
+  on_open_url: (url: string) => void
   are_keyboard_shortcuts_disabled: boolean
   prune_context_instructions_prefix: string
   on_prune_context_instructions_prefix_change: (prefix: string) => void
@@ -250,8 +251,8 @@ export const MainView: React.FC<Props> = (props) => {
             }
             context_file_paths={props.context_file_paths}
             on_go_to_file={props.on_go_to_file}
-            currently_open_file_text={props.currently_open_file_text}
             on_pasted_lines_click={props.on_pasted_lines_click}
+            on_open_url={props.on_open_url}
             invocation_count={current_invocation_count}
             on_invocation_count_change={handle_invocation_count_change}
             prune_context_instructions_prefix={

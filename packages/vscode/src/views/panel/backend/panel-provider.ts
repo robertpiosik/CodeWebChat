@@ -82,7 +82,8 @@ import {
   handle_cancel_intelligent_update_file_in_preview,
   handle_get_prune_context_instructions_prefix,
   handle_save_prune_context_instructions_prefix,
-  handle_open_file_and_select
+  handle_open_file_and_select,
+  handle_open_external_url
 } from './message-handlers'
 import { SelectionState } from '../types/messages'
 import {
@@ -744,6 +745,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             message.command == 'SAVE_PRUNE_CONTEXT_INSTRUCTIONS_PREFIX'
           ) {
             await handle_save_prune_context_instructions_prefix(message.prefix)
+          } else if (message.command == 'OPEN_EXTERNAL_URL') {
+            await handle_open_external_url(message)
           }
         } catch (error: any) {
           Logger.error({

@@ -222,6 +222,13 @@ export const Panel = () => {
     })
   }
 
+  const handle_open_url = (url: string) => {
+    post_message(vscode, {
+      command: 'OPEN_EXTERNAL_URL',
+      url
+    })
+  }
+
   const layout_context_value = {
     can_undo,
     has_changes_to_commit,
@@ -315,6 +322,7 @@ export const Panel = () => {
                 on_prune_context_instructions_prefix_change={
                   handle_prune_context_instructions_prefix_change
                 }
+                on_open_url={handle_open_url}
               />
             </div>
             <div

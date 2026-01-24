@@ -67,6 +67,7 @@ export type PromptFieldProps = {
   prune_context_instructions_prefix: string
   on_prune_context_instructions_prefix_change: (value: string) => void
   on_pasted_lines_click: (path: string, start?: string, end?: string) => void
+  on_open_url: (url: string) => void
 }
 
 export const PromptField: React.FC<PromptFieldProps> = (props) => {
