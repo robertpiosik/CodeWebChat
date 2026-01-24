@@ -32,17 +32,17 @@ Code Web Chat is a free and open-source AI coding toolkit **designed for speed a
 
 ## Introduction
 
-With its focus on context engineering, CWC addresses pitfalls of coding agents.
+With its **focus on context engineering**, CWC addresses pitfalls of coding agents.
 
 ### The problem
 
-We believe the **agentic context retrieval is inherently flawed**. Since the model has to first read the keyword-matched file to understand its role, **context pollution is inevitable**. That may cause it reason about wrong things, leading to regressions. These could be overwhelmingly hard to fix with the very approach that created them.
+We believe the **agentic context retrieval is inherently flawed**. Since the model has to first read the keyword-matched file to understand its role, **context is polluted by default**. That may cause it reason about wrong things, leading to regressions. These could be overwhelmingly hard to fix with the very approach that created them.
 
 ### The solution
 
-CWC proposes a **non-agentic approach**, where all the necessary for the task files, includnig useful examples, are picked with **engineer's intent**.
+CWC proposes a **non-agentic approach**, where all the necessary for the task files, includnig useful examples, are picked with **engineer's intent**. Such guided model is easy to prompt and as accurate as it can get.
 
-When pair-programming with Code Web Chat you foster codebase understanding, iterate on changes easier review, and enter the flow state like in the good old days!
+When pair-programming with Code Web Chat you **foster codebase understanding**, iterate on changes easier review, and enter the flow state like in the good old days!
 
 ## Enabling autofill in browser
 
