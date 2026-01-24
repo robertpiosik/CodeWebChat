@@ -1,4 +1,4 @@
-<p align="center">
+<p align="center" title="Code Web Chat">
   <a href="https://codeweb.chat">
     <picture>
       <source srcset="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/readme-heading-dark.svg" media="(prefers-color-scheme: dark)">

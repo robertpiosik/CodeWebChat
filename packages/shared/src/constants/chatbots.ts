@@ -194,15 +194,10 @@ export const CHATBOTS = {
   Together: {
     url: 'https://chat.together.ai/',
     models: {
-      'deepseek-r1-0528': { label: 'DeepSeek R1 (0528)' },
       'deepseek-v3.1': { label: 'DeepSeek V3.1' },
-      'glm-4.6': { label: 'GLM-4.6' },
+      'glm-4.7': { label: 'GLM-4.7' },
       'kimi-k2-thinking': { label: 'Kimi K2 Thinking' },
-      'kimi-k2-instruct-0905': { label: 'Kimi K2 Instruct (0905)' },
-      'gpt-oss-120b': { label: 'GPT OSS 120B' },
-      'llama-4-maverick': { label: 'Llama 4 Maverick' },
-      'flux-dev': { label: 'Flux Dev' },
-      'flux-kontext-pro': { label: 'Flux Kontext [Pro]' }
+      'gpt-oss-120b': { label: 'GPT OSS 120B' }
     }
   } as Chatbot,
   Yuanbao: {
