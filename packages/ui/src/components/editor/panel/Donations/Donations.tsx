@@ -84,7 +84,6 @@ export type DonationsProps = {
 
 export const Donations: React.FC<DonationsProps> = (props) => {
   const observer_target = useRef<HTMLDivElement>(null)
-  const [is_sponsors_collapsed, set_sponsors_collapsed] = useState(true)
   const [is_links_collapsed, set_links_collapsed] = useState(true)
   const [is_wallets_collapsed, set_wallets_collapsed] = useState(true)
 
@@ -149,23 +148,6 @@ export const Donations: React.FC<DonationsProps> = (props) => {
           <div className={styles.about}>
             Hey there! Donating is a great way to show your support for
             independent software development. Thank you.
-          </div>
-          <div className={styles.sponsors}>
-            <Fieldset
-              is_collapsed={is_sponsors_collapsed}
-              label="Sponsors"
-              on_toggle_collapsed={() =>
-                set_sponsors_collapsed(!is_sponsors_collapsed)
-              }
-            >
-              <div className={styles.sponsors__content}>
-                <p>
-                  Please{' '}
-                  <a href="https://github.com/robertpiosik">contact me</a> if
-                  you are interested in sponsorship.
-                </p>
-              </div>
-            </Fieldset>
           </div>
           <div className={styles.links}>
             <Fieldset

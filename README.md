@@ -36,7 +36,7 @@ With its focus on context engineering, CWC addresses pitfalls of coding agents.
 
 ### The problem
 
-We believe the agentic context retrieval is inherently flawed. Since the model has to first read the keyword-matched file to understand its role, context is polluted by default. That may cause it reason about wrong things, leading to regressions. These could be overwhelmingly hard to fix with the very approach that created them.
+We believe the agentic context retrieval is inherently flawed. Since the model has to first read the keyword-matched file to understand its role, context gets polluted by default. That may cause it reason about wrong things, leading to regressions. These could be overwhelmingly hard to fix with the very approach that created them.
 
 ### The solution
 
