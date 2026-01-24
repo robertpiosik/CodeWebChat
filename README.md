@@ -36,17 +36,13 @@ With its focus on context engineering, CWC addresses pitfalls of coding agents.
 
 ### The problem
 
-We believe that context management based on tool-calling is inherently flawed. Because the model can't know about a keyword-matched file's purpose until it's read the context window gets inevitably polluted. That may make the model reason about wrong things, possibly leading to regressions. These could be overwhelmingly hard to fix with the very approach that created them.
+We believe the **agentic approach of tool calling for context retrieval is inherently flawed**. Since the model has to first read the keyword-matched file to understand its role, **context pollution becomes inevitable**. That may make the model reason about wrong things, leading to regressions. These could be overwhelmingly hard to fix with the very approach that created them.
 
 ### The solution
 
-CWC proposes a non-agentic workflow, where context is picked by ticking checkboxes. With this level of control your instructions are simple and edits accurate.
+CWC proposes a **non-agentic workflow**, where all the necessary for the task files, includnig valuable examples, are picked with engineer's intent.
 
-Foster codebase understanding.
-
-Make code reviews a piece of cake.
-
-Enter the flow and have fun!
+When pair-programming with Code Web Chat you foster codebase understanding, iterate on changes that are easy to review, and enter the flow state like in the good old days of traditional coding!
 
 ## Enabling autofill in browser
 
