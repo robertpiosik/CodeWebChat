@@ -20,7 +20,7 @@ export const handle_save_history = async (
 ): Promise<void> => {
   let key: string | undefined
   let pinned_key: string | undefined
-  switch (message.mode) {
+  switch (message.prompt_type) {
     case 'ask-about-context':
       key = HISTORY_ASK_STATE_KEY
       pinned_key = PINNED_HISTORY_ASK_STATE_KEY

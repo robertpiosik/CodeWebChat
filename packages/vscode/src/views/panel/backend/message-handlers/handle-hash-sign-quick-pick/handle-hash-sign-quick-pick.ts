@@ -169,19 +169,19 @@ export const handle_hash_sign_quick_pick = async (
 
   let current_text = ''
 
-  const mode =
+  const prompt_type =
     panel_provider.mode == MODE.WEB
       ? panel_provider.web_prompt_type
       : panel_provider.api_prompt_type
-  if (mode == 'ask-about-context') {
+  if (prompt_type == 'ask-about-context') {
     current_text = panel_provider.ask_about_context_instructions
-  } else if (mode == 'edit-context') {
+  } else if (prompt_type == 'edit-context') {
     current_text = panel_provider.edit_context_instructions
-  } else if (mode == 'no-context') {
+  } else if (prompt_type == 'no-context') {
     current_text = panel_provider.no_context_instructions
-  } else if (mode == 'code-at-cursor') {
+  } else if (prompt_type == 'code-at-cursor') {
     current_text = panel_provider.code_at_cursor_instructions
-  } else if (mode == 'prune-context') {
+  } else if (prompt_type == 'prune-context') {
     current_text = panel_provider.prune_context_instructions
   }
 

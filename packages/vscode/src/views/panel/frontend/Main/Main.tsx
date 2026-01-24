@@ -34,7 +34,7 @@ type Props = {
   prune_context_instructions: string
   set_instructions: (
     value: string,
-    mode:
+    prompt_type:
       | 'ask-about-context'
       | 'edit-context'
       | 'no-context'
@@ -157,13 +157,13 @@ export const Main: React.FC<Props> = (props) => {
         case 'SELECTED_PRESET_OR_GROUP_CHANGED':
           set_selected_preset_or_group_name_by_mode((prev) => ({
             ...prev,
-            [message.mode]: message.name
+            [message.prompt_type]: message.name
           }))
           break
         case 'SELECTED_CONFIGURATION_CHANGED':
           set_selected_configuration_id_by_mode((prev) => ({
             ...prev,
-            [message.mode]: message.id
+            [message.prompt_type]: message.id
           }))
           break
       }
@@ -225,7 +225,7 @@ export const Main: React.FC<Props> = (props) => {
       post_message(props.vscode, {
         command: 'SAVE_HISTORY',
         messages: new_history,
-        mode: current_prompt_type
+        prompt_type: current_prompt_type
       })
     }
   }
@@ -429,7 +429,7 @@ export const Main: React.FC<Props> = (props) => {
 
       post_message(props.vscode, {
         command: 'REORDER_API_TOOL_CONFIGURATIONS',
-        mode: props.api_prompt_type,
+        prompt_type: props.api_prompt_type,
         configurations: reordered_api_tool_configs
       })
     }
@@ -439,7 +439,7 @@ export const Main: React.FC<Props> = (props) => {
     if (props.api_prompt_type) {
       post_message(props.vscode, {
         command: 'TOGGLE_PINNED_API_TOOL_CONFIGURATION',
-        mode: props.api_prompt_type,
+        prompt_type: props.api_prompt_type,
         configuration_id: id
       })
     }

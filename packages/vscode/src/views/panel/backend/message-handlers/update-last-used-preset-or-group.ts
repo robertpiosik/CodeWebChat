@@ -29,7 +29,7 @@ export const update_last_used_preset_or_group = (params: {
 
     params.panel_provider.send_message({
       command: 'SELECTED_PRESET_OR_GROUP_CHANGED',
-      mode: params.panel_provider.web_prompt_type,
+      prompt_type: params.panel_provider.web_prompt_type,
       name: name_to_save
     })
   }

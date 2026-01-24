@@ -67,7 +67,7 @@ export interface GetInstructionsMessage extends BaseMessage {
 export interface SaveInstructionsMessage extends BaseMessage {
   command: 'SAVE_INSTRUCTIONS'
   instruction: string
-  mode:
+  prompt_type:
     | 'ask-about-context'
     | 'edit-context'
     | 'code-at-cursor'
@@ -135,7 +135,7 @@ export interface GetResponseHistoryMessage extends BaseMessage {
 export interface SaveHistoryMessage extends BaseMessage {
   command: 'SAVE_HISTORY'
   messages: string[]
-  mode:
+  prompt_type:
     | 'ask-about-context'
     | 'edit-context'
     | 'code-at-cursor'
@@ -256,7 +256,7 @@ export interface GetWebPromptTypeMessage extends BaseMessage {
 
 export interface SaveWebPromptTypeMessage extends BaseMessage {
   command: 'SAVE_WEB_PROMPT_TYPE'
-  mode: WebPromptType
+  prompt_type: WebPromptType
 }
 
 export interface GetApiPromptTypeMessage extends BaseMessage {
@@ -265,7 +265,7 @@ export interface GetApiPromptTypeMessage extends BaseMessage {
 
 export interface SaveApiPromptTypeMessage extends BaseMessage {
   command: 'SAVE_API_PROMPT_TYPE'
-  mode: ApiPromptType
+  prompt_type: ApiPromptType
 }
 
 export interface GetApiToolConfigurationsMessage extends BaseMessage {
@@ -274,13 +274,13 @@ export interface GetApiToolConfigurationsMessage extends BaseMessage {
 
 export interface ReorderApiToolConfigurationsMessage extends BaseMessage {
   command: 'REORDER_API_TOOL_CONFIGURATIONS'
-  mode: ApiPromptType
+  prompt_type: ApiPromptType
   configurations: ApiToolConfiguration[]
 }
 
 export interface TogglePinnedApiToolConfigurationMessage extends BaseMessage {
   command: 'TOGGLE_PINNED_API_TOOL_CONFIGURATION'
-  mode: ApiPromptType
+  prompt_type: ApiPromptType
   configuration_id: string
 }
 
@@ -410,7 +410,7 @@ export interface SaveComponentCollapsedStateMessage extends BaseMessage {
   command: 'SAVE_COMPONENT_COLLAPSED_STATE'
   component: 'presets' | 'configurations' | 'timeline' | 'tasks'
   is_collapsed: boolean
-  mode?: WebPromptType | ApiPromptType
+  prompt_type?: WebPromptType | ApiPromptType
 }
 
 export interface GetCheckpointsMessage extends BaseMessage {
@@ -692,12 +692,12 @@ export interface ModeMessage extends BaseMessage {
 
 export interface WebPromptTypeMessage extends BaseMessage {
   command: 'WEB_PROMPT_TYPE'
-  mode: WebPromptType
+  prompt_type: WebPromptType
 }
 
 export interface ApiPromptTypeMessage extends BaseMessage {
   command: 'API_PROMPT_TYPE'
-  mode: ApiPromptType
+  prompt_type: ApiPromptType
 }
 
 export interface VersionMessage extends BaseMessage {
@@ -742,13 +742,13 @@ export interface WorkspaceStateMessage extends BaseMessage {
 
 export interface SelectedPresetOrGroupChangedMessage extends BaseMessage {
   command: 'SELECTED_PRESET_OR_GROUP_CHANGED'
-  mode: WebPromptType
+  prompt_type: WebPromptType
   name?: string
 }
 
 export interface SelectedConfigurationChangedMessage extends BaseMessage {
   command: 'SELECTED_CONFIGURATION_CHANGED'
-  mode: ApiPromptType
+  prompt_type: ApiPromptType
   id: string
 }
 

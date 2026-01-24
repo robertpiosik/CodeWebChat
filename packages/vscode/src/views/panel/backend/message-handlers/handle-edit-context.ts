@@ -71,7 +71,7 @@ const get_edit_context_config = async (
       if (panel_provider) {
         panel_provider.send_message({
           command: 'SELECTED_CONFIGURATION_CHANGED',
-          mode: 'edit-context',
+          prompt_type: 'edit-context',
           id: config_id
         })
       }
@@ -221,7 +221,7 @@ const get_edit_context_config = async (
           if (panel_provider) {
             panel_provider.send_message({
               command: 'SELECTED_CONFIGURATION_CHANGED',
-              mode: 'edit-context',
+              prompt_type: 'edit-context',
               id: selected.id!
             })
           }

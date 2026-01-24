@@ -61,7 +61,7 @@ const get_code_completion_config = async (
       if (panel_provider) {
         panel_provider.send_message({
           command: 'SELECTED_CONFIGURATION_CHANGED',
-          mode: 'code-at-cursor',
+          prompt_type: 'code-at-cursor',
           id: config_id
         })
       }
@@ -210,7 +210,7 @@ const get_code_completion_config = async (
           if (panel_provider) {
             panel_provider.send_message({
               command: 'SELECTED_CONFIGURATION_CHANGED',
-              mode: 'code-at-cursor',
+              prompt_type: 'code-at-cursor',
               id: selected.id
             })
           }

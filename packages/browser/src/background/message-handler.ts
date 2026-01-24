@@ -82,7 +82,7 @@ const process_next_chat = async () => {
       },
       client_id: current_chat_message.client_id,
       raw_instructions: current_chat_message.raw_instructions,
-      mode: current_chat_message.mode
+      prompt_type: current_chat_message.prompt_type
     }
   })
 

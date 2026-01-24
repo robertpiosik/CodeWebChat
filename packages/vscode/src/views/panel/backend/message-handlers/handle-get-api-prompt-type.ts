@@ -5,6 +5,6 @@ export const handle_get_api_prompt_type = (
 ): void => {
   panel_provider.send_message({
     command: 'API_PROMPT_TYPE',
-    mode: panel_provider.api_prompt_type
+    prompt_type: panel_provider.api_prompt_type
   })
 }

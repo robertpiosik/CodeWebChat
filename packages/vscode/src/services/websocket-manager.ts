@@ -267,7 +267,7 @@ export class WebSocketManager {
       preset_name: string
       raw_instructions?: string
       edit_format?: string
-      mode: any
+      prompt_type: any
     }>
     presets_config_key: string
   }): Promise<void> {
@@ -345,7 +345,7 @@ export class WebSocketManager {
         client_id: this.client_id || 0, // 0 is a temporary fallback and should be removed few weeks from 28.03.25
         raw_instructions: chat.raw_instructions,
         edit_format: chat.edit_format,
-        mode: chat.mode
+        prompt_type: chat.prompt_type
       }
 
       Logger.info({
@@ -362,7 +362,7 @@ export class WebSocketManager {
     instruction: string
     preset: Preset
     raw_instructions: string
-    mode: any
+    prompt_type: any
   }): Promise<void> {
     if (!this.has_connected_browsers) {
       throw new Error('Does not have connected browsers.')
@@ -433,7 +433,7 @@ export class WebSocketManager {
       options: params.preset.options,
       client_id: this.client_id || 0, // 0 is a temporary fallback and should be removed few weeks from 28.03.25
       raw_instructions: params.raw_instructions,
-      mode: params.mode
+      prompt_type: params.prompt_type
     }
 
     Logger.info({

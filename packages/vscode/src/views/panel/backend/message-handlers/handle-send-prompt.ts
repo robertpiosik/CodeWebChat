@@ -187,7 +187,7 @@ export const handle_send_prompt = async (params: {
         text,
         preset_name,
         raw_instructions: processed_completion_instructions,
-        mode: params.panel_provider.web_prompt_type
+        prompt_type: params.panel_provider.web_prompt_type
       }))
     })
 
@@ -295,7 +295,7 @@ export const handle_send_prompt = async (params: {
               }${processed_instructions}`,
           preset_name,
           raw_instructions: current_instructions,
-          mode: params.panel_provider.web_prompt_type,
+          prompt_type: params.panel_provider.web_prompt_type,
           edit_format:
             params.panel_provider.web_prompt_type == 'edit-context'
               ? params.panel_provider.chat_edit_format
@@ -324,19 +324,19 @@ export const handle_send_prompt = async (params: {
 async function show_preset_quick_pick(params: {
   presets: ConfigPresetFormat[]
   context: vscode.ExtensionContext
-  mode: WebPromptType
+  prompt_type: WebPromptType
   panel_provider: PanelProvider
   get_is_preset_disabled: (preset: ConfigPresetFormat) => boolean
   is_in_code_completions_mode: boolean
   current_instructions: string
 }): Promise<{ preset_names: string[] } | null> {
-  const { presets, context, mode, panel_provider } = params
+  const { presets, context, prompt_type, panel_provider } = params
 
   const quick_pick = vscode.window.createQuickPick<
     vscode.QuickPickItem & { preset_name?: string; group_name?: string }
   >()
 
-  const recents_key = get_recently_used_presets_or_groups_key(mode)
+  const recents_key = get_recently_used_presets_or_groups_key(prompt_type)
   const recent_names =
     context.workspaceState.get<string[]>(recents_key) ??
     context.globalState.get<string[]>(recents_key) ??
@@ -699,7 +699,7 @@ async function resolve_presets(params: {
   const resolution = await show_preset_quick_pick({
     presets: all_presets,
     context: params.context,
-    mode: params.panel_provider.web_prompt_type,
+    prompt_type: params.panel_provider.web_prompt_type,
     panel_provider: params.panel_provider,
     get_is_preset_disabled,
     is_in_code_completions_mode,

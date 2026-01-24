@@ -235,7 +235,7 @@ export const handle_preview_preset = async (
   panel_provider.websocket_server_instance.preview_preset({
     instruction: text_to_send,
     preset: preset_for_preview,
-    mode: panel_provider.web_prompt_type,
+    prompt_type: panel_provider.web_prompt_type,
     raw_instructions: current_instructions
   })
   vscode.window.showInformationMessage(

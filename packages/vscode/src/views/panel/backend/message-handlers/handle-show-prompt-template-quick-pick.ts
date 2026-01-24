@@ -14,17 +14,17 @@ const ADD_NEW_TEMPLATE_LABEL = '$(add) New prompt template...'
 export const handle_show_prompt_template_quick_pick = async (
   panel_provider: PanelProvider
 ): Promise<void> => {
-  const mode: WebPromptType | ApiPromptType | undefined =
+  const prompt_type: WebPromptType | ApiPromptType | undefined =
     panel_provider.mode == MODE.WEB
       ? panel_provider.web_prompt_type
       : panel_provider.api_prompt_type
 
-  if (!mode) {
+  if (!prompt_type) {
     return
   }
 
   let prompt_templates_key: string | undefined
-  switch (mode) {
+  switch (prompt_type) {
     case 'ask-about-context':
       prompt_templates_key = 'promptTemplatesForAskAboutContext'
       break

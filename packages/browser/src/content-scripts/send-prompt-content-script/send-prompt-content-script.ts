@@ -196,7 +196,7 @@ const main = async () => {
       client_id: number
       raw_instructions?: string
       edit_format?: string
-      mode?:
+      prompt_type?:
         | 'ask-about-context'
         | 'edit-context'
         | 'code-at-cursor'
@@ -235,9 +235,9 @@ const main = async () => {
 
     if (
       chatbot?.inject_apply_response_button &&
-      (stored_data.mode == 'edit-context' ||
-        stored_data.mode == 'code-at-cursor' ||
-        stored_data.mode == 'prune-context')
+      (stored_data.prompt_type == 'edit-context' ||
+        stored_data.prompt_type == 'code-at-cursor' ||
+        stored_data.prompt_type == 'prune-context')
     ) {
       sessionStorage.setItem(
         session_data_key,

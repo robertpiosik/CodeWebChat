@@ -14,12 +14,14 @@ export const handle_save_component_collapsed_state = async (
 ): Promise<void> => {
   if (message.component == 'presets') {
     await panel_provider.context.globalState.update(
-      get_presets_collapsed_state_key(message.mode as WebPromptType),
+      get_presets_collapsed_state_key(message.prompt_type as WebPromptType),
       message.is_collapsed
     )
   } else if (message.component == 'configurations') {
     await panel_provider.context.globalState.update(
-      get_configurations_collapsed_state_key(message.mode as ApiPromptType),
+      get_configurations_collapsed_state_key(
+        message.prompt_type as ApiPromptType
+      ),
       message.is_collapsed
     )
   } else if (message.component == 'timeline') {

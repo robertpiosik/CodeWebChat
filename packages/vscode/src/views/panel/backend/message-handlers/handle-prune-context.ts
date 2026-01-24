@@ -63,7 +63,7 @@ const get_prune_context_config = async (
       if (panel_provider) {
         panel_provider.send_message({
           command: 'SELECTED_CONFIGURATION_CHANGED',
-          mode: 'prune-context',
+          prompt_type: 'prune-context',
           id: config_id
         })
       }
@@ -213,7 +213,7 @@ const get_prune_context_config = async (
           if (panel_provider) {
             panel_provider.send_message({
               command: 'SELECTED_CONFIGURATION_CHANGED',
-              mode: 'prune-context',
+              prompt_type: 'prune-context',
               id: selected.id!
             })
           }

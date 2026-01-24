@@ -136,23 +136,26 @@ export const use_panel = (vscode: any) => {
 
   const handle_instructions_change = (
     value: string,
-    mode:
+    prompt_type:
       | 'ask-about-context'
       | 'edit-context'
       | 'no-context'
       | 'code-at-cursor'
       | 'prune-context'
   ) => {
-    if (mode == 'ask-about-context') set_ask_about_context_instructions(value)
-    else if (mode == 'edit-context') set_edit_context_instructions(value)
-    else if (mode == 'no-context') set_no_context_instructions(value)
-    else if (mode == 'code-at-cursor') set_code_at_cursor_instructions(value)
-    else if (mode == 'prune-context') set_prune_context_instructions(value)
+    if (prompt_type == 'ask-about-context')
+      set_ask_about_context_instructions(value)
+    else if (prompt_type == 'edit-context') set_edit_context_instructions(value)
+    else if (prompt_type == 'no-context') set_no_context_instructions(value)
+    else if (prompt_type == 'code-at-cursor')
+      set_code_at_cursor_instructions(value)
+    else if (prompt_type == 'prune-context')
+      set_prune_context_instructions(value)
 
     post_message(vscode, {
       command: 'SAVE_INSTRUCTIONS',
       instruction: value,
-      mode: mode
+      prompt_type: prompt_type
     })
   }
 
@@ -217,9 +220,9 @@ export const use_panel = (vscode: any) => {
       } else if (message.command == 'MODE') {
         set_mode(message.mode)
       } else if (message.command == 'WEB_PROMPT_TYPE') {
-        set_web_mode(message.mode)
+        set_web_mode(message.prompt_type)
       } else if (message.command == 'API_PROMPT_TYPE') {
-        set_api_mode(message.mode)
+        set_api_mode(message.prompt_type)
       } else if (message.command == 'COLLAPSED_STATES') {
         set_presets_collapsed_by_web_mode(message.presets_collapsed_by_web_mode)
         set_configurations_collapsed_by_api_mode(
@@ -449,23 +452,23 @@ export const use_panel = (vscode: any) => {
     })
   }
 
-  const handle_web_prompt_type_change = (new_mode: WebPromptType) => {
-    set_web_mode(new_mode)
+  const handle_web_prompt_type_change = (prompt_type: WebPromptType) => {
+    set_web_mode(prompt_type)
     set_chat_input_focus_and_select_key((k) => k + 1)
     set_main_view_scroll_reset_key((k) => k + 1)
     post_message(vscode, {
       command: 'SAVE_WEB_PROMPT_TYPE',
-      mode: new_mode
+      prompt_type: prompt_type
     })
   }
 
-  const handle_api_prompt_type_change = (new_mode: ApiPromptType) => {
-    set_api_mode(new_mode)
+  const handle_api_prompt_type_change = (prompt_type: ApiPromptType) => {
+    set_api_mode(prompt_type)
     set_chat_input_focus_and_select_key((k) => k + 1)
     set_main_view_scroll_reset_key((k) => k + 1)
     post_message(vscode, {
       command: 'SAVE_API_PROMPT_TYPE',
-      mode: new_mode
+      prompt_type: prompt_type
     })
   }
 
@@ -514,7 +517,7 @@ export const use_panel = (vscode: any) => {
       command: 'SAVE_COMPONENT_COLLAPSED_STATE',
       component: 'presets',
       is_collapsed,
-      mode: web_prompt_type
+      prompt_type: web_prompt_type
     })
   }
 
@@ -528,7 +531,7 @@ export const use_panel = (vscode: any) => {
       command: 'SAVE_COMPONENT_COLLAPSED_STATE',
       component: 'configurations',
       is_collapsed,
-      mode: api_prompt_type
+      prompt_type: api_prompt_type
     })
   }
 

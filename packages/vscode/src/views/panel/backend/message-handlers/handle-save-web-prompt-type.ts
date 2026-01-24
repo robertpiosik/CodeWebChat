@@ -3,8 +3,8 @@ import { WebPromptType } from '@shared/types/prompt-types'
 
 export const handle_save_web_prompt_type = async (
   panel_provider: PanelProvider,
-  mode: WebPromptType
+  prompt_type: WebPromptType
 ): Promise<void> => {
-  panel_provider.web_prompt_type = mode
-  await panel_provider.context.workspaceState.update('web-mode', mode)
+  panel_provider.web_prompt_type = prompt_type
+  await panel_provider.context.workspaceState.update('web-mode', prompt_type)
 }

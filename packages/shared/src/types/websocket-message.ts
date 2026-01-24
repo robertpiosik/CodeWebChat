@@ -23,7 +23,7 @@ export type InitializeChatMessage = {
   options?: string[]
   raw_instructions?: string
   edit_format?: string
-  mode?: any
+  prompt_type?: any
 }
 
 export type Website = {

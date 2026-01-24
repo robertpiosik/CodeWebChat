@@ -3,8 +3,8 @@ import { ApiPromptType } from '@shared/types/prompt-types'
 
 export const handle_save_api_prompt_type = async (
   panel_provider: PanelProvider,
-  mode: ApiPromptType
+  prompt_type: ApiPromptType
 ): Promise<void> => {
-  panel_provider.api_prompt_type = mode
-  await panel_provider.context.workspaceState.update('api-mode', mode)
+  panel_provider.api_prompt_type = prompt_type
+  await panel_provider.context.workspaceState.update('api-mode', prompt_type)
 }

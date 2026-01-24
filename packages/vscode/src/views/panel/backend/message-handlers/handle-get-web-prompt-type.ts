@@ -5,6 +5,6 @@ export const handle_get_web_prompt_type = (
 ): void => {
   panel_provider.send_message({
     command: 'WEB_PROMPT_TYPE',
-    mode: panel_provider.web_prompt_type
+    prompt_type: panel_provider.web_prompt_type
   })
 }

@@ -640,12 +640,12 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           ) {
             await handle_toggle_pinned_api_tool_configuration(this, message)
           } else if (message.command == 'SAVE_WEB_PROMPT_TYPE') {
-            await handle_save_web_prompt_type(this, message.mode)
+            await handle_save_web_prompt_type(this, message.prompt_type)
             this._update_providers_compact_mode()
           } else if (message.command == 'GET_API_PROMPT_TYPE') {
             handle_get_api_prompt_type(this)
           } else if (message.command == 'SAVE_API_PROMPT_TYPE') {
-            await handle_save_api_prompt_type(this, message.mode)
+            await handle_save_api_prompt_type(this, message.prompt_type)
             this._update_providers_compact_mode()
           } else if (message.command == 'GET_EDIT_FORMAT_INSTRUCTIONS') {
             handle_get_edit_format_instructions(this)
