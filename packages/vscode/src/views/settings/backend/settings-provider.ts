@@ -25,9 +25,7 @@ import {
   handle_get_checkpoint_lifespan,
   handle_reorder_configuration,
   handle_reorder_model_providers,
-  handle_set_default_code_completions_configuration,
-  handle_set_default_commit_messages_configuration,
-  handle_set_default_intelligent_update_configuration,
+  handle_set_default_configuration,
   handle_update_check_new_files,
   handle_update_clear_checks_in_workspace_behavior,
   handle_update_are_automatic_checkpoints_disabled,
@@ -133,7 +131,11 @@ export class SettingsProvider {
         } else if (
           message.command == 'SET_DEFAULT_CODE_COMPLETIONS_CONFIGURATION'
         ) {
-          await handle_set_default_code_completions_configuration(this, message)
+          await handle_set_default_configuration(
+            this,
+            message.configuration_id,
+            'code-completions'
+          )
         } else if (message.command == 'GET_EDIT_CONTEXT_CONFIGURATIONS') {
           await handle_get_configurations(this, 'edit-context')
         } else if (message.command == 'REORDER_EDIT_CONTEXT_CONFIGURATIONS') {
@@ -179,9 +181,10 @@ export class SettingsProvider {
         } else if (
           message.command == 'SET_DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION'
         ) {
-          await handle_set_default_intelligent_update_configuration(
+          await handle_set_default_configuration(
             this,
-            message
+            message.configuration_id,
+            'intelligent-update'
           )
         } else if (message.command == 'GET_PRUNE_CONTEXT_CONFIGURATIONS') {
           await handle_get_configurations(this, 'prune-context')
@@ -216,7 +219,11 @@ export class SettingsProvider {
         } else if (
           message.command == 'SET_DEFAULT_COMMIT_MESSAGES_CONFIGURATION'
         ) {
-          await handle_set_default_commit_messages_configuration(this, message)
+          await handle_set_default_configuration(
+            this,
+            message.configuration_id,
+            'commit-messages'
+          )
         } else if (message.command == 'GET_COMMIT_MESSAGE_INSTRUCTIONS') {
           await handle_get_commit_message_instructions(this)
         } else if (message.command == 'UPDATE_COMMIT_MESSAGE_INSTRUCTIONS') {
