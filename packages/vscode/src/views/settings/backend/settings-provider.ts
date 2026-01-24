@@ -23,12 +23,8 @@ import {
   handle_get_model_providers,
   handle_get_send_with_shift_enter,
   handle_get_checkpoint_lifespan,
-  handle_reorder_code_completions_configurations,
-  handle_reorder_commit_messages_configurations,
-  handle_reorder_edit_context_configurations,
-  handle_reorder_intelligent_update_configurations,
+  handle_reorder_configuration,
   handle_reorder_model_providers,
-  handle_reorder_prune_context_configurations,
   handle_set_default_code_completions_configuration,
   handle_set_default_commit_messages_configuration,
   handle_set_default_intelligent_update_configuration,
@@ -123,7 +119,11 @@ export class SettingsProvider {
         } else if (
           message.command == 'REORDER_CODE_COMPLETIONS_CONFIGURATIONS'
         ) {
-          await handle_reorder_code_completions_configurations(this, message)
+          await handle_reorder_configuration(
+            this,
+            message.configurations,
+            'code-completions'
+          )
         } else if (message.command == 'DELETE_CODE_COMPLETIONS_CONFIGURATION') {
           await handle_delete_configuration(
             this,
@@ -137,7 +137,11 @@ export class SettingsProvider {
         } else if (message.command == 'GET_EDIT_CONTEXT_CONFIGURATIONS') {
           await handle_get_configurations(this, 'edit-context')
         } else if (message.command == 'REORDER_EDIT_CONTEXT_CONFIGURATIONS') {
-          await handle_reorder_edit_context_configurations(this, message)
+          await handle_reorder_configuration(
+            this,
+            message.configurations,
+            'edit-context'
+          )
         } else if (message.command == 'DELETE_EDIT_CONTEXT_CONFIGURATION') {
           await handle_delete_configuration(
             this,
@@ -159,7 +163,11 @@ export class SettingsProvider {
         } else if (
           message.command == 'REORDER_INTELLIGENT_UPDATE_CONFIGURATIONS'
         ) {
-          await handle_reorder_intelligent_update_configurations(this, message)
+          await handle_reorder_configuration(
+            this,
+            message.configurations,
+            'intelligent-update'
+          )
         } else if (
           message.command == 'DELETE_INTELLIGENT_UPDATE_CONFIGURATION'
         ) {
@@ -178,7 +186,11 @@ export class SettingsProvider {
         } else if (message.command == 'GET_PRUNE_CONTEXT_CONFIGURATIONS') {
           await handle_get_configurations(this, 'prune-context')
         } else if (message.command == 'REORDER_PRUNE_CONTEXT_CONFIGURATIONS') {
-          await handle_reorder_prune_context_configurations(this, message)
+          await handle_reorder_configuration(
+            this,
+            message.configurations,
+            'prune-context'
+          )
         } else if (message.command == 'DELETE_PRUNE_CONTEXT_CONFIGURATION') {
           await handle_delete_configuration(
             this,
@@ -190,7 +202,11 @@ export class SettingsProvider {
         } else if (
           message.command == 'REORDER_COMMIT_MESSAGES_CONFIGURATIONS'
         ) {
-          await handle_reorder_commit_messages_configurations(this, message)
+          await handle_reorder_configuration(
+            this,
+            message.configurations,
+            'commit-messages'
+          )
         } else if (message.command == 'DELETE_COMMIT_MESSAGES_CONFIGURATION') {
           await handle_delete_configuration(
             this,
