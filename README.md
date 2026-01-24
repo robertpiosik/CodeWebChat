@@ -22,7 +22,7 @@ Code Web Chat is a free and open-source AI coding toolkit. You can use CWC in **
 - APIs—_Gemini API, OpenRouter, local Ollama, etc._
 
 💅 **Apply responses**—interactive edits integration with checkpoints for state restoration \
-🤙 **Fully-featured**—code completions with reasoning models, commit messages, and more \
+🤙 **Fully-featured**—code completions, commit messages, checkpoints, skills, and more \
 🫰 **Cost-efficient**—zero-overhead prompts optimized for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching) \
 ✋ **Privacy-first**—zero telemetry, operates 100% on your machine
 
@@ -36,14 +36,14 @@ With its focus on context engineering, CWC addresses pitfalls of coding agents.
 
 ### The problem
 
-We believe the agentic context retrieval is inherently flawed. Since the model has to first read the keyword-matched file to understand its role, the context window gets polluted by default. That may cause it reason about wrong things, leading to regressions. These could be overwhelmingly hard to fix with the very approach that created them.
+We believe the agentic context retrieval is inherently flawed. Since the model has to first read the keyword-matched file to understand its role and multi-turns are encouraged, the context window gets polluted by default. That may cause the model to reason about wrong things, possibly leading to regressions. These could be overwhelmingly hard to fix with the very approach that created them.
 
 ### The solution
 
 CWC proposes a non-agentic approach, where all the necessary for the task files, includnig useful examples, are picked with engineer's intent. Such guided model is easy to prompt and as accurate as it can get.
 
 > [!TIP]
-> Don't worry if you're unsure what files to choose. The _Prune context_ prompt type will help you filter out noise.
+> Use the prompt type _Prune context_ to narrow down roughly picked context.
 
 When pair-programming with Code Web Chat you foster codebase understanding, iterate on changes easier to review, and enter the flow state like in the good old days!
 
