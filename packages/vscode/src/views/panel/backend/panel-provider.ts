@@ -259,6 +259,14 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
     this._watch_git_state()
 
+    this.context.subscriptions.push(
+      vscode.workspace.onDidChangeWorkspaceFolders(() => {
+        handle_get_tasks(this)
+        handle_get_workspace_state(this)
+        this.send_context_files()
+      })
+    )
+
     this._config_listener = vscode.workspace.onDidChangeConfiguration(
       (event) => {
         if (!this._webview_view) return
