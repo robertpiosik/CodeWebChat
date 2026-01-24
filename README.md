@@ -32,15 +32,7 @@ Code Web Chat is a free and open-source AI coding toolkit. You can use CWC in **
 
 ## Introduction
 
-With its focus on context engineering, CWC addresses pitfalls of coding agents.
-
-### The problem
-
-We believe the agentic context retrieval is inherently flawed. Since the model has to first read the keyword-matched file to understand its role and multi-turns are encouraged, the context window gets polluted by default. That may cause the model to reason about wrong things, possibly leading to regressions. These could be overwhelmingly hard to fix with the very approach that created them.
-
-### The solution
-
-CWC proposes a non-agentic approach, where all the necessary for the task files, includnig useful examples, are picked with engineer's intent. Such guided model is easy to prompt and as accurate as it can get.
+With its focus on context engineering, CWC proposes a non-agentic approach, where all the necessary for the task files, includnig useful examples, are picked with engineer's intent. Such guided model is easy to prompt and as accurate as it can get.
 
 > [!TIP]
 > The prompt type _Prune context_ will help you narrow down roughly picked context.

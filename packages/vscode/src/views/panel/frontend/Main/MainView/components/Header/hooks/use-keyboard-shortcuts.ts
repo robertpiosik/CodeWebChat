@@ -10,8 +10,8 @@ import {
 type UseKeyboardShortcutsParams = {
   mode: Mode
   handle_heading_click: () => void
-  on_web_prompt_type_change: (mode: WebPromptType) => void
-  on_api_prompt_type_change: (mode: ApiPromptType) => void
+  on_web_prompt_type_change: (prompt_type: WebPromptType) => void
+  on_api_prompt_type_change: (prompt_type: ApiPromptType) => void
   on_show_home: () => void
   is_disabled: boolean
 }

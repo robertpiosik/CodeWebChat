@@ -19,8 +19,8 @@ type Props = {
   on_show_home: () => void
   web_prompt_type: WebPromptType
   api_prompt_type: ApiPromptType
-  on_web_prompt_type_change: (mode: WebPromptType) => void
-  on_api_prompt_type_change: (mode: ApiPromptType) => void
+  on_web_prompt_type_change: (prompt_type: WebPromptType) => void
+  on_api_prompt_type_change: (prompt_type: ApiPromptType) => void
   on_quick_action_click: (command: string) => void
   are_keyboard_shortcuts_disabled: boolean
 }
