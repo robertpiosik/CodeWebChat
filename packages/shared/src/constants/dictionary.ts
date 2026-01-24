@@ -80,7 +80,8 @@ export const dictionary = {
     PRESET_PREVIEW_SENT_TO_BROWSER:
       'Preset preview sent to the connected browser.',
     DELETED_CONTEXT_FROM_ALL_ROOTS: 'Deleted context.',
-    NO_HISTORY_FOR_MODE: 'No history to show for the current mode.',
+    NO_HISTORY_FOR_PROMPT_TYPE:
+      'No history to show for the current prompt type.',
     NO_TEXT_SELECTED_FOR_SELECTION_PLACEHOLDER:
       'No text selected for #Selection placeholder.',
     NOTHING_TO_DELETE: 'Nothing to delete.',

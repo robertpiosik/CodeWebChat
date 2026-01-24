@@ -200,8 +200,8 @@ const main = async () => {
         | 'ask-about-context'
         | 'edit-context'
         | 'code-at-cursor'
-        | 'no-context'
         | 'prune-context'
+        | 'no-context'
     }
 
     if (!stored_data) {

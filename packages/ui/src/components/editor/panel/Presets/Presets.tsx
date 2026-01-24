@@ -47,8 +47,8 @@ export namespace Presets {
       | 'ask-about-context'
       | 'edit-context'
       | 'code-at-cursor'
-      | 'no-context'
       | 'prune-context'
+      | 'no-context'
     is_connected: boolean
     has_instructions: boolean
     is_in_code_completions_mode: boolean

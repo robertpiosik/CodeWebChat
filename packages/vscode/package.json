@@ -449,16 +449,6 @@
           "group": "navigation@3"
         },
         {
-          "command": "codeWebChat.newFile",
-          "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@6"
-        },
-        {
-          "command": "codeWebChat.newFolder",
-          "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@7"
-        },
-        {
           "command": "codeWebChat.collapseFolders",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@8"

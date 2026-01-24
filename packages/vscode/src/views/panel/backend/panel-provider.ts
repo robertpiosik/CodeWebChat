@@ -766,9 +766,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const web_prompt_types: WebPromptType[] = [
       'ask-about-context',
+      'prune-context',
       'edit-context',
       'code-at-cursor',
-      'prune-context',
       'no-context'
     ]
     const mode_to_config_key: Record<WebPromptType, string> = {

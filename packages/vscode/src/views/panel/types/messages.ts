@@ -70,9 +70,9 @@ export interface SaveInstructionsMessage extends BaseMessage {
   mode:
     | 'ask-about-context'
     | 'edit-context'
-    | 'no-context'
     | 'code-at-cursor'
     | 'prune-context'
+    | 'no-context'
 }
 
 export interface GetEditFormat extends BaseMessage {
@@ -138,9 +138,9 @@ export interface SaveHistoryMessage extends BaseMessage {
   mode:
     | 'ask-about-context'
     | 'edit-context'
-    | 'no-context'
     | 'code-at-cursor'
     | 'prune-context'
+    | 'no-context'
 }
 
 export interface GetContextSizeWarningThresholdMessage extends BaseMessage {
