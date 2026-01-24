@@ -42,7 +42,7 @@ We believe the **agentic context retrieval is inherently flawed**. Since the mod
 
 CWC proposes a **non-agentic approach**, where all the necessary for the task files, includnig useful examples, are picked with **engineer's intent**.
 
-When pair-programming with Code Web Chat you foster codebase understanding, iterate on changes easier review, and enter the flow state like in the good old days of traditional coding!
+When pair-programming with Code Web Chat you foster codebase understanding, iterate on changes easier review, and enter the flow state like in the good old days!
 
 ## Enabling autofill in browser
 
