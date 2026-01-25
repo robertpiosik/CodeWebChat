@@ -444,6 +444,16 @@
           "group": "navigation@5"
         },
         {
+          "command": "codeWebChat.newFolder",
+          "when": "view == codeWebChatViewWorkspace",
+          "group": "navigation@6"
+        },
+        {
+          "command": "codeWebChat.newFile",
+          "when": "view == codeWebChatViewWorkspace",
+          "group": "navigation@7"
+        },
+        {
           "command": "codeWebChat.copyContext",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@3"
@@ -560,12 +570,12 @@
         {
           "command": "codeWebChat.rename",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "1_modification@1"
+          "group": "1_creation@3"
         },
         {
           "command": "codeWebChat.delete",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "1_modification@2"
+          "group": "1_creation@4"
         },
         {
           "command": "codeWebChat.referenceInPrompt",
