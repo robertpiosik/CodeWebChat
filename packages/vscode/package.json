@@ -107,6 +107,16 @@
         "icon": "$(copy)"
       },
       {
+        "command": "codeWebChat.undoContextSelection",
+        "title": "Undo Context Selection",
+        "category": "Code Web Chat"
+      },
+      {
+        "command": "codeWebChat.redoContextSelection",
+        "title": "Redo Context Selection",
+        "category": "Code Web Chat"
+      },
+      {
         "command": "codeWebChat.duplicateWorkspace",
         "title": "Duplicate Workspace in New Window",
         "category": "Code Web Chat",
@@ -535,22 +545,22 @@
         {
           "command": "codeWebChat.checkParentFolder",
           "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
-          "group": "1_modification@3"
+          "group": "2_modification@1"
         },
         {
           "command": "codeWebChat.referenceInPrompt",
           "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
-          "group": "1_modification@4"
+          "group": "2_modification@2"
         },
         {
           "command": "codeWebChat.revealInExplorer",
           "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
-          "group": "1_modification@5"
+          "group": "2_modification@3"
         },
         {
           "command": "codeWebChat.setRange",
           "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
-          "group": "1_modification@6"
+          "group": "2_modification@4"
         },
         {
           "command": "codeWebChat.openInIntegratedTerminal",

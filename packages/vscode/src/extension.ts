@@ -10,6 +10,7 @@ import {
   migrate_saved_contexts_to_global_storage,
   migrate_token_cache_cleanup
 } from './migrations'
+import { SharedFileState } from './context/shared-file-state'
 import {
   apply_chat_response_command,
   add_file_to_context_command,
@@ -169,6 +170,14 @@ export async function activate(context: vscode.ExtensionContext) {
           })
         }
       }
+    ),
+    vscode.commands.registerCommand(
+      'codeWebChat.undoContextSelection',
+      async () => SharedFileState.get_instance().undo()
+    ),
+    vscode.commands.registerCommand(
+      'codeWebChat.redoContextSelection',
+      async () => SharedFileState.get_instance().redo()
     ),
     vscode.commands.registerCommand(
       'codeWebChat.openInIntegratedTerminal',

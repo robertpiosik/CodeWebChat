@@ -164,7 +164,11 @@ export const context_initialization = async (
   }
 
   const shared_state = SharedFileState.get_instance()
-  shared_state.set_providers(workspace_provider, open_editors_provider)
+  shared_state.set_providers(
+    workspace_provider,
+    open_editors_provider,
+    websites_provider
+  )
 
   workspace_provider.load_checked_files_state()
   websites_provider.load_checked_websites_state()

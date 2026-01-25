@@ -5,4 +5,4 @@ export type WebPromptType =
   | 'prune-context'
   | 'no-context'
 
-export type ApiPromptType = 'edit-context' | 'code-at-cursor' | 'prune-context'
+export type ApiPromptType = 'edit-context' | 'prune-context' | 'code-at-cursor'

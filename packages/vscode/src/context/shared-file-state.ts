@@ -6,6 +6,12 @@ import {
   FileItem
 } from './providers/workspace/workspace-provider'
 import { OpenEditorsProvider } from './providers/open-editors/open-editors-provider'
+import { WebsitesProvider } from './providers/websites/websites-provider'
+
+type ContextState = {
+  files: string[]
+  websites: string[]
+}
 
 export class SharedFileState {
   private static _instance: SharedFileState
@@ -13,14 +19,19 @@ export class SharedFileState {
   readonly onDidChangeCheckedFiles = this._on_did_change_checked_files.event
 
   private _workspace_provider?: WorkspaceProvider
+  private _websites_provider?: WebsitesProvider
   private _open_editors_provider?: OpenEditorsProvider
   private _checked_files: Set<string> = new Set()
+  private _checked_websites: Set<string> = new Set()
   // Track which view last unchecked a file
   private _unchecked_in_open_editors: Set<string> = new Set()
   private _unchecked_in_workspace: Set<string> = new Set()
   private _synchronizing_provider: 'workspace' | 'openEditors' | null = null
   private _is_synchronizing: boolean = false
   private _is_initialized: boolean = false
+  private _is_undoing_redoing: boolean = false
+  private _undo_stack: ContextState[] = []
+  private _redo_stack: ContextState[] = []
 
   static get_instance(): SharedFileState {
     if (!SharedFileState._instance) {
@@ -31,13 +42,15 @@ export class SharedFileState {
 
   set_providers(
     workspace_provider: WorkspaceProvider,
-    open_editors_provider: OpenEditorsProvider
+    open_editors_provider: OpenEditorsProvider,
+    websites_provider?: WebsitesProvider
   ) {
     this._workspace_provider = workspace_provider
     this._open_editors_provider = open_editors_provider
+    this._websites_provider = websites_provider
 
     workspace_provider.onDidChangeCheckedFiles(() => {
-      if (!this._is_synchronizing) {
+      if (!this._is_synchronizing && !this._is_undoing_redoing) {
         this._synchronizing_provider = 'workspace'
         this.synchronize_state()
         this._synchronizing_provider = null
@@ -45,25 +58,119 @@ export class SharedFileState {
     })
 
     open_editors_provider.onDidChangeCheckedFiles(() => {
-      if (!this._is_synchronizing) {
+      if (!this._is_synchronizing && !this._is_undoing_redoing) {
         this._synchronizing_provider = 'openEditors'
         this.synchronize_state()
         this._synchronizing_provider = null
       }
     })
 
+    if (websites_provider) {
+      websites_provider.onDidChangeCheckedWebsites(() => {
+        if (!this._is_undoing_redoing) {
+          this.handle_websites_change()
+        }
+      })
+    }
+
     // Initialize with a synchronization after a small delay to ensure both providers are ready
     setTimeout(() => {
       if (!this._is_initialized) {
         this.synchronize_state()
+        if (this._websites_provider) {
+          const websites = this._websites_provider
+            .get_checked_websites()
+            .map((w) => w.url)
+          this._checked_websites = new Set(websites)
+        }
         this._is_initialized = true
       }
     }, 1000)
   }
 
+  private push_state(files: string[], websites: string[]) {
+    if (!this._is_initialized) return
+    this._undo_stack.push({ files, websites })
+    if (this._undo_stack.length > 50) this._undo_stack.shift()
+    this._redo_stack = []
+  }
+
+  private handle_websites_change() {
+    if (this._is_undoing_redoing) return
+
+    const current_websites =
+      this._websites_provider
+        ?.get_checked_websites()
+        .map((w) => w.url)
+        .sort() || []
+    const prev_websites = Array.from(this._checked_websites).sort()
+
+    if (JSON.stringify(prev_websites) !== JSON.stringify(current_websites)) {
+      this.push_state(
+        Array.from(this._checked_files).sort(),
+        Array.from(this._checked_websites).sort()
+      )
+      this._checked_websites = new Set(current_websites)
+    }
+  }
+
+  async undo() {
+    if (this._undo_stack.length === 0) return
+
+    const current_state = {
+      files: Array.from(this._checked_files).sort(),
+      websites: Array.from(this._checked_websites).sort()
+    }
+    this._redo_stack.push(current_state)
+
+    const previous_state = this._undo_stack.pop()
+    if (previous_state) {
+      this._is_undoing_redoing = true
+      await this.apply_state(previous_state)
+      this._is_undoing_redoing = false
+    }
+  }
+
+  async redo() {
+    if (this._redo_stack.length === 0) return
+
+    const current_state = {
+      files: Array.from(this._checked_files).sort(),
+      websites: Array.from(this._checked_websites).sort()
+    }
+    this._undo_stack.push(current_state)
+
+    const next_state = this._redo_stack.pop()
+    if (next_state) {
+      this._is_undoing_redoing = true
+      await this.apply_state(next_state)
+      this._is_undoing_redoing = false
+    }
+  }
+
+  async apply_state(state: ContextState) {
+    if (this._workspace_provider) {
+      await this._workspace_provider.set_checked_files(state.files)
+    }
+    if (this._open_editors_provider) {
+      await this._open_editors_provider.set_checked_files(state.files)
+    }
+    if (this._websites_provider) {
+      this._websites_provider.set_checked_websites(state.websites)
+    }
+
+    this.update_checked_files_set()
+    this._checked_websites = new Set(state.websites)
+
+    this._on_did_change_checked_files.fire()
+  }
+
   async synchronize_state() {
     if (!this._workspace_provider || !this._open_editors_provider) return
     if (this._is_synchronizing) return
+
+    const prev_files = Array.from(this._checked_files).sort()
+    const prev_websites = Array.from(this._checked_websites).sort()
 
     this._is_synchronizing = true
 
@@ -144,6 +251,14 @@ export class SharedFileState {
       this.update_checked_files_set()
 
       this._on_did_change_checked_files.fire()
+
+      const curr_files = Array.from(this._checked_files).sort()
+
+      if (!this._is_undoing_redoing && this._is_initialized) {
+        if (JSON.stringify(prev_files) !== JSON.stringify(curr_files)) {
+          this.push_state(prev_files, prev_websites)
+        }
+      }
     } finally {
       this._is_synchronizing = false
     }

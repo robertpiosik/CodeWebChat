@@ -152,6 +152,22 @@ export class WebsitesProvider
     }
   }
 
+  set_checked_websites(urls: string[]): void {
+    this._checked_websites.clear()
+
+    // Only check websites that are currently in the list
+    const valid_urls = new Set(this._websites.map((w) => w.url))
+
+    for (const url of urls) {
+      if (valid_urls.has(url)) {
+        this._checked_websites.set(url, vscode.TreeItemCheckboxState.Checked)
+      }
+    }
+
+    this._onDidChangeCheckedWebsites.fire()
+    this._onDidChangeTreeData.fire()
+  }
+
   clear_checks(): void {
     if (this._checked_websites.size == 0) {
       return

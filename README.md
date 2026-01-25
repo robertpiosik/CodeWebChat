@@ -32,7 +32,7 @@ Code Web Chat is a free and open-source AI coding toolkit. You can use CWC in **
 
 ## Introduction
 
-With its focus on context engineering, CWC proposes a non-agentic workflow, where all the necessary for the task files, includnig useful examples, are picked with engineer's intent. Such guided model is easy to prompt and as accurate as it can get. It's a perfect companion for all kinds of coding tasks; from mass renamings to features.
+With its focus on context engineering, CWC proposes a non-agentic workflow, where all the necessary for the task files, includnig useful examples, are picked with engineer's intent. Such guided model is easy to prompt and as accurate as it can get. The tool a perfect companion for all kinds of coding tasks; from mass renamings to complex features.
 
 > [!TIP]
 > Feeling lost in the codebase? Pick context roughly, switch prompt type to _Prune context_, include your task and AI will help narrowing it down to reasonable size.
@@ -118,7 +118,8 @@ Meaningful summaries of changes adhering to your style.
 - `Code Web Chat: Remove File from Context` - Search and remove file (or parent folder via file action) from the context.
 - `Code Web Chat: Copy Context` - Copy XML-formatted checked files from the Workspace view to the clipboard.
 - `Code Web Chat: Copy Context of Open Editors` - Copy XML-formatted checked files from the Open Editors view to the clipboard.
-- `Code Web Chat: Find Paths in Clipboard` - Select files based on paths found in the clipboard text.
+- `Code Web Chat: Undo Context Selection` - Undo the last context change.
+- `Code Web Chat: Redo Context Selection` - Redo the last undone context change.
 
 ## Contributing
 

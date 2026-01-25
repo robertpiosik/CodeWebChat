@@ -13,8 +13,8 @@ export const WEB_PROMPT_TYPES = Object.keys(
 
 export const api_prompt_type_labels: Record<ApiPromptType, string> = {
   'edit-context': 'Edit context',
-  'code-at-cursor': 'Code at cursor',
-  'prune-context': 'Prune context'
+  'prune-context': 'Prune context',
+  'code-at-cursor': 'Code at cursor'
 }
 export const API_PROMPT_TYPES = Object.keys(
   api_prompt_type_labels
