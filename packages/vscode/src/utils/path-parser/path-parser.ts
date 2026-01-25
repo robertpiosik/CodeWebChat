@@ -6,7 +6,7 @@ export enum ParserState {
   IN_PATH = 'IN_PATH'
 }
 
-export function extract_paths_from_text(text: string): string[] {
+export const extract_paths_from_text = (text: string): string[] => {
   const paths: string[] = []
   let current_path = ''
   let state = ParserState.DEFAULT
@@ -98,11 +98,11 @@ export function extract_paths_from_text(text: string): string[] {
     .filter((path) => is_potential_file_path(path))
 }
 
-function is_path_start_char(char: string): boolean {
+const is_path_start_char = (char: string): boolean => {
   return /[a-zA-Z0-9_.\-~/@]/.test(char)
 }
 
-function is_potential_file_path(path: string): boolean {
+const is_potential_file_path = (path: string): boolean => {
   const trimmed = path.trim()
   if (trimmed.length == 0) return false
 

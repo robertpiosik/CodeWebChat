@@ -6,7 +6,7 @@ import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 
 // Helper to replace fs.existsSync with a non-throwing async version
-async function uri_exists(uri: vscode.Uri): Promise<boolean> {
+const uri_exists = async (uri: vscode.Uri): Promise<boolean> => {
   try {
     await vscode.workspace.fs.stat(uri)
     return true

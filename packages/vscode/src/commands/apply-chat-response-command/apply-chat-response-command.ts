@@ -377,7 +377,9 @@ export const apply_chat_response_command = (params: {
   )
 }
 
-async function restore_tab_groups(saved_state: SavedTabGroups): Promise<void> {
+const restore_tab_groups = async (
+  saved_state: SavedTabGroups
+): Promise<void> => {
   try {
     const current_editors: SavedEditorState[] = []
     for (const tab_group of vscode.window.tabGroups.all) {

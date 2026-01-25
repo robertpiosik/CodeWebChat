@@ -9,11 +9,11 @@ import {
   type DuplicateWorkspaceContext
 } from '../constants/state-keys'
 
-export function duplicate_workspace_command(
+export const duplicate_workspace_command = (
   workspace_provider: WorkspaceProvider,
   websites_provider: WebsitesProvider,
   context: vscode.ExtensionContext
-) {
+) => {
   return vscode.commands.registerCommand(
     'codeWebChat.duplicateWorkspace',
     async () => {

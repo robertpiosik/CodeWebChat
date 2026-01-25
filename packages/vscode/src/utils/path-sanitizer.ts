@@ -7,7 +7,7 @@ import * as path from 'path'
  * @param name The raw name input from the user
  * @returns A sanitized version of the name with dangerous characters removed
  */
-export function sanitize_file_name(name: string): string {
+export const sanitize_file_name = (name: string): string => {
   // Remove path traversal sequences
   let sanitized = name.replace(/\.\.\//g, '').replace(/\.\.\\/g, '')
 
@@ -29,10 +29,10 @@ export function sanitize_file_name(name: string): string {
  * @param file_name The filename to append (can include nested path segments)
  * @returns A safe file path or null if path traversal was detected
  */
-export function create_safe_path(
+export const create_safe_path = (
   parent_path: string,
   file_name: string
-): string | null {
+): string | null => {
   const sanitized_name = sanitize_file_name(file_name)
   if (!sanitized_name) {
     return null // Return null if sanitization results in empty string

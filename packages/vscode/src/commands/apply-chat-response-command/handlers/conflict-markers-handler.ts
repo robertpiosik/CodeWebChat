@@ -266,7 +266,7 @@ export const handle_conflict_markers = async (
   }
 }
 
-function parse_conflict_segments(content: string): Segment[] {
+const parse_conflict_segments = (content: string): Segment[] => {
   const lines = content.split('\n')
   const segments: Segment[] = []
   let current_lines: string[] = []
@@ -345,10 +345,10 @@ function parse_conflict_segments(content: string): Segment[] {
   return segments
 }
 
-function apply_conflict_markers_to_content(
+const apply_conflict_markers_to_content = (
   original_content: string,
   markers_content: string
-): string {
+): string => {
   let current_content = original_content
   const segments = parse_conflict_segments(markers_content)
   let cursor = 0

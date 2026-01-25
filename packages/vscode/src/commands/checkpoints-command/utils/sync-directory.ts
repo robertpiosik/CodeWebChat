@@ -2,12 +2,12 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 
-async function count_sync_operations(params: {
+const count_sync_operations = async (params: {
   source_dir: vscode.Uri
   dest_dir: vscode.Uri
   root_path: string
   workspace_provider: WorkspaceProvider
-}): Promise<number> {
+}): Promise<number> => {
   let count = 0
 
   try {

@@ -1,9 +1,9 @@
+import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
 import * as vscode from 'vscode'
-import { OpenEditorsProvider } from '../context/providers/open-editors-provider'
 
-export function open_file_from_workspace_command(
+export const open_file_from_workspace_command = (
   open_editors_provider?: OpenEditorsProvider
-) {
+) => {
   return vscode.commands.registerCommand(
     'codeWebChat.openFileFromWorkspace',
     async (uri: vscode.Uri) => {

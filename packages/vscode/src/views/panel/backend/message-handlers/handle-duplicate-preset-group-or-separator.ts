@@ -4,10 +4,10 @@ import { dictionary } from '@shared/constants/dictionary'
 import { DuplicatePresetGroupOrSeparatorMessage } from '@/views/panel/types/messages'
 import { ConfigPresetFormat } from '@/views/panel/backend/utils/preset-format-converters'
 
-function generate_unique_name(
+const generate_unique_name = (
   base_name: string | undefined,
   all_presets: ConfigPresetFormat[]
-): string {
+): string => {
   const preset_name = base_name ?? ''
 
   const parenthetical_match = preset_name.match(/^(.*?)(?:\s*\((\d+)\))?$/)

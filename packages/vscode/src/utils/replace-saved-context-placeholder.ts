@@ -8,10 +8,10 @@ import { resolve_context_paths } from '@/commands/apply-context-command/helpers/
 import { load_and_merge_global_contexts } from '@/commands/apply-context-command/helpers/saving/global-storage-utils'
 import { load_and_merge_file_contexts } from '@/commands/apply-context-command/sources/json-file-source'
 
-async function get_file_content_as_xml(
+const get_file_content_as_xml = async (
   file_path: string,
   workspace_provider: WorkspaceProvider
-): Promise<string> {
+): Promise<string> => {
   const workspace_root =
     workspace_provider.get_workspace_root_for_file(file_path)
   if (!workspace_root) return ''

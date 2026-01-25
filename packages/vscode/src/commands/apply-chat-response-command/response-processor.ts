@@ -613,11 +613,11 @@ export const process_chat_response = async (
   }
 }
 
-function create_failed_file_state(
+const create_failed_file_state = (
   file: FileItem,
   default_workspace: string,
   workspace_map: Map<string, string>
-): OriginalFileState {
+): OriginalFileState => {
   let workspace_root = default_workspace
   if (file.workspace_name && workspace_map.has(file.workspace_name)) {
     workspace_root = workspace_map.get(file.workspace_name)!

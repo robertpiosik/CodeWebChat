@@ -5,9 +5,9 @@ import {
 } from '../utils/git-repository-utils'
 import { generate_commit_message_from_diff } from '../views/panel/backend/message-handlers/handle-commit-changes/utils'
 
-export function generate_commit_message_command(
+export const generate_commit_message_command = (
   context: vscode.ExtensionContext
-) {
+) => {
   return vscode.commands.registerCommand(
     'codeWebChat.generateCommitMessage',
     async (source_control?: vscode.SourceControl) => {

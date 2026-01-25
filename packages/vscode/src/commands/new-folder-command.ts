@@ -4,7 +4,7 @@ import * as fs from 'fs'
 import { create_safe_path } from '../utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
 
-export function new_folder_command() {
+export const new_folder_command = () => {
   return vscode.commands.registerCommand(
     'codeWebChat.newFolder',
     async (item?: vscode.TreeItem | vscode.Uri) => {

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 
-export function close_editor_command() {
+export const close_editor_command = () => {
   return vscode.commands.registerCommand(
     'codeWebChat.closeEditor',
     async (item: any) => {

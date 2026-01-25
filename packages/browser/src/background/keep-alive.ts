@@ -1,6 +1,6 @@
 import browser from 'webextension-polyfill'
 
-export function setup_keep_alive() {
+export const setup_keep_alive = () => {
   if (!browser.browserAction) {
     const create_keep_alive_alarm = async () => {
       try {

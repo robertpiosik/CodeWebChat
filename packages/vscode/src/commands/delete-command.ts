@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { dictionary } from '@shared/constants/dictionary'
 
-export function delete_command() {
+export const delete_command = () => {
   return vscode.commands.registerCommand(
     'codeWebChat.delete',
     async (item?: vscode.TreeItem) => {

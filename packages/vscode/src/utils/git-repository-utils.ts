@@ -17,9 +17,9 @@ export interface GitRepository {
   show: (ref: string, path: string) => Promise<string>
 }
 
-export async function get_git_repository(
+export const get_git_repository = async (
   source_control?: vscode.SourceControl
-): Promise<GitRepository | null> {
+): Promise<GitRepository | null> => {
   const git_extension = vscode.extensions.getExtension('vscode.git')
   if (!git_extension) {
     vscode.window.showErrorMessage(
@@ -86,9 +86,9 @@ export async function get_git_repository(
   return selected.repository
 }
 
-export async function prepare_staged_changes(
+export const prepare_staged_changes = async (
   repository: GitRepository
-): Promise<string | null> {
+): Promise<string | null> => {
   await repository.status()
   const staged_changes = repository.state.indexChanges || []
 

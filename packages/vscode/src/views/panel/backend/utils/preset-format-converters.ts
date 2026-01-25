@@ -20,9 +20,9 @@ export type ConfigPresetFormat = {
   isPinned?: boolean
 }
 
-export function config_preset_to_ui_format(
+export const config_preset_to_ui_format = (
   config_preset: ConfigPresetFormat
-): Preset {
+): Preset => {
   return {
     name: config_preset.name,
     chatbot: config_preset.chatbot,
@@ -43,7 +43,9 @@ export function config_preset_to_ui_format(
   }
 }
 
-export function ui_preset_to_config_format(preset: Preset): ConfigPresetFormat {
+export const ui_preset_to_config_format = (
+  preset: Preset
+): ConfigPresetFormat => {
   return {
     name: preset.name || undefined,
     chatbot: preset.chatbot,

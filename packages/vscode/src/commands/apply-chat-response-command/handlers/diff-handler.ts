@@ -165,10 +165,10 @@ export const extract_content_from_patch = (
   }
 }
 
-async function close_files_in_all_editor_groups(
+const close_files_in_all_editor_groups = async (
   file_paths: string[],
   workspace_path: string
-): Promise<vscode.Uri[]> {
+): Promise<vscode.Uri[]> => {
   const closed_files: vscode.Uri[] = []
   const files_to_close = new Set<string>()
 
@@ -207,7 +207,9 @@ async function close_files_in_all_editor_groups(
   return [...new Map(closed_files.map((item) => [item.fsPath, item])).values()]
 }
 
-async function reopen_closed_files(closed_files: vscode.Uri[]): Promise<void> {
+const reopen_closed_files = async (
+  closed_files: vscode.Uri[]
+): Promise<void> => {
   for (const uri of closed_files) {
     try {
       const document = await vscode.workspace.openTextDocument(uri)
@@ -222,10 +224,10 @@ async function reopen_closed_files(closed_files: vscode.Uri[]): Promise<void> {
   }
 }
 
-async function process_modified_files(
+const process_modified_files = async (
   file_paths: string[],
   workspace_path: string
-): Promise<void> {
+): Promise<void> => {
   for (const file_path of file_paths) {
     const safe_path = create_safe_path(workspace_path, file_path)
     if (!safe_path) {

@@ -3,7 +3,7 @@ import * as path from 'path'
 import { dictionary } from '@shared/constants/dictionary'
 import { create_safe_path } from '../utils/path-sanitizer'
 
-export function rename_command() {
+export const rename_command = () => {
   return vscode.commands.registerCommand(
     'codeWebChat.rename',
     async (item?: vscode.TreeItem) => {

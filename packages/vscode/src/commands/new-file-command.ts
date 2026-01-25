@@ -4,7 +4,7 @@ import * as fs from 'fs'
 import { create_safe_path } from '../utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
 
-export function new_file_command() {
+export const new_file_command = () => {
   return vscode.commands.registerCommand(
     'codeWebChat.newFile',
     async (item?: vscode.TreeItem | vscode.Uri) => {

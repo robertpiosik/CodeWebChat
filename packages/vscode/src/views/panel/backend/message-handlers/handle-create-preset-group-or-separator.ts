@@ -12,12 +12,12 @@ const ITEM_NAME_GROUP = 'Group'
 const ITEM_NAME_SEPARATOR = 'Separator'
 const ITEM_NAME_PRESET = 'Preset'
 
-async function create_group(
+const create_group = async (
   panel_provider: PanelProvider,
   options: {
     placement?: 'top' | 'bottom'
   }
-) {
+) => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const presets_config_key = panel_provider.get_presets_config_key()
   const current_presets =
@@ -53,12 +53,12 @@ async function create_group(
   }
 }
 
-async function create_separator(
+const create_separator = async (
   panel_provider: PanelProvider,
   options: {
     placement?: 'top' | 'bottom'
   }
-) {
+) => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const presets_config_key = panel_provider.get_presets_config_key()
   const current_presets =
@@ -80,10 +80,10 @@ async function create_separator(
   }
 }
 
-async function create_preset(
+const create_preset = async (
   panel_provider: PanelProvider,
   options: { placement?: 'top' | 'bottom' }
-) {
+) => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const presets_config_key = panel_provider.get_presets_config_key()
   const current_presets =

@@ -350,7 +350,7 @@ export const handle_fast_replace = async (
   }
 }
 
-async function close_file_tabs(file_path: string) {
+const close_file_tabs = async (file_path: string) => {
   const tabs_to_close: vscode.Tab[] = []
   for (const tab_group of vscode.window.tabGroups.all) {
     tabs_to_close.push(

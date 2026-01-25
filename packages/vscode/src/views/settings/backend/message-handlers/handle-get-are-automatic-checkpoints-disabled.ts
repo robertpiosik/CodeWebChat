@@ -1,9 +1,9 @@
 import { SettingsProvider } from '../settings-provider'
 import * as vscode from 'vscode'
 
-export async function handle_get_are_automatic_checkpoints_disabled(
+export const handle_get_are_automatic_checkpoints_disabled = async (
   settings_provider: SettingsProvider
-) {
+) => {
   const disabled = vscode.workspace
     .getConfiguration('codeWebChat')
     .get<boolean>('areAutomaticCheckpointsDisabled', false)

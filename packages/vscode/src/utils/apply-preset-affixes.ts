@@ -1,12 +1,12 @@
 import { ConfigPresetFormat } from '@/views/panel/backend/utils/preset-format-converters'
 import * as vscode from 'vscode'
 
-export function apply_preset_affixes_to_instruction(params: {
+export const apply_preset_affixes_to_instruction = (params: {
   instruction: string
   preset_name: string
   presets_config_key: string
   override_affixes?: { promptPrefix?: string; promptSuffix?: string }
-}): string {
+}): string => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const all_presets = config.get<ConfigPresetFormat[]>(
     params.presets_config_key,

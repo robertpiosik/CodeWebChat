@@ -125,10 +125,10 @@ export const handle_truncated_edit = async (
   return { success: true, original_states, failed_files }
 }
 
-function process_truncated_content(
+const process_truncated_content = (
   new_text: string,
   original_text: string
-): string {
+): string => {
   const new_lines = new_text.split(/\r?\n/)
   const original_lines = original_text.split(/\r?\n/)
 
@@ -242,11 +242,11 @@ function process_truncated_content(
   return result
 }
 
-function find_line_sequence(
+const find_line_sequence = (
   lines: string[],
   sequence: string[],
   start_idx: number
-): number {
+): number => {
   if (sequence.length == 0) return -1
   if (start_idx >= lines.length) return -1
 

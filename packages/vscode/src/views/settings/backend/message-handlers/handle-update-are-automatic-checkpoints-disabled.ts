@@ -1,9 +1,9 @@
 import * as vscode from 'vscode'
 import { UpdateAreAutomaticCheckpointsDisabledMessage } from '@/views/settings/types/messages'
 
-export async function handle_update_are_automatic_checkpoints_disabled(
+export const handle_update_are_automatic_checkpoints_disabled = async (
   message: UpdateAreAutomaticCheckpointsDisabledMessage
-) {
+) => {
   await vscode.workspace
     .getConfiguration('codeWebChat')
     .update(

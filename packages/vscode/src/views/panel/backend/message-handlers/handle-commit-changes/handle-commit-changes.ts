@@ -11,7 +11,7 @@ import * as path from 'path'
 import { execSync } from 'child_process'
 import { handle_accept_commit_message } from '../handle-accept-commit-message'
 
-function unstage_changes(repository: GitRepository) {
+const unstage_changes = (repository: GitRepository) => {
   let has_commits = false
   try {
     execSync('git rev-parse HEAD', {
@@ -38,11 +38,11 @@ function unstage_changes(repository: GitRepository) {
   }
 }
 
-async function proceed_with_commit_generation(
+const proceed_with_commit_generation = async (
   panel_provider: PanelProvider,
   repository: GitRepository,
   was_empty_stage: boolean
-) {
+) => {
   try {
     const api_config = await get_commit_message_config(panel_provider.context)
     if (!api_config) {
