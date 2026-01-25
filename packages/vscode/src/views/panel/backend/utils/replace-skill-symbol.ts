@@ -8,12 +8,21 @@ import {
 
 export const replace_skill_symbol = async (params: {
   instruction: string
-}): Promise<string> => {
+}): Promise<{ instruction: string; skill_definitions: string }> => {
   const regex = /#Skill:([^:]+):([^:]+(?::[^:]+)?):([^\s,;:.!?]+)/g
+  let skill_definitions = ''
+  const processed_skills = new Set<string>()
 
-  return params.instruction.replace(
+  const instruction = params.instruction.replace(
     regex,
     (_, agent_name, _repo_id, skill_name) => {
+      const key = `${agent_name}:${skill_name}`
+      const reference = `<skill name="${skill_name}" />`
+
+      if (processed_skills.has(key)) {
+        return reference
+      }
+
       const agent = agents[agent_name]
       if (!agent) {
         Logger.warn({
@@ -33,6 +42,8 @@ export const replace_skill_symbol = async (params: {
         })
         return ''
       }
+
+      processed_skills.add(key)
 
       let skill_content = `<skill name="${skill_name}">\n`
 
@@ -66,7 +77,11 @@ export const replace_skill_symbol = async (params: {
       }
 
       skill_content += `</skill>`
-      return skill_content
+      skill_definitions += skill_content + '\n'
+
+      return reference
     }
   )
+
+  return { instruction, skill_definitions }
 }

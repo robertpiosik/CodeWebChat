@@ -310,6 +310,7 @@ export const handle_edit_context = async (
   }
 
   let processed_instructions = instructions
+  let skill_definitions = ''
 
   if (processed_instructions.includes('#Changes:')) {
     processed_instructions = await replace_changes_symbol({
@@ -339,9 +340,11 @@ export const handle_edit_context = async (
   }
 
   if (processed_instructions.includes('#Skill:')) {
-    processed_instructions = await replace_skill_symbol({
+    const result = await replace_skill_symbol({
       instruction: processed_instructions
     })
+    processed_instructions = result.instruction
+    skill_definitions = result.skill_definitions
   }
 
   const is_prune_context = panel_provider.api_prompt_type == 'prune-context'
@@ -437,7 +440,7 @@ export const handle_edit_context = async (
 
     const content = `${
       system_instructions_xml ? system_instructions_xml + '\n' : ''
-    }${files}\n${
+    }${skill_definitions}${files}\n${
       system_instructions_xml ? system_instructions_xml + '\n' : ''
     }${processed_instructions}`
 

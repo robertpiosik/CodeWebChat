@@ -302,6 +302,7 @@ export const handle_prune_context = async (
   }
 
   let processed_instructions = instructions
+  let skill_definitions = ''
 
   if (processed_instructions.includes('#Changes:')) {
     processed_instructions = await replace_changes_symbol({
@@ -331,9 +332,11 @@ export const handle_prune_context = async (
   }
 
   if (processed_instructions.includes('#Skill:')) {
-    processed_instructions = await replace_skill_symbol({
+    const result = await replace_skill_symbol({
       instruction: processed_instructions
     })
+    processed_instructions = result.instruction
+    skill_definitions = result.skill_definitions
   }
 
   const collected_files = await files_collector.collect_files({
@@ -398,7 +401,7 @@ export const handle_prune_context = async (
       config_prune_instructions_prefix || prune_context_instructions_prefix
     const system_instructions_xml = `${instructions_to_use}\n${prune_context_format}`
 
-    const content = `${system_instructions_xml}\n${files}\n${system_instructions_xml}\n${processed_instructions}`
+    const content = `${system_instructions_xml}\n${skill_definitions}${files}\n${system_instructions_xml}\n${processed_instructions}`
 
     const messages = [
       {

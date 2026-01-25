@@ -353,6 +353,7 @@ export const handle_code_completion = async (
     )
 
     let processed_completion_instructions = completion_instructions
+    let skill_definitions = ''
 
     if (processed_completion_instructions.includes('#Selection')) {
       processed_completion_instructions = replace_selection_placeholder(
@@ -390,9 +391,11 @@ export const handle_code_completion = async (
     }
 
     if (processed_completion_instructions.includes('#Skill:')) {
-      processed_completion_instructions = await replace_skill_symbol({
+      const result = await replace_skill_symbol({
         instruction: processed_completion_instructions
       })
+      processed_completion_instructions = result.instruction
+      skill_definitions = result.skill_definitions
     }
 
     const files_collector = new FilesCollector(
@@ -409,7 +412,7 @@ export const handle_code_completion = async (
       after: `${text_after_cursor}\n]]>\n</file>\n</files>`
     }
 
-    const content = `${main_instructions}\n${payload.before}${
+    const content = `${main_instructions}\n${skill_definitions}${payload.before}${
       processed_completion_instructions
         ? `<missing_text>${processed_completion_instructions}</missing_text>`
         : '<missing_text>'

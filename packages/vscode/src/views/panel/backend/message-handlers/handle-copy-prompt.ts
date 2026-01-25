@@ -90,6 +90,7 @@ export const handle_copy_prompt = async (params: {
     )
 
     let processed_completion_instructions = final_instruction
+    let skill_definitions = ''
 
     if (processed_completion_instructions.includes('#Selection')) {
       processed_completion_instructions = replace_selection_placeholder(
@@ -127,16 +128,18 @@ export const handle_copy_prompt = async (params: {
     }
 
     if (processed_completion_instructions.includes('#Skill:')) {
-      processed_completion_instructions = await replace_skill_symbol({
+      const result = await replace_skill_symbol({
         instruction: processed_completion_instructions
       })
+      processed_completion_instructions = result.instruction
+      skill_definitions = result.skill_definitions
     }
 
     const missing_text_tag = processed_completion_instructions
       ? `<missing_text>${processed_completion_instructions}</missing_text>`
       : '<missing_text>'
 
-    const text = `${system_instructions}\n<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}${missing_text_tag}${text_after_cursor}\n]]>\n</file>\n</files>\n${system_instructions}`
+    const text = `${system_instructions}\n${skill_definitions}<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}${missing_text_tag}${text_after_cursor}\n]]>\n</file>\n</files>\n${system_instructions}`
 
     vscode.env.clipboard.writeText(text.trim())
   } else if (!is_in_code_completions_prompt_type) {
@@ -154,6 +157,7 @@ export const handle_copy_prompt = async (params: {
     const instructions = replace_selection_placeholder(final_instruction)
 
     let processed_instructions = instructions
+    let skill_definitions = ''
 
     if (processed_instructions.includes('#Changes:')) {
       processed_instructions = await replace_changes_symbol({
@@ -183,9 +187,11 @@ export const handle_copy_prompt = async (params: {
     }
 
     if (processed_instructions.includes('#Skill:')) {
-      processed_instructions = await replace_skill_symbol({
+      const result = await replace_skill_symbol({
         instruction: processed_instructions
       })
+      processed_instructions = result.instruction
+      skill_definitions = result.skill_definitions
     }
 
     let system_instructions_xml = ''
@@ -226,12 +232,12 @@ export const handle_copy_prompt = async (params: {
     const text = context_text
       ? `${
           system_instructions_xml ? system_instructions_xml + '\n' : ''
-        }<files>\n${context_text}</files>\n${
+        }${skill_definitions}<files>\n${context_text}</files>\n${
           system_instructions_xml ? system_instructions_xml + '\n' : ''
         }${processed_instructions}`
       : `${
           system_instructions_xml ? system_instructions_xml + '\n' : ''
-        }${processed_instructions}`
+        }${skill_definitions}${processed_instructions}`
     vscode.env.clipboard.writeText(text.trim())
   } else {
     vscode.window.showWarningMessage(

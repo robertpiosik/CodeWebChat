@@ -117,6 +117,7 @@ export const handle_send_prompt = async (params: {
       params.panel_provider.code_at_cursor_instructions
 
     let processed_completion_instructions = completion_instructions
+    let skill_definitions = ''
 
     if (processed_completion_instructions.includes('#Selection')) {
       processed_completion_instructions = replace_selection_placeholder(
@@ -154,9 +155,11 @@ export const handle_send_prompt = async (params: {
     }
 
     if (processed_completion_instructions.includes('#Skill:')) {
-      processed_completion_instructions = await replace_skill_symbol({
+      const result = await replace_skill_symbol({
         instruction: processed_completion_instructions
       })
+      processed_completion_instructions = result.instruction
+      skill_definitions = result.skill_definitions
     }
 
     const context_text = await files_collector.collect_files({
@@ -176,7 +179,7 @@ export const handle_send_prompt = async (params: {
       after: `${text_after_cursor}\n]]>\n</file>\n</files>`
     }
 
-    const text = `${main_instructions}\n${payload.before}${
+    const text = `${main_instructions}\n${skill_definitions}${payload.before}${
       processed_completion_instructions
         ? `<missing_text>${processed_completion_instructions}</missing_text>`
         : '<missing_text>'
@@ -220,6 +223,7 @@ export const handle_send_prompt = async (params: {
         }
 
         let processed_instructions = instructions
+        let skill_definitions = ''
         if (processed_instructions.includes('#Changes:')) {
           processed_instructions = await replace_changes_symbol({
             instruction: processed_instructions
@@ -247,9 +251,11 @@ export const handle_send_prompt = async (params: {
         }
 
         if (processed_instructions.includes('#Skill:')) {
-          processed_instructions = await replace_skill_symbol({
+          const result = await replace_skill_symbol({
             instruction: processed_instructions
           })
+          processed_instructions = result.instruction
+          skill_definitions = result.skill_definitions
         }
 
         let system_instructions_xml = ''
@@ -287,12 +293,12 @@ export const handle_send_prompt = async (params: {
           text: context_text
             ? `${
                 system_instructions_xml ? system_instructions_xml + '\n' : ''
-              }<files>\n${context_text}</files>\n${
+              }${skill_definitions}<files>\n${context_text}</files>\n${
                 system_instructions_xml ? system_instructions_xml + '\n' : ''
               }${processed_instructions}`
             : `${
                 system_instructions_xml ? system_instructions_xml + '\n' : ''
-              }${processed_instructions}`,
+              }${skill_definitions}${processed_instructions}`,
           preset_name,
           raw_instructions: current_instructions,
           prompt_type: params.panel_provider.web_prompt_type,
