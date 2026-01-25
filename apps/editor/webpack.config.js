@@ -39,7 +39,7 @@ const config = [
         extensions: ['.ts', '.js'],
         alias: {
           '@': path.resolve(__dirname, 'src'),
-          '@shared': path.resolve(__dirname, '../shared/src')
+          '@shared': path.resolve(__dirname, '../../packages/shared/src')
         }
       },
       module: {
@@ -109,8 +109,8 @@ const config = [
         extensions: ['.ts', '.tsx', '.js'],
         alias: {
           '@': path.resolve(__dirname, 'src'),
-          '@shared': path.resolve(__dirname, '../shared/src'),
-          '@ui': path.resolve(__dirname, '../ui/src')
+          '@shared': path.resolve(__dirname, '../../packages/shared/src'),
+          '@ui': path.resolve(__dirname, '../../packages/ui/src')
         }
       },
       module: {
@@ -152,7 +152,7 @@ const config = [
                 loader: 'sass-loader',
                 options: {
                   additionalData: `@use "${path
-                    .resolve(__dirname, '../ui/src/styles/foundation')
+                    .resolve(__dirname, '../../packages/ui/src/styles/foundation')
                     .replace(/\\/g, '/')}" as *;`
                 }
               }

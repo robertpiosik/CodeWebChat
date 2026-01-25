@@ -1,5 +1,5 @@
 {
-  "name": "my-website",
+  "name": "website",
   "scripts": {
     "docusaurus": "docusaurus",
     "dev": "concurrently \"node copy-readme.js --watch\" \"docusaurus start\"",

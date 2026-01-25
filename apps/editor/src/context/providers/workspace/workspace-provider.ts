@@ -1364,7 +1364,7 @@ export class WorkspaceProvider
     // After updating gitignore rules, clear token caches since exclusions may have changed
     this._token_calculator.clear_caches()
 
-    this._schedule_refresh()
+    this._dispatch_change_events()
   }
 
   public is_excluded(relative_path: string): boolean {

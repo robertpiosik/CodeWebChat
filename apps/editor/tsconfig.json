@@ -12,15 +12,15 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@shared/*": ["../shared/src/*"],
-      "@ui/*": ["../ui/src/*"]
+      "@shared/*": ["../../packages/shared/src/*"],
+      "@ui/*": ["../../packages/ui/src/*"]
     }
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
-    "../shared/src/**/*.ts",
-    "../ui/src/**/*"
+    "../../packages/shared/src/**/*.ts",
+    "../../packages/ui/src/**/*"
   ],
   "exclude": ["node_modules"]
 }

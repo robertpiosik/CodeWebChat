@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - 'packages/vscode/package.json'
+      - 'apps/editor/package.json'
   workflow_dispatch:
     inputs:
       reason:
@@ -38,23 +38,23 @@ jobs:
 
       - name: Lint
         run: |
-          cd packages/vscode
+          cd apps/editor
           pnpm lint
 
       - name: Run Tests
         run: |
-          cd packages/vscode
+          cd apps/editor
           pnpm test
 
       - name: Build VS Code extension
         run: |
-          cd packages/vscode
+          cd apps/editor
           pnpm build
 
       - name: Publish to VS Code Marketplace
         continue-on-error: true
         run: |
-          cd packages/vscode
+          cd apps/editor
           npx @vscode/vsce publish --no-dependencies -p ${{ secrets.VSCE_PAT }}
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
@@ -62,7 +62,7 @@ jobs:
       - name: Publish to Open VSX Registry
         continue-on-error: true
         run: |
-          cd packages/vscode
+          cd apps/editor
           npx ovsx publish --no-dependencies -p ${{ secrets.OVSX_PAT }}
         env:
           OVSX_PAT: ${{ secrets.OVSX_PAT }}

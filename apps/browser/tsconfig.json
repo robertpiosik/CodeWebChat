@@ -12,9 +12,13 @@
     "types": ["chrome", "webextension-polyfill", "node", "jest"],
     "paths": {
       "@/*": ["./src/*"],
-      "@shared/*": ["../shared/src/*"],
-      "@ui/*": ["../ui/src/*"]
+      "@shared/*": ["../../packages/shared/src/*"],
+      "@ui/*": ["../../packages/ui/src/*"]
     }
   },
-  "include": ["src/**/*", "../shared/src/**/*", "../ui/src/**/*"]
+  "include": [
+    "src/**/*",
+    "../../packages/shared/src/**/*",
+    "../../packages/ui/src/**/*"
+  ]
 }
