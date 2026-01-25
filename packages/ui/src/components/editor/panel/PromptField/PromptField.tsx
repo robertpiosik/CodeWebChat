@@ -126,6 +126,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     handle_key_down,
     is_history_enabled,
     handle_copy,
+    handle_cut,
     handle_paste,
     handle_input_click
   } = use_handlers(props, input_ref, ghost_text, handle_accept_ghost_text)
@@ -391,6 +392,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               handle_key_down(e)
             }}
             onCopy={handle_copy}
+            onCut={handle_cut}
             onPaste={handle_paste}
             onClick={handle_input_click}
             onMouseDown={handle_mouse_down}
