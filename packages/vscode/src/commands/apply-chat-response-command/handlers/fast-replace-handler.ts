@@ -99,6 +99,59 @@ export const handle_fast_replace = async (
 
       if (!safe_path) continue
 
+      if (file.is_deleted) {
+        // If the file was also renamed (moved then deleted), we need to ensure the source is deleted too.
+        if (file.renamed_from) {
+          const sanitized_rename_path = sanitize_file_name(file.renamed_from)
+          const safe_rename_path = create_safe_path(
+            workspace_root,
+            sanitized_rename_path
+          )
+          if (safe_rename_path && fs.existsSync(safe_rename_path)) {
+            await close_file_tabs(safe_rename_path)
+            await vscode.workspace.fs.delete(vscode.Uri.file(safe_rename_path))
+            await remove_directory_if_empty({
+              dir_path: path.dirname(safe_rename_path),
+              workspace_root
+            })
+          }
+        }
+
+        if (fs.existsSync(safe_path)) {
+          try {
+            const document = await vscode.workspace.openTextDocument(safe_path)
+            const original_content = document.getText()
+
+            await close_file_tabs(safe_path)
+
+            await vscode.workspace.fs.delete(vscode.Uri.file(safe_path))
+            await remove_directory_if_empty({
+              dir_path: path.dirname(safe_path),
+              workspace_root
+            })
+
+            original_states.push({
+              file_path: file.file_path,
+              content: original_content,
+              workspace_name: file.workspace_name,
+              file_state: 'deleted'
+            })
+            Logger.info({
+              function_name: 'handle_fast_replace',
+              message: 'File deleted',
+              data: safe_path
+            })
+          } catch (error) {
+            Logger.error({
+              function_name: 'handle_fast_replace',
+              message: 'Failed to delete file',
+              data: { safe_path, error }
+            })
+          }
+        }
+        continue
+      }
+
       let rename_source_path: string | undefined
       let rename_source_content: string | undefined
 
@@ -131,21 +184,7 @@ export const handle_fast_replace = async (
             new_content = rename_source_content
           }
 
-          const tabs_to_close: vscode.Tab[] = []
-          for (const tab_group of vscode.window.tabGroups.all) {
-            tabs_to_close.push(
-              ...tab_group.tabs.filter((tab) => {
-                const tab_uri = (tab.input as any)?.uri as
-                  | vscode.Uri
-                  | undefined
-                return tab_uri && tab_uri.fsPath === rename_source_path
-              })
-            )
-          }
-
-          if (tabs_to_close.length > 0) {
-            await vscode.window.tabGroups.close(tabs_to_close)
-          }
+          await close_file_tabs(rename_source_path)
 
           await vscode.workspace.fs.delete(vscode.Uri.file(rename_source_path))
           await remove_directory_if_empty({
@@ -308,5 +347,20 @@ export const handle_fast_replace = async (
       )
     )
     return { success: false }
+  }
+}
+
+async function close_file_tabs(file_path: string) {
+  const tabs_to_close: vscode.Tab[] = []
+  for (const tab_group of vscode.window.tabGroups.all) {
+    tabs_to_close.push(
+      ...tab_group.tabs.filter((tab) => {
+        const tab_uri = (tab.input as any)?.uri as vscode.Uri | undefined
+        return tab_uri && tab_uri.fsPath === file_path
+      })
+    )
+  }
+  if (tabs_to_close.length > 0) {
+    await vscode.window.tabGroups.close(tabs_to_close)
   }
 }

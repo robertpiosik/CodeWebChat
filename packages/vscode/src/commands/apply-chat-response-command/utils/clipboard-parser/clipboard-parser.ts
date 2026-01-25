@@ -11,6 +11,7 @@ export type FileItem = {
   content: string
   workspace_name?: string
   renamed_from?: string
+  is_deleted?: boolean
 }
 
 export type DiffItem = {

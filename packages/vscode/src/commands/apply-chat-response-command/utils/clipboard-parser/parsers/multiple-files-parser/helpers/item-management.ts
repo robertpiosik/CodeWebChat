@@ -9,6 +9,7 @@ export const create_or_update_file_item = (params: {
   results: (FileItem | TextItem | InlineFileItem)[]
   mode?: 'overwrite' | 'append'
   renamed_from?: string
+  is_deleted?: boolean
 }): void => {
   const {
     file_name,
@@ -17,7 +18,8 @@ export const create_or_update_file_item = (params: {
     file_ref_map,
     results,
     mode = 'overwrite',
-    renamed_from
+    renamed_from,
+    is_deleted
   } = params
 
   if (!file_name) {
@@ -40,13 +42,18 @@ export const create_or_update_file_item = (params: {
     if (renamed_from) {
       existing_file.renamed_from = renamed_from
     }
+
+    if (is_deleted !== undefined) {
+      existing_file.is_deleted = is_deleted
+    }
   } else {
     const new_file: FileItem = {
       type: 'file' as const,
       file_path: file_name,
       content: processed_content,
       workspace_name: workspace_name,
-      renamed_from
+      renamed_from,
+      is_deleted
     }
     file_ref_map.set(file_key, new_file)
     results.push(new_file)

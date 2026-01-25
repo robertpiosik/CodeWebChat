@@ -279,7 +279,8 @@ export const parse_multiple_files = (params: {
           content: '',
           workspace_name,
           file_ref_map,
-          results
+          results,
+          is_deleted: true
         })
         continue
       }
