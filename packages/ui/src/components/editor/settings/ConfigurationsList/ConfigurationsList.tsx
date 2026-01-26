@@ -75,12 +75,21 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
   return (
     <div className={styles.container}>
       <div className={styles.toolbar}>
+        <div className={styles['toolbar-group']}>
+          <span style={{ fontWeight: 500 }}>
+            {props.configurations.length} configuration
+            {props.configurations.length === 1 ? '' : 's'}
+          </span>
+          {props.on_unset_default && has_default && (
+            <>
+              <span>·</span>
+              <TextButton on_click={props.on_unset_default}>
+                Unset default
+              </TextButton>
+            </>
+          )}
+        </div>
         <Button on_click={props.on_add}>New Configuration...</Button>
-        {props.on_unset_default && has_default && (
-          <TextButton on_click={props.on_unset_default}>
-            Unset default
-          </TextButton>
-        )}
       </div>
       <div className={styles.list}>
         {props.configurations.length > 0 ? (
