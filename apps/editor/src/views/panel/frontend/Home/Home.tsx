@@ -334,7 +334,7 @@ export const Home: React.FC<Props> = (props) => {
         </div>
       </Scrollable>
 
-      {!is_timeline_reached && is_mode_sticky && (
+      {!is_timeline_reached && (
         <button
           className={styles['scroll-to-timeline']}
           onClick={handle_scroll_to_timeline}

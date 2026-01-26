@@ -324,7 +324,10 @@ export const handle_send_prompt = async (params: {
     command: 'SHOW_AUTO_CLOSING_MODAL',
     title: 'Opened in the connected browser'
   })
-  params.panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
+
+  if (!params.preset_name && !params.group_name) {
+    params.panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
+  }
 }
 
 async function show_preset_quick_pick(params: {

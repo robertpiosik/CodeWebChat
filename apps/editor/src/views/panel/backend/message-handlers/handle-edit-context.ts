@@ -376,7 +376,9 @@ export const handle_edit_context = async (
       return
     }
 
-    panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
+    if (!message.config_id) {
+      panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
+    }
 
     const { provider, config: edit_context_config } = config_result
 
