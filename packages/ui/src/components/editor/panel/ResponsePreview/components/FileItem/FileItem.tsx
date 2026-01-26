@@ -47,49 +47,39 @@ const get_file_message = (file: FileInPreview): FileMessage | null => {
   }
 }
 
-export const FileItem: FC<Props> = ({
-  file,
-  is_selected,
-  has_multiple_workspaces,
-  total_files_count,
-  on_click,
-  on_toggle,
-  on_discard_user_changes,
-  on_preview_generated_code,
-  on_intelligent_update,
-  on_cancel_intelligent_update,
-  on_go_to_file
-}) => {
-  const message_obj = get_file_message(file)
-  const last_slash_index = file.file_path.lastIndexOf('/')
-  const file_name = file.file_path.substring(last_slash_index + 1)
+export const FileItem: FC<Props> = (props) => {
+  const message_obj = get_file_message(props.file)
+  const last_slash_index = props.file.file_path.lastIndexOf('/')
+  const file_name = props.file.file_path.substring(last_slash_index + 1)
   const dir_path =
-    last_slash_index > -1 ? file.file_path.substring(0, last_slash_index) : ''
+    last_slash_index > -1
+      ? props.file.file_path.substring(0, last_slash_index)
+      : ''
 
   const render_apply_progress = () => {
-    if (!file.is_applying) return null
+    if (!props.file.is_applying) return null
 
     let status_text = ''
-    if (file.apply_status == 'waiting') status_text = 'Waiting...'
-    else if (file.apply_status == 'thinking') status_text = 'Thinking...'
-    else if (file.apply_status == 'retrying') status_text = 'Retrying...'
-    else if (file.apply_status == 'receiving') {
-      const progress = file.apply_progress ?? 0
-      const tps = file.apply_tokens_per_second
+    if (props.file.apply_status == 'waiting') status_text = 'Waiting...'
+    else if (props.file.apply_status == 'thinking') status_text = 'Thinking...'
+    else if (props.file.apply_status == 'retrying') status_text = 'Retrying...'
+    else if (props.file.apply_status == 'receiving') {
+      const progress = props.file.apply_progress ?? 0
+      const tps = props.file.apply_tokens_per_second
       status_text = `${progress}%`
       if (tps) status_text += ` (${tps} t/s)`
-    } else if (file.apply_status == 'done') status_text = 'Done'
+    } else if (props.file.apply_status == 'done') status_text = 'Done'
 
     return (
       <div className={styles.progress}>
         <span>{status_text}</span>
         <span className="codicon codicon-loading codicon-modifier-spin" />
-        {file.apply_status !== 'done' && (
+        {props.file.apply_status !== 'done' && (
           <div
             className={styles.progress__cancel}
             onClick={(e) => {
               e.stopPropagation()
-              on_cancel_intelligent_update()
+              props.on_cancel_intelligent_update()
             }}
             title="Cancel"
           >
@@ -104,95 +94,97 @@ export const FileItem: FC<Props> = ({
     <div className={styles.container}>
       <div
         className={cn(styles.file, {
-          [styles['file--selected']]: is_selected,
-          [styles['file--error']]:
-            file.apply_failed && !file.fixed_with_intelligent_update,
-          [styles['file--warning']]:
-            file.diff_application_method == 'search_and_replace' &&
-            !file.fixed_with_intelligent_update,
-          [styles['file--deleted']]: file.file_state == 'deleted'
+          [styles['file--selected']]: props.is_selected,
+          [styles['file--deleted']]: props.file.file_state == 'deleted'
         })}
-        onClick={file.file_state == 'deleted' ? undefined : on_click}
+        onClick={
+          props.file.file_state == 'deleted' ? undefined : props.on_click
+        }
         role="button"
-        title={file.file_path}
+        title={props.file.file_path}
       >
         <div className={styles['file__left']}>
-          {total_files_count > 1 && (
-            <Checkbox checked={file.is_checked} on_change={on_toggle} />
+          {props.total_files_count > 1 && (
+            <Checkbox
+              checked={props.file.is_checked}
+              on_change={props.on_toggle}
+            />
           )}
           <div
             className={cn(styles['file__left__label'], {
-              [styles['file__left__label--new']]: file.file_state == 'new',
+              [styles['file__left__label--new']]:
+                props.file.file_state == 'new',
               [styles['file__left__label--deleted']]:
-                file.file_state == 'deleted'
+                props.file.file_state == 'deleted'
             })}
           >
             <span>{file_name}</span>
 
             <span>
-              {has_multiple_workspaces && file.workspace_name
-                ? `${file.workspace_name}${dir_path ? '/' : ''}`
+              {props.has_multiple_workspaces && props.file.workspace_name
+                ? `${props.file.workspace_name}${dir_path ? '/' : ''}`
                 : ''}
               {dir_path}
             </span>
           </div>
         </div>
         <div className={styles['file__right']}>
-          {file.is_applying ? (
+          {props.file.is_applying ? (
             render_apply_progress()
           ) : (
             <>
               <div className={styles['file__actions']}>
-                {file.content !== undefined &&
-                  file.proposed_content !== undefined &&
-                  file.content !== file.proposed_content && (
+                {props.file.content !== undefined &&
+                  props.file.proposed_content !== undefined &&
+                  props.file.content !== props.file.proposed_content && (
                     <IconButton
                       codicon_icon="discard"
                       title="Discard user changes"
                       on_click={(e) => {
                         e.stopPropagation()
-                        on_discard_user_changes()
+                        props.on_discard_user_changes()
                       }}
                     />
                   )}
-                {file.ai_content && (
+                {props.file.ai_content && (
                   <IconButton
                     codicon_icon="open-preview"
                     title="Preview generated code"
                     on_click={(e) => {
                       e.stopPropagation()
-                      on_preview_generated_code()
+                      props.on_preview_generated_code()
                     }}
                   />
                 )}
-                {file.file_state != 'new' && file.file_state != 'deleted' && (
-                  <IconButton
-                    codicon_icon="sparkle"
-                    title="Fix with Intelligent Update API tool"
-                    on_click={(e) => {
-                      e.stopPropagation()
-                      on_intelligent_update()
-                    }}
-                  />
-                )}
+                {props.file.file_state != 'new' &&
+                  props.file.file_state != 'deleted' && (
+                    <IconButton
+                      codicon_icon="sparkle"
+                      title="Fix with Intelligent Update API tool"
+                      on_click={(e) => {
+                        e.stopPropagation()
+                        props.on_intelligent_update()
+                      }}
+                    />
+                  )}
                 <IconButton
                   codicon_icon="go-to-file"
                   title="Go to file"
                   on_click={(e) => {
                     e.stopPropagation()
-                    on_go_to_file()
+                    props.on_go_to_file()
                   }}
                 />
               </div>
               <div className={styles['file__line-numbers']}>
-                {file.file_state != 'deleted' && (
+                {props.file.file_state != 'deleted' && (
                   <span className={styles['file__line-numbers__added']}>
-                    +{file.lines_added}
+                    +{props.file.lines_added}
                   </span>
                 )}
-                {file.file_state != 'new' && (
+                {props.file.file_state != 'new' && (
                   <span className={styles['file__line-numbers__removed']}>
-                    -{file.lines_removed}
+                    -{props.file.lines_removed}
                   </span>
                 )}
               </div>
@@ -204,7 +196,8 @@ export const FileItem: FC<Props> = ({
         <div
           className={cn(styles.message, {
             [styles['message--error']]: message_obj.type == 'error',
-            [styles['message--warning']]: message_obj.type == 'warning'
+            [styles['message--warning']]: message_obj.type == 'warning',
+            [styles['message--success']]: message_obj.type == 'success'
           })}
         >
           <div className={styles['message__content']}>
@@ -221,20 +214,20 @@ export const FileItem: FC<Props> = ({
           </div>
           {'show_actions' in message_obj && message_obj.show_actions && (
             <div className={styles['message__actions']}>
-              {file.ai_content && !file.is_applying && (
+              {props.file.ai_content && (
                 <div
                   className={styles['message__actions__item']}
-                  onClick={on_preview_generated_code}
+                  onClick={props.on_preview_generated_code}
                   title="Preview generated code"
                 >
                   <span className="codicon codicon-open-preview" />
                   <span>Preview</span>
                 </div>
               )}
-              {!file.is_applying && (
+              {!props.file.is_applying && (
                 <div
                   className={styles['message__actions__item']}
-                  onClick={on_intelligent_update}
+                  onClick={props.on_intelligent_update}
                   title={'Fix with Intelligent Update API tool'}
                 >
                   <span className="codicon codicon-sparkle" />

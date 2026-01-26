@@ -5,7 +5,7 @@
   --vscode-editor-font-size: 15px;
   --vscode-foreground: #f3eff5;
   --vscode-errorForeground: #f48771;
-  --vscode-descriptionForeground: rgba(243, 239, 245, 0.7);
+  --cwc-text-color-dimmed: rgba(243, 239, 245, 0.7);
   --vscode-icon-foreground: #c5c5c5;
   --vscode-focusBorder: #263354;
   --vscode-selection-background: rgba(243, 239, 245, 0.31);

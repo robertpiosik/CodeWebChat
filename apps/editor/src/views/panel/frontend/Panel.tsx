@@ -603,9 +603,10 @@ export const Panel = () => {
                     content: file.content
                   })
                 }}
-                on_fix_all_failed={() => {
+                on_fix_all_failed={(files) => {
                   post_message(vscode, {
-                    command: 'FIX_ALL_FAILED_FILES'
+                    command: 'FIX_ALL_FAILED_FILES',
+                    files
                   })
                 }}
               />

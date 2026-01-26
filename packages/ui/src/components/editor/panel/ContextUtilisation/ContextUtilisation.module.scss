@@ -3,12 +3,13 @@
   align-items: center;
   gap: 8px;
   padding: 0 10px;
-  color: var(--vscode-descriptionForeground);
+  color: var(--cwc-text-color-dimmed);
 }
 
 .label {
   font-size: 11px;
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .bar {

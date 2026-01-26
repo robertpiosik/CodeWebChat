@@ -1,4 +1,4 @@
-import { FC, useRef, useState, useMemo } from 'react'
+import { FC, useRef, useState, useMemo, useEffect } from 'react'
 import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
 import cn from 'classnames'
 import styles from './ResponsePreview.module.scss'
@@ -32,7 +32,9 @@ type Props = {
     workspace_name?: string
     content: string
   }) => void
-  on_fix_all_failed: () => void
+  on_fix_all_failed: (
+    files: { file_path: string; workspace_name?: string }[]
+  ) => void
   raw_instructions?: string
 }
 
@@ -43,6 +45,7 @@ export const ResponsePreview: FC<Props> = (props) => {
   const [expanded_text_items, set_expanded_text_items] = useState<Set<number>>(
     new Set()
   )
+  const [is_fixing_all, set_is_fixing_all] = useState(false)
   const scroll_top_ref = useRef(0)
   const scrollable_ref = useRef<any>(null)
 
@@ -86,12 +89,26 @@ export const ResponsePreview: FC<Props> = (props) => {
     [props.items]
   )
 
+  const applying_files = useMemo(
+    () => files_in_preview.filter((f) => f.is_applying),
+    [files_in_preview]
+  )
+
+  const prev_applying_count = useRef(0)
+  useEffect(() => {
+    if (prev_applying_count.current > 0 && applying_files.length === 0) {
+      set_is_fixing_all(false)
+    }
+    prev_applying_count.current = applying_files.length
+  }, [applying_files.length])
+
   const aggressive_fallback_count = useMemo(
     () =>
       files_in_preview.filter(
         (f) =>
           f.diff_application_method == 'search_and_replace' &&
-          !f.fixed_with_intelligent_update
+          !f.fixed_with_intelligent_update &&
+          !f.is_applying
       ).length,
     [files_in_preview]
   )
@@ -99,10 +116,31 @@ export const ResponsePreview: FC<Props> = (props) => {
   const error_count = useMemo(
     () =>
       files_in_preview.filter(
-        (f) => f.apply_failed && !f.fixed_with_intelligent_update
+        (f) =>
+          f.apply_failed && !f.fixed_with_intelligent_update && !f.is_applying
       ).length,
     [files_in_preview]
   )
+
+  const get_status_text = (file: FileInPreview) => {
+    if (file.apply_status == 'waiting') return 'Waiting...'
+    if (file.apply_status == 'thinking') return 'Thinking...'
+    if (file.apply_status == 'retrying') return 'Retrying...'
+    if (file.apply_status == 'receiving') {
+      const progress = file.apply_progress ?? 0
+      const tps = file.apply_tokens_per_second
+      let text = `${progress}%`
+      if (tps) text += ` (${tps} t/s)`
+      return text
+    }
+    if (file.apply_status == 'done') return 'Done'
+    return ''
+  }
+
+  const get_file_name = (path: string) => {
+    const last_slash_index = path.lastIndexOf('/')
+    return path.substring(last_slash_index + 1)
+  }
 
   const get_instructions_font_size_class = (text: string): string => {
     const length = text.length
@@ -135,6 +173,31 @@ export const ResponsePreview: FC<Props> = (props) => {
             {props.raw_instructions}
           </div>
         )}
+        {applying_files.length > 0 && is_fixing_all && (
+          <div className={styles['fix-all-progress']}>
+            {applying_files.map((file) => (
+              <div
+                key={file.file_path}
+                className={styles['fix-all-progress__item']}
+              >
+                <div className={styles['fix-all-progress__header']}>
+                  <span className={styles['fix-all-progress__header__name']}>
+                    {get_file_name(file.file_path)}
+                  </span>
+                  <span className={styles['fix-all-progress__header__status']}>
+                    {get_status_text(file)}
+                  </span>
+                </div>
+                <div className={styles['fix-all-progress__bar']}>
+                  <div
+                    className={styles['fix-all-progress__bar__fill']}
+                    style={{ width: `${file.apply_progress || 0}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
         {error_count > 0 && (
           <div
             className={cn(styles.info, styles['info--error'])}
@@ -154,7 +217,21 @@ export const ResponsePreview: FC<Props> = (props) => {
             </div>
             <div
               className={styles.info__action}
-              onClick={() => props.on_fix_all_failed()}
+              onClick={() => {
+                set_is_fixing_all(true)
+                const files_to_fix = files_in_preview
+                  .filter(
+                    (f) =>
+                      f.apply_failed &&
+                      !f.fixed_with_intelligent_update &&
+                      !f.is_applying
+                  )
+                  .map((f) => ({
+                    file_path: f.file_path,
+                    workspace_name: f.workspace_name
+                  }))
+                props.on_fix_all_failed(files_to_fix)
+              }}
             >
               <span className="codicon codicon-sparkle" />
               <span>{error_count > 1 ? 'Fix all' : 'Fix'}</span>
@@ -183,6 +260,7 @@ export const ResponsePreview: FC<Props> = (props) => {
             </div>
           </div>
         )}
+        {/* summary of progress when clicked "Fix all" */}
         <div className={styles.list}>
           {props.items.map((item, index) => {
             if (item.type == 'file') {

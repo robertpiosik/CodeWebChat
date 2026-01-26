@@ -45,7 +45,13 @@ const hash_sign_quick_pick = async (params: {
     },
     {
       label: skill_label,
-      description: 'Reference an installed skill'
+      description: 'Reference an installed skill',
+      buttons: [
+        {
+          iconPath: new vscode.ThemeIcon('globe'),
+          tooltip: 'Discover skills at skills.sh'
+        }
+      ]
     }
   ]
 
@@ -84,6 +90,13 @@ const hash_sign_quick_pick = async (params: {
         let is_accepted = false
         quick_pick.onDidTriggerButton(() => {
           quick_pick.hide()
+        })
+        quick_pick.onDidTriggerItemButton(async (e) => {
+          if (e.item.label === skill_label) {
+            await vscode.env.openExternal(
+              vscode.Uri.parse('https://skills.sh/')
+            )
+          }
         })
         quick_pick.onDidAccept(() => {
           is_accepted = true

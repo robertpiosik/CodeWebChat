@@ -201,6 +201,11 @@ export const use_handlers = (
   const has_modified_current_entry_ref = useRef(false)
 
   useEffect(() => {
+    if (!props.value) {
+      has_modified_current_entry_ref.current = false
+      set_is_history_enabled(true)
+    }
+
     const on_selection_change = () => {
       if (document.activeElement === input_ref.current && input_ref.current) {
         const selection = window.getSelection()

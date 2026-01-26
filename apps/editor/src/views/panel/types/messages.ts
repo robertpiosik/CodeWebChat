@@ -365,6 +365,7 @@ export interface CancelIntelligentUpdateFileInPreviewMessage extends BaseMessage
 
 export interface FixAllFailedFilesMessage extends BaseMessage {
   command: 'FIX_ALL_FAILED_FILES'
+  files: { file_path: string; workspace_name?: string }[]
 }
 
 export interface CommitChangesMessage extends BaseMessage {

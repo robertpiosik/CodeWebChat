@@ -7,7 +7,7 @@
 .tokens-per-second {
   text-align: center;
   font-family: monospace;
-  color: var(--vscode-descriptionForeground);
+  color: var(--cwc-text-color-dimmed);
 }
 
 .progress {
@@ -57,7 +57,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: var(--vscode-descriptionForeground);
+  color: var(--cwc-text-color-dimmed);
   flex-shrink: 1;
 
   > span:nth-child(2) {
@@ -72,7 +72,7 @@
   flex-shrink: 0;
 
   &--waiting {
-    color: var(--vscode-descriptionForeground);
+    color: var(--cwc-text-color-dimmed);
   }
   &--thinking {
     color: var(--vscode-focusBorder);
@@ -88,7 +88,7 @@
 .file-item__details {
   font-family: monospace;
   font-size: 10px;
-  color: var(--vscode-descriptionForeground);
+  color: var(--cwc-text-color-dimmed);
   text-align: right;
 }
 

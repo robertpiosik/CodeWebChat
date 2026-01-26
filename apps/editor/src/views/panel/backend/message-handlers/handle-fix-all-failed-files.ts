@@ -19,7 +19,8 @@ import { Logger } from '@shared/utils/logger'
 import { set_file_fixed_with_intelligent_update } from '@/commands/apply-chat-response-command/utils/preview'
 
 export const handle_fix_all_failed_files = async (
-  panel_provider: PanelProvider
+  panel_provider: PanelProvider,
+  files_to_fix: { file_path: string; workspace_name?: string }[]
 ): Promise<void> => {
   const original_states = panel_provider.context.workspaceState.get<
     OriginalFileState[]
@@ -36,7 +37,13 @@ export const handle_fix_all_failed_files = async (
   }
 
   const failed_files = original_states.filter(
-    (s) => s.apply_failed && !s.fixed_with_intelligent_update
+    (s) =>
+      s.apply_failed &&
+      !s.fixed_with_intelligent_update &&
+      files_to_fix.some(
+        (f) =>
+          f.file_path == s.file_path && f.workspace_name == s.workspace_name
+      )
   )
 
   if (failed_files.length == 0) {
@@ -72,10 +79,6 @@ export const handle_fix_all_failed_files = async (
   }
 
   const max_concurrency = intelligent_update_config.max_concurrency ?? 4
-  const cancel_token_source = axios.CancelToken.source()
-  panel_provider.intelligent_update_cancel_token_sources.push(
-    cancel_token_source
-  )
 
   const default_workspace_path =
     vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
@@ -135,6 +138,13 @@ export const handle_fix_all_failed_files = async (
 
         const file_path = file_state.file_path
         const workspace_name = file_state.workspace_name
+
+        const cancel_token_source = axios.CancelToken.source()
+        panel_provider.intelligent_update_cancel_token_sources.push({
+          source: cancel_token_source,
+          file_path,
+          workspace_name
+        })
 
         panel_provider.send_message({
           command: 'UPDATE_FILE_PROGRESS',
@@ -268,16 +278,19 @@ export const handle_fix_all_failed_files = async (
             workspace_name,
             is_applying: false
           })
+
+          const index =
+            panel_provider.intelligent_update_cancel_token_sources.findIndex(
+              (s) => s.source === cancel_token_source
+            )
+          if (index > -1) {
+            panel_provider.intelligent_update_cancel_token_sources.splice(
+              index,
+              1
+            )
+          }
         }
       })
     )
-  }
-
-  const index =
-    panel_provider.intelligent_update_cancel_token_sources.indexOf(
-      cancel_token_source
-    )
-  if (index > -1) {
-    panel_provider.intelligent_update_cancel_token_sources.splice(index, 1)
   }
 }

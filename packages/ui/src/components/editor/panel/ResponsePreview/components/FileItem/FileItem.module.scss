@@ -8,9 +8,10 @@
   align-items: center;
   gap: 6px;
   font-size: 11px;
-  color: var(--vscode-descriptionForeground);
+  color: var(--cwc-text-color-dimmed);
   margin-right: 4px;
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 
   &__cancel {
     display: flex;
@@ -50,14 +51,6 @@
 
   &--deleted {
     cursor: default !important;
-  }
-
-  &--error {
-    border-color: var(--vscode-errorForeground) !important;
-  }
-
-  &--warning {
-    border-color: var(--vscode-inputValidation-warningBorder) !important;
   }
 
   &__left {
@@ -119,24 +112,51 @@
   display: flex;
   justify-content: space-between;
   gap: 4px;
-  border: 1px solid var(--cwc-border-color-dimmed);
-  border-top: none;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
   overflow: hidden;
 
   &--error {
-    color: var(--vscode-errorForeground);
-    border-color: var(--vscode-errorForeground);
+    color: var(--vscode-gitDecoration-deletedResourceForeground);
+    background-color: color-mix(
+      in srgb,
+      var(--vscode-gitDecoration-deletedResourceForeground) 12%,
+      transparent
+    );
+
+    .message__actions__item:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--vscode-gitDecoration-deletedResourceForeground) 12%,
+        transparent
+      );
+    }
   }
 
   &--warning {
-    color: var(--vscode-inputValidation-warningBorder);
-    border-color: var(--vscode-inputValidation-warningBorder);
+    color: var(--vscode-gitDecoration-modifiedResourceForeground);
+    background-color: color-mix(
+      in srgb,
+      var(--vscode-gitDecoration-modifiedResourceForeground) 12%,
+      transparent
+    );
+
+    .message__actions__item:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--vscode-gitDecoration-modifiedResourceForeground) 12%,
+        transparent
+      );
+    }
   }
 
   &--success {
-    color: var(--vscode-notebookStatusSuccessIcon-foreground);
+    color: var(--vscode-gitDecoration-addedResourceForeground);
+    background-color: color-mix(
+      in srgb,
+      var(--vscode-gitDecoration-addedResourceForeground) 12%,
+      transparent
+    );
   }
 
   &__content {

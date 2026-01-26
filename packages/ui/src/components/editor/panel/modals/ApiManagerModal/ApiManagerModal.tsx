@@ -88,7 +88,11 @@ export const ApiManagerModal: React.FC<Props> = (props) => {
         >
           API Manager
         </div>
-        <Scrollable max_height="20vh" on_scrolled_change={set_is_scrolled}>
+        <Scrollable
+          className={styles.scrollable}
+          max_height="25vh"
+          on_scrolled_change={set_is_scrolled}
+        >
           <div className={styles['requests-container']}>
             {props.progress_items.map((item) => {
               const item_start_time = start_times[item.id]

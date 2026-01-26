@@ -9,21 +9,44 @@
   display: flex;
   justify-content: space-between;
   gap: 4px;
-  color: var(--vscode-descriptionForeground);
+  color: var(--cwc-text-color-dimmed);
   font-size: 12px;
-  border: 1px solid var(--vscode-sideBarSectionHeader-border);
   margin: 0 12px;
   border-radius: 8px;
   overflow: hidden;
 
   &--error {
-    border-color: var(--vscode-errorForeground);
-    color: var(--vscode-errorForeground);
+    color: var(--vscode-gitDecoration-deletedResourceForeground);
+    background-color: color-mix(
+      in srgb,
+      var(--vscode-gitDecoration-deletedResourceForeground) 12%,
+      transparent
+    );
+
+    .info__action:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--vscode-gitDecoration-deletedResourceForeground) 12%,
+        transparent
+      );
+    }
   }
 
   &--warning {
-    border-color: var(--vscode-inputValidation-warningBorder);
-    color: var(--vscode-inputValidation-warningBorder);
+    color: var(--vscode-gitDecoration-modifiedResourceForeground);
+    background-color: color-mix(
+      in srgb,
+      var(--vscode-gitDecoration-modifiedResourceForeground) 12%,
+      transparent
+    );
+
+    .info__action:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--vscode-gitDecoration-modifiedResourceForeground) 12%,
+        transparent
+      );
+    }
   }
 
   &__content {
@@ -79,6 +102,53 @@
 
   &--small {
     font-size: 13px;
+  }
+}
+
+.fix-all-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0 12px;
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    align-items: center;
+    color: var(--cwc-text-color);
+
+    &__name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &__status {
+      color: var(--cwc-text-color-dimmed);
+      white-space: nowrap;
+      margin-left: 8px;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  &__bar {
+    height: 2px;
+    background-color: var(--vscode-dropdown-border);
+    width: 100%;
+    border-radius: 2px;
+    overflow: hidden;
+
+    &__fill {
+      height: 100%;
+      background-color: var(--vscode-focusBorder);
+    }
   }
 }
 

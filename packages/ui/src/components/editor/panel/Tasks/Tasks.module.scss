@@ -163,10 +163,6 @@
 
   &:hover {
     background-color: var(--vscode-list-hoverBackground);
-
-    .add-button::before {
-      opacity: 1;
-    }
   }
 }
 

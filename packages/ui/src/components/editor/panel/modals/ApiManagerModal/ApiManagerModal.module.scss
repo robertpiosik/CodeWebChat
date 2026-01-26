@@ -18,10 +18,8 @@
   pointer-events: all;
   z-index: 1;
   border-radius: 8px;
-  color: var(--vscode-quickInput-foreground);
-  background-color: var(--vscode-quickInput-background);
-  border: 1px solid var(--vscode-focusBorder);
-  box-shadow: 0 0 8px 2px var(--vscode-widget-shadow);
+  color: var(--vscode-button-foreground);
+  background-color: var(--vscode-button-background);
   width: 100%;
   max-width: min(260px, 70vw);
   overflow: hidden;
@@ -31,7 +29,8 @@
   font-weight: 500;
   font-size: 11px;
   font-weight: 600;
-  color: var(--cwc-text-color-dimmed);
+  color: var(--vscode-button-foreground);
+  opacity: 0.9;
   text-transform: uppercase;
   display: flex;
   align-items: center;
@@ -59,15 +58,11 @@
   width: 100%;
   position: relative;
 
-  &:nth-child(even) {
-    background-color: var(--vscode-list-hoverBackground);
-  }
-
   &__top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 12px 0 8px;
+    padding: 0 26px 0 8px;
     height: 22px;
     position: relative;
 
@@ -78,7 +73,8 @@
       line-height: 1.2;
 
       > span:nth-child(2) {
-        color: var(--vscode-descriptionForeground);
+        color: var(--vscode-button-foreground);
+        opacity: 0.7;
         margin-left: 0.5em;
         font-size: 0.9em;
       }
@@ -92,7 +88,8 @@
     padding: 0 12px 0 8px;
     height: 18px;
     font-size: 11px;
-    color: var(--vscode-descriptionForeground);
+    color: var(--vscode-button-foreground);
+    opacity: 0.7;
 
     &__status {
       overflow: hidden;
@@ -130,7 +127,7 @@
       margin: 0;
       height: 15px;
       width: 15px;
-      color: var(--vscode-checkbox-foreground);
+      color: var(--vscode-button-foreground);
       position: relative;
       cursor: pointer;
       flex-shrink: 0;
@@ -158,5 +155,20 @@
 
   &:nth-child(odd) &__close {
     background: transparent;
+  }
+}
+
+.scrollable {
+  &::before {
+    box-shadow: color-mix(in srgb, var(--vscode-button-background) 50%, black) 0
+      6px 6px -6px inset !important;
+  }
+
+  > div > div:last-child > div::before {
+    background-color: color-mix(
+      in srgb,
+      var(--vscode-button-background) 80%,
+      black
+    );
   }
 }

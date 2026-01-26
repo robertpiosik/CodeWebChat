@@ -102,7 +102,7 @@
   border: none;
   border-bottom: 1px solid var(--cwc-border-color);
   resize: none;
-  color: var(--vscode-descriptionForeground);
+  color: var(--cwc-text-color-dimmed);
   overflow: hidden;
 
   &:focus {
