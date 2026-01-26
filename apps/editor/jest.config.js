@@ -9,7 +9,7 @@ module.exports = {
   // Module name mapper for path aliases from tsconfig.json
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-    '^@shared/(.*)$': '<rootDir>/../shared/src/$1',
+    '^@shared/(.*)$': '<rootDir>/../../packages/shared/src/$1',
     '^vscode$': '<rootDir>/__mocks__/vscode.js'
   },
   // Transform files with ts-jest
