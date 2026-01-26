@@ -105,7 +105,7 @@ export const handle_changes_item = async (): Promise<
     })
 
     if (selected_branch && selected_branch != 'back') {
-      return `#Changes:${selected_branch.label} `
+      return `#Changes(${selected_branch.label})`
     }
 
     return 'continue'

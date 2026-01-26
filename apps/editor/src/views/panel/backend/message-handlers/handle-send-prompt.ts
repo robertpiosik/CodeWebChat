@@ -1,9 +1,9 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import * as vscode from 'vscode'
 import { FilesCollector } from '@/utils/files-collector'
-import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-symbol'
+import { replace_selection_symbol } from '@/views/panel/backend/utils/replace-selection-symbol'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
-import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
+import { replace_saved_context_symbol } from '@/views/panel/backend/utils/replace-saved-context-symbol'
 import {
   replace_changes_symbol,
   replace_context_at_commit_symbol,
@@ -120,24 +120,28 @@ export const handle_send_prompt = async (params: {
     let skill_definitions = ''
 
     if (processed_completion_instructions.includes('#Selection')) {
-      processed_completion_instructions = replace_selection_placeholder(
+      processed_completion_instructions = replace_selection_symbol(
         processed_completion_instructions
       )
     }
 
-    if (processed_completion_instructions.includes('#Changes:')) {
-      processed_completion_instructions = await replace_changes_symbol({
+    if (processed_completion_instructions.includes('#Changes(')) {
+      const result = await replace_changes_symbol({
         instruction: processed_completion_instructions
       })
+      processed_completion_instructions = result.instruction
+      skill_definitions += result.changes_definitions
     }
 
-    if (processed_completion_instructions.includes('#Commit:')) {
-      processed_completion_instructions = await replace_commit_symbol({
+    if (processed_completion_instructions.includes('#Commit(')) {
+      const result = await replace_commit_symbol({
         instruction: processed_completion_instructions
       })
+      processed_completion_instructions = result.instruction
+      skill_definitions += result.commit_definitions
     }
 
-    if (processed_completion_instructions.includes('#ContextAtCommit:')) {
+    if (processed_completion_instructions.includes('#ContextAtCommit(')) {
       processed_completion_instructions =
         await replace_context_at_commit_symbol({
           instruction: processed_completion_instructions,
@@ -145,21 +149,22 @@ export const handle_send_prompt = async (params: {
         })
     }
 
-    if (processed_completion_instructions.includes('#SavedContext:')) {
-      processed_completion_instructions =
-        await replace_saved_context_placeholder({
-          instruction: processed_completion_instructions,
-          context: params.panel_provider.context,
-          workspace_provider: params.panel_provider.workspace_provider
-        })
+    if (processed_completion_instructions.includes('#SavedContext(')) {
+      const result = await replace_saved_context_symbol({
+        instruction: processed_completion_instructions,
+        context: params.panel_provider.context,
+        workspace_provider: params.panel_provider.workspace_provider
+      })
+      processed_completion_instructions = result.instruction
+      skill_definitions += result.context_definitions
     }
 
-    if (processed_completion_instructions.includes('#Skill:')) {
+    if (processed_completion_instructions.includes('#Skill(')) {
       const result = await replace_skill_symbol({
         instruction: processed_completion_instructions
       })
       processed_completion_instructions = result.instruction
-      skill_definitions = result.skill_definitions
+      skill_definitions += result.skill_definitions
     }
 
     const context_text = await files_collector.collect_files({
@@ -218,44 +223,50 @@ export const handle_send_prompt = async (params: {
 
         if (editor && !editor.selection.isEmpty) {
           if (instructions.includes('#Selection')) {
-            instructions = replace_selection_placeholder(instructions)
+            instructions = replace_selection_symbol(instructions)
           }
         }
 
         let processed_instructions = instructions
         let skill_definitions = ''
-        if (processed_instructions.includes('#Changes:')) {
-          processed_instructions = await replace_changes_symbol({
+        if (processed_instructions.includes('#Changes(')) {
+          const result = await replace_changes_symbol({
             instruction: processed_instructions
           })
+          processed_instructions = result.instruction
+          skill_definitions += result.changes_definitions
         }
 
-        if (processed_instructions.includes('#Commit:')) {
-          processed_instructions = await replace_commit_symbol({
+        if (processed_instructions.includes('#Commit(')) {
+          const result = await replace_commit_symbol({
             instruction: processed_instructions
           })
+          processed_instructions = result.instruction
+          skill_definitions += result.commit_definitions
         }
 
-        if (processed_instructions.includes('#ContextAtCommit:')) {
+        if (processed_instructions.includes('#ContextAtCommit(')) {
           processed_instructions = await replace_context_at_commit_symbol({
             instruction: processed_instructions,
             workspace_provider: params.panel_provider.workspace_provider
           })
         }
-        if (processed_instructions.includes('#SavedContext:')) {
-          processed_instructions = await replace_saved_context_placeholder({
+        if (processed_instructions.includes('#SavedContext(')) {
+          const result = await replace_saved_context_symbol({
             instruction: processed_instructions,
             context: params.panel_provider.context,
             workspace_provider: params.panel_provider.workspace_provider
           })
+          processed_instructions = result.instruction
+          skill_definitions += result.context_definitions
         }
 
-        if (processed_instructions.includes('#Skill:')) {
+        if (processed_instructions.includes('#Skill(')) {
           const result = await replace_skill_symbol({
             instruction: processed_instructions
           })
           processed_instructions = result.instruction
-          skill_definitions = result.skill_definitions
+          skill_definitions += result.skill_definitions
         }
 
         let system_instructions_xml = ''

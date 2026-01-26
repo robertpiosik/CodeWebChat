@@ -203,7 +203,10 @@ export const handle_saved_context_item = async (
       }
 
       if (selected_context) {
-        return `#SavedContext:${source} "${selected_context.label}" `
+        const escaped_label = selected_context.label
+          .replace(/\\/g, '\\\\')
+          .replace(/"/g, '\\"')
+        return `#SavedContext(${source} "${escaped_label}")`
       }
 
       return 'continue'

@@ -183,9 +183,7 @@ export const handle_commit_item = async (
 
       if (selected_commit) {
         const message = (selected_commit.detail || '').replace(/"/g, '\\"')
-        return `#${symbol}:${selected_folder.name}:${
-          selected_commit.label
-        } "${message}" `
+        return `#${symbol}(${selected_folder.name}:${selected_commit.label} "${message}")`
       }
 
       return 'continue'

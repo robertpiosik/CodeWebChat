@@ -9,7 +9,7 @@ import {
 export const replace_skill_symbol = async (params: {
   instruction: string
 }): Promise<{ instruction: string; skill_definitions: string }> => {
-  const regex = /#Skill:([^:]+):([^:]+(?::[^:]+)?):([^\s,;:.!?]+)/g
+  const regex = /#Skill\(([^:]+):([^:]+(?::[^:]+)?):([^)]+)\)/g
   let skill_definitions = ''
   const processed_skills = new Set<string>()
 

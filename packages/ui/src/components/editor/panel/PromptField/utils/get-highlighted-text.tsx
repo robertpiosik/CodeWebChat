@@ -51,18 +51,18 @@ export const get_highlighted_text = (params: {
   context_file_paths: string[]
 }): string => {
   const saved_context_regex_part =
-    '#SavedContext:(?:WorkspaceState|JSON)\\s+"[^"]+"'
+    '#SavedContext\\((?:WorkspaceState|JSON) "(?:\\\\.|[^"\\\\])*"\\)'
 
   const commit_regex_part =
-    '#(?:Commit|ContextAtCommit):[^:]+:[^\\s"]+\\s+"(?:\\\\.|[^"\\\\])*"'
+    '#(?:Commit|ContextAtCommit)\\([^:]+:[^\\s"]+ "(?:\\\\.|[^"\\\\])*"\\)'
 
   const fragment_regex_part =
-    '<fragment path="[^"]+"(?: [^>]+)?>\\n[\\s\\S]*?\\n<\\/fragment>'
+    '<fragment path="[^"]+"(?: [^>]+)?>[\\s\\S]*?<\\/fragment>'
 
-  const skill_regex_part = '#Skill:[^:]+:[^:]+:[^\\s]+'
+  const skill_regex_part = '#Skill\\([^)]+\\)'
 
   const regex = new RegExp(
-    `(${fragment_regex_part}|#Selection|#Changes:[^\\s,;:!?]+|${saved_context_regex_part}|${commit_regex_part}|${skill_regex_part})`,
+    `(${fragment_regex_part}|#Selection|#Changes\\([^)]+\\)|${saved_context_regex_part}|${commit_regex_part}|${skill_regex_part})`,
     'g'
   )
   const parts = params.text.split(regex)
@@ -70,13 +70,25 @@ export const get_highlighted_text = (params: {
   const result = parts
     .map((part) => {
       const fragment_match = part.match(
-        /^<fragment path="([^"]+)"(?: start="([^"]+)")?(?: end="([^"]+)")?>\n([\s\S]*?)\n<\/fragment>$/
+        /^<fragment path="([^"]+)"(?: start="([^"]+)")?(?: end="([^"]+)")?>([\s\S]*?)<\/fragment>$/
       )
       if (part && fragment_match) {
         const path = fragment_match[1]
         const start = fragment_match[2]
         const end = fragment_match[3]
-        const content = fragment_match[4]
+        let content = fragment_match[4]
+
+        if (
+          content.startsWith('\n<![CDATA[\n') &&
+          content.endsWith('\n]]>\n')
+        ) {
+          content = content.slice(11, -5)
+        } else if (content.startsWith('<![CDATA[') && content.endsWith(']]>')) {
+          content = content.slice(9, -3)
+        } else if (content.startsWith('\n') && content.endsWith('\n')) {
+          content = content.slice(1, -1)
+        }
+
         const line_count = content.split('\n').length
         const lines_text = line_count === 1 ? 'line' : 'lines'
 
@@ -111,8 +123,8 @@ export const get_highlighted_text = (params: {
           styles['keyword__text']
         }" data-role="keyword-text">Selection</span></span>`
       }
-      if (part && /^#Changes:[^\s,;:!?]+$/.test(part)) {
-        const branch_name = part.substring('#Changes:'.length)
+      if (part && /^#Changes\([^)]+\)$/.test(part)) {
+        const branch_name = part.slice(9, -1)
         return `<span class="${cn(
           styles['keyword'],
           styles['keyword--changes']
@@ -127,11 +139,14 @@ export const get_highlighted_text = (params: {
         )}</span></span>`
       }
       const saved_context_match = part.match(
-        /^#SavedContext:(WorkspaceState|JSON)\s+"([^"]+)"$/
+        /^#SavedContext\((WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\)$/
       )
       if (part && saved_context_match) {
         const context_type = saved_context_match[1]
+        // Unescape quotes and backslashes for display
         const context_name = saved_context_match[2]
+          .replace(/\\"/g, '"')
+          .replace(/\\\\/g, '\\')
         return `<span class="${cn(
           styles['keyword'],
           styles['keyword--saved-context']
@@ -146,7 +161,7 @@ export const get_highlighted_text = (params: {
         )}"</span></span>`
       }
       const commit_match = part.match(
-        /^#(Commit|ContextAtCommit):([^:]+):([^\s"]+)\s+"((?:\\.|[^"\\])*)"$/
+        /^#(Commit|ContextAtCommit)\(([^:]+):([^\s"]+) "((?:\\.|[^"\\])*)"\)$/
       )
       if (part && commit_match) {
         const symbol = commit_match[1]
@@ -170,7 +185,7 @@ export const get_highlighted_text = (params: {
         }" data-role="keyword-text">${escape_html(short_hash)}</span></span>`
       }
 
-      const skill_match = part.match(/^#Skill:([^:]+):(.+):([^\s:]+)$/)
+      const skill_match = part.match(/^#Skill\(([^:]+):(.+):([^\s:]+)\)$/)
       if (part && skill_match) {
         const agent = skill_match[1]
         const repo = skill_match[2]

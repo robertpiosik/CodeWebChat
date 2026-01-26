@@ -346,13 +346,36 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     const update_editor_state = () => {
       const active_editor = vscode.window.activeTextEditor
       const current_file_path = active_editor?.document.uri.fsPath
+      let display_path: string | undefined
 
-      if (current_file_path != this.currently_open_file_path) {
-        this.currently_open_file_path = current_file_path
+      if (current_file_path) {
+        const workspace_root =
+          this.workspace_provider.get_workspace_root_for_file(current_file_path)
+
+        if (workspace_root) {
+          const relative_path = path
+            .relative(workspace_root, current_file_path)
+            .replace(/\\/g, '/')
+
+          const workspace_roots = this.workspace_provider.get_workspace_roots()
+          if (workspace_roots.length > 1) {
+            const workspace_name =
+              this.workspace_provider.get_workspace_name(workspace_root)
+            display_path = `${workspace_name}/${relative_path}`
+          } else {
+            display_path = relative_path
+          }
+        } else {
+          display_path = current_file_path.replace(/\\/g, '/')
+        }
+      }
+
+      if (display_path != this.currently_open_file_path) {
+        this.currently_open_file_path = display_path
         if (this._webview_view) {
           this.send_message({
             command: 'EDITOR_STATE_CHANGED',
-            currently_open_file_path: current_file_path
+            currently_open_file_path: display_path
           })
         }
       }

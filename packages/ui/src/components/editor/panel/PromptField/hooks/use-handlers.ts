@@ -21,7 +21,7 @@ const getKeywordRanges = (
   const ranges: { start: number; end: number }[] = []
   // This regex is a combination of all keyword types
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+")|(#(?:Commit|ContextAtCommit):[^:]+:[^\s"]+\s+"(?:\\.|[^"\\])*")|(<fragment path="[^"]+"(?: [^>]+)?>\n[\s\S]*?\n<\/fragment>)|(#Skill:[^:]+:[^:]+:[^\s]+)/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "(?:\\.|[^"\\])*"\))|(#(?:Commit|ContextAtCommit)\([^:]+:[^\s"]+ "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>[\s\S]*?<\/fragment>)|(#Skill\([^)]+\))/g
 
   let match
   while ((match = regex.exec(text)) !== null) {
@@ -71,7 +71,7 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
       if (index != -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + expected_text.length)
-        return `${prefix}#Changes:${branchName}${suffix}`
+        return `${prefix}#Changes(${branchName})${suffix}`
       }
     } else if (el.dataset.type == 'saved-context-keyword') {
       const contextType = el.dataset.contextType
@@ -82,7 +82,7 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
       if (index != -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + expected_text.length)
-        return `${prefix}#SavedContext:${contextType} "${contextName}"${suffix}`
+        return `${prefix}#SavedContext(${contextType} "${contextName.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}")${suffix}`
       }
     } else if (el.dataset.type == 'selection-keyword') {
       const expected_text = 'Selection'
@@ -104,10 +104,10 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
       if (index != -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + short_hash.length)
-        return `${prefix}#Commit:${repo_name}:${commit_hash} "${commit_message.replace(
+        return `${prefix}#Commit(${repo_name}:${commit_hash} "${commit_message.replace(
           /"/g,
           '\\"'
-        )}"${suffix}`
+        )}")${suffix}`
       }
     } else if (el.dataset.type == 'contextatcommit-keyword') {
       const repo_name = el.dataset.repoName
@@ -121,10 +121,10 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
       if (index !== -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + short_hash.length)
-        return `${prefix}#ContextAtCommit:${repo_name}:${commit_hash} "${commit_message.replace(
+        return `${prefix}#ContextAtCommit(${repo_name}:${commit_hash} "${commit_message.replace(
           /"/g,
           '\\"'
-        )}"${suffix}`
+        )}")${suffix}`
       }
     } else if (el.dataset.type == 'pasted-lines-keyword') {
       const path = el.dataset.path
@@ -137,18 +137,22 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
       if (start) attributes += ` start="${start}"`
       if (end) attributes += ` end="${end}"`
 
-      const line_count = content.split('\n').length
-      const lines_text = line_count == 1 ? 'line' : 'lines'
+      const is_multiline = content.includes('\n')
+      const formatted_content = is_multiline
+        ? `\n<![CDATA[\n${content}\n]]>\n`
+        : `<![CDATA[${content}]]>`
+      const line_count = is_multiline ? content.split('\n').length : 1
+      const lines_text = line_count === 1 ? 'line' : 'lines'
       const label = `Pasted ${line_count} ${lines_text}`
       const index = inner_content.indexOf(label)
 
       if (index != -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + label.length)
-        return `${prefix}<fragment ${attributes}>\n${content}\n</fragment>${suffix}`
+        return `${prefix}<fragment ${attributes}>${formatted_content}</fragment>${suffix}`
       }
 
-      return `<fragment ${attributes}>\n${content}\n</fragment>`
+      return `<fragment ${attributes}>${formatted_content}</fragment>`
     } else if (el.dataset.type == 'skill-keyword') {
       const agent = el.dataset.agent
       const repo = el.dataset.repo
@@ -159,7 +163,7 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
       if (index != -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + skillName.length)
-        return `${prefix}#Skill:${agent}:${repo}:${skillName}${suffix}`
+        return `${prefix}#Skill(${agent}:${repo}:${skillName})${suffix}`
       }
     }
 
@@ -282,7 +286,7 @@ export const use_handlers = (
       const branch_name = keyword_element.dataset.branchName
       if (!branch_name) return
 
-      const search_pattern = `#Changes:${branch_name}`
+      const search_pattern = `#Changes(${branch_name})`
       const start_index = props.value.indexOf(search_pattern)
 
       if (start_index !== -1) {
@@ -293,7 +297,7 @@ export const use_handlers = (
       const context_name = keyword_element.dataset.contextName
       if (!context_type || !context_name) return
 
-      const search_pattern = `#SavedContext:${context_type} "${context_name}"`
+      const search_pattern = `#SavedContext(${context_type} "${context_name.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}")`
       const start_index = props.value.indexOf(search_pattern)
 
       if (start_index !== -1) {
@@ -312,7 +316,10 @@ export const use_handlers = (
       const commit_message = keyword_element.dataset.commitMessage
       if (!repo_name || !commit_hash || commit_message === undefined) return
 
-      const search_pattern = `#Commit:${repo_name}:${commit_hash} "${commit_message.replace(/"/g, '\\"')}"`
+      const search_pattern = `#Commit(${repo_name}:${commit_hash} "${commit_message.replace(
+        /"/g,
+        '\\\\\"'
+      )}")`
       const start_index = props.value.indexOf(search_pattern)
 
       if (start_index !== -1) {
@@ -324,7 +331,10 @@ export const use_handlers = (
       const commit_message = keyword_element.dataset.commitMessage
       if (!repo_name || !commit_hash || commit_message === undefined) return
 
-      const search_pattern = `#ContextAtCommit:${repo_name}:${commit_hash} "${commit_message.replace(/"/g, '\\"')}"`
+      const search_pattern = `#ContextAtCommit(${repo_name}:${commit_hash} "${commit_message.replace(
+        /"/g,
+        '\\\\\"'
+      )}")`
       const start_index = props.value.indexOf(search_pattern)
 
       if (start_index !== -1) {
@@ -336,7 +346,7 @@ export const use_handlers = (
       const skillName = keyword_element.dataset.skillName
       if (!agent || !repo || !skillName) return
 
-      const search_pattern = `#Skill:${agent}:${repo}:${skillName}`
+      const search_pattern = `#Skill(${agent}:${repo}:${skillName})`
       const start_index = props.value.indexOf(search_pattern)
 
       if (start_index !== -1) {
@@ -353,11 +363,21 @@ export const use_handlers = (
       if (start) attributes += ` start="${start}"`
       if (end) attributes += ` end="${end}"`
 
-      // Since we can't reliably search for multiline content with indexOf easily if formatting varies,
-      // and we just clicked a specific element, we might need a better way.
-      // However, we construct exact strings.
-      const search_pattern = `<fragment ${attributes}>\n${content}\n</fragment>`
-      const start_index = props.value.indexOf(search_pattern)
+      const is_multiline = content.includes('\n')
+      const formatted_content = is_multiline
+        ? `\n<![CDATA[\n${content}\n]]>\n`
+        : `<![CDATA[${content}]]>`
+
+      const search_pattern_new = `<fragment ${attributes}>${formatted_content}</fragment>`
+      const search_pattern_old = `<fragment ${attributes}>\n${content}\n</fragment>`
+
+      let search_pattern = search_pattern_new
+      let start_index = props.value.indexOf(search_pattern)
+
+      if (start_index === -1) {
+        search_pattern = search_pattern_old
+        start_index = props.value.indexOf(search_pattern)
+      }
 
       if (start_index !== -1) {
         apply_keyword_deletion(start_index, start_index + search_pattern.length)
@@ -476,21 +496,11 @@ export const use_handlers = (
     ) {
       const { start_line, start_col, end_line, end_col } =
         props.current_selection
-      text_to_insert = `<fragment path="${props.currently_open_file_path}" start="${start_line}:${start_col}" end="${end_line}:${end_col}">\n${text}\n</fragment>`
-
-      let has_space_after = false
-      if (raw_end < props.value.length) {
-        const char_after = props.value[raw_end]
-        if (/\s/.test(char_after)) {
-          has_space_after = true
-        }
-      }
-
-      if (!has_space_after) {
-        text_to_insert += ' '
-      } else {
-        caret_offset_adjustment = 1
-      }
+      const is_multiline = text.includes('\n')
+      const formatted_text = is_multiline
+        ? `\n<![CDATA[\n${text}\n]]>\n`
+        : `<![CDATA[${text}]]>`
+      text_to_insert = `<fragment path="${props.currently_open_file_path}" start="${start_line}:${start_col}" end="${end_line}:${end_col}">${formatted_text}</fragment>`
     }
 
     const new_value =
@@ -668,7 +678,7 @@ export const use_handlers = (
     context_file_paths: string[]
   ): boolean => {
     const text_before_cursor = props.value.substring(0, raw_pos)
-    const match = text_before_cursor.match(/#Changes:[^\s,;:!?]+$/)
+    const match = text_before_cursor.match(/#Changes\([^)]+\)$/)
 
     if (match) {
       const start_of_match = raw_pos - match[0].length
@@ -688,7 +698,7 @@ export const use_handlers = (
   ): boolean => {
     const text_before_cursor = props.value.substring(0, raw_pos)
     const match = text_before_cursor.match(
-      /#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+"$/
+      /#SavedContext\((?:WorkspaceState|JSON) "(?:\\.|[^"\\])*"\)$/
     )
 
     if (match) {
@@ -728,7 +738,7 @@ export const use_handlers = (
   ): boolean => {
     const text_before_cursor = props.value.substring(0, raw_pos)
     const match = text_before_cursor.match(
-      /#(?:Commit|ContextAtCommit):[^:]+:[^\s"]+\s+"(?:\\.|[^"\\])*"$/
+      /#(?:Commit|ContextAtCommit)\([^:]+:[^\s"]+ "(?:\\.|[^"\\])*"\)$/
     )
 
     if (match) {
@@ -745,7 +755,7 @@ export const use_handlers = (
 
   const handle_skill_keyword_deletion = (raw_pos: number): boolean => {
     const text_before_cursor = props.value.substring(0, raw_pos)
-    const match = text_before_cursor.match(/#Skill:[^:]+:[^:]+:[^\s]+$/)
+    const match = text_before_cursor.match(/#Skill\([^)]+\)$/)
 
     if (match) {
       const start_of_match = raw_pos - match[0].length
@@ -762,7 +772,7 @@ export const use_handlers = (
   const handle_pasted_lines_keyword_deletion = (raw_pos: number): boolean => {
     const text_before_cursor = props.value.substring(0, raw_pos)
 
-    const regex = /<fragment path="[^"]+"(?: [^>]+)?>\n[\s\S]*?\n<\/fragment>/g
+    const regex = /<fragment path="[^"]+"(?: [^>]+)?>[\s\S]*?<\/fragment>/g
     let match
     let last_match: RegExpExecArray | null = null
 

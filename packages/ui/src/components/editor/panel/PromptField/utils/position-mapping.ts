@@ -8,7 +8,7 @@ export const map_display_pos_to_raw_pos = (
   let last_raw_index = 0
 
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"([^"]+)")|(#(?:Commit|ContextAtCommit):[^:]+:([^\s"]+)\s+"(?:\\.|[^"\\])*")|(<fragment path="[^"]+"(?: [^>]+)?>\n([\s\S]*?)\n<\/fragment>)|(#Skill:[^:]+:[^:]+:[^\s]+)/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))/g
   let match
 
   while ((match = regex.exec(raw_text)) !== null) {
@@ -19,8 +19,8 @@ export const map_display_pos_to_raw_pos = (
     const context_name = match[5]
     const commit_keyword = match[6]
     const commit_hash = match[7]
-    const fragment_keyword = match[8]
-    const fragment_content = match[9]
+    const fragment_keyword = match[8] // Whole fragment tag
+    let fragment_content = match[9] // Content inside fragment
     const skill_keyword = match[10]
 
     let is_replacement_match = false
@@ -31,26 +31,46 @@ export const map_display_pos_to_raw_pos = (
       display_match_length = filename.length
       is_replacement_match = true
     } else if (changes_keyword) {
-      const branch_name = changes_keyword.substring('#Changes:'.length)
+      const branch_name = changes_keyword.slice(9, -1)
       display_match_length = `Diff with ${branch_name}`.length
       is_replacement_match = true
     } else if (selection_keyword) {
       display_match_length = 'Selection'.length
       is_replacement_match = true
     } else if (saved_context_keyword) {
-      display_match_length = `Context "${context_name}"`.length
+      const display_name = context_name
+        .replace(/\\"/g, '"')
+        .replace(/\\\\/g, '\\')
+      display_match_length = `Context "${display_name}"`.length
       is_replacement_match = true
     } else if (commit_keyword) {
       const short_hash = commit_hash.substring(0, 7)
       display_match_length = short_hash.length
       is_replacement_match = true
     } else if (fragment_keyword) {
+      if (
+        fragment_content.startsWith('\n<![CDATA[\n') &&
+        fragment_content.endsWith('\n]]>\n')
+      ) {
+        fragment_content = fragment_content.slice(11, -5)
+      } else if (
+        fragment_content.startsWith('<![CDATA[') &&
+        fragment_content.endsWith(']]>')
+      ) {
+        fragment_content = fragment_content.slice(9, -3)
+      } else if (
+        fragment_content.startsWith('\n') &&
+        fragment_content.endsWith('\n')
+      ) {
+        fragment_content = fragment_content.slice(1, -1)
+      }
       const line_count = fragment_content.split('\n').length
       const lines_text = line_count === 1 ? 'line' : 'lines'
       display_match_length = `Pasted ${line_count} ${lines_text}`.length
       is_replacement_match = true
     } else if (skill_keyword) {
-      const parts = skill_keyword.split(':')
+      const content = skill_keyword.slice(7, -1)
+      const parts = content.split(':')
       const skill_name = parts[parts.length - 1]
       display_match_length = skill_name.length
       is_replacement_match = true
@@ -97,7 +117,7 @@ export const map_raw_pos_to_display_pos = (
   let last_raw_index = 0
 
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"([^"]+)")|(#(?:Commit|ContextAtCommit):[^:]+:([^\s"]+)\s+"(?:\\.|[^"\\])*")|(<fragment path="[^"]+"(?: [^>]+)?>\n([\s\S]*?)\n<\/fragment>)|(#Skill:[^:]+:[^:]+:[^\s]+)/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))/g
   let match
 
   while ((match = regex.exec(raw_text)) !== null) {
@@ -109,7 +129,7 @@ export const map_raw_pos_to_display_pos = (
     const commit_keyword = match[6]
     const commit_hash = match[7]
     const fragment_keyword = match[8]
-    const fragment_content = match[9]
+    let fragment_content = match[9] // Content inside fragment
     const skill_keyword = match[10]
 
     let is_replacement_match = false
@@ -120,26 +140,46 @@ export const map_raw_pos_to_display_pos = (
       display_match_length = filename.length
       is_replacement_match = true
     } else if (changes_keyword) {
-      const branch_name = changes_keyword.substring('#Changes:'.length)
+      const branch_name = changes_keyword.slice(9, -1)
       display_match_length = `Diff with ${branch_name}`.length
       is_replacement_match = true
     } else if (selection_keyword) {
       display_match_length = 'Selection'.length
       is_replacement_match = true
     } else if (saved_context_keyword) {
-      display_match_length = `Context "${context_name}"`.length
+      const display_name = context_name
+        .replace(/\\"/g, '"')
+        .replace(/\\\\/g, '\\')
+      display_match_length = `Context "${display_name}"`.length
       is_replacement_match = true
     } else if (commit_keyword) {
       const short_hash = commit_hash.substring(0, 7)
       display_match_length = short_hash.length
       is_replacement_match = true
     } else if (fragment_keyword) {
+      if (
+        fragment_content.startsWith('\n<![CDATA[\n') &&
+        fragment_content.endsWith('\n]]>\n')
+      ) {
+        fragment_content = fragment_content.slice(11, -5)
+      } else if (
+        fragment_content.startsWith('<![CDATA[') &&
+        fragment_content.endsWith(']]>')
+      ) {
+        fragment_content = fragment_content.slice(9, -3)
+      } else if (
+        fragment_content.startsWith('\n') &&
+        fragment_content.endsWith('\n')
+      ) {
+        fragment_content = fragment_content.slice(1, -1)
+      }
       const line_count = fragment_content.split('\n').length
       const lines_text = line_count === 1 ? 'line' : 'lines'
       display_match_length = `Pasted ${line_count} ${lines_text}`.length
       is_replacement_match = true
     } else if (skill_keyword) {
-      const parts = skill_keyword.split(':')
+      const content = skill_keyword.slice(7, -1)
+      const parts = content.split(':')
       const skill_name = parts[parts.length - 1]
       display_match_length = skill_name.length
       is_replacement_match = true

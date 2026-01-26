@@ -18,8 +18,8 @@ import {
   replace_commit_symbol,
   replace_context_at_commit_symbol
 } from '@/views/panel/backend/utils/replace-git-symbols'
-import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
-import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-symbol'
+import { replace_saved_context_symbol } from '@/views/panel/backend/utils/replace-saved-context-symbol'
+import { replace_selection_symbol } from '@/views/panel/backend/utils/replace-selection-symbol'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { replace_skill_symbol } from '@/views/panel/backend/utils/replace-skill-symbol'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
@@ -298,45 +298,51 @@ export const handle_prune_context = async (
     !!editor && !editor.selection.isEmpty && instructions.includes('#Selection')
 
   if (has_selection) {
-    instructions = replace_selection_placeholder(instructions)
+    instructions = replace_selection_symbol(instructions)
   }
 
   let processed_instructions = instructions
   let skill_definitions = ''
 
-  if (processed_instructions.includes('#Changes:')) {
-    processed_instructions = await replace_changes_symbol({
+  if (processed_instructions.includes('#Changes(')) {
+    const result = await replace_changes_symbol({
       instruction: processed_instructions
     })
+    processed_instructions = result.instruction
+    skill_definitions += result.changes_definitions
   }
 
-  if (processed_instructions.includes('#Commit:')) {
-    processed_instructions = await replace_commit_symbol({
+  if (processed_instructions.includes('#Commit(')) {
+    const result = await replace_commit_symbol({
       instruction: processed_instructions
     })
+    processed_instructions = result.instruction
+    skill_definitions += result.commit_definitions
   }
 
-  if (processed_instructions.includes('#ContextAtCommit:')) {
+  if (processed_instructions.includes('#ContextAtCommit(')) {
     processed_instructions = await replace_context_at_commit_symbol({
       instruction: processed_instructions,
       workspace_provider: panel_provider.workspace_provider
     })
   }
 
-  if (processed_instructions.includes('#SavedContext:')) {
-    processed_instructions = await replace_saved_context_placeholder({
+  if (processed_instructions.includes('#SavedContext(')) {
+    const result = await replace_saved_context_symbol({
       instruction: processed_instructions,
       context: panel_provider.context,
       workspace_provider: panel_provider.workspace_provider
     })
+    processed_instructions = result.instruction
+    skill_definitions += result.context_definitions
   }
 
-  if (processed_instructions.includes('#Skill:')) {
+  if (processed_instructions.includes('#Skill(')) {
     const result = await replace_skill_symbol({
       instruction: processed_instructions
     })
     processed_instructions = result.instruction
-    skill_definitions = result.skill_definitions
+    skill_definitions += result.skill_definitions
   }
 
   const collected_files = await files_collector.collect_files({

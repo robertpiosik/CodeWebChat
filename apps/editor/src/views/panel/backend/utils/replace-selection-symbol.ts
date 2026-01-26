@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { dictionary } from '@shared/constants/dictionary'
 
-export const replace_selection_placeholder = (instruction: string): string => {
+export const replace_selection_symbol = (instruction: string): string => {
   if (!instruction.includes('#Selection')) {
     return instruction
   }

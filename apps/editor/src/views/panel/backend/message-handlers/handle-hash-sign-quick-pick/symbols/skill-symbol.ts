@@ -424,6 +424,6 @@ export const handle_skill_item = async (): Promise<
       }
     }
 
-    return `#Skill:${agent.name}:${repo_id}:${skill_name} `
+    return `#Skill(${agent.name}:${repo_id}:${skill_name})`
   }
 }

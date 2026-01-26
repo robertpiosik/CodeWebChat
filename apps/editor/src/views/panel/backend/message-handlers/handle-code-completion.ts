@@ -18,13 +18,13 @@ import { CodeCompletionMessage } from '@/views/panel/types/messages'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { dictionary } from '@shared/constants/dictionary'
 import { randomUUID } from 'crypto'
-import { replace_selection_placeholder } from '../utils/replace-selection-symbol'
+import { replace_selection_symbol } from '../utils/replace-selection-symbol'
 import {
   replace_changes_symbol,
   replace_commit_symbol,
   replace_context_at_commit_symbol
 } from '../utils/replace-git-symbols'
-import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
+import { replace_saved_context_symbol } from '@/views/panel/backend/utils/replace-saved-context-symbol'
 import { replace_skill_symbol } from '../utils/replace-skill-symbol'
 
 const get_code_completion_config = async (
@@ -356,24 +356,28 @@ export const handle_code_completion = async (
     let skill_definitions = ''
 
     if (processed_completion_instructions.includes('#Selection')) {
-      processed_completion_instructions = replace_selection_placeholder(
+      processed_completion_instructions = replace_selection_symbol(
         processed_completion_instructions
       )
     }
 
-    if (processed_completion_instructions.includes('#Changes:')) {
-      processed_completion_instructions = await replace_changes_symbol({
+    if (processed_completion_instructions.includes('#Changes(')) {
+      const result = await replace_changes_symbol({
         instruction: processed_completion_instructions
       })
+      processed_completion_instructions = result.instruction
+      skill_definitions += result.changes_definitions
     }
 
-    if (processed_completion_instructions.includes('#Commit:')) {
-      processed_completion_instructions = await replace_commit_symbol({
+    if (processed_completion_instructions.includes('#Commit(')) {
+      const result = await replace_commit_symbol({
         instruction: processed_completion_instructions
       })
+      processed_completion_instructions = result.instruction
+      skill_definitions += result.commit_definitions
     }
 
-    if (processed_completion_instructions.includes('#ContextAtCommit:')) {
+    if (processed_completion_instructions.includes('#ContextAtCommit(')) {
       processed_completion_instructions =
         await replace_context_at_commit_symbol({
           instruction: processed_completion_instructions,
@@ -381,21 +385,22 @@ export const handle_code_completion = async (
         })
     }
 
-    if (processed_completion_instructions.includes('#SavedContext:')) {
-      processed_completion_instructions =
-        await replace_saved_context_placeholder({
-          instruction: processed_completion_instructions,
-          context: panel_provider.context,
-          workspace_provider: panel_provider.workspace_provider
-        })
+    if (processed_completion_instructions.includes('#SavedContext(')) {
+      const result = await replace_saved_context_symbol({
+        instruction: processed_completion_instructions,
+        context: panel_provider.context,
+        workspace_provider: panel_provider.workspace_provider
+      })
+      processed_completion_instructions = result.instruction
+      skill_definitions += result.context_definitions
     }
 
-    if (processed_completion_instructions.includes('#Skill:')) {
+    if (processed_completion_instructions.includes('#Skill(')) {
       const result = await replace_skill_symbol({
         instruction: processed_completion_instructions
       })
       processed_completion_instructions = result.instruction
-      skill_definitions = result.skill_definitions
+      skill_definitions += result.skill_definitions
     }
 
     const files_collector = new FilesCollector(

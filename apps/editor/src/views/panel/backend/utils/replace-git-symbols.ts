@@ -80,179 +80,186 @@ const build_changes_xml = (
 
 export const replace_changes_symbol = async (params: {
   instruction: string
-}): Promise<string> => {
-  const matches = params.instruction.match(
-    /#Changes:([^\s,;:.!?]+(?:\/[^\s,;:.!?]+)?)/
-  )
-  if (!matches) {
-    return params.instruction
+}): Promise<{ instruction: string; changes_definitions: string }> => {
+  const regex = /#Changes\(([^)]+)\)/g
+  const matches = [...params.instruction.matchAll(regex)]
+
+  let result_instruction = params.instruction
+  let changes_definitions = ''
+
+  if (matches.length == 0) {
+    return { instruction: result_instruction, changes_definitions }
   }
 
-  const branch_spec = matches[1]
-
-  const multi_root_match = branch_spec.match(/^([^/]+)\/(.+)$/)
-
-  if (multi_root_match) {
-    const [, folder_name, branch_name] = multi_root_match
-
-    const workspace_folders = vscode.workspace.workspaceFolders
-    if (!workspace_folders) {
-      vscode.window.showErrorMessage(
-        dictionary.error_message.NO_WORKSPACE_FOLDERS_FOUND
-      )
-      return params.instruction.replace(
-        new RegExp(`#Changes:${branch_spec}`, 'g'),
-        ''
-      )
-    }
-
-    const target_folder = workspace_folders.find(
-      (folder) => folder.name == folder_name
+  for (const match of matches) {
+    const branch_spec = match[1]
+    const escaped_branch_spec = branch_spec.replace(
+      /[.*+?^${}()|[\]\\]/g,
+      '\\$&'
     )
-    if (!target_folder) {
-      vscode.window.showErrorMessage(
-        dictionary.error_message.WORKSPACE_FOLDER_NOT_FOUND(folder_name)
-      )
-      return params.instruction.replace(
-        new RegExp(`#Changes:${branch_spec}`, 'g'),
-        ''
-      )
+    const replacement_regex = new RegExp(
+      `\\s*#Changes\\(${escaped_branch_spec}\\)\\s*`
+    )
+
+    // Skip if the placeholder is already gone (e.g., duplicate processing)
+    if (!replacement_regex.test(result_instruction)) {
+      continue
     }
 
-    try {
-      const current_branch = execSync('git rev-parse --abbrev-ref HEAD', {
-        cwd: target_folder.uri.fsPath
-      })
-        .toString()
-        .trim()
+    const multi_root_match = branch_spec.match(/^([^/]+)\/(.+)$/)
 
-      let diff_base: string
-      if (current_branch == branch_name) {
-        // If comparing to same branch, use merge-base to show changes since branch point
-        diff_base = execSync(`git merge-base HEAD origin/${branch_name}`, {
+    if (multi_root_match) {
+      const [, folder_name, branch_name] = multi_root_match
+
+      const workspace_folders = vscode.workspace.workspaceFolders
+      if (!workspace_folders) {
+        vscode.window.showErrorMessage(
+          dictionary.error_message.NO_WORKSPACE_FOLDERS_FOUND
+        )
+        result_instruction = result_instruction.replace(replacement_regex, '')
+        continue
+      }
+
+      const target_folder = workspace_folders.find(
+        (folder) => folder.name == folder_name
+      )
+      if (!target_folder) {
+        vscode.window.showErrorMessage(
+          dictionary.error_message.WORKSPACE_FOLDER_NOT_FOUND(folder_name)
+        )
+        result_instruction = result_instruction.replace(replacement_regex, '')
+        continue
+      }
+
+      try {
+        const current_branch = execSync('git rev-parse --abbrev-ref HEAD', {
           cwd: target_folder.uri.fsPath
         })
           .toString()
           .trim()
-      } else {
-        diff_base = branch_name
-      }
-      const diff_command = `git diff ${diff_base}`
-      const diff = execSync(diff_command, {
-        cwd: target_folder.uri.fsPath
-      }).toString()
 
-      if (!diff || diff.length == 0) {
-        vscode.window.showInformationMessage(
-          dictionary.information_message.NO_CHANGES_FOUND_BETWEEN_BRANCHES_IN_FOLDER(
+        let diff_base: string
+        if (current_branch == branch_name) {
+          // If comparing to same branch, use merge-base to show changes since branch point
+          diff_base = execSync(`git merge-base HEAD origin/${branch_name}`, {
+            cwd: target_folder.uri.fsPath
+          })
+            .toString()
+            .trim()
+        } else {
+          diff_base = branch_name
+        }
+        const diff_command = `git diff ${diff_base}`
+        const diff = execSync(diff_command, {
+          cwd: target_folder.uri.fsPath
+        }).toString()
+
+        if (!diff || diff.length == 0) {
+          vscode.window.showInformationMessage(
+            dictionary.information_message.NO_CHANGES_FOUND_BETWEEN_BRANCHES_IN_FOLDER(
+              branch_name,
+              folder_name
+            )
+          )
+          result_instruction = result_instruction.replace(replacement_regex, '')
+          continue
+        }
+
+        const replacement_text = build_changes_xml(
+          diff,
+          target_folder.uri.fsPath,
+          diff_base
+        )
+        changes_definitions += replacement_text
+        result_instruction = result_instruction.replace(
+          replacement_regex,
+          ` <changes branch="${branch_spec}" /> `
+        )
+      } catch (error) {
+        vscode.window.showErrorMessage(
+          dictionary.error_message.FAILED_TO_GET_CHANGES_FROM_BRANCH_IN_FOLDER(
             branch_name,
             folder_name
           )
         )
-        return params.instruction.replace(
-          new RegExp(`#Changes:${branch_spec}`, 'g'),
-          ''
+        Logger.error({
+          function_name: 'replace_changes_placeholder',
+          message: `Error getting diff from branch ${branch_name} in folder ${folder_name}`,
+          data: error
+        })
+        result_instruction = result_instruction.replace(replacement_regex, '')
+      }
+    } else {
+      const branch_name = branch_spec
+      const repository = await get_git_repository()
+      if (!repository) {
+        vscode.window.showErrorMessage(
+          dictionary.error_message.NO_GIT_REPOSITORY_FOUND
         )
+        result_instruction = result_instruction.replace(replacement_regex, '')
+        continue
       }
 
-      const replacement_text = build_changes_xml(
-        diff,
-        target_folder.uri.fsPath,
-        diff_base
-      )
-      return params.instruction.replace(
-        new RegExp(`\\s*#Changes:${branch_spec}\\s*`, 'g'),
-        replacement_text
-      )
-    } catch (error) {
-      vscode.window.showErrorMessage(
-        dictionary.error_message.FAILED_TO_GET_CHANGES_FROM_BRANCH_IN_FOLDER(
-          branch_name,
-          folder_name
-        )
-      )
-      Logger.error({
-        function_name: 'replace_changes_placeholder',
-        message: `Error getting diff from branch ${branch_name} in folder ${folder_name}`,
-        data: error
-      })
-      return params.instruction.replace(
-        new RegExp(`#Changes:${branch_spec}`, 'g'),
-        ''
-      )
-    }
-  } else {
-    const branch_name = branch_spec
-    const repository = await get_git_repository()
-    if (!repository) {
-      vscode.window.showErrorMessage(
-        dictionary.error_message.NO_GIT_REPOSITORY_FOUND
-      )
-      return params.instruction.replace(
-        new RegExp(`#Changes:${branch_name}`, 'g'),
-        ''
-      )
-    }
-
-    try {
-      const current_branch = execSync('git rev-parse --abbrev-ref HEAD', {
-        cwd: repository.rootUri.fsPath
-      })
-        .toString()
-        .trim()
-
-      let diff_base: string
-      if (current_branch == branch_name) {
-        // If comparing to same branch, use merge-base to show changes since branch point
-        diff_base = execSync(`git merge-base HEAD origin/${branch_name}`, {
+      try {
+        const current_branch = execSync('git rev-parse --abbrev-ref HEAD', {
           cwd: repository.rootUri.fsPath
         })
           .toString()
           .trim()
-      } else {
-        diff_base = branch_name
-      }
-      const diff_command = `git diff ${diff_base}`
-      const diff = execSync(diff_command, {
-        cwd: repository.rootUri.fsPath
-      }).toString()
 
-      if (!diff || diff.length == 0) {
-        vscode.window.showInformationMessage(
-          dictionary.information_message.NO_CHANGES_FOUND_BETWEEN_BRANCHES(
+        let diff_base: string
+        if (current_branch == branch_name) {
+          // If comparing to same branch, use merge-base to show changes since branch point
+          diff_base = execSync(`git merge-base HEAD origin/${branch_name}`, {
+            cwd: repository.rootUri.fsPath
+          })
+            .toString()
+            .trim()
+        } else {
+          diff_base = branch_name
+        }
+        const diff_command = `git diff ${diff_base}`
+        const diff = execSync(diff_command, {
+          cwd: repository.rootUri.fsPath
+        }).toString()
+
+        if (!diff || diff.length == 0) {
+          vscode.window.showInformationMessage(
+            dictionary.information_message.NO_CHANGES_FOUND_BETWEEN_BRANCHES(
+              branch_name
+            )
+          )
+          result_instruction = result_instruction.replace(replacement_regex, '')
+          continue
+        }
+
+        const replacement_text = build_changes_xml(
+          diff,
+          repository.rootUri.fsPath,
+          diff_base
+        )
+        changes_definitions += replacement_text
+        result_instruction = result_instruction.replace(
+          replacement_regex,
+          ` <changes branch="${branch_spec}" /> `
+        )
+      } catch (error) {
+        vscode.window.showErrorMessage(
+          dictionary.error_message.FAILED_TO_GET_CHANGES_FROM_BRANCH(
             branch_name
           )
         )
-        return params.instruction.replace(
-          new RegExp(`#Changes:${branch_name}`, 'g'),
-          ''
-        )
+        Logger.error({
+          function_name: 'replace_changes_placeholder',
+          message: `Error getting diff from branch ${branch_name}`,
+          data: error
+        })
+        result_instruction = result_instruction.replace(replacement_regex, '')
       }
-
-      const replacement_text = build_changes_xml(
-        diff,
-        repository.rootUri.fsPath,
-        diff_base
-      )
-      return params.instruction.replace(
-        new RegExp(`\\s*#Changes:${branch_name}\\s*`, 'g'),
-        replacement_text
-      )
-    } catch (error) {
-      vscode.window.showErrorMessage(
-        dictionary.error_message.FAILED_TO_GET_CHANGES_FROM_BRANCH(branch_name)
-      )
-      Logger.error({
-        function_name: 'replace_changes_placeholder',
-        message: `Error getting diff from branch ${branch_name}`,
-        data: error
-      })
-      return params.instruction.replace(
-        new RegExp(`#Changes:${branch_name}`, 'g'),
-        ''
-      )
     }
   }
+
+  return { instruction: result_instruction, changes_definitions }
 }
 
 const build_commit_changes_xml = (
@@ -329,15 +336,19 @@ const build_commit_changes_xml = (
 
 export const replace_commit_symbol = async (params: {
   instruction: string
-}): Promise<string> => {
-  const regex = /#Commit:([^:]+):([a-fA-F0-9]+)\s*(?:"((?:[^"\\]|\\.)*)")?/g
+}): Promise<{ instruction: string; commit_definitions: string }> => {
+  const regex = /#Commit\(([^:]+):([a-fA-F0-9]+)\s*(?:"((?:[^"\\]|\\.)*)")?\)/g
 
   let result_instruction = params.instruction
+  let commit_definitions = ''
   const matches = [...result_instruction.matchAll(regex)]
 
   const workspace_folders = vscode.workspace.workspaceFolders
   if (!workspace_folders) {
-    return result_instruction.replace(regex, '')
+    return {
+      instruction: result_instruction.replace(regex, ''),
+      commit_definitions: ''
+    }
   }
 
   for (const match of matches) {
@@ -377,11 +388,15 @@ export const replace_commit_symbol = async (params: {
         commit_hash,
         commit_message
       )
+      commit_definitions += replacement_text
+
+      const safe_message = (commit_message || '').replace(/"/g, '&quot;')
+
       result_instruction = result_instruction.replace(
         new RegExp(
           `\\s*${full_match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`
         ),
-        replacement_text
+        ` <commit message="${safe_message}" /> `
       )
     } catch (error) {
       vscode.window.showErrorMessage(
@@ -395,7 +410,7 @@ export const replace_commit_symbol = async (params: {
       result_instruction = result_instruction.replace(full_match, '')
     }
   }
-  return result_instruction
+  return { instruction: result_instruction, commit_definitions }
 }
 
 const build_context_at_commit_xml = (
@@ -420,7 +435,7 @@ export const replace_context_at_commit_symbol = async (params: {
   workspace_provider: WorkspaceProvider
 }): Promise<string> => {
   const regex =
-    /#ContextAtCommit:([^:]+):([a-fA-F0-9]+)\s*(?:"((?:[^"\\]|\\.)*)")?/g
+    /#ContextAtCommit\(([^:]+):([a-fA-F0-9]+)\s*(?:"((?:[^"\\]|\\.)*)")?\)/g
 
   let result_instruction = params.instruction
   const matches = [...result_instruction.matchAll(regex)]

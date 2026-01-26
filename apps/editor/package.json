@@ -454,12 +454,12 @@
           "group": "navigation@5"
         },
         {
-          "command": "codeWebChat.newFolder",
+          "command": "codeWebChat.newFile",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@6"
         },
         {
-          "command": "codeWebChat.newFile",
+          "command": "codeWebChat.newFolder",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@7"
         },

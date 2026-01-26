@@ -112,7 +112,7 @@ export const LongText = () => (
 
 export const WithPlaceholderSavedContext = () => (
   <PromptField
-    value='Ask about the #SavedContext:JSON "My Context"'
+    value='Ask about the #SavedContext(JSON "My Context")'
     chat_history={[]}
     on_change={(value) => console.log('Changed:', value)}
     on_submit={() => console.log('Submitted')}
@@ -188,7 +188,7 @@ export const WithPlaceholderSelection = () => (
 
 export const WithCommit = () => (
   <PromptField
-    value='Ask about #Commit:my-repo:a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0 "Initial commit"'
+    value='Ask about #Commit(my-repo:a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0 "Initial commit")'
     chat_history={[]}
     on_change={(value) => console.log('Changed:', value)}
     on_submit={() => console.log('Submitted')}
@@ -223,7 +223,7 @@ export const WithCommit = () => (
 
 export const WithCommitWithQuotes = () => (
   <PromptField
-    value='Ask about #Commit:my-repo:a1b2c3d "feat: add "cool" feature"'
+    value='Ask about #Commit(my-repo:a1b2c3d "feat: add \"cool\" feature")'
     chat_history={[]}
     on_change={(value) => console.log('Changed:', value)}
     on_submit={() => console.log('Submitted')}
@@ -257,7 +257,7 @@ export const WithCommitWithQuotes = () => (
 )
 export const WithContextAtCommit = () => (
   <PromptField
-    value='Ask about #ContextAtCommit:my-repo:a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0 "Initial commit"'
+    value='Ask about #ContextAtCommit(my-repo:a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0 "Initial commit")'
     chat_history={[]}
     on_change={(value) => console.log('Changed:', value)}
     on_submit={() => console.log('Submitted')}
