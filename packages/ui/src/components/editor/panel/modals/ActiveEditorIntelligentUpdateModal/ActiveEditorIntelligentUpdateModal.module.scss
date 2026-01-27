@@ -39,6 +39,59 @@
   gap: 8px;
 }
 
+.file-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.file-item__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.file-item__name {
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--cwc-text-color-dimmed);
+  flex-shrink: 1;
+
+  > span:nth-child(2) {
+    margin-left: 0.5em;
+    opacity: 0.7;
+    font-size: 0.9em;
+  }
+}
+
+.file-item__status {
+  font-size: 12px;
+  flex-shrink: 0;
+
+  &--waiting {
+    color: var(--cwc-text-color-dimmed);
+  }
+  &--thinking {
+    color: var(--vscode-focusBorder);
+  }
+  &--receiving {
+    color: var(--vscode-focusBorder);
+  }
+  &--done {
+    color: var(--vscode-testing-iconPassed);
+  }
+}
+
+.file-item__details {
+  font-family: monospace;
+  font-size: 10px;
+  color: var(--cwc-text-color-dimmed);
+  text-align: right;
+}
+
 @keyframes indeterminate-progress {
   from {
     left: -50px;

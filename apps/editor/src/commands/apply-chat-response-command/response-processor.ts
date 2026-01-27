@@ -17,7 +17,7 @@ import { apply_file_relocations } from './utils/file-operations'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { get_intelligent_update_config } from '@/utils/intelligent-update-utils'
 import { PROVIDERS } from '@shared/constants/providers'
-import { handle_intelligent_update } from './handlers/intelligent-update-handler'
+import { handle_active_editor_intelligent_update } from './handlers/active-editor-intelligent-update-handler'
 import { handle_fast_replace } from './handlers/fast-replace-handler'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { FileInPreview } from '@shared/types/file-in-preview'
@@ -441,15 +441,16 @@ export const process_chat_response = async (
             endpoint_url = provider.base_url
           }
 
-          const intelligent_update_states = await handle_intelligent_update({
-            endpoint_url,
-            api_key: provider.api_key,
-            config: intelligent_update_config,
-            chat_response: fake_chat_response,
-            context: context,
-            is_single_root_folder_workspace,
-            panel_provider
-          })
+          const intelligent_update_states =
+            await handle_active_editor_intelligent_update({
+              endpoint_url,
+              api_key: provider.api_key,
+              config: intelligent_update_config,
+              chat_response: fake_chat_response,
+              context: context,
+              is_single_root_folder_workspace,
+              panel_provider
+            })
 
           if (intelligent_update_states) {
             update_undo_button_state({

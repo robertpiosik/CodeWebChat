@@ -762,7 +762,6 @@ export interface ShowProgressMessage extends BaseMessage {
   title: string
   progress?: number
   tokens_per_second?: number
-  files?: FileProgress[]
   cancellable?: boolean
   show_elapsed_time?: boolean
   delay_visibility?: boolean
@@ -789,6 +788,16 @@ export interface ShowApiManagerProgressMessage extends BaseMessage {
 export interface HideApiManagerProgressMessage extends BaseMessage {
   command: 'HIDE_API_MANAGER_PROGRESS'
   id: string
+}
+
+export interface ShowActiveEditorIntelligentUpdateModalMessage extends BaseMessage {
+  command: 'SHOW_ACTIVE_EDITOR_INTELLIGENT_UPDATE_MODAL'
+  title: string
+  file?: FileProgress
+}
+
+export interface HideActiveEditorIntelligentUpdateModalMessage extends BaseMessage {
+  command: 'HIDE_ACTIVE_EDITOR_INTELLIGENT_UPDATE_MODAL'
 }
 
 export interface ShowAutoClosingModalMessage extends BaseMessage {
@@ -896,3 +905,5 @@ export type BackendMessage =
   | TasksMessage
   | UpdateFileProgressMessage
   | PruneContextInstructionsPrefixMessage
+  | ShowActiveEditorIntelligentUpdateModalMessage
+  | HideActiveEditorIntelligentUpdateModalMessage

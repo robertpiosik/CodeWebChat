@@ -12,6 +12,7 @@ import { post_message } from './utils/post_message'
 import { ResponsePreview as UiResponsePreview } from '@ui/components/editor/panel/ResponsePreview'
 import { Modal as UiModal } from '@ui/components/editor/panel/modals/Modal'
 import { ProgressModal as UiProgressModal } from '@ui/components/editor/panel/modals/ProgressModal'
+import { ActiveEditorIntelligentUpdateModal as UiActiveEditorIntelligentUpdateModal } from '@ui/components/editor/panel/modals/ActiveEditorIntelligentUpdateModal'
 import { ApiManagerModal as UiApiManagerModal } from '@ui/components/editor/panel/modals/ApiManagerModal'
 import { QRCodeModal as UiQRCodeModal } from '@ui/components/editor/panel/modals/QRCodeModal'
 import { AutoClosingModal as UiAutoClosingModal } from '@ui/components/editor/panel/modals/AutoClosingModal'
@@ -109,7 +110,8 @@ export const Panel = () => {
     handle_discard_user_changes_in_preview,
     handle_task_forward,
     prune_context_instructions_prefix,
-    handle_prune_context_instructions_prefix_change
+    handle_prune_context_instructions_prefix_change,
+    active_editor_intelligent_update_state
   } = use_panel(vscode)
 
   const [checkpoint_to_edit, set_checkpoint_to_edit] = useState<
@@ -659,13 +661,24 @@ export const Panel = () => {
           </div>
         )}
 
+        {active_editor_intelligent_update_state && (
+          <div className={styles.slot}>
+            <UiActiveEditorIntelligentUpdateModal
+              title={active_editor_intelligent_update_state.title}
+              file={active_editor_intelligent_update_state.file}
+              on_cancel={() => {
+                post_message(vscode, { command: 'CANCEL_API_REQUEST' })
+              }}
+            />
+          </div>
+        )}
+
         {progress_state && (
           <div className={styles.slot}>
             <UiProgressModal
               title={progress_state.title}
               progress={progress_state.progress}
               tokens_per_second={progress_state.tokens_per_second}
-              files={progress_state.files}
               show_elapsed_time={progress_state.show_elapsed_time}
               delay_visibility={progress_state.delay_visibility}
               on_cancel={

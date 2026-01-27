@@ -26,7 +26,6 @@ export const use_panel = (vscode: any) => {
     title: string
     progress?: number
     tokens_per_second?: number
-    files?: FileProgress[]
     cancellable?: boolean
     show_elapsed_time?: boolean
     delay_visibility?: boolean
@@ -133,6 +132,10 @@ export const use_panel = (vscode: any) => {
     prune_context_instructions_prefix,
     set_prune_context_instructions_prefix
   ] = useState<string>('')
+  const [
+    active_editor_intelligent_update_state,
+    set_active_editor_intelligent_update_state
+  ] = useState<{ title: string; file?: FileProgress }>()
 
   const handle_instructions_change = (
     value: string,
@@ -319,7 +322,6 @@ export const use_panel = (vscode: any) => {
           title: message.title,
           progress: message.progress,
           tokens_per_second: message.tokens_per_second,
-          files: message.files,
           cancellable: message.cancellable ?? true,
           show_elapsed_time: message.show_elapsed_time,
           delay_visibility: message.delay_visibility
@@ -379,6 +381,17 @@ export const use_panel = (vscode: any) => {
         set_tasks(message.tasks)
       } else if (message.command == 'PRUNE_CONTEXT_INSTRUCTIONS_PREFIX') {
         set_prune_context_instructions_prefix(message.prefix)
+      } else if (
+        message.command == 'SHOW_ACTIVE_EDITOR_INTELLIGENT_UPDATE_MODAL'
+      ) {
+        set_active_editor_intelligent_update_state({
+          title: message.title,
+          file: message.file
+        })
+      } else if (
+        message.command == 'HIDE_ACTIVE_EDITOR_INTELLIGENT_UPDATE_MODAL'
+      ) {
+        set_active_editor_intelligent_update_state(undefined)
       }
     }
     window.addEventListener('message', handle_message)
@@ -616,6 +629,7 @@ export const use_panel = (vscode: any) => {
     handle_configurations_collapsed_change,
     handle_remove_response_history_item,
     handle_discard_user_changes_in_preview,
-    handle_prune_context_instructions_prefix_change
+    handle_prune_context_instructions_prefix_change,
+    active_editor_intelligent_update_state
   }
 }
