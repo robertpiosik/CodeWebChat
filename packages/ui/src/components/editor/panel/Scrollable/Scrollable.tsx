@@ -18,7 +18,6 @@ type Props = {
   on_scroll?: (top: number) => void
   on_scrolled_change?: (is_scrolled: boolean) => void
   scroll_trigger?: number
-  className?: string
 }
 
 export const Scrollable = forwardRef<any, Props>((props, ref) => {
@@ -86,7 +85,7 @@ export const Scrollable = forwardRef<any, Props>((props, ref) => {
 
   return (
     <div
-      className={cn(styles.scrollable, props.className, {
+      className={cn(styles.scrollable, {
         [styles['scrollable--shadow']]: has_top_shadow
       })}
     >

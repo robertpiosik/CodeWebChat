@@ -4,7 +4,7 @@ import axios, { CancelTokenSource } from 'axios'
 import { randomUUID, createHash } from 'crypto'
 import { Logger } from '@shared/utils/logger'
 
-const CHAIN_RESOLUTION_DELAY_MS = 2000
+const CHAIN_RESOLUTION_DELAY_MS = 3000
 
 export class ApiManager {
   private cancel_token_sources: Map<string, CancelTokenSource> = new Map()

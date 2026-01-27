@@ -665,7 +665,12 @@ export const Panel = () => {
           <div className={styles.slot}>
             <UiActiveEditorIntelligentUpdateModal
               title={active_editor_intelligent_update_state.title}
-              file={active_editor_intelligent_update_state.file}
+              status={active_editor_intelligent_update_state.status}
+              progress={active_editor_intelligent_update_state.progress}
+              tokens_per_second={
+                active_editor_intelligent_update_state.tokens_per_second
+              }
+              total_tokens={active_editor_intelligent_update_state.total_tokens}
               on_cancel={() => {
                 post_message(vscode, { command: 'CANCEL_API_REQUEST' })
               }}

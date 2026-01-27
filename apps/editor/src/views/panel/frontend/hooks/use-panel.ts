@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Preset } from '@shared/types/preset'
 import {
   BackendMessage,
-  FileProgress,
+  FileProgressStatus,
   FrontendMessage,
   SelectionState
 } from '../../types/messages'
@@ -135,7 +135,13 @@ export const use_panel = (vscode: any) => {
   const [
     active_editor_intelligent_update_state,
     set_active_editor_intelligent_update_state
-  ] = useState<{ title: string; file?: FileProgress }>()
+  ] = useState<{
+    title: string
+    status?: FileProgressStatus
+    progress?: number
+    tokens_per_second?: number
+    total_tokens?: number
+  }>()
 
   const handle_instructions_change = (
     value: string,
@@ -386,7 +392,10 @@ export const use_panel = (vscode: any) => {
       ) {
         set_active_editor_intelligent_update_state({
           title: message.title,
-          file: message.file
+          status: message.status,
+          progress: message.progress,
+          tokens_per_second: message.tokens_per_second,
+          total_tokens: message.total_tokens
         })
       } else if (
         message.command == 'HIDE_ACTIVE_EDITOR_INTELLIGENT_UPDATE_MODAL'

@@ -51,14 +51,6 @@ export type FileProgressStatus =
   | 'done'
   | 'retrying'
 
-export type FileProgress = {
-  file_path: string
-  workspace_name?: string
-  status: FileProgressStatus
-  progress?: number
-  tokens_per_second?: number
-}
-
 // === FROM FRONTEND TO BACKEND ===
 export interface GetInstructionsMessage extends BaseMessage {
   command: 'GET_INSTRUCTIONS'
@@ -793,7 +785,10 @@ export interface HideApiManagerProgressMessage extends BaseMessage {
 export interface ShowActiveEditorIntelligentUpdateModalMessage extends BaseMessage {
   command: 'SHOW_ACTIVE_EDITOR_INTELLIGENT_UPDATE_MODAL'
   title: string
-  file?: FileProgress
+  status?: FileProgressStatus
+  progress?: number
+  tokens_per_second?: number
+  total_tokens?: number
 }
 
 export interface HideActiveEditorIntelligentUpdateModalMessage extends BaseMessage {

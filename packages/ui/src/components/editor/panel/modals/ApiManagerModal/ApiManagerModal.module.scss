@@ -18,8 +18,10 @@
   pointer-events: all;
   z-index: 1;
   border-radius: 8px;
-  color: var(--vscode-button-foreground);
-  background-color: var(--vscode-button-background);
+  color: var(--vscode-editorWidget-foreground);
+  background-color: var(--vscode-editorWidget-background);
+  border: 1px solid var(--vscode-editorWidget-border);
+  box-shadow: 0 4px 10px var(--vscode-widget-shadow);
   width: 100%;
   max-width: min(260px, 70vw);
   overflow: hidden;
@@ -29,8 +31,7 @@
   font-weight: 500;
   font-size: 11px;
   font-weight: 600;
-  color: var(--vscode-button-foreground);
-  opacity: 0.9;
+  color: var(--vscode-textLink-foreground);
   text-transform: uppercase;
   display: flex;
   align-items: center;
@@ -73,7 +74,7 @@
       line-height: 1.2;
 
       > span:nth-child(2) {
-        color: var(--vscode-button-foreground);
+        color: var(--vscode-editorWidget-foreground);
         opacity: 0.7;
         margin-left: 0.5em;
         font-size: 0.9em;
@@ -88,7 +89,7 @@
     padding: 0 12px 0 8px;
     height: 18px;
     font-size: 11px;
-    color: var(--vscode-button-foreground);
+    color: var(--vscode-editorWidget-foreground);
     opacity: 0.7;
 
     &__status {
@@ -127,7 +128,7 @@
       margin: 0;
       height: 15px;
       width: 15px;
-      color: var(--vscode-button-foreground);
+      color: var(--vscode-editorWidget-foreground);
       position: relative;
       cursor: pointer;
       flex-shrink: 0;
@@ -155,20 +156,5 @@
 
   &:nth-child(odd) &__close {
     background: transparent;
-  }
-}
-
-.scrollable {
-  &::before {
-    box-shadow: color-mix(in srgb, var(--vscode-button-background) 50%, black) 0
-      6px 6px -6px inset !important;
-  }
-
-  > div > div:last-child > div::before {
-    background-color: color-mix(
-      in srgb,
-      var(--vscode-button-background) 80%,
-      black
-    );
   }
 }

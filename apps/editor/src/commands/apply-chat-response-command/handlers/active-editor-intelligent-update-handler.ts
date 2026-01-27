@@ -92,12 +92,8 @@ export const handle_active_editor_intelligent_update = async (params: {
     params.panel_provider.api_call_cancel_token_source = cancel_token_source
     params.panel_provider.send_message({
       command: 'SHOW_ACTIVE_EDITOR_INTELLIGENT_UPDATE_MODAL',
-      title: 'Called Intelligent Update API tool',
-      file: {
-        file_path: file_item.file_path,
-        workspace_name: file_item.workspace_name,
-        status: 'thinking'
-      }
+      title: 'Updating file...',
+      status: 'thinking'
     })
   }
 
@@ -131,14 +127,11 @@ export const handle_active_editor_intelligent_update = async (params: {
 
           params.panel_provider.send_message({
             command: 'SHOW_ACTIVE_EDITOR_INTELLIGENT_UPDATE_MODAL',
-            title: 'Called Intelligent Update API tool',
-            file: {
-              file_path: file_item.file_path,
-              workspace_name: file_item.workspace_name,
-              status: 'receiving',
-              tokens_per_second,
-              progress
-            }
+            title: 'Updating file...',
+            status: 'receiving',
+            tokens_per_second,
+            progress,
+            total_tokens
           })
         }
       },
@@ -146,12 +139,8 @@ export const handle_active_editor_intelligent_update = async (params: {
         if (params.panel_provider) {
           params.panel_provider.send_message({
             command: 'SHOW_ACTIVE_EDITOR_INTELLIGENT_UPDATE_MODAL',
-            title: 'Called Intelligent Update API tool',
-            file: {
-              file_path: file_item.file_path,
-              workspace_name: file_item.workspace_name,
-              status: 'thinking'
-            }
+            title: 'Updating file...',
+            status: 'thinking'
           })
         }
       },
@@ -159,12 +148,8 @@ export const handle_active_editor_intelligent_update = async (params: {
         if (params.panel_provider) {
           params.panel_provider.send_message({
             command: 'SHOW_ACTIVE_EDITOR_INTELLIGENT_UPDATE_MODAL',
-            title: 'Called Intelligent Update API tool',
-            file: {
-              file_path: file_item.file_path,
-              workspace_name: file_item.workspace_name,
-              status: 'retrying'
-            }
+            title: 'Updating file...',
+            status: 'retrying'
           })
         }
       }
