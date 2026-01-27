@@ -298,10 +298,10 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_checkpoint_lifespan_change = (hours: number) =>
+  const handle_checkpoint_lifespan_change = (hours: number | undefined) =>
     post_message(vscode, {
       command: 'UPDATE_CHECKPOINT_LIFESPAN',
-      hours
+      hours: hours ?? null
     })
 
   const handle_gemini_user_id_change = (geminiUserId: number | null) =>

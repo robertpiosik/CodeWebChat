@@ -2,15 +2,15 @@ import * as vscode from 'vscode'
 import { CHECKPOINTS_STATE_KEY } from '../../../constants/state-keys'
 import type { Checkpoint } from '../types'
 import { get_checkpoint_path } from '../utils'
-
 import { Logger } from '@shared/utils/logger'
+import { CHECKPOINT_DEFAULT_LIFESPAN } from '@/constants/values'
 
 export const remove_old_checkpoints = async (
   checkpoints: Checkpoint[]
 ): Promise<Checkpoint[]> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const checkpoint_lifespan_hours =
-    config.get<number>('checkpointLifespan') || 24
+    config.get<number>('checkpointLifespan') || CHECKPOINT_DEFAULT_LIFESPAN
   const checkpoint_lifespan_ms = checkpoint_lifespan_hours * 60 * 60 * 1000
 
   const now = Date.now()

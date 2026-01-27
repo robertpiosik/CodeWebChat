@@ -22,6 +22,7 @@ import {
   handle_get_ai_studio_user_id,
   handle_get_model_providers,
   handle_get_send_with_shift_enter,
+  handle_update_checkpoint_lifespan,
   handle_get_checkpoint_lifespan,
   handle_reorder_configuration,
   handle_reorder_model_providers,
@@ -273,13 +274,7 @@ export class SettingsProvider {
         ) {
           await handle_update_are_automatic_checkpoints_disabled(message)
         } else if (message.command == 'UPDATE_CHECKPOINT_LIFESPAN') {
-          await vscode.workspace
-            .getConfiguration('codeWebChat')
-            .update(
-              'checkpointLifespan',
-              message.hours,
-              vscode.ConfigurationTarget.Global
-            )
+          await handle_update_checkpoint_lifespan(message)
         } else if (message.command == 'OPEN_EDITOR_SETTINGS') {
           await vscode.commands.executeCommand('workbench.action.openSettings')
         } else if (message.command == 'OPEN_IGNORE_PATTERNS_SETTINGS') {

@@ -218,7 +218,7 @@ export interface GetCheckpointLifespanMessage {
 
 export interface UpdateCheckpointLifespanMessage {
   command: 'UPDATE_CHECKPOINT_LIFESPAN'
-  hours: number
+  hours: number | null
 }
 
 export interface GetGeminiUserIdMessage {

@@ -29,7 +29,7 @@ type Props = {
   on_automatic_checkpoints_toggle: (disabled: boolean) => void
   on_send_with_shift_enter_change: (enabled: boolean) => void
   on_check_new_files_change: (enabled: boolean) => void
-  on_checkpoint_lifespan_change: (hours: number) => void
+  on_checkpoint_lifespan_change: (hours: number | undefined) => void
   clear_checks_in_workspace_behavior: ClearChecksBehavior
   edit_format_instructions: EditFormatInstructions
   on_context_size_warning_threshold_change: (threshold: number) => void
@@ -109,6 +109,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
       const num_hours = parseInt(checkpoint_lifespan_str, 10)
       if (!isNaN(num_hours) && num_hours > 0) {
         props.on_checkpoint_lifespan_change(num_hours)
+      } else {
+        props.on_checkpoint_lifespan_change(undefined)
       }
     }
 
@@ -241,7 +243,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 on_change={set_checkpoint_lifespan_str}
                 on_blur={handle_checkpoint_lifespan_blur}
                 max_width={100}
-                min={1}
               />
             }
           />

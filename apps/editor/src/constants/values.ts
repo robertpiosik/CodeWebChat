@@ -1,0 +1,1 @@
+export const CHECKPOINT_DEFAULT_LIFESPAN = 24
