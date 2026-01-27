@@ -68,11 +68,11 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.toolbar}>
-        <span style={{ fontWeight: 500 }}>
+      <div className={styles.header}>
+        <div className={styles.header__amount}>
           {props.providers.length} model provider
-          {props.providers.length === 1 ? '' : 's'}
-        </span>
+          {props.providers.length == 1 ? '' : 's'}
+        </div>
         <Button on_click={props.on_add_provider}>New Provider...</Button>
       </div>
       <div className={styles.list}>

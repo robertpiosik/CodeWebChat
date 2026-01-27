@@ -3,17 +3,21 @@
   flex-direction: column;
 }
 
-.toolbar {
+.header {
   display: flex;
   padding: 12px 12px 8px 12px;
   align-items: center;
   justify-content: space-between;
-}
 
-.toolbar-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &__amount {
+      font-weight: 600;
+    }
+  }
 }
 
 .list {

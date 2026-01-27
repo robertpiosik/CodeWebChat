@@ -3,11 +3,15 @@
   flex-direction: column;
 }
 
-.toolbar {
+.header {
   display: flex;
   padding: 12px 12px 8px 12px;
   align-items: center;
   justify-content: space-between;
+
+  &__amount {
+    font-weight: 600;
+  }
 }
 
 .list {
@@ -23,7 +27,7 @@
   gap: 12px;
 
   &:nth-child(even) {
-    background-color: var(--vscode-welcomePage-tileBackground);
+    background-color: var(--cwc-bg-tertiary);
   }
 
   &__content {

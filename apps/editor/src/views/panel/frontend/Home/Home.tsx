@@ -203,9 +203,14 @@ export const Home: React.FC<Props> = (props) => {
               }
             />
             {!props.are_tasks_collapsed &&
+              Object.keys(props.tasks).length == 1 &&
+              props.tasks[Object.keys(props.tasks)[0]].length == 0 && (
+                <div className={styles.inner__empty}>No tasks created yet.</div>
+              )}
+            {!props.are_tasks_collapsed &&
               Object.entries(props.tasks)
                 .filter(([_, tasks], __, arr) =>
-                  arr.length == 1 ? tasks.length : true
+                  arr.length == 1 ? tasks.length > 0 : true
                 )
                 .map(([workspace_root_folder, tasks], _, entries) => (
                   <div

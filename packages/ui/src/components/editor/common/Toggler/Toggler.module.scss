@@ -18,7 +18,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--vscode-input-background);
+  background-color: var(--cwc-bg-primary);
   border: 1px solid var(--cwc-border-color);
   transition: var(--transition-duration-250);
   border-radius: 20px;
@@ -30,9 +30,10 @@
     width: 12px;
     left: 3px;
     bottom: 3px;
-    background-color: var(--vscode-button-background);
+    background-color: white;
     transition: var(--transition-duration-250);
     border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -43,5 +44,4 @@ input:checked + .slider {
 
 input:checked + .slider:before {
   transform: translateX(16px);
-  background-color: var(--vscode-button-foreground);
 }

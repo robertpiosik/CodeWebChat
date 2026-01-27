@@ -71,12 +71,12 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
 
   return (
     <div className={styles.container}>
-      <div className={styles.toolbar}>
-        <div className={styles['toolbar-group']}>
-          <span style={{ fontWeight: 500 }}>
+      <div className={styles.header}>
+        <div className={styles['header__left']}>
+          <div className={styles['header__left__amount']}>
             {props.configurations.length} configuration
-            {props.configurations.length === 1 ? '' : 's'}
-          </span>
+            {props.configurations.length == 1 ? '' : 's'}
+          </div>
           {props.on_unset_default && has_default && (
             <>
               <span>·</span>
