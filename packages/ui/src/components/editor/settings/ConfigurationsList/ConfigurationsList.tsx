@@ -33,11 +33,7 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
   const has_default = props.configurations.some((c) => c.is_default)
 
   const render_item = (config: ConfigurationsList.Configuration) => (
-    <div
-      key={config.id}
-      className={styles.row}
-      onClick={() => props.on_edit(config.id)}
-    >
+    <div key={config.id} className={styles.row}>
       {sortable && (
         <div className={cn(styles['drag-handle'], styles['col-drag'])}>
           <span className="codicon codicon-gripper" />
@@ -58,16 +54,19 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
         <span>{config.description}</span>
       </div>
       <div className={styles['col-actions']}>
-        {props.on_delete && (
-          <IconButton
-            codicon_icon="trash"
-            title="Delete configuration"
-            on_click={(e) => {
-              e.stopPropagation()
-              props.on_delete(config.id)
-            }}
-          />
-        )}
+        <IconButton
+          codicon_icon="edit"
+          title="Edit configuration"
+          on_click={() => props.on_edit(config.id)}
+        />
+        <IconButton
+          codicon_icon="trash"
+          title="Delete configuration"
+          on_click={(e) => {
+            e.stopPropagation()
+            props.on_delete(config.id)
+          }}
+        />
       </div>
     </div>
   )
