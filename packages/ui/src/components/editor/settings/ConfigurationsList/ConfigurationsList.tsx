@@ -40,14 +40,12 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
         </div>
       )}
       {props.on_set_default && (
-        <div className={styles['col-radio']}>
-          <Radio
-            name={props.radio_group_name ?? 'default_configuration'}
-            checked={!!config.is_default}
-            title="Set as default"
-            on_change={() => props.on_set_default?.(config.id)}
-          />
-        </div>
+        <Radio
+          name={props.radio_group_name ?? 'default_configuration'}
+          checked={!!config.is_default}
+          title="Set as default"
+          on_change={() => props.on_set_default?.(config.id)}
+        />
       )}
       <div className={styles.row__content}>
         <span>{config.model}</span>

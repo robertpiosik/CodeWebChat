@@ -20,20 +20,20 @@
   bottom: 0;
   background-color: var(--vscode-input-background);
   border: 1px solid var(--cwc-border-color);
-  transition: 0.4s;
+  transition: var(--transition-duration-250);
   border-radius: 20px;
-}
 
-.slider:before {
-  position: absolute;
-  content: '';
-  height: 12px;
-  width: 12px;
-  left: 3px;
-  bottom: 3px;
-  background-color: var(--vscode-input-foreground);
-  transition: var(--transition-duration-150);
-  border-radius: 50%;
+  &::before {
+    position: absolute;
+    content: '';
+    height: 12px;
+    width: 12px;
+    left: 3px;
+    bottom: 3px;
+    background-color: var(--vscode-button-background);
+    transition: var(--transition-duration-250);
+    border-radius: 50%;
+  }
 }
 
 input:checked + .slider {

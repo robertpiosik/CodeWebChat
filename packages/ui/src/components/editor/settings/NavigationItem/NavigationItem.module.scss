@@ -9,11 +9,11 @@
   cursor: pointer;
 
   &:hover {
-    background-color: var(--vscode-list-hoverBackground);
+    background-color: var(--cwc-bg-secondary);
     text-decoration: none;
   }
 
   &--active {
-    background-color: var(--vscode-list-inactiveSelectionBackground);
+    background-color: var(--cwc-bg-tertiary);
   }
 }

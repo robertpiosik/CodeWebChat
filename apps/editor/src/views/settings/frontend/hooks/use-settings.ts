@@ -290,11 +290,13 @@ export const use_settings = (vscode: any) => {
       instructions
     })
 
-  const handle_automatic_checkpoints_toggle = (disabled: boolean) =>
+  const handle_automatic_checkpoints_toggle = (disabled: boolean) => {
+    set_are_automatic_checkpoints_disabled(disabled)
     post_message(vscode, {
       command: 'UPDATE_ARE_AUTOMATIC_CHECKPOINTS_DISABLED',
       disabled
     })
+  }
 
   const handle_checkpoint_lifespan_change = (hours: number) =>
     post_message(vscode, {
@@ -314,25 +316,31 @@ export const use_settings = (vscode: any) => {
       aiStudioUserId
     })
 
-  const handle_send_with_shift_enter_change = (enabled: boolean) =>
+  const handle_send_with_shift_enter_change = (enabled: boolean) => {
+    set_send_with_shift_enter(enabled)
     post_message(vscode, {
       command: 'UPDATE_SEND_WITH_SHIFT_ENTER',
       enabled
     })
+  }
 
-  const handle_check_new_files_change = (enabled: boolean) =>
+  const handle_check_new_files_change = (enabled: boolean) => {
+    set_check_new_files(enabled)
     post_message(vscode, {
       command: 'UPDATE_CHECK_NEW_FILES',
       enabled
     })
+  }
 
   const handle_clear_checks_in_workspace_behavior_change = (
     value: 'ignore-open-editors' | 'uncheck-all'
-  ) =>
+  ) => {
+    set_clear_checks_in_workspace_behavior(value)
     post_message(vscode, {
       command: 'UPDATE_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR',
       value
     })
+  }
 
   return {
     providers,

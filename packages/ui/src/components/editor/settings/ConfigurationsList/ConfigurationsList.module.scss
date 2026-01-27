@@ -30,7 +30,7 @@
   padding: 0 12px;
 
   &:nth-child(even) {
-    background-color: var(--vscode-welcomePage-tileBackground);
+    background-color: var(--cwc-bg-tertiary);
   }
 
   &__content {
@@ -67,18 +67,11 @@
   }
 }
 
-.col-radio {
-  width: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .col-drag {
   padding: 4px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  height: 100%;
 }
 
 .col-actions {
