@@ -24,7 +24,7 @@ Code Web Chat is a free and open-source AI coding toolkit. You can use CWC in **
 💅 **Apply responses**—interactive edits integration with checkpoints for state restoration \
 🤙 **Fully-featured**—code completions, commit messages, checkpoints, skills, and more \
 🫰 **Cost-efficient**—zero-overhead prompts optimized for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching) \
-✋ **Privacy-first**—zero telemetry, operates 100% on your machine
+✋ **Privacy-first**—zero telemetry, 100% local operation
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />
@@ -32,7 +32,7 @@ Code Web Chat is a free and open-source AI coding toolkit. You can use CWC in **
 
 ## Introduction
 
-With its focus on context engineering, CWC proposes a **non-agentic workflow**, where all the necessary for the task files, includnig useful examples, are **picked with engineer's intent**. Such guided model works well with simple prompts and is as accurate as it can get. The tool is a **perfect companion for all kinds of coding tasks**; from laborious refactors to complex features.
+With its focus on context engineering, CWC proposes a **non-agentic workflow**, where all the necessary for the task files, includnig useful examples, are **picked with engineer's intent**. Such guided model works well with simple prompts and is as accurate as it can get. The tool is a **perfect companion for all kinds of coding tasks**; from tedious refactors to complex features.
 
 > [!TIP]
 > Feeling lost in the codebase? Just pick a broad context, set _Prune context_, type what you're about to do and AI will help narrow it down to a reasonable size.
