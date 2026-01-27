@@ -10,7 +10,7 @@ export const apply_saved_context = async (
   workspace_root: string,
   workspace_provider: WorkspaceProvider,
   extension_context: vscode.ExtensionContext
-): Promise<void> => {
+): Promise<'back' | void> => {
   const resolved_paths = await resolve_context_paths(
     context,
     workspace_root,
@@ -55,6 +55,8 @@ export const apply_saved_context = async (
       const quick_pick = vscode.window.createQuickPick()
       quick_pick.items = quick_pick_options
       quick_pick.placeholder = `How would you like to apply "${context.name}"?`
+      quick_pick.buttons = [vscode.QuickInputButtons.Back]
+
       if (last_choice_label) {
         const active_item = quick_pick_options.find(
           (opt) => opt.label === last_choice_label
@@ -64,23 +66,33 @@ export const apply_saved_context = async (
         }
       }
 
-      const choice = await new Promise<vscode.QuickPickItem | undefined>(
-        (resolve) => {
-          let is_accepted = false
-          quick_pick.onDidAccept(() => {
-            is_accepted = true
-            resolve(quick_pick.selectedItems[0])
+      const choice = await new Promise<
+        vscode.QuickPickItem | 'back' | undefined
+      >((resolve) => {
+        let is_accepted = false
+        quick_pick.onDidTriggerButton((button) => {
+          if (button === vscode.QuickInputButtons.Back) {
+            resolve('back')
             quick_pick.hide()
-          })
-          quick_pick.onDidHide(() => {
-            if (!is_accepted) {
-              resolve(undefined)
-            }
-            quick_pick.dispose()
-          })
-          quick_pick.show()
-        }
-      )
+          }
+        })
+        quick_pick.onDidAccept(() => {
+          is_accepted = true
+          resolve(quick_pick.selectedItems[0])
+          quick_pick.hide()
+        })
+        quick_pick.onDidHide(() => {
+          if (!is_accepted) {
+            resolve('back')
+          }
+          quick_pick.dispose()
+        })
+        quick_pick.show()
+      })
+
+      if (choice === 'back') {
+        return 'back'
+      }
 
       if (!choice) {
         return

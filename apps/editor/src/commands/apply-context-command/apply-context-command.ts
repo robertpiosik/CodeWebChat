@@ -243,8 +243,13 @@ export const apply_context_command = (
             show_main_menu = true
           }
         } else if (main_selection.value == 'unstaged') {
-          await handle_unstaged_files_source(workspace_provider)
-          return
+          const result = await handle_unstaged_files_source(
+            workspace_provider,
+            extension_context
+          )
+          if (result == 'back') {
+            show_main_menu = true
+          }
         } else if (main_selection.value == 'commit_files') {
           const result = await handle_commit_files_source(
             workspace_provider,

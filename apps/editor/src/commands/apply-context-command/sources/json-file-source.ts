@@ -414,12 +414,15 @@ export const handle_json_file_source = async (
       if (selection.context) {
         const primary_workspace_root =
           workspace_provider.get_workspace_roots()[0]!
-        await apply_saved_context(
+        const result = await apply_saved_context(
           selection.context,
           primary_workspace_root,
           workspace_provider,
           extension_context
         )
+        if (result === 'back') {
+          continue
+        }
         on_context_selected()
         return
       }

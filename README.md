@@ -14,7 +14,7 @@
 
 Code Web Chat is a free and open-source AI coding toolkit. You can use CWC in **VS Code** family of editors (Cursor, Antigravity, VSCodium etc.) for a **much faster and cost efficient\*** development experience.
 
-<sup>\* Compared to coding agents.</sub>
+<sup>\* Compared to coding agents, thanks to its a single request/response design.</sub>
 
 ✍️ **Construct coding prompts for...**
 
@@ -32,7 +32,7 @@ Code Web Chat is a free and open-source AI coding toolkit. You can use CWC in **
 
 ## Introduction
 
-With its focus on context engineering, CWC proposes a non-agentic workflow, where all the necessary for the task files, includnig useful examples, are picked with engineer's intent. Such guided model works well with simple prompts and as accurate as it can get. The tool is a perfect companion for all kinds of coding tasks; from mass renamings to complex features.
+With its focus on context engineering, CWC proposes **a non-agentic workflow**, where all the necessary for the task files, includnig useful examples, are **picked with engineer's intent**. Such guided model works well with simple prompts and is as accurate as it can get. The tool is a **perfect companion for all kinds of coding tasks**; from laborious refactors to complex features.
 
 > [!TIP]
 > Feeling lost in the codebase? Just pick a broad context, set _Prune context_, type what you're about to do and AI will help narrow it down to a reasonable size.
