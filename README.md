@@ -14,7 +14,7 @@
 
 Code Web Chat is a free and open-source AI coding toolkit. You can use CWC in **VS Code** family of editors (Cursor, Antigravity, VSCodium etc.) for a **much faster and cost efficient\*** development experience.
 
-<sup>\* Compared to coding agents.</sub>
+<sup>\* Thanks to a simple request→response design.</sub>
 
 ✍️ **Construct coding prompts for...**
 
