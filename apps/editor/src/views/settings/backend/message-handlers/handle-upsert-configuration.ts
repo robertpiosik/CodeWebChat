@@ -137,8 +137,7 @@ export const handle_upsert_configuration = async (
         quick_pick.title = original_id
           ? 'Edit Configuration'
           : 'Create New Configuration'
-        quick_pick.placeholder =
-          'Select a property to edit, or press Esc to save'
+        quick_pick.placeholder = 'Select a property to edit'
         const close_button: vscode.QuickInputButton = {
           iconPath: new vscode.ThemeIcon('close'),
           tooltip: 'Save and Close'
