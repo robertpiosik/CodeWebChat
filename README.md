@@ -35,7 +35,7 @@ Code Web Chat is a free and open-source AI coding toolkit. You can use CWC in **
 With its focus on context engineering, CWC lets you pick all the necessary files, includnig useful examples with **engineer's intent**. Such steered model welcomes simple, task-focused instrucions, makes all edits in a single request, and is as accurate as it can get. The tool is a perfect companion for all kinds of coding tasks; **from tedious refactors to complex features**.
 
 > [!TIP]
-> Feeling lost in the codebase? CWC has you covered with a special _context pruning_ prompt type.
+> Feeling lost in the codebase? CWC will help you out with a _context pruning_ prompt type.
 
 When pair-programming with Code Web Chat you foster codebase understanding, iterate on changes easy to review, and enter the flow state like in the good old days!
 
