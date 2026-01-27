@@ -19,7 +19,7 @@ Code Web Chat is a free and open-source AI coding toolkit. You can use CWC in **
 ✍️ **Construct coding prompts for...**
 
 - Chatbots—_ChatGPT, Gemini, Claude, Grok, DeepSeek, etc._
-- APIs—_Gemini API, OpenRouter, local Ollama, etc._
+- APIs—_Gemini API, OpenAI, OpenRouter, local Ollama, etc._
 
 💅 **Apply responses**—interactive edits integration with checkpoints for state restoration \
 🤙 **Fully-featured**—code completions, commit messages, checkpoints, skills, and more \
