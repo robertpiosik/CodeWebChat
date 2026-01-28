@@ -5,53 +5,6 @@
     var(--vscode-foreground) 75%,
     transparent
   );
-  --cwc-text-color-red: var(--vscode-charts-red);
-
-  --cwc-text-color-yellow: var(--vscode-charts-yellow);
-  --cwc-text-color-green: var(--vscode-charts-green);
-  --cwc-text-color-purple: var(--vscode-charts-purple);
-  --cwc-text-color-blue: var(--vscode-charts-blue);
-  --cwc-text-color-orange: var(--vscode-charts-orange);
-  --cwc-icon-fill: color-mix(
-    in srgb,
-    var(--vscode-foreground) 92%,
-    transparent
-  );
-  --cwc-icon-fill-red: color-mix(
-    in srgb,
-    var(--vscode-charts-red) 92%,
-    transparent
-  );
-  --cwc-icon-fill-yellow: color-mix(
-    in srgb,
-    var(--vscode-charts-yellow) 92%,
-    transparent
-  );
-  --cwc-icon-fill-green: color-mix(
-    in srgb,
-    var(--vscode-charts-green) 92%,
-    transparent
-  );
-  --cwc-icon-magenta-primary: color-mix(
-    in srgb,
-    var(--vscode-charts-purple) 92%,
-    transparent
-  );
-  --cwc-icon-magenta-secondary: color-mix(
-    in srgb,
-    var(--vscode-charts-purple) 60%,
-    transparent
-  );
-  --cwc-icon-cyan-primary: color-mix(
-    in srgb,
-    var(--vscode-charts-blue) 92%,
-    transparent
-  );
-  --cwc-icon-cyan-secondary: color-mix(
-    in srgb,
-    var(--vscode-charts-blue) 60%,
-    transparent
-  );
   --cwc-bg-primary: color-mix(
     in srgb,
     var(--vscode-foreground) 20%,
@@ -65,37 +18,6 @@
   --cwc-bg-tertiary: color-mix(
     in srgb,
     var(--vscode-foreground) 4%,
-    transparent
-  );
-  --cwc-bg-elevated: var(--vscode-quickInput-background);
-  --cwc-bg-yellow-primary: var(--vscode-charts-yellow);
-  --cwc-bg-yellow-secondary: color-mix(
-    in srgb,
-    var(--vscode-charts-yellow) 12%,
-    transparent
-  );
-  --cwc-bg-red-primary: var(--vscode-charts-red);
-  --cwc-bg-red-secondary: color-mix(
-    in srgb,
-    var(--vscode-charts-red) 12%,
-    transparent
-  );
-  --cwc-bg-green-primary: var(--vscode-charts-green);
-  --cwc-bg-green-secondary: color-mix(
-    in srgb,
-    var(--vscode-charts-green) 12%,
-    transparent
-  );
-  --cwc-bg-magenta-primary: var(--vscode-charts-purple);
-  --cwc-bg-magenta-secondary: color-mix(
-    in srgb,
-    var(--vscode-charts-purple) 12%,
-    transparent
-  );
-  --cwc-bg-cyan-primary: var(--vscode-charts-blue);
-  --cwc-bg-cyan-secondary: color-mix(
-    in srgb,
-    var(--vscode-charts-blue) 12%,
     transparent
   );
   --cwc-border-color: color-mix(
@@ -113,53 +35,4 @@
     var(--vscode-foreground) 17%,
     transparent
   );
-  --cwc-border-color-red: color-mix(
-    in srgb,
-    var(--vscode-charts-red) 56%,
-    transparent
-  );
-  --cwc-border-color-yellow: color-mix(
-    in srgb,
-    var(--vscode-charts-yellow) 56%,
-    transparent
-  );
-  --cwc-border-color-green: color-mix(
-    in srgb,
-    var(--vscode-charts-green) 56%,
-    transparent
-  );
-  --cwc-border-color-purple: color-mix(
-    in srgb,
-    var(--vscode-charts-purple) 56%,
-    transparent
-  );
-  --cwc-border-color-blue: color-mix(
-    in srgb,
-    var(--vscode-charts-blue) 56%,
-    transparent
-  );
-  --cwc-shadow-primary: var(--vscode-widget-shadow);
-  --cwc-shadow-secondary: color-mix(
-    in srgb,
-    var(--vscode-widget-shadow) 60%,
-    transparent
-  );
-  --cwc-shadow-tertiary: color-mix(
-    in srgb,
-    var(--vscode-widget-shadow) 30%,
-    transparent
-  );
-  --cwc-box-shadow-sm: 0 2px 8px 0px var(--cwc-shadow-secondary);
-  --cwc-box-shadow-md: 0 0 8px 2px var(--cwc-shadow-primary);
-  --cwc-box-shadow-lg:
-    0 0 4px 0 hsla(0, 0%, 100%, 0.05) inset,
-    0 0 3px 0 var(--cwc-shadow-secondary),
-    0 16px 24px 0 var(--cwc-shadow-tertiary);
-  --cwc-box-shadow-xl:
-    0 0 4px 0 hsla(0, 0%, 100%, 0.05) inset,
-    0 0 6px 8px var(--cwc-shadow-secondary),
-    0 24px 16px 6px var(--cwc-shadow-tertiary);
-  --cwc-shadow-workbench: 0 0 8px 2px
-    color-mix(in srgb, var(--vscode-widget-shadow) 40%, transparent);
-  --cwc-shadow-hover-tooltip: 0 2px 4px var(--cwc-shadow-secondary);
 }
