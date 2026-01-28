@@ -31,8 +31,8 @@ const get_code_completion_config = async (
   api_providers_manager: ModelProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext,
-  config_id?: string,
-  panel_provider?: PanelProvider
+  panel_provider: PanelProvider,
+  config_id?: string
 ): Promise<{ provider: any; config: any } | undefined> => {
   const code_completions_configs =
     await api_providers_manager.get_code_completions_tool_configs()
@@ -234,6 +234,9 @@ const get_code_completion_config = async (
 
         quick_pick.onDidHide(() => {
           quick_pick.dispose()
+          if (panel_provider) {
+            panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
+          }
           resolve(undefined)
         })
 
@@ -276,15 +279,13 @@ export const handle_code_completion = async (
     api_providers_manager,
     message.use_quick_pick,
     panel_provider.context,
-    message.config_id,
-    panel_provider
+    panel_provider,
+    message.config_id
   )
 
   if (!config_result) {
     return
   }
-
-  panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
 
   const { provider, config: code_completions_config } = config_result
 

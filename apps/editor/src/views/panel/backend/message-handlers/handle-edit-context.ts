@@ -38,13 +38,20 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
 
-const get_edit_context_config = async (
-  api_providers_manager: ModelProvidersManager,
-  show_quick_pick: boolean = false,
-  context: vscode.ExtensionContext,
-  panel_provider: PanelProvider,
+const get_edit_context_config = async (params: {
+  api_providers_manager: ModelProvidersManager
+  show_quick_pick?: boolean
+  context: vscode.ExtensionContext
+  panel_provider: PanelProvider
   config_id?: string
-): Promise<{ provider: Provider; config: ToolConfig } | undefined> => {
+}): Promise<{ provider: Provider; config: ToolConfig } | undefined> => {
+  const {
+    api_providers_manager,
+    show_quick_pick,
+    context,
+    panel_provider,
+    config_id
+  } = params
   const edit_context_configs =
     await api_providers_manager.get_edit_context_tool_configs()
 
@@ -245,6 +252,9 @@ const get_edit_context_config = async (
 
         quick_pick.onDidHide(() => {
           quick_pick.dispose()
+          if (panel_provider) {
+            panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
+          }
           if (!accepted) {
             resolve(undefined)
           }
@@ -370,20 +380,16 @@ export const handle_edit_context = async (
 
   // eslint-disable-next-line no-constant-condition
   while (true) {
-    const config_result = await get_edit_context_config(
+    const config_result = await get_edit_context_config({
       api_providers_manager,
-      should_show_quick_pick,
-      panel_provider.context,
+      show_quick_pick: should_show_quick_pick,
+      context: panel_provider.context,
       panel_provider,
-      current_config_id
-    )
+      config_id: current_config_id
+    })
 
     if (!config_result) {
       return
-    }
-
-    if (!message.config_id) {
-      panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
     }
 
     const { provider, config: edit_context_config } = config_result
