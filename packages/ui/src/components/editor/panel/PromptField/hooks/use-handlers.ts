@@ -203,6 +203,28 @@ export const use_handlers = (
   const [redo_stack, set_redo_stack] = useState<HistoryEntry[]>([])
   const raw_caret_pos_ref = useRef(0)
   const has_modified_current_entry_ref = useRef(false)
+  const is_shift_pressed_ref = useRef(false)
+
+  useEffect(() => {
+    const handle_key_down = (e: KeyboardEvent) => {
+      if (e.key == 'Shift') is_shift_pressed_ref.current = true
+    }
+    const handle_key_up = (e: KeyboardEvent) => {
+      if (e.key == 'Shift') is_shift_pressed_ref.current = false
+    }
+    const handle_blur = () => {
+      is_shift_pressed_ref.current = false
+    }
+    window.addEventListener('keydown', handle_key_down)
+    window.addEventListener('keyup', handle_key_up)
+    window.addEventListener('blur', handle_blur)
+
+    return () => {
+      window.removeEventListener('keydown', handle_key_down)
+      window.removeEventListener('keyup', handle_key_up)
+      window.removeEventListener('blur', handle_blur)
+    }
+  }, [])
 
   useEffect(() => {
     if (!props.value) {
@@ -457,9 +479,7 @@ export const use_handlers = (
     update_value(new_value, raw_start)
   }
 
-  const handle_paste = (e: React.ClipboardEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    const text = e.clipboardData.getData('text/plain')
+  const perform_paste = (text: string) => {
     const selection = window.getSelection()
     if (!selection || !selection.rangeCount || !input_ref.current) return
     const range = selection.getRangeAt(0)
@@ -490,6 +510,7 @@ export const use_handlers = (
     let caret_offset_adjustment = 0
 
     if (
+      !is_shift_pressed_ref.current &&
       props.current_selection &&
       text == props.current_selection.text &&
       props.currently_open_file_path
@@ -512,6 +533,12 @@ export const use_handlers = (
 
     has_modified_current_entry_ref.current = true
     update_value(new_value, new_caret_pos)
+  }
+
+  const handle_paste = (e: React.ClipboardEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    const text = e.clipboardData.getData('text/plain')
+    perform_paste(text)
   }
 
   const handle_input_click = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -956,6 +983,14 @@ export const use_handlers = (
         props.on_copy()
         return
       }
+    }
+
+    if ((e.ctrlKey || e.metaKey) && shiftKey && key.toLowerCase() == 'v') {
+      e.preventDefault()
+      navigator.clipboard.readText().then((text) => {
+        perform_paste(text)
+      })
+      return
     }
 
     if ((e.ctrlKey || e.metaKey) && !shiftKey) {
