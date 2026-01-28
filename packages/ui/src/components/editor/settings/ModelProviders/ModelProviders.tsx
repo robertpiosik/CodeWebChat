@@ -101,7 +101,7 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
         ) : (
           <div className={styles.row}>
             <div className={styles['empty-message']}>
-              No model providers configured.
+              No model providers found.
             </div>
           </div>
         )}

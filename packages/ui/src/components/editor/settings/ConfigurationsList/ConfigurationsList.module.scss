@@ -5,7 +5,7 @@
 
 .header {
   display: flex;
-  padding: 12px 12px 8px 12px;
+  padding: 12px 12px 8px 16px;
   align-items: center;
   justify-content: space-between;
 
@@ -56,10 +56,11 @@
 }
 
 .empty-message {
-  flex: 1;
   text-align: center;
   font-style: italic;
   color: var(--cwc-text-color-dimmed);
+  align-self: flex-start;
+  flex: 1;
 }
 
 .drag-handle {

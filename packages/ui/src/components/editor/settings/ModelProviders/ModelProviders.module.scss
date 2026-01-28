@@ -5,7 +5,7 @@
 
 .header {
   display: flex;
-  padding: 12px 12px 8px 12px;
+  padding: 12px 12px 8px 16px;
   align-items: center;
   justify-content: space-between;
 
@@ -24,6 +24,7 @@
   display: flex;
   align-items: center;
   height: 40px;
+  padding: 0 12px;
   gap: 12px;
 
   &:nth-child(even) {
@@ -45,10 +46,10 @@
 }
 
 .col-drag {
-  padding: 0 4px 0 14px;
+  padding: 4px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  height: 100%;
 }
 
 .col-name {
@@ -65,18 +66,15 @@
 
 .col-actions {
   display: flex;
-  justify-content: flex-end;
   gap: 8px;
-  padding-right: 8px;
-  width: 60px;
-  flex-shrink: 0;
 }
 
 .empty-message {
-  flex: 1;
   text-align: center;
   font-style: italic;
   color: var(--cwc-text-color-dimmed);
+  align-self: flex-start;
+  flex: 1;
 }
 
 .drag-handle {
