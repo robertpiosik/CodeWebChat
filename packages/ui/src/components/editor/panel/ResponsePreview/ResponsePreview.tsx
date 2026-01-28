@@ -131,7 +131,7 @@ export const ResponsePreview: FC<Props> = (props) => {
       const progress = file.apply_progress ?? 0
       const tps = file.apply_tokens_per_second
       let text = `${progress}%`
-      if (tps) text += ` (${tps} t/s)`
+      if (tps) text += ` (${tps} tokens/s)`
       return text
     }
     if (file.apply_status == 'done') return 'Done'

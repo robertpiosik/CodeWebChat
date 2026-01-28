@@ -68,14 +68,13 @@ export const FileItem: FC<Props> = (props) => {
       const progress = props.file.apply_progress ?? 0
       const tps = props.file.apply_tokens_per_second
       status_text = `${progress}%`
-      if (tps) status_text += ` (${tps} t/s)`
+      if (tps) status_text += ` (${tps} tokens/s)`
     } else if (props.file.apply_status == 'done') status_text = 'Done'
 
     return (
       <div className={styles.progress}>
         <span>{status_text}</span>
-        <span className="codicon codicon-loading codicon-modifier-spin" />
-        {props.file.apply_status !== 'done' && (
+        {props.file.apply_status != 'done' && (
           <div
             className={styles.progress__cancel}
             onClick={(e) => {
@@ -137,7 +136,7 @@ export const FileItem: FC<Props> = (props) => {
               <div className={styles['file__actions']}>
                 {props.file.content !== undefined &&
                   props.file.proposed_content !== undefined &&
-                  props.file.content !== props.file.proposed_content && (
+                  props.file.content != props.file.proposed_content && (
                     <IconButton
                       codicon_icon="discard"
                       title="Discard user changes"
