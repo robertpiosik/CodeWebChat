@@ -276,10 +276,12 @@ export const use_settings = (vscode: any) => {
   const handle_open_allow_patterns_settings = () =>
     post_message(vscode, { command: 'OPEN_ALLOW_PATTERNS_SETTINGS' })
 
-  const handle_context_size_warning_threshold_change = (threshold: number) =>
+  const handle_context_size_warning_threshold_change = (
+    threshold: number | undefined
+  ) =>
     post_message(vscode, {
       command: 'UPDATE_CONTEXT_SIZE_WARNING_THRESHOLD',
-      threshold
+      threshold: threshold ?? null
     })
 
   const handle_edit_format_instructions_change = (

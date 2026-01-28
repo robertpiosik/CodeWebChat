@@ -10,7 +10,7 @@ export const handle_update_context_size_warning_threshold = async (
     .getConfiguration('codeWebChat')
     .update(
       'contextSizeWarningThreshold',
-      message.threshold,
+      message.threshold ?? undefined,
       vscode.ConfigurationTarget.Global
     )
 }

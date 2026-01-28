@@ -65,7 +65,6 @@ import {
   handle_commit_changes,
   handle_accept_commit_message,
   handle_cancel_commit_message,
-  handle_hash_sign_quick_pick,
   handle_proceed_with_commit,
   handle_get_collapsed_states,
   handle_manage_configurations,
@@ -83,7 +82,8 @@ import {
   handle_get_prune_context_instructions_prefix,
   handle_save_prune_context_instructions_prefix,
   handle_open_file_and_select,
-  handle_open_external_url
+  handle_open_external_url,
+  handle_hash_sign_quick_pick
 } from './message-handlers'
 import { SelectionState } from '../types/messages'
 import {
@@ -113,6 +113,7 @@ import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { CancelTokenSource } from 'axios'
 import { update_last_used_preset_or_group } from './message-handlers/update-last-used-preset-or-group'
 import { dictionary } from '@shared/constants/dictionary'
+import { DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD } from '@/constants/values'
 
 export class PanelProvider implements vscode.WebviewViewProvider {
   private _webview_view: vscode.WebviewView | undefined
@@ -859,7 +860,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   private _send_context_size_warning_threshold() {
     if (!this._webview_view) return
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const threshold = config.get<number>('contextSizeWarningThreshold', 60000)
+    const threshold = config.get<number>(
+      'contextSizeWarningThreshold',
+      DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD
+    )
     this.send_message({
       command: 'CONTEXT_SIZE_WARNING_THRESHOLD',
       threshold

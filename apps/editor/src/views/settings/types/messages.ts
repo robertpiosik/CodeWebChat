@@ -200,7 +200,7 @@ export interface GetContextSizeWarningThresholdMessage {
 
 export interface UpdateContextSizeWarningThresholdMessage {
   command: 'UPDATE_CONTEXT_SIZE_WARNING_THRESHOLD'
-  threshold: number
+  threshold: number | null
 }
 
 export interface GetAreAutomaticCheckpointsDisabledMessage {

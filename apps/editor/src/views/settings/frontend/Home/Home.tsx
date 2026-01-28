@@ -93,7 +93,9 @@ type Props = {
   set_intelligent_update_configs: (configs: ConfigurationForClient[]) => void
   set_prune_context_configs: (configs: ConfigurationForClient[]) => void
   set_commit_messages_configs: (configs: ConfigurationForClient[]) => void
-  on_context_size_warning_threshold_change: (threshold: number) => void
+  on_context_size_warning_threshold_change: (
+    threshold: number | undefined
+  ) => void
   on_commit_instructions_change: (instructions: string) => void
   on_commit_message_auto_accept_after_change: (seconds: number | null) => void
   on_edit_format_instructions_change: (
