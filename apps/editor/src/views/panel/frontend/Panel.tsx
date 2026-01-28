@@ -587,7 +587,8 @@ export const Panel = () => {
                   post_message(vscode, {
                     command: 'INTELLIGENT_UPDATE_FILE_IN_PREVIEW',
                     file_path: file.file_path,
-                    workspace_name: file.workspace_name
+                    workspace_name: file.workspace_name,
+                    force_model_selection: file.force_model_selection
                   })
                 }}
                 on_cancel_intelligent_update={(file) => {

@@ -14,7 +14,7 @@ type Props = {
   on_toggle: (checked: boolean) => void
   on_discard_user_changes: () => void
   on_preview_generated_code: () => void
-  on_intelligent_update: () => void
+  on_intelligent_update: (force_model_selection?: boolean) => void
   on_cancel_intelligent_update: () => void
   on_go_to_file: () => void
 }
@@ -163,7 +163,9 @@ export const FileItem: FC<Props> = (props) => {
                       title="Fix with Intelligent Update API tool"
                       on_click={(e) => {
                         e.stopPropagation()
-                        props.on_intelligent_update()
+                        props.on_intelligent_update(
+                          !!props.file.fixed_with_intelligent_update
+                        )
                       }}
                     />
                   )}
@@ -227,7 +229,11 @@ export const FileItem: FC<Props> = (props) => {
               {!props.file.is_applying && (
                 <div
                   className={styles['message__actions__item']}
-                  onClick={props.on_intelligent_update}
+                  onClick={() =>
+                    props.on_intelligent_update(
+                      !!props.file.fixed_with_intelligent_update
+                    )
+                  }
                   title={'Fix with Intelligent Update API tool'}
                 >
                   <span className="codicon codicon-sparkle" />

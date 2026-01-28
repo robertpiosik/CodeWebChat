@@ -13,6 +13,7 @@ type Props = {
   on_intelligent_update: (file: {
     file_path: string
     workspace_name?: string
+    force_model_selection?: boolean
   }) => void
   on_cancel_intelligent_update: (file: {
     file_path: string
@@ -299,10 +300,11 @@ export const ResponsePreview: FC<Props> = (props) => {
                       content: file.ai_content!
                     })
                   }
-                  on_intelligent_update={() =>
+                  on_intelligent_update={(force_model_selection) =>
                     props.on_intelligent_update({
                       file_path: file.file_path,
-                      workspace_name: file.workspace_name
+                      workspace_name: file.workspace_name,
+                      force_model_selection
                     })
                   }
                   on_cancel_intelligent_update={() =>

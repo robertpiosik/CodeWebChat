@@ -24,7 +24,7 @@ export const handle_intelligent_update_file_in_preview = async (
   panel_provider: PanelProvider,
   message: IntelligentUpdateFileInPreviewMessage
 ): Promise<void> => {
-  const { file_path, workspace_name } = message
+  const { file_path, workspace_name, force_model_selection } = message
   const file_name = path.basename(file_path)
 
   const original_states = panel_provider.context.workspaceState.get<
@@ -95,7 +95,7 @@ export const handle_intelligent_update_file_in_preview = async (
   )
   const config_result = await get_intelligent_update_config(
     api_providers_manager,
-    false,
+    force_model_selection ?? false,
     panel_provider.context
   )
   if (!config_result) return

@@ -347,6 +347,7 @@ export interface IntelligentUpdateFileInPreviewMessage extends BaseMessage {
   command: 'INTELLIGENT_UPDATE_FILE_IN_PREVIEW'
   file_path: string
   workspace_name?: string
+  force_model_selection?: boolean
 }
 
 export interface CancelIntelligentUpdateFileInPreviewMessage extends BaseMessage {
