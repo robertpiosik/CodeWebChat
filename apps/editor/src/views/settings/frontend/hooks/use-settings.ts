@@ -39,7 +39,7 @@ export const use_settings = (vscode: any) => {
     set_edit_context_system_instructions
   ] = useState<string | undefined>(undefined)
   const [context_size_warning_threshold, set_context_size_warning_threshold] =
-    useState<number | undefined>(undefined)
+    useState<number>()
   const [edit_format_instructions, set_edit_format_instructions] = useState<
     EditFormatInstructions | undefined
   >(undefined)

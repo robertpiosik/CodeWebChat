@@ -860,10 +860,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   private _send_context_size_warning_threshold() {
     if (!this._webview_view) return
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const threshold = config.get<number>(
-      'contextSizeWarningThreshold',
+    const threshold =
+      config.get<number>('contextSizeWarningThreshold') ||
       DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD
-    )
     this.send_message({
       command: 'CONTEXT_SIZE_WARNING_THRESHOLD',
       threshold
