@@ -56,7 +56,7 @@ export class ApiManager {
       }
     }
 
-    if (!previous_waiting || previous_waiting.body_hash !== body_hash) {
+    if (!previous_waiting || previous_waiting.body_hash != body_hash) {
       this.waiting_chain.set(params.endpoint_url, {
         promise: current_promise,
         resolve: resolve_current,
@@ -74,8 +74,14 @@ export class ApiManager {
         reasoning_effort: params.reasoning_effort
       })
 
-      if (previous_waiting && previous_waiting.body_hash === body_hash) {
-        await previous_waiting.promise
+      if (previous_waiting && previous_waiting.body_hash == body_hash) {
+        if (cancel_token_source.token.reason) {
+          throw cancel_token_source.token.reason
+        }
+        await Promise.race([
+          previous_waiting.promise,
+          cancel_token_source.token.promise.then((c) => Promise.reject(c))
+        ])
       }
 
       const result = await make_api_request({
