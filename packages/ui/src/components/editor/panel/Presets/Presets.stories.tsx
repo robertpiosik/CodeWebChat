@@ -62,8 +62,12 @@ export const Primary = () => {
       on_group_click={(name) => {
         console.log('on_group_click', name)
       }}
-      on_create={(options) => {
-        console.log('on_create_preset_group_or_separator', options)
+      on_create={(placement, reference_index) => {
+        console.log(
+          'on_create_preset_group_or_separator',
+          placement,
+          reference_index
+        )
       }}
       on_preset_copy={(name) => console.log('on_preset_copy', name)}
       on_presets_reorder={(reordered) =>

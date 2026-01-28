@@ -445,12 +445,14 @@ export const Main: React.FC<Props> = (props) => {
     }
   }
 
-  const handle_create_preset_group_or_separator = (options?: {
-    placement?: 'top' | 'bottom'
-  }) => {
+  const handle_create_preset_group_or_separator = (
+    placement?: 'top' | 'bottom',
+    reference_index?: number
+  ) => {
     post_message(props.vscode, {
       command: 'CREATE_PRESET_GROUP_OR_SEPARATOR',
-      placement: options?.placement
+      placement,
+      reference_index
     })
   }
 

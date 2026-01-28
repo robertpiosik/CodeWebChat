@@ -56,7 +56,7 @@ export namespace Presets {
     presets: Preset[]
     on_preset_click: (preset_name: string) => void
     on_group_click: (group_name: string) => void
-    on_create: (options?: { placement?: 'top' | 'bottom' }) => void
+    on_create: (placement?: 'top' | 'bottom', reference_index?: number) => void
     on_preset_copy: (name: string) => void
     on_presets_reorder: (reordered_presets: Preset[]) => void
     on_preset_edit: (name: string) => void
@@ -240,7 +240,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             codicon_icon="add"
             on_click={(e) => {
               e.stopPropagation()
-              props.on_create({ placement: 'top' })
+              props.on_create('top')
             }}
             title="Create New..."
           />
@@ -337,6 +337,14 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                           on_click={(e) => {
                             e.stopPropagation()
                             props.on_duplicate(preset.original_index!)
+                          }}
+                        />
+                        <IconButton
+                          codicon_icon="insert"
+                          title="Insert below/above"
+                          on_click={(e) => {
+                            e.stopPropagation()
+                            props.on_create(undefined, preset.original_index!)
                           }}
                         />
                         <IconButton
@@ -537,6 +545,14 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         }}
                       />
                       <IconButton
+                        codicon_icon="insert"
+                        title="Insert below/above"
+                        on_click={(e) => {
+                          e.stopPropagation()
+                          props.on_create(undefined, preset.original_index!)
+                        }}
+                      />
+                      <IconButton
                         codicon_icon="edit"
                         title="Edit"
                         on_click={(e) => {
@@ -559,13 +575,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             </ReactSortable>
           </div>
           <div className={styles.footer}>
-            <Button
-              on_click={() =>
-                props.on_create({
-                  placement: 'bottom'
-                })
-              }
-            >
+            <Button on_click={() => props.on_create('bottom')}>
               Create New...
             </Button>
           </div>

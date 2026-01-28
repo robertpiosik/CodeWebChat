@@ -14,9 +14,10 @@
 
 Code Web Chat is a free and open-source AI coding toolkit. You can use CWC in **VS Code** family of editors (Cursor, Antigravity, VSCodium etc.) for a **fast and cost efficient** AI-assisted development experience.
 
+☝️ **Multi-file edits in a single request** \
 ✍️ **Construct coding prompts for...**
 
-- Chatbots—_ChatGPT, Gemini, Claude, Grok, DeepSeek, etc._
+- Chatbots—_Gemini, ChatGPT, Claude, Grok, DeepSeek, etc._
 - APIs—_Google AI Studio, OpenAI, OpenRouter, local Ollama, etc._
 
 💅 **Apply responses**—interactive edits integration with checkpoints for state restoration \

@@ -29,9 +29,10 @@ type Props = {
   copy_to_clipboard: (preset_name?: string) => void
   on_show_home: () => void
   on_search_click: () => void
-  on_create_preset_group_or_separator: (options?: {
-    placement?: 'top' | 'bottom'
-  }) => void
+  on_create_preset_group_or_separator: (
+    placement?: 'top' | 'bottom',
+    reference_index?: number
+  ) => void
   on_at_sign_click: (search_value?: string) => void
   on_hash_sign_click: () => void
   on_curly_braces_click: () => void

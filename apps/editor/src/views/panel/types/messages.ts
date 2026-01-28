@@ -159,6 +159,7 @@ export interface DuplicatePresetGroupOrSeparatorMessage extends BaseMessage {
 export interface CreatePresetGroupOrSeparatorMessage extends BaseMessage {
   command: 'CREATE_PRESET_GROUP_OR_SEPARATOR'
   placement?: 'top' | 'bottom'
+  reference_index?: number
 }
 
 export interface ExecuteCommandMessage extends BaseMessage {
