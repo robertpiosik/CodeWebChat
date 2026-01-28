@@ -1,11 +1,47 @@
 :root {
+  --cwc-text-color: var(--vscode-foreground);
+  --cwc-text-color-dimmed: color-mix(
+    in srgb,
+    var(--vscode-foreground) 75%,
+    transparent
+  );
+  --cwc-bg-primary: color-mix(
+    in srgb,
+    var(--vscode-foreground) 20%,
+    transparent
+  );
+  --cwc-bg-secondary: color-mix(
+    in srgb,
+    var(--vscode-foreground) 8%,
+    transparent
+  );
+  --cwc-bg-tertiary: color-mix(
+    in srgb,
+    var(--vscode-foreground) 4%,
+    transparent
+  );
+  --cwc-border-color: color-mix(
+    in srgb,
+    var(--vscode-foreground) 25%,
+    transparent
+  );
+  --cwc-border-color-hover: color-mix(
+    in srgb,
+    var(--vscode-foreground) 35%,
+    transparent
+  );
+  --cwc-border-color-dimmed: color-mix(
+    in srgb,
+    var(--vscode-foreground) 17%,
+    transparent
+  );
+
   --vscode-font-weight: normal;
   --vscode-font-size: 13px;
   --vscode-editor-font-weight: normal;
   --vscode-editor-font-size: 15px;
   --vscode-foreground: #f3eff5;
   --vscode-errorForeground: #f48771;
-  --cwc-text-color-dimmed: rgba(243, 239, 245, 0.7);
   --vscode-icon-foreground: #c5c5c5;
   --vscode-focusBorder: #263354;
   --vscode-selection-background: rgba(243, 239, 245, 0.31);

@@ -19,10 +19,10 @@ Code Web Chat is a free and open-source AI coding toolkit. You can use CWC in **
 - Chatbots—_[Gemini](https://gemini.google.com/app), [ChatGPT](https://chatgpt.com/), [Claude](https://claude.ai/), [Grok](https://grok.com/), [DeepSeek](https://chat.deepseek.com/), etc._
 - APIs—_[Google](https://aistudio.google.com/api-keys), [OpenAI](https://platform.openai.com/api-keys), [OpenRouter](https://openrouter.ai/settings/keys), [local Ollama](https://ollama.com/search), etc._
 
-💅 **Apply responses**—interactive integration of edits with easy rollback \
-🤙 **Fully-featured**—code completions, commit messages, and more \
-🫰 **Cost-efficient**—optimized for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks \
-✋ **Privacy-first**—zero telemetry, 100% local operation
+💅 **Apply responses**—interactive multi-file changes integration \
+🤙 **Fully-featured**—tab completions and commit messages \
+🫰 **Cost-efficient**—optimized for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching) \
+✋ **Privacy-first**—strict zero telemetry policy
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />

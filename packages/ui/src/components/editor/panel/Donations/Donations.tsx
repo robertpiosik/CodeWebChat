@@ -199,29 +199,29 @@ export const Donations: React.FC<DonationsProps> = (props) => {
 
           <div className={styles.donations}>
             {props.is_fetching ? (
-              <>
+              <div className={styles.donations__inner}>
                 <div className={styles.donations__inner__donation}>
                   <div
                     className={styles.skeleton}
-                    style={{ width: '50%', height: '14px' }}
+                    style={{ width: '25%', height: '14px' }}
                   />
                   <div className={styles.skeleton} style={{ height: '30px' }} />
                 </div>
                 <div className={styles.donations__inner__donation}>
                   <div
                     className={styles.skeleton}
-                    style={{ width: '70%', height: '14px' }}
+                    style={{ width: '30%', height: '14px' }}
                   />
                   <div className={styles.skeleton} style={{ height: '30px' }} />
                 </div>
                 <div className={styles.donations__inner__donation}>
                   <div
                     className={styles.skeleton}
-                    style={{ width: '40%', height: '14px' }}
+                    style={{ width: '20%', height: '14px' }}
                   />
                   <div className={styles.skeleton} style={{ height: '30px' }} />
                 </div>
-              </>
+              </div>
             ) : (
               <>
                 <div
