@@ -94,12 +94,12 @@ export interface ReplacePresetsMessage extends BaseMessage {
   presets: Preset[]
 }
 
-export interface SendPromptMessage extends BaseMessage {
-  command: 'SEND_PROMPT'
+export interface SendToBrowserMessage extends BaseMessage {
+  command: 'SEND_TO_BROWSER'
+  invocation_count: number
   preset_name?: string
   group_name?: string
   show_quick_pick?: boolean
-  invocation_count: number
 }
 
 export interface CopyPromptMessage extends BaseMessage {
@@ -502,7 +502,7 @@ export type FrontendMessage =
   | GetConnectionStatusMessage
   | GetPresetsMessage
   | ReplacePresetsMessage
-  | SendPromptMessage
+  | SendToBrowserMessage
   | CopyPromptMessage
   | RequestEditorStateMessage
   | RequestEditorSelectionStateMessage

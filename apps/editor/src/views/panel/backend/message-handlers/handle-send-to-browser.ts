@@ -29,7 +29,7 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
 
-export const handle_send_prompt = async (params: {
+export const handle_send_to_browser = async (params: {
   panel_provider: PanelProvider
   preset_name?: string
   group_name?: string

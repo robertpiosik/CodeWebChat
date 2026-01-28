@@ -345,7 +345,7 @@ export const Main: React.FC<Props> = (props) => {
     invocation_count: number
   }) => {
     post_message(props.vscode, {
-      command: 'SEND_PROMPT',
+      command: 'SEND_TO_BROWSER',
       preset_name: params.preset_name,
       group_name: params.group_name,
       show_quick_pick: params.show_quick_pick,

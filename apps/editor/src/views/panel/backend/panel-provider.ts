@@ -17,7 +17,7 @@ import {
 } from '@/commands/checkpoints-command/actions'
 import {
   handle_copy_prompt,
-  handle_send_prompt,
+  handle_send_to_browser,
   handle_update_preset,
   handle_delete_preset_group_or_separator,
   handle_create_checkpoint,
@@ -586,8 +586,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             handle_get_connection_status(this)
           } else if (message.command == 'GET_PRESETS') {
             this.send_presets_to_webview(webview_view.webview)
-          } else if (message.command == 'SEND_PROMPT') {
-            await handle_send_prompt({
+          } else if (message.command == 'SEND_TO_BROWSER') {
+            await handle_send_to_browser({
               panel_provider: this,
               preset_name: message.preset_name,
               group_name: message.group_name,
