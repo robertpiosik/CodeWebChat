@@ -358,7 +358,7 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['edit-context'] = el)}
           group="API Tool"
           title="Edit Context"
-          subtitle="Modify, create or delete files based on natural language instructions."
+          subtitle="Pair-programming using natural language instructions."
           on_stuck_change={edit_context_on_stuck_change}
         >
           <Group>
@@ -395,7 +395,7 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['code-completions'] = el)}
           group="API Tool"
           title="Code Completions"
-          subtitle="Get accurate inline code snippets from state-of-the-art reasoning models."
+          subtitle="Get accurate code at cursor from state-of-the-art models."
           on_stuck_change={code_completions_on_stuck_change}
         >
           <Group>
@@ -423,7 +423,7 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['intelligent-update'] = el)}
           group="API Tool"
           title="Intelligent Update"
-          subtitle={`Integrate changes from malformed markdown code blocks.`}
+          subtitle="Integrate changes from malformed markdown code blocks."
           on_stuck_change={intelligent_update_on_stuck_change}
         >
           <Group>
@@ -453,7 +453,7 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['prune-context'] = el)}
           group="API Tool"
           title="Prune Context"
-          subtitle="Make your context task-focused by unchecking irrelevant files."
+          subtitle="Remove irrelevant files from the current context selection."
           on_stuck_change={prune_context_on_stuck_change}
         >
           <Group>
@@ -475,7 +475,7 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['commit-messages'] = el)}
           group="API Tool"
           title="Commit Messages"
-          subtitle="Generate meaningful summaries of changes adhering to your style."
+          subtitle="Meaningful summaries of changes adhering to your style."
           on_stuck_change={commit_messages_on_stuck_change}
         >
           <Group>

@@ -12,7 +12,7 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 </p>
 
-Code Web Chat is a free and open-source AI coding toolkit. You can use CWC in **VS Code** family of editors (Cursor, Antigravity, VSCodium etc.) for a **blazing fast** AI-assisted development experience.
+Code Web Chat is a free and open-source (FOSS) AI coding toolkit. You can use CWC in **VS Code** family of editors (Cursor, Antigravity, VSCodium etc.) for a **blazing fast** pair-programming experience.
 
 ✍️ **Construct coding prompts for...**
 
@@ -79,13 +79,16 @@ Like all of CWC, the extension is [open-source](https://github.com/robertpiosik/
 ## API tools for common tasks
 
 **🛠️ Edit Context** \
-Work on your codebase with natural language instructions.
+Pair-programming using natural language instructions.
 
 **🛠️ Code Completions** \
-Get accurate code at cursor from reasoning models.
+Get accurate code at cursor from state-of-the-art models.
 
 **🛠️ Intelligent Update** \
-Fix malformed AI responses.
+Integrate changes from malformed markdown code blocks.
+
+**🛠️ Prune Context** \
+Remove irrelevant files from the current context selection.
 
 **🛠️ Commit Messages** \
 Meaningful summaries of changes adhering to your style.
