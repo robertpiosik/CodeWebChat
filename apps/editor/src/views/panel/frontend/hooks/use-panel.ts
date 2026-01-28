@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Preset } from '@shared/types/preset'
 import {
   BackendMessage,
-  FileProgressStatus,
   FrontendMessage,
   SelectionState
 } from '../../types/messages'
@@ -132,16 +131,6 @@ export const use_panel = (vscode: any) => {
     prune_context_instructions_prefix,
     set_prune_context_instructions_prefix
   ] = useState<string>('')
-  const [
-    active_editor_intelligent_update_state,
-    set_active_editor_intelligent_update_state
-  ] = useState<{
-    title: string
-    status?: FileProgressStatus
-    progress?: number
-    tokens_per_second?: number
-    total_tokens?: number
-  }>()
 
   const handle_instructions_change = (
     value: string,
@@ -387,20 +376,6 @@ export const use_panel = (vscode: any) => {
         set_tasks(message.tasks)
       } else if (message.command == 'PRUNE_CONTEXT_INSTRUCTIONS_PREFIX') {
         set_prune_context_instructions_prefix(message.prefix)
-      } else if (
-        message.command == 'SHOW_ACTIVE_EDITOR_INTELLIGENT_UPDATE_MODAL'
-      ) {
-        set_active_editor_intelligent_update_state({
-          title: message.title,
-          status: message.status,
-          progress: message.progress,
-          tokens_per_second: message.tokens_per_second,
-          total_tokens: message.total_tokens
-        })
-      } else if (
-        message.command == 'HIDE_ACTIVE_EDITOR_INTELLIGENT_UPDATE_MODAL'
-      ) {
-        set_active_editor_intelligent_update_state(undefined)
       }
     }
     window.addEventListener('message', handle_message)
@@ -638,7 +613,6 @@ export const use_panel = (vscode: any) => {
     handle_configurations_collapsed_change,
     handle_remove_response_history_item,
     handle_discard_user_changes_in_preview,
-    handle_prune_context_instructions_prefix_change,
-    active_editor_intelligent_update_state
+    handle_prune_context_instructions_prefix_change
   }
 }

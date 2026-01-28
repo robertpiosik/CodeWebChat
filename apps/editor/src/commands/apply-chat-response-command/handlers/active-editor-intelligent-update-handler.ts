@@ -91,9 +91,9 @@ export const handle_active_editor_intelligent_update = async (params: {
   if (params.panel_provider) {
     params.panel_provider.api_call_cancel_token_source = cancel_token_source
     params.panel_provider.send_message({
-      command: 'SHOW_ACTIVE_EDITOR_INTELLIGENT_UPDATE_MODAL',
-      title: 'Updating file...',
-      status: 'thinking'
+      command: 'SHOW_PROGRESS',
+      title: 'Thinking...',
+      show_elapsed_time: true
     })
   }
 
@@ -126,30 +126,28 @@ export const handle_active_editor_intelligent_update = async (params: {
           }
 
           params.panel_provider.send_message({
-            command: 'SHOW_ACTIVE_EDITOR_INTELLIGENT_UPDATE_MODAL',
-            title: 'Updating file...',
-            status: 'receiving',
+            command: 'SHOW_PROGRESS',
+            title: 'Receiving...',
             tokens_per_second,
-            progress,
-            total_tokens
+            progress
           })
         }
       },
       on_retry_attempt: () => {
         if (params.panel_provider) {
           params.panel_provider.send_message({
-            command: 'SHOW_ACTIVE_EDITOR_INTELLIGENT_UPDATE_MODAL',
-            title: 'Updating file...',
-            status: 'thinking'
+            command: 'SHOW_PROGRESS',
+            title: 'Thinking...',
+            show_elapsed_time: true
           })
         }
       },
       on_retry: () => {
         if (params.panel_provider) {
           params.panel_provider.send_message({
-            command: 'SHOW_ACTIVE_EDITOR_INTELLIGENT_UPDATE_MODAL',
-            title: 'Updating file...',
-            status: 'retrying'
+            command: 'SHOW_PROGRESS',
+            title: 'Retrying...',
+            show_elapsed_time: true
           })
         }
       }
@@ -195,7 +193,7 @@ export const handle_active_editor_intelligent_update = async (params: {
   } finally {
     if (params.panel_provider) {
       params.panel_provider.send_message({
-        command: 'HIDE_ACTIVE_EDITOR_INTELLIGENT_UPDATE_MODAL'
+        command: 'HIDE_PROGRESS'
       })
       params.panel_provider.api_call_cancel_token_source = null
     }

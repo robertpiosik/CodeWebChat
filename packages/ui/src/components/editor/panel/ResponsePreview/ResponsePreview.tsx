@@ -97,7 +97,7 @@ export const ResponsePreview: FC<Props> = (props) => {
 
   const prev_applying_count = useRef(0)
   useEffect(() => {
-    if (prev_applying_count.current > 0 && applying_files.length === 0) {
+    if (prev_applying_count.current > 0 && applying_files.length == 0) {
       set_is_fixing_all(false)
     }
     prev_applying_count.current = applying_files.length
@@ -127,10 +127,7 @@ export const ResponsePreview: FC<Props> = (props) => {
     if (file.apply_status == 'waiting') return 'Waiting...'
     if (file.apply_status == 'thinking') return 'Thinking...'
     if (file.apply_status == 'retrying') return 'Retrying...'
-    if (file.apply_status == 'receiving') {
-      const tps = file.apply_tokens_per_second
-      return tps ? `${tps} tokens/s` : 'Receiving...'
-    }
+    if (file.apply_status == 'receiving') return 'Receiving...'
     if (file.apply_status == 'done') return 'Done'
     return ''
   }
@@ -138,6 +135,11 @@ export const ResponsePreview: FC<Props> = (props) => {
   const get_file_name = (path: string) => {
     const last_slash_index = path.lastIndexOf('/')
     return path.substring(last_slash_index + 1)
+  }
+
+  const get_dir_path = (path: string) => {
+    const last_slash_index = path.lastIndexOf('/')
+    return last_slash_index > -1 ? path.substring(0, last_slash_index) : ''
   }
 
   const get_instructions_font_size_class = (text: string): string => {
@@ -179,9 +181,15 @@ export const ResponsePreview: FC<Props> = (props) => {
                 className={styles['fix-all-progress__item']}
               >
                 <div className={styles['fix-all-progress__header']}>
-                  <span className={styles['fix-all-progress__header__name']}>
-                    {get_file_name(file.file_path)}
-                  </span>
+                  <div className={styles['fix-all-progress__header__name']}>
+                    <span>{get_file_name(file.file_path)}</span>
+                    <span>
+                      {props.has_multiple_workspaces && file.workspace_name
+                        ? `${file.workspace_name}${get_dir_path(file.file_path) ? '/' : ''}`
+                        : ''}
+                      {get_dir_path(file.file_path)}
+                    </span>
+                  </div>
                   <span className={styles['fix-all-progress__header__status']}>
                     {get_status_text(file)}
                   </span>
@@ -228,7 +236,6 @@ export const ResponsePreview: FC<Props> = (props) => {
                     file_path: f.file_path,
                     workspace_name: f.workspace_name
                   }))
-                console.log('xxx', files_to_fix)
                 props.on_fix_all_failed(files_to_fix)
               }}
             >

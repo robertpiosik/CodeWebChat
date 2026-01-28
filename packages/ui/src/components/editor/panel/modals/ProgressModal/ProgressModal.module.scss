@@ -1,13 +1,13 @@
 .elapsed-time {
   text-align: center;
-  font-size: 20px;
-  font-family: monospace;
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
 }
 
 .tokens-per-second {
   text-align: center;
-  font-family: monospace;
   color: var(--cwc-text-color-dimmed);
+  font-variant-numeric: tabular-nums;
 }
 
 .progress {

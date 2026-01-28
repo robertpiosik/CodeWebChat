@@ -48,7 +48,6 @@ export type FileProgressStatus =
   | 'waiting'
   | 'thinking'
   | 'receiving'
-  | 'done'
   | 'retrying'
 
 // === FROM FRONTEND TO BACKEND ===
@@ -783,20 +782,6 @@ export interface HideApiManagerProgressMessage extends BaseMessage {
   command: 'HIDE_API_MANAGER_PROGRESS'
   id: string
 }
-
-export interface ShowActiveEditorIntelligentUpdateModalMessage extends BaseMessage {
-  command: 'SHOW_ACTIVE_EDITOR_INTELLIGENT_UPDATE_MODAL'
-  title: string
-  status?: FileProgressStatus
-  progress?: number
-  tokens_per_second?: number
-  total_tokens?: number
-}
-
-export interface HideActiveEditorIntelligentUpdateModalMessage extends BaseMessage {
-  command: 'HIDE_ACTIVE_EDITOR_INTELLIGENT_UPDATE_MODAL'
-}
-
 export interface ShowAutoClosingModalMessage extends BaseMessage {
   command: 'SHOW_AUTO_CLOSING_MODAL'
   title: string
@@ -902,5 +887,3 @@ export type BackendMessage =
   | TasksMessage
   | UpdateFileProgressMessage
   | PruneContextInstructionsPrefixMessage
-  | ShowActiveEditorIntelligentUpdateModalMessage
-  | HideActiveEditorIntelligentUpdateModalMessage

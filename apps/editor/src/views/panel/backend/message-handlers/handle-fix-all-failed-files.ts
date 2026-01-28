@@ -36,14 +36,10 @@ export const handle_fix_all_failed_files = async (
     return
   }
 
-  const failed_files = original_states.filter(
-    (s) =>
-      s.apply_failed &&
-      !s.fixed_with_intelligent_update &&
-      files_to_fix.some(
-        (f) =>
-          f.file_path == s.file_path && f.workspace_name == s.workspace_name
-      )
+  const failed_files = original_states.filter((s) =>
+    files_to_fix.some(
+      (f) => f.file_path == s.file_path && f.workspace_name == s.workspace_name
+    )
   )
 
   if (failed_files.length == 0) {

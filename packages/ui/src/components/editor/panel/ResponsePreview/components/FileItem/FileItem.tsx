@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import cn from 'classnames'
 import { FileInPreview } from '@shared/types/file-in-preview'
 import styles from './FileItem.module.scss'
@@ -28,7 +28,7 @@ const get_file_message = (file: FileInPreview): FileMessage | null => {
   if (file.fixed_with_intelligent_update) {
     return {
       type: 'success',
-      text: 'Fixed successfully',
+      text: 'Applied with Intelligent Update',
       show_actions: true
     }
   } else if (file.apply_failed) {
@@ -49,6 +49,20 @@ const get_file_message = (file: FileInPreview): FileMessage | null => {
 }
 
 export const FileItem: FC<Props> = (props) => {
+  const [elapsed_seconds, set_elapsed_seconds] = useState(0.0)
+
+  useEffect(() => {
+    if (!props.file.is_applying) {
+      set_elapsed_seconds(0)
+      return
+    }
+
+    const interval = setInterval(() => {
+      set_elapsed_seconds((prev) => prev + 0.1)
+    }, 100)
+    return () => clearInterval(interval)
+  }, [props.file.is_applying])
+
   const message_obj = get_file_message(props.file)
   const last_slash_index = props.file.file_path.lastIndexOf('/')
   const file_name = props.file.file_path.substring(last_slash_index + 1)
@@ -72,6 +86,7 @@ export const FileItem: FC<Props> = (props) => {
     return (
       <div className={styles.progress}>
         <span>{status_text}</span>
+        <span>{elapsed_seconds.toFixed(1)}s</span>
         {props.file.apply_status != 'done' && (
           <div
             className={styles.progress__cancel}

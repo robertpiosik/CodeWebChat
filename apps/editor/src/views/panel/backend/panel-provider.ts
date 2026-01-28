@@ -81,9 +81,9 @@ import {
   handle_cancel_intelligent_update_file_in_preview,
   handle_get_prune_context_instructions_prefix,
   handle_save_prune_context_instructions_prefix,
-  handle_open_file_and_select,
   handle_open_external_url,
-  handle_hash_sign_quick_pick
+  handle_hash_sign_quick_pick,
+  handle_open_file_and_select
 } from './message-handlers'
 import { SelectionState } from '../types/messages'
 import {
