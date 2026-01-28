@@ -157,6 +157,14 @@
       var(--vscode-gitDecoration-addedResourceForeground) 12%,
       transparent
     );
+
+    .message__actions__item:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--vscode-gitDecoration-addedResourceForeground) 12%,
+        transparent
+      );
+    }
   }
 
   &__content {
@@ -164,11 +172,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 11px;
-    padding: 2px 0 2px 6px;
+    font-size: 12px;
+    padding: 3px 0 3px 6px;
 
     > span:first-child {
-      font-size: 12px !important;
+      font-size: 13px !important;
       margin-right: 4px;
       transform: translateY(2px);
     }

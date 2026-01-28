@@ -34,6 +34,8 @@ With its focus on context engineering, CWC lets you pick all the necessary files
 
 When pair-programming with Code Web Chat you foster codebase understanding, iterate on changes that are easy to review, and enter the flow state like in the good old days!
 
+> “The only way to go fast, is to go well.” ― Robert C. Martin, Clean Architecture
+
 ## Enabling autofill in browser
 
 Start using [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt) (also called [gems](https://gemini.google/pl/overview/gems) or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)) without the tedious copy and paste!

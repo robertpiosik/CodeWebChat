@@ -20,7 +20,7 @@ type Props = {
 }
 
 type FileMessage =
-  | { type: 'success'; text: string }
+  | { type: 'success'; text: string; show_actions?: boolean }
   | { type: 'error'; text: string; show_actions: boolean }
   | { type: 'warning'; text: string; show_actions: boolean }
 
@@ -28,7 +28,8 @@ const get_file_message = (file: FileInPreview): FileMessage | null => {
   if (file.fixed_with_intelligent_update) {
     return {
       type: 'success',
-      text: 'Fixed successfully'
+      text: 'Fixed successfully',
+      show_actions: true
     }
   } else if (file.apply_failed) {
     return {
@@ -237,7 +238,9 @@ export const FileItem: FC<Props> = (props) => {
                   title={'Fix with Intelligent Update API tool'}
                 >
                   <span className="codicon codicon-sparkle" />
-                  <span>Fix</span>
+                  <span>
+                    {props.file.fixed_with_intelligent_update ? 'Retry' : 'Fix'}
+                  </span>
                 </div>
               )}
             </div>
