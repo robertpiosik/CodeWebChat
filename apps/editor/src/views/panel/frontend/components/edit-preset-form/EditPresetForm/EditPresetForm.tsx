@@ -521,6 +521,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
               }}
               onFocus={() => set_active_field('prompt_prefix')}
               min_rows={2}
+              blur_on_enter={false}
             />
           </Field>
 
@@ -543,6 +544,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
               }}
               onFocus={() => set_active_field('prompt_suffix')}
               min_rows={2}
+              blur_on_enter={false}
             />
           </Field>
         </Fieldset>

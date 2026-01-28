@@ -9,6 +9,7 @@ type Props = {
   autofocus?: boolean
   min_rows?: number
   max_rows?: number
+  blur_on_enter?: boolean
   on_change: (value: string) => void
   on_blur?: () => void
   on_key_down?: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void
@@ -42,7 +43,11 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, Props>(
     }, [])
 
     const handle_key_down = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      if ((e.key == 'Enter' || e.key == 'Escape') && !e.shiftKey) {
+      if (
+        (e.key == 'Escape' ||
+          (e.key == 'Enter' && (props.blur_on_enter ?? true))) &&
+        !e.shiftKey
+      ) {
         e.preventDefault()
         e.currentTarget.blur()
       }
