@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
   "description": "CWC is a blazing fast AI coding with chatbots/APIs",
-  "version": "1.765.0",
+  "version": "1.766.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
@@ -656,7 +656,8 @@
         },
         "codeWebChat.checkNewFiles": {
           "type": "boolean",
-          "default": true
+          "default": true,
+          "scope": "resource"
         },
         "codeWebChat.sendWithShiftEnter": {
           "type": "boolean",
@@ -665,6 +666,7 @@
         },
         "codeWebChat.clearChecksInWorkspaceBehavior": {
           "type": "string",
+          "scope": "resource",
           "enum": [
             "ignore-open-editors",
             "uncheck-all"
@@ -712,6 +714,7 @@
         },
         "codeWebChat.chatPresetsForAskAboutContext": {
           "type": "array",
+          "scope": "resource",
           "default": [
             {
               "name": "Popular"
@@ -880,6 +883,7 @@
         },
         "codeWebChat.chatPresetsForEditContext": {
           "type": "array",
+          "scope": "resource",
           "default": [
             {
               "name": "Popular"
@@ -1048,6 +1052,7 @@
         },
         "codeWebChat.chatPresetsForCodeAtCursor": {
           "type": "array",
+          "scope": "resource",
           "default": [
             {
               "name": "Popular"
@@ -1188,6 +1193,7 @@
         },
         "codeWebChat.chatPresetsForPruneContext": {
           "type": "array",
+          "scope": "resource",
           "default": [
             {
               "name": "Popular"
@@ -1328,6 +1334,7 @@
         },
         "codeWebChat.chatPresetsForNoContext": {
           "type": "array",
+          "scope": "resource",
           "default": [
             {
               "name": "Popular"
@@ -1496,6 +1503,7 @@
         },
         "codeWebChat.promptTemplatesForAskAboutContext": {
           "type": "array",
+          "scope": "resource",
           "default": [],
           "items": {
             "type": "object",
@@ -1514,6 +1522,7 @@
         },
         "codeWebChat.promptTemplatesForEditContext": {
           "type": "array",
+          "scope": "resource",
           "default": [],
           "items": {
             "type": "object",
@@ -1532,6 +1541,7 @@
         },
         "codeWebChat.promptTemplatesForCodeAtCursor": {
           "type": "array",
+          "scope": "resource",
           "default": [],
           "items": {
             "type": "object",
@@ -1550,6 +1560,7 @@
         },
         "codeWebChat.promptTemplatesForNoContext": {
           "type": "array",
+          "scope": "resource",
           "default": [],
           "items": {
             "type": "object",
@@ -1568,6 +1579,7 @@
         },
         "codeWebChat.promptTemplatesForPruneContext": {
           "type": "array",
+          "scope": "resource",
           "default": [],
           "items": {
             "type": "object",
@@ -1586,6 +1598,7 @@
         },
         "codeWebChat.modelProviders": {
           "type": "array",
+          "scope": "resource",
           "default": [],
           "items": {
             "oneOf": [
