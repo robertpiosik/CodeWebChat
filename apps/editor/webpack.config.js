@@ -70,7 +70,12 @@ const config = [
               from: '../../README.md',
               to: '../README.md',
               transform(content) {
-                return content.toString().split('\n').slice(13).join('\n')
+                return content
+                  .toString()
+                  .split('\n')
+                  .slice(13)
+                  .filter((line) => !['> [!TIP]', '> [!IMPORTANT]', '> [!NOTE]'].includes(line.trim()))
+                  .join('\n')
               }
             }
           ]
