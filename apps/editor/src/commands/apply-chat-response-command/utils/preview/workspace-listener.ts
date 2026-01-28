@@ -657,6 +657,15 @@ export const setup_workspace_listeners = (
       return
     }
 
+    if (file_to_discard.previewable_file.fixed_with_intelligent_update) {
+      file_to_discard.previewable_file.fixed_with_intelligent_update = false
+      update_response_history(
+        panel_provider,
+        created_at,
+        file_to_discard.previewable_file
+      )
+    }
+
     const proposed = file_to_discard.previewable_file.proposed_content
 
     await vscode.workspace.fs.writeFile(
