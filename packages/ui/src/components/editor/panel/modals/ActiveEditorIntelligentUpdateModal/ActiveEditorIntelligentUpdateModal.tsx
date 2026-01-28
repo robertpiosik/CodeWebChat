@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { FC } from 'react'
 import styles from './ActiveEditorIntelligentUpdateModal.module.scss'
 import { Button } from '../../../common/Button'
 import { Modal } from '../Modal'
@@ -40,21 +40,7 @@ const get_status_text = (status: FileProgressStatus): string => {
   }
 }
 
-export const ActiveEditorIntelligentUpdateModal: React.FC<Props> = (props) => {
-  const [elapsed_time, set_elapsed_time] = useState(0)
-
-  useEffect(() => {
-    set_elapsed_time(0)
-    const start_time = Date.now()
-    const elapsed_time_timer = setInterval(() => {
-      set_elapsed_time((Date.now() - start_time) / 1000)
-    }, 100)
-
-    return () => {
-      clearInterval(elapsed_time_timer)
-    }
-  }, [])
-
+export const ActiveEditorIntelligentUpdateModal: FC<Props> = (props) => {
   return (
     <div
       onKeyDown={(e) => {
@@ -80,17 +66,16 @@ export const ActiveEditorIntelligentUpdateModal: React.FC<Props> = (props) => {
                         </div>
                         <div className={styles['file-item__bottom__right']}>
                           {props.status == 'receiving' &&
-                            props.tokens_per_second !== undefined && (
-                              <div>
-                                ~{format_tokens(props.tokens_per_second)}{' '}
-                                tokens/s
-                              </div>
+                            props.progress !== undefined && (
+                              <div>{Math.round(props.progress)}%</div>
                             )}
                           {props.status == 'receiving' &&
-                            props.total_tokens !== undefined && (
-                              <div>({format_tokens(props.total_tokens)})</div>
+                            props.tokens_per_second !== undefined && (
+                              <div>
+                                ({format_tokens(props.tokens_per_second)}{' '}
+                                tokens/s)
+                              </div>
                             )}
-                          <div>{elapsed_time.toFixed(1)}s</div>
                         </div>
                       </div>
                       <div className={styles.progress}>

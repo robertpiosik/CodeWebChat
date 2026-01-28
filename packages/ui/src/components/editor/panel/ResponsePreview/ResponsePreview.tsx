@@ -128,11 +128,8 @@ export const ResponsePreview: FC<Props> = (props) => {
     if (file.apply_status == 'thinking') return 'Thinking...'
     if (file.apply_status == 'retrying') return 'Retrying...'
     if (file.apply_status == 'receiving') {
-      const progress = file.apply_progress ?? 0
       const tps = file.apply_tokens_per_second
-      let text = `${progress}%`
-      if (tps) text += ` (${tps} tokens/s)`
-      return text
+      return tps ? `${tps} tokens/s` : 'Receiving...'
     }
     if (file.apply_status == 'done') return 'Done'
     return ''
@@ -231,6 +228,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                     file_path: f.file_path,
                     workspace_name: f.workspace_name
                   }))
+                console.log('xxx', files_to_fix)
                 props.on_fix_all_failed(files_to_fix)
               }}
             >

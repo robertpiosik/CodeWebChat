@@ -65,10 +65,8 @@ export const FileItem: FC<Props> = (props) => {
     else if (props.file.apply_status == 'thinking') status_text = 'Thinking...'
     else if (props.file.apply_status == 'retrying') status_text = 'Retrying...'
     else if (props.file.apply_status == 'receiving') {
-      const progress = props.file.apply_progress ?? 0
       const tps = props.file.apply_tokens_per_second
-      status_text = `${progress}%`
-      if (tps) status_text += ` (${tps} tokens/s)`
+      if (tps) status_text = `${tps} tokens/s`
     } else if (props.file.apply_status == 'done') status_text = 'Done'
 
     return (
@@ -90,6 +88,17 @@ export const FileItem: FC<Props> = (props) => {
     )
   }
 
+  const progress =
+    props.file.apply_status == 'receiving'
+      ? (props.file.apply_progress ?? 0)
+      : 0
+  const container_style =
+    props.file.apply_status == 'receiving'
+      ? {
+          backgroundImage: `linear-gradient(to right, var(--cwc-bg-secondary) ${progress}%, transparent ${progress}%)`
+        }
+      : undefined
+
   return (
     <div className={styles.container}>
       <div
@@ -100,6 +109,7 @@ export const FileItem: FC<Props> = (props) => {
         onClick={
           props.file.file_state == 'deleted' ? undefined : props.on_click
         }
+        style={container_style}
         role="button"
         title={props.file.file_path}
       >

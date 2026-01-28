@@ -11,6 +11,17 @@
   pointer-events: none;
 }
 
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -25,6 +36,8 @@
   width: 100%;
   max-width: min(260px, 70vw);
   overflow: hidden;
+  animation: slideIn var(--transition-duration-250)
+    var(--transition-timing-function);
 }
 
 .title {
@@ -58,6 +71,10 @@
   flex-direction: column;
   width: 100%;
   position: relative;
+
+  &:nth-child(even) {
+    background-color: var(--cwc-bg-tertiary);
+  }
 
   &__top {
     display: flex;
@@ -102,7 +119,7 @@
     &__right {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       flex-shrink: 0;
       font-variant-numeric: tabular-nums;
     }

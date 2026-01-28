@@ -12,8 +12,8 @@
   padding: 3px 6px;
   border-radius: 6px;
   background-color: var(--vscode-quickInput-background);
-  border: 1px solid var(--vscode-widget-border);
-  box-shadow: 0 0 8px 2px var(--vscode-widget-shadow);
+  border: 1px solid var(--cwc-border-color-dimmed);
+  box-shadow: 0 0 10px var(--vscode-widget-shadow);
   pointer-events: none;
 
   &--warning {
@@ -31,7 +31,7 @@
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
     border-top: 5px solid var(--vscode-quickInput-background);
-    filter: drop-shadow(0 1px 0.5px var(--vscode-widget-border));
+    filter: drop-shadow(0 1px 0.5px var(--cwc-border-color-dimmed));
   }
 
   &--align-left {
