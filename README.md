@@ -12,17 +12,16 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 </p>
 
-Code Web Chat is a free and open-source AI coding toolkit. You can use CWC in **VS Code** family of editors (Cursor, Antigravity, VSCodium etc.) for a **fast and cost efficient** AI-assisted development experience.
+Code Web Chat is a free and open-source AI coding toolkit. You can use CWC in **VS Code** family of editors (Cursor, Antigravity, VSCodium etc.) for a **blazing fast** AI-assisted development experience.
 
-☝️ **Multi-file edits in a single request** \
 ✍️ **Construct coding prompts for...**
 
-- Chatbots—_Gemini, ChatGPT, Claude, Grok, DeepSeek, etc._
-- APIs—_Google AI Studio, OpenAI, OpenRouter, local Ollama, etc._
+- Chatbots—_[Gemini](https://gemini.google.com/app), [ChatGPT](https://chatgpt.com/), [Claude](https://claude.ai/), [Grok](https://grok.com/), [DeepSeek](https://chat.deepseek.com/), etc._
+- APIs—_[Google](https://aistudio.google.com/api-keys), [OpenAI](https://platform.openai.com/api-keys), [OpenRouter](https://openrouter.ai/settings/keys), [local Ollama](https://ollama.com/search), etc._
 
-💅 **Apply responses**—interactive edits integration with checkpoints for state restoration \
-🤙 **Fully-featured**—code completions, commit messages, checkpoints, skills, and more \
-🫰 **Cost-efficient**—zero-overhead prompts optimized for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching) \
+💅 **Apply responses**—interactive integration of edits with easy rollback \
+🤙 **Fully-featured**—code completions, commit messages, and more \
+🫰 **Cost-efficient**—optimized for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks \
 ✋ **Privacy-first**—zero telemetry, 100% local operation
 
 <p>
@@ -31,7 +30,7 @@ Code Web Chat is a free and open-source AI coding toolkit. You can use CWC in **
 
 ## Introduction
 
-With its focus on context engineering, CWC lets you pick all the necessary files, includnig useful examples, with engineer's intent. Such steered model welcomes simple, task-focused instructions, makes all edits in a single request, and is as accurate as can get. The tool is a perfect companion for all kinds of coding tasks; from tedious refactors to complex features.
+With its focus on context engineering, CWC lets you pick all the necessary files, includnig useful examples, with engineer's intent. Such steered model doesn't need time consuming planning, makes all edits in a single request, and is as accurate as can get. The tool is a perfect companion for all kinds of coding tasks; from tedious refactors to complex features.
 
 When pair-programming with Code Web Chat you foster codebase understanding, iterate on changes that are easy to review, and enter the flow state like in the good old days!
 

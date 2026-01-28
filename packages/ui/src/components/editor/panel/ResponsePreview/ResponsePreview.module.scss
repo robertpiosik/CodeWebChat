@@ -110,6 +110,9 @@
   flex-direction: column;
   gap: 8px;
   margin: 0 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: var(--cwc-bg-tertiary);
 
   &__item {
     display: flex;
@@ -120,9 +123,8 @@
   &__header {
     display: flex;
     justify-content: space-between;
-    font-size: 11px;
+    font-size: 12px;
     align-items: center;
-    color: var(--cwc-text-color);
 
     &__name {
       white-space: nowrap;
