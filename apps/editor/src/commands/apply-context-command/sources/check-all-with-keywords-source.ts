@@ -1,10 +1,10 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import * as fs from 'fs'
 import { WorkspaceProvider } from '../../../context/providers/workspace/workspace-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY } from '../../../constants/state-keys'
+import { search_files_by_keywords } from '../../../utils/search-files-by-keywords'
 
 export const handle_check_all_with_keywords_source = async (
   workspace_provider: WorkspaceProvider,
@@ -82,52 +82,7 @@ export const handle_check_all_with_keywords_source = async (
         all_files.push(...files)
       }
 
-      const matched_files: string[] = []
-
-      await vscode.window.withProgress(
-        {
-          location: vscode.ProgressLocation.Notification,
-          title: `Searching for keywords: ${keywords.join(', ')}...`,
-          cancellable: true
-        },
-        async (progress, token) => {
-          const total = all_files.length
-          let processed = 0
-          const increment = (1 / total) * 100
-
-          for (const file_path of all_files) {
-            if (token.isCancellationRequested) break
-
-            try {
-              // Skip large files (> 1MB) to avoid performance issues
-              const stats = await fs.promises.stat(file_path)
-              if (stats.size > 1024 * 1024) {
-                processed++
-                progress.report({
-                  increment,
-                  message: `${processed}/${total}`
-                })
-                continue
-              }
-
-              const content = await fs.promises.readFile(file_path, 'utf-8')
-              const content_lower = content.toLowerCase()
-
-              if (keywords.some((k) => content_lower.includes(k))) {
-                matched_files.push(file_path)
-              }
-            } catch (error) {
-              // Ignore read errors (binary files, permissions, etc.)
-            }
-
-            processed++
-            progress.report({
-              increment,
-              message: `${processed}/${total}`
-            })
-          }
-        }
-      )
+      const matched_files = await search_files_by_keywords(all_files, keywords)
 
       if (matched_files.length == 0) {
         vscode.window.showInformationMessage(
