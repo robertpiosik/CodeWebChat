@@ -19,7 +19,8 @@ Code Web Chat is a free and open-source (FOSS), independent AI coding toolkit fo
 - APIs—_[Google](https://aistudio.google.com/api-keys), [OpenAI](https://platform.openai.com/api-keys), [OpenRouter](https://openrouter.ai/settings/keys), [local Ollama](https://ollama.com/search), etc._
 
 💅 **Apply responses**—interactive multi-file changes integration \
-🫰 **Cost-efficient**—optimized for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks \
+🔋 **Batteries included**—code completions, commit messages \
+🫰 **Cost-efficient**—[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks \
 ✋ **Privacy-first**—strict zero telemetry policy
 
 <p>
@@ -28,9 +29,9 @@ Code Web Chat is a free and open-source (FOSS), independent AI coding toolkit fo
 
 ## Introduction
 
-With its focus on context engineering, CWC lets you pick all the necessary files, including useful examples, with engineering intent. Such steered model welcomes simple instructions and produces predictable outputs you're looking for, very fast. The tool is a perfect companion for all kinds of coding tasks; from tedious refactors to complex features.
+With its static context approach, CWC lets you pick all the necessary files, including useful examples, with intent. Such steered model is easier to prompt for outputs you're looking for. The toolkit is a perfect companion for all kinds of coding tasks; from tedious refactors to complex features.
 
-When pair-programming with Code Web Chat you foster codebase understanding, iterate on changes easy to review, and roam through tasks in a flow state.
+When pair-programming with Code Web Chat you foster codebase understanding and prompt for changes easy to review.
 
 > “The only way to go fast, is to go well.” ― Robert C. Martin, Clean Architecture
 
