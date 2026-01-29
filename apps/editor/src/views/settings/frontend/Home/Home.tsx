@@ -114,12 +114,12 @@ type Props = {
   on_open_editor_settings: () => void
   on_open_ignore_patterns_settings: () => void
   on_open_allow_patterns_settings: () => void
-  on_add_provider: () => void
+  on_add_provider: (params?: { insertion_index?: number }) => void
   on_delete_provider: (provider_name: string) => void
   on_edit_provider: (provider_name: string) => void
   on_change_api_key: (provider_name: string) => void
   on_reorder_providers: (reordered_providers: ProviderForClient[]) => void
-  on_add_config: (tool_name: string) => void
+  on_add_config: (tool_name: string, insertion_index?: number) => void
   on_reorder_configs: (
     tool_name: string,
     reordered: ConfigurationForClient[]
@@ -382,7 +382,9 @@ export const Home: React.FC<Props> = (props) => {
               set_configurations={props.set_edit_context_configs}
               tool_name="EDIT_CONTEXT"
               can_have_default={false}
-              on_add={() => props.on_add_config('EDIT_CONTEXT')}
+              on_add={(params) =>
+                props.on_add_config('EDIT_CONTEXT', params?.insertion_index)
+              }
               on_reorder={(reordered) =>
                 props.on_reorder_configs('EDIT_CONTEXT', reordered)
               }
@@ -404,7 +406,12 @@ export const Home: React.FC<Props> = (props) => {
               set_configurations={props.set_intelligent_update_configs}
               tool_name="INTELLIGENT_UPDATE"
               can_have_default={true}
-              on_add={() => props.on_add_config('INTELLIGENT_UPDATE')}
+              on_add={(params) =>
+                props.on_add_config(
+                  'INTELLIGENT_UPDATE',
+                  params?.insertion_index
+                )
+              }
               on_reorder={(reordered) =>
                 props.on_reorder_configs('INTELLIGENT_UPDATE', reordered)
               }
@@ -434,7 +441,9 @@ export const Home: React.FC<Props> = (props) => {
               set_configurations={props.set_prune_context_configs}
               tool_name="PRUNE_CONTEXT"
               can_have_default={false}
-              on_add={() => props.on_add_config('PRUNE_CONTEXT')}
+              on_add={(params) =>
+                props.on_add_config('PRUNE_CONTEXT', params?.insertion_index)
+              }
               on_reorder={(reordered) =>
                 props.on_reorder_configs('PRUNE_CONTEXT', reordered)
               }
@@ -456,7 +465,9 @@ export const Home: React.FC<Props> = (props) => {
               set_configurations={props.set_code_completions_configs}
               tool_name="CODE_COMPLETIONS"
               can_have_default={true}
-              on_add={() => props.on_add_config('CODE_COMPLETIONS')}
+              on_add={(params) =>
+                props.on_add_config('CODE_COMPLETIONS', params?.insertion_index)
+              }
               on_reorder={(reordered) =>
                 props.on_reorder_configs('CODE_COMPLETIONS', reordered)
               }
@@ -510,7 +521,9 @@ export const Home: React.FC<Props> = (props) => {
               set_configurations={props.set_commit_messages_configs}
               tool_name="COMMIT_MESSAGES"
               can_have_default={true}
-              on_add={() => props.on_add_config('COMMIT_MESSAGES')}
+              on_add={(params) =>
+                props.on_add_config('COMMIT_MESSAGES', params?.insertion_index)
+              }
               on_reorder={(reordered) =>
                 props.on_reorder_configs('COMMIT_MESSAGES', reordered)
               }

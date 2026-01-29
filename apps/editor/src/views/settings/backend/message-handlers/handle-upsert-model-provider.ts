@@ -13,10 +13,12 @@ const normalize_base_url = (url: string): string => {
   return url.trim().replace(/\/+$/, '')
 }
 
-export const handle_upsert_model_provider = async (
-  provider: SettingsProvider,
+export const handle_upsert_model_provider = async (params: {
+  provider: SettingsProvider
   provider_name?: string
-): Promise<void> => {
+  insertion_index?: number
+}): Promise<void> => {
+  const { provider, provider_name, insertion_index } = params
   const providers_manager = new ModelProvidersManager(provider.context)
 
   const prompt_for_name = async (
@@ -302,6 +304,55 @@ export const handle_upsert_model_provider = async (
     }
   }
 
+  let actual_insertion_index: number | undefined
+
+  if (insertion_index !== undefined) {
+    const position_quick_pick = await new Promise<string | undefined>(
+      (resolve) => {
+        const quick_pick = vscode.window.createQuickPick()
+        quick_pick.items = [
+          { label: 'Insert above' },
+          { label: 'Insert below' }
+        ]
+        quick_pick.title = 'Placement'
+        quick_pick.placeholder = 'Where to insert?'
+        quick_pick.buttons = [
+          {
+            iconPath: new vscode.ThemeIcon('close'),
+            tooltip: 'Close'
+          }
+        ]
+
+        let accepted = false
+        const disposables: vscode.Disposable[] = []
+
+        disposables.push(
+          quick_pick.onDidTriggerButton(() => {
+            quick_pick.hide()
+          }),
+          quick_pick.onDidAccept(() => {
+            accepted = true
+            resolve(quick_pick.selectedItems[0]?.label)
+            quick_pick.hide()
+          }),
+          quick_pick.onDidHide(() => {
+            if (!accepted) resolve(undefined)
+            disposables.forEach((d) => d.dispose())
+            quick_pick.dispose()
+          })
+        )
+
+        quick_pick.show()
+      }
+    )
+    if (!position_quick_pick) return
+
+    actual_insertion_index =
+      position_quick_pick == 'Insert above'
+        ? insertion_index
+        : insertion_index + 1
+  }
+
   let working_provider: CustomProvider | undefined
   let original_name: string | undefined
 
@@ -469,7 +520,11 @@ export const handle_upsert_model_provider = async (
     }
   } else {
     // Append new
-    updated_providers.push(working_provider)
+    if (actual_insertion_index !== undefined) {
+      updated_providers.splice(actual_insertion_index, 0, working_provider)
+    } else {
+      updated_providers.push(working_provider)
+    }
   }
 
   await providers_manager.save_providers(updated_providers)

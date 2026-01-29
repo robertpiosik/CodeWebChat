@@ -167,8 +167,11 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_add_provider = () => {
-    post_message(vscode, { command: 'ADD_MODEL_PROVIDER' })
+  const handle_add_provider = (params?: { insertion_index?: number }) => {
+    post_message(vscode, {
+      command: 'ADD_MODEL_PROVIDER',
+      insertion_index: params?.insertion_index
+    })
   }
 
   const handle_delete_provider = (provider_name: string) => {
@@ -192,11 +195,12 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_add_config = (tool_name: string) => {
+  const handle_add_config = (tool_name: string, insertion_index?: number) => {
     const tool_type = tool_name.toLowerCase().replace(/_/g, '-') as ToolType
     post_message(vscode, {
       command: 'UPSERT_CONFIGURATION',
-      tool_type
+      tool_type,
+      insertion_index
     })
   }
 

@@ -45,7 +45,12 @@ type Props = {
     reordered_configurations: UiConfigurations.Configuration[]
   ) => void
   on_toggle_pinned_configuration: (id: string) => void
-  on_manage_configurations: () => void
+  on_edit_configuration: (id: string) => void
+  on_delete_configuration: (id: string) => void
+  on_create_configuration: (params?: {
+    create_on_top?: boolean
+    insertion_index?: number
+  }) => void
   currently_open_file_path?: string
   current_selection?: SelectionState | null
   chat_history: string[]
@@ -322,8 +327,10 @@ export const MainView: React.FC<Props> = (props) => {
               on_configuration_click={props.on_configuration_click}
               on_reorder={props.on_configurations_reorder}
               on_toggle_pinned={props.on_toggle_pinned_configuration}
+              on_edit={props.on_edit_configuration}
+              on_delete={props.on_delete_configuration}
               selected_configuration_id={props.selected_configuration_id}
-              on_manage_configurations={props.on_manage_configurations}
+              on_create={props.on_create_configuration}
               is_collapsed={props.configurations_collapsed}
               on_toggle_collapsed={props.on_configurations_collapsed_change}
             />

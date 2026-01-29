@@ -13,7 +13,7 @@ type ToolConfigurationsSectionProps = {
   can_have_default: boolean
   configurations: ConfigurationForClient[] | undefined
   set_configurations: (configurations: ConfigurationForClient[]) => void
-  on_add: () => void
+  on_add: (params?: { insertion_index?: number }) => void
   on_reorder: (reordered: ConfigurationForClient[]) => void
   on_edit: (configuration_id: string) => void
   on_delete: (configuration_id: string) => void

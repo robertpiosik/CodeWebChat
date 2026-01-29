@@ -83,11 +83,11 @@ Pair-programming using natural language instructions.
 **🛠️ Intelligent Update** \
 Integrate changes from malformed markdown code blocks.
 
-**🛠️ Code Completions** \
-Get accurate code at cursor from state-of-the-art models.
-
 **🛠️ Prune Context** \
 Remove irrelevant files from the current context selection.
+
+**🛠️ Code Completions** \
+Get accurate code at cursor from state-of-the-art models.
 
 **🛠️ Commit Messages** \
 Meaningful summaries of changes adhering to your style.

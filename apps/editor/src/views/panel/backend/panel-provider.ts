@@ -114,6 +114,8 @@ import { CancelTokenSource } from 'axios'
 import { update_last_used_preset_or_group } from './message-handlers/update-last-used-preset-or-group'
 import { dictionary } from '@shared/constants/dictionary'
 import { DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD } from '@/constants/values'
+import { upsert_configuration } from '../../utils/upsert-configuration'
+import { delete_configuration } from '../../utils/delete-configuration'
 
 export class PanelProvider implements vscode.WebviewViewProvider {
   private _webview_view: vscode.WebviewView | undefined
@@ -769,6 +771,30 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             message.command == 'SAVE_PRUNE_CONTEXT_INSTRUCTIONS_PREFIX'
           ) {
             await handle_save_prune_context_instructions_prefix(message.prefix)
+          } else if (message.command == 'UPSERT_CONFIGURATION') {
+            const tool_type_map: Record<string, string> = {
+              'edit-context': 'edit-context',
+              'code-at-cursor': 'code-completions',
+              'prune-context': 'prune-context'
+            }
+            await upsert_configuration({
+              context: this.context,
+              tool_type: tool_type_map[message.tool_type] || message.tool_type,
+              configuration_id: message.configuration_id,
+              create_on_top: message.create_on_top,
+              insertion_index: message.insertion_index
+            })
+          } else if (message.command == 'DELETE_CONFIGURATION') {
+            const tool_type_map: Record<string, any> = {
+              'edit-context': 'edit-context',
+              'code-at-cursor': 'code-completions',
+              'prune-context': 'prune-context'
+            }
+            await delete_configuration(
+              this.context,
+              message.configuration_id,
+              tool_type_map[message.api_prompt_type] || message.api_prompt_type
+            )
           } else if (message.command == 'OPEN_EXTERNAL_URL') {
             await handle_open_external_url(message)
           }

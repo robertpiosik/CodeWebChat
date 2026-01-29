@@ -105,11 +105,17 @@ export class SettingsProvider {
         } else if (message.command == 'REORDER_MODEL_PROVIDERS') {
           await handle_reorder_model_providers(this, message)
         } else if (message.command == 'ADD_MODEL_PROVIDER') {
-          await handle_upsert_model_provider(this)
+          await handle_upsert_model_provider({
+            provider: this,
+            insertion_index: message.insertion_index
+          })
         } else if (message.command == 'DELETE_MODEL_PROVIDER') {
           await handle_delete_model_provider(this, message)
         } else if (message.command == 'EDIT_CUSTOM_MODEL_PROVIDER') {
-          await handle_upsert_model_provider(this, message.provider_name)
+          await handle_upsert_model_provider({
+            provider: this,
+            provider_name: message.provider_name
+          })
         } else if (message.command == 'CHANGE_MODEL_PROVIDER_KEY') {
           await handle_change_model_provider_key(this, message)
         } else if (message.command == 'GET_CODE_COMPLETIONS_CONFIGURATIONS') {

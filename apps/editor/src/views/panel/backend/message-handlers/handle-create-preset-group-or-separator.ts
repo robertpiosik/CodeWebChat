@@ -134,19 +134,51 @@ export const handle_create_preset_group_or_separator = async (
   let insertion_index: number | undefined
 
   if (message.reference_index !== undefined) {
-    const position_quick_pick = await vscode.window.showQuickPick(
-      ['Insert Above', 'Insert Below'],
-      {
-        placeHolder: 'Where to insert?'
+    const position_quick_pick = await new Promise<string | undefined>(
+      (resolve) => {
+        const quick_pick = vscode.window.createQuickPick()
+        quick_pick.items = [
+          { label: 'Insert above' },
+          { label: 'Insert below' }
+        ]
+        quick_pick.title = 'Placement'
+        quick_pick.placeholder = 'Where to insert?'
+        quick_pick.buttons = [
+          {
+            iconPath: new vscode.ThemeIcon('close'),
+            tooltip: 'Close'
+          }
+        ]
+
+        let accepted = false
+        const disposables: vscode.Disposable[] = []
+
+        disposables.push(
+          quick_pick.onDidTriggerButton(() => {
+            quick_pick.hide()
+          }),
+          quick_pick.onDidAccept(() => {
+            accepted = true
+            resolve(quick_pick.selectedItems[0]?.label)
+            quick_pick.hide()
+          }),
+          quick_pick.onDidHide(() => {
+            if (!accepted) resolve(undefined)
+            disposables.forEach((d) => d.dispose())
+            quick_pick.dispose()
+          })
+        )
+
+        quick_pick.show()
       }
     )
     if (!position_quick_pick) return
 
     insertion_index =
-      position_quick_pick === 'Insert Above'
+      position_quick_pick == 'Insert above'
         ? message.reference_index
         : message.reference_index + 1
-  } else if (message.placement === 'top') {
+  } else if (message.placement == 'top') {
     insertion_index = 0
   }
 

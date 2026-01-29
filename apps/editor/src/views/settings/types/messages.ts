@@ -40,6 +40,7 @@ export interface ReorderModelProvidersMessage {
 
 export interface AddModelProviderMessage {
   command: 'ADD_MODEL_PROVIDER'
+  insertion_index?: number
 }
 
 export interface DeleteModelProviderMessage {
@@ -270,6 +271,8 @@ export interface UpsertConfigurationMessage {
   command: 'UPSERT_CONFIGURATION'
   tool_type: ToolType
   configuration_id?: string
+  insertion_index?: number
+  create_on_top?: boolean
 }
 
 export type FrontendMessage =

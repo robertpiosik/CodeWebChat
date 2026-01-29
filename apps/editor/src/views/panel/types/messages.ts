@@ -493,6 +493,20 @@ export interface OpenExternalUrlMessage extends BaseMessage {
   url: string
 }
 
+export interface UpsertConfigurationMessage extends BaseMessage {
+  command: 'UPSERT_CONFIGURATION'
+  tool_type: string
+  configuration_id?: string
+  create_on_top?: boolean
+  insertion_index?: number
+}
+
+export interface DeleteConfigurationMessage extends BaseMessage {
+  command: 'DELETE_CONFIGURATION'
+  api_prompt_type: ApiPromptType
+  configuration_id: string
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -580,6 +594,8 @@ export type FrontendMessage =
   | GetPruneContextInstructionsPrefixMessage
   | SavePruneContextInstructionsPrefixMessage
   | OpenExternalUrlMessage
+  | UpsertConfigurationMessage
+  | DeleteConfigurationMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {

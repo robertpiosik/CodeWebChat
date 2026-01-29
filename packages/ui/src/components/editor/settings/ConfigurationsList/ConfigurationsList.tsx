@@ -19,7 +19,7 @@ export namespace ConfigurationsList {
     on_reorder: (configurations: Configuration[]) => void
     on_edit: (configuration_id: string) => void
     on_delete: (configuration_id: string) => void
-    on_add: () => void
+    on_add: (params?: { insertion_index?: number }) => void
     on_set_default?: (configuration_id: string) => void
     on_unset_default?: () => void
     radio_group_name?: string
@@ -32,7 +32,10 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
   const sortable = props.on_reorder !== undefined
   const has_default = props.configurations.some((c) => c.is_default)
 
-  const render_item = (config: ConfigurationsList.Configuration) => (
+  const render_item = (
+    config: ConfigurationsList.Configuration,
+    index: number
+  ) => (
     <div key={config.id} className={styles.row}>
       {sortable && (
         <div className={cn(styles['drag-handle'], styles['col-drag'])}>
@@ -52,6 +55,13 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
         <span>{config.description}</span>
       </div>
       <div className={styles['col-actions']}>
+        {sortable && (
+          <IconButton
+            codicon_icon="insert"
+            title="Insert below/above"
+            on_click={() => props.on_add({ insertion_index: index })}
+          />
+        )}
         <IconButton
           codicon_icon="edit"
           title="Edit configuration"
@@ -86,7 +96,7 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
             </>
           )}
         </div>
-        <Button on_click={props.on_add}>New Configuration...</Button>
+        <Button on_click={() => props.on_add()}>New Configuration...</Button>
       </div>
       <div className={styles.list}>
         {props.configurations.length > 0 ? (
@@ -108,10 +118,12 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
               handle={`.${styles['drag-handle']}`}
               animation={150}
             >
-              {props.configurations.map(render_item)}
+              {props.configurations.map((item, index) =>
+                render_item(item, index)
+              )}
             </ReactSortable>
           ) : (
-            props.configurations.map(render_item)
+            props.configurations.map((item, index) => render_item(item, index))
           )
         ) : (
           <div className={styles.row}>

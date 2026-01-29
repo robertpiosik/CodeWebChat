@@ -398,10 +398,14 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_manage_configurations = () => {
+  const handle_create_configuration = (params?: {
+    create_on_top?: boolean
+    insertion_index?: number
+  }) => {
     post_message(props.vscode, {
-      command: 'MANAGE_CONFIGURATIONS',
-      api_prompt_type: props.api_prompt_type
+      command: 'UPSERT_CONFIGURATION',
+      tool_type: props.api_prompt_type,
+      ...params
     })
   }
 
@@ -433,6 +437,24 @@ export const Main: React.FC<Props> = (props) => {
         configurations: reordered_api_tool_configs
       })
     }
+  }
+
+  const handle_edit_configuration = (id: string) => {
+    if (props.api_prompt_type) {
+      post_message(props.vscode, {
+        command: 'UPSERT_CONFIGURATION',
+        tool_type: props.api_prompt_type,
+        configuration_id: id
+      })
+    }
+  }
+
+  const handle_delete_configuration = (id: string) => {
+    post_message(props.vscode, {
+      command: 'DELETE_CONFIGURATION',
+      api_prompt_type: props.api_prompt_type,
+      configuration_id: id
+    })
   }
 
   const handle_toggle_pinned_configuration = (id: string) => {
@@ -738,7 +760,9 @@ export const Main: React.FC<Props> = (props) => {
       on_configuration_click={handle_configuration_click}
       on_configurations_reorder={handle_configurations_reorder}
       on_toggle_pinned_configuration={handle_toggle_pinned_configuration}
-      on_manage_configurations={handle_manage_configurations}
+      on_edit_configuration={handle_edit_configuration}
+      on_delete_configuration={handle_delete_configuration}
+      on_create_configuration={handle_create_configuration}
       on_search_click={handle_search_click}
       on_at_sign_click={handle_at_sign_click}
       on_hash_sign_click={handle_hash_sign_click}

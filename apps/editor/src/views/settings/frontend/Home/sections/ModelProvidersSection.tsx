@@ -4,7 +4,7 @@ import { ModelProviders } from '@ui/components/editor/settings/ModelProviders'
 type ModelProvidersSectionProps = {
   providers: ProviderForClient[] | undefined
   on_reorder: (reordered_providers: ProviderForClient[]) => void
-  on_add_provider: () => void
+  on_add_provider: (params?: { insertion_index?: number }) => void
   on_delete_provider: (provider_name: string) => void
   on_edit_provider: (provider_name: string) => void
   on_change_api_key: (provider_name: string) => void

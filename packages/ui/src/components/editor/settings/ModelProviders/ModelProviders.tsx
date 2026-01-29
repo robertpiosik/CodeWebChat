@@ -15,7 +15,7 @@ export namespace ModelProviders {
   export type Props = {
     providers: Provider[]
     on_reorder: (providers: Provider[]) => void
-    on_add_provider: () => void
+    on_add_provider: (params?: { insertion_index?: number }) => void
     on_delete_provider: (provider_name: string) => void
     on_edit_provider: (provider_name: string) => void
     on_change_api_key: (provider_name: string) => void
@@ -32,7 +32,7 @@ const with_ids = (
 }
 
 export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
-  const render_item = (provider: ModelProviders.Provider) => (
+  const render_item = (provider: ModelProviders.Provider, index: number) => (
     <div key={provider.name} className={styles.row}>
       <div className={cn(styles['drag-handle'], styles['col-drag'])}>
         <span className="codicon codicon-gripper" />
@@ -43,6 +43,11 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
         <div className={styles['col-base-url']}>{provider.baseUrl}</div>
       </div>
       <div className={styles['col-actions']}>
+        <IconButton
+          codicon_icon="insert"
+          title="Insert below/above"
+          on_click={() => props.on_add_provider({ insertion_index: index })}
+        />
         {provider.type == 'custom' && (
           <IconButton
             codicon_icon="edit"
@@ -73,7 +78,9 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
           {props.providers.length} model provider
           {props.providers.length == 1 ? '' : 's'}
         </div>
-        <Button on_click={props.on_add_provider}>New Provider...</Button>
+        <Button on_click={() => props.on_add_provider()}>
+          New Provider...
+        </Button>
       </div>
       <div className={styles.list}>
         {props.providers.length > 0 ? (
@@ -96,7 +103,7 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
             handle={`.${styles['drag-handle']}`}
             animation={150}
           >
-            {props.providers.map(render_item)}
+            {props.providers.map((p, i) => render_item(p, i))}
           </ReactSortable>
         ) : (
           <div className={styles.row}>

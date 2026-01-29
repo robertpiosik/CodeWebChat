@@ -19,10 +19,15 @@ export namespace Configurations {
     api_prompt_type: 'edit-context' | 'code-at-cursor' | 'prune-context'
     configurations: Configuration[]
     on_configuration_click: (id: string) => void
-    on_reorder?: (configurations: Configuration[]) => void
-    on_toggle_pinned?: (id: string) => void
+    on_reorder: (configurations: Configuration[]) => void
+    on_toggle_pinned: (id: string) => void
     selected_configuration_id?: string
-    on_manage_configurations: () => void
+    on_create: (params?: {
+      create_on_top?: boolean
+      insertion_index?: number
+    }) => void
+    on_edit: (id: string) => void
+    on_delete: (id: string) => void
     is_collapsed: boolean
     on_toggle_collapsed: (is_collapsed: boolean) => void
   }
@@ -33,7 +38,8 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
 
   const render_configuration_item = (
     configuration: Configurations.Configuration,
-    is_dragging_disabled: boolean
+    is_dragging_disabled: boolean,
+    index_for_insertion?: number
   ) => {
     const description_parts = [configuration.provider_name]
     if (configuration.reasoning_effort) {
@@ -52,16 +58,17 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
           [styles['configurations__item--highlighted']]:
             props.selected_configuration_id == configuration.id
         })}
-        onClick={() => {
-          props.on_configuration_click(configuration.id)
-        }}
+        onClick={() => props.on_configuration_click(configuration.id)}
         role="button"
+        title="Initialize"
       >
         <div className={styles.configurations__item__left}>
           {!is_dragging_disabled && (
             <div
               className={styles['configurations__item__left__drag-handle']}
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation()
+              }}
             >
               <span className="codicon codicon-gripper" />
             </div>
@@ -71,21 +78,53 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
             <span>{description}</span>
           </div>
         </div>
-        {props.on_toggle_pinned && (
-          <div
-            className={styles.configurations__item__right}
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div
+          className={styles.configurations__item__right}
+          onClick={(e) => {
+            e.stopPropagation()
+          }}
+        >
+          {props.on_toggle_pinned && (
             <IconButton
               codicon_icon={configuration.is_pinned ? 'pinned' : 'pin'}
               title={configuration.is_pinned ? 'Unpin' : 'Pin'}
               on_click={(e) => {
                 e.stopPropagation()
-                props.on_toggle_pinned?.(configuration.id)
+                props.on_toggle_pinned(configuration.id)
               }}
             />
-          </div>
-        )}
+          )}
+          {!is_dragging_disabled && (
+            <IconButton
+              codicon_icon="insert"
+              title="Insert below/above"
+              on_click={(e) => {
+                e.stopPropagation()
+                props.on_create({ insertion_index: index_for_insertion })
+              }}
+            />
+          )}
+          {props.on_edit && (
+            <IconButton
+              codicon_icon="edit"
+              title="Edit"
+              on_click={(e) => {
+                e.stopPropagation()
+                props.on_edit(configuration.id)
+              }}
+            />
+          )}
+          {props.on_delete && (
+            <IconButton
+              codicon_icon="trash"
+              title="Delete"
+              on_click={(e) => {
+                e.stopPropagation()
+                props.on_delete(configuration.id)
+              }}
+            />
+          )}
+        </div>
       </div>
     )
   }
@@ -94,7 +133,13 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
     <div className={styles.container}>
       {pinned_configurations.length > 0 && (
         <div className={styles.configurations}>
-          {pinned_configurations.map((i) => render_configuration_item(i, true))}
+          {pinned_configurations.map((i) =>
+            render_configuration_item(
+              i,
+              true,
+              props.configurations.findIndex((c) => c.id === i.id)
+            )
+          )}
         </div>
       )}
       <ListHeader
@@ -105,12 +150,12 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
         }
         actions={
           <IconButton
-            codicon_icon="edit"
+            codicon_icon="add"
             on_click={(e) => {
               e.stopPropagation()
-              props.on_manage_configurations()
+              props.on_create({ create_on_top: true })
             }}
-            title="Edit Configurations"
+            title="New Configuration..."
           />
         }
       />
@@ -120,29 +165,26 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
             <ReactSortable
               list={props.configurations}
               setList={(new_state) => {
-                if (props.on_reorder) {
-                  const has_order_changed =
-                    new_state.length != props.configurations.length ||
-                    new_state.some(
-                      (item, index) => item.id != props.configurations[index].id
-                    )
+                const has_order_changed =
+                  new_state.length != props.configurations.length ||
+                  new_state.some(
+                    (item, index) => item.id != props.configurations[index].id
+                  )
 
-                  if (has_order_changed) {
-                    props.on_reorder(new_state)
-                  }
+                if (has_order_changed) {
+                  props.on_reorder(new_state)
                 }
               }}
               animation={150}
-              disabled={!props.on_reorder}
             >
-              {props.configurations.map((i) =>
-                render_configuration_item(i, false)
+              {props.configurations.map((i, index) =>
+                render_configuration_item(i, false, index)
               )}
             </ReactSortable>
           </div>
           <div className={styles.footer}>
-            <Button on_click={() => props.on_manage_configurations()}>
-              Edit Configurations
+            <Button on_click={() => props.on_create()}>
+              New Configuration...
             </Button>
           </div>
         </>

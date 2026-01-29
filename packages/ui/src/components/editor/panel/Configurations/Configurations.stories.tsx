@@ -33,11 +33,20 @@ export const Default = () => {
       on_configuration_click={(id) => {
         console.log('on_configuration_click', id)
       }}
-      on_manage_configurations={() => {
-        console.log('on_manage_configurations')
+      on_create={() => {
+        console.log('on_create')
       }}
       on_toggle_pinned={(id) => {
         console.log('on_toggle_pinned', id)
+      }}
+      on_edit={(id) => {
+        console.log('on_edit', id)
+      }}
+      on_delete={(id) => {
+        console.log('on_delete', id)
+      }}
+      on_reorder={(configs) => {
+        console.log('on_reorder', configs)
       }}
       is_collapsed={false}
       on_toggle_collapsed={(is_collapsed) => {
@@ -54,8 +63,20 @@ export const Empty = () => (
     on_configuration_click={(id) => {
       console.log('on_configuration_click', id)
     }}
-    on_manage_configurations={() => {
-      console.log('on_manage_configurations')
+    on_create={() => {
+      console.log('on_create')
+    }}
+    on_toggle_pinned={(id) => {
+      console.log('on_toggle_pinned', id)
+    }}
+    on_edit={(id) => {
+      console.log('on_edit', id)
+    }}
+    on_delete={(id) => {
+      console.log('on_delete', id)
+    }}
+    on_reorder={(configs) => {
+      console.log('on_reorder', configs)
     }}
     is_collapsed={false}
     on_toggle_collapsed={(is_collapsed) => {
