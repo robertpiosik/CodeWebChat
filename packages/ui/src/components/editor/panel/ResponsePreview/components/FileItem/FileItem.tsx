@@ -25,7 +25,7 @@ type FileMessage =
   | { type: 'warning'; text: string; show_actions: boolean }
 
 const get_file_message = (file: FileInPreview): FileMessage | null => {
-  if (file.fixed_with_intelligent_update) {
+  if (file.applied_with_intelligent_update) {
     return {
       type: 'success',
       text: 'Applied with Intelligent Update',
@@ -185,11 +185,11 @@ export const FileItem: FC<Props> = (props) => {
                   props.file.file_state != 'deleted' && (
                     <IconButton
                       codicon_icon="sparkle"
-                      title="Fix with Intelligent Update API tool"
+                      title="Apply with Intelligent Update API tool"
                       on_click={(e) => {
                         e.stopPropagation()
                         props.on_intelligent_update(
-                          !!props.file.fixed_with_intelligent_update
+                          !!props.file.applied_with_intelligent_update
                         )
                       }}
                     />
@@ -256,14 +256,16 @@ export const FileItem: FC<Props> = (props) => {
                   className={styles['message__actions__item']}
                   onClick={() =>
                     props.on_intelligent_update(
-                      !!props.file.fixed_with_intelligent_update
+                      !!props.file.applied_with_intelligent_update
                     )
                   }
-                  title={'Fix with Intelligent Update API tool'}
+                  title="Apply with Intelligent Update API tool"
                 >
                   <span className="codicon codicon-sparkle" />
                   <span>
-                    {props.file.fixed_with_intelligent_update ? 'Retry' : 'Fix'}
+                    {props.file.applied_with_intelligent_update
+                      ? 'Retry'
+                      : 'Fix'}
                   </span>
                 </div>
               )}

@@ -131,6 +131,7 @@ export const use_panel = (vscode: any) => {
     prune_context_instructions_prefix,
     set_prune_context_instructions_prefix
   ] = useState<string>('')
+  const [fix_all_automatically, set_fix_all_automatically] = useState(false)
 
   const handle_instructions_change = (
     value: string,
@@ -244,6 +245,7 @@ export const use_panel = (vscode: any) => {
         set_items_to_review(message.items)
         set_raw_instructions(message.raw_instructions)
         set_preview_item_created_at(message.created_at)
+        set_fix_all_automatically(message.fix_all_automatically ?? false)
         if (message.created_at) {
           set_selected_history_item_created_at(message.created_at)
         }
@@ -296,10 +298,10 @@ export const use_panel = (vscode: any) => {
                 apply_status: message.apply_status,
                 apply_progress: message.apply_progress,
                 apply_tokens_per_second: message.apply_tokens_per_second,
-                fixed_with_intelligent_update:
+                applied_with_intelligent_update:
                   message.apply_status == 'done'
                     ? true
-                    : existing_item.fixed_with_intelligent_update
+                    : existing_item.applied_with_intelligent_update
               }
             }
             return new_items
@@ -613,6 +615,7 @@ export const use_panel = (vscode: any) => {
     handle_configurations_collapsed_change,
     handle_remove_response_history_item,
     handle_discard_user_changes_in_preview,
-    handle_prune_context_instructions_prefix_change
+    handle_prune_context_instructions_prefix_change,
+    fix_all_automatically
   }
 }

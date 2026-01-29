@@ -99,8 +99,8 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
         <Button on_click={() => props.on_add()}>New Configuration...</Button>
       </div>
       <div className={styles.list}>
-        {props.configurations.length > 0 ? (
-          sortable ? (
+        {props.configurations.length > 0 &&
+          (sortable ? (
             <ReactSortable
               list={props.configurations}
               setList={(new_list) => {
@@ -124,14 +124,7 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
             </ReactSortable>
           ) : (
             props.configurations.map((item, index) => render_item(item, index))
-          )
-        ) : (
-          <div className={styles.row}>
-            <div className={styles['empty-message']}>
-              No configurations found.
-            </div>
-          </div>
-        )}
+          ))}
       </div>
     </div>
   )

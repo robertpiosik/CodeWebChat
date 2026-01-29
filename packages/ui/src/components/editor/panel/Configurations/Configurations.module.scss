@@ -77,6 +77,11 @@
   }
 }
 
+.empty {
+  padding: 0 12px 0 34px;
+  color: var(--cwc-text-color-dimmed);
+}
+
 .arrow-animate {
   animation: arrow-left-move 2s infinite;
   font-weight: 600 !important;

@@ -39,7 +39,9 @@ import {
   handle_update_send_with_shift_enter,
   handle_upsert_configuration,
   handle_open_ignore_patterns_settings,
-  handle_open_allow_patterns_settings
+  handle_open_allow_patterns_settings,
+  handle_get_fix_all_automatically,
+  handle_update_fix_all_automatically
 } from './message-handlers'
 
 export class SettingsProvider {
@@ -288,6 +290,10 @@ export class SettingsProvider {
           await handle_open_allow_patterns_settings()
         } else if (message.command == 'UPSERT_CONFIGURATION') {
           await handle_upsert_configuration(this, message)
+        } else if (message.command == 'GET_FIX_ALL_AUTOMATICALLY') {
+          await handle_get_fix_all_automatically(this)
+        } else if (message.command == 'UPDATE_FIX_ALL_AUTOMATICALLY') {
+          await handle_update_fix_all_automatically(message)
         }
       },
       null,
@@ -315,6 +321,7 @@ export class SettingsProvider {
           void handle_get_ai_studio_user_id(this)
           void handle_get_send_with_shift_enter(this)
           void handle_get_check_new_files(this)
+          void handle_get_fix_all_automatically(this)
         }
       })
     )

@@ -739,6 +739,7 @@ export interface ResponsePreviewStartedMessage extends BaseMessage {
   items: ItemInPreview[]
   raw_instructions?: string
   created_at?: number
+  fix_all_automatically?: boolean
 }
 
 export interface ResponsePreviewFinishedMessage extends BaseMessage {

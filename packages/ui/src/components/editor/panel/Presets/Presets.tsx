@@ -249,6 +249,9 @@ export const Presets: React.FC<Presets.Props> = (props) => {
       {!props.is_collapsed && (
         <>
           <div className={styles.presets}>
+            {props.presets.length === 0 && (
+              <div className={styles.empty}>No presets created yet.</div>
+            )}
             <ReactSortable
               list={sortable_list}
               setList={(new_state) => {

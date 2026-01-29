@@ -37,6 +37,7 @@ type Props = {
     files: { file_path: string; workspace_name?: string }[]
   ) => void
   raw_instructions?: string
+  fix_all_automatically?: boolean
 }
 
 export const ResponsePreview: FC<Props> = (props) => {
@@ -47,6 +48,7 @@ export const ResponsePreview: FC<Props> = (props) => {
     new Set()
   )
   const [is_fixing_all, set_is_fixing_all] = useState(false)
+  const [has_attempted_auto_fix, set_has_attempted_auto_fix] = useState(false)
   const scroll_top_ref = useRef(0)
   const scrollable_ref = useRef<any>(null)
 
@@ -108,7 +110,7 @@ export const ResponsePreview: FC<Props> = (props) => {
       files_in_preview.filter(
         (f) =>
           f.diff_application_method == 'search_and_replace' &&
-          !f.fixed_with_intelligent_update &&
+          !f.applied_with_intelligent_update &&
           !f.is_applying
       ).length,
     [files_in_preview]
@@ -118,10 +120,36 @@ export const ResponsePreview: FC<Props> = (props) => {
     () =>
       files_in_preview.filter(
         (f) =>
-          f.apply_failed && !f.fixed_with_intelligent_update && !f.is_applying
+          f.apply_failed && !f.applied_with_intelligent_update && !f.is_applying
       ).length,
     [files_in_preview]
   )
+
+  useEffect(() => {
+    if (
+      props.fix_all_automatically &&
+      error_count > 0 &&
+      !is_fixing_all &&
+      !has_attempted_auto_fix
+    ) {
+      set_is_fixing_all(true)
+      set_has_attempted_auto_fix(true)
+      const files_to_fix = files_in_preview
+        .filter((f) => f.apply_failed && !f.applied_with_intelligent_update)
+        .map((f) => ({
+          file_path: f.file_path,
+          workspace_name: f.workspace_name
+        }))
+      props.on_fix_all_failed(files_to_fix)
+    }
+  }, [
+    props.fix_all_automatically,
+    error_count,
+    is_fixing_all,
+    has_attempted_auto_fix,
+    files_in_preview,
+    props.on_fix_all_failed
+  ])
 
   const get_status_text = (file: FileInPreview) => {
     if (file.apply_status == 'waiting') return 'Waiting...'
@@ -229,7 +257,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                   .filter(
                     (f) =>
                       f.apply_failed &&
-                      !f.fixed_with_intelligent_update &&
+                      !f.applied_with_intelligent_update &&
                       !f.is_applying
                   )
                   .map((f) => ({

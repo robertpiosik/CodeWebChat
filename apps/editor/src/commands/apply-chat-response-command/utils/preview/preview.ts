@@ -16,7 +16,7 @@ import { ItemInPreview } from '@shared/types/file-in-preview'
 export { response_preview_promise_resolve } from './vscode-ui'
 export { toggle_file_preview_state } from './workspace-listener'
 export { discard_user_changes_in_preview } from './workspace-listener'
-export { set_file_fixed_with_intelligent_update } from './workspace-listener'
+export { set_file_applied_with_intelligent_update } from './workspace-listener'
 
 export const preview = async (params: {
   original_states: OriginalFileState[]
@@ -123,12 +123,19 @@ export const preview = async (params: {
       items_for_preview.push(...prepared_files.map((p) => p.previewable_file))
     }
 
+    const config = vscode.workspace.getConfiguration('codeWebChat')
+    const fix_all_automatically = config.get<boolean>(
+      'fixAllAutomatically',
+      false
+    )
+
     if (params.panel_provider) {
       params.panel_provider.send_message({
         command: 'RESPONSE_PREVIEW_STARTED',
         items: items_for_preview,
         raw_instructions: params.raw_instructions,
-        created_at: params.created_at
+        created_at: params.created_at,
+        fix_all_automatically
       })
     }
 

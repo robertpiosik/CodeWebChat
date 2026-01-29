@@ -70,14 +70,6 @@
   gap: 8px;
 }
 
-.empty-message {
-  text-align: center;
-  font-style: italic;
-  color: var(--cwc-text-color-dimmed);
-  align-self: flex-start;
-  flex: 1;
-}
-
 .drag-handle {
   cursor: grab;
   opacity: 0.5;

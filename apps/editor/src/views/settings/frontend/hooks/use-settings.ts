@@ -66,6 +66,9 @@ export const use_settings = (vscode: any) => {
     clear_checks_in_workspace_behavior,
     set_clear_checks_in_workspace_behavior
   ] = useState<'ignore-open-editors' | 'uncheck-all' | undefined>(undefined)
+  const [fix_all_automatically, set_fix_all_automatically] = useState<
+    boolean | undefined
+  >(undefined)
 
   useEffect(() => {
     // Request initial data
@@ -87,6 +90,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_SEND_WITH_SHIFT_ENTER' })
     post_message(vscode, { command: 'GET_CHECK_NEW_FILES' })
     post_message(vscode, { command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR' })
+    post_message(vscode, { command: 'GET_FIX_ALL_AUTOMATICALLY' })
   }, [vscode])
 
   useEffect(() => {
@@ -146,6 +150,9 @@ export const use_settings = (vscode: any) => {
           break
         case 'CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR':
           set_clear_checks_in_workspace_behavior(message.value)
+          break
+        case 'FIX_ALL_AUTOMATICALLY':
+          set_fix_all_automatically(message.enabled)
           break
       }
     }
@@ -348,6 +355,14 @@ export const use_settings = (vscode: any) => {
     })
   }
 
+  const handle_fix_all_automatically_change = (enabled: boolean) => {
+    set_fix_all_automatically(enabled)
+    post_message(vscode, {
+      command: 'UPDATE_FIX_ALL_AUTOMATICALLY',
+      enabled
+    })
+  }
+
   return {
     providers,
     set_providers,
@@ -373,6 +388,7 @@ export const use_settings = (vscode: any) => {
     send_with_shift_enter,
     check_new_files,
     clear_checks_in_workspace_behavior,
+    fix_all_automatically,
     handle_reorder_providers,
     handle_add_provider,
     handle_delete_provider,
@@ -398,6 +414,7 @@ export const use_settings = (vscode: any) => {
     handle_ai_studio_user_id_change,
     handle_send_with_shift_enter_change,
     handle_check_new_files_change,
-    handle_clear_checks_in_workspace_behavior_change
+    handle_clear_checks_in_workspace_behavior_change,
+    handle_fix_all_automatically_change
   }
 }

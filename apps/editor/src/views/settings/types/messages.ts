@@ -275,6 +275,15 @@ export interface UpsertConfigurationMessage {
   create_on_top?: boolean
 }
 
+export interface GetFixAllAutomaticallyMessage {
+  command: 'GET_FIX_ALL_AUTOMATICALLY'
+}
+
+export interface UpdateFixAllAutomaticallyMessage {
+  command: 'UPDATE_FIX_ALL_AUTOMATICALLY'
+  enabled: boolean
+}
+
 export type FrontendMessage =
   | GetModelProvidersMessage
   | ReorderModelProvidersMessage
@@ -329,6 +338,8 @@ export type FrontendMessage =
   | OpenEditorSettingsMessage
   | OpenIgnorePatternsSettingsMessage
   | OpenAllowPatternsSettingsMessage
+  | GetFixAllAutomaticallyMessage
+  | UpdateFixAllAutomaticallyMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface ModelProvidersMessage {
@@ -418,6 +429,11 @@ export interface ClearChecksInWorkspaceBehaviorMessage {
   value: 'ignore-open-editors' | 'uncheck-all'
 }
 
+export interface FixAllAutomaticallyMessage {
+  command: 'FIX_ALL_AUTOMATICALLY'
+  enabled: boolean
+}
+
 export interface ShowSectionMessage {
   command: 'SHOW_SECTION'
   section: string
@@ -443,3 +459,4 @@ export type BackendMessage =
   | CheckNewFilesMessage
   | ClearChecksInWorkspaceBehaviorMessage
   | ShowSectionMessage
+  | FixAllAutomaticallyMessage

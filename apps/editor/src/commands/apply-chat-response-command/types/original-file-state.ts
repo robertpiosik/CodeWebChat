@@ -11,5 +11,5 @@ export type OriginalFileState = {
   ai_content?: string
   proposed_content?: string
   apply_failed?: boolean
-  fixed_with_intelligent_update?: boolean
+  applied_with_intelligent_update?: boolean
 }

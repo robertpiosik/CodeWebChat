@@ -9,6 +9,7 @@ import { Group } from '@ui/components/editor/settings/Group/Group'
 import { Section } from '@ui/components/editor/settings/Section'
 import { Input } from '@ui/components/editor/common/Input'
 import { Textarea } from '@ui/components/editor/common/Textarea'
+import { Toggler } from '@ui/components/editor/common/Toggler'
 import {
   ConfigurationForClient,
   ProviderForClient,
@@ -85,6 +86,7 @@ type Props = {
   checkpoint_lifespan: number
   edit_format_instructions: EditFormatInstructions
   clear_checks_in_workspace_behavior: 'ignore-open-editors' | 'uncheck-all'
+  fix_all_automatically: boolean
 
   // handlers
   set_providers: (providers: ProviderForClient[]) => void
@@ -111,6 +113,7 @@ type Props = {
   on_clear_checks_in_workspace_behavior_change: (
     value: 'ignore-open-editors' | 'uncheck-all'
   ) => void
+  on_fix_all_automatically_change: (enabled: boolean) => void
   on_open_editor_settings: () => void
   on_open_ignore_patterns_settings: () => void
   on_open_allow_patterns_settings: () => void
@@ -401,6 +404,16 @@ export const Home: React.FC<Props> = (props) => {
           on_stuck_change={intelligent_update_on_stuck_change}
         >
           <Group>
+            <Item
+              title="Fix All Automatically"
+              description="Apply changes to failed files on response preview load."
+              slot_right={
+                <Toggler
+                  is_on={props.fix_all_automatically}
+                  on_toggle={props.on_fix_all_automatically_change}
+                />
+              }
+            />
             <ApiToolConfigurationSection
               configurations={props.intelligent_update_configs}
               set_configurations={props.set_intelligent_update_configs}

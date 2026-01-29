@@ -83,7 +83,7 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
         </Button>
       </div>
       <div className={styles.list}>
-        {props.providers.length > 0 ? (
+        {props.providers.length > 0 && (
           <ReactSortable
             list={with_ids(props.providers)}
             setList={(new_list) => {
@@ -105,12 +105,6 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
           >
             {props.providers.map((p, i) => render_item(p, i))}
           </ReactSortable>
-        ) : (
-          <div className={styles.row}>
-            <div className={styles['empty-message']}>
-              No model providers found.
-            </div>
-          </div>
         )}
       </div>
     </div>

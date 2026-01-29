@@ -73,8 +73,8 @@ export const process_chat_response = async (
           proposed_content: file_in_preview?.proposed_content,
           is_checked: file_in_preview?.is_checked,
           apply_failed: file_in_preview?.apply_failed,
-          fixed_with_intelligent_update:
-            file_in_preview?.fixed_with_intelligent_update
+          applied_with_intelligent_update:
+            file_in_preview?.applied_with_intelligent_update
         }
       })
       update_undo_button_state({

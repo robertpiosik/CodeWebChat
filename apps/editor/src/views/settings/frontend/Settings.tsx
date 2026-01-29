@@ -39,7 +39,8 @@ export const Settings = () => {
       settings_hook.ai_studio_user_id !== undefined &&
       settings_hook.send_with_shift_enter !== undefined &&
       settings_hook.check_new_files !== undefined &&
-      settings_hook.clear_checks_in_workspace_behavior !== undefined
+      settings_hook.clear_checks_in_workspace_behavior !== undefined &&
+      settings_hook.fix_all_automatically !== undefined
     )
   }, [settings_hook])
 
@@ -87,6 +88,7 @@ export const Settings = () => {
       clear_checks_in_workspace_behavior={
         settings_hook.clear_checks_in_workspace_behavior!
       }
+      fix_all_automatically={settings_hook.fix_all_automatically!}
       set_providers={settings_hook.set_providers}
       set_code_completions_configs={settings_hook.set_code_completions_configs}
       set_commit_messages_configs={settings_hook.set_commit_messages_configs}
@@ -127,6 +129,9 @@ export const Settings = () => {
         settings_hook.handle_send_with_shift_enter_change
       }
       on_check_new_files_change={settings_hook.handle_check_new_files_change}
+      on_fix_all_automatically_change={
+        settings_hook.handle_fix_all_automatically_change
+      }
       on_open_editor_settings={settings_hook.handle_open_editor_settings}
       on_open_ignore_patterns_settings={
         settings_hook.handle_open_ignore_patterns_settings

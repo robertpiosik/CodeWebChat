@@ -711,6 +711,11 @@
           "type": "string",
           "scope": "resource"
         },
+        "codeWebChat.fixAllAutomatically": {
+          "type": "boolean",
+          "scope": "resource",
+          "default": false
+        },
         "codeWebChat.chatPresetsForAskAboutContext": {
           "type": "array",
           "scope": "resource",

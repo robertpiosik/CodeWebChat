@@ -18,7 +18,7 @@ import {
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
 import axios from 'axios'
-import { set_file_fixed_with_intelligent_update } from '@/commands/apply-chat-response-command/utils/preview'
+import { set_file_applied_with_intelligent_update } from '@/commands/apply-chat-response-command/utils/preview'
 
 export const handle_intelligent_update_file_in_preview = async (
   panel_provider: PanelProvider,
@@ -236,8 +236,8 @@ export const handle_intelligent_update_file_in_preview = async (
         final_content = updated_content.slice(0, -1)
       }
 
-      if (set_file_fixed_with_intelligent_update) {
-        set_file_fixed_with_intelligent_update({
+      if (set_file_applied_with_intelligent_update) {
+        set_file_applied_with_intelligent_update({
           file_path,
           workspace_name
         })

@@ -23,7 +23,7 @@ export let discard_user_changes_in_preview:
   | ((file: { file_path: string; workspace_name?: string }) => Promise<void>)
   | undefined
 
-export let set_file_fixed_with_intelligent_update:
+export let set_file_applied_with_intelligent_update:
   | ((file: { file_path: string; workspace_name?: string }) => void)
   | undefined
 
@@ -657,8 +657,8 @@ export const setup_workspace_listeners = (
       return
     }
 
-    if (file_to_discard.previewable_file.fixed_with_intelligent_update) {
-      file_to_discard.previewable_file.fixed_with_intelligent_update = false
+    if (file_to_discard.previewable_file.applied_with_intelligent_update) {
+      file_to_discard.previewable_file.applied_with_intelligent_update = false
       update_response_history(
         panel_provider,
         created_at,
@@ -769,14 +769,17 @@ export const setup_workspace_listeners = (
     }
   }
 
-  set_file_fixed_with_intelligent_update = ({ file_path, workspace_name }) => {
+  set_file_applied_with_intelligent_update = ({
+    file_path,
+    workspace_name
+  }) => {
     const file = prepared_files.find(
       (f) =>
         f.previewable_file.file_path == file_path &&
         f.previewable_file.workspace_name == workspace_name
     )
     if (file) {
-      file.previewable_file.fixed_with_intelligent_update = true
+      file.previewable_file.applied_with_intelligent_update = true
       update_response_history(panel_provider, created_at, file.previewable_file)
     }
   }
@@ -789,7 +792,7 @@ export const setup_workspace_listeners = (
     file_renamed_listener.dispose()
     toggle_file_preview_state = undefined
     discard_user_changes_in_preview = undefined
-    set_file_fixed_with_intelligent_update = undefined
+    set_file_applied_with_intelligent_update = undefined
   }
 
   return { dispose }

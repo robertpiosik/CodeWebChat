@@ -421,17 +421,21 @@ export const edit_reasoning_effort_for_config = async () => {
 export const edit_max_concurrency_for_config = async (config: ToolConfig) => {
   const new_concurrency_str = await vscode.window.showInputBox({
     title: 'Edit Max Concurrency',
-    value: String(config.max_concurrency ?? 1),
-    prompt: 'Enter a number for max concurrency',
+    value: config.max_concurrency?.toString() ?? '',
+    prompt:
+      'Enter a number for max concurrency. Leave empty or enter 0 to unset.',
     validateInput: (value) => {
+      if (value === '') return null
       const num = parseInt(value, 10)
-      if (isNaN(num) || !Number.isInteger(num) || num < 1) {
-        return 'Please enter a whole number greater than or equal to 1.'
+      if (isNaN(num) || !Number.isInteger(num) || num < 0) {
+        return 'Please enter a whole number greater than or equal to 0.'
       }
       return null
     }
   })
-  if (new_concurrency_str !== undefined)
-    return parseInt(new_concurrency_str, 10)
-  return undefined
+  if (new_concurrency_str === undefined) return undefined
+  if (new_concurrency_str === '') return null
+  const val = parseInt(new_concurrency_str, 10)
+  if (val === 0) return null
+  return val
 }

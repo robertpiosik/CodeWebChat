@@ -280,7 +280,8 @@ export const upsert_configuration = async (params: {
         if (advanced_options.includes('Max Concurrency')) {
           advanced_items.push({
             label: 'Max Concurrency',
-            detail: `${updated_config.max_concurrency ?? 1}`
+            description: !updated_config.max_concurrency ? 'Unset' : undefined,
+            detail: updated_config.max_concurrency?.toString() || undefined
           })
         }
 
@@ -335,7 +336,8 @@ export const upsert_configuration = async (params: {
           const new_concurrency =
             await edit_max_concurrency_for_config(updated_config)
           if (new_concurrency !== undefined) {
-            updated_config.max_concurrency = new_concurrency as any
+            updated_config.max_concurrency =
+              new_concurrency === null ? undefined : new_concurrency
           }
         }
       }

@@ -162,6 +162,9 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
       {!props.is_collapsed && (
         <>
           <div className={styles.configurations}>
+            {props.configurations.length === 0 && (
+              <div className={styles.empty}>No configurations created yet.</div>
+            )}
             <ReactSortable
               list={props.configurations}
               setList={(new_state) => {

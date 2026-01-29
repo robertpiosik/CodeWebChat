@@ -109,7 +109,8 @@ export const Panel = () => {
     handle_discard_user_changes_in_preview,
     handle_task_forward,
     prune_context_instructions_prefix,
-    handle_prune_context_instructions_prefix_change
+    handle_prune_context_instructions_prefix_change,
+    fix_all_automatically
   } = use_panel(vscode)
 
   const [checkpoint_to_edit, set_checkpoint_to_edit] = useState<
@@ -548,6 +549,7 @@ export const Panel = () => {
             >
               <UiResponsePreview
                 items={items_to_preview}
+                fix_all_automatically={fix_all_automatically}
                 raw_instructions={raw_instructions}
                 has_multiple_workspaces={workspace_folder_count > 1}
                 on_focus_file={(file) => {

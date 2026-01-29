@@ -137,6 +137,11 @@
   }
 }
 
+.empty {
+  padding: 0 12px 0 34px;
+  color: var(--cwc-text-color-dimmed);
+}
+
 .footer {
   display: flex;
   padding: 10px 12px 12px 12px;

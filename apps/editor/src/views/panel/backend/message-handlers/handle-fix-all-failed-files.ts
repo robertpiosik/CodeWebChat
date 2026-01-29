@@ -16,7 +16,7 @@ import {
 import { PROVIDERS } from '@shared/constants/providers'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { Logger } from '@shared/utils/logger'
-import { set_file_fixed_with_intelligent_update } from '@/commands/apply-chat-response-command/utils/preview'
+import { set_file_applied_with_intelligent_update } from '@/commands/apply-chat-response-command/utils/preview'
 
 export const handle_fix_all_failed_files = async (
   panel_provider: PanelProvider,
@@ -74,8 +74,6 @@ export const handle_fix_all_failed_files = async (
     endpoint_url = api_provider.base_url
   }
 
-  const max_concurrency = intelligent_update_config.max_concurrency ?? 4
-
   const default_workspace_path =
     vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
 
@@ -124,6 +122,10 @@ export const handle_fix_all_failed_files = async (
       }
     })
     .filter((item) => item.instructions && item.safe_path)
+
+  const max_concurrency =
+    intelligent_update_config.max_concurrency ??
+    (files_to_process.length > 0 ? files_to_process.length : 1)
 
   // Process in batches
   for (let i = 0; i < files_to_process.length; i += max_concurrency) {
@@ -244,8 +246,8 @@ export const handle_fix_all_failed_files = async (
               final_content = updated_content.slice(0, -1)
             }
 
-            if (set_file_fixed_with_intelligent_update) {
-              set_file_fixed_with_intelligent_update({
+            if (set_file_applied_with_intelligent_update) {
+              set_file_applied_with_intelligent_update({
                 file_path,
                 workspace_name
               })
