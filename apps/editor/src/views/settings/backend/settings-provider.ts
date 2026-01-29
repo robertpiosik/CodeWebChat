@@ -237,7 +237,7 @@ export class SettingsProvider {
         } else if (message.command == 'GET_CONTEXT_SIZE_WARNING_THRESHOLD') {
           await handle_get_context_size_warning_threshold(this)
         } else if (message.command == 'UPDATE_CONTEXT_SIZE_WARNING_THRESHOLD') {
-          await handle_update_context_size_warning_threshold(this, message)
+          await handle_update_context_size_warning_threshold(message)
         } else if (
           message.command == 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
         ) {
@@ -245,7 +245,7 @@ export class SettingsProvider {
         } else if (
           message.command == 'UPDATE_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
         ) {
-          await handle_update_clear_checks_in_workspace_behavior(this, message)
+          await handle_update_clear_checks_in_workspace_behavior(message)
         } else if (message.command == 'GET_GEMINI_USER_ID') {
           await handle_get_gemini_user_id(this)
         } else if (message.command == 'UPDATE_GEMINI_USER_ID') {

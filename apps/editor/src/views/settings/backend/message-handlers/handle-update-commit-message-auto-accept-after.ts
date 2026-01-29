@@ -8,7 +8,7 @@ export const handle_update_commit_message_auto_accept_after = async (
     .getConfiguration('codeWebChat')
     .update(
       'commitMessageAutoAcceptAfter',
-      message.seconds === null ? 0 : message.seconds,
+      message.seconds ?? undefined,
       vscode.ConfigurationTarget.Global
     )
 }

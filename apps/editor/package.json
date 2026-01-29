@@ -705,8 +705,7 @@
         },
         "codeWebChat.editContextSystemInstructions": {
           "type": "string",
-          "scope": "resource",
-          "default": "You're a helpful coding assistant. Don't explain changes in inline comments."
+          "scope": "resource"
         },
         "codeWebChat.pruneContextInstructionsPrefix": {
           "type": "string",

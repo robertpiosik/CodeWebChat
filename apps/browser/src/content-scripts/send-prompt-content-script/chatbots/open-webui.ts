@@ -1,10 +1,10 @@
+import { default_system_instructions } from '@shared/constants/default-system-instructions'
 import { Chatbot } from '../types/chatbot'
 import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
 import { report_initialization_error } from '../utils/report-initialization-error'
-import { default_system_instructions } from '../constants/default-system-instructions'
 
 export const open_webui: Chatbot = {
   wait_until_ready: async () => {

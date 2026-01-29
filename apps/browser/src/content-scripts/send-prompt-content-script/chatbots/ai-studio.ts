@@ -3,7 +3,7 @@ import { CHATBOTS } from '@shared/constants/chatbots'
 import { show_response_ready_notification } from '../utils/show-response-ready-notification'
 import { add_apply_response_button } from '../utils/add-apply-response-button'
 import { report_initialization_error } from '../utils/report-initialization-error'
-import { default_system_instructions } from '../constants/default-system-instructions'
+import { default_system_instructions } from '@shared/constants/default-system-instructions'
 
 export const ai_studio: Chatbot = {
   wait_until_ready: async () => {

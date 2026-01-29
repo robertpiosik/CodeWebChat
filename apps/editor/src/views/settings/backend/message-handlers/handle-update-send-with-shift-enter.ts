@@ -8,7 +8,7 @@ export const handle_update_send_with_shift_enter = async (
     .getConfiguration('codeWebChat')
     .update(
       'sendWithShiftEnter',
-      message.enabled,
+      message.enabled || undefined,
       vscode.ConfigurationTarget.Global
     )
 }

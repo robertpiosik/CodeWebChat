@@ -8,7 +8,7 @@ export const handle_update_checkpoint_lifespan = async (
     .getConfiguration('codeWebChat')
     .update(
       'checkpointLifespan',
-      message.hours ?? undefined,
+      message.hours || undefined,
       vscode.ConfigurationTarget.Global
     )
 }

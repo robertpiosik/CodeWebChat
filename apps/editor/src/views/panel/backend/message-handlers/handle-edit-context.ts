@@ -37,6 +37,7 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER,
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
+import { default_system_instructions } from '@shared/constants/default-system-instructions'
 
 const get_edit_context_config = async (params: {
   api_providers_manager: ModelProvidersManager
@@ -458,9 +459,11 @@ export const handle_edit_context = async (
       system_instructions_xml ? system_instructions_xml + '\n' : ''
     }${processed_instructions}`
 
-    const system_instructions = vscode.workspace
-      .getConfiguration('codeWebChat')
-      .get<string>('editContextSystemInstructions')
+    const system_instructions =
+      vscode.workspace
+        .getConfiguration('codeWebChat')
+        .get<string>('editContextSystemInstructions') ||
+      default_system_instructions
 
     const messages = [
       ...(system_instructions

@@ -8,7 +8,7 @@ export const handle_update_edit_context_system_instructions = async (
     .getConfiguration('codeWebChat')
     .update(
       'editContextSystemInstructions',
-      message.instructions,
+      message.instructions || undefined,
       vscode.ConfigurationTarget.Global
     )
 }
