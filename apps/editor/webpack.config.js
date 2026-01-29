@@ -73,7 +73,7 @@ const config = [
                 return content
                   .toString()
                   .split('\n')
-                  .slice(13)
+                  .slice(12)
                   .filter((line) => !['> [!TIP]', '> [!IMPORTANT]', '> [!NOTE]'].includes(line.trim()))
                   .join('\n')
               }
