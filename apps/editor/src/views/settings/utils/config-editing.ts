@@ -31,6 +31,7 @@ export const initial_select_provider = async (
         vscode.window.createQuickPick<(typeof provider_items)[0]>()
       quick_pick.items = provider_items
       quick_pick.title = 'Model Providers'
+      quick_pick.placeholder = 'Select a model provider'
       const close_button: vscode.QuickInputButton = {
         iconPath: new vscode.ThemeIcon('close'),
         tooltip: 'Close'
@@ -152,7 +153,6 @@ export const edit_provider_for_config = async (
   const providers = await providers_manager.get_providers()
   const provider_items = providers.map((p) => ({
     label: p.name,
-    detail: p.type,
     provider: p
   }))
   const selected_provider_item = await new Promise<
@@ -162,6 +162,7 @@ export const edit_provider_for_config = async (
       vscode.window.createQuickPick<(typeof provider_items)[0]>()
     quick_pick.items = provider_items
     quick_pick.title = 'Model Providers'
+    quick_pick.placeholder = 'Select a model provider'
     quick_pick.buttons = [vscode.QuickInputButtons.Back]
     let accepted = false
     const disposables: vscode.Disposable[] = []

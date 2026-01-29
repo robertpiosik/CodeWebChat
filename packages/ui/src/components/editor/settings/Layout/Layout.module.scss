@@ -26,9 +26,11 @@
   }
 
   &__title {
-    font-size: 24px;
+    font-size: 28px;
+    font-family: var(--font-family-accent);
     font-weight: 600;
     padding-left: 8px;
+    letter-spacing: 1.5px;
   }
 
   &__navigation {

@@ -5,7 +5,7 @@
 
 .header {
   display: flex;
-  padding: 12px 12px 8px 16px;
+  padding: 12px 12px 12px 16px;
   align-items: center;
   justify-content: space-between;
 
@@ -32,6 +32,7 @@
   height: 40px;
   gap: 12px;
   padding: 0 12px;
+  user-select: text;
 
   &:nth-child(odd) {
     background-color: var(--cwc-bg-tertiary);

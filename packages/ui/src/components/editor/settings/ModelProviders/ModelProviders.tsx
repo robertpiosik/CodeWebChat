@@ -50,7 +50,7 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
             title="Edit provider"
           />
         )}
-        {!provider.baseUrl.includes('localhost') && (
+        {provider.type != 'custom' && (
           <IconButton
             codicon_icon="key"
             on_click={() => props.on_change_api_key(provider.name)}

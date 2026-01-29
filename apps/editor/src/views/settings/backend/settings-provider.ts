@@ -4,11 +4,10 @@ import {
   FrontendMessage
 } from '@/views/settings/types/messages'
 import {
-  handle_add_model_provider,
+  handle_upsert_model_provider,
   handle_change_model_provider_key,
   handle_delete_configuration,
   handle_delete_model_provider,
-  handle_edit_custom_model_provider,
   handle_get_check_new_files,
   handle_get_clear_checks_in_workspace_behavior,
   handle_get_are_automatic_checkpoints_disabled,
@@ -77,7 +76,7 @@ export class SettingsProvider {
       column || vscode.ViewColumn.One,
       {
         enableScripts: true,
-        localResourceRoots: [vscode.Uri.joinPath(this._extensionUri, 'out')]
+        localResourceRoots: [this._extensionUri]
       }
     )
 
@@ -106,11 +105,11 @@ export class SettingsProvider {
         } else if (message.command == 'REORDER_MODEL_PROVIDERS') {
           await handle_reorder_model_providers(this, message)
         } else if (message.command == 'ADD_MODEL_PROVIDER') {
-          await handle_add_model_provider(this)
+          await handle_upsert_model_provider(this)
         } else if (message.command == 'DELETE_MODEL_PROVIDER') {
           await handle_delete_model_provider(this, message)
         } else if (message.command == 'EDIT_CUSTOM_MODEL_PROVIDER') {
-          await handle_edit_custom_model_provider(this, message)
+          await handle_upsert_model_provider(this, message.provider_name)
         } else if (message.command == 'CHANGE_MODEL_PROVIDER_KEY') {
           await handle_change_model_provider_key(this, message)
         } else if (message.command == 'GET_CODE_COMPLETIONS_CONFIGURATIONS') {
@@ -329,12 +328,26 @@ export class SettingsProvider {
       vscode.Uri.joinPath(this._extensionUri, 'out', 'settings.css')
     )
 
+    const bangers_font_uri = webview.asWebviewUri(
+      vscode.Uri.joinPath(
+        this._extensionUri,
+        'resources',
+        'Bangers-Regular.ttf'
+      )
+    )
+
     return `<!DOCTYPE html>
 <html lang="${vscode.env.language}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="${styleUri}">
+  <style>
+    @font-face {
+      font-family: 'Bangers';
+      src: url('${bangers_font_uri}') format('truetype');
+    }
+  </style>
   <title>Settings</title>
 </head>
 <body>
