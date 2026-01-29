@@ -80,11 +80,11 @@ Like all of CWC, the extension is [open-source](https://github.com/robertpiosik/
 **🛠️ Edit Context** \
 Pair-programming using natural language instructions.
 
-**🛠️ Code Completions** \
-Get accurate code at cursor from state-of-the-art models.
-
 **🛠️ Intelligent Update** \
 Integrate changes from malformed markdown code blocks.
+
+**🛠️ Code Completions** \
+Get accurate code at cursor from state-of-the-art models.
 
 **🛠️ Prune Context** \
 Remove irrelevant files from the current context selection.

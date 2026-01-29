@@ -45,11 +45,6 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   { type: 'item', id: 'edit-context', label: 'settings.sidebar.edit-context' },
   {
     type: 'item',
-    id: 'code-completions',
-    label: 'settings.sidebar.code-completions'
-  },
-  {
-    type: 'item',
     id: 'intelligent-update',
     label: 'settings.sidebar.intelligent-update'
   },
@@ -57,6 +52,11 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
     type: 'item',
     id: 'prune-context',
     label: 'settings.sidebar.prune-context'
+  },
+  {
+    type: 'item',
+    id: 'code-completions',
+    label: 'settings.sidebar.code-completions'
   },
   {
     type: 'item',
@@ -139,9 +139,9 @@ export const Home: React.FC<Props> = (props) => {
     general: null,
     'model-providers': null,
     'edit-context': null,
-    'code-completions': null,
     'intelligent-update': null,
     'prune-context': null,
+    'code-completions': null,
     'commit-messages': null
   })
   const [commit_instructions, set_commit_instructions] = useState('')
@@ -392,34 +392,6 @@ export const Home: React.FC<Props> = (props) => {
           </Group>
         </Section>
         <Section
-          ref={(el) => (section_refs.current['code-completions'] = el)}
-          group="API Tool"
-          title="Code Completions"
-          subtitle="Get accurate code at cursor from state-of-the-art models."
-          on_stuck_change={code_completions_on_stuck_change}
-        >
-          <Group>
-            <ApiToolConfigurationSection
-              configurations={props.code_completions_configs}
-              set_configurations={props.set_code_completions_configs}
-              tool_name="CODE_COMPLETIONS"
-              can_have_default={true}
-              on_add={() => props.on_add_config('CODE_COMPLETIONS')}
-              on_reorder={(reordered) =>
-                props.on_reorder_configs('CODE_COMPLETIONS', reordered)
-              }
-              on_edit={(id) => props.on_edit_config('CODE_COMPLETIONS', id)}
-              on_delete={(id) => props.on_delete_config('CODE_COMPLETIONS', id)}
-              on_set_default={(id) =>
-                props.on_set_default_config('CODE_COMPLETIONS', id)
-              }
-              on_unset_default={() =>
-                props.on_unset_default_config('CODE_COMPLETIONS')
-              }
-            />
-          </Group>
-        </Section>
-        <Section
           ref={(el) => (section_refs.current['intelligent-update'] = el)}
           group="API Tool"
           title="Intelligent Update"
@@ -468,6 +440,34 @@ export const Home: React.FC<Props> = (props) => {
               }
               on_edit={(id) => props.on_edit_config('PRUNE_CONTEXT', id)}
               on_delete={(id) => props.on_delete_config('PRUNE_CONTEXT', id)}
+            />
+          </Group>
+        </Section>
+        <Section
+          ref={(el) => (section_refs.current['code-completions'] = el)}
+          group="API Tool"
+          title="Code Completions"
+          subtitle="Get accurate code at cursor from state-of-the-art models."
+          on_stuck_change={code_completions_on_stuck_change}
+        >
+          <Group>
+            <ApiToolConfigurationSection
+              configurations={props.code_completions_configs}
+              set_configurations={props.set_code_completions_configs}
+              tool_name="CODE_COMPLETIONS"
+              can_have_default={true}
+              on_add={() => props.on_add_config('CODE_COMPLETIONS')}
+              on_reorder={(reordered) =>
+                props.on_reorder_configs('CODE_COMPLETIONS', reordered)
+              }
+              on_edit={(id) => props.on_edit_config('CODE_COMPLETIONS', id)}
+              on_delete={(id) => props.on_delete_config('CODE_COMPLETIONS', id)}
+              on_set_default={(id) =>
+                props.on_set_default_config('CODE_COMPLETIONS', id)
+              }
+              on_unset_default={() =>
+                props.on_unset_default_config('CODE_COMPLETIONS')
+              }
             />
           </Group>
         </Section>

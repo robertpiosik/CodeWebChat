@@ -33,7 +33,7 @@
   gap: 12px;
   padding: 0 12px;
 
-  &:nth-child(even) {
+  &:nth-child(odd) {
     background-color: var(--cwc-bg-tertiary);
   }
 
