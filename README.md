@@ -13,12 +13,12 @@
 
 Code Web Chat is a free and open-source (FOSS), independent AI coding toolkit for VS Code.
 
-✍️ **Construct coding prompts for...**
+✅ **Construct coding prompts for...**
 
 - Chatbots—_[Gemini](https://gemini.google.com/app), [ChatGPT](https://chatgpt.com/), [Claude](https://claude.ai/), [Grok](https://grok.com/), [DeepSeek](https://chat.deepseek.com/), etc._
 - APIs—_[Google](https://aistudio.google.com/api-keys), [OpenAI](https://platform.openai.com/api-keys), [OpenRouter](https://openrouter.ai/settings/keys), [local Ollama](https://ollama.com/search), etc._
 
-💅 **Apply responses**—interactive multi-file changes integration \
+✅ **Apply responses**—interactive multi-file changes integration \
 🔋 **Batteries included**—code completions, commit messages \
 🌱 **Sustainable**—optimized [prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks \
 ✋ **Privacy-first**—strict zero telemetry policy
