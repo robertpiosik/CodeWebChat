@@ -61,7 +61,7 @@ export const get_commit_message_config = async (
         }
       })
       quick_pick.title = 'Configurations'
-      quick_pick.placeholder = 'Select configuration for commit message'
+      quick_pick.placeholder = 'Select configuration'
       quick_pick.matchOnDescription = true
 
       const last_selected_id = context.workspaceState.get<string>(
