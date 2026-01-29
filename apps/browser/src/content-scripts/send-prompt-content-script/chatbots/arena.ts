@@ -5,7 +5,7 @@ import {
 } from '../utils/add-apply-response-button'
 import { report_initialization_error } from '../utils/report-initialization-error'
 
-export const lmarena: Chatbot = {
+export const arena: Chatbot = {
   wait_until_ready: async () => {
     await new Promise((resolve) => {
       const check_for_element = () => {
@@ -24,7 +24,7 @@ export const lmarena: Chatbot = {
     ) as HTMLTextAreaElement
     if (!input_element) {
       report_initialization_error({
-        function_name: 'lmarena.enter_message',
+        function_name: 'arena.enter_message',
         log_message: 'Message input textarea not found'
       })
       return
@@ -54,7 +54,7 @@ export const lmarena: Chatbot = {
           ) as HTMLElement
           if (!copy_button) {
             report_initialization_error({
-              function_name: 'lmarena.perform_copy',
+              function_name: 'arena.perform_copy',
               log_message: 'Copy button not found'
             })
             return
@@ -66,7 +66,7 @@ export const lmarena: Chatbot = {
     }
 
     observe_for_responses({
-      chatbot_name: 'LMArena',
+      chatbot_name: 'Arena',
       is_generating: () =>
         !!document.querySelector('canvas[data-sentry-component="Loading"]'),
       footer_selector:

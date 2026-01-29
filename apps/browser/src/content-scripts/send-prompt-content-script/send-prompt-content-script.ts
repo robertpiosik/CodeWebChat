@@ -17,7 +17,7 @@ import {
   yuanbao,
   doubao,
   kimi,
-  lmarena,
+  arena,
   together,
   github_copilot,
   hugging_chat,
@@ -69,8 +69,8 @@ const is_yuanbao = current_url.startsWith(yuanbao_url)
 const hugging_chat_url = 'https://huggingface.co/chat/'
 const is_hugging_chat = current_url.startsWith(hugging_chat_url)
 
-const lmarena_url = 'https://lmarena.ai/'
-const is_lmarena = current_url.startsWith(lmarena_url)
+const arena_url = 'https://arena.ai/'
+const is_arena = current_url.startsWith(arena_url)
 
 const grok_url = 'https://grok.com/'
 const is_grok = current_url.startsWith(grok_url)
@@ -105,8 +105,8 @@ if (is_ai_studio) {
   chatbot = claude
 } else if (is_hugging_chat) {
   chatbot = hugging_chat
-} else if (is_lmarena) {
-  chatbot = lmarena
+} else if (is_arena) {
+  chatbot = arena
 } else if (is_mistral) {
   chatbot = mistral
 } else if (is_open_webui) {

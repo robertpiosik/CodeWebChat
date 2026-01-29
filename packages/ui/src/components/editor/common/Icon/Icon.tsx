@@ -2,6 +2,7 @@ import AIStudio from '../../../../assets/icons/ai-studio.svg'
 import AtSign from '../../../../assets/icons/at-sign.svg'
 import BuyMeACoffeeLogo from '../../../../assets/icons/buy-me-a-coffee-logo.svg'
 import BuyMeACoffeeText from '../../../../assets/icons/buy-me-a-coffee-text.svg'
+import Arena from '../../../../assets/icons/arena.svg'
 import ChatGPT from '../../../../assets/icons/openai.svg'
 import Claude from '../../../../assets/icons/claude.svg'
 import CodeWebChatLogo from '../../../../assets/icons/code-web-chat-logo.svg'
@@ -17,7 +18,6 @@ import Grok from '../../../../assets/icons/grok.svg'
 import HashSign from '../../../../assets/icons/hash-sign.svg'
 import HuggingChat from '../../../../assets/icons/hugging-chat.svg'
 import Kimi from '../../../../assets/icons/kimi.svg'
-import LMArena from '../../../../assets/icons/lmarena.svg'
 import Mistral from '../../../../assets/icons/mistral.svg'
 import OpenRouter from '../../../../assets/icons/openrouter.svg'
 import OpenWebUI from '../../../../assets/icons/open-webui.svg'
@@ -49,7 +49,7 @@ export namespace Icon {
     | 'HASH_SIGN'
     | 'HUGGING_CHAT'
     | 'KIMI'
-    | 'LMARENA'
+    | 'ARENA'
     | 'MISTRAL'
     | 'OPENROUTER'
     | 'OPEN_WEBUI'
@@ -126,8 +126,8 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
     case 'KIMI':
       icon = <Kimi />
       break
-    case 'LMARENA':
-      icon = <LMArena />
+    case 'ARENA':
+      icon = <Arena />
       break
     case 'MISTRAL':
       icon = <Mistral />

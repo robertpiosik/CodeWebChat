@@ -147,8 +147,8 @@ export const CHATBOTS = {
   Kimi: {
     url: 'https://www.kimi.com/'
   } as Chatbot,
-  LMArena: {
-    url: 'https://lmarena.ai/'
+  Arena: {
+    url: 'https://arena.ai/'
   } as Chatbot,
   Mistral: {
     url: 'https://chat.mistral.ai/chat',
