@@ -320,24 +320,59 @@ export const edit_model_for_config = async (
 export const edit_temperature_for_config = async (
   config: ToolConfig
 ): Promise<number | null | undefined> => {
-  const new_temp_str = await vscode.window.showInputBox({
-    title: 'Edit Temperature',
-    value: config.temperature?.toString() ?? '',
-    prompt: 'Enter a value between 0 and 2. Leave empty to unset.',
-    validateInput: (value) => {
-      if (value.trim() == '') {
-        return null
-      }
-      const num = parseFloat(value)
-      if (isNaN(num) || num < 0 || num > 2) {
-        return 'Please enter a number between 0 and 2.'
-      }
-      return null
-    }
+  return await new Promise<number | null | undefined>((resolve) => {
+    const input = vscode.window.createInputBox()
+    input.title = 'Edit Temperature'
+    input.value = config.temperature?.toString() ?? ''
+    input.prompt = 'Enter a value between 0 and 2. Leave empty to unset.'
+    input.buttons = [vscode.QuickInputButtons.Back]
+
+    let accepted = false
+    const disposables: vscode.Disposable[] = []
+
+    disposables.push(
+      input.onDidAccept(() => {
+        const value = input.value
+        if (value.trim() == '') {
+          accepted = true
+          resolve(null)
+          input.hide()
+          return
+        }
+        const num = parseFloat(value)
+        if (isNaN(num) || num < 0 || num > 2) {
+          input.validationMessage = 'Please enter a number between 0 and 2.'
+          return
+        }
+        accepted = true
+        resolve(num)
+        input.hide()
+      }),
+      input.onDidChangeValue((value) => {
+        if (value.trim() == '') {
+          input.validationMessage = undefined
+          return
+        }
+        const num = parseFloat(value)
+        if (isNaN(num) || num < 0 || num > 2) {
+          input.validationMessage = 'Please enter a number between 0 and 2.'
+        } else {
+          input.validationMessage = undefined
+        }
+      }),
+      input.onDidTriggerButton((button) => {
+        if (button === vscode.QuickInputButtons.Back) {
+          input.hide()
+        }
+      }),
+      input.onDidHide(() => {
+        if (!accepted) resolve(undefined)
+        disposables.forEach((d) => d.dispose())
+        input.dispose()
+      })
+    )
+    input.show()
   })
-  if (new_temp_str === undefined) return undefined
-  if (new_temp_str.trim() == '') return null
-  return parseFloat(new_temp_str)
 }
 
 export const edit_reasoning_effort_for_config = async () => {
@@ -347,13 +382,40 @@ export const edit_reasoning_effort_for_config = async () => {
     { label: 'medium' },
     { label: 'high' }
   ]
-  const selected_effort = await vscode.window.showQuickPick(effort_options, {
-    title: 'Select Reasoning Effort'
-  })
 
-  if (!selected_effort) return undefined
-  if (selected_effort.label == 'Unset') return null
-  return selected_effort.label
+  return await new Promise<string | null | undefined>((resolve) => {
+    const quick_pick = vscode.window.createQuickPick()
+    quick_pick.items = effort_options
+    quick_pick.title = 'Select Reasoning Effort'
+    quick_pick.buttons = [vscode.QuickInputButtons.Back]
+
+    let accepted = false
+    const disposables: vscode.Disposable[] = []
+
+    disposables.push(
+      quick_pick.onDidAccept(() => {
+        accepted = true
+        const selected = quick_pick.selectedItems[0]
+        if (selected) {
+          resolve(selected.label === 'Unset' ? null : selected.label)
+        } else {
+          resolve(undefined)
+        }
+        quick_pick.hide()
+      }),
+      quick_pick.onDidTriggerButton((button) => {
+        if (button === vscode.QuickInputButtons.Back) {
+          quick_pick.hide()
+        }
+      }),
+      quick_pick.onDidHide(() => {
+        if (!accepted) resolve(undefined)
+        disposables.forEach((d) => d.dispose())
+        quick_pick.dispose()
+      })
+    )
+    quick_pick.show()
+  })
 }
 
 export const edit_max_concurrency_for_config = async (config: ToolConfig) => {
