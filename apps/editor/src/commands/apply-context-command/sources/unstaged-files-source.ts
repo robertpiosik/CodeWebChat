@@ -248,7 +248,7 @@ export const handle_unstaged_files_source = async (
       )
     )
     Logger.error({
-      function_name: 'apply_context_command:unstaged',
+      function_name: 'handle_unstaged_files_source',
       message: 'Failed to select unstaged files',
       data: error
     })

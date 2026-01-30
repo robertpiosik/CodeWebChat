@@ -432,7 +432,7 @@ export const handle_json_file_source = async (
       dictionary.error_message.ERROR_SELECTING_SAVED_CONTEXT(error.message)
     )
     Logger.error({
-      function_name: 'apply_context_command',
+      function_name: 'handle_json_file_source',
       message: 'Error selecting saved context',
       data: error
     })

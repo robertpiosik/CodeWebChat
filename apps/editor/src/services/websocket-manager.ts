@@ -75,7 +75,7 @@ export class WebSocketManager {
       this._connect_as_client()
     } catch (error) {
       Logger.error({
-        function_name: 'initialize_server',
+        function_name: '_initialize_server',
         message: 'Error initializing WebSocket server',
         data: error
       })
@@ -152,7 +152,7 @@ export class WebSocketManager {
 
     this.client.on('open', () => {
       Logger.info({
-        function_name: 'connect_to_server',
+        function_name: '_connect_as_client',
         message: 'Connected to WebSocket server'
       })
     })
@@ -161,7 +161,7 @@ export class WebSocketManager {
       try {
         const message = JSON.parse(data.toString())
         Logger.info({
-          function_name: 'connect_to_server',
+          function_name: '_connect_as_client',
           message: 'Incoming WS message',
           data: message
         })
@@ -197,7 +197,7 @@ export class WebSocketManager {
         }
       } catch (error) {
         Logger.error({
-          function_name: 'connect_to_server',
+          function_name: '_connect_as_client',
           message: 'Error processing message',
           data: error
         })
@@ -206,7 +206,7 @@ export class WebSocketManager {
 
     this.client.on('error', (error) => {
       Logger.error({
-        function_name: 'connect_to_server',
+        function_name: '_connect_as_client',
         message: 'WebSocket client error',
         data: error
       })
@@ -220,7 +220,7 @@ export class WebSocketManager {
 
     this.client.on('close', () => {
       Logger.warn({
-        function_name: 'connect_to_server',
+        function_name: '_connect_as_client',
         message: 'Disconnected from WebSocket server'
       })
       this.has_connected_browsers = false

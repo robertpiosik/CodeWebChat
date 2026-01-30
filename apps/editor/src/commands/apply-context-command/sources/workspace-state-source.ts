@@ -489,7 +489,7 @@ export const handle_workspace_state_source = async (
           )
         )
         Logger.error({
-          function_name: 'apply_context_command',
+          function_name: 'handle_workspace_state_source',
           message: 'Could not find selected context after potential edits',
           data: selected.label
         })
@@ -538,7 +538,7 @@ export const handle_workspace_state_source = async (
       dictionary.error_message.ERROR_SELECTING_SAVED_CONTEXT(error.message)
     )
     Logger.error({
-      function_name: 'apply_context_command',
+      function_name: 'handle_workspace_state_source',
       message: 'Error selecting saved context',
       data: error
     })

@@ -992,7 +992,7 @@ export class WorkspaceProvider
       }
     } catch (error) {
       Logger.error({
-        function_name: 'get_files_and_directories',
+        function_name: '_get_files_and_directories',
         message: `Error reading directory ${dir_path}`,
         data: error
       })
@@ -1134,7 +1134,7 @@ export class WorkspaceProvider
       }
     } catch (error) {
       Logger.error({
-        function_name: 'update_parent_state',
+        function_name: '_update_parent_state',
         message: `Error updating parent state for ${dir_path}`,
         data: error
       })
@@ -1216,7 +1216,7 @@ export class WorkspaceProvider
       }
     } catch (error) {
       Logger.error({
-        function_name: 'update_directory_check_state',
+        function_name: '_update_directory_check_state',
         message: `Error updating directory check state for ${dir_path}`,
         data: error
       })
@@ -1354,7 +1354,7 @@ export class WorkspaceProvider
         this._combined_gitignore.add(rules_with_prefix)
       } catch (error) {
         Logger.error({
-          function_name: 'load_all_gitignore_files',
+          function_name: '_load_all_gitignore_files',
           message: `Error reading ignore file at ${gitignore_path}`,
           data: error
         })

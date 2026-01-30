@@ -183,7 +183,7 @@ export const replace_changes_symbol = async (params: {
           )
         )
         Logger.error({
-          function_name: 'replace_changes_placeholder',
+          function_name: 'replace_changes_symbol',
           message: `Error getting diff from branch ${branch_name} in folder ${folder_name}`,
           data: error
         })
@@ -250,7 +250,7 @@ export const replace_changes_symbol = async (params: {
           )
         )
         Logger.error({
-          function_name: 'replace_changes_placeholder',
+          function_name: 'replace_changes_symbol',
           message: `Error getting diff from branch ${branch_name}`,
           data: error
         })
@@ -403,7 +403,7 @@ export const replace_commit_symbol = async (params: {
         dictionary.error_message.FAILED_TO_GET_DIFF_FOR_COMMIT(commit_hash)
       )
       Logger.error({
-        function_name: 'replace_commit_placeholder',
+        function_name: 'replace_commit_symbol',
         message: `Error getting diff for commit ${commit_hash}`,
         data: error
       })
