@@ -8,7 +8,7 @@ export const translations = {
     'settings.sidebar.model-providers': 'Model Providers',
     'settings.sidebar.api-tools': 'API Tools',
     'settings.sidebar.edit-context': 'Edit Context',
-    'settings.sidebar.code-completions': 'Code Completions',
+    'settings.sidebar.code-at-cursor': 'Code at Cursor',
     'settings.sidebar.intelligent-update': 'Intelligent Update',
     'settings.sidebar.prune-context': 'Prune Context',
     'settings.sidebar.commit-messages': 'Commit Messages'

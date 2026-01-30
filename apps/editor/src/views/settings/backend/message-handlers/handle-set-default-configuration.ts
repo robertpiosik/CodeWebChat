@@ -9,7 +9,7 @@ export const handle_set_default_configuration = async (
   provider: SettingsProvider,
   configuration_id: string | null,
   type:
-    | 'code-completions'
+    | 'code-at-cursor'
     | 'intelligent-update'
     | 'commit-messages'
     | 'prune-context'
@@ -20,7 +20,7 @@ export const handle_set_default_configuration = async (
   let set_default_config: (config: ToolConfig | null) => Promise<void>
 
   switch (type) {
-    case 'code-completions':
+    case 'code-at-cursor':
       get_configs = () => providers_manager.get_code_completions_tool_configs()
       set_default_config = (c) =>
         providers_manager.set_default_code_completions_config(c)

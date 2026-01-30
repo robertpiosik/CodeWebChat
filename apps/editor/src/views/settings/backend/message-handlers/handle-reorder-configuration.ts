@@ -9,7 +9,7 @@ export const handle_reorder_configuration = async (
   provider: SettingsProvider,
   configurations: { id: string }[],
   type:
-    | 'code-completions'
+    | 'code-at-cursor'
     | 'edit-context'
     | 'intelligent-update'
     | 'commit-messages'
@@ -21,7 +21,7 @@ export const handle_reorder_configuration = async (
   let save_configs: (configs: ToolConfig[]) => Promise<void>
 
   switch (type) {
-    case 'code-completions':
+    case 'code-at-cursor':
       get_configs = () => providers_manager.get_code_completions_tool_configs()
       save_configs = (c) =>
         providers_manager.save_code_completions_tool_configs(c)

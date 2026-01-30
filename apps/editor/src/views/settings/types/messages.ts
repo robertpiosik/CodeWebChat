@@ -22,7 +22,7 @@ export type EditFormatInstructions = {
 }
 
 export type ToolType =
-  | 'code-completions'
+  | 'code-at-cursor'
   | 'commit-messages'
   | 'edit-context'
   | 'intelligent-update'

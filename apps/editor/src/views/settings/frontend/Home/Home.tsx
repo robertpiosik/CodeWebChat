@@ -22,7 +22,7 @@ type NavItem =
   | 'general'
   | 'model-providers'
   | 'edit-context'
-  | 'code-completions'
+  | 'code-at-cursor'
   | 'intelligent-update'
   | 'prune-context'
   | 'commit-messages'
@@ -56,8 +56,8 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   },
   {
     type: 'item',
-    id: 'code-completions',
-    label: 'settings.sidebar.code-completions'
+    id: 'code-at-cursor',
+    label: 'settings.sidebar.code-at-cursor'
   },
   {
     type: 'item',
@@ -144,7 +144,7 @@ export const Home: React.FC<Props> = (props) => {
     'edit-context': null,
     'intelligent-update': null,
     'prune-context': null,
-    'code-completions': null,
+    'code-at-cursor': null,
     'commit-messages': null
   })
   const [commit_instructions, set_commit_instructions] = useState('')
@@ -185,7 +185,7 @@ export const Home: React.FC<Props> = (props) => {
     [handle_stuck_change]
   )
   const code_completions_on_stuck_change = useCallback(
-    (is_stuck: boolean) => handle_stuck_change('code-completions', is_stuck),
+    (is_stuck: boolean) => handle_stuck_change('code-at-cursor', is_stuck),
     [handle_stuck_change]
   )
   const intelligent_update_on_stuck_change = useCallback(
@@ -466,7 +466,7 @@ export const Home: React.FC<Props> = (props) => {
           </Group>
         </Section>
         <Section
-          ref={(el) => (section_refs.current['code-completions'] = el)}
+          ref={(el) => (section_refs.current['code-at-cursor'] = el)}
           group="API Tool"
           title="Code at Cursor"
           subtitle="Get accurate inline suggestions from state-of-the-art models."

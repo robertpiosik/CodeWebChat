@@ -33,7 +33,7 @@ export const upsert_configuration = async (params: {
   let advanced_details = ''
 
   switch (params.tool_type) {
-    case 'code-completions':
+    case 'code-at-cursor':
       get_configs = () => providers_manager.get_code_completions_tool_configs()
       save_configs = (configs) =>
         providers_manager.save_code_completions_tool_configs(configs)

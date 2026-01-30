@@ -121,20 +121,20 @@ export class SettingsProvider {
         } else if (message.command == 'CHANGE_MODEL_PROVIDER_KEY') {
           await handle_change_model_provider_key(this, message)
         } else if (message.command == 'GET_CODE_COMPLETIONS_CONFIGURATIONS') {
-          await handle_get_configurations(this, 'code-completions')
+          await handle_get_configurations(this, 'code-at-cursor')
         } else if (
           message.command == 'REORDER_CODE_COMPLETIONS_CONFIGURATIONS'
         ) {
           await handle_reorder_configuration(
             this,
             message.configurations,
-            'code-completions'
+            'code-at-cursor'
           )
         } else if (message.command == 'DELETE_CODE_COMPLETIONS_CONFIGURATION') {
           await handle_delete_configuration(
             this,
             message.configuration_id,
-            'code-completions'
+            'code-at-cursor'
           )
         } else if (
           message.command == 'SET_DEFAULT_CODE_COMPLETIONS_CONFIGURATION'
@@ -142,7 +142,7 @@ export class SettingsProvider {
           await handle_set_default_configuration(
             this,
             message.configuration_id,
-            'code-completions'
+            'code-at-cursor'
           )
         } else if (message.command == 'GET_EDIT_CONTEXT_CONFIGURATIONS') {
           await handle_get_configurations(this, 'edit-context')
@@ -304,7 +304,7 @@ export class SettingsProvider {
       vscode.workspace.onDidChangeConfiguration((e) => {
         if (e.affectsConfiguration('codeWebChat')) {
           void handle_get_model_providers(this)
-          void handle_get_configurations(this, 'code-completions')
+          void handle_get_configurations(this, 'code-at-cursor')
           void handle_get_configurations(this, 'commit-messages')
           void handle_get_configurations(this, 'edit-context')
           void handle_get_edit_context_system_instructions(this)

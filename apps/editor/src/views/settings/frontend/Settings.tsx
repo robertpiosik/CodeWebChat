@@ -7,7 +7,7 @@ import { Home } from './Home/Home'
 type NavItem =
   | 'general'
   | 'model-providers'
-  | 'code-completions'
+  | 'code-at-cursor'
   | 'edit-context'
   | 'intelligent-update'
   | 'prune-context'

@@ -5,7 +5,7 @@ export const handle_delete_configuration = async (
   provider: SettingsProvider,
   configuration_id: string,
   type:
-    | 'code-completions'
+    | 'code-at-cursor'
     | 'edit-context'
     | 'intelligent-update'
     | 'commit-messages'

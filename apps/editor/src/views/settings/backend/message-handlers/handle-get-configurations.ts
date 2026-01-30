@@ -20,7 +20,7 @@ const create_description = (config: ToolConfig): string => {
 export const handle_get_configurations = async (
   provider: SettingsProvider,
   type:
-    | 'code-completions'
+    | 'code-at-cursor'
     | 'edit-context'
     | 'intelligent-update'
     | 'commit-messages'
@@ -33,7 +33,7 @@ export const handle_get_configurations = async (
   let command: string
 
   switch (type) {
-    case 'code-completions':
+    case 'code-at-cursor':
       saved_configs =
         await providers_manager.get_code_completions_tool_configs()
       default_config =

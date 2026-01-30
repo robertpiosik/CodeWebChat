@@ -771,7 +771,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'UPSERT_CONFIGURATION') {
             const tool_type_map: Record<string, string> = {
               'edit-context': 'edit-context',
-              'code-at-cursor': 'code-completions',
+              'code-at-cursor': 'code-at-cursor',
               'prune-context': 'prune-context'
             }
             await upsert_configuration({
@@ -784,7 +784,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'DELETE_CONFIGURATION') {
             const tool_type_map: Record<string, any> = {
               'edit-context': 'edit-context',
-              'code-at-cursor': 'code-completions',
+              'code-at-cursor': 'code-at-cursor',
               'prune-context': 'prune-context'
             }
             await delete_configuration(
