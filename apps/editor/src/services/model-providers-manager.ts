@@ -296,9 +296,7 @@ export class ModelProvidersManager {
 
   public async get_code_completions_tool_configs(): Promise<CodeCompletionsConfigs> {
     await this._load_promise
-    return this._get_tool_configs_from_settings(
-      'configurationsForCodeCompletions'
-    )
+    return this._get_tool_configs_from_settings('configurationsForCodeAtCursor')
   }
 
   public async get_default_code_completions_config(): Promise<
@@ -306,7 +304,7 @@ export class ModelProvidersManager {
   > {
     await this._load_promise
     const default_config = this._get_default_tool_config_from_settings(
-      'configurationsForCodeCompletions'
+      'configurationsForCodeAtCursor'
     )
     if (default_config) return default_config
 
@@ -318,7 +316,7 @@ export class ModelProvidersManager {
 
   public async set_default_code_completions_config(config: ToolConfig | null) {
     await this._set_default_tool_config_in_settings(
-      'configurationsForCodeCompletions',
+      'configurationsForCodeAtCursor',
       config
     )
   }
@@ -327,7 +325,7 @@ export class ModelProvidersManager {
     configs: CodeCompletionsConfigs
   ) {
     await this._save_tool_configs_to_settings(
-      'configurationsForCodeCompletions',
+      'configurationsForCodeAtCursor',
       configs
     )
   }
@@ -464,7 +462,7 @@ export class ModelProvidersManager {
     const config = vscode.workspace.getConfiguration('codeWebChat')
 
     const settings_keys = [
-      'configurationsForCodeCompletions',
+      'configurationsForCodeAtCursor',
       'configurationsForEditContext',
       'configurationsForIntelligentUpdate',
       'configurationsForCommitMessages',

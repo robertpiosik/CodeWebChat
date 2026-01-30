@@ -45,7 +45,6 @@ export type PromptFieldProps = {
   current_selection?: SelectionState | null
   on_caret_position_change: (caret_position: number) => void
   is_web_mode: boolean
-  on_search_click: () => void
   on_at_sign_click: () => void
   on_hash_sign_click: () => void
   on_curly_braces_click: () => void
@@ -97,7 +96,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const { is_alt_pressed, handle_container_key_down } = use_keyboard_shortcuts({
     show_edit_format_selector: props.show_edit_format_selector,
     on_edit_format_change: props.on_edit_format_change,
-    on_search_click: props.on_search_click,
     on_copy: props.on_copy,
     on_invocation_count_change: props.on_invocation_count_change,
     is_invocation_dropdown_open,

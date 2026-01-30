@@ -11,7 +11,7 @@ import {
 } from '@/views/panel/backend/utils/replace-git-symbols'
 import { replace_skill_symbol } from '@/views/panel/backend/utils/replace-skill-symbol'
 import {
-  code_completion_instructions_for_panel,
+  code_at_cursor_instructions_for_panel,
   prune_context_instructions_prefix,
   prune_context_format
 } from '@/constants/instructions'
@@ -173,7 +173,7 @@ export const handle_send_to_browser = async (params: {
 
     const relative_path = vscode.workspace.asRelativePath(document.uri)
 
-    const main_instructions = code_completion_instructions_for_panel(
+    const main_instructions = code_at_cursor_instructions_for_panel(
       relative_path,
       position.line,
       position.character

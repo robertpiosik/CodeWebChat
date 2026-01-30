@@ -645,12 +645,6 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_search_click = () => {
-    post_message(props.vscode, {
-      command: 'SHOW_HISTORY_QUICK_PICK'
-    })
-  }
-
   const handle_configuration_click = (id: string) => {
     const instruction = get_current_instructions()
 
@@ -763,7 +757,6 @@ export const Main: React.FC<Props> = (props) => {
       on_edit_configuration={handle_edit_configuration}
       on_delete_configuration={handle_delete_configuration}
       on_create_configuration={handle_create_configuration}
-      on_search_click={handle_search_click}
       on_at_sign_click={handle_at_sign_click}
       on_hash_sign_click={handle_hash_sign_click}
       on_curly_braces_click={handle_curly_braces_click}

@@ -20,7 +20,6 @@ export const Empty = () => (
     is_web_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
-    on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
     context_file_paths={[]}
     on_curly_braces_click={() => {}}
@@ -55,7 +54,6 @@ export const WithText = () => (
     is_web_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
-    on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
     context_file_paths={[]}
     on_curly_braces_click={() => {}}
@@ -90,7 +88,6 @@ export const LongText = () => (
     is_web_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
-    on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
     context_file_paths={[]}
     on_curly_braces_click={() => {}}
@@ -122,7 +119,6 @@ export const WithPlaceholderSavedContext = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     is_web_mode={false}
@@ -163,7 +159,6 @@ export const WithPlaceholderSelection = () => (
     }}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     is_web_mode={false}
@@ -198,7 +193,6 @@ export const WithCommit = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     is_web_mode={false}
@@ -233,7 +227,6 @@ export const WithCommitWithQuotes = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     is_web_mode={false}
@@ -267,7 +260,6 @@ export const WithContextAtCommit = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     is_web_mode={false}
@@ -307,7 +299,6 @@ export const WithEditFormatSelector = () => {
       is_web_mode={false}
       on_at_sign_click={() => console.log('@ clicked')}
       on_hash_sign_click={() => console.log('# clicked')}
-      on_search_click={() => console.log('Search clicked')}
       on_submit_with_control={() => console.log('Submitted with control')}
       on_curly_braces_click={() => {}}
       show_edit_format_selector={true}
@@ -344,7 +335,6 @@ export const WithFilePaths = () => (
     is_web_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
-    on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
     on_curly_braces_click={() => {}}
     on_go_to_file={(path) => console.log('Go to file:', path)}

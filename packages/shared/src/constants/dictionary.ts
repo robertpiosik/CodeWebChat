@@ -326,7 +326,7 @@ export const dictionary = {
     UPDATE_INSTRUCTIONS_FOR_FILE_NOT_FOUND: (file_name: string) =>
       `Could not find update instructions for file: ${file_name}.`,
     INTELLIGENT_UPDATE_FAILED_FOR_FILE: (file_name: string, message: string) =>
-      `Intelligent update failed for ${file_name}: ${message}.`,
+      `Applying changes to ${file_name}: ${message}.`,
     FAILED_TO_FETCH_OPEN_ROUTER_MODELS:
       'Failed to fetch Open Router models. Please check your connection.',
     FAILED_TO_GET_CHANGES_FROM_BRANCH: (branch_name: string) =>

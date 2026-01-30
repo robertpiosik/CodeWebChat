@@ -195,23 +195,23 @@
         "icon": "$(save-all)"
       },
       {
-        "command": "codeWebChat.codeCompletion",
-        "title": "Code Completion",
+        "command": "codeWebChat.codeAtCursor",
+        "title": "Code at Cursor",
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.codeCompletionUsing",
-        "title": "Code Completion using...",
+        "command": "codeWebChat.codeAtCursorUsing",
+        "title": "Code at Cursor using...",
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.codeCompletionWithInstructions",
-        "title": "Code Completion with Instructions",
+        "command": "codeWebChat.codeAtCursorWithInstructions",
+        "title": "Code at Cursor with Instructions",
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.codeCompletionWithInstructionsUsing",
-        "title": "Code Completion with Instructions using...",
+        "command": "codeWebChat.codeAtCursorWithInstructionsUsing",
+        "title": "Code at Cursor with Instructions using...",
         "category": "Code Web Chat"
       },
       {
@@ -1647,7 +1647,7 @@
             ]
           }
         },
-        "codeWebChat.configurationsForCodeCompletions": {
+        "codeWebChat.configurationsForCodeAtCursor": {
           "type": "array",
           "scope": "resource",
           "default": [],

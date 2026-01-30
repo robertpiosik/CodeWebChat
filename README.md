@@ -19,7 +19,7 @@ Code Web Chat is a free and open-source (FOSS), independent AI coding toolkit fo
 - APIs—_[Google](https://aistudio.google.com/api-keys), [OpenAI](https://platform.openai.com/api-keys), [OpenRouter](https://openrouter.ai/settings/keys), [local Ollama](https://ollama.com/search), etc._
 
 ✅ **Apply responses**—interactive multi-file changes integration \
-✅ **Fully-featured**—code completions, commit messages, etc. \
+✅ **Fully-featured**—code at cursor, commit messages, etc. \
 🌱 **Sustainable**—optimized for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks \
 ✋ **Privacy-first**—strict zero telemetry policy
 
@@ -86,8 +86,8 @@ Integrate changes from malformed markdown code blocks.
 **🛠️ Prune Context** \
 Remove irrelevant files from the current context selection.
 
-**🛠️ Code Completions** \
-Get accurate code at cursor from state-of-the-art models.
+**🛠️ Code at Cursor** \
+Get accurate inline suggestions from state-of-the-art models.
 
 **🛠️ Commit Messages** \
 Meaningful summaries of changes adhering to your style.
@@ -98,12 +98,12 @@ Meaningful summaries of changes adhering to your style.
 
 ## Commands
 
-### Code completions
+### Code at Cursor
 
-- `Code Web Chat: Code Completion` - Get code-at-cursor using API tool.
-- `Code Web Chat: Code Completion using...` - ...with configuration selection.
-- `Code Web Chat: Code Completion with Instructions` - ...with instructions.
-- `Code Web Chat: Code Completion with Instructions using...` - ...with instructions and configuration selection.
+- `Code Web Chat: Code at Cursor` - Get an inline snippet while using the current context.
+- `Code Web Chat: Code at Cursor using...` - Inline snippet with configuration selection.
+- `Code Web Chat: Code at Cursor with Instructions` - Inline snippet with instructions.
+- `Code Web Chat: Code at Cursor with Instructions using...` - Inline snippet with instructions and configuration selection.
 
 ### Checkpoints
 

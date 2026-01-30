@@ -10,7 +10,7 @@ import {
 import { replace_saved_context_symbol } from '@/views/panel/backend/utils/replace-saved-context-symbol'
 import { replace_skill_symbol } from '@/views/panel/backend/utils/replace-skill-symbol'
 import {
-  code_completion_instructions_for_panel,
+  code_at_cursor_instructions_for_panel,
   prune_context_instructions_prefix,
   prune_context_format
 } from '@/constants/instructions'
@@ -83,7 +83,7 @@ export const handle_copy_prompt = async (params: {
     const workspace_folder = vscode.workspace.workspaceFolders?.[0].uri.fsPath
     const relative_path = active_path.replace(workspace_folder + '/', '')
 
-    const system_instructions = code_completion_instructions_for_panel(
+    const system_instructions = code_at_cursor_instructions_for_panel(
       relative_path,
       position.line,
       position.character

@@ -1,15 +1,10 @@
 import {
   HISTORY_ASK_STATE_KEY,
-  HISTORY_CODE_COMPLETIONS_STATE_KEY,
+  HISTORY_CODE_AT_CURSOR_STATE_KEY,
   HISTORY_EDIT_STATE_KEY,
   HISTORY_NO_CONTEXT_STATE_KEY,
   HistoryEntry,
-  PINNED_HISTORY_ASK_STATE_KEY,
-  PINNED_HISTORY_CODE_COMPLETIONS_STATE_KEY,
-  PINNED_HISTORY_EDIT_STATE_KEY,
-  PINNED_HISTORY_NO_CONTEXT_STATE_KEY,
-  HISTORY_PRUNE_CONTEXT_STATE_KEY,
-  PINNED_HISTORY_PRUNE_CONTEXT_STATE_KEY
+  HISTORY_PRUNE_CONTEXT_STATE_KEY
 } from '@/constants/state-keys'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { SaveHistoryMessage } from '@/views/panel/types/messages'
@@ -19,27 +14,22 @@ export const handle_save_history = async (
   message: SaveHistoryMessage
 ): Promise<void> => {
   let key: string | undefined
-  let pinned_key: string | undefined
+
   switch (message.prompt_type) {
     case 'ask-about-context':
       key = HISTORY_ASK_STATE_KEY
-      pinned_key = PINNED_HISTORY_ASK_STATE_KEY
       break
     case 'edit-context':
       key = HISTORY_EDIT_STATE_KEY
-      pinned_key = PINNED_HISTORY_EDIT_STATE_KEY
       break
     case 'no-context':
       key = HISTORY_NO_CONTEXT_STATE_KEY
-      pinned_key = PINNED_HISTORY_NO_CONTEXT_STATE_KEY
       break
     case 'code-at-cursor':
-      key = HISTORY_CODE_COMPLETIONS_STATE_KEY
-      pinned_key = PINNED_HISTORY_CODE_COMPLETIONS_STATE_KEY
+      key = HISTORY_CODE_AT_CURSOR_STATE_KEY
       break
     case 'prune-context':
       key = HISTORY_PRUNE_CONTEXT_STATE_KEY
-      pinned_key = PINNED_HISTORY_PRUNE_CONTEXT_STATE_KEY
       break
   }
   if (key) {
@@ -80,23 +70,5 @@ export const handle_save_history = async (
     }
 
     await panel_provider.context.workspaceState.update(key, new_history)
-
-    if (pinned_key) {
-      const used_text = text_history[0]
-      const pinned_history =
-        panel_provider.context.workspaceState.get<HistoryEntry[]>(
-          pinned_key,
-          []
-        ) || []
-      const pinned_index = pinned_history.findIndex((p) => p.text === used_text)
-
-      if (pinned_index > -1) {
-        pinned_history[pinned_index].createdAt = Date.now()
-        await panel_provider.context.workspaceState.update(
-          pinned_key,
-          pinned_history
-        )
-      }
-    }
   }
 }

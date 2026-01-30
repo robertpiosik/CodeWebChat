@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import axios from 'axios'
-import { code_completion_instructions_for_panel } from '@/constants/instructions'
+import { code_at_cursor_instructions_for_panel } from '@/constants/instructions'
 import { FilesCollector } from '@/utils/files-collector'
 import {
   ModelProvidersManager,
@@ -10,8 +10,8 @@ import {
 import { Logger } from '@shared/utils/logger'
 import { PROVIDERS } from '@shared/constants/providers'
 import {
-  LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
-  RECENTLY_USED_CODE_COMPLETION_CONFIG_IDS_STATE_KEY
+  LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
+  RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
 } from '@/constants/state-keys'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { CodeCompletionMessage } from '@/views/panel/types/messages'
@@ -54,7 +54,7 @@ const get_code_completion_config = async (
       ) || null
     if (selected_config) {
       context.workspaceState.update(
-        LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
+        LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
         config_id
       )
 
@@ -68,7 +68,7 @@ const get_code_completion_config = async (
     }
   } else if (!show_quick_pick) {
     const last_selected_id = context.workspaceState.get<string>(
-      LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
+      LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
     )
     if (last_selected_id) {
       selected_config =
@@ -86,7 +86,7 @@ const get_code_completion_config = async (
     const create_items = () => {
       const recent_ids =
         context.workspaceState.get<string[]>(
-          RECENTLY_USED_CODE_COMPLETION_CONFIG_IDS_STATE_KEY
+          RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
         ) || []
 
       const matched_recent_configs: ToolConfig[] = []
@@ -162,7 +162,7 @@ const get_code_completion_config = async (
     quick_pick.matchOnDescription = true
 
     const last_selected_id = context.workspaceState.get<string>(
-      LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
+      LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
     )
 
     const items = quick_pick.items as (vscode.QuickPickItem & { id: string })[]
@@ -193,17 +193,17 @@ const get_code_completion_config = async (
           }
 
           context.workspaceState.update(
-            LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
+            LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
             selected.id
           )
 
           let recents =
             context.workspaceState.get<string[]>(
-              RECENTLY_USED_CODE_COMPLETION_CONFIG_IDS_STATE_KEY
+              RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
             ) || []
           recents = [selected.id, ...recents.filter((id) => id != selected.id)]
           context.workspaceState.update(
-            RECENTLY_USED_CODE_COMPLETION_CONFIG_IDS_STATE_KEY,
+            RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY,
             recents
           )
 
@@ -347,7 +347,7 @@ export const handle_code_completion = async (
     )
 
     const relative_path = vscode.workspace.asRelativePath(document.uri)
-    const main_instructions = code_completion_instructions_for_panel(
+    const main_instructions = code_at_cursor_instructions_for_panel(
       relative_path,
       position.line,
       position.character

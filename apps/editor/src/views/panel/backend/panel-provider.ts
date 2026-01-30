@@ -26,7 +26,6 @@ import {
   handle_create_preset_group_or_separator,
   handle_preview_preset,
   handle_save_edit_format,
-  handle_show_history_quick_pick,
   handle_replace_presets,
   handle_get_connection_status,
   handle_get_history,
@@ -91,11 +90,11 @@ import {
   API_MODE_STATE_KEY,
   CHAT_EDIT_FORMAT_STATE_KEY,
   INSTRUCTIONS_ASK_STATE_KEY,
-  INSTRUCTIONS_CODE_COMPLETIONS_STATE_KEY,
+  INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY,
   INSTRUCTIONS_PRUNE_CONTEXT_STATE_KEY,
   INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY,
   INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
-  LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
+  LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
   LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY,
   PANEL_MODE_STATE_KEY,
   WEB_MODE_STATE_KEY,
@@ -221,7 +220,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       ''
     )
     this.code_at_cursor_instructions = this.context.workspaceState.get<string>(
-      INSTRUCTIONS_CODE_COMPLETIONS_STATE_KEY,
+      INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY,
       ''
     )
     this.prune_context_instructions = this.context.workspaceState.get<string>(
@@ -305,7 +304,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
         const all_api_config_keys = [
           'codeWebChat.configurationsForEditContext',
-          'codeWebChat.configurationsForCodeCompletions',
+          'codeWebChat.configurationsForCodeAtCursor',
           'codeWebChat.configurationsForPruneContext'
         ]
 
@@ -644,8 +643,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_code_completion(this, message)
           } else if (message.command == 'PRUNE_CONTEXT') {
             await handle_prune_context(this, message)
-          } else if (message.command == 'SHOW_HISTORY_QUICK_PICK') {
-            await handle_show_history_quick_pick(this)
           } else if (message.command == 'SHOW_PROMPT_TEMPLATE_QUICK_PICK') {
             await handle_show_prompt_template_quick_pick(this)
           } else if (message.command == 'GET_WEB_PROMPT_TYPE') {
@@ -877,7 +874,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY
         ),
         'code-at-cursor': this.context.workspaceState.get<string>(
-          LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
+          LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
         )
       }
     })

@@ -2,7 +2,7 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { SaveInstructionsMessage } from '@/views/panel/types/messages'
 import {
   INSTRUCTIONS_ASK_STATE_KEY,
-  INSTRUCTIONS_CODE_COMPLETIONS_STATE_KEY,
+  INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY,
   INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY,
   INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
   INSTRUCTIONS_PRUNE_CONTEXT_STATE_KEY
@@ -35,7 +35,7 @@ export const handle_save_instructions = async (
   } else if (prompt_type == 'code-at-cursor') {
     panel_provider.code_at_cursor_instructions = instruction
     await panel_provider.context.workspaceState.update(
-      INSTRUCTIONS_CODE_COMPLETIONS_STATE_KEY,
+      INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY,
       instruction
     )
   } else if (prompt_type == 'prune-context') {

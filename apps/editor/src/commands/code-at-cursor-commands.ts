@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import axios from 'axios'
 import { make_api_request } from '../utils/make-api-request'
-import { code_completion_instructions } from '../constants/instructions'
+import { code_at_cursor_instructions } from '../constants/instructions'
 import { FilesCollector } from '../utils/files-collector'
 import {
   ModelProvidersManager,
@@ -11,8 +11,8 @@ import { Logger } from '@shared/utils/logger'
 import he from 'he'
 import { PROVIDERS } from '@shared/constants/providers'
 import {
-  LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
-  RECENTLY_USED_CODE_COMPLETION_CONFIG_IDS_STATE_KEY
+  LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
+  RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
 } from '@/constants/state-keys'
 import { ToolConfig } from '@/services/model-providers-manager'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
@@ -55,17 +55,17 @@ const show_inline_completion = async (params: {
   }, 10000)
 }
 
-const get_code_completion_config = async (
+const get_code_at_cursor_config = async (
   api_providers_manager: ModelProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext,
   config_id?: string,
   panel_provider?: PanelProvider
 ): Promise<{ provider: any; config: any } | undefined> => {
-  const code_completions_configs =
+  const code_at_cursor_configs =
     await api_providers_manager.get_code_completions_tool_configs()
 
-  if (code_completions_configs.length == 0) {
+  if (code_at_cursor_configs.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
       dictionary.information_message.NO_CODE_COMPLETIONS_CONFIGURATIONS_FOUND
@@ -77,9 +77,8 @@ const get_code_completion_config = async (
 
   if (config_id !== undefined) {
     selected_config =
-      code_completions_configs.find(
-        (c) => get_tool_config_id(c) === config_id
-      ) || null
+      code_at_cursor_configs.find((c) => get_tool_config_id(c) === config_id) ||
+      null
   } else if (!show_quick_pick) {
     const default_config =
       await api_providers_manager.get_default_code_completions_config()
@@ -88,16 +87,16 @@ const get_code_completion_config = async (
       selected_config = default_config
     } else {
       const last_selected_id = context.workspaceState.get<string>(
-        LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
+        LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
       )
       if (last_selected_id) {
         selected_config =
-          code_completions_configs.find(
+          code_at_cursor_configs.find(
             (c) => get_tool_config_id(c) === last_selected_id
           ) || null
       }
-      if (!selected_config && code_completions_configs.length > 0) {
-        selected_config = code_completions_configs[0]
+      if (!selected_config && code_at_cursor_configs.length > 0) {
+        selected_config = code_at_cursor_configs[0]
       }
     }
   }
@@ -106,13 +105,13 @@ const get_code_completion_config = async (
     const create_items = () => {
       const recent_ids =
         context.workspaceState.get<string[]>(
-          RECENTLY_USED_CODE_COMPLETION_CONFIG_IDS_STATE_KEY
+          RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
         ) || []
 
       const matched_recent_configs: ToolConfig[] = []
       const remaining_configs: ToolConfig[] = []
 
-      code_completions_configs.forEach((config) => {
+      code_at_cursor_configs.forEach((config) => {
         const id = get_tool_config_id(config)
         if (recent_ids.includes(id)) {
           matched_recent_configs.push(config)
@@ -178,11 +177,11 @@ const get_code_completion_config = async (
 
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = create_items()
-    quick_pick.placeholder = 'Select code completions configuration'
+    quick_pick.placeholder = 'Select code at cursor configuration'
     quick_pick.matchOnDescription = true
 
     const last_selected_id = context.workspaceState.get<string>(
-      LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
+      LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
     )
 
     const items = quick_pick.items as (vscode.QuickPickItem & { id: string })[]
@@ -211,17 +210,17 @@ const get_code_completion_config = async (
           }
 
           context.workspaceState.update(
-            LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
+            LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
             selected.id
           )
 
           let recents =
             context.workspaceState.get<string[]>(
-              RECENTLY_USED_CODE_COMPLETION_CONFIG_IDS_STATE_KEY
+              RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
             ) || []
           recents = [selected.id, ...recents.filter((id) => id != selected.id)]
           context.workspaceState.update(
-            RECENTLY_USED_CODE_COMPLETION_CONFIG_IDS_STATE_KEY,
+            RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY,
             recents
           )
 
@@ -269,7 +268,7 @@ const get_code_completion_config = async (
       dictionary.error_message.API_PROVIDER_NOT_FOUND
     )
     Logger.warn({
-      function_name: 'get_code_completion_config',
+      function_name: 'get_code_at_cursor_config',
       message: 'API provider not found for Code Completions tool.'
     })
     return
@@ -281,7 +280,7 @@ const get_code_completion_config = async (
   }
 }
 
-const perform_code_completion = async (params: {
+const perform_code_at_cursor = async (params: {
   file_tree_provider: any
   open_editors_provider: any
   context: vscode.ExtensionContext
@@ -314,7 +313,7 @@ const perform_code_completion = async (params: {
     )
   }
 
-  const config_result = await get_code_completion_config(
+  const config_result = await get_code_at_cursor_config(
     api_providers_manager,
     params.show_quick_pick,
     params.context,
@@ -326,23 +325,23 @@ const perform_code_completion = async (params: {
     return
   }
 
-  const { provider, config: code_completions_config } = config_result
+  const { provider, config: code_at_cursor_config } = config_result
 
-  if (!code_completions_config.provider_name) {
+  if (!code_at_cursor_config.provider_name) {
     vscode.window.showErrorMessage(
       dictionary.error_message.API_PROVIDER_NOT_SPECIFIED_FOR_CODE_COMPLETIONS
     )
     Logger.warn({
-      function_name: 'perform_code_completion',
+      function_name: 'perform_code_at_cursor',
       message: 'API provider is not specified for Code Completions tool.'
     })
     return
-  } else if (!code_completions_config.model) {
+  } else if (!code_at_cursor_config.model) {
     vscode.window.showErrorMessage(
       dictionary.error_message.MODEL_NOT_SPECIFIED_FOR_CODE_COMPLETIONS
     )
     Logger.warn({
-      function_name: 'perform_code_completion',
+      function_name: 'perform_code_at_cursor',
       message: 'Model is not specified for Code Completions tool.'
     })
     return
@@ -356,7 +355,7 @@ const perform_code_completion = async (params: {
         dictionary.error_message.BUILT_IN_PROVIDER_NOT_FOUND(provider.name)
       )
       Logger.warn({
-        function_name: 'perform_code_completion',
+        function_name: 'perform_code_at_cursor',
         message: `Built-in provider "${provider.name}" not found.`
       })
       return
@@ -402,11 +401,11 @@ const perform_code_completion = async (params: {
       after: `${text_after_cursor}\n]]>\n</file>\n</files>`
     }
 
-    const content = `${code_completion_instructions}\n${payload.before}${
+    const content = `${code_at_cursor_instructions}\n${payload.before}${
       completion_instructions
         ? `<missing_text>${completion_instructions}</missing_text>`
         : '<missing_text>'
-    }${payload.after}\n${code_completion_instructions}`
+    }${payload.after}\n${code_at_cursor_instructions}`
 
     const messages = [
       {
@@ -417,14 +416,14 @@ const perform_code_completion = async (params: {
 
     const body: { [key: string]: any } = {
       messages,
-      model: code_completions_config.model,
-      temperature: code_completions_config.temperature
+      model: code_at_cursor_config.model,
+      temperature: code_at_cursor_config.temperature
     }
 
     apply_reasoning_effort(
       body,
       provider,
-      code_completions_config.reasoning_effort
+      code_at_cursor_config.reasoning_effort
     )
 
     const cursor_listener = vscode.window.onDidChangeTextEditorSelection(() => {
@@ -528,7 +527,7 @@ const perform_code_completion = async (params: {
       }
     } catch (err: any) {
       Logger.error({
-        function_name: 'perform_code_completion',
+        function_name: 'perform_code_at_cursor',
         message: 'Completion error',
         data: err
       })
@@ -538,15 +537,15 @@ const perform_code_completion = async (params: {
   }
 }
 
-export const code_completion_commands = (params: {
+export const code_at_cursor_commands = (params: {
   file_tree_provider: any
   open_editors_provider: any
   context: vscode.ExtensionContext
   panel_provider: PanelProvider
 }) => {
   return [
-    vscode.commands.registerCommand('codeWebChat.codeCompletion', async () =>
-      perform_code_completion({
+    vscode.commands.registerCommand('codeWebChat.codeAtCursor', async () =>
+      perform_code_at_cursor({
         file_tree_provider: params.file_tree_provider,
         open_editors_provider: params.open_editors_provider,
         context: params.context,
@@ -555,9 +554,9 @@ export const code_completion_commands = (params: {
       })
     ),
     vscode.commands.registerCommand(
-      'codeWebChat.codeCompletionWithInstructions',
+      'codeWebChat.codeAtCursorWithInstructions',
       async () =>
-        perform_code_completion({
+        perform_code_at_cursor({
           file_tree_provider: params.file_tree_provider,
           open_editors_provider: params.open_editors_provider,
           context: params.context,
@@ -565,22 +564,20 @@ export const code_completion_commands = (params: {
           show_quick_pick: false
         })
     ),
-    vscode.commands.registerCommand(
-      'codeWebChat.codeCompletionUsing',
-      async () =>
-        perform_code_completion({
-          file_tree_provider: params.file_tree_provider,
-          open_editors_provider: params.open_editors_provider,
-          context: params.context,
-          with_completion_instructions: false,
-          show_quick_pick: true,
-          panel_provider: params.panel_provider
-        })
+    vscode.commands.registerCommand('codeWebChat.codeAtCursorUsing', async () =>
+      perform_code_at_cursor({
+        file_tree_provider: params.file_tree_provider,
+        open_editors_provider: params.open_editors_provider,
+        context: params.context,
+        with_completion_instructions: false,
+        show_quick_pick: true,
+        panel_provider: params.panel_provider
+      })
     ),
     vscode.commands.registerCommand(
-      'codeWebChat.codeCompletionWithInstructionsUsing',
+      'codeWebChat.codeAtCursorWithInstructionsUsing',
       async () =>
-        perform_code_completion({
+        perform_code_at_cursor({
           file_tree_provider: params.file_tree_provider,
           open_editors_provider: params.open_editors_provider,
           context: params.context,

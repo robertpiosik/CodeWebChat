@@ -1,7 +1,7 @@
-export const code_completion_instructions =
+export const code_at_cursor_instructions =
   'Find correct replacement for the <missing_text> symbol. Respond with replacement text within "replacement" XML tags, without explanations or any other text.\nExample:\n<replacement>!== undefined</replacement>\n'
 
-export const code_completion_instructions_for_panel = (
+export const code_at_cursor_instructions_for_panel = (
   file_path: string,
   row: number,
   column: number

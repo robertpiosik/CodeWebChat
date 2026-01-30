@@ -12,8 +12,8 @@ export const LAST_APPLY_CONTEXT_OPTION_STATE_KEY = 'last-apply-context-option'
 export const CONTEXT_CHECKED_PATHS_STATE_KEY = 'context-checked-paths'
 export const CONTEXT_CHECKED_URLS_STATE_KEY = 'context-checked-urls'
 export const CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY = 'context-checked-timestamps'
-export const LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY =
-  'lastSelectedCodeCompletionConfigId'
+export const LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY =
+  'lastSelectedCodeAtCursorConfigId'
 export const LAST_SELECTED_PRUNE_CONTEXT_CONFIG_ID_STATE_KEY =
   'lastSelectedPruneContextConfigId'
 export const LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY =
@@ -51,8 +51,8 @@ export const PANEL_MODE_STATE_KEY = 'panel-mode'
 export const INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY = 'instructions-edit-context'
 export const INSTRUCTIONS_ASK_STATE_KEY = 'instructions-ask'
 export const INSTRUCTIONS_NO_CONTEXT_STATE_KEY = 'instructions-no-context'
-export const INSTRUCTIONS_CODE_COMPLETIONS_STATE_KEY =
-  'instructions-code-completions'
+export const INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY =
+  'instructions-code-at-cursor'
 export const INSTRUCTIONS_PRUNE_CONTEXT_STATE_KEY = 'instructions-prune-context'
 
 export const ARE_TASKS_COLLAPSED_STATE_KEY = 'are-tasks-collapsed'
@@ -60,20 +60,12 @@ export const IS_TIMELINE_COLLAPSED_STATE_KEY = 'is-timeline-collapsed'
 
 export const HISTORY_ASK_STATE_KEY = 'history-ask'
 export const HISTORY_EDIT_STATE_KEY = 'history-edit'
-export const HISTORY_CODE_COMPLETIONS_STATE_KEY = 'history-code-completions'
+export const HISTORY_CODE_AT_CURSOR_STATE_KEY = 'history-code-at-cursor'
 export const HISTORY_PRUNE_CONTEXT_STATE_KEY = 'history-prune-context'
 export const HISTORY_NO_CONTEXT_STATE_KEY = 'history-no-context'
 
-export const PINNED_HISTORY_ASK_STATE_KEY = 'pinned-history-ask'
-export const PINNED_HISTORY_EDIT_STATE_KEY = 'pinned-history-edit'
-export const PINNED_HISTORY_CODE_COMPLETIONS_STATE_KEY =
-  'pinned-history-code-completions'
-export const PINNED_HISTORY_PRUNE_CONTEXT_STATE_KEY =
-  'pinned-history-prune-context'
-export const PINNED_HISTORY_NO_CONTEXT_STATE_KEY = 'pinned-history-no-context'
-
-export const RECENTLY_USED_CODE_COMPLETION_CONFIG_IDS_STATE_KEY =
-  'recently-used-code-completion-config-ids'
+export const RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY =
+  'recently-used-code-at-cursor-config-ids'
 export const RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY =
   'recently-used-prune-context-config-ids'
 export const RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY =

@@ -5,7 +5,6 @@ type UseKeyboardShortcutsParams = Pick<
   PromptFieldProps,
   | 'show_edit_format_selector'
   | 'on_edit_format_change'
-  | 'on_search_click'
   | 'on_copy'
   | 'on_invocation_count_change'
 > & {
@@ -127,10 +126,6 @@ export const use_keyboard_shortcuts = (params: UseKeyboardShortcutsParams) => {
     if (e.key == 'Escape' && !e.ctrlKey && !e.metaKey) {
       e.stopPropagation()
       return
-    }
-    if (e.key == 'f' && (e.ctrlKey || e.metaKey)) {
-      e.stopPropagation()
-      params.on_search_click()
     }
     if (e.key == 'c' && e.altKey && (e.ctrlKey || e.metaKey)) {
       if (params.on_copy) {

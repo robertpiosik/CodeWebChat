@@ -8,14 +8,15 @@ import {
   migrate_api_providers_to_model_providers,
   migrate_token_count_cache,
   migrate_saved_contexts_to_global_storage,
-  migrate_token_cache_cleanup
+  migrate_token_cache_cleanup,
+  migrate_configurations_code_completions_to_code_at_cursor
 } from './migrations'
 import { SharedFileState } from './context/shared-file-state'
 import {
   apply_chat_response_command,
   add_file_to_context_command,
   remove_file_from_context_command,
-  code_completion_commands,
+  code_at_cursor_commands,
   close_editor_command,
   checkpoints_command,
   close_all_editors_command,
@@ -60,6 +61,8 @@ export async function activate(context: vscode.ExtensionContext) {
     await migrate_saved_contexts_to_global_storage(context)
     // 12 January 2026
     await migrate_token_cache_cleanup(context)
+    // 30 January 2026
+    await migrate_configurations_code_completions_to_code_at_cursor(context)
   }
 
   await migrations()
@@ -100,7 +103,7 @@ export async function activate(context: vscode.ExtensionContext) {
       workspace_provider,
       api_manager
     }),
-    ...code_completion_commands({
+    ...code_at_cursor_commands({
       file_tree_provider: workspace_provider,
       open_editors_provider,
       context,

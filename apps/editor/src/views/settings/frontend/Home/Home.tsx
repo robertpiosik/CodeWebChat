@@ -468,8 +468,8 @@ export const Home: React.FC<Props> = (props) => {
         <Section
           ref={(el) => (section_refs.current['code-completions'] = el)}
           group="API Tool"
-          title="Code Completions"
-          subtitle="Get accurate code at cursor from state-of-the-art models."
+          title="Code at Cursor"
+          subtitle="Get accurate inline suggestions from state-of-the-art models."
           on_stuck_change={code_completions_on_stuck_change}
         >
           <Group>

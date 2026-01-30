@@ -1,6 +1,6 @@
 import {
   HISTORY_ASK_STATE_KEY,
-  HISTORY_CODE_COMPLETIONS_STATE_KEY,
+  HISTORY_CODE_AT_CURSOR_STATE_KEY,
   HISTORY_EDIT_STATE_KEY,
   HISTORY_NO_CONTEXT_STATE_KEY,
   HISTORY_PRUNE_CONTEXT_STATE_KEY,
@@ -18,7 +18,7 @@ export const handle_get_history = (panel_provider: PanelProvider): void => {
   >(HISTORY_EDIT_STATE_KEY, [])
   const code_completions_history = panel_provider.context.workspaceState.get<
     HistoryEntry[]
-  >(HISTORY_CODE_COMPLETIONS_STATE_KEY, [])
+  >(HISTORY_CODE_AT_CURSOR_STATE_KEY, [])
   const no_context_history = panel_provider.context.workspaceState.get<
     HistoryEntry[]
   >(HISTORY_NO_CONTEXT_STATE_KEY, [])

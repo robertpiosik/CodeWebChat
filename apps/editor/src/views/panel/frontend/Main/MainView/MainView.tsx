@@ -28,7 +28,6 @@ type Props = {
   }) => void
   copy_to_clipboard: (preset_name?: string) => void
   on_show_home: () => void
-  on_search_click: () => void
   on_create_preset_group_or_separator: (
     placement?: 'top' | 'bottom',
     reference_index?: number
@@ -224,7 +223,6 @@ export const MainView: React.FC<Props> = (props) => {
             on_submit={handle_submit}
             on_submit_with_control={handle_submit_with_control}
             on_copy={props.copy_to_clipboard}
-            on_search_click={props.on_search_click}
             on_at_sign_click={props.on_at_sign_click}
             on_hash_sign_click={props.on_hash_sign_click}
             on_curly_braces_click={props.on_curly_braces_click}

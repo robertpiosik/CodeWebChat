@@ -166,10 +166,6 @@ export interface ExecuteCommandMessage extends BaseMessage {
   command_id: string
 }
 
-export interface ShowHistoryQuickPickMessage extends BaseMessage {
-  command: 'SHOW_HISTORY_QUICK_PICK'
-}
-
 export interface ShowPromptTemplateQuickPickMessage extends BaseMessage {
   command: 'SHOW_PROMPT_TEMPLATE_QUICK_PICK'
 }
@@ -529,7 +525,6 @@ export type FrontendMessage =
   | DuplicatePresetGroupOrSeparatorMessage
   | CreatePresetGroupOrSeparatorMessage
   | ExecuteCommandMessage
-  | ShowHistoryQuickPickMessage
   | ShowPromptTemplateQuickPickMessage
   | PreviewPresetMessage
   | CaretPositionChangedWebviewMessage
