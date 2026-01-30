@@ -178,9 +178,9 @@ export const process_file = async (params: {
 
   apply_reasoning_effort(body, params.provider, params.reasoning_effort)
 
+  const MAX_ATTEMPTS = 3
   let attempt = 0
-  // eslint-disable-next-line no-constant-condition
-  while (true) {
+  while (attempt < MAX_ATTEMPTS) {
     attempt++
     try {
       const result = await make_api_request({
@@ -189,7 +189,8 @@ export const process_file = async (params: {
         body,
         cancellation_token: params.cancel_token,
         on_chunk: params.on_chunk,
-        on_thinking_chunk: params.on_thinking_chunk
+        on_thinking_chunk: params.on_thinking_chunk,
+        rethrow_error: true
       })
 
       const refactored_content = result?.response
@@ -224,6 +225,21 @@ export const process_file = async (params: {
         throw error
       }
 
+      const is_retryable_error =
+        (axios.isAxiosError(error) &&
+          (error.response?.status == 429 ||
+            (error.response?.status && error.response.status >= 500))) ||
+        error.name == 'StreamAbortError'
+
+      if (!is_retryable_error) {
+        Logger.error({
+          function_name: 'process_file',
+          message: `Refactoring error (attempt ${attempt}) - not retrying`,
+          data: { error, file_path: params.file_path }
+        })
+        throw error
+      }
+
       Logger.error({
         function_name: 'process_file',
         message: `Refactoring error (attempt ${attempt})`,
@@ -233,8 +249,15 @@ export const process_file = async (params: {
         `Refactoring error for ${params.file_path} (attempt ${attempt}):`,
         error
       )
+
+      if (attempt >= MAX_ATTEMPTS) {
+        throw error
+      }
+
       params.on_retry?.(attempt, error)
-      await new Promise((resolve) => setTimeout(resolve, 5000))
+      await new Promise((resolve) => setTimeout(resolve, 3000))
+      params.on_retry_attempt?.()
     }
   }
+  throw new Error('Processing file failed after maximum attempts')
 }

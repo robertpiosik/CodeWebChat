@@ -74,6 +74,7 @@ export const make_api_request = async (params: {
   cancellation_token: any
   on_chunk?: StreamCallback
   on_thinking_chunk?: ThinkingStreamCallback
+  rethrow_error?: boolean
 }): Promise<{ response: string; thoughts?: string } | null> => {
   Logger.info({
     function_name: 'make_api_request',
@@ -118,336 +119,301 @@ export const make_api_request = async (params: {
     params.on_thinking_chunk(chunk)
   }
 
-  const MAX_RETRIES = 5
-  const RETRY_DELAYS = [1000, 2000, 3000, 4000, 5000]
+  try {
+    const request_body = { ...params.body, stream: true }
 
-  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
-    try {
-      const request_body = { ...params.body, stream: true }
+    let buffer = ''
+    let full_response = ''
+    let content_for_client = ''
+    let in_think_block = false
+    let think_block_closed = false
+    let processed_think_content_length = 0
 
-      let buffer = ''
-      let full_response = ''
-      let content_for_client = ''
-      let in_think_block = false
-      let think_block_closed = false
-      let processed_think_content_length = 0
+    let last_log_time = Date.now()
+    let logged_content_length = 0
 
-      let last_log_time = Date.now()
-      let logged_content_length = 0
+    const process_content = (new_content: string) => {
+      if (!new_content) return
 
-      const process_content = (new_content: string) => {
-        if (!new_content) return
+      full_response += new_content
 
-        full_response += new_content
+      if (think_block_closed) {
+        content_for_client += new_content
+        handle_chunk_metrics(new_content)
+        return
+      }
 
-        if (think_block_closed) {
-          content_for_client += new_content
-          handle_chunk_metrics(new_content)
-          return
-        }
+      if (!in_think_block) {
+        const think_start_regex = /<(think|thought)>/
+        const start_match = full_response.match(think_start_regex)
 
-        if (!in_think_block) {
-          const think_start_regex = /<(think|thought)>/
-          const start_match = full_response.match(think_start_regex)
-
-          if (start_match) {
-            in_think_block = true
-            processed_think_content_length =
-              start_match.index! + start_match[0].length
-          } else {
-            const think_end_regex = /<\/(think|thought)>/
-            const end_match = full_response.match(think_end_regex)
-
-            if (end_match) {
-              const think_content_chunk = full_response.substring(
-                0,
-                end_match.index!
-              )
-              if (think_content_chunk) {
-                handle_thinking_chunk(think_content_chunk)
-              }
-
-              think_block_closed = true
-
-              const content_after = full_response.substring(
-                end_match.index! + end_match[0].length
-              )
-              content_for_client = content_after
-              if (content_after) {
-                handle_chunk_metrics(content_after)
-              }
-              return
-            }
-
-            const trimmed_response = full_response.trimStart()
-            if (trimmed_response.length == 0) {
-              return
-            }
-
-            const is_think_prefix =
-              '<think>'.startsWith(trimmed_response) ||
-              '<thought>'.startsWith(trimmed_response)
-
-            if (!is_think_prefix) {
-              think_block_closed = true
-              content_for_client = full_response
-              handle_chunk_metrics(full_response)
-              return
-            }
-          }
-        }
-
-        if (in_think_block) {
+        if (start_match) {
+          in_think_block = true
+          processed_think_content_length =
+            start_match.index! + start_match[0].length
+        } else {
           const think_end_regex = /<\/(think|thought)>/
-          const end_match = full_response
-            .substring(processed_think_content_length)
-            .match(think_end_regex)
-
-          let think_content_chunk: string
+          const end_match = full_response.match(think_end_regex)
 
           if (end_match) {
-            const end_match_absolute_index =
-              processed_think_content_length + end_match.index!
-
-            think_content_chunk = full_response.substring(
-              processed_think_content_length,
-              end_match_absolute_index
+            const think_content_chunk = full_response.substring(
+              0,
+              end_match.index!
             )
+            if (think_content_chunk) {
+              handle_thinking_chunk(think_content_chunk)
+            }
 
             think_block_closed = true
 
             const content_after = full_response.substring(
-              end_match_absolute_index + end_match[0].length
+              end_match.index! + end_match[0].length
             )
             content_for_client = content_after
             if (content_after) {
               handle_chunk_metrics(content_after)
             }
-          } else {
-            think_content_chunk = full_response.substring(
-              processed_think_content_length
-            )
+            return
           }
 
-          if (think_content_chunk) {
-            handle_thinking_chunk(think_content_chunk)
-            processed_think_content_length += think_content_chunk.length
+          const trimmed_response = full_response.trimStart()
+          if (trimmed_response.length == 0) {
+            return
+          }
+
+          const is_think_prefix =
+            '<tool_call>'.startsWith(trimmed_response) ||
+            '<thought>'.startsWith(trimmed_response)
+
+          if (!is_think_prefix) {
+            think_block_closed = true
+            content_for_client = full_response
+            handle_chunk_metrics(full_response)
+            return
           }
         }
       }
 
-      const response: AxiosResponse<NodeJS.ReadableStream> = await axios.post(
-        params.endpoint_url + '/chat/completions',
-        request_body,
-        {
-          headers: {
-            ...(params.api_key
-              ? { ['Authorization']: `Bearer ${params.api_key}` }
-              : {}),
-            ['Content-Type']: 'application/json',
-            ...(params.endpoint_url == 'https://openrouter.ai/api/v1'
-              ? {
-                  'HTTP-Referer': 'https://codeweb.chat/',
-                  'X-Title': 'Code Web Chat'
-                }
-              : {})
-          },
-          cancelToken: params.cancellation_token,
-          responseType: 'stream'
-        }
-      )
+      if (in_think_block) {
+        const think_end_regex = /<\/(think|thought)>/
+        const end_match = full_response
+          .substring(processed_think_content_length)
+          .match(think_end_regex)
 
-      response.data.setEncoding('utf8')
+        let think_content_chunk: string
 
-      return await new Promise((resolve, reject) => {
-        let stream_closed = false
+        if (end_match) {
+          const end_match_absolute_index =
+            processed_think_content_length + end_match.index!
 
-        response.data.on('data', async (chunk: string) => {
-          const { updated_buffer, new_content } = process_stream_chunk(
-            chunk,
-            buffer
+          think_content_chunk = full_response.substring(
+            processed_think_content_length,
+            end_match_absolute_index
           )
-          buffer = updated_buffer
-          process_content(new_content)
 
-          const current_time = Date.now()
-          if (current_time - last_log_time >= 1000) {
-            Logger.info({
-              function_name: 'make_api_request',
-              message: 'Streaming tokens',
-              data: `\n${full_response.substring(logged_content_length)}`
-            })
-            last_log_time = current_time
-            logged_content_length = full_response.length
+          think_block_closed = true
+
+          const content_after = full_response.substring(
+            end_match_absolute_index + end_match[0].length
+          )
+          content_for_client = content_after
+          if (content_after) {
+            handle_chunk_metrics(content_after)
           }
-        })
+        } else {
+          think_content_chunk = full_response.substring(
+            processed_think_content_length
+          )
+        }
 
-        response.data.on('end', () => {
-          stream_closed = true
+        if (think_content_chunk) {
+          handle_thinking_chunk(think_content_chunk)
+          processed_think_content_length += think_content_chunk.length
+        }
+      }
+    }
 
-          if (buffer.trim()) {
-            try {
-              const trimmed_line = buffer.trim()
-              if (trimmed_line.startsWith(DATA_PREFIX)) {
-                const json_string = trimmed_line
-                  .slice(DATA_PREFIX.length)
-                  .trim()
-                if (json_string && json_string !== DONE_TOKEN) {
-                  const json_data = JSON.parse(json_string)
-                  const content = json_data.choices?.[0]?.delta?.content
-                  if (typeof content == 'string') {
-                    process_content(content)
-                  }
+    const response: AxiosResponse<NodeJS.ReadableStream> = await axios.post(
+      params.endpoint_url + '/chat/completions',
+      request_body,
+      {
+        headers: {
+          ...(params.api_key
+            ? { ['Authorization']: `Bearer ${params.api_key}` }
+            : {}),
+          ['Content-Type']: 'application/json',
+          ...(params.endpoint_url == 'https://openrouter.ai/api/v1'
+            ? {
+                'HTTP-Referer': 'https://codeweb.chat/',
+                'X-Title': 'Code Web Chat'
+              }
+            : {})
+        },
+        cancelToken: params.cancellation_token,
+        responseType: 'stream'
+      }
+    )
+
+    response.data.setEncoding('utf8')
+
+    return await new Promise((resolve, reject) => {
+      let stream_closed = false
+
+      response.data.on('data', async (chunk: string) => {
+        const { updated_buffer, new_content } = process_stream_chunk(
+          chunk,
+          buffer
+        )
+        buffer = updated_buffer
+        process_content(new_content)
+
+        const current_time = Date.now()
+        if (current_time - last_log_time >= 1000) {
+          Logger.info({
+            function_name: 'make_api_request',
+            message: 'Streaming tokens',
+            data: `\n${full_response.substring(logged_content_length)}`
+          })
+          last_log_time = current_time
+          logged_content_length = full_response.length
+        }
+      })
+
+      response.data.on('end', () => {
+        stream_closed = true
+
+        if (buffer.trim()) {
+          try {
+            const trimmed_line = buffer.trim()
+            if (trimmed_line.startsWith(DATA_PREFIX)) {
+              const json_string = trimmed_line.slice(DATA_PREFIX.length).trim()
+              if (json_string && json_string !== DONE_TOKEN) {
+                const json_data = JSON.parse(json_string)
+                const content = json_data.choices?.[0]?.delta?.content
+                if (typeof content == 'string') {
+                  process_content(content)
                 }
               }
-            } catch (error) {
-              Logger.warn({
+            }
+          } catch (error) {
+            Logger.warn({
+              function_name: 'make_api_request',
+              message: 'Failed to parse final buffer',
+              data: error
+            })
+          }
+        }
+
+        const thoughts_match = full_response.match(
+          /<(?:think|thought)>([\s\S]*?)<\/(?:think|thought)>/
+        )
+        let thoughts = thoughts_match ? thoughts_match[1].trim() : undefined
+        let final_content = content_for_client
+
+        if (!thoughts_match) {
+          const end_match = full_response.match(/<\/(?:think|thought)>/)
+          if (end_match) {
+            const start_match = full_response.match(/<(?:think|thought)>/)
+            if (!start_match) {
+              thoughts = full_response.substring(0, end_match.index).trim()
+              final_content = full_response
+                .substring(end_match.index! + end_match[0].length)
+                .trim()
+              Logger.info({
                 function_name: 'make_api_request',
-                message: 'Failed to parse final buffer',
-                data: error
+                message:
+                  'Detected closing tag without opening tag, stripped content before  '
               })
             }
           }
-
-          const thoughts_match = full_response.match(
-            /<(?:think|thought)>([\s\S]*?)<\/(?:think|thought)>/
-          )
-          let thoughts = thoughts_match ? thoughts_match[1].trim() : undefined
-          let final_content = content_for_client
-
-          if (!thoughts_match) {
-            const end_match = full_response.match(/<\/(?:think|thought)>/)
-            if (end_match) {
-              const start_match = full_response.match(/<(?:think|thought)>/)
-              if (!start_match) {
-                thoughts = full_response.substring(0, end_match.index).trim()
-                final_content = full_response
-                  .substring(end_match.index! + end_match[0].length)
-                  .trim()
-                Logger.info({
-                  function_name: 'make_api_request',
-                  message:
-                    'Detected closing tag without opening tag, stripped content before </think>'
-                })
-              }
-            }
-          }
-
-          Logger.info({
-            function_name: 'make_api_request',
-            message: 'Combined code received (full response):',
-            data: full_response
-          })
-          if (in_think_block) {
-            Logger.info({
-              function_name: 'make_api_request',
-              message: 'Combined code received (for client):',
-              data: content_for_client
-            })
-          }
-
-          resolve({ response: final_content, thoughts })
-        })
-
-        response.data.on('error', (error: Error) => {
-          if (!stream_closed) {
-            Logger.error({
-              function_name: 'make_api_request',
-              message: 'Stream error',
-              data: error
-            })
-            reject(new StreamAbortError(error.message))
-          }
-        })
-
-        response.data.on('aborted', () => {
-          if (!stream_closed) {
-            Logger.warn({
-              function_name: 'make_api_request',
-              message: 'Stream aborted'
-            })
-            reject(new StreamAbortError('Stream was aborted'))
-          }
-        })
-      })
-    } catch (error) {
-      if (params.cancellation_token?.reason) {
-        Logger.info({
-          function_name: 'make_api_request',
-          message: 'Request canceled',
-          data: params.cancellation_token.reason
-        })
-        throw params.cancellation_token.reason
-      }
-
-      const is_retryable_error =
-        (axios.isAxiosError(error) &&
-          (error.response?.status == 503 ||
-            error.code == 'ECONNRESET' ||
-            error.code == 'ECONNABORTED')) ||
-        error instanceof StreamAbortError
-
-      if (is_retryable_error && attempt < MAX_RETRIES) {
-        const delay = RETRY_DELAYS[attempt]
-        let reason = 'an unknown error'
-
-        if (axios.isAxiosError(error)) {
-          if (error.response?.status == 503) {
-            reason = 'status 503'
-          } else if (error.code == 'ECONNABORTED') {
-            reason = 'a timeout'
-          } else if (error.code == 'ECONNRESET') {
-            reason = 'a socket hang up (ECONNRESET)'
-          }
-        } else if (error instanceof StreamAbortError) {
-          reason = 'stream abortion'
         }
 
-        Logger.warn({
-          function_name: 'make_api_request',
-          message: `API request failed with ${reason}. Retrying in ${
-            delay / 1000
-          }s... (Attempt ${attempt + 1}/${MAX_RETRIES + 1})`
-        })
-        await new Promise((resolve) => setTimeout(resolve, delay))
-        continue
-      }
-
-      if (axios.isCancel(error)) {
         Logger.info({
           function_name: 'make_api_request',
-          message: 'Request canceled',
-          data: error.message
+          message: 'Combined code received (full response):',
+          data: full_response
         })
-        throw error
-      } else if (axios.isAxiosError(error) && error.response?.status == 429) {
-        vscode.window.showErrorMessage(
-          dictionary.error_message.API_RATE_LIMIT_EXCEEDED
-        )
-      } else if (axios.isAxiosError(error) && error.response?.status == 413) {
-        vscode.window.showErrorMessage(
-          dictionary.error_message.API_PAYLOAD_TOO_LARGE
-        )
-      } else if (axios.isAxiosError(error) && error.response?.status == 400) {
-        vscode.window.showErrorMessage(dictionary.error_message.API_BAD_REQUEST)
-      } else if (axios.isAxiosError(error) && error.response?.status == 503) {
-        vscode.window.showErrorMessage(
-          dictionary.error_message.API_ENDPOINT_UNAVAILABLE
-        )
-      } else if (axios.isAxiosError(error) && error.response?.status == 401) {
-        vscode.window.showErrorMessage(dictionary.error_message.API_INVALID_KEY)
-      } else {
-        vscode.window.showErrorMessage(
-          dictionary.error_message.API_REQUEST_FAILED
-        )
-      }
-      Logger.error({
-        function_name: 'make_api_request',
-        message: 'API request failed',
-        data: error
+        if (in_think_block) {
+          Logger.info({
+            function_name: 'make_api_request',
+            message: 'Combined code received (for client):',
+            data: content_for_client
+          })
+        }
+
+        resolve({ response: final_content, thoughts })
       })
-      return null
+
+      response.data.on('error', (error: Error) => {
+        if (!stream_closed) {
+          Logger.error({
+            function_name: 'make_api_request',
+            message: 'Stream error',
+            data: error
+          })
+          reject(new StreamAbortError(error.message))
+        }
+      })
+
+      response.data.on('aborted', () => {
+        if (!stream_closed) {
+          Logger.warn({
+            function_name: 'make_api_request',
+            message: 'Stream aborted'
+          })
+          reject(new StreamAbortError('Stream was aborted'))
+        }
+      })
+    })
+  } catch (error) {
+    if (params.cancellation_token?.reason) {
+      Logger.info({
+        function_name: 'make_api_request',
+        message: 'Request canceled',
+        data: params.cancellation_token.reason
+      })
+      throw params.cancellation_token.reason
     }
+
+    if (axios.isCancel(error)) {
+      Logger.info({
+        function_name: 'make_api_request',
+        message: 'Request canceled',
+        data: error.message
+      })
+      throw error
+    }
+
+    if (params.rethrow_error) {
+      throw error
+    }
+
+    if (axios.isAxiosError(error) && error.response?.status == 429) {
+      vscode.window.showErrorMessage(
+        dictionary.error_message.API_RATE_LIMIT_EXCEEDED
+      )
+    } else if (axios.isAxiosError(error) && error.response?.status == 413) {
+      vscode.window.showErrorMessage(
+        dictionary.error_message.API_PAYLOAD_TOO_LARGE
+      )
+    } else if (axios.isAxiosError(error) && error.response?.status == 400) {
+      vscode.window.showErrorMessage(dictionary.error_message.API_BAD_REQUEST)
+    } else if (axios.isAxiosError(error) && error.response?.status == 503) {
+      vscode.window.showErrorMessage(
+        dictionary.error_message.API_ENDPOINT_UNAVAILABLE
+      )
+    } else if (axios.isAxiosError(error) && error.response?.status == 401) {
+      vscode.window.showErrorMessage(dictionary.error_message.API_INVALID_KEY)
+    } else {
+      vscode.window.showErrorMessage(
+        dictionary.error_message.API_REQUEST_FAILED
+      )
+    }
+    Logger.error({
+      function_name: 'make_api_request',
+      message: 'API request failed',
+      data: error
+    })
+    return null
   }
-  return null
 }

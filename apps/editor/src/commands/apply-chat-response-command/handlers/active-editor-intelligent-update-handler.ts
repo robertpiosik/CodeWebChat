@@ -33,7 +33,7 @@ export const handle_active_editor_intelligent_update = async (params: {
       dictionary.error_message.CANNOT_PROCESS_MULTIPLE_FILES_WITHOUT_WORKSPACE
     )
     Logger.warn({
-      function_name: 'handle_intelligent_update',
+      function_name: 'handle_active_editor_intelligent_update',
       message: 'No workspace folder open.'
     })
     return null
@@ -53,12 +53,12 @@ export const handle_active_editor_intelligent_update = async (params: {
     (item): item is FileItem => item.type == 'file'
   )
 
-  if (files.length === 0) {
+  if (files.length == 0) {
     vscode.window.showErrorMessage(
       dictionary.error_message.NO_VALID_FILE_CONTENT_IN_CLIPBOARD
     )
     Logger.warn({
-      function_name: 'handle_intelligent_update',
+      function_name: 'handle_active_editor_intelligent_update',
       message: 'No valid file content found.'
     })
     return null
@@ -80,7 +80,7 @@ export const handle_active_editor_intelligent_update = async (params: {
       dictionary.error_message.INVALID_FILE_PATH_TRAVERSAL(file_item.file_path)
     )
     Logger.error({
-      function_name: 'handle_intelligent_update',
+      function_name: 'handle_active_editor_intelligent_update',
       message: 'Invalid file path',
       data: file_item.file_path
     })

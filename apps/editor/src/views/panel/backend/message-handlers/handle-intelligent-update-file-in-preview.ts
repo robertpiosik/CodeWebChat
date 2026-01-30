@@ -254,7 +254,7 @@ export const handle_intelligent_update_file_in_preview = async (
       error.message != 'User cancelled the operation'
     ) {
       Logger.error({
-        function_name: 'handle_intelligent_update_file_in_review',
+        function_name: 'handle_intelligent_update_file_in_preview',
         message: 'Error during process_file',
         data: { error, file_path }
       })

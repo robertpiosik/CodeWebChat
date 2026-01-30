@@ -228,7 +228,7 @@ const get_code_completion_config = async (
           if (panel_provider) {
             panel_provider.send_message({
               command: 'SELECTED_CONFIGURATION_CHANGED',
-              mode: 'code-at-cursor',
+              prompt_type: 'code-at-cursor',
               id: selected.id
             })
           }
@@ -528,7 +528,7 @@ const perform_code_completion = async (params: {
       }
     } catch (err: any) {
       Logger.error({
-        function_name: 'perform_fim_completion',
+        function_name: 'perform_code_completion',
         message: 'Completion error',
         data: err
       })
