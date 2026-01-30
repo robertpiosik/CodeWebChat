@@ -344,7 +344,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         />
                         <IconButton
                           codicon_icon="insert"
-                          title="Insert below/above"
+                          title="Insert new item below/above"
                           on_click={(e) => {
                             e.stopPropagation()
                             props.on_create(undefined, preset.original_index!)
@@ -549,7 +549,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       />
                       <IconButton
                         codicon_icon="insert"
-                        title="Insert below/above"
+                        title="Insert new item below/above"
                         on_click={(e) => {
                           e.stopPropagation()
                           props.on_create(undefined, preset.original_index!)

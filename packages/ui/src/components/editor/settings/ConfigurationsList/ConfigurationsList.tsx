@@ -58,7 +58,7 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
         {sortable && (
           <IconButton
             codicon_icon="insert"
-            title="Insert below/above"
+            title="Insert new configuration below/above"
             on_click={() => props.on_add({ insertion_index: index })}
           />
         )}

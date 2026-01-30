@@ -82,8 +82,8 @@ export const upsert_configuration = async (params: {
       (resolve) => {
         const quick_pick = vscode.window.createQuickPick()
         quick_pick.items = [
-          { label: 'Insert above' },
-          { label: 'Insert below' }
+          { label: 'Insert new configuration above' },
+          { label: 'Insert new configuration below' }
         ]
         quick_pick.title = 'Placement'
         quick_pick.placeholder = 'Where to insert?'
@@ -119,7 +119,7 @@ export const upsert_configuration = async (params: {
     if (!position_quick_pick) return
 
     actual_insertion_index =
-      position_quick_pick == 'Insert above'
+      position_quick_pick == 'Insert new configuration above'
         ? params.insertion_index
         : params.insertion_index + 1
   }
