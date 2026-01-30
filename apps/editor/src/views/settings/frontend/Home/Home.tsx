@@ -406,7 +406,7 @@ export const Home: React.FC<Props> = (props) => {
           <Group>
             <Item
               title="Fix All Automatically"
-              description="Always run on all failed files in the response preview."
+              description="Run the tool on all failed to apply files immediately."
               slot_right={
                 <Toggler
                   is_on={props.fix_all_automatically}

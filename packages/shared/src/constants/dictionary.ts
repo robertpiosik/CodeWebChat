@@ -192,8 +192,8 @@ export const dictionary = {
       `No models found for ${provider_name}. You can enter model name manually.`,
     NO_RESULTS_FOR_SEARCH_SHOWING_ALL: (search_value: string) =>
       `No results for "${search_value}" in the selected context.`,
-    NO_MODEL_PROVIDERS_CONFIGURED:
-      'No model providers configured. Please add a model provider first on the "Model Providers" page.',
+    NO_MODEL_PROVIDERS_FOUND:
+      'No model providers found. Please add a model provider first.',
     SELECT_PRESET_FROM_LIST: 'Select preset from the list.'
   },
 

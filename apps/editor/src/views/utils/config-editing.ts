@@ -19,8 +19,10 @@ export const initial_select_provider = async (
 
   if (providers.length == 0) {
     vscode.window.showWarningMessage(
-      dictionary.warning_message.NO_MODEL_PROVIDERS_CONFIGURED
+      dictionary.warning_message.NO_MODEL_PROVIDERS_FOUND,
+      { modal: true }
     )
+    vscode.commands.executeCommand('codeWebChat.settings', 'model-providers')
     return
   }
 
