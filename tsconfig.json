@@ -6,7 +6,7 @@
     "baseUrl": ".",
     "paths": {
       "@shared/*": ["packages/shared/src/*"],
-      "@/*": ["packages/vscode/src/*"]
+      "@/*": ["apps/editor/src/*"]
     }
   }
 }
