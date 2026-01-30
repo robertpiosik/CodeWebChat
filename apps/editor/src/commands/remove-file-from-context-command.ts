@@ -183,7 +183,7 @@ export const remove_file_from_context_command = (
                 undefined,
                 undefined,
                 undefined,
-                false,
+                undefined,
                 undefined
               )
 

@@ -159,7 +159,7 @@ export const add_file_to_context_command = (
                 undefined,
                 undefined,
                 undefined,
-                false,
+                undefined,
                 undefined
               )
 

@@ -61,8 +61,9 @@ export const check_parent_folder_command = (
           undefined,
           undefined,
           undefined,
-          is_workspace_root,
-          undefined
+          undefined,
+          undefined,
+          is_workspace_root
         )
 
         await workspace_provider.update_check_state(
