@@ -365,6 +365,20 @@ export const Home: React.FC<Props> = (props) => {
           on_stuck_change={edit_context_on_stuck_change}
         >
           <Group>
+            <ApiToolConfigurationSection
+              configurations={props.edit_context_configs}
+              set_configurations={props.set_edit_context_configs}
+              tool_name="EDIT_CONTEXT"
+              can_have_default={false}
+              on_add={(params) =>
+                props.on_add_config('EDIT_CONTEXT', params?.insertion_index)
+              }
+              on_reorder={(reordered) =>
+                props.on_reorder_configs('EDIT_CONTEXT', reordered)
+              }
+              on_edit={(id) => props.on_edit_config('EDIT_CONTEXT', id)}
+              on_delete={(id) => props.on_delete_config('EDIT_CONTEXT', id)}
+            />
             <Item
               title="System Instructions"
               description="Tone and style instructions for the model."
@@ -380,20 +394,6 @@ export const Home: React.FC<Props> = (props) => {
                 />
               }
             />
-            <ApiToolConfigurationSection
-              configurations={props.edit_context_configs}
-              set_configurations={props.set_edit_context_configs}
-              tool_name="EDIT_CONTEXT"
-              can_have_default={false}
-              on_add={(params) =>
-                props.on_add_config('EDIT_CONTEXT', params?.insertion_index)
-              }
-              on_reorder={(reordered) =>
-                props.on_reorder_configs('EDIT_CONTEXT', reordered)
-              }
-              on_edit={(id) => props.on_edit_config('EDIT_CONTEXT', id)}
-              on_delete={(id) => props.on_delete_config('EDIT_CONTEXT', id)}
-            />
           </Group>
         </Section>
         <Section
@@ -404,16 +404,6 @@ export const Home: React.FC<Props> = (props) => {
           on_stuck_change={intelligent_update_on_stuck_change}
         >
           <Group>
-            <Item
-              title="Fix All Automatically"
-              description="Run the tool on all failed to apply files immediately."
-              slot_right={
-                <Toggler
-                  is_on={props.fix_all_automatically}
-                  on_toggle={props.on_fix_all_automatically_change}
-                />
-              }
-            />
             <ApiToolConfigurationSection
               configurations={props.intelligent_update_configs}
               set_configurations={props.set_intelligent_update_configs}
@@ -437,6 +427,16 @@ export const Home: React.FC<Props> = (props) => {
               }
               on_unset_default={() =>
                 props.on_unset_default_config('INTELLIGENT_UPDATE')
+              }
+            />
+            <Item
+              title="Fix All Automatically"
+              description="Run the tool on all failed to apply files immediately."
+              slot_right={
+                <Toggler
+                  is_on={props.fix_all_automatically}
+                  on_toggle={props.on_fix_all_automatically_change}
+                />
               }
             />
           </Group>
@@ -503,6 +503,26 @@ export const Home: React.FC<Props> = (props) => {
           on_stuck_change={commit_messages_on_stuck_change}
         >
           <Group>
+            <ApiToolConfigurationSection
+              configurations={props.commit_messages_configs}
+              set_configurations={props.set_commit_messages_configs}
+              tool_name="COMMIT_MESSAGES"
+              can_have_default={true}
+              on_add={(params) =>
+                props.on_add_config('COMMIT_MESSAGES', params?.insertion_index)
+              }
+              on_reorder={(reordered) =>
+                props.on_reorder_configs('COMMIT_MESSAGES', reordered)
+              }
+              on_edit={(id) => props.on_edit_config('COMMIT_MESSAGES', id)}
+              on_delete={(id) => props.on_delete_config('COMMIT_MESSAGES', id)}
+              on_set_default={(id) =>
+                props.on_set_default_config('COMMIT_MESSAGES', id)
+              }
+              on_unset_default={() =>
+                props.on_unset_default_config('COMMIT_MESSAGES')
+              }
+            />
             <Item
               title="Instructions"
               description="Describe style and conventions (e.g. Conventional Commits, gitmoji) for the generated commit message."
@@ -527,26 +547,6 @@ export const Home: React.FC<Props> = (props) => {
                   on_blur={handle_commit_message_auto_accept_after_blur}
                   max_width={60}
                 />
-              }
-            />
-            <ApiToolConfigurationSection
-              configurations={props.commit_messages_configs}
-              set_configurations={props.set_commit_messages_configs}
-              tool_name="COMMIT_MESSAGES"
-              can_have_default={true}
-              on_add={(params) =>
-                props.on_add_config('COMMIT_MESSAGES', params?.insertion_index)
-              }
-              on_reorder={(reordered) =>
-                props.on_reorder_configs('COMMIT_MESSAGES', reordered)
-              }
-              on_edit={(id) => props.on_edit_config('COMMIT_MESSAGES', id)}
-              on_delete={(id) => props.on_delete_config('COMMIT_MESSAGES', id)}
-              on_set_default={(id) =>
-                props.on_set_default_config('COMMIT_MESSAGES', id)
-              }
-              on_unset_default={() =>
-                props.on_unset_default_config('COMMIT_MESSAGES')
               }
             />
           </Group>

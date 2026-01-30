@@ -35,7 +35,8 @@ export const Footer: React.FC<Props> = (props) => {
     if (left_ref.current && right_ref.current) {
       const width =
         left_ref.current.getBoundingClientRect().width +
-        right_ref.current.getBoundingClientRect().width
+        right_ref.current.getBoundingClientRect().width +
+        2
       report_width(width, compact_step)
     }
   }, [compact_step, report_width])
