@@ -92,6 +92,7 @@ import {
   INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
   LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
   LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY,
+  LAST_SELECTED_PRUNE_CONTEXT_CONFIG_ID_STATE_KEY,
   PANEL_MODE_STATE_KEY,
   WEB_MODE_STATE_KEY,
   get_recently_used_presets_or_groups_key
@@ -858,6 +859,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         ),
         'code-at-cursor': this.context.workspaceState.get<string>(
           LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
+        ),
+        'prune-context': this.context.workspaceState.get<string>(
+          LAST_SELECTED_PRUNE_CONTEXT_CONFIG_ID_STATE_KEY
         )
       }
     })
