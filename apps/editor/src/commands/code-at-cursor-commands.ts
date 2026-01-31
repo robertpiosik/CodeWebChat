@@ -19,10 +19,10 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { apply_reasoning_effort } from '../utils/apply-reasoning-effort'
 
-const show_inline_completion = async (params: {
+const show_ghost_text = async (params: {
   editor: vscode.TextEditor
   position: vscode.Position
-  completion_text: string
+  ghost_text: string
 }) => {
   const document = params.editor.document
   const controller = vscode.languages.registerInlineCompletionItemProvider(
@@ -30,7 +30,7 @@ const show_inline_completion = async (params: {
     {
       provideInlineCompletionItems: () => {
         const item = {
-          insertText: params.completion_text,
+          insertText: params.ghost_text,
           range: new vscode.Range(params.position, params.position)
         }
         return [item]
@@ -518,10 +518,10 @@ const perform_code_at_cursor = async (params: {
             .replace(/\]\]>/g, '')
             .trim()
 
-          await show_inline_completion({
+          await show_ghost_text({
             editor,
             position,
-            completion_text: decoded_completion
+            ghost_text: decoded_completion
           })
         }
       }
