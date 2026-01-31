@@ -3,7 +3,7 @@ import { execSync } from 'child_process'
 import { dictionary } from '@shared/constants/dictionary'
 import * as path from 'path'
 
-export interface GitRepository {
+type GitRepository = {
   rootUri: vscode.Uri
   state: {
     indexChanges: any[]
