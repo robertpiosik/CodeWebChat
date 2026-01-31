@@ -116,7 +116,7 @@ export const open_webui: Chatbot = {
       return
     }
     const temperature_div = pb_safe_bottom.querySelector(
-      'div:nth-child(5)'
+      'div:nth-child(7)'
     ) as HTMLElement
     if (!temperature_div) {
       report_initialization_error({
@@ -144,7 +144,7 @@ export const open_webui: Chatbot = {
       return
     }
     input.value = temperature.toString()
-    input.dispatchEvent(new Event('change', { bubbles: true }))
+    input.dispatchEvent(new Event('input', { bubbles: true }))
     const close_button = controls_pane.querySelector(
       'button'
     ) as HTMLButtonElement
@@ -223,7 +223,7 @@ export const open_webui: Chatbot = {
       return
     }
     input.value = top_p.toString()
-    input.dispatchEvent(new Event('change', { bubbles: true }))
+    input.dispatchEvent(new Event('input', { bubbles: true }))
     const close_button = controls_pane.querySelector(
       'button'
     ) as HTMLButtonElement
@@ -277,20 +277,19 @@ export const open_webui: Chatbot = {
     await new Promise((r) => requestAnimationFrame(r))
   },
   enter_message: async (params) => {
-    const input_element = document.querySelector(
-      'textarea#chat-input-0'
-    ) as HTMLTextAreaElement
+    const input_element = document.querySelector('#chat-input') as HTMLElement
+
     if (!input_element) {
       report_initialization_error({
         function_name: 'open_webui.enter_message',
-        log_message: 'Message input textarea not found'
+        log_message: 'Message input not found'
       })
       return
     }
-    input_element.value = params.message
+
+    input_element.innerText = params.message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
-    input_element.dispatchEvent(new Event('change', { bubbles: true }))
-    await new Promise((r) => requestAnimationFrame(r))
+    input_element.focus()
   },
   inject_apply_response_button: (
     client_id: number,
