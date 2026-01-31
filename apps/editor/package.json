@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
   "description": "Connect VS Code with chatbots (CWC)",
-  "version": "1.773.0",
+  "version": "1.774.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
@@ -309,6 +309,17 @@
         "icon": "$(sparkle)"
       },
       {
+        "command": "codeWebChat.copyCommitMessagePrompt",
+        "title": "Copy Commit Message Prompt from CWC",
+        "category": "Code Web Chat",
+        "icon": "$(copy)"
+      },
+      {
+        "command": "codeWebChat.generateCommitMessageAndCommit",
+        "title": "Commit Changes",
+        "category": "Code Web Chat"
+      },
+      {
         "command": "codeWebChat.setRange",
         "title": "Set Range",
         "category": "Code Web Chat"
@@ -430,6 +441,14 @@
         {
           "command": "codeWebChat.setRange",
           "when": "false"
+        },
+        {
+          "command": "codeWebChat.generateCommitMessage",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.copyCommitMessagePrompt",
+          "when": "false"
         }
       ],
       "view/title": [
@@ -522,6 +541,11 @@
       "scm/title": [
         {
           "command": "codeWebChat.generateCommitMessage",
+          "group": "navigation",
+          "when": "scmProvider == git"
+        },
+        {
+          "command": "codeWebChat.copyCommitMessagePrompt",
           "group": "navigation",
           "when": "scmProvider == git"
         }

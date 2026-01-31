@@ -120,6 +120,10 @@ Meaningful summaries of changes adhering to your preffered style.
 - `Code Web Chat: Undo Context Selection` - Undo the last context change.
 - `Code Web Chat: Redo Context Selection` - Redo the last undone context change.
 
+### Commit messages
+
+- `Code Web Chat: Commit Changes` - Generate commit message and commit.
+
 ## Contributing
 
 All contributions are welcome. Feel free to submit pull requests, feature requests and bug reports.

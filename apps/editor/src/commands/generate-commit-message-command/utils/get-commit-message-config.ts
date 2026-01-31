@@ -17,8 +17,7 @@ export interface CommitMessageConfig {
 }
 
 export const get_commit_message_config = async (
-  context: vscode.ExtensionContext,
-  message_prompt?: string
+  context: vscode.ExtensionContext
 ): Promise<{
   config: CommitMessageConfig
   provider: any
@@ -49,14 +48,7 @@ export const get_commit_message_config = async (
         tooltip: 'Close'
       }
 
-      const copy_button = {
-        iconPath: new vscode.ThemeIcon('copy'),
-        tooltip: 'Copy prompt to clipboard'
-      }
-
-      quick_pick.buttons = message_prompt
-        ? [copy_button, close_button]
-        : [close_button]
+      quick_pick.buttons = [close_button]
       quick_pick.items = configs.map((config, index) => {
         const description_parts = [config.provider_name]
         if (config.reasoning_effort) {
@@ -98,9 +90,6 @@ export const get_commit_message_config = async (
           if (button == close_button) {
             quick_pick.hide()
             resolve(undefined)
-          } else if (button == copy_button && message_prompt) {
-            vscode.env.clipboard.writeText(message_prompt)
-            vscode.window.showInformationMessage('Prompt copied to clipboard')
           }
         })
 
