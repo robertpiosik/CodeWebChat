@@ -35,14 +35,14 @@ When pair-programming with Code Web Chat you foster codebase understanding and p
 
 > “The only way to go fast, is to go well.” ― Robert C. Martin, Clean Architecture
 
-## Enabling autofill in browser
+## Enabling autofill in chatbots
 
 Start using [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt) (also called [gems](https://gemini.google/pl/overview/gems) or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)) without the tedious copy and paste!
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
 
-Like all of CWC, the extension is [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser) and works with minimal permissions for your absolute privacy and security.
+Like all of CWC, the browser extension is [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser) and works with minimal permissions for your absolute privacy and security.
 
 **List of supported chatbots:**
 
@@ -66,11 +66,8 @@ Like all of CWC, the extension is [open-source](https://github.com/robertpiosik/
 - Yuanbao
 - Z AI
 
-> [!TIP]
-> With the browser extension you can include markdown-parsed websites in context. Go to target website, click the extension's icon in the browser's toolbar and click _Enable for context_.
-
 > [!IMPORTANT]
-> The _Apply response_ button placed under responses is not a means of automatic output extraction, it's an alias for the original _copy to s_ button. Review the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/apps/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) for implementation details.
+> In respect to chatbot's Terms of Use, a prompt autofill is all the extension does automatically. Furthermore, the _Apply response_ button placed under responses is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button. Review the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/apps/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) for implementation details.
 
 > [!NOTE]
 > Use [port forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) on port _55155_ when using remote machine via SSH.
