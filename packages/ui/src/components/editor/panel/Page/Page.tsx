@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import styles from './Page.module.scss'
-import { IconButton } from '../IconButton'
+import { IconButton } from '../../common/IconButton'
 
 type Props = {
   title?: string

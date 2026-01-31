@@ -1,7 +1,7 @@
 import { FC, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
 import styles from './InlineFileItem.module.scss'
-import { IconButton } from '../../../IconButton'
+import { IconButton } from '../../../../common/IconButton'
 
 type Props = {
   content: string

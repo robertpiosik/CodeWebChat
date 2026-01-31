@@ -2,9 +2,8 @@ import styles from './ConfigurationsList.module.scss'
 import cn from 'classnames'
 import { Radio } from '../../panel/Radio'
 import { ReactSortable } from 'react-sortablejs'
-import { IconButton } from '../../panel/IconButton'
+import { IconButton } from '../../common/IconButton'
 import { TextButton } from '../TextButton'
-import { Button } from '../../common/Button'
 
 export namespace ConfigurationsList {
   export type Configuration = {

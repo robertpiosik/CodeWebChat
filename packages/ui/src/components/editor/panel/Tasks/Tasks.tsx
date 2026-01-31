@@ -7,7 +7,7 @@ import { Textarea } from '../../common/Textarea'
 import { use_periodic_re_render } from '../../../../hooks/use-periodic-re-render'
 import cn from 'classnames'
 import { Task } from '@shared/types/task'
-import { IconButton } from '../IconButton'
+import { IconButton } from '../../common/IconButton'
 import { TaskGroup, SortableTask } from './components/TaskGroup'
 import { use_auto_focus_new_task } from './hooks/use-auto-focus-new-task'
 

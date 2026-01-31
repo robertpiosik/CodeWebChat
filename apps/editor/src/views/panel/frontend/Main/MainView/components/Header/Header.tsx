@@ -4,7 +4,7 @@ import { MODE, Mode } from '@/views/panel/types/main-view-mode'
 import { use_is_narrow_viewport, use_is_mac } from '@shared/hooks'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Dropdown as UiDropdown } from '@ui/components/editor/panel/Dropdown'
-import { IconButton as UiIconButton } from '@ui/components/editor/panel/IconButton'
+import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
 import styles from './Header.module.scss'
 import {
   api_prompt_type_labels,

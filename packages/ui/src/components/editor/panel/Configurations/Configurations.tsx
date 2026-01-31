@@ -1,7 +1,7 @@
 import styles from './Configurations.module.scss'
 import cn from 'classnames'
 import { ReactSortable } from 'react-sortablejs'
-import { IconButton } from '../IconButton/IconButton'
+import { IconButton } from '../../common/IconButton'
 import { Button } from '../../common/Button'
 import { ListHeader } from '../ListHeader'
 

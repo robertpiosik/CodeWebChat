@@ -3,7 +3,7 @@ import cn from 'classnames'
 import { FileInPreview } from '@shared/types/file-in-preview'
 import styles from './FileItem.module.scss'
 import { Checkbox } from '../../../../common/Checkbox'
-import { IconButton } from '../../../IconButton/IconButton'
+import { IconButton } from '../../../../common/IconButton'
 
 type Props = {
   file: FileInPreview

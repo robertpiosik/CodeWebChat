@@ -3,7 +3,7 @@ import styles from './Timeline.module.scss'
 import cn from 'classnames'
 import dayjs from 'dayjs'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
-import { IconButton } from '../IconButton/IconButton'
+import { IconButton } from '../../common/IconButton'
 
 dayjs.extend(localizedFormat)
 
