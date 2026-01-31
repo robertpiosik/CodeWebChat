@@ -271,6 +271,10 @@
         "title": "Check Parent Folder"
       },
       {
+        "command": "codeWebChat.uncheckParentFolder",
+        "title": "Uncheck Parent Folder"
+      },
+      {
         "command": "codeWebChat.referenceInPrompt",
         "title": "Reference in Prompt",
         "category": "Code Web Chat"
@@ -392,6 +396,10 @@
         },
         {
           "command": "codeWebChat.checkParentFolder",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.uncheckParentFolder",
           "when": "false"
         },
         {
@@ -570,6 +578,11 @@
           "command": "codeWebChat.checkParentFolder",
           "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
           "group": "2_modification@1"
+        },
+        {
+          "command": "codeWebChat.uncheckParentFolder",
+          "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
+          "group": "2_modification@1.5"
         },
         {
           "command": "codeWebChat.referenceInPrompt",
