@@ -15,8 +15,6 @@ import { ProgressModal as UiProgressModal } from '@ui/components/editor/panel/mo
 import { ApiManagerModal as UiApiManagerModal } from '@ui/components/editor/panel/modals/ApiManagerModal'
 import { QRCodeModal as UiQRCodeModal } from '@ui/components/editor/panel/modals/QRCodeModal'
 import { AutoClosingModal as UiAutoClosingModal } from '@ui/components/editor/panel/modals/AutoClosingModal'
-import { CommitMessageModal as UiCommitMessageModal } from '@ui/components/editor/panel/modals/CommitMessageModal'
-import { StageFilesModal as UiStageFilesModal } from '@ui/components/editor/panel/modals/StageFilesModal'
 import { EditCheckpointDescriptionModal as UiEditCheckpointDescriptionModal } from '@ui/components/editor/panel/modals/EditCheckpointDescriptionModal'
 import { use_panel } from './hooks/use-panel'
 import { FileInPreview } from '@shared/types/file-in-preview'
@@ -48,12 +46,6 @@ export const Panel = () => {
     api_manager_progress_state,
     auto_closing_modal_title,
     set_auto_closing_modal_title,
-    commit_message_to_review,
-    set_commit_message_to_review,
-    files_to_stage,
-    set_files_to_stage,
-    commit_button_enabling_trigger_count,
-    set_commit_button_enabling_trigger_count,
     apply_button_enabling_trigger_count,
     selected_history_item_created_at,
     set_selected_history_item_created_at,
@@ -80,8 +72,6 @@ export const Panel = () => {
     chat_input_focus_and_select_key,
     set_chat_input_focus_and_select_key,
     context_size_warning_threshold,
-    has_changes_to_commit,
-    has_some_git_repositories,
     can_undo,
     context_file_paths,
     presets_collapsed,
@@ -194,12 +184,6 @@ export const Panel = () => {
     })
   }
 
-  const handle_commit_click = () => {
-    post_message(vscode, {
-      command: 'COMMIT_CHANGES'
-    })
-  }
-
   const handle_response_history_item_click = (item: ResponseHistoryItem) => {
     post_message(vscode, {
       command: 'APPLY_RESPONSE_FROM_HISTORY',
@@ -232,11 +216,8 @@ export const Panel = () => {
 
   const layout_context_value = {
     can_undo,
-    has_changes_to_commit,
     on_apply_click: handle_apply_click,
     on_undo_click: handle_undo_click,
-    on_commit_click: handle_commit_click,
-    commit_button_enabling_trigger_count,
     apply_button_enabling_trigger_count
   }
 
@@ -250,7 +231,6 @@ export const Panel = () => {
           <Layout
             on_donate_click={() => set_viewing_donations(true)}
             are_links_dimmed={active_view == 'main'}
-            has_some_git_repositories={has_some_git_repositories}
           >
             <div
               className={cn(styles.content, {
@@ -718,62 +698,6 @@ export const Panel = () => {
                 set_checkpoint_to_edit(undefined)
               }}
               on_cancel={() => set_checkpoint_to_edit(undefined)}
-            />
-          </div>
-        )}
-
-        {files_to_stage && (
-          <div className={styles.slot}>
-            <UiStageFilesModal
-              files={files_to_stage}
-              on_stage={(selected_files) => {
-                post_message(vscode, {
-                  command: 'PROCEED_WITH_COMMIT',
-                  files_to_stage: selected_files
-                })
-                set_files_to_stage(undefined)
-              }}
-              on_cancel={() => {
-                post_message(vscode, { command: 'CANCEL_COMMIT_MESSAGE' })
-                set_files_to_stage(undefined)
-                set_commit_button_enabling_trigger_count((k) => k + 1)
-              }}
-              on_go_to_file={(file) => {
-                post_message(vscode, {
-                  command: 'GO_TO_FILE',
-                  file_path: file
-                })
-              }}
-              on_show_diff={(file) => {
-                post_message(vscode, {
-                  command: 'SHOW_DIFF',
-                  file_path: file
-                })
-              }}
-            />
-          </div>
-        )}
-
-        {commit_message_to_review && (
-          <div className={styles.slot}>
-            <UiCommitMessageModal
-              commit_message={commit_message_to_review.commit_message}
-              auto_accept_after_seconds={
-                commit_message_to_review.auto_accept_after_seconds
-              }
-              on_accept={(message) => {
-                post_message(vscode, {
-                  command: 'ACCEPT_COMMIT_MESSAGE',
-                  commit_message: message
-                })
-                set_commit_message_to_review(undefined)
-                set_commit_button_enabling_trigger_count((k) => k + 1)
-              }}
-              on_cancel={() => {
-                post_message(vscode, { command: 'CANCEL_COMMIT_MESSAGE' })
-                set_commit_message_to_review(undefined)
-                set_commit_button_enabling_trigger_count((k) => k + 1)
-              }}
             />
           </div>
         )}

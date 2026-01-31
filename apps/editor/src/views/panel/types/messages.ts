@@ -330,10 +330,6 @@ export interface GetWorkspaceStateMessage extends BaseMessage {
   command: 'GET_WORKSPACE_STATE'
 }
 
-export interface RequestGitStateMessage extends BaseMessage {
-  command: 'REQUEST_GIT_STATE'
-}
-
 export interface UpdateLastUsedPresetMessage extends BaseMessage {
   command: 'UPDATE_LAST_USED_PRESET'
   preset_name: string
@@ -355,24 +351,6 @@ export interface CancelIntelligentUpdateFileInPreviewMessage extends BaseMessage
 export interface FixAllFailedFilesMessage extends BaseMessage {
   command: 'FIX_ALL_FAILED_FILES'
   files: { file_path: string; workspace_name?: string }[]
-}
-
-export interface CommitChangesMessage extends BaseMessage {
-  command: 'COMMIT_CHANGES'
-}
-
-export interface ProceedWithCommitMessage extends BaseMessage {
-  command: 'PROCEED_WITH_COMMIT'
-  files_to_stage: string[]
-}
-
-export interface AcceptCommitMessage extends BaseMessage {
-  command: 'ACCEPT_COMMIT_MESSAGE'
-  commit_message: string
-}
-
-export interface CancelCommitMessage extends BaseMessage {
-  command: 'CANCEL_COMMIT_MESSAGE'
 }
 
 export interface ManageConfigurationsMessage extends BaseMessage {
@@ -557,15 +535,10 @@ export type FrontendMessage =
   | ShowDiffMessage
   | OpenFileAndSelectMessage
   | GetWorkspaceStateMessage
-  | RequestGitStateMessage
   | IntelligentUpdateFileInPreviewMessage
   | CancelIntelligentUpdateFileInPreviewMessage
   | UpdateLastUsedPresetMessage
   | FixAllFailedFilesMessage
-  | CommitChangesMessage
-  | ProceedWithCommitMessage
-  | AcceptCommitMessage
-  | CancelCommitMessage
   | ManageConfigurationsMessage
   | UndoMessage
   | ApplyResponseFromHistoryMessage
@@ -639,12 +612,6 @@ export interface EditorStateChangedMessage extends BaseMessage {
 export interface EditorSelectionChangedMessage extends BaseMessage {
   command: 'EDITOR_SELECTION_CHANGED'
   current_selection: SelectionState | null
-}
-
-export interface GitStateChangedMessage extends BaseMessage {
-  command: 'GIT_STATE_CHANGED'
-  has_changes_to_commit: boolean
-  has_some_git_repositories: boolean
 }
 
 export interface ChatHistoryMessage extends BaseMessage {
@@ -804,21 +771,6 @@ export interface UpdateFileInPreviewMessage extends BaseMessage {
   file: FileInPreview
 }
 
-export interface ShowStageFilesModalMessage extends BaseMessage {
-  command: 'SHOW_STAGE_FILES_MODAL'
-  files: { path: string; status: number }[]
-}
-
-export interface ShowCommitMessageModalMessage extends BaseMessage {
-  command: 'SHOW_COMMIT_MESSAGE_MODAL'
-  commit_message: string
-  auto_accept_after_seconds: number
-}
-
-export interface CommitProcessCancelledMessage extends BaseMessage {
-  command: 'COMMIT_PROCESS_CANCELLED'
-}
-
 export interface CollapsedStatesMessage extends BaseMessage {
   command: 'COLLAPSED_STATES'
   presets_collapsed_by_web_mode: { [mode in WebPromptType]?: boolean }
@@ -860,7 +812,6 @@ export type BackendMessage =
   | ApiToolConfigurationsMessage
   | PresetsMessage
   | EditorStateChangedMessage
-  | GitStateChangedMessage
   | EditorSelectionChangedMessage
   | ChatHistoryMessage
   | ResponseHistoryMessage
@@ -889,9 +840,6 @@ export type BackendMessage =
   | HideApiManagerProgressMessage
   | ShowAutoClosingModalMessage
   | UpdateFileInPreviewMessage
-  | ShowStageFilesModalMessage
-  | ShowCommitMessageModalMessage
-  | CommitProcessCancelledMessage
   | CollapsedStatesMessage
   | CheckpointsMessage
   | CurrentlyOpenFileTextMessage

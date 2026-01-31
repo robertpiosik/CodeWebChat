@@ -8,22 +8,16 @@ import { LayoutContext } from '../../../contexts/LayoutContext'
 type Props = {
   on_donate_click: () => void
   are_links_dimmed?: boolean
-  has_some_git_repositories?: boolean
 }
 
 export const Footer: React.FC<Props> = (props) => {
   const {
     can_undo,
-    has_changes_to_commit,
     on_apply_click,
     on_undo_click,
-    on_commit_click,
-    commit_button_enabling_trigger_count,
     apply_button_enabling_trigger_count
   } = useContext(LayoutContext)
 
-  const [is_commit_disabled_temporarily, set_is_commit_disabled_temporarily] =
-    useState(false)
   const [is_apply_disabled_temporarily, set_is_apply_disabled_temporarily] =
     useState(false)
 
@@ -42,10 +36,6 @@ export const Footer: React.FC<Props> = (props) => {
   }, [compact_step, report_width])
 
   useEffect(() => {
-    set_is_commit_disabled_temporarily(false)
-  }, [commit_button_enabling_trigger_count])
-
-  useEffect(() => {
     set_is_apply_disabled_temporarily(false)
   }, [apply_button_enabling_trigger_count])
 
@@ -60,14 +50,6 @@ export const Footer: React.FC<Props> = (props) => {
     set_is_apply_disabled_temporarily(true)
     on_apply_click()
     setTimeout(() => set_is_apply_disabled_temporarily(false), 10000)
-  }
-
-  const handle_commit_click = () => {
-    if (!has_changes_to_commit) return
-
-    set_is_commit_disabled_temporarily(true)
-    on_commit_click()
-    setTimeout(() => set_is_commit_disabled_temporarily(false), 10000)
   }
 
   return (
@@ -154,33 +136,6 @@ export const Footer: React.FC<Props> = (props) => {
               )}
             />
           </button>
-          {props.has_some_git_repositories && (
-            <button
-              className={cn(styles['footer__action-button'], {
-                [styles['footer__action-button--compact']]: compact_step >= 2
-              })}
-              onClick={handle_commit_click}
-              title={
-                has_changes_to_commit && !is_commit_disabled_temporarily
-                  ? 'Commit changes'
-                  : 'No changes to commit'
-              }
-              disabled={
-                !has_changes_to_commit || is_commit_disabled_temporarily
-              }
-            >
-              <span className={styles['footer__action-button__text']}>
-                Commit
-              </span>
-              <span
-                className={cn(
-                  styles['footer__action-button__icon'],
-                  'codicon',
-                  'codicon-git-commit'
-                )}
-              />
-            </button>
-          )}
         </div>
       </div>
     </>

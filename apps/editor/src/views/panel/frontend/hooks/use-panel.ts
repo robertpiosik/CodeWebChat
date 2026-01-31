@@ -46,19 +46,6 @@ export const use_panel = (vscode: any) => {
   const [auto_closing_modal_title, set_auto_closing_modal_title] = useState<
     string | undefined
   >()
-  const [commit_message_to_review, set_commit_message_to_review] = useState<
-    | {
-        commit_message: string
-        auto_accept_after_seconds: number
-      }
-    | undefined
-  >()
-  const [files_to_stage, set_files_to_stage] =
-    useState<{ path: string; status: number }[]>()
-  const [
-    commit_button_enabling_trigger_count,
-    set_commit_button_enabling_trigger_count
-  ] = useState(0)
   const [
     apply_button_enabling_trigger_count,
     set_apply_button_enabling_trigger_count
@@ -106,10 +93,6 @@ export const use_panel = (vscode: any) => {
     useState(0)
   const [context_size_warning_threshold, set_context_size_warning_threshold] =
     useState<number>()
-  const [has_changes_to_commit, set_has_changes_to_commit] =
-    useState<boolean>(false)
-  const [has_some_git_repositories, set_has_some_git_repositories] =
-    useState<boolean>(true)
   const [can_undo, set_can_undo] = useState<boolean>(false)
   const [context_file_paths, set_context_file_paths] = useState<string[]>([])
   const [presets_collapsed_by_web_mode, set_presets_collapsed_by_web_mode] =
@@ -354,22 +337,10 @@ export const use_panel = (vscode: any) => {
         message.command == 'RESET_APPLY_BUTTON_TEMPORARY_DISABLED_STATE'
       ) {
         set_apply_button_enabling_trigger_count((c) => c + 1)
-      } else if (message.command == 'SHOW_COMMIT_MESSAGE_MODAL') {
-        set_commit_message_to_review({
-          commit_message: message.commit_message,
-          auto_accept_after_seconds: message.auto_accept_after_seconds
-        })
-      } else if (message.command == 'SHOW_STAGE_FILES_MODAL') {
-        set_files_to_stage(message.files)
-      } else if (message.command == 'COMMIT_PROCESS_CANCELLED') {
-        set_commit_button_enabling_trigger_count((k) => k + 1)
       } else if (message.command == 'RESPONSE_HISTORY') {
         set_response_history(message.history)
       } else if (message.command == 'CONTEXT_SIZE_WARNING_THRESHOLD') {
         set_context_size_warning_threshold(message.threshold)
-      } else if (message.command == 'GIT_STATE_CHANGED') {
-        set_has_changes_to_commit(message.has_changes_to_commit)
-        set_has_some_git_repositories(message.has_some_git_repositories)
       } else if (message.command == 'CAN_UNDO_CHANGED') {
         set_can_undo(message.can_undo)
       } else if (message.command == 'SHOW_PREVIEW_ONGOING_MODAL') {
@@ -394,7 +365,6 @@ export const use_panel = (vscode: any) => {
       { command: 'REQUEST_EDITOR_SELECTION_STATE' },
       { command: 'GET_WORKSPACE_STATE' },
       { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' },
-      { command: 'REQUEST_GIT_STATE' },
       { command: 'GET_SEND_WITH_SHIFT_ENTER' },
       { command: 'GET_COLLAPSED_STATES' },
       { command: 'GET_CHECKPOINTS' },
@@ -550,12 +520,6 @@ export const use_panel = (vscode: any) => {
     api_manager_progress_state,
     auto_closing_modal_title,
     set_auto_closing_modal_title,
-    commit_message_to_review,
-    set_commit_message_to_review,
-    files_to_stage,
-    set_files_to_stage,
-    commit_button_enabling_trigger_count,
-    set_commit_button_enabling_trigger_count,
     apply_button_enabling_trigger_count,
     selected_history_item_created_at,
     set_selected_history_item_created_at,
@@ -582,8 +546,6 @@ export const use_panel = (vscode: any) => {
     chat_input_focus_and_select_key,
     set_chat_input_focus_and_select_key,
     context_size_warning_threshold,
-    has_changes_to_commit,
-    has_some_git_repositories,
     can_undo,
     context_file_paths,
     presets_collapsed: web_prompt_type

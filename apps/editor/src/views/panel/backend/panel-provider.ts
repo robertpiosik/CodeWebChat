@@ -61,10 +61,6 @@ import {
   handle_discard_user_changes_in_preview,
   handle_intelligent_update_file_in_preview,
   handle_response_preview,
-  handle_commit_changes,
-  handle_accept_commit_message,
-  handle_cancel_commit_message,
-  handle_proceed_with_commit,
   handle_get_collapsed_states,
   handle_manage_configurations,
   handle_save_component_collapsed_state,
@@ -139,7 +135,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   }[] = []
   public api_call_cancel_token_source: CancelTokenSource | null = null
   public api_manager!: ApiManager
-  public commit_was_staged_by_script: boolean = false
   public response_history: ResponseHistoryItem[] = []
   public active_checkpoint_delete_operation: {
     finalize: () => Promise<void>
@@ -259,8 +254,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         })
       }
     })
-
-    this._watch_git_state()
 
     this.context.subscriptions.push(
       vscode.workspace.onDidChangeWorkspaceFolders(() => {
@@ -728,16 +721,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               panel_provider: this,
               preset_name: message.preset_name
             })
-          } else if (message.command == 'REQUEST_GIT_STATE') {
-            this._send_git_state()
-          } else if (message.command == 'COMMIT_CHANGES') {
-            await handle_commit_changes(this)
-          } else if (message.command == 'PROCEED_WITH_COMMIT') {
-            await handle_proceed_with_commit(this, message.files_to_stage)
-          } else if (message.command == 'ACCEPT_COMMIT_MESSAGE') {
-            await handle_accept_commit_message(this, message.commit_message)
-          } else if (message.command == 'CANCEL_COMMIT_MESSAGE') {
-            await handle_cancel_commit_message(this)
           } else if (message.command == 'MANAGE_CONFIGURATIONS') {
             await handle_manage_configurations(message)
           } else if (message.command == 'GET_COLLAPSED_STATES') {
@@ -890,78 +873,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       command: 'CONTEXT_SIZE_WARNING_THRESHOLD',
       threshold
     })
-  }
-
-  private _send_git_state() {
-    try {
-      const git_extension =
-        vscode.extensions.getExtension('vscode.git')?.exports
-      if (!git_extension) {
-        return
-      }
-      const git = git_extension.getAPI(1)
-      if (!git) {
-        return
-      }
-      const has_changes = git.repositories.some(
-        (repo: any) =>
-          repo.state.workingTreeChanges.length > 0 ||
-          repo.state.indexChanges.length > 0
-      )
-      this.send_message({
-        command: 'GIT_STATE_CHANGED',
-        has_changes_to_commit: has_changes,
-        has_some_git_repositories: git.repositories.length > 0
-      })
-    } catch (error) {
-      Logger.warn({
-        function_name: '_send_git_state',
-        message: 'Failed to get git state',
-        data: error
-      })
-    }
-  }
-
-  private _watch_git_state() {
-    try {
-      const git_extension =
-        vscode.extensions.getExtension('vscode.git')?.exports
-      if (!git_extension) {
-        throw new Error('Git extension not found or not yet active.')
-      }
-      const git = git_extension.getAPI(1)
-      if (!git) {
-        throw new Error('Git API not available yet.')
-      }
-
-      for (const repo of git.repositories) {
-        repo.state.onDidChange(
-          this._send_git_state,
-          this,
-          this.context.subscriptions
-        )
-      }
-
-      git.onDidOpenRepository(
-        (repo: any) => {
-          repo.state.onDidChange(
-            this._send_git_state,
-            this,
-            this.context.subscriptions
-          )
-          this._send_git_state()
-        },
-        this,
-        this.context.subscriptions
-      )
-    } catch (error) {
-      Logger.warn({
-        function_name: '_watch_git_state',
-        message: 'Failed to initialize git watcher, will retry in 1s',
-        data: error
-      })
-      setTimeout(() => this._watch_git_state(), 1000)
-    }
   }
 
   public set_undo_button_state = (can_undo: boolean) => {
