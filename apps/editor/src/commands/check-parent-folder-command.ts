@@ -43,9 +43,39 @@ export const check_parent_folder_command = (
         return
       }
 
-      const selected = await vscode.window.showQuickPick(folders, {
-        placeHolder: 'Select a parent folder to check',
-        title: 'Parent Folders'
+      const selected = await new Promise<
+        { label: string; full_path: string } | undefined
+      >((resolve) => {
+        const quick_pick = vscode.window.createQuickPick<{
+          label: string
+          full_path: string
+        }>()
+        quick_pick.items = folders
+        quick_pick.placeholder = 'Select a parent folder to check'
+        quick_pick.title = 'Parent Folders'
+        quick_pick.buttons = [
+          {
+            iconPath: new vscode.ThemeIcon('close'),
+            tooltip: 'Close'
+          }
+        ]
+
+        quick_pick.onDidTriggerButton(() => {
+          resolve(undefined)
+          quick_pick.hide()
+        })
+
+        quick_pick.onDidAccept(() => {
+          resolve(quick_pick.selectedItems[0])
+          quick_pick.hide()
+        })
+
+        quick_pick.onDidHide(() => {
+          resolve(undefined)
+          quick_pick.dispose()
+        })
+
+        quick_pick.show()
       })
 
       if (selected) {

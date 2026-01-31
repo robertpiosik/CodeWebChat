@@ -1,0 +1,56 @@
+import styles from './IconButton.module.scss'
+import cn from 'classnames'
+
+type Props = {
+  codicon_icon: string
+  on_click?: (e: any) => void
+  on_mouse_down?: (e: any) => void
+  href?: string
+  title?: string
+  label?: string
+  style?: React.CSSProperties
+}
+
+export const IconButton: React.FC<Props> = (props) => {
+  const icon_element = (
+    <span className={styles['icon-wrapper']}>
+      <span className={cn('codicon', `codicon-${props.codicon_icon}`)} />
+    </span>
+  )
+
+  const label_element = props.label && <span>{props.label}</span>
+
+  if (props.href) {
+    return (
+      <a
+        href={props.href}
+        className={cn(styles['icon-button'], {
+          [styles['with-label']]: !!props.label
+        })}
+        onMouseDown={props.on_mouse_down}
+        title={props.title}
+        target="_blank"
+        style={props.style}
+        rel="noopener noreferrer"
+      >
+        {label_element}
+        {icon_element}
+      </a>
+    )
+  } else {
+    return (
+      <button
+        className={cn(styles['icon-button'], {
+          [styles['with-label']]: !!props.label
+        })}
+        onMouseDown={props.on_mouse_down}
+        onClick={props.on_click}
+        title={props.title}
+        style={props.style}
+      >
+        {label_element}
+        {icon_element}
+      </button>
+    )
+  }
+}

@@ -10,6 +10,7 @@ import { Section } from '@ui/components/editor/settings/Section'
 import { Input } from '@ui/components/editor/common/Input'
 import { Textarea } from '@ui/components/editor/common/Textarea'
 import { Toggler } from '@ui/components/editor/common/Toggler'
+import { Button } from '@ui/components/editor/common/Button'
 import {
   ConfigurationForClient,
   ProviderForClient,
@@ -342,6 +343,11 @@ export const Home: React.FC<Props> = (props) => {
           title="Model Providers"
           subtitle="Manage your API keys for use with API tools."
           on_stuck_change={model_providers_on_stuck_change}
+          actions={
+            <Button on_click={() => props.on_add_provider()}>
+              New Provider...
+            </Button>
+          }
         >
           <Group>
             <ModelProvidersSection
@@ -363,6 +369,11 @@ export const Home: React.FC<Props> = (props) => {
           title="Edit Context"
           subtitle="Pair-programming using natural language instructions."
           on_stuck_change={edit_context_on_stuck_change}
+          actions={
+            <Button on_click={() => props.on_add_config('EDIT_CONTEXT')}>
+              New Configuration...
+            </Button>
+          }
         >
           <Group>
             <ApiToolConfigurationSection
@@ -402,6 +413,11 @@ export const Home: React.FC<Props> = (props) => {
           title="Intelligent Update"
           subtitle="Integrate changes from malformed markdown code blocks."
           on_stuck_change={intelligent_update_on_stuck_change}
+          actions={
+            <Button on_click={() => props.on_add_config('INTELLIGENT_UPDATE')}>
+              New Configuration...
+            </Button>
+          }
         >
           <Group>
             <ApiToolConfigurationSection
@@ -447,6 +463,11 @@ export const Home: React.FC<Props> = (props) => {
           title="Prune Context"
           subtitle="Remove irrelevant files from the current context selection."
           on_stuck_change={prune_context_on_stuck_change}
+          actions={
+            <Button on_click={() => props.on_add_config('PRUNE_CONTEXT')}>
+              New Configuration...
+            </Button>
+          }
         >
           <Group>
             <ApiToolConfigurationSection
@@ -471,6 +492,11 @@ export const Home: React.FC<Props> = (props) => {
           title="Code at Cursor"
           subtitle="Get accurate inline suggestions from state-of-the-art models."
           on_stuck_change={code_completions_on_stuck_change}
+          actions={
+            <Button on_click={() => props.on_add_config('CODE_COMPLETIONS')}>
+              New Configuration...
+            </Button>
+          }
         >
           <Group>
             <ApiToolConfigurationSection
@@ -499,8 +525,13 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['commit-messages'] = el)}
           group="API Tool"
           title="Commit Messages"
-          subtitle="Meaningful summaries of changes adhering to your style."
+          subtitle="Meaningful summaries of changes adhering to your preffered style."
           on_stuck_change={commit_messages_on_stuck_change}
+          actions={
+            <Button on_click={() => props.on_add_config('COMMIT_MESSAGES')}>
+              New Configuration...
+            </Button>
+          }
         >
           <Group>
             <ApiToolConfigurationSection

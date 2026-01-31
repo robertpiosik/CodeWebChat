@@ -79,25 +79,29 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
     </div>
   )
 
+  const render_header = () => (
+    <div className={styles.header}>
+      <div className={styles['header__left']}>
+        <div className={styles['header__left__amount']}>
+          {props.configurations.length} configuration
+          {props.configurations.length == 1 ? '' : 's'}
+        </div>
+        {props.on_unset_default && has_default && (
+          <>
+            <span>·</span>
+            <TextButton on_click={props.on_unset_default}>
+              Unset default
+            </TextButton>
+          </>
+        )}
+      </div>
+      <IconButton codicon_icon="add" on_click={() => props.on_add()} />
+    </div>
+  )
+
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <div className={styles['header__left']}>
-          <div className={styles['header__left__amount']}>
-            {props.configurations.length} configuration
-            {props.configurations.length == 1 ? '' : 's'}
-          </div>
-          {props.on_unset_default && has_default && (
-            <>
-              <span>·</span>
-              <TextButton on_click={props.on_unset_default}>
-                Unset default
-              </TextButton>
-            </>
-          )}
-        </div>
-        <Button on_click={() => props.on_add()}>New Configuration...</Button>
-      </div>
+      {render_header()}
       <div className={styles.list}>
         {props.configurations.length > 0 &&
           (sortable ? (
@@ -126,6 +130,7 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
             props.configurations.map((item, index) => render_item(item, index))
           ))}
       </div>
+      {props.configurations.length > 0 && render_header()}
     </div>
   )
 }

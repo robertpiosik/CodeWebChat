@@ -158,12 +158,22 @@ export const remove_file_from_context_command = (
             label: f.label,
             full_path: f.full_path
           }))
-          folder_quick_pick.buttons = [vscode.QuickInputButtons.Back]
+          folder_quick_pick.buttons = [
+            vscode.QuickInputButtons.Back,
+            {
+              iconPath: new vscode.ThemeIcon('close'),
+              tooltip: 'Close'
+            }
+          ]
 
           let folder_accepted = false
+          let should_close_fully = false
 
           folder_quick_pick.onDidTriggerButton((button) => {
             if (button === vscode.QuickInputButtons.Back) {
+              folder_quick_pick.hide()
+            } else if (button.tooltip == 'Close') {
+              should_close_fully = true
               folder_quick_pick.hide()
             }
           })
@@ -199,6 +209,11 @@ export const remove_file_from_context_command = (
           folder_quick_pick.onDidHide(() => {
             folder_quick_pick.dispose()
             is_showing_folder_quick_pick = false
+
+            if (should_close_fully) {
+              quick_pick.dispose()
+              return
+            }
 
             if (!folder_accepted) {
               if (file_items_cache.length > 0) {

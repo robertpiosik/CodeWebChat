@@ -42,6 +42,13 @@
     margin-top: -2px;
   }
 
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+
   &__group {
     font-weight: 400;
     color: var(--vscode-textLink-foreground);

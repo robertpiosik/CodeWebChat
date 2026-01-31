@@ -90,7 +90,7 @@ Remove irrelevant files from the current context selection.
 Get accurate inline suggestions from state-of-the-art models.
 
 **🛠️ Commit Messages** \
-Meaningful summaries of changes adhering to your style.
+Meaningful summaries of changes adhering to your preffered style.
 
 ## Enterprise security
 

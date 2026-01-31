@@ -2,7 +2,6 @@ import styles from './ModelProviders.module.scss'
 import { ReactSortable } from 'react-sortablejs'
 import cn from 'classnames'
 import { IconButton } from '../../panel/IconButton'
-import { Button } from '../../common/Button'
 
 export namespace ModelProviders {
   export type Provider = {
@@ -71,17 +70,19 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
     </div>
   )
 
+  const render_header = () => (
+    <div className={styles.header}>
+      <div className={styles.header__amount}>
+        {props.providers.length} model provider
+        {props.providers.length == 1 ? '' : 's'}
+      </div>
+      <IconButton codicon_icon="add" on_click={() => props.on_add_provider()} />
+    </div>
+  )
+
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <div className={styles.header__amount}>
-          {props.providers.length} model provider
-          {props.providers.length == 1 ? '' : 's'}
-        </div>
-        <Button on_click={() => props.on_add_provider()}>
-          New Provider...
-        </Button>
-      </div>
+      {render_header()}
       <div className={styles.list}>
         {props.providers.length > 0 && (
           <ReactSortable
@@ -107,6 +108,7 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
           </ReactSortable>
         )}
       </div>
+      {props.providers.length > 0 && render_header()}
     </div>
   )
 }
