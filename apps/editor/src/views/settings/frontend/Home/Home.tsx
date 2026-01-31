@@ -70,7 +70,7 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
 type Props = {
   // data
   providers: ProviderForClient[]
-  code_completions_configs: ConfigurationForClient[]
+  code_at_cursor_configs: ConfigurationForClient[]
   commit_messages_configs: ConfigurationForClient[]
   edit_context_configs: ConfigurationForClient[]
   edit_context_system_instructions: string
@@ -92,7 +92,7 @@ type Props = {
   // handlers
   set_providers: (providers: ProviderForClient[]) => void
   set_edit_context_configs: (configs: ConfigurationForClient[]) => void
-  set_code_completions_configs: (configs: ConfigurationForClient[]) => void
+  set_code_at_cursor_configs: (configs: ConfigurationForClient[]) => void
   set_intelligent_update_configs: (configs: ConfigurationForClient[]) => void
   set_prune_context_configs: (configs: ConfigurationForClient[]) => void
   set_commit_messages_configs: (configs: ConfigurationForClient[]) => void
@@ -118,12 +118,18 @@ type Props = {
   on_open_editor_settings: () => void
   on_open_ignore_patterns_settings: () => void
   on_open_allow_patterns_settings: () => void
-  on_add_provider: (params?: { insertion_index?: number }) => void
+  on_add_provider: (params?: {
+    insertion_index?: number
+    create_on_top?: boolean
+  }) => void
   on_delete_provider: (provider_name: string) => void
   on_edit_provider: (provider_name: string) => void
   on_change_api_key: (provider_name: string) => void
   on_reorder_providers: (reordered_providers: ProviderForClient[]) => void
-  on_add_config: (tool_name: string, insertion_index?: number) => void
+  on_add_config: (
+    tool_name: string,
+    params?: { insertion_index?: number; create_on_top?: boolean }
+  ) => void
   on_reorder_configs: (
     tool_name: string,
     reordered: ConfigurationForClient[]
@@ -185,7 +191,7 @@ export const Home: React.FC<Props> = (props) => {
     (is_stuck: boolean) => handle_stuck_change('edit-context', is_stuck),
     [handle_stuck_change]
   )
-  const code_completions_on_stuck_change = useCallback(
+  const code_at_cursor_on_stuck_change = useCallback(
     (is_stuck: boolean) => handle_stuck_change('code-at-cursor', is_stuck),
     [handle_stuck_change]
   )
@@ -368,7 +374,11 @@ export const Home: React.FC<Props> = (props) => {
           subtitle="Pair-programming using natural language instructions."
           on_stuck_change={edit_context_on_stuck_change}
           actions={
-            <Button on_click={() => props.on_add_config('EDIT_CONTEXT')}>
+            <Button
+              on_click={() =>
+                props.on_add_config('EDIT_CONTEXT', { create_on_top: true })
+              }
+            >
               Add New...
             </Button>
           }
@@ -379,9 +389,7 @@ export const Home: React.FC<Props> = (props) => {
               set_configurations={props.set_edit_context_configs}
               tool_name="EDIT_CONTEXT"
               can_have_default={false}
-              on_add={(params) =>
-                props.on_add_config('EDIT_CONTEXT', params?.insertion_index)
-              }
+              on_add={(params) => props.on_add_config('EDIT_CONTEXT', params)}
               on_reorder={(reordered) =>
                 props.on_reorder_configs('EDIT_CONTEXT', reordered)
               }
@@ -412,7 +420,13 @@ export const Home: React.FC<Props> = (props) => {
           subtitle="Integrate changes from malformed markdown code blocks."
           on_stuck_change={intelligent_update_on_stuck_change}
           actions={
-            <Button on_click={() => props.on_add_config('INTELLIGENT_UPDATE')}>
+            <Button
+              on_click={() =>
+                props.on_add_config('INTELLIGENT_UPDATE', {
+                  create_on_top: true
+                })
+              }
+            >
               Add New...
             </Button>
           }
@@ -424,10 +438,7 @@ export const Home: React.FC<Props> = (props) => {
               tool_name="INTELLIGENT_UPDATE"
               can_have_default={true}
               on_add={(params) =>
-                props.on_add_config(
-                  'INTELLIGENT_UPDATE',
-                  params?.insertion_index
-                )
+                props.on_add_config('INTELLIGENT_UPDATE', params)
               }
               on_reorder={(reordered) =>
                 props.on_reorder_configs('INTELLIGENT_UPDATE', reordered)
@@ -462,7 +473,11 @@ export const Home: React.FC<Props> = (props) => {
           subtitle="Remove irrelevant files from the current context selection."
           on_stuck_change={prune_context_on_stuck_change}
           actions={
-            <Button on_click={() => props.on_add_config('PRUNE_CONTEXT')}>
+            <Button
+              on_click={() =>
+                props.on_add_config('PRUNE_CONTEXT', { create_on_top: true })
+              }
+            >
               Add New...
             </Button>
           }
@@ -473,9 +488,7 @@ export const Home: React.FC<Props> = (props) => {
               set_configurations={props.set_prune_context_configs}
               tool_name="PRUNE_CONTEXT"
               can_have_default={false}
-              on_add={(params) =>
-                props.on_add_config('PRUNE_CONTEXT', params?.insertion_index)
-              }
+              on_add={(params) => props.on_add_config('PRUNE_CONTEXT', params)}
               on_reorder={(reordered) =>
                 props.on_reorder_configs('PRUNE_CONTEXT', reordered)
               }
@@ -489,32 +502,34 @@ export const Home: React.FC<Props> = (props) => {
           group="API Tool"
           title="Code at Cursor"
           subtitle="Get accurate inline suggestions from state-of-the-art models."
-          on_stuck_change={code_completions_on_stuck_change}
+          on_stuck_change={code_at_cursor_on_stuck_change}
           actions={
-            <Button on_click={() => props.on_add_config('CODE_COMPLETIONS')}>
+            <Button
+              on_click={() =>
+                props.on_add_config('CODE_AT_CURSOR', { create_on_top: true })
+              }
+            >
               Add New...
             </Button>
           }
         >
           <Group>
             <ApiToolConfigurationSection
-              configurations={props.code_completions_configs}
-              set_configurations={props.set_code_completions_configs}
-              tool_name="CODE_COMPLETIONS"
+              configurations={props.code_at_cursor_configs}
+              set_configurations={props.set_code_at_cursor_configs}
+              tool_name="CODE_AT_CURSOR"
               can_have_default={true}
-              on_add={(params) =>
-                props.on_add_config('CODE_COMPLETIONS', params?.insertion_index)
-              }
+              on_add={(params) => props.on_add_config('CODE_AT_CURSOR', params)}
               on_reorder={(reordered) =>
-                props.on_reorder_configs('CODE_COMPLETIONS', reordered)
+                props.on_reorder_configs('CODE_AT_CURSOR', reordered)
               }
-              on_edit={(id) => props.on_edit_config('CODE_COMPLETIONS', id)}
-              on_delete={(id) => props.on_delete_config('CODE_COMPLETIONS', id)}
+              on_edit={(id) => props.on_edit_config('CODE_AT_CURSOR', id)}
+              on_delete={(id) => props.on_delete_config('CODE_AT_CURSOR', id)}
               on_set_default={(id) =>
-                props.on_set_default_config('CODE_COMPLETIONS', id)
+                props.on_set_default_config('CODE_AT_CURSOR', id)
               }
               on_unset_default={() =>
-                props.on_unset_default_config('CODE_COMPLETIONS')
+                props.on_unset_default_config('CODE_AT_CURSOR')
               }
             />
           </Group>
@@ -526,7 +541,11 @@ export const Home: React.FC<Props> = (props) => {
           subtitle="Meaningful summaries of changes adhering to your preffered style."
           on_stuck_change={commit_messages_on_stuck_change}
           actions={
-            <Button on_click={() => props.on_add_config('COMMIT_MESSAGES')}>
+            <Button
+              on_click={() =>
+                props.on_add_config('COMMIT_MESSAGES', { create_on_top: true })
+              }
+            >
               Add New...
             </Button>
           }
@@ -538,7 +557,7 @@ export const Home: React.FC<Props> = (props) => {
               tool_name="COMMIT_MESSAGES"
               can_have_default={true}
               on_add={(params) =>
-                props.on_add_config('COMMIT_MESSAGES', params?.insertion_index)
+                props.on_add_config('COMMIT_MESSAGES', params)
               }
               on_reorder={(reordered) =>
                 props.on_reorder_configs('COMMIT_MESSAGES', reordered)

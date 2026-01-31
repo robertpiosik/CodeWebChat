@@ -41,6 +41,7 @@ export interface ReorderModelProvidersMessage {
 export interface AddModelProviderMessage {
   command: 'ADD_MODEL_PROVIDER'
   insertion_index?: number
+  create_on_top?: boolean
 }
 
 export interface DeleteModelProviderMessage {
@@ -58,22 +59,22 @@ export interface ChangeModelProviderKeyMessage {
   provider_name: string
 }
 
-export interface GetCodeCompletionsConfigurationsMessage {
-  command: 'GET_CODE_COMPLETIONS_CONFIGURATIONS'
+export interface GetCodeAtCursorConfigurationsMessage {
+  command: 'GET_CODE_AT_CURSOR_CONFIGURATIONS'
 }
 
-export interface ReorderCodeCompletionsConfigurationsMessage {
-  command: 'REORDER_CODE_COMPLETIONS_CONFIGURATIONS'
+export interface ReorderCodeAtCursorConfigurationsMessage {
+  command: 'REORDER_CODE_AT_CURSOR_CONFIGURATIONS'
   configurations: ConfigurationForClient[]
 }
 
-export interface DeleteCodeCompletionsConfigurationMessage {
-  command: 'DELETE_CODE_COMPLETIONS_CONFIGURATION'
+export interface DeleteCodeAtCursorConfigurationMessage {
+  command: 'DELETE_CODE_AT_CURSOR_CONFIGURATION'
   configuration_id: string
 }
 
-export interface SetDefaultCodeCompletionsConfigurationMessage {
-  command: 'SET_DEFAULT_CODE_COMPLETIONS_CONFIGURATION'
+export interface SetDefaultCodeAtCursorConfigurationMessage {
+  command: 'SET_DEFAULT_CODE_AT_CURSOR_CONFIGURATION'
   configuration_id: string | null
 }
 
@@ -291,10 +292,10 @@ export type FrontendMessage =
   | DeleteModelProviderMessage
   | EditCustomModelProviderMessage
   | ChangeModelProviderKeyMessage
-  | GetCodeCompletionsConfigurationsMessage
-  | ReorderCodeCompletionsConfigurationsMessage
-  | DeleteCodeCompletionsConfigurationMessage
-  | SetDefaultCodeCompletionsConfigurationMessage
+  | GetCodeAtCursorConfigurationsMessage
+  | ReorderCodeAtCursorConfigurationsMessage
+  | DeleteCodeAtCursorConfigurationMessage
+  | SetDefaultCodeAtCursorConfigurationMessage
   | GetEditContextConfigurationsMessage
   | ReorderEditContextConfigurationsMessage
   | DeleteEditContextConfigurationMessage
@@ -347,8 +348,8 @@ export interface ModelProvidersMessage {
   providers: ProviderForClient[]
 }
 
-export interface CodeCompletionsConfigurationsMessage {
-  command: 'CODE_COMPLETIONS_CONFIGURATIONS'
+export interface CodeAtCursorConfigurationsMessage {
+  command: 'CODE_AT_CURSOR_CONFIGURATIONS'
   configurations: ConfigurationForClient[]
 }
 export interface EditContextConfigurationsMessage {
@@ -441,7 +442,7 @@ export interface ShowSectionMessage {
 
 export type BackendMessage =
   | ModelProvidersMessage
-  | CodeCompletionsConfigurationsMessage
+  | CodeAtCursorConfigurationsMessage
   | EditContextConfigurationsMessage
   | IntelligentUpdateConfigurationsMessage
   | PruneContextConfigurationsMessage

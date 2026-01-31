@@ -38,7 +38,7 @@ export const dictionary = {
     NO_FILE_PATHS_FOUND_IN_CLIPBOARD: 'No file paths found in the clipboard.',
     NO_MATCHING_FILES_FOUND_FOR_CLIPBOARD_PATHS:
       'No matching files found in workspace for the paths in clipboard.',
-    NO_CODE_COMPLETIONS_CONFIGURATIONS_FOUND:
+    NO_CODE_AT_CURSOR_CONFIGURATIONS_FOUND:
       'No "Code Completions" configurations found. Please add one in the settings.',
     NO_PRUNE_CONTEXT_CONFIGURATIONS_FOUND:
       'No "Prune Context" configurations found. Please add one in the settings.',
@@ -114,7 +114,7 @@ export const dictionary = {
     PLEASE_CONFIRM: 'Please confirm',
     SKIPPING_INVALID_PATH: (file_path: string) =>
       `Skipping applying change to invalid path: ${file_path}.`,
-    CODE_COMPLETIONS_NO_SELECTION:
+    CODE_AT_CURSOR_NO_SELECTION:
       'Code completions are not supported with active text selection.',
     CANNOT_REFERENCE_FILE_OUTSIDE_WORKSPACE:
       'Cannot reference file outside of the workspace.',
@@ -361,9 +361,9 @@ export const dictionary = {
       'No valid file content found in clipboard.',
     NO_WORKSPACE_PROVIDER: 'No workspace provider available.',
     NO_WORKSPACE_ROOT: 'No workspace root found.',
-    API_PROVIDER_NOT_SPECIFIED_FOR_CODE_COMPLETIONS:
+    API_PROVIDER_NOT_SPECIFIED_FOR_CODE_AT_CURSOR:
       'API provider is not specified for Code Completions tool.',
-    MODEL_NOT_SPECIFIED_FOR_CODE_COMPLETIONS:
+    MODEL_NOT_SPECIFIED_FOR_CODE_AT_CURSOR:
       'Model is not specified for Code Completions tool.',
     API_KEY_MISSING: 'API key is missing. Please add it in the Settings tab.',
     CODE_COMPLETION_ERROR:

@@ -17,8 +17,9 @@ export const handle_upsert_model_provider = async (params: {
   provider: SettingsProvider
   provider_name?: string
   insertion_index?: number
+  create_on_top?: boolean
 }): Promise<void> => {
-  const { provider, provider_name, insertion_index } = params
+  const { provider, provider_name, insertion_index, create_on_top } = params
   const providers_manager = new ModelProvidersManager(provider.context)
 
   const prompt_for_name = async (
@@ -520,7 +521,9 @@ export const handle_upsert_model_provider = async (params: {
     }
   } else {
     // Append new
-    if (actual_insertion_index !== undefined) {
+    if (create_on_top) {
+      updated_providers.unshift(working_provider)
+    } else if (actual_insertion_index !== undefined) {
       updated_providers.splice(actual_insertion_index, 0, working_provider)
     } else {
       updated_providers.push(working_provider)

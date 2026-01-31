@@ -14,7 +14,10 @@ export namespace ModelProviders {
   export type Props = {
     providers: Provider[]
     on_reorder: (providers: Provider[]) => void
-    on_add_provider: (params?: { insertion_index?: number }) => void
+    on_add_provider: (params?: {
+      insertion_index?: number
+      create_on_top?: boolean
+    }) => void
     on_delete_provider: (provider_name: string) => void
     on_edit_provider: (provider_name: string) => void
     on_change_api_key: (provider_name: string) => void
@@ -70,19 +73,24 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
     </div>
   )
 
-  const render_header = () => (
+  const render_header = (is_top: boolean) => (
     <div className={styles.header}>
       <div className={styles.header__amount}>
         {props.providers.length} model provider
         {props.providers.length == 1 ? '' : 's'}
       </div>
-      <IconButton codicon_icon="add" on_click={() => props.on_add_provider()} />
+      <IconButton
+        codicon_icon="add"
+        on_click={() =>
+          props.on_add_provider(is_top ? { create_on_top: true } : undefined)
+        }
+      />
     </div>
   )
 
   return (
     <div className={styles.container}>
-      {render_header()}
+      {render_header(true)}
       <div className={styles.list}>
         {props.providers.length > 0 && (
           <ReactSortable
@@ -108,7 +116,7 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
           </ReactSortable>
         )}
       </div>
-      {props.providers.length > 0 && render_header()}
+      {props.providers.length > 0 && render_header(false)}
     </div>
   )
 }

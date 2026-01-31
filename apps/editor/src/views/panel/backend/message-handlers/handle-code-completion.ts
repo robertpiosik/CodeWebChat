@@ -40,7 +40,7 @@ const get_code_completion_config = async (
   if (code_completions_configs.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
-      dictionary.information_message.NO_CODE_COMPLETIONS_CONFIGURATIONS_FOUND
+      dictionary.information_message.NO_CODE_AT_CURSOR_CONFIGURATIONS_FOUND
     )
     return
   }
@@ -291,7 +291,7 @@ export const handle_code_completion = async (
 
   if (!code_completions_config.provider_name) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.API_PROVIDER_NOT_SPECIFIED_FOR_CODE_COMPLETIONS
+      dictionary.error_message.API_PROVIDER_NOT_SPECIFIED_FOR_CODE_AT_CURSOR
     )
     Logger.warn({
       function_name: 'handle_code_completion',
@@ -300,7 +300,7 @@ export const handle_code_completion = async (
     return
   } else if (!code_completions_config.model) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.MODEL_NOT_SPECIFIED_FOR_CODE_COMPLETIONS
+      dictionary.error_message.MODEL_NOT_SPECIFIED_FOR_CODE_AT_CURSOR
     )
     Logger.warn({
       function_name: 'handle_code_completion',
@@ -331,7 +331,7 @@ export const handle_code_completion = async (
   if (editor) {
     if (!editor.selection.isEmpty) {
       vscode.window.showWarningMessage(
-        dictionary.warning_message.CODE_COMPLETIONS_NO_SELECTION
+        dictionary.warning_message.CODE_AT_CURSOR_NO_SELECTION
       )
       return
     }

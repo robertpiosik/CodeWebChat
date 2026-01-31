@@ -13,7 +13,7 @@ export const use_settings = (vscode: any) => {
   const [providers, set_providers] = useState<ProviderForClient[] | undefined>(
     undefined
   )
-  const [code_completions_configs, set_code_completions_configs] = useState<
+  const [code_at_cursor_configs, set_code_at_cursor_configs] = useState<
     ConfigurationForClient[] | undefined
   >(undefined)
   const [commit_messages_configs, set_commit_messages_configs] = useState<
@@ -73,7 +73,7 @@ export const use_settings = (vscode: any) => {
   useEffect(() => {
     // Request initial data
     post_message(vscode, { command: 'GET_MODEL_PROVIDERS' })
-    post_message(vscode, { command: 'GET_CODE_COMPLETIONS_CONFIGURATIONS' })
+    post_message(vscode, { command: 'GET_CODE_AT_CURSOR_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGES_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_EDIT_CONTEXT_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS' })
@@ -100,8 +100,8 @@ export const use_settings = (vscode: any) => {
         case 'MODEL_PROVIDERS':
           set_providers(message.providers)
           break
-        case 'CODE_COMPLETIONS_CONFIGURATIONS':
-          set_code_completions_configs(message.configurations)
+        case 'CODE_AT_CURSOR_CONFIGURATIONS':
+          set_code_at_cursor_configs(message.configurations)
           break
         case 'COMMIT_MESSAGES_CONFIGURATIONS':
           set_commit_messages_configs(message.configurations)
@@ -174,10 +174,14 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_add_provider = (params?: { insertion_index?: number }) => {
+  const handle_add_provider = (params?: {
+    insertion_index?: number
+    create_on_top?: boolean
+  }) => {
     post_message(vscode, {
       command: 'ADD_MODEL_PROVIDER',
-      insertion_index: params?.insertion_index
+      insertion_index: params?.insertion_index,
+      create_on_top: params?.create_on_top
     })
   }
 
@@ -202,12 +206,16 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_add_config = (tool_name: string, insertion_index?: number) => {
+  const handle_add_config = (
+    tool_name: string,
+    params?: { insertion_index?: number; create_on_top?: boolean }
+  ) => {
     const tool_type = tool_name.toLowerCase().replace(/_/g, '-') as ToolType
     post_message(vscode, {
       command: 'UPSERT_CONFIGURATION',
       tool_type,
-      insertion_index
+      insertion_index: params?.insertion_index,
+      create_on_top: params?.create_on_top
     })
   }
 
@@ -366,8 +374,8 @@ export const use_settings = (vscode: any) => {
   return {
     providers,
     set_providers,
-    code_completions_configs,
-    set_code_completions_configs,
+    code_at_cursor_configs,
+    set_code_at_cursor_configs,
     commit_messages_configs,
     set_commit_messages_configs,
     edit_context_configs,

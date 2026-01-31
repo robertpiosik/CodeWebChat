@@ -38,7 +38,7 @@ export const handle_get_configurations = async (
         await providers_manager.get_code_completions_tool_configs()
       default_config =
         await providers_manager.get_default_code_completions_config()
-      command = 'CODE_COMPLETIONS_CONFIGURATIONS'
+      command = 'CODE_AT_CURSOR_CONFIGURATIONS'
       break
     case 'edit-context':
       saved_configs = await providers_manager.get_edit_context_tool_configs()

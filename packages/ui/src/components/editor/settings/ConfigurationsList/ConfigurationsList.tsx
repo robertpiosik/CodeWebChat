@@ -18,7 +18,10 @@ export namespace ConfigurationsList {
     on_reorder: (configurations: Configuration[]) => void
     on_edit: (configuration_id: string) => void
     on_delete: (configuration_id: string) => void
-    on_add: (params?: { insertion_index?: number }) => void
+    on_add: (params?: {
+      insertion_index?: number
+      create_on_top?: boolean
+    }) => void
     on_set_default?: (configuration_id: string) => void
     on_unset_default?: () => void
     radio_group_name?: string
@@ -78,7 +81,7 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
     </div>
   )
 
-  const render_header = () => (
+  const render_header = (is_top: boolean) => (
     <div className={styles.header}>
       <div className={styles['header__left']}>
         <div className={styles['header__left__amount']}>
@@ -94,13 +97,18 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
           </>
         )}
       </div>
-      <IconButton codicon_icon="add" on_click={() => props.on_add()} />
+      <IconButton
+        codicon_icon="add"
+        on_click={() =>
+          props.on_add(is_top ? { create_on_top: true } : undefined)
+        }
+      />
     </div>
   )
 
   return (
     <div className={styles.container}>
-      {render_header()}
+      {render_header(true)}
       <div className={styles.list}>
         {props.configurations.length > 0 &&
           (sortable ? (
@@ -129,7 +137,7 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
             props.configurations.map((item, index) => render_item(item, index))
           ))}
       </div>
-      {props.configurations.length > 0 && render_header()}
+      {props.configurations.length > 0 && render_header(false)}
     </div>
   )
 }

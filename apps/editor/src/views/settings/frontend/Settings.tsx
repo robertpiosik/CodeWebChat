@@ -23,7 +23,7 @@ export const Settings = () => {
   const all_data_loaded = useMemo(() => {
     return (
       settings_hook.providers !== undefined &&
-      settings_hook.code_completions_configs !== undefined &&
+      settings_hook.code_at_cursor_configs !== undefined &&
       settings_hook.commit_messages_configs !== undefined &&
       settings_hook.edit_context_configs !== undefined &&
       settings_hook.edit_context_system_instructions !== undefined &&
@@ -61,7 +61,7 @@ export const Settings = () => {
   return (
     <Home
       providers={settings_hook.providers!}
-      code_completions_configs={settings_hook.code_completions_configs!}
+      code_at_cursor_configs={settings_hook.code_at_cursor_configs!}
       commit_messages_configs={settings_hook.commit_messages_configs!}
       edit_context_configs={settings_hook.edit_context_configs!}
       edit_context_system_instructions={
@@ -90,7 +90,7 @@ export const Settings = () => {
       }
       fix_all_automatically={settings_hook.fix_all_automatically!}
       set_providers={settings_hook.set_providers}
-      set_code_completions_configs={settings_hook.set_code_completions_configs}
+      set_code_at_cursor_configs={settings_hook.set_code_at_cursor_configs}
       set_commit_messages_configs={settings_hook.set_commit_messages_configs}
       set_edit_context_configs={settings_hook.set_edit_context_configs}
       set_intelligent_update_configs={

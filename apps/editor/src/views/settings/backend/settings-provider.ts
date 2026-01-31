@@ -109,7 +109,8 @@ export class SettingsProvider {
         } else if (message.command == 'ADD_MODEL_PROVIDER') {
           await handle_upsert_model_provider({
             provider: this,
-            insertion_index: message.insertion_index
+            insertion_index: message.insertion_index,
+            create_on_top: message.create_on_top
           })
         } else if (message.command == 'DELETE_MODEL_PROVIDER') {
           await handle_delete_model_provider(this, message)
@@ -120,24 +121,22 @@ export class SettingsProvider {
           })
         } else if (message.command == 'CHANGE_MODEL_PROVIDER_KEY') {
           await handle_change_model_provider_key(this, message)
-        } else if (message.command == 'GET_CODE_COMPLETIONS_CONFIGURATIONS') {
+        } else if (message.command == 'GET_CODE_AT_CURSOR_CONFIGURATIONS') {
           await handle_get_configurations(this, 'code-at-cursor')
-        } else if (
-          message.command == 'REORDER_CODE_COMPLETIONS_CONFIGURATIONS'
-        ) {
+        } else if (message.command == 'REORDER_CODE_AT_CURSOR_CONFIGURATIONS') {
           await handle_reorder_configuration(
             this,
             message.configurations,
             'code-at-cursor'
           )
-        } else if (message.command == 'DELETE_CODE_COMPLETIONS_CONFIGURATION') {
+        } else if (message.command == 'DELETE_CODE_AT_CURSOR_CONFIGURATION') {
           await handle_delete_configuration(
             this,
             message.configuration_id,
             'code-at-cursor'
           )
         } else if (
-          message.command == 'SET_DEFAULT_CODE_COMPLETIONS_CONFIGURATION'
+          message.command == 'SET_DEFAULT_CODE_AT_CURSOR_CONFIGURATION'
         ) {
           await handle_set_default_configuration(
             this,
