@@ -344,9 +344,7 @@ export const Home: React.FC<Props> = (props) => {
           subtitle="Manage your API keys for use with API tools."
           on_stuck_change={model_providers_on_stuck_change}
           actions={
-            <Button on_click={() => props.on_add_provider()}>
-              New Provider...
-            </Button>
+            <Button on_click={() => props.on_add_provider()}>Add New...</Button>
           }
         >
           <Group>
@@ -371,7 +369,7 @@ export const Home: React.FC<Props> = (props) => {
           on_stuck_change={edit_context_on_stuck_change}
           actions={
             <Button on_click={() => props.on_add_config('EDIT_CONTEXT')}>
-              New Configuration...
+              Add New...
             </Button>
           }
         >
@@ -415,7 +413,7 @@ export const Home: React.FC<Props> = (props) => {
           on_stuck_change={intelligent_update_on_stuck_change}
           actions={
             <Button on_click={() => props.on_add_config('INTELLIGENT_UPDATE')}>
-              New Configuration...
+              Add New...
             </Button>
           }
         >
@@ -465,7 +463,7 @@ export const Home: React.FC<Props> = (props) => {
           on_stuck_change={prune_context_on_stuck_change}
           actions={
             <Button on_click={() => props.on_add_config('PRUNE_CONTEXT')}>
-              New Configuration...
+              Add New...
             </Button>
           }
         >
@@ -494,7 +492,7 @@ export const Home: React.FC<Props> = (props) => {
           on_stuck_change={code_completions_on_stuck_change}
           actions={
             <Button on_click={() => props.on_add_config('CODE_COMPLETIONS')}>
-              New Configuration...
+              Add New...
             </Button>
           }
         >
@@ -529,7 +527,7 @@ export const Home: React.FC<Props> = (props) => {
           on_stuck_change={commit_messages_on_stuck_change}
           actions={
             <Button on_click={() => props.on_add_config('COMMIT_MESSAGES')}>
-              New Configuration...
+              Add New...
             </Button>
           }
         >
