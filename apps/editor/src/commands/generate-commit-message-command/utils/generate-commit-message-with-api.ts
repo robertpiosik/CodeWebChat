@@ -37,18 +37,10 @@ export const generate_commit_message_with_api = async (params: {
       title: dictionary.api_call.WAITING_FOR_RESPONSE,
       cancellable: true
     },
-    async (progress, token) => {
+    async (_, token) => {
       token.onCancellationRequested(() => {
         cancel_token_source.cancel('Operation cancelled by user')
       })
-
-      let wait_time = 0
-      const wait_timer = setInterval(() => {
-        progress.report({
-          message: `${(wait_time / 10).toFixed(1)}s`
-        })
-        wait_time++
-      }, 100)
 
       try {
         const response_result = await make_api_request({
@@ -85,8 +77,6 @@ export const generate_commit_message_with_api = async (params: {
           data: error
         })
         throw error
-      } finally {
-        clearInterval(wait_timer)
       }
     }
   )

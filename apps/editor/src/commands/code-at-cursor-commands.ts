@@ -458,21 +458,12 @@ const perform_code_at_cursor = async (params: {
           title: dictionary.api_call.WAITING_FOR_RESPONSE,
           cancellable: true
         },
-        async (progress, token) => {
+        async (_, token) => {
           token.onCancellationRequested(() => {
             cancel_token_source.cancel('User cancelled the operation')
           })
 
-          let wait_time = 0
-          const wait_timer = setInterval(() => {
-            progress.report({
-              message: `${(wait_time / 10).toFixed(1)}s`
-            })
-            wait_time++
-          }, 100)
-
           await Promise.race([api_promise, thinking_promise])
-          clearInterval(wait_timer)
         }
       )
 
@@ -488,19 +479,7 @@ const perform_code_at_cursor = async (params: {
               cancel_token_source.cancel('User cancelled the operation')
             })
 
-            let thinking_time = 0
-            const thinking_timer = setInterval(() => {
-              progress.report({
-                message: `${(thinking_time / 10).toFixed(1)}s`
-              })
-              thinking_time++
-            }, 100)
-
-            try {
-              await api_promise
-            } finally {
-              clearInterval(thinking_timer)
-            }
+            await api_promise
           }
         )
       }
