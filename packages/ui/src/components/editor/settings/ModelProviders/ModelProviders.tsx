@@ -109,7 +109,6 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
               }
             }}
             tag="div"
-            handle={`.${styles['drag-handle']}`}
             animation={150}
           >
             {props.providers.map((p, i) => render_item(p, i))}

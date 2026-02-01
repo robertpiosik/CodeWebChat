@@ -49,6 +49,12 @@
     gap: 16px;
   }
 
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
   &__group {
     font-weight: 400;
     color: var(--vscode-textLink-foreground);

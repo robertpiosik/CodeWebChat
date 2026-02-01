@@ -1,13 +1,15 @@
 .container {
   display: flex;
   flex-direction: column;
+  --row-height: 40px;
 }
 
 .header {
   display: flex;
-  padding: 12px 12px 12px 16px;
+  padding: 0 12px 0 16px;
   align-items: center;
   justify-content: space-between;
+  height: var(--row-height);
 
   &__left {
     display: flex;
@@ -15,7 +17,7 @@
     gap: 5px;
 
     &__amount {
-      font-weight: 600;
+      font-weight: 500;
     }
   }
 }
@@ -23,18 +25,19 @@
 .list {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  border-top: 1px solid var(--cwc-bg-secondary);
+  border-bottom: 1px solid var(--cwc-bg-secondary);
 }
 
 .row {
   display: flex;
   align-items: center;
-  height: 40px;
+  height: var(--row-height);
   gap: 12px;
   padding: 0 12px;
   user-select: text;
 
-  &:nth-child(odd) {
+  &:nth-child(even) {
     background-color: var(--cwc-bg-tertiary);
   }
 
@@ -58,7 +61,7 @@
 
 .drag-handle {
   cursor: grab;
-  opacity: 0.5;
+  opacity: var(--drag-handle-opacity);
 
   &:active {
     cursor: grabbing;

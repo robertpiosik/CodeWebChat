@@ -126,7 +126,6 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
                 }
               }}
               tag="div"
-              handle={`.${styles['drag-handle']}`}
               animation={150}
             >
               {props.configurations.map((item, index) =>

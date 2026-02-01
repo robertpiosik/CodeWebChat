@@ -19,15 +19,14 @@
   right: 0;
   bottom: 0;
   background-color: var(--cwc-bg-primary);
-  border: 1px solid var(--cwc-border-color);
   transition: var(--transition-duration-250);
-  border-radius: 20px;
+  border-radius: 10px;
 
   &::before {
     position: absolute;
     content: '';
-    height: 12px;
-    width: 12px;
+    height: 14px;
+    width: 14px;
     left: 3px;
     bottom: 3px;
     background-color: white;
@@ -39,7 +38,6 @@
 
 input:checked + .slider {
   background-color: var(--vscode-button-background);
-  border-color: transparent;
 }
 
 input:checked + .slider:before {

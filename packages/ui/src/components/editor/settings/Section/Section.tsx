@@ -92,17 +92,19 @@ export const Section = forwardRef<HTMLDivElement, Props>((props, ref) => {
       >
         <div className={styles.header__marker} ref={marker_ref} />
         <div className={styles.header__top}>
-          <div className={styles.header__title}>
-            {props.group && (
-              <span className={styles.header__group}>{props.group}: </span>
-            )}
-            {props.title}
+          <div className={styles.header__content}>
+            <div className={styles.header__title}>
+              {props.group && (
+                <span className={styles.header__group}>{props.group}: </span>
+              )}
+              {props.title}
+            </div>
+            <div className={styles.header__subtitle}>{props.subtitle}</div>
           </div>
           {props.actions && (
             <div className={styles.header__actions}>{props.actions}</div>
           )}
         </div>
-        <div className={styles.header__subtitle}>{props.subtitle}</div>
       </div>
       {props.children}
     </div>
