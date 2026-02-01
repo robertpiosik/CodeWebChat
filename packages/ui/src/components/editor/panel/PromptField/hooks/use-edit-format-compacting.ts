@@ -17,15 +17,12 @@ export const use_edit_format_compacting = () => {
     ]
 
     if (refs.every((ref) => ref.current)) {
-      // Calculate total width of all elements
       const total_width = refs.reduce(
         (acc, ref) => acc + (ref.current?.getBoundingClientRect().width || 0),
         0
       )
-      // Add gap (4px * 3 gaps)
-      const width = total_width
 
-      report_width(width, compact_step)
+      report_width(total_width, compact_step)
     }
   }, [compact_step, report_width])
 

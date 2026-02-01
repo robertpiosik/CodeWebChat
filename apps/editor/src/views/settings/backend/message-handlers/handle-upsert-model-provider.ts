@@ -403,7 +403,7 @@ export const handle_upsert_model_provider = async (params: {
       quick_pick.items = items
       quick_pick.title = 'Add New Model Provider'
       quick_pick.placeholder =
-        'Choose a predefined provider or create a custom one'
+        'Choose a predefined provider or add a custom endpoint'
 
       return new Promise((resolve) => {
         quick_pick.onDidAccept(() => {
