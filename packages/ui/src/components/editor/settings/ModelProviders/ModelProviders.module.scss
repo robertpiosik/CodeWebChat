@@ -29,7 +29,6 @@
   height: var(--row-height);
   padding: 0 12px;
   gap: 12px;
-  user-select: text;
 
   &:nth-child(even) {
     background-color: var(--cwc-bg-tertiary);

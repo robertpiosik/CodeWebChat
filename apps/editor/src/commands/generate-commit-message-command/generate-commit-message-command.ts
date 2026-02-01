@@ -51,9 +51,49 @@ export const generate_commit_message_command = (
     })
 
     if (commit_message) {
-      repository.inputBox.value = commit_message
       if (should_commit) {
-        await vscode.commands.executeCommand('git.commit', repository)
+        const edited_message = await new Promise<string | undefined>(
+          (resolve) => {
+            const input_box = vscode.window.createInputBox()
+            input_box.value = commit_message
+            input_box.title = 'Commit Message'
+            input_box.prompt = 'Review the commit message'
+
+            const close_button = {
+              iconPath: new vscode.ThemeIcon('close'),
+              tooltip: 'Close'
+            }
+
+            input_box.buttons = [close_button]
+
+            input_box.onDidTriggerButton((button) => {
+              if (button == close_button) {
+                input_box.hide()
+              }
+            })
+
+            input_box.onDidAccept(() => {
+              resolve(input_box.value)
+              input_box.hide()
+            })
+
+            input_box.onDidHide(() => {
+              resolve(undefined)
+              input_box.dispose()
+            })
+
+            input_box.show()
+          }
+        )
+
+        if (edited_message) {
+          repository.inputBox.value = edited_message
+          await vscode.commands.executeCommand('git.commit', repository)
+        } else if (was_empty_stage) {
+          await vscode.commands.executeCommand('git.unstageAll')
+        }
+      } else {
+        repository.inputBox.value = commit_message
       }
     } else if (was_empty_stage) {
       await vscode.commands.executeCommand('git.unstageAll')

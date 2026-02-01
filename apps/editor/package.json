@@ -308,13 +308,13 @@
       },
       {
         "command": "codeWebChat.generateCommitMessage",
-        "title": "Generate Commit Message with CWC",
+        "title": "CWC: Generate Commit Message",
         "category": "Code Web Chat",
         "icon": "$(sparkle)"
       },
       {
         "command": "codeWebChat.copyCommitMessagePrompt",
-        "title": "Copy Commit Message Prompt from CWC",
+        "title": "CWC: Copy Commit Message Prompt",
         "category": "Code Web Chat",
         "icon": "$(copy)"
       },
