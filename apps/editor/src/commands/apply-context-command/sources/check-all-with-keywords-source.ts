@@ -17,7 +17,7 @@ export const handle_check_all_with_keywords_source = async (
       input_box.title = 'Keyword Search'
       input_box.prompt =
         'Enter keywords separated by comma (use & for AND, quotes for whole words)'
-      input_box.placeholder = 'e.g. user,login&auth,"ignoreFocus"'
+      input_box.placeholder = 'e.g. user, login&auth, "ignoreFocus"'
       input_box.ignoreFocusOut = true
       input_box.buttons = [vscode.QuickInputButtons.Back]
 

@@ -20,7 +20,7 @@ export const check_all_with_keywords_command = (
         input_box.title = 'Keyword Search'
         input_box.prompt =
           'Enter keywords separated by comma (use & for AND, quotes for whole words)'
-        input_box.placeholder = 'e.g. user,login&auth,"ignoreFocus"'
+        input_box.placeholder = 'e.g. user, login&auth, "ignoreFocus"'
 
         const keywords_input = await new Promise<string | undefined>(
           (resolve) => {

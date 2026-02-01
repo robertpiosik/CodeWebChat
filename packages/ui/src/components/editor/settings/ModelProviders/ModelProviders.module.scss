@@ -21,6 +21,10 @@
   flex-direction: column;
   border-top: 1px solid var(--cwc-bg-secondary);
   border-bottom: 1px solid var(--cwc-bg-secondary);
+
+  &:has(.row:nth-child(even):last-child) {
+    border-bottom: none;
+  }
 }
 
 .row {
