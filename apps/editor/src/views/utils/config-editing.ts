@@ -380,6 +380,8 @@ export const edit_temperature_for_config = async (
 export const edit_reasoning_effort_for_config = async () => {
   const effort_options: vscode.QuickPickItem[] = [
     { label: 'Unset', description: 'Remove reasoning effort configuration' },
+    { label: 'none' },
+    { label: 'minimal' },
     { label: 'low' },
     { label: 'medium' },
     { label: 'high' }

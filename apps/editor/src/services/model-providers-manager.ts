@@ -17,7 +17,7 @@ export type CustomProvider = {
 
 export type Provider = BuiltInProvider | CustomProvider
 
-export type ReasoningEffort = 'none' | 'low' | 'medium' | 'high'
+export type ReasoningEffort = 'none' | 'minimal' | 'low' | 'medium' | 'high'
 
 export type ToolConfig = {
   provider_type: string
