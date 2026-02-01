@@ -13,17 +13,14 @@ export const check_all_with_keywords_command = (
   return vscode.commands.registerCommand(
     'codeWebChat.checkAllWithKeywords',
     async (item: any) => {
-      if (!item || !item.resourceUri) {
-        return
-      }
-
-      const folder_path = item.resourceUri.fsPath
+      const folder_path = item?.resourceUri?.fsPath
 
       try {
         const input_box = vscode.window.createInputBox()
         input_box.title = 'Keyword Search'
-        input_box.prompt = 'Enter keywords separated by comma'
-        input_box.placeholder = 'e.g. user, login, auth'
+        input_box.prompt =
+          'Enter keywords separated by comma (use & for AND, quotes for whole words)'
+        input_box.placeholder = 'e.g. user,login&auth,"ignoreFocus"'
 
         const keywords_input = await new Promise<string | undefined>(
           (resolve) => {
@@ -63,12 +60,27 @@ export const check_all_with_keywords_command = (
 
         const keywords = keywords_input
           .split(',')
-          .map((k) => k.trim().toLowerCase())
-          .filter((k) => k.length > 0)
+          .map((group) =>
+            group
+              .split('&')
+              .map((k) => k.trim().toLowerCase())
+              .filter((k) => k.length > 0)
+          )
+          .filter((group) => group.length > 0)
 
         if (keywords.length == 0) return
 
-        const all_files = await workspace_provider.find_all_files(folder_path)
+        let all_files: string[] = []
+
+        if (folder_path) {
+          all_files = await workspace_provider.find_all_files(folder_path)
+        } else {
+          const roots = workspace_provider.get_workspace_roots()
+          for (const root of roots) {
+            const files = await workspace_provider.find_all_files(root)
+            all_files.push(...files)
+          }
+        }
 
         const matched_files = await search_files_by_keywords(
           all_files,
@@ -158,17 +170,23 @@ export const check_all_with_keywords_command = (
         const selected_paths = selected_items.map((item) => item.file_path)
         const currently_checked = workspace_provider.get_checked_files()
 
-        const files_outside_search_folder = currently_checked.filter((file) => {
-          const relative = path.relative(folder_path, file)
-          return relative.startsWith('..') || path.isAbsolute(relative)
-        })
+        let files_outside_search_folder: string[] = []
+        let files_inside_search_folder: string[] = []
+
+        if (folder_path) {
+          files_outside_search_folder = currently_checked.filter((file) => {
+            const relative = path.relative(folder_path, file)
+            return relative.startsWith('..') || path.isAbsolute(relative)
+          })
+          files_inside_search_folder = currently_checked.filter((file) => {
+            const relative = path.relative(folder_path, file)
+            return !relative.startsWith('..') && !path.isAbsolute(relative)
+          })
+        } else {
+          files_inside_search_folder = currently_checked
+        }
 
         let paths_to_apply = [...files_outside_search_folder, ...selected_paths]
-
-        const files_inside_search_folder = currently_checked.filter((file) => {
-          const relative = path.relative(folder_path, file)
-          return !relative.startsWith('..') && !path.isAbsolute(relative)
-        })
 
         if (files_inside_search_folder.length > 0) {
           const selected_paths_set = new Set(selected_paths)

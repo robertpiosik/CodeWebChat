@@ -15,8 +15,9 @@ export const handle_check_all_with_keywords_source = async (
     while (true) {
       const input_box = vscode.window.createInputBox()
       input_box.title = 'Keyword Search'
-      input_box.prompt = 'Enter keywords separated by comma'
-      input_box.placeholder = 'e.g. user, login, auth'
+      input_box.prompt =
+        'Enter keywords separated by comma (use & for AND, quotes for whole words)'
+      input_box.placeholder = 'e.g. user,login&auth,"ignoreFocus"'
       input_box.ignoreFocusOut = true
       input_box.buttons = [vscode.QuickInputButtons.Back]
 
@@ -69,8 +70,13 @@ export const handle_check_all_with_keywords_source = async (
 
       const keywords = keywords_input
         .split(',')
-        .map((k) => k.trim().toLowerCase())
-        .filter((k) => k.length > 0)
+        .map((group) =>
+          group
+            .split('&')
+            .map((k) => k.trim().toLowerCase())
+            .filter((k) => k.length > 0)
+        )
+        .filter((group) => group.length > 0)
 
       if (keywords.length == 0) continue
 

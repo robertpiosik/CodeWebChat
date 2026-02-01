@@ -423,10 +423,6 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.checkAllWithKeywords",
-          "when": "false"
-        },
-        {
           "command": "codeWebChat.revealInExplorer",
           "when": "false"
         },

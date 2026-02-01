@@ -112,6 +112,7 @@ Meaningful summaries of changes adhering to your preffered style.
 - `Code Web Chat: Apply Context` - Apply a saved context or save the current file selection.
 - `Code Web Chat: Add File to Context` - Search and add file (or parent folder via file action) to the context.
 - `Code Web Chat: Remove File from Context` - Search and remove file (or parent folder via file action) from the context.
+- `Code Web Chat: Check All with Keywords` - Search and add files containing specific keywords to the context.
 - `Code Web Chat: Copy Context` - Copy XML-formatted checked files from the Workspace view to the clipboard.
 - `Code Web Chat: Copy Context of Open Editors` - Copy XML-formatted checked files from the Open Editors view to the clipboard.
 - `Code Web Chat: Undo Context Selection` - Undo the last context change.
