@@ -127,7 +127,7 @@ const at_sign_quick_pick = async (params: {
         params.workspace_provider,
         browsed_item.absolute_path
       )
-      return `\`${browsed_item.full_path}\` `
+      return `\`${browsed_item.full_path}\``
     }
     return
   }
@@ -253,7 +253,7 @@ const at_sign_quick_pick = async (params: {
   }
 
   if (selected_path_item) {
-    return `\`${selected_path_item.full_path}\` `
+    return `\`${selected_path_item.full_path}\``
   }
   return
 }

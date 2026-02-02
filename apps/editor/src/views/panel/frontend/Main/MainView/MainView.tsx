@@ -240,6 +240,7 @@ export const MainView: React.FC<Props> = (props) => {
             current_selection={props.current_selection}
             send_with_shift_enter={props.send_with_shift_enter}
             currently_open_file_path={props.currently_open_file_path}
+            currently_open_file_text={props.currently_open_file_text}
             on_caret_position_change={props.on_caret_position_change}
             caret_position_to_set={props.caret_position_to_set}
             on_caret_position_set={props.on_caret_position_set}

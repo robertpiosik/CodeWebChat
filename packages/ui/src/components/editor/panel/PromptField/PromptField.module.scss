@@ -194,12 +194,8 @@
     margin-left: -4px;
   }
 
-  &:hover &__icon::before {
-    content: '\ea76';
-  }
-
   &--file &__icon::before {
-    content: '\ea7b';
+    content: '\eae9';
   }
 
   &--file &__text {

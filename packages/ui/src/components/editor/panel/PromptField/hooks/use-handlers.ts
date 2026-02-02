@@ -715,25 +715,32 @@ export const use_handlers = (
     has_modified_current_entry_ref.current = new_raw_value != ''
     update_value(new_raw_value)
 
+    const native_event = e.nativeEvent as unknown as { inputType?: string }
+    if (native_event.inputType?.startsWith('delete')) {
+      set_history_index(-1)
+      return
+    }
+
     if (char_before_caret == '@') {
       const is_at_start = caret_position == 1
-      let is_after_non_word_char = false
+      let is_after_whitespace = false
       if (caret_position > 1) {
         const char_before_at = new_display_value.charAt(caret_position - 2)
-        is_after_non_word_char = !/\w/.test(char_before_at)
+        is_after_whitespace = /\s/.test(char_before_at)
       }
 
-      if (is_at_start || is_after_non_word_char) {
+      if (is_at_start || is_after_whitespace) {
         props.on_at_sign_click()
       }
     } else if (char_before_caret == '#') {
-      let is_after_hash = false
+      const is_at_start = caret_position == 1
+      let is_after_whitespace = false
       if (caret_position > 1) {
         const char_before_hash = new_display_value.charAt(caret_position - 2)
-        is_after_hash = char_before_hash == '#'
+        is_after_whitespace = /\s/.test(char_before_hash)
       }
 
-      if (!is_after_hash) {
+      if (is_at_start || is_after_whitespace) {
         props.on_hash_sign_click()
       }
     }
