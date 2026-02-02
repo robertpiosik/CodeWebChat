@@ -66,6 +66,8 @@ type Props = {
   on_open_url: (url: string) => void
   on_paste_image: (base64_content: string) => void
   on_open_image: (hash: string) => void
+  on_paste_document: (text: string) => void
+  on_open_document: (hash: string) => void
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -843,6 +845,8 @@ export const Main: React.FC<Props> = (props) => {
       on_open_url={props.on_open_url}
       on_paste_image={props.on_paste_image}
       on_open_image={props.on_open_image}
+      on_paste_document={props.on_paste_document}
+      on_open_document={props.on_open_document}
     />
   )
 }

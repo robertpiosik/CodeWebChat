@@ -8,7 +8,7 @@ export const map_display_pos_to_raw_pos = (
   let last_raw_index = 0
 
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#Document\([a-fA-F0-9]+\))/g
   let match
 
   while ((match = regex.exec(raw_text)) !== null) {
@@ -23,6 +23,7 @@ export const map_display_pos_to_raw_pos = (
     let fragment_content = match[9] // Content inside fragment
     const skill_symbol = match[10]
     const image_symbol = match[11]
+    const document_symbol = match[12]
 
     let is_replacement_match = false
     let display_match_length = 0
@@ -77,6 +78,9 @@ export const map_display_pos_to_raw_pos = (
       is_replacement_match = true
     } else if (image_symbol) {
       display_match_length = 'Image'.length
+      is_replacement_match = true
+    } else if (document_symbol) {
+      display_match_length = 'Document'.length
       is_replacement_match = true
     }
 
@@ -121,7 +125,7 @@ export const map_raw_pos_to_display_pos = (
   let last_raw_index = 0
 
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#Document\([a-fA-F0-9]+\))/g
   let match
 
   while ((match = regex.exec(raw_text)) !== null) {
@@ -136,6 +140,7 @@ export const map_raw_pos_to_display_pos = (
     let fragment_content = match[9] // Content inside fragment
     const skill_symbol = match[10]
     const image_symbol = match[11]
+    const document_symbol = match[12]
 
     let is_replacement_match = false
     let display_match_length = 0
@@ -190,6 +195,9 @@ export const map_raw_pos_to_display_pos = (
       is_replacement_match = true
     } else if (image_symbol) {
       display_match_length = 'Image'.length
+      is_replacement_match = true
+    } else if (document_symbol) {
+      display_match_length = 'Document'.length
       is_replacement_match = true
     }
 

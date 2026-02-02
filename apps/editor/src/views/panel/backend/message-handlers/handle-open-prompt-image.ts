@@ -2,9 +2,11 @@ import * as vscode from 'vscode'
 import * as os from 'os'
 import * as path from 'path'
 import * as fs from 'fs'
-import { OpenTempImageMessage } from '../../types/messages'
+import { OpenPromptImageMessage } from '../../types/messages'
 
-export const handle_open_temp_image = async (message: OpenTempImageMessage) => {
+export const handle_open_prompt_image = async (
+  message: OpenPromptImageMessage
+) => {
   try {
     const hash = message.hash
     const txt_filename = `cwc-image-${hash}.txt`

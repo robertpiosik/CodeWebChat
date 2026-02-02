@@ -25,6 +25,7 @@ import { replace_selection_symbol } from '@/views/panel/backend/utils/replace-se
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { replace_skill_symbol } from '@/views/panel/backend/utils/replace-skill-symbol'
 import { replace_image_symbol } from '@/views/panel/backend/utils/replace-image-symbol'
+import { replace_document_symbol } from '../utils/replace-document-symbol'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { EditContextMessage } from '@/views/panel/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
@@ -367,6 +368,12 @@ export const handle_edit_context = async (
 
   if (processed_instructions.includes('#Image(')) {
     processed_instructions = await replace_image_symbol({
+      instruction: processed_instructions
+    })
+  }
+
+  if (processed_instructions.includes('#Document(')) {
+    processed_instructions = await replace_document_symbol({
       instruction: processed_instructions
     })
   }

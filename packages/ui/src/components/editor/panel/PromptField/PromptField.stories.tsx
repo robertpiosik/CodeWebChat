@@ -37,7 +37,9 @@ export const Empty = () => (
     }
     on_open_url={(url) => console.log('Open URL:', url)}
     on_paste_image={(content) => console.log('Paste image:', content)}
+    on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
+    on_open_document={(hash) => console.log('Open document:', hash)}
   />
 )
 
@@ -73,7 +75,9 @@ export const WithText = () => (
     }
     on_open_url={(url) => console.log('Open URL:', url)}
     on_paste_image={(content) => console.log('Paste image:', content)}
+    on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
+    on_open_document={(hash) => console.log('Open document:', hash)}
   />
 )
 
@@ -109,7 +113,9 @@ export const LongText = () => (
     }
     on_open_url={(url) => console.log('Open URL:', url)}
     on_paste_image={(content) => console.log('Paste image:', content)}
+    on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
+    on_open_document={(hash) => console.log('Open document:', hash)}
   />
 )
 
@@ -145,7 +151,9 @@ export const WithPlaceholderSavedContext = () => (
     }
     on_open_url={(url) => console.log('Open URL:', url)}
     on_paste_image={(content) => console.log('Paste image:', content)}
+    on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
+    on_open_document={(hash) => console.log('Open document:', hash)}
   />
 )
 
@@ -187,7 +195,9 @@ export const WithPlaceholderSelection = () => (
     }
     on_open_url={(url) => console.log('Open URL:', url)}
     on_paste_image={(content) => console.log('Paste image:', content)}
+    on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
+    on_open_document={(hash) => console.log('Open document:', hash)}
   />
 )
 
@@ -223,7 +233,9 @@ export const WithCommit = () => (
     }
     on_open_url={(url) => console.log('Open URL:', url)}
     on_paste_image={(content) => console.log('Paste image:', content)}
+    on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
+    on_open_document={(hash) => console.log('Open document:', hash)}
   />
 )
 
@@ -259,7 +271,9 @@ export const WithCommitWithQuotes = () => (
     }
     on_open_url={(url) => console.log('Open URL:', url)}
     on_paste_image={(content) => console.log('Paste image:', content)}
+    on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
+    on_open_document={(hash) => console.log('Open document:', hash)}
   />
 )
 export const WithContextAtCommit = () => (
@@ -294,7 +308,9 @@ export const WithContextAtCommit = () => (
     }
     on_open_url={(url) => console.log('Open URL:', url)}
     on_paste_image={(content) => console.log('Paste image:', content)}
+    on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
+    on_open_document={(hash) => console.log('Open document:', hash)}
   />
 )
 
@@ -333,7 +349,9 @@ export const WithEditFormatSelector = () => {
       }
       on_open_url={(url) => console.log('Open URL:', url)}
       on_paste_image={(content) => console.log('Paste image:', content)}
+      on_paste_document={(content) => console.log('Paste document:', content)}
       on_open_image={(hash) => console.log('Open image:', hash)}
+      on_open_document={(hash) => console.log('Open document:', hash)}
     />
   )
 }
@@ -370,6 +388,8 @@ export const WithFilePaths = () => (
     }
     on_open_url={(url) => console.log('Open URL:', url)}
     on_paste_image={(content) => console.log('Paste image:', content)}
+    on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
+    on_open_document={(hash) => console.log('Open document:', hash)}
   />
 )

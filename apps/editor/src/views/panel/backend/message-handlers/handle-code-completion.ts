@@ -27,6 +27,7 @@ import {
 import { replace_saved_context_symbol } from '@/views/panel/backend/utils/replace-saved-context-symbol'
 import { replace_skill_symbol } from '../utils/replace-skill-symbol'
 import { replace_image_symbol } from '../utils/replace-image-symbol'
+import { replace_document_symbol } from '../utils/replace-document-symbol'
 
 const get_code_completion_config = async (
   api_providers_manager: ModelProvidersManager,
@@ -407,6 +408,12 @@ export const handle_code_completion = async (
 
     if (processed_completion_instructions.includes('#Image(')) {
       processed_completion_instructions = await replace_image_symbol({
+        instruction: processed_completion_instructions
+      })
+    }
+
+    if (processed_completion_instructions.includes('#Document(')) {
+      processed_completion_instructions = await replace_document_symbol({
         instruction: processed_completion_instructions
       })
     }

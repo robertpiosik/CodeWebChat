@@ -178,14 +178,28 @@ export const use_panel = (vscode: any) => {
 
   const handle_paste_image = (content_base64: string) => {
     post_message(vscode, {
-      command: 'SAVE_TEMP_IMAGE',
+      command: 'SAVE_PROMPT_IMAGE',
       content_base64
     })
   }
 
   const handle_open_image = (hash: string) => {
     post_message(vscode, {
-      command: 'OPEN_TEMP_IMAGE',
+      command: 'OPEN_PROMPT_IMAGE',
+      hash
+    })
+  }
+
+  const handle_paste_long_document = (text: string) => {
+    post_message(vscode, {
+      command: 'SAVE_PROMPT_DOCUMENT',
+      text
+    })
+  }
+
+  const handle_open_document = (hash: string) => {
+    post_message(vscode, {
+      command: 'OPEN_PROMPT_DOCUMENT',
       hash
     })
   }
@@ -594,6 +608,8 @@ export const use_panel = (vscode: any) => {
     handle_prune_context_instructions_prefix_change,
     fix_all_automatically,
     handle_paste_image,
-    handle_open_image
+    handle_open_image,
+    handle_paste_long_document,
+    handle_open_document
   }
 }

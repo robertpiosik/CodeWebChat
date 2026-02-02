@@ -107,6 +107,8 @@ type Props = {
   on_prune_context_instructions_prefix_change: (prefix: string) => void
   on_paste_image: (base64_content: string) => void
   on_open_image: (hash: string) => void
+  on_paste_document: (text: string) => void
+  on_open_document: (hash: string) => void
 }
 
 export const MainView: React.FC<Props> = (props) => {
@@ -269,6 +271,8 @@ export const MainView: React.FC<Props> = (props) => {
             }
             on_paste_image={props.on_paste_image}
             on_open_image={props.on_open_image}
+            on_paste_document={props.on_paste_document}
+            on_open_document={props.on_open_document}
           />
           <UiContextUtilisation
             current_context_size={props.token_count}

@@ -21,7 +21,7 @@ const get_symbol_ranges = (
   const ranges: { start: number; end: number }[] = []
   // This regex is a combination of all symbol types
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "(?:\\.|[^"\\])*"\))|(#(?:Commit|ContextAtCommit)\([^:]+:[^\s"]+ "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>[\s\S]*?<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "(?:\\.|[^"\\])*"\))|(#(?:Commit|ContextAtCommit)\([^:]+:[^\s"]+ "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>[\s\S]*?<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#Document\([a-fA-F0-9]+\))/g
 
   let match
   while ((match = regex.exec(text)) !== null) {
@@ -175,6 +175,17 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + expected_text.length)
         return `${prefix}#Image(${hash})${suffix}`
+      }
+    } else if (el.dataset.type == 'document-symbol') {
+      const hash = el.dataset.hash
+      if (!hash) return ''
+
+      const expected_text = `Document`
+      const index = inner_content.indexOf(expected_text)
+      if (index != -1) {
+        const prefix = inner_content.substring(0, index)
+        const suffix = inner_content.substring(index + expected_text.length)
+        return `${prefix}#Document(${hash})${suffix}`
       }
     }
 
@@ -425,6 +436,16 @@ export const use_handlers = (
       if (start_index != -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
+    } else if (symbol_type == 'document-symbol') {
+      const hash = symbol_element.dataset.hash
+      if (!hash) return
+
+      const search_pattern = `#Document(${hash})`
+      const start_index = props.value.indexOf(search_pattern)
+
+      if (start_index != -1) {
+        apply_symbol_deletion(start_index, start_index + search_pattern.length)
+      }
     }
   }
 
@@ -580,6 +601,13 @@ export const use_handlers = (
     }
 
     const text = e.clipboardData.getData('text/plain')
+
+    if (text.length > 1000) {
+      e.preventDefault()
+      props.on_paste_document(text)
+      return
+    }
+
     perform_paste(text)
   }
 
@@ -647,6 +675,16 @@ export const use_handlers = (
         const hash = image_symbol_element.dataset.hash
         if (hash) {
           props.on_open_image(hash)
+        }
+      }
+
+      const document_symbol_element = text_element.closest<HTMLElement>(
+        '[data-type="document-symbol"]'
+      )
+      if (document_symbol_element) {
+        const hash = document_symbol_element.dataset.hash
+        if (hash) {
+          props.on_open_document(hash)
         }
       }
 
@@ -891,6 +929,22 @@ export const use_handlers = (
     return false
   }
 
+  const handle_document_symbol_deletion = (raw_pos: number): boolean => {
+    const text_before_cursor = props.value.substring(0, raw_pos)
+    const match = text_before_cursor.match(/#Document\(([a-fA-F0-9]+)\)$/)
+
+    if (match) {
+      const start_of_match = raw_pos - match[0].length
+      const new_value =
+        props.value.substring(0, start_of_match) +
+        props.value.substring(raw_pos)
+      const new_raw_cursor_pos = start_of_match
+      update_value(new_value, new_raw_cursor_pos)
+      return true
+    }
+    return false
+  }
+
   const handle_symbol_deletion_by_backspace = (
     el: HTMLElement,
     display_pos: number
@@ -937,6 +991,10 @@ export const use_handlers = (
       return handle_image_symbol_deletion(raw_pos)
     }
 
+    if (el.dataset.type == 'document-symbol') {
+      return handle_document_symbol_deletion(raw_pos)
+    }
+
     return false
   }
 
@@ -977,7 +1035,8 @@ export const use_handlers = (
           parent.dataset.type == 'contextatcommit-symbol' ||
           parent.dataset.type == 'pasted-lines-symbol' ||
           parent.dataset.type == 'skill-symbol' ||
-          parent.dataset.type == 'image-symbol'
+          parent.dataset.type == 'image-symbol' ||
+          parent.dataset.type == 'document-symbol'
         ) {
           const rangeAfter = document.createRange()
           rangeAfter.selectNodeContents(parent)
@@ -1005,7 +1064,8 @@ export const use_handlers = (
         el.dataset.type == 'contextatcommit-symbol' ||
         el.dataset.type == 'pasted-lines-symbol' ||
         el.dataset.type == 'skill-symbol' ||
-        el.dataset.type == 'image-symbol'
+        el.dataset.type == 'image-symbol' ||
+        el.dataset.type == 'document-symbol'
       ) {
         const display_pos = get_caret_position_from_div(input_ref.current)
         if (handle_symbol_deletion_by_backspace(el, display_pos)) {

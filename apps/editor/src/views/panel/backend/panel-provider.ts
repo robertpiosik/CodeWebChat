@@ -79,8 +79,10 @@ import {
   handle_open_external_url,
   handle_hash_sign_quick_pick,
   handle_open_file_and_select,
-  handle_save_temp_image,
-  handle_open_temp_image
+  handle_save_prompt_image,
+  handle_open_prompt_image,
+  handle_save_prompt_document,
+  handle_open_prompt_document
 } from './message-handlers'
 import { SelectionState } from '../types/messages'
 import {
@@ -780,10 +782,14 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             )
           } else if (message.command == 'OPEN_EXTERNAL_URL') {
             await handle_open_external_url(message)
-          } else if (message.command == 'SAVE_TEMP_IMAGE') {
-            await handle_save_temp_image(this, message)
-          } else if (message.command == 'OPEN_TEMP_IMAGE') {
-            await handle_open_temp_image(message)
+          } else if (message.command == 'SAVE_PROMPT_IMAGE') {
+            await handle_save_prompt_image(this, message)
+          } else if (message.command == 'OPEN_PROMPT_IMAGE') {
+            await handle_open_prompt_image(message)
+          } else if (message.command == 'SAVE_PROMPT_DOCUMENT') {
+            await handle_save_prompt_document(this, message)
+          } else if (message.command == 'OPEN_PROMPT_DOCUMENT') {
+            await handle_open_prompt_document(message)
           }
         } catch (error: any) {
           Logger.error({

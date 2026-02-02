@@ -3,12 +3,12 @@ import * as os from 'os'
 import * as path from 'path'
 import * as fs from 'fs'
 import * as crypto from 'crypto'
-import { SaveTempImageMessage } from '../../types/messages'
+import { SavePromptImageMessage } from '../../types/messages'
 import { PanelProvider } from '../panel-provider'
 
-export const handle_save_temp_image = async (
+export const handle_save_prompt_image = async (
   panel_provider: PanelProvider,
-  message: SaveTempImageMessage
+  message: SavePromptImageMessage
 ) => {
   try {
     const buffer = Buffer.from(message.content_base64, 'base64')

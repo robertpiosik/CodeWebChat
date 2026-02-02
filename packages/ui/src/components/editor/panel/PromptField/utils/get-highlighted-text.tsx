@@ -64,8 +64,10 @@ export const get_highlighted_text = (params: {
 
   const image_regex_part = '#Image\\([a-fA-F0-9]+\\)'
 
+  const document_regex_part = '#Document\\([a-fA-F0-9]+\\)'
+
   const regex = new RegExp(
-    `(${fragment_regex_part}|#Selection|#Changes\\([^)]+\\)|${saved_context_regex_part}|${commit_regex_part}|${skill_regex_part}|${image_regex_part})`,
+    `(${fragment_regex_part}|#Selection|#Changes\\([^)]+\\)|${saved_context_regex_part}|${commit_regex_part}|${skill_regex_part}|${image_regex_part}|${document_regex_part})`,
     'g'
   )
   const parts = params.text.split(regex)
@@ -221,6 +223,19 @@ export const get_highlighted_text = (params: {
         }" data-role="symbol-icon"></span><span class="${
           styles['symbol__text']
         }" data-role="symbol-text">Image</span></span>`
+      }
+
+      const document_match = part.match(/^#Document\(([a-fA-F0-9]+)\)$/)
+      if (part && document_match) {
+        const hash = document_match[1]
+        return `<span class="${cn(
+          styles['symbol'],
+          styles['symbol--document']
+        )}" data-type="document-symbol" data-hash="${hash}"><span class="${
+          styles['symbol__icon']
+        }" data-role="symbol-icon"></span><span class="${
+          styles['symbol__text']
+        }" data-role="symbol-text">Document</span></span>`
       }
 
       return process_text_part_for_files(part, params.context_file_paths)
