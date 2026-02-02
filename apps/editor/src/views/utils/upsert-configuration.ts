@@ -459,6 +459,7 @@ const verify_reasoning_effort = async (params: {
     messages: [
       {
         role: 'user',
+        // Keep possibly hidden reasoning as short as possible
         content: 'Respond with "Hello!" and nothing else.'
       }
     ],
