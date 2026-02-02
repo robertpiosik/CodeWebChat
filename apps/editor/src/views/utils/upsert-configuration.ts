@@ -16,6 +16,9 @@ import {
   initial_select_model,
   initial_select_provider
 } from './config-editing'
+import axios from 'axios'
+import { PROVIDERS } from '@shared/constants/providers'
+import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 
 export const upsert_configuration = async (params: {
   context: vscode.ExtensionContext
@@ -30,7 +33,6 @@ export const upsert_configuration = async (params: {
   let get_configs: () => Promise<ToolConfig[]>
   let save_configs: (configs: ToolConfig[]) => Promise<void>
   let advanced_options: string[] = []
-  let advanced_details = ''
 
   switch (params.tool_type) {
     case 'code-at-cursor':
@@ -38,21 +40,18 @@ export const upsert_configuration = async (params: {
       save_configs = (configs) =>
         providers_manager.save_code_completions_tool_configs(configs)
       advanced_options = ['Temperature', 'Reasoning Effort']
-      advanced_details = 'Temperature, Reasoning Effort...'
       break
     case 'commit-messages':
       get_configs = () => providers_manager.get_commit_messages_tool_configs()
       save_configs = (configs) =>
         providers_manager.save_commit_messages_tool_configs(configs)
       advanced_options = ['Temperature', 'Reasoning Effort']
-      advanced_details = 'Temperature, Reasoning Effort...'
       break
     case 'edit-context':
       get_configs = () => providers_manager.get_edit_context_tool_configs()
       save_configs = (configs) =>
         providers_manager.save_edit_context_tool_configs(configs)
       advanced_options = ['Temperature', 'Reasoning Effort']
-      advanced_details = 'Temperature, Reasoning Effort...'
       break
     case 'intelligent-update':
       get_configs = () =>
@@ -60,14 +59,12 @@ export const upsert_configuration = async (params: {
       save_configs = (configs) =>
         providers_manager.save_intelligent_update_tool_configs(configs)
       advanced_options = ['Temperature', 'Reasoning Effort', 'Max Concurrency']
-      advanced_details = 'Temperature, Reasoning Effort, Max Concurrency...'
       break
     case 'prune-context':
       get_configs = () => providers_manager.get_prune_context_tool_configs()
       save_configs = (configs) =>
         providers_manager.save_prune_context_tool_configs(configs)
       advanced_options = ['Temperature', 'Reasoning Effort']
-      advanced_details = 'Temperature, Reasoning Effort...'
       break
     default:
       throw new Error(`Unknown tool type: ${params.tool_type}`)
@@ -178,7 +175,7 @@ export const upsert_configuration = async (params: {
     const items: vscode.QuickPickItem[] = [
       { label: 'Model Provider', detail: updated_config.provider_name },
       { label: 'Model', detail: updated_config.model },
-      { label: 'Advanced', detail: advanced_details }
+      { label: 'Advanced' }
     ]
 
     const selected_item = await new Promise<vscode.QuickPickItem | undefined>(
@@ -191,7 +188,7 @@ export const upsert_configuration = async (params: {
         quick_pick.placeholder = 'Select a property to edit'
         const close_button: vscode.QuickInputButton = {
           iconPath: new vscode.ThemeIcon('close'),
-          tooltip: 'Save and Close'
+          tooltip: 'Save and close'
         }
         const redo_button: vscode.QuickInputButton = {
           iconPath: new vscode.ThemeIcon('redo'),
@@ -223,7 +220,7 @@ export const upsert_configuration = async (params: {
                   detail: updated_config.provider_name
                 },
                 { label: 'Model', detail: updated_config.model },
-                { label: 'Advanced', detail: advanced_details }
+                { label: 'Advanced' }
               ]
               quick_pick.buttons = [close_button]
             }
@@ -266,7 +263,7 @@ export const upsert_configuration = async (params: {
         if (advanced_options.includes('Temperature')) {
           advanced_items.push({
             label: 'Temperature',
-            description: 'Leave unset with reasoning models',
+            description: 'Leave empty with reasoning models',
             detail: updated_config.temperature?.toString()
           })
         }
@@ -327,10 +324,60 @@ export const upsert_configuration = async (params: {
               new_temp === null ? undefined : new_temp
           }
         } else if (selected_advanced.label == 'Reasoning Effort') {
-          const new_effort = await edit_reasoning_effort_for_config()
-          if (new_effort !== undefined) {
-            updated_config.reasoning_effort =
-              new_effort === null ? undefined : (new_effort as any)
+          // eslint-disable-next-line no-constant-condition
+          while (true) {
+            const new_effort = await edit_reasoning_effort_for_config()
+            if (new_effort === undefined) break
+
+            let is_valid = true
+            if (new_effort !== null) {
+              const provider = await providers_manager.get_provider(
+                updated_config.provider_name
+              )
+              if (provider) {
+                const base_url =
+                  provider.type === 'built-in'
+                    ? PROVIDERS[provider.name as keyof typeof PROVIDERS]
+                        ?.base_url
+                    : provider.base_url
+
+                if (base_url) {
+                  try {
+                    await vscode.window.withProgress(
+                      {
+                        location: vscode.ProgressLocation.Notification,
+                        title: 'Checking reasoning effort support...',
+                        cancellable: true
+                      },
+                      async (_progress, token) => {
+                        await verify_reasoning_effort({
+                          endpoint_url: base_url!,
+                          api_key: provider.api_key,
+                          model: updated_config.model,
+                          reasoning_effort: new_effort as string,
+                          provider,
+                          cancellation_token: token
+                        })
+                      }
+                    )
+                  } catch (error: any) {
+                    is_valid = false
+                    if (error?.message != 'Cancelled') {
+                      vscode.window.showWarningMessage(
+                        dictionary.warning_message
+                          .REASONING_EFFORT_NOT_SUPPORTED
+                      )
+                    }
+                  }
+                }
+              }
+            }
+
+            if (is_valid) {
+              updated_config.reasoning_effort =
+                new_effort === null ? undefined : (new_effort as any)
+              break
+            }
           }
         } else if (selected_advanced.label == 'Max Concurrency') {
           const new_concurrency =
@@ -391,4 +438,78 @@ export const upsert_configuration = async (params: {
   }
 
   await save_configs(configs)
+}
+
+const verify_reasoning_effort = async (params: {
+  endpoint_url: string
+  api_key?: string
+  model: string
+  reasoning_effort: string
+  provider: Provider
+  cancellation_token: vscode.CancellationToken
+}): Promise<void> => {
+  const cancel_source = axios.CancelToken.source()
+
+  const disposable = params.cancellation_token.onCancellationRequested(() => {
+    cancel_source.cancel('User cancelled')
+  })
+
+  const body: any = {
+    model: params.model,
+    messages: [
+      {
+        role: 'user',
+        content: 'Respond with "Hello!" and nothing else.'
+      }
+    ],
+    stream: true
+  }
+
+  apply_reasoning_effort(body, params.provider, params.reasoning_effort as any)
+
+  try {
+    const response = await axios.post(
+      params.endpoint_url + '/chat/completions',
+      body,
+      {
+        headers: {
+          ...(params.api_key
+            ? { ['Authorization']: `Bearer ${params.api_key}` }
+            : {}),
+          ['Content-Type']: 'application/json'
+        },
+        responseType: 'stream',
+        cancelToken: cancel_source.token
+      }
+    )
+
+    await new Promise<void>((resolve, reject) => {
+      const stream = response.data
+
+      stream.on('data', () => {
+        cancel_source.cancel('Verified')
+        resolve()
+      })
+
+      stream.on('error', (err: any) => {
+        reject(err)
+      })
+
+      stream.on('end', () => {
+        resolve()
+      })
+    })
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      if (error.message == 'Verified') {
+        return
+      }
+      if (error.message == 'User cancelled') {
+        throw new Error('Cancelled')
+      }
+    }
+    throw error
+  } finally {
+    disposable.dispose()
+  }
 }

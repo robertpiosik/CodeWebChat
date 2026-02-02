@@ -379,18 +379,22 @@ export const edit_temperature_for_config = async (
 
 export const edit_reasoning_effort_for_config = async () => {
   const effort_options: vscode.QuickPickItem[] = [
-    { label: 'Unset', description: 'Remove reasoning effort configuration' },
-    { label: 'none' },
-    { label: 'minimal' },
-    { label: 'low' },
-    { label: 'medium' },
-    { label: 'high' }
+    {
+      label: 'Unset',
+      description: 'Remove reasoning effort from the configuration'
+    },
+    { label: 'None' },
+    { label: 'Minimal' },
+    { label: 'Low' },
+    { label: 'Medium' },
+    { label: 'High' }
   ]
 
   return await new Promise<string | null | undefined>((resolve) => {
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = effort_options
-    quick_pick.title = 'Select Reasoning Effort'
+    quick_pick.title = 'Reasoning Efforts'
+    quick_pick.placeholder = 'Select reasoning effort'
     quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
     let accepted = false
@@ -401,7 +405,9 @@ export const edit_reasoning_effort_for_config = async () => {
         accepted = true
         const selected = quick_pick.selectedItems[0]
         if (selected) {
-          resolve(selected.label === 'Unset' ? null : selected.label)
+          resolve(
+            selected.label == 'Unset' ? null : selected.label.toLowerCase()
+          )
         } else {
           resolve(undefined)
         }

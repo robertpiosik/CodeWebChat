@@ -193,7 +193,9 @@ export const dictionary = {
       `No results for "${search_value}" in the selected context.`,
     NO_MODEL_PROVIDERS_FOUND:
       'No model providers found. Please add a model provider first.',
-    SELECT_PRESET_FROM_LIST: 'Select preset from the list.'
+    SELECT_PRESET_FROM_LIST: 'Select preset from the list.',
+    REASONING_EFFORT_NOT_SUPPORTED:
+      'The selected reasoning effort is not supported by the model.'
   },
 
   error_message: {
