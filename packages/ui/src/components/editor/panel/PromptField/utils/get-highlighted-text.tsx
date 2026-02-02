@@ -217,7 +217,9 @@ export const get_highlighted_text = (params: {
         return `<span class="${cn(styles['symbol'], styles['symbol--image'], {
           [styles['symbol--error']]: is_error
         })}" data-type="image-symbol" data-hash="${hash}"${
-          is_error ? ' title="Images are not supported in Web mode"' : ''
+          is_error
+            ? ' title="The prompt autofill feature can\'t handle images.\nUpload in chatbot or use API with a multimodal model."'
+            : ''
         }><span class="${
           styles['symbol__icon']
         }" data-role="symbol-icon"></span><span class="${
