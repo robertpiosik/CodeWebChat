@@ -67,6 +67,8 @@ export type PromptFieldProps = {
   on_prune_context_instructions_prefix_change: (value: string) => void
   on_pasted_lines_click: (path: string, start?: string, end?: string) => void
   on_open_url: (url: string) => void
+  on_paste_image: (base64_content: string) => void
+  on_open_image: (hash: string) => void
 }
 
 export const PromptField: React.FC<PromptFieldProps> = (props) => {
@@ -172,13 +174,15 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     return get_highlighted_text({
       text: props.value,
       current_selection: props.current_selection,
-      context_file_paths: props.context_file_paths ?? []
+      context_file_paths: props.context_file_paths ?? [],
+      is_web_mode: props.is_web_mode
     })
   }, [
     props.value,
     props.prompt_type,
     props.current_selection,
-    props.context_file_paths
+    props.context_file_paths,
+    props.is_web_mode
   ])
 
   useEffect(() => {

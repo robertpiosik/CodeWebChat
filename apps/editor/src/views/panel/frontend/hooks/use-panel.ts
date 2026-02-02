@@ -176,6 +176,20 @@ export const use_panel = (vscode: any) => {
     set_main_view_scroll_reset_key((k) => k + 1)
   }
 
+  const handle_paste_image = (content_base64: string) => {
+    post_message(vscode, {
+      command: 'SAVE_TEMP_IMAGE',
+      content_base64
+    })
+  }
+
+  const handle_open_image = (hash: string) => {
+    post_message(vscode, {
+      command: 'OPEN_TEMP_IMAGE',
+      hash
+    })
+  }
+
   const handle_prune_context_instructions_prefix_change = (prefix: string) => {
     post_message(vscode, {
       command: 'SAVE_PRUNE_CONTEXT_INSTRUCTIONS_PREFIX',
@@ -578,6 +592,8 @@ export const use_panel = (vscode: any) => {
     handle_remove_response_history_item,
     handle_discard_user_changes_in_preview,
     handle_prune_context_instructions_prefix_change,
-    fix_all_automatically
+    fix_all_automatically,
+    handle_paste_image,
+    handle_open_image
   }
 }

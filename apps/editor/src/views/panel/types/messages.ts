@@ -481,6 +481,16 @@ export interface DeleteConfigurationMessage extends BaseMessage {
   configuration_id: string
 }
 
+export interface SaveTempImageMessage extends BaseMessage {
+  command: 'SAVE_TEMP_IMAGE'
+  content_base64: string
+}
+
+export interface OpenTempImageMessage extends BaseMessage {
+  command: 'OPEN_TEMP_IMAGE'
+  hash: string
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -564,6 +574,8 @@ export type FrontendMessage =
   | OpenExternalUrlMessage
   | UpsertConfigurationMessage
   | DeleteConfigurationMessage
+  | SaveTempImageMessage
+  | OpenTempImageMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {

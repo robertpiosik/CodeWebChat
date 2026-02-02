@@ -10,6 +10,7 @@ import {
   replace_commit_symbol
 } from '@/views/panel/backend/utils/replace-git-symbols'
 import { replace_skill_symbol } from '@/views/panel/backend/utils/replace-skill-symbol'
+import { replace_image_symbol } from '@/views/panel/backend/utils/replace-image-symbol'
 import {
   code_at_cursor_instructions_for_panel,
   prune_context_instructions_prefix,
@@ -167,6 +168,13 @@ export const handle_send_to_browser = async (params: {
       skill_definitions += result.skill_definitions
     }
 
+    if (processed_completion_instructions.includes('#Image(')) {
+      processed_completion_instructions = await replace_image_symbol({
+        instruction: processed_completion_instructions,
+        remove: true
+      })
+    }
+
     const context_text = await files_collector.collect_files({
       exclude_path: active_path
     })
@@ -267,6 +275,13 @@ export const handle_send_to_browser = async (params: {
           })
           processed_instructions = result.instruction
           skill_definitions += result.skill_definitions
+        }
+
+        if (processed_instructions.includes('#Image(')) {
+          processed_instructions = await replace_image_symbol({
+            instruction: processed_instructions,
+            remove: true
+          })
         }
 
         let system_instructions_xml = ''

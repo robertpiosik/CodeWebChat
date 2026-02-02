@@ -11,6 +11,7 @@ import {
 } from '@/views/panel/backend/utils/replace-git-symbols'
 import { Preset } from '@shared/types/preset'
 import { replace_skill_symbol } from '@/views/panel/backend/utils/replace-skill-symbol'
+import { replace_image_symbol } from '@/views/panel/backend/utils/replace-image-symbol'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import { dictionary } from '@shared/constants/dictionary'
 import {
@@ -120,6 +121,13 @@ export const handle_preview_preset = async (
       skill_definitions += result.skill_definitions
     }
 
+    if (processed_completion_instructions.includes('#Image(')) {
+      processed_completion_instructions = await replace_image_symbol({
+        instruction: processed_completion_instructions,
+        remove: true
+      })
+    }
+
     const missing_text_tag = processed_completion_instructions
       ? `<missing_text>${processed_completion_instructions}</missing_text>`
       : '<missing_text>'
@@ -192,6 +200,13 @@ export const handle_preview_preset = async (
       })
       processed_instructions = result.instruction
       skill_definitions += result.skill_definitions
+    }
+
+    if (processed_instructions.includes('#Image(')) {
+      processed_instructions = await replace_image_symbol({
+        instruction: processed_instructions,
+        remove: true
+      })
     }
 
     let system_instructions_xml = ''

@@ -24,6 +24,7 @@ import { replace_saved_context_symbol } from '@/views/panel/backend/utils/replac
 import { replace_selection_symbol } from '@/views/panel/backend/utils/replace-selection-symbol'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { replace_skill_symbol } from '@/views/panel/backend/utils/replace-skill-symbol'
+import { replace_image_symbol } from '@/views/panel/backend/utils/replace-image-symbol'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { EditContextMessage } from '@/views/panel/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
@@ -364,6 +365,12 @@ export const handle_edit_context = async (
     skill_definitions += result.skill_definitions
   }
 
+  if (processed_instructions.includes('#Image(')) {
+    processed_instructions = await replace_image_symbol({
+      instruction: processed_instructions
+    })
+  }
+
   const is_prune_context = panel_provider.api_prompt_type == 'prune-context'
   const collected_files = await files_collector.collect_files({
     compact: is_prune_context
@@ -465,6 +472,29 @@ export const handle_edit_context = async (
         .get<string>('editContextSystemInstructions') ||
       default_system_instructions
 
+    let user_content: any = content
+
+    if (content.includes('<cwc-image>')) {
+      user_content = []
+      const parts = content.split(/<cwc-image>([\s\S]*?)<\/cwc-image>/)
+
+      for (let i = 0; i < parts.length; i++) {
+        const part = parts[i]
+        if (i % 2 == 0) {
+          if (part.length > 0) {
+            user_content.push({ type: 'text', text: part.trim() })
+          }
+        } else {
+          user_content.push({
+            type: 'image_url',
+            image_url: {
+              url: `data:image/png;base64,${part}`
+            }
+          })
+        }
+      }
+    }
+
     const messages = [
       ...(system_instructions
         ? [
@@ -476,7 +506,7 @@ export const handle_edit_context = async (
         : []),
       {
         role: 'user',
-        content
+        content: user_content
       }
     ]
 

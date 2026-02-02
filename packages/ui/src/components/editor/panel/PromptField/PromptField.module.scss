@@ -136,7 +136,7 @@
   }
 }
 
-.selection-keyword {
+.selection-symbol {
   background-color: var(--vscode-editor-selectionBackground);
   border-radius: 2px;
   padding: 0 0.6px;
@@ -146,7 +146,7 @@
   }
 }
 
-.keyword {
+.symbol {
   font-size: 12px;
   background-color: color-mix(
     in srgb,
@@ -232,6 +232,22 @@
     }
   }
 
+  &--image &__icon::before {
+    content: '\eaea';
+  }
+
+  &--image &__text {
+    cursor: pointer;
+
+    &:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--vscode-charts-blue) 30%,
+        transparent
+      );
+    }
+  }
+
   &--changes &__icon::before {
     content: '\ebdb';
   }
@@ -270,7 +286,7 @@
     }
   }
 
-  &--selection-error {
+  &--error {
     background-color: color-mix(
       in srgb,
       var(--vscode-charts-red) 30%,
@@ -278,8 +294,15 @@
     );
   }
 
-  // hover on close icon of selection error
-  &--selection-error &__icon:hover {
+  &--error &__icon:hover {
+    background-color: color-mix(
+      in srgb,
+      var(--vscode-charts-red) 40%,
+      transparent
+    );
+  }
+
+  &--error &__text:hover {
     background-color: color-mix(
       in srgb,
       var(--vscode-charts-red) 40%,

@@ -36,6 +36,8 @@ export const Empty = () => (
       console.log('Pasted lines clicked:', path, start, end)
     }
     on_open_url={(url) => console.log('Open URL:', url)}
+    on_paste_image={(content) => console.log('Paste image:', content)}
+    on_open_image={(hash) => console.log('Open image:', hash)}
   />
 )
 
@@ -70,6 +72,8 @@ export const WithText = () => (
       console.log('Pasted lines clicked:', path, start, end)
     }
     on_open_url={(url) => console.log('Open URL:', url)}
+    on_paste_image={(content) => console.log('Paste image:', content)}
+    on_open_image={(hash) => console.log('Open image:', hash)}
   />
 )
 
@@ -104,6 +108,8 @@ export const LongText = () => (
       console.log('Pasted lines clicked:', path, start, end)
     }
     on_open_url={(url) => console.log('Open URL:', url)}
+    on_paste_image={(content) => console.log('Paste image:', content)}
+    on_open_image={(hash) => console.log('Open image:', hash)}
   />
 )
 
@@ -138,6 +144,8 @@ export const WithPlaceholderSavedContext = () => (
       console.log('Pasted lines clicked:', path, start, end)
     }
     on_open_url={(url) => console.log('Open URL:', url)}
+    on_paste_image={(content) => console.log('Paste image:', content)}
+    on_open_image={(hash) => console.log('Open image:', hash)}
   />
 )
 
@@ -178,6 +186,8 @@ export const WithPlaceholderSelection = () => (
       console.log('Pasted lines clicked:', path, start, end)
     }
     on_open_url={(url) => console.log('Open URL:', url)}
+    on_paste_image={(content) => console.log('Paste image:', content)}
+    on_open_image={(hash) => console.log('Open image:', hash)}
   />
 )
 
@@ -212,6 +222,8 @@ export const WithCommit = () => (
       console.log('Pasted lines clicked:', path, start, end)
     }
     on_open_url={(url) => console.log('Open URL:', url)}
+    on_paste_image={(content) => console.log('Paste image:', content)}
+    on_open_image={(hash) => console.log('Open image:', hash)}
   />
 )
 
@@ -246,6 +258,8 @@ export const WithCommitWithQuotes = () => (
       console.log('Pasted lines clicked:', path, start, end)
     }
     on_open_url={(url) => console.log('Open URL:', url)}
+    on_paste_image={(content) => console.log('Paste image:', content)}
+    on_open_image={(hash) => console.log('Open image:', hash)}
   />
 )
 export const WithContextAtCommit = () => (
@@ -279,6 +293,8 @@ export const WithContextAtCommit = () => (
       console.log('Pasted lines clicked:', path, start, end)
     }
     on_open_url={(url) => console.log('Open URL:', url)}
+    on_paste_image={(content) => console.log('Paste image:', content)}
+    on_open_image={(hash) => console.log('Open image:', hash)}
   />
 )
 
@@ -306,7 +322,7 @@ export const WithEditFormatSelector = () => {
       on_edit_format_change={set_edit_format}
       context_file_paths={[]}
       invocation_count={1}
-      on_invocation_count_change={set_edit_format as any} // Mocking for demo
+      on_invocation_count_change={set_edit_format as any}
       on_go_to_file={(path) => console.log('Go to file:', path)}
       prune_context_instructions_prefix=""
       on_prune_context_instructions_prefix_change={(val) =>
@@ -316,6 +332,8 @@ export const WithEditFormatSelector = () => {
         console.log('Pasted lines clicked:', path, start, end)
       }
       on_open_url={(url) => console.log('Open URL:', url)}
+      on_paste_image={(content) => console.log('Paste image:', content)}
+      on_open_image={(hash) => console.log('Open image:', hash)}
     />
   )
 }
@@ -351,5 +369,7 @@ export const WithFilePaths = () => (
       console.log('Pasted lines clicked:', path, start, end)
     }
     on_open_url={(url) => console.log('Open URL:', url)}
+    on_paste_image={(content) => console.log('Paste image:', content)}
+    on_open_image={(hash) => console.log('Open image:', hash)}
   />
 )

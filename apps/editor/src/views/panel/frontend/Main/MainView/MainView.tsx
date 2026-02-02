@@ -105,6 +105,8 @@ type Props = {
   are_keyboard_shortcuts_disabled: boolean
   prune_context_instructions_prefix: string
   on_prune_context_instructions_prefix_change: (prefix: string) => void
+  on_paste_image: (base64_content: string) => void
+  on_open_image: (hash: string) => void
 }
 
 export const MainView: React.FC<Props> = (props) => {
@@ -265,6 +267,8 @@ export const MainView: React.FC<Props> = (props) => {
             on_prune_context_instructions_prefix_change={
               props.on_prune_context_instructions_prefix_change
             }
+            on_paste_image={props.on_paste_image}
+            on_open_image={props.on_open_image}
           />
           <UiContextUtilisation
             current_context_size={props.token_count}

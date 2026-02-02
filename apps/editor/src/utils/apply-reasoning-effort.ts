@@ -14,14 +14,13 @@ export const apply_reasoning_effort = (
       }
     }
   } else if (provider.name == 'Google') {
-    if (reasoning_effort) {
+    if (reasoning_effort == 'none') {
       body.reasoning_effort = reasoning_effort
-    }
-
-    if (reasoning_effort && reasoning_effort != 'none') {
+    } else {
       body.extra_body = {
         google: {
           thinking_config: {
+            thinking_level: reasoning_effort,
             include_thoughts: true
           }
         }

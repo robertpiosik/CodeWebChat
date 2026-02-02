@@ -17,7 +17,7 @@ export const handle_check_all_with_keywords_source = async (
       input_box.title = 'Keyword Search'
       input_box.prompt =
         'Enter keywords separated by comma (use & for AND, quotes for whole words)'
-      input_box.placeholder = 'e.g. user, login&auth, "ignoreFocus"'
+      input_box.placeholder = 'e.g. user, login&auth, "changePassword"'
       input_box.ignoreFocusOut = true
       input_box.buttons = [vscode.QuickInputButtons.Back]
 
@@ -221,6 +221,7 @@ export const handle_check_all_with_keywords_source = async (
             quick_pick_merge.items = quick_pick_options
             quick_pick_merge.placeholder = `How would you like to apply the ${selected_paths.length} selected files?`
             quick_pick_merge.buttons = [vscode.QuickInputButtons.Back]
+            quick_pick_merge.ignoreFocusOut = true
 
             if (last_choice_label) {
               const active_item = quick_pick_options.find(

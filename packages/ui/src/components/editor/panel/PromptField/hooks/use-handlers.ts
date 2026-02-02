@@ -14,21 +14,21 @@ type HistoryEntry = {
   raw_caret_pos: number
 }
 
-const getKeywordRanges = (
+const get_symbol_ranges = (
   text: string,
   context_file_paths: string[]
 ): { start: number; end: number }[] => {
   const ranges: { start: number; end: number }[] = []
-  // This regex is a combination of all keyword types
+  // This regex is a combination of all symbol types
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "(?:\\.|[^"\\])*"\))|(#(?:Commit|ContextAtCommit)\([^:]+:[^\s"]+ "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>[\s\S]*?<\/fragment>)|(#Skill\([^)]+\))/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "(?:\\.|[^"\\])*"\))|(#(?:Commit|ContextAtCommit)\([^:]+:[^\s"]+ "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>[\s\S]*?<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))/g
 
   let match
   while ((match = regex.exec(text)) !== null) {
     const file_path = match[1]
 
     if (file_path) {
-      // Only treat file paths as keywords if they are in the context
+      // Only treat file paths as symbols if they are in the context
       if (context_file_paths.includes(file_path)) {
         ranges.push({ start: match.index, end: match.index + match[0].length })
       }
@@ -53,7 +53,7 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
       inner_content += reconstruct_raw_value_from_node(child)
     }
 
-    if (el.dataset.type == 'file-keyword') {
+    if (el.dataset.type == 'file-symbol') {
       const path = el.dataset.path
       if (!path) return ''
       const filename = path.split('/').pop() || path
@@ -63,7 +63,7 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
         const suffix = inner_content.substring(index + filename.length)
         return `${prefix}\`${path}\`${suffix}`
       }
-    } else if (el.dataset.type == 'changes-keyword') {
+    } else if (el.dataset.type == 'changes-symbol') {
       const branchName = el.dataset.branchName
       if (!branchName) return ''
       const expected_text = `Diff with ${branchName}`
@@ -73,7 +73,7 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
         const suffix = inner_content.substring(index + expected_text.length)
         return `${prefix}#Changes(${branchName})${suffix}`
       }
-    } else if (el.dataset.type == 'saved-context-keyword') {
+    } else if (el.dataset.type == 'saved-context-symbol') {
       const contextType = el.dataset.contextType
       const contextName = el.dataset.contextName
       if (!contextType || !contextName) return ''
@@ -84,7 +84,7 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
         const suffix = inner_content.substring(index + expected_text.length)
         return `${prefix}#SavedContext(${contextType} "${contextName.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}")${suffix}`
       }
-    } else if (el.dataset.type == 'selection-keyword') {
+    } else if (el.dataset.type == 'selection-symbol') {
       const expected_text = 'Selection'
       const index = inner_content.indexOf(expected_text)
       if (index != -1) {
@@ -92,7 +92,7 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
         const suffix = inner_content.substring(index + expected_text.length)
         return `${prefix}#Selection${suffix}`
       }
-    } else if (el.dataset.type == 'commit-keyword') {
+    } else if (el.dataset.type == 'commit-symbol') {
       const repo_name = el.dataset.repoName
       const commit_hash = el.dataset.commitHash
       const commit_message = el.dataset.commitMessage
@@ -109,7 +109,7 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
           '\\"'
         )}")${suffix}`
       }
-    } else if (el.dataset.type == 'contextatcommit-keyword') {
+    } else if (el.dataset.type == 'contextatcommit-symbol') {
       const repo_name = el.dataset.repoName
       const commit_hash = el.dataset.commitHash
       const commit_message = el.dataset.commitMessage
@@ -118,7 +118,7 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
       }
       const short_hash = commit_hash.substring(0, 7)
       const index = inner_content.indexOf(short_hash)
-      if (index !== -1) {
+      if (index != -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + short_hash.length)
         return `${prefix}#ContextAtCommit(${repo_name}:${commit_hash} "${commit_message.replace(
@@ -126,7 +126,7 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
           '\\"'
         )}")${suffix}`
       }
-    } else if (el.dataset.type == 'pasted-lines-keyword') {
+    } else if (el.dataset.type == 'pasted-lines-symbol') {
       const path = el.dataset.path
       const content = el.dataset.content
       const start = el.dataset.start
@@ -153,7 +153,7 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
       }
 
       return `<fragment ${attributes}>${formatted_content}</fragment>`
-    } else if (el.dataset.type == 'skill-keyword') {
+    } else if (el.dataset.type == 'skill-symbol') {
       const agent = el.dataset.agent
       const repo = el.dataset.repo
       const skillName = el.dataset.skillName
@@ -164,6 +164,17 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + skillName.length)
         return `${prefix}#Skill(${agent}:${repo}:${skillName})${suffix}`
+      }
+    } else if (el.dataset.type == 'image-symbol') {
+      const hash = el.dataset.hash
+      if (!hash) return ''
+
+      const expected_text = `Image`
+      const index = inner_content.indexOf(expected_text)
+      if (index != -1) {
+        const prefix = inner_content.substring(0, index)
+        const suffix = inner_content.substring(index + expected_text.length)
+        return `${prefix}#Image(${hash})${suffix}`
       }
     }
 
@@ -276,7 +287,7 @@ export const use_handlers = (
     }
   }
 
-  const apply_keyword_deletion = (start_pos: number, end_pos: number) => {
+  const apply_symbol_deletion = (start_pos: number, end_pos: number) => {
     let leading_part = props.value.substring(0, start_pos)
     let trailing_part = props.value.substring(end_pos)
 
@@ -292,50 +303,50 @@ export const use_handlers = (
     update_value(new_value, new_raw_cursor_pos)
   }
 
-  const handle_keyword_deletion_by_click = (keyword_element: HTMLElement) => {
-    const keyword_type = keyword_element.dataset.type
-    if (keyword_type == 'file-keyword') {
-      const file_path = keyword_element.dataset.path
+  const handle_symbol_deletion_by_click = (symbol_element: HTMLElement) => {
+    const symbol_type = symbol_element.dataset.type
+    if (symbol_type == 'file-symbol') {
+      const file_path = symbol_element.dataset.path
       if (!file_path || !props.context_file_paths?.includes(file_path)) return
 
       const search_pattern = `\`${file_path}\``
       const start_index = props.value.indexOf(search_pattern)
 
-      if (start_index !== -1) {
-        apply_keyword_deletion(start_index, start_index + search_pattern.length)
+      if (start_index != -1) {
+        apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (keyword_type == 'changes-keyword') {
-      const branch_name = keyword_element.dataset.branchName
+    } else if (symbol_type == 'changes-symbol') {
+      const branch_name = symbol_element.dataset.branchName
       if (!branch_name) return
 
       const search_pattern = `#Changes(${branch_name})`
       const start_index = props.value.indexOf(search_pattern)
 
-      if (start_index !== -1) {
-        apply_keyword_deletion(start_index, start_index + search_pattern.length)
+      if (start_index != -1) {
+        apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (keyword_type == 'saved-context-keyword') {
-      const context_type = keyword_element.dataset.contextType
-      const context_name = keyword_element.dataset.contextName
+    } else if (symbol_type == 'saved-context-symbol') {
+      const context_type = symbol_element.dataset.contextType
+      const context_name = symbol_element.dataset.contextName
       if (!context_type || !context_name) return
 
       const search_pattern = `#SavedContext(${context_type} "${context_name.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}")`
       const start_index = props.value.indexOf(search_pattern)
 
-      if (start_index !== -1) {
-        apply_keyword_deletion(start_index, start_index + search_pattern.length)
+      if (start_index != -1) {
+        apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (keyword_type == 'selection-keyword') {
+    } else if (symbol_type == 'selection-symbol') {
       const search_pattern = '#Selection'
       const start_index = props.value.indexOf(search_pattern)
 
-      if (start_index !== -1) {
-        apply_keyword_deletion(start_index, start_index + search_pattern.length)
+      if (start_index != -1) {
+        apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (keyword_type == 'commit-keyword') {
-      const repo_name = keyword_element.dataset.repoName
-      const commit_hash = keyword_element.dataset.commitHash
-      const commit_message = keyword_element.dataset.commitMessage
+    } else if (symbol_type == 'commit-symbol') {
+      const repo_name = symbol_element.dataset.repoName
+      const commit_hash = symbol_element.dataset.commitHash
+      const commit_message = symbol_element.dataset.commitMessage
       if (!repo_name || !commit_hash || commit_message === undefined) return
 
       const search_pattern = `#Commit(${repo_name}:${commit_hash} "${commit_message.replace(
@@ -344,13 +355,13 @@ export const use_handlers = (
       )}")`
       const start_index = props.value.indexOf(search_pattern)
 
-      if (start_index !== -1) {
-        apply_keyword_deletion(start_index, start_index + search_pattern.length)
+      if (start_index != -1) {
+        apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (keyword_type == 'contextatcommit-keyword') {
-      const repo_name = keyword_element.dataset.repoName
-      const commit_hash = keyword_element.dataset.commitHash
-      const commit_message = keyword_element.dataset.commitMessage
+    } else if (symbol_type == 'contextatcommit-symbol') {
+      const repo_name = symbol_element.dataset.repoName
+      const commit_hash = symbol_element.dataset.commitHash
+      const commit_message = symbol_element.dataset.commitMessage
       if (!repo_name || !commit_hash || commit_message === undefined) return
 
       const search_pattern = `#ContextAtCommit(${repo_name}:${commit_hash} "${commit_message.replace(
@@ -359,26 +370,26 @@ export const use_handlers = (
       )}")`
       const start_index = props.value.indexOf(search_pattern)
 
-      if (start_index !== -1) {
-        apply_keyword_deletion(start_index, start_index + search_pattern.length)
+      if (start_index != -1) {
+        apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (keyword_type == 'skill-keyword') {
-      const agent = keyword_element.dataset.agent
-      const repo = keyword_element.dataset.repo
-      const skillName = keyword_element.dataset.skillName
+    } else if (symbol_type == 'skill-symbol') {
+      const agent = symbol_element.dataset.agent
+      const repo = symbol_element.dataset.repo
+      const skillName = symbol_element.dataset.skillName
       if (!agent || !repo || !skillName) return
 
       const search_pattern = `#Skill(${agent}:${repo}:${skillName})`
       const start_index = props.value.indexOf(search_pattern)
 
-      if (start_index !== -1) {
-        apply_keyword_deletion(start_index, start_index + search_pattern.length)
+      if (start_index != -1) {
+        apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (keyword_type == 'pasted-lines-keyword') {
-      const path = keyword_element.dataset.path
-      const content = keyword_element.dataset.content
-      const start = keyword_element.dataset.start
-      const end = keyword_element.dataset.end
+    } else if (symbol_type == 'pasted-lines-symbol') {
+      const path = symbol_element.dataset.path
+      const content = symbol_element.dataset.content
+      const start = symbol_element.dataset.start
+      const end = symbol_element.dataset.end
       if (!path || content === undefined) return
 
       let attributes = `path="${path}"`
@@ -396,13 +407,23 @@ export const use_handlers = (
       let search_pattern = search_pattern_new
       let start_index = props.value.indexOf(search_pattern)
 
-      if (start_index === -1) {
+      if (start_index == -1) {
         search_pattern = search_pattern_old
         start_index = props.value.indexOf(search_pattern)
       }
 
-      if (start_index !== -1) {
-        apply_keyword_deletion(start_index, start_index + search_pattern.length)
+      if (start_index != -1) {
+        apply_symbol_deletion(start_index, start_index + search_pattern.length)
+      }
+    } else if (symbol_type == 'image-symbol') {
+      const hash = symbol_element.dataset.hash
+      if (!hash) return
+
+      const search_pattern = `#Image(${hash})`
+      const start_index = props.value.indexOf(search_pattern)
+
+      if (start_index != -1) {
+        apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
     }
   }
@@ -537,56 +558,77 @@ export const use_handlers = (
 
   const handle_paste = (e: React.ClipboardEvent<HTMLDivElement>) => {
     e.preventDefault()
+
+    if (e.clipboardData.files && e.clipboardData.files.length > 0) {
+      const file = e.clipboardData.files[0]
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader()
+        reader.onload = (event) => {
+          if (event.target?.result) {
+            const base64 = event.target.result.toString()
+            // Remove data:image/png;base64, prefix
+            const commaIndex = base64.indexOf(',')
+            if (commaIndex != -1) {
+              const rawBase64 = base64.substring(commaIndex + 1)
+              props.on_paste_image(rawBase64)
+            }
+          }
+        }
+        reader.readAsDataURL(file)
+        return
+      }
+    }
+
     const text = e.clipboardData.getData('text/plain')
     perform_paste(text)
   }
 
   const handle_input_click = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement
-    const icon_element = target.closest('[data-role="keyword-icon"]')
-    const text_element = target.closest('[data-role="keyword-text"]')
+    const icon_element = target.closest('[data-role="symbol-icon"]')
+    const text_element = target.closest('[data-role="symbol-text"]')
 
     if (icon_element) {
       e.preventDefault()
       e.stopPropagation()
-      const keyword_element = (
-        icon_element as HTMLElement
-      ).closest<HTMLElement>('[data-type]')
-      if (keyword_element) {
-        handle_keyword_deletion_by_click(keyword_element)
+      const symbol_element = (icon_element as HTMLElement).closest<HTMLElement>(
+        '[data-type]'
+      )
+      if (symbol_element) {
+        handle_symbol_deletion_by_click(symbol_element)
       }
     } else if (text_element) {
       e.preventDefault()
       e.stopPropagation()
 
-      const file_keyword_element = text_element.closest<HTMLElement>(
-        '[data-type="file-keyword"]'
+      const file_symbol_element = text_element.closest<HTMLElement>(
+        '[data-type="file-symbol"]'
       )
-      if (file_keyword_element) {
-        const file_path = file_keyword_element.getAttribute('title')
+      if (file_symbol_element) {
+        const file_path = file_symbol_element.getAttribute('title')
         if (file_path) {
           props.on_go_to_file(file_path)
         }
       }
 
-      const pasted_lines_keyword_element = text_element.closest<HTMLElement>(
-        '[data-type="pasted-lines-keyword"]'
+      const pasted_lines_symbol_element = text_element.closest<HTMLElement>(
+        '[data-type="pasted-lines-symbol"]'
       )
-      if (pasted_lines_keyword_element) {
-        const path = pasted_lines_keyword_element.dataset.path
-        const start = pasted_lines_keyword_element.dataset.start
-        const end = pasted_lines_keyword_element.dataset.end
+      if (pasted_lines_symbol_element) {
+        const path = pasted_lines_symbol_element.dataset.path
+        const start = pasted_lines_symbol_element.dataset.start
+        const end = pasted_lines_symbol_element.dataset.end
         if (path) {
           props.on_pasted_lines_click(path, start, end)
         }
       }
 
-      const skill_keyword_element = text_element.closest<HTMLElement>(
-        '[data-type="skill-keyword"]'
+      const skill_symbol_element = text_element.closest<HTMLElement>(
+        '[data-type="skill-symbol"]'
       )
-      if (skill_keyword_element) {
-        const repo = skill_keyword_element.dataset.repo
-        const skill_name = skill_keyword_element.dataset.skillName
+      if (skill_symbol_element) {
+        const repo = skill_symbol_element.dataset.repo
+        const skill_name = skill_symbol_element.dataset.skillName
 
         if (repo && repo != 'local' && skill_name) {
           const parts = repo.split(':')
@@ -595,6 +637,16 @@ export const use_handlers = (
             const url = `https://skills.sh/${user}/${repo_name}/${skill_name}`
             props.on_open_url(url)
           }
+        }
+      }
+
+      const image_symbol_element = text_element.closest<HTMLElement>(
+        '[data-type="image-symbol"]'
+      )
+      if (image_symbol_element) {
+        const hash = image_symbol_element.dataset.hash
+        if (hash) {
+          props.on_open_image(hash)
         }
       }
 
@@ -667,7 +719,7 @@ export const use_handlers = (
     set_history_index(-1)
   }
 
-  const handle_file_keyword_deletion = (
+  const handle_file_symbol_deletion = (
     raw_pos: number,
     context_file_paths: string[]
   ): boolean => {
@@ -680,8 +732,8 @@ export const use_handlers = (
     }
 
     if (
-      start_of_path !== -1 &&
-      end_of_path !== -1 &&
+      start_of_path != -1 &&
+      end_of_path != -1 &&
       start_of_path < end_of_path
     ) {
       const path_in_backticks = props.value.substring(
@@ -700,7 +752,7 @@ export const use_handlers = (
     return false
   }
 
-  const handle_changes_keyword_deletion = (
+  const handle_changes_symbol_deletion = (
     raw_pos: number,
     context_file_paths: string[]
   ): boolean => {
@@ -719,7 +771,7 @@ export const use_handlers = (
     return false
   }
 
-  const handle_saved_context_keyword_deletion = (
+  const handle_saved_context_symbol_deletion = (
     raw_pos: number,
     context_file_paths: string[]
   ): boolean => {
@@ -740,7 +792,7 @@ export const use_handlers = (
     return false
   }
 
-  const handle_selection_keyword_deletion = (
+  const handle_selection_symbol_deletion = (
     raw_pos: number,
     context_file_paths: string[]
   ): boolean => {
@@ -759,7 +811,7 @@ export const use_handlers = (
     return false
   }
 
-  const handle_commit_keyword_deletion = (
+  const handle_commit_symbol_deletion = (
     raw_pos: number,
     context_file_paths: string[]
   ): boolean => {
@@ -780,7 +832,7 @@ export const use_handlers = (
     return false
   }
 
-  const handle_skill_keyword_deletion = (raw_pos: number): boolean => {
+  const handle_skill_symbol_deletion = (raw_pos: number): boolean => {
     const text_before_cursor = props.value.substring(0, raw_pos)
     const match = text_before_cursor.match(/#Skill\([^)]+\)$/)
 
@@ -796,7 +848,7 @@ export const use_handlers = (
     return false
   }
 
-  const handle_pasted_lines_keyword_deletion = (raw_pos: number): boolean => {
+  const handle_pasted_lines_symbol_deletion = (raw_pos: number): boolean => {
     const text_before_cursor = props.value.substring(0, raw_pos)
 
     const regex = /<fragment path="[^"]+"(?: [^>]+)?>[\s\S]*?<\/fragment>/g
@@ -822,7 +874,24 @@ export const use_handlers = (
     return false
   }
 
-  const handle_keyword_deletion_by_backspace = (
+  const handle_image_symbol_deletion = (raw_pos: number): boolean => {
+    const text_before_cursor = props.value.substring(0, raw_pos)
+    const match = text_before_cursor.match(/#Image\(([a-fA-F0-9]+)\)$/)
+
+    if (match) {
+      const hash = match[1]
+      const start_of_match = raw_pos - match[0].length
+      const new_value =
+        props.value.substring(0, start_of_match) +
+        props.value.substring(raw_pos)
+      const new_raw_cursor_pos = start_of_match
+      update_value(new_value, new_raw_cursor_pos)
+      return true
+    }
+    return false
+  }
+
+  const handle_symbol_deletion_by_backspace = (
     el: HTMLElement,
     display_pos: number
   ): boolean => {
@@ -833,35 +902,39 @@ export const use_handlers = (
       context_file_paths
     )
 
-    if (el.dataset.type == 'file-keyword') {
-      return handle_file_keyword_deletion(raw_pos, context_file_paths)
+    if (el.dataset.type == 'file-symbol') {
+      return handle_file_symbol_deletion(raw_pos, context_file_paths)
     }
 
-    if (el.dataset.type == 'changes-keyword') {
-      return handle_changes_keyword_deletion(raw_pos, context_file_paths)
+    if (el.dataset.type == 'changes-symbol') {
+      return handle_changes_symbol_deletion(raw_pos, context_file_paths)
     }
 
-    if (el.dataset.type == 'saved-context-keyword') {
-      return handle_saved_context_keyword_deletion(raw_pos, context_file_paths)
+    if (el.dataset.type == 'saved-context-symbol') {
+      return handle_saved_context_symbol_deletion(raw_pos, context_file_paths)
     }
 
-    if (el.dataset.type == 'selection-keyword') {
-      return handle_selection_keyword_deletion(raw_pos, context_file_paths)
+    if (el.dataset.type == 'selection-symbol') {
+      return handle_selection_symbol_deletion(raw_pos, context_file_paths)
     }
 
     if (
-      el.dataset.type == 'commit-keyword' ||
-      el.dataset.type == 'contextatcommit-keyword'
+      el.dataset.type == 'commit-symbol' ||
+      el.dataset.type == 'contextatcommit-symbol'
     ) {
-      return handle_commit_keyword_deletion(raw_pos, context_file_paths)
+      return handle_commit_symbol_deletion(raw_pos, context_file_paths)
     }
 
-    if (el.dataset.type == 'skill-keyword') {
-      return handle_skill_keyword_deletion(raw_pos)
+    if (el.dataset.type == 'skill-symbol') {
+      return handle_skill_symbol_deletion(raw_pos)
     }
 
-    if (el.dataset.type == 'pasted-lines-keyword') {
-      return handle_pasted_lines_keyword_deletion(raw_pos)
+    if (el.dataset.type == 'pasted-lines-symbol') {
+      return handle_pasted_lines_symbol_deletion(raw_pos)
+    }
+
+    if (el.dataset.type == 'image-symbol') {
+      return handle_image_symbol_deletion(raw_pos)
     }
 
     return false
@@ -896,14 +969,15 @@ export const use_handlers = (
       let parent = startContainer.parentElement
       while (parent && parent !== input_ref.current) {
         if (
-          parent.dataset.type == 'file-keyword' ||
-          parent.dataset.type == 'changes-keyword' ||
-          parent.dataset.type == 'selection-keyword' ||
-          parent.dataset.type == 'saved-context-keyword' ||
-          parent.dataset.type == 'commit-keyword' ||
-          parent.dataset.type == 'contextatcommit-keyword' ||
-          parent.dataset.type == 'pasted-lines-keyword' ||
-          parent.dataset.type == 'skill-keyword'
+          parent.dataset.type == 'file-symbol' ||
+          parent.dataset.type == 'changes-symbol' ||
+          parent.dataset.type == 'selection-symbol' ||
+          parent.dataset.type == 'saved-context-symbol' ||
+          parent.dataset.type == 'commit-symbol' ||
+          parent.dataset.type == 'contextatcommit-symbol' ||
+          parent.dataset.type == 'pasted-lines-symbol' ||
+          parent.dataset.type == 'skill-symbol' ||
+          parent.dataset.type == 'image-symbol'
         ) {
           const rangeAfter = document.createRange()
           rangeAfter.selectNodeContents(parent)
@@ -923,17 +997,18 @@ export const use_handlers = (
     ) {
       const el = node_before_cursor as HTMLElement
       if (
-        el.dataset.type == 'file-keyword' ||
-        el.dataset.type == 'changes-keyword' ||
-        el.dataset.type == 'selection-keyword' ||
-        el.dataset.type == 'saved-context-keyword' ||
-        el.dataset.type == 'commit-keyword' ||
-        el.dataset.type == 'contextatcommit-keyword' ||
-        el.dataset.type == 'pasted-lines-keyword' ||
-        el.dataset.type == 'skill-keyword'
+        el.dataset.type == 'file-symbol' ||
+        el.dataset.type == 'changes-symbol' ||
+        el.dataset.type == 'selection-symbol' ||
+        el.dataset.type == 'saved-context-symbol' ||
+        el.dataset.type == 'commit-symbol' ||
+        el.dataset.type == 'contextatcommit-symbol' ||
+        el.dataset.type == 'pasted-lines-symbol' ||
+        el.dataset.type == 'skill-symbol' ||
+        el.dataset.type == 'image-symbol'
       ) {
         const display_pos = get_caret_position_from_div(input_ref.current)
-        if (handle_keyword_deletion_by_backspace(el, display_pos)) {
+        if (handle_symbol_deletion_by_backspace(el, display_pos)) {
           e.preventDefault()
         }
       }
@@ -1015,11 +1090,11 @@ export const use_handlers = (
           return
         }
 
-        const keyword_ranges = getKeywordRanges(value, context_file_paths)
+        const symbol_ranges = get_symbol_ranges(value, context_file_paths)
         let new_raw_pos: number | undefined
 
-        // Check if cursor is within a keyword; if so, jump to its start.
-        for (const range of keyword_ranges) {
+        // Check if cursor is within a symbol; if so, jump to its start.
+        for (const range of symbol_ranges) {
           if (i >= range.start && i < range.end) {
             new_raw_pos = range.start
             break
@@ -1060,11 +1135,11 @@ export const use_handlers = (
           i++
         }
 
-        const keyword_ranges = getKeywordRanges(value, context_file_paths)
+        const symbol_ranges = get_symbol_ranges(value, context_file_paths)
         let new_raw_pos: number | undefined
 
-        // Check if cursor is within a keyword; if so, jump to its end.
-        for (const range of keyword_ranges) {
+        // Check if cursor is within a symbol; if so, jump to its end.
+        for (const range of symbol_ranges) {
           if (i >= range.start && i < range.end) {
             new_raw_pos = range.end
             break

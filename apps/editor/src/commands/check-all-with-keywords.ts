@@ -20,7 +20,14 @@ export const check_all_with_keywords_command = (
         input_box.title = 'Keyword Search'
         input_box.prompt =
           'Enter keywords separated by comma (use & for AND, quotes for whole words)'
-        input_box.placeholder = 'e.g. user, login&auth, "ignoreFocus"'
+        input_box.placeholder = 'e.g. username, login&auth, "changePassword"'
+        input_box.ignoreFocusOut = true
+
+        const close_button = {
+          iconPath: new vscode.ThemeIcon('close'),
+          tooltip: 'Close'
+        }
+        input_box.buttons = [close_button]
 
         const keywords_input = await new Promise<string | undefined>(
           (resolve) => {
@@ -28,6 +35,12 @@ export const check_all_with_keywords_command = (
             const disposables: vscode.Disposable[] = []
 
             disposables.push(
+              input_box.onDidTriggerButton((button) => {
+                if (button === close_button) {
+                  resolve(undefined)
+                  input_box.hide()
+                }
+              }),
               input_box.onDidAccept(() => {
                 const value = input_box.value.trim()
                 if (value.length == 0) {
@@ -215,6 +228,7 @@ export const check_all_with_keywords_command = (
             const quick_pick_apply = vscode.window.createQuickPick()
             quick_pick_apply.items = quick_pick_options
             quick_pick_apply.placeholder = `How would you like to apply the ${selected_paths.length} selected files?`
+            quick_pick_apply.ignoreFocusOut = true
 
             if (last_choice_label) {
               const active_item = quick_pick_options.find(

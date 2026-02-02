@@ -26,6 +26,7 @@ import {
 } from '../utils/replace-git-symbols'
 import { replace_saved_context_symbol } from '@/views/panel/backend/utils/replace-saved-context-symbol'
 import { replace_skill_symbol } from '../utils/replace-skill-symbol'
+import { replace_image_symbol } from '../utils/replace-image-symbol'
 
 const get_code_completion_config = async (
   api_providers_manager: ModelProvidersManager,
@@ -404,6 +405,12 @@ export const handle_code_completion = async (
       skill_definitions += result.skill_definitions
     }
 
+    if (processed_completion_instructions.includes('#Image(')) {
+      processed_completion_instructions = await replace_image_symbol({
+        instruction: processed_completion_instructions
+      })
+    }
+
     const files_collector = new FilesCollector(
       panel_provider.workspace_provider,
       panel_provider.open_editors_provider
@@ -424,10 +431,33 @@ export const handle_code_completion = async (
         : '<missing_text>'
     }${payload.after}\n${main_instructions}`
 
+    let user_content: any = content
+
+    if (content.includes('<cwc-image>')) {
+      user_content = []
+      const parts = content.split(/<cwc-image>([\s\S]*?)<\/cwc-image>/)
+
+      for (let i = 0; i < parts.length; i++) {
+        const part = parts[i]
+        if (i % 2 == 0) {
+          if (part.length > 0) {
+            user_content.push({ type: 'text', text: part.trim() })
+          }
+        } else {
+          user_content.push({
+            type: 'image_url',
+            image_url: {
+              url: `data:image/png;base64,${part}`
+            }
+          })
+        }
+      }
+    }
+
     const messages = [
       {
         role: 'user',
-        content
+        content: user_content
       }
     ]
 

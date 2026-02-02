@@ -8,20 +8,21 @@ export const map_display_pos_to_raw_pos = (
   let last_raw_index = 0
 
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))/g
   let match
 
   while ((match = regex.exec(raw_text)) !== null) {
     const file_path = match[1]
-    const changes_keyword = match[2]
-    const selection_keyword = match[3]
-    const saved_context_keyword = match[4]
+    const changes_symbol = match[2]
+    const selection_symbol = match[3]
+    const saved_context_symbol = match[4]
     const context_name = match[5]
-    const commit_keyword = match[6]
+    const commit_symbol = match[6]
     const commit_hash = match[7]
-    const fragment_keyword = match[8] // Whole fragment tag
+    const fragment_symbol = match[8] // Whole fragment tag
     let fragment_content = match[9] // Content inside fragment
-    const skill_keyword = match[10]
+    const skill_symbol = match[10]
+    const image_symbol = match[11]
 
     let is_replacement_match = false
     let display_match_length = 0
@@ -30,24 +31,24 @@ export const map_display_pos_to_raw_pos = (
       const filename = file_path.split('/').pop() || file_path
       display_match_length = filename.length
       is_replacement_match = true
-    } else if (changes_keyword) {
-      const branch_name = changes_keyword.slice(9, -1)
+    } else if (changes_symbol) {
+      const branch_name = changes_symbol.slice(9, -1)
       display_match_length = `Diff with ${branch_name}`.length
       is_replacement_match = true
-    } else if (selection_keyword) {
+    } else if (selection_symbol) {
       display_match_length = 'Selection'.length
       is_replacement_match = true
-    } else if (saved_context_keyword) {
+    } else if (saved_context_symbol) {
       const display_name = context_name
         .replace(/\\"/g, '"')
         .replace(/\\\\/g, '\\')
       display_match_length = `Context "${display_name}"`.length
       is_replacement_match = true
-    } else if (commit_keyword) {
+    } else if (commit_symbol) {
       const short_hash = commit_hash.substring(0, 7)
       display_match_length = short_hash.length
       is_replacement_match = true
-    } else if (fragment_keyword) {
+    } else if (fragment_symbol) {
       if (
         fragment_content.startsWith('\n<![CDATA[\n') &&
         fragment_content.endsWith('\n]]>\n')
@@ -68,11 +69,14 @@ export const map_display_pos_to_raw_pos = (
       const lines_text = line_count === 1 ? 'line' : 'lines'
       display_match_length = `Pasted ${line_count} ${lines_text}`.length
       is_replacement_match = true
-    } else if (skill_keyword) {
-      const content = skill_keyword.slice(7, -1)
+    } else if (skill_symbol) {
+      const content = skill_symbol.slice(7, -1)
       const parts = content.split(':')
       const skill_name = parts[parts.length - 1]
       display_match_length = skill_name.length
+      is_replacement_match = true
+    } else if (image_symbol) {
+      display_match_length = 'Image'.length
       is_replacement_match = true
     }
 
@@ -117,20 +121,21 @@ export const map_raw_pos_to_display_pos = (
   let last_raw_index = 0
 
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))/g
   let match
 
   while ((match = regex.exec(raw_text)) !== null) {
     const file_path = match[1]
-    const changes_keyword = match[2]
-    const selection_keyword = match[3]
-    const saved_context_keyword = match[4]
+    const changes_symbol = match[2]
+    const selection_symbol = match[3]
+    const saved_context_symbol = match[4]
     const context_name = match[5]
-    const commit_keyword = match[6]
+    const commit_symbol = match[6]
     const commit_hash = match[7]
-    const fragment_keyword = match[8]
+    const fragment_symbol = match[8]
     let fragment_content = match[9] // Content inside fragment
-    const skill_keyword = match[10]
+    const skill_symbol = match[10]
+    const image_symbol = match[11]
 
     let is_replacement_match = false
     let display_match_length = 0
@@ -139,24 +144,24 @@ export const map_raw_pos_to_display_pos = (
       const filename = file_path.split('/').pop() || file_path
       display_match_length = filename.length
       is_replacement_match = true
-    } else if (changes_keyword) {
-      const branch_name = changes_keyword.slice(9, -1)
+    } else if (changes_symbol) {
+      const branch_name = changes_symbol.slice(9, -1)
       display_match_length = `Diff with ${branch_name}`.length
       is_replacement_match = true
-    } else if (selection_keyword) {
+    } else if (selection_symbol) {
       display_match_length = 'Selection'.length
       is_replacement_match = true
-    } else if (saved_context_keyword) {
+    } else if (saved_context_symbol) {
       const display_name = context_name
         .replace(/\\"/g, '"')
         .replace(/\\\\/g, '\\')
       display_match_length = `Context "${display_name}"`.length
       is_replacement_match = true
-    } else if (commit_keyword) {
+    } else if (commit_symbol) {
       const short_hash = commit_hash.substring(0, 7)
       display_match_length = short_hash.length
       is_replacement_match = true
-    } else if (fragment_keyword) {
+    } else if (fragment_symbol) {
       if (
         fragment_content.startsWith('\n<![CDATA[\n') &&
         fragment_content.endsWith('\n]]>\n')
@@ -177,11 +182,14 @@ export const map_raw_pos_to_display_pos = (
       const lines_text = line_count === 1 ? 'line' : 'lines'
       display_match_length = `Pasted ${line_count} ${lines_text}`.length
       is_replacement_match = true
-    } else if (skill_keyword) {
-      const content = skill_keyword.slice(7, -1)
+    } else if (skill_symbol) {
+      const content = skill_symbol.slice(7, -1)
       const parts = content.split(':')
       const skill_name = parts[parts.length - 1]
       display_match_length = skill_name.length
+      is_replacement_match = true
+    } else if (image_symbol) {
+      display_match_length = 'Image'.length
       is_replacement_match = true
     }
 

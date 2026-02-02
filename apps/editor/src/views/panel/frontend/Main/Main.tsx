@@ -64,6 +64,8 @@ type Props = {
   prune_context_instructions_prefix: string
   on_prune_context_instructions_prefix_change: (prefix: string) => void
   on_open_url: (url: string) => void
+  on_paste_image: (base64_content: string) => void
+  on_open_image: (hash: string) => void
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -839,6 +841,8 @@ export const Main: React.FC<Props> = (props) => {
         props.on_prune_context_instructions_prefix_change
       }
       on_open_url={props.on_open_url}
+      on_paste_image={props.on_paste_image}
+      on_open_image={props.on_open_image}
     />
   )
 }

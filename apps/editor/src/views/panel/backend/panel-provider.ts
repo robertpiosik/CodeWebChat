@@ -78,7 +78,9 @@ import {
   handle_save_prune_context_instructions_prefix,
   handle_open_external_url,
   handle_hash_sign_quick_pick,
-  handle_open_file_and_select
+  handle_open_file_and_select,
+  handle_save_temp_image,
+  handle_open_temp_image
 } from './message-handlers'
 import { SelectionState } from '../types/messages'
 import {
@@ -778,6 +780,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             )
           } else if (message.command == 'OPEN_EXTERNAL_URL') {
             await handle_open_external_url(message)
+          } else if (message.command == 'SAVE_TEMP_IMAGE') {
+            await handle_save_temp_image(this, message)
+          } else if (message.command == 'OPEN_TEMP_IMAGE') {
+            await handle_open_temp_image(message)
           }
         } catch (error: any) {
           Logger.error({
