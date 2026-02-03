@@ -6,7 +6,7 @@ on:
       - master
       - dev
     paths:
-      - 'apps/website/**'
+      - 'apps/old-website/**'
       - 'docs/**'
       - '.github/workflows/deploy-website.yml'
 
@@ -45,7 +45,7 @@ jobs:
 
       - name: Build Docusaurus Website
         run: |
-          cd apps/website
+          cd apps/old-website
           pnpm build
 
       - name: Set environment variables
@@ -75,7 +75,7 @@ jobs:
       - name: Deploy to S3 Bucket
         if: env.S3_BUCKET
         run: |
-          aws s3 sync ./apps/website/build s3://${{ env.S3_BUCKET }} --delete
+          aws s3 sync ./apps/old-website/build s3://${{ env.S3_BUCKET }} --delete
 
       - name: Invalidate CloudFront
         if: env.CLOUDFRONT_ID
