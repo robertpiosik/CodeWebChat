@@ -32,6 +32,10 @@
 
     &--highlighted {
       background-color: var(--vscode-list-inactiveSelectionBackground);
+
+      &:hover {
+        background-color: var(--vscode-list-inactiveSelectionBackground);
+      }
     }
 
     &__left {

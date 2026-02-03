@@ -100,7 +100,7 @@ export const initial_select_model = async (
         const quick_pick = vscode.window.createQuickPick()
         quick_pick.items = model_items
         quick_pick.title = 'Create New Configuration'
-        quick_pick.placeholder = 'Choose an AI model'
+        quick_pick.placeholder = 'Choose a model'
         quick_pick.buttons = [vscode.QuickInputButtons.Back]
         if (provider.name) {
           // Currently initial_select_model doesn't take a previous selection,
