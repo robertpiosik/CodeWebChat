@@ -82,8 +82,8 @@ export const Main: React.FC<Props> = (props) => {
     [T in ApiPromptType]?: ApiToolConfiguration[]
   }>()
   const [
-    selected_configuration_id_by_mode,
-    set_selected_configuration_id_by_mode
+    selected_configuration_id_by_prompt_type,
+    set_selected_configuration_id_by_prompt_type
   ] = useState<{ [T in ApiPromptType]?: string }>()
   const [ask_history, set_ask_history] = useState<string[]>()
   const [edit_history, set_edit_history] = useState<string[]>()
@@ -112,8 +112,8 @@ export const Main: React.FC<Props> = (props) => {
           set_selected_preset_or_group_name_by_mode(
             (message as PresetsMessage).selected_preset_or_group_name_by_mode
           )
-          set_selected_configuration_id_by_mode(
-            (message as PresetsMessage).selected_configuration_id_by_mode
+          set_selected_configuration_id_by_prompt_type(
+            (message as PresetsMessage).selected_configuration_id_by_prompt_type
           )
           break
         case 'API_TOOL_CONFIGURATIONS':
@@ -165,7 +165,7 @@ export const Main: React.FC<Props> = (props) => {
           }))
           break
         case 'SELECTED_CONFIGURATION_CHANGED':
-          set_selected_configuration_id_by_mode((prev) => ({
+          set_selected_configuration_id_by_prompt_type((prev) => ({
             ...prev,
             [message.prompt_type]: message.id
           }))
@@ -796,7 +796,7 @@ export const Main: React.FC<Props> = (props) => {
       on_toggle_group_collapsed={handle_toggle_group_collapsed}
       selected_preset_or_group_name={selected_preset_or_group_name}
       selected_configuration_id={
-        selected_configuration_id_by_mode?.[props.api_prompt_type]
+        selected_configuration_id_by_prompt_type?.[props.api_prompt_type]
       }
       instructions={instructions}
       set_instructions={set_instructions}

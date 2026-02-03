@@ -6,7 +6,7 @@ import {
   ToolConfig,
   get_tool_config_id
 } from '@/services/model-providers-manager'
-import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY } from '../constants/state-keys'
+import { RECENTLY_USED_INTELLIGENT_UPDATE_CONFIG_IDS_STATE_KEY } from '../constants/state-keys'
 import { Logger } from '@shared/utils/logger'
 import { make_api_request } from './make-api-request'
 import { cleanup_api_response } from './cleanup-api-response'
@@ -33,13 +33,49 @@ export const get_intelligent_update_config = async (
   let selected_config: ToolConfig | undefined
 
   if (!show_quick_pick) {
-    selected_config =
-      await api_providers_manager.get_default_intelligent_update_config()
+    const recents = context.workspaceState.get<string[]>(
+      RECENTLY_USED_INTELLIGENT_UPDATE_CONFIG_IDS_STATE_KEY
+    )
+    const last_selected_id = recents?.[0]
+
+    if (last_selected_id) {
+      selected_config = intelligent_update_configs.find(
+        (c) => get_tool_config_id(c) == last_selected_id
+      )
+    }
+
+    if (!selected_config) {
+      selected_config =
+        await api_providers_manager.get_default_intelligent_update_config()
+    }
   }
 
   if (!selected_config || show_quick_pick) {
-    const create_items = async () => {
-      return intelligent_update_configs.map((config, index) => {
+    const create_items = () => {
+      const recent_ids =
+        context.workspaceState.get<string[]>(
+          RECENTLY_USED_INTELLIGENT_UPDATE_CONFIG_IDS_STATE_KEY
+        ) || []
+
+      const matched_recent_configs: ToolConfig[] = []
+      const remaining_configs: ToolConfig[] = []
+
+      intelligent_update_configs.forEach((config) => {
+        const id = get_tool_config_id(config)
+        if (recent_ids.includes(id)) {
+          matched_recent_configs.push(config)
+        } else {
+          remaining_configs.push(config)
+        }
+      })
+
+      matched_recent_configs.sort((a, b) => {
+        const id_a = get_tool_config_id(a)
+        const id_b = get_tool_config_id(b)
+        return recent_ids.indexOf(id_a) - recent_ids.indexOf(id_b)
+      })
+
+      const map_config_to_item = (config: ToolConfig) => {
         return {
           label: config.model,
           description: `${
@@ -50,29 +86,54 @@ export const get_intelligent_update_config = async (
               : `${config.provider_name}`
           }`,
           config,
-          index,
           id: get_tool_config_id(config)
         }
-      })
+      }
+
+      const items: (vscode.QuickPickItem & {
+        config?: ToolConfig
+        id?: string
+      })[] = []
+
+      if (matched_recent_configs.length > 0) {
+        items.push({
+          label: 'recently used',
+          kind: vscode.QuickPickItemKind.Separator
+        })
+        items.push(...matched_recent_configs.map(map_config_to_item))
+      }
+
+      if (remaining_configs.length > 0) {
+        if (matched_recent_configs.length > 0) {
+          items.push({
+            label: 'other configurations',
+            kind: vscode.QuickPickItemKind.Separator
+          })
+        }
+        items.push(...remaining_configs.map(map_config_to_item))
+      }
+
+      return items
     }
 
     const quick_pick = vscode.window.createQuickPick()
-    const items = await create_items()
-    quick_pick.items = items
+    quick_pick.items = create_items()
     quick_pick.title = 'Configurations'
     quick_pick.placeholder =
       'Select the Intelligent Update API tool configuration'
     quick_pick.matchOnDescription = true
 
-    const last_selected_id = context.workspaceState.get<string>(
-      LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY
-    )
-    const last_selected_item = items.find((item) => item.id == last_selected_id)
+    const items = quick_pick.items as (vscode.QuickPickItem & {
+      id?: string
+    })[]
 
-    if (last_selected_item) {
-      quick_pick.activeItems = [last_selected_item]
-    } else if (items.length > 0) {
-      quick_pick.activeItems = [items[0]]
+    if (items.length > 0) {
+      const first_selectable = items.find(
+        (i) => i.kind !== vscode.QuickPickItemKind.Separator
+      )
+      if (first_selectable) {
+        quick_pick.activeItems = [first_selectable]
+      }
     }
 
     return new Promise<{ provider: any; config: ToolConfig } | undefined>(
@@ -81,14 +142,21 @@ export const get_intelligent_update_config = async (
           const selected = quick_pick.selectedItems[0] as any
           quick_pick.hide()
 
-          if (!selected) {
+          if (!selected || !selected.config) {
             resolve(undefined)
             return
           }
 
+          let recents =
+            context.workspaceState.get<string[]>(
+              RECENTLY_USED_INTELLIGENT_UPDATE_CONFIG_IDS_STATE_KEY
+            ) || []
+
+          recents = [selected.id, ...recents.filter((id) => id !== selected.id)]
+
           context.workspaceState.update(
-            LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY,
-            selected.id
+            RECENTLY_USED_INTELLIGENT_UPDATE_CONFIG_IDS_STATE_KEY,
+            recents
           )
 
           const provider = await api_providers_manager.get_provider(

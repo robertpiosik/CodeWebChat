@@ -12,22 +12,11 @@ export const LAST_APPLY_CONTEXT_OPTION_STATE_KEY = 'last-apply-context-option'
 export const CONTEXT_CHECKED_PATHS_STATE_KEY = 'context-checked-paths'
 export const CONTEXT_CHECKED_URLS_STATE_KEY = 'context-checked-urls'
 export const CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY = 'context-checked-timestamps'
-export const LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY =
-  'lastSelectedCodeAtCursorConfigId'
-export const LAST_SELECTED_PRUNE_CONTEXT_CONFIG_ID_STATE_KEY =
-  'lastSelectedPruneContextConfigId'
-export const LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY =
-  'lastSelectedEditContextConfigId'
-export const LAST_SELECTED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY =
-  'lastSelectedCommitMessagesConfigId'
-export const LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY =
-  'lastSelectedIntelligentUpdateConfigId'
 export const LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY =
   'last-context-merge-replace-option'
 export const LAST_REFACTOR_INSTRUCTION_SOURCE_STATE_KEY =
   'last-refactor-instruction-source'
 export const LAST_REFACTOR_INSTRUCTION_STATE_KEY = 'last-refactor-instruction'
-
 export const LAST_SELECTED_SYMBOL_STATE_KEY = 'last-selected-symbol'
 export const LAST_SELECTED_CONTEXT_SOURCE_IN_SYMBOLS_QUICK_PICK_STATE_KEY =
   'last-selected-context-source-in-symbols-quick-pick'
@@ -70,6 +59,10 @@ export const RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY =
   'recently-used-prune-context-config-ids'
 export const RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY =
   'recently-used-edit-context-config-ids'
+export const RECENTLY_USED_COMMIT_MESSAGES_CONFIG_IDS_STATE_KEY =
+  'recently-used-commit-messages-config-ids'
+export const RECENTLY_USED_INTELLIGENT_UPDATE_CONFIG_IDS_STATE_KEY =
+  'recently-used-intelligent-update-config-ids'
 
 export const get_presets_collapsed_state_key = (web_prompt_type: string) =>
   `presets-collapsed-${web_prompt_type}`

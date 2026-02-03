@@ -94,11 +94,11 @@ import {
   INSTRUCTIONS_PRUNE_CONTEXT_STATE_KEY,
   INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY,
   INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
-  LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
-  LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY,
-  LAST_SELECTED_PRUNE_CONTEXT_CONFIG_ID_STATE_KEY,
   PANEL_MODE_STATE_KEY,
   WEB_MODE_STATE_KEY,
+  RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY,
+  RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY,
+  RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY,
   get_recently_used_presets_or_groups_key
 } from '@/constants/state-keys'
 import {
@@ -865,16 +865,16 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           return [prompt_type, selected_name]
         })
       ),
-      selected_configuration_id_by_mode: {
-        'edit-context': this.context.workspaceState.get<string>(
-          LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY
-        ),
-        'code-at-cursor': this.context.workspaceState.get<string>(
-          LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
-        ),
-        'prune-context': this.context.workspaceState.get<string>(
-          LAST_SELECTED_PRUNE_CONTEXT_CONFIG_ID_STATE_KEY
-        )
+      selected_configuration_id_by_prompt_type: {
+        'edit-context': (this.context.workspaceState.get<string[]>(
+          RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY
+        ) || [])[0],
+        'code-at-cursor': (this.context.workspaceState.get<string[]>(
+          RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
+        ) || [])[0],
+        'prune-context': (this.context.workspaceState.get<string[]>(
+          RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY
+        ) || [])[0]
       }
     })
   }

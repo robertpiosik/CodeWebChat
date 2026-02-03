@@ -10,10 +10,7 @@ import {
 import { Logger } from '@shared/utils/logger'
 import he from 'he'
 import { PROVIDERS } from '@shared/constants/providers'
-import {
-  LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
-  RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
-} from '@/constants/state-keys'
+import { RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY } from '@/constants/state-keys'
 import { ToolConfig } from '@/services/model-providers-manager'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
@@ -86,13 +83,14 @@ const get_code_at_cursor_config = async (
     if (default_config) {
       selected_config = default_config
     } else {
-      const last_selected_id = context.workspaceState.get<string>(
-        LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
+      const recents = context.workspaceState.get<string[]>(
+        RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
       )
+      const last_selected_id = recents?.[0]
       if (last_selected_id) {
         selected_config =
           code_at_cursor_configs.find(
-            (c) => get_tool_config_id(c) === last_selected_id
+            (c) => get_tool_config_id(c) == last_selected_id
           ) || null
       }
       if (!selected_config && code_at_cursor_configs.length > 0) {
@@ -180,16 +178,9 @@ const get_code_at_cursor_config = async (
     quick_pick.placeholder = 'Select code at cursor configuration'
     quick_pick.matchOnDescription = true
 
-    const last_selected_id = context.workspaceState.get<string>(
-      LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
-    )
-
     const items = quick_pick.items as (vscode.QuickPickItem & { id: string })[]
-    const last_selected_item = items.find((item) => item.id == last_selected_id)
 
-    if (last_selected_item) {
-      quick_pick.activeItems = [last_selected_item]
-    } else if (items.length > 0) {
+    if (items.length > 0) {
       const first_selectable = items.find(
         (i) => i.kind != vscode.QuickPickItemKind.Separator
       )
@@ -208,11 +199,6 @@ const get_code_at_cursor_config = async (
             resolve(undefined)
             return
           }
-
-          context.workspaceState.update(
-            LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
-            selected.id
-          )
 
           let recents =
             context.workspaceState.get<string[]>(

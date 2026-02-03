@@ -19,8 +19,8 @@ Code Web Chat is a free and open-source (FOSS), independent AI coding toolkit fo
 - APIs—_[Google](https://aistudio.google.com/api-keys), [OpenAI](https://platform.openai.com/api-keys), [OpenRouter](https://openrouter.ai/settings/keys), [local Ollama](https://ollama.com/search), etc._
 
 ✅ **Apply responses**—interactive multi-file changes integration \
-✅ **Fully-featured**—code at cursor, commit messages, etc. \
-🫰 **Cost-efficient**—optimized [prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks \
+✅ **Fully-featured**—tab completions, commit messages, etc. \
+🫰 **Cost-efficient**—[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) utilization across tasks \
 ✋ **Privacy-first**—strict zero telemetry policy
 
 <p>

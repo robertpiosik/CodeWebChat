@@ -9,10 +9,7 @@ import {
 } from '@/services/model-providers-manager'
 import { Logger } from '@shared/utils/logger'
 import { PROVIDERS } from '@shared/constants/providers'
-import {
-  LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
-  RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
-} from '@/constants/state-keys'
+import { RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY } from '@/constants/state-keys'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { CodeCompletionMessage } from '@/views/panel/types/messages'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
@@ -54,24 +51,18 @@ const get_code_completion_config = async (
       code_completions_configs.find(
         (c) => get_tool_config_id(c) === config_id
       ) || null
-    if (selected_config) {
-      context.workspaceState.update(
-        LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
-        config_id
-      )
-
-      if (panel_provider) {
-        panel_provider.send_message({
-          command: 'SELECTED_CONFIGURATION_CHANGED',
-          prompt_type: 'code-at-cursor',
-          id: config_id
-        })
-      }
+    if (selected_config && panel_provider) {
+      panel_provider.send_message({
+        command: 'SELECTED_CONFIGURATION_CHANGED',
+        prompt_type: 'code-at-cursor',
+        id: config_id
+      })
     }
   } else if (!show_quick_pick) {
-    const last_selected_id = context.workspaceState.get<string>(
-      LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
+    const recents = context.workspaceState.get<string[]>(
+      RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
     )
+    const last_selected_id = recents?.[0]
     if (last_selected_id) {
       selected_config =
         code_completions_configs.find(
@@ -163,18 +154,8 @@ const get_code_completion_config = async (
     quick_pick.placeholder = 'Select code completions configuration'
     quick_pick.matchOnDescription = true
 
-    const last_selected_id = context.workspaceState.get<string>(
-      LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
-    )
-
     const items = quick_pick.items as (vscode.QuickPickItem & { id: string })[]
-    const last_selected_item = items.find(
-      (item) => item.id === last_selected_id
-    )
-
-    if (last_selected_item) {
-      quick_pick.activeItems = [last_selected_item]
-    } else if (items.length > 0) {
+    if (items.length > 0) {
       const first_selectable = items.find(
         (i) => i.kind != vscode.QuickPickItemKind.Separator
       )
@@ -193,11 +174,6 @@ const get_code_completion_config = async (
             resolve(undefined)
             return
           }
-
-          context.workspaceState.update(
-            LAST_SELECTED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
-            selected.id
-          )
 
           let recents =
             context.workspaceState.get<string[]>(

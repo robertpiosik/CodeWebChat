@@ -9,10 +9,7 @@ import {
 } from '@/services/model-providers-manager'
 import axios from 'axios'
 import { PROVIDERS } from '@shared/constants/providers'
-import {
-  LAST_SELECTED_PRUNE_CONTEXT_CONFIG_ID_STATE_KEY,
-  RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY
-} from '@/constants/state-keys'
+import { RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY } from '@/constants/state-keys'
 import {
   replace_changes_symbol,
   replace_commit_symbol,
@@ -57,9 +54,14 @@ const get_prune_context_config = async (
       prune_context_configs.find((c) => get_tool_config_id(c) == config_id) ||
       null
     if (selected_config) {
+      let recents =
+        context.workspaceState.get<string[]>(
+          RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY
+        ) || []
+      recents = [config_id, ...recents.filter((id) => id != config_id)]
       context.workspaceState.update(
-        LAST_SELECTED_PRUNE_CONTEXT_CONFIG_ID_STATE_KEY,
-        config_id
+        RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY,
+        recents
       )
 
       if (panel_provider) {
@@ -71,9 +73,11 @@ const get_prune_context_config = async (
       }
     }
   } else if (!show_quick_pick) {
-    const last_selected_id = context.workspaceState.get<string>(
-      LAST_SELECTED_PRUNE_CONTEXT_CONFIG_ID_STATE_KEY
+    const recents = context.workspaceState.get<string[]>(
+      RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY
     )
+    const last_selected_id = recents?.[0]
+
     if (last_selected_id) {
       selected_config =
         prune_context_configs.find(
@@ -162,10 +166,10 @@ const get_prune_context_config = async (
     quick_pick.placeholder = 'Select configuration'
     quick_pick.matchOnDescription = true
 
-    const last_selected_id = context.workspaceState.get<string>(
-      LAST_SELECTED_PRUNE_CONTEXT_CONFIG_ID_STATE_KEY
+    const recents = context.workspaceState.get<string[]>(
+      RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY
     )
-
+    const last_selected_id = recents?.[0]
     const items = quick_pick.items
     const last_selected_item = items.find((item) => item.id == last_selected_id)
 
@@ -194,11 +198,6 @@ const get_prune_context_config = async (
             return
           }
 
-          context.workspaceState.update(
-            LAST_SELECTED_PRUNE_CONTEXT_CONFIG_ID_STATE_KEY,
-            selected.id
-          )
-
           let recents =
             context.workspaceState.get<string[]>(
               RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY
@@ -206,7 +205,7 @@ const get_prune_context_config = async (
           recents = [
             selected.id!,
             ...recents.filter((id) => id !== selected.id)
-          ].slice(0, 10)
+          ]
           context.workspaceState.update(
             RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY,
             recents

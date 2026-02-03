@@ -2,12 +2,13 @@ import * as vscode from 'vscode'
 import {
   ModelProvidersManager,
   ReasoningEffort,
-  get_tool_config_id
+  get_tool_config_id,
+  ToolConfig
 } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { PROVIDERS } from '@shared/constants/providers'
-import { LAST_SELECTED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
+import { RECENTLY_USED_COMMIT_MESSAGES_CONFIG_IDS_STATE_KEY } from '@/constants/state-keys'
 
 export interface CommitMessageConfig {
   provider_name: string
@@ -42,6 +43,76 @@ export const get_commit_message_config = async (
     if (configs.length == 1) {
       commit_message_config = configs[0]
     } else if (configs.length > 1) {
+      const create_items = () => {
+        const recent_ids =
+          context.workspaceState.get<string[]>(
+            RECENTLY_USED_COMMIT_MESSAGES_CONFIG_IDS_STATE_KEY
+          ) || []
+
+        const matched_recent_configs: ToolConfig[] = []
+        const remaining_configs: ToolConfig[] = []
+
+        configs.forEach((config) => {
+          const id = get_tool_config_id(config)
+          if (recent_ids.includes(id)) {
+            matched_recent_configs.push(config)
+          } else {
+            remaining_configs.push(config)
+          }
+        })
+
+        matched_recent_configs.sort((a, b) => {
+          const id_a = get_tool_config_id(a)
+          const id_b = get_tool_config_id(b)
+          return recent_ids.indexOf(id_a) - recent_ids.indexOf(id_b)
+        })
+
+        const recent_configs = matched_recent_configs
+        const other_configs = remaining_configs
+
+        const map_config_to_item = (config: ToolConfig) => {
+          const description_parts = [config.provider_name]
+          if (config.reasoning_effort) {
+            description_parts.push(`${config.reasoning_effort}`)
+          }
+          if (config.temperature != null) {
+            description_parts.push(`${config.temperature}`)
+          }
+
+          return {
+            label: config.model,
+            description: description_parts.join(' · '),
+            config,
+            id: get_tool_config_id(config)
+          }
+        }
+
+        const items: (vscode.QuickPickItem & {
+          config?: ToolConfig
+          id?: string
+        })[] = []
+
+        if (recent_configs.length > 0) {
+          items.push({
+            label: 'recently used',
+            kind: vscode.QuickPickItemKind.Separator
+          })
+          items.push(...recent_configs.map(map_config_to_item))
+        }
+
+        if (other_configs.length > 0) {
+          if (recent_configs.length > 0) {
+            items.push({
+              label: 'other configurations',
+              kind: vscode.QuickPickItemKind.Separator
+            })
+          }
+          items.push(...other_configs.map(map_config_to_item))
+        }
+
+        return items
+      }
+
       const quick_pick = vscode.window.createQuickPick()
       const close_button = {
         iconPath: new vscode.ThemeIcon('close'),
@@ -49,38 +120,22 @@ export const get_commit_message_config = async (
       }
 
       quick_pick.buttons = [close_button]
-      quick_pick.items = configs.map((config, index) => {
-        const description_parts = [config.provider_name]
-        if (config.reasoning_effort) {
-          description_parts.push(`${config.reasoning_effort}`)
-        }
-        if (config.temperature != null) {
-          description_parts.push(`${config.temperature}`)
-        }
-
-        return {
-          label: config.model,
-          description: description_parts.join(' · '),
-          config,
-          index,
-          id: get_tool_config_id(config)
-        }
-      })
+      quick_pick.items = create_items()
       quick_pick.title = 'Configurations'
       quick_pick.placeholder = 'Select configuration'
       quick_pick.matchOnDescription = true
 
-      const last_selected_id = context.workspaceState.get<string>(
-        LAST_SELECTED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY
-      )
-      const last_selected_item = (
-        quick_pick.items as (vscode.QuickPickItem & { id: string })[]
-      ).find((item) => item.id == last_selected_id)
+      const items = quick_pick.items as (vscode.QuickPickItem & {
+        id: string
+      })[]
 
-      if (last_selected_item) {
-        quick_pick.activeItems = [last_selected_item]
-      } else if (quick_pick.items.length > 0) {
-        quick_pick.activeItems = [quick_pick.items[0]]
+      if (items.length > 0) {
+        const first_selectable = items.find(
+          (i) => i.kind != vscode.QuickPickItemKind.Separator
+        )
+        if (first_selectable) {
+          quick_pick.activeItems = [first_selectable]
+        }
       }
 
       commit_message_config = await new Promise<
@@ -97,11 +152,20 @@ export const get_commit_message_config = async (
           const selected = quick_pick.selectedItems[0] as any
           quick_pick.hide()
 
-          if (selected) {
+          if (selected && selected.config) {
+            let recents =
+              context.workspaceState.get<string[]>(
+                RECENTLY_USED_COMMIT_MESSAGES_CONFIG_IDS_STATE_KEY
+              ) || []
+            recents = [
+              selected.id,
+              ...recents.filter((id) => id != selected.id)
+            ]
             context.workspaceState.update(
-              LAST_SELECTED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY,
-              selected.id
+              RECENTLY_USED_COMMIT_MESSAGES_CONFIG_IDS_STATE_KEY,
+              recents
             )
+
             resolve(selected.config)
           } else {
             resolve(undefined)

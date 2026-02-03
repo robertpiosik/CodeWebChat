@@ -619,7 +619,7 @@ export interface PresetsMessage extends BaseMessage {
   command: 'PRESETS'
   presets: { [T in WebPromptType]: Preset[] }
   selected_preset_or_group_name_by_mode?: { [T in WebPromptType]?: string }
-  selected_configuration_id_by_mode?: { [T in ApiPromptType]?: string }
+  selected_configuration_id_by_prompt_type?: { [T in ApiPromptType]?: string }
 }
 
 export interface ApiToolConfigurationsMessage extends BaseMessage {
