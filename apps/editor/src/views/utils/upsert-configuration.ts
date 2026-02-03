@@ -146,7 +146,10 @@ export const upsert_configuration = async (params: {
 
     // eslint-disable-next-line no-constant-condition
     while (true) {
-      selected_provider = await initial_select_provider(providers_manager)
+      selected_provider = await initial_select_provider(
+        providers_manager,
+        selected_provider?.name
+      )
       if (!selected_provider) return
 
       selected_model = await initial_select_model(
@@ -166,6 +169,7 @@ export const upsert_configuration = async (params: {
 
   const updated_config = config_to_edit
   const starting_config = { ...updated_config }
+  let last_selected_label: string | undefined
 
   // eslint-disable-next-line no-constant-condition
   while (true) {
@@ -197,6 +201,10 @@ export const upsert_configuration = async (params: {
         quick_pick.buttons = has_changes
           ? [redo_button, close_button]
           : [close_button]
+        if (last_selected_label) {
+          const active = items.find((i) => i.label === last_selected_label)
+          if (active) quick_pick.activeItems = [active]
+        }
         let accepted = false
         const disposables: vscode.Disposable[] = []
 
@@ -239,10 +247,14 @@ export const upsert_configuration = async (params: {
       break
     }
 
+    last_selected_label = selected_item.label
     const selected_option = selected_item.label
 
     if (selected_option == 'Model Provider') {
-      const new_provider = await edit_provider_for_config(providers_manager)
+      const new_provider = await edit_provider_for_config(
+        providers_manager,
+        updated_config.provider_name
+      )
       if (new_provider) {
         updated_config.provider_name = new_provider.provider_name
         updated_config.provider_type = new_provider.provider_type
@@ -258,6 +270,7 @@ export const upsert_configuration = async (params: {
       }
     } else if (selected_option == 'Advanced') {
       // eslint-disable-next-line no-constant-condition
+      let last_advanced_label: string | undefined
       while (true) {
         const advanced_items: vscode.QuickPickItem[] = []
         if (advanced_options.includes('Temperature')) {
@@ -292,6 +305,12 @@ export const upsert_configuration = async (params: {
             : 'Create New Configuration - Advanced'
           quick_pick.placeholder = 'Select a property to edit'
           quick_pick.buttons = [vscode.QuickInputButtons.Back]
+          if (last_advanced_label) {
+            const active = advanced_items.find(
+              (i) => i.label === last_advanced_label
+            )
+            if (active) quick_pick.activeItems = [active]
+          }
           let accepted = false
           const disposables: vscode.Disposable[] = []
 
@@ -316,6 +335,7 @@ export const upsert_configuration = async (params: {
         })
 
         if (!selected_advanced) break
+        last_advanced_label = selected_advanced.label
 
         if (selected_advanced.label == 'Temperature') {
           const new_temp = await edit_temperature_for_config(updated_config)
@@ -326,7 +346,9 @@ export const upsert_configuration = async (params: {
         } else if (selected_advanced.label == 'Reasoning Effort') {
           // eslint-disable-next-line no-constant-condition
           while (true) {
-            const new_effort = await edit_reasoning_effort_for_config()
+            const new_effort = await edit_reasoning_effort_for_config(
+              updated_config.reasoning_effort
+            )
             if (new_effort === undefined) break
 
             let is_valid = true

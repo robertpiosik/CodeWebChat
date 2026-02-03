@@ -13,7 +13,8 @@ import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 
 export const initial_select_provider = async (
-  providers_manager: ModelProvidersManager
+  providers_manager: ModelProvidersManager,
+  last_selected_provider_name?: string
 ): Promise<Provider | undefined> => {
   const providers = await providers_manager.get_providers()
 
@@ -39,6 +40,12 @@ export const initial_select_provider = async (
         tooltip: 'Close'
       }
       quick_pick.buttons = [close_button]
+      if (last_selected_provider_name) {
+        const active = provider_items.find(
+          (p) => p.label == last_selected_provider_name
+        )
+        if (active) quick_pick.activeItems = [active]
+      }
       let accepted = false
       const disposables: vscode.Disposable[] = []
 
@@ -95,6 +102,12 @@ export const initial_select_model = async (
         quick_pick.title = 'Models'
         quick_pick.placeholder = 'Choose an AI model'
         quick_pick.buttons = [vscode.QuickInputButtons.Back]
+        if (provider.name) {
+          // Currently initial_select_model doesn't take a previous selection,
+          // but if we wanted to highlight one, we would do it here.
+          // Since this is the "Add" flow, usually we don't have a previous model yet.
+          // Skipping activeItems for initial add flow model selection as per current logic.
+        }
 
         let accepted = false
         const disposables: vscode.Disposable[] = []
@@ -150,7 +163,8 @@ export const initial_select_model = async (
 }
 
 export const edit_provider_for_config = async (
-  providers_manager: ModelProvidersManager
+  providers_manager: ModelProvidersManager,
+  current_provider_name?: string
 ) => {
   const providers = await providers_manager.get_providers()
   const provider_items = providers.map((p) => ({
@@ -166,6 +180,12 @@ export const edit_provider_for_config = async (
     quick_pick.title = 'Model Providers'
     quick_pick.placeholder = 'Select a model provider'
     quick_pick.buttons = [vscode.QuickInputButtons.Back]
+    if (current_provider_name) {
+      const active = provider_items.find(
+        (p) => p.label === current_provider_name
+      )
+      if (active) quick_pick.activeItems = [active]
+    }
     let accepted = false
     const disposables: vscode.Disposable[] = []
 
@@ -248,6 +268,12 @@ export const edit_model_for_config = async (
         quick_pick.title = 'Models'
         quick_pick.placeholder = 'Choose a model'
         quick_pick.buttons = [vscode.QuickInputButtons.Back]
+        if (config.model) {
+          const active = model_items.find(
+            (item) => (item.description || item.label) === config.model
+          )
+          if (active) quick_pick.activeItems = [active]
+        }
         let accepted = false
         const disposables: vscode.Disposable[] = []
 
@@ -377,7 +403,9 @@ export const edit_temperature_for_config = async (
   })
 }
 
-export const edit_reasoning_effort_for_config = async () => {
+export const edit_reasoning_effort_for_config = async (
+  current_effort?: string
+) => {
   const effort_options: vscode.QuickPickItem[] = [
     {
       label: 'Unset',
@@ -396,6 +424,12 @@ export const edit_reasoning_effort_for_config = async () => {
     quick_pick.title = 'Reasoning Efforts'
     quick_pick.placeholder = 'Select reasoning effort'
     quick_pick.buttons = [vscode.QuickInputButtons.Back]
+    if (current_effort) {
+      const active = effort_options.find(
+        (item) => item.label.toLowerCase() === current_effort.toLowerCase()
+      )
+      if (active) quick_pick.activeItems = [active]
+    }
 
     let accepted = false
     const disposables: vscode.Disposable[] = []
