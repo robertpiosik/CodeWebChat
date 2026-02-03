@@ -123,171 +123,161 @@ export const handle_fix_all_failed_files = async (
     })
     .filter((item) => item.instructions && item.safe_path)
 
-  const max_concurrency =
-    files_to_process.length > 0 ? files_to_process.length : 1
+  await Promise.all(
+    files_to_process.map(async ({ file_state, instructions, safe_path }) => {
+      if (!safe_path) return
 
-  // Process in batches
-  for (let i = 0; i < files_to_process.length; i += max_concurrency) {
-    const batch = files_to_process.slice(i, i + max_concurrency)
-    await Promise.all(
-      batch.map(async ({ file_state, instructions, safe_path }) => {
-        if (!safe_path) return
+      const file_path = file_state.file_path
+      const workspace_name = file_state.workspace_name
 
-        const file_path = file_state.file_path
-        const workspace_name = file_state.workspace_name
+      const cancel_token_source = axios.CancelToken.source()
+      panel_provider.intelligent_update_cancel_token_sources.push({
+        source: cancel_token_source,
+        file_path,
+        workspace_name
+      })
 
-        const cancel_token_source = axios.CancelToken.source()
-        panel_provider.intelligent_update_cancel_token_sources.push({
-          source: cancel_token_source,
+      panel_provider.send_message({
+        command: 'UPDATE_FILE_PROGRESS',
+        file_path,
+        workspace_name,
+        is_applying: true,
+        apply_status: 'waiting'
+      })
+
+      const on_thinking_chunk = () => {
+        panel_provider.send_message({
+          command: 'UPDATE_FILE_PROGRESS',
           file_path,
-          workspace_name
+          workspace_name,
+          is_applying: true,
+          apply_status: 'thinking'
         })
+      }
+
+      const original_file_size = file_state.content.length
+      const estimated_total_tokens = Math.ceil(original_file_size / 4)
+
+      const on_chunk = (tokens_per_second: number, total_tokens: number) => {
+        let progress = 0
+        if (estimated_total_tokens > 0) {
+          progress = Math.min(
+            Math.round((total_tokens / estimated_total_tokens) * 100),
+            100
+          )
+        }
 
         panel_provider.send_message({
           command: 'UPDATE_FILE_PROGRESS',
           file_path,
           workspace_name,
           is_applying: true,
-          apply_status: 'waiting'
+          apply_status: 'receiving',
+          apply_progress: progress,
+          apply_tokens_per_second: tokens_per_second
+        })
+      }
+
+      const on_retry_attempt = () => {
+        panel_provider.send_message({
+          command: 'UPDATE_FILE_PROGRESS',
+          file_path,
+          workspace_name,
+          is_applying: true,
+          apply_status: 'thinking'
+        })
+      }
+
+      const on_retry = () => {
+        panel_provider.send_message({
+          command: 'UPDATE_FILE_PROGRESS',
+          file_path,
+          workspace_name,
+          is_applying: true,
+          apply_status: 'retrying'
+        })
+      }
+
+      try {
+        const updated_content = await process_file({
+          endpoint_url: endpoint_url,
+          api_key: api_provider.api_key,
+          provider: api_provider,
+          model: intelligent_update_config.model,
+          temperature: intelligent_update_config.temperature,
+          reasoning_effort: intelligent_update_config.reasoning_effort,
+          file_path: file_path,
+          file_content: file_state.content,
+          instruction: instructions,
+          cancel_token: cancel_token_source.token,
+          on_chunk,
+          on_thinking_chunk,
+          on_retry_attempt,
+          on_retry
         })
 
-        const on_thinking_chunk = () => {
+        if (updated_content) {
           panel_provider.send_message({
             command: 'UPDATE_FILE_PROGRESS',
             file_path,
             workspace_name,
             is_applying: true,
-            apply_status: 'thinking'
+            apply_status: 'done',
+            apply_progress: 100
           })
-        }
 
-        const original_file_size = file_state.content.length
-        const estimated_total_tokens = Math.ceil(original_file_size / 4)
+          const original_ends_with_newline = file_state.content.endsWith('\n')
+          const updated_ends_with_newline = updated_content.endsWith('\n')
 
-        const on_chunk = (tokens_per_second: number, total_tokens: number) => {
-          let progress = 0
-          if (estimated_total_tokens > 0) {
-            progress = Math.min(
-              Math.round((total_tokens / estimated_total_tokens) * 100),
-              100
-            )
+          let final_content = updated_content
+          if (original_ends_with_newline && !updated_ends_with_newline) {
+            final_content = updated_content + '\n'
+          } else if (!original_ends_with_newline && updated_ends_with_newline) {
+            final_content = updated_content.slice(0, -1)
           }
 
-          panel_provider.send_message({
-            command: 'UPDATE_FILE_PROGRESS',
-            file_path,
-            workspace_name,
-            is_applying: true,
-            apply_status: 'receiving',
-            apply_progress: progress,
-            apply_tokens_per_second: tokens_per_second
-          })
-        }
-
-        const on_retry_attempt = () => {
-          panel_provider.send_message({
-            command: 'UPDATE_FILE_PROGRESS',
-            file_path,
-            workspace_name,
-            is_applying: true,
-            apply_status: 'thinking'
-          })
-        }
-
-        const on_retry = () => {
-          panel_provider.send_message({
-            command: 'UPDATE_FILE_PROGRESS',
-            file_path,
-            workspace_name,
-            is_applying: true,
-            apply_status: 'retrying'
-          })
-        }
-
-        try {
-          const updated_content = await process_file({
-            endpoint_url: endpoint_url,
-            api_key: api_provider.api_key,
-            provider: api_provider,
-            model: intelligent_update_config.model,
-            temperature: intelligent_update_config.temperature,
-            reasoning_effort: intelligent_update_config.reasoning_effort,
-            file_path: file_path,
-            file_content: file_state.content,
-            instruction: instructions,
-            cancel_token: cancel_token_source.token,
-            on_chunk,
-            on_thinking_chunk,
-            on_retry_attempt,
-            on_retry
-          })
-
-          if (updated_content) {
-            panel_provider.send_message({
-              command: 'UPDATE_FILE_PROGRESS',
+          if (set_file_applied_with_intelligent_update) {
+            set_file_applied_with_intelligent_update({
               file_path,
-              workspace_name,
-              is_applying: true,
-              apply_status: 'done',
-              apply_progress: 100
-            })
-
-            const original_ends_with_newline = file_state.content.endsWith('\n')
-            const updated_ends_with_newline = updated_content.endsWith('\n')
-
-            let final_content = updated_content
-            if (original_ends_with_newline && !updated_ends_with_newline) {
-              final_content = updated_content + '\n'
-            } else if (
-              !original_ends_with_newline &&
-              updated_ends_with_newline
-            ) {
-              final_content = updated_content.slice(0, -1)
-            }
-
-            if (set_file_applied_with_intelligent_update) {
-              set_file_applied_with_intelligent_update({
-                file_path,
-                workspace_name
-              })
-            }
-
-            await vscode.workspace.fs.writeFile(
-              vscode.Uri.file(safe_path),
-              Buffer.from(final_content, 'utf8')
-            )
-          }
-        } catch (error: any) {
-          if (
-            !axios.isCancel(error) &&
-            error.message != 'User cancelled the operation'
-          ) {
-            Logger.error({
-              function_name: 'handle_fix_all_failed_files',
-              message: 'Error during process_file',
-              data: { error, file_path }
+              workspace_name
             })
           }
-        } finally {
-          panel_provider.send_message({
-            command: 'UPDATE_FILE_PROGRESS',
-            file_path,
-            workspace_name,
-            is_applying: false
-          })
 
-          const index =
-            panel_provider.intelligent_update_cancel_token_sources.findIndex(
-              (s) => s.source === cancel_token_source
-            )
-          if (index > -1) {
-            panel_provider.intelligent_update_cancel_token_sources.splice(
-              index,
-              1
-            )
-          }
+          await vscode.workspace.fs.writeFile(
+            vscode.Uri.file(safe_path),
+            Buffer.from(final_content, 'utf8')
+          )
         }
-      })
-    )
-  }
+      } catch (error: any) {
+        if (
+          !axios.isCancel(error) &&
+          error.message != 'User cancelled the operation'
+        ) {
+          Logger.error({
+            function_name: 'handle_fix_all_failed_files',
+            message: 'Error during process_file',
+            data: { error, file_path }
+          })
+        }
+      } finally {
+        panel_provider.send_message({
+          command: 'UPDATE_FILE_PROGRESS',
+          file_path,
+          workspace_name,
+          is_applying: false
+        })
+
+        const index =
+          panel_provider.intelligent_update_cancel_token_sources.findIndex(
+            (s) => s.source === cancel_token_source
+          )
+        if (index > -1) {
+          panel_provider.intelligent_update_cancel_token_sources.splice(
+            index,
+            1
+          )
+        }
+      }
+    })
+  )
 }
