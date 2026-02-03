@@ -59,14 +59,12 @@ export function add_apply_response_button(params: {
   apply_response_button.focus()
 }
 
-interface ResponseObserverParams {
+export function observe_for_responses(params: {
   chatbot_name: string
   is_generating: () => boolean
   footer_selector: string
   add_buttons: (footer: Element) => void
-}
-
-export function observe_for_responses(params: ResponseObserverParams) {
+}) {
   const observer = new MutationObserver(() => {
     if (params.is_generating()) {
       return
