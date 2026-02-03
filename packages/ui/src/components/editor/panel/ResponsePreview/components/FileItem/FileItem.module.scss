@@ -171,6 +171,11 @@
     }
   }
 
+  &--loading {
+    color: var(--cwc-text-color);
+    background-color: var(--cwc-bg-tertiary);
+  }
+
   &__content {
     flex: 1;
     overflow: hidden;
@@ -180,9 +185,9 @@
     padding: 3px 0 3px 6px;
 
     > span:first-child {
-      font-size: 13px !important;
+      font-size: 14px !important;
       margin-right: 4px;
-      transform: translateY(2px);
+      vertical-align: middle;
     }
   }
 

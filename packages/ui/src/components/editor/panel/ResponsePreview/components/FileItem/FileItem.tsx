@@ -23,9 +23,16 @@ type FileMessage =
   | { type: 'success'; text: string; show_actions?: boolean }
   | { type: 'error'; text: string; show_actions: boolean }
   | { type: 'warning'; text: string; show_actions: boolean }
+  | { type: 'loading'; text: string; show_actions?: boolean }
 
 const get_file_message = (file: FileInPreview): FileMessage | null => {
-  if (file.applied_with_intelligent_update) {
+  if (file.is_applying) {
+    return {
+      type: 'loading',
+      text: 'Applying...',
+      show_actions: false
+    }
+  } else if (file.applied_with_intelligent_update) {
     return {
       type: 'success',
       text: 'Applied with Intelligent Update',
@@ -224,7 +231,8 @@ export const FileItem: FC<Props> = (props) => {
           className={cn(styles.message, {
             [styles['message--error']]: message_obj.type == 'error',
             [styles['message--warning']]: message_obj.type == 'warning',
-            [styles['message--success']]: message_obj.type == 'success'
+            [styles['message--success']]: message_obj.type == 'success',
+            [styles['message--loading']]: message_obj.type == 'loading'
           })}
         >
           <div className={styles['message__content']}>
@@ -236,6 +244,9 @@ export const FileItem: FC<Props> = (props) => {
             )}
             {message_obj.type == 'warning' && (
               <span className="codicon codicon-warning" />
+            )}
+            {message_obj.type == 'loading' && (
+              <span className="codicon codicon-loading codicon-modifier-spin" />
             )}
             <span>{message_obj.text}</span>
           </div>
