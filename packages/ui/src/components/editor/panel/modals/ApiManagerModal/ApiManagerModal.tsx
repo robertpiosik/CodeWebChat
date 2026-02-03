@@ -31,6 +31,9 @@ export const ApiManagerModal: React.FC<Props> = (props) => {
   const [now, set_now] = useState(Date.now())
   const [is_scrolled, set_is_scrolled] = useState(false)
   const [window_width, set_window_width] = useState(window.innerWidth)
+  const [breathing_state, set_breathing_state] = useState<'inhale' | 'exhale'>(
+    'inhale'
+  )
 
   useEffect(() => {
     const handle_resize = () => set_window_width(window.innerWidth)
@@ -44,6 +47,13 @@ export const ApiManagerModal: React.FC<Props> = (props) => {
     const interval = setInterval(() => {
       set_now(Date.now())
     }, 100)
+    return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      set_breathing_state((prev) => (prev === 'inhale' ? 'exhale' : 'inhale'))
+    }, 5000)
     return () => clearInterval(interval)
   }, [])
 
@@ -82,11 +92,16 @@ export const ApiManagerModal: React.FC<Props> = (props) => {
     >
       <div className={styles.container}>
         <div
-          className={cn(styles.title, {
-            [styles['title--scrolled']]: is_scrolled
+          className={cn(styles.heading, {
+            [styles['heading--scrolled']]: is_scrolled,
+            [styles['heading--inhale']]: breathing_state === 'inhale',
+            [styles['heading--exhale']]: breathing_state === 'exhale'
           })}
         >
-          API Manager
+          <div className={styles.heading__title}>API Manager</div>
+          <div className={styles['heading__breathing-status']}>
+            {breathing_state.toUpperCase()}
+          </div>
         </div>
         <Scrollable max_height="25vh" on_scrolled_change={set_is_scrolled}>
           <div className={styles['requests-container']}>

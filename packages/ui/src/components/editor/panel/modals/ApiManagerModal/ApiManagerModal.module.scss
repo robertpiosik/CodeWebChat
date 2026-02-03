@@ -40,23 +40,49 @@
     var(--transition-timing-function);
 }
 
-.title {
+.heading {
+  display: flex;
+  justify-content: space-between;
   font-weight: 500;
   font-size: 11px;
   font-weight: 600;
-  color: var(--vscode-textLink-foreground);
   text-transform: uppercase;
   display: flex;
   align-items: center;
   padding: 0 8px;
   height: 28px;
-  transform: translateY(3px);
-  transition: transform var(--transition-duration-250)
-    var(--transition-timing-function);
+  background-image: linear-gradient(
+    to right,
+    var(--cwc-bg-secondary),
+    var(--cwc-bg-secondary)
+  );
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
 
-  &--scrolled {
-    transform: unset;
+  > div {
+    transform: translateY(3px);
+    transition: transform var(--transition-duration-250)
+      var(--transition-timing-function);
+  }
+
+  &__title {
+    color: var(--vscode-textLink-foreground);
+  }
+
+  &--scrolled > span {
     transform: translateY(1px);
+  }
+
+  &--inhale {
+    animation: inhale 5s linear forwards;
+  }
+
+  &--exhale {
+    animation: exhale 5s linear forwards;
+  }
+
+  &__breathing-status {
+    color: var(--cwc-text-color-dimmed);
   }
 }
 
@@ -173,5 +199,23 @@
 
   &:nth-child(odd) &__close {
     background: transparent;
+  }
+}
+
+@keyframes inhale {
+  from {
+    background-size: 0% 100%;
+  }
+  to {
+    background-size: 100% 100%;
+  }
+}
+
+@keyframes exhale {
+  from {
+    background-size: 100% 100%;
+  }
+  to {
+    background-size: 0% 100%;
   }
 }
