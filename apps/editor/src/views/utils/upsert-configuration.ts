@@ -8,7 +8,6 @@ import {
 import { dictionary } from '@shared/constants/dictionary'
 import { ModelFetcher } from '@/services/model-fetcher'
 import {
-  edit_max_concurrency_for_config,
   edit_model_for_config,
   edit_provider_for_config,
   edit_reasoning_effort_for_config,
@@ -58,7 +57,7 @@ export const upsert_configuration = async (params: {
         providers_manager.get_intelligent_update_tool_configs()
       save_configs = (configs) =>
         providers_manager.save_intelligent_update_tool_configs(configs)
-      advanced_options = ['Temperature', 'Reasoning Effort', 'Max Concurrency']
+      advanced_options = ['Temperature', 'Reasoning Effort']
       break
     case 'prune-context':
       get_configs = () => providers_manager.get_prune_context_tool_configs()
@@ -177,9 +176,12 @@ export const upsert_configuration = async (params: {
       JSON.stringify(updated_config) !== JSON.stringify(starting_config)
 
     const items: vscode.QuickPickItem[] = [
-      { label: 'Model Provider', detail: updated_config.provider_name },
-      { label: 'Model', detail: updated_config.model },
-      { label: 'Advanced' }
+      {
+        label: 'Model',
+        description: updated_config.provider_name,
+        detail: updated_config.model
+      },
+      { label: 'More...' }
     ]
 
     const selected_item = await new Promise<vscode.QuickPickItem | undefined>(
@@ -224,11 +226,11 @@ export const upsert_configuration = async (params: {
               Object.assign(updated_config, starting_config)
               quick_pick.items = [
                 {
-                  label: 'Model Provider',
-                  detail: updated_config.provider_name
+                  label: 'Model',
+                  description: updated_config.provider_name,
+                  detail: updated_config.model
                 },
-                { label: 'Model', detail: updated_config.model },
-                { label: 'Advanced' }
+                { label: 'More...' }
               ]
               quick_pick.buttons = [close_button]
             }
@@ -250,27 +252,46 @@ export const upsert_configuration = async (params: {
     last_selected_label = selected_item.label
     const selected_option = selected_item.label
 
-    if (selected_option == 'Model Provider') {
-      const new_provider = await edit_provider_for_config(
-        providers_manager,
-        updated_config.provider_name
-      )
-      if (new_provider) {
-        updated_config.provider_name = new_provider.provider_name
-        updated_config.provider_type = new_provider.provider_type
-      }
-    } else if (selected_option == 'Model') {
-      const new_model = await edit_model_for_config(
-        updated_config,
-        providers_manager,
-        model_fetcher
-      )
-      if (new_model !== undefined) {
-        updated_config.model = new_model
-      }
-    } else if (selected_option == 'Advanced') {
+    if (selected_option == 'Model') {
+      let current_provider_name = updated_config.provider_name
+
       // eslint-disable-next-line no-constant-condition
+      while (true) {
+        const new_provider = await edit_provider_for_config(
+          providers_manager,
+          current_provider_name
+        )
+
+        if (!new_provider) {
+          break
+        }
+
+        current_provider_name = new_provider.provider_name
+
+        const temp_config = {
+          ...updated_config,
+          provider_name: new_provider.provider_name,
+          provider_type: new_provider.provider_type,
+          model:
+            new_provider.provider_name === updated_config.provider_name
+              ? updated_config.model
+              : ''
+        }
+        const new_model = await edit_model_for_config(
+          temp_config,
+          providers_manager,
+          model_fetcher
+        )
+        if (new_model !== undefined) {
+          updated_config.provider_name = new_provider.provider_name
+          updated_config.provider_type = new_provider.provider_type
+          updated_config.model = new_model
+          break
+        }
+      }
+    } else if (selected_option == 'More...') {
       let last_advanced_label: string | undefined
+      // eslint-disable-next-line no-constant-condition
       while (true) {
         const advanced_items: vscode.QuickPickItem[] = []
         if (advanced_options.includes('Temperature')) {
@@ -287,22 +308,13 @@ export const upsert_configuration = async (params: {
             detail: updated_config.reasoning_effort
           })
         }
-        if (advanced_options.includes('Max Concurrency')) {
-          advanced_items.push({
-            label: 'Max Concurrency',
-            description: !updated_config.max_concurrency ? 'Unset' : undefined,
-            detail: updated_config.max_concurrency?.toString() || undefined
-          })
-        }
 
         const selected_advanced = await new Promise<
           vscode.QuickPickItem | undefined
         >((resolve) => {
           const quick_pick = vscode.window.createQuickPick()
           quick_pick.items = advanced_items
-          quick_pick.title = original_id
-            ? 'Edit Configuration - Advanced'
-            : 'Create New Configuration - Advanced'
+          quick_pick.title = 'Edit Configuration'
           quick_pick.placeholder = 'Select a property to edit'
           quick_pick.buttons = [vscode.QuickInputButtons.Back]
           if (last_advanced_label) {
@@ -400,13 +412,6 @@ export const upsert_configuration = async (params: {
                 new_effort === null ? undefined : (new_effort as any)
               break
             }
-          }
-        } else if (selected_advanced.label == 'Max Concurrency') {
-          const new_concurrency =
-            await edit_max_concurrency_for_config(updated_config)
-          if (new_concurrency !== undefined) {
-            updated_config.max_concurrency =
-              new_concurrency === null ? undefined : new_concurrency
           }
         }
       }

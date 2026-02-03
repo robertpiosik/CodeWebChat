@@ -34,8 +34,7 @@ export const handle_get_api_tool_configurations = async (
       default_config.provider_name == config.provider_name &&
       default_config.model == config.model &&
       default_config.temperature == config.temperature &&
-      default_config.reasoning_effort == config.reasoning_effort &&
-      default_config.max_concurrency == config.max_concurrency
+      default_config.reasoning_effort == config.reasoning_effort
     )
   }
 

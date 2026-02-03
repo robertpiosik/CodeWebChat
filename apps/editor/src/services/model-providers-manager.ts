@@ -25,7 +25,6 @@ export type ToolConfig = {
   model: string
   temperature?: number
   reasoning_effort?: ReasoningEffort
-  max_concurrency?: number
   is_pinned?: boolean
 }
 
@@ -34,8 +33,7 @@ export const get_tool_config_id = (config: ToolConfig): string => {
     config.provider_name,
     config.model,
     config.temperature,
-    config.reasoning_effort ?? '',
-    config.max_concurrency ?? ''
+    config.reasoning_effort ?? ''
   ]
     .filter((v) => v !== null && v !== undefined)
     .join(':')
@@ -163,7 +161,6 @@ export class ModelProvidersManager {
         model: string
         temperature?: number
         reasoningEffort?: ReasoningEffort
-        maxConcurrency?: number
         isPinned?: boolean
       }[]
     >(settings_key, [])
@@ -177,7 +174,6 @@ export class ModelProvidersManager {
           model: sc.model,
           temperature: sc.temperature,
           reasoning_effort: sc.reasoningEffort,
-          max_concurrency: sc.maxConcurrency,
           is_pinned: sc.isPinned
         }
       })
@@ -207,8 +203,6 @@ export class ModelProvidersManager {
       }
       if (c.reasoning_effort !== undefined)
         new_config.reasoningEffort = c.reasoning_effort
-      if (c.max_concurrency !== undefined)
-        new_config.maxConcurrency = c.max_concurrency
       if (c.is_pinned) new_config.isPinned = c.is_pinned
       return new_config
     })
@@ -229,9 +223,7 @@ export class ModelProvidersManager {
       settings_config.model === tool_config.model &&
       settings_config.temperature === tool_config.temperature &&
       (settings_config.reasoningEffort ?? undefined) ===
-        (tool_config.reasoning_effort ?? undefined) &&
-      (settings_config.maxConcurrency ?? undefined) ===
-        (tool_config.max_concurrency ?? undefined)
+        (tool_config.reasoning_effort ?? undefined)
     )
   }
 
@@ -246,7 +238,6 @@ export class ModelProvidersManager {
         temperature?: number
         reasoningEffort?: ReasoningEffort
         isDefault?: boolean
-        maxConcurrency?: number
         isPinned?: boolean
       }[]
     >(settings_key, [])
@@ -264,7 +255,6 @@ export class ModelProvidersManager {
         model: default_config_from_settings.model,
         temperature: default_config_from_settings.temperature,
         reasoning_effort: default_config_from_settings.reasoningEffort,
-        max_concurrency: default_config_from_settings.maxConcurrency,
         is_pinned: default_config_from_settings.isPinned
       }
       const validated_config = this._validate_tool_config(tool_config)

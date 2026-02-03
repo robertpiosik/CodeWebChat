@@ -32,7 +32,6 @@ export type ApiToolConfiguration = {
   model: string
   temperature?: number
   reasoning_effort?: string
-  max_concurrency?: number
   is_default?: boolean
   is_pinned?: boolean
 }

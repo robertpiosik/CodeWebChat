@@ -124,8 +124,7 @@ export const handle_fix_all_failed_files = async (
     .filter((item) => item.instructions && item.safe_path)
 
   const max_concurrency =
-    intelligent_update_config.max_concurrency ??
-    (files_to_process.length > 0 ? files_to_process.length : 1)
+    files_to_process.length > 0 ? files_to_process.length : 1
 
   // Process in batches
   for (let i = 0; i < files_to_process.length; i += max_concurrency) {

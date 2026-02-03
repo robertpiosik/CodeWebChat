@@ -33,7 +33,7 @@ export const initial_select_provider = async (
       const quick_pick =
         vscode.window.createQuickPick<(typeof provider_items)[0]>()
       quick_pick.items = provider_items
-      quick_pick.title = 'Model Providers'
+      quick_pick.title = 'Create New Configuration'
       quick_pick.placeholder = 'Select a model provider'
       const close_button: vscode.QuickInputButton = {
         iconPath: new vscode.ThemeIcon('close'),
@@ -99,7 +99,7 @@ export const initial_select_model = async (
       return await new Promise<string | undefined>((resolve) => {
         const quick_pick = vscode.window.createQuickPick()
         quick_pick.items = model_items
-        quick_pick.title = 'Models'
+        quick_pick.title = 'Create New Configuration'
         quick_pick.placeholder = 'Choose an AI model'
         quick_pick.buttons = [vscode.QuickInputButtons.Back]
         if (provider.name) {
@@ -157,7 +157,7 @@ export const initial_select_model = async (
   }
 
   return await vscode.window.showInputBox({
-    title: 'Enter Model Name',
+    title: 'Create New Configuration',
     prompt: 'Could not fetch models. Please enter a model name (ID).'
   })
 }
@@ -177,7 +177,7 @@ export const edit_provider_for_config = async (
     const quick_pick =
       vscode.window.createQuickPick<(typeof provider_items)[0]>()
     quick_pick.items = provider_items
-    quick_pick.title = 'Model Providers'
+    quick_pick.title = 'Edit Configuration'
     quick_pick.placeholder = 'Select a model provider'
     quick_pick.buttons = [vscode.QuickInputButtons.Back]
     if (current_provider_name) {
@@ -265,7 +265,7 @@ export const edit_model_for_config = async (
         const quick_pick =
           vscode.window.createQuickPick<(typeof model_items)[0]>()
         quick_pick.items = model_items
-        quick_pick.title = 'Models'
+        quick_pick.title = 'Edit Configuration'
         quick_pick.placeholder = 'Choose a model'
         quick_pick.buttons = [vscode.QuickInputButtons.Back]
         if (config.model) {
@@ -335,7 +335,7 @@ export const edit_model_for_config = async (
   }
 
   const new_model_input = await vscode.window.showInputBox({
-    title: 'Enter Model Name',
+    title: 'Edit Configuration',
     value: config.model,
     prompt: `Enter a model name (ID)`
   })
@@ -350,7 +350,7 @@ export const edit_temperature_for_config = async (
 ): Promise<number | null | undefined> => {
   return await new Promise<number | null | undefined>((resolve) => {
     const input = vscode.window.createInputBox()
-    input.title = 'Edit Temperature'
+    input.title = 'Edit Configuration'
     input.value = config.temperature?.toString() ?? ''
     input.prompt = 'Enter a value between 0 and 2. Leave empty to unset.'
     input.buttons = [vscode.QuickInputButtons.Back]
@@ -421,7 +421,7 @@ export const edit_reasoning_effort_for_config = async (
   return await new Promise<string | null | undefined>((resolve) => {
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = effort_options
-    quick_pick.title = 'Reasoning Efforts'
+    quick_pick.title = 'Edit Configuration'
     quick_pick.placeholder = 'Select reasoning effort'
     quick_pick.buttons = [vscode.QuickInputButtons.Back]
     if (current_effort) {
@@ -460,26 +460,4 @@ export const edit_reasoning_effort_for_config = async (
     )
     quick_pick.show()
   })
-}
-
-export const edit_max_concurrency_for_config = async (config: ToolConfig) => {
-  const new_concurrency_str = await vscode.window.showInputBox({
-    title: 'Edit Max Concurrency',
-    value: config.max_concurrency?.toString() ?? '',
-    prompt:
-      'Enter a number for max concurrency. Leave empty or enter 0 to unset.',
-    validateInput: (value) => {
-      if (value === '') return null
-      const num = parseInt(value, 10)
-      if (isNaN(num) || !Number.isInteger(num) || num < 0) {
-        return 'Please enter a whole number greater than or equal to 0.'
-      }
-      return null
-    }
-  })
-  if (new_concurrency_str === undefined) return undefined
-  if (new_concurrency_str === '') return null
-  const val = parseInt(new_concurrency_str, 10)
-  if (val === 0) return null
-  return val
 }

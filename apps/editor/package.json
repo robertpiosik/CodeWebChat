@@ -1819,9 +1819,6 @@
               "isDefault": {
                 "type": "boolean"
               },
-              "maxConcurrency": {
-                "type": "number"
-              },
               "isPinned": {
                 "type": "boolean"
               }
