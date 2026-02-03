@@ -181,6 +181,10 @@
         var(--vscode-charts-blue) 30%,
         transparent
       );
+
+      &::before {
+        content: '\ea76' !important;
+      }
     }
   }
 
@@ -278,6 +282,10 @@
 
   &--selection &__icon::before {
     content: '\eb84';
+  }
+
+  &--selection &__text {
+    pointer-events: none;
   }
 
   &--pasted-lines &__icon::before {
