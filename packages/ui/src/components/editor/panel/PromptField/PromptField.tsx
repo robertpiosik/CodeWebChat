@@ -322,9 +322,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
       {props.prompt_type == 'code-at-cursor' &&
         !props.currently_open_file_path && (
           <div className={styles.error}>
-            <div className={styles.error__inner}>
-              Place cursor for completion
-            </div>
+            <div className={styles.error__inner}>Place cursor in a file</div>
           </div>
         )}
 
