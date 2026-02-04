@@ -745,7 +745,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'REQUEST_CAN_UNDO') {
             handle_request_can_undo(this)
           } else if (message.command == 'FIX_ALL_FAILED_FILES') {
-            await handle_fix_all_failed_files(this, message.files)
+            await handle_fix_all_failed_files({
+              panel_provider: this,
+              files_to_fix: message.files
+            })
           } else if (
             message.command == 'GET_PRUNE_CONTEXT_INSTRUCTIONS_PREFIX'
           ) {

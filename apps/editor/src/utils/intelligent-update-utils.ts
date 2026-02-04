@@ -33,21 +33,8 @@ export const get_intelligent_update_config = async (
   let selected_config: ToolConfig | undefined
 
   if (!show_quick_pick) {
-    const recents = context.workspaceState.get<string[]>(
-      RECENTLY_USED_INTELLIGENT_UPDATE_CONFIG_IDS_STATE_KEY
-    )
-    const last_selected_id = recents?.[0]
-
-    if (last_selected_id) {
-      selected_config = intelligent_update_configs.find(
-        (c) => get_tool_config_id(c) == last_selected_id
-      )
-    }
-
-    if (!selected_config) {
-      selected_config =
-        await api_providers_manager.get_default_intelligent_update_config()
-    }
+    selected_config =
+      await api_providers_manager.get_default_intelligent_update_config()
   }
 
   if (!selected_config || show_quick_pick) {

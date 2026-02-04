@@ -21,14 +21,14 @@
     position: relative;
     width: 100%;
 
-    & .responses__item__remove-wrapper {
+    & .responses__item__remove {
       visibility: hidden;
     }
 
     &:hover {
       background-color: var(--vscode-list-hoverBackground);
 
-      & .responses__item__remove-wrapper {
+      & .responses__item__remove {
         visibility: visible;
       }
     }
@@ -38,6 +38,14 @@
 
       &:hover {
         background-color: var(--vscode-list-inactiveSelectionBackground);
+
+        & .responses__item__remove {
+          background: linear-gradient(
+            to left,
+            var(--vscode-list-inactiveSelectionBackground) 56%,
+            transparent
+          );
+        }
       }
     }
 

@@ -264,6 +264,14 @@ export const handle_intelligent_update_file_in_preview = async (
           error.message
         )
       )
+
+      if (axios.isAxiosError(error)) {
+        await handle_intelligent_update_file_in_preview(panel_provider, {
+          ...message,
+          force_model_selection: true
+        })
+        return
+      }
     }
   } finally {
     const index =

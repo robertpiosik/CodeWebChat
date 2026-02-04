@@ -1,6 +1,10 @@
 import * as vscode from 'vscode'
 import axios from 'axios'
-import { FileItem } from '../utils/clipboard-parser'
+import {
+  FileItem,
+  DiffItem,
+  parse_response
+} from '../utils/clipboard-parser/clipboard-parser'
 import { sanitize_file_name, create_safe_path } from '@/utils/path-sanitizer'
 import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
@@ -8,7 +12,6 @@ import { ToolConfig } from '@/services/model-providers-manager'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { process_file } from '@/utils/intelligent-update-utils'
-import { parse_multiple_files } from '../utils/clipboard-parser/parsers'
 
 export const handle_active_editor_intelligent_update = async (params: {
   endpoint_url: string
@@ -44,13 +47,14 @@ export const handle_active_editor_intelligent_update = async (params: {
     message: 'Processing single file update'
   })
 
-  const raw_items = parse_multiple_files({
+  const raw_items = parse_response({
     response: params.chat_response,
     is_single_root_folder_workspace: params.is_single_root_folder_workspace
   })
 
   const files = raw_items.filter(
-    (item): item is FileItem => item.type == 'file'
+    (item): item is FileItem | DiffItem =>
+      item.type == 'file' || item.type == 'diff'
   )
 
   if (files.length == 0) {
@@ -67,22 +71,27 @@ export const handle_active_editor_intelligent_update = async (params: {
   // We only handle the first file as this handler is intended for single-file fallback
   const file_item = files[0]
 
+  let target_file_path = file_item.file_path
+  if (file_item.type == 'diff' && file_item.new_file_path) {
+    target_file_path = file_item.new_file_path
+  }
+
   let workspace_root = default_workspace_path
   if (file_item.workspace_name && workspace_map.has(file_item.workspace_name)) {
     workspace_root = workspace_map.get(file_item.workspace_name)!
   }
 
-  const sanitized_path = sanitize_file_name(file_item.file_path)
+  const sanitized_path = sanitize_file_name(target_file_path)
   const safe_path = create_safe_path(workspace_root, sanitized_path)
 
   if (!safe_path) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.INVALID_FILE_PATH_TRAVERSAL(file_item.file_path)
+      dictionary.error_message.INVALID_FILE_PATH_TRAVERSAL(target_file_path)
     )
     Logger.error({
       function_name: 'handle_active_editor_intelligent_update',
       message: 'Invalid file path',
-      data: file_item.file_path
+      data: target_file_path
     })
     return null
   }
@@ -110,7 +119,7 @@ export const handle_active_editor_intelligent_update = async (params: {
       model: params.config.model,
       temperature: params.config.temperature,
       reasoning_effort: params.config.reasoning_effort,
-      file_path: file_item.file_path,
+      file_path: target_file_path,
       file_content: original_content,
       instruction: file_item.content,
       cancel_token: cancel_token_source.token,
@@ -172,7 +181,7 @@ export const handle_active_editor_intelligent_update = async (params: {
 
     return [
       {
-        file_path: file_item.file_path,
+        file_path: target_file_path,
         content: original_content,
         workspace_name: file_item.workspace_name
       }

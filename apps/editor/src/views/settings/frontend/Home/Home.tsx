@@ -456,7 +456,7 @@ export const Home: React.FC<Props> = (props) => {
             />
             <Item
               title="Fix All Automatically"
-              description="Run the tool on all failed to apply files immediately."
+              description="Use the default configuration to fix failed files immediately."
               slot_right={
                 <Toggler
                   is_on={props.fix_all_automatically}
