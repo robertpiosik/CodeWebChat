@@ -82,7 +82,8 @@ import {
   handle_save_prompt_image,
   handle_open_prompt_image,
   handle_save_prompt_document,
-  handle_open_prompt_document
+  handle_open_prompt_document,
+  handle_paste_url
 } from './message-handlers'
 import { SelectionState } from '../types/messages'
 import {
@@ -790,6 +791,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_save_prompt_document(this, message)
           } else if (message.command == 'OPEN_PROMPT_DOCUMENT') {
             await handle_open_prompt_document(message)
+          } else if (message.command == 'PASTE_URL') {
+            await handle_paste_url(this, message)
           }
         } catch (error: any) {
           Logger.error({

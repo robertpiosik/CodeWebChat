@@ -71,6 +71,7 @@ export type PromptFieldProps = {
   on_open_image: (hash: string) => void
   on_paste_document: (text: string) => void
   on_open_document: (hash: string) => void
+  on_paste_url: (url: string) => void
 }
 
 export const PromptField: React.FC<PromptFieldProps> = (props) => {

@@ -13,6 +13,7 @@ import { Preset } from '@shared/types/preset'
 import { replace_skill_symbol } from '@/views/panel/backend/utils/replace-skill-symbol'
 import { replace_image_symbol } from '@/views/panel/backend/utils/replace-image-symbol'
 import { replace_document_symbol } from '../utils/replace-document-symbol'
+import { replace_website_symbol } from '../utils/replace-website-symbol'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import { dictionary } from '@shared/constants/dictionary'
 import {
@@ -135,6 +136,12 @@ export const handle_preview_preset = async (
       })
     }
 
+    if (processed_completion_instructions.includes('#Website(')) {
+      processed_completion_instructions = await replace_website_symbol({
+        instruction: processed_completion_instructions
+      })
+    }
+
     const missing_text_tag = processed_completion_instructions
       ? `<missing_text>${processed_completion_instructions}</missing_text>`
       : '<missing_text>'
@@ -218,6 +225,12 @@ export const handle_preview_preset = async (
 
     if (processed_instructions.includes('#Document(')) {
       processed_instructions = await replace_document_symbol({
+        instruction: processed_instructions
+      })
+    }
+
+    if (processed_instructions.includes('#Website(')) {
+      processed_instructions = await replace_website_symbol({
         instruction: processed_instructions
       })
     }

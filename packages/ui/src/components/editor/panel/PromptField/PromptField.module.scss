@@ -248,6 +248,22 @@
     }
   }
 
+  &--website &__icon::before {
+    content: '\eb01';
+  }
+
+  &--website &__text {
+    cursor: pointer;
+
+    &:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--vscode-charts-blue) 30%,
+        transparent
+      );
+    }
+  }
+
   &--document &__icon::before {
     content: '\ec5e';
   }

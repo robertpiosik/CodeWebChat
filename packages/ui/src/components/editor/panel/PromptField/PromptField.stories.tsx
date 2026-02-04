@@ -40,6 +40,7 @@ export const Empty = () => (
     on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
     on_open_document={(hash) => console.log('Open document:', hash)}
+    on_paste_url={(url) => console.log('Paste URL:', url)}
   />
 )
 
@@ -78,6 +79,7 @@ export const WithText = () => (
     on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
     on_open_document={(hash) => console.log('Open document:', hash)}
+    on_paste_url={(url) => console.log('Paste URL:', url)}
   />
 )
 
@@ -116,6 +118,7 @@ export const LongText = () => (
     on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
     on_open_document={(hash) => console.log('Open document:', hash)}
+    on_paste_url={(url) => console.log('Paste URL:', url)}
   />
 )
 
@@ -154,6 +157,7 @@ export const WithPlaceholderSavedContext = () => (
     on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
     on_open_document={(hash) => console.log('Open document:', hash)}
+    on_paste_url={(url) => console.log('Paste URL:', url)}
   />
 )
 
@@ -198,6 +202,7 @@ export const WithPlaceholderSelection = () => (
     on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
     on_open_document={(hash) => console.log('Open document:', hash)}
+    on_paste_url={(url) => console.log('Paste URL:', url)}
   />
 )
 
@@ -236,6 +241,7 @@ export const WithCommit = () => (
     on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
     on_open_document={(hash) => console.log('Open document:', hash)}
+    on_paste_url={(url) => console.log('Paste URL:', url)}
   />
 )
 
@@ -274,6 +280,7 @@ export const WithCommitWithQuotes = () => (
     on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
     on_open_document={(hash) => console.log('Open document:', hash)}
+    on_paste_url={(url) => console.log('Paste URL:', url)}
   />
 )
 export const WithContextAtCommit = () => (
@@ -311,6 +318,7 @@ export const WithContextAtCommit = () => (
     on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
     on_open_document={(hash) => console.log('Open document:', hash)}
+    on_paste_url={(url) => console.log('Paste URL:', url)}
   />
 )
 
@@ -352,6 +360,7 @@ export const WithEditFormatSelector = () => {
       on_paste_document={(content) => console.log('Paste document:', content)}
       on_open_image={(hash) => console.log('Open image:', hash)}
       on_open_document={(hash) => console.log('Open document:', hash)}
+      on_paste_url={(url) => console.log('Paste URL:', url)}
     />
   )
 }
@@ -391,5 +400,6 @@ export const WithFilePaths = () => (
     on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
     on_open_document={(hash) => console.log('Open document:', hash)}
+    on_paste_url={(url) => console.log('Paste URL:', url)}
   />
 )

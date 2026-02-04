@@ -12,19 +12,19 @@ const escape_html = (str: string): string => {
     .replace(/'/g, '&#039;')
 }
 
-const process_text_part_for_files = (
-  text: string,
+const process_text_part_for_files = (params: {
+  text: string
   context_file_paths: string[]
-): string => {
+}): string => {
   const file_path_regex = /`([^\s`]*\.[^\s`]+)`/g
-  const parts = text.split(file_path_regex)
+  const parts = params.text.split(file_path_regex)
 
   return parts
     .map((part, index) => {
       // part at odd index is a file_path
       if (index % 2 == 1) {
         const file_path = part
-        if (context_file_paths.includes(file_path)) {
+        if (params.context_file_paths.includes(file_path)) {
           const filename = file_path.split('/').pop() || file_path
           return `<span class="${cn(
             styles['symbol'],
@@ -64,10 +64,12 @@ export const get_highlighted_text = (params: {
 
   const image_regex_part = '#Image\\([a-fA-F0-9]+\\)'
 
+  const website_regex_part = '#Website\\([^)]+\\)'
+
   const document_regex_part = '#Document\\([a-fA-F0-9]+\\)'
 
   const regex = new RegExp(
-    `(${fragment_regex_part}|#Selection|#Changes\\([^)]+\\)|${saved_context_regex_part}|${commit_regex_part}|${skill_regex_part}|${image_regex_part}|${document_regex_part})`,
+    `(${fragment_regex_part}|#Selection|#Changes\\([^)]+\\)|${saved_context_regex_part}|${commit_regex_part}|${skill_regex_part}|${image_regex_part}|${document_regex_part}|${website_regex_part})`,
     'g'
   )
   const parts = params.text.split(regex)
@@ -227,6 +229,20 @@ export const get_highlighted_text = (params: {
         }" data-role="symbol-text">Image</span></span>`
       }
 
+      const website_match = part.match(/^#Website\(([^)]+)\)$/)
+      if (part && website_match) {
+        const url = website_match[1]
+        let label = 'Website'
+        try {
+          label = new URL(url).hostname
+          if (label.startsWith('www.')) {
+            label = label.slice(4)
+          }
+        } catch {}
+
+        return `<span class="${cn(styles['symbol'], styles['symbol--website'])}" data-type="website-symbol" data-url="${escape_html(url)}" title="${escape_html(url)}"><span class="${styles['symbol__icon']}" data-role="symbol-icon"></span><span class="${styles['symbol__text']}" data-role="symbol-text">${escape_html(label)}</span></span>`
+      }
+
       const document_match = part.match(/^#Document\(([a-fA-F0-9]+)\)$/)
       if (part && document_match) {
         const hash = document_match[1]
@@ -240,7 +256,10 @@ export const get_highlighted_text = (params: {
         }" data-role="symbol-text">Document</span></span>`
       }
 
-      return process_text_part_for_files(part, params.context_file_paths)
+      return process_text_part_for_files({
+        text: part,
+        context_file_paths: params.context_file_paths
+      })
     })
     .join('')
 

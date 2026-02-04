@@ -68,6 +68,7 @@ type Props = {
   on_open_image: (hash: string) => void
   on_paste_document: (text: string) => void
   on_open_document: (hash: string) => void
+  on_paste_url: (url: string) => void
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -847,6 +848,7 @@ export const Main: React.FC<Props> = (props) => {
       on_open_image={props.on_open_image}
       on_paste_document={props.on_paste_document}
       on_open_document={props.on_open_document}
+      on_paste_url={props.on_paste_url}
     />
   )
 }

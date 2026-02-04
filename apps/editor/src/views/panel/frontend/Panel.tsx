@@ -104,7 +104,8 @@ export const Panel = () => {
     handle_paste_image,
     handle_open_image,
     handle_paste_long_document,
-    handle_open_document
+    handle_open_document,
+    handle_paste_url
   } = use_panel(vscode)
 
   const [checkpoint_to_edit, set_checkpoint_to_edit] = useState<
@@ -312,6 +313,7 @@ export const Panel = () => {
                 on_open_image={handle_open_image}
                 on_paste_document={handle_paste_long_document}
                 on_open_document={handle_open_document}
+                on_paste_url={handle_paste_url}
               />
             </div>
             <div

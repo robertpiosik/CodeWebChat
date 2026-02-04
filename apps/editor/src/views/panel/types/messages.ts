@@ -500,6 +500,11 @@ export interface OpenPromptDocumentMessage extends BaseMessage {
   hash: string
 }
 
+export interface PasteUrlMessage extends BaseMessage {
+  command: 'PASTE_URL'
+  url: string
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -587,6 +592,7 @@ export type FrontendMessage =
   | OpenPromptImageMessage
   | SavePromptDocumentMessage
   | OpenPromptDocumentMessage
+  | PasteUrlMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {

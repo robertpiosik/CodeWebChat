@@ -204,6 +204,13 @@ export const use_panel = (vscode: any) => {
     })
   }
 
+  const handle_paste_url = (url: string) => {
+    post_message(vscode, {
+      command: 'PASTE_URL',
+      url
+    })
+  }
+
   const handle_prune_context_instructions_prefix_change = (prefix: string) => {
     post_message(vscode, {
       command: 'SAVE_PRUNE_CONTEXT_INSTRUCTIONS_PREFIX',
@@ -610,6 +617,7 @@ export const use_panel = (vscode: any) => {
     handle_paste_image,
     handle_open_image,
     handle_paste_long_document,
-    handle_open_document
+    handle_open_document,
+    handle_paste_url
   }
 }
