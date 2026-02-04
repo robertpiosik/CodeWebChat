@@ -32,30 +32,15 @@ importers:
 
   apps/browser:
     dependencies:
-      '@joplin/turndown':
-        specifier: ^4.0.81
-        version: 4.0.82(bufferutil@4.0.9)(utf-8-validate@6.0.5)
-      '@joplin/turndown-plugin-gfm':
-        specifier: ^1.0.63
-        version: 1.0.64
-      '@mozilla/readability':
-        specifier: ^0.6.0
-        version: 0.6.0
       '@types/chrome':
         specifier: ^0.1.16
         version: 0.1.24
-      '@types/dompurify':
-        specifier: ^3.0.5
-        version: 3.2.0
       '@types/react':
         specifier: ^18.2.48
         version: 18.3.18
       '@types/react-dom':
         specifier: ^18.2.18
         version: 18.3.5(@types/react@18.3.18)
-      '@types/turndown':
-        specifier: ^5.0.5
-        version: 5.0.5
       '@types/webextension-polyfill':
         specifier: ^0.12.4
         version: 0.12.4
@@ -65,12 +50,6 @@ importers:
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
-      dompurify:
-        specifier: ^3.2.7
-        version: 3.3.0
-      localforage:
-        specifier: ^1.10.0
-        version: 1.10.0
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -138,9 +117,6 @@ importers:
       ts-loader:
         specifier: ^9.5.4
         version: 9.5.4(typescript@5.9.3)(webpack@5.102.1)
-      turndown:
-        specifier: ^7.2.1
-        version: 7.2.1
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -204,9 +180,6 @@ importers:
       jsdom:
         specifier: ^24.0.0
         version: 24.1.3(bufferutil@4.0.9)(utf-8-validate@6.0.5)
-      marked:
-        specifier: ^15.0.12
-        version: 15.0.12
       path-browserify:
         specifier: ^1.0.1
         version: 1.0.1
@@ -2187,9 +2160,6 @@ packages:
     peerDependencies:
       '@types/react': '>=16'
       react: '>=16'
-
-  '@mixmark-io/domino@2.2.0':
-    resolution: {integrity: sha512-Y28PR25bHXUg88kCV7nivXrP2Nj2RueZ3/l/jdx6J9f8J4nsEGcgX0Qe6lt7Pa+J79+kPiJU3LguR6O/6zrLOw==}
 
   '@mozilla/readability@0.6.0':
     resolution: {integrity: sha512-juG5VWh4qAivzTAeMzvY9xs9HY5rAcr2E4I7tiSSCokRFi7XIZCAu92ZkSTsIj1OPceCifL3cpfteP3pDT9/QQ==}
@@ -5182,9 +5152,6 @@ packages:
     engines: {node: '>=16.x'}
     hasBin: true
 
-  immediate@3.0.6:
-    resolution: {integrity: sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==}
-
   immutable@5.0.3:
     resolution: {integrity: sha512-P8IdPQHq3lA1xVeBRi5VPqUm5HDgKnx0Ru51wZz5mjxHr5n3RWhjIpOFU7ybkUxfB+5IToy+OLaHYDBIWsv+uw==}
 
@@ -5827,9 +5794,6 @@ packages:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
 
-  lie@3.1.1:
-    resolution: {integrity: sha512-RiNhHysUjhrDQntfYSfY4MU24coXXdEOgw9WGcKHNeEwffDYbF//u87M1EWaMGzuFoSbqW0C9C6lEEhDOAswfw==}
-
   lightningcss-darwin-arm64@1.29.2:
     resolution: {integrity: sha512-cK/eMabSViKn/PG8U/a7aCorpeKLMlK0bQeNHmdb7qUnBkNPnL+oV5DjJUo0kqWsJUapZsM4jCfYItbqBDvlcA==}
     engines: {node: '>= 12.0.0'}
@@ -5917,9 +5881,6 @@ packages:
   loader-utils@2.0.4:
     resolution: {integrity: sha512-xXqpXoINfFhgua9xiqD8fPFHgkoq1mmmpE92WlDbm9rNRd/EbRb+Gqf908T2DMfuHjjJlksiK2RbHVOdD/MqSw==}
     engines: {node: '>=8.9.0'}
-
-  localforage@1.10.0:
-    resolution: {integrity: sha512-14/H1aX7hzBBmmh7sGPd+AOMkkIrHM3Z1PAyGgZigA1H1p5O5ANnMyWzvpAETtG68/dC4pC0ncy3+PPGzXZHPg==}
 
   locate-path@3.0.0:
     resolution: {integrity: sha512-7AO748wWnIhNqAuaty2ZWHkQHRSNfPVIsPIfwEOWO22AmaoVrWavlOcMR5nzTLNYvp36X220/maaRsrec1G65A==}
@@ -6024,11 +5985,6 @@ packages:
 
   markdown-table@3.0.4:
     resolution: {integrity: sha512-wiYz4+JrLyb/DqW2hkFJxP7Vd7JuTDm77fvbM8VfEQdmSMqcImWeeRbHwZjBjIFki/VaMK2BhFi7oUUZeM5bqw==}
-
-  marked@15.0.12:
-    resolution: {integrity: sha512-8dD6FusOQSrpv9Z1rdNMdlSgQOIP880DHqnohobOmYLElGEqAL/JvxvuxZO16r4HtjTlfPRDC1hbvxC9dPN2nA==}
-    engines: {node: '>= 18'}
-    hasBin: true
 
   math-intrinsics@1.1.0:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
@@ -8470,9 +8426,6 @@ packages:
 
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
-
-  turndown@7.2.1:
-    resolution: {integrity: sha512-7YiPJw6rLClQL3oUKN3KgMaXeJJ2lAyZItclgKDurqnH61so4k4IH/qwmMva0zpuJc/FhRExBBnk7EbeFANlgQ==}
 
   type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
@@ -11659,8 +11612,6 @@ snapshots:
       '@types/mdx': 2.0.13
       '@types/react': 18.3.18
       react: 19.0.0
-
-  '@mixmark-io/domino@2.2.0': {}
 
   '@mozilla/readability@0.6.0': {}
 
@@ -15456,8 +15407,6 @@ snapshots:
 
   image-size@2.0.2: {}
 
-  immediate@3.0.6: {}
-
   immutable@5.0.3: {}
 
   import-fresh@3.3.1:
@@ -16292,10 +16241,6 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
 
-  lie@3.1.1:
-    dependencies:
-      immediate: 3.0.6
-
   lightningcss-darwin-arm64@1.29.2:
     optional: true
 
@@ -16377,10 +16322,6 @@ snapshots:
       big.js: 5.2.2
       emojis-list: 3.0.0
       json5: 2.2.3
-
-  localforage@1.10.0:
-    dependencies:
-      lie: 3.1.1
 
   locate-path@3.0.0:
     dependencies:
@@ -16480,8 +16421,6 @@ snapshots:
       repeat-string: 1.6.1
 
   markdown-table@3.0.4: {}
-
-  marked@15.0.12: {}
 
   math-intrinsics@1.1.0: {}
 
@@ -19432,10 +19371,6 @@ snapshots:
   tslib@1.14.1: {}
 
   tslib@2.8.1: {}
-
-  turndown@7.2.1:
-    dependencies:
-      '@mixmark-io/domino': 2.2.0
 
   type-check@0.4.0:
     dependencies:
