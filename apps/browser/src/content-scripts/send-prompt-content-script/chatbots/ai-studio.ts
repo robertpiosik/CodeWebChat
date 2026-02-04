@@ -185,7 +185,7 @@ export const ai_studio: Chatbot = {
     const temperature = chat.temperature
     if (temperature === undefined) return
     const temperature_element = document.querySelector(
-      'ms-prompt-run-settings div[data-test-id="temperatureSliderContainer"] input[type=number]'
+      'ms-prompt-run-settings div[data-test-id="temperatureSliderContainer"] input[inputmode="decimal"]'
     ) as HTMLInputElement
     if (!temperature_element) {
       report_initialization_error({
@@ -333,7 +333,7 @@ export const ai_studio: Chatbot = {
       await new Promise((r) => requestAnimationFrame(r))
     }
     const top_p_element = document.querySelector(
-      'ms-prompt-run-settings div[mattooltip="Probability threshold for top-p sampling"] input[type=number]'
+      'ms-prompt-run-settings div[mattooltip="Probability threshold for top-p sampling"] input[inputmode="decimal"]'
     ) as HTMLInputElement
     if (!top_p_element) {
       report_initialization_error({
