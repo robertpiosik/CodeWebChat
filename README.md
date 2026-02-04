@@ -20,7 +20,7 @@ Code Web Chat is a free and open-source (FOSS), independent AI coding toolkit fo
 
 ✅ **Apply responses**—interactive multi-file changes integration \
 ✅ **Fully-featured**—tab completions, commit messages, etc. \
-🫰 **Cost-efficient**—[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) utilization across tasks \
+🌱 **Sustainable**—[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) utilization across tasks \
 ✋ **Privacy-first**—strict zero telemetry policy
 
 <p>
