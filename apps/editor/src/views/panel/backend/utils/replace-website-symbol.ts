@@ -2,6 +2,7 @@ import * as os from 'os'
 import * as path from 'path'
 import * as fs from 'fs'
 import * as crypto from 'crypto'
+import { fetch_and_save_website } from './website-fetcher'
 
 export const replace_website_symbol = async (params: {
   instruction: string
@@ -19,6 +20,7 @@ export const replace_website_symbol = async (params: {
       const hash = crypto.createHash('md5').update(url).digest('hex')
       const filename = `cwc-website-${hash}.txt`
       const file_path = path.join(os.tmpdir(), filename)
+
       try {
         const content = await fs.promises.readFile(file_path, 'utf-8')
         return {
@@ -26,6 +28,14 @@ export const replace_website_symbol = async (params: {
           success: true
         }
       } catch (error) {
+        // If file is missing (e.g. reboot), try to refetch
+        const content = await fetch_and_save_website(url)
+        if (content) {
+          return {
+            content,
+            success: true
+          }
+        }
         return {
           success: false
         }
