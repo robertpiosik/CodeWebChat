@@ -94,13 +94,36 @@ export const ApiManagerModal: React.FC<Props> = (props) => {
         <div
           className={cn(styles.heading, {
             [styles['heading--scrolled']]: is_scrolled,
-            [styles['heading--inhale']]: breathing_state === 'inhale',
-            [styles['heading--exhale']]: breathing_state === 'exhale'
+            [styles['heading--inhale']]: breathing_state == 'inhale',
+            [styles['heading--exhale']]: breathing_state == 'exhale'
           })}
         >
           <div className={styles.heading__title}>API Manager</div>
-          <div className={styles['heading__breathing-status']}>
-            {breathing_state.toUpperCase()}
+          <div className={styles['heading__breathing']}>
+            <span
+              className={cn(
+                styles['heading__breathing__text'],
+                styles['heading__breathing__text--inhale'],
+                {
+                  [styles['heading__breathing__text--active']]:
+                    breathing_state == 'inhale'
+                }
+              )}
+            >
+              INHALE
+            </span>
+            <span
+              className={cn(
+                styles['heading__breathing__text'],
+                styles['heading__breathing__text--exhale'],
+                {
+                  [styles['heading__breathing__text--active']]:
+                    breathing_state == 'exhale'
+                }
+              )}
+            >
+              EXHALE
+            </span>
           </div>
         </div>
         <Scrollable max_height="25vh" on_scrolled_change={set_is_scrolled}>

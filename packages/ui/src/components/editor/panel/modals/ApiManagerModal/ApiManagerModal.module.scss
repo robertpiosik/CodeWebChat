@@ -81,8 +81,41 @@
     animation: exhale 5s linear forwards;
   }
 
-  &__breathing-status {
+  &__breathing {
+    position: relative;
     color: var(--cwc-text-color-dimmed);
+    width: 60px;
+    height: 100%;
+
+    &__text {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 1s var(--transition-timing-function);
+      &--active {
+        opacity: 1;
+      }
+
+      &--inhale {
+        letter-spacing: 2px;
+
+        &.heading__breathing__text--active {
+          animation: inhale-spacing 5s linear forwards;
+        }
+      }
+
+      &--exhale {
+        letter-spacing: 0px;
+
+        &.heading__breathing__text--active {
+          animation: exhale-spacing 5s linear forwards;
+        }
+      }
+    }
   }
 }
 
@@ -217,5 +250,23 @@
   }
   to {
     background-size: 0% 100%;
+  }
+}
+
+@keyframes inhale-spacing {
+  from {
+    letter-spacing: 0px;
+  }
+  to {
+    letter-spacing: 2px;
+  }
+}
+
+@keyframes exhale-spacing {
+  from {
+    letter-spacing: 2px;
+  }
+  to {
+    letter-spacing: 0px;
   }
 }
