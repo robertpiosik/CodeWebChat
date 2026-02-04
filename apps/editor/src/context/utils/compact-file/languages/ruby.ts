@@ -46,7 +46,7 @@ export const compact_ruby = (content: string): string => {
           continue
         }
         if (char == '#') {
-          break // Ignore rest of line
+          break
         }
         processed_line += char
         i++

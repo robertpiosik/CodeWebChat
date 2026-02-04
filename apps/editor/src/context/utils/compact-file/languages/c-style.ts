@@ -50,7 +50,7 @@ export const compact_c_style = (content: string): string => {
         continue
       }
 
-      if (char == '"' || char === "'" || char == '`') {
+      if (char == '"' || char == "'" || char == '`') {
         is_in_string = char
         if (skip_body_depth == 0) {
           processed_line += char
@@ -61,7 +61,7 @@ export const compact_c_style = (content: string): string => {
       }
 
       if (char == '/' && next_char == '/') {
-        break // Ignore the rest of the line
+        break
       }
 
       if (char == '/' && next_char == '*') {

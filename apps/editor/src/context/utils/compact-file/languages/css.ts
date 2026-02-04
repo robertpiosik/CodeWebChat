@@ -46,7 +46,7 @@ export const compact_css = (content: string): string => {
 
       // Support // for SCSS/LESS, though not standard CSS
       if (char == '/' && next_char == '/') {
-        break // Ignore the rest of the line
+        break
       }
 
       if (char == '/' && next_char == '*') {

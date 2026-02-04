@@ -51,7 +51,7 @@ export const compact_sql = (content: string): string => {
       }
 
       if (char == '-' && next_char == '-') {
-        break // Ignore the rest of the line
+        break
       }
 
       if (char == '/' && next_char == '*') {

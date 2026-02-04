@@ -380,6 +380,10 @@ export class WorkspaceProvider
       // Ignore if file was deleted quickly
     }
 
+    if (is_directory) {
+      await this._load_all_gitignore_files()
+    }
+
     const check_new_files = vscode.workspace
       .getConfiguration('codeWebChat')
       .get<boolean>('checkNewFiles')
@@ -711,17 +715,17 @@ export class WorkspaceProvider
           name,
           uri,
           vscode.TreeItemCollapsibleState.Collapsed,
-          true, // Is directory
+          true,
           this._checked_items.get(root) ??
             vscode.TreeItemCheckboxState.Unchecked,
-          false, // Is not symbolic link
-          false, // Is not open file
+          false,
+          false,
           total_tokens.total,
           total_tokens.compact,
           selected_tokens.total,
           selected_tokens.compact,
           undefined,
-          true // Is workspace root
+          true
         )
       )
       if (context_view) {
