@@ -7,23 +7,17 @@ import {
 import { FilesCollector } from '../utils/files-collector'
 import { OpenEditorsProvider } from './providers/open-editors/open-editors-provider'
 import { SharedFileState } from './shared-file-state'
-import { marked } from 'marked'
 import { EventEmitter } from 'events'
 import { apply_context_command } from '../commands/apply-context-command/apply-context-command'
 import { dictionary } from '@shared/constants/dictionary'
 import {
   CONTEXT_CHECKED_PATHS_STATE_KEY,
-  CONTEXT_CHECKED_URLS_STATE_KEY,
   CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY,
   DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY,
   RANGES_STATE_KEY,
   type DuplicateWorkspaceContext
 } from '../constants/state-keys'
 import { ContextProvider } from './providers/context/context-provider'
-import {
-  WebsiteItem,
-  WebsitesProvider
-} from './providers/websites/websites-provider'
 
 export const token_count_emitter = new EventEmitter()
 
@@ -71,10 +65,6 @@ const restore_duplicated_workspace_context = async (
             duplicated_context.checked_files_timestamps
           )
         }
-        await context.workspaceState.update(
-          CONTEXT_CHECKED_URLS_STATE_KEY,
-          duplicated_context.checked_websites
-        )
         if (duplicated_context.ranges) {
           await context.workspaceState.update(
             RANGES_STATE_KEY,
@@ -113,7 +103,6 @@ export const context_initialization = async (
 ): Promise<{
   workspace_provider: WorkspaceProvider
   open_editors_provider: OpenEditorsProvider
-  websites_provider: WebsitesProvider
 }> => {
   await restore_duplicated_workspace_context(context)
 
@@ -121,13 +110,12 @@ export const context_initialization = async (
 
   let workspace_view: vscode.TreeView<FileItem>
 
-  const websites_provider = new WebsitesProvider(context)
   const workspace_provider = new WorkspaceProvider(
     workspace_folders as any,
     context
   )
   const context_provider = new ContextProvider(workspace_provider)
-  context.subscriptions.push(websites_provider, context_provider)
+  context.subscriptions.push(context_provider)
 
   const open_editors_provider = new OpenEditorsProvider(
     workspace_folders as any,
@@ -136,8 +124,7 @@ export const context_initialization = async (
 
   const files_collector = new FilesCollector(
     workspace_provider,
-    open_editors_provider,
-    websites_provider
+    open_editors_provider
   )
 
   const update_view_badges = async () => {
@@ -148,9 +135,7 @@ export const context_initialization = async (
       const files_count = workspace_provider.use_compact_token_count
         ? token_counts.compact
         : token_counts.total
-      const websites_count =
-        websites_provider.get_checked_websites_token_count()
-      context_token_count = files_count + websites_count
+      context_token_count = files_count
 
       workspace_view.badge = {
         value: round_token_count_for_badge(context_token_count),
@@ -164,14 +149,9 @@ export const context_initialization = async (
   }
 
   const shared_state = SharedFileState.get_instance()
-  shared_state.set_providers(
-    workspace_provider,
-    open_editors_provider,
-    websites_provider
-  )
+  shared_state.set_providers(workspace_provider, open_editors_provider)
 
   workspace_provider.load_checked_files_state()
-  websites_provider.load_checked_websites_state()
 
   context.subscriptions.push({
     dispose: () => shared_state.dispose()
@@ -213,38 +193,12 @@ export const context_initialization = async (
     }
   )
 
-  const websites_view = vscode.window.createTreeView(
-    'codeWebChatViewWebsites',
-    {
-      treeDataProvider: websites_provider,
-      manageCheckboxStateManually: true
-    }
-  )
-
-  const update_websites_view_message = () => {
-    websites_view.message =
-      websites_provider.get_websites_count() > 0
-        ? undefined
-        : 'Websites added with the browser extension appear here.'
-  }
-
-  update_websites_view_message()
-
-  websites_view.onDidChangeCheckboxState(async (e) => {
-    for (const [item, state] of e.items) {
-      if (item instanceof WebsiteItem) {
-        await websites_provider.update_check_state(item, state)
-      }
-    }
-  })
-
   context.subscriptions.push(
     workspace_provider,
     open_editors_provider,
     workspace_view,
     context_view,
-    open_editors_view,
-    websites_view
+    open_editors_view
   )
 
   context.subscriptions.push(
@@ -254,18 +208,16 @@ export const context_initialization = async (
       try {
         context_text = await files_collector.collect_files()
       } catch (error: any) {
-        console.error('Error collecting files and websites:', error)
+        console.error('Error collecting files:', error)
         vscode.window.showErrorMessage(
-          dictionary.error_message.ERROR_COLLECTING_FILES_AND_WEBSITES(
-            error.message
-          )
+          dictionary.error_message.ERROR_COLLECTING_FILES(error.message)
         )
         return
       }
 
       if (context_text == '') {
         vscode.window.showWarningMessage(
-          dictionary.warning_message.NO_FILES_OR_WEBSITES_SELECTED
+          dictionary.warning_message.NO_FILES_SELECTED
         )
         return
       }
@@ -380,50 +332,6 @@ export const context_initialization = async (
         await open_editors_provider!.check_all()
       }
     ),
-    vscode.commands.registerCommand('codeWebChat.checkAllWebsites', () => {
-      websites_provider.check_all()
-    }),
-    vscode.commands.registerCommand('codeWebChat.clearChecksWebsites', () => {
-      websites_provider.clear_checks()
-    }),
-    vscode.commands.registerCommand(
-      'codeWebChat.previewWebsite',
-      async (website: WebsiteItem) => {
-        const panel = vscode.window.createWebviewPanel(
-          'websitePreview',
-          website.title,
-          vscode.ViewColumn.One,
-          { enableScripts: false }
-        )
-
-        const rendered_content = marked.parse(website.content)
-
-        panel.webview.html = `
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>${website.title}</title>
-              <style>
-                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.4; max-width: 700px; margin: 0 auto; padding: 40px; color: var(--vscode-foreground); }
-                body > *:first-child { margin-top: 0; }
-                body > *:last-child { margin-bottom: 0; }
-                h1 { color: var(--vscode-foreground); }
-                a { color: var(--vscode-textLink-foreground); }
-                hr { height: 1px; border: none; background-color: var(--vscode-foreground); }
-              </style>
-            </head>
-            <body>
-              <h1>${website.title}</h1>
-              <p>🔗 <a href="${website.url}" target="_blank">${website.url}</a></p>
-              <hr>
-              <div>${rendered_content}</div>
-            </body>
-            </html>
-          `
-      }
-    ),
     apply_context_command(
       workspace_provider,
       () => {
@@ -445,14 +353,6 @@ export const context_initialization = async (
     }),
     open_editors_provider.onDidChangeCheckedFiles(() => {
       update_view_badges()
-    }),
-    websites_provider.onDidChangeCheckedWebsites(() => {
-      update_view_badges()
-    }),
-    // Fixes badge not updating when websites list changes
-    websites_provider.onDidChangeTreeData(() => {
-      update_view_badges()
-      update_websites_view_message()
     }),
     workspace_provider.onDidChangeTreeData(() => {
       update_view_badges()
@@ -507,7 +407,6 @@ export const context_initialization = async (
 
   return {
     workspace_provider,
-    open_editors_provider,
-    websites_provider
+    open_editors_provider
   }
 }

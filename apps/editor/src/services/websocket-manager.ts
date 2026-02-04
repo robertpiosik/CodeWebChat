@@ -3,13 +3,9 @@ import * as vscode from 'vscode'
 import * as child_process from 'child_process'
 import * as path from 'path'
 import * as net from 'net'
-import {
-  InitializeChatMessage,
-  UpdateSavedWebsitesMessage
-} from '@shared/types/websocket-message'
+import { InitializeChatMessage } from '@shared/types/websocket-message'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
-import { WebsitesProvider } from '../context/providers/websites/websites-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { Preset } from '@shared/types/preset'
@@ -27,7 +23,6 @@ export class WebSocketManager {
     new vscode.EventEmitter<boolean>()
   private reconnect_timer: NodeJS.Timeout | null = null
   private has_connected_browsers: boolean = false
-  private websites_provider: WebsitesProvider | null = null
   private client_id: number | null = null
   private current_extension_version: string
   private should_reconnect: boolean = true
@@ -35,18 +30,10 @@ export class WebSocketManager {
   public readonly on_connection_status_change: vscode.Event<boolean> =
     this._on_connection_status_change.event
 
-  constructor(
-    context: vscode.ExtensionContext,
-    websites_provider: WebsitesProvider
-  ) {
+  constructor(context: vscode.ExtensionContext) {
     this.context = context
-    this.websites_provider = websites_provider || null
     this.current_extension_version = context.extension.packageJSON.version
     this._initialize_server()
-  }
-
-  set_websites_provider(provider: WebsitesProvider): void {
-    this.websites_provider = provider
   }
 
   private async _is_port_in_use(port: number): Promise<boolean> {
@@ -171,10 +158,6 @@ export class WebSocketManager {
         } else if (message.action == 'browser-connection-status') {
           this.has_connected_browsers = message.has_connected_browsers
           this._on_connection_status_change.fire(this.has_connected_browsers)
-        } else if (message.action == 'update-saved-websites') {
-          this.websites_provider?.update_websites(
-            (message as UpdateSavedWebsitesMessage).websites
-          )
         } else if (message.action == 'apply-chat-response') {
           vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
             raw_instructions: message.raw_instructions,

@@ -46,10 +46,10 @@ import { SettingsProvider } from './views/settings/backend/settings-provider'
 let websocket_server_instance: WebSocketManager | null = null
 
 export async function activate(context: vscode.ExtensionContext) {
-  const { workspace_provider, open_editors_provider, websites_provider } =
+  const { workspace_provider, open_editors_provider } =
     await context_initialization(context)
 
-  websocket_server_instance = new WebSocketManager(context, websites_provider)
+  websocket_server_instance = new WebSocketManager(context)
 
   const migrations = async () => {
     // 1 September 2025
@@ -80,7 +80,6 @@ export async function activate(context: vscode.ExtensionContext) {
     context.extensionUri,
     workspace_provider,
     open_editors_provider,
-    websites_provider,
     context,
     websocket_server_instance
   )
@@ -113,7 +112,6 @@ export async function activate(context: vscode.ExtensionContext) {
     ...checkpoints_command({
       context,
       workspace_provider,
-      websites_provider,
       panel_provider
     })
   )
@@ -136,7 +134,7 @@ export async function activate(context: vscode.ExtensionContext) {
     set_range_command(workspace_provider, context),
     check_parent_folder_command(workspace_provider),
     uncheck_parent_folder_command(workspace_provider),
-    duplicate_workspace_command(workspace_provider, websites_provider, context),
+    duplicate_workspace_command(workspace_provider, context),
     check_all_with_keywords_command(workspace_provider, context),
     open_url_command({
       command: 'codeWebChat.openRepository',

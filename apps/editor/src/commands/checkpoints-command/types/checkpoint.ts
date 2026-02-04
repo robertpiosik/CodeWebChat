@@ -24,6 +24,5 @@ export interface Checkpoint {
   response_history?: ResponseHistoryItem[]
   response_preview_item_created_at?: number
   checked_files?: string[]
-  checked_websites?: string[]
   active_tabs?: CheckpointTab[]
 }

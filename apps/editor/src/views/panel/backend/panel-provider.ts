@@ -3,7 +3,6 @@ import * as path from 'path'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { FrontendMessage, BackendMessage } from '../types/messages'
 import { ApiManager } from '@/services/api-manager'
-import { WebsitesProvider } from '@/context/providers/websites/websites-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { token_count_emitter } from '@/context/context-initialization'
@@ -197,7 +196,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     public readonly extension_uri: vscode.Uri,
     public readonly workspace_provider: WorkspaceProvider,
     public readonly open_editors_provider: OpenEditorsProvider,
-    public readonly websites_provider: WebsitesProvider,
     public readonly context: vscode.ExtensionContext,
     public readonly websocket_server_instance: WebSocketManager
   ) {
@@ -552,7 +550,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
                 workspace_provider: this.workspace_provider,
                 context: this.context,
                 panel_provider: this,
-                websites_provider: this.websites_provider,
                 options: {
                   show_auto_closing_modal_on_success: true
                 }

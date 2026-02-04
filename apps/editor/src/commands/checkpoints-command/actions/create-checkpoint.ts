@@ -21,7 +21,6 @@ import * as path from 'path'
 import { Logger } from '@shared/utils/logger'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
-import { WebsitesProvider } from '@/context/providers/websites/websites-provider'
 import { response_preview_promise_resolve } from '../../apply-chat-response-command/utils/preview'
 import { remove_old_checkpoints } from './get-checkpoints'
 
@@ -29,7 +28,6 @@ export const create_checkpoint = async (
   workspace_provider: WorkspaceProvider,
   context: vscode.ExtensionContext,
   panel_provider: PanelProvider,
-  websites_provider: WebsitesProvider,
   title: string = 'Created by user',
   description?: string
 ): Promise<Checkpoint | undefined> => {
@@ -208,9 +206,6 @@ export const create_checkpoint = async (
         uses_git,
         git_data: Object.keys(git_data).length > 0 ? git_data : undefined,
         checked_files: workspace_provider.get_all_checked_paths(),
-        checked_websites: websites_provider
-          .get_checked_websites()
-          .map((w) => w.url),
         active_tabs
       }
 

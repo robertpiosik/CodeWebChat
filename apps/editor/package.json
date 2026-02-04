@@ -84,13 +84,6 @@
           "initialSize": 3
         },
         {
-          "id": "codeWebChatViewWebsites",
-          "name": "Websites",
-          "icon": "resources/activity-bar-icon.svg",
-          "visibility": "collapsed",
-          "initialSize": 1
-        },
-        {
           "id": "codeWebChatView",
           "name": "Code Web Chat",
           "type": "webview",
@@ -246,22 +239,6 @@
         "title": "Rename..."
       },
       {
-        "command": "codeWebChat.previewWebsite",
-        "title": "Preview Website Content"
-      },
-      {
-        "command": "codeWebChat.checkAllWebsites",
-        "title": "Check All",
-        "category": "Code Web Chat",
-        "icon": "$(check-all)"
-      },
-      {
-        "command": "codeWebChat.clearChecksWebsites",
-        "title": "Clear All Checks",
-        "category": "Code Web Chat",
-        "icon": "$(clear-all)"
-      },
-      {
         "command": "codeWebChat.delete",
         "title": "Delete",
         "icon": "$(trash)"
@@ -403,18 +380,6 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.previewWebsite",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.checkAllWebsites",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.clearChecksWebsites",
-          "when": "false"
-        },
-        {
           "command": "codeWebChat.referenceInPrompt",
           "when": "false"
         },
@@ -520,16 +485,6 @@
           "command": "codeWebChat.closeAllEditors",
           "when": "view == codeWebChatViewOpenEditors",
           "group": "navigation@5"
-        },
-        {
-          "command": "codeWebChat.checkAllWebsites",
-          "when": "view == codeWebChatViewWebsites",
-          "group": "navigation@1"
-        },
-        {
-          "command": "codeWebChat.clearChecksWebsites",
-          "when": "view == codeWebChatViewWebsites",
-          "group": "navigation@2"
         },
         {
           "command": "codeWebChat.openRepository",
@@ -1918,7 +1873,6 @@
     "he": "^1.2.0",
     "ignore": "^6.0.2",
     "jsdom": "^24.0.0",
-    "marked": "^15.0.12",
     "path-browserify": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

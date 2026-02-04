@@ -26,18 +26,6 @@ export type InitializeChatMessage = {
   prompt_type?: any
 }
 
-export type Website = {
-  url: string
-  title: string
-  content: string
-  favicon?: string
-}
-
-export type UpdateSavedWebsitesMessage = {
-  action: 'update-saved-websites'
-  websites: Array<Website>
-}
-
 export type BrowserConnectionStatusMessage = {
   action: 'browser-connection-status'
   has_connected_browsers: boolean
@@ -57,7 +45,6 @@ export type ClientIdAssignmentMessage = {
 
 export type WebSocketMessage =
   | InitializeChatMessage
-  | UpdateSavedWebsitesMessage
   | BrowserConnectionStatusMessage
   | ClientIdAssignmentMessage
   | ApplyChatResponseMessage

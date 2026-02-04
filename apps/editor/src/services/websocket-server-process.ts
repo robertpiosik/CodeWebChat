@@ -4,7 +4,6 @@ import * as process from 'process'
 const WebSocket = require('ws')
 
 import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
-import { Website } from '@shared/types/websocket-message'
 
 interface BrowserClient {
   ws: WebSocket
@@ -22,7 +21,6 @@ class WebSocketServer {
   private current_browser_client: BrowserClient | null = null
   private connections: Set<WebSocket> = new Set()
   private vscode_extension_version: string | null = null
-  private saved_websites: Website[] = []
   private server: http.Server
   private wss: any
 
@@ -146,8 +144,6 @@ class WebSocketServer {
       })
     )
 
-    this._send_saved_websites_to_client(ws)
-
     if (
       this.current_browser_client &&
       this.current_browser_client.ws.readyState === WebSocket.OPEN
@@ -172,14 +168,6 @@ class WebSocketServer {
         this.current_browser_client.ws.readyState === WebSocket.OPEN
       ) {
         this.current_browser_client.ws.send(msg_string)
-      }
-    } else if (msg_data.action == 'update-saved-websites') {
-      this.saved_websites = msg_data.websites
-
-      for (const client of this.vscode_clients.values()) {
-        if (client.ws.readyState == WebSocket.OPEN) {
-          client.ws.send(msg_string)
-        }
       }
     } else if (msg_data.action == 'apply-chat-response') {
       const target_client_id = msg_data.client_id
@@ -243,17 +231,6 @@ class WebSocketServer {
       if (client.ws.readyState == WebSocket.OPEN) {
         client.ws.send(message)
       }
-    }
-  }
-
-  private _send_saved_websites_to_client(client: WebSocket): void {
-    if (this.saved_websites.length > 0 && client.readyState == WebSocket.OPEN) {
-      client.send(
-        JSON.stringify({
-          action: 'update-saved-websites',
-          websites: this.saved_websites
-        })
-      )
     }
   }
 

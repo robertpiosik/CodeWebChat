@@ -11,7 +11,6 @@ import { replace_saved_context_symbol } from '@/views/panel/backend/utils/replac
 import { replace_skill_symbol } from '@/views/panel/backend/utils/replace-skill-symbol'
 import { replace_image_symbol } from '@/views/panel/backend/utils/replace-image-symbol'
 import { replace_document_symbol } from '../utils/replace-document-symbol'
-import { replace_website_symbol } from '../utils/replace-website-symbol'
 import {
   code_at_cursor_instructions_for_panel,
   prune_context_instructions_prefix,
@@ -34,8 +33,7 @@ export const handle_copy_prompt = async (params: {
 }): Promise<void> => {
   const files_collector = new FilesCollector(
     params.panel_provider.workspace_provider,
-    params.panel_provider.open_editors_provider,
-    params.panel_provider.websites_provider
+    params.panel_provider.open_editors_provider
   )
 
   const active_editor = vscode.window.activeTextEditor
@@ -156,12 +154,6 @@ export const handle_copy_prompt = async (params: {
       })
     }
 
-    if (processed_completion_instructions.includes('#Website(')) {
-      processed_completion_instructions = await replace_website_symbol({
-        instruction: processed_completion_instructions
-      })
-    }
-
     const missing_text_tag = processed_completion_instructions
       ? `<missing_text>${processed_completion_instructions}</missing_text>`
       : '<missing_text>'
@@ -236,12 +228,6 @@ export const handle_copy_prompt = async (params: {
 
     if (processed_instructions.includes('#Document(')) {
       processed_instructions = await replace_document_symbol({
-        instruction: processed_instructions
-      })
-    }
-
-    if (processed_instructions.includes('#Website(')) {
-      processed_instructions = await replace_website_symbol({
         instruction: processed_instructions
       })
     }

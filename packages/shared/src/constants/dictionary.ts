@@ -125,7 +125,7 @@ export const dictionary = {
     NOTHING_IN_CONTEXT_TO_SAVE: 'There is nothing in your context to save.',
     CONTEXTS_FILE_NOT_VALID_ARRAY:
       'Contexts file is not a valid array. Starting with empty contexts list.',
-    NO_FILES_OR_WEBSITES_SELECTED: 'No files or websites selected or open.',
+    NO_FILES_SELECTED: 'No files selected or open.',
     NOTHING_SELECTED_IN_CONTEXT: 'Nothing is selected in context.',
     NO_OPEN_EDITORS_SELECTED: 'No open editors selected.',
     NO_EDITOR_OPEN: 'No editor is open.',
@@ -269,8 +269,8 @@ export const dictionary = {
     CONTEXT_NAME_NOT_PROVIDED: 'Context name was not provided.',
     ERROR_SAVING_CONTEXT_TO_WORKSPACE_STATE: (message: string) =>
       `Error saving context to Workspace State: ${message}.`,
-    ERROR_COLLECTING_FILES_AND_WEBSITES: (message: string) =>
-      `Error collecting files and websites: ${message}.`,
+    ERROR_COLLECTING_FILES: (message: string) =>
+      `Error collecting files: ${message}.`,
     ERROR_READING_FILE: (file_path: string, message: string) =>
       `Error reading file ${file_path}: ${message}.`,
     FAILED_TO_INITIALIZE_WEBSOCKET_SERVER: (error: any) =>

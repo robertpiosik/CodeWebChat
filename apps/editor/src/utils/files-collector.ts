@@ -1,7 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
-import { WebsitesProvider } from '../context/providers/websites/websites-provider'
 import { natural_sort } from '@/utils/natural-sort'
 import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
 import { compact_file } from '../context/utils/compact-file/compact-file'
@@ -9,17 +8,14 @@ import { compact_file } from '../context/utils/compact-file/compact-file'
 export class FilesCollector {
   private workspace_provider: WorkspaceProvider
   private open_editors_provider?: OpenEditorsProvider
-  private websites_provider?: WebsitesProvider
   private workspace_roots: string[] = []
 
   constructor(
     workspace_provider: WorkspaceProvider,
-    open_editors_provider?: OpenEditorsProvider,
-    websites_provider?: WebsitesProvider
+    open_editors_provider?: OpenEditorsProvider
   ) {
     this.workspace_provider = workspace_provider
     this.open_editors_provider = open_editors_provider
-    this.websites_provider = websites_provider
 
     this.workspace_roots = workspace_provider.get_workspace_roots()
   }
@@ -64,16 +60,6 @@ export class FilesCollector {
     )
 
     let collected_text = ''
-
-    // Only include websites when not in no_context mode
-    if (!params?.no_context && this.websites_provider) {
-      const checked_websites = this.websites_provider.get_checked_websites()
-      checked_websites.sort((a, b) => a.url.localeCompare(b.url))
-
-      for (const website of checked_websites) {
-        collected_text += `<document title="${website.title}">\n<![CDATA[\n${website.content}\n]]>\n</document>\n`
-      }
-    }
 
     for (const file_path of sorted_context_files) {
       if (params?.exclude_path && params.exclude_path == file_path) continue

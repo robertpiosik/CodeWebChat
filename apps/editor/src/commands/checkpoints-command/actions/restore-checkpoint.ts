@@ -5,8 +5,7 @@ import { execSync } from 'child_process'
 import {
   TEMPORARY_CHECKPOINT_STATE_KEY,
   CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
-  CONTEXT_CHECKED_PATHS_STATE_KEY,
-  CONTEXT_CHECKED_URLS_STATE_KEY
+  CONTEXT_CHECKED_PATHS_STATE_KEY
 } from '@/constants/state-keys'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import type { Checkpoint } from '../types'
@@ -21,7 +20,6 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { response_preview_promise_resolve } from '../../apply-chat-response-command/utils/preview'
 import { ongoing_preview_cleanup_promise } from '../../apply-chat-response-command/utils/preview-handler'
 import { dictionary } from '@shared/constants/dictionary'
-import { WebsitesProvider } from '@/context/providers/websites/websites-provider'
 import { get_git_info } from '../utils/git-utils'
 
 export const restore_checkpoint = async (params: {
@@ -29,7 +27,6 @@ export const restore_checkpoint = async (params: {
   workspace_provider: WorkspaceProvider
   context: vscode.ExtensionContext
   panel_provider: PanelProvider
-  websites_provider: WebsitesProvider
   options?: {
     skip_confirmation?: boolean
     use_native_progress?: boolean
@@ -92,7 +89,6 @@ export const restore_checkpoint = async (params: {
           params.workspace_provider,
           params.context,
           params.panel_provider,
-          params.websites_provider,
           'Before checkpoint restored'
         )
       }
@@ -118,8 +114,7 @@ export const restore_checkpoint = async (params: {
       }
 
       temp_checkpoint = await create_temporary_checkpoint(
-        params.workspace_provider,
-        params.websites_provider
+        params.workspace_provider
       )
       await params.context.workspaceState.update(
         TEMPORARY_CHECKPOINT_STATE_KEY,
@@ -512,13 +507,6 @@ export const restore_checkpoint = async (params: {
       )
       params.workspace_provider.load_checked_files_state()
     }
-    if (params.checkpoint.checked_websites) {
-      await params.context.workspaceState.update(
-        CONTEXT_CHECKED_URLS_STATE_KEY,
-        params.checkpoint.checked_websites
-      )
-      params.websites_provider.load_checked_websites_state()
-    }
 
     await params.context.workspaceState.update(
       CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
@@ -564,7 +552,6 @@ export const restore_checkpoint = async (params: {
           workspace_provider: params.workspace_provider,
           context: params.context,
           panel_provider: params.panel_provider,
-          websites_provider: params.websites_provider,
           options: { skip_confirmation: true, use_native_progress: true }
         })
         await delete_checkpoint({

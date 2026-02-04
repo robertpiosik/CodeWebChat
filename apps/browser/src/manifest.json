@@ -3,7 +3,7 @@
   "author": "Robert Piosik",
   "name": "Code Web Chat Connector",
   "short_name": "CWC",
-  "description": "Autofill your prompts in chatbots. Add websites to context.",
+  "description": "Autofill your prompts in chatbots.",
   "version": "1.93.0",
   "homepage_url": "https://github.com/robertpiosik/CodeWebChat",
   "icons": {
@@ -12,7 +12,7 @@
     "48": "icons/icon-48.png",
     "128": "icons/icon-128.png"
   },
-  "permissions": ["storage", "alarms", "activeTab"],
+  "permissions": ["storage", "alarms"],
   "host_permissions": ["http://localhost:55155/", "ws://localhost:55155/"],
   "action": {
     "default_title": "Code Web Chat Connector",

@@ -19,7 +19,6 @@ import {
 } from './actions'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { get_checkpoint_path } from './utils'
-import { WebsitesProvider } from '@/context/providers/websites/websites-provider'
 import { dictionary } from '@shared/constants/dictionary'
 
 dayjs.extend(relativeTime)
@@ -29,7 +28,6 @@ export type { Checkpoint } from './types'
 export const checkpoints_command = (params: {
   context: vscode.ExtensionContext
   workspace_provider: WorkspaceProvider
-  websites_provider: WebsitesProvider
   panel_provider: PanelProvider
 }): vscode.Disposable[] => {
   let active_delete_operation: ActiveDeleteOperation | null = null
@@ -49,8 +47,7 @@ export const checkpoints_command = (params: {
       const checkpoint = await create_checkpoint(
         params.workspace_provider,
         params.context,
-        params.panel_provider,
-        params.websites_provider
+        params.panel_provider
       )
       if (checkpoint) {
         vscode.commands.executeCommand('codeWebChat.checkpoints', {
@@ -225,8 +222,7 @@ export const checkpoints_command = (params: {
             const checkpoint = await create_checkpoint(
               params.workspace_provider,
               params.context,
-              params.panel_provider,
-              params.websites_provider
+              params.panel_provider
             )
             if (checkpoint) {
               vscode.commands.executeCommand('codeWebChat.checkpoints', {
@@ -252,8 +248,7 @@ export const checkpoints_command = (params: {
               workspace_provider: params.workspace_provider,
               context: params.context,
               options: { skip_confirmation: true, use_native_progress: true },
-              panel_provider: params.panel_provider,
-              websites_provider: params.websites_provider
+              panel_provider: params.panel_provider
             })
             // After reverting, delete the temp checkpoint and clear state.
             await delete_checkpoint({
@@ -272,7 +267,6 @@ export const checkpoints_command = (params: {
               workspace_provider: params.workspace_provider,
               context: params.context,
               panel_provider: params.panel_provider,
-              websites_provider: params.websites_provider,
               options: { use_native_progress: true }
             })
           }

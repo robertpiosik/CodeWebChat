@@ -172,7 +172,6 @@ export const apply_chat_response_command = (params: {
           params.workspace_provider,
           params.context,
           params.panel_provider,
-          params.panel_provider.websites_provider,
           'Before response previewed',
           args?.raw_instructions
         )

@@ -1,10 +1,3 @@
-import { Website } from '@/views/popup/hooks/use-websites-store'
-
-type UpdateSavedWebsitesMessage = {
-  action: 'update-saved-websites'
-  websites: Website[]
-}
-
 type ChatInitializedMessage = {
   action: 'chat-initialized'
 }
@@ -16,13 +9,4 @@ type ApplyChatResponseMessage = {
   edit_format?: string
 }
 
-type GetTabDataMessage = {
-  action: 'get-tab-data'
-  url: string
-}
-
-export type Message =
-  | UpdateSavedWebsitesMessage
-  | ChatInitializedMessage
-  | ApplyChatResponseMessage
-  | GetTabDataMessage
+export type Message = ChatInitializedMessage | ApplyChatResponseMessage

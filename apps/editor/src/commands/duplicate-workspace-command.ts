@@ -1,6 +1,5 @@
 import * as vscode from 'vscode'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
-import { WebsitesProvider } from '../context/providers/websites/websites-provider'
 import {
   API_EDIT_FORMAT_STATE_KEY,
   CHAT_EDIT_FORMAT_STATE_KEY,
@@ -11,16 +10,12 @@ import {
 
 export const duplicate_workspace_command = (
   workspace_provider: WorkspaceProvider,
-  websites_provider: WebsitesProvider,
   context: vscode.ExtensionContext
 ) => {
   return vscode.commands.registerCommand(
     'codeWebChat.duplicateWorkspace',
     async () => {
       const checked_files = workspace_provider.get_all_checked_paths()
-      const checked_websites = websites_provider
-        .get_checked_websites()
-        .map((w) => w.url)
       const workspace_root_folders =
         vscode.workspace.workspaceFolders?.map((folder) => folder.uri.fsPath) ??
         []
@@ -44,7 +39,6 @@ export const duplicate_workspace_command = (
         context.workspaceState.get<Record<string, string>>(RANGES_STATE_KEY)
       const context_to_save: DuplicateWorkspaceContext = {
         checked_files,
-        checked_websites,
         workspace_root_folders,
         timestamp: Date.now(),
         open_editors,

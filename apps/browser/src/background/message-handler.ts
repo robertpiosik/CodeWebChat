@@ -4,10 +4,8 @@ import {
   ApplyChatResponseMessage
 } from '@shared/types/websocket-message'
 import browser from 'webextension-polyfill'
-import { send_saved_websites, send_message_to_server } from './websocket'
+import { send_message_to_server } from './websocket'
 import { is_message } from '@/utils/is-message'
-import { GetTabDataResponse } from '@/types/responses'
-import { image_url_to_base64 } from '@/utils/image-url-to-base64'
 
 interface ChatQueueItem {
   message: InitializeChatMessage
@@ -86,7 +84,7 @@ const process_next_chat = async () => {
     }
   })
 
-  // OpenRouter is a special case, in model handling via search params
+  // OpenRouter is a special case—model handling via search params
   if (current_chat_message.url == 'https://openrouter.ai/chat') {
     // https://openrouter.ai/chat?models=openrouter/quasar-alpha
     const search_params = new URLSearchParams()
@@ -141,69 +139,11 @@ const handle_chat_initialized = async () => {
   }
 }
 
-const handle_get_tab_data = async (
-  callback: (tab_data?: GetTabDataResponse) => void
-) => {
-  try {
-    const tabs = await browser.tabs.query({ active: true, currentWindow: true })
-    const tab = tabs[0]
-    const favicon_url = tabs[0]?.favIconUrl
-
-    if (!tab?.url || !tab.url.startsWith('http')) {
-      throw new Error('URL is not valid')
-    }
-
-    let html = ''
-
-    // (Firefox uses browserAction, Chrome uses action)
-    const is_firefox = typeof browser.browserAction != 'undefined'
-
-    if (is_firefox && tab.id) {
-      // Firefox: Use the older tabs.executeScript API (MV2 style)
-      const results = await browser.tabs.executeScript(tab.id, {
-        code: 'document.documentElement.outerHTML'
-      })
-
-      if (!results || results.length == 0 || !results[0]) {
-        throw new Error('Failed to get page content')
-      }
-
-      html = results[0] as string
-    } else {
-      // Chrome: Use fetch
-      const response = await fetch(tab.url)
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
-      }
-      html = await response.text()
-    }
-
-    let favicon_base64: string | undefined
-    if (favicon_url) {
-      try {
-        favicon_base64 = (await image_url_to_base64(favicon_url)) || undefined
-      } catch (faviconError) {
-        console.error('Error converting favicon to base64:', faviconError)
-      }
-    }
-
-    callback({
-      html,
-      favicon_base64
-    })
-  } catch (error) {
-    console.error('Error getting tab data:', error)
-    callback()
-  }
-}
-
 export const setup_message_listeners = () => {
   browser.runtime.onMessage.addListener(
-    (message: any, _: any, sendResponse: any): any => {
+    (message: any, _: any, __: any): any => {
       if (is_message(message)) {
-        if (message.action == 'update-saved-websites' && message.websites) {
-          send_saved_websites(message.websites)
-        } else if (message.action == 'chat-initialized') {
+        if (message.action == 'chat-initialized') {
           handle_chat_initialized()
         } else if (message.action == 'apply-chat-response') {
           send_message_to_server({
@@ -212,11 +152,6 @@ export const setup_message_listeners = () => {
             raw_instructions: message.raw_instructions,
             edit_format: message.edit_format
           } as ApplyChatResponseMessage)
-        } else if (message.action == 'get-tab-data') {
-          handle_get_tab_data((tab_data) => {
-            sendResponse(tab_data)
-          })
-          return true
         }
       }
       return false
