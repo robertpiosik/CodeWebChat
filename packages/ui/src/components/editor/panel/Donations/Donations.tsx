@@ -84,7 +84,7 @@ export type DonationsProps = {
 
 export const Donations: React.FC<DonationsProps> = (props) => {
   const observer_target = useRef<HTMLDivElement>(null)
-  const [is_links_collapsed, set_links_collapsed] = useState(true)
+  const [is_platforms_collapsed, set_platforms_collapsed] = useState(true)
   const [is_wallets_collapsed, set_wallets_collapsed] = useState(true)
 
   useEffect(() => {
@@ -105,7 +105,7 @@ export const Donations: React.FC<DonationsProps> = (props) => {
     return () => observer.unobserve(target)
   }, [props.on_fetch_next_page])
 
-  const links = [
+  const platforms = [
     {
       label: 'Buy Me A Coffee ↗',
       url: 'https://buymeacoffee.com/robertpiosik'
@@ -149,23 +149,23 @@ export const Donations: React.FC<DonationsProps> = (props) => {
             Hey there! Donating is a great way to show your support for the
             project. Thank you.
           </div>
-          <div className={styles.links}>
+          <div className={styles.platforms}>
             <Fieldset
-              is_collapsed={is_links_collapsed}
-              label="Links"
+              is_collapsed={is_platforms_collapsed}
+              label="Platforms"
               on_toggle_collapsed={() =>
-                set_links_collapsed(!is_links_collapsed)
+                set_platforms_collapsed(!is_platforms_collapsed)
               }
             >
-              <div className={styles.links__content}>
-                {links.map((link) => (
+              <div className={styles.platforms__content}>
+                {platforms.map((link) => (
                   <a
                     href={link.url}
-                    className={styles.links__item}
+                    className={styles.platforms__item}
                     key={link.url}
                   >
                     <strong>{link.label}</strong>
-                    <span className={styles.links__item__url}>
+                    <span className={styles.platforms__item__url}>
                       {format_url_for_display(link.url)}
                     </span>
                   </a>

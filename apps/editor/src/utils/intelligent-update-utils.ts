@@ -152,7 +152,7 @@ export const get_intelligent_update_config = async (
               RECENTLY_USED_INTELLIGENT_UPDATE_CONFIG_IDS_STATE_KEY
             ) || []
 
-          recents = [selected.id, ...recents.filter((id) => id !== selected.id)]
+          recents = [selected.id, ...recents.filter((id) => id != selected.id)]
 
           context.workspaceState.update(
             RECENTLY_USED_INTELLIGENT_UPDATE_CONFIG_IDS_STATE_KEY,
