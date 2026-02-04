@@ -1,8 +1,6 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 
-export const handle_get_instructions = (
-  panel_provider: PanelProvider
-): void => {
+export const handle_get_instructions = (panel_provider: PanelProvider) => {
   panel_provider.send_message({
     command: 'INSTRUCTIONS',
     ask_about_context: panel_provider.ask_about_context_instructions,

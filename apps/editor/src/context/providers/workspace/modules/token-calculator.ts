@@ -63,7 +63,7 @@ export class TokenCalculator implements vscode.Disposable {
     }
   }
 
-  private _update_token_counts_cache(): void {
+  private _update_token_counts_cache() {
     if (this._has_token_counts_cache_updated_once) return
 
     if (this._token_cache_update_timeout) {
@@ -143,7 +143,7 @@ export class TokenCalculator implements vscode.Disposable {
     mtime: number,
     token_count: number,
     compact_token_count: number
-  ): void {
+  ) {
     if (!this._session_cache[workspace_root]) {
       this._session_cache[workspace_root] = {
         modified_at: Date.now(),
@@ -189,7 +189,7 @@ export class TokenCalculator implements vscode.Disposable {
     }
   }
 
-  public invalidate_token_counts_for_file(changed_file_path: string): void {
+  public invalidate_token_counts_for_file(changed_file_path: string) {
     const workspace_root =
       this._provider.get_workspace_root_for_file(changed_file_path)
     if (!workspace_root) {
@@ -211,19 +211,19 @@ export class TokenCalculator implements vscode.Disposable {
     }
   }
 
-  public invalidate_directory_counts(dir_path: string): void {
+  public invalidate_directory_counts(dir_path: string) {
     this._directory_token_counts.delete(dir_path)
     this._directory_compact_token_counts.delete(dir_path)
     this._directory_selected_token_counts.delete(dir_path)
     this._directory_selected_compact_token_counts.delete(dir_path)
   }
 
-  public invalidate_directory_selected_count(dir_path: string): void {
+  public invalidate_directory_selected_count(dir_path: string) {
     this._directory_selected_token_counts.delete(dir_path)
     this._directory_selected_compact_token_counts.delete(dir_path)
   }
 
-  public clear_caches(): void {
+  public clear_caches() {
     this._file_token_counts.clear()
     this._file_compact_token_counts.clear()
     this._directory_token_counts.clear()
@@ -232,7 +232,7 @@ export class TokenCalculator implements vscode.Disposable {
     this._directory_selected_compact_token_counts.clear()
   }
 
-  public clear_selected_counts(): void {
+  public clear_selected_counts() {
     this._directory_selected_token_counts.clear()
     this._directory_selected_compact_token_counts.clear()
   }
@@ -619,7 +619,7 @@ export class TokenCalculator implements vscode.Disposable {
     return result
   }
 
-  public dispose(): void {
+  public dispose() {
     if (this._token_cache_update_timeout) {
       clearTimeout(this._token_cache_update_timeout)
     }

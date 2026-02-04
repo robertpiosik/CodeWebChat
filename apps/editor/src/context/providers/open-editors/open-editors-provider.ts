@@ -31,7 +31,7 @@ export class OpenEditorsProvider
   private _workspace_provider: WorkspaceProvider
   private _use_compact_token_count: boolean = false
 
-  public set_use_compact_token_count(use_compact: boolean): void {
+  public set_use_compact_token_count(use_compact: boolean) {
     if (this._use_compact_token_count != use_compact) {
       this._use_compact_token_count = use_compact
       this.refresh()
@@ -78,12 +78,12 @@ export class OpenEditorsProvider
 
   public update_workspace_folders(
     workspace_folders: readonly vscode.WorkspaceFolder[]
-  ): void {
+  ) {
     this._workspace_roots = workspace_folders.map((folder) => folder.uri.fsPath)
     this.refresh()
   }
 
-  private _dispatch_change_events(): void {
+  private _dispatch_change_events() {
     this._on_did_change_checked_files.fire()
     this.refresh()
   }
@@ -98,7 +98,7 @@ export class OpenEditorsProvider
     return this._workspace_roots.find((root) => file_path.startsWith(root))
   }
 
-  private _uncheck_ignored_files(): void {
+  private _uncheck_ignored_files() {
     const checked_files = this.get_checked_files()
 
     const files_to_uncheck = checked_files.filter((file_path) =>
@@ -114,7 +114,7 @@ export class OpenEditorsProvider
     }
   }
 
-  private _update_preview_tabs_state(): void {
+  private _update_preview_tabs_state() {
     this._preview_tabs.clear()
 
     vscode.window.tabGroups.all.forEach((tab_group) => {
@@ -127,7 +127,7 @@ export class OpenEditorsProvider
     })
   }
 
-  private _handle_tab_changes(e: vscode.TabChangeEvent): void {
+  private _handle_tab_changes(e: vscode.TabChangeEvent) {
     for (const tab of e.changed) {
       if (tab.input instanceof vscode.TabInputText) {
         const file_path = tab.input.uri.fsPath
@@ -150,18 +150,18 @@ export class OpenEditorsProvider
     }
   }
 
-  mark_opened_from_workspace_view(file_path: string): void {
+  mark_opened_from_workspace_view(file_path: string) {
     this._opened_from_workspace_view.add(file_path)
   }
 
-  dispose(): void {
+  dispose() {
     this._workspace_change_handler.dispose()
     this._tab_change_handler.dispose()
     this._config_change_handler.dispose()
     this._on_did_change_checked_files.dispose()
   }
 
-  refresh(): void {
+  refresh() {
     this._clean_up_closed_files()
     this._on_did_change_tree_data.fire()
   }
@@ -171,7 +171,7 @@ export class OpenEditorsProvider
     return workspace_checked_files.includes(file_path)
   }
 
-  private _clean_up_closed_files(): void {
+  private _clean_up_closed_files() {
     const open_file_paths = new Set(
       this._get_open_editors().map((uri) => uri.fsPath)
     )
@@ -365,7 +365,7 @@ export class OpenEditorsProvider
     this._dispatch_change_events()
   }
 
-  clear_checks(): void {
+  clear_checks() {
     // Instead of clearing the map, explicitly set each open editor to unchecked
     const open_files = this._get_open_editors()
 

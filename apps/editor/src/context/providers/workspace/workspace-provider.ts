@@ -67,7 +67,7 @@ export class WorkspaceProvider
   public ranges_initialization: Promise<void>
   public use_compact_token_count: boolean = false
 
-  public set_use_compact_token_count(use_compact: boolean): void {
+  public set_use_compact_token_count(use_compact: boolean) {
     if (this.use_compact_token_count != use_compact) {
       this.use_compact_token_count = use_compact
       this.refresh()
@@ -138,7 +138,7 @@ export class WorkspaceProvider
     )
   }
 
-  public load_checked_files_state(): void {
+  public load_checked_files_state() {
     const persisted_checked_paths = this._context.workspaceState.get<string[]>(
       CONTEXT_CHECKED_PATHS_STATE_KEY
     )
@@ -183,12 +183,12 @@ export class WorkspaceProvider
     return matching_root
   }
 
-  private _dispatch_change_events(): void {
+  private _dispatch_change_events() {
     this._on_did_change_checked_files.fire()
     this.refresh()
   }
 
-  private _uncheck_ignored_files(): void {
+  private _uncheck_ignored_files() {
     const checked_files = this.get_all_checked_paths()
 
     const files_to_uncheck = checked_files.filter((file_path) =>
@@ -212,7 +212,7 @@ export class WorkspaceProvider
     }
   }
 
-  public dispose(): void {
+  public dispose() {
     this._watcher.dispose()
     this._ranges_watcher.dispose()
     this._gitignore_watcher.dispose()
@@ -228,7 +228,7 @@ export class WorkspaceProvider
     this._token_calculator.dispose()
   }
 
-  private _update_preview_tabs_state(): void {
+  private _update_preview_tabs_state() {
     this._preview_tabs.clear()
 
     vscode.window.tabGroups.all.forEach((tabGroup) => {
@@ -241,7 +241,7 @@ export class WorkspaceProvider
     })
   }
 
-  private _handle_tab_changes(e: vscode.TabChangeEvent): void {
+  private _handle_tab_changes(e: vscode.TabChangeEvent) {
     for (const tab of e.changed) {
       if (tab.input instanceof vscode.TabInputText) {
         const file_path = tab.input.uri.fsPath
@@ -263,7 +263,7 @@ export class WorkspaceProvider
     }
   }
 
-  private _handle_file_out_preview(file_path: string): void {
+  private _handle_file_out_preview(file_path: string) {
     const workspace_root = this.get_workspace_root_for_file(file_path)
     if (!workspace_root) return
 
@@ -286,7 +286,7 @@ export class WorkspaceProvider
     }
   }
 
-  public mark_opened_from_workspace_view(file_path: string): void {
+  public mark_opened_from_workspace_view(file_path: string) {
     this._opened_from_workspace_view.add(file_path)
   }
 
@@ -316,11 +316,11 @@ export class WorkspaceProvider
     return path.basename(root_path)
   }
 
-  public invalidate_token_counts_for_file(changed_file_path: string): void {
+  public invalidate_token_counts_for_file(changed_file_path: string) {
     this._token_calculator.invalidate_token_counts_for_file(changed_file_path)
   }
 
-  private _on_file_system_changed(changed_file_path?: string): void {
+  private _on_file_system_changed(changed_file_path?: string) {
     if (!changed_file_path) return
 
     const workspace_root = this.get_workspace_root_for_file(changed_file_path)
@@ -426,7 +426,7 @@ export class WorkspaceProvider
     this._schedule_refresh()
   }
 
-  public refresh(): void {
+  public refresh() {
     if (this._refresh_timeout) {
       clearTimeout(this._refresh_timeout)
       this._refresh_timeout = null
@@ -434,7 +434,7 @@ export class WorkspaceProvider
     this._on_did_change_tree_data.fire()
   }
 
-  private _schedule_refresh(): void {
+  private _schedule_refresh() {
     if (this._refresh_timeout) {
       clearTimeout(this._refresh_timeout)
     }

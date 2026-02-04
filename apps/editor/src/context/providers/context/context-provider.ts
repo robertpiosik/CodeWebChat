@@ -17,7 +17,7 @@ export class ContextProvider implements vscode.TreeDataProvider<FileItem> {
     )
   }
 
-  refresh(): void {
+  refresh() {
     this._onDidChangeTreeData.fire()
   }
 

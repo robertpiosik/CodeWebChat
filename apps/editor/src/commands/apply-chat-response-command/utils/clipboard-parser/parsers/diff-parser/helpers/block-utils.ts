@@ -51,7 +51,7 @@ export const remove_path_line_from_text_block = (params: {
   text_item: TextItem
   target_file_path: string
   is_single_root: boolean
-}): void => {
+}) => {
   const content_lines = params.text_item.content.split('\n')
   let path_line_index = -1
 

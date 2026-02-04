@@ -5,7 +5,7 @@ export namespace Logger {
     function_name?: string
     message: string
     data?: any
-  }): void {
+  }) {
     const function_name = params.function_name
       ? `[${params.function_name}] `
       : ''
@@ -16,7 +16,7 @@ export namespace Logger {
     function_name?: string
     message: string
     data?: any
-  }): void {
+  }) {
     const prefix = params.function_name ? `[${params.function_name}] ` : ''
     console.warn(`${LOG_PREFIX}${prefix}${params.message}`, params.data)
   }
@@ -25,7 +25,7 @@ export namespace Logger {
     function_name?: string
     message: string
     data?: any
-  }): void {
+  }) {
     const prefix = params.function_name ? `[${params.function_name}] ` : ''
     console.error(`${LOG_PREFIX}${prefix}${params.message}`, params.data)
   }

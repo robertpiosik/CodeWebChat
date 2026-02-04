@@ -10,7 +10,7 @@ import {
 
 export const handle_get_edit_format_instructions = (
   panel_provider: PanelProvider
-): void => {
+) => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const instructions: Record<EditFormat, string> = {
     whole:

@@ -10,7 +10,7 @@ export const create_or_update_file_item = (params: {
   mode?: 'overwrite' | 'append'
   renamed_from?: string
   is_deleted?: boolean
-}): void => {
+}) => {
   const {
     file_name,
     content,
@@ -63,7 +63,7 @@ export const create_or_update_file_item = (params: {
 export const flush_text_block = (params: {
   text_block: string
   results: (FileItem | TextItem | InlineFileItem)[]
-}): void => {
+}) => {
   const { text_block, results } = params
 
   if (!text_block.trim()) {

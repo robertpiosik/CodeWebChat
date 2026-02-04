@@ -40,7 +40,7 @@ export const save_contexts_for_workspace = (
   context: vscode.ExtensionContext,
   workspace_root: string,
   contexts: SavedContext[]
-): void => {
+) => {
   const file_path = get_global_contexts_file_path(context)
   const dir_path = path.dirname(file_path)
 

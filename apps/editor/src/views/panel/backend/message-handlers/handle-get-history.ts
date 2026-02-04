@@ -8,7 +8,7 @@ import {
 } from '@/constants/state-keys'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 
-export const handle_get_history = (panel_provider: PanelProvider): void => {
+export const handle_get_history = (panel_provider: PanelProvider) => {
   const ask_history = panel_provider.context.workspaceState.get<HistoryEntry[]>(
     HISTORY_ASK_STATE_KEY,
     []

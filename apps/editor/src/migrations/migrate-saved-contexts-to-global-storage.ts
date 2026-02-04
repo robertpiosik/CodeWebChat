@@ -39,7 +39,7 @@ const load_all_global_contexts = (
 const save_all_global_contexts = (
   context: vscode.ExtensionContext,
   data: GlobalContextsData
-): void => {
+) => {
   const file_path = get_global_contexts_file_path(context)
   const dir_path = path.dirname(file_path)
 

@@ -7,9 +7,7 @@ import {
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 
-export const handle_get_collapsed_states = (
-  panel_provider: PanelProvider
-): void => {
+export const handle_get_collapsed_states = (panel_provider: PanelProvider) => {
   const WEB_PROMPT_TYPES: WebPromptType[] = [
     'ask-about-context',
     'edit-context',

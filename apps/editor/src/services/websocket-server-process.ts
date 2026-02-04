@@ -61,13 +61,13 @@ class WebSocketServer {
     })
   }
 
-  private _setup_websocket_server(): void {
+  private _setup_websocket_server() {
     this.wss.on('connection', (ws: any, request: any) =>
       this._handle_connection(ws, request)
     )
   }
 
-  private _handle_connection(ws: any, request: any): void {
+  private _handle_connection(ws: any, request: any) {
     const url = new URL(request.url || '', `http://localhost:${DEFAULT_PORT}`)
     const token = url.searchParams.get('token')
 
@@ -90,7 +90,7 @@ class WebSocketServer {
     ws.on('close', () => this._handle_disconnection(ws, is_browser_client))
   }
 
-  private _handle_browser_connection(ws: WebSocket, url: URL): void {
+  private _handle_browser_connection(ws: WebSocket, url: URL) {
     const version = url.searchParams.get('version') || 'unknown'
 
     if (
@@ -105,7 +105,7 @@ class WebSocketServer {
     this._notify_vscode_clients()
   }
 
-  private _handle_vscode_connection(ws: WebSocket, url: URL): void {
+  private _handle_vscode_connection(ws: WebSocket, url: URL) {
     const incoming_vscode_extension_version = url.searchParams.get(
       'vscode_extension_version'
     )
@@ -158,7 +158,7 @@ class WebSocketServer {
     }
   }
 
-  private _handle_message(message: any): void {
+  private _handle_message(message: any) {
     const msg_string = message.toString()
     const msg_data = JSON.parse(msg_string)
 
@@ -178,10 +178,7 @@ class WebSocketServer {
     }
   }
 
-  private _handle_disconnection(
-    ws: WebSocket,
-    is_browser_client: boolean
-  ): void {
+  private _handle_disconnection(ws: WebSocket, is_browser_client: boolean) {
     if (
       is_browser_client &&
       this.current_browser_client &&
@@ -220,7 +217,7 @@ class WebSocketServer {
     return this.vscode_client_counter
   }
 
-  private _notify_vscode_clients(): void {
+  private _notify_vscode_clients() {
     const has_connected_browser = this.current_browser_client !== null
     const message = JSON.stringify({
       action: 'browser-connection-status',
@@ -234,7 +231,7 @@ class WebSocketServer {
     }
   }
 
-  private _ping_clients(): void {
+  private _ping_clients() {
     if (
       this.current_browser_client &&
       this.current_browser_client.ws.readyState == WebSocket.OPEN
@@ -254,7 +251,7 @@ class WebSocketServer {
     }
   }
 
-  public start(): void {
+  public start() {
     this.server.listen(DEFAULT_PORT, () => {
       console.log(
         `WebSocket server is running on ws://localhost:${DEFAULT_PORT}`
@@ -262,7 +259,7 @@ class WebSocketServer {
     })
   }
 
-  private _shutdown(): void {
+  private _shutdown() {
     this.connections.forEach((ws) => {
       ws.close(1001, 'Server is shutting down') // 1001: Going Away
     })

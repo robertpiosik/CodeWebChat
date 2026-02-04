@@ -4,7 +4,7 @@ export const apply_reasoning_effort = (
   body: { [key: string]: any },
   provider: any,
   reasoning_effort?: ToolConfig['reasoning_effort']
-): void => {
+) => {
   if (provider.name == 'OpenRouter') {
     if (reasoning_effort) {
       if (reasoning_effort == 'none') {
