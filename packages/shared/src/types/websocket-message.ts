@@ -9,12 +9,19 @@ export type Chat = {
   options?: string[]
 }
 
+export type ConnectedBrowser = {
+  id: number
+  version: string
+  user_agent: string
+}
+
 export type InitializeChatMessage = {
   action: 'initialize-chat'
   text: string
   url: string
   client_id: number // Client ID to identify which editor sent this message
   model?: string
+  target_browser_id?: number
   temperature?: number
   thinking_budget?: number
   reasoning_effort?: string
@@ -28,7 +35,7 @@ export type InitializeChatMessage = {
 
 export type BrowserConnectionStatusMessage = {
   action: 'browser-connection-status'
-  has_connected_browsers: boolean
+  connected_browsers: ConnectedBrowser[]
 }
 
 export type ApplyChatResponseMessage = {

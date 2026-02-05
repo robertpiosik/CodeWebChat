@@ -8,6 +8,8 @@ import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
 interface BrowserClient {
   ws: WebSocket
   version: string
+  id: number
+  user_agent: string
 }
 
 interface VSCodeClient {
@@ -18,7 +20,8 @@ interface VSCodeClient {
 class WebSocketServer {
   private vscode_clients: Map<number, VSCodeClient> = new Map()
   private vscode_client_counter: number = 0
-  private current_browser_client: BrowserClient | null = null
+  private browser_clients: Map<number, BrowserClient> = new Map()
+  private browser_client_counter: number = 0
   private connections: Set<WebSocket> = new Set()
   private vscode_extension_version: string | null = null
   private server: http.Server
@@ -92,17 +95,16 @@ class WebSocketServer {
 
   private _handle_browser_connection(ws: WebSocket, url: URL) {
     const version = url.searchParams.get('version') || 'unknown'
+    const user_agent = url.searchParams.get('user_agent') || 'unknown'
 
-    if (
-      this.current_browser_client &&
-      this.current_browser_client.ws.readyState == WebSocket.OPEN
-    ) {
-      ws.close(1000, 'Another browser client is already connected')
-      return
-    }
+    this.browser_client_counter++
+    const id = this.browser_client_counter
 
-    this.current_browser_client = { ws, version }
+    const client: BrowserClient = { ws, version, id, user_agent }
+    this.browser_clients.set(id, client)
+
     this._notify_vscode_clients()
+    ws.send(JSON.stringify({ action: 'connected', id })) // Optional welcome
   }
 
   private _handle_vscode_connection(ws: WebSocket, url: URL) {
@@ -140,21 +142,20 @@ class WebSocketServer {
     ws.send(
       JSON.stringify({
         action: 'browser-connection-status',
-        has_connected_browsers: this.current_browser_client !== null
+        connected_browsers: this._get_connected_browsers_list()
       })
     )
 
-    if (
-      this.current_browser_client &&
-      this.current_browser_client.ws.readyState === WebSocket.OPEN
-    ) {
-      this.current_browser_client.ws.send(
-        JSON.stringify({
-          action: 'vscode-client-connected',
-          client_id,
-          vscode_extension_version: this.vscode_extension_version
-        })
-      )
+    for (const client of this.browser_clients.values()) {
+      if (client.ws.readyState === WebSocket.OPEN) {
+        client.ws.send(
+          JSON.stringify({
+            action: 'vscode-client-connected',
+            client_id,
+            vscode_extension_version: this.vscode_extension_version
+          })
+        )
+      }
     }
   }
 
@@ -163,11 +164,22 @@ class WebSocketServer {
     const msg_data = JSON.parse(msg_string)
 
     if (msg_data.action == 'initialize-chat') {
-      if (
-        this.current_browser_client &&
-        this.current_browser_client.ws.readyState === WebSocket.OPEN
-      ) {
-        this.current_browser_client.ws.send(msg_string)
+      if (msg_data.target_browser_id) {
+        const client = this.browser_clients.get(msg_data.target_browser_id)
+        if (client && client.ws.readyState === WebSocket.OPEN) {
+          client.ws.send(msg_string)
+        }
+      } else {
+        // Default to the first one or broadcast? Since we should have asked the user,
+        // falling back to "any" if id is missing seems acceptable, or picking the last one.
+        // For now, let's pick the last added one (most recent) if exists.
+        const clients = Array.from(this.browser_clients.values())
+        if (clients.length > 0) {
+          const client = clients[clients.length - 1]
+          if (client.ws.readyState === WebSocket.OPEN) {
+            client.ws.send(msg_string)
+          }
+        }
       }
     } else if (msg_data.action == 'apply-chat-response') {
       const target_client_id = msg_data.client_id
@@ -179,12 +191,13 @@ class WebSocketServer {
   }
 
   private _handle_disconnection(ws: WebSocket, is_browser_client: boolean) {
-    if (
-      is_browser_client &&
-      this.current_browser_client &&
-      this.current_browser_client.ws === ws
-    ) {
-      this.current_browser_client = null
+    if (is_browser_client) {
+      for (const [id, client] of this.browser_clients.entries()) {
+        if (client.ws === ws) {
+          this.browser_clients.delete(id)
+          break
+        }
+      }
       this._notify_vscode_clients()
     } else {
       let disconnected_client_id: number | null = null
@@ -196,17 +209,16 @@ class WebSocketServer {
         }
       }
 
-      if (
-        disconnected_client_id !== null &&
-        this.current_browser_client &&
-        this.current_browser_client.ws.readyState === WebSocket.OPEN
-      ) {
-        this.current_browser_client.ws.send(
-          JSON.stringify({
-            action: 'vscode-client-disconnected',
-            client_id: disconnected_client_id
-          })
-        )
+      if (disconnected_client_id !== null && this.browser_clients.size > 0) {
+        const message = JSON.stringify({
+          action: 'vscode-client-disconnected',
+          client_id: disconnected_client_id
+        })
+        for (const client of this.browser_clients.values()) {
+          if (client.ws.readyState === WebSocket.OPEN) {
+            client.ws.send(message)
+          }
+        }
       }
     }
     this.connections.delete(ws)
@@ -217,11 +229,18 @@ class WebSocketServer {
     return this.vscode_client_counter
   }
 
+  private _get_connected_browsers_list() {
+    return Array.from(this.browser_clients.values()).map((c) => ({
+      id: c.id,
+      version: c.version,
+      user_agent: c.user_agent
+    }))
+  }
+
   private _notify_vscode_clients() {
-    const has_connected_browser = this.current_browser_client !== null
     const message = JSON.stringify({
       action: 'browser-connection-status',
-      has_connected_browsers: has_connected_browser
+      connected_browsers: this._get_connected_browsers_list()
     })
 
     for (const client of this.vscode_clients.values()) {
@@ -232,11 +251,12 @@ class WebSocketServer {
   }
 
   private _ping_clients() {
-    if (
-      this.current_browser_client &&
-      this.current_browser_client.ws.readyState == WebSocket.OPEN
-    ) {
-      this.current_browser_client.ws.send(JSON.stringify({ action: 'ping' }))
+    const pingMessage = JSON.stringify({ action: 'ping' })
+
+    for (const client of this.browser_clients.values()) {
+      if (client.ws.readyState === WebSocket.OPEN) {
+        client.ws.send(pingMessage)
+      }
     }
 
     for (const client of this.vscode_clients.values()) {

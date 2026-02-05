@@ -103,6 +103,8 @@ export const handle_send_to_browser = async (params: {
     params.panel_provider.open_editors_provider
   )
 
+  let sent = false
+
   if (is_in_code_completions_mode) {
     const document = active_editor!.document
     const position = active_editor!.selection.active
@@ -213,10 +215,11 @@ export const handle_send_to_browser = async (params: {
       }))
     })
 
-    params.panel_provider.websocket_server_instance.initialize_chats({
-      chats,
-      presets_config_key: params.panel_provider.get_presets_config_key()
-    })
+    sent =
+      await params.panel_provider.websocket_server_instance.initialize_chats({
+        chats,
+        presets_config_key: params.panel_provider.get_presets_config_key()
+      })
   } else {
     const editor = vscode.window.activeTextEditor
     const additional_paths: string[] = []
@@ -352,16 +355,19 @@ export const handle_send_to_browser = async (params: {
       Array.from({ length: params.invocation_count }).map(() => ({ ...chat }))
     )
 
-    params.panel_provider.websocket_server_instance.initialize_chats({
-      chats,
-      presets_config_key: params.panel_provider.get_presets_config_key()
-    })
+    sent =
+      await params.panel_provider.websocket_server_instance.initialize_chats({
+        chats,
+        presets_config_key: params.panel_provider.get_presets_config_key()
+      })
   }
 
-  params.panel_provider.send_message({
-    command: 'SHOW_AUTO_CLOSING_MODAL',
-    title: 'Opened in the connected browser'
-  })
+  if (sent) {
+    params.panel_provider.send_message({
+      command: 'SHOW_AUTO_CLOSING_MODAL',
+      title: 'Opened in the connected browser'
+    })
+  }
 
   if (!params.preset_name && !params.group_name) {
     params.panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })

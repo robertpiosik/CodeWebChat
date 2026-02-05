@@ -35,9 +35,10 @@ export const connect_websocket = async (): Promise<void> => {
 
     const manifest = browser.runtime.getManifest()
     const version = manifest.version
+    const user_agent = navigator.userAgent
 
     websocket = new WebSocket(
-      `ws://localhost:${DEFAULT_PORT}?token=${SECURITY_TOKENS.BROWSERS}&version=${version}`
+      `ws://localhost:${DEFAULT_PORT}?token=${SECURITY_TOKENS.BROWSERS}&version=${version}&user_agent=${encodeURIComponent(user_agent)}`
     )
 
     websocket.onopen = () => {

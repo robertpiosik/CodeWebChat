@@ -3,13 +3,17 @@ import * as vscode from 'vscode'
 import * as child_process from 'child_process'
 import * as path from 'path'
 import * as net from 'net'
-import { InitializeChatMessage } from '@shared/types/websocket-message'
+import {
+  ConnectedBrowser,
+  InitializeChatMessage
+} from '@shared/types/websocket-message'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { Preset } from '@shared/types/preset'
 import { ConfigPresetFormat } from '@/views/panel/backend/utils/preset-format-converters'
+import { LAST_SELECTED_BROWSER_ID_STATE_KEY } from '@/constants/state-keys'
 
 /**
  * Bridges the current workspace window and websocket server that runs in a separate process.
@@ -21,6 +25,7 @@ export class WebSocketManager {
   private client: WebSocket.WebSocket | null = null
   private _on_connection_status_change: vscode.EventEmitter<boolean> =
     new vscode.EventEmitter<boolean>()
+  private connected_browsers: ConnectedBrowser[] = []
   private reconnect_timer: NodeJS.Timeout | null = null
   private has_connected_browsers: boolean = false
   private client_id: number | null = null
@@ -156,7 +161,8 @@ export class WebSocketManager {
         if (message.action == 'client-id-assignment') {
           this.client_id = message.client_id
         } else if (message.action == 'browser-connection-status') {
-          this.has_connected_browsers = message.has_connected_browsers
+          this.connected_browsers = message.connected_browsers
+          this.has_connected_browsers = this.connected_browsers.length > 0
           this._on_connection_status_change.fire(this.has_connected_browsers)
         } else if (message.action == 'apply-chat-response') {
           vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
@@ -244,6 +250,96 @@ export class WebSocketManager {
     return this.has_connected_browsers
   }
 
+  private _get_browser_name(user_agent: string): string {
+    if (user_agent.includes('Edg/')) {
+      return 'Edge'
+    } else if (user_agent.includes('Chrome/')) {
+      return 'Chrome'
+    } else if (user_agent.includes('Firefox/')) {
+      return 'Firefox'
+    } else if (user_agent.includes('Safari/')) {
+      return 'Safari'
+    } else {
+      return 'Browser'
+    }
+  }
+
+  private async _select_browser(): Promise<number | undefined> {
+    if (this.connected_browsers.length == 0) {
+      return undefined
+    }
+
+    if (this.connected_browsers.length == 1) {
+      const id = this.connected_browsers[0].id
+      await this.context.workspaceState.update(
+        LAST_SELECTED_BROWSER_ID_STATE_KEY,
+        id
+      )
+      return id
+    }
+
+    const last_selected_browser_id = this.context.workspaceState.get<number>(
+      LAST_SELECTED_BROWSER_ID_STATE_KEY
+    )
+
+    const items = this.connected_browsers.map((b) => ({
+      label: this._get_browser_name(b.user_agent),
+      detail: b.user_agent,
+      id: b.id,
+      picked: b.id == last_selected_browser_id
+    }))
+
+    return new Promise<number | undefined>((resolve) => {
+      const quick_pick = vscode.window.createQuickPick<
+        vscode.QuickPickItem & { id: number }
+      >()
+      quick_pick.items = items
+      quick_pick.placeholder = 'Select a browser to use'
+      quick_pick.title = 'Connected Browsers'
+
+      const close_button = {
+        iconPath: new vscode.ThemeIcon('close'),
+        tooltip: 'Close'
+      }
+
+      quick_pick.buttons = [close_button]
+
+      const disposables: vscode.Disposable[] = []
+
+      disposables.push(
+        quick_pick.onDidTriggerButton((button) => {
+          if (button === close_button) {
+            quick_pick.hide()
+          }
+        })
+      )
+
+      disposables.push(
+        quick_pick.onDidAccept(async () => {
+          const selected = quick_pick.selectedItems[0]
+          if (selected) {
+            await this.context.workspaceState.update(
+              LAST_SELECTED_BROWSER_ID_STATE_KEY,
+              selected.id
+            )
+            resolve(selected.id)
+          }
+          quick_pick.hide()
+        })
+      )
+
+      disposables.push(
+        quick_pick.onDidHide(() => {
+          resolve(undefined)
+          disposables.forEach((d) => d.dispose())
+          quick_pick.dispose()
+        })
+      )
+
+      quick_pick.show()
+    })
+  }
+
   public async initialize_chats(params: {
     chats: Array<{
       text: string
@@ -253,7 +349,7 @@ export class WebSocketManager {
       prompt_type: any
     }>
     presets_config_key: string
-  }): Promise<void> {
+  }): Promise<boolean> {
     if (!this.has_connected_browsers) {
       throw new Error('Does not have connected browsers.')
     }
@@ -263,6 +359,11 @@ export class WebSocketManager {
       config.get<ConfigPresetFormat[]>(params.presets_config_key) ?? []
     const gemini_user_id = config.get<number | null>('geminiUserId')
     const ai_studio_user_id = config.get<number | null>('aiStudioUserId')
+
+    const target_browser_id = await this._select_browser()
+    if (target_browser_id === undefined) {
+      return false // User cancelled or no browser
+    }
 
     for (const chat of params.chats) {
       const preset = web_chat_presets.find((p) => p.name == chat.preset_name)
@@ -320,6 +421,7 @@ export class WebSocketManager {
         url,
         model: preset.model,
         temperature: preset.temperature,
+        target_browser_id,
         top_p: preset.topP,
         thinking_budget: preset.thinkingBudget,
         reasoning_effort: preset.reasoningEffort,
@@ -339,6 +441,8 @@ export class WebSocketManager {
 
       this.client?.send(JSON.stringify(message))
     }
+
+    return true
   }
 
   public async preview_preset(params: {
@@ -349,6 +453,11 @@ export class WebSocketManager {
   }): Promise<void> {
     if (!this.has_connected_browsers) {
       throw new Error('Does not have connected browsers.')
+    }
+
+    const target_browser_id = await this._select_browser()
+    if (target_browser_id === undefined) {
+      return // User cancelled
     }
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
@@ -409,6 +518,7 @@ export class WebSocketManager {
       url,
       model: params.preset.model,
       temperature: params.preset.temperature,
+      target_browser_id,
       top_p: params.preset.top_p,
       thinking_budget: params.preset.thinking_budget,
       reasoning_effort: params.preset.reasoning_effort,

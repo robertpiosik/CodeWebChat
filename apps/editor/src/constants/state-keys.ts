@@ -1,11 +1,10 @@
-// Note: Use kebab-case for new keys
 export const LAST_APPLIED_CHANGES_STATE_KEY = 'last-applied-changes-state'
 export const LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY =
   'last-applied-changes-editor-state'
 export const LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY =
   'last-applied-clipboard-content'
 export const QUICK_SAVES_STATE_KEY = 'quick-saves'
-export const LAST_CONTEXT_SAVE_LOCATION_STATE_KEY = 'lastSaveLocation'
+export const LAST_CONTEXT_SAVE_LOCATION_STATE_KEY = 'last-save-location'
 export const RANGES_STATE_KEY = 'ranges'
 export const LAST_RANGE_SAVE_LOCATION_STATE_KEY = 'last-range-save-location'
 export const LAST_APPLY_CONTEXT_OPTION_STATE_KEY = 'last-apply-context-option'
@@ -72,6 +71,8 @@ export const get_configurations_collapsed_state_key = (
 export const get_recently_used_presets_or_groups_key = (
   web_prompt_type: string
 ) => `recently-used-presets-or-groups-${web_prompt_type}`
+
+export const LAST_SELECTED_BROWSER_ID_STATE_KEY = 'last-selected-browser-id'
 
 export type DuplicateWorkspaceContext = {
   checked_files: string[]
