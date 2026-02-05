@@ -1,16 +1,18 @@
-const path = require('path')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+import * as path from 'path'
+import * as webpack from 'webpack'
+import CopyWebpackPlugin from 'copy-webpack-plugin'
+import { CleanWebpackPlugin } from 'clean-webpack-plugin'
+import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import 'webpack-dev-server'
 
-module.exports = (_, argv) => {
+const config = (_: any, argv: Record<string, any>): webpack.Configuration => {
   const is_production = argv.mode == 'production'
 
-  const plugins = [
+  const plugins: webpack.WebpackPluginInstance[] = [
     new MiniCssExtractPlugin({
       filename: '[name].css'
-    }),
+    }) as unknown as webpack.WebpackPluginInstance,
     new CopyWebpackPlugin({
       patterns: [
         { from: 'src/manifest.json', to: 'manifest.json' },
@@ -75,6 +77,9 @@ module.exports = (_, argv) => {
       extensions: ['.ts', '.tsx', '.js', '.jsx'],
       plugins: [new TsconfigPathsPlugin()]
     },
-    plugins
+    plugins,
+    stats: 'errors-warnings'
   }
 }
+
+export default config

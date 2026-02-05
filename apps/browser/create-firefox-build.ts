@@ -1,10 +1,10 @@
-const fs = require('fs')
-const path = require('path')
+import * as fs from 'fs'
+import * as path from 'path'
 
 const manifest_path = path.join(__dirname, 'src', 'manifest.json')
 const manifest = JSON.parse(fs.readFileSync(manifest_path, 'utf8'))
 
-const firefox_manifest = { ...manifest }
+const firefox_manifest: any = { ...manifest }
 delete firefox_manifest.manifest_version
 firefox_manifest.manifest_version = 2
 
@@ -19,7 +19,7 @@ firefox_manifest.browser_action = firefox_manifest.action
 delete firefox_manifest.action
 
 firefox_manifest.permissions = firefox_manifest.permissions.filter(
-  (p) => p != 'alarms'
+  (p: string) => p != 'alarms'
 )
 
 firefox_manifest.permissions.push('contextualIdentities')

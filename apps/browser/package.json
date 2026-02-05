@@ -1,19 +1,21 @@
 {
   "name": "gemini-coder-connector",
   "scripts": {
-    "build": "webpack --mode production && node create-firefox-build.js && node create-zip-archives.js",
+    "build": "webpack --mode production && ts-node create-firefox-build.ts && ts-node create-zip-archives.ts",
     "lint": "eslint src --ext ts,tsx",
     "lint:fix": "eslint src --ext ts,tsx --fix"
   },
   "devDependencies": {
     "@pmmmwh/react-refresh-webpack-plugin": "^0.6.1",
     "@svgr/webpack": "^8.1.0",
+    "@types/archiver": "^6.0.3",
     "@types/jest": "^29.5.14",
     "@types/node": "20.x",
     "@types/webextension-polyfill": "^0.12.4",
-    "@typescript-eslint/eslint-plugin": "^7.18.0",
-    "@typescript-eslint/parser": "^7.18.0",
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
     "archiver": "^6.0.1",
+    "baseline-browser-mapping": "^2.9.19",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^12.0.2",
     "css-loader": "^6.8.1",
@@ -25,6 +27,7 @@
     "sass": "^1.93.2",
     "sass-loader": "^13.3.3",
     "style-loader": "^3.3.3",
+    "ts-node": "^10.9.2",
     "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",
     "webextension-polyfill": "^0.12.0",

@@ -63,7 +63,7 @@ export const connect_websocket = async (): Promise<void> => {
       is_reconnecting = false
       websocket = null
     }
-  } catch (error) {
+  } catch {
     is_reconnecting = false
     setTimeout(connect_websocket, CONFIG.RECONNECT_DELAY)
   }

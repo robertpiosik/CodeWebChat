@@ -317,7 +317,36 @@
         "icon": "$(terminal)"
       }
     ],
+    "submenus": [
+      {
+        "id": "codeWebChat.editorSubmenu",
+        "label": "Code Web Chat"
+      }
+    ],
     "menus": {
+      "editor/context": [
+        {
+          "submenu": "codeWebChat.editorSubmenu"
+        }
+      ],
+      "codeWebChat.editorSubmenu": [
+        {
+          "command": "codeWebChat.codeAtCursor",
+          "group": "1_action@1"
+        },
+        {
+          "command": "codeWebChat.codeAtCursorWithInstructions",
+          "group": "1_action@2"
+        },
+        {
+          "command": "codeWebChat.codeAtCursorUsing",
+          "group": "1_action@3"
+        },
+        {
+          "command": "codeWebChat.codeAtCursorWithInstructionsUsing",
+          "group": "1_action@4"
+        }
+      ],
       "commandPalette": [
         {
           "command": "codeWebChat.clearChecks",

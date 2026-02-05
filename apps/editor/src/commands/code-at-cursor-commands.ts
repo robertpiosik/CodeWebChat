@@ -52,15 +52,15 @@ const show_ghost_text = async (params: {
   }, 10000)
 }
 
-const get_code_at_cursor_config = async (
-  api_providers_manager: ModelProvidersManager,
-  show_quick_pick: boolean = false,
-  context: vscode.ExtensionContext,
-  config_id?: string,
+const get_code_at_cursor_config = async (params: {
+  api_providers_manager: ModelProvidersManager
+  show_quick_pick?: boolean
+  context: vscode.ExtensionContext
+  config_id?: string
   panel_provider?: PanelProvider
-): Promise<{ provider: any; config: any } | undefined> => {
+}): Promise<{ provider: any; config: any } | undefined> => {
   const code_at_cursor_configs =
-    await api_providers_manager.get_code_completions_tool_configs()
+    await params.api_providers_manager.get_code_completions_tool_configs()
 
   if (code_at_cursor_configs.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
@@ -72,18 +72,18 @@ const get_code_at_cursor_config = async (
 
   let selected_config: ToolConfig | null = null
 
-  if (config_id !== undefined) {
+  if (params.config_id !== undefined) {
     selected_config =
-      code_at_cursor_configs.find((c) => get_tool_config_id(c) === config_id) ||
-      null
-  } else if (!show_quick_pick) {
+      code_at_cursor_configs.find(
+        (c) => get_tool_config_id(c) === params.config_id
+      ) || null
+  } else if (!params.show_quick_pick) {
     const default_config =
-      await api_providers_manager.get_default_code_completions_config()
-
+      await params.api_providers_manager.get_default_code_completions_config()
     if (default_config) {
       selected_config = default_config
     } else {
-      const recents = context.workspaceState.get<string[]>(
+      const recents = params.context.workspaceState.get<string[]>(
         RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
       )
       const last_selected_id = recents?.[0]
@@ -99,10 +99,10 @@ const get_code_at_cursor_config = async (
     }
   }
 
-  if (!selected_config || show_quick_pick) {
+  if (!selected_config || params.show_quick_pick) {
     const create_items = () => {
       const recent_ids =
-        context.workspaceState.get<string[]>(
+        params.context.workspaceState.get<string[]>(
           RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
         ) || []
 
@@ -201,24 +201,24 @@ const get_code_at_cursor_config = async (
           }
 
           let recents =
-            context.workspaceState.get<string[]>(
+            params.context.workspaceState.get<string[]>(
               RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
             ) || []
           recents = [selected.id, ...recents.filter((id) => id != selected.id)]
-          context.workspaceState.update(
+          params.context.workspaceState.update(
             RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY,
             recents
           )
 
-          if (panel_provider) {
-            panel_provider.send_message({
+          if (params.panel_provider) {
+            params.panel_provider.send_message({
               command: 'SELECTED_CONFIGURATION_CHANGED',
               prompt_type: 'code-at-cursor',
               id: selected.id
             })
           }
 
-          const provider = await api_providers_manager.get_provider(
+          const provider = await params.api_providers_manager.get_provider(
             selected.config.provider_name
           )
           if (!provider) {
@@ -245,7 +245,7 @@ const get_code_at_cursor_config = async (
     )
   }
 
-  const provider = await api_providers_manager.get_provider(
+  const provider = await params.api_providers_manager.get_provider(
     selected_config.provider_name
   )
 
@@ -299,13 +299,13 @@ const perform_code_at_cursor = async (params: {
     )
   }
 
-  const config_result = await get_code_at_cursor_config(
+  const config_result = await get_code_at_cursor_config({
     api_providers_manager,
-    params.show_quick_pick,
-    params.context,
-    params.config_id,
-    params.panel_provider
-  )
+    show_quick_pick: params.show_quick_pick,
+    context: params.context,
+    config_id: params.config_id,
+    panel_provider: params.panel_provider
+  })
 
   if (!config_result) {
     return

@@ -1,5 +1,4 @@
 import { Chatbot } from '../types/chatbot'
-import { CHATBOTS } from '@shared/constants/chatbots'
 import {
   add_apply_response_button,
   observe_for_responses
