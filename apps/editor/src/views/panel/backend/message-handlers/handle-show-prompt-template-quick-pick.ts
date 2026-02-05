@@ -55,7 +55,8 @@ export const handle_show_prompt_template_quick_pick = async (
   >()
   templates_quick_pick.matchOnDetail = true
   templates_quick_pick.title = 'Prompt Templates'
-  templates_quick_pick.placeholder = 'Manage and use your prompt templates'
+  templates_quick_pick.placeholder =
+    'Select a prompt template or create a new one'
   templates_quick_pick.buttons = [
     { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
   ]

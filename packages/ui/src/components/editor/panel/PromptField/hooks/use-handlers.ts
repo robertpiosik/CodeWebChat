@@ -776,14 +776,15 @@ export const use_handlers = (
     }
 
     if (char_before_caret == '@') {
-      const is_at_start = caret_position == 1
-      let is_after_whitespace = false
+      let should_trigger = true
       if (caret_position > 1) {
         const char_before_at = new_display_value.charAt(caret_position - 2)
-        is_after_whitespace = /\s/.test(char_before_at)
+        if (char_before_at == '@') {
+          should_trigger = false
+        }
       }
 
-      if (is_at_start || is_after_whitespace) {
+      if (should_trigger) {
         props.on_at_sign_click()
       }
     } else if (char_before_caret == '#') {

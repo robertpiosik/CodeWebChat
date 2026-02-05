@@ -468,6 +468,10 @@ export const process_chat_response = async (
           }
           return null
         }
+      } else {
+        vscode.window.showInformationMessage(
+          dictionary.information_message.NO_ACTIVE_EDITOR_FOUND
+        )
       }
 
       return null
