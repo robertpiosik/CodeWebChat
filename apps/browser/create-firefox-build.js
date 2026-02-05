@@ -22,6 +22,9 @@ firefox_manifest.permissions = firefox_manifest.permissions.filter(
   (p) => p != 'alarms'
 )
 
+firefox_manifest.permissions.push('contextualIdentities')
+firefox_manifest.optional_permissions = ['cookies'] // Needed by Firefox Containers
+
 delete firefox_manifest.host_permissions
 
 const firefox_dist_dir = path.join(__dirname, 'dist-firefox')

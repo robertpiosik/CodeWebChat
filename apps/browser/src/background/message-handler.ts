@@ -84,6 +84,17 @@ const process_next_chat = async () => {
     }
   })
 
+  const { 'selected-firefox-container': selected_firefox_container_id } =
+    await browser.storage.local.get('selected-firefox-container')
+
+  const create_tab_options: any = {
+    active: true
+  }
+
+  if (selected_firefox_container_id) {
+    create_tab_options.cookieStoreId = selected_firefox_container_id
+  }
+
   // OpenRouter is a special case—model handling via search params
   if (current_chat_message.url == 'https://openrouter.ai/chat') {
     // https://openrouter.ai/chat?models=openrouter/quasar-alpha
@@ -94,15 +105,11 @@ const process_next_chat = async () => {
     const open_router_url = `${
       current_chat_message.url
     }?${search_params.toString()}#cwc-${batch_id}`
-    browser.tabs.create({
-      url: open_router_url,
-      active: true
-    })
+    create_tab_options.url = open_router_url
+    browser.tabs.create(create_tab_options)
   } else {
-    browser.tabs.create({
-      url: `${current_chat_message.url}#cwc-${batch_id}`,
-      active: true
-    })
+    create_tab_options.url = `${current_chat_message.url}#cwc-${batch_id}`
+    browser.tabs.create(create_tab_options)
   }
 
   // Set a timeout to automatically proceed if no confirmation is received
