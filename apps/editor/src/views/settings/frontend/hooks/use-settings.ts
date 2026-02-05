@@ -252,6 +252,32 @@ export const use_settings = (vscode: any) => {
     tool_name: string,
     configuration_id: string
   ) => {
+    if (tool_name == 'CODE_AT_CURSOR' && code_at_cursor_configs) {
+      set_code_at_cursor_configs(
+        code_at_cursor_configs.map((c) => ({
+          ...c,
+          is_default: c.id == configuration_id
+        }))
+      )
+    } else if (
+      tool_name == 'INTELLIGENT_UPDATE' &&
+      intelligent_update_configs
+    ) {
+      set_intelligent_update_configs(
+        intelligent_update_configs.map((c) => ({
+          ...c,
+          is_default: c.id == configuration_id
+        }))
+      )
+    } else if (tool_name == 'COMMIT_MESSAGES' && commit_messages_configs) {
+      set_commit_messages_configs(
+        commit_messages_configs.map((c) => ({
+          ...c,
+          is_default: c.id == configuration_id
+        }))
+      )
+    }
+
     post_message(vscode, {
       command: `SET_DEFAULT_${tool_name}_CONFIGURATION`,
       configuration_id
@@ -259,6 +285,32 @@ export const use_settings = (vscode: any) => {
   }
 
   const handle_unset_default_config = (tool_name: string) => {
+    if (tool_name == 'CODE_AT_CURSOR' && code_at_cursor_configs) {
+      set_code_at_cursor_configs(
+        code_at_cursor_configs.map((c) => ({
+          ...c,
+          is_default: false
+        }))
+      )
+    } else if (
+      tool_name == 'INTELLIGENT_UPDATE' &&
+      intelligent_update_configs
+    ) {
+      set_intelligent_update_configs(
+        intelligent_update_configs.map((c) => ({
+          ...c,
+          is_default: false
+        }))
+      )
+    } else if (tool_name == 'COMMIT_MESSAGES' && commit_messages_configs) {
+      set_commit_messages_configs(
+        commit_messages_configs.map((c) => ({
+          ...c,
+          is_default: false
+        }))
+      )
+    }
+
     post_message(vscode, {
       command: `SET_DEFAULT_${tool_name}_CONFIGURATION`,
       configuration_id: null
