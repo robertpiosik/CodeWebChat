@@ -41,7 +41,8 @@ import {
   handle_open_ignore_patterns_settings,
   handle_open_allow_patterns_settings,
   handle_get_fix_all_automatically,
-  handle_update_fix_all_automatically
+  handle_update_fix_all_automatically,
+  handle_open_keybindings
 } from './message-handlers'
 
 export class SettingsProvider {
@@ -293,6 +294,8 @@ export class SettingsProvider {
           await handle_get_fix_all_automatically(this)
         } else if (message.command == 'UPDATE_FIX_ALL_AUTOMATICALLY') {
           await handle_update_fix_all_automatically(message)
+        } else if (message.command == 'OPEN_KEYBINDINGS') {
+          await handle_open_keybindings(message)
         }
       },
       null,

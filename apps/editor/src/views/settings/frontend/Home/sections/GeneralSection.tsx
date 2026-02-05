@@ -175,7 +175,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             description="Glob patterns that you don't want to place in .gitignore files."
             slot_right={
               <TextButton on_click={props.on_open_ignore_patterns_settings}>
-                Open settings file
+                Open Settings File
               </TextButton>
             }
           />
@@ -184,7 +184,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             description="Glob patterns that you want to include despite being ignored by .gitignore."
             slot_right={
               <TextButton on_click={props.on_open_allow_patterns_settings}>
-                Open settings file
+                Open Settings File
               </TextButton>
             }
           />

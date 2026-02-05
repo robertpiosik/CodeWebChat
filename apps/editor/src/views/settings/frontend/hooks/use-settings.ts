@@ -423,6 +423,13 @@ export const use_settings = (vscode: any) => {
     })
   }
 
+  const handle_open_keybindings = (search?: string) => {
+    post_message(vscode, {
+      command: 'OPEN_KEYBINDINGS',
+      search
+    })
+  }
+
   return {
     providers,
     set_providers,
@@ -475,6 +482,7 @@ export const use_settings = (vscode: any) => {
     handle_send_with_shift_enter_change,
     handle_check_new_files_change,
     handle_clear_checks_in_workspace_behavior_change,
-    handle_fix_all_automatically_change
+    handle_fix_all_automatically_change,
+    handle_open_keybindings
   }
 }

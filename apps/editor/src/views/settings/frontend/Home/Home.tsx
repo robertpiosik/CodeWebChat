@@ -11,6 +11,7 @@ import { Input } from '@ui/components/editor/common/Input'
 import { Textarea } from '@ui/components/editor/common/Textarea'
 import { Toggler } from '@ui/components/editor/common/Toggler'
 import { Button } from '@ui/components/editor/common/Button'
+import { TextButton } from '@ui/components/editor/settings/TextButton'
 import {
   ConfigurationForClient,
   ProviderForClient,
@@ -115,6 +116,7 @@ type Props = {
     value: 'ignore-open-editors' | 'uncheck-all'
   ) => void
   on_fix_all_automatically_change: (enabled: boolean) => void
+  on_open_keybindings: (search?: string) => void
   on_open_editor_settings: () => void
   on_open_ignore_patterns_settings: () => void
   on_open_allow_patterns_settings: () => void
@@ -530,6 +532,19 @@ export const Home: React.FC<Props> = (props) => {
               }
               on_unset_default={() =>
                 props.on_unset_default_config('CODE_AT_CURSOR')
+              }
+            />
+            <Item
+              title="Keyboard Shortcut"
+              description="Setup tool triggering key combinations."
+              slot_right={
+                <TextButton
+                  on_click={() =>
+                    props.on_open_keybindings('codeWebChat.codeAtCursor')
+                  }
+                >
+                  Open Keyboard Shortcuts
+                </TextButton>
               }
             />
           </Group>

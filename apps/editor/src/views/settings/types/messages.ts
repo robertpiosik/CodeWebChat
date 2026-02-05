@@ -285,6 +285,11 @@ export interface UpdateFixAllAutomaticallyMessage {
   enabled: boolean
 }
 
+export interface OpenKeybindingsMessage {
+  command: 'OPEN_KEYBINDINGS'
+  search?: string
+}
+
 export type FrontendMessage =
   | GetModelProvidersMessage
   | ReorderModelProvidersMessage
@@ -341,6 +346,7 @@ export type FrontendMessage =
   | OpenAllowPatternsSettingsMessage
   | GetFixAllAutomaticallyMessage
   | UpdateFixAllAutomaticallyMessage
+  | OpenKeybindingsMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface ModelProvidersMessage {

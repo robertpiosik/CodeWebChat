@@ -132,6 +132,7 @@ export const Settings = () => {
       on_fix_all_automatically_change={
         settings_hook.handle_fix_all_automatically_change
       }
+      on_open_keybindings={settings_hook.handle_open_keybindings}
       on_open_editor_settings={settings_hook.handle_open_editor_settings}
       on_open_ignore_patterns_settings={
         settings_hook.handle_open_ignore_patterns_settings
