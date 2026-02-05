@@ -50,6 +50,10 @@
     white-space: nowrap;
     text-overflow: ellipsis;
 
+    &.clickable {
+      cursor: pointer;
+    }
+
     .default-icon {
       margin-right: 0.5em;
     }

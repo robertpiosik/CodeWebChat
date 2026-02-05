@@ -52,7 +52,12 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
           on_change={() => props.on_set_default?.(config.id)}
         />
       )}
-      <div className={styles.row__content}>
+      <div
+        className={cn(styles.row__content, {
+          [styles.clickable]: !!props.on_set_default
+        })}
+        onClick={() => props.on_set_default?.(config.id)}
+      >
         <span>{config.model}</span>
         <span>{config.description}</span>
       </div>
