@@ -91,8 +91,8 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
   return (
     <div className={styles.container}>
       {render_header(true)}
-      <div className={styles.list}>
-        {props.providers.length > 0 && (
+      {props.providers.length > 0 && (
+        <div className={styles.list}>
           <ReactSortable
             list={with_ids(props.providers)}
             setList={(new_list) => {
@@ -113,8 +113,8 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
           >
             {props.providers.map((p, i) => render_item(p, i))}
           </ReactSortable>
-        )}
-      </div>
+        </div>
+      )}
       {props.providers.length > 0 && render_header(false)}
     </div>
   )

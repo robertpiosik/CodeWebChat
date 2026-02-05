@@ -31,7 +31,6 @@ export namespace ConfigurationsList {
 export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
   props
 ) => {
-  const sortable = props.on_reorder !== undefined
   const has_default = props.configurations.some((c) => c.is_default)
 
   const render_item = (
@@ -39,11 +38,9 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
     index: number
   ) => (
     <div key={config.id} className={styles.row}>
-      {sortable && (
-        <div className={cn(styles['drag-handle'], styles['col-drag'])}>
-          <span className="codicon codicon-gripper" />
-        </div>
-      )}
+      <div className={cn(styles['drag-handle'], styles['col-drag'])}>
+        <span className="codicon codicon-gripper" />
+      </div>
       {props.on_set_default && (
         <Radio
           name={props.radio_group_name ?? 'default_configuration'}
@@ -62,13 +59,11 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
         <span>{config.description}</span>
       </div>
       <div className={styles['col-actions']}>
-        {sortable && (
-          <IconButton
-            codicon_icon="insert"
-            title="Insert new configuration below/above"
-            on_click={() => props.on_add({ insertion_index: index })}
-          />
-        )}
+        <IconButton
+          codicon_icon="insert"
+          title="Insert new configuration below/above"
+          on_click={() => props.on_add({ insertion_index: index })}
+        />
         <IconButton
           codicon_icon="edit"
           title="Edit configuration"
@@ -114,33 +109,30 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
   return (
     <div className={styles.container}>
       {render_header(true)}
-      <div className={styles.list}>
-        {props.configurations.length > 0 &&
-          (sortable ? (
-            <ReactSortable
-              list={props.configurations}
-              setList={(new_list) => {
-                const has_order_changed =
-                  new_list.length != props.configurations.length ||
-                  new_list.some(
-                    (item, index) => item.id != props.configurations[index].id
-                  )
+      {props.configurations.length > 0 && (
+        <div className={styles.list}>
+          <ReactSortable
+            list={props.configurations}
+            setList={(new_list) => {
+              const has_order_changed =
+                new_list.length != props.configurations.length ||
+                new_list.some(
+                  (item, index) => item.id != props.configurations[index].id
+                )
 
-                if (has_order_changed) {
-                  props.on_reorder(new_list)
-                }
-              }}
-              tag="div"
-              animation={150}
-            >
-              {props.configurations.map((item, index) =>
-                render_item(item, index)
-              )}
-            </ReactSortable>
-          ) : (
-            props.configurations.map((item, index) => render_item(item, index))
-          ))}
-      </div>
+              if (has_order_changed) {
+                props.on_reorder(new_list)
+              }
+            }}
+            tag="div"
+            animation={150}
+          >
+            {props.configurations.map((item, index) =>
+              render_item(item, index)
+            )}
+          </ReactSortable>
+        </div>
+      )}
       {props.configurations.length > 0 && render_header(false)}
     </div>
   )

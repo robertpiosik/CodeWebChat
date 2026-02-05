@@ -80,7 +80,7 @@ export const CHATBOTS = {
     models: {
       'sonnet-4-5': { label: 'Sonnet 4.5' },
       'haiku-4-5': { label: 'Haiku 4.5' },
-      'opus-4-5': { label: 'Opus 4.5' }
+      'opus-4-6': { label: 'Opus 4.6' }
     }
   } as Chatbot,
   Copilot: {
