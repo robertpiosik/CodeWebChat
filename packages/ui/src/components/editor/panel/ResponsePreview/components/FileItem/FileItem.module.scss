@@ -149,7 +149,7 @@
 
   &--loading {
     color: var(--cwc-text-color);
-    background-color: var(--cwc-bg-tertiary);
+    background-color: var(--cwc-bg-secondary);
 
     .message__actions__item:hover {
       background-color: var(--cwc-bg-secondary);
@@ -167,7 +167,7 @@
     > span:first-child {
       font-size: 14px !important;
       margin-right: 4px;
-      vertical-align: middle;
+      vertical-align: sub;
     }
   }
 

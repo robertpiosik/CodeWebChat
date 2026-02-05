@@ -56,8 +56,8 @@ const update_response_history = (
     }
     const file_in_history_index = item_to_update.files.findIndex(
       (f) =>
-        f.file_path === updated_file.file_path &&
-        f.workspace_name === updated_file.workspace_name
+        f.file_path == updated_file.file_path &&
+        f.workspace_name == updated_file.workspace_name
     )
 
     if (file_in_history_index !== -1) {
@@ -694,8 +694,7 @@ export const setup_workspace_listeners = (
       const item_to_update = history.find((i) => i.created_at === created_at)
       if (item_to_update && item_to_update.files) {
         const file_in_history = item_to_update.files.find(
-          (f) =>
-            f.file_path === file_path && f.workspace_name === workspace_name
+          (f) => f.file_path == file_path && f.workspace_name == workspace_name
         )
         if (file_in_history) {
           file_in_history.is_checked = is_checked
