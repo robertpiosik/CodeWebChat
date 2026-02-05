@@ -58,6 +58,7 @@
   );
   background-repeat: no-repeat;
   background-size: 0% 100%;
+  animation: breathe-background 10s infinite linear;
 
   > div {
     transform: translateY(3px);
@@ -73,14 +74,6 @@
     transform: translateY(1px);
   }
 
-  &--inhale {
-    animation: inhale 5s linear forwards;
-  }
-
-  &--exhale {
-    animation: exhale 5s linear forwards;
-  }
-
   &__breathing {
     position: relative;
     color: var(--cwc-text-color-dimmed);
@@ -94,26 +87,14 @@
       height: 100%;
       display: flex;
       align-items: center;
-      opacity: 0;
-      transition: opacity 1s var(--transition-timing-function);
-      &--active {
-        opacity: 1;
-      }
+      opacity: 0; // Hidden by default
 
       &--inhale {
-        letter-spacing: 2px;
-
-        &.heading__breathing__text--active {
-          animation: inhale-spacing 5s linear forwards;
-        }
+        animation: inhale-text 10s infinite linear;
       }
 
       &--exhale {
-        letter-spacing: 0px;
-
-        &.heading__breathing__text--active {
-          animation: exhale-spacing 5s linear forwards;
-        }
+        animation: exhale-text 10s infinite linear;
       }
     }
   }
@@ -204,13 +185,18 @@
       margin: 0;
       height: 15px;
       width: 15px;
-      color: var(--vscode-editorWidget-foreground);
+      color: var(--vscode-icon-foreground);
+      opacity: var(--dimmed-opacity);
       position: relative;
       cursor: pointer;
       flex-shrink: 0;
 
       &:focus {
         outline: none;
+      }
+
+      &:hover {
+        opacity: 1;
       }
 
       &::before {
@@ -221,11 +207,6 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        opacity: 0.5;
-      }
-
-      &:hover::before {
-        opacity: 1;
       }
     }
   }
@@ -235,38 +216,56 @@
   }
 }
 
-@keyframes inhale {
-  from {
+@keyframes breathe-background {
+  0% {
     background-size: 0% 100%;
   }
-  to {
+  50% {
     background-size: 100% 100%;
   }
-}
-
-@keyframes exhale {
-  from {
-    background-size: 100% 100%;
-  }
-  to {
+  100% {
     background-size: 0% 100%;
   }
 }
 
-@keyframes inhale-spacing {
-  from {
+@keyframes inhale-text {
+  0% {
+    opacity: 0;
     letter-spacing: 0px;
   }
-  to {
+  5% {
+    opacity: 1;
+  }
+  45% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+    letter-spacing: 2px;
+  }
+  100% {
+    opacity: 0;
     letter-spacing: 2px;
   }
 }
 
-@keyframes exhale-spacing {
-  from {
+@keyframes exhale-text {
+  0% {
+    opacity: 0;
     letter-spacing: 2px;
   }
-  to {
+  50% {
+    opacity: 0;
+    letter-spacing: 2px;
+  }
+  55% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
     letter-spacing: 0px;
   }
 }

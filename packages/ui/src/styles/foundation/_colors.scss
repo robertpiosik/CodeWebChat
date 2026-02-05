@@ -12,7 +12,7 @@
   );
   --cwc-bg-secondary: color-mix(
     in srgb,
-    var(--vscode-foreground) 8%,
+    var(--vscode-foreground) 12%,
     transparent
   );
   --cwc-bg-tertiary: color-mix(
@@ -33,6 +33,21 @@
   --cwc-border-color-dimmed: color-mix(
     in srgb,
     var(--vscode-foreground) 17%,
+    transparent
+  );
+  --cwc-bg-success: color-mix(
+    in srgb,
+    var(--vscode-gitDecoration-addedResourceForeground) 12%,
+    transparent
+  );
+  --cwc-bg-error: color-mix(
+    in srgb,
+    var(--vscode-gitDecoration-deletedResourceForeground) 12%,
+    transparent
+  );
+  --cwc-bg-warning: color-mix(
+    in srgb,
+    var(--vscode-gitDecoration-modifiedResourceForeground) 12%,
     transparent
   );
 }

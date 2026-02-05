@@ -31,9 +31,6 @@ export const ApiManagerModal: React.FC<Props> = (props) => {
   const [now, set_now] = useState(Date.now())
   const [is_scrolled, set_is_scrolled] = useState(false)
   const [window_width, set_window_width] = useState(window.innerWidth)
-  const [breathing_state, set_breathing_state] = useState<'inhale' | 'exhale'>(
-    'inhale'
-  )
 
   useEffect(() => {
     const handle_resize = () => set_window_width(window.innerWidth)
@@ -47,13 +44,6 @@ export const ApiManagerModal: React.FC<Props> = (props) => {
     const interval = setInterval(() => {
       set_now(Date.now())
     }, 100)
-    return () => clearInterval(interval)
-  }, [])
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      set_breathing_state((prev) => (prev === 'inhale' ? 'exhale' : 'inhale'))
-    }, 5000)
     return () => clearInterval(interval)
   }, [])
 
@@ -93,9 +83,7 @@ export const ApiManagerModal: React.FC<Props> = (props) => {
       <div className={styles.container}>
         <div
           className={cn(styles.heading, {
-            [styles['heading--scrolled']]: is_scrolled,
-            [styles['heading--inhale']]: breathing_state == 'inhale',
-            [styles['heading--exhale']]: breathing_state == 'exhale'
+            [styles['heading--scrolled']]: is_scrolled
           })}
         >
           <div className={styles.heading__title}>API Manager</div>
@@ -103,11 +91,7 @@ export const ApiManagerModal: React.FC<Props> = (props) => {
             <span
               className={cn(
                 styles['heading__breathing__text'],
-                styles['heading__breathing__text--inhale'],
-                {
-                  [styles['heading__breathing__text--active']]:
-                    breathing_state == 'inhale'
-                }
+                styles['heading__breathing__text--inhale']
               )}
             >
               INHALE
@@ -115,11 +99,7 @@ export const ApiManagerModal: React.FC<Props> = (props) => {
             <span
               className={cn(
                 styles['heading__breathing__text'],
-                styles['heading__breathing__text--exhale'],
-                {
-                  [styles['heading__breathing__text--active']]:
-                    breathing_state == 'exhale'
-                }
+                styles['heading__breathing__text--exhale']
               )}
             >
               EXHALE

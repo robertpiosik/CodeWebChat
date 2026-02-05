@@ -20,35 +20,38 @@ type Props = {
 }
 
 type FileMessage =
-  | { type: 'success'; text: string; show_actions?: boolean }
-  | { type: 'error'; text: string; show_actions: boolean }
-  | { type: 'warning'; text: string; show_actions: boolean }
-  | { type: 'loading'; text: string; show_actions?: boolean }
+  | { type: 'success'; text: string }
+  | { type: 'error'; text: string }
+  | { type: 'warning'; text: string }
+  | { type: 'loading'; text: string }
 
 const get_file_message = (file: FileInPreview): FileMessage | null => {
   if (file.is_applying) {
+    let text = 'Applying...'
+    if (file.apply_status == 'waiting') text = 'Waiting...'
+    else if (file.apply_status == 'thinking') text = 'Thinking...'
+    else if (file.apply_status == 'retrying') text = 'Retrying...'
+    else if (file.apply_status == 'receiving') text = 'Receiving...'
+    else if (file.apply_status == 'done') text = 'Done'
+
     return {
       type: 'loading',
-      text: 'Applying...',
-      show_actions: false
+      text
     }
   } else if (file.applied_with_intelligent_update) {
     return {
       type: 'success',
-      text: 'Applied with Intelligent Update',
-      show_actions: true
+      text: 'Applied with Intelligent Update'
     }
   } else if (file.apply_failed) {
     return {
       type: 'error',
-      text: 'Failed to apply changes',
-      show_actions: true
+      text: 'Failed to apply changes'
     }
   } else if (file.diff_application_method == 'search_and_replace') {
     return {
       type: 'warning',
-      text: 'Used aggressive fallback method',
-      show_actions: true
+      text: 'Used aggressive fallback method'
     }
   } else {
     return null
@@ -82,17 +85,14 @@ export const FileItem: FC<Props> = (props) => {
     if (!props.file.is_applying) return null
 
     let status_text = ''
-    if (props.file.apply_status == 'waiting') status_text = 'Waiting...'
-    else if (props.file.apply_status == 'thinking') status_text = 'Thinking...'
-    else if (props.file.apply_status == 'retrying') status_text = 'Retrying...'
-    else if (props.file.apply_status == 'receiving') {
+    if (props.file.apply_status == 'receiving') {
       const tps = props.file.apply_tokens_per_second
       if (tps) status_text = `${tps} tokens/s`
-    } else if (props.file.apply_status == 'done') status_text = 'Done'
+    }
 
     return (
       <div className={styles.progress}>
-        <span>{status_text}</span>
+        {status_text && <span>{status_text}</span>}
         <span>{elapsed_seconds.toFixed(1)}s</span>
         {props.file.apply_status != 'done' && (
           <div
@@ -250,38 +250,34 @@ export const FileItem: FC<Props> = (props) => {
             )}
             <span>{message_obj.text}</span>
           </div>
-          {'show_actions' in message_obj && message_obj.show_actions && (
-            <div className={styles['message__actions']}>
-              {props.file.ai_content && (
-                <div
-                  className={styles['message__actions__item']}
-                  onClick={props.on_preview_generated_code}
-                  title="Preview generated code"
-                >
-                  <span className="codicon codicon-open-preview" />
-                  <span>Preview</span>
-                </div>
-              )}
-              {!props.file.is_applying && (
-                <div
-                  className={styles['message__actions__item']}
-                  onClick={() =>
-                    props.on_intelligent_update(
-                      !!props.file.applied_with_intelligent_update
-                    )
-                  }
-                  title="Apply with Intelligent Update API tool"
-                >
-                  <span className="codicon codicon-sparkle" />
-                  <span>
-                    {props.file.applied_with_intelligent_update
-                      ? 'Retry'
-                      : 'Fix'}
-                  </span>
-                </div>
-              )}
-            </div>
-          )}
+          <div className={styles['message__actions']}>
+            {props.file.ai_content && (
+              <div
+                className={styles['message__actions__item']}
+                onClick={props.on_preview_generated_code}
+                title="Preview generated code"
+              >
+                <span className="codicon codicon-open-preview" />
+                <span>Preview</span>
+              </div>
+            )}
+            {!props.file.is_applying && (
+              <div
+                className={styles['message__actions__item']}
+                onClick={() =>
+                  props.on_intelligent_update(
+                    !!props.file.applied_with_intelligent_update
+                  )
+                }
+                title="Apply with Intelligent Update API tool"
+              >
+                <span className="codicon codicon-sparkle" />
+                <span>
+                  {props.file.applied_with_intelligent_update ? 'Retry' : 'Fix'}
+                </span>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

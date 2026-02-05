@@ -122,58 +122,38 @@
 
   &--error {
     color: var(--vscode-gitDecoration-deletedResourceForeground);
-    background-color: color-mix(
-      in srgb,
-      var(--vscode-gitDecoration-deletedResourceForeground) 12%,
-      transparent
-    );
+    background-color: var(--cwc-bg-error);
 
     .message__actions__item:hover {
-      background-color: color-mix(
-        in srgb,
-        var(--vscode-gitDecoration-deletedResourceForeground) 12%,
-        transparent
-      );
+      background-color: var(--cwc-bg-error);
     }
   }
 
   &--warning {
     color: var(--vscode-gitDecoration-modifiedResourceForeground);
-    background-color: color-mix(
-      in srgb,
-      var(--vscode-gitDecoration-modifiedResourceForeground) 12%,
-      transparent
-    );
+    background-color: var(--cwc-bg-warning);
 
     .message__actions__item:hover {
-      background-color: color-mix(
-        in srgb,
-        var(--vscode-gitDecoration-modifiedResourceForeground) 12%,
-        transparent
-      );
+      background-color: var(--cwc-bg-warning);
     }
   }
 
   &--success {
     color: var(--vscode-gitDecoration-addedResourceForeground);
-    background-color: color-mix(
-      in srgb,
-      var(--vscode-gitDecoration-addedResourceForeground) 12%,
-      transparent
-    );
+    background-color: var(--cwc-bg-success);
 
     .message__actions__item:hover {
-      background-color: color-mix(
-        in srgb,
-        var(--vscode-gitDecoration-addedResourceForeground) 12%,
-        transparent
-      );
+      background-color: var(--cwc-bg-success);
     }
   }
 
   &--loading {
     color: var(--cwc-text-color);
     background-color: var(--cwc-bg-tertiary);
+
+    .message__actions__item:hover {
+      background-color: var(--cwc-bg-secondary);
+    }
   }
 
   &__content {

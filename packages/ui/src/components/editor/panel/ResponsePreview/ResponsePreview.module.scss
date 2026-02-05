@@ -17,35 +17,19 @@
 
   &--error {
     color: var(--vscode-gitDecoration-deletedResourceForeground);
-    background-color: color-mix(
-      in srgb,
-      var(--vscode-gitDecoration-deletedResourceForeground) 12%,
-      transparent
-    );
+    background-color: var(--cwc-bg-error);
 
     .info__action:hover {
-      background-color: color-mix(
-        in srgb,
-        var(--vscode-gitDecoration-deletedResourceForeground) 12%,
-        transparent
-      );
+      background-color: var(--cwc-bg-error);
     }
   }
 
   &--warning {
     color: var(--vscode-gitDecoration-modifiedResourceForeground);
-    background-color: color-mix(
-      in srgb,
-      var(--vscode-gitDecoration-modifiedResourceForeground) 12%,
-      transparent
-    );
+    background-color: var(--cwc-bg-warning);
 
     .info__action:hover {
-      background-color: color-mix(
-        in srgb,
-        var(--vscode-gitDecoration-modifiedResourceForeground) 12%,
-        transparent
-      );
+      background-color: var(--cwc-bg-warning);
     }
   }
 
@@ -112,7 +96,15 @@
   margin: 0 12px;
   padding: 7px 9px 9px 9px;
   border-radius: 6px;
-  background: var(--cwc-bg-tertiary);
+  background-color: var(--cwc-bg-tertiary);
+  background-image: linear-gradient(
+    to right,
+    var(--cwc-bg-secondary),
+    var(--cwc-bg-secondary)
+  );
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  animation: breathe 10s infinite linear;
 
   &__item {
     display: flex;
@@ -149,7 +141,7 @@
 
   &__bar {
     height: 2px;
-    background-color: var(--vscode-dropdown-border);
+    background-color: var(--cwc-bg-secondary);
     width: 100%;
     border-radius: 2px;
     overflow: hidden;
@@ -168,5 +160,17 @@
 
   > div:first-child {
     margin-top: 0;
+  }
+}
+
+@keyframes breathe {
+  0% {
+    background-size: 0% 100%;
+  }
+  50% {
+    background-size: 100% 100%;
+  }
+  100% {
+    background-size: 0% 100%;
   }
 }
