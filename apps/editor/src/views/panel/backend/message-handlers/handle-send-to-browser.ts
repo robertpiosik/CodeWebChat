@@ -550,8 +550,10 @@ async function show_preset_quick_pick(params: {
     quick_pick.onDidHide(() => {
       disposables.forEach((d) => d.dispose())
       quick_pick.dispose()
-      panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
-      do_resolve(null)
+      if (!resolved) {
+        panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
+        do_resolve(null)
+      }
     })
 
     disposables.push(quick_pick)
