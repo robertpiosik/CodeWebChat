@@ -14,6 +14,7 @@ export const handle_reorder_configuration = async (
     | 'intelligent-update'
     | 'commit-messages'
     | 'prune-context'
+    | 'voice-input'
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(provider.context)
 
@@ -44,6 +45,10 @@ export const handle_reorder_configuration = async (
     case 'prune-context':
       get_configs = () => providers_manager.get_prune_context_tool_configs()
       save_configs = (c) => providers_manager.save_prune_context_tool_configs(c)
+      break
+    case 'voice-input':
+      get_configs = () => providers_manager.get_voice_input_tool_configs()
+      save_configs = (c) => providers_manager.save_voice_input_tool_configs(c)
       break
   }
 

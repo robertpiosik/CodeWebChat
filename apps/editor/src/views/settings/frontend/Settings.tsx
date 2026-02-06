@@ -27,6 +27,7 @@ export const Settings = () => {
       settings_hook.commit_messages_configs !== undefined &&
       settings_hook.edit_context_configs !== undefined &&
       settings_hook.edit_context_system_instructions !== undefined &&
+      settings_hook.voice_input_configs !== undefined &&
       settings_hook.intelligent_update_configs !== undefined &&
       settings_hook.prune_context_configs !== undefined &&
       settings_hook.commit_message_instructions !== undefined &&
@@ -67,6 +68,7 @@ export const Settings = () => {
       edit_context_system_instructions={
         settings_hook.edit_context_system_instructions!
       }
+      voice_input_configs={settings_hook.voice_input_configs!}
       intelligent_update_configs={settings_hook.intelligent_update_configs!}
       prune_context_configs={settings_hook.prune_context_configs!}
       context_size_warning_threshold={
@@ -93,6 +95,7 @@ export const Settings = () => {
       set_code_at_cursor_configs={settings_hook.set_code_at_cursor_configs}
       set_commit_messages_configs={settings_hook.set_commit_messages_configs}
       set_edit_context_configs={settings_hook.set_edit_context_configs}
+      set_voice_input_configs={settings_hook.set_voice_input_configs}
       set_intelligent_update_configs={
         settings_hook.set_intelligent_update_configs
       }

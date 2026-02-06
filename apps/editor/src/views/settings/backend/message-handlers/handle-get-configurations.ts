@@ -25,6 +25,7 @@ export const handle_get_configurations = async (
     | 'intelligent-update'
     | 'commit-messages'
     | 'prune-context'
+    | 'voice-input'
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(provider.context)
 
@@ -60,6 +61,11 @@ export const handle_get_configurations = async (
     case 'prune-context':
       saved_configs = await providers_manager.get_prune_context_tool_configs()
       command = 'PRUNE_CONTEXT_CONFIGURATIONS'
+      break
+    case 'voice-input':
+      saved_configs = await providers_manager.get_voice_input_tool_configs()
+      default_config = await providers_manager.get_default_voice_input_config()
+      command = 'VOICE_INPUT_CONFIGURATIONS'
       break
   }
 

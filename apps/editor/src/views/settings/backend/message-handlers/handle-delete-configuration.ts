@@ -10,6 +10,7 @@ export const handle_delete_configuration = async (
     | 'intelligent-update'
     | 'commit-messages'
     | 'prune-context'
+    | 'voice-input'
 ): Promise<void> => {
   await delete_configuration(provider.context, configuration_id, type)
 }

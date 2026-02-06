@@ -15,6 +15,7 @@ export const delete_configuration = async (
     | 'intelligent-update'
     | 'commit-messages'
     | 'prune-context'
+    | 'voice-input'
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(context)
 
@@ -65,6 +66,14 @@ export const delete_configuration = async (
         providers_manager.get_default_prune_context_config()
       set_default_config = (c) =>
         providers_manager.set_default_prune_context_config(c)
+      break
+    case 'voice-input':
+      get_configs = () => providers_manager.get_voice_input_tool_configs()
+      save_configs = (c) => providers_manager.save_voice_input_tool_configs(c)
+      get_default_config = () =>
+        providers_manager.get_default_voice_input_config()
+      set_default_config = (c) =>
+        providers_manager.set_default_voice_input_config(c)
       break
     default:
       throw new Error(`Unknown tool type: ${type}`)

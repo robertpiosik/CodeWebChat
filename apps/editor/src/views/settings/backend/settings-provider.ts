@@ -208,6 +208,26 @@ export class SettingsProvider {
             message.configuration_id,
             'prune-context'
           )
+        } else if (message.command == 'GET_VOICE_INPUT_CONFIGURATIONS') {
+          await handle_get_configurations(this, 'voice-input')
+        } else if (message.command == 'REORDER_VOICE_INPUT_CONFIGURATIONS') {
+          await handle_reorder_configuration(
+            this,
+            message.configurations,
+            'voice-input'
+          )
+        } else if (message.command == 'DELETE_VOICE_INPUT_CONFIGURATION') {
+          await handle_delete_configuration(
+            this,
+            message.configuration_id,
+            'voice-input'
+          )
+        } else if (message.command == 'SET_DEFAULT_VOICE_INPUT_CONFIGURATION') {
+          await handle_set_default_configuration(
+            this,
+            message.configuration_id,
+            'voice-input'
+          )
         } else if (message.command == 'GET_COMMIT_MESSAGES_CONFIGURATIONS') {
           await handle_get_configurations(this, 'commit-messages')
         } else if (
@@ -311,6 +331,7 @@ export class SettingsProvider {
           void handle_get_configurations(this, 'edit-context')
           void handle_get_edit_context_system_instructions(this)
           void handle_get_edit_format_instructions(this)
+          void handle_get_configurations(this, 'voice-input')
           void handle_get_configurations(this, 'intelligent-update')
           void handle_get_configurations(this, 'prune-context')
           void handle_get_context_size_warning_threshold(this)

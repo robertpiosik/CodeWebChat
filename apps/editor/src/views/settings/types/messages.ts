@@ -25,6 +25,7 @@ export type ToolType =
   | 'edit-context'
   | 'intelligent-update'
   | 'prune-context'
+  | 'voice-input'
 
 // === FROM FRONTEND TO BACKEND ===
 export interface GetModelProvidersMessage {
@@ -121,6 +122,25 @@ export interface ReorderPruneContextConfigurationsMessage {
 export interface DeletePruneContextConfigurationMessage {
   command: 'DELETE_PRUNE_CONTEXT_CONFIGURATION'
   configuration_id: string
+}
+
+export interface GetVoiceInputConfigurationsMessage {
+  command: 'GET_VOICE_INPUT_CONFIGURATIONS'
+}
+
+export interface ReorderVoiceInputConfigurationsMessage {
+  command: 'REORDER_VOICE_INPUT_CONFIGURATIONS'
+  configurations: ConfigurationForClient[]
+}
+
+export interface DeleteVoiceInputConfigurationMessage {
+  command: 'DELETE_VOICE_INPUT_CONFIGURATION'
+  configuration_id: string
+}
+
+export interface SetDefaultVoiceInputConfigurationMessage {
+  command: 'SET_DEFAULT_VOICE_INPUT_CONFIGURATION'
+  configuration_id: string | null
 }
 
 export interface GetCommitMessagesConfigurationsMessage {
@@ -309,6 +329,10 @@ export type FrontendMessage =
   | GetPruneContextConfigurationsMessage
   | ReorderPruneContextConfigurationsMessage
   | DeletePruneContextConfigurationMessage
+  | GetVoiceInputConfigurationsMessage
+  | ReorderVoiceInputConfigurationsMessage
+  | DeleteVoiceInputConfigurationMessage
+  | SetDefaultVoiceInputConfigurationMessage
   | GetCommitMessagesConfigurationsMessage
   | ReorderCommitMessagesConfigurationsMessage
   | DeleteCommitMessagesConfigurationMessage
@@ -356,16 +380,24 @@ export interface CodeAtCursorConfigurationsMessage {
   command: 'CODE_AT_CURSOR_CONFIGURATIONS'
   configurations: ConfigurationForClient[]
 }
+
 export interface EditContextConfigurationsMessage {
   command: 'EDIT_CONTEXT_CONFIGURATIONS'
   configurations: ConfigurationForClient[]
 }
+
 export interface IntelligentUpdateConfigurationsMessage {
   command: 'INTELLIGENT_UPDATE_CONFIGURATIONS'
   configurations: ConfigurationForClient[]
 }
+
 export interface PruneContextConfigurationsMessage {
   command: 'PRUNE_CONTEXT_CONFIGURATIONS'
+  configurations: ConfigurationForClient[]
+}
+
+export interface VoiceInputConfigurationsMessage {
+  command: 'VOICE_INPUT_CONFIGURATIONS'
   configurations: ConfigurationForClient[]
 }
 
@@ -434,14 +466,14 @@ export interface ClearChecksInWorkspaceBehaviorMessage {
   value: 'ignore-open-editors' | 'uncheck-all'
 }
 
-export interface FixAllAutomaticallyMessage {
-  command: 'FIX_ALL_AUTOMATICALLY'
-  enabled: boolean
-}
-
 export interface ShowSectionMessage {
   command: 'SHOW_SECTION'
   section: string
+}
+
+export interface FixAllAutomaticallyMessage {
+  command: 'FIX_ALL_AUTOMATICALLY'
+  enabled: boolean
 }
 
 export type BackendMessage =
@@ -450,6 +482,7 @@ export type BackendMessage =
   | EditContextConfigurationsMessage
   | IntelligentUpdateConfigurationsMessage
   | PruneContextConfigurationsMessage
+  | VoiceInputConfigurationsMessage
   | CommitMessagesConfigurationsMessage
   | CommitMessageInstructionsMessage
   | CommitMessageAutoAcceptAfterMessage

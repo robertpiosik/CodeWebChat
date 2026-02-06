@@ -25,6 +25,9 @@ export const use_settings = (vscode: any) => {
   const [intelligent_update_configs, set_intelligent_update_configs] = useState<
     ConfigurationForClient[] | undefined
   >(undefined)
+  const [voice_input_configs, set_voice_input_configs] = useState<
+    ConfigurationForClient[] | undefined
+  >(undefined)
   const [prune_context_configs, set_prune_context_configs] = useState<
     ConfigurationForClient[] | undefined
   >(undefined)
@@ -77,6 +80,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_EDIT_CONTEXT_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_INTELLIGENT_UPDATE_CONFIGURATIONS' })
+    post_message(vscode, { command: 'GET_VOICE_INPUT_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_PRUNE_CONTEXT_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER' })
@@ -113,6 +117,9 @@ export const use_settings = (vscode: any) => {
           break
         case 'INTELLIGENT_UPDATE_CONFIGURATIONS':
           set_intelligent_update_configs(message.configurations)
+          break
+        case 'VOICE_INPUT_CONFIGURATIONS':
+          set_voice_input_configs(message.configurations)
           break
         case 'PRUNE_CONTEXT_CONFIGURATIONS':
           set_prune_context_configs(message.configurations)
@@ -268,6 +275,13 @@ export const use_settings = (vscode: any) => {
           is_default: c.id == configuration_id
         }))
       )
+    } else if (tool_name == 'VOICE_INPUT' && voice_input_configs) {
+      set_voice_input_configs(
+        voice_input_configs.map((c) => ({
+          ...c,
+          is_default: c.id == configuration_id
+        }))
+      )
     } else if (tool_name == 'COMMIT_MESSAGES' && commit_messages_configs) {
       set_commit_messages_configs(
         commit_messages_configs.map((c) => ({
@@ -297,6 +311,13 @@ export const use_settings = (vscode: any) => {
     ) {
       set_intelligent_update_configs(
         intelligent_update_configs.map((c) => ({
+          ...c,
+          is_default: false
+        }))
+      )
+    } else if (tool_name == 'VOICE_INPUT' && voice_input_configs) {
+      set_voice_input_configs(
+        voice_input_configs.map((c) => ({
           ...c,
           is_default: false
         }))
@@ -440,6 +461,8 @@ export const use_settings = (vscode: any) => {
     set_edit_context_configs,
     intelligent_update_configs,
     set_intelligent_update_configs,
+    voice_input_configs,
+    set_voice_input_configs,
     prune_context_configs,
     set_prune_context_configs,
     commit_message_instructions,

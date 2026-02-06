@@ -81,17 +81,20 @@ Pair-programming using natural language instructions.
 Integrate changes from malformed markdown code blocks.
 
 **🛠️ Prune Context** \
-Remove irrelevant files from the current context selection.
+Remove irrelevant files from the current context.
 
 **🛠️ Code at Cursor** \
-Get accurate inline suggestions from state-of-the-art models.
+Accurate inline code from reasoning models.
+
+**🛠️ Voice Input** \
+Transcribe speech to text in the prompt field.
 
 **🛠️ Commit Messages** \
-Meaningful summaries of changes adhering to your preffered style.
+Meaningful summaries of changes in your style.
 
 ## Enterprise security
 
-**Code Web Chat operates exclusively on your machine.** Your prompts are sent directly to chatbots via editor-browser communication channel run on local Websockets. For API tools, model providers are called directly.
+Code Web Chat operates exclusively on your machine. Your prompts are sent directly to chatbots via editor-browser communication channel run on local Websockets. For API tools, model providers are called directly.
 
 ## Commands
 

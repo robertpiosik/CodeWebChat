@@ -26,6 +26,7 @@ type NavItem =
   | 'edit-context'
   | 'code-at-cursor'
   | 'intelligent-update'
+  | 'voice-input'
   | 'prune-context'
   | 'commit-messages'
 
@@ -63,6 +64,11 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   },
   {
     type: 'item',
+    id: 'voice-input',
+    label: 'settings.sidebar.voice-input'
+  },
+  {
+    type: 'item',
     id: 'commit-messages',
     label: 'settings.sidebar.commit-messages'
   }
@@ -73,6 +79,7 @@ type Props = {
   code_at_cursor_configs: ConfigurationForClient[]
   commit_messages_configs: ConfigurationForClient[]
   edit_context_configs: ConfigurationForClient[]
+  voice_input_configs: ConfigurationForClient[]
   edit_context_system_instructions: string
   intelligent_update_configs: ConfigurationForClient[]
   prune_context_configs: ConfigurationForClient[]
@@ -93,6 +100,7 @@ type Props = {
   set_edit_context_configs: (configs: ConfigurationForClient[]) => void
   set_code_at_cursor_configs: (configs: ConfigurationForClient[]) => void
   set_intelligent_update_configs: (configs: ConfigurationForClient[]) => void
+  set_voice_input_configs: (configs: ConfigurationForClient[]) => void
   set_prune_context_configs: (configs: ConfigurationForClient[]) => void
   set_commit_messages_configs: (configs: ConfigurationForClient[]) => void
   on_context_size_warning_threshold_change: (
@@ -151,6 +159,7 @@ export const Home: React.FC<Props> = (props) => {
     'edit-context': null,
     'intelligent-update': null,
     'prune-context': null,
+    'voice-input': null,
     'code-at-cursor': null,
     'commit-messages': null
   })
@@ -197,6 +206,10 @@ export const Home: React.FC<Props> = (props) => {
   )
   const intelligent_update_on_stuck_change = useCallback(
     (is_stuck: boolean) => handle_stuck_change('intelligent-update', is_stuck),
+    [handle_stuck_change]
+  )
+  const voice_input_on_stuck_change = useCallback(
+    (is_stuck: boolean) => handle_stuck_change('voice-input', is_stuck),
     [handle_stuck_change]
   )
   const prune_context_on_stuck_change = useCallback(
@@ -470,7 +483,7 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['prune-context'] = el)}
           group="API Tool"
           title="Prune Context"
-          subtitle="Remove irrelevant files from the current context selection."
+          subtitle="Remove irrelevant files from the current context."
           on_stuck_change={prune_context_on_stuck_change}
           actions={
             <Button
@@ -501,7 +514,7 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['code-at-cursor'] = el)}
           group="API Tool"
           title="Code at Cursor"
-          subtitle="Get accurate inline suggestions from state-of-the-art models."
+          subtitle="Accurate inline code from reasoning models."
           on_stuck_change={code_at_cursor_on_stuck_change}
           actions={
             <Button
@@ -548,10 +561,50 @@ export const Home: React.FC<Props> = (props) => {
           </Group>
         </Section>
         <Section
+          ref={(el) => (section_refs.current['voice-input'] = el)}
+          group="API Tool"
+          title="Voice Input"
+          subtitle="Transcribe speech to text in the prompt field."
+          on_stuck_change={voice_input_on_stuck_change}
+          actions={
+            <Button
+              on_click={() =>
+                props.on_add_config('VOICE_INPUT', {
+                  create_on_top: true
+                })
+              }
+            >
+              Add New...
+            </Button>
+          }
+        >
+          <Group>
+            <ApiToolConfigurationSection
+              configurations={props.voice_input_configs}
+              set_configurations={props.set_voice_input_configs}
+              tool_name="VOICE_INPUT"
+              can_have_default={true}
+              on_add={(params) => props.on_add_config('VOICE_INPUT', params)}
+              on_reorder={(reordered) =>
+                props.on_reorder_configs('VOICE_INPUT', reordered)
+              }
+              on_edit={(id) => props.on_edit_config('VOICE_INPUT', id)}
+              on_delete={(id) => props.on_delete_config('VOICE_INPUT', id)}
+              on_set_default={(id) =>
+                props.on_set_default_config('VOICE_INPUT', id)
+              }
+              on_unset_default={() =>
+                props.on_unset_default_config('VOICE_INPUT')
+              }
+            />
+          </Group>
+        </Section>
+
+        <Section
           ref={(el) => (section_refs.current['commit-messages'] = el)}
           group="API Tool"
           title="Commit Messages"
-          subtitle="Meaningful summaries of changes adhering to your preffered style."
+          subtitle="Meaningful summaries of changes in your style."
           on_stuck_change={commit_messages_on_stuck_change}
           actions={
             <Button

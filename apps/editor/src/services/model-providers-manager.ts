@@ -44,6 +44,7 @@ export type EditContextConfigs = ToolConfig[]
 export type IntelligentUpdateConfigs = ToolConfig[]
 export type CommitMessagesConfigs = ToolConfig[]
 export type PruneContextConfigs = ToolConfig[]
+export type VoiceInputConfigs = ToolConfig[]
 
 export class ModelProvidersManager {
   private _providers: Provider[] = []
@@ -444,6 +445,40 @@ export class ModelProvidersManager {
     )
   }
 
+  public async get_voice_input_tool_configs(): Promise<VoiceInputConfigs> {
+    await this._load_promise
+    return this._get_tool_configs_from_settings('configurationsForVoiceInput')
+  }
+
+  public async get_default_voice_input_config(): Promise<
+    ToolConfig | undefined
+  > {
+    await this._load_promise
+    const default_config = this._get_default_tool_config_from_settings(
+      'configurationsForVoiceInput'
+    )
+    if (default_config) return default_config
+
+    const configs = await this.get_voice_input_tool_configs()
+    if (configs.length == 1) return configs[0]
+
+    return undefined
+  }
+
+  public async set_default_voice_input_config(config: ToolConfig | null) {
+    await this._set_default_tool_config_in_settings(
+      'configurationsForVoiceInput',
+      config
+    )
+  }
+
+  public async save_voice_input_tool_configs(configs: VoiceInputConfigs) {
+    await this._save_tool_configs_to_settings(
+      'configurationsForVoiceInput',
+      configs
+    )
+  }
+
   public async update_provider_name_in_configs(params: {
     old_name: string
     new_name: string
@@ -456,7 +491,8 @@ export class ModelProvidersManager {
       'configurationsForEditContext',
       'configurationsForIntelligentUpdate',
       'configurationsForCommitMessages',
-      'configurationsForPruneContext'
+      'configurationsForPruneContext',
+      'configurationsForVoiceInput'
     ]
 
     for (const key of settings_keys) {

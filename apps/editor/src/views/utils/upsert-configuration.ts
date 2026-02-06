@@ -31,39 +31,38 @@ export const upsert_configuration = async (params: {
 
   let get_configs: () => Promise<ToolConfig[]>
   let save_configs: (configs: ToolConfig[]) => Promise<void>
-  let advanced_options: string[] = []
 
   switch (params.tool_type) {
     case 'code-at-cursor':
       get_configs = () => providers_manager.get_code_completions_tool_configs()
       save_configs = (configs) =>
         providers_manager.save_code_completions_tool_configs(configs)
-      advanced_options = ['Temperature', 'Reasoning Effort']
       break
     case 'commit-messages':
       get_configs = () => providers_manager.get_commit_messages_tool_configs()
       save_configs = (configs) =>
         providers_manager.save_commit_messages_tool_configs(configs)
-      advanced_options = ['Temperature', 'Reasoning Effort']
       break
     case 'edit-context':
       get_configs = () => providers_manager.get_edit_context_tool_configs()
       save_configs = (configs) =>
         providers_manager.save_edit_context_tool_configs(configs)
-      advanced_options = ['Temperature', 'Reasoning Effort']
       break
     case 'intelligent-update':
       get_configs = () =>
         providers_manager.get_intelligent_update_tool_configs()
       save_configs = (configs) =>
         providers_manager.save_intelligent_update_tool_configs(configs)
-      advanced_options = ['Temperature', 'Reasoning Effort']
       break
     case 'prune-context':
       get_configs = () => providers_manager.get_prune_context_tool_configs()
       save_configs = (configs) =>
         providers_manager.save_prune_context_tool_configs(configs)
-      advanced_options = ['Temperature', 'Reasoning Effort']
+      break
+    case 'voice-input':
+      get_configs = () => providers_manager.get_voice_input_tool_configs()
+      save_configs = (configs) =>
+        providers_manager.save_voice_input_tool_configs(configs)
       break
     default:
       throw new Error(`Unknown tool type: ${params.tool_type}`)
@@ -180,12 +179,10 @@ export const upsert_configuration = async (params: {
       }
     ]
 
-    if (advanced_options.includes('Reasoning Effort')) {
-      items.push({
-        label: 'Reasoning Effort',
-        detail: updated_config.reasoning_effort
-      })
-    }
+    items.push({
+      label: 'Reasoning Effort',
+      detail: updated_config.reasoning_effort
+    })
 
     items.push({ label: 'Advanced...' })
 
@@ -238,12 +235,10 @@ export const upsert_configuration = async (params: {
                 }
               ]
 
-              if (advanced_options.includes('Reasoning Effort')) {
-                reset_items.push({
-                  label: 'Reasoning Effort',
-                  detail: updated_config.reasoning_effort
-                })
-              }
+              reset_items.push({
+                label: 'Reasoning Effort',
+                detail: updated_config.reasoning_effort
+              })
 
               reset_items.push({ label: 'Advanced...' })
 
@@ -362,14 +357,13 @@ export const upsert_configuration = async (params: {
     } else if (selected_option == 'Advanced...') {
       let last_advanced_label: string | undefined
       while (true) {
-        const advanced_items: vscode.QuickPickItem[] = []
-        if (advanced_options.includes('Temperature')) {
-          advanced_items.push({
+        const advanced_items: vscode.QuickPickItem[] = [
+          {
             label: 'Temperature',
             description: 'Leave empty with reasoning models',
             detail: updated_config.temperature?.toString()
-          })
-        }
+          }
+        ]
 
         const selected_advanced = await new Promise<
           vscode.QuickPickItem | undefined

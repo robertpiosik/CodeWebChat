@@ -7,6 +7,7 @@ type ToolName =
   | 'EDIT_CONTEXT'
   | 'INTELLIGENT_UPDATE'
   | 'PRUNE_CONTEXT'
+  | 'VOICE_INPUT'
 
 type ToolConfigurationsSectionProps = {
   tool_name: ToolName

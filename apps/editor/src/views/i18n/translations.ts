@@ -11,7 +11,8 @@ export const translations = {
     'settings.sidebar.code-at-cursor': 'Code at Cursor',
     'settings.sidebar.intelligent-update': 'Intelligent Update',
     'settings.sidebar.prune-context': 'Prune Context',
-    'settings.sidebar.commit-messages': 'Commit Messages'
+    'settings.sidebar.commit-messages': 'Commit Messages',
+    'settings.sidebar.voice-input': 'Voice Input'
   },
   pl: {
     'panel.header.settings': 'Ustawienia',
