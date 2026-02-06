@@ -36,7 +36,6 @@ export const handle_commit_item = async (
       return undefined
     }
 
-    // eslint-disable-next-line no-constant-condition
     while (true) {
       let selected_folder: vscode.WorkspaceFolder | undefined
 

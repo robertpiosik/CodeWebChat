@@ -401,7 +401,6 @@ export const handle_edit_context = async (
   let current_config_id = message.config_id
   let should_show_quick_pick = message.use_quick_pick
 
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const config_result = await get_edit_context_config({
       api_providers_manager,

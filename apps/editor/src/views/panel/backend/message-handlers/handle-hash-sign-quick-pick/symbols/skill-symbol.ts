@@ -250,7 +250,6 @@ export const handle_skill_item = async (): Promise<
 
   let last_selected_agent_label: string | undefined
 
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const agent_pick = vscode.window.createQuickPick()
     agent_pick.items = detected_agents.map((agent) => {

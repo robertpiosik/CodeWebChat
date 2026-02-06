@@ -59,7 +59,6 @@ export const handle_open_ignore_patterns_settings = async (): Promise<void> => {
     return
   }
 
-  // Ensure key exists
   const config = vscode.workspace.getConfiguration(
     'codeWebChat',
     selectedFolder.uri
@@ -74,7 +73,6 @@ export const handle_open_ignore_patterns_settings = async (): Promise<void> => {
     )
   }
 
-  // Open the file
   const settingsPath = path.join(
     selectedFolder.uri.fsPath,
     '.vscode',

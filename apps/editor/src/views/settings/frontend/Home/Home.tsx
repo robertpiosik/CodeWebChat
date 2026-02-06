@@ -69,7 +69,6 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
 ]
 
 type Props = {
-  // data
   providers: ProviderForClient[]
   code_at_cursor_configs: ConfigurationForClient[]
   commit_messages_configs: ConfigurationForClient[]
@@ -90,7 +89,6 @@ type Props = {
   clear_checks_in_workspace_behavior: 'ignore-open-editors' | 'uncheck-all'
   fix_all_automatically: boolean
 
-  // handlers
   set_providers: (providers: ProviderForClient[]) => void
   set_edit_context_configs: (configs: ConfigurationForClient[]) => void
   set_code_at_cursor_configs: (configs: ConfigurationForClient[]) => void

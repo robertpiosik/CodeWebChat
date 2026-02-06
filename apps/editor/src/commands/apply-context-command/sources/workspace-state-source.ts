@@ -45,7 +45,6 @@ export const handle_workspace_state_source = async (
       tooltip: 'Delete'
     }
 
-    // eslint-disable-next-line no-constant-condition
     while (true) {
       const create_quick_pick_items = (contexts: SavedContext[]) => {
         const items: (vscode.QuickPickItem & {

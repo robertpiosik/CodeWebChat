@@ -11,29 +11,49 @@ import {
 import { PROVIDERS } from '@shared/constants/providers'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
+import { upsert_model_provider } from './upsert-model-provider'
 
 export const initial_select_provider = async (
+  context: vscode.ExtensionContext,
   providers_manager: ModelProvidersManager,
   last_selected_provider_name?: string
 ): Promise<Provider | undefined> => {
-  const providers = await providers_manager.get_providers()
+  while (true) {
+    const providers = await providers_manager.get_providers()
 
-  if (providers.length == 0) {
-    vscode.window.showWarningMessage(
-      dictionary.warning_message.NO_MODEL_PROVIDERS_FOUND,
-      { modal: true }
-    )
-    vscode.commands.executeCommand('codeWebChat.settings', 'model-providers')
-    return
-  }
+    if (providers.length == 0) {
+      const new_provider = await upsert_model_provider({ context })
+      if (new_provider) {
+        return new_provider
+      }
+      return undefined
+    }
 
-  const provider_items = providers.map((p) => ({ label: p.name, provider: p }))
-  const selected = await new Promise<(typeof provider_items)[0] | undefined>(
-    (resolve) => {
-      const quick_pick =
-        vscode.window.createQuickPick<(typeof provider_items)[0]>()
-      quick_pick.items = provider_items
-      quick_pick.title = 'Create New Configuration'
+    const provider_items = providers.map((p) => ({
+      label: p.name,
+      provider: p
+    }))
+    const add_new_item = {
+      label: '$(plus) New model provider...',
+      provider: undefined
+    }
+
+    const selected = await new Promise<
+      { label: string; provider?: Provider } | undefined
+    >((resolve) => {
+      const quick_pick = vscode.window.createQuickPick<{
+        label: string
+        provider?: Provider
+      }>()
+      quick_pick.items = [
+        add_new_item,
+        {
+          label: 'model providers',
+          kind: vscode.QuickPickItemKind.Separator
+        } as any,
+        ...provider_items
+      ]
+      quick_pick.title = 'New Configuration'
       quick_pick.placeholder = 'Select a model provider'
       const close_button: vscode.QuickInputButton = {
         iconPath: new vscode.ThemeIcon('close'),
@@ -67,9 +87,25 @@ export const initial_select_provider = async (
         })
       )
       quick_pick.show()
+    })
+
+    if (!selected) {
+      return undefined
     }
-  )
-  return selected?.provider
+
+    if (selected.label == add_new_item.label) {
+      const new_provider = await upsert_model_provider({
+        context,
+        show_back_button: true
+      })
+      if (new_provider) {
+        return new_provider
+      }
+      continue
+    }
+
+    return selected.provider
+  }
 }
 
 export const initial_select_model = async (
@@ -99,15 +135,9 @@ export const initial_select_model = async (
       return await new Promise<string | undefined>((resolve) => {
         const quick_pick = vscode.window.createQuickPick()
         quick_pick.items = model_items
-        quick_pick.title = 'Create New Configuration'
+        quick_pick.title = 'Models'
         quick_pick.placeholder = 'Choose a model'
         quick_pick.buttons = [vscode.QuickInputButtons.Back]
-        if (provider.name) {
-          // Currently initial_select_model doesn't take a previous selection,
-          // but if we wanted to highlight one, we would do it here.
-          // Since this is the "Add" flow, usually we don't have a previous model yet.
-          // Skipping activeItems for initial add flow model selection as per current logic.
-        }
 
         let accepted = false
         const disposables: vscode.Disposable[] = []
@@ -157,7 +187,7 @@ export const initial_select_model = async (
   }
 
   return await vscode.window.showInputBox({
-    title: 'Create New Configuration',
+    title: 'Models',
     prompt: 'Could not fetch models. Please enter a model name (ID).'
   })
 }
@@ -177,7 +207,7 @@ export const edit_provider_for_config = async (
     const quick_pick =
       vscode.window.createQuickPick<(typeof provider_items)[0]>()
     quick_pick.items = provider_items
-    quick_pick.title = 'Edit Configuration'
+    quick_pick.title = 'Model Providers'
     quick_pick.placeholder = 'Select a model provider'
     quick_pick.buttons = [vscode.QuickInputButtons.Back]
     if (current_provider_name) {
@@ -265,7 +295,7 @@ export const edit_model_for_config = async (
         const quick_pick =
           vscode.window.createQuickPick<(typeof model_items)[0]>()
         quick_pick.items = model_items
-        quick_pick.title = 'Edit Configuration'
+        quick_pick.title = 'Models'
         quick_pick.placeholder = 'Choose a model'
         quick_pick.buttons = [vscode.QuickInputButtons.Back]
         if (config.model) {
@@ -335,7 +365,7 @@ export const edit_model_for_config = async (
   }
 
   const new_model_input = await vscode.window.showInputBox({
-    title: 'Edit Configuration',
+    title: 'Models',
     value: config.model,
     prompt: `Enter a model name (ID)`
   })
@@ -352,8 +382,8 @@ export const edit_temperature_for_config = async (
     const input = vscode.window.createInputBox()
     input.title = 'Edit Configuration'
     input.value = config.temperature?.toString() ?? ''
-    input.prompt = 'Enter a value between 0 and 2. Leave empty to unset.'
-    input.buttons = [vscode.QuickInputButtons.Back]
+    input.prompt = 'Enter a value between 0 and 2.'
+    input.placeholder = 'Temperature'
 
     let accepted = false
     const disposables: vscode.Disposable[] = []
@@ -386,11 +416,6 @@ export const edit_temperature_for_config = async (
           input.validationMessage = 'Please enter a number between 0 and 2.'
         } else {
           input.validationMessage = undefined
-        }
-      }),
-      input.onDidTriggerButton((button) => {
-        if (button === vscode.QuickInputButtons.Back) {
-          input.hide()
         }
       }),
       input.onDidHide(() => {

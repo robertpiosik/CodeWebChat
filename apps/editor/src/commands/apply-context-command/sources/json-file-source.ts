@@ -94,7 +94,6 @@ export const handle_json_file_source = async (
 
     let active_dialog_count = 0
 
-    // eslint-disable-next-line no-constant-condition
     while (true) {
       const create_items = () => {
         const items: (vscode.QuickPickItem & {

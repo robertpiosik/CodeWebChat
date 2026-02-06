@@ -70,7 +70,6 @@ const hash_sign_quick_pick = async (params: {
     (item) => item.label == last_selected_symbol
   )
 
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = items

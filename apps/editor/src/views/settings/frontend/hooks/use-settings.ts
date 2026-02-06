@@ -71,7 +71,6 @@ export const use_settings = (vscode: any) => {
   >(undefined)
 
   useEffect(() => {
-    // Request initial data
     post_message(vscode, { command: 'GET_MODEL_PROVIDERS' })
     post_message(vscode, { command: 'GET_CODE_AT_CURSOR_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGES_CONFIGURATIONS' })

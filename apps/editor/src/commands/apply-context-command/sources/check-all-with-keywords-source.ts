@@ -11,7 +11,6 @@ export const handle_check_all_with_keywords_source = async (
   extension_context: vscode.ExtensionContext
 ): Promise<'back' | void> => {
   try {
-    // eslint-disable-next-line no-constant-condition
     while (true) {
       const input_box = vscode.window.createInputBox()
       input_box.title = 'Keyword Search'
@@ -103,7 +102,6 @@ export const handle_check_all_with_keywords_source = async (
       }
 
       // Inner loop for file selection
-      // eslint-disable-next-line no-constant-condition
       while (true) {
         const quick_pick_items = matched_files.map((file_path) => {
           const workspace_root =

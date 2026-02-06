@@ -124,7 +124,6 @@ export const upsert_configuration = async (params: {
   let original_id: string | undefined
 
   if (params.configuration_id) {
-    // Edit mode
     const config_index = configs.findIndex(
       (c) => get_tool_config_id(c) == params.configuration_id
     )
@@ -139,13 +138,12 @@ export const upsert_configuration = async (params: {
     config_to_edit = { ...configs[config_index] }
     original_id = params.configuration_id
   } else {
-    // Add mode
     let selected_provider: Provider | undefined
     let selected_model: string | undefined
 
-    // eslint-disable-next-line no-constant-condition
     while (true) {
       selected_provider = await initial_select_provider(
+        params.context,
         providers_manager,
         selected_provider?.name
       )
@@ -170,7 +168,6 @@ export const upsert_configuration = async (params: {
   const starting_config = { ...updated_config }
   let last_selected_label: string | undefined
 
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const has_changes =
       JSON.stringify(updated_config) !== JSON.stringify(starting_config)
@@ -180,9 +177,17 @@ export const upsert_configuration = async (params: {
         label: 'Model',
         description: updated_config.provider_name,
         detail: updated_config.model
-      },
-      { label: 'More...' }
+      }
     ]
+
+    if (advanced_options.includes('Reasoning Effort')) {
+      items.push({
+        label: 'Reasoning Effort',
+        detail: updated_config.reasoning_effort
+      })
+    }
+
+    items.push({ label: 'Advanced...' })
 
     const selected_item = await new Promise<vscode.QuickPickItem | undefined>(
       (resolve) => {
@@ -190,15 +195,15 @@ export const upsert_configuration = async (params: {
         quick_pick.items = items
         quick_pick.title = original_id
           ? 'Edit Configuration'
-          : 'Create New Configuration'
+          : 'New Configuration'
         quick_pick.placeholder = 'Select a property to edit'
         const close_button: vscode.QuickInputButton = {
-          iconPath: new vscode.ThemeIcon('close'),
+          iconPath: new vscode.ThemeIcon('save'),
           tooltip: 'Save and close'
         }
         const redo_button: vscode.QuickInputButton = {
           iconPath: new vscode.ThemeIcon('redo'),
-          tooltip: 'Reset Changes'
+          tooltip: 'Reset changes'
         }
         quick_pick.buttons = has_changes
           ? [redo_button, close_button]
@@ -224,14 +229,25 @@ export const upsert_configuration = async (params: {
                 (key) => delete (updated_config as any)[key]
               )
               Object.assign(updated_config, starting_config)
-              quick_pick.items = [
+
+              const reset_items: vscode.QuickPickItem[] = [
                 {
                   label: 'Model',
                   description: updated_config.provider_name,
                   detail: updated_config.model
-                },
-                { label: 'More...' }
+                }
               ]
+
+              if (advanced_options.includes('Reasoning Effort')) {
+                reset_items.push({
+                  label: 'Reasoning Effort',
+                  detail: updated_config.reasoning_effort
+                })
+              }
+
+              reset_items.push({ label: 'Advanced...' })
+
+              quick_pick.items = reset_items
               quick_pick.buttons = [close_button]
             }
           }),
@@ -255,7 +271,6 @@ export const upsert_configuration = async (params: {
     if (selected_option == 'Model') {
       let current_provider_name = updated_config.provider_name
 
-      // eslint-disable-next-line no-constant-condition
       while (true) {
         const new_provider = await edit_provider_for_config(
           providers_manager,
@@ -289,9 +304,63 @@ export const upsert_configuration = async (params: {
           break
         }
       }
-    } else if (selected_option == 'More...') {
+    } else if (selected_option == 'Reasoning Effort') {
+      while (true) {
+        const new_effort = await edit_reasoning_effort_for_config(
+          updated_config.reasoning_effort
+        )
+        if (new_effort === undefined) break
+
+        let is_valid = true
+        if (new_effort !== null) {
+          const provider = await providers_manager.get_provider(
+            updated_config.provider_name
+          )
+          if (provider) {
+            const base_url =
+              provider.type == 'built-in'
+                ? PROVIDERS[provider.name as keyof typeof PROVIDERS]?.base_url
+                : provider.base_url
+
+            if (base_url) {
+              try {
+                await vscode.window.withProgress(
+                  {
+                    location: vscode.ProgressLocation.Notification,
+                    title: 'Checking reasoning effort validity...',
+                    cancellable: true
+                  },
+                  async (_progress, token) => {
+                    await verify_reasoning_effort({
+                      endpoint_url: base_url!,
+                      api_key: provider.api_key,
+                      model: updated_config.model,
+                      reasoning_effort: new_effort as string,
+                      provider,
+                      cancellation_token: token
+                    })
+                  }
+                )
+              } catch (error: any) {
+                is_valid = false
+                if (error?.message != 'Cancelled') {
+                  vscode.window.showWarningMessage(
+                    dictionary.warning_message.REASONING_EFFORT_NOT_SUPPORTED
+                  )
+                }
+              }
+            }
+          }
+        }
+
+        if (is_valid) {
+          updated_config.reasoning_effort =
+            new_effort === null ? undefined : (new_effort as any)
+          break
+        }
+      }
+    } else if (selected_option == 'Advanced...') {
       let last_advanced_label: string | undefined
-      // eslint-disable-next-line no-constant-condition
       while (true) {
         const advanced_items: vscode.QuickPickItem[] = []
         if (advanced_options.includes('Temperature')) {
@@ -299,13 +368,6 @@ export const upsert_configuration = async (params: {
             label: 'Temperature',
             description: 'Leave empty with reasoning models',
             detail: updated_config.temperature?.toString()
-          })
-        }
-        if (advanced_options.includes('Reasoning Effort')) {
-          advanced_items.push({
-            label: 'Reasoning Effort',
-            description: 'Requires supporting model',
-            detail: updated_config.reasoning_effort
           })
         }
 
@@ -355,74 +417,14 @@ export const upsert_configuration = async (params: {
             updated_config.temperature =
               new_temp === null ? undefined : new_temp
           }
-        } else if (selected_advanced.label == 'Reasoning Effort') {
-          // eslint-disable-next-line no-constant-condition
-          while (true) {
-            const new_effort = await edit_reasoning_effort_for_config(
-              updated_config.reasoning_effort
-            )
-            if (new_effort === undefined) break
-
-            let is_valid = true
-            if (new_effort !== null) {
-              const provider = await providers_manager.get_provider(
-                updated_config.provider_name
-              )
-              if (provider) {
-                const base_url =
-                  provider.type === 'built-in'
-                    ? PROVIDERS[provider.name as keyof typeof PROVIDERS]
-                        ?.base_url
-                    : provider.base_url
-
-                if (base_url) {
-                  try {
-                    await vscode.window.withProgress(
-                      {
-                        location: vscode.ProgressLocation.Notification,
-                        title: 'Checking reasoning effort support...',
-                        cancellable: true
-                      },
-                      async (_progress, token) => {
-                        await verify_reasoning_effort({
-                          endpoint_url: base_url!,
-                          api_key: provider.api_key,
-                          model: updated_config.model,
-                          reasoning_effort: new_effort as string,
-                          provider,
-                          cancellation_token: token
-                        })
-                      }
-                    )
-                  } catch (error: any) {
-                    is_valid = false
-                    if (error?.message != 'Cancelled') {
-                      vscode.window.showWarningMessage(
-                        dictionary.warning_message
-                          .REASONING_EFFORT_NOT_SUPPORTED
-                      )
-                    }
-                  }
-                }
-              }
-            }
-
-            if (is_valid) {
-              updated_config.reasoning_effort =
-                new_effort === null ? undefined : (new_effort as any)
-              break
-            }
-          }
         }
       }
     }
   }
 
-  // Save logic
   const new_id = get_tool_config_id(updated_config)
 
   if (original_id) {
-    // If nothing changed, return
     const original_config = configs.find(
       (c) => get_tool_config_id(c) === original_id
     )
@@ -430,7 +432,6 @@ export const upsert_configuration = async (params: {
       return
     }
 
-    // Check for collision with OTHER configs
     if (
       new_id !== original_id &&
       configs.some((c) => get_tool_config_id(c) === new_id)
@@ -448,7 +449,6 @@ export const upsert_configuration = async (params: {
       configs[index] = updated_config
     }
   } else {
-    // Add mode: check for collision
     if (configs.some((c) => get_tool_config_id(c) === new_id)) {
       vscode.window.showErrorMessage(
         dictionary.error_message.CONFIGURATION_ALREADY_EXISTS

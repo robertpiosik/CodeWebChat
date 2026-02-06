@@ -1,4 +1,3 @@
-// A simplified Provider type for sending to the client
 export type ProviderForClient = {
   name: string
   type: 'built-in' | 'custom'
@@ -6,7 +5,6 @@ export type ProviderForClient = {
   baseUrl: string
 }
 
-// A simplified Configuration type for sending to the client
 export type ConfigurationForClient = {
   id: string
   model: string

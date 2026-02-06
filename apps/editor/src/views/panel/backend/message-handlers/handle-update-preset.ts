@@ -108,7 +108,6 @@ export const handle_update_preset = async (
     (!updated_ui_preset.name || !updated_ui_preset.name.trim())
   ) {
     let counter = 1
-    // eslint-disable-next-line no-constant-condition
     while (true) {
       const candidate = `(${counter})`
       const conflict = current_presets.some(

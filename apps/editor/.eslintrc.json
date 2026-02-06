@@ -31,7 +31,8 @@
     "no-empty": "off",
     "react/react-in-jsx-scope": "off",
     "@typescript-eslint/no-namespace": "off",
-    "no-undef": "off"
+    "no-undef": "off",
+    "no-constant-condition": ["error", { "checkLoops": false }]
   },
   "overrides": [
     {

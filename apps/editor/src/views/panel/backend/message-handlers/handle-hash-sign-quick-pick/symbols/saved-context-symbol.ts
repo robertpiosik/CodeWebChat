@@ -49,7 +49,6 @@ export const handle_saved_context_item = async (
       return 'continue'
     }
 
-    // eslint-disable-next-line no-constant-condition
     while (true) {
       let source: 'WorkspaceState' | 'JSON' | undefined
       if (source_options.length > 1) {

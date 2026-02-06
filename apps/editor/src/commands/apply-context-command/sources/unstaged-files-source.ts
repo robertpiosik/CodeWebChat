@@ -65,7 +65,6 @@ export const handle_unstaged_files_source = async (
 
     const workspace_roots = workspace_provider.get_workspace_roots()
 
-    // eslint-disable-next-line no-constant-condition
     while (true) {
       const quick_pick_items = await Promise.all(
         existing_unstaged_files.map(async (file_path) => {

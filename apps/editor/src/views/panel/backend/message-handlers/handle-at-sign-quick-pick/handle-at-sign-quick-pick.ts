@@ -134,7 +134,6 @@ const at_sign_quick_pick = async (params: {
 
   let selected_path_item: QuickPickItem | undefined
 
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const all_quick_pick_items: QuickPickItem[] = checked_paths
       .filter((p) => {

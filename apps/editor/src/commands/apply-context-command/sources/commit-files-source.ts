@@ -18,7 +18,6 @@ export const handle_commit_files_source = async (
       return
     }
 
-    // eslint-disable-next-line no-constant-condition
     while (true) {
       const log_output = execSync('git log -n 20 --pretty=format:"%H|%s|%ar"', {
         cwd: repository.rootUri.fsPath,
@@ -131,7 +130,6 @@ export const handle_commit_files_source = async (
       }
 
       // Inner loop for file selection
-      // eslint-disable-next-line no-constant-condition
       while (true) {
         const file_items = valid_files.map((f) => ({
           label: path.basename(f.relative_path),

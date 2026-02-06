@@ -14,7 +14,6 @@ export const handle_reorder_model_providers = async (
 
   const reordered_names = message.providers.map((p) => p.name)
 
-  // Make sure all providers exist
   const reordered_providers = reordered_names
     .map((name) => {
       const found = current_providers.find((p) => p.name == name)
