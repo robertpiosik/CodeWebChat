@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import { execSync } from 'child_process'
 import { dictionary } from '@shared/constants/dictionary'
 import * as path from 'path'
+import { natural_sort } from './natural-sort'
 
 type GitRepository = {
   rootUri: vscode.Uri
@@ -111,10 +112,44 @@ export const prepare_staged_changes = async (
       }
     })
 
-    const selected = await vscode.window.showQuickPick(items, {
-      canPickMany: true,
-      title: 'Unstaged Files',
-      placeHolder: 'Select files to commit'
+    items.sort((a, b) => {
+      const label_diff = natural_sort(a.label, b.label)
+      if (label_diff != 0) return label_diff
+      return natural_sort(a.description || '', b.description || '')
+    })
+
+    const selected = await new Promise<any[] | undefined>((resolve) => {
+      const quick_pick = vscode.window.createQuickPick<any>()
+      quick_pick.items = items
+      quick_pick.selectedItems = items
+      quick_pick.canSelectMany = true
+      quick_pick.title = 'Unstaged Files'
+      quick_pick.placeholder = 'Select files to commit'
+      quick_pick.buttons = [
+        {
+          iconPath: new vscode.ThemeIcon('close'),
+          tooltip: 'Close'
+        }
+      ]
+
+      quick_pick.onDidTriggerButton((button) => {
+        if (button.tooltip == 'Close') {
+          resolve(undefined)
+          quick_pick.hide()
+        }
+      })
+
+      quick_pick.onDidAccept(() => {
+        resolve(Array.from(quick_pick.selectedItems))
+        quick_pick.hide()
+      })
+
+      quick_pick.onDidHide(() => {
+        resolve(undefined)
+        quick_pick.dispose()
+      })
+
+      quick_pick.show()
     })
 
     if (!selected || selected.length == 0) {

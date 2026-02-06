@@ -18,14 +18,19 @@ export interface CommitMessageConfig {
 }
 
 export const get_commit_message_config = async (
-  context: vscode.ExtensionContext
-): Promise<{
-  config: CommitMessageConfig
-  provider: any
-  endpoint_url: string
-} | null> => {
+  context: vscode.ExtensionContext,
+  show_back_button: boolean = true
+): Promise<
+  | {
+      config: CommitMessageConfig
+      provider: any
+      endpoint_url: string
+    }
+  | 'back'
+  | null
+> => {
   const api_providers_manager = new ModelProvidersManager(context)
-  let commit_message_config: CommitMessageConfig | null | undefined =
+  let commit_message_config: CommitMessageConfig | null | undefined | 'back' =
     await api_providers_manager.get_default_commit_messages_config()
 
   if (!commit_message_config) {
@@ -114,12 +119,18 @@ export const get_commit_message_config = async (
       }
 
       const quick_pick = vscode.window.createQuickPick()
-      const close_button = {
-        iconPath: new vscode.ThemeIcon('close'),
-        tooltip: 'Close'
+
+      if (show_back_button) {
+        quick_pick.buttons = [vscode.QuickInputButtons.Back]
+      } else {
+        quick_pick.buttons = [
+          {
+            iconPath: new vscode.ThemeIcon('close'),
+            tooltip: 'Close'
+          }
+        ]
       }
 
-      quick_pick.buttons = [close_button]
       quick_pick.items = create_items()
       quick_pick.title = 'Configurations'
       quick_pick.placeholder = 'Select configuration'
@@ -139,10 +150,13 @@ export const get_commit_message_config = async (
       }
 
       commit_message_config = await new Promise<
-        CommitMessageConfig | undefined
+        CommitMessageConfig | 'back' | undefined
       >((resolve) => {
         quick_pick.onDidTriggerButton((button) => {
-          if (button == close_button) {
+          if (button === vscode.QuickInputButtons.Back) {
+            quick_pick.hide()
+            resolve('back')
+          } else if (button.tooltip === 'Close') {
             quick_pick.hide()
             resolve(undefined)
           }
@@ -175,13 +189,17 @@ export const get_commit_message_config = async (
         quick_pick.onDidHide(() => {
           quick_pick.dispose()
           if (quick_pick.selectedItems.length == 0) {
-            resolve(undefined)
+            resolve('back')
           }
         })
 
         quick_pick.show()
       })
     }
+  }
+
+  if (commit_message_config === 'back') {
+    return 'back'
   }
 
   if (!commit_message_config) {

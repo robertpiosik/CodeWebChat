@@ -7,6 +7,7 @@ import { display_token_count } from '../../utils/display-token-count'
 import { get_commit_message_config } from './utils/get-commit-message-config'
 import { build_commit_message_prompt } from './utils/build-commit-message-prompt'
 import { generate_commit_message_with_api } from './utils/generate-commit-message-with-api'
+import { ModelProvidersManager } from '@/services/model-providers-manager'
 
 export const generate_commit_message_command = (
   context: vscode.ExtensionContext
@@ -31,73 +32,128 @@ export const generate_commit_message_command = (
     source_control: vscode.SourceControl | undefined,
     should_commit: boolean
   ) => {
-    const data = await get_prompt_data(source_control)
-    if (!data) return
-    const { repository, was_empty_stage, message_prompt } = data
+    let files_staged_by_action = false
+    const api_providers_manager = new ModelProvidersManager(context)
 
-    const api_config_data = await get_commit_message_config(context)
+    while (true) {
+      const data = await get_prompt_data(source_control)
+      if (!data) return
+      const { repository, message_prompt } = data
+      let { was_empty_stage } = data
 
-    if (!api_config_data) {
       if (was_empty_stage) {
-        await vscode.commands.executeCommand('git.unstageAll')
+        files_staged_by_action = true
+      } else if (files_staged_by_action) {
+        was_empty_stage = true
       }
-      return
-    }
 
-    const commit_message = await generate_commit_message_with_api({
-      endpoint_url: api_config_data.endpoint_url,
-      provider: api_config_data.provider,
-      config: api_config_data.config,
-      message: message_prompt
-    })
+      const default_config =
+        await api_providers_manager.get_default_commit_messages_config()
+      const has_default_config = !!default_config
 
-    if (commit_message) {
-      if (should_commit) {
-        const edited_message = await new Promise<string | undefined>(
-          (resolve) => {
-            const input_box = vscode.window.createInputBox()
-            input_box.value = commit_message
-            input_box.title = 'Commit Message'
-            input_box.prompt = 'Review the commit message.'
+      const api_config_data = await get_commit_message_config(
+        context,
+        was_empty_stage
+      )
 
-            const close_button = {
-              iconPath: new vscode.ThemeIcon('close'),
-              tooltip: 'Close'
-            }
+      if (api_config_data === 'back') {
+        if (was_empty_stage) {
+          await vscode.commands.executeCommand('git.unstageAll')
+          files_staged_by_action = false
+          continue
+        }
+        return
+      }
 
-            input_box.buttons = [close_button]
-
-            input_box.onDidTriggerButton((button) => {
-              if (button == close_button) {
-                input_box.hide()
-              }
-            })
-
-            input_box.onDidAccept(() => {
-              resolve(input_box.value)
-              input_box.hide()
-            })
-
-            input_box.onDidHide(() => {
-              resolve(undefined)
-              input_box.dispose()
-            })
-
-            input_box.show()
-          }
-        )
-
-        if (edited_message) {
-          repository.inputBox.value = edited_message
-          await vscode.commands.executeCommand('git.commit', repository)
-        } else if (was_empty_stage) {
+      if (!api_config_data) {
+        if (was_empty_stage) {
           await vscode.commands.executeCommand('git.unstageAll')
         }
-      } else {
-        repository.inputBox.value = commit_message
+        return
       }
-    } else if (was_empty_stage) {
-      await vscode.commands.executeCommand('git.unstageAll')
+
+      const commit_message = await generate_commit_message_with_api({
+        endpoint_url: api_config_data.endpoint_url,
+        provider: api_config_data.provider,
+        config: api_config_data.config,
+        message: message_prompt
+      })
+
+      if (commit_message) {
+        if (should_commit) {
+          const edited_message = await new Promise<string | 'back' | undefined>(
+            (resolve) => {
+              const input_box = vscode.window.createInputBox()
+              input_box.value = commit_message
+              input_box.title = 'Commit Message'
+              input_box.prompt = 'Review the commit message.'
+
+              if (has_default_config && !files_staged_by_action) {
+                input_box.buttons = [
+                  {
+                    iconPath: new vscode.ThemeIcon('close'),
+                    tooltip: 'Close'
+                  }
+                ]
+              } else {
+                input_box.buttons = [vscode.QuickInputButtons.Back]
+              }
+
+              let is_resolved = false
+
+              input_box.onDidTriggerButton((button) => {
+                if (
+                  button === vscode.QuickInputButtons.Back ||
+                  button.tooltip == 'Close'
+                ) {
+                  is_resolved = true
+                  resolve('back')
+                  input_box.hide()
+                }
+              })
+
+              input_box.onDidAccept(() => {
+                is_resolved = true
+                resolve(input_box.value)
+                input_box.hide()
+              })
+
+              input_box.onDidHide(() => {
+                if (!is_resolved) {
+                  resolve('back')
+                }
+                input_box.dispose()
+              })
+
+              input_box.show()
+            }
+          )
+
+          if (edited_message === 'back') {
+            if (has_default_config) {
+              if (files_staged_by_action) {
+                await vscode.commands.executeCommand('git.unstageAll')
+              } else {
+                return
+              }
+            }
+            continue
+          }
+
+          if (edited_message) {
+            repository.inputBox.value = edited_message
+            await vscode.commands.executeCommand('git.commit', repository)
+          } else if (was_empty_stage) {
+            await vscode.commands.executeCommand('git.unstageAll')
+          }
+        } else {
+          repository.inputBox.value = commit_message
+        }
+      } else if (was_empty_stage) {
+        await vscode.commands.executeCommand('git.unstageAll')
+      }
+
+      break
     }
   }
 
