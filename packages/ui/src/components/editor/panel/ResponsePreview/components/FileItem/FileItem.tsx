@@ -201,14 +201,16 @@ export const FileItem: FC<Props> = (props) => {
                       }}
                     />
                   )}
-                <IconButton
-                  codicon_icon="go-to-file"
-                  title="Go to file"
-                  on_click={(e) => {
-                    e.stopPropagation()
-                    props.on_go_to_file()
-                  }}
-                />
+                {props.file.file_state != 'deleted' && (
+                  <IconButton
+                    codicon_icon="go-to-file"
+                    title="Go to file"
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      props.on_go_to_file()
+                    }}
+                  />
+                )}
               </div>
               <div className={styles['file__line-numbers']}>
                 {props.file.file_state != 'deleted' && (

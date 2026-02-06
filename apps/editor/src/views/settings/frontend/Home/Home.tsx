@@ -12,6 +12,7 @@ import { Textarea } from '@ui/components/editor/common/Textarea'
 import { Toggler } from '@ui/components/editor/common/Toggler'
 import { Button } from '@ui/components/editor/common/Button'
 import { TextButton } from '@ui/components/editor/settings/TextButton'
+import { Notice } from '@ui/components/editor/settings/Notice'
 import {
   ConfigurationForClient,
   ProviderForClient,
@@ -146,6 +147,7 @@ type Props = {
   on_delete_config: (tool_name: string, configuration_id: string) => void
   on_set_default_config: (tool_name: string, configuration_id: string) => void
   on_unset_default_config: (tool_name: string) => void
+  on_open_external_url: (url: string) => void
   scroll_to_section_on_load?: NavItem
 }
 
@@ -387,6 +389,26 @@ export const Home: React.FC<Props> = (props) => {
             <Button on_click={() => props.on_add_provider()}>Add New...</Button>
           }
         >
+          <Notice type="info">
+            API keys are stored securely in the{' '}
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault()
+                props.on_open_external_url(
+                  'https://code.visualstudio.com/api/references/vscode-api#SecretStorage'
+                )
+              }}
+            >
+              SecretStorage
+            </a>
+            .
+          </Notice>
+          {props.providers.length == 0 && (
+            <Notice type="warning">
+              Add a model provider to use API features.
+            </Notice>
+          )}
           <Group>
             <ModelProvidersSection
               providers={props.providers}
@@ -417,6 +439,11 @@ export const Home: React.FC<Props> = (props) => {
             </Button>
           }
         >
+          {props.edit_context_configs.length == 0 && (
+            <Notice type="warning">
+              Add a configuration to use this feature.
+            </Notice>
+          )}
           <Group>
             <ApiToolConfigurationSection
               configurations={props.edit_context_configs}
@@ -465,6 +492,11 @@ export const Home: React.FC<Props> = (props) => {
             </Button>
           }
         >
+          {props.intelligent_update_configs.length == 0 && (
+            <Notice type="warning">
+              Add a configuration to use this feature.
+            </Notice>
+          )}
           <Group>
             <ApiToolConfigurationSection
               configurations={props.intelligent_update_configs}
@@ -516,6 +548,11 @@ export const Home: React.FC<Props> = (props) => {
             </Button>
           }
         >
+          {props.prune_context_configs.length == 0 && (
+            <Notice type="warning">
+              Add a configuration to use this feature.
+            </Notice>
+          )}
           <Group>
             <ApiToolConfigurationSection
               configurations={props.prune_context_configs}
@@ -547,6 +584,11 @@ export const Home: React.FC<Props> = (props) => {
             </Button>
           }
         >
+          {props.code_at_cursor_configs.length == 0 && (
+            <Notice type="warning">
+              Add a configuration to use this feature.
+            </Notice>
+          )}
           <Group>
             <ApiToolConfigurationSection
               configurations={props.code_at_cursor_configs}
@@ -599,6 +641,11 @@ export const Home: React.FC<Props> = (props) => {
             </Button>
           }
         >
+          {props.voice_input_configs.length == 0 && (
+            <Notice type="warning">
+              Add a configuration to use this feature.
+            </Notice>
+          )}
           <Group>
             <ApiToolConfigurationSection
               configurations={props.voice_input_configs}
@@ -637,6 +684,11 @@ export const Home: React.FC<Props> = (props) => {
             </Button>
           }
         >
+          {props.commit_messages_configs.length == 0 && (
+            <Notice type="warning">
+              Add a configuration to use this feature.
+            </Notice>
+          )}
           <Group>
             <ApiToolConfigurationSection
               configurations={props.commit_messages_configs}

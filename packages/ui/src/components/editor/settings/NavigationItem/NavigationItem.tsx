@@ -14,13 +14,16 @@ export const NavigationItem: React.FC<Props> = (props) => {
     <a
       href={props.href}
       className={cn(styles.container, {
-        [styles['container--active']]: props.is_active,
-        [styles['container--warning']]: props.has_warning
+        [styles['container--active']]: props.is_active
       })}
       onClick={props.on_click}
     >
-      {props.has_warning && <span className="codicon codicon-warning" />}
       <span>{props.label}</span>
+      {props.has_warning && (
+        <div className={styles.warning}>
+          <span className="codicon codicon-warning" />
+        </div>
+      )}
     </a>
   )
 }

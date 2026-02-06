@@ -154,6 +154,7 @@ export const Settings = () => {
       on_delete_config={settings_hook.handle_delete_config}
       on_set_default_config={settings_hook.handle_set_default_config}
       on_unset_default_config={settings_hook.handle_unset_default_config}
+      on_open_external_url={settings_hook.handle_open_external_url}
       scroll_to_section_on_load={scroll_to_section_on_load}
     />
   )

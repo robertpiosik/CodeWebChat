@@ -5,6 +5,12 @@
     var(--vscode-foreground) 75%,
     transparent
   );
+  --cwc-text-color-green: var(--vscode-gitDecoration-addedResourceForeground);
+  --cwc-text-color-orange: var(
+    --vscode-gitDecoration-modifiedResourceForeground
+  );
+  --cwc-text-color-red: var(--vscode-gitDecoration-deletedResourceForeground);
+
   --cwc-bg-primary: color-mix(
     in srgb,
     var(--vscode-foreground) 20%,

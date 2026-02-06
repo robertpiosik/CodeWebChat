@@ -76,12 +76,12 @@
       }
 
       &--new {
-        color: var(--vscode-gitDecoration-untrackedResourceForeground);
+        color: var(--cwc-text-color-green);
       }
 
       &--deleted {
         text-decoration: line-through;
-        color: var(--vscode-gitDecoration-deletedResourceForeground);
+        color: var(--cwc-text-color-red);
       }
     }
   }
@@ -102,11 +102,11 @@
     gap: 3px;
 
     &__added {
-      color: var(--vscode-gitDecoration-addedResourceForeground);
+      color: var(--cwc-text-color-green);
     }
 
     &__removed {
-      color: var(--vscode-gitDecoration-deletedResourceForeground);
+      color: var(--cwc-text-color-red);
     }
   }
 }
@@ -121,38 +121,38 @@
   overflow: hidden;
 
   &--error {
-    color: var(--vscode-gitDecoration-deletedResourceForeground);
-    background-color: var(--cwc-bg-error);
+    color: var(--cwc-text-color-red);
+    background-color: var(--cwc-bg-red);
 
     .message__actions__item:hover {
-      background-color: var(--cwc-bg-error);
+      background-color: var(--cwc-bg-red);
     }
   }
 
   &--warning {
-    color: var(--vscode-gitDecoration-modifiedResourceForeground);
-    background-color: var(--cwc-bg-warning);
+    color: var(--cwc-text-color-orange);
+    background-color: var(--cwc-bg-orange);
 
     .message__actions__item:hover {
-      background-color: var(--cwc-bg-warning);
+      background-color: var(--cwc-bg-orange);
     }
   }
 
   &--success {
-    color: var(--vscode-gitDecoration-addedResourceForeground);
-    background-color: var(--cwc-bg-success);
+    color: var(--cwc-text-color-green);
+    background-color: var(--cwc-bg-green);
 
     .message__actions__item:hover {
-      background-color: var(--cwc-bg-success);
+      background-color: var(--cwc-bg-green);
     }
   }
 
   &--loading {
     color: var(--cwc-text-color);
-    background-color: var(--cwc-bg-secondary);
+    background-color: var(--cwc-bg-tertiary);
 
     .message__actions__item:hover {
-      background-color: var(--cwc-bg-secondary);
+      background-color: var(--cwc-bg-tertiary);
     }
   }
 

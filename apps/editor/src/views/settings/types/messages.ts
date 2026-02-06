@@ -302,6 +302,11 @@ export interface OpenKeybindingsMessage {
   search?: string
 }
 
+export interface OpenExternalUrlMessage {
+  command: 'OPEN_EXTERNAL_URL'
+  url: string
+}
+
 export type FrontendMessage =
   | GetModelProvidersMessage
   | ReorderModelProvidersMessage
@@ -363,6 +368,7 @@ export type FrontendMessage =
   | GetFixAllAutomaticallyMessage
   | UpdateFixAllAutomaticallyMessage
   | OpenKeybindingsMessage
+  | OpenExternalUrlMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface ModelProvidersMessage {

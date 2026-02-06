@@ -1,12 +1,14 @@
 .container {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
-  padding: 6px 8px;
+  padding: 0 8px;
   border-radius: 4px;
   color: var(--vscode-foreground);
   text-decoration: none;
   cursor: pointer;
+  height: 30px;
 
   &:hover {
     background-color: var(--cwc-bg-secondary);
@@ -16,13 +18,9 @@
   &--active {
     background-color: var(--cwc-bg-tertiary);
   }
+}
 
-  &--warning {
-    color: var(--vscode-gitDecoration-modifiedResourceForeground);
-    background-color: var(--cwc-bg-warning);
-
-    &:hover {
-      background-color: var(--cwc-bg-warning);
-    }
-  }
+.warning {
+  display: flex;
+  color: var(--cwc-text-color-orange);
 }

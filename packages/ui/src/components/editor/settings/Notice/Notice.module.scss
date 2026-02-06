@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 10px;
+
+  a {
+    text-decoration: underline;
+  }
+
+  &--info {
+    color: var(--cwc-text-color-blue);
+    background-color: var(--cwc-bg-blue);
+  }
+
+  &--warning {
+    color: var(--cwc-text-color-orange);
+    background-color: var(--cwc-bg-orange);
+  }
+}

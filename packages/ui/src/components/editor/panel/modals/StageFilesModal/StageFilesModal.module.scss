@@ -30,16 +30,16 @@
       text-overflow: ellipsis;
 
       &--new {
-        color: var(--vscode-gitDecoration-untrackedResourceForeground);
+        color: var(--cwc-text-color-green);
       }
 
       &--modified {
-        color: var(--vscode-gitDecoration-modifiedResourceForeground);
+        color: var(--cwc-text-color-orange);
       }
 
       &--deleted {
         text-decoration: line-through;
-        color: var(--vscode-gitDecoration-deletedResourceForeground);
+        color: var(--cwc-text-color-red);
       }
 
       > strong {

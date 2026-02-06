@@ -42,7 +42,8 @@ import {
   handle_open_allow_patterns_settings,
   handle_get_fix_all_automatically,
   handle_update_fix_all_automatically,
-  handle_open_keybindings
+  handle_open_keybindings,
+  handle_open_external_url
 } from './message-handlers'
 
 export class SettingsProvider {
@@ -334,6 +335,8 @@ export class SettingsProvider {
           await handle_update_fix_all_automatically(message)
         } else if (message.command == 'OPEN_KEYBINDINGS') {
           await handle_open_keybindings(message)
+        } else if (message.command == 'OPEN_EXTERNAL_URL') {
+          await handle_open_external_url(message)
         }
       },
       null,

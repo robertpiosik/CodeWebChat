@@ -429,6 +429,13 @@ export const use_settings = (vscode: any) => {
     })
   }
 
+  const handle_open_external_url = (url: string) => {
+    post_message(vscode, {
+      command: 'OPEN_EXTERNAL_URL',
+      url
+    })
+  }
+
   return {
     providers,
     set_providers,
@@ -484,6 +491,7 @@ export const use_settings = (vscode: any) => {
     handle_check_new_files_change,
     handle_clear_checks_in_workspace_behavior_change,
     handle_fix_all_automatically_change,
-    handle_open_keybindings
+    handle_open_keybindings,
+    handle_open_external_url
   }
 }

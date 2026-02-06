@@ -5,6 +5,13 @@
     var(--vscode-foreground) 75%,
     transparent
   );
+  --cwc-text-color-green: var(--vscode-gitDecoration-addedResourceForeground);
+  --cwc-text-color-orange: var(
+    --vscode-gitDecoration-modifiedResourceForeground
+  );
+  --cwc-text-color-red: var(--vscode-gitDecoration-deletedResourceForeground);
+  --cwc-text-color-blue: var(--vscode-editorInfo-foreground);
+
   --cwc-bg-primary: color-mix(
     in srgb,
     var(--vscode-foreground) 20%,
@@ -17,7 +24,7 @@
   );
   --cwc-bg-tertiary: color-mix(
     in srgb,
-    var(--vscode-foreground) 4%,
+    var(--vscode-foreground) 5%,
     transparent
   );
   --cwc-border-color: color-mix(
@@ -35,19 +42,21 @@
     var(--vscode-foreground) 17%,
     transparent
   );
-  --cwc-bg-success: color-mix(
+
+  --cwc-bg-green: color-mix(
     in srgb,
-    var(--vscode-gitDecoration-addedResourceForeground) 12%,
+    var(--cwc-text-color-green) 12%,
     transparent
   );
-  --cwc-bg-error: color-mix(
+  --cwc-bg-red: color-mix(in srgb, var(--cwc-text-color-red) 12%, transparent);
+  --cwc-bg-orange: color-mix(
     in srgb,
-    var(--vscode-gitDecoration-deletedResourceForeground) 12%,
+    var(--cwc-text-color-orange) 12%,
     transparent
   );
-  --cwc-bg-warning: color-mix(
+  --cwc-bg-blue: color-mix(
     in srgb,
-    var(--vscode-gitDecoration-modifiedResourceForeground) 12%,
+    var(--cwc-text-color-blue) 12%,
     transparent
   );
 }

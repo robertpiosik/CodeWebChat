@@ -16,20 +16,20 @@
   overflow: hidden;
 
   &--error {
-    color: var(--vscode-gitDecoration-deletedResourceForeground);
-    background-color: var(--cwc-bg-error);
+    color: var(--cwc-text-color-red);
+    background-color: var(--cwc-bg-red);
 
     .info__action:hover {
-      background-color: var(--cwc-bg-error);
+      background-color: var(--cwc-bg-red);
     }
   }
 
   &--warning {
-    color: var(--vscode-gitDecoration-modifiedResourceForeground);
-    background-color: var(--cwc-bg-warning);
+    color: var(--cwc-text-color-orange);
+    background-color: var(--cwc-bg-orange);
 
     .info__action:hover {
-      background-color: var(--cwc-bg-warning);
+      background-color: var(--cwc-bg-orange);
     }
   }
 
