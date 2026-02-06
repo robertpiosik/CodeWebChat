@@ -92,6 +92,12 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
   }, [])
 
   useEffect(() => {
+    set_is_open(false)
+    set_just_opened(false)
+    opened_by_shortcut.current = false
+  }, [props.selected_value])
+
+  useEffect(() => {
     const handle_key_down = (event: KeyboardEvent) => {
       if (event.altKey && event.shiftKey && !is_open) {
         event.preventDefault()
