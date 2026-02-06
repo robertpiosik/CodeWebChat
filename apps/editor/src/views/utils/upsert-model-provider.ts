@@ -37,7 +37,7 @@ export const upsert_model_provider = async (params: {
       const input_box = vscode.window.createInputBox()
       input_box.ignoreFocusOut = true
       input_box.title = params.is_creation ? 'Name' : 'Edit Name'
-      input_box.prompt = 'Name of the custom model provider'
+      input_box.prompt = 'Name of the custom model provider.'
       input_box.value = params.current_name
       if (!params.is_creation) {
         input_box.valueSelection = [0, input_box.value.length]
@@ -109,7 +109,7 @@ export const upsert_model_provider = async (params: {
       const input_box = vscode.window.createInputBox()
       input_box.ignoreFocusOut = true
       input_box.title = 'Edit Base URL'
-      input_box.prompt = 'Enter the base URL'
+      input_box.prompt = 'Enter the base URL.'
       input_box.value = current_url
       input_box.valueSelection = [0, input_box.value.length]
 
@@ -157,7 +157,7 @@ export const upsert_model_provider = async (params: {
       const input_box = vscode.window.createInputBox()
       input_box.ignoreFocusOut = true
       input_box.title = 'API Key'
-      input_box.prompt = 'Enter your API key'
+      input_box.prompt = 'Enter your API key.'
       input_box.password = true
       input_box.placeholder = current_key
         ? `...${current_key.slice(-4)}`

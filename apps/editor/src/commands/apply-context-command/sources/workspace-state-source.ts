@@ -287,7 +287,7 @@ export const handle_workspace_state_source = async (
               active_dialog_count++
               const input_box = vscode.window.createInputBox()
               input_box.title = 'Rename Context'
-              input_box.prompt = 'Enter new name for context'
+              input_box.prompt = 'Enter new name for context.'
               input_box.value = item.context.name
 
               const new_name = await new Promise<string | undefined | 'back'>(

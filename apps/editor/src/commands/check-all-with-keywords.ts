@@ -18,8 +18,7 @@ export const check_all_with_keywords_command = (
       try {
         const input_box = vscode.window.createInputBox()
         input_box.title = 'Keyword Search'
-        input_box.prompt =
-          'Enter keywords separated by comma (use & for AND, quotes for whole words)'
+        input_box.prompt = 'Enter keywords separated by comma.'
         input_box.placeholder = 'e.g. username, login&auth, "changePassword"'
         input_box.ignoreFocusOut = true
 
@@ -134,7 +133,7 @@ export const check_all_with_keywords_command = (
         quick_pick.items = quick_pick_items
         quick_pick.selectedItems = quick_pick_items
         quick_pick.canSelectMany = true
-        quick_pick.placeholder = 'Select files to include'
+        quick_pick.placeholder = 'Select files to check for context'
         quick_pick.title = `Found ${matched_files.length} file${
           matched_files.length == 1 ? '' : 's'
         }`

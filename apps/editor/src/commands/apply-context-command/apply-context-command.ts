@@ -94,7 +94,7 @@ export const apply_context_command = (
         })
 
         main_quick_pick_options.push({
-          label: 'Files of a commit...',
+          label: 'Files touched by a commit...',
           value: 'commit_files'
         })
 
