@@ -17,8 +17,8 @@ const create_description = (config: ToolConfig): string => {
   return description_parts.join(' · ')
 }
 
-export const handle_get_configurations = async (
-  provider: SettingsProvider,
+export const handle_get_configurations = async (params: {
+  provider: SettingsProvider
   type:
     | 'code-at-cursor'
     | 'edit-context'
@@ -26,14 +26,14 @@ export const handle_get_configurations = async (
     | 'commit-messages'
     | 'prune-context'
     | 'voice-input'
-): Promise<void> => {
-  const providers_manager = new ModelProvidersManager(provider.context)
+}): Promise<void> => {
+  const providers_manager = new ModelProvidersManager(params.provider.context)
 
   let saved_configs: ToolConfig[] = []
   let default_config: ToolConfig | undefined
   let command: string
 
-  switch (type) {
+  switch (params.type) {
     case 'code-at-cursor':
       saved_configs =
         await providers_manager.get_code_completions_tool_configs()
@@ -84,7 +84,7 @@ export const handle_get_configurations = async (
     }
   )
 
-  provider.postMessage({
+  params.provider.postMessage({
     command,
     configurations: configs_for_client
   } as any)

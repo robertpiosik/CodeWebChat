@@ -123,7 +123,10 @@ export class SettingsProvider {
         } else if (message.command == 'CHANGE_MODEL_PROVIDER_KEY') {
           await handle_change_model_provider_key(this, message)
         } else if (message.command == 'GET_CODE_AT_CURSOR_CONFIGURATIONS') {
-          await handle_get_configurations(this, 'code-at-cursor')
+          await handle_get_configurations({
+            provider: this,
+            type: 'code-at-cursor'
+          })
         } else if (message.command == 'REORDER_CODE_AT_CURSOR_CONFIGURATIONS') {
           await handle_reorder_configuration(
             this,
@@ -145,7 +148,10 @@ export class SettingsProvider {
             'code-at-cursor'
           )
         } else if (message.command == 'GET_EDIT_CONTEXT_CONFIGURATIONS') {
-          await handle_get_configurations(this, 'edit-context')
+          await handle_get_configurations({
+            provider: this,
+            type: 'edit-context'
+          })
         } else if (message.command == 'REORDER_EDIT_CONTEXT_CONFIGURATIONS') {
           await handle_reorder_configuration(
             this,
@@ -169,7 +175,10 @@ export class SettingsProvider {
         } else if (message.command == 'UPDATE_EDIT_FORMAT_INSTRUCTIONS') {
           await handle_update_edit_format_instructions(message)
         } else if (message.command == 'GET_INTELLIGENT_UPDATE_CONFIGURATIONS') {
-          await handle_get_configurations(this, 'intelligent-update')
+          await handle_get_configurations({
+            provider: this,
+            type: 'intelligent-update'
+          })
         } else if (
           message.command == 'REORDER_INTELLIGENT_UPDATE_CONFIGURATIONS'
         ) {
@@ -195,7 +204,10 @@ export class SettingsProvider {
             'intelligent-update'
           )
         } else if (message.command == 'GET_PRUNE_CONTEXT_CONFIGURATIONS') {
-          await handle_get_configurations(this, 'prune-context')
+          await handle_get_configurations({
+            provider: this,
+            type: 'prune-context'
+          })
         } else if (message.command == 'REORDER_PRUNE_CONTEXT_CONFIGURATIONS') {
           await handle_reorder_configuration(
             this,
@@ -209,7 +221,10 @@ export class SettingsProvider {
             'prune-context'
           )
         } else if (message.command == 'GET_VOICE_INPUT_CONFIGURATIONS') {
-          await handle_get_configurations(this, 'voice-input')
+          await handle_get_configurations({
+            provider: this,
+            type: 'voice-input'
+          })
         } else if (message.command == 'REORDER_VOICE_INPUT_CONFIGURATIONS') {
           await handle_reorder_configuration(
             this,
@@ -229,7 +244,10 @@ export class SettingsProvider {
             'voice-input'
           )
         } else if (message.command == 'GET_COMMIT_MESSAGES_CONFIGURATIONS') {
-          await handle_get_configurations(this, 'commit-messages')
+          await handle_get_configurations({
+            provider: this,
+            type: 'commit-messages'
+          })
         } else if (
           message.command == 'REORDER_COMMIT_MESSAGES_CONFIGURATIONS'
         ) {
@@ -326,14 +344,32 @@ export class SettingsProvider {
       vscode.workspace.onDidChangeConfiguration((e) => {
         if (e.affectsConfiguration('codeWebChat')) {
           void handle_get_model_providers(this)
-          void handle_get_configurations(this, 'code-at-cursor')
-          void handle_get_configurations(this, 'commit-messages')
-          void handle_get_configurations(this, 'edit-context')
+          void handle_get_configurations({
+            provider: this,
+            type: 'code-at-cursor'
+          })
+          void handle_get_configurations({
+            provider: this,
+            type: 'commit-messages'
+          })
+          void handle_get_configurations({
+            provider: this,
+            type: 'edit-context'
+          })
           void handle_get_edit_context_system_instructions(this)
           void handle_get_edit_format_instructions(this)
-          void handle_get_configurations(this, 'voice-input')
-          void handle_get_configurations(this, 'intelligent-update')
-          void handle_get_configurations(this, 'prune-context')
+          void handle_get_configurations({
+            provider: this,
+            type: 'voice-input'
+          })
+          void handle_get_configurations({
+            provider: this,
+            type: 'intelligent-update'
+          })
+          void handle_get_configurations({
+            provider: this,
+            type: 'prune-context'
+          })
           void handle_get_context_size_warning_threshold(this)
           void handle_get_commit_message_instructions(this)
           void handle_get_commit_message_auto_accept_after(this)

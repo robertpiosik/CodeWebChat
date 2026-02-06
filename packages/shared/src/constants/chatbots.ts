@@ -196,7 +196,7 @@ export const CHATBOTS = {
     models: {
       'deepseek-v3.1': { label: 'DeepSeek V3.1' },
       'glm-4.7': { label: 'GLM-4.7' },
-      'kimi-k2-thinking': { label: 'Kimi K2 Thinking' },
+      'kimi-k2': { label: 'Kimi K2' },
       'gpt-oss-120b': { label: 'GPT OSS 120B' }
     }
   } as Chatbot,

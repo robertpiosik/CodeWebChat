@@ -248,7 +248,7 @@ export class ModelProvidersManager {
 
     if (default_config_from_settings) {
       const provider = this._providers.find(
-        (p) => p.name === default_config_from_settings.providerName
+        (p) => p.name == default_config_from_settings.providerName
       )
       const tool_config: ToolConfig = {
         provider_name: default_config_from_settings.providerName,
@@ -294,15 +294,9 @@ export class ModelProvidersManager {
     ToolConfig | undefined
   > {
     await this._load_promise
-    const default_config = this._get_default_tool_config_from_settings(
+    return this._get_default_tool_config_from_settings(
       'configurationsForCodeAtCursor'
     )
-    if (default_config) return default_config
-
-    const configs = await this.get_code_completions_tool_configs()
-    if (configs.length == 1) return configs[0]
-
-    return undefined
   }
 
   public async set_default_code_completions_config(config: ToolConfig | null) {
@@ -344,15 +338,9 @@ export class ModelProvidersManager {
     ToolConfig | undefined
   > {
     await this._load_promise
-    const default_config = this._get_default_tool_config_from_settings(
+    return this._get_default_tool_config_from_settings(
       'configurationsForCommitMessages'
     )
-    if (default_config) return default_config
-
-    const configs = await this.get_commit_messages_tool_configs()
-    if (configs.length == 1) return configs[0]
-
-    return undefined
   }
 
   public async set_default_commit_messages_config(config: ToolConfig | null) {
@@ -382,15 +370,9 @@ export class ModelProvidersManager {
     ToolConfig | undefined
   > {
     await this._load_promise
-    const default_config = this._get_default_tool_config_from_settings(
+    return this._get_default_tool_config_from_settings(
       'configurationsForIntelligentUpdate'
     )
-    if (default_config) return default_config
-
-    const configs = await this.get_intelligent_update_tool_configs()
-    if (configs.length == 1) return configs[0]
-
-    return undefined
   }
 
   public async set_default_intelligent_update_config(
@@ -420,15 +402,9 @@ export class ModelProvidersManager {
     ToolConfig | undefined
   > {
     await this._load_promise
-    const default_config = this._get_default_tool_config_from_settings(
+    return this._get_default_tool_config_from_settings(
       'configurationsForPruneContext'
     )
-    if (default_config) return default_config
-
-    const configs = await this.get_prune_context_tool_configs()
-    if (configs.length == 1) return configs[0]
-
-    return undefined
   }
 
   public async set_default_prune_context_config(config: ToolConfig | null) {
@@ -454,15 +430,9 @@ export class ModelProvidersManager {
     ToolConfig | undefined
   > {
     await this._load_promise
-    const default_config = this._get_default_tool_config_from_settings(
+    return this._get_default_tool_config_from_settings(
       'configurationsForVoiceInput'
     )
-    if (default_config) return default_config
-
-    const configs = await this.get_voice_input_tool_configs()
-    if (configs.length == 1) return configs[0]
-
-    return undefined
   }
 
   public async set_default_voice_input_config(config: ToolConfig | null) {

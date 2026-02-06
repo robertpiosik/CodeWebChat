@@ -35,6 +35,10 @@ export const get_intelligent_update_config = async (
   if (!show_quick_pick) {
     selected_config =
       await api_providers_manager.get_default_intelligent_update_config()
+
+    if (!selected_config && intelligent_update_configs.length == 1) {
+      selected_config = intelligent_update_configs[0]
+    }
   }
 
   if (!selected_config || show_quick_pick) {
