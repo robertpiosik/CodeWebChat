@@ -1,3 +1,5 @@
+import { ToolType } from './tools'
+
 export type ProviderForClient = {
   name: string
   type: 'built-in' | 'custom'
@@ -18,14 +20,6 @@ export type EditFormatInstructions = {
   before_after: string
   diff: string
 }
-
-export type ToolType =
-  | 'code-at-cursor'
-  | 'commit-messages'
-  | 'edit-context'
-  | 'intelligent-update'
-  | 'prune-context'
-  | 'voice-input'
 
 // === FROM FRONTEND TO BACKEND ===
 export interface GetModelProvidersMessage {

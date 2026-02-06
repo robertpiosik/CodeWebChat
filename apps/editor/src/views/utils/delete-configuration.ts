@@ -5,17 +5,12 @@ import {
   ToolConfig
 } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
+import { ToolType } from '../settings/types/tools'
 
 export const delete_configuration = async (
   context: vscode.ExtensionContext,
   configuration_id: string,
-  type:
-    | 'code-at-cursor'
-    | 'edit-context'
-    | 'intelligent-update'
-    | 'commit-messages'
-    | 'prune-context'
-    | 'voice-input'
+  type: ToolType
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(context)
 
@@ -26,57 +21,48 @@ export const delete_configuration = async (
     | ((config: ToolConfig | null) => Promise<void>)
     | undefined
 
-  switch (type) {
-    case 'code-at-cursor':
-      get_configs = () => providers_manager.get_code_completions_tool_configs()
-      save_configs = (c) =>
-        providers_manager.save_code_completions_tool_configs(c)
-      get_default_config = () =>
-        providers_manager.get_default_code_completions_config()
-      set_default_config = (c) =>
-        providers_manager.set_default_code_completions_config(c)
-      break
-    case 'edit-context':
-      get_configs = () => providers_manager.get_edit_context_tool_configs()
-      save_configs = (c) => providers_manager.save_edit_context_tool_configs(c)
-      break
-    case 'intelligent-update':
-      get_configs = () =>
-        providers_manager.get_intelligent_update_tool_configs()
-      save_configs = (c) =>
-        providers_manager.save_intelligent_update_tool_configs(c)
-      get_default_config = () =>
-        providers_manager.get_default_intelligent_update_config()
-      set_default_config = (c) =>
-        providers_manager.set_default_intelligent_update_config(c)
-      break
-    case 'commit-messages':
-      get_configs = () => providers_manager.get_commit_messages_tool_configs()
-      save_configs = (c) =>
-        providers_manager.save_commit_messages_tool_configs(c)
-      get_default_config = () =>
-        providers_manager.get_default_commit_messages_config()
-      set_default_config = (c) =>
-        providers_manager.set_default_commit_messages_config(c)
-      break
-    case 'prune-context':
-      get_configs = () => providers_manager.get_prune_context_tool_configs()
-      save_configs = (c) => providers_manager.save_prune_context_tool_configs(c)
-      get_default_config = () =>
-        providers_manager.get_default_prune_context_config()
-      set_default_config = (c) =>
-        providers_manager.set_default_prune_context_config(c)
-      break
-    case 'voice-input':
-      get_configs = () => providers_manager.get_voice_input_tool_configs()
-      save_configs = (c) => providers_manager.save_voice_input_tool_configs(c)
-      get_default_config = () =>
-        providers_manager.get_default_voice_input_config()
-      set_default_config = (c) =>
-        providers_manager.set_default_voice_input_config(c)
-      break
-    default:
-      throw new Error(`Unknown tool type: ${type}`)
+  if (type == 'code-at-cursor') {
+    get_configs = () => providers_manager.get_code_completions_tool_configs()
+    save_configs = (c) =>
+      providers_manager.save_code_completions_tool_configs(c)
+    get_default_config = () =>
+      providers_manager.get_default_code_completions_config()
+    set_default_config = (c) =>
+      providers_manager.set_default_code_completions_config(c)
+  } else if (type == 'edit-context') {
+    get_configs = () => providers_manager.get_edit_context_tool_configs()
+    save_configs = (c) => providers_manager.save_edit_context_tool_configs(c)
+  } else if (type == 'intelligent-update') {
+    get_configs = () => providers_manager.get_intelligent_update_tool_configs()
+    save_configs = (c) =>
+      providers_manager.save_intelligent_update_tool_configs(c)
+    get_default_config = () =>
+      providers_manager.get_default_intelligent_update_config()
+    set_default_config = (c) =>
+      providers_manager.set_default_intelligent_update_config(c)
+  } else if (type == 'commit-messages') {
+    get_configs = () => providers_manager.get_commit_messages_tool_configs()
+    save_configs = (c) => providers_manager.save_commit_messages_tool_configs(c)
+    get_default_config = () =>
+      providers_manager.get_default_commit_messages_config()
+    set_default_config = (c) =>
+      providers_manager.set_default_commit_messages_config(c)
+  } else if (type == 'prune-context') {
+    get_configs = () => providers_manager.get_prune_context_tool_configs()
+    save_configs = (c) => providers_manager.save_prune_context_tool_configs(c)
+    get_default_config = () =>
+      providers_manager.get_default_prune_context_config()
+    set_default_config = (c) =>
+      providers_manager.set_default_prune_context_config(c)
+  } else if (type == 'voice-input') {
+    get_configs = () => providers_manager.get_voice_input_tool_configs()
+    save_configs = (c) => providers_manager.save_voice_input_tool_configs(c)
+    get_default_config = () =>
+      providers_manager.get_default_voice_input_config()
+    set_default_config = (c) =>
+      providers_manager.set_default_voice_input_config(c)
+  } else {
+    throw new Error(`Unknown tool type: ${type}`)
   }
 
   const original_configs = await get_configs()

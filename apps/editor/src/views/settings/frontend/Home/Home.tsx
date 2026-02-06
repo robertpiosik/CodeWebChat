@@ -221,6 +221,26 @@ export const Home: React.FC<Props> = (props) => {
     [handle_stuck_change]
   )
 
+  const get_has_warning = (id: NavItem): boolean => {
+    if (id == 'model-providers') {
+      return props.providers.length == 0
+    } else if (id == 'edit-context') {
+      return props.edit_context_configs.length == 0
+    } else if (id == 'intelligent-update') {
+      return props.intelligent_update_configs.length == 0
+    } else if (id == 'prune-context') {
+      return props.prune_context_configs.length == 0
+    } else if (id == 'code-at-cursor') {
+      return props.code_at_cursor_configs.length == 0
+    } else if (id == 'voice-input') {
+      return props.voice_input_configs.length == 0
+    } else if (id == 'commit-messages') {
+      return props.commit_messages_configs.length == 0
+    } else {
+      return false
+    }
+  }
+
   const nav_item_ids = NAV_ITEMS_CONFIG.filter(
     (item): item is Extract<NavConfigItem, { type: 'item' }> =>
       item.type == 'item'
@@ -309,6 +329,7 @@ export const Home: React.FC<Props> = (props) => {
               href={`#${item.id}`}
               label={t(item.label)}
               is_active={item.id === active_nav_item_id}
+              has_warning={get_has_warning(item.id)}
               on_click={(e) => handle_nav_click(e, item.id)}
             />
           )

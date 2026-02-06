@@ -16,4 +16,13 @@
   &--active {
     background-color: var(--cwc-bg-tertiary);
   }
+
+  &--warning {
+    color: var(--vscode-gitDecoration-modifiedResourceForeground);
+    background-color: var(--cwc-bg-warning);
+
+    &:hover {
+      background-color: var(--cwc-bg-warning);
+    }
+  }
 }

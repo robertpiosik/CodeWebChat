@@ -18,10 +18,11 @@ import {
 import axios from 'axios'
 import { PROVIDERS } from '@shared/constants/providers'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
+import { ToolType } from '../settings/types/tools'
 
 export const upsert_configuration = async (params: {
   context: vscode.ExtensionContext
-  tool_type: string
+  tool_type: ToolType
   configuration_id?: string
   create_on_top?: boolean
   insertion_index?: number
@@ -32,40 +33,32 @@ export const upsert_configuration = async (params: {
   let get_configs: () => Promise<ToolConfig[]>
   let save_configs: (configs: ToolConfig[]) => Promise<void>
 
-  switch (params.tool_type) {
-    case 'code-at-cursor':
-      get_configs = () => providers_manager.get_code_completions_tool_configs()
-      save_configs = (configs) =>
-        providers_manager.save_code_completions_tool_configs(configs)
-      break
-    case 'commit-messages':
-      get_configs = () => providers_manager.get_commit_messages_tool_configs()
-      save_configs = (configs) =>
-        providers_manager.save_commit_messages_tool_configs(configs)
-      break
-    case 'edit-context':
-      get_configs = () => providers_manager.get_edit_context_tool_configs()
-      save_configs = (configs) =>
-        providers_manager.save_edit_context_tool_configs(configs)
-      break
-    case 'intelligent-update':
-      get_configs = () =>
-        providers_manager.get_intelligent_update_tool_configs()
-      save_configs = (configs) =>
-        providers_manager.save_intelligent_update_tool_configs(configs)
-      break
-    case 'prune-context':
-      get_configs = () => providers_manager.get_prune_context_tool_configs()
-      save_configs = (configs) =>
-        providers_manager.save_prune_context_tool_configs(configs)
-      break
-    case 'voice-input':
-      get_configs = () => providers_manager.get_voice_input_tool_configs()
-      save_configs = (configs) =>
-        providers_manager.save_voice_input_tool_configs(configs)
-      break
-    default:
-      throw new Error(`Unknown tool type: ${params.tool_type}`)
+  if (params.tool_type == 'code-at-cursor') {
+    get_configs = () => providers_manager.get_code_completions_tool_configs()
+    save_configs = (configs) =>
+      providers_manager.save_code_completions_tool_configs(configs)
+  } else if (params.tool_type == 'commit-messages') {
+    get_configs = () => providers_manager.get_commit_messages_tool_configs()
+    save_configs = (configs) =>
+      providers_manager.save_commit_messages_tool_configs(configs)
+  } else if (params.tool_type == 'edit-context') {
+    get_configs = () => providers_manager.get_edit_context_tool_configs()
+    save_configs = (configs) =>
+      providers_manager.save_edit_context_tool_configs(configs)
+  } else if (params.tool_type == 'intelligent-update') {
+    get_configs = () => providers_manager.get_intelligent_update_tool_configs()
+    save_configs = (configs) =>
+      providers_manager.save_intelligent_update_tool_configs(configs)
+  } else if (params.tool_type == 'prune-context') {
+    get_configs = () => providers_manager.get_prune_context_tool_configs()
+    save_configs = (configs) =>
+      providers_manager.save_prune_context_tool_configs(configs)
+  } else if (params.tool_type == 'voice-input') {
+    get_configs = () => providers_manager.get_voice_input_tool_configs()
+    save_configs = (configs) =>
+      providers_manager.save_voice_input_tool_configs(configs)
+  } else {
+    throw new Error(`Unknown tool type: ${params.tool_type}`)
   }
 
   const configs = await get_configs()

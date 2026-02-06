@@ -4,9 +4,9 @@ import {
   EditFormatInstructions,
   ConfigurationForClient,
   ProviderForClient,
-  FrontendMessage,
-  ToolType
+  FrontendMessage
 } from '@/views/settings/types/messages'
+import { ToolType } from '@/views/settings/types/tools'
 import { post_message } from '../utils/post-message'
 
 export const use_settings = (vscode: any) => {
@@ -99,67 +99,46 @@ export const use_settings = (vscode: any) => {
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
-      switch (message.command) {
-        case 'MODEL_PROVIDERS':
-          set_providers(message.providers)
-          break
-        case 'CODE_AT_CURSOR_CONFIGURATIONS':
-          set_code_at_cursor_configs(message.configurations)
-          break
-        case 'COMMIT_MESSAGES_CONFIGURATIONS':
-          set_commit_messages_configs(message.configurations)
-          break
-        case 'EDIT_CONTEXT_CONFIGURATIONS':
-          set_edit_context_configs(message.configurations)
-          break
-        case 'EDIT_CONTEXT_SYSTEM_INSTRUCTIONS':
-          set_edit_context_system_instructions(message.instructions)
-          break
-        case 'INTELLIGENT_UPDATE_CONFIGURATIONS':
-          set_intelligent_update_configs(message.configurations)
-          break
-        case 'VOICE_INPUT_CONFIGURATIONS':
-          set_voice_input_configs(message.configurations)
-          break
-        case 'PRUNE_CONTEXT_CONFIGURATIONS':
-          set_prune_context_configs(message.configurations)
-          break
-        case 'COMMIT_MESSAGE_INSTRUCTIONS':
-          set_commit_message_instructions(message.instructions)
-          break
-        case 'COMMIT_MESSAGE_AUTO_ACCEPT_AFTER':
-          set_commit_message_auto_accept_after(message.seconds)
-          break
-        case 'CONTEXT_SIZE_WARNING_THRESHOLD':
-          set_context_size_warning_threshold(message.threshold)
-          break
-        case 'EDIT_FORMAT_INSTRUCTIONS':
-          set_edit_format_instructions(message.instructions)
-          break
-        case 'ARE_AUTOMATIC_CHECKPOINTS_DISABLED':
-          set_are_automatic_checkpoints_disabled(message.disabled)
-          break
-        case 'CHECKPOINT_LIFESPAN':
-          set_checkpoint_lifespan(message.hours)
-          break
-        case 'GEMINI_USER_ID':
-          set_gemini_user_id(message.geminiUserId)
-          break
-        case 'AI_STUDIO_USER_ID':
-          set_ai_studio_user_id(message.aiStudioUserId)
-          break
-        case 'SEND_WITH_SHIFT_ENTER':
-          set_send_with_shift_enter(message.enabled)
-          break
-        case 'CHECK_NEW_FILES':
-          set_check_new_files(message.enabled)
-          break
-        case 'CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR':
-          set_clear_checks_in_workspace_behavior(message.value)
-          break
-        case 'FIX_ALL_AUTOMATICALLY':
-          set_fix_all_automatically(message.enabled)
-          break
+      if (message.command == 'MODEL_PROVIDERS') {
+        set_providers(message.providers)
+      } else if (message.command == 'CODE_AT_CURSOR_CONFIGURATIONS') {
+        set_code_at_cursor_configs(message.configurations)
+      } else if (message.command == 'COMMIT_MESSAGES_CONFIGURATIONS') {
+        set_commit_messages_configs(message.configurations)
+      } else if (message.command == 'EDIT_CONTEXT_CONFIGURATIONS') {
+        set_edit_context_configs(message.configurations)
+      } else if (message.command == 'EDIT_CONTEXT_SYSTEM_INSTRUCTIONS') {
+        set_edit_context_system_instructions(message.instructions)
+      } else if (message.command == 'INTELLIGENT_UPDATE_CONFIGURATIONS') {
+        set_intelligent_update_configs(message.configurations)
+      } else if (message.command == 'VOICE_INPUT_CONFIGURATIONS') {
+        set_voice_input_configs(message.configurations)
+      } else if (message.command == 'PRUNE_CONTEXT_CONFIGURATIONS') {
+        set_prune_context_configs(message.configurations)
+      } else if (message.command == 'COMMIT_MESSAGE_INSTRUCTIONS') {
+        set_commit_message_instructions(message.instructions)
+      } else if (message.command == 'COMMIT_MESSAGE_AUTO_ACCEPT_AFTER') {
+        set_commit_message_auto_accept_after(message.seconds)
+      } else if (message.command == 'CONTEXT_SIZE_WARNING_THRESHOLD') {
+        set_context_size_warning_threshold(message.threshold)
+      } else if (message.command == 'EDIT_FORMAT_INSTRUCTIONS') {
+        set_edit_format_instructions(message.instructions)
+      } else if (message.command == 'ARE_AUTOMATIC_CHECKPOINTS_DISABLED') {
+        set_are_automatic_checkpoints_disabled(message.disabled)
+      } else if (message.command == 'CHECKPOINT_LIFESPAN') {
+        set_checkpoint_lifespan(message.hours)
+      } else if (message.command == 'GEMINI_USER_ID') {
+        set_gemini_user_id(message.geminiUserId)
+      } else if (message.command == 'AI_STUDIO_USER_ID') {
+        set_ai_studio_user_id(message.aiStudioUserId)
+      } else if (message.command == 'SEND_WITH_SHIFT_ENTER') {
+        set_send_with_shift_enter(message.enabled)
+      } else if (message.command == 'CHECK_NEW_FILES') {
+        set_check_new_files(message.enabled)
+      } else if (message.command == 'CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR') {
+        set_clear_checks_in_workspace_behavior(message.value)
+      } else if (message.command == 'FIX_ALL_AUTOMATICALLY') {
+        set_fix_all_automatically(message.enabled)
       }
     }
 
