@@ -96,9 +96,32 @@ export const prepare_staged_changes = async (
     staged_changes.length == 0 &&
     repository.state.workingTreeChanges.length > 0
   ) {
-    const files_to_stage = repository.state.workingTreeChanges.map(
-      (change: any) => change.uri.fsPath
-    )
+    const items = repository.state.workingTreeChanges.map((change: any) => {
+      const relative_path = path.relative(
+        repository.rootUri.fsPath,
+        change.uri.fsPath
+      )
+      const dir_name = path.dirname(relative_path)
+
+      return {
+        label: path.basename(relative_path),
+        description: dir_name == '.' ? '' : dir_name,
+        picked: true,
+        fsPath: change.uri.fsPath
+      }
+    })
+
+    const selected = await vscode.window.showQuickPick(items, {
+      canPickMany: true,
+      title: 'Unstaged Files',
+      placeHolder: 'Select files to commit'
+    })
+
+    if (!selected || selected.length == 0) {
+      return null
+    }
+
+    const files_to_stage = selected.map((item) => item.fsPath)
     const file_args = files_to_stage
       .map((file: string) => `"${file.replace(/"/g, '\\"')}"`)
       .join(' ')

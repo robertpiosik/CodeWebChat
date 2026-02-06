@@ -3,6 +3,7 @@ import {
   get_git_repository,
   prepare_staged_changes
 } from '../../utils/git-repository-utils'
+import { display_token_count } from '../../utils/display-token-count'
 import { get_commit_message_config } from './utils/get-commit-message-config'
 import { build_commit_message_prompt } from './utils/build-commit-message-prompt'
 import { generate_commit_message_with_api } from './utils/generate-commit-message-with-api'
@@ -122,8 +123,11 @@ export const generate_commit_message_command = (
       const { was_empty_stage, message_prompt } = data
 
       await vscode.env.clipboard.writeText(message_prompt)
+      const token_count = Math.floor(message_prompt.length / 4)
       vscode.window.showInformationMessage(
-        'Commit message prompt copied to clipboard'
+        `Commit message prompt of about ${display_token_count(
+          token_count
+        )} tokens copied to clipboard.`
       )
 
       if (was_empty_stage) {
