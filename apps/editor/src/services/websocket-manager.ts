@@ -285,8 +285,7 @@ export class WebSocketManager {
     const items = this.connected_browsers.map((b) => ({
       label: this._get_browser_name(b.user_agent),
       detail: b.user_agent,
-      id: b.id,
-      picked: b.id == last_selected_browser_id
+      id: b.id
     }))
 
     return new Promise<number | undefined>((resolve) => {
@@ -294,6 +293,16 @@ export class WebSocketManager {
         vscode.QuickPickItem & { id: number }
       >()
       quick_pick.items = items
+
+      if (last_selected_browser_id) {
+        const active_item = items.find(
+          (item) => item.id == last_selected_browser_id
+        )
+        if (active_item) {
+          quick_pick.activeItems = [active_item]
+        }
+      }
+
       quick_pick.placeholder = 'Select a browser to use'
       quick_pick.title = 'Connected Browsers'
 
