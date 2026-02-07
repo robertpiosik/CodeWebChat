@@ -180,8 +180,9 @@ export interface CaretPositionChangedWebviewMessage extends BaseMessage {
   caret_position: number
 }
 
-export interface PickOpenRouterModel extends BaseMessage {
-  command: 'PICK_OPEN_ROUTER_MODEL'
+export interface PickModelMessage extends BaseMessage {
+  command: 'PICK_MODEL'
+  chatbot_name: string
 }
 
 export interface PickChatbotMessage extends BaseMessage {
@@ -531,7 +532,7 @@ export type FrontendMessage =
   | ShowPromptTemplateQuickPickMessage
   | PreviewPresetMessage
   | CaretPositionChangedWebviewMessage
-  | PickOpenRouterModel
+  | PickModelMessage
   | PickChatbotMessage
   | SaveModeMessage
   | GetModeMessage
@@ -677,8 +678,8 @@ export interface PresetUpdatedMessage extends BaseMessage {
   command: 'PRESET_UPDATED'
 }
 
-export interface NewlyPickedOpenRouterModelMessage extends BaseMessage {
-  command: 'NEWLY_PICKED_OPEN_ROUTER_MODEL'
+export interface NewlyPickedModelMessage extends BaseMessage {
+  command: 'NEWLY_PICKED_MODEL'
   model_id: string
 }
 
@@ -849,7 +850,7 @@ export type BackendMessage =
   | ContextSizeWarningThresholdMessage
   | PresetCreatedMessage
   | PresetUpdatedMessage
-  | NewlyPickedOpenRouterModelMessage
+  | NewlyPickedModelMessage
   | NewlyPickedChatbotMessage
   | ModeMessage
   | WebPromptTypeMessage

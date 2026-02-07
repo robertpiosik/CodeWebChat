@@ -433,8 +433,11 @@ export const Panel = () => {
               <EditPresetForm
                 preset={updating_preset}
                 on_update={set_updated_preset}
-                pick_open_router_model={() => {
-                  post_message(vscode, { command: 'PICK_OPEN_ROUTER_MODEL' })
+                pick_model={(chatbot_name) => {
+                  post_message(vscode, {
+                    command: 'PICK_MODEL',
+                    chatbot_name
+                  })
                 }}
                 pick_chatbot={(chatbot_id) => {
                   post_message(vscode, { command: 'PICK_CHATBOT', chatbot_id })

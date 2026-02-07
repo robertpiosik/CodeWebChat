@@ -51,7 +51,7 @@ import {
   handle_get_api_tool_configurations,
   handle_reorder_api_tool_configurations,
   handle_toggle_pinned_api_tool_configuration,
-  handle_pick_open_router_model,
+  handle_pick_model,
   handle_pick_chatbot,
   handle_focus_on_file_in_preview,
   handle_go_to_file,
@@ -715,8 +715,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             )
           } else if (message.command == 'GET_WORKSPACE_STATE') {
             handle_get_workspace_state(this)
-          } else if (message.command == 'PICK_OPEN_ROUTER_MODEL') {
-            await handle_pick_open_router_model(this)
+          } else if (message.command == 'PICK_MODEL') {
+            await handle_pick_model(this, message)
           } else if (message.command == 'PICK_CHATBOT') {
             await handle_pick_chatbot(this, message)
           } else if (message.command == 'UPDATE_LAST_USED_PRESET') {

@@ -17,7 +17,7 @@ import { Fieldset } from '@ui/components/editor/panel/Fieldset'
 type Props = {
   preset: Preset
   on_update: (updated_preset: Preset) => void
-  pick_open_router_model: () => void
+  pick_model: (chatbot_name: string) => void
   pick_chatbot: (chatbot_id?: keyof typeof CHATBOTS) => void
   on_at_sign_in_affix: () => void
 }
@@ -179,7 +179,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
   useEffect(() => {
     const handle_message = (event: MessageEvent) => {
       const message = event.data as BackendMessage
-      if (message.command == 'NEWLY_PICKED_OPEN_ROUTER_MODEL') {
+      if (message.command == 'NEWLY_PICKED_MODEL') {
         set_model(message.model_id)
       } else if (message.command == 'NEWLY_PICKED_CHATBOT') {
         handle_chatbot_change(message.chatbot_id as keyof typeof CHATBOTS)
@@ -249,32 +249,18 @@ export const EditPresetForm: React.FC<Props> = (props) => {
             </Field>
           )}
 
-          {Object.keys(models).length > 0 && (
+          {(Object.keys(models).length > 0 || chatbot == 'OpenRouter') && (
             <Field label="Model" html_for="model">
-              <Dropdown
-                options={[
-                  { value: '', label: '—' },
-                  ...Object.entries(models).map(([value, model_data]) => ({
-                    value,
-                    label: (model_data as any).label
-                  }))
-                ]}
-                value={model || ''}
-                onChange={(value) => set_model(value || undefined)}
-              />
-            </Field>
-          )}
-
-          {chatbot == 'OpenRouter' && (
-            <Field label="Model" html_for="open-router-model">
               <button
                 className={dropdown_styles.button}
                 onClick={(e) => {
                   e.stopPropagation()
-                  props.pick_open_router_model()
+                  if (chatbot) {
+                    props.pick_model(chatbot)
+                  }
                 }}
               >
-                <span>{model || 'Select model'}</span>
+                <span>{model_info?.label || model || 'Select model'}</span>
                 <span
                   className={cn(
                     'codicon codicon-chevron-down',

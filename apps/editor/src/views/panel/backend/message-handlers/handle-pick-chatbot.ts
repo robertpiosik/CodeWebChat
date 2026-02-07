@@ -26,8 +26,14 @@ export const handle_pick_chatbot = async (
 
   const quick_pick = vscode.window.createQuickPick()
   quick_pick.items = items
-  quick_pick.title = 'Select a Chatbot'
-  quick_pick.placeholder = 'Choose a chatbot from the list'
+  quick_pick.title = 'Chatbots'
+  quick_pick.placeholder = 'Choose a chatbot'
+  quick_pick.buttons = [
+    {
+      iconPath: new vscode.ThemeIcon('close'),
+      tooltip: 'Close'
+    }
+  ]
 
   if (message.chatbot_id) {
     const active_item = items.find((item) => item.label == message.chatbot_id)
@@ -35,6 +41,12 @@ export const handle_pick_chatbot = async (
       quick_pick.activeItems = [active_item]
     }
   }
+
+  quick_pick.onDidTriggerButton((button) => {
+    if (button.tooltip === 'Close') {
+      quick_pick.hide()
+    }
+  })
 
   quick_pick.onDidTriggerItemButton((e) => {
     const chatbot_name = e.item.label

@@ -1,12 +1,15 @@
 .container {
   display: flex;
-  align-items: center;
   gap: 8px;
   padding: 9px 12px;
   border-radius: 10px;
 
   a {
     text-decoration: underline;
+  }
+
+  > span:first-child {
+    padding-top: 1px;
   }
 
   &--info {
