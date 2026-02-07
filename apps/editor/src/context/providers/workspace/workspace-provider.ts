@@ -66,6 +66,14 @@ export class WorkspaceProvider
   public gitignore_initialization: Promise<void>
   public ranges_initialization: Promise<void>
   public use_compact_token_count: boolean = false
+  private _context_view_collapsible_state: vscode.TreeItemCollapsibleState =
+    vscode.TreeItemCollapsibleState.Expanded
+
+  public set_context_view_collapsible_state(
+    state: vscode.TreeItemCollapsibleState
+  ) {
+    this._context_view_collapsible_state = state
+  }
 
   public set_use_compact_token_count(use_compact: boolean) {
     if (this.use_compact_token_count != use_compact) {
@@ -715,7 +723,7 @@ export class WorkspaceProvider
           name,
           uri,
           context_view
-            ? vscode.TreeItemCollapsibleState.Expanded
+            ? this._context_view_collapsible_state
             : vscode.TreeItemCollapsibleState.Collapsed,
           true,
           this._checked_items.get(root) ??
@@ -974,7 +982,7 @@ export class WorkspaceProvider
           uri,
           is_directory
             ? context_view
-              ? vscode.TreeItemCollapsibleState.Expanded
+              ? this._context_view_collapsible_state
               : vscode.TreeItemCollapsibleState.Collapsed
             : vscode.TreeItemCollapsibleState.None,
           is_directory,

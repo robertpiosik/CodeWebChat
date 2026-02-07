@@ -154,6 +154,12 @@
         "icon": "$(clear-all)"
       },
       {
+        "command": "codeWebChat.expandFolders",
+        "title": "Expand Folders",
+        "category": "Code Web Chat",
+        "icon": "$(expand-all)"
+      },
+      {
         "command": "codeWebChat.collapseFolders",
         "title": "Collapse Folders",
         "category": "Code Web Chat",
@@ -371,6 +377,10 @@
           "when": "false"
         },
         {
+          "command": "codeWebChat.expandFolders",
+          "when": "false"
+        },
+        {
           "command": "codeWebChat.collapseFolders",
           "when": "false"
         },
@@ -461,6 +471,16 @@
           "command": "codeWebChat.redoContextSelection",
           "when": "view == codeWebChatViewContext",
           "group": "navigation@2"
+        },
+        {
+          "command": "codeWebChat.expandFolders",
+          "when": "view == codeWebChatViewContext",
+          "group": "navigation@3"
+        },
+        {
+          "command": "codeWebChat.collapseFolders",
+          "when": "view == codeWebChatViewContext",
+          "group": "navigation@4"
         },
         {
           "command": "codeWebChat.checkAll",
