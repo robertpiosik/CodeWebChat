@@ -103,13 +103,13 @@
         "command": "codeWebChat.undoContextSelection",
         "title": "Undo Context Selection",
         "category": "Code Web Chat",
-        "icon": "$(arrow-left)"
+        "icon": "$(discard)"
       },
       {
         "command": "codeWebChat.redoContextSelection",
         "title": "Redo Context Selection",
         "category": "Code Web Chat",
-        "icon": "$(arrow-right)"
+        "icon": "$(redo)"
       },
       {
         "command": "codeWebChat.duplicateWorkspace",
