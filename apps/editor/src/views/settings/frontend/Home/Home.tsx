@@ -439,7 +439,7 @@ export const Home: React.FC<Props> = (props) => {
             </Button>
           }
         >
-          <Notice type="info">Sends the selected files.</Notice>
+          <Notice type="info">A request includes the selected files.</Notice>
           {props.edit_context_configs.length == 0 && (
             <Notice type="warning">
               Add a configuration to use this feature.
@@ -494,7 +494,8 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            Sends the original file and the failed to apply code block.
+            A request includes the original file and the failed to apply code
+            block.
           </Notice>
           {props.intelligent_update_configs.length == 0 && (
             <Notice type="warning">
@@ -553,7 +554,8 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            Sends the selected files in a compacted form (~60% less tokens).
+            A request includes the selected files in a compacted form (~60% less
+            tokens).
           </Notice>
           {props.prune_context_configs.length == 0 && (
             <Notice type="warning">
@@ -591,7 +593,7 @@ export const Home: React.FC<Props> = (props) => {
             </Button>
           }
         >
-          <Notice type="info">Sends the selected files.</Notice>
+          <Notice type="info">A request includes the selected files.</Notice>
           {props.code_at_cursor_configs.length == 0 && (
             <Notice type="warning">
               Add a configuration to use this feature.
@@ -696,7 +698,7 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            Sends diffs of changed files and their original states.
+            A request includes diffs of changed files and their original states.
           </Notice>
           {props.commit_messages_configs.length == 0 && (
             <Notice type="warning">
