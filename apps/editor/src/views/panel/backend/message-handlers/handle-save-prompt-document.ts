@@ -15,7 +15,10 @@ export const handle_save_prompt_document = async (
     const filename = `cwc-document-${hash}.txt`
     const file_path = path.join(os.tmpdir(), filename)
     await fs.promises.writeFile(file_path, message.text, 'utf-8')
-    panel_provider.add_text_at_cursor_position(`#Document(${hash})`)
+    const token_count = Math.ceil(message.text.length / 4)
+    panel_provider.add_text_at_cursor_position(
+      `#Document(${hash}:${token_count})`
+    )
   } catch (error) {
     vscode.window.showErrorMessage(`Failed to save document: ${error}`)
   }

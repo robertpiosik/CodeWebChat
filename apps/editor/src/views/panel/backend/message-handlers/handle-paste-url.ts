@@ -1,3 +1,4 @@
+import * as vscode from 'vscode'
 import { PasteUrlMessage } from '../../types/messages'
 import { PanelProvider } from '../panel-provider'
 import * as fs from 'fs'
@@ -10,6 +11,17 @@ export const handle_paste_url = async (
   panel_provider: PanelProvider,
   message: PasteUrlMessage
 ) => {
+  const paste_as_text = async () => {
+    const selection = await vscode.window.showInformationMessage(
+      'Failed to parse the website. Place URL instead?',
+      { modal: true },
+      'Yes'
+    )
+    if (selection == 'Yes') {
+      panel_provider.add_text_at_cursor_position(message.url)
+    }
+  }
+
   try {
     const url = message.url
     const file_path = get_website_file_path(url)
@@ -24,9 +36,9 @@ export const handle_paste_url = async (
     if (content) {
       panel_provider.add_text_at_cursor_position(`#Website(${url})`)
     } else {
-      panel_provider.add_text_at_cursor_position(url)
+      await paste_as_text()
     }
   } catch (error) {
-    panel_provider.add_text_at_cursor_position(message.url)
+    await paste_as_text()
   }
 }

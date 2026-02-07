@@ -5,6 +5,7 @@ import { Preset } from '@shared/types/preset'
 import { Task } from '@shared/types/task'
 import { Mode } from './main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
+import { ToolType } from '@/views/settings/types/tools'
 
 export interface BaseMessage {
   command: string
@@ -468,7 +469,7 @@ export interface OpenExternalUrlMessage extends BaseMessage {
 
 export interface UpsertConfigurationMessage extends BaseMessage {
   command: 'UPSERT_CONFIGURATION'
-  tool_type: string
+  tool_type: ToolType
   configuration_id?: string
   create_on_top?: boolean
   insertion_index?: number

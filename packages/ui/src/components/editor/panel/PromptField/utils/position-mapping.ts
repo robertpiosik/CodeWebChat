@@ -8,7 +8,7 @@ export const map_display_pos_to_raw_pos = (
   let last_raw_index = 0
 
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#Document\([a-fA-F0-9]+\))|(#Website\([^)]+\))/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#Document\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
   let match
 
   while ((match = regex.exec(raw_text)) !== null) {
@@ -81,7 +81,11 @@ export const map_display_pos_to_raw_pos = (
       display_match_length = 'Image'.length
       is_replacement_match = true
     } else if (document_symbol) {
-      display_match_length = 'Document'.length
+      const match = document_symbol.match(/^#Document\(([a-fA-F0-9]+):(\d+)\)$/)
+      const token_count = match ? match[2] : null
+      display_match_length = token_count
+        ? `Pasted ${token_count} tokens`.length
+        : 0
       is_replacement_match = true
     } else if (website_symbol) {
       const url = website_symbol.slice(9, -1)
@@ -137,7 +141,7 @@ export const map_raw_pos_to_display_pos = (
   let last_raw_index = 0
 
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#Document\([a-fA-F0-9]+\))|(#Website\([^)]+\))/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#Document\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
   let match
 
   while ((match = regex.exec(raw_text)) !== null) {
@@ -210,7 +214,11 @@ export const map_raw_pos_to_display_pos = (
       display_match_length = 'Image'.length
       is_replacement_match = true
     } else if (document_symbol) {
-      display_match_length = 'Document'.length
+      const match = document_symbol.match(/^#Document\(([a-fA-F0-9]+):(\d+)\)$/)
+      const token_count = match ? match[2] : null
+      display_match_length = token_count
+        ? `Pasted ${token_count} tokens`.length
+        : 0
       is_replacement_match = true
     } else if (website_symbol) {
       const url = website_symbol.slice(9, -1)

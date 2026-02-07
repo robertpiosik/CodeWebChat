@@ -758,14 +758,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           ) {
             await handle_save_prune_context_instructions_prefix(message.prefix)
           } else if (message.command == 'UPSERT_CONFIGURATION') {
-            const tool_type_map: Record<string, string> = {
-              'edit-context': 'edit-context',
-              'code-at-cursor': 'code-at-cursor',
-              'prune-context': 'prune-context'
-            }
             await upsert_configuration({
               context: this.context,
-              tool_type: tool_type_map[message.tool_type] || message.tool_type,
+              tool_type: message.tool_type,
               configuration_id: message.configuration_id,
               create_on_top: message.create_on_top,
               insertion_index: message.insertion_index

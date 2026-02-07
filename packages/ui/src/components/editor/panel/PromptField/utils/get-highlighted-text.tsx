@@ -66,7 +66,7 @@ export const get_highlighted_text = (params: {
 
   const website_regex_part = '#Website\\([^)]+\\)'
 
-  const document_regex_part = '#Document\\([a-fA-F0-9]+\\)'
+  const document_regex_part = '#Document\\([a-fA-F0-9]+:\\d+\\)'
 
   const regex = new RegExp(
     `(${fragment_regex_part}|#Selection|#Changes\\([^)]+\\)|${saved_context_regex_part}|${commit_regex_part}|${skill_regex_part}|${image_regex_part}|${document_regex_part}|${website_regex_part})`,
@@ -243,17 +243,19 @@ export const get_highlighted_text = (params: {
         return `<span class="${cn(styles['symbol'], styles['symbol--website'])}" data-type="website-symbol" data-url="${escape_html(url)}" title="${escape_html(url)}"><span class="${styles['symbol__icon']}" data-role="symbol-icon"></span><span class="${styles['symbol__text']}" data-role="symbol-text">${escape_html(label)}</span></span>`
       }
 
-      const document_match = part.match(/^#Document\(([a-fA-F0-9]+)\)$/)
+      const document_match = part.match(/^#Document\(([a-fA-F0-9]+):(\d+)\)$/)
       if (part && document_match) {
         const hash = document_match[1]
+        const token_count = document_match[2]
+        const label = `Pasted ${token_count} tokens`
         return `<span class="${cn(
           styles['symbol'],
           styles['symbol--document']
-        )}" data-type="document-symbol" data-hash="${hash}"><span class="${
+        )}" data-type="document-symbol" data-hash="${hash}" data-token-count="${token_count}"><span class="${
           styles['symbol__icon']
         }" data-role="symbol-icon"></span><span class="${
           styles['symbol__text']
-        }" data-role="symbol-text">Document</span></span>`
+        }" data-role="symbol-text">${escape_html(label)}</span></span>`
       }
 
       return process_text_part_for_files({

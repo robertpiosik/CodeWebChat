@@ -21,7 +21,7 @@ const get_symbol_ranges = (
   const ranges: { start: number; end: number }[] = []
   // This regex is a combination of all symbol types
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "(?:\\.|[^"\\])*"\))|(#(?:Commit|ContextAtCommit)\([^:]+:[^\s"]+ "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>[\s\S]*?<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#Document\([a-fA-F0-9]+\))|(#Website\([^)]+\))/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "(?:\\.|[^"\\])*"\))|(#(?:Commit|ContextAtCommit)\([^:]+:[^\s"]+ "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>[\s\S]*?<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#Document\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
 
   let match
   while ((match = regex.exec(text)) !== null) {
@@ -77,7 +77,7 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
       const contextType = el.dataset.contextType
       const contextName = el.dataset.contextName
       if (!contextType || !contextName) return ''
-      const expected_text = `Context "${contextName}"`
+      const expected_text = `Context "${contextName}`
       const index = inner_content.indexOf(expected_text)
       if (index != -1) {
         const prefix = inner_content.substring(0, index)
@@ -178,14 +178,15 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
       }
     } else if (el.dataset.type == 'document-symbol') {
       const hash = el.dataset.hash
-      if (!hash) return ''
+      const token_count = el.dataset.tokenCount
+      if (!hash || !token_count) return ''
 
-      const expected_text = `Document`
+      const expected_text = `Pasted ${token_count} tokens`
       const index = inner_content.indexOf(expected_text)
       if (index != -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + expected_text.length)
-        return `${prefix}#Document(${hash})${suffix}`
+        return `${prefix}#Document(${hash}:${token_count})${suffix}`
       }
     } else if (el.dataset.type == 'website-symbol') {
       const url = el.dataset.url
@@ -456,9 +457,10 @@ export const use_handlers = (
       }
     } else if (symbol_type == 'document-symbol') {
       const hash = symbol_element.dataset.hash
-      if (!hash) return
+      const token_count = symbol_element.dataset.tokenCount
+      if (!hash || !token_count) return
 
-      const search_pattern = `#Document(${hash})`
+      const search_pattern = `#Document(${hash}:${token_count})`
       const start_index = props.value.indexOf(search_pattern)
 
       if (start_index != -1) {
@@ -640,14 +642,15 @@ export const use_handlers = (
 
     const text = e.clipboardData.getData('text/plain')
 
-    if (/^https?:\/\/[^\s]+$/.test(text.trim())) {
-      e.preventDefault()
+    if (
+      !is_shift_pressed_ref.current &&
+      /^https?:\/\/[^\s]+$/.test(text.trim())
+    ) {
       props.on_paste_url(text.trim())
       return
     }
 
-    if (text.length > 1000) {
-      e.preventDefault()
+    if (!is_shift_pressed_ref.current && text.length > 1000) {
       props.on_paste_document(text)
       return
     }
@@ -993,7 +996,9 @@ export const use_handlers = (
 
   const handle_document_symbol_deletion = (raw_pos: number): boolean => {
     const text_before_cursor = props.value.substring(0, raw_pos)
-    const match = text_before_cursor.match(/#Document\(([a-fA-F0-9]+)\)$/)
+    const match = text_before_cursor.match(
+      /#Document\(([a-fA-F0-9]+)(?: (\d+))?\)$/
+    )
 
     if (match) {
       const start_of_match = raw_pos - match[0].length
