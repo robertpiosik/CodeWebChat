@@ -86,7 +86,7 @@ export const generate_commit_message_command = (
               const input_box = vscode.window.createInputBox()
               input_box.value = commit_message
               input_box.title = 'Commit Message'
-              input_box.prompt = 'Review the commit message.'
+              input_box.prompt = 'Edit the commit message.'
 
               if (has_default_config && !files_staged_by_action) {
                 input_box.buttons = [
