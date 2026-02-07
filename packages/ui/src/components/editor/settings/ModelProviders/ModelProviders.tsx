@@ -47,7 +47,7 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
       <div className={styles['col-actions']}>
         <IconButton
           codicon_icon="insert"
-          title="Insert new provider below/above"
+          title="Insert a new provider below/above"
           on_click={() => props.on_add_provider({ insertion_index: index })}
         />
         {provider.type == 'custom' && (

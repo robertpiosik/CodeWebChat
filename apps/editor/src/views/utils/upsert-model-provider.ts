@@ -317,8 +317,8 @@ export const upsert_model_provider = async (params: {
       (resolve) => {
         const quick_pick = vscode.window.createQuickPick()
         quick_pick.items = [
-          { label: 'Insert new provider above' },
-          { label: 'Insert new provider below' }
+          { label: 'Insert a new provider above' },
+          { label: 'Insert a new provider below' }
         ]
         quick_pick.title = 'Placement'
         quick_pick.placeholder = 'Where to insert?'
@@ -354,7 +354,7 @@ export const upsert_model_provider = async (params: {
     if (!position_quick_pick) return
 
     actual_insertion_index =
-      position_quick_pick == 'Insert new provider above'
+      position_quick_pick == 'Insert a new provider above'
         ? insertion_index
         : insertion_index + 1
   }

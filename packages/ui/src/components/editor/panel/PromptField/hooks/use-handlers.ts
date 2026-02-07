@@ -236,7 +236,8 @@ export const use_handlers = (
   props: PromptFieldProps,
   input_ref: RefObject<HTMLDivElement>,
   ghost_text: string,
-  on_accept_ghost_text: () => void
+  on_accept_ghost_text: () => void,
+  set_caret_position: (pos: number) => void
 ) => {
   const [history_index, set_history_index] = useState(-1)
   const [is_history_enabled, set_is_history_enabled] = useState(!props.value)
@@ -277,17 +278,19 @@ export const use_handlers = (
       if (document.activeElement === input_ref.current && input_ref.current) {
         const selection = window.getSelection()
         const pos = get_caret_position_from_div(input_ref.current)
+        set_caret_position(pos)
+
         const raw_pos = map_display_pos_to_raw_pos(
           pos,
           props.value,
           props.context_file_paths ?? []
         )
         raw_caret_pos_ref.current = raw_pos
+        props.on_caret_position_change(raw_pos)
 
         const is_at_end =
           raw_pos == props.value.length && !!selection?.isCollapsed
 
-        // Only enable history if at end AND haven't modified the current entry
         const is_history_check_enabled =
           is_at_end && !has_modified_current_entry_ref.current
         set_is_history_enabled(is_history_check_enabled)
@@ -297,7 +300,54 @@ export const use_handlers = (
     on_selection_change()
     return () =>
       document.removeEventListener('selectionchange', on_selection_change)
-  }, [props.value, props.context_file_paths, input_ref])
+  }, [
+    props.value,
+    props.context_file_paths,
+    input_ref,
+    props.on_caret_position_change,
+    set_caret_position
+  ])
+
+  useEffect(() => {
+    if (input_ref.current) {
+      if (
+        props.caret_position_to_set !== undefined &&
+        props.on_caret_position_set
+      ) {
+        const display_pos = map_raw_pos_to_display_pos(
+          props.caret_position_to_set,
+          props.value,
+          props.context_file_paths ?? []
+        )
+        set_caret_position_for_div(input_ref.current, display_pos)
+        props.on_caret_position_set()
+      }
+    }
+  }, [
+    props.caret_position_to_set,
+    props.on_caret_position_set,
+    props.value,
+    props.context_file_paths
+  ])
+
+  useEffect(() => {
+    if (input_ref.current) {
+      input_ref.current.focus()
+    }
+  }, [props.focus_key])
+
+  useEffect(() => {
+    if (input_ref.current) {
+      input_ref.current.focus()
+      const selection = window.getSelection()
+      if (selection) {
+        const range = document.createRange()
+        range.selectNodeContents(input_ref.current)
+        selection.removeAllRanges()
+        selection.addRange(range)
+      }
+    }
+  }, [props.focus_and_select_key])
 
   const update_value = (new_value: string, caret_pos?: number) => {
     if (new_value === props.value) return
@@ -1460,7 +1510,6 @@ export const use_handlers = (
     handle_submit,
     handle_key_down,
     is_history_enabled,
-    handle_clear,
     handle_copy,
     handle_cut,
     handle_paste,

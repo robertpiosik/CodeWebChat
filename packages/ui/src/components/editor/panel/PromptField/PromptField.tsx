@@ -16,10 +16,6 @@ import {
   get_caret_position_from_div,
   set_caret_position_for_div
 } from './utils/caret'
-import {
-  map_display_pos_to_raw_pos,
-  map_raw_pos_to_display_pos
-} from './utils/position-mapping'
 import { Tooltip } from './components'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 
@@ -85,7 +81,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     useState(false)
   const [hovered_edit_format, set_hovered_edit_format] =
     useState<EditFormat | null>(null)
-
   const [prune_instructions, set_prune_instructions] = useState(
     props.prune_context_instructions_prefix
   )
@@ -106,6 +101,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     is_invocation_dropdown_open,
     on_toggle_invocation_dropdown: toggle_invocation_dropdown
   })
+
   const {
     is_dropdown_open,
     toggle_dropdown,
@@ -114,7 +110,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     handle_copy_click,
     handle_select_click
   } = use_dropdown(props)
+
   const invocation_dropdown_ref = useRef<HTMLDivElement>(null)
+
   const { ghost_text, handle_accept_ghost_text } = use_ghost_text({
     value: props.value,
     input_ref,
@@ -122,8 +120,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     currently_open_file_text: props.currently_open_file_text,
     caret_position
   })
+
   const {
-    handle_clear,
     handle_input_change,
     handle_submit,
     handle_key_down,
@@ -132,7 +130,14 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     handle_cut,
     handle_paste,
     handle_input_click
-  } = use_handlers(props, input_ref, ghost_text, handle_accept_ghost_text)
+  } = use_handlers(
+    props,
+    input_ref,
+    ghost_text,
+    handle_accept_ghost_text,
+    set_caret_position
+  )
+
   const { handle_drag_start, handle_drag_over, handle_drop, handle_drag_end } =
     use_drag_drop({
       input_ref,
@@ -201,28 +206,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
   useEffect(() => {
     if (input_ref.current) {
-      if (
-        props.caret_position_to_set !== undefined &&
-        props.on_caret_position_set
-      ) {
-        const display_pos = map_raw_pos_to_display_pos(
-          props.caret_position_to_set,
-          props.value,
-          props.context_file_paths ?? []
-        )
-        set_caret_position_for_div(input_ref.current, display_pos)
-        props.on_caret_position_set()
-      }
-    }
-  }, [
-    props.caret_position_to_set,
-    props.on_caret_position_set,
-    props.value,
-    props.context_file_paths
-  ])
-
-  useEffect(() => {
-    if (input_ref.current) {
       input_ref.current.focus()
     }
   }, [props.focus_key])
@@ -246,37 +229,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
       }
     }
   }, [is_invocation_dropdown_open])
-
-  useEffect(() => {
-    if (input_ref.current) {
-      input_ref.current.focus()
-      const selection = window.getSelection()
-      if (selection) {
-        const range = document.createRange()
-        range.selectNodeContents(input_ref.current)
-        selection.removeAllRanges()
-        selection.addRange(range)
-      }
-    }
-  }, [props.focus_and_select_key])
-
-  useEffect(() => {
-    const on_selection_change = () => {
-      if (document.activeElement === input_ref.current && input_ref.current) {
-        const pos = get_caret_position_from_div(input_ref.current)
-        set_caret_position(pos)
-        const raw_pos = map_display_pos_to_raw_pos(
-          pos,
-          props.value,
-          props.context_file_paths ?? []
-        )
-        props.on_caret_position_change(raw_pos)
-      }
-    }
-    document.addEventListener('selectionchange', on_selection_change)
-    return () =>
-      document.removeEventListener('selectionchange', on_selection_change)
-  }, [props.on_caret_position_change, props.value, props.context_file_paths])
 
   const placeholder = useMemo(() => {
     if (props.prompt_type == 'code-at-cursor') {

@@ -138,8 +138,8 @@ export const handle_create_preset_group_or_separator = async (
       (resolve) => {
         const quick_pick = vscode.window.createQuickPick()
         quick_pick.items = [
-          { label: 'Insert new item above' },
-          { label: 'Insert new item below' }
+          { label: 'Insert a new item above' },
+          { label: 'Insert a new item below' }
         ]
         quick_pick.title = 'Placement'
         quick_pick.placeholder = 'Where to insert?'
@@ -175,7 +175,7 @@ export const handle_create_preset_group_or_separator = async (
     if (!position_quick_pick) return
 
     insertion_index =
-      position_quick_pick == 'Insert new item above'
+      position_quick_pick == 'Insert a new item above'
         ? message.reference_index
         : message.reference_index + 1
   } else if (message.placement == 'top') {

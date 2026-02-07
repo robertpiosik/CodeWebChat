@@ -61,7 +61,7 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
       <div className={styles['col-actions']}>
         <IconButton
           codicon_icon="insert"
-          title="Insert new configuration below/above"
+          title="Insert a new configuration below/above"
           on_click={() => props.on_add({ insertion_index: index })}
         />
         <IconButton

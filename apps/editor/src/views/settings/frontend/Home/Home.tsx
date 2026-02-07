@@ -652,7 +652,19 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            Requires a multimodal model accepting audio input.
+            Requires a multimodal model supporting{' '}
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault()
+                props.on_open_external_url(
+                  'https://ai.google.dev/gemini-api/docs/audio'
+                )
+              }}
+            >
+              audio understanding
+            </a>
+            .
           </Notice>
           {props.voice_input_configs.length == 0 && (
             <Notice type="warning">

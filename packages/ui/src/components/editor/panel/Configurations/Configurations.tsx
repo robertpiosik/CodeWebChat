@@ -97,7 +97,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
           {!is_dragging_disabled && (
             <IconButton
               codicon_icon="insert"
-              title="Insert new configuration below/above"
+              title="Insert a new configuration below/above"
               on_click={(e) => {
                 e.stopPropagation()
                 props.on_create({ insertion_index: index_for_insertion })
