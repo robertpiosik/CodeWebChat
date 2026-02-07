@@ -13,6 +13,12 @@ export interface AgentConfig {
 }
 
 export const agents: Record<string, AgentConfig> = {
+  agents: {
+    name: 'agents',
+    display_name: 'Agents',
+    global_skills_dir: path.join(home, '.agents/skills'),
+    detect_installed: () => fs.existsSync(path.join(home, '.agents'))
+  },
   amp: {
     name: 'amp',
     display_name: 'Amp',
