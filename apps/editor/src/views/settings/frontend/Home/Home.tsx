@@ -401,12 +401,12 @@ export const Home: React.FC<Props> = (props) => {
               }}
             >
               SecretStorage
-            </a>
-            .
+            </a>{' '}
+            on your machine.
           </Notice>
           {props.providers.length == 0 && (
             <Notice type="warning">
-              Add a model provider to use API features.
+              Add a model provider to use API tools.
             </Notice>
           )}
           <Group>
@@ -439,6 +439,7 @@ export const Home: React.FC<Props> = (props) => {
             </Button>
           }
         >
+          <Notice type="info">Sends the selected files.</Notice>
           {props.edit_context_configs.length == 0 && (
             <Notice type="warning">
               Add a configuration to use this feature.
@@ -492,6 +493,9 @@ export const Home: React.FC<Props> = (props) => {
             </Button>
           }
         >
+          <Notice type="info">
+            Sends the original file and failed to apply code block.
+          </Notice>
           {props.intelligent_update_configs.length == 0 && (
             <Notice type="warning">
               Add a configuration to use this feature.
@@ -536,7 +540,7 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['prune-context'] = el)}
           group="API Tool"
           title="Prune Context"
-          subtitle="Remove irrelevant files from the current context."
+          subtitle="Make the context task-focused."
           on_stuck_change={prune_context_on_stuck_change}
           actions={
             <Button
@@ -548,6 +552,9 @@ export const Home: React.FC<Props> = (props) => {
             </Button>
           }
         >
+          <Notice type="info">
+            Sends the selected files in a compacted form (~60% less tokens).
+          </Notice>
           {props.prune_context_configs.length == 0 && (
             <Notice type="warning">
               Add a configuration to use this feature.
@@ -584,6 +591,7 @@ export const Home: React.FC<Props> = (props) => {
             </Button>
           }
         >
+          <Notice type="info">Sends the selected files.</Notice>
           {props.code_at_cursor_configs.length == 0 && (
             <Notice type="warning">
               Add a configuration to use this feature.
@@ -610,7 +618,7 @@ export const Home: React.FC<Props> = (props) => {
             />
             <Item
               title="Keyboard Shortcut"
-              description="Setup tool triggering key combinations."
+              description="Setup completion triggers."
               slot_right={
                 <TextButton
                   on_click={() =>
@@ -641,6 +649,9 @@ export const Home: React.FC<Props> = (props) => {
             </Button>
           }
         >
+          <Notice type="info">
+            Requires a multimodal model accepting audio.
+          </Notice>
           {props.voice_input_configs.length == 0 && (
             <Notice type="warning">
               Add a configuration to use this feature.
@@ -684,6 +695,9 @@ export const Home: React.FC<Props> = (props) => {
             </Button>
           }
         >
+          <Notice type="info">
+            Sends diffs of changed files and their original states.
+          </Notice>
           {props.commit_messages_configs.length == 0 && (
             <Notice type="warning">
               Add a configuration to use this feature.

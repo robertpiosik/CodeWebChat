@@ -172,10 +172,16 @@ export const upsert_configuration = async (params: {
       }
     ]
 
-    items.push({
+    const reasoning_effort_item: vscode.QuickPickItem = {
       label: 'Reasoning Effort',
       detail: updated_config.reasoning_effort
-    })
+    }
+    if (updated_config.reasoning_effort) {
+      reasoning_effort_item.buttons = [
+        { iconPath: new vscode.ThemeIcon('eraser'), tooltip: 'Unset' }
+      ]
+    }
+    items.push(reasoning_effort_item)
 
     items.push({ label: 'Advanced...' })
 
@@ -206,6 +212,14 @@ export const upsert_configuration = async (params: {
         const disposables: vscode.Disposable[] = []
 
         disposables.push(
+          quick_pick.onDidTriggerItemButton((e) => {
+            if (e.item.label === 'Reasoning Effort') {
+              delete updated_config.reasoning_effort
+              accepted = true
+              resolve({ label: 'REFRESH' })
+              quick_pick.hide()
+            }
+          }),
           quick_pick.onDidAccept(() => {
             accepted = true
             resolve(quick_pick.selectedItems[0])
@@ -228,10 +242,19 @@ export const upsert_configuration = async (params: {
                 }
               ]
 
-              reset_items.push({
+              const reset_reasoning_item: vscode.QuickPickItem = {
                 label: 'Reasoning Effort',
                 detail: updated_config.reasoning_effort
-              })
+              }
+              if (updated_config.reasoning_effort) {
+                reset_reasoning_item.buttons = [
+                  {
+                    iconPath: new vscode.ThemeIcon('clear-all'),
+                    tooltip: 'Unset'
+                  }
+                ]
+              }
+              reset_items.push(reset_reasoning_item)
 
               reset_items.push({ label: 'Advanced...' })
 
@@ -251,6 +274,10 @@ export const upsert_configuration = async (params: {
 
     if (!selected_item) {
       break
+    }
+
+    if (selected_item.label === 'REFRESH') {
+      continue
     }
 
     last_selected_label = selected_item.label
@@ -350,13 +377,18 @@ export const upsert_configuration = async (params: {
     } else if (selected_option == 'Advanced...') {
       let last_advanced_label: string | undefined
       while (true) {
-        const advanced_items: vscode.QuickPickItem[] = [
-          {
-            label: 'Temperature',
-            description: 'Leave empty with reasoning models',
-            detail: updated_config.temperature?.toString()
-          }
-        ]
+        const temperature_item: vscode.QuickPickItem = {
+          label: 'Temperature',
+          description: 'Leave empty with reasoning models',
+          detail: updated_config.temperature?.toString()
+        }
+        if (updated_config.temperature != null) {
+          temperature_item.buttons = [
+            { iconPath: new vscode.ThemeIcon('eraser'), tooltip: 'Unset' }
+          ]
+        }
+
+        const advanced_items: vscode.QuickPickItem[] = [temperature_item]
 
         const selected_advanced = await new Promise<
           vscode.QuickPickItem | undefined
@@ -376,6 +408,14 @@ export const upsert_configuration = async (params: {
           const disposables: vscode.Disposable[] = []
 
           disposables.push(
+            quick_pick.onDidTriggerItemButton((e) => {
+              if (e.item.label === 'Temperature') {
+                delete updated_config.temperature
+                accepted = true
+                resolve({ label: 'REFRESH' })
+                quick_pick.hide()
+              }
+            }),
             quick_pick.onDidAccept(() => {
               accepted = true
               resolve(quick_pick.selectedItems[0])
@@ -396,6 +436,8 @@ export const upsert_configuration = async (params: {
         })
 
         if (!selected_advanced) break
+        if (selected_advanced.label === 'REFRESH') continue
+
         last_advanced_label = selected_advanced.label
 
         if (selected_advanced.label == 'Temperature') {
