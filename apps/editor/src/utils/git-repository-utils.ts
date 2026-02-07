@@ -2,7 +2,6 @@ import * as vscode from 'vscode'
 import { execSync } from 'child_process'
 import { dictionary } from '@shared/constants/dictionary'
 import * as path from 'path'
-import { natural_sort } from './natural-sort'
 
 type GitRepository = {
   rootUri: vscode.Uri
@@ -115,12 +114,6 @@ export const prepare_staged_changes = async (
           picked: true,
           fsPath: change.uri.fsPath
         }
-      })
-
-      items.sort((a, b) => {
-        const label_diff = natural_sort(a.label, b.label)
-        if (label_diff != 0) return label_diff
-        return natural_sort(a.description || '', b.description || '')
       })
 
       const selected = await new Promise<any[] | undefined>((resolve) => {
