@@ -494,7 +494,7 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            Sends the original file and failed to apply code block.
+            Sends the original file and the failed to apply code block.
           </Notice>
           {props.intelligent_update_configs.length == 0 && (
             <Notice type="warning">
@@ -650,7 +650,7 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            Requires a multimodal model accepting audio.
+            Requires a multimodal model accepting audio input.
           </Notice>
           {props.voice_input_configs.length == 0 && (
             <Notice type="warning">
