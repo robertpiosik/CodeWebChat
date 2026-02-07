@@ -97,66 +97,73 @@ export const prepare_staged_changes = async (
     staged_changes.length == 0 &&
     repository.state.workingTreeChanges.length > 0
   ) {
-    const items = repository.state.workingTreeChanges.map((change: any) => {
-      const relative_path = path.relative(
-        repository.rootUri.fsPath,
-        change.uri.fsPath
-      )
-      const dir_name = path.dirname(relative_path)
+    let files_to_stage: string[] = []
 
-      return {
-        label: path.basename(relative_path),
-        description: dir_name == '.' ? '' : dir_name,
-        picked: true,
-        fsPath: change.uri.fsPath
-      }
-    })
+    if (repository.state.workingTreeChanges.length == 1) {
+      files_to_stage = [repository.state.workingTreeChanges[0].uri.fsPath]
+    } else {
+      const items = repository.state.workingTreeChanges.map((change: any) => {
+        const relative_path = path.relative(
+          repository.rootUri.fsPath,
+          change.uri.fsPath
+        )
+        const dir_name = path.dirname(relative_path)
 
-    items.sort((a, b) => {
-      const label_diff = natural_sort(a.label, b.label)
-      if (label_diff != 0) return label_diff
-      return natural_sort(a.description || '', b.description || '')
-    })
-
-    const selected = await new Promise<any[] | undefined>((resolve) => {
-      const quick_pick = vscode.window.createQuickPick<any>()
-      quick_pick.items = items
-      quick_pick.selectedItems = items
-      quick_pick.canSelectMany = true
-      quick_pick.title = 'Unstaged Files'
-      quick_pick.placeholder = 'Select files to commit'
-      quick_pick.buttons = [
-        {
-          iconPath: new vscode.ThemeIcon('close'),
-          tooltip: 'Close'
+        return {
+          label: path.basename(relative_path),
+          description: dir_name == '.' ? '' : dir_name,
+          picked: true,
+          fsPath: change.uri.fsPath
         }
-      ]
+      })
 
-      quick_pick.onDidTriggerButton((button) => {
-        if (button.tooltip == 'Close') {
-          resolve(undefined)
+      items.sort((a, b) => {
+        const label_diff = natural_sort(a.label, b.label)
+        if (label_diff != 0) return label_diff
+        return natural_sort(a.description || '', b.description || '')
+      })
+
+      const selected = await new Promise<any[] | undefined>((resolve) => {
+        const quick_pick = vscode.window.createQuickPick<any>()
+        quick_pick.items = items
+        quick_pick.selectedItems = items
+        quick_pick.canSelectMany = true
+        quick_pick.title = 'Unstaged Files'
+        quick_pick.placeholder = 'Select files to commit'
+        quick_pick.buttons = [
+          {
+            iconPath: new vscode.ThemeIcon('close'),
+            tooltip: 'Close'
+          }
+        ]
+
+        quick_pick.onDidTriggerButton((button) => {
+          if (button.tooltip == 'Close') {
+            resolve(undefined)
+            quick_pick.hide()
+          }
+        })
+
+        quick_pick.onDidAccept(() => {
+          resolve(Array.from(quick_pick.selectedItems))
           quick_pick.hide()
-        }
+        })
+
+        quick_pick.onDidHide(() => {
+          resolve(undefined)
+          quick_pick.dispose()
+        })
+
+        quick_pick.show()
       })
 
-      quick_pick.onDidAccept(() => {
-        resolve(Array.from(quick_pick.selectedItems))
-        quick_pick.hide()
-      })
+      if (!selected || selected.length == 0) {
+        return null
+      }
 
-      quick_pick.onDidHide(() => {
-        resolve(undefined)
-        quick_pick.dispose()
-      })
-
-      quick_pick.show()
-    })
-
-    if (!selected || selected.length == 0) {
-      return null
+      files_to_stage = selected.map((item) => item.fsPath)
     }
 
-    const files_to_stage = selected.map((item) => item.fsPath)
     const file_args = files_to_stage
       .map((file: string) => `"${file.replace(/"/g, '\\"')}"`)
       .join(' ')
