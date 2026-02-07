@@ -662,6 +662,7 @@ export const use_handlers = (
     const target = e.target as HTMLElement
     const icon_element = target.closest('[data-role="symbol-icon"]')
     const text_element = target.closest('[data-role="symbol-text"]')
+    const clear_button = target.closest('[data-role="clear-button"]')
 
     if (icon_element) {
       e.preventDefault()
@@ -745,6 +746,13 @@ export const use_handlers = (
         }
       }
 
+      if (input_ref.current) {
+        input_ref.current.focus()
+      }
+    } else if (clear_button) {
+      e.preventDefault()
+      e.stopPropagation()
+      handle_clear()
       if (input_ref.current) {
         input_ref.current.focus()
       }

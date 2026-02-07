@@ -355,17 +355,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           />
         )}
         <div className={styles['input-wrapper']}>
-          {props.value && (
-            <button
-              className={cn(styles['clear-button'], 'codicon', 'codicon-close')}
-              onClick={() => {
-                set_should_show_ghost_text(false)
-                handle_clear()
-                input_ref.current?.focus()
-              }}
-              title="Clear"
-            />
-          )}
           <div
             ref={input_ref}
             contentEditable={true}

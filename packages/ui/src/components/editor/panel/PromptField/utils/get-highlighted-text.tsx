@@ -74,7 +74,7 @@ export const get_highlighted_text = (params: {
   )
   const parts = params.text.split(regex)
 
-  const result = parts
+  let result = parts
     .map((part) => {
       const fragment_match = part.match(
         /^<fragment path="([^"]+)"(?: start="([^"]+)")?(?: end="([^"]+)")?>([\s\S]*?)<\/fragment>$/
@@ -264,6 +264,15 @@ export const get_highlighted_text = (params: {
       })
     })
     .join('')
+
+  if (params.text) {
+    result =
+      `<span class="${cn(
+        styles['clear-button'],
+        'codicon',
+        'codicon-close'
+      )}" contenteditable="false" data-role="clear-button"></span>` + result
+  }
 
   if (params.text.endsWith('\n')) {
     return result + '<br data-role="trailing-break">'

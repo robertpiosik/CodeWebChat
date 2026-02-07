@@ -1,5 +1,5 @@
 .container {
-  --padding: 5px 22px 5px 7px;
+  --padding: 5px 7px;
   position: relative;
 
   &__inner {
@@ -112,19 +112,14 @@
 }
 
 .clear-button {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 2;
+  float: right;
+  position: relative;
   width: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
   color: var(--vscode-icon-foreground);
   opacity: var(--dimmed-opacity);
-  padding-bottom: 6px;
-  line-height: 0;
+  transform: translate(5px, -3px);
+  padding-bottom: 2px;
 
   &::before {
     font-size: 13px !important;
