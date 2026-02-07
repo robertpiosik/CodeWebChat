@@ -714,7 +714,9 @@ export class WorkspaceProvider
         new FileItem(
           name,
           uri,
-          vscode.TreeItemCollapsibleState.Collapsed,
+          context_view
+            ? vscode.TreeItemCollapsibleState.Expanded
+            : vscode.TreeItemCollapsibleState.Collapsed,
           true,
           this._checked_items.get(root) ??
             vscode.TreeItemCheckboxState.Unchecked,
@@ -971,7 +973,9 @@ export class WorkspaceProvider
           entry.name,
           uri,
           is_directory
-            ? vscode.TreeItemCollapsibleState.Collapsed
+            ? context_view
+              ? vscode.TreeItemCollapsibleState.Expanded
+              : vscode.TreeItemCollapsibleState.Collapsed
             : vscode.TreeItemCollapsibleState.None,
           is_directory,
           checkbox_state,

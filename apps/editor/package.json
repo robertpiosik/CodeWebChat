@@ -102,12 +102,14 @@
       {
         "command": "codeWebChat.undoContextSelection",
         "title": "Undo Context Selection",
-        "category": "Code Web Chat"
+        "category": "Code Web Chat",
+        "icon": "$(arrow-left)"
       },
       {
         "command": "codeWebChat.redoContextSelection",
         "title": "Redo Context Selection",
-        "category": "Code Web Chat"
+        "category": "Code Web Chat",
+        "icon": "$(arrow-right)"
       },
       {
         "command": "codeWebChat.duplicateWorkspace",
@@ -450,6 +452,16 @@
         }
       ],
       "view/title": [
+        {
+          "command": "codeWebChat.undoContextSelection",
+          "when": "view == codeWebChatViewContext",
+          "group": "navigation@1"
+        },
+        {
+          "command": "codeWebChat.redoContextSelection",
+          "when": "view == codeWebChatViewContext",
+          "group": "navigation@2"
+        },
         {
           "command": "codeWebChat.checkAll",
           "when": "view == codeWebChatViewWorkspace",
