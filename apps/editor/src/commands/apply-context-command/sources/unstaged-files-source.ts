@@ -81,7 +81,7 @@ export const handle_unstaged_files_source = async (
 
           return {
             label: path.basename(file_path),
-            description: `${formatted_token_count} ${display_dir}`.trim(),
+            description: `${formatted_token_count} · ${display_dir}`.trim(),
             picked: true,
             file_path: file_path
           }
@@ -91,9 +91,7 @@ export const handle_unstaged_files_source = async (
       const quick_pick = vscode.window.createQuickPick<
         vscode.QuickPickItem & { file_path: string }
       >()
-      quick_pick.title = `Found ${
-        existing_unstaged_files.length
-      } unstaged file${existing_unstaged_files.length == 1 ? '' : 's'}`
+      quick_pick.title = 'Unstaged Files'
       quick_pick.placeholder = 'Select files to include'
       quick_pick.canSelectMany = true
       quick_pick.items = quick_pick_items
