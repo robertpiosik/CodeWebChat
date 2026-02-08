@@ -49,6 +49,11 @@
     transparent
   );
   --cwc-bg-red: color-mix(in srgb, var(--cwc-text-color-red) 12%, transparent);
+  --cwc-bg-red-dark: color-mix(
+    in srgb,
+    var(--cwc-text-color-red) 24%,
+    transparent
+  );
   --cwc-bg-orange: color-mix(
     in srgb,
     var(--cwc-text-color-orange) 12%,

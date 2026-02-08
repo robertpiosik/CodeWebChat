@@ -461,11 +461,6 @@
         height: 20px;
         border-radius: 5px;
 
-        > svg {
-          width: 10px;
-          fill: var(--vscode-icon-foreground);
-        }
-
         &.codicon::before {
           font-size: 16px;
         }
@@ -485,6 +480,18 @@
 
         &--submit {
           padding: 0 2px;
+        }
+
+        &--recording {
+          background-color: var(--cwc-bg-red);
+
+          &:hover {
+            background-color: var(--cwc-bg-red-dark) !important;
+          }
+
+          &::before {
+            color: var(--cwc-text-color-red);
+          }
         }
 
         &--chevron {

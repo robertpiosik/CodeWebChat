@@ -46,13 +46,7 @@ const stop_recording = async (panel_provider: PanelProvider) => {
       const configs =
         await model_providers_manager.get_voice_input_tool_configs()
 
-      if (configs.length == 0) {
-        vscode.window.showWarningMessage(
-          'No Voice Input configuration found. Please configure it in settings.',
-          { modal: true }
-        )
-        return
-      }
+      if (configs.length == 0) return
 
       let config: ToolConfig | undefined =
         await model_providers_manager.get_default_voice_input_config()
@@ -175,6 +169,26 @@ export const handle_voice_input = async (
 ) => {
   if (panel_provider.is_recording === message.is_recording) {
     return
+  }
+
+  if (message.is_recording) {
+    const model_providers_manager = new ModelProvidersManager(
+      panel_provider.context
+    )
+    const configs = await model_providers_manager.get_voice_input_tool_configs()
+
+    if (configs.length == 0) {
+      vscode.window.showWarningMessage('No configuration found', {
+        modal: true,
+        detail:
+          'Add a "Voice Input" configuration in settings to use this feature.'
+      })
+      panel_provider.send_message({
+        command: 'RECORDING_STATE',
+        is_recording: false
+      })
+      return
+    }
   }
 
   panel_provider.is_recording = message.is_recording
