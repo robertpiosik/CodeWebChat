@@ -105,7 +105,9 @@ export const Panel = () => {
     handle_open_image,
     handle_paste_long_document,
     handle_open_document,
-    handle_paste_url
+    handle_paste_url,
+    is_recording,
+    handle_set_recording_state
   } = use_panel(vscode)
 
   const [checkpoint_to_edit, set_checkpoint_to_edit] = useState<
@@ -314,6 +316,9 @@ export const Panel = () => {
                 on_paste_document={handle_paste_long_document}
                 on_open_document={handle_open_document}
                 on_paste_url={handle_paste_url}
+                is_recording={is_recording}
+                on_recording_started={() => handle_set_recording_state(true)}
+                on_recording_finished={() => handle_set_recording_state(false)}
               />
             </div>
             <div

@@ -108,13 +108,13 @@ export const use_panel = (vscode: any) => {
     configurations_collapsed_by_api_mode,
     set_configurations_collapsed_by_api_mode
   ] = useState<{ [mode in ApiPromptType]?: boolean }>({})
-
   const [tasks, set_tasks] = useState<Record<string, Task[]>>({})
   const [
     prune_context_instructions_prefix,
     set_prune_context_instructions_prefix
   ] = useState<string>('')
   const [fix_all_automatically, set_fix_all_automatically] = useState(false)
+  const [is_recording, set_is_recording] = useState(false)
 
   const handle_instructions_change = (
     value: string,
@@ -215,6 +215,13 @@ export const use_panel = (vscode: any) => {
     post_message(vscode, {
       command: 'SAVE_PRUNE_CONTEXT_INSTRUCTIONS_PREFIX',
       prefix
+    })
+  }
+
+  const handle_set_recording_state = (is_recording: boolean) => {
+    post_message(vscode, {
+      command: 'SET_RECORDING_STATE',
+      is_recording
     })
   }
 
@@ -384,6 +391,8 @@ export const use_panel = (vscode: any) => {
         set_tasks(message.tasks)
       } else if (message.command == 'PRUNE_CONTEXT_INSTRUCTIONS_PREFIX') {
         set_prune_context_instructions_prefix(message.prefix)
+      } else if (message.command == 'RECORDING_STATE') {
+        set_is_recording(message.is_recording)
       }
     }
     window.addEventListener('message', handle_message)
@@ -618,6 +627,8 @@ export const use_panel = (vscode: any) => {
     handle_open_image,
     handle_paste_long_document,
     handle_open_document,
-    handle_paste_url
+    handle_paste_url,
+    is_recording,
+    handle_set_recording_state
   }
 }

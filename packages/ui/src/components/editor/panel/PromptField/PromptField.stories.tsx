@@ -41,6 +41,9 @@ export const Empty = () => (
     on_open_image={(hash) => console.log('Open image:', hash)}
     on_open_document={(hash) => console.log('Open document:', hash)}
     on_paste_url={(url) => console.log('Paste URL:', url)}
+    is_recording={false}
+    on_recording_started={() => console.log('Recording started')}
+    on_recording_finished={() => console.log('Recording finished')}
   />
 )
 
@@ -80,6 +83,9 @@ export const WithText = () => (
     on_open_image={(hash) => console.log('Open image:', hash)}
     on_open_document={(hash) => console.log('Open document:', hash)}
     on_paste_url={(url) => console.log('Paste URL:', url)}
+    is_recording={false}
+    on_recording_started={() => console.log('Recording started')}
+    on_recording_finished={() => console.log('Recording finished')}
   />
 )
 
@@ -119,6 +125,9 @@ export const LongText = () => (
     on_open_image={(hash) => console.log('Open image:', hash)}
     on_open_document={(hash) => console.log('Open document:', hash)}
     on_paste_url={(url) => console.log('Paste URL:', url)}
+    is_recording={false}
+    on_recording_started={() => console.log('Recording started')}
+    on_recording_finished={() => console.log('Recording finished')}
   />
 )
 
@@ -158,6 +167,9 @@ export const WithPlaceholderSavedContext = () => (
     on_open_image={(hash) => console.log('Open image:', hash)}
     on_open_document={(hash) => console.log('Open document:', hash)}
     on_paste_url={(url) => console.log('Paste URL:', url)}
+    is_recording={false}
+    on_recording_started={() => console.log('Recording started')}
+    on_recording_finished={() => console.log('Recording finished')}
   />
 )
 
@@ -203,6 +215,9 @@ export const WithPlaceholderSelection = () => (
     on_open_image={(hash) => console.log('Open image:', hash)}
     on_open_document={(hash) => console.log('Open document:', hash)}
     on_paste_url={(url) => console.log('Paste URL:', url)}
+    is_recording={false}
+    on_recording_started={() => console.log('Recording started')}
+    on_recording_finished={() => console.log('Recording finished')}
   />
 )
 
@@ -242,6 +257,9 @@ export const WithCommit = () => (
     on_open_image={(hash) => console.log('Open image:', hash)}
     on_open_document={(hash) => console.log('Open document:', hash)}
     on_paste_url={(url) => console.log('Paste URL:', url)}
+    is_recording={false}
+    on_recording_started={() => console.log('Recording started')}
+    on_recording_finished={() => console.log('Recording finished')}
   />
 )
 
@@ -281,6 +299,9 @@ export const WithCommitWithQuotes = () => (
     on_open_image={(hash) => console.log('Open image:', hash)}
     on_open_document={(hash) => console.log('Open document:', hash)}
     on_paste_url={(url) => console.log('Paste URL:', url)}
+    is_recording={false}
+    on_recording_started={() => console.log('Recording started')}
+    on_recording_finished={() => console.log('Recording finished')}
   />
 )
 export const WithContextAtCommit = () => (
@@ -319,6 +340,9 @@ export const WithContextAtCommit = () => (
     on_open_image={(hash) => console.log('Open image:', hash)}
     on_open_document={(hash) => console.log('Open document:', hash)}
     on_paste_url={(url) => console.log('Paste URL:', url)}
+    is_recording={false}
+    on_recording_started={() => console.log('Recording started')}
+    on_recording_finished={() => console.log('Recording finished')}
   />
 )
 
@@ -361,6 +385,9 @@ export const WithEditFormatSelector = () => {
       on_open_image={(hash) => console.log('Open image:', hash)}
       on_open_document={(hash) => console.log('Open document:', hash)}
       on_paste_url={(url) => console.log('Paste URL:', url)}
+      is_recording={false}
+      on_recording_started={() => console.log('Recording started')}
+      on_recording_finished={() => console.log('Recording finished')}
     />
   )
 }
@@ -401,5 +428,8 @@ export const WithFilePaths = () => (
     on_open_image={(hash) => console.log('Open image:', hash)}
     on_open_document={(hash) => console.log('Open document:', hash)}
     on_paste_url={(url) => console.log('Paste URL:', url)}
+    is_recording={false}
+    on_recording_started={() => console.log('Recording started')}
+    on_recording_finished={() => console.log('Recording finished')}
   />
 )

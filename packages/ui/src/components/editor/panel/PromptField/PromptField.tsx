@@ -68,6 +68,9 @@ export type PromptFieldProps = {
   on_paste_document: (text: string) => void
   on_open_document: (hash: string) => void
   on_paste_url: (url: string) => void
+  is_recording: boolean
+  on_recording_started: () => void
+  on_recording_finished: () => void
 }
 
 export const PromptField: React.FC<PromptFieldProps> = (props) => {
@@ -545,17 +548,52 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       )}
                     </div>
                   )}
-                  <button
-                    className={cn(
-                      styles['footer__right__submit__button'],
-                      styles['footer__right__submit__button--submit'],
-                      'codicon',
-                      'codicon-send'
-                    )}
-                    onClick={handle_submit}
-                    onMouseEnter={() => set_show_submit_tooltip(true)}
-                    onMouseLeave={() => set_show_submit_tooltip(false)}
-                  />
+                  {props.is_recording ? (
+                    <button
+                      className={cn(
+                        styles['footer__right__submit__button'],
+                        styles['footer__right__submit__button--submit'],
+                        styles['footer__right__submit__button--recording'],
+                        'codicon',
+                        'codicon-mic-filled'
+                      )}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        props.on_recording_finished()
+                      }}
+                      title={`Exit voice input ${
+                        is_mac ? '(⇧⌘Space)' : '(Ctrl+Shift+Space)'
+                      }`}
+                    />
+                  ) : !props.value ? (
+                    <button
+                      className={cn(
+                        styles['footer__right__submit__button'],
+                        styles['footer__right__submit__button--submit'],
+                        'codicon',
+                        'codicon-mic'
+                      )}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        props.on_recording_started()
+                      }}
+                      title={`Voice input ${
+                        is_mac ? '(⇧⌘Space)' : '(Ctrl+Shift+Space)'
+                      }`}
+                    />
+                  ) : (
+                    <button
+                      className={cn(
+                        styles['footer__right__submit__button'],
+                        styles['footer__right__submit__button--submit'],
+                        'codicon',
+                        'codicon-send'
+                      )}
+                      onClick={handle_submit}
+                      onMouseEnter={() => set_show_submit_tooltip(true)}
+                      onMouseLeave={() => set_show_submit_tooltip(false)}
+                    />
+                  )}
                   <button
                     className={cn(
                       styles['footer__right__submit__button'],
@@ -590,7 +628,21 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                           label: 'Copy prompt',
                           shortcut: is_mac ? '⌘C' : 'Ctrl+C',
                           on_click: handle_copy_click
-                        }
+                        },
+                        ...(props.value
+                          ? [
+                              {
+                                label: 'Voice input',
+                                shortcut: is_mac
+                                  ? '⇧⌘Space'
+                                  : 'Ctrl+Shift+Space',
+                                on_click: () => {
+                                  props.on_recording_started()
+                                  close_dropdown()
+                                }
+                              }
+                            ]
+                          : [])
                       ]}
                     />
                   )}

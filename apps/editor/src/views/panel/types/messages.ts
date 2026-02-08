@@ -507,6 +507,11 @@ export interface PasteUrlMessage extends BaseMessage {
   url: string
 }
 
+export interface SetRecordingStateMessage extends BaseMessage {
+  command: 'SET_RECORDING_STATE'
+  is_recording: boolean
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -595,6 +600,7 @@ export type FrontendMessage =
   | SavePromptDocumentMessage
   | OpenPromptDocumentMessage
   | PasteUrlMessage
+  | SetRecordingStateMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -834,6 +840,11 @@ export interface PruneContextInstructionsPrefixMessage extends BaseMessage {
   prefix: string
 }
 
+export interface RecordingStateMessage extends BaseMessage {
+  command: 'RECORDING_STATE'
+  is_recording: boolean
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | FocusPromptFieldMessage
@@ -878,3 +889,4 @@ export type BackendMessage =
   | TasksMessage
   | UpdateFileProgressMessage
   | PruneContextInstructionsPrefixMessage
+  | RecordingStateMessage

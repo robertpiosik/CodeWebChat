@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
+import { ChildProcessWithoutNullStreams } from 'child_process'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { FrontendMessage, BackendMessage } from '../types/messages'
 import { ApiManager } from '@/services/api-manager'
@@ -82,7 +83,8 @@ import {
   handle_open_prompt_image,
   handle_save_prompt_document,
   handle_open_prompt_document,
-  handle_paste_url
+  handle_paste_url,
+  handle_voice_input
 } from './message-handlers'
 import { SelectionState } from '../types/messages'
 import {
@@ -145,6 +147,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     finalize: () => Promise<void>
     timestamp: number
   } | null = null
+
+  public is_recording = false
+  public recording_process: ChildProcessWithoutNullStreams | null = null
+  public audio_chunks: Buffer[] = []
 
   public preview_switch_choice_resolver:
     | ((choice: 'Switch' | undefined) => void)
@@ -788,6 +794,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_open_prompt_document(message)
           } else if (message.command == 'PASTE_URL') {
             await handle_paste_url(this, message)
+          } else if (message.command == 'SET_RECORDING_STATE') {
+            await handle_voice_input(this, message)
           }
         } catch (error: any) {
           Logger.error({

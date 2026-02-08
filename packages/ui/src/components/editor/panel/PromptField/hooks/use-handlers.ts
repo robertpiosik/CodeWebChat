@@ -1258,6 +1258,16 @@ export const use_handlers = (
   const handle_key_down = (e: React.KeyboardEvent<HTMLDivElement>) => {
     const { key, shiftKey } = e
 
+    if ((e.ctrlKey || e.metaKey) && shiftKey && e.code == 'Space') {
+      e.preventDefault()
+      if (props.is_recording) {
+        props.on_recording_finished()
+      } else {
+        props.on_recording_started()
+      }
+      return
+    }
+
     if ((e.ctrlKey || e.metaKey) && !shiftKey && key.toLowerCase() == 'c') {
       const selection = window.getSelection()
       if (!selection || selection.rangeCount == 0 || selection.isCollapsed) {

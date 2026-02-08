@@ -110,6 +110,9 @@ type Props = {
   on_paste_document: (text: string) => void
   on_open_document: (hash: string) => void
   on_paste_url: (url: string) => void
+  is_recording: boolean
+  on_recording_started: () => void
+  on_recording_finished: () => void
 }
 
 export const MainView: React.FC<Props> = (props) => {
@@ -276,6 +279,9 @@ export const MainView: React.FC<Props> = (props) => {
             on_paste_document={props.on_paste_document}
             on_open_document={props.on_open_document}
             on_paste_url={props.on_paste_url}
+            is_recording={props.is_recording}
+            on_recording_started={props.on_recording_started}
+            on_recording_finished={props.on_recording_finished}
           />
           <UiContextUtilisation
             current_context_size={props.token_count}
