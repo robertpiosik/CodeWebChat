@@ -453,19 +453,7 @@ export const Home: React.FC<Props> = (props) => {
         >
           <Notice type="info">
             A request includes the selected files, edit format instructions, and
-            your prompt. For{' '}
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault()
-                props.on_open_external_url(
-                  'https://ai.google.dev/gemini-api/docs/caching'
-                )
-              }}
-            >
-              context caching
-            </a>{' '}
-            efficiency, recently checked/modified files are placed at the end.
+            your prompt.
           </Notice>
           {props.edit_context_configs.length == 0 && (
             <Notice type="warning">
@@ -588,8 +576,7 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            A request includes the selected files in a compacted form (~60% less
-            tokens).
+            A request includes the selected files in a compacted form.
           </Notice>
           {props.prune_context_configs.length == 0 && (
             <Notice type="warning">
@@ -700,7 +687,7 @@ export const Home: React.FC<Props> = (props) => {
             >
               audio understanding
             </a>
-            . Gemini, for example, consumes 32 tokens per second.
+            .
           </Notice>
           {props.voice_input_configs.length == 0 && (
             <Notice type="warning">
