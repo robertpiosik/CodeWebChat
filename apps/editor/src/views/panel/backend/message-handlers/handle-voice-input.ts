@@ -16,7 +16,6 @@ const start_recording = (panel_provider: PanelProvider) => {
   panel_provider.audio_chunks = []
   try {
     panel_provider.recording_process = spawn('rec', ['-q', '-t', 'wav', '-'])
-
     panel_provider.recording_process.stdout.on('data', (chunk: Buffer) => {
       panel_provider.audio_chunks.push(chunk)
     })
@@ -109,7 +108,7 @@ const stop_recording = async (panel_provider: PanelProvider) => {
             content: [
               {
                 type: 'text',
-                text: 'Transcribe this audio'
+                text: 'Transcribe this audio.'
               },
               {
                 type: 'input_audio',

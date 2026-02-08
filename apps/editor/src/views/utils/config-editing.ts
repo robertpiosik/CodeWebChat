@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import axios from 'axios'
 import {
   ModelProvidersManager,
   Provider,
@@ -12,6 +13,7 @@ import { PROVIDERS } from '@shared/constants/providers'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { upsert_model_provider } from './upsert-model-provider'
+import { ToolType } from '../settings/types/tools'
 
 export const initial_select_provider = async (
   context: vscode.ExtensionContext,
@@ -110,10 +112,13 @@ export const initial_select_provider = async (
 
 export const initial_select_model = async (
   model_fetcher: ModelFetcher,
-  provider: Provider
+  provider: Provider,
+  tool_type?: ToolType
 ): Promise<string | undefined> => {
+  let base_url: string | undefined
+
   try {
-    const base_url =
+    base_url =
       provider.type == 'built-in'
         ? PROVIDERS[provider.name]?.base_url
         : provider.base_url
@@ -132,36 +137,65 @@ export const initial_select_model = async (
         detail: model.description
       }))
 
-      return await new Promise<string | undefined>((resolve) => {
-        const quick_pick = vscode.window.createQuickPick()
-        quick_pick.items = model_items
-        quick_pick.title = 'Models'
-        quick_pick.placeholder = 'Choose a model'
-        quick_pick.buttons = [vscode.QuickInputButtons.Back]
+      let last_selected_model_id: string | undefined
 
-        let accepted = false
-        const disposables: vscode.Disposable[] = []
+      while (true) {
+        const selected_model = await new Promise<string | undefined>(
+          (resolve) => {
+            const quick_pick = vscode.window.createQuickPick()
+            quick_pick.items = model_items
+            quick_pick.title = 'Models'
+            quick_pick.placeholder = 'Choose a model'
+            quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
-        disposables.push(
-          quick_pick.onDidAccept(() => {
-            accepted = true
-            const selected = quick_pick.selectedItems[0]
-            resolve(selected.description || selected.label)
-            quick_pick.hide()
-          }),
-          quick_pick.onDidTriggerButton((button) => {
-            if (button === vscode.QuickInputButtons.Back) {
-              quick_pick.hide()
+            if (last_selected_model_id) {
+              const active = model_items.find(
+                (item) =>
+                  (item.description || item.label) === last_selected_model_id
+              )
+              if (active) quick_pick.activeItems = [active]
             }
-          }),
-          quick_pick.onDidHide(() => {
-            if (!accepted) resolve(undefined)
-            disposables.forEach((d) => d.dispose())
-            quick_pick.dispose()
-          })
+
+            let accepted = false
+            const disposables: vscode.Disposable[] = []
+
+            disposables.push(
+              quick_pick.onDidAccept(() => {
+                accepted = true
+                const selected = quick_pick.selectedItems[0]
+                resolve(selected.description || selected.label)
+                quick_pick.hide()
+              }),
+              quick_pick.onDidTriggerButton((button) => {
+                if (button === vscode.QuickInputButtons.Back) {
+                  quick_pick.hide()
+                }
+              }),
+              quick_pick.onDidHide(() => {
+                if (!accepted) resolve(undefined)
+                disposables.forEach((d) => d.dispose())
+                quick_pick.dispose()
+              })
+            )
+            quick_pick.show()
+          }
         )
-        quick_pick.show()
-      })
+
+        if (!selected_model) return undefined
+
+        last_selected_model_id = selected_model
+
+        if (
+          await verify_model({
+            model: selected_model,
+            base_url,
+            api_key: provider.api_key,
+            is_voice_input: tool_type == 'voice-input'
+          })
+        ) {
+          return selected_model
+        }
+      }
     }
   } catch (error) {
     Logger.error({
@@ -186,10 +220,27 @@ export const initial_select_model = async (
     }
   }
 
-  return await vscode.window.showInputBox({
-    title: 'Models',
-    prompt: 'Could not fetch models. Please enter a model name (ID).'
-  })
+  while (true) {
+    const input = await vscode.window.showInputBox({
+      title: 'Models',
+      prompt: 'Could not fetch models. Please enter a model name (ID).'
+    })
+
+    if (!input) return undefined
+    const model = input.trim()
+
+    if (
+      !base_url ||
+      (await verify_model({
+        model,
+        base_url,
+        api_key: provider.api_key,
+        is_voice_input: tool_type == 'voice-input'
+      }))
+    ) {
+      return model
+    }
+  }
 }
 
 export const edit_provider_for_config = async (
@@ -251,7 +302,8 @@ export const edit_provider_for_config = async (
 export const edit_model_for_config = async (
   config: ToolConfig,
   providers_manager: ModelProvidersManager,
-  model_fetcher: ModelFetcher
+  model_fetcher: ModelFetcher,
+  tool_type?: ToolType
 ) => {
   const provider_from_manager = await providers_manager.get_provider(
     config.provider_name
@@ -289,49 +341,68 @@ export const edit_model_for_config = async (
         description: model.name ? model.id : undefined,
         detail: model.description
       }))
-      const selected_model_item = await new Promise<
-        (typeof model_items)[0] | undefined
-      >((resolve) => {
-        const quick_pick =
-          vscode.window.createQuickPick<(typeof model_items)[0]>()
-        quick_pick.items = model_items
-        quick_pick.title = 'Models'
-        quick_pick.placeholder = 'Choose a model'
-        quick_pick.buttons = [vscode.QuickInputButtons.Back]
-        if (config.model) {
-          const active = model_items.find(
-            (item) => (item.description || item.label) === config.model
-          )
-          if (active) quick_pick.activeItems = [active]
-        }
-        let accepted = false
-        const disposables: vscode.Disposable[] = []
 
-        disposables.push(
-          quick_pick.onDidAccept(() => {
-            accepted = true
-            resolve(quick_pick.selectedItems[0])
-            quick_pick.hide()
-          }),
-          quick_pick.onDidTriggerButton((button) => {
-            if (button === vscode.QuickInputButtons.Back) {
+      let last_selected_model_id = config.model
+
+      while (true) {
+        const selected_model_item = await new Promise<
+          (typeof model_items)[0] | undefined
+        >((resolve) => {
+          const quick_pick =
+            vscode.window.createQuickPick<(typeof model_items)[0]>()
+          quick_pick.items = model_items
+          quick_pick.title = 'Models'
+          quick_pick.placeholder = 'Choose a model'
+          quick_pick.buttons = [vscode.QuickInputButtons.Back]
+          if (last_selected_model_id) {
+            const active = model_items.find(
+              (item) =>
+                (item.description || item.label) === last_selected_model_id
+            )
+            if (active) quick_pick.activeItems = [active]
+          }
+          let accepted = false
+          const disposables: vscode.Disposable[] = []
+
+          disposables.push(
+            quick_pick.onDidAccept(() => {
+              accepted = true
+              resolve(quick_pick.selectedItems[0])
               quick_pick.hide()
-            }
-          }),
-          quick_pick.onDidHide(() => {
-            if (!accepted) resolve(undefined)
-            disposables.forEach((d) => d.dispose())
-            quick_pick.dispose()
-          })
-        )
-        quick_pick.show()
-      })
-      if (selected_model_item) {
-        return (
+            }),
+            quick_pick.onDidTriggerButton((button) => {
+              if (button === vscode.QuickInputButtons.Back) {
+                quick_pick.hide()
+              }
+            }),
+            quick_pick.onDidHide(() => {
+              if (!accepted) resolve(undefined)
+              disposables.forEach((d) => d.dispose())
+              quick_pick.dispose()
+            })
+          )
+          quick_pick.show()
+        })
+
+        if (!selected_model_item) return undefined
+
+        const model = (
           selected_model_item.description || selected_model_item.label
         ).trim()
+
+        last_selected_model_id = model
+
+        if (
+          await verify_model({
+            model,
+            base_url,
+            api_key: provider_from_manager.api_key,
+            is_voice_input: tool_type == 'voice-input'
+          })
+        ) {
+          return model
+        }
       }
-      return undefined
     } else {
       vscode.window.showWarningMessage(
         dictionary.warning_message.NO_MODELS_FOUND_MANUAL_ENTRY(
@@ -364,15 +435,27 @@ export const edit_model_for_config = async (
     }
   }
 
-  const new_model_input = await vscode.window.showInputBox({
-    title: 'Models',
-    value: config.model,
-    prompt: `Enter a model name (ID)`
-  })
-  if (new_model_input !== undefined) {
-    return new_model_input.trim()
+  while (true) {
+    const new_model_input = await vscode.window.showInputBox({
+      title: 'Models',
+      value: config.model,
+      prompt: `Enter a model name (ID)`
+    })
+
+    if (!new_model_input) return undefined
+    const model = new_model_input.trim()
+
+    if (
+      await verify_model({
+        model,
+        base_url,
+        api_key: provider_from_manager.api_key,
+        is_voice_input: tool_type == 'voice-input'
+      })
+    ) {
+      return model
+    }
   }
-  return undefined
 }
 
 export const edit_temperature_for_config = async (
@@ -485,4 +568,126 @@ export const edit_reasoning_effort_for_config = async (
     )
     quick_pick.show()
   })
+}
+
+const verify_model = async (params: {
+  model: string
+  base_url: string
+  api_key?: string
+  is_voice_input?: boolean
+}): Promise<boolean> => {
+  let error: any | undefined
+  let success = false
+
+  await vscode.window.withProgress(
+    {
+      location: vscode.ProgressLocation.Notification,
+      title: 'Sending test message...',
+      cancellable: true
+    },
+    async (_progress, token) => {
+      try {
+        const messages: any[] = params.is_voice_input
+          ? [
+              {
+                role: 'user',
+                content: [
+                  { type: 'text', text: 'Transcribe this audio.' },
+                  {
+                    type: 'input_audio',
+                    input_audio: { data: '', format: 'wav' }
+                  }
+                ]
+              }
+            ]
+          : [
+              {
+                role: 'user',
+                content: 'Test'
+              }
+            ]
+
+        await axios.post(
+          `${params.base_url}/chat/completions`,
+          {
+            model: params.model,
+            messages,
+            max_tokens: 1
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              ...(params.api_key
+                ? { Authorization: `Bearer ${params.api_key}` }
+                : {})
+            },
+            cancelToken: new axios.CancelToken((c) => {
+              token.onCancellationRequested(() => {
+                c('User cancelled')
+              })
+            })
+          }
+        )
+        success = true
+      } catch (e: any) {
+        if (!token.isCancellationRequested) {
+          error = e
+        }
+      }
+    }
+  )
+
+  if (success) {
+    return true
+  }
+
+  if (!error) {
+    return false
+  }
+
+  const title = 'Test message failed'
+  let detail = 'Error'
+
+  if (axios.isAxiosError(error)) {
+    if (error.response) {
+      const status = error.response.status
+      let reason = 'Server Error'
+      switch (status) {
+        case 400:
+          reason = 'Bad Request'
+          break
+        case 401:
+          reason = 'Authentication Error'
+          break
+        case 403:
+          reason = 'Access Forbidden'
+          break
+        case 404:
+          reason = 'Model not found'
+          break
+        case 429:
+          reason = 'Rate limit exceeded'
+          break
+        case 500:
+          reason = 'Internal Server Error'
+          break
+        case 502:
+          reason = 'Bad Gateway'
+          break
+        case 503:
+          reason = 'Service Unavailable'
+          break
+      }
+      detail = `Status code: ${status} (${reason})`
+    } else if (error.code) {
+      detail = error.message
+    }
+  }
+
+  const choice = await vscode.window.showWarningMessage(
+    title,
+    { modal: true, detail },
+    'Use Anyway'
+  )
+  return choice == 'Use Anyway'
 }

@@ -143,7 +143,8 @@ export const upsert_configuration = async (params: {
 
       selected_model = await initial_select_model(
         model_fetcher,
-        selected_provider
+        selected_provider,
+        params.tool_type
       )
       if (selected_model) break
     }
@@ -197,12 +198,12 @@ export const upsert_configuration = async (params: {
           iconPath: new vscode.ThemeIcon('save'),
           tooltip: 'Save and close'
         }
-        const redo_button: vscode.QuickInputButton = {
-          iconPath: new vscode.ThemeIcon('redo'),
-          tooltip: 'Reset changes'
+        const discard_button: vscode.QuickInputButton = {
+          iconPath: new vscode.ThemeIcon('discard'),
+          tooltip: 'Discard changes'
         }
         quick_pick.buttons = has_changes
-          ? [redo_button, close_button]
+          ? [discard_button, close_button]
           : [close_button]
         if (last_selected_label) {
           const active = items.find((i) => i.label === last_selected_label)
@@ -213,7 +214,7 @@ export const upsert_configuration = async (params: {
 
         disposables.push(
           quick_pick.onDidTriggerItemButton((e) => {
-            if (e.item.label === 'Reasoning Effort') {
+            if (e.item.label == 'Reasoning Effort') {
               delete updated_config.reasoning_effort
               accepted = true
               resolve({ label: 'REFRESH' })
@@ -228,7 +229,7 @@ export const upsert_configuration = async (params: {
           quick_pick.onDidTriggerButton((button) => {
             if (button === close_button) {
               quick_pick.hide()
-            } else if (button === redo_button) {
+            } else if (button === discard_button) {
               Object.keys(updated_config).forEach(
                 (key) => delete (updated_config as any)[key]
               )
@@ -276,7 +277,7 @@ export const upsert_configuration = async (params: {
       break
     }
 
-    if (selected_item.label === 'REFRESH') {
+    if (selected_item.label == 'REFRESH') {
       continue
     }
 
@@ -310,7 +311,8 @@ export const upsert_configuration = async (params: {
         const new_model = await edit_model_for_config(
           temp_config,
           providers_manager,
-          model_fetcher
+          model_fetcher,
+          params.tool_type
         )
         if (new_model !== undefined) {
           updated_config.provider_name = new_provider.provider_name
