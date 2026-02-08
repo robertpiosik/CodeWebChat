@@ -20,6 +20,11 @@ import {
 } from '@/views/settings/types/messages'
 import { GeneralSection } from './sections/GeneralSection'
 import { use_translation, TranslationKey } from '@/views/i18n/use-translation'
+import {
+  commit_message_instructions as default_commit_message_instructions,
+  voice_input_instructions as default_voice_input_instructions
+} from '@/constants/instructions'
+import { default_system_instructions } from '@shared/constants/default-system-instructions'
 
 type NavItem =
   | 'general'
@@ -84,6 +89,7 @@ type Props = {
   edit_context_system_instructions: string
   intelligent_update_configs: ConfigurationForClient[]
   prune_context_configs: ConfigurationForClient[]
+  voice_input_instructions: string
   commit_message_instructions: string
   commit_message_auto_accept_after: number | null
   context_size_warning_threshold: number
@@ -113,6 +119,7 @@ type Props = {
     instructions: EditFormatInstructions
   ) => void
   on_edit_context_system_instructions_change: (instructions: string) => void
+  on_voice_input_instructions_change: (instructions: string) => void
   on_automatic_checkpoints_toggle: (disabled: boolean) => void
   on_checkpoint_lifespan_change: (hours: number | undefined) => void
   on_gemini_user_id_change: (id: number | null) => void
@@ -166,6 +173,7 @@ export const Home: React.FC<Props> = (props) => {
     'commit-messages': null
   })
   const [commit_instructions, set_commit_instructions] = useState('')
+  const [voice_input_instructions, set_voice_input_instructions] = useState('')
   const [
     commit_message_auto_accept_after_str,
     set_commit_message_auto_accept_after_str
@@ -253,6 +261,10 @@ export const Home: React.FC<Props> = (props) => {
   useEffect(() => {
     set_commit_instructions(props.commit_message_instructions || '')
   }, [props.commit_message_instructions])
+
+  useEffect(() => {
+    set_voice_input_instructions(props.voice_input_instructions || '')
+  }, [props.voice_input_instructions])
 
   useEffect(() => {
     set_commit_message_auto_accept_after_str(
@@ -465,11 +477,18 @@ export const Home: React.FC<Props> = (props) => {
                 <Textarea
                   value={edit_context_instructions}
                   on_change={set_edit_context_instructions}
-                  on_blur={() =>
+                  on_blur={() => {
                     props.on_edit_context_system_instructions_change(
                       edit_context_instructions
                     )
-                  }
+                    if (
+                      edit_context_instructions == '' &&
+                      props.edit_context_system_instructions ==
+                        default_system_instructions
+                    ) {
+                      set_edit_context_instructions(default_system_instructions)
+                    }
+                  }}
                 />
               }
             />
@@ -593,7 +612,9 @@ export const Home: React.FC<Props> = (props) => {
             </Button>
           }
         >
-          <Notice type="info">A request includes the selected files.</Notice>
+          <Notice type="info">
+            A request includes the editor with cursor and the selected files.
+          </Notice>
           {props.code_at_cursor_configs.length == 0 && (
             <Notice type="warning">
               Add a configuration to use this feature.
@@ -690,6 +711,30 @@ export const Home: React.FC<Props> = (props) => {
                 props.on_unset_default_config('VOICE_INPUT')
               }
             />
+            <Item
+              title="Instructions"
+              description="Instructions for the model to process voice input."
+              slot_below={
+                <Textarea
+                  value={voice_input_instructions}
+                  on_change={set_voice_input_instructions}
+                  on_blur={() => {
+                    props.on_voice_input_instructions_change(
+                      voice_input_instructions
+                    )
+                    if (
+                      voice_input_instructions == '' &&
+                      props.voice_input_instructions ==
+                        default_voice_input_instructions
+                    ) {
+                      set_voice_input_instructions(
+                        default_voice_input_instructions
+                      )
+                    }
+                  }}
+                />
+              }
+            />
           </Group>
         </Section>
 
@@ -745,9 +790,18 @@ export const Home: React.FC<Props> = (props) => {
                 <Textarea
                   value={commit_instructions}
                   on_change={set_commit_instructions}
-                  on_blur={() =>
+                  on_blur={() => {
                     props.on_commit_instructions_change(commit_instructions)
-                  }
+                    if (
+                      commit_instructions == '' &&
+                      props.commit_message_instructions ==
+                        default_commit_message_instructions
+                    ) {
+                      set_commit_instructions(
+                        default_commit_message_instructions
+                      )
+                    }
+                  }}
                 />
               }
             />

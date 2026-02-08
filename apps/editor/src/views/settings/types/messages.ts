@@ -165,6 +165,15 @@ export interface UpdateCommitMessageInstructionsMessage {
   instructions: string
 }
 
+export interface GetVoiceInputInstructionsMessage {
+  command: 'GET_VOICE_INPUT_INSTRUCTIONS'
+}
+
+export interface UpdateVoiceInputInstructionsMessage {
+  command: 'UPDATE_VOICE_INPUT_INSTRUCTIONS'
+  instructions: string
+}
+
 export interface GetCommitMessageAutoAcceptAfterMessage {
   command: 'GET_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER'
 }
@@ -338,6 +347,8 @@ export type FrontendMessage =
   | SetDefaultCommitMessagesConfigurationMessage
   | GetCommitMessageInstructionsMessage
   | UpdateCommitMessageInstructionsMessage
+  | GetVoiceInputInstructionsMessage
+  | UpdateVoiceInputInstructionsMessage
   | GetCommitMessageAutoAcceptAfterMessage
   | UpdateCommitMessageAutoAcceptAfterMessage
   | GetEditContextSystemInstructionsMessage
@@ -408,6 +419,11 @@ export interface CommitMessagesConfigurationsMessage {
 
 export interface CommitMessageInstructionsMessage {
   command: 'COMMIT_MESSAGE_INSTRUCTIONS'
+  instructions: string
+}
+
+export interface VoiceInputInstructionsMessage {
+  command: 'VOICE_INPUT_INSTRUCTIONS'
   instructions: string
 }
 
@@ -485,6 +501,7 @@ export type BackendMessage =
   | VoiceInputConfigurationsMessage
   | CommitMessagesConfigurationsMessage
   | CommitMessageInstructionsMessage
+  | VoiceInputInstructionsMessage
   | CommitMessageAutoAcceptAfterMessage
   | EditContextSystemInstructionsMessage
   | EditFormatInstructionsMessage

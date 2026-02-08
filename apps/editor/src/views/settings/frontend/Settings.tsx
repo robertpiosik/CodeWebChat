@@ -30,6 +30,7 @@ export const Settings = () => {
       settings_hook.voice_input_configs !== undefined &&
       settings_hook.intelligent_update_configs !== undefined &&
       settings_hook.prune_context_configs !== undefined &&
+      settings_hook.voice_input_instructions !== undefined &&
       settings_hook.commit_message_instructions !== undefined &&
       settings_hook.commit_message_auto_accept_after !== undefined &&
       settings_hook.context_size_warning_threshold !== undefined &&
@@ -74,6 +75,7 @@ export const Settings = () => {
       context_size_warning_threshold={
         settings_hook.context_size_warning_threshold!
       }
+      voice_input_instructions={settings_hook.voice_input_instructions!}
       commit_message_instructions={settings_hook.commit_message_instructions!}
       commit_message_auto_accept_after={
         settings_hook.commit_message_auto_accept_after!
@@ -102,6 +104,9 @@ export const Settings = () => {
       set_prune_context_configs={settings_hook.set_prune_context_configs}
       on_context_size_warning_threshold_change={
         settings_hook.handle_context_size_warning_threshold_change
+      }
+      on_voice_input_instructions_change={
+        settings_hook.handle_voice_input_instructions_change
       }
       on_commit_instructions_change={
         settings_hook.handle_commit_instructions_change

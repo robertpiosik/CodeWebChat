@@ -61,9 +61,9 @@ export const set_caret_position_for_div = (
     return found
   }
 
-  const startFound = find_boundary(position, true)
+  const start_found = find_boundary(position, true)
 
-  if (startFound) {
+  if (start_found) {
     if (end_position !== undefined && end_position !== position) {
       find_boundary(end_position, false)
     } else {

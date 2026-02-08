@@ -685,6 +685,10 @@
           "type": "string",
           "scope": "resource"
         },
+        "codeWebChat.voiceInputInstructions": {
+          "type": "string",
+          "scope": "resource"
+        },
         "codeWebChat.commitMessageAutoAcceptAfter": {
           "type": "number",
           "scope": "resource",

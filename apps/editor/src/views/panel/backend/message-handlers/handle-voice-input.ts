@@ -11,6 +11,7 @@ import * as vscode from 'vscode'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import axios from 'axios'
 import { make_api_request } from '@/utils/make-api-request'
+import { voice_input_instructions } from '@/constants/instructions'
 
 const start_recording = (panel_provider: PanelProvider) => {
   panel_provider.audio_chunks = []
@@ -79,6 +80,12 @@ const stop_recording = async (panel_provider: PanelProvider) => {
         }
       }
 
+      panel_provider.send_message({
+        command: 'SHOW_PROGRESS',
+        title: 'Transcribing...',
+        cancellable: true
+      })
+
       const provider = await model_providers_manager.get_provider(
         config!.provider_name
       )
@@ -100,6 +107,10 @@ const stop_recording = async (panel_provider: PanelProvider) => {
         endpoint_url = provider.base_url
       }
 
+      const instructions = vscode.workspace
+        .getConfiguration('codeWebChat')
+        .get<string>('voiceInputInstructions')
+
       const body: { [key: string]: any } = {
         model: config.model,
         messages: [
@@ -108,7 +119,7 @@ const stop_recording = async (panel_provider: PanelProvider) => {
             content: [
               {
                 type: 'text',
-                text: 'Transcribe this audio.'
+                text: instructions || voice_input_instructions
               },
               {
                 type: 'input_audio',
@@ -124,19 +135,23 @@ const stop_recording = async (panel_provider: PanelProvider) => {
 
       apply_reasoning_effort(body, provider, config.reasoning_effort)
 
-      const cancel_token_source = axios.CancelToken.source()
+      panel_provider.api_call_cancel_token_source = axios.CancelToken.source()
 
       const result = await make_api_request({
         endpoint_url,
         api_key: provider.api_key,
         body,
-        cancellation_token: cancel_token_source.token
+        cancellation_token: panel_provider.api_call_cancel_token_source.token
       })
 
       if (result?.response) {
         panel_provider.add_text_at_cursor_position(result.response)
       }
     } catch (error: any) {
+      if (axios.isCancel(error)) {
+        return
+      }
+
       Logger.error({
         function_name: 'stop_recording',
         message: 'Failed to process audio',
@@ -145,6 +160,11 @@ const stop_recording = async (panel_provider: PanelProvider) => {
       vscode.window.showErrorMessage(
         'Failed to process audio: ' + error.message
       )
+    } finally {
+      panel_provider.api_call_cancel_token_source = null
+      panel_provider.send_message({
+        command: 'HIDE_PROGRESS'
+      })
     }
   }
 }

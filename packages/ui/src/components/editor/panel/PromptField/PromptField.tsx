@@ -92,6 +92,12 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     set_prune_instructions(props.prune_context_instructions_prefix)
   }, [props.prune_context_instructions_prefix])
 
+  useEffect(() => {
+    if (!props.value) {
+      set_show_submit_tooltip(false)
+    }
+  }, [props.value])
+
   const toggle_invocation_dropdown = useCallback(() => {
     set_is_invocation_dropdown_open((prev) => !prev)
   }, [])
@@ -265,6 +271,19 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     format_before_after_ref,
     format_diff_ref
   } = use_edit_format_compacting()
+
+  useEffect(() => {
+    if (props.is_recording) {
+      const handle_click = () => {
+        props.on_recording_finished()
+      }
+
+      document.addEventListener('click', handle_click, true)
+      return () => {
+        document.removeEventListener('click', handle_click, true)
+      }
+    }
+  }, [props.is_recording])
 
   return (
     <div className={styles.container}>

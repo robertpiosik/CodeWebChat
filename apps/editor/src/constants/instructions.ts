@@ -40,3 +40,6 @@ Your response must begin with "**Relevant files:**", then list paths one under a
 - \`src/hello.ts\`
 - \`src/welcome.ts\`
 </system>`
+
+export const voice_input_instructions =
+  'Respond with a transcription of the following audio recording or text "(inaudible)", and nothing else.'

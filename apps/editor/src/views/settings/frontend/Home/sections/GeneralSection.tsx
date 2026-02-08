@@ -12,6 +12,12 @@ import {
   CHECKPOINT_DEFAULT_LIFESPAN,
   DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD
 } from '@/constants/values'
+import {
+  EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER,
+  EDIT_FORMAT_INSTRUCTIONS_DIFF,
+  EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
+  EDIT_FORMAT_INSTRUCTIONS_WHOLE
+} from '@/constants/edit-format-instructions'
 
 type ClearChecksBehavior = 'ignore-open-editors' | 'uncheck-all'
 
@@ -151,6 +157,31 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
 
     const handle_instructions_blur = () => {
       props.on_edit_format_instructions_change(instructions)
+
+      set_instructions((prev) => ({
+        whole:
+          prev.whole == '' &&
+          props.edit_format_instructions.whole == EDIT_FORMAT_INSTRUCTIONS_WHOLE
+            ? EDIT_FORMAT_INSTRUCTIONS_WHOLE
+            : prev.whole,
+        truncated:
+          prev.truncated == '' &&
+          props.edit_format_instructions.truncated ==
+            EDIT_FORMAT_INSTRUCTIONS_TRUNCATED
+            ? EDIT_FORMAT_INSTRUCTIONS_TRUNCATED
+            : prev.truncated,
+        before_after:
+          prev.before_after == '' &&
+          props.edit_format_instructions.before_after ==
+            EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER
+            ? EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER
+            : prev.before_after,
+        diff:
+          prev.diff == '' &&
+          props.edit_format_instructions.diff == EDIT_FORMAT_INSTRUCTIONS_DIFF
+            ? EDIT_FORMAT_INSTRUCTIONS_DIFF
+            : prev.diff
+      }))
     }
 
     return (

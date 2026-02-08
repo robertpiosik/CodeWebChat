@@ -64,25 +64,25 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
         return `${prefix}\`${path}\`${suffix}`
       }
     } else if (el.dataset.type == 'changes-symbol') {
-      const branchName = el.dataset.branchName
-      if (!branchName) return ''
-      const expected_text = `Diff with ${branchName}`
+      const branch_name = el.dataset.branchName
+      if (!branch_name) return ''
+      const expected_text = `Diff with ${branch_name}`
       const index = inner_content.indexOf(expected_text)
       if (index != -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + expected_text.length)
-        return `${prefix}#Changes(${branchName})${suffix}`
+        return `${prefix}#Changes(${branch_name})${suffix}`
       }
     } else if (el.dataset.type == 'saved-context-symbol') {
-      const contextType = el.dataset.contextType
-      const contextName = el.dataset.contextName
-      if (!contextType || !contextName) return ''
-      const expected_text = `Context "${contextName}`
+      const context_type = el.dataset.contextType
+      const context_name = el.dataset.contextName
+      if (!context_type || !context_name) return ''
+      const expected_text = `Context "${context_name}"`
       const index = inner_content.indexOf(expected_text)
       if (index != -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + expected_text.length)
-        return `${prefix}#SavedContext(${contextType} "${contextName.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}")${suffix}`
+        return `${prefix}#SavedContext(${context_type} "${context_name.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}")${suffix}`
       }
     } else if (el.dataset.type == 'selection-symbol') {
       const expected_text = 'Selection'
@@ -156,14 +156,14 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
     } else if (el.dataset.type == 'skill-symbol') {
       const agent = el.dataset.agent
       const repo = el.dataset.repo
-      const skillName = el.dataset.skillName
-      if (!agent || !repo || !skillName) return ''
+      const skill_name = el.dataset.skillName
+      if (!agent || !repo || !skill_name) return ''
 
-      const index = inner_content.indexOf(skillName)
+      const index = inner_content.indexOf(skill_name)
       if (index != -1) {
         const prefix = inner_content.substring(0, index)
-        const suffix = inner_content.substring(index + skillName.length)
-        return `${prefix}#Skill(${agent}:${repo}:${skillName})${suffix}`
+        const suffix = inner_content.substring(index + skill_name.length)
+        return `${prefix}#Skill(${agent}:${repo}:${skill_name})${suffix}`
       }
     } else if (el.dataset.type == 'image-symbol') {
       const hash = el.dataset.hash
@@ -314,13 +314,19 @@ export const use_handlers = (
         props.caret_position_to_set !== undefined &&
         props.on_caret_position_set
       ) {
-        const display_pos = map_raw_pos_to_display_pos(
-          props.caret_position_to_set,
-          props.value,
-          props.context_file_paths ?? []
-        )
-        set_caret_position_for_div(input_ref.current, display_pos)
-        props.on_caret_position_set()
+        const caret_pos = props.caret_position_to_set
+        const on_set = props.on_caret_position_set
+        setTimeout(() => {
+          if (input_ref.current) {
+            const display_pos = map_raw_pos_to_display_pos(
+              caret_pos,
+              props.value,
+              props.context_file_paths ?? []
+            )
+            set_caret_position_for_div(input_ref.current, display_pos)
+            on_set()
+          }
+        }, 0)
       }
     }
   }, [
@@ -1184,10 +1190,10 @@ export const use_handlers = (
           parent.dataset.type == 'document-symbol' ||
           parent.dataset.type == 'website-symbol'
         ) {
-          const rangeAfter = document.createRange()
-          rangeAfter.selectNodeContents(parent)
-          rangeAfter.setStart(startContainer, startOffset)
-          if (rangeAfter.toString().trim() == '') {
+          const range_after = document.createRange()
+          range_after.selectNodeContents(parent)
+          range_after.setStart(startContainer, startOffset)
+          if (range_after.toString().trim() == '') {
             node_before_cursor = parent
             break
           }

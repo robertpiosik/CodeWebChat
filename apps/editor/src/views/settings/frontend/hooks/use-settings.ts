@@ -33,6 +33,9 @@ export const use_settings = (vscode: any) => {
   >(undefined)
   const [commit_message_instructions, set_commit_message_instructions] =
     useState<string | undefined>(undefined)
+  const [voice_input_instructions, set_voice_input_instructions] = useState<
+    string | undefined
+  >(undefined)
   const [
     commit_message_auto_accept_after,
     set_commit_message_auto_accept_after
@@ -83,6 +86,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_VOICE_INPUT_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_PRUNE_CONTEXT_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
+    post_message(vscode, { command: 'GET_VOICE_INPUT_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER' })
     post_message(vscode, { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' })
     post_message(vscode, { command: 'GET_EDIT_FORMAT_INSTRUCTIONS' })
@@ -117,6 +121,8 @@ export const use_settings = (vscode: any) => {
         set_prune_context_configs(message.configurations)
       } else if (message.command == 'COMMIT_MESSAGE_INSTRUCTIONS') {
         set_commit_message_instructions(message.instructions)
+      } else if (message.command == 'VOICE_INPUT_INSTRUCTIONS') {
+        set_voice_input_instructions(message.instructions)
       } else if (message.command == 'COMMIT_MESSAGE_AUTO_ACCEPT_AFTER') {
         set_commit_message_auto_accept_after(message.seconds)
       } else if (message.command == 'CONTEXT_SIZE_WARNING_THRESHOLD') {
@@ -322,6 +328,12 @@ export const use_settings = (vscode: any) => {
       instructions
     })
 
+  const handle_voice_input_instructions_change = (instructions: string) =>
+    post_message(vscode, {
+      command: 'UPDATE_VOICE_INPUT_INSTRUCTIONS',
+      instructions
+    })
+
   const handle_commit_message_auto_accept_after_change = (
     seconds: number | null
   ) =>
@@ -451,6 +463,7 @@ export const use_settings = (vscode: any) => {
     set_voice_input_configs,
     prune_context_configs,
     set_prune_context_configs,
+    voice_input_instructions,
     commit_message_instructions,
     commit_message_auto_accept_after,
     edit_context_system_instructions,
@@ -475,6 +488,7 @@ export const use_settings = (vscode: any) => {
     handle_delete_config,
     handle_set_default_config,
     handle_unset_default_config,
+    handle_voice_input_instructions_change,
     handle_commit_instructions_change,
     handle_commit_message_auto_accept_after_change,
     handle_edit_context_system_instructions_change,
