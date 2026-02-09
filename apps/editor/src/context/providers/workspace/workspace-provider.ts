@@ -68,11 +68,19 @@ export class WorkspaceProvider
   public use_compact_token_count: boolean = false
   private _context_view_collapsible_state: vscode.TreeItemCollapsibleState =
     vscode.TreeItemCollapsibleState.Expanded
+  private _workspace_view_collapsible_state: vscode.TreeItemCollapsibleState =
+    vscode.TreeItemCollapsibleState.Collapsed
 
   public set_context_view_collapsible_state(
     state: vscode.TreeItemCollapsibleState
   ) {
     this._context_view_collapsible_state = state
+  }
+
+  public set_workspace_view_collapsible_state(
+    state: vscode.TreeItemCollapsibleState
+  ) {
+    this._workspace_view_collapsible_state = state
   }
 
   public set_use_compact_token_count(use_compact: boolean) {
@@ -724,7 +732,7 @@ export class WorkspaceProvider
           uri,
           context_view
             ? this._context_view_collapsible_state
-            : vscode.TreeItemCollapsibleState.Collapsed,
+            : this._workspace_view_collapsible_state,
           true,
           this._checked_items.get(root) ??
             vscode.TreeItemCheckboxState.Unchecked,
@@ -983,7 +991,7 @@ export class WorkspaceProvider
           is_directory
             ? context_view
               ? this._context_view_collapsible_state
-              : vscode.TreeItemCollapsibleState.Collapsed
+              : this._workspace_view_collapsible_state
             : vscode.TreeItemCollapsibleState.None,
           is_directory,
           checkbox_state,

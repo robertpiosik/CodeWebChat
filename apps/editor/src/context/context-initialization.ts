@@ -297,58 +297,63 @@ export const context_initialization = async (
         )
       }
     ),
-    vscode.commands.registerCommand('codeWebChat.expandFolders', async () => {
-      workspace_provider.set_context_view_collapsible_state(
-        vscode.TreeItemCollapsibleState.Expanded
-      )
-      workspace_view.dispose()
-      context_view.dispose()
-      await new Promise((resolve) => setTimeout(resolve, 0))
+    vscode.commands.registerCommand(
+      'codeWebChat.expandContextFolders',
+      async () => {
+        workspace_provider.set_context_view_collapsible_state(
+          vscode.TreeItemCollapsibleState.Expanded
+        )
+        context_view.dispose()
+        await new Promise((resolve) => setTimeout(resolve, 0))
 
-      workspace_view = vscode.window.createTreeView(
-        'codeWebChatViewWorkspace',
-        {
-          treeDataProvider: workspace_provider!,
+        context_view = vscode.window.createTreeView('codeWebChatViewContext', {
+          treeDataProvider: context_provider,
           manageCheckboxStateManually: true
-        }
-      )
+        })
 
-      context_view = vscode.window.createTreeView('codeWebChatViewContext', {
-        treeDataProvider: context_provider,
-        manageCheckboxStateManually: true
-      })
+        register_workspace_view_handlers(context_view)
+        context.subscriptions.push(context_view)
+      }
+    ),
+    vscode.commands.registerCommand(
+      'codeWebChat.collapseContextFolders',
+      async () => {
+        workspace_provider.set_context_view_collapsible_state(
+          vscode.TreeItemCollapsibleState.Collapsed
+        )
+        context_view.dispose()
+        await new Promise((resolve) => setTimeout(resolve, 0))
 
-      register_workspace_view_handlers(workspace_view)
-      register_workspace_view_handlers(context_view)
-      context.subscriptions.push(workspace_view)
-      context.subscriptions.push(context_view)
-    }),
-    vscode.commands.registerCommand('codeWebChat.collapseFolders', async () => {
-      workspace_provider.set_context_view_collapsible_state(
-        vscode.TreeItemCollapsibleState.Collapsed
-      )
-      workspace_view.dispose()
-      context_view.dispose()
-      await new Promise((resolve) => setTimeout(resolve, 0))
-
-      workspace_view = vscode.window.createTreeView(
-        'codeWebChatViewWorkspace',
-        {
-          treeDataProvider: workspace_provider!,
+        context_view = vscode.window.createTreeView('codeWebChatViewContext', {
+          treeDataProvider: context_provider,
           manageCheckboxStateManually: true
-        }
-      )
+        })
 
-      context_view = vscode.window.createTreeView('codeWebChatViewContext', {
-        treeDataProvider: context_provider,
-        manageCheckboxStateManually: true
-      })
+        register_workspace_view_handlers(context_view)
+        context.subscriptions.push(context_view)
+      }
+    ),
+    vscode.commands.registerCommand(
+      'codeWebChat.collapseWorkspaceFolders',
+      async () => {
+        workspace_provider.set_workspace_view_collapsible_state(
+          vscode.TreeItemCollapsibleState.Collapsed
+        )
+        workspace_view.dispose()
+        await new Promise((resolve) => setTimeout(resolve, 0))
 
-      register_workspace_view_handlers(workspace_view)
-      register_workspace_view_handlers(context_view)
-      context.subscriptions.push(workspace_view)
-      context.subscriptions.push(context_view)
-    }),
+        workspace_view = vscode.window.createTreeView(
+          'codeWebChatViewWorkspace',
+          {
+            treeDataProvider: workspace_provider!,
+            manageCheckboxStateManually: true
+          }
+        )
+
+        register_workspace_view_handlers(workspace_view)
+        context.subscriptions.push(workspace_view)
+      }
+    ),
     vscode.commands.registerCommand('codeWebChat.clearChecks', async () => {
       await workspace_provider!.clear_checks()
     }),

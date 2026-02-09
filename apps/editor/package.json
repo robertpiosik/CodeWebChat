@@ -154,13 +154,19 @@
         "icon": "$(clear-all)"
       },
       {
-        "command": "codeWebChat.expandFolders",
+        "command": "codeWebChat.expandContextFolders",
         "title": "Expand Folders",
         "category": "Code Web Chat",
         "icon": "$(expand-all)"
       },
       {
-        "command": "codeWebChat.collapseFolders",
+        "command": "codeWebChat.collapseContextFolders",
+        "title": "Collapse Folders",
+        "category": "Code Web Chat",
+        "icon": "$(collapse-all)"
+      },
+      {
+        "command": "codeWebChat.collapseWorkspaceFolders",
         "title": "Collapse Folders",
         "category": "Code Web Chat",
         "icon": "$(collapse-all)"
@@ -377,11 +383,15 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.expandFolders",
+          "command": "codeWebChat.expandContextFolders",
           "when": "false"
         },
         {
-          "command": "codeWebChat.collapseFolders",
+          "command": "codeWebChat.collapseContextFolders",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.collapseWorkspaceFolders",
           "when": "false"
         },
         {
@@ -473,12 +483,12 @@
           "group": "navigation@2"
         },
         {
-          "command": "codeWebChat.expandFolders",
+          "command": "codeWebChat.expandContextFolders",
           "when": "view == codeWebChatViewContext",
           "group": "navigation@3"
         },
         {
-          "command": "codeWebChat.collapseFolders",
+          "command": "codeWebChat.collapseContextFolders",
           "when": "view == codeWebChatViewContext",
           "group": "navigation@4"
         },
@@ -518,9 +528,9 @@
           "group": "navigation@3"
         },
         {
-          "command": "codeWebChat.collapseFolders",
+          "command": "codeWebChat.collapseWorkspaceFolders",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@8"
+          "group": "navigation@9"
         },
         {
           "command": "codeWebChat.checkAllOpenEditors",
