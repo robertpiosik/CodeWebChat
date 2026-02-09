@@ -9,8 +9,7 @@ import {
   ApiToolConfigurationsMessage,
   PresetsMessage,
   FrontendMessage,
-  SelectionState,
-  SetupProgress
+  SelectionState
 } from '@/views/panel/types/messages'
 import { ApiToolConfiguration } from '@/views/panel/types/messages'
 import { post_message } from '../utils/post_message'
@@ -73,7 +72,7 @@ type Props = {
   is_recording: boolean
   on_recording_started: () => void
   on_recording_finished: () => void
-  setup_progress?: SetupProgress
+  is_setup_complete: boolean
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -857,7 +856,7 @@ export const Main: React.FC<Props> = (props) => {
       is_recording={props.is_recording}
       on_recording_started={props.on_recording_started}
       on_recording_finished={props.on_recording_finished}
-      setup_progress={props.setup_progress}
+      is_setup_complete={props.is_setup_complete}
     />
   )
 }

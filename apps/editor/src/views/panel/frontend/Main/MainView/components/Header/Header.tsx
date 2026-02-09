@@ -12,7 +12,6 @@ import {
 import { SettingsButton as UiSettingsButton } from '@ui/components/editor/panel/SettingsButton'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 import { use_translation } from '@/views/i18n/use-translation'
-import { SetupProgress } from '@/views/panel/types/messages'
 
 type Props = {
   mode: Mode
@@ -24,7 +23,7 @@ type Props = {
   on_api_prompt_type_change: (prompt_type: ApiPromptType) => void
   on_quick_action_click: (command: string) => void
   are_keyboard_shortcuts_disabled: boolean
-  setup_progress?: SetupProgress
+  is_setup_complete: boolean
 }
 
 export const Header: React.FC<Props> = (props) => {
@@ -51,10 +50,6 @@ export const Header: React.FC<Props> = (props) => {
     on_show_home: props.on_show_home,
     is_disabled: props.are_keyboard_shortcuts_disabled
   })
-
-  const has_incomplete_setup = props.setup_progress
-    ? Object.values(props.setup_progress).some((v) => !v)
-    : false
 
   return (
     <div className={styles.header} ref={header_ref}>
@@ -127,7 +122,7 @@ export const Header: React.FC<Props> = (props) => {
         <UiSettingsButton
           on_click={() => props.on_quick_action_click('codeWebChat.settings')}
           title="Settings"
-          show_warning_icon={has_incomplete_setup}
+          show_warning_icon={!props.is_setup_complete}
         />
       </div>
     </div>

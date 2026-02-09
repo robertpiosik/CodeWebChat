@@ -108,7 +108,7 @@ export const Panel = () => {
     handle_paste_url,
     is_recording,
     handle_set_recording_state,
-    setup_progress
+    is_setup_complete
   } = use_panel(vscode)
 
   const [checkpoint_to_edit, set_checkpoint_to_edit] = useState<
@@ -320,7 +320,7 @@ export const Panel = () => {
                 is_recording={is_recording}
                 on_recording_started={() => handle_set_recording_state(true)}
                 on_recording_finished={() => handle_set_recording_state(false)}
-                setup_progress={setup_progress}
+                is_setup_complete={is_setup_complete}
               />
             </div>
             <div
@@ -398,7 +398,7 @@ export const Panel = () => {
                 on_tasks_change={handle_tasks_change}
                 on_task_delete={handle_task_delete}
                 on_task_forward={handle_task_forward}
-                setup_progress={setup_progress}
+                is_setup_complete={is_setup_complete}
               />
             </div>
           </Layout>

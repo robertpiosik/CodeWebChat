@@ -5,11 +5,7 @@ import { Timeline } from '@ui/components/editor/panel/Timeline'
 import { ModeButton } from '@ui/components/editor/panel/ModeButton'
 import cn from 'classnames'
 import { post_message } from '../utils/post_message'
-import {
-  Checkpoint,
-  FrontendMessage,
-  SetupProgress
-} from '@/views/panel/types/messages'
+import { Checkpoint, FrontendMessage } from '@/views/panel/types/messages'
 import { Responses as UiResponses } from '@ui/components/editor/panel/Responses'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Separator } from '@ui/components/editor/panel/Separator'
@@ -47,7 +43,7 @@ type Props = {
   on_tasks_change: (root: string, tasks: Task[]) => void
   on_task_delete: (root: string, timestamp: number) => void
   on_task_forward: (text: string) => void
-  setup_progress?: SetupProgress
+  is_setup_complete: boolean
 }
 
 export const Home: React.FC<Props> = (props) => {
@@ -98,10 +94,6 @@ export const Home: React.FC<Props> = (props) => {
     } as FrontendMessage)
   }
 
-  const has_incomplete_setup = props.setup_progress
-    ? Object.values(props.setup_progress).some((v) => !v)
-    : false
-
   return (
     <>
       <div className={styles.header}>
@@ -114,7 +106,7 @@ export const Home: React.FC<Props> = (props) => {
         <SettingsButton
           on_click={handle_settings_click}
           label={t('panel.header.settings')}
-          show_warning_icon={has_incomplete_setup}
+          show_warning_icon={!props.is_setup_complete}
         />
       </div>
 

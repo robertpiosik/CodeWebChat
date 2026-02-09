@@ -16,7 +16,7 @@ import { use_last_choice_button_title } from './hooks/use-last-choice-button-tit
 import { ContextUtilisation as UiContextUtilisation } from '@ui/components/editor/panel/ContextUtilisation'
 import { Header } from './components/Header'
 import { use_invocation_counts } from './hooks/use-invocation-counts'
-import { SelectionState, SetupProgress } from '@/views/panel/types/messages'
+import { SelectionState } from '@/views/panel/types/messages'
 
 type Props = {
   scroll_reset_key: number
@@ -113,7 +113,7 @@ type Props = {
   is_recording: boolean
   on_recording_started: () => void
   on_recording_finished: () => void
-  setup_progress?: SetupProgress
+  is_setup_complete: boolean
 }
 
 export const MainView: React.FC<Props> = (props) => {
@@ -194,7 +194,7 @@ export const MainView: React.FC<Props> = (props) => {
         on_api_prompt_type_change={props.on_api_prompt_type_change}
         on_quick_action_click={props.on_quick_action_click}
         are_keyboard_shortcuts_disabled={props.are_keyboard_shortcuts_disabled}
-        setup_progress={props.setup_progress}
+        is_setup_complete={props.is_setup_complete}
       />
       <Scrollable scroll_to_top_key={props.scroll_reset_key}>
         <UiSeparator height={4} />

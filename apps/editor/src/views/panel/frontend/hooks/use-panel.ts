@@ -553,6 +553,10 @@ export const use_panel = (vscode: any) => {
     })
   }
 
+  const is_setup_complete = setup_progress
+    ? Object.values(setup_progress).every((v) => v)
+    : true
+
   return {
     active_view,
     set_active_view,
@@ -635,6 +639,6 @@ export const use_panel = (vscode: any) => {
     handle_paste_url,
     is_recording,
     handle_set_recording_state,
-    setup_progress
+    is_setup_complete
   }
 }
