@@ -7,6 +7,7 @@ export const apply_chat_response_button_style = (button: HTMLButtonElement) => {
   button.style.border = 'none'
   button.style.display = 'flex'
   button.style.alignItems = 'center'
+  button.style.outlineOffset = '4px'
 
   const svg = button.querySelector('svg')
   if (svg) {
