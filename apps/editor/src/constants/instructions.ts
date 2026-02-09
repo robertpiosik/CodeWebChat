@@ -1,20 +1,19 @@
 export const code_at_cursor_instructions =
   'Find correct replacement for the <missing_text> symbol. Respond with replacement text within "replacement" XML tags, without explanations or any other text.\nExample:\n<replacement>!== undefined</replacement>\n'
 
-export const code_at_cursor_instructions_for_panel = (
-  file_path: string,
-  row: number,
+export const code_at_cursor_instructions_for_panel = (params: {
+  file_path: string
+  row: number
   column: number
-) =>
-  `Find correct replacement text for the <missing_text> symbol.
+}) => `Find correct replacement text for the <missing_text> symbol.
 <system>
-Your response must begin with a markdown heading identifying the file and the cursor position, followed by a markdown code block containing the replacement text, followed by a brief explanation. The heading must be: "### Code at cursor: \`${file_path}\` (${
-    row + 1
-  }:${
-    column + 1
-  })". Always refer to the symbol "<missing_text>" as "cursor position" and "replacement" as "completion". Example:
+Your response must begin with a markdown heading identifying the file and the cursor position, followed by a markdown code block containing the replacement text, followed by a brief explanation. The heading must be: "### Code at cursor: \`${
+  params.file_path
+}\` (${params.row + 1}:${
+  params.column + 1
+})". Always refer to the symbol "<missing_text>" as "cursor position" and "replacement" as "completion". Example:
 
-### Code at cursor: \`${file_path}\` (${row + 1}:${column + 1})
+### Code at cursor: \`${params.file_path}\` (${params.row + 1}:${params.column + 1})
 
 \`\`\`typescript
 !== undefined

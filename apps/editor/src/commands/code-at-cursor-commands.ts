@@ -363,7 +363,6 @@ const perform_code_at_cursor = async (params: {
     const document = editor.document
     const position = editor.selection.active
 
-    const document_path = document.uri.fsPath
     const text_before_cursor = document.getText(
       new vscode.Range(new vscode.Position(0, 0), position)
     )
@@ -376,9 +375,7 @@ const perform_code_at_cursor = async (params: {
       params.open_editors_provider
     )
 
-    const context_text = await files_collector.collect_files({
-      exclude_path: document_path
-    })
+    const context_text = await files_collector.collect_files()
 
     const payload = {
       before: `<files>\n${context_text}<file path="${vscode.workspace.asRelativePath(
@@ -387,7 +384,7 @@ const perform_code_at_cursor = async (params: {
       after: `${text_after_cursor}\n]]>\n</file>\n</files>`
     }
 
-    const content = `${code_at_cursor_instructions}\n${payload.before}${
+    const content = `${payload.before}${
       completion_instructions
         ? `<missing_text>${completion_instructions}</missing_text>`
         : '<missing_text>'

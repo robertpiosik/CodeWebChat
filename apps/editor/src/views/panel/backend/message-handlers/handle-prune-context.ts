@@ -426,7 +426,7 @@ export const handle_prune_context = async (
       config_prune_instructions_prefix || prune_context_instructions_prefix
     const system_instructions_xml = `${instructions_to_use}\n${prune_context_format}`
 
-    const content = `${system_instructions_xml}\n${skill_definitions}${files}\n${system_instructions_xml}\n${processed_instructions}`
+    const content = `${files}\n${skill_definitions}${system_instructions_xml}\n${processed_instructions}`
 
     let user_content: any = content
 

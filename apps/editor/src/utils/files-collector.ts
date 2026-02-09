@@ -21,7 +21,6 @@ export class FilesCollector {
   }
 
   async collect_files(params?: {
-    exclude_path?: string
     additional_paths?: string[]
     no_context?: boolean
     compact?: boolean
@@ -62,7 +61,6 @@ export class FilesCollector {
     let collected_text = ''
 
     for (const file_path of sorted_context_files) {
-      if (params?.exclude_path && params.exclude_path == file_path) continue
       try {
         if (!fs.existsSync(file_path)) continue
         const stats = fs.statSync(file_path)

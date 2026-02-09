@@ -474,9 +474,7 @@ export const handle_edit_context = async (
       system_instructions_xml = `<system>\n${edit_format_instructions}\n</system>`
     }
 
-    const content = `${
-      system_instructions_xml ? system_instructions_xml + '\n' : ''
-    }${skill_definitions}${files}\n${
+    const content = `${files}\n${skill_definitions}${
       system_instructions_xml ? system_instructions_xml + '\n' : ''
     }${processed_instructions}`
 

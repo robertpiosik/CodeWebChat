@@ -59,9 +59,7 @@ export const handle_preview_preset = async (
       new vscode.Range(position, document.positionAt(document.getText().length))
     )
 
-    const context_text = await files_collector.collect_files({
-      exclude_path: active_path
-    })
+    const context_text = await files_collector.collect_files()
 
     const workspace_folder = vscode.workspace.workspaceFolders?.[0].uri.fsPath
     const relative_path = active_path!.replace(workspace_folder + '/', '')
@@ -138,7 +136,7 @@ export const handle_preview_preset = async (
       ? `<missing_text>${processed_completion_instructions}</missing_text>`
       : '<missing_text>'
 
-    text_to_send = `${system_instructions}\n${skill_definitions}<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}${missing_text_tag}${text_after_cursor}\n]]>\n</file>\n</files>\n${system_instructions}`
+    text_to_send = `<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}${missing_text_tag}${text_after_cursor}\n]]>\n</file>\n</files>\n${skill_definitions}${system_instructions}`
   } else if (panel_provider.web_prompt_type != 'code-at-cursor') {
     let instructions = apply_preset_affixes_to_instruction({
       instruction: current_instructions,
@@ -244,9 +242,7 @@ export const handle_preview_preset = async (
     }
 
     text_to_send = context_text
-      ? `${
-          system_instructions_xml ? system_instructions_xml + '\n' : ''
-        }${skill_definitions}<files>\n${context_text}</files>\n${
+      ? `<files>\n${context_text}</files>\n${skill_definitions}${
           system_instructions_xml ? system_instructions_xml + '\n' : ''
         }${processed_instructions}`
       : `${

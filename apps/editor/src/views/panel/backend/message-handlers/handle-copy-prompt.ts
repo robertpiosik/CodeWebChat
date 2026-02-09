@@ -77,18 +77,16 @@ export const handle_copy_prompt = async (params: {
       new vscode.Range(position, document.positionAt(document.getText().length))
     )
 
-    const context_text = await files_collector.collect_files({
-      exclude_path: active_path
-    })
+    const context_text = await files_collector.collect_files()
 
     const workspace_folder = vscode.workspace.workspaceFolders?.[0].uri.fsPath
     const relative_path = active_path.replace(workspace_folder + '/', '')
 
-    const system_instructions = code_at_cursor_instructions_for_panel(
-      relative_path,
-      position.line,
-      position.character
-    )
+    const system_instructions = code_at_cursor_instructions_for_panel({
+      file_path: relative_path,
+      row: position.line,
+      column: position.character
+    })
 
     let processed_completion_instructions = final_instruction
     let skill_definitions = ''
@@ -158,7 +156,7 @@ export const handle_copy_prompt = async (params: {
       ? `<missing_text>${processed_completion_instructions}</missing_text>`
       : '<missing_text>'
 
-    const text = `${system_instructions}\n${skill_definitions}<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}${missing_text_tag}${text_after_cursor}\n]]>\n</file>\n</files>\n${system_instructions}`
+    const text = `<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}${missing_text_tag}${text_after_cursor}\n]]>\n</file>\n</files>\n${skill_definitions}${system_instructions}`
 
     vscode.env.clipboard.writeText(text.trim())
   } else if (!is_in_code_completions_prompt_type) {
@@ -268,9 +266,7 @@ export const handle_copy_prompt = async (params: {
     }
 
     const text = context_text
-      ? `${
-          system_instructions_xml ? system_instructions_xml + '\n' : ''
-        }${skill_definitions}<files>\n${context_text}</files>\n${
+      ? `<files>\n${context_text}</files>\n${skill_definitions}${
           system_instructions_xml ? system_instructions_xml + '\n' : ''
         }${processed_instructions}`
       : `${

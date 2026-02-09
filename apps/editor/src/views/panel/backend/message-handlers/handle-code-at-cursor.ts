@@ -317,7 +317,6 @@ export const handle_code_at_cursor = async (
     const document = editor.document
     const position = editor.selection.active
 
-    const document_path = document.uri.fsPath
     const text_before_cursor = document.getText(
       new vscode.Range(new vscode.Position(0, 0), position)
     )
@@ -326,11 +325,11 @@ export const handle_code_at_cursor = async (
     )
 
     const relative_path = vscode.workspace.asRelativePath(document.uri)
-    const main_instructions = code_at_cursor_instructions_for_panel(
-      relative_path,
-      position.line,
-      position.character
-    )
+    const main_instructions = code_at_cursor_instructions_for_panel({
+      file_path: relative_path,
+      row: position.line,
+      column: position.character
+    })
 
     let processed_completion_instructions = completion_instructions
     let skill_definitions = ''
@@ -406,20 +405,18 @@ export const handle_code_at_cursor = async (
       panel_provider.open_editors_provider
     )
 
-    const context_text = await files_collector.collect_files({
-      exclude_path: document_path
-    })
+    const context_text = await files_collector.collect_files()
 
     const payload = {
       before: `<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}`,
       after: `${text_after_cursor}\n]]>\n</file>\n</files>`
     }
 
-    const content = `${main_instructions}\n${skill_definitions}${payload.before}${
+    const content = `${payload.before}${
       processed_completion_instructions
         ? `<missing_text>${processed_completion_instructions}</missing_text>`
         : '<missing_text>'
-    }${payload.after}\n${main_instructions}`
+    }${payload.after}\n${skill_definitions}${main_instructions}`
 
     let user_content: any = content
 

@@ -68,7 +68,6 @@ export const handle_send_to_browser = async (params: {
   }
 
   const active_editor = vscode.window.activeTextEditor
-  const active_path = active_editor?.document.uri.fsPath
 
   if (is_in_code_completions_mode && !active_editor) {
     vscode.window.showWarningMessage(dictionary.warning_message.NO_EDITOR_OPEN)
@@ -183,28 +182,26 @@ export const handle_send_to_browser = async (params: {
       })
     }
 
-    const context_text = await files_collector.collect_files({
-      exclude_path: active_path
-    })
+    const context_text = await files_collector.collect_files()
 
     const relative_path = vscode.workspace.asRelativePath(document.uri)
 
-    const main_instructions = code_at_cursor_instructions_for_panel(
-      relative_path,
-      position.line,
-      position.character
-    )
+    const main_instructions = code_at_cursor_instructions_for_panel({
+      file_path: relative_path,
+      row: position.line,
+      column: position.character
+    })
 
     const payload = {
       before: `<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}`,
       after: `${text_after_cursor}\n]]>\n</file>\n</files>`
     }
 
-    const text = `${main_instructions}\n${skill_definitions}${payload.before}${
+    const text = `${payload.before}${
       processed_completion_instructions
         ? `<missing_text>${processed_completion_instructions}</missing_text>`
         : '<missing_text>'
-    }${payload.after}\n${main_instructions}`
+    }${payload.after}\n${skill_definitions}${main_instructions}`
 
     const chats = resolved_preset_names.flatMap((preset_name) => {
       return Array.from({ length: params.invocation_count }).map(() => ({
@@ -332,9 +329,7 @@ export const handle_send_to_browser = async (params: {
 
         return {
           text: context_text
-            ? `${
-                system_instructions_xml ? system_instructions_xml + '\n' : ''
-              }${skill_definitions}<files>\n${context_text}</files>\n${
+            ? `<files>\n${context_text}</files>\n${skill_definitions}${
                 system_instructions_xml ? system_instructions_xml + '\n' : ''
               }${processed_instructions}`
             : `${
