@@ -216,8 +216,8 @@ export interface EditContextMessage extends BaseMessage {
   invocation_count: number
 }
 
-export interface CodeCompletionMessage extends BaseMessage {
-  command: 'CODE_COMPLETION'
+export interface CodeAtCursorMessage extends BaseMessage {
+  command: 'CODE_AT_CURSOR'
   use_quick_pick: boolean
   config_id?: string
   invocation_count: number
@@ -562,7 +562,7 @@ export type FrontendMessage =
   | GetModeMessage
   | EditContextMessage
   | CancelApiRequestMessage
-  | CodeCompletionMessage
+  | CodeAtCursorMessage
   | PruneContextMessage
   | ShowAtSignQuickPickMessage
   | ShowHashSignQuickPickMessage

@@ -64,10 +64,14 @@ export const handle_intelligent_update_file_in_preview = async (
     if (
       item.type == 'file' ||
       item.type == 'diff' ||
-      item.type == 'completion'
+      item.type == 'code-at-cursor'
     ) {
+      const matches_path =
+        item.file_path == file_path ||
+        (item.type == 'diff' && item.new_file_path == file_path)
+
       return (
-        item.file_path == file_path &&
+        matches_path &&
         (!item.workspace_name || item.workspace_name == workspace_name)
       )
     }
@@ -78,7 +82,7 @@ export const handle_intelligent_update_file_in_preview = async (
     relevant_item &&
     (relevant_item.type == 'file' ||
       relevant_item.type == 'diff' ||
-      relevant_item.type == 'completion')
+      relevant_item.type == 'code-at-cursor')
   ) {
     instructions = relevant_item.content
   }

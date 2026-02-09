@@ -322,9 +322,9 @@ export const process_chat_response = async (
 
     return null
   } else {
-    if (clipboard_items.some((item) => item.type == 'completion')) {
+    if (clipboard_items.some((item) => item.type == 'code-at-cursor')) {
       const completion = clipboard_items.find(
-        (item) => item.type == 'completion'
+        (item) => item.type == 'code-at-cursor'
       )!
       const workspace_map = new Map<string, string>()
       vscode.workspace.workspaceFolders!.forEach((folder) => {

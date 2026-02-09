@@ -136,7 +136,7 @@ export const apply_chat_response_command = (params: {
             (item) =>
               item.type == 'diff' ||
               item.type == 'file' ||
-              item.type == 'completion'
+              item.type == 'code-at-cursor'
           )
 
         if (has_content_to_preview) {

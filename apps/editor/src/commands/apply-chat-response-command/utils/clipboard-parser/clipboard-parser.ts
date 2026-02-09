@@ -1,6 +1,6 @@
 import {
   extract_diffs,
-  parse_code_completion,
+  parse_code_at_cursor,
   parse_multiple_files,
   parse_relevant_files
 } from './parsers'
@@ -22,8 +22,8 @@ export type DiffItem = {
   new_file_path?: string
 }
 
-export type CompletionItem = {
-  type: 'completion'
+export type CodeAtCursorItem = {
+  type: 'code-at-cursor'
   file_path: string
   content: string
   line: number
@@ -50,7 +50,7 @@ export type InlineFileItem = {
 export type ClipboardItem =
   | FileItem
   | DiffItem
-  | CompletionItem
+  | CodeAtCursorItem
   | TextItem
   | InlineFileItem
   | RelevantFilesItem
@@ -82,13 +82,13 @@ export const parse_response = (params: {
   const is_single_root_folder_workspace =
     params.is_single_root_folder_workspace ?? true
 
-  const code_completion_items = parse_code_completion({
+  const code_at_cursor_items = parse_code_at_cursor({
     response: params.response,
     is_single_root_folder_workspace
   })
 
-  if (code_completion_items && code_completion_items.length > 0) {
-    return code_completion_items
+  if (code_at_cursor_items && code_at_cursor_items.length > 0) {
+    return code_at_cursor_items
   }
 
   const relevant_files = parse_relevant_files({ response: params.response })

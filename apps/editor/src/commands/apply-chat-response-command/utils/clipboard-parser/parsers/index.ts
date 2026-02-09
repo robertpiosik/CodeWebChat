@@ -1,4 +1,4 @@
-export * from './code-completion-parser'
+export * from './code-at-cursor-parser'
 export * from './file-content-only-parser'
 export * from './multiple-files-parser/multiple-files-parser'
 export * from './diff-parser/diff-parser'

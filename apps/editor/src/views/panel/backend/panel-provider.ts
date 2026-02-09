@@ -36,7 +36,7 @@ import {
   handle_request_editor_state,
   handle_request_editor_selection_state,
   handle_edit_context,
-  handle_code_completion,
+  handle_code_at_cursor,
   handle_get_edit_format,
   handle_get_edit_format_instructions,
   handle_at_sign_quick_pick,
@@ -692,8 +692,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await vscode.commands.executeCommand(message.command_id)
           } else if (message.command == 'EDIT_CONTEXT') {
             await handle_edit_context(this, message)
-          } else if (message.command == 'CODE_COMPLETION') {
-            await handle_code_completion(this, message)
+          } else if (message.command == 'CODE_AT_CURSOR') {
+            await handle_code_at_cursor(this, message)
           } else if (message.command == 'PRUNE_CONTEXT') {
             await handle_prune_context(this, message)
           } else if (message.command == 'SHOW_PROMPT_TEMPLATE_QUICK_PICK') {

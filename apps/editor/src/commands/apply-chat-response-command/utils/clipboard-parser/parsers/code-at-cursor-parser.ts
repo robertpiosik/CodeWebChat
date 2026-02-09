@@ -1,6 +1,6 @@
 import { cleanup_api_response } from '@/utils/cleanup-api-response'
 import {
-  CompletionItem,
+  CodeAtCursorItem,
   TextItem,
   extract_workspace_and_path
 } from '../clipboard-parser'
@@ -8,8 +8,7 @@ import {
 const extract_path_and_position = (
   line: string
 ): { path: string; line: number; character: number } | null => {
-  const path_pos_regex =
-    /###\s+Code completion:\s+`?([^`]+)`?\s+\((\d+):(\d+)\)/
+  const path_pos_regex = /###\s+Code at cursor:\s+`?([^`]+)`?\s+\((\d+):(\d+)\)/
 
   const match = line.match(path_pos_regex)
 
@@ -29,10 +28,10 @@ const extract_path_and_position = (
   return null
 }
 
-export const parse_code_completion = (params: {
+export const parse_code_at_cursor = (params: {
   response: string
   is_single_root_folder_workspace: boolean
-}): (CompletionItem | TextItem)[] | null => {
+}): (CodeAtCursorItem | TextItem)[] | null => {
   const lines = params.response.split('\n')
   let code_block_start_index = -1
   let code_block_end_index = -1
@@ -75,7 +74,7 @@ export const parse_code_completion = (params: {
     return null
   }
 
-  const results: (CompletionItem | TextItem)[] = []
+  const results: (CodeAtCursorItem | TextItem)[] = []
   const text_before = lines.slice(0, header_index).join('\n').trim()
   if (text_before) {
     results.push({ type: 'text', content: text_before })
@@ -92,7 +91,7 @@ export const parse_code_completion = (params: {
   )
 
   results.push({
-    type: 'completion',
+    type: 'code-at-cursor',
     file_path: relative_path,
     content: cleanup_api_response({ content: content_lines.join('\n') }),
     line: completion_info.line,

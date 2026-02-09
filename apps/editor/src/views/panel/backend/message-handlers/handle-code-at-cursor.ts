@@ -11,7 +11,7 @@ import { Logger } from '@shared/utils/logger'
 import { PROVIDERS } from '@shared/constants/providers'
 import { RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY } from '@/constants/state-keys'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { CodeCompletionMessage } from '@/views/panel/types/messages'
+import { CodeAtCursorMessage } from '@/views/panel/types/messages'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { dictionary } from '@shared/constants/dictionary'
 import { randomUUID } from 'crypto'
@@ -27,7 +27,7 @@ import { replace_image_symbol } from '../utils/replace-image-symbol'
 import { replace_document_symbol } from '../utils/replace-document-symbol'
 import { replace_website_symbol } from '../utils/replace-website-symbol'
 
-const get_code_completion_config = async (
+const get_code_at_cursor_config = async (
   api_providers_manager: ModelProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext,
@@ -50,7 +50,7 @@ const get_code_completion_config = async (
   if (config_id !== undefined) {
     selected_config =
       code_completions_configs.find(
-        (c) => get_tool_config_id(c) === config_id
+        (c) => get_tool_config_id(c) == config_id
       ) || null
     if (selected_config && panel_provider) {
       panel_provider.send_message({
@@ -233,7 +233,7 @@ const get_code_completion_config = async (
       dictionary.error_message.API_PROVIDER_NOT_FOUND
     )
     Logger.warn({
-      function_name: 'get_code_completion_config',
+      function_name: 'get_code_at_cursor_config',
       message: 'API provider not found for Code Completions tool.'
     })
     return
@@ -245,16 +245,16 @@ const get_code_completion_config = async (
   }
 }
 
-export const handle_code_completion = async (
+export const handle_code_at_cursor = async (
   panel_provider: PanelProvider,
-  message: CodeCompletionMessage
+  message: CodeAtCursorMessage
 ): Promise<void> => {
   const api_providers_manager = new ModelProvidersManager(
     panel_provider.context
   )
   const completion_instructions = panel_provider.code_at_cursor_instructions
 
-  const config_result = await get_code_completion_config(
+  const config_result = await get_code_at_cursor_config(
     api_providers_manager,
     message.use_quick_pick,
     panel_provider.context,
@@ -273,7 +273,7 @@ export const handle_code_completion = async (
       dictionary.error_message.API_PROVIDER_NOT_SPECIFIED_FOR_CODE_AT_CURSOR
     )
     Logger.warn({
-      function_name: 'handle_code_completion',
+      function_name: 'handle_code_at_cursor',
       message: 'API provider is not specified for Code Completions tool.'
     })
     return
@@ -282,7 +282,7 @@ export const handle_code_completion = async (
       dictionary.error_message.MODEL_NOT_SPECIFIED_FOR_CODE_AT_CURSOR
     )
     Logger.warn({
-      function_name: 'handle_code_completion',
+      function_name: 'handle_code_at_cursor',
       message: 'Model is not specified for Code Completions tool.'
     })
     return
@@ -296,7 +296,7 @@ export const handle_code_completion = async (
         dictionary.error_message.BUILT_IN_PROVIDER_NOT_FOUND(provider.name)
       )
       Logger.warn({
-        function_name: 'handle_code_completion',
+        function_name: 'handle_code_at_cursor',
         message: `Built-in provider "${provider.name}" not found.`
       })
       return
@@ -501,7 +501,7 @@ export const handle_code_completion = async (
             return
           }
           Logger.error({
-            function_name: 'handle_code_completion',
+            function_name: 'handle_code_at_cursor',
             message: 'code completion error',
             data: err
           })

@@ -79,8 +79,8 @@ type Props = {
   on_mode_change: (value: Mode) => void
   on_edit_context_click: (invocation_count: number) => void
   on_edit_context_with_quick_pick_click: (invocation_count: number) => void
-  on_code_completion_click: (invocation_count: number) => void
-  on_code_completion_with_quick_pick_click: (invocation_count: number) => void
+  on_code_at_cursor_click: (invocation_count: number) => void
+  on_code_at_cursor_with_quick_pick_click: (invocation_count: number) => void
   on_prune_context_click: (invocation_count: number) => void
   on_prune_context_with_quick_pick_click: (invocation_count: number) => void
   caret_position_to_set?: number
@@ -148,7 +148,7 @@ export const MainView: React.FC<Props> = (props) => {
       props.initialize_chats({ invocation_count: current_invocation_count })
     } else {
       if (is_in_code_completions_prompt_type) {
-        props.on_code_completion_click(current_invocation_count)
+        props.on_code_at_cursor_click(current_invocation_count)
       } else if (is_in_prune_context_prompt_type) {
         props.on_prune_context_click(current_invocation_count)
       } else {
@@ -165,7 +165,7 @@ export const MainView: React.FC<Props> = (props) => {
       })
     } else {
       if (is_in_code_completions_prompt_type) {
-        props.on_code_completion_with_quick_pick_click(current_invocation_count)
+        props.on_code_at_cursor_with_quick_pick_click(current_invocation_count)
       } else if (is_in_prune_context_prompt_type) {
         props.on_prune_context_with_quick_pick_click(current_invocation_count)
       } else {

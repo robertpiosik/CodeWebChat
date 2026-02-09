@@ -94,7 +94,7 @@ export const preview = async (params: {
         } else if (
           item.type == 'file' ||
           item.type == 'diff' ||
-          item.type == 'completion'
+          item.type == 'code-at-cursor'
         ) {
           const key = is_single_root_folder_workspace
             ? item.file_path

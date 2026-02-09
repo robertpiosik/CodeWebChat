@@ -574,11 +574,11 @@ export const Main: React.FC<Props> = (props) => {
     update_chat_history(instruction)
   }
 
-  const handle_code_completion_click = (invocation_count: number) => {
+  const handle_code_at_cursor_click = (invocation_count: number) => {
     const instruction = get_current_instructions()
 
     post_message(props.vscode, {
-      command: 'CODE_COMPLETION',
+      command: 'CODE_AT_CURSOR',
       use_quick_pick: false,
       invocation_count
     })
@@ -588,13 +588,13 @@ export const Main: React.FC<Props> = (props) => {
     }
   }
 
-  const handle_code_completion_with_quick_pick_click = (
+  const handle_code_at_cursor_with_quick_pick_click = (
     invocation_count: number
   ) => {
     const instruction = get_current_instructions()
 
     post_message(props.vscode, {
-      command: 'CODE_COMPLETION',
+      command: 'CODE_AT_CURSOR',
       use_quick_pick: true,
       invocation_count
     })
@@ -666,7 +666,7 @@ export const Main: React.FC<Props> = (props) => {
       })
     } else if (props.api_prompt_type == 'code-at-cursor') {
       post_message(props.vscode, {
-        command: 'CODE_COMPLETION',
+        command: 'CODE_AT_CURSOR',
         use_quick_pick: false,
         config_id: id,
         invocation_count: 1
@@ -812,9 +812,9 @@ export const Main: React.FC<Props> = (props) => {
       on_edit_context_with_quick_pick_click={
         handle_edit_context_with_quick_pick_click
       }
-      on_code_completion_click={handle_code_completion_click}
-      on_code_completion_with_quick_pick_click={
-        handle_code_completion_with_quick_pick_click
+      on_code_at_cursor_click={handle_code_at_cursor_click}
+      on_code_at_cursor_with_quick_pick_click={
+        handle_code_at_cursor_with_quick_pick_click
       }
       on_prune_context_click={handle_prune_context_click}
       on_prune_context_with_quick_pick_click={

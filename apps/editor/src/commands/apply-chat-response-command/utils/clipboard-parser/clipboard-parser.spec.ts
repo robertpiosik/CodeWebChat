@@ -1120,7 +1120,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
-        type: 'completion',
+        type: 'code-at-cursor',
         file_path: 'src/index.ts',
         line: 25,
         character: 5,
@@ -1146,7 +1146,7 @@ describe('clipboard-parser', () => {
         content: load_test_case_file('completions', test_case, '1-text.txt')
       })
       expect(result[1]).toMatchObject({
-        type: 'completion',
+        type: 'code-at-cursor',
         file_path: 'src/index.ts',
         line: 25,
         character: 5,

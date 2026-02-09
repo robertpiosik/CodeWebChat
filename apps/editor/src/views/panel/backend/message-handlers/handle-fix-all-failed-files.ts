@@ -83,13 +83,17 @@ export const handle_fix_all_failed_files = async (params: {
   const files_to_process = failed_files
     .map((file_state) => {
       const relevant_item = parsed_response.find((item) => {
-        if (
-          item.type == 'file' ||
-          item.type == 'diff' ||
-          item.type == 'completion'
-        ) {
+        if (item.type == 'file' || item.type == 'code-at-cursor') {
           return (
             item.file_path == file_state.file_path &&
+            (!item.workspace_name ||
+              item.workspace_name == file_state.workspace_name)
+          )
+        }
+        if (item.type == 'diff') {
+          return (
+            (item.file_path == file_state.file_path ||
+              item.new_file_path == file_state.file_path) &&
             (!item.workspace_name ||
               item.workspace_name == file_state.workspace_name)
           )
@@ -102,7 +106,7 @@ export const handle_fix_all_failed_files = async (params: {
         relevant_item &&
         (relevant_item.type == 'file' ||
           relevant_item.type == 'diff' ||
-          relevant_item.type == 'completion')
+          relevant_item.type == 'code-at-cursor')
       ) {
         instructions = relevant_item.content
       }

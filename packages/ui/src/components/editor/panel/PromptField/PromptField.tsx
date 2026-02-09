@@ -584,7 +584,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         is_mac ? '(⇧⌘Space)' : '(Ctrl+Shift+Space)'
                       }`}
                     />
-                  ) : !props.value ? (
+                  ) : !props.value && props.prompt_type != 'code-at-cursor' ? (
                     <button
                       className={cn(
                         styles['footer__right__submit__button'],
@@ -648,7 +648,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                           shortcut: is_mac ? '⌘C' : 'Ctrl+C',
                           on_click: handle_copy_click
                         },
-                        ...(props.value
+                        ...(props.value || props.prompt_type == 'code-at-cursor'
                           ? [
                               {
                                 label: 'Voice input',

@@ -8,13 +8,13 @@ export const code_at_cursor_instructions_for_panel = (
 ) =>
   `Find correct replacement text for the <missing_text> symbol.
 <system>
-Your response must begin with a markdown heading identifying the file and the cursor position, followed by a markdown code block containing the replacement text, followed by a brief explanation. The heading must be: "### Code completion: \`${file_path}\` (${
+Your response must begin with a markdown heading identifying the file and the cursor position, followed by a markdown code block containing the replacement text, followed by a brief explanation. The heading must be: "### Code at cursor: \`${file_path}\` (${
     row + 1
   }:${
     column + 1
   })". Always refer to the symbol "<missing_text>" as "cursor position" and "replacement" as "completion". Example:
 
-### Code completion: \`${file_path}\` (${row + 1}:${column + 1})
+### Code at cursor: \`${file_path}\` (${row + 1}:${column + 1})
 
 \`\`\`typescript
 !== undefined
