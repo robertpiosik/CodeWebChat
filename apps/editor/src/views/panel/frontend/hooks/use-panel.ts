@@ -3,7 +3,8 @@ import { Preset } from '@shared/types/preset'
 import {
   BackendMessage,
   FrontendMessage,
-  SelectionState
+  SelectionState,
+  SetupProgress
 } from '../../types/messages'
 import { Checkpoint } from '../../types/messages'
 import { Mode, MODE } from '../../types/main-view-mode'
@@ -115,6 +116,7 @@ export const use_panel = (vscode: any) => {
   ] = useState<string>('')
   const [fix_all_automatically, set_fix_all_automatically] = useState(false)
   const [is_recording, set_is_recording] = useState(false)
+  const [setup_progress, set_setup_progress] = useState<SetupProgress>()
 
   const handle_instructions_change = (
     value: string,
@@ -393,6 +395,8 @@ export const use_panel = (vscode: any) => {
         set_prune_context_instructions_prefix(message.prefix)
       } else if (message.command == 'RECORDING_STATE') {
         set_is_recording(message.is_recording)
+      } else if (message.command == 'SETUP_PROGRESS') {
+        set_setup_progress(message.setup_progress)
       }
     }
     window.addEventListener('message', handle_message)
@@ -415,7 +419,8 @@ export const use_panel = (vscode: any) => {
       { command: 'REQUEST_CURRENTLY_OPEN_FILE_TEXT' },
       { command: 'REQUEST_CAN_UNDO' },
       { command: 'GET_TASKS' },
-      { command: 'GET_PRUNE_CONTEXT_INSTRUCTIONS_PREFIX' }
+      { command: 'GET_PRUNE_CONTEXT_INSTRUCTIONS_PREFIX' },
+      { command: 'GET_SETUP_PROGRESS' }
     ]
     initial_messages.forEach((message) => post_message(vscode, message))
 
@@ -629,6 +634,7 @@ export const use_panel = (vscode: any) => {
     handle_open_document,
     handle_paste_url,
     is_recording,
-    handle_set_recording_state
+    handle_set_recording_state,
+    setup_progress
   }
 }

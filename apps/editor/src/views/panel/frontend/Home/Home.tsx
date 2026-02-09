@@ -5,7 +5,11 @@ import { Timeline } from '@ui/components/editor/panel/Timeline'
 import { ModeButton } from '@ui/components/editor/panel/ModeButton'
 import cn from 'classnames'
 import { post_message } from '../utils/post_message'
-import { Checkpoint, FrontendMessage } from '@/views/panel/types/messages'
+import {
+  Checkpoint,
+  FrontendMessage,
+  SetupProgress
+} from '@/views/panel/types/messages'
 import { Responses as UiResponses } from '@ui/components/editor/panel/Responses'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Separator } from '@ui/components/editor/panel/Separator'
@@ -16,6 +20,7 @@ import { Tasks } from '@ui/components/editor/panel/Tasks'
 import { Task } from '@shared/types/task'
 import { use_tasks } from './hooks/use-tasks'
 import { use_timeline_scroll } from './hooks/use-timeline-scroll'
+import { SettingsButton } from '@ui/components/editor/panel/SettingsButton'
 
 type Props = {
   vscode: any
@@ -42,6 +47,7 @@ type Props = {
   on_tasks_change: (root: string, tasks: Task[]) => void
   on_task_delete: (root: string, timestamp: number) => void
   on_task_forward: (text: string) => void
+  setup_progress?: SetupProgress
 }
 
 export const Home: React.FC<Props> = (props) => {
@@ -92,6 +98,10 @@ export const Home: React.FC<Props> = (props) => {
     } as FrontendMessage)
   }
 
+  const has_incomplete_setup = props.setup_progress
+    ? Object.values(props.setup_progress).some((v) => !v)
+    : false
+
   return (
     <>
       <div className={styles.header}>
@@ -101,16 +111,11 @@ export const Home: React.FC<Props> = (props) => {
           </div>
           <span className={styles['header__text']}>Home</span>
         </div>
-        <button
-          className={styles['header__settings']}
-          onClick={handle_settings_click}
-          title={t('panel.header.settings')}
-        >
-          <span>{t('panel.header.settings')}</span>
-          <span className={styles['header__settings__icon-wrapper']}>
-            <span className={cn('codicon', 'codicon-settings-gear')} />
-          </span>
-        </button>
+        <SettingsButton
+          on_click={handle_settings_click}
+          label={t('panel.header.settings')}
+          show_warning_icon={has_incomplete_setup}
+        />
       </div>
 
       <Scrollable

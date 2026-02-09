@@ -1,5 +1,4 @@
 import { useRef, useCallback } from 'react'
-import cn from 'classnames'
 import { MODE, Mode } from '@/views/panel/types/main-view-mode'
 import { use_is_narrow_viewport, use_is_mac } from '@shared/hooks'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
@@ -10,8 +9,10 @@ import {
   api_prompt_type_labels,
   web_prompt_type_labels
 } from '../../prompt-type-labels'
+import { SettingsButton as UiSettingsButton } from '@ui/components/editor/panel/SettingsButton'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 import { use_translation } from '@/views/i18n/use-translation'
+import { SetupProgress } from '@/views/panel/types/messages'
 
 type Props = {
   mode: Mode
@@ -23,6 +24,7 @@ type Props = {
   on_api_prompt_type_change: (prompt_type: ApiPromptType) => void
   on_quick_action_click: (command: string) => void
   are_keyboard_shortcuts_disabled: boolean
+  setup_progress?: SetupProgress
 }
 
 export const Header: React.FC<Props> = (props) => {
@@ -49,6 +51,10 @@ export const Header: React.FC<Props> = (props) => {
     on_show_home: props.on_show_home,
     is_disabled: props.are_keyboard_shortcuts_disabled
   })
+
+  const has_incomplete_setup = props.setup_progress
+    ? Object.values(props.setup_progress).some((v) => !v)
+    : false
 
   return (
     <div className={styles.header} ref={header_ref}>
@@ -118,13 +124,11 @@ export const Header: React.FC<Props> = (props) => {
           )}
         </div>
 
-        <button
-          className={styles['header__right__settings']}
-          onClick={() => props.on_quick_action_click('codeWebChat.settings')}
+        <UiSettingsButton
+          on_click={() => props.on_quick_action_click('codeWebChat.settings')}
           title="Settings"
-        >
-          <span className={cn('codicon', 'codicon-settings-gear')} />
-        </button>
+          show_warning_icon={has_incomplete_setup}
+        />
       </div>
     </div>
   )

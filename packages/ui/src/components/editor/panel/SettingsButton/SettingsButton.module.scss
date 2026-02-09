@@ -1,0 +1,57 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  background: none;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  color: var(--vscode-foreground);
+  padding: 0;
+  width: 20px;
+  height: 20px;
+
+  &:hover {
+    background-color: var(--vscode-toolbar-hoverBackground);
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &--labeled {
+    width: auto;
+    height: auto;
+    gap: 4px;
+    padding: 1px 0 1px 5px;
+  }
+
+  &--with-warning {
+    width: auto;
+    height: auto;
+    gap: 2px;
+    padding: 0 4px;
+  }
+}
+
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: var(--vscode-icon-foreground);
+}
+
+.warning-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cwc-text-color-orange);
+
+  span {
+    font-size: 14px;
+  }
+}

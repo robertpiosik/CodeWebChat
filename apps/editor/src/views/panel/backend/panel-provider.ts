@@ -118,6 +118,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import { DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD } from '@/constants/values'
 import { upsert_configuration } from '../../utils/upsert-configuration'
 import { delete_configuration } from '../../utils/delete-configuration'
+import { ModelProvidersManager } from '@/services/model-providers-manager'
 
 export class PanelProvider implements vscode.WebviewViewProvider {
   private _webview_view: vscode.WebviewView | undefined
@@ -187,6 +188,40 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     this.send_message({
       command: 'SEND_WITH_SHIFT_ENTER',
       enabled
+    })
+  }
+
+  public async send_setup_progress() {
+    const providers_manager = new ModelProvidersManager(this.context)
+    const [
+      providers,
+      edit_context,
+      intelligent_update,
+      prune_context,
+      code_at_cursor,
+      voice_input,
+      commit_messages
+    ] = await Promise.all([
+      providers_manager.get_providers(),
+      providers_manager.get_edit_context_tool_configs(),
+      providers_manager.get_intelligent_update_tool_configs(),
+      providers_manager.get_prune_context_tool_configs(),
+      providers_manager.get_code_completions_tool_configs(),
+      providers_manager.get_voice_input_tool_configs(),
+      providers_manager.get_commit_messages_tool_configs()
+    ])
+
+    this.send_message({
+      command: 'SETUP_PROGRESS',
+      setup_progress: {
+        has_model_provider: providers.length > 0,
+        has_configuration_for_edit_context: edit_context.length > 0,
+        has_configuration_for_intelligent_update: intelligent_update.length > 0,
+        has_configuration_for_prune_context: prune_context.length > 0,
+        has_configuration_for_code_at_cursor: code_at_cursor.length > 0,
+        has_configuration_for_voice_input: voice_input.length > 0,
+        has_configuration_for_commit_messages: commit_messages.length > 0
+      }
     })
   }
 
@@ -315,6 +350,22 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           all_api_config_keys.some((key) => event.affectsConfiguration(key))
         ) {
           handle_get_api_tool_configurations(this)
+        }
+
+        const setup_progress_keys = [
+          'codeWebChat.modelProviders',
+          'codeWebChat.configurationsForEditContext',
+          'codeWebChat.configurationsForCodeAtCursor',
+          'codeWebChat.configurationsForPruneContext',
+          'codeWebChat.configurationsForIntelligentUpdate',
+          'codeWebChat.configurationsForCommitMessages',
+          'codeWebChat.configurationsForVoiceInput'
+        ]
+
+        if (
+          setup_progress_keys.some((key) => event.affectsConfiguration(key))
+        ) {
+          this.send_setup_progress()
         }
 
         if (event.affectsConfiguration('codeWebChat.isTimelineCollapsed')) {
@@ -796,6 +847,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_paste_url(this, message)
           } else if (message.command == 'SET_RECORDING_STATE') {
             await handle_voice_input(this, message)
+          } else if (message.command == 'GET_SETUP_PROGRESS') {
+            await this.send_setup_progress()
           }
         } catch (error: any) {
           Logger.error({

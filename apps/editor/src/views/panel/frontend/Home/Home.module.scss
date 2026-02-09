@@ -33,33 +33,6 @@
     letter-spacing: 1px;
     padding-top: 1px;
   }
-
-  &__settings {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    cursor: pointer;
-    text-decoration: none;
-    background: none;
-    border: none;
-    border-radius: 5px;
-    padding: 1px 0 1px 5px;
-
-    &:hover {
-      background-color: var(--vscode-toolbar-hoverBackground);
-    }
-
-    &__icon-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      --size: 20px;
-      width: var(--size);
-      height: var(--size);
-      color: var(--vscode-icon-foreground);
-    }
-  }
 }
 
 .content {

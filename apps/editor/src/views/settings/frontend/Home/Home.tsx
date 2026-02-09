@@ -398,7 +398,9 @@ export const Home: React.FC<Props> = (props) => {
           subtitle="Manage your API keys for use with API tools."
           on_stuck_change={model_providers_on_stuck_change}
           actions={
-            <Button on_click={() => props.on_add_provider()}>Add New...</Button>
+            <Button on_click={() => props.on_add_provider()}>
+              {t('settings.action.add-new')}
+            </Button>
           }
         >
           <Notice type="info">
@@ -447,7 +449,7 @@ export const Home: React.FC<Props> = (props) => {
                 props.on_add_config('EDIT_CONTEXT', { create_on_top: true })
               }
             >
-              Add New...
+              {t('settings.action.add-new')}
             </Button>
           }
         >
@@ -457,7 +459,7 @@ export const Home: React.FC<Props> = (props) => {
           </Notice>
           {props.edit_context_configs.length == 0 && (
             <Notice type="warning">
-              Add a configuration to use this feature.
+              {t('settings.message.missing-configuration')}
             </Notice>
           )}
           <Group>
@@ -511,7 +513,7 @@ export const Home: React.FC<Props> = (props) => {
                 })
               }
             >
-              Add New...
+              {t('settings.action.add-new')}
             </Button>
           }
         >
@@ -521,7 +523,7 @@ export const Home: React.FC<Props> = (props) => {
           </Notice>
           {props.intelligent_update_configs.length == 0 && (
             <Notice type="warning">
-              Add a configuration to use this feature.
+              {t('settings.message.missing-configuration')}
             </Notice>
           )}
           <Group>
@@ -571,7 +573,7 @@ export const Home: React.FC<Props> = (props) => {
                 props.on_add_config('PRUNE_CONTEXT', { create_on_top: true })
               }
             >
-              Add New...
+              {t('settings.action.add-new')}
             </Button>
           }
         >
@@ -580,7 +582,7 @@ export const Home: React.FC<Props> = (props) => {
           </Notice>
           {props.prune_context_configs.length == 0 && (
             <Notice type="warning">
-              Add a configuration to use this feature.
+              {t('settings.message.missing-configuration')}
             </Notice>
           )}
           <Group>
@@ -610,7 +612,7 @@ export const Home: React.FC<Props> = (props) => {
                 props.on_add_config('CODE_AT_CURSOR', { create_on_top: true })
               }
             >
-              Add New...
+              {t('settings.action.add-new')}
             </Button>
           }
         >
@@ -619,7 +621,7 @@ export const Home: React.FC<Props> = (props) => {
           </Notice>
           {props.code_at_cursor_configs.length == 0 && (
             <Notice type="warning">
-              Add a configuration to use this feature.
+              {t('settings.message.missing-configuration')}
             </Notice>
           )}
           <Group>
@@ -670,7 +672,7 @@ export const Home: React.FC<Props> = (props) => {
                 })
               }
             >
-              Add New...
+              {t('settings.action.add-new')}
             </Button>
           }
         >
@@ -691,7 +693,7 @@ export const Home: React.FC<Props> = (props) => {
           </Notice>
           {props.voice_input_configs.length == 0 && (
             <Notice type="warning">
-              Add a configuration to use this feature.
+              {t('settings.message.missing-configuration')}
             </Notice>
           )}
           <Group>
@@ -752,7 +754,7 @@ export const Home: React.FC<Props> = (props) => {
                 props.on_add_config('COMMIT_MESSAGES', { create_on_top: true })
               }
             >
-              Add New...
+              {t('settings.action.add-new')}
             </Button>
           }
         >
@@ -761,7 +763,7 @@ export const Home: React.FC<Props> = (props) => {
           </Notice>
           {props.commit_messages_configs.length == 0 && (
             <Notice type="warning">
-              Add a configuration to use this feature.
+              {t('settings.message.missing-configuration')}
             </Notice>
           )}
           <Group>

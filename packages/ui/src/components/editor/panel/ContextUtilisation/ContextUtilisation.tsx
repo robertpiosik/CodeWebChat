@@ -39,10 +39,6 @@ export const ContextUtilisation: React.FC<Props> = (props) => {
     props.context_size_warning_threshold
   )
 
-  const display_current_size = is_above_threshold
-    ? `⚠ ${formatted_current_size}`
-    : formatted_current_size
-
   let title_text = ''
 
   if (!is_above_threshold) {
@@ -71,7 +67,17 @@ export const ContextUtilisation: React.FC<Props> = (props) => {
         />
       </div>
       <span className={styles.label} title={title_text}>
-        {display_current_size} tokens in context
+        {is_above_threshold && (
+          <span
+            className="codicon codicon-warning"
+            style={{
+              fontSize: '11px',
+              marginRight: '4px',
+              verticalAlign: 'sub'
+            }}
+          />
+        )}
+        {formatted_current_size} tokens in context
       </span>
     </div>
   )

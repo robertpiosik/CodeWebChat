@@ -6,10 +6,8 @@
     transparent
   );
   --cwc-text-color-green: var(--vscode-gitDecoration-addedResourceForeground);
-  --cwc-text-color-orange: var(
-    --vscode-gitDecoration-modifiedResourceForeground
-  );
-  --cwc-text-color-red: var(--vscode-gitDecoration-deletedResourceForeground);
+  --cwc-text-color-orange: var(--vscode-list-warningForeground);
+  --cwc-text-color-red: var(--vscode-list-errorForeground);
   --cwc-text-color-blue: var(--vscode-editorInfo-foreground);
 
   --cwc-bg-primary: color-mix(

@@ -11,6 +11,16 @@ export interface BaseMessage {
   command: string
 }
 
+export type SetupProgress = {
+  has_model_provider: boolean
+  has_configuration_for_edit_context: boolean
+  has_configuration_for_intelligent_update: boolean
+  has_configuration_for_prune_context: boolean
+  has_configuration_for_code_at_cursor: boolean
+  has_configuration_for_voice_input: boolean
+  has_configuration_for_commit_messages: boolean
+}
+
 export interface PreviewGeneratedCodeMessage extends BaseMessage {
   command: 'PREVIEW_GENERATED_CODE'
   file_path: string
@@ -512,6 +522,15 @@ export interface SetRecordingStateMessage extends BaseMessage {
   is_recording: boolean
 }
 
+export interface GetSetupProgressMessage extends BaseMessage {
+  command: 'GET_SETUP_PROGRESS'
+}
+
+export interface SetupProgressMessage {
+  command: 'SETUP_PROGRESS'
+  setup_progress: SetupProgress
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -601,6 +620,7 @@ export type FrontendMessage =
   | OpenPromptDocumentMessage
   | PasteUrlMessage
   | SetRecordingStateMessage
+  | GetSetupProgressMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -798,6 +818,7 @@ export interface HideApiManagerProgressMessage extends BaseMessage {
   command: 'HIDE_API_MANAGER_PROGRESS'
   id: string
 }
+
 export interface ShowAutoClosingModalMessage extends BaseMessage {
   command: 'SHOW_AUTO_CLOSING_MODAL'
   title: string
@@ -838,6 +859,11 @@ export interface TasksMessage extends BaseMessage {
 export interface PruneContextInstructionsPrefixMessage extends BaseMessage {
   command: 'PRUNE_CONTEXT_INSTRUCTIONS_PREFIX'
   prefix: string
+}
+
+export interface SetupProgressMessage {
+  command: 'SETUP_PROGRESS'
+  setup_progress: SetupProgress
 }
 
 export interface RecordingStateMessage extends BaseMessage {
@@ -890,3 +916,4 @@ export type BackendMessage =
   | UpdateFileProgressMessage
   | PruneContextInstructionsPrefixMessage
   | RecordingStateMessage
+  | SetupProgressMessage
