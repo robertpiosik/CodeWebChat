@@ -677,7 +677,8 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            Requires a multimodal model supporting{' '}
+            A request includes instructions and an audio file. Requires a
+            multimodal model supporting{' '}
             <a
               href="#"
               onClick={(e) => {
@@ -689,7 +690,7 @@ export const Home: React.FC<Props> = (props) => {
             >
               audio understanding
             </a>
-            .
+            . 17 hours of speech fits in 1 million input tokens.
           </Notice>
           {props.voice_input_configs.length == 0 && (
             <Notice type="warning">
