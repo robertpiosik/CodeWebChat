@@ -48,6 +48,8 @@ export const handle_fix_all_failed_files = async (params: {
     return
   }
 
+  const successful_files = new Set<string>()
+
   const is_single_root_folder_workspace =
     (vscode.workspace.workspaceFolders?.length ?? 0) <= 1
   const parsed_response = parse_response({
@@ -261,6 +263,10 @@ export const handle_fix_all_failed_files = async (params: {
               vscode.Uri.file(safe_path),
               Buffer.from(final_content, 'utf8')
             )
+
+            successful_files.add(
+              workspace_name ? `${workspace_name}:${file_path}` : file_path
+            )
           }
         } catch (error: any) {
           if (
@@ -309,10 +315,19 @@ export const handle_fix_all_failed_files = async (params: {
       })
     )
   } catch (error: any) {
-    await handle_fix_all_failed_files({
-      panel_provider: params.panel_provider,
-      files_to_fix: params.files_to_fix,
-      force_model_selection: true
+    const remaining_files = params.files_to_fix.filter((f) => {
+      const key = f.workspace_name
+        ? `${f.workspace_name}:${f.file_path}`
+        : f.file_path
+      return !successful_files.has(key)
     })
+
+    if (remaining_files.length > 0) {
+      await handle_fix_all_failed_files({
+        panel_provider: params.panel_provider,
+        files_to_fix: remaining_files,
+        force_model_selection: true
+      })
+    }
   }
 }

@@ -108,6 +108,12 @@ export const get_intelligent_update_config = async (
     }
 
     const quick_pick = vscode.window.createQuickPick()
+    quick_pick.buttons = [
+      {
+        iconPath: new vscode.ThemeIcon('close'),
+        tooltip: 'Close'
+      }
+    ]
     quick_pick.items = create_items()
     quick_pick.title = 'Configurations'
     quick_pick.placeholder =
@@ -129,6 +135,13 @@ export const get_intelligent_update_config = async (
 
     return new Promise<{ provider: any; config: ToolConfig } | undefined>(
       (resolve) => {
+        quick_pick.onDidTriggerButton((button) => {
+          if (button.tooltip == 'Close') {
+            quick_pick.hide()
+            resolve(undefined)
+          }
+        })
+
         quick_pick.onDidAccept(async () => {
           const selected = quick_pick.selectedItems[0] as any
           quick_pick.hide()
