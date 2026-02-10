@@ -27,10 +27,10 @@ class SearchBlock {
 
 export const process_diff = async (params: {
   file_path: string
-  diff_path_patch: string
+  diff_patch_path: string
 }): Promise<string> => {
   const file_content = fs.readFileSync(params.file_path, 'utf8')
-  const diff_patch_content = fs.readFileSync(params.diff_path_patch, 'utf8')
+  const diff_patch_content = fs.readFileSync(params.diff_patch_path, 'utf8')
 
   const result = apply_diff({
     original_code: file_content,
