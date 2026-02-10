@@ -13,7 +13,7 @@ import axios from 'axios'
 import { make_api_request } from '@/utils/make-api-request'
 import { voice_input_instructions } from '@/constants/instructions'
 
-const MIN_RECORDING_DURATION = 3000
+const MIN_RECORDING_DURATION = 1000
 
 const start_recording = (panel_provider: PanelProvider) => {
   panel_provider.audio_chunks = []

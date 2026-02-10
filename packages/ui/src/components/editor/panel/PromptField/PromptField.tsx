@@ -100,10 +100,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     }
   }, [props.value])
 
-  useEffect(() => {
-    set_is_recording_hovered(false)
-  }, [props.is_recording])
-
   const toggle_invocation_dropdown = useCallback(() => {
     set_is_invocation_dropdown_open((prev) => !prev)
   }, [])
@@ -606,6 +602,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         e.stopPropagation()
                         props.on_recording_started()
                       }}
+                      onMouseEnter={() => set_is_recording_hovered(true)}
+                      onMouseLeave={() => set_is_recording_hovered(false)}
                       title={`Voice input ${
                         is_mac ? '(⇧⌘Space)' : '(Ctrl+Shift+Space)'
                       }`}
