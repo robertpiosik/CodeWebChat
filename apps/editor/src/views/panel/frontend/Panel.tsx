@@ -222,6 +222,13 @@ export const Panel = () => {
     })
   }
 
+  const handle_open_website = (url: string) => {
+    post_message(vscode, {
+      command: 'OPEN_WEBSITE',
+      url
+    })
+  }
+
   const layout_context_value = {
     can_undo,
     on_apply_click: handle_apply_click,
@@ -312,6 +319,7 @@ export const Panel = () => {
                   handle_prune_context_instructions_prefix_change
                 }
                 on_open_url={handle_open_url}
+                on_open_website={handle_open_website}
                 on_paste_image={handle_paste_image}
                 on_open_image={handle_open_image}
                 on_paste_document={handle_paste_long_document}

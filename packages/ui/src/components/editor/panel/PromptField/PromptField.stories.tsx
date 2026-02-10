@@ -36,6 +36,7 @@ export const Empty = () => (
       console.log('Pasted lines clicked:', path, start, end)
     }
     on_open_url={(url) => console.log('Open URL:', url)}
+    on_open_website={(url) => console.log('Open website:', url)}
     on_paste_image={(content) => console.log('Paste image:', content)}
     on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
@@ -78,6 +79,7 @@ export const WithText = () => (
       console.log('Pasted lines clicked:', path, start, end)
     }
     on_open_url={(url) => console.log('Open URL:', url)}
+    on_open_website={(url) => console.log('Open website:', url)}
     on_paste_image={(content) => console.log('Paste image:', content)}
     on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
@@ -120,6 +122,7 @@ export const LongText = () => (
       console.log('Pasted lines clicked:', path, start, end)
     }
     on_open_url={(url) => console.log('Open URL:', url)}
+    on_open_website={(url) => console.log('Open website:', url)}
     on_paste_image={(content) => console.log('Paste image:', content)}
     on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
@@ -162,6 +165,7 @@ export const WithPlaceholderSavedContext = () => (
       console.log('Pasted lines clicked:', path, start, end)
     }
     on_open_url={(url) => console.log('Open URL:', url)}
+    on_open_website={(url) => console.log('Open website:', url)}
     on_paste_image={(content) => console.log('Paste image:', content)}
     on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
@@ -210,6 +214,7 @@ export const WithPlaceholderSelection = () => (
       console.log('Pasted lines clicked:', path, start, end)
     }
     on_open_url={(url) => console.log('Open URL:', url)}
+    on_open_website={(url) => console.log('Open website:', url)}
     on_paste_image={(content) => console.log('Paste image:', content)}
     on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
@@ -252,6 +257,7 @@ export const WithCommit = () => (
       console.log('Pasted lines clicked:', path, start, end)
     }
     on_open_url={(url) => console.log('Open URL:', url)}
+    on_open_website={(url) => console.log('Open website:', url)}
     on_paste_image={(content) => console.log('Paste image:', content)}
     on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
@@ -294,6 +300,7 @@ export const WithCommitWithQuotes = () => (
       console.log('Pasted lines clicked:', path, start, end)
     }
     on_open_url={(url) => console.log('Open URL:', url)}
+    on_open_website={(url) => console.log('Open website:', url)}
     on_paste_image={(content) => console.log('Paste image:', content)}
     on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
@@ -335,6 +342,7 @@ export const WithContextAtCommit = () => (
       console.log('Pasted lines clicked:', path, start, end)
     }
     on_open_url={(url) => console.log('Open URL:', url)}
+    on_open_website={(url) => console.log('Open website:', url)}
     on_paste_image={(content) => console.log('Paste image:', content)}
     on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}
@@ -380,6 +388,7 @@ export const WithEditFormatSelector = () => {
         console.log('Pasted lines clicked:', path, start, end)
       }
       on_open_url={(url) => console.log('Open URL:', url)}
+      on_open_website={(url) => console.log('Open website:', url)}
       on_paste_image={(content) => console.log('Paste image:', content)}
       on_paste_document={(content) => console.log('Paste document:', content)}
       on_open_image={(hash) => console.log('Open image:', hash)}
@@ -423,6 +432,7 @@ export const WithFilePaths = () => (
       console.log('Pasted lines clicked:', path, start, end)
     }
     on_open_url={(url) => console.log('Open URL:', url)}
+    on_open_website={(url) => console.log('Open website:', url)}
     on_paste_image={(content) => console.log('Paste image:', content)}
     on_paste_document={(content) => console.log('Paste document:', content)}
     on_open_image={(hash) => console.log('Open image:', hash)}

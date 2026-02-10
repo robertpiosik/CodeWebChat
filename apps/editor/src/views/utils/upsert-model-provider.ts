@@ -159,9 +159,7 @@ export const upsert_model_provider = async (params: {
       input_box.title = 'API Key'
       input_box.prompt = 'Enter your API key.'
       input_box.password = true
-      input_box.placeholder = current_key
-        ? `...${current_key.slice(-4)}`
-        : 'No API key set'
+      input_box.placeholder = current_key ? `...${current_key.slice(-4)}` : ''
 
       if (show_back) {
         input_box.buttons = [vscode.QuickInputButtons.Back]
@@ -404,7 +402,7 @@ export const upsert_model_provider = async (params: {
 
       const quick_pick = vscode.window.createQuickPick()
       quick_pick.items = items
-      quick_pick.title = 'New Model Provider'
+      quick_pick.title = 'Model Providers'
       quick_pick.placeholder =
         'Choose a predefined provider or add a custom endpoint'
 

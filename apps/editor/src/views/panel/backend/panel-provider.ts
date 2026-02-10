@@ -73,7 +73,6 @@ import {
   handle_delete_task,
   handle_fix_all_failed_files,
   handle_prune_context,
-  handle_cancel_intelligent_update_file_in_preview,
   handle_get_prune_context_instructions_prefix,
   handle_save_prune_context_instructions_prefix,
   handle_open_external_url,
@@ -84,7 +83,9 @@ import {
   handle_save_prompt_document,
   handle_open_prompt_document,
   handle_paste_url,
-  handle_voice_input
+  handle_voice_input,
+  handle_open_website,
+  handle_cancel_intelligent_update_file_in_preview
 } from './message-handlers'
 import { SelectionState } from '../types/messages'
 import {
@@ -845,6 +846,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_open_prompt_document(message)
           } else if (message.command == 'PASTE_URL') {
             await handle_paste_url(this, message)
+          } else if (message.command == 'OPEN_WEBSITE') {
+            await handle_open_website(message)
           } else if (message.command == 'SET_RECORDING_STATE') {
             await handle_voice_input(this, message)
           } else if (message.command == 'GET_SETUP_PROGRESS') {

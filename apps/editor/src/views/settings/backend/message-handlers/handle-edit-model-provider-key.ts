@@ -32,7 +32,7 @@ export const handle_change_model_provider_key = async (
     password: true,
     placeHolder: provider_to_update.api_key
       ? `...${provider_to_update.api_key.slice(-4)}`
-      : 'No API key set'
+      : ''
   })
 
   if (new_api_key === undefined) {

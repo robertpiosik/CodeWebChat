@@ -798,7 +798,7 @@ export const use_handlers = (
       if (website_symbol_element) {
         const url = website_symbol_element.dataset.url
         if (url) {
-          props.on_open_url(url)
+          props.on_open_website(url)
         }
       }
 

@@ -85,6 +85,10 @@ const create_turndown_service = () => {
     filter: ['figure', 'picture', 'sup'],
     replacement: () => ''
   })
+  turndown_service.addRule('removeLinks', {
+    filter: 'a',
+    replacement: (content) => content
+  })
   return turndown_service
 }
 

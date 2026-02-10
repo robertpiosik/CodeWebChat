@@ -478,6 +478,11 @@ export interface OpenExternalUrlMessage extends BaseMessage {
   url: string
 }
 
+export interface OpenWebsiteMessage extends BaseMessage {
+  command: 'OPEN_WEBSITE'
+  url: string
+}
+
 export interface UpsertConfigurationMessage extends BaseMessage {
   command: 'UPSERT_CONFIGURATION'
   tool_type: ToolType
@@ -619,6 +624,7 @@ export type FrontendMessage =
   | SavePromptDocumentMessage
   | OpenPromptDocumentMessage
   | PasteUrlMessage
+  | OpenWebsiteMessage
   | SetRecordingStateMessage
   | GetSetupProgressMessage
 
