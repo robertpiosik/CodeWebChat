@@ -61,6 +61,8 @@ export const RECENTLY_USED_COMMIT_MESSAGES_CONFIG_IDS_STATE_KEY =
   'recently-used-commit-messages-config-ids'
 export const RECENTLY_USED_INTELLIGENT_UPDATE_CONFIG_IDS_STATE_KEY =
   'recently-used-intelligent-update-config-ids'
+export const RECENTLY_USED_VOICE_INPUT_CONFIG_IDS_STATE_KEY =
+  'recently-used-voice-input-config-ids'
 
 export const get_presets_collapsed_state_key = (web_prompt_type: string) =>
   `presets-collapsed-${web_prompt_type}`

@@ -118,8 +118,6 @@ Code Web Chat operates exclusively on your machine. Your prompts are sent direct
 - `Code Web Chat: Check All with Keywords` - Search and add files containing specific keywords to the context.
 - `Code Web Chat: Copy Context` - Copy XML-formatted checked files from the Workspace view to the clipboard.
 - `Code Web Chat: Copy Context of Open Editors` - Copy XML-formatted checked files from the Open Editors view to the clipboard.
-- `Code Web Chat: Undo Context Selection` - Undo the last context change.
-- `Code Web Chat: Redo Context Selection` - Redo the last undone context change.
 
 ### Commit messages
 

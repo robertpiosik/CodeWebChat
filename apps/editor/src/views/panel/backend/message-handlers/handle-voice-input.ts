@@ -4,7 +4,8 @@ import { spawn } from 'child_process'
 import { Logger } from '@shared/utils/logger'
 import {
   ModelProvidersManager,
-  ToolConfig
+  ToolConfig,
+  get_tool_config_id
 } from '@/services/model-providers-manager'
 import { PROVIDERS } from '@shared/constants/providers'
 import * as vscode from 'vscode'
@@ -12,6 +13,7 @@ import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import axios from 'axios'
 import { make_api_request } from '@/utils/make-api-request'
 import { voice_input_instructions } from '@/constants/instructions'
+import { RECENTLY_USED_VOICE_INPUT_CONFIG_IDS_STATE_KEY } from '@/constants/state-keys'
 
 const MIN_RECORDING_DURATION = 1000
 
@@ -66,19 +68,110 @@ const stop_recording = async (panel_provider: PanelProvider) => {
         if (configs.length == 1) {
           config = configs[0]
         } else {
-          const selected = await vscode.window.showQuickPick(
-            configs.map((c) => ({
-              label: c.model,
-              description: c.provider_name,
-              config: c
-            })),
-            {
-              title: 'Configurations',
-              placeHolder: 'Select a configuration'
+          const recent_ids =
+            panel_provider.context.workspaceState.get<string[]>(
+              RECENTLY_USED_VOICE_INPUT_CONFIG_IDS_STATE_KEY
+            ) || []
+
+          const matched_recent_configs: ToolConfig[] = []
+          const remaining_configs: ToolConfig[] = []
+
+          configs.forEach((config) => {
+            const id = get_tool_config_id(config)
+            if (recent_ids.includes(id)) {
+              matched_recent_configs.push(config)
+            } else {
+              remaining_configs.push(config)
             }
-          )
-          if (selected) {
+          })
+
+          matched_recent_configs.sort((a, b) => {
+            const id_a = get_tool_config_id(a)
+            const id_b = get_tool_config_id(b)
+            return recent_ids.indexOf(id_a) - recent_ids.indexOf(id_b)
+          })
+
+          const map_config_to_item = (config: ToolConfig) => ({
+            label: config.model,
+            description: config.provider_name,
+            config,
+            id: get_tool_config_id(config)
+          })
+
+          const items: (vscode.QuickPickItem & {
+            config?: ToolConfig
+            id?: string
+          })[] = []
+
+          if (matched_recent_configs.length > 0) {
+            items.push({
+              label: 'recently used',
+              kind: vscode.QuickPickItemKind.Separator
+            })
+            items.push(...matched_recent_configs.map(map_config_to_item))
+          }
+
+          if (remaining_configs.length > 0) {
+            if (matched_recent_configs.length > 0) {
+              items.push({
+                label: 'other configurations',
+                kind: vscode.QuickPickItemKind.Separator
+              })
+            }
+            items.push(...remaining_configs.map(map_config_to_item))
+          }
+
+          const quick_pick = vscode.window.createQuickPick()
+          quick_pick.items = items
+          quick_pick.title = 'Configurations'
+          quick_pick.placeholder = 'Select a configuration'
+          quick_pick.buttons = [
+            {
+              iconPath: new vscode.ThemeIcon('close'),
+              tooltip: 'Close'
+            }
+          ]
+
+          const selected = await new Promise<
+            | (vscode.QuickPickItem & {
+                config?: ToolConfig
+                id?: string
+              })
+            | undefined
+          >((resolve) => {
+            quick_pick.onDidTriggerButton((button) => {
+              if (button.tooltip == 'Close') {
+                resolve(undefined)
+                quick_pick.hide()
+              }
+            })
+            quick_pick.onDidAccept(() => {
+              const selected = quick_pick.selectedItems[0] as any
+              resolve(selected)
+              quick_pick.hide()
+            })
+            quick_pick.onDidHide(() => {
+              resolve(undefined)
+              quick_pick.dispose()
+            })
+            quick_pick.show()
+          })
+
+          if (selected && selected.config) {
             config = selected.config
+
+            let recents =
+              panel_provider.context.workspaceState.get<string[]>(
+                RECENTLY_USED_VOICE_INPUT_CONFIG_IDS_STATE_KEY
+              ) || []
+            recents = [
+              selected.id!,
+              ...recents.filter((id) => id != selected.id!)
+            ]
+            panel_provider.context.workspaceState.update(
+              RECENTLY_USED_VOICE_INPUT_CONFIG_IDS_STATE_KEY,
+              recents
+            )
           } else {
             return
           }
