@@ -299,13 +299,13 @@
       },
       {
         "command": "codeWebChat.generateCommitMessage",
-        "title": "CWC: Generate Commit Message",
+        "title": "Generate Commit Message with CWC",
         "category": "Code Web Chat",
         "icon": "$(sparkle)"
       },
       {
         "command": "codeWebChat.copyCommitMessagePrompt",
-        "title": "CWC: Copy Commit Message Prompt",
+        "title": "Copy Commit Message Prompt",
         "category": "Code Web Chat",
         "icon": "$(copy)"
       },
