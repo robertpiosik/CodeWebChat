@@ -54,6 +54,10 @@ export const reference_in_prompt_command = (params: {
       const reference_text = `\`${relative_path}\``
 
       params.panel_provider.add_text_at_cursor_position(reference_text)
+
+      params.panel_provider.send_message({
+        command: 'FOCUS_PROMPT_FIELD'
+      })
     }
   )
 }
