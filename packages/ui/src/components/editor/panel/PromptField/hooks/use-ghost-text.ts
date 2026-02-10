@@ -64,30 +64,46 @@ export const use_ghost_text = ({
       if (selection && selection.rangeCount > 0) {
         const range = selection.getRangeAt(0)
         if (range.collapsed) {
-          const post_caret_range = range.cloneRange()
-          post_caret_range.selectNodeContents(input_ref.current)
-          post_caret_range.setStart(range.endContainer, range.endOffset)
-          const text_after_cursor = post_caret_range.toString()
+          let is_inside_symbol = false
+          let current_node: Node | null = range.startContainer
+          while (current_node && current_node !== input_ref.current) {
+            if (
+              current_node.nodeType === Node.ELEMENT_NODE &&
+              (current_node as HTMLElement).dataset.type?.endsWith('-symbol')
+            ) {
+              is_inside_symbol = true
+              break
+            }
+            current_node = current_node.parentNode
+          }
 
-          if (text_after_cursor == '' || /^\s/.test(text_after_cursor)) {
-            const pre_caret_range = range.cloneRange()
-            pre_caret_range.selectNodeContents(input_ref.current)
-            pre_caret_range.setEnd(range.startContainer, range.startOffset)
-            const text_before_cursor = pre_caret_range.toString()
-            const last_word_match = text_before_cursor.match(/[\S]+$/)
+          if (!is_inside_symbol) {
+            const post_caret_range = range.cloneRange()
+            post_caret_range.selectNodeContents(input_ref.current)
+            post_caret_range.setStart(range.endContainer, range.endOffset)
+            const text_after_cursor = post_caret_range.toString()
 
-            if (last_word_match) {
-              const last_word_with_prefix = last_word_match[0]
-              const word_start_match = last_word_with_prefix.match(/[a-zA-Z_]/)
-              if (word_start_match) {
-                const last_word = last_word_with_prefix.substring(
-                  word_start_match.index ?? 0
-                )
-                if (last_word.length >= 2) {
-                  for (const id of identifiers) {
-                    if (id.startsWith(last_word) && id !== last_word) {
-                      potential_ghost_text = id.substring(last_word.length)
-                      break
+            if (text_after_cursor == '' || /^\s/.test(text_after_cursor)) {
+              const pre_caret_range = range.cloneRange()
+              pre_caret_range.selectNodeContents(input_ref.current)
+              pre_caret_range.setEnd(range.startContainer, range.startOffset)
+              const text_before_cursor = pre_caret_range.toString()
+              const last_word_match = text_before_cursor.match(/[\S]+$/)
+
+              if (last_word_match) {
+                const last_word_with_prefix = last_word_match[0]
+                const word_start_match =
+                  last_word_with_prefix.match(/[a-zA-Z_]/)
+                if (word_start_match) {
+                  const last_word = last_word_with_prefix.substring(
+                    word_start_match.index ?? 0
+                  )
+                  if (last_word.length >= 2) {
+                    for (const id of identifiers) {
+                      if (id.startsWith(last_word) && id !== last_word) {
+                        potential_ghost_text = id.substring(last_word.length)
+                        break
+                      }
                     }
                   }
                 }
