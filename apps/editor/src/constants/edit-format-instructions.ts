@@ -64,7 +64,8 @@ Updated the greeting text.
 \`\`\`diff
 --- a/src/examples/hello.py
 +++ b/src/examples/hello.py
-@@ -1,4 +1,4 @@
+@@ -1,5 +1,5 @@
+ # A simple greeting script
 -GREETING = "Welcome everyone!"
 +GREETING = "Hello, World!"
 

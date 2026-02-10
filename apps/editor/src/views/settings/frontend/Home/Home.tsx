@@ -419,9 +419,7 @@ export const Home: React.FC<Props> = (props) => {
             on your machine.
           </Notice>
           {props.providers.length == 0 && (
-            <Notice type="warning">
-              Add a model provider to use API tools.
-            </Notice>
+            <Notice type="warning">Missing model provider.</Notice>
           )}
           <Group>
             <ModelProvidersSection
