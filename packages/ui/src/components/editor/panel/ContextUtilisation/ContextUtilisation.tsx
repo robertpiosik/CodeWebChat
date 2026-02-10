@@ -67,16 +67,6 @@ export const ContextUtilisation: React.FC<Props> = (props) => {
         />
       </div>
       <span className={styles.label} title={title_text}>
-        {is_above_threshold && (
-          <span
-            className="codicon codicon-warning"
-            style={{
-              fontSize: '11px',
-              marginRight: '4px',
-              verticalAlign: 'sub'
-            }}
-          />
-        )}
         {formatted_current_size} tokens in context
       </span>
     </div>
