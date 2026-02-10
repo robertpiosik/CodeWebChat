@@ -51,7 +51,8 @@ export function add_apply_response_button(params: {
       action: 'apply-chat-response',
       client_id: params.client_id,
       raw_instructions: params.raw_instructions,
-      edit_format: params.edit_format
+      edit_format: params.edit_format,
+      url: window.location.href
     })
   })
 

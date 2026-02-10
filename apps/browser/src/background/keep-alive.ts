@@ -6,7 +6,7 @@ export const setup_keep_alive = () => {
       try {
         chrome.alarms.create('keep-alive', {
           when: Date.now() + 1000 * 30
-        }) // 30 seconds interval
+        })
       } catch (error) {
         console.error('Error creating KeepAlive alarm:', error)
       }

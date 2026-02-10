@@ -20,8 +20,9 @@ export const use_panel = (vscode: any) => {
     useState(0)
   const [version, set_version] = useState<string>('')
   const [updating_preset, set_updating_preset] = useState<Preset>()
-  const [items_to_review, set_items_to_review] = useState<ItemInPreview[]>()
+  const [items_in_preview, set_items_in_preview] = useState<ItemInPreview[]>()
   const [raw_instructions, set_raw_instructions] = useState<string>()
+  const [preview_url, set_preview_url] = useState<string>()
   const [progress_state, set_progress_state] = useState<{
     title: string
     progress?: number
@@ -269,15 +270,16 @@ export const use_panel = (vscode: any) => {
       } else if (message.command == 'CURRENTLY_OPEN_FILE_TEXT') {
         set_currently_open_file_text(message.text)
       } else if (message.command == 'RESPONSE_PREVIEW_STARTED') {
-        set_items_to_review(message.items)
+        set_items_in_preview(message.items)
         set_raw_instructions(message.raw_instructions)
         set_preview_item_created_at(message.created_at)
+        set_preview_url(message.url)
         set_fix_all_automatically(message.fix_all_automatically ?? false)
         if (message.created_at) {
           set_selected_history_item_created_at(message.created_at)
         }
       } else if (message.command == 'UPDATE_FILE_IN_PREVIEW') {
-        set_items_to_review((current_items) => {
+        set_items_in_preview((current_items) => {
           const items = current_items ?? []
           const existing_file_index = items.findIndex(
             (f) =>
@@ -305,7 +307,7 @@ export const use_panel = (vscode: any) => {
           }
         })
       } else if (message.command == 'UPDATE_FILE_PROGRESS') {
-        set_items_to_review((current_items) => {
+        set_items_in_preview((current_items) => {
           if (!current_items) return undefined
           const items = current_items ?? []
           const existing_file_index = items.findIndex(
@@ -336,9 +338,10 @@ export const use_panel = (vscode: any) => {
           return items
         })
       } else if (message.command == 'RESPONSE_PREVIEW_FINISHED') {
-        set_items_to_review(undefined)
+        set_items_in_preview(undefined)
         set_raw_instructions(undefined)
         set_preview_item_created_at(undefined)
+        set_preview_url(undefined)
       } else if (message.command == 'WORKSPACE_STATE') {
         set_workspace_folder_count(message.folder_count)
       } else if (message.command == 'SHOW_PROGRESS') {
@@ -565,9 +568,10 @@ export const use_panel = (vscode: any) => {
     version,
     updating_preset,
     set_updating_preset,
-    items_to_review,
-    set_items_to_review,
+    items_in_preview,
+    set_items_in_preview,
     raw_instructions,
+    preview_url,
     progress_state,
     set_progress_state,
     api_manager_progress_state,

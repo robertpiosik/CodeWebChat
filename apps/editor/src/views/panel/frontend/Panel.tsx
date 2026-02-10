@@ -26,6 +26,7 @@ import { EditPresetFormFooter } from './components/edit-preset-form/EditPresetFo
 import { Donations as UiDonations } from '@ui/components/editor/panel/Donations/Donations'
 import { use_latest_donations } from './hooks/latest-donations'
 import { DonationsFooter } from './components/donations/DonationsFooter'
+import { IconButton } from '@ui/components/editor/common/IconButton'
 
 const vscode = acquireVsCodeApi()
 
@@ -38,9 +39,10 @@ export const Panel = () => {
     version,
     updating_preset,
     set_updating_preset,
-    items_to_review: items_to_preview,
-    set_items_to_review: set_items_to_preview,
+    items_in_preview,
+    set_items_in_preview,
     raw_instructions,
+    preview_url,
     progress_state,
     set_progress_state,
     api_manager_progress_state,
@@ -198,7 +200,8 @@ export const Panel = () => {
       response: item.response,
       raw_instructions: item.raw_instructions,
       files: item.files,
-      created_at: item.created_at
+      created_at: item.created_at,
+      url: item.url
     })
   }
 
@@ -237,7 +240,7 @@ export const Panel = () => {
   }
 
   const are_keyboard_shortcuts_disabled =
-    !!updating_preset || !!items_to_preview || active_view != 'main'
+    !!updating_preset || !!items_in_preview || active_view != 'main'
 
   return (
     <LayoutContext.Provider value={layout_context_value}>
@@ -503,13 +506,18 @@ export const Panel = () => {
           </div>
         )}
 
-        {items_to_preview && (
+        {items_in_preview && (
           <div className={styles.slot}>
             <UiPage
               title="Response Preview"
               on_back_click={() => {
                 post_message(vscode, { command: 'RESPONSE_PREVIEW', files: [] })
               }}
+              header_slot={
+                preview_url && (
+                  <IconButton codicon_icon="link-external" href={preview_url} />
+                )
+              }
               footer_slot={
                 <UiResponsePreviewFooter
                   on_back={() => {
@@ -534,7 +542,7 @@ export const Panel = () => {
                     })
                   }}
                   on_accept={() => {
-                    const accepted_files = items_to_preview.filter(
+                    const accepted_files = items_in_preview.filter(
                       (f) => f.type == 'file' && f.is_checked
                     ) as FileInPreview[]
                     set_response_history([])
@@ -546,10 +554,10 @@ export const Panel = () => {
                     })
                   }}
                   is_accept_disabled={
-                    items_to_preview.filter(
+                    items_in_preview.filter(
                       (f) => f.type == 'file' && f.is_checked
                     ).length == 0 ||
-                    items_to_preview.some(
+                    items_in_preview.some(
                       (f) => f.type == 'file' && f.is_applying
                     )
                   }
@@ -557,7 +565,7 @@ export const Panel = () => {
               }
             >
               <UiResponsePreview
-                items={items_to_preview}
+                items={items_in_preview}
                 fix_all_automatically={fix_all_automatically}
                 raw_instructions={raw_instructions}
                 has_multiple_workspaces={workspace_folder_count > 1}
@@ -575,7 +583,7 @@ export const Panel = () => {
                   })
                 }}
                 on_toggle_file={(file) => {
-                  set_items_to_preview((current_items) =>
+                  set_items_in_preview((current_items) =>
                     current_items?.map((f) =>
                       f.type == 'file' &&
                       f.file_path == file.file_path &&

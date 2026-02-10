@@ -7,4 +7,5 @@ export type ResponseHistoryItem = {
   lines_added?: number
   lines_removed?: number
   files?: FileInPreview[]
+  url?: string
 }

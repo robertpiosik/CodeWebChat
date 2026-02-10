@@ -456,7 +456,7 @@ export const ai_studio: Chatbot = {
 
 const open_panel = async () => {
   if (window.innerWidth <= 960) {
-    if (document.querySelector('ms-right-side-panel > div')) return // Already opened
+    if (document.querySelector('ms-right-side-panel > div')) return
 
     const tune_button = document.querySelector(
       'button.runsettings-toggle-button'
@@ -475,7 +475,8 @@ const open_panel = async () => {
 
 const close_panel = async () => {
   if (window.innerWidth <= 960) {
-    if (!document.querySelector('ms-right-side-panel > div')) return // Already closed
+    if (!document.querySelector('ms-right-side-panel > div')) return
+
     const close_button = document.querySelector(
       'ms-run-settings button[iconname="close"]'
     ) as HTMLButtonElement

@@ -25,6 +25,7 @@ export const preview = async (params: {
   chat_response: string
   context: vscode.ExtensionContext
   created_at?: number
+  url?: string
 }): Promise<{
   accepted_files: PreviewableFile[]
   rejected_states: OriginalFileState[]
@@ -135,7 +136,8 @@ export const preview = async (params: {
         items: items_for_preview,
         raw_instructions: params.raw_instructions,
         created_at: params.created_at,
-        fix_all_automatically
+        fix_all_automatically,
+        url: params.url
       })
     }
 

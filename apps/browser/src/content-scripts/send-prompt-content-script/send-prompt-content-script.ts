@@ -159,7 +159,6 @@ const initialize_chat = async (params: { message: string; chat: Chat }) => {
     })
   }
 
-  // User may send by pressing enter
   await new Promise<void>((resolve) => {
     const handle_key_press = (e: KeyboardEvent) => {
       if (e.key == 'Enter') {
@@ -170,7 +169,6 @@ const initialize_chat = async (params: { message: string; chat: Chat }) => {
     document.addEventListener('keydown', handle_key_press)
     setTimeout(resolve, 2000)
   })
-  // Process next chat from the queue
   browser.runtime.sendMessage<Message>({
     action: 'chat-initialized'
   })
@@ -180,14 +178,12 @@ const main = async () => {
   const session_data_key = 'cwc-session-data'
 
   if (is_cwc_hash) {
-    // Remove the hash from the URL to avoid reloading the content script if the page is refreshed
     history.replaceState(
       null,
       '',
       window.location.pathname + window.location.search
     )
 
-    // Get the message using the batch ID from the hash
     const storage_key = `chat-init:${batch_id}`
     const storage = await browser.storage.local.get(storage_key)
     const stored_data = storage[storage_key] as {
@@ -212,7 +208,6 @@ const main = async () => {
       return
     }
 
-    // Now directly use the current_chat instead of searching for it
     const message_text = stored_data.text
     const current_chat = stored_data.current_chat
 
@@ -230,7 +225,6 @@ const main = async () => {
       chat: current_chat
     })
 
-    // Clean up the storage entry after using it
     await browser.storage.local.remove(storage_key)
 
     if (

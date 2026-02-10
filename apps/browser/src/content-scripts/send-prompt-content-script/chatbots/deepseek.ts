@@ -36,7 +36,6 @@ export const deepseek: Chatbot = {
       return
     }
 
-    // Uncheck deep think
     const deep_think_button_style = window.getComputedStyle(deep_think_button)
     if (
       deep_think_button_style.getPropertyValue('color') != 'rgb(15, 17, 21)' &&
@@ -45,7 +44,6 @@ export const deepseek: Chatbot = {
       deep_think_button.click()
     }
 
-    // Uncheck search
     const search_button_style = window.getComputedStyle(search_button)
     if (
       search_button_style.getPropertyValue('color') != 'rgb(15, 17, 21)' &&

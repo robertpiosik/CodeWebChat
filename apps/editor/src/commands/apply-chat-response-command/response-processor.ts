@@ -46,6 +46,7 @@ export type CommandArgs = {
   }
   files_with_content?: FileInPreview[]
   created_at?: number
+  url?: string
 }
 
 export const process_chat_response = async (

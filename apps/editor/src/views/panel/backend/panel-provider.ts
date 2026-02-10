@@ -150,6 +150,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     timestamp: number
   } | null = null
 
+  // Voice input
   public is_recording = false
   public recording_process: ChildProcessWithoutNullStreams | null = null
   public audio_chunks: Buffer[] = []

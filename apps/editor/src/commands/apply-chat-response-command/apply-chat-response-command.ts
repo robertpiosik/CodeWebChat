@@ -79,7 +79,8 @@ export const apply_chat_response_command = (params: {
         const new_item: ResponseHistoryItem = {
           response: chat_response,
           raw_instructions: args?.raw_instructions,
-          created_at: Date.now()
+          created_at: Date.now(),
+          url: args?.url
         }
 
         history.push(new_item)
@@ -316,7 +317,8 @@ export const apply_chat_response_command = (params: {
                   created_at: created_at_for_preview,
                   lines_added: total_lines_added,
                   lines_removed: total_lines_removed,
-                  files: files_for_history
+                  files: files_for_history,
+                  url: args?.url
                 }
 
                 history.push(new_item)
@@ -339,7 +341,8 @@ export const apply_chat_response_command = (params: {
             context: params.context,
             original_editor_state: args?.original_editor_state,
             raw_instructions: args?.raw_instructions,
-            created_at: created_at_for_preview
+            created_at: created_at_for_preview,
+            url: args?.url
           })
 
           if (changes_accepted) {

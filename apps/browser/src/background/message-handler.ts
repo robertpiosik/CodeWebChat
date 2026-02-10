@@ -12,7 +12,6 @@ interface ChatQueueItem {
   timeout_id?: number
 }
 
-// Global queue of chat initialization requests
 const chat_queue: ChatQueueItem[] = []
 let is_processing = false
 
@@ -112,7 +111,6 @@ const process_next_chat = async () => {
     browser.tabs.create(create_tab_options)
   }
 
-  // Set a timeout to automatically proceed if no confirmation is received
   current_queue_item.timeout_id = setTimeout(() => {
     console.warn(
       `Chat initialization timeout for ${current_chat_message.url}. Moving to next chat.`
@@ -157,7 +155,8 @@ export const setup_message_listeners = () => {
             action: 'apply-chat-response',
             client_id: message.client_id,
             raw_instructions: message.raw_instructions,
-            edit_format: message.edit_format
+            edit_format: message.edit_format,
+            url: message.url
           } as ApplyChatResponseMessage)
         }
       }

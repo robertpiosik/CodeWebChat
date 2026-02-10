@@ -90,7 +90,6 @@ export class WebSocketManager {
         stdio: 'ignore'
       })
 
-      // Allow the parent process to exit independently
       if (process.pid) {
         process.unref()
       }
@@ -100,7 +99,6 @@ export class WebSocketManager {
         message: `Started WebSocket server process with PID: ${process.pid}`
       })
 
-      // Allow some time for the server to start up
       return new Promise<void>((resolve) => setTimeout(resolve, 1000))
     } catch (error) {
       Logger.error({
@@ -120,7 +118,6 @@ export class WebSocketManager {
 
     this.client_id = null
 
-    // Check if server is running, restart if not
     const port_in_use = await this._is_port_in_use(this.port)
     if (!port_in_use) {
       try {
@@ -131,7 +128,6 @@ export class WebSocketManager {
           message: 'Failed to restart WebSocket server',
           data: error
         })
-        // If server fails to start, don't attempt to connect immediately
         if (this.should_reconnect) {
           this._schedule_reconnect()
         }
@@ -167,7 +163,8 @@ export class WebSocketManager {
         } else if (message.action == 'apply-chat-response') {
           vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
             raw_instructions: message.raw_instructions,
-            edit_format: message.edit_format
+            edit_format: message.edit_format,
+            url: message.url
           })
         } else if (message.action == 'ping') {
           if (message.vscode_extension_version) {
@@ -222,12 +219,10 @@ export class WebSocketManager {
   }
 
   private _schedule_reconnect() {
-    // Clear existing reconnect timer
     if (this.reconnect_timer) {
       clearTimeout(this.reconnect_timer)
     }
 
-    // Try to reconnect after 3 seconds
     this.reconnect_timer = setTimeout(() => {
       this._connect_as_client()
     }, 3000)
@@ -243,7 +238,7 @@ export class WebSocketManager {
       if (p1 > p2) return true
       if (p1 < p2) return false
     }
-    return false // Versions are equal or v1 is not newer
+    return false
   }
 
   is_connected_with_browser(): boolean {
@@ -371,7 +366,7 @@ export class WebSocketManager {
 
     const target_browser_id = await this._select_browser()
     if (target_browser_id === undefined) {
-      return false // User cancelled or no browser
+      return false
     }
 
     for (const chat of params.chats) {
@@ -466,7 +461,7 @@ export class WebSocketManager {
 
     const target_browser_id = await this._select_browser()
     if (target_browser_id === undefined) {
-      return // User cancelled
+      return
     }
 
     const config = vscode.workspace.getConfiguration('codeWebChat')

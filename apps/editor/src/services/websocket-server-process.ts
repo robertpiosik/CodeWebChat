@@ -104,7 +104,7 @@ class WebSocketServer {
     this.browser_clients.set(id, client)
 
     this._notify_vscode_clients()
-    ws.send(JSON.stringify({ action: 'connected', id })) // Optional welcome
+    ws.send(JSON.stringify({ action: 'connected', id }))
   }
 
   private _handle_vscode_connection(ws: WebSocket, url: URL) {
@@ -170,9 +170,6 @@ class WebSocketServer {
           client.ws.send(msg_string)
         }
       } else {
-        // Default to the first one or broadcast? Since we should have asked the user,
-        // falling back to "any" if id is missing seems acceptable, or picking the last one.
-        // For now, let's pick the last added one (most recent) if exists.
         const clients = Array.from(this.browser_clients.values())
         if (clients.length > 0) {
           const client = clients[clients.length - 1]
@@ -281,7 +278,7 @@ class WebSocketServer {
 
   private _shutdown() {
     this.connections.forEach((ws) => {
-      ws.close(1001, 'Server is shutting down') // 1001: Going Away
+      ws.close(1001, 'Server is shutting down')
     })
     this.wss.close()
     this.server.close(() => {

@@ -20,6 +20,7 @@ export const preview_handler = async (params: {
   }
   raw_instructions?: string
   created_at?: number
+  url?: string
 }): Promise<boolean> => {
   let resolve_cleanup_promise: () => void
   ongoing_preview_cleanup_promise = new Promise((resolve) => {
@@ -33,7 +34,8 @@ export const preview_handler = async (params: {
       raw_instructions: params.raw_instructions,
       chat_response: params.chat_response,
       context: params.context,
-      created_at: params.created_at
+      created_at: params.created_at,
+      url: params.url
     })
 
     if (preview_result === null || preview_result.accepted_files.length == 0) {

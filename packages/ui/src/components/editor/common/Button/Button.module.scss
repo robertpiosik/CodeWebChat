@@ -55,8 +55,8 @@
     &:hover {
       background-color: color-mix(
         in srgb,
-        var(--vscode-inputValidation-errorBorder) 80%,
-        var(--cwc-text-color)
+        var(--vscode-inputValidation-errorBorder) 90%,
+        transparent
       );
     }
 

@@ -7,6 +7,7 @@ type ApplyChatResponseMessage = {
   client_id: number
   raw_instructions?: string
   edit_format?: string
+  url?: string
 }
 
 export type Message = ChatInitializedMessage | ApplyChatResponseMessage

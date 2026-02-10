@@ -201,6 +201,7 @@ export const ResponsePreview: FC<Props> = (props) => {
             {props.raw_instructions}
           </div>
         )}
+
         {applying_files.length > 0 && is_fixing_all && (
           <div className={styles['fix-all-progress']}>
             {applying_files.map((file) => (
@@ -232,6 +233,7 @@ export const ResponsePreview: FC<Props> = (props) => {
             ))}
           </div>
         )}
+
         {error_count > 0 && (
           <div
             className={cn(styles.info, styles['info--error'])}
@@ -272,6 +274,7 @@ export const ResponsePreview: FC<Props> = (props) => {
             </div>
           </div>
         )}
+
         {aggressive_fallback_count > 0 && (
           <div
             className={cn(styles.info, styles['info--warning'])}
@@ -294,7 +297,7 @@ export const ResponsePreview: FC<Props> = (props) => {
             </div>
           </div>
         )}
-        {/* summary of progress when clicked "Fix all" */}
+
         <div className={styles.list}>
           {props.items.map((item, index) => {
             if (item.type == 'file') {

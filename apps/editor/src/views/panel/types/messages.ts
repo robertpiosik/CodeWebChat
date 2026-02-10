@@ -379,6 +379,7 @@ export interface ApplyResponseFromHistoryMessage extends BaseMessage {
   raw_instructions?: string
   files?: FileInPreview[]
   created_at: number
+  url?: string
 }
 
 export interface GetCollapsedStatesMessage extends BaseMessage {
@@ -765,6 +766,7 @@ export interface ResponsePreviewStartedMessage extends BaseMessage {
   raw_instructions?: string
   created_at?: number
   fix_all_automatically?: boolean
+  url?: string
 }
 
 export interface ResponsePreviewFinishedMessage extends BaseMessage {
