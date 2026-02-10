@@ -13,8 +13,11 @@ import axios from 'axios'
 import { make_api_request } from '@/utils/make-api-request'
 import { voice_input_instructions } from '@/constants/instructions'
 
+const MIN_RECORDING_DURATION = 3000
+
 const start_recording = (panel_provider: PanelProvider) => {
   panel_provider.audio_chunks = []
+  panel_provider.recording_start_time = Date.now()
   try {
     panel_provider.recording_process = spawn('rec', ['-q', '-t', 'wav', '-'])
     panel_provider.recording_process.stdout.on('data', (chunk: Buffer) => {
@@ -33,6 +36,14 @@ const stop_recording = async (panel_provider: PanelProvider) => {
   if (panel_provider.recording_process) {
     panel_provider.recording_process.kill()
     panel_provider.recording_process = null
+
+    if (
+      Date.now() - panel_provider.recording_start_time <
+      MIN_RECORDING_DURATION
+    ) {
+      panel_provider.audio_chunks = []
+      return
+    }
 
     const audio_buffer = Buffer.concat(panel_provider.audio_chunks)
     const base64_audio = audio_buffer.toString('base64')

@@ -154,6 +154,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public is_recording = false
   public recording_process: ChildProcessWithoutNullStreams | null = null
   public audio_chunks: Buffer[] = []
+  public recording_start_time: number = 0
 
   public preview_switch_choice_resolver:
     | ((choice: 'Switch' | undefined) => void)
