@@ -85,6 +85,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     useState(false)
   const [hovered_edit_format, set_hovered_edit_format] =
     useState<EditFormat | null>(null)
+  const [is_recording_hovered, set_is_recording_hovered] = useState(false)
   const [prune_instructions, set_prune_instructions] = useState(
     props.prune_context_instructions_prefix
   )
@@ -98,6 +99,10 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
       set_show_submit_tooltip(false)
     }
   }, [props.value])
+
+  useEffect(() => {
+    set_is_recording_hovered(false)
+  }, [props.is_recording])
 
   const toggle_invocation_dropdown = useCallback(() => {
     set_is_invocation_dropdown_open((prev) => !prev)
@@ -575,12 +580,16 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         styles['footer__right__submit__button--submit'],
                         styles['footer__right__submit__button--recording'],
                         'codicon',
-                        'codicon-mic-filled'
+                        is_recording_hovered
+                          ? 'codicon-debug-stop'
+                          : 'codicon-mic-filled'
                       )}
                       onClick={(e) => {
                         e.stopPropagation()
                         props.on_recording_finished()
                       }}
+                      onMouseEnter={() => set_is_recording_hovered(true)}
+                      onMouseLeave={() => set_is_recording_hovered(false)}
                       title={`Exit voice input ${
                         is_mac ? '(⇧⌘Space)' : '(Ctrl+Shift+Space)'
                       }`}
