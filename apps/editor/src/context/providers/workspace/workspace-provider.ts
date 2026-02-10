@@ -140,6 +140,8 @@ export class WorkspaceProvider
     this._ranges_watcher.onDidDelete(() => this.load_all_ranges())
 
     this.ranges_initialization = this.load_all_ranges()
+
+    this.load_checked_files_state()
   }
 
   private async _save_checked_files_state(): Promise<void> {
