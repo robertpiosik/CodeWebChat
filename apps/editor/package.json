@@ -363,6 +363,14 @@
       ],
       "commandPalette": [
         {
+          "command": "codeWebChat.undoContextSelection",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.redoContextSelection",
+          "when": "false"
+        },
+        {
           "command": "codeWebChat.clearChecks",
           "when": "false"
         },
