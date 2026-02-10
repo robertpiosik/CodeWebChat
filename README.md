@@ -21,7 +21,7 @@ Code Web Chat is a free and open-source (FOSS), independent AI coding toolkit fo
 ✅ **Apply responses**—multi-file edits integration with automatic checkpoints \
 🌱 **Sustainable**—first-class support for [context caching](https://ai.google.dev/gemini-api/docs/caching) across tasks \
 🤙 **Fully-featured**—code at cursor, commit messages \
-✋ **Privacy-first**—strict [zero telemetry policy](https://github.com/robertpiosik/CodeWebChat/blob/dev/PRIVACY.md)
+✋ **Privacy-first**—[strict zero telemetry policy](https://github.com/robertpiosik/CodeWebChat/blob/dev/PRIVACY.md)
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />
