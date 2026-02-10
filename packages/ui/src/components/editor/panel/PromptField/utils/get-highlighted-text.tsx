@@ -49,7 +49,7 @@ export const get_highlighted_text = (params: {
   text: string
   current_selection?: SelectionState | null
   context_file_paths: string[]
-  is_web_mode?: boolean
+  is_chatbots_mode?: boolean
 }): string => {
   const saved_context_regex_part =
     '#SavedContext\\((?:WorkspaceState|JSON) "(?:\\\\.|[^"\\\\])*"\\)'
@@ -215,7 +215,7 @@ export const get_highlighted_text = (params: {
       const image_match = part.match(/^#Image\(([a-fA-F0-9]+)\)$/)
       if (part && image_match) {
         const hash = image_match[1]
-        const is_error = params.is_web_mode
+        const is_error = params.is_chatbots_mode
         return `<span class="${cn(styles['symbol'], styles['symbol--image'], {
           [styles['symbol--error']]: is_error
         })}" data-type="image-symbol" data-hash="${hash}"${

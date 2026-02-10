@@ -138,11 +138,19 @@ export const check_all_with_keywords_command = (
           matched_files.length == 1 ? '' : 's'
         }`
         quick_pick.ignoreFocusOut = true
+        quick_pick.buttons = [close_button]
 
         const selected_items = await new Promise<
           readonly (vscode.QuickPickItem & { file_path: string })[] | undefined
         >((resolve) => {
           let is_accepted = false
+
+          quick_pick.onDidTriggerButton((button) => {
+            if (button === close_button) {
+              resolve(undefined)
+              quick_pick.hide()
+            }
+          })
 
           quick_pick.onDidAccept(() => {
             is_accepted = true

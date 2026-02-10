@@ -17,7 +17,7 @@ export const Empty = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    is_web_mode={false}
+    is_chatbots_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
@@ -60,7 +60,7 @@ export const WithText = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    is_web_mode={false}
+    is_chatbots_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
@@ -103,7 +103,7 @@ export const LongText = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    is_web_mode={false}
+    is_chatbots_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
@@ -148,7 +148,7 @@ export const WithPlaceholderSavedContext = () => (
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
-    is_web_mode={false}
+    is_chatbots_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     context_file_paths={[]}
     invocation_count={1}
@@ -197,7 +197,7 @@ export const WithPlaceholderSelection = () => (
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
-    is_web_mode={false}
+    is_chatbots_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     context_file_paths={[]}
     invocation_count={1}
@@ -240,7 +240,7 @@ export const WithCommit = () => (
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
-    is_web_mode={false}
+    is_chatbots_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     context_file_paths={[]}
     invocation_count={1}
@@ -283,7 +283,7 @@ export const WithCommitWithQuotes = () => (
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
-    is_web_mode={false}
+    is_chatbots_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     context_file_paths={[]}
     invocation_count={1}
@@ -325,7 +325,7 @@ export const WithContextAtCommit = () => (
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
-    is_web_mode={false}
+    is_chatbots_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     context_file_paths={[]}
     invocation_count={1}
@@ -368,7 +368,7 @@ export const WithEditFormatSelector = () => {
       current_selection={null}
       currently_open_file_path="/path/to/file"
       on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-      is_web_mode={false}
+      is_chatbots_mode={false}
       on_at_sign_click={() => console.log('@ clicked')}
       on_hash_sign_click={() => console.log('# clicked')}
       on_submit_with_control={() => console.log('Submitted with control')}
@@ -413,7 +413,7 @@ export const WithFilePaths = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    is_web_mode={false}
+    is_chatbots_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}

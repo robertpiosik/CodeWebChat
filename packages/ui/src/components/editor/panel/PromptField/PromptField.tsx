@@ -40,7 +40,7 @@ export type PromptFieldProps = {
   prompt_type: WebPromptType | ApiPromptType
   current_selection?: SelectionState | null
   on_caret_position_change: (caret_position: number) => void
-  is_web_mode: boolean
+  is_chatbots_mode: boolean
   on_at_sign_click: () => void
   on_hash_sign_click: () => void
   on_curly_braces_click: () => void
@@ -194,14 +194,14 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
       text: props.value,
       current_selection: props.current_selection,
       context_file_paths: props.context_file_paths ?? [],
-      is_web_mode: props.is_web_mode
+      is_chatbots_mode: props.is_chatbots_mode
     })
   }, [
     props.value,
     props.prompt_type,
     props.current_selection,
     props.context_file_paths,
-    props.is_web_mode
+    props.is_chatbots_mode
   ])
 
   useEffect(() => {
@@ -530,11 +530,12 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             </div>
 
             <div className={styles['footer__right__submit']} ref={dropdown_ref}>
-              {(!props.is_web_mode ||
-                (props.is_web_mode && props.is_connected)) && (
+              {(!props.is_chatbots_mode ||
+                (props.is_chatbots_mode && props.is_connected)) && (
                 <>
                   {!(
-                    props.prompt_type == 'prune-context' && !props.is_web_mode
+                    props.prompt_type == 'prune-context' &&
+                    !props.is_chatbots_mode
                   ) && (
                     <div
                       className={styles['footer__right__invocation-count']}
@@ -675,7 +676,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   )}
                 </>
               )}
-              {props.is_web_mode && !props.is_connected && (
+              {props.is_chatbots_mode && !props.is_connected && (
                 <button
                   className={cn(
                     styles['footer__right__submit__button'],

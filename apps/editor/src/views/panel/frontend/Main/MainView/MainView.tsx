@@ -237,7 +237,7 @@ export const MainView: React.FC<Props> = (props) => {
             on_at_sign_click={props.on_at_sign_click}
             on_hash_sign_click={props.on_hash_sign_click}
             on_curly_braces_click={props.on_curly_braces_click}
-            is_web_mode={props.mode == MODE.WEB}
+            is_chatbots_mode={props.mode == MODE.WEB}
             is_connected={props.is_connected}
             prompt_type={
               props.mode == MODE.WEB

@@ -325,6 +325,16 @@
         "category": "Code Web Chat"
       },
       {
+        "command": "codeWebChat.checkReferences",
+        "title": "Check References",
+        "category": "Code Web Chat"
+      },
+      {
+        "command": "codeWebChat.checkDefinition",
+        "title": "Check Definition",
+        "category": "Code Web Chat"
+      },
+      {
         "command": "codeWebChat.openInIntegratedTerminal",
         "title": "Open in Integrated Terminal",
         "category": "Code Web Chat",
@@ -340,7 +350,8 @@
     "menus": {
       "editor/context": [
         {
-          "submenu": "codeWebChat.editorSubmenu"
+          "submenu": "codeWebChat.editorSubmenu",
+          "group": "navigation@1000"
         }
       ],
       "codeWebChat.editorSubmenu": [
@@ -359,6 +370,14 @@
         {
           "command": "codeWebChat.codeAtCursorWithInstructionsUsing",
           "group": "1_action@4"
+        },
+        {
+          "command": "codeWebChat.checkDefinition",
+          "group": "1_action@6"
+        },
+        {
+          "command": "codeWebChat.checkReferences",
+          "group": "1_action@5"
         }
       ],
       "commandPalette": [
@@ -476,6 +495,14 @@
         },
         {
           "command": "codeWebChat.copyCommitMessagePrompt",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.checkDefinition",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.checkReferences",
           "when": "false"
         }
       ],
