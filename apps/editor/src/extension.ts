@@ -34,8 +34,8 @@ import {
   check_parent_folder_command,
   uncheck_parent_folder_command,
   check_all_with_keywords_command,
-  check_references_command,
-  check_definition_command
+  check_referencing_files_for_context_command,
+  check_definition_file_for_context_command
 } from './commands'
 import {
   get_checkpoints,
@@ -137,9 +137,9 @@ export async function activate(context: vscode.ExtensionContext) {
     check_parent_folder_command(workspace_provider),
     uncheck_parent_folder_command(workspace_provider),
     duplicate_workspace_command(workspace_provider, context),
-    check_references_command(workspace_provider),
+    check_referencing_files_for_context_command(workspace_provider),
     check_all_with_keywords_command(workspace_provider, context),
-    check_definition_command(workspace_provider),
+    check_definition_file_for_context_command(workspace_provider),
     open_url_command({
       command: 'codeWebChat.openRepository',
       url: 'https://github.com/robertpiosik/CodeWebChat'

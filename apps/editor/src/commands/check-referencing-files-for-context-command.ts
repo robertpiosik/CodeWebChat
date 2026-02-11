@@ -3,11 +3,11 @@ import * as path from 'path'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'
 
-export const check_references_command = (
+export const check_referencing_files_for_context_command = (
   workspace_provider: WorkspaceProvider
 ) => {
   return vscode.commands.registerCommand(
-    'codeWebChat.checkReferences',
+    'codeWebChat.checkReferencingFilesForContext',
     async () => {
       const editor = vscode.window.activeTextEditor
       if (!editor) {
@@ -165,7 +165,7 @@ export const check_references_command = (
           }`
         )
         Logger.error({
-          function_name: 'check_references_command',
+          function_name: 'check_referencing_files_for_context_command',
           message: 'Error searching references',
           data: error
         })

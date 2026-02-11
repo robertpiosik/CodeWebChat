@@ -325,13 +325,13 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.checkReferences",
-        "title": "Check References",
+        "command": "codeWebChat.checkReferencingFilesForContext",
+        "title": "Check Referencing Files for Context",
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.checkDefinition",
-        "title": "Check Definition",
+        "command": "codeWebChat.checkDefinitionFileForContext",
+        "title": "Check Definition File for Context",
         "category": "Code Web Chat"
       },
       {
@@ -372,11 +372,11 @@
           "group": "1_action@4"
         },
         {
-          "command": "codeWebChat.checkDefinition",
+          "command": "codeWebChat.checkDefinitionFileForContext",
           "group": "1_action@6"
         },
         {
-          "command": "codeWebChat.checkReferences",
+          "command": "codeWebChat.checkReferencingFilesForContext",
           "group": "1_action@5"
         }
       ],
@@ -498,11 +498,11 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.checkDefinition",
+          "command": "codeWebChat.checkDefinitionFileForContext",
           "when": "false"
         },
         {
-          "command": "codeWebChat.checkReferences",
+          "command": "codeWebChat.checkReferencingFilesForContext",
           "when": "false"
         }
       ],

@@ -2,11 +2,11 @@ import * as vscode from 'vscode'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'
 
-export const check_definition_command = (
+export const check_definition_file_for_context_command = (
   workspace_provider: WorkspaceProvider
 ) => {
   return vscode.commands.registerCommand(
-    'codeWebChat.checkDefinition',
+    'codeWebChat.checkDefinitionFileForContext',
     async () => {
       const editor = vscode.window.activeTextEditor
       if (!editor) {
@@ -93,7 +93,7 @@ export const check_definition_command = (
           }`
         )
         Logger.error({
-          function_name: 'check_definition_command',
+          function_name: 'check_definition_file_for_context_command',
           message: 'Error resolving definition',
           data: error
         })
