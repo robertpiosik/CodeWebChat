@@ -151,7 +151,7 @@ export const ApiManagerModal: React.FC<Props> = (props) => {
                       {item.total_tokens !== undefined && (
                         <div>({format_tokens(item.total_tokens)})</div>
                       )}
-                      {item.show_elapsed_time !== false && (
+                      {item.show_elapsed_time && (
                         <div>{(elapsed_ms / 1000).toFixed(1)}s</div>
                       )}
                     </div>

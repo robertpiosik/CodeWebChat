@@ -56,6 +56,15 @@
   }
 }
 
+.elapsed-time {
+  position: absolute;
+  top: 5px;
+  right: 7px;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--cwc-text-color-dimmed);
+}
+
 .content {
   padding: 8px 12px 12px 12px;
   display: flex;
