@@ -11,10 +11,10 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 </p>
 
-Code Web Chat (CWC) is a free and open-source, independent AI coding toolkit for VS Code. Start using [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt) (also called [gems](https://gemini.google/pl/overview/gems) or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)) in chatbots or make API calls directly from the editor!
+Code Web Chat (CWC) is a free and open-source, independent AI coding toolkit for VS Code. Start using [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt) (also called [gems](https://gemini.google/pl/overview/gems) or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)) in free chatbots!
 
-💅 **Apply responses**—multi-file edits integration with automatic checkpoints \
-🌱 **Sustainable**—first-class support for [context caching](https://ai.google.dev/gemini-api/docs/caching) across tasks \
+💅 **Apply responses**—multi-file edits integration \
+🌱 **Sustainable**—[context caching](https://ai.google.dev/gemini-api/docs/caching) across tasks \
 ✋ **Privacy-first**—[strict zero telemetry policy](https://github.com/robertpiosik/CodeWebChat/blob/dev/PRIVACY.md)
 
 <p>
@@ -31,7 +31,7 @@ When pair programming with Code Web Chat, you foster codebase understanding to p
 
 ## Enabling autofill in chatbots
 
-Got tired with copy and paste? Simplify the workflow by installing the browser extension:
+Got tired with copy and paste? Simplify the workflow with the browser extension:
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
@@ -64,7 +64,9 @@ Got tired with copy and paste? Simplify the workflow by installing the browser e
 > [!NOTE]
 > Use [forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) of port _55155_ when using remote machine via SSH.
 
-## API tools for common tasks
+## API tools
+
+CWC lets you complete common tasks directly in the editor. To use, bring your own key (BYOK) for a model provider of choice.
 
 **🛠️ Edit Context** \
 Pair-programming using natural language instructions.
