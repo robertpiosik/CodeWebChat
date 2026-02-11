@@ -176,6 +176,15 @@ const convert_code_block_to_new_file_diff = (params: {
   } else {
     for (let i = 0; i < Math.min(params.lines.length, 5); i++) {
       const line = params.lines[i].trim()
+
+      if (
+        line.startsWith('--- ') ||
+        line.startsWith('+++ ') ||
+        line.startsWith('diff --git ')
+      ) {
+        continue
+      }
+
       const match = line.match(path_regex)
 
       if (match && match[1]) {
@@ -217,22 +226,32 @@ const convert_code_block_to_new_file_diff = (params: {
   const first_real_content_line = content_lines.find((l) => l.trim() != '')
   if (
     first_real_content_line &&
-    first_real_content_line
+    (first_real_content_line
       .trim()
-      .match(/^(@@ -\d+(?:,\d+)? \+\d+(?:,\d+)? @@)/)
+      .match(/^(@@ -\d+(?:,\d+)? \+\d+(?:,\d+)? @@)/) ||
+      first_real_content_line.startsWith('diff --git ') ||
+      first_real_content_line.startsWith('--- '))
   ) {
     const { workspace_name, relative_path } = extract_workspace_and_path({
       raw_file_path: file_path,
       is_single_root_folder_workspace: params.is_single_root
     })
 
-    const is_new_file = first_real_content_line.trim().startsWith('@@ -0,0')
+    let patch_content = ''
+    if (
+      first_real_content_line.startsWith('diff --git ') ||
+      first_real_content_line.startsWith('--- ')
+    ) {
+      patch_content = content_lines.join('\n')
+    } else {
+      const is_new_file = first_real_content_line.trim().startsWith('@@ -0,0')
 
-    const patch_content = [
-      is_new_file ? '--- /dev/null' : `--- a/${relative_path}`,
-      `+++ b/${relative_path}`,
-      ...content_lines
-    ].join('\n')
+      patch_content = [
+        is_new_file ? '--- /dev/null' : `--- a/${relative_path}`,
+        `+++ b/${relative_path}`,
+        ...content_lines
+      ].join('\n')
+    }
 
     return {
       type: 'diff',
