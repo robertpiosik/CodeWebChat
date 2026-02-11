@@ -76,6 +76,9 @@ export const get_recently_used_presets_or_groups_key = (
 
 export const LAST_SELECTED_BROWSER_ID_STATE_KEY = 'last-selected-browser-id'
 
+export const LAST_SEARCH_FILES_FOR_CONTEXT_QUERY_STATE_KEY =
+  'last-search-files-for-context-query'
+
 export type DuplicateWorkspaceContext = {
   checked_files: string[]
   checked_files_timestamps?: Record<string, number>

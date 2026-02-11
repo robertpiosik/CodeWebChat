@@ -8,8 +8,7 @@ import {
   handle_unstaged_files_source,
   handle_json_file_source,
   handle_workspace_state_source,
-  handle_commit_files_source,
-  handle_check_all_with_keywords_source
+  handle_commit_files_source
 } from './sources'
 import {
   load_all_contexts,
@@ -27,13 +26,7 @@ export const apply_context_command = (
     async () => {
       let show_main_menu = true
       let last_main_selection_value = extension_context.workspaceState.get<
-        | 'internal'
-        | 'file'
-        | 'unstaged'
-        | 'commit_files'
-        | 'check_all_with_keywords'
-        | string
-        | undefined
+        'internal' | 'file' | 'unstaged' | 'commit_files' | string | undefined
       >(LAST_APPLY_CONTEXT_OPTION_STATE_KEY)
 
       while (show_main_menu) {
@@ -57,13 +50,7 @@ export const apply_context_command = (
         }
 
         const main_quick_pick_options: (vscode.QuickPickItem & {
-          value:
-            | 'internal'
-            | 'file'
-            | 'unstaged'
-            | 'commit_files'
-            | 'check_all_with_keywords'
-            | string
+          value: 'internal' | 'file' | 'unstaged' | 'commit_files' | string
         })[] = []
 
         main_quick_pick_options.push({
@@ -98,20 +85,9 @@ export const apply_context_command = (
           value: 'commit_files'
         })
 
-        main_quick_pick_options.push({
-          label: 'Check all with keywords...',
-          value: 'check_all_with_keywords'
-        })
-
         const main_quick_pick = vscode.window.createQuickPick<
           vscode.QuickPickItem & {
-            value:
-              | 'internal'
-              | 'file'
-              | 'unstaged'
-              | 'commit_files'
-              | 'check_all_with_keywords'
-              | string
+            value: 'internal' | 'file' | 'unstaged' | 'commit_files' | string
           }
         >()
         main_quick_pick.title = 'Context Sources'
@@ -131,13 +107,7 @@ export const apply_context_command = (
 
         const main_selection = await new Promise<
           | (vscode.QuickPickItem & {
-              value:
-                | 'internal'
-                | 'file'
-                | 'unstaged'
-                | 'commit_files'
-                | 'check_all_with_keywords'
-                | string
+              value: 'internal' | 'file' | 'unstaged' | 'commit_files' | string
               triggeredButton?: vscode.QuickInputButton
             })
           | undefined
@@ -252,14 +222,6 @@ export const apply_context_command = (
           }
         } else if (main_selection.value == 'commit_files') {
           const result = await handle_commit_files_source(
-            workspace_provider,
-            extension_context
-          )
-          if (result == 'back') {
-            show_main_menu = true
-          }
-        } else if (main_selection.value == 'check_all_with_keywords') {
-          const result = await handle_check_all_with_keywords_source(
             workspace_provider,
             extension_context
           )
