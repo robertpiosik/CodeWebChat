@@ -1,0 +1,38 @@
+--- a/apps/tour/next.config.js
++++ b/apps/tour/next.config.js
+@@ -0,0 +0,0 @@
+-// https://stackoverflow.com/a/69166434/3998651
+-// Nextjs 14 needs this change to the above answer: https://stackoverflow.com/a/76852889/3998651
+ const hash_only_ident = (context, _, export_name) => {
+   const hash = crypto.createHash('sha256')
+   hash.update(
+@@ -0,0 +0,0 @@
+-    // For development mode, ensure we set up the module naming consistently
+     const rules = config.module.rules
+       .find((rule) => typeof rule.oneOf === 'object')
+       .oneOf.filter((rule) => Array.isArray(rule.use))
+@@ -0,0 +0,0 @@
+-          // Add SCSS preprocessor options for dev mode too
+           if (moduleLoader.loader?.includes('sass-loader')) {
+             moduleLoader.options = moduleLoader.options || {}
+             moduleLoader.options.additionalData = `@use "${path.resolve(
+               __dirname,
+@@ -0,0 +0,0 @@
+-        // Mangle properties suffixed with _ (and not __) or prefixed with cn_.
+         mangle: {
+           properties: {
+             // Mangle properties suffixed with _ (and not __) or prefixed with cn_.
+             regex: /[^_]_$|^_$|^cn_/
+           }
+         }
+@@ -0,0 +0,0 @@
+-// robots: {
+-//   index: false,
+-//   follow: false
+-// }
+ export const metadata = {
+   // robots: {
+   //   index: false,
+   //   follow: false
+   // }
+ }

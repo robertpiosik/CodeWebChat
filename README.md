@@ -11,14 +11,9 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 </p>
 
-Code Web Chat is a free and open-source, independent AI coding toolkit for VS Code.
+Code Web Chat is a free and open-source, independent AI coding toolkit for VS Code. Start using [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt) (also called [gems](https://gemini.google/pl/overview/gems) or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)) without the tedious copy and paste!
 
-✅ **Construct coding prompts for...**
-
-- Chatbots—_[Gemini](https://gemini.google.com/app), [ChatGPT](https://chatgpt.com/), [Claude](https://claude.ai/), [Grok](https://grok.com/), [DeepSeek](https://chat.deepseek.com/), etc._
-- APIs—_[Google](https://aistudio.google.com/api-keys), [OpenAI](https://platform.openai.com/api-keys), [OpenRouter](https://openrouter.ai/settings/keys), [local Ollama](https://ollama.com/search), etc._
-
-✅ **Apply responses**—multi-file edits integration with automatic checkpoints \
+💅 **Apply responses**—multi-file edits integration with automatic checkpoints \
 🌱 **Sustainable**—first-class support for [context caching](https://ai.google.dev/gemini-api/docs/caching) across tasks \
 🤙 **Fully-featured**—code at cursor, commit messages \
 ✋ **Privacy-first**—[strict zero telemetry policy](https://github.com/robertpiosik/CodeWebChat/blob/dev/PRIVACY.md)
@@ -37,12 +32,10 @@ When pair programming with Code Web Chat, you foster codebase understanding to p
 
 ## Enabling autofill in chatbots
 
-Start using [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt) (also called [gems](https://gemini.google/pl/overview/gems) or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)) without the tedious copy and paste!
+The browser extension simplifies the workflow but is not a prerequisite. You can still copy and paste.
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
-
-Like all of CWC, the browser extension is [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser) and works with minimal permissions for your absolute privacy and security.
 
 **List of supported chatbots:**
 
@@ -67,10 +60,10 @@ Like all of CWC, the browser extension is [open-source](https://github.com/rober
 - Z AI
 
 > [!IMPORTANT]
-> In respect to chatbot's Terms of Use, a prompt autofill is all the extension does automatically. Furthermore, the _Apply response_ button placed under responses is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button. Review the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/apps/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) for implementation details.
+> The _Apply response_ button placed under responses is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button. Review the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/apps/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) to learn implementation details.
 
 > [!NOTE]
-> Use [port forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) on port _55155_ when using remote machine via SSH.
+> Use [forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) of port _55155_ when using remote machine via SSH.
 
 ## API tools for common tasks
 

@@ -1,0 +1,123 @@
+const crypto = require('crypto')
+const path = require('path')
+const TerserPlugin = require('terser-webpack-plugin')
+
+const hash_only_ident = (context, _, export_name) => {
+  const hash = crypto.createHash('sha256')
+  hash.update(
+    Buffer.from(
+      `filePath:${path
+        .relative(context.rootContext, context.resourcePath)
+        .replace(/\\+/g, '/')}#className:${export_name}`
+    )
+  )
+  return hash
+    .digest('base64')
+    .replace(/[^a-zA-Z0-9-_]/g, '_')
+    .replace(/^(-?\d|--)/, '_$1')
+    .slice(0, 5)
+}
+
+/** @type {import('next').NextConfig} */
+const next_config = {
+  output: 'export',
+  typescript: {
+    ignoreBuildErrors: true
+  },
+  poweredByHeader: false,
+  reactStrictMode: false,
+  trailingSlash: process.env.TRAILING_SLASH == 'true',
+  webpack(config, { dev }) {
+    if (!dev) {
+      const rules = config.module.rules
+        .find((rule) => typeof rule.oneOf == 'object')
+        .oneOf.filter((rule) => Array.isArray(rule.use))
+
+      rules.forEach((rule) => {
+        rule.use.forEach((moduleLoader) => {
+          if (
+            moduleLoader.loader?.includes('css-loader') &&
+            !moduleLoader.loader?.includes('postcss-loader') &&
+            moduleLoader.options !== undefined &&
+            moduleLoader.options.modules !== undefined
+          )
+            moduleLoader.options.modules.getLocalIdent = hash_only_ident
+
+          if (moduleLoader.loader?.includes('sass-loader')) {
+            moduleLoader.options = moduleLoader.options || {}
+            moduleLoader.options.additionalData = `@use "${path.resolve(
+              __dirname,
+              '../../packages/core/src/styles/foundation'
+            )}" as *;`
+          }
+        })
+      })
+    } else {
+      const rules = config.module.rules
+        .find((rule) => typeof rule.oneOf === 'object')
+        .oneOf.filter((rule) => Array.isArray(rule.use))
+
+      rules.forEach((rule) => {
+        rule.use.forEach((moduleLoader) => {
+          if (
+            moduleLoader.loader?.includes('css-loader') &&
+            !moduleLoader.loader?.includes('postcss-loader') &&
+            moduleLoader.options !== undefined &&
+            moduleLoader.options.modules !== undefined
+          ) {
+            moduleLoader.options.modules.getLocalIdent = (
+              context,
+              _,
+              exportName
+            ) => {
+              const filename = context.resourcePath
+              const isModule = /\.module\.(scss|css)$/i.test(filename)
+              if (isModule) {
+                const moduleName = path
+                  .basename(filename)
+                  .replace(/\.module\.(scss|css)$/i, '')
+                return `${moduleName}__${exportName}`
+              }
+              return exportName
+            }
+          }
+
+          if (moduleLoader.loader?.includes('sass-loader')) {
+            moduleLoader.options = moduleLoader.options || {}
+            moduleLoader.options.additionalData = `@use "${path.resolve(
+              __dirname,
+              '../../packages/core/src/styles/foundation'
+            )}" as *;`
+          }
+        })
+      })
+    }
+
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ['@svgr/webpack']
+    })
+
+    config.optimization.minimizer = []
+    config.optimization.minimizer.push(
+      new TerserPlugin({
+        terserOptions: {
+          mangle: {
+            properties: {
+              // Mangle properties suffixed with _ (and not __) or prefixed with cn_.
+              regex: /[^_]_$|^_$|^cn_/
+            }
+          }
+        }
+      })
+    )
+
+    return config
+  },
+  experimental: {
+    typedRoutes: true,
+    webpackBuildWorker: true
+  }
+}
+
+module.exports = next_config
