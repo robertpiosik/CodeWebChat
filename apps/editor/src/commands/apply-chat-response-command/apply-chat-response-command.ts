@@ -131,21 +131,21 @@ export const apply_chat_response_command = (params: {
               is_single_root_folder_workspace
             })
 
-        const has_content_to_preview =
-          (args?.files_with_content && args.files_with_content.length > 0) ||
-          parsed_items.some(
-            (item) =>
-              item.type == 'diff' ||
-              item.type == 'file' ||
-              item.type == 'code-at-cursor'
-          )
+        const file_count = args?.files_with_content
+          ? args.files_with_content.length
+          : parsed_items.filter(
+              (item) =>
+                item.type == 'diff' ||
+                item.type == 'file' ||
+                item.type == 'code-at-cursor'
+            ).length
 
-        if (has_content_to_preview) {
+        if (file_count > 0) {
           params.panel_provider.send_message({
             command: 'SHOW_PROGRESS',
             title: 'Preparing response preview...',
             show_elapsed_time: false,
-            delay_visibility: true,
+            delay_visibility: file_count < 5,
             cancellable: false
           })
         }

@@ -1,0 +1,10 @@
+--- a/daemon.ts
++++ b/daemon.ts
+@@ -7,7 +7,7 @@
+ import FormData from 'form-data'
+ const CONFIG = {
+   API_URL: 'http://localhost:10008/api/v1',
+   STITCHER_PATH: path.resolve(__dirname),
+-  CHECK_INTERVAL: 60000 // 1 minute in milliseconds
++  CHECK_INTERVAL: 120000 // 2 minutes in milliseconds
+ }

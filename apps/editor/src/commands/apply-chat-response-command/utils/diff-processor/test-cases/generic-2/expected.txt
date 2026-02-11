@@ -1,0 +1,21 @@
+import axios from 'axios'
+import { execSync } from 'child_process'
+import * as fs from 'fs'
+import * as path from 'path'
+import * as os from 'os'
+import FormData from 'form-data'
+
+const CONFIG = {
+  API_URL: 'http://localhost:10008/api/v1',
+  STITCHER_PATH: path.resolve(__dirname),
+  CHECK_INTERVAL: 120000 // 2 minutes in milliseconds
+}
+
+interface UnstitchedImageResponse {
+  tour_id: string
+  scene_id: string
+  images: string[]
+  hugin_project?: string
+  processing_started_at: string
+  layer_name?: string
+}
