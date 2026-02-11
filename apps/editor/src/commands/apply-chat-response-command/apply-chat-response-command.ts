@@ -144,9 +144,7 @@ export const apply_chat_response_command = (params: {
           params.panel_provider.send_message({
             command: 'SHOW_PROGRESS',
             title: 'Preparing response preview...',
-            show_elapsed_time: false,
-            delay_visibility: file_count < 5,
-            cancellable: false
+            delay_visibility: file_count < 5
           })
         }
 

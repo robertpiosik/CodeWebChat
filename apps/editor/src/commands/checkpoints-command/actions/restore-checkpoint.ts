@@ -425,8 +425,6 @@ export const restore_checkpoint = async (params: {
         command: 'SHOW_PROGRESS',
         title,
         progress: current_progress,
-        cancellable: false,
-        show_elapsed_time: false,
         delay_visibility: true
       })
       const progress: vscode.Progress<{
@@ -440,8 +438,6 @@ export const restore_checkpoint = async (params: {
               command: 'SHOW_PROGRESS',
               title,
               progress: Math.min(current_progress, 100),
-              cancellable: false,
-              show_elapsed_time: false,
               delay_visibility: true
             })
           }

@@ -7,6 +7,8 @@ type UseKeyboardShortcutsParams = Pick<
   | 'on_edit_format_change'
   | 'on_copy'
   | 'on_invocation_count_change'
+  | 'is_recording'
+  | 'on_recording_finished'
 > & {
   on_toggle_invocation_dropdown?: () => void
   is_invocation_dropdown_open?: boolean
@@ -124,6 +126,9 @@ export const use_keyboard_shortcuts = (params: UseKeyboardShortcutsParams) => {
     e: React.KeyboardEvent<HTMLDivElement>
   ) => {
     if (e.key == 'Escape' && !e.ctrlKey && !e.metaKey) {
+      if (params.is_recording) {
+        params.on_recording_finished()
+      }
       e.stopPropagation()
       return
     }

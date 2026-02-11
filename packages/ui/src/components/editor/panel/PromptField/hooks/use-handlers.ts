@@ -1514,8 +1514,10 @@ export const use_handlers = (
     }
 
     if (key == 'Escape') {
-      if (input_ref.current) {
-        input_ref.current.blur()
+      if (props.is_recording) {
+        props.on_recording_finished()
+      } else {
+        input_ref.current?.blur()
       }
       return
     }

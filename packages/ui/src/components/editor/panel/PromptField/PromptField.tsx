@@ -110,7 +110,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     on_copy: props.on_copy,
     on_invocation_count_change: props.on_invocation_count_change,
     is_invocation_dropdown_open,
-    on_toggle_invocation_dropdown: toggle_invocation_dropdown
+    on_toggle_invocation_dropdown: toggle_invocation_dropdown,
+    is_recording: props.is_recording,
+    on_recording_finished: props.on_recording_finished
   })
 
   const {

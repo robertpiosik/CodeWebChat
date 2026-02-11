@@ -349,7 +349,7 @@ export const use_panel = (vscode: any) => {
           title: message.title,
           progress: message.progress,
           tokens_per_second: message.tokens_per_second,
-          cancellable: message.cancellable ?? true,
+          cancellable: message.cancellable ?? false,
           show_elapsed_time: message.show_elapsed_time,
           delay_visibility: message.delay_visibility
         })

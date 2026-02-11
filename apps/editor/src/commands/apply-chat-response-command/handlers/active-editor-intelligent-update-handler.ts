@@ -102,7 +102,8 @@ export const handle_active_editor_intelligent_update = async (params: {
     params.panel_provider.send_message({
       command: 'SHOW_PROGRESS',
       title: 'Thinking...',
-      show_elapsed_time: true
+      show_elapsed_time: true,
+      cancellable: true
     })
   }
 
@@ -147,7 +148,8 @@ export const handle_active_editor_intelligent_update = async (params: {
           params.panel_provider.send_message({
             command: 'SHOW_PROGRESS',
             title: 'Thinking...',
-            show_elapsed_time: true
+            show_elapsed_time: true,
+            cancellable: true
           })
         }
       },
@@ -156,7 +158,8 @@ export const handle_active_editor_intelligent_update = async (params: {
           params.panel_provider.send_message({
             command: 'SHOW_PROGRESS',
             title: 'Retrying...',
-            show_elapsed_time: true
+            show_elapsed_time: true,
+            cancellable: true
           })
         }
       }

@@ -181,6 +181,7 @@ const stop_recording = async (panel_provider: PanelProvider) => {
       panel_provider.send_message({
         command: 'SHOW_PROGRESS',
         title: 'Transcribing...',
+        show_elapsed_time: true,
         cancellable: true
       })
 

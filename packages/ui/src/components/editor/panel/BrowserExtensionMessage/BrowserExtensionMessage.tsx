@@ -25,7 +25,7 @@ export const BrowserExtensionMessage: React.FC = () => {
 
   return (
     <div ref={container_ref} className={styles.container}>
-      <div className={styles.heading}>Enable autofill in your browser</div>
+      <div className={styles.heading}>Enable autofill in chatbots</div>
       <div ref={links_ref} className={styles.links}>
         <a href="https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp">
           {compact_step >= 2 ? 'Chrome' : 'Chrome Web Store'}
