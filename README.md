@@ -15,7 +15,7 @@ Code Web Chat (CWC) is a free and open-source, independent AI coding toolkit for
 
 💅 **Apply responses**—multi-file edits integration with automatic checkpoints \
 🌱 **Sustainable**—first-class support for [context caching](https://ai.google.dev/gemini-api/docs/caching) across tasks \
-✋ **Privacy-first**—local processing and strict zero telemetry [policy](https://github.com/robertpiosik/CodeWebChat/blob/dev/PRIVACY.md)
+✋ **Privacy-first**—local processing, zero telemetry [privacy policy](https://github.com/robertpiosik/CodeWebChat/blob/dev/PRIVACY.md)
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />

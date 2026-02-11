@@ -1,9 +1,9 @@
 # Privacy Policy
 
-Code Web Chat is **privacy-first**.
+Code Web Chat is privacy-first.
 
-**No Data Collection** \
-The extension does not collect, store, or transmit any telemetry data.
+**Local processing** \
+Code, prompts and responses never leave your machine.
 
-**Local Operation** \
-Responses are processed on your machine.
+**Zero telemetry** \
+The extension does not collect, store, or transmit any usage data.
