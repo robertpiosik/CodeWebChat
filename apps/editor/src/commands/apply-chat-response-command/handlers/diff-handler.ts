@@ -11,6 +11,13 @@ import { remove_directory_if_empty } from '../utils/file-operations'
 
 const execAsync = promisify(exec)
 
+const INDENTATION_BASED_EXTENSIONS = new Set(['.py', '.yaml', '.yml'])
+
+const is_indentation_based_file = (file_path: string): boolean => {
+  const ext = path.extname(file_path).toLowerCase()
+  return INDENTATION_BASED_EXTENSIONS.has(ext)
+}
+
 interface PatchFileInfo {
   from_path?: string
   to_path?: string
@@ -449,12 +456,12 @@ export const apply_git_patch = async (
     // Attempt 1: git apply with --recount
     if (!success) {
       try {
-        const contains_python_file = file_paths.some((path) =>
-          path.toLowerCase().endsWith('.py')
+        const is_indentation_sensitive = file_paths.some((path) =>
+          is_indentation_based_file(path)
         )
         const flags = [
           '--whitespace=fix',
-          contains_python_file ? '' : '--ignore-whitespace',
+          is_indentation_sensitive ? '' : '--ignore-whitespace',
           '--recount'
         ]
           .filter(Boolean)
@@ -485,9 +492,13 @@ export const apply_git_patch = async (
       try {
         const file_path_safe = create_safe_path(workspace_path, file_paths[0])
         if (file_path_safe == null) throw new Error('File path is null')
+
+        const use_strict_whitespace = is_indentation_based_file(file_path_safe)
+
         applied_content = await process_diff({
           file_path: file_path_safe,
-          diff_path_patch: temp_file
+          diff_patch_path: temp_file,
+          use_strict_whitespace
         })
         success = true
         diff_application_method = 'search_and_replace'

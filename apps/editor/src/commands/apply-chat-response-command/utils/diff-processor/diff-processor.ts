@@ -2,14 +2,19 @@ import * as vscode from 'vscode'
 import * as fs from 'fs'
 import { Logger } from '@shared/utils/logger'
 
+interface ReplaceLine {
+  content: string
+  search_index: number | null
+}
+
 class SearchBlock {
   public search_lines: string[]
-  public replace_lines: string[]
+  public replace_lines: ReplaceLine[]
   public search_block_start_index: number
 
   public constructor(
     search_lines: string[],
-    replace_lines: string[],
+    replace_lines: ReplaceLine[],
     search_block_start_index: number
   ) {
     this.search_lines = search_lines
@@ -28,13 +33,15 @@ class SearchBlock {
 export const process_diff = async (params: {
   file_path: string
   diff_patch_path: string
+  use_strict_whitespace?: boolean
 }): Promise<string> => {
   const file_content = fs.readFileSync(params.file_path, 'utf8')
   const diff_patch_content = fs.readFileSync(params.diff_patch_path, 'utf8')
 
   const result = apply_diff({
     original_code: file_content,
-    diff_patch: diff_patch_content
+    diff_patch: diff_patch_content,
+    use_strict_whitespace: params.use_strict_whitespace
   })
 
   try {
@@ -55,6 +62,7 @@ export const process_diff = async (params: {
 export const apply_diff = (params: {
   original_code: string
   diff_patch: string
+  use_strict_whitespace?: boolean
 }): string => {
   try {
     const original_code_normalized = params.original_code.replace(/\r\n/g, '\n')
@@ -79,12 +87,15 @@ export const apply_diff = (params: {
         .replace(/\r/g, '')
         .replace(/\n/g, '')
 
-      const line_normalized_2 = line_normalized.replace(/\s+/g, '')
-      const line_normalized_3 = line_normalized_2.toLowerCase()
+      let line_normalized_processed = line_normalized.replace(/\s+/g, '')
+
+      if (params.use_strict_whitespace) {
+        line_normalized_processed = line_normalized
+      }
 
       original_code_lines_normalized.push({
         key: line_count,
-        value: line_normalized_3
+        value: line_normalized_processed
       })
 
       line_count++
@@ -118,20 +129,31 @@ export const apply_diff = (params: {
         .replace(/\r\n/g, '')
         .replace(/\r/g, '')
         .replace(/\n/g, '')
-      if (line_normalized.startsWith(' ')) {
-        line_normalized = line_normalized.replace(/^\s+/, '~')
+
+      let line_normalized_processed = ''
+
+      if (params.use_strict_whitespace) {
+        if (line_normalized.startsWith(' ')) {
+          line_normalized_processed = '~' + line_normalized.substring(1)
+        } else {
+          line_normalized_processed = line_normalized
+        }
+      } else {
+        if (line_normalized.startsWith(' ')) {
+          line_normalized = line_normalized.replace(/^\s+/, '~')
+        }
+        line_normalized_processed = line_normalized.replace(/\s+/g, '')
       }
 
-      const line_normalized_2 = line_normalized.replace(/\s+/g, '')
-      const line_normalized_3 = line_normalized_2.toLowerCase()
-      patch_lines_normalized.push(line_normalized_3)
+      patch_lines_normalized.push(line_normalized_processed)
     }
 
-    const search_replace_blocks = []
-    let search_chunks = []
-    let replace_chunks = []
+    const search_replace_blocks: SearchBlock[] = []
+    let search_chunks: string[] = []
+    let replace_chunks: ReplaceLine[] = []
 
     let inside_replace_block = false
+    let current_block_has_changes = false
 
     for (let i = 0; i < patch_lines_normalized.length; i++) {
       const line = patch_lines_normalized[i]
@@ -139,13 +161,16 @@ export const apply_diff = (params: {
 
       if (line.startsWith('@@')) {
         if (search_chunks.length > 0 || replace_chunks.length > 0) {
-          search_replace_blocks.push(
-            new SearchBlock(search_chunks, replace_chunks, -1)
-          )
+          if (current_block_has_changes) {
+            search_replace_blocks.push(
+              new SearchBlock(search_chunks, replace_chunks, -1)
+            )
+          }
         }
         search_chunks = []
         replace_chunks = []
         inside_replace_block = false
+        current_block_has_changes = false
       }
 
       if (line.startsWith('-') || line.startsWith('~')) {
@@ -153,30 +178,38 @@ export const apply_diff = (params: {
           inside_replace_block = false
 
           if (search_chunks.length > 0 || replace_chunks.length > 0) {
-            search_replace_blocks.push(
-              new SearchBlock(search_chunks, replace_chunks, -1)
-            )
+            if (current_block_has_changes) {
+              search_replace_blocks.push(
+                new SearchBlock(search_chunks, replace_chunks, -1)
+              )
+            }
           }
 
           search_chunks = []
           replace_chunks = []
+          current_block_has_changes = false
         }
 
-        if (line.startsWith('--')) {
-          // Remove the leading '-' from the search line only if there are two -
-          // Fix for files with lines that start with - eg. markdown
-          search_chunks.push(line.substring(1, line.length))
-        } else if (line.startsWith('~nnn') || line.startsWith('-~nnn')) {
+        if (line.startsWith('-')) {
+          current_block_has_changes = true
+        }
+
+        if (line.startsWith('~nnn') || line.startsWith('-~nnn')) {
           search_chunks.push('~nnn')
         } else {
           search_chunks.push(line.replace(/^-/, '').replace(/^~/, ''))
         }
 
-        // Also replace unchanged lines
         if (line.startsWith('~nnn')) {
-          replace_chunks.push(line_original.replace(/^~nnn/, '') + '\n')
+          replace_chunks.push({
+            content: line_original.replace(/^~nnn/, '') + '\n',
+            search_index: search_chunks.length - 1
+          })
         } else if (line.startsWith('~')) {
-          replace_chunks.push(line_original.replace(/^~/, '') + '\n')
+          replace_chunks.push({
+            content: line_original + '\n',
+            search_index: search_chunks.length - 1
+          })
         }
 
         continue
@@ -184,30 +217,34 @@ export const apply_diff = (params: {
 
       if (line.startsWith('+')) {
         inside_replace_block = true
+        current_block_has_changes = true
 
-        if (line.startsWith('++')) {
-          // Remove the leading '+' from the search line only if there are two +
-          replace_chunks.push(line_original.substring(1, line.length) + '\n')
-        } else if (line.startsWith('+~nnn')) {
-          replace_chunks.push(line_original.replace(/^\+~nnn/, '') + '\n')
+        if (line.startsWith('+~nnn')) {
+          replace_chunks.push({
+            content: line_original.replace(/^\+~nnn/, '') + '\n',
+            search_index: null
+          })
         } else {
-          replace_chunks.push(line_original.replace(/^\+/, '') + '\n')
+          replace_chunks.push({
+            content: line_original.replace(/^\+/, '') + '\n',
+            search_index: null
+          })
         }
       }
     }
 
     if (search_chunks.length > 0) {
-      // A extra trailing new line is sometimes added by the AI model
       if (search_chunks[search_chunks.length - 1] == '~nnn') {
         search_chunks.pop()
         replace_chunks.pop()
       }
 
       if (search_chunks.length != 0 || replace_chunks.length != 0) {
-        // This is crucial for diffs that only have deletions
-        search_replace_blocks.push(
-          new SearchBlock(search_chunks, replace_chunks, -1)
-        )
+        if (current_block_has_changes) {
+          search_replace_blocks.push(
+            new SearchBlock(search_chunks, replace_chunks, -1)
+          )
+        }
       }
     }
 
@@ -216,20 +253,19 @@ export const apply_diff = (params: {
       const search_replace_block = search_replace_blocks[i]
       const search_string = search_replace_block.search_lines.join('')
 
-      // We start search from the previous found index to ensure duplicate code is not found at wrong index
       let found = false
       for (
         let j = previous_found_index;
         j < original_code_lines_normalized.length;
         j++
       ) {
-        // This is a special case when a patch hunk starts with one or more + lines and no context lines
         if (
           search_replace_block.search_lines.length == 0 &&
           previous_found_index == 0
         ) {
           search_replace_block.search_block_start_index = -1
           found = true
+          break
         } else {
           const chunk = original_code_lines_normalized.slice(
             j,
@@ -246,7 +282,8 @@ export const apply_diff = (params: {
             search_replace_block.search_block_start_index = chunk[0].key
             found = true
 
-            previous_found_index = chunk[0].key
+            previous_found_index =
+              chunk[0].key + search_replace_block.search_lines.length
             break
           }
         }
@@ -270,7 +307,20 @@ export const apply_diff = (params: {
       const start_index =
         block.get_start_index() == -1 ? 0 : block.get_start_index()
       const search_count = block.get_search_count()
-      const replacement_content = block.replace_lines
+      const replacement_content = block.replace_lines.map((line) => {
+        if (
+          line.search_index !== null &&
+          start_index + line.search_index < original_code_lines.length
+        ) {
+          let originalContent =
+            original_code_lines[start_index + line.search_index]
+          if (!originalContent.endsWith('\n')) {
+            originalContent += '\n'
+          }
+          return originalContent
+        }
+        return line.content
+      })
 
       if (start_index < 0 || start_index > result_lines.length) {
         continue

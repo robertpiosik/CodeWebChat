@@ -1,0 +1,9 @@
+import { foo } from './foo';
+import { bar } from './bar';
+
+function main() {
+  foo();
+  bar();
+}
+
+export default main;

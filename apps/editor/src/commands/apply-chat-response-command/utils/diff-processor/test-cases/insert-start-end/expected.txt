@@ -1,0 +1,6 @@
+import 'start'
+
+function main() {
+  console.log('middle')
+}
+console.log('end')

@@ -1,0 +1,12 @@
+--- a/file.ts
++++ b/file.ts
+@@ @@
+ import { foo } from './foo';
+-import { bar } from './bar';
++import { baz } from './baz';
+ function main()  {
+   foo();
+-  bar();
++  baz();
+ 
+ }
