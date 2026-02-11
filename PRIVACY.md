@@ -6,4 +6,4 @@ Code Web Chat is **privacy-first**.
 The extension does not collect, store, or transmit any telemetry data.
 
 **Local Operation** \
-Chatbot/API responses are processed on your machine.
+Responses are processed on your machine.
