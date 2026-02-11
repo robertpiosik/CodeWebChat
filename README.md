@@ -23,11 +23,7 @@ Code Web Chat (CWC) is a free and open-source, independent AI coding toolkit for
 
 ## Introduction
 
-Pick all the necessary files, including useful examples, for a lean, task-focused context. Such steered model is easy to prompt, for outputs you're looking for. CWC is a perfect companion for all kinds of coding tasks; from tedious refactors to complex features.
-
-When pair programming with Code Web Chat, you foster codebase understanding to prompt for the right, easy to review code.
-
-> “The only way to go fast, is to go well.” ― Robert C. Martin, Clean Architecture
+Pick all the necessary files, including useful examples, for a lean, task-focused context. Such steered model is easy to prompt, for edits you're looking for. CWC is a perfect companion for all kinds of coding tasks; from tedious refactors to complex features.
 
 ## Enabling autofill in chatbots
 
