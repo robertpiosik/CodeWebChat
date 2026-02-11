@@ -11,11 +11,10 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 </p>
 
-Code Web Chat is a free and open-source, independent AI coding toolkit for VS Code. Start using [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt) (also called [gems](https://gemini.google/pl/overview/gems) or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)) without the tedious copy and paste!
+Code Web Chat (CWC) is a free and open-source, independent AI coding toolkit for VS Code. Start using [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt) (also called [gems](https://gemini.google/pl/overview/gems) or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)) without the tedious copy and paste!
 
 💅 **Apply responses**—multi-file edits integration with automatic checkpoints \
 🌱 **Sustainable**—first-class support for [context caching](https://ai.google.dev/gemini-api/docs/caching) across tasks \
-🤙 **Fully-featured**—code at cursor, commit messages \
 ✋ **Privacy-first**—[strict zero telemetry policy](https://github.com/robertpiosik/CodeWebChat/blob/dev/PRIVACY.md)
 
 <p>
@@ -24,7 +23,7 @@ Code Web Chat is a free and open-source, independent AI coding toolkit for VS Co
 
 ## Introduction
 
-Pick all the necessary files, including useful examples, for a lean, task-focused context. Such steered model is easy to prompt, for outputs you're looking for. The toolkit is a perfect companion for all kinds of coding tasks; from tedious refactors to complex features.
+Pick all the necessary files, including useful examples, for a lean, task-focused context. Such steered model is easy to prompt, for outputs you're looking for. CWC is a perfect companion for all kinds of coding tasks; from tedious refactors to complex features.
 
 When pair programming with Code Web Chat, you foster codebase understanding to prompt for the right, easy to review code.
 
@@ -32,7 +31,7 @@ When pair programming with Code Web Chat, you foster codebase understanding to p
 
 ## Enabling autofill in chatbots
 
-The browser extension simplifies the workflow but is not a prerequisite. You can still copy and paste.
+Got tired with copy and paste? Simplify the workflow by installing the browser extension:
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
@@ -60,7 +59,7 @@ The browser extension simplifies the workflow but is not a prerequisite. You can
 - Z AI
 
 > [!IMPORTANT]
-> The _Apply response_ button placed under responses is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button. Review the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/apps/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) to learn implementation details.
+> The _Apply response_ button placed under responses is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button. Review the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/apps/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) to learn about implementation details.
 
 > [!NOTE]
 > Use [forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) of port _55155_ when using remote machine via SSH.
