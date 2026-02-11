@@ -332,7 +332,10 @@ export const parse_multiple_files = (params: {
             const after = line.substring(match.index! + match[0].length)
 
             // Avoid matching file paths that are part of a sentence.
-            if (!(/[a-zA-Z]/.test(before) && /[a-zA-Z]/.test(after))) {
+            if (
+              is_header_line ||
+              !(/[a-zA-Z]/.test(before) && /[a-zA-Z]/.test(after))
+            ) {
               const trimmed_line = line.trim()
               const is_comment_or_header =
                 trimmed_line.startsWith('#') ||

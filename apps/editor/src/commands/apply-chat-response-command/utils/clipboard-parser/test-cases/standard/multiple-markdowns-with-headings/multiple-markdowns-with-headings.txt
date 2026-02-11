@@ -1,4 +1,4 @@
-### New file: `src/hello.md`
+### New file: `src/hello.md` (lorem ipsum)
 
 ```markdown
 ## hello
