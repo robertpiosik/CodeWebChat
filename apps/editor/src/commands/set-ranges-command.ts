@@ -7,15 +7,15 @@ import {
 } from '../context/providers/workspace/workspace-provider'
 import {
   RANGES_STATE_KEY,
-  LAST_RANGE_SAVE_LOCATION_STATE_KEY
+  LAST_RANGES_SAVE_LOCATION_STATE_KEY
 } from '../constants/state-keys'
 
-export const set_range_command = (
+export const set_ranges_command = (
   workspace_provider: WorkspaceProvider,
   context: vscode.ExtensionContext
 ) => {
   return vscode.commands.registerCommand(
-    'codeWebChat.setRange',
+    'codeWebChat.setRanges',
     async (item: FileItem) => {
       if (!item || !item.resourceUri) {
         return
@@ -70,9 +70,9 @@ export const set_range_command = (
       const state_range_value = state_ranges[state_key]
       const current_range = file_range_value || state_range_value
 
-      const new_range = await vscode.window.showInputBox({
-        prompt: `Set a range of lines to include in the context`,
-        title: 'Range',
+      const new_ranges = await vscode.window.showInputBox({
+        prompt: `Set ranges of lines to include in the context`,
+        title: 'Ranges',
         placeHolder: 'e.g., 100-300 400- -500 or empty to clear',
         value: current_range,
         validateInput: (value) => {
@@ -135,12 +135,12 @@ export const set_range_command = (
         }
       })
 
-      if (new_range === undefined) {
+      if (new_ranges === undefined) {
         return
       }
 
       // If range is cleared, remove from both locations
-      if (!new_range) {
+      if (!new_ranges) {
         let changed = false
         if (file_ranges[relative_path]) {
           delete file_ranges[relative_path]
@@ -182,7 +182,7 @@ export const set_range_command = (
       else {
         const last_location = context.workspaceState.get<
           'file' | 'state' | undefined
-        >(LAST_RANGE_SAVE_LOCATION_STATE_KEY)
+        >(LAST_RANGES_SAVE_LOCATION_STATE_KEY)
 
         const choice = await vscode.window.showQuickPick(
           [
@@ -197,19 +197,19 @@ export const set_range_command = (
               picked: last_location == 'state'
             }
           ],
-          { placeHolder: 'Where do you want to save this range?' }
+          { placeHolder: 'Where do you want to save these ranges?' }
         )
 
         if (!choice) return
         save_location = choice.label == 'JSON File' ? 'file' : 'state'
         await context.workspaceState.update(
-          LAST_RANGE_SAVE_LOCATION_STATE_KEY,
+          LAST_RANGES_SAVE_LOCATION_STATE_KEY,
           save_location
         )
       }
 
-      if (new_range) {
-        const formatted_range = new_range.trim().split(/\s+/).join(' ')
+      if (new_ranges) {
+        const formatted_range = new_ranges.trim().split(/\s+/).join(' ')
 
         if (save_location == 'file') {
           file_ranges[relative_path] = formatted_range
@@ -231,7 +231,7 @@ export const set_range_command = (
             }
           } catch (error: any) {
             vscode.window.showErrorMessage(
-              `Failed to save range to file: ${error.message}`
+              `Failed to save ranges to file: ${error.message}`
             )
           }
         } else {
