@@ -5,7 +5,7 @@ import * as fs from 'fs'
 export const replace_document_symbol = async (params: {
   instruction: string
 }): Promise<string> => {
-  const regex = /#Document\(([a-fA-F0-9]+)\)/g
+  const regex = /#Document\(([a-fA-F0-9]+)(?::\d+)?\)/g
 
   const matches = Array.from(params.instruction.matchAll(regex))
 
