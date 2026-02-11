@@ -66,7 +66,7 @@ Got tired with copy and paste? Simplify the workflow with the browser extension:
 
 ## API tools
 
-CWC lets you complete common tasks directly in the editor. To use, bring your own key (BYOK) for a model provider of choice.
+Bring your own key (BYOK) for a model provider of choice and complete common tasks without leaving the editor.
 
 **🛠️ Edit Context** \
 Pair-programming using natural language instructions.
