@@ -26,6 +26,9 @@ _Chatbot answers..._
 _Applying copied response_
 ![Reviewing suggested changes](https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-3.png)
 
+> [!TIP]
+> Use a built-in API tool "Edit Context" and never leave your editor!
+
 ## Enabling autofill
 
 Got tired with copy and paste? Enable prompt autofill in chatbots!
