@@ -23,7 +23,7 @@ _Prompting for edits:_
 _Chatbots answers:_
 ![Chatbots answers](https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-2.png)
 
-_Reviewing changes:_
+_Reviewing suggested changes:_
 ![Reviewing suggested changes](https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-3.png)
 
 ## Enabling autofill
