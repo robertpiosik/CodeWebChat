@@ -340,6 +340,12 @@
         "title": "Open in Integrated Terminal",
         "category": "Code Web Chat",
         "icon": "$(terminal)"
+      },
+      {
+        "command": "codeWebChat.removeFolderFromWorkspace",
+        "title": "Remove Folder from Workspace",
+        "category": "Code Web Chat",
+        "icon": "$(close)"
       }
     ],
     "submenus": [
@@ -505,6 +511,10 @@
         {
           "command": "codeWebChat.checkReferencingFilesForContext",
           "when": "false"
+        },
+        {
+          "command": "codeWebChat.removeFolderFromWorkspace",
+          "when": "false"
         }
       ],
       "view/title": [
@@ -666,6 +676,11 @@
           "command": "codeWebChat.openInIntegratedTerminal",
           "when": "view == codeWebChatViewWorkspace && (viewItem == workspaceRoot || viewItem == directory)",
           "group": "1_modification@7"
+        },
+        {
+          "command": "codeWebChat.removeFolderFromWorkspace",
+          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == workspaceRoot || viewItem == contextWorkspaceRoot) && workspaceFolderCount > 1",
+          "group": "1_modification@8"
         },
         {
           "command": "codeWebChat.newFile",

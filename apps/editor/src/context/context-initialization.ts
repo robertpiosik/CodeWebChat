@@ -372,6 +372,17 @@ export const context_initialization = async (
         await open_editors_provider!.check_all()
       }
     ),
+    vscode.commands.registerCommand(
+      'codeWebChat.removeFolderFromWorkspace',
+      async (item: FileItem) => {
+        if (!item?.resourceUri) return
+
+        const folder = vscode.workspace.getWorkspaceFolder(item.resourceUri)
+        if (folder) {
+          vscode.workspace.updateWorkspaceFolders(folder.index, 1)
+        }
+      }
+    ),
     apply_context_command(
       workspace_provider,
       () => {
