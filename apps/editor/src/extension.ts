@@ -14,6 +14,7 @@ import {
 import { SharedFileState } from './context/shared-file-state'
 import {
   apply_chat_response_command,
+  apply_context_command,
   add_file_to_context_command,
   remove_file_from_context_command,
   code_at_cursor_commands,
@@ -129,6 +130,11 @@ export async function activate(context: vscode.ExtensionContext) {
     save_all_command(),
     new_file_command(),
     new_folder_command(),
+    apply_context_command({
+      workspace_provider,
+      on_context_selected: () => {},
+      extension_context: context
+    }),
     rename_command(),
     delete_command(),
     add_file_to_context_command(workspace_provider),

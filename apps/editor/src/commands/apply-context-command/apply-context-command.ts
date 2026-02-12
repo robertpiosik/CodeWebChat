@@ -3,7 +3,6 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { WorkspaceProvider } from '../../context/providers/workspace/workspace-provider'
 import { LAST_APPLY_CONTEXT_OPTION_STATE_KEY } from '../../constants/state-keys'
-import { dictionary } from '@shared/constants/dictionary'
 import {
   handle_unstaged_files_source,
   handle_json_file_source,
@@ -16,32 +15,27 @@ import {
   load_and_merge_global_contexts
 } from './helpers/saving'
 
-export const apply_context_command = (
-  workspace_provider: WorkspaceProvider | undefined,
-  on_context_selected: () => void,
+export const apply_context_command = (params: {
+  workspace_provider: WorkspaceProvider
+  on_context_selected: () => void
   extension_context: vscode.ExtensionContext
-): vscode.Disposable => {
+}): vscode.Disposable => {
   return vscode.commands.registerCommand(
     'codeWebChat.applyContext',
     async () => {
       let show_main_menu = true
-      let last_main_selection_value = extension_context.workspaceState.get<
-        'internal' | 'file' | 'unstaged' | 'commit_files' | string | undefined
-      >(LAST_APPLY_CONTEXT_OPTION_STATE_KEY)
+      let last_main_selection_value =
+        params.extension_context.workspaceState.get<
+          'internal' | 'file' | 'unstaged' | 'commit_files' | string | undefined
+        >(LAST_APPLY_CONTEXT_OPTION_STATE_KEY)
 
       while (show_main_menu) {
         show_main_menu = false
 
-        if (!workspace_provider) {
-          vscode.window.showErrorMessage(
-            dictionary.error_message.NO_WORKSPACE_PROVIDER
-          )
-          return
-        }
-
         // Load merged contexts for display count
-        const { merged: internal_contexts } =
-          load_and_merge_global_contexts(extension_context)
+        const { merged: internal_contexts } = load_and_merge_global_contexts(
+          params.extension_context
+        )
 
         const file_contexts_map = await load_all_contexts()
         let file_contexts_count = 0
@@ -189,41 +183,41 @@ export const apply_context_command = (
         }
 
         last_main_selection_value = main_selection.value
-        await extension_context.workspaceState.update(
+        await params.extension_context.workspaceState.update(
           LAST_APPLY_CONTEXT_OPTION_STATE_KEY,
           last_main_selection_value
         )
 
         if (main_selection.value == 'internal') {
           const result = await handle_workspace_state_source(
-            workspace_provider,
-            extension_context,
-            on_context_selected
+            params.workspace_provider,
+            params.extension_context,
+            params.on_context_selected
           )
           if (result == 'back') {
             show_main_menu = true
           }
         } else if (main_selection.value == 'file') {
           const result = await handle_json_file_source(
-            workspace_provider,
-            extension_context,
-            on_context_selected
+            params.workspace_provider,
+            params.extension_context,
+            params.on_context_selected
           )
           if (result == 'back') {
             show_main_menu = true
           }
         } else if (main_selection.value == 'unstaged') {
           const result = await handle_unstaged_files_source(
-            workspace_provider,
-            extension_context
+            params.workspace_provider,
+            params.extension_context
           )
           if (result == 'back') {
             show_main_menu = true
           }
         } else if (main_selection.value == 'commit_files') {
           const result = await handle_commit_files_source(
-            workspace_provider,
-            extension_context
+            params.workspace_provider,
+            params.extension_context
           )
           if (result == 'back') {
             show_main_menu = true

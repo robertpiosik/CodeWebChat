@@ -8,7 +8,6 @@ import { FilesCollector } from '../utils/files-collector'
 import { OpenEditorsProvider } from './providers/open-editors/open-editors-provider'
 import { SharedFileState } from './shared-file-state'
 import { EventEmitter } from 'events'
-import { apply_context_command } from '../commands/apply-context-command/apply-context-command'
 import { dictionary } from '@shared/constants/dictionary'
 import {
   CONTEXT_CHECKED_PATHS_STATE_KEY,
@@ -382,13 +381,6 @@ export const context_initialization = async (
           vscode.workspace.updateWorkspaceFolders(folder.index, 1)
         }
       }
-    ),
-    apply_context_command(
-      workspace_provider,
-      () => {
-        update_view_badges()
-      },
-      context
     )
   )
 
