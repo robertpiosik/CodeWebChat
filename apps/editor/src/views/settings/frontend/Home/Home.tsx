@@ -7,7 +7,6 @@ import { Item } from '@ui/components/editor/settings/Item'
 import { ApiToolConfigurationSection } from './sections/ApiToolConfigurationSection'
 import { Group } from '@ui/components/editor/settings/Group/Group'
 import { Section } from '@ui/components/editor/settings/Section'
-import { Input } from '@ui/components/editor/common/Input'
 import { Textarea } from '@ui/components/editor/common/Textarea'
 import { Toggler } from '@ui/components/editor/common/Toggler'
 import { Button } from '@ui/components/editor/common/Button'
@@ -91,7 +90,6 @@ type Props = {
   prune_context_configs: ConfigurationForClient[]
   voice_input_instructions: string
   commit_message_instructions: string
-  commit_message_auto_accept_after: number | null
   context_size_warning_threshold: number
   gemini_user_id: number | null
   ai_studio_user_id: number | null
@@ -114,7 +112,6 @@ type Props = {
     threshold: number | undefined
   ) => void
   on_commit_instructions_change: (instructions: string) => void
-  on_commit_message_auto_accept_after_change: (seconds: number | null) => void
   on_edit_format_instructions_change: (
     instructions: EditFormatInstructions
   ) => void
@@ -174,10 +171,6 @@ export const Home: React.FC<Props> = (props) => {
   })
   const [commit_instructions, set_commit_instructions] = useState('')
   const [voice_input_instructions, set_voice_input_instructions] = useState('')
-  const [
-    commit_message_auto_accept_after_str,
-    set_commit_message_auto_accept_after_str
-  ] = useState('')
   const [edit_context_instructions, set_edit_context_instructions] =
     useState('')
   const [stuck_sections, set_stuck_sections] = useState(new Set<NavItem>())
@@ -267,28 +260,8 @@ export const Home: React.FC<Props> = (props) => {
   }, [props.voice_input_instructions])
 
   useEffect(() => {
-    set_commit_message_auto_accept_after_str(
-      props.commit_message_auto_accept_after === null ||
-        props.commit_message_auto_accept_after === undefined
-        ? ''
-        : String(props.commit_message_auto_accept_after)
-    )
-  }, [props.commit_message_auto_accept_after])
-
-  useEffect(() => {
     set_edit_context_instructions(props.edit_context_system_instructions || '')
   }, [props.edit_context_system_instructions])
-
-  const handle_commit_message_auto_accept_after_blur = () => {
-    if (commit_message_auto_accept_after_str == '') {
-      props.on_commit_message_auto_accept_after_change(null)
-      return
-    }
-    const num_seconds = parseInt(commit_message_auto_accept_after_str, 10)
-    if (!isNaN(num_seconds) && num_seconds >= 0) {
-      props.on_commit_message_auto_accept_after_change(num_seconds)
-    }
-  }
 
   const handle_scroll_to_section = (item_id: NavItem) => {
     const section = section_refs.current[item_id]
@@ -805,19 +778,6 @@ export const Home: React.FC<Props> = (props) => {
                       )
                     }
                   }}
-                />
-              }
-            />
-            <Item
-              title="Modal Duration"
-              description="Automatically accept the generated commit message after a specified number of seconds."
-              slot_right={
-                <Input
-                  type="number"
-                  value={commit_message_auto_accept_after_str}
-                  on_change={set_commit_message_auto_accept_after_str}
-                  on_blur={handle_commit_message_auto_accept_after_blur}
-                  max_width={60}
                 />
               }
             />

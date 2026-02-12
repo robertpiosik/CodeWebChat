@@ -32,7 +32,6 @@ export const Settings = () => {
       settings_hook.prune_context_configs !== undefined &&
       settings_hook.voice_input_instructions !== undefined &&
       settings_hook.commit_message_instructions !== undefined &&
-      settings_hook.commit_message_auto_accept_after !== undefined &&
       settings_hook.context_size_warning_threshold !== undefined &&
       settings_hook.edit_format_instructions !== undefined &&
       settings_hook.are_automatic_checkpoints_disabled !== undefined &&
@@ -77,9 +76,6 @@ export const Settings = () => {
       }
       voice_input_instructions={settings_hook.voice_input_instructions!}
       commit_message_instructions={settings_hook.commit_message_instructions!}
-      commit_message_auto_accept_after={
-        settings_hook.commit_message_auto_accept_after!
-      }
       edit_format_instructions={settings_hook.edit_format_instructions!}
       are_automatic_checkpoints_disabled={
         settings_hook.are_automatic_checkpoints_disabled!
@@ -110,9 +106,6 @@ export const Settings = () => {
       }
       on_commit_instructions_change={
         settings_hook.handle_commit_instructions_change
-      }
-      on_commit_message_auto_accept_after_change={
-        settings_hook.handle_commit_message_auto_accept_after_change
       }
       on_edit_context_system_instructions_change={
         settings_hook.handle_edit_context_system_instructions_change

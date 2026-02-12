@@ -87,7 +87,6 @@ export const mistral: Chatbot = {
 
     input_element.textContent = params.message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
-    input_element.dispatchEvent(new Event('change', { bubbles: true }))
     await new Promise((r) => requestAnimationFrame(r))
   },
   inject_apply_response_button: (

@@ -81,7 +81,6 @@ export const ai_studio: Chatbot = {
 
     textarea.value = system_instructions
     textarea.dispatchEvent(new Event('input', { bubbles: true }))
-    textarea.dispatchEvent(new Event('change', { bubbles: true }))
 
     close_button.click()
     await new Promise((r) => requestAnimationFrame(r))
@@ -309,7 +308,6 @@ export const ai_studio: Chatbot = {
       }
       budget_input.value = thinking_budget.toString()
       budget_input.dispatchEvent(new Event('input', { bubbles: true }))
-      budget_input.dispatchEvent(new Event('change', { bubbles: true }))
     }
   },
   set_top_p: async (chat) => {
@@ -343,7 +341,6 @@ export const ai_studio: Chatbot = {
       return
     }
     top_p_element.value = top_p.toString()
-    top_p_element.dispatchEvent(new Event('change', { bubbles: true }))
   },
   enter_message: async (params) => {
     const input_element = document.querySelector(
@@ -358,7 +355,6 @@ export const ai_studio: Chatbot = {
     }
     input_element.value = params.message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
-    input_element.dispatchEvent(new Event('change', { bubbles: true }))
     await new Promise((r) => requestAnimationFrame(r))
     await new Promise((resolve) => {
       const check = () => {

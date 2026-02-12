@@ -90,7 +90,6 @@ export const openrouter: Chatbot = {
     await new Promise((r) => requestAnimationFrame(r))
     textarea.focus()
     textarea.value = system_instructions
-    textarea.dispatchEvent(new Event('change', { bubbles: true }))
     textarea.blur()
     await close_options_modal('enter_system_instructions')
   },
@@ -158,7 +157,6 @@ export const openrouter: Chatbot = {
     }
     temperature_input.focus()
     temperature_input.value = temperature.toString()
-    temperature_input.dispatchEvent(new Event('change', { bubbles: true }))
     temperature_input.blur()
     await close_options_modal('set_temperature')
   },
@@ -205,7 +203,6 @@ export const openrouter: Chatbot = {
     }
     top_p_input.focus()
     top_p_input.value = top_p.toString()
-    top_p_input.dispatchEvent(new Event('change', { bubbles: true }))
     top_p_input.blur()
     await close_options_modal('set_top_p')
   },
@@ -282,7 +279,6 @@ export const openrouter: Chatbot = {
     }
     input_element.value = params.message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
-    input_element.dispatchEvent(new Event('change', { bubbles: true }))
     input_element.focus()
   },
   inject_apply_response_button: (

@@ -14,7 +14,6 @@ import {
   handle_get_configurations,
   handle_get_commit_message_instructions,
   handle_get_voice_input_instructions,
-  handle_get_commit_message_auto_accept_after,
   handle_get_context_size_warning_threshold,
   handle_get_edit_context_system_instructions,
   handle_get_edit_format_instructions,
@@ -32,7 +31,6 @@ import {
   handle_update_are_automatic_checkpoints_disabled,
   handle_update_commit_message_instructions,
   handle_update_voice_input_instructions,
-  handle_update_commit_message_auto_accept_after,
   handle_update_context_size_warning_threshold,
   handle_update_edit_context_system_instructions,
   handle_update_edit_format_instructions,
@@ -281,12 +279,6 @@ export class SettingsProvider {
           await handle_get_voice_input_instructions(this)
         } else if (message.command == 'UPDATE_VOICE_INPUT_INSTRUCTIONS') {
           await handle_update_voice_input_instructions(message)
-        } else if (message.command == 'GET_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER') {
-          await handle_get_commit_message_auto_accept_after(this)
-        } else if (
-          message.command == 'UPDATE_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER'
-        ) {
-          await handle_update_commit_message_auto_accept_after(message)
         } else if (message.command == 'GET_CONTEXT_SIZE_WARNING_THRESHOLD') {
           await handle_get_context_size_warning_threshold(this)
         } else if (message.command == 'UPDATE_CONTEXT_SIZE_WARNING_THRESHOLD') {
@@ -382,7 +374,6 @@ export class SettingsProvider {
           void handle_get_context_size_warning_threshold(this)
           void handle_get_commit_message_instructions(this)
           void handle_get_voice_input_instructions(this)
-          void handle_get_commit_message_auto_accept_after(this)
           void handle_get_clear_checks_in_workspace_behavior(this)
           void handle_get_are_automatic_checkpoints_disabled(this)
           void handle_get_checkpoint_lifespan(this)

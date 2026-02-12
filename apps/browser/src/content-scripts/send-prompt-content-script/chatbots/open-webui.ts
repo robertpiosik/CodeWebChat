@@ -64,9 +64,6 @@ export const open_webui: Chatbot = {
     system_instructions_textarea.dispatchEvent(
       new Event('input', { bubbles: true })
     )
-    system_instructions_textarea.dispatchEvent(
-      new Event('change', { bubbles: true })
-    )
     const close_button = controls_pane.querySelector(
       'button'
     ) as HTMLButtonElement

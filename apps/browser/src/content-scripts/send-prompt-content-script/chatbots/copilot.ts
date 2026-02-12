@@ -31,7 +31,6 @@ export const copilot: Chatbot = {
     }
     input_element.value = params.message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
-    input_element.dispatchEvent(new Event('change', { bubbles: true }))
   },
   inject_apply_response_button: (
     client_id: number,

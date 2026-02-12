@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
   "description": "Fast AI coding in free chatbots (CWC)",
-  "version": "1.809.0",
+  "version": "1.810.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
@@ -754,11 +754,6 @@
         "codeWebChat.voiceInputInstructions": {
           "type": "string",
           "scope": "resource"
-        },
-        "codeWebChat.commitMessageAutoAcceptAfter": {
-          "type": "number",
-          "scope": "resource",
-          "default": 5
         },
         "codeWebChat.contextSizeWarningThreshold": {
           "type": "number",

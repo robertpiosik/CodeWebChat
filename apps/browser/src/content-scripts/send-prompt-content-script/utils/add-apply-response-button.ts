@@ -45,14 +45,16 @@ export function add_apply_response_button(params: {
 
   apply_response_button.addEventListener('click', async () => {
     set_button_disabled_state(apply_response_button)
-    await params.perform_copy(params.footer)
-    await new Promise((resolve) => setTimeout(resolve, 500))
-    browser.runtime.sendMessage<Message>({
-      action: 'apply-chat-response',
-      client_id: params.client_id,
-      raw_instructions: params.raw_instructions,
-      edit_format: params.edit_format,
-      url: window.location.href
+    requestAnimationFrame(async () => {
+      await params.perform_copy(params.footer)
+      await new Promise((resolve) => setTimeout(resolve, 500))
+      browser.runtime.sendMessage<Message>({
+        action: 'apply-chat-response',
+        client_id: params.client_id,
+        raw_instructions: params.raw_instructions,
+        edit_format: params.edit_format,
+        url: window.location.href
+      })
     })
   })
 
