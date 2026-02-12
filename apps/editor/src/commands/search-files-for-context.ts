@@ -26,8 +26,8 @@ export const search_files_for_context_command = (
         try {
           const input_box = vscode.window.createInputBox()
           input_box.title = 'Search'
-          input_box.prompt = 'Enter keywords separated by comma.'
-          input_box.placeholder = 'e.g. username, login&auth, "changePassword"'
+          input_box.prompt = 'Enter text to search for.'
+          input_box.placeholder = 'Search'
           input_box.ignoreFocusOut = true
           input_box.value = initial_keywords
 
@@ -86,17 +86,10 @@ export const search_files_for_context_command = (
 
           initial_keywords = keywords_input
 
-          const keywords = keywords_input
-            .split(',')
-            .map((group) =>
-              group
-                .split('&')
-                .map((k) => k.trim().toLowerCase())
-                .filter((k) => k.length > 0)
-            )
-            .filter((group) => group.length > 0)
+          const term = keywords_input.trim().toLowerCase()
+          if (term.length === 0) return
 
-          if (keywords.length == 0) return
+          const keywords = [[term]]
 
           let all_files: string[] = []
 
@@ -349,14 +342,15 @@ const search_files_by_keywords = async (
 
   const matchers = keyword_groups.map((group) =>
     group.map((k) => {
-      if (k.length >= 2 && k.startsWith('"') && k.endsWith('"')) {
-        const term = k.slice(1, -1)
-        if (!term) return () => false
-        const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-        const regex = new RegExp(`\\b${escaped}\\b`)
-        return (text: string) => regex.test(text)
-      }
-      return (text: string) => text.includes(k)
+      const term = k
+
+      if (!term) return () => false
+
+      const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      const pattern = escaped.replace(/\s+/g, '\\s+')
+
+      const regex = new RegExp(pattern, 'm')
+      return (text: string) => regex.test(text)
     })
   )
 
