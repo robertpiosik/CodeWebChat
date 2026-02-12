@@ -58,7 +58,7 @@ Got tired with copy and paste? Enable prompt autofill in chatbots!
 > [!NOTE]
 > Use [forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) of port _55155_ when using remote machine via SSH.
 
-## Make API calls
+## Built-in API tools
 
 Bring your own key (BYOK) for a model provider of choice to use many of the built-in API tools.
 
