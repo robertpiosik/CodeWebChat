@@ -17,11 +17,10 @@ Code Web Chat (CWC) is an open-source, privacy-first AI coding toolkit for VS Co
 ✅ **Automatic checkpoints for easy rollback** \
 ✅ **Create presets for common tasks**
 
-<p style="text-align: center;">Prompting for edits:</p>
-
+_Prompting for edits:_
 ![Prompting for edits](https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-1.png)
 
-_Reviewing suggested changes:_
+_Reviewing changes from a chat response:_
 ![Reviewing suggested changes](https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-2.png)
 
 ## Enabling autofill
