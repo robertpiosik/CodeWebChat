@@ -1,10 +1,10 @@
 {
   "manifest_version": 3,
   "author": "Robert Piosik",
-  "name": "Code Web Chat Connector",
+  "name": "Autofill for Code Web Chat",
   "short_name": "CWC",
-  "description": "Autofill your coding prompts in chatbots.",
-  "version": "1.97.0",
+  "description": "Got tired with copy and paste? Enable prompt autofill in chatbots!",
+  "version": "1.98.0",
   "homepage_url": "https://github.com/robertpiosik/CodeWebChat",
   "icons": {
     "16": "icons/icon-16.png",
@@ -15,7 +15,7 @@
   "permissions": ["storage", "alarms"],
   "host_permissions": ["http://localhost:55155/", "ws://localhost:55155/"],
   "action": {
-    "default_title": "Code Web Chat Connector",
+    "default_title": "Autofill for Code Web Chat",
     "default_popup": "popup.html"
   },
   "background": {

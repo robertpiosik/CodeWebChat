@@ -21,12 +21,12 @@ Code Web Chat (CWC) is an open-source, independent AI coding toolkit for VS Code
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />
 </p>
 
-## Autofill chatbots
+## Enabling autofill
 
-Got tired with copy and paste? Enable prompt autofill in your favorite chatbot!
+Got tired with copy and paste? Enable prompt autofill in chatbots!
 
-- [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
-- [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
+- [Chrome Web Store](https://chromewebstore.google.com/detail/autofill-for-code-web-chat/ljookipcanaglfaocjbgdicfbdhhjffp)
+- [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/autofill-for-code-web-chat/)
 
 **List of supported chatbots:**
 

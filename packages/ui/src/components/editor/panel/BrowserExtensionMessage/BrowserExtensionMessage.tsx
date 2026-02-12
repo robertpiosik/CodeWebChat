@@ -27,10 +27,10 @@ export const BrowserExtensionMessage: React.FC = () => {
     <div ref={container_ref} className={styles.container}>
       <div className={styles.heading}>Enable autofill in chatbots</div>
       <div ref={links_ref} className={styles.links}>
-        <a href="https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp">
+        <a href="https://chromewebstore.google.com/detail/autofill-for-code-web-chat/ljookipcanaglfaocjbgdicfbdhhjffp">
           {compact_step >= 2 ? 'Chrome' : 'Chrome Web Store'}
         </a>
-        <a href="https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/">
+        <a href="https://addons.mozilla.org/en-US/firefox/addon/autofill-for-code-web-chat/">
           {compact_step >= 1 ? 'Firefox' : 'Firefox Add-ons'}
         </a>
       </div>
