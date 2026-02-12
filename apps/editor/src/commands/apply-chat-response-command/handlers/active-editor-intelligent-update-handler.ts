@@ -138,6 +138,8 @@ export const handle_active_editor_intelligent_update = async (params: {
           params.panel_provider.send_message({
             command: 'SHOW_PROGRESS',
             title: 'Receiving...',
+            show_elapsed_time: true,
+            cancellable: true,
             tokens_per_second,
             progress
           })

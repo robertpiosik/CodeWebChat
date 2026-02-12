@@ -407,12 +407,15 @@ export const process_chat_response = async (
       const editor = vscode.window.activeTextEditor
       if (editor) {
         const choice = await vscode.window.showWarningMessage(
-          'No valid code blocks found in the clipboard text. Apply found text to the active editor with the Intelligent Update API tool?',
-          { modal: true },
-          'Apply'
+          'No valid code blocks found',
+          {
+            modal: true,
+            detail: 'Apply the clipboard text to the active editor?'
+          },
+          'Apply with Intelligent Update'
         )
 
-        if (choice == 'Apply') {
+        if (choice == 'Apply with Intelligent Update') {
           const document = editor.document
           const file_path_for_block = vscode.workspace
             .asRelativePath(document.uri, !is_single_root_folder_workspace)
