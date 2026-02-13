@@ -17,15 +17,11 @@ Code Web Chat (CWC) is an open-source, privacy-first AI coding toolkit for VS Co
 ✅ **Automatic checkpoints for easy rollback** \
 ✅ **Create presets for common tasks**
 
-<p align="center"><i>Prompting for edits...</i><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-1.png"></p>
+<p align="center"><i>Prompting for edits...</i><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-1.png" alt="Prompting for edits">></p>
 
-![Prompting for edits](https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-1.png)
+<p align="center"><i>Copying chat response...</i><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-2.png" alt="Gemini answers"></p>
 
-_Copying chat response..._
-![Gemini answers](https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-2.png)
-
-_Applying from clipboard..._
-![Reviewing suggested changes](https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-3.png)
+<p align="center"><i>Applying from clipboard...</i><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-3.png" alt="Reviewing suggested changes"></p>
 
 > [!TIP]
 > Use a built-in API tool "Edit Context" and never leave your editor!
