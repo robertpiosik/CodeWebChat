@@ -353,6 +353,8 @@ const perform_code_at_cursor = async (params: {
 
   const editor = vscode.window.activeTextEditor
   if (editor) {
+    await editor.document.save()
+
     if (!editor.selection.isEmpty) {
       vscode.window.showWarningMessage(
         dictionary.warning_message.CODE_AT_CURSOR_NO_SELECTION
