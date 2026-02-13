@@ -18,6 +18,8 @@ export const generate_commit_message_command = (
 
     await repository.status()
     const was_empty_stage = (repository.state.indexChanges || []).length == 0
+    const working_tree_changes = repository.state.workingTreeChanges || []
+    const is_single_change = was_empty_stage && working_tree_changes.length == 1
 
     const diff = await prepare_staged_changes(repository)
 
@@ -25,7 +27,7 @@ export const generate_commit_message_command = (
 
     const message_prompt = build_commit_message_prompt(diff)
 
-    return { repository, was_empty_stage, message_prompt }
+    return { repository, was_empty_stage, message_prompt, is_single_change }
   }
 
   const run_generate_action = async (
@@ -33,16 +35,18 @@ export const generate_commit_message_command = (
     should_commit: boolean
   ) => {
     let files_staged_by_action = false
+    let is_single_change_flow = false
     const api_providers_manager = new ModelProvidersManager(context)
 
     while (true) {
       const data = await get_prompt_data(source_control)
       if (!data) return
-      const { repository, message_prompt } = data
+      const { repository, message_prompt, is_single_change } = data
       let { was_empty_stage } = data
 
       if (was_empty_stage) {
         files_staged_by_action = true
+        is_single_change_flow = is_single_change
       } else if (files_staged_by_action) {
         was_empty_stage = true
       }
@@ -51,13 +55,20 @@ export const generate_commit_message_command = (
         await api_providers_manager.get_default_commit_messages_config()
       const has_default_config = !!default_config
 
+      const show_back_button = was_empty_stage && !is_single_change_flow
+
       const api_config_data = await get_commit_message_config(
         context,
-        was_empty_stage
+        show_back_button
       )
 
       if (api_config_data === 'back') {
         if (was_empty_stage) {
+          if (!show_back_button) {
+            await vscode.commands.executeCommand('git.unstageAll')
+            return
+          }
+
           await vscode.commands.executeCommand('git.unstageAll')
           files_staged_by_action = false
           continue
