@@ -21,7 +21,7 @@ Code Web Chat (CWC) is an open-source, privacy-first AI coding toolkit for VS Co
 
 <p align="center"><i>Copy the chat response when ready...</i><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-2.png"></p>
 
-<p align="center"><i>Apply from clipboard with a preview...</i><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-3.png"></p>
+<p align="center"><i>Apply from clipboard interactively...</i><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-3.png"></p>
 
 > [!TIP]
 > Don't want to use a chatbot? With CWC you can make API calls to remote or local (e.g. Ollama) model providers.
