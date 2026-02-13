@@ -13,7 +13,7 @@
 
 Code Web Chat (CWC) is an open-source and privacy-first AI coding toolkit for VS Code. Helps construct prompts for chatbot's smart workspace (called [project](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), also [gem](https://gemini.google/pl/overview/gems) or [space](https://docs.github.com/en/copilot/concepts/context/spaces)). It's free!
 
-<p align="center"><i>Select files, type the task and choose chatbot</i><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-1.png"></p>
+<p align="center"><i>Select files, type something and choose chatbot</i><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-1.png"></p>
 
 <p align="center"><i>Copy the chat response when ready</i><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-2.png"></p>
 
