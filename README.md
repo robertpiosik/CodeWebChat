@@ -11,7 +11,7 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 </p>
 
-Code Web Chat (CWC) is an open-source and privacy-first AI coding toolkit for VS Code. Helps construct task-focused prompts for chatbot's powerful [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt) feature (also called [gems](https://gemini.google/pl/overview/gems) or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)). It's free!
+Code Web Chat (CWC) is an open-source and privacy-first AI coding toolkit for VS Code. Helps construct prompts for chatbot's smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), also [gems](https://gemini.google/pl/overview/gems) or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)). It's free!
 
 <p align="center"><i>Select files, type the task and choose chatbot...</i><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-1.png"></p>
 
