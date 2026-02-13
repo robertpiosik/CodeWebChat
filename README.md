@@ -11,15 +11,15 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 </p>
 
-Code Web Chat (CWC) is an open-source, privacy-first AI coding toolkit for VS Code. Start using [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt)/[gems](https://gemini.google/pl/overview/gems)/[spaces](https://docs.github.com/en/copilot/concepts/context/spaces) with task-focused prompts. It's free!
+Code Web Chat (CWC) is an open-source, privacy-first AI coding toolkit for VS Code. Helps construct task-focused prompts for chatbot's powerful [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt) feature (also called [gems](https://gemini.google/pl/overview/gems) or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)). It's free!
 
 ✅ **Apply chat responses from clipboard** \
 ✅ **Automatic checkpoints for easy rollback** \
 ✅ **Create presets for common tasks**
 
-<p align="center"><i>Select relevant files and type the task...</i><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-1.png"></p>
+<p align="center"><i>Select files, type the task and choose chatbot...</i><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-1.png"></p>
 
-<p align="center"><i>Copy chat response when it's ready...</i><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-2.png"></p>
+<p align="center"><i>Copy the chat response when ready...</i><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-2.png"></p>
 
 <p align="center"><i>Apply from clipboard with a preview...</i><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-3.png"></p>
 
