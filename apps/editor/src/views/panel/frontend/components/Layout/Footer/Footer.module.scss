@@ -25,7 +25,7 @@
       var(--transition-timing-function);
 
     &--dimmed {
-      opacity: var(--dimmed-opacity);
+      opacity: var(--disabled-opacity);
 
       &:hover {
         opacity: 1;
