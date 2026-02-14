@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
 
 const MIGRATION_ID =
-  'configurations-code-completions-to-code-at-cursor-migration-20260130'
+  'configurations-code-completions-to-code-at-cursor-migration-20260131'
 const OLD_KEY = 'configurationsForCodeCompletions'
 const NEW_KEY = 'configurationsForCodeAtCursor'
 

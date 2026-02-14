@@ -35,13 +35,12 @@ export const WEB_MODE_STATE_KEY = 'web-mode'
 export const API_MODE_STATE_KEY = 'api-mode'
 export const PANEL_MODE_STATE_KEY = 'panel-mode'
 
-export const INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY = 'instructions-edit-context1'
-export const INSTRUCTIONS_ASK_STATE_KEY = 'instructions-ask1'
-export const INSTRUCTIONS_NO_CONTEXT_STATE_KEY = 'instructions-no-context1'
+export const INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY = 'instructions-edit-context'
+export const INSTRUCTIONS_ASK_STATE_KEY = 'instructions-ask'
+export const INSTRUCTIONS_NO_CONTEXT_STATE_KEY = 'instructions-no-context'
 export const INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY =
-  'instructions-code-at-cursor1'
-export const INSTRUCTIONS_PRUNE_CONTEXT_STATE_KEY =
-  'instructions-prune-context1'
+  'instructions-code-at-cursor'
+export const INSTRUCTIONS_PRUNE_CONTEXT_STATE_KEY = 'instructions-prune-context'
 
 export const ARE_TASKS_COLLAPSED_STATE_KEY = 'are-tasks-collapsed'
 export const IS_TIMELINE_COLLAPSED_STATE_KEY = 'is-timeline-collapsed'
