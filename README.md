@@ -17,9 +17,13 @@ Code Web Chat is an open-source and privacy-first **AI coding toolkit for VS Cod
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-1.png"></p>
 
-<p align="center"><small><i>Interate in your favorite chatbot...</i></small><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-2.png"></p>
+<p align="center"><sub><i>Interate in your favorite chatbot...</i></sub></p>
 
-<p align="center"><small><i>Apply response from clipboard...</i></small><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-3.png"></p>
+<p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-2.png"></p>
+
+<p align="center"><sub><i>Apply response from clipboard...</i></sub></p>
+
+<p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-3.png"></p>
 
 > [!TIP]
 > Don't want to make edits in chatbots? CWC supports remote and local (e.g. Ollama) model providers.
