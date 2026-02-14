@@ -45,6 +45,11 @@ export const Empty = () => (
     is_recording={false}
     on_recording_started={() => console.log('Recording started')}
     on_recording_finished={() => console.log('Recording finished')}
+    tabs_count={1}
+    active_tab_index={0}
+    on_tab_change={() => {}}
+    on_new_tab={() => {}}
+    on_tab_delete={() => {}}
   />
 )
 
@@ -88,6 +93,11 @@ export const WithText = () => (
     is_recording={false}
     on_recording_started={() => console.log('Recording started')}
     on_recording_finished={() => console.log('Recording finished')}
+    tabs_count={1}
+    active_tab_index={0}
+    on_tab_change={() => {}}
+    on_new_tab={() => {}}
+    on_tab_delete={() => {}}
   />
 )
 
@@ -131,6 +141,11 @@ export const LongText = () => (
     is_recording={false}
     on_recording_started={() => console.log('Recording started')}
     on_recording_finished={() => console.log('Recording finished')}
+    tabs_count={1}
+    active_tab_index={0}
+    on_tab_change={() => {}}
+    on_new_tab={() => {}}
+    on_tab_delete={() => {}}
   />
 )
 
@@ -174,6 +189,11 @@ export const WithPlaceholderSavedContext = () => (
     is_recording={false}
     on_recording_started={() => console.log('Recording started')}
     on_recording_finished={() => console.log('Recording finished')}
+    tabs_count={1}
+    active_tab_index={0}
+    on_tab_change={() => {}}
+    on_new_tab={() => {}}
+    on_tab_delete={() => {}}
   />
 )
 
@@ -223,6 +243,11 @@ export const WithPlaceholderSelection = () => (
     is_recording={false}
     on_recording_started={() => console.log('Recording started')}
     on_recording_finished={() => console.log('Recording finished')}
+    tabs_count={1}
+    active_tab_index={0}
+    on_tab_change={() => {}}
+    on_new_tab={() => {}}
+    on_tab_delete={() => {}}
   />
 )
 
@@ -266,6 +291,11 @@ export const WithCommit = () => (
     is_recording={false}
     on_recording_started={() => console.log('Recording started')}
     on_recording_finished={() => console.log('Recording finished')}
+    tabs_count={1}
+    active_tab_index={0}
+    on_tab_change={() => {}}
+    on_new_tab={() => {}}
+    on_tab_delete={() => {}}
   />
 )
 
@@ -309,6 +339,11 @@ export const WithCommitWithQuotes = () => (
     is_recording={false}
     on_recording_started={() => console.log('Recording started')}
     on_recording_finished={() => console.log('Recording finished')}
+    tabs_count={1}
+    active_tab_index={0}
+    on_tab_change={() => {}}
+    on_new_tab={() => {}}
+    on_tab_delete={() => {}}
   />
 )
 export const WithContextAtCommit = () => (
@@ -351,11 +386,17 @@ export const WithContextAtCommit = () => (
     is_recording={false}
     on_recording_started={() => console.log('Recording started')}
     on_recording_finished={() => console.log('Recording finished')}
+    tabs_count={1}
+    active_tab_index={0}
+    on_tab_change={() => {}}
+    on_new_tab={() => {}}
+    on_tab_delete={() => {}}
   />
 )
 
 export const WithEditFormatSelector = () => {
   const [edit_format, set_edit_format] = useState<EditFormat>('diff')
+  const [invocation_count, set_invocation_count] = useState(1)
   return (
     <PromptField
       value="Hello, this is a sample message"
@@ -377,8 +418,8 @@ export const WithEditFormatSelector = () => {
       edit_format={edit_format}
       on_edit_format_change={set_edit_format}
       context_file_paths={[]}
-      invocation_count={1}
-      on_invocation_count_change={set_edit_format as any}
+      invocation_count={invocation_count}
+      on_invocation_count_change={set_invocation_count}
       on_go_to_file={(path) => console.log('Go to file:', path)}
       prune_context_instructions_prefix=""
       on_prune_context_instructions_prefix_change={(val) =>
@@ -397,6 +438,11 @@ export const WithEditFormatSelector = () => {
       is_recording={false}
       on_recording_started={() => console.log('Recording started')}
       on_recording_finished={() => console.log('Recording finished')}
+      tabs_count={1}
+      active_tab_index={0}
+      on_tab_change={() => {}}
+      on_new_tab={() => {}}
+      on_tab_delete={() => {}}
     />
   )
 }
@@ -441,5 +487,87 @@ export const WithFilePaths = () => (
     is_recording={false}
     on_recording_started={() => console.log('Recording started')}
     on_recording_finished={() => console.log('Recording finished')}
+    tabs_count={1}
+    active_tab_index={0}
+    on_tab_change={() => {}}
+    on_new_tab={() => {}}
+    on_tab_delete={() => {}}
   />
 )
+
+export const WithTabs = () => {
+  const [tabs, set_tabs] = useState(['Prompt 1', 'Prompt 2', 'Prompt 3'])
+  const [active_index, set_active_index] = useState(0)
+
+  const handle_change = (val: string) => {
+    const new_tabs = [...tabs]
+    new_tabs[active_index] = val
+    set_tabs(new_tabs)
+  }
+
+  const handle_new_tab = () => {
+    set_tabs([...tabs, ''])
+    set_active_index(tabs.length)
+  }
+
+  const handle_tab_delete = (index: number) => {
+    const new_tabs = tabs.filter((_, i) => i !== index)
+    if (new_tabs.length === 0) {
+      set_tabs([''])
+      set_active_index(0)
+    } else {
+      set_tabs(new_tabs)
+      if (active_index >= new_tabs.length) {
+        set_active_index(new_tabs.length - 1)
+      }
+    }
+  }
+
+  return (
+    <PromptField
+      value={tabs[active_index]}
+      chat_history={[]}
+      on_change={handle_change}
+      on_submit={() => console.log('Submitted:', tabs[active_index])}
+      on_copy={() => console.log('Copied')}
+      is_connected={true}
+      prompt_type="edit-context"
+      current_selection={null}
+      currently_open_file_path="/path/to/file"
+      on_caret_position_change={(pos) => console.log('Caret position:', pos)}
+      is_chatbots_mode={false}
+      on_at_sign_click={() => console.log('@ clicked')}
+      on_hash_sign_click={() => console.log('# clicked')}
+      on_submit_with_control={() => console.log('Submitted with control')}
+      on_curly_braces_click={() => {}}
+      on_go_to_file={(path) => console.log('Go to file:', path)}
+      context_file_paths={['path/to/my/file.ts']}
+      invocation_count={1}
+      on_invocation_count_change={(count) =>
+        console.log('Invocation count changed:', count)
+      }
+      prune_context_instructions_prefix=""
+      on_prune_context_instructions_prefix_change={(val) =>
+        console.log('Prune prefix changed:', val)
+      }
+      on_pasted_lines_click={(path, start, end) =>
+        console.log('Pasted lines clicked:', path, start, end)
+      }
+      on_open_url={(url) => console.log('Open URL:', url)}
+      on_open_website={(url) => console.log('Open website:', url)}
+      on_paste_image={(content) => console.log('Paste image:', content)}
+      on_paste_document={(content) => console.log('Paste document:', content)}
+      on_open_image={(hash) => console.log('Open image:', hash)}
+      on_open_document={(hash) => console.log('Open document:', hash)}
+      on_paste_url={(url) => console.log('Paste URL:', url)}
+      is_recording={false}
+      on_recording_started={() => console.log('Recording started')}
+      on_recording_finished={() => console.log('Recording finished')}
+      tabs_count={tabs.length}
+      active_tab_index={active_index}
+      on_tab_change={set_active_index}
+      on_new_tab={handle_new_tab}
+      on_tab_delete={handle_tab_delete}
+    />
+  )
+}

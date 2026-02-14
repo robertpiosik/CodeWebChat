@@ -16,7 +16,7 @@ import { ApiManagerModal as UiApiManagerModal } from '@ui/components/editor/pane
 import { QRCodeModal as UiQRCodeModal } from '@ui/components/editor/panel/modals/QRCodeModal'
 import { AutoClosingModal as UiAutoClosingModal } from '@ui/components/editor/panel/modals/AutoClosingModal'
 import { EditCheckpointDescriptionModal as UiEditCheckpointDescriptionModal } from '@ui/components/editor/panel/modals/EditCheckpointDescriptionModal'
-import { use_panel } from './hooks/use-panel'
+import { use_panel } from './hooks/panel/use-panel'
 import { FileInPreview } from '@shared/types/file-in-preview'
 import { LayoutContext } from './contexts/LayoutContext'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
@@ -27,6 +27,12 @@ import { Donations as UiDonations } from '@ui/components/editor/panel/Donations/
 import { use_latest_donations } from './hooks/latest-donations'
 import { DonationsFooter } from './components/donations/DonationsFooter'
 import { IconButton } from '@ui/components/editor/common/IconButton'
+import { use_modal_manager } from './hooks/use-modal-manager'
+import { use_tasks } from './hooks/use-tasks'
+import { use_response_history } from './hooks/panel/use-response-history'
+import { use_preview_manager } from './hooks/panel/use-preview-manager'
+import { use_editor_sync } from './hooks/panel/use-editor-sync'
+import { use_preset_editing } from './hooks/panel/use-preset-editing'
 
 const vscode = acquireVsCodeApi()
 
@@ -37,36 +43,14 @@ export const Panel = () => {
     main_view_scroll_reset_key,
     set_main_view_scroll_reset_key,
     version,
-    updating_preset,
-    set_updating_preset,
-    items_in_preview,
-    set_items_in_preview,
-    raw_instructions,
-    preview_url,
-    progress_state,
-    set_progress_state,
-    api_manager_progress_state,
-    auto_closing_modal_title,
-    set_auto_closing_modal_title,
     apply_button_enabling_trigger_count,
-    selected_history_item_created_at,
-    set_selected_history_item_created_at,
-    response_history,
     checkpoints,
-    preview_item_created_at,
-    set_response_history,
-    workspace_folder_count,
     is_connected,
-    updated_preset,
-    set_updated_preset,
     ask_about_context_instructions,
     edit_context_instructions,
     no_context_instructions,
-    currently_open_file_path,
-    current_selection,
     code_at_cursor_instructions,
     prune_context_instructions,
-    currently_open_file_text,
     mode,
     web_prompt_type,
     api_prompt_type,
@@ -75,16 +59,10 @@ export const Panel = () => {
     set_chat_input_focus_and_select_key,
     context_size_warning_threshold,
     can_undo,
-    context_file_paths,
     presets_collapsed,
     send_with_shift_enter,
-    is_preview_ongoing_modal_visible,
-    set_is_preview_ongoing_modal_visible,
     configurations_collapsed,
     handle_instructions_change,
-    edit_preset_back_click_handler,
-    edit_preset_save_handler,
-    handle_preview_preset,
     handle_web_prompt_type_change,
     handle_api_prompt_type_change,
     handle_mode_change,
@@ -92,17 +70,9 @@ export const Panel = () => {
     handle_configurations_collapsed_change,
     is_timeline_collapsed,
     handle_timeline_collapsed_change,
-    are_tasks_collapsed,
-    handle_tasks_collapsed_change,
-    handle_remove_response_history_item,
-    tasks,
-    handle_tasks_change,
-    handle_task_delete,
-    handle_discard_user_changes_in_preview,
     handle_task_forward,
     prune_context_instructions_prefix,
     handle_prune_context_instructions_prefix_change,
-    fix_all_automatically,
     handle_paste_image,
     handle_open_image,
     handle_paste_long_document,
@@ -110,8 +80,65 @@ export const Panel = () => {
     handle_paste_url,
     is_recording,
     handle_set_recording_state,
-    is_setup_complete
+    is_setup_complete,
+    handle_tab_change,
+    handle_new_tab,
+    handle_tab_delete
   } = use_panel(vscode)
+
+  const {
+    currently_open_file_path,
+    current_selection,
+    currently_open_file_text,
+    context_file_paths,
+    workspace_folder_count
+  } = use_editor_sync(vscode)
+
+  const {
+    items_in_preview,
+    set_items_in_preview,
+    raw_instructions,
+    preview_url,
+    preview_item_created_at,
+    fix_all_automatically,
+    handle_discard_user_changes_in_preview
+  } = use_preview_manager(vscode)
+
+  const {
+    response_history,
+    set_response_history,
+    selected_history_item_created_at,
+    set_selected_history_item_created_at,
+    handle_remove_response_history_item
+  } = use_response_history(vscode)
+
+  const {
+    tasks,
+    are_tasks_collapsed,
+    handle_tasks_change,
+    handle_task_delete,
+    handle_tasks_collapsed_change
+  } = use_tasks(vscode)
+
+  const {
+    updating_preset,
+    set_updating_preset,
+    updated_preset,
+    set_updated_preset,
+    edit_preset_back_click_handler,
+    edit_preset_save_handler,
+    handle_preview_preset
+  } = use_preset_editing(vscode)
+
+  const {
+    progress_state,
+    set_progress_state,
+    api_manager_progress_state,
+    auto_closing_modal_title,
+    set_auto_closing_modal_title,
+    is_preview_ongoing_modal_visible,
+    set_is_preview_ongoing_modal_visible
+  } = use_modal_manager()
 
   const [checkpoint_to_edit, set_checkpoint_to_edit] = useState<
     { timestamp: number; description: string } | undefined
@@ -159,15 +186,35 @@ export const Panel = () => {
     (mode == MODE.API && api_prompt_type == 'code-at-cursor')
 
   const get_current_instructions = () => {
-    if (is_for_code_completions) {
-      return code_at_cursor_instructions
+    let state: { instructions: string[]; active_index: number } | undefined
+
+    if (is_for_code_completions && code_at_cursor_instructions) {
+      state = code_at_cursor_instructions
     }
+    const prompt_type = mode == MODE.WEB ? web_prompt_type : api_prompt_type
+
+    if (prompt_type == 'ask-about-context') {
+      state = ask_about_context_instructions
+    } else if (prompt_type == 'edit-context') {
+      state = edit_context_instructions
+    } else if (prompt_type == 'no-context') {
+      state = no_context_instructions
+    }
+
+    if (!state) return ''
+
+    return state.instructions[state.active_index] || ''
+  }
+
+  const get_current_instructions_state = () => {
     const prompt_type = mode == MODE.WEB ? web_prompt_type : api_prompt_type
     if (prompt_type == 'ask-about-context')
       return ask_about_context_instructions
     if (prompt_type == 'edit-context') return edit_context_instructions
     if (prompt_type == 'no-context') return no_context_instructions
-    return ''
+    if (prompt_type == 'code-at-cursor') return code_at_cursor_instructions
+    if (prompt_type == 'prune-context') return prune_context_instructions
+    return undefined
   }
 
   const has_affixes =
@@ -239,6 +286,7 @@ export const Panel = () => {
     apply_button_enabling_trigger_count
   }
 
+  const current_state = get_current_instructions_state()
   const are_keyboard_shortcuts_disabled =
     !!updating_preset || !!items_in_preview || active_view != 'main'
 
@@ -273,11 +321,31 @@ export const Panel = () => {
                 on_show_home={() => {
                   set_active_view('home')
                 }}
-                ask_instructions={ask_about_context_instructions}
-                edit_instructions={edit_context_instructions}
-                no_context_instructions={no_context_instructions}
-                code_completions_instructions={code_at_cursor_instructions}
-                prune_context_instructions={prune_context_instructions}
+                ask_instructions={
+                  ask_about_context_instructions.instructions[
+                    ask_about_context_instructions.active_index
+                  ] || ''
+                }
+                edit_instructions={
+                  edit_context_instructions.instructions[
+                    edit_context_instructions.active_index
+                  ] || ''
+                }
+                no_context_instructions={
+                  no_context_instructions.instructions[
+                    no_context_instructions.active_index
+                  ] || ''
+                }
+                code_completions_instructions={
+                  code_at_cursor_instructions.instructions[
+                    code_at_cursor_instructions.active_index
+                  ] || ''
+                }
+                prune_context_instructions={
+                  prune_context_instructions.instructions[
+                    prune_context_instructions.active_index
+                  ] || ''
+                }
                 set_instructions={handle_instructions_change}
                 mode={mode}
                 web_prompt_type={web_prompt_type}
@@ -332,6 +400,11 @@ export const Panel = () => {
                 on_recording_started={() => handle_set_recording_state(true)}
                 on_recording_finished={() => handle_set_recording_state(false)}
                 is_setup_complete={is_setup_complete}
+                tabs_count={current_state?.instructions.length ?? 0}
+                active_tab_index={current_state?.active_index ?? 0}
+                on_tab_change={handle_tab_change}
+                on_new_tab={handle_new_tab}
+                on_tab_delete={handle_tab_delete}
               />
             </div>
             <div

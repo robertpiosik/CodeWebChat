@@ -21,7 +21,6 @@ const process_text_part_for_files = (params: {
 
   return parts
     .map((part, index) => {
-      // part at odd index is a file_path
       if (index % 2 == 1) {
         const file_path = part
         if (params.context_file_paths.includes(file_path)) {
@@ -37,7 +36,6 @@ const process_text_part_for_files = (params: {
             styles['symbol__text']
           }" data-role="symbol-text">${escape_html(filename)}</span></span>`
         }
-        // If not a context file, return with backticks
         return `\`${escape_html(file_path)}\``
       }
       return escape_html(part)
@@ -50,6 +48,12 @@ export const get_highlighted_text = (params: {
   current_selection?: SelectionState | null
   context_file_paths: string[]
   is_chatbots_mode?: boolean
+  tabs_config?: {
+    count: number
+    active_index: number
+    can_delete: boolean
+    suppressed_index?: number
+  }
 }): string => {
   const saved_context_regex_part =
     '#SavedContext\\((?:WorkspaceState|JSON) "(?:\\\\.|[^"\\\\])*"\\)'
@@ -150,7 +154,6 @@ export const get_highlighted_text = (params: {
       )
       if (part && saved_context_match) {
         const context_type = saved_context_match[1]
-        // Unescape quotes and backslashes for display
         const context_name = saved_context_match[2]
           .replace(/\\"/g, '"')
           .replace(/\\\\/g, '\\')
@@ -274,7 +277,40 @@ export const get_highlighted_text = (params: {
       )}" contenteditable="false" data-role="clear-button"></span>` + result
   }
 
-  if (params.text.endsWith('\n')) {
+  if (params.tabs_config) {
+    const { count, active_index, can_delete, suppressed_index } =
+      params.tabs_config
+    let tabs_items = ''
+
+    if (count > 1) {
+      for (let i = 0; i < count; i++) {
+        const is_active = i == active_index
+        const is_suppressed = i == suppressed_index
+        const delete_btn = can_delete
+          ? `<span class="${cn(
+              styles['tabs__tab-delete']
+            )}" data-role="tab-delete" data-index="${i}"></span>`
+          : ''
+
+        tabs_items += `<span class="${cn(styles['tabs__tab'], {
+          [styles['tabs__tab--active']]: is_active,
+          [styles['tabs__tab--suppress-hover']]: is_suppressed
+        })}" data-role="tab-item" data-index="${i}"><span class="${
+          styles['tabs__tab-icon']
+        }"></span>${delete_btn}</span>`
+      }
+    }
+
+    tabs_items += `<span class="${cn(
+      styles['tabs__tab'],
+      styles['tabs__tab--new']
+    )}" data-role="tab-new" title="New Tab"></span>`
+
+    const tabs_html = `<span class="${styles['tabs']}" contenteditable="false" data-role="tabs-container">${tabs_items}</span>`
+    result = tabs_html + result
+  }
+
+  if (params.text.endsWith('\n') || params.text == '') {
     return result + '<br data-role="trailing-break">'
   }
   return result

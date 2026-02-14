@@ -11,6 +11,11 @@ export interface BaseMessage {
   command: string
 }
 
+export type InstructionsState = {
+  instructions: string[]
+  active_index: number
+}
+
 export type SetupProgress = {
   has_model_provider: boolean
   has_configuration_for_edit_context: boolean
@@ -67,7 +72,7 @@ export interface GetInstructionsMessage extends BaseMessage {
 
 export interface SaveInstructionsMessage extends BaseMessage {
   command: 'SAVE_INSTRUCTIONS'
-  instruction: string
+  instruction: InstructionsState
   prompt_type:
     | 'ask-about-context'
     | 'edit-context'
@@ -632,11 +637,11 @@ export type FrontendMessage =
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
   command: 'INSTRUCTIONS'
-  ask_about_context: string
-  edit_context: string
-  no_context: string
-  code_at_cursor: string
-  prune_context: string
+  ask_about_context: InstructionsState
+  edit_context: InstructionsState
+  no_context: InstructionsState
+  code_at_cursor: InstructionsState
+  prune_context: InstructionsState
   caret_position?: number
 }
 

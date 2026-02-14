@@ -10,12 +10,14 @@ import { use_ghost_text } from './hooks/use-ghost-text'
 import { use_drag_drop } from './hooks/use-drag-drop'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 import { use_edit_format_compacting } from './hooks/use-edit-format-compacting'
+import { use_suppressed_hover_tab } from './hooks/use-suppressed-hover-tab'
 import { DropdownMenu } from '../../common/DropdownMenu'
 import { use_is_mac } from '@shared/hooks'
 import {
   get_caret_position_from_div,
   set_caret_position_for_div
 } from './utils/caret'
+import { map_raw_pos_to_display_pos } from './utils/position-mapping'
 import { Tooltip } from './components'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 
@@ -72,11 +74,17 @@ export type PromptFieldProps = {
   is_recording: boolean
   on_recording_started: () => void
   on_recording_finished: () => void
+  tabs_count: number
+  active_tab_index: number
+  on_tab_change: (index: number) => void
+  on_new_tab: () => void
+  on_tab_delete: (index: number) => void
 }
 
 export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const input_ref = useRef<HTMLDivElement>(null)
   const [caret_position, set_caret_position] = useState(0)
+  const prev_tab_index_ref = useRef(props.active_tab_index)
   const [should_show_ghost_text, set_should_show_ghost_text] = useState(false)
   const [show_submit_tooltip, set_show_submit_tooltip] = useState(false)
   const [is_text_selecting, set_is_text_selecting] = useState(false)
@@ -86,6 +94,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [hovered_edit_format, set_hovered_edit_format] =
     useState<EditFormat | null>(null)
   const [is_recording_hovered, set_is_recording_hovered] = useState(false)
+  const { suppressed_hover_tab_index, handle_mouse_over } =
+    use_suppressed_hover_tab(props.active_tab_index)
+
   const [prune_instructions, set_prune_instructions] = useState(
     props.prune_context_instructions_prefix
   )
@@ -138,18 +149,16 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     handle_input_change,
     handle_submit,
     handle_key_down,
-    is_history_enabled,
     handle_copy,
     handle_cut,
     handle_paste,
     handle_input_click
-  } = use_handlers(
-    props,
+  } = use_handlers(props, {
     input_ref,
     ghost_text,
-    handle_accept_ghost_text,
+    on_accept_ghost_text: handle_accept_ghost_text,
     set_caret_position
-  )
+  })
 
   const { handle_drag_start, handle_drag_over, handle_drop, handle_drag_end } =
     use_drag_drop({
@@ -196,26 +205,56 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
       text: props.value,
       current_selection: props.current_selection,
       context_file_paths: props.context_file_paths ?? [],
-      is_chatbots_mode: props.is_chatbots_mode
+      is_chatbots_mode: props.is_chatbots_mode,
+      tabs_config: {
+        count: props.tabs_count,
+        active_index: props.active_tab_index,
+        can_delete: true,
+        suppressed_index: suppressed_hover_tab_index ?? undefined
+      }
     })
   }, [
     props.value,
     props.prompt_type,
     props.current_selection,
     props.context_file_paths,
-    props.is_chatbots_mode
+    props.is_chatbots_mode,
+    props.tabs_count,
+    props.active_tab_index,
+    suppressed_hover_tab_index
   ])
 
   useEffect(() => {
     if (input_ref.current && input_ref.current.innerHTML !== highlighted_html) {
       const is_focused = document.activeElement === input_ref.current
-      const selection_start = get_caret_position_from_div(input_ref.current)
+      const tab_changed = prev_tab_index_ref.current !== props.active_tab_index
+
+      let selection_start = 0
+      if (!tab_changed) {
+        selection_start = get_caret_position_from_div(input_ref.current)
+      }
+
       input_ref.current.innerHTML = highlighted_html
-      if (is_focused) {
+
+      if (tab_changed) {
+        prev_tab_index_ref.current = props.active_tab_index
+        const display_pos = map_raw_pos_to_display_pos(
+          props.value.length,
+          props.value,
+          props.context_file_paths ?? []
+        )
+        input_ref.current.focus()
+        set_caret_position_for_div(input_ref.current, display_pos)
+      } else if (is_focused) {
         set_caret_position_for_div(input_ref.current, selection_start)
       }
     }
-  }, [highlighted_html])
+  }, [
+    highlighted_html,
+    props.active_tab_index,
+    props.value,
+    props.context_file_paths
+  ])
 
   useEffect(() => {
     if (input_ref.current) {
@@ -245,17 +284,17 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
   const placeholder = useMemo(() => {
     if (props.prompt_type == 'code-at-cursor') {
-      if (props.chat_history.length > 0 && is_history_enabled) {
+      if (props.chat_history.length > 0) {
         return 'Completion instructions (⇅ for history)'
       } else {
         return 'Completion instructions'
       }
     }
 
-    return props.chat_history.length > 0 && is_history_enabled
+    return props.chat_history.length > 0
       ? 'Type something (⇅ for history)'
       : 'Type something'
-  }, [props.prompt_type, props.chat_history, is_history_enabled])
+  }, [props.prompt_type, props.chat_history])
 
   const edit_format_shortcuts: Record<EditFormat, string> = useMemo(() => {
     const modifier = is_mac ? '⌥' : 'Alt+'
@@ -311,6 +350,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             (!!props.current_selection || !props.currently_open_file_path),
           [styles['container__inner--selecting']]: is_text_selecting
         })}
+        onMouseOver={handle_mouse_over}
         onKeyDown={handle_container_key_down}
         onClick={() => input_ref.current?.focus()}
       >

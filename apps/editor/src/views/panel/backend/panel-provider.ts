@@ -2,7 +2,11 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import { ChildProcessWithoutNullStreams } from 'child_process'
 import { WebSocketManager } from '@/services/websocket-manager'
-import { FrontendMessage, BackendMessage } from '../types/messages'
+import {
+  FrontendMessage,
+  BackendMessage,
+  InstructionsState
+} from '../types/messages'
 import { ApiManager } from '@/services/api-manager'
 import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
@@ -127,11 +131,26 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public currently_open_file_path?: string
   public current_selection: SelectionState | null = null
   public caret_position: number = 0
-  public ask_about_context_instructions: string = ''
-  public edit_context_instructions: string = ''
-  public no_context_instructions: string = ''
-  public code_at_cursor_instructions: string = ''
-  public prune_context_instructions: string = ''
+  public ask_about_context_instructions: InstructionsState = {
+    instructions: [''],
+    active_index: 0
+  }
+  public edit_context_instructions: InstructionsState = {
+    instructions: [''],
+    active_index: 0
+  }
+  public no_context_instructions: InstructionsState = {
+    instructions: [''],
+    active_index: 0
+  }
+  public code_at_cursor_instructions: InstructionsState = {
+    instructions: [''],
+    active_index: 0
+  }
+  public prune_context_instructions: InstructionsState = {
+    instructions: [''],
+    active_index: 0
+  }
   public web_prompt_type: WebPromptType
   public chat_edit_format: EditFormat
   public api_edit_format: EditFormat
@@ -155,6 +174,64 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public recording_process: ChildProcessWithoutNullStreams | null = null
   public audio_chunks: Buffer[] = []
   public recording_start_time: number = 0
+
+  public get current_ask_about_context_instruction(): string {
+    return (
+      this.ask_about_context_instructions.instructions[
+        this.ask_about_context_instructions.active_index
+      ] || ''
+    )
+  }
+
+  public get current_edit_context_instruction(): string {
+    return (
+      this.edit_context_instructions.instructions[
+        this.edit_context_instructions.active_index
+      ] || ''
+    )
+  }
+
+  public get current_no_context_instruction(): string {
+    return (
+      this.no_context_instructions.instructions[
+        this.no_context_instructions.active_index
+      ] || ''
+    )
+  }
+
+  public get current_code_at_cursor_instruction(): string {
+    return (
+      this.code_at_cursor_instructions.instructions[
+        this.code_at_cursor_instructions.active_index
+      ] || ''
+    )
+  }
+
+  public get current_prune_context_instruction(): string {
+    return (
+      this.prune_context_instructions.instructions[
+        this.prune_context_instructions.active_index
+      ] || ''
+    )
+  }
+
+  public get prompt_type(): WebPromptType | ApiPromptType {
+    return this.mode == MODE.WEB ? this.web_prompt_type : this.api_prompt_type
+  }
+
+  public get active_instructions_state(): InstructionsState {
+    const type = this.prompt_type
+    if (type == 'ask-about-context') return this.ask_about_context_instructions
+    if (type == 'edit-context') return this.edit_context_instructions
+    if (type == 'no-context') return this.no_context_instructions
+    if (type == 'code-at-cursor') return this.code_at_cursor_instructions
+    return this.prune_context_instructions
+  }
+
+  public get current_instruction(): string {
+    const state = this.active_instructions_state
+    return state.instructions[state.active_index] || ''
+  }
 
   public preview_switch_choice_resolver:
     | ((choice: 'Switch' | undefined) => void)
@@ -252,23 +329,20 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       }
     })
 
-    this.edit_context_instructions = this.context.workspaceState.get<string>(
-      INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY,
-      ''
+    this.edit_context_instructions = this._load_instructions(
+      INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY
     )
-    this.ask_about_context_instructions =
-      this.context.workspaceState.get<string>(INSTRUCTIONS_ASK_STATE_KEY, '')
-    this.no_context_instructions = this.context.workspaceState.get<string>(
-      INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
-      ''
+    this.ask_about_context_instructions = this._load_instructions(
+      INSTRUCTIONS_ASK_STATE_KEY
     )
-    this.code_at_cursor_instructions = this.context.workspaceState.get<string>(
-      INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY,
-      ''
+    this.no_context_instructions = this._load_instructions(
+      INSTRUCTIONS_NO_CONTEXT_STATE_KEY
     )
-    this.prune_context_instructions = this.context.workspaceState.get<string>(
-      INSTRUCTIONS_PRUNE_CONTEXT_STATE_KEY,
-      ''
+    this.code_at_cursor_instructions = this._load_instructions(
+      INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY
+    )
+    this.prune_context_instructions = this._load_instructions(
+      INSTRUCTIONS_PRUNE_CONTEXT_STATE_KEY
     )
 
     this.chat_edit_format =
@@ -564,6 +638,14 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       command: 'CONTEXT_FILES',
       file_paths
     })
+  }
+
+  private _load_instructions(key: string): InstructionsState {
+    const stored = this.context.workspaceState.get<any>(key)
+    if (typeof stored == 'string') {
+      return { instructions: [stored], active_index: 0 }
+    }
+    return stored ?? { instructions: [''], active_index: 0 }
   }
 
   public send_message(message: BackendMessage) {
@@ -1008,37 +1090,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   }
 
   public add_text_at_cursor_position(text: string, chars_to_remove_before = 0) {
-    const is_in_code_completions_mode =
-      (this.mode == MODE.WEB && this.web_prompt_type == 'code-at-cursor') ||
-      (this.mode == MODE.API && this.api_prompt_type == 'code-at-cursor')
-
-    let current_instructions = ''
-    let new_instructions = ''
-    const mode: WebPromptType | ApiPromptType = is_in_code_completions_mode
-      ? 'code-at-cursor'
-      : this.mode == MODE.WEB
-        ? this.web_prompt_type
-        : this.api_prompt_type
-
-    switch (mode) {
-      case 'ask-about-context':
-        current_instructions = this.ask_about_context_instructions
-        break
-      case 'edit-context':
-        current_instructions = this.edit_context_instructions
-        break
-      case 'no-context':
-        current_instructions = this.no_context_instructions
-        break
-      case 'code-at-cursor':
-        current_instructions = this.code_at_cursor_instructions
-        break
-      case 'prune-context':
-        current_instructions = this.prune_context_instructions
-        break
-      default:
-        return
-    }
+    const target_state = this.active_instructions_state
+    const current_instructions = this.current_instruction
 
     const before_caret = current_instructions.slice(
       0,
@@ -1046,29 +1099,13 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     )
     const after_caret = current_instructions.slice(this.caret_position)
 
-    new_instructions = (before_caret + text + after_caret).replace(/  +/g, ' ')
+    const new_instructions = (before_caret + text + after_caret).replace(
+      /  +/g,
+      ' '
+    )
     const new_caret_position = (before_caret + text).replace(/  +/g, ' ').length
 
-    new_instructions = new_instructions.replace(/  +/g, ' ')
-
-    switch (mode) {
-      case 'ask-about-context':
-        this.ask_about_context_instructions = new_instructions
-        break
-      case 'edit-context':
-        this.edit_context_instructions = new_instructions
-        break
-      case 'no-context':
-        this.no_context_instructions = new_instructions
-        break
-      case 'code-at-cursor':
-        this.code_at_cursor_instructions = new_instructions
-        break
-      case 'prune-context':
-        this.prune_context_instructions = new_instructions
-        break
-    }
-
+    target_state.instructions[target_state.active_index] = new_instructions
     this.caret_position = new_caret_position
 
     this.send_message({

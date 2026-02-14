@@ -49,7 +49,7 @@ export const set_caret_position_for_div = (
           } else {
             char_count = next_char_count
           }
-          return // Do not iterate over children
+          return
         }
         for (let i = 0; i < node.childNodes.length; i++) {
           find(node.childNodes[i])

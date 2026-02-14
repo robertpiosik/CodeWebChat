@@ -74,6 +74,11 @@ type Props = {
   on_recording_started: () => void
   on_recording_finished: () => void
   is_setup_complete: boolean
+  tabs_count: number
+  active_tab_index: number
+  on_tab_change: (index: number) => void
+  on_new_tab: () => void
+  on_tab_delete: (index: number) => void
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -141,19 +146,6 @@ export const Main: React.FC<Props> = (props) => {
           props.on_preset_edit(message.preset)
           break
         case 'INSTRUCTIONS':
-          if (message.ask_about_context !== undefined)
-            props.set_instructions(
-              message.ask_about_context,
-              'ask-about-context'
-            )
-          if (message.edit_context !== undefined)
-            props.set_instructions(message.edit_context, 'edit-context')
-          if (message.no_context !== undefined)
-            props.set_instructions(message.no_context, 'no-context')
-          if (message.code_at_cursor !== undefined)
-            props.set_instructions(message.code_at_cursor, 'code-at-cursor')
-          if (message.prune_context !== undefined)
-            props.set_instructions(message.prune_context, 'prune-context')
           if (
             message.caret_position !== undefined &&
             message.caret_position >= 0
@@ -859,6 +851,11 @@ export const Main: React.FC<Props> = (props) => {
       on_recording_started={props.on_recording_started}
       on_recording_finished={props.on_recording_finished}
       is_setup_complete={props.is_setup_complete}
+      tabs_count={props.tabs_count}
+      active_tab_index={props.active_tab_index}
+      on_tab_change={props.on_tab_change}
+      on_new_tab={props.on_new_tab}
+      on_tab_delete={props.on_tab_delete}
     />
   )
 }

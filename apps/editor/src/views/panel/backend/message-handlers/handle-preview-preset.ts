@@ -37,16 +37,7 @@ export const handle_preview_preset = async (
   const active_path = active_editor?.document.uri.fsPath
 
   let text_to_send: string
-  let current_instructions = ''
-  if (panel_provider.web_prompt_type == 'ask-about-context') {
-    current_instructions = panel_provider.ask_about_context_instructions
-  } else if (panel_provider.web_prompt_type == 'edit-context') {
-    current_instructions = panel_provider.edit_context_instructions
-  } else if (panel_provider.web_prompt_type == 'no-context') {
-    current_instructions = panel_provider.no_context_instructions
-  } else if (panel_provider.web_prompt_type == 'code-at-cursor') {
-    current_instructions = panel_provider.code_at_cursor_instructions
-  }
+  const current_instructions = panel_provider.current_instruction
 
   if (panel_provider.web_prompt_type == 'code-at-cursor' && active_editor) {
     const document = active_editor.document

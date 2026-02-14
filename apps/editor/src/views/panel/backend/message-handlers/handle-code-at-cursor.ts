@@ -252,7 +252,8 @@ export const handle_code_at_cursor = async (
   const api_providers_manager = new ModelProvidersManager(
     panel_provider.context
   )
-  const completion_instructions = panel_provider.code_at_cursor_instructions
+  const completion_instructions =
+    panel_provider.current_code_at_cursor_instruction
 
   const config_result = await get_code_at_cursor_config(
     api_providers_manager,

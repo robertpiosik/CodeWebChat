@@ -19,7 +19,6 @@ const get_symbol_ranges = (
   context_file_paths: string[]
 ): { start: number; end: number }[] => {
   const ranges: { start: number; end: number }[] = []
-  // This regex is a combination of all symbol types
   const regex =
     /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "(?:\\.|[^"\\])*"\))|(#(?:Commit|ContextAtCommit)\([^:]+:[^\s"]+ "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>[\s\S]*?<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#Document\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
 
@@ -28,7 +27,6 @@ const get_symbol_ranges = (
     const file_path = match[1]
 
     if (file_path) {
-      // Only treat file paths as symbols if they are in the context
       if (context_file_paths.includes(file_path)) {
         ranges.push({ start: match.index, end: match.index + match[0].length })
       }
@@ -82,7 +80,9 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
       if (index != -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + expected_text.length)
-        return `${prefix}#SavedContext(${context_type} "${context_name.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}")${suffix}`
+        return `${prefix}#SavedContext(${context_type} "${context_name
+          .replace(/\\/g, '\\\\')
+          .replace(/"/g, '\\"')}")${suffix}`
       }
     } else if (el.dataset.type == 'selection-symbol') {
       const expected_text = 'Selection'
@@ -208,6 +208,8 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
       }
     }
 
+    if (el.dataset.role == 'tabs-container') return ''
+
     return inner_content
   }
 
@@ -234,10 +236,12 @@ const set_caret_position_after_change = (
 
 export const use_handlers = (
   props: PromptFieldProps,
-  input_ref: RefObject<HTMLDivElement>,
-  ghost_text: string,
-  on_accept_ghost_text: () => void,
-  set_caret_position: (pos: number) => void
+  params: {
+    input_ref: RefObject<HTMLDivElement>
+    ghost_text: string
+    on_accept_ghost_text: () => void
+    set_caret_position: (pos: number) => void
+  }
 ) => {
   const [history_index, set_history_index] = useState(-1)
   const [is_history_enabled, set_is_history_enabled] = useState(!props.value)
@@ -275,10 +279,13 @@ export const use_handlers = (
     }
 
     const on_selection_change = () => {
-      if (document.activeElement === input_ref.current && input_ref.current) {
+      if (
+        document.activeElement === params.input_ref.current &&
+        params.input_ref.current
+      ) {
         const selection = window.getSelection()
-        const pos = get_caret_position_from_div(input_ref.current)
-        set_caret_position(pos)
+        const pos = get_caret_position_from_div(params.input_ref.current)
+        params.set_caret_position(pos)
 
         const raw_pos = map_display_pos_to_raw_pos(
           pos,
@@ -303,13 +310,13 @@ export const use_handlers = (
   }, [
     props.value,
     props.context_file_paths,
-    input_ref,
+    params.input_ref,
     props.on_caret_position_change,
-    set_caret_position
+    params.set_caret_position
   ])
 
   useEffect(() => {
-    if (input_ref.current) {
+    if (params.input_ref.current) {
       if (
         props.caret_position_to_set !== undefined &&
         props.on_caret_position_set
@@ -317,13 +324,13 @@ export const use_handlers = (
         const caret_pos = props.caret_position_to_set
         const on_set = props.on_caret_position_set
         setTimeout(() => {
-          if (input_ref.current) {
+          if (params.input_ref.current) {
             const display_pos = map_raw_pos_to_display_pos(
               caret_pos,
               props.value,
               props.context_file_paths ?? []
             )
-            set_caret_position_for_div(input_ref.current, display_pos)
+            set_caret_position_for_div(params.input_ref.current, display_pos)
             on_set()
           }
         }, 0)
@@ -337,18 +344,18 @@ export const use_handlers = (
   ])
 
   useEffect(() => {
-    if (input_ref.current) {
-      input_ref.current.focus()
+    if (params.input_ref.current) {
+      params.input_ref.current.focus()
     }
   }, [props.focus_key])
 
   useEffect(() => {
-    if (input_ref.current) {
-      input_ref.current.focus()
+    if (params.input_ref.current) {
+      params.input_ref.current.focus()
       const selection = window.getSelection()
       if (selection) {
         const range = document.createRange()
-        range.selectNodeContents(input_ref.current)
+        range.selectNodeContents(params.input_ref.current)
         selection.removeAllRanges()
         selection.addRange(range)
       }
@@ -365,7 +372,7 @@ export const use_handlers = (
     props.on_change(new_value)
     if (caret_pos !== undefined) {
       set_caret_position_after_change(
-        input_ref,
+        params.input_ref,
         caret_pos,
         new_value,
         props.context_file_paths ?? []
@@ -416,7 +423,9 @@ export const use_handlers = (
       const context_name = symbol_element.dataset.contextName
       if (!context_type || !context_name) return
 
-      const search_pattern = `#SavedContext(${context_type} "${context_name.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}")`
+      const search_pattern = `#SavedContext(${context_type} "${context_name
+        .replace(/\\/g, '\\\\')
+        .replace(/"/g, '\\"')}")`
       const start_index = props.value.indexOf(search_pattern)
 
       if (start_index != -1) {
@@ -550,7 +559,7 @@ export const use_handlers = (
     if (!selection || selection.rangeCount == 0 || selection.isCollapsed) return
 
     const range = selection.getRangeAt(0)
-    const input_element = input_ref.current
+    const input_element = params.input_ref.current
     if (!input_element || !input_element.contains(range.startContainer)) return
 
     e.preventDefault()
@@ -583,7 +592,7 @@ export const use_handlers = (
     if (!selection || selection.rangeCount == 0 || selection.isCollapsed) return
 
     const range = selection.getRangeAt(0)
-    const input_element = input_ref.current
+    const input_element = params.input_ref.current
     if (!input_element || !input_element.contains(range.startContainer)) return
 
     e.preventDefault()
@@ -619,9 +628,9 @@ export const use_handlers = (
 
   const perform_paste = (text: string) => {
     const selection = window.getSelection()
-    if (!selection || !selection.rangeCount || !input_ref.current) return
+    if (!selection || !selection.rangeCount || !params.input_ref.current) return
     const range = selection.getRangeAt(0)
-    const input_element = input_ref.current
+    const input_element = params.input_ref.current
 
     if (!input_element.contains(range.startContainer)) return
 
@@ -683,7 +692,6 @@ export const use_handlers = (
         reader.onload = (event) => {
           if (event.target?.result) {
             const base64 = event.target.result.toString()
-            // Remove data:image/png;base64, prefix
             const commaIndex = base64.indexOf(',')
             if (commaIndex != -1) {
               const rawBase64 = base64.substring(commaIndex + 1)
@@ -719,6 +727,9 @@ export const use_handlers = (
     const icon_element = target.closest('[data-role="symbol-icon"]')
     const text_element = target.closest('[data-role="symbol-text"]')
     const clear_button = target.closest('[data-role="clear-button"]')
+    const tab_item = target.closest('[data-role="tab-item"]')
+    const tab_new = target.closest('[data-role="tab-new"]')
+    const tab_delete = target.closest('[data-role="tab-delete"]')
 
     if (icon_element) {
       e.preventDefault()
@@ -802,16 +813,29 @@ export const use_handlers = (
         }
       }
 
-      if (input_ref.current) {
-        input_ref.current.focus()
+      if (params.input_ref.current) {
+        params.input_ref.current.focus()
       }
     } else if (clear_button) {
       e.preventDefault()
       e.stopPropagation()
       handle_clear()
-      if (input_ref.current) {
-        input_ref.current.focus()
+      if (params.input_ref.current) {
+        params.input_ref.current.focus()
       }
+    } else if (tab_item) {
+      e.preventDefault()
+      e.stopPropagation()
+      const index = parseInt((tab_item as HTMLElement).dataset.index || '0')
+      if (index == props.active_tab_index) {
+        props.on_tab_delete?.(index)
+      } else {
+        props.on_tab_change?.(index)
+      }
+    } else if (tab_new) {
+      e.preventDefault()
+      e.stopPropagation()
+      props.on_new_tab?.()
     }
   }
 
@@ -1152,7 +1176,7 @@ export const use_handlers = (
   const handle_backspace_key = (e: React.KeyboardEvent<HTMLDivElement>) => {
     const selection = window.getSelection()
     if (
-      !input_ref.current ||
+      !params.input_ref.current ||
       !selection ||
       selection.rangeCount == 0 ||
       !selection.isCollapsed
@@ -1176,7 +1200,7 @@ export const use_handlers = (
       startOffset == startContainer.textContent?.length
     ) {
       let parent = startContainer.parentElement
-      while (parent && parent !== input_ref.current) {
+      while (parent && parent !== params.input_ref.current) {
         if (
           parent.dataset.type == 'file-symbol' ||
           parent.dataset.type == 'changes-symbol' ||
@@ -1220,7 +1244,9 @@ export const use_handlers = (
         el.dataset.type == 'document-symbol' ||
         el.dataset.type == 'website-symbol'
       ) {
-        const display_pos = get_caret_position_from_div(input_ref.current)
+        const display_pos = get_caret_position_from_div(
+          params.input_ref.current
+        )
         if (handle_symbol_deletion_by_backspace(el, display_pos)) {
           e.preventDefault()
         }
@@ -1238,7 +1264,6 @@ export const use_handlers = (
     e.preventDefault()
 
     const update_and_set_caret = (value: string) => {
-      // Reset the modification flag when navigating history
       has_modified_current_entry_ref.current = false
       update_value(value, value.length)
     }
@@ -1305,7 +1330,7 @@ export const use_handlers = (
         }
         if (i < 0) {
           set_caret_position_after_change(
-            input_ref,
+            params.input_ref,
             0,
             value,
             context_file_paths
@@ -1316,7 +1341,6 @@ export const use_handlers = (
         const symbol_ranges = get_symbol_ranges(value, context_file_paths)
         let new_raw_pos: number | undefined
 
-        // Check if cursor is within a symbol; if so, jump to its start.
         for (const range of symbol_ranges) {
           if (i >= range.start && i < range.end) {
             new_raw_pos = range.start
@@ -1325,7 +1349,6 @@ export const use_handlers = (
         }
 
         if (new_raw_pos === undefined) {
-          // Default word-jump behavior.
           const is_word_char = /\w/.test(value[i])
           while (i >= 0) {
             const current_is_word = /\w/.test(value[i])
@@ -1338,7 +1361,7 @@ export const use_handlers = (
         }
 
         set_caret_position_after_change(
-          input_ref,
+          params.input_ref,
           new_raw_pos,
           value,
           context_file_paths
@@ -1361,7 +1384,6 @@ export const use_handlers = (
         const symbol_ranges = get_symbol_ranges(value, context_file_paths)
         let new_raw_pos: number | undefined
 
-        // Check if cursor is within a symbol; if so, jump to its end.
         for (const range of symbol_ranges) {
           if (i >= range.start && i < range.end) {
             new_raw_pos = range.end
@@ -1370,7 +1392,6 @@ export const use_handlers = (
         }
 
         if (new_raw_pos === undefined) {
-          // Default word-jump behavior.
           const is_word_char = /\w/.test(value[i])
           while (i < value.length) {
             const current_is_word = /\w/.test(value[i])
@@ -1383,7 +1404,7 @@ export const use_handlers = (
         }
 
         set_caret_position_after_change(
-          input_ref,
+          params.input_ref,
           new_raw_pos,
           value,
           context_file_paths
@@ -1399,11 +1420,14 @@ export const use_handlers = (
         set_undo_stack((prev) => prev.slice(0, -1))
         set_redo_stack((prev) => [
           ...prev,
-          { value: props.value, raw_caret_pos: raw_caret_pos_ref.current }
+          {
+            value: props.value,
+            raw_caret_pos: raw_caret_pos_ref.current
+          }
         ])
         props.on_change(prev_entry.value)
         set_caret_position_after_change(
-          input_ref,
+          params.input_ref,
           prev_entry.raw_caret_pos,
           prev_entry.value,
           props.context_file_paths ?? []
@@ -1423,11 +1447,14 @@ export const use_handlers = (
         set_redo_stack((prev) => prev.slice(0, -1))
         set_undo_stack((prev) => [
           ...prev,
-          { value: props.value, raw_caret_pos: raw_caret_pos_ref.current }
+          {
+            value: props.value,
+            raw_caret_pos: raw_caret_pos_ref.current
+          }
         ])
         props.on_change(next_entry.value)
         set_caret_position_after_change(
-          input_ref,
+          params.input_ref,
           next_entry.raw_caret_pos,
           next_entry.value,
           props.context_file_paths ?? []
@@ -1438,14 +1465,19 @@ export const use_handlers = (
       return
     }
     if (key == 'Tab' && !shiftKey) {
-      if (ghost_text) {
+      if (params.ghost_text) {
         e.preventDefault()
-        on_accept_ghost_text()
+        params.on_accept_ghost_text()
       }
       return
     }
 
     if (key == 'Backspace') {
+      if (!props.value) {
+        e.preventDefault()
+        return
+      }
+
       if (e.ctrlKey || e.metaKey) {
         e.preventDefault()
         const raw_pos = raw_caret_pos_ref.current
@@ -1458,7 +1490,6 @@ export const use_handlers = (
           i--
         }
 
-        // Then, delete the word or symbol group before that.
         if (i >= 0) {
           const is_word_char = /\w/.test(value[i])
           while (i >= 0) {
@@ -1489,7 +1520,8 @@ export const use_handlers = (
         } else {
           e.preventDefault()
           const selection = window.getSelection()
-          if (!selection || !selection.rangeCount || !input_ref.current) return
+          if (!selection || !selection.rangeCount || !params.input_ref.current)
+            return
 
           const range = selection.getRangeAt(0)
           range.deleteContents()
@@ -1499,7 +1531,9 @@ export const use_handlers = (
           range.setEndAfter(text_node)
           selection.removeAllRanges()
           selection.addRange(range)
-          input_ref.current.dispatchEvent(new Event('input', { bubbles: true }))
+          params.input_ref.current.dispatchEvent(
+            new Event('input', { bubbles: true })
+          )
         }
       } else if (!shiftKey) {
         e.preventDefault()
@@ -1517,7 +1551,7 @@ export const use_handlers = (
       if (props.is_recording) {
         props.on_recording_finished()
       } else {
-        input_ref.current?.blur()
+        params.input_ref.current?.blur()
       }
       return
     }
@@ -1527,7 +1561,6 @@ export const use_handlers = (
     handle_input_change,
     handle_submit,
     handle_key_down,
-    is_history_enabled,
     handle_copy,
     handle_cut,
     handle_paste,

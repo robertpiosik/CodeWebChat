@@ -48,24 +48,9 @@ export const handle_send_to_browser = async (params: {
     return
   }
 
-  let current_instructions = ''
   const is_in_code_completions_mode =
     params.panel_provider.web_prompt_type == 'code-at-cursor'
-
-  if (is_in_code_completions_mode) {
-    current_instructions = params.panel_provider.code_at_cursor_instructions
-  } else {
-    if (params.panel_provider.web_prompt_type == 'ask-about-context') {
-      current_instructions =
-        params.panel_provider.ask_about_context_instructions
-    } else if (params.panel_provider.web_prompt_type == 'edit-context') {
-      current_instructions = params.panel_provider.edit_context_instructions
-    } else if (params.panel_provider.web_prompt_type == 'no-context') {
-      current_instructions = params.panel_provider.no_context_instructions
-    } else if (params.panel_provider.web_prompt_type == 'prune-context') {
-      current_instructions = params.panel_provider.prune_context_instructions
-    }
-  }
+  const current_instructions = params.panel_provider.current_instruction
 
   const active_editor = vscode.window.activeTextEditor
 
@@ -114,11 +99,7 @@ export const handle_send_to_browser = async (params: {
     const text_after_cursor = document.getText(
       new vscode.Range(position, document.positionAt(document.getText().length))
     )
-
-    const completion_instructions =
-      params.panel_provider.code_at_cursor_instructions
-
-    let processed_completion_instructions = completion_instructions
+    let processed_completion_instructions = current_instructions
     let skill_definitions = ''
 
     if (processed_completion_instructions.includes('#Selection')) {
@@ -574,15 +555,30 @@ async function resolve_presets(params: {
 
   let current_instructions = ''
   if (params.panel_provider.web_prompt_type == 'code-at-cursor') {
-    current_instructions = params.panel_provider.code_at_cursor_instructions
+    current_instructions =
+      params.panel_provider.code_at_cursor_instructions.instructions[
+        params.panel_provider.code_at_cursor_instructions.active_index
+      ] || ''
   } else if (params.panel_provider.web_prompt_type == 'ask-about-context') {
-    current_instructions = params.panel_provider.ask_about_context_instructions
+    current_instructions =
+      params.panel_provider.ask_about_context_instructions.instructions[
+        params.panel_provider.ask_about_context_instructions.active_index
+      ] || ''
   } else if (params.panel_provider.web_prompt_type == 'edit-context') {
-    current_instructions = params.panel_provider.edit_context_instructions
+    current_instructions =
+      params.panel_provider.edit_context_instructions.instructions[
+        params.panel_provider.edit_context_instructions.active_index
+      ] || ''
   } else if (params.panel_provider.web_prompt_type == 'no-context') {
-    current_instructions = params.panel_provider.no_context_instructions
+    current_instructions =
+      params.panel_provider.no_context_instructions.instructions[
+        params.panel_provider.no_context_instructions.active_index
+      ] || ''
   } else if (params.panel_provider.web_prompt_type == 'prune-context') {
-    current_instructions = params.panel_provider.prune_context_instructions
+    current_instructions =
+      params.panel_provider.prune_context_instructions.instructions[
+        params.panel_provider.prune_context_instructions.active_index
+      ] || ''
   }
 
   const get_is_preset_disabled = (preset: ConfigPresetFormat) =>

@@ -179,23 +179,7 @@ export const handle_hash_sign_quick_pick = async (
     return
   }
 
-  let current_text = ''
-
-  const prompt_type =
-    panel_provider.mode == MODE.WEB
-      ? panel_provider.web_prompt_type
-      : panel_provider.api_prompt_type
-  if (prompt_type == 'ask-about-context') {
-    current_text = panel_provider.ask_about_context_instructions
-  } else if (prompt_type == 'edit-context') {
-    current_text = panel_provider.edit_context_instructions
-  } else if (prompt_type == 'no-context') {
-    current_text = panel_provider.no_context_instructions
-  } else if (prompt_type == 'code-at-cursor') {
-    current_text = panel_provider.code_at_cursor_instructions
-  } else if (prompt_type == 'prune-context') {
-    current_text = panel_provider.prune_context_instructions
-  }
+  const current_text = panel_provider.current_instruction
 
   const is_after_hash_sign = current_text
     .slice(0, panel_provider.caret_position)
