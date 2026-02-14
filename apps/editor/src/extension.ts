@@ -4,12 +4,9 @@ import { PanelProvider } from './views/panel/backend/panel-provider'
 import { WebSocketManager } from './services/websocket-manager'
 import { ApiManager } from './services/api-manager'
 import {
-  migrate_preset_is_default_to_is_selected,
-  migrate_api_providers_to_model_providers,
-  migrate_token_count_cache,
-  migrate_saved_contexts_to_global_storage,
   migrate_token_cache_cleanup,
-  migrate_configurations_code_completions_to_code_at_cursor
+  migrate_configurations_code_completions_to_code_at_cursor,
+  migrate_instructions_state_cleanup
 } from './migrations'
 import { SharedFileState } from './context/shared-file-state'
 import {
@@ -55,18 +52,12 @@ export async function activate(context: vscode.ExtensionContext) {
   websocket_server_instance = new WebSocketManager(context)
 
   const migrations = async () => {
-    // 1 September 2025
-    await migrate_preset_is_default_to_is_selected(context)
-    // 16 September 2025
-    await migrate_api_providers_to_model_providers(context)
-    // 4 January 2026
-    await migrate_token_count_cache(context)
-    // 5 January 2026
-    await migrate_saved_contexts_to_global_storage(context)
     // 12 January 2026
     await migrate_token_cache_cleanup(context)
     // 30 January 2026
     await migrate_configurations_code_completions_to_code_at_cursor(context)
+    // 14 February 2026
+    await migrate_instructions_state_cleanup(context)
   }
 
   await migrations()

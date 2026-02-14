@@ -641,11 +641,12 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   }
 
   private _load_instructions(key: string): InstructionsState {
-    const stored = this.context.workspaceState.get<any>(key)
-    if (typeof stored == 'string') {
-      return { instructions: [stored], active_index: 0 }
-    }
-    return stored ?? { instructions: [''], active_index: 0 }
+    return (
+      this.context.workspaceState.get<any>(key) || {
+        instructions: [''],
+        active_index: 0
+      }
+    )
   }
 
   public send_message(message: BackendMessage) {

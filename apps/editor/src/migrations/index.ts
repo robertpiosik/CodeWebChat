@@ -1,6 +1,4 @@
-export * from './migrate-preset-is-default-to-is-selected'
-export * from './migrate-api-providers-to-model-providers'
-export * from './migrate-token-count-cache'
-export * from './migrate-saved-contexts-to-global-storage'
 export * from './migrate-token-cache-cleanup'
 export * from './migrate-configurations-code-completions-to-code-at-cursor'
+
+export * from './migrate-instructions-state-cleanup'
