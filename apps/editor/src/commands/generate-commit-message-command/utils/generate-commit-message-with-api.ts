@@ -3,7 +3,6 @@ import axios from 'axios'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { dictionary } from '@shared/constants/dictionary'
 import { make_api_request } from '@/utils/make-api-request'
-import { process_single_trailing_dot } from '@/utils/process-single-trailing-dot/process-single-trailing-dot'
 import { Logger } from '@shared/utils/logger'
 import { strip_wrapping_quotes } from './strip-wrapping-quotes'
 import { CommitMessageConfig } from './get-commit-message-config'
@@ -59,9 +58,7 @@ export const generate_commit_message_with_api = async (params: {
           )
           return null
         } else {
-          let commit_message = process_single_trailing_dot(
-            response_result.response
-          )
+          let commit_message = response_result.response
           commit_message = strip_wrapping_quotes(commit_message)
           // Sanitize to prevent shell syntax errors
           commit_message = commit_message.replace(/[<>`$()]/g, '')
