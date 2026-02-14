@@ -97,9 +97,7 @@ Meaningful summaries of changes in your style.
 
 ## 🏢 Enterprise security
 
-**Code Web Chat operates exclusively on your machine.** When using the browser extension for prompt autofill, data is moved via editor-browser communication channel run on local Websockets. For API tools, model providers are called directly.
-
-**The tool does not collect telemetry.**
+**Code Web Chat operates exclusively on your machine.** When using the browser extension for prompt autofill, data is moved via editor-browser communication channel run on local Websockets. For API tools, model providers are called directly. The tool **does not collect telemetry.**
 
 ## Commands
 
