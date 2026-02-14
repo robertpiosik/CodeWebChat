@@ -36,7 +36,11 @@ Code Web Chat is an open-source and privacy-first **AI coding toolkit for VS Cod
 
 ## 🌱 Sustainable AI coding
 
-With its smart context files ordering, CWC is designed from the ground-up for [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching), across tasks! Make the most of your usage limits. Reduce latency by up to 80% and input token costs by up to 90%.
+With its smart context files ordering, CWC is designed from the ground-up for [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching), across tasks!
+
+- When using chatbots, make the most of your usage allowances.
+- When calling APIs, reduce input token costs by up to 90%.
+- When using self-hosted models, reduce latency by up to 80%.
 
 ## Enabling autofill
 
