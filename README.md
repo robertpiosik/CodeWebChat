@@ -13,6 +13,8 @@
 
 Code Web Chat is an open-source and privacy-first **AI coding toolkit for VS Code**. It helps construct prompts for a chatbot's smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), also [gems](https://gemini.google/pl/overview/gems) or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)) and APIs. **It's free!**
 
+<br/>
+
 <p align="center"><i>Select context, type a prompt...</i></p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-1.png"></p>
