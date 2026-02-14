@@ -266,16 +266,7 @@ export const get_highlighted_text = (params: {
     })
     .join('')
 
-  const show_clear_button =
-    !!params.text || (params.tabs_config && params.tabs_config.count > 1)
-  if (show_clear_button) {
-    result =
-      `<span class="${cn(
-        styles['clear-button'],
-        'codicon',
-        'codicon-close'
-      )}" contenteditable="false" data-role="clear-button"></span>` + result
-  }
+  let header_html = ''
 
   if (params.tabs_config) {
     const { count, active_index } = params.tabs_config
@@ -287,7 +278,9 @@ export const get_highlighted_text = (params: {
 
         tabs_items += `<span class="${cn(styles['tabs__tab'], {
           [styles['tabs__tab--active']]: is_active
-        })}" data-role="tab-item" data-index="${i}"><span class="${styles['tabs__tab-icon']}"></span></span>`
+        })}" data-role="tab-item" data-index="${i}"><span class="${
+          styles['tabs__tab-icon']
+        }"></span></span>`
       }
     }
 
@@ -296,8 +289,21 @@ export const get_highlighted_text = (params: {
       styles['tabs__tab--new']
     )}" data-role="tab-new" title="New Tab"></span>`
 
-    const tabs_html = `<span class="${styles['tabs']}" contenteditable="false" data-role="tabs-container">${tabs_items}</span>`
-    result = tabs_html + result
+    header_html += `<span class="${styles['tabs']}" data-role="tabs-container">${tabs_items}</span>`
+  }
+
+  const show_clear_button =
+    !!params.text || (params.tabs_config && params.tabs_config.count > 1)
+  if (show_clear_button) {
+    header_html += `<span class="${cn(
+      styles['clear-button'],
+      'codicon',
+      'codicon-close'
+    )}" data-role="clear-button"></span>`
+  }
+
+  if (header_html) {
+    result = `<span contenteditable="false">${header_html}</span>` + result
   }
 
   if (params.text.endsWith('\n') || params.text == '') {
