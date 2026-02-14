@@ -36,9 +36,7 @@ Code Web Chat is an open-source and privacy-first **AI coding toolkit for VS Cod
 
 ## 🌱 Sustainable AI coding
 
-Code Web Chat is **designed from the ground-up for [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) across tasks** through intelligent file ordering.
-
-Make the most of your usage limits. When calling APIs—reduce latency by up to 80% and input token costs by up to 90%.
+Code Web Chat is **designed from the ground-up for [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) across tasks** through intelligent file in context ordering. Make the most of your usage limits. When calling APIs—reduce latency by up to 80% and input token costs by up to 90%.
 
 ## Enabling autofill
 
