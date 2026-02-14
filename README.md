@@ -30,6 +30,12 @@ Code Web Chat is an open-source and privacy-first **AI coding toolkit for VS Cod
 > [!TIP]
 > Don't want to make edits in chatbots? CWC supports remote and local (e.g. Ollama) model providers.
 
+## 🌱 Sustainability
+
+Code Web Chat is **designed from the ground-up for [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching)** by placing all recently modified and selected files at the end of constructed prompts.
+
+Offload chatbots. Save up to 90% on input tokens, across tasks! Make local inference fast.
+
 ## Enabling autofill
 
 Got tired with copy and paste? Enable prompt autofill with a browser extension ([source code](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser)).
