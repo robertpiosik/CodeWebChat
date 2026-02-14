@@ -51,8 +51,6 @@ export const get_highlighted_text = (params: {
   tabs_config?: {
     count: number
     active_index: number
-    can_delete: boolean
-    suppressed_index?: number
   }
 }): string => {
   const saved_context_regex_part =
@@ -268,7 +266,9 @@ export const get_highlighted_text = (params: {
     })
     .join('')
 
-  if (params.text) {
+  const show_clear_button =
+    !!params.text || (params.tabs_config && params.tabs_config.count > 1)
+  if (show_clear_button) {
     result =
       `<span class="${cn(
         styles['clear-button'],
@@ -278,26 +278,16 @@ export const get_highlighted_text = (params: {
   }
 
   if (params.tabs_config) {
-    const { count, active_index, can_delete, suppressed_index } =
-      params.tabs_config
+    const { count, active_index } = params.tabs_config
     let tabs_items = ''
 
     if (count > 1) {
       for (let i = 0; i < count; i++) {
         const is_active = i == active_index
-        const is_suppressed = i == suppressed_index
-        const delete_btn = can_delete
-          ? `<span class="${cn(
-              styles['tabs__tab-delete']
-            )}" data-role="tab-delete" data-index="${i}"></span>`
-          : ''
 
         tabs_items += `<span class="${cn(styles['tabs__tab'], {
-          [styles['tabs__tab--active']]: is_active,
-          [styles['tabs__tab--suppress-hover']]: is_suppressed
-        })}" data-role="tab-item" data-index="${i}"><span class="${
-          styles['tabs__tab-icon']
-        }"></span>${delete_btn}</span>`
+          [styles['tabs__tab--active']]: is_active
+        })}" data-role="tab-item" data-index="${i}"><span class="${styles['tabs__tab-icon']}"></span></span>`
       }
     }
 

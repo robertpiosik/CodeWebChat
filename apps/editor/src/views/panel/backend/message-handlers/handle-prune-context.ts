@@ -287,7 +287,7 @@ export const handle_prune_context = async (
     panel_provider.open_editors_provider
   )
 
-  let instructions = panel_provider.prune_context_instructions
+  let instructions = panel_provider.current_prune_context_instruction
 
   if (!instructions) {
     vscode.window.showWarningMessage(

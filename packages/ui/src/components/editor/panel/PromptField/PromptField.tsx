@@ -10,7 +10,6 @@ import { use_ghost_text } from './hooks/use-ghost-text'
 import { use_drag_drop } from './hooks/use-drag-drop'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 import { use_edit_format_compacting } from './hooks/use-edit-format-compacting'
-import { use_suppressed_hover_tab } from './hooks/use-suppressed-hover-tab'
 import { DropdownMenu } from '../../common/DropdownMenu'
 import { use_is_mac } from '@shared/hooks'
 import {
@@ -94,8 +93,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [hovered_edit_format, set_hovered_edit_format] =
     useState<EditFormat | null>(null)
   const [is_recording_hovered, set_is_recording_hovered] = useState(false)
-  const { suppressed_hover_tab_index, handle_mouse_over } =
-    use_suppressed_hover_tab(props.active_tab_index)
 
   const [prune_instructions, set_prune_instructions] = useState(
     props.prune_context_instructions_prefix
@@ -208,9 +205,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
       is_chatbots_mode: props.is_chatbots_mode,
       tabs_config: {
         count: props.tabs_count,
-        active_index: props.active_tab_index,
-        can_delete: true,
-        suppressed_index: suppressed_hover_tab_index ?? undefined
+        active_index: props.active_tab_index
       }
     })
   }, [
@@ -220,8 +215,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     props.context_file_paths,
     props.is_chatbots_mode,
     props.tabs_count,
-    props.active_tab_index,
-    suppressed_hover_tab_index
+    props.active_tab_index
   ])
 
   useEffect(() => {
@@ -350,7 +344,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             (!!props.current_selection || !props.currently_open_file_path),
           [styles['container__inner--selecting']]: is_text_selecting
         })}
-        onMouseOver={handle_mouse_over}
         onKeyDown={handle_container_key_down}
         onClick={() => input_ref.current?.focus()}
       >

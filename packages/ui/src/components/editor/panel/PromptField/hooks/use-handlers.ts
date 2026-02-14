@@ -729,7 +729,6 @@ export const use_handlers = (
     const clear_button = target.closest('[data-role="clear-button"]')
     const tab_item = target.closest('[data-role="tab-item"]')
     const tab_new = target.closest('[data-role="tab-new"]')
-    const tab_delete = target.closest('[data-role="tab-delete"]')
 
     if (icon_element) {
       e.preventDefault()
@@ -819,7 +818,11 @@ export const use_handlers = (
     } else if (clear_button) {
       e.preventDefault()
       e.stopPropagation()
-      handle_clear()
+      if (props.value) {
+        handle_clear()
+      } else if (props.tabs_count > 1) {
+        props.on_tab_delete(props.active_tab_index)
+      }
       if (params.input_ref.current) {
         params.input_ref.current.focus()
       }
@@ -827,9 +830,7 @@ export const use_handlers = (
       e.preventDefault()
       e.stopPropagation()
       const index = parseInt((tab_item as HTMLElement).dataset.index || '0')
-      if (index == props.active_tab_index) {
-        props.on_tab_delete?.(index)
-      } else {
+      if (index !== props.active_tab_index) {
         props.on_tab_change?.(index)
       }
     } else if (tab_new) {

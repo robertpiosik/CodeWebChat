@@ -308,7 +308,7 @@ export const handle_edit_context = async (
     panel_provider.open_editors_provider
   )
 
-  let instructions = panel_provider.edit_context_instructions
+  let instructions = panel_provider.current_edit_context_instruction
 
   if (!instructions) {
     vscode.window.showWarningMessage(
