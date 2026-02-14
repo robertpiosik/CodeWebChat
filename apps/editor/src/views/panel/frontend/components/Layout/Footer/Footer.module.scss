@@ -1,5 +1,4 @@
 .footer {
-  $self: &;
   --button-size: 24px;
   position: relative;
   z-index: -1; // Makes context menu of a preset appear above
@@ -26,7 +25,7 @@
       var(--transition-timing-function);
 
     &--dimmed {
-      opacity: 0.3;
+      opacity: var(--dimmed-opacity);
 
       &:hover {
         opacity: 1;
@@ -86,7 +85,6 @@
   }
 
   &__action-button {
-    $btn: &;
     display: flex;
     align-items: center;
     flex-shrink: 0;
@@ -106,16 +104,18 @@
 
     &__text {
       display: inline;
-      #{$btn}--compact & {
-        display: none;
-      }
+    }
+
+    &--compact &__text {
+      display: none;
     }
 
     &__icon {
       display: none !important;
-      #{$btn}--compact & {
-        display: inline !important;
-      }
+    }
+
+    &--compact &__icon {
+      display: inline !important;
     }
 
     &--compact {
