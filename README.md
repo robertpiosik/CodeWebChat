@@ -13,14 +13,11 @@
 
 Code Web Chat is an open-source and privacy-first **AI coding toolkit for VS Code**. It helps construct prompts for a chatbot's smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), also [gems](https://gemini.google/pl/overview/gems) or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)). **It's free!**
 
-<p align="center"><i>Select context, type a prompt, copy and open your favorite chatbot</i><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-1.png"></p>
+<p align="center"><i>Select context, type a prompt...</i><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-1.png"></p>
 
-<p align="center"><i>Iterate on changes and copy the response when ready</i><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-2.png"></p>
+<p align="center"><i>Interate on changes...</i><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-2.png"></p>
 
-<p align="center"><i>Parse the clipboard text and review suggested edits</i><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-3.png"></p>
-
-> [!NOTE]
-> Screenshots show simplified flow with the [browser extension](#enabling-autofill) installed.
+<p align="center"><i>Apply from clipboard...</i><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-3.png"></p>
 
 > [!TIP]
 > Don't want to make edits in chatbots? CWC supports remote and local (e.g. Ollama) model providers.
