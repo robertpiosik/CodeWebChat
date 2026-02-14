@@ -21,7 +21,7 @@ export const generate_commit_message_command = (
     const working_tree_changes = repository.state.workingTreeChanges || []
     const is_single_change = was_empty_stage && working_tree_changes.length == 1
 
-    const diff = await prepare_staged_changes(repository)
+    const diff = await prepare_staged_changes(repository, !!source_control)
 
     if (!diff) return null
 
@@ -55,7 +55,8 @@ export const generate_commit_message_command = (
         await api_providers_manager.get_default_commit_messages_config()
       const has_default_config = !!default_config
 
-      const show_back_button = was_empty_stage && !is_single_change_flow
+      const show_back_button =
+        was_empty_stage && !is_single_change_flow && !source_control
 
       const api_config_data = await get_commit_message_config(
         context,

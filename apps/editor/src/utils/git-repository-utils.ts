@@ -87,7 +87,8 @@ export const get_git_repository = async (
 }
 
 export const prepare_staged_changes = async (
-  repository: GitRepository
+  repository: GitRepository,
+  stage_all_if_none_staged: boolean = false
 ): Promise<string | null> => {
   await repository.status()
   const staged_changes = repository.state.indexChanges || []
@@ -98,7 +99,11 @@ export const prepare_staged_changes = async (
   ) {
     let files_to_stage: string[] = []
 
-    if (repository.state.workingTreeChanges.length == 1) {
+    if (stage_all_if_none_staged) {
+      files_to_stage = repository.state.workingTreeChanges.map(
+        (change: any) => change.uri.fsPath
+      )
+    } else if (repository.state.workingTreeChanges.length == 1) {
       files_to_stage = [repository.state.workingTreeChanges[0].uri.fsPath]
     } else {
       const items = repository.state.workingTreeChanges.map((change: any) => {
