@@ -603,6 +603,11 @@
 
     &--active:hover:not(.tabs__tab--suppress-hover) {
       .tabs__tab-icon {
+        opacity: 0;
+      }
+
+      .tabs__tab-delete {
+        opacity: 1;
         color: var(--vscode-errorForeground);
       }
     }
