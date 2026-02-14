@@ -51,7 +51,7 @@ const get_file_message = (file: FileInPreview): FileMessage | null => {
   } else if (file.diff_application_method == 'search_and_replace') {
     return {
       type: 'warning',
-      text: 'Used aggressive fallback method'
+      text: 'Applied with fallback method'
     }
   } else {
     return null

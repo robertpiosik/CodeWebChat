@@ -282,7 +282,7 @@ export const ResponsePreview: FC<Props> = (props) => {
               files_in_preview.length > 1
                 ? `${aggressive_fallback_count} of ${files_in_preview.length} files`
                 : 'The file'
-            } used aggressive fallback method`}
+            } applied with fallback method`}
           >
             <div
               className={cn(
@@ -292,8 +292,8 @@ export const ResponsePreview: FC<Props> = (props) => {
             >
               <span className="codicon codicon-warning" />
               {files_in_preview.length > 1
-                ? `${aggressive_fallback_count} of ${files_in_preview.length} files used aggressive fallback method`
-                : 'The file used aggressive fallback method'}
+                ? `${aggressive_fallback_count} of ${files_in_preview.length} files applied with fallback method`
+                : 'The file applied with fallback method'}
             </div>
           </div>
         )}
