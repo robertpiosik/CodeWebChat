@@ -36,7 +36,7 @@ Code Web Chat is an open-source and privacy-first **AI coding toolkit for VS Cod
 
 ## 🌱 Sustainable AI coding
 
-With its smart context files ordering, CWC is **designed from the ground-up for [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching)**, across tasks.
+With smart ordering of context files, CWC is **designed from the ground-up for [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching)**, across tasks.
 
 **Why it matters?**
 
@@ -79,26 +79,26 @@ Got tired with copy and paste? Enable prompt autofill with a browser extension! 
 > [!NOTE]
 > Use [forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) of port _55155_ when using remote machine via SSH.
 
-## Built-in API tools
+## 🛠️ Built-in API tools
 
 Bring your own key (BYOK) for a model provider of choice to use many of the built-in API tools.
 
-**🛠️ Edit Context** \
+**Edit Context** \
 Pair-programming using natural language instructions.
 
-**🛠️ Intelligent Update** \
+**Intelligent Update** \
 Integrate changes from malformed markdown code blocks.
 
-**🛠️ Prune Context** \
+**Prune Context** \
 Make the context task-focused.
 
-**🛠️ Code at Cursor** \
+**Code at Cursor** \
 Accurate inline code from reasoning models.
 
-**🛠️ Voice Input** \
+**Voice Input** \
 Transcribe speech to text in the prompt field.
 
-**🛠️ Commit Messages** \
+**Commit Messages** \
 Meaningful summaries of changes in your style.
 
 ## 🏢 Enterprise security
