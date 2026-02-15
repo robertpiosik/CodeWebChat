@@ -44,6 +44,7 @@ Got tired with copy and paste? Enable prompt autofill with a browser extension! 
 **List of supported chatbots:**
 
 - AI Studio
+- Arena
 - ChatGPT
 - Claude
 - Copilot
@@ -54,7 +55,6 @@ Got tired with copy and paste? Enable prompt autofill with a browser extension! 
 - Grok
 - HuggingChat
 - Kimi
-- LMArena
 - Mistral
 - Open WebUI
 - OpenRouter
