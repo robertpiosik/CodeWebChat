@@ -34,16 +34,6 @@ Code Web Chat is an open-source and privacy-first **AI coding toolkit for VS Cod
 > [!TIP]
 > Don't want to make edits in chatbots? CWC supports remote and local (e.g. Ollama) model providers.
 
-## 🌱 Sustainable AI coding
-
-With smart ordering of context files, CWC is **designed from the ground-up for [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching)**, across tasks.
-
-**Why it matters?**
-
-- When using chatbots, make the most of your usage allowances
-- When calling APIs, reduce input token costs by up to 90%
-- When using self-hosted models, reduce latency by up to 80%
-
 ## Enabling autofill
 
 Got tired with copy and paste? Enable prompt autofill with a browser extension! It's [open-source](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser).
@@ -79,31 +69,11 @@ Got tired with copy and paste? Enable prompt autofill with a browser extension! 
 > [!NOTE]
 > Use [forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) of port _55155_ when using remote machine via SSH.
 
-## 🛠️ Built-in API tools
+## Enterprise security
 
-Bring your own key (BYOK) for a model provider of choice to use many of the built-in API tools.
+**Code Web Chat operates exclusively on your machine.** When using the browser extension for prompt autofill, data is moved via editor-browser communication channel run on local Websockets. For API tools, model providers are called directly.
 
-**Edit Context** \
-Pair-programming using natural language instructions.
-
-**Intelligent Update** \
-Integrate changes from malformed markdown code blocks.
-
-**Prune Context** \
-Make the context task-focused.
-
-**Code at Cursor** \
-Accurate inline code from reasoning models.
-
-**Voice Input** \
-Transcribe speech to text in the prompt field.
-
-**Commit Messages** \
-Meaningful summaries of changes in your style.
-
-## 🏢 Enterprise security
-
-**Code Web Chat operates exclusively on your machine.** When using the browser extension for prompt autofill, data is moved via editor-browser communication channel run on local Websockets. For API tools, model providers are called directly. The tool **does not collect telemetry.**
+The tool **does not collect telemetry.**
 
 [Privacy Policy](https://github.com/robertpiosik/CodeWebChat/blob/dev/PRIVACY.md)
 

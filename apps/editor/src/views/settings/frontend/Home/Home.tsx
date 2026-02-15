@@ -368,7 +368,7 @@ export const Home: React.FC<Props> = (props) => {
         <Section
           ref={(el) => (section_refs.current['model-providers'] = el)}
           title="Model Providers"
-          subtitle="Manage your API keys for use with API tools."
+          subtitle="Manage API keys."
           on_stuck_change={model_providers_on_stuck_change}
           actions={
             <Button on_click={() => props.on_add_provider()}>
@@ -474,7 +474,7 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['intelligent-update'] = el)}
           group="API Tool"
           title="Intelligent Update"
-          subtitle="Integrate changes from malformed markdown code blocks."
+          subtitle="Integrate changes from malformed responses."
           on_stuck_change={intelligent_update_on_stuck_change}
           actions={
             <Button
