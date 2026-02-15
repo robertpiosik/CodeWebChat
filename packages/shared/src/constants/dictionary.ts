@@ -14,7 +14,7 @@ export const dictionary = {
     ) =>
       `All checked files in "${folder_name}" are unchanged since commit ${commit_hash}.`,
     NO_INTELLIGENT_UPDATE_CONFIGURATIONS_FOUND:
-      'No "Intelligent Update" configurations found. Please add one in the settings.',
+      'No "Intelligent Update" configurations found. Please add one in settings.',
     NO_SAFE_FILE_PATHS_REMAINING:
       'No safe file paths remaining. Operation cancelled.',
     NO_ACTIVE_EDITOR_FOUND: 'No active editor found.',
@@ -39,9 +39,9 @@ export const dictionary = {
     NO_MATCHING_FILES_FOUND_FOR_CLIPBOARD_PATHS:
       'No matching files found in workspace for the paths in clipboard.',
     NO_CODE_AT_CURSOR_CONFIGURATIONS_FOUND:
-      'No "Code Completions" configurations found. Please add one in the settings.',
+      'No "Code Completions" configurations found. Please add one in settings.',
     NO_PRUNE_CONTEXT_CONFIGURATIONS_FOUND:
-      'No "Prune Context" configurations found. Please add one in the settings.',
+      'No "Prune Context" configurations found. Please add one in settings.',
     NO_RECENT_CHANGES_TO_UNDO:
       'No recent changes found to undo or changes were already undone.',
     CONTEXT_COPIED_TO_CLIPBOARD: 'Context copied to clipboard.',
@@ -49,7 +49,7 @@ export const dictionary = {
       'Context from open editors copied to clipboard.',
     NO_SAVED_CONTEXTS_FOUND: 'No saved contexts found.',
     NO_COMMIT_MESSAGES_CONFIGURATIONS_FOUND:
-      'No "Commit Messages" configurations found. Please add one in the settings.',
+      'No "Commit Messages" configurations found. Please add one in settings.',
     NO_FILES_SELECTED_FOR_COMMIT_MESSAGE_GENERATION:
       'No files selected for commit message generation.',
     COMMIT_MESSAGE_GENERATION_CANCELLED: 'Commit message generation cancelled.',
@@ -75,7 +75,7 @@ export const dictionary = {
     NO_DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION:
       'No default "Intelligent Update" configuration found. Please set one as default in the settings.',
     NO_EDIT_CONTEXT_CONFIGURATIONS_FOUND:
-      'No "Edit Context" configurations found. Please add one in the settings.',
+      'No "Edit Context" configurations found. Please add one in settings.',
     DELETED_CONTEXT_FROM_ALL_ROOTS: 'Deleted context.',
     NO_HISTORY_FOR_PROMPT_TYPE:
       'No history to show for the current prompt type.',

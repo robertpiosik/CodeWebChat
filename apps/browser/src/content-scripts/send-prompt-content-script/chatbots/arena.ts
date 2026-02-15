@@ -41,11 +41,11 @@ export const arena: Chatbot = {
         footer,
         get_chat_turn: (f) =>
           f
-            .closest('div[role="group"]')
+            .closest('.bg-surface-primary')
             ?.querySelector('div.prose') as HTMLElement,
         perform_copy: (f) => {
           const copy_button = f.querySelector(
-            'button:nth-child(2)'
+            'button:has([d="M15 9V4.6C15 4.26863 14.7314 4 14.4 4H4.6C4.26863 4 4 4.26863 4 4.6V14.4C4 14.7314 4.26863 15 4.6 15H9"])'
           ) as HTMLElement
           if (!copy_button) {
             report_initialization_error({
@@ -62,10 +62,9 @@ export const arena: Chatbot = {
 
     observe_for_responses({
       chatbot_name: 'Arena',
-      is_generating: () =>
-        !!document.querySelector('canvas[data-sentry-component="Loading"]'),
+      is_generating: () => !!document.querySelector('ol.animate-spin'),
       footer_selector:
-        'div[aria-roledescription="slide"] > div > div > div[role="presentation"]',
+        'ol .bg-surface-primary > div:last-child > div.text-text-primary',
       add_buttons
     })
   }

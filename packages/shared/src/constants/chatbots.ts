@@ -43,12 +43,12 @@ export const CHATBOTS = {
       'gemini-3-pro-preview': {
         label: 'Gemini 3 Pro Preview',
         disabled_options: ['disable-thinking'],
-        supported_reasoning_efforts: ['high', 'low']
+        supported_reasoning_efforts: ['Low', 'High']
       },
       'gemini-3-flash-preview': {
         label: 'Gemini 3 Flash Preview',
         disabled_options: ['disable-thinking'],
-        supported_reasoning_efforts: ['high', 'Medium', 'Low', 'Minimal']
+        supported_reasoning_efforts: ['Minimal', 'Low', 'Medium', 'High']
       },
       'gemini-2.5-pro': {
         label: 'Gemini 2.5 Pro',
@@ -60,7 +60,8 @@ export const CHATBOTS = {
     }
   } as Chatbot,
   Arena: {
-    url: 'https://arena.ai/'
+    url: 'https://arena.ai/',
+    supports_user_provided_model: true
   } as Chatbot,
   ChatGPT: {
     url: 'https://chatgpt.com/',
@@ -175,7 +176,14 @@ export const CHATBOTS = {
     supports_custom_top_p: true,
     supports_system_instructions: true,
     supports_reasoning_effort: true,
-    supported_reasoning_efforts: ['high', 'medium', 'low', 'minimal'],
+    supported_reasoning_efforts: [
+      'None',
+      'Minimal',
+      'Low',
+      'Medium',
+      'High',
+      'XHigh'
+    ],
     default_system_instructions: "You're a helpful coding assistant.",
     supported_options: {
       'disable-reasoning': 'Disable reasoning (for hybrid models)'

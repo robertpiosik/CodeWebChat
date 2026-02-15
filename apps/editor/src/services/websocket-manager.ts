@@ -396,6 +396,12 @@ export class WebSocketManager {
         } else {
           url = 'http://openwebui/'
         }
+      } else if (preset.chatbot == 'Arena') {
+        if (preset.model) {
+          url = `https://arena.ai/?mode=direct&model=${preset.model}`
+        } else {
+          url = chatbot.url
+        }
       } else if (preset.chatbot == 'Gemini' && gemini_user_id) {
         url = `https://gemini.google.com/u/${gemini_user_id}/app`
       } else if (chatbot.supports_url_override && preset.newUrl) {
@@ -488,6 +494,12 @@ export class WebSocketManager {
         url = `http://localhost:${params.preset.port}/`
       } else {
         url = 'http://openwebui/'
+      }
+    } else if (params.preset.chatbot == 'Arena') {
+      if (params.preset.model) {
+        url = `https://arena.ai/?mode=direct&model=${params.preset.model}`
+      } else {
+        url = chatbot.url
       }
     } else if (
       params.preset.chatbot == 'Gemini' &&
