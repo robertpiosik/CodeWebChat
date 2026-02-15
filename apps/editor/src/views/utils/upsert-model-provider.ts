@@ -406,13 +406,23 @@ export const upsert_model_provider = async (params: {
       quick_pick.placeholder =
         'Choose a predefined provider or add a custom endpoint'
 
+      const close_button: vscode.QuickInputButton = {
+        iconPath: new vscode.ThemeIcon('close'),
+        tooltip: 'Close'
+      }
+
       if (show_back_button) {
-        quick_pick.buttons = [vscode.QuickInputButtons.Back]
+        quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
+      } else {
+        quick_pick.buttons = [close_button]
       }
 
       return new Promise((resolve) => {
         quick_pick.onDidTriggerButton((button) => {
-          if (button === vscode.QuickInputButtons.Back) {
+          if (
+            button === vscode.QuickInputButtons.Back ||
+            button === close_button
+          ) {
             quick_pick.hide()
           }
         })
