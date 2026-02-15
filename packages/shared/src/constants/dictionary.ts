@@ -76,8 +76,6 @@ export const dictionary = {
       'No default "Intelligent Update" configuration found. Please set one as default in the settings.',
     NO_EDIT_CONTEXT_CONFIGURATIONS_FOUND:
       'No "Edit Context" configurations found. Please add one in the settings.',
-    PRESET_PREVIEW_SENT_TO_BROWSER:
-      'Preset preview sent to the connected browser.',
     DELETED_CONTEXT_FROM_ALL_ROOTS: 'Deleted context.',
     NO_HISTORY_FOR_PROMPT_TYPE:
       'No history to show for the current prompt type.',

@@ -3,7 +3,7 @@
     <picture>
       <source srcset="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/readme-heading-dark.svg" media="(prefers-color-scheme: dark)">
       <source srcset="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/readme-heading-light.svg" media="(prefers-color-scheme: light)">
-      <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/logo-light.png" alt="Logo" width="680">
+      <img alt="Logo" width="680" src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/readme-heading-light.svg">
     </picture>
   </a>
 </p>
@@ -36,15 +36,17 @@ Code Web Chat is an open-source and privacy-first **AI coding toolkit for VS Cod
 
 ## 🌱 Sustainable AI coding
 
-With its smart context files ordering, CWC is designed from the ground-up for [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching), across tasks!
+With its smart context files ordering, CWC is **designed from the ground-up for [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching)**, across tasks.
 
-- When using chatbots, make the most of your usage allowances.
-- When calling APIs, reduce input token costs by up to 90%.
-- When using self-hosted models, reduce latency by up to 80%.
+**Why it matters?**
+
+- When using chatbots, make the most of your usage allowances
+- When calling APIs, reduce input token costs by up to 90%
+- When using self-hosted models, reduce latency by up to 80%
 
 ## Enabling autofill
 
-Got tired with copy and paste? Enable prompt autofill with a browser extension ([source code](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser)).
+Got tired with copy and paste? Enable prompt autofill with a browser extension! It's [open-source](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser).
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/autofill-for-code-web-chat/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/autofill-for-code-web-chat/)

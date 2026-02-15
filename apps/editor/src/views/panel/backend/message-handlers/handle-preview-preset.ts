@@ -269,7 +269,10 @@ export const handle_preview_preset = async (
     prompt_type: panel_provider.web_prompt_type,
     raw_instructions: current_instructions
   })
-  vscode.window.showInformationMessage(
-    dictionary.information_message.PRESET_PREVIEW_SENT_TO_BROWSER
-  )
+
+  panel_provider.send_message({
+    command: 'SHOW_AUTO_CLOSING_MODAL',
+    title: 'Opened in the connected browser',
+    type: 'success'
+  })
 }

@@ -71,7 +71,8 @@ export const handle_undo = async (
     panel_provider.set_undo_button_state(false)
     panel_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
-      title: 'Changes undone successfully'
+      title: 'Changes undone successfully',
+      type: 'success'
     })
   } catch (error: any) {
     console.error('Error during undo:', error)

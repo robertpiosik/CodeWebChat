@@ -26,8 +26,8 @@ export const use_modal_manager = () => {
     >
   >({})
 
-  const [auto_closing_modal_title, set_auto_closing_modal_title] = useState<
-    string | undefined
+  const [auto_closing_modal_data, set_auto_closing_modal_data] = useState<
+    { title: string; type: 'success' | 'warning' | 'error' } | undefined
   >()
 
   const [
@@ -71,7 +71,10 @@ export const use_modal_manager = () => {
           return new_state
         })
       } else if (message.command == 'SHOW_AUTO_CLOSING_MODAL') {
-        set_auto_closing_modal_title(message.title)
+        set_auto_closing_modal_data({
+          title: message.title,
+          type: message.type
+        })
       } else if (message.command == 'SHOW_PREVIEW_ONGOING_MODAL') {
         set_is_preview_ongoing_modal_visible(true)
       }
@@ -85,8 +88,8 @@ export const use_modal_manager = () => {
     progress_state,
     set_progress_state,
     api_manager_progress_state,
-    auto_closing_modal_title,
-    set_auto_closing_modal_title,
+    auto_closing_modal_data,
+    set_auto_closing_modal_data,
     is_preview_ongoing_modal_visible,
     set_is_preview_ongoing_modal_visible
   }

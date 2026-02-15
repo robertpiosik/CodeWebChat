@@ -527,13 +527,11 @@
   display: flex;
   flex-wrap: wrap;
   user-select: none;
-  padding-top: 1px;
-  padding-right: 1px;
-  margin-left: -1px;
+  margin: 1px 1px 0 -2px;
 
   &__tab {
     height: 15px;
-    width: 15px;
+    width: 13px;
     padding: 0;
     display: flex;
     align-items: center;
@@ -548,6 +546,7 @@
 
     &--new {
       padding: 0;
+      width: 15px;
 
       &::before {
         font-family: 'codicon';

@@ -134,8 +134,8 @@ export const Panel = () => {
     progress_state,
     set_progress_state,
     api_manager_progress_state,
-    auto_closing_modal_title,
-    set_auto_closing_modal_title,
+    auto_closing_modal_data,
+    set_auto_closing_modal_data,
     is_preview_ongoing_modal_visible,
     set_is_preview_ongoing_modal_visible
   } = use_modal_manager()
@@ -782,14 +782,14 @@ export const Panel = () => {
           </div>
         )}
 
-        {auto_closing_modal_title && (
+        {auto_closing_modal_data && (
           <div className={styles.slot}>
             <UiAutoClosingModal
-              title={auto_closing_modal_title}
+              title={auto_closing_modal_data.title}
+              type={auto_closing_modal_data.type}
               duration={3000}
-              icon="success"
               on_close={() => {
-                set_auto_closing_modal_title(undefined)
+                set_auto_closing_modal_data(undefined)
               }}
             />
           </div>

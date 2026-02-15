@@ -835,6 +835,7 @@ export interface HideApiManagerProgressMessage extends BaseMessage {
 export interface ShowAutoClosingModalMessage extends BaseMessage {
   command: 'SHOW_AUTO_CLOSING_MODAL'
   title: string
+  type: 'success' | 'warning' | 'error'
 }
 
 export interface UpdateFileInPreviewMessage extends BaseMessage {

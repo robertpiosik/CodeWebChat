@@ -241,11 +241,11 @@ const main = async () => {
           edit_format: stored_data.edit_format
         })
       )
-      chatbot.inject_apply_response_button(
-        stored_data.client_id,
-        stored_data.raw_instructions,
-        stored_data.edit_format
-      )
+      chatbot.inject_apply_response_button({
+        client_id: stored_data.client_id,
+        raw_instructions: stored_data.raw_instructions,
+        edit_format: stored_data.edit_format
+      })
     } else {
       sessionStorage.removeItem(session_data_key)
     }
@@ -255,11 +255,11 @@ const main = async () => {
       try {
         const session_data = JSON.parse(session_data_str)
         if (chatbot.inject_apply_response_button) {
-          chatbot.inject_apply_response_button(
-            session_data.client_id,
-            session_data.raw_instructions,
-            session_data.edit_format
-          )
+          chatbot.inject_apply_response_button({
+            client_id: session_data.client_id,
+            raw_instructions: session_data.raw_instructions,
+            edit_format: session_data.edit_format
+          })
         }
       } catch (e) {
         console.error('Failed to parse CWC session data', e)

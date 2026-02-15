@@ -32,16 +32,12 @@ export const arena: Chatbot = {
     input_element.value = params.message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
   },
-  inject_apply_response_button: (
-    client_id: number,
-    raw_instructions?: string,
-    edit_format?: string
-  ) => {
+  inject_apply_response_button: (params) => {
     const add_buttons = (footer: Element) => {
       add_apply_response_button({
-        client_id,
-        raw_instructions,
-        edit_format,
+        client_id: params.client_id,
+        raw_instructions: params.raw_instructions,
+        edit_format: params.edit_format,
         footer,
         get_chat_turn: (f) =>
           f
@@ -49,7 +45,7 @@ export const arena: Chatbot = {
             ?.querySelector('div.prose') as HTMLElement,
         perform_copy: (f) => {
           const copy_button = f.querySelector(
-            'button:nth-child(3)'
+            'button:nth-child(2)'
           ) as HTMLElement
           if (!copy_button) {
             report_initialization_error({
@@ -69,7 +65,7 @@ export const arena: Chatbot = {
       is_generating: () =>
         !!document.querySelector('canvas[data-sentry-component="Loading"]'),
       footer_selector:
-        'div[aria-roledescription="slide"] > div > div > div.gap-2:last-child',
+        'div[aria-roledescription="slide"] > div > div > div[role="presentation"]',
       add_buttons
     })
   }

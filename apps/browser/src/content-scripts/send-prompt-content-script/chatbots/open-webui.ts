@@ -288,16 +288,12 @@ export const open_webui: Chatbot = {
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
     input_element.focus()
   },
-  inject_apply_response_button: (
-    client_id: number,
-    raw_instructions?: string,
-    edit_format?: string
-  ) => {
+  inject_apply_response_button: (params) => {
     const add_buttons = (footer: Element) => {
       add_apply_response_button({
-        client_id,
-        raw_instructions,
-        edit_format,
+        client_id: params.client_id,
+        raw_instructions: params.raw_instructions,
+        edit_format: params.edit_format,
         footer,
         get_chat_turn: (f) =>
           f.parentElement?.querySelector(

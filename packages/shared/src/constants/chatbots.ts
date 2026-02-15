@@ -59,6 +59,9 @@ export const CHATBOTS = {
       }
     }
   } as Chatbot,
+  Arena: {
+    url: 'https://arena.ai/'
+  } as Chatbot,
   ChatGPT: {
     url: 'https://chatgpt.com/',
     supports_url_override: true,
@@ -146,9 +149,6 @@ export const CHATBOTS = {
   } as Chatbot,
   Kimi: {
     url: 'https://www.kimi.com/'
-  } as Chatbot,
-  Arena: {
-    url: 'https://arena.ai/'
   } as Chatbot,
   Mistral: {
     url: 'https://chat.mistral.ai/chat',

@@ -29,11 +29,15 @@
   justify-content: center;
 
   &--success {
-    color: var(--vscode-testing-iconPassed);
+    color: var(--cwc-text-color-green);
   }
 
   &--warning {
-    color: var(--vscode-list-warningForeground);
+    color: var(--cwc-text-color-orange);
+  }
+
+  &--error {
+    color: var(--cwc-text-color-red);
   }
 }
 

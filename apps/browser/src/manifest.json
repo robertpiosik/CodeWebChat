@@ -3,8 +3,8 @@
   "author": "Robert Piosik",
   "name": "Autofill for Code Web Chat",
   "short_name": "CWC",
-  "description": "Got tired with copy and paste? Enable prompt autofill in chatbots!",
-  "version": "1.98.0",
+  "description": "Got tired with copy and paste? Enable prompt autofill!",
+  "version": "1.99.0",
   "homepage_url": "https://github.com/robertpiosik/CodeWebChat",
   "icons": {
     "16": "icons/icon-16.png",
