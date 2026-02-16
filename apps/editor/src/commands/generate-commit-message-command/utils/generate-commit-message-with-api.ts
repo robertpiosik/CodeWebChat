@@ -24,7 +24,7 @@ export const generate_commit_message_with_api = async (params: {
     messages,
     model: params.config.model,
     temperature: params.config.temperature
-  } as any
+  }
 
   apply_reasoning_effort(body, params.provider, params.config.reasoning_effort)
 
@@ -33,20 +33,28 @@ export const generate_commit_message_with_api = async (params: {
   return await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: dictionary.api_call.WAITING_FOR_RESPONSE,
+      title: 'Requested commit message',
       cancellable: true
     },
-    async (_, token) => {
+    async (progress, token) => {
       token.onCancellationRequested(() => {
         cancel_token_source.cancel('Operation cancelled by user')
       })
+
+      progress.report({ message: 'waiting for server...' })
 
       try {
         const response_result = await make_api_request({
           endpoint_url: params.endpoint_url,
           api_key: params.provider.api_key,
           body,
-          cancellation_token: cancel_token_source.token
+          cancellation_token: cancel_token_source.token,
+          on_chunk: () => {
+            progress.report({ message: 'receiving...' })
+          },
+          on_thinking_chunk: () => {
+            progress.report({ message: 'thinking...' })
+          }
         })
 
         if (!response_result) {

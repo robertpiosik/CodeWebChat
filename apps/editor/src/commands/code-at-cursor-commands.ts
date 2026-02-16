@@ -415,61 +415,34 @@ const perform_code_at_cursor = async (params: {
       cancel_token_source.cancel('User moved the cursor, cancelling request.')
     })
 
-    let thinking_reported = false
-    let resolve_thinking: () => void
-    const thinking_promise = new Promise<void>((resolve) => {
-      resolve_thinking = resolve
-    })
-
-    const on_thinking_chunk = () => {
-      if (!thinking_reported) {
-        thinking_reported = true
-        resolve_thinking()
-      }
-    }
-
-    const api_promise = make_api_request({
-      endpoint_url,
-      api_key: provider.api_key,
-      body,
-      cancellation_token: cancel_token_source.token,
-      on_thinking_chunk
-    })
-
     try {
-      await vscode.window.withProgress(
+      const completion_result = await vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: dictionary.api_call.WAITING_FOR_RESPONSE,
+          title: 'Requested code at cursor',
           cancellable: true
         },
-        async (_, token) => {
+        async (progress, token) => {
           token.onCancellationRequested(() => {
             cancel_token_source.cancel('User cancelled the operation')
           })
 
-          await Promise.race([api_promise, thinking_promise])
+          progress.report({ message: 'waiting for server...' })
+
+          return await make_api_request({
+            endpoint_url,
+            api_key: provider.api_key,
+            body,
+            cancellation_token: cancel_token_source.token,
+            on_chunk: () => {
+              progress.report({ message: 'receiving...' })
+            },
+            on_thinking_chunk: () => {
+              progress.report({ message: 'thinking...' })
+            }
+          })
         }
       )
-
-      if (thinking_reported) {
-        await vscode.window.withProgress(
-          {
-            location: vscode.ProgressLocation.Notification,
-            title: dictionary.api_call.THINKING,
-            cancellable: true
-          },
-          async (progress, token) => {
-            token.onCancellationRequested(() => {
-              cancel_token_source.cancel('User cancelled the operation')
-            })
-
-            await api_promise
-          }
-        )
-      }
-
-      const completion_result = await api_promise
 
       if (completion_result) {
         const match = completion_result.response.match(
