@@ -11,12 +11,16 @@
   height: 30px;
 
   &:hover {
-    background-color: var(--cwc-bg-secondary);
+    background-color: var(--cwc-bg-tertiary);
     text-decoration: none;
   }
 
   &--active {
-    background-color: var(--cwc-bg-tertiary);
+    background-color: var(--cwc-bg-secondary);
+
+    &:hover {
+      background-color: var(--cwc-bg-secondary);
+    }
   }
 }
 
