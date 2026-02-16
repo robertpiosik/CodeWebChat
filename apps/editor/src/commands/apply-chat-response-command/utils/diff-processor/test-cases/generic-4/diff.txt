@@ -1,10 +1,3 @@
-Refactoring `search_files_for_context_command` to utilize `vscode.workspace.findFiles` significantly improves performance by leveraging VS Code's internal file indexing, replacing the previous manual `fs` iteration.
-
-> **Note:** This change shifts the behavior to **filename-only search** (glob-based). It will no longer grep the content of files, as `vscode.workspace.findFiles` searches paths.
-
-### Updated file: `apps/editor/src/commands/search-files-for-context.ts`
-
-```diff
 --- a/apps/editor/src/commands/search-files-for-context.ts
 +++ b/apps/editor/src/commands/search-files-for-context.ts
 @@ -2,5 +2,4 @@
@@ -151,6 +144,3 @@ Refactoring `search_files_for_context_command` to utilize `vscode.workspace.find
 -
 -  return matched_files
 -}
-
-
-```

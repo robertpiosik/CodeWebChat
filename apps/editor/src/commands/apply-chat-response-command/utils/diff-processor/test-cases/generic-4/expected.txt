@@ -86,8 +86,10 @@ export const search_files_for_context_command = (
           initial_keywords = keywords_input
 
           const term = keywords_input.trim()
-          if (term.length == 0) return
+          if (term.length === 0) return
 
+          // If the user input contains a wildcard, treat it as a glob.
+          // Otherwise, wrap it to search for any file containing the term.
           const glob_pattern = term.includes('*') ? term : `**/*${term}*`
           let matched_uris: vscode.Uri[] = []
 

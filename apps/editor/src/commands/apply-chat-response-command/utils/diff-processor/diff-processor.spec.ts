@@ -98,5 +98,19 @@ describe('diff-processor', () => {
 
       expect(result).toBe(expected)
     })
+
+    it('applies diff with generic test case 4 correctly', async () => {
+      const test_case = 'generic-4'
+      const original = load_test_case_file('', test_case, 'original.txt')
+      const diff = load_test_case_file('', test_case, 'diff.txt')
+      const expected = load_test_case_file('', test_case, 'expected.txt')
+
+      const result = apply_diff({
+        original_code: original,
+        diff_patch: diff
+      })
+
+      expect(result).toBe(expected)
+    })
   })
 })

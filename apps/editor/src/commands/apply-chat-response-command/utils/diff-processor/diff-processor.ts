@@ -295,12 +295,19 @@ export const apply_diff = (params: {
     const replacement_content: string[] = []
     let last_original_idx = start_index - 1
 
+    const matched_original_indices = new Set(
+      block.search_to_original_map.values()
+    )
+
     for (const line of block.replace_lines) {
       if (line.search_index != null) {
         const original_idx = block.search_to_original_map.get(line.search_index)
         if (original_idx != undefined) {
           for (let skip = last_original_idx + 1; skip < original_idx; skip++) {
-            if (original_code_lines_normalized[skip].value == '~nnn') {
+            if (
+              original_code_lines_normalized[skip].value == '~nnn' &&
+              !matched_original_indices.has(skip)
+            ) {
               replacement_content.push(original_code_lines[skip])
             }
           }
@@ -323,7 +330,10 @@ export const apply_diff = (params: {
       block.actual_original_line_count || block.search_lines.length
     const end_original_idx = start_index + search_count - 1
     for (let skip = last_original_idx + 1; skip <= end_original_idx; skip++) {
-      if (original_code_lines_normalized[skip].value == '~nnn') {
+      if (
+        original_code_lines_normalized[skip].value == '~nnn' &&
+        !matched_original_indices.has(skip)
+      ) {
         replacement_content.push(original_code_lines[skip])
       }
     }
