@@ -405,11 +405,11 @@ const perform_code_at_cursor = async (params: {
       temperature: code_at_cursor_config.temperature
     }
 
-    apply_reasoning_effort(
+    apply_reasoning_effort({
       body,
       provider,
-      code_at_cursor_config.reasoning_effort
-    )
+      reasoning_effort: code_at_cursor_config.reasoning_effort
+    })
 
     const cursor_listener = vscode.window.onDidChangeTextEditorSelection(() => {
       cancel_token_source.cancel('User moved the cursor, cancelling request.')

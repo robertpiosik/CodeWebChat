@@ -1,23 +1,23 @@
 import { ToolConfig } from '@/services/model-providers-manager'
 
-export const apply_reasoning_effort = (
-  body: { [key: string]: any },
-  provider: any,
+export const apply_reasoning_effort = (params: {
+  body: { [key: string]: any }
+  provider: any
   reasoning_effort?: ToolConfig['reasoning_effort']
-) => {
-  if (provider.name == 'OpenRouter') {
-    if (reasoning_effort) {
-      if (reasoning_effort == 'none') {
-        body.reasoning = { enabled: false }
+}) => {
+  if (params.provider.name == 'OpenRouter') {
+    if (params.reasoning_effort) {
+      if (params.reasoning_effort == 'none') {
+        params.body.reasoning = { enabled: false }
       } else {
-        body.reasoning = { effort: reasoning_effort }
+        params.body.reasoning = { effort: params.reasoning_effort }
       }
     }
-  } else if (provider.name == 'Google') {
-    body.extra_body = {
+  } else if (params.provider.name == 'Google') {
+    params.body.extra_body = {
       google: {
         thinking_config: {
-          thinking_level: reasoning_effort,
+          thinking_level: params.reasoning_effort,
           include_thoughts: true
         }
       }

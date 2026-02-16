@@ -534,11 +534,11 @@ export const handle_edit_context = async (
           temperature: edit_context_config.temperature
         }
 
-        apply_reasoning_effort(
+        apply_reasoning_effort({
           body,
           provider,
-          edit_context_config.reasoning_effort
-        )
+          reasoning_effort: edit_context_config.reasoning_effort
+        })
 
         try {
           const result = await panel_provider.api_manager.get({

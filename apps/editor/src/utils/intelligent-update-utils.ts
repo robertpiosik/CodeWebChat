@@ -248,7 +248,11 @@ export const process_file = async (params: {
     temperature: params.temperature
   }
 
-  apply_reasoning_effort(body, params.provider, params.reasoning_effort)
+  apply_reasoning_effort({
+    body,
+    provider: params.provider,
+    reasoning_effort: params.reasoning_effort
+  })
 
   const MAX_ATTEMPTS = 3
   let attempt = 0

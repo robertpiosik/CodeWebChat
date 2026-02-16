@@ -457,11 +457,11 @@ export const handle_code_at_cursor = async (
       temperature: code_completions_config.temperature
     }
 
-    apply_reasoning_effort(
+    apply_reasoning_effort({
       body,
       provider,
-      code_completions_config.reasoning_effort
-    )
+      reasoning_effort: code_completions_config.reasoning_effort
+    })
 
     let error_occurred = false
 

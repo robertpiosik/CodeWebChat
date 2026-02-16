@@ -552,7 +552,11 @@ const verify_reasoning_effort = async (params: {
     stream: true
   }
 
-  apply_reasoning_effort(body, params.provider, params.reasoning_effort as any)
+  apply_reasoning_effort({
+    body,
+    provider: params.provider,
+    reasoning_effort: params.reasoning_effort as any
+  })
 
   try {
     const response = await axios.post(

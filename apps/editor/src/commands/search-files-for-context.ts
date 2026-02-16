@@ -40,7 +40,6 @@ export const search_files_for_context_command = (
           input_box.title = 'Search'
           input_box.prompt = 'Enter text to search for.'
           input_box.placeholder = 'Search'
-          input_box.ignoreFocusOut = true
           input_box.value = initial_keywords
 
           const close_button = {

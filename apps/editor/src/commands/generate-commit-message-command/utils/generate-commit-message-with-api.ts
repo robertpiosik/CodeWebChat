@@ -26,7 +26,11 @@ export const generate_commit_message_with_api = async (params: {
     temperature: params.config.temperature
   }
 
-  apply_reasoning_effort(body, params.provider, params.config.reasoning_effort)
+  apply_reasoning_effort({
+    body,
+    provider: params.provider,
+    reasoning_effort: params.config.reasoning_effort
+  })
 
   const cancel_token_source = axios.CancelToken.source()
 

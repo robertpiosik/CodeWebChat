@@ -232,7 +232,11 @@ const stop_recording = async (panel_provider: PanelProvider) => {
         ]
       }
 
-      apply_reasoning_effort(body, provider, config.reasoning_effort)
+      apply_reasoning_effort({
+        body,
+        provider,
+        reasoning_effort: config.reasoning_effort
+      })
 
       panel_provider.api_call_cancel_token_source = axios.CancelToken.source()
 
