@@ -16,7 +16,19 @@ export const search_files_for_context_command = (
   return vscode.commands.registerCommand(
     'codeWebChat.searchFilesForContext',
     async (item: any) => {
-      const folder_path = item?.resourceUri?.fsPath
+      let folder_path = item?.resourceUri?.fsPath
+
+      if (folder_path) {
+        try {
+          const stats = await fs.promises.stat(folder_path)
+          if (!stats.isDirectory()) {
+            folder_path = path.dirname(folder_path)
+          }
+        } catch (error) {
+          // If we can't validate the path, ignore it and let logic fall back to workspace roots
+          folder_path = undefined
+        }
+      }
       let initial_keywords =
         extension_context.workspaceState.get<string>(
           LAST_SEARCH_FILES_FOR_CONTEXT_QUERY_STATE_KEY
@@ -86,10 +98,8 @@ export const search_files_for_context_command = (
 
           initial_keywords = keywords_input
 
-          const term = keywords_input.trim().toLowerCase()
-          if (term.length === 0) return
-
-          const keywords = [[term]]
+          const search_term = keywords_input.trim()
+          if (search_term.length == 0) return
 
           let all_files: string[] = []
 
@@ -103,10 +113,10 @@ export const search_files_for_context_command = (
             }
           }
 
-          const matched_files = await search_files_by_keywords(
-            all_files,
-            keywords
-          )
+          const matched_files = await search_files_by_keywords({
+            files: all_files,
+            search_term: search_term
+          })
 
           if (matched_files.length == 0) {
             vscode.window.showInformationMessage(
@@ -329,45 +339,31 @@ export const search_files_for_context_command = (
   )
 }
 
-const search_files_by_keywords = async (
-  files: string[],
-  keyword_groups: string[][],
-  progress?: vscode.Progress<{ message?: string; increment?: number }>,
+const search_files_by_keywords = async (params: {
+  files: string[]
+  search_term: string
+  progress?: vscode.Progress<{ message?: string; increment?: number }>
   token?: vscode.CancellationToken
-): Promise<string[]> => {
+}): Promise<string[]> => {
   const matched_files: string[] = []
-  const total = files.length
+  const total = params.files.length
   let processed = 0
   const increment = total > 0 ? (1 / total) * 100 : 0
 
-  const matchers = keyword_groups.map((group) =>
-    group.map((k) => {
-      const term = k
+  // Escape special characters and treat multiple spaces as flexible whitespace
+  const escaped_term = params.search_term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const pattern = escaped_term.replace(/\s+/g, '\\s+')
+  const regex = new RegExp(pattern, 'mi') // Case-insensitive, multiline
 
-      if (!term) return () => false
-
-      const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-      const pattern = escaped.replace(/\s+/g, '\\s+')
-
-      const regex = new RegExp(pattern, 'm')
-      return (text: string) => regex.test(text)
-    })
-  )
-
-  for (const file_path of files) {
-    if (token?.isCancellationRequested) break
+  for (const file_path of params.files) {
+    if (params.token?.isCancellationRequested) break
 
     try {
-      const file_name_lower = path.basename(file_path).toLowerCase()
-      if (
-        matchers.some((group) => group.every((match) => match(file_name_lower)))
-      ) {
+      const file_name = path.basename(file_path)
+
+      // Check filename first
+      if (regex.test(file_name)) {
         matched_files.push(file_path)
-        processed++
-        progress?.report({
-          increment,
-          message: `${processed}/${total}`
-        })
         continue
       }
 
@@ -375,7 +371,7 @@ const search_files_by_keywords = async (
       const stats = await fs.promises.stat(file_path)
       if (stats.size > 1024 * 1024) {
         processed++
-        progress?.report({
+        params.progress?.report({
           increment,
           message: `${processed}/${total}`
         })
@@ -383,11 +379,8 @@ const search_files_by_keywords = async (
       }
 
       const content = await fs.promises.readFile(file_path, 'utf-8')
-      const content_lower = content.toLowerCase()
 
-      if (
-        matchers.some((group) => group.every((match) => match(content_lower)))
-      ) {
+      if (regex.test(content)) {
         matched_files.push(file_path)
       }
     } catch (error) {
@@ -395,7 +388,7 @@ const search_files_by_keywords = async (
     }
 
     processed++
-    progress?.report({
+    params.progress?.report({
       increment,
       message: `${processed}/${total}`
     })
