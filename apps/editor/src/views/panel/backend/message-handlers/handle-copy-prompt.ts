@@ -31,10 +31,10 @@ export const handle_copy_prompt = async (params: {
   instructions: string
   preset_name?: string
 }): Promise<void> => {
-  const files_collector = new FilesCollector(
-    params.panel_provider.workspace_provider,
-    params.panel_provider.open_editors_provider
-  )
+  const files_collector = new FilesCollector({
+    workspace_provider: params.panel_provider.workspace_provider,
+    open_editors_provider: params.panel_provider.open_editors_provider
+  })
 
   const active_editor = vscode.window.activeTextEditor
 

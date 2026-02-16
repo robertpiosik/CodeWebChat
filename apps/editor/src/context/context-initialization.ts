@@ -109,22 +109,22 @@ export const context_initialization = async (
 
   let workspace_view: vscode.TreeView<FileItem>
 
-  const workspace_provider = new WorkspaceProvider(
-    workspace_folders as any,
+  const workspace_provider = new WorkspaceProvider({
+    workspace_folders,
     context
-  )
+  })
   const context_provider = new ContextProvider(workspace_provider)
   context.subscriptions.push(context_provider)
 
-  const open_editors_provider = new OpenEditorsProvider(
-    workspace_folders as any,
+  const open_editors_provider = new OpenEditorsProvider({
+    workspace_folders,
     workspace_provider
-  )
+  })
 
-  const files_collector = new FilesCollector(
+  const files_collector = new FilesCollector({
     workspace_provider,
     open_editors_provider
-  )
+  })
 
   const update_view_badges = async () => {
     let context_token_count = 0

@@ -130,7 +130,7 @@ export const handle_json_file_source = async (
             items.push({
               label: context.name,
               description,
-              context: context,
+              context,
               buttons: [sync_button, edit_button, delete_button]
             })
           }

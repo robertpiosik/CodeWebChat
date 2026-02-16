@@ -82,10 +82,10 @@ export const handle_send_to_browser = async (params: {
 
   await vscode.workspace.saveAll()
 
-  const files_collector = new FilesCollector(
-    params.panel_provider.workspace_provider,
-    params.panel_provider.open_editors_provider
-  )
+  const files_collector = new FilesCollector({
+    workspace_provider: params.panel_provider.workspace_provider,
+    open_editors_provider: params.panel_provider.open_editors_provider
+  })
 
   let sent = false
 

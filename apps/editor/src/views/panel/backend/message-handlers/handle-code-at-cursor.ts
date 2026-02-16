@@ -403,10 +403,10 @@ export const handle_code_at_cursor = async (
       })
     }
 
-    const files_collector = new FilesCollector(
-      panel_provider.workspace_provider,
-      panel_provider.open_editors_provider
-    )
+    const files_collector = new FilesCollector({
+      workspace_provider: panel_provider.workspace_provider,
+      open_editors_provider: panel_provider.open_editors_provider
+    })
 
     const context_text = await files_collector.collect_files()
 

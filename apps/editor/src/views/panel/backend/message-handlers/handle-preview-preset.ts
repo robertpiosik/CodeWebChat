@@ -28,10 +28,10 @@ export const handle_preview_preset = async (
 ): Promise<void> => {
   await vscode.workspace.saveAll()
 
-  const files_collector = new FilesCollector(
-    panel_provider.workspace_provider,
-    panel_provider.open_editors_provider
-  )
+  const files_collector = new FilesCollector({
+    workspace_provider: panel_provider.workspace_provider,
+    open_editors_provider: panel_provider.open_editors_provider
+  })
 
   const active_editor = vscode.window.activeTextEditor
   const active_path = active_editor?.document.uri.fsPath

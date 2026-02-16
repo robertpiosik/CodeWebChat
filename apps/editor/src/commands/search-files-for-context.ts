@@ -114,7 +114,7 @@ export const search_files_for_context_command = (
 
           const matched_files = await search_files_by_keywords({
             files: all_files,
-            search_term: search_term
+            search_term
           })
 
           if (matched_files.length == 0) {
@@ -140,7 +140,7 @@ export const search_files_for_context_command = (
             return {
               label: path.basename(file_path),
               description: dir_name == '.' ? '' : dir_name,
-              file_path: file_path,
+              file_path,
               buttons: [open_file_button]
             }
           })

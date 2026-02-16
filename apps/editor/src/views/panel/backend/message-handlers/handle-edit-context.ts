@@ -303,10 +303,10 @@ export const handle_edit_context = async (
 
   const editor = vscode.window.activeTextEditor
 
-  const files_collector = new FilesCollector(
-    panel_provider.workspace_provider,
-    panel_provider.open_editors_provider
-  )
+  const files_collector = new FilesCollector({
+    workspace_provider: panel_provider.workspace_provider,
+    open_editors_provider: panel_provider.open_editors_provider
+  })
 
   let instructions = panel_provider.current_edit_context_instruction
 

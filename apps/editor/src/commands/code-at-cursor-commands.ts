@@ -372,10 +372,10 @@ const perform_code_at_cursor = async (params: {
       new vscode.Range(position, document.positionAt(document.getText().length))
     )
 
-    const files_collector = new FilesCollector(
-      params.file_tree_provider,
-      params.open_editors_provider
-    )
+    const files_collector = new FilesCollector({
+      workspace_provider: params.file_tree_provider,
+      open_editors_provider: params.open_editors_provider
+    })
 
     const context_text = await files_collector.collect_files()
 

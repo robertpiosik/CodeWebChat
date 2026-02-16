@@ -38,13 +38,15 @@ export class OpenEditorsProvider
     }
   }
 
-  constructor(
-    workspace_folders: vscode.WorkspaceFolder[],
+  constructor(params: {
+    workspace_folders: readonly vscode.WorkspaceFolder[]
     workspace_provider: WorkspaceProvider
-  ) {
-    this._workspace_roots = workspace_folders.map((folder) => folder.uri.fsPath)
+  }) {
+    this._workspace_roots = params.workspace_folders.map(
+      (folder) => folder.uri.fsPath
+    )
     this._shared_state = SharedFileState.get_instance()
-    this._workspace_provider = workspace_provider
+    this._workspace_provider = params.workspace_provider
 
     this._workspace_change_handler =
       this._workspace_provider.onDidChangeTreeData(() => this.refresh())

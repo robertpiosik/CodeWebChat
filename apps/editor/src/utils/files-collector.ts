@@ -10,14 +10,14 @@ export class FilesCollector {
   private open_editors_provider?: OpenEditorsProvider
   private workspace_roots: string[] = []
 
-  constructor(
-    workspace_provider: WorkspaceProvider,
+  constructor(params: {
+    workspace_provider: WorkspaceProvider
     open_editors_provider?: OpenEditorsProvider
-  ) {
-    this.workspace_provider = workspace_provider
-    this.open_editors_provider = open_editors_provider
+  }) {
+    this.workspace_provider = params.workspace_provider
+    this.open_editors_provider = params.open_editors_provider
 
-    this.workspace_roots = workspace_provider.get_workspace_roots()
+    this.workspace_roots = this.workspace_provider.get_workspace_roots()
   }
 
   async collect_files(params?: {
@@ -48,15 +48,11 @@ export class FilesCollector {
     }
 
     const context_files = [...new Set(context_files_list)]
-    const now = Date.now()
-    const THREE_HOURS = 3 * 60 * 60 * 1000
 
     // Sort context files based on modification time and selection timestamp
-    const sorted_context_files = this._sort_context_files(
-      context_files,
-      now,
-      THREE_HOURS
-    )
+    const sorted_context_files = this._sort_context_files({
+      files: context_files
+    })
 
     let collected_text = ''
 
@@ -116,15 +112,13 @@ export class FilesCollector {
     return this.workspace_provider.get_workspace_root_for_file(file_path)
   }
 
-  private _sort_context_files(
-    files: string[],
-    now: number,
-    three_hours: number
-  ): string[] {
+  private _sort_context_files(params: { files: string[] }): string[] {
     const recently_modified: Array<{ path: string; mtime: number }> = []
     const older_files: Array<{ path: string; timestamp: number }> = []
+    const now = Date.now()
+    const THREE_HOURS = 3 * 60 * 60 * 1000
 
-    for (const file_path of files) {
+    for (const file_path of params.files) {
       try {
         if (!fs.existsSync(file_path)) continue
         const stats = fs.statSync(file_path)
@@ -134,7 +128,7 @@ export class FilesCollector {
         const selection_timestamp =
           this.workspace_provider.get_selection_timestamp(file_path) ?? now
 
-        if (now - mtime < three_hours) {
+        if (now - mtime < THREE_HOURS) {
           recently_modified.push({ path: file_path, mtime })
         } else {
           older_files.push({ path: file_path, timestamp: selection_timestamp })

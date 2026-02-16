@@ -70,13 +70,13 @@ export async function activate(context: vscode.ExtensionContext) {
   // Run startup tasks without blocking extension activation
   startup_tasks()
 
-  const panel_provider = new PanelProvider(
-    context.extensionUri,
+  const panel_provider = new PanelProvider({
+    extension_uri: context.extensionUri,
     workspace_provider,
     open_editors_provider,
     context,
     websocket_server_instance
-  )
+  })
 
   const api_manager = new ApiManager(panel_provider)
 

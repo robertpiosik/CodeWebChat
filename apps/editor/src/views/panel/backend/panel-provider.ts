@@ -126,6 +126,11 @@ import { delete_configuration } from '../../utils/delete-configuration'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 
 export class PanelProvider implements vscode.WebviewViewProvider {
+  public readonly extension_uri: vscode.Uri
+  public readonly workspace_provider: WorkspaceProvider
+  public readonly open_editors_provider: OpenEditorsProvider
+  public readonly context: vscode.ExtensionContext
+  public readonly websocket_server_instance: WebSocketManager
   private _webview_view: vscode.WebviewView | undefined
   private _config_listener: vscode.Disposable | undefined
   public currently_open_file_path?: string
@@ -313,21 +318,29 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     })
   }
 
-  constructor(
-    public readonly extension_uri: vscode.Uri,
-    public readonly workspace_provider: WorkspaceProvider,
-    public readonly open_editors_provider: OpenEditorsProvider,
-    public readonly context: vscode.ExtensionContext,
-    public readonly websocket_server_instance: WebSocketManager
-  ) {
-    this.websocket_server_instance.on_connection_status_change((connected) => {
-      if (this._webview_view) {
-        this.send_message({
-          command: 'CONNECTION_STATUS',
-          connected
-        })
+  constructor(params: {
+    extension_uri: vscode.Uri
+    workspace_provider: WorkspaceProvider
+    open_editors_provider: OpenEditorsProvider
+    context: vscode.ExtensionContext
+    websocket_server_instance: WebSocketManager
+  }) {
+    this.extension_uri = params.extension_uri
+    this.workspace_provider = params.workspace_provider
+    this.open_editors_provider = params.open_editors_provider
+    this.context = params.context
+    this.websocket_server_instance = params.websocket_server_instance
+
+    params.websocket_server_instance.on_connection_status_change(
+      (connected) => {
+        if (this._webview_view) {
+          this.send_message({
+            command: 'CONNECTION_STATUS',
+            connected
+          })
+        }
       }
-    })
+    )
 
     this.edit_context_instructions = this._load_instructions(
       INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY

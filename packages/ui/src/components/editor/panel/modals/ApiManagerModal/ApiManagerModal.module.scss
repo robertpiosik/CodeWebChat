@@ -61,7 +61,7 @@
   animation: breathe-background 10s infinite linear;
 
   > div {
-    transform: translateY(3px);
+    transform: translateY(2px);
     transition: transform var(--transition-duration-250)
       var(--transition-timing-function);
   }

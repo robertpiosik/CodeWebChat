@@ -40,6 +40,7 @@ export class WorkspaceProvider
   readonly onDidChangeTreeData: vscode.Event<
     FileItem | undefined | null | void
   > = this._on_did_change_tree_data.event
+  private _context: vscode.ExtensionContext
   private _workspace_roots: string[] = []
   private _workspace_names: string[] = []
   private _checked_items: Map<string, vscode.TreeItemCheckboxState> = new Map()
@@ -90,12 +91,17 @@ export class WorkspaceProvider
     }
   }
 
-  constructor(
-    workspace_folders: vscode.WorkspaceFolder[],
-    private _context: vscode.ExtensionContext
-  ) {
-    this._workspace_roots = workspace_folders.map((folder) => folder.uri.fsPath)
-    this._workspace_names = workspace_folders.map((folder) => folder.name)
+  constructor(params: {
+    workspace_folders: readonly vscode.WorkspaceFolder[]
+    context: vscode.ExtensionContext
+  }) {
+    this._context = params.context
+    this._workspace_roots = params.workspace_folders.map(
+      (folder) => folder.uri.fsPath
+    )
+    this._workspace_names = params.workspace_folders.map(
+      (folder) => folder.name
+    )
     this.onDidChangeCheckedFiles(() => this._save_checked_files_state())
     this._token_calculator = new TokenCalculator(this, this._context)
     this._load_ignore_patterns()

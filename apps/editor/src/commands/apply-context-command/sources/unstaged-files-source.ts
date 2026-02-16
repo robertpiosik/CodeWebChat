@@ -83,7 +83,7 @@ export const handle_unstaged_files_source = async (
             label: path.basename(file_path),
             description: `${formatted_token_count} · ${display_dir}`.trim(),
             picked: true,
-            file_path: file_path
+            file_path
           }
         })
       )
