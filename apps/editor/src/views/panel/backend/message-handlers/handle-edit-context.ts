@@ -479,6 +479,7 @@ export const handle_edit_context = async (
     }${processed_instructions}`
 
     const system_instructions =
+      edit_context_config.system_instructions_override ||
       vscode.workspace
         .getConfiguration('codeWebChat')
         .get<string>('editContextSystemInstructions') ||

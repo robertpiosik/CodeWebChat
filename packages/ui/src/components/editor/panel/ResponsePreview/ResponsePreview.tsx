@@ -292,8 +292,8 @@ export const ResponsePreview: FC<Props> = (props) => {
             >
               <span className="codicon codicon-warning" />
               {files_in_preview.length > 1
-                ? `${aggressive_fallback_count} of ${files_in_preview.length} files applied with fallback method`
-                : 'The file applied with fallback method'}
+                ? `${aggressive_fallback_count} of ${files_in_preview.length} edits applied with fallback method`
+                : 'The edit applied with fallback method'}
             </div>
           </div>
         )}

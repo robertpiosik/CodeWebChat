@@ -1778,13 +1778,7 @@
                 "type": "number"
               },
               "reasoningEffort": {
-                "type": "string",
-                "enum": [
-                  "none",
-                  "low",
-                  "medium",
-                  "high"
-                ]
+                "type": "string"
               },
               "isDefault": {
                 "type": "boolean"
@@ -1816,13 +1810,7 @@
                 "type": "number"
               },
               "reasoningEffort": {
-                "type": "string",
-                "enum": [
-                  "none",
-                  "low",
-                  "medium",
-                  "high"
-                ]
+                "type": "string"
               },
               "isDefault": {
                 "type": "boolean"
@@ -1854,13 +1842,10 @@
                 "type": "number"
               },
               "reasoningEffort": {
-                "type": "string",
-                "enum": [
-                  "none",
-                  "low",
-                  "medium",
-                  "high"
-                ]
+                "type": "string"
+              },
+              "systemInstructionsOverride": {
+                "type": "string"
               },
               "isPinned": {
                 "type": "boolean"
@@ -1889,13 +1874,7 @@
                 "type": "number"
               },
               "reasoningEffort": {
-                "type": "string",
-                "enum": [
-                  "none",
-                  "low",
-                  "medium",
-                  "high"
-                ]
+                "type": "string"
               },
               "isDefault": {
                 "type": "boolean"
@@ -1927,13 +1906,7 @@
                 "type": "number"
               },
               "reasoningEffort": {
-                "type": "string",
-                "enum": [
-                  "none",
-                  "low",
-                  "medium",
-                  "high"
-                ]
+                "type": "string"
               },
               "isDefault": {
                 "type": "boolean"
@@ -1965,13 +1938,7 @@
                 "type": "number"
               },
               "reasoningEffort": {
-                "type": "string",
-                "enum": [
-                  "none",
-                  "low",
-                  "medium",
-                  "high"
-                ]
+                "type": "string"
               },
               "isDefault": {
                 "type": "boolean"

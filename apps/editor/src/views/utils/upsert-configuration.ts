@@ -12,6 +12,7 @@ import {
   edit_provider_for_config,
   edit_reasoning_effort_for_config,
   edit_temperature_for_config,
+  edit_system_instructions_override_for_config,
   initial_select_model,
   initial_select_provider
 } from './config-editing'
@@ -392,6 +393,21 @@ export const upsert_configuration = async (params: {
 
         const advanced_items: vscode.QuickPickItem[] = [temperature_item]
 
+        if (params.tool_type == 'edit-context') {
+          const system_instr_item: vscode.QuickPickItem = {
+            label: 'System Instructions',
+            description: 'Overrides global system instructions',
+            detail: updated_config.system_instructions_override
+          }
+          if (updated_config.system_instructions_override) {
+            system_instr_item.buttons = [
+              { iconPath: new vscode.ThemeIcon('eraser'), tooltip: 'Unset' }
+            ]
+          }
+
+          advanced_items.push(system_instr_item)
+        }
+
         const selected_advanced = await new Promise<
           vscode.QuickPickItem | undefined
         >((resolve) => {
@@ -402,7 +418,7 @@ export const upsert_configuration = async (params: {
           quick_pick.buttons = [vscode.QuickInputButtons.Back]
           if (last_advanced_label) {
             const active = advanced_items.find(
-              (i) => i.label === last_advanced_label
+              (i) => i.label == last_advanced_label
             )
             if (active) quick_pick.activeItems = [active]
           }
@@ -411,8 +427,13 @@ export const upsert_configuration = async (params: {
 
           disposables.push(
             quick_pick.onDidTriggerItemButton((e) => {
-              if (e.item.label === 'Temperature') {
+              if (e.item.label == 'Temperature') {
                 delete updated_config.temperature
+                accepted = true
+                resolve({ label: 'REFRESH' })
+                quick_pick.hide()
+              } else if (e.item.label === 'System Instructions') {
+                delete updated_config.system_instructions_override
                 accepted = true
                 resolve({ label: 'REFRESH' })
                 quick_pick.hide()
@@ -438,7 +459,7 @@ export const upsert_configuration = async (params: {
         })
 
         if (!selected_advanced) break
-        if (selected_advanced.label === 'REFRESH') continue
+        if (selected_advanced.label == 'REFRESH') continue
 
         last_advanced_label = selected_advanced.label
 
@@ -447,6 +468,13 @@ export const upsert_configuration = async (params: {
           if (new_temp !== undefined) {
             updated_config.temperature =
               new_temp === null ? undefined : new_temp
+          }
+        } else if (selected_advanced.label == 'System Instructions') {
+          const new_instr =
+            await edit_system_instructions_override_for_config(updated_config)
+          if (new_instr !== undefined) {
+            updated_config.system_instructions_override =
+              new_instr === null ? undefined : new_instr
           }
         }
       }

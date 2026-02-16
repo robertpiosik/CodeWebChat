@@ -25,6 +25,7 @@ export type ToolConfig = {
   model: string
   temperature?: number
   reasoning_effort?: ReasoningEffort
+  system_instructions_override?: string
   is_pinned?: boolean
 }
 
@@ -162,19 +163,21 @@ export class ModelProvidersManager {
         model: string
         temperature?: number
         reasoningEffort?: ReasoningEffort
+        systemInstructionsOverride?: string
         isPinned?: boolean
       }[]
     >(settings_key, [])
 
     const tool_configs: ToolConfig[] = settings_configs
       .map((sc) => {
-        const provider = this._providers.find((p) => p.name === sc.providerName)
+        const provider = this._providers.find((p) => p.name == sc.providerName)
         return {
           provider_name: sc.providerName,
           provider_type: provider?.type || '',
           model: sc.model,
           temperature: sc.temperature,
           reasoning_effort: sc.reasoningEffort,
+          system_instructions_override: sc.systemInstructionsOverride,
           is_pinned: sc.isPinned
         }
       })
@@ -204,6 +207,8 @@ export class ModelProvidersManager {
       }
       if (c.reasoning_effort !== undefined)
         new_config.reasoningEffort = c.reasoning_effort
+      if (c.system_instructions_override !== undefined)
+        new_config.systemInstructionsOverride = c.system_instructions_override
       if (c.is_pinned) new_config.isPinned = c.is_pinned
       return new_config
     })
@@ -224,7 +229,9 @@ export class ModelProvidersManager {
       settings_config.model === tool_config.model &&
       settings_config.temperature === tool_config.temperature &&
       (settings_config.reasoningEffort ?? undefined) ===
-        (tool_config.reasoning_effort ?? undefined)
+        (tool_config.reasoning_effort ?? undefined) &&
+      (settings_config.systemInstructionsOverride ?? undefined) ===
+        (tool_config.system_instructions_override ?? undefined)
     )
   }
 
@@ -238,6 +245,7 @@ export class ModelProvidersManager {
         model: string
         temperature?: number
         reasoningEffort?: ReasoningEffort
+        systemInstructionsOverride?: string
         isDefault?: boolean
         isPinned?: boolean
       }[]
@@ -256,6 +264,8 @@ export class ModelProvidersManager {
         model: default_config_from_settings.model,
         temperature: default_config_from_settings.temperature,
         reasoning_effort: default_config_from_settings.reasoningEffort,
+        system_instructions_override:
+          default_config_from_settings.systemInstructionsOverride,
         is_pinned: default_config_from_settings.isPinned
       }
       const validated_config = this._validate_tool_config(tool_config)
