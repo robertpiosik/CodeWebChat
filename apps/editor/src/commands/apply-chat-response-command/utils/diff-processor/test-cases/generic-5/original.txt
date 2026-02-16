@@ -1,0 +1,147 @@
+import * as vscode from 'vscode'
+import * as fs from 'fs'
+import * as path from 'path'
+import ignore, { Ignore } from 'ignore'
+import {
+  CONTEXT_CHECKED_PATHS_STATE_KEY,
+  CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY,
+  RANGES_STATE_KEY
+} from '@/constants/state-keys'
+import { IGNORE_PATTERNS } from '@/constants/ignore-patterns'
+import { natural_sort } from '@/utils/natural-sort'
+import { dictionary } from '@shared/constants/dictionary'
+import { Logger } from '@shared/utils/logger'
+import { display_token_count } from '@/utils/display-token-count'
+import { TokenCalculator } from './modules/token-calculator'
+
+export interface IWorkspaceProvider {
+  get_workspace_roots(): string[]
+  get_workspace_root_for_file(file_path: string): string | undefined
+  get_workspace_name(root_path: string): string
+  get_range(filePath: string): string | undefined
+  apply_range_to_content(content: string, range_string: string): string
+  is_excluded(relative_path: string): boolean
+  is_ignored_by_patterns(file_path: string): boolean
+  get_check_state(path: string): vscode.TreeItemCheckboxState
+  is_partially_checked(path: string): boolean
+  get_checked_files(): string[]
+  get_selection_timestamp(path: string): number | undefined
+}
+
+export class WorkspaceProvider
+  implements
+    vscode.TreeDataProvider<FileItem>,
+    vscode.Disposable,
+    IWorkspaceProvider
+{
+  private _on_did_change_tree_data: vscode.EventEmitter<
+    FileItem | undefined | null | void
+  > = new vscode.EventEmitter<FileItem | undefined | null | void>()
+  readonly onDidChangeTreeData: vscode.Event<
+    FileItem | undefined | null | void
+  > = this._on_did_change_tree_data.event
+  private _context: vscode.ExtensionContext
+  private _workspace_roots: string[] = []
+  private _workspace_names: string[] = []
+  private _checked_items: Map<string, vscode.TreeItemCheckboxState> = new Map()
+  private _checked_timestamps: Map<string, number> = new Map()
+  private _combined_gitignore = ignore()
+  private _user_ignore_patterns: Ignore = ignore()
+  private _user_allow_patterns: Ignore = ignore()
+  private _watcher: vscode.FileSystemWatcher
+  private _ranges_watcher: vscode.FileSystemWatcher
+  private _gitignore_watcher: vscode.FileSystemWatcher
+  private _file_ranges: Map<string, string> = new Map()
+  private _token_calculator: TokenCalculator
+
+  private _config_change_handler: vscode.Disposable
+  private _on_did_change_checked_files = new vscode.EventEmitter<void>()
+  readonly onDidChangeCheckedFiles = this._on_did_change_checked_files.event
+  private _refresh_timeout: NodeJS.Timeout | null = null
+  // Track which files were opened from workspace view to prevent auto-checking
+  private _opened_from_workspace_view: Set<string> = new Set()
+  private _preview_tabs: Map<string, boolean> = new Map()
+  private _tab_change_handler: vscode.Disposable
+  private _partially_checked_dirs: Set<string> = new Set()
+  private _file_workspace_map: Map<string, string> = new Map()
+  public gitignore_initialization: Promise<void>
+  public ranges_initialization: Promise<void>
+  public use_compact_token_count: boolean = false
+  private _context_view_collapsible_state: vscode.TreeItemCollapsibleState =
+    vscode.TreeItemCollapsibleState.Expanded
+  private _workspace_view_collapsible_state: vscode.TreeItemCollapsibleState =
+    vscode.TreeItemCollapsibleState.Collapsed
+
+  public set_context_view_collapsible_state(
+    state: vscode.TreeItemCollapsibleState
+  ) {
+    this._context_view_collapsible_state = state
+  }
+
+  public set_workspace_view_collapsible_state(
+    state: vscode.TreeItemCollapsibleState
+  ) {
+    this._workspace_view_collapsible_state = state
+  }
+
+  public set_use_compact_token_count(use_compact: boolean) {
+    if (this.use_compact_token_count != use_compact) {
+      this.use_compact_token_count = use_compact
+      this.refresh()
+    }
+  }
+
+  constructor(
+    workspace_folders: vscode.WorkspaceFolder[],
+    context: vscode.ExtensionContext
+  ) {
+    this._context = context
+    this._workspace_roots = workspace_folders.map((folder) => folder.uri.fsPath)
+    this._workspace_names = workspace_folders.map((folder) => folder.name)
+    this.onDidChangeCheckedFiles(() => this._save_checked_files_state())
+    this._token_calculator = new TokenCalculator(this, this._context)
+    this._load_ignore_patterns()
+
+    this._watcher = vscode.workspace.createFileSystemWatcher('**/*')
+    this._watcher.onDidCreate((uri) => this._handle_file_create(uri.fsPath))
+    this._watcher.onDidChange((uri) => this._on_file_system_changed(uri.fsPath))
+    this._watcher.onDidDelete((uri) => this._on_file_system_changed(uri.fsPath))
+
+    this._gitignore_watcher = vscode.workspace.createFileSystemWatcher(
+      '**/{.gitignore,.cursorignore,.codeiumignore}'
+    )
+    this._gitignore_watcher.onDidCreate(() => this._load_all_gitignore_files())
+    this._gitignore_watcher.onDidChange(() => this._load_all_gitignore_files())
+    this._gitignore_watcher.onDidDelete(() => this._load_all_gitignore_files())
+
+    this._config_change_handler = vscode.workspace.onDidChangeConfiguration(
+      (event) => {
+        if (
+          event.affectsConfiguration('codeWebChat.ignorePatterns') ||
+          event.affectsConfiguration('codeWebChat.allowPatterns')
+        ) {
+          this._load_ignore_patterns()
+          this._uncheck_ignored_files()
+          this.refresh()
+        }
+      }
+    )
+
+    this._update_preview_tabs_state()
+
+    this._tab_change_handler = vscode.window.tabGroups.onDidChangeTabs((e) => {
+      this._handle_tab_changes(e)
+    })
+
+    this.gitignore_initialization = this._load_all_gitignore_files()
+    this._ranges_watcher = vscode.workspace.createFileSystemWatcher(
+      '**/.vscode/ranges.json'
+    )
+    this._ranges_watcher.onDidCreate(() => this.load_all_ranges())
+    this._ranges_watcher.onDidChange(() => this.load_all_ranges())
+    this._ranges_watcher.onDidDelete(() => this.load_all_ranges())
+
+    this.ranges_initialization = this.load_all_ranges()
+
+    this.load_checked_files_state()
+  }

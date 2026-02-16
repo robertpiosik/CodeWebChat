@@ -229,53 +229,106 @@ export const apply_diff = (params: {
       continue
     }
 
-    let found = false
-    for (
-      let j = previous_found_index;
-      j < original_code_lines_normalized.length;
-      j++
-    ) {
-      let search_ptr = 0
-      let original_ptr = j
-      const matched_indices: number[] = []
-      const current_search_to_original = new Map<number, number>()
-
-      while (
-        search_ptr < block.search_lines.length &&
-        original_ptr < original_code_lines_normalized.length
-      ) {
-        const s_val = block.search_lines[search_ptr]
-        const o_val = original_code_lines_normalized[original_ptr].value
-
-        if (s_val == o_val) {
-          current_search_to_original.set(
-            search_ptr,
-            original_code_lines_normalized[original_ptr].key
-          )
-          matched_indices.push(original_code_lines_normalized[original_ptr].key)
-          search_ptr++
-          original_ptr++
-        } else if (o_val == '~nnn') {
-          matched_indices.push(original_code_lines_normalized[original_ptr].key)
-          original_ptr++
-        } else if (s_val == '~nnn') {
-          search_ptr++
-        } else {
-          break
-        }
+    const safe_trim_indices: number[] = []
+    for (const replace_line of block.replace_lines) {
+      if (replace_line.search_index === null) {
+        break // Hit an insertion, cannot trim further
       }
+      safe_trim_indices.push(replace_line.search_index)
+    }
 
-      if (search_ptr == block.search_lines.length) {
-        block.search_block_start_index = matched_indices[0]
-        block.actual_original_line_count = matched_indices.length
-        block.search_to_original_map = current_search_to_original
-        found = true
-        previous_found_index = matched_indices[matched_indices.length - 1] + 1
+    let max_trim_top = 0
+    for (let k = 0; k < safe_trim_indices.length; k++) {
+      if (safe_trim_indices[k] === k) {
+        max_trim_top = k + 1
+      } else {
         break
       }
     }
 
-    if (!found) {
+    let found = false
+    let matched_info: {
+      start_index: number
+      actual_count: number
+      map: Map<number, number>
+    } | null = null
+    let used_trim_top = 0
+
+    for (let trim_cnt = 0; trim_cnt <= max_trim_top; trim_cnt++) {
+      const current_search_lines = block.search_lines.slice(trim_cnt)
+      if (current_search_lines.length === 0) continue
+
+      for (
+        let j = previous_found_index;
+        j < original_code_lines_normalized.length;
+        j++
+      ) {
+        let search_ptr = 0
+        let original_ptr = j
+        const matched_indices: number[] = []
+        const current_search_to_original = new Map<number, number>()
+
+        while (
+          search_ptr < current_search_lines.length &&
+          original_ptr < original_code_lines_normalized.length
+        ) {
+          const s_val = current_search_lines[search_ptr]
+          const o_val = original_code_lines_normalized[original_ptr].value
+
+          if (s_val == o_val) {
+            current_search_to_original.set(
+              search_ptr + trim_cnt,
+              original_code_lines_normalized[original_ptr].key
+            )
+            matched_indices.push(
+              original_code_lines_normalized[original_ptr].key
+            )
+            search_ptr++
+            original_ptr++
+          } else if (o_val == '~nnn') {
+            matched_indices.push(
+              original_code_lines_normalized[original_ptr].key
+            )
+            original_ptr++
+          } else if (s_val == '~nnn') {
+            search_ptr++
+          } else {
+            break
+          }
+        }
+
+        if (search_ptr == current_search_lines.length) {
+          matched_info = {
+            start_index: matched_indices[0],
+            actual_count: matched_indices.length,
+            map: current_search_to_original
+          }
+          found = true
+          break
+        }
+      }
+
+      if (found) {
+        used_trim_top = trim_cnt
+        break
+      }
+    }
+
+    if (found && matched_info) {
+      block.search_block_start_index = matched_info.start_index
+      block.actual_original_line_count = matched_info.actual_count
+      block.search_to_original_map = matched_info.map
+
+      if (used_trim_top > 0) {
+        block.search_lines = block.search_lines.slice(used_trim_top)
+        block.replace_lines = block.replace_lines.filter(
+          (l) => l.search_index === null || l.search_index >= used_trim_top
+        )
+      }
+
+      const indices = Array.from(matched_info.map.values())
+      previous_found_index = Math.max(...indices) + 1
+    } else {
       block.search_block_start_index = -2
     }
   }

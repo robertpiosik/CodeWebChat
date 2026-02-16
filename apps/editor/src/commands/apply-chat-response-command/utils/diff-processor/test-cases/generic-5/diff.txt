@@ -1,0 +1,27 @@
+--- a/apps/editor/src/context/providers/workspace/workspace-provider.ts
++++ b/apps/editor/src/context/providers/workspace/workspace-provider.ts
+@@ -91,13 +91,17 @@
+   private _workspace_view_collapsible_state: vscode.TreeItemCollapsibleState =
+     vscode.TreeItemCollapsibleState.Collapsed
+ 
+-  constructor(
+-    workspace_folders: vscode.WorkspaceFolder[],
+-    context: vscode.ExtensionContext
+-  ) {
+-    this._context = context
+-    this._workspace_roots = workspace_folders.map((folder) => folder.uri.fsPath)
+-    this._workspace_names = workspace_folders.map((folder) => folder.name)
++  constructor(params: {
++    workspace_folders: vscode.WorkspaceFolder[]
++    context: vscode.ExtensionContext
++  }) {
++    this._context = params.context
++    this._workspace_roots = params.workspace_folders.map(
++      (folder) => folder.uri.fsPath
++    )
++    this._workspace_names = params.workspace_folders.map(
++      (folder) => folder.name
++    )
+     this.onDidChangeCheckedFiles(() => this._save_checked_files_state())
+     this._token_calculator = new TokenCalculator(this, this._context)
+     this._load_ignore_patterns()
