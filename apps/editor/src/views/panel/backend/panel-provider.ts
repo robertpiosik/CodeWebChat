@@ -331,16 +331,14 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     this.context = params.context
     this.websocket_server_instance = params.websocket_server_instance
 
-    params.websocket_server_instance.on_connection_status_change(
-      (connected) => {
-        if (this._webview_view) {
-          this.send_message({
-            command: 'CONNECTION_STATUS',
-            connected
-          })
-        }
+    this.websocket_server_instance.on_connection_status_change((connected) => {
+      if (this._webview_view) {
+        this.send_message({
+          command: 'CONNECTION_STATUS',
+          connected
+        })
       }
-    )
+    })
 
     this.edit_context_instructions = this._load_instructions(
       INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY
