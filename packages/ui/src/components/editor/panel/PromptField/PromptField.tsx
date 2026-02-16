@@ -712,19 +712,101 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                 </>
               )}
               {props.is_chatbots_mode && !props.is_connected && (
-                <button
-                  className={cn(
-                    styles['footer__right__submit__button'],
-                    styles['footer__right__submit__button--copy'],
-                    'codicon',
-                    'codicon-copy'
+                <>
+                  {props.is_recording ? (
+                    <button
+                      className={cn(
+                        styles['footer__right__submit__button'],
+                        styles['footer__right__submit__button--submit'],
+                        styles['footer__right__submit__button--recording'],
+                        'codicon',
+                        is_recording_hovered
+                          ? 'codicon-debug-stop'
+                          : 'codicon-mic-filled'
+                      )}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        props.on_recording_finished()
+                      }}
+                      onMouseEnter={() => set_is_recording_hovered(true)}
+                      onMouseLeave={() => set_is_recording_hovered(false)}
+                      title={`Exit voice input ${
+                        is_mac ? '(⇧⌘Space)' : '(Ctrl+Shift+Space)'
+                      }`}
+                    />
+                  ) : !props.value ? (
+                    <button
+                      className={cn(
+                        styles['footer__right__submit__button'],
+                        styles['footer__right__submit__button--submit'],
+                        'codicon',
+                        'codicon-mic'
+                      )}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        props.on_recording_started()
+                      }}
+                      onMouseEnter={() => set_is_recording_hovered(true)}
+                      onMouseLeave={() => set_is_recording_hovered(false)}
+                      title={`Voice input ${
+                        is_mac ? '(⇧⌘Space)' : '(Ctrl+Shift+Space)'
+                      }`}
+                    />
+                  ) : (
+                    <>
+                      <button
+                        className={cn(
+                          styles['footer__right__submit__button'],
+                          styles['footer__right__submit__button--copy'],
+                          'codicon',
+                          'codicon-copy'
+                        )}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          props.on_copy()
+                        }}
+                        title="Copy prompt"
+                      />
+                      <button
+                        className={cn(
+                          styles['footer__right__submit__button'],
+                          styles['footer__right__submit__button--chevron']
+                        )}
+                        onClick={() => {
+                          toggle_dropdown()
+                          set_is_invocation_dropdown_open(false)
+                        }}
+                        title="More actions"
+                      >
+                        <span
+                          className={cn(
+                            {
+                              [styles[
+                                'footer__right__submit__button--toggled'
+                              ]]: is_dropdown_open
+                            },
+                            'codicon',
+                            'codicon-chevron-down'
+                          )}
+                        />
+                      </button>
+                      {is_dropdown_open && (
+                        <DropdownMenu
+                          items={[
+                            {
+                              label: 'Voice input',
+                              shortcut: is_mac ? '⇧⌘Space' : 'Ctrl+Shift+Space',
+                              on_click: () => {
+                                props.on_recording_started()
+                                close_dropdown()
+                              }
+                            }
+                          ]}
+                        />
+                      )}
+                    </>
                   )}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    props.on_copy()
-                  }}
-                  title="Copy prompt"
-                />
+                </>
               )}
             </div>
           </div>

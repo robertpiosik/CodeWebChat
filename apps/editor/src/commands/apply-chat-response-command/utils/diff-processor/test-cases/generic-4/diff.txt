@@ -1,0 +1,156 @@
+Refactoring `search_files_for_context_command` to utilize `vscode.workspace.findFiles` significantly improves performance by leveraging VS Code's internal file indexing, replacing the previous manual `fs` iteration.
+
+> **Note:** This change shifts the behavior to **filename-only search** (glob-based). It will no longer grep the content of files, as `vscode.workspace.findFiles` searches paths.
+
+### Updated file: `apps/editor/src/commands/search-files-for-context.ts`
+
+```diff
+--- a/apps/editor/src/commands/search-files-for-context.ts
++++ b/apps/editor/src/commands/search-files-for-context.ts
+@@ -2,5 +2,4 @@
+ import * as path from 'path'
+-import * as fs from 'fs'
+ import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
+ import { Logger } from '@shared/utils/logger'
+@@ -112,65 +111,26 @@
+           initial_keywords = keywords_input
+ 
+-          const term = keywords_input.trim().toLowerCase()
++          const term = keywords_input.trim()
+           if (term.length === 0) return
+ 
+-          const keywords = [[term]]
+-
+-          let all_files: string[] = []
+-
+-          if (folder_path) {
+-            all_files = await workspace_provider.find_all_files(folder_path)
+-          } else {
+-            const roots = workspace_provider.get_workspace_roots()
+-            for (const root of roots) {
+-              const files = await workspace_provider.find_all_files(root)
+-              all_files.push(...files)
+-            }
+-          }
+-
+-          const matched_files = await search_files_by_keywords(
+-            all_files,
+-            keywords
+-          )
++          // If the user input contains a wildcard, treat it as a glob.
++          // Otherwise, wrap it to search for any file containing the term.
++          const glob_pattern = term.includes('*') ? term : `**/*${term}*`
++          let matched_uris: vscode.Uri[] = []
++
++          if (folder_path) {
++            const relative_pattern = new vscode.RelativePattern(
++              folder_path,
++              glob_pattern
++            )
++            matched_uris = await vscode.workspace.findFiles(relative_pattern)
++          } else {
++            matched_uris = await vscode.workspace.findFiles(glob_pattern)
++          }
++
++          const matched_files = matched_uris.map((uri) => uri.fsPath)
+ 
+           if (matched_files.length == 0) {
+             vscode.window.showInformationMessage(
+-              'No files found containing these keywords.'
++              'No files found matching this pattern.'
+             )
+             continue
+@@ -321,57 +281,2 @@
+     }
+   )
+ }
+-
+-
+-const search_files_by_keywords = async (
+-  files: string[],
+-  keyword_groups: string[][],
+-  progress?: vscode.Progress<{ message?: string; increment?: number }>,
+-  token?: vscode.CancellationToken
+-): Promise<string[]> => {
+-  const matched_files: string[] = []
+-  const total = files.length
+-  let processed = 0
+-  const increment = total > 0 ? (1 / total) * 100 : 0
+-
+-
+-  const matchers = keyword_groups.map((group) =>
+-    group.map((k) => {
+-      const term = k
+-
+-
+-      if (!term) return () => false
+-
+-
+-      const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+-      const pattern = escaped.replace(/\s+/g, '\\s+')
+-
+-
+-      const regex = new RegExp(pattern, 'm')
+-      return (text: string) => regex.test(text)
+-    })
+-  )
+-
+-
+-  for (const file_path of files) {
+-    if (token?.isCancellationRequested) break
+-
+-
+-    try {
+-      const file_name_lower = path.basename(file_path).toLowerCase()
+-      if (
+-        matchers.some((group) => group.every((match) => match(file_name_lower)))
+-      ) {
+-        matched_files.push(file_path)
+-        processed++
+-        progress?.report({
+-          increment,
+-          message: `${processed}/${total}`
+-        })
+-        continue
+-      }
+-
+-
+-      // Skip large files (> 1MB) to avoid performance issues
+-      const stats = await fs.promises.stat(file_path)
+-      if (stats.size > 1024 * 1024) {
+-        processed++
+-        progress?.report({
+-          increment,
+-          message: `${processed}/${total}`
+-        })
+-        continue
+-      }
+-
+-
+-      const content = await fs.promises.readFile(file_path, 'utf-8')
+-      const content_lower = content.toLowerCase()
+-
+-
+-      if (
+-        matchers.some((group) => group.every((match) => match(content_lower)))
+-      ) {
+-        matched_files.push(file_path)
+-      }
+-    } catch (error) {
+-      // Ignore read errors (binary files, permissions, etc.)
+-    }
+-
+-
+-    processed++
+-    progress?.report({
+-      increment,
+-      message: `${processed}/${total}`
+-    })
+-  }
+-
+-
+-  return matched_files
+-}
+
+
+```
