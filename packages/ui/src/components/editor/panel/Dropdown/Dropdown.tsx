@@ -143,9 +143,6 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
         <span className={styles.button__label}>
           {selected_option ? selected_option.label : 'Select an option'}
         </span>
-        {props.info && (
-          <span className={styles.button__info}>{props.info}</span>
-        )}
         {is_open ? (
           <span
             className={cn('codicon', 'codicon-chevron-up', styles.button__icon)}
@@ -171,6 +168,7 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
           }))}
           underline_non_selected_items={opened_by_shortcut.current}
           max_width={props.menu_max_width}
+          info={props.info}
         />
       )}
     </div>

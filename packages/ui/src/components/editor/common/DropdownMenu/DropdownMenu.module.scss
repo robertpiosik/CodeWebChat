@@ -17,6 +17,14 @@
   }
 }
 
+.header {
+  padding: 0 6px 4px 6px;
+  font-size: 12px;
+  color: var(--cwc-text-color-dimmed);
+  border-bottom: 1px solid var(--cwc-border-color-dimmed);
+  margin-bottom: 4px;
+}
+
 .item {
   display: flex;
   justify-content: space-between;

@@ -29,7 +29,7 @@ type Props = {
 export const Header: React.FC<Props> = (props) => {
   const { t } = use_translation()
   const header_ref = useRef<HTMLDivElement>(null)
-  const is_narrow_viewport = use_is_narrow_viewport(330)
+  const is_narrow_viewport = use_is_narrow_viewport(290)
   const is_mac = use_is_mac()
   const header_left_ref = useRef<HTMLDivElement>(null)
   const dropdown_container_ref = useRef<HTMLDivElement>(null)
@@ -85,9 +85,7 @@ export const Header: React.FC<Props> = (props) => {
               selected_value={props.web_prompt_type}
               on_change={props.on_web_prompt_type_change}
               menu_max_width="calc(100vw - 52px)"
-              info={
-                is_narrow_viewport ? undefined : t('panel.header.prompt-type')
-              }
+              info={t('panel.header.prompt-type')}
               title={
                 is_mac
                   ? 'Change prompt type (⇧⌥)'

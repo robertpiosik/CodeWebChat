@@ -14,6 +14,7 @@ export namespace DropdownMenu {
     items: Item[]
     underline_non_selected_items?: boolean
     max_width?: number | string
+    info?: string
   }
 }
 
@@ -26,6 +27,7 @@ export const DropdownMenu: React.FC<DropdownMenu.Props> = (props) => {
   return (
     <div className={styles.menu} style={{ maxWidth: props.max_width }}>
       <div className={styles.menu__inner}>
+        {props.info && <div className={styles.header}>{props.info}</div>}
         {props.items.map((item, index) => {
           const is_selected = item.is_selected && is_preselection_respected
           const should_underline =
