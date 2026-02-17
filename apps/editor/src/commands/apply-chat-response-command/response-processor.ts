@@ -24,12 +24,10 @@ import { FileInPreview } from '@shared/types/file-in-preview'
 import { update_undo_button_state } from './utils/state-manager'
 import { check_for_conflict_markers } from './utils/file-checks'
 import { handle_conflict_markers } from './handlers/conflict-markers-handler'
-import {
-  handle_truncated_edit,
-  is_truncation_line
-} from './handlers/truncated-handler'
+import { handle_truncated_edit } from './handlers/truncated-handler'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { natural_sort } from '@/utils/natural-sort'
+import { is_truncation_line } from './utils/edit-formats/truncations'
 
 export type PreviewData = {
   original_states: OriginalFileState[]

@@ -1,16 +1,14 @@
-const path = require('path')
-const crypto = require('crypto')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+import * as path from 'path'
+import * as crypto from 'crypto'
+import * as webpack from 'webpack'
+import CopyWebpackPlugin from 'copy-webpack-plugin'
+import { CleanWebpackPlugin } from 'clean-webpack-plugin'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 
-/**
- * @type {import('webpack').Configuration[]}
- */
-const config = [
+const config: ((env: any, argv: any) => webpack.Configuration)[] = [
   // Extension Configuration (Node.js environment)
-  (env, argv) => {
-    const is_production = argv.mode == 'production'
+  (env: any, argv: any): webpack.Configuration => {
+    const is_production = argv.mode === 'production'
     return {
       name: 'extension',
       mode: is_production ? 'production' : 'development',
@@ -25,7 +23,7 @@ const config = [
         libraryTarget: 'commonjs2',
         devtoolModuleFilenameTemplate: '../[resource-path]'
       },
-      devtool: is_production ? false : 'eval-source-map', // Use 'eval-source-map' for faster dev builds and good debugging
+      devtool: is_production ? false : 'eval-source-map',
       cache: {
         type: 'filesystem',
         buildDependencies: {
@@ -74,7 +72,12 @@ const config = [
                   .toString()
                   .split('\n')
                   .slice(12)
-                  .filter((line) => !['> [!TIP]', '> [!IMPORTANT]', '> [!NOTE]'].includes(line.trim()))
+                  .filter(
+                    (line) =>
+                      !['> [!TIP]', '> [!IMPORTANT]', '> [!NOTE]'].includes(
+                        line.trim()
+                      )
+                  )
                   .join('\n')
               }
             }
@@ -85,8 +88,8 @@ const config = [
     }
   },
   // View Configuration (Web environment)
-  (env, argv) => {
-    const isProduction = argv.mode == 'production'
+  (env: any, argv: any): webpack.Configuration => {
+    const isProduction = argv.mode === 'production'
     return {
       name: 'view',
       mode: isProduction ? 'production' : 'development',
@@ -103,7 +106,7 @@ const config = [
       performance: {
         hints: false
       },
-      devtool: isProduction ? false : 'eval-source-map', // Use 'eval-source-map' for dev
+      devtool: isProduction ? false : 'eval-source-map',
       cache: {
         type: 'filesystem',
         buildDependencies: {
@@ -132,12 +135,16 @@ const config = [
                 loader: 'css-loader',
                 options: {
                   modules: {
-                    getLocalIdent: (context, _, localName) => {
+                    getLocalIdent: (
+                      context: webpack.LoaderContext<any>,
+                      _: any,
+                      localName: string
+                    ) => {
                       const filename = context.resourcePath
                       const isModule = /\.module\.(scss|css)$/i.test(filename)
                       if (isModule) {
                         const moduleName = path
-                          .basename(filename)
+                          .basename(filename as string)
                           .replace(/\.module\.(scss|css)$/i, '')
                         const hash = crypto
                           .createHash('md5')
@@ -157,7 +164,10 @@ const config = [
                 loader: 'sass-loader',
                 options: {
                   additionalData: `@use "${path
-                    .resolve(__dirname, '../../packages/ui/src/styles/foundation')
+                    .resolve(
+                      __dirname,
+                      '../../packages/ui/src/styles/foundation'
+                    )
                     .replace(/\\/g, '/')}" as *;`
                 }
               }
@@ -193,11 +203,11 @@ const config = [
       plugins: [
         new MiniCssExtractPlugin({
           filename: '[name].css'
-        })
-      ],
+        }) as unknown as webpack.WebpackPluginInstance
+      ] as webpack.WebpackPluginInstance[],
       stats: 'errors-only'
     }
   }
 ]
 
-module.exports = config
+export default config
