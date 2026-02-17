@@ -140,7 +140,9 @@ export const handle_conflict_markers = async (
             file_path: file.file_path,
             content: rename_source_content,
             workspace_name: file.workspace_name,
-            file_path_to_restore: file.renamed_from
+            file_path_to_restore: file.renamed_from,
+            ai_content: file.content,
+            proposed_content: new_content
           })
         } catch (error) {
           failed_files.push(file)
@@ -164,7 +166,9 @@ export const handle_conflict_markers = async (
           original_states.push({
             file_path: file.file_path,
             content: original_content,
-            workspace_name: file.workspace_name
+            workspace_name: file.workspace_name,
+            ai_content: file.content,
+            proposed_content: current_content
           })
 
           Logger.info({
@@ -205,7 +209,8 @@ export const handle_conflict_markers = async (
             file_path: file.file_path,
             content: '',
             file_state: 'new',
-            workspace_name: file.workspace_name
+            workspace_name: file.workspace_name,
+            proposed_content: content_to_write
           })
         } catch (error) {
           failed_files.push(file)
@@ -237,7 +242,9 @@ export const handle_conflict_markers = async (
           original_states.push({
             file_path: file.file_path,
             content: original_content,
-            workspace_name: file.workspace_name
+            workspace_name: file.workspace_name,
+            ai_content: file.content,
+            proposed_content: final_content
           })
         } catch (error: any) {
           Logger.error({

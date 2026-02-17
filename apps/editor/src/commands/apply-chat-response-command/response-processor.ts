@@ -251,9 +251,7 @@ export const process_chat_response = async (
         if (result.diff_application_method && result.original_states) {
           for (const state of result.original_states) {
             state.diff_application_method = result.diff_application_method
-            if (result.diff_application_method == 'search_and_replace') {
-              state.ai_content = patch.content
-            }
+            state.ai_content = patch.content
           }
         }
         if (result.original_states) {

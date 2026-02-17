@@ -104,7 +104,9 @@ export const handle_truncated_edit = async (
       original_states.push({
         file_path: file.file_path,
         content: original_content,
-        workspace_name: file.workspace_name
+        workspace_name: file.workspace_name,
+        ai_content: file.content,
+        proposed_content: new_content
       })
 
       Logger.info({
