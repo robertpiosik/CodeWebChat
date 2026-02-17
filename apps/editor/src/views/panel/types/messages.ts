@@ -820,7 +820,6 @@ export interface ShowApiManagerProgressMessage extends BaseMessage {
   tokens_per_second?: number
   total_tokens?: number
   cancellable?: boolean
-  show_elapsed_time?: boolean
   delay_visibility?: boolean
   provider_name: string
   model?: string

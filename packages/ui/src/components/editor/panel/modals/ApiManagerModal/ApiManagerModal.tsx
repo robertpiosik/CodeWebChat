@@ -9,7 +9,6 @@ type Props = {
     title: string
     tokens_per_second?: number
     total_tokens?: number
-    show_elapsed_time?: boolean
     delay_visibility?: boolean
     provider_name: string
     model?: string
@@ -151,9 +150,7 @@ export const ApiManagerModal: React.FC<Props> = (props) => {
                       {item.total_tokens !== undefined && (
                         <div>({format_tokens(item.total_tokens)})</div>
                       )}
-                      {item.show_elapsed_time && (
-                        <div>{(elapsed_ms / 1000).toFixed(1)}s</div>
-                      )}
+                      <div>{(elapsed_ms / 1000).toFixed(1)}s</div>
                     </div>
                   </div>
                 </div>

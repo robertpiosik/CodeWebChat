@@ -10,7 +10,6 @@ export const Default = () => {
     {
       id: '1',
       title: 'Receiving...',
-      show_elapsed_time: true,
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     }
@@ -29,7 +28,6 @@ export const Default = () => {
           {
             id: '1',
             title: 'Receiving...',
-            show_elapsed_time: true,
             provider_name: 'OpenAI',
             model: 'gpt-5.2'
           }
@@ -42,11 +40,10 @@ export const Default = () => {
 }
 
 export const MultipleItems = () => {
-  const [items, set_items] = useState([
+  const initial_items = [
     {
       id: '1',
       title: 'Thinking...',
-      show_elapsed_time: true,
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     },
@@ -55,110 +52,98 @@ export const MultipleItems = () => {
       title: 'Receiving...',
       tokens_per_second: 145,
       total_tokens: 320,
-      show_elapsed_time: true,
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     },
     {
       id: '3',
       title: 'Waiting for connection...',
-      show_elapsed_time: true,
       provider_name: 'Anthropic',
       model: 'claude-4-5-sonnet'
     },
     {
-      id: '1',
+      id: '4',
       title: 'Thinking...',
-      show_elapsed_time: true,
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     },
     {
-      id: '2',
+      id: '5',
       title: 'Receiving...',
       tokens_per_second: 145,
       total_tokens: 320,
-      show_elapsed_time: true,
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     },
     {
-      id: '3',
+      id: '6',
       title: 'Waiting for connection...',
-      show_elapsed_time: true,
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     },
     {
-      id: '1',
+      id: '7',
       title: 'Thinking...',
-      show_elapsed_time: true,
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     },
     {
-      id: '2',
+      id: '8',
       title: 'Receiving...',
       tokens_per_second: 145,
       total_tokens: 320,
-      show_elapsed_time: true,
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     },
     {
-      id: '3',
+      id: '9',
       title: 'Waiting for connection...',
-      show_elapsed_time: true,
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     },
     {
-      id: '1',
+      id: '10',
       title: 'Thinking...',
-      show_elapsed_time: true,
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     },
     {
-      id: '2',
+      id: '11',
       title: 'Receiving...',
       tokens_per_second: 145,
       total_tokens: 320,
-      show_elapsed_time: true,
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     },
     {
-      id: '3',
+      id: '12',
       title: 'Waiting for connection...',
-      show_elapsed_time: true,
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     },
     {
-      id: '1',
+      id: '13',
       title: 'Thinking...',
-      show_elapsed_time: true,
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     },
     {
-      id: '2',
+      id: '14',
       title: 'Receiving...',
       tokens_per_second: 145,
       total_tokens: 320,
-      show_elapsed_time: true,
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     },
     {
-      id: '3',
+      id: '15',
       title: 'Waiting for connection...',
-      show_elapsed_time: true,
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     }
-  ])
+  ]
+
+  const [items, set_items] = useState(initial_items)
 
   const handle_cancel = (id: string) => {
     set_items((prev) => prev.filter((i) => i.id !== id))
@@ -167,36 +152,6 @@ export const MultipleItems = () => {
   return items.length > 0 ? (
     <ApiManagerModal progress_items={items} on_cancel={handle_cancel} />
   ) : (
-    <button
-      onClick={() =>
-        set_items([
-          {
-            id: '1',
-            title: 'Thinking...',
-            show_elapsed_time: true,
-            provider_name: 'OpenAI',
-            model: 'gpt-5.2'
-          },
-          {
-            id: '2',
-            title: 'Receiving...',
-            tokens_per_second: 145,
-            total_tokens: 320,
-            show_elapsed_time: true,
-            provider_name: 'OpenAI',
-            model: 'gpt-5.2'
-          },
-          {
-            id: '3',
-            title: 'Waiting for connection...',
-            show_elapsed_time: true,
-            provider_name: 'OpenAI',
-            model: 'gpt-5.2'
-          }
-        ])
-      }
-    >
-      Reset
-    </button>
+    <button onClick={() => set_items(initial_items)}>Reset</button>
   )
 }
