@@ -52,16 +52,16 @@ export const ResponsePreview: FC<Props> = (props) => {
   const scroll_top_ref = useRef(0)
   const scrollable_ref = useRef<any>(null)
 
-  const toggle_expanded_text_item = (
-    index: number,
+  const toggle_expanded_text_item = (params: {
+    index: number
     element: HTMLDivElement
-  ) => {
+  }) => {
     const scrollable_instance = scrollable_ref.current
     if (scrollable_instance) {
       const scroll_container = scrollable_instance.getScrollElement()
       if (scroll_container) {
         const scroll_container_rect = scroll_container.getBoundingClientRect()
-        const element_rect = element.getBoundingClientRect()
+        const element_rect = params.element.getBoundingClientRect()
 
         if (element_rect.top < scroll_container_rect.top) {
           // Element's top edge is above the scrollable viewport's top edge.
@@ -78,10 +78,10 @@ export const ResponsePreview: FC<Props> = (props) => {
 
     set_expanded_text_items((prev) => {
       const new_set = new Set(prev)
-      if (new_set.has(index)) {
-        new_set.delete(index)
+      if (new_set.has(params.index)) {
+        new_set.delete(params.index)
       } else {
-        new_set.add(index)
+        new_set.add(params.index)
       }
       return new_set
     })
@@ -275,14 +275,10 @@ export const ResponsePreview: FC<Props> = (props) => {
           </div>
         )}
 
-        {aggressive_fallback_count > 0 && (
+        {aggressive_fallback_count > 1 && (
           <div
             className={cn(styles.info, styles['info--warning'])}
-            title={`${
-              files_in_preview.length > 1
-                ? `${aggressive_fallback_count} of ${files_in_preview.length} files`
-                : 'The file'
-            } applied with fallback method`}
+            title={`${aggressive_fallback_count} of ${files_in_preview.length} files applied with fallback method`}
           >
             <div
               className={cn(
@@ -291,9 +287,7 @@ export const ResponsePreview: FC<Props> = (props) => {
               )}
             >
               <span className="codicon codicon-warning" />
-              {files_in_preview.length > 1
-                ? `${aggressive_fallback_count} of ${files_in_preview.length} edits applied with fallback method`
-                : 'The edit applied with fallback method'}
+              {`${aggressive_fallback_count} of ${files_in_preview.length} files applied with fallback method`}
             </div>
           </div>
         )}
@@ -365,7 +359,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                   language={item.language}
                   is_expanded={expanded_text_items.has(index)}
                   on_toggle={(element) =>
-                    toggle_expanded_text_item(index, element)
+                    toggle_expanded_text_item({ index, element })
                   }
                 />
               )
@@ -376,7 +370,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                   content={item.content}
                   is_expanded={expanded_text_items.has(index)}
                   on_toggle={(element) =>
-                    toggle_expanded_text_item(index, element)
+                    toggle_expanded_text_item({ index, element })
                   }
                 />
               )
