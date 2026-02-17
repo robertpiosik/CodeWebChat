@@ -6,7 +6,7 @@ import { Logger } from '@shared/utils/logger'
 import { promisify } from 'util'
 import { OriginalFileState } from '../types/original-file-state'
 import { create_safe_path } from '@/utils/path-sanitizer'
-import { apply_diff, process_diff } from '../utils/diff-processor'
+import { apply_diff } from '../utils/diff-processor'
 import { remove_directory_if_empty } from '../utils/file-operations'
 
 const execAsync = promisify(exec)
@@ -395,6 +395,36 @@ const handle_deleted_file_patch = async (
       data: { error: error.message, file_path }
     })
     return { success: false, original_states }
+  }
+}
+
+const process_diff = async (params: {
+  file_path: string
+  diff_patch_path: string
+  use_strict_whitespace?: boolean
+}): Promise<string> => {
+  const file_content = fs.readFileSync(params.file_path, 'utf8')
+  const diff_patch_content = fs.readFileSync(params.diff_patch_path, 'utf8')
+
+  const result = apply_diff({
+    original_code: file_content,
+    diff_patch: diff_patch_content,
+    use_strict_whitespace: params.use_strict_whitespace
+  })
+
+  try {
+    await vscode.workspace.fs.writeFile(
+      vscode.Uri.file(params.file_path),
+      Buffer.from(result, 'utf8')
+    )
+    return result
+  } catch (error) {
+    Logger.error({
+      function_name: 'process_diff',
+      message: 'Failed to save file after applying diff patch',
+      data: { error, file_path: params.file_path }
+    })
+    throw new Error('Failed to save file after applying diff patch')
   }
 }
 

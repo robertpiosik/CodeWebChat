@@ -1,6 +1,3 @@
-import * as vscode from 'vscode'
-import * as fs from 'fs'
-
 type ReplaceLine = {
   content: string
   search_index: number | null
@@ -12,31 +9,6 @@ type SearchBlock = {
   search_block_start_index: number
   actual_original_line_count: number
   search_to_original_map: Map<number, number>
-}
-
-export const process_diff = async (params: {
-  file_path: string
-  diff_patch_path: string
-  use_strict_whitespace?: boolean
-}): Promise<string> => {
-  const file_content = fs.readFileSync(params.file_path, 'utf8')
-  const diff_patch_content = fs.readFileSync(params.diff_patch_path, 'utf8')
-
-  const result = apply_diff({
-    original_code: file_content,
-    diff_patch: diff_patch_content,
-    use_strict_whitespace: params.use_strict_whitespace
-  })
-
-  try {
-    await vscode.workspace.fs.writeFile(
-      vscode.Uri.file(params.file_path),
-      Buffer.from(result, 'utf8')
-    )
-    return result
-  } catch (error) {
-    throw new Error('Failed to save file after applying diff patch')
-  }
 }
 
 export const apply_diff = (params: {
