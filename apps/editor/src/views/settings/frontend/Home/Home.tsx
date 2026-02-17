@@ -365,6 +365,7 @@ export const Home: React.FC<Props> = (props) => {
           on_ai_studio_user_id_change={props.on_ai_studio_user_id_change}
           on_stuck_change={general_on_stuck_change}
         />
+
         <Section
           ref={(el) => (section_refs.current['model-providers'] = el)}
           title="Model Providers"
@@ -469,6 +470,7 @@ export const Home: React.FC<Props> = (props) => {
             />
           </Group>
         </Section>
+
         <Section
           ref={(el) => (section_refs.current['intelligent-update'] = el)}
           group="API Tool"
@@ -531,6 +533,7 @@ export const Home: React.FC<Props> = (props) => {
             />
           </Group>
         </Section>
+
         <Section
           ref={(el) => (section_refs.current['prune-context'] = el)}
           group="API Tool"
@@ -548,7 +551,7 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            A request include context (all checked files) in a compacted form.
+            A request includes context (all checked files) in a compacted form.
           </Notice>
           {props.prune_context_configs.length == 0 && (
             <Notice type="warning">
@@ -570,6 +573,7 @@ export const Home: React.FC<Props> = (props) => {
             />
           </Group>
         </Section>
+
         <Section
           ref={(el) => (section_refs.current['code-at-cursor'] = el)}
           group="API Tool"
@@ -628,6 +632,7 @@ export const Home: React.FC<Props> = (props) => {
             />
           </Group>
         </Section>
+
         <Section
           ref={(el) => (section_refs.current['voice-input'] = el)}
           group="API Tool"
