@@ -62,7 +62,7 @@ export const arena: Chatbot = {
 
     observe_for_responses({
       chatbot_name: 'Arena',
-      is_generating: () => !!document.querySelector('ol.animate-spin'),
+      is_generating: () => !!document.querySelector('ol .animate-spin'),
       footer_selector:
         'ol .bg-surface-primary > div:last-child > div.text-text-primary',
       add_buttons
