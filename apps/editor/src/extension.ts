@@ -33,7 +33,8 @@ import {
   uncheck_parent_folder_command,
   search_files_for_context_command,
   check_referencing_files_for_context_command,
-  check_definition_file_for_context_command
+  check_definition_file_for_context_command,
+  rate_command
 } from './commands'
 import {
   get_checkpoints,
@@ -137,6 +138,7 @@ export async function activate(context: vscode.ExtensionContext) {
     check_referencing_files_for_context_command(workspace_provider),
     search_files_for_context_command(workspace_provider, context),
     check_definition_file_for_context_command(workspace_provider),
+    rate_command(),
     open_url_command({
       command: 'codeWebChat.openRepository',
       url: 'https://github.com/robertpiosik/CodeWebChat'

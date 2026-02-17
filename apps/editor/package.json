@@ -124,6 +124,12 @@
         "icon": "$(copy)"
       },
       {
+        "command": "codeWebChat.rate",
+        "title": "Rate",
+        "category": "Code Web Chat",
+        "icon": "$(feedback)"
+      },
+      {
         "command": "codeWebChat.openRepository",
         "title": "GitHub",
         "category": "Code Web Chat",
@@ -493,6 +499,10 @@
           "when": "false"
         },
         {
+          "command": "codeWebChat.rate",
+          "when": "false"
+        },
+        {
           "command": "codeWebChat.setRanges",
           "when": "false"
         },
@@ -607,6 +617,11 @@
           "command": "codeWebChat.closeAllEditors",
           "when": "view == codeWebChatViewOpenEditors",
           "group": "navigation@5"
+        },
+        {
+          "command": "codeWebChat.rate",
+          "when": "view == codeWebChatView",
+          "group": "navigation@1.5"
         },
         {
           "command": "codeWebChat.openRepository",
