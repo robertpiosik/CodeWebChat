@@ -1,0 +1,6 @@
+Step 1: Setup
+Step 2: Initialize
+Step 3: Execute
+Step 4: Cleanup
+Step 5: Logging
+Step 6: Finish

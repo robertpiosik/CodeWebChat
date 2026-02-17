@@ -1,0 +1,5 @@
+import { a } from 'module'
+// ...
+const y = 20
+
+export const result = x * y

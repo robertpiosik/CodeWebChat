@@ -7,10 +7,8 @@ import { create_safe_path, sanitize_file_name } from '@/utils/path-sanitizer'
 import { FileItem } from '../utils/clipboard-parser'
 import { OriginalFileState } from '../types/original-file-state'
 import { remove_directory_if_empty } from '../utils/file-operations'
-import {
-  apply_conflict_markers_to_content,
-  parse_conflict_segments
-} from '../utils/conflict-marker-parser'
+import { apply_conflict_markers_to_content } from '../utils/edit-formats/conflict-markers/apply-conflict-markers-to-content'
+import { parse_conflict_segments } from '../utils/edit-formats/conflict-markers'
 
 export const handle_conflict_markers = async (
   files: FileItem[]

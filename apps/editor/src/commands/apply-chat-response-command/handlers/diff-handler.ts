@@ -6,7 +6,7 @@ import { Logger } from '@shared/utils/logger'
 import { promisify } from 'util'
 import { OriginalFileState } from '../types/original-file-state'
 import { create_safe_path } from '@/utils/path-sanitizer'
-import { apply_diff } from '../utils/diff-processor'
+import { apply_diff } from '../utils/edit-formats/diffs'
 import { remove_directory_if_empty } from '../utils/file-operations'
 
 const execAsync = promisify(exec)

@@ -1,0 +1,7 @@
+import { a } from 'module'
+import { b } from 'module'
+
+const x = 10
+const y = 20
+
+export const result = x + y

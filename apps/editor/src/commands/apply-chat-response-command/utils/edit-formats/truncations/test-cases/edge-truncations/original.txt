@@ -1,0 +1,6 @@
+/* Header */
+/* License */
+function main() {
+  console.log("running");
+}
+// EOF
