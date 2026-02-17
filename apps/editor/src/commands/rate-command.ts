@@ -17,30 +17,30 @@ export function rate_command() {
       }
     ]
 
-    const quickPick = vscode.window.createQuickPick<(typeof options)[0]>()
-    quickPick.items = options
-    quickPick.title = 'Rate Extension'
-    quickPick.placeholder = 'How do you like CWC?'
-    quickPick.buttons = [
+    const quick_pick = vscode.window.createQuickPick<(typeof options)[0]>()
+    quick_pick.items = options
+    quick_pick.title = 'Rate Extension'
+    quick_pick.placeholder = 'How do you like CWC?'
+    quick_pick.buttons = [
       {
         iconPath: new vscode.ThemeIcon('close'),
         tooltip: 'Close'
       }
     ]
 
-    quickPick.onDidTriggerButton(() => {
-      quickPick.hide()
+    quick_pick.onDidTriggerButton(() => {
+      quick_pick.hide()
     })
 
-    quickPick.onDidAccept(() => {
-      const selected = quickPick.selectedItems[0]
+    quick_pick.onDidAccept(() => {
+      const selected = quick_pick.selectedItems[0]
       if (selected) {
         vscode.env.openExternal(vscode.Uri.parse(selected.url))
       }
-      quickPick.hide()
+      quick_pick.hide()
     })
 
-    quickPick.onDidHide(() => quickPick.dispose())
-    quickPick.show()
+    quick_pick.onDidHide(() => quick_pick.dispose())
+    quick_pick.show()
   })
 }
