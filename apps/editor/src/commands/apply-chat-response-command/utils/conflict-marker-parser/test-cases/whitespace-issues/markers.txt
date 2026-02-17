@@ -1,0 +1,6 @@
+  context
+<<<<<<< 
+  change me
+======= 
+  changed
+>>>>>>>

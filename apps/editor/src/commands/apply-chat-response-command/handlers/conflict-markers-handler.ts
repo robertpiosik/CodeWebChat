@@ -97,10 +97,10 @@ export const handle_conflict_markers = async (
         try {
           let new_content = rename_source_content
           if (has_markers) {
-            new_content = apply_conflict_markers_to_content(
-              rename_source_content,
-              file.content
-            )
+            new_content = apply_conflict_markers_to_content({
+              original_content: rename_source_content,
+              markers_content: file.content
+            })
           } else {
             new_content = file.content
           }
@@ -151,10 +151,10 @@ export const handle_conflict_markers = async (
         try {
           const document = await vscode.workspace.openTextDocument(safe_path)
           const original_content = document.getText()
-          const current_content = apply_conflict_markers_to_content(
+          const current_content = apply_conflict_markers_to_content({
             original_content,
-            file.content
-          )
+            markers_content: file.content
+          })
 
           if (current_content !== original_content) {
             await vscode.workspace.fs.writeFile(
