@@ -546,13 +546,36 @@ export const apply_git_patch = async (
       await reopen_closed_files(closed_files)
       await vscode.workspace.fs.delete(vscode.Uri.file(temp_file))
 
-      if (original_states && applied_content && file_paths.length > 0) {
-        const processed_path = file_paths[0]
-        const state = original_states.find(
-          (s) => s.file_path === processed_path
-        )
-        if (state) {
-          state.proposed_content = applied_content
+      if (original_states) {
+        for (const state of original_states) {
+          if (state.proposed_content !== undefined) {
+            continue
+          }
+
+          if (
+            applied_content &&
+            file_paths.length > 0 &&
+            state.file_path == file_paths[0]
+          ) {
+            state.proposed_content = applied_content
+            continue
+          }
+
+          const safe_path = create_safe_path(workspace_path, state.file_path)
+          if (safe_path && fs.existsSync(safe_path)) {
+            try {
+              const content = fs.readFileSync(safe_path, 'utf8')
+              state.proposed_content = content
+            } catch (error) {
+              Logger.warn({
+                function_name: 'apply_git_patch',
+                message: 'Failed to read proposed content from disk',
+                data: { file_path: state.file_path, error }
+              })
+            }
+          } else if (state.file_state === 'deleted') {
+            state.proposed_content = ''
+          }
         }
       }
 
