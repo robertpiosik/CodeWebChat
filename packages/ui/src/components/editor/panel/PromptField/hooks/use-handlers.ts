@@ -715,6 +715,44 @@ export const use_handlers = (
     }
 
     if (!is_shift_pressed_ref.current && text.length > 1000) {
+      const selection = window.getSelection()
+      if (
+        selection &&
+        selection.rangeCount > 0 &&
+        !selection.isCollapsed &&
+        params.input_ref.current
+      ) {
+        const range = selection.getRangeAt(0)
+        const input_element = params.input_ref.current
+
+        if (input_element.contains(range.startContainer)) {
+          const pre_selection_range = document.createRange()
+          pre_selection_range.selectNodeContents(input_element)
+          pre_selection_range.setEnd(range.startContainer, range.startOffset)
+          const display_start = pre_selection_range.toString().length
+
+          pre_selection_range.setEnd(range.endContainer, range.endOffset)
+          const display_end = pre_selection_range.toString().length
+
+          const raw_start = map_display_pos_to_raw_pos(
+            display_start,
+            props.value,
+            props.context_file_paths ?? []
+          )
+          const raw_end = map_display_pos_to_raw_pos(
+            display_end,
+            props.value,
+            props.context_file_paths ?? []
+          )
+
+          const new_value =
+            props.value.substring(0, raw_start) + props.value.substring(raw_end)
+
+          update_value(new_value, raw_start)
+          props.on_caret_position_change(raw_start)
+          raw_caret_pos_ref.current = raw_start
+        }
+      }
       props.on_paste_document(text)
       return
     }
