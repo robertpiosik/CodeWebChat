@@ -425,8 +425,7 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            A request includes the selected files, edit format instructions, and
-            your prompt.
+            A request includes context (all checked files).
           </Notice>
           {props.edit_context_configs.length == 0 && (
             <Notice type="warning">
@@ -489,8 +488,8 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            A request includes the original file and the failed to apply code
-            block.
+            A request includes just the original file and the failed to apply
+            code block.
           </Notice>
           {props.intelligent_update_configs.length == 0 && (
             <Notice type="warning">
@@ -549,7 +548,7 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            A request includes the selected files in a compacted form.
+            A request includes context (all checked files) in a compacted form.
           </Notice>
           {props.prune_context_configs.length == 0 && (
             <Notice type="warning">
@@ -588,7 +587,7 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            A request includes the editor with cursor and the selected files.
+            A request includes context (all checked files).
           </Notice>
           {props.code_at_cursor_configs.length == 0 && (
             <Notice type="warning">
@@ -648,8 +647,7 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            A request includes instructions and an audio file. Requires a
-            multimodal model supporting{' '}
+            Requires a multimodal model supporting{' '}
             <a
               href="#"
               onClick={(e) => {

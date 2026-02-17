@@ -95,18 +95,18 @@ Changed greeting to wishes.
 ### Updated file: \`src/examples/hello.py\`
 
 \`\`\`python
-<<<<<<< SEARCH
+<<<<<<< HEAD
 GREETING = "Welcome everyone!"
 =======
 WISHES = "Have a nice day!"
->>>>>>> REPLACE
-<<<<<<< SEARCH
+>>>>>>>
+<<<<<<< HEAD
  def show_greeting():
    print(GREETING)
 =======
  def show_wishes():
    print(WISHES)
->>>>>>> REPLACE
+>>>>>>>
 \`\`\`
 
 ### Deleted file: \`src/examples/weekdays.py\`
