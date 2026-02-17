@@ -425,7 +425,7 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            Requests include context (all checked files).
+            A request includes context (all checked files).
           </Notice>
           {props.edit_context_configs.length == 0 && (
             <Notice type="warning">
@@ -488,7 +488,7 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            Requests include the original file and the failed to apply code
+            A request includes the original file and the failed to apply code
             block.
           </Notice>
           {props.intelligent_update_configs.length == 0 && (
@@ -548,7 +548,7 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            Requests include context (all checked files) in a compacted form.
+            A request include context (all checked files) in a compacted form.
           </Notice>
           {props.prune_context_configs.length == 0 && (
             <Notice type="warning">
@@ -587,7 +587,7 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            Requests include context (all checked files).
+            A request includes context (all checked files).
           </Notice>
           {props.code_at_cursor_configs.length == 0 && (
             <Notice type="warning">
@@ -729,7 +729,7 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            Requests include diffs of changed files and their original states.
+            A request includes diffs of changed files and their original states.
           </Notice>
           {props.commit_messages_configs.length == 0 && (
             <Notice type="warning">

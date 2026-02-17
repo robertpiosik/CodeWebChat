@@ -518,8 +518,7 @@ export const edit_system_instructions_override_for_config = async (
     const input = vscode.window.createInputBox()
     input.title = 'Edit Configuration'
     input.value = config.system_instructions_override ?? ''
-    input.prompt = 'Enter system instructions override.'
-    input.placeholder = 'System Instructions Override'
+    input.prompt = 'Enter system instructions.'
 
     let accepted = false
     const disposables: vscode.Disposable[] = []

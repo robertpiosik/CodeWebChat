@@ -166,9 +166,8 @@ export const handle_show_prompt_template_quick_pick = async (
           if (selected.label == NAME_LABEL) {
             const new_name = await vscode.window.showInputBox({
               title,
-              prompt: 'Enter an optional name for the template',
-              value: template.name,
-              placeHolder: 'Leave empty to remove name'
+              prompt: 'Enter a name for the template',
+              value: template.name
             })
 
             let next_template_state = template
