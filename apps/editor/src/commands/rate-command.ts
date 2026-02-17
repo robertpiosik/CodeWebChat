@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 
 export function rate_command() {
-  return vscode.commands.registerCommand('codeWebChat.rate', async () => {
+  return vscode.commands.registerCommand('codeWebChat.rate', () => {
     const options = [
       {
         label: 'VS Code Marketplace',
@@ -17,12 +17,30 @@ export function rate_command() {
       }
     ]
 
-    const selected = await vscode.window.showQuickPick(options, {
-      placeHolder: 'Rate the tool'
+    const quickPick = vscode.window.createQuickPick<(typeof options)[0]>()
+    quickPick.items = options
+    quickPick.title = 'Rate Extension'
+    quickPick.placeholder = 'How do you like CWC?'
+    quickPick.buttons = [
+      {
+        iconPath: new vscode.ThemeIcon('close'),
+        tooltip: 'Close'
+      }
+    ]
+
+    quickPick.onDidTriggerButton(() => {
+      quickPick.hide()
     })
 
-    if (selected) {
-      vscode.env.openExternal(vscode.Uri.parse(selected.url))
-    }
+    quickPick.onDidAccept(() => {
+      const selected = quickPick.selectedItems[0]
+      if (selected) {
+        vscode.env.openExternal(vscode.Uri.parse(selected.url))
+      }
+      quickPick.hide()
+    })
+
+    quickPick.onDidHide(() => quickPick.dispose())
+    quickPick.show()
   })
 }
