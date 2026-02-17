@@ -1,6 +1,10 @@
   context
-<<<<<<< 
+<<<<<<<
+
   change me
+
+and me
+
 ======= 
   changed
 >>>>>>>

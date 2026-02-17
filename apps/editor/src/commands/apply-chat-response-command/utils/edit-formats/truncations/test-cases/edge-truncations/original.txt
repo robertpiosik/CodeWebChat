@@ -1,6 +1,6 @@
 /* Header */
 /* License */
 function main() {
-  console.log("running");
+  console.log("welcome");
 }
 // EOF

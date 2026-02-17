@@ -23,49 +23,55 @@ export const apply_conflict_markers_to_content = (params: {
     const context_before = prev && prev.type == 'common' ? prev.lines : []
     const context_after = next && next.type == 'common' ? next.lines : []
 
-    const all_search_lines = [
-      ...context_before,
-      ...segment.original_lines,
-      ...context_after
-    ]
+    const clean_lines = (lines: string[]) =>
+      lines.filter((l) => l.trim() !== '')
 
-    const all_search_patterns = all_search_lines.map((line) => {
-      const trimmed = line.trim()
-      if (trimmed == '') return '[ \\t]*'
-      const escaped = escape_reg_exp(trimmed)
-      return `[ \\t]*${escaped}[ \\t]*`
-    })
+    const clean_context_before = clean_lines(context_before)
+    const clean_original = clean_lines(segment.original_lines)
+    const clean_context_after = clean_lines(context_after)
 
-    const start_original = context_before.length
-    const end_original = start_original + segment.original_lines.length
+    const SEPARATOR = '(?:\\r?\\n[ \\t]*)+'
+
+    const build_block_pattern = (lines: string[]) => {
+      return lines
+        .map((line) => {
+          const trimmed = line.trim()
+          const escaped = escape_reg_exp(trimmed)
+          return `[ \\t]*${escaped}[ \\t]*`
+        })
+        .join(SEPARATOR)
+    }
 
     const regex_parts: string[] = []
-    if (context_before.length > 0) {
-      regex_parts.push(
-        `(${all_search_patterns.slice(0, start_original).join('\\r?\\n')})`
-      )
-    }
-    if (segment.original_lines.length > 0) {
-      regex_parts.push(
-        `(${all_search_patterns
-          .slice(start_original, end_original)
-          .join('\\r?\\n')})`
-      )
-    }
-    if (context_after.length > 0) {
-      regex_parts.push(
-        `(${all_search_patterns.slice(end_original).join('\\r?\\n')})`
-      )
+
+    if (clean_context_before.length > 0) {
+      regex_parts.push(`(${build_block_pattern(clean_context_before)})`)
     }
 
-    const regex = new RegExp(regex_parts.join('\\r?\\n'))
+    if (clean_original.length > 0) {
+      regex_parts.push(`(${build_block_pattern(clean_original)})`)
+    }
+
+    if (clean_context_after.length > 0) {
+      regex_parts.push(`(${build_block_pattern(clean_context_after)})`)
+    }
+
+    const regex = new RegExp(regex_parts.join(SEPARATOR))
     const content_slice = current_content.slice(cursor)
     const match = regex.exec(content_slice)
 
     if (!match) {
+      const all_search_lines = [
+        ...context_before,
+        ...segment.original_lines,
+        ...context_after
+      ]
       const search_text = all_search_lines.join('\n')
       throw new Error(
-        `Could not find content to replace for conflict marker. Context:\n${search_text.slice(0, 100)}...`
+        `Could not find content to replace for conflict marker. Context:\n${search_text.slice(
+          0,
+          100
+        )}...`
       )
     }
 
@@ -73,9 +79,11 @@ export const apply_conflict_markers_to_content = (params: {
     const matched_text = match[0]
 
     let group_index = 1
-    const matched_before = context_before.length > 0 ? match[group_index++] : ''
-    if (segment.original_lines.length > 0) group_index++
-    const matched_after = context_after.length > 0 ? match[group_index++] : ''
+    const matched_before =
+      clean_context_before.length > 0 ? match[group_index++] : ''
+    if (clean_original.length > 0) group_index++
+    const matched_after =
+      clean_context_after.length > 0 ? match[group_index++] : ''
 
     const updated_text = segment.updated_lines.join(line_ending)
 
@@ -95,7 +103,7 @@ export const apply_conflict_markers_to_content = (params: {
 
     // Advance cursor while preserving context for the next possible conflict
     let advance_length = replacement_text.length
-    if (context_after.length > 0 && matched_after) {
+    if (clean_context_after.length > 0 && matched_after) {
       const offset = replacement_text.lastIndexOf(matched_after)
       advance_length = offset > 0 ? offset - line_ending.length : 0
     }
