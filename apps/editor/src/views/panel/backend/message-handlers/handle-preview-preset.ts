@@ -263,16 +263,18 @@ export const handle_preview_preset = async (
     new_url: message.preset.new_url
   }
 
-  panel_provider.websocket_server_instance.preview_preset({
+  const sent = await panel_provider.websocket_server_instance.preview_preset({
     instruction: text_to_send,
     preset: preset_for_preview,
     prompt_type: panel_provider.web_prompt_type,
     raw_instructions: current_instructions
   })
 
-  panel_provider.send_message({
-    command: 'SHOW_AUTO_CLOSING_MODAL',
-    title: 'Opened in the connected browser',
-    type: 'success'
-  })
+  if (sent) {
+    panel_provider.send_message({
+      command: 'SHOW_AUTO_CLOSING_MODAL',
+      title: 'Opened in the connected browser',
+      type: 'success'
+    })
+  }
 }

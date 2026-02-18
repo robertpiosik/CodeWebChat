@@ -460,14 +460,14 @@ export class WebSocketManager {
     preset: Preset
     raw_instructions: string
     prompt_type: any
-  }): Promise<void> {
+  }): Promise<boolean> {
     if (!this.has_connected_browsers) {
       throw new Error('Does not have connected browsers.')
     }
 
     const target_browser_id = await this._select_browser()
     if (target_browser_id === undefined) {
-      return
+      return false
     }
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
@@ -552,5 +552,6 @@ export class WebSocketManager {
     })
 
     this.client?.send(JSON.stringify(message))
+    return true
   }
 }
