@@ -1,0 +1,34 @@
+--- a/apps/editor/src/views/panel/backend/message-handlers/handle-preview-preset.ts
++++ b/apps/editor/src/views/panel/backend/message-handlers/handle-preview-preset.ts
+@@ -14,6 +14,7 @@
+ import { replace_skill_symbol } from '@/views/panel/backend/utils/replace-skill-symbol'
+ import { replace_image_symbol } from '@/views/panel/backend/utils/replace-image-symbol'
+ import { replace_document_symbol } from '../utils/replace-document-symbol'
++import { replace_fragment_symbol } from '../utils/replace-fragment-symbol'
+ import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
+ import { dictionary } from '@shared/constants/dictionary'
+ import {
+@@ -124,6 +125,12 @@
+       })
+     }
+ 
++    if (processed_completion_instructions.includes('<fragment')) {
++      processed_completion_instructions = replace_fragment_symbol(
++        processed_completion_instructions
++      )
++    }
++
+     const missing_text_tag = processed_completion_instructions
+       ? `<missing_text>${processed_completion_instructions}</missing_text>`
+       : '<missing_text>'
+@@ -213,6 +220,10 @@
+       })
+     }
+ 
++    if (processed_instructions.includes('<fragment')) {
++      processed_instructions = replace_fragment_symbol(processed_instructions)
++    }
++
+     let system_instructions_xml = ''
+ 
+     if (panel_provider.web_prompt_type == 'edit-context') {

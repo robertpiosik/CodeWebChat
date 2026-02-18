@@ -134,9 +134,7 @@ export const apply_diff = (params: {
     }
 
     if (line.startsWith('-') || line.startsWith('~')) {
-      if (inside_replace_block) {
-        push_block()
-      }
+      inside_replace_block = false
 
       if (line.startsWith('-')) {
         current_block_has_changes = true
