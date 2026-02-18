@@ -182,6 +182,12 @@ const convert_code_block_to_new_file_diff = (params: {
         line.startsWith('+++ ') ||
         line.startsWith('diff --git ')
       ) {
+        const { from_path, to_path } = extract_paths_from_lines([line])
+        const potential_path = to_path || from_path
+        if (potential_path && potential_path != '/dev/null') {
+          file_path = normalize_path(potential_path)
+          break
+        }
         continue
       }
 
