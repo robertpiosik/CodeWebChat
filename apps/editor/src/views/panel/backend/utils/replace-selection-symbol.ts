@@ -17,8 +17,10 @@ export const replace_selection_symbol = (instruction: string): string => {
   const selected_text = active_editor.document.getText(active_editor.selection)
   const document = active_editor.document
   const current_file_path = vscode.workspace.asRelativePath(document.uri)
+  const start = active_editor.selection.start
+  const end = active_editor.selection.end
 
-  const replacement_text = `\n<fragment path="${current_file_path}">\n<![CDATA[\n${selected_text}\n]]>\n</fragment>`
+  const replacement_text = `\n\n\`${current_file_path}\` (${start.line + 1}:${start.character + 1}-${end.line + 1}:${end.character + 1})\n\n\`\`\`\n${selected_text}\n\`\`\`\n\n`
 
   return instruction.replace(/\s*#Selection\s*/g, replacement_text)
 }

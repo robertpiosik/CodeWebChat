@@ -11,6 +11,7 @@ import { replace_saved_context_symbol } from '@/views/panel/backend/utils/replac
 import { replace_skill_symbol } from '@/views/panel/backend/utils/replace-skill-symbol'
 import { replace_image_symbol } from '@/views/panel/backend/utils/replace-image-symbol'
 import { replace_document_symbol } from '../utils/replace-document-symbol'
+import { replace_fragment_symbol } from '../utils/replace-fragment-symbol'
 import {
   code_at_cursor_instructions_for_panel,
   prune_context_instructions_prefix,
@@ -152,6 +153,12 @@ export const handle_copy_prompt = async (params: {
       })
     }
 
+    if (processed_completion_instructions.includes('<fragment')) {
+      processed_completion_instructions = replace_fragment_symbol(
+        processed_completion_instructions
+      )
+    }
+
     const missing_text_tag = processed_completion_instructions
       ? `<missing_text>${processed_completion_instructions}</missing_text>`
       : '<missing_text>'
@@ -228,6 +235,10 @@ export const handle_copy_prompt = async (params: {
       processed_instructions = await replace_document_symbol({
         instruction: processed_instructions
       })
+    }
+
+    if (processed_instructions.includes('<fragment')) {
+      processed_instructions = replace_fragment_symbol(processed_instructions)
     }
 
     let system_instructions_xml = ''

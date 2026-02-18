@@ -22,6 +22,7 @@ import { replace_skill_symbol } from '@/views/panel/backend/utils/replace-skill-
 import { replace_image_symbol } from '@/views/panel/backend/utils/replace-image-symbol'
 import { replace_document_symbol } from '@/views/panel/backend/utils/replace-document-symbol'
 import { replace_website_symbol } from '@/views/panel/backend/utils/replace-website-symbol'
+import { replace_fragment_symbol } from '@/views/panel/backend/utils/replace-fragment-symbol'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { PruneContextMessage } from '@/views/panel/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
@@ -363,6 +364,10 @@ export const handle_prune_context = async (
     processed_instructions = await replace_website_symbol({
       instruction: processed_instructions
     })
+  }
+
+  if (processed_instructions.includes('<fragment')) {
+    processed_instructions = replace_fragment_symbol(processed_instructions)
   }
 
   const collected_files = await files_collector.collect_files({

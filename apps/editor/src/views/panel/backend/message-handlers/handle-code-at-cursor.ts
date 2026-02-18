@@ -26,6 +26,7 @@ import { replace_skill_symbol } from '../utils/replace-skill-symbol'
 import { replace_image_symbol } from '../utils/replace-image-symbol'
 import { replace_document_symbol } from '../utils/replace-document-symbol'
 import { replace_website_symbol } from '../utils/replace-website-symbol'
+import { replace_fragment_symbol } from '../utils/replace-fragment-symbol'
 
 const get_code_at_cursor_config = async (
   api_providers_manager: ModelProvidersManager,
@@ -401,6 +402,12 @@ export const handle_code_at_cursor = async (
       processed_completion_instructions = await replace_website_symbol({
         instruction: processed_completion_instructions
       })
+    }
+
+    if (processed_completion_instructions.includes('<fragment')) {
+      processed_completion_instructions = replace_fragment_symbol(
+        processed_completion_instructions
+      )
     }
 
     const files_collector = new FilesCollector({

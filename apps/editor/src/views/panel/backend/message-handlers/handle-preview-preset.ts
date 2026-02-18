@@ -13,6 +13,7 @@ import { Preset } from '@shared/types/preset'
 import { replace_skill_symbol } from '@/views/panel/backend/utils/replace-skill-symbol'
 import { replace_image_symbol } from '@/views/panel/backend/utils/replace-image-symbol'
 import { replace_document_symbol } from '../utils/replace-document-symbol'
+import { replace_fragment_symbol } from '../utils/replace-fragment-symbol'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import { dictionary } from '@shared/constants/dictionary'
 import {
@@ -123,6 +124,12 @@ export const handle_preview_preset = async (
       })
     }
 
+    if (processed_completion_instructions.includes('<fragment')) {
+      processed_completion_instructions = replace_fragment_symbol(
+        processed_completion_instructions
+      )
+    }
+
     const missing_text_tag = processed_completion_instructions
       ? `<missing_text>${processed_completion_instructions}</missing_text>`
       : '<missing_text>'
@@ -208,6 +215,11 @@ export const handle_preview_preset = async (
       processed_instructions = await replace_document_symbol({
         instruction: processed_instructions
       })
+    }
+
+    // New fragment handling for non‑cursor prompts
+    if (processed_instructions.includes('<fragment')) {
+      processed_instructions = replace_fragment_symbol(processed_instructions)
     }
 
     let system_instructions_xml = ''
