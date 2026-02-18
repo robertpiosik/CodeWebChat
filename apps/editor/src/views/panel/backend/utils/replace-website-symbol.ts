@@ -53,7 +53,7 @@ export const replace_website_symbol = async (params: {
     result_string += params.instruction.slice(last_index, match.index)
 
     if (replacement.success && replacement.content) {
-      result_string += `\n<document>\n<![CDATA[\n${replacement.content}\n]]>\n</document>\n`
+      result_string += `\n<![CDATA[\n${replacement.content}\n]]>\n`
     } else {
       result_string += match[0]
     }

@@ -714,7 +714,16 @@ export const use_handlers = (
       return
     }
 
-    if (!is_shift_pressed_ref.current && text.length > 1000) {
+    const is_fragment_paste =
+      props.current_selection &&
+      text == props.current_selection.text &&
+      props.currently_open_file_path
+
+    if (
+      !is_shift_pressed_ref.current &&
+      text.includes('\n') &&
+      !is_fragment_paste
+    ) {
       const selection = window.getSelection()
       if (
         selection &&
