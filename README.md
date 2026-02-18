@@ -11,7 +11,7 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 </p>
 
-Code Web Chat is an open-source and privacy-first **AI coding toolkit for VS Code**. It helps construct prompts for chatbot smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)) and APIs. **It's free!**
+Code Web Chat is an open-source and privacy-first **AI coding toolkit for VS Code**. It helps construct prompts for chatbot smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)). **It's free!**
 
 <br/>
 
@@ -36,7 +36,7 @@ Code Web Chat is an open-source and privacy-first **AI coding toolkit for VS Cod
 
 ## Enabling autofill
 
-Got tired with copy and paste? Enable prompt autofill with a browser extension! It's [open-source](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser).
+Got tired with copy and paste? Enable prompt autofill with a browser extension.
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/autofill-for-code-web-chat/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/autofill-for-code-web-chat/)
