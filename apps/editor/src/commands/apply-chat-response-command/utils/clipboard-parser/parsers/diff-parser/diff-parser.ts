@@ -23,12 +23,7 @@ const process_collected_patch_lines = (params: {
   is_single_root: boolean
 }): DiffItem | null => {
   let lines = [...params.patch_lines_array]
-
   lines = lines.filter((l) => l.length > 0)
-
-  while (lines.length > 0 && lines[lines.length - 1].trim() == '') {
-    lines.pop()
-  }
 
   const joined_patch_text_for_checks = lines.join('\n')
   if (joined_patch_text_for_checks.trim() == '') return null
@@ -463,6 +458,7 @@ const extract_all_code_block_patches = (params: {
       }
     }
   }
+
   if (in_xml_block) {
     xml_blocks.push({
       start: xml_start,
@@ -470,8 +466,10 @@ const extract_all_code_block_patches = (params: {
       type: 'xml_file'
     })
   }
+
   code_blocks.push(...xml_blocks)
   code_blocks.sort((a, b) => a.start - b.start)
+
   const diff_block_patches = new Map<number, DiffItem[]>()
 
   for (let i = 0; i < code_blocks.length; i++) {
