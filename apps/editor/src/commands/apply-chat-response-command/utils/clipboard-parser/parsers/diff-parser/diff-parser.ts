@@ -546,7 +546,8 @@ const extract_all_code_block_patches = (params: {
           remove_path_line_from_text_block({
             text_item: last_item,
             target_file_path: patches[0].file_path,
-            is_single_root: params.is_single_root
+            is_single_root: params.is_single_root,
+            target_new_file_path: patches[0].new_file_path
           })
 
           if (!last_item.content) {

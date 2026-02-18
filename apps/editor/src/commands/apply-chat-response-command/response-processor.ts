@@ -99,6 +99,8 @@ export const process_chat_response = async (
     is_single_root_folder_workspace
   })
 
+  console.log('xxx', clipboard_items)
+
   if (clipboard_items.some((item) => item.type == 'relevant-files')) {
     const relevant_files_item = clipboard_items.find(
       (item) => item.type == 'relevant-files'

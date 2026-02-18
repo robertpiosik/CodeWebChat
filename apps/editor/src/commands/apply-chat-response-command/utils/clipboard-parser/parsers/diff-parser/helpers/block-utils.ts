@@ -51,6 +51,7 @@ export const remove_path_line_from_text_block = (params: {
   text_item: TextItem
   target_file_path: string
   is_single_root: boolean
+  target_new_file_path?: string
 }) => {
   const content_lines = params.text_item.content.split('\n')
   let path_line_index = -1
@@ -66,7 +67,11 @@ export const remove_path_line_from_text_block = (params: {
         raw_file_path: extracted,
         is_single_root_folder_workspace: params.is_single_root
       })
-      if (relative_path === params.target_file_path) {
+      if (
+        relative_path == params.target_file_path ||
+        (params.target_new_file_path &&
+          relative_path == params.target_new_file_path)
+      ) {
         if (line.startsWith('###')) {
           path_line_index = i
         }
