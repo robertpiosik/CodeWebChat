@@ -63,8 +63,7 @@ export const search_files_for_context_command = (
                 input_box.onDidAccept(() => {
                   const value = input_box.value.trim()
                   if (value.length == 0) {
-                    input_box.validationMessage =
-                      'Please enter at least one keyword'
+                    input_box.validationMessage = 'Please type something'
                     return
                   }
                   is_resolved = true
@@ -119,7 +118,7 @@ export const search_files_for_context_command = (
 
           if (matched_files.length == 0) {
             vscode.window.showInformationMessage(
-              'No files found containing these keywords.'
+              'No files found containing thes phrase.'
             )
             continue
           }
