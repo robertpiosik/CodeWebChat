@@ -91,13 +91,13 @@ export class OpenEditorsProvider
   }
 
   private _is_file_in_any_workspace(file_path: string): boolean {
-    return this._workspace_roots.some((root) => file_path.startsWith(root))
+    return !!this._workspace_provider.get_workspace_root_for_file(file_path)
   }
 
   private _get_containing_workspace_root(
     file_path: string
   ): string | undefined {
-    return this._workspace_roots.find((root) => file_path.startsWith(root))
+    return this._workspace_provider.get_workspace_root_for_file(file_path)
   }
 
   private _uncheck_ignored_files() {

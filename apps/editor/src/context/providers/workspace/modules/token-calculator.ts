@@ -418,6 +418,13 @@ export class TokenCalculator implements vscode.Disposable {
 
       for (const entry of entries) {
         const full_path = path.join(dir_path, entry.name)
+
+        const file_workspace_root =
+          this._provider.get_workspace_root_for_file(full_path)
+        if (file_workspace_root && file_workspace_root !== workspace_root) {
+          continue
+        }
+
         const relative_path = path.relative(workspace_root, full_path)
 
         if (
@@ -523,6 +530,13 @@ export class TokenCalculator implements vscode.Disposable {
       })
       for (const entry of entries) {
         const full_path = path.join(dir_path, entry.name)
+
+        const file_workspace_root =
+          this._provider.get_workspace_root_for_file(full_path)
+        if (file_workspace_root && file_workspace_root !== workspace_root) {
+          continue
+        }
+
         const relative_path = path.relative(workspace_root, full_path)
 
         if (

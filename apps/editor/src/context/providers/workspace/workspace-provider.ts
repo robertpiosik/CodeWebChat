@@ -191,7 +191,17 @@ export class WorkspaceProvider
     let matching_root: string | undefined
 
     for (const root of this._workspace_roots) {
-      if (file_path.startsWith(root)) {
+      const is_exact_match = file_path === root
+      const is_child =
+        file_path.startsWith(root) &&
+        (root.endsWith('/') ||
+          root.endsWith('\\') ||
+          root.endsWith(path.sep) ||
+          file_path[root.length] === '/' ||
+          file_path[root.length] === '\\' ||
+          file_path[root.length] === path.sep)
+
+      if (is_exact_match || is_child) {
         // If we found a match, or if this root is longer than the current match
         // (to handle nested workspace folders)
         if (!matching_root || root.length > matching_root.length) {
@@ -907,6 +917,13 @@ export class WorkspaceProvider
 
       for (const entry of dir_entries) {
         const full_path = path.join(dir_path, entry.name)
+
+        // Exclude nested workspace folders from appearing in parent workspace trees
+        const file_workspace_root = this.get_workspace_root_for_file(full_path)
+        if (file_workspace_root && file_workspace_root !== workspace_root) {
+          continue
+        }
+
         const relative_path = path.relative(workspace_root, full_path)
 
         if (context_view) {
@@ -1103,6 +1120,13 @@ export class WorkspaceProvider
 
       for (const entry of dir_entries) {
         const sibling_path = path.join(dir_path, entry.name)
+
+        const file_workspace_root =
+          this.get_workspace_root_for_file(sibling_path)
+        if (file_workspace_root && file_workspace_root !== workspace_root) {
+          continue
+        }
+
         const relative_path = path.relative(workspace_root, sibling_path)
 
         if (
@@ -1205,6 +1229,12 @@ export class WorkspaceProvider
 
       for (const entry of dir_entries) {
         const full_path = path.join(dir_path, entry.name)
+
+        const file_workspace_root = this.get_workspace_root_for_file(full_path)
+        if (file_workspace_root && file_workspace_root !== workspace_root) {
+          continue
+        }
+
         const relative_path = path.relative(workspace_root, full_path)
 
         if (
@@ -1532,6 +1562,13 @@ export class WorkspaceProvider
 
         for (const entry of entries) {
           const full_path = path.join(dir_path, entry.name)
+
+          const file_workspace_root =
+            this.get_workspace_root_for_file(full_path)
+          if (file_workspace_root && file_workspace_root !== workspace_root) {
+            continue
+          }
+
           const relative_path = path.relative(workspace_root, full_path)
 
           if (
