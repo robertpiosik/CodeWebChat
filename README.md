@@ -71,7 +71,14 @@ Got tired with copy and paste? Enable prompt autofill with a browser extension.
 
 ## Built-in API tools
 
-Bring Your Own Key (BYOK) for a model provider of choice for multi-file edits, code at cursor or commit messages.
+Bring Your Own Key (BYOK) for a model provider of choice for built-in API tools.
+
+- Edit Context
+- Intelligent Update
+- Prune Context
+- Code at Cursor
+- Voice Input
+- Commit Messages
 
 ## Enterprise security
 
