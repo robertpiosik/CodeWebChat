@@ -40,6 +40,11 @@ export const CHATBOTS = {
       'url-context': 'URL context'
     },
     models: {
+      'gemini-3.1-pro-preview': {
+        label: 'Gemini 3.1 Pro Preview',
+        disabled_options: ['disable-thinking'],
+        supported_reasoning_efforts: ['Low', 'Medium', 'High']
+      },
       'gemini-3-pro-preview': {
         label: 'Gemini 3 Pro Preview',
         disabled_options: ['disable-thinking'],
