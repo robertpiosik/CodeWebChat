@@ -13,8 +13,8 @@
 
 Code Web Chat is an open-source and privacy-first **AI coding toolkit for VS Code**. It helps construct zero-overhead prompts **for fast and accurate multi-file edits in chatbots**. It's 100% free!
 
-> [!TIP]
-> Don't want to make edits in chatbots? CWC supports remote and local (e.g. Ollama) model providers.
+> [!NOTE]
+> CWC includes built-in API tools for remote and local (e.g. Ollama) model providers.
 
 <br/>
 
@@ -71,7 +71,7 @@ Got tired with copy and paste? Enable prompt autofill with a browser extension.
 
 ## Built-in API tools
 
-Setup remote and local (e.g. Ollama) model providers for built-in API tools:
+Setup model providers for built-in API tools:
 
 - Edit Context
 - Intelligent Update
