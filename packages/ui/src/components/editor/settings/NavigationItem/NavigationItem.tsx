@@ -18,7 +18,7 @@ export const NavigationItem: React.FC<Props> = (props) => {
       })}
       onClick={props.on_click}
     >
-      <span>{props.label}</span>
+      <span className={styles.label}>{props.label}</span>
       {props.has_warning && (
         <div className={styles.warning}>
           <span className="codicon codicon-warning" />

@@ -32,7 +32,10 @@
     width: auto;
     height: auto;
     gap: 2px;
-    padding: 0 4px;
+
+    &:not(.button--labeled) {
+      padding-left: 3px;
+    }
   }
 }
 

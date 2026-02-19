@@ -24,6 +24,12 @@
   }
 }
 
+.label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .warning {
   display: flex;
   color: var(--cwc-text-color-orange);
