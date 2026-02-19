@@ -71,7 +71,7 @@ Got tired with copy and paste? Enable prompt autofill with a browser extension.
 
 ## Built-in API tools
 
-Bring Your Own Key (BYOK) for a model provider of choice for built-in API tools.
+Setup remote and local (e.g. Ollama) model providers for built-in API tools:
 
 - Edit Context
 - Intelligent Update
