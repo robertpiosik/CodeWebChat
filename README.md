@@ -27,7 +27,7 @@ Code Web Chat is an open-source and privacy-first **AI coding toolkit for VS Cod
 
 <br/>
 
-<p align="center"><i>Apply response from clipboard...</i></p>
+<p align="center"><i>Apply chat response from clipboard...</i></p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-3.png"></p>
 
