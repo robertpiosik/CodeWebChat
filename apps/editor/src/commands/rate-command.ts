@@ -20,7 +20,7 @@ export function rate_command() {
     const quick_pick = vscode.window.createQuickPick<(typeof options)[0]>()
     quick_pick.items = options
     quick_pick.title = 'Rate Extension'
-    quick_pick.placeholder = 'Select a platform to rate CWC'
+    quick_pick.placeholder = 'Select platform'
     quick_pick.buttons = [
       {
         iconPath: new vscode.ThemeIcon('close'),
