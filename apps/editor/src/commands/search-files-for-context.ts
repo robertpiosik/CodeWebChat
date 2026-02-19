@@ -367,7 +367,11 @@ const search_files_by_keywords = async (params: {
         matched_files.push(file_path)
       }
     } catch (error) {
-      // Ignore read errors (binary files, permissions, etc.)
+      Logger.error({
+        function_name: 'search_files_by_keywords',
+        message: `Error reading file during search: ${file_path}`,
+        data: error
+      })
     }
   }
 
