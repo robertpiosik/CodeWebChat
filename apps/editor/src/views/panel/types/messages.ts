@@ -198,6 +198,7 @@ export interface CaretPositionChangedWebviewMessage extends BaseMessage {
 export interface PickModelMessage extends BaseMessage {
   command: 'PICK_MODEL'
   chatbot_name: string
+  current_model_id?: string
 }
 
 export interface PickChatbotMessage extends BaseMessage {

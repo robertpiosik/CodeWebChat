@@ -11,7 +11,7 @@ export const handle_pick_model = async (
   message: PickModelMessage
 ): Promise<void> => {
   try {
-    let items: vscode.QuickPickItem[] = []
+    let items: (vscode.QuickPickItem & { model_id: string })[] = []
 
     if (message.chatbot_name == 'OpenRouter') {
       const response = await axios.get('https://openrouter.ai/api/v1/models')
@@ -19,15 +19,15 @@ export const handle_pick_model = async (
 
       items = models.map((model: any) => ({
         label: model.name,
-        description: model.id,
-        detail: model.description
+        model_id: model.id
       }))
     } else {
       const chatbot_config =
         CHATBOTS[message.chatbot_name as keyof typeof CHATBOTS]
       if (chatbot_config && chatbot_config.models) {
         items = Object.entries(chatbot_config.models).map(([id, data]) => ({
-          label: (data as any).label || id
+          label: (data as any).label || id,
+          model_id: id
         }))
       }
     }
@@ -36,6 +36,14 @@ export const handle_pick_model = async (
     quick_pick.items = items
     quick_pick.title = 'Models'
     quick_pick.placeholder = 'Choose a model'
+
+    if (message.current_model_id) {
+      const active_item = items.find(
+        (i) => i.model_id === message.current_model_id
+      )
+      if (active_item) quick_pick.activeItems = [active_item]
+    }
+
     quick_pick.buttons = [
       {
         iconPath: new vscode.ThemeIcon('close'),
@@ -51,11 +59,11 @@ export const handle_pick_model = async (
 
     return new Promise<void>((resolve) => {
       quick_pick.onDidAccept(() => {
-        const selected = quick_pick.selectedItems[0]
+        const selected = quick_pick.selectedItems[0] as any
         if (selected) {
           panel_provider.send_message({
             command: 'NEWLY_PICKED_MODEL',
-            model_id: selected.description!
+            model_id: selected.model_id
           })
         }
         quick_pick.hide()

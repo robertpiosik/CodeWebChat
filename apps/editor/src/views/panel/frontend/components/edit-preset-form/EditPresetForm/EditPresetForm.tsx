@@ -17,7 +17,7 @@ import { Fieldset } from '@ui/components/editor/panel/Fieldset'
 type Props = {
   preset: Preset
   on_update: (updated_preset: Preset) => void
-  pick_model: (chatbot_name: string) => void
+  pick_model: (chatbot_name: string, current_model_id?: string) => void
   pick_chatbot: (chatbot_id?: keyof typeof CHATBOTS) => void
   on_at_sign_in_affix: () => void
 }
@@ -256,7 +256,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
                 onClick={(e) => {
                   e.stopPropagation()
                   if (chatbot) {
-                    props.pick_model(chatbot)
+                    props.pick_model(chatbot, model)
                   }
                 }}
               >

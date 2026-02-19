@@ -525,10 +525,11 @@ export const Panel = () => {
               <EditPresetForm
                 preset={updating_preset}
                 on_update={set_updated_preset}
-                pick_model={(chatbot_name) => {
+                pick_model={(chatbot_name, current_model_id) => {
                   post_message(vscode, {
                     command: 'PICK_MODEL',
-                    chatbot_name
+                    chatbot_name,
+                    current_model_id
                   })
                 }}
                 pick_chatbot={(chatbot_id) => {
