@@ -1,0 +1,25 @@
+### Updated file: `src/ipsum.ts`
+
+Lorem.
+
+```diff
+--- a/src/ipsum.ts
++++ b/src/ipsum.ts
+@@ -0,0 +0,0 @@
+ console.log("hello")
+-console.log("old lorem")
++console.log("new lorem")
+```
+
+### Updated file: `src/ipsum.ts`
+
+Ipsum.
+
+```diff
+--- a/src/ipsum.ts
++++ b/src/ipsum.ts
+@@ -0,0 +0,0 @@
+ console.log("welcome")
+-console.log("old ipsum")
++console.log("new ipsum")
+```

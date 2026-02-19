@@ -1,8 +1,8 @@
 import { Logger } from '@shared/utils/logger'
 import {
+  TextItem,
   DiffItem,
   InlineFileItem,
-  TextItem,
   extract_workspace_and_path
 } from '../../clipboard-parser'
 import {
@@ -729,22 +729,65 @@ const parse_multiple_raw_patches = (params: {
   return patches
 }
 
-const filter_last_diff_per_file = (
-  items: DiffParserItem[]
-): DiffParserItem[] => {
-  const seen_files = new Set<string>()
+const merge_diffs_per_file = (items: DiffParserItem[]): DiffParserItem[] => {
   const result: DiffParserItem[] = []
+  const file_diff_map = new Map<string, DiffItem>()
 
-  for (let i = items.length - 1; i >= 0; i--) {
-    const item = items[i]
+  for (const item of items) {
     if (item.type == 'diff') {
       const file_key = `${item.workspace_name || ''}:${item.file_path}`
-      if (!seen_files.has(file_key)) {
-        seen_files.add(file_key)
-        result.unshift(item)
+      if (file_diff_map.has(file_key)) {
+        const existing_diff = file_diff_map.get(file_key)!
+        const existing_lines = existing_diff.content
+          .replace(/\n$/, '')
+          .split('\n')
+        const existing_has_real_hunks = existing_lines.some(
+          (l) =>
+            (l.startsWith('+') && !l.startsWith('+++ ')) ||
+            (l.startsWith('-') && !l.startsWith('--- ')) ||
+            (l.startsWith(' ') && !l.startsWith('  '))
+        )
+
+        if (!existing_has_real_hunks) {
+          existing_diff.content = item.content
+        } else {
+          const new_lines = item.content.replace(/\n$/, '').split('\n')
+
+          let start_idx = new_lines.findIndex((l) => l.startsWith('@@'))
+          if (start_idx == -1) {
+            start_idx = new_lines.findIndex(
+              (l) =>
+                !l.startsWith('--- ') &&
+                !l.startsWith('+++ ') &&
+                !l.startsWith('diff --git') &&
+                l.trim() != ''
+            )
+          }
+
+          if (start_idx != -1) {
+            const content_to_add = new_lines.slice(start_idx).join('\n') + '\n'
+            existing_diff.content = existing_diff.content.endsWith('\n')
+              ? existing_diff.content + content_to_add
+              : existing_diff.content + '\n' + content_to_add
+          }
+        }
+
+        if (result.length > 0 && result[result.length - 1].type == 'text') {
+          const orphaned_text = result.pop() as TextItem
+          const diff_index = result.indexOf(existing_diff)
+          if (diff_index > 0 && result[diff_index - 1].type == 'text') {
+            ;(result[diff_index - 1] as TextItem).content +=
+              '\n' + orphaned_text.content
+          } else {
+            result.splice(diff_index, 0, orphaned_text)
+          }
+        }
+      } else {
+        file_diff_map.set(file_key, item)
+        result.push(item)
       }
     } else {
-      result.unshift(item)
+      result.push(item)
     }
   }
   return result
@@ -780,7 +823,7 @@ export const extract_diffs = (params: {
       is_single_root: params.is_single_root
     })
   }
-  return filter_last_diff_per_file(items)
+  return merge_diffs_per_file(items)
 }
 
 export { extract_paths_from_lines }

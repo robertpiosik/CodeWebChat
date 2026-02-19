@@ -1509,6 +1509,26 @@ describe('clipboard-parser', () => {
       })
     })
 
+    it('merges multiple diffs for the same file into a single diff item', () => {
+      const test_case = 'diff-multiple-edits-for-the-same-file'
+      const text = load_test_case_file('diffs', test_case, `${test_case}.txt`)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'text',
+        content: load_test_case_file('diffs', test_case, '1-text.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file('diffs', test_case, '2-file.txt')
+      })
+    })
+
     it('parses multiple diffs with quoted file paths in separate markdown code blocks', () => {
       const test_case = 'diff-multiple-files-with-quoted-paths'
       const text = load_test_case_file('diffs', test_case, `${test_case}.txt`)
@@ -1912,22 +1932,6 @@ describe('clipboard-parser', () => {
       expect(result[4]).toMatchObject({
         type: 'text',
         content: load_test_case_file('diffs', test_case, '5-text.txt')
-      })
-    })
-
-    it('merges a new file and a diff for the same file path into one patch', () => {
-      const test_case = 'diff-merge-new-file-and-diff-same-path'
-      const text = load_test_case_file('diffs', test_case, `${test_case}.txt`)
-      const result = parse_response({
-        response: text,
-        is_single_root_folder_workspace: true
-      })
-
-      expect(result).toHaveLength(1)
-      expect(result[0]).toMatchObject({
-        type: 'diff',
-        file_path: 'src/ipsum.ts',
-        content: load_test_case_file('diffs', test_case, '1-file.txt')
       })
     })
 
