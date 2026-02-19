@@ -32,7 +32,7 @@ Code Web Chat is an open-source and privacy-first **AI coding toolkit for VS Cod
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-3.png"></p>
 
 > [!TIP]
-> Don't want to make edits in chatbots? Use a built-in API tool _Edit Context_.
+> Do you want to make edits directly from the editor? Use a built-in API tool _Edit Context_.
 
 ## Enabling autofill
 
