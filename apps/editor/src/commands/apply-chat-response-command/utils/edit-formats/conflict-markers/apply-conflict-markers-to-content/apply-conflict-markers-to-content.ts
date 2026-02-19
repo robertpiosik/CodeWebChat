@@ -13,6 +13,8 @@ export const apply_conflict_markers_to_content = (params: {
   const segments = parse_conflict_segments(params.markers_content)
   let cursor = 0
 
+  const MAX_CONTEXT_LINES = 5
+
   for (let i = 0; i < segments.length; i++) {
     const segment = segments[i]
     if (segment.type !== 'conflict') continue
@@ -20,8 +22,12 @@ export const apply_conflict_markers_to_content = (params: {
     const prev = i > 0 ? segments[i - 1] : undefined
     const next = i < segments.length - 1 ? segments[i + 1] : undefined
 
-    const context_before = prev && prev.type == 'common' ? prev.lines : []
-    const context_after = next && next.type == 'common' ? next.lines : []
+    const context_before =
+      prev && prev.type == 'common' ? prev.lines.slice(-MAX_CONTEXT_LINES) : []
+    const context_after =
+      next && next.type == 'common'
+        ? next.lines.slice(0, MAX_CONTEXT_LINES)
+        : []
 
     const clean_lines = (lines: string[]) =>
       lines.filter((l) => l.trim() !== '')
@@ -30,7 +36,7 @@ export const apply_conflict_markers_to_content = (params: {
     const clean_original = clean_lines(segment.original_lines)
     const clean_context_after = clean_lines(context_after)
 
-    const SEPARATOR = '(?:\\r?\\n[ \\t]*)+'
+    const SEPARATOR = '(?:\\r?\\n[ \\t]*){1,5}'
 
     const build_block_pattern = (lines: string[]) => {
       return lines
@@ -101,14 +107,12 @@ export const apply_conflict_markers_to_content = (params: {
       replacement_text +
       current_content.slice(match_index + matched_text.length)
 
-    // Advance cursor while preserving context for the next possible conflict
-    let advance_length = replacement_text.length
-    if (clean_context_after.length > 0 && matched_after) {
-      const offset = replacement_text.lastIndexOf(matched_after)
-      advance_length = offset > 0 ? offset - line_ending.length : 0
-    }
-
-    cursor = Math.max(0, match_index + advance_length)
+    const content_before_after_context = matched_before
+      ? matched_before + line_ending + updated_text
+      : updated_text
+    cursor = matched_after
+      ? match_index + content_before_after_context.length
+      : match_index + replacement_text.length
   }
 
   return current_content
