@@ -69,9 +69,9 @@ Got tired with copy and paste? Enable prompt autofill with a browser extension.
 > [!NOTE]
 > Use [forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) of port _55155_ when using remote machine via SSH.
 
-## API tools
+## Built-in API tools
 
-Bring your own key (BYOK) for a model provider of choice or use a self hosted model for multi-file edits, code at cursor or commit messages.
+Bring Your Own Key (BYOK) for a model provider of choice for multi-file edits, code at cursor or commit messages.
 
 ## Enterprise security
 
