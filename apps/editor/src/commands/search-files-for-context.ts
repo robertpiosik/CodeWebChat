@@ -340,39 +340,24 @@ export const search_files_for_context_command = (
 const search_files_by_keywords = async (params: {
   files: string[]
   search_term: string
-  progress?: vscode.Progress<{ message?: string; increment?: number }>
-  token?: vscode.CancellationToken
 }): Promise<string[]> => {
   const matched_files: string[] = []
-  const total = params.files.length
-  let processed = 0
-  const increment = total > 0 ? (1 / total) * 100 : 0
 
-  // Escape special characters and treat multiple spaces as flexible whitespace
   const escaped_term = params.search_term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   const pattern = escaped_term.replace(/\s+/g, '\\s+')
-  const regex = new RegExp(pattern, 'mi') // Case-insensitive, multiline
+  const regex = new RegExp(pattern, 'mi')
 
   for (const file_path of params.files) {
-    if (params.token?.isCancellationRequested) break
-
     try {
       const file_name = path.basename(file_path)
 
-      // Check filename first
       if (regex.test(file_name)) {
         matched_files.push(file_path)
         continue
       }
 
-      // Skip large files (> 1MB) to avoid performance issues
       const stats = await fs.promises.stat(file_path)
       if (stats.size > 1024 * 1024) {
-        processed++
-        params.progress?.report({
-          increment,
-          message: `${processed}/${total}`
-        })
         continue
       }
 
@@ -384,12 +369,6 @@ const search_files_by_keywords = async (params: {
     } catch (error) {
       // Ignore read errors (binary files, permissions, etc.)
     }
-
-    processed++
-    params.progress?.report({
-      increment,
-      message: `${processed}/${total}`
-    })
   }
 
   return matched_files
