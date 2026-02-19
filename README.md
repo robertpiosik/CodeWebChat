@@ -14,7 +14,7 @@
 Code Web Chat is an open-source and privacy-first **AI coding toolkit for VS Code**. It helps construct zero-overhead prompts **for fast and accurate multi-file edits in chatbots**. It's 100% free!
 
 > [!TIP]
-> Use smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)) for a powerful pair programming environment.
+> Use smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)) as a powerful pair programming environment.
 
 <br/>
 
