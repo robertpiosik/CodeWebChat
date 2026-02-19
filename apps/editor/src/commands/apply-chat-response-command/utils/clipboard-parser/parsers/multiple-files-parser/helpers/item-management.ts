@@ -35,6 +35,43 @@ export const create_or_update_file_item = (params: {
 
     if (mode == 'append') {
       existing_file.content = existing_file.content + '\n' + processed_content
+
+      const file_index = results.indexOf(existing_file)
+      if (file_index >= 0) {
+        const text_indices: number[] = []
+        for (let i = file_index + 1; i < results.length; i++) {
+          if (results[i].type == 'text') {
+            text_indices.push(i)
+          }
+        }
+
+        if (text_indices.length > 0) {
+          const text_contents = text_indices
+            .map((idx) => (results[idx] as TextItem).content.trim())
+            .filter((c) => c)
+
+          for (let i = text_indices.length - 1; i >= 0; i--) {
+            results.splice(text_indices[i], 1)
+          }
+
+          if (text_contents.length > 0) {
+            const combined = text_contents.join('\n')
+            const updated_file_index = results.indexOf(existing_file)
+            if (
+              updated_file_index > 0 &&
+              results[updated_file_index - 1].type == 'text'
+            ) {
+              const prev_text = results[updated_file_index - 1] as TextItem
+              prev_text.content = prev_text.content.trim() + '\n' + combined
+            } else {
+              results.splice(updated_file_index, 0, {
+                type: 'text' as const,
+                content: combined
+              })
+            }
+          }
+        }
+      }
     } else {
       existing_file.content = processed_content
     }

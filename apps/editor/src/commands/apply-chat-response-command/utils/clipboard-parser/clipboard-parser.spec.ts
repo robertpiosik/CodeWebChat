@@ -427,6 +427,30 @@ describe('clipboard-parser', () => {
       })
     })
 
+    it('merges content and text when multiple merge conflicts for the same file are provided in separate code blocks with text between them', () => {
+      const test_case = 'merge-conflicts-merge-the-same-file'
+      const text = load_test_case_file(
+        'standard',
+        test_case,
+        `${test_case}.txt`
+      )
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'text',
+        content: load_test_case_file('standard', test_case, '1-text.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'file',
+        file_path: 'src/index.ts',
+        content: load_test_case_file('standard', test_case, '2-file.txt')
+      })
+    })
+
     it('merges content when merge conflicts use three dots notation', () => {
       const test_case = 'merge-conflicts-three-dots'
       const text = load_test_case_file(

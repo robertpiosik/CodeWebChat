@@ -1,0 +1,10 @@
+<<<<<<< ORIGINAL
+  console.log("a")
+=======
+  console.log("b")
+>>>>>>> UPDATED
+<<<<<<< ORIGINAL
+    console.log("c")
+=======
+    console.log("d")
+>>>>>>> UPDATED

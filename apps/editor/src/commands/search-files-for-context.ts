@@ -111,6 +111,9 @@ export const search_files_for_context_command = (
             }
           }
 
+          console.log(search_term)
+          console.log(all_files)
+
           const matched_files = await search_files_by_keywords({
             files: all_files,
             search_term

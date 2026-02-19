@@ -168,7 +168,19 @@ export const parse_multiple_files = (params: {
                 current_block_mode = 'overwrite'
               }
             } else {
-              current_block_mode = 'overwrite'
+              const file_key = `${current_workspace_name || ''}:${current_file_name}`
+              const existing_file = file_ref_map.get(file_key)
+              const has_conflict_markers =
+                existing_file &&
+                existing_file.content.includes('<<<<<<<') &&
+                existing_file.content.includes('>>>>>>>') &&
+                existing_file.content.includes('=======')
+
+              if (has_conflict_markers) {
+                current_block_mode = 'append'
+              } else {
+                current_block_mode = 'overwrite'
+              }
               header_path_already_used = true
             }
           } else {
