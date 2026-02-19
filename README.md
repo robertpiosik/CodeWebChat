@@ -35,7 +35,7 @@ Code Web Chat is an open-source and privacy-first **AI coding toolkit for VS Cod
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-3.png"></p>
 
 > [!TIP]
-> You can use a built-in [API tool](#built-in-api-tools) _Edit Context_ to make multi-file edits directly from the editor.
+> Use a built-in [API tool](#built-in-api-tools) _Edit Context_ to make multi-file edits directly from the editor.
 
 ## Enabling autofill
 
