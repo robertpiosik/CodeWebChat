@@ -104,7 +104,6 @@ const next_config = {
         terserOptions: {
           mangle: {
             properties: {
-              // Mangle properties suffixed with _ (and not __) or prefixed with cn_.
               regex: /[^_]_$|^_$|^cn_/
             }
           }
