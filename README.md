@@ -14,7 +14,7 @@
 Code Web Chat (CWC) is a free and open-source (FOSS), privacy-first **AI coding toolkit for VS Code**. It helps construct zero-overhead prompts **for fast and accurate multi-file edits in chatbots and APIs**.
 
 > [!TIP]
-> Use smart workspaces called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces), as a powerful pair programming environment.
+> Start using powerful smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)).
 
 <br/>
 
@@ -35,7 +35,7 @@ Code Web Chat (CWC) is a free and open-source (FOSS), privacy-first **AI coding 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-3.png"></p>
 
 > [!TIP]
-> Use [a built-in API tool](#built-in-api-tools) _Edit Context_ to make multi-file edits directly in the editor.
+> Use a built-in API tool _Edit Context_ for a more seamless workflow.
 
 ## Enabling autofill
 
