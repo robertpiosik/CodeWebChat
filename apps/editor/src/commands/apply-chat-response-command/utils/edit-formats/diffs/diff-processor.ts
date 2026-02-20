@@ -216,6 +216,24 @@ export const apply_diff = (params: {
       }
     }
 
+    if (max_trim_top > 0 && safe_trim_indices.length === max_trim_top) {
+      if (
+        max_trim_top < block.replace_lines.length &&
+        block.replace_lines[max_trim_top].search_index === null
+      ) {
+        let has_deletion = true
+        for (let r = max_trim_top + 1; r < block.replace_lines.length; r++) {
+          if (block.replace_lines[r].search_index === max_trim_top) {
+            has_deletion = false
+            break
+          }
+        }
+        if (!has_deletion) {
+          max_trim_top -= 1
+        }
+      }
+    }
+
     let found = false
     let matched_info: {
       start_index: number
