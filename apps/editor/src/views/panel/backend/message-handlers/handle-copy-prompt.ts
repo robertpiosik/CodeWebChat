@@ -11,6 +11,7 @@ import { replace_saved_context_symbol } from '@/views/panel/backend/utils/replac
 import { replace_skill_symbol } from '@/views/panel/backend/utils/replace-skill-symbol'
 import { replace_image_symbol } from '@/views/panel/backend/utils/replace-image-symbol'
 import { replace_document_symbol } from '../utils/replace-document-symbol'
+import { replace_website_symbol } from '../utils/replace-website-symbol'
 import { replace_fragment_symbol } from '../utils/replace-fragment-symbol'
 import {
   code_at_cursor_instructions_for_panel,
@@ -153,6 +154,12 @@ export const handle_copy_prompt = async (params: {
       })
     }
 
+    if (processed_completion_instructions.includes('#Website(')) {
+      processed_completion_instructions = await replace_website_symbol({
+        instruction: processed_completion_instructions
+      })
+    }
+
     if (processed_completion_instructions.includes('<fragment')) {
       processed_completion_instructions = replace_fragment_symbol(
         processed_completion_instructions
@@ -233,6 +240,12 @@ export const handle_copy_prompt = async (params: {
 
     if (processed_instructions.includes('#Document(')) {
       processed_instructions = await replace_document_symbol({
+        instruction: processed_instructions
+      })
+    }
+
+    if (processed_instructions.includes('#Website(')) {
+      processed_instructions = await replace_website_symbol({
         instruction: processed_instructions
       })
     }
