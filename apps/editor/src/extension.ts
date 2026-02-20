@@ -31,7 +31,7 @@ import {
   set_ranges_command,
   check_parent_folder_command,
   uncheck_parent_folder_command,
-  search_files_for_context_command,
+  search_files_for_context_commands,
   check_referencing_files_for_context_command,
   check_definition_file_for_context_command,
   rate_command
@@ -137,7 +137,7 @@ export async function activate(context: vscode.ExtensionContext) {
     uncheck_parent_folder_command(workspace_provider),
     duplicate_workspace_command(workspace_provider, context),
     check_referencing_files_for_context_command(workspace_provider),
-    search_files_for_context_command(workspace_provider, context),
+    ...search_files_for_context_commands(workspace_provider, context),
     check_definition_file_for_context_command(workspace_provider),
     rate_command(),
     open_url_command({

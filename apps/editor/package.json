@@ -332,6 +332,11 @@
         "icon": "$(search)"
       },
       {
+        "command": "codeWebChat.searchFilesForContextFromDirectory",
+        "title": "Search Files for Context...",
+        "category": "Code Web Chat"
+      },
+      {
         "command": "codeWebChat.checkReferencingFilesForContext",
         "title": "Check Referencing Files for Context",
         "category": "Code Web Chat"
@@ -517,6 +522,10 @@
         },
         {
           "command": "codeWebChat.copyCommitMessagePrompt",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.searchFilesForContextFromDirectory",
           "when": "false"
         },
         {
@@ -739,7 +748,7 @@
           "group": "1_modification@3"
         },
         {
-          "command": "codeWebChat.searchFilesForContext",
+          "command": "codeWebChat.searchFilesForContextFromDirectory",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
           "group": "1_modification@3.5"
         },
