@@ -425,9 +425,7 @@ export const Home: React.FC<Props> = (props) => {
             </Button>
           }
         >
-          <Notice type="info">
-            A request includes context (all checked files).
-          </Notice>
+          <Notice type="info">A request includes context files.</Notice>
           {props.edit_context_configs.length == 0 && (
             <Notice type="warning">
               {t('settings.message.missing-configuration')}
@@ -551,7 +549,7 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            A request includes context (all checked files) in a compacted form.
+            A request includes context files in a compacted form.
           </Notice>
           {props.prune_context_configs.length == 0 && (
             <Notice type="warning">
@@ -590,9 +588,7 @@ export const Home: React.FC<Props> = (props) => {
             </Button>
           }
         >
-          <Notice type="info">
-            A request includes context (all checked files).
-          </Notice>
+          <Notice type="info">A request includes context files.</Notice>
           {props.code_at_cursor_configs.length == 0 && (
             <Notice type="warning">
               {t('settings.message.missing-configuration')}

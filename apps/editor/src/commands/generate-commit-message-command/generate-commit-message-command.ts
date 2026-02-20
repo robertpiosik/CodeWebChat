@@ -15,18 +15,14 @@ export const generate_commit_message_command = (
   const get_prompt_data = async (source_control?: vscode.SourceControl) => {
     const repository = await get_git_repository(source_control)
     if (!repository) return null
-
+    await vscode.workspace.saveAll()
     await repository.status()
     const was_empty_stage = (repository.state.indexChanges || []).length == 0
     const working_tree_changes = repository.state.workingTreeChanges || []
     const is_single_change = was_empty_stage && working_tree_changes.length == 1
-
     const diff = await prepare_staged_changes(repository, !!source_control)
-
     if (!diff) return null
-
     const message_prompt = build_commit_message_prompt(diff)
-
     return { repository, was_empty_stage, message_prompt, is_single_change }
   }
 
