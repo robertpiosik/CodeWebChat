@@ -11,7 +11,7 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 </p>
 
-Code Web Chat (CWC) is a free and open-source (FOSS), privacy-first **AI coding toolkit for VS Code**. It helps construct zero-overhead prompts **for fast and accurate multi-file edits in chatbots and APIs**.
+Code Web Chat (CWC) is a free and open-source (FOSS), privacy-first **AI coding toolkit for VS Code**. It helps construct zero-overhead prompts **for fast and accurate multi-file edits in chatbots**.
 
 > [!TIP]
 > Elevate your workflow with smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)).
@@ -33,9 +33,6 @@ Code Web Chat (CWC) is a free and open-source (FOSS), privacy-first **AI coding 
 <p align="center"><i>Apply chat response from clipboard...</i></p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-3.png"></p>
-
-> [!TIP]
-> Use the built-in _Edit Context_ API tool for a more seamless, in-editor workflow.
 
 ## Enabling autofill
 
@@ -72,9 +69,9 @@ Got tired with copy and paste? Enable prompt autofill with a browser extension.
 > [!NOTE]
 > Use [forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) of port _55155_ when using remote machine via SSH.
 
-## Built-in API tools
+## API tools
 
-Bring Your Own Key (BYOK) for a model provider of choice or self-host with [Ollama](https://ollama.com/search) for built-in API tools:
+Explore built-in API tools you configure with a model provider of choice or self-hosted models.
 
 - Edit Context
 - Intelligent Update
