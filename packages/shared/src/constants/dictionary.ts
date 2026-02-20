@@ -273,8 +273,6 @@ export const dictionary = {
       `Error reading file ${file_path}: ${message}.`,
     FAILED_TO_INITIALIZE_WEBSOCKET_SERVER: (error: any) =>
       `Failed to initialize WebSocket server: ${error}.`,
-    CWC_UPDATED_RELOAD_WINDOW:
-      'CWC has been updated. To continue using it in this workspace, open the command palette and run "Reload Window".',
     NO_WORKSPACE_FOLDERS_FOUND: 'No workspace folders found.',
     NO_GIT_BRANCHES_FOUND_IN_WORKSPACE:
       'No Git branches found in any workspace folder.',

@@ -29,15 +29,12 @@ export class WebSocketManager {
   private reconnect_timer: NodeJS.Timeout | null = null
   private has_connected_browsers: boolean = false
   private client_id: number | null = null
-  private current_extension_version: string
-  private should_reconnect: boolean = true
 
   public readonly on_connection_status_change: vscode.Event<boolean> =
     this._on_connection_status_change.event
 
   constructor(context: vscode.ExtensionContext) {
     this.context = context
-    this.current_extension_version = context.extension.packageJSON.version
     this._initialize_server()
   }
 
@@ -128,14 +125,12 @@ export class WebSocketManager {
           message: 'Failed to restart WebSocket server',
           data: error
         })
-        if (this.should_reconnect) {
-          this._schedule_reconnect()
-        }
+        this._schedule_reconnect()
         return
       }
     }
 
-    const ws_url = `ws://localhost:${this.port}?token=${this.security_token}&vscode_extension_version=${this.current_extension_version}`
+    const ws_url = `ws://localhost:${this.port}?token=${this.security_token}`
     this.client = new WebSocket.WebSocket(ws_url)
 
     this.client.on('open', () => {
@@ -166,20 +161,6 @@ export class WebSocketManager {
             edit_format: message.edit_format,
             url: message.url
           })
-        } else if (message.action == 'ping') {
-          if (message.vscode_extension_version) {
-            const is_newer = this._is_version_newer(
-              message.vscode_extension_version,
-              this.current_extension_version
-            )
-            if (is_newer) {
-              this.should_reconnect = false
-              this.client?.close()
-              vscode.window.showErrorMessage(
-                dictionary.error_message.CWC_UPDATED_RELOAD_WINDOW
-              )
-            }
-          }
         }
       } catch (error) {
         Logger.error({
@@ -199,9 +180,7 @@ export class WebSocketManager {
       this.has_connected_browsers = false
       this._on_connection_status_change.fire(false)
 
-      if (this.should_reconnect) {
-        this._schedule_reconnect()
-      }
+      this._schedule_reconnect()
     })
 
     this.client.on('close', () => {
@@ -212,9 +191,7 @@ export class WebSocketManager {
       this.has_connected_browsers = false
       this._on_connection_status_change.fire(false)
 
-      if (this.should_reconnect) {
-        this._schedule_reconnect()
-      }
+      this._schedule_reconnect()
     })
   }
 
@@ -226,19 +203,6 @@ export class WebSocketManager {
     this.reconnect_timer = setTimeout(() => {
       this._connect_as_client()
     }, 3000)
-  }
-
-  private _is_version_newer(v1: string, v2: string): boolean {
-    const parts1 = v1.split('.').map(Number)
-    const parts2 = v2.split('.').map(Number)
-
-    for (let i = 0; i < Math.max(parts1.length, parts2.length); i++) {
-      const p1 = parts1[i] || 0
-      const p2 = parts2[i] || 0
-      if (p1 > p2) return true
-      if (p1 < p2) return false
-    }
-    return false
   }
 
   is_connected_with_browser(): boolean {

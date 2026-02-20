@@ -23,7 +23,6 @@ class WebSocketServer {
   private browser_clients: Map<number, BrowserClient> = new Map()
   private browser_client_counter: number = 0
   private connections: Set<WebSocket> = new Set()
-  private vscode_extension_version: string | null = null
   private server: http.Server
   private wss: any
 
@@ -84,7 +83,7 @@ class WebSocketServer {
     if (is_browser_client) {
       this._handle_browser_connection(ws, url)
     } else {
-      this._handle_vscode_connection(ws, url)
+      this._handle_vscode_connection(ws)
     }
 
     this.connections.add(ws)
@@ -107,28 +106,7 @@ class WebSocketServer {
     ws.send(JSON.stringify({ action: 'connected', id }))
   }
 
-  private _handle_vscode_connection(ws: WebSocket, url: URL) {
-    const incoming_vscode_extension_version = url.searchParams.get(
-      'vscode_extension_version'
-    )
-
-    if (incoming_vscode_extension_version) {
-      if (this.vscode_extension_version == null) {
-        this.vscode_extension_version = incoming_vscode_extension_version
-      } else {
-        if (
-          this.is_version_newer(
-            incoming_vscode_extension_version,
-            this.vscode_extension_version
-          )
-        ) {
-          ws.close(1000, 'Server shutting down due to newer client version.')
-          this._shutdown()
-          return
-        }
-      }
-    }
-
+  private _handle_vscode_connection(ws: WebSocket) {
     const client_id = this._generate_client_id()
     this.vscode_clients.set(client_id, { ws, client_id })
 
@@ -151,8 +129,7 @@ class WebSocketServer {
         client.ws.send(
           JSON.stringify({
             action: 'vscode-client-connected',
-            client_id,
-            vscode_extension_version: this.vscode_extension_version
+            client_id
           })
         )
       }
@@ -248,22 +225,17 @@ class WebSocketServer {
   }
 
   private _ping_clients() {
-    const pingMessage = JSON.stringify({ action: 'ping' })
+    const ping_message = JSON.stringify({ action: 'ping' })
 
     for (const client of this.browser_clients.values()) {
       if (client.ws.readyState === WebSocket.OPEN) {
-        client.ws.send(pingMessage)
+        client.ws.send(ping_message)
       }
     }
 
     for (const client of this.vscode_clients.values()) {
       if (client.ws.readyState == WebSocket.OPEN) {
-        client.ws.send(
-          JSON.stringify({
-            action: 'ping',
-            vscode_extension_version: this.vscode_extension_version
-          })
-        )
+        client.ws.send(ping_message)
       }
     }
   }
@@ -284,19 +256,6 @@ class WebSocketServer {
     this.server.close(() => {
       process.exit(0)
     })
-  }
-
-  private is_version_newer(v1: string, v2: string): boolean {
-    const parts1 = v1.split('.').map(Number)
-    const parts2 = v2.split('.').map(Number)
-
-    for (let i = 0; i < Math.max(parts1.length, parts2.length); i++) {
-      const p1 = parts1[i] || 0
-      const p2 = parts2[i] || 0
-      if (p1 > p2) return true
-      if (p1 < p2) return false
-    }
-    return false
   }
 }
 
