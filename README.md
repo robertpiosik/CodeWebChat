@@ -71,7 +71,7 @@ Got tired with copy and paste? Enable prompt autofill with a browser extension.
 
 ## API tools
 
-Explore built-in API tools you configure with a model provider of choice or self-hosted models.
+Explore built-in API tools, configurable with your preferred model provider.
 
 - Edit Context
 - Intelligent Update
