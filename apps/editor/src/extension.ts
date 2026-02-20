@@ -42,6 +42,7 @@ import {
 } from './commands/checkpoints-command/actions'
 import { CHECKPOINTS_STATE_KEY } from './constants/state-keys'
 import { SettingsProvider } from './views/settings/backend/settings-provider'
+import { get_current_preview_url } from './views/panel/backend/message-handlers/handle-open-website'
 
 // Store WebSocketServer instance at module level
 let websocket_server_instance: WebSocketManager | null = null
@@ -154,6 +155,15 @@ export async function activate(context: vscode.ExtensionContext) {
       }
     ),
     generate_commit_message_command(context),
+    vscode.commands.registerCommand(
+      'codeWebChat.openWebsitePreviewUrl',
+      async () => {
+        const url = get_current_preview_url()
+        if (url) {
+          await vscode.env.openExternal(vscode.Uri.parse(url))
+        }
+      }
+    ),
     vscode.commands.registerCommand(
       'codeWebChat.revealInExplorer',
       async (item: any) => {

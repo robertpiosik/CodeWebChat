@@ -4,6 +4,10 @@ import * as fs from 'fs'
 import { get_website_file_path } from '../utils/website-fetcher'
 import { marked } from 'marked'
 
+let current_preview_url: string | undefined
+
+export const get_current_preview_url = () => current_preview_url
+
 export const handle_open_website = async (message: OpenWebsiteMessage) => {
   const file_path = get_website_file_path(message.url)
 
@@ -17,28 +21,56 @@ export const handle_open_website = async (message: OpenWebsiteMessage) => {
       vscode.ViewColumn.One
     )
 
+    current_preview_url = message.url
+    vscode.commands.executeCommand(
+      'setContext',
+      'codeWebChat.websitePreviewActive',
+      true
+    )
+
+    panel.onDidChangeViewState((e) => {
+      if (e.webviewPanel.active) {
+        current_preview_url = message.url
+        vscode.commands.executeCommand(
+          'setContext',
+          'codeWebChat.websitePreviewActive',
+          true
+        )
+      } else {
+        vscode.commands.executeCommand(
+          'setContext',
+          'codeWebChat.websitePreviewActive',
+          false
+        )
+      }
+    })
+
+    panel.onDidDispose(() => {
+      if (current_preview_url === message.url) {
+        current_preview_url = undefined
+        vscode.commands.executeCommand(
+          'setContext',
+          'codeWebChat.websitePreviewActive',
+          false
+        )
+      }
+    })
+
     panel.webview.html = `
       <!DOCTYPE html>
       <html lang="en">
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Website Preview</title>
+        <title>${message.url}</title>
         <style>
           body {
             line-height: 1.5;
             padding: 20px 40px;
           }
-          hr {
-            height: 1px;
-            border: none;
-            background-color: var(--vscode-editorWidget-border);
-          }
         </style>
       </head>
       <body>
-        <a href="${message.url}">${message.url}</a>
-        <hr>
         ${html}
       </body>
       </html>

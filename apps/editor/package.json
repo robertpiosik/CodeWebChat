@@ -352,6 +352,11 @@
         "title": "Remove Folder from Workspace",
         "category": "Code Web Chat",
         "icon": "$(close)"
+      },
+      {
+        "command": "codeWebChat.openWebsitePreviewUrl",
+        "title": "Open URL in Browser",
+        "icon": "$(link-external)"
       }
     ],
     "submenus": [
@@ -525,6 +530,10 @@
         {
           "command": "codeWebChat.removeFolderFromWorkspace",
           "when": "false"
+        },
+        {
+          "command": "codeWebChat.openWebsitePreviewUrl",
+          "when": "codeWebChat.websitePreviewActive"
         }
       ],
       "view/title": [
@@ -644,6 +653,13 @@
           "command": "codeWebChat.copyCommitMessagePrompt",
           "group": "navigation",
           "when": "scmProvider == git"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "codeWebChat.openWebsitePreviewUrl",
+          "when": "codeWebChat.websitePreviewActive",
+          "group": "navigation@1"
         }
       ],
       "view/item/context": [
