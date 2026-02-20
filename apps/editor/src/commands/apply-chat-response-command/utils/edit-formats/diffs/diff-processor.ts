@@ -303,9 +303,17 @@ export const apply_diff = (params: {
     }
   }
 
-  const valid_blocks = search_replace_blocks.filter(
-    (block) => block.search_block_start_index != -2
+  const invalid_blocks = search_replace_blocks.filter(
+    (block) => block.search_block_start_index == -2
   )
+
+  if (invalid_blocks.length > 0) {
+    throw new Error(
+      `Failed to apply ${invalid_blocks.length} hunk(s). Aborting diff application for this file.`
+    )
+  }
+
+  const valid_blocks = search_replace_blocks
   valid_blocks.sort(
     (a, b) => b.search_block_start_index - a.search_block_start_index
   )
