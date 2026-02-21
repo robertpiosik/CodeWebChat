@@ -74,14 +74,12 @@ Got tired with copy and paste? Enable prompt autofill with a browser extension.
 
 ## API tools
 
-CWC includes many API tools, configurable with your preferred remote or local model provider.
+From code editing to voice input and commit messages, CWC covers your software development needs without leaving the editor.
 
-- Edit Context
-- Intelligent Update
-- Prune Context
-- Code at Cursor
-- Voice Input
-- Commit Messages
+Bring Your Own Key (BYOK) for a remote model provider of choice. Self-host on your local machine with [Ollama](https://ollama.com/search).
+
+> [!NOTE]
+> Thanks to smart context files ordering by update/pick recency, CWC heavily utilizes [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching/), across tasks. This reduces input token costs by up to 90% and latency by up to 80%.
 
 ## Enterprise security
 
