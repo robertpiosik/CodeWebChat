@@ -35,7 +35,7 @@ Code Web Chat (CWC) is a free and open-source (FOSS), privacy-first **AI coding 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-3.png"></p>
 
 > [!TIP]
-> Don't want to use browser? You can make edits without leaving the editor via an [API call](#api-tools).
+> Don't want to use browser? You can make edits without leaving the editor by making an [API call](#api-tools).
 
 ## Enabling autofill
 
