@@ -18,13 +18,9 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
   EDIT_FORMAT_INSTRUCTIONS_WHOLE
 } from '@/constants/edit-format-instructions'
+import { use_translation } from '@/views/i18n/use-translation'
 
 type ClearChecksBehavior = 'ignore-open-editors' | 'uncheck-all'
-
-const CLEAR_CHECKS_OPTIONS: Dropdown.Option<ClearChecksBehavior>[] = [
-  { value: 'ignore-open-editors', label: 'Ignore Open Editors' },
-  { value: 'uncheck-all', label: 'Uncheck All' }
-]
 
 type Props = {
   context_size_warning_threshold: number
@@ -59,6 +55,7 @@ type Props = {
 
 export const GeneralSection = forwardRef<HTMLDivElement, Props>(
   (props, ref) => {
+    const { t } = use_translation()
     const [context_size_warning_threshold, set_context_size_warning_threshold] =
       useState<number>()
     const [checkpoint_lifespan, set_checkpoint_lifespan] = useState<number>()
@@ -187,41 +184,43 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
     return (
       <Section
         ref={ref}
-        title="General"
-        subtitle="Configure your experience."
+        title={t('settings.sidebar.general')}
+        subtitle={t('settings.general.subtitle')}
         on_stuck_change={props.on_stuck_change}
       >
         <Group>
           <Item
-            title="Open Editor Settings"
-            description="For general editor settings, visit the Editor Settings Page."
+            title={t('settings.general.open-editor-settings.title')}
+            description={t('settings.general.open-editor-settings.description')}
             slot_right={
               <TextButton on_click={props.on_open_editor_settings}>
-                Open Editor Settings
+                {t('settings.general.open-editor-settings.action')}
               </TextButton>
             }
           />
           <Item
-            title="Ignore patterns"
-            description="Glob patterns that you don't want to place in .gitignore files."
+            title={t('settings.general.ignore-patterns.title')}
+            description={t('settings.general.ignore-patterns.description')}
             slot_right={
               <TextButton on_click={props.on_open_ignore_patterns_settings}>
-                Open Settings File
+                {t('settings.general.ignore-patterns.action')}
               </TextButton>
             }
           />
           <Item
-            title="Allow patterns"
-            description="Glob patterns that you want to include despite being ignored by .gitignore."
+            title={t('settings.general.allow-patterns.title')}
+            description={t('settings.general.allow-patterns.description')}
             slot_right={
               <TextButton on_click={props.on_open_allow_patterns_settings}>
-                Open Settings File
+                {t('settings.general.allow-patterns.action')}
               </TextButton>
             }
           />
           <Item
-            title="Context Size Warning Threshold"
-            description="Set the token count threshold for showing a warning about large context sizes."
+            title={t('settings.general.context-size-warning-threshold.title')}
+            description={t(
+              'settings.general.context-size-warning-threshold.description'
+            )}
             slot_right={
               <Input
                 type="number"
@@ -237,8 +236,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
           <Item
-            title="Check New Files"
-            description="Automatically include newly created files in context."
+            title={t('settings.general.check-new-files.title')}
+            description={t('settings.general.check-new-files.description')}
             slot_right={
               <Toggler
                 is_on={props.check_new_files}
@@ -247,8 +246,10 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
           <Item
-            title="Send with Shift+Enter"
-            description="Use Shift+Enter to send messages and Enter to insert a new line."
+            title={t('settings.general.send-with-shift-enter.title')}
+            description={t(
+              'settings.general.send-with-shift-enter.description'
+            )}
             slot_right={
               <Toggler
                 is_on={props.send_with_shift_enter}
@@ -257,21 +258,38 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
           <Item
-            title="Clear Checks in Workspace Behavior"
-            description="Behavior of the 'Clear Checks' button in the Workspace view."
+            title={t(
+              'settings.general.clear-checks-in-workspace-behavior.title'
+            )}
+            description={t(
+              'settings.general.clear-checks-in-workspace-behavior.description'
+            )}
             slot_right={
               <Dropdown
-                options={CLEAR_CHECKS_OPTIONS}
+                options={[
+                  {
+                    value: 'ignore-open-editors',
+                    label: t(
+                      'settings.general.clear-checks.ignore-open-editors'
+                    )
+                  },
+                  {
+                    value: 'uncheck-all',
+                    label: t('settings.general.clear-checks.uncheck-all')
+                  }
+                ]}
                 value={props.clear_checks_in_workspace_behavior}
                 onChange={props.on_clear_checks_in_workspace_behavior_change}
               />
             }
           />
         </Group>
-        <Group title="Checkpoints">
+        <Group title={t('settings.general.checkpoints.title')}>
           <Item
-            title="Automatic Checkpoints"
-            description="A checkpoint will be created whenever a response is accepted or changes commited."
+            title={t('settings.general.automatic-checkpoints.title')}
+            description={t(
+              'settings.general.automatic-checkpoints.description'
+            )}
             slot_right={
               <Toggler
                 is_on={!props.are_automatic_checkpoints_disabled}
@@ -282,8 +300,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
           <Item
-            title="Checkpoint Lifespan"
-            description="The lifespan of checkpoints in hours. Checkpoints older than this will be automatically deleted."
+            title={t('settings.general.checkpoint-lifespan.title')}
+            description={t('settings.general.checkpoint-lifespan.description')}
             slot_right={
               <Input
                 type="number"
@@ -299,10 +317,10 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
         </Group>
-        <Group title="Edit Format Instructions">
+        <Group title={t('settings.general.edit-format-instructions.title')}>
           <Item
-            title="Whole"
-            description="Instructions for generating code in 'whole' edit format."
+            title={t('settings.general.edit-format.whole.title')}
+            description={t('settings.general.edit-format.whole.description')}
             slot_right={
               <TextButton
                 on_click={() =>
@@ -312,7 +330,9 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                   }))
                 }
               >
-                {instructions_visibility.whole ? 'Hide' : 'Show'}
+                {instructions_visibility.whole
+                  ? t('settings.general.edit-format.hide')
+                  : t('settings.general.edit-format.show')}
               </TextButton>
             }
             slot_below={
@@ -329,8 +349,10 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
           <Item
-            title="Truncated"
-            description="Instructions for generating code in 'truncated' edit format."
+            title={t('settings.general.edit-format.truncated.title')}
+            description={t(
+              'settings.general.edit-format.truncated.description'
+            )}
             slot_right={
               <TextButton
                 on_click={() =>
@@ -340,7 +362,9 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                   }))
                 }
               >
-                {instructions_visibility.truncated ? 'Hide' : 'Show'}
+                {instructions_visibility.truncated
+                  ? t('settings.general.edit-format.hide')
+                  : t('settings.general.edit-format.show')}
               </TextButton>
             }
             slot_below={
@@ -357,8 +381,10 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
           <Item
-            title="Before and After"
-            description="Instructions for generating code in 'before/after' edit format."
+            title={t('settings.general.edit-format.before-after.title')}
+            description={t(
+              'settings.general.edit-format.before-after.description'
+            )}
             slot_right={
               <TextButton
                 on_click={() =>
@@ -368,7 +394,9 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                   }))
                 }
               >
-                {instructions_visibility.before_after ? 'Hide' : 'Show'}
+                {instructions_visibility.before_after
+                  ? t('settings.general.edit-format.hide')
+                  : t('settings.general.edit-format.show')}
               </TextButton>
             }
             slot_below={
@@ -388,8 +416,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
           <Item
-            title="Diff"
-            description="Instructions for generating code in 'diff' edit format."
+            title={t('settings.general.edit-format.diff.title')}
+            description={t('settings.general.edit-format.diff.description')}
             slot_right={
               <TextButton
                 on_click={() =>
@@ -399,7 +427,9 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                   }))
                 }
               >
-                {instructions_visibility.diff ? 'Hide' : 'Show'}
+                {instructions_visibility.diff
+                  ? t('settings.general.edit-format.hide')
+                  : t('settings.general.edit-format.show')}
               </TextButton>
             }
             slot_below={
@@ -416,10 +446,10 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
         </Group>
-        <Group title="Presets">
+        <Group title={t('settings.general.presets.title')}>
           <Item
-            title="Gemini User ID"
-            description="Run Gemini chatbot as non-default user. Check URL for the numeric ID."
+            title={t('settings.general.gemini-user-id.title')}
+            description={t('settings.general.gemini-user-id.description')}
             slot_right={
               <Input
                 type="number"
@@ -431,8 +461,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
           <Item
-            title="AI Studio User ID"
-            description="Run AI Studio chatbot as non-default user. Check URL for the numeric ID."
+            title={t('settings.general.ai-studio-user-id.title')}
+            description={t('settings.general.ai-studio-user-id.description')}
             slot_right={
               <Input
                 type="number"

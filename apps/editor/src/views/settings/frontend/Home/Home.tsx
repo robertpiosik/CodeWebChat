@@ -18,7 +18,11 @@ import {
   EditFormatInstructions
 } from '@/views/settings/types/messages'
 import { GeneralSection } from './sections/GeneralSection'
-import { use_translation, TranslationKey } from '@/views/i18n/use-translation'
+import {
+  T,
+  use_translation,
+  TranslationKey
+} from '@/views/i18n/use-translation'
 import {
   commit_message_instructions as default_commit_message_instructions,
   voice_input_instructions as default_voice_input_instructions
@@ -368,8 +372,8 @@ export const Home: React.FC<Props> = (props) => {
 
         <Section
           ref={(el) => (section_refs.current['model-providers'] = el)}
-          title="Model Providers"
-          subtitle="Manage API keys."
+          title={t('settings.sidebar.model-providers')}
+          subtitle={t('settings.model-providers.subtitle')}
           on_stuck_change={model_providers_on_stuck_change}
           actions={
             <Button on_click={() => props.on_add_provider()}>
@@ -378,22 +382,29 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            API keys are stored securely in the{' '}
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault()
-                props.on_open_external_url(
-                  'https://code.visualstudio.com/api/references/vscode-api#SecretStorage'
+            <T
+              id="settings.model-providers.notice.api-keys"
+              components={{
+                link: (
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      props.on_open_external_url(
+                        'https://code.visualstudio.com/api/references/vscode-api#SecretStorage'
+                      )
+                    }}
+                  >
+                    SecretStorage
+                  </a>
                 )
               }}
-            >
-              SecretStorage
-            </a>{' '}
-            on your machine.
+            />
           </Notice>
           {props.providers.length == 0 && (
-            <Notice type="warning">Missing model provider.</Notice>
+            <Notice type="warning">
+              {t('settings.model-providers.notice.missing')}
+            </Notice>
           )}
           <Group>
             <ModelProvidersSection
@@ -411,9 +422,9 @@ export const Home: React.FC<Props> = (props) => {
         </Section>
         <Section
           ref={(el) => (section_refs.current['edit-context'] = el)}
-          group="API Tool"
-          title="Edit Context"
-          subtitle="Pair-programming using natural language instructions."
+          group={t('settings.section.api-tool')}
+          title={t('settings.sidebar.edit-context')}
+          subtitle={t('settings.edit-context.subtitle')}
           on_stuck_change={edit_context_on_stuck_change}
           actions={
             <Button
@@ -425,7 +436,7 @@ export const Home: React.FC<Props> = (props) => {
             </Button>
           }
         >
-          <Notice type="info">A request includes context files.</Notice>
+          <Notice type="info">{t('settings.edit-context.notice')}</Notice>
           {props.edit_context_configs.length == 0 && (
             <Notice type="warning">
               {t('settings.message.missing-configuration')}
@@ -445,8 +456,10 @@ export const Home: React.FC<Props> = (props) => {
               on_delete={(id) => props.on_delete_config('EDIT_CONTEXT', id)}
             />
             <Item
-              title="System Instructions"
-              description="Tone and style instructions for the model."
+              title={t('settings.edit-context.system-instructions.title')}
+              description={t(
+                'settings.edit-context.system-instructions.description'
+              )}
               slot_below={
                 <Textarea
                   value={edit_context_instructions}
@@ -471,9 +484,9 @@ export const Home: React.FC<Props> = (props) => {
 
         <Section
           ref={(el) => (section_refs.current['intelligent-update'] = el)}
-          group="API Tool"
-          title="Intelligent Update"
-          subtitle="Integrate changes from malformed responses."
+          group={t('settings.section.api-tool')}
+          title={t('settings.sidebar.intelligent-update')}
+          subtitle={t('settings.intelligent-update.subtitle')}
           on_stuck_change={intelligent_update_on_stuck_change}
           actions={
             <Button
@@ -487,10 +500,7 @@ export const Home: React.FC<Props> = (props) => {
             </Button>
           }
         >
-          <Notice type="info">
-            A request includes the original file and the failed to apply code
-            block.
-          </Notice>
+          <Notice type="info">{t('settings.intelligent-update.notice')}</Notice>
           {props.intelligent_update_configs.length == 0 && (
             <Notice type="warning">
               {t('settings.message.missing-configuration')}
@@ -520,8 +530,12 @@ export const Home: React.FC<Props> = (props) => {
               }
             />
             <Item
-              title="Fix All Automatically"
-              description="Use the default configuration to fix failed files immediately."
+              title={t(
+                'settings.intelligent-update.fix-all-automatically.title'
+              )}
+              description={t(
+                'settings.intelligent-update.fix-all-automatically.description'
+              )}
               slot_right={
                 <Toggler
                   is_on={props.fix_all_automatically}
@@ -534,9 +548,9 @@ export const Home: React.FC<Props> = (props) => {
 
         <Section
           ref={(el) => (section_refs.current['prune-context'] = el)}
-          group="API Tool"
-          title="Prune Context"
-          subtitle="Make the context task-focused."
+          group={t('settings.section.api-tool')}
+          title={t('settings.sidebar.prune-context')}
+          subtitle={t('settings.prune-context.subtitle')}
           on_stuck_change={prune_context_on_stuck_change}
           actions={
             <Button
@@ -548,9 +562,7 @@ export const Home: React.FC<Props> = (props) => {
             </Button>
           }
         >
-          <Notice type="info">
-            A request includes context files in a compacted form.
-          </Notice>
+          <Notice type="info">{t('settings.prune-context.notice')}</Notice>
           {props.prune_context_configs.length == 0 && (
             <Notice type="warning">
               {t('settings.message.missing-configuration')}
@@ -574,9 +586,9 @@ export const Home: React.FC<Props> = (props) => {
 
         <Section
           ref={(el) => (section_refs.current['code-at-cursor'] = el)}
-          group="API Tool"
-          title="Code at Cursor"
-          subtitle="Accurate inline code from reasoning models."
+          group={t('settings.section.api-tool')}
+          title={t('settings.sidebar.code-at-cursor')}
+          subtitle={t('settings.code-at-cursor.subtitle')}
           on_stuck_change={code_at_cursor_on_stuck_change}
           actions={
             <Button
@@ -588,7 +600,7 @@ export const Home: React.FC<Props> = (props) => {
             </Button>
           }
         >
-          <Notice type="info">A request includes context files.</Notice>
+          <Notice type="info">{t('settings.code-at-cursor.notice')}</Notice>
           {props.code_at_cursor_configs.length == 0 && (
             <Notice type="warning">
               {t('settings.message.missing-configuration')}
@@ -614,15 +626,17 @@ export const Home: React.FC<Props> = (props) => {
               }
             />
             <Item
-              title="Keyboard Shortcut"
-              description="Setup completion triggers."
+              title={t('settings.code-at-cursor.keyboard-shortcut.title')}
+              description={t(
+                'settings.code-at-cursor.keyboard-shortcut.description'
+              )}
               slot_right={
                 <TextButton
                   on_click={() =>
                     props.on_open_keybindings('codeWebChat.codeAtCursor')
                   }
                 >
-                  Open Keyboard Shortcuts
+                  {t('settings.code-at-cursor.keyboard-shortcut.action')}
                 </TextButton>
               }
             />
@@ -631,9 +645,9 @@ export const Home: React.FC<Props> = (props) => {
 
         <Section
           ref={(el) => (section_refs.current['voice-input'] = el)}
-          group="API Tool"
-          title="Voice Input"
-          subtitle="Transcribe speech to text in the prompt field."
+          group={t('settings.section.api-tool')}
+          title={t('settings.sidebar.voice-input')}
+          subtitle={t('settings.voice-input.subtitle')}
           on_stuck_change={voice_input_on_stuck_change}
           actions={
             <Button
@@ -648,19 +662,24 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            Requires a multimodal model supporting{' '}
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault()
-                props.on_open_external_url(
-                  'https://ai.google.dev/gemini-api/docs/audio'
+            <T
+              id="settings.voice-input.notice"
+              components={{
+                link: (
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      props.on_open_external_url(
+                        'https://ai.google.dev/gemini-api/docs/audio'
+                      )
+                    }}
+                  >
+                    {t('settings.voice-input.notice.link')}
+                  </a>
                 )
               }}
-            >
-              audio understanding
-            </a>
-            .
+            />
           </Notice>
           {props.voice_input_configs.length == 0 && (
             <Notice type="warning">
@@ -687,8 +706,8 @@ export const Home: React.FC<Props> = (props) => {
               }
             />
             <Item
-              title="Instructions"
-              description="Instructions for the model to process voice input."
+              title={t('settings.voice-input.instructions.title')}
+              description={t('settings.voice-input.instructions.description')}
               slot_below={
                 <Textarea
                   value={voice_input_instructions}
@@ -715,9 +734,9 @@ export const Home: React.FC<Props> = (props) => {
 
         <Section
           ref={(el) => (section_refs.current['commit-messages'] = el)}
-          group="API Tool"
-          title="Commit Messages"
-          subtitle="Meaningful summaries of changes in your style."
+          group={t('settings.section.api-tool')}
+          title={t('settings.sidebar.commit-messages')}
+          subtitle={t('settings.commit-messages.subtitle')}
           on_stuck_change={commit_messages_on_stuck_change}
           actions={
             <Button
@@ -729,9 +748,7 @@ export const Home: React.FC<Props> = (props) => {
             </Button>
           }
         >
-          <Notice type="info">
-            A request includes diffs of changed files and their original states.
-          </Notice>
+          <Notice type="info">{t('settings.commit-messages.notice')}</Notice>
           {props.commit_messages_configs.length == 0 && (
             <Notice type="warning">
               {t('settings.message.missing-configuration')}
@@ -759,8 +776,10 @@ export const Home: React.FC<Props> = (props) => {
               }
             />
             <Item
-              title="Instructions"
-              description="Describe style and conventions (e.g. Conventional Commits, gitmoji) for the generated commit message."
+              title={t('settings.commit-messages.instructions.title')}
+              description={t(
+                'settings.commit-messages.instructions.description'
+              )}
               slot_below={
                 <Textarea
                   value={commit_instructions}
