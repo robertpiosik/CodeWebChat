@@ -13,7 +13,7 @@
 
 Code Web Chat is a free and open-source, privacy-first **AI coding toolkit for VS Code**. It helps construct zero-overhead prompts for fast and accurate multi-file edits in your codebase using:
 
-- chatbots—ChatGPT, Gemini, Claude...
+- chatbots—Gemini, ChatGPT, Claude, Qwen...
 - APIs—remote and local model providers
 
 <br/>
