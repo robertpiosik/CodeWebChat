@@ -264,11 +264,11 @@
     }
   }
 
-  &--document &__icon::before {
+  &--pasted-text &__icon::before {
     content: '\eac0';
   }
 
-  &--document &__text {
+  &--pasted-text &__text {
     cursor: pointer;
 
     &:hover {

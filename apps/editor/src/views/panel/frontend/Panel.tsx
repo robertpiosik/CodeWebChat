@@ -75,8 +75,8 @@ export const Panel = () => {
     handle_prune_context_instructions_prefix_change,
     handle_paste_image,
     handle_open_image,
-    handle_paste_long_document,
-    handle_open_document,
+    handle_paste_long_text,
+    handle_open_pasted_text,
     handle_paste_url,
     is_recording,
     handle_set_recording_state,
@@ -393,8 +393,8 @@ export const Panel = () => {
                 on_open_website={handle_open_website}
                 on_paste_image={handle_paste_image}
                 on_open_image={handle_open_image}
-                on_paste_document={handle_paste_long_document}
-                on_open_document={handle_open_document}
+                on_paste_text={handle_paste_long_text}
+                on_open_pasted_text={handle_open_pasted_text}
                 on_paste_url={handle_paste_url}
                 is_recording={is_recording}
                 on_recording_started={() => handle_set_recording_state(true)}

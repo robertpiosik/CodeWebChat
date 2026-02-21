@@ -2,10 +2,10 @@ import * as os from 'os'
 import * as path from 'path'
 import * as fs from 'fs'
 
-export const replace_document_symbol = async (params: {
+export const replace_pasted_text_symbol = async (params: {
   instruction: string
 }): Promise<string> => {
-  const regex = /#Document\(([a-fA-F0-9]+)(?::\d+)?\)/g
+  const regex = /#PastedText\(([a-fA-F0-9]+)(?::\d+)?\)/g
 
   const matches = Array.from(params.instruction.matchAll(regex))
 
@@ -16,7 +16,7 @@ export const replace_document_symbol = async (params: {
   const replacements = await Promise.all(
     matches.map(async (match) => {
       const hash = match[1]
-      const filename = `cwc-document-${hash}.txt`
+      const filename = `cwc-paste-${hash}.txt`
       const file_path = path.join(os.tmpdir(), filename)
       try {
         const content = await fs.promises.readFile(file_path, 'utf-8')

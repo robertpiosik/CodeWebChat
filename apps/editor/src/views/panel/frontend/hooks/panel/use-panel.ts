@@ -78,16 +78,16 @@ export const use_panel = (vscode: any) => {
     })
   }
 
-  const handle_paste_long_document = (text: string) => {
+  const handle_paste_long_text = (text: string) => {
     post_message(vscode, {
-      command: 'SAVE_PROMPT_DOCUMENT',
+      command: 'SAVE_PROMPT_PASTED_TEXT',
       text
     })
   }
 
-  const handle_open_document = (hash: string) => {
+  const handle_open_pasted_text = (hash: string) => {
     post_message(vscode, {
-      command: 'OPEN_PROMPT_DOCUMENT',
+      command: 'OPEN_PROMPT_PASTED_TEXT',
       hash
     })
   }
@@ -302,8 +302,8 @@ export const use_panel = (vscode: any) => {
     handle_prune_context_instructions_prefix_change,
     handle_paste_image,
     handle_open_image,
-    handle_paste_long_document,
-    handle_open_document,
+    handle_paste_long_text,
+    handle_open_pasted_text,
     handle_paste_url,
     is_recording,
     handle_set_recording_state,

@@ -67,8 +67,8 @@ export type PromptFieldProps = {
   on_paste_image: (base64_content: string) => void
   on_open_website: (url: string) => void
   on_open_image: (hash: string) => void
-  on_paste_document: (text: string) => void
-  on_open_document: (hash: string) => void
+  on_paste_pasted_text: (text: string) => void
+  on_open_pasted_text: (hash: string) => void
   on_paste_url: (url: string) => void
   is_recording: boolean
   on_recording_started: () => void

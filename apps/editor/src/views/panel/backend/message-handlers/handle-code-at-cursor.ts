@@ -24,7 +24,7 @@ import {
 import { replace_saved_context_symbol } from '@/views/panel/backend/utils/replace-saved-context-symbol'
 import { replace_skill_symbol } from '../utils/replace-skill-symbol'
 import { replace_image_symbol } from '../utils/replace-image-symbol'
-import { replace_document_symbol } from '../utils/replace-document-symbol'
+import { replace_pasted_text_symbol } from '../utils/replace-pasted-text-symbol'
 import { replace_website_symbol } from '../utils/replace-website-symbol'
 import { replace_fragment_symbol } from '../utils/replace-fragment-symbol'
 
@@ -392,8 +392,8 @@ export const handle_code_at_cursor = async (
       })
     }
 
-    if (processed_completion_instructions.includes('#Document(')) {
-      processed_completion_instructions = await replace_document_symbol({
+    if (processed_completion_instructions.includes('#PastedText(')) {
+      processed_completion_instructions = await replace_pasted_text_symbol({
         instruction: processed_completion_instructions
       })
     }

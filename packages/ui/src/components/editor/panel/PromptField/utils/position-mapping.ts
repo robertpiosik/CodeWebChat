@@ -8,7 +8,7 @@ export const map_display_pos_to_raw_pos = (
   let last_raw_index = 0
 
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#Document\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
   let match
 
   while ((match = regex.exec(raw_text)) !== null) {
@@ -23,7 +23,7 @@ export const map_display_pos_to_raw_pos = (
     let fragment_content = match[9]
     const skill_symbol = match[10]
     const image_symbol = match[11]
-    const document_symbol = match[12]
+    const pasted_text_symbol = match[12]
     const website_symbol = match[13]
 
     let is_replacement_match = false
@@ -80,8 +80,10 @@ export const map_display_pos_to_raw_pos = (
     } else if (image_symbol) {
       display_match_length = 'Image'.length
       is_replacement_match = true
-    } else if (document_symbol) {
-      const match = document_symbol.match(/^#Document\(([a-fA-F0-9]+):(\d+)\)$/)
+    } else if (pasted_text_symbol) {
+      const match = pasted_text_symbol.match(
+        /^#PastedText\(([a-fA-F0-9]+):(\d+)\)$/
+      )
       const token_count = match ? match[2] : null
       display_match_length = token_count
         ? `Pasted ${token_count} tokens`.length
@@ -141,7 +143,7 @@ export const map_raw_pos_to_display_pos = (
   let last_raw_index = 0
 
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#Document\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
   let match
 
   while ((match = regex.exec(raw_text)) !== null) {
@@ -156,7 +158,7 @@ export const map_raw_pos_to_display_pos = (
     let fragment_content = match[9]
     const skill_symbol = match[10]
     const image_symbol = match[11]
-    const document_symbol = match[12]
+    const pasted_text_symbol = match[12]
     const website_symbol = match[13]
 
     let is_replacement_match = false
@@ -213,8 +215,10 @@ export const map_raw_pos_to_display_pos = (
     } else if (image_symbol) {
       display_match_length = 'Image'.length
       is_replacement_match = true
-    } else if (document_symbol) {
-      const match = document_symbol.match(/^#Document\(([a-fA-F0-9]+):(\d+)\)$/)
+    } else if (pasted_text_symbol) {
+      const match = pasted_text_symbol.match(
+        /^#PastedText\(([a-fA-F0-9]+):(\d+)\)$/
+      )
       const token_count = match ? match[2] : null
       display_match_length = token_count
         ? `Pasted ${token_count} tokens`.length

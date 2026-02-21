@@ -24,7 +24,7 @@ import { replace_selection_symbol } from '@/views/panel/backend/utils/replace-se
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { replace_skill_symbol } from '@/views/panel/backend/utils/replace-skill-symbol'
 import { replace_image_symbol } from '@/views/panel/backend/utils/replace-image-symbol'
-import { replace_document_symbol } from '../utils/replace-document-symbol'
+import { replace_pasted_text_symbol } from '../utils/replace-pasted-text-symbol'
 import { replace_website_symbol } from '../utils/replace-website-symbol'
 import { replace_fragment_symbol } from '../utils/replace-fragment-symbol'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
@@ -375,8 +375,8 @@ export const handle_edit_context = async (
     })
   }
 
-  if (processed_instructions.includes('#Document(')) {
-    processed_instructions = await replace_document_symbol({
+  if (processed_instructions.includes('#PastedText(')) {
+    processed_instructions = await replace_pasted_text_symbol({
       instruction: processed_instructions
     })
   }

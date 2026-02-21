@@ -84,8 +84,8 @@ import {
   handle_open_file_and_select,
   handle_save_prompt_image,
   handle_open_prompt_image,
-  handle_save_prompt_document,
-  handle_open_prompt_document,
+  handle_save_prompt_pasted_text,
+  handle_open_prompt_pasted_text,
   handle_paste_url,
   handle_voice_input,
   handle_open_website,
@@ -936,10 +936,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_save_prompt_image(this, message)
           } else if (message.command == 'OPEN_PROMPT_IMAGE') {
             await handle_open_prompt_image(message)
-          } else if (message.command == 'SAVE_PROMPT_DOCUMENT') {
-            await handle_save_prompt_document(this, message)
-          } else if (message.command == 'OPEN_PROMPT_DOCUMENT') {
-            await handle_open_prompt_document(message)
+          } else if (message.command == 'SAVE_PROMPT_PASTED_TEXT') {
+            await handle_save_prompt_pasted_text(this, message)
+          } else if (message.command == 'OPEN_PROMPT_PASTED_TEXT') {
+            await handle_open_prompt_pasted_text(message)
           } else if (message.command == 'PASTE_URL') {
             await handle_paste_url(this, message)
           } else if (message.command == 'OPEN_WEBSITE') {

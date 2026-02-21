@@ -514,13 +514,13 @@ export interface OpenPromptImageMessage extends BaseMessage {
   hash: string
 }
 
-export interface SavePromptDocumentMessage extends BaseMessage {
-  command: 'SAVE_PROMPT_DOCUMENT'
+export interface SavePromptPastedTextMessage extends BaseMessage {
+  command: 'SAVE_PROMPT_PASTED_TEXT'
   text: string
 }
 
-export interface OpenPromptDocumentMessage extends BaseMessage {
-  command: 'OPEN_PROMPT_DOCUMENT'
+export interface OpenPromptPastedTextMessage extends BaseMessage {
+  command: 'OPEN_PROMPT_PASTED_TEXT'
   hash: string
 }
 
@@ -628,8 +628,8 @@ export type FrontendMessage =
   | DeleteConfigurationMessage
   | SavePromptImageMessage
   | OpenPromptImageMessage
-  | SavePromptDocumentMessage
-  | OpenPromptDocumentMessage
+  | SavePromptPastedTextMessage
+  | OpenPromptPastedTextMessage
   | PasteUrlMessage
   | OpenWebsiteMessage
   | SetRecordingStateMessage

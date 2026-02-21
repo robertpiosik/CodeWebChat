@@ -20,7 +20,7 @@ const get_symbol_ranges = (
 ): { start: number; end: number }[] => {
   const ranges: { start: number; end: number }[] = []
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "(?:\\.|[^"\\])*"\))|(#(?:Commit|ContextAtCommit)\([^:]+:[^\s"]+ "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>[\s\S]*?<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#Document\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "(?:\\.|[^"\\])*"\))|(#(?:Commit|ContextAtCommit)\([^:]+:[^\s"]+ "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>[\s\S]*?<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
 
   let match
   while ((match = regex.exec(text)) !== null) {
@@ -176,7 +176,7 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
         const suffix = inner_content.substring(index + expected_text.length)
         return `${prefix}#Image(${hash})${suffix}`
       }
-    } else if (el.dataset.type == 'document-symbol') {
+    } else if (el.dataset.type == 'pasted-text-symbol') {
       const hash = el.dataset.hash
       const token_count = el.dataset.tokenCount
       if (!hash || !token_count) return ''
@@ -186,7 +186,7 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
       if (index != -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + expected_text.length)
-        return `${prefix}#Document(${hash}:${token_count})${suffix}`
+        return `${prefix}#PastedText(${hash}:${token_count})${suffix}`
       }
     } else if (el.dataset.type == 'website-symbol') {
       const url = el.dataset.url
@@ -520,12 +520,12 @@ export const use_handlers = (
       if (start_index != -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (symbol_type == 'document-symbol') {
+    } else if (symbol_type == 'pasted-text-symbol') {
       const hash = symbol_element.dataset.hash
       const token_count = symbol_element.dataset.tokenCount
       if (!hash || !token_count) return
 
-      const search_pattern = `#Document(${hash}:${token_count})`
+      const search_pattern = `#PastedText(${hash}:${token_count})`
       const start_index = props.value.indexOf(search_pattern)
 
       if (start_index != -1) {
@@ -762,7 +762,7 @@ export const use_handlers = (
           raw_caret_pos_ref.current = raw_start
         }
       }
-      props.on_paste_document(text)
+      props.on_paste_pasted_text(text)
       return
     }
 
@@ -839,13 +839,13 @@ export const use_handlers = (
         }
       }
 
-      const document_symbol_element = text_element.closest<HTMLElement>(
-        '[data-type="document-symbol"]'
+      const pasted_text_symbol_element = text_element.closest<HTMLElement>(
+        '[data-type="pasted-text-symbol"]'
       )
-      if (document_symbol_element) {
-        const hash = document_symbol_element.dataset.hash
+      if (pasted_text_symbol_element) {
+        const hash = pasted_text_symbol_element.dataset.hash
         if (hash) {
-          props.on_open_document(hash)
+          props.on_open_pasted_text(hash)
         }
       }
 
@@ -1130,10 +1130,10 @@ export const use_handlers = (
     return false
   }
 
-  const handle_document_symbol_deletion = (raw_pos: number): boolean => {
+  const handle_pasted_text_symbol_deletion = (raw_pos: number): boolean => {
     const text_before_cursor = props.value.substring(0, raw_pos)
     const match = text_before_cursor.match(
-      /#Document\(([a-fA-F0-9]+)(?: (\d+))?\)$/
+      /#PastedText\(([a-fA-F0-9]+)(?: (\d+))?\)$/
     )
 
     if (match) {
@@ -1210,8 +1210,8 @@ export const use_handlers = (
       return handle_image_symbol_deletion(raw_pos)
     }
 
-    if (el.dataset.type == 'document-symbol') {
-      return handle_document_symbol_deletion(raw_pos)
+    if (el.dataset.type == 'pasted-text-symbol') {
+      return handle_pasted_text_symbol_deletion(raw_pos)
     }
 
     if (el.dataset.type == 'website-symbol') {
@@ -1259,7 +1259,7 @@ export const use_handlers = (
           parent.dataset.type == 'pasted-lines-symbol' ||
           parent.dataset.type == 'skill-symbol' ||
           parent.dataset.type == 'image-symbol' ||
-          parent.dataset.type == 'document-symbol' ||
+          parent.dataset.type == 'pasted-text-symbol' ||
           parent.dataset.type == 'website-symbol'
         ) {
           const range_after = document.createRange()
@@ -1289,7 +1289,7 @@ export const use_handlers = (
         el.dataset.type == 'pasted-lines-symbol' ||
         el.dataset.type == 'skill-symbol' ||
         el.dataset.type == 'image-symbol' ||
-        el.dataset.type == 'document-symbol' ||
+        el.dataset.type == 'pasted-text-symbol' ||
         el.dataset.type == 'website-symbol'
       ) {
         const display_pos = get_caret_position_from_div(
