@@ -13,14 +13,14 @@ export const translations = {
     'settings.sidebar.prune-context': 'Prune Context',
     'settings.sidebar.commit-messages': 'Commit Messages',
     'settings.sidebar.voice-input': 'Voice Input',
-    'settings.action.add-new': 'Add New...',
+    'settings.action.add-new': 'Add New',
     'settings.message.missing-configuration': 'Missing configuration.'
   },
   pl: {
     'panel.header.settings': 'Ustawienia',
     'panel.header.prompt-type': 'Typ promptu',
     'settings.sidebar.settings': 'Ustawienia',
-    'settings.action.add-new': 'Dodaj nowy...',
+    'settings.action.add-new': 'Dodaj nowy',
     'settings.message.missing-configuration': 'Brak konfiguracji.'
   },
   'zh-cn': {

@@ -101,43 +101,43 @@
       },
       {
         "command": "codeWebChat.undoContextSelection",
-        "title": "Undo Context Selection",
+        "title": "%codeWebChat.undoContextSelection.title%",
         "category": "Code Web Chat",
         "icon": "$(discard)"
       },
       {
         "command": "codeWebChat.redoContextSelection",
-        "title": "Redo Context Selection",
+        "title": "%codeWebChat.redoContextSelection.title%",
         "category": "Code Web Chat",
         "icon": "$(redo)"
       },
       {
         "command": "codeWebChat.duplicateWorkspace",
-        "title": "Duplicate Workspace in New Window",
+        "title": "%codeWebChat.duplicateWorkspace.title%",
         "category": "Code Web Chat",
         "icon": "$(multiple-windows)"
       },
       {
         "command": "codeWebChat.copyContextOpenEditors",
-        "title": "Copy Context of Open Editors",
+        "title": "%codeWebChat.copyContextOpenEditors.title%",
         "category": "Code Web Chat",
         "icon": "$(copy)"
       },
       {
         "command": "codeWebChat.rate",
-        "title": "Rate",
+        "title": "%codeWebChat.rate.title%",
         "category": "Code Web Chat",
         "icon": "$(star-empty)"
       },
       {
         "command": "codeWebChat.openRepository",
-        "title": "GitHub",
+        "title": "%codeWebChat.openRepository.title%",
         "category": "Code Web Chat",
         "icon": "$(github-alt)"
       },
       {
         "command": "codeWebChat.twitter",
-        "title": "X",
+        "title": "%codeWebChat.twitter.title%",
         "category": "Code Web Chat",
         "icon": "$(twitter)"
       },
@@ -149,93 +149,93 @@
       },
       {
         "command": "codeWebChat.checkAll",
-        "title": "Check All",
+        "title": "%codeWebChat.checkAll.title%",
         "category": "Code Web Chat",
         "icon": "$(check-all)"
       },
       {
         "command": "codeWebChat.clearChecks",
-        "title": "Clear Checks",
+        "title": "%codeWebChat.clearChecks.title%",
         "category": "Code Web Chat",
         "icon": "$(clear-all)"
       },
       {
         "command": "codeWebChat.expandContextFolders",
-        "title": "Expand Folders",
+        "title": "%codeWebChat.expandContextFolders.title%",
         "category": "Code Web Chat",
         "icon": "$(expand-all)"
       },
       {
         "command": "codeWebChat.collapseContextFolders",
-        "title": "Collapse Folders",
+        "title": "%codeWebChat.collapseContextFolders.title%",
         "category": "Code Web Chat",
         "icon": "$(collapse-all)"
       },
       {
         "command": "codeWebChat.collapseWorkspaceFolders",
-        "title": "Collapse Folders",
+        "title": "%codeWebChat.collapseWorkspaceFolders.title%",
         "category": "Code Web Chat",
         "icon": "$(collapse-all)"
       },
       {
         "command": "codeWebChat.checkAllOpenEditors",
-        "title": "Check All",
+        "title": "%codeWebChat.checkAllOpenEditors.title%",
         "category": "Code Web Chat",
         "icon": "$(check-all)"
       },
       {
         "command": "codeWebChat.clearChecksOpenEditors",
-        "title": "Clear Checks",
+        "title": "%codeWebChat.clearChecksOpenEditors.title%",
         "category": "Code Web Chat",
         "icon": "$(clear-all)"
       },
       {
         "command": "codeWebChat.closeEditor",
-        "title": "Close Editor",
+        "title": "%codeWebChat.closeEditor.title%",
         "category": "Code Web Chat",
         "icon": "$(close)"
       },
       {
         "command": "codeWebChat.closeAllEditors",
-        "title": "Close All Editors",
+        "title": "%codeWebChat.closeAllEditors.title%",
         "category": "Code Web Chat",
         "icon": "$(close-all)"
       },
       {
         "command": "codeWebChat.saveAll",
-        "title": "Save All",
+        "title": "%codeWebChat.saveAll.title%",
         "category": "Code Web Chat",
         "icon": "$(save-all)"
       },
       {
         "command": "codeWebChat.codeAtCursor",
-        "title": "Code at Cursor",
+        "title": "%codeWebChat.codeAtCursor.title%",
         "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.codeAtCursorUsing",
-        "title": "Code at Cursor using...",
+        "title": "%codeWebChat.codeAtCursorUsing.title%",
         "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.codeAtCursorWithInstructions",
-        "title": "Code at Cursor with Instructions",
+        "title": "%codeWebChat.codeAtCursorWithInstructions.title%",
         "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.codeAtCursorWithInstructionsUsing",
-        "title": "Code at Cursor with Instructions using...",
+        "title": "%codeWebChat.codeAtCursorWithInstructionsUsing.title%",
         "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.addFileToContext",
-        "title": "Add File to Context",
+        "title": "%codeWebChat.addFileToContext.title%",
         "category": "Code Web Chat",
         "icon": "$(add)"
       },
       {
         "command": "codeWebChat.removeFileFromContext",
-        "title": "Remove File from Context",
+        "title": "%codeWebChat.removeFileFromContext.title%",
         "category": "Code Web Chat",
         "icon": "$(remove)"
       },
@@ -246,44 +246,44 @@
       },
       {
         "command": "codeWebChat.newFolder",
-        "title": "New Folder...",
+        "title": "%codeWebChat.newFolder.title%",
         "icon": "$(new-folder)"
       },
       {
         "command": "codeWebChat.newFile",
-        "title": "New File...",
+        "title": "%codeWebChat.newFile.title%",
         "icon": "$(new-file)"
       },
       {
         "command": "codeWebChat.rename",
-        "title": "Rename..."
+        "title": "%codeWebChat.rename.title%"
       },
       {
         "command": "codeWebChat.delete",
-        "title": "Delete",
+        "title": "%codeWebChat.delete.title%",
         "icon": "$(trash)"
       },
       {
         "command": "codeWebChat.checkParentFolder",
-        "title": "Check Parent Folder"
+        "title": "%codeWebChat.checkParentFolder.title%"
       },
       {
         "command": "codeWebChat.uncheckParentFolder",
-        "title": "Uncheck Parent Folder"
+        "title": "%codeWebChat.uncheckParentFolder.title%"
       },
       {
         "command": "codeWebChat.referenceInPrompt",
-        "title": "Reference in Prompt",
+        "title": "%codeWebChat.referenceInPrompt.title%",
         "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.revealInExplorer",
-        "title": "Reveal in Explorer View",
+        "title": "%codeWebChat.revealInExplorer.title%",
         "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.findInFolder",
-        "title": "Find in Folder...",
+        "title": "%codeWebChat.findInFolder.title%",
         "category": "Code Web Chat",
         "icon": "$(search)"
       },
@@ -295,72 +295,72 @@
       },
       {
         "command": "codeWebChat.createNewCheckpoint",
-        "title": "Create New Checkpoint",
+        "title": "%codeWebChat.createNewCheckpoint.title%",
         "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.settings",
-        "title": "Settings",
+        "title": "%codeWebChat.settings.title%",
         "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.generateCommitMessage",
-        "title": "Generate Commit Message with CWC",
+        "title": "%codeWebChat.generateCommitMessage.title%",
         "category": "Code Web Chat",
         "icon": "$(sparkle)"
       },
       {
         "command": "codeWebChat.copyCommitMessagePrompt",
-        "title": "Copy Commit Message Prompt",
+        "title": "%codeWebChat.copyCommitMessagePrompt.title%",
         "category": "Code Web Chat",
         "icon": "$(copy)"
       },
       {
         "command": "codeWebChat.generateCommitMessageAndCommit",
-        "title": "Commit Changes",
+        "title": "%codeWebChat.generateCommitMessageAndCommit.title%",
         "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.setRanges",
-        "title": "Set Ranges",
+        "title": "%codeWebChat.setRanges.title%",
         "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.searchFilesForContext",
-        "title": "Search Files for Context...",
+        "title": "%codeWebChat.searchFilesForContext.title%",
         "category": "Code Web Chat",
         "icon": "$(search)"
       },
       {
         "command": "codeWebChat.searchFilesForContextFromDirectory",
-        "title": "Search Files for Context...",
+        "title": "%codeWebChat.searchFilesForContextFromDirectory.title%",
         "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.checkReferencingFilesForContext",
-        "title": "Check Referencing Files for Context",
+        "title": "%codeWebChat.checkReferencingFilesForContext.title%",
         "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.checkDefinitionFileForContext",
-        "title": "Check Definition File for Context",
+        "title": "%codeWebChat.checkDefinitionFileForContext.title%",
         "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.openInIntegratedTerminal",
-        "title": "Open in Integrated Terminal",
+        "title": "%codeWebChat.openInIntegratedTerminal.title%",
         "category": "Code Web Chat",
         "icon": "$(terminal)"
       },
       {
         "command": "codeWebChat.removeFolderFromWorkspace",
-        "title": "Remove Folder from Workspace",
+        "title": "%codeWebChat.removeFolderFromWorkspace.title%",
         "category": "Code Web Chat",
         "icon": "$(close)"
       },
       {
         "command": "codeWebChat.openWebsitePreviewUrl",
-        "title": "Open URL in Browser",
+        "title": "%codeWebChat.openWebsitePreviewUrl.title%",
         "icon": "$(link-external)"
       }
     ],

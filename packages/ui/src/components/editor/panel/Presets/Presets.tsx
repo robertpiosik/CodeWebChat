@@ -242,7 +242,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
               e.stopPropagation()
               props.on_create('top')
             }}
-            title="Create New..."
+            title="Add new"
           />
         }
       />
@@ -578,9 +578,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             </ReactSortable>
           </div>
           <div className={styles.footer}>
-            <Button on_click={() => props.on_create('bottom')}>
-              Create New...
-            </Button>
+            <Button on_click={() => props.on_create('bottom')}>Add New</Button>
           </div>
         </>
       )}

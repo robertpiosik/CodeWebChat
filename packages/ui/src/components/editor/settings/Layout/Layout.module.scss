@@ -31,6 +31,9 @@
     font-weight: 600;
     padding-left: 8px;
     letter-spacing: 1.5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__navigation {
