@@ -79,7 +79,7 @@ From code editing to voice input and commit messages, CWC covers your software d
 Bring Your Own Key (BYOK) for a remote model provider of choice. Self-host on your local machine with [Ollama](https://ollama.com/search).
 
 > [!NOTE]
-> Thanks to smart context files ordering by update/pick recency, CWC heavily utilizes [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching/), across tasks. This reduces input token costs by up to 90% and latency by up to 80%.
+> Thanks to smart context files ordering by update/pick recency, CWC heavily utilizes [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching/), across tasks. This consistently reduces input token costs by up to 90% and latency by up to 80%.
 
 ## Enterprise security
 
