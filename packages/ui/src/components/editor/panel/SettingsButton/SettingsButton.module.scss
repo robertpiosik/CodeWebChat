@@ -26,6 +26,10 @@
     height: auto;
     gap: 4px;
     padding: 1px 0 1px 5px;
+
+    .warning-icon {
+      padding-left: 2px;
+    }
   }
 
   &--with-warning {
