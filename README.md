@@ -11,10 +11,10 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 </p>
 
-Code Web Chat is a free and open-source, privacy-first **AI coding toolkit for VS Code**. It helps construct zero-overhead prompts for fast and accurate multi-file edits in your codebase using chatbots and APIs.
+Code Web Chat is a free and open-source, privacy-first **AI coding toolkit for VS Code**. It helps construct zero-overhead prompts for fast and accurate multi-file edits in your codebase using:
 
-> [!TIP]
-> Elevate your workflow with smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)).
+- chatbots—ChatGPT, Gemini, Claude...
+- APIs—remote and local model providers
 
 <br/>
 
@@ -35,7 +35,7 @@ Code Web Chat is a free and open-source, privacy-first **AI coding toolkit for V
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-3.png"></p>
 
 > [!TIP]
-> Don't want to use chatbots? Complete tasks without leaving the editor by making [API calls](#api-tools).
+> Elevate your workflow with smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)).
 
 ## Enabling autofill
 
