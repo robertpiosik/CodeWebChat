@@ -74,7 +74,7 @@ Got tired with copy and paste? Enable prompt autofill with a browser extension.
 
 ## API tools
 
-CWC includes many API tools, configurable with your preferred model provider.
+CWC includes many API tools, configurable with your preferred remote or local model provider.
 
 - Edit Context
 - Intelligent Update
