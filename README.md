@@ -77,7 +77,7 @@ Got tired with copy and paste? Autofill prompts with the browser extension:
 From code editing to voice input and commit messages, CWC supports your software development efforts on every step. Bring Your Own Key for a remote model provider of choice. Self-host with [Ollama](https://ollama.com/search).
 
 > [!NOTE]
-> Thanks to smart context files ordering by update/check recency, CWC heavily utilizes [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching/), across tasks. This consistently reduces input token costs by up to 90% and latency by up to 80%.
+> Thanks to smart context files ordering, CWC heavily utilizes [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching/), across tasks. This reduces input token costs by up to 90% and latency by up to 80%.
 
 > [!IMPORTANT]
 > Not all providers equally offer discounted input tokens. [Google](https://aistudio.google.com/api-keys) and [OpenAI](https://platform.openai.com/settings/organization/api-keys) are your best bets.
