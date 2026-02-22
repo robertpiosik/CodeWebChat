@@ -44,7 +44,9 @@ export const use_translation = () => {
   return { t }
 }
 
-export const T = <K extends TranslationKey>(params: TransProps<K>) => {
+export const Translation = <K extends TranslationKey>(
+  params: TransProps<K>
+) => {
   const components = params.components ?? {}
   const { t } = use_translation()
   const text = t(params.id)

@@ -4,6 +4,7 @@ import cn from 'classnames'
 import dayjs from 'dayjs'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
 import { IconButton } from '../../common/IconButton'
+import { use_dayjs_locale } from '../../../../hooks/use-dayjs-locale'
 
 dayjs.extend(localizedFormat)
 
@@ -24,20 +25,16 @@ type Props = {
   on_edit?: (id: number) => void
 }
 
-export const Timeline: React.FC<Props> = ({
-  items,
-  on_toggle_starred,
-  on_item_click,
-  on_delete,
-  on_edit
-}) => {
-  const [local_items, set_local_items] = useState(items)
+export const Timeline: React.FC<Props> = (props) => {
+  const [local_items, set_local_items] = useState(props.items)
   const [locked, set_locked] = useState(false)
 
+  use_dayjs_locale()
+
   useEffect(() => {
-    set_local_items(items)
+    set_local_items(props.items)
     set_locked(false)
-  }, [items])
+  }, [props.items])
 
   return (
     <div className={styles.timeline}>
@@ -45,13 +42,13 @@ export const Timeline: React.FC<Props> = ({
         <div
           key={item.id}
           className={styles.item}
-          onClick={() => on_item_click(item.id)}
+          onClick={() => props.on_item_click(item.id)}
         >
           <div
             className={styles.item__time}
             title={dayjs(item.timestamp).format('LLLL')}
           >
-            {dayjs(item.timestamp).format('h:mm A')}
+            {dayjs(item.timestamp).format('LT')}
           </div>
           <div className={styles.item__connector}>
             <div className={styles.item__marker}>
@@ -88,26 +85,26 @@ export const Timeline: React.FC<Props> = ({
                           : i
                       )
                     )
-                    on_toggle_starred(item.id)
+                    props.on_toggle_starred(item.id)
                   }}
                 />
-                {on_edit && item.can_edit && (
+                {props.on_edit && item.can_edit && (
                   <IconButton
                     codicon_icon="edit"
                     title="Edit description"
                     on_click={(e) => {
                       e.stopPropagation()
-                      on_edit(item.id)
+                      props.on_edit!(item.id)
                     }}
                   />
                 )}
-                {on_delete && (
+                {props.on_delete && (
                   <IconButton
                     codicon_icon="trash"
                     title="Delete"
                     on_click={(e) => {
                       e.stopPropagation()
-                      on_delete(item.id)
+                      props.on_delete!(item.id)
                     }}
                   />
                 )}

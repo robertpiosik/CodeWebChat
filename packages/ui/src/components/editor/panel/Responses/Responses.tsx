@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { use_periodic_re_render } from '../../../../hooks/use-periodic-re-render'
+import { use_dayjs_locale } from '../../../../hooks/use-dayjs-locale'
 import styles from './Responses.module.scss'
 
 dayjs.extend(relativeTime)
@@ -18,6 +19,7 @@ type Props = {
 export const Responses: React.FC<Props> = (props) => {
   // Re-render every minute to update the relative time of the history responses.
   use_periodic_re_render(60 * 1000)
+  use_dayjs_locale()
 
   if (props.response_history.length == 0) {
     return null

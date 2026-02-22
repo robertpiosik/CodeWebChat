@@ -5,6 +5,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import { SimpleCheckbox } from '../../common/SimpleCheckbox'
 import { Textarea } from '../../common/Textarea'
 import { use_periodic_re_render } from '../../../../hooks/use-periodic-re-render'
+import { use_dayjs_locale } from '../../../../hooks/use-dayjs-locale'
 import cn from 'classnames'
 import { Task } from '@shared/types/task'
 import { IconButton } from '../../common/IconButton'
@@ -52,6 +53,7 @@ const get_structure_signature = (tasks: Task[]): string => {
 
 export const Tasks: React.FC<Props> = (props) => {
   use_periodic_re_render(60 * 1000)
+  use_dayjs_locale()
   const [editing_timestamp, set_editing_timestamp] = useState<number | null>(
     null
   )

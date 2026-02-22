@@ -10,7 +10,7 @@ import { Responses as UiResponses } from '@ui/components/editor/panel/Responses'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Separator } from '@ui/components/editor/panel/Separator'
 import { ListHeader } from '@ui/components/editor/panel/ListHeader'
-import { use_translation } from '@/views/i18n/use-translation'
+import { Translation, use_translation } from '@/views/i18n/use-translation'
 import { IconButton } from '@ui/components/editor/common/IconButton'
 import { Tasks } from '@ui/components/editor/panel/Tasks'
 import { Task } from '@shared/types/task'
@@ -175,7 +175,7 @@ export const Home: React.FC<Props> = (props) => {
             <Separator height={8} />
 
             <ListHeader
-              title="Tasks"
+              title={t('panel.home.tasks')}
               is_collapsed={props.are_tasks_collapsed}
               on_toggle_collapsed={() =>
                 props.on_tasks_collapsed_change(!props.are_tasks_collapsed)
@@ -184,7 +184,7 @@ export const Home: React.FC<Props> = (props) => {
                 Object.keys(props.tasks).length == 1 ? (
                   <IconButton
                     codicon_icon="add"
-                    title="Add Task"
+                    title={t('panel.home.tasks.add')}
                     on_click={(e) => {
                       e.stopPropagation()
                       const roots = Object.keys(props.tasks)
@@ -202,7 +202,9 @@ export const Home: React.FC<Props> = (props) => {
             {!props.are_tasks_collapsed &&
               Object.keys(props.tasks).length == 1 &&
               props.tasks[Object.keys(props.tasks)[0]].length == 0 && (
-                <div className={styles.inner__empty}>No tasks created yet.</div>
+                <div className={styles.inner__empty}>
+                  {t('panel.home.tasks.empty')}
+                </div>
               )}
             {!props.are_tasks_collapsed &&
               Object.entries(props.tasks)
@@ -222,7 +224,7 @@ export const Home: React.FC<Props> = (props) => {
                         </span>
                         <button
                           className={styles['add-button']}
-                          title="Add Task"
+                          title={t('panel.home.tasks.add')}
                           onClick={() => {
                             handle_add(workspace_root_folder, tasks, 'top')
                           }}
@@ -265,7 +267,7 @@ export const Home: React.FC<Props> = (props) => {
 
             <ListHeader
               ref={timeline_ref}
-              title="Timeline"
+              title={t('panel.home.timeline')}
               is_collapsed={props.is_timeline_collapsed}
               on_toggle_collapsed={() =>
                 props.on_timeline_collapsed_change(!props.is_timeline_collapsed)
@@ -274,7 +276,7 @@ export const Home: React.FC<Props> = (props) => {
                 <>
                   <IconButton
                     codicon_icon="add"
-                    title="New Checkpoint"
+                    title={t('panel.home.timeline.new-checkpoint')}
                     on_click={(e) => {
                       e.stopPropagation()
                       handle_create_checkpoint_click()
@@ -283,7 +285,7 @@ export const Home: React.FC<Props> = (props) => {
                   {props.checkpoints.length > 0 && (
                     <IconButton
                       codicon_icon="trash"
-                      title="Delete all checkpoints"
+                      title={t('panel.home.timeline.delete-all')}
                       on_click={(e) => {
                         e.stopPropagation()
                         handle_delete_all_checkpoints_click()
@@ -313,7 +315,7 @@ export const Home: React.FC<Props> = (props) => {
                 />
               ) : (
                 <div className={styles.inner__empty}>
-                  No checkpoints created yet.
+                  {t('panel.home.timeline.empty')}
                 </div>
               ))}
           </div>
@@ -322,14 +324,25 @@ export const Home: React.FC<Props> = (props) => {
             <div className={styles.bottom__links}>
               <div>{props.version}</div>
               <div>
-                Released under the{' '}
-                <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE">
-                  GPL-3.0 license
-                </a>
+                <Translation
+                  id="panel.home.footer.license"
+                  components={{
+                    link: (
+                      <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE">
+                        {t('panel.home.footer.license.name')}
+                      </a>
+                    )
+                  }}
+                />
               </div>
               <div>
-                Copyright © {new Date().getFullYear()}{' '}
-                <a href="https://x.com/robertpiosik">Robert Piosik</a>
+                <Translation
+                  id="panel.home.footer.copyright"
+                  components={{
+                    year: new Date().getFullYear().toString(),
+                    link: <a href="https://x.com/robertpiosik">Robert Piosik</a>
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -348,7 +361,7 @@ export const Home: React.FC<Props> = (props) => {
               styles['scroll-to-timeline__icon']
             )}
           />
-          <span>Scroll to timeline</span>
+          <span>{t('panel.home.timeline.scroll')}</span>
         </button>
       )}
     </>

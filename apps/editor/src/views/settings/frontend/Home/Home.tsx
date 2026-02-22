@@ -19,7 +19,7 @@ import {
 } from '@/views/settings/types/messages'
 import { GeneralSection } from './sections/GeneralSection'
 import {
-  T,
+  Translation,
   use_translation,
   TranslationKey
 } from '@/views/i18n/use-translation'
@@ -382,7 +382,7 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            <T
+            <Translation
               id="settings.model-providers.notice.api-keys"
               components={{
                 link: (
@@ -662,7 +662,7 @@ export const Home: React.FC<Props> = (props) => {
           }
         >
           <Notice type="info">
-            <T
+            <Translation
               id="settings.voice-input.notice"
               components={{
                 link: (
