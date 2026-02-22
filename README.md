@@ -74,9 +74,7 @@ Got tired with copy and paste? Enable prompt autofill with a browser extension.
 
 ## API tools
 
-From code editing to voice input and commit messages, CWC covers your software development needs without leaving the editor.
-
-Bring Your Own Key (BYOK) for a remote model provider of choice. Self-host on your local machine with [Ollama](https://ollama.com/search).
+From code editing to voice input and commit messages, CWC supports your software development efforts on every step. Bring Your Own Key for a remote model provider of choice. Self-host on your local machine with [Ollama](https://ollama.com/search).
 
 > [!NOTE]
 > Thanks to smart context files ordering by update/pick recency, CWC heavily utilizes [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching/), across tasks. This consistently reduces input token costs by up to 90% and latency by up to 80%.
