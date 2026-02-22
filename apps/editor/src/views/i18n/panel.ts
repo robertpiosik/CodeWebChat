@@ -1,6 +1,6 @@
 export const panel = {
   'panel.header.home': {
-    en: 'Hello!',
+    en: 'Howdy!',
     pl: 'Cześć!',
     'zh-cn': '你好！',
     ja: 'こんにちは！',
