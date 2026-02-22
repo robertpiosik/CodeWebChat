@@ -1,8 +1,8 @@
-export const map_display_pos_to_raw_pos = (
-  display_pos: number,
-  raw_text: string,
+export const map_display_pos_to_raw_pos = (params: {
+  display_pos: number
+  raw_text: string
   context_file_paths: string[]
-): number => {
+}): number => {
   let raw_pos = 0
   let current_display_pos = 0
   let last_raw_index = 0
@@ -11,7 +11,7 @@ export const map_display_pos_to_raw_pos = (
     /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
   let match
 
-  while ((match = regex.exec(raw_text)) !== null) {
+  while ((match = regex.exec(params.raw_text)) !== null) {
     const file_path = match[1]
     const changes_symbol = match[2]
     const selection_symbol = match[3]
@@ -29,7 +29,7 @@ export const map_display_pos_to_raw_pos = (
     let is_replacement_match = false
     let display_match_length = 0
 
-    if (file_path && context_file_paths.includes(file_path)) {
+    if (file_path && params.context_file_paths.includes(file_path)) {
       const filename = file_path.split('/').pop() || file_path
       display_match_length = filename.length
       is_replacement_match = true
@@ -109,15 +109,15 @@ export const map_display_pos_to_raw_pos = (
     const raw_match_length = match[0].length
     const text_before_length = match.index - last_raw_index
 
-    if (display_pos <= current_display_pos + text_before_length) {
-      return raw_pos + (display_pos - current_display_pos)
+    if (params.display_pos <= current_display_pos + text_before_length) {
+      return raw_pos + (params.display_pos - current_display_pos)
     }
 
     current_display_pos += text_before_length
     raw_pos += text_before_length
 
-    if (display_pos <= current_display_pos + display_match_length) {
-      const pos_in_display = display_pos - current_display_pos
+    if (params.display_pos <= current_display_pos + display_match_length) {
+      const pos_in_display = params.display_pos - current_display_pos
       if (pos_in_display < display_match_length) {
         return raw_pos
       } else {
@@ -130,7 +130,7 @@ export const map_display_pos_to_raw_pos = (
     last_raw_index = regex.lastIndex
   }
 
-  return raw_pos + (display_pos - current_display_pos)
+  return raw_pos + (params.display_pos - current_display_pos)
 }
 
 export const map_raw_pos_to_display_pos = (

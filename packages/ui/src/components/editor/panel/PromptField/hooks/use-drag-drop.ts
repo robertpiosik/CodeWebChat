@@ -42,16 +42,16 @@ export const use_drag_drop = ({
     pre_selection_range.setEnd(range.endContainer, range.endOffset)
     const display_end = pre_selection_range.toString().length
 
-    const raw_start = map_display_pos_to_raw_pos(
-      display_start,
-      value,
-      context_file_paths ?? []
-    )
-    const raw_end = map_display_pos_to_raw_pos(
-      display_end,
-      value,
-      context_file_paths ?? []
-    )
+    const raw_start = map_display_pos_to_raw_pos({
+      display_pos: display_start,
+      raw_text: value,
+      context_file_paths: context_file_paths ?? []
+    })
+    const raw_end = map_display_pos_to_raw_pos({
+      display_pos: display_end,
+      raw_text: value,
+      context_file_paths: context_file_paths ?? []
+    })
 
     dragged_text_range_ref.current = { start: raw_start, end: raw_end }
     const dragged_text = value.substring(raw_start, raw_end)
@@ -96,11 +96,11 @@ export const use_drag_drop = ({
     pre_drop_range.setEnd(range.startContainer, range.startOffset)
     const display_drop_pos = pre_drop_range.toString().length
 
-    let raw_drop_pos = map_display_pos_to_raw_pos(
-      display_drop_pos,
-      value,
-      context_file_paths ?? []
-    )
+    let raw_drop_pos = map_display_pos_to_raw_pos({
+      display_pos: display_drop_pos,
+      raw_text: value,
+      context_file_paths: context_file_paths ?? []
+    })
 
     const dragged_text = value.substring(dragged_range.start, dragged_range.end)
 

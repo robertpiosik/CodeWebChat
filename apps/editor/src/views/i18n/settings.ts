@@ -181,7 +181,7 @@ export const settings = {
   },
   'settings.action.add-new': {
     en: 'Add New',
-    pl: 'Dodaj nowy',
+    pl: 'Dodaj...',
     'zh-cn': '添加新的',
     ja: '新規追加',
     'zh-tw': '新增',

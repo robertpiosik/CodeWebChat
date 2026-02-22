@@ -21,8 +21,10 @@
 
     &--disabled {
       pointer-events: none;
-      > * {
-        opacity: 0.3;
+      opacity: var(--disabled-opacity);
+
+      * {
+        pointer-events: none !important;
       }
     }
 
@@ -38,7 +40,7 @@
   position: relative;
 }
 
-.error {
+.warning {
   position: absolute;
   z-index: 2;
   width: 100%;
@@ -48,21 +50,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  pointer-events: none;
 
   &__inner {
     display: flex;
+    pointer-events: auto;
     text-align: center;
     align-items: center;
-    padding: 3px 10px 3px 8px;
-    font-weight: 500;
-    color: var(--vscode-activityWarningBadge-foreground);
-    background-color: var(--vscode-activityWarningBadge-background);
+    padding: 3px 12px 3px 8px;
+    color: var(--cwc-text-color-orange);
+    background-color: var(--cwc-bg-orange);
     border-radius: 999px;
     margin: 0 8px;
 
     &::before {
-      content: '⚠';
-      padding-right: 4px;
+      font-family: 'codicon';
+      content: '\ea6c';
+      font-size: 16px;
+      padding-right: 5px;
     }
   }
 }

@@ -41,7 +41,7 @@ export type PromptFieldProps = {
   prompt_type: WebPromptType | ApiPromptType
   current_selection?: SelectionState | null
   on_caret_position_change: (caret_position: number) => void
-  is_chatbots_mode: boolean
+  is_web_mode: boolean
   on_at_sign_click: () => void
   on_hash_sign_click: () => void
   on_curly_braces_click: () => void
@@ -78,6 +78,8 @@ export type PromptFieldProps = {
   on_tab_change: (index: number) => void
   on_new_tab: () => void
   on_tab_delete: (index: number) => void
+  missing_configuration: boolean
+  missing_preset: boolean
 }
 
 export const PromptField: React.FC<PromptFieldProps> = (props) => {
@@ -202,7 +204,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
       text: props.value,
       current_selection: props.current_selection,
       context_file_paths: props.context_file_paths ?? [],
-      is_chatbots_mode: props.is_chatbots_mode,
+      is_web_mode: props.is_web_mode,
       tabs_config: {
         count: props.tabs_count,
         active_index: props.active_tab_index
@@ -213,7 +215,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     props.prompt_type,
     props.current_selection,
     props.context_file_paths,
-    props.is_chatbots_mode,
+    props.is_web_mode,
     props.tabs_count,
     props.active_tab_index
   ])
@@ -318,24 +320,27 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
   return (
     <div className={styles.container}>
-      {!!props.current_selection && props.prompt_type == 'code-at-cursor' && (
-        <div className={styles.error}>
-          <div className={styles.error__inner}>Remove text selection</div>
+      {props.missing_configuration ? (
+        <div className={styles.warning}>
+          <div className={styles.warning__inner}>Missing configuration</div>
         </div>
-      )}
-
-      {props.prompt_type == 'code-at-cursor' &&
-        !props.currently_open_file_path && (
-          <div className={styles.error}>
-            <div className={styles.error__inner}>Place cursor in a file</div>
-          </div>
-        )}
+      ) : !!props.current_selection && props.prompt_type == 'code-at-cursor' ? (
+        <div className={styles.warning}>
+          <div className={styles.warning__inner}>Remove text selection</div>
+        </div>
+      ) : props.prompt_type == 'code-at-cursor' &&
+        !props.currently_open_file_path ? (
+        <div className={styles.warning}>
+          <div className={styles.warning__inner}>Place cursor in a file</div>
+        </div>
+      ) : null}
 
       <div
         className={cn(styles.container__inner, {
           [styles['container__inner--disabled']]:
-            props.prompt_type == 'code-at-cursor' &&
-            (!!props.current_selection || !props.currently_open_file_path),
+            props.missing_configuration ||
+            (props.prompt_type == 'code-at-cursor' &&
+              (!!props.current_selection || !props.currently_open_file_path)),
           [styles['container__inner--selecting']]: is_text_selecting
         })}
         onKeyDown={handle_container_key_down}
@@ -562,12 +567,13 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             </div>
 
             <div className={styles['footer__right__submit']} ref={dropdown_ref}>
-              {(!props.is_chatbots_mode ||
-                (props.is_chatbots_mode && props.is_connected)) && (
+              {(!props.is_web_mode ||
+                (props.is_web_mode &&
+                  props.is_connected &&
+                  !props.missing_preset)) && (
                 <>
                   {!(
-                    props.prompt_type == 'prune-context' &&
-                    !props.is_chatbots_mode
+                    props.prompt_type == 'prune-context' && !props.is_web_mode
                   ) && (
                     <div
                       className={styles['footer__right__invocation-count']}
@@ -708,7 +714,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   )}
                 </>
               )}
-              {props.is_chatbots_mode && !props.is_connected && (
+              {((props.is_web_mode && !props.is_connected) ||
+                props.missing_preset) && (
                 <>
                   {props.is_recording ? (
                     <button

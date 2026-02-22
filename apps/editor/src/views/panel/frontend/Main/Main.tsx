@@ -79,6 +79,7 @@ type Props = {
   on_tab_change: (index: number) => void
   on_new_tab: () => void
   on_tab_delete: (index: number) => void
+  missing_preset?: boolean
 }
 
 export const Main: React.FC<Props> = (props) => {

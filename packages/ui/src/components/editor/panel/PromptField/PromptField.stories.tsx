@@ -17,7 +17,7 @@ export const Empty = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    is_chatbots_mode={false}
+    is_web_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
@@ -52,6 +52,8 @@ export const Empty = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
+    missing_configuration={false}
+    missing_preset={false}
   />
 )
 
@@ -67,7 +69,7 @@ export const WithText = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    is_chatbots_mode={false}
+    is_web_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
@@ -102,6 +104,8 @@ export const WithText = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
+    missing_configuration={false}
+    missing_preset={false}
   />
 )
 
@@ -117,7 +121,7 @@ export const LongText = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    is_chatbots_mode={false}
+    is_web_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
@@ -152,6 +156,8 @@ export const LongText = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
+    missing_configuration={false}
+    missing_preset={false}
   />
 )
 
@@ -169,7 +175,7 @@ export const WithPlaceholderSavedContext = () => (
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
-    is_chatbots_mode={false}
+    is_web_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     context_file_paths={[]}
     invocation_count={1}
@@ -202,6 +208,8 @@ export const WithPlaceholderSavedContext = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
+    missing_configuration={false}
+    missing_preset={false}
   />
 )
 
@@ -225,7 +233,7 @@ export const WithPlaceholderSelection = () => (
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
-    is_chatbots_mode={false}
+    is_web_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     context_file_paths={[]}
     invocation_count={1}
@@ -258,6 +266,8 @@ export const WithPlaceholderSelection = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
+    missing_configuration={false}
+    missing_preset={false}
   />
 )
 
@@ -275,7 +285,7 @@ export const WithCommit = () => (
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
-    is_chatbots_mode={false}
+    is_web_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     context_file_paths={[]}
     invocation_count={1}
@@ -308,6 +318,8 @@ export const WithCommit = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
+    missing_configuration={false}
+    missing_preset={false}
   />
 )
 
@@ -325,7 +337,7 @@ export const WithCommitWithQuotes = () => (
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
-    is_chatbots_mode={false}
+    is_web_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     context_file_paths={[]}
     invocation_count={1}
@@ -358,6 +370,8 @@ export const WithCommitWithQuotes = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
+    missing_configuration={false}
+    missing_preset={false}
   />
 )
 export const WithContextAtCommit = () => (
@@ -374,7 +388,7 @@ export const WithContextAtCommit = () => (
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
-    is_chatbots_mode={false}
+    is_web_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     context_file_paths={[]}
     invocation_count={1}
@@ -407,6 +421,8 @@ export const WithContextAtCommit = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
+    missing_configuration={false}
+    missing_preset={false}
   />
 )
 
@@ -425,7 +441,7 @@ export const WithEditFormatSelector = () => {
       current_selection={null}
       currently_open_file_path="/path/to/file"
       on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-      is_chatbots_mode={false}
+      is_web_mode={false}
       on_at_sign_click={() => console.log('@ clicked')}
       on_hash_sign_click={() => console.log('# clicked')}
       on_submit_with_control={() => console.log('Submitted with control')}
@@ -461,6 +477,8 @@ export const WithEditFormatSelector = () => {
       on_tab_change={() => {}}
       on_new_tab={() => {}}
       on_tab_delete={() => {}}
+      missing_configuration={false}
+      missing_preset={false}
     />
   )
 }
@@ -477,7 +495,7 @@ export const WithFilePaths = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-    is_chatbots_mode={false}
+    is_web_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
@@ -512,6 +530,8 @@ export const WithFilePaths = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
+    missing_configuration={false}
+    missing_preset={false}
   />
 )
 
@@ -555,7 +575,7 @@ export const WithTabs = () => {
       current_selection={null}
       currently_open_file_path="/path/to/file"
       on_caret_position_change={(pos) => console.log('Caret position:', pos)}
-      is_chatbots_mode={false}
+      is_web_mode={false}
       on_at_sign_click={() => console.log('@ clicked')}
       on_hash_sign_click={() => console.log('# clicked')}
       on_submit_with_control={() => console.log('Submitted with control')}
@@ -590,6 +610,54 @@ export const WithTabs = () => {
       on_tab_change={set_active_index}
       on_new_tab={handle_new_tab}
       on_tab_delete={handle_tab_delete}
+      missing_configuration={false}
+      missing_preset={false}
     />
   )
 }
+
+export const MissingPreset = () => (
+  <PromptField
+    value="I want to copy this even if there are no presets"
+    chat_history={[]}
+    on_change={(value) => console.log('Changed:', value)}
+    on_submit={() => console.log('Submitted')}
+    on_copy={() => console.log('Copied')}
+    is_connected={true}
+    prompt_type="ask-about-context"
+    current_selection={null}
+    currently_open_file_path="/path/to/file"
+    on_caret_position_change={(pos) => console.log('Caret position:', pos)}
+    is_web_mode={true}
+    on_at_sign_click={() => console.log('@ clicked')}
+    on_hash_sign_click={() => console.log('# clicked')}
+    on_submit_with_control={() => console.log('Submitted with control')}
+    context_file_paths={[]}
+    on_curly_braces_click={() => {}}
+    invocation_count={1}
+    on_invocation_count_change={(count) =>
+      console.log('Invocation count changed:', count)
+    }
+    on_go_to_file={(path) => console.log('Go to file:', path)}
+    prune_context_instructions_prefix=""
+    on_prune_context_instructions_prefix_change={() => {}}
+    on_pasted_lines_click={() => {}}
+    on_open_url={() => {}}
+    on_open_website={() => {}}
+    on_paste_image={() => {}}
+    on_paste_pasted_text={() => {}}
+    on_open_image={() => {}}
+    on_open_pasted_text={() => {}}
+    on_paste_url={() => {}}
+    is_recording={false}
+    on_recording_started={() => {}}
+    on_recording_finished={() => {}}
+    tabs_count={1}
+    active_tab_index={0}
+    on_tab_change={() => {}}
+    on_new_tab={() => {}}
+    on_tab_delete={() => {}}
+    missing_configuration={false}
+    missing_preset={true}
+  />
+)

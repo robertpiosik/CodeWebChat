@@ -245,7 +245,7 @@ export const MainView: React.FC<Props> = (props) => {
             on_at_sign_click={props.on_at_sign_click}
             on_hash_sign_click={props.on_hash_sign_click}
             on_curly_braces_click={props.on_curly_braces_click}
-            is_chatbots_mode={props.mode == MODE.WEB}
+            is_web_mode={props.mode == MODE.WEB}
             is_connected={props.is_connected}
             prompt_type={
               props.mode == MODE.WEB
@@ -299,6 +299,10 @@ export const MainView: React.FC<Props> = (props) => {
             on_tab_change={props.on_tab_change}
             on_new_tab={props.on_new_tab}
             on_tab_delete={props.on_tab_delete}
+            missing_configuration={
+              props.mode == MODE.API && props.configurations.length == 0
+            }
+            missing_preset={props.mode == MODE.WEB && props.presets.length == 0}
           />
           <UiContextUtilisation
             current_context_size={props.token_count}
