@@ -152,6 +152,7 @@ export const Default = () => {
         on_add_subtask={handle_add_subtask}
         on_delete={handle_delete}
         on_forward={() => {}}
+        placeholder="Click to add text..."
       />
     </div>
   )
@@ -179,6 +180,7 @@ export const NoReorder = () => {
         on_add_subtask={() => {}}
         on_delete={() => {}}
         on_forward={() => {}}
+        placeholder="Click to add text..."
       />
     </div>
   )

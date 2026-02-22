@@ -101,7 +101,9 @@ export const Home: React.FC<Props> = (props) => {
           <div className={styles['header__home']}>
             <span className="codicon codicon-home" />
           </div>
-          <span className={styles['header__text']}>Home</span>
+          <span className={styles['header__text']}>
+            {t('panel.header.home')}
+          </span>
         </div>
         <SettingsButton
           on_click={handle_settings_click}
@@ -260,6 +262,7 @@ export const Home: React.FC<Props> = (props) => {
                         on_forward={(text) => {
                           props.on_task_forward(text)
                         }}
+                        placeholder={t('panel.home.tasks.placeholder')}
                       />
                     )}
                   </div>

@@ -22,6 +22,7 @@ type Props = {
   on_add_subtask?: (parent_task: Task) => void
   on_forward: (text: string) => void
   on_delete: (created_at: number) => void
+  placeholder: string
 }
 
 const add_ids = (tasks: Task[]): SortableTask[] => {
@@ -255,7 +256,7 @@ export const Tasks: React.FC<Props> = (props) => {
                 set_editing_timestamp(params.task.created_at)
               }}
             >
-              {params.task.text || 'Click to add text...'}
+              {params.task.text || props.placeholder}
             </div>
           )}
         </div>

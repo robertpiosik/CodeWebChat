@@ -1,4 +1,22 @@
 export const panel = {
+  'panel.header.home': {
+    en: 'Hello!',
+    pl: 'Cześć!',
+    'zh-cn': '你好！',
+    ja: 'こんにちは！',
+    'zh-tw': '你好！',
+    de: 'Hallo!',
+    es: '¡Hola!',
+    fr: 'Salut !',
+    'pt-br': 'Olá!',
+    ru: 'Привет!',
+    ko: '안녕하세요!',
+    it: 'Ciao!',
+    tr: 'Merhaba!',
+    cs: 'Ahoj!',
+    hu: 'Szia!',
+    bg: 'Здравей!'
+  },
   'panel.header.settings': {
     en: 'Settings',
     pl: 'Ustawienia',
@@ -88,6 +106,24 @@ export const panel = {
     cs: 'Přidat úkol',
     hu: 'Feladat hozzáadása',
     bg: 'Добавяне на задача'
+  },
+  'panel.home.tasks.placeholder': {
+    en: 'Click to add text...',
+    pl: 'Kliknij, aby dodać tekst...',
+    'zh-cn': '点击添加文本...',
+    ja: 'クリックしてテキストを追加...',
+    'zh-tw': '點擊添加文本...',
+    de: 'Klicken, um Text hinzuzufügen...',
+    es: 'Haga clic para añadir texto...',
+    fr: 'Cliquez pour ajouter du texte...',
+    'pt-br': 'Clique para adicionar texto...',
+    ru: 'Нажмите, чтобы добавить текст...',
+    ko: '텍스트를 추가하려면 클릭하세요...',
+    it: 'Clicca per aggiungere testo...',
+    tr: 'Metin eklemek için tıklayın...',
+    cs: 'Kliknutím přidáte text...',
+    hu: 'Kattintson szöveg hozzáadásához...',
+    bg: 'Кликнете, за да добавите текст...'
   },
   'panel.home.timeline': {
     en: 'Timeline',
