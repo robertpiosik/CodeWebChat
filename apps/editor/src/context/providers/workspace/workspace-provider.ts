@@ -96,12 +96,13 @@ export class WorkspaceProvider
     context: vscode.ExtensionContext
   }) {
     this._context = params.context
-    this._workspace_roots = params.workspace_folders.map(
-      (folder) => folder.uri.fsPath
+    const valid_folders = params.workspace_folders.filter((folder) =>
+      fs.existsSync(folder.uri.fsPath)
     )
-    this._workspace_names = params.workspace_folders.map(
-      (folder) => folder.name
-    )
+
+    this._workspace_roots = valid_folders.map((folder) => folder.uri.fsPath)
+    this._workspace_names = valid_folders.map((folder) => folder.name)
+
     this.onDidChangeCheckedFiles(() => this._save_checked_files_state())
     this._token_calculator = new TokenCalculator(this, this._context)
     this._load_ignore_patterns()
@@ -675,6 +676,9 @@ export class WorkspaceProvider
 
     if (this._workspace_roots.length == 1) {
       const single_root = this._workspace_roots[0]
+      if (!fs.existsSync(single_root)) {
+        return []
+      }
       const items =
         await this._token_calculator.with_token_counting_notification(() =>
           this._get_files_and_directories(single_root)
@@ -712,6 +716,9 @@ export class WorkspaceProvider
     }
 
     if (this._workspace_roots.length == 1) {
+      if (!fs.existsSync(this._workspace_roots[0])) {
+        return []
+      }
       return this._get_files_and_directories(this._workspace_roots[0], true)
     } else {
       return this._get_workspace_folder_items(true)
@@ -724,6 +731,10 @@ export class WorkspaceProvider
     const items: FileItem[] = []
     for (let i = 0; i < this._workspace_roots.length; i++) {
       const root = this._workspace_roots[i]
+
+      if (!fs.existsSync(root)) {
+        continue
+      }
 
       if (context_view) {
         const state = this._checked_items.get(root)
@@ -1620,8 +1631,12 @@ export class WorkspaceProvider
   ): Promise<void> {
     const checked_paths = this.get_all_checked_paths()
 
-    this._workspace_roots = workspace_folders.map((folder) => folder.uri.fsPath)
-    this._workspace_names = workspace_folders.map((folder) => folder.name)
+    const valid_folders = workspace_folders.filter((folder) =>
+      fs.existsSync(folder.uri.fsPath)
+    )
+
+    this._workspace_roots = valid_folders.map((folder) => folder.uri.fsPath)
+    this._workspace_names = valid_folders.map((folder) => folder.name)
 
     // Clear caches that depend on workspace structure
     this._file_workspace_map.clear()

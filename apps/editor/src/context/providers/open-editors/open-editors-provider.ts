@@ -42,9 +42,10 @@ export class OpenEditorsProvider
     workspace_folders: readonly vscode.WorkspaceFolder[]
     workspace_provider: WorkspaceProvider
   }) {
-    this._workspace_roots = params.workspace_folders.map(
-      (folder) => folder.uri.fsPath
-    )
+    this._workspace_roots = params.workspace_folders
+      .map((folder) => folder.uri.fsPath)
+      .filter((folder_path) => fs.existsSync(folder_path))
+
     this._shared_state = SharedFileState.get_instance()
     this._workspace_provider = params.workspace_provider
 
@@ -81,7 +82,9 @@ export class OpenEditorsProvider
   public update_workspace_folders(
     workspace_folders: readonly vscode.WorkspaceFolder[]
   ) {
-    this._workspace_roots = workspace_folders.map((folder) => folder.uri.fsPath)
+    this._workspace_roots = workspace_folders
+      .map((folder) => folder.uri.fsPath)
+      .filter((folder_path) => fs.existsSync(folder_path))
     this.refresh()
   }
 
