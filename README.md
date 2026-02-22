@@ -18,25 +18,25 @@ Code Web Chat is a free and open-source, privacy-first **AI coding toolkit for V
 
 <br/>
 
-<p align="center"><i>Select files for context, enter a prompt...</i></p>
+<p align="center"><i>Select relevant files, type a task...</i></p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-1.png"></p>
 
 <br/>
 
-<p align="center"><i>Wait a few seconds for the chatbot...</i></p>
+<p align="center"><i>Copy response when ready...</i></p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-2.png"></p>
 
 <br/>
 
-<p align="center"><i>Apply chat response from clipboard...</i></p>
+<p align="center"><i>Apply from clipboard...</i></p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot-3.png"></p>
 
 ## Enabling autofill
 
-Got tired with copy and paste? Autofill prompts with the browser extension:
+Install the browser extension and never copy and paste again.
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/autofill-for-code-web-chat/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/autofill-for-code-web-chat/)
