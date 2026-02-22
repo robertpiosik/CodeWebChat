@@ -80,7 +80,7 @@ From code editing to voice input and commit messages, CWC supports your software
 > Thanks to smart context files ordering, CWC heavily utilizes [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching/). This reduces input token costs by up to 90% and latency by up to 80%.
 
 > [!IMPORTANT]
-> Not all providers equally offer discounted input tokens. [Google](https://aistudio.google.com/api-keys) and [OpenAI](https://platform.openai.com/settings/organization/api-keys) are your best bets.
+> Not all providers equally offer discounted input tokens. [Google](https://aistudio.google.com/api-keys) and [OpenAI](https://platform.openai.com/settings/organization/api-keys) are your safe bets.
 
 ## Enterprise security
 
