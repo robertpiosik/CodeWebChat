@@ -5,7 +5,7 @@ export const use_dayjs_locale = () => {
   useEffect(() => {
     const lang = document.documentElement.lang || 'en'
     if (lang != 'en') {
-      import(`dayjs/locale/${lang}`)
+      import(/* webpackInclude: /\.js$/ */ `dayjs/locale/${lang}`)
         .then(() => {
           dayjs.locale(lang)
         })
