@@ -36,7 +36,7 @@ Code Web Chat is a free and open-source, privacy-first **AI coding toolkit for V
 
 ## Enabling autofill
 
-Got tired with copy and paste? Enable prompt autofill with the browser extension:
+Got tired with copy and paste? Autofill prompts with the browser extension:
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/autofill-for-code-web-chat/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/autofill-for-code-web-chat/)
