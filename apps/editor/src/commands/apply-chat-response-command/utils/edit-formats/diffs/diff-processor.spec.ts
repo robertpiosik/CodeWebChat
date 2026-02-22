@@ -57,6 +57,19 @@ describe('diff-processor', () => {
       expect(result).toBe(expected)
     })
 
+    it('applies diff with failing test case correctly', async () => {
+      const test_case = 'failing'
+      const original = load_test_case_file('', test_case, 'original.txt')
+      const diff = load_test_case_file('', test_case, 'diff.txt')
+
+      expect(() => {
+        apply_diff({
+          original_code: original,
+          diff_patch: diff
+        })
+      }).toThrow(/Failed to apply \d+ hunk\(s\)/)
+    })
+
     it('applies diff with generic test case correctly', async () => {
       const test_case = 'generic-1'
       const original = load_test_case_file('', test_case, 'original.txt')
@@ -141,17 +154,18 @@ describe('diff-processor', () => {
       expect(result).toBe(expected)
     })
 
-    it('applies diff with failing test case correctly', async () => {
-      const test_case = 'failing'
+    it('applies diff with generic test case 7 correctly', async () => {
+      const test_case = 'generic-7'
       const original = load_test_case_file('', test_case, 'original.txt')
       const diff = load_test_case_file('', test_case, 'diff.txt')
+      const expected = load_test_case_file('', test_case, 'expected.txt')
 
-      expect(() => {
-        apply_diff({
-          original_code: original,
-          diff_patch: diff
-        })
-      }).toThrow(/Failed to apply \d+ hunk\(s\)/)
+      const result = apply_diff({
+        original_code: original,
+        diff_patch: diff
+      })
+
+      expect(result).toBe(expected)
     })
   })
 })

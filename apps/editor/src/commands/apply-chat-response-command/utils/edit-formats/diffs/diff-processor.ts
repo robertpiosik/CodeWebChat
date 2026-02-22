@@ -134,6 +134,10 @@ export const apply_diff = (params: {
     }
 
     if (line.startsWith('-') || line.startsWith('~')) {
+      if (inside_replace_block && line.startsWith('-')) {
+        push_block()
+      }
+
       inside_replace_block = false
 
       if (line.startsWith('-')) {

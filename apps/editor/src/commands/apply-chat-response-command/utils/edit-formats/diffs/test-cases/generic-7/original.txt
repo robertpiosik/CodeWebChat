@@ -1,0 +1,18 @@
+  'settings.intelligent-update.subtitle': {
+    en: 'Integrate changes from malformed responses.',
+    pl: 'Integruj zmiany z nieprawidłowych bloków kodu.',
+    'zh-cn': '集成格式错误响应中的更改。',
+    ja: '不正な形式の応答からの変更を統合します。',
+    'zh-tw': '整合格式錯誤回應中的變更。',
+    de: 'Integrieren Sie Änderungen aus fehlerhaften Antworten.',
+    es: 'Integra cambios de respuestas mal formateadas.',
+    fr: 'Intégrez les modifications à partir de réponses mal formatées.',
+    'pt-br': 'Integre alterações de respostas mal formatadas.',
+    ru: 'Интеграция изменений из некорректных ответов.',
+    ko: '잘못된 형식의 응답에서 변경 사항을 통합합니다.',
+    it: 'Integra modifiche da risposte mal formattate.',
+    tr: 'Hatalı biçimlendirilmiş yanıtlardan gelen değişiklikleri entegre edin.',
+    cs: 'Integrovat změny z chybně formátovaných odpovědí.',
+    hu: 'Hibás válaszokból származó változások integrálása.',
+    bg: 'Интегриране на промени от грешни отговори.'
+  },

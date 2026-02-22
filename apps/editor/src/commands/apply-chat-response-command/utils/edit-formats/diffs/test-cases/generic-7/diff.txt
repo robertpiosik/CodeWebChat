@@ -1,0 +1,18 @@
+--- a/apps/editor/src/views/i18n/settings.ts
++++ b/apps/editor/src/views/i18n/settings.ts
+@@ -1116,13 +1116,13 @@
+-    de: 'Integrieren Sie Änderungen aus fehlerhaften Antworten.',
++    de: 'Integrieren Sie Änderungen aus fehlerhaft formatierten Antworten.',
+-    es: 'Integra cambios de respuestas mal formateadas.',
++    es: 'Integra los cambios de respuestas con formato incorrecto.',
+-    fr: 'Intégrez les modifications à partir de réponses mal formatées.',
++    fr: 'Intégrez les modifications des réponses mal formatées.',
+-    ru: 'Интеграция изменений из некорректных ответов.',
++    ru: 'Интегрируйте изменения из некорректно сформированных ответов.',
+-    it: 'Integra modifiche da risposte mal formattate.',
++    it: 'Integra le modifiche da risposte malformate.',
+@@ -1138,7 +1138,7 @@
+-    hu: 'Hibás válaszokból származó változások integrálása.',
++    hu: 'Hibásan formázott válaszokból származó változások integrálása.',
+-    bg: 'Интегриране на промени от грешни отговори.'
++    bg: 'Интегриране на промени от неправилно форматирани отговори.'
