@@ -4,6 +4,7 @@ import { Icon } from '@ui/components/editor/common/Icon'
 import styles from './Footer.module.scss'
 import { use_compacting } from '@shared/hooks'
 import { LayoutContext } from '../../../contexts/LayoutContext'
+import { use_translation } from '@/views/i18n/use-translation'
 
 type Props = {
   on_donate_click: () => void
@@ -17,6 +18,8 @@ export const Footer: React.FC<Props> = (props) => {
     on_undo_click,
     apply_button_enabling_trigger_count
   } = useContext(LayoutContext)
+
+  const { t } = use_translation()
 
   const [is_apply_disabled_temporarily, set_is_apply_disabled_temporarily] =
     useState(false)
@@ -107,7 +110,9 @@ export const Footer: React.FC<Props> = (props) => {
             disabled={is_apply_disabled_temporarily}
           >
             <span className={styles['footer__action-button__text']}>
-              {compact_step == 0 ? 'Apply from Clipboard' : 'Apply'}
+              {compact_step == 0
+                ? t('panel.action.apply-from-clipboard')
+                : t('panel.action.apply')}
             </span>
             <span
               className={cn(
@@ -127,7 +132,9 @@ export const Footer: React.FC<Props> = (props) => {
             }
             disabled={!can_undo}
           >
-            <span className={styles['footer__action-button__text']}>Undo</span>
+            <span className={styles['footer__action-button__text']}>
+              {t('panel.action.undo')}
+            </span>
             <span
               className={cn(
                 styles['footer__action-button__icon'],

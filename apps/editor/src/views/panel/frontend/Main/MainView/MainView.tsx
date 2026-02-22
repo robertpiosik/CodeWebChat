@@ -17,6 +17,7 @@ import { ContextUtilisation as UiContextUtilisation } from '@ui/components/edito
 import { Header } from './components/Header'
 import { use_invocation_counts } from './hooks/use-invocation-counts'
 import { SelectionState } from '@/views/panel/types/messages'
+import { use_translation } from '@/views/i18n/use-translation'
 
 type Props = {
   scroll_reset_key: number
@@ -123,6 +124,8 @@ type Props = {
 }
 
 export const MainView: React.FC<Props> = (props) => {
+  const { t } = use_translation()
+
   const is_in_code_completions_prompt_type =
     (props.mode == MODE.WEB && props.web_prompt_type == 'code-at-cursor') ||
     (props.mode == MODE.API && props.api_prompt_type == 'code-at-cursor')
@@ -343,6 +346,26 @@ export const MainView: React.FC<Props> = (props) => {
               selected_preset_name={props.selected_preset_or_group_name}
               is_collapsed={props.presets_collapsed}
               on_toggle_collapsed={props.on_presets_collapsed_change}
+              translations={{
+                title: t('panel.presets.title'),
+                empty: t('panel.presets.empty'),
+                group: t('panel.presets.group'),
+                preset: t('panel.presets.preset'),
+                presets: t('panel.presets.presets'),
+                selected: t('panel.presets.selected'),
+                add_new: t('panel.action.add-new'),
+                add_new_tooltip: t('panel.action.add-new'),
+                initialize_tooltip: t('panel.action.initialize'),
+                copy_tooltip: t('panel.action.copy'),
+                pin_tooltip: t('panel.action.pin'),
+                unpin_tooltip: t('panel.action.unpin'),
+                duplicate_tooltip: t('panel.action.duplicate'),
+                edit_tooltip: t('panel.action.edit'),
+                delete_tooltip: t('panel.action.delete'),
+                insert_tooltip: t('panel.action.insert-preset'),
+                run_selected_tooltip: t('panel.action.run-selected'),
+                select_multi_tooltip: t('panel.action.select-multi')
+              }}
             />
           </>
         )}
@@ -362,6 +385,18 @@ export const MainView: React.FC<Props> = (props) => {
               on_create={props.on_create_configuration}
               is_collapsed={props.configurations_collapsed}
               on_toggle_collapsed={props.on_configurations_collapsed_change}
+              translations={{
+                title: t('panel.configurations.title'),
+                empty: t('panel.configurations.empty'),
+                add_new: t('panel.action.add-new'),
+                add_new_tooltip: t('panel.action.add-new'),
+                initialize_tooltip: t('panel.action.initialize'),
+                pin_tooltip: t('panel.action.pin'),
+                unpin_tooltip: t('panel.action.unpin'),
+                insert_tooltip: t('panel.action.insert-configuration'),
+                edit_tooltip: t('panel.action.edit'),
+                delete_tooltip: t('panel.action.delete')
+              }}
             />
           </>
         )}

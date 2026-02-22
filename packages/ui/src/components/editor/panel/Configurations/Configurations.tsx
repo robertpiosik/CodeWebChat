@@ -30,6 +30,18 @@ export namespace Configurations {
     on_delete: (id: string) => void
     is_collapsed: boolean
     on_toggle_collapsed: (is_collapsed: boolean) => void
+    translations: {
+      title: string
+      empty: string
+      add_new: string
+      add_new_tooltip: string
+      initialize_tooltip: string
+      pin_tooltip: string
+      unpin_tooltip: string
+      insert_tooltip: string
+      edit_tooltip: string
+      delete_tooltip: string
+    }
   }
 }
 
@@ -60,7 +72,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
         })}
         onClick={() => props.on_configuration_click(configuration.id)}
         role="button"
-        title="Initialize"
+        title={props.translations.initialize_tooltip}
       >
         <div className={styles.configurations__item__left}>
           {!is_dragging_disabled && (
@@ -87,7 +99,11 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
           {props.on_toggle_pinned && (
             <IconButton
               codicon_icon={configuration.is_pinned ? 'pinned' : 'pin'}
-              title={configuration.is_pinned ? 'Unpin' : 'Pin'}
+              title={
+                configuration.is_pinned
+                  ? props.translations.unpin_tooltip
+                  : props.translations.pin_tooltip
+              }
               on_click={(e) => {
                 e.stopPropagation()
                 props.on_toggle_pinned(configuration.id)
@@ -97,7 +113,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
           {!is_dragging_disabled && (
             <IconButton
               codicon_icon="insert"
-              title="Insert a new configuration below/above"
+              title={props.translations.insert_tooltip}
               on_click={(e) => {
                 e.stopPropagation()
                 props.on_create({ insertion_index: index_for_insertion })
@@ -107,7 +123,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
           {props.on_edit && (
             <IconButton
               codicon_icon="edit"
-              title="Edit"
+              title={props.translations.edit_tooltip}
               on_click={(e) => {
                 e.stopPropagation()
                 props.on_edit(configuration.id)
@@ -117,7 +133,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
           {props.on_delete && (
             <IconButton
               codicon_icon="trash"
-              title="Delete"
+              title={props.translations.delete_tooltip}
               on_click={(e) => {
                 e.stopPropagation()
                 props.on_delete(configuration.id)
@@ -143,7 +159,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
         </div>
       )}
       <ListHeader
-        title="Configurations"
+        title={props.translations.title}
         is_collapsed={props.is_collapsed}
         on_toggle_collapsed={() =>
           props.on_toggle_collapsed(!props.is_collapsed)
@@ -155,7 +171,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
               e.stopPropagation()
               props.on_create({ create_on_top: true })
             }}
-            title="New Configuration..."
+            title={props.translations.add_new_tooltip}
           />
         }
       />
@@ -163,7 +179,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
         <>
           <div className={styles.configurations}>
             {props.configurations.length === 0 && (
-              <div className={styles.empty}>No configurations created yet.</div>
+              <div className={styles.empty}>{props.translations.empty}</div>
             )}
             <ReactSortable
               list={props.configurations}
@@ -187,7 +203,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
           </div>
           <div className={styles.footer}>
             <Button on_click={() => props.on_create()}>
-              New Configuration...
+              {props.translations.add_new}
             </Button>
           </div>
         </>

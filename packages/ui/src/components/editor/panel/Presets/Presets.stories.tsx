@@ -47,6 +47,27 @@ const presets: Presets.Preset[] = [
   }
 ]
 
+const mock_translations = {
+  title: 'Presets',
+  empty: 'No presets created yet.',
+  group: 'Group',
+  preset: 'preset',
+  presets: 'presets',
+  selected: 'selected',
+  add_new: 'Add New',
+  add_new_tooltip: 'Add new',
+  initialize_tooltip: 'Initialize',
+  copy_tooltip: 'Copy to clipboard',
+  pin_tooltip: 'Pin',
+  unpin_tooltip: 'Unpin',
+  duplicate_tooltip: 'Duplicate',
+  edit_tooltip: 'Edit',
+  delete_tooltip: 'Delete',
+  insert_tooltip: 'Insert a new item below/above',
+  run_selected_tooltip: 'Run Selected Presets',
+  select_multi_tooltip: 'Select for multi-initialization'
+}
+
 export const Primary = () => {
   return (
     <Presets
@@ -94,6 +115,7 @@ export const Primary = () => {
       on_toggle_collapsed={(is_collapsed) =>
         console.log('on_toggle_collapsed', is_collapsed)
       }
+      translations={mock_translations}
     />
   )
 }

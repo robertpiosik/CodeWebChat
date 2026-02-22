@@ -25,6 +25,19 @@ const configurations: Configurations.Configuration[] = [
   }
 ]
 
+const mock_translations = {
+  title: 'Configurations',
+  empty: 'No configurations created yet.',
+  add_new: 'Add New',
+  add_new_tooltip: 'Add new',
+  initialize_tooltip: 'Initialize',
+  pin_tooltip: 'Pin',
+  unpin_tooltip: 'Unpin',
+  insert_tooltip: 'Insert a new configuration below/above',
+  edit_tooltip: 'Edit',
+  delete_tooltip: 'Delete'
+}
+
 export const Default = () => {
   return (
     <Configurations
@@ -52,6 +65,7 @@ export const Default = () => {
       on_toggle_collapsed={(is_collapsed) => {
         console.log('on_toggle_collapsed', is_collapsed)
       }}
+      translations={mock_translations}
     />
   )
 }
@@ -82,5 +96,6 @@ export const Empty = () => (
     on_toggle_collapsed={(is_collapsed) => {
       console.log('on_toggle_collapsed', is_collapsed)
     }}
+    translations={mock_translations}
   />
 )

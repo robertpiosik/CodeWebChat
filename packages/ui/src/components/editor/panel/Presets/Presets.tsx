@@ -68,6 +68,26 @@ export namespace Presets {
     selected_preset_name?: string
     is_collapsed: boolean
     on_toggle_collapsed: (is_collapsed: boolean) => void
+    translations: {
+      title: string
+      empty: string
+      group: string
+      preset: string
+      presets: string
+      selected: string
+      add_new: string
+      add_new_tooltip: string
+      initialize_tooltip: string
+      copy_tooltip: string
+      pin_tooltip: string
+      unpin_tooltip: string
+      duplicate_tooltip: string
+      edit_tooltip: string
+      delete_tooltip: string
+      insert_tooltip: string
+      run_selected_tooltip: string
+      select_multi_tooltip: string
+    }
   }
 }
 
@@ -165,7 +185,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   props.on_preset_click(preset.name!)
                 }}
                 role="button"
-                title="Initialize"
+                title={props.translations.initialize_tooltip}
               >
                 <div className={styles.presets__item__left}>
                   <div className={styles.presets__item__left__icon}>
@@ -184,7 +204,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   {(preset.prompt_prefix || preset.prompt_suffix) && (
                     <IconButton
                       codicon_icon="copy"
-                      title="Copy to clipboard"
+                      title={props.translations.copy_tooltip}
                       on_click={(e) => {
                         e.stopPropagation()
                         props.on_preset_copy(preset.name!)
@@ -193,7 +213,11 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   )}
                   <IconButton
                     codicon_icon={preset.is_pinned ? 'pinned' : 'pin'}
-                    title={preset.is_pinned ? 'Unpin' : 'Pin'}
+                    title={
+                      preset.is_pinned
+                        ? props.translations.unpin_tooltip
+                        : props.translations.pin_tooltip
+                    }
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_toggle_preset_pinned(preset.name!)
@@ -201,7 +225,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   />
                   <IconButton
                     codicon_icon="files"
-                    title="Duplicate"
+                    title={props.translations.duplicate_tooltip}
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_duplicate(index)
@@ -209,7 +233,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   />
                   <IconButton
                     codicon_icon="edit"
-                    title="Edit"
+                    title={props.translations.edit_tooltip}
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_preset_edit(preset.name!)
@@ -217,7 +241,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   />
                   <IconButton
                     codicon_icon="trash"
-                    title="Delete"
+                    title={props.translations.delete_tooltip}
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_delete(index)
@@ -230,7 +254,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
         </div>
       )}
       <ListHeader
-        title="Presets"
+        title={props.translations.title}
         is_collapsed={props.is_collapsed}
         on_toggle_collapsed={() =>
           props.on_toggle_collapsed(!props.is_collapsed)
@@ -242,7 +266,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
               e.stopPropagation()
               props.on_create('top')
             }}
-            title="Add new"
+            title={props.translations.add_new_tooltip}
           />
         }
       />
@@ -250,7 +274,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
         <>
           <div className={styles.presets}>
             {props.presets.length == 0 && (
-              <div className={styles.empty}>No presets created yet.</div>
+              <div className={styles.empty}>{props.translations.empty}</div>
             )}
             <ReactSortable
               list={sortable_list}
@@ -336,7 +360,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       >
                         <IconButton
                           codicon_icon="files"
-                          title="Duplicate"
+                          title={props.translations.duplicate_tooltip}
                           on_click={(e) => {
                             e.stopPropagation()
                             props.on_duplicate(preset.original_index!)
@@ -344,7 +368,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         />
                         <IconButton
                           codicon_icon="insert"
-                          title="Insert a new item below/above"
+                          title={props.translations.insert_tooltip}
                           on_click={(e) => {
                             e.stopPropagation()
                             props.on_create(undefined, preset.original_index!)
@@ -352,7 +376,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         />
                         <IconButton
                           codicon_icon="trash"
-                          title="Delete"
+                          title={props.translations.delete_tooltip}
                           on_click={(e) => {
                             e.stopPropagation()
                             props.on_delete(preset.original_index!)
@@ -374,7 +398,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 } else {
                   // Group (no chatbot)
                   display_name = is_unnamed
-                    ? 'Group'
+                    ? props.translations.group
                     : preset.name!.replace(/ \(\d+\)$/, '')
                 }
 
@@ -405,10 +429,14 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       }
                       if (preset.is_collapsed) {
                         let text = `${preset_count} ${
-                          preset_count == 1 ? 'preset' : 'presets'
+                          preset_count == 1
+                            ? props.translations.preset
+                            : props.translations.presets
                         }`
                         if (selected_count > 0) {
-                          text += ` · ${selected_count} selected`
+                          text += ` · ${selected_count} ${
+                            props.translations.selected
+                          }`
                         }
                         return text
                       }
@@ -447,7 +475,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       }
                     }}
                     role="button"
-                    title="Initialize"
+                    title={props.translations.initialize_tooltip}
                   >
                     <div className={styles.presets__item__left}>
                       <div
@@ -473,7 +501,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                             on_change={() =>
                               props.on_toggle_selected_preset(preset.name!)
                             }
-                            title="Select for multi-initialization"
+                            title={props.translations.select_multi_tooltip}
                           />
                         )}
                       {preset.chatbot && (
@@ -511,7 +539,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       {!preset.chatbot && (
                         <IconButton
                           codicon_icon="run-coverage"
-                          title="Run Selected Presets"
+                          title={props.translations.run_selected_tooltip}
                           on_click={(e) => {
                             e.stopPropagation()
                             props.on_group_click(preset.name!)
@@ -522,7 +550,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         (preset.prompt_prefix || preset.prompt_suffix) && (
                           <IconButton
                             codicon_icon="copy"
-                            title="Copy to clipboard"
+                            title={props.translations.copy_tooltip}
                             on_click={(e) => {
                               e.stopPropagation()
                               props.on_preset_copy(preset.name!)
@@ -532,7 +560,11 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       {preset.chatbot && (
                         <IconButton
                           codicon_icon={preset.is_pinned ? 'pinned' : 'pin'}
-                          title={preset.is_pinned ? 'Unpin' : 'Pin'}
+                          title={
+                            preset.is_pinned
+                              ? props.translations.unpin_tooltip
+                              : props.translations.pin_tooltip
+                          }
                           on_click={(e) => {
                             e.stopPropagation()
                             props.on_toggle_preset_pinned(preset.name!)
@@ -541,7 +573,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       )}
                       <IconButton
                         codicon_icon="files"
-                        title="Duplicate"
+                        title={props.translations.duplicate_tooltip}
                         on_click={(e) => {
                           e.stopPropagation()
                           props.on_duplicate(preset.original_index!)
@@ -549,7 +581,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       />
                       <IconButton
                         codicon_icon="insert"
-                        title="Insert a new item below/above"
+                        title={props.translations.insert_tooltip}
                         on_click={(e) => {
                           e.stopPropagation()
                           props.on_create(undefined, preset.original_index!)
@@ -557,7 +589,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       />
                       <IconButton
                         codicon_icon="edit"
-                        title="Edit"
+                        title={props.translations.edit_tooltip}
                         on_click={(e) => {
                           e.stopPropagation()
                           props.on_preset_edit(preset.name!)
@@ -565,7 +597,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       />
                       <IconButton
                         codicon_icon="trash"
-                        title="Delete"
+                        title={props.translations.delete_tooltip}
                         on_click={(e) => {
                           e.stopPropagation()
                           props.on_delete(preset.original_index!)
@@ -578,7 +610,9 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             </ReactSortable>
           </div>
           <div className={styles.footer}>
-            <Button on_click={() => props.on_create('bottom')}>Add New</Button>
+            <Button on_click={() => props.on_create('bottom')}>
+              {props.translations.add_new}
+            </Button>
           </div>
         </>
       )}
