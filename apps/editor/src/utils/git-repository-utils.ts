@@ -117,7 +117,13 @@ export const prepare_staged_changes = async (
           label: path.basename(relative_path),
           description: dir_name == '.' ? '' : dir_name,
           picked: true,
-          fsPath: change.uri.fsPath
+          fsPath: change.uri.fsPath,
+          buttons: [
+            {
+              iconPath: new vscode.ThemeIcon('go-to-file'),
+              tooltip: 'Go to File'
+            }
+          ]
         }
       })
 
@@ -128,6 +134,7 @@ export const prepare_staged_changes = async (
         quick_pick.canSelectMany = true
         quick_pick.title = 'Unstaged Files'
         quick_pick.placeholder = 'Select files to commit'
+        quick_pick.ignoreFocusOut = true
         quick_pick.buttons = [
           {
             iconPath: new vscode.ThemeIcon('close'),
@@ -139,6 +146,13 @@ export const prepare_staged_changes = async (
           if (button.tooltip == 'Close') {
             resolve(undefined)
             quick_pick.hide()
+          }
+        })
+
+        quick_pick.onDidTriggerItemButton((event) => {
+          if (event.button.tooltip == 'Go to File') {
+            const uri = vscode.Uri.file(event.item.fsPath)
+            vscode.window.showTextDocument(uri, { preview: true })
           }
         })
 
