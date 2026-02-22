@@ -1129,7 +1129,7 @@ export const settings = {
   },
   'settings.intelligent-update.notice': {
     en: 'A request includes the original file and the code block that failed to apply.',
-    pl: 'Żądanie zawiera oryginalny plik i blok kodu, którego nie udało się zastosować.',
+    pl: 'Żądanie zawiera oryginalny plik i blok kodu, którego nie udało się zintegrować.',
     'zh-cn': '请求包含原始文件和应用失败的代码块。',
     ja: 'リクエストには、元のファイルと適用に失敗したコードブロックが含まれます。',
     'zh-tw': '請求包含原始檔案和應用失敗的程式碼區塊。',
