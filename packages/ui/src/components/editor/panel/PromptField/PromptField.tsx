@@ -252,12 +252,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
   useEffect(() => {
     if (input_ref.current) {
-      input_ref.current.focus()
-    }
-  }, [props.focus_key])
-
-  useEffect(() => {
-    if (input_ref.current) {
       const handle_click_outside = (event: MouseEvent) => {
         if (
           invocation_dropdown_ref.current &&
@@ -426,6 +420,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               if (selection) {
                 const range = document.createRange()
                 range.selectNodeContents(input_ref.current)
+                if (!props.value) {
+                  range.collapse(true)
+                }
                 selection.removeAllRanges()
                 selection.addRange(range)
               }

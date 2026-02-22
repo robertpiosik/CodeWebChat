@@ -356,6 +356,9 @@ export const use_handlers = (
       if (selection) {
         const range = document.createRange()
         range.selectNodeContents(params.input_ref.current)
+        if (!params.input_ref.current.textContent) {
+          range.collapse(true)
+        }
         selection.removeAllRanges()
         selection.addRange(range)
       }
