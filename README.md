@@ -88,8 +88,6 @@ From code editing to voice input and commit messages, CWC supports your software
 
 The tool **does not collect telemetry.**
 
-[Privacy Policy](https://github.com/robertpiosik/CodeWebChat/blob/dev/PRIVACY.md)
-
 ## Commands
 
 ### Code at Cursor
