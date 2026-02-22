@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useRef, useLayoutEffect } from 'react'
 import cn from 'classnames'
-import { Icon } from '@ui/components/editor/common/Icon'
+import { Icon as UiIcon } from '@ui/components/editor/common/Icon'
 import styles from './Footer.module.scss'
 import { use_compacting } from '@shared/hooks'
 import { LayoutContext } from '../../../contexts/LayoutContext'
@@ -76,7 +76,7 @@ export const Footer: React.FC<Props> = (props) => {
             }}
             title="Donate"
           >
-            <Icon variant="BUY_ME_A_COFFEE_LOGO" />
+            <UiIcon variant="BUY_ME_A_COFFEE_LOGO" />
           </a>
           <a
             className={cn(
@@ -86,7 +86,7 @@ export const Footer: React.FC<Props> = (props) => {
             href="https://www.reddit.com/r/CodeWebChat/"
             title="Reddit"
           >
-            <Icon variant="REDDIT" />
+            <UiIcon variant="REDDIT" />
           </a>
           <a
             className={cn(
@@ -96,7 +96,7 @@ export const Footer: React.FC<Props> = (props) => {
             href="https://discord.gg/KJySXsrSX5"
             title="Get involved"
           >
-            <Icon variant="DISCORD" />
+            <UiIcon variant="DISCORD" />
           </a>
         </div>
 

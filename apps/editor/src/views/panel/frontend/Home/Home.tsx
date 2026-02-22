@@ -1,22 +1,22 @@
 import { useState, useRef, useEffect } from 'react'
 import styles from './Home.module.scss'
-import { Scrollable } from '@ui/components/editor/panel/Scrollable'
-import { Timeline } from '@ui/components/editor/panel/Timeline'
-import { ModeButton } from '@ui/components/editor/panel/ModeButton'
+import { Scrollable as UiScrollable } from '@ui/components/editor/panel/Scrollable'
+import { Timeline as UiTimeline } from '@ui/components/editor/panel/Timeline'
+import { ModeButton as UiModeButton } from '@ui/components/editor/panel/ModeButton'
 import cn from 'classnames'
 import { post_message } from '../utils/post_message'
 import { Checkpoint, FrontendMessage } from '@/views/panel/types/messages'
 import { Responses as UiResponses } from '@ui/components/editor/panel/Responses'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
-import { Separator } from '@ui/components/editor/panel/Separator'
-import { ListHeader } from '@ui/components/editor/panel/ListHeader'
+import { Separator as UiSeparator } from '@ui/components/editor/panel/Separator'
+import { ListHeader as UiListHeader } from '@ui/components/editor/panel/ListHeader'
 import { Translation, use_translation } from '@/views/i18n/use-translation'
-import { IconButton } from '@ui/components/editor/common/IconButton'
-import { Tasks } from '@ui/components/editor/panel/Tasks'
+import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
+import { Tasks as UiTasks } from '@ui/components/editor/panel/Tasks'
 import { Task } from '@shared/types/task'
 import { use_tasks } from './hooks/use-tasks'
 import { use_timeline_scroll } from './hooks/use-timeline-scroll'
-import { SettingsButton } from '@ui/components/editor/panel/SettingsButton'
+import { SettingsButton as UiSettingsButton } from '@ui/components/editor/panel/SettingsButton'
 
 type Props = {
   vscode: any
@@ -105,14 +105,14 @@ export const Home: React.FC<Props> = (props) => {
             {t('panel.header.home')}
           </span>
         </div>
-        <SettingsButton
+        <UiSettingsButton
           on_click={handle_settings_click}
           label={t('panel.header.settings')}
           show_warning_icon={!props.is_setup_complete}
         />
       </div>
 
-      <Scrollable
+      <UiScrollable
         on_scroll={(top) => {
           const responses_height = responses_ref.current?.clientHeight || 0
           const current_mode_height = mode_ref.current?.offsetHeight || 0
@@ -160,13 +160,13 @@ export const Home: React.FC<Props> = (props) => {
               })}
               ref={mode_ref}
             >
-              <ModeButton
+              <UiModeButton
                 pre="Autofill"
                 label="Chatbots"
                 on_click={props.on_chatbots_click}
                 is_compact={is_mode_sticky}
               />
-              <ModeButton
+              <UiModeButton
                 pre="Make"
                 label="API calls"
                 on_click={props.on_api_calls_click}
@@ -174,9 +174,9 @@ export const Home: React.FC<Props> = (props) => {
               />
             </div>
 
-            <Separator height={8} />
+            <UiSeparator height={8} />
 
-            <ListHeader
+            <UiListHeader
               title={t('panel.home.tasks')}
               is_collapsed={props.are_tasks_collapsed}
               on_toggle_collapsed={() =>
@@ -184,7 +184,7 @@ export const Home: React.FC<Props> = (props) => {
               }
               actions={
                 Object.keys(props.tasks).length == 1 ? (
-                  <IconButton
+                  <UiIconButton
                     codicon_icon="add"
                     title={t('panel.home.tasks.add')}
                     on_click={(e) => {
@@ -234,7 +234,7 @@ export const Home: React.FC<Props> = (props) => {
                       </div>
                     )}
                     {tasks.length > 0 && (
-                      <Tasks
+                      <UiTasks
                         tasks={tasks}
                         on_reorder={(new_tasks) =>
                           handle_reorder(workspace_root_folder, new_tasks)
@@ -268,7 +268,7 @@ export const Home: React.FC<Props> = (props) => {
                   </div>
                 ))}
 
-            <ListHeader
+            <UiListHeader
               ref={timeline_ref}
               title={t('panel.home.timeline')}
               is_collapsed={props.is_timeline_collapsed}
@@ -277,7 +277,7 @@ export const Home: React.FC<Props> = (props) => {
               }
               actions={
                 <>
-                  <IconButton
+                  <UiIconButton
                     codicon_icon="add"
                     title={t('panel.home.timeline.new-checkpoint')}
                     on_click={(e) => {
@@ -286,7 +286,7 @@ export const Home: React.FC<Props> = (props) => {
                     }}
                   />
                   {props.checkpoints.length > 0 && (
-                    <IconButton
+                    <UiIconButton
                       codicon_icon="trash"
                       title={t('panel.home.timeline.delete-all')}
                       on_click={(e) => {
@@ -300,7 +300,7 @@ export const Home: React.FC<Props> = (props) => {
             />
             {!props.is_timeline_collapsed &&
               (props.checkpoints.length > 0 ? (
-                <Timeline
+                <UiTimeline
                   items={props.checkpoints.map((c) => ({
                     id: c.timestamp,
                     label: c.title,
@@ -350,7 +350,7 @@ export const Home: React.FC<Props> = (props) => {
             </div>
           </div>
         </div>
-      </Scrollable>
+      </UiScrollable>
 
       {!is_timeline_reached && (
         <button

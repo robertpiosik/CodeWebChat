@@ -1,5 +1,5 @@
 import { ProviderForClient } from '@/views/settings/types/messages'
-import { ModelProviders } from '@ui/components/editor/settings/ModelProviders'
+import { ModelProviders as UiModelProviders } from '@ui/components/editor/settings/ModelProviders'
 
 type ModelProvidersSectionProps = {
   providers: ProviderForClient[] | undefined
@@ -18,7 +18,7 @@ export const ModelProvidersSection: React.FC<ModelProvidersSectionProps> = (
   return (
     <>
       {props.providers && (
-        <ModelProviders
+        <UiModelProviders
           providers={props.providers}
           on_reorder={props.on_reorder}
           on_add_provider={props.on_add_provider}

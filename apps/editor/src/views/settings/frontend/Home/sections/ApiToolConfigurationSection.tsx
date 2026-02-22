@@ -1,5 +1,5 @@
 import { ConfigurationForClient } from '@/views/settings/types/messages'
-import { ConfigurationsList } from '@ui/components/editor/settings/ConfigurationsList'
+import { ConfigurationsList as UiConfigurationsList } from '@ui/components/editor/settings/ConfigurationsList'
 
 type ToolName =
   | 'CODE_AT_CURSOR'
@@ -33,7 +33,7 @@ export const ApiToolConfigurationSection: React.FC<
   return (
     <>
       {configurations && (
-        <ConfigurationsList
+        <UiConfigurationsList
           configurations={configurations}
           on_add={props.on_add}
           on_reorder={(reordered) => {

@@ -9,7 +9,7 @@ import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { EditFormat } from '@shared/types/edit-format'
 import { MODE, Mode } from '@/views/panel/types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
-import { Scrollable } from '@ui/components/editor/panel/Scrollable'
+import { Scrollable as UiScrollable } from '@ui/components/editor/panel/Scrollable'
 import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/components/editor/panel/BrowserExtensionMessage'
 import { ApiToolConfiguration } from '@/views/panel/types/messages'
 import { use_last_choice_button_title } from './hooks/use-last-choice-button-title'
@@ -205,7 +205,7 @@ export const MainView: React.FC<Props> = (props) => {
         are_keyboard_shortcuts_disabled={props.are_keyboard_shortcuts_disabled}
         is_setup_complete={props.is_setup_complete}
       />
-      <Scrollable scroll_to_top_key={props.scroll_reset_key}>
+      <UiScrollable scroll_to_top_key={props.scroll_reset_key}>
         <UiSeparator height={4} />
 
         {!props.is_connected && props.mode == MODE.WEB && (
@@ -404,7 +404,7 @@ export const MainView: React.FC<Props> = (props) => {
             />
           </>
         )}
-      </Scrollable>
+      </UiScrollable>
     </>
   )
 }

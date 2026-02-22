@@ -1,17 +1,17 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { Layout } from '@ui/components/editor/settings/Layout'
-import { NavigationItem } from '@ui/components/editor/settings/NavigationItem'
+import { Layout as UiLayout } from '@ui/components/editor/settings/Layout'
+import { NavigationItem as UiNavigationItem } from '@ui/components/editor/settings/NavigationItem'
 import { ModelProvidersSection } from './sections/ModelProvidersSection'
-import { NavigationDivider } from '@ui/components/editor/settings/NavigationDivider'
-import { Item } from '@ui/components/editor/settings/Item'
+import { NavigationDivider as UiNavigationDivider } from '@ui/components/editor/settings/NavigationDivider'
+import { Item as UiItem } from '@ui/components/editor/settings/Item'
 import { ApiToolConfigurationSection } from './sections/ApiToolConfigurationSection'
-import { Group } from '@ui/components/editor/settings/Group/Group'
-import { Section } from '@ui/components/editor/settings/Section'
-import { Textarea } from '@ui/components/editor/common/Textarea'
-import { Toggler } from '@ui/components/editor/common/Toggler'
-import { Button } from '@ui/components/editor/common/Button'
-import { TextButton } from '@ui/components/editor/settings/TextButton'
-import { Notice } from '@ui/components/editor/settings/Notice'
+import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
+import { Section as UiSection } from '@ui/components/editor/settings/Section'
+import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
+import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
+import { Button as UiButton } from '@ui/components/editor/common/Button'
+import { TextButton as UiTextButton } from '@ui/components/editor/settings/TextButton'
+import { Notice as UiNotice } from '@ui/components/editor/settings/Notice'
 import {
   ConfigurationForClient,
   ProviderForClient,
@@ -301,13 +301,13 @@ export const Home: React.FC<Props> = (props) => {
 
   return (
     <div style={{ height: '100vh' }}>
-      <Layout
+      <UiLayout
         ref={scroll_container_ref}
         title={t('settings.sidebar.settings')}
         sidebar={NAV_ITEMS_CONFIG.map((item, i) => {
           if (item.type == 'divider') {
             return (
-              <NavigationDivider
+              <UiNavigationDivider
                 key={i}
                 text={item.text ? t(item.text) : undefined}
               />
@@ -315,7 +315,7 @@ export const Home: React.FC<Props> = (props) => {
           }
 
           return (
-            <NavigationItem
+            <UiNavigationItem
               key={i}
               href={`#${item.id}`}
               label={t(item.label)}
@@ -370,18 +370,18 @@ export const Home: React.FC<Props> = (props) => {
           on_stuck_change={general_on_stuck_change}
         />
 
-        <Section
+        <UiSection
           ref={(el) => (section_refs.current['model-providers'] = el)}
           title={t('settings.sidebar.model-providers')}
           subtitle={t('settings.model-providers.subtitle')}
           on_stuck_change={model_providers_on_stuck_change}
           actions={
-            <Button on_click={() => props.on_add_provider()}>
+            <UiButton on_click={() => props.on_add_provider()}>
               {t('settings.action.add-new')}
-            </Button>
+            </UiButton>
           }
         >
-          <Notice type="info">
+          <UiNotice type="info">
             <Translation
               id="settings.model-providers.notice.api-keys"
               components={{
@@ -400,13 +400,13 @@ export const Home: React.FC<Props> = (props) => {
                 )
               }}
             />
-          </Notice>
+          </UiNotice>
           {props.providers.length == 0 && (
-            <Notice type="warning">
+            <UiNotice type="warning">
               {t('settings.model-providers.notice.missing')}
-            </Notice>
+            </UiNotice>
           )}
-          <Group>
+          <UiGroup>
             <ModelProvidersSection
               providers={props.providers}
               on_reorder={(reordered) => {
@@ -418,31 +418,31 @@ export const Home: React.FC<Props> = (props) => {
               on_edit_provider={props.on_edit_provider}
               on_change_api_key={props.on_change_api_key}
             />
-          </Group>
-        </Section>
-        <Section
+          </UiGroup>
+        </UiSection>
+        <UiSection
           ref={(el) => (section_refs.current['edit-context'] = el)}
           group={t('settings.section.api-tool')}
           title={t('settings.sidebar.edit-context')}
           subtitle={t('settings.edit-context.subtitle')}
           on_stuck_change={edit_context_on_stuck_change}
           actions={
-            <Button
+            <UiButton
               on_click={() =>
                 props.on_add_config('EDIT_CONTEXT', { create_on_top: true })
               }
             >
               {t('settings.action.add-new')}
-            </Button>
+            </UiButton>
           }
         >
-          <Notice type="info">{t('settings.edit-context.notice')}</Notice>
+          <UiNotice type="info">{t('settings.edit-context.notice')}</UiNotice>
           {props.edit_context_configs.length == 0 && (
-            <Notice type="warning">
+            <UiNotice type="warning">
               {t('settings.message.missing-configuration')}
-            </Notice>
+            </UiNotice>
           )}
-          <Group>
+          <UiGroup>
             <ApiToolConfigurationSection
               configurations={props.edit_context_configs}
               set_configurations={props.set_edit_context_configs}
@@ -455,13 +455,13 @@ export const Home: React.FC<Props> = (props) => {
               on_edit={(id) => props.on_edit_config('EDIT_CONTEXT', id)}
               on_delete={(id) => props.on_delete_config('EDIT_CONTEXT', id)}
             />
-            <Item
+            <UiItem
               title={t('settings.edit-context.system-instructions.title')}
               description={t(
                 'settings.edit-context.system-instructions.description'
               )}
               slot_below={
-                <Textarea
+                <UiTextarea
                   value={edit_context_instructions}
                   on_change={set_edit_context_instructions}
                   on_blur={() => {
@@ -479,17 +479,17 @@ export const Home: React.FC<Props> = (props) => {
                 />
               }
             />
-          </Group>
-        </Section>
+          </UiGroup>
+        </UiSection>
 
-        <Section
+        <UiSection
           ref={(el) => (section_refs.current['intelligent-update'] = el)}
           group={t('settings.section.api-tool')}
           title={t('settings.sidebar.intelligent-update')}
           subtitle={t('settings.intelligent-update.subtitle')}
           on_stuck_change={intelligent_update_on_stuck_change}
           actions={
-            <Button
+            <UiButton
               on_click={() =>
                 props.on_add_config('INTELLIGENT_UPDATE', {
                   create_on_top: true
@@ -497,16 +497,18 @@ export const Home: React.FC<Props> = (props) => {
               }
             >
               {t('settings.action.add-new')}
-            </Button>
+            </UiButton>
           }
         >
-          <Notice type="info">{t('settings.intelligent-update.notice')}</Notice>
+          <UiNotice type="info">
+            {t('settings.intelligent-update.notice')}
+          </UiNotice>
           {props.intelligent_update_configs.length == 0 && (
-            <Notice type="warning">
+            <UiNotice type="warning">
               {t('settings.message.missing-configuration')}
-            </Notice>
+            </UiNotice>
           )}
-          <Group>
+          <UiGroup>
             <ApiToolConfigurationSection
               configurations={props.intelligent_update_configs}
               set_configurations={props.set_intelligent_update_configs}
@@ -529,7 +531,7 @@ export const Home: React.FC<Props> = (props) => {
                 props.on_unset_default_config('INTELLIGENT_UPDATE')
               }
             />
-            <Item
+            <UiItem
               title={t(
                 'settings.intelligent-update.fix-all-automatically.title'
               )}
@@ -537,38 +539,38 @@ export const Home: React.FC<Props> = (props) => {
                 'settings.intelligent-update.fix-all-automatically.description'
               )}
               slot_right={
-                <Toggler
+                <UiToggler
                   is_on={props.fix_all_automatically}
                   on_toggle={props.on_fix_all_automatically_change}
                 />
               }
             />
-          </Group>
-        </Section>
+          </UiGroup>
+        </UiSection>
 
-        <Section
+        <UiSection
           ref={(el) => (section_refs.current['prune-context'] = el)}
           group={t('settings.section.api-tool')}
           title={t('settings.sidebar.prune-context')}
           subtitle={t('settings.prune-context.subtitle')}
           on_stuck_change={prune_context_on_stuck_change}
           actions={
-            <Button
+            <UiButton
               on_click={() =>
                 props.on_add_config('PRUNE_CONTEXT', { create_on_top: true })
               }
             >
               {t('settings.action.add-new')}
-            </Button>
+            </UiButton>
           }
         >
-          <Notice type="info">{t('settings.prune-context.notice')}</Notice>
+          <UiNotice type="info">{t('settings.prune-context.notice')}</UiNotice>
           {props.prune_context_configs.length == 0 && (
-            <Notice type="warning">
+            <UiNotice type="warning">
               {t('settings.message.missing-configuration')}
-            </Notice>
+            </UiNotice>
           )}
-          <Group>
+          <UiGroup>
             <ApiToolConfigurationSection
               configurations={props.prune_context_configs}
               set_configurations={props.set_prune_context_configs}
@@ -581,32 +583,32 @@ export const Home: React.FC<Props> = (props) => {
               on_edit={(id) => props.on_edit_config('PRUNE_CONTEXT', id)}
               on_delete={(id) => props.on_delete_config('PRUNE_CONTEXT', id)}
             />
-          </Group>
-        </Section>
+          </UiGroup>
+        </UiSection>
 
-        <Section
+        <UiSection
           ref={(el) => (section_refs.current['code-at-cursor'] = el)}
           group={t('settings.section.api-tool')}
           title={t('settings.sidebar.code-at-cursor')}
           subtitle={t('settings.code-at-cursor.subtitle')}
           on_stuck_change={code_at_cursor_on_stuck_change}
           actions={
-            <Button
+            <UiButton
               on_click={() =>
                 props.on_add_config('CODE_AT_CURSOR', { create_on_top: true })
               }
             >
               {t('settings.action.add-new')}
-            </Button>
+            </UiButton>
           }
         >
-          <Notice type="info">{t('settings.code-at-cursor.notice')}</Notice>
+          <UiNotice type="info">{t('settings.code-at-cursor.notice')}</UiNotice>
           {props.code_at_cursor_configs.length == 0 && (
-            <Notice type="warning">
+            <UiNotice type="warning">
               {t('settings.message.missing-configuration')}
-            </Notice>
+            </UiNotice>
           )}
-          <Group>
+          <UiGroup>
             <ApiToolConfigurationSection
               configurations={props.code_at_cursor_configs}
               set_configurations={props.set_code_at_cursor_configs}
@@ -625,32 +627,32 @@ export const Home: React.FC<Props> = (props) => {
                 props.on_unset_default_config('CODE_AT_CURSOR')
               }
             />
-            <Item
+            <UiItem
               title={t('settings.code-at-cursor.keyboard-shortcut.title')}
               description={t(
                 'settings.code-at-cursor.keyboard-shortcut.description'
               )}
               slot_right={
-                <TextButton
+                <UiTextButton
                   on_click={() =>
                     props.on_open_keybindings('codeWebChat.codeAtCursor')
                   }
                 >
                   {t('settings.code-at-cursor.keyboard-shortcut.action')}
-                </TextButton>
+                </UiTextButton>
               }
             />
-          </Group>
-        </Section>
+          </UiGroup>
+        </UiSection>
 
-        <Section
+        <UiSection
           ref={(el) => (section_refs.current['voice-input'] = el)}
           group={t('settings.section.api-tool')}
           title={t('settings.sidebar.voice-input')}
           subtitle={t('settings.voice-input.subtitle')}
           on_stuck_change={voice_input_on_stuck_change}
           actions={
-            <Button
+            <UiButton
               on_click={() =>
                 props.on_add_config('VOICE_INPUT', {
                   create_on_top: true
@@ -658,10 +660,10 @@ export const Home: React.FC<Props> = (props) => {
               }
             >
               {t('settings.action.add-new')}
-            </Button>
+            </UiButton>
           }
         >
-          <Notice type="info">
+          <UiNotice type="info">
             <Translation
               id="settings.voice-input.notice"
               components={{
@@ -680,13 +682,13 @@ export const Home: React.FC<Props> = (props) => {
                 )
               }}
             />
-          </Notice>
+          </UiNotice>
           {props.voice_input_configs.length == 0 && (
-            <Notice type="warning">
+            <UiNotice type="warning">
               {t('settings.message.missing-configuration')}
-            </Notice>
+            </UiNotice>
           )}
-          <Group>
+          <UiGroup>
             <ApiToolConfigurationSection
               configurations={props.voice_input_configs}
               set_configurations={props.set_voice_input_configs}
@@ -705,11 +707,11 @@ export const Home: React.FC<Props> = (props) => {
                 props.on_unset_default_config('VOICE_INPUT')
               }
             />
-            <Item
+            <UiItem
               title={t('settings.voice-input.instructions.title')}
               description={t('settings.voice-input.instructions.description')}
               slot_below={
-                <Textarea
+                <UiTextarea
                   value={voice_input_instructions}
                   on_change={set_voice_input_instructions}
                   on_blur={() => {
@@ -729,32 +731,34 @@ export const Home: React.FC<Props> = (props) => {
                 />
               }
             />
-          </Group>
-        </Section>
+          </UiGroup>
+        </UiSection>
 
-        <Section
+        <UiSection
           ref={(el) => (section_refs.current['commit-messages'] = el)}
           group={t('settings.section.api-tool')}
           title={t('settings.sidebar.commit-messages')}
           subtitle={t('settings.commit-messages.subtitle')}
           on_stuck_change={commit_messages_on_stuck_change}
           actions={
-            <Button
+            <UiButton
               on_click={() =>
                 props.on_add_config('COMMIT_MESSAGES', { create_on_top: true })
               }
             >
               {t('settings.action.add-new')}
-            </Button>
+            </UiButton>
           }
         >
-          <Notice type="info">{t('settings.commit-messages.notice')}</Notice>
+          <UiNotice type="info">
+            {t('settings.commit-messages.notice')}
+          </UiNotice>
           {props.commit_messages_configs.length == 0 && (
-            <Notice type="warning">
+            <UiNotice type="warning">
               {t('settings.message.missing-configuration')}
-            </Notice>
+            </UiNotice>
           )}
-          <Group>
+          <UiGroup>
             <ApiToolConfigurationSection
               configurations={props.commit_messages_configs}
               set_configurations={props.set_commit_messages_configs}
@@ -775,13 +779,13 @@ export const Home: React.FC<Props> = (props) => {
                 props.on_unset_default_config('COMMIT_MESSAGES')
               }
             />
-            <Item
+            <UiItem
               title={t('settings.commit-messages.instructions.title')}
               description={t(
                 'settings.commit-messages.instructions.description'
               )}
               slot_below={
-                <Textarea
+                <UiTextarea
                   value={commit_instructions}
                   on_change={set_commit_instructions}
                   on_blur={() => {
@@ -799,9 +803,9 @@ export const Home: React.FC<Props> = (props) => {
                 />
               }
             />
-          </Group>
-        </Section>
-      </Layout>
+          </UiGroup>
+        </UiSection>
+      </UiLayout>
     </div>
   )
 }

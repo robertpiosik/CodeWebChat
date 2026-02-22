@@ -4,15 +4,15 @@ import styles from './EditPresetForm.module.scss'
 import dropdown_styles from '@ui/components/editor/common/Dropdown/Dropdown.module.scss'
 import { Preset } from '@shared/types/preset'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { Field } from '@ui/components/editor/panel/Field'
-import { Slider } from '@ui/components/editor/panel/Slider'
-import { Input } from '@ui/components/editor/common/Input'
-import { Textarea } from '@ui/components/editor/common/Textarea'
-import { Dropdown } from '@ui/components/editor/common/Dropdown'
+import { Field as UiField } from '@ui/components/editor/panel/Field'
+import { Slider as UiSlider } from '@ui/components/editor/panel/Slider'
+import { Input as UiInput } from '@ui/components/editor/common/Input'
+import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
+import { Dropdown as UiDropdown } from '@ui/components/editor/common/Dropdown'
 import { BackendMessage } from '@/views/panel/types/messages'
-import { PresetOption } from '@ui/components/editor/panel/PresetOption'
-import { Scrollable } from '@ui/components/editor/panel/Scrollable'
-import { Fieldset } from '@ui/components/editor/panel/Fieldset'
+import { PresetOption as UiPresetOption } from '@ui/components/editor/panel/PresetOption'
+import { Scrollable as UiScrollable } from '@ui/components/editor/panel/Scrollable'
+import { Fieldset as UiFieldset } from '@ui/components/editor/panel/Fieldset'
 
 type Props = {
   preset: Preset
@@ -226,11 +226,11 @@ export const EditPresetForm: React.FC<Props> = (props) => {
   }, [reasoning_effort, reasoning_effort_options])
 
   return (
-    <Scrollable>
+    <UiScrollable>
       <div className={styles.form}>
-        <Fieldset label="General">
+        <UiFieldset label="General">
           {chatbot && (
-            <Field label="Chatbot" html_for="chatbot">
+            <UiField label="Chatbot" html_for="chatbot">
               <button
                 className={dropdown_styles.button}
                 onClick={(e) => {
@@ -246,11 +246,11 @@ export const EditPresetForm: React.FC<Props> = (props) => {
                   )}
                 />
               </button>
-            </Field>
+            </UiField>
           )}
 
           {(Object.keys(models).length > 0 || chatbot == 'OpenRouter') && (
-            <Field label="Model" html_for="model">
+            <UiField label="Model" html_for="model">
               <button
                 className={dropdown_styles.button}
                 onClick={(e) => {
@@ -268,33 +268,33 @@ export const EditPresetForm: React.FC<Props> = (props) => {
                   )}
                 />
               </button>
-            </Field>
+            </UiField>
           )}
 
           {supports_user_provided_model && (
-            <Field label="Model" html_for="custom-model">
-              <Input
+            <UiField label="Model" html_for="custom-model">
+              <UiInput
                 id="custom-model"
                 type="text"
                 value={model || ''}
                 on_change={set_model}
                 placeholder="Enter model name"
               />
-            </Field>
+            </UiField>
           )}
 
-          <Field label="Name" html_for="name">
-            <Input
+          <UiField label="Name" html_for="name">
+            <UiInput
               id="name"
               type="text"
               value={name && /^\(\d+\)$/.test(name) ? '' : name!}
               on_change={set_name}
               placeholder={chatbot || 'Group'}
             />
-          </Field>
+          </UiField>
 
           {supports_port && (
-            <Field
+            <UiField
               label="Port"
               html_for="port"
               info={
@@ -306,7 +306,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
                 )
               }
             >
-              <Input
+              <UiInput
                 id="port"
                 type="text"
                 value={String(port ?? '')}
@@ -321,50 +321,50 @@ export const EditPresetForm: React.FC<Props> = (props) => {
                   e.preventDefault()
                 }
               />
-            </Field>
+            </UiField>
           )}
 
           {supports_url_override && (
-            <Field
+            <UiField
               label={chatbot_config?.url_override_label || 'URL override'}
               html_for="new-url"
               info="Use a smart workspace for your coding tasks."
             >
-              <Input
+              <UiInput
                 id="new-url"
                 type="text"
                 value={new_url || ''}
                 on_change={set_new_url}
               />
-            </Field>
+            </UiField>
           )}
 
           {supports_reasoning_effort && (
-            <Field
+            <UiField
               label="Reasoning Effort"
               html_for="reasoning-effort"
               info={`Controls how much the model thinks.${
                 chatbot == 'OpenRouter' ? ' Requires a reasoning model.' : ''
               }`}
             >
-              <Dropdown
+              <UiDropdown
                 options={reasoning_effort_options}
                 value={reasoning_effort || '—'}
                 onChange={(value) => {
                   set_reasoning_effort(value == '—' ? undefined : value)
                 }}
               />
-            </Field>
+            </UiField>
           )}
 
           {supports_thinking_budget &&
             !supports_reasoning_effort && ( // Additional check for AI Studio
-              <Field
+              <UiField
                 label="Thinking Budget"
                 html_for="thinking-budget"
                 info="Search for allowed min-max values."
               >
-                <Input
+                <UiInput
                   id="thinking-budget"
                   type="text"
                   value={String(thinking_budget ?? '')}
@@ -379,29 +379,29 @@ export const EditPresetForm: React.FC<Props> = (props) => {
                     e.preventDefault()
                   }
                 />
-              </Field>
+              </UiField>
             )}
 
           {supports_system_instructions && (
-            <Field
+            <UiField
               label="System Instructions"
               html_for="instructions"
               info="Optional tone and style instructions for the model."
             >
-              <Textarea
+              <UiTextarea
                 id="instructions"
                 value={system_instructions || ''}
                 on_change={set_system_instructions}
                 min_rows={2}
                 placeholder="You're a helpful coding assistant."
               />
-            </Field>
+            </UiField>
           )}
-        </Fieldset>
+        </UiFieldset>
 
         {chatbot &&
           Object.keys(chatbot_config?.supported_options || {}).length > 0 && (
-            <Fieldset
+            <UiFieldset
               label="Options"
               is_collapsed={is_options_collapsed}
               on_toggle_collapsed={() =>
@@ -421,7 +421,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
                       return null
                     }
                     return (
-                      <PresetOption
+                      <UiPresetOption
                         key={key}
                         label={label as string}
                         checked={options.includes(key)}
@@ -440,11 +440,11 @@ export const EditPresetForm: React.FC<Props> = (props) => {
                   }
                 )}
               </div>
-            </Fieldset>
+            </UiFieldset>
           )}
 
         {(supports_temperature || supports_top_p) && (
-          <Fieldset
+          <UiFieldset
             label="Sampling parameters"
             is_collapsed={is_sampling_collapsed}
             on_toggle_collapsed={() =>
@@ -452,43 +452,43 @@ export const EditPresetForm: React.FC<Props> = (props) => {
             }
           >
             {supports_temperature && (
-              <Field
+              <UiField
                 label="Temperature"
                 info="Influences response variety. Lower values are more predictable; higher values are more diverse."
               >
-                <Slider
+                <UiSlider
                   value={temperature ?? 1}
                   onChange={set_temperature}
                   min={0}
                   max={2}
                 />
-              </Field>
+              </UiField>
             )}
 
             {supports_top_p && (
-              <Field
+              <UiField
                 label="Top P"
                 info="Limits token choices to cumulative probability P. Lower values make responses more predictable."
               >
-                <Slider
+                <UiSlider
                   value={top_p ?? 0.95}
                   onChange={set_top_p}
                   min={0}
                   max={1}
                 />
-              </Field>
+              </UiField>
             )}
-          </Fieldset>
+          </UiFieldset>
         )}
 
-        <Fieldset
+        <UiFieldset
           label="Prompt template"
           is_collapsed={is_prompt_template_collapsed}
           on_toggle_collapsed={() =>
             set_is_prompt_template_collapsed(!is_prompt_template_collapsed)
           }
         >
-          <Field
+          <UiField
             label={chatbot ? 'Prompt Prefix' : 'Group Prefix'}
             html_for="prefix"
             info={
@@ -497,7 +497,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
                 : "Text prepended to all prompts used with this group's presets."
             }
           >
-            <Textarea
+            <UiTextarea
               id="prefix"
               ref={prefix_ref}
               value={prompt_prefix}
@@ -509,9 +509,9 @@ export const EditPresetForm: React.FC<Props> = (props) => {
               min_rows={2}
               blur_on_enter={false}
             />
-          </Field>
+          </UiField>
 
-          <Field
+          <UiField
             label={chatbot ? 'Prompt Suffix' : 'Group Suffix'}
             html_for="suffix"
             info={
@@ -520,7 +520,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
                 : "Text appended to all prompts used with this group's presets."
             }
           >
-            <Textarea
+            <UiTextarea
               id="suffix"
               ref={suffix_ref}
               value={prompt_suffix}
@@ -532,9 +532,9 @@ export const EditPresetForm: React.FC<Props> = (props) => {
               min_rows={2}
               blur_on_enter={false}
             />
-          </Field>
-        </Fieldset>
+          </UiField>
+        </UiFieldset>
       </div>
-    </Scrollable>
+    </UiScrollable>
   )
 }

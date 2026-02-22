@@ -26,7 +26,7 @@ import { EditPresetFormFooter } from './components/edit-preset-form/EditPresetFo
 import { Donations as UiDonations } from '@ui/components/editor/panel/Donations/Donations'
 import { use_latest_donations } from './hooks/latest-donations'
 import { DonationsFooter } from './components/donations/DonationsFooter'
-import { IconButton } from '@ui/components/editor/common/IconButton'
+import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
 import { use_modal_manager } from './hooks/use-modal-manager'
 import { use_tasks } from './hooks/use-tasks'
 import { use_response_history } from './hooks/panel/use-response-history'
@@ -589,7 +589,10 @@ export const Panel = () => {
               }}
               header_slot={
                 preview_url && (
-                  <IconButton codicon_icon="link-external" href={preview_url} />
+                  <UiIconButton
+                    codicon_icon="link-external"
+                    href={preview_url}
+                  />
                 )
               }
               footer_slot={

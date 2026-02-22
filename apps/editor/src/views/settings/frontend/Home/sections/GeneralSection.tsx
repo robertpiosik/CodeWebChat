@@ -1,12 +1,12 @@
 import { forwardRef, useEffect, useState } from 'react'
-import { Input } from '@ui/components/editor/common/Input'
-import { Toggler } from '@ui/components/editor/common/Toggler'
-import { Dropdown } from '@ui/components/editor/common/Dropdown'
-import { Item } from '@ui/components/editor/settings/Item'
-import { Group } from '@ui/components/editor/settings/Group/Group'
-import { Section } from '@ui/components/editor/settings/Section'
-import { TextButton } from '@ui/components/editor/settings/TextButton'
-import { Textarea } from '@ui/components/editor/common/Textarea'
+import { Input as UiInput } from '@ui/components/editor/common/Input'
+import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
+import { Dropdown as UiDropdown } from '@ui/components/editor/common/Dropdown'
+import { Item as UiItem } from '@ui/components/editor/settings/Item'
+import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
+import { Section as UiSection } from '@ui/components/editor/settings/Section'
+import { TextButton as UiTextButton } from '@ui/components/editor/settings/TextButton'
+import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { EditFormatInstructions } from '@/views/settings/types/messages'
 import {
   CHECKPOINT_DEFAULT_LIFESPAN,
@@ -182,47 +182,47 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
     }
 
     return (
-      <Section
+      <UiSection
         ref={ref}
         title={t('settings.sidebar.general')}
         subtitle={t('settings.general.subtitle')}
         on_stuck_change={props.on_stuck_change}
       >
-        <Group>
-          <Item
+        <UiGroup>
+          <UiItem
             title={t('settings.general.open-editor-settings.title')}
             description={t('settings.general.open-editor-settings.description')}
             slot_right={
-              <TextButton on_click={props.on_open_editor_settings}>
+              <UiTextButton on_click={props.on_open_editor_settings}>
                 {t('settings.general.open-editor-settings.action')}
-              </TextButton>
+              </UiTextButton>
             }
           />
-          <Item
+          <UiItem
             title={t('settings.general.ignore-patterns.title')}
             description={t('settings.general.ignore-patterns.description')}
             slot_right={
-              <TextButton on_click={props.on_open_ignore_patterns_settings}>
+              <UiTextButton on_click={props.on_open_ignore_patterns_settings}>
                 {t('settings.general.ignore-patterns.action')}
-              </TextButton>
+              </UiTextButton>
             }
           />
-          <Item
+          <UiItem
             title={t('settings.general.allow-patterns.title')}
             description={t('settings.general.allow-patterns.description')}
             slot_right={
-              <TextButton on_click={props.on_open_allow_patterns_settings}>
+              <UiTextButton on_click={props.on_open_allow_patterns_settings}>
                 {t('settings.general.allow-patterns.action')}
-              </TextButton>
+              </UiTextButton>
             }
           />
-          <Item
+          <UiItem
             title={t('settings.general.context-size-warning-threshold.title')}
             description={t(
               'settings.general.context-size-warning-threshold.description'
             )}
             slot_right={
-              <Input
+              <UiInput
                 type="number"
                 value={context_size_warning_threshold?.toString() ?? ''}
                 on_change={(val) =>
@@ -235,29 +235,29 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               />
             }
           />
-          <Item
+          <UiItem
             title={t('settings.general.check-new-files.title')}
             description={t('settings.general.check-new-files.description')}
             slot_right={
-              <Toggler
+              <UiToggler
                 is_on={props.check_new_files}
                 on_toggle={props.on_check_new_files_change}
               />
             }
           />
-          <Item
+          <UiItem
             title={t('settings.general.send-with-shift-enter.title')}
             description={t(
               'settings.general.send-with-shift-enter.description'
             )}
             slot_right={
-              <Toggler
+              <UiToggler
                 is_on={props.send_with_shift_enter}
                 on_toggle={props.on_send_with_shift_enter_change}
               />
             }
           />
-          <Item
+          <UiItem
             title={t(
               'settings.general.clear-checks-in-workspace-behavior.title'
             )}
@@ -265,7 +265,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               'settings.general.clear-checks-in-workspace-behavior.description'
             )}
             slot_right={
-              <Dropdown
+              <UiDropdown
                 options={[
                   {
                     value: 'ignore-open-editors',
@@ -283,15 +283,16 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               />
             }
           />
-        </Group>
-        <Group title={t('settings.general.checkpoints.title')}>
-          <Item
+        </UiGroup>
+
+        <UiGroup title={t('settings.general.checkpoints.title')}>
+          <UiItem
             title={t('settings.general.automatic-checkpoints.title')}
             description={t(
               'settings.general.automatic-checkpoints.description'
             )}
             slot_right={
-              <Toggler
+              <UiToggler
                 is_on={!props.are_automatic_checkpoints_disabled}
                 on_toggle={(is_on) =>
                   props.on_automatic_checkpoints_toggle(!is_on)
@@ -299,11 +300,11 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               />
             }
           />
-          <Item
+          <UiItem
             title={t('settings.general.checkpoint-lifespan.title')}
             description={t('settings.general.checkpoint-lifespan.description')}
             slot_right={
-              <Input
+              <UiInput
                 type="number"
                 value={checkpoint_lifespan?.toString() || ''}
                 on_change={(val) =>
@@ -316,13 +317,14 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               />
             }
           />
-        </Group>
-        <Group title={t('settings.general.edit-format-instructions.title')}>
-          <Item
+        </UiGroup>
+
+        <UiGroup title={t('settings.general.edit-format-instructions.title')}>
+          <UiItem
             title={t('settings.general.edit-format.whole.title')}
             description={t('settings.general.edit-format.whole.description')}
             slot_right={
-              <TextButton
+              <UiTextButton
                 on_click={() =>
                   set_instructions_visibility((prev) => ({
                     ...prev,
@@ -333,11 +335,11 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 {instructions_visibility.whole
                   ? t('settings.general.edit-format.hide')
                   : t('settings.general.edit-format.show')}
-              </TextButton>
+              </UiTextButton>
             }
             slot_below={
               instructions_visibility.whole && (
-                <Textarea
+                <UiTextarea
                   value={instructions.whole}
                   min_rows={3}
                   on_change={(value) =>
@@ -348,13 +350,14 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               )
             }
           />
-          <Item
+
+          <UiItem
             title={t('settings.general.edit-format.truncated.title')}
             description={t(
               'settings.general.edit-format.truncated.description'
             )}
             slot_right={
-              <TextButton
+              <UiTextButton
                 on_click={() =>
                   set_instructions_visibility((prev) => ({
                     ...prev,
@@ -365,28 +368,32 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 {instructions_visibility.truncated
                   ? t('settings.general.edit-format.hide')
                   : t('settings.general.edit-format.show')}
-              </TextButton>
+              </UiTextButton>
             }
             slot_below={
               instructions_visibility.truncated && (
-                <Textarea
+                <UiTextarea
                   value={instructions.truncated}
                   min_rows={3}
                   on_change={(value) =>
-                    set_instructions((prev) => ({ ...prev, truncated: value }))
+                    set_instructions((prev) => ({
+                      ...prev,
+                      truncated: value
+                    }))
                   }
                   on_blur={handle_instructions_blur}
                 />
               )
             }
           />
-          <Item
+
+          <UiItem
             title={t('settings.general.edit-format.before-after.title')}
             description={t(
               'settings.general.edit-format.before-after.description'
             )}
             slot_right={
-              <TextButton
+              <UiTextButton
                 on_click={() =>
                   set_instructions_visibility((prev) => ({
                     ...prev,
@@ -397,11 +404,11 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 {instructions_visibility.before_after
                   ? t('settings.general.edit-format.hide')
                   : t('settings.general.edit-format.show')}
-              </TextButton>
+              </UiTextButton>
             }
             slot_below={
               instructions_visibility.before_after && (
-                <Textarea
+                <UiTextarea
                   value={instructions.before_after}
                   min_rows={3}
                   on_change={(value) =>
@@ -415,11 +422,12 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               )
             }
           />
-          <Item
+
+          <UiItem
             title={t('settings.general.edit-format.diff.title')}
             description={t('settings.general.edit-format.diff.description')}
             slot_right={
-              <TextButton
+              <UiTextButton
                 on_click={() =>
                   set_instructions_visibility((prev) => ({
                     ...prev,
@@ -430,11 +438,11 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 {instructions_visibility.diff
                   ? t('settings.general.edit-format.hide')
                   : t('settings.general.edit-format.show')}
-              </TextButton>
+              </UiTextButton>
             }
             slot_below={
               instructions_visibility.diff && (
-                <Textarea
+                <UiTextarea
                   value={instructions.diff}
                   min_rows={3}
                   on_change={(value) =>
@@ -445,13 +453,14 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               )
             }
           />
-        </Group>
-        <Group title={t('settings.general.presets.title')}>
-          <Item
+        </UiGroup>
+
+        <UiGroup title={t('settings.general.presets.title')}>
+          <UiItem
             title={t('settings.general.gemini-user-id.title')}
             description={t('settings.general.gemini-user-id.description')}
             slot_right={
-              <Input
+              <UiInput
                 type="number"
                 value={gemini_user_id_str}
                 on_change={set_gemini_user_id_str}
@@ -460,11 +469,11 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               />
             }
           />
-          <Item
+          <UiItem
             title={t('settings.general.ai-studio-user-id.title')}
             description={t('settings.general.ai-studio-user-id.description')}
             slot_right={
-              <Input
+              <UiInput
                 type="number"
                 value={ai_studio_user_id_str}
                 on_change={set_ai_studio_user_id_str}
@@ -473,9 +482,10 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               />
             }
           />
-        </Group>
-      </Section>
+        </UiGroup>
+      </UiSection>
     )
   }
 )
+
 GeneralSection.displayName = 'GeneralSection'
