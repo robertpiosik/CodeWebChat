@@ -631,7 +631,7 @@ export const panel = {
   },
   'panel.action.apply': {
     en: 'Apply',
-    pl: 'Zastosuj',
+    pl: 'Integruj',
     'zh-cn': '应用',
     ja: '適用',
     'zh-tw': '應用',
@@ -649,7 +649,7 @@ export const panel = {
   },
   'panel.action.apply-from-clipboard': {
     en: 'Apply from Clipboard',
-    pl: 'Zastosuj ze schowka',
+    pl: 'Integruj ze schowka',
     'zh-cn': '从剪贴板应用',
     ja: 'クリップボードから適用',
     'zh-tw': '從剪貼簿應用',
