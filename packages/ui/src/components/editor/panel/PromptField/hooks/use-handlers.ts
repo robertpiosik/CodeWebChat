@@ -124,13 +124,13 @@ export const use_handlers = (
   ])
 
   useEffect(() => {
-    if (params.input_ref.current) {
+    if (params.input_ref.current && !props.missing_configuration) {
       params.input_ref.current.focus()
     }
-  }, [props.focus_key])
+  }, [props.focus_key, props.missing_configuration])
 
   useEffect(() => {
-    if (params.input_ref.current) {
+    if (params.input_ref.current && !props.missing_configuration) {
       params.input_ref.current.focus()
       const selection = window.getSelection()
       if (selection) {
@@ -143,7 +143,7 @@ export const use_handlers = (
         selection.addRange(range)
       }
     }
-  }, [props.focus_and_select_key])
+  }, [props.focus_and_select_key, props.missing_configuration])
 
   const update_value = (new_value: string, caret_pos?: number) => {
     if (new_value === props.value) return
