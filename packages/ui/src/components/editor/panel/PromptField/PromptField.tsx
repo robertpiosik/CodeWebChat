@@ -408,7 +408,10 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             onDragOver={handle_drag_over}
             onDragEnd={handle_drag_end}
             onFocus={() => set_is_focused(true)}
-            onBlur={() => set_is_focused(false)}
+            onBlur={() => {
+              set_is_focused(false)
+              window.getSelection()?.removeAllRanges()
+            }}
             className={cn(styles.input, {
               [styles['input--empty']]: !props.value
             })}

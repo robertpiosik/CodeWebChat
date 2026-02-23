@@ -99,13 +99,20 @@ export const get_highlighted_text = (params: {
         }
 
         const line_count = content.split('\n').length
-        const lines_text = line_count === 1 ? 'line' : 'lines'
+        const lines_text = line_count == 1 ? 'line' : 'lines'
+
+        const is_error = !params.context_file_paths.includes(path)
+
+        const title = is_error
+          ? 'File of the selection is not in context'
+          : content
 
         return `<span class="${cn(
           styles['symbol'],
-          styles['symbol--pasted-lines']
+          styles['symbol--pasted-lines'],
+          { [styles['symbol--error']]: is_error }
         )}" data-type="pasted-lines-symbol" title="${escape_html(
-          content
+          title
         )}" data-path="${escape_html(path)}" data-content="${escape_html(
           content
         )}"${start ? ` data-start="${escape_html(start)}"` : ''}${
@@ -297,11 +304,12 @@ export const get_highlighted_text = (params: {
   const show_clear_button =
     !!params.text || (params.tabs_config && params.tabs_config.count > 1)
   if (show_clear_button) {
+    const title = params.text ? 'Clear' : 'Close tab'
     header_html += `<span class="${cn(
       styles['clear-button'],
       'codicon',
       'codicon-close'
-    )}" data-role="clear-button"></span>`
+    )}" data-role="clear-button" title="${title}"></span>`
   }
 
   if (header_html) {
