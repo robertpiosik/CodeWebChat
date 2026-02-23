@@ -13,6 +13,17 @@ export namespace ConfigurationsList {
     is_default?: boolean
   }
 
+  export type Translations = {
+    add_title: string
+    insert_title: string
+    edit_title: string
+    delete_title: string
+    set_default_title: string
+    unset_default_text: string
+    configuration_text: string
+    configurations_text: string
+  }
+
   export type Props = {
     configurations: Configuration[]
     on_reorder: (configurations: Configuration[]) => void
@@ -25,6 +36,7 @@ export namespace ConfigurationsList {
     on_set_default?: (configuration_id: string) => void
     on_unset_default?: () => void
     radio_group_name?: string
+    translations: Translations
   }
 }
 
@@ -45,7 +57,7 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
         <Radio
           name={props.radio_group_name ?? 'default_configuration'}
           checked={!!config.is_default}
-          title="Set as default"
+          title={props.translations.set_default_title}
           on_change={() => props.on_set_default?.(config.id)}
         />
       )}
@@ -61,17 +73,17 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
       <div className={styles['col-actions']}>
         <IconButton
           codicon_icon="insert"
-          title="Insert a new configuration below/above"
+          title={props.translations.insert_title}
           on_click={() => props.on_add({ insertion_index: index })}
         />
         <IconButton
           codicon_icon="edit"
-          title="Edit configuration"
+          title={props.translations.edit_title}
           on_click={() => props.on_edit(config.id)}
         />
         <IconButton
           codicon_icon="trash"
-          title="Delete configuration"
+          title={props.translations.delete_title}
           on_click={(e) => {
             e.stopPropagation()
             props.on_delete(config.id)
@@ -85,20 +97,23 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
     <div className={styles.header}>
       <div className={styles['header__left']}>
         <div className={styles['header__left__amount']}>
-          {props.configurations.length} configuration
-          {props.configurations.length == 1 ? '' : 's'}
+          {props.configurations.length}{' '}
+          {props.configurations.length == 1
+            ? props.translations.configuration_text
+            : props.translations.configurations_text}
         </div>
         {props.on_unset_default && has_default && (
           <>
             <span>·</span>
             <TextButton on_click={props.on_unset_default}>
-              Unset default
+              {props.translations.unset_default_text}
             </TextButton>
           </>
         )}
       </div>
       <IconButton
         codicon_icon="add"
+        title={props.translations.add_title}
         on_click={() =>
           props.on_add(is_top ? { create_on_top: true } : undefined)
         }

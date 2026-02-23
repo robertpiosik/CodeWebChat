@@ -11,6 +11,16 @@ export namespace ModelProviders {
     baseUrl: string
   }
 
+  export type Translations = {
+    add_title: string
+    insert_title: string
+    edit_title: string
+    change_api_key_title: string
+    delete_title: string
+    provider_text: string
+    providers_text: string
+  }
+
   export type Props = {
     providers: Provider[]
     on_reorder: (providers: Provider[]) => void
@@ -21,6 +31,7 @@ export namespace ModelProviders {
     on_delete_provider: (provider_name: string) => void
     on_edit_provider: (provider_name: string) => void
     on_change_api_key: (provider_name: string) => void
+    translations: Translations
   }
 }
 
@@ -47,27 +58,27 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
       <div className={styles['col-actions']}>
         <IconButton
           codicon_icon="insert"
-          title="Insert a new provider below/above"
+          title={props.translations.insert_title}
           on_click={() => props.on_add_provider({ insertion_index: index })}
         />
         {provider.type == 'custom' && (
           <IconButton
             codicon_icon="edit"
             on_click={() => props.on_edit_provider(provider.name)}
-            title="Edit provider"
+            title={props.translations.edit_title}
           />
         )}
         {provider.type != 'custom' && (
           <IconButton
             codicon_icon="key"
             on_click={() => props.on_change_api_key(provider.name)}
-            title="Change API key"
+            title={props.translations.change_api_key_title}
           />
         )}
         <IconButton
           codicon_icon="trash"
           on_click={() => props.on_delete_provider(provider.name)}
-          title="Delete provider"
+          title={props.translations.delete_title}
         />
       </div>
     </div>
@@ -76,11 +87,14 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
   const render_header = (is_top: boolean) => (
     <div className={styles.header}>
       <div className={styles.header__amount}>
-        {props.providers.length} model provider
-        {props.providers.length == 1 ? '' : 's'}
+        {props.providers.length}{' '}
+        {props.providers.length == 1
+          ? props.translations.provider_text
+          : props.translations.providers_text}
       </div>
       <IconButton
         codicon_icon="add"
+        title={props.translations.add_title}
         on_click={() =>
           props.on_add_provider(is_top ? { create_on_top: true } : undefined)
         }

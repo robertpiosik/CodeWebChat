@@ -104,7 +104,6 @@ type Props = {
   edit_format_instructions: EditFormatInstructions
   clear_checks_in_workspace_behavior: 'ignore-open-editors' | 'uncheck-all'
   fix_all_automatically: boolean
-
   set_providers: (providers: ProviderForClient[]) => void
   set_edit_context_configs: (configs: ConfigurationForClient[]) => void
   set_code_at_cursor_configs: (configs: ConfigurationForClient[]) => void

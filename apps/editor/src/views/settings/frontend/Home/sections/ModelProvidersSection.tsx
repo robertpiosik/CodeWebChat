@@ -1,5 +1,6 @@
 import { ProviderForClient } from '@/views/settings/types/messages'
 import { ModelProviders as UiModelProviders } from '@ui/components/editor/settings/ModelProviders'
+import { use_translation } from '@/views/i18n/use-translation'
 
 type ModelProvidersSectionProps = {
   providers: ProviderForClient[] | undefined
@@ -15,10 +16,21 @@ type ModelProvidersSectionProps = {
 export const ModelProvidersSection: React.FC<ModelProvidersSectionProps> = (
   props
 ) => {
+  const { t } = use_translation()
+
   return (
     <>
       {props.providers && (
         <UiModelProviders
+          translations={{
+            add_title: t('settings.action.add-new'),
+            insert_title: t('settings.action.insert-provider'),
+            edit_title: t('settings.action.edit-provider'),
+            change_api_key_title: t('settings.action.change-api-key'),
+            delete_title: t('settings.action.delete-provider'),
+            provider_text: t('settings.action.model-provider'),
+            providers_text: t('settings.action.model-providers')
+          }}
           providers={props.providers}
           on_reorder={props.on_reorder}
           on_add_provider={props.on_add_provider}

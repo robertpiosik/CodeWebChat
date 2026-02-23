@@ -24,6 +24,17 @@ const initial_configurations: ConfigurationsList.Configuration[] = [
   }
 ]
 
+const translations = {
+  add_title: 'Add New',
+  insert_title: 'Insert...',
+  edit_title: 'Edit',
+  delete_title: 'Delete',
+  set_default_title: 'Set Default',
+  unset_default_text: 'Unset',
+  configuration_text: 'config',
+  configurations_text: 'configs'
+}
+
 const log_action =
   (action: string) =>
   (...args: any[]) => {
@@ -71,6 +82,7 @@ export const Default = () => {
         on_add={log_action('on_add')}
         on_set_default={handle_set_default}
         on_unset_default={handle_unset_default}
+        translations={translations}
       />
     </div>
   )
@@ -97,6 +109,7 @@ export const NoDefaultOption = () => {
         on_edit={log_action('on_edit')}
         on_delete={log_action('on_delete')}
         on_add={log_action('on_add')}
+        translations={translations}
       />
     </div>
   )
@@ -118,6 +131,7 @@ export const Empty = () => {
         on_add={log_action('on_add')}
         on_set_default={log_action('on_set_default')}
         on_unset_default={log_action('on_unset_default')}
+        translations={translations}
       />
     </div>
   )

@@ -1,5 +1,6 @@
 import { ConfigurationForClient } from '@/views/settings/types/messages'
 import { ConfigurationsList as UiConfigurationsList } from '@ui/components/editor/settings/ConfigurationsList'
+import { use_translation } from '@/views/i18n/use-translation'
 
 type ToolName =
   | 'CODE_AT_CURSOR'
@@ -29,11 +30,22 @@ export const ApiToolConfigurationSection: React.FC<
   ToolConfigurationsSectionProps
 > = (props) => {
   const { configurations, set_configurations } = props
+  const { t } = use_translation()
 
   return (
     <>
       {configurations && (
         <UiConfigurationsList
+          translations={{
+            add_title: t('settings.action.add-new'),
+            insert_title: t('settings.action.insert-configuration'),
+            edit_title: t('settings.action.edit-configuration'),
+            delete_title: t('settings.action.delete-configuration'),
+            set_default_title: t('settings.action.set-default'),
+            unset_default_text: t('settings.action.unset-default'),
+            configuration_text: t('settings.action.configuration'),
+            configurations_text: t('settings.action.configurations')
+          }}
           configurations={configurations}
           on_add={props.on_add}
           on_reorder={(reordered) => {

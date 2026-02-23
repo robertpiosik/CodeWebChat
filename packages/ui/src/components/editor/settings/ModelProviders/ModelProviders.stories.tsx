@@ -26,6 +26,16 @@ const initial_providers: ModelProviders.Provider[] = [
   }
 ]
 
+const translations = {
+  add_title: 'Add New',
+  insert_title: 'Insert...',
+  edit_title: 'Edit',
+  change_api_key_title: 'Key',
+  delete_title: 'Delete',
+  provider_text: 'provider',
+  providers_text: 'providers'
+}
+
 export const Default = () => {
   const [providers, set_providers] = useState(initial_providers)
   return (
@@ -45,6 +55,7 @@ export const Default = () => {
         on_delete_provider={(name) => console.log('Delete provider', name)}
         on_edit_provider={(name) => console.log('Edit provider', name)}
         on_change_api_key={(name) => console.log('Change API key for', name)}
+        translations={translations}
       />
     </div>
   )
@@ -65,6 +76,7 @@ export const Empty = () => {
         on_delete_provider={(name) => console.log('Delete provider', name)}
         on_edit_provider={(name) => console.log('Edit provider', name)}
         on_change_api_key={(name) => console.log('Change API key for', name)}
+        translations={translations}
       />
     </div>
   )
