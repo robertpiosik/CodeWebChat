@@ -32,5 +32,14 @@
       width: 12px;
       border-radius: 50%;
     }
+
+    &[data-has-value='false'] {
+      &::-webkit-slider-runnable-track {
+        background: var(--vscode-dropdown-border);
+      }
+      &::-webkit-slider-thumb {
+        opacity: 0;
+      }
+    }
   }
 }

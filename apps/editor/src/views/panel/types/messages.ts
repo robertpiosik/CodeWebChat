@@ -206,6 +206,12 @@ export interface PickChatbotMessage extends BaseMessage {
   chatbot_id?: string
 }
 
+export interface PickReasoningEffortMessage extends BaseMessage {
+  command: 'PICK_REASONING_EFFORT'
+  supported_efforts: string[]
+  current_effort?: string
+}
+
 export interface SaveModeMessage extends BaseMessage {
   command: 'SAVE_MODE'
   mode: Mode
@@ -570,6 +576,7 @@ export type FrontendMessage =
   | CaretPositionChangedWebviewMessage
   | PickModelMessage
   | PickChatbotMessage
+  | PickReasoningEffortMessage
   | SaveModeMessage
   | GetModeMessage
   | EditContextMessage
@@ -725,6 +732,11 @@ export interface NewlyPickedModelMessage extends BaseMessage {
 export interface NewlyPickedChatbotMessage extends BaseMessage {
   command: 'NEWLY_PICKED_CHATBOT'
   chatbot_id: string
+}
+
+export interface NewlyPickedReasoningEffortMessage extends BaseMessage {
+  command: 'NEWLY_PICKED_REASONING_EFFORT'
+  effort?: string
 }
 
 export interface ModeMessage extends BaseMessage {
@@ -903,6 +915,7 @@ export type BackendMessage =
   | PresetUpdatedMessage
   | NewlyPickedModelMessage
   | NewlyPickedChatbotMessage
+  | NewlyPickedReasoningEffortMessage
   | ModeMessage
   | WebPromptTypeMessage
   | ApiPromptTypeMessage

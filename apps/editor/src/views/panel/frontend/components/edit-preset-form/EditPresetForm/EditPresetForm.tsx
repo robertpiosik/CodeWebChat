@@ -8,7 +8,6 @@ import { Field as UiField } from '@ui/components/editor/panel/Field'
 import { Slider as UiSlider } from '@ui/components/editor/panel/Slider'
 import { Input as UiInput } from '@ui/components/editor/common/Input'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
-import { Dropdown as UiDropdown } from '@ui/components/editor/common/Dropdown'
 import { BackendMessage } from '@/views/panel/types/messages'
 import { PresetOption as UiPresetOption } from '@ui/components/editor/panel/PresetOption'
 import { Scrollable as UiScrollable } from '@ui/components/editor/panel/Scrollable'
@@ -19,6 +18,10 @@ type Props = {
   on_update: (updated_preset: Preset) => void
   pick_model: (chatbot_name: string, current_model_id?: string) => void
   pick_chatbot: (chatbot_id?: keyof typeof CHATBOTS) => void
+  pick_reasoning_effort: (
+    supported_efforts: string[],
+    current_effort?: string
+  ) => void
   on_at_sign_in_affix: () => void
 }
 
@@ -58,9 +61,11 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     'prompt_prefix' | 'prompt_suffix' | null
   >(null)
   const [is_prompt_template_collapsed, set_is_prompt_template_collapsed] =
-    useState(true)
+    useState(!(props.preset.prompt_prefix || props.preset.prompt_suffix))
   const [is_sampling_collapsed, set_is_sampling_collapsed] = useState(true)
-  const [is_options_collapsed, set_is_options_collapsed] = useState(true)
+  const [is_options_collapsed, set_is_options_collapsed] = useState(
+    !props.preset.options?.length
+  )
 
   const chatbot_config = chatbot ? CHATBOTS[chatbot] : undefined
   const models = useMemo(() => chatbot_config?.models || {}, [chatbot_config])
@@ -183,6 +188,8 @@ export const EditPresetForm: React.FC<Props> = (props) => {
         set_model(message.model_id)
       } else if (message.command == 'NEWLY_PICKED_CHATBOT') {
         handle_chatbot_change(message.chatbot_id as keyof typeof CHATBOTS)
+      } else if (message.command == 'NEWLY_PICKED_REASONING_EFFORT') {
+        set_reasoning_effort(message.effort)
       }
     }
     window.addEventListener('message', handle_message)
@@ -200,30 +207,21 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     }
   }
 
-  const reasoning_effort_options = useMemo(() => {
-    const supported_efforts =
+  const supported_reasoning_efforts = useMemo(() => {
+    return (
       chatbot_config?.supported_reasoning_efforts ||
-      model_info?.supported_reasoning_efforts
-
-    if (supported_efforts) {
-      return [
-        { value: '—', label: '—' },
-        ...supported_efforts.map((effort: string) => {
-          const capitalized = effort.charAt(0).toUpperCase() + effort.slice(1)
-          return { value: effort, label: capitalized }
-        })
-      ]
-    }
-    return [{ value: '—', label: '—' }]
+      model_info?.supported_reasoning_efforts ||
+      []
+    )
   }, [chatbot_config, model_info])
 
   useEffect(() => {
     if (
       reasoning_effort &&
-      !reasoning_effort_options.find((o) => o.value === reasoning_effort)
+      !supported_reasoning_efforts.includes(reasoning_effort)
     )
       set_reasoning_effort(undefined)
-  }, [reasoning_effort, reasoning_effort_options])
+  }, [reasoning_effort, supported_reasoning_efforts])
 
   return (
     <UiScrollable>
@@ -347,40 +345,55 @@ export const EditPresetForm: React.FC<Props> = (props) => {
                 chatbot == 'OpenRouter' ? ' Requires a reasoning model.' : ''
               }`}
             >
-              <UiDropdown
-                options={reasoning_effort_options}
-                value={reasoning_effort || '—'}
-                onChange={(value) => {
-                  set_reasoning_effort(value == '—' ? undefined : value)
+              <button
+                className={dropdown_styles.button}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  props.pick_reasoning_effort(
+                    supported_reasoning_efforts,
+                    reasoning_effort
+                  )
                 }}
-              />
+              >
+                <span>
+                  {reasoning_effort
+                    ? reasoning_effort.charAt(0).toUpperCase() +
+                      reasoning_effort.slice(1)
+                    : '—'}
+                </span>
+                <span
+                  className={cn(
+                    'codicon codicon-chevron-down',
+                    dropdown_styles.chevron
+                  )}
+                />
+              </button>
             </UiField>
           )}
 
-          {supports_thinking_budget &&
-            !supports_reasoning_effort && ( // Additional check for AI Studio
-              <UiField
-                label="Thinking Budget"
-                html_for="thinking-budget"
-                info="Search for allowed min-max values."
-              >
-                <UiInput
-                  id="thinking-budget"
-                  type="text"
-                  value={String(thinking_budget ?? '')}
-                  on_change={(value) => {
-                    const num = parseInt(value, 10)
-                    set_thinking_budget(isNaN(num) ? undefined : num)
-                  }}
-                  placeholder="e.g. 8000"
-                  on_key_down={(e) =>
-                    !/[0-9]/.test(e.key) &&
-                    e.key != 'Backspace' &&
-                    e.preventDefault()
-                  }
-                />
-              </UiField>
-            )}
+          {supports_thinking_budget && !supports_reasoning_effort && (
+            <UiField
+              label="Thinking Budget"
+              html_for="thinking-budget"
+              info="Search for allowed min-max values."
+            >
+              <UiInput
+                id="thinking-budget"
+                type="text"
+                value={String(thinking_budget ?? '')}
+                on_change={(value) => {
+                  const num = parseInt(value, 10)
+                  set_thinking_budget(isNaN(num) ? undefined : num)
+                }}
+                placeholder="e.g. 8000"
+                on_key_down={(e) =>
+                  !/[0-9]/.test(e.key) &&
+                  e.key != 'Backspace' &&
+                  e.preventDefault()
+                }
+              />
+            </UiField>
+          )}
 
           {supports_system_instructions && (
             <UiField
@@ -455,9 +468,19 @@ export const EditPresetForm: React.FC<Props> = (props) => {
               <UiField
                 label="Temperature"
                 info="Influences response variety. Lower values are more predictable; higher values are more diverse."
+                action={
+                  temperature !== undefined && (
+                    <button
+                      className={styles.clear}
+                      onClick={() => set_temperature(undefined)}
+                    >
+                      Clear
+                    </button>
+                  )
+                }
               >
                 <UiSlider
-                  value={temperature ?? 1}
+                  value={temperature}
                   onChange={set_temperature}
                   min={0}
                   max={2}
@@ -469,13 +492,18 @@ export const EditPresetForm: React.FC<Props> = (props) => {
               <UiField
                 label="Top P"
                 info="Limits token choices to cumulative probability P. Lower values make responses more predictable."
+                action={
+                  top_p !== undefined && (
+                    <button
+                      className={styles.clear}
+                      onClick={() => set_top_p(undefined)}
+                    >
+                      Clear
+                    </button>
+                  )
+                }
               >
-                <UiSlider
-                  value={top_p ?? 0.95}
-                  onChange={set_top_p}
-                  min={0}
-                  max={1}
-                />
+                <UiSlider value={top_p} onChange={set_top_p} min={0} max={1} />
               </UiField>
             )}
           </UiFieldset>

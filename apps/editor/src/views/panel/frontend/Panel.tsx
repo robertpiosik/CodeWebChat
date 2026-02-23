@@ -535,6 +535,13 @@ export const Panel = () => {
                 pick_chatbot={(chatbot_id) => {
                   post_message(vscode, { command: 'PICK_CHATBOT', chatbot_id })
                 }}
+                pick_reasoning_effort={(supported_efforts, current_effort) => {
+                  post_message(vscode, {
+                    command: 'PICK_REASONING_EFFORT',
+                    supported_efforts,
+                    current_effort
+                  })
+                }}
                 on_at_sign_in_affix={() => {}}
               />
             </UiPage>

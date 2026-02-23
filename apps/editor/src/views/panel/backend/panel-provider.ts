@@ -58,6 +58,7 @@ import {
   handle_toggle_pinned_api_tool_configuration,
   handle_pick_model,
   handle_pick_chatbot,
+  handle_pick_reasoning_effort,
   handle_focus_on_file_in_preview,
   handle_go_to_file,
   handle_show_diff,
@@ -873,6 +874,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_pick_model(this, message)
           } else if (message.command == 'PICK_CHATBOT') {
             await handle_pick_chatbot(this, message)
+          } else if (message.command == 'PICK_REASONING_EFFORT') {
+            await handle_pick_reasoning_effort(this, message)
           } else if (message.command == 'UPDATE_LAST_USED_PRESET') {
             update_last_used_preset_or_group({
               panel_provider: this,

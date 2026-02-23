@@ -3,20 +3,25 @@ import { Input } from '../../common/Input'
 import styles from './Slider.module.scss'
 
 type Props = {
-  value: number
-  onChange: (value: number) => void
+  value?: number
+  onChange: (value?: number) => void
   min: number
   max: number
 }
 
 export const Slider: React.FC<Props> = (props) => {
-  const [value, set_value] = useState(props.value)
+  const [value, set_value] = useState<number | undefined>(props.value)
 
   useEffect(() => {
     set_value(props.value)
   }, [props.value])
 
   const handleInputChange = (newValue: string) => {
+    if (newValue === '') {
+      set_value(undefined)
+      props.onChange(undefined)
+      return
+    }
     const numValue = parseFloat(newValue)
     if (!isNaN(numValue)) {
       set_value(numValue)
@@ -26,7 +31,9 @@ export const Slider: React.FC<Props> = (props) => {
     }
   }
 
-  const percentage = ((value - props.min) / (props.max - props.min)) * 100
+  const active_value = value !== undefined ? value : (props.max + props.min) / 2
+  const percentage =
+    ((active_value - props.min) / (props.max - props.min)) * 100
 
   return (
     <div className={styles.container}>
@@ -35,7 +42,7 @@ export const Slider: React.FC<Props> = (props) => {
         min={props.min}
         max={props.max}
         step={0.05}
-        value={value}
+        value={value ?? ''}
         on_change={handleInputChange}
         width={60}
       />
@@ -44,11 +51,12 @@ export const Slider: React.FC<Props> = (props) => {
         min={String(props.min)}
         max={String(props.max)}
         step="0.05"
-        value={value}
+        value={value ?? ''}
         onChange={(e) => set_value(parseFloat(e.target.value))}
-        onMouseUp={() => props.onChange(value)}
+        onMouseUp={(e) => props.onChange(parseFloat(e.currentTarget.value))}
         className={styles.container__slider}
         style={{ '--value-percent': `${percentage}%` } as any}
+        data-has-value={value !== undefined}
       />
     </div>
   )

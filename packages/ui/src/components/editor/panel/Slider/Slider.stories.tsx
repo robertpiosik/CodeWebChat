@@ -6,7 +6,7 @@ export default {
 }
 
 export const Primary = () => {
-  const [value, set_value] = useState(0.7)
+  const [value, set_value] = useState<number | undefined>(0.7)
   return (
     <div style={{ padding: '20px', width: '300px' }}>
       <Slider
@@ -22,7 +22,7 @@ export const Primary = () => {
           color: 'var(--vscode-foreground)'
         }}
       >
-        Current value: {value}
+        Current value: {value ?? 'unset'}
       </div>
     </div>
   )
