@@ -62,7 +62,9 @@ export const EditPresetForm: React.FC<Props> = (props) => {
   >(null)
   const [is_prompt_template_collapsed, set_is_prompt_template_collapsed] =
     useState(!(props.preset.prompt_prefix || props.preset.prompt_suffix))
-  const [is_sampling_collapsed, set_is_sampling_collapsed] = useState(true)
+  const [is_sampling_collapsed, set_is_sampling_collapsed] = useState(
+    props.preset.temperature === undefined && props.preset.top_p === undefined
+  )
   const [is_options_collapsed, set_is_options_collapsed] = useState(
     !props.preset.options?.length
   )
