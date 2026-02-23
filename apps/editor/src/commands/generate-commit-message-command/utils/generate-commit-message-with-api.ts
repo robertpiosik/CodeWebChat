@@ -3,6 +3,7 @@ import axios from 'axios'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { dictionary } from '@shared/constants/dictionary'
 import { make_api_request } from '@/utils/make-api-request'
+import { display_token_count } from '@/utils/display-token-count'
 import { Logger } from '@shared/utils/logger'
 import { strip_wrapping_quotes } from './strip-wrapping-quotes'
 import { CommitMessageConfig } from './get-commit-message-config'
@@ -45,7 +46,11 @@ export const generate_commit_message_with_api = async (params: {
         cancel_token_source.cancel('Operation cancelled by user')
       })
 
-      progress.report({ message: 'waiting for server...' })
+      progress.report({
+        message: `sent ${display_token_count(
+          Math.floor(params.message.length / 4)
+        )} tokens...`
+      })
 
       try {
         const response_result = await make_api_request({

@@ -187,7 +187,7 @@ export const generate_commit_message_command = (
       const { was_empty_stage, message_prompt } = data
 
       await vscode.env.clipboard.writeText(message_prompt)
-      const token_count = Math.floor(message_prompt.length / 4)
+      const token_count = Math.ceil(message_prompt.length / 4)
       vscode.window.showInformationMessage(
         `Commit message prompt of about ${display_token_count(
           token_count
