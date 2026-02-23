@@ -15,6 +15,7 @@ import { ToolConfig } from '@/services/model-providers-manager'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { apply_reasoning_effort } from '../utils/apply-reasoning-effort'
+import { display_token_count } from '../utils/display-token-count'
 
 const show_ghost_text = async (params: {
   editor: vscode.TextEditor
@@ -427,7 +428,11 @@ const perform_code_at_cursor = async (params: {
             cancel_token_source.cancel('User cancelled the operation')
           })
 
-          progress.report({ message: 'waiting for server...' })
+          progress.report({
+            message: `sent ${display_token_count(
+              Math.floor(content.length / 4)
+            )} tokens...`
+          })
 
           return await make_api_request({
             endpoint_url,
