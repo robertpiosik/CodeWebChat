@@ -165,6 +165,7 @@ const get_prune_context_config = async (
 
     const quick_pick = vscode.window.createQuickPick<Item>()
     quick_pick.items = await create_items()
+    quick_pick.title = 'Configurations'
     quick_pick.placeholder = 'Select configuration'
     quick_pick.matchOnDescription = true
 

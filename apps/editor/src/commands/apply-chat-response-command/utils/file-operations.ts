@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import { create_safe_path } from '@/utils/path-sanitizer'
+import * as fs from 'fs'
+import { create_safe_path, sanitize_file_name } from '@/utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
@@ -57,6 +58,61 @@ export const remove_directory_if_empty = async (params: {
       data: { error, dir_path: normalized_dir }
     })
   }
+}
+
+export const close_file_tabs = async (file_path: string) => {
+  const tabs_to_close: vscode.Tab[] = []
+  for (const tab_group of vscode.window.tabGroups.all) {
+    tabs_to_close.push(
+      ...tab_group.tabs.filter((tab) => {
+        const tab_uri = (tab.input as any)?.uri as vscode.Uri | undefined
+        return tab_uri && tab_uri.fsPath === file_path
+      })
+    )
+  }
+  if (tabs_to_close.length > 0) {
+    await vscode.window.tabGroups.close(tabs_to_close)
+  }
+}
+
+export const read_rename_source_file = async (params: {
+  renamed_from: string
+  workspace_root: string
+}): Promise<{ path: string; content: string } | undefined> => {
+  const sanitized_rename_path = sanitize_file_name(params.renamed_from)
+  const safe_rename_path = create_safe_path(
+    params.workspace_root,
+    sanitized_rename_path
+  )
+
+  if (safe_rename_path && fs.existsSync(safe_rename_path)) {
+    try {
+      const document = await vscode.workspace.openTextDocument(safe_rename_path)
+      return {
+        path: safe_rename_path,
+        content: document.getText()
+      }
+    } catch (e) {
+      Logger.warn({
+        function_name: 'read_rename_source_file',
+        message: 'Failed to read rename source file',
+        data: safe_rename_path
+      })
+    }
+  }
+  return undefined
+}
+
+export const cleanup_rename_source = async (params: {
+  source_path: string
+  workspace_root: string
+}) => {
+  await close_file_tabs(params.source_path)
+  await vscode.workspace.fs.delete(vscode.Uri.file(params.source_path))
+  await remove_directory_if_empty({
+    dir_path: path.dirname(params.source_path),
+    workspace_root: params.workspace_root
+  })
 }
 
 export const create_file_if_needed = async (params: {

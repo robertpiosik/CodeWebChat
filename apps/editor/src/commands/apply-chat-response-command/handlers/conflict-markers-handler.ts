@@ -6,7 +6,10 @@ import { dictionary } from '@shared/constants/dictionary'
 import { create_safe_path, sanitize_file_name } from '@/utils/path-sanitizer'
 import { FileItem } from '../utils/clipboard-parser'
 import { OriginalFileState } from '../types/original-file-state'
-import { remove_directory_if_empty } from '../utils/file-operations'
+import {
+  read_rename_source_file,
+  cleanup_rename_source
+} from '../utils/file-operations'
 import { apply_conflict_markers_to_content } from '../utils/edit-formats/conflict-markers/apply-conflict-markers-to-content'
 import { parse_conflict_segments } from '../utils/edit-formats/conflict-markers'
 
@@ -70,24 +73,13 @@ export const handle_conflict_markers = async (
       let rename_source_content: string | undefined
 
       if (file.renamed_from) {
-        const sanitized_rename_path = sanitize_file_name(file.renamed_from)
-        const safe_rename_path = create_safe_path(
-          workspace_root,
-          sanitized_rename_path
-        )
-        if (safe_rename_path && fs.existsSync(safe_rename_path)) {
-          rename_source_path = safe_rename_path
-          try {
-            const document =
-              await vscode.workspace.openTextDocument(safe_rename_path)
-            rename_source_content = document.getText()
-          } catch (e) {
-            Logger.warn({
-              function_name: 'handle_conflict_markers',
-              message: 'Failed to read rename source file',
-              data: safe_rename_path
-            })
-          }
+        const source_info = await read_rename_source_file({
+          renamed_from: file.renamed_from,
+          workspace_root
+        })
+        if (source_info) {
+          rename_source_path = source_info.path
+          rename_source_content = source_info.content
         }
       }
 
@@ -103,25 +95,8 @@ export const handle_conflict_markers = async (
             new_content = file.content
           }
 
-          const tabs_to_close: vscode.Tab[] = []
-          for (const tab_group of vscode.window.tabGroups.all) {
-            tabs_to_close.push(
-              ...tab_group.tabs.filter((tab) => {
-                const tab_uri = (tab.input as any)?.uri as
-                  | vscode.Uri
-                  | undefined
-                return tab_uri && tab_uri.fsPath === rename_source_path
-              })
-            )
-          }
-
-          if (tabs_to_close.length > 0) {
-            await vscode.window.tabGroups.close(tabs_to_close)
-          }
-
-          await vscode.workspace.fs.delete(vscode.Uri.file(rename_source_path))
-          await remove_directory_if_empty({
-            dir_path: path.dirname(rename_source_path),
+          await cleanup_rename_source({
+            source_path: rename_source_path,
             workspace_root
           })
 

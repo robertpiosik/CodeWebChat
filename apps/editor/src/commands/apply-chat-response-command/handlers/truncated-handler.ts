@@ -7,6 +7,10 @@ import { create_safe_path, sanitize_file_name } from '@/utils/path-sanitizer'
 import { FileItem } from '../utils/clipboard-parser'
 import { OriginalFileState } from '../types/original-file-state'
 import { process_truncated_content } from '../utils/edit-formats/truncations'
+import {
+  read_rename_source_file,
+  cleanup_rename_source
+} from '../utils/file-operations'
 
 export const handle_truncated_edit = async (
   files: FileItem[]
@@ -56,6 +60,67 @@ export const handle_truncated_edit = async (
         data: file.file_path
       })
       continue
+    }
+
+    let rename_source_path: string | undefined
+    let rename_source_content: string | undefined
+
+    if (file.renamed_from) {
+      const source_info = await read_rename_source_file({
+        renamed_from: file.renamed_from,
+        workspace_root
+      })
+      if (source_info) {
+        rename_source_path = source_info.path
+        rename_source_content = source_info.content
+      }
+    }
+
+    if (rename_source_path && rename_source_content !== undefined) {
+      try {
+        const new_content = process_truncated_content(
+          file.content,
+          rename_source_content
+        )
+
+        await cleanup_rename_source({
+          source_path: rename_source_path,
+          workspace_root
+        })
+
+        const directory = path.dirname(safe_path)
+        if (!fs.existsSync(directory)) {
+          await fs.promises.mkdir(directory, { recursive: true })
+        }
+        await vscode.workspace.fs.writeFile(
+          vscode.Uri.file(safe_path),
+          Buffer.from(new_content, 'utf8')
+        )
+
+        original_states.push({
+          file_path: file.file_path,
+          content: rename_source_content,
+          workspace_name: file.workspace_name,
+          file_path_to_restore: file.renamed_from,
+          ai_content: file.content,
+          proposed_content: new_content
+        })
+
+        Logger.info({
+          function_name: 'handle_truncated_edit',
+          message: 'Applied truncated edit',
+          data: safe_path
+        })
+        continue
+      } catch (error: any) {
+        Logger.error({
+          function_name: 'handle_truncated_edit',
+          message: 'Failed to process truncated file for rename',
+          data: { error: error.message, file_path: safe_path }
+        })
+        failed_files.push(file)
+        continue
+      }
     }
 
     if (!fs.existsSync(safe_path)) {

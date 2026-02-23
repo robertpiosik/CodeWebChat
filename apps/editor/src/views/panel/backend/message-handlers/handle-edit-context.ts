@@ -183,6 +183,7 @@ const get_edit_context_config = async (params: {
 
     const quick_pick = vscode.window.createQuickPick<Item>()
     quick_pick.items = await create_items()
+    quick_pick.title = 'Configurations'
     quick_pick.placeholder = 'Select configuration'
     quick_pick.matchOnDescription = true
 
