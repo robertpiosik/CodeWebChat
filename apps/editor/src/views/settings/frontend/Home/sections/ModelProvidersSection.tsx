@@ -1,5 +1,6 @@
 import { ProviderForClient } from '@/views/settings/types/messages'
-import { ModelProviders as UiModelProviders } from '@ui/components/editor/settings/ModelProviders'
+import { SortableList } from '@ui/components/editor/settings/SortableList'
+import { IconButton } from '@ui/components/editor/common/IconButton'
 import { use_translation } from '@/views/i18n/use-translation'
 
 type ModelProvidersSectionProps = {
@@ -18,27 +19,79 @@ export const ModelProvidersSection: React.FC<ModelProvidersSectionProps> = (
 ) => {
   const { t } = use_translation()
 
+  if (!props.providers) return null
+
+  const items = props.providers.map((p) => ({ ...p, id: p.name }))
+
   return (
-    <>
-      {props.providers && (
-        <UiModelProviders
-          translations={{
-            add_title: t('settings.action.add-new'),
-            insert_title: t('settings.action.insert-provider'),
-            edit_title: t('settings.action.edit-provider'),
-            change_api_key_title: t('settings.action.change-api-key'),
-            delete_title: t('settings.action.delete-provider'),
-            provider_text: t('settings.action.model-provider'),
-            providers_text: t('settings.action.model-providers')
-          }}
-          providers={props.providers}
-          on_reorder={props.on_reorder}
-          on_add_provider={props.on_add_provider}
-          on_delete_provider={props.on_delete_provider}
-          on_edit_provider={props.on_edit_provider}
-          on_change_api_key={props.on_change_api_key}
-        />
+    <SortableList
+      items={items}
+      on_reorder={(reordered) => {
+        props.on_reorder(reordered.map(({ id: _id, ...rest }) => rest))
+      }}
+      on_add={props.on_add_provider}
+      translations={{
+        add_title: t('settings.action.add-new'),
+        insert_title: t('settings.action.insert-provider'),
+        item_text: t('settings.action.model-provider'),
+        items_text: t('settings.action.model-providers')
+      }}
+      render_content={(provider) => (
+        <>
+          <div
+            style={{
+              width: 90,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}
+          >
+            {provider.name}
+          </div>
+          <div
+            style={{
+              width: 50,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}
+          >
+            {provider.apiKeyMask}
+          </div>
+          <div
+            style={{
+              flex: 1,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}
+          >
+            {provider.baseUrl}
+          </div>
+        </>
       )}
-    </>
+      render_actions={(provider) => (
+        <>
+          {provider.type == 'custom' ? (
+            <IconButton
+              codicon_icon="edit"
+              title={t('settings.action.edit-provider')}
+              on_click={() => props.on_edit_provider(provider.name)}
+            />
+          ) : (
+            <IconButton
+              codicon_icon="key"
+              title={t('settings.action.change-api-key')}
+              on_click={() => props.on_change_api_key(provider.name)}
+            />
+          )}
+          <IconButton
+            codicon_icon="trash"
+            title={t('settings.action.delete-provider')}
+            on_click={() => props.on_delete_provider(provider.name)}
+          />
+        </>
+      )}
+    />
   )
 }
