@@ -77,7 +77,7 @@ Install the browser extension and never copy and paste again.
 From code editing to voice input and commit messages, CWC supports your software development efforts on every step. Bring Your Own Key (BYOK) for a remote model provider of choice. Self-host with [Ollama](https://ollama.com/search).
 
 > [!NOTE]
-> Thanks to smart context files ordering, CWC heavily utilizes [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching/), across tasks.
+> Thanks to smart context files ordering, [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching/) is heavily utilized across tasks.
 
 > [!IMPORTANT]
 > Not all providers offer 90% discount on cached input tokens. [Google](https://aistudio.google.com/api-keys) and [OpenAI](https://platform.openai.com/settings/organization/api-keys) are your safe bets.
