@@ -7,11 +7,12 @@ import { Home } from './Home/Home'
 type NavItem =
   | 'general'
   | 'model-providers'
-  | 'code-at-cursor'
-  | 'edit-context'
   | 'intelligent-update'
+  | 'edit-context'
+  | 'code-at-cursor'
   | 'prune-context'
   | 'commit-messages'
+  | 'voice-input'
 
 const vscode = acquireVsCodeApi()
 

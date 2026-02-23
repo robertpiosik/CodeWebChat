@@ -32,12 +32,12 @@ import { default_system_instructions } from '@shared/constants/default-system-in
 type NavItem =
   | 'general'
   | 'model-providers'
+  | 'intelligent-update'
   | 'edit-context'
   | 'code-at-cursor'
-  | 'intelligent-update'
-  | 'voice-input'
   | 'prune-context'
   | 'commit-messages'
+  | 'voice-input'
 
 type NavConfigItem =
   | { type: 'item'; id: NavItem; label: TranslationKey }
@@ -55,11 +55,16 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
     label: 'settings.sidebar.model-providers'
   },
   { type: 'divider', text: 'settings.sidebar.api-tools' },
-  { type: 'item', id: 'edit-context', label: 'settings.sidebar.edit-context' },
   {
     type: 'item',
     id: 'intelligent-update',
     label: 'settings.sidebar.intelligent-update'
+  },
+  { type: 'item', id: 'edit-context', label: 'settings.sidebar.edit-context' },
+  {
+    type: 'item',
+    id: 'code-at-cursor',
+    label: 'settings.sidebar.code-at-cursor'
   },
   {
     type: 'item',
@@ -68,18 +73,13 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   },
   {
     type: 'item',
-    id: 'code-at-cursor',
-    label: 'settings.sidebar.code-at-cursor'
+    id: 'commit-messages',
+    label: 'settings.sidebar.commit-messages'
   },
   {
     type: 'item',
     id: 'voice-input',
     label: 'settings.sidebar.voice-input'
-  },
-  {
-    type: 'item',
-    id: 'commit-messages',
-    label: 'settings.sidebar.commit-messages'
   }
 ]
 
@@ -165,12 +165,12 @@ export const Home: React.FC<Props> = (props) => {
   const section_refs = useRef<Record<NavItem, HTMLDivElement | null>>({
     general: null,
     'model-providers': null,
-    'edit-context': null,
     'intelligent-update': null,
-    'prune-context': null,
-    'voice-input': null,
+    'edit-context': null,
     'code-at-cursor': null,
-    'commit-messages': null
+    'prune-context': null,
+    'commit-messages': null,
+    'voice-input': null
   })
   const [commit_instructions, set_commit_instructions] = useState('')
   const [voice_input_instructions, set_voice_input_instructions] = useState('')
@@ -420,68 +420,6 @@ export const Home: React.FC<Props> = (props) => {
           </UiGroup>
         </UiSection>
         <UiSection
-          ref={(el) => (section_refs.current['edit-context'] = el)}
-          group={t('settings.section.api-tool')}
-          title={t('settings.sidebar.edit-context')}
-          subtitle={t('settings.edit-context.subtitle')}
-          on_stuck_change={edit_context_on_stuck_change}
-          actions={
-            <UiButton
-              on_click={() =>
-                props.on_add_config('EDIT_CONTEXT', { create_on_top: true })
-              }
-            >
-              {t('settings.action.add-new')}
-            </UiButton>
-          }
-        >
-          <UiNotice type="info">{t('settings.edit-context.notice')}</UiNotice>
-          {props.edit_context_configs.length == 0 && (
-            <UiNotice type="warning">
-              {t('settings.message.missing-configuration')}
-            </UiNotice>
-          )}
-          <UiGroup>
-            <ApiToolConfigurationSection
-              configurations={props.edit_context_configs}
-              set_configurations={props.set_edit_context_configs}
-              tool_name="EDIT_CONTEXT"
-              can_have_default={false}
-              on_add={(params) => props.on_add_config('EDIT_CONTEXT', params)}
-              on_reorder={(reordered) =>
-                props.on_reorder_configs('EDIT_CONTEXT', reordered)
-              }
-              on_edit={(id) => props.on_edit_config('EDIT_CONTEXT', id)}
-              on_delete={(id) => props.on_delete_config('EDIT_CONTEXT', id)}
-            />
-            <UiItem
-              title={t('settings.edit-context.system-instructions.title')}
-              description={t(
-                'settings.edit-context.system-instructions.description'
-              )}
-              slot_below={
-                <UiTextarea
-                  value={edit_context_instructions}
-                  on_change={set_edit_context_instructions}
-                  on_blur={() => {
-                    props.on_edit_context_system_instructions_change(
-                      edit_context_instructions
-                    )
-                    if (
-                      edit_context_instructions == '' &&
-                      props.edit_context_system_instructions ==
-                        default_system_instructions
-                    ) {
-                      set_edit_context_instructions(default_system_instructions)
-                    }
-                  }}
-                />
-              }
-            />
-          </UiGroup>
-        </UiSection>
-
-        <UiSection
           ref={(el) => (section_refs.current['intelligent-update'] = el)}
           group={t('settings.section.api-tool')}
           title={t('settings.sidebar.intelligent-update')}
@@ -548,39 +486,63 @@ export const Home: React.FC<Props> = (props) => {
         </UiSection>
 
         <UiSection
-          ref={(el) => (section_refs.current['prune-context'] = el)}
+          ref={(el) => (section_refs.current['edit-context'] = el)}
           group={t('settings.section.api-tool')}
-          title={t('settings.sidebar.prune-context')}
-          subtitle={t('settings.prune-context.subtitle')}
-          on_stuck_change={prune_context_on_stuck_change}
+          title={t('settings.sidebar.edit-context')}
+          subtitle={t('settings.edit-context.subtitle')}
+          on_stuck_change={edit_context_on_stuck_change}
           actions={
             <UiButton
               on_click={() =>
-                props.on_add_config('PRUNE_CONTEXT', { create_on_top: true })
+                props.on_add_config('EDIT_CONTEXT', { create_on_top: true })
               }
             >
               {t('settings.action.add-new')}
             </UiButton>
           }
         >
-          <UiNotice type="info">{t('settings.prune-context.notice')}</UiNotice>
-          {props.prune_context_configs.length == 0 && (
+          <UiNotice type="info">{t('settings.edit-context.notice')}</UiNotice>
+          {props.edit_context_configs.length == 0 && (
             <UiNotice type="warning">
               {t('settings.message.missing-configuration')}
             </UiNotice>
           )}
           <UiGroup>
             <ApiToolConfigurationSection
-              configurations={props.prune_context_configs}
-              set_configurations={props.set_prune_context_configs}
-              tool_name="PRUNE_CONTEXT"
+              configurations={props.edit_context_configs}
+              set_configurations={props.set_edit_context_configs}
+              tool_name="EDIT_CONTEXT"
               can_have_default={false}
-              on_add={(params) => props.on_add_config('PRUNE_CONTEXT', params)}
+              on_add={(params) => props.on_add_config('EDIT_CONTEXT', params)}
               on_reorder={(reordered) =>
-                props.on_reorder_configs('PRUNE_CONTEXT', reordered)
+                props.on_reorder_configs('EDIT_CONTEXT', reordered)
               }
-              on_edit={(id) => props.on_edit_config('PRUNE_CONTEXT', id)}
-              on_delete={(id) => props.on_delete_config('PRUNE_CONTEXT', id)}
+              on_edit={(id) => props.on_edit_config('EDIT_CONTEXT', id)}
+              on_delete={(id) => props.on_delete_config('EDIT_CONTEXT', id)}
+            />
+            <UiItem
+              title={t('settings.edit-context.system-instructions.title')}
+              description={t(
+                'settings.edit-context.system-instructions.description'
+              )}
+              slot_below={
+                <UiTextarea
+                  value={edit_context_instructions}
+                  on_change={set_edit_context_instructions}
+                  on_blur={() => {
+                    props.on_edit_context_system_instructions_change(
+                      edit_context_instructions
+                    )
+                    if (
+                      edit_context_instructions == '' &&
+                      props.edit_context_system_instructions ==
+                        default_system_instructions
+                    ) {
+                      set_edit_context_instructions(default_system_instructions)
+                    }
+                  }}
+                />
+              }
             />
           </UiGroup>
         </UiSection>
@@ -639,6 +601,116 @@ export const Home: React.FC<Props> = (props) => {
                 >
                   {t('settings.code-at-cursor.keyboard-shortcut.action')}
                 </UiTextButton>
+              }
+            />
+          </UiGroup>
+        </UiSection>
+
+        <UiSection
+          ref={(el) => (section_refs.current['prune-context'] = el)}
+          group={t('settings.section.api-tool')}
+          title={t('settings.sidebar.prune-context')}
+          subtitle={t('settings.prune-context.subtitle')}
+          on_stuck_change={prune_context_on_stuck_change}
+          actions={
+            <UiButton
+              on_click={() =>
+                props.on_add_config('PRUNE_CONTEXT', { create_on_top: true })
+              }
+            >
+              {t('settings.action.add-new')}
+            </UiButton>
+          }
+        >
+          <UiNotice type="info">{t('settings.prune-context.notice')}</UiNotice>
+          {props.prune_context_configs.length == 0 && (
+            <UiNotice type="warning">
+              {t('settings.message.missing-configuration')}
+            </UiNotice>
+          )}
+          <UiGroup>
+            <ApiToolConfigurationSection
+              configurations={props.prune_context_configs}
+              set_configurations={props.set_prune_context_configs}
+              tool_name="PRUNE_CONTEXT"
+              can_have_default={false}
+              on_add={(params) => props.on_add_config('PRUNE_CONTEXT', params)}
+              on_reorder={(reordered) =>
+                props.on_reorder_configs('PRUNE_CONTEXT', reordered)
+              }
+              on_edit={(id) => props.on_edit_config('PRUNE_CONTEXT', id)}
+              on_delete={(id) => props.on_delete_config('PRUNE_CONTEXT', id)}
+            />
+          </UiGroup>
+        </UiSection>
+
+        <UiSection
+          ref={(el) => (section_refs.current['commit-messages'] = el)}
+          group={t('settings.section.api-tool')}
+          title={t('settings.sidebar.commit-messages')}
+          subtitle={t('settings.commit-messages.subtitle')}
+          on_stuck_change={commit_messages_on_stuck_change}
+          actions={
+            <UiButton
+              on_click={() =>
+                props.on_add_config('COMMIT_MESSAGES', { create_on_top: true })
+              }
+            >
+              {t('settings.action.add-new')}
+            </UiButton>
+          }
+        >
+          <UiNotice type="info">
+            {t('settings.commit-messages.notice')}
+          </UiNotice>
+          {props.commit_messages_configs.length == 0 && (
+            <UiNotice type="warning">
+              {t('settings.message.missing-configuration')}
+            </UiNotice>
+          )}
+          <UiGroup>
+            <ApiToolConfigurationSection
+              configurations={props.commit_messages_configs}
+              set_configurations={props.set_commit_messages_configs}
+              tool_name="COMMIT_MESSAGES"
+              can_have_default={true}
+              on_add={(params) =>
+                props.on_add_config('COMMIT_MESSAGES', params)
+              }
+              on_reorder={(reordered) =>
+                props.on_reorder_configs('COMMIT_MESSAGES', reordered)
+              }
+              on_edit={(id) => props.on_edit_config('COMMIT_MESSAGES', id)}
+              on_delete={(id) => props.on_delete_config('COMMIT_MESSAGES', id)}
+              on_set_default={(id) =>
+                props.on_set_default_config('COMMIT_MESSAGES', id)
+              }
+              on_unset_default={() =>
+                props.on_unset_default_config('COMMIT_MESSAGES')
+              }
+            />
+            <UiItem
+              title={t('settings.commit-messages.instructions.title')}
+              description={t(
+                'settings.commit-messages.instructions.description'
+              )}
+              slot_below={
+                <UiTextarea
+                  value={commit_instructions}
+                  on_change={set_commit_instructions}
+                  on_blur={() => {
+                    props.on_commit_instructions_change(commit_instructions)
+                    if (
+                      commit_instructions == '' &&
+                      props.commit_message_instructions ==
+                        default_commit_message_instructions
+                    ) {
+                      set_commit_instructions(
+                        default_commit_message_instructions
+                      )
+                    }
+                  }}
+                />
               }
             />
           </UiGroup>
@@ -724,78 +796,6 @@ export const Home: React.FC<Props> = (props) => {
                     ) {
                       set_voice_input_instructions(
                         default_voice_input_instructions
-                      )
-                    }
-                  }}
-                />
-              }
-            />
-          </UiGroup>
-        </UiSection>
-
-        <UiSection
-          ref={(el) => (section_refs.current['commit-messages'] = el)}
-          group={t('settings.section.api-tool')}
-          title={t('settings.sidebar.commit-messages')}
-          subtitle={t('settings.commit-messages.subtitle')}
-          on_stuck_change={commit_messages_on_stuck_change}
-          actions={
-            <UiButton
-              on_click={() =>
-                props.on_add_config('COMMIT_MESSAGES', { create_on_top: true })
-              }
-            >
-              {t('settings.action.add-new')}
-            </UiButton>
-          }
-        >
-          <UiNotice type="info">
-            {t('settings.commit-messages.notice')}
-          </UiNotice>
-          {props.commit_messages_configs.length == 0 && (
-            <UiNotice type="warning">
-              {t('settings.message.missing-configuration')}
-            </UiNotice>
-          )}
-          <UiGroup>
-            <ApiToolConfigurationSection
-              configurations={props.commit_messages_configs}
-              set_configurations={props.set_commit_messages_configs}
-              tool_name="COMMIT_MESSAGES"
-              can_have_default={true}
-              on_add={(params) =>
-                props.on_add_config('COMMIT_MESSAGES', params)
-              }
-              on_reorder={(reordered) =>
-                props.on_reorder_configs('COMMIT_MESSAGES', reordered)
-              }
-              on_edit={(id) => props.on_edit_config('COMMIT_MESSAGES', id)}
-              on_delete={(id) => props.on_delete_config('COMMIT_MESSAGES', id)}
-              on_set_default={(id) =>
-                props.on_set_default_config('COMMIT_MESSAGES', id)
-              }
-              on_unset_default={() =>
-                props.on_unset_default_config('COMMIT_MESSAGES')
-              }
-            />
-            <UiItem
-              title={t('settings.commit-messages.instructions.title')}
-              description={t(
-                'settings.commit-messages.instructions.description'
-              )}
-              slot_below={
-                <UiTextarea
-                  value={commit_instructions}
-                  on_change={set_commit_instructions}
-                  on_blur={() => {
-                    props.on_commit_instructions_change(commit_instructions)
-                    if (
-                      commit_instructions == '' &&
-                      props.commit_message_instructions ==
-                        default_commit_message_instructions
-                    ) {
-                      set_commit_instructions(
-                        default_commit_message_instructions
                       )
                     }
                   }}
