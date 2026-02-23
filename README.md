@@ -16,6 +16,9 @@ Code Web Chat (CWC) is a free and open-source, privacy-first **AI coding toolkit
 - chatbots—Gemini, ChatGPT, Claude, etc.
 - APIs—remote and local model providers
 
+> [!TIP]
+> Elevate your workflow with smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)).
+
 <br/>
 
 <p align="center"><i>Select relevant files, type a task...</i></p>
@@ -40,9 +43,6 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/autofill-for-code-web-chat/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/autofill-for-code-web-chat/)
-
-> [!TIP]
-> Elevate your workflow with smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)).
 
 **List of supported chatbots:**
 
