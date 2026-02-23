@@ -59,7 +59,7 @@ export function add_apply_response_button(params: {
   })
 
   params.insert_button(params.footer, apply_response_button)
-  apply_response_button.focus()
+  apply_response_button.focus({ preventScroll: true })
 }
 
 export function observe_for_responses(params: {
