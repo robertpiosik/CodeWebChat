@@ -186,6 +186,12 @@ const get_edit_context_config = async (params: {
     quick_pick.title = 'Configurations'
     quick_pick.placeholder = 'Select configuration'
     quick_pick.matchOnDescription = true
+    quick_pick.buttons = [
+      {
+        iconPath: new vscode.ThemeIcon('close'),
+        tooltip: 'Close'
+      }
+    ]
 
     const recents = context.workspaceState.get<string[]>(
       RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY
@@ -208,6 +214,13 @@ const get_edit_context_config = async (params: {
     return new Promise<{ provider: Provider; config: ToolConfig } | undefined>(
       (resolve) => {
         let accepted = false
+
+        quick_pick.onDidTriggerButton((button) => {
+          if (button.tooltip == 'Close') {
+            resolve(undefined)
+            quick_pick.hide()
+          }
+        })
 
         quick_pick.onDidAccept(async () => {
           accepted = true

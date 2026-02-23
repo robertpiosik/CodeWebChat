@@ -68,7 +68,7 @@ export class ApiManager {
       this.panel_provider.send_message({
         command: 'SHOW_API_MANAGER_PROGRESS',
         id: request_id,
-        title: 'Waiting...',
+        title: 'Waiting for server...',
         provider_name: params.provider_name,
         model: params.model,
         reasoning_effort: params.reasoning_effort

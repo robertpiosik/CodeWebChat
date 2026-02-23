@@ -152,7 +152,7 @@ export const ResponsePreview: FC<Props> = (props) => {
   ])
 
   const get_status_text = (file: FileInPreview) => {
-    if (file.apply_status == 'waiting') return 'Waiting...'
+    if (file.apply_status == 'waiting') return 'Waiting for server...'
     if (file.apply_status == 'thinking') return 'Thinking...'
     if (file.apply_status == 'retrying') return 'Retrying...'
     if (file.apply_status == 'receiving') return 'Receiving...'
