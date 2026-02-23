@@ -439,6 +439,18 @@ async function show_preset_quick_pick(params: {
   quick_pick.title = 'Recently Used Presets and Groups'
   quick_pick.matchOnDescription = true
 
+  const close_button = {
+    iconPath: new vscode.ThemeIcon('close'),
+    tooltip: 'Close'
+  }
+  quick_pick.buttons = [close_button]
+
+  quick_pick.onDidTriggerButton((button) => {
+    if (button === close_button) {
+      quick_pick.hide()
+    }
+  })
+
   const last_selected_name = recent_names[0]
 
   let last_selected_preset_name: string | undefined
