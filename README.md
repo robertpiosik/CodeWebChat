@@ -74,7 +74,7 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 
 ## API tools
 
-From code editing to voice input and commit messages, CWC supports your software development efforts on every step. Bring Your Own Key (BYOK) for a remote model provider of choice. Self-host with [Ollama](https://ollama.com/search).
+From code editing to commit messages, CWC supports your software development efforts on every step. Bring Your Own Key (BYOK) for a remote model provider of choice. Self-host with [Ollama](https://ollama.com/search).
 
 > [!NOTE]
 > By smart context files ordering, designed for [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching/) across tasks.
