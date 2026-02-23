@@ -6,7 +6,6 @@ import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 
-// Helper to replace fs.existsSync with a non-throwing async version
 const uri_exists = async (uri: vscode.Uri): Promise<boolean> => {
   try {
     await vscode.workspace.fs.stat(uri)
@@ -256,14 +255,12 @@ const relocate_file = async (params: {
       return false
     }
 
-    // Create directory for new path if needed
     const new_uri = vscode.Uri.file(new_safe_path)
     const new_dir_uri = vscode.Uri.file(path.dirname(new_safe_path))
     if (!(await uri_exists(new_dir_uri))) {
       await vscode.workspace.fs.createDirectory(new_dir_uri)
     }
 
-    // Close any open editors for the old file
     const text_editors = vscode.window.visibleTextEditors.filter(
       (editor) => editor.document.uri.toString() == old_uri.toString()
     )
@@ -388,18 +385,16 @@ export const undo_files = async (params: {
           data: state.file_path
         })
         console.error(`Cannot undo file with unsafe path: ${state.file_path}`)
-        continue // Skip this file
+        continue
       }
       let file_uri = vscode.Uri.file(safe_path)
 
       if (state.file_state == 'new' && !state.file_path_to_restore) {
         if (await uri_exists(file_uri)) {
-          // Close any open editors for this file before deleting
           const text_editors = vscode.window.visibleTextEditors.filter(
             (editor) => editor.document.uri.toString() === file_uri.toString()
           )
 
-          // Close all tabs for this file across all editor groups
           const tabs_to_close: vscode.Tab[] = []
           for (const tab_group of vscode.window.tabGroups.all) {
             tabs_to_close.push(
@@ -416,7 +411,6 @@ export const undo_files = async (params: {
             await vscode.window.tabGroups.close(tabs_to_close)
           }
 
-          // Fallback: close active editor if it's still showing this file
           for (const editor of text_editors) {
             await vscode.window.showTextDocument(editor.document, {
               preview: false,
@@ -467,8 +461,6 @@ export const undo_files = async (params: {
         }
         if (!safe_path) continue
         file_uri = vscode.Uri.file(safe_path)
-        // For existing files that were modified, restore original content.
-        // This also handles files that were deleted (by recreating them).
         if (!(await uri_exists(file_uri))) {
           try {
             const dir_uri = vscode.Uri.file(path.dirname(safe_path))
