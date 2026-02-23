@@ -4,7 +4,7 @@ import axios, { CancelTokenSource } from 'axios'
 import { randomUUID, createHash } from 'crypto'
 import { Logger } from '@shared/utils/logger'
 
-const CHAIN_RESOLUTION_DELAY_MS = 3000
+const CHAIN_RESOLUTION_DELAY_MS = 5000
 
 export class ApiManager {
   private cancel_token_sources: Map<string, CancelTokenSource> = new Map()
@@ -33,6 +33,7 @@ export class ApiManager {
     const body_hash = createHash('md5')
       .update(JSON.stringify(params.body))
       .digest('hex')
+
     const previous_waiting = this.waiting_chain.get(params.endpoint_url)
 
     let resolve_current: () => void = () => {}
@@ -43,11 +44,13 @@ export class ApiManager {
     let is_chain_resolution_scheduled = false
     const schedule_chain_resolution = () => {
       if (is_chain_resolution_scheduled) return
+
       const chain_entry = this.waiting_chain.get(params.endpoint_url)
       if (chain_entry && chain_entry.resolve === resolve_current) {
         is_chain_resolution_scheduled = true
         setTimeout(() => {
           chain_entry.resolve()
+
           const current_entry = this.waiting_chain.get(params.endpoint_url)
           if (current_entry && current_entry.resolve === resolve_current) {
             this.waiting_chain.delete(params.endpoint_url)
@@ -65,16 +68,21 @@ export class ApiManager {
     }
 
     try {
+      const is_queued =
+        previous_waiting && previous_waiting.body_hash == body_hash
+
+      // 1. Show appropriate initial state (Queued vs Waiting)
       this.panel_provider.send_message({
         command: 'SHOW_API_MANAGER_PROGRESS',
         id: request_id,
-        title: 'Waiting for server...',
+        title: is_queued ? 'Queued...' : 'Waiting for server...',
         provider_name: params.provider_name,
         model: params.model,
         reasoning_effort: params.reasoning_effort
       })
 
-      if (previous_waiting && previous_waiting.body_hash == body_hash) {
+      // 2. Handle the queuing block if this is a duplicate request
+      if (is_queued) {
         if (cancel_token_source.token.reason) {
           throw cancel_token_source.token.reason
         }
@@ -82,6 +90,16 @@ export class ApiManager {
           previous_waiting.promise,
           cancel_token_source.token.promise.then((c) => Promise.reject(c))
         ])
+
+        // 3. Queue cleared, update UI to show we are now hitting the server
+        this.panel_provider.send_message({
+          command: 'SHOW_API_MANAGER_PROGRESS',
+          id: request_id,
+          title: 'Waiting for server...',
+          provider_name: params.provider_name,
+          model: params.model,
+          reasoning_effort: params.reasoning_effort
+        })
       }
 
       const result = await make_api_request({
@@ -114,6 +132,7 @@ export class ApiManager {
           })
         }
       })
+
       return result
     } catch (error) {
       if (axios.isCancel(error)) {
