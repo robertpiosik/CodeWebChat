@@ -44,9 +44,10 @@ export const search_files_for_context_commands = (
           iconPath: new vscode.ThemeIcon('close'),
           tooltip: 'Close'
         }
+
         input_box.buttons = [close_button]
 
-        const keywords_input = await new Promise<string | undefined>(
+        const result = await new Promise<{ value: string | undefined }>(
           (resolve) => {
             let is_resolved = false
             const disposables: vscode.Disposable[] = []
@@ -54,7 +55,7 @@ export const search_files_for_context_commands = (
             disposables.push(
               input_box.onDidTriggerButton((button) => {
                 if (button === close_button) {
-                  resolve(undefined)
+                  resolve({ value: undefined })
                   input_box.hide()
                 }
               }),
@@ -65,7 +66,7 @@ export const search_files_for_context_commands = (
                   return
                 }
                 is_resolved = true
-                resolve(value)
+                resolve({ value })
                 input_box.hide()
               }),
               input_box.onDidChangeValue(() => {
@@ -75,7 +76,7 @@ export const search_files_for_context_commands = (
               }),
               input_box.onDidHide(() => {
                 if (!is_resolved) {
-                  resolve(undefined)
+                  resolve({ value: undefined })
                 }
                 disposables.forEach((d) => d.dispose())
                 input_box.dispose()
@@ -85,6 +86,7 @@ export const search_files_for_context_commands = (
           }
         )
 
+        const keywords_input = result.value
         if (!keywords_input) return
 
         await extension_context.workspaceState.update(
@@ -347,8 +349,25 @@ const search_files_by_keywords = async (params: {
 }): Promise<string[]> => {
   const matched_files: string[] = []
 
-  const escaped_term = params.search_term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const pattern = escaped_term.replace(/\s+/g, '\\s+')
+  let actual_term = params.search_term
+  let match_whole_word = false
+
+  if (
+    actual_term.length >= 2 &&
+    actual_term.startsWith('"') &&
+    actual_term.endsWith('"')
+  ) {
+    match_whole_word = true
+    actual_term = actual_term.slice(1, -1)
+  }
+
+  const escaped_term = actual_term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  let pattern = escaped_term.replace(/\s+/g, '\\s+')
+
+  if (match_whole_word) {
+    pattern = `\\b${pattern}\\b`
+  }
+
   const regex = new RegExp(pattern, 'mi')
 
   for (const file_path of params.files) {
