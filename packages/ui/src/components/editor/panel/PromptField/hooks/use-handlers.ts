@@ -126,6 +126,14 @@ export const use_handlers = (
   useEffect(() => {
     if (params.input_ref.current && !props.missing_configuration) {
       params.input_ref.current.focus()
+      const selection = window.getSelection()
+      if (selection) {
+        const range = document.createRange()
+        range.selectNodeContents(params.input_ref.current)
+        range.collapse(false)
+        selection.removeAllRanges()
+        selection.addRange(range)
+      }
     }
   }, [props.focus_key, props.missing_configuration])
 
