@@ -1350,31 +1350,49 @@ export const use_handlers = (
     }
 
     if (key == 'Enter') {
-      if (props.send_with_shift_enter) {
-        if (shiftKey) {
-          e.preventDefault()
-          handle_submit(e)
-        } else {
-          e.preventDefault()
-          const selection = window.getSelection()
-          if (!selection || !selection.rangeCount || !params.input_ref.current)
-            return
-
-          const range = selection.getRangeAt(0)
-          range.deleteContents()
-          const text_node = document.createTextNode('\n')
-          range.insertNode(text_node)
-          range.setStartAfter(text_node)
-          range.setEndAfter(text_node)
-          selection.removeAllRanges()
-          selection.addRange(range)
-          params.input_ref.current.dispatchEvent(
-            new Event('input', { bubbles: true })
-          )
-        }
-      } else if (!shiftKey) {
+      if (props.send_with_shift_enter && shiftKey) {
         e.preventDefault()
         handle_submit(e)
+      } else if (!props.send_with_shift_enter && !shiftKey) {
+        e.preventDefault()
+        handle_submit(e)
+      } else {
+        e.preventDefault()
+        const selection = window.getSelection()
+        if (!selection || !selection.rangeCount || !params.input_ref.current)
+          return
+
+        const range = selection.getRangeAt(0)
+        const input_element = params.input_ref.current
+
+        if (!input_element.contains(range.startContainer)) return
+
+        const pre_selection_range = document.createRange()
+        pre_selection_range.selectNodeContents(input_element)
+        pre_selection_range.setEnd(range.startContainer, range.startOffset)
+        const display_start = pre_selection_range.toString().length
+
+        pre_selection_range.setEnd(range.endContainer, range.endOffset)
+        const display_end = pre_selection_range.toString().length
+
+        const raw_start = map_display_pos_to_raw_pos({
+          display_pos: display_start,
+          raw_text: props.value,
+          context_file_paths: props.context_file_paths ?? []
+        })
+        const raw_end = map_display_pos_to_raw_pos({
+          display_pos: display_end,
+          raw_text: props.value,
+          context_file_paths: props.context_file_paths ?? []
+        })
+
+        const new_value =
+          props.value.substring(0, raw_start) +
+          '\n' +
+          props.value.substring(raw_end)
+
+        has_modified_current_entry_ref.current = true
+        update_value(new_value, raw_start + 1)
       }
       return
     }
