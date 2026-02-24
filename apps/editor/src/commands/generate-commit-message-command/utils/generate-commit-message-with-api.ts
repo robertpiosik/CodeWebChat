@@ -7,6 +7,7 @@ import { display_token_count } from '@/utils/display-token-count'
 import { Logger } from '@shared/utils/logger'
 import { strip_wrapping_quotes } from './strip-wrapping-quotes'
 import { CommitMessageConfig } from './get-commit-message-config'
+import { t } from '@/i18n'
 
 export const generate_commit_message_with_api = async (params: {
   endpoint_url: string
@@ -38,7 +39,7 @@ export const generate_commit_message_with_api = async (params: {
   return await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: 'Requested commit message',
+      title: t('command.commit-message.progress.title'),
       cancellable: true
     },
     async (progress, token) => {
@@ -47,9 +48,9 @@ export const generate_commit_message_with_api = async (params: {
       })
 
       progress.report({
-        message: `sent ${display_token_count(
-          Math.floor(params.message.length / 4)
-        )} tokens...`
+        message: t('common.progress.sent', {
+          tokens: display_token_count(Math.floor(params.message.length / 4))
+        })
       })
 
       try {
@@ -59,10 +60,10 @@ export const generate_commit_message_with_api = async (params: {
           body,
           cancellation_token: cancel_token_source.token,
           on_chunk: () => {
-            progress.report({ message: 'receiving...' })
+            progress.report({ message: t('common.progress.receiving') })
           },
           on_thinking_chunk: () => {
-            progress.report({ message: 'thinking...' })
+            progress.report({ message: t('common.progress.thinking') })
           }
         })
 

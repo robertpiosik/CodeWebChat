@@ -11,9 +11,9 @@ type PlaceholdersForKey<K extends TranslationKey> = ExtractPlaceholders<
   (typeof translations)[K]['en']
 >
 
-type TransProps<K extends TranslationKey> = [PlaceholdersForKey<K>] extends [
-  never
-]
+type TranslationProps<K extends TranslationKey> = [
+  PlaceholdersForKey<K>
+] extends [never]
   ? { id: K; components?: never }
   : { id: K; components: Record<PlaceholdersForKey<K>, React.ReactNode> }
 
@@ -45,7 +45,7 @@ export const use_translation = () => {
 }
 
 export const Translation = <K extends TranslationKey>(
-  params: TransProps<K>
+  params: TranslationProps<K>
 ) => {
   const components = params.components ?? {}
   const { t } = use_translation()

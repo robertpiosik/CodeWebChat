@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import { execSync } from 'child_process'
 import { dictionary } from '@shared/constants/dictionary'
 import * as path from 'path'
+import { t } from '@/i18n'
 
 type GitRepository = {
   rootUri: vscode.Uri
@@ -76,7 +77,7 @@ export const get_git_repository = async (
   })
 
   const selected = await vscode.window.showQuickPick(picks, {
-    placeHolder: 'Select a repository to generate the commit message for'
+    placeHolder: t('command.commit-message.select-repository')
   })
 
   if (!selected) {
@@ -121,7 +122,7 @@ export const prepare_staged_changes = async (
           buttons: [
             {
               iconPath: new vscode.ThemeIcon('go-to-file'),
-              tooltip: 'Go to File'
+              tooltip: t('common.go-to-file')
             }
           ]
         }
@@ -132,25 +133,25 @@ export const prepare_staged_changes = async (
         quick_pick.items = items
         quick_pick.selectedItems = items
         quick_pick.canSelectMany = true
-        quick_pick.title = 'Unstaged Files'
-        quick_pick.placeholder = 'Select files to commit'
+        quick_pick.title = t('command.commit-message.unstaged-files')
+        quick_pick.placeholder = t('command.commit-message.select-files')
         quick_pick.ignoreFocusOut = true
         quick_pick.buttons = [
           {
             iconPath: new vscode.ThemeIcon('close'),
-            tooltip: 'Close'
+            tooltip: t('common.close')
           }
         ]
 
         quick_pick.onDidTriggerButton((button) => {
-          if (button.tooltip == 'Close') {
+          if (button.tooltip == t('common.close')) {
             resolve(undefined)
             quick_pick.hide()
           }
         })
 
         quick_pick.onDidTriggerItemButton((event) => {
-          if (event.button.tooltip == 'Go to File') {
+          if (event.button.tooltip == t('common.go-to-file')) {
             const uri = vscode.Uri.file(event.item.fsPath)
             vscode.window.showTextDocument(uri, { preview: true })
           }

@@ -8,6 +8,7 @@ import { get_commit_message_config } from './utils/get-commit-message-config'
 import { build_commit_message_prompt } from './utils/build-commit-message-prompt'
 import { generate_commit_message_with_api } from './utils/generate-commit-message-with-api'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
+import { t } from '@/i18n'
 
 export const generate_commit_message_command = (
   context: vscode.ExtensionContext
@@ -93,14 +94,14 @@ export const generate_commit_message_command = (
             (resolve) => {
               const input_box = vscode.window.createInputBox()
               input_box.value = commit_message
-              input_box.title = 'Commit Message'
-              input_box.prompt = 'Edit the commit message.'
+              input_box.title = t('command.commit-message.input.title')
+              input_box.prompt = t('command.commit-message.input.prompt')
 
               if (has_default_config && !files_staged_by_action) {
                 input_box.buttons = [
                   {
                     iconPath: new vscode.ThemeIcon('close'),
-                    tooltip: 'Close'
+                    tooltip: t('common.close')
                   }
                 ]
               } else {
@@ -112,7 +113,7 @@ export const generate_commit_message_command = (
               input_box.onDidTriggerButton((button) => {
                 if (
                   button === vscode.QuickInputButtons.Back ||
-                  button.tooltip == 'Close'
+                  button.tooltip === t('common.close')
                 ) {
                   is_resolved = true
                   resolve('back')
@@ -189,9 +190,9 @@ export const generate_commit_message_command = (
       await vscode.env.clipboard.writeText(message_prompt)
       const token_count = Math.ceil(message_prompt.length / 4)
       vscode.window.showInformationMessage(
-        `Commit message prompt of about ${display_token_count(
-          token_count
-        )} tokens copied to clipboard.`
+        t('command.commit-message.copied', {
+          tokens: display_token_count(token_count)
+        })
       )
 
       if (was_empty_stage) {

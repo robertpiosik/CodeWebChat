@@ -2,20 +2,20 @@ export const panel = {
   'panel.header.home': {
     en: 'Howdy!',
     pl: 'Cześć!',
-    'zh-cn': '你好！',
-    ja: 'こんにちは！',
-    'zh-tw': '你好！',
+    'zh-cn': '你好',
+    ja: 'こんにちは',
+    'zh-tw': '你好',
     de: 'Hallo!',
     es: '¡Hola!',
     fr: 'Salut !',
     'pt-br': 'Olá!',
-    ru: 'Привет!',
-    ko: '안녕하세요!',
+    ru: 'Привет',
+    ko: '안녕하세요',
     it: 'Ciao!',
-    tr: 'Merhaba!',
+    tr: 'Merhaba',
     cs: 'Ahoj!',
     hu: 'Szia!',
-    bg: 'Здравей!'
+    bg: 'Здравей'
   },
   'panel.header.settings': {
     en: 'Settings',

@@ -9,6 +9,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { PROVIDERS } from '@shared/constants/providers'
 import { RECENTLY_USED_COMMIT_MESSAGES_CONFIG_IDS_STATE_KEY } from '@/constants/state-keys'
+import { t } from '@/i18n'
 
 export interface CommitMessageConfig {
   provider_name: string
@@ -99,7 +100,7 @@ export const get_commit_message_config = async (
 
         if (recent_configs.length > 0) {
           items.push({
-            label: 'recently used',
+            label: t('common.config.recently-used'),
             kind: vscode.QuickPickItemKind.Separator
           })
           items.push(...recent_configs.map(map_config_to_item))
@@ -108,7 +109,7 @@ export const get_commit_message_config = async (
         if (other_configs.length > 0) {
           if (recent_configs.length > 0) {
             items.push({
-              label: 'other configurations',
+              label: t('common.config.other'),
               kind: vscode.QuickPickItemKind.Separator
             })
           }
@@ -126,14 +127,14 @@ export const get_commit_message_config = async (
         quick_pick.buttons = [
           {
             iconPath: new vscode.ThemeIcon('close'),
-            tooltip: 'Close'
+            tooltip: t('common.close')
           }
         ]
       }
 
       quick_pick.items = create_items()
-      quick_pick.title = 'Configurations'
-      quick_pick.placeholder = 'Select configuration'
+      quick_pick.title = t('common.config.title')
+      quick_pick.placeholder = t('common.config.placeholder')
       quick_pick.matchOnDescription = true
 
       const items = quick_pick.items as (vscode.QuickPickItem & {
@@ -156,7 +157,7 @@ export const get_commit_message_config = async (
           if (button === vscode.QuickInputButtons.Back) {
             quick_pick.hide()
             resolve('back')
-          } else if (button.tooltip === 'Close') {
+          } else if (button.tooltip === t('common.close')) {
             quick_pick.hide()
             resolve(undefined)
           }
