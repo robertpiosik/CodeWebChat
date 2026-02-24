@@ -100,7 +100,7 @@ export const get_commit_message_config = async (
 
         if (recent_configs.length > 0) {
           items.push({
-            label: t('common.config.recently-used'),
+            label: t('common.separator.recently-used'),
             kind: vscode.QuickPickItemKind.Separator
           })
           items.push(...recent_configs.map(map_config_to_item))

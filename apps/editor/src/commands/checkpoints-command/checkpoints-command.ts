@@ -6,6 +6,7 @@ import {
 import { WorkspaceProvider } from '../../context/providers/workspace/workspace-provider'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import { t } from '@/i18n'
 import type { Checkpoint } from './types'
 import {
   create_checkpoint,
@@ -75,19 +76,18 @@ export const checkpoints_command = (params: {
         const quick_pick = vscode.window.createQuickPick<
           vscode.QuickPickItem & { id?: string; checkpoint?: Checkpoint }
         >()
-        quick_pick.title = 'Checkpoints'
-        quick_pick.placeholder =
-          'Select a checkpoint to restore or add a new one'
+        quick_pick.title = t('command.checkpoints.title')
+        quick_pick.placeholder = t('command.checkpoints.placeholder')
         quick_pick.matchOnDetail = true
 
         const clear_all_button: vscode.QuickInputButton = {
           iconPath: new vscode.ThemeIcon('trash'),
-          tooltip: 'Delete all checkpoints'
+          tooltip: t('command.checkpoints.delete-all')
         }
 
         const close_button: vscode.QuickInputButton = {
           iconPath: new vscode.ThemeIcon('close'),
-          tooltip: 'Close'
+          tooltip: t('common.close')
         }
 
         let notification_count = 0
@@ -102,7 +102,7 @@ export const checkpoints_command = (params: {
           if (temp_checkpoint_is_valid) {
             revert_item = {
               id: 'revert-last',
-              label: '$(discard) Revert last restored checkpoint'
+              label: `$(discard) ${t('command.checkpoints.revert-last')}`
             }
           }
 
@@ -118,7 +118,7 @@ export const checkpoints_command = (params: {
             ...(visible_checkpoints.length > 0
               ? [
                   {
-                    label: 'recently created',
+                    label: t('common.separator.recently-created'),
                     kind: vscode.QuickPickItemKind.Separator
                   }
                 ]
@@ -136,19 +136,21 @@ export const checkpoints_command = (params: {
                     iconPath: new vscode.ThemeIcon(
                       c.is_starred ? 'star-full' : 'star-empty'
                     ),
-                    tooltip: c.is_starred ? 'Unstar' : 'Star'
+                    tooltip: c.is_starred
+                      ? t('common.unstar')
+                      : t('common.star')
                   },
                   ...(c.title == 'Created by user'
                     ? [
                         {
                           iconPath: new vscode.ThemeIcon('edit'),
-                          tooltip: 'Edit Description'
+                          tooltip: t('command.checkpoints.edit-description')
                         }
                       ]
                     : []),
                   {
                     iconPath: new vscode.ThemeIcon('trash'),
-                    tooltip: 'Delete'
+                    tooltip: t('common.delete')
                   }
                 ]
               }
@@ -161,7 +163,7 @@ export const checkpoints_command = (params: {
             quick_pick.items = [
               {
                 id: 'add-new',
-                label: '$(add) New checkpoint...'
+                label: `$(add) ${t('command.checkpoints.new')}`
               },
               ...(revert_item ? [revert_item] : []),
               ...checkpoint_items
@@ -317,7 +319,10 @@ export const checkpoints_command = (params: {
           }
           if (!item.checkpoint) return
 
-          if (e.button.tooltip == 'Star' || e.button.tooltip == 'Unstar') {
+          if (
+            e.button.tooltip == t('common.star') ||
+            e.button.tooltip == t('common.unstar')
+          ) {
             await toggle_checkpoint_star({
               context: params.context,
               timestamp: item.checkpoint.timestamp,
@@ -336,13 +341,13 @@ export const checkpoints_command = (params: {
             return
           }
 
-          if (e.button.tooltip == 'Edit Description') {
+          if (e.button.tooltip == t('command.checkpoints.edit-description')) {
             notification_count++
             const new_description = await vscode.window.showInputBox({
-              title: 'Description',
-              prompt: 'Enter a description for the checkpoint',
+              title: t('command.checkpoints.description.title'),
+              prompt: t('command.checkpoints.description.prompt'),
               value: item.checkpoint.description || '',
-              placeHolder: 'e.g. Before refactoring the main component'
+              placeHolder: t('command.checkpoints.description.placeholder')
             })
             notification_count--
 
@@ -374,7 +379,7 @@ export const checkpoints_command = (params: {
             return
           }
 
-          if (e.button.tooltip == 'Delete') {
+          if (e.button.tooltip == t('common.delete')) {
             const was_restored = await delete_checkpoint_with_undo({
               context: params.context,
               checkpoint: item.checkpoint,

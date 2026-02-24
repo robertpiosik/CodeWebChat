@@ -1,4 +1,4 @@
-export const commands = {
+export const generate_commit_message = {
   'command.commit-message.input.title': {
     en: 'Commit Message',
     pl: 'Wiadomość commita',

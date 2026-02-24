@@ -1,4 +1,4 @@
-import { commands } from './commands'
+import { commands } from './commands/index'
 import { common } from './common'
 
 export const translations = {
