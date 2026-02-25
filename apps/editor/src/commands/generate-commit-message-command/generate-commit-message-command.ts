@@ -23,7 +23,7 @@ export const generate_commit_message_command = (
     const is_single_change = was_empty_stage && working_tree_changes.length == 1
     const diff = await prepare_staged_changes(repository, !!source_control)
     if (!diff) return null
-    const message_prompt = build_commit_message_prompt(diff)
+    const message_prompt = await build_commit_message_prompt(diff, repository)
     return { repository, was_empty_stage, message_prompt, is_single_change }
   }
 

@@ -1,7 +1,11 @@
 import * as vscode from 'vscode'
 import { commit_message_instructions } from '@/constants/instructions'
+import type { GitRepository } from '@/utils/git-repository-utils'
 
-export const build_commit_message_prompt = (diff: string): string => {
+export const build_commit_message_prompt = async (
+  diff: string,
+  repository: GitRepository
+): Promise<string> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const instructions = config.get<string>('commitMessageInstructions')
   const commit_message_prompt = instructions || commit_message_instructions
@@ -70,12 +74,36 @@ export const build_commit_message_prompt = (diff: string): string => {
         }
       }
 
+      const hunk_start_index = final_diff_content.indexOf('\n@@ ')
+      if (hunk_start_index != -1) {
+        final_diff_content = final_diff_content.substring(hunk_start_index + 1)
+      } else if (!final_diff_content.startsWith('@@ ')) {
+        final_diff_content = ''
+      }
+
       changes_content += `<file path="${file_path}" status="${status}"`
       if (old_path_attr) {
         changes_content += ` old_path="${old_path_attr}"`
       }
       changes_content += '>\n'
-      changes_content += `<![CDATA[\n${final_diff_content}\n]]>\n`
+      changes_content += `<![CDATA[\n${final_diff_content.trimEnd()}\n]]>\n`
+
+      if (!is_deleted && file_path) {
+        try {
+          let full_content = ''
+          try {
+            full_content = await repository.show('', file_path)
+          } catch (e) {
+            const uri = vscode.Uri.joinPath(repository.rootUri, file_path)
+            const content = await vscode.workspace.fs.readFile(uri)
+            full_content = Buffer.from(content).toString('utf8')
+          }
+          if (full_content) {
+            changes_content += `<![CDATA[\n${full_content.trimEnd()}\n]]>\n`
+          }
+        } catch (err) {}
+      }
+
       changes_content += `</file>\n`
     }
   }

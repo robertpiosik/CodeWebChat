@@ -1,7 +1,13 @@
 import * as vscode from 'vscode'
-import { translations } from './translations'
+import { commands } from './translations/commands'
+import { common } from './translations/common'
 
 export type TranslationKey = keyof typeof translations
+
+const translations = {
+  ...commands,
+  ...common
+}
 
 export const t = (
   key: TranslationKey,

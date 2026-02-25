@@ -3,8 +3,9 @@ import { execSync } from 'child_process'
 import { dictionary } from '@shared/constants/dictionary'
 import * as path from 'path'
 import { t } from '@/i18n'
+import { display_token_count } from './display-token-count'
 
-type GitRepository = {
+export type GitRepository = {
   rootUri: vscode.Uri
   state: {
     indexChanges: any[]
@@ -107,26 +108,90 @@ export const prepare_staged_changes = async (
     } else if (repository.state.workingTreeChanges.length == 1) {
       files_to_stage = [repository.state.workingTreeChanges[0].uri.fsPath]
     } else {
-      const items = repository.state.workingTreeChanges.map((change: any) => {
-        const relative_path = path.relative(
-          repository.rootUri.fsPath,
-          change.uri.fsPath
-        )
-        const dir_name = path.dirname(relative_path)
+      const items = await Promise.all(
+        repository.state.workingTreeChanges.map(async (change: any) => {
+          const relative_path = path.relative(
+            repository.rootUri.fsPath,
+            change.uri.fsPath
+          )
+          const dir_name = path.dirname(relative_path)
 
-        return {
-          label: path.basename(relative_path),
-          description: dir_name == '.' ? '' : dir_name,
-          picked: true,
-          fsPath: change.uri.fsPath,
-          buttons: [
-            {
-              iconPath: new vscode.ThemeIcon('go-to-file'),
-              tooltip: t('common.go-to-file')
+          let status = 'updated'
+          let is_deleted = false
+          let final_diff_content = ''
+          let full_content = ''
+
+          try {
+            if (change.status == 7) {
+              // UNTRACKED
+              status = 'created'
+              const content = await vscode.workspace.fs.readFile(change.uri)
+              full_content = Buffer.from(content).toString('utf8')
+              const lines = full_content.split('\n')
+              final_diff_content =
+                `@@ -0,0 +1,${lines.length} @@\n` +
+                lines.map((l: string) => '+' + l).join('\n')
+            } else {
+              const raw_diff = execSync(`git diff -- "${change.uri.fsPath}"`, {
+                cwd: repository.rootUri.fsPath
+              }).toString()
+
+              if (
+                raw_diff.includes('\n+++ /dev/null') ||
+                raw_diff.startsWith('+++ /dev/null')
+              ) {
+                status = 'deleted'
+                is_deleted = true
+              } else {
+                if (
+                  raw_diff.includes('\nnew file mode ') ||
+                  raw_diff.startsWith('new file mode ')
+                ) {
+                  status = 'created'
+                }
+
+                const hunk_start_index = raw_diff.indexOf('\n@@ ')
+                if (hunk_start_index !== -1) {
+                  final_diff_content = raw_diff.substring(hunk_start_index + 1)
+                } else if (raw_diff.startsWith('@@ ')) {
+                  final_diff_content = raw_diff
+                }
+
+                try {
+                  const content = await vscode.workspace.fs.readFile(change.uri)
+                  full_content = Buffer.from(content).toString('utf8')
+                } catch (e) {}
+              }
             }
-          ]
-        }
-      })
+          } catch (e) {}
+
+          let file_xml = `<file path="${relative_path}" status="${status}">\n`
+          file_xml += `<![CDATA[\n${final_diff_content.trimEnd()}\n]]>\n`
+          if (!is_deleted && full_content) {
+            file_xml += `<![CDATA[\n${full_content.trimEnd()}\n]]>\n`
+          }
+          file_xml += `</file>\n`
+
+          const token_count = Math.ceil(file_xml.length / 4)
+          const tokens_str = display_token_count(token_count)
+          const description_parts = []
+          description_parts.push(tokens_str)
+          if (dir_name !== '.') description_parts.push(dir_name)
+
+          return {
+            label: path.basename(relative_path),
+            description: description_parts.join(' · '),
+            picked: true,
+            fsPath: change.uri.fsPath,
+            buttons: [
+              {
+                iconPath: new vscode.ThemeIcon('go-to-file'),
+                tooltip: t('common.go-to-file')
+              }
+            ]
+          }
+        })
+      )
 
       const selected = await new Promise<any[] | undefined>((resolve) => {
         const quick_pick = vscode.window.createQuickPick<any>()

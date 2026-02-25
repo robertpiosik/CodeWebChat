@@ -1025,6 +1025,40 @@ export const use_handlers = (
 
     const range = selection.getRangeAt(0)
     const { startContainer, startOffset } = range
+
+    let current_node: Node | null = startContainer
+    let symbol_node: HTMLElement | null = null
+
+    while (current_node && current_node !== params.input_ref.current) {
+      if (
+        current_node.nodeType === Node.ELEMENT_NODE &&
+        (current_node as HTMLElement).dataset.type?.endsWith('-symbol')
+      ) {
+        symbol_node = current_node as HTMLElement
+        break
+      }
+      current_node = current_node.parentNode
+    }
+
+    if (symbol_node) {
+      const range_after = document.createRange()
+      range_after.selectNodeContents(symbol_node)
+      range_after.collapse(false)
+
+      const pre_caret_range = document.createRange()
+      pre_caret_range.selectNodeContents(params.input_ref.current)
+      pre_caret_range.setEnd(range_after.endContainer, range_after.endOffset)
+
+      const display_pos = pre_caret_range.toString().length
+
+      if (
+        handle_symbol_deletion_by_backspace({ el: symbol_node, display_pos })
+      ) {
+        e.preventDefault()
+        return
+      }
+    }
+
     let node_before_cursor: Node | null = null
 
     if (startContainer.nodeType == Node.TEXT_NODE && startOffset == 0) {
