@@ -748,7 +748,16 @@ const merge_diffs_per_file = (items: DiffParserItem[]): DiffParserItem[] => {
             (l.startsWith(' ') && !l.startsWith('  '))
         )
 
-        if (!existing_has_real_hunks) {
+        const existing_is_new_file = existing_lines.some(
+          (l) => l === '--- /dev/null'
+        )
+        const incoming_is_modification =
+          !item.content.includes('--- /dev/null') && item.content.includes('@@')
+
+        if (
+          !existing_has_real_hunks ||
+          (existing_is_new_file && incoming_is_modification)
+        ) {
           existing_diff.content = item.content
         } else {
           const new_lines = item.content.replace(/\n$/, '').split('\n')

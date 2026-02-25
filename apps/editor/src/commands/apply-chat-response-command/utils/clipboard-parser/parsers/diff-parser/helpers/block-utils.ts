@@ -28,6 +28,19 @@ export const find_file_path_before_block = (params: {
         continue
       }
 
+      if (!prev_line.startsWith('###')) {
+        const line_without_path = prev_line
+          .replace('`' + extracted + '`', '')
+          .replace(extracted, '')
+          .trim()
+        const remaining_words = line_without_path
+          .split(/\s+/)
+          .filter((w) => /[a-zA-Z]{2,}/.test(w))
+        if (remaining_words.length >= 5) {
+          continue
+        }
+      }
+
       const { workspace_name } = extract_workspace_and_path({
         raw_file_path: extracted,
         is_single_root_folder_workspace: params.is_single_root
