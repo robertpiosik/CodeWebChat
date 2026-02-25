@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import { dictionary } from '@shared/constants/dictionary'
 import { create_safe_path } from '../utils/path-sanitizer'
+import { t } from '../i18n'
 
 export const rename_command = () => {
   return vscode.commands.registerCommand(
@@ -16,7 +17,7 @@ export const rename_command = () => {
       const current_name = path.basename(old_path)
 
       const new_name = await vscode.window.showInputBox({
-        prompt: 'Enter new name',
+        prompt: t('command.files.rename.prompt'),
         placeHolder: '',
         value: current_name
       })

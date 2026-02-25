@@ -8,6 +8,7 @@ import {
   LAST_SEARCH_FILES_FOR_CONTEXT_QUERY_STATE_KEY
 } from '../constants/state-keys'
 import { dictionary } from '@shared/constants/dictionary'
+import { t } from '../i18n'
 
 export const search_files_for_context_commands = (
   workspace_provider: WorkspaceProvider,
@@ -35,14 +36,14 @@ export const search_files_for_context_commands = (
     while (true) {
       try {
         const input_box = vscode.window.createInputBox()
-        input_box.title = 'Search'
-        input_box.prompt = 'Enter text to search for.'
-        input_box.placeholder = 'Search'
+        input_box.title = t('command.search.title')
+        input_box.prompt = t('command.search.prompt')
+        input_box.placeholder = t('command.search.placeholder')
         input_box.value = initial_keywords
 
         const close_button = {
           iconPath: new vscode.ThemeIcon('close'),
-          tooltip: 'Close'
+          tooltip: t('common.close')
         }
 
         input_box.buttons = [close_button]
@@ -62,7 +63,9 @@ export const search_files_for_context_commands = (
               input_box.onDidAccept(() => {
                 const value = input_box.value.trim()
                 if (value.length == 0) {
-                  input_box.validationMessage = 'Please type something'
+                  input_box.validationMessage = t(
+                    'command.search.validation-empty'
+                  )
                   return
                 }
                 is_resolved = true
@@ -117,15 +120,13 @@ export const search_files_for_context_commands = (
         })
 
         if (matched_files.length == 0) {
-          vscode.window.showInformationMessage(
-            'No files found containing thes phrase.'
-          )
+          vscode.window.showInformationMessage(t('command.search.no-files'))
           continue
         }
 
         const open_file_button = {
           iconPath: new vscode.ThemeIcon('go-to-file'),
-          tooltip: 'Open file'
+          tooltip: t('common.go-to-file')
         }
 
         const quick_pick_items = matched_files.map((file_path) => {
@@ -151,8 +152,8 @@ export const search_files_for_context_commands = (
         quick_pick.selectedItems = quick_pick_items
         quick_pick.canSelectMany = true
         quick_pick.matchOnDescription = true
-        quick_pick.placeholder = 'Select files to add to context'
-        quick_pick.title = 'Search Results'
+        quick_pick.placeholder = t('command.search.select-files')
+        quick_pick.title = t('command.search.results')
         quick_pick.ignoreFocusOut = true
         quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
 
@@ -196,7 +197,11 @@ export const search_files_for_context_commands = (
                   preview: true
                 })
               } catch (error) {
-                vscode.window.showErrorMessage(`Error opening file: ${error}`)
+                vscode.window.showErrorMessage(
+                  t('command.context.check-references.error-opening', {
+                    error: String(error)
+                  })
+                )
               }
             }
           })
@@ -245,12 +250,12 @@ export const search_files_for_context_commands = (
           if (!all_current_files_in_new_context) {
             const quick_pick_options = [
               {
-                label: 'Replace',
-                description: 'Replace the current context with selected files'
+                label: t('command.search.replace'),
+                description: t('command.search.replace-description')
               },
               {
-                label: 'Merge',
-                description: 'Merge selected files with the current context'
+                label: t('command.search.merge'),
+                description: t('command.search.merge-description')
               }
             ]
 
@@ -261,7 +266,10 @@ export const search_files_for_context_commands = (
 
             const quick_pick_apply = vscode.window.createQuickPick()
             quick_pick_apply.items = quick_pick_options
-            quick_pick_apply.placeholder = `How would you like to apply the ${selected_paths.length} selected files?`
+            quick_pick_apply.placeholder = t(
+              'command.search.apply-placeholder',
+              { count: selected_paths.length }
+            )
             quick_pick_apply.ignoreFocusOut = true
 
             if (last_choice_label) {
@@ -296,7 +304,7 @@ export const search_files_for_context_commands = (
               choice.label
             )
 
-            if (choice.label == 'Merge') {
+            if (choice.label == t('command.search.merge')) {
               paths_to_apply = [
                 ...new Set([...currently_checked, ...selected_paths])
               ]
@@ -318,9 +326,9 @@ export const search_files_for_context_commands = (
         break
       } catch (error) {
         vscode.window.showErrorMessage(
-          `Search files for context failed: ${
-            error instanceof Error ? error.message : String(error)
-          }`
+          t('command.search.failed', {
+            error: error instanceof Error ? error.message : String(error)
+          })
         )
         Logger.error({
           function_name: 'search_files_for_context_command',

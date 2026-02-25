@@ -4,6 +4,7 @@ import { LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY } from '../../../../constan
 import { SavedContext } from '@/types/context'
 import { dictionary } from '@shared/constants/dictionary'
 import { resolve_context_paths } from './resolve-context-paths'
+import { t } from '@/i18n'
 
 export const apply_saved_context = async (
   context: SavedContext,
@@ -37,14 +38,18 @@ export const apply_saved_context = async (
     )
 
     if (!all_current_files_in_new_context) {
-      const quick_pick_options = [
+      const quick_pick_options: (vscode.QuickPickItem & {
+        action_id: string
+      })[] = [
         {
-          label: 'Replace',
-          description: 'Replace the current context with the selected one'
+          action_id: 'Replace',
+          label: t('command.apply-context.action.replace.label'),
+          description: t('command.apply-context.action.replace.description')
         },
         {
-          label: 'Merge',
-          description: 'Merge the selected context with the current one'
+          action_id: 'Merge',
+          label: t('command.apply-context.action.merge.label'),
+          description: t('command.apply-context.action.merge.description')
         }
       ]
 
@@ -54,12 +59,14 @@ export const apply_saved_context = async (
 
       const quick_pick = vscode.window.createQuickPick()
       quick_pick.items = quick_pick_options
-      quick_pick.placeholder = `How would you like to apply "${context.name}"?`
+      quick_pick.placeholder = t('command.apply-context.apply.placeholder', {
+        name: context.name
+      })
       quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
       if (last_choice_label) {
         const active_item = quick_pick_options.find(
-          (opt) => opt.label === last_choice_label
+          (opt) => opt.action_id === last_choice_label
         )
         if (active_item) {
           quick_pick.activeItems = [active_item]
@@ -67,7 +74,7 @@ export const apply_saved_context = async (
       }
 
       const choice = await new Promise<
-        vscode.QuickPickItem | 'back' | undefined
+        (vscode.QuickPickItem & { action_id: string }) | 'back' | undefined
       >((resolve) => {
         let is_accepted = false
         quick_pick.onDidTriggerButton((button) => {
@@ -78,7 +85,11 @@ export const apply_saved_context = async (
         })
         quick_pick.onDidAccept(() => {
           is_accepted = true
-          resolve(quick_pick.selectedItems[0])
+          resolve(
+            quick_pick.selectedItems[0] as vscode.QuickPickItem & {
+              action_id: string
+            }
+          )
           quick_pick.hide()
         })
         quick_pick.onDidHide(() => {
@@ -100,9 +111,9 @@ export const apply_saved_context = async (
 
       await extension_context.workspaceState.update(
         LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY,
-        choice.label
+        choice.action_id
       )
-      if (choice.label == 'Merge') {
+      if (choice.action_id == 'Merge') {
         paths_to_apply = [
           ...new Set([...currently_checked_files, ...existing_paths])
         ]

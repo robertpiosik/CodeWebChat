@@ -27,6 +27,7 @@ import { handle_conflict_markers } from './handlers/conflict-markers-handler'
 import { handle_truncated_edit } from './handlers/truncated-handler'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { natural_sort } from '@/utils/natural-sort'
+import { t } from '@/i18n'
 import { is_truncation_line } from './utils/edit-formats/truncations'
 
 export type PreviewData = {
@@ -142,10 +143,12 @@ export const process_chat_response = async (
     quick_pick.items = quick_pick_items
     quick_pick.selectedItems = quick_pick_items.filter((i) => i.picked)
     quick_pick.canSelectMany = true
-    quick_pick.title = 'Context Pruning'
-    quick_pick.placeholder = 'Confirm file selection'
+    quick_pick.title = t('command.apply-chat-response.context-pruning.title')
+    quick_pick.placeholder = t(
+      'command.apply-chat-response.context-pruning.placeholder'
+    )
     quick_pick.buttons = [
-      { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
+      { iconPath: new vscode.ThemeIcon('close'), tooltip: t('common.close') }
     ]
 
     const selected_items = await new Promise<
@@ -193,7 +196,9 @@ export const process_chat_response = async (
 
       if (files_to_check.length > 0) {
         await workspace_provider.set_checked_files(files_to_check)
-        vscode.window.showInformationMessage(`Context pruned successfully.`)
+        vscode.window.showInformationMessage(
+          t('command.apply-chat-response.context-pruning.success')
+        )
       }
     }
 
@@ -403,15 +408,20 @@ export const process_chat_response = async (
       const editor = vscode.window.activeTextEditor
       if (editor) {
         const choice = await vscode.window.showWarningMessage(
-          'No valid code blocks found',
+          t('command.apply-chat-response.warning.no-code-blocks.title'),
           {
             modal: true,
-            detail: 'Apply the clipboard text to the active editor?'
+            detail: t(
+              'command.apply-chat-response.warning.no-code-blocks.detail'
+            )
           },
-          'Apply with Intelligent Update'
+          t('command.apply-chat-response.warning.no-code-blocks.action')
         )
 
-        if (choice == 'Apply with Intelligent Update') {
+        if (
+          choice ==
+          t('command.apply-chat-response.warning.no-code-blocks.action')
+        ) {
           const document = editor.document
           const file_path_for_block = vscode.workspace
             .asRelativePath(document.uri, !is_single_root_folder_workspace)

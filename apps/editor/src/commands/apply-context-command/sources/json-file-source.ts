@@ -15,8 +15,7 @@ import {
   load_contexts_from_file,
   resolve_unique_context_name
 } from '../helpers/saving'
-
-const LABEL_NEW_ENTRY = '$(add) New entry...'
+import { t } from '@/i18n'
 
 export const load_and_merge_file_contexts = async (): Promise<{
   merged: SavedContext[]
@@ -73,23 +72,24 @@ export const handle_json_file_source = async (
     let { merged: file_contexts, context_to_roots } =
       await load_and_merge_file_contexts()
     const workspace_folders = vscode.workspace.workspaceFolders || []
+    const LABEL_NEW_ENTRY = t('command.apply-context.new-entry.label')
 
     const sync_button = {
       iconPath: new vscode.ThemeIcon('sync'),
-      tooltip: 'Update with currently selected files'
+      tooltip: t('command.apply-context.action.update')
     }
 
     const edit_button = {
       iconPath: new vscode.ThemeIcon('edit'),
-      tooltip: 'Rename'
+      tooltip: t('command.apply-context.action.rename')
     }
     const delete_button = {
       iconPath: new vscode.ThemeIcon('trash'),
-      tooltip: 'Delete'
+      tooltip: t('command.apply-context.action.delete')
     }
     const open_file_button = {
       iconPath: new vscode.ThemeIcon('go-to-file'),
-      tooltip: 'Open contexts.json'
+      tooltip: t('command.apply-context.action.open-json')
     }
 
     let active_dialog_count = 0
@@ -105,7 +105,7 @@ export const handle_json_file_source = async (
 
         if (file_contexts.length > 0) {
           items.push({
-            label: 'entries (A-Z)',
+            label: t('command.apply-context.entries-az'),
             kind: vscode.QuickPickItemKind.Separator
           })
 
@@ -139,9 +139,9 @@ export const handle_json_file_source = async (
       }
 
       const quick_pick = vscode.window.createQuickPick<any>()
-      quick_pick.title = 'Select Saved Context'
+      quick_pick.title = t('command.apply-context.select-saved.title')
       quick_pick.items = create_items()
-      quick_pick.placeholder = `Select saved context (from .vscode/contexts.json)`
+      quick_pick.placeholder = t('command.apply-context.select-saved.file')
       quick_pick.buttons = [vscode.QuickInputButtons.Back, open_file_button]
 
       const selection = await new Promise<any>((resolve) => {
@@ -170,7 +170,7 @@ export const handle_json_file_source = async (
                     label: f.name,
                     folder: f
                   })),
-                  { placeHolder: 'Select workspace folder' }
+                  { placeHolder: t('command.apply-context.select-folder') }
                 )
                 active_dialog_count--
                 if (picked) {
@@ -286,7 +286,7 @@ export const handle_json_file_source = async (
         if (selection.triggeredButton === edit_button) {
           active_dialog_count++
           const input = vscode.window.createInputBox()
-          input.title = 'Rename Context'
+          input.title = t('command.apply-context.rename.title')
           input.value = old_name
           const new_name = await new Promise<string | undefined>((resolve) => {
             input.onDidAccept(() => {
@@ -329,13 +329,13 @@ export const handle_json_file_source = async (
         } else if (selection.triggeredButton === delete_button) {
           active_dialog_count++
           const choice = await vscode.window.showInformationMessage(
-            `Delete context "${old_name}"?`,
+            t('command.apply-context.delete.prompt', { name: old_name }),
             { modal: true },
-            'Delete'
+            t('command.apply-context.delete.action')
           )
           active_dialog_count--
 
-          if (choice == 'Delete') {
+          if (choice == t('command.apply-context.delete.action')) {
             const roots_to_update = context_to_roots.get(old_name) || []
 
             for (const root of roots_to_update) {

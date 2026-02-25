@@ -3,6 +3,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { create_safe_path } from '../utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
+import { t } from '../i18n'
 
 export const new_folder_command = () => {
   return vscode.commands.registerCommand(
@@ -51,7 +52,7 @@ export const new_folder_command = () => {
       }
 
       const folder_name = await vscode.window.showInputBox({
-        prompt: 'Enter folder name',
+        prompt: t('command.files.new-folder.prompt'),
         placeHolder: ''
       })
 

@@ -5,6 +5,7 @@ import {
   FileItem
 } from '../context/providers/workspace/workspace-provider'
 import { natural_sort } from '../utils/natural-sort'
+import { t } from '../i18n'
 
 interface FileQuickPickItem extends vscode.QuickPickItem {
   full_path: string
@@ -19,7 +20,9 @@ export const remove_file_from_context_command = (
       const current_checked = workspace_provider.get_checked_files()
 
       if (current_checked.length == 0) {
-        vscode.window.showInformationMessage('No files currently in context.')
+        vscode.window.showInformationMessage(
+          t('command.context.remove.no-files')
+        )
         return
       }
 
@@ -54,18 +57,19 @@ export const remove_file_from_context_command = (
             (resolve) => {
               const quick_pick = vscode.window.createQuickPick()
               quick_pick.items = items
-              quick_pick.placeholder =
-                'Select a workspace folder to remove files from'
-              quick_pick.title = 'Workspace Folders'
+              quick_pick.placeholder = t(
+                'command.context.remove.select-workspace'
+              )
+              quick_pick.title = t('command.context.workspace-folders')
               quick_pick.buttons = [
                 {
                   iconPath: new vscode.ThemeIcon('close'),
-                  tooltip: 'Close'
+                  tooltip: t('common.close')
                 }
               ]
 
               quick_pick.onDidTriggerButton((button) => {
-                if (button.tooltip == 'Close') {
+                if (button.tooltip == t('common.close')) {
                   quick_pick.hide()
                 }
               })
@@ -94,19 +98,19 @@ export const remove_file_from_context_command = (
       }
 
       const quick_pick = vscode.window.createQuickPick<FileQuickPickItem>()
-      quick_pick.title = 'Context Files'
-      quick_pick.placeholder = 'Select a file to remove from context'
+      quick_pick.title = t('command.context.remove.context-files')
+      quick_pick.placeholder = t('command.context.remove.select-file')
       quick_pick.matchOnDescription = true
       quick_pick.buttons = [
         {
           iconPath: new vscode.ThemeIcon('close'),
-          tooltip: 'Close'
+          tooltip: t('common.close')
         }
       ]
       quick_pick.show()
 
       quick_pick.onDidTriggerButton((button) => {
-        if (button.tooltip == 'Close') {
+        if (button.tooltip == t('common.close')) {
           quick_pick.hide()
         }
       })
@@ -118,7 +122,9 @@ export const remove_file_from_context_command = (
 
       quick_pick.onDidTriggerItemButton(async (e) => {
         const item = e.item
-        if (e.button.tooltip == 'Remove Parent Folder from Context') {
+        if (
+          e.button.tooltip == t('command.context.remove.remove-parent-folder')
+        ) {
           parent_folder_source_full_path = item.full_path
 
           const workspace_root = workspace_provider.get_workspace_root_for_file(
@@ -143,7 +149,9 @@ export const remove_file_from_context_command = (
           }
 
           if (folders.length == 0) {
-            vscode.window.showInformationMessage('No parent folders to remove.')
+            vscode.window.showInformationMessage(
+              t('command.context.remove.no-parent-folders')
+            )
             return
           }
 
@@ -151,9 +159,10 @@ export const remove_file_from_context_command = (
             label: string
             full_path: string
           }>()
-          folder_quick_pick.title = 'Parent Folders'
-          folder_quick_pick.placeholder =
-            'Select a folder to remove from context'
+          folder_quick_pick.title = t('command.context.parent-folders')
+          folder_quick_pick.placeholder = t(
+            'command.context.remove.select-folder'
+          )
           folder_quick_pick.items = folders.map((f) => ({
             label: f.label,
             full_path: f.full_path
@@ -258,7 +267,7 @@ export const remove_file_from_context_command = (
             ? [
                 {
                   iconPath: new vscode.ThemeIcon('folder'),
-                  tooltip: 'Remove Parent Folder from Context'
+                  tooltip: t('command.context.remove.remove-parent-folder')
                 }
               ]
             : []

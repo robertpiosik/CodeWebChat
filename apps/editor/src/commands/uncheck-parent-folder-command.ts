@@ -4,6 +4,7 @@ import {
   WorkspaceProvider,
   FileItem
 } from '../context/providers/workspace/workspace-provider'
+import { t } from '../i18n'
 
 export const uncheck_parent_folder_command = (
   workspace_provider: WorkspaceProvider
@@ -39,7 +40,9 @@ export const uncheck_parent_folder_command = (
       }
 
       if (folders.length == 0) {
-        vscode.window.showInformationMessage('No parent folders found.')
+        vscode.window.showInformationMessage(
+          t('command.context.parent-folder.no-folders')
+        )
         return
       }
 
@@ -51,12 +54,14 @@ export const uncheck_parent_folder_command = (
           full_path: string
         }>()
         quick_pick.items = folders
-        quick_pick.placeholder = 'Select a parent folder to uncheck'
-        quick_pick.title = 'Parent Folders'
+        quick_pick.placeholder = t(
+          'command.context.parent-folder.select-uncheck'
+        )
+        quick_pick.title = t('command.context.parent-folders')
         quick_pick.buttons = [
           {
             iconPath: new vscode.ThemeIcon('close'),
-            tooltip: 'Close'
+            tooltip: t('common.close')
           }
         ]
 

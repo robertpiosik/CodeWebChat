@@ -13,8 +13,7 @@ import {
   save_contexts_for_workspace,
   load_and_merge_global_contexts
 } from '../helpers/saving'
-
-const LABEL_NEW_ENTRY = '$(add) New entry...'
+import { t } from '@/i18n'
 
 let active_deletion_timestamp: number | undefined
 
@@ -29,20 +28,21 @@ export const handle_workspace_state_source = async (
     }
 
     let { merged: internal_contexts, context_to_roots } = refresh_contexts()
+    const LABEL_NEW_ENTRY = t('command.apply-context.new-entry.label')
 
     const sync_button = {
       iconPath: new vscode.ThemeIcon('sync'),
-      tooltip: 'Update with currently selected files'
+      tooltip: t('command.apply-context.action.update')
     }
 
     const edit_button = {
       iconPath: new vscode.ThemeIcon('edit'),
-      tooltip: 'Rename'
+      tooltip: t('command.apply-context.action.rename')
     }
 
     const delete_button = {
       iconPath: new vscode.ThemeIcon('trash'),
-      tooltip: 'Delete'
+      tooltip: t('command.apply-context.action.delete')
     }
 
     while (true) {
@@ -57,7 +57,7 @@ export const handle_workspace_state_source = async (
 
         if (contexts.length > 0) {
           items.push({
-            label: 'recent entries',
+            label: t('command.apply-context.recent-entries'),
             kind: vscode.QuickPickItemKind.Separator
           })
 
@@ -94,9 +94,9 @@ export const handle_workspace_state_source = async (
       }
 
       const quick_pick = vscode.window.createQuickPick()
-      quick_pick.title = 'Select Saved Context'
+      quick_pick.title = t('command.apply-context.select-saved.title')
       quick_pick.items = create_quick_pick_items(internal_contexts)
-      quick_pick.placeholder = `Select saved context (from workspace state)`
+      quick_pick.placeholder = t('command.apply-context.select-saved.workspace')
       quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
       let active_dialog_count = 0
@@ -286,8 +286,8 @@ export const handle_workspace_state_source = async (
             if (event.button === edit_button) {
               active_dialog_count++
               const input_box = vscode.window.createInputBox()
-              input_box.title = 'Rename Context'
-              input_box.prompt = 'Enter new name for context.'
+              input_box.title = t('command.apply-context.rename.title')
+              input_box.prompt = t('command.apply-context.rename.prompt')
               input_box.value = item.context.name
 
               const new_name = await new Promise<string | undefined | 'back'>(
@@ -298,7 +298,9 @@ export const handle_workspace_state_source = async (
                   const validate = (value: string): boolean => {
                     const trimmed_value = value.trim()
                     if (!trimmed_value) {
-                      input_box.validationMessage = 'Name cannot be empty'
+                      input_box.validationMessage = t(
+                        'command.apply-context.rename.empty'
+                      )
                       return false
                     }
 
@@ -307,8 +309,9 @@ export const handle_workspace_state_source = async (
                         c.name === trimmed_value && c.name !== item.context.name
                     )
                     if (duplicate) {
-                      input_box.validationMessage =
-                        'A context with this name already exists'
+                      input_box.validationMessage = t(
+                        'command.apply-context.rename.exists'
+                      )
                       return false
                     }
                     input_box.validationMessage = ''
@@ -422,7 +425,7 @@ export const handle_workspace_state_source = async (
               if (active_deletion_timestamp !== current_timestamp) {
                 if (choice == 'Undo') {
                   vscode.window.showInformationMessage(
-                    'Could not undo as another context was deleted.'
+                    t('command.apply-context.undo.failed')
                   )
                 }
                 quick_pick.show()

@@ -7,6 +7,7 @@ import { LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY } from '../../../constants/
 import { get_git_repository } from '@/utils/git-repository-utils'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
+import { t } from '@/i18n'
 
 export const handle_commit_files_source = async (
   workspace_provider: WorkspaceProvider,
@@ -28,7 +29,7 @@ export const handle_commit_files_source = async (
 
       if (!log_output) {
         vscode.window.showInformationMessage(
-          'No commits found in the repository.'
+          t('command.apply-context.commit.no-commits')
         )
         return
       }
@@ -47,7 +48,7 @@ export const handle_commit_files_source = async (
         vscode.QuickPickItem & { hash: string }
       >()
       quick_pick.items = commits
-      quick_pick.placeholder = 'Select a commit to load modified files from'
+      quick_pick.placeholder = t('command.apply-context.commit.select')
       quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
       const selected_commit = await new Promise<
@@ -99,7 +100,7 @@ export const handle_commit_files_source = async (
 
       if (!files_output) {
         vscode.window.showInformationMessage(
-          'No files modified in this commit.'
+          t('command.apply-context.commit.no-modified')
         )
         continue
       }
@@ -124,7 +125,7 @@ export const handle_commit_files_source = async (
 
       if (valid_files.length == 0) {
         vscode.window.showInformationMessage(
-          'No valid existing files found from this commit.'
+          t('command.apply-context.commit.no-valid')
         )
         continue
       }
@@ -140,8 +141,10 @@ export const handle_commit_files_source = async (
 
         const selected_files = await vscode.window.showQuickPick(file_items, {
           canPickMany: true,
-          placeHolder: 'Select files to add to context',
-          title: `Files modified in ${selected_commit.hash.substring(0, 7)}`
+          placeHolder: t('command.apply-context.commit.select-files'),
+          title: t('command.apply-context.commit.files-modified', {
+            hash: selected_commit.hash.substring(0, 7)
+          })
         })
 
         if (!selected_files || selected_files.length == 0) {
@@ -163,14 +166,14 @@ export const handle_commit_files_source = async (
           if (!all_current_files_in_new_context) {
             const quick_pick_options = [
               {
-                label: 'Replace',
-                description:
-                  'Replace the current context with files from this commit'
+                label: t('command.apply-context.action.replace.label'),
+                description: t(
+                  'command.apply-context.action.replace.description'
+                )
               },
               {
-                label: 'Merge',
-                description:
-                  'Merge files from this commit with the current context'
+                label: t('command.apply-context.action.merge.label'),
+                description: t('command.apply-context.action.merge.description')
               }
             ]
 
@@ -181,10 +184,9 @@ export const handle_commit_files_source = async (
 
             const quick_pick = vscode.window.createQuickPick()
             quick_pick.items = quick_pick_options
-            quick_pick.placeholder = `How would you like to apply files from commit ${selected_commit.hash.substring(
-              0,
-              7
-            )}?`
+            quick_pick.placeholder = t('command.apply-context.commit.apply', {
+              hash: selected_commit.hash.substring(0, 7)
+            })
             quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
             if (last_choice_label) {
@@ -228,7 +230,9 @@ export const handle_commit_files_source = async (
                 choice.label
               )
 
-              if (choice.label == 'Merge') {
+              if (
+                choice.label == t('command.apply-context.action.merge.label')
+              ) {
                 paths_to_apply = [
                   ...new Set([...currently_checked, ...selected_paths])
                 ]

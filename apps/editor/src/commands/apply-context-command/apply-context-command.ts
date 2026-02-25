@@ -14,6 +14,7 @@ import {
   get_contexts_file_path,
   load_and_merge_global_contexts
 } from './helpers/saving'
+import { t } from '@/i18n'
 
 export const apply_context_command = (params: {
   workspace_provider: WorkspaceProvider
@@ -48,7 +49,7 @@ export const apply_context_command = (params: {
         })[] = []
 
         main_quick_pick_options.push({
-          label: 'Workspace state',
+          label: t('command.apply-context.sources.workspace-state'),
           description: `${internal_contexts.length} ${
             internal_contexts.length == 1 ? 'entry' : 'entries'
           }`,
@@ -57,11 +58,11 @@ export const apply_context_command = (params: {
 
         const open_file_button = {
           iconPath: new vscode.ThemeIcon('go-to-file'),
-          tooltip: 'Open contexts.json'
+          tooltip: t('command.apply-context.action.open-json')
         }
 
         main_quick_pick_options.push({
-          label: 'JSON file',
+          label: t('command.apply-context.sources.json-file'),
           description: `${file_contexts_count} ${
             file_contexts_count == 1 ? 'entry' : 'entries'
           }`,
@@ -70,12 +71,12 @@ export const apply_context_command = (params: {
         })
 
         main_quick_pick_options.push({
-          label: 'Unstaged files',
+          label: t('command.apply-context.sources.unstaged-files'),
           value: 'unstaged'
         })
 
         main_quick_pick_options.push({
-          label: 'Files touched by a commit...',
+          label: t('command.apply-context.sources.commit-files'),
           value: 'commit_files'
         })
 
@@ -84,9 +85,11 @@ export const apply_context_command = (params: {
             value: 'internal' | 'file' | 'unstaged' | 'commit_files' | string
           }
         >()
-        main_quick_pick.title = 'Context Sources'
+        main_quick_pick.title = t('command.apply-context.sources.title')
         main_quick_pick.items = main_quick_pick_options
-        main_quick_pick.placeholder = 'Select option'
+        main_quick_pick.placeholder = t(
+          'command.apply-context.sources.placeholder'
+        )
         main_quick_pick.buttons = [
           { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
         ]

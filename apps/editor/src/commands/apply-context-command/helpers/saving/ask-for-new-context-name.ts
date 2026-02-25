@@ -1,16 +1,13 @@
 import * as vscode from 'vscode'
-
-const PROMPT_ENTER_CONTEXT_NAME = 'Enter a name for this context'
-const PLACEHOLDER_CONTEXT_NAME = 'e.g., Backend API Context'
-const VALIDATION_CONTEXT_NAME_EMPTY = 'Context name cannot be empty.'
+import { t } from '@/i18n'
 
 export const ask_for_new_context_name = async (
   with_back_button: boolean
 ): Promise<string | 'back' | undefined> => {
   const input_box = vscode.window.createInputBox()
-  input_box.title = 'New Entry'
-  input_box.prompt = PROMPT_ENTER_CONTEXT_NAME
-  input_box.placeholder = PLACEHOLDER_CONTEXT_NAME
+  input_box.title = t('command.apply-context.ask-name.title')
+  input_box.prompt = t('command.apply-context.ask-name.prompt')
+  input_box.placeholder = t('command.apply-context.ask-name.placeholder')
 
   return new Promise((resolve) => {
     let accepted = false
@@ -20,7 +17,9 @@ export const ask_for_new_context_name = async (
       input_box.onDidAccept(() => {
         const value = input_box.value.trim()
         if (value.length == 0) {
-          input_box.validationMessage = VALIDATION_CONTEXT_NAME_EMPTY
+          input_box.validationMessage = t(
+            'command.apply-context.ask-name.empty'
+          )
           return
         }
         accepted = true

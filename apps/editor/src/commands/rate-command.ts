@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import { t } from '../i18n'
 
 export function rate_command() {
   return vscode.commands.registerCommand('codeWebChat.rate', () => {
@@ -19,12 +20,12 @@ export function rate_command() {
 
     const quick_pick = vscode.window.createQuickPick<(typeof options)[0]>()
     quick_pick.items = options
-    quick_pick.title = 'Rate Extension'
-    quick_pick.placeholder = 'Select a platform'
+    quick_pick.title = t('command.rate.title')
+    quick_pick.placeholder = t('command.rate.placeholder')
     quick_pick.buttons = [
       {
         iconPath: new vscode.ThemeIcon('close'),
-        tooltip: 'Close'
+        tooltip: t('common.close')
       }
     ]
 

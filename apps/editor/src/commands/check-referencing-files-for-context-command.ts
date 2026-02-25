@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'
+import { t } from '../i18n'
 
 export const check_referencing_files_for_context_command = (
   workspace_provider: WorkspaceProvider
@@ -21,7 +22,7 @@ export const check_referencing_files_for_context_command = (
         const matched_files = await vscode.window.withProgress(
           {
             location: vscode.ProgressLocation.Window,
-            title: 'Searching for references...'
+            title: t('command.context.check-references.searching')
           },
           async () => {
             const locations = await vscode.commands.executeCommand<
@@ -46,14 +47,14 @@ export const check_referencing_files_for_context_command = (
 
         if (matched_files.length === 0) {
           vscode.window.showInformationMessage(
-            'No files found referencing the current symbol.'
+            t('command.context.check-references.no-files')
           )
           return
         }
 
         const open_file_button = {
           iconPath: new vscode.ThemeIcon('go-to-file'),
-          tooltip: 'Open file'
+          tooltip: t('common.go-to-file')
         }
 
         const quick_pick_items = matched_files.map((file_path) => {
@@ -78,15 +79,17 @@ export const check_referencing_files_for_context_command = (
         quick_pick.items = quick_pick_items
         quick_pick.selectedItems = quick_pick_items
         quick_pick.canSelectMany = true
-        quick_pick.placeholder = 'Select files to check for context'
-        quick_pick.title = `Found ${matched_files.length} file${
-          matched_files.length == 1 ? '' : 's'
-        }`
+        quick_pick.placeholder = t(
+          'command.context.check-references.select-files'
+        )
+        quick_pick.title = t('command.context.check-references.found-files', {
+          count: matched_files.length
+        })
         quick_pick.ignoreFocusOut = true
 
         const close_button = {
           iconPath: new vscode.ThemeIcon('close'),
-          tooltip: 'Close'
+          tooltip: t('common.close')
         }
         quick_pick.buttons = [close_button]
 
@@ -125,7 +128,11 @@ export const check_referencing_files_for_context_command = (
                   preview: true
                 })
               } catch (error) {
-                vscode.window.showErrorMessage(`Error opening file: ${error}`)
+                vscode.window.showErrorMessage(
+                  t('command.context.check-references.error-opening', {
+                    error: String(error)
+                  })
+                )
               }
             }
           })
@@ -157,12 +164,14 @@ export const check_referencing_files_for_context_command = (
         })
 
         await workspace_provider.set_checked_files(paths_to_apply)
-        vscode.window.showInformationMessage(`Context updated.`)
+        vscode.window.showInformationMessage(
+          t('command.context.check-references.context-updated')
+        )
       } catch (error) {
         vscode.window.showErrorMessage(
-          `Reference check failed: ${
-            error instanceof Error ? error.message : String(error)
-          }`
+          t('command.context.check-references.failed', {
+            error: error instanceof Error ? error.message : String(error)
+          })
         )
         Logger.error({
           function_name: 'check_referencing_files_for_context_command',

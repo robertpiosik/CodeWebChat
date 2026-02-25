@@ -127,7 +127,7 @@ export const settings = {
   },
   'settings.sidebar.prune-context': {
     en: 'Prune Context',
-    pl: 'Oczyść kontekst',
+    pl: 'Przytnij kontekst',
     'zh-cn': '精简上下文',
     ja: 'コンテキストの剪定',
     'zh-tw': '精簡上下文',

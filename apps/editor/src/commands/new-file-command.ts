@@ -3,6 +3,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { create_safe_path } from '../utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
+import { t } from '../i18n'
 
 export const new_file_command = () => {
   return vscode.commands.registerCommand(
@@ -43,7 +44,7 @@ export const new_file_command = () => {
       } catch {}
 
       const file_name = await vscode.window.showInputBox({
-        prompt: 'Enter file name',
+        prompt: t('command.files.new-file.prompt'),
         placeHolder: ''
       })
 

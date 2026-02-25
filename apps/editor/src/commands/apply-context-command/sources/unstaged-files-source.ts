@@ -6,6 +6,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { display_token_count } from '../../../utils/display-token-count'
 import { LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY } from '../../../constants/state-keys'
+import { t } from '@/i18n'
 
 export const handle_unstaged_files_source = async (
   workspace_provider: WorkspaceProvider,
@@ -91,8 +92,8 @@ export const handle_unstaged_files_source = async (
       const quick_pick = vscode.window.createQuickPick<
         vscode.QuickPickItem & { file_path: string }
       >()
-      quick_pick.title = 'Unstaged Files'
-      quick_pick.placeholder = 'Select files to include'
+      quick_pick.title = t('command.apply-context.unstaged.title')
+      quick_pick.placeholder = t('command.apply-context.unstaged.include')
       quick_pick.canSelectMany = true
       quick_pick.items = quick_pick_items
       quick_pick.selectedItems = quick_pick_items
@@ -152,12 +153,12 @@ export const handle_unstaged_files_source = async (
         if (!all_current_files_in_new_context) {
           const quick_pick_options = [
             {
-              label: 'Replace',
-              description: 'Replace the current context with selected files'
+              label: t('command.apply-context.action.replace.label'),
+              description: t('command.apply-context.action.replace.description')
             },
             {
-              label: 'Merge',
-              description: 'Merge selected files with the current context'
+              label: t('command.apply-context.action.merge.label'),
+              description: t('command.apply-context.action.merge.description')
             }
           ]
 
@@ -168,7 +169,12 @@ export const handle_unstaged_files_source = async (
 
           const quick_pick_merge = vscode.window.createQuickPick()
           quick_pick_merge.items = quick_pick_options
-          quick_pick_merge.placeholder = `How would you like to apply the ${selected_paths.length} selected files?`
+          quick_pick_merge.placeholder = t(
+            'command.apply-context.unstaged.apply',
+            {
+              count: selected_paths.length
+            }
+          )
           quick_pick_merge.buttons = [vscode.QuickInputButtons.Back]
 
           if (last_choice_label) {
@@ -212,7 +218,7 @@ export const handle_unstaged_files_source = async (
               choice.label
             )
 
-            if (choice.label == 'Merge') {
+            if (choice.label == t('command.apply-context.action.merge.label')) {
               paths_to_apply = [
                 ...new Set([...currently_checked, ...selected_paths])
               ]

@@ -5,6 +5,7 @@ import {
   FileItem
 } from '../context/providers/workspace/workspace-provider'
 import { natural_sort } from '../utils/natural-sort'
+import { t } from '../i18n'
 
 interface FileQuickPickItem extends vscode.QuickPickItem {
   full_path: string
@@ -33,17 +34,17 @@ export const add_file_to_context_command = (
           (resolve) => {
             const quick_pick = vscode.window.createQuickPick()
             quick_pick.items = items
-            quick_pick.placeholder = 'Select a workspace folder to browse files'
-            quick_pick.title = 'Workspace Folders'
+            quick_pick.placeholder = t('command.context.add.select-workspace')
+            quick_pick.title = t('command.context.workspace-folders')
             quick_pick.buttons = [
               {
                 iconPath: new vscode.ThemeIcon('close'),
-                tooltip: 'Close'
+                tooltip: t('common.close')
               }
             ]
 
             quick_pick.onDidTriggerButton((button) => {
-              if (button.tooltip == 'Close') {
+              if (button.tooltip == t('common.close')) {
                 quick_pick.hide()
               }
             })
@@ -70,20 +71,20 @@ export const add_file_to_context_command = (
       }
 
       const quick_pick = vscode.window.createQuickPick<FileQuickPickItem>()
-      quick_pick.title = 'Workspace Files'
-      quick_pick.placeholder = 'Select a file to add to context'
+      quick_pick.title = t('command.context.workspace-files')
+      quick_pick.placeholder = t('command.context.add.select-file')
       quick_pick.matchOnDescription = true
       quick_pick.buttons = [
         {
           iconPath: new vscode.ThemeIcon('close'),
-          tooltip: 'Close'
+          tooltip: t('common.close')
         }
       ]
       quick_pick.busy = true
       quick_pick.show()
 
       quick_pick.onDidTriggerButton((button) => {
-        if (button.tooltip == 'Close') {
+        if (button.tooltip == t('common.close')) {
           quick_pick.hide()
         }
       })
@@ -95,7 +96,7 @@ export const add_file_to_context_command = (
 
       quick_pick.onDidTriggerItemButton(async (e) => {
         const item = e.item
-        if (e.button.tooltip == 'Add Parent Folder to Context') {
+        if (e.button.tooltip == t('command.context.add.add-parent-folder')) {
           parent_folder_source_full_path = item.full_path
 
           const workspace_root = workspace_provider.get_workspace_root_for_file(
@@ -120,7 +121,9 @@ export const add_file_to_context_command = (
           }
 
           if (folders.length == 0) {
-            vscode.window.showInformationMessage('No parent folders to add.')
+            vscode.window.showInformationMessage(
+              t('command.context.add.no-parent-folders')
+            )
             return
           }
 
@@ -128,8 +131,8 @@ export const add_file_to_context_command = (
             label: string
             full_path: string
           }>()
-          folder_quick_pick.title = 'Parent Folders'
-          folder_quick_pick.placeholder = 'Select a folder to add to context'
+          folder_quick_pick.title = t('command.context.parent-folders')
+          folder_quick_pick.placeholder = t('command.context.add.select-folder')
           folder_quick_pick.items = folders.map((f) => ({
             label: f.label,
             full_path: f.full_path
@@ -241,7 +244,7 @@ export const add_file_to_context_command = (
               ? [
                   {
                     iconPath: new vscode.ThemeIcon('folder'),
-                    tooltip: 'Add Parent Folder to Context'
+                    tooltip: t('command.context.add.add-parent-folder')
                   }
                 ]
               : []

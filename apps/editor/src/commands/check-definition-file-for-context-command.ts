@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'
+import { t } from '../i18n'
 
 export const check_definition_file_for_context_command = (
   workspace_provider: WorkspaceProvider
@@ -20,7 +21,7 @@ export const check_definition_file_for_context_command = (
         const definition_uri = await vscode.window.withProgress(
           {
             location: vscode.ProgressLocation.Window,
-            title: 'Resolving definition...'
+            title: t('command.context.check-definition.resolving')
           },
           async () => {
             const result = await vscode.commands.executeCommand<
@@ -40,7 +41,9 @@ export const check_definition_file_for_context_command = (
         )
 
         if (!definition_uri) {
-          vscode.window.showInformationMessage('No definition found.')
+          vscode.window.showInformationMessage(
+            t('command.context.check-definition.no-definition')
+          )
           return
         }
 
@@ -48,14 +51,14 @@ export const check_definition_file_for_context_command = (
 
         if (!workspace_provider.get_workspace_root_for_file(file_path)) {
           vscode.window.showWarningMessage(
-            'Definition found is outside the workspace.'
+            t('command.context.check-definition.outside-workspace')
           )
           return
         }
 
         if (workspace_provider.is_ignored_by_patterns(file_path)) {
           vscode.window.showWarningMessage(
-            'Definition found is in an ignored file.'
+            t('command.context.check-definition.ignored')
           )
           return
         }
@@ -71,11 +74,11 @@ export const check_definition_file_for_context_command = (
           added = true
         }
 
-        const open_button = 'Open File'
+        const open_button = t('command.context.check-definition.open-file')
 
         const message = added
-          ? `Added definition to context.`
-          : `The definition is already in context.`
+          ? t('command.context.check-definition.added')
+          : t('command.context.check-definition.already-in-context')
 
         const selection = await vscode.window.showInformationMessage(
           message,
@@ -88,9 +91,9 @@ export const check_definition_file_for_context_command = (
         }
       } catch (error) {
         vscode.window.showErrorMessage(
-          `Check definition failed: ${
-            error instanceof Error ? error.message : String(error)
-          }`
+          t('command.context.check-definition.failed', {
+            error: error instanceof Error ? error.message : String(error)
+          })
         )
         Logger.error({
           function_name: 'check_definition_file_for_context_command',

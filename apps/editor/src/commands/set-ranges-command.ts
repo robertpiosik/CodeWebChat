@@ -9,6 +9,7 @@ import {
   RANGES_STATE_KEY,
   LAST_RANGES_SAVE_LOCATION_STATE_KEY
 } from '../constants/state-keys'
+import { t } from '../i18n'
 
 export const set_ranges_command = (
   workspace_provider: WorkspaceProvider,
@@ -28,7 +29,7 @@ export const set_ranges_command = (
       const workspace_folders = vscode.workspace.workspaceFolders || []
 
       if (!workspace_folder) {
-        vscode.window.showErrorMessage('File is not in a workspace folder.')
+        vscode.window.showErrorMessage(t('command.ranges.not-in-workspace'))
         return
       }
 
@@ -71,9 +72,9 @@ export const set_ranges_command = (
       const current_range = file_range_value || state_range_value
 
       const new_ranges = await vscode.window.showInputBox({
-        prompt: `Set ranges of lines to include in the context`,
-        title: 'Ranges',
-        placeHolder: 'e.g., 100-300 400- -500 or empty to clear',
+        prompt: t('command.ranges.prompt'),
+        title: t('command.ranges.title'),
+        placeHolder: t('command.ranges.placeholder'),
         value: current_range,
         validateInput: (value) => {
           if (value.trim() == '') return null
@@ -88,32 +89,36 @@ export const set_ranges_command = (
           for (const part of parts) {
             const match = part.match(/^(\d+)?-(\d+)?$/)
             if (!match) {
-              return `Invalid format in "${part}". Use formats like 100-300, 100-, -300.`
+              return t('command.ranges.validation.invalid-format', { part })
             }
 
             const [, start_str, end_str] = match
 
             if (!start_str && !end_str) {
-              return 'Invalid range "-". Specify at least a start or an end line.'
+              return t('command.ranges.validation.invalid-range')
             }
 
             const start = start_str ? parseInt(start_str, 10) : null
             const end = end_str ? parseInt(end_str, 10) : null
 
             if (start !== null && start < 1) {
-              return `Start line must be 1 or greater in "${part}".`
+              return t('command.ranges.validation.start-greater-than-0', {
+                part
+              })
             }
 
             if (end !== null && end < 1) {
-              return `End line must be 1 or greater in "${part}".`
+              return t('command.ranges.validation.end-greater-than-0', { part })
             }
 
             if (start !== null && end !== null) {
               if (start > end) {
-                return `Start line cannot be greater than end line in "${part}".`
+                return t('command.ranges.validation.start-greater-than-end', {
+                  part
+                })
               }
               if (start == end) {
-                return `Start and end lines cannot be the same in "${part}".`
+                return t('command.ranges.validation.start-equals-end', { part })
               }
             }
             parsed_ranges.push({
@@ -126,9 +131,10 @@ export const set_ranges_command = (
 
           for (let i = 0; i < parsed_ranges.length - 1; i++) {
             if (parsed_ranges[i].end >= parsed_ranges[i + 1].start) {
-              return `Ranges cannot overlap: "${
-                parsed_ranges[i].original
-              }" and "${parsed_ranges[i + 1].original}".`
+              return t('command.ranges.validation.overlap', {
+                part1: parsed_ranges[i].original,
+                part2: parsed_ranges[i + 1].original
+              })
             }
           }
           return null
@@ -156,7 +162,7 @@ export const set_ranges_command = (
             changed = true
           } catch (error: any) {
             vscode.window.showErrorMessage(
-              `Failed to update range in file: ${error.message}`
+              t('command.ranges.error.update-file', { error: error.message })
             )
           }
         }
@@ -187,21 +193,26 @@ export const set_ranges_command = (
         const choice = await vscode.window.showQuickPick(
           [
             {
-              label: 'JSON File',
-              description: '.vscode/ranges.json',
+              label: t('command.ranges.quick-pick.json-file'),
+              description: t('command.ranges.quick-pick.json-file-description'),
               picked: last_location != 'state'
             },
             {
-              label: 'Workspace State',
-              description: 'Internal storage',
+              label: t('command.ranges.quick-pick.workspace-state'),
+              description: t(
+                'command.ranges.quick-pick.workspace-state-description'
+              ),
               picked: last_location == 'state'
             }
           ],
-          { placeHolder: 'Where do you want to save these ranges?' }
+          { placeHolder: t('command.ranges.quick-pick.placeholder') }
         )
 
         if (!choice) return
-        save_location = choice.label == 'JSON File' ? 'file' : 'state'
+        save_location =
+          choice.label == t('command.ranges.quick-pick.json-file')
+            ? 'file'
+            : 'state'
         await context.workspaceState.update(
           LAST_RANGES_SAVE_LOCATION_STATE_KEY,
           save_location
@@ -231,7 +242,7 @@ export const set_ranges_command = (
             }
           } catch (error: any) {
             vscode.window.showErrorMessage(
-              `Failed to save ranges to file: ${error.message}`
+              t('command.ranges.error.save-file', { error: error.message })
             )
           }
         } else {
@@ -256,7 +267,7 @@ export const set_ranges_command = (
               }
             } catch (error: any) {
               vscode.window.showErrorMessage(
-                `Failed to clean up range from file: ${error.message}`
+                t('command.ranges.error.cleanup-file', { error: error.message })
               )
             }
           }

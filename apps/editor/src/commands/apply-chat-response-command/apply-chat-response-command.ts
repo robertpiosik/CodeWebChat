@@ -22,6 +22,7 @@ import { CHECKPOINTS_STATE_KEY } from '@/constants/state-keys'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { ApiManager } from '@/services/api-manager'
 import { parse_response } from './utils/clipboard-parser/clipboard-parser'
+import { t } from '@/i18n'
 
 let in_progress = false
 let placeholder_created_at_for_update: number | undefined
@@ -143,7 +144,7 @@ export const apply_chat_response_command = (params: {
         if (file_count > 0) {
           params.panel_provider.send_message({
             command: 'SHOW_PROGRESS',
-            title: 'Preparing response preview...',
+            title: t('command.apply-chat-response.progress.preparing-preview'),
             delay_visibility: file_count == 1
           })
         }
