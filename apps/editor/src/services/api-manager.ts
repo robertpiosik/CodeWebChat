@@ -136,10 +136,6 @@ export class ApiManager {
       return result
     } catch (error) {
       if (axios.isCancel(error)) {
-        Logger.info({
-          function_name: 'get',
-          message: 'API call cancelled by user'
-        })
         throw error
       } else {
         Logger.error({

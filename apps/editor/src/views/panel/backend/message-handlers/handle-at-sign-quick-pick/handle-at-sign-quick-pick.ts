@@ -123,7 +123,7 @@ const browse_all_files = async (
         description: dir_path == '.' ? '' : dir_path,
         full_path: normalized_path,
         absolute_path: p,
-        buttons: [FOLDER_BUTTON]
+        buttons: dir_path == '.' ? [] : [FOLDER_BUTTON]
       }
     })
 
@@ -245,7 +245,7 @@ const at_sign_quick_pick = async (params: {
           description: dir_path == '.' ? '' : dir_path,
           full_path: normalized_path,
           absolute_path: p,
-          buttons: [FOLDER_BUTTON]
+          buttons: dir_path == '.' ? [] : [FOLDER_BUTTON]
         }
       })
 
