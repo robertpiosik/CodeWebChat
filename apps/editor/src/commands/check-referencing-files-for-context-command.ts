@@ -31,17 +31,22 @@ export const check_referencing_files_for_context_command = (
 
             if (!locations) return []
 
-            const unique_paths = new Set<string>()
+            const file_map = new Map<string, vscode.Range>()
             locations.forEach((loc) => {
               const file_path = loc.uri.fsPath
               if (
                 workspace_provider.get_workspace_root_for_file(file_path) &&
                 !workspace_provider.is_ignored_by_patterns(file_path)
               ) {
-                unique_paths.add(file_path)
+                if (!file_map.has(file_path)) {
+                  file_map.set(file_path, loc.range)
+                }
               }
             })
-            return Array.from(unique_paths)
+            return Array.from(file_map.entries()).map(([file_path, range]) => ({
+              file_path,
+              range
+            }))
           }
         )
 
@@ -57,7 +62,9 @@ export const check_referencing_files_for_context_command = (
           tooltip: t('common.go-to-file')
         }
 
-        const quick_pick_items = matched_files.map((file_path) => {
+        const currently_checked = workspace_provider.get_checked_files()
+
+        const quick_pick_items = matched_files.map(({ file_path, range }) => {
           const workspace_root =
             workspace_provider.get_workspace_root_for_file(file_path)
           const relative_path = workspace_root
@@ -68,16 +75,19 @@ export const check_referencing_files_for_context_command = (
           return {
             label: path.basename(file_path),
             description: dir_name == '.' ? '' : dir_name,
-            file_path: file_path,
+            file_path,
+            range,
             buttons: [open_file_button]
           }
         })
 
         const quick_pick = vscode.window.createQuickPick<
-          vscode.QuickPickItem & { file_path: string }
+          vscode.QuickPickItem & { file_path: string; range: vscode.Range }
         >()
         quick_pick.items = quick_pick_items
-        quick_pick.selectedItems = quick_pick_items
+        quick_pick.selectedItems = quick_pick_items.filter((item) =>
+          currently_checked.includes(item.file_path)
+        )
         quick_pick.canSelectMany = true
         quick_pick.placeholder = t(
           'command.context.check-references.select-files'
@@ -94,7 +104,11 @@ export const check_referencing_files_for_context_command = (
         quick_pick.buttons = [close_button]
 
         const selected_items = await new Promise<
-          readonly (vscode.QuickPickItem & { file_path: string })[] | undefined
+          | readonly (vscode.QuickPickItem & {
+              file_path: string
+              range: vscode.Range
+            })[]
+          | undefined
         >((resolve) => {
           let is_accepted = false
 
@@ -125,7 +139,8 @@ export const check_referencing_files_for_context_command = (
                   e.item.file_path
                 )
                 await vscode.window.showTextDocument(doc, {
-                  preview: true
+                  preview: true,
+                  selection: e.item.range
                 })
               } catch (error) {
                 vscode.window.showErrorMessage(
@@ -145,11 +160,12 @@ export const check_referencing_files_for_context_command = (
         }
 
         const selected_paths = selected_items.map((item) => item.file_path)
-        const currently_checked = workspace_provider.get_checked_files()
 
         const selected_paths_set = new Set(selected_paths)
         const unselected_files_set = new Set(
-          matched_files.filter((file) => !selected_paths_set.has(file))
+          matched_files
+            .map((m) => m.file_path)
+            .filter((file_path) => !selected_paths_set.has(file_path))
         )
         const currently_checked_filtered = currently_checked.filter(
           (file) => !unselected_files_set.has(file)
