@@ -43,9 +43,45 @@ export const new_file_command = () => {
         }
       } catch {}
 
-      const file_name = await vscode.window.showInputBox({
-        prompt: t('command.files.new-file.prompt'),
-        placeHolder: ''
+      const input_box = vscode.window.createInputBox()
+      input_box.title = t('command.files.new-file.title')
+      input_box.prompt = t('command.files.new-file.prompt')
+      input_box.placeholder = ''
+
+      const close_button = {
+        iconPath: new vscode.ThemeIcon('close'),
+        tooltip: t('common.close')
+      }
+
+      input_box.buttons = [close_button]
+
+      const file_name = await new Promise<string | undefined>((resolve) => {
+        let is_resolved = false
+
+        const disposables: vscode.Disposable[] = []
+
+        disposables.push(
+          input_box.onDidTriggerButton((button) => {
+            if (button === close_button) {
+              resolve(undefined)
+              input_box.hide()
+            }
+          }),
+          input_box.onDidAccept(() => {
+            is_resolved = true
+            resolve(input_box.value.trim())
+            input_box.hide()
+          }),
+          input_box.onDidHide(() => {
+            if (!is_resolved) {
+              resolve(undefined)
+            }
+            disposables.forEach((d) => d.dispose())
+            input_box.dispose()
+          })
+        )
+
+        input_box.show()
       })
 
       if (!file_name) {

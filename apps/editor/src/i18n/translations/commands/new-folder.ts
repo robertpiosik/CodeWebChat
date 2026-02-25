@@ -1,4 +1,22 @@
 export const new_folder = {
+  'command.files.new-folder.title': {
+    en: 'New Folder',
+    pl: 'Nowy folder',
+    'zh-cn': '新建文件夹',
+    ja: '新規フォルダ',
+    'zh-tw': '建立資料夾',
+    de: 'Neuer Ordner',
+    es: 'Nueva carpeta',
+    fr: 'Nouveau dossier',
+    'pt-br': 'Nova pasta',
+    ru: 'Новая папка',
+    ko: '새 폴더',
+    it: 'Nuova cartella',
+    tr: 'Yeni Klasör',
+    cs: 'Nová složka',
+    hu: 'Új mappa',
+    bg: 'Нова папка'
+  },
   'command.files.new-folder.prompt': {
     en: 'Enter folder name',
     pl: 'Wprowadź nazwę folderu',
