@@ -175,7 +175,14 @@ const get_code_at_cursor_config = async (params: {
     }
 
     const quick_pick = vscode.window.createQuickPick()
+    quick_pick.buttons = [
+      {
+        iconPath: new vscode.ThemeIcon('close'),
+        tooltip: t('common.close')
+      }
+    ]
     quick_pick.items = create_items()
+    quick_pick.title = t('common.config.title')
     quick_pick.placeholder = t('command.code-at-cursor.config.placeholder')
     quick_pick.matchOnDescription = true
 
@@ -192,6 +199,13 @@ const get_code_at_cursor_config = async (params: {
 
     return new Promise<{ provider: any; config: any } | undefined>(
       (resolve) => {
+        quick_pick.onDidTriggerButton((button) => {
+          if (button.tooltip == t('common.close')) {
+            quick_pick.hide()
+            resolve(undefined)
+          }
+        })
+
         quick_pick.onDidAccept(async () => {
           const selected = quick_pick.selectedItems[0] as any
           quick_pick.hide()
@@ -300,181 +314,211 @@ const perform_code_at_cursor = async (params: {
     )
   }
 
-  const config_result = await get_code_at_cursor_config({
-    api_providers_manager,
-    show_quick_pick: params.show_quick_pick,
-    context: params.context,
-    config_id: params.config_id,
-    panel_provider: params.panel_provider
-  })
+  let force_show_quick_pick = params.show_quick_pick || false
+  let current_config_id = params.config_id
 
-  if (!config_result) {
-    return
-  }
-
-  const { provider, config: code_at_cursor_config } = config_result
-
-  if (!code_at_cursor_config.provider_name) {
-    vscode.window.showErrorMessage(
-      dictionary.error_message.API_PROVIDER_NOT_SPECIFIED_FOR_CODE_AT_CURSOR
-    )
-    Logger.warn({
-      function_name: 'perform_code_at_cursor',
-      message: 'API provider is not specified for Code Completions tool.'
+  while (true) {
+    const config_result = await get_code_at_cursor_config({
+      api_providers_manager,
+      show_quick_pick: force_show_quick_pick,
+      context: params.context,
+      config_id: current_config_id,
+      panel_provider: params.panel_provider
     })
-    return
-  } else if (!code_at_cursor_config.model) {
-    vscode.window.showErrorMessage(
-      dictionary.error_message.MODEL_NOT_SPECIFIED_FOR_CODE_AT_CURSOR
-    )
-    Logger.warn({
-      function_name: 'perform_code_at_cursor',
-      message: 'Model is not specified for Code Completions tool.'
-    })
-    return
-  }
 
-  let endpoint_url = ''
-  if (provider.type == 'built-in') {
-    const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]
-    if (!provider_info) {
+    if (!config_result) {
+      return
+    }
+
+    force_show_quick_pick = false
+    current_config_id = undefined
+
+    const { provider, config: code_at_cursor_config } = config_result
+
+    if (!code_at_cursor_config.provider_name) {
       vscode.window.showErrorMessage(
-        dictionary.error_message.BUILT_IN_PROVIDER_NOT_FOUND(provider.name)
+        dictionary.error_message.API_PROVIDER_NOT_SPECIFIED_FOR_CODE_AT_CURSOR
       )
       Logger.warn({
         function_name: 'perform_code_at_cursor',
-        message: `Built-in provider "${provider.name}" not found.`
+        message: 'API provider is not specified for Code Completions tool.'
       })
-      return
-    }
-    endpoint_url = provider_info.base_url
-  } else {
-    endpoint_url = provider.base_url
-  }
-
-  const editor = vscode.window.activeTextEditor
-  if (editor) {
-    await editor.document.save()
-
-    if (!editor.selection.isEmpty) {
-      vscode.window.showWarningMessage(
-        dictionary.warning_message.CODE_AT_CURSOR_NO_SELECTION
+      force_show_quick_pick = true
+      continue
+    } else if (!code_at_cursor_config.model) {
+      vscode.window.showErrorMessage(
+        dictionary.error_message.MODEL_NOT_SPECIFIED_FOR_CODE_AT_CURSOR
       )
-      return
-    }
-    const cancel_token_source = axios.CancelToken.source()
-    const document = editor.document
-    const position = editor.selection.active
-
-    const text_before_cursor = document.getText(
-      new vscode.Range(new vscode.Position(0, 0), position)
-    )
-    const text_after_cursor = document.getText(
-      new vscode.Range(position, document.positionAt(document.getText().length))
-    )
-
-    const files_collector = new FilesCollector({
-      workspace_provider: params.file_tree_provider,
-      open_editors_provider: params.open_editors_provider
-    })
-
-    const context_text = await files_collector.collect_files()
-
-    const payload = {
-      before: `<files>\n${context_text}<file path="${vscode.workspace.asRelativePath(
-        document.uri
-      )}">\n<![CDATA[\n${text_before_cursor}`,
-      after: `${text_after_cursor}\n]]>\n</file>\n</files>`
-    }
-
-    const content = `${payload.before}${
-      completion_instructions
-        ? `<missing_text>${completion_instructions}</missing_text>`
-        : '<missing_text>'
-    }${payload.after}\n${code_at_cursor_instructions}`
-
-    const messages = [
-      {
-        role: 'user',
-        content
-      }
-    ]
-
-    const body: { [key: string]: any } = {
-      messages,
-      model: code_at_cursor_config.model,
-      temperature: code_at_cursor_config.temperature
-    }
-
-    apply_reasoning_effort({
-      body,
-      provider,
-      reasoning_effort: code_at_cursor_config.reasoning_effort
-    })
-
-    const cursor_listener = vscode.window.onDidChangeTextEditorSelection(() => {
-      cancel_token_source.cancel(
-        t('command.code-at-cursor.cancel.cursor-moved')
-      )
-    })
-
-    try {
-      const completion_result = await vscode.window.withProgress(
-        {
-          location: vscode.ProgressLocation.Notification,
-          title: t('command.code-at-cursor.progress.title'),
-          cancellable: true
-        },
-        async (progress, token) => {
-          token.onCancellationRequested(() => {
-            cancel_token_source.cancel(t('command.code-at-cursor.cancel.user'))
-          })
-
-          progress.report({
-            message: t('common.progress.waiting-for-server')
-          })
-
-          return await make_api_request({
-            endpoint_url,
-            api_key: provider.api_key,
-            body,
-            cancellation_token: cancel_token_source.token,
-            on_chunk: () => {
-              progress.report({ message: t('common.progress.receiving') })
-            },
-            on_thinking_chunk: () => {
-              progress.report({ message: t('common.progress.thinking') })
-            }
-          })
-        }
-      )
-
-      if (completion_result) {
-        const match = completion_result.response.match(
-          /<replacement>([\s\S]*?)<\/replacement>/i
-        )
-        if (match && match[1]) {
-          let decoded_completion = he.decode(match[1].trim())
-          decoded_completion = decoded_completion
-            .replace(/<!\[CDATA\[/g, '')
-            .replace(/\]\]>/g, '')
-            .trim()
-
-          await show_ghost_text({
-            editor,
-            position,
-            ghost_text: decoded_completion
-          })
-        }
-      }
-    } catch (err: any) {
-      Logger.error({
+      Logger.warn({
         function_name: 'perform_code_at_cursor',
-        message: 'Completion error',
-        data: err
+        message: 'Model is not specified for Code Completions tool.'
       })
-    } finally {
-      cursor_listener.dispose()
+      force_show_quick_pick = true
+      continue
+    }
+
+    let endpoint_url = ''
+    if (provider.type == 'built-in') {
+      const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]
+      if (!provider_info) {
+        vscode.window.showErrorMessage(
+          dictionary.error_message.BUILT_IN_PROVIDER_NOT_FOUND(provider.name)
+        )
+        Logger.warn({
+          function_name: 'perform_code_at_cursor',
+          message: `Built-in provider "${provider.name}" not found.`
+        })
+        force_show_quick_pick = true
+        continue
+      }
+      endpoint_url = provider_info.base_url
+    } else {
+      endpoint_url = provider.base_url
+    }
+
+    const editor = vscode.window.activeTextEditor
+    if (editor) {
+      await editor.document.save()
+
+      if (!editor.selection.isEmpty) {
+        vscode.window.showWarningMessage(
+          dictionary.warning_message.CODE_AT_CURSOR_NO_SELECTION
+        )
+        return
+      }
+      const cancel_token_source = axios.CancelToken.source()
+      const document = editor.document
+      const position = editor.selection.active
+
+      const text_before_cursor = document.getText(
+        new vscode.Range(new vscode.Position(0, 0), position)
+      )
+      const text_after_cursor = document.getText(
+        new vscode.Range(
+          position,
+          document.positionAt(document.getText().length)
+        )
+      )
+
+      const files_collector = new FilesCollector({
+        workspace_provider: params.file_tree_provider,
+        open_editors_provider: params.open_editors_provider
+      })
+
+      const context_text = await files_collector.collect_files()
+
+      const payload = {
+        before: `<files>\n${context_text}<file path="${vscode.workspace.asRelativePath(
+          document.uri
+        )}">\n<![CDATA[\n${text_before_cursor}`,
+        after: `${text_after_cursor}\n]]>\n</file>\n</files>`
+      }
+
+      const content = `${payload.before}${
+        completion_instructions
+          ? `<missing_text>${completion_instructions}</missing_text>`
+          : '<missing_text>'
+      }${payload.after}\n${code_at_cursor_instructions}`
+
+      const messages = [
+        {
+          role: 'user',
+          content
+        }
+      ]
+
+      const body: { [key: string]: any } = {
+        messages,
+        model: code_at_cursor_config.model,
+        temperature: code_at_cursor_config.temperature
+      }
+
+      apply_reasoning_effort({
+        body,
+        provider,
+        reasoning_effort: code_at_cursor_config.reasoning_effort
+      })
+
+      const cursor_listener = vscode.window.onDidChangeTextEditorSelection(
+        () => {
+          cancel_token_source.cancel(
+            t('command.code-at-cursor.cancel.cursor-moved')
+          )
+        }
+      )
+
+      try {
+        const completion_result = await vscode.window.withProgress(
+          {
+            location: vscode.ProgressLocation.Notification,
+            title: t('command.code-at-cursor.progress.title'),
+            cancellable: true
+          },
+          async (progress, token) => {
+            token.onCancellationRequested(() => {
+              cancel_token_source.cancel(
+                t('command.code-at-cursor.cancel.user')
+              )
+            })
+
+            progress.report({
+              message: t('common.progress.waiting-for-server')
+            })
+
+            return await make_api_request({
+              endpoint_url,
+              api_key: provider.api_key,
+              body,
+              cancellation_token: cancel_token_source.token,
+              on_chunk: () => {
+                progress.report({ message: t('common.progress.receiving') })
+              },
+              on_thinking_chunk: () => {
+                progress.report({ message: t('common.progress.thinking') })
+              }
+            })
+          }
+        )
+
+        if (completion_result) {
+          const match = completion_result.response.match(
+            /<replacement>([\s\S]*?)<\/replacement>/i
+          )
+          if (match && match[1]) {
+            let decoded_completion = he.decode(match[1].trim())
+            decoded_completion = decoded_completion
+              .replace(/<!\[CDATA\[/g, '')
+              .replace(/\]\]>/g, '')
+              .trim()
+
+            await show_ghost_text({
+              editor,
+              position,
+              ghost_text: decoded_completion
+            })
+          }
+          break
+        } else {
+          force_show_quick_pick = true
+          continue
+        }
+      } catch (err: any) {
+        if (axios.isCancel(err)) {
+          break
+        }
+
+        Logger.error({
+          function_name: 'perform_code_at_cursor',
+          message: 'Completion error',
+          data: err
+        })
+        force_show_quick_pick = true
+        continue
+      } finally {
+        cursor_listener.dispose()
+      }
+    } else {
+      break
     }
   }
 }
