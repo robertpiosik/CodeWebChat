@@ -1,7 +1,6 @@
 import * as vscode from 'vscode'
 import axios from 'axios'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
-import { dictionary } from '@shared/constants/dictionary'
 import { make_api_request } from '@/utils/make-api-request'
 import { Logger } from '@shared/utils/logger'
 import { strip_wrapping_quotes } from './strip-wrapping-quotes'
@@ -13,7 +12,7 @@ export const generate_commit_message_with_api = async (params: {
   provider: any
   config: CommitMessageConfig
   message: string
-}): Promise<string | null> => {
+}): Promise<string> => {
   const messages = [
     {
       role: 'user',
@@ -66,23 +65,17 @@ export const generate_commit_message_with_api = async (params: {
 
         if (!response_result) {
           if (token.isCancellationRequested) {
-            return null
+            throw new axios.Cancel('Operation cancelled by user')
           }
-          vscode.window.showErrorMessage(
-            dictionary.error_message.FAILED_TO_GENERATE_COMMIT_MESSAGE
-          )
-          return null
-        } else {
-          let commit_message = response_result.response
-          commit_message = strip_wrapping_quotes(commit_message)
-          // Sanitize to prevent shell syntax errors
-          commit_message = commit_message.replace(/[<>`$()]/g, '')
-          return commit_message
+          throw new Error('API request failed to return a response')
         }
+
+        let commit_message = response_result.response
+        commit_message = strip_wrapping_quotes(commit_message)
+        // Sanitize to prevent shell syntax errors
+        commit_message = commit_message.replace(/[<>`$()]/g, '')
+        return commit_message
       } catch (error) {
-        if (axios.isCancel(error)) {
-          return null
-        }
         Logger.error({
           function_name: 'generate_commit_message_with_api',
           message: 'Error during API request',

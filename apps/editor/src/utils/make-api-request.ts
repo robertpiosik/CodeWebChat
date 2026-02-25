@@ -371,11 +371,6 @@ export const make_api_request = async (params: {
     }
 
     if (axios.isCancel(error)) {
-      Logger.info({
-        function_name: 'make_api_request',
-        message: 'Request canceled',
-        data: error.message
-      })
       throw error
     }
 

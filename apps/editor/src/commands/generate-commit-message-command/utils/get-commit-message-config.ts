@@ -20,7 +20,8 @@ export interface CommitMessageConfig {
 
 export const get_commit_message_config = async (
   context: vscode.ExtensionContext,
-  show_back_button: boolean = true
+  show_back_button: boolean = true,
+  force_quick_pick: boolean = false
 ): Promise<
   | {
       config: CommitMessageConfig
@@ -32,7 +33,9 @@ export const get_commit_message_config = async (
 > => {
   const api_providers_manager = new ModelProvidersManager(context)
   let commit_message_config: CommitMessageConfig | null | undefined | 'back' =
-    await api_providers_manager.get_default_commit_messages_config()
+    force_quick_pick
+      ? undefined
+      : await api_providers_manager.get_default_commit_messages_config()
 
   if (!commit_message_config) {
     const configs =
@@ -46,9 +49,9 @@ export const get_commit_message_config = async (
       return null
     }
 
-    if (configs.length == 1) {
+    if (configs.length == 1 && !force_quick_pick) {
       commit_message_config = configs[0]
-    } else if (configs.length > 1) {
+    } else if (configs.length >= 1) {
       const create_items = () => {
         const recent_ids =
           context.workspaceState.get<string[]>(

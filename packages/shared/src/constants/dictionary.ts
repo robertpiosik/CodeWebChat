@@ -280,7 +280,6 @@ export const dictionary = {
       'Failed to get Git branches. Make sure you are in a Git repository.',
     API_KEY_MISSING_FOR_PROVIDER:
       'API key is missing for the selected provider. Please add it in the Settings tab.',
-    FAILED_TO_GENERATE_COMMIT_MESSAGE: 'Failed to generate commit message.',
     CHECKPOINTS_ONLY_IN_WORKSPACE:
       'Checkpoints can only be used in a workspace.',
     GIT_EXTENSION_NOT_FOUND: 'Git extension not found.',
@@ -295,7 +294,7 @@ export const dictionary = {
     API_PAYLOAD_TOO_LARGE: 'API request failed. The context is too large.',
     API_BAD_REQUEST: 'API request failed. Bad request.',
     API_ENDPOINT_UNAVAILABLE:
-      'Endpoint is currently unable to handle the request. Wait a few moments and retry or use another API provider.',
+      'Endpoint is currently unable to handle the request.',
     API_INVALID_KEY: 'API request failed. Invalid API key.',
     API_REQUEST_FAILED: 'API request failed. Check console for details.',
     FAILED_TO_CREATE_ITEM: (item_id: string, error: any) =>
