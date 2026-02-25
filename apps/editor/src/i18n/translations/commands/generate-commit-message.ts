@@ -125,5 +125,23 @@ export const generate_commit_message = {
     cs: 'Vyberte soubory k commitnutí',
     hu: 'Válassza ki a commitolandó fájlokat',
     bg: 'Изберете файлове за commit'
+  },
+  'command.commit-message.show-diff': {
+    en: 'Show Diff',
+    pl: 'Pokaż zmiany',
+    'zh-cn': '显示差异',
+    ja: '変更を表示',
+    'zh-tw': '顯示差異',
+    de: 'Änderungen anzeigen',
+    es: 'Mostrar cambios',
+    fr: 'Afficher les modifications',
+    'pt-br': 'Mostrar alterações',
+    ru: 'Показать изменения',
+    ko: '차이 보기',
+    it: 'Mostra differenze',
+    tr: 'Değişiklikleri Göster',
+    cs: 'Zobrazit změny',
+    hu: 'Eltérések megjelenítése',
+    bg: 'Покажи разликите'
   }
 } as const

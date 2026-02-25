@@ -185,6 +185,12 @@ export const prepare_staged_changes = async (
             fsPath: change.uri.fsPath,
             buttons: [
               {
+                iconPath: new vscode.ThemeIcon(
+                  'git-pull-request-go-to-changes'
+                ),
+                tooltip: t('command.commit-message.show-diff')
+              },
+              {
                 iconPath: new vscode.ThemeIcon('go-to-file'),
                 tooltip: t('common.go-to-file')
               }
@@ -215,10 +221,15 @@ export const prepare_staged_changes = async (
           }
         })
 
-        quick_pick.onDidTriggerItemButton((event) => {
+        quick_pick.onDidTriggerItemButton(async (event) => {
           if (event.button.tooltip == t('common.go-to-file')) {
             const uri = vscode.Uri.file(event.item.fsPath)
             vscode.window.showTextDocument(uri, { preview: true })
+          } else if (
+            event.button.tooltip == t('command.commit-message.show-diff')
+          ) {
+            const uri = vscode.Uri.file(event.item.fsPath)
+            await vscode.commands.executeCommand('git.openChange', uri)
           }
         })
 
