@@ -3,7 +3,6 @@ import axios from 'axios'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { dictionary } from '@shared/constants/dictionary'
 import { make_api_request } from '@/utils/make-api-request'
-import { display_token_count } from '@/utils/display-token-count'
 import { Logger } from '@shared/utils/logger'
 import { strip_wrapping_quotes } from './strip-wrapping-quotes'
 import { CommitMessageConfig } from './get-commit-message-config'
@@ -48,9 +47,7 @@ export const generate_commit_message_with_api = async (params: {
       })
 
       progress.report({
-        message: t('common.progress.sent', {
-          tokens: display_token_count(Math.floor(params.message.length / 4))
-        })
+        message: t('common.progress.waiting-for-server')
       })
 
       try {

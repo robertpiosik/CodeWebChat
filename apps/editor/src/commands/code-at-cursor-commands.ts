@@ -15,7 +15,7 @@ import { ToolConfig } from '@/services/model-providers-manager'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { apply_reasoning_effort } from '../utils/apply-reasoning-effort'
-import { display_token_count } from '../utils/display-token-count'
+import { t } from '@/i18n'
 
 const show_ghost_text = async (params: {
   editor: vscode.TextEditor
@@ -155,7 +155,7 @@ const get_code_at_cursor_config = async (params: {
 
       if (recent_configs.length > 0) {
         items.push({
-          label: 'recently used',
+          label: t('common.separator.recently-used'),
           kind: vscode.QuickPickItemKind.Separator
         })
         items.push(...recent_configs.map(map_config_to_item))
@@ -164,7 +164,7 @@ const get_code_at_cursor_config = async (params: {
       if (other_configs.length > 0) {
         if (recent_configs.length > 0) {
           items.push({
-            label: 'other configurations',
+            label: t('common.config.other'),
             kind: vscode.QuickPickItemKind.Separator
           })
         }
@@ -176,7 +176,7 @@ const get_code_at_cursor_config = async (params: {
 
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = create_items()
-    quick_pick.placeholder = 'Select code at cursor configuration'
+    quick_pick.placeholder = t('command.code-at-cursor.config.placeholder')
     quick_pick.matchOnDescription = true
 
     const items = quick_pick.items as (vscode.QuickPickItem & { id: string })[]
@@ -287,8 +287,8 @@ const perform_code_at_cursor = async (params: {
         'last-completion-instructions'
       ) || ''
     completion_instructions = await vscode.window.showInputBox({
-      placeHolder: 'Enter completion instructions',
-      prompt: 'E.g. "Include explanatory comments".',
+      placeHolder: t('command.code-at-cursor.instructions.placeholder'),
+      prompt: t('command.code-at-cursor.instructions.prompt'),
       value: last_value
     })
 
@@ -413,25 +413,25 @@ const perform_code_at_cursor = async (params: {
     })
 
     const cursor_listener = vscode.window.onDidChangeTextEditorSelection(() => {
-      cancel_token_source.cancel('User moved the cursor, cancelling request.')
+      cancel_token_source.cancel(
+        t('command.code-at-cursor.cancel.cursor-moved')
+      )
     })
 
     try {
       const completion_result = await vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: 'Requested code at cursor',
+          title: t('command.code-at-cursor.progress.title'),
           cancellable: true
         },
         async (progress, token) => {
           token.onCancellationRequested(() => {
-            cancel_token_source.cancel('User cancelled the operation')
+            cancel_token_source.cancel(t('command.code-at-cursor.cancel.user'))
           })
 
           progress.report({
-            message: `sent ${display_token_count(
-              Math.floor(content.length / 4)
-            )} tokens...`
+            message: t('common.progress.waiting-for-server')
           })
 
           return await make_api_request({
@@ -440,10 +440,10 @@ const perform_code_at_cursor = async (params: {
             body,
             cancellation_token: cancel_token_source.token,
             on_chunk: () => {
-              progress.report({ message: 'receiving...' })
+              progress.report({ message: t('common.progress.receiving') })
             },
             on_thinking_chunk: () => {
-              progress.report({ message: 'thinking...' })
+              progress.report({ message: t('common.progress.thinking') })
             }
           })
         }
