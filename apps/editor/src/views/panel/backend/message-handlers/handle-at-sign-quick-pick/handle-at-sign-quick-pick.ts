@@ -5,11 +5,75 @@ import * as path from 'path'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { natural_sort } from '@/utils/natural-sort'
 
-type QuickPickItem = {
+type QuickPickItem = vscode.QuickPickItem & {
   label: string
   description: string
   full_path: string
   absolute_path: string
+  is_folder?: boolean
+}
+
+const FOLDER_BUTTON: vscode.QuickInputButton = {
+  iconPath: new vscode.ThemeIcon('folder'),
+  tooltip: 'Reference parent folder'
+}
+
+const select_parent_folder = async (
+  workspace_provider: WorkspaceProvider,
+  file_path: string,
+  format_path: (p: string) => string
+): Promise<QuickPickItem | 'back' | undefined> => {
+  const workspace_root =
+    workspace_provider.get_workspace_root_for_file(file_path)
+  if (!workspace_root) return undefined
+
+  const folders: QuickPickItem[] = []
+  let current_dir = path.dirname(file_path)
+
+  while (
+    current_dir.startsWith(workspace_root) &&
+    current_dir !== workspace_root
+  ) {
+    const normalized_path = format_path(current_dir)
+
+    folders.push({
+      label: normalized_path,
+      description: '',
+      full_path: normalized_path,
+      absolute_path: current_dir,
+      is_folder: true
+    })
+
+    current_dir = path.dirname(current_dir)
+  }
+
+  if (folders.length == 0) {
+    vscode.window.showInformationMessage('No parent folders found.')
+    return undefined
+  }
+
+  const quick_pick = vscode.window.createQuickPick<QuickPickItem>()
+  quick_pick.items = folders
+  quick_pick.placeholder = 'Reference a folder in the prompt field'
+  quick_pick.title = 'Reference Parent Folders'
+  quick_pick.buttons = [vscode.QuickInputButtons.Back]
+  quick_pick.matchOnDescription = true
+
+  return new Promise<QuickPickItem | 'back' | undefined>((resolve) => {
+    quick_pick.onDidTriggerButton((button) => {
+      if (button === vscode.QuickInputButtons.Back) resolve('back')
+      quick_pick.hide()
+    })
+    quick_pick.onDidAccept(() => {
+      resolve(quick_pick.selectedItems[0])
+      quick_pick.hide()
+    })
+    quick_pick.onDidHide(() => {
+      resolve(undefined)
+      quick_pick.dispose()
+    })
+    quick_pick.show()
+  })
 }
 
 const add_to_context_if_needed = async (
@@ -58,7 +122,8 @@ const browse_all_files = async (
         label: filename,
         description: dir_path == '.' ? '' : dir_path,
         full_path: normalized_path,
-        absolute_path: p
+        absolute_path: p,
+        buttons: [FOLDER_BUTTON]
       }
     })
 
@@ -75,6 +140,8 @@ const browse_all_files = async (
   }
 
   return new Promise<QuickPickItem | 'back' | undefined>((resolve) => {
+    let is_navigating = false
+
     quick_pick.onDidTriggerButton((button) => {
       if (button === vscode.QuickInputButtons.Back) {
         resolve('back')
@@ -82,13 +149,37 @@ const browse_all_files = async (
       quick_pick.hide()
     })
 
+    quick_pick.onDidTriggerItemButton(async (e) => {
+      if (e.button === FOLDER_BUTTON) {
+        is_navigating = true
+        quick_pick.hide()
+        const selected = await select_parent_folder(
+          workspace_provider,
+          e.item.absolute_path,
+          format_path
+        )
+        if (selected && selected !== 'back') {
+          resolve(selected)
+          quick_pick.dispose()
+        } else if (selected === 'back') {
+          is_navigating = false
+          quick_pick.show()
+        } else {
+          resolve('back')
+          quick_pick.dispose()
+        }
+      }
+    })
+
     quick_pick.onDidAccept(() => {
       resolve(quick_pick.selectedItems[0])
       quick_pick.hide()
     })
     quick_pick.onDidHide(() => {
-      resolve('back')
-      quick_pick.dispose()
+      if (!is_navigating) {
+        resolve('back')
+        quick_pick.dispose()
+      }
     })
   })
 }
@@ -122,10 +213,12 @@ const at_sign_quick_pick = async (params: {
       false
     )
     if (browsed_item && browsed_item != 'back') {
-      await add_to_context_if_needed(
-        params.workspace_provider,
-        browsed_item.absolute_path
-      )
+      if (!browsed_item.is_folder) {
+        await add_to_context_if_needed(
+          params.workspace_provider,
+          browsed_item.absolute_path
+        )
+      }
       return `\`${browsed_item.full_path}\``
     }
     return
@@ -151,7 +244,8 @@ const at_sign_quick_pick = async (params: {
           label: filename,
           description: dir_path == '.' ? '' : dir_path,
           full_path: normalized_path,
-          absolute_path: p
+          absolute_path: p,
+          buttons: [FOLDER_BUTTON]
         }
       })
 
@@ -187,11 +281,35 @@ const at_sign_quick_pick = async (params: {
     const choice = await new Promise<QuickPickItem | undefined>((resolve) => {
       let is_accepted = false
       let is_browse_visible = true
+      let is_navigating = false
       const disposables: vscode.Disposable[] = []
 
       disposables.push(
         quick_pick.onDidTriggerButton((_button) => {
           quick_pick.hide()
+        }),
+        quick_pick.onDidTriggerItemButton(async (e) => {
+          if (e.button === FOLDER_BUTTON) {
+            is_navigating = true
+            quick_pick.hide()
+            const selected = await select_parent_folder(
+              params.workspace_provider,
+              e.item.absolute_path,
+              format_path
+            )
+            if (selected && selected !== 'back') {
+              is_accepted = true
+              resolve(selected)
+              quick_pick.dispose()
+            } else if (selected === 'back') {
+              is_navigating = false
+              quick_pick.show()
+            } else {
+              resolve(undefined)
+              disposables.forEach((d) => d.dispose())
+              quick_pick.dispose()
+            }
+          }
         }),
         quick_pick.onDidChangeValue((value) => {
           if (value && is_browse_visible) {
@@ -209,11 +327,13 @@ const at_sign_quick_pick = async (params: {
           quick_pick.hide()
         }),
         quick_pick.onDidHide(() => {
-          if (!is_accepted) {
+          if (!is_accepted && !is_navigating) {
             resolve(undefined)
           }
-          disposables.forEach((d) => d.dispose())
-          quick_pick.dispose()
+          if (!is_navigating) {
+            disposables.forEach((d) => d.dispose())
+            quick_pick.dispose()
+          }
         })
       )
       quick_pick.show()
@@ -251,6 +371,12 @@ const at_sign_quick_pick = async (params: {
   }
 
   if (selected_path_item) {
+    if (!selected_path_item.is_folder) {
+      await add_to_context_if_needed(
+        params.workspace_provider,
+        selected_path_item.absolute_path
+      )
+    }
     return `\`${selected_path_item.full_path}\``
   }
   return
