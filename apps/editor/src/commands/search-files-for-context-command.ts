@@ -129,6 +129,8 @@ export const search_files_for_context_commands = (
           tooltip: t('common.go-to-file')
         }
 
+        const currently_checked = workspace_provider.get_checked_files()
+
         const quick_pick_items = matched_files.map((file_path) => {
           const workspace_root =
             workspace_provider.get_workspace_root_for_file(file_path)
@@ -149,7 +151,9 @@ export const search_files_for_context_commands = (
           vscode.QuickPickItem & { file_path: string }
         >()
         quick_pick.items = quick_pick_items
-        quick_pick.selectedItems = quick_pick_items
+        quick_pick.selectedItems = quick_pick_items.filter((item) =>
+          currently_checked.includes(item.file_path)
+        )
         quick_pick.canSelectMany = true
         quick_pick.matchOnDescription = true
         quick_pick.placeholder = t('command.search.select-files')
@@ -193,8 +197,21 @@ export const search_files_for_context_commands = (
                 const doc = await vscode.workspace.openTextDocument(
                   e.item.file_path
                 )
+
+                const text = doc.getText()
+                const regex = create_search_regex(search_term)
+                const match = regex.exec(text)
+
+                let selection: vscode.Range | undefined
+                if (match) {
+                  const start_pos = doc.positionAt(match.index)
+                  const end_pos = doc.positionAt(match.index + match[0].length)
+                  selection = new vscode.Range(start_pos, end_pos)
+                }
+
                 await vscode.window.showTextDocument(doc, {
-                  preview: true
+                  preview: true,
+                  selection
                 })
               } catch (error) {
                 vscode.window.showErrorMessage(
@@ -220,7 +237,6 @@ export const search_files_for_context_commands = (
         const selected_paths = (
           selected_items as (vscode.QuickPickItem & { file_path: string })[]
         ).map((item) => item.file_path)
-        const currently_checked = workspace_provider.get_checked_files()
 
         let files_outside_search_folder: string[] = []
         let files_inside_search_folder: string[] = []
@@ -318,9 +334,14 @@ export const search_files_for_context_commands = (
         })
 
         await workspace_provider.set_checked_files(paths_to_apply)
+
+        const newly_selected_count = selected_paths.filter(
+          (p) => !currently_checked.includes(p)
+        ).length
+
         vscode.window.showInformationMessage(
-          dictionary.information_message.SELECTED_FILES(
-            paths_to_apply.length - files_outside_search_folder.length
+          dictionary.information_message.ADDED_FILES_TO_CONTEXT(
+            newly_selected_count
           )
         )
         break
@@ -357,26 +378,7 @@ const search_files_by_keywords = async (params: {
 }): Promise<string[]> => {
   const matched_files: string[] = []
 
-  let actual_term = params.search_term
-  let match_whole_word = false
-
-  if (
-    actual_term.length >= 2 &&
-    actual_term.startsWith('"') &&
-    actual_term.endsWith('"')
-  ) {
-    match_whole_word = true
-    actual_term = actual_term.slice(1, -1)
-  }
-
-  const escaped_term = actual_term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  let pattern = escaped_term.replace(/\s+/g, '\\s+')
-
-  if (match_whole_word) {
-    pattern = `\\b${pattern}\\b`
-  }
-
-  const regex = new RegExp(pattern, 'mi')
+  const regex = create_search_regex(params.search_term)
 
   for (const file_path of params.files) {
     try {
@@ -407,4 +409,27 @@ const search_files_by_keywords = async (params: {
   }
 
   return matched_files
+}
+
+const create_search_regex = (search_term: string): RegExp => {
+  let actual_term = search_term
+  let match_whole_word = false
+
+  if (
+    actual_term.length >= 2 &&
+    actual_term.startsWith('"') &&
+    actual_term.endsWith('"')
+  ) {
+    match_whole_word = true
+    actual_term = actual_term.slice(1, -1)
+  }
+
+  const escaped_term = actual_term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  let pattern = escaped_term.replace(/\s+/g, '\\s+')
+
+  if (match_whole_word) {
+    pattern = `\\b${pattern}\\b`
+  }
+
+  return new RegExp(pattern, 'mi')
 }
