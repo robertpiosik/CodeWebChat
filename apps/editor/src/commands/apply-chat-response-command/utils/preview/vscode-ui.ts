@@ -9,14 +9,16 @@ export let response_preview_promise_resolve:
 export const close_preview_diff_editors = async (
   prepared_files: PreparedFile[]
 ): Promise<void> => {
-  const temp_file_paths = new Set(prepared_files.map((f) => f.temp_file_path))
+  const temp_uris = new Set(
+    prepared_files.map((f) => vscode.Uri.file(f.temp_file_path).toString())
+  )
   const promises: Thenable<boolean>[] = []
 
   for (const tabGroup of vscode.window.tabGroups.all) {
     for (const tab of tabGroup.tabs) {
       if (
         tab.input instanceof vscode.TabInputTextDiff &&
-        temp_file_paths.has(tab.input.original.fsPath)
+        temp_uris.has(tab.input.original.toString())
       ) {
         promises.push(vscode.window.tabGroups.close(tab, true))
       }
