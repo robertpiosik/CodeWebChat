@@ -67,6 +67,9 @@ export const handle_unstaged_files_source = async (
     const workspace_roots = workspace_provider.get_workspace_roots()
 
     while (true) {
+      const currently_checked = workspace_provider.get_checked_files()
+      const currently_checked_set = new Set(currently_checked)
+
       const quick_pick_items = await Promise.all(
         existing_unstaged_files.map(async (file_path) => {
           const token_count =
@@ -82,9 +85,23 @@ export const handle_unstaged_files_source = async (
 
           return {
             label: path.basename(file_path),
-            description: `${formatted_token_count} · ${display_dir}`.trim(),
-            picked: true,
-            file_path
+            description: display_dir
+              ? `${formatted_token_count} · ${display_dir}`
+              : formatted_token_count,
+            picked: currently_checked_set.has(file_path),
+            file_path,
+            buttons: [
+              {
+                iconPath: new vscode.ThemeIcon(
+                  'git-pull-request-go-to-changes'
+                ),
+                tooltip: t('command.commit-message.show-diff')
+              },
+              {
+                iconPath: new vscode.ThemeIcon('go-to-file'),
+                tooltip: t('common.go-to-file')
+              }
+            ]
           }
         })
       )
@@ -96,7 +113,8 @@ export const handle_unstaged_files_source = async (
       quick_pick.placeholder = t('command.apply-context.unstaged.include')
       quick_pick.canSelectMany = true
       quick_pick.items = quick_pick_items
-      quick_pick.selectedItems = quick_pick_items
+      quick_pick.ignoreFocusOut = true
+      quick_pick.selectedItems = quick_pick_items.filter((item) => item.picked)
       quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
       const selected_items = await new Promise<
@@ -112,6 +130,18 @@ export const handle_unstaged_files_source = async (
             did_trigger_back = true
             resolve('back')
             quick_pick.hide()
+          }
+        })
+
+        quick_pick.onDidTriggerItemButton(async (e) => {
+          if (e.button.tooltip == t('common.go-to-file')) {
+            const uri = vscode.Uri.file(e.item.file_path)
+            vscode.window.showTextDocument(uri, { preview: true })
+          } else if (
+            e.button.tooltip == t('command.commit-message.show-diff')
+          ) {
+            const uri = vscode.Uri.file(e.item.file_path)
+            await vscode.commands.executeCommand('git.openChange', uri)
           }
         })
 
@@ -140,7 +170,6 @@ export const handle_unstaged_files_source = async (
       }
 
       const selected_paths = selected_items.map((item) => item.file_path)
-      const currently_checked = workspace_provider.get_checked_files()
       let paths_to_apply = selected_paths
       let should_continue = false
 
@@ -239,8 +268,15 @@ export const handle_unstaged_files_source = async (
       })
 
       await workspace_provider.set_checked_files(paths_to_apply)
+
+      const newly_selected_count = selected_paths.filter(
+        (p) => !currently_checked.includes(p)
+      ).length
+
       vscode.window.showInformationMessage(
-        dictionary.information_message.SELECTED_FILES(paths_to_apply.length)
+        dictionary.information_message.ADDED_FILES_TO_CONTEXT(
+          newly_selected_count
+        )
       )
       return
     }

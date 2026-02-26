@@ -91,6 +91,8 @@ export const dictionary = {
       'No actionable unstaged files found (e.g. only deletions).',
     ADDED_FILES_TO_CONTEXT: (count: number) =>
       `Added ${count} file${count == 1 ? '' : 's'} to context.`,
+    SELECTED_FILES: (count: number) =>
+      `Selected ${count} file${count == 1 ? '' : 's'}.`,
     DELETED_CONTEXT_FROM_WORKSPACE_STATE: 'Deleted context.',
     CONTEXT_SAVED_SUCCESSFULLY: 'Saved successfully.',
     CONTEXT_APPLIED_SUCCESSFULLY: 'Context applied successfully.',
