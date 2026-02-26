@@ -11,6 +11,7 @@ import {
 } from './utils/clipboard-parser'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
+import { display_token_count } from '../../utils/display-token-count'
 import { Logger } from '@shared/utils/logger'
 import { apply_git_patch } from './handlers/diff-handler'
 import { apply_file_relocations } from './utils/file-operations'
@@ -110,14 +111,8 @@ export const process_chat_response = async (
       relevant_files_item.file_paths.map((p) => p.replace(/\\/g, '/'))
     )
 
-    const quick_pick_items: {
-      label: string
-      picked: boolean
-      description?: string
-    }[] = relevant_files_item.file_paths.map((path) => ({
-      label: path,
-      picked: true
-    }))
+    const workspace_roots = workspace_provider.get_workspace_roots()
+    const all_paths_to_process = new Set<string>(relevant_files_item.file_paths)
 
     for (const file_path of current_checked_files) {
       const workspace_root =
@@ -126,20 +121,55 @@ export const process_chat_response = async (
         const relative_path = path
           .relative(workspace_root, file_path)
           .replace(/\\/g, '/')
-        if (!relevant_paths_normalized.has(relative_path)) {
-          if (!quick_pick_items.some((item) => item.label == relative_path)) {
-            quick_pick_items.push({
-              label: relative_path,
-              picked: false
-            })
-          }
-        }
+        all_paths_to_process.add(relative_path)
       }
     }
 
-    quick_pick_items.sort((a, b) => natural_sort(a.label, b.label))
+    const open_file_button = {
+      iconPath: new vscode.ThemeIcon('go-to-file'),
+      tooltip: t('common.go-to-file')
+    }
 
-    const quick_pick = vscode.window.createQuickPick()
+    const quick_pick_items = await Promise.all(
+      Array.from(all_paths_to_process).map(async (rel_path) => {
+        let absolute_path: string | undefined
+        for (const root of workspace_roots) {
+          const potential = path.join(root, rel_path)
+          if (fs.existsSync(potential)) {
+            absolute_path = potential
+            break
+          }
+        }
+
+        let token_info = ''
+        if (absolute_path) {
+          const count =
+            await workspace_provider.calculate_file_tokens(absolute_path)
+          token_info = display_token_count(count.total)
+        }
+
+        const dir_name = path.dirname(rel_path)
+        const display_dir = dir_name === '.' ? '' : dir_name
+
+        return {
+          label: path.basename(rel_path),
+          description: display_dir
+            ? `${token_info} · ${display_dir}`
+            : token_info,
+          picked: relevant_paths_normalized.has(rel_path),
+          file_path: absolute_path,
+          relative_path: rel_path,
+          buttons: [open_file_button]
+        }
+      })
+    )
+
+    quick_pick_items.sort((a, b) =>
+      natural_sort(a.relative_path, b.relative_path)
+    )
+
+    const quick_pick =
+      vscode.window.createQuickPick<(typeof quick_pick_items)[0]>()
     quick_pick.items = quick_pick_items
     quick_pick.selectedItems = quick_pick_items.filter((i) => i.picked)
     quick_pick.canSelectMany = true
@@ -147,26 +177,46 @@ export const process_chat_response = async (
     quick_pick.placeholder = t(
       'command.apply-chat-response.context-pruning.placeholder'
     )
-    quick_pick.buttons = [
-      { iconPath: new vscode.ThemeIcon('close'), tooltip: t('common.close') }
-    ]
+    quick_pick.ignoreFocusOut = true
+
+    const close_button = {
+      iconPath: new vscode.ThemeIcon('close'),
+      tooltip: t('common.close')
+    }
+    quick_pick.buttons = [close_button]
 
     const selected_items = await new Promise<
-      readonly vscode.QuickPickItem[] | undefined
+      readonly (typeof quick_pick_items)[0][] | undefined
     >((resolve) => {
       let is_accepted = false
       const disposables: vscode.Disposable[] = []
 
       disposables.push(
         quick_pick.onDidTriggerButton((button) => {
-          if (button.tooltip == 'Close') {
+          if (button === close_button) {
             quick_pick.hide()
             resolve(undefined)
           }
         }),
+        quick_pick.onDidTriggerItemButton(async (e) => {
+          if (e.button === open_file_button && e.item.file_path) {
+            try {
+              const doc = await vscode.workspace.openTextDocument(
+                e.item.file_path
+              )
+              await vscode.window.showTextDocument(doc, { preview: true })
+            } catch (error) {
+              vscode.window.showErrorMessage(
+                t('command.context.check-references.error-opening', {
+                  error: String(error)
+                })
+              )
+            }
+          }
+        }),
         quick_pick.onDidAccept(() => {
           is_accepted = true
-          resolve(quick_pick.selectedItems)
+          resolve([...quick_pick.selectedItems])
           quick_pick.hide()
         }),
         quick_pick.onDidHide(() => {
@@ -181,16 +231,11 @@ export const process_chat_response = async (
     })
 
     if (selected_items && selected_items.length > 0) {
-      const workspace_roots = workspace_provider.get_workspace_roots()
       const files_to_check: string[] = []
 
       for (const selection of selected_items) {
-        for (const root of workspace_roots) {
-          const potential_path = path.join(root, selection.label)
-          if (fs.existsSync(potential_path)) {
-            files_to_check.push(potential_path)
-            break
-          }
+        if (selection.file_path) {
+          files_to_check.push(selection.file_path)
         }
       }
 

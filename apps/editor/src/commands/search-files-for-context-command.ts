@@ -7,6 +7,7 @@ import {
   LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY,
   LAST_SEARCH_FILES_FOR_CONTEXT_QUERY_STATE_KEY
 } from '../constants/state-keys'
+import { display_token_count } from '../utils/display-token-count'
 import { dictionary } from '@shared/constants/dictionary'
 import { t } from '../i18n'
 
@@ -131,21 +132,31 @@ export const search_files_for_context_commands = (
 
         const currently_checked = workspace_provider.get_checked_files()
 
-        const quick_pick_items = matched_files.map((file_path) => {
-          const workspace_root =
-            workspace_provider.get_workspace_root_for_file(file_path)
-          const relative_path = workspace_root
-            ? path.relative(workspace_root, file_path)
-            : file_path
+        const quick_pick_items = await Promise.all(
+          matched_files.map(async (file_path) => {
+            const workspace_root =
+              workspace_provider.get_workspace_root_for_file(file_path)
+            const relative_path = workspace_root
+              ? path.relative(workspace_root, file_path)
+              : file_path
 
-          const dir_name = path.dirname(relative_path)
-          return {
-            label: path.basename(file_path),
-            description: dir_name == '.' ? '' : dir_name,
-            file_path,
-            buttons: [open_file_button]
-          }
-        })
+            const dir_name = path.dirname(relative_path)
+            const display_dir = dir_name == '.' ? '' : dir_name
+
+            const token_count =
+              await workspace_provider.calculate_file_tokens(file_path)
+            const formatted_token_count = display_token_count(token_count.total)
+
+            return {
+              label: path.basename(file_path),
+              description: display_dir
+                ? `${formatted_token_count} · ${display_dir}`
+                : formatted_token_count,
+              file_path,
+              buttons: [open_file_button]
+            }
+          })
+        )
 
         const quick_pick = vscode.window.createQuickPick<
           vscode.QuickPickItem & { file_path: string }
