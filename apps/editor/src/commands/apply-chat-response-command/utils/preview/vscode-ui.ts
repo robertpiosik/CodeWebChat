@@ -32,7 +32,7 @@ export const show_diff_with_actions = async (
   const left_doc_uri = vscode.Uri.file(prepared_file.temp_file_path)
   const right_doc_uri = vscode.Uri.file(prepared_file.sanitized_path)
 
-  const title = path.basename(prepared_file.previewable_file.file_path)
+  const title = `${path.basename(prepared_file.previewable_file.file_path)} (Working Tree)`
 
   if (prepared_file.previewable_file.file_state != 'deleted') {
     await vscode.commands.executeCommand(
