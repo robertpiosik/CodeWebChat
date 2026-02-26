@@ -314,7 +314,8 @@ export const openrouter: Chatbot = {
     observe_for_responses({
       chatbot_name: 'OpenRouter',
       is_generating: () => !!document.querySelector('.animate-spin'),
-      footer_selector: 'div[data-message-id] > div > div:last-child > div',
+      footer_selector:
+        'div[data-testid="assistant-message"] > div:last-child > div',
       add_buttons
     })
   }
