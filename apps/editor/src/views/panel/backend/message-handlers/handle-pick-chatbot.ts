@@ -11,17 +11,10 @@ export const handle_pick_chatbot = async (
 
   const items: vscode.QuickPickItem[] = chatbots.map(([chatbot, { url }]) => ({
     label: chatbot,
-    description: chatbot == 'Open WebUI' ? 'localhost' : url,
-    buttons: [
-      ...(chatbot != 'Open WebUI'
-        ? [
-            {
-              iconPath: new vscode.ThemeIcon('link-external'),
-              tooltip: 'Open in Browser'
-            }
-          ]
-        : [])
-    ]
+    description:
+      chatbot == 'Open WebUI'
+        ? 'localhost'
+        : url.replace(/^https?:\/\//, '').split('/')[0]
   }))
 
   const quick_pick = vscode.window.createQuickPick()
@@ -45,14 +38,6 @@ export const handle_pick_chatbot = async (
   quick_pick.onDidTriggerButton((button) => {
     if (button.tooltip === 'Close') {
       quick_pick.hide()
-    }
-  })
-
-  quick_pick.onDidTriggerItemButton((e) => {
-    const chatbot_name = e.item.label
-    const chatbot_details = CHATBOTS[chatbot_name as keyof typeof CHATBOTS]
-    if (chatbot_details) {
-      vscode.env.openExternal(vscode.Uri.parse(chatbot_details.url))
     }
   })
 

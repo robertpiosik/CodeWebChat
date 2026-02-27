@@ -79,6 +79,7 @@ const create_separator = async (params: {
 const create_preset = async (params: {
   panel_provider: PanelProvider
   insertion_index?: number
+  chatbot: keyof typeof CHATBOTS
 }) => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const presets_config_key = params.panel_provider.get_presets_config_key()
@@ -93,10 +94,11 @@ const create_preset = async (params: {
 
   const new_preset: ConfigPresetFormat = {
     name: new_name,
-    chatbot: 'AI Studio',
-    model: Object.keys(CHATBOTS['AI Studio'].models ?? {})[0],
-    temperature: 0.5,
-    systemInstructions: CHATBOTS['AI Studio'].default_system_instructions
+    chatbot: params.chatbot,
+    model: Object.keys(CHATBOTS[params.chatbot].models ?? {})[0],
+    systemInstructions: CHATBOTS[params.chatbot].supports_system_instructions
+      ? CHATBOTS[params.chatbot].default_system_instructions
+      : undefined
   }
 
   const updated_presets = [...current_presets]
@@ -182,38 +184,96 @@ export const handle_create_preset_group_or_separator = async (
     insertion_index = 0
   }
 
-  const quickPick = vscode.window.createQuickPick()
-  quickPick.items = [
-    { label: ITEM_NAME_PRESET },
-    { label: ITEM_NAME_GROUP },
-    { label: ITEM_NAME_SEPARATOR }
-  ]
-  quickPick.title = 'Item Types'
-  quickPick.placeholder = 'What would you like to create?'
-  quickPick.buttons = [
-    {
-      iconPath: new vscode.ThemeIcon('close'),
-      tooltip: 'Close'
-    }
-  ]
+  const show_item_types_menu = () => {
+    const quickPick = vscode.window.createQuickPick()
+    quickPick.items = [
+      { label: ITEM_NAME_PRESET },
+      { label: ITEM_NAME_GROUP },
+      { label: ITEM_NAME_SEPARATOR }
+    ]
+    quickPick.title = 'Item Types'
+    quickPick.placeholder = 'What would you like to create?'
+    quickPick.buttons = [
+      {
+        iconPath: new vscode.ThemeIcon('close'),
+        tooltip: 'Close'
+      }
+    ]
 
-  quickPick.onDidTriggerButton(() => {
-    quickPick.hide()
-  })
+    quickPick.onDidTriggerButton(() => {
+      quickPick.hide()
+    })
 
-  quickPick.onDidAccept(async () => {
-    const selection = quickPick.selectedItems[0]?.label
-    quickPick.hide()
+    quickPick.onDidAccept(async () => {
+      const selection = quickPick.selectedItems[0]?.label
+      quickPick.hide()
 
-    if (selection == ITEM_NAME_GROUP) {
-      await create_group({ panel_provider, insertion_index })
-    } else if (selection == ITEM_NAME_SEPARATOR) {
-      await create_separator({ panel_provider, insertion_index })
-    } else if (selection == ITEM_NAME_PRESET) {
-      await create_preset({ panel_provider, insertion_index })
-    }
-  })
+      if (selection == ITEM_NAME_GROUP) {
+        await create_group({ panel_provider, insertion_index })
+      } else if (selection == ITEM_NAME_SEPARATOR) {
+        await create_separator({ panel_provider, insertion_index })
+      } else if (selection == ITEM_NAME_PRESET) {
+        show_chatbots_menu()
+      }
+    })
 
-  quickPick.onDidHide(() => quickPick.dispose())
-  quickPick.show()
+    quickPick.onDidHide(() => quickPick.dispose())
+    quickPick.show()
+  }
+
+  const show_chatbots_menu = () => {
+    const chatbots = Object.entries(CHATBOTS)
+    const items: vscode.QuickPickItem[] = chatbots.map(
+      ([chatbot, { url }]) => ({
+        label: chatbot,
+        description:
+          chatbot == 'Open WebUI'
+            ? 'localhost'
+            : url.replace(/^https?:\/\//, '').split('/')[0]
+      })
+    )
+
+    const quick_pick = vscode.window.createQuickPick()
+    quick_pick.items = items
+    quick_pick.title = 'Chatbots'
+    quick_pick.placeholder = 'Choose a chatbot for the new preset'
+    quick_pick.buttons = [vscode.QuickInputButtons.Back]
+
+    let is_handled = false
+    const disposables: vscode.Disposable[] = []
+
+    disposables.push(
+      quick_pick.onDidTriggerButton((button) => {
+        if (button === vscode.QuickInputButtons.Back) {
+          is_handled = true
+          quick_pick.hide()
+          show_item_types_menu()
+        }
+      }),
+      quick_pick.onDidAccept(async () => {
+        is_handled = true
+        const selected_chatbot = quick_pick.selectedItems[0]
+          ?.label as keyof typeof CHATBOTS
+        quick_pick.hide()
+        if (selected_chatbot) {
+          await create_preset({
+            panel_provider,
+            insertion_index,
+            chatbot: selected_chatbot
+          })
+        }
+      }),
+      quick_pick.onDidHide(() => {
+        if (!is_handled) {
+          show_item_types_menu()
+        }
+        disposables.forEach((d) => d.dispose())
+        quick_pick.dispose()
+      })
+    )
+
+    quick_pick.show()
+  }
+
+  show_item_types_menu()
 }
