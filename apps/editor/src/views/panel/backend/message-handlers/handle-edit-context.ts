@@ -326,9 +326,11 @@ export const handle_edit_context = async (
   let instructions = panel_provider.current_edit_context_instruction
 
   if (!instructions) {
-    vscode.window.showWarningMessage(
-      dictionary.warning_message.INSTRUCTIONS_CANNOT_BE_EMPTY
-    )
+    panel_provider.send_message({
+      command: 'SHOW_AUTO_CLOSING_MODAL',
+      title: 'Instructions cannot be empty',
+      type: 'warning'
+    })
     return
   }
 
@@ -411,9 +413,11 @@ export const handle_edit_context = async (
   })
 
   if (!collected_files) {
-    vscode.window.showWarningMessage(
-      dictionary.warning_message.CONTEXT_CANNOT_BE_EMPTY
-    )
+    panel_provider.send_message({
+      command: 'SHOW_AUTO_CLOSING_MODAL',
+      title: 'Context cannot be empty',
+      type: 'warning'
+    })
     return
   }
 

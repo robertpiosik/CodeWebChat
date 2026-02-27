@@ -133,13 +133,10 @@ export const dictionary = {
       'Cannot copy prompt in code completion mode with an active selection.',
     CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITHOUT_EDITOR:
       'Cannot copy prompt in code completion mode without an active editor.',
-    CONTEXT_CANNOT_BE_EMPTY: 'Context cannot be empty.',
-    INSTRUCTIONS_CANNOT_BE_EMPTY: 'Instructions cannot be empty.',
     CANNOT_PREVIEW_IN_CODE_COMPLETION_WITHOUT_EDITOR:
       'Cannot preview in code completion mode without an active editor.',
     BROWSER_EXTENSION_NOT_CONNECTED:
       'Browser extension is not connected. Please install or reload it.',
-    TYPE_SOMETHING_TO_USE_PRESET: 'Type something to use this preset.',
     PRESETS_NOT_RUN_DUE_TO_MISSING_INSTRUCTIONS:
       'Some presets were not run due to missing instructions.',
     TYPE_SOMETHING_TO_USE_GROUP: 'Type something to use this group.',

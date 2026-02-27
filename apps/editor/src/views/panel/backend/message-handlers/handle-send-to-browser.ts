@@ -493,9 +493,11 @@ async function show_preset_quick_pick(params: {
             !preset.promptPrefix &&
             !preset.promptSuffix
           ) {
-            vscode.window.showWarningMessage(
-              dictionary.warning_message.TYPE_SOMETHING_TO_USE_PRESET
-            )
+            params.panel_provider.send_message({
+              command: 'SHOW_AUTO_CLOSING_MODAL',
+              title: 'Type something to use this preset',
+              type: 'warning'
+            })
           }
           do_resolve(null)
         } else {
@@ -631,9 +633,11 @@ async function resolve_presets(params: {
           !preset.promptPrefix &&
           !preset.promptSuffix
         ) {
-          vscode.window.showWarningMessage(
-            dictionary.warning_message.TYPE_SOMETHING_TO_USE_PRESET
-          )
+          params.panel_provider.send_message({
+            command: 'SHOW_AUTO_CLOSING_MODAL',
+            title: 'Type something to use this preset',
+            type: 'warning'
+          })
         }
         return { preset_names: [] }
       }
@@ -694,9 +698,11 @@ async function resolve_presets(params: {
           !p.promptSuffix
       )
       if (any_disabled_due_to_instructions) {
-        vscode.window.showWarningMessage(
-          dictionary.warning_message.TYPE_SOMETHING_TO_USE_GROUP
-        )
+        params.panel_provider.send_message({
+          command: 'SHOW_AUTO_CLOSING_MODAL',
+          title: 'Type something to use this group',
+          type: 'warning'
+        })
         return { preset_names: [] }
       }
     }
@@ -734,9 +740,11 @@ async function resolve_presets(params: {
               !item.promptPrefix &&
               !item.promptSuffix
             ) {
-              vscode.window.showWarningMessage(
-                dictionary.warning_message.TYPE_SOMETHING_TO_USE_PRESET
-              )
+              params.panel_provider.send_message({
+                command: 'SHOW_AUTO_CLOSING_MODAL',
+                title: 'Type something to use this preset',
+                type: 'warning'
+              })
             }
             return { preset_names: [] }
           } else {
