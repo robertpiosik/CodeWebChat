@@ -231,16 +231,16 @@ export const preview = async (params: {
           | { file_path: string; position: vscode.Position }
           | undefined
 
-        if (result.active_file_path && result.active_position) {
-          const active_path = result.active_file_path
+        if (result.active_file_uri && result.active_position) {
+          const active_uri = result.active_file_uri
           const matching_prepared = prepared_files.find(
-            (pf) => pf.temp_file_path === active_path
+            (pf) => pf.original_uri === active_uri
           )
 
           active_editor_state = {
             file_path: matching_prepared
               ? matching_prepared.sanitized_path
-              : active_path,
+              : vscode.Uri.parse(active_uri).fsPath,
             position: result.active_position
           }
         }

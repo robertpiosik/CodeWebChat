@@ -1,8 +1,7 @@
 import * as fs from 'fs'
 import * as crypto from 'crypto'
-import * as path from 'path'
-import * as os from 'os'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
+import * as vscode from 'vscode'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { get_diff_stats } from './diff-utils'
 import { PreparedFile, PreviewableFile } from './types'
@@ -52,8 +51,9 @@ export const prepare_files_from_original_states = async (params: {
       .createHash('md5')
       .update(sanitized_file_path)
       .digest('hex')
-    const temp_filename = `cwc-${hash}.tmp`
-    const temp_file_path = path.join(os.tmpdir(), temp_filename)
+    const original_uri = vscode.Uri.file(sanitized_file_path)
+      .with({ scheme: 'cwc-preview', query: `hash=${hash}` })
+      .toString()
 
     const original_content_for_diff = state.file_path_to_restore
       ? ''
@@ -93,7 +93,7 @@ export const prepare_files_from_original_states = async (params: {
       previewable_file,
       sanitized_path: sanitized_file_path,
       original_content: original_content_for_diff,
-      temp_file_path,
+      original_uri,
       file_exists: state.file_state != 'new'
     })
 
@@ -112,11 +112,11 @@ export const prepare_files_from_original_states = async (params: {
         .createHash('md5')
         .update(restored_sanitized_file_path)
         .digest('hex')
-      const restored_temp_filename = `cwc-${restored_hash}.tmp`
-      const restored_temp_file_path = path.join(
-        os.tmpdir(),
-        restored_temp_filename
+      const restored_original_uri = vscode.Uri.file(
+        restored_sanitized_file_path
       )
+        .with({ scheme: 'cwc-preview', query: `hash=${restored_hash}` })
+        .toString()
 
       const restored_diff_stats = get_diff_stats({
         original_content: state.content,
@@ -139,7 +139,7 @@ export const prepare_files_from_original_states = async (params: {
         previewable_file: restored_previewable_file,
         sanitized_path: restored_sanitized_file_path,
         original_content: state.content,
-        temp_file_path: restored_temp_file_path,
+        original_uri: restored_original_uri,
         file_exists: false
       })
     }

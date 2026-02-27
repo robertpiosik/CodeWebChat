@@ -10,7 +10,7 @@ export const close_preview_diff_editors = async (
   prepared_files: PreparedFile[]
 ): Promise<void> => {
   const temp_uris = new Set(
-    prepared_files.map((f) => vscode.Uri.file(f.temp_file_path).toString())
+    prepared_files.map((f) => vscode.Uri.parse(f.original_uri).toString())
   )
   const promises: Thenable<boolean>[] = []
 
@@ -31,7 +31,7 @@ export const close_preview_diff_editors = async (
 export const show_diff_with_actions = async (
   prepared_file: PreparedFile
 ): Promise<PreviewResult> => {
-  const left_doc_uri = vscode.Uri.file(prepared_file.temp_file_path)
+  const left_doc_uri = vscode.Uri.parse(prepared_file.original_uri)
   const right_doc_uri = vscode.Uri.file(prepared_file.sanitized_path)
 
   const title = path.basename(prepared_file.previewable_file.file_path)
@@ -57,19 +57,19 @@ export const show_diff_with_actions = async (
       } catch (error) {}
 
       const active_editor = vscode.window.activeTextEditor
-      let active_file_path: string | undefined
+      let active_file_uri: string | undefined
       let active_position: vscode.Position | undefined
 
       if (active_editor) {
-        active_file_path = active_editor.document.uri.fsPath
+        active_file_uri = active_editor.document.uri.toString()
         active_position = active_editor.selection.active
       }
 
       resolve({
         decision,
         new_content: final_content,
-        temp_file_path: prepared_file.temp_file_path,
-        active_file_path,
+        original_uri: prepared_file.original_uri,
+        active_file_uri,
         active_position
       })
     }

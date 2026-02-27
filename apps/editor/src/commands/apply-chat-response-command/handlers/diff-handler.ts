@@ -3,13 +3,10 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { exec } from 'child_process'
 import { Logger } from '@shared/utils/logger'
-import { promisify } from 'util'
 import { OriginalFileState } from '../types/original-file-state'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { apply_diff } from '../utils/edit-formats/diffs'
 import { remove_directory_if_empty } from '../utils/file-operations'
-
-const execAsync = promisify(exec)
 
 const INDENTATION_BASED_EXTENSIONS = new Set(['.py', '.yaml', '.yml'])
 
@@ -398,17 +395,34 @@ const handle_deleted_file_patch = async (
   }
 }
 
+const run_git_apply = (
+  patch: string,
+  cwd: string,
+  flags: string
+): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const child = exec(`git apply ${flags} -`, { cwd }, (error) => {
+      if (error) {
+        reject(error)
+      } else {
+        resolve()
+      }
+    })
+    child.stdin?.write(patch)
+    child.stdin?.end()
+  })
+}
+
 const process_diff = async (params: {
   file_path: string
-  diff_patch_path: string
+  diff_patch_content: string
   use_strict_whitespace?: boolean
 }): Promise<string> => {
   const file_content = fs.readFileSync(params.file_path, 'utf8')
-  const diff_patch_content = fs.readFileSync(params.diff_patch_path, 'utf8')
 
   const result = apply_diff({
     original_code: file_content,
-    diff_patch: diff_patch_content,
+    diff_patch: params.diff_patch_content,
     use_strict_whitespace: params.use_strict_whitespace
   })
 
@@ -447,7 +461,6 @@ export const apply_git_patch = async (
   }
 
   let closed_files: vscode.Uri[] = []
-  const temp_file = path.join(workspace_path, '.tmp_patch')
   let original_states: OriginalFileState[] | undefined
 
   try {
@@ -461,16 +474,6 @@ export const apply_git_patch = async (
       file_paths,
       workspace_path
     )
-
-    // Write patch file and ensure it's synced to disk before git apply reads it
-    const patch_buffer = Buffer.from(patch_content)
-    const fd = await fs.promises.open(temp_file, 'w')
-    try {
-      await fd.write(patch_buffer)
-      await fd.sync() // Ensure data is flushed to disk
-    } finally {
-      await fd.close()
-    }
 
     let last_error: any = null
     let success = false
@@ -497,9 +500,7 @@ export const apply_git_patch = async (
           .filter(Boolean)
           .join(' ')
 
-        await execAsync(`git apply ${flags} "${temp_file}"`, {
-          cwd: workspace_path
-        })
+        await run_git_apply(patch_content, workspace_path, flags)
         success = true
         diff_application_method = 'recount'
         Logger.info({
@@ -527,7 +528,7 @@ export const apply_git_patch = async (
 
         applied_content = await process_diff({
           file_path: file_path_safe,
-          diff_patch_path: temp_file,
+          diff_patch_content: patch_content,
           use_strict_whitespace
         })
         success = true
@@ -544,7 +545,6 @@ export const apply_git_patch = async (
     if (success) {
       await process_modified_files(file_paths, workspace_path)
       await reopen_closed_files(closed_files)
-      await vscode.workspace.fs.delete(vscode.Uri.file(temp_file))
 
       if (original_states) {
         for (const state of original_states) {
@@ -591,18 +591,6 @@ export const apply_git_patch = async (
   } catch (error: any) {
     // This outer catch handles setup errors and final application failures
     await reopen_closed_files(closed_files)
-
-    try {
-      if (fs.existsSync(temp_file)) {
-        await vscode.workspace.fs.delete(vscode.Uri.file(temp_file))
-      }
-    } catch (deleteError) {
-      Logger.warn({
-        function_name: 'apply_git_patch',
-        message: 'Failed to delete temp patch file in error handler.',
-        data: deleteError
-      })
-    }
 
     const has_rejects = error?.message?.includes('.rej')
     if (has_rejects) {

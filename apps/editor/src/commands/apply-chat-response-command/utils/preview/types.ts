@@ -8,8 +8,8 @@ export type PreviewDecision =
 export type PreviewResult = {
   decision: PreviewDecision
   new_content: string
-  temp_file_path: string
-  active_file_path?: string
+  original_uri: string
+  active_file_uri?: string
   active_position?: vscode.Position
 }
 
@@ -21,7 +21,7 @@ export type PreparedFile = {
   previewable_file: PreviewableFile
   sanitized_path: string
   original_content: string
-  temp_file_path: string
+  original_uri: string
   file_exists: boolean
   content_to_restore?: string
 }
