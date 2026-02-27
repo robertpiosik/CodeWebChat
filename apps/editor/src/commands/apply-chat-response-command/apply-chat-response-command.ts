@@ -21,8 +21,6 @@ import { Checkpoint } from '../checkpoints-command/types'
 import { CHECKPOINTS_STATE_KEY } from '@/constants/state-keys'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { ApiManager } from '@/services/api-manager'
-import { parse_response } from './utils/clipboard-parser/clipboard-parser'
-import { t } from '@/i18n'
 import {
   preview_document_provider,
   CwcPreviewProvider
@@ -133,33 +131,6 @@ export const apply_chat_response_command = (params: {
       let saved_tab_groups: SavedTabGroups | undefined
 
       try {
-        const is_single_root_folder_workspace =
-          vscode.workspace.workspaceFolders?.length == 1
-
-        const parsed_items = args?.files_with_content
-          ? []
-          : parse_response({
-              response: chat_response,
-              is_single_root_folder_workspace
-            })
-
-        const file_count = args?.files_with_content
-          ? args.files_with_content.length
-          : parsed_items.filter(
-              (item) =>
-                item.type == 'diff' ||
-                item.type == 'file' ||
-                item.type == 'code-at-cursor'
-            ).length
-
-        if (file_count > 0) {
-          params.panel_provider.send_message({
-            command: 'SHOW_PROGRESS',
-            title: t('command.apply-chat-response.progress.preparing-preview'),
-            delay_visibility: file_count == 1
-          })
-        }
-
         // Save current tab groups before entering preview
         saved_tab_groups = {
           editors: [],
@@ -194,10 +165,6 @@ export const apply_chat_response_command = (params: {
           params.panel_provider,
           params.workspace_provider
         )
-
-        params.panel_provider.send_message({
-          command: 'HIDE_PROGRESS'
-        })
 
         if (preview_data) {
           let created_at_for_preview = args?.created_at
@@ -410,9 +377,6 @@ export const apply_chat_response_command = (params: {
           dictionary.error_message.APPLYING_CHANGES_GENERIC_ERROR(err.message)
         )
       } finally {
-        params.panel_provider.send_message({
-          command: 'HIDE_PROGRESS'
-        })
         in_progress = false
         if (before_checkpoint) {
           delete_checkpoint({

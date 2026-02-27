@@ -1,22 +1,4 @@
 export const apply_chat_response = {
-  'command.apply-chat-response.progress.preparing-preview': {
-    en: 'Preparing response preview...',
-    pl: 'Przygotowywanie podglądu zmian...',
-    'zh-cn': '正在准备响应预览...',
-    ja: '応答プレビューを準備中...',
-    'zh-tw': '正在準備回應預覽...',
-    de: 'Antwortvorschau wird vorbereitet...',
-    es: 'Preparando vista previa de la respuesta...',
-    fr: "Préparation de l'aperçu de la réponse...",
-    'pt-br': 'Preparando visualização da resposta...',
-    ru: 'Подготовка предпросмотра ответа...',
-    ko: '응답 미리보기 준비 중...',
-    it: 'Preparazione anteprima risposta...',
-    tr: 'Yanıt önizlemesi hazırlanıyor...',
-    cs: 'Příprava náhledu odpovědi...',
-    hu: 'Válasz előnézetének előkészítése...',
-    bg: 'Подготовка на предварителен преглед на отговора...'
-  },
   'command.apply-chat-response.warning.no-code-blocks.title': {
     en: 'No valid code blocks found',
     pl: 'Nie znaleziono prawidłowych bloków z kodem',
