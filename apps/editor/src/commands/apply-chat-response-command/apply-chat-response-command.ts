@@ -459,18 +459,39 @@ const restore_tab_groups = async (
       return
     }
 
-    await vscode.commands.executeCommand('workbench.action.closeAllEditors')
+    if (current_editors.length > saved_state.editors.length) {
+      const tabs_to_close: vscode.Tab[] = []
+      for (const tab_group of vscode.window.tabGroups.all) {
+        for (const tab of tab_group.tabs) {
+          if (tab.input instanceof vscode.TabInputText) {
+            const uri = tab.input.uri.toString()
+            const is_saved = saved_state.editors.some(
+              (saved) =>
+                saved.uri == uri && saved.view_column == tab_group.viewColumn
+            )
+            if (!is_saved) {
+              tabs_to_close.push(tab)
+            }
+          }
+        }
+      }
+      if (tabs_to_close.length > 0) {
+        await vscode.window.tabGroups.close(tabs_to_close)
+      }
+    } else {
+      await vscode.commands.executeCommand('workbench.action.closeAllEditors')
 
-    for (const editor of saved_state.editors) {
-      try {
-        const uri = vscode.Uri.parse(editor.uri)
-        await vscode.window.showTextDocument(uri, {
-          viewColumn: editor.view_column,
-          preview: false,
-          preserveFocus: !editor.is_active
-        })
-      } catch (error) {
-        console.error(`Failed to restore editor for ${editor.uri}:`, error)
+      for (const editor of saved_state.editors) {
+        try {
+          const uri = vscode.Uri.parse(editor.uri)
+          await vscode.window.showTextDocument(uri, {
+            viewColumn: editor.view_column,
+            preview: false,
+            preserveFocus: !editor.is_active
+          })
+        } catch (error) {
+          console.error(`Failed to restore editor for ${editor.uri}:`, error)
+        }
       }
     }
 
