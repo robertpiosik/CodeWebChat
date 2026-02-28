@@ -70,6 +70,19 @@ describe('diff-processor', () => {
       }).toThrow(/Failed to apply \d+ hunk\(s\)/)
     })
 
+    it('applies diff with failing test case 2 correctly', async () => {
+      const test_case = 'failing-2'
+      const original = load_test_case_file('', test_case, 'original.txt')
+      const diff = load_test_case_file('', test_case, 'diff.txt')
+
+      expect(() => {
+        apply_diff({
+          original_code: original,
+          diff_patch: diff
+        })
+      }).toThrow(/Failed to apply \d+ hunk\(s\)/)
+    })
+
     it('applies diff with generic test case correctly', async () => {
       const test_case = 'generic-1'
       const original = load_test_case_file('', test_case, 'original.txt')

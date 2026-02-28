@@ -6,6 +6,7 @@ type ReplaceLine = {
 type SearchBlock = {
   search_lines: string[]
   replace_lines: ReplaceLine[]
+  after_search_lines: string[]
   search_block_start_index: number
   actual_original_line_count: number
   search_to_original_map: Map<number, number>
@@ -102,6 +103,7 @@ export const apply_diff = (params: {
   const search_replace_blocks: SearchBlock[] = []
   let search_chunks: string[] = []
   let replace_chunks: ReplaceLine[] = []
+  let after_search_chunks: string[] = []
 
   let inside_replace_block = false
   let current_block_has_changes = false
@@ -112,6 +114,7 @@ export const apply_diff = (params: {
         search_replace_blocks.push({
           search_lines: search_chunks,
           replace_lines: replace_chunks,
+          after_search_lines: after_search_chunks,
           search_block_start_index: -1,
           actual_original_line_count: 0,
           search_to_original_map: new Map()
@@ -120,6 +123,7 @@ export const apply_diff = (params: {
     }
     search_chunks = []
     replace_chunks = []
+    after_search_chunks = []
     inside_replace_block = false
     current_block_has_changes = false
   }
@@ -150,6 +154,14 @@ export const apply_diff = (params: {
         search_chunks.push(line.replace(/^-/, '').replace(/^~/, ''))
       }
 
+      if (!line.startsWith('-')) {
+        if (line.startsWith('~nnn')) {
+          after_search_chunks.push('~nnn')
+        } else {
+          after_search_chunks.push(line.replace(/^~/, ''))
+        }
+      }
+
       if (line.startsWith('~nnn')) {
         replace_chunks.push({
           content: line_original.replace(/^~nnn/, '') + '\n',
@@ -174,11 +186,13 @@ export const apply_diff = (params: {
           content: line_original.replace(/^\+~nnn/, '') + '\n',
           search_index: null
         })
+        after_search_chunks.push('~nnn')
       } else {
         replace_chunks.push({
           content: line_original.replace(/^\+/, '') + '\n',
           search_index: null
         })
+        after_search_chunks.push(line.replace(/^\+/, ''))
       }
     }
   }
@@ -190,6 +204,12 @@ export const apply_diff = (params: {
     ) {
       search_chunks.pop()
       replace_chunks.pop()
+      if (
+        after_search_chunks.length > 0 &&
+        after_search_chunks[after_search_chunks.length - 1] == '~nnn'
+      ) {
+        after_search_chunks.pop()
+      }
     }
     push_block()
   }
@@ -318,8 +338,59 @@ export const apply_diff = (params: {
         )
       }
 
-      const indices = Array.from(matched_info.map.values())
-      previous_found_index = Math.max(...indices) + 1
+      // Check if the patch is already applied by matching the after-side
+      const has_additions = block.replace_lines.some(
+        (l) => l.search_index === null
+      )
+      if (has_additions && block.after_search_lines.length > 0) {
+        const check_start = Math.max(
+          0,
+          matched_info.start_index - block.after_search_lines.length
+        )
+        const check_end = Math.min(
+          original_code_lines_normalized.length - 1,
+          matched_info.start_index + matched_info.actual_count
+        )
+
+        let already_applied = false
+        for (let j = check_start; j <= check_end; j++) {
+          let after_ptr = 0
+          let orig_ptr = j
+
+          while (
+            after_ptr < block.after_search_lines.length &&
+            orig_ptr < original_code_lines_normalized.length
+          ) {
+            const a_val = block.after_search_lines[after_ptr]
+            const o_val = original_code_lines_normalized[orig_ptr].value
+
+            if (a_val === o_val) {
+              after_ptr++
+              orig_ptr++
+            } else if (o_val === '~nnn') {
+              orig_ptr++
+            } else if (a_val === '~nnn') {
+              after_ptr++
+            } else {
+              break
+            }
+          }
+
+          if (after_ptr === block.after_search_lines.length) {
+            already_applied = true
+            break
+          }
+        }
+
+        if (already_applied) {
+          block.search_block_start_index = -2
+        }
+      }
+
+      if (block.search_block_start_index !== -2) {
+        const indices = Array.from(matched_info.map.values())
+        previous_found_index = Math.max(...indices) + 1
+      }
     } else {
       block.search_block_start_index = -2
     }
