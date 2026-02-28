@@ -31,19 +31,22 @@ export const handle_delete_task = async (
   // 1. Load and Find
   let all_data = load_all_tasks(panel_provider.context)
   const root_tasks = all_data[message.root] || []
-  const task_info = find_task_in_tree_with_location(
-    root_tasks,
-    message.timestamp
-  )
+  const task_info = find_task_in_tree_with_location({
+    tasks: root_tasks,
+    id: message.timestamp
+  })
 
   if (!task_info) {
     return
   }
 
   // 2. Delete
-  const new_root_tasks = delete_task_from_tree(root_tasks, message.timestamp)
+  const new_root_tasks = delete_task_from_tree({
+    tasks: root_tasks,
+    timestamp: message.timestamp
+  })
   all_data[message.root] = new_root_tasks
-  save_all_tasks(panel_provider.context, all_data)
+  save_all_tasks({ context: panel_provider.context, tasks: all_data })
   broadcast_tasks(all_data)
 
   const is_empty = (task: Task): boolean => {
@@ -66,12 +69,12 @@ export const handle_delete_task = async (
     all_data = load_all_tasks(panel_provider.context) // Reload to get latest state
     const current_root_tasks = all_data[message.root] || []
 
-    const result = insert_task_in_tree(
-      current_root_tasks,
-      task_info.task,
-      task_info.parent_id,
-      task_info.index
-    )
+    const result = insert_task_in_tree({
+      tasks: current_root_tasks,
+      task: task_info.task,
+      parent_id: task_info.parent_id,
+      index: task_info.index
+    })
 
     if (result.success) {
       all_data[message.root] = result.tasks
@@ -80,7 +83,7 @@ export const handle_delete_task = async (
       all_data[message.root] = [...current_root_tasks, task_info.task]
     }
 
-    save_all_tasks(panel_provider.context, all_data)
+    save_all_tasks({ context: panel_provider.context, tasks: all_data })
     broadcast_tasks(all_data)
   }
 }

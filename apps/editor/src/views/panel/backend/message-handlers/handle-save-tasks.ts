@@ -13,5 +13,5 @@ export const handle_save_tasks = async (
     ...message.tasks
   }
 
-  save_all_tasks(panel_provider.context, all_data)
+  save_all_tasks({ context: panel_provider.context, tasks: all_data })
 }

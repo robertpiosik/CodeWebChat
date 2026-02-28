@@ -110,10 +110,10 @@ export const preview_handler = async (params: {
       }
 
       if (params.raw_instructions) {
-        const updated_tasks = mark_task_as_completed_if_matches_prompt(
-          params.context,
-          params.raw_instructions
-        )
+        const updated_tasks = mark_task_as_completed_if_matches_prompt({
+          context: params.context,
+          prompt_text: params.raw_instructions
+        })
         if (updated_tasks) {
           params.panel_provider.send_message({
             command: 'TASKS',
