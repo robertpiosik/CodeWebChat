@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import * as path from 'path'
 import {
   get_git_repository,
   prepare_staged_changes
@@ -10,6 +11,8 @@ import { generate_commit_message_with_api } from './utils/generate-commit-messag
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { t } from '@/i18n'
 import axios from 'axios'
+import { PromptsForCommitMessagesUtils } from '../../utils/prompts-for-commit-messages-utils'
+import { simplify_prompt_symbols } from '../../utils/simplify-prompt-symbols'
 
 export const generate_commit_message_command = (
   context: vscode.ExtensionContext
@@ -106,6 +109,17 @@ export const generate_commit_message_command = (
         }
       }
 
+      const workspace_root = repository.rootUri.fsPath
+      const all_prompts =
+        PromptsForCommitMessagesUtils.load_all(context)[workspace_root] || []
+      const staged_files = repository.state.indexChanges.map((change) =>
+        path.relative(workspace_root, change.uri.fsPath).replace(/\\/g, '/')
+      )
+
+      const relevant_prompts = all_prompts.filter((p) =>
+        p.files.some((file) => staged_files.includes(file))
+      )
+
       if (should_commit) {
         const edited_message = await new Promise<string | 'back' | undefined>(
           (resolve) => {
@@ -167,13 +181,76 @@ export const generate_commit_message_command = (
         }
 
         if (edited_message) {
-          repository.inputBox.value = edited_message
+          let selected_prompts = relevant_prompts
+
+          if (relevant_prompts.length > 0) {
+            const picked = await new Promise<
+              typeof relevant_prompts | undefined
+            >((resolve) => {
+              const quick_pick = vscode.window.createQuickPick()
+              quick_pick.items = relevant_prompts.map((p) => ({
+                label: simplify_prompt_symbols({ prompt: p.prompt }),
+                prompt: p
+              }))
+              quick_pick.selectedItems = quick_pick.items
+              quick_pick.canSelectMany = true
+              quick_pick.title = 'Accepted Prompts'
+              quick_pick.placeholder =
+                'Choose accepted prompts to include in the commit message'
+              quick_pick.ignoreFocusOut = true
+
+              quick_pick.onDidAccept(() => {
+                resolve(quick_pick.selectedItems.map((i: any) => i.prompt))
+                quick_pick.hide()
+              })
+              quick_pick.onDidHide(() => {
+                resolve(undefined)
+                quick_pick.dispose()
+              })
+              quick_pick.show()
+            })
+
+            if (picked === undefined) {
+              if (was_empty_stage) {
+                await vscode.commands.executeCommand('git.unstageAll')
+              }
+              break
+            }
+            selected_prompts = picked
+          }
+
+          const selected_prompts_text =
+            selected_prompts.length > 0
+              ? '\n\n' +
+                selected_prompts
+                  .map(
+                    (p) => `- ${simplify_prompt_symbols({ prompt: p.prompt })}`
+                  )
+                  .join('\n')
+              : ''
+
+          repository.inputBox.value = edited_message + selected_prompts_text
           await vscode.commands.executeCommand('git.commit', repository)
+          relevant_prompts.forEach((p) => {
+            PromptsForCommitMessagesUtils.remove({
+              context,
+              prompt: p.prompt
+            })
+          })
         } else if (was_empty_stage) {
           await vscode.commands.executeCommand('git.unstageAll')
         }
       } else {
-        repository.inputBox.value = commit_message
+        const prompts_text =
+          relevant_prompts.length > 0
+            ? '\n\n' +
+              relevant_prompts
+                .map(
+                  (p) => `- ${simplify_prompt_symbols({ prompt: p.prompt })}`
+                )
+                .join('\n')
+            : ''
+        repository.inputBox.value = commit_message + prompts_text
       }
 
       break

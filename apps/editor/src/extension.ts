@@ -36,6 +36,7 @@ import {
   check_definition_file_for_context_command,
   rate_command
 } from './commands'
+import { setup_git_discard_file_watcher } from './services/git-discard-file-watcher'
 import {
   get_checkpoints,
   remove_old_checkpoints
@@ -71,6 +72,8 @@ export async function activate(context: vscode.ExtensionContext) {
   }
   // Run startup tasks without blocking extension activation
   startup_tasks()
+
+  setup_git_discard_file_watcher(context)
 
   const panel_provider = new PanelProvider({
     extension_uri: context.extensionUri,

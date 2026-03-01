@@ -5,7 +5,8 @@ import { undo_files } from './file-operations'
 import { preview } from './preview'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { update_undo_button_state } from './state-manager'
-import { mark_task_as_completed_if_matches_prompt } from '@/utils/tasks-utils'
+import { TasksUtils } from '@/utils/tasks-utils'
+import { PromptsForCommitMessagesUtils } from '@/utils/prompts-for-commit-messages-utils'
 
 export let ongoing_preview_cleanup_promise: Promise<void> | null = null
 
@@ -110,7 +111,7 @@ export const preview_handler = async (params: {
       }
 
       if (params.raw_instructions) {
-        const updated_tasks = mark_task_as_completed_if_matches_prompt({
+        const updated_tasks = TasksUtils.mark_as_completed_if_matches_prompt({
           context: params.context,
           prompt_text: params.raw_instructions
         })
@@ -118,6 +119,37 @@ export const preview_handler = async (params: {
           params.panel_provider.send_message({
             command: 'TASKS',
             tasks: updated_tasks
+          })
+        }
+
+        const workspace_map = new Map<string, string>()
+        vscode.workspace.workspaceFolders?.forEach((folder) => {
+          workspace_map.set(folder.name, folder.uri.fsPath)
+        })
+        const default_workspace =
+          vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
+
+        const files_by_workspace = new Map<string, string[]>()
+        for (const state of accepted_states) {
+          let workspace_root = default_workspace
+          if (state.workspace_name && workspace_map.has(state.workspace_name)) {
+            workspace_root = workspace_map.get(state.workspace_name)!
+          }
+          if (workspace_root) {
+            const current_files = files_by_workspace.get(workspace_root) || []
+            if (!current_files.includes(state.file_path)) {
+              current_files.push(state.file_path)
+            }
+            files_by_workspace.set(workspace_root, current_files)
+          }
+        }
+
+        for (const [workspace_root, files] of files_by_workspace.entries()) {
+          PromptsForCommitMessagesUtils.add({
+            context: params.context,
+            workspace_root,
+            prompt: params.raw_instructions,
+            files
           })
         }
       }

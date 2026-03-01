@@ -1,13 +1,13 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { Task } from '@shared/types/task'
-import { load_all_tasks } from '@/utils/tasks-utils'
+import { TasksUtils } from '@/utils/tasks-utils'
 
 export const handle_get_tasks = async (
   panel_provider: PanelProvider
 ): Promise<void> => {
   const workspace_roots =
     panel_provider.workspace_provider.get_workspace_roots()
-  const all_data = load_all_tasks(panel_provider.context)
+  const all_data = TasksUtils.load_all(panel_provider.context)
 
   const tasks: Record<string, Task[]> = {}
 

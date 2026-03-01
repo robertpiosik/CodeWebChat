@@ -21,6 +21,7 @@ import { response_preview_promise_resolve } from '../../apply-chat-response-comm
 import { ongoing_preview_cleanup_promise } from '../../apply-chat-response-command/utils/preview-handler'
 import { dictionary } from '@shared/constants/dictionary'
 import { get_git_info } from '../utils/git-utils'
+import { PromptsForCommitMessagesUtils } from '@/utils/prompts-for-commit-messages-utils'
 
 export const restore_checkpoint = async (params: {
   checkpoint: Checkpoint
@@ -41,6 +42,16 @@ export const restore_checkpoint = async (params: {
       dictionary.warning_message.CHECKPOINT_OPERATION_IN_PROGRESS
     )
     return
+  }
+
+  if (
+    params.checkpoint.title == 'Response accepted' &&
+    params.checkpoint.description
+  ) {
+    PromptsForCommitMessagesUtils.remove({
+      context: params.context,
+      prompt: params.checkpoint.description
+    })
   }
 
   let open_files: {

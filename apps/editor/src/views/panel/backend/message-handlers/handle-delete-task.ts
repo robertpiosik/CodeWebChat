@@ -3,13 +3,7 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { DeleteTaskMessage } from '@/views/panel/types/messages'
 import { Task } from '@shared/types/task'
 import { dictionary } from '@shared/constants/dictionary'
-import {
-  load_all_tasks,
-  save_all_tasks,
-  find_task_in_tree_with_location,
-  delete_task_from_tree,
-  insert_task_in_tree
-} from '@/utils/tasks-utils'
+import { TasksUtils } from '@/utils/tasks-utils'
 
 export const handle_delete_task = async (
   panel_provider: PanelProvider,
@@ -29,9 +23,9 @@ export const handle_delete_task = async (
   }
 
   // 1. Load and Find
-  let all_data = load_all_tasks(panel_provider.context)
+  let all_data = TasksUtils.load_all(panel_provider.context)
   const root_tasks = all_data[message.root] || []
-  const task_info = find_task_in_tree_with_location({
+  const task_info = TasksUtils.find_in_tree_with_location({
     tasks: root_tasks,
     id: message.timestamp
   })
@@ -41,12 +35,12 @@ export const handle_delete_task = async (
   }
 
   // 2. Delete
-  const new_root_tasks = delete_task_from_tree({
+  const new_root_tasks = TasksUtils.delete_from_tree({
     tasks: root_tasks,
     timestamp: message.timestamp
   })
   all_data[message.root] = new_root_tasks
-  save_all_tasks({ context: panel_provider.context, tasks: all_data })
+  TasksUtils.save_all({ context: panel_provider.context, tasks: all_data })
   broadcast_tasks(all_data)
 
   const is_empty = (task: Task): boolean => {
@@ -66,10 +60,10 @@ export const handle_delete_task = async (
 
   if (selection == 'Undo') {
     // 4. Restore
-    all_data = load_all_tasks(panel_provider.context) // Reload to get latest state
+    all_data = TasksUtils.load_all(panel_provider.context) // Reload to get latest state
     const current_root_tasks = all_data[message.root] || []
 
-    const result = insert_task_in_tree({
+    const result = TasksUtils.insert_in_tree({
       tasks: current_root_tasks,
       task: task_info.task,
       parent_id: task_info.parent_id,
@@ -83,7 +77,7 @@ export const handle_delete_task = async (
       all_data[message.root] = [...current_root_tasks, task_info.task]
     }
 
-    save_all_tasks({ context: panel_provider.context, tasks: all_data })
+    TasksUtils.save_all({ context: panel_provider.context, tasks: all_data })
     broadcast_tasks(all_data)
   }
 }
