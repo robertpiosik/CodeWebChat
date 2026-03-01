@@ -185,32 +185,10 @@ export const use_ghost_text = ({
       if (parent_node) {
         parent_node.replaceChild(text_node, ghost_node)
 
-        let next_sibling = text_node.nextSibling
-        let space_added = false
-
-        if (
-          !next_sibling ||
-          next_sibling.nodeType !== Node.TEXT_NODE ||
-          !next_sibling.textContent?.startsWith(' ')
-        ) {
-          const space_node = document.createTextNode(' ')
-          if (next_sibling) {
-            parent_node.insertBefore(space_node, next_sibling)
-          } else {
-            parent_node.appendChild(space_node)
-          }
-          next_sibling = space_node
-          space_added = true
-        }
-
         const selection = window.getSelection()
         if (selection) {
           const range = document.createRange()
-          if (space_added) {
-            range.setStartAfter(next_sibling!)
-          } else {
-            range.setStart(next_sibling!, 1)
-          }
+          range.setStartAfter(text_node)
           range.collapse(true)
           selection.removeAllRanges()
           selection.addRange(range)
