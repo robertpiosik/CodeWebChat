@@ -165,6 +165,15 @@ export interface UpdateCommitMessageInstructionsMessage {
   instructions: string
 }
 
+export interface GetIncludePromptsInCommitMessagesMessage {
+  command: 'GET_INCLUDE_PROMPTS_IN_COMMIT_MESSAGES'
+}
+
+export interface UpdateIncludePromptsInCommitMessagesMessage {
+  command: 'UPDATE_INCLUDE_PROMPTS_IN_COMMIT_MESSAGES'
+  enabled: boolean
+}
+
 export interface GetVoiceInputInstructionsMessage {
   command: 'GET_VOICE_INPUT_INSTRUCTIONS'
 }
@@ -338,6 +347,8 @@ export type FrontendMessage =
   | SetDefaultCommitMessagesConfigurationMessage
   | GetCommitMessageInstructionsMessage
   | UpdateCommitMessageInstructionsMessage
+  | GetIncludePromptsInCommitMessagesMessage
+  | UpdateIncludePromptsInCommitMessagesMessage
   | GetVoiceInputInstructionsMessage
   | UpdateVoiceInputInstructionsMessage
   | GetEditContextSystemInstructionsMessage
@@ -409,6 +420,11 @@ export interface CommitMessagesConfigurationsMessage {
 export interface CommitMessageInstructionsMessage {
   command: 'COMMIT_MESSAGE_INSTRUCTIONS'
   instructions: string
+}
+
+export interface IncludePromptsInCommitMessagesMessage {
+  command: 'INCLUDE_PROMPTS_IN_COMMIT_MESSAGES'
+  enabled: boolean
 }
 
 export interface VoiceInputInstructionsMessage {
@@ -485,6 +501,7 @@ export type BackendMessage =
   | VoiceInputConfigurationsMessage
   | CommitMessagesConfigurationsMessage
   | CommitMessageInstructionsMessage
+  | IncludePromptsInCommitMessagesMessage
   | VoiceInputInstructionsMessage
   | EditContextSystemInstructionsMessage
   | EditFormatInstructionsMessage

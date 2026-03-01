@@ -1745,5 +1745,41 @@ export const settings = {
     cs: 'Popište styl a konvence (např. Conventional Commits) pro generovanou zprávu.',
     hu: 'Stílus és konvenciók (pl. Conventional Commits) leírása.',
     bg: 'Опишете стил (напр. Conventional Commits) за съобщението.'
+  },
+  'settings.commit-messages.include-prompts.title': {
+    en: 'Include Prompts',
+    pl: 'Dołącz prompty',
+    'zh-cn': '包含提示',
+    ja: 'プロンプトを含める',
+    'zh-tw': '包含提示',
+    de: 'Prompts einschließen',
+    es: 'Incluir prompts',
+    fr: 'Inclure les prompts',
+    'pt-br': 'Incluir Prompts',
+    ru: 'Включать промпты',
+    ko: '프롬프트 포함',
+    it: 'Includi prompt',
+    tr: 'İstemleri Dahil Et',
+    cs: 'Zahrnout prompty',
+    hu: 'Kérdések bevonása',
+    bg: 'Включване на промптове'
+  },
+  'settings.commit-messages.include-prompts.description': {
+    en: 'Attach prompts used to edit committed files.',
+    pl: 'Dołącz prompty użyte do edycji zatwierdzonych plików.',
+    'zh-cn': '附加用于编辑已提交文件的提示。',
+    ja: 'コミットされたファイルの編集に使用されたプロンプトを添付します。',
+    'zh-tw': '附加用於編輯已提交檔案的提示。',
+    de: 'Fügen Sie Prompts bei, die zum Bearbeiten committeter Dateien verwendet wurden.',
+    es: 'Adjunta los prompts usados para editar los archivos confirmados.',
+    fr: 'Joindre les prompts utilisés pour modifier les fichiers commités.',
+    'pt-br': 'Anexe os prompts usados para editar os arquivos commitados.',
+    ru: 'Прикреплять промпты, использованные для редактирования закоммиченных файлов.',
+    ko: '커밋된 파일을 편집하는 데 사용된 프롬프트를 첨부합니다.',
+    it: 'Allega i prompt usati per modificare i file committati.',
+    tr: 'Commit edilen dosyaları düzenlemek için kullanılan istemleri ekleyin.',
+    cs: 'Připojit prompty použité k úpravě potvrzených souborů.',
+    hu: 'A commitált fájlok szerkesztéséhez használt promptok csatolása.',
+    bg: 'Прикачване на промптовете, използвани за редактиране на къмитнатите файлове.'
   }
 } as const

@@ -94,6 +94,7 @@ type Props = {
   prune_context_configs: ConfigurationForClient[]
   voice_input_instructions: string
   commit_message_instructions: string
+  include_prompts_in_commit_messages: boolean
   context_size_warning_threshold: number
   gemini_user_id: number | null
   ai_studio_user_id: number | null
@@ -115,6 +116,7 @@ type Props = {
     threshold: number | undefined
   ) => void
   on_commit_instructions_change: (instructions: string) => void
+  on_include_prompts_in_commit_messages_change: (enabled: boolean) => void
   on_edit_format_instructions_change: (
     instructions: EditFormatInstructions
   ) => void
@@ -710,6 +712,18 @@ export const Home: React.FC<Props> = (props) => {
                       )
                     }
                   }}
+                />
+              }
+            />
+            <UiItem
+              title={t('settings.commit-messages.include-prompts.title')}
+              description={t(
+                'settings.commit-messages.include-prompts.description'
+              )}
+              slot_right={
+                <UiToggler
+                  is_on={props.include_prompts_in_commit_messages}
+                  on_toggle={props.on_include_prompts_in_commit_messages_change}
                 />
               }
             />

@@ -776,6 +776,11 @@
           "type": "string",
           "scope": "resource"
         },
+        "codeWebChat.includePromptsInCommitMessages": {
+          "type": "boolean",
+          "scope": "resource",
+          "default": true
+        },
         "codeWebChat.voiceInputInstructions": {
           "type": "string",
           "scope": "resource"

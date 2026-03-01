@@ -114,6 +114,10 @@ export const generate_commit_message_command = (
         path.relative(workspace_root, change.uri.fsPath).replace(/\\/g, '/')
       )
 
+      const include_prompts_setting = vscode.workspace
+        .getConfiguration('codeWebChat')
+        .get<boolean>('includePromptsInCommitMessages', true)
+
       const relevant_prompts = all_prompts.filter((p) =>
         p.files.some((file) => staged_files.includes(file))
       )
@@ -181,7 +185,7 @@ export const generate_commit_message_command = (
         if (edited_message) {
           let selected_prompts = relevant_prompts
 
-          if (relevant_prompts.length > 0) {
+          if (include_prompts_setting && relevant_prompts.length > 0) {
             const picked = await new Promise<
               typeof relevant_prompts | undefined
             >((resolve) => {
@@ -218,7 +222,7 @@ export const generate_commit_message_command = (
           }
 
           const selected_prompts_text =
-            selected_prompts.length > 0
+            include_prompts_setting && selected_prompts.length > 0
               ? '\n\n' +
                 selected_prompts
                   .map(
@@ -240,7 +244,7 @@ export const generate_commit_message_command = (
         }
       } else {
         const prompts_text =
-          relevant_prompts.length > 0
+          include_prompts_setting && relevant_prompts.length > 0
             ? '\n\n' +
               relevant_prompts
                 .map(

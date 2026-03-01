@@ -37,6 +37,10 @@ export const use_settings = (vscode: any) => {
     string | undefined
   >(undefined)
   const [
+    include_prompts_in_commit_messages,
+    set_include_prompts_in_commit_messages
+  ] = useState<boolean | undefined>(undefined)
+  const [
     edit_context_system_instructions,
     set_edit_context_system_instructions
   ] = useState<string | undefined>(undefined)
@@ -82,6 +86,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_VOICE_INPUT_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_PRUNE_CONTEXT_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
+    post_message(vscode, { command: 'GET_INCLUDE_PROMPTS_IN_COMMIT_MESSAGES' })
     post_message(vscode, { command: 'GET_VOICE_INPUT_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' })
     post_message(vscode, { command: 'GET_EDIT_FORMAT_INSTRUCTIONS' })
@@ -116,6 +121,8 @@ export const use_settings = (vscode: any) => {
         set_prune_context_configs(message.configurations)
       } else if (message.command == 'COMMIT_MESSAGE_INSTRUCTIONS') {
         set_commit_message_instructions(message.instructions)
+      } else if (message.command == 'INCLUDE_PROMPTS_IN_COMMIT_MESSAGES') {
+        set_include_prompts_in_commit_messages(message.enabled)
       } else if (message.command == 'VOICE_INPUT_INSTRUCTIONS') {
         set_voice_input_instructions(message.instructions)
       } else if (message.command == 'CONTEXT_SIZE_WARNING_THRESHOLD') {
@@ -321,6 +328,16 @@ export const use_settings = (vscode: any) => {
       instructions
     })
 
+  const handle_include_prompts_in_commit_messages_change = (
+    enabled: boolean
+  ) => {
+    set_include_prompts_in_commit_messages(enabled)
+    post_message(vscode, {
+      command: 'UPDATE_INCLUDE_PROMPTS_IN_COMMIT_MESSAGES',
+      enabled
+    })
+  }
+
   const handle_voice_input_instructions_change = (instructions: string) =>
     post_message(vscode, {
       command: 'UPDATE_VOICE_INPUT_INSTRUCTIONS',
@@ -451,6 +468,7 @@ export const use_settings = (vscode: any) => {
     set_prune_context_configs,
     voice_input_instructions,
     commit_message_instructions,
+    include_prompts_in_commit_messages,
     edit_context_system_instructions,
     context_size_warning_threshold,
     edit_format_instructions,
@@ -475,6 +493,7 @@ export const use_settings = (vscode: any) => {
     handle_unset_default_config,
     handle_voice_input_instructions_change,
     handle_commit_instructions_change,
+    handle_include_prompts_in_commit_messages_change,
     handle_edit_context_system_instructions_change,
     handle_open_editor_settings,
     handle_open_ignore_patterns_settings,
