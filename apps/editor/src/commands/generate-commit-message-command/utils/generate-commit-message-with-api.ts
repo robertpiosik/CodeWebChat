@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import axios from 'axios'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { make_api_request } from '@/utils/make-api-request'
+import { display_token_count } from '@/utils/display-token-count'
 import { Logger } from '@shared/utils/logger'
 import { strip_wrapping_quotes } from './strip-wrapping-quotes'
 import { CommitMessageConfig } from './get-commit-message-config'
@@ -32,6 +33,8 @@ export const generate_commit_message_with_api = async (params: {
     reasoning_effort: params.config.reasoning_effort
   })
 
+  const token_count = Math.ceil(params.message.length / 4)
+
   const cancel_token_source = axios.CancelToken.source()
 
   return await vscode.window.withProgress(
@@ -46,7 +49,9 @@ export const generate_commit_message_with_api = async (params: {
       })
 
       progress.report({
-        message: t('common.progress.waiting-for-server')
+        message: t('common.progress.sent-tokens', {
+          tokens: display_token_count(token_count)
+        })
       })
 
       try {

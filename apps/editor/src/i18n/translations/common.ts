@@ -53,6 +53,24 @@ export const common = {
     hu: 'várakozás a szerverre...',
     bg: 'изчакване на сървъра...'
   },
+  'common.progress.sent-tokens': {
+    en: 'sent {tokens} tokens...',
+    pl: 'wysłano {tokens} tokenów...',
+    'zh-cn': '已发送 {tokens} token...',
+    ja: '{tokens} トークンを送信しました...',
+    'zh-tw': '已發送 {tokens} token...',
+    de: '{tokens} Tokens gesendet...',
+    es: 'enviados {tokens} tokens...',
+    fr: '{tokens} tokens envoyés...',
+    'pt-br': '{tokens} tokens enviados...',
+    ru: 'отправлено {tokens} токенов...',
+    ko: '{tokens} 토큰 전송됨...',
+    it: 'inviati {tokens} token...',
+    tr: '{tokens} token gönderildi...',
+    cs: 'odesláno {tokens} tokenů...',
+    hu: '{tokens} token elküldve...',
+    bg: 'изпратени са {tokens} токена...'
+  },
   'common.progress.receiving': {
     en: 'receiving...',
     pl: 'odbieranie...',
