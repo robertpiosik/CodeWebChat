@@ -504,7 +504,11 @@ const perform_code_at_cursor = async (params: {
         }
       } catch (err: any) {
         if (axios.isCancel(err)) {
-          break
+          if (err.message == t('command.code-at-cursor.cancel.cursor-moved')) {
+            break
+          }
+          force_show_quick_pick = true
+          continue
         }
 
         Logger.error({

@@ -99,10 +99,8 @@ export const generate_commit_message_command = (
         })
       } catch (error) {
         if (axios.isCancel(error)) {
-          if (was_empty_stage) {
-            await vscode.commands.executeCommand('git.unstageAll')
-          }
-          break
+          force_show_quick_pick = true
+          continue
         } else {
           force_show_quick_pick = true
           continue
