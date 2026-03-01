@@ -51,8 +51,15 @@ export const save_contexts_for_workspace = (
   const all_data = load_all_global_contexts_data(context)
   all_data[workspace_root] = contexts
 
+  const filtered_data: GlobalContextsData = {}
+  for (const root in all_data) {
+    if (fs.existsSync(root)) {
+      filtered_data[root] = all_data[root]
+    }
+  }
+
   try {
-    fs.writeFileSync(file_path, JSON.stringify(all_data, null, 2), 'utf8')
+    fs.writeFileSync(file_path, JSON.stringify(filtered_data, null, 2), 'utf8')
   } catch (error) {
     console.error('Error saving global contexts:', error)
     throw new Error('Failed to save contexts to global storage.')

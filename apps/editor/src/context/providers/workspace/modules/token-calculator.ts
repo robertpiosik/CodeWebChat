@@ -103,10 +103,13 @@ export class TokenCalculator implements vscode.Disposable {
         }
       }
 
-      // Prune workspaces updated one week ago or later
-      const one_week_ago = Date.now() - 7 * 24 * 60 * 60 * 1000
+      // Prune workspaces that no longer exist or were updated more than 3 months ago
+      const three_months_ago = Date.now() - 90 * 24 * 60 * 60 * 1000
       for (const root in current_global_cache) {
-        if (current_global_cache[root].modified_at < one_week_ago) {
+        if (
+          !fs.existsSync(root) ||
+          current_global_cache[root].modified_at < three_months_ago
+        ) {
           delete current_global_cache[root]
         }
       }
