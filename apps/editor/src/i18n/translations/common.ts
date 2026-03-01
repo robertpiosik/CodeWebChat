@@ -107,6 +107,24 @@ export const common = {
     hu: 'gondolkodás...',
     bg: 'мислене...'
   },
+  'common.progress.preparing-preview': {
+    en: 'Preparing response preview...',
+    pl: 'Przygotowywanie podglądu odpowiedzi...',
+    'zh-cn': '正在准备响应预览...',
+    ja: '応答のプレビューを準備中...',
+    'zh-tw': '正在準備回應預覽...',
+    de: 'Antwortvorschau wird vorbereitet...',
+    es: 'Preparando vista previa de la respuesta...',
+    fr: "Préparation de l'aperçu de la réponse...",
+    'pt-br': 'Preparando a prévia da resposta...',
+    ru: 'Подготовка предпросмотра ответа...',
+    ko: '응답 미리보기 준비 중...',
+    it: "Preparazione dell'anteprima della risposta...",
+    tr: 'Yanıt önizlemesi hazırlanıyor...',
+    cs: 'Příprava náhledu odpovědi...',
+    hu: 'Válasz előnézetének előkészítése...',
+    bg: 'Подготовка на преглед на отговора...'
+  },
   'common.separator.recently-used': {
     en: 'recently used',
     pl: 'ostatnio używane',

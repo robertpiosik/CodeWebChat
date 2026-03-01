@@ -21,6 +21,7 @@ import { Checkpoint } from '../checkpoints-command/types'
 import { CHECKPOINTS_STATE_KEY } from '@/constants/state-keys'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { ApiManager } from '@/services/api-manager'
+import { t } from '@/i18n'
 import {
   preview_document_provider,
   CwcPreviewProvider
@@ -150,6 +151,11 @@ export const apply_chat_response_command = (params: {
           }
         }
 
+        params.panel_provider.send_message({
+          command: 'SHOW_PROGRESS',
+          title: t('common.progress.preparing-preview')
+        })
+
         before_checkpoint = await create_checkpoint(
           params.workspace_provider,
           params.context,
@@ -165,6 +171,10 @@ export const apply_chat_response_command = (params: {
           params.panel_provider,
           params.workspace_provider
         )
+
+        params.panel_provider.send_message({
+          command: 'HIDE_PROGRESS'
+        })
 
         if (preview_data) {
           let created_at_for_preview = args?.created_at
@@ -373,6 +383,9 @@ export const apply_chat_response_command = (params: {
           }
         }
       } catch (err: any) {
+        params.panel_provider.send_message({
+          command: 'HIDE_PROGRESS'
+        })
         vscode.window.showErrorMessage(
           dictionary.error_message.APPLYING_CHANGES_GENERIC_ERROR(err.message)
         )
