@@ -1673,9 +1673,17 @@ export class FileItem extends vscode.TreeItem {
 
     if (this.isWorkspaceRoot) {
       this.contextValue = 'workspaceRoot'
+      this.command = {
+        command: 'list.toggleExpand',
+        title: 'Toggle Expand'
+      }
     } else if (this.isDirectory) {
       this.iconPath = new vscode.ThemeIcon('folder')
       this.contextValue = 'directory'
+      this.command = {
+        command: 'list.toggleExpand',
+        title: 'Toggle Expand'
+      }
     } else {
       this.iconPath = new vscode.ThemeIcon('file')
       this.contextValue = 'file'
