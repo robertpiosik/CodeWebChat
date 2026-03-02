@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import { PromptsForCommitMessagesUtils } from '../utils/prompts-for-commit-messages-utils'
+import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
 
 export const setup_git_discard_file_watcher = (
   context: vscode.ExtensionContext
@@ -16,6 +17,7 @@ export const setup_git_discard_file_watcher = (
       const git_api = git_extension.exports.getAPI(1)
 
       const repo_states = new Map<string, Set<string>>()
+      const previous_prompts_text_map = new Map<string, string>()
 
       const update_repo_state = (repo: any) => {
         const workspace_root = repo.rootUri.fsPath
@@ -51,6 +53,54 @@ export const setup_git_discard_file_watcher = (
         }
 
         repo_states.set(workspace_root, current_changes)
+
+        const include_prompts_setting = vscode.workspace
+          .getConfiguration('codeWebChat')
+          .get<boolean>('includePromptsInCommitMessages', true)
+
+        let relevant_prompts_text = ''
+
+        if (include_prompts_setting) {
+          const all_prompts =
+            PromptsForCommitMessagesUtils.load_all(context)[workspace_root] ||
+            []
+          const staged_files = (repo.state.indexChanges || []).map(
+            (change: any) =>
+              path
+                .relative(workspace_root, change.uri.fsPath)
+                .replace(/\\/g, '/')
+          )
+
+          const relevant_prompts = all_prompts.filter((p) =>
+            p.files.some((file) => staged_files.includes(file))
+          )
+
+          if (relevant_prompts.length > 0) {
+            relevant_prompts_text =
+              '\n\n' +
+              relevant_prompts
+                .map(
+                  (p) => `- ${simplify_prompt_symbols({ prompt: p.prompt })}`
+                )
+                .join('\n')
+          }
+        }
+
+        const previous_text =
+          previous_prompts_text_map.get(workspace_root) || ''
+
+        if (previous_text !== relevant_prompts_text) {
+          let current_value = repo.inputBox.value
+
+          if (previous_text && current_value.includes(previous_text)) {
+            current_value = current_value.replace(previous_text, '')
+          }
+
+          current_value = current_value.trimEnd()
+
+          repo.inputBox.value = current_value + relevant_prompts_text
+          previous_prompts_text_map.set(workspace_root, relevant_prompts_text)
+        }
       }
 
       for (const repo of git_api.repositories) {

@@ -1,0 +1,57 @@
+export const model_providers = {
+  'model-providers.subtitle': {
+    en: 'Manage API keys.',
+    pl: 'Zarządzaj kluczami API.',
+    'zh-cn': '管理 API 密钥。',
+    ja: 'API キーを管理します。',
+    'zh-tw': '管理 API 金鑰。',
+    de: 'API-Schlüssel verwalten.',
+    es: 'Gestionar claves API.',
+    fr: 'Gérer les clés API.',
+    'pt-br': 'Gerenciar chaves de API.',
+    ru: 'Управление API ключами.',
+    ko: 'API 키를 관리합니다.',
+    it: 'Gestisci le chiavi API.',
+    tr: 'API anahtarını yönetin.',
+    cs: 'Správa API klíčů.',
+    hu: 'API kulcsok kezelése.',
+    bg: 'Управление на API ключове.'
+  },
+  'model-providers.notice.api-keys': {
+    en: 'API keys are stored securely in the {link} on your machine.',
+    pl: 'Klucze API są bezpiecznie przechowywane w {link} na twoim komputerze.',
+    'zh-cn': 'API 密钥安全地存储在您机器上的 {link} 中。',
+    ja: 'API キーはマシンの {link} に安全に保存されます。',
+    'zh-tw': 'API 金鑰安全地儲存在您機器的 {link} 中。',
+    de: 'API-Schlüssel werden sicher im {link} auf Ihrem Computer gespeichert.',
+    es: 'Las claves API se almacenan de forma segura en {link} en tu máquina.',
+    fr: 'Les clés API sont stockées de manière sécurisée dans {link} sur votre machine.',
+    'pt-br':
+      'As chaves de API são armazenadas com segurança no {link} em sua máquina.',
+    ru: 'API ключи безопасно хранятся в {link} на вашей машине.',
+    ko: 'API 키는 컴퓨터의 {link}에 안전하게 저장됩니다.',
+    it: 'Le chiavi API sono archiviate in modo sicuro nel {link} sul tuo computer.',
+    tr: 'API anahtarları güvenli bir şekilde bilgisayarınızdaki {link} içinde saklanır.',
+    cs: 'API klíče jsou bezpečně uloženy v {link} na vašem počítači.',
+    hu: 'Az API kulcsok biztonságosan vannak tárolva a {link} a gépén.',
+    bg: 'API ключовете се съхраняват сигурно в {link} на вашата машина.'
+  },
+  'model-providers.notice.missing': {
+    en: 'Missing model provider.',
+    pl: 'Brak dostawcy modelu.',
+    'zh-cn': '缺少模型提供商。',
+    ja: 'モデルプロバイダーがありません。',
+    'zh-tw': '缺少模型供應商。',
+    de: 'Fehlender Modellanbieter.',
+    es: 'Falta el proveedor de modelos.',
+    fr: 'Fournisseur de modèles manquant.',
+    'pt-br': 'Provedor de modelo ausente.',
+    ru: 'Провайдер модели отсутствует.',
+    ko: '모델 제공자가 누락되었습니다.',
+    it: 'Fornitore di modelli mancante.',
+    tr: 'Eksik model sağlayıcı.',
+    cs: 'Chybějící poskytovatel modelu.',
+    hu: 'Hiányzó modell szolgáltató.',
+    bg: 'Липсващ доставчик.'
+  }
+} as const
