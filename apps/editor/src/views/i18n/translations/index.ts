@@ -1,4 +1,4 @@
-import { panel } from './panel'
+import { panel } from './panel/index'
 import { settings } from './settings'
 
 export const translations = {
