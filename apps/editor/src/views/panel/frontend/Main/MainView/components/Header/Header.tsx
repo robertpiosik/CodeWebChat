@@ -11,7 +11,7 @@ import {
 } from '../../prompt-type-labels'
 import { SettingsButton as UiSettingsButton } from '@ui/components/editor/panel/SettingsButton'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
-import { use_translation } from '@/views/i18n/use-translation'
+import { use_translation } from '../../../../i18n/use-translation'
 
 type Props = {
   mode: Mode
@@ -85,7 +85,7 @@ export const Header: React.FC<Props> = (props) => {
               selected_value={props.web_prompt_type}
               on_change={props.on_web_prompt_type_change}
               menu_max_width="calc(100vw - 52px)"
-              info={t('panel.header.prompt-type')}
+              info={t('header.prompt-type')}
               title={
                 is_mac
                   ? 'Change prompt type (⇧⌥)'
@@ -105,9 +105,7 @@ export const Header: React.FC<Props> = (props) => {
               selected_value={props.api_prompt_type}
               on_change={props.on_api_prompt_type_change}
               menu_max_width="calc(100vw - 60px)"
-              info={
-                is_narrow_viewport ? undefined : t('panel.header.prompt-type')
-              }
+              info={is_narrow_viewport ? undefined : t('header.prompt-type')}
               title={
                 is_mac
                   ? 'Change prompt type (⇧⌥)'

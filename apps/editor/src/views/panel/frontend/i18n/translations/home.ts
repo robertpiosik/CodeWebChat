@@ -1,5 +1,5 @@
 export const home = {
-  'panel.home.tasks': {
+  'home.tasks': {
     en: 'Tasks',
     pl: 'Zadania',
     'zh-cn': '任务',
@@ -17,7 +17,7 @@ export const home = {
     hu: 'Feladatok',
     bg: 'Задачи'
   },
-  'panel.home.tasks.empty': {
+  'home.tasks.empty': {
     en: 'No tasks created yet.',
     pl: 'Nie utworzono jeszcze żadnych zadań.',
     'zh-cn': '尚未创建任务。',
@@ -35,7 +35,7 @@ export const home = {
     hu: 'Még nincsenek feladatok létrehozva.',
     bg: 'Все още няма създадени задачи.'
   },
-  'panel.home.tasks.add': {
+  'home.tasks.add': {
     en: 'Add Task',
     pl: 'Dodaj zadanie',
     'zh-cn': '添加任务',
@@ -53,7 +53,7 @@ export const home = {
     hu: 'Feladat hozzáadása',
     bg: 'Добавяне на задача'
   },
-  'panel.home.tasks.placeholder': {
+  'home.tasks.placeholder': {
     en: 'Click to add text...',
     pl: 'Kliknij, aby dodać tekst...',
     'zh-cn': '点击添加文本...',
@@ -71,7 +71,7 @@ export const home = {
     hu: 'Kattintson szöveg hozzáadásához...',
     bg: 'Кликнете, за да добавите текст...'
   },
-  'panel.home.footer.license': {
+  'home.footer.license': {
     en: 'Released under the {link}',
     pl: 'Wydano na {link}',
     'zh-cn': '在 {link} 下发布',
@@ -89,7 +89,7 @@ export const home = {
     hu: '{link} alatt kiadva',
     bg: 'Публикуван под {link}'
   },
-  'panel.home.footer.license.name': {
+  'home.footer.license.name': {
     en: 'GPL-3.0 license',
     pl: 'licencji GPL-3.0',
     'zh-cn': 'GPL-3.0 许可证',
@@ -108,7 +108,7 @@ export const home = {
     hu: 'GPL-3.0 licenc',
     bg: 'GPL-3.0 лиценз'
   },
-  'panel.home.footer.copyright': {
+  'home.footer.copyright': {
     en: 'Copyright © {year} {link}',
     pl: 'Copyright © {year} {link}',
     'zh-cn': '版权所有 © {year} {link}',

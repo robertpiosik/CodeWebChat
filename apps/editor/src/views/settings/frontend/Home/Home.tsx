@@ -22,7 +22,7 @@ import {
   Translation,
   use_translation,
   TranslationKey
-} from '@/views/i18n/use-translation'
+} from '../i18n/use-translation'
 import {
   commit_message_instructions as default_commit_message_instructions,
   voice_input_instructions as default_voice_input_instructions
@@ -47,39 +47,39 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   {
     type: 'item',
     id: 'general',
-    label: 'settings.sidebar.general'
+    label: 'sidebar.general'
   },
   {
     type: 'item',
     id: 'model-providers',
-    label: 'settings.sidebar.model-providers'
+    label: 'sidebar.model-providers'
   },
-  { type: 'divider', text: 'settings.sidebar.api-tools' },
+  { type: 'divider', text: 'sidebar.api-tools' },
   {
     type: 'item',
     id: 'intelligent-update',
-    label: 'settings.sidebar.intelligent-update'
+    label: 'sidebar.intelligent-update'
   },
-  { type: 'item', id: 'edit-context', label: 'settings.sidebar.edit-context' },
+  { type: 'item', id: 'edit-context', label: 'sidebar.edit-context' },
   {
     type: 'item',
     id: 'code-at-cursor',
-    label: 'settings.sidebar.code-at-cursor'
+    label: 'sidebar.code-at-cursor'
   },
   {
     type: 'item',
     id: 'prune-context',
-    label: 'settings.sidebar.prune-context'
+    label: 'sidebar.prune-context'
   },
   {
     type: 'item',
     id: 'commit-messages',
-    label: 'settings.sidebar.commit-messages'
+    label: 'sidebar.commit-messages'
   },
   {
     type: 'item',
     id: 'voice-input',
-    label: 'settings.sidebar.voice-input'
+    label: 'sidebar.voice-input'
   }
 ]
 
@@ -304,7 +304,7 @@ export const Home: React.FC<Props> = (props) => {
     <div style={{ height: '100vh' }}>
       <UiLayout
         ref={scroll_container_ref}
-        title={t('settings.sidebar.settings')}
+        title={t('sidebar.settings')}
         sidebar={NAV_ITEMS_CONFIG.map((item, i) => {
           if (item.type == 'divider') {
             return (
@@ -373,18 +373,18 @@ export const Home: React.FC<Props> = (props) => {
 
         <UiSection
           ref={(el) => (section_refs.current['model-providers'] = el)}
-          title={t('settings.sidebar.model-providers')}
-          subtitle={t('settings.model-providers.subtitle')}
+          title={t('sidebar.model-providers')}
+          subtitle={t('model-providers.subtitle')}
           on_stuck_change={model_providers_on_stuck_change}
           actions={
             <UiButton on_click={() => props.on_add_provider()}>
-              {t('settings.action.add-new')}
+              {t('action.add-new')}
             </UiButton>
           }
         >
           <UiNotice type="info">
             <Translation
-              id="settings.model-providers.notice.api-keys"
+              id="model-providers.notice.api-keys"
               components={{
                 link: (
                   <a
@@ -404,7 +404,7 @@ export const Home: React.FC<Props> = (props) => {
           </UiNotice>
           {props.providers.length == 0 && (
             <UiNotice type="warning">
-              {t('settings.model-providers.notice.missing')}
+              {t('model-providers.notice.missing')}
             </UiNotice>
           )}
           <UiGroup>
@@ -423,9 +423,9 @@ export const Home: React.FC<Props> = (props) => {
         </UiSection>
         <UiSection
           ref={(el) => (section_refs.current['intelligent-update'] = el)}
-          group={t('settings.section.api-tool')}
-          title={t('settings.sidebar.intelligent-update')}
-          subtitle={t('settings.intelligent-update.subtitle')}
+          group={t('section.api-tool')}
+          title={t('sidebar.intelligent-update')}
+          subtitle={t('intelligent-update.subtitle')}
           on_stuck_change={intelligent_update_on_stuck_change}
           actions={
             <UiButton
@@ -435,16 +435,14 @@ export const Home: React.FC<Props> = (props) => {
                 })
               }
             >
-              {t('settings.action.add-new')}
+              {t('action.add-new')}
             </UiButton>
           }
         >
-          <UiNotice type="info">
-            {t('settings.intelligent-update.notice')}
-          </UiNotice>
+          <UiNotice type="info">{t('intelligent-update.notice')}</UiNotice>
           {props.intelligent_update_configs.length == 0 && (
             <UiNotice type="warning">
-              {t('settings.message.missing-configuration')}
+              {t('message.missing-configuration')}
             </UiNotice>
           )}
           <UiGroup>
@@ -471,11 +469,9 @@ export const Home: React.FC<Props> = (props) => {
               }
             />
             <UiItem
-              title={t(
-                'settings.intelligent-update.fix-all-automatically.title'
-              )}
+              title={t('intelligent-update.fix-all-automatically.title')}
               description={t(
-                'settings.intelligent-update.fix-all-automatically.description'
+                'intelligent-update.fix-all-automatically.description'
               )}
               slot_right={
                 <UiToggler
@@ -489,9 +485,9 @@ export const Home: React.FC<Props> = (props) => {
 
         <UiSection
           ref={(el) => (section_refs.current['edit-context'] = el)}
-          group={t('settings.section.api-tool')}
-          title={t('settings.sidebar.edit-context')}
-          subtitle={t('settings.edit-context.subtitle')}
+          group={t('section.api-tool')}
+          title={t('sidebar.edit-context')}
+          subtitle={t('edit-context.subtitle')}
           on_stuck_change={edit_context_on_stuck_change}
           actions={
             <UiButton
@@ -499,14 +495,14 @@ export const Home: React.FC<Props> = (props) => {
                 props.on_add_config('EDIT_CONTEXT', { create_on_top: true })
               }
             >
-              {t('settings.action.add-new')}
+              {t('action.add-new')}
             </UiButton>
           }
         >
-          <UiNotice type="info">{t('settings.edit-context.notice')}</UiNotice>
+          <UiNotice type="info">{t('edit-context.notice')}</UiNotice>
           {props.edit_context_configs.length == 0 && (
             <UiNotice type="warning">
-              {t('settings.message.missing-configuration')}
+              {t('message.missing-configuration')}
             </UiNotice>
           )}
           <UiGroup>
@@ -523,10 +519,8 @@ export const Home: React.FC<Props> = (props) => {
               on_delete={(id) => props.on_delete_config('EDIT_CONTEXT', id)}
             />
             <UiItem
-              title={t('settings.edit-context.system-instructions.title')}
-              description={t(
-                'settings.edit-context.system-instructions.description'
-              )}
+              title={t('edit-context.system-instructions.title')}
+              description={t('edit-context.system-instructions.description')}
               slot_below={
                 <UiTextarea
                   value={edit_context_instructions}
@@ -551,9 +545,9 @@ export const Home: React.FC<Props> = (props) => {
 
         <UiSection
           ref={(el) => (section_refs.current['code-at-cursor'] = el)}
-          group={t('settings.section.api-tool')}
-          title={t('settings.sidebar.code-at-cursor')}
-          subtitle={t('settings.code-at-cursor.subtitle')}
+          group={t('section.api-tool')}
+          title={t('sidebar.code-at-cursor')}
+          subtitle={t('code-at-cursor.subtitle')}
           on_stuck_change={code_at_cursor_on_stuck_change}
           actions={
             <UiButton
@@ -561,14 +555,14 @@ export const Home: React.FC<Props> = (props) => {
                 props.on_add_config('CODE_AT_CURSOR', { create_on_top: true })
               }
             >
-              {t('settings.action.add-new')}
+              {t('action.add-new')}
             </UiButton>
           }
         >
-          <UiNotice type="info">{t('settings.code-at-cursor.notice')}</UiNotice>
+          <UiNotice type="info">{t('code-at-cursor.notice')}</UiNotice>
           {props.code_at_cursor_configs.length == 0 && (
             <UiNotice type="warning">
-              {t('settings.message.missing-configuration')}
+              {t('message.missing-configuration')}
             </UiNotice>
           )}
           <UiGroup>
@@ -591,17 +585,15 @@ export const Home: React.FC<Props> = (props) => {
               }
             />
             <UiItem
-              title={t('settings.code-at-cursor.keyboard-shortcut.title')}
-              description={t(
-                'settings.code-at-cursor.keyboard-shortcut.description'
-              )}
+              title={t('code-at-cursor.keyboard-shortcut.title')}
+              description={t('code-at-cursor.keyboard-shortcut.description')}
               slot_right={
                 <UiTextButton
                   on_click={() =>
                     props.on_open_keybindings('codeWebChat.codeAtCursor')
                   }
                 >
-                  {t('settings.code-at-cursor.keyboard-shortcut.action')}
+                  {t('code-at-cursor.keyboard-shortcut.action')}
                 </UiTextButton>
               }
             />
@@ -610,9 +602,9 @@ export const Home: React.FC<Props> = (props) => {
 
         <UiSection
           ref={(el) => (section_refs.current['prune-context'] = el)}
-          group={t('settings.section.api-tool')}
-          title={t('settings.sidebar.prune-context')}
-          subtitle={t('settings.prune-context.subtitle')}
+          group={t('section.api-tool')}
+          title={t('sidebar.prune-context')}
+          subtitle={t('prune-context.subtitle')}
           on_stuck_change={prune_context_on_stuck_change}
           actions={
             <UiButton
@@ -620,14 +612,14 @@ export const Home: React.FC<Props> = (props) => {
                 props.on_add_config('PRUNE_CONTEXT', { create_on_top: true })
               }
             >
-              {t('settings.action.add-new')}
+              {t('action.add-new')}
             </UiButton>
           }
         >
-          <UiNotice type="info">{t('settings.prune-context.notice')}</UiNotice>
+          <UiNotice type="info">{t('prune-context.notice')}</UiNotice>
           {props.prune_context_configs.length == 0 && (
             <UiNotice type="warning">
-              {t('settings.message.missing-configuration')}
+              {t('message.missing-configuration')}
             </UiNotice>
           )}
           <UiGroup>
@@ -648,9 +640,9 @@ export const Home: React.FC<Props> = (props) => {
 
         <UiSection
           ref={(el) => (section_refs.current['commit-messages'] = el)}
-          group={t('settings.section.api-tool')}
-          title={t('settings.sidebar.commit-messages')}
-          subtitle={t('settings.commit-messages.subtitle')}
+          group={t('section.api-tool')}
+          title={t('sidebar.commit-messages')}
+          subtitle={t('commit-messages.subtitle')}
           on_stuck_change={commit_messages_on_stuck_change}
           actions={
             <UiButton
@@ -658,16 +650,14 @@ export const Home: React.FC<Props> = (props) => {
                 props.on_add_config('COMMIT_MESSAGES', { create_on_top: true })
               }
             >
-              {t('settings.action.add-new')}
+              {t('action.add-new')}
             </UiButton>
           }
         >
-          <UiNotice type="info">
-            {t('settings.commit-messages.notice')}
-          </UiNotice>
+          <UiNotice type="info">{t('commit-messages.notice')}</UiNotice>
           {props.commit_messages_configs.length == 0 && (
             <UiNotice type="warning">
-              {t('settings.message.missing-configuration')}
+              {t('message.missing-configuration')}
             </UiNotice>
           )}
           <UiGroup>
@@ -692,10 +682,8 @@ export const Home: React.FC<Props> = (props) => {
               }
             />
             <UiItem
-              title={t('settings.commit-messages.instructions.title')}
-              description={t(
-                'settings.commit-messages.instructions.description'
-              )}
+              title={t('commit-messages.instructions.title')}
+              description={t('commit-messages.instructions.description')}
               slot_below={
                 <UiTextarea
                   value={commit_instructions}
@@ -716,10 +704,8 @@ export const Home: React.FC<Props> = (props) => {
               }
             />
             <UiItem
-              title={t('settings.commit-messages.include-prompts.title')}
-              description={t(
-                'settings.commit-messages.include-prompts.description'
-              )}
+              title={t('commit-messages.include-prompts.title')}
+              description={t('commit-messages.include-prompts.description')}
               slot_right={
                 <UiToggler
                   is_on={props.include_prompts_in_commit_messages}
@@ -732,9 +718,9 @@ export const Home: React.FC<Props> = (props) => {
 
         <UiSection
           ref={(el) => (section_refs.current['voice-input'] = el)}
-          group={t('settings.section.api-tool')}
-          title={t('settings.sidebar.voice-input')}
-          subtitle={t('settings.voice-input.subtitle')}
+          group={t('section.api-tool')}
+          title={t('sidebar.voice-input')}
+          subtitle={t('voice-input.subtitle')}
           on_stuck_change={voice_input_on_stuck_change}
           actions={
             <UiButton
@@ -744,13 +730,13 @@ export const Home: React.FC<Props> = (props) => {
                 })
               }
             >
-              {t('settings.action.add-new')}
+              {t('action.add-new')}
             </UiButton>
           }
         >
           <UiNotice type="info">
             <Translation
-              id="settings.voice-input.notice"
+              id="voice-input.notice"
               components={{
                 link: (
                   <a
@@ -762,7 +748,7 @@ export const Home: React.FC<Props> = (props) => {
                       )
                     }}
                   >
-                    {t('settings.voice-input.notice.link')}
+                    {t('voice-input.notice.link')}
                   </a>
                 )
               }}
@@ -770,7 +756,7 @@ export const Home: React.FC<Props> = (props) => {
           </UiNotice>
           {props.voice_input_configs.length == 0 && (
             <UiNotice type="warning">
-              {t('settings.message.missing-configuration')}
+              {t('message.missing-configuration')}
             </UiNotice>
           )}
           <UiGroup>
@@ -793,8 +779,8 @@ export const Home: React.FC<Props> = (props) => {
               }
             />
             <UiItem
-              title={t('settings.voice-input.instructions.title')}
-              description={t('settings.voice-input.instructions.description')}
+              title={t('voice-input.instructions.title')}
+              description={t('voice-input.instructions.description')}
               slot_below={
                 <UiTextarea
                   value={voice_input_instructions}

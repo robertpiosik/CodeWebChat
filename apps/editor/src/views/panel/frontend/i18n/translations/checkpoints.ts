@@ -1,5 +1,5 @@
 export const checkpoints = {
-  'panel.home.timeline': {
+  'home.timeline': {
     en: 'Timeline',
     pl: 'Oś czasu',
     'zh-cn': '时间线',
@@ -17,7 +17,7 @@ export const checkpoints = {
     hu: 'Idővonal',
     bg: 'Хронология'
   },
-  'panel.home.timeline.empty': {
+  'home.timeline.empty': {
     en: 'No checkpoints created yet.',
     pl: 'Nie utworzono jeszcze żadnych punktów kontrolnych.',
     'zh-cn': '尚未创建检查点。',
@@ -35,7 +35,7 @@ export const checkpoints = {
     hu: 'Még nincsenek ellenőrzőpontok létrehozva.',
     bg: 'Все още няма създадени контролни точки.'
   },
-  'panel.home.timeline.new-checkpoint': {
+  'home.timeline.new-checkpoint': {
     en: 'New Checkpoint',
     pl: 'Nowy punkt kontrolny',
     'zh-cn': '新检查点',
@@ -53,7 +53,7 @@ export const checkpoints = {
     hu: 'Új Ellenőrzőpont',
     bg: 'Нова контролна точка'
   },
-  'panel.home.timeline.delete-all': {
+  'home.timeline.delete-all': {
     en: 'Delete all checkpoints',
     pl: 'Usuń wszystkie punkty kontrolne',
     'zh-cn': '删除所有检查点',
@@ -71,7 +71,7 @@ export const checkpoints = {
     hu: 'Összes ellenőrzőpont törlése',
     bg: 'Изтриване на всички контролни точки'
   },
-  'panel.home.timeline.scroll': {
+  'home.timeline.scroll': {
     en: 'Scroll to timeline',
     pl: 'Przewiń do osi czasu',
     'zh-cn': '滚动到时间线',

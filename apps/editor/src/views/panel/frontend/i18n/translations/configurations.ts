@@ -1,5 +1,5 @@
 export const configurations = {
-  'panel.configurations.title': {
+  'configurations.title': {
     en: 'Configurations',
     pl: 'Konfiguracje',
     'zh-cn': '配置',
@@ -17,7 +17,7 @@ export const configurations = {
     hu: 'Konfigurációk',
     bg: 'Конфигурации'
   },
-  'panel.configurations.empty': {
+  'configurations.empty': {
     en: 'No configurations created yet.',
     pl: 'Nie utworzono jeszcze żadnych konfiguracji.',
     'zh-cn': '尚未创建配置。',

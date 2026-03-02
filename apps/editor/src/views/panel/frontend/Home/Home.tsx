@@ -10,7 +10,7 @@ import { Responses as UiResponses } from '@ui/components/editor/panel/Responses'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Separator as UiSeparator } from '@ui/components/editor/panel/Separator'
 import { ListHeader as UiListHeader } from '@ui/components/editor/panel/ListHeader'
-import { Translation, use_translation } from '@/views/i18n/use-translation'
+import { Translation, use_translation } from '../i18n/use-translation'
 import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
 import { Tasks as UiTasks } from '@ui/components/editor/panel/Tasks'
 import { Task } from '@shared/types/task'
@@ -101,13 +101,11 @@ export const Home: React.FC<Props> = (props) => {
           <div className={styles['header__home']}>
             <span className="codicon codicon-home" />
           </div>
-          <span className={styles['header__text']}>
-            {t('panel.header.home')}
-          </span>
+          <span className={styles['header__text']}>{t('header.home')}</span>
         </div>
         <UiSettingsButton
           on_click={handle_settings_click}
-          label={t('panel.header.settings')}
+          label={t('header.settings')}
           show_warning_icon={!props.is_setup_complete}
         />
       </div>
@@ -177,7 +175,7 @@ export const Home: React.FC<Props> = (props) => {
             <UiSeparator height={8} />
 
             <UiListHeader
-              title={t('panel.home.tasks')}
+              title={t('home.tasks')}
               is_collapsed={props.are_tasks_collapsed}
               on_toggle_collapsed={() =>
                 props.on_tasks_collapsed_change(!props.are_tasks_collapsed)
@@ -186,7 +184,7 @@ export const Home: React.FC<Props> = (props) => {
                 Object.keys(props.tasks).length == 1 ? (
                   <UiIconButton
                     codicon_icon="add"
-                    title={t('panel.home.tasks.add')}
+                    title={t('home.tasks.add')}
                     on_click={(e) => {
                       e.stopPropagation()
                       const roots = Object.keys(props.tasks)
@@ -205,7 +203,7 @@ export const Home: React.FC<Props> = (props) => {
               Object.keys(props.tasks).length == 1 &&
               props.tasks[Object.keys(props.tasks)[0]].length == 0 && (
                 <div className={styles.inner__empty}>
-                  {t('panel.home.tasks.empty')}
+                  {t('home.tasks.empty')}
                 </div>
               )}
             {!props.are_tasks_collapsed &&
@@ -226,7 +224,7 @@ export const Home: React.FC<Props> = (props) => {
                         </span>
                         <button
                           className={styles['add-button']}
-                          title={t('panel.home.tasks.add')}
+                          title={t('home.tasks.add')}
                           onClick={() => {
                             handle_add(workspace_root_folder, tasks, 'top')
                           }}
@@ -262,7 +260,7 @@ export const Home: React.FC<Props> = (props) => {
                         on_forward={(text) => {
                           props.on_task_forward(text)
                         }}
-                        placeholder={t('panel.home.tasks.placeholder')}
+                        placeholder={t('home.tasks.placeholder')}
                       />
                     )}
                   </div>
@@ -270,7 +268,7 @@ export const Home: React.FC<Props> = (props) => {
 
             <UiListHeader
               ref={timeline_ref}
-              title={t('panel.home.timeline')}
+              title={t('home.timeline')}
               is_collapsed={props.is_timeline_collapsed}
               on_toggle_collapsed={() =>
                 props.on_timeline_collapsed_change(!props.is_timeline_collapsed)
@@ -279,7 +277,7 @@ export const Home: React.FC<Props> = (props) => {
                 <>
                   <UiIconButton
                     codicon_icon="add"
-                    title={t('panel.home.timeline.new-checkpoint')}
+                    title={t('home.timeline.new-checkpoint')}
                     on_click={(e) => {
                       e.stopPropagation()
                       handle_create_checkpoint_click()
@@ -288,7 +286,7 @@ export const Home: React.FC<Props> = (props) => {
                   {props.checkpoints.length > 0 && (
                     <UiIconButton
                       codicon_icon="trash"
-                      title={t('panel.home.timeline.delete-all')}
+                      title={t('home.timeline.delete-all')}
                       on_click={(e) => {
                         e.stopPropagation()
                         handle_delete_all_checkpoints_click()
@@ -318,7 +316,7 @@ export const Home: React.FC<Props> = (props) => {
                 />
               ) : (
                 <div className={styles.inner__empty}>
-                  {t('panel.home.timeline.empty')}
+                  {t('home.timeline.empty')}
                 </div>
               ))}
           </div>
@@ -328,11 +326,11 @@ export const Home: React.FC<Props> = (props) => {
               <div>{props.version}</div>
               <div>
                 <Translation
-                  id="panel.home.footer.license"
+                  id="home.footer.license"
                   components={{
                     link: (
                       <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE">
-                        {t('panel.home.footer.license.name')}
+                        {t('home.footer.license.name')}
                       </a>
                     )
                   }}
@@ -340,7 +338,7 @@ export const Home: React.FC<Props> = (props) => {
               </div>
               <div>
                 <Translation
-                  id="panel.home.footer.copyright"
+                  id="home.footer.copyright"
                   components={{
                     year: new Date().getFullYear().toString(),
                     link: <a href="https://x.com/robertpiosik">Robert Piosik</a>
@@ -364,7 +362,7 @@ export const Home: React.FC<Props> = (props) => {
               styles['scroll-to-timeline__icon']
             )}
           />
-          <span>{t('panel.home.timeline.scroll')}</span>
+          <span>{t('home.timeline.scroll')}</span>
         </button>
       )}
     </>

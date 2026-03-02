@@ -17,7 +17,7 @@ import { ContextUtilisation as UiContextUtilisation } from '@ui/components/edito
 import { Header } from './components/Header'
 import { use_invocation_counts } from './hooks/use-invocation-counts'
 import { SelectionState } from '@/views/panel/types/messages'
-import { use_translation } from '@/views/i18n/use-translation'
+import { use_translation } from '../../i18n/use-translation'
 
 type Props = {
   scroll_reset_key: number
@@ -351,24 +351,24 @@ export const MainView: React.FC<Props> = (props) => {
               is_collapsed={props.presets_collapsed}
               on_toggle_collapsed={props.on_presets_collapsed_change}
               translations={{
-                title: t('panel.presets.title'),
-                empty: t('panel.presets.empty'),
-                group: t('panel.presets.group'),
-                preset: t('panel.presets.preset'),
-                presets: t('panel.presets.presets'),
-                selected: t('panel.presets.selected'),
-                add_new: t('panel.action.add-new'),
-                add_new_tooltip: t('panel.action.add-new'),
-                initialize_tooltip: t('panel.action.initialize'),
-                copy_tooltip: t('panel.action.copy'),
-                pin_tooltip: t('panel.action.pin'),
-                unpin_tooltip: t('panel.action.unpin'),
-                duplicate_tooltip: t('panel.action.duplicate'),
-                edit_tooltip: t('panel.action.edit'),
-                delete_tooltip: t('panel.action.delete'),
-                insert_tooltip: t('panel.action.insert-preset'),
-                run_selected_tooltip: t('panel.action.run-selected'),
-                select_multi_tooltip: t('panel.action.select-multi')
+                title: t('presets.title'),
+                empty: t('presets.empty'),
+                group: t('presets.group'),
+                preset: t('presets.preset'),
+                presets: t('presets.presets'),
+                selected: t('presets.selected'),
+                add_new: t('action.add-new'),
+                add_new_tooltip: t('action.add-new'),
+                initialize_tooltip: t('action.initialize'),
+                copy_tooltip: t('action.copy'),
+                pin_tooltip: t('action.pin'),
+                unpin_tooltip: t('action.unpin'),
+                duplicate_tooltip: t('action.duplicate'),
+                edit_tooltip: t('action.edit'),
+                delete_tooltip: t('action.delete'),
+                insert_tooltip: t('action.insert-preset'),
+                run_selected_tooltip: t('action.run-selected'),
+                select_multi_tooltip: t('action.select-multi')
               }}
             />
           </>
@@ -390,16 +390,16 @@ export const MainView: React.FC<Props> = (props) => {
               is_collapsed={props.configurations_collapsed}
               on_toggle_collapsed={props.on_configurations_collapsed_change}
               translations={{
-                title: t('panel.configurations.title'),
-                empty: t('panel.configurations.empty'),
-                add_new: t('panel.action.add-new'),
-                add_new_tooltip: t('panel.action.add-new'),
-                initialize_tooltip: t('panel.action.initialize'),
-                pin_tooltip: t('panel.action.pin'),
-                unpin_tooltip: t('panel.action.unpin'),
-                insert_tooltip: t('panel.action.insert-configuration'),
-                edit_tooltip: t('panel.action.edit'),
-                delete_tooltip: t('panel.action.delete')
+                title: t('configurations.title'),
+                empty: t('configurations.empty'),
+                add_new: t('action.add-new'),
+                add_new_tooltip: t('action.add-new'),
+                initialize_tooltip: t('action.initialize'),
+                pin_tooltip: t('action.pin'),
+                unpin_tooltip: t('action.unpin'),
+                insert_tooltip: t('action.insert-configuration'),
+                edit_tooltip: t('action.edit'),
+                delete_tooltip: t('action.delete')
               }}
             />
           </>

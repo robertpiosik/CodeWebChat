@@ -1,5 +1,5 @@
 export const presets = {
-  'panel.presets.title': {
+  'presets.title': {
     en: 'Presets',
     pl: 'Presety',
     'zh-cn': '预设',
@@ -17,7 +17,7 @@ export const presets = {
     hu: 'Előbeállítások',
     bg: 'Шаблони'
   },
-  'panel.presets.empty': {
+  'presets.empty': {
     en: 'No presets created yet.',
     pl: 'Nie utworzono jeszcze żadnych presetów.',
     'zh-cn': '尚未创建预设。',
@@ -35,7 +35,7 @@ export const presets = {
     hu: 'Még nincsenek előbeállítások létrehozva.',
     bg: 'Все още няма създадени шаблони.'
   },
-  'panel.presets.group': {
+  'presets.group': {
     en: 'Group',
     pl: 'Grupa',
     'zh-cn': '组',
@@ -53,7 +53,7 @@ export const presets = {
     hu: 'Csoport',
     bg: 'Група'
   },
-  'panel.presets.preset': {
+  'presets.preset': {
     en: 'preset',
     pl: 'preset',
     'zh-cn': '预设',
@@ -71,7 +71,7 @@ export const presets = {
     hu: 'előbeállítás',
     bg: 'шаблон'
   },
-  'panel.presets.presets': {
+  'presets.presets': {
     en: 'presets',
     pl: 'presety',
     'zh-cn': '预设',
@@ -89,7 +89,7 @@ export const presets = {
     hu: 'előbeállítások',
     bg: 'шаблони'
   },
-  'panel.presets.selected': {
+  'presets.selected': {
     en: 'selected',
     pl: 'wybrane',
     'zh-cn': '已选择',

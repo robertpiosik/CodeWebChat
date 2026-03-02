@@ -1,15 +1,15 @@
-import { sidebar } from './sidebar'
 import { actions } from './actions'
-import { general } from './general'
-import { model_providers } from './model-providers'
-import { edit_context } from './edit-context'
-import { intelligent_update } from './intelligent-update'
-import { prune_context } from './prune-context'
 import { code_at_cursor } from './code-at-cursor'
-import { voice_input } from './voice-input'
 import { commit_messages } from './commit-messages'
+import { edit_context } from './edit-context'
+import { general } from './general'
+import { intelligent_update } from './intelligent-update'
+import { model_providers } from './model-providers'
+import { prune_context } from './prune-context'
+import { sidebar } from './sidebar'
+import { voice_input } from './voice-input'
 
-export const settings = {
+export const translations = {
   ...sidebar,
   ...actions,
   ...general,

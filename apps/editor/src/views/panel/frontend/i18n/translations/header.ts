@@ -1,5 +1,5 @@
 export const header = {
-  'panel.header.home': {
+  'header.home': {
     en: 'Howdy!',
     pl: 'Cześć!',
     'zh-cn': '你好',
@@ -17,7 +17,7 @@ export const header = {
     hu: 'Szia!',
     bg: 'Здравей'
   },
-  'panel.header.settings': {
+  'header.settings': {
     en: 'Settings',
     pl: 'Ustawienia',
     'zh-cn': '设置',
@@ -35,7 +35,7 @@ export const header = {
     hu: 'Beállítások',
     bg: 'Настройки'
   },
-  'panel.header.prompt-type': {
+  'header.prompt-type': {
     en: 'Prompt type',
     pl: 'Typ promptu',
     'zh-cn': '提示类型',

@@ -5,7 +5,7 @@ import { presets } from './presets'
 import { configurations } from './configurations'
 import { actions } from './actions'
 
-export const panel = {
+export const translations = {
   ...header,
   ...home,
   ...checkpoints,

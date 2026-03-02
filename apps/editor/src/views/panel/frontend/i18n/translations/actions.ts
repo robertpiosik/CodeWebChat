@@ -1,5 +1,5 @@
 export const actions = {
-  'panel.action.add-new': {
+  'action.add-new': {
     en: 'Add New',
     pl: 'Dodaj...',
     'zh-cn': '添加新项',
@@ -17,7 +17,7 @@ export const actions = {
     hu: 'Új Hozzáadása',
     bg: 'Добавяне на нов'
   },
-  'panel.action.initialize': {
+  'action.initialize': {
     en: 'Initialize',
     pl: 'Zainicjuj',
     'zh-cn': '初始化',
@@ -35,7 +35,7 @@ export const actions = {
     hu: 'Inicializálás',
     bg: 'Инициализиране'
   },
-  'panel.action.copy': {
+  'action.copy': {
     en: 'Copy to clipboard',
     pl: 'Skopiuj do schowka',
     'zh-cn': '复制到剪贴板',
@@ -53,7 +53,7 @@ export const actions = {
     hu: 'Másolás vágólapra',
     bg: 'Копиране в клипборда'
   },
-  'panel.action.pin': {
+  'action.pin': {
     en: 'Pin',
     pl: 'Przypnij',
     'zh-cn': '固定',
@@ -71,7 +71,7 @@ export const actions = {
     hu: 'Rögzítés',
     bg: 'Фиксиране'
   },
-  'panel.action.unpin': {
+  'action.unpin': {
     en: 'Unpin',
     pl: 'Odepnij',
     'zh-cn': '取消固定',
@@ -89,7 +89,7 @@ export const actions = {
     hu: 'Rögzítés feloldása',
     bg: 'Откачане'
   },
-  'panel.action.duplicate': {
+  'action.duplicate': {
     en: 'Duplicate',
     pl: 'Duplikuj',
     'zh-cn': '复制',
@@ -107,7 +107,7 @@ export const actions = {
     hu: 'Kettőzés',
     bg: 'Дублиране'
   },
-  'panel.action.edit': {
+  'action.edit': {
     en: 'Edit',
     pl: 'Edytuj',
     'zh-cn': '编辑',
@@ -125,7 +125,7 @@ export const actions = {
     hu: 'Szerkesztés',
     bg: 'Редактиране'
   },
-  'panel.action.delete': {
+  'action.delete': {
     en: 'Delete',
     pl: 'Usuń',
     'zh-cn': '删除',
@@ -143,7 +143,7 @@ export const actions = {
     hu: 'Törlés',
     bg: 'Изтриване'
   },
-  'panel.action.insert-preset': {
+  'action.insert-preset': {
     en: 'Insert a new item below/above',
     pl: 'Wstaw nowy element poniżej/powyżej',
     'zh-cn': '在下方/上方插入新项',
@@ -161,7 +161,7 @@ export const actions = {
     hu: 'Új elem beszúrása alá/fölé',
     bg: 'Вмъкване на нов елемент отдолу/отгоре'
   },
-  'panel.action.insert-configuration': {
+  'action.insert-configuration': {
     en: 'Insert a new configuration below/above',
     pl: 'Wstaw nową konfigurację poniżej/powyżej',
     'zh-cn': '在下方/上方插入新配置',
@@ -179,7 +179,7 @@ export const actions = {
     hu: 'Új konfiguráció beszúrása alá/fölé',
     bg: 'Вмъкване на нова конфигурация отдолу/отгоре'
   },
-  'panel.action.run-selected': {
+  'action.run-selected': {
     en: 'Run Selected Presets',
     pl: 'Uruchom wybrane presety',
     'zh-cn': '运行选定的预设',
@@ -197,7 +197,7 @@ export const actions = {
     hu: 'Kiválasztott Előbeállítások Futtatása',
     bg: 'Изпълнение на избраните шаблони'
   },
-  'panel.action.select-multi': {
+  'action.select-multi': {
     en: 'Select for multi-initialization',
     pl: 'Wybierz do wielokrotnej inicjalizacji',
     'zh-cn': '选择以进行多重初始化',
@@ -215,7 +215,7 @@ export const actions = {
     hu: 'Kiválasztás többszörös inicializáláshoz',
     bg: 'Избор за многократна инициализация'
   },
-  'panel.action.apply': {
+  'action.apply': {
     en: 'Apply',
     pl: 'Integruj',
     'zh-cn': '应用',
@@ -233,7 +233,7 @@ export const actions = {
     hu: 'Alkalmaz',
     bg: 'Приложи'
   },
-  'panel.action.apply-from-clipboard': {
+  'action.apply-from-clipboard': {
     en: 'Apply from Clipboard',
     pl: 'Integruj ze schowka',
     'zh-cn': '从剪贴板应用',
@@ -251,7 +251,7 @@ export const actions = {
     hu: 'Alkalmazás vágólapról',
     bg: 'Приложи от клипборда'
   },
-  'panel.action.undo': {
+  'action.undo': {
     en: 'Undo',
     pl: 'Cofnij',
     'zh-cn': '撤销',

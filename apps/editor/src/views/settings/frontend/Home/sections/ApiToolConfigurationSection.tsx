@@ -3,7 +3,7 @@ import { SortableList } from '@ui/components/editor/settings/SortableList'
 import { Radio } from '@ui/components/editor/common/Radio'
 import { IconButton } from '@ui/components/editor/common/IconButton'
 import { TextButton } from '@ui/components/editor/settings/TextButton'
-import { use_translation } from '@/views/i18n/use-translation'
+import { use_translation } from '../../i18n/use-translation'
 
 type ToolName =
   | 'CODE_AT_CURSOR'
@@ -48,18 +48,18 @@ export const ApiToolConfigurationSection: React.FC<
           }}
           on_add={props.on_add}
           translations={{
-            add_title: t('settings.action.add-new'),
-            insert_title: t('settings.action.insert-configuration'),
-            item_text: t('settings.action.configuration'),
-            items_text: t('settings.action.configurations'),
-            items_text_many: t('settings.action.configurations-many')
+            add_title: t('action.add-new'),
+            insert_title: t('action.insert-configuration'),
+            item_text: t('action.configuration'),
+            items_text: t('action.configurations'),
+            items_text_many: t('action.configurations-many')
           }}
           header_extra={
             props.on_unset_default && has_default ? (
               <>
                 <span>·</span>
                 <TextButton on_click={props.on_unset_default}>
-                  {t('settings.action.unset-default')}
+                  {t('action.unset-default')}
                 </TextButton>
               </>
             ) : undefined
@@ -70,7 +70,7 @@ export const ApiToolConfigurationSection: React.FC<
                 <Radio
                   name={`default_configuration_${props.tool_name.toLowerCase()}`}
                   checked={!!config.is_default}
-                  title={t('settings.action.set-default')}
+                  title={t('action.set-default')}
                   on_change={() => props.on_set_default!(config.id)}
                 />
               )}
@@ -101,12 +101,12 @@ export const ApiToolConfigurationSection: React.FC<
             <>
               <IconButton
                 codicon_icon="edit"
-                title={t('settings.action.edit-configuration')}
+                title={t('action.edit-configuration')}
                 on_click={() => props.on_edit(config.id)}
               />
               <IconButton
                 codicon_icon="trash"
-                title={t('settings.action.delete-configuration')}
+                title={t('action.delete-configuration')}
                 on_click={(e) => {
                   e.stopPropagation()
                   props.on_delete(config.id)

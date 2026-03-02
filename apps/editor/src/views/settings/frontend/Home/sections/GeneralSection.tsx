@@ -18,7 +18,7 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
   EDIT_FORMAT_INSTRUCTIONS_WHOLE
 } from '@/constants/edit-format-instructions'
-import { use_translation } from '@/views/i18n/use-translation'
+import { use_translation } from '../../i18n/use-translation'
 
 type ClearChecksBehavior = 'ignore-open-editors' | 'uncheck-all'
 
@@ -184,42 +184,42 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
     return (
       <UiSection
         ref={ref}
-        title={t('settings.sidebar.general')}
-        subtitle={t('settings.general.subtitle')}
+        title={t('sidebar.general')}
+        subtitle={t('general.subtitle')}
         on_stuck_change={props.on_stuck_change}
       >
         <UiGroup>
           <UiItem
-            title={t('settings.general.open-editor-settings.title')}
-            description={t('settings.general.open-editor-settings.description')}
+            title={t('general.open-editor-settings.title')}
+            description={t('general.open-editor-settings.description')}
             slot_right={
               <UiTextButton on_click={props.on_open_editor_settings}>
-                {t('settings.general.open-editor-settings.action')}
+                {t('general.open-editor-settings.action')}
               </UiTextButton>
             }
           />
           <UiItem
-            title={t('settings.general.ignore-patterns.title')}
-            description={t('settings.general.ignore-patterns.description')}
+            title={t('general.ignore-patterns.title')}
+            description={t('general.ignore-patterns.description')}
             slot_right={
               <UiTextButton on_click={props.on_open_ignore_patterns_settings}>
-                {t('settings.general.ignore-patterns.action')}
+                {t('general.ignore-patterns.action')}
               </UiTextButton>
             }
           />
           <UiItem
-            title={t('settings.general.allow-patterns.title')}
-            description={t('settings.general.allow-patterns.description')}
+            title={t('general.allow-patterns.title')}
+            description={t('general.allow-patterns.description')}
             slot_right={
               <UiTextButton on_click={props.on_open_allow_patterns_settings}>
-                {t('settings.general.allow-patterns.action')}
+                {t('general.allow-patterns.action')}
               </UiTextButton>
             }
           />
           <UiItem
-            title={t('settings.general.context-size-warning-threshold.title')}
+            title={t('general.context-size-warning-threshold.title')}
             description={t(
-              'settings.general.context-size-warning-threshold.description'
+              'general.context-size-warning-threshold.description'
             )}
             slot_right={
               <UiInput
@@ -236,8 +236,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
           <UiItem
-            title={t('settings.general.check-new-files.title')}
-            description={t('settings.general.check-new-files.description')}
+            title={t('general.check-new-files.title')}
+            description={t('general.check-new-files.description')}
             slot_right={
               <UiToggler
                 is_on={props.check_new_files}
@@ -246,10 +246,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
           <UiItem
-            title={t('settings.general.send-with-shift-enter.title')}
-            description={t(
-              'settings.general.send-with-shift-enter.description'
-            )}
+            title={t('general.send-with-shift-enter.title')}
+            description={t('general.send-with-shift-enter.description')}
             slot_right={
               <UiToggler
                 is_on={props.send_with_shift_enter}
@@ -258,24 +256,20 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
           <UiItem
-            title={t(
-              'settings.general.clear-checks-in-workspace-behavior.title'
-            )}
+            title={t('general.clear-checks-in-workspace-behavior.title')}
             description={t(
-              'settings.general.clear-checks-in-workspace-behavior.description'
+              'general.clear-checks-in-workspace-behavior.description'
             )}
             slot_right={
               <UiDropdown
                 options={[
                   {
                     value: 'ignore-open-editors',
-                    label: t(
-                      'settings.general.clear-checks.ignore-open-editors'
-                    )
+                    label: t('general.clear-checks.ignore-open-editors')
                   },
                   {
                     value: 'uncheck-all',
-                    label: t('settings.general.clear-checks.uncheck-all')
+                    label: t('general.clear-checks.uncheck-all')
                   }
                 ]}
                 value={props.clear_checks_in_workspace_behavior}
@@ -285,12 +279,10 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           />
         </UiGroup>
 
-        <UiGroup title={t('settings.general.checkpoints.title')}>
+        <UiGroup title={t('general.checkpoints.title')}>
           <UiItem
-            title={t('settings.general.automatic-checkpoints.title')}
-            description={t(
-              'settings.general.automatic-checkpoints.description'
-            )}
+            title={t('general.automatic-checkpoints.title')}
+            description={t('general.automatic-checkpoints.description')}
             slot_right={
               <UiToggler
                 is_on={!props.are_automatic_checkpoints_disabled}
@@ -301,8 +293,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
           <UiItem
-            title={t('settings.general.checkpoint-lifespan.title')}
-            description={t('settings.general.checkpoint-lifespan.description')}
+            title={t('general.checkpoint-lifespan.title')}
+            description={t('general.checkpoint-lifespan.description')}
             slot_right={
               <UiInput
                 type="number"
@@ -319,10 +311,10 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           />
         </UiGroup>
 
-        <UiGroup title={t('settings.general.edit-format-instructions.title')}>
+        <UiGroup title={t('general.edit-format-instructions.title')}>
           <UiItem
-            title={t('settings.general.edit-format.whole.title')}
-            description={t('settings.general.edit-format.whole.description')}
+            title={t('general.edit-format.whole.title')}
+            description={t('general.edit-format.whole.description')}
             slot_right={
               <UiTextButton
                 on_click={() =>
@@ -333,8 +325,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 }
               >
                 {instructions_visibility.whole
-                  ? t('settings.general.edit-format.hide')
-                  : t('settings.general.edit-format.show')}
+                  ? t('general.edit-format.hide')
+                  : t('general.edit-format.show')}
               </UiTextButton>
             }
             slot_below={
@@ -352,10 +344,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           />
 
           <UiItem
-            title={t('settings.general.edit-format.truncated.title')}
-            description={t(
-              'settings.general.edit-format.truncated.description'
-            )}
+            title={t('general.edit-format.truncated.title')}
+            description={t('general.edit-format.truncated.description')}
             slot_right={
               <UiTextButton
                 on_click={() =>
@@ -366,8 +356,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 }
               >
                 {instructions_visibility.truncated
-                  ? t('settings.general.edit-format.hide')
-                  : t('settings.general.edit-format.show')}
+                  ? t('general.edit-format.hide')
+                  : t('general.edit-format.show')}
               </UiTextButton>
             }
             slot_below={
@@ -388,10 +378,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           />
 
           <UiItem
-            title={t('settings.general.edit-format.before-after.title')}
-            description={t(
-              'settings.general.edit-format.before-after.description'
-            )}
+            title={t('general.edit-format.before-after.title')}
+            description={t('general.edit-format.before-after.description')}
             slot_right={
               <UiTextButton
                 on_click={() =>
@@ -402,8 +390,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 }
               >
                 {instructions_visibility.before_after
-                  ? t('settings.general.edit-format.hide')
-                  : t('settings.general.edit-format.show')}
+                  ? t('general.edit-format.hide')
+                  : t('general.edit-format.show')}
               </UiTextButton>
             }
             slot_below={
@@ -424,8 +412,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           />
 
           <UiItem
-            title={t('settings.general.edit-format.diff.title')}
-            description={t('settings.general.edit-format.diff.description')}
+            title={t('general.edit-format.diff.title')}
+            description={t('general.edit-format.diff.description')}
             slot_right={
               <UiTextButton
                 on_click={() =>
@@ -436,8 +424,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 }
               >
                 {instructions_visibility.diff
-                  ? t('settings.general.edit-format.hide')
-                  : t('settings.general.edit-format.show')}
+                  ? t('general.edit-format.hide')
+                  : t('general.edit-format.show')}
               </UiTextButton>
             }
             slot_below={
@@ -455,10 +443,10 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           />
         </UiGroup>
 
-        <UiGroup title={t('settings.general.presets.title')}>
+        <UiGroup title={t('general.presets.title')}>
           <UiItem
-            title={t('settings.general.gemini-user-id.title')}
-            description={t('settings.general.gemini-user-id.description')}
+            title={t('general.gemini-user-id.title')}
+            description={t('general.gemini-user-id.description')}
             slot_right={
               <UiInput
                 type="number"
@@ -470,8 +458,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
           <UiItem
-            title={t('settings.general.ai-studio-user-id.title')}
-            description={t('settings.general.ai-studio-user-id.description')}
+            title={t('general.ai-studio-user-id.title')}
+            description={t('general.ai-studio-user-id.description')}
             slot_right={
               <UiInput
                 type="number"

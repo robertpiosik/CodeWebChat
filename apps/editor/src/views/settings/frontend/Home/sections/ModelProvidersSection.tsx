@@ -1,7 +1,7 @@
 import { ProviderForClient } from '@/views/settings/types/messages'
 import { SortableList } from '@ui/components/editor/settings/SortableList'
 import { IconButton } from '@ui/components/editor/common/IconButton'
-import { use_translation } from '@/views/i18n/use-translation'
+import { use_translation } from '../../i18n/use-translation'
 
 type ModelProvidersSectionProps = {
   providers: ProviderForClient[] | undefined
@@ -31,10 +31,10 @@ export const ModelProvidersSection: React.FC<ModelProvidersSectionProps> = (
       }}
       on_add={props.on_add_provider}
       translations={{
-        add_title: t('settings.action.add-new'),
-        insert_title: t('settings.action.insert-provider'),
-        item_text: t('settings.action.model-provider'),
-        items_text: t('settings.action.model-providers')
+        add_title: t('action.add-new'),
+        insert_title: t('action.insert-provider'),
+        item_text: t('action.model-provider'),
+        items_text: t('action.model-providers')
       }}
       render_content={(provider) => (
         <>
@@ -75,19 +75,19 @@ export const ModelProvidersSection: React.FC<ModelProvidersSectionProps> = (
           {provider.type == 'custom' ? (
             <IconButton
               codicon_icon="edit"
-              title={t('settings.action.edit-provider')}
+              title={t('action.edit-provider')}
               on_click={() => props.on_edit_provider(provider.name)}
             />
           ) : (
             <IconButton
               codicon_icon="key"
-              title={t('settings.action.change-api-key')}
+              title={t('action.change-api-key')}
               on_click={() => props.on_change_api_key(provider.name)}
             />
           )}
           <IconButton
             codicon_icon="trash"
-            title={t('settings.action.delete-provider')}
+            title={t('action.delete-provider')}
             on_click={() => props.on_delete_provider(provider.name)}
           />
         </>
