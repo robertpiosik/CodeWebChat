@@ -247,11 +247,11 @@ export const generate_commit_message_command = (
 
           repository.inputBox.value = edited_message + selected_prompts_text
           await vscode.commands.executeCommand('git.commit', repository)
-          relevant_prompts.forEach((p) => {
-            PromptsForCommitMessagesUtils.remove({
-              context,
-              prompt: p.prompt
-            })
+          PromptsForCommitMessagesUtils.remove_committed_files({
+            context,
+            workspace_root,
+            prompts: relevant_prompts.map((p) => p.prompt),
+            committed_files: staged_files
           })
         } else if (was_empty_stage) {
           await vscode.commands.executeCommand('git.unstageAll')

@@ -160,4 +160,41 @@ export namespace PromptsForCommitMessagesUtils {
       })
     }
   }
+
+  export const remove_committed_files = (params: {
+    context: vscode.ExtensionContext
+    workspace_root: string
+    prompts: string[]
+    committed_files: string[]
+  }) => {
+    const all_prompts = load_all(params.context)
+    if (!all_prompts[params.workspace_root]) return
+
+    let changed = false
+    const committed_set = new Set(params.committed_files)
+    const prompt_set = new Set(params.prompts)
+
+    all_prompts[params.workspace_root] = all_prompts[params.workspace_root]
+      .map((p) => {
+        if (!prompt_set.has(p.prompt)) return p
+        const filtered_files = p.files.filter((f) => !committed_set.has(f))
+        if (filtered_files.length != p.files.length) {
+          changed = true
+          return { ...p, files: filtered_files }
+        }
+        return p
+      })
+      .filter((p) => p.files.length > 0)
+
+    if (all_prompts[params.workspace_root].length == 0) {
+      delete all_prompts[params.workspace_root]
+    }
+
+    if (changed) {
+      save_all({
+        context: params.context,
+        prompts: all_prompts
+      })
+    }
+  }
 }
