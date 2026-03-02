@@ -8,6 +8,7 @@ import {
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { PROVIDERS } from '@shared/constants/providers'
+import { display_token_count } from '@/utils/display-token-count'
 import { RECENTLY_USED_COMMIT_MESSAGES_CONFIG_IDS_STATE_KEY } from '@/constants/state-keys'
 import { t } from '@/i18n'
 
@@ -21,7 +22,8 @@ export interface CommitMessageConfig {
 export const get_commit_message_config = async (
   context: vscode.ExtensionContext,
   show_back_button: boolean = true,
-  force_quick_pick: boolean = false
+  force_quick_pick: boolean = false,
+  token_count?: number
 ): Promise<
   | {
       config: CommitMessageConfig
@@ -137,7 +139,12 @@ export const get_commit_message_config = async (
 
       quick_pick.items = create_items()
       quick_pick.title = t('common.config.title')
-      quick_pick.placeholder = t('common.config.placeholder')
+      quick_pick.placeholder =
+        token_count != null
+          ? t('common.config.placeholder-with-tokens', {
+              tokens: display_token_count(token_count)
+            })
+          : t('common.config.placeholder')
       quick_pick.matchOnDescription = true
 
       const items = quick_pick.items as (vscode.QuickPickItem & {

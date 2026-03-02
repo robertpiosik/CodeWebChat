@@ -4,6 +4,7 @@ import cn from 'classnames'
 import dayjs from 'dayjs'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
 import { IconButton } from '../../common/IconButton'
+import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
 import { use_dayjs_locale } from '../../../../hooks/use-dayjs-locale'
 
 dayjs.extend(localizedFormat)
@@ -115,7 +116,7 @@ export const Timeline: React.FC<Props> = (props) => {
                 className={styles.item__content__description}
                 title={item.description}
               >
-                {item.description}
+                {simplify_prompt_symbols({ prompt: item.description })}
               </div>
             )}
           </div>

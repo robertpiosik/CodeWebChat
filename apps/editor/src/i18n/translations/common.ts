@@ -197,6 +197,24 @@ export const common = {
     hu: 'Válasszon konfigurációt',
     bg: 'Изберете конфигурация'
   },
+  'common.config.placeholder-with-tokens': {
+    en: 'Select configuration to send {tokens} tokens',
+    pl: 'Wybierz konfigurację, aby wysłać {tokens} tokenów',
+    'zh-cn': '选择配置以发送 {tokens} 个 token',
+    ja: '設定を選択して {tokens} トークンを送信',
+    'zh-tw': '選擇設定以發送 {tokens} 個 token',
+    de: 'Konfiguration auswählen, um {tokens} Tokens zu senden',
+    es: 'Seleccionar configuración para enviar {tokens} tokens',
+    fr: 'Sélectionner la configuration pour envoyer {tokens} tokens',
+    'pt-br': 'Selecionar configuração para enviar {tokens} tokens',
+    ru: 'Выберите конфигурацию для отправки {tokens} токенов',
+    ko: '구성 선택 ({tokens} 토큰 전송)',
+    it: 'Seleziona la configurazione per inviare {tokens} token',
+    tr: '{tokens} token göndermek için yapılandırma seçin',
+    cs: 'Vyberte konfiguraci pro odeslání {tokens} tokenů',
+    hu: 'Válasszon konfigurációt {tokens} token elküldéséhez',
+    bg: 'Изберете конфигурация за изпращане на {tokens} токена'
+  },
   'common.separator.recently-created': {
     en: 'recently created',
     pl: 'ostatnio utworzone',

@@ -12,12 +12,15 @@ import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { t } from '@/i18n'
 import axios from 'axios'
 import { PromptsForCommitMessagesUtils } from '../../utils/prompts-for-commit-messages-utils'
-import { simplify_prompt_symbols } from '../../utils/simplify-prompt-symbols'
+import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
 
 export const generate_commit_message_command = (
   context: vscode.ExtensionContext
 ) => {
-  const get_prompt_data = async (source_control?: vscode.SourceControl) => {
+  const get_prompt_data = async (
+    source_control?: vscode.SourceControl,
+    selection_state?: { files?: string[] }
+  ) => {
     const repository = await get_git_repository(source_control)
     if (!repository) return null
     await vscode.workspace.saveAll()
@@ -25,7 +28,11 @@ export const generate_commit_message_command = (
     const was_empty_stage = (repository.state.indexChanges || []).length == 0
     const working_tree_changes = repository.state.workingTreeChanges || []
     const is_single_change = was_empty_stage && working_tree_changes.length == 1
-    const diff = await prepare_staged_changes(repository, !!source_control)
+    const diff = await prepare_staged_changes(
+      repository,
+      !!source_control,
+      selection_state
+    )
     if (!diff) return null
     const message_prompt = await build_commit_message_prompt(diff, repository)
     return { repository, was_empty_stage, message_prompt, is_single_change }
@@ -38,13 +45,17 @@ export const generate_commit_message_command = (
     let files_staged_by_action = false
     let is_single_change_flow = false
     const api_providers_manager = new ModelProvidersManager(context)
-    let force_show_quick_pick = false
+    let force_quick_pick = false
+    const selection_state: { files?: string[] } = {}
 
     while (true) {
-      const data = await get_prompt_data(source_control)
+      const data = await get_prompt_data(source_control, selection_state)
       if (!data) return
       const { repository, message_prompt, is_single_change } = data
       let { was_empty_stage } = data
+
+      // token count for the prompt, used in the config UI
+      const token_count = Math.ceil(message_prompt.length / 4)
 
       if (was_empty_stage) {
         files_staged_by_action = true
@@ -63,10 +74,11 @@ export const generate_commit_message_command = (
       const api_config_data = await get_commit_message_config(
         context,
         show_back_button,
-        force_show_quick_pick
+        force_quick_pick,
+        token_count
       )
 
-      force_show_quick_pick = false
+      force_quick_pick = false
 
       if (api_config_data === 'back') {
         if (was_empty_stage) {
@@ -99,10 +111,10 @@ export const generate_commit_message_command = (
         })
       } catch (error) {
         if (axios.isCancel(error)) {
-          force_show_quick_pick = true
+          force_quick_pick = true
           continue
         } else {
-          force_show_quick_pick = true
+          force_quick_pick = true
           continue
         }
       }
@@ -205,10 +217,12 @@ export const generate_commit_message_command = (
                 resolve(quick_pick.selectedItems.map((i: any) => i.prompt))
                 quick_pick.hide()
               })
+
               quick_pick.onDidHide(() => {
                 resolve(undefined)
                 quick_pick.dispose()
               })
+
               quick_pick.show()
             })
 

@@ -1,5 +1,6 @@
 import { FC, useRef, useState, useMemo, useEffect } from 'react'
 import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
+import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
 import cn from 'classnames'
 import styles from './ResponsePreview.module.scss'
 import { TextItem, InlineFileItem, FileItem } from './components'
@@ -180,6 +181,14 @@ export const ResponsePreview: FC<Props> = (props) => {
     return ''
   }
 
+  const simplified_instructions = useMemo(
+    () =>
+      props.raw_instructions
+        ? simplify_prompt_symbols({ prompt: props.raw_instructions })
+        : '',
+    [props.raw_instructions]
+  )
+
   return (
     <Scrollable
       ref={scrollable_ref}
@@ -194,11 +203,11 @@ export const ResponsePreview: FC<Props> = (props) => {
           <div
             className={cn(
               styles.instructions,
-              get_instructions_font_size_class(props.raw_instructions)
+              get_instructions_font_size_class(simplified_instructions)
             )}
             title={props.raw_instructions}
           >
-            {props.raw_instructions}
+            {simplified_instructions}
           </div>
         )}
 

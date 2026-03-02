@@ -4,6 +4,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { use_periodic_re_render } from '../../../../hooks/use-periodic-re-render'
 import { use_dayjs_locale } from '../../../../hooks/use-dayjs-locale'
+import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
 import styles from './Responses.module.scss'
 
 dayjs.extend(relativeTime)
@@ -61,7 +62,9 @@ export const Responses: React.FC<Props> = (props) => {
                   />
                 )}
               {item.raw_instructions ? (
-                <span>{item.raw_instructions}</span>
+                <span>
+                  {simplify_prompt_symbols({ prompt: item.raw_instructions })}
+                </span>
               ) : (
                 <span
                   className={

@@ -90,7 +90,8 @@ export const get_git_repository = async (
 
 export const prepare_staged_changes = async (
   repository: GitRepository,
-  stage_all_if_none_staged: boolean = false
+  stage_all_if_none_staged: boolean = false,
+  selection_state?: { files?: string[] }
 ): Promise<string | null> => {
   await repository.status()
   const staged_changes = repository.state.indexChanges || []
@@ -183,6 +184,7 @@ export const prepare_staged_changes = async (
             description: description_parts.join(' · '),
             picked: true,
             fsPath: change.uri.fsPath,
+            token_count,
             buttons: [
               {
                 iconPath: new vscode.ThemeIcon(
@@ -202,7 +204,15 @@ export const prepare_staged_changes = async (
       const selected = await new Promise<any[] | undefined>((resolve) => {
         const quick_pick = vscode.window.createQuickPick<any>()
         quick_pick.items = items
-        quick_pick.selectedItems = items
+
+        if (selection_state?.files) {
+          quick_pick.selectedItems = items.filter((i) =>
+            selection_state.files!.includes(i.fsPath)
+          )
+        } else {
+          quick_pick.selectedItems = items
+        }
+
         quick_pick.canSelectMany = true
         quick_pick.title = t('command.commit-message.unstaged-files')
         quick_pick.placeholder = t('command.commit-message.select-files')
@@ -234,7 +244,11 @@ export const prepare_staged_changes = async (
         })
 
         quick_pick.onDidAccept(() => {
-          resolve(Array.from(quick_pick.selectedItems))
+          const selected_items = Array.from(quick_pick.selectedItems)
+          if (selection_state) {
+            selection_state.files = selected_items.map((i: any) => i.fsPath)
+          }
+          resolve(selected_items)
           quick_pick.hide()
         })
 
