@@ -13,13 +13,14 @@ import {
   cleanup_rename_source
 } from '../utils/file-operations'
 
-export const handle_fast_replace = async (
+export const handle_fast_replace = async (params: {
   files: FileItem[]
-): Promise<{ success: boolean; original_states?: OriginalFileState[] }> => {
+  on_progress: (progress: number) => void
+}): Promise<{ success: boolean; original_states?: OriginalFileState[] }> => {
   Logger.info({
     function_name: 'handle_fast_replace',
     message: 'start',
-    data: { file_count: files.length }
+    data: { file_count: params.files.length }
   })
   try {
     const safe_files: FileItem[] = []
@@ -46,7 +47,7 @@ export const handle_fast_replace = async (
 
     const default_workspace = vscode.workspace.workspaceFolders[0].uri.fsPath
 
-    for (const file of files) {
+    for (const file of params.files) {
       let workspace_root = default_workspace
       if (file.workspace_name && workspace_map.has(file.workspace_name)) {
         workspace_root = workspace_map.get(file.workspace_name)!
@@ -94,7 +95,10 @@ export const handle_fast_replace = async (
     }
 
     const original_states: OriginalFileState[] = []
-    for (const file of safe_files) {
+    const total_files = safe_files.length
+    for (let i = 0; i < total_files; i++) {
+      params.on_progress(Math.round((i / total_files) * 100))
+      const file = safe_files[i]
       let workspace_root = default_workspace
       if (file.workspace_name && workspace_map.has(file.workspace_name)) {
         workspace_root = workspace_map.get(file.workspace_name)!

@@ -56,6 +56,14 @@ export const process_chat_response = async (
   panel_provider: PanelProvider,
   workspace_provider: WorkspaceProvider
 ): Promise<PreviewData | null> => {
+  const on_progress = (progress: number) => {
+    panel_provider.send_message({
+      command: 'SHOW_PROGRESS',
+      title: t('common.progress.preparing-preview'),
+      progress
+    })
+  }
+
   if (args?.files_with_content) {
     const result = await handle_restore_preview(args.files_with_content)
     if (result.success && result.original_states) {
@@ -286,6 +294,7 @@ export const process_chat_response = async (
     const total_patches = patches.length
 
     for (let i = 0; i < total_patches; i++) {
+      on_progress(Math.round((i / total_patches) * 100))
       const patch = patches[i]
       let workspace_path = default_workspace
 
@@ -563,7 +572,7 @@ export const process_chat_response = async (
     let operation_success = false
 
     if (selected_mode_label == 'Fast replace') {
-      const result = await handle_fast_replace(files)
+      const result = await handle_fast_replace({ files, on_progress })
       if (result.success && result.original_states) {
         final_original_states = result.original_states
         operation_success = true
@@ -574,7 +583,7 @@ export const process_chat_response = async (
         data: { success: result.success }
       })
     } else if (selected_mode_label == 'Truncated') {
-      const result = await handle_truncated_edit(files)
+      const result = await handle_truncated_edit({ files, on_progress })
       const successful_states = result.original_states || []
       const failed_files = result.failed_files || []
 
@@ -603,7 +612,7 @@ export const process_chat_response = async (
         data: { success: result.success }
       })
     } else if (selected_mode_label == 'Conflict markers') {
-      const result = await handle_conflict_markers(files)
+      const result = await handle_conflict_markers({ files, on_progress })
 
       const successful_states = result.original_states || []
       const failed_files: FileItem[] = result.failed_files || []

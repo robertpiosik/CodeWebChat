@@ -12,9 +12,10 @@ import {
   cleanup_rename_source
 } from '../utils/file-operations'
 
-export const handle_truncated_edit = async (
+export const handle_truncated_edit = async (params: {
   files: FileItem[]
-): Promise<{
+  on_progress: (progress: number) => void
+}): Promise<{
   success: boolean
   original_states?: OriginalFileState[]
   failed_files?: FileItem[]
@@ -22,7 +23,7 @@ export const handle_truncated_edit = async (
   Logger.info({
     function_name: 'handle_truncated_edit',
     message: 'start',
-    data: { file_count: files.length }
+    data: { file_count: params.files.length }
   })
 
   if (
@@ -44,7 +45,10 @@ export const handle_truncated_edit = async (
   const original_states: OriginalFileState[] = []
   const failed_files: FileItem[] = []
 
-  for (const file of files) {
+  const total_files = params.files.length
+  for (let i = 0; i < total_files; i++) {
+    params.on_progress(Math.round((i / total_files) * 100))
+    const file = params.files[i]
     let workspace_root = default_workspace
     if (file.workspace_name && workspace_map.has(file.workspace_name)) {
       workspace_root = workspace_map.get(file.workspace_name)!

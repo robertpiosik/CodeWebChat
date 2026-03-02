@@ -378,7 +378,6 @@ export const apply_chat_response_command = (params: {
 
             before_checkpoint = undefined
           } else if (saved_tab_groups) {
-            // Restore tab groups when preview gets rejected
             await restore_tab_groups(saved_tab_groups)
           }
         }
@@ -422,12 +421,9 @@ const restore_tab_groups = async (
 
     const are_states_equal =
       current_editors.length == saved_state.editors.length &&
-      current_editors.every((editor, index) => {
-        const saved = saved_state.editors[index]
-        return (
-          editor.uri == saved.uri && editor.view_column == saved.view_column
-        )
-      })
+      current_editors.every((editor) =>
+        saved_state.editors.some((saved) => saved.uri == editor.uri)
+      )
 
     if (are_states_equal) {
       if (saved_state.active_editor_uri) {

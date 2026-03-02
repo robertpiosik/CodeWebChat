@@ -13,9 +13,10 @@ import {
 import { apply_conflict_markers_to_content } from '../utils/edit-formats/conflict-markers/apply-conflict-markers-to-content'
 import { parse_conflict_segments } from '../utils/edit-formats/conflict-markers'
 
-export const handle_conflict_markers = async (
+export const handle_conflict_markers = async (params: {
   files: FileItem[]
-): Promise<{
+  on_progress: (progress: number) => void
+}): Promise<{
   success: boolean
   original_states?: OriginalFileState[]
   failed_files?: FileItem[]
@@ -23,7 +24,7 @@ export const handle_conflict_markers = async (
   Logger.info({
     function_name: 'handle_conflict_markers',
     message: 'start',
-    data: { file_count: files.length }
+    data: { file_count: params.files.length }
   })
   try {
     if (
@@ -45,7 +46,10 @@ export const handle_conflict_markers = async (
     const original_states: OriginalFileState[] = []
     const failed_files: FileItem[] = []
 
-    for (const file of files) {
+    const total_files = params.files.length
+    for (let i = 0; i < total_files; i++) {
+      params.on_progress(Math.round((i / total_files) * 100))
+      const file = params.files[i]
       let workspace_root = default_workspace
       if (file.workspace_name && workspace_map.has(file.workspace_name)) {
         workspace_root = workspace_map.get(file.workspace_name)!
