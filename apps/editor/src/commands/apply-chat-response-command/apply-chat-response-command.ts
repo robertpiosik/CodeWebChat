@@ -156,13 +156,13 @@ export const apply_chat_response_command = (params: {
           title: t('common.progress.preparing-preview')
         })
 
-        before_checkpoint = await create_checkpoint(
-          params.workspace_provider,
-          params.context,
-          params.panel_provider,
-          'Before response previewed',
-          args?.raw_instructions
-        )
+        before_checkpoint = await create_checkpoint({
+          workspace_provider: params.workspace_provider,
+          context: params.context,
+          panel_provider: params.panel_provider,
+          trigger: 'before-response-previewed',
+          description: args?.raw_instructions
+        })
 
         const preview_data = await process_chat_response(
           args,
@@ -361,7 +361,7 @@ export const apply_chat_response_command = (params: {
                     err
                   )
                 }
-                checkpoint_to_update.title = 'Response accepted'
+                checkpoint_to_update.trigger = 'response-accepted'
                 checkpoint_to_update.response_history = history_for_checkpoint
                 checkpoint_to_update.response_preview_item_created_at =
                   created_at_for_preview

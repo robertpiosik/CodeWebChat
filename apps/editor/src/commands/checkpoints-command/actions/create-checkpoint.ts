@@ -5,7 +5,7 @@ import {
   CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY
 } from '../../../constants/state-keys'
 import { WorkspaceProvider } from '../../../context/providers/workspace/workspace-provider'
-import type { Checkpoint, CheckpointTab } from '../types'
+import type { Checkpoint, CheckpointTab, CheckpointTrigger } from '../types'
 import { get_checkpoints } from './get-checkpoints'
 import {
   copy_optimised_recursively,
@@ -24,29 +24,30 @@ import { dictionary } from '@shared/constants/dictionary'
 import { response_preview_promise_resolve } from '../../apply-chat-response-command/utils/preview'
 import { remove_old_checkpoints } from './get-checkpoints'
 
-export const create_checkpoint = async (
-  workspace_provider: WorkspaceProvider,
-  context: vscode.ExtensionContext,
-  panel_provider: PanelProvider,
-  title: string = 'Created by user',
+export const create_checkpoint = async (params: {
+  workspace_provider: WorkspaceProvider
+  context: vscode.ExtensionContext
+  panel_provider: PanelProvider
+  trigger?: CheckpointTrigger
   description?: string
-): Promise<Checkpoint | undefined> => {
+}): Promise<Checkpoint | undefined> => {
   try {
+    const trigger = params.trigger ?? 'manual'
     const are_automatic_checkpoints_disabled = vscode.workspace
       .getConfiguration('codeWebChat')
       .get<boolean>('areAutomaticCheckpointsDisabled', false)
-    const is_automatic_checkpoint = title != 'Created by user'
+    const is_automatic_checkpoint = trigger != 'manual'
 
     if (are_automatic_checkpoints_disabled && is_automatic_checkpoint) {
       Logger.info({
         function_name: 'create_checkpoint',
         message: 'Automatic checkpoint creation is disabled. Skipping.',
-        data: { title }
+        data: { trigger }
       })
       return undefined
     }
 
-    const operation_in_progress = context.workspaceState.get<number>(
+    const operation_in_progress = params.context.workspaceState.get<number>(
       CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY
     )
     if (
@@ -59,7 +60,7 @@ export const create_checkpoint = async (
       return undefined
     }
 
-    const old_temp_checkpoint = context.workspaceState.get<Checkpoint>(
+    const old_temp_checkpoint = params.context.workspaceState.get<Checkpoint>(
       TEMPORARY_CHECKPOINT_STATE_KEY
     )
     if (old_temp_checkpoint) {
@@ -77,7 +78,7 @@ export const create_checkpoint = async (
           data: error
         })
       }
-      await context.workspaceState.update(
+      await params.context.workspaceState.update(
         TEMPORARY_CHECKPOINT_STATE_KEY,
         undefined
       )
@@ -91,7 +92,7 @@ export const create_checkpoint = async (
     let new_checkpoint: Checkpoint | undefined
 
     const create_checkpoint_task = async () => {
-      await context.workspaceState.update(
+      await params.context.workspaceState.update(
         CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
         Date.now()
       )
@@ -147,7 +148,7 @@ export const create_checkpoint = async (
                 vscode.Uri.joinPath(folder.uri, name),
                 vscode.Uri.joinPath(dest_folder_uri, name),
                 folder.uri.fsPath,
-                workspace_provider
+                params.workspace_provider
               )
             }
           }
@@ -167,20 +168,20 @@ export const create_checkpoint = async (
               vscode.Uri.joinPath(folder.uri, name),
               vscode.Uri.joinPath(dest_folder_uri, name),
               folder.uri.fsPath,
-              workspace_provider
+              params.workspace_provider
             )
           }
         }
       }
 
-      let checkpoints = await get_checkpoints(context)
+      let checkpoints = await get_checkpoints(params.context)
 
       // Remove checkpoints older than 48 hours
       checkpoints = await remove_old_checkpoints(checkpoints)
 
       const final_description = get_incremented_description(
-        title,
-        description,
+        trigger,
+        params.description,
         checkpoints
       )
 
@@ -200,25 +201,28 @@ export const create_checkpoint = async (
       }
 
       const checkpoint_object: Checkpoint = {
-        title,
+        trigger,
         timestamp,
         description: final_description,
         uses_git,
         git_data: Object.keys(git_data).length > 0 ? git_data : undefined,
-        checked_files: workspace_provider.get_all_checked_paths(),
+        checked_files: params.workspace_provider.get_all_checked_paths(),
         active_tabs
       }
 
-      if (title == 'Created by user' && !response_preview_promise_resolve) {
+      if (trigger == 'manual' && !response_preview_promise_resolve) {
         checkpoint_object.response_history = [
-          ...panel_provider.response_history
+          ...params.panel_provider.response_history
         ]
       }
 
       checkpoints.unshift(checkpoint_object)
-      await context.workspaceState.update(CHECKPOINTS_STATE_KEY, checkpoints)
-      await panel_provider.send_checkpoints()
-      await context.workspaceState.update(
+      await params.context.workspaceState.update(
+        CHECKPOINTS_STATE_KEY,
+        checkpoints
+      )
+      await params.panel_provider.send_checkpoints()
+      await params.context.workspaceState.update(
         CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
         undefined
       )
@@ -231,7 +235,7 @@ export const create_checkpoint = async (
     try {
       timer = setTimeout(() => {
         did_show_modal = true
-        panel_provider.send_message({
+        params.panel_provider.send_message({
           command: 'SHOW_PROGRESS',
           title: 'Creating checkpoint...'
         })
@@ -241,7 +245,7 @@ export const create_checkpoint = async (
     } finally {
       if (timer) clearTimeout(timer)
       if (did_show_modal) {
-        panel_provider.send_message({
+        params.panel_provider.send_message({
           command: 'HIDE_PROGRESS'
         })
       }
@@ -251,7 +255,7 @@ export const create_checkpoint = async (
     vscode.window.showErrorMessage(
       `Failed to create checkpoint: ${err.message}`
     )
-    await context.workspaceState.update(
+    await params.context.workspaceState.update(
       CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
       undefined
     )

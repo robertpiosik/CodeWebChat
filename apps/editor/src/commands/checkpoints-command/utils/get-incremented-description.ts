@@ -1,7 +1,7 @@
-import type { Checkpoint } from '../types'
+import type { Checkpoint, CheckpointTrigger } from '../types'
 
 export const get_incremented_description = (
-  title: string,
+  trigger: CheckpointTrigger,
   description: string | undefined,
   checkpoints: Checkpoint[]
 ): string | undefined => {
@@ -11,7 +11,7 @@ export const get_incremented_description = (
 
   const most_recent = checkpoints[0]
 
-  if (most_recent.title != title) {
+  if (most_recent.trigger != trigger) {
     return description
   }
 

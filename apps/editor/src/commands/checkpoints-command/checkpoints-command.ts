@@ -45,11 +45,11 @@ export const checkpoints_command = (params: {
         )
         return
       }
-      const checkpoint = await create_checkpoint(
-        params.workspace_provider,
-        params.context,
-        params.panel_provider
-      )
+      const checkpoint = await create_checkpoint({
+        workspace_provider: params.workspace_provider,
+        context: params.context,
+        panel_provider: params.panel_provider
+      })
       if (checkpoint) {
         vscode.commands.executeCommand('codeWebChat.checkpoints', {
           highlight_checkpoint: checkpoint
@@ -106,7 +106,9 @@ export const checkpoints_command = (params: {
             }
           }
 
-          const visible_checkpoints = checkpoints.filter((c) => !c.is_temporary)
+          const visible_checkpoints = checkpoints.filter(
+            (c) => c.trigger != 'temporary'
+          )
 
           quick_pick.buttons = [clear_all_button, close_button]
 
@@ -124,9 +126,12 @@ export const checkpoints_command = (params: {
                 ]
               : []),
             ...visible_checkpoints.map((c, index) => {
+              const labelText = t(
+                `command.checkpoints.trigger.${c.trigger}` as any
+              )
               return {
                 id: c.timestamp.toString(),
-                label: c.is_starred ? `$(star-full) ${c.title}` : c.title,
+                label: c.is_starred ? `$(star-full) ${labelText}` : labelText,
                 description: dayjs(c.timestamp).fromNow(),
                 detail: c.description,
                 checkpoint: c,
@@ -140,7 +145,7 @@ export const checkpoints_command = (params: {
                       ? t('common.unstar')
                       : t('common.star')
                   },
-                  ...(c.title == 'Created by user'
+                  ...(c.trigger == 'manual'
                     ? [
                         {
                           iconPath: new vscode.ThemeIcon('edit'),
@@ -221,11 +226,11 @@ export const checkpoints_command = (params: {
 
           if (selected.id == 'add-new') {
             quick_pick.hide()
-            const checkpoint = await create_checkpoint(
-              params.workspace_provider,
-              params.context,
-              params.panel_provider
-            )
+            const checkpoint = await create_checkpoint({
+              workspace_provider: params.workspace_provider,
+              context: params.context,
+              panel_provider: params.panel_provider
+            })
             if (checkpoint) {
               vscode.commands.executeCommand('codeWebChat.checkpoints', {
                 highlight_checkpoint: checkpoint

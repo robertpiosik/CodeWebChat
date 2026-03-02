@@ -15,9 +15,9 @@ export const handle_create_checkpoint = async (
     )
     return
   }
-  await create_checkpoint(
-    panel_provider.workspace_provider,
-    panel_provider.context,
-    panel_provider
-  )
+  await create_checkpoint({
+    workspace_provider: panel_provider.workspace_provider,
+    context: panel_provider.context,
+    panel_provider: panel_provider
+  })
 }

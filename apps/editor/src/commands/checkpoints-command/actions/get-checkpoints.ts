@@ -41,7 +41,7 @@ export const remove_old_checkpoints = async (
       })
       Logger.info({
         function_name: 'remove_old_checkpoints',
-        message: `Removed old checkpoint: ${checkpoint.title}`,
+        message: `Removed old checkpoint: ${checkpoint.trigger}`,
         data: { timestamp: checkpoint.timestamp }
       })
     } catch (error) {
@@ -66,7 +66,7 @@ export const get_checkpoints = async (
     try {
       const checkpoint_path = get_checkpoint_path(checkpoint.timestamp)
       await vscode.workspace.fs.stat(vscode.Uri.file(checkpoint_path))
-      if (!checkpoint.is_temporary) valid_checkpoints.push(checkpoint)
+      if (checkpoint.trigger != 'temporary') valid_checkpoints.push(checkpoint)
     } catch {
       state_updated = true
     }

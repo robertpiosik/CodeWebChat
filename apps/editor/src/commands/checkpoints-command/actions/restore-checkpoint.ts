@@ -45,7 +45,7 @@ export const restore_checkpoint = async (params: {
   }
 
   if (
-    params.checkpoint.title == 'Response accepted' &&
+    params.checkpoint.trigger == 'response-accepted' &&
     params.checkpoint.description
   ) {
     PromptsForCommitMessagesUtils.remove({
@@ -94,14 +94,14 @@ export const restore_checkpoint = async (params: {
       const checkpoints = await get_checkpoints(params.context)
       if (
         checkpoints.length > 0 &&
-        checkpoints[0].title != 'Before checkpoint restored'
+        checkpoints[0].trigger != 'before-checkpoint-restored'
       ) {
-        await create_checkpoint(
-          params.workspace_provider,
-          params.context,
-          params.panel_provider,
-          'Before checkpoint restored'
-        )
+        await create_checkpoint({
+          workspace_provider: params.workspace_provider,
+          context: params.context,
+          panel_provider: params.panel_provider,
+          trigger: 'before-checkpoint-restored'
+        })
       }
 
       const old_temp_checkpoint = params.context.workspaceState.get<Checkpoint>(
@@ -521,7 +521,7 @@ export const restore_checkpoint = async (params: {
     )
 
     if (
-      params.checkpoint.title == 'Response accepted' &&
+      params.checkpoint.trigger == 'response-accepted' &&
       params.checkpoint.response_preview_item_created_at &&
       params.checkpoint.response_history
     ) {

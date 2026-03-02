@@ -52,9 +52,16 @@ export type ApiToolConfiguration = {
   is_pinned?: boolean
 }
 
+export type CheckpointTrigger =
+  | 'manual'
+  | 'response-accepted'
+  | 'before-response-previewed'
+  | 'before-checkpoint-restored'
+  | 'temporary'
+
 export type Checkpoint = {
   timestamp: number
-  title: string
+  trigger: CheckpointTrigger
   description?: string
   is_starred?: boolean
 }

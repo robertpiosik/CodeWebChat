@@ -303,11 +303,11 @@ export const Home: React.FC<Props> = (props) => {
                 <UiTimeline
                   items={props.checkpoints.map((c) => ({
                     id: c.timestamp,
-                    label: c.title,
+                    label: t(`command.checkpoints.trigger.${c.trigger}` as any),
                     timestamp: c.timestamp,
                     description: c.description,
                     is_starred: c.is_starred,
-                    can_edit: c.title == 'Created by user'
+                    can_edit: c.trigger == 'manual'
                   }))}
                   on_toggle_starred={(id) =>
                     props.on_toggle_checkpoint_starred(id)

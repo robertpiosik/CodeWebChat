@@ -261,7 +261,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       command: 'CHECKPOINTS',
       checkpoints: checkpoints.map((c) => ({
         timestamp: c.timestamp,
-        title: c.title,
+        trigger: c.trigger,
         description: c.description,
         is_starred: c.is_starred
       }))

@@ -13,11 +13,17 @@ export interface CheckpointTab {
   is_group_active: boolean
 }
 
+export type CheckpointTrigger =
+  | 'manual'
+  | 'response-accepted'
+  | 'before-response-previewed'
+  | 'before-checkpoint-restored'
+  | 'temporary'
+
 export interface Checkpoint {
   timestamp: number
-  title: string
+  trigger: CheckpointTrigger
   description?: string
-  is_temporary?: boolean
   is_starred?: boolean
   git_data?: Record<string, GitCheckpointData> // folder name -> git data
   uses_git?: boolean

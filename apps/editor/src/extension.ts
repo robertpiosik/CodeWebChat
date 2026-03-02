@@ -6,7 +6,8 @@ import { ApiManager } from './services/api-manager'
 import {
   migrate_token_cache_cleanup,
   migrate_configurations_code_completions_to_code_at_cursor,
-  migrate_instructions_state_cleanup
+  migrate_instructions_state_cleanup,
+  migrate_checkpoints_title_to_trigger
 } from './migrations'
 import { SharedFileState } from './context/shared-file-state'
 import {
@@ -56,6 +57,8 @@ export async function activate(context: vscode.ExtensionContext) {
     await migrate_configurations_code_completions_to_code_at_cursor(context)
     // 14 February 2026
     await migrate_instructions_state_cleanup(context)
+    // 2 March 2026
+    await migrate_checkpoints_title_to_trigger(context)
   }
 
   await migrations()

@@ -110,8 +110,7 @@ export const create_temporary_checkpoint = async (
 
   const new_checkpoint: Checkpoint = {
     timestamp,
-    title: '',
-    is_temporary: true,
+    trigger: 'temporary',
     uses_git,
     git_data: Object.keys(git_data).length > 0 ? git_data : undefined,
     checked_files: workspace_provider.get_all_checked_paths(),
