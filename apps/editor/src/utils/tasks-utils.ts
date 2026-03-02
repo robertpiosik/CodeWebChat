@@ -148,46 +148,4 @@ export namespace TasksUtils {
     })
     return { tasks: new_tasks, success }
   }
-
-  export const mark_as_completed_if_matches_prompt = (params: {
-    context: vscode.ExtensionContext
-    prompt_text: string
-  }): Record<string, Task[]> | null => {
-    if (!params.prompt_text.trim()) return null
-
-    const all_tasks = load_all(params.context)
-    if (Object.keys(all_tasks).length == 0) return null
-
-    let file_changed = false
-    const relevant_tasks: Record<string, Task[]> = {}
-
-    const process_tasks = (tasks: Task[]) => {
-      for (const task of tasks) {
-        if (!task.is_checked && task.text.trim() == params.prompt_text.trim()) {
-          task.is_checked = true
-          file_changed = true
-        }
-        if (task.children) {
-          process_tasks(task.children)
-        }
-      }
-    }
-
-    if (vscode.workspace.workspaceFolders) {
-      vscode.workspace.workspaceFolders.forEach((folder) => {
-        const tasks = all_tasks[folder.uri.fsPath]
-        if (tasks) {
-          process_tasks(tasks)
-          relevant_tasks[folder.uri.fsPath] = tasks
-        }
-      })
-    }
-
-    if (file_changed) {
-      save_all({ context: params.context, tasks: all_tasks })
-      return relevant_tasks
-    }
-
-    return null
-  }
 }

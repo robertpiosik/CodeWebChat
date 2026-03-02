@@ -5,7 +5,6 @@ import { undo_files } from './file-operations'
 import { preview } from './preview'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { update_undo_button_state } from './state-manager'
-import { TasksUtils } from '@/utils/tasks-utils'
 import { PromptsForCommitMessagesUtils } from '@/utils/prompts-for-commit-messages-utils'
 
 export let ongoing_preview_cleanup_promise: Promise<void> | null = null
@@ -111,17 +110,6 @@ export const preview_handler = async (params: {
       }
 
       if (params.raw_instructions) {
-        const updated_tasks = TasksUtils.mark_as_completed_if_matches_prompt({
-          context: params.context,
-          prompt_text: params.raw_instructions
-        })
-        if (updated_tasks) {
-          params.panel_provider.send_message({
-            command: 'TASKS',
-            tasks: updated_tasks
-          })
-        }
-
         const workspace_map = new Map<string, string>()
         vscode.workspace.workspaceFolders?.forEach((folder) => {
           workspace_map.set(folder.name, folder.uri.fsPath)
