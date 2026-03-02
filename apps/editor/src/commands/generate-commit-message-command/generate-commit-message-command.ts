@@ -238,14 +238,10 @@ export const generate_commit_message_command = (
           const selected_prompts_text =
             include_prompts_setting && selected_prompts.length > 0
               ? '\n\n' +
-                [
-                  ...new Set(
-                    selected_prompts.map((p) =>
-                      simplify_prompt_symbols({ prompt: p.prompt })
-                    )
+                selected_prompts
+                  .map(
+                    (p) => `- ${simplify_prompt_symbols({ prompt: p.prompt })}`
                   )
-                ]
-                  .map((s) => `- ${s}`)
                   .join('\n')
               : ''
 
@@ -264,14 +260,10 @@ export const generate_commit_message_command = (
         const prompts_text =
           include_prompts_setting && relevant_prompts.length > 0
             ? '\n\n' +
-              [
-                ...new Set(
-                  relevant_prompts.map((p) =>
-                    simplify_prompt_symbols({ prompt: p.prompt })
-                  )
+              relevant_prompts
+                .map(
+                  (p) => `- ${simplify_prompt_symbols({ prompt: p.prompt })}`
                 )
-              ]
-                .map((s) => `- ${s}`)
                 .join('\n')
             : ''
         repository.inputBox.value = commit_message + prompts_text
