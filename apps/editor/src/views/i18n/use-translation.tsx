@@ -1,6 +1,9 @@
-import React, { useContext } from 'react'
+import React, { createContext, useContext } from 'react'
 import { translations } from '@/views/i18n/translations'
-import { TranslationContext } from '@/views/i18n/TranslationContext'
+
+export const TranslationContext = createContext<
+  Record<string, Record<string, string>>
+>({})
 
 type ExtractPlaceholders<S extends string> =
   S extends `${string}{${infer Key}}${infer Rest}`

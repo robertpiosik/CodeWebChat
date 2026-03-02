@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom/client'
 import { Panel } from './Panel'
 import { translations } from '@/views/i18n/translations'
-import { TranslationContext } from '@/views/i18n/TranslationContext'
+import { TranslationContext } from '@/views/i18n/use-translation'
 
 import '@vscode/codicons/dist/codicon.css'
 import 'simplebar-react/dist/simplebar.min.css'
