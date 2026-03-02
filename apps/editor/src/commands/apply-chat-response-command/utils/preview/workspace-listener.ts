@@ -39,46 +39,44 @@ const recalculate_history_item_totals = (item: ResponseHistoryItem) => {
     .filter((f) => f.is_checked)
     .reduce((sum, f) => sum + f.lines_removed, 0)
 }
-
-const update_response_history = (
-  panel_provider: PanelProvider,
-  created_at: number | undefined,
+const update_response_history = (params: {
+  panel_provider: PanelProvider
+  created_at: number | undefined
   updated_file: PreviewableFile
-) => {
-  if (!created_at) return
+}) => {
+  if (!params.created_at) return
 
-  const history = panel_provider.response_history
-  const item_to_update = history.find((i) => i.created_at === created_at)
+  const history = params.panel_provider.response_history
+  const item_to_update = history.find((i) => i.created_at === params.created_at)
   if (item_to_update) {
     if (!item_to_update.files) {
       item_to_update.files = []
     }
     const file_in_history_index = item_to_update.files.findIndex(
       (f) =>
-        f.file_path == updated_file.file_path &&
-        f.workspace_name == updated_file.workspace_name
+        f.file_path == params.updated_file.file_path &&
+        f.workspace_name == params.updated_file.workspace_name
     )
 
     if (file_in_history_index !== -1) {
-      item_to_update.files[file_in_history_index] = updated_file
+      item_to_update.files[file_in_history_index] = params.updated_file
     } else {
-      item_to_update.files.push(updated_file)
+      item_to_update.files.push(params.updated_file)
     }
 
     recalculate_history_item_totals(item_to_update)
-    panel_provider.send_message({ command: 'RESPONSE_HISTORY', history })
+    params.panel_provider.send_message({ command: 'RESPONSE_HISTORY', history })
   }
 }
 
-export const setup_workspace_listeners = (
-  prepared_files: PreparedFile[],
-  original_states: OriginalFileState[],
-  panel_provider: PanelProvider,
-  workspace_map: Map<string, string>,
-  default_workspace: string,
-  context: vscode.ExtensionContext,
+export const setup_workspace_listeners = (params: {
+  prepared_files: PreparedFile[]
+  original_states: OriginalFileState[]
+  panel_provider: PanelProvider
+  workspace_map: Map<string, string>
+  default_workspace: string
   created_at?: number
-) => {
+}) => {
   const deleted_files_content_cache = new Map<string, string>()
 
   const file_will_delete_listener = vscode.workspace.onWillDeleteFiles(
@@ -101,7 +99,7 @@ export const setup_workspace_listeners = (
   const text_document_change_listener =
     vscode.workspace.onDidChangeTextDocument(async (event) => {
       const changed_doc_path = event.document.uri.fsPath
-      const changed_file_in_preview = prepared_files.find(
+      const changed_file_in_preview = params.prepared_files.find(
         (pf) => pf.sanitized_path == changed_doc_path
       )
 
@@ -120,14 +118,13 @@ export const setup_workspace_listeners = (
         if (changed_file_in_preview.previewable_file.is_checked) {
           changed_file_in_preview.previewable_file.content = new_content
         }
+        update_response_history({
+          panel_provider: params.panel_provider,
+          created_at: params.created_at,
+          updated_file: changed_file_in_preview.previewable_file
+        })
 
-        update_response_history(
-          panel_provider,
-          created_at,
-          changed_file_in_preview.previewable_file
-        )
-
-        panel_provider.send_message({
+        params.panel_provider.send_message({
           command: 'UPDATE_FILE_IN_PREVIEW',
           file: changed_file_in_preview.previewable_file
         })
@@ -138,7 +135,11 @@ export const setup_workspace_listeners = (
         if (!workspace_folder) return
 
         // Check if it's already added to avoid races
-        if (prepared_files.some((pf) => pf.sanitized_path == doc.uri.fsPath)) {
+        if (
+          params.prepared_files.some(
+            (pf) => pf.sanitized_path == doc.uri.fsPath
+          )
+        ) {
           return
         }
 
@@ -202,15 +203,15 @@ export const setup_workspace_listeners = (
           file_exists: !is_new
         }
 
-        original_states.push(new_original_state)
-        prepared_files.push(new_prepared_file)
+        params.original_states.push(new_original_state)
+        params.prepared_files.push(new_prepared_file)
         create_temp_files_with_original_content([new_prepared_file])
-        update_response_history(
-          panel_provider,
-          created_at,
-          new_prepared_file.previewable_file
-        )
-        panel_provider.send_message({
+        update_response_history({
+          panel_provider: params.panel_provider,
+          created_at: params.created_at,
+          updated_file: new_prepared_file.previewable_file
+        })
+        params.panel_provider.send_message({
           command: 'UPDATE_FILE_IN_PREVIEW',
           file: new_prepared_file.previewable_file
         })
@@ -222,7 +223,7 @@ export const setup_workspace_listeners = (
       if (uri.scheme != 'file') continue
 
       const deleted_file_path = uri.fsPath
-      const deleted_file_in_preview = prepared_files.find(
+      const deleted_file_in_preview = params.prepared_files.find(
         (pf) => pf.sanitized_path == deleted_file_path
       )
 
@@ -230,7 +231,9 @@ export const setup_workspace_listeners = (
         const workspace_folder = vscode.workspace.getWorkspaceFolder(uri)
         if (!workspace_folder) continue
 
-        if (prepared_files.some((pf) => pf.sanitized_path == uri.fsPath)) {
+        if (
+          params.prepared_files.some((pf) => pf.sanitized_path == uri.fsPath)
+        ) {
           continue
         }
 
@@ -282,15 +285,15 @@ export const setup_workspace_listeners = (
           file_exists: false
         }
 
-        original_states.push(new_original_state)
-        prepared_files.push(new_prepared_file)
+        params.original_states.push(new_original_state)
+        params.prepared_files.push(new_prepared_file)
         create_temp_files_with_original_content([new_prepared_file])
-        update_response_history(
-          panel_provider,
-          created_at,
-          new_prepared_file.previewable_file
-        )
-        panel_provider.send_message({
+        update_response_history({
+          panel_provider: params.panel_provider,
+          created_at: params.created_at,
+          updated_file: new_prepared_file.previewable_file
+        })
+        params.panel_provider.send_message({
           command: 'UPDATE_FILE_IN_PREVIEW',
           file: new_prepared_file.previewable_file
         })
@@ -305,12 +308,12 @@ export const setup_workspace_listeners = (
           diff_stats.lines_added
         deleted_file_in_preview.previewable_file.lines_removed =
           diff_stats.lines_removed
-        update_response_history(
-          panel_provider,
-          created_at,
-          deleted_file_in_preview.previewable_file
-        )
-        panel_provider.send_message({
+        update_response_history({
+          panel_provider: params.panel_provider,
+          created_at: params.created_at,
+          updated_file: deleted_file_in_preview.previewable_file
+        })
+        params.panel_provider.send_message({
           command: 'UPDATE_FILE_IN_PREVIEW',
           file: deleted_file_in_preview.previewable_file
         })
@@ -327,7 +330,9 @@ export const setup_workspace_listeners = (
         if (!workspace_folder) continue
 
         // Avoid duplicates if already tracked
-        if (prepared_files.some((pf) => pf.sanitized_path === uri.fsPath)) {
+        if (
+          params.prepared_files.some((pf) => pf.sanitized_path === uri.fsPath)
+        ) {
           continue
         }
 
@@ -387,19 +392,19 @@ export const setup_workspace_listeners = (
           file_exists: false
         }
 
-        original_states.push(new_original_state)
-        prepared_files.push(new_prepared_file)
+        params.original_states.push(new_original_state)
+        params.prepared_files.push(new_prepared_file)
 
         // Create temp file with the original (empty) content for diff view
         create_temp_files_with_original_content([new_prepared_file])
+        update_response_history({
+          panel_provider: params.panel_provider,
+          created_at: params.created_at,
+          updated_file: new_prepared_file.previewable_file
+        })
 
-        update_response_history(
-          panel_provider,
-          created_at,
-          new_prepared_file.previewable_file
-        )
         // Notify the panel to include this file in the preview UI
-        panel_provider.send_message({
+        params.panel_provider.send_message({
           command: 'UPDATE_FILE_IN_PREVIEW',
           file: new_prepared_file.previewable_file
         })
@@ -436,7 +441,7 @@ export const setup_workspace_listeners = (
           .replace(/\\/g, '/')
 
         // Find existing tracked file by old path
-        const existing = prepared_files.find(
+        const existing = params.prepared_files.find(
           (pf) => pf.sanitized_path == oldUri.fsPath
         )
 
@@ -506,11 +511,11 @@ export const setup_workspace_listeners = (
             file_exists: false
           }
 
-          prepared_files.push(deleted_prepared)
+          params.prepared_files.push(deleted_prepared)
           create_temp_files_with_original_content([deleted_prepared])
 
           // Track state for downstream consumers (rename grouping)
-          original_states.push({
+          params.original_states.push({
             file_path: new_relative,
             content: old_original_content,
             file_state: 'new',
@@ -519,28 +524,30 @@ export const setup_workspace_listeners = (
           })
 
           // Notify UI
-          update_response_history(
-            panel_provider,
-            created_at,
-            existing.previewable_file
-          )
-          panel_provider.send_message({
+          update_response_history({
+            panel_provider: params.panel_provider,
+            created_at: params.created_at,
+            updated_file: existing.previewable_file
+          })
+          params.panel_provider.send_message({
             command: 'UPDATE_FILE_IN_PREVIEW',
             file: existing.previewable_file
           })
-          update_response_history(
-            panel_provider,
-            created_at,
-            deleted_prepared.previewable_file
-          )
-          panel_provider.send_message({
+          update_response_history({
+            panel_provider: params.panel_provider,
+            created_at: params.created_at,
+            updated_file: deleted_prepared.previewable_file
+          })
+          params.panel_provider.send_message({
             command: 'UPDATE_FILE_IN_PREVIEW',
             file: deleted_prepared.previewable_file
           })
         } else {
           // Not previously tracked: treat rename as delete (old) + create (new)
           if (
-            prepared_files.some((pf) => pf.sanitized_path === newUri.fsPath)
+            params.prepared_files.some(
+              (pf) => pf.sanitized_path === newUri.fsPath
+            )
           ) {
             continue
           }
@@ -613,14 +620,14 @@ export const setup_workspace_listeners = (
             file_exists: false
           }
 
-          original_states.push({
+          params.original_states.push({
             file_path: new_relative,
             content: new_content,
             file_state: 'new',
             workspace_name: new_workspace_folder.name,
             file_path_to_restore: old_relative
           })
-          prepared_files.push(created_prepared, deleted_prepared)
+          params.prepared_files.push(created_prepared, deleted_prepared)
 
           create_temp_files_with_original_content([
             created_prepared,
@@ -628,21 +635,21 @@ export const setup_workspace_listeners = (
           ])
 
           // Notify UI
-          update_response_history(
-            panel_provider,
-            created_at,
-            created_previewable
-          )
-          panel_provider.send_message({
+          update_response_history({
+            panel_provider: params.panel_provider,
+            created_at: params.created_at,
+            updated_file: created_previewable
+          })
+          params.panel_provider.send_message({
             command: 'UPDATE_FILE_IN_PREVIEW',
             file: created_previewable
           })
-          update_response_history(
-            panel_provider,
-            created_at,
-            deleted_previewable
-          )
-          panel_provider.send_message({
+          update_response_history({
+            panel_provider: params.panel_provider,
+            created_at: params.created_at,
+            updated_file: deleted_previewable
+          })
+          params.panel_provider.send_message({
             command: 'UPDATE_FILE_IN_PREVIEW',
             file: deleted_previewable
           })
@@ -652,7 +659,7 @@ export const setup_workspace_listeners = (
   )
 
   discard_user_changes_in_preview = async ({ file_path, workspace_name }) => {
-    const file_to_discard = prepared_files.find(
+    const file_to_discard = params.prepared_files.find(
       (f) =>
         f.previewable_file.file_path == file_path &&
         f.previewable_file.workspace_name == workspace_name
@@ -667,11 +674,11 @@ export const setup_workspace_listeners = (
 
     if (file_to_discard.previewable_file.applied_with_intelligent_update) {
       file_to_discard.previewable_file.applied_with_intelligent_update = false
-      update_response_history(
-        panel_provider,
-        created_at,
-        file_to_discard.previewable_file
-      )
+      update_response_history({
+        panel_provider: params.panel_provider,
+        created_at: params.created_at,
+        updated_file: file_to_discard.previewable_file
+      })
     }
 
     const proposed = file_to_discard.previewable_file.proposed_content
@@ -687,7 +694,7 @@ export const setup_workspace_listeners = (
     workspace_name,
     is_checked
   }) => {
-    const file_to_toggle = prepared_files.find(
+    const file_to_toggle = params.prepared_files.find(
       (f) =>
         f.previewable_file.file_path == file_path &&
         f.previewable_file.workspace_name == workspace_name
@@ -697,9 +704,11 @@ export const setup_workspace_listeners = (
 
     file_to_toggle.previewable_file.is_checked = is_checked
 
-    if (created_at) {
-      const history = panel_provider.response_history
-      const item_to_update = history.find((i) => i.created_at === created_at)
+    if (params.created_at) {
+      const history = params.panel_provider.response_history
+      const item_to_update = history.find(
+        (i) => i.created_at === params.created_at
+      )
       if (item_to_update && item_to_update.files) {
         const file_in_history = item_to_update.files.find(
           (f) => f.file_path == file_path && f.workspace_name == workspace_name
@@ -707,17 +716,20 @@ export const setup_workspace_listeners = (
         if (file_in_history) {
           file_in_history.is_checked = is_checked
           recalculate_history_item_totals(item_to_update)
-          panel_provider.send_message({ command: 'RESPONSE_HISTORY', history })
+          params.panel_provider.send_message({
+            command: 'RESPONSE_HISTORY',
+            history
+          })
         }
       }
     }
 
-    let workspace_root = default_workspace
+    let workspace_root = params.default_workspace
     if (
       file_to_toggle.previewable_file.workspace_name &&
-      workspace_map.has(file_to_toggle.previewable_file.workspace_name)
+      params.workspace_map.has(file_to_toggle.previewable_file.workspace_name)
     ) {
-      workspace_root = workspace_map.get(
+      workspace_root = params.workspace_map.get(
         file_to_toggle.previewable_file.workspace_name
       )!
     }
@@ -780,14 +792,18 @@ export const setup_workspace_listeners = (
     file_path,
     workspace_name
   }) => {
-    const file = prepared_files.find(
+    const file = params.prepared_files.find(
       (f) =>
         f.previewable_file.file_path == file_path &&
         f.previewable_file.workspace_name == workspace_name
     )
     if (file) {
       file.previewable_file.applied_with_intelligent_update = true
-      update_response_history(panel_provider, created_at, file.previewable_file)
+      update_response_history({
+        panel_provider: params.panel_provider,
+        created_at: params.created_at,
+        updated_file: file.previewable_file
+      })
     }
   }
 

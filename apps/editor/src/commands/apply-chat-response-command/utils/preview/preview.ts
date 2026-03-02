@@ -145,15 +145,14 @@ export const preview = async (params: {
       return null
     }
 
-    listener_disposer = setup_workspace_listeners(
+    listener_disposer = setup_workspace_listeners({
       prepared_files,
-      params.original_states,
-      params.panel_provider,
+      original_states: params.original_states,
+      panel_provider: params.panel_provider,
       workspace_map,
       default_workspace,
-      params.context,
-      params.created_at
-    )
+      created_at: params.created_at
+    })
 
     create_temp_files_with_original_content(prepared_files)
 
