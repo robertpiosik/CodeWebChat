@@ -30,8 +30,11 @@ export class ApiManager {
     const cancel_token_source = axios.CancelToken.source()
     this.cancel_token_sources.set(request_id, cancel_token_source)
 
+    const body_to_hash = { ...params.body }
+    delete body_to_hash.reasoning_effort
+
     const body_hash = createHash('md5')
-      .update(JSON.stringify(params.body))
+      .update(JSON.stringify(body_to_hash))
       .digest('hex')
 
     const previous_waiting = this.waiting_chain.get(params.endpoint_url)
