@@ -14,7 +14,12 @@
     outline: none;
   }
 
-  &:hover {
+  &:disabled {
+    opacity: var(--disabled-opacity);
+    cursor: default;
+  }
+
+  &:hover:not(:disabled) {
     background-color: var(--vscode-toolbar-hoverBackground);
     text-decoration: none;
   }

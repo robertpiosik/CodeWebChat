@@ -49,7 +49,6 @@ export const ApiToolConfigurationSection: React.FC<
           on_add={props.on_add}
           translations={{
             add_title: t('action.add-new'),
-            insert_title: t('action.insert-configuration'),
             item_text: t('action.configuration'),
             items_text: t('action.configurations'),
             items_text_many: t('action.configurations-many')
@@ -97,8 +96,13 @@ export const ApiToolConfigurationSection: React.FC<
               </div>
             </>
           )}
-          render_actions={(config) => (
+          render_actions={(config, index) => (
             <>
+              <IconButton
+                codicon_icon="insert"
+                title={t('action.insert-configuration')}
+                on_click={() => props.on_add({ insertion_index: index })}
+              />
               <IconButton
                 codicon_icon="edit"
                 title={t('action.edit-configuration')}

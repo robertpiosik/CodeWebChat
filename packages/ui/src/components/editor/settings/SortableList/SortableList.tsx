@@ -10,7 +10,6 @@ export namespace SortableList {
 
   export type Translations = {
     add_title: string
-    insert_title: string
     item_text: string
     items_text: string
     items_text_many?: string
@@ -42,11 +41,6 @@ export function SortableList<T extends SortableList.Item>(
         {props.render_content(item, index)}
       </div>
       <div className={styles['col-actions']}>
-        <IconButton
-          codicon_icon="insert"
-          title={props.translations.insert_title}
-          on_click={() => props.on_add({ insertion_index: index })}
-        />
         {props.render_actions?.(item, index)}
       </div>
     </div>

@@ -3,8 +3,8 @@ import { ToolType } from './tools'
 export type ProviderForClient = {
   name: string
   type: 'built-in' | 'custom'
-  apiKeyMask: string
-  baseUrl: string
+  api_key_mask: string
+  base_url: string
 }
 
 export type ConfigurationForClient = {

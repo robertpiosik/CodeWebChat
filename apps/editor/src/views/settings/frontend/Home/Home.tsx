@@ -384,7 +384,7 @@ export const Home: React.FC<Props> = (props) => {
         >
           <UiNotice type="info">
             <Translation
-              id="model-providers.notice.api-keys"
+              id="model-providers.notice.credentials"
               components={{
                 link: (
                   <a

@@ -9,6 +9,7 @@ type Props = {
   title?: string
   label?: string
   style?: React.CSSProperties
+  disabled?: boolean
 }
 
 export const IconButton: React.FC<Props> = (props) => {
@@ -46,6 +47,7 @@ export const IconButton: React.FC<Props> = (props) => {
         onMouseDown={props.on_mouse_down}
         onClick={props.on_click}
         title={props.title}
+        disabled={props.disabled}
         style={props.style}
       >
         {label_element}

@@ -71,7 +71,6 @@ export const Configurations = () => {
         on_add={log_action('on_add')}
         translations={{
           add_title: 'Add New',
-          insert_title: 'Insert...',
           item_text: 'config',
           items_text: 'configs'
         }}
@@ -110,8 +109,13 @@ export const Configurations = () => {
             </div>
           </>
         )}
-        render_actions={(config) => (
+        render_actions={(config, index) => (
           <>
+            <IconButton
+              codicon_icon="insert"
+              title="Insert..."
+              on_click={() => log_action('on_insert')(index)}
+            />
             <IconButton
               codicon_icon="edit"
               title="Edit"
@@ -137,8 +141,8 @@ export const Configurations = () => {
 type Provider = SortableList.Item & {
   name: string
   type: 'built-in' | 'custom'
-  apiKeyMask: string
-  baseUrl: string
+  api_key_mask: string
+  base_url: string
 }
 
 const initial_providers: Provider[] = [
@@ -146,22 +150,22 @@ const initial_providers: Provider[] = [
     id: 'openai',
     name: 'OpenAI',
     type: 'built-in',
-    apiKeyMask: '...1234',
-    baseUrl: 'https://api.openai.com/v1'
+    api_key_mask: '...1234',
+    base_url: 'https://api.openai.com/v1'
   },
   {
     id: 'anthropic',
     name: 'Anthropic',
     type: 'built-in',
-    apiKeyMask: '...5678',
-    baseUrl: 'https://api.anthropic.com/v1'
+    api_key_mask: '...5678',
+    base_url: 'https://api.anthropic.com/v1'
   },
   {
     id: 'custom',
     name: 'My Custom Endpoint',
     type: 'custom',
-    apiKeyMask: '⚠ Missing API key',
-    baseUrl: 'http://localhost:1234/v1'
+    api_key_mask: '⚠ Missing API key',
+    base_url: 'http://localhost:1234/v1'
   }
 ]
 
@@ -184,7 +188,6 @@ export const Providers = () => {
         on_add={log_action('on_add_provider')}
         translations={{
           add_title: 'Add New',
-          insert_title: 'Insert...',
           item_text: 'provider',
           items_text: 'providers'
         }}
@@ -208,7 +211,7 @@ export const Providers = () => {
                 textOverflow: 'ellipsis'
               }}
             >
-              {provider.apiKeyMask}
+              {provider.api_key_mask}
             </div>
             <div
               style={{
@@ -218,12 +221,17 @@ export const Providers = () => {
                 textOverflow: 'ellipsis'
               }}
             >
-              {provider.baseUrl}
+              {provider.base_url}
             </div>
           </>
         )}
-        render_actions={(provider) => (
+        render_actions={(provider, index) => (
           <>
+            <IconButton
+              codicon_icon="insert"
+              title="Insert..."
+              on_click={() => log_action('on_insert')(index)}
+            />
             {provider.type == 'custom' ? (
               <IconButton
                 codicon_icon="edit"
@@ -263,7 +271,6 @@ export const Empty = () => {
         on_add={log_action('on_add')}
         translations={{
           add_title: 'Add New',
-          insert_title: 'Insert...',
           item_text: 'item',
           items_text: 'items'
         }}
