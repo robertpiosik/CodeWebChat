@@ -7,7 +7,7 @@ import {
 import { dictionary } from '@shared/constants/dictionary'
 import { ChangeModelProviderKeyMessage } from '@/views/settings/types/messages'
 import { handle_get_model_providers } from './handle-get-model-providers'
-import { authenticate_chatgpt } from '../../../utils/upsert-model-provider'
+import { authenticate_chatgpt } from '../../../utils/authenticate-chatgpt'
 
 export const handle_change_model_provider_key = async (
   provider: SettingsProvider,
