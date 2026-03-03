@@ -17,14 +17,12 @@ export type CustomProvider = {
 
 export type Provider = BuiltInProvider | CustomProvider
 
-export type ReasoningEffort = 'none' | 'minimal' | 'low' | 'medium' | 'high'
-
 export type ToolConfig = {
   provider_type: string
   provider_name: string
   model: string
   temperature?: number
-  reasoning_effort?: ReasoningEffort
+  reasoning_effort?: string
   system_instructions_override?: string
   is_pinned?: boolean
 }
@@ -162,7 +160,7 @@ export class ModelProvidersManager {
         providerName: string
         model: string
         temperature?: number
-        reasoningEffort?: ReasoningEffort
+        reasoningEffort?: string
         systemInstructionsOverride?: string
         isPinned?: boolean
       }[]
@@ -244,7 +242,7 @@ export class ModelProvidersManager {
         providerName: string
         model: string
         temperature?: number
-        reasoningEffort?: ReasoningEffort
+        reasoningEffort?: string
         systemInstructionsOverride?: string
         isDefault?: boolean
         isPinned?: boolean

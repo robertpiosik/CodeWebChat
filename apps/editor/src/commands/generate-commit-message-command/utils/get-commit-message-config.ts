@@ -1,7 +1,6 @@
 import * as vscode from 'vscode'
 import {
   ModelProvidersManager,
-  ReasoningEffort,
   get_tool_config_id,
   ToolConfig
 } from '@/services/model-providers-manager'
@@ -16,7 +15,7 @@ export interface CommitMessageConfig {
   provider_name: string
   model: string
   temperature?: number
-  reasoning_effort?: ReasoningEffort
+  reasoning_effort?: string
 }
 
 export const get_commit_message_config = async (

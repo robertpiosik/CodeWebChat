@@ -22,5 +22,16 @@ export const apply_reasoning_effort = (params: {
         }
       }
     }
+  } else if (params.provider.name == 'ChatGPT') {
+    if (params.reasoning_effort) {
+      params.body.reasoning_effort =
+        params.reasoning_effort == 'extra high'
+          ? 'xhigh'
+          : params.reasoning_effort
+    }
+  } else {
+    if (params.reasoning_effort) {
+      params.body.reasoning_effort = params.reasoning_effort
+    }
   }
 }

@@ -185,8 +185,9 @@ export const upsert_configuration = async (params: {
     }
     items.push(reasoning_effort_item)
 
-    items.push({ label: 'Advanced...' })
-
+    if (updated_config.provider_name != 'ChatGPT') {
+      items.push({ label: 'Advanced...' })
+    }
     const selected_item = await new Promise<vscode.QuickPickItem | undefined>(
       (resolve) => {
         const quick_pick = vscode.window.createQuickPick()
@@ -258,7 +259,9 @@ export const upsert_configuration = async (params: {
               }
               reset_items.push(reset_reasoning_item)
 
-              reset_items.push({ label: 'Advanced...' })
+              if (updated_config.provider_name != 'ChatGPT') {
+                reset_items.push({ label: 'Advanced...' })
+              }
 
               quick_pick.items = reset_items
               quick_pick.buttons = [close_button]
@@ -325,12 +328,13 @@ export const upsert_configuration = async (params: {
     } else if (selected_option == 'Reasoning Effort') {
       while (true) {
         const new_effort = await edit_reasoning_effort_for_config(
-          updated_config.reasoning_effort
+          updated_config.reasoning_effort,
+          updated_config.provider_name
         )
         if (new_effort === undefined) break
 
         let is_valid = true
-        if (new_effort !== null) {
+        if (new_effort !== null && updated_config.provider_name != 'ChatGPT') {
           const provider = await providers_manager.get_provider(
             updated_config.provider_name
           )

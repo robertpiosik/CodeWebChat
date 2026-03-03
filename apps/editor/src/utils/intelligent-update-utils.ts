@@ -2,7 +2,6 @@ import * as vscode from 'vscode'
 import axios, { CancelToken } from 'axios'
 import {
   ModelProvidersManager,
-  ReasoningEffort,
   ToolConfig,
   get_tool_config_id
 } from '@/services/model-providers-manager'
@@ -217,7 +216,7 @@ export const process_file = async (params: {
   provider: any
   model: string
   temperature?: number
-  reasoning_effort?: ReasoningEffort
+  reasoning_effort?: string
   file_path: string
   file_content: string
   instruction: string
