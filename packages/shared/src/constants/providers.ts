@@ -38,6 +38,9 @@ export const PROVIDERS = {
   HuggingFace: {
     base_url: 'https://router.huggingface.co/v1'
   },
+  'LM Studio': {
+    base_url: 'http://localhost:1234/v1'
+  },
   Mistral: {
     base_url: 'https://api.mistral.ai/v1'
   },
