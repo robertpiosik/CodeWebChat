@@ -195,6 +195,8 @@ export const make_api_request = async (params: {
       }
       if (system_message) {
         request_body.instructions = system_message.content
+      } else {
+        request_body.instructions = ''
       }
       if (params.body.temperature !== undefined) {
         request_body.temperature = params.body.temperature
