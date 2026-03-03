@@ -1,5 +1,5 @@
 import { Logger } from '@shared/utils/logger'
-import { PROVIDERS } from '@shared/constants/providers'
+import { PROVIDERS } from '@/constants/providers'
 import axios from 'axios'
 
 export const MODELS_ROUTE_NOT_FOUND_ERROR = '/models route not found'

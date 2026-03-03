@@ -11,9 +11,6 @@ export const PROVIDERS = {
   Cerebras: {
     base_url: 'https://api.cerebras.ai/v1'
   },
-  ChatGPT: {
-    base_url: 'https://chatgpt.com/backend-api/codex'
-  },
   Chutes: {
     base_url: 'https://llm.chutes.ai/v1'
   },

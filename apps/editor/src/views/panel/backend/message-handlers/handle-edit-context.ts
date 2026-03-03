@@ -7,7 +7,7 @@ import {
   Provider
 } from '@/services/model-providers-manager'
 import axios from 'axios'
-import { PROVIDERS } from '@shared/constants/providers'
+import { PROVIDERS } from '@/constants/providers'
 import {
   API_EDIT_FORMAT_STATE_KEY,
   RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY

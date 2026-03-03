@@ -95,13 +95,11 @@ export const ModelProvidersSection: React.FC<ModelProvidersSectionProps> = (
               />
             ) : (
               <IconButton
-                codicon_icon={provider.name == 'ChatGPT' ? 'refresh' : 'key'}
+                codicon_icon="key"
                 title={
                   is_localhost
                     ? t('action.api-key-not-required')
-                    : provider.name == 'ChatGPT'
-                      ? t('action.refresh-token')
-                      : t('action.change-api-key')
+                    : t('action.change-api-key')
                 }
                 on_click={() => props.on_change_api_key(provider.name)}
                 disabled={is_localhost}

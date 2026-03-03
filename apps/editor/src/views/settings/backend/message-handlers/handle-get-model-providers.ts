@@ -1,6 +1,6 @@
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
-import { PROVIDERS } from '@shared/constants/providers'
+import { PROVIDERS } from '@/constants/providers'
 
 export const handle_get_model_providers = async (
   provider: SettingsProvider

@@ -13,7 +13,7 @@ import {
   get_intelligent_update_config,
   process_file
 } from '@/utils/intelligent-update-utils'
-import { PROVIDERS } from '@shared/constants/providers'
+import { PROVIDERS } from '@/constants/providers'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { Logger } from '@shared/utils/logger'
 import { set_file_applied_with_intelligent_update } from '@/commands/apply-chat-response-command/utils/preview'

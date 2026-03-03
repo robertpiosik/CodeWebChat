@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { PROVIDERS } from '@shared/constants/providers'
+import { PROVIDERS } from '@/constants/providers'
 import { SECRET_STORAGE_MODEL_PROVIDERS_KEY } from '@/constants/secret-storage-keys'
 
 export type BuiltInProvider = {

@@ -6,8 +6,7 @@ import {
   Provider
 } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
-import { PROVIDERS } from '@shared/constants/providers'
-import { authenticate_chatgpt } from './authenticate-chatgpt'
+import { PROVIDERS } from '@/constants/providers'
 
 const normalize_base_url = (url: string): string => {
   return url.trim().replace(/\/+$/, '')
@@ -455,25 +454,7 @@ export const upsert_model_provider = async (params: {
         const info = PROVIDERS[name]
         let api_key = ''
 
-        if (name == 'ChatGPT') {
-          try {
-            api_key = await authenticate_chatgpt()
-            vscode.window.showInformationMessage(
-              'Authenticated successfully!',
-              {
-                modal: true,
-                detail:
-                  'A ChatGPT provider for subscription-based usage has been added to the list of providers.'
-              }
-            )
-          } catch (error) {
-            vscode.window.showErrorMessage(
-              `ChatGPT authentication failed: ${error instanceof Error ? error.message : String(error)}`,
-              { modal: true }
-            )
-            return
-          }
-        } else if (!info.base_url.includes('localhost')) {
+        if (!info.base_url.includes('localhost')) {
           const { value, accepted, back } = await prompt_for_key('', true)
           if (back) continue
           if (!accepted) return

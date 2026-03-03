@@ -10,7 +10,7 @@ import {
 import { Logger } from '@shared/utils/logger'
 import { parse_response } from '@/commands/apply-chat-response-command/utils/clipboard-parser'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
-import { PROVIDERS } from '@shared/constants/providers'
+import { PROVIDERS } from '@/constants/providers'
 import {
   get_intelligent_update_config,
   process_file

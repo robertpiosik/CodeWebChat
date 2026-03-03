@@ -8,7 +8,7 @@ import {
   ToolConfig
 } from '@/services/model-providers-manager'
 import axios from 'axios'
-import { PROVIDERS } from '@shared/constants/providers'
+import { PROVIDERS } from '@/constants/providers'
 import { RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY } from '@/constants/state-keys'
 import {
   replace_changes_symbol,

@@ -9,7 +9,7 @@ import {
   ModelFetcher,
   MODELS_ROUTE_NOT_FOUND_ERROR
 } from '@/services/model-fetcher'
-import { PROVIDERS } from '@shared/constants/providers'
+import { PROVIDERS } from '@/constants/providers'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { upsert_model_provider } from './upsert-model-provider'
@@ -115,62 +115,6 @@ export const initial_select_model = async (
   provider: Provider,
   tool_type?: ToolType
 ): Promise<string | undefined> => {
-  if (provider.name == 'ChatGPT' && provider.type == 'built-in') {
-    const model_items = [
-      { label: 'gpt-5.2' },
-      { label: 'gpt-5.3-codex' },
-      { label: 'gpt-5.3-codex-spark' }
-    ]
-
-    let last_selected_model_id: string | undefined
-
-    while (true) {
-      const selected_model = await new Promise<string | undefined>(
-        (resolve) => {
-          const quick_pick = vscode.window.createQuickPick()
-          quick_pick.items = model_items
-          quick_pick.title = 'Models'
-          quick_pick.placeholder = 'Choose a model'
-          quick_pick.buttons = [vscode.QuickInputButtons.Back]
-
-          if (last_selected_model_id) {
-            const active = model_items.find(
-              (item) => item.label == last_selected_model_id
-            )
-            if (active) quick_pick.activeItems = [active]
-          }
-
-          let accepted = false
-          const disposables: vscode.Disposable[] = []
-
-          disposables.push(
-            quick_pick.onDidAccept(() => {
-              accepted = true
-              const selected = quick_pick.selectedItems[0]
-              resolve(selected.description || selected.label)
-              quick_pick.hide()
-            }),
-            quick_pick.onDidTriggerButton((button) => {
-              if (button === vscode.QuickInputButtons.Back) {
-                quick_pick.hide()
-              }
-            }),
-            quick_pick.onDidHide(() => {
-              if (!accepted) resolve(undefined)
-              disposables.forEach((d) => d.dispose())
-              quick_pick.dispose()
-            })
-          )
-          quick_pick.show()
-        }
-      )
-
-      if (!selected_model) return undefined
-
-      return selected_model
-    }
-  }
-
   let base_url: string | undefined
 
   try {
@@ -361,60 +305,6 @@ export const edit_model_for_config = async (
   model_fetcher: ModelFetcher,
   tool_type?: ToolType
 ) => {
-  if (config.provider_name == 'ChatGPT' && config.provider_type == 'built-in') {
-    const model_items = [
-      { label: 'gpt-5.2' },
-      { label: 'gpt-5.3-codex' },
-      { label: 'gpt-5.3-codex-spark' }
-    ]
-
-    const last_selected_model_id = config.model
-
-    while (true) {
-      const selected_model_item = await new Promise<
-        (typeof model_items)[0] | undefined
-      >((resolve) => {
-        const quick_pick =
-          vscode.window.createQuickPick<(typeof model_items)[0]>()
-        quick_pick.items = model_items
-        quick_pick.title = 'Models'
-        quick_pick.placeholder = 'Choose a model'
-        quick_pick.buttons = [vscode.QuickInputButtons.Back]
-        if (last_selected_model_id) {
-          const active = model_items.find(
-            (item) => item.label == last_selected_model_id
-          )
-          if (active) quick_pick.activeItems = [active]
-        }
-        let accepted = false
-        const disposables: vscode.Disposable[] = []
-
-        disposables.push(
-          quick_pick.onDidAccept(() => {
-            accepted = true
-            resolve(quick_pick.selectedItems[0])
-            quick_pick.hide()
-          }),
-          quick_pick.onDidTriggerButton((button) => {
-            if (button === vscode.QuickInputButtons.Back) {
-              quick_pick.hide()
-            }
-          }),
-          quick_pick.onDidHide(() => {
-            if (!accepted) resolve(undefined)
-            disposables.forEach((d) => d.dispose())
-            quick_pick.dispose()
-          })
-        )
-        quick_pick.show()
-      })
-
-      if (!selected_model_item) return undefined
-
-      return selected_model_item.label
-    }
-  }
-
   const provider_from_manager = await providers_manager.get_provider(
     config.provider_name
   )
@@ -657,8 +547,7 @@ export const edit_system_instructions_override_for_config = async (
 }
 
 export const edit_reasoning_effort_for_config = async (
-  current_effort?: string,
-  provider_name?: string
+  current_effort?: string
 ) => {
   const effort_options: vscode.QuickPickItem[] = [
     {
@@ -667,22 +556,13 @@ export const edit_reasoning_effort_for_config = async (
     }
   ]
 
-  if (provider_name == 'ChatGPT') {
-    effort_options.push(
-      { label: 'Low' },
-      { label: 'Medium' },
-      { label: 'High' },
-      { label: 'Extra High' }
-    )
-  } else {
-    effort_options.push(
-      { label: 'None' },
-      { label: 'Minimal' },
-      { label: 'Low' },
-      { label: 'Medium' },
-      { label: 'High' }
-    )
-  }
+  effort_options.push(
+    { label: 'None' },
+    { label: 'Minimal' },
+    { label: 'Low' },
+    { label: 'Medium' },
+    { label: 'High' }
+  )
 
   return await new Promise<string | null | undefined>((resolve) => {
     const quick_pick = vscode.window.createQuickPick()

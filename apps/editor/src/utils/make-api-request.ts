@@ -33,31 +33,7 @@ const process_stream_chunk = (
           if (!json_string || json_string == DONE_TOKEN) continue
 
           const json_data = JSON.parse(json_string)
-          let content = json_data.choices?.[0]?.delta?.content
-
-          // Special handling for ChatGPT provider
-          if (content === undefined && json_data.type) {
-            if (
-              [
-                'response.text.delta',
-                'response.output_text.delta',
-                'response.reasoning.delta',
-                'response.reasoning_text.delta'
-              ].includes(json_data.type)
-            ) {
-              content = json_data.delta
-            } else if (json_data.type === 'response.content_part.added') {
-              content =
-                typeof json_data.part?.text === 'string'
-                  ? json_data.part.text
-                  : json_data.part?.text?.value
-            } else if (
-              json_data.type === 'response.output_item.added' &&
-              json_data.item?.type === 'text'
-            ) {
-              content = json_data.item?.text
-            }
-          }
+          const content = json_data.choices?.[0]?.delta?.content
 
           if (typeof content == 'string') {
             new_content += content
@@ -139,75 +115,8 @@ export const make_api_request = async (params: {
   }
 
   try {
-    const is_chatgpt = params.endpoint_url.includes('chatgpt.com/backend-api')
-    const request_url = is_chatgpt
-      ? params.endpoint_url + '/responses'
-      : params.endpoint_url + '/chat/completions'
-
-    let request_body: any = { ...params.body, stream: true }
-
-    if (is_chatgpt) {
-      const system_message = params.body.messages?.find(
-        (m: any) => m.role === 'system'
-      )
-      const other_messages =
-        params.body.messages?.filter((m: any) => m.role !== 'system') || []
-
-      const formatted_input = other_messages.map((m: any) => {
-        if (m.role == 'user') {
-          const content = []
-          if (typeof m.content == 'string') {
-            content.push({ type: 'input_text', text: m.content })
-          } else if (Array.isArray(m.content)) {
-            for (const block of m.content) {
-              if (block.type == 'text') {
-                content.push({ type: 'input_text', text: block.text })
-              } else if (block.type == 'image_url') {
-                content.push({
-                  type: 'input_image',
-                  image_url: block.image_url.url
-                })
-              }
-            }
-          }
-          return { role: 'user', content }
-        } else if (m.role == 'assistant') {
-          const content = []
-          if (typeof m.content == 'string') {
-            content.push({ type: 'output_text', text: m.content })
-          } else if (Array.isArray(m.content)) {
-            for (const block of m.content) {
-              if (block.type == 'text') {
-                content.push({ type: 'output_text', text: block.text })
-              }
-            }
-          }
-          return { role: 'assistant', content }
-        }
-        return m
-      })
-
-      request_body = {
-        model: params.body.model,
-        input: formatted_input,
-        stream: true,
-        store: false
-      }
-      if (system_message) {
-        request_body.instructions = system_message.content
-      } else {
-        request_body.instructions = ''
-      }
-      if (params.body.temperature !== undefined) {
-        request_body.temperature = params.body.temperature
-      }
-      if (params.body.reasoning_effort) {
-        request_body.reasoning = {
-          effort: params.body.reasoning_effort,
-          summary: 'auto'
-        }
-      }
-    }
+    const request_url = params.endpoint_url + '/chat/completions'
+    const request_body: any = { ...params.body, stream: true }
 
     Logger.info({
       function_name: 'make_api_request',
@@ -339,10 +248,6 @@ export const make_api_request = async (params: {
         : {})
     }
 
-    if (is_chatgpt) {
-      headers['originator'] = 'code-web-chat'
-    }
-
     const response: AxiosResponse<NodeJS.ReadableStream> = await axios.post(
       request_url,
       request_body,
@@ -388,31 +293,7 @@ export const make_api_request = async (params: {
               const json_string = trimmed_line.slice(DATA_PREFIX.length).trim()
               if (json_string && json_string !== DONE_TOKEN) {
                 const json_data = JSON.parse(json_string)
-                let content = json_data.choices?.[0]?.delta?.content
-
-                // Special handling for ChatGPT provider
-                if (content === undefined && json_data.type) {
-                  if (
-                    [
-                      'response.text.delta',
-                      'response.output_text.delta',
-                      'response.reasoning.delta',
-                      'response.reasoning_text.delta'
-                    ].includes(json_data.type)
-                  ) {
-                    content = json_data.delta
-                  } else if (json_data.type === 'response.content_part.added') {
-                    content =
-                      typeof json_data.part?.text === 'string'
-                        ? json_data.part.text
-                        : json_data.part?.text?.value
-                  } else if (
-                    json_data.type === 'response.output_item.added' &&
-                    json_data.item?.type === 'text'
-                  ) {
-                    content = json_data.item?.text
-                  }
-                }
+                const content = json_data.choices?.[0]?.delta?.content
 
                 if (typeof content == 'string') {
                   process_content(content)

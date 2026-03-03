@@ -6,7 +6,7 @@ import {
 } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
-import { PROVIDERS } from '@shared/constants/providers'
+import { PROVIDERS } from '@/constants/providers'
 import { display_token_count } from '@/utils/display-token-count'
 import { RECENTLY_USED_COMMIT_MESSAGES_CONFIG_IDS_STATE_KEY } from '@/constants/state-keys'
 import { t } from '@/i18n'

@@ -7,7 +7,7 @@ import {
   ToolConfig,
   get_tool_config_id
 } from '@/services/model-providers-manager'
-import { PROVIDERS } from '@shared/constants/providers'
+import { PROVIDERS } from '@/constants/providers'
 import * as vscode from 'vscode'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import axios from 'axios'
