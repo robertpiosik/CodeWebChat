@@ -92,9 +92,7 @@ export const check_referencing_files_for_context_command = (
         quick_pick.placeholder = t(
           'command.context.check-references.select-files'
         )
-        quick_pick.title = t('command.context.check-references.found-files', {
-          count: matched_files.length
-        })
+        quick_pick.title = t('command.context.check-references.search-results')
         quick_pick.ignoreFocusOut = true
 
         const close_button = {
