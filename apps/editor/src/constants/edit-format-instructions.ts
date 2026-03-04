@@ -12,6 +12,18 @@ def show_greeting():
   print(GREETING)
 \`\`\`
 
+Created a simple calculator with addition and subtraction.
+
+### Created file: \`src/examples/calculator.py\`
+
+\`\`\`python
+def add(a, b):
+  return a + b
+
+def subtract(a, b):
+  return a - b
+\`\`\`
+
 ### Deleted file: \`src/examples/weekdays.py\`
 
 ### Renamed file: \`src/examples/math_utils.py\` (old) \`src/examples/calculator.py\` (new)`
@@ -50,6 +62,20 @@ Greet user saying "Hello, World!", for a duration of 5 seconds.
 ## Author
 
 <!-- ... --->
+\`\`\`
+
+Created a simple calculator with addition and subtraction.
+
+### Created file: \`src/examples/calculator.js\`
+
+\`\`\`javascript
+function add(a, b) {
+  return a + b;
+}
+
+function subtract(a, b) {
+  return a - b;
+}
 \`\`\`
 
 ### Deleted file: \`src/examples/weekdays.js\`
@@ -107,6 +133,18 @@ WISHES = "Have a nice day!"
  def show_wishes():
    print(WISHES)
 >>>>>>>
+\`\`\`
+
+Created a simple calculator with addition and subtraction.
+
+### Created file: \`src/examples/calculator.py\`
+
+\`\`\`python
+def add(a, b):
+  return a + b
+
+def subtract(a, b):
+  return a - b
 \`\`\`
 
 ### Deleted file: \`src/examples/weekdays.py\`
