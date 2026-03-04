@@ -30,6 +30,7 @@ import {
   prune_context_instructions_prefix,
   prune_context_format
 } from '@/constants/instructions'
+import { build_user_content } from '@/utils/build-user-content'
 
 const get_prune_context_config = async (
   api_providers_manager: ModelProvidersManager,
@@ -386,9 +387,10 @@ export const handle_prune_context = async (
     processed_instructions = replace_fragment_symbol(processed_instructions)
   }
 
-  const collected_files = await files_collector.collect_files({
+  const collected = await files_collector.collect_files({
     compact: true
   })
+  const collected_files = collected.other_files + collected.recent_files
 
   if (!collected_files) {
     panel_provider.send_message({
@@ -439,8 +441,6 @@ export const handle_prune_context = async (
       endpoint_url = provider.base_url
     }
 
-    const files = `<files>${collected_files}\n</files>`
-
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const config_prune_instructions_prefix = config.get<string>(
       'pruneContextInstructionsPrefix'
@@ -449,30 +449,14 @@ export const handle_prune_context = async (
       config_prune_instructions_prefix || prune_context_instructions_prefix
     const system_instructions_xml = `${instructions_to_use}\n${prune_context_format}`
 
-    const content = `${files}\n${skill_definitions}${system_instructions_xml}\n${processed_instructions}`
+    const part1 = `<files>\n${collected.other_files}`
+    const part2 = `${collected.recent_files}</files>\n${skill_definitions}${system_instructions_xml}\n${processed_instructions}`
 
-    let user_content: any = content
-
-    if (content.includes('<cwc-image>')) {
-      user_content = []
-      const parts = content.split(/<cwc-image>([\s\S]*?)<\/cwc-image>/)
-
-      for (let i = 0; i < parts.length; i++) {
-        const part = parts[i]
-        if (i % 2 == 0) {
-          if (part.length > 0) {
-            user_content.push({ type: 'text', text: part.trim() })
-          }
-        } else {
-          user_content.push({
-            type: 'image_url',
-            image_url: {
-              url: `data:image/png;base64,${part}`
-            }
-          })
-        }
-      }
-    }
+    const user_content = build_user_content({
+      provider_name: provider.name,
+      part1,
+      part2
+    })
 
     const messages = [
       {

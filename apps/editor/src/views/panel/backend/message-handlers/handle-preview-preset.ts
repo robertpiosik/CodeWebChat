@@ -51,7 +51,8 @@ export const handle_preview_preset = async (
       new vscode.Range(position, document.positionAt(document.getText().length))
     )
 
-    const context_text = await files_collector.collect_files()
+    const collected = await files_collector.collect_files()
+    const context_text = collected.other_files + collected.recent_files
 
     const workspace_folder = vscode.workspace.workspaceFolders?.[0].uri.fsPath
     const relative_path = active_path!.replace(workspace_folder + '/', '')
@@ -151,10 +152,11 @@ export const handle_preview_preset = async (
       !active_editor.selection.isEmpty &&
       instructions.includes('#Selection')
 
-    const context_text =
+    const collected =
       panel_provider.web_prompt_type != 'no-context'
         ? await files_collector.collect_files({})
-        : ''
+        : { other_files: '', recent_files: '' }
+    const context_text = collected.other_files + collected.recent_files
 
     if (has_selection) {
       instructions = replace_selection_symbol(instructions)

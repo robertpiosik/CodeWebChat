@@ -203,7 +203,8 @@ export const context_initialization = async (
       let context_text = ''
 
       try {
-        context_text = await files_collector.collect_files()
+        const collected = await files_collector.collect_files()
+        context_text = collected.other_files + collected.recent_files
       } catch (error: any) {
         console.error('Error collecting files:', error)
         vscode.window.showErrorMessage(

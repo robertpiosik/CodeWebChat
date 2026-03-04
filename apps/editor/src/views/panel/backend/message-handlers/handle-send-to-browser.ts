@@ -170,7 +170,8 @@ export const handle_send_to_browser = async (params: {
       )
     }
 
-    const context_text = await files_collector.collect_files()
+    const collected = await files_collector.collect_files()
+    const context_text = collected.other_files + collected.recent_files
 
     const relative_path = vscode.workspace.asRelativePath(document.uri)
 
@@ -209,11 +210,12 @@ export const handle_send_to_browser = async (params: {
     const editor = vscode.window.activeTextEditor
     const additional_paths: string[] = []
 
-    const context_text = await files_collector.collect_files({
+    const collected = await files_collector.collect_files({
       additional_paths,
       no_context: params.panel_provider.web_prompt_type == 'no-context',
       compact: params.panel_provider.web_prompt_type == 'prune-context'
     })
+    const context_text = collected.other_files + collected.recent_files
 
     const prepared_chats = await Promise.all(
       resolved_preset_names.map(async (preset_name) => {

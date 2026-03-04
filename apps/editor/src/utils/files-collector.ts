@@ -24,7 +24,7 @@ export class FilesCollector {
     additional_paths?: string[]
     no_context?: boolean
     compact?: boolean
-  }): Promise<string> {
+  }): Promise<{ other_files: string; recent_files: string }> {
     const additional_paths = (params?.additional_paths ?? []).map((p) => {
       if (this.workspace_roots.length > 0) {
         return path.join(this.workspace_roots[0], p)
@@ -50,69 +50,78 @@ export class FilesCollector {
     const context_files = [...new Set(context_files_list)]
 
     // Sort context files based on modification time and selection timestamp
-    const sorted_context_files = this._sort_context_files({
-      files: context_files
-    })
+    const { other_files: other_paths, recent_files: recent_paths } =
+      this._sort_context_files({
+        files: context_files
+      })
 
-    let collected_text = ''
+    const process_paths = (paths: string[]) => {
+      let collected_text = ''
+      for (const file_path of paths) {
+        try {
+          if (!fs.existsSync(file_path)) continue
+          const stats = fs.statSync(file_path)
 
-    for (const file_path of sorted_context_files) {
-      try {
-        if (!fs.existsSync(file_path)) continue
-        const stats = fs.statSync(file_path)
+          if (stats.isDirectory()) continue
 
-        if (stats.isDirectory()) continue
+          let content = fs.readFileSync(file_path, 'utf8')
 
-        let content = fs.readFileSync(file_path, 'utf8')
+          const range = this.workspace_provider.get_range(file_path)
+          if (range) {
+            content = this.workspace_provider.apply_range_to_content(
+              content,
+              range
+            )
+          }
 
-        const range = this.workspace_provider.get_range(file_path)
-        if (range) {
-          content = this.workspace_provider.apply_range_to_content(
-            content,
-            range
-          )
+          if (params?.compact) {
+            content = compact_file(content, path.extname(file_path))
+          }
+
+          const workspace_root = this._get_workspace_root_for_file(file_path)
+
+          if (!workspace_root) {
+            collected_text += `<file path="${file_path.replace(
+              /\\/g,
+              '/'
+            )}">\n<![CDATA[\n${content}\n]]>\n</file>\n`
+            continue
+          }
+
+          const relative_path = path
+            .relative(workspace_root, file_path)
+            .replace(/\\/g, '/')
+
+          // Get the workspace name to prefix the path if there are multiple workspaces
+          let display_path = relative_path
+          if (this.workspace_roots.length > 1) {
+            const workspace_name =
+              this.workspace_provider.get_workspace_name(workspace_root)
+            display_path = `${workspace_name}/${relative_path}`
+          }
+
+          collected_text += `<file path="${display_path}">\n<![CDATA[\n${content}\n]]>\n</file>\n`
+        } catch (error) {
+          console.error(`Error reading file ${file_path}:`, error)
         }
-
-        if (params?.compact) {
-          content = compact_file(content, path.extname(file_path))
-        }
-
-        const workspace_root = this._get_workspace_root_for_file(file_path)
-
-        if (!workspace_root) {
-          collected_text += `<file path="${file_path.replace(
-            /\\/g,
-            '/'
-          )}">\n<![CDATA[\n${content}\n]]>\n</file>\n`
-          continue
-        }
-
-        const relative_path = path
-          .relative(workspace_root, file_path)
-          .replace(/\\/g, '/')
-
-        // Get the workspace name to prefix the path if there are multiple workspaces
-        let display_path = relative_path
-        if (this.workspace_roots.length > 1) {
-          const workspace_name =
-            this.workspace_provider.get_workspace_name(workspace_root)
-          display_path = `${workspace_name}/${relative_path}`
-        }
-
-        collected_text += `<file path="${display_path}">\n<![CDATA[\n${content}\n]]>\n</file>\n`
-      } catch (error) {
-        console.error(`Error reading file ${file_path}:`, error)
       }
+      return collected_text
     }
 
-    return collected_text
+    return {
+      other_files: process_paths(other_paths),
+      recent_files: process_paths(recent_paths)
+    }
   }
 
   private _get_workspace_root_for_file(file_path: string): string | undefined {
     return this.workspace_provider.get_workspace_root_for_file(file_path)
   }
 
-  private _sort_context_files(params: { files: string[] }): string[] {
+  private _sort_context_files(params: { files: string[] }): {
+    other_files: string[]
+    recent_files: string[]
+  } {
     const recently_modified: Array<{ path: string; mtime: number }> = []
     const older_files: Array<{ path: string; timestamp: number }> = []
     const now = Date.now()
@@ -153,9 +162,9 @@ export class FilesCollector {
 
     recently_modified.sort((a, b) => a.mtime - b.mtime)
 
-    return [
-      ...older_files.map((f) => f.path),
-      ...recently_modified.map((f) => f.path)
-    ]
+    return {
+      other_files: older_files.map((f) => f.path),
+      recent_files: recently_modified.map((f) => f.path)
+    }
   }
 }

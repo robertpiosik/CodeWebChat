@@ -79,7 +79,8 @@ export const handle_copy_prompt = async (params: {
       new vscode.Range(position, document.positionAt(document.getText().length))
     )
 
-    const context_text = await files_collector.collect_files()
+    const collected = await files_collector.collect_files()
+    const context_text = collected.other_files + collected.recent_files
 
     const workspace_folder = vscode.workspace.workspaceFolders?.[0].uri.fsPath
     const relative_path = active_path.replace(workspace_folder + '/', '')
@@ -180,10 +181,11 @@ export const handle_copy_prompt = async (params: {
       (params.panel_provider.mode == MODE.API &&
         params.panel_provider.api_prompt_type == 'prune-context')
 
-    const context_text = await files_collector.collect_files({
+    const collected = await files_collector.collect_files({
       no_context: params.panel_provider.web_prompt_type == 'no-context',
       compact: is_in_prune_context_prompt_type
     })
+    const context_text = collected.other_files + collected.recent_files
 
     const instructions = replace_selection_symbol(final_instruction)
 

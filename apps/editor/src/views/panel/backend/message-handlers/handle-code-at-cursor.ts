@@ -27,6 +27,7 @@ import { replace_image_symbol } from '../utils/replace-image-symbol'
 import { replace_pasted_text_symbol } from '../utils/replace-pasted-text-symbol'
 import { replace_website_symbol } from '../utils/replace-website-symbol'
 import { replace_fragment_symbol } from '../utils/replace-fragment-symbol'
+import { build_user_content } from '@/utils/build-user-content'
 
 const get_code_at_cursor_config = async (
   api_providers_manager: ModelProvidersManager,
@@ -415,41 +416,20 @@ export const handle_code_at_cursor = async (
       open_editors_provider: panel_provider.open_editors_provider
     })
 
-    const context_text = await files_collector.collect_files()
+    const collected = await files_collector.collect_files()
 
-    const payload = {
-      before: `<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}`,
-      after: `${text_after_cursor}\n]]>\n</file>\n</files>`
-    }
-
-    const content = `${payload.before}${
+    const part1 = `<files>\n${collected.other_files}`
+    const part2 = `${collected.recent_files}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}${
       processed_completion_instructions
         ? `<missing_text>${processed_completion_instructions}</missing_text>`
         : '<missing_text>'
-    }${payload.after}\n${skill_definitions}${main_instructions}`
+    }${text_after_cursor}\n]]>\n</file>\n</files>\n${skill_definitions}${main_instructions}`
 
-    let user_content: any = content
-
-    if (content.includes('<cwc-image>')) {
-      user_content = []
-      const parts = content.split(/<cwc-image>([\s\S]*?)<\/cwc-image>/)
-
-      for (let i = 0; i < parts.length; i++) {
-        const part = parts[i]
-        if (i % 2 == 0) {
-          if (part.length > 0) {
-            user_content.push({ type: 'text', text: part.trim() })
-          }
-        } else {
-          user_content.push({
-            type: 'image_url',
-            image_url: {
-              url: `data:image/png;base64,${part}`
-            }
-          })
-        }
-      }
-    }
+    const user_content = build_user_content({
+      provider_name: provider.name,
+      part1,
+      part2
+    })
 
     const messages = [
       {

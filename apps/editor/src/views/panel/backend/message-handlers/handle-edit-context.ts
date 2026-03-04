@@ -41,6 +41,7 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
 import { default_system_instructions } from '@shared/constants/default-system-instructions'
+import { build_user_content } from '@/utils/build-user-content'
 
 const get_edit_context_config = async (params: {
   api_providers_manager: ModelProvidersManager
@@ -407,9 +408,10 @@ export const handle_edit_context = async (
   }
 
   const is_prune_context = panel_provider.api_prompt_type == 'prune-context'
-  const collected_files = await files_collector.collect_files({
+  const collected = await files_collector.collect_files({
     compact: is_prune_context
   })
+  const collected_files = collected.other_files + collected.recent_files
 
   if (!collected_files) {
     panel_provider.send_message({
@@ -458,8 +460,6 @@ export const handle_edit_context = async (
       endpoint_url = provider.base_url
     }
 
-    const files = `<files>${collected_files}\n</files>`
-
     const edit_format =
       panel_provider.context.workspaceState.get<EditFormat>(
         API_EDIT_FORMAT_STATE_KEY
@@ -496,10 +496,6 @@ export const handle_edit_context = async (
       system_instructions_xml = `<system>\n${edit_format_instructions}\n</system>`
     }
 
-    const content = `${files}\n${skill_definitions}${
-      system_instructions_xml ? system_instructions_xml + '\n' : ''
-    }${processed_instructions}`
-
     const system_instructions =
       edit_context_config.system_instructions_override ||
       vscode.workspace
@@ -507,28 +503,16 @@ export const handle_edit_context = async (
         .get<string>('editContextSystemInstructions') ||
       default_system_instructions
 
-    let user_content: any = content
+    const part1 = `<files>\n${collected.other_files}`
+    const part2 = `${collected.recent_files}</files>\n${skill_definitions}${
+      system_instructions_xml ? system_instructions_xml + '\n' : ''
+    }${processed_instructions}`
 
-    if (content.includes('<cwc-image>')) {
-      user_content = []
-      const parts = content.split(/<cwc-image>([\s\S]*?)<\/cwc-image>/)
-
-      for (let i = 0; i < parts.length; i++) {
-        const part = parts[i]
-        if (i % 2 == 0) {
-          if (part.length > 0) {
-            user_content.push({ type: 'text', text: part.trim() })
-          }
-        } else {
-          user_content.push({
-            type: 'image_url',
-            image_url: {
-              url: `data:image/png;base64,${part}`
-            }
-          })
-        }
-      }
-    }
+    const user_content = build_user_content({
+      provider_name: provider.name,
+      part1,
+      part2
+    })
 
     const messages = [
       ...(system_instructions

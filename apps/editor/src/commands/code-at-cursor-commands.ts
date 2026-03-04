@@ -16,6 +16,7 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { apply_reasoning_effort } from '../utils/apply-reasoning-effort'
 import { t } from '@/i18n'
+import { build_user_content } from '../utils/build-user-content'
 
 const show_ghost_text = async (params: {
   editor: vscode.TextEditor
@@ -405,25 +406,27 @@ const perform_code_at_cursor = async (params: {
         open_editors_provider: params.open_editors_provider
       })
 
-      const context_text = await files_collector.collect_files()
+      const collected = await files_collector.collect_files()
 
-      const payload = {
-        before: `<files>\n${context_text}<file path="${vscode.workspace.asRelativePath(
-          document.uri
-        )}">\n<![CDATA[\n${text_before_cursor}`,
-        after: `${text_after_cursor}\n]]>\n</file>\n</files>`
-      }
-
-      const content = `${payload.before}${
+      const part1 = `<files>\n${collected.other_files}`
+      const part2 = `${collected.recent_files}<file path="${vscode.workspace.asRelativePath(
+        document.uri
+      )}">\n<![CDATA[\n${text_before_cursor}${
         completion_instructions
           ? `<missing_text>${completion_instructions}</missing_text>`
           : '<missing_text>'
-      }${payload.after}\n${code_at_cursor_instructions}`
+      }${text_after_cursor}\n]]>\n</file>\n</files>\n${code_at_cursor_instructions}`
+
+      const user_content = build_user_content({
+        provider_name: provider.name,
+        part1,
+        part2
+      })
 
       const messages = [
         {
           role: 'user',
-          content
+          content: user_content
         }
       ]
 
