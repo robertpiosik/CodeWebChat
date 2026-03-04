@@ -7,5 +7,9 @@ export const handle_delete_configuration = async (
   configuration_id: string,
   type: ToolType
 ): Promise<void> => {
-  await delete_configuration(provider.context, configuration_id, type)
+  await delete_configuration({
+    context: provider.context,
+    configuration_id,
+    type
+  })
 }

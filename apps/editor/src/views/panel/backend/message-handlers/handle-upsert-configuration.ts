@@ -1,17 +1,16 @@
-import { SettingsProvider } from '@/views/settings/backend/settings-provider'
-import { UpsertConfigurationMessage } from '@/views/settings/types/messages'
+import { PanelProvider } from '../panel-provider'
 import { upsert_configuration } from '@/views/utils/upsert-configuration/upsert-configuration'
 
 export const handle_upsert_configuration = async (
-  provider: SettingsProvider,
-  message: UpsertConfigurationMessage
+  provider: PanelProvider,
+  message: any
 ): Promise<void> => {
   await upsert_configuration({
     context: provider.context,
     tool_type: message.tool_type,
     configuration_id: message.configuration_id,
-    insertion_index: message.insertion_index,
+    duplicate_from_id: message.duplicate_from_id,
     create_on_top: message.create_on_top,
-    duplicate_from_id: message.duplicate_from_id
+    insertion_index: message.insertion_index
   })
 }

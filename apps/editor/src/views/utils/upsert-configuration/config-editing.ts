@@ -12,8 +12,8 @@ import {
 import { PROVIDERS } from '@/constants/providers'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
-import { upsert_model_provider } from './upsert-model-provider'
-import { ToolType } from '../settings/types/tools'
+import { upsert_model_provider } from '../upsert-model-provider'
+import { ToolType } from '../../settings/types/tools'
 
 export const initial_select_provider = async (
   context: vscode.ExtensionContext,

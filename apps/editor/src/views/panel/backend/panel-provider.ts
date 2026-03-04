@@ -90,7 +90,9 @@ import {
   handle_paste_url,
   handle_voice_input,
   handle_open_website,
-  handle_cancel_intelligent_update_file_in_preview
+  handle_cancel_intelligent_update_file_in_preview,
+  handle_upsert_configuration,
+  handle_delete_configuration
 } from './message-handlers'
 import { SelectionState } from '../types/messages'
 import {
@@ -122,8 +124,6 @@ import { CancelTokenSource } from 'axios'
 import { update_last_used_preset_or_group } from './message-handlers/update-last-used-preset-or-group'
 import { dictionary } from '@shared/constants/dictionary'
 import { DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD } from '@/constants/values'
-import { upsert_configuration } from '../../utils/upsert-configuration'
-import { delete_configuration } from '../../utils/delete-configuration'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 
 export class PanelProvider implements vscode.WebviewViewProvider {
@@ -931,25 +931,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           ) {
             await handle_save_prune_context_instructions_prefix(message.prefix)
           } else if (message.command == 'UPSERT_CONFIGURATION') {
-            await upsert_configuration({
-              context: this.context,
-              tool_type: message.tool_type,
-              configuration_id: message.configuration_id,
-              duplicate_from_id: message.duplicate_from_id,
-              create_on_top: message.create_on_top,
-              insertion_index: message.insertion_index
-            })
+            await handle_upsert_configuration(this, message)
           } else if (message.command == 'DELETE_CONFIGURATION') {
-            const tool_type_map: Record<string, any> = {
-              'edit-context': 'edit-context',
-              'code-at-cursor': 'code-at-cursor',
-              'prune-context': 'prune-context'
-            }
-            await delete_configuration(
-              this.context,
-              message.configuration_id,
-              tool_type_map[message.api_prompt_type] || message.api_prompt_type
-            )
+            await handle_delete_configuration(this, message)
           } else if (message.command == 'OPEN_EXTERNAL_URL') {
             await handle_open_external_url(message)
           } else if (message.command == 'SAVE_PROMPT_IMAGE') {

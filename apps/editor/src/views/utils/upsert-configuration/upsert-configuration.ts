@@ -19,7 +19,7 @@ import {
 import axios from 'axios'
 import { PROVIDERS } from '@/constants/providers'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
-import { ToolType } from '../settings/types/tools'
+import { ToolType } from '@/views/settings/types/tools'
 
 export const upsert_configuration = async (params: {
   context: vscode.ExtensionContext
