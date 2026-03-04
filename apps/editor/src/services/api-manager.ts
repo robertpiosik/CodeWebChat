@@ -152,9 +152,9 @@ export class ApiManager {
     } finally {
       // Unblock anyone waiting for this request if it was the one in the chain
       if (!is_chain_resolution_scheduled) {
+        resolve_current()
         const chain_entry = this.waiting_chain.get(params.endpoint_url)
         if (chain_entry && chain_entry.resolve === resolve_current) {
-          chain_entry.resolve()
           this.waiting_chain.delete(params.endpoint_url)
         }
       }
