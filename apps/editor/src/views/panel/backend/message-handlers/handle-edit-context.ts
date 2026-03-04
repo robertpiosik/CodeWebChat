@@ -49,15 +49,8 @@ const get_edit_context_config = async (params: {
   panel_provider: PanelProvider
   config_id?: string
 }): Promise<{ provider: Provider; config: ToolConfig } | undefined> => {
-  const {
-    api_providers_manager,
-    show_quick_pick,
-    context,
-    panel_provider,
-    config_id
-  } = params
   const edit_context_configs =
-    await api_providers_manager.get_edit_context_tool_configs()
+    await params.api_providers_manager.get_edit_context_tool_configs()
 
   if (edit_context_configs.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
@@ -69,31 +62,35 @@ const get_edit_context_config = async (params: {
 
   let selected_config: ToolConfig | null = null
 
-  if (config_id !== undefined) {
+  if (params.config_id !== undefined) {
     selected_config =
-      edit_context_configs.find((c) => get_tool_config_id(c) == config_id) ||
-      null
+      edit_context_configs.find(
+        (c) => get_tool_config_id(c) == params.config_id
+      ) || null
     if (selected_config) {
       let recents =
-        context.workspaceState.get<string[]>(
+        params.context.workspaceState.get<string[]>(
           RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY
         ) || []
-      recents = [config_id, ...recents.filter((id) => id != config_id)]
-      context.workspaceState.update(
+      recents = [
+        params.config_id,
+        ...recents.filter((id) => id != params.config_id)
+      ]
+      params.context.workspaceState.update(
         RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY,
         recents
       )
 
-      if (panel_provider) {
-        panel_provider.send_message({
+      if (params.panel_provider) {
+        params.panel_provider.send_message({
           command: 'SELECTED_CONFIGURATION_CHANGED',
           prompt_type: 'edit-context',
-          id: config_id
+          id: params.config_id
         })
       }
     }
-  } else if (!show_quick_pick) {
-    const recents = context.workspaceState.get<string[]>(
+  } else if (!params.show_quick_pick) {
+    const recents = params.context.workspaceState.get<string[]>(
       RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY
     )
     const last_selected_id = recents?.[0]
@@ -106,14 +103,14 @@ const get_edit_context_config = async (params: {
     }
   }
 
-  if (!selected_config || show_quick_pick) {
+  if (!selected_config || params.show_quick_pick) {
     type Item = vscode.QuickPickItem & {
       config?: ToolConfig
       id?: string
     }
     const create_items = async (): Promise<Item[]> => {
       const recent_ids =
-        context.workspaceState.get<string[]>(
+        params.context.workspaceState.get<string[]>(
           RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY
         ) || []
 
@@ -193,7 +190,7 @@ const get_edit_context_config = async (params: {
       }
     ]
 
-    const recents = context.workspaceState.get<string[]>(
+    const recents = params.context.workspaceState.get<string[]>(
       RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY
     )
     const last_selected_id = recents?.[0]
@@ -233,27 +230,27 @@ const get_edit_context_config = async (params: {
           }
 
           let recents =
-            context.workspaceState.get<string[]>(
+            params.context.workspaceState.get<string[]>(
               RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY
             ) || []
           recents = [
             selected.id!,
             ...recents.filter((id) => id !== selected.id)
           ]
-          context.workspaceState.update(
+          params.context.workspaceState.update(
             RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY,
             recents
           )
 
-          if (panel_provider) {
-            panel_provider.send_message({
+          if (params.panel_provider) {
+            params.panel_provider.send_message({
               command: 'SELECTED_CONFIGURATION_CHANGED',
               prompt_type: 'edit-context',
               id: selected.id!
             })
           }
 
-          const provider = await api_providers_manager.get_provider(
+          const provider = await params.api_providers_manager.get_provider(
             selected.config.provider_name
           )
           if (!provider) {
@@ -272,8 +269,10 @@ const get_edit_context_config = async (params: {
 
         quick_pick.onDidHide(() => {
           quick_pick.dispose()
-          if (panel_provider) {
-            panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
+          if (params.panel_provider) {
+            params.panel_provider.send_message({
+              command: 'FOCUS_PROMPT_FIELD'
+            })
           }
           if (!accepted) {
             resolve(undefined)
@@ -285,7 +284,7 @@ const get_edit_context_config = async (params: {
     )
   }
 
-  const provider = await api_providers_manager.get_provider(
+  const provider = await params.api_providers_manager.get_provider(
     selected_config.provider_name
   )
 

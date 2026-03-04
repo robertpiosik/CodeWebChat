@@ -19,14 +19,7 @@ export const upsert_model_provider = async (params: {
   create_on_top?: boolean
   show_back_button?: boolean
 }): Promise<Provider | undefined> => {
-  const {
-    context,
-    provider_name,
-    insertion_index,
-    create_on_top,
-    show_back_button
-  } = params
-  const providers_manager = new ModelProvidersManager(context)
+  const providers_manager = new ModelProvidersManager(params.context)
 
   const prompt_for_name = async (params: {
     current_name: string
@@ -310,7 +303,7 @@ export const upsert_model_provider = async (params: {
 
   let actual_insertion_index: number | undefined
 
-  if (insertion_index !== undefined) {
+  if (params.insertion_index !== undefined) {
     const position_quick_pick = await new Promise<string | undefined>(
       (resolve) => {
         const quick_pick = vscode.window.createQuickPick()
@@ -353,18 +346,20 @@ export const upsert_model_provider = async (params: {
 
     actual_insertion_index =
       position_quick_pick == 'Insert a new provider above'
-        ? insertion_index
-        : insertion_index + 1
+        ? params.insertion_index
+        : params.insertion_index + 1
   }
 
   let working_provider: CustomProvider | undefined
   let original_name: string | undefined
 
-  if (provider_name) {
-    const existing = await providers_manager.get_provider(provider_name)
+  if (params.provider_name) {
+    const existing = await providers_manager.get_provider(params.provider_name)
     if (!existing || existing.type !== 'custom') {
       vscode.window.showErrorMessage(
-        dictionary.error_message.MODEL_PROVIDER_NOT_FOUND_BY_NAME(provider_name)
+        dictionary.error_message.MODEL_PROVIDER_NOT_FOUND_BY_NAME(
+          params.provider_name
+        )
       )
       return
     }
@@ -411,7 +406,7 @@ export const upsert_model_provider = async (params: {
         tooltip: 'Close'
       }
 
-      if (show_back_button) {
+      if (params.show_back_button) {
         quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
       } else {
         quick_pick.buttons = [close_button]
@@ -533,7 +528,7 @@ export const upsert_model_provider = async (params: {
       })
     }
   } else {
-    if (create_on_top) {
+    if (params.create_on_top) {
       updated_providers.unshift(working_provider)
     } else if (actual_insertion_index !== undefined) {
       updated_providers.splice(actual_insertion_index, 0, working_provider)

@@ -11,60 +11,51 @@ export const create_or_update_file_item = (params: {
   renamed_from?: string
   is_deleted?: boolean
 }) => {
-  const {
-    file_name,
-    content,
-    workspace_name,
-    file_ref_map,
-    results,
-    mode = 'overwrite',
-    renamed_from,
-    is_deleted
-  } = params
-
-  if (!file_name) {
+  if (!params.file_name) {
     return
   }
 
-  const processed_content = process_conflict_markers(content)
+  const processed_content = process_conflict_markers(params.content)
 
-  const file_key = `${workspace_name || ''}:${file_name}`
+  const file_key = `${params.workspace_name || ''}:${params.file_name}`
 
-  if (file_ref_map.has(file_key)) {
-    const existing_file = file_ref_map.get(file_key)!
+  if (params.file_ref_map.has(file_key)) {
+    const existing_file = params.file_ref_map.get(file_key)!
 
-    if (mode == 'append') {
+    if (params.mode == 'append') {
       existing_file.content = existing_file.content + '\n' + processed_content
 
-      const file_index = results.indexOf(existing_file)
+      const file_index = params.results.indexOf(existing_file)
       if (file_index >= 0) {
         const text_indices: number[] = []
-        for (let i = file_index + 1; i < results.length; i++) {
-          if (results[i].type == 'text') {
+        for (let i = file_index + 1; i < params.results.length; i++) {
+          if (params.results[i].type == 'text') {
             text_indices.push(i)
           }
         }
 
         if (text_indices.length > 0) {
           const text_contents = text_indices
-            .map((idx) => (results[idx] as TextItem).content.trim())
+            .map((idx) => (params.results[idx] as TextItem).content.trim())
             .filter((c) => c)
 
           for (let i = text_indices.length - 1; i >= 0; i--) {
-            results.splice(text_indices[i], 1)
+            params.results.splice(text_indices[i], 1)
           }
 
           if (text_contents.length > 0) {
             const combined = text_contents.join('\n')
-            const updated_file_index = results.indexOf(existing_file)
+            const updated_file_index = params.results.indexOf(existing_file)
             if (
               updated_file_index > 0 &&
-              results[updated_file_index - 1].type == 'text'
+              params.results[updated_file_index - 1].type == 'text'
             ) {
-              const prev_text = results[updated_file_index - 1] as TextItem
+              const prev_text = params.results[
+                updated_file_index - 1
+              ] as TextItem
               prev_text.content = prev_text.content.trim() + '\n' + combined
             } else {
-              results.splice(updated_file_index, 0, {
+              params.results.splice(updated_file_index, 0, {
                 type: 'text' as const,
                 content: combined
               })
@@ -76,24 +67,24 @@ export const create_or_update_file_item = (params: {
       existing_file.content = processed_content
     }
 
-    if (renamed_from) {
-      existing_file.renamed_from = renamed_from
+    if (params.renamed_from) {
+      existing_file.renamed_from = params.renamed_from
     }
 
-    if (is_deleted !== undefined) {
-      existing_file.is_deleted = is_deleted
+    if (params.is_deleted !== undefined) {
+      existing_file.is_deleted = params.is_deleted
     }
   } else {
     const new_file: FileItem = {
       type: 'file' as const,
-      file_path: file_name,
+      file_path: params.file_name,
       content: processed_content,
-      workspace_name: workspace_name,
-      renamed_from,
-      is_deleted
+      workspace_name: params.workspace_name,
+      renamed_from: params.renamed_from,
+      is_deleted: params.is_deleted
     }
-    file_ref_map.set(file_key, new_file)
-    results.push(new_file)
+    params.file_ref_map.set(file_key, new_file)
+    params.results.push(new_file)
   }
 }
 
@@ -101,13 +92,14 @@ export const flush_text_block = (params: {
   text_block: string
   results: (FileItem | TextItem | InlineFileItem)[]
 }) => {
-  const { text_block, results } = params
-
-  if (!text_block.trim()) {
+  if (!params.text_block.trim()) {
     return
   }
 
-  const content = results.length == 0 ? text_block.trim() : text_block.trimEnd()
+  const content =
+    params.results.length == 0
+      ? params.text_block.trim()
+      : params.text_block.trimEnd()
 
-  results.push({ type: 'text', content })
+  params.results.push({ type: 'text', content })
 }

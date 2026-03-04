@@ -56,39 +56,31 @@ export const delete_checkpoint_with_undo = async (params: {
   on_before_show_message?: () => void
   on_after_show_message?: () => void
 }): Promise<boolean> => {
-  const {
-    context,
-    checkpoint,
-    panel_provider,
-    get_active_operation,
-    set_active_operation,
-    on_did_update_checkpoints,
-    on_before_show_message,
-    on_after_show_message
-  } = params
-
-  if (get_active_operation()) {
-    await get_active_operation()!.finalize()
-    set_active_operation(null)
+  if (params.get_active_operation()) {
+    await params.get_active_operation()!.finalize()
+    params.set_active_operation(null)
   }
 
   const checkpoints =
-    context.workspaceState.get<Checkpoint[]>(CHECKPOINTS_STATE_KEY, []) ?? []
+    params.context.workspaceState.get<Checkpoint[]>(
+      CHECKPOINTS_STATE_KEY,
+      []
+    ) ?? []
 
   // Optimistically remove from state
   const updated_checkpoints = checkpoints.filter(
-    (c) => c.timestamp !== checkpoint.timestamp
+    (c) => c.timestamp !== params.checkpoint.timestamp
   )
-  await context.workspaceState.update(
+  await params.context.workspaceState.update(
     CHECKPOINTS_STATE_KEY,
     updated_checkpoints
   )
-  await panel_provider.send_checkpoints()
-  on_did_update_checkpoints?.(updated_checkpoints)
+  await params.panel_provider.send_checkpoints()
+  params.on_did_update_checkpoints?.(updated_checkpoints)
 
   const finalize = async () => {
     try {
-      const checkpoint_path = get_checkpoint_path(checkpoint.timestamp)
+      const checkpoint_path = get_checkpoint_path(params.checkpoint.timestamp)
       await vscode.workspace.fs.delete(vscode.Uri.file(checkpoint_path), {
         recursive: true
       })
@@ -101,17 +93,17 @@ export const delete_checkpoint_with_undo = async (params: {
     }
   }
 
-  const operation = { timestamp: checkpoint.timestamp, finalize }
-  set_active_operation(operation)
+  const operation = { timestamp: params.checkpoint.timestamp, finalize }
+  params.set_active_operation(operation)
 
-  on_before_show_message?.()
+  params.on_before_show_message?.()
   const choice = await vscode.window.showInformationMessage(
     dictionary.information_message.CHECKPOINT_DELETED,
     'Undo'
   )
-  on_after_show_message?.()
+  params.on_after_show_message?.()
 
-  const current_active_op = get_active_operation()
+  const current_active_op = params.get_active_operation()
 
   if (
     current_active_op &&
@@ -119,38 +111,40 @@ export const delete_checkpoint_with_undo = async (params: {
   ) {
     if (choice == 'Undo') {
       const current_checkpoints =
-        context.workspaceState.get<Checkpoint[]>(CHECKPOINTS_STATE_KEY, []) ??
-        []
+        params.context.workspaceState.get<Checkpoint[]>(
+          CHECKPOINTS_STATE_KEY,
+          []
+        ) ?? []
 
-      current_checkpoints.push(checkpoint)
+      current_checkpoints.push(params.checkpoint)
       current_checkpoints.sort((a, b) => b.timestamp - a.timestamp)
 
-      await context.workspaceState.update(
+      await params.context.workspaceState.update(
         CHECKPOINTS_STATE_KEY,
         current_checkpoints
       )
-      await panel_provider.send_checkpoints()
-      on_did_update_checkpoints?.(current_checkpoints)
+      await params.panel_provider.send_checkpoints()
+      params.on_did_update_checkpoints?.(current_checkpoints)
 
-      on_before_show_message?.()
+      params.on_before_show_message?.()
       await vscode.window.showInformationMessage(
         dictionary.information_message.CHECKPOINT_RESTORED
       )
-      on_after_show_message?.()
+      params.on_after_show_message?.()
 
-      set_active_operation(null)
+      params.set_active_operation(null)
       return true
     } else {
       await operation.finalize()
-      set_active_operation(null)
+      params.set_active_operation(null)
       return false
     }
   } else if (choice == 'Undo') {
-    on_before_show_message?.()
+    params.on_before_show_message?.()
     await vscode.window.showInformationMessage(
       dictionary.information_message.COULD_NOT_UNDO_ANOTHER_CHECKPOINT_DELETED
     )
-    on_after_show_message?.()
+    params.on_after_show_message?.()
     return false
   }
 

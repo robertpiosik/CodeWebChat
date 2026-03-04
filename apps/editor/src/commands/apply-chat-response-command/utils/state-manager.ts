@@ -17,34 +17,30 @@ export const update_undo_button_state = (params: {
     position: { line: number; character: number }
   } | null
 }) => {
-  const {
-    context,
-    panel_provider,
-    states,
-    applied_content,
-    original_editor_state
-  } = params
-  if (states && states.length > 0) {
-    context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, states)
-    context.workspaceState.update(
+  if (params.states && params.states.length > 0) {
+    params.context.workspaceState.update(
+      LAST_APPLIED_CHANGES_STATE_KEY,
+      params.states
+    )
+    params.context.workspaceState.update(
       LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
-      applied_content
+      params.applied_content
     )
-    context.workspaceState.update(
+    params.context.workspaceState.update(
       LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
-      original_editor_state
+      params.original_editor_state
     )
-    panel_provider.set_undo_button_state(true)
+    params.panel_provider.set_undo_button_state(true)
   } else {
-    context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
-    context.workspaceState.update(
+    params.context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
+    params.context.workspaceState.update(
       LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
       null
     )
-    context.workspaceState.update(
+    params.context.workspaceState.update(
       LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
       null
     )
-    panel_provider.set_undo_button_state(false)
+    params.panel_provider.set_undo_button_state(false)
   }
 }
