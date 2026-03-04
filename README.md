@@ -77,10 +77,7 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 From code editing to commit messages, CWC supports your software development efforts on every step. Bring Your Own Key (BYOK) or authenticate with ChatGPT account. Self-host with [Ollama](https://ollama.com/search) or [LM Studio](https://lmstudio.ai/).
 
 > [!NOTE]
-> With its smart context files ordering, [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching/) is heavily utilized across tasks.
-
-> [!IMPORTANT]
-> Not all providers offer 90% discount on cached input tokens. [Google](https://aistudio.google.com/api-keys) and [OpenAI](https://platform.openai.com/settings/organization/api-keys) are your safe bets.
+> With its smart context files ordering, [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching/) is heavily utilized across tasks. Reduce input token costs by up to 90% and latency by up to 80%.
 
 ## Enterprise security
 
