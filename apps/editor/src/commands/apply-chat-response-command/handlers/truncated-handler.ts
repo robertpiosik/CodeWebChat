@@ -128,13 +128,32 @@ export const handle_truncated_edit = async (params: {
     }
 
     if (!fs.existsSync(safe_path)) {
-      // Cannot fill truncations for a file that doesn't exist
-      failed_files.push(file)
-      Logger.warn({
-        function_name: 'handle_truncated_edit',
-        message: 'File not found for truncated edit',
-        data: safe_path
-      })
+      try {
+        const directory = path.dirname(safe_path)
+        if (!fs.existsSync(directory)) {
+          await fs.promises.mkdir(directory, { recursive: true })
+        }
+
+        const new_content = process_truncated_content(file.content, '')
+
+        await fs.promises.writeFile(safe_path, new_content, 'utf8')
+
+        original_states.push({
+          file_path: file.file_path,
+          content: '',
+          file_state: 'new',
+          workspace_name: file.workspace_name,
+          ai_content: file.content,
+          proposed_content: new_content
+        })
+      } catch (error: any) {
+        Logger.error({
+          function_name: 'handle_truncated_edit',
+          message: 'Failed to create new file',
+          data: { error: error.message, file_path: safe_path }
+        })
+        failed_files.push(file)
+      }
       continue
     }
 
