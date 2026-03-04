@@ -47,6 +47,7 @@ type Props = {
   on_toggle_pinned_configuration: (id: string) => void
   on_edit_configuration: (id: string) => void
   on_delete_configuration: (id: string) => void
+  on_duplicate_configuration: (id: string) => void
   on_create_configuration: (params?: {
     create_on_top?: boolean
     insertion_index?: number
@@ -363,7 +364,7 @@ export const MainView: React.FC<Props> = (props) => {
                 copy_tooltip: t('action.copy'),
                 pin_tooltip: t('action.pin'),
                 unpin_tooltip: t('action.unpin'),
-                duplicate_tooltip: t('action.duplicate'),
+                duplicate_tooltip: t('action.duplicate-preset'),
                 edit_tooltip: t('action.edit'),
                 delete_tooltip: t('action.delete'),
                 insert_tooltip: t('action.insert-preset'),
@@ -385,6 +386,7 @@ export const MainView: React.FC<Props> = (props) => {
               on_toggle_pinned={props.on_toggle_pinned_configuration}
               on_edit={props.on_edit_configuration}
               on_delete={props.on_delete_configuration}
+              on_duplicate={props.on_duplicate_configuration}
               selected_configuration_id={props.selected_configuration_id}
               on_create={props.on_create_configuration}
               is_collapsed={props.configurations_collapsed}
@@ -399,7 +401,8 @@ export const MainView: React.FC<Props> = (props) => {
                 unpin_tooltip: t('action.unpin'),
                 insert_tooltip: t('action.insert-configuration'),
                 edit_tooltip: t('action.edit'),
-                delete_tooltip: t('action.delete')
+                delete_tooltip: t('action.delete'),
+                duplicate_tooltip: t('action.duplicate-configuration')
               }}
             />
           </>

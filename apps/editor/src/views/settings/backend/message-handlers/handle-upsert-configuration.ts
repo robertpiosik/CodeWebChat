@@ -11,6 +11,7 @@ export const handle_upsert_configuration = async (
     tool_type: message.tool_type,
     configuration_id: message.configuration_id,
     insertion_index: message.insertion_index,
-    create_on_top: message.create_on_top
+    create_on_top: message.create_on_top,
+    duplicate_from_id: message.duplicate_from_id
   })
 }

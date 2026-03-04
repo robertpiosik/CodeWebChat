@@ -507,6 +507,7 @@ export interface UpsertConfigurationMessage extends BaseMessage {
   command: 'UPSERT_CONFIGURATION'
   tool_type: ToolType
   configuration_id?: string
+  duplicate_from_id?: string
   create_on_top?: boolean
   insertion_index?: number
 }

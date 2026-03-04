@@ -359,19 +359,19 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         onClick={(e) => e.stopPropagation()}
                       >
                         <IconButton
-                          codicon_icon="files"
-                          title={props.translations.duplicate_tooltip}
-                          on_click={(e) => {
-                            e.stopPropagation()
-                            props.on_duplicate(preset.original_index!)
-                          }}
-                        />
-                        <IconButton
                           codicon_icon="insert"
                           title={props.translations.insert_tooltip}
                           on_click={(e) => {
                             e.stopPropagation()
                             props.on_create(undefined, preset.original_index!)
+                          }}
+                        />
+                        <IconButton
+                          codicon_icon="files"
+                          title={props.translations.duplicate_tooltip}
+                          on_click={(e) => {
+                            e.stopPropagation()
+                            props.on_duplicate(preset.original_index!)
                           }}
                         />
                         <IconButton
@@ -572,19 +572,19 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         />
                       )}
                       <IconButton
-                        codicon_icon="files"
-                        title={props.translations.duplicate_tooltip}
-                        on_click={(e) => {
-                          e.stopPropagation()
-                          props.on_duplicate(preset.original_index!)
-                        }}
-                      />
-                      <IconButton
                         codicon_icon="insert"
                         title={props.translations.insert_tooltip}
                         on_click={(e) => {
                           e.stopPropagation()
                           props.on_create(undefined, preset.original_index!)
+                        }}
+                      />
+                      <IconButton
+                        codicon_icon="files"
+                        title={props.translations.duplicate_tooltip}
+                        on_click={(e) => {
+                          e.stopPropagation()
+                          props.on_duplicate(preset.original_index!)
                         }}
                       />
                       <IconButton

@@ -229,6 +229,18 @@ export const use_settings = (vscode: any) => {
     })
   }
 
+  const handle_duplicate_config = (
+    tool_name: string,
+    configuration_id: string
+  ) => {
+    const tool_type = tool_name.toLowerCase().replace(/_/g, '-') as ToolType
+    post_message(vscode, {
+      command: 'UPSERT_CONFIGURATION',
+      tool_type,
+      duplicate_from_id: configuration_id
+    })
+  }
+
   const handle_delete_config = (
     tool_name: string,
     configuration_id: string
@@ -488,6 +500,7 @@ export const use_settings = (vscode: any) => {
     handle_add_config,
     handle_reorder_configs,
     handle_edit_config,
+    handle_duplicate_config,
     handle_delete_config,
     handle_set_default_config,
     handle_unset_default_config,

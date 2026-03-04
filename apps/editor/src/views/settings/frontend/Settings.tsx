@@ -157,6 +157,7 @@ export const Settings = () => {
       on_add_config={settings_hook.handle_add_config}
       on_reorder_configs={settings_hook.handle_reorder_configs}
       on_edit_config={settings_hook.handle_edit_config}
+      on_duplicate_config={settings_hook.handle_duplicate_config}
       on_delete_config={settings_hook.handle_delete_config}
       on_set_default_config={settings_hook.handle_set_default_config}
       on_unset_default_config={settings_hook.handle_unset_default_config}

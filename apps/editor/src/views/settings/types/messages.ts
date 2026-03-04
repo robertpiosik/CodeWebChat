@@ -295,6 +295,7 @@ export interface UpsertConfigurationMessage {
   configuration_id?: string
   insertion_index?: number
   create_on_top?: boolean
+  duplicate_from_id?: string
 }
 
 export interface GetFixAllAutomaticallyMessage {

@@ -24,6 +24,7 @@ type ToolConfigurationsSectionProps = {
   }) => void
   on_reorder: (reordered: ConfigurationForClient[]) => void
   on_edit: (configuration_id: string) => void
+  on_duplicate: (configuration_id: string) => void
   on_delete: (configuration_id: string) => void
   on_set_default?: (configuration_id: string) => void
   on_unset_default?: () => void
@@ -102,6 +103,14 @@ export const ApiToolConfigurationSection: React.FC<
                 codicon_icon="insert"
                 title={t('action.insert-configuration')}
                 on_click={() => props.on_add({ insertion_index: index })}
+              />
+              <IconButton
+                codicon_icon="files"
+                title={t('action.duplicate-configuration')}
+                on_click={(e) => {
+                  e.stopPropagation()
+                  props.on_duplicate(config.id)
+                }}
               />
               <IconButton
                 codicon_icon="edit"

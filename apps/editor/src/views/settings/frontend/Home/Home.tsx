@@ -153,6 +153,7 @@ type Props = {
     reordered: ConfigurationForClient[]
   ) => void
   on_edit_config: (tool_name: string, configuration_id: string) => void
+  on_duplicate_config: (tool_name: string, configuration_id: string) => void
   on_delete_config: (tool_name: string, configuration_id: string) => void
   on_set_default_config: (tool_name: string, configuration_id: string) => void
   on_unset_default_config: (tool_name: string) => void
@@ -458,6 +459,9 @@ export const Home: React.FC<Props> = (props) => {
                 props.on_reorder_configs('INTELLIGENT_UPDATE', reordered)
               }
               on_edit={(id) => props.on_edit_config('INTELLIGENT_UPDATE', id)}
+              on_duplicate={(id) =>
+                props.on_duplicate_config('INTELLIGENT_UPDATE', id)
+              }
               on_delete={(id) =>
                 props.on_delete_config('INTELLIGENT_UPDATE', id)
               }
@@ -516,6 +520,9 @@ export const Home: React.FC<Props> = (props) => {
                 props.on_reorder_configs('EDIT_CONTEXT', reordered)
               }
               on_edit={(id) => props.on_edit_config('EDIT_CONTEXT', id)}
+              on_duplicate={(id) =>
+                props.on_duplicate_config('EDIT_CONTEXT', id)
+              }
               on_delete={(id) => props.on_delete_config('EDIT_CONTEXT', id)}
             />
             <UiItem
@@ -576,6 +583,9 @@ export const Home: React.FC<Props> = (props) => {
                 props.on_reorder_configs('CODE_AT_CURSOR', reordered)
               }
               on_edit={(id) => props.on_edit_config('CODE_AT_CURSOR', id)}
+              on_duplicate={(id) =>
+                props.on_duplicate_config('CODE_AT_CURSOR', id)
+              }
               on_delete={(id) => props.on_delete_config('CODE_AT_CURSOR', id)}
               on_set_default={(id) =>
                 props.on_set_default_config('CODE_AT_CURSOR', id)
@@ -633,6 +643,9 @@ export const Home: React.FC<Props> = (props) => {
                 props.on_reorder_configs('PRUNE_CONTEXT', reordered)
               }
               on_edit={(id) => props.on_edit_config('PRUNE_CONTEXT', id)}
+              on_duplicate={(id) =>
+                props.on_duplicate_config('PRUNE_CONTEXT', id)
+              }
               on_delete={(id) => props.on_delete_config('PRUNE_CONTEXT', id)}
             />
           </UiGroup>
@@ -673,6 +686,9 @@ export const Home: React.FC<Props> = (props) => {
                 props.on_reorder_configs('COMMIT_MESSAGES', reordered)
               }
               on_edit={(id) => props.on_edit_config('COMMIT_MESSAGES', id)}
+              on_duplicate={(id) =>
+                props.on_duplicate_config('COMMIT_MESSAGES', id)
+              }
               on_delete={(id) => props.on_delete_config('COMMIT_MESSAGES', id)}
               on_set_default={(id) =>
                 props.on_set_default_config('COMMIT_MESSAGES', id)
@@ -770,6 +786,9 @@ export const Home: React.FC<Props> = (props) => {
                 props.on_reorder_configs('VOICE_INPUT', reordered)
               }
               on_edit={(id) => props.on_edit_config('VOICE_INPUT', id)}
+              on_duplicate={(id) =>
+                props.on_duplicate_config('VOICE_INPUT', id)
+              }
               on_delete={(id) => props.on_delete_config('VOICE_INPUT', id)}
               on_set_default={(id) =>
                 props.on_set_default_config('VOICE_INPUT', id)

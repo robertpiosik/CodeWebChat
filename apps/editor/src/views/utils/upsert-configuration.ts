@@ -25,6 +25,7 @@ export const upsert_configuration = async (params: {
   context: vscode.ExtensionContext
   tool_type: ToolType
   configuration_id?: string
+  duplicate_from_id?: string
   create_on_top?: boolean
   insertion_index?: number
 }): Promise<void> => {
@@ -116,9 +117,10 @@ export const upsert_configuration = async (params: {
   let config_to_edit: ToolConfig
   let original_id: string | undefined
 
-  if (params.configuration_id) {
+  if (params.configuration_id || params.duplicate_from_id) {
+    const target_id = params.configuration_id || params.duplicate_from_id
     const config_index = configs.findIndex(
-      (c) => get_tool_config_id(c) == params.configuration_id
+      (c) => get_tool_config_id(c) == target_id
     )
 
     if (config_index == -1) {
@@ -129,7 +131,11 @@ export const upsert_configuration = async (params: {
     }
 
     config_to_edit = { ...configs[config_index] }
-    original_id = params.configuration_id
+    if (params.configuration_id) {
+      original_id = params.configuration_id
+    } else if (params.duplicate_from_id) {
+      actual_insertion_index = config_index + 1
+    }
   } else {
     let selected_provider: Provider | undefined
     let selected_model: string | undefined

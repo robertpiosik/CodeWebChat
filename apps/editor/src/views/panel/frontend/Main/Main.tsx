@@ -408,7 +408,8 @@ export const Main: React.FC<Props> = (props) => {
     post_message(props.vscode, {
       command: 'UPSERT_CONFIGURATION',
       tool_type: props.api_prompt_type,
-      ...params
+      create_on_top: params?.create_on_top,
+      insertion_index: params?.insertion_index
     })
   }
 
@@ -457,6 +458,14 @@ export const Main: React.FC<Props> = (props) => {
       command: 'DELETE_CONFIGURATION',
       api_prompt_type: props.api_prompt_type,
       configuration_id: id
+    })
+  }
+
+  const handle_duplicate_configuration = (id: string) => {
+    post_message(props.vscode, {
+      command: 'UPSERT_CONFIGURATION',
+      tool_type: props.api_prompt_type,
+      duplicate_from_id: id
     })
   }
 
@@ -759,6 +768,7 @@ export const Main: React.FC<Props> = (props) => {
       on_toggle_pinned_configuration={handle_toggle_pinned_configuration}
       on_edit_configuration={handle_edit_configuration}
       on_delete_configuration={handle_delete_configuration}
+      on_duplicate_configuration={handle_duplicate_configuration}
       on_create_configuration={handle_create_configuration}
       on_at_sign_click={handle_at_sign_click}
       on_hash_sign_click={handle_hash_sign_click}

@@ -28,6 +28,7 @@ export namespace Configurations {
     }) => void
     on_edit: (id: string) => void
     on_delete: (id: string) => void
+    on_duplicate: (id: string) => void
     is_collapsed: boolean
     on_toggle_collapsed: (is_collapsed: boolean) => void
     translations: {
@@ -41,6 +42,7 @@ export namespace Configurations {
       insert_tooltip: string
       edit_tooltip: string
       delete_tooltip: string
+      duplicate_tooltip: string
     }
   }
 }
@@ -117,6 +119,16 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
               on_click={(e) => {
                 e.stopPropagation()
                 props.on_create({ insertion_index: index_for_insertion })
+              }}
+            />
+          )}
+          {props.on_duplicate && (
+            <IconButton
+              codicon_icon="files"
+              title={props.translations.duplicate_tooltip}
+              on_click={(e) => {
+                e.stopPropagation()
+                props.on_duplicate(configuration.id)
               }}
             />
           )}
