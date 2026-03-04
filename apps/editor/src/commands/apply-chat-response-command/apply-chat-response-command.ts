@@ -109,9 +109,7 @@ export const apply_chat_response_command = (params: {
 
         const choice = await new Promise<'Switch' | undefined>((resolve) => {
           params.panel_provider.preview_switch_choice_resolver = resolve
-          params.panel_provider.send_message({
-            command: 'SHOW_PREVIEW_ONGOING_MODAL'
-          })
+          params.panel_provider.show_preview_ongoing_modal()
         })
         params.panel_provider.preview_switch_choice_resolver = undefined
 

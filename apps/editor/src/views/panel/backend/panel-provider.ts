@@ -667,6 +667,22 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     }
   }
 
+  public show_preview_ongoing_modal() {
+    const items_without_files_count = this.response_history.filter(
+      (item) => item.files === undefined
+    ).length
+
+    if (items_without_files_count > 1) {
+      if (this.preview_switch_choice_resolver) {
+        this.preview_switch_choice_resolver(undefined)
+      }
+    } else {
+      this.send_message({
+        command: 'SHOW_PREVIEW_ONGOING_MODAL'
+      })
+    }
+  }
+
   async resolveWebviewView(
     webview_view: vscode.WebviewView,
     _: vscode.WebviewViewResolveContext,
