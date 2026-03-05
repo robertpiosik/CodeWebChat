@@ -92,7 +92,8 @@ import {
   handle_open_website,
   handle_cancel_intelligent_update_file_in_preview,
   handle_upsert_configuration,
-  handle_delete_configuration
+  handle_delete_configuration,
+  handle_update_last_used_preset_or_group
 } from './message-handlers'
 import { SelectionState } from '../types/messages'
 import {
@@ -121,7 +122,6 @@ import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Logger } from '@shared/utils/logger'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { CancelTokenSource } from 'axios'
-import { update_last_used_preset_or_group } from './message-handlers/update-last-used-preset-or-group'
 import { dictionary } from '@shared/constants/dictionary'
 import { DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD } from '@/constants/values'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
@@ -893,7 +893,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'PICK_REASONING_EFFORT') {
             await handle_pick_reasoning_effort(this, message)
           } else if (message.command == 'UPDATE_LAST_USED_PRESET') {
-            update_last_used_preset_or_group({
+            handle_update_last_used_preset_or_group({
               panel_provider: this,
               preset_name: message.preset_name
             })

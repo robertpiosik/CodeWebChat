@@ -1,7 +1,7 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { get_recently_used_presets_or_groups_key } from '@/constants/state-keys'
 
-export const update_last_used_preset_or_group = (params: {
+export const handle_update_last_used_preset_or_group = (params: {
   panel_provider: PanelProvider
   preset_name?: string
   group_name?: string
