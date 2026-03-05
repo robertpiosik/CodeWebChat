@@ -15,7 +15,7 @@ import {
   edit_system_instructions_override_for_config,
   initial_select_model,
   initial_select_provider
-} from './config-editing'
+} from './interactions'
 import axios from 'axios'
 import { PROVIDERS } from '@/constants/providers'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
@@ -313,12 +313,12 @@ export const upsert_configuration = async (params: {
               ? updated_config.model
               : ''
         }
-        const new_model = await edit_model_for_config(
-          temp_config,
+        const new_model = await edit_model_for_config({
+          config: temp_config,
           providers_manager,
           model_fetcher,
-          params.tool_type
-        )
+          tool_type: params.tool_type
+        })
         if (new_model !== undefined) {
           updated_config.provider_name = new_provider.provider_name
           updated_config.provider_type = new_provider.provider_type
