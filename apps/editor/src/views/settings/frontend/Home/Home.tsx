@@ -424,9 +424,28 @@ export const Home: React.FC<Props> = (props) => {
             />
             <UiItem
               title={t('model-providers.extended-cache.anthropic.title')}
-              description={t(
-                'model-providers.extended-cache.anthropic.description'
-              )}
+              description={
+                <Translation
+                  id="model-providers.extended-cache.anthropic.description"
+                  components={{
+                    link: (
+                      <a
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          props.on_open_external_url(
+                            'https://platform.claude.com/docs/en/build-with-claude/prompt-caching'
+                          )
+                        }}
+                      >
+                        {t(
+                          'model-providers.extended-cache.anthropic.learn-more'
+                        )}
+                      </a>
+                    )
+                  }}
+                />
+              }
               slot_right={
                 <UiToggler
                   is_on={props.extended_cache_duration_for_anthropic}
