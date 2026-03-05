@@ -73,22 +73,21 @@ export const model_providers = {
     bg: 'Разширен кеш за Anthropic'
   },
   'model-providers.extended-cache.anthropic.description': {
-    en: 'Enable the extended, 1-hour prompt cache duration for Anthropic models.',
-    pl: 'Włącz rozszerzoną, 1-godzinną pamięć podręczną promptów dla modeli Anthropic.',
-    'zh-cn': '为 Anthropic 模型启用延长的 1 小时提示词缓存持续时间。',
-    ja: 'Anthropic モデルの拡張 1 時間プロンプトキャッシュ期間を有効にします。',
-    'zh-tw': '為 Anthropic 模型啟用延長的 1 小時提示詞快取持續時間。',
-    de: 'Aktivieren Sie die erweiterte 1-stündige Prompt-Cache-Dauer für Anthropic-Modelle.',
-    es: 'Habilitar la duración ampliada de 1 hora del caché de prompts para los modelos de Anthropic.',
-    fr: 'Activer la durée étendue de 1 heure du cache de prompts pour les modèles Anthropic.',
-    'pt-br':
-      'Ativar a duração estendida de 1 hora do cache de prompts para modelos Anthropic.',
-    ru: 'Включить расширенную 1-часовую длительность кэша промптов для моделей Anthropic.',
-    ko: 'Anthropic 모델에 대해 확장된 1시간 프롬프트 캐시 기간을 활성화합니다.',
-    it: 'Abilita la durata estesa di 1 ora della cache dei prompt per i modelli Anthropic.',
-    tr: 'Anthropic modelleri için uzatılmış 1 saatlik istem önbellek süresini etkinleştirin.',
-    cs: 'Povolit rozšířenou 1hodinovou dobu trvání mezipaměti promptů pro modely Anthropic.',
-    hu: 'Engedélyezze a kiterjesztett, 1 órás prompt gyorsítótár időtartamot az Anthropic modellekhez.',
-    bg: 'Активирайте разширената 1-часова продължителност на кеша на prompt за моделите на Anthropic.'
+    en: 'Enable 1-hour prompt caching.',
+    pl: 'Włącz 1-godzinne przechowywanie prompta w cache.',
+    'zh-cn': '启用 1 小时提示词缓存。',
+    ja: '1時間のプロンプトキャッシュを有効にします。',
+    'zh-tw': '啟用 1 小時提示詞快取。',
+    de: '1-stündigen Prompt-Cache aktivieren.',
+    es: 'Habilitar caché de prompts de 1 hora.',
+    fr: 'Activer le cache de prompts de 1 heure.',
+    'pt-br': 'Ativar cache de prompts de 1 hora.',
+    ru: 'Включить 1-часовое кэширование промптов.',
+    ko: '1시간 프롬프트 캐싱을 활성화합니다.',
+    it: 'Abilita la cache dei prompt di 1 ora.',
+    tr: '1 saatlik istem önbelleğini etkinleştirin.',
+    cs: 'Povolit 1hodinovou mezipaměť promptů.',
+    hu: '1 órás prompt gyorsítótár engedélyezése.',
+    bg: 'Активирайте 1-часовия кеш на prompt.'
   }
 } as const
