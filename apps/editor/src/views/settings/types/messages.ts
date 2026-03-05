@@ -307,6 +307,15 @@ export interface UpdateFixAllAutomaticallyMessage {
   enabled: boolean
 }
 
+export interface GetExtendedCacheDurationForAnthropicMessage {
+  command: 'GET_EXTENDED_CACHE_DURATION_FOR_ANTHROPIC'
+}
+
+export interface UpdateExtendedCacheDurationForAnthropicMessage {
+  command: 'UPDATE_EXTENDED_CACHE_DURATION_FOR_ANTHROPIC'
+  enabled: boolean
+}
+
 export interface OpenKeybindingsMessage {
   command: 'OPEN_KEYBINDINGS'
   search?: string
@@ -379,6 +388,8 @@ export type FrontendMessage =
   | OpenAllowPatternsSettingsMessage
   | GetFixAllAutomaticallyMessage
   | UpdateFixAllAutomaticallyMessage
+  | GetExtendedCacheDurationForAnthropicMessage
+  | UpdateExtendedCacheDurationForAnthropicMessage
   | OpenKeybindingsMessage
   | OpenExternalUrlMessage
 
@@ -493,6 +504,11 @@ export interface FixAllAutomaticallyMessage {
   enabled: boolean
 }
 
+export interface ExtendedCacheDurationForAnthropicMessage {
+  command: 'EXTENDED_CACHE_DURATION_FOR_ANTHROPIC'
+  enabled: boolean
+}
+
 export type BackendMessage =
   | ModelProvidersMessage
   | CodeAtCursorConfigurationsMessage
@@ -516,3 +532,4 @@ export type BackendMessage =
   | ClearChecksInWorkspaceBehaviorMessage
   | ShowSectionMessage
   | FixAllAutomaticallyMessage
+  | ExtendedCacheDurationForAnthropicMessage

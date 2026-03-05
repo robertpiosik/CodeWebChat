@@ -23,7 +23,6 @@ import { ConfigPresetFormat } from '../utils/preset-format-converters'
 import { MODE } from '@/views/panel/types/main-view-mode'
 import { WebPromptType } from '@shared/types/prompt-types'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { update_last_used_preset_or_group } from './update-last-used-preset-or-group'
 import { dictionary } from '@shared/constants/dictionary'
 import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE,
@@ -31,6 +30,7 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER,
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
+import { handle_update_last_used_preset_or_group } from './handle-update-last-used-preset-or-group'
 
 export const handle_send_to_browser = async (params: {
   panel_provider: PanelProvider
@@ -74,7 +74,7 @@ export const handle_send_to_browser = async (params: {
   const resolved_preset_names = resolution.preset_names
 
   if (params.preset_name !== undefined || params.group_name) {
-    update_last_used_preset_or_group({
+    handle_update_last_used_preset_or_group({
       panel_provider: params.panel_provider,
       preset_name: params.preset_name,
       group_name: params.group_name
@@ -515,7 +515,7 @@ async function show_preset_quick_pick(params: {
               }
             }
           }
-          update_last_used_preset_or_group({
+          handle_update_last_used_preset_or_group({
             panel_provider,
             preset_name: selected.preset_name,
             group_name: group_name
@@ -544,7 +544,10 @@ async function show_preset_quick_pick(params: {
           .filter(Boolean)
 
         if (preset_names.length > 0) {
-          update_last_used_preset_or_group({ panel_provider, group_name })
+          handle_update_last_used_preset_or_group({
+            panel_provider,
+            group_name
+          })
           do_resolve({ preset_names })
         }
       } else {

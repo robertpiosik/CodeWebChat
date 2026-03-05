@@ -789,6 +789,10 @@
           "type": "string",
           "scope": "resource"
         },
+        "codeWebChat.extendedCacheDurationForAnthropic": {
+          "type": "boolean",
+          "scope": "resource"
+        },
         "codeWebChat.contextSizeWarningThreshold": {
           "type": "number",
           "scope": "resource"

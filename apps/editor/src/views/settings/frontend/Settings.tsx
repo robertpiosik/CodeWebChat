@@ -43,7 +43,8 @@ export const Settings = () => {
       settings_hook.send_with_shift_enter !== undefined &&
       settings_hook.check_new_files !== undefined &&
       settings_hook.clear_checks_in_workspace_behavior !== undefined &&
-      settings_hook.fix_all_automatically !== undefined
+      settings_hook.fix_all_automatically !== undefined &&
+      settings_hook.extended_cache_duration_for_anthropic !== undefined
     )
   }, [settings_hook])
 
@@ -93,6 +94,9 @@ export const Settings = () => {
       clear_checks_in_workspace_behavior={
         settings_hook.clear_checks_in_workspace_behavior!
       }
+      extended_cache_duration_for_anthropic={
+        settings_hook.extended_cache_duration_for_anthropic!
+      }
       fix_all_automatically={settings_hook.fix_all_automatically!}
       set_providers={settings_hook.set_providers}
       set_code_at_cursor_configs={settings_hook.set_code_at_cursor_configs}
@@ -140,6 +144,9 @@ export const Settings = () => {
       on_check_new_files_change={settings_hook.handle_check_new_files_change}
       on_fix_all_automatically_change={
         settings_hook.handle_fix_all_automatically_change
+      }
+      on_extended_cache_duration_for_anthropic_change={
+        settings_hook.handle_extended_cache_duration_for_anthropic_change
       }
       on_open_keybindings={settings_hook.handle_open_keybindings}
       on_open_editor_settings={settings_hook.handle_open_editor_settings}

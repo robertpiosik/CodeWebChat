@@ -53,5 +53,42 @@ export const model_providers = {
     cs: 'Chybějící poskytovatel modelu.',
     hu: 'Hiányzó modell szolgáltató.',
     bg: 'Липсващ доставчик.'
+  },
+  'model-providers.extended-cache.anthropic.title': {
+    en: 'Extended Cache for Anthropic',
+    pl: 'Rozszerzona pamięć podręczna dla Anthropic',
+    'zh-cn': 'Anthropic 的扩展缓存',
+    ja: 'Anthropic の拡張キャッシュ',
+    'zh-tw': 'Anthropic 的擴展快取',
+    de: 'Erweiterter Cache für Anthropic',
+    es: 'Caché extendido para Anthropic',
+    fr: 'Cache étendu pour Anthropic',
+    'pt-br': 'Cache Estendido para Anthropic',
+    ru: 'Расширенный кэш для Anthropic',
+    ko: 'Anthropic용 확장 캐시',
+    it: 'Cache estesa per Anthropic',
+    tr: 'Anthropic için Genişletilmiş Önbellek',
+    cs: 'Rozšířená mezipaměť pro Anthropic',
+    hu: 'Bővített gyorsítótár Anthropic-hoz',
+    bg: 'Разширен кеш за Anthropic'
+  },
+  'model-providers.extended-cache.anthropic.description': {
+    en: 'Enable the extended, 1-hour prompt cache duration for Anthropic models.',
+    pl: 'Włącz rozszerzoną, 1-godzinną pamięć podręczną promptów dla modeli Anthropic.',
+    'zh-cn': '为 Anthropic 模型启用延长的 1 小时提示词缓存持续时间。',
+    ja: 'Anthropic モデルの拡張 1 時間プロンプトキャッシュ期間を有効にします。',
+    'zh-tw': '為 Anthropic 模型啟用延長的 1 小時提示詞快取持續時間。',
+    de: 'Aktivieren Sie die erweiterte 1-stündige Prompt-Cache-Dauer für Anthropic-Modelle.',
+    es: 'Habilitar la duración ampliada de 1 hora del caché de prompts para los modelos de Anthropic.',
+    fr: 'Activer la durée étendue de 1 heure du cache de prompts pour les modèles Anthropic.',
+    'pt-br':
+      'Ativar a duração estendida de 1 hora do cache de prompts para modelos Anthropic.',
+    ru: 'Включить расширенную 1-часовую длительность кэша промптов для моделей Anthropic.',
+    ko: 'Anthropic 모델에 대해 확장된 1시간 프롬프트 캐시 기간을 활성화합니다.',
+    it: 'Abilita la durata estesa di 1 ora della cache dei prompt per i modelli Anthropic.',
+    tr: 'Anthropic modelleri için uzatılmış 1 saatlik istem önbellek süresini etkinleştirin.',
+    cs: 'Povolit rozšířenou 1hodinovou dobu trvání mezipaměti promptů pro modely Anthropic.',
+    hu: 'Engedélyezze a kiterjesztett, 1 órás prompt gyorsítótár időtartamot az Anthropic modellekhez.',
+    bg: 'Активирайте разширената 1-часова продължителност на кеша на prompt за моделите на Anthropic.'
   }
 } as const

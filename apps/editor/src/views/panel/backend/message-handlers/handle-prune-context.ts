@@ -455,7 +455,8 @@ export const handle_prune_context = async (
     const user_content = build_user_content({
       provider_name: provider.name,
       part1,
-      part2
+      part2,
+      disable_cache: true
     })
 
     const messages = [

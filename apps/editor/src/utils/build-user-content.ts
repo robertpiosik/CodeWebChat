@@ -1,7 +1,10 @@
+import * as vscode from 'vscode'
+
 export const build_user_content = (params: {
   provider_name: string
   part1: string
   part2: string
+  disable_cache?: boolean
 }): any => {
   const parse_text_with_images = (text: string) => {
     if (!text.includes('<cwc-image>')) {
@@ -28,11 +31,17 @@ export const build_user_content = (params: {
   }
 
   if (params.provider_name == 'Anthropic') {
+    const cache_control: any = { type: 'ephemeral' }
+    const config = vscode.workspace.getConfiguration('codeWebChat')
+    if (config.get('extendedCacheDurationForAnthropic')) {
+      cache_control.ttl = '1h'
+    }
+
     const user_content: any[] = [
       {
         type: 'text',
         text: params.part1,
-        cache_control: { type: 'ephemeral' }
+        ...(!params.disable_cache && { cache_control })
       }
     ]
 

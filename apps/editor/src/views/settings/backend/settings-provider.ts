@@ -44,6 +44,8 @@ import {
   handle_open_allow_patterns_settings,
   handle_get_fix_all_automatically,
   handle_update_fix_all_automatically,
+  handle_get_extended_cache_duration_for_anthropic,
+  handle_update_extended_cache_duration_for_anthropic,
   handle_open_keybindings,
   handle_open_external_url
 } from './message-handlers'
@@ -341,6 +343,14 @@ export class SettingsProvider {
           await handle_get_fix_all_automatically(this)
         } else if (message.command == 'UPDATE_FIX_ALL_AUTOMATICALLY') {
           await handle_update_fix_all_automatically(message)
+        } else if (
+          message.command == 'GET_EXTENDED_CACHE_DURATION_FOR_ANTHROPIC'
+        ) {
+          await handle_get_extended_cache_duration_for_anthropic(this)
+        } else if (
+          message.command == 'UPDATE_EXTENDED_CACHE_DURATION_FOR_ANTHROPIC'
+        ) {
+          await handle_update_extended_cache_duration_for_anthropic(message)
         } else if (message.command == 'OPEN_KEYBINDINGS') {
           await handle_open_keybindings(message)
         } else if (message.command == 'OPEN_EXTERNAL_URL') {
@@ -393,6 +403,7 @@ export class SettingsProvider {
           void handle_get_send_with_shift_enter(this)
           void handle_get_check_new_files(this)
           void handle_get_fix_all_automatically(this)
+          void handle_get_extended_cache_duration_for_anthropic(this)
         }
       })
     )
