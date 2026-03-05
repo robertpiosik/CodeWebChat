@@ -105,11 +105,11 @@ export const use_handlers = (
         const on_set = props.on_caret_position_set
         setTimeout(() => {
           if (params.input_ref.current) {
-            const display_pos = map_raw_pos_to_display_pos(
-              caret_pos,
-              props.value,
-              props.context_file_paths ?? []
-            )
+            const display_pos = map_raw_pos_to_display_pos({
+              raw_pos: caret_pos,
+              raw_text: props.value,
+              context_file_paths: props.context_file_paths ?? []
+            })
             set_caret_position_for_div(params.input_ref.current, display_pos)
             on_set()
           }
@@ -125,33 +125,43 @@ export const use_handlers = (
 
   useEffect(() => {
     if (params.input_ref.current && !props.missing_configuration) {
-      params.input_ref.current.focus()
-      const selection = window.getSelection()
-      if (selection) {
-        const range = document.createRange()
-        range.selectNodeContents(params.input_ref.current)
-        range.collapse(false)
-        selection.removeAllRanges()
-        selection.addRange(range)
-      }
+      requestAnimationFrame(() => {
+        if (!params.input_ref.current) return
+        params.input_ref.current.focus()
+        const selection = window.getSelection()
+        if (selection) {
+          const range = document.createRange()
+          range.selectNodeContents(params.input_ref.current)
+          range.collapse(false)
+          selection.removeAllRanges()
+          selection.addRange(range)
+        }
+      })
     }
   }, [props.focus_key, props.missing_configuration])
 
   useEffect(() => {
     if (params.input_ref.current && !props.missing_configuration) {
-      params.input_ref.current.focus()
-      const selection = window.getSelection()
-      if (selection) {
-        const range = document.createRange()
-        range.selectNodeContents(params.input_ref.current)
-        if (!params.input_ref.current.textContent) {
-          range.collapse(true)
+      requestAnimationFrame(() => {
+        if (!params.input_ref.current) return
+        params.input_ref.current.focus()
+        const selection = window.getSelection()
+        if (selection) {
+          const range = document.createRange()
+          range.selectNodeContents(params.input_ref.current)
+          if (!params.input_ref.current.textContent) {
+            range.collapse(true)
+          }
+          selection.removeAllRanges()
+          selection.addRange(range)
         }
-        selection.removeAllRanges()
-        selection.addRange(range)
-      }
+      })
     }
-  }, [props.focus_and_select_key, props.missing_configuration])
+  }, [
+    props.focus_and_select_key,
+    props.missing_configuration,
+    props.prompt_type
+  ])
 
   const update_value = (new_value: string, caret_pos?: number) => {
     if (new_value === props.value) return
@@ -1471,7 +1481,7 @@ const get_symbol_ranges = (params: {
 }): { start: number; end: number }[] => {
   const ranges: { start: number; end: number }[] = []
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "(?:\\.|[^"\\])*"\))|(#(?:Commit|ContextAtCommit)\([^:]+:[^\s"]+ "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>[\s\S]*?<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
+    /`([^`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "(?:\\.|[^"\\])*"\))|(#(?:Commit|ContextAtCommit)\([^:]+:[^\s"]+ "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>[\s\S]*?<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
 
   let match
   while ((match = regex.exec(params.text)) !== null) {
@@ -1675,11 +1685,11 @@ const set_caret_position_after_change = (params: {
 }) => {
   setTimeout(() => {
     if (params.input_ref.current) {
-      const display_pos = map_raw_pos_to_display_pos(
-        params.new_raw_cursor_pos,
-        params.new_value,
-        params.context_file_paths
-      )
+      const display_pos = map_raw_pos_to_display_pos({
+        raw_pos: params.new_raw_cursor_pos,
+        raw_text: params.new_value,
+        context_file_paths: params.context_file_paths
+      })
       set_caret_position_for_div(params.input_ref.current, display_pos)
     }
   }, 0)

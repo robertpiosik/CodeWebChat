@@ -1,34 +1,21 @@
 import { useState, useEffect } from 'react'
 import type { PromptFieldProps, EditFormat } from '../PromptField'
 
-type UseKeyboardShortcutsParams = Pick<
-  PromptFieldProps,
-  | 'show_edit_format_selector'
-  | 'on_edit_format_change'
-  | 'on_copy'
-  | 'on_invocation_count_change'
-  | 'is_recording'
-  | 'on_recording_finished'
-> & {
-  on_toggle_invocation_dropdown?: () => void
-  is_invocation_dropdown_open?: boolean
-}
-
-export const use_keyboard_shortcuts = (params: UseKeyboardShortcutsParams) => {
+export const use_keyboard_shortcuts = (
+  props: PromptFieldProps,
+  params: {
+    on_toggle_invocation_dropdown?: () => void
+    is_invocation_dropdown_open?: boolean
+  }
+) => {
   const [is_alt_pressed, set_is_alt_pressed] = useState(false)
-
-  const {
-    on_toggle_invocation_dropdown,
-    is_invocation_dropdown_open,
-    on_invocation_count_change
-  } = params
 
   useEffect(() => {
     const handle_key_down = (e: KeyboardEvent) => {
       if (e.key == 'Alt') set_is_alt_pressed(true)
 
       if (
-        on_toggle_invocation_dropdown &&
+        params.on_toggle_invocation_dropdown &&
         e.code == 'KeyX' &&
         e.altKey &&
         !e.shiftKey &&
@@ -36,13 +23,13 @@ export const use_keyboard_shortcuts = (params: UseKeyboardShortcutsParams) => {
         !e.metaKey
       ) {
         e.preventDefault()
-        on_toggle_invocation_dropdown()
+        params.on_toggle_invocation_dropdown()
         return
       }
 
       if (
-        is_invocation_dropdown_open &&
-        on_invocation_count_change &&
+        params.is_invocation_dropdown_open &&
+        props.on_invocation_count_change &&
         !e.altKey &&
         !e.ctrlKey &&
         !e.metaKey &&
@@ -69,14 +56,14 @@ export const use_keyboard_shortcuts = (params: UseKeyboardShortcutsParams) => {
 
         if (count > 0) {
           e.preventDefault()
-          on_invocation_count_change(count)
-          on_toggle_invocation_dropdown?.()
+          props.on_invocation_count_change(count)
+          params.on_toggle_invocation_dropdown?.()
           return
         }
       }
 
       if (e.altKey && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
-        if (params.show_edit_format_selector && params.on_edit_format_change) {
+        if (props.show_edit_format_selector && props.on_edit_format_change) {
           let format: EditFormat | undefined
           switch (e.code) {
             case 'KeyW':
@@ -94,7 +81,7 @@ export const use_keyboard_shortcuts = (params: UseKeyboardShortcutsParams) => {
           }
           if (format) {
             e.preventDefault()
-            params.on_edit_format_change(format)
+            props.on_edit_format_change(format)
             return
           }
         }
@@ -115,28 +102,28 @@ export const use_keyboard_shortcuts = (params: UseKeyboardShortcutsParams) => {
       window.removeEventListener('blur', handle_blur)
     }
   }, [
-    params.show_edit_format_selector,
-    params.on_edit_format_change,
-    on_invocation_count_change,
-    on_toggle_invocation_dropdown,
-    is_invocation_dropdown_open
+    props.show_edit_format_selector,
+    props.on_edit_format_change,
+    props.on_invocation_count_change,
+    params.on_toggle_invocation_dropdown,
+    params.is_invocation_dropdown_open
   ])
 
   const handle_container_key_down = (
     e: React.KeyboardEvent<HTMLDivElement>
   ) => {
     if (e.key == 'Escape' && !e.ctrlKey && !e.metaKey) {
-      if (params.is_recording) {
-        params.on_recording_finished()
+      if (props.is_recording) {
+        props.on_recording_finished()
       }
       e.stopPropagation()
       return
     }
     if (e.key == 'c' && e.altKey && (e.ctrlKey || e.metaKey)) {
-      if (params.on_copy) {
+      if (props.on_copy) {
         e.stopPropagation()
         e.preventDefault()
-        params.on_copy()
+        props.on_copy()
       }
     }
   }

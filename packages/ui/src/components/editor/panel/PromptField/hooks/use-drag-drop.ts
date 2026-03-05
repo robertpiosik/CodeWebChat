@@ -6,19 +6,10 @@ import {
 import { set_caret_position_for_div } from '../utils/caret'
 import type { PromptFieldProps } from '../PromptField'
 
-type UseDragDropParams = {
+export const use_drag_drop = (
+  props: PromptFieldProps,
   input_ref: RefObject<HTMLDivElement>
-  value: PromptFieldProps['value']
-  context_file_paths: PromptFieldProps['context_file_paths']
-  on_change: PromptFieldProps['on_change']
-}
-
-export const use_drag_drop = ({
-  input_ref,
-  value,
-  context_file_paths,
-  on_change
-}: UseDragDropParams) => {
+) => {
   const dragged_text_range_ref = useRef<{ start: number; end: number } | null>(
     null
   )
@@ -44,17 +35,17 @@ export const use_drag_drop = ({
 
     const raw_start = map_display_pos_to_raw_pos({
       display_pos: display_start,
-      raw_text: value,
-      context_file_paths: context_file_paths ?? []
+      raw_text: props.value,
+      context_file_paths: props.context_file_paths ?? []
     })
     const raw_end = map_display_pos_to_raw_pos({
       display_pos: display_end,
-      raw_text: value,
-      context_file_paths: context_file_paths ?? []
+      raw_text: props.value,
+      context_file_paths: props.context_file_paths ?? []
     })
 
     dragged_text_range_ref.current = { start: raw_start, end: raw_end }
-    const dragged_text = value.substring(raw_start, raw_end)
+    const dragged_text = props.value.substring(raw_start, raw_end)
     e.dataTransfer.setData('text/plain', dragged_text)
   }
 
@@ -98,11 +89,14 @@ export const use_drag_drop = ({
 
     let raw_drop_pos = map_display_pos_to_raw_pos({
       display_pos: display_drop_pos,
-      raw_text: value,
-      context_file_paths: context_file_paths ?? []
+      raw_text: props.value,
+      context_file_paths: props.context_file_paths ?? []
     })
 
-    const dragged_text = value.substring(dragged_range.start, dragged_range.end)
+    const dragged_text = props.value.substring(
+      dragged_range.start,
+      dragged_range.end
+    )
 
     if (
       raw_drop_pos >= dragged_range.start &&
@@ -112,8 +106,8 @@ export const use_drag_drop = ({
     }
 
     const value_without_dragged =
-      value.substring(0, dragged_range.start) +
-      value.substring(dragged_range.end)
+      props.value.substring(0, dragged_range.start) +
+      props.value.substring(dragged_range.end)
 
     if (raw_drop_pos > dragged_range.start) {
       raw_drop_pos -= dragged_text.length
@@ -124,22 +118,22 @@ export const use_drag_drop = ({
       dragged_text +
       value_without_dragged.substring(raw_drop_pos)
 
-    on_change(new_value)
+    props.on_change(new_value)
 
     const new_raw_selection_start = raw_drop_pos
     const new_raw_selection_end = raw_drop_pos + dragged_text.length
     setTimeout(() => {
       if (input_ref.current) {
-        const display_start = map_raw_pos_to_display_pos(
-          new_raw_selection_start,
-          new_value,
-          context_file_paths ?? []
-        )
-        const display_end = map_raw_pos_to_display_pos(
-          new_raw_selection_end,
-          new_value,
-          context_file_paths ?? []
-        )
+        const display_start = map_raw_pos_to_display_pos({
+          raw_pos: new_raw_selection_start,
+          raw_text: new_value,
+          context_file_paths: props.context_file_paths ?? []
+        })
+        const display_end = map_raw_pos_to_display_pos({
+          raw_pos: new_raw_selection_end,
+          raw_text: new_value,
+          context_file_paths: props.context_file_paths ?? []
+        })
         set_caret_position_for_div(
           input_ref.current,
           display_start,

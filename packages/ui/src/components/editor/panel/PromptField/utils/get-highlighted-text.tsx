@@ -16,7 +16,7 @@ const process_text_part_for_files = (params: {
   text: string
   context_file_paths: string[]
 }): string => {
-  const file_path_regex = /`([^\s`]*\.[^\s`]+)`/g
+  const file_path_regex = /`([^`]+)`/g
   const parts = params.text.split(file_path_regex)
 
   return parts
@@ -36,7 +36,7 @@ const process_text_part_for_files = (params: {
             styles['symbol__text']
           }" data-role="symbol-text">${escape_html(filename)}</span></span>`
         }
-        return `\`${escape_html(file_path)}\``
+        return `<span class="${styles['inline-code']}">\`${escape_html(file_path)}\`</span>`
       }
       return escape_html(part)
     })

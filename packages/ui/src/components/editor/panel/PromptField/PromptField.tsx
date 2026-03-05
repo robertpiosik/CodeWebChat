@@ -114,16 +114,13 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     set_is_invocation_dropdown_open((prev) => !prev)
   }, [])
 
-  const { is_alt_pressed, handle_container_key_down } = use_keyboard_shortcuts({
-    show_edit_format_selector: props.show_edit_format_selector,
-    on_edit_format_change: props.on_edit_format_change,
-    on_copy: props.on_copy,
-    on_invocation_count_change: props.on_invocation_count_change,
-    is_invocation_dropdown_open,
-    on_toggle_invocation_dropdown: toggle_invocation_dropdown,
-    is_recording: props.is_recording,
-    on_recording_finished: props.on_recording_finished
-  })
+  const { is_alt_pressed, handle_container_key_down } = use_keyboard_shortcuts(
+    props,
+    {
+      is_invocation_dropdown_open,
+      on_toggle_invocation_dropdown: toggle_invocation_dropdown
+    }
+  )
 
   const {
     is_dropdown_open,
@@ -160,12 +157,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   })
 
   const { handle_drag_start, handle_drag_over, handle_drop, handle_drag_end } =
-    use_drag_drop({
-      input_ref,
-      value: props.value,
-      context_file_paths: props.context_file_paths,
-      on_change: props.on_change
-    })
+    use_drag_drop(props, input_ref)
 
   const mouse_down_pos_ref = useRef<{ x: number; y: number } | null>(null)
 
@@ -234,11 +226,11 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
       if (tab_changed) {
         prev_tab_index_ref.current = props.active_tab_index
-        const display_pos = map_raw_pos_to_display_pos(
-          props.value.length,
-          props.value,
-          props.context_file_paths ?? []
-        )
+        const display_pos = map_raw_pos_to_display_pos({
+          raw_pos: props.value.length,
+          raw_text: props.value,
+          context_file_paths: props.context_file_paths ?? []
+        })
         input_ref.current.focus()
         set_caret_position_for_div(input_ref.current, display_pos)
       } else if (is_focused) {

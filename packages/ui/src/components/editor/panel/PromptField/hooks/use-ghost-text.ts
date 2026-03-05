@@ -7,49 +7,43 @@ import {
   useCallback
 } from 'react'
 
-type UseGhostTextParams = {
+export const use_ghost_text = (params: {
   value: string
   input_ref: RefObject<HTMLDivElement>
   is_focused: boolean
   currently_open_file_text?: string
   caret_position: number
-}
-
-export const use_ghost_text = ({
-  value,
-  input_ref,
-  is_focused,
-  currently_open_file_text,
-  caret_position
-}: UseGhostTextParams) => {
+}) => {
   const [ghost_text, set_ghost_text] = useState('')
   const ghost_text_debounce_timer_ref = useRef<ReturnType<
     typeof setTimeout
   > | null>(null)
   const [can_show_ghost_text, set_can_show_ghost_text] = useState(false)
-  const prev_is_focused_ref = useRef(is_focused)
+  const prev_is_focused_ref = useRef(params.is_focused)
   const initial_value_on_focus_ref = useRef('')
 
   useEffect(() => {
-    if (is_focused && !prev_is_focused_ref.current) {
+    if (params.is_focused && !prev_is_focused_ref.current) {
       set_can_show_ghost_text(false)
-      initial_value_on_focus_ref.current = value
+      initial_value_on_focus_ref.current = params.value
     } else if (
-      is_focused &&
+      params.is_focused &&
       !can_show_ghost_text &&
-      value !== initial_value_on_focus_ref.current
+      params.value !== initial_value_on_focus_ref.current
     ) {
       set_can_show_ghost_text(true)
     }
-    prev_is_focused_ref.current = is_focused
-  }, [is_focused, value, can_show_ghost_text])
+    prev_is_focused_ref.current = params.is_focused
+  }, [params.is_focused, params.value, can_show_ghost_text])
 
   const identifiers = useMemo(() => {
-    if (!currently_open_file_text) return new Set<string>()
-    const matches = currently_open_file_text.match(/[a-zA-Z_][a-zA-Z0-9_]*/g)
+    if (!params.currently_open_file_text) return new Set<string>()
+    const matches = params.currently_open_file_text.match(
+      /[a-zA-Z_][a-zA-Z0-9_]*/g
+    )
     if (!matches) return new Set<string>()
     return new Set(matches.filter((id) => id.length >= 3))
-  }, [currently_open_file_text])
+  }, [params.currently_open_file_text])
 
   useEffect(() => {
     if (ghost_text_debounce_timer_ref.current) {
@@ -59,14 +53,14 @@ export const use_ghost_text = ({
 
     let potential_ghost_text = ''
 
-    if (input_ref.current && is_focused && can_show_ghost_text) {
+    if (params.input_ref.current && params.is_focused && can_show_ghost_text) {
       const selection = window.getSelection()
       if (selection && selection.rangeCount > 0) {
         const range = selection.getRangeAt(0)
         if (range.collapsed) {
           let is_inside_symbol = false
           let current_node: Node | null = range.startContainer
-          while (current_node && current_node !== input_ref.current) {
+          while (current_node && current_node !== params.input_ref.current) {
             if (
               current_node.nodeType === Node.ELEMENT_NODE &&
               (current_node as HTMLElement).dataset.type?.endsWith('-symbol')
@@ -79,13 +73,13 @@ export const use_ghost_text = ({
 
           if (!is_inside_symbol) {
             const post_caret_range = range.cloneRange()
-            post_caret_range.selectNodeContents(input_ref.current)
+            post_caret_range.selectNodeContents(params.input_ref.current)
             post_caret_range.setStart(range.endContainer, range.endOffset)
             const text_after_cursor = post_caret_range.toString()
 
             if (text_after_cursor == '' || /^\s/.test(text_after_cursor)) {
               const pre_caret_range = range.cloneRange()
-              pre_caret_range.selectNodeContents(input_ref.current)
+              pre_caret_range.selectNodeContents(params.input_ref.current)
               pre_caret_range.setEnd(range.startContainer, range.startOffset)
               const text_before_cursor = pre_caret_range.toString()
               const last_word_match = text_before_cursor.match(/[\S]+$/)
@@ -132,17 +126,17 @@ export const use_ghost_text = ({
       }
     }
   }, [
-    value,
-    caret_position,
+    params.value,
+    params.caret_position,
     identifiers,
-    is_focused,
+    params.is_focused,
     ghost_text,
-    input_ref,
+    params.input_ref,
     can_show_ghost_text
   ])
 
   useEffect(() => {
-    const input = input_ref.current
+    const input = params.input_ref.current
     if (!input) return
 
     const existing_ghost = input.querySelector('span[data-type="ghost-text"]')
@@ -170,12 +164,12 @@ export const use_ghost_text = ({
         }
       }
     }
-  }, [ghost_text, input_ref])
+  }, [ghost_text, params.input_ref])
 
   const handle_accept_ghost_text = useCallback(() => {
-    if (!ghost_text || !input_ref.current) return
+    if (!ghost_text || !params.input_ref.current) return
 
-    const ghost_node = input_ref.current.querySelector(
+    const ghost_node = params.input_ref.current.querySelector(
       'span[data-type="ghost-text"]'
     )
     if (ghost_node) {
@@ -195,11 +189,11 @@ export const use_ghost_text = ({
         }
       }
 
-      input_ref.current.dispatchEvent(
+      params.input_ref.current.dispatchEvent(
         new Event('input', { bubbles: true, cancelable: true })
       )
     }
-  }, [ghost_text, input_ref])
+  }, [ghost_text, params.input_ref])
 
   return { ghost_text, handle_accept_ghost_text }
 }

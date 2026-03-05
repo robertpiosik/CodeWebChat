@@ -1,15 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import type { PromptFieldProps } from '../PromptField'
 
-type UseDropdownParams = Pick<
-  PromptFieldProps,
-  'on_copy' | 'on_submit_with_control'
->
-
-export const use_dropdown = ({
-  on_copy,
-  on_submit_with_control
-}: UseDropdownParams) => {
+export const use_dropdown = (props: PromptFieldProps) => {
   const dropdown_ref = useRef<HTMLDivElement>(null)
   const [is_dropdown_open, set_is_dropdown_open] = useState(false)
 
@@ -38,12 +30,12 @@ export const use_dropdown = ({
   }, [])
 
   const handle_copy_click = () => {
-    on_copy()
+    props.on_copy()
     close_dropdown()
   }
 
   const handle_select_click = () => {
-    on_submit_with_control()
+    props.on_submit_with_control()
     close_dropdown()
   }
 

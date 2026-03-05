@@ -8,7 +8,7 @@ export const map_display_pos_to_raw_pos = (params: {
   let last_raw_index = 0
 
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
+    /`([^`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
   let match
 
   while ((match = regex.exec(params.raw_text)) !== null) {
@@ -133,20 +133,20 @@ export const map_display_pos_to_raw_pos = (params: {
   return raw_pos + (params.display_pos - current_display_pos)
 }
 
-export const map_raw_pos_to_display_pos = (
-  raw_pos: number,
-  raw_text: string,
+export const map_raw_pos_to_display_pos = (params: {
+  raw_pos: number
+  raw_text: string
   context_file_paths: string[]
-): number => {
+}): number => {
   let display_pos = 0
   let current_raw_pos = 0
   let last_raw_index = 0
 
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
+    /`([^`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "((?:\\.|[^"\\])*)"\))|(#(?:Commit|ContextAtCommit)\([^:]+:([^\s"]+) "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>([\s\S]*?)<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
   let match
 
-  while ((match = regex.exec(raw_text)) !== null) {
+  while ((match = regex.exec(params.raw_text)) !== null) {
     const file_path = match[1]
     const changes_symbol = match[2]
     const selection_symbol = match[3]
@@ -164,7 +164,7 @@ export const map_raw_pos_to_display_pos = (
     let is_replacement_match = false
     let display_match_length = 0
 
-    if (file_path && context_file_paths.includes(file_path)) {
+    if (file_path && params.context_file_paths.includes(file_path)) {
       const filename = file_path.split('/').pop() || file_path
       display_match_length = filename.length
       is_replacement_match = true
@@ -243,17 +243,17 @@ export const map_raw_pos_to_display_pos = (
 
     const raw_match_length = match[0].length
     const text_before_length = match.index - last_raw_index
-    if (raw_pos <= current_raw_pos + text_before_length) {
-      return display_pos + (raw_pos - current_raw_pos)
+    if (params.raw_pos <= current_raw_pos + text_before_length) {
+      return display_pos + (params.raw_pos - current_raw_pos)
     }
     current_raw_pos += text_before_length
     display_pos += text_before_length
-    if (raw_pos <= current_raw_pos + raw_match_length) {
+    if (params.raw_pos <= current_raw_pos + raw_match_length) {
       return display_pos + display_match_length
     }
     current_raw_pos += raw_match_length
     display_pos += display_match_length
     last_raw_index = regex.lastIndex
   }
-  return display_pos + (raw_pos - current_raw_pos)
+  return display_pos + (params.raw_pos - current_raw_pos)
 }
