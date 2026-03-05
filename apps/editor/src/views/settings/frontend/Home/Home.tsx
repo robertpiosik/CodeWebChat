@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { Layout as UiLayout } from '@ui/components/editor/settings/Layout'
 import { NavigationItem as UiNavigationItem } from '@ui/components/editor/settings/NavigationItem'
 import { ModelProvidersSection } from './sections/ModelProvidersSection'
@@ -182,10 +182,6 @@ export const Home: React.FC<Props> = (props) => {
   const [edit_context_instructions, set_edit_context_instructions] =
     useState('')
   const [stuck_sections, set_stuck_sections] = useState(new Set<NavItem>())
-
-  const has_anthropic_provider = useMemo(() => {
-    return props.providers.some((p) => p.name == 'Anthropic')
-  }, [props.providers])
 
   const handle_stuck_change = useCallback((id: NavItem, is_stuck: boolean) => {
     set_stuck_sections((prev) => {
@@ -426,22 +422,20 @@ export const Home: React.FC<Props> = (props) => {
               on_edit_provider={props.on_edit_provider}
               on_change_api_key={props.on_change_api_key}
             />
-            {has_anthropic_provider && (
-              <UiItem
-                title={t('model-providers.extended-cache.anthropic.title')}
-                description={t(
-                  'model-providers.extended-cache.anthropic.description'
-                )}
-                slot_right={
-                  <UiToggler
-                    is_on={props.extended_cache_duration_for_anthropic}
-                    on_toggle={
-                      props.on_extended_cache_duration_for_anthropic_change
-                    }
-                  />
-                }
-              />
-            )}
+            <UiItem
+              title={t('model-providers.extended-cache.anthropic.title')}
+              description={t(
+                'model-providers.extended-cache.anthropic.description'
+              )}
+              slot_right={
+                <UiToggler
+                  is_on={props.extended_cache_duration_for_anthropic}
+                  on_toggle={
+                    props.on_extended_cache_duration_for_anthropic_change
+                  }
+                />
+              }
+            />
           </UiGroup>
         </UiSection>
         <UiSection
