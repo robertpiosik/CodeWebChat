@@ -4,7 +4,6 @@ import {
   ModelFetcher,
   MODELS_ROUTE_NOT_FOUND_ERROR
 } from '@/services/model-fetcher'
-import { PROVIDERS } from '@/constants/providers'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { ToolType } from '../../../settings/types/tools'
@@ -18,10 +17,8 @@ export const initial_select_model = async (
   let base_url: string | undefined
 
   try {
-    base_url =
-      provider.type == 'built-in'
-        ? PROVIDERS[provider.name]?.base_url
-        : provider.base_url
+    base_url = provider.base_url
+
     if (!base_url)
       throw new Error(`Base URL not found for provider ${provider.name}`)
 

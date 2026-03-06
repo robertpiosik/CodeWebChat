@@ -7,7 +7,8 @@ import {
   migrate_token_cache_cleanup,
   migrate_configurations_code_completions_to_code_at_cursor,
   migrate_instructions_state_cleanup,
-  migrate_checkpoints_title_to_trigger
+  migrate_checkpoints_title_to_trigger,
+  migrate_model_providers_type
 } from './migrations'
 import { SharedFileState } from './context/shared-file-state'
 import {
@@ -59,6 +60,8 @@ export async function activate(context: vscode.ExtensionContext) {
     await migrate_instructions_state_cleanup(context)
     // 2 March 2026
     await migrate_checkpoints_title_to_trigger(context)
+    // 5 March 2026
+    await migrate_model_providers_type(context)
   }
 
   await migrations()

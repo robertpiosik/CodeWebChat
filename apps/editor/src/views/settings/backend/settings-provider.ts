@@ -5,7 +5,6 @@ import {
 } from '@/views/settings/types/messages'
 import {
   handle_upsert_model_provider,
-  handle_change_model_provider_key,
   handle_delete_configuration,
   handle_delete_model_provider,
   handle_get_check_new_files,
@@ -125,8 +124,6 @@ export class SettingsProvider {
             provider: this,
             provider_name: message.provider_name
           })
-        } else if (message.command == 'CHANGE_MODEL_PROVIDER_KEY') {
-          await handle_change_model_provider_key(this, message)
         } else if (message.command == 'GET_CODE_AT_CURSOR_CONFIGURATIONS') {
           await handle_get_configurations({
             provider: this,

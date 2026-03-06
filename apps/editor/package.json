@@ -1757,45 +1757,18 @@
           "scope": "resource",
           "default": [],
           "items": {
-            "oneOf": [
-              {
-                "type": "object",
-                "title": "Built-in Provider",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "const": "built-in"
-                  },
-                  "name": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "type",
-                  "name"
-                ]
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
               },
-              {
-                "type": "object",
-                "title": "Custom Provider",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "const": "custom"
-                  },
-                  "name": {
-                    "type": "string"
-                  },
-                  "baseUrl": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "type",
-                  "name",
-                  "baseUrl"
-                ]
+              "baseUrl": {
+                "type": "string"
               }
+            },
+            "required": [
+              "name",
+              "baseUrl"
             ]
           }
         },

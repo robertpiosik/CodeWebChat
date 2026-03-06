@@ -2,7 +2,6 @@ import { ToolType } from './tools'
 
 export type ProviderForClient = {
   name: string
-  type: 'built-in' | 'custom'
   api_key_mask: string
   base_url: string
 }
@@ -44,11 +43,6 @@ export interface DeleteModelProviderMessage {
 
 export interface EditCustomModelProviderMessage {
   command: 'EDIT_CUSTOM_MODEL_PROVIDER'
-  provider_name: string
-}
-
-export interface ChangeModelProviderKeyMessage {
-  command: 'CHANGE_MODEL_PROVIDER_KEY'
   provider_name: string
 }
 
@@ -332,7 +326,6 @@ export type FrontendMessage =
   | AddModelProviderMessage
   | DeleteModelProviderMessage
   | EditCustomModelProviderMessage
-  | ChangeModelProviderKeyMessage
   | GetCodeAtCursorConfigurationsMessage
   | ReorderCodeAtCursorConfigurationsMessage
   | DeleteCodeAtCursorConfigurationMessage

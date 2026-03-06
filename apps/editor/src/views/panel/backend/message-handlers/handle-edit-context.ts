@@ -7,7 +7,6 @@ import {
   Provider
 } from '@/services/model-providers-manager'
 import axios from 'axios'
-import { PROVIDERS } from '@/constants/providers'
 import {
   API_EDIT_FORMAT_STATE_KEY,
   RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY
@@ -440,25 +439,7 @@ export const handle_edit_context = async (
 
     const { provider, config: edit_context_config } = config_result
 
-    let endpoint_url = ''
-    if (provider.type == 'built-in') {
-      const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]
-      if (!provider_info) {
-        vscode.window.showErrorMessage(
-          dictionary.error_message.BUILT_IN_PROVIDER_NOT_FOUND(provider.name)
-        )
-        Logger.warn({
-          function_name: 'handle_edit_context',
-          message: `Built-in provider "${provider.name}" not found.`
-        })
-        should_show_quick_pick = true
-        current_config_id = undefined
-        continue
-      }
-      endpoint_url = provider_info.base_url
-    } else {
-      endpoint_url = provider.base_url
-    }
+    const endpoint_url = provider.base_url
 
     const edit_format =
       panel_provider.context.workspaceState.get<EditFormat>(

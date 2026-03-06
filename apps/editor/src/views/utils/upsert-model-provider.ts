@@ -1,7 +1,6 @@
 import * as vscode from 'vscode'
 import axios from 'axios'
 import {
-  CustomProvider,
   ModelProvidersManager,
   Provider
 } from '@/services/model-providers-manager'
@@ -56,25 +55,11 @@ export const upsert_model_provider = async (params: {
             resolve('BACK')
           }
         }),
-        input_box.onDidAccept(async () => {
+        input_box.onDidAccept(() => {
           const new_name = input_box.value.trim()
 
           if (!new_name) {
             input_box.validationMessage = 'Name is required'
-            return
-          }
-
-          const providers = await providers_manager.get_providers()
-          const exists = providers.some(
-            (p) =>
-              p.type == 'custom' &&
-              p.name == new_name &&
-              (params.is_creation || p.name !== params.current_name)
-          )
-
-          if (exists) {
-            input_box.validationMessage =
-              'A provider with this name already exists'
             return
           }
 
@@ -84,7 +69,7 @@ export const upsert_model_provider = async (params: {
         }),
         input_box.onDidHide(() => {
           if (!is_accepted) {
-            resolve(undefined)
+            resolve(params.show_back ? 'BACK' : undefined)
             cleanup()
           }
         })
@@ -94,19 +79,19 @@ export const upsert_model_provider = async (params: {
     })
   }
 
-  const prompt_for_url = (
-    current_url: string,
-    show_back = false
-  ): Promise<string | undefined | 'BACK'> => {
+  const prompt_for_url = (params: {
+    current_url: string
+    show_back?: boolean
+    is_required?: boolean
+  }): Promise<string | undefined | 'BACK'> => {
     return new Promise((resolve) => {
       const input_box = vscode.window.createInputBox()
       input_box.ignoreFocusOut = true
       input_box.title = 'Edit Base URL'
       input_box.prompt = 'Enter the base URL.'
-      input_box.value = current_url
+      input_box.value = params.current_url
       input_box.valueSelection = [0, input_box.value.length]
-
-      if (show_back) {
+      if (params.show_back) {
         input_box.buttons = [vscode.QuickInputButtons.Back]
       }
 
@@ -127,13 +112,20 @@ export const upsert_model_provider = async (params: {
           }
         }),
         input_box.onDidAccept(() => {
+          const new_url = input_box.value.trim()
+
+          if (params.is_required && !new_url) {
+            input_box.validationMessage = 'Base URL is required'
+            return
+          }
+
           is_accepted = true
           cleanup()
-          resolve(input_box.value)
+          resolve(new_url)
         }),
         input_box.onDidHide(() => {
           if (!is_accepted) {
-            resolve(undefined)
+            resolve(params.show_back ? 'BACK' : undefined)
             cleanup()
           }
         })
@@ -181,7 +173,11 @@ export const upsert_model_provider = async (params: {
         }),
         input_box.onDidHide(() => {
           if (!is_accepted) {
-            resolve({ value: input_box.value, accepted: false })
+            resolve({
+              value: input_box.value,
+              accepted: false,
+              back: show_back
+            })
             cleanup()
           }
         })
@@ -190,9 +186,7 @@ export const upsert_model_provider = async (params: {
     })
   }
 
-  const run_edit_loop = async (
-    provider_to_edit: CustomProvider
-  ): Promise<void> => {
+  const run_edit_loop = async (provider_to_edit: Provider): Promise<void> => {
     while (true) {
       const items: (vscode.QuickPickItem & { id: string })[] = [
         {
@@ -222,8 +216,8 @@ export const upsert_model_provider = async (params: {
       quick_pick.placeholder = 'Select a property to edit'
 
       const close_button: vscode.QuickInputButton = {
-        iconPath: new vscode.ThemeIcon('close'),
-        tooltip: 'Done'
+        iconPath: new vscode.ThemeIcon('save'),
+        tooltip: 'Save and close'
       }
       quick_pick.buttons = [close_button]
 
@@ -262,11 +256,15 @@ export const upsert_model_provider = async (params: {
           show_back: true
         })
         if (new_name == 'BACK') continue
-        if (new_name && new_name !== provider_to_edit.name) {
+        if (new_name && new_name != provider_to_edit.name) {
           provider_to_edit.name = new_name
         }
       } else if (selected_id == 'edit-url') {
-        const new_url = await prompt_for_url(provider_to_edit.base_url, true)
+        const new_url = await prompt_for_url({
+          current_url: provider_to_edit.base_url,
+          show_back: true,
+          is_required: true
+        })
         if (new_url == 'BACK') continue
         if (new_url !== undefined) {
           provider_to_edit.base_url = normalize_base_url(new_url)
@@ -350,12 +348,12 @@ export const upsert_model_provider = async (params: {
         : params.insertion_index + 1
   }
 
-  let working_provider: CustomProvider | undefined
+  let working_provider: Provider | undefined
   let original_name: string | undefined
 
   if (params.provider_name) {
     const existing = await providers_manager.get_provider(params.provider_name)
-    if (!existing || existing.type !== 'custom') {
+    if (!existing) {
       vscode.window.showErrorMessage(
         dictionary.error_message.MODEL_PROVIDER_NOT_FOUND_BY_NAME(
           params.provider_name
@@ -367,19 +365,11 @@ export const upsert_model_provider = async (params: {
     original_name = existing.name
   } else {
     const show_add_options = async (): Promise<{
-      type: 'built-in' | 'custom'
       id?: string
     } | null> => {
-      const saved_providers = await providers_manager.get_providers()
-      const saved_built_ins = saved_providers
-        .filter((p) => p.type == 'built-in')
-        .map((p) => p.name)
-
-      const available_built_in = Object.entries(PROVIDERS).filter(
-        ([id]) => !saved_built_ins.includes(id as keyof typeof PROVIDERS)
-      )
-
       const custom_label = '$(edit) Custom endpoint...'
+      const available_built_in = Object.entries(PROVIDERS)
+
       const items: vscode.QuickPickItem[] = [
         {
           label: custom_label,
@@ -427,9 +417,9 @@ export const upsert_model_provider = async (params: {
           if (!selected) return resolve(null)
 
           if (selected.label === custom_label) {
-            resolve({ type: 'custom' })
+            resolve({})
           } else {
-            resolve({ type: 'built-in', id: selected.label })
+            resolve({ id: selected.label })
           }
         })
         quick_pick.onDidHide(() => {
@@ -444,39 +434,98 @@ export const upsert_model_provider = async (params: {
       const choice = await show_add_options()
       if (!choice) return
 
-      if (choice.type == 'built-in' && choice.id) {
+      if (choice.id) {
         const name = choice.id as keyof typeof PROVIDERS
         const info = PROVIDERS[name]
-        let api_key = ''
 
-        if (!info.base_url.includes('localhost')) {
-          const { value, accepted, back } = await prompt_for_key('', true)
-          if (back) continue
-          if (!accepted) return
-          api_key = value.trim()
+        let current_name_value = name as string
+        let back_to_options = false
+
+        while (true) {
+          const new_name = await prompt_for_name({
+            current_name: current_name_value,
+            is_creation: true,
+            show_back: true
+          })
+          if (new_name == 'BACK') {
+            back_to_options = true
+            break
+          }
+          if (!new_name) return
+
+          current_name_value = new_name
+
+          let api_key = ''
+          if (!info.base_url.includes('localhost')) {
+            const { value, accepted, back } = await prompt_for_key('', true)
+            if (back) continue
+            if (!accepted) return
+            api_key = value.trim()
+          }
+
+          const providers = await providers_manager.get_providers()
+
+          let final_name = new_name
+          let counter = 1
+          while (providers.some((p) => p.name == final_name)) {
+            final_name = `${new_name} (${counter})`
+            counter++
+          }
+
+          const new_provider: Provider = {
+            name: final_name,
+            base_url: info.base_url,
+            api_key
+          }
+          await providers_manager.save_providers([...providers, new_provider])
+          return new_provider
+        }
+        if (back_to_options) continue
+      } else {
+        let custom_step = 'url'
+        let new_url = ''
+        let new_name = ''
+        let back_to_options = false
+
+        while (true) {
+          if (custom_step == 'url') {
+            const res = await prompt_for_url({
+              current_url: new_url,
+              show_back: true,
+              is_required: true
+            })
+            if (res == 'BACK') {
+              back_to_options = true
+              break
+            }
+            if (!res) return
+            new_url = res
+            custom_step = 'name'
+          } else if (custom_step == 'name') {
+            const res = await prompt_for_name({
+              current_name: new_name,
+              is_creation: true,
+              show_back: true
+            })
+            if (res == 'BACK') {
+              custom_step = 'url'
+              continue
+            }
+            if (!res) return
+            new_name = res
+            break
+          }
         }
 
-        const providers = await providers_manager.get_providers()
-        const new_provider: Provider = { type: 'built-in', name, api_key }
-        await providers_manager.save_providers([...providers, new_provider])
-        return new_provider
-      }
+        if (back_to_options) continue
 
-      const new_name = await prompt_for_name({
-        current_name: '',
-        is_creation: true,
-        show_back: true
-      })
-      if (new_name == 'BACK') continue
-      if (!new_name) return
-
-      working_provider = {
-        type: 'custom',
-        name: new_name,
-        base_url: '',
-        api_key: ''
+        working_provider = {
+          name: new_name,
+          base_url: normalize_base_url(new_url),
+          api_key: ''
+        }
+        break
       }
-      break
     }
   }
 
@@ -517,11 +566,23 @@ export const upsert_model_provider = async (params: {
   const providers = await providers_manager.get_providers()
   let updated_providers = [...providers]
 
+  let final_name = working_provider.name
+  let counter = 1
+  while (
+    updated_providers.some(
+      (p) => p.name == final_name && p.name != original_name
+    )
+  ) {
+    final_name = `${working_provider.name} (${counter})`
+    counter++
+  }
+  working_provider.name = final_name
+
   if (original_name) {
     updated_providers = updated_providers.map((p) =>
-      p.name == original_name && p.type == 'custom' ? working_provider! : p
+      p.name == original_name ? working_provider! : p
     )
-    if (original_name !== working_provider.name) {
+    if (original_name != working_provider.name) {
       await providers_manager.update_provider_name_in_configs({
         old_name: original_name,
         new_name: working_provider.name

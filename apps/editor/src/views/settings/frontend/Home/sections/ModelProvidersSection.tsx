@@ -12,7 +12,6 @@ type ModelProvidersSectionProps = {
   }) => void
   on_delete_provider: (provider_name: string) => void
   on_edit_provider: (provider_name: string) => void
-  on_change_api_key: (provider_name: string) => void
 }
 export const ModelProvidersSection: React.FC<ModelProvidersSectionProps> = (
   props
@@ -76,10 +75,6 @@ export const ModelProvidersSection: React.FC<ModelProvidersSectionProps> = (
         )
       }}
       render_actions={(provider, index) => {
-        const is_localhost =
-          provider.base_url.includes('localhost') ||
-          provider.base_url.includes('127.0.0.1')
-
         return (
           <>
             <IconButton
@@ -87,24 +82,11 @@ export const ModelProvidersSection: React.FC<ModelProvidersSectionProps> = (
               title={t('action.insert-provider')}
               on_click={() => props.on_add_provider({ insertion_index: index })}
             />
-            {provider.type == 'custom' ? (
-              <IconButton
-                codicon_icon="edit"
-                title={t('action.edit-provider')}
-                on_click={() => props.on_edit_provider(provider.name)}
-              />
-            ) : (
-              <IconButton
-                codicon_icon="key"
-                title={
-                  is_localhost
-                    ? t('action.api-key-not-required')
-                    : t('action.change-api-key')
-                }
-                on_click={() => props.on_change_api_key(provider.name)}
-                disabled={is_localhost}
-              />
-            )}
+            <IconButton
+              codicon_icon="edit"
+              title={t('action.edit-provider')}
+              on_click={() => props.on_edit_provider(provider.name)}
+            />
             <IconButton
               codicon_icon="trash"
               title={t('action.delete-provider')}

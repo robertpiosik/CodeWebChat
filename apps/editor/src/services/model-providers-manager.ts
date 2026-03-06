@@ -1,24 +1,13 @@
 import * as vscode from 'vscode'
-import { PROVIDERS } from '@/constants/providers'
 import { SECRET_STORAGE_MODEL_PROVIDERS_KEY } from '@/constants/secret-storage-keys'
 
-export type BuiltInProvider = {
-  type: 'built-in'
-  name: keyof typeof PROVIDERS
-  api_key: string
-}
-
-export type CustomProvider = {
-  type: 'custom'
+export type Provider = {
   name: string
   base_url: string
   api_key: string
 }
 
-export type Provider = BuiltInProvider | CustomProvider
-
 export type ToolConfig = {
-  provider_type: string
   provider_name: string
   model: string
   temperature?: number
@@ -58,9 +47,8 @@ export class ModelProvidersManager {
       const config = vscode.workspace.getConfiguration('codeWebChat')
       const provider_configs = config.get<
         {
-          type: 'built-in' | 'custom'
           name: string
-          baseUrl?: string
+          baseUrl: string
         }[]
       >('modelProviders', [])
 
@@ -71,25 +59,17 @@ export class ModelProvidersManager {
         ? (JSON.parse(providers_json) as Provider[])
         : []
 
-      this._providers = provider_configs
-        .map((provider_config) => {
-          const provider_with_key = saved_providers_with_keys.find(
-            (p) =>
-              p.name == provider_config.name && p.type == provider_config.type
-          )
-          const provider: Provider = {
-            type: provider_config.type,
-            name: provider_config.name,
-            api_key: provider_with_key?.api_key || '',
-            ...(provider_config.type == 'custom' && {
-              base_url: provider_config.baseUrl || ''
-            })
-          } as Provider
-          return provider
-        })
-        .filter(
-          (provider) => provider.type == 'custom' || PROVIDERS[provider.name]
+      this._providers = provider_configs.map((provider_config) => {
+        const provider_with_key = saved_providers_with_keys.find(
+          (p) => p.name == provider_config.name
         )
+        const provider: Provider = {
+          name: provider_config.name,
+          api_key: provider_with_key?.api_key || '',
+          base_url: provider_config.baseUrl || ''
+        }
+        return provider
+      })
     } catch (error) {
       console.error('Error loading providers:', error)
       this._providers = []
@@ -106,12 +86,7 @@ export class ModelProvidersManager {
 
       // Save provider config to settings
       const provider_configs = providers.map((p) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const config: any = { type: p.type, name: p.name }
-        if (p.type == 'custom') {
-          config.baseUrl = p.base_url
-        }
-        return config
+        return { name: p.name, baseUrl: p.base_url }
       })
       const config = vscode.workspace.getConfiguration('codeWebChat')
       await config.update(
@@ -142,9 +117,7 @@ export class ModelProvidersManager {
   ): ToolConfig | undefined {
     if (!config) return undefined
 
-    const provider = this._providers.find(
-      (p) => p.type == config.provider_type && p.name == config.provider_name
-    )
+    const provider = this._providers.find((p) => p.name == config.provider_name)
 
     if (!provider) {
       return undefined
@@ -166,20 +139,16 @@ export class ModelProvidersManager {
       }[]
     >(settings_key, [])
 
-    const tool_configs: ToolConfig[] = settings_configs
-      .map((sc) => {
-        const provider = this._providers.find((p) => p.name == sc.providerName)
-        return {
-          provider_name: sc.providerName,
-          provider_type: provider?.type || '',
-          model: sc.model,
-          temperature: sc.temperature,
-          reasoning_effort: sc.reasoningEffort,
-          system_instructions_override: sc.systemInstructionsOverride,
-          is_pinned: sc.isPinned
-        }
-      })
-      .filter((tc) => tc.provider_type)
+    const tool_configs: ToolConfig[] = settings_configs.map((sc) => {
+      return {
+        provider_name: sc.providerName,
+        model: sc.model,
+        temperature: sc.temperature,
+        reasoning_effort: sc.reasoningEffort,
+        system_instructions_override: sc.systemInstructionsOverride,
+        is_pinned: sc.isPinned
+      }
+    })
 
     return tool_configs.filter(
       (c) => this._validate_tool_config(c) !== undefined
@@ -253,12 +222,8 @@ export class ModelProvidersManager {
     )
 
     if (default_config_from_settings) {
-      const provider = this._providers.find(
-        (p) => p.name == default_config_from_settings.providerName
-      )
       const tool_config: ToolConfig = {
         provider_name: default_config_from_settings.providerName,
-        provider_type: provider?.type || '',
         model: default_config_from_settings.model,
         temperature: default_config_from_settings.temperature,
         reasoning_effort: default_config_from_settings.reasoningEffort,

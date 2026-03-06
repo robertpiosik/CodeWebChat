@@ -10,7 +10,6 @@ import {
 import { Logger } from '@shared/utils/logger'
 import { parse_response } from '@/commands/apply-chat-response-command/utils/clipboard-parser'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
-import { PROVIDERS } from '@/constants/providers'
 import {
   get_intelligent_update_config,
   process_file
@@ -107,13 +106,7 @@ export const handle_intelligent_update_file_in_preview = async (
   const { provider: api_provider, config: intelligent_update_config } =
     config_result
 
-  let endpoint_url = ''
-  if (api_provider.type == 'built-in') {
-    const provider_info = PROVIDERS[api_provider.name as keyof typeof PROVIDERS]
-    endpoint_url = provider_info.base_url
-  } else {
-    endpoint_url = api_provider.base_url
-  }
+  const endpoint_url = api_provider.base_url
 
   const default_workspace_path =
     vscode.workspace.workspaceFolders?.[0]?.uri.fsPath

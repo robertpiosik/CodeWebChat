@@ -144,7 +144,6 @@ type Props = {
   }) => void
   on_delete_provider: (provider_name: string) => void
   on_edit_provider: (provider_name: string) => void
-  on_change_api_key: (provider_name: string) => void
   on_reorder_providers: (reordered_providers: ProviderForClient[]) => void
   on_add_config: (
     tool_name: string,
@@ -420,7 +419,6 @@ export const Home: React.FC<Props> = (props) => {
               on_add_provider={props.on_add_provider}
               on_delete_provider={props.on_delete_provider}
               on_edit_provider={props.on_edit_provider}
-              on_change_api_key={props.on_change_api_key}
             />
             <UiItem
               title={t('model-providers.extended-cache.anthropic.title')}

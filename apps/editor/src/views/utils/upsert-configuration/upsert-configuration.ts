@@ -17,7 +17,6 @@ import {
   initial_select_provider
 } from './interactions'
 import axios from 'axios'
-import { PROVIDERS } from '@/constants/providers'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { ToolType } from '@/views/settings/types/tools'
 
@@ -157,7 +156,6 @@ export const upsert_configuration = async (params: {
     }
 
     config_to_edit = {
-      provider_type: selected_provider!.type,
       provider_name: selected_provider!.name,
       model: selected_model,
       temperature: undefined
@@ -307,7 +305,6 @@ export const upsert_configuration = async (params: {
         const temp_config = {
           ...updated_config,
           provider_name: new_provider.provider_name,
-          provider_type: new_provider.provider_type,
           model:
             new_provider.provider_name === updated_config.provider_name
               ? updated_config.model
@@ -321,7 +318,6 @@ export const upsert_configuration = async (params: {
         })
         if (new_model !== undefined) {
           updated_config.provider_name = new_provider.provider_name
-          updated_config.provider_type = new_provider.provider_type
           updated_config.model = new_model
           break
         }
@@ -339,10 +335,7 @@ export const upsert_configuration = async (params: {
             updated_config.provider_name
           )
           if (provider) {
-            const base_url =
-              provider.type == 'built-in'
-                ? PROVIDERS[provider.name as keyof typeof PROVIDERS]?.base_url
-                : provider.base_url
+            const base_url = provider.base_url
 
             if (base_url) {
               try {

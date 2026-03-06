@@ -7,7 +7,6 @@ import {
   ModelFetcher,
   MODELS_ROUTE_NOT_FOUND_ERROR
 } from '@/services/model-fetcher'
-import { PROVIDERS } from '@/constants/providers'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { ToolType } from '../../../settings/types/tools'
@@ -29,10 +28,7 @@ export const edit_model_for_config = async (params: {
     return undefined
   }
 
-  const base_url =
-    provider_from_manager.type == 'built-in'
-      ? PROVIDERS[provider_from_manager.name]?.base_url
-      : provider_from_manager.base_url
+  const base_url = provider_from_manager.base_url
 
   if (!base_url) {
     vscode.window.showErrorMessage(

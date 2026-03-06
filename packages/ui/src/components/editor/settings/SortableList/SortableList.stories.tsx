@@ -140,7 +140,6 @@ export const Configurations = () => {
 
 type Provider = SortableList.Item & {
   name: string
-  type: 'built-in' | 'custom'
   api_key_mask: string
   base_url: string
 }
@@ -149,21 +148,18 @@ const initial_providers: Provider[] = [
   {
     id: 'openai',
     name: 'OpenAI',
-    type: 'built-in',
     api_key_mask: '...1234',
     base_url: 'https://api.openai.com/v1'
   },
   {
     id: 'anthropic',
     name: 'Anthropic',
-    type: 'built-in',
     api_key_mask: '...5678',
     base_url: 'https://api.anthropic.com/v1'
   },
   {
     id: 'custom',
     name: 'My Custom Endpoint',
-    type: 'custom',
     api_key_mask: '⚠ Missing API key',
     base_url: 'http://localhost:1234/v1'
   }
@@ -232,19 +228,11 @@ export const Providers = () => {
               title="Insert..."
               on_click={() => log_action('on_insert')(index)}
             />
-            {provider.type == 'custom' ? (
-              <IconButton
-                codicon_icon="edit"
-                title="Edit"
-                on_click={() => log_action('on_edit_provider')(provider.name)}
-              />
-            ) : (
-              <IconButton
-                codicon_icon="key"
-                title="Key"
-                on_click={() => log_action('on_change_api_key')(provider.name)}
-              />
-            )}
+            <IconButton
+              codicon_icon="edit"
+              title="Edit"
+              on_click={() => log_action('on_edit_provider')(provider.name)}
+            />
             <IconButton
               codicon_icon="trash"
               title="Delete"

@@ -7,7 +7,6 @@ import {
   ToolConfig,
   get_tool_config_id
 } from '@/services/model-providers-manager'
-import { PROVIDERS } from '@/constants/providers'
 import * as vscode from 'vscode'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import axios from 'axios'
@@ -196,15 +195,7 @@ const stop_recording = async (panel_provider: PanelProvider) => {
         return
       }
 
-      let endpoint_url = ''
-      if (provider.type == 'built-in') {
-        const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]
-        if (provider_info) {
-          endpoint_url = provider_info.base_url
-        }
-      } else {
-        endpoint_url = provider.base_url
-      }
+      const endpoint_url = provider.base_url
 
       const instructions = vscode.workspace
         .getConfiguration('codeWebChat')

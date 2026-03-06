@@ -8,7 +8,6 @@ import {
   get_tool_config_id
 } from '@/services/model-providers-manager'
 import { Logger } from '@shared/utils/logger'
-import { PROVIDERS } from '@/constants/providers'
 import { RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY } from '@/constants/state-keys'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { CodeAtCursorMessage } from '@/views/panel/types/messages'
@@ -291,23 +290,7 @@ export const handle_code_at_cursor = async (
     return
   }
 
-  let endpoint_url = ''
-  if (provider.type == 'built-in') {
-    const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]
-    if (!provider_info) {
-      vscode.window.showErrorMessage(
-        dictionary.error_message.BUILT_IN_PROVIDER_NOT_FOUND(provider.name)
-      )
-      Logger.warn({
-        function_name: 'handle_code_at_cursor',
-        message: `Built-in provider "${provider.name}" not found.`
-      })
-      return
-    }
-    endpoint_url = provider_info.base_url
-  } else {
-    endpoint_url = provider.base_url
-  }
+  const endpoint_url = provider.base_url
 
   const editor = vscode.window.activeTextEditor
   if (editor) {

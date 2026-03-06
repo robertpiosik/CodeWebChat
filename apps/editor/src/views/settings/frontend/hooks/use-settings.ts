@@ -199,13 +199,6 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_change_api_key = (provider_name: string) => {
-    post_message(vscode, {
-      command: 'CHANGE_MODEL_PROVIDER_KEY',
-      provider_name
-    })
-  }
-
   const handle_add_config = (
     tool_name: string,
     params?: { insertion_index?: number; create_on_top?: boolean }
@@ -516,7 +509,6 @@ export const use_settings = (vscode: any) => {
     handle_add_provider,
     handle_delete_provider,
     handle_edit_provider,
-    handle_change_api_key,
     handle_add_config,
     handle_reorder_configs,
     handle_edit_config,

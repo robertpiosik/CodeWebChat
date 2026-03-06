@@ -1,6 +1,5 @@
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
-import { PROVIDERS } from '@/constants/providers'
 
 export const handle_get_model_providers = async (
   provider: SettingsProvider
@@ -11,14 +10,10 @@ export const handle_get_model_providers = async (
   const providers_for_client = saved_providers.map((p) => {
     const api_key_mask = p.api_key ? `...${p.api_key.slice(-4)}` : ''
 
-    const base_url =
-      p.type == 'built-in' ? PROVIDERS[p.name].base_url : p.base_url
-
     return {
       name: p.name,
-      type: p.type,
       api_key_mask,
-      base_url
+      base_url: p.base_url
     }
   })
 

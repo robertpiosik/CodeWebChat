@@ -6,7 +6,6 @@ import {
 } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
-import { PROVIDERS } from '@/constants/providers'
 import { display_token_count } from '@/utils/display-token-count'
 import { RECENTLY_USED_COMMIT_MESSAGES_CONFIG_IDS_STATE_KEY } from '@/constants/state-keys'
 import { t } from '@/i18n'
@@ -231,13 +230,7 @@ export const get_commit_message_config = async (
     return null
   }
 
-  let endpoint_url = ''
-  if (provider.type == 'built-in') {
-    const provider_info = PROVIDERS[provider.name]
-    endpoint_url = provider_info.base_url
-  } else {
-    endpoint_url = provider.base_url
-  }
+  const endpoint_url = provider.base_url
 
   return {
     config: commit_message_config,

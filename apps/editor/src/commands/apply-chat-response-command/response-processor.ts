@@ -17,7 +17,6 @@ import { apply_git_patch } from './handlers/diff-handler'
 import { apply_file_relocations } from './utils/file-operations'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { get_intelligent_update_config } from '@/utils/intelligent-update-utils'
-import { PROVIDERS } from '@/constants/providers'
 import { handle_active_editor_intelligent_update } from './handlers/active-editor-intelligent-update-handler'
 import { handle_fast_replace } from './handlers/fast-replace-handler'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
@@ -496,14 +495,7 @@ export const process_chat_response = async (
 
           const { provider, config: intelligent_update_config } = config_result
 
-          let endpoint_url = ''
-          if (provider.type == 'built-in') {
-            const provider_info =
-              PROVIDERS[provider.name as keyof typeof PROVIDERS]
-            endpoint_url = provider_info.base_url
-          } else {
-            endpoint_url = provider.base_url
-          }
+          const endpoint_url = provider.base_url
 
           const intelligent_update_states =
             await handle_active_editor_intelligent_update({

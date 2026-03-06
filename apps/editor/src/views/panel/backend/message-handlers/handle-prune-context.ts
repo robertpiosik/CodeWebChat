@@ -8,7 +8,6 @@ import {
   ToolConfig
 } from '@/services/model-providers-manager'
 import axios from 'axios'
-import { PROVIDERS } from '@/constants/providers'
 import { RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY } from '@/constants/state-keys'
 import {
   replace_changes_symbol,
@@ -421,25 +420,7 @@ export const handle_prune_context = async (
 
     const { provider, config: prune_context_config } = config_result
 
-    let endpoint_url = ''
-    if (provider.type == 'built-in') {
-      const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]
-      if (!provider_info) {
-        vscode.window.showErrorMessage(
-          dictionary.error_message.BUILT_IN_PROVIDER_NOT_FOUND(provider.name)
-        )
-        Logger.warn({
-          function_name: 'handle_prune_context',
-          message: `Built-in provider "${provider.name}" not found.`
-        })
-        should_show_quick_pick = true
-        current_config_id = undefined
-        continue
-      }
-      endpoint_url = provider_info.base_url
-    } else {
-      endpoint_url = provider.base_url
-    }
+    const endpoint_url = provider.base_url
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const config_prune_instructions_prefix = config.get<string>(
