@@ -30,8 +30,12 @@ export class ApiManager {
     const cancel_token_source = axios.CancelToken.source()
     this.cancel_token_sources.set(request_id, cancel_token_source)
 
-    const body_to_hash = { ...params.body }
+    const body_to_hash = JSON.parse(JSON.stringify(params.body))
     delete body_to_hash.reasoning_effort
+    delete body_to_hash.reasoning
+    if (body_to_hash.extra_body?.google?.thinking_config) {
+      delete body_to_hash.extra_body.google.thinking_config
+    }
 
     const body_hash = createHash('md5')
       .update(JSON.stringify(body_to_hash))
