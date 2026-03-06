@@ -28,16 +28,23 @@ export const apply_saved_context = async (
   }
 
   let paths_to_apply = existing_paths
-  let message = dictionary.information_message.CONTEXT_APPLIED_SUCCESSFULLY
+  const message = dictionary.information_message.CONTEXT_APPLIED_SUCCESSFULLY
 
   const currently_checked_files = workspace_provider.get_checked_files()
   if (currently_checked_files.length > 0) {
     const existing_paths_set = new Set(existing_paths)
-    const all_current_files_in_new_context = currently_checked_files.every(
-      (file) => existing_paths_set.has(file)
-    )
+    const is_identical =
+      currently_checked_files.length == existing_paths_set.size &&
+      currently_checked_files.every((file) => existing_paths_set.has(file))
 
-    if (!all_current_files_in_new_context) {
+    if (is_identical) {
+      vscode.window.showInformationMessage(
+        dictionary.information_message.CONTEXT_ALREADY_SET
+      )
+      return
+    }
+
+    if (!is_identical) {
       const quick_pick_options: (vscode.QuickPickItem & {
         action_id: string
       })[] = [
@@ -117,7 +124,6 @@ export const apply_saved_context = async (
         paths_to_apply = [
           ...new Set([...currently_checked_files, ...existing_paths])
         ]
-        message = dictionary.information_message.CONTEXT_MERGED_SUCCESSFULLY
       }
     }
   }

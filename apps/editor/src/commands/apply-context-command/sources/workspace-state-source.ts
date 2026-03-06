@@ -192,6 +192,13 @@ export const handle_workspace_state_source = async (
               internal_contexts = reloaded.merged
               context_to_roots = reloaded.context_to_roots
               quick_pick.items = create_quick_pick_items(internal_contexts)
+              const active_item = quick_pick.items.find(
+                (i) => i.label == unique_name
+              )
+              if (active_item) {
+                quick_pick.activeItems = [active_item]
+              }
+
               quick_pick.value = ''
               quick_pick.show()
               return
@@ -273,12 +280,20 @@ export const handle_workspace_state_source = async (
               }
 
               vscode.window.showInformationMessage(
-                dictionary.information_message.CONTEXT_SAVED_SUCCESSFULLY
+                dictionary.information_message.CONTEXT_UPDATED_SUCCESSFULLY
               )
               const reloaded = refresh_contexts()
               internal_contexts = reloaded.merged
               context_to_roots = reloaded.context_to_roots
               quick_pick.items = create_quick_pick_items(internal_contexts)
+
+              const active_item = quick_pick.items.find(
+                (i) => i.label === context.name
+              )
+              if (active_item) {
+                quick_pick.activeItems = [active_item]
+              }
+
               quick_pick.show()
               return
             }

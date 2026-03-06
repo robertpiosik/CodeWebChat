@@ -159,11 +159,18 @@ export const handle_commit_files_source = async (
 
         if (currently_checked.length > 0) {
           const selected_paths_set = new Set(selected_paths)
-          const all_current_files_in_new_context = currently_checked.every(
-            (file) => selected_paths_set.has(file)
-          )
+          const is_identical =
+            currently_checked.length == selected_paths_set.size &&
+            currently_checked.every((file) => selected_paths_set.has(file))
 
-          if (!all_current_files_in_new_context) {
+          if (is_identical) {
+            vscode.window.showInformationMessage(
+              dictionary.information_message.CONTEXT_ALREADY_SET
+            )
+            return
+          }
+
+          if (!is_identical) {
             const quick_pick_options = [
               {
                 label: t('command.apply-context.action.replace.label'),

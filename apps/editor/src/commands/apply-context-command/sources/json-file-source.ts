@@ -93,6 +93,7 @@ export const handle_json_file_source = async (
     }
 
     let active_dialog_count = 0
+    let name_to_highlight: string | undefined
 
     while (true) {
       const create_items = () => {
@@ -143,6 +144,16 @@ export const handle_json_file_source = async (
       quick_pick.items = create_items()
       quick_pick.placeholder = t('command.apply-context.select-saved.file')
       quick_pick.buttons = [vscode.QuickInputButtons.Back, open_file_button]
+
+      if (name_to_highlight) {
+        const active_item = quick_pick.items.find(
+          (i: any) => i.label == name_to_highlight
+        )
+        if (active_item) {
+          quick_pick.activeItems = [active_item]
+        }
+        name_to_highlight = undefined
+      }
 
       const selection = await new Promise<any>((resolve) => {
         let is_resolved = false
@@ -278,9 +289,13 @@ export const handle_json_file_source = async (
             await save_contexts_to_file(contexts, p)
           }
           vscode.window.showInformationMessage(
-            dictionary.information_message.CONTEXT_SAVED_SUCCESSFULLY
+            dictionary.information_message.CONTEXT_UPDATED_SUCCESSFULLY
           )
-          return
+          name_to_highlight = context_name
+          const reloaded = await load_and_merge_file_contexts()
+          file_contexts = reloaded.merged
+          context_to_roots = reloaded.context_to_roots
+          continue
         }
 
         if (selection.triggeredButton === edit_button) {
@@ -326,6 +341,8 @@ export const handle_json_file_source = async (
             file_contexts = reloaded.merged
             context_to_roots = reloaded.context_to_roots
           }
+          name_to_highlight =
+            new_name && new_name != old_name ? new_name : old_name
         } else if (selection.triggeredButton === delete_button) {
           active_dialog_count++
           const choice = await vscode.window.showInformationMessage(
@@ -407,6 +424,7 @@ export const handle_json_file_source = async (
         const reloaded = await load_and_merge_file_contexts()
         file_contexts = reloaded.merged
         context_to_roots = reloaded.context_to_roots
+        name_to_highlight = unique_name
         continue
       }
 

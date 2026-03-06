@@ -47,6 +47,8 @@ export const dictionary = {
     CONTEXT_COPIED_TO_CLIPBOARD: 'Context copied to clipboard.',
     CONTEXT_FROM_OPEN_EDITORS_COPIED_TO_CLIPBOARD:
       'Context from open editors copied to clipboard.',
+    CONTEXT_ALREADY_SET: 'Context already set.',
+    CONTEXT_UPDATED_SUCCESSFULLY: 'Updated successfully.',
     NO_SAVED_CONTEXTS_FOUND: 'No saved contexts found.',
     NO_COMMIT_MESSAGES_CONFIGURATIONS_FOUND:
       'No "Commit Messages" configurations found. Please add one in settings.',
@@ -96,7 +98,6 @@ export const dictionary = {
     DELETED_CONTEXT_FROM_WORKSPACE_STATE: 'Deleted context.',
     CONTEXT_SAVED_SUCCESSFULLY: 'Saved successfully.',
     CONTEXT_APPLIED_SUCCESSFULLY: 'Context applied successfully.',
-    CONTEXT_MERGED_SUCCESSFULLY: 'Context merged successfully.',
     FILES_REMAIN_CHECKED: (count: number) =>
       `${count} file${count == 1 ? '' : 's'} remain${
         count == 1 ? 's' : ''
