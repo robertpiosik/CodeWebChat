@@ -5,7 +5,7 @@ export const apply_reasoning_effort = (params: {
   provider: any
   reasoning_effort?: ToolConfig['reasoning_effort']
 }) => {
-  if (params.provider.name == 'OpenRouter') {
+  if (params.provider.base_url == 'https://openrouter.ai/api/v1') {
     if (params.reasoning_effort) {
       if (params.reasoning_effort == 'none') {
         params.body.reasoning = { enabled: false }
@@ -13,7 +13,10 @@ export const apply_reasoning_effort = (params: {
         params.body.reasoning = { effort: params.reasoning_effort }
       }
     }
-  } else if (params.provider.name == 'Google') {
+  } else if (
+    params.provider.base_url ==
+    'https://generativelanguage.googleapis.com/v1beta/openai'
+  ) {
     params.body.extra_body = {
       google: {
         thinking_config: {

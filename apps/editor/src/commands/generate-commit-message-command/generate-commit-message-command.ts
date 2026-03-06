@@ -38,10 +38,10 @@ export const generate_commit_message_command = (
     return { repository, was_empty_stage, message_prompt, is_single_change }
   }
 
-  const run_generate_action = async (
-    source_control: vscode.SourceControl | undefined,
+  const run_generate_action = async (params: {
     should_commit: boolean
-  ) => {
+    source_control?: vscode.SourceControl
+  }) => {
     let files_staged_by_action = false
     let is_single_change_flow = false
     const api_providers_manager = new ModelProvidersManager(context)
@@ -49,7 +49,7 @@ export const generate_commit_message_command = (
     const selection_state: { files?: string[] } = {}
 
     while (true) {
-      const data = await get_prompt_data(source_control, selection_state)
+      const data = await get_prompt_data(params.source_control, selection_state)
       if (!data) return
       const { repository, message_prompt, is_single_change } = data
       let { was_empty_stage } = data
@@ -69,7 +69,7 @@ export const generate_commit_message_command = (
       const has_default_config = !!default_config
 
       const show_back_button =
-        was_empty_stage && !is_single_change_flow && !source_control
+        was_empty_stage && !is_single_change_flow && !params.source_control
 
       const api_config_data = await get_commit_message_config(
         context,
@@ -134,7 +134,7 @@ export const generate_commit_message_command = (
         p.files.some((file) => staged_files.includes(file))
       )
 
-      if (should_commit) {
+      if (params.should_commit) {
         const edited_message = await new Promise<string | 'back' | undefined>(
           (resolve) => {
             const input_box = vscode.window.createInputBox()
@@ -276,14 +276,14 @@ export const generate_commit_message_command = (
   const generate_command = vscode.commands.registerCommand(
     'codeWebChat.generateCommitMessage',
     async (source_control?: vscode.SourceControl) => {
-      await run_generate_action(source_control, false)
+      await run_generate_action({ source_control, should_commit: false })
     }
   )
 
   const generate_and_commit_command = vscode.commands.registerCommand(
     'codeWebChat.generateCommitMessageAndCommit',
     async (source_control?: vscode.SourceControl) => {
-      await run_generate_action(source_control, true)
+      await run_generate_action({ source_control, should_commit: true })
     }
   )
 
