@@ -125,7 +125,7 @@ export class FilesCollector {
     const recently_modified: Array<{ path: string; mtime: number }> = []
     const older_files: Array<{ path: string; timestamp: number }> = []
     const now = Date.now()
-    const THREE_HOURS = 3 * 60 * 60 * 1000
+    const ONE_AND_HALF_HOURS = 1.5 * 60 * 60 * 1000
 
     for (const file_path of params.files) {
       try {
@@ -137,7 +137,7 @@ export class FilesCollector {
         const selection_timestamp =
           this.workspace_provider.get_selection_timestamp(file_path) ?? now
 
-        if (now - mtime < THREE_HOURS) {
+        if (now - mtime < ONE_AND_HALF_HOURS) {
           recently_modified.push({ path: file_path, mtime })
         } else {
           older_files.push({ path: file_path, timestamp: selection_timestamp })
