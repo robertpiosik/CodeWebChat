@@ -15,7 +15,12 @@ export const handle_open_website = async (message: OpenWebsiteMessage) => {
     const markdown = fs.readFileSync(file_path, 'utf8')
     const html = await marked.parse(markdown)
 
-    const title = new URL(message.url).hostname
+    const url_obj = new URL(message.url)
+    let hostname = url_obj.hostname
+    if (hostname.startsWith('www.')) {
+      hostname = hostname.substring(4)
+    }
+    const title = `${hostname}${url_obj.pathname == '/' ? '' : url_obj.pathname}`
 
     const panel = vscode.window.createWebviewPanel(
       'websitePreview',

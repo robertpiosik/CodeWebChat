@@ -248,7 +248,12 @@ export const get_highlighted_text = (params: {
           }
         } catch {}
 
-        return `<span class="${cn(styles['symbol'], styles['symbol--website'])}" data-type="website-symbol" data-url="${escape_html(url)}" title="${escape_html(url)}"><span class="${styles['symbol__icon']}" data-role="symbol-icon"></span><span class="${styles['symbol__text']}" data-role="symbol-text">${escape_html(label)}</span></span>`
+        const display_url = url.replace(/^https?:\/\//, '')
+        const display_url_stripped = display_url.startsWith('www.')
+          ? display_url.slice(4)
+          : display_url
+
+        return `<span class="${cn(styles['symbol'], styles['symbol--website'])}" data-type="website-symbol" data-url="${escape_html(url)}" title="${escape_html(display_url_stripped)}"><span class="${styles['symbol__icon']}" data-role="symbol-icon"></span><span class="${styles['symbol__text']}" data-role="symbol-text">${escape_html(label)}</span></span>`
       }
 
       const pasted_text_match = part.match(

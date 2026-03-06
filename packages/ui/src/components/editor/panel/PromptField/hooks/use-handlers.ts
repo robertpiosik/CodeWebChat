@@ -427,47 +427,6 @@ export const use_handlers = (
     update_value(new_value, raw_start)
   }
 
-  const delete_selection_if_any = () => {
-    const selection = window.getSelection()
-    if (
-      selection &&
-      selection.rangeCount > 0 &&
-      !selection.isCollapsed &&
-      params.input_ref.current
-    ) {
-      const range = selection.getRangeAt(0)
-      const input_element = params.input_ref.current
-
-      if (input_element.contains(range.startContainer)) {
-        const pre_selection_range = document.createRange()
-        pre_selection_range.selectNodeContents(input_element)
-        pre_selection_range.setEnd(range.startContainer, range.startOffset)
-        const display_start = pre_selection_range.toString().length
-
-        pre_selection_range.setEnd(range.endContainer, range.endOffset)
-        const display_end = pre_selection_range.toString().length
-
-        const raw_start = map_display_pos_to_raw_pos({
-          display_pos: display_start,
-          raw_text: props.value,
-          context_file_paths: props.context_file_paths ?? []
-        })
-        const raw_end = map_display_pos_to_raw_pos({
-          display_pos: display_end,
-          raw_text: props.value,
-          context_file_paths: props.context_file_paths ?? []
-        })
-
-        const new_value =
-          props.value.substring(0, raw_start) + props.value.substring(raw_end)
-
-        update_value(new_value, raw_start)
-        props.on_caret_position_change(raw_start)
-        raw_caret_pos_ref.current = raw_start
-      }
-    }
-  }
-
   const perform_paste = (text: string) => {
     const selection = window.getSelection()
     if (!selection || !selection.rangeCount || !params.input_ref.current) return
@@ -530,7 +489,6 @@ export const use_handlers = (
     if (e.clipboardData.files && e.clipboardData.files.length > 0) {
       const file = e.clipboardData.files[0]
       if (file.type.startsWith('image/')) {
-        delete_selection_if_any()
         const reader = new FileReader()
         reader.onload = (event) => {
           if (event.target?.result) {
@@ -553,7 +511,6 @@ export const use_handlers = (
       !is_shift_pressed_ref.current &&
       /^https?:\/\/[^\s]+$/.test(text.trim())
     ) {
-      delete_selection_if_any()
       props.on_paste_url(text.trim())
       return
     }
@@ -568,7 +525,44 @@ export const use_handlers = (
       text.includes('\n') &&
       !is_fragment_paste
     ) {
-      delete_selection_if_any()
+      const selection = window.getSelection()
+      if (
+        selection &&
+        selection.rangeCount > 0 &&
+        !selection.isCollapsed &&
+        params.input_ref.current
+      ) {
+        const range = selection.getRangeAt(0)
+        const input_element = params.input_ref.current
+
+        if (input_element.contains(range.startContainer)) {
+          const pre_selection_range = document.createRange()
+          pre_selection_range.selectNodeContents(input_element)
+          pre_selection_range.setEnd(range.startContainer, range.startOffset)
+          const display_start = pre_selection_range.toString().length
+
+          pre_selection_range.setEnd(range.endContainer, range.endOffset)
+          const display_end = pre_selection_range.toString().length
+
+          const raw_start = map_display_pos_to_raw_pos({
+            display_pos: display_start,
+            raw_text: props.value,
+            context_file_paths: props.context_file_paths ?? []
+          })
+          const raw_end = map_display_pos_to_raw_pos({
+            display_pos: display_end,
+            raw_text: props.value,
+            context_file_paths: props.context_file_paths ?? []
+          })
+
+          const new_value =
+            props.value.substring(0, raw_start) + props.value.substring(raw_end)
+
+          update_value(new_value, raw_start)
+          props.on_caret_position_change(raw_start)
+          raw_caret_pos_ref.current = raw_start
+        }
+      }
       props.on_paste_pasted_text(text)
       return
     }
