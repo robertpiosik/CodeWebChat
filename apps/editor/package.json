@@ -331,6 +331,11 @@
         "category": "Code Web Chat"
       },
       {
+        "command": "codeWebChat.searchFilesForContextFromFile",
+        "title": "%codeWebChat.searchFilesForContext.title%",
+        "category": "Code Web Chat"
+      },
+      {
         "command": "codeWebChat.checkReferencingFilesForContext",
         "title": "%codeWebChat.checkReferencingFilesForContext.title%",
         "category": "Code Web Chat"
@@ -397,7 +402,7 @@
           "group": "1_action@5"
         },
         {
-          "command": "codeWebChat.searchFilesForContext",
+          "command": "codeWebChat.searchFilesForContextFromFile",
           "group": "1_action@7"
         }
       ],
@@ -520,6 +525,10 @@
         },
         {
           "command": "codeWebChat.searchFilesForContextFromDirectory",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.searchFilesForContextFromFile",
           "when": "false"
         },
         {

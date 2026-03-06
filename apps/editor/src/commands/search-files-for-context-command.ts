@@ -15,7 +15,7 @@ export const search_files_for_context_commands = (
   workspace_provider: WorkspaceProvider,
   extension_context: vscode.ExtensionContext
 ) => {
-  const search_handler = async (item?: any) => {
+  const search_handler = async (item?: any, auto_submit: boolean = false) => {
     let folder_path = item?.resourceUri?.fsPath
 
     if (folder_path) {
@@ -29,46 +29,45 @@ export const search_files_for_context_commands = (
         folder_path = undefined
       }
     }
-    let initial_keywords =
+    let initial_search_term =
       extension_context.workspaceState.get<string>(
         LAST_SEARCH_FILES_FOR_CONTEXT_QUERY_STATE_KEY
       ) || ''
 
-    let skip_input = false
-    const is_context_menu = item !== undefined
+    let should_auto_submit = false
 
-    if (is_context_menu) {
-      const active_editor = vscode.window.activeTextEditor
-      if (active_editor) {
-        const selection = active_editor.selection
-        if (!selection.isEmpty) {
-          const selected_text = active_editor.document.getText(selection).trim()
-          if (selected_text.length > 0) {
-            initial_keywords = selected_text
-            skip_input = true
+    const active_editor = vscode.window.activeTextEditor
+    if (active_editor) {
+      const selection = active_editor.selection
+      if (!selection.isEmpty) {
+        const selected_text = active_editor.document.getText(selection).trim()
+        if (selected_text.length > 0) {
+          initial_search_term = selected_text
+          if (auto_submit) {
+            should_auto_submit = true
           }
         }
       }
     }
 
+    const close_button = {
+      iconPath: new vscode.ThemeIcon('close'),
+      tooltip: t('common.close')
+    }
+
     while (true) {
       try {
-        const close_button = {
-          iconPath: new vscode.ThemeIcon('close'),
-          tooltip: t('common.close')
-        }
+        let search_term_input: string | undefined
 
-        let keywords_input: string | undefined
-
-        if (skip_input) {
-          keywords_input = initial_keywords
-          skip_input = false
+        if (should_auto_submit && initial_search_term.length > 0) {
+          search_term_input = initial_search_term
+          should_auto_submit = false // Only auto-submit on the first iteration
         } else {
           const input_box = vscode.window.createInputBox()
           input_box.title = t('command.search.title')
           input_box.prompt = t('command.search.prompt')
           input_box.placeholder = t('command.search.placeholder')
-          input_box.value = initial_keywords
+          input_box.value = initial_search_term
 
           input_box.buttons = [close_button]
 
@@ -113,19 +112,18 @@ export const search_files_for_context_commands = (
             }
           )
 
-          keywords_input = result.value
+          if (!result.value) return
+          search_term_input = result.value
         }
-
-        if (!keywords_input) return
 
         await extension_context.workspaceState.update(
           LAST_SEARCH_FILES_FOR_CONTEXT_QUERY_STATE_KEY,
-          keywords_input
+          search_term_input
         )
 
-        initial_keywords = keywords_input
+        initial_search_term = search_term_input
 
-        const search_term = keywords_input.trim()
+        const search_term = search_term_input.trim()
         if (search_term.length == 0) return
 
         let all_files: string[] = []
@@ -140,7 +138,7 @@ export const search_files_for_context_commands = (
           }
         }
 
-        const matched_files = await search_files_by_keywords({
+        const matched_files = await search_files_by_term({
           files: all_files,
           search_term
         })
@@ -398,18 +396,21 @@ export const search_files_for_context_commands = (
   }
 
   return [
-    vscode.commands.registerCommand(
-      'codeWebChat.searchFilesForContext',
-      (item?: any) => search_handler(item)
+    vscode.commands.registerCommand('codeWebChat.searchFilesForContext', () =>
+      search_handler()
     ),
     vscode.commands.registerCommand(
       'codeWebChat.searchFilesForContextFromDirectory',
       (item: any) => search_handler(item)
+    ),
+    vscode.commands.registerCommand(
+      'codeWebChat.searchFilesForContextFromFile',
+      (item: any) => search_handler(item, true)
     )
   ]
 }
 
-const search_files_by_keywords = async (params: {
+const search_files_by_term = async (params: {
   files: string[]
   search_term: string
 }): Promise<string[]> => {
@@ -438,7 +439,7 @@ const search_files_by_keywords = async (params: {
       }
     } catch (error) {
       Logger.error({
-        function_name: 'search_files_by_keywords',
+        function_name: 'search_files_by_term',
         message: `Error reading file during search: ${file_path}`,
         data: error
       })
