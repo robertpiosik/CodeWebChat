@@ -199,6 +199,8 @@ export const Panel = () => {
       state = edit_context_instructions
     } else if (prompt_type == 'no-context') {
       state = no_context_instructions
+    } else if (prompt_type == 'prune-context') {
+      state = prune_context_instructions
     }
 
     if (!state) return ''
@@ -225,7 +227,7 @@ export const Panel = () => {
     (!has_affixes &&
       !has_instructions &&
       web_prompt_type != 'code-at-cursor') ||
-    (web_prompt_type === 'code-at-cursor' &&
+    (web_prompt_type == 'code-at-cursor' &&
       (!currently_open_file_path || !!current_selection))
 
   const handle_apply_click = () => {
