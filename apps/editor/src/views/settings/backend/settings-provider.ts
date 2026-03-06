@@ -87,6 +87,8 @@ export class SettingsProvider {
       }
     )
 
+    this._webview_panel.iconPath = new vscode.ThemeIcon('gear') as any
+
     this._webview_panel.onDidDispose(() => {
       this._webview_panel = undefined
       this._disposables.forEach((d) => d.dispose())

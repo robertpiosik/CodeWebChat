@@ -21,7 +21,7 @@
     "url": "https://github.com/robertpiosik/CodeWebChat"
   },
   "engines": {
-    "vscode": "^1.92.0"
+    "vscode": "^1.96.0"
   },
   "sponsor": {
     "url": "https://github.com/sponsors/robertpiosik"
@@ -1978,7 +1978,7 @@
     "@types/node": "20.x",
     "@types/react": "^18.2.60",
     "@types/react-dom": "^18.2.19",
-    "@types/vscode": "1.92.0",
+    "@types/vscode": "1.96.0",
     "@types/ws": "^8.18.1",
     "@types/turndown": "^5.0.5",
     "@typescript-eslint/eslint-plugin": "^7.18.0",

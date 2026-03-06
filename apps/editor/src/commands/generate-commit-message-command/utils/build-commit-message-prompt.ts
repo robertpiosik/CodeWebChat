@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import { commit_message_instructions } from '@/constants/instructions'
 import type { GitRepository } from '@/utils/git-repository-utils'
+import { MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE } from '@/constants/values'
 
 export const build_commit_message_prompt = async (
   diff: string,
@@ -99,7 +100,10 @@ export const build_commit_message_prompt = async (
             full_content = Buffer.from(content).toString('utf8')
           }
           if (full_content) {
-            changes_content += `<![CDATA[\n${full_content.trimEnd()}\n]]>\n`
+            const full_content_tokens = Math.ceil(full_content.length / 4)
+            if (full_content_tokens <= MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE) {
+              changes_content += `<![CDATA[\n${full_content.trimEnd()}\n]]>\n`
+            }
           }
         } catch (err) {}
       }

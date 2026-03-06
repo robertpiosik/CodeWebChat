@@ -4,6 +4,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import * as path from 'path'
 import { t } from '@/i18n'
 import { display_token_count } from './display-token-count'
+import { MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE } from '@/constants/values'
 
 export type GitRepository = {
   rootUri: vscode.Uri
@@ -166,18 +167,26 @@ export const prepare_staged_changes = async (
             }
           } catch (e) {}
 
+          const file_tokens = Math.ceil(
+            (full_content ? full_content.length : final_diff_content.length) / 4
+          )
+          const is_too_large = file_tokens > MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE
+
           let file_xml = `<file path="${relative_path}" status="${status}">\n`
           file_xml += `<![CDATA[\n${final_diff_content.trimEnd()}\n]]>\n`
-          if (!is_deleted && full_content) {
+          if (!is_deleted && full_content && !is_too_large) {
             file_xml += `<![CDATA[\n${full_content.trimEnd()}\n]]>\n`
           }
           file_xml += `</file>\n`
 
           const token_count = Math.ceil(file_xml.length / 4)
-          const tokens_str = display_token_count(token_count)
           const description_parts = []
-          description_parts.push(tokens_str)
-          if (dir_name !== '.') description_parts.push(dir_name)
+
+          if (!is_too_large) {
+            const tokens_str = display_token_count(token_count)
+            description_parts.push(tokens_str)
+          }
+          if (dir_name != '.') description_parts.push(dir_name)
 
           return {
             label: path.basename(relative_path),
