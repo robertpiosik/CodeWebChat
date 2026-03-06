@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'
+import { display_token_count } from '../utils/display-token-count'
 import { t } from '../i18n'
 
 export const check_referencing_files_for_context_command = (
@@ -64,22 +65,32 @@ export const check_referencing_files_for_context_command = (
 
         const currently_checked = workspace_provider.get_checked_files()
 
-        const quick_pick_items = matched_files.map(({ file_path, range }) => {
-          const workspace_root =
-            workspace_provider.get_workspace_root_for_file(file_path)
-          const relative_path = workspace_root
-            ? path.relative(workspace_root, file_path)
-            : file_path
+        const quick_pick_items = await Promise.all(
+          matched_files.map(async ({ file_path, range }) => {
+            const workspace_root =
+              workspace_provider.get_workspace_root_for_file(file_path)
+            const relative_path = workspace_root
+              ? path.relative(workspace_root, file_path)
+              : file_path
 
-          const dir_name = path.dirname(relative_path)
-          return {
-            label: path.basename(file_path),
-            description: dir_name == '.' ? '' : dir_name,
-            file_path,
-            range,
-            buttons: [open_file_button]
-          }
-        })
+            const dir_name = path.dirname(relative_path)
+            const display_dir = dir_name == '.' ? '' : dir_name
+
+            const token_count =
+              await workspace_provider.calculate_file_tokens(file_path)
+            const formatted_token_count = display_token_count(token_count.total)
+
+            return {
+              label: path.basename(file_path),
+              description: display_dir
+                ? `${formatted_token_count} · ${display_dir}`
+                : formatted_token_count,
+              file_path,
+              range,
+              buttons: [open_file_button]
+            }
+          })
+        )
 
         const quick_pick = vscode.window.createQuickPick<
           vscode.QuickPickItem & { file_path: string; range: vscode.Range }
