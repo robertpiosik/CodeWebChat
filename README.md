@@ -81,7 +81,7 @@ From code editing to commit messages, CWC supports your software development eff
 
 ## Enterprise security
 
-**Zero [function calling](https://developers.openai.com/api/docs/guides/function-calling/)**. This design choice completely eliminates the risk of unauthorized command execution and protects your environment against prompt injection.
+**Zero [function calling](https://developers.openai.com/api/docs/guides/function-calling/)**. This design choice eliminates the risk of destructive command execution and protects your environment against prompt injection.
 
 **Operates exclusively on your machine**. When using the browser extension for prompt autofill, data is moved via editor-browser communication channel run on local Websockets. For API tools, model providers are called directly.
 
