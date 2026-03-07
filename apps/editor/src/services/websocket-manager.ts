@@ -159,7 +159,7 @@ export class WebSocketManager {
           vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
             raw_instructions: message.raw_instructions,
             edit_format: message.edit_format,
-            url: message.url
+            chatbot_url: message.chatbot_url
           })
         }
       } catch (error) {

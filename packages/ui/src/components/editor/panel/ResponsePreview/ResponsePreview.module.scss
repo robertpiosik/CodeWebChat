@@ -163,6 +163,15 @@
   }
 }
 
+.configuration {
+  font-size: 11px;
+  opacity: var(--dimmed-opacity);
+  margin: 4px 12px 0 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 @keyframes breathe {
   0% {
     background-size: 0% 100%;

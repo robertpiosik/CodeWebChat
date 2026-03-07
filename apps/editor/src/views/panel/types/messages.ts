@@ -1,6 +1,9 @@
 import { EditFormat } from '@shared/types/edit-format'
 import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
-import { ResponseHistoryItem } from '@shared/types/response-history-item'
+import {
+  ResponseHistoryItem,
+  ApiConfiguration
+} from '@shared/types/response-history-item'
 import { Preset } from '@shared/types/preset'
 import { Task } from '@shared/types/task'
 import { Mode } from './main-view-mode'
@@ -398,7 +401,8 @@ export interface ApplyResponseFromHistoryMessage extends BaseMessage {
   raw_instructions?: string
   files?: FileInPreview[]
   created_at: number
-  url?: string
+  chatbot_url?: string
+  api_configuration?: ApiConfiguration
 }
 
 export interface GetCollapsedStatesMessage extends BaseMessage {
@@ -792,7 +796,8 @@ export interface ResponsePreviewStartedMessage extends BaseMessage {
   raw_instructions?: string
   created_at?: number
   fix_all_automatically?: boolean
-  url?: string
+  chatbot_url?: string
+  api_configuration?: ApiConfiguration
 }
 
 export interface ResponsePreviewFinishedMessage extends BaseMessage {

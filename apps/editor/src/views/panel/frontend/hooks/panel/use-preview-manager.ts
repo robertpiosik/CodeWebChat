@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react'
 import { BackendMessage } from '../../../types/messages'
 import { post_message } from '../../utils/post_message'
+import { ApiConfiguration } from '@shared/types/response-history-item'
 import { ItemInPreview } from '@shared/types/file-in-preview'
 
 export const use_preview_manager = (vscode: any) => {
   const [items_in_preview, set_items_in_preview] = useState<ItemInPreview[]>()
   const [raw_instructions, set_raw_instructions] = useState<string>()
-  const [preview_url, set_preview_url] = useState<string>()
   const [preview_item_created_at, set_preview_item_created_at] =
     useState<number>()
   const [fix_all_automatically, set_fix_all_automatically] = useState(false)
+  const [chatbot_url, set_chatbot_url] = useState<string>()
+  const [api_configuration, set_api_configuration] =
+    useState<ApiConfiguration>()
 
   const handle_discard_user_changes_in_preview = (file: {
     file_path: string
@@ -29,8 +32,9 @@ export const use_preview_manager = (vscode: any) => {
         set_items_in_preview(message.items)
         set_raw_instructions(message.raw_instructions)
         set_preview_item_created_at(message.created_at)
-        set_preview_url(message.url)
         set_fix_all_automatically(message.fix_all_automatically ?? false)
+        set_chatbot_url(message.chatbot_url)
+        set_api_configuration(message.api_configuration)
       } else if (message.command == 'UPDATE_FILE_IN_PREVIEW') {
         set_items_in_preview((current_items) => {
           const items = current_items ?? []
@@ -94,7 +98,8 @@ export const use_preview_manager = (vscode: any) => {
         set_items_in_preview(undefined)
         set_raw_instructions(undefined)
         set_preview_item_created_at(undefined)
-        set_preview_url(undefined)
+        set_chatbot_url(undefined)
+        set_api_configuration(undefined)
       }
     }
 
@@ -106,9 +111,10 @@ export const use_preview_manager = (vscode: any) => {
     items_in_preview,
     set_items_in_preview,
     raw_instructions,
-    preview_url,
+    chatbot_url,
     preview_item_created_at,
     fix_all_automatically,
-    handle_discard_user_changes_in_preview
+    handle_discard_user_changes_in_preview,
+    api_configuration
   }
 }

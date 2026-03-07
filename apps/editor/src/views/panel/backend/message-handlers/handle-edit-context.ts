@@ -541,7 +541,12 @@ export const handle_edit_context = async (
             vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
               response: result.response,
               raw_instructions: instructions,
-              edit_format
+              edit_format,
+              api_configuration: {
+                provider: edit_context_config.provider_name,
+                model: edit_context_config.model,
+                reasoning_effort: edit_context_config.reasoning_effort
+              }
             })
             return true
           }

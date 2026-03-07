@@ -1,5 +1,11 @@
 import { FileInPreview } from './file-in-preview'
 
+export type ApiConfiguration = {
+  provider: string
+  model: string
+  reasoning_effort?: string
+}
+
 export type ResponseHistoryItem = {
   response: string
   raw_instructions?: string
@@ -7,5 +13,6 @@ export type ResponseHistoryItem = {
   lines_added?: number
   lines_removed?: number
   files?: FileInPreview[]
-  url?: string
+  chatbot_url?: string
+  api_configuration?: ApiConfiguration
 }

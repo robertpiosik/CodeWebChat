@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import { dictionary } from '@shared/constants/dictionary'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
+import { ApiConfiguration } from '@shared/types/response-history-item'
 import { setup_workspace_listeners } from './workspace-listener'
 import { prepare_files_from_original_states } from './file-preparer'
 import { parse_response } from '../clipboard-parser/clipboard-parser'
@@ -25,7 +26,8 @@ export const preview = async (params: {
   chat_response: string
   context: vscode.ExtensionContext
   created_at?: number
-  url?: string
+  chatbot_url?: string
+  api_configuration?: ApiConfiguration
 }): Promise<{
   accepted_files: PreviewableFile[]
   rejected_states: OriginalFileState[]
@@ -137,7 +139,8 @@ export const preview = async (params: {
         raw_instructions: params.raw_instructions,
         created_at: params.created_at,
         fix_all_automatically,
-        url: params.url
+        chatbot_url: params.chatbot_url,
+        api_configuration: params.api_configuration
       })
     }
 

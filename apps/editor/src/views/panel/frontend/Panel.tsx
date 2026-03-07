@@ -98,10 +98,11 @@ export const Panel = () => {
     items_in_preview,
     set_items_in_preview,
     raw_instructions,
-    preview_url,
     preview_item_created_at,
     fix_all_automatically,
-    handle_discard_user_changes_in_preview
+    handle_discard_user_changes_in_preview,
+    chatbot_url,
+    api_configuration
   } = use_preview_manager(vscode)
 
   const {
@@ -250,7 +251,8 @@ export const Panel = () => {
       raw_instructions: item.raw_instructions,
       files: item.files,
       created_at: item.created_at,
-      url: item.url
+      chatbot_url: item.chatbot_url,
+      api_configuration: item.api_configuration
     })
   }
 
@@ -597,12 +599,12 @@ export const Panel = () => {
                 post_message(vscode, { command: 'RESPONSE_PREVIEW', files: [] })
               }}
               header_slot={
-                preview_url && (
+                chatbot_url ? (
                   <UiIconButton
                     codicon_icon="link-external"
-                    href={preview_url}
+                    href={chatbot_url}
                   />
-                )
+                ) : undefined
               }
               footer_slot={
                 <UiResponsePreviewFooter
@@ -654,6 +656,7 @@ export const Panel = () => {
                 items={items_in_preview}
                 fix_all_automatically={fix_all_automatically}
                 raw_instructions={raw_instructions}
+                api_configuration={api_configuration}
                 has_multiple_workspaces={workspace_folder_count > 1}
                 on_focus_file={(file) => {
                   post_message(vscode, {

@@ -472,7 +472,12 @@ export const handle_prune_context = async (
       if (result) {
         vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
           response: result.response,
-          raw_instructions: instructions
+          raw_instructions: instructions,
+          api_configuration: {
+            provider: prune_context_config.provider_name,
+            model: prune_context_config.model,
+            reasoning_effort: prune_context_config.reasoning_effort
+          }
         })
         return
       }

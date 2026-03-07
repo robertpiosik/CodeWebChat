@@ -1,5 +1,6 @@
 import { FC, useRef, useState, useMemo, useEffect } from 'react'
 import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
+import { ApiConfiguration } from '@shared/types/response-history-item'
 import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
 import cn from 'classnames'
 import styles from './ResponsePreview.module.scss'
@@ -39,6 +40,7 @@ type Props = {
   ) => void
   raw_instructions?: string
   fix_all_automatically?: boolean
+  api_configuration?: ApiConfiguration
 }
 
 export const ResponsePreview: FC<Props> = (props) => {
@@ -386,6 +388,21 @@ export const ResponsePreview: FC<Props> = (props) => {
             }
           })}
         </div>
+        {props.api_configuration && (
+          <div className={styles.configuration}>
+            {[
+              props.api_configuration.provider,
+              props.api_configuration.model,
+              props.api_configuration.reasoning_effort
+            ]
+              .filter(Boolean)
+              .map((item, i) => (
+                <div key={i} title={item!}>
+                  {item}
+                </div>
+              ))}
+          </div>
+        )}
       </div>
     </Scrollable>
   )

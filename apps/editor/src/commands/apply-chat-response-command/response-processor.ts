@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
 import { OriginalFileState } from './types/original-file-state'
+import { ApiConfiguration } from '@shared/types/response-history-item'
 import { handle_restore_preview } from './handlers/restore-preview-handler'
 import {
   parse_response,
@@ -45,7 +46,8 @@ export type CommandArgs = {
   }
   files_with_content?: FileInPreview[]
   created_at?: number
-  url?: string
+  chatbot_url?: string
+  api_configuration?: ApiConfiguration
 }
 
 export const process_chat_response = async (
