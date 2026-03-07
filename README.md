@@ -81,9 +81,11 @@ From code editing to commit messages, CWC supports your software development eff
 
 ## Enterprise security
 
-Code Web Chat **operates exclusively on your machine.** When using the browser extension for prompt autofill, data is moved via editor-browser communication channel run on local Websockets. For API tools, model providers are called directly.
+**Zero [function calling](https://developers.openai.com/api/docs/guides/function-calling/)**. This design choice completely eliminates the risk of unauthorized command execution and protects your environment against prompt injection.
 
-The tool **does not collect telemetry.**
+**Operates exclusively on your machine**. When using the browser extension for prompt autofill, data is moved via editor-browser communication channel run on local Websockets. For API tools, model providers are called directly.
+
+**Zero telemetry.** No usage data is collected and sent to third-party servers.
 
 ## Commands
 
