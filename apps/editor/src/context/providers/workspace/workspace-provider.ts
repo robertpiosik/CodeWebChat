@@ -1066,9 +1066,7 @@ export class WorkspaceProvider
   ): Promise<void> {
     const key = item.resourceUri.fsPath
 
-    // If a partially checked directory is clicked, check it completely
     if (item.isDirectory && this._partially_checked_dirs.has(key)) {
-      state = vscode.TreeItemCheckboxState.Checked
       this._partially_checked_dirs.delete(key)
     }
 
