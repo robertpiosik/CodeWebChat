@@ -13,6 +13,12 @@ import { t } from '@/i18n'
 import axios from 'axios'
 import { PromptsForCommitMessagesUtils } from '../../utils/prompts-for-commit-messages-utils'
 import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
+import { MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE } from '@/constants/values'
+
+const truncate_prompt = (text: string): string => {
+  if (text.length <= MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE) return text
+  return text.substring(0, MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE) + '...'
+}
 
 export const generate_commit_message_command = (
   context: vscode.ExtensionContext
@@ -240,7 +246,8 @@ export const generate_commit_message_command = (
               ? '\n\n' +
                 selected_prompts
                   .map(
-                    (p) => `- ${simplify_prompt_symbols({ prompt: p.prompt })}`
+                    (p) =>
+                      `- ${truncate_prompt(simplify_prompt_symbols({ prompt: p.prompt }))}`
                   )
                   .join('\n')
               : ''
@@ -262,7 +269,8 @@ export const generate_commit_message_command = (
             ? '\n\n' +
               relevant_prompts
                 .map(
-                  (p) => `- ${simplify_prompt_symbols({ prompt: p.prompt })}`
+                  (p) =>
+                    `- ${truncate_prompt(simplify_prompt_symbols({ prompt: p.prompt }))}`
                 )
                 .join('\n')
             : ''
