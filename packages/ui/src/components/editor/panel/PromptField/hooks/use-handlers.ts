@@ -520,10 +520,17 @@ export const use_handlers = (
       text == props.current_selection.text &&
       props.currently_open_file_path
 
+    const has_symbols =
+      get_symbol_ranges({
+        text,
+        context_file_paths: props.context_file_paths ?? []
+      }).length > 0
+
     if (
       !is_shift_pressed_ref.current &&
       text.includes('\n') &&
-      !is_fragment_paste
+      !is_fragment_paste &&
+      !has_symbols
     ) {
       const selection = window.getSelection()
       if (
