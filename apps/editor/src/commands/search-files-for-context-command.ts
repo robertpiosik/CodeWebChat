@@ -3,10 +3,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'
-import {
-  LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY,
-  LAST_SEARCH_FILES_FOR_CONTEXT_QUERY_STATE_KEY
-} from '../constants/state-keys'
+import { LAST_SEARCH_FILES_FOR_CONTEXT_QUERY_STATE_KEY } from '../constants/state-keys'
 import { display_token_count } from '../utils/display-token-count'
 import { dictionary } from '@shared/constants/dictionary'
 import { t } from '../i18n'
@@ -272,95 +269,9 @@ export const search_files_for_context_commands = (
           selected_items as (vscode.QuickPickItem & { file_path: string })[]
         ).map((item) => item.file_path)
 
-        let files_outside_search_folder: string[] = []
-        let files_inside_search_folder: string[] = []
-
-        if (folder_path) {
-          files_outside_search_folder = currently_checked.filter((file) => {
-            const relative = path.relative(folder_path, file)
-            return relative.startsWith('..') || path.isAbsolute(relative)
-          })
-          files_inside_search_folder = currently_checked.filter((file) => {
-            const relative = path.relative(folder_path, file)
-            return !relative.startsWith('..') && !path.isAbsolute(relative)
-          })
-        } else {
-          files_inside_search_folder = currently_checked
-        }
-
-        let paths_to_apply = [...files_outside_search_folder, ...selected_paths]
-
-        if (files_inside_search_folder.length > 0) {
-          const selected_paths_set = new Set(selected_paths)
-          const all_current_files_in_new_context =
-            files_inside_search_folder.every((file) =>
-              selected_paths_set.has(file)
-            )
-
-          if (!all_current_files_in_new_context) {
-            const quick_pick_options = [
-              {
-                label: t('command.search.replace'),
-                description: t('command.search.replace-description')
-              },
-              {
-                label: t('command.search.merge'),
-                description: t('command.search.merge-description')
-              }
-            ]
-
-            const last_choice_label =
-              extension_context.workspaceState.get<string>(
-                LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY
-              )
-
-            const quick_pick_apply = vscode.window.createQuickPick()
-            quick_pick_apply.items = quick_pick_options
-            quick_pick_apply.placeholder = t(
-              'command.search.apply-placeholder',
-              { count: selected_paths.length }
-            )
-            quick_pick_apply.ignoreFocusOut = true
-
-            if (last_choice_label) {
-              const active_item = quick_pick_options.find(
-                (opt) => opt.label === last_choice_label
-              )
-              if (active_item) {
-                quick_pick_apply.activeItems = [active_item]
-              }
-            }
-
-            const choice = await new Promise<vscode.QuickPickItem | undefined>(
-              (resolve) => {
-                let is_accepted = false
-                quick_pick_apply.onDidAccept(() => {
-                  is_accepted = true
-                  resolve(quick_pick_apply.selectedItems[0])
-                  quick_pick_apply.hide()
-                })
-                quick_pick_apply.onDidHide(() => {
-                  if (!is_accepted) resolve(undefined)
-                  quick_pick_apply.dispose()
-                })
-                quick_pick_apply.show()
-              }
-            )
-
-            if (!choice) return
-
-            await extension_context.workspaceState.update(
-              LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY,
-              choice.label
-            )
-
-            if (choice.label == t('command.search.merge')) {
-              paths_to_apply = [
-                ...new Set([...currently_checked, ...selected_paths])
-              ]
-            }
-          }
-        }
+        const paths_to_apply = [
+          ...new Set([...currently_checked, ...selected_paths])
+        ]
 
         Logger.info({
           message: `Selected ${selected_paths.length} files from search in folder.`,
