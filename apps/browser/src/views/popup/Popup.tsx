@@ -14,7 +14,9 @@ export const Popup: React.FC = () => {
 
   return (
     <div className={styles.popup}>
-      <p className={styles['popup__title']}>Code Web Chat Connector is alive</p>
+      <p className={styles['popup__title']}>
+        Autofill for Code Web Chat is alive
+      </p>
 
       {is_firefox && (
         <div className={styles['popup__firefox']}>
