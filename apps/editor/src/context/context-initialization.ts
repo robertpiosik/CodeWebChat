@@ -131,8 +131,8 @@ export const context_initialization = async (
     if (context_provider && context_view) {
       const token_counts =
         await workspace_provider.get_checked_files_token_count()
-      const files_count = workspace_provider.use_compact_token_count
-        ? token_counts.compact
+      const files_count = workspace_provider.use_shrink_token_count
+        ? token_counts.shrink
         : token_counts.total
       context_token_count = files_count
 
