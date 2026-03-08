@@ -3,7 +3,7 @@ import * as path from 'path'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { natural_sort } from '@/utils/natural-sort'
 import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
-import { compact_file } from '../context/utils/compact-file/compact-file'
+import { shrink_file } from '../context/utils/shrink-file/shrink-file'
 
 export class FilesCollector {
   private workspace_provider: WorkspaceProvider
@@ -23,7 +23,7 @@ export class FilesCollector {
   async collect_files(params?: {
     additional_paths?: string[]
     no_context?: boolean
-    compact?: boolean
+    shrink?: boolean
   }): Promise<{ other_files: string; recent_files: string }> {
     const additional_paths = (params?.additional_paths ?? []).map((p) => {
       if (this.workspace_roots.length > 0) {
@@ -74,8 +74,8 @@ export class FilesCollector {
             )
           }
 
-          if (params?.compact) {
-            content = compact_file(content, path.extname(file_path))
+          if (params?.shrink) {
+            content = shrink_file(content, path.extname(file_path))
           }
 
           const workspace_root = this._get_workspace_root_for_file(file_path)

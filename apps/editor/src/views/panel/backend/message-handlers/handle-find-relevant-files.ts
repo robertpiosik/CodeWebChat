@@ -8,7 +8,10 @@ import {
   ToolConfig
 } from '@/services/model-providers-manager'
 import axios from 'axios'
-import { RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY } from '@/constants/state-keys'
+import {
+  RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY,
+  FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY
+} from '@/constants/state-keys'
 import {
   replace_changes_symbol,
   replace_commit_symbol,
@@ -387,8 +390,13 @@ export const handle_find_relevant_files = async (
     processed_instructions = replace_fragment_symbol(processed_instructions)
   }
 
+  const shrink_source_code = panel_provider.context.workspaceState.get<boolean>(
+    FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
+    false
+  )
+
   const collected = await files_collector.collect_files({
-    compact: true
+    shrink: shrink_source_code
   })
   const collected_files = collected.other_files + collected.recent_files
 

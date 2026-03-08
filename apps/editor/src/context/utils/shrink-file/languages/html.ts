@@ -1,7 +1,7 @@
-import { compact_c_style } from './c-style'
-import { compact_css } from './css'
+import { shrink_c_style } from './c-style'
+import { shrink_css } from './css'
 
-export const compact_html = (content: string): string => {
+export const shrink_html = (content: string): string => {
   const scripts: { open: string; content: string }[] = []
   const styles: { open: string; content: string }[] = []
 
@@ -27,32 +27,32 @@ export const compact_html = (content: string): string => {
   // 3. Strip HTML Comments
   processed = processed.replace(/<!--[\s\S]*?-->/g, '')
 
-  // 4. Compact HTML Lines (Trim and remove empty lines)
+  // 4. Shrink HTML Lines (Trim and remove empty lines)
   const lines = processed.split(/\r?\n/)
-  const compacted_lines: string[] = []
+  const shrunk_lines: string[] = []
   for (const line of lines) {
     const trimmed = line.trimEnd()
     if (trimmed.trim()) {
-      compacted_lines.push(trimmed)
+      shrunk_lines.push(trimmed)
     }
   }
-  processed = compacted_lines.join('\n')
+  processed = shrunk_lines.join('\n')
 
   // 5. Restore Scripts
   processed = processed.replace(/___SCRIPT_(\d+)___/g, (_, idx) => {
     const { open, content } = scripts[parseInt(idx)]
     // Treat as C-style but do NOT strip bodies (preserve logic, just strip comments)
     // as scripts in HTML are often minimal or structural.
-    const compacted = compact_c_style(content).trimEnd()
-    return `${open}\n${compacted}\n</script>`
+    const shrunk = shrink_c_style(content).trimEnd()
+    return `${open}\n${shrunk}\n</script>`
   })
 
   // 6. Restore Styles
   processed = processed.replace(/___STYLE_(\d+)___/g, (_, idx) => {
     const { open, content } = styles[parseInt(idx)]
-    // Compact CSS (strips bodies/properties usually)
-    const compacted = compact_css(content).trimEnd()
-    return `${open}\n${compacted}\n</style>`
+    // Shrink CSS (strips bodies/properties usually)
+    const shrunk = shrink_css(content).trimEnd()
+    return `${open}\n${shrunk}\n</style>`
   })
 
   return processed + '\n'

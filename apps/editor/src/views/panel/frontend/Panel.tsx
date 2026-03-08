@@ -80,6 +80,8 @@ export const Panel = () => {
     handle_paste_url,
     is_recording,
     handle_set_recording_state,
+    find_relevant_files_shrink_source_code,
+    handle_find_relevant_files_shrink_source_code_change,
     is_setup_complete,
     handle_tab_change,
     handle_new_tab,
@@ -404,6 +406,12 @@ export const Panel = () => {
                 is_recording={is_recording}
                 on_recording_started={() => handle_set_recording_state(true)}
                 on_recording_finished={() => handle_set_recording_state(false)}
+                find_relevant_files_shrink_source_code={
+                  find_relevant_files_shrink_source_code
+                }
+                on_find_relevant_files_shrink_source_code_change={
+                  handle_find_relevant_files_shrink_source_code_change
+                }
                 is_setup_complete={is_setup_complete}
                 tabs_count={current_state?.instructions.length ?? 0}
                 active_tab_index={current_state?.active_index ?? 0}

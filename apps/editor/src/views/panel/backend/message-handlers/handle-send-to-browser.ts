@@ -18,7 +18,10 @@ import {
   find_relevant_files_instructions_prefix,
   find_relevant_files_format
 } from '@/constants/instructions'
-import { get_recently_used_presets_or_groups_key } from '@/constants/state-keys'
+import {
+  get_recently_used_presets_or_groups_key,
+  FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY
+} from '@/constants/state-keys'
 import { ConfigPresetFormat } from '../utils/preset-format-converters'
 import { MODE } from '@/views/panel/types/main-view-mode'
 import { WebPromptType } from '@shared/types/prompt-types'
@@ -210,10 +213,18 @@ export const handle_send_to_browser = async (params: {
     const editor = vscode.window.activeTextEditor
     const additional_paths: string[] = []
 
+    const shrink_source_code =
+      params.panel_provider.context.workspaceState.get<boolean>(
+        FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
+        false
+      )
+
     const collected = await files_collector.collect_files({
       additional_paths,
       no_context: params.panel_provider.web_prompt_type == 'no-context',
-      compact: params.panel_provider.web_prompt_type == 'find-relevant-files'
+      shrink:
+        params.panel_provider.web_prompt_type == 'find-relevant-files' &&
+        shrink_source_code
     })
     const context_text = collected.other_files + collected.recent_files
 
@@ -608,10 +619,10 @@ async function resolve_presets(params: {
       params.panel_provider.no_context_instructions.instructions[
         params.panel_provider.no_context_instructions.active_index
       ] || ''
-  } else if (params.panel_provider.web_prompt_type == 'prune-context') {
+  } else if (params.panel_provider.web_prompt_type == 'find-relevant-files') {
     current_instructions =
-      params.panel_provider.prune_context_instructions.instructions[
-        params.panel_provider.prune_context_instructions.active_index
+      params.panel_provider.find_relevant_files_instructions.instructions[
+        params.panel_provider.find_relevant_files_instructions.active_index
       ] || ''
   }
 

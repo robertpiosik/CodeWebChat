@@ -29,11 +29,11 @@ export class OpenEditorsProvider
   private _shared_state: SharedFileState
   private _config_change_handler: vscode.Disposable
   private _workspace_provider: WorkspaceProvider
-  private _use_compact_token_count: boolean = false
+  private _use_shrink_token_count: boolean = false
 
-  public set_use_compact_token_count(use_compact: boolean) {
-    if (this._use_compact_token_count != use_compact) {
-      this._use_compact_token_count = use_compact
+  public set_use_shrink_token_count(use_shrink: boolean) {
+    if (this._use_shrink_token_count != use_shrink) {
+      this._use_shrink_token_count = use_shrink
       this.refresh()
     }
   }
@@ -202,8 +202,8 @@ export class OpenEditorsProvider
 
     element.checkboxState = checkbox_state
 
-    const token_count = this._use_compact_token_count
-      ? element.compactTokenCount
+    const token_count = this._use_shrink_token_count
+      ? element.shrinkTokenCount
       : element.tokenCount
 
     let final_description = element.description || ''
@@ -320,7 +320,7 @@ export class OpenEditorsProvider
         false,
         true,
         tokens.total,
-        tokens.compact,
+        tokens.shrink,
         undefined,
         undefined,
         description,

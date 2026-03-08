@@ -1,4 +1,4 @@
-export const compact_jsx = (content: string): string => {
+export const shrink_c_style = (content: string): string => {
   // Split by newline to process line by line, handling both LF and CRLF
   const lines = content.split(/\r?\n/)
   const result: string[] = []
@@ -50,7 +50,7 @@ export const compact_jsx = (content: string): string => {
         continue
       }
 
-      if (char == '"' || char === "'" || char == '`') {
+      if (char == '"' || char == "'" || char == '`') {
         is_in_string = char
         if (skip_body_depth == 0) {
           processed_line += char
@@ -61,7 +61,7 @@ export const compact_jsx = (content: string): string => {
       }
 
       if (char == '/' && next_char == '/') {
-        break // Ignore the rest of the line
+        break
       }
 
       if (char == '/' && next_char == '*') {
@@ -81,14 +81,13 @@ export const compact_jsx = (content: string): string => {
         } else {
           // Check if we should preserve this block (class, interface, etc.)
           // We look at last_code_buffer for keywords
+          // We also want to preserve control flow (if, for, while, etc.)
           const is_keeper =
-            /(^|\s)(class|interface|enum|namespace|type|import|export)(\s|$)/.test(
+            /(^|\s)(class|interface|enum|namespace|type|if|else|for|while|do|switch|try|catch|finally|import|export)(\s|$)/.test(
               last_code_buffer
             )
-          // Also preserve object literals (preceded by =, :, or open paren for destructuring)
-          const is_object_literal = /(=|:|\()\s*$/.test(
-            last_code_buffer.trimEnd()
-          )
+          // Also preserve object literals (preceded by = or :)
+          const is_object_literal = /(=|:)\s*$/.test(last_code_buffer.trimEnd())
 
           if (!is_keeper && !is_object_literal) {
             skip_body_depth = 1
@@ -117,7 +116,7 @@ export const compact_jsx = (content: string): string => {
       i++
     }
 
-    // We trim the line to actually "compact" the file.
+    // We trim the line to actually "shrink" the file.
     // If a line contained only comments, it becomes empty and is skipped.
     const trimmed = processed_line.trim()
     if (trimmed) {

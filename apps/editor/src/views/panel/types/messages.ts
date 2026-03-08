@@ -553,6 +553,15 @@ export interface SetRecordingStateMessage extends BaseMessage {
   is_recording: boolean
 }
 
+export interface GetFindRelevantFilesShrinkSourceCodeMessage extends BaseMessage {
+  command: 'GET_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE'
+}
+
+export interface SaveFindRelevantFilesShrinkSourceCodeMessage extends BaseMessage {
+  command: 'SAVE_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE'
+  shrink_source_code: boolean
+}
+
 export interface GetSetupProgressMessage extends BaseMessage {
   command: 'GET_SETUP_PROGRESS'
 }
@@ -659,6 +668,8 @@ export type FrontendMessage =
   | PasteUrlMessage
   | OpenWebsiteMessage
   | SetRecordingStateMessage
+  | GetFindRelevantFilesShrinkSourceCodeMessage
+  | SaveFindRelevantFilesShrinkSourceCodeMessage
   | GetSetupProgressMessage
 
 // === FROM BACKEND TO FRONTEND ===
@@ -907,6 +918,11 @@ export interface FindRelevantFilesInstructionsPrefixMessage extends BaseMessage 
   prefix: string
 }
 
+export interface FindRelevantFilesShrinkSourceCodeMessage extends BaseMessage {
+  command: 'FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE'
+  shrink_source_code: boolean
+}
+
 export interface SetupProgressMessage {
   command: 'SETUP_PROGRESS'
   setup_progress: SetupProgress
@@ -963,5 +979,6 @@ export type BackendMessage =
   | UpdateFileProgressMessage
   | FindRelevantFilesInstructionsPrefixMessage
   | RecordingStateMessage
+  | FindRelevantFilesShrinkSourceCodeMessage
   | SetupProgressMessage
   | InsertSymbolAtCursorMessage

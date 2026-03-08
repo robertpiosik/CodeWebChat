@@ -57,6 +57,10 @@ export const use_panel = (vscode: any) => {
   ] = useState<string>('')
   const [is_recording, set_is_recording] = useState(false)
   const [setup_progress, set_setup_progress] = useState<SetupProgress>()
+  const [
+    find_relevant_files_shrink_source_code,
+    set_find_relevant_files_shrink_source_code
+  ] = useState<boolean>(false)
 
   const handle_task_forward = (text: string) => {
     handle_instructions_change(text, 'edit-context')
@@ -115,6 +119,16 @@ export const use_panel = (vscode: any) => {
     })
   }
 
+  const handle_find_relevant_files_shrink_source_code_change = (
+    shrink_source_code: boolean
+  ) => {
+    set_find_relevant_files_shrink_source_code(shrink_source_code)
+    post_message(vscode, {
+      command: 'SAVE_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE',
+      shrink_source_code
+    })
+  }
+
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
@@ -154,6 +168,8 @@ export const use_panel = (vscode: any) => {
         set_is_recording(message.is_recording)
       } else if (message.command == 'SETUP_PROGRESS') {
         set_setup_progress(message.setup_progress)
+      } else if (message.command == 'FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE') {
+        set_find_relevant_files_shrink_source_code(message.shrink_source_code)
       }
     }
     window.addEventListener('message', handle_message)
@@ -170,7 +186,8 @@ export const use_panel = (vscode: any) => {
       { command: 'GET_CHECKPOINTS' },
       { command: 'REQUEST_CAN_UNDO' },
       { command: 'GET_FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX' },
-      { command: 'GET_SETUP_PROGRESS' }
+      { command: 'GET_SETUP_PROGRESS' },
+      { command: 'GET_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE' }
     ]
     initial_messages.forEach((message) => post_message(vscode, message))
 
@@ -310,6 +327,8 @@ export const use_panel = (vscode: any) => {
     is_recording,
     handle_set_recording_state,
     is_setup_complete,
+    find_relevant_files_shrink_source_code,
+    handle_find_relevant_files_shrink_source_code_change,
     handle_tab_change,
     handle_new_tab,
     handle_tab_delete

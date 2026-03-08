@@ -66,7 +66,7 @@ export class WorkspaceProvider
   private _file_workspace_map: Map<string, string> = new Map()
   public gitignore_initialization: Promise<void>
   public ranges_initialization: Promise<void>
-  public use_compact_token_count: boolean = false
+  public use_shrink_token_count: boolean = false
   private _context_view_collapsible_state: vscode.TreeItemCollapsibleState =
     vscode.TreeItemCollapsibleState.Expanded
   private _workspace_view_collapsible_state: vscode.TreeItemCollapsibleState =
@@ -84,9 +84,9 @@ export class WorkspaceProvider
     this._workspace_view_collapsible_state = state
   }
 
-  public set_use_compact_token_count(use_compact: boolean) {
-    if (this.use_compact_token_count != use_compact) {
-      this.use_compact_token_count = use_compact
+  public set_use_shrink_token_count(use_shrink: boolean) {
+    if (this.use_shrink_token_count != use_shrink) {
+      this.use_shrink_token_count = use_shrink
       this.refresh()
     }
   }
@@ -574,11 +574,11 @@ export class WorkspaceProvider
 
     element.checkboxState = checkbox_state
 
-    const total_token_count = this.use_compact_token_count
-      ? element.compactTokenCount
+    const total_token_count = this.use_shrink_token_count
+      ? element.shrinkTokenCount
       : element.tokenCount
-    const selected_token_count = this.use_compact_token_count
-      ? element.selectedCompactTokenCount
+    const selected_token_count = this.use_shrink_token_count
+      ? element.selectedShrinkTokenCount
       : element.selectedTokenCount
 
     const formatted_total =
@@ -768,9 +768,9 @@ export class WorkspaceProvider
           false,
           false,
           total_tokens.total,
-          total_tokens.compact,
+          total_tokens.shrink,
           selected_tokens.total,
-          selected_tokens.compact,
+          selected_tokens.shrink,
           undefined,
           true
         )
@@ -883,13 +883,13 @@ export class WorkspaceProvider
 
   public get_cached_token_count(
     file_path: string
-  ): { total: number; compact: number } | undefined {
+  ): { total: number; shrink: number } | undefined {
     return this._token_calculator.get_cached_token_count(file_path)
   }
 
   public async calculate_file_tokens(
     file_path: string
-  ): Promise<{ total: number; compact: number }> {
+  ): Promise<{ total: number; shrink: number }> {
     return this._token_calculator.calculate_file_tokens(file_path)
   }
 
@@ -1034,9 +1034,9 @@ export class WorkspaceProvider
           is_symbolic_link,
           false,
           tokens.total,
-          tokens.compact,
+          tokens.shrink,
           selected_tokens?.total,
-          selected_tokens?.compact,
+          selected_tokens?.shrink,
           undefined,
           false,
           range
@@ -1535,7 +1535,7 @@ export class WorkspaceProvider
 
   public async get_checked_files_token_count(options?: {
     exclude_file_path?: string
-  }): Promise<{ total: number; compact: number }> {
+  }): Promise<{ total: number; shrink: number }> {
     return this._token_calculator.get_checked_files_token_count(options)
   }
 
@@ -1658,9 +1658,9 @@ export class FileItem extends vscode.TreeItem {
     public isSymbolicLink: boolean = false,
     public isOpenFile: boolean = false,
     public tokenCount?: number,
-    public compactTokenCount?: number,
+    public shrinkTokenCount?: number,
     public selectedTokenCount?: number,
-    public selectedCompactTokenCount?: number,
+    public selectedShrinkTokenCount?: number,
     description?: string,
     public isWorkspaceRoot: boolean = false,
     public range?: string

@@ -1,4 +1,5 @@
-export const compact_sql = (content: string): string => {
+export const shrink_css = (content: string): string => {
+  // Split by newline to process line by line, handling both LF and CRLF
   const lines = content.split(/\r?\n/)
   const result: string[] = []
   let is_in_block_comment = false
@@ -23,13 +24,6 @@ export const compact_sql = (content: string): string => {
       }
 
       if (is_in_string) {
-        // specific SQL escape: double quote to escape quote (e.g. 'Don''t')
-        if (char === is_in_string && next_char === is_in_string) {
-          processed_line += char + next_char
-          i += 2
-          continue
-        }
-        // Backslash escape (common dialect support)
         if (char == '\\') {
           processed_line += char + (next_char || '')
           i += 2
@@ -50,7 +44,8 @@ export const compact_sql = (content: string): string => {
         continue
       }
 
-      if (char == '-' && next_char == '-') {
+      // Support // for SCSS/LESS, though not standard CSS
+      if (char == '/' && next_char == '/') {
         break
       }
 
@@ -64,9 +59,19 @@ export const compact_sql = (content: string): string => {
       i++
     }
 
+    // We trim the line to actually "shrink" the file.
     const trimmed = processed_line.trim()
     if (trimmed) {
-      result.push(processed_line.trimEnd())
+      // Filter Logic:
+      // 1. Keep lines that preserve structure (containing { or })
+      // 2. Strip lines that look like properties/variables (contain : or = and end in ;)
+      //    Also strip SCSS/LESS at-rules that function as properties (@include, @extend, etc.)
+      const has_structure = /[{}]/.test(trimmed)
+      const is_property = /([:=].*|@(?:include|extend|apply).*);$/.test(trimmed)
+
+      if (has_structure || !is_property) {
+        result.push(processed_line.trimEnd())
+      }
     }
   }
 

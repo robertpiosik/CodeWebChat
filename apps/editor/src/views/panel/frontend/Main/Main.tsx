@@ -74,6 +74,8 @@ type Props = {
   on_recording_started: () => void
   on_recording_finished: () => void
   is_setup_complete: boolean
+  find_relevant_files_shrink_source_code: boolean
+  on_find_relevant_files_shrink_source_code_change: (shrink: boolean) => void
   tabs_count: number
   active_tab_index: number
   on_tab_change: (index: number) => void
@@ -861,6 +863,12 @@ export const Main: React.FC<Props> = (props) => {
       is_recording={props.is_recording}
       on_recording_started={props.on_recording_started}
       on_recording_finished={props.on_recording_finished}
+      find_relevant_files_shrink_source_code={
+        props.find_relevant_files_shrink_source_code
+      }
+      on_find_relevant_files_shrink_source_code_change={
+        props.on_find_relevant_files_shrink_source_code_change
+      }
       is_setup_complete={props.is_setup_complete}
       tabs_count={props.tabs_count}
       active_tab_index={props.active_tab_index}

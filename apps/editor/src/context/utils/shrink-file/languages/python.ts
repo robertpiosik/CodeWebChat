@@ -1,4 +1,4 @@
-export const compact_python = (content: string): string => {
+export const shrink_python = (content: string): string => {
   const lines = content.split(/\r?\n/)
   const result: string[] = []
   let skip_indent_threshold = -1

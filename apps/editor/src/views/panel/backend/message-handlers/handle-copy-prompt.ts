@@ -27,6 +27,7 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER,
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
+import { FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY } from '@/constants/state-keys'
 
 export const handle_copy_prompt = async (params: {
   panel_provider: PanelProvider
@@ -181,9 +182,15 @@ export const handle_copy_prompt = async (params: {
       (params.panel_provider.mode == MODE.API &&
         params.panel_provider.api_prompt_type == 'find-relevant-files')
 
+    const shrink_source_code =
+      params.panel_provider.context.workspaceState.get<boolean>(
+        FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
+        false
+      )
+
     const collected = await files_collector.collect_files({
       no_context: params.panel_provider.web_prompt_type == 'no-context',
-      compact: is_in_find_relevant_files_prompt_type
+      shrink: is_in_find_relevant_files_prompt_type && shrink_source_code
     })
     const context_text = collected.other_files + collected.recent_files
 

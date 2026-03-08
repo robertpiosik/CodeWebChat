@@ -38,3 +38,20 @@
   padding: 0 16px;
   position: relative;
 }
+
+.shrink-source-code-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px;
+
+  label {
+    font-size: 12px;
+    color: var(--cwc-text-color-dimmed);
+    cursor: pointer;
+    user-select: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

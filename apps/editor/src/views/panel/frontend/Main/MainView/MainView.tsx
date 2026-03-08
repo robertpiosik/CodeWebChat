@@ -18,6 +18,7 @@ import { Header } from './components/Header'
 import { use_invocation_counts } from './hooks/use-invocation-counts'
 import { SelectionState } from '@/views/panel/types/messages'
 import { use_translation } from '../../i18n/use-translation'
+import { Checkbox as UiCheckbox } from '@ui/components/editor/common/Checkbox'
 
 type Props = {
   scroll_reset_key: number
@@ -118,6 +119,8 @@ type Props = {
   is_recording: boolean
   on_recording_started: () => void
   on_recording_finished: () => void
+  find_relevant_files_shrink_source_code: boolean
+  on_find_relevant_files_shrink_source_code_change: (shrink: boolean) => void
   is_setup_complete: boolean
   tabs_count: number
   active_tab_index: number
@@ -241,6 +244,20 @@ export const MainView: React.FC<Props> = (props) => {
         )}
 
         <div className={styles['chat-input-container']}>
+          {is_in_find_relevant_files_prompt_type && (
+            <div className={styles['shrink-source-code-checkbox']}>
+              <UiCheckbox
+                checked={props.find_relevant_files_shrink_source_code}
+                on_change={
+                  props.on_find_relevant_files_shrink_source_code_change
+                }
+                id="shrink-source-code"
+              />
+              <label htmlFor="shrink-source-code">
+                Remove function bodies and comments
+              </label>
+            </div>
+          )}
           <UiPromptField
             value={props.instructions}
             chat_history={props.chat_history}

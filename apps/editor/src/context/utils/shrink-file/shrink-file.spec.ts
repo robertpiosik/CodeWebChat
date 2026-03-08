@@ -1,8 +1,8 @@
-import { compact_file } from './compact-file'
+import { shrink_file } from './shrink-file'
 import * as fs from 'fs'
 import * as path from 'path'
 
-describe('compact_file', () => {
+describe('shrink_file', () => {
   const load_test_case = (
     test_case: string,
     directory = 'c-style'
@@ -23,41 +23,41 @@ describe('compact_file', () => {
       path.join(case_path, 'output.txt'),
       'utf-8'
     )
-    expect(compact_file(input, '.ts')).toBe(expected)
+    expect(shrink_file(input, '.ts')).toBe(expected)
   })
 
   it('should strip jsx bodies', () => {
     const { input, expected } = load_test_case('jsx', '.')
-    expect(compact_file(input, '.tsx')).toBe(expected)
+    expect(shrink_file(input, '.tsx')).toBe(expected)
   })
 
   it('should strip python function bodies', () => {
     const { input, expected } = load_test_case('python', '.')
-    expect(compact_file(input, '.py')).toBe(expected)
+    expect(shrink_file(input, '.py')).toBe(expected)
   })
 
   it('should strip ruby method bodies', () => {
     const { input, expected } = load_test_case('ruby', '.')
-    expect(compact_file(input, '.rb')).toBe(expected)
+    expect(shrink_file(input, '.rb')).toBe(expected)
   })
 
   it('should strip css bodies', () => {
     const { input, expected } = load_test_case('css', '.')
-    expect(compact_file(input, '.css')).toBe(expected)
+    expect(shrink_file(input, '.css')).toBe(expected)
   })
 
   it('should handle scss with nested BEM', () => {
     const { input, expected } = load_test_case('scss', '.')
-    expect(compact_file(input, '.scss')).toBe(expected)
+    expect(shrink_file(input, '.scss')).toBe(expected)
   })
 
   it('should strip sql comments', () => {
     const { input, expected } = load_test_case('sql', '.')
-    expect(compact_file(input, '.sql')).toBe(expected)
+    expect(shrink_file(input, '.sql')).toBe(expected)
   })
 
   it('should strip html comments', () => {
     const { input, expected } = load_test_case('html', '.')
-    expect(compact_file(input, '.html')).toBe(expected)
+    expect(shrink_file(input, '.html')).toBe(expected)
   })
 })

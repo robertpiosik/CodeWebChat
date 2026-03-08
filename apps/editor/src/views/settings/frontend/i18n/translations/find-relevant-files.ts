@@ -18,7 +18,7 @@ export const find_relevant_files = {
     bg: 'Фокусиране на контекста.'
   },
   'find-relevant-files.notice': {
-    en: 'A request includes context files in a compacted form.',
+    en: 'A request includes context files in a shrunk form.',
     pl: 'Wiadomość zawiera pliki kontekstowe w skompresowanej formie.',
     'zh-cn': '请求以压缩形式包含上下文文件。',
     ja: 'リクエストには、圧縮された形式のコンテキストファイルが含まれます。',

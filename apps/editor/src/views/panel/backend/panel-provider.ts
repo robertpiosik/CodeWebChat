@@ -93,7 +93,9 @@ import {
   handle_cancel_intelligent_update_file_in_preview,
   handle_upsert_configuration,
   handle_delete_configuration,
-  handle_update_last_used_preset_or_group
+  handle_update_last_used_preset_or_group,
+  handle_get_find_relevant_files_shrink_source_code,
+  handle_save_find_relevant_files_shrink_source_code
 } from './message-handlers'
 import { SelectionState } from '../types/messages'
 import {
@@ -110,7 +112,8 @@ import {
   RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY,
   RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY,
   RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY,
-  get_recently_used_presets_or_groups_key
+  get_recently_used_presets_or_groups_key,
+  FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY
 } from '@/constants/state-keys'
 import {
   config_preset_to_ui_format,
@@ -247,15 +250,18 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     this.api_manager = api_manager
   }
 
-  private _update_providers_compact_mode() {
+  public update_providers_shrink_mode() {
+    const shrink_source_code = this.context.workspaceState.get<boolean>(
+      FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
+      false
+    )
     const is_find_relevant_files =
       (this.mode == MODE.WEB &&
         this.web_prompt_type == 'find-relevant-files') ||
       (this.mode == MODE.API && this.api_prompt_type == 'find-relevant-files')
-    this.workspace_provider.set_use_compact_token_count(is_find_relevant_files)
-    this.open_editors_provider.set_use_compact_token_count(
-      is_find_relevant_files
-    )
+    const use_shrink = is_find_relevant_files && shrink_source_code
+    this.workspace_provider.set_use_shrink_token_count(use_shrink)
+    this.open_editors_provider.set_use_shrink_token_count(use_shrink)
   }
 
   public async send_checkpoints() {
@@ -383,7 +389,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       'edit-context'
     )
 
-    this._update_providers_compact_mode()
+    this.update_providers_shrink_mode()
 
     vscode.window.onDidChangeWindowState(async (e) => {
       if (e.focused) {
@@ -835,12 +841,12 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_toggle_pinned_api_tool_configuration(this, message)
           } else if (message.command == 'SAVE_WEB_PROMPT_TYPE') {
             await handle_save_web_prompt_type(this, message.prompt_type)
-            this._update_providers_compact_mode()
+            this.update_providers_shrink_mode()
           } else if (message.command == 'GET_API_PROMPT_TYPE') {
             handle_get_api_prompt_type(this)
           } else if (message.command == 'SAVE_API_PROMPT_TYPE') {
             await handle_save_api_prompt_type(this, message.prompt_type)
-            this._update_providers_compact_mode()
+            this.update_providers_shrink_mode()
           } else if (message.command == 'GET_EDIT_FORMAT_INSTRUCTIONS') {
             handle_get_edit_format_instructions(this)
           } else if (message.command == 'GET_EDIT_FORMAT') {
@@ -851,7 +857,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             this.caret_position = message.caret_position
           } else if (message.command == 'SAVE_MODE') {
             await handle_save_mode(this, message)
-            this._update_providers_compact_mode()
+            this.update_providers_shrink_mode()
           } else if (message.command == 'GET_MODE') {
             handle_get_mode(this)
           } else if (message.command == 'GET_VERSION') {
@@ -959,6 +965,17 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_voice_input(this, message)
           } else if (message.command == 'GET_SETUP_PROGRESS') {
             await this.send_setup_progress()
+          } else if (
+            message.command == 'GET_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE'
+          ) {
+            handle_get_find_relevant_files_shrink_source_code(this)
+          } else if (
+            message.command == 'SAVE_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE'
+          ) {
+            await handle_save_find_relevant_files_shrink_source_code(
+              this,
+              message.shrink_source_code
+            )
           }
         } catch (error: any) {
           Logger.error({
