@@ -127,7 +127,7 @@ export const use_handlers = (
     if (params.input_ref.current && !props.missing_configuration) {
       requestAnimationFrame(() => {
         if (!params.input_ref.current) return
-        params.input_ref.current.focus()
+        params.input_ref.current.focus({ preventScroll: true })
         const selection = window.getSelection()
         if (selection) {
           const range = document.createRange()
@@ -144,7 +144,7 @@ export const use_handlers = (
     if (params.input_ref.current && !props.missing_configuration) {
       requestAnimationFrame(() => {
         if (!params.input_ref.current) return
-        params.input_ref.current.focus()
+        params.input_ref.current.focus({ preventScroll: true })
         const selection = window.getSelection()
         if (selection) {
           const range = document.createRange()
