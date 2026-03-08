@@ -202,7 +202,7 @@ export async function activate(context: vscode.ExtensionContext) {
   )
 
   const commit_status_bar_item = vscode.window.createStatusBarItem(
-    vscode.StatusBarAlignment.Right,
+    vscode.StatusBarAlignment.Left,
     1000
   )
   commit_status_bar_item.text = '$(git-commit) Commit Changes'
