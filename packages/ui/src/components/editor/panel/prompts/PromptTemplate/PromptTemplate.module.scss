@@ -1,0 +1,59 @@
+.prompt-template-wrapper {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.input {
+  width: 100%;
+  min-height: 56px;
+  padding: 6px 8px;
+  padding-bottom: 32px;
+  background-color: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+  border: 1px solid var(--cwc-border-color);
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.4;
+  resize: none;
+  outline: none;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+
+  &:focus {
+    border-color: var(--vscode-focusBorder);
+  }
+}
+
+.toolbar {
+  display: flex;
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  z-index: 2;
+}
+
+.insert-button {
+  --size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--size);
+  width: var(--size);
+  border-radius: 5px;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--vscode-toolbar-hoverBackground);
+  }
+
+  > svg {
+    height: 11px;
+    fill: var(--vscode-icon-foreground);
+  }
+}

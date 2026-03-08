@@ -8,6 +8,10 @@ import { Field as UiField } from '@ui/components/editor/panel/Field'
 import { Slider as UiSlider } from '@ui/components/editor/panel/Slider'
 import { Input as UiInput } from '@ui/components/editor/common/Input'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
+import {
+  PromptTemplate as UiPromptTemplate,
+  PromptTemplateHandle
+} from '@ui/components/editor/panel/prompts/PromptTemplate'
 import { BackendMessage } from '@/views/panel/types/messages'
 import { PresetOption as UiPresetOption } from '@ui/components/editor/panel/PresetOption'
 import { Scrollable as UiScrollable } from '@ui/components/editor/panel/Scrollable'
@@ -22,7 +26,7 @@ type Props = {
     supported_efforts: string[],
     current_effort?: string
   ) => void
-  on_at_sign_in_affix: () => void
+  on_insert_symbol_click: (target: 'preset-prefix' | 'preset-suffix') => void
 }
 
 /**
@@ -31,8 +35,8 @@ type Props = {
  * - add additional prefix and suffix to each preset below it.
  */
 export const EditPresetForm: React.FC<Props> = (props) => {
-  const prefix_ref = useRef<HTMLTextAreaElement>(null)
-  const suffix_ref = useRef<HTMLTextAreaElement>(null)
+  const prefix_ref = useRef<PromptTemplateHandle>(null)
+  const suffix_ref = useRef<PromptTemplateHandle>(null)
 
   const [chatbot, set_chatbot] = useState(props.preset.chatbot)
   const [name, set_name] = useState(props.preset.name)
@@ -192,22 +196,42 @@ export const EditPresetForm: React.FC<Props> = (props) => {
         handle_chatbot_change(message.chatbot_id as keyof typeof CHATBOTS)
       } else if (message.command == 'NEWLY_PICKED_REASONING_EFFORT') {
         set_reasoning_effort(message.effort)
+      } else if (message.command == 'INSERT_SYMBOL_AT_CURSOR') {
+        const ref = message.target == 'preset-prefix' ? prefix_ref : suffix_ref
+        const set_text =
+          message.target == 'preset-prefix'
+            ? set_prompt_prefix
+            : set_prompt_suffix
+        const text =
+          message.target == 'preset-prefix' ? prompt_prefix : prompt_suffix
+
+        if (ref.current) {
+          const start = ref.current.get_caret_position()
+          const end = start
+          const before = (text || '').substring(0, start)
+          const after = (text || '').substring(end)
+
+          const is_after_hash_sign = before.endsWith('#')
+          const prefix_before = is_after_hash_sign
+            ? before.slice(0, -1)
+            : before
+
+          const new_text = prefix_before + message.text + after
+          set_text(new_text)
+
+          setTimeout(() => {
+            if (ref.current) {
+              ref.current.focus()
+              const new_caret = prefix_before.length + message.text.length
+              ref.current.set_caret_position(new_caret)
+            }
+          }, 0)
+        }
       }
     }
     window.addEventListener('message', handle_message)
     return () => window.removeEventListener('message', handle_message)
   }, [active_field, prompt_prefix, prompt_suffix])
-
-  const check_for_at_sign = (
-    value: string,
-    ref: React.RefObject<HTMLTextAreaElement>
-  ) => {
-    if (ref.current && value.charAt(ref.current.selectionStart - 1) == '@') {
-      setTimeout(() => {
-        props.on_at_sign_in_affix()
-      }, 150)
-    }
-  }
 
   const supported_reasoning_efforts = useMemo(() => {
     return (
@@ -527,17 +551,15 @@ export const EditPresetForm: React.FC<Props> = (props) => {
                 : "Text prepended to all prompts used with this group's presets."
             }
           >
-            <UiTextarea
+            <UiPromptTemplate
               id="prefix"
               ref={prefix_ref}
               value={prompt_prefix}
-              on_change={(value) => {
-                set_prompt_prefix(value)
-                check_for_at_sign(value, prefix_ref)
-              }}
-              onFocus={() => set_active_field('prompt_prefix')}
-              min_rows={2}
-              blur_on_enter={false}
+              on_change={(value) => set_prompt_prefix(value)}
+              on_focus={() => set_active_field('prompt_prefix')}
+              on_insert_symbol_click={() =>
+                props.on_insert_symbol_click('preset-prefix')
+              }
             />
           </UiField>
 
@@ -550,17 +572,15 @@ export const EditPresetForm: React.FC<Props> = (props) => {
                 : "Text appended to all prompts used with this group's presets."
             }
           >
-            <UiTextarea
+            <UiPromptTemplate
               id="suffix"
               ref={suffix_ref}
               value={prompt_suffix}
-              on_change={(value) => {
-                set_prompt_suffix(value)
-                check_for_at_sign(value, suffix_ref)
-              }}
-              onFocus={() => set_active_field('prompt_suffix')}
-              min_rows={2}
-              blur_on_enter={false}
+              on_change={(value) => set_prompt_suffix(value)}
+              on_focus={() => set_active_field('prompt_suffix')}
+              on_insert_symbol_click={() =>
+                props.on_insert_symbol_click('preset-suffix')
+              }
             />
           </UiField>
         </UiFieldset>

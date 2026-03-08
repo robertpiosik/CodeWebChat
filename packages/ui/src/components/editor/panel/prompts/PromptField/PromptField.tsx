@@ -2,23 +2,23 @@ import { useRef, useEffect, useMemo, useState, useCallback } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 import styles from './PromptField.module.scss'
 import cn from 'classnames'
-import { Icon } from '../../common/Icon'
-import { get_highlighted_text } from './utils/get-highlighted-text'
+import { Icon } from '../../../common/Icon'
 import { use_handlers } from './hooks/use-handlers'
 import { use_dropdown } from './hooks/use-dropdown'
 import { use_ghost_text } from './hooks/use-ghost-text'
 import { use_drag_drop } from './hooks/use-drag-drop'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 import { use_edit_format_compacting } from './hooks/use-edit-format-compacting'
-import { DropdownMenu } from '../../common/DropdownMenu'
+import { DropdownMenu } from '../../../common/DropdownMenu'
 import { use_is_mac } from '@shared/hooks'
-import {
-  get_caret_position_from_div,
-  set_caret_position_for_div
-} from './utils/caret'
-import { map_raw_pos_to_display_pos } from './utils/position-mapping'
 import { Tooltip } from './components'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
+import {
+  get_caret_position_from_div,
+  set_caret_position_for_div,
+  map_raw_pos_to_display_pos,
+  get_highlighted_text
+} from '../shared/symbols'
 
 export type EditFormat = 'whole' | 'truncated' | 'diff' | 'before-after'
 

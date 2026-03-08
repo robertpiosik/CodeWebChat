@@ -529,6 +529,13 @@ export const Panel = () => {
               <EditPresetForm
                 preset={updating_preset}
                 on_update={set_updated_preset}
+                on_insert_symbol_click={(target) => {
+                  post_message(vscode, {
+                    command: 'SHOW_HASH_SIGN_QUICK_PICK',
+                    is_for_code_completions: false,
+                    target
+                  })
+                }}
                 pick_model={(chatbot_name, current_model_id) => {
                   post_message(vscode, {
                     command: 'PICK_MODEL',
@@ -546,7 +553,6 @@ export const Panel = () => {
                     current_effort
                   })
                 }}
-                on_at_sign_in_affix={() => {}}
               />
             </UiPage>
           </div>

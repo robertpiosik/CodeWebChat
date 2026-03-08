@@ -158,7 +158,8 @@ const hash_sign_quick_pick = async (params: {
 export const handle_hash_sign_quick_pick = async (
   panel_provider: PanelProvider,
   context: vscode.ExtensionContext,
-  is_for_code_completions: boolean
+  is_for_code_completions: boolean,
+  target?: 'prompt-field' | 'preset-prefix' | 'preset-suffix'
 ): Promise<void> => {
   const is_prune_context =
     (panel_provider.mode == MODE.WEB &&
@@ -173,24 +174,34 @@ export const handle_hash_sign_quick_pick = async (
   })
 
   if (!replacement) {
-    panel_provider.send_message({
-      command: 'FOCUS_PROMPT_FIELD'
-    })
+    if (!target || target == 'prompt-field') {
+      panel_provider.send_message({
+        command: 'FOCUS_PROMPT_FIELD'
+      })
+    }
     return
   }
 
-  const current_text = panel_provider.current_instruction
-
-  const is_after_hash_sign = current_text
-    .slice(0, panel_provider.caret_position)
-    .endsWith('#')
-  if (is_after_hash_sign) {
-    panel_provider.add_text_at_cursor_position(replacement, 1)
+  if (target == 'preset-prefix' || target == 'preset-suffix') {
+    panel_provider.send_message({
+      command: 'INSERT_SYMBOL_AT_CURSOR',
+      text: replacement,
+      target
+    })
   } else {
-    panel_provider.add_text_at_cursor_position(replacement)
-  }
+    const current_text = panel_provider.current_instruction
 
-  panel_provider.send_message({
-    command: 'FOCUS_PROMPT_FIELD'
-  })
+    const is_after_hash_sign = current_text
+      .slice(0, panel_provider.caret_position)
+      .endsWith('#')
+    if (is_after_hash_sign) {
+      panel_provider.add_text_at_cursor_position(replacement, 1)
+    } else {
+      panel_provider.add_text_at_cursor_position(replacement)
+    }
+
+    panel_provider.send_message({
+      command: 'FOCUS_PROMPT_FIELD'
+    })
+  }
 }

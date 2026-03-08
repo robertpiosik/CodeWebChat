@@ -1,9 +1,9 @@
 import { useRef, RefObject } from 'react'
 import {
   map_display_pos_to_raw_pos,
-  map_raw_pos_to_display_pos
-} from '../utils/position-mapping'
-import { set_caret_position_for_div } from '../utils/caret'
+  map_raw_pos_to_display_pos,
+  set_caret_position_for_div
+} from '../../shared/symbols'
 import type { PromptFieldProps } from '../PromptField'
 
 export const use_drag_drop = (

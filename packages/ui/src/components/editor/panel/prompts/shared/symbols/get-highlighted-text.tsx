@@ -1,6 +1,7 @@
 import cn from 'classnames'
-import styles from '../PromptField.module.scss'
-import { SelectionState } from '../PromptField'
+import styles from './prompt-symbols.module.scss'
+import pfStyles from '../../PromptField/PromptField.module.scss'
+import { SelectionState } from '../../PromptField'
 
 const escape_html = (str: string): string => {
   if (!str) return ''
@@ -48,6 +49,7 @@ export const get_highlighted_text = (params: {
   current_selection?: SelectionState | null
   context_file_paths: string[]
   is_web_mode?: boolean
+  show_clear_button?: boolean
   tabs_config?: {
     count: number
     active_index: number
@@ -290,28 +292,32 @@ export const get_highlighted_text = (params: {
       for (let i = 0; i < count; i++) {
         const is_active = i == active_index
 
-        tabs_items += `<span class="${cn(styles['tabs__tab'], {
-          [styles['tabs__tab--active']]: is_active
+        tabs_items += `<span class="${cn(pfStyles['tabs__tab'], {
+          [pfStyles['tabs__tab--active']]: is_active
         })}" data-role="tab-item" data-index="${i}"><span class="${
-          styles['tabs__tab-icon']
+          pfStyles['tabs__tab-icon']
         }"></span></span>`
       }
     }
 
     tabs_items += `<span class="${cn(
-      styles['tabs__tab'],
-      styles['tabs__tab--new']
+      pfStyles['tabs__tab'],
+      pfStyles['tabs__tab--new']
     )}" data-role="tab-new" title="New Tab"></span>`
 
-    header_html += `<span class="${styles['tabs']}" data-role="tabs-container">${tabs_items}</span>`
+    header_html += `<span class="${pfStyles['tabs']}" data-role="tabs-container">${tabs_items}</span>`
   }
 
-  const show_clear_button =
-    !!params.text || (params.tabs_config && params.tabs_config.count > 1)
+  let show_clear_button = params.show_clear_button
+  if (show_clear_button === undefined) {
+    show_clear_button =
+      !!params.text || (params.tabs_config && params.tabs_config.count > 1)
+  }
+
   if (show_clear_button) {
     const title = params.text ? 'Clear' : 'Close tab'
     header_html += `<span class="${cn(
-      styles['clear-button'],
+      pfStyles['clear-button'],
       'codicon',
       'codicon-close'
     )}" data-role="clear-button" title="${title}"></span>`

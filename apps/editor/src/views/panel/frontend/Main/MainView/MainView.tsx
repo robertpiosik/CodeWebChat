@@ -1,7 +1,7 @@
 import styles from './MainView.module.scss'
 import { Configurations as UiConfigurations } from '@ui/components/editor/panel/Configurations'
 import { Presets as UiPresets } from '@ui/components/editor/panel/Presets'
-import { PromptField as UiPromptField } from '@ui/components/editor/panel/PromptField'
+import { PromptField as UiPromptField } from '@ui/components/editor/panel/prompts/PromptField'
 import { Separator as UiSeparator } from '@ui/components/editor/panel/Separator'
 import { Preset } from '@shared/types/preset'
 import { Responses as UiResponses } from '@ui/components/editor/panel/Responses'
