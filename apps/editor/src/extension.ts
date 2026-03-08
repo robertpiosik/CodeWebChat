@@ -198,5 +198,15 @@ export async function activate(context: vscode.ExtensionContext) {
     )
   )
 
+  const commit_status_bar_item = vscode.window.createStatusBarItem(
+    vscode.StatusBarAlignment.Right,
+    1000
+  )
+  commit_status_bar_item.text = '$(git-commit) Commit Changes'
+  commit_status_bar_item.tooltip = "Use CWC's Commit Changes API tool"
+  commit_status_bar_item.command = 'codeWebChat.generateCommitMessageAndCommit'
+  commit_status_bar_item.show()
+  context.subscriptions.push(commit_status_bar_item)
+
   setup_git_discard_file_watcher(context)
 }
