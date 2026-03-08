@@ -868,7 +868,7 @@
           "type": "string",
           "scope": "resource"
         },
-        "codeWebChat.pruneContextInstructionsPrefix": {
+        "codeWebChat.findRelevantFilesInstructionsPrefix": {
           "type": "string",
           "scope": "resource"
         },
@@ -1356,7 +1356,7 @@
             }
           }
         },
-        "codeWebChat.chatPresetsForPruneContext": {
+        "codeWebChat.chatPresetsForFindRelevantFiles": {
           "type": "array",
           "scope": "resource",
           "default": [
@@ -1742,7 +1742,7 @@
             ]
           }
         },
-        "codeWebChat.promptTemplatesForPruneContext": {
+        "codeWebChat.promptTemplatesForFindRelevantFiles": {
           "type": "array",
           "scope": "resource",
           "default": [],
@@ -1813,7 +1813,7 @@
             ]
           }
         },
-        "codeWebChat.configurationsForPruneContext": {
+        "codeWebChat.configurationsForFindRelevantFiles": {
           "type": "array",
           "scope": "resource",
           "default": [],

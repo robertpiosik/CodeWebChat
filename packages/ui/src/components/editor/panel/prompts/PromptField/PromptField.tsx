@@ -60,8 +60,8 @@ export type PromptFieldProps = {
   invocation_count: number
   on_invocation_count_change: (count: number) => void
   on_go_to_file: (file_path: string) => void
-  prune_context_instructions_prefix: string
-  on_prune_context_instructions_prefix_change: (value: string) => void
+  find_relevant_files_instructions_prefix: string
+  on_find_relevant_files_instructions_prefix_change: (value: string) => void
   on_pasted_lines_click: (path: string, start?: string, end?: string) => void
   on_open_url: (url: string) => void
   on_paste_image: (base64_content: string) => void
@@ -96,13 +96,16 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     useState<EditFormat | null>(null)
   const [is_recording_hovered, set_is_recording_hovered] = useState(false)
 
-  const [prune_instructions, set_prune_instructions] = useState(
-    props.prune_context_instructions_prefix
-  )
+  const [
+    find_relevant_files_instructions,
+    set_find_relevant_files_instructions
+  ] = useState(props.find_relevant_files_instructions_prefix)
 
   useEffect(() => {
-    set_prune_instructions(props.prune_context_instructions_prefix)
-  }, [props.prune_context_instructions_prefix])
+    set_find_relevant_files_instructions(
+      props.find_relevant_files_instructions_prefix
+    )
+  }, [props.find_relevant_files_instructions_prefix])
 
   useEffect(() => {
     if (!props.value) {
@@ -338,19 +341,21 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         onKeyDown={handle_container_key_down}
         onClick={() => input_ref.current?.focus()}
       >
-        {props.prompt_type == 'prune-context' && (
+        {props.prompt_type == 'find-relevant-files' && (
           <TextareaAutosize
-            className={styles['prune-context-prefix']}
-            value={prune_instructions}
+            className={styles['find-relevant-files-prefix']}
+            value={find_relevant_files_instructions}
             onChange={(e) => {
-              set_prune_instructions(e.target.value)
+              set_find_relevant_files_instructions(e.target.value)
             }}
             onBlur={(e) => {
-              props.on_prune_context_instructions_prefix_change(
-                prune_instructions
+              props.on_find_relevant_files_instructions_prefix_change(
+                find_relevant_files_instructions
               )
               if (!e.target.value) {
-                set_prune_instructions(props.prune_context_instructions_prefix)
+                set_find_relevant_files_instructions(
+                  props.find_relevant_files_instructions_prefix
+                )
               }
             }}
             onClick={(e) => e.stopPropagation()}
@@ -565,7 +570,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   !props.missing_preset)) && (
                 <>
                   {!(
-                    props.prompt_type == 'prune-context' && !props.is_web_mode
+                    props.prompt_type == 'find-relevant-files' &&
+                    !props.is_web_mode
                   ) && (
                     <div
                       className={styles['footer__right__invocation-count']}

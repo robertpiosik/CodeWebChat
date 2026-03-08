@@ -40,7 +40,8 @@ export const INSTRUCTIONS_ASK_STATE_KEY = 'instructions-ask'
 export const INSTRUCTIONS_NO_CONTEXT_STATE_KEY = 'instructions-no-context'
 export const INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY =
   'instructions-code-at-cursor'
-export const INSTRUCTIONS_PRUNE_CONTEXT_STATE_KEY = 'instructions-prune-context'
+export const INSTRUCTIONS_FIND_RELEVANT_FILES_STATE_KEY =
+  'instructions-find-relevant-files'
 
 export const ARE_TASKS_COLLAPSED_STATE_KEY = 'are-tasks-collapsed'
 export const IS_TIMELINE_COLLAPSED_STATE_KEY = 'is-timeline-collapsed'
@@ -48,13 +49,14 @@ export const IS_TIMELINE_COLLAPSED_STATE_KEY = 'is-timeline-collapsed'
 export const HISTORY_ASK_STATE_KEY = 'history-ask'
 export const HISTORY_EDIT_STATE_KEY = 'history-edit'
 export const HISTORY_CODE_AT_CURSOR_STATE_KEY = 'history-code-at-cursor'
-export const HISTORY_PRUNE_CONTEXT_STATE_KEY = 'history-prune-context'
+export const HISTORY_FIND_RELEVANT_FILES_STATE_KEY =
+  'history-find-relevant-files'
 export const HISTORY_NO_CONTEXT_STATE_KEY = 'history-no-context'
 
 export const RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY =
   'recently-used-code-at-cursor-config-ids'
-export const RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY =
-  'recently-used-prune-context-config-ids'
+export const RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY =
+  'recently-used-find-relevant-files-config-ids'
 export const RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY =
   'recently-used-edit-context-config-ids'
 export const RECENTLY_USED_COMMIT_MESSAGES_CONFIG_IDS_STATE_KEY =

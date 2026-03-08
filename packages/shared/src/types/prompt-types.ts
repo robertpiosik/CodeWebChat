@@ -2,7 +2,10 @@ export type WebPromptType =
   | 'ask-about-context'
   | 'edit-context'
   | 'code-at-cursor'
-  | 'prune-context'
+  | 'find-relevant-files'
   | 'no-context'
 
-export type ApiPromptType = 'edit-context' | 'prune-context' | 'code-at-cursor'
+export type ApiPromptType =
+  | 'edit-context'
+  | 'find-relevant-files'
+  | 'code-at-cursor'

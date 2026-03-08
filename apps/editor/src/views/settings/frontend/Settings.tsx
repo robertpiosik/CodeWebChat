@@ -10,7 +10,7 @@ type NavItem =
   | 'intelligent-update'
   | 'edit-context'
   | 'code-at-cursor'
-  | 'prune-context'
+  | 'find-relevant-files'
   | 'commit-messages'
   | 'voice-input'
 
@@ -30,7 +30,7 @@ export const Settings = () => {
       settings_hook.edit_context_system_instructions !== undefined &&
       settings_hook.voice_input_configs !== undefined &&
       settings_hook.intelligent_update_configs !== undefined &&
-      settings_hook.prune_context_configs !== undefined &&
+      settings_hook.find_relevant_files_configs !== undefined &&
       settings_hook.voice_input_instructions !== undefined &&
       settings_hook.commit_message_instructions !== undefined &&
       settings_hook.include_prompts_in_commit_messages !== undefined &&
@@ -73,7 +73,7 @@ export const Settings = () => {
       }
       voice_input_configs={settings_hook.voice_input_configs!}
       intelligent_update_configs={settings_hook.intelligent_update_configs!}
-      prune_context_configs={settings_hook.prune_context_configs!}
+      find_relevant_files_configs={settings_hook.find_relevant_files_configs!}
       context_size_warning_threshold={
         settings_hook.context_size_warning_threshold!
       }
@@ -106,7 +106,9 @@ export const Settings = () => {
       set_intelligent_update_configs={
         settings_hook.set_intelligent_update_configs
       }
-      set_prune_context_configs={settings_hook.set_prune_context_configs}
+      set_find_relevant_files_configs={
+        settings_hook.set_find_relevant_files_configs
+      }
       on_context_size_warning_threshold_change={
         settings_hook.handle_context_size_warning_threshold_change
       }

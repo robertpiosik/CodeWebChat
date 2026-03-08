@@ -125,24 +125,23 @@ export const sidebar = {
     hu: 'Intelligens Frissítés',
     bg: 'Интелигентно актуализиране'
   },
-  'sidebar.prune-context': {
-    en: 'Prune Context',
-    pl: 'Przytnij kontekst',
-    'zh-cn': '精简上下文',
-
-    ja: 'コンテキストの剪定',
-    'zh-tw': '精簡上下文',
-    de: 'Kontext bereinigen',
-    es: 'Limpiar contexto',
-    fr: 'Élaguer le contexte',
-    'pt-br': 'Limpar Contexto',
-    ru: 'Очистка контекста',
-    ko: '컨텍스트 정리',
-    it: 'Pulisci contesto',
-    tr: 'Bağlamı Temizle',
-    cs: 'Pročistit kontext',
-    hu: 'Kontextus Tisztítása',
-    bg: 'Изчистване на контекста'
+  'sidebar.find-relevant-files': {
+    en: 'Find Relevant Files',
+    pl: 'Wyszukaj pliki',
+    'zh-cn': '查找相关文件',
+    ja: '関連ファイルの検索',
+    'zh-tw': '尋找相關檔案',
+    de: 'Relevante Dateien finden',
+    es: 'Buscar archivos relevantes',
+    fr: 'Trouver les fichiers pertinents',
+    'pt-br': 'Encontrar arquivos relevantes',
+    ru: 'Поиск соответствующих файлов',
+    ko: '관련 파일 찾기',
+    it: 'Trova file rilevanti',
+    tr: 'İlgili Dosyaları Bul',
+    cs: 'Najít relevantní soubory',
+    hu: 'Releváns fájlok keresése',
+    bg: 'Намиране на съответните файлове'
   },
   'sidebar.commit-messages': {
     en: 'Commit Messages',

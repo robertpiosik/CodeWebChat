@@ -8,7 +8,7 @@ import {
   INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY,
   INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY,
   INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
-  INSTRUCTIONS_PRUNE_CONTEXT_STATE_KEY
+  INSTRUCTIONS_FIND_RELEVANT_FILES_STATE_KEY
 } from '@/constants/state-keys'
 
 export const handle_save_instructions = async (
@@ -42,10 +42,10 @@ export const handle_save_instructions = async (
       INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY,
       instruction_state
     )
-  } else if (prompt_type == 'prune-context') {
-    panel_provider.prune_context_instructions = instruction_state
+  } else if (prompt_type == 'find-relevant-files') {
+    panel_provider.find_relevant_files_instructions = instruction_state
     await panel_provider.context.workspaceState.update(
-      INSTRUCTIONS_PRUNE_CONTEXT_STATE_KEY,
+      INSTRUCTIONS_FIND_RELEVANT_FILES_STATE_KEY,
       instruction_state
     )
   } else {

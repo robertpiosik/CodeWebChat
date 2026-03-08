@@ -31,7 +31,7 @@ type Props = {
   edit_instructions: string
   no_context_instructions: string
   code_completions_instructions: string
-  prune_context_instructions: string
+  find_relevant_files_instructions: string
   set_instructions: (
     value: string,
     prompt_type:
@@ -39,7 +39,7 @@ type Props = {
       | 'edit-context'
       | 'no-context'
       | 'code-at-cursor'
-      | 'prune-context'
+      | 'find-relevant-files'
   ) => void
   mode: Mode
   web_prompt_type: WebPromptType
@@ -61,8 +61,8 @@ type Props = {
   currently_open_file_text?: string
   on_pasted_lines_click: (path: string, start?: string, end?: string) => void
   are_keyboard_shortcuts_disabled: boolean
-  prune_context_instructions_prefix: string
-  on_prune_context_instructions_prefix_change: (prefix: string) => void
+  find_relevant_files_instructions_prefix: string
+  on_find_relevant_files_instructions_prefix_change: (prefix: string) => void
   on_open_url: (url: string) => void
   on_open_website: (url: string) => void
   on_paste_image: (base64_content: string) => void
@@ -102,7 +102,7 @@ export const Main: React.FC<Props> = (props) => {
   const [no_context_history, set_no_context_history] = useState<string[]>()
   const [code_completions_history, set_code_completions_history] =
     useState<string[]>()
-  const [prune_context_history, set_prune_context_history] =
+  const [find_relevant_files_history, set_find_relevant_files_history] =
     useState<string[]>()
   const [token_count, set_token_count] = useState<number>(0)
   const [chat_edit_format, set_chat_edit_format] = useState<EditFormat>()
@@ -138,7 +138,7 @@ export const Main: React.FC<Props> = (props) => {
           set_edit_history(message.edit_context || [])
           set_no_context_history(message.no_context || [])
           set_code_completions_history(message.code_at_cursor || [])
-          set_prune_context_history(message.prune_context || [])
+          set_find_relevant_files_history(message.find_relevant_files || [])
           break
         case 'TOKEN_COUNT_UPDATED':
           set_token_count(message.token_count)
@@ -211,9 +211,9 @@ export const Main: React.FC<Props> = (props) => {
     } else if (current_prompt_type == 'code-at-cursor') {
       history = code_completions_history
       set_history = set_code_completions_history
-    } else if (current_prompt_type == 'prune-context') {
-      history = prune_context_history
-      set_history = set_prune_context_history
+    } else if (current_prompt_type == 'find-relevant-files') {
+      history = find_relevant_files_history
+      set_history = set_find_relevant_files_history
     } else {
       return
     }
@@ -540,8 +540,8 @@ export const Main: React.FC<Props> = (props) => {
   const get_current_instructions = () => {
     if (is_in_code_completions_mode) {
       return props.code_completions_instructions
-    } else if (current_prompt_type == 'prune-context') {
-      return props.prune_context_instructions
+    } else if (current_prompt_type == 'find-relevant-files') {
+      return props.find_relevant_files_instructions
     }
     if (current_prompt_type == 'ask-about-context')
       return props.ask_instructions
@@ -607,11 +607,11 @@ export const Main: React.FC<Props> = (props) => {
     }
   }
 
-  const handle_prune_context_click = (invocation_count: number) => {
+  const handle_find_relevant_files_click = (invocation_count: number) => {
     const instruction = get_current_instructions()
 
     post_message(props.vscode, {
-      command: 'PRUNE_CONTEXT',
+      command: 'FIND_RELEVANT_FILES',
       use_quick_pick: false,
       invocation_count
     })
@@ -621,13 +621,13 @@ export const Main: React.FC<Props> = (props) => {
     }
   }
 
-  const handle_prune_context_with_quick_pick_click = (
+  const handle_find_relevant_files_with_quick_pick_click = (
     invocation_count: number
   ) => {
     const instruction = get_current_instructions()
 
     post_message(props.vscode, {
-      command: 'PRUNE_CONTEXT',
+      command: 'FIND_RELEVANT_FILES',
       use_quick_pick: true,
       invocation_count
     })
@@ -674,9 +674,9 @@ export const Main: React.FC<Props> = (props) => {
         config_id: id,
         invocation_count: 1
       })
-    } else if (props.api_prompt_type == 'prune-context') {
+    } else if (props.api_prompt_type == 'find-relevant-files') {
       post_message(props.vscode, {
-        command: 'PRUNE_CONTEXT',
+        command: 'FIND_RELEVANT_FILES',
         use_quick_pick: false,
         config_id: id,
         invocation_count: 1
@@ -709,8 +709,8 @@ export const Main: React.FC<Props> = (props) => {
           ? props.no_context_instructions
           : current_prompt_type == 'code-at-cursor'
             ? props.code_completions_instructions
-            : current_prompt_type == 'prune-context'
-              ? props.prune_context_instructions
+            : current_prompt_type == 'find-relevant-files'
+              ? props.find_relevant_files_instructions
               : ''
 
   const set_instructions = (value: string) => {
@@ -726,8 +726,8 @@ export const Main: React.FC<Props> = (props) => {
     current_history = no_context_history
   } else if (current_prompt_type == 'code-at-cursor') {
     current_history = code_completions_history
-  } else if (current_prompt_type == 'prune-context') {
-    current_history = prune_context_history
+  } else if (current_prompt_type == 'find-relevant-files') {
+    current_history = find_relevant_files_history
   }
 
   if (
@@ -737,7 +737,7 @@ export const Main: React.FC<Props> = (props) => {
     edit_history === undefined ||
     no_context_history === undefined ||
     code_completions_history === undefined ||
-    prune_context_history === undefined ||
+    find_relevant_files_history === undefined ||
     is_in_code_completions_mode === undefined ||
     instructions === undefined ||
     chat_edit_format === undefined ||
@@ -820,9 +820,9 @@ export const Main: React.FC<Props> = (props) => {
       on_code_at_cursor_with_quick_pick_click={
         handle_code_at_cursor_with_quick_pick_click
       }
-      on_prune_context_click={handle_prune_context_click}
-      on_prune_context_with_quick_pick_click={
-        handle_prune_context_with_quick_pick_click
+      on_find_relevant_files_click={handle_find_relevant_files_click}
+      on_find_relevant_files_with_quick_pick_click={
+        handle_find_relevant_files_with_quick_pick_click
       }
       caret_position_to_set={caret_position_to_set}
       on_caret_position_set={() => set_caret_position_to_set(undefined)}
@@ -845,11 +845,11 @@ export const Main: React.FC<Props> = (props) => {
       on_pasted_lines_click={props.on_pasted_lines_click}
       currently_open_file_text={props.currently_open_file_text}
       are_keyboard_shortcuts_disabled={props.are_keyboard_shortcuts_disabled}
-      prune_context_instructions_prefix={
-        props.prune_context_instructions_prefix
+      find_relevant_files_instructions_prefix={
+        props.find_relevant_files_instructions_prefix
       }
-      on_prune_context_instructions_prefix_change={
-        props.on_prune_context_instructions_prefix_change
+      on_find_relevant_files_instructions_prefix_change={
+        props.on_find_relevant_files_instructions_prefix_change
       }
       on_open_url={props.on_open_url}
       on_open_website={props.on_open_website}

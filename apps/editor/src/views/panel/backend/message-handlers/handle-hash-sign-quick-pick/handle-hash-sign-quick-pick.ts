@@ -20,7 +20,7 @@ const skill_label = '$(thinking) Skill'
 const hash_sign_quick_pick = async (params: {
   context: vscode.ExtensionContext
   is_for_code_completions: boolean
-  is_prune_context: boolean
+  is_find_relevant_files: boolean
 }): Promise<string | undefined> => {
   let items: vscode.QuickPickItem[] = [
     {
@@ -55,7 +55,7 @@ const hash_sign_quick_pick = async (params: {
     }
   ]
 
-  if (params.is_prune_context) {
+  if (params.is_find_relevant_files) {
     items = items.filter(
       (item) =>
         item.label !== context_at_commit_label &&
@@ -161,16 +161,16 @@ export const handle_hash_sign_quick_pick = async (
   is_for_code_completions: boolean,
   target?: 'prompt-field' | 'preset-prefix' | 'preset-suffix'
 ): Promise<void> => {
-  const is_prune_context =
+  const is_find_relevant_files =
     (panel_provider.mode == MODE.WEB &&
-      panel_provider.web_prompt_type == 'prune-context') ||
+      panel_provider.web_prompt_type == 'find-relevant-files') ||
     (panel_provider.mode == MODE.API &&
-      panel_provider.api_prompt_type == 'prune-context')
+      panel_provider.api_prompt_type == 'find-relevant-files')
 
   const replacement = await hash_sign_quick_pick({
     context,
     is_for_code_completions,
-    is_prune_context
+    is_find_relevant_files
   })
 
   if (!replacement) {

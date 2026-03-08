@@ -8,7 +8,7 @@ const KEYS_TO_CLEAR = [
   'instructions-ask',
   'instructions-no-context',
   'instructions-code-at-cursor',
-  'instructions-prune-context'
+  'instructions-find-relevant-files'
 ]
 
 /**

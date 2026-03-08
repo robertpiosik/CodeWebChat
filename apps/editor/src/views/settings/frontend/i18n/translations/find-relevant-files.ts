@@ -1,5 +1,5 @@
-export const prune_context = {
-  'prune-context.subtitle': {
+export const find_relevant_files = {
+  'find-relevant-files.subtitle': {
     en: 'Make the context task-focused.',
     pl: 'Skup kontekst na zadaniu.',
     'zh-cn': '使上下文聚焦于任务。',
@@ -17,7 +17,7 @@ export const prune_context = {
     hu: 'A kontextus feladatra fókuszálása.',
     bg: 'Фокусиране на контекста.'
   },
-  'prune-context.notice': {
+  'find-relevant-files.notice': {
     en: 'A request includes context files in a compacted form.',
     pl: 'Wiadomość zawiera pliki kontekstowe w skompresowanej formie.',
     'zh-cn': '请求以压缩形式包含上下文文件。',
@@ -27,7 +27,7 @@ export const prune_context = {
     es: 'Una solicitud incluye archivos de contexto en forma compactada.',
     fr: 'Une requête inclut des fichiers de contexte sous forme compactée.',
     'pt-br':
-      'Uma solicitação incluye archivos de contexto em formato compactado.',
+      'Uma solicitação incluye arquivos de contexto em formato compactado.',
     ru: 'Запрос включает файлы контекста в сжатом виде.',
     ko: '요청에 압축된 형식의 컨텍스트 파일이 포함됩니다.',
     it: 'Una richiesta include file di contesto in forma compatta.',

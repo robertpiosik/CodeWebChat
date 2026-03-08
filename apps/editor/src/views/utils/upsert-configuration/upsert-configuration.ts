@@ -50,10 +50,10 @@ export const upsert_configuration = async (params: {
     get_configs = () => providers_manager.get_intelligent_update_tool_configs()
     save_configs = (configs) =>
       providers_manager.save_intelligent_update_tool_configs(configs)
-  } else if (params.tool_type == 'prune-context') {
-    get_configs = () => providers_manager.get_prune_context_tool_configs()
+  } else if (params.tool_type == 'find-relevant-files') {
+    get_configs = () => providers_manager.get_find_relevant_files_tool_configs()
     save_configs = (configs) =>
-      providers_manager.save_prune_context_tool_configs(configs)
+      providers_manager.save_find_relevant_files_tool_configs(configs)
   } else if (params.tool_type == 'voice-input') {
     get_configs = () => providers_manager.get_voice_input_tool_configs()
     save_configs = (configs) =>

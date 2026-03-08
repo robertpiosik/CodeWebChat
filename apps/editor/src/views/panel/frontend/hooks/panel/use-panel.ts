@@ -33,7 +33,7 @@ export const use_panel = (vscode: any) => {
     edit_context_instructions,
     no_context_instructions,
     code_at_cursor_instructions,
-    prune_context_instructions,
+    find_relevant_files_instructions,
     handle_instructions_change,
     handle_tab_change,
     handle_new_tab,
@@ -52,8 +52,8 @@ export const use_panel = (vscode: any) => {
     set_configurations_collapsed_by_api_mode
   ] = useState<{ [mode in ApiPromptType]?: boolean }>({})
   const [
-    prune_context_instructions_prefix,
-    set_prune_context_instructions_prefix
+    find_relevant_files_instructions_prefix,
+    set_find_relevant_files_instructions_prefix
   ] = useState<string>('')
   const [is_recording, set_is_recording] = useState(false)
   const [setup_progress, set_setup_progress] = useState<SetupProgress>()
@@ -99,9 +99,11 @@ export const use_panel = (vscode: any) => {
     })
   }
 
-  const handle_prune_context_instructions_prefix_change = (prefix: string) => {
+  const handle_find_relevant_files_instructions_prefix_change = (
+    prefix: string
+  ) => {
     post_message(vscode, {
-      command: 'SAVE_PRUNE_CONTEXT_INSTRUCTIONS_PREFIX',
+      command: 'SAVE_FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX',
       prefix
     })
   }
@@ -146,8 +148,8 @@ export const use_panel = (vscode: any) => {
         set_context_size_warning_threshold(message.threshold)
       } else if (message.command == 'CAN_UNDO_CHANGED') {
         set_can_undo(message.can_undo)
-      } else if (message.command == 'PRUNE_CONTEXT_INSTRUCTIONS_PREFIX') {
-        set_prune_context_instructions_prefix(message.prefix)
+      } else if (message.command == 'FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX') {
+        set_find_relevant_files_instructions_prefix(message.prefix)
       } else if (message.command == 'RECORDING_STATE') {
         set_is_recording(message.is_recording)
       } else if (message.command == 'SETUP_PROGRESS') {
@@ -167,7 +169,7 @@ export const use_panel = (vscode: any) => {
       { command: 'GET_COLLAPSED_STATES' },
       { command: 'GET_CHECKPOINTS' },
       { command: 'REQUEST_CAN_UNDO' },
-      { command: 'GET_PRUNE_CONTEXT_INSTRUCTIONS_PREFIX' },
+      { command: 'GET_FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX' },
       { command: 'GET_SETUP_PROGRESS' }
     ]
     initial_messages.forEach((message) => post_message(vscode, message))
@@ -211,7 +213,7 @@ export const use_panel = (vscode: any) => {
       if (
         web_prompt_type == 'edit-context' ||
         web_prompt_type == 'code-at-cursor' ||
-        web_prompt_type == 'prune-context'
+        web_prompt_type == 'find-relevant-files'
       ) {
         handle_api_prompt_type_change(web_prompt_type)
       }
@@ -273,7 +275,7 @@ export const use_panel = (vscode: any) => {
     edit_context_instructions,
     no_context_instructions,
     code_at_cursor_instructions,
-    prune_context_instructions,
+    find_relevant_files_instructions,
     mode,
     web_prompt_type,
     api_prompt_type,
@@ -291,7 +293,7 @@ export const use_panel = (vscode: any) => {
       : false,
     is_timeline_collapsed,
     handle_task_forward,
-    prune_context_instructions_prefix,
+    find_relevant_files_instructions_prefix,
     handle_instructions_change,
     handle_web_prompt_type_change,
     handle_api_prompt_type_change,
@@ -299,7 +301,7 @@ export const use_panel = (vscode: any) => {
     handle_presets_collapsed_change,
     handle_timeline_collapsed_change,
     handle_configurations_collapsed_change,
-    handle_prune_context_instructions_prefix_change,
+    handle_find_relevant_files_instructions_prefix_change,
     handle_paste_image,
     handle_open_image,
     handle_paste_long_text,

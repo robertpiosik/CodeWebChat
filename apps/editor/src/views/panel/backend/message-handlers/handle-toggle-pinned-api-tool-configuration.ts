@@ -17,8 +17,8 @@ export const handle_toggle_pinned_api_tool_configuration = async (
     configs = await providers_manager.get_edit_context_tool_configs()
   } else if (prompt_type == 'code-at-cursor') {
     configs = await providers_manager.get_code_completions_tool_configs()
-  } else if (prompt_type == 'prune-context') {
-    configs = await providers_manager.get_prune_context_tool_configs()
+  } else if (prompt_type == 'find-relevant-files') {
+    configs = await providers_manager.get_find_relevant_files_tool_configs()
   } else {
     return
   }
@@ -32,8 +32,8 @@ export const handle_toggle_pinned_api_tool_configuration = async (
     await providers_manager.save_edit_context_tool_configs(configs)
   } else if (prompt_type == 'code-at-cursor') {
     await providers_manager.save_code_completions_tool_configs(configs)
-  } else if (prompt_type == 'prune-context') {
-    await providers_manager.save_prune_context_tool_configs(configs)
+  } else if (prompt_type == 'find-relevant-files') {
+    await providers_manager.save_find_relevant_files_tool_configs(configs)
   }
   await handle_get_api_tool_configurations(panel_provider)
 }

@@ -28,10 +28,10 @@ export const handle_set_default_configuration = async (
     get_configs = () => providers_manager.get_commit_messages_tool_configs()
     set_default_config = (c) =>
       providers_manager.set_default_commit_messages_config(c)
-  } else if (type == 'prune-context') {
-    get_configs = () => providers_manager.get_prune_context_tool_configs()
+  } else if (type == 'find-relevant-files') {
+    get_configs = () => providers_manager.get_find_relevant_files_tool_configs()
     set_default_config = (c) =>
-      providers_manager.set_default_prune_context_config(c)
+      providers_manager.set_default_find_relevant_files_config(c)
   } else if (type == 'voice-input') {
     get_configs = () => providers_manager.get_voice_input_tool_configs()
     set_default_config = (c) =>

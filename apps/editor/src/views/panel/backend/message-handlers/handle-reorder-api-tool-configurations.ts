@@ -49,9 +49,9 @@ export const handle_reorder_api_tool_configurations = async (
         reordered_configs
       )
     }
-  } else if (message.prompt_type == 'prune-context') {
+  } else if (message.prompt_type == 'find-relevant-files') {
     const current_configs =
-      await providers_manager.get_prune_context_tool_configs()
+      await providers_manager.get_find_relevant_files_tool_configs()
     const reordered_configs = reordered_ids
       .map((id) => {
         const found = current_configs.find((p) => get_tool_config_id(p) === id)
@@ -64,7 +64,9 @@ export const handle_reorder_api_tool_configurations = async (
       .filter((p): p is ToolConfig => p !== null)
 
     if (reordered_configs.length === current_configs.length) {
-      await providers_manager.save_prune_context_tool_configs(reordered_configs)
+      await providers_manager.save_find_relevant_files_tool_configs(
+        reordered_configs
+      )
     }
   }
 }

@@ -50,7 +50,7 @@ export const Panel = () => {
     edit_context_instructions,
     no_context_instructions,
     code_at_cursor_instructions,
-    prune_context_instructions,
+    find_relevant_files_instructions,
     mode,
     web_prompt_type,
     api_prompt_type,
@@ -71,8 +71,8 @@ export const Panel = () => {
     is_timeline_collapsed,
     handle_timeline_collapsed_change,
     handle_task_forward,
-    prune_context_instructions_prefix,
-    handle_prune_context_instructions_prefix_change,
+    find_relevant_files_instructions_prefix,
+    handle_find_relevant_files_instructions_prefix_change,
     handle_paste_image,
     handle_open_image,
     handle_paste_long_text,
@@ -158,7 +158,7 @@ export const Panel = () => {
     no_context_instructions === undefined ||
     !version ||
     code_at_cursor_instructions === undefined ||
-    prune_context_instructions === undefined ||
+    find_relevant_files_instructions === undefined ||
     mode === undefined ||
     web_prompt_type === undefined ||
     is_connected === undefined ||
@@ -200,8 +200,8 @@ export const Panel = () => {
       state = edit_context_instructions
     } else if (prompt_type == 'no-context') {
       state = no_context_instructions
-    } else if (prompt_type == 'prune-context') {
-      state = prune_context_instructions
+    } else if (prompt_type == 'find-relevant-files') {
+      state = find_relevant_files_instructions
     }
 
     if (!state) return ''
@@ -216,7 +216,8 @@ export const Panel = () => {
     if (prompt_type == 'edit-context') return edit_context_instructions
     if (prompt_type == 'no-context') return no_context_instructions
     if (prompt_type == 'code-at-cursor') return code_at_cursor_instructions
-    if (prompt_type == 'prune-context') return prune_context_instructions
+    if (prompt_type == 'find-relevant-files')
+      return find_relevant_files_instructions
     return undefined
   }
 
@@ -345,9 +346,9 @@ export const Panel = () => {
                     code_at_cursor_instructions.active_index
                   ] || ''
                 }
-                prune_context_instructions={
-                  prune_context_instructions.instructions[
-                    prune_context_instructions.active_index
+                find_relevant_files_instructions={
+                  find_relevant_files_instructions.instructions[
+                    find_relevant_files_instructions.active_index
                   ] || ''
                 }
                 set_instructions={handle_instructions_change}
@@ -387,11 +388,11 @@ export const Panel = () => {
                 }
                 on_pasted_lines_click={handle_pasted_lines_click}
                 currently_open_file_text={currently_open_file_text}
-                prune_context_instructions_prefix={
-                  prune_context_instructions_prefix
+                find_relevant_files_instructions_prefix={
+                  find_relevant_files_instructions_prefix
                 }
-                on_prune_context_instructions_prefix_change={
-                  handle_prune_context_instructions_prefix_change
+                on_find_relevant_files_instructions_prefix_change={
+                  handle_find_relevant_files_instructions_prefix_change
                 }
                 on_open_url={handle_open_url}
                 on_open_website={handle_open_website}

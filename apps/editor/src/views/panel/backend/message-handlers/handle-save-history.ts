@@ -4,7 +4,7 @@ import {
   HISTORY_EDIT_STATE_KEY,
   HISTORY_NO_CONTEXT_STATE_KEY,
   HistoryEntry,
-  HISTORY_PRUNE_CONTEXT_STATE_KEY
+  HISTORY_FIND_RELEVANT_FILES_STATE_KEY
 } from '@/constants/state-keys'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { SaveHistoryMessage } from '@/views/panel/types/messages'
@@ -28,8 +28,8 @@ export const handle_save_history = async (
     case 'code-at-cursor':
       key = HISTORY_CODE_AT_CURSOR_STATE_KEY
       break
-    case 'prune-context':
-      key = HISTORY_PRUNE_CONTEXT_STATE_KEY
+    case 'find-relevant-files':
+      key = HISTORY_FIND_RELEVANT_FILES_STATE_KEY
       break
   }
   if (key) {

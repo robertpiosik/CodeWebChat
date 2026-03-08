@@ -30,9 +30,10 @@ export const handle_reorder_configuration = async (
   } else if (type == 'commit-messages') {
     get_configs = () => providers_manager.get_commit_messages_tool_configs()
     save_configs = (c) => providers_manager.save_commit_messages_tool_configs(c)
-  } else if (type == 'prune-context') {
-    get_configs = () => providers_manager.get_prune_context_tool_configs()
-    save_configs = (c) => providers_manager.save_prune_context_tool_configs(c)
+  } else if (type == 'find-relevant-files') {
+    get_configs = () => providers_manager.get_find_relevant_files_tool_configs()
+    save_configs = (c) =>
+      providers_manager.save_find_relevant_files_tool_configs(c)
   } else if (type == 'voice-input') {
     get_configs = () => providers_manager.get_voice_input_tool_configs()
     save_configs = (c) => providers_manager.save_voice_input_tool_configs(c)

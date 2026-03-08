@@ -15,8 +15,8 @@ import { replace_pasted_text_symbol } from '../utils/replace-pasted-text-symbol'
 import { replace_fragment_symbol } from '../utils/replace-fragment-symbol'
 import {
   code_at_cursor_instructions_for_panel,
-  prune_context_instructions_prefix,
-  prune_context_format
+  find_relevant_files_instructions_prefix,
+  find_relevant_files_format
 } from '@/constants/instructions'
 import { get_recently_used_presets_or_groups_key } from '@/constants/state-keys'
 import { ConfigPresetFormat } from '../utils/preset-format-converters'
@@ -213,7 +213,7 @@ export const handle_send_to_browser = async (params: {
     const collected = await files_collector.collect_files({
       additional_paths,
       no_context: params.panel_provider.web_prompt_type == 'no-context',
-      compact: params.panel_provider.web_prompt_type == 'prune-context'
+      compact: params.panel_provider.web_prompt_type == 'find-relevant-files'
     })
     const context_text = collected.other_files + collected.recent_files
 
@@ -312,15 +312,16 @@ export const handle_send_to_browser = async (params: {
           if (edit_format_instructions) {
             system_instructions_xml = `<system>\n${edit_format_instructions}\n</system>`
           }
-        } else if (params.panel_provider.web_prompt_type == 'prune-context') {
+        } else if (
+          params.panel_provider.web_prompt_type == 'find-relevant-files'
+        ) {
           const config = vscode.workspace.getConfiguration('codeWebChat')
-          const config_prune_instructions_prefix = config.get<string>(
-            'pruneContextInstructionsPrefix'
-          )
+          const config_find_relevant_files_instructions_prefix =
+            config.get<string>('findRelevantFilesInstructionsPrefix')
           const instructions_to_use =
-            config_prune_instructions_prefix ||
-            prune_context_instructions_prefix
-          system_instructions_xml = `${instructions_to_use}\n${prune_context_format}`
+            config_find_relevant_files_instructions_prefix ||
+            find_relevant_files_instructions_prefix
+          system_instructions_xml = `${instructions_to_use}\n${find_relevant_files_format}`
         }
 
         return {

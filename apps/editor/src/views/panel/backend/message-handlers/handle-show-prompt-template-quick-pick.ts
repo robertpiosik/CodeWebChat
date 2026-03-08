@@ -37,8 +37,8 @@ export const handle_show_prompt_template_quick_pick = async (
     case 'no-context':
       prompt_templates_key = 'promptTemplatesForNoContext'
       break
-    case 'prune-context':
-      prompt_templates_key = 'promptTemplatesForPruneContext'
+    case 'find-relevant-files':
+      prompt_templates_key = 'promptTemplatesForFindRelevantFiles'
       break
   }
 

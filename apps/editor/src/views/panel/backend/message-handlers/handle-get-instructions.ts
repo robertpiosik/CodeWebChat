@@ -7,6 +7,6 @@ export const handle_get_instructions = (panel_provider: PanelProvider) => {
     edit_context: panel_provider.edit_context_instructions,
     no_context: panel_provider.no_context_instructions,
     code_at_cursor: panel_provider.code_at_cursor_instructions,
-    prune_context: panel_provider.prune_context_instructions
+    find_relevant_files: panel_provider.find_relevant_files_instructions
   })
 }

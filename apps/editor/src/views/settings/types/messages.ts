@@ -98,17 +98,17 @@ export interface SetDefaultIntelligentUpdateConfigurationMessage {
   configuration_id: string | null
 }
 
-export interface GetPruneContextConfigurationsMessage {
-  command: 'GET_PRUNE_CONTEXT_CONFIGURATIONS'
+export interface GetFindRelevantFilesConfigurationsMessage {
+  command: 'GET_FIND_RELEVANT_FILES_CONFIGURATIONS'
 }
 
-export interface ReorderPruneContextConfigurationsMessage {
-  command: 'REORDER_PRUNE_CONTEXT_CONFIGURATIONS'
+export interface ReorderFindRelevantFilesConfigurationsMessage {
+  command: 'REORDER_FIND_RELEVANT_FILES_CONFIGURATIONS'
   configurations: ConfigurationForClient[]
 }
 
-export interface DeletePruneContextConfigurationMessage {
-  command: 'DELETE_PRUNE_CONTEXT_CONFIGURATION'
+export interface DeleteFindRelevantFilesConfigurationMessage {
+  command: 'DELETE_FIND_RELEVANT_FILES_CONFIGURATION'
   configuration_id: string
 }
 
@@ -337,9 +337,9 @@ export type FrontendMessage =
   | ReorderIntelligentUpdateConfigurationsMessage
   | DeleteIntelligentUpdateConfigurationMessage
   | SetDefaultIntelligentUpdateConfigurationMessage
-  | GetPruneContextConfigurationsMessage
-  | ReorderPruneContextConfigurationsMessage
-  | DeletePruneContextConfigurationMessage
+  | GetFindRelevantFilesConfigurationsMessage
+  | ReorderFindRelevantFilesConfigurationsMessage
+  | DeleteFindRelevantFilesConfigurationMessage
   | GetVoiceInputConfigurationsMessage
   | ReorderVoiceInputConfigurationsMessage
   | DeleteVoiceInputConfigurationMessage
@@ -407,8 +407,8 @@ export interface IntelligentUpdateConfigurationsMessage {
   configurations: ConfigurationForClient[]
 }
 
-export interface PruneContextConfigurationsMessage {
-  command: 'PRUNE_CONTEXT_CONFIGURATIONS'
+export interface FindRelevantFilesConfigurationsMessage {
+  command: 'FIND_RELEVANT_FILES_CONFIGURATIONS'
   configurations: ConfigurationForClient[]
 }
 
@@ -507,7 +507,7 @@ export type BackendMessage =
   | CodeAtCursorConfigurationsMessage
   | EditContextConfigurationsMessage
   | IntelligentUpdateConfigurationsMessage
-  | PruneContextConfigurationsMessage
+  | FindRelevantFilesConfigurationsMessage
   | VoiceInputConfigurationsMessage
   | CommitMessagesConfigurationsMessage
   | CommitMessageInstructionsMessage

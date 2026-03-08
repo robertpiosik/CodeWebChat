@@ -83,8 +83,10 @@ type Props = {
   on_edit_context_with_quick_pick_click: (invocation_count: number) => void
   on_code_at_cursor_click: (invocation_count: number) => void
   on_code_at_cursor_with_quick_pick_click: (invocation_count: number) => void
-  on_prune_context_click: (invocation_count: number) => void
-  on_prune_context_with_quick_pick_click: (invocation_count: number) => void
+  on_find_relevant_files_click: (invocation_count: number) => void
+  on_find_relevant_files_with_quick_pick_click: (
+    invocation_count: number
+  ) => void
   caret_position_to_set?: number
   on_caret_position_set?: () => void
   chat_input_focus_and_select_key: number
@@ -106,8 +108,8 @@ type Props = {
   on_open_url: (url: string) => void
   on_open_website: (url: string) => void
   are_keyboard_shortcuts_disabled: boolean
-  prune_context_instructions_prefix: string
-  on_prune_context_instructions_prefix_change: (prefix: string) => void
+  find_relevant_files_instructions_prefix: string
+  on_find_relevant_files_instructions_prefix_change: (prefix: string) => void
   on_paste_image: (base64_content: string) => void
   on_open_image: (hash: string) => void
   on_paste_text: (text: string) => void
@@ -131,9 +133,10 @@ export const MainView: React.FC<Props> = (props) => {
     (props.mode == MODE.WEB && props.web_prompt_type == 'code-at-cursor') ||
     (props.mode == MODE.API && props.api_prompt_type == 'code-at-cursor')
 
-  const is_in_prune_context_prompt_type =
-    (props.mode == MODE.WEB && props.web_prompt_type == 'prune-context') ||
-    (props.mode == MODE.API && props.api_prompt_type == 'prune-context')
+  const is_in_find_relevant_files_prompt_type =
+    (props.mode == MODE.WEB &&
+      props.web_prompt_type == 'find-relevant-files') ||
+    (props.mode == MODE.API && props.api_prompt_type == 'find-relevant-files')
 
   const show_edit_format_selector =
     (props.mode == MODE.WEB && props.web_prompt_type == 'edit-context') ||
@@ -159,8 +162,8 @@ export const MainView: React.FC<Props> = (props) => {
     } else {
       if (is_in_code_completions_prompt_type) {
         props.on_code_at_cursor_click(current_invocation_count)
-      } else if (is_in_prune_context_prompt_type) {
-        props.on_prune_context_click(current_invocation_count)
+      } else if (is_in_find_relevant_files_prompt_type) {
+        props.on_find_relevant_files_click(current_invocation_count)
       } else {
         props.on_edit_context_click(current_invocation_count)
       }
@@ -176,8 +179,10 @@ export const MainView: React.FC<Props> = (props) => {
     } else {
       if (is_in_code_completions_prompt_type) {
         props.on_code_at_cursor_with_quick_pick_click(current_invocation_count)
-      } else if (is_in_prune_context_prompt_type) {
-        props.on_prune_context_with_quick_pick_click(current_invocation_count)
+      } else if (is_in_find_relevant_files_prompt_type) {
+        props.on_find_relevant_files_with_quick_pick_click(
+          current_invocation_count
+        )
       } else {
         props.on_edit_context_with_quick_pick_click(current_invocation_count)
       }
@@ -281,11 +286,11 @@ export const MainView: React.FC<Props> = (props) => {
             on_open_website={props.on_open_website}
             invocation_count={current_invocation_count}
             on_invocation_count_change={handle_invocation_count_change}
-            prune_context_instructions_prefix={
-              props.prune_context_instructions_prefix
+            find_relevant_files_instructions_prefix={
+              props.find_relevant_files_instructions_prefix
             }
-            on_prune_context_instructions_prefix_change={
-              props.on_prune_context_instructions_prefix_change
+            on_find_relevant_files_instructions_prefix_change={
+              props.on_find_relevant_files_instructions_prefix_change
             }
             on_paste_image={props.on_paste_image}
             on_open_image={props.on_open_image}

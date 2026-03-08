@@ -23,7 +23,7 @@ export type SetupProgress = {
   has_model_provider: boolean
   has_configuration_for_edit_context: boolean
   has_configuration_for_intelligent_update: boolean
-  has_configuration_for_prune_context: boolean
+  has_configuration_for_find_relevant_files: boolean
   has_configuration_for_code_at_cursor: boolean
   has_configuration_for_voice_input: boolean
   has_configuration_for_commit_messages: boolean
@@ -87,7 +87,7 @@ export interface SaveInstructionsMessage extends BaseMessage {
     | 'ask-about-context'
     | 'edit-context'
     | 'code-at-cursor'
-    | 'prune-context'
+    | 'find-relevant-files'
     | 'no-context'
 }
 
@@ -155,7 +155,7 @@ export interface SaveHistoryMessage extends BaseMessage {
     | 'ask-about-context'
     | 'edit-context'
     | 'code-at-cursor'
-    | 'prune-context'
+    | 'find-relevant-files'
     | 'no-context'
 }
 
@@ -245,8 +245,8 @@ export interface CodeAtCursorMessage extends BaseMessage {
   invocation_count: number
 }
 
-export interface PruneContextMessage extends BaseMessage {
-  command: 'PRUNE_CONTEXT'
+export interface FindRelevantFilesMessage extends BaseMessage {
+  command: 'FIND_RELEVANT_FILES'
   use_quick_pick: boolean
   config_id?: string
   invocation_count: number
@@ -489,12 +489,12 @@ export interface UpdateFileProgressMessage extends BaseMessage {
   apply_tokens_per_second?: number
 }
 
-export interface GetPruneContextInstructionsPrefixMessage extends BaseMessage {
-  command: 'GET_PRUNE_CONTEXT_INSTRUCTIONS_PREFIX'
+export interface GetFindRelevantFilesInstructionsPrefixMessage extends BaseMessage {
+  command: 'GET_FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX'
 }
 
-export interface SavePruneContextInstructionsPrefixMessage extends BaseMessage {
-  command: 'SAVE_PRUNE_CONTEXT_INSTRUCTIONS_PREFIX'
+export interface SaveFindRelevantFilesInstructionsPrefixMessage extends BaseMessage {
+  command: 'SAVE_FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX'
   prefix: string
 }
 
@@ -601,7 +601,7 @@ export type FrontendMessage =
   | EditContextMessage
   | CancelApiRequestMessage
   | CodeAtCursorMessage
-  | PruneContextMessage
+  | FindRelevantFilesMessage
   | ShowAtSignQuickPickMessage
   | ShowHashSignQuickPickMessage
   | SaveWebPromptTypeMessage
@@ -647,8 +647,8 @@ export type FrontendMessage =
   | DeleteTaskMessage
   | PreviewGeneratedCodeMessage
   | UpdateFileProgressMessage
-  | GetPruneContextInstructionsPrefixMessage
-  | SavePruneContextInstructionsPrefixMessage
+  | GetFindRelevantFilesInstructionsPrefixMessage
+  | SaveFindRelevantFilesInstructionsPrefixMessage
   | OpenExternalUrlMessage
   | UpsertConfigurationMessage
   | DeleteConfigurationMessage
@@ -668,7 +668,7 @@ export interface InstructionsMessage extends BaseMessage {
   edit_context: InstructionsState
   no_context: InstructionsState
   code_at_cursor: InstructionsState
-  prune_context: InstructionsState
+  find_relevant_files: InstructionsState
   caret_position?: number
 }
 
@@ -716,7 +716,7 @@ export interface ChatHistoryMessage extends BaseMessage {
   edit_context: string[]
   no_context: string[]
   code_at_cursor: string[]
-  prune_context: string[]
+  find_relevant_files: string[]
 }
 
 export interface ResponseHistoryMessage extends BaseMessage {
@@ -902,8 +902,8 @@ export interface TasksMessage extends BaseMessage {
   tasks: Record<string, Task[]>
 }
 
-export interface PruneContextInstructionsPrefixMessage extends BaseMessage {
-  command: 'PRUNE_CONTEXT_INSTRUCTIONS_PREFIX'
+export interface FindRelevantFilesInstructionsPrefixMessage extends BaseMessage {
+  command: 'FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX'
   prefix: string
 }
 
@@ -961,7 +961,7 @@ export type BackendMessage =
   | ShowPreviewOngoingModalMessage
   | TasksMessage
   | UpdateFileProgressMessage
-  | PruneContextInstructionsPrefixMessage
+  | FindRelevantFilesInstructionsPrefixMessage
   | RecordingStateMessage
   | SetupProgressMessage
   | InsertSymbolAtCursorMessage

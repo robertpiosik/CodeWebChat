@@ -47,13 +47,14 @@ export const delete_configuration = async (params: {
       providers_manager.get_default_commit_messages_config()
     set_default_config = (c) =>
       providers_manager.set_default_commit_messages_config(c)
-  } else if (params.type == 'prune-context') {
-    get_configs = () => providers_manager.get_prune_context_tool_configs()
-    save_configs = (c) => providers_manager.save_prune_context_tool_configs(c)
+  } else if (params.type == 'find-relevant-files') {
+    get_configs = () => providers_manager.get_find_relevant_files_tool_configs()
+    save_configs = (c) =>
+      providers_manager.save_find_relevant_files_tool_configs(c)
     get_default_config = () =>
-      providers_manager.get_default_prune_context_config()
+      providers_manager.get_default_find_relevant_files_config()
     set_default_config = (c) =>
-      providers_manager.set_default_prune_context_config(c)
+      providers_manager.set_default_find_relevant_files_config(c)
   } else if (params.type == 'voice-input') {
     get_configs = () => providers_manager.get_voice_input_tool_configs()
     save_configs = (c) => providers_manager.save_voice_input_tool_configs(c)

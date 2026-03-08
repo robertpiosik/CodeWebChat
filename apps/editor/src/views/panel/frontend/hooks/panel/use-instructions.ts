@@ -20,9 +20,10 @@ export const use_instructions = (
   >()
   const [code_at_cursor_instructions, set_code_at_cursor_instructions] =
     useState<InstructionsState | undefined>(undefined)
-  const [prune_context_instructions, set_prune_context_instructions] = useState<
-    InstructionsState | undefined
-  >(undefined)
+  const [
+    find_relevant_files_instructions,
+    set_find_relevant_files_instructions
+  ] = useState<InstructionsState | undefined>(undefined)
 
   const handle_instructions_change = (
     value: string,
@@ -31,7 +32,7 @@ export const use_instructions = (
       | 'edit-context'
       | 'no-context'
       | 'code-at-cursor'
-      | 'prune-context'
+      | 'find-relevant-files'
   ) => {
     const update_state = (
       current_state: InstructionsState | undefined,
@@ -65,8 +66,11 @@ export const use_instructions = (
       update_state(no_context_instructions, set_no_context_instructions)
     } else if (prompt_type == 'code-at-cursor') {
       update_state(code_at_cursor_instructions, set_code_at_cursor_instructions)
-    } else if (prompt_type == 'prune-context') {
-      update_state(prune_context_instructions, set_prune_context_instructions)
+    } else if (prompt_type == 'find-relevant-files') {
+      update_state(
+        find_relevant_files_instructions,
+        set_find_relevant_files_instructions
+      )
     }
   }
 
@@ -98,8 +102,11 @@ export const use_instructions = (
       update(no_context_instructions, set_no_context_instructions)
     } else if (prompt_type == 'code-at-cursor') {
       update(code_at_cursor_instructions, set_code_at_cursor_instructions)
-    } else if (prompt_type == 'prune-context') {
-      update(prune_context_instructions, set_prune_context_instructions)
+    } else if (prompt_type == 'find-relevant-files') {
+      update(
+        find_relevant_files_instructions,
+        set_find_relevant_files_instructions
+      )
     }
   }
 
@@ -134,8 +141,11 @@ export const use_instructions = (
       update(no_context_instructions, set_no_context_instructions)
     } else if (prompt_type == 'code-at-cursor') {
       update(code_at_cursor_instructions, set_code_at_cursor_instructions)
-    } else if (prompt_type == 'prune-context') {
-      update(prune_context_instructions, set_prune_context_instructions)
+    } else if (prompt_type == 'find-relevant-files') {
+      update(
+        find_relevant_files_instructions,
+        set_find_relevant_files_instructions
+      )
     }
   }
 
@@ -178,8 +188,11 @@ export const use_instructions = (
       update(no_context_instructions, set_no_context_instructions)
     } else if (prompt_type == 'code-at-cursor') {
       update(code_at_cursor_instructions, set_code_at_cursor_instructions)
-    } else if (prompt_type == 'prune-context') {
-      update(prune_context_instructions, set_prune_context_instructions)
+    } else if (prompt_type == 'find-relevant-files') {
+      update(
+        find_relevant_files_instructions,
+        set_find_relevant_files_instructions
+      )
     }
   }
 
@@ -191,7 +204,7 @@ export const use_instructions = (
         set_edit_context_instructions(message.edit_context)
         set_no_context_instructions(message.no_context)
         set_code_at_cursor_instructions(message.code_at_cursor)
-        set_prune_context_instructions(message.prune_context)
+        set_find_relevant_files_instructions(message.find_relevant_files)
       }
     }
 
@@ -205,7 +218,7 @@ export const use_instructions = (
     edit_context_instructions,
     no_context_instructions,
     code_at_cursor_instructions,
-    prune_context_instructions,
+    find_relevant_files_instructions,
     handle_instructions_change,
     handle_tab_change,
     handle_new_tab,

@@ -207,22 +207,28 @@ export class SettingsProvider {
             message.configuration_id,
             'intelligent-update'
           )
-        } else if (message.command == 'GET_PRUNE_CONTEXT_CONFIGURATIONS') {
+        } else if (
+          message.command == 'GET_FIND_RELEVANT_FILES_CONFIGURATIONS'
+        ) {
           await handle_get_configurations({
             provider: this,
-            type: 'prune-context'
+            type: 'find-relevant-files'
           })
-        } else if (message.command == 'REORDER_PRUNE_CONTEXT_CONFIGURATIONS') {
+        } else if (
+          message.command == 'REORDER_FIND_RELEVANT_FILES_CONFIGURATIONS'
+        ) {
           await handle_reorder_configuration(
             this,
             message.configurations,
-            'prune-context'
+            'find-relevant-files'
           )
-        } else if (message.command == 'DELETE_PRUNE_CONTEXT_CONFIGURATION') {
+        } else if (
+          message.command == 'DELETE_FIND_RELEVANT_FILES_CONFIGURATION'
+        ) {
           await handle_delete_configuration(
             this,
             message.configuration_id,
-            'prune-context'
+            'find-relevant-files'
           )
         } else if (message.command == 'GET_VOICE_INPUT_CONFIGURATIONS') {
           await handle_get_configurations({
@@ -388,7 +394,7 @@ export class SettingsProvider {
           })
           void handle_get_configurations({
             provider: this,
-            type: 'prune-context'
+            type: 'find-relevant-files'
           })
           void handle_get_context_size_warning_threshold(this)
           void handle_get_commit_message_instructions(this)

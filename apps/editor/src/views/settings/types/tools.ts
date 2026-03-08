@@ -3,5 +3,5 @@ export type ToolType =
   | 'commit-messages'
   | 'edit-context'
   | 'intelligent-update'
-  | 'prune-context'
+  | 'find-relevant-files'
   | 'voice-input'

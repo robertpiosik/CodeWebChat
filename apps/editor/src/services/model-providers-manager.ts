@@ -31,7 +31,7 @@ export type CodeCompletionsConfigs = ToolConfig[]
 export type EditContextConfigs = ToolConfig[]
 export type IntelligentUpdateConfigs = ToolConfig[]
 export type CommitMessagesConfigs = ToolConfig[]
-export type PruneContextConfigs = ToolConfig[]
+export type FindRelevantFilesConfigs = ToolConfig[]
 export type VoiceInputConfigs = ToolConfig[]
 
 export class ModelProvidersManager {
@@ -366,30 +366,36 @@ export class ModelProvidersManager {
     )
   }
 
-  public async get_prune_context_tool_configs(): Promise<PruneContextConfigs> {
+  public async get_find_relevant_files_tool_configs(): Promise<FindRelevantFilesConfigs> {
     await this._load_promise
-    return this._get_tool_configs_from_settings('configurationsForPruneContext')
+    return this._get_tool_configs_from_settings(
+      'configurationsForFindRelevantFiles'
+    )
   }
 
-  public async get_default_prune_context_config(): Promise<
+  public async get_default_find_relevant_files_config(): Promise<
     ToolConfig | undefined
   > {
     await this._load_promise
     return this._get_default_tool_config_from_settings(
-      'configurationsForPruneContext'
+      'configurationsForFindRelevantFiles'
     )
   }
 
-  public async set_default_prune_context_config(config: ToolConfig | null) {
+  public async set_default_find_relevant_files_config(
+    config: ToolConfig | null
+  ) {
     await this._set_default_tool_config_in_settings(
-      'configurationsForPruneContext',
+      'configurationsForFindRelevantFiles',
       config
     )
   }
 
-  public async save_prune_context_tool_configs(configs: PruneContextConfigs) {
+  public async save_find_relevant_files_tool_configs(
+    configs: FindRelevantFilesConfigs
+  ) {
     await this._save_tool_configs_to_settings(
-      'configurationsForPruneContext',
+      'configurationsForFindRelevantFiles',
       configs
     )
   }
@@ -434,7 +440,7 @@ export class ModelProvidersManager {
       'configurationsForEditContext',
       'configurationsForIntelligentUpdate',
       'configurationsForCommitMessages',
-      'configurationsForPruneContext',
+      'configurationsForFindRelevantFiles',
       'configurationsForVoiceInput'
     ]
 

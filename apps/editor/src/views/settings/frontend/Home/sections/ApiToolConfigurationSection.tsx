@@ -10,7 +10,7 @@ type ToolName =
   | 'COMMIT_MESSAGES'
   | 'EDIT_CONTEXT'
   | 'INTELLIGENT_UPDATE'
-  | 'PRUNE_CONTEXT'
+  | 'FIND_RELEVANT_FILES'
   | 'VOICE_INPUT'
 
 type ToolConfigurationsSectionProps = {

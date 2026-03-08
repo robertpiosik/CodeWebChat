@@ -77,9 +77,9 @@ import {
   handle_save_tasks,
   handle_delete_task,
   handle_fix_all_failed_files,
-  handle_prune_context,
-  handle_get_prune_context_instructions_prefix,
-  handle_save_prune_context_instructions_prefix,
+  handle_find_relevant_files,
+  handle_get_find_relevant_files_instructions_prefix,
+  handle_save_find_relevant_files_instructions_prefix,
   handle_open_external_url,
   handle_hash_sign_quick_pick,
   handle_open_file_and_select,
@@ -102,13 +102,13 @@ import {
   CHAT_EDIT_FORMAT_STATE_KEY,
   INSTRUCTIONS_ASK_STATE_KEY,
   INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY,
-  INSTRUCTIONS_PRUNE_CONTEXT_STATE_KEY,
+  INSTRUCTIONS_FIND_RELEVANT_FILES_STATE_KEY,
   INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY,
   INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
   PANEL_MODE_STATE_KEY,
   WEB_MODE_STATE_KEY,
   RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY,
-  RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY,
+  RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY,
   RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY,
   get_recently_used_presets_or_groups_key
 } from '@/constants/state-keys'
@@ -153,7 +153,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     instructions: [''],
     active_index: 0
   }
-  public prune_context_instructions: InstructionsState = {
+  public find_relevant_files_instructions: InstructionsState = {
     instructions: [''],
     active_index: 0
   }
@@ -213,10 +213,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     )
   }
 
-  public get current_prune_context_instruction(): string {
+  public get current_find_relevant_files_instruction(): string {
     return (
-      this.prune_context_instructions.instructions[
-        this.prune_context_instructions.active_index
+      this.find_relevant_files_instructions.instructions[
+        this.find_relevant_files_instructions.active_index
       ] || ''
     )
   }
@@ -231,7 +231,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     if (type == 'edit-context') return this.edit_context_instructions
     if (type == 'no-context') return this.no_context_instructions
     if (type == 'code-at-cursor') return this.code_at_cursor_instructions
-    return this.prune_context_instructions
+    return this.find_relevant_files_instructions
   }
 
   public get current_instruction(): string {
@@ -248,11 +248,14 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   }
 
   private _update_providers_compact_mode() {
-    const is_prune_context =
-      (this.mode == MODE.WEB && this.web_prompt_type == 'prune-context') ||
-      (this.mode == MODE.API && this.api_prompt_type == 'prune-context')
-    this.workspace_provider.set_use_compact_token_count(is_prune_context)
-    this.open_editors_provider.set_use_compact_token_count(is_prune_context)
+    const is_find_relevant_files =
+      (this.mode == MODE.WEB &&
+        this.web_prompt_type == 'find-relevant-files') ||
+      (this.mode == MODE.API && this.api_prompt_type == 'find-relevant-files')
+    this.workspace_provider.set_use_compact_token_count(is_find_relevant_files)
+    this.open_editors_provider.set_use_compact_token_count(
+      is_find_relevant_files
+    )
   }
 
   public async send_checkpoints() {
@@ -283,7 +286,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       providers,
       edit_context,
       intelligent_update,
-      prune_context,
+      find_relevant_files,
       code_at_cursor,
       voice_input,
       commit_messages
@@ -291,7 +294,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       providers_manager.get_providers(),
       providers_manager.get_edit_context_tool_configs(),
       providers_manager.get_intelligent_update_tool_configs(),
-      providers_manager.get_prune_context_tool_configs(),
+      providers_manager.get_find_relevant_files_tool_configs(),
       providers_manager.get_code_completions_tool_configs(),
       providers_manager.get_voice_input_tool_configs(),
       providers_manager.get_commit_messages_tool_configs()
@@ -303,7 +306,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         has_model_provider: providers.length > 0,
         has_configuration_for_edit_context: edit_context.length > 0,
         has_configuration_for_intelligent_update: intelligent_update.length > 0,
-        has_configuration_for_prune_context: prune_context.length > 0,
+        has_configuration_for_find_relevant_files:
+          find_relevant_files.length > 0,
         has_configuration_for_code_at_cursor: code_at_cursor.length > 0,
         has_configuration_for_voice_input: voice_input.length > 0,
         has_configuration_for_commit_messages: commit_messages.length > 0
@@ -353,8 +357,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     this.code_at_cursor_instructions = this._load_instructions(
       INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY
     )
-    this.prune_context_instructions = this._load_instructions(
-      INSTRUCTIONS_PRUNE_CONTEXT_STATE_KEY
+    this.find_relevant_files_instructions = this._load_instructions(
+      INSTRUCTIONS_FIND_RELEVANT_FILES_STATE_KEY
     )
 
     this.chat_edit_format =
@@ -404,7 +408,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           'codeWebChat.chatPresetsForAskAboutContext',
           'codeWebChat.chatPresetsForEditContext',
           'codeWebChat.chatPresetsForCodeAtCursor',
-          'codeWebChat.chatPresetsForPruneContext',
+          'codeWebChat.chatPresetsForFindRelevantFiles',
           'codeWebChat.chatPresetsForNoContext'
         ]
         if (all_preset_keys.some((key) => event.affectsConfiguration(key))) {
@@ -432,7 +436,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         const all_api_config_keys = [
           'codeWebChat.configurationsForEditContext',
           'codeWebChat.configurationsForCodeAtCursor',
-          'codeWebChat.configurationsForPruneContext'
+          'codeWebChat.configurationsForFindRelevantFiles'
         ]
 
         if (
@@ -445,7 +449,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           'codeWebChat.modelProviders',
           'codeWebChat.configurationsForEditContext',
           'codeWebChat.configurationsForCodeAtCursor',
-          'codeWebChat.configurationsForPruneContext',
+          'codeWebChat.configurationsForFindRelevantFiles',
           'codeWebChat.configurationsForIntelligentUpdate',
           'codeWebChat.configurationsForCommitMessages',
           'codeWebChat.configurationsForVoiceInput'
@@ -467,10 +471,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
         if (
           event.affectsConfiguration(
-            'codeWebChat.pruneContextInstructionsPrefix'
+            'codeWebChat.findRelevantFilesInstructionsPrefix'
           )
         ) {
-          handle_get_prune_context_instructions_prefix(this)
+          handle_get_find_relevant_files_instructions_prefix(this)
         }
       }
     )
@@ -609,8 +613,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         return 'chatPresetsForEditContext'
       case 'code-at-cursor':
         return 'chatPresetsForCodeAtCursor'
-      case 'prune-context':
-        return 'chatPresetsForPruneContext'
+      case 'find-relevant-files':
+        return 'chatPresetsForFindRelevantFiles'
       case 'no-context':
         return 'chatPresetsForNoContext'
     }
@@ -808,8 +812,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_edit_context(this, message)
           } else if (message.command == 'CODE_AT_CURSOR') {
             await handle_code_at_cursor(this, message)
-          } else if (message.command == 'PRUNE_CONTEXT') {
-            await handle_prune_context(this, message)
+          } else if (message.command == 'FIND_RELEVANT_FILES') {
+            await handle_find_relevant_files(this, message)
           } else if (message.command == 'SHOW_PROMPT_TEMPLATE_QUICK_PICK') {
             await handle_show_prompt_template_quick_pick(this)
           } else if (message.command == 'GET_WEB_PROMPT_TYPE') {
@@ -924,13 +928,15 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               files_to_fix: message.files
             })
           } else if (
-            message.command == 'GET_PRUNE_CONTEXT_INSTRUCTIONS_PREFIX'
+            message.command == 'GET_FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX'
           ) {
-            handle_get_prune_context_instructions_prefix(this)
+            handle_get_find_relevant_files_instructions_prefix(this)
           } else if (
-            message.command == 'SAVE_PRUNE_CONTEXT_INSTRUCTIONS_PREFIX'
+            message.command == 'SAVE_FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX'
           ) {
-            await handle_save_prune_context_instructions_prefix(message.prefix)
+            await handle_save_find_relevant_files_instructions_prefix(
+              message.prefix
+            )
           } else if (message.command == 'UPSERT_CONFIGURATION') {
             await handle_upsert_configuration(this, message)
           } else if (message.command == 'DELETE_CONFIGURATION') {
@@ -972,7 +978,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const web_prompt_types: WebPromptType[] = [
       'ask-about-context',
-      'prune-context',
+      'find-relevant-files',
       'edit-context',
       'code-at-cursor',
       'no-context'
@@ -981,7 +987,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       'ask-about-context': 'chatPresetsForAskAboutContext',
       'edit-context': 'chatPresetsForEditContext',
       'code-at-cursor': 'chatPresetsForCodeAtCursor',
-      'prune-context': 'chatPresetsForPruneContext',
+      'find-relevant-files': 'chatPresetsForFindRelevantFiles',
       'no-context': 'chatPresetsForNoContext'
     }
     const all_presets = Object.fromEntries(
@@ -1035,8 +1041,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         'code-at-cursor': (this.context.workspaceState.get<string[]>(
           RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
         ) || [])[0],
-        'prune-context': (this.context.workspaceState.get<string[]>(
-          RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY
+        'find-relevant-files': (this.context.workspaceState.get<string[]>(
+          RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY
         ) || [])[0]
       }
     })
@@ -1131,7 +1137,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       edit_context: this.edit_context_instructions,
       no_context: this.no_context_instructions,
       code_at_cursor: this.code_at_cursor_instructions,
-      prune_context: this.prune_context_instructions,
+      find_relevant_files: this.find_relevant_files_instructions,
       caret_position: this.caret_position
     })
   }

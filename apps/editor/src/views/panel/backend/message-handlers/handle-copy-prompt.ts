@@ -15,8 +15,8 @@ import { replace_website_symbol } from '../utils/replace-website-symbol'
 import { replace_fragment_symbol } from '../utils/replace-fragment-symbol'
 import {
   code_at_cursor_instructions_for_panel,
-  prune_context_instructions_prefix,
-  prune_context_format
+  find_relevant_files_instructions_prefix,
+  find_relevant_files_format
 } from '@/constants/instructions'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import { MODE } from '@/views/panel/types/main-view-mode'
@@ -175,15 +175,15 @@ export const handle_copy_prompt = async (params: {
 
     vscode.env.clipboard.writeText(text.trim())
   } else if (!is_in_code_completions_prompt_type) {
-    const is_in_prune_context_prompt_type =
+    const is_in_find_relevant_files_prompt_type =
       (params.panel_provider.mode == MODE.WEB &&
-        params.panel_provider.web_prompt_type == 'prune-context') ||
+        params.panel_provider.web_prompt_type == 'find-relevant-files') ||
       (params.panel_provider.mode == MODE.API &&
-        params.panel_provider.api_prompt_type == 'prune-context')
+        params.panel_provider.api_prompt_type == 'find-relevant-files')
 
     const collected = await files_collector.collect_files({
       no_context: params.panel_provider.web_prompt_type == 'no-context',
-      compact: is_in_prune_context_prompt_type
+      compact: is_in_find_relevant_files_prompt_type
     })
     const context_text = collected.other_files + collected.recent_files
 
@@ -281,14 +281,15 @@ export const handle_copy_prompt = async (params: {
       if (edit_format_instructions) {
         system_instructions_xml = `<system>\n${edit_format_instructions}\n</system>`
       }
-    } else if (is_in_prune_context_prompt_type) {
+    } else if (is_in_find_relevant_files_prompt_type) {
       const config = vscode.workspace.getConfiguration('codeWebChat')
-      const config_prune_instructions_prefix = config.get<string>(
-        'pruneContextInstructionsPrefix'
+      const config_find_relevant_files_instructions_prefix = config.get<string>(
+        'findRelevantFilesInstructionsPrefix'
       )
       const instructions_to_use =
-        config_prune_instructions_prefix || prune_context_instructions_prefix
-      system_instructions_xml = `${instructions_to_use}\n${prune_context_format}`
+        config_find_relevant_files_instructions_prefix ||
+        find_relevant_files_instructions_prefix
+      system_instructions_xml = `${instructions_to_use}\n${find_relevant_files_format}`
     }
 
     const text = context_text

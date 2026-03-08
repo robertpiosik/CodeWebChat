@@ -35,7 +35,7 @@ type NavItem =
   | 'intelligent-update'
   | 'edit-context'
   | 'code-at-cursor'
-  | 'prune-context'
+  | 'find-relevant-files'
   | 'commit-messages'
   | 'voice-input'
 
@@ -68,8 +68,8 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   },
   {
     type: 'item',
-    id: 'prune-context',
-    label: 'sidebar.prune-context'
+    id: 'find-relevant-files',
+    label: 'sidebar.find-relevant-files'
   },
   {
     type: 'item',
@@ -91,7 +91,7 @@ type Props = {
   voice_input_configs: ConfigurationForClient[]
   edit_context_system_instructions: string
   intelligent_update_configs: ConfigurationForClient[]
-  prune_context_configs: ConfigurationForClient[]
+  find_relevant_files_configs: ConfigurationForClient[]
   voice_input_instructions: string
   commit_message_instructions: string
   include_prompts_in_commit_messages: boolean
@@ -111,7 +111,7 @@ type Props = {
   set_code_at_cursor_configs: (configs: ConfigurationForClient[]) => void
   set_intelligent_update_configs: (configs: ConfigurationForClient[]) => void
   set_voice_input_configs: (configs: ConfigurationForClient[]) => void
-  set_prune_context_configs: (configs: ConfigurationForClient[]) => void
+  set_find_relevant_files_configs: (configs: ConfigurationForClient[]) => void
   set_commit_messages_configs: (configs: ConfigurationForClient[]) => void
   on_context_size_warning_threshold_change: (
     threshold: number | undefined
@@ -172,7 +172,7 @@ export const Home: React.FC<Props> = (props) => {
     'intelligent-update': null,
     'edit-context': null,
     'code-at-cursor': null,
-    'prune-context': null,
+    'find-relevant-files': null,
     'commit-messages': null,
     'voice-input': null
   })
@@ -222,8 +222,8 @@ export const Home: React.FC<Props> = (props) => {
     (is_stuck: boolean) => handle_stuck_change('voice-input', is_stuck),
     [handle_stuck_change]
   )
-  const prune_context_on_stuck_change = useCallback(
-    (is_stuck: boolean) => handle_stuck_change('prune-context', is_stuck),
+  const find_relevant_files_on_stuck_change = useCallback(
+    (is_stuck: boolean) => handle_stuck_change('find-relevant-files', is_stuck),
     [handle_stuck_change]
   )
   const commit_messages_on_stuck_change = useCallback(
@@ -238,8 +238,8 @@ export const Home: React.FC<Props> = (props) => {
       return props.edit_context_configs.length == 0
     } else if (id == 'intelligent-update') {
       return props.intelligent_update_configs.length == 0
-    } else if (id == 'prune-context') {
-      return props.prune_context_configs.length == 0
+    } else if (id == 'find-relevant-files') {
+      return props.find_relevant_files_configs.length == 0
     } else if (id == 'code-at-cursor') {
       return props.code_at_cursor_configs.length == 0
     } else if (id == 'voice-input') {
@@ -644,42 +644,48 @@ export const Home: React.FC<Props> = (props) => {
         </UiSection>
 
         <UiSection
-          ref={(el) => (section_refs.current['prune-context'] = el)}
+          ref={(el) => (section_refs.current['find-relevant-files'] = el)}
           group={t('section.api-tool')}
-          title={t('sidebar.prune-context')}
-          subtitle={t('prune-context.subtitle')}
-          on_stuck_change={prune_context_on_stuck_change}
+          title={t('sidebar.find-relevant-files')}
+          subtitle={t('find-relevant-files.subtitle')}
+          on_stuck_change={find_relevant_files_on_stuck_change}
           actions={
             <UiButton
               on_click={() =>
-                props.on_add_config('PRUNE_CONTEXT', { create_on_top: true })
+                props.on_add_config('FIND_RELEVANT_FILES', {
+                  create_on_top: true
+                })
               }
             >
               {t('action.add-new')}
             </UiButton>
           }
         >
-          <UiNotice type="info">{t('prune-context.notice')}</UiNotice>
-          {props.prune_context_configs.length == 0 && (
+          <UiNotice type="info">{t('find-relevant-files.notice')}</UiNotice>
+          {props.find_relevant_files_configs.length == 0 && (
             <UiNotice type="warning">
               {t('message.missing-configuration')}
             </UiNotice>
           )}
           <UiGroup>
             <ApiToolConfigurationSection
-              configurations={props.prune_context_configs}
-              set_configurations={props.set_prune_context_configs}
-              tool_name="PRUNE_CONTEXT"
+              configurations={props.find_relevant_files_configs}
+              set_configurations={props.set_find_relevant_files_configs}
+              tool_name="FIND_RELEVANT_FILES"
               can_have_default={false}
-              on_add={(params) => props.on_add_config('PRUNE_CONTEXT', params)}
+              on_add={(params) =>
+                props.on_add_config('FIND_RELEVANT_FILES', params)
+              }
               on_reorder={(reordered) =>
-                props.on_reorder_configs('PRUNE_CONTEXT', reordered)
+                props.on_reorder_configs('FIND_RELEVANT_FILES', reordered)
               }
-              on_edit={(id) => props.on_edit_config('PRUNE_CONTEXT', id)}
+              on_edit={(id) => props.on_edit_config('FIND_RELEVANT_FILES', id)}
               on_duplicate={(id) =>
-                props.on_duplicate_config('PRUNE_CONTEXT', id)
+                props.on_duplicate_config('FIND_RELEVANT_FILES', id)
               }
-              on_delete={(id) => props.on_delete_config('PRUNE_CONTEXT', id)}
+              on_delete={(id) =>
+                props.on_delete_config('FIND_RELEVANT_FILES', id)
+              }
             />
           </UiGroup>
         </UiSection>

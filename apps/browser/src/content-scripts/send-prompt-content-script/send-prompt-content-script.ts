@@ -196,7 +196,7 @@ const main = async () => {
         | 'ask-about-context'
         | 'edit-context'
         | 'code-at-cursor'
-        | 'prune-context'
+        | 'find-relevant-files'
         | 'no-context'
     }
 
@@ -231,7 +231,7 @@ const main = async () => {
       chatbot?.inject_apply_response_button &&
       (stored_data.prompt_type == 'edit-context' ||
         stored_data.prompt_type == 'code-at-cursor' ||
-        stored_data.prompt_type == 'prune-context')
+        stored_data.prompt_type == 'find-relevant-files')
     ) {
       sessionStorage.setItem(
         session_data_key,

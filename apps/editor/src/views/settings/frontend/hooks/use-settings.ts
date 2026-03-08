@@ -28,9 +28,8 @@ export const use_settings = (vscode: any) => {
   const [voice_input_configs, set_voice_input_configs] = useState<
     ConfigurationForClient[] | undefined
   >(undefined)
-  const [prune_context_configs, set_prune_context_configs] = useState<
-    ConfigurationForClient[] | undefined
-  >(undefined)
+  const [find_relevant_files_configs, set_find_relevant_files_configs] =
+    useState<ConfigurationForClient[] | undefined>(undefined)
   const [commit_message_instructions, set_commit_message_instructions] =
     useState<string | undefined>(undefined)
   const [voice_input_instructions, set_voice_input_instructions] = useState<
@@ -88,7 +87,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_INTELLIGENT_UPDATE_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_VOICE_INPUT_CONFIGURATIONS' })
-    post_message(vscode, { command: 'GET_PRUNE_CONTEXT_CONFIGURATIONS' })
+    post_message(vscode, { command: 'GET_FIND_RELEVANT_FILES_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_INCLUDE_PROMPTS_IN_COMMIT_MESSAGES' })
     post_message(vscode, { command: 'GET_VOICE_INPUT_INSTRUCTIONS' })
@@ -124,8 +123,8 @@ export const use_settings = (vscode: any) => {
         set_intelligent_update_configs(message.configurations)
       } else if (message.command == 'VOICE_INPUT_CONFIGURATIONS') {
         set_voice_input_configs(message.configurations)
-      } else if (message.command == 'PRUNE_CONTEXT_CONFIGURATIONS') {
-        set_prune_context_configs(message.configurations)
+      } else if (message.command == 'FIND_RELEVANT_FILES_CONFIGURATIONS') {
+        set_find_relevant_files_configs(message.configurations)
       } else if (message.command == 'COMMIT_MESSAGE_INSTRUCTIONS') {
         set_commit_message_instructions(message.instructions)
       } else if (message.command == 'INCLUDE_PROMPTS_IN_COMMIT_MESSAGES') {
@@ -488,8 +487,8 @@ export const use_settings = (vscode: any) => {
     set_intelligent_update_configs,
     voice_input_configs,
     set_voice_input_configs,
-    prune_context_configs,
-    set_prune_context_configs,
+    find_relevant_files_configs,
+    set_find_relevant_files_configs,
     voice_input_instructions,
     commit_message_instructions,
     include_prompts_in_commit_messages,

@@ -8,7 +8,7 @@ import {
   ToolConfig
 } from '@/services/model-providers-manager'
 import axios from 'axios'
-import { RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY } from '@/constants/state-keys'
+import { RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY } from '@/constants/state-keys'
 import {
   replace_changes_symbol,
   replace_commit_symbol,
@@ -23,28 +23,28 @@ import { replace_pasted_text_symbol } from '@/views/panel/backend/utils/replace-
 import { replace_website_symbol } from '@/views/panel/backend/utils/replace-website-symbol'
 import { replace_fragment_symbol } from '@/views/panel/backend/utils/replace-fragment-symbol'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
-import { PruneContextMessage } from '@/views/panel/types/messages'
+import { FindRelevantFilesMessage } from '@/views/panel/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
 import {
-  prune_context_instructions_prefix,
-  prune_context_format
+  find_relevant_files_instructions_prefix,
+  find_relevant_files_format
 } from '@/constants/instructions'
 import { build_user_content } from '@/utils/build-user-content'
 
-const get_prune_context_config = async (
+const get_find_relevant_files_config = async (
   api_providers_manager: ModelProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext,
   panel_provider: PanelProvider,
   config_id?: string
 ): Promise<{ provider: Provider; config: ToolConfig } | undefined> => {
-  const prune_context_configs =
-    await api_providers_manager.get_prune_context_tool_configs()
+  const find_relevant_files_configs =
+    await api_providers_manager.get_find_relevant_files_tool_configs()
 
-  if (prune_context_configs.length == 0) {
+  if (find_relevant_files_configs.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
-      dictionary.information_message.NO_PRUNE_CONTEXT_CONFIGURATIONS_FOUND
+      dictionary.information_message.NO_FIND_RELEVANT_FILES_CONFIGURATIONS_FOUND
     )
     return
   }
@@ -53,36 +53,37 @@ const get_prune_context_config = async (
 
   if (config_id !== undefined) {
     selected_config =
-      prune_context_configs.find((c) => get_tool_config_id(c) == config_id) ||
-      null
+      find_relevant_files_configs.find(
+        (c) => get_tool_config_id(c) == config_id
+      ) || null
     if (selected_config) {
       let recents =
         context.workspaceState.get<string[]>(
-          RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY
+          RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY
         ) || []
       recents = [config_id, ...recents.filter((id) => id != config_id)]
       context.workspaceState.update(
-        RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY,
+        RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY,
         recents
       )
 
       if (panel_provider) {
         panel_provider.send_message({
           command: 'SELECTED_CONFIGURATION_CHANGED',
-          prompt_type: 'prune-context',
+          prompt_type: 'find-relevant-files',
           id: config_id
         })
       }
     }
   } else if (!show_quick_pick) {
     const recents = context.workspaceState.get<string[]>(
-      RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY
+      RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY
     )
     const last_selected_id = recents?.[0]
 
     if (last_selected_id) {
       selected_config =
-        prune_context_configs.find(
+        find_relevant_files_configs.find(
           (c) => get_tool_config_id(c) == last_selected_id
         ) || null
     }
@@ -96,13 +97,13 @@ const get_prune_context_config = async (
     const create_items = async (): Promise<Item[]> => {
       const recent_ids =
         context.workspaceState.get<string[]>(
-          RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY
+          RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY
         ) || []
 
       const matched_recent_configs: ToolConfig[] = []
       const remaining_configs: ToolConfig[] = []
 
-      prune_context_configs.forEach((config) => {
+      find_relevant_files_configs.forEach((config) => {
         const id = get_tool_config_id(config)
         if (recent_ids.includes(id)) {
           matched_recent_configs.push(config)
@@ -176,7 +177,7 @@ const get_prune_context_config = async (
     ]
 
     const recents = context.workspaceState.get<string[]>(
-      RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY
+      RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY
     )
     const last_selected_id = recents?.[0]
     const items = quick_pick.items
@@ -216,21 +217,21 @@ const get_prune_context_config = async (
 
           let recents =
             context.workspaceState.get<string[]>(
-              RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY
+              RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY
             ) || []
           recents = [
             selected.id!,
             ...recents.filter((id) => id !== selected.id)
           ]
           context.workspaceState.update(
-            RECENTLY_USED_PRUNE_CONTEXT_CONFIG_IDS_STATE_KEY,
+            RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY,
             recents
           )
 
           if (panel_provider) {
             panel_provider.send_message({
               command: 'SELECTED_CONFIGURATION_CHANGED',
-              prompt_type: 'prune-context',
+              prompt_type: 'find-relevant-files',
               id: selected.id!
             })
           }
@@ -273,8 +274,8 @@ const get_prune_context_config = async (
       dictionary.error_message.API_PROVIDER_NOT_FOUND
     )
     Logger.warn({
-      function_name: 'get_prune_context_config',
-      message: 'API provider not found for Prune Context tool.'
+      function_name: 'get_find_relevant_files_config',
+      message: 'API provider not found for Find Relevant Files tool.'
     })
     return
   }
@@ -285,9 +286,9 @@ const get_prune_context_config = async (
   }
 }
 
-export const handle_prune_context = async (
+export const handle_find_relevant_files = async (
   panel_provider: PanelProvider,
-  message: PruneContextMessage
+  message: FindRelevantFilesMessage
 ): Promise<void> => {
   await vscode.workspace.saveAll()
 
@@ -302,7 +303,7 @@ export const handle_prune_context = async (
     open_editors_provider: panel_provider.open_editors_provider
   })
 
-  let instructions = panel_provider.current_prune_context_instruction
+  let instructions = panel_provider.current_find_relevant_files_instruction
 
   if (!instructions) {
     panel_provider.send_message({
@@ -404,7 +405,7 @@ export const handle_prune_context = async (
   let should_show_quick_pick = message.use_quick_pick
 
   while (true) {
-    const config_result = await get_prune_context_config(
+    const config_result = await get_find_relevant_files_config(
       api_providers_manager,
       should_show_quick_pick,
       panel_provider.context,
@@ -418,17 +419,18 @@ export const handle_prune_context = async (
 
     panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
 
-    const { provider, config: prune_context_config } = config_result
+    const { provider, config: find_relevant_files_config } = config_result
 
     const endpoint_url = provider.base_url
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const config_prune_instructions_prefix = config.get<string>(
-      'pruneContextInstructionsPrefix'
+    const config_find_relevant_files_instructions_prefix = config.get<string>(
+      'findRelevantFilesInstructionsPrefix'
     )
     const instructions_to_use =
-      config_prune_instructions_prefix || prune_context_instructions_prefix
-    const system_instructions_xml = `${instructions_to_use}\n${prune_context_format}`
+      config_find_relevant_files_instructions_prefix ||
+      find_relevant_files_instructions_prefix
+    const system_instructions_xml = `${instructions_to_use}\n${find_relevant_files_format}`
 
     const part1 = `<files>\n${collected.other_files}`
     const part2 = `${collected.recent_files}</files>\n${skill_definitions}${system_instructions_xml}\n${processed_instructions}`
@@ -449,14 +451,14 @@ export const handle_prune_context = async (
 
     const body: { [key: string]: any } = {
       messages,
-      model: prune_context_config.model,
-      temperature: prune_context_config.temperature
+      model: find_relevant_files_config.model,
+      temperature: find_relevant_files_config.temperature
     }
 
     apply_reasoning_effort({
       body,
       provider,
-      reasoning_effort: prune_context_config.reasoning_effort
+      reasoning_effort: find_relevant_files_config.reasoning_effort
     })
 
     try {
@@ -464,9 +466,9 @@ export const handle_prune_context = async (
         endpoint_url,
         api_key: provider.api_key,
         body,
-        provider_name: prune_context_config.provider_name,
-        model: prune_context_config.model,
-        reasoning_effort: prune_context_config.reasoning_effort
+        provider_name: find_relevant_files_config.provider_name,
+        model: find_relevant_files_config.model,
+        reasoning_effort: find_relevant_files_config.reasoning_effort
       })
 
       if (result) {
@@ -474,9 +476,9 @@ export const handle_prune_context = async (
           response: result.response,
           raw_instructions: instructions,
           api_configuration: {
-            provider: prune_context_config.provider_name,
-            model: prune_context_config.model,
-            reasoning_effort: prune_context_config.reasoning_effort
+            provider: find_relevant_files_config.provider_name,
+            model: find_relevant_files_config.model,
+            reasoning_effort: find_relevant_files_config.reasoning_effort
           }
         })
         return
@@ -486,12 +488,12 @@ export const handle_prune_context = async (
         return
       }
       Logger.error({
-        function_name: 'handle_prune_context',
-        message: 'prune context task error',
+        function_name: 'handle_find_relevant_files',
+        message: 'find relevant files task error',
         data: error
       })
       vscode.window.showErrorMessage(
-        'Prune context error. See console for details.'
+        'Find relevant files error. See console for details.'
       )
       return
     }

@@ -16,12 +16,12 @@ export const handle_get_api_tool_configurations = async (
     edit_context_configs,
     code_completions_configs,
     default_code_completions_config,
-    prune_context_configs
+    find_relevant_files_configs
   ] = await Promise.all([
     providers_manager.get_edit_context_tool_configs(),
     providers_manager.get_code_completions_tool_configs(),
     providers_manager.get_default_code_completions_config(),
-    providers_manager.get_prune_context_tool_configs()
+    providers_manager.get_find_relevant_files_tool_configs()
   ])
 
   const is_config_default = (
@@ -48,7 +48,7 @@ export const handle_get_api_tool_configurations = async (
       id: get_tool_config_id(config),
       is_default: is_config_default(config, default_code_completions_config)
     })),
-    'prune-context': prune_context_configs.map((config) => ({
+    'find-relevant-files': find_relevant_files_configs.map((config) => ({
       ...config,
       id: get_tool_config_id(config)
     }))

@@ -47,9 +47,10 @@ export const handle_get_configurations = async (params: {
     default_config =
       await providers_manager.get_default_commit_messages_config()
     command = 'COMMIT_MESSAGES_CONFIGURATIONS'
-  } else if (params.type == 'prune-context') {
-    saved_configs = await providers_manager.get_prune_context_tool_configs()
-    command = 'PRUNE_CONTEXT_CONFIGURATIONS'
+  } else if (params.type == 'find-relevant-files') {
+    saved_configs =
+      await providers_manager.get_find_relevant_files_tool_configs()
+    command = 'FIND_RELEVANT_FILES_CONFIGURATIONS'
   } else if (params.type == 'voice-input') {
     saved_configs = await providers_manager.get_voice_input_tool_configs()
     default_config = await providers_manager.get_default_voice_input_config()
