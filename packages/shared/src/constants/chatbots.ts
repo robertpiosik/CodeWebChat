@@ -55,6 +55,11 @@ export const CHATBOTS = {
         disabled_options: ['disable-thinking'],
         supported_reasoning_efforts: ['Minimal', 'Low', 'Medium', 'High']
       },
+      'gemini-3.1-flash-lite-preview': {
+        label: 'Gemini 3.1 Flash Lite Preview',
+        disabled_options: ['disable-thinking'],
+        supported_reasoning_efforts: ['Minimal', 'Low', 'Medium', 'High']
+      },
       'gemini-2.5-pro': {
         label: 'Gemini 2.5 Pro',
         disabled_options: ['disable-thinking']
