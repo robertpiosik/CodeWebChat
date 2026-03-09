@@ -581,6 +581,16 @@ export interface InsertSymbolAtCursorMessage extends BaseMessage {
   target: 'preset-prefix' | 'preset-suffix'
 }
 
+export interface RelevantFilesModalResponseMessage extends BaseMessage {
+  command: 'RELEVANT_FILES_MODAL_RESPONSE'
+  files?: string[]
+}
+
+export interface AutoClosingWithActionsModalResponseMessage extends BaseMessage {
+  command: 'AUTO_CLOSING_WITH_ACTIONS_MODAL_RESPONSE'
+  action: 'action' | 'close'
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -676,6 +686,8 @@ export type FrontendMessage =
   | SaveFindRelevantFilesShrinkSourceCodeMessage
   | GetSetupProgressMessage
   | RequestReturnHomeMessage
+  | RelevantFilesModalResponseMessage
+  | AutoClosingWithActionsModalResponseMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -886,6 +898,13 @@ export interface ShowAutoClosingModalMessage extends BaseMessage {
   type: 'success' | 'warning' | 'error'
 }
 
+export interface ShowAutoClosingWithActionsModalMessage extends BaseMessage {
+  command: 'SHOW_AUTO_CLOSING_WITH_ACTIONS_MODAL'
+  title: string
+  type: 'success' | 'warning' | 'error'
+  action_label: string
+}
+
 export interface UpdateFileInPreviewMessage extends BaseMessage {
   command: 'UPDATE_FILE_IN_PREVIEW'
   file: FileInPreview
@@ -933,6 +952,14 @@ export interface SetupProgressMessage {
   setup_progress: SetupProgress
 }
 
+export interface ShowRelevantFilesModalMessage extends BaseMessage {
+  command: 'SHOW_RELEVANT_FILES_MODAL'
+  files: {
+    file_path: string
+    relative_path: string
+    token_count?: number
+  }[]
+}
 export interface RecordingStateMessage extends BaseMessage {
   command: 'RECORDING_STATE'
   is_recording: boolean
@@ -992,3 +1019,5 @@ export type BackendMessage =
   | SetupProgressMessage
   | InsertSymbolAtCursorMessage
   | ReturnHomeMessage
+  | ShowRelevantFilesModalMessage
+  | ShowAutoClosingWithActionsModalMessage

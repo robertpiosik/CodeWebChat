@@ -12,7 +12,6 @@ import {
 } from './utils/clipboard-parser'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
-import { display_token_count } from '../../utils/display-token-count'
 import { Logger } from '@shared/utils/logger'
 import { apply_git_patch } from './handlers/diff-handler'
 import { apply_file_relocations } from './utils/file-operations'
@@ -116,138 +115,64 @@ export const process_chat_response = async (
       (item) => item.type == 'relevant-files'
     ) as RelevantFilesItem
 
-    panel_provider.send_message({
-      command: 'SHOW_PROGRESS',
-      title: 'Waiting for confirmation...'
-    })
-
     const current_checked_files =
       workspace_provider.get_export_state().regular.checked_files
 
     const workspace_roots = workspace_provider.get_workspace_roots()
     const all_paths_to_process = new Set<string>(relevant_files_item.file_paths)
 
-    const open_file_button = {
-      iconPath: new vscode.ThemeIcon('go-to-file'),
-      tooltip: t('common.go-to-file')
-    }
-
-    const quick_pick_items = await Promise.all(
-      Array.from(all_paths_to_process).map(async (rel_path) => {
-        let absolute_path: string | undefined
-        for (const root of workspace_roots) {
-          const potential = path.join(root, rel_path)
-          if (fs.existsSync(potential)) {
-            absolute_path = potential
-            break
+    const files_for_modal = (
+      await Promise.all(
+        Array.from(all_paths_to_process).map(async (rel_path) => {
+          let absolute_path: string | undefined
+          for (const root of workspace_roots) {
+            const potential = path.join(root, rel_path)
+            if (fs.existsSync(potential)) {
+              absolute_path = potential
+              break
+            }
           }
-        }
 
-        let token_info = ''
-        if (absolute_path) {
-          const count =
-            await workspace_provider.calculate_file_tokens(absolute_path)
-          token_info = display_token_count(count.total)
-        }
+          let token_count: number | undefined
+          if (absolute_path) {
+            const count =
+              await workspace_provider.calculate_file_tokens(absolute_path)
+            token_count = count.total
+          }
 
-        const dir_name = path.dirname(rel_path)
-        const display_dir = dir_name === '.' ? '' : dir_name
-
-        return {
-          label: path.basename(rel_path),
-          description: display_dir
-            ? `${token_info} · ${display_dir}`
-            : token_info,
-          picked: true,
-          file_path: absolute_path,
-          relative_path: rel_path,
-          buttons: [open_file_button]
-        }
-      })
+          return {
+            file_path: absolute_path,
+            relative_path: rel_path,
+            token_count
+          }
+        })
+      )
+    ).filter(
+      (
+        f
+      ): f is {
+        file_path: string
+        relative_path: string
+        token_count: number
+      } => !!f.file_path
     )
 
-    quick_pick_items.sort((a, b) =>
+    files_for_modal.sort((a, b) =>
       natural_sort(a.relative_path, b.relative_path)
     )
 
-    const quick_pick =
-      vscode.window.createQuickPick<(typeof quick_pick_items)[0]>()
-    quick_pick.items = quick_pick_items
-    quick_pick.selectedItems = quick_pick_items.filter((i) => i.picked)
-    quick_pick.canSelectMany = true
-    quick_pick.title = t('command.apply-chat-response.relevant-files.title')
-    quick_pick.placeholder = t(
-      'command.apply-chat-response.relevant-files.placeholder'
-    )
-    quick_pick.ignoreFocusOut = true
-
-    const close_button = {
-      iconPath: new vscode.ThemeIcon('close'),
-      tooltip: t('common.close')
-    }
-    quick_pick.buttons = [close_button]
-
-    const selected_items = await new Promise<
-      readonly (typeof quick_pick_items)[0][] | undefined
-    >((resolve) => {
-      let is_accepted = false
-      const disposables: vscode.Disposable[] = []
-
-      disposables.push(
-        quick_pick.onDidTriggerButton((button) => {
-          if (button === close_button) {
-            quick_pick.hide()
-            resolve(undefined)
-          }
-        }),
-        quick_pick.onDidTriggerItemButton(async (e) => {
-          if (e.button === open_file_button && e.item.file_path) {
-            try {
-              const doc = await vscode.workspace.openTextDocument(
-                e.item.file_path
-              )
-              await vscode.window.showTextDocument(doc, { preview: true })
-            } catch (error) {
-              vscode.window.showErrorMessage(
-                t('command.context.check-references.error-opening', {
-                  error: String(error)
-                })
-              )
-            }
-          }
-        }),
-        quick_pick.onDidAccept(() => {
-          is_accepted = true
-          resolve([...quick_pick.selectedItems])
-          quick_pick.hide()
-        }),
-        quick_pick.onDidHide(() => {
-          if (!is_accepted) {
-            resolve(undefined)
-          }
-          disposables.forEach((d) => d.dispose())
-          quick_pick.dispose()
-        })
-      )
-      quick_pick.show()
+    panel_provider.send_message({
+      command: 'SHOW_RELEVANT_FILES_MODAL',
+      files: files_for_modal
     })
 
-    if (selected_items) {
-      const files_to_check: string[] = []
-
-      for (const selection of selected_items) {
-        if (selection.file_path) {
-          files_to_check.push(selection.file_path)
-        }
+    const selected_files = await new Promise<string[] | undefined>(
+      (resolve) => {
+        panel_provider.relevant_files_choice_resolver = resolve
       }
+    )
 
-      const presented_files: string[] = []
-      for (const item of quick_pick_items) {
-        if (item.file_path) {
-          presented_files.push(item.file_path)
-        }
-      }
-
+    if (selected_files) {
       const shared_state = SharedFileState.get_instance()
       const was_frf = workspace_provider.is_frf_mode
 
@@ -255,25 +180,35 @@ export const process_chat_response = async (
         shared_state.switch_context_state(false)
       }
 
+      const presented_files = files_for_modal.map((f) => f.file_path)
+
       const filtered_current_files = current_checked_files.filter(
         (f) => !presented_files.includes(f)
       )
 
       const merged_files = Array.from(
-        new Set([...filtered_current_files, ...files_to_check])
+        new Set([...filtered_current_files, ...selected_files])
       )
       await workspace_provider.set_checked_files(merged_files)
 
       if (was_frf) {
         shared_state.switch_context_state(true)
-        await panel_provider.switch_to_edit_context()
       }
 
       panel_provider.send_message({
-        command: 'SHOW_AUTO_CLOSING_MODAL',
+        command: 'SHOW_AUTO_CLOSING_WITH_ACTIONS_MODAL',
         title: t('command.apply-chat-response.relevant-files.success'),
-        type: 'success'
+        type: 'success',
+        action_label: 'Edit context'
       })
+
+      const action = await new Promise<'action' | 'close'>((resolve) => {
+        panel_provider.auto_closing_action_resolver = resolve
+      })
+
+      if (action == 'action') {
+        await panel_provider.switch_to_edit_context()
+      }
     }
 
     return null

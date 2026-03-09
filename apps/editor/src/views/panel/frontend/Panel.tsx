@@ -14,7 +14,9 @@ import { Modal as UiModal } from '@ui/components/editor/panel/modals/Modal'
 import { ProgressModal as UiProgressModal } from '@ui/components/editor/panel/modals/ProgressModal'
 import { ApiManagerModal as UiApiManagerModal } from '@ui/components/editor/panel/modals/ApiManagerModal'
 import { QRCodeModal as UiQRCodeModal } from '@ui/components/editor/panel/modals/QRCodeModal'
+import { RelevantFilesModal as UiRelevantFilesModal } from '@ui/components/editor/panel/modals/RelevantFilesModal'
 import { AutoClosingModal as UiAutoClosingModal } from '@ui/components/editor/panel/modals/AutoClosingModal'
+import { AutoClosingWithActionsModal as UiAutoClosingWithActionsModal } from '@ui/components/editor/panel/modals/AutoClosingWithActionsModal'
 import { EditCheckpointDescriptionModal as UiEditCheckpointDescriptionModal } from '@ui/components/editor/panel/modals/EditCheckpointDescriptionModal'
 import { use_panel } from './hooks/panel/use-panel'
 import { FileInPreview } from '@shared/types/file-in-preview'
@@ -139,8 +141,12 @@ export const Panel = () => {
     api_manager_progress_state,
     auto_closing_modal_data,
     set_auto_closing_modal_data,
+    auto_closing_with_actions_modal_data,
+    set_auto_closing_with_actions_modal_data,
     is_preview_ongoing_modal_visible,
-    set_is_preview_ongoing_modal_visible
+    set_is_preview_ongoing_modal_visible,
+    relevant_files_modal_data,
+    set_relevant_files_modal_data
   } = use_modal_manager()
 
   const [checkpoint_to_edit, set_checkpoint_to_edit] = useState<
@@ -803,6 +809,34 @@ export const Panel = () => {
           </div>
         )}
 
+        {relevant_files_modal_data && (
+          <div className={styles.slot}>
+            <UiRelevantFilesModal
+              files={relevant_files_modal_data.files}
+              on_accept={(files) => {
+                post_message(vscode, {
+                  command: 'RELEVANT_FILES_MODAL_RESPONSE',
+                  files
+                })
+                set_relevant_files_modal_data(undefined)
+              }}
+              on_cancel={() => {
+                post_message(vscode, {
+                  command: 'RELEVANT_FILES_MODAL_RESPONSE',
+                  files: undefined
+                })
+                set_relevant_files_modal_data(undefined)
+              }}
+              on_go_to_file={(file_path) => {
+                post_message(vscode, {
+                  command: 'OPEN_FILE_AND_SELECT',
+                  file_path
+                })
+              }}
+            />
+          </div>
+        )}
+
         {active_qr_wallet && (
           <div className={styles.slot}>
             <UiQRCodeModal
@@ -821,6 +855,31 @@ export const Panel = () => {
               duration={3000}
               on_close={() => {
                 set_auto_closing_modal_data(undefined)
+              }}
+            />
+          </div>
+        )}
+
+        {auto_closing_with_actions_modal_data && (
+          <div className={styles.slot}>
+            <UiAutoClosingWithActionsModal
+              title={auto_closing_with_actions_modal_data.title}
+              type={auto_closing_with_actions_modal_data.type}
+              duration={3000}
+              action_label={auto_closing_with_actions_modal_data.action_label}
+              on_action={() => {
+                post_message(vscode, {
+                  command: 'AUTO_CLOSING_WITH_ACTIONS_MODAL_RESPONSE',
+                  action: 'action'
+                })
+                set_auto_closing_with_actions_modal_data(undefined)
+              }}
+              on_close={() => {
+                post_message(vscode, {
+                  command: 'AUTO_CLOSING_WITH_ACTIONS_MODAL_RESPONSE',
+                  action: 'close'
+                })
+                set_auto_closing_with_actions_modal_data(undefined)
               }}
             />
           </div>
