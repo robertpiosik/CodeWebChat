@@ -95,7 +95,8 @@ import {
   handle_delete_configuration,
   handle_update_last_used_preset_or_group,
   handle_get_find_relevant_files_shrink_source_code,
-  handle_save_find_relevant_files_shrink_source_code
+  handle_save_find_relevant_files_shrink_source_code,
+  handle_return_home_and_switch_to_edit_context
 } from './message-handlers'
 import { SelectionState } from '../types/messages'
 import {
@@ -274,8 +275,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     SharedFileState.get_instance().switch_context_state(is_find_relevant_files)
   }
 
-  public async return_home_and_switch_to_edit_context() {
-    this.send_message({ command: 'RETURN_HOME' })
+  public async switch_to_edit_context() {
     if (this.mode == MODE.WEB) {
       this.web_prompt_type = 'edit-context'
       await this.context.workspaceState.update(
@@ -1007,7 +1007,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'GET_SETUP_PROGRESS') {
             await this.send_setup_progress()
           } else if (message.command == 'REQUEST_RETURN_HOME') {
-            await this.return_home_and_switch_to_edit_context()
+            await handle_return_home_and_switch_to_edit_context(this)
           } else if (
             message.command == 'GET_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE'
           ) {
