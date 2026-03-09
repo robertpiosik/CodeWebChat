@@ -400,10 +400,6 @@
         {
           "command": "codeWebChat.checkReferencingFilesForContext",
           "group": "1_action@5"
-        },
-        {
-          "command": "codeWebChat.searchFilesForContextFromFile",
-          "group": "1_action@7"
         }
       ],
       "commandPalette": [
