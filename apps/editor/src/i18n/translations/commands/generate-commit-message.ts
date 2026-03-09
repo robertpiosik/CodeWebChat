@@ -35,6 +35,24 @@ export const generate_commit_message = {
     hu: 'Szerkessze a commit üzenetet.',
     bg: 'Редактирайте commit съобщението.'
   },
+  'command.commit-message.input.accept': {
+    en: 'Accept',
+    pl: 'Akceptuj',
+    'zh-cn': '接受',
+    ja: '承認',
+    'zh-tw': '接受',
+    de: 'Akzeptieren',
+    es: 'Aceptar',
+    fr: 'Accepter',
+    'pt-br': 'Aceitar',
+    ru: 'Принять',
+    ko: '수락',
+    it: 'Accetta',
+    tr: 'Kabul Et',
+    cs: 'Přijmout',
+    hu: 'Elfogadás',
+    bg: 'Приемане'
+  },
   'command.commit-message.copied': {
     en: 'Commit message prompt copied to clipboard ({tokens} tokens).',
     pl: 'Wiadomość commita skopiowana do schowka ({tokens} tokenów).',

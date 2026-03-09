@@ -86,7 +86,7 @@ export const generate_commit_message_command = (
 
       force_quick_pick = false
 
-      if (api_config_data === 'back') {
+      if (api_config_data == 'back') {
         if (was_empty_stage) {
           if (!show_back_button) {
             await vscode.commands.executeCommand('git.unstageAll')
@@ -148,23 +148,33 @@ export const generate_commit_message_command = (
             input_box.title = t('command.commit-message.input.title')
             input_box.prompt = t('command.commit-message.input.prompt')
 
+            const accept_button = {
+              iconPath: new vscode.ThemeIcon('check'),
+              tooltip: t('command.commit-message.input.accept')
+            }
+
             if (has_default_config && !files_staged_by_action) {
               input_box.buttons = [
+                accept_button,
                 {
                   iconPath: new vscode.ThemeIcon('close'),
                   tooltip: t('common.close')
                 }
               ]
             } else {
-              input_box.buttons = [vscode.QuickInputButtons.Back]
+              input_box.buttons = [accept_button, vscode.QuickInputButtons.Back]
             }
 
             let is_resolved = false
 
             input_box.onDidTriggerButton((button) => {
-              if (
+              if (button.tooltip == t('command.commit-message.input.accept')) {
+                is_resolved = true
+                resolve(input_box.value)
+                input_box.hide()
+              } else if (
                 button === vscode.QuickInputButtons.Back ||
-                button.tooltip === t('common.close')
+                button.tooltip == t('common.close')
               ) {
                 is_resolved = true
                 resolve('back')
@@ -189,7 +199,7 @@ export const generate_commit_message_command = (
           }
         )
 
-        if (edited_message === 'back') {
+        if (edited_message == 'back') {
           if (has_default_config) {
             if (files_staged_by_action) {
               await vscode.commands.executeCommand('git.unstageAll')
