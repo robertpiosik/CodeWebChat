@@ -275,6 +275,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   }
 
   public async return_home_and_switch_to_edit_context() {
+    this.send_message({ command: 'RETURN_HOME' })
     if (this.mode == MODE.WEB) {
       this.web_prompt_type = 'edit-context'
       await this.context.workspaceState.update(
@@ -298,7 +299,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     }
     this.update_providers_shrink_mode()
     this.update_providers_context_state()
-    this.send_message({ command: 'RETURN_HOME' })
   }
 
   public async send_checkpoints() {
@@ -1006,7 +1006,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_voice_input(this, message)
           } else if (message.command == 'GET_SETUP_PROGRESS') {
             await this.send_setup_progress()
-          } else if (message.command == 'RETURN_HOME') {
+          } else if (message.command == 'REQUEST_RETURN_HOME') {
             await this.return_home_and_switch_to_edit_context()
           } else if (
             message.command == 'GET_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE'

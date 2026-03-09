@@ -225,7 +225,7 @@ export const MainView: React.FC<Props> = (props) => {
               id="shrink-source-code"
             />
             <label htmlFor="shrink-source-code">
-              Remove function bodies and comments
+              {t('home.shrink-source-code')}
             </label>
           </div>
         )}

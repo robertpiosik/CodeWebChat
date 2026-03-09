@@ -571,6 +571,10 @@ export interface SetupProgressMessage {
   setup_progress: SetupProgress
 }
 
+export interface RequestReturnHomeMessage extends BaseMessage {
+  command: 'REQUEST_RETURN_HOME'
+}
+
 export interface InsertSymbolAtCursorMessage extends BaseMessage {
   command: 'INSERT_SYMBOL_AT_CURSOR'
   text: string
@@ -671,7 +675,7 @@ export type FrontendMessage =
   | GetFindRelevantFilesShrinkSourceCodeMessage
   | SaveFindRelevantFilesShrinkSourceCodeMessage
   | GetSetupProgressMessage
-  | ReturnHomeMessage
+  | RequestReturnHomeMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {

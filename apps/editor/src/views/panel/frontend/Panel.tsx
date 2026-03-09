@@ -326,7 +326,7 @@ export const Panel = () => {
                 }}
                 is_connected={is_connected}
                 on_show_home={() => {
-                  post_message(vscode, { command: 'RETURN_HOME' })
+                  post_message(vscode, { command: 'REQUEST_RETURN_HOME' })
                 }}
                 ask_instructions={
                   ask_about_context_instructions.instructions[

@@ -125,5 +125,23 @@ export const home = {
     cs: 'Copyright © {year} {link}',
     hu: 'Szerzői jog © {year} {link}',
     bg: 'Авторско право © {year} {link}'
+  },
+  'home.shrink-source-code': {
+    en: 'Strip function bodies and comments',
+    pl: 'Usuń ciała funkcji i komentarze',
+    'zh-cn': '剥离函数体和注释',
+    ja: '関数本体とコメントを取り除く',
+    'zh-tw': '剝離函數主體和註釋',
+    de: 'Funktionskörper und Kommentare entfernen',
+    es: 'Eliminar cuerpos de funciones y comentarios',
+    fr: 'Supprimer les corps de fonction et les commentaires',
+    'pt-br': 'Remover corpos de funções e comentários',
+    ru: 'Удалить тела функций и комментарии',
+    ko: '함수 본문 및 주석 제거',
+    it: 'Rimuovi corpi di funzioni e commenti',
+    tr: 'İşlev gövdelerini ve yorumları kaldır',
+    cs: 'Odstranit těla funkcí a komentáře',
+    hu: 'Függvénytestek és megjegyzések eltávolítása',
+    bg: 'Премахване на телата на функциите и коментарите'
   }
 } as const
