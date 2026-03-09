@@ -36,8 +36,21 @@ Your response must begin with "**Relevant files:**", then list paths one under a
 
 **Relevant files:**
 
+- \`src/index.ts\`
 - \`src/hello.ts\`
 - \`src/welcome.ts\`
+</system>`
+
+export const find_relevant_files_format_for_panel = `<system>
+Your response must begin with "**Relevant files:**", then list paths one under another, followed by a brief explanation. Example:
+
+**Relevant files:**
+
+- \`src/index.ts\`
+- \`src/hello.ts\`
+- \`src/welcome.ts\`
+
+These files contain the core greeting logic and module exports.
 </system>`
 
 export const voice_input_instructions =
