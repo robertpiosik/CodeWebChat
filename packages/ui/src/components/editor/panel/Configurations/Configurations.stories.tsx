@@ -35,7 +35,8 @@ const mock_translations = {
   unpin_tooltip: 'Unpin',
   insert_tooltip: 'Insert a new configuration below/above',
   edit_tooltip: 'Edit',
-  delete_tooltip: 'Delete'
+  delete_tooltip: 'Delete',
+  duplicate_tooltip: 'Duplicate'
 }
 
 export const Default = () => {
@@ -57,6 +58,9 @@ export const Default = () => {
       }}
       on_delete={(id) => {
         console.log('on_delete', id)
+      }}
+      on_duplicate={(id) => {
+        console.log('on_duplicate', id)
       }}
       on_reorder={(configs) => {
         console.log('on_reorder', configs)
@@ -88,6 +92,9 @@ export const Empty = () => (
     }}
     on_delete={(id) => {
       console.log('on_delete', id)
+    }}
+    on_duplicate={(id) => {
+      console.log('on_duplicate', id)
     }}
     on_reorder={(configs) => {
       console.log('on_reorder', configs)
