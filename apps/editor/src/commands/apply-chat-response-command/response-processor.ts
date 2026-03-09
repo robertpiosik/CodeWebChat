@@ -175,9 +175,9 @@ export const process_chat_response = async (
     quick_pick.items = quick_pick_items
     quick_pick.selectedItems = quick_pick_items.filter((i) => i.picked)
     quick_pick.canSelectMany = true
-    quick_pick.title = t('command.apply-chat-response.context-pruning.title')
+    quick_pick.title = t('command.apply-chat-response.relevant-files.title')
     quick_pick.placeholder = t(
-      'command.apply-chat-response.context-pruning.placeholder'
+      'command.apply-chat-response.relevant-files.placeholder'
     )
     quick_pick.ignoreFocusOut = true
 
@@ -266,10 +266,12 @@ export const process_chat_response = async (
 
       if (was_frf) {
         shared_state.switch_context_state(true)
+        await workspace_provider.set_checked_files([])
+        await panel_provider.switch_to_edit_context()
       }
 
       vscode.window.showInformationMessage(
-        t('command.apply-chat-response.context-pruning.success')
+        t('command.apply-chat-response.relevant-files.success')
       )
     }
 

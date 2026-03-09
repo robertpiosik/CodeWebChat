@@ -274,6 +274,32 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     SharedFileState.get_instance().switch_context_state(is_find_relevant_files)
   }
 
+  public async switch_to_edit_context() {
+    if (this.mode == MODE.WEB) {
+      this.web_prompt_type = 'edit-context'
+      await this.context.workspaceState.update(
+        WEB_MODE_STATE_KEY,
+        'edit-context'
+      )
+      this.send_message({
+        command: 'WEB_PROMPT_TYPE',
+        prompt_type: 'edit-context'
+      })
+    } else {
+      this.api_prompt_type = 'edit-context'
+      await this.context.workspaceState.update(
+        API_MODE_STATE_KEY,
+        'edit-context'
+      )
+      this.send_message({
+        command: 'API_PROMPT_TYPE',
+        prompt_type: 'edit-context'
+      })
+    }
+    this.update_providers_shrink_mode()
+    this.update_providers_context_state()
+  }
+
   public async send_checkpoints() {
     const checkpoints = await get_checkpoints(this.context)
     this.send_message({

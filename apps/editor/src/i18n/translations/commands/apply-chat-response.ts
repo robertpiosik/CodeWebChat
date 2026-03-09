@@ -53,7 +53,7 @@ export const apply_chat_response = {
     hu: 'Alkalmazás intelligens frissítéssel',
     bg: 'Прилагане с Интелигентно актуализиране'
   },
-  'command.apply-chat-response.context-pruning.title': {
+  'command.apply-chat-response.relevant-files.title': {
     en: 'Relevant Files',
     pl: 'Pasujące pliki',
     'zh-cn': '相关文件',
@@ -71,7 +71,7 @@ export const apply_chat_response = {
     hu: 'Releváns fájlok',
     bg: 'Съответни файлове'
   },
-  'command.apply-chat-response.context-pruning.placeholder': {
+  'command.apply-chat-response.relevant-files.placeholder': {
     en: 'Confirm files to include in context',
     pl: 'Wybierz pliki do zaznaczenia w kontekście',
     'zh-cn': '确认要包含在上下文中的文件',
@@ -89,8 +89,8 @@ export const apply_chat_response = {
     hu: 'Erősítse meg a kontextusba foglalandó fájlokat',
     bg: 'Потвърдете файловете за включване в контекста'
   },
-  'command.apply-chat-response.context-pruning.success': {
-    en: 'Relevant files found successfully.',
+  'command.apply-chat-response.relevant-files.success': {
+    en: 'Relevant files has been checked successfully.',
     pl: 'Pomyślnie znaleziono odpowiednie pliki.',
     'zh-cn': '成功找到相关文件。',
     ja: '関連ファイルが正常に見つかりました。',
