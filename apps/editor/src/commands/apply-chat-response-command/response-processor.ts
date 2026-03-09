@@ -30,6 +30,7 @@ import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provi
 import { natural_sort } from '@/utils/natural-sort'
 import { t } from '@/i18n'
 import { is_truncation_line } from './utils/edit-formats/truncations'
+import { SharedFileState } from '@/context/shared-file-state'
 
 export type PreviewData = {
   original_states: OriginalFileState[]
@@ -115,24 +116,16 @@ export const process_chat_response = async (
       (item) => item.type == 'relevant-files'
     ) as RelevantFilesItem
 
-    const current_checked_files = workspace_provider.get_checked_files()
-    const relevant_paths_normalized = new Set(
-      relevant_files_item.file_paths.map((p) => p.replace(/\\/g, '/'))
-    )
+    panel_provider.send_message({
+      command: 'SHOW_PROGRESS',
+      title: 'Waiting for confirmation...'
+    })
+
+    const current_checked_files =
+      workspace_provider.get_export_state().regular.checked_files
 
     const workspace_roots = workspace_provider.get_workspace_roots()
     const all_paths_to_process = new Set<string>(relevant_files_item.file_paths)
-
-    for (const file_path of current_checked_files) {
-      const workspace_root =
-        workspace_provider.get_workspace_root_for_file(file_path)
-      if (workspace_root) {
-        const relative_path = path
-          .relative(workspace_root, file_path)
-          .replace(/\\/g, '/')
-        all_paths_to_process.add(relative_path)
-      }
-    }
 
     const open_file_button = {
       iconPath: new vscode.ThemeIcon('go-to-file'),
@@ -165,7 +158,7 @@ export const process_chat_response = async (
           description: display_dir
             ? `${token_info} · ${display_dir}`
             : token_info,
-          picked: relevant_paths_normalized.has(rel_path),
+          picked: true,
           file_path: absolute_path,
           relative_path: rel_path,
           buttons: [open_file_button]
@@ -239,7 +232,7 @@ export const process_chat_response = async (
       quick_pick.show()
     })
 
-    if (selected_items && selected_items.length > 0) {
+    if (selected_items) {
       const files_to_check: string[] = []
 
       for (const selection of selected_items) {
@@ -248,12 +241,36 @@ export const process_chat_response = async (
         }
       }
 
-      if (files_to_check.length > 0) {
-        await workspace_provider.set_checked_files(files_to_check)
-        vscode.window.showInformationMessage(
-          t('command.apply-chat-response.context-pruning.success')
-        )
+      const presented_files: string[] = []
+      for (const item of quick_pick_items) {
+        if (item.file_path) {
+          presented_files.push(item.file_path)
+        }
       }
+
+      const shared_state = SharedFileState.get_instance()
+      const was_frf = workspace_provider.is_frf_mode
+
+      if (was_frf) {
+        shared_state.switch_context_state(false)
+      }
+
+      const filtered_current_files = current_checked_files.filter(
+        (f) => !presented_files.includes(f)
+      )
+
+      const merged_files = Array.from(
+        new Set([...filtered_current_files, ...files_to_check])
+      )
+      await workspace_provider.set_checked_files(merged_files)
+
+      if (was_frf) {
+        shared_state.switch_context_state(true)
+      }
+
+      vscode.window.showInformationMessage(
+        t('command.apply-chat-response.context-pruning.success')
+      )
     }
 
     return null

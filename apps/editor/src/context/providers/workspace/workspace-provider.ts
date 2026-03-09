@@ -35,6 +35,7 @@ export interface IWorkspaceProvider {
     }
     frf: { checked_files: string[]; checked_timestamps: Record<string, number> }
   }
+  readonly is_frf_mode: boolean
 }
 
 export class WorkspaceProvider
@@ -64,6 +65,10 @@ export class WorkspaceProvider
     partially_checked_dirs: new Set<string>()
   }
   private _is_frf_mode: boolean = false
+
+  public get is_frf_mode(): boolean {
+    return this._is_frf_mode
+  }
 
   private get _checked_items() {
     return this._is_frf_mode

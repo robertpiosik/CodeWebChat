@@ -26,6 +26,7 @@ import {
   preview_document_provider,
   CwcPreviewProvider
 } from './utils/preview/virtual-document-provider'
+import { parse_response } from './utils/clipboard-parser'
 
 let in_progress = false
 let placeholder_created_at_for_update: number | undefined
@@ -84,7 +85,17 @@ export const apply_chat_response_command = (params: {
         return
       }
 
-      if (response_preview_promise_resolve) {
+      const is_single_root_folder_workspace =
+        (vscode.workspace.workspaceFolders?.length ?? 0) <= 1
+      const clipboard_items = parse_response({
+        response: chat_response,
+        is_single_root_folder_workspace
+      })
+      const is_relevant_files = clipboard_items.some(
+        (item) => item.type == 'relevant-files'
+      )
+
+      if (response_preview_promise_resolve && !is_relevant_files) {
         const history = params.panel_provider.response_history
 
         const new_item: ResponseHistoryItem = {
@@ -131,37 +142,39 @@ export const apply_chat_response_command = (params: {
       let saved_tab_groups: SavedTabGroups | undefined
 
       try {
-        // Save current tab groups before entering preview
-        saved_tab_groups = {
-          editors: [],
-          active_editor_uri:
-            vscode.window.activeTextEditor?.document.uri.toString()
-        }
+        if (!is_relevant_files) {
+          // Save current tab groups before entering preview
+          saved_tab_groups = {
+            editors: [],
+            active_editor_uri:
+              vscode.window.activeTextEditor?.document.uri.toString()
+          }
 
-        for (const tab_group of vscode.window.tabGroups.all) {
-          for (const tab of tab_group.tabs) {
-            if (tab.input instanceof vscode.TabInputText) {
-              saved_tab_groups.editors.push({
-                uri: tab.input.uri.toString(),
-                view_column: tab_group.viewColumn,
-                is_active: tab.isActive
-              })
+          for (const tab_group of vscode.window.tabGroups.all) {
+            for (const tab of tab_group.tabs) {
+              if (tab.input instanceof vscode.TabInputText) {
+                saved_tab_groups.editors.push({
+                  uri: tab.input.uri.toString(),
+                  view_column: tab_group.viewColumn,
+                  is_active: tab.isActive
+                })
+              }
             }
           }
+
+          params.panel_provider.send_message({
+            command: 'SHOW_PROGRESS',
+            title: t('common.progress.preparing-preview')
+          })
+
+          before_checkpoint = await create_checkpoint({
+            workspace_provider: params.workspace_provider,
+            context: params.context,
+            panel_provider: params.panel_provider,
+            trigger: 'before-response-previewed',
+            description: args?.raw_instructions
+          })
         }
-
-        params.panel_provider.send_message({
-          command: 'SHOW_PROGRESS',
-          title: t('common.progress.preparing-preview')
-        })
-
-        before_checkpoint = await create_checkpoint({
-          workspace_provider: params.workspace_provider,
-          context: params.context,
-          panel_provider: params.panel_provider,
-          trigger: 'before-response-previewed',
-          description: args?.raw_instructions
-        })
 
         const preview_data = await process_chat_response(
           args,
