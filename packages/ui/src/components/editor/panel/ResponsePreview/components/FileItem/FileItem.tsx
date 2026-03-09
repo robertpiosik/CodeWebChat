@@ -253,16 +253,6 @@ export const FileItem: FC<Props> = (props) => {
             <span>{message_obj.text}</span>
           </div>
           <div className={styles['message__actions']}>
-            {props.file.ai_content && (
-              <div
-                className={styles['message__actions__item']}
-                onClick={props.on_preview_generated_code}
-                title="Preview generated code"
-              >
-                <span className="codicon codicon-open-preview" />
-                <span>Preview</span>
-              </div>
-            )}
             {!props.file.is_applying && (
               <div
                 className={styles['message__actions__item']}
@@ -277,6 +267,16 @@ export const FileItem: FC<Props> = (props) => {
                 <span>
                   {props.file.applied_with_intelligent_update ? 'Retry' : 'Fix'}
                 </span>
+              </div>
+            )}
+            {props.file.ai_content && (
+              <div
+                className={styles['message__actions__item']}
+                onClick={props.on_preview_generated_code}
+                title="Preview generated code"
+              >
+                <span className="codicon codicon-open-preview" />
+                <span>Preview</span>
               </div>
             )}
           </div>
