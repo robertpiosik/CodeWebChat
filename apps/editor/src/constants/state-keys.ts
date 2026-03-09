@@ -10,6 +10,9 @@ export const LAST_RANGES_SAVE_LOCATION_STATE_KEY = 'last-ranges-save-location'
 export const LAST_APPLY_CONTEXT_OPTION_STATE_KEY = 'last-apply-context-option'
 export const CONTEXT_CHECKED_PATHS_STATE_KEY = 'context-checked-paths'
 export const CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY = 'context-checked-timestamps'
+export const CONTEXT_CHECKED_PATHS_FRF_STATE_KEY = 'context-checked-paths-frf'
+export const CONTEXT_CHECKED_TIMESTAMPS_FRF_STATE_KEY =
+  'context-checked-timestamps-frf'
 export const LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY =
   'last-context-merge-replace-option'
 export const LAST_REFACTOR_INSTRUCTION_SOURCE_STATE_KEY =
@@ -85,7 +88,9 @@ export const LAST_SEARCH_FILES_FOR_CONTEXT_QUERY_STATE_KEY =
 
 export type DuplicateWorkspaceContext = {
   checked_files: string[]
-  checked_files_timestamps?: Record<string, number>
+  checked_files_timestamps: Record<string, number>
+  checked_files_frf: string[]
+  checked_files_timestamps_frf: Record<string, number>
   timestamp: number
   workspace_root_folders: string[]
   open_editors?: { path: string; view_column?: number }[]

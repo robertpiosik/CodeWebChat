@@ -128,6 +128,7 @@ import { CancelTokenSource } from 'axios'
 import { dictionary } from '@shared/constants/dictionary'
 import { DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD } from '@/constants/values'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
+import { SharedFileState } from '@/context/shared-file-state'
 
 export class PanelProvider implements vscode.WebviewViewProvider {
   public readonly extension_uri: vscode.Uri
@@ -264,6 +265,15 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     this.open_editors_provider.set_use_shrink_token_count(use_shrink)
   }
 
+  public update_providers_context_state() {
+    const is_find_relevant_files =
+      (this.mode == MODE.WEB &&
+        this.web_prompt_type == 'find-relevant-files') ||
+      (this.mode == MODE.API && this.api_prompt_type == 'find-relevant-files')
+
+    SharedFileState.get_instance().switch_context_state(is_find_relevant_files)
+  }
+
   public async send_checkpoints() {
     const checkpoints = await get_checkpoints(this.context)
     this.send_message({
@@ -390,6 +400,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     )
 
     this.update_providers_shrink_mode()
+    this.update_providers_context_state()
 
     vscode.window.onDidChangeWindowState(async (e) => {
       if (e.focused) {
@@ -842,11 +853,13 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'SAVE_WEB_PROMPT_TYPE') {
             await handle_save_web_prompt_type(this, message.prompt_type)
             this.update_providers_shrink_mode()
+            this.update_providers_context_state()
           } else if (message.command == 'GET_API_PROMPT_TYPE') {
             handle_get_api_prompt_type(this)
           } else if (message.command == 'SAVE_API_PROMPT_TYPE') {
             await handle_save_api_prompt_type(this, message.prompt_type)
             this.update_providers_shrink_mode()
+            this.update_providers_context_state()
           } else if (message.command == 'GET_EDIT_FORMAT_INSTRUCTIONS') {
             handle_get_edit_format_instructions(this)
           } else if (message.command == 'GET_EDIT_FORMAT') {
@@ -858,6 +871,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'SAVE_MODE') {
             await handle_save_mode(this, message)
             this.update_providers_shrink_mode()
+            this.update_providers_context_state()
           } else if (message.command == 'GET_MODE') {
             handle_get_mode(this)
           } else if (message.command == 'GET_VERSION') {

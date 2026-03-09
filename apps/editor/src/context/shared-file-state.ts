@@ -18,22 +18,92 @@ export class SharedFileState {
 
   private _workspace_provider?: WorkspaceProvider
   private _open_editors_provider?: OpenEditorsProvider
-  private _checked_files: Set<string> = new Set()
-  // Track which view last unchecked a file
-  private _unchecked_in_open_editors: Set<string> = new Set()
-  private _unchecked_in_workspace: Set<string> = new Set()
+
+  private _regular_state = {
+    checked_files: new Set<string>(),
+    unchecked_in_open_editors: new Set<string>(),
+    unchecked_in_workspace: new Set<string>(),
+    undo_stack: [] as ContextState[],
+    redo_stack: [] as ContextState[]
+  }
+  private _frf_state = {
+    checked_files: new Set<string>(),
+    unchecked_in_open_editors: new Set<string>(),
+    unchecked_in_workspace: new Set<string>(),
+    undo_stack: [] as ContextState[],
+    redo_stack: [] as ContextState[]
+  }
+  private _is_frf_mode = false
+
   private _synchronizing_provider: 'workspace' | 'openEditors' | null = null
   private _is_synchronizing: boolean = false
   private _is_initialized: boolean = false
   private _is_undoing_redoing: boolean = false
-  private _undo_stack: ContextState[] = []
-  private _redo_stack: ContextState[] = []
 
   static get_instance(): SharedFileState {
     if (!SharedFileState._instance) {
       SharedFileState._instance = new SharedFileState()
     }
     return SharedFileState._instance
+  }
+
+  private get _checked_files() {
+    return this._is_frf_mode
+      ? this._frf_state.checked_files
+      : this._regular_state.checked_files
+  }
+  private set _checked_files(val) {
+    if (this._is_frf_mode) this._frf_state.checked_files = val
+    else this._regular_state.checked_files = val
+  }
+
+  private get _unchecked_in_open_editors() {
+    return this._is_frf_mode
+      ? this._frf_state.unchecked_in_open_editors
+      : this._regular_state.unchecked_in_open_editors
+  }
+  private get _unchecked_in_workspace() {
+    return this._is_frf_mode
+      ? this._frf_state.unchecked_in_workspace
+      : this._regular_state.unchecked_in_workspace
+  }
+
+  private get _undo_stack() {
+    return this._is_frf_mode
+      ? this._frf_state.undo_stack
+      : this._regular_state.undo_stack
+  }
+  private set _undo_stack(val) {
+    if (this._is_frf_mode) this._frf_state.undo_stack = val
+    else this._regular_state.undo_stack = val
+  }
+
+  private get _redo_stack() {
+    return this._is_frf_mode
+      ? this._frf_state.redo_stack
+      : this._regular_state.redo_stack
+  }
+  private set _redo_stack(val) {
+    if (this._is_frf_mode) this._frf_state.redo_stack = val
+    else this._regular_state.redo_stack = val
+  }
+
+  public switch_context_state(is_frf: boolean) {
+    if (this._is_frf_mode == is_frf) return
+
+    this._is_synchronizing = true
+    try {
+      if (this._workspace_provider)
+        this._workspace_provider.switch_context_state(is_frf)
+      if (this._open_editors_provider)
+        this._open_editors_provider.switch_context_state(is_frf)
+
+      this._is_frf_mode = is_frf
+      this.update_checked_files_set()
+      this._on_did_change_checked_files.fire()
+    } finally {
+      this._is_synchronizing = false
+    }
   }
 
   set_providers(

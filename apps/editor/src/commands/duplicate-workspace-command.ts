@@ -15,15 +15,13 @@ export const duplicate_workspace_command = (
   return vscode.commands.registerCommand(
     'codeWebChat.duplicateWorkspace',
     async () => {
-      const checked_files = workspace_provider.get_all_checked_paths()
-      const checked_files_timestamps: Record<string, number> = {}
+      const export_state = workspace_provider.get_export_state()
 
-      for (const file_path of checked_files) {
-        const timestamp = workspace_provider.get_selection_timestamp(file_path)
-        if (timestamp !== undefined) {
-          checked_files_timestamps[file_path] = timestamp
-        }
-      }
+      const checked_files = export_state.regular.checked_files
+      const checked_files_timestamps = export_state.regular.checked_timestamps
+
+      const checked_files_frf = export_state.frf.checked_files
+      const checked_files_timestamps_frf = export_state.frf.checked_timestamps
 
       const workspace_root_folders =
         vscode.workspace.workspaceFolders?.map((folder) => folder.uri.fsPath) ??
@@ -49,6 +47,8 @@ export const duplicate_workspace_command = (
       const context_to_save: DuplicateWorkspaceContext = {
         checked_files,
         checked_files_timestamps,
+        checked_files_frf,
+        checked_files_timestamps_frf,
         workspace_root_folders,
         timestamp: Date.now(),
         open_editors,

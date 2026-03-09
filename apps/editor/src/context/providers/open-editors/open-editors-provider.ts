@@ -17,7 +17,21 @@ export class OpenEditorsProvider
   > = this._on_did_change_tree_data.event
 
   private _workspace_roots: string[] = []
-  private _checked_items: Map<string, vscode.TreeItemCheckboxState> = new Map()
+  private _regular_checked_items = new Map<
+    string,
+    vscode.TreeItemCheckboxState
+  >()
+  private _frf_checked_items = new Map<string, vscode.TreeItemCheckboxState>()
+  private _is_frf_mode = false
+  private get _checked_items() {
+    return this._is_frf_mode
+      ? this._frf_checked_items
+      : this._regular_checked_items
+  }
+  private set _checked_items(val) {
+    if (this._is_frf_mode) this._frf_checked_items = val
+    else this._regular_checked_items = val
+  }
   private _tab_change_handler: vscode.Disposable
   private _workspace_change_handler: vscode.Disposable
   private _initialized: boolean = false
@@ -36,6 +50,13 @@ export class OpenEditorsProvider
       this._use_shrink_token_count = use_shrink
       this.refresh()
     }
+  }
+
+  public switch_context_state(is_frf: boolean) {
+    if (this._is_frf_mode == is_frf) return
+    this._is_frf_mode = is_frf
+    this.refresh()
+    this._dispatch_change_events()
   }
 
   constructor(params: {

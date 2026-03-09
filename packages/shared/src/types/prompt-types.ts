@@ -7,5 +7,5 @@ export type WebPromptType =
 
 export type ApiPromptType =
   | 'edit-context'
-  | 'find-relevant-files'
   | 'code-at-cursor'
+  | 'find-relevant-files'
