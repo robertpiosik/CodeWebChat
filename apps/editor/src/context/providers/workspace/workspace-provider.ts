@@ -1506,13 +1506,57 @@ export class WorkspaceProvider
 
   // Load .gitignore from all levels of the workspace
   private async _load_all_gitignore_files(): Promise<void> {
-    const gitignore_files = await vscode.workspace.findFiles(
-      '**/{.gitignore,.cursorignore,.codeiumignore}'
-    )
+    const gitignore_files: string[] = []
+    const visited = new Set<string>()
+
+    const walk = async (dir_path: string) => {
+      if (visited.has(dir_path)) return
+      visited.add(dir_path)
+
+      try {
+        const entries = await fs.promises.readdir(dir_path, {
+          withFileTypes: true
+        })
+
+        for (const entry of entries) {
+          if (entry.name == '.git' || entry.name == 'node_modules') continue
+
+          const full_path = path.join(dir_path, entry.name)
+
+          let is_directory = entry.isDirectory()
+          if (entry.isSymbolicLink()) {
+            try {
+              const stats = await fs.promises.stat(full_path)
+              is_directory = stats.isDirectory()
+            } catch {
+              continue
+            }
+          }
+
+          if (is_directory) {
+            await walk(full_path)
+          } else if (
+            ['.gitignore', '.cursorignore', '.codeiumignore'].includes(
+              entry.name
+            )
+          ) {
+            gitignore_files.push(full_path)
+          }
+        }
+      } catch (error) {
+        // Ignore read errors
+      }
+    }
+
+    for (const root of this._workspace_roots) {
+      if (fs.existsSync(root)) {
+        await walk(root)
+      }
+    }
+
     this._combined_gitignore = ignore()
 
-    for (const file_uri of gitignore_files) {
-      const gitignore_path = file_uri.fsPath
+    for (const gitignore_path of gitignore_files) {
       const workspace_root = this.get_workspace_root_for_file(gitignore_path)
       if (!workspace_root) continue
 
