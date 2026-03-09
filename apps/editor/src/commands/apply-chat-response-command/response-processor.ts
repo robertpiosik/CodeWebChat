@@ -266,13 +266,14 @@ export const process_chat_response = async (
 
       if (was_frf) {
         shared_state.switch_context_state(true)
-        await workspace_provider.set_checked_files([])
-        await panel_provider.switch_to_edit_context()
+        await panel_provider.return_home_and_switch_to_edit_context()
       }
 
-      vscode.window.showInformationMessage(
-        t('command.apply-chat-response.relevant-files.success')
-      )
+      panel_provider.send_message({
+        command: 'SHOW_AUTO_CLOSING_MODAL',
+        title: t('command.apply-chat-response.relevant-files.success'),
+        type: 'success'
+      })
     }
 
     return null

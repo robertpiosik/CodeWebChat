@@ -217,6 +217,19 @@ export const MainView: React.FC<Props> = (props) => {
       <UiScrollable scroll_to_top_key={props.scroll_reset_key}>
         <UiSeparator height={4} />
 
+        {is_in_find_relevant_files_prompt_type && (
+          <div className={styles['shrink-source-code-checkbox']}>
+            <UiCheckbox
+              checked={props.find_relevant_files_shrink_source_code}
+              on_change={props.on_find_relevant_files_shrink_source_code_change}
+              id="shrink-source-code"
+            />
+            <label htmlFor="shrink-source-code">
+              Remove function bodies and comments
+            </label>
+          </div>
+        )}
+
         {!props.is_connected && props.mode == MODE.WEB && (
           <>
             <div className={styles['browser-extension-message']}>
@@ -244,20 +257,6 @@ export const MainView: React.FC<Props> = (props) => {
         )}
 
         <div className={styles['chat-input-container']}>
-          {is_in_find_relevant_files_prompt_type && (
-            <div className={styles['shrink-source-code-checkbox']}>
-              <UiCheckbox
-                checked={props.find_relevant_files_shrink_source_code}
-                on_change={
-                  props.on_find_relevant_files_shrink_source_code_change
-                }
-                id="shrink-source-code"
-              />
-              <label htmlFor="shrink-source-code">
-                Remove function bodies and comments
-              </label>
-            </div>
-          )}
           <UiPromptField
             value={props.instructions}
             chat_history={props.chat_history}

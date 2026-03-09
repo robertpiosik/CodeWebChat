@@ -90,21 +90,21 @@ export const apply_chat_response = {
     bg: 'Потвърдете файловете за включване в контекста'
   },
   'command.apply-chat-response.relevant-files.success': {
-    en: 'Relevant files has been checked successfully.',
-    pl: 'Pomyślnie znaleziono odpowiednie pliki.',
-    'zh-cn': '成功找到相关文件。',
-    ja: '関連ファイルが正常に見つかりました。',
-    'zh-tw': '成功找到相關檔案。',
-    de: 'Relevante Dateien erfolgreich gefunden.',
-    es: 'Archivos relevantes encontrados exitosamente.',
-    fr: 'Fichiers pertinents trouvés avec succès.',
-    'pt-br': 'Arquivos relevantes encontrados com sucesso.',
-    ru: 'Соответствующие файлы успешно найдены.',
-    ko: '관련 파일을 성공적으로 찾았습니다.',
-    it: 'File rilevanti trovati con successo.',
-    tr: 'İlgili dosyalar başarıyla bulundu.',
-    cs: 'Relevantní soubory úspěšně nalezeny.',
-    hu: 'A releváns fájlok sikeresen megtalálva.',
-    bg: 'Съответните файлове са намерени успешно.'
+    en: 'Context has been updated',
+    pl: 'Kontekst został zaktualizowany',
+    'zh-cn': '上下文已更新',
+    ja: 'コンテキストが更新されました',
+    'zh-tw': '上下文已更新',
+    de: 'Kontext wurde aktualisiert',
+    es: 'El contexto ha sido actualizado',
+    fr: 'Le contexte a été mis à jour',
+    'pt-br': 'O contexto foi atualizado',
+    ru: 'Контекст был обновлен',
+    ko: '컨텍스트가 업데이트되었습니다',
+    it: 'Il contesto è stato aggiornato',
+    tr: 'Bağlam güncellendi',
+    cs: 'Kontext byl aktualizován',
+    hu: 'A kontextus frissítve lett',
+    bg: 'Контекстът е актуализиран'
   }
 } as const

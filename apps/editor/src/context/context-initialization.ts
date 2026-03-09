@@ -65,14 +65,6 @@ const restore_duplicated_workspace_context = async (
           CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY,
           duplicated_context.checked_files_timestamps
         )
-        await context.workspaceState.update(
-          CONTEXT_CHECKED_PATHS_FRF_STATE_KEY,
-          duplicated_context.checked_files_frf
-        )
-        await context.workspaceState.update(
-          CONTEXT_CHECKED_TIMESTAMPS_FRF_STATE_KEY,
-          duplicated_context.checked_files_timestamps_frf
-        )
 
         if (duplicated_context.ranges) {
           await context.workspaceState.update(

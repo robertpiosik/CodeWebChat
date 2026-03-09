@@ -671,6 +671,7 @@ export type FrontendMessage =
   | GetFindRelevantFilesShrinkSourceCodeMessage
   | SaveFindRelevantFilesShrinkSourceCodeMessage
   | GetSetupProgressMessage
+  | ReturnHomeMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -933,6 +934,10 @@ export interface RecordingStateMessage extends BaseMessage {
   is_recording: boolean
 }
 
+export interface ReturnHomeMessage extends BaseMessage {
+  command: 'RETURN_HOME'
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | FocusPromptFieldMessage
@@ -982,3 +987,4 @@ export type BackendMessage =
   | FindRelevantFilesShrinkSourceCodeMessage
   | SetupProgressMessage
   | InsertSymbolAtCursorMessage
+  | ReturnHomeMessage

@@ -170,6 +170,8 @@ export const use_panel = (vscode: any) => {
         set_setup_progress(message.setup_progress)
       } else if (message.command == 'FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE') {
         set_find_relevant_files_shrink_source_code(message.shrink_source_code)
+      } else if (message.command == 'RETURN_HOME') {
+        set_active_view('home')
       }
     }
     window.addEventListener('message', handle_message)

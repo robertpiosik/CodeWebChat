@@ -55,6 +55,11 @@ export class OpenEditorsProvider
   public switch_context_state(is_frf: boolean) {
     if (this._is_frf_mode == is_frf) return
     this._is_frf_mode = is_frf
+
+    if (is_frf) {
+      this._checked_items.clear()
+    }
+
     this.refresh()
     this._dispatch_change_events()
   }

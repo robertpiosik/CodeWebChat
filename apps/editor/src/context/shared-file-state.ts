@@ -99,6 +99,14 @@ export class SharedFileState {
         this._open_editors_provider.switch_context_state(is_frf)
 
       this._is_frf_mode = is_frf
+
+      if (is_frf) {
+        this._unchecked_in_open_editors.clear()
+        this._unchecked_in_workspace.clear()
+        this._undo_stack = []
+        this._redo_stack = []
+      }
+
       this.update_checked_files_set()
       this._on_did_change_checked_files.fire()
     } finally {

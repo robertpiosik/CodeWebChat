@@ -89,8 +89,6 @@ export const LAST_SEARCH_FILES_FOR_CONTEXT_QUERY_STATE_KEY =
 export type DuplicateWorkspaceContext = {
   checked_files: string[]
   checked_files_timestamps: Record<string, number>
-  checked_files_frf: string[]
-  checked_files_timestamps_frf: Record<string, number>
   timestamp: number
   workspace_root_folders: string[]
   open_editors?: { path: string; view_column?: number }[]
