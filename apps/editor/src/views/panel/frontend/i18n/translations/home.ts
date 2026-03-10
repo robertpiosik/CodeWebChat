@@ -128,7 +128,7 @@ export const home = {
   },
   'home.shrink-source-code': {
     en: 'Strip function bodies and comments',
-    pl: 'Usuń ciała funkcji i komentarze',
+    pl: 'Usuń body funkcji i komentarze',
     'zh-cn': '剥离函数体和注释',
     ja: '関数本体とコメントを取り除く',
     'zh-tw': '剝離函數主體和註釋',
