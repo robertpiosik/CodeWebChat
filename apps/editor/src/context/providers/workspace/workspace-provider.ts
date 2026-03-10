@@ -1560,10 +1560,9 @@ export class WorkspaceProvider
       const workspace_root = this.get_workspace_root_for_file(gitignore_path)
       if (!workspace_root) continue
 
-      const relative_gitignore_path = path.relative(
-        workspace_root,
-        path.dirname(gitignore_path)
-      )
+      const relative_gitignore_path = path
+        .relative(workspace_root, path.dirname(gitignore_path))
+        .replace(/\\/g, '/')
 
       try {
         const gitignore_content = fs.readFileSync(gitignore_path, 'utf-8')
