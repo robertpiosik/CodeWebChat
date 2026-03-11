@@ -128,14 +128,6 @@ export const use_handlers = (
       requestAnimationFrame(() => {
         if (!params.input_ref.current) return
         params.input_ref.current.focus({ preventScroll: true })
-        const selection = window.getSelection()
-        if (selection) {
-          const range = document.createRange()
-          range.selectNodeContents(params.input_ref.current)
-          range.collapse(false)
-          selection.removeAllRanges()
-          selection.addRange(range)
-        }
       })
     }
   }, [props.focus_key, props.missing_configuration])
