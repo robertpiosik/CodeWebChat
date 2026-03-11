@@ -3,7 +3,7 @@ import cn from 'classnames'
 import { Scrollable } from '../../Scrollable'
 import styles from './Modal.module.scss'
 
-export type ModalIconType = 'success' | 'warning' | 'error'
+export type ModalIconType = 'success' | 'warning' | 'error' | 'info'
 
 type Props = {
   title?: string
@@ -54,9 +54,11 @@ export const Modal: React.FC<Props> = (props) => {
               'codicon-check': props.icon == 'success',
               'codicon-warning': props.icon == 'warning',
               'codicon-error': props.icon == 'error',
+              'codicon-info': props.icon == 'info',
               [styles['icon--success']]: props.icon == 'success',
               [styles['icon--warning']]: props.icon == 'warning',
-              [styles['icon--error']]: props.icon == 'error'
+              [styles['icon--error']]: props.icon == 'error',
+              [styles['icon--info']]: props.icon == 'info'
             })}
           />
         )}

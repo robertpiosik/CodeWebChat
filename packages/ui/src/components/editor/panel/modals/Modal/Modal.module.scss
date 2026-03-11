@@ -39,6 +39,10 @@
   &--error {
     color: var(--cwc-text-color-red);
   }
+
+  &--info {
+    color: var(--vscode-notificationsInfoIcon-foreground);
+  }
 }
 
 .title {

@@ -27,7 +27,8 @@ export const use_modal_manager = () => {
   >({})
 
   const [auto_closing_modal_data, set_auto_closing_modal_data] = useState<
-    { title: string; type: 'success' | 'warning' | 'error' } | undefined
+    | { title: string; type: 'success' | 'warning' | 'error' | 'info' }
+    | undefined
   >()
 
   const [

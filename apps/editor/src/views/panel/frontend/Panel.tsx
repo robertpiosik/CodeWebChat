@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Main } from './Main'
 import { Button as UiButton } from '@ui/components/editor/common/Button'
 import { Page as UiPage } from '@ui/components/editor/panel/Page'
@@ -154,6 +154,30 @@ export const Panel = () => {
 
   const { viewing_donations, set_viewing_donations, ...donations_state } =
     use_latest_donations()
+
+  const prev_web_prompt_type = useRef(web_prompt_type)
+  const prev_api_prompt_type = useRef(api_prompt_type)
+
+  useEffect(() => {
+    const switched_web =
+      web_prompt_type == 'find-relevant-files' &&
+      prev_web_prompt_type.current != 'find-relevant-files' &&
+      prev_web_prompt_type.current !== undefined
+    const switched_api =
+      api_prompt_type == 'find-relevant-files' &&
+      prev_api_prompt_type.current != 'find-relevant-files' &&
+      prev_api_prompt_type.current !== undefined
+
+    if (switched_web || switched_api) {
+      set_auto_closing_modal_data({
+        title:
+          'Context temporarily cleared, make rough selection on the file tree',
+        type: 'info'
+      })
+    }
+    prev_web_prompt_type.current = web_prompt_type
+    prev_api_prompt_type.current = api_prompt_type
+  }, [web_prompt_type, api_prompt_type])
 
   if (
     ask_about_context_instructions === undefined ||
