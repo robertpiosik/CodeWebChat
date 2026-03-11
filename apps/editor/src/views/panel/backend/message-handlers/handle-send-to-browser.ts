@@ -20,7 +20,8 @@ import {
 } from '@/constants/instructions'
 import {
   get_recently_used_presets_or_groups_key,
-  FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY
+  FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
+  FIND_RELEVANT_FILES_ONLY_FILE_TREE_STATE_KEY
 } from '@/constants/state-keys'
 import { ConfigPresetFormat } from '../utils/preset-format-converters'
 import { MODE } from '@/views/panel/types/main-view-mode'
@@ -219,12 +220,21 @@ export const handle_send_to_browser = async (params: {
         false
       )
 
+    const only_file_tree =
+      params.panel_provider.context.workspaceState.get<boolean>(
+        FIND_RELEVANT_FILES_ONLY_FILE_TREE_STATE_KEY,
+        false
+      )
+
     const collected = await files_collector.collect_files({
       additional_paths,
       no_context: params.panel_provider.web_prompt_type == 'no-context',
       shrink:
         params.panel_provider.web_prompt_type == 'find-relevant-files' &&
-        shrink_source_code
+        shrink_source_code,
+      only_file_tree:
+        params.panel_provider.web_prompt_type == 'find-relevant-files' &&
+        only_file_tree
     })
     const context_text = collected.other_files + collected.recent_files
 

@@ -7,7 +7,8 @@ import {
   CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY,
   CONTEXT_CHECKED_PATHS_FRF_STATE_KEY,
   CONTEXT_CHECKED_TIMESTAMPS_FRF_STATE_KEY,
-  RANGES_STATE_KEY
+  RANGES_STATE_KEY,
+  FIND_RELEVANT_FILES_ONLY_FILE_TREE_STATE_KEY
 } from '@/constants/state-keys'
 import { IGNORE_PATTERNS } from '@/constants/ignore-patterns'
 import { natural_sort } from '@/utils/natural-sort'
@@ -695,12 +696,23 @@ export class WorkspaceProvider
 
     element.checkboxState = checkbox_state
 
-    const total_token_count = this.use_shrink_token_count
-      ? element.shrinkTokenCount
-      : element.tokenCount
-    const selected_token_count = this.use_shrink_token_count
-      ? element.selectedShrinkTokenCount
-      : element.selectedTokenCount
+    const only_file_tree = this._context.workspaceState.get<boolean>(
+      FIND_RELEVANT_FILES_ONLY_FILE_TREE_STATE_KEY,
+      false
+    )
+    const show_only_path_tokens = this._is_frf_mode && only_file_tree
+
+    const total_token_count = show_only_path_tokens
+      ? element.pathTokenCount
+      : this.use_shrink_token_count
+        ? element.shrinkTokenCount
+        : element.tokenCount
+
+    const selected_token_count = show_only_path_tokens
+      ? element.selectedPathTokenCount
+      : this.use_shrink_token_count
+        ? element.selectedShrinkTokenCount
+        : element.selectedTokenCount
 
     const formatted_total =
       total_token_count !== undefined && total_token_count > 0
@@ -724,6 +736,23 @@ export class WorkspaceProvider
       }
     } else {
       display_description = formatted_total ?? ''
+    }
+
+    if (
+      !show_only_path_tokens &&
+      element.pathTokenCount !== undefined &&
+      element.pathTokenCount > 0
+    ) {
+      const path_token_str = `${element.pathTokenCount} path`
+      if (element.isDirectory && formatted_selected) {
+        if (selected_token_count! < total_token_count!) {
+          display_description += ` (${element.selectedPathTokenCount} path selected)`
+        } else {
+          display_description += ` (${path_token_str})`
+        }
+      } else {
+        display_description += ` (${path_token_str})`
+      }
     }
 
     if (!element.isDirectory && element.range) {
@@ -892,8 +921,10 @@ export class WorkspaceProvider
           false,
           total_tokens.total,
           total_tokens.shrink,
+          total_tokens.path,
           selected_tokens.total,
           selected_tokens.shrink,
+          selected_tokens.path,
           undefined,
           true
         )
@@ -1006,13 +1037,13 @@ export class WorkspaceProvider
 
   public get_cached_token_count(
     file_path: string
-  ): { total: number; shrink: number } | undefined {
+  ): { total: number; shrink: number; path: number } | undefined {
     return this._token_calculator.get_cached_token_count(file_path)
   }
 
   public async calculate_file_tokens(
     file_path: string
-  ): Promise<{ total: number; shrink: number }> {
+  ): Promise<{ total: number; shrink: number; path: number }> {
     return this._token_calculator.calculate_file_tokens(file_path)
   }
 
@@ -1158,8 +1189,10 @@ export class WorkspaceProvider
           false,
           tokens.total,
           tokens.shrink,
+          tokens.path,
           selected_tokens?.total,
           selected_tokens?.shrink,
+          selected_tokens?.path,
           undefined,
           false,
           range
@@ -1701,7 +1734,7 @@ export class WorkspaceProvider
 
   public async get_checked_files_token_count(options?: {
     exclude_file_path?: string
-  }): Promise<{ total: number; shrink: number }> {
+  }): Promise<{ total: number; shrink: number; path: number }> {
     return this._token_calculator.get_checked_files_token_count(options)
   }
 
@@ -1825,8 +1858,10 @@ export class FileItem extends vscode.TreeItem {
     public isOpenFile: boolean = false,
     public tokenCount?: number,
     public shrinkTokenCount?: number,
+    public pathTokenCount?: number,
     public selectedTokenCount?: number,
     public selectedShrinkTokenCount?: number,
+    public selectedPathTokenCount?: number,
     description?: string,
     public isWorkspaceRoot: boolean = false,
     public range?: string
