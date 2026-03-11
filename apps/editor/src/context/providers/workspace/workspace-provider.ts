@@ -65,6 +65,7 @@ export class WorkspaceProvider
     partially_checked_dirs: new Set<string>()
   }
   private _is_frf_mode: boolean = false
+  private _is_no_context_mode: boolean = false
 
   public get is_frf_mode(): boolean {
     return this._is_frf_mode
@@ -134,6 +135,12 @@ export class WorkspaceProvider
     state: vscode.TreeItemCollapsibleState
   ) {
     this._workspace_view_collapsible_state = state
+  }
+
+  public set_no_context_mode(is_no_context: boolean) {
+    if (this._is_no_context_mode == is_no_context) return
+    this._is_no_context_mode = is_no_context
+    this.refresh()
   }
 
   public set_use_shrink_token_count(use_shrink: boolean) {
@@ -682,8 +689,9 @@ export class WorkspaceProvider
 
   async getTreeItem(element: FileItem): Promise<vscode.TreeItem> {
     const key = element.resourceUri.fsPath
-    const checkbox_state =
-      this._checked_items.get(key) ?? vscode.TreeItemCheckboxState.Unchecked
+    const checkbox_state = this._is_no_context_mode
+      ? undefined
+      : (this._checked_items.get(key) ?? vscode.TreeItemCheckboxState.Unchecked)
 
     element.checkboxState = checkbox_state
 
@@ -876,8 +884,10 @@ export class WorkspaceProvider
             ? this._context_view_collapsible_state
             : this._workspace_view_collapsible_state,
           true,
-          this._checked_items.get(root) ??
-            vscode.TreeItemCheckboxState.Unchecked,
+          this._is_no_context_mode
+            ? undefined
+            : (this._checked_items.get(root) ??
+                vscode.TreeItemCheckboxState.Unchecked),
           false,
           false,
           total_tokens.total,
@@ -1143,7 +1153,7 @@ export class WorkspaceProvider
               : this._workspace_view_collapsible_state
             : vscode.TreeItemCollapsibleState.None,
           is_directory,
-          checkbox_state,
+          this._is_no_context_mode ? undefined : checkbox_state,
           is_symbolic_link,
           false,
           tokens.total,
@@ -1810,7 +1820,7 @@ export class FileItem extends vscode.TreeItem {
     public readonly resourceUri: vscode.Uri,
     public collapsibleState: vscode.TreeItemCollapsibleState,
     public isDirectory: boolean,
-    public checkboxState: vscode.TreeItemCheckboxState,
+    public checkboxState: vscode.TreeItemCheckboxState | undefined,
     public isSymbolicLink: boolean = false,
     public isOpenFile: boolean = false,
     public tokenCount?: number,

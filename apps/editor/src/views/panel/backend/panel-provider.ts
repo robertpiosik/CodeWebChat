@@ -279,7 +279,13 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         this.web_prompt_type == 'find-relevant-files') ||
       (this.mode == MODE.API && this.api_prompt_type == 'find-relevant-files')
 
+    const is_no_context =
+      this.mode == MODE.WEB && this.web_prompt_type == 'no-context'
+
     SharedFileState.get_instance().switch_context_state(is_find_relevant_files)
+
+    this.workspace_provider.set_no_context_mode(is_no_context)
+    this.open_editors_provider.set_no_context_mode(is_no_context)
   }
 
   public async switch_to_edit_context() {

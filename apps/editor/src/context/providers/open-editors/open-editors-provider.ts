@@ -44,12 +44,19 @@ export class OpenEditorsProvider
   private _config_change_handler: vscode.Disposable
   private _workspace_provider: WorkspaceProvider
   private _use_shrink_token_count: boolean = false
+  private _is_no_context_mode = false
 
   public set_use_shrink_token_count(use_shrink: boolean) {
     if (this._use_shrink_token_count != use_shrink) {
       this._use_shrink_token_count = use_shrink
       this.refresh()
     }
+  }
+
+  public set_no_context_mode(is_no_context: boolean) {
+    if (this._is_no_context_mode == is_no_context) return
+    this._is_no_context_mode = is_no_context
+    this.refresh()
   }
 
   public switch_context_state(is_frf: boolean) {
@@ -223,8 +230,9 @@ export class OpenEditorsProvider
   }
   getTreeItem(element: FileItem): vscode.TreeItem {
     const key = element.resourceUri.fsPath
-    const checkbox_state =
-      this._checked_items.get(key) ?? vscode.TreeItemCheckboxState.Unchecked
+    const checkbox_state = this._is_no_context_mode
+      ? undefined
+      : (this._checked_items.get(key) ?? vscode.TreeItemCheckboxState.Unchecked)
 
     element.checkboxState = checkbox_state
 
@@ -342,7 +350,7 @@ export class OpenEditorsProvider
         file_uri,
         vscode.TreeItemCollapsibleState.None,
         false,
-        checkbox_state,
+        this._is_no_context_mode ? undefined : checkbox_state,
         false,
         true,
         tokens.total,
