@@ -129,7 +129,7 @@ import { CancelTokenSource } from 'axios'
 import { dictionary } from '@shared/constants/dictionary'
 import { DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD } from '@/constants/values'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
-import { SharedFileState } from '@/context/shared-file-state'
+import { SharedContextState } from '@/context/shared-context-state'
 
 export class PanelProvider implements vscode.WebviewViewProvider {
   public readonly extension_uri: vscode.Uri
@@ -137,6 +137,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public readonly open_editors_provider: OpenEditorsProvider
   public readonly context: vscode.ExtensionContext
   public readonly websocket_server_instance: WebSocketManager
+  public readonly shared_context_state: SharedContextState
   private _webview_view: vscode.WebviewView | undefined
   private _config_listener: vscode.Disposable | undefined
   public currently_open_file_path?: string
@@ -282,7 +283,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     const is_no_context =
       this.mode == MODE.WEB && this.web_prompt_type == 'no-context'
 
-    SharedFileState.get_instance().switch_context_state(is_find_relevant_files)
+    this.shared_context_state.switch_context_state(is_find_relevant_files)
 
     this.workspace_provider.set_no_context_mode(is_no_context)
     this.open_editors_provider.set_no_context_mode(is_no_context)
@@ -385,12 +386,14 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     open_editors_provider: OpenEditorsProvider
     context: vscode.ExtensionContext
     websocket_server_instance: WebSocketManager
+    shared_context_state: SharedContextState
   }) {
     this.extension_uri = params.extension_uri
     this.workspace_provider = params.workspace_provider
     this.open_editors_provider = params.open_editors_provider
     this.context = params.context
     this.websocket_server_instance = params.websocket_server_instance
+    this.shared_context_state = params.shared_context_state
 
     this.websocket_server_instance.on_connection_status_change((connected) => {
       if (this._webview_view) {

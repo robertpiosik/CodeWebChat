@@ -29,7 +29,6 @@ import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provi
 import { natural_sort } from '@/utils/natural-sort'
 import { t } from '@/i18n'
 import { is_truncation_line } from './utils/edit-formats/truncations'
-import { SharedFileState } from '@/context/shared-file-state'
 
 export type PreviewData = {
   original_states: OriginalFileState[]
@@ -173,11 +172,11 @@ export const process_chat_response = async (
     )
 
     if (selected_files) {
-      const shared_state = SharedFileState.get_instance()
+      const shared_context_state = panel_provider.shared_context_state
       const was_frf = workspace_provider.is_frf_mode
 
       if (was_frf) {
-        shared_state.switch_context_state(false)
+        shared_context_state.switch_context_state(false)
       }
 
       const presented_files = files_for_modal.map((f) => f.file_path)
@@ -192,7 +191,7 @@ export const process_chat_response = async (
       await workspace_provider.set_checked_files(merged_files)
 
       if (was_frf) {
-        shared_state.switch_context_state(true)
+        shared_context_state.switch_context_state(true)
       }
 
       panel_provider.send_message({

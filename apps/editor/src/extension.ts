@@ -11,7 +11,6 @@ import {
   migrate_model_providers_type,
   migrate_prune_context_to_find_relevant_files
 } from './migrations'
-import { SharedFileState } from './context/shared-file-state'
 import {
   apply_chat_response_command,
   apply_context_command,
@@ -47,7 +46,7 @@ import { get_current_preview_url } from './views/panel/backend/message-handlers/
 let websocket_server_instance: WebSocketManager | null = null
 
 export async function activate(context: vscode.ExtensionContext) {
-  const { workspace_provider, open_editors_provider } =
+  const { workspace_provider, open_editors_provider, shared_context_state } =
     await context_initialization(context)
 
   websocket_server_instance = new WebSocketManager(context)
@@ -74,7 +73,8 @@ export async function activate(context: vscode.ExtensionContext) {
     workspace_provider,
     open_editors_provider,
     context,
-    websocket_server_instance
+    websocket_server_instance,
+    shared_context_state
   })
 
   const api_manager = new ApiManager(panel_provider)
@@ -182,11 +182,11 @@ export async function activate(context: vscode.ExtensionContext) {
     ),
     vscode.commands.registerCommand(
       'codeWebChat.undoContextSelection',
-      async () => SharedFileState.get_instance().undo()
+      async () => shared_context_state.undo()
     ),
     vscode.commands.registerCommand(
       'codeWebChat.redoContextSelection',
-      async () => SharedFileState.get_instance().redo()
+      async () => shared_context_state.redo()
     ),
     vscode.commands.registerCommand(
       'codeWebChat.openInIntegratedTerminal',

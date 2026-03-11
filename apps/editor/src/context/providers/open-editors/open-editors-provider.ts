@@ -4,7 +4,7 @@ import * as path from 'path'
 import { FileItem } from '../workspace/workspace-provider'
 import { WorkspaceProvider } from '../workspace/workspace-provider'
 import { display_token_count } from '../../../utils/display-token-count'
-import { SharedFileState } from '@/context/shared-file-state'
+import { SharedContextState } from '@/context/shared-context-state'
 
 export class OpenEditorsProvider
   implements vscode.TreeDataProvider<FileItem>, vscode.Disposable
@@ -40,7 +40,7 @@ export class OpenEditorsProvider
   private _preview_tabs: Map<string, boolean> = new Map()
   private _on_did_change_checked_files = new vscode.EventEmitter<void>()
   readonly onDidChangeCheckedFiles = this._on_did_change_checked_files.event
-  private _shared_state: SharedFileState
+  private _shared_context_state: SharedContextState
   private _config_change_handler: vscode.Disposable
   private _workspace_provider: WorkspaceProvider
   private _use_shrink_token_count: boolean = false
@@ -74,12 +74,13 @@ export class OpenEditorsProvider
   constructor(params: {
     workspace_folders: readonly vscode.WorkspaceFolder[]
     workspace_provider: WorkspaceProvider
+    shared_context_state: SharedContextState
   }) {
     this._workspace_roots = params.workspace_folders
       .map((folder) => folder.uri.fsPath)
       .filter((folder_path) => fs.existsSync(folder_path))
 
-    this._shared_state = SharedFileState.get_instance()
+    this._shared_context_state = params.shared_context_state
     this._workspace_provider = params.workspace_provider
 
     this._workspace_change_handler =
@@ -205,7 +206,8 @@ export class OpenEditorsProvider
   }
 
   private _is_file_checked_in_workspace(file_path: string): boolean {
-    const workspace_checked_files = this._shared_state.get_checked_files()
+    const workspace_checked_files =
+      this._shared_context_state.get_checked_files()
     return workspace_checked_files.includes(file_path)
   }
 

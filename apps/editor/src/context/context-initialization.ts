@@ -6,14 +6,12 @@ import {
 } from './providers/workspace/workspace-provider'
 import { FilesCollector } from '../utils/files-collector'
 import { OpenEditorsProvider } from './providers/open-editors/open-editors-provider'
-import { SharedFileState } from './shared-file-state'
+import { SharedContextState } from './shared-context-state'
 import { EventEmitter } from 'events'
 import { dictionary } from '@shared/constants/dictionary'
 import {
   CONTEXT_CHECKED_PATHS_STATE_KEY,
   CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY,
-  CONTEXT_CHECKED_PATHS_FRF_STATE_KEY,
-  CONTEXT_CHECKED_TIMESTAMPS_FRF_STATE_KEY,
   DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY,
   RANGES_STATE_KEY,
   type DuplicateWorkspaceContext
@@ -104,12 +102,15 @@ export const context_initialization = async (
 ): Promise<{
   workspace_provider: WorkspaceProvider
   open_editors_provider: OpenEditorsProvider
+  shared_context_state: SharedContextState
 }> => {
   await restore_duplicated_workspace_context(context)
 
   const workspace_folders = vscode.workspace.workspaceFolders ?? []
 
   let workspace_view: vscode.TreeView<FileItem>
+
+  const shared_context_state = new SharedContextState()
 
   const workspace_provider = new WorkspaceProvider({
     workspace_folders,
@@ -120,7 +121,8 @@ export const context_initialization = async (
 
   const open_editors_provider = new OpenEditorsProvider({
     workspace_folders,
-    workspace_provider
+    workspace_provider,
+    shared_context_state
   })
 
   const files_collector = new FilesCollector({
@@ -149,11 +151,10 @@ export const context_initialization = async (
     token_count_emitter.emit('token-count-updated', context_token_count)
   }
 
-  const shared_state = SharedFileState.get_instance()
-  shared_state.set_providers(workspace_provider, open_editors_provider)
+  shared_context_state.set_providers(workspace_provider, open_editors_provider)
 
   context.subscriptions.push({
-    dispose: () => shared_state.dispose()
+    dispose: () => shared_context_state.dispose()
   })
 
   const register_workspace_view_handlers = (
@@ -428,7 +429,10 @@ export const context_initialization = async (
         open_editors_provider.update_workspace_folders(
           vscode.workspace.workspaceFolders
         )
-        shared_state.set_providers(workspace_provider, open_editors_provider)
+        shared_context_state.set_providers(
+          workspace_provider,
+          open_editors_provider
+        )
         update_view_badges()
       }
     })
@@ -453,6 +457,7 @@ export const context_initialization = async (
 
   return {
     workspace_provider,
-    open_editors_provider
+    open_editors_provider,
+    shared_context_state
   }
 }

@@ -11,8 +11,7 @@ type ContextState = {
   files: string[]
 }
 
-export class SharedFileState {
-  private static _instance: SharedFileState
+export class SharedContextState {
   private _on_did_change_checked_files = new vscode.EventEmitter<void>()
   readonly onDidChangeCheckedFiles = this._on_did_change_checked_files.event
 
@@ -39,13 +38,6 @@ export class SharedFileState {
   private _is_synchronizing: boolean = false
   private _is_initialized: boolean = false
   private _is_undoing_redoing: boolean = false
-
-  static get_instance(): SharedFileState {
-    if (!SharedFileState._instance) {
-      SharedFileState._instance = new SharedFileState()
-    }
-    return SharedFileState._instance
-  }
 
   private get _checked_files() {
     return this._is_frf_mode
