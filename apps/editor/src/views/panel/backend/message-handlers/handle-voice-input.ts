@@ -239,7 +239,15 @@ const stop_recording = async (panel_provider: PanelProvider) => {
       })
 
       if (result?.response) {
-        panel_provider.add_text_at_cursor_position(result.response)
+        if (result.response.trim().toUpperCase() === 'INAUDIBLE') {
+          panel_provider.send_message({
+            command: 'SHOW_AUTO_CLOSING_MODAL',
+            title: 'Inaudible voice input',
+            type: 'warning'
+          })
+        } else {
+          panel_provider.add_text_at_cursor_position(result.response)
+        }
       }
     } catch (error: any) {
       if (axios.isCancel(error)) {
