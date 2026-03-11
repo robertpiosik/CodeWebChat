@@ -7,7 +7,8 @@ type Props = {
   title: string
   duration: number
   type: ModalIconType
-  on_close?: () => void
+  on_close: () => void
+  non_dismissable?: boolean
 }
 
 export const AutoClosingModal: React.FC<Props> = (props) => {
@@ -16,7 +17,7 @@ export const AutoClosingModal: React.FC<Props> = (props) => {
   useEffect(() => {
     set_is_filling(true)
     const timeout = setTimeout(() => {
-      props.on_close?.()
+      props.on_close()
     }, props.duration)
 
     return () => {
@@ -27,9 +28,9 @@ export const AutoClosingModal: React.FC<Props> = (props) => {
   return (
     <div
       onKeyDown={(e) => {
-        if (e.key == 'Escape') {
+        if (e.key == 'Escape' && !props.non_dismissable) {
           e.stopPropagation()
-          props.on_close?.()
+          props.on_close()
         }
       }}
     >
@@ -47,9 +48,11 @@ export const AutoClosingModal: React.FC<Props> = (props) => {
             />
           </div>
         }
-        on_background_click={props.on_close}
+        on_background_click={
+          !props.non_dismissable ? props.on_close : undefined
+        }
         footer_slot={
-          props.on_close ? (
+          !props.non_dismissable ? (
             <Button on_click={props.on_close} is_focused={true}>
               Close
             </Button>

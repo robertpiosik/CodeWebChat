@@ -866,9 +866,8 @@ export const Panel = () => {
               title={auto_closing_modal_data.title}
               type={auto_closing_modal_data.type}
               duration={3000}
-              on_close={() => {
-                set_auto_closing_modal_data(undefined)
-              }}
+              on_close={() => set_auto_closing_modal_data(undefined)}
+              non_dismissable={auto_closing_modal_data.non_dismissable}
             />
           </div>
         )}

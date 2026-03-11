@@ -549,7 +549,8 @@ export const restore_checkpoint = async (params: {
       params.panel_provider.send_message({
         command: 'SHOW_AUTO_CLOSING_MODAL',
         title: message.slice(0, -1),
-        type: 'success'
+        type: 'success',
+        non_dismissable: true
       })
     } else if (temp_checkpoint) {
       const action = await vscode.window.showInformationMessage(
