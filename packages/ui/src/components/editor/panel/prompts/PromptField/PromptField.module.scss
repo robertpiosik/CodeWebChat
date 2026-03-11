@@ -94,6 +94,7 @@
     position: absolute;
     color: var(--vscode-input-placeholderForeground);
     pointer-events: none;
+    padding-right: 7px;
   }
 
   &--empty::selection,
