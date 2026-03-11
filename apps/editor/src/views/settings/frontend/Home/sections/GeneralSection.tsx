@@ -18,6 +18,7 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
   EDIT_FORMAT_INSTRUCTIONS_WHOLE
 } from '@/constants/edit-format-instructions'
+import { find_relevant_files_instructions_prefix as default_find_relevant_files_instructions_prefix } from '@/constants/instructions'
 import { use_translation } from '../../i18n/use-translation'
 
 type ClearChecksBehavior = 'ignore-open-editors' | 'uncheck-all'
@@ -28,6 +29,7 @@ type Props = {
   send_with_shift_enter: boolean
   check_new_files: boolean
   checkpoint_lifespan: number
+  find_relevant_files_instructions_prefix: string
   gemini_user_id: number | null
   ai_studio_user_id: number | null
   on_gemini_user_id_change: (id: number | null) => void
@@ -35,6 +37,9 @@ type Props = {
   on_automatic_checkpoints_toggle: (disabled: boolean) => void
   on_send_with_shift_enter_change: (enabled: boolean) => void
   on_check_new_files_change: (enabled: boolean) => void
+  on_find_relevant_files_instructions_prefix_change: (
+    instructions: string
+  ) => void
   on_checkpoint_lifespan_change: (hours: number | undefined) => void
   clear_checks_in_workspace_behavior: ClearChecksBehavior
   edit_format_instructions: EditFormatInstructions
@@ -59,6 +64,10 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
     const [context_size_warning_threshold, set_context_size_warning_threshold] =
       useState<number>()
     const [checkpoint_lifespan, set_checkpoint_lifespan] = useState<number>()
+    const [
+      find_relevant_files_instructions_prefix,
+      set_find_relevant_files_instructions_prefix
+    ] = useState('')
     const [gemini_user_id_str, set_gemini_user_id_str] = useState('')
     const [ai_studio_user_id_str, set_ai_studio_user_id_str] = useState('')
     const [instructions, set_instructions] = useState<EditFormatInstructions>({
@@ -81,6 +90,12 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
     useEffect(() => {
       set_checkpoint_lifespan(props.checkpoint_lifespan)
     }, [props.checkpoint_lifespan])
+
+    useEffect(() => {
+      set_find_relevant_files_instructions_prefix(
+        props.find_relevant_files_instructions_prefix || ''
+      )
+    }, [props.find_relevant_files_instructions_prefix])
 
     useEffect(() => {
       set_gemini_user_id_str(
@@ -117,6 +132,17 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
         props.on_context_size_warning_threshold_change(undefined)
         set_context_size_warning_threshold(
           DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD
+        )
+      }
+    }
+
+    const handle_find_relevant_files_instructions_prefix_blur = () => {
+      props.on_find_relevant_files_instructions_prefix_change(
+        find_relevant_files_instructions_prefix
+      )
+      if (find_relevant_files_instructions_prefix == '') {
+        set_find_relevant_files_instructions_prefix(
+          default_find_relevant_files_instructions_prefix
         )
       }
     }
@@ -274,6 +300,19 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 ]}
                 value={props.clear_checks_in_workspace_behavior}
                 onChange={props.on_clear_checks_in_workspace_behavior_change}
+              />
+            }
+          />
+          <UiItem
+            title={t('general.find-relevant-files-instructions-prefix.title')}
+            description={t(
+              'general.find-relevant-files-instructions-prefix.description'
+            )}
+            slot_below={
+              <UiTextarea
+                value={find_relevant_files_instructions_prefix}
+                on_change={set_find_relevant_files_instructions_prefix}
+                on_blur={handle_find_relevant_files_instructions_prefix_blur}
               />
             }
           />

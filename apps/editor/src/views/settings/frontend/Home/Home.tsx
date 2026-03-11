@@ -103,6 +103,7 @@ type Props = {
   are_automatic_checkpoints_disabled: boolean
   checkpoint_lifespan: number
   edit_format_instructions: EditFormatInstructions
+  find_relevant_files_instructions_prefix: string
   clear_checks_in_workspace_behavior: 'ignore-open-editors' | 'uncheck-all'
   extended_cache_duration_for_anthropic: boolean
   fix_all_automatically: boolean
@@ -120,6 +121,9 @@ type Props = {
   on_include_prompts_in_commit_messages_change: (enabled: boolean) => void
   on_edit_format_instructions_change: (
     instructions: EditFormatInstructions
+  ) => void
+  on_find_relevant_files_instructions_prefix_change: (
+    instructions: string
   ) => void
   on_edit_context_system_instructions_change: (instructions: string) => void
   on_voice_input_instructions_change: (instructions: string) => void
@@ -346,6 +350,12 @@ export const Home: React.FC<Props> = (props) => {
           }
           on_clear_checks_in_workspace_behavior_change={
             props.on_clear_checks_in_workspace_behavior_change
+          }
+          find_relevant_files_instructions_prefix={
+            props.find_relevant_files_instructions_prefix
+          }
+          on_find_relevant_files_instructions_prefix_change={
+            props.on_find_relevant_files_instructions_prefix_change
           }
           edit_format_instructions={props.edit_format_instructions}
           on_edit_format_instructions_change={

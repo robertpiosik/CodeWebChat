@@ -1,5 +1,4 @@
 import { useRef, useEffect, useMemo, useState, useCallback } from 'react'
-import TextareaAutosize from 'react-textarea-autosize'
 import styles from './PromptField.module.scss'
 import cn from 'classnames'
 import { Icon } from '../../../common/Icon'
@@ -60,8 +59,6 @@ export type PromptFieldProps = {
   invocation_count: number
   on_invocation_count_change: (count: number) => void
   on_go_to_file: (file_path: string) => void
-  find_relevant_files_instructions_prefix: string
-  on_find_relevant_files_instructions_prefix_change: (value: string) => void
   on_pasted_lines_click: (path: string, start?: string, end?: string) => void
   on_open_url: (url: string) => void
   on_paste_image: (base64_content: string) => void
@@ -95,17 +92,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [hovered_edit_format, set_hovered_edit_format] =
     useState<EditFormat | null>(null)
   const [is_recording_hovered, set_is_recording_hovered] = useState(false)
-
-  const [
-    find_relevant_files_instructions,
-    set_find_relevant_files_instructions
-  ] = useState(props.find_relevant_files_instructions_prefix)
-
-  useEffect(() => {
-    set_find_relevant_files_instructions(
-      props.find_relevant_files_instructions_prefix
-    )
-  }, [props.find_relevant_files_instructions_prefix])
 
   useEffect(() => {
     if (!props.value) {
@@ -341,26 +327,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         onKeyDown={handle_container_key_down}
         onClick={() => input_ref.current?.focus()}
       >
-        {props.prompt_type == 'find-relevant-files' && (
-          <TextareaAutosize
-            className={styles['find-relevant-files-prefix']}
-            value={find_relevant_files_instructions}
-            onChange={(e) => {
-              set_find_relevant_files_instructions(e.target.value)
-            }}
-            onBlur={(e) => {
-              props.on_find_relevant_files_instructions_prefix_change(
-                find_relevant_files_instructions
-              )
-              if (!e.target.value) {
-                set_find_relevant_files_instructions(
-                  props.find_relevant_files_instructions_prefix
-                )
-              }
-            }}
-            onClick={(e) => e.stopPropagation()}
-          />
-        )}
         <div className={styles['input-wrapper']}>
           <div
             ref={input_ref}

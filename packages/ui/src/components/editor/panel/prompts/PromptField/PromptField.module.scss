@@ -107,21 +107,6 @@
   }
 }
 
-.find-relevant-files-prefix {
-  padding: var(--padding);
-  background-color: transparent;
-  border: none;
-  border-bottom: 1px solid var(--cwc-border-color);
-  resize: none;
-  color: var(--cwc-text-color-dimmed);
-  overflow: hidden;
-
-  &:focus {
-    outline: none;
-    color: unset;
-  }
-}
-
 .clear-button {
   float: right;
   position: relative;

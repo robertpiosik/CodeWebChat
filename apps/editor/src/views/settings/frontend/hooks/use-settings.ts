@@ -78,6 +78,10 @@ export const use_settings = (vscode: any) => {
     extended_cache_duration_for_anthropic,
     set_extended_cache_duration_for_anthropic
   ] = useState<boolean | undefined>(undefined)
+  const [
+    find_relevant_files_instructions_prefix,
+    set_find_relevant_files_instructions_prefix
+  ] = useState<boolean | undefined>(undefined)
 
   useEffect(() => {
     post_message(vscode, { command: 'GET_MODEL_PROVIDERS' })
@@ -101,6 +105,9 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_CHECK_NEW_FILES' })
     post_message(vscode, { command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR' })
     post_message(vscode, { command: 'GET_FIX_ALL_AUTOMATICALLY' })
+    post_message(vscode, {
+      command: 'GET_FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX'
+    })
     post_message(vscode, {
       command: 'GET_EXTENDED_CACHE_DURATION_FOR_ANTHROPIC'
     })
@@ -153,6 +160,8 @@ export const use_settings = (vscode: any) => {
         set_fix_all_automatically(message.enabled)
       } else if (message.command == 'EXTENDED_CACHE_DURATION_FOR_ANTHROPIC') {
         set_extended_cache_duration_for_anthropic(message.enabled)
+      } else if (message.command == 'FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX') {
+        set_find_relevant_files_instructions_prefix(message.instructions)
       }
     }
 
@@ -474,6 +483,14 @@ export const use_settings = (vscode: any) => {
     })
   }
 
+  const handle_find_relevant_files_instructions_prefix_change = (
+    instructions: string
+  ) =>
+    post_message(vscode, {
+      command: 'UPDATE_FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX',
+      instructions
+    })
+
   return {
     providers,
     set_providers,
@@ -504,6 +521,7 @@ export const use_settings = (vscode: any) => {
     clear_checks_in_workspace_behavior,
     fix_all_automatically,
     extended_cache_duration_for_anthropic,
+    find_relevant_files_instructions_prefix,
     handle_reorder_providers,
     handle_add_provider,
     handle_delete_provider,
@@ -534,6 +552,7 @@ export const use_settings = (vscode: any) => {
     handle_fix_all_automatically_change,
     handle_extended_cache_duration_for_anthropic_change,
     handle_open_keybindings,
-    handle_open_external_url
+    handle_open_external_url,
+    handle_find_relevant_files_instructions_prefix_change
   }
 }

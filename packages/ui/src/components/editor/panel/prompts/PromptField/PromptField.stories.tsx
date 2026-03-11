@@ -28,10 +28,6 @@ export const Empty = () => (
       console.log('Invocation count changed:', count)
     }
     on_go_to_file={(path) => console.log('Go to file:', path)}
-    find_relevant_files_instructions_prefix=""
-    on_find_relevant_files_instructions_prefix_change={(val) =>
-      console.log('Find relevant files prefix changed:', val)
-    }
     on_pasted_lines_click={(path, start, end) =>
       console.log('Pasted lines clicked:', path, start, end)
     }
@@ -80,10 +76,6 @@ export const WithText = () => (
       console.log('Invocation count changed:', count)
     }
     on_go_to_file={(path) => console.log('Go to file:', path)}
-    find_relevant_files_instructions_prefix=""
-    on_find_relevant_files_instructions_prefix_change={(val) =>
-      console.log('Find relevant files prefix changed:', val)
-    }
     on_pasted_lines_click={(path, start, end) =>
       console.log('Pasted lines clicked:', path, start, end)
     }
@@ -132,10 +124,6 @@ export const LongText = () => (
       console.log('Invocation count changed:', count)
     }
     on_go_to_file={(path) => console.log('Go to file:', path)}
-    find_relevant_files_instructions_prefix=""
-    on_find_relevant_files_instructions_prefix_change={(val) =>
-      console.log('Find relevant files prefix changed:', val)
-    }
     on_pasted_lines_click={(path, start, end) =>
       console.log('Pasted lines clicked:', path, start, end)
     }
@@ -184,10 +172,6 @@ export const WithPlaceholderSavedContext = () => (
     }
     on_go_to_file={(path) => console.log('Go to file:', path)}
     on_curly_braces_click={() => {}}
-    find_relevant_files_instructions_prefix=""
-    on_find_relevant_files_instructions_prefix_change={(val) =>
-      console.log('Find relevant files prefix changed:', val)
-    }
     on_pasted_lines_click={(path, start, end) =>
       console.log('Pasted lines clicked:', path, start, end)
     }
@@ -242,10 +226,6 @@ export const WithPlaceholderSelection = () => (
     }
     on_go_to_file={(path) => console.log('Go to file:', path)}
     on_curly_braces_click={() => {}}
-    find_relevant_files_instructions_prefix=""
-    on_find_relevant_files_instructions_prefix_change={(val) =>
-      console.log('Find relevant files prefix changed:', val)
-    }
     on_pasted_lines_click={(path, start, end) =>
       console.log('Pasted lines clicked:', path, start, end)
     }
@@ -294,10 +274,6 @@ export const WithCommit = () => (
     }
     on_go_to_file={(path) => console.log('Go to file:', path)}
     on_curly_braces_click={() => {}}
-    find_relevant_files_instructions_prefix=""
-    on_find_relevant_files_instructions_prefix_change={(val) =>
-      console.log('Find relevant files prefix changed:', val)
-    }
     on_pasted_lines_click={(path, start, end) =>
       console.log('Pasted lines clicked:', path, start, end)
     }
@@ -346,10 +322,6 @@ export const WithCommitWithQuotes = () => (
     }
     on_go_to_file={(path) => console.log('Go to file:', path)}
     on_curly_braces_click={() => {}}
-    find_relevant_files_instructions_prefix=""
-    on_find_relevant_files_instructions_prefix_change={(val) =>
-      console.log('Find relevant files prefix changed:', val)
-    }
     on_pasted_lines_click={(path, start, end) =>
       console.log('Pasted lines clicked:', path, start, end)
     }
@@ -397,10 +369,6 @@ export const WithContextAtCommit = () => (
     }
     on_go_to_file={(path) => console.log('Go to file:', path)}
     on_curly_braces_click={() => {}}
-    find_relevant_files_instructions_prefix=""
-    on_find_relevant_files_instructions_prefix_change={(val) =>
-      console.log('Find relevant files prefix changed:', val)
-    }
     on_pasted_lines_click={(path, start, end) =>
       console.log('Pasted lines clicked:', path, start, end)
     }
@@ -453,10 +421,6 @@ export const WithEditFormatSelector = () => {
       invocation_count={invocation_count}
       on_invocation_count_change={set_invocation_count}
       on_go_to_file={(path) => console.log('Go to file:', path)}
-      find_relevant_files_instructions_prefix=""
-      on_find_relevant_files_instructions_prefix_change={(val) =>
-        console.log('Find relevant files prefix changed:', val)
-      }
       on_pasted_lines_click={(path, start, end) =>
         console.log('Pasted lines clicked:', path, start, end)
       }
@@ -505,10 +469,6 @@ export const WithFilePaths = () => (
     invocation_count={1}
     on_invocation_count_change={(count) =>
       console.log('Invocation count changed:', count)
-    }
-    find_relevant_files_instructions_prefix=""
-    on_find_relevant_files_instructions_prefix_change={(val) =>
-      console.log('Find relevant files prefix changed:', val)
     }
     on_pasted_lines_click={(path, start, end) =>
       console.log('Pasted lines clicked:', path, start, end)
@@ -586,10 +546,6 @@ export const WithTabs = () => {
       on_invocation_count_change={(count) =>
         console.log('Invocation count changed:', count)
       }
-      find_relevant_files_instructions_prefix=""
-      on_find_relevant_files_instructions_prefix_change={(val) =>
-        console.log('Find relevant files prefix changed:', val)
-      }
       on_pasted_lines_click={(path, start, end) =>
         console.log('Pasted lines clicked:', path, start, end)
       }
@@ -639,8 +595,6 @@ export const MissingPreset = () => (
       console.log('Invocation count changed:', count)
     }
     on_go_to_file={(path) => console.log('Go to file:', path)}
-    find_relevant_files_instructions_prefix=""
-    on_find_relevant_files_instructions_prefix_change={() => {}}
     on_pasted_lines_click={() => {}}
     on_open_url={() => {}}
     on_open_website={() => {}}
