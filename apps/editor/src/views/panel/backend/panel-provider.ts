@@ -78,8 +78,6 @@ import {
   handle_delete_task,
   handle_fix_all_failed_files,
   handle_find_relevant_files,
-  handle_get_find_relevant_files_instructions_prefix,
-  handle_save_find_relevant_files_instructions_prefix,
   handle_open_external_url,
   handle_hash_sign_quick_pick,
   handle_open_file_and_select,
@@ -527,14 +525,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
         if (event.affectsConfiguration('codeWebChat.sendWithShiftEnter')) {
           this._send_send_with_shift_enter()
-        }
-
-        if (
-          event.affectsConfiguration(
-            'codeWebChat.findRelevantFilesInstructionsPrefix'
-          )
-        ) {
-          handle_get_find_relevant_files_instructions_prefix(this)
         }
       }
     )
@@ -990,16 +980,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               panel_provider: this,
               files_to_fix: message.files
             })
-          } else if (
-            message.command == 'GET_FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX'
-          ) {
-            handle_get_find_relevant_files_instructions_prefix(this)
-          } else if (
-            message.command == 'SAVE_FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX'
-          ) {
-            await handle_save_find_relevant_files_instructions_prefix(
-              message.prefix
-            )
           } else if (message.command == 'UPSERT_CONFIGURATION') {
             await handle_upsert_configuration(this, message)
           } else if (message.command == 'DELETE_CONFIGURATION') {

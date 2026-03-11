@@ -109,8 +109,6 @@ type Props = {
   on_open_url: (url: string) => void
   on_open_website: (url: string) => void
   are_keyboard_shortcuts_disabled: boolean
-  find_relevant_files_instructions_prefix: string
-  on_find_relevant_files_instructions_prefix_change: (prefix: string) => void
   on_paste_image: (base64_content: string) => void
   on_open_image: (hash: string) => void
   on_paste_text: (text: string) => void
@@ -302,12 +300,6 @@ export const MainView: React.FC<Props> = (props) => {
             on_open_website={props.on_open_website}
             invocation_count={current_invocation_count}
             on_invocation_count_change={handle_invocation_count_change}
-            find_relevant_files_instructions_prefix={
-              props.find_relevant_files_instructions_prefix
-            }
-            on_find_relevant_files_instructions_prefix_change={
-              props.on_find_relevant_files_instructions_prefix_change
-            }
             on_paste_image={props.on_paste_image}
             on_open_image={props.on_open_image}
             on_paste_pasted_text={props.on_paste_text}

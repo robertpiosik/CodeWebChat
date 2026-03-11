@@ -73,8 +73,6 @@ export const Panel = () => {
     is_timeline_collapsed,
     handle_timeline_collapsed_change,
     handle_task_forward,
-    find_relevant_files_instructions_prefix,
-    handle_find_relevant_files_instructions_prefix_change,
     handle_paste_image,
     handle_open_image,
     handle_paste_long_text,
@@ -396,12 +394,6 @@ export const Panel = () => {
                 }
                 on_pasted_lines_click={handle_pasted_lines_click}
                 currently_open_file_text={currently_open_file_text}
-                find_relevant_files_instructions_prefix={
-                  find_relevant_files_instructions_prefix
-                }
-                on_find_relevant_files_instructions_prefix_change={
-                  handle_find_relevant_files_instructions_prefix_change
-                }
                 on_open_url={handle_open_url}
                 on_open_website={handle_open_website}
                 on_paste_image={handle_paste_image}

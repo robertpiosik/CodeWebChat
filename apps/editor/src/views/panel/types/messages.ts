@@ -489,15 +489,6 @@ export interface UpdateFileProgressMessage extends BaseMessage {
   apply_tokens_per_second?: number
 }
 
-export interface GetFindRelevantFilesInstructionsPrefixMessage extends BaseMessage {
-  command: 'GET_FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX'
-}
-
-export interface SaveFindRelevantFilesInstructionsPrefixMessage extends BaseMessage {
-  command: 'SAVE_FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX'
-  prefix: string
-}
-
 export interface OpenExternalUrlMessage extends BaseMessage {
   command: 'OPEN_EXTERNAL_URL'
   url: string
@@ -670,8 +661,6 @@ export type FrontendMessage =
   | DeleteTaskMessage
   | PreviewGeneratedCodeMessage
   | UpdateFileProgressMessage
-  | GetFindRelevantFilesInstructionsPrefixMessage
-  | SaveFindRelevantFilesInstructionsPrefixMessage
   | OpenExternalUrlMessage
   | UpsertConfigurationMessage
   | DeleteConfigurationMessage
@@ -937,11 +926,6 @@ export interface TasksMessage extends BaseMessage {
   tasks: Record<string, Task[]>
 }
 
-export interface FindRelevantFilesInstructionsPrefixMessage extends BaseMessage {
-  command: 'FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX'
-  prefix: string
-}
-
 export interface FindRelevantFilesShrinkSourceCodeMessage extends BaseMessage {
   command: 'FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE'
   shrink_source_code: boolean
@@ -1013,7 +997,6 @@ export type BackendMessage =
   | ShowPreviewOngoingModalMessage
   | TasksMessage
   | UpdateFileProgressMessage
-  | FindRelevantFilesInstructionsPrefixMessage
   | RecordingStateMessage
   | FindRelevantFilesShrinkSourceCodeMessage
   | SetupProgressMessage

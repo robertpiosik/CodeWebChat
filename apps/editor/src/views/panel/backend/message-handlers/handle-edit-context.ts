@@ -30,10 +30,6 @@ import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { EditContextMessage } from '@/views/panel/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
 import {
-  find_relevant_files_instructions_prefix,
-  find_relevant_files_format
-} from '@/constants/instructions'
-import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
   EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER,
@@ -406,11 +402,8 @@ export const handle_edit_context = async (
     processed_instructions = replace_fragment_symbol(processed_instructions)
   }
 
-  const is_find_relevant_files =
-    panel_provider.api_prompt_type == 'find-relevant-files'
-  const collected = await files_collector.collect_files({
-    compact: is_find_relevant_files
-  })
+  panel_provider.api_prompt_type == 'find-relevant-files'
+  const collected = await files_collector.collect_files({})
   const collected_files = collected.other_files + collected.recent_files
 
   if (!collected_files) {
@@ -467,15 +460,7 @@ export const handle_edit_context = async (
       config.get<string>(instructions_key) || default_instructions
 
     let system_instructions_xml = ''
-    if (is_find_relevant_files) {
-      const config_find_relevant_files_instructions_prefix = config.get<string>(
-        'findRelevantFilesInstructionsPrefix'
-      )
-      const instructions_to_use =
-        config_find_relevant_files_instructions_prefix ||
-        find_relevant_files_instructions_prefix
-      system_instructions_xml = `${instructions_to_use}\n${find_relevant_files_format}`
-    } else if (edit_format_instructions) {
+    if (edit_format_instructions) {
       system_instructions_xml = `<system>\n${edit_format_instructions}\n</system>`
     }
 
