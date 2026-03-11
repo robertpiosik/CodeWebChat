@@ -5,6 +5,8 @@ type Props = {
   current_context_size: number
   context_size_warning_threshold: number
   is_context_disabled?: boolean
+  is_only_file_tree_active?: boolean
+  file_tree_token_count?: number
 }
 
 const format_tokens = (tokens: number): string => {
@@ -22,6 +24,25 @@ export const ContextUtilisation: React.FC<Props> = (props) => {
         <div className={styles.bar} />
         <span className={styles.label} style={{ fontStyle: 'italic' }}>
           Context disabled
+        </span>
+      </div>
+    )
+  }
+
+  if (
+    props.is_only_file_tree_active &&
+    props.file_tree_token_count !== undefined
+  ) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.bar}>
+          <div className={styles.bar__progress} style={{ width: `0%` }} />
+        </div>
+        <span
+          className={styles.label}
+          title="Only file tree is provided as context"
+        >
+          ~{format_tokens(props.file_tree_token_count)} file tree tokens
         </span>
       </div>
     )

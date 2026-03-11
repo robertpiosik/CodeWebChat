@@ -81,6 +81,8 @@ export const Panel = () => {
     handle_set_recording_state,
     find_relevant_files_shrink_source_code,
     handle_find_relevant_files_shrink_source_code_change,
+    find_relevant_files_only_file_tree,
+    handle_find_relevant_files_only_file_tree_change,
     is_setup_complete,
     handle_tab_change,
     handle_new_tab,
@@ -430,6 +432,12 @@ export const Panel = () => {
                 }
                 on_find_relevant_files_shrink_source_code_change={
                   handle_find_relevant_files_shrink_source_code_change
+                }
+                find_relevant_files_only_file_tree={
+                  find_relevant_files_only_file_tree
+                }
+                on_find_relevant_files_only_file_tree_change={
+                  handle_find_relevant_files_only_file_tree_change
                 }
                 is_setup_complete={is_setup_complete}
                 tabs_count={current_state?.instructions.length ?? 0}

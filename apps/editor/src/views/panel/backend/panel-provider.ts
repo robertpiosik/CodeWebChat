@@ -112,7 +112,8 @@ import {
   RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY,
   RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY,
   get_recently_used_presets_or_groups_key,
-  FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY
+  FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
+  FIND_RELEVANT_FILES_ONLY_FILE_TREE_STATE_KEY
 } from '@/constants/state-keys'
 import {
   config_preset_to_ui_format,
@@ -1011,6 +1012,24 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_save_find_relevant_files_shrink_source_code(
               this,
               message.shrink_source_code
+            )
+          } else if (
+            message.command == 'GET_FIND_RELEVANT_FILES_ONLY_FILE_TREE'
+          ) {
+            const only_file_tree = this.context.workspaceState.get<boolean>(
+              FIND_RELEVANT_FILES_ONLY_FILE_TREE_STATE_KEY,
+              false
+            )
+            this.send_message({
+              command: 'FIND_RELEVANT_FILES_ONLY_FILE_TREE',
+              only_file_tree
+            })
+          } else if (
+            message.command == 'SAVE_FIND_RELEVANT_FILES_ONLY_FILE_TREE'
+          ) {
+            await this.context.workspaceState.update(
+              FIND_RELEVANT_FILES_ONLY_FILE_TREE_STATE_KEY,
+              message.only_file_tree
             )
           } else if (message.command == 'RELEVANT_FILES_MODAL_RESPONSE') {
             if (this.relevant_files_choice_resolver) {

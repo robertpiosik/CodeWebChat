@@ -57,6 +57,10 @@ export const use_panel = (vscode: any) => {
     find_relevant_files_shrink_source_code,
     set_find_relevant_files_shrink_source_code
   ] = useState<boolean>(false)
+  const [
+    find_relevant_files_only_file_tree,
+    set_find_relevant_files_only_file_tree
+  ] = useState<boolean>(false)
 
   const handle_task_forward = (text: string) => {
     handle_instructions_change(text, 'edit-context')
@@ -116,6 +120,16 @@ export const use_panel = (vscode: any) => {
     })
   }
 
+  const handle_find_relevant_files_only_file_tree_change = (
+    only_file_tree: boolean
+  ) => {
+    set_find_relevant_files_only_file_tree(only_file_tree)
+    post_message(vscode, {
+      command: 'SAVE_FIND_RELEVANT_FILES_ONLY_FILE_TREE',
+      only_file_tree
+    })
+  }
+
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
@@ -155,6 +169,8 @@ export const use_panel = (vscode: any) => {
         set_setup_progress(message.setup_progress)
       } else if (message.command == 'FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE') {
         set_find_relevant_files_shrink_source_code(message.shrink_source_code)
+      } else if (message.command == 'FIND_RELEVANT_FILES_ONLY_FILE_TREE') {
+        set_find_relevant_files_only_file_tree(message.only_file_tree)
       } else if (message.command == 'RETURN_HOME') {
         set_active_view('home')
       }
@@ -173,7 +189,8 @@ export const use_panel = (vscode: any) => {
       { command: 'GET_CHECKPOINTS' },
       { command: 'REQUEST_CAN_UNDO' },
       { command: 'GET_SETUP_PROGRESS' },
-      { command: 'GET_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE' }
+      { command: 'GET_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE' },
+      { command: 'GET_FIND_RELEVANT_FILES_ONLY_FILE_TREE' }
     ]
     initial_messages.forEach((message) => post_message(vscode, message))
 
@@ -313,6 +330,8 @@ export const use_panel = (vscode: any) => {
     is_setup_complete,
     find_relevant_files_shrink_source_code,
     handle_find_relevant_files_shrink_source_code_change,
+    find_relevant_files_only_file_tree,
+    handle_find_relevant_files_only_file_tree_change,
     handle_tab_change,
     handle_new_tab,
     handle_tab_delete

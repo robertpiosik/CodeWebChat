@@ -549,6 +549,15 @@ export interface SaveFindRelevantFilesShrinkSourceCodeMessage extends BaseMessag
   shrink_source_code: boolean
 }
 
+export interface GetFindRelevantFilesOnlyFileTreeMessage extends BaseMessage {
+  command: 'GET_FIND_RELEVANT_FILES_ONLY_FILE_TREE'
+}
+
+export interface SaveFindRelevantFilesOnlyFileTreeMessage extends BaseMessage {
+  command: 'SAVE_FIND_RELEVANT_FILES_ONLY_FILE_TREE'
+  only_file_tree: boolean
+}
+
 export interface GetSetupProgressMessage extends BaseMessage {
   command: 'GET_SETUP_PROGRESS'
 }
@@ -664,6 +673,8 @@ export type FrontendMessage =
   | SetRecordingStateMessage
   | GetFindRelevantFilesShrinkSourceCodeMessage
   | SaveFindRelevantFilesShrinkSourceCodeMessage
+  | GetFindRelevantFilesOnlyFileTreeMessage
+  | SaveFindRelevantFilesOnlyFileTreeMessage
   | GetSetupProgressMessage
   | RequestReturnHomeMessage
   | RelevantFilesModalResponseMessage
@@ -915,6 +926,11 @@ export interface FindRelevantFilesShrinkSourceCodeMessage extends BaseMessage {
   shrink_source_code: boolean
 }
 
+export interface FindRelevantFilesOnlyFileTreeMessage extends BaseMessage {
+  command: 'FIND_RELEVANT_FILES_ONLY_FILE_TREE'
+  only_file_tree: boolean
+}
+
 export interface SetupProgressMessage {
   command: 'SETUP_PROGRESS'
   setup_progress: SetupProgress
@@ -983,6 +999,7 @@ export type BackendMessage =
   | UpdateFileProgressMessage
   | RecordingStateMessage
   | FindRelevantFilesShrinkSourceCodeMessage
+  | FindRelevantFilesOnlyFileTreeMessage
   | SetupProgressMessage
   | InsertSymbolAtCursorMessage
   | ReturnHomeMessage

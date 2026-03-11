@@ -119,6 +119,8 @@ type Props = {
   on_recording_finished: () => void
   find_relevant_files_shrink_source_code: boolean
   on_find_relevant_files_shrink_source_code_change: (shrink: boolean) => void
+  find_relevant_files_only_file_tree: boolean
+  on_find_relevant_files_only_file_tree_change: (only: boolean) => void
   is_setup_complete: boolean
   tabs_count: number
   active_tab_index: number
@@ -198,6 +200,13 @@ export const MainView: React.FC<Props> = (props) => {
     configurations: props.configurations
   })
 
+  const is_only_file_tree_active =
+    is_in_find_relevant_files_prompt_type &&
+    props.find_relevant_files_only_file_tree
+  const file_tree_token_count = Math.ceil(
+    props.context_file_paths.join('\n').length / 4
+  )
+
   return (
     <>
       <Header
@@ -216,15 +225,33 @@ export const MainView: React.FC<Props> = (props) => {
         <UiSeparator height={4} />
 
         {is_in_find_relevant_files_prompt_type && (
-          <div className={styles['shrink-source-code-checkbox']}>
-            <UiCheckbox
-              checked={props.find_relevant_files_shrink_source_code}
-              on_change={props.on_find_relevant_files_shrink_source_code_change}
-              id="shrink-source-code"
-            />
-            <label htmlFor="shrink-source-code">
-              {t('home.shrink-source-code')}
-            </label>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div className={styles['shrink-source-code-checkbox']}>
+              <UiCheckbox
+                checked={props.find_relevant_files_shrink_source_code}
+                on_change={
+                  props.on_find_relevant_files_shrink_source_code_change
+                }
+                id="shrink-source-code"
+                disabled={props.find_relevant_files_only_file_tree}
+              />
+              <label
+                htmlFor="shrink-source-code"
+                style={{
+                  opacity: props.find_relevant_files_only_file_tree ? 0.5 : 1
+                }}
+              >
+                {t('home.shrink-source-code')}
+              </label>
+            </div>
+            <div className={styles['shrink-source-code-checkbox']}>
+              <UiCheckbox
+                checked={props.find_relevant_files_only_file_tree}
+                on_change={props.on_find_relevant_files_only_file_tree_change}
+                id="only-file-tree"
+              />
+              <label htmlFor="only-file-tree">{t('home.only-file-tree')}</label>
+            </div>
           </div>
         )}
 
@@ -324,6 +351,8 @@ export const MainView: React.FC<Props> = (props) => {
               props.context_size_warning_threshold
             }
             is_context_disabled={is_in_no_context_prompt_type}
+            is_only_file_tree_active={is_only_file_tree_active}
+            file_tree_token_count={file_tree_token_count}
           />
         </div>
 

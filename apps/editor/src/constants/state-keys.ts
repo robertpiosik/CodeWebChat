@@ -57,6 +57,8 @@ export const HISTORY_FIND_RELEVANT_FILES_STATE_KEY =
 export const HISTORY_NO_CONTEXT_STATE_KEY = 'history-no-context'
 export const FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY =
   'find-relevant-files-shrink-source-code'
+export const FIND_RELEVANT_FILES_ONLY_FILE_TREE_STATE_KEY =
+  'find-relevant-files-only-file-tree'
 
 export const RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY =
   'recently-used-code-at-cursor-config-ids'
