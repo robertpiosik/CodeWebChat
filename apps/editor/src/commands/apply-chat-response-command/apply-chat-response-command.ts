@@ -26,7 +26,7 @@ import {
   preview_document_provider,
   CwcPreviewProvider
 } from './utils/preview/virtual-document-provider'
-import { parse_response } from './utils/clipboard-parser'
+import { parse_response, SubtasksItem } from './utils/clipboard-parser'
 
 let in_progress = false
 let placeholder_created_at_for_update: number | undefined
@@ -91,9 +91,13 @@ export const apply_chat_response_command = (params: {
         response: chat_response,
         is_single_root_folder_workspace
       })
+
       const is_relevant_files = clipboard_items.some(
-        (item) => item.type == 'relevant-files'
+        (item) => item.type == 'relevant-files' || item.type == 'subtasks'
       )
+      const subtasks_item = clipboard_items.find(
+        (item) => item.type == 'subtasks'
+      ) as SubtasksItem | undefined
 
       if (response_preview_promise_resolve && !is_relevant_files) {
         const history = params.panel_provider.response_history
@@ -187,6 +191,72 @@ export const apply_chat_response_command = (params: {
         params.panel_provider.send_message({
           command: 'HIDE_PROGRESS'
         })
+
+        if (subtasks_item) {
+          const tasks_array = subtasks_item.subtasks.map((st) => ({
+            id: Math.random().toString(36).substring(7),
+            description: st.instruction,
+            is_done: false,
+            files: st.files
+          }))
+
+          const default_workspace =
+            vscode.workspace.workspaceFolders![0].uri.fsPath
+
+          const tasks_record =
+            params.context.workspaceState.get<Record<string, any>>(
+              'codeWebChat.tasks'
+            ) || {}
+
+          tasks_record[default_workspace] = tasks_array
+
+          await params.context.workspaceState.update(
+            'codeWebChat.tasks',
+            tasks_record
+          )
+
+          params.panel_provider.send_message({
+            command: 'TASKS',
+            tasks: tasks_record as any
+          })
+
+          if (tasks_array.length > 0) {
+            const first_task = tasks_array[0]
+
+            const wp = params.workspace_provider as any
+            if (typeof wp.set_checked_files === 'function') {
+              wp.set_checked_files(first_task.files)
+            } else if (typeof wp.check_file === 'function') {
+              if (typeof wp.uncheck_all_files === 'function') {
+                wp.uncheck_all_files()
+              }
+              for (const file of first_task.files) {
+                wp.check_file(file)
+              }
+            }
+
+            await params.panel_provider.switch_to_edit_context()
+
+            params.panel_provider.edit_context_instructions.instructions[
+              params.panel_provider.edit_context_instructions.active_index
+            ] = first_task.description
+            params.panel_provider.caret_position = first_task.description.length
+
+            params.panel_provider.send_message({
+              command: 'INSTRUCTIONS',
+              ask_about_context:
+                params.panel_provider.ask_about_context_instructions,
+              edit_context: params.panel_provider.edit_context_instructions,
+              no_context: params.panel_provider.no_context_instructions,
+              code_at_cursor: params.panel_provider.code_at_cursor_instructions,
+              find_relevant_files:
+                params.panel_provider.find_relevant_files_instructions,
+              caret_position: params.panel_provider.caret_position
+            })
+
+            params.panel_provider.send_context_files()
+          }
+        }
 
         if (preview_data) {
           let created_at_for_preview = args?.created_at

@@ -39,6 +39,23 @@ Your response must begin with "**Relevant files:**", then list paths one under a
 - \`src/index.ts\`
 - \`src/hello.ts\`
 - \`src/welcome.ts\`
+
+If \`only_file_tree\` is active and the request is complex, you can instead respond with a plan using the \`<subtasks>\` format. Each subtask should contain the files that need to be edited and a clear instruction. Example:
+
+<subtasks>
+<subtask>
+  <instruction>Update the greeting logic</instruction>
+  <files>
+    <file>src/hello.ts</file>
+  </files>
+</subtask>
+<subtask>
+  <instruction>Export the new functions</instruction>
+  <files>
+    <file>src/index.ts</file>
+  </files>
+</subtask>
+</subtasks>
 </system>`
 
 export const find_relevant_files_format_for_panel = `<system>
@@ -51,6 +68,23 @@ Your response must begin with "**Relevant files:**", then list paths one under a
 - \`src/welcome.ts\`
 
 These files contain the core greeting logic and module exports.
+
+If \`only_file_tree\` is active and the request is complex, you can instead respond with a plan using the \`<subtasks>\` format. Each subtask should contain the files that need to be edited and a clear instruction. Example:
+
+<subtasks>
+<subtask>
+  <instruction>Update the greeting logic</instruction>
+  <files>
+    <file>src/hello.ts</file>
+  </files>
+</subtask>
+<subtask>
+  <instruction>Export the new functions</instruction>
+  <files>
+    <file>src/index.ts</file>
+  </files>
+</subtask>
+</subtasks>
 </system>`
 
 export const voice_input_instructions =

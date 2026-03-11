@@ -4,6 +4,10 @@ import {
   parse_multiple_files,
   parse_relevant_files
 } from './parsers'
+import {
+  parse_subtask_directives,
+  SubtaskDirective
+} from './parsers/subtask-directives-parser'
 
 export type FileItem = {
   type: 'file'
@@ -36,6 +40,11 @@ export type RelevantFilesItem = {
   file_paths: string[]
 }
 
+export type SubtasksItem = {
+  type: 'subtasks'
+  subtasks: SubtaskDirective[]
+}
+
 export type TextItem = {
   type: 'text'
   content: string
@@ -54,6 +63,7 @@ export type ClipboardItem =
   | TextItem
   | InlineFileItem
   | RelevantFilesItem
+  | SubtasksItem
 
 export const extract_workspace_and_path = (params: {
   raw_file_path: string
@@ -89,6 +99,11 @@ export const parse_response = (params: {
 
   if (code_at_cursor_items && code_at_cursor_items.length > 0) {
     return code_at_cursor_items
+  }
+
+  const subtasks = parse_subtask_directives(params.response) as SubtasksItem[]
+  if (subtasks && subtasks.length > 0) {
+    return subtasks
   }
 
   const relevant_files = parse_relevant_files({ response: params.response })
