@@ -16,7 +16,6 @@ import { ApiManagerModal as UiApiManagerModal } from '@ui/components/editor/pane
 import { QRCodeModal as UiQRCodeModal } from '@ui/components/editor/panel/modals/QRCodeModal'
 import { RelevantFilesModal as UiRelevantFilesModal } from '@ui/components/editor/panel/modals/RelevantFilesModal'
 import { AutoClosingModal as UiAutoClosingModal } from '@ui/components/editor/panel/modals/AutoClosingModal'
-import { AutoClosingWithActionsModal as UiAutoClosingWithActionsModal } from '@ui/components/editor/panel/modals/AutoClosingWithActionsModal'
 import { EditCheckpointDescriptionModal as UiEditCheckpointDescriptionModal } from '@ui/components/editor/panel/modals/EditCheckpointDescriptionModal'
 import { use_panel } from './hooks/panel/use-panel'
 import { FileInPreview } from '@shared/types/file-in-preview'
@@ -139,8 +138,6 @@ export const Panel = () => {
     api_manager_progress_state,
     auto_closing_modal_data,
     set_auto_closing_modal_data,
-    auto_closing_with_actions_modal_data,
-    set_auto_closing_with_actions_modal_data,
     is_preview_ongoing_modal_visible,
     set_is_preview_ongoing_modal_visible,
     relevant_files_modal_data,
@@ -847,31 +844,6 @@ export const Panel = () => {
               duration={3000}
               on_close={() => {
                 set_auto_closing_modal_data(undefined)
-              }}
-            />
-          </div>
-        )}
-
-        {auto_closing_with_actions_modal_data && (
-          <div className={styles.slot}>
-            <UiAutoClosingWithActionsModal
-              title={auto_closing_with_actions_modal_data.title}
-              type={auto_closing_with_actions_modal_data.type}
-              duration={3000}
-              action_label={auto_closing_with_actions_modal_data.action_label}
-              on_action={() => {
-                post_message(vscode, {
-                  command: 'AUTO_CLOSING_WITH_ACTIONS_MODAL_RESPONSE',
-                  action: 'action'
-                })
-                set_auto_closing_with_actions_modal_data(undefined)
-              }}
-              on_close={() => {
-                post_message(vscode, {
-                  command: 'AUTO_CLOSING_WITH_ACTIONS_MODAL_RESPONSE',
-                  action: 'close'
-                })
-                set_auto_closing_with_actions_modal_data(undefined)
               }}
             />
           </div>

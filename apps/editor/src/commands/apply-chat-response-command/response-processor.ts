@@ -192,19 +192,12 @@ export const process_chat_response = async (
       }
 
       panel_provider.send_message({
-        command: 'SHOW_AUTO_CLOSING_WITH_ACTIONS_MODAL',
+        command: 'SHOW_AUTO_CLOSING_MODAL',
         title: t('command.apply-chat-response.relevant-files.success'),
-        type: 'success',
-        action_label: 'Edit context'
+        type: 'success'
       })
 
-      const action = await new Promise<'action' | 'close'>((resolve) => {
-        panel_provider.auto_closing_action_resolver = resolve
-      })
-
-      if (action == 'action') {
-        await panel_provider.switch_to_edit_context()
-      }
+      await panel_provider.switch_to_edit_context()
     }
 
     return null

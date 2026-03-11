@@ -79,9 +79,9 @@ export const use_settings = (vscode: any) => {
     set_extended_cache_duration_for_anthropic
   ] = useState<boolean | undefined>(undefined)
   const [
-    find_relevant_files_instructions_prefix,
-    set_find_relevant_files_instructions_prefix
-  ] = useState<boolean | undefined>(undefined)
+    find_relevant_files_instructions,
+    set_find_relevant_files_instructions
+  ] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     post_message(vscode, { command: 'GET_MODEL_PROVIDERS' })
@@ -106,7 +106,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR' })
     post_message(vscode, { command: 'GET_FIX_ALL_AUTOMATICALLY' })
     post_message(vscode, {
-      command: 'GET_FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX'
+      command: 'GET_FIND_RELEVANT_FILES_INSTRUCTIONS'
     })
     post_message(vscode, {
       command: 'GET_EXTENDED_CACHE_DURATION_FOR_ANTHROPIC'
@@ -160,8 +160,8 @@ export const use_settings = (vscode: any) => {
         set_fix_all_automatically(message.enabled)
       } else if (message.command == 'EXTENDED_CACHE_DURATION_FOR_ANTHROPIC') {
         set_extended_cache_duration_for_anthropic(message.enabled)
-      } else if (message.command == 'FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX') {
-        set_find_relevant_files_instructions_prefix(message.instructions)
+      } else if (message.command == 'FIND_RELEVANT_FILES_INSTRUCTIONS') {
+        set_find_relevant_files_instructions(message.instructions)
       }
     }
 
@@ -483,11 +483,11 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_find_relevant_files_instructions_prefix_change = (
+  const handle_find_relevant_files_instructions_change = (
     instructions: string
   ) =>
     post_message(vscode, {
-      command: 'UPDATE_FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX',
+      command: 'UPDATE_FIND_RELEVANT_FILES_INSTRUCTIONS',
       instructions
     })
 
@@ -521,7 +521,7 @@ export const use_settings = (vscode: any) => {
     clear_checks_in_workspace_behavior,
     fix_all_automatically,
     extended_cache_duration_for_anthropic,
-    find_relevant_files_instructions_prefix,
+    find_relevant_files_instructions,
     handle_reorder_providers,
     handle_add_provider,
     handle_delete_provider,
@@ -553,6 +553,6 @@ export const use_settings = (vscode: any) => {
     handle_extended_cache_duration_for_anthropic_change,
     handle_open_keybindings,
     handle_open_external_url,
-    handle_find_relevant_files_instructions_prefix_change
+    handle_find_relevant_files_instructions_change
   }
 }

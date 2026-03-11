@@ -864,7 +864,7 @@
           "type": "string",
           "scope": "resource"
         },
-        "codeWebChat.findRelevantFilesInstructionsPrefix": {
+        "codeWebChat.findRelevantFilesInstructions": {
           "type": "string",
           "scope": "resource"
         },

@@ -59,7 +59,7 @@ export const RelevantFilesModal: React.FC<Props> = (props) => {
       }}
     >
       <Modal
-        title="Found Relevant Files"
+        title="Search Results"
         content_max_height="calc(100vh - 150px)"
         use_full_width={true}
         content_slot={

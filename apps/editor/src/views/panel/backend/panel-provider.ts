@@ -188,9 +188,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public relevant_files_choice_resolver:
     | ((files: string[] | undefined) => void)
     | undefined = undefined
-  public auto_closing_action_resolver:
-    | ((action: 'action' | 'close') => void)
-    | undefined = undefined
 
   public get current_ask_about_context_instruction(): string {
     return (
@@ -1019,13 +1016,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             if (this.relevant_files_choice_resolver) {
               this.relevant_files_choice_resolver(message.files)
               this.relevant_files_choice_resolver = undefined
-            }
-          } else if (
-            message.command == 'AUTO_CLOSING_WITH_ACTIONS_MODAL_RESPONSE'
-          ) {
-            if (this.auto_closing_action_resolver) {
-              this.auto_closing_action_resolver(message.action)
-              this.auto_closing_action_resolver = undefined
             }
           }
         } catch (error: any) {

@@ -577,11 +577,6 @@ export interface RelevantFilesModalResponseMessage extends BaseMessage {
   files?: string[]
 }
 
-export interface AutoClosingWithActionsModalResponseMessage extends BaseMessage {
-  command: 'AUTO_CLOSING_WITH_ACTIONS_MODAL_RESPONSE'
-  action: 'action' | 'close'
-}
-
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -676,7 +671,6 @@ export type FrontendMessage =
   | GetSetupProgressMessage
   | RequestReturnHomeMessage
   | RelevantFilesModalResponseMessage
-  | AutoClosingWithActionsModalResponseMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -887,13 +881,6 @@ export interface ShowAutoClosingModalMessage extends BaseMessage {
   type: 'success' | 'warning' | 'error'
 }
 
-export interface ShowAutoClosingWithActionsModalMessage extends BaseMessage {
-  command: 'SHOW_AUTO_CLOSING_WITH_ACTIONS_MODAL'
-  title: string
-  type: 'success' | 'warning' | 'error'
-  action_label: string
-}
-
 export interface UpdateFileInPreviewMessage extends BaseMessage {
   command: 'UPDATE_FILE_IN_PREVIEW'
   file: FileInPreview
@@ -1003,4 +990,3 @@ export type BackendMessage =
   | InsertSymbolAtCursorMessage
   | ReturnHomeMessage
   | ShowRelevantFilesModalMessage
-  | ShowAutoClosingWithActionsModalMessage

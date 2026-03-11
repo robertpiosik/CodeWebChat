@@ -320,12 +320,12 @@ export interface OpenExternalUrlMessage {
   url: string
 }
 
-export interface GetFindRelevantFilesInstructionsPrefixMessage {
-  command: 'GET_FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX'
+export interface GetFindRelevantFilesInstructionsMessage {
+  command: 'GET_FIND_RELEVANT_FILES_INSTRUCTIONS'
 }
 
-export interface UpdateFindRelevantFilesInstructionsPrefixMessage {
-  command: 'UPDATE_FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX'
+export interface UpdateFindRelevantFilesInstructionsMessage {
+  command: 'UPDATE_FIND_RELEVANT_FILES_INSTRUCTIONS'
   instructions: string
 }
 
@@ -394,8 +394,8 @@ export type FrontendMessage =
   | UpdateExtendedCacheDurationForAnthropicMessage
   | OpenKeybindingsMessage
   | OpenExternalUrlMessage
-  | GetFindRelevantFilesInstructionsPrefixMessage
-  | UpdateFindRelevantFilesInstructionsPrefixMessage
+  | GetFindRelevantFilesInstructionsMessage
+  | UpdateFindRelevantFilesInstructionsMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface ModelProvidersMessage {
@@ -513,8 +513,8 @@ export interface ExtendedCacheDurationForAnthropicMessage {
   enabled: boolean
 }
 
-export interface FindRelevantFilesInstructionsPrefixMessage {
-  command: 'FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX'
+export interface FindRelevantFilesInstructionsMessage {
+  command: 'FIND_RELEVANT_FILES_INSTRUCTIONS'
   instructions: string
 }
 
@@ -542,4 +542,4 @@ export type BackendMessage =
   | ShowSectionMessage
   | FixAllAutomaticallyMessage
   | ExtendedCacheDurationForAnthropicMessage
-  | FindRelevantFilesInstructionsPrefixMessage
+  | FindRelevantFilesInstructionsMessage

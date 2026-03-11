@@ -15,7 +15,7 @@ import { replace_pasted_text_symbol } from '../utils/replace-pasted-text-symbol'
 import { replace_fragment_symbol } from '../utils/replace-fragment-symbol'
 import {
   code_at_cursor_instructions_for_panel,
-  find_relevant_files_instructions_prefix,
+  find_relevant_files_instructions,
   find_relevant_files_format_for_panel
 } from '@/constants/instructions'
 import {
@@ -327,11 +327,12 @@ export const handle_send_to_browser = async (params: {
           params.panel_provider.web_prompt_type == 'find-relevant-files'
         ) {
           const config = vscode.workspace.getConfiguration('codeWebChat')
-          const config_find_relevant_files_instructions_prefix =
-            config.get<string>('findRelevantFilesInstructionsPrefix')
+          const config_find_relevant_files_instructions = config.get<string>(
+            'findRelevantFilesInstructions'
+          )
           const instructions_to_use =
-            config_find_relevant_files_instructions_prefix ||
-            find_relevant_files_instructions_prefix
+            config_find_relevant_files_instructions ||
+            find_relevant_files_instructions
           system_instructions_xml = `${instructions_to_use}\n${find_relevant_files_format_for_panel}`
         }
 

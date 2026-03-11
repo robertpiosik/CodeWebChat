@@ -47,8 +47,8 @@ import {
   handle_update_extended_cache_duration_for_anthropic,
   handle_open_keybindings,
   handle_open_external_url,
-  handle_get_find_relevant_files_instructions_prefix,
-  handle_update_find_relevant_files_instructions_prefix
+  handle_get_find_relevant_files_instructions,
+  handle_update_find_relevant_files_instructions
 } from './message-handlers'
 
 export class SettingsProvider {
@@ -362,14 +362,12 @@ export class SettingsProvider {
           await handle_open_keybindings(message)
         } else if (message.command == 'OPEN_EXTERNAL_URL') {
           await handle_open_external_url(message)
+        } else if (message.command == 'GET_FIND_RELEVANT_FILES_INSTRUCTIONS') {
+          await handle_get_find_relevant_files_instructions(this)
         } else if (
-          message.command == 'GET_FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX'
+          message.command == 'UPDATE_FIND_RELEVANT_FILES_INSTRUCTIONS'
         ) {
-          await handle_get_find_relevant_files_instructions_prefix(this)
-        } else if (
-          message.command == 'UPDATE_FIND_RELEVANT_FILES_INSTRUCTIONS_PREFIX'
-        ) {
-          await handle_update_find_relevant_files_instructions_prefix(message)
+          await handle_update_find_relevant_files_instructions(message)
         }
       },
       null,
@@ -414,7 +412,7 @@ export class SettingsProvider {
           void handle_get_are_automatic_checkpoints_disabled(this)
           void handle_get_checkpoint_lifespan(this)
           void handle_get_gemini_user_id(this)
-          void handle_get_find_relevant_files_instructions_prefix(this)
+          void handle_get_find_relevant_files_instructions(this)
           void handle_get_ai_studio_user_id(this)
           void handle_get_send_with_shift_enter(this)
           void handle_get_check_new_files(this)

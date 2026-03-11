@@ -29,7 +29,7 @@ import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { FindRelevantFilesMessage } from '@/views/panel/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
 import {
-  find_relevant_files_instructions_prefix,
+  find_relevant_files_instructions,
   find_relevant_files_format
 } from '@/constants/instructions'
 import { build_user_content } from '@/utils/build-user-content'
@@ -432,12 +432,12 @@ export const handle_find_relevant_files = async (
     const endpoint_url = provider.base_url
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const config_find_relevant_files_instructions_prefix = config.get<string>(
-      'findRelevantFilesInstructionsPrefix'
+    const config_find_relevant_files_instructions = config.get<string>(
+      'findRelevantFilesInstructions'
     )
     const instructions_to_use =
-      config_find_relevant_files_instructions_prefix ||
-      find_relevant_files_instructions_prefix
+      config_find_relevant_files_instructions ||
+      find_relevant_files_instructions
     const system_instructions_xml = `${instructions_to_use}\n${find_relevant_files_format}`
 
     const part1 = `<files>\n${collected.other_files}`

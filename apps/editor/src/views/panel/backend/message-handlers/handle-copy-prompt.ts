@@ -15,7 +15,7 @@ import { replace_website_symbol } from '../utils/replace-website-symbol'
 import { replace_fragment_symbol } from '../utils/replace-fragment-symbol'
 import {
   code_at_cursor_instructions_for_panel,
-  find_relevant_files_instructions_prefix,
+  find_relevant_files_instructions,
   find_relevant_files_format
 } from '@/constants/instructions'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
@@ -290,12 +290,12 @@ export const handle_copy_prompt = async (params: {
       }
     } else if (is_in_find_relevant_files_prompt_type) {
       const config = vscode.workspace.getConfiguration('codeWebChat')
-      const config_find_relevant_files_instructions_prefix = config.get<string>(
-        'findRelevantFilesInstructionsPrefix'
+      const config_find_relevant_files_instructions = config.get<string>(
+        'findRelevantFilesInstructions'
       )
       const instructions_to_use =
-        config_find_relevant_files_instructions_prefix ||
-        find_relevant_files_instructions_prefix
+        config_find_relevant_files_instructions ||
+        find_relevant_files_instructions
       system_instructions_xml = `${instructions_to_use}\n${find_relevant_files_format}`
     }
 

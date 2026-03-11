@@ -327,7 +327,7 @@ export const general = {
     hu: "A 'Kijelölés Törlése' gomb viselkedése.",
     bg: "Поведение на бутона 'Изчистване' в работното пространство."
   },
-  'general.find-relevant-files-instructions-prefix.title': {
+  'general.find-relevant-files-instructions.title': {
     en: 'Find Relevant Files Instructions',
     pl: 'Instrukcje znajdowania odpowiednich plików',
     'zh-cn': '查找相关文件说明',
@@ -345,7 +345,7 @@ export const general = {
     hu: 'Releváns Fájlok Keresési Utasításai',
     bg: 'Инструкции за намиране на съответните файлове'
   },
-  'general.find-relevant-files-instructions-prefix.description': {
+  'general.find-relevant-files-instructions.description': {
     en: 'Instructions used when searching for relevant files with AI.',
     pl: 'Instrukcje używane podczas wyszukiwania odpowiednich plików za pomocą AI.',
     'zh-cn': '使用 AI 搜索相关文件时使用的说明。',
