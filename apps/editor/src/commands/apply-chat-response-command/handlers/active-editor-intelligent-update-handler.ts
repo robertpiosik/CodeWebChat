@@ -8,10 +8,16 @@ import {
 import { sanitize_file_name, create_safe_path } from '@/utils/path-sanitizer'
 import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
-import { ToolConfig } from '@/services/model-providers-manager'
+import {
+  ToolConfig,
+  ModelProvidersManager
+} from '@/services/model-providers-manager'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
-import { process_file } from '@/utils/intelligent-update-utils'
+import {
+  process_file,
+  get_intelligent_update_config
+} from '@/utils/intelligent-update-utils'
 
 export const handle_active_editor_intelligent_update = async (params: {
   endpoint_url: string
@@ -144,26 +150,6 @@ export const handle_active_editor_intelligent_update = async (params: {
             progress
           })
         }
-      },
-      on_retry_attempt: () => {
-        if (params.panel_provider) {
-          params.panel_provider.send_message({
-            command: 'SHOW_PROGRESS',
-            title: 'Thinking...',
-            show_elapsed_time: true,
-            cancellable: true
-          })
-        }
-      },
-      on_retry: () => {
-        if (params.panel_provider) {
-          params.panel_provider.send_message({
-            command: 'SHOW_PROGRESS',
-            title: 'Retrying...',
-            show_elapsed_time: true,
-            cancellable: true
-          })
-        }
       }
     })
 
@@ -198,10 +184,30 @@ export const handle_active_editor_intelligent_update = async (params: {
       data: error
     })
 
-    if (!axios.isCancel(error) && error.message != 'Operation cancelled') {
+    if (
+      !axios.isCancel(error) &&
+      error.message != 'Operation cancelled' &&
+      error.message != 'User cancelled the operation'
+    ) {
       vscode.window.showErrorMessage(
         dictionary.error_message.ERROR_APPLYING_CHANGES(error.message)
       )
+
+      const api_providers_manager = new ModelProvidersManager(params.context)
+      const config_result = await get_intelligent_update_config(
+        api_providers_manager,
+        true,
+        params.context
+      )
+
+      if (config_result) {
+        return await handle_active_editor_intelligent_update({
+          ...params,
+          endpoint_url: config_result.provider.base_url,
+          api_key: config_result.provider.api_key,
+          config: config_result.config
+        })
+      }
     }
     return null
   } finally {

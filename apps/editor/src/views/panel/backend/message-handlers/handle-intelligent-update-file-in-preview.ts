@@ -172,26 +172,6 @@ export const handle_intelligent_update_file_in_preview = async (
     })
   }
 
-  const on_retry_attempt = () => {
-    panel_provider.send_message({
-      command: 'UPDATE_FILE_PROGRESS',
-      file_path,
-      workspace_name,
-      is_applying: true,
-      apply_status: 'thinking'
-    })
-  }
-
-  const on_retry = () => {
-    panel_provider.send_message({
-      command: 'UPDATE_FILE_PROGRESS',
-      file_path,
-      workspace_name,
-      is_applying: true,
-      apply_status: 'retrying'
-    })
-  }
-
   const content_promise = process_file({
     endpoint_url: endpoint_url,
     api_key: api_provider.api_key,
@@ -204,9 +184,7 @@ export const handle_intelligent_update_file_in_preview = async (
     instruction: instructions,
     cancel_token: cancel_token_source.token,
     on_chunk,
-    on_thinking_chunk,
-    on_retry_attempt,
-    on_retry
+    on_thinking_chunk
   })
 
   try {
@@ -255,20 +233,13 @@ export const handle_intelligent_update_file_in_preview = async (
         message: 'Error during process_file',
         data: { error, file_path }
       })
-      vscode.window.showErrorMessage(
-        dictionary.error_message.INTELLIGENT_UPDATE_FAILED_FOR_FILE(
-          file_name,
-          error.message
-        )
-      )
+      vscode.window.showErrorMessage(error.message)
 
-      if (axios.isAxiosError(error)) {
-        await handle_intelligent_update_file_in_preview(panel_provider, {
-          ...message,
-          force_model_selection: true
-        })
-        return
-      }
+      await handle_intelligent_update_file_in_preview(panel_provider, {
+        ...message,
+        force_model_selection: true
+      })
+      return
     }
   } finally {
     const index =

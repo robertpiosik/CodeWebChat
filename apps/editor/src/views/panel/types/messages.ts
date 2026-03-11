@@ -69,11 +69,7 @@ export type Checkpoint = {
   is_starred?: boolean
 }
 
-export type FileProgressStatus =
-  | 'waiting'
-  | 'thinking'
-  | 'receiving'
-  | 'retrying'
+export type FileProgressStatus = 'waiting' | 'thinking' | 'receiving'
 
 // === FROM FRONTEND TO BACKEND ===
 export interface GetInstructionsMessage extends BaseMessage {
@@ -484,7 +480,7 @@ export interface UpdateFileProgressMessage extends BaseMessage {
   file_path: string
   workspace_name?: string
   is_applying: boolean
-  apply_status?: 'waiting' | 'thinking' | 'receiving' | 'done' | 'retrying'
+  apply_status?: 'waiting' | 'thinking' | 'receiving' | 'done'
   apply_progress?: number
   apply_tokens_per_second?: number
 }

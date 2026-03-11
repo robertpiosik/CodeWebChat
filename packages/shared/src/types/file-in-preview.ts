@@ -12,7 +12,7 @@ export type FileInPreview = {
   apply_failed?: boolean
   ai_content?: string
   is_applying?: boolean
-  apply_status?: 'waiting' | 'thinking' | 'receiving' | 'done' | 'retrying'
+  apply_status?: 'waiting' | 'thinking' | 'receiving' | 'done'
   apply_progress?: number
   apply_tokens_per_second?: number
   applied_with_intelligent_update?: boolean

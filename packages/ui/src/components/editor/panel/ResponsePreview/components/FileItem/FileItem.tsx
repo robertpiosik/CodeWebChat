@@ -30,7 +30,6 @@ const get_file_message = (file: FileInPreview): FileMessage | null => {
     let text = 'Applying...'
     if (file.apply_status == 'waiting') text = 'Waiting for server...'
     else if (file.apply_status == 'thinking') text = 'Thinking...'
-    else if (file.apply_status == 'retrying') text = 'Retrying...'
     else if (file.apply_status == 'receiving') text = 'Receiving...'
     else if (file.apply_status == 'done') text = 'Done'
 

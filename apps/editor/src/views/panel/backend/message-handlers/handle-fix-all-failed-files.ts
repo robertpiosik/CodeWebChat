@@ -184,26 +184,6 @@ export const handle_fix_all_failed_files = async (params: {
           })
         }
 
-        const on_retry_attempt = () => {
-          params.panel_provider.send_message({
-            command: 'UPDATE_FILE_PROGRESS',
-            file_path,
-            workspace_name,
-            is_applying: true,
-            apply_status: 'thinking'
-          })
-        }
-
-        const on_retry = () => {
-          params.panel_provider.send_message({
-            command: 'UPDATE_FILE_PROGRESS',
-            file_path,
-            workspace_name,
-            is_applying: true,
-            apply_status: 'retrying'
-          })
-        }
-
         try {
           const updated_content = await process_file({
             endpoint_url: endpoint_url,
@@ -217,9 +197,7 @@ export const handle_fix_all_failed_files = async (params: {
             instruction: instructions,
             cancel_token: cancel_token_source.token,
             on_chunk,
-            on_thinking_chunk,
-            on_retry_attempt,
-            on_retry
+            on_thinking_chunk
           })
 
           if (updated_content) {
