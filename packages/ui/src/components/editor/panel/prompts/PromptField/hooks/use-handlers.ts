@@ -825,6 +825,46 @@ export const use_handlers = (
         return
       }
 
+      const selection = window.getSelection()
+      if (
+        selection &&
+        selection.rangeCount > 0 &&
+        !selection.isCollapsed &&
+        params.input_ref.current?.contains(
+          selection.getRangeAt(0).startContainer
+        )
+      ) {
+        e.preventDefault()
+        const range = selection.getRangeAt(0)
+        const input_element = params.input_ref.current
+
+        const pre_selection_range = document.createRange()
+        pre_selection_range.selectNodeContents(input_element)
+        pre_selection_range.setEnd(range.startContainer, range.startOffset)
+        const display_start = pre_selection_range.toString().length
+
+        pre_selection_range.setEnd(range.endContainer, range.endOffset)
+        const display_end = pre_selection_range.toString().length
+
+        const raw_start = map_display_pos_to_raw_pos({
+          display_pos: display_start,
+          raw_text: props.value,
+          context_file_paths: props.context_file_paths ?? []
+        })
+        const raw_end = map_display_pos_to_raw_pos({
+          display_pos: display_end,
+          raw_text: props.value,
+          context_file_paths: props.context_file_paths ?? []
+        })
+
+        const new_value =
+          props.value.substring(0, raw_start) + props.value.substring(raw_end)
+
+        has_modified_current_entry_ref.current = true
+        update_value(new_value, raw_start)
+        return
+      }
+
       if (e.ctrlKey || e.metaKey) {
         e.preventDefault()
         const raw_pos = raw_caret_pos_ref.current
