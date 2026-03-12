@@ -430,7 +430,12 @@ export const ai_studio: Chatbot = {
           'ms-chat-turn .turn-footer'
         )
         all_footers.forEach((footer) => {
-          if (footer.querySelector('button[iconname="thumb_up"]')) {
+          const has_thumb_up =
+            footer.querySelector('button[iconname="thumb_up"]') ||
+            Array.from(footer.querySelectorAll('button span')).some(
+              (span) => span.textContent?.trim() == 'thumb_up'
+            )
+          if (has_thumb_up) {
             show_response_ready_notification({ chatbot_name: 'AI Studio' })
             add_buttons(footer)
           }
