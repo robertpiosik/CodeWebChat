@@ -217,7 +217,7 @@ export const dictionary = {
     ERROR_DURING_PROCESSING: (message: string) =>
       `An error occurred during processing: ${message}.`,
     ERROR_APPLYING_CHANGES: (message: string) =>
-      `An error occurred while applying changes: ${message}.`,
+      `An error occurred while applying changes (${message}).`,
     INVALID_FILE_PATH_TRAVERSAL: (file_path: string) =>
       `Invalid file path: ${file_path}. Path may contain traversal attempts.`,
     FAILED_TO_UNDO_CHANGES: (message: string) =>
@@ -369,6 +369,6 @@ export const dictionary = {
       'A configuration with these properties already exists.',
     CONFIGURATION_NOT_FOUND: 'Configuration not found.',
     APPLYING_CHANGES_GENERIC_ERROR: (msg: string) =>
-      `An error occurred while applying changes: ${msg}.`
+      `An error occurred while applying changes (${msg}).`
   }
 }

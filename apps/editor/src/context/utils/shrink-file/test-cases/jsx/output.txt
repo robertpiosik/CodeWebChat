@@ -1,11 +1,26 @@
 import React from 'react'
 interface Props {
-  title: string
+  title
 }
-export const MyComponent: React.FC<Props> = ({ title }) => {}
-function Header() {}
+export const MyComponent: React.FC<Props> = ({ title }) => {
+  const [count, setCount]
+  return (
+    <div>
+       {}
+       <h1>{}</h1>
+       <button>
+         Click me
+       </button>
+    </div>
+  )
+}
+function Header() {
+  return <header>Header</header>
+}
 class OldComponent extends React.Component {
-  render() {}
+  render() {
+    return <div>Old</div>
+  }
 }
 import {
   useState,

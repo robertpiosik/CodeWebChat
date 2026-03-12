@@ -8,6 +8,11 @@ export const MyComponent: React.FC<Props> = ({ title }) => {
   // This comment goes away
   const [count, setCount] = React.useState(0);
 
+  useEffect(() => {
+    // test
+    const x = 'test';
+  }, [])
+
   return (
     <div className="container">
        {/* Block comment */}
