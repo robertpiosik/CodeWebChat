@@ -21,6 +21,16 @@ export const parse_subtask_directives = (response: string) => {
       )
       const instruction = instruction_match ? instruction_match[1].trim() : ''
 
+      const commit_match = subtask_content.match(
+        /<commit_message>([\s\S]*?)<\/commit_message>/i
+      )
+      const commit = commit_match ? commit_match[1].trim() : ''
+
+      let final_instruction = instruction
+      if (commit) {
+        final_instruction += `\n\nCommit message: ${commit}`
+      }
+
       const files_match = subtask_content.match(/<files>([\s\S]*?)<\/files>/i)
       const files: string[] = []
       if (files_match) {
@@ -31,8 +41,8 @@ export const parse_subtask_directives = (response: string) => {
         }
       }
 
-      if (instruction || files.length > 0) {
-        subtasks.push({ instruction, files })
+      if (final_instruction || files.length > 0) {
+        subtasks.push({ instruction: final_instruction, files })
       }
     }
 
