@@ -7,6 +7,7 @@ import {
 import { Checkpoint } from '../../../types/messages'
 import { Mode, MODE } from '../../../types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
+import { Task } from '@shared/types/task'
 import { post_message } from '../../utils/post_message'
 import { use_instructions } from './use-instructions'
 
@@ -62,8 +63,16 @@ export const use_panel = (vscode: any) => {
     set_find_relevant_files_only_file_tree
   ] = useState<boolean>(false)
 
-  const handle_task_forward = (text: string) => {
-    handle_instructions_change(text, 'edit-context')
+  const handle_task_forward = (task: Task) => {
+    handle_instructions_change(task.text, 'edit-context')
+
+    if (task.files && task.files.length > 0) {
+      post_message(vscode, {
+        command: 'SET_TASK_FILES',
+        files: task.files
+      })
+    }
+
     set_active_view('main')
     set_main_view_scroll_reset_key((k) => k + 1)
   }

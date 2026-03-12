@@ -42,7 +42,7 @@ type Props = {
   tasks: Record<string, Task[]>
   on_tasks_change: (root: string, tasks: Task[]) => void
   on_task_delete: (root: string, timestamp: number) => void
-  on_task_forward: (text: string) => void
+  on_task_forward: (task: Task) => void
   is_setup_complete: boolean
 }
 
@@ -257,8 +257,8 @@ export const Home: React.FC<Props> = (props) => {
                         on_delete={(timestamp) => {
                           handle_delete(workspace_root_folder, timestamp)
                         }}
-                        on_forward={(text) => {
-                          props.on_task_forward(text)
+                        on_forward={(task) => {
+                          props.on_task_forward(task)
                         }}
                         placeholder={t('home.tasks.placeholder')}
                       />

@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
+import * as fs from 'fs'
 import { ChildProcessWithoutNullStreams } from 'child_process'
 import { WebSocketManager } from '@/services/websocket-manager'
 import {
@@ -1112,6 +1113,26 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               this.relevant_files_choice_resolver(message.files)
               this.relevant_files_choice_resolver = undefined
             }
+          } else if (message.command == 'SET_TASK_FILES') {
+            if (message.files && message.files.length > 0) {
+              const workspace_roots =
+                this.workspace_provider.get_workspace_roots()
+              const absolute_paths = message.files
+                .map((rel_path: string) => {
+                  for (const root of workspace_roots) {
+                    const potential = path.join(root, rel_path)
+                    if (fs.existsSync(potential)) return potential
+                  }
+                  return null
+                })
+                .filter(Boolean) as string[]
+
+              if (absolute_paths.length > 0) {
+                await this.workspace_provider.set_checked_files(absolute_paths)
+                this.send_context_files()
+                await this.send_token_count()
+              }
+            }
           }
         } catch (error: any) {
           Logger.error({
@@ -1295,3 +1316,5 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     })
   }
 }
+
+// Note: Ensure 'import * as fs from 'fs'' is added.

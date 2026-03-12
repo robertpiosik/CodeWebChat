@@ -20,7 +20,7 @@ type Props = {
   on_change: (task: Task) => void
   on_add: () => void
   on_add_subtask?: (parent_task: Task) => void
-  on_forward: (text: string) => void
+  on_forward: (task: Task) => void
   on_delete: (created_at: number) => void
   placeholder: string
 }
@@ -164,7 +164,7 @@ export const Tasks: React.FC<Props> = (props) => {
                   codicon_icon="forward"
                   on_click={(e) => {
                     e.stopPropagation()
-                    props.on_forward(params.task.text)
+                    props.on_forward(params.task)
                     set_forwarded_timestamp(params.task.created_at)
                   }}
                   title="Use"

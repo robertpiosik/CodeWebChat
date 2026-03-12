@@ -4,4 +4,5 @@ export type Task = {
   created_at: number
   is_collapsed?: boolean
   children?: Task[]
+  files?: string[]
 }

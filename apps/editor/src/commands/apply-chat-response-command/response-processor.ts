@@ -192,21 +192,22 @@ export const process_chat_response = async (
       }
 
       if (subtasks_item) {
-        const tasks_array = subtasks_item.subtasks.map((st: any) => ({
-          id: Math.random().toString(36).substring(7),
-          // Safely fallback to different possible property names from the parser to prevent undefined errors
-          description: (
-            st.instruction ||
-            st.description ||
-            st.title ||
-            st.text ||
-            'Execute subtask'
-          )
-            .toString()
-            .trim(),
-          is_done: false,
-          files: Array.isArray(st.files) ? st.files : []
-        }))
+        const tasks_array = subtasks_item.subtasks.map(
+          (st: any, index: number) => ({
+            text: (
+              st.instruction ||
+              st.description ||
+              st.title ||
+              st.text ||
+              'Execute subtask'
+            )
+              .toString()
+              .trim(),
+            is_checked: false,
+            created_at: Date.now() + index,
+            files: Array.isArray(st.files) ? st.files : []
+          })
+        )
 
         const default_workspace =
           vscode.workspace.workspaceFolders![0].uri.fsPath
@@ -221,24 +222,34 @@ export const process_chat_response = async (
           tasks: tasks_record as any
         })
 
-        // Check all files the user explicitly approved in the modal
-        const presented_files = files_for_modal.map((f) => f.file_path)
-        const filtered_current_files = current_checked_files.filter(
-          (f) => !presented_files.includes(f)
-        )
-        const merged_files = Array.from(
-          new Set([...filtered_current_files, ...selected_files])
-        )
-
-        await workspace_provider.set_checked_files(merged_files)
-
         if (tasks_array.length > 0) {
           const first_task = tasks_array[0]
 
+          // Only check the absolute paths that match the first task's relative files
+          const approved_first_task_absolute_paths = selected_files.filter(
+            (sf) =>
+              first_task.files.some(
+                (rel_f: string) => sf.endsWith(rel_f) || sf.includes(rel_f)
+              )
+          )
+
+          const presented_files = files_for_modal.map((f) => f.file_path)
+          const filtered_current_files = current_checked_files.filter(
+            (f) => !presented_files.includes(f)
+          )
+          const merged_files = Array.from(
+            new Set([
+              ...filtered_current_files,
+              ...approved_first_task_absolute_paths
+            ])
+          )
+
+          await workspace_provider.set_checked_files(merged_files)
+
           panel_provider.edit_context_instructions.instructions[
             panel_provider.edit_context_instructions.active_index
-          ] = first_task.description
-          panel_provider.caret_position = first_task.description.length
+          ] = first_task.text
+          panel_provider.caret_position = first_task.text.length
 
           panel_provider.send_message({
             command: 'INSTRUCTIONS',

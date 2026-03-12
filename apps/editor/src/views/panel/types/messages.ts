@@ -469,6 +469,11 @@ export interface SaveTasksMessage extends BaseMessage {
   tasks: Record<string, Task[]>
 }
 
+export interface SetTaskFilesMessage extends BaseMessage {
+  command: 'SET_TASK_FILES'
+  files: string[]
+}
+
 export interface DeleteTaskMessage extends BaseMessage {
   command: 'DELETE_TASK'
   root: string
@@ -658,6 +663,7 @@ export type FrontendMessage =
   | PreviewSwitchChoiceMessage
   | GetTasksMessage
   | SaveTasksMessage
+  | SetTaskFilesMessage
   | DeleteTaskMessage
   | PreviewGeneratedCodeMessage
   | UpdateFileProgressMessage
