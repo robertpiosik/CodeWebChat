@@ -3,8 +3,9 @@ import { RelevantFilesItem } from '../clipboard-parser'
 export const parse_relevant_files = (params: {
   response: string
 }): RelevantFilesItem | null => {
-  const trimmed_response = params.response.trim()
-  const lines = trimmed_response.split('\n')
+  // Strip out everything inside markdown code blocks to prevent false positive keyword matches
+  const clean_response = params.response.replace(/```[\s\S]*?```/g, '')
+  const lines = clean_response.trim().split('\n')
 
   if (lines.length == 0) {
     return null

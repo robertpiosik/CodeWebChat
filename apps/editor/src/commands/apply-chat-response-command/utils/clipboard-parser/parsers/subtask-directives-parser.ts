@@ -7,8 +7,13 @@ export const parse_subtask_directives = (response: string) => {
   const items: any[] = []
   const subtasks: SubtaskDirective[] = []
 
+  // Strip out everything inside markdown code blocks to prevent false positive keyword matches
+  const clean_response = response.replace(/```[\s\S]*?```/g, '')
+
   // 1. Try old XML format (for backward compatibility with history)
-  const xml_subtasks_match = response.match(/<subtasks>([\s\S]*?)<\/subtasks>/i)
+  const xml_subtasks_match = clean_response.match(
+    /<subtasks>([\s\S]*?)<\/subtasks>/i
+  )
   if (xml_subtasks_match) {
     const subtasks_content = xml_subtasks_match[1]
     const subtask_regex = /<subtask>([\s\S]*?)<\/subtask>/gi
@@ -48,7 +53,9 @@ export const parse_subtask_directives = (response: string) => {
     }
   } else {
     // 2. Try new Markdown format
-    const md_subtasks_match = response.match(/\*\*Subtasks:\*\*([\s\S]+)/i)
+    const md_subtasks_match = clean_response.match(
+      /\*\*Subtasks:\*\*([\s\S]+)/i
+    )
     if (md_subtasks_match) {
       const content = md_subtasks_match[1]
       // Split safely by LLM generated headings (### Subtask 1, **Subtask 1**, or 1. **Instruction:**)
