@@ -30,6 +30,7 @@ import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provi
 import { natural_sort } from '@/utils/natural-sort'
 import { t } from '@/i18n'
 import { is_truncation_line } from './utils/edit-formats/truncations'
+import { TasksUtils } from '@/utils/tasks-utils'
 
 export type PreviewData = {
   original_states: OriginalFileState[]
@@ -227,17 +228,17 @@ export const process_chat_response = async (
           // Only save to the task list if there are multiple subtasks
           const default_workspace =
             vscode.workspace.workspaceFolders![0].uri.fsPath
-          const tasks_record =
-            context.workspaceState.get<Record<string, any>>(
-              'codeWebChat.tasks'
-            ) || {}
+
+          // Use TasksUtils instead of workspaceState to prevent desync with deletion logic
+          const tasks_record = TasksUtils.load_all(context)
 
           // Append new tasks to existing ones to prevent data loss
           tasks_record[default_workspace] = [
             ...(tasks_record[default_workspace] || []),
             ...tasks_array
           ]
-          await context.workspaceState.update('codeWebChat.tasks', tasks_record)
+
+          TasksUtils.save_all({ context, tasks: tasks_record })
 
           panel_provider.send_message({
             command: 'TASKS',
