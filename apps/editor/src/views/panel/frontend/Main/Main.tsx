@@ -82,6 +82,8 @@ type Props = {
   on_new_tab: () => void
   on_tab_delete: (index: number) => void
   missing_preset?: boolean
+  active_commit_message?: string
+  on_fill_scm_commit: () => void
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -875,6 +877,8 @@ export const Main: React.FC<Props> = (props) => {
       on_tab_change={props.on_tab_change}
       on_new_tab={props.on_new_tab}
       on_tab_delete={props.on_tab_delete}
+      active_commit_message={props.active_commit_message}
+      on_fill_scm_commit={props.on_fill_scm_commit}
     />
   )
 }

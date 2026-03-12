@@ -127,6 +127,8 @@ type Props = {
   on_tab_change: (index: number) => void
   on_new_tab: () => void
   on_tab_delete: (index: number) => void
+  active_commit_message?: string
+  on_fill_scm_commit?: () => void
 }
 
 export const MainView: React.FC<Props> = (props) => {
@@ -270,6 +272,55 @@ export const MainView: React.FC<Props> = (props) => {
               props.on_response_history_item_remove
             }
           />
+        )}
+
+        {props.active_commit_message && (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              background: 'var(--vscode-textBlockQuote-background)',
+              borderLeft: '2px solid var(--vscode-textBlockQuote-border)',
+              padding: '8px 12px',
+              marginBottom: '8px',
+              borderRadius: '2px'
+            }}
+          >
+            <div
+              style={{
+                fontSize: '11px',
+                color: 'var(--cwc-text-color)',
+                wordBreak: 'break-word',
+                flexGrow: 1,
+                paddingRight: '12px'
+              }}
+            >
+              <span style={{ fontWeight: 'bold', opacity: 0.8 }}>
+                Pending Commit:
+              </span>{' '}
+              {props.active_commit_message}
+            </div>
+            <button
+              onClick={props.on_fill_scm_commit}
+              style={{
+                background: 'var(--vscode-button-background)',
+                color: 'var(--vscode-button-foreground)',
+                border: 'none',
+                padding: '4px 8px',
+                borderRadius: '2px',
+                cursor: 'pointer',
+                fontSize: '11px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                flexShrink: 0
+              }}
+            >
+              <span className="codicon codicon-git-commit"></span>
+              Fill SCM
+            </button>
+          </div>
         )}
 
         <div className={styles['chat-input-container']}>

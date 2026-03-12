@@ -684,6 +684,7 @@ export type FrontendMessage =
   | GetSetupProgressMessage
   | RequestReturnHomeMessage
   | RelevantFilesModalResponseMessage
+  | { command: 'FILL_SCM_COMMIT'; commit_message: string }
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -1010,3 +1011,4 @@ export type BackendMessage =
   | InsertSymbolAtCursorMessage
   | ReturnHomeMessage
   | ShowRelevantFilesModalMessage
+  | { command: 'SET_ACTIVE_COMMIT_MESSAGE'; commit_message: string }
