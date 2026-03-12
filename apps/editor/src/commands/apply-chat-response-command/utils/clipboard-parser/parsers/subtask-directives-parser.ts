@@ -1,5 +1,6 @@
 export interface SubtaskDirective {
   instruction: string
+  commit_message?: string
   files: string[]
 }
 
@@ -32,11 +33,6 @@ export const parse_subtask_directives = (response: string) => {
       )
       const commit = commit_match ? commit_match[1].trim() : ''
 
-      let final_instruction = instruction
-      if (commit) {
-        final_instruction += `\n\nCommit message: ${commit}`
-      }
-
       const files_match = subtask_content.match(/<files>([\s\S]*?)<\/files>/i)
       const files: string[] = []
       if (files_match) {
@@ -47,8 +43,8 @@ export const parse_subtask_directives = (response: string) => {
         }
       }
 
-      if (final_instruction || files.length > 0) {
-        subtasks.push({ instruction: final_instruction, files })
+      if (instruction || files.length > 0) {
+        subtasks.push({ instruction, commit_message: commit, files })
       }
     }
   } else {
@@ -77,11 +73,6 @@ export const parse_subtask_directives = (response: string) => {
         const instruction = instruction_match ? instruction_match[1].trim() : ''
         const commit = commit_match ? commit_match[1].trim() : ''
 
-        let final_instruction = instruction
-        if (commit) {
-          final_instruction += `\n\nCommit message: ${commit}`
-        }
-
         const files: string[] = []
         if (files_match) {
           // Extracts paths from standard markdown lists like: - `src/file.ts` or * src/file.ts
@@ -93,8 +84,8 @@ export const parse_subtask_directives = (response: string) => {
           }
         }
 
-        if (final_instruction || files.length > 0) {
-          subtasks.push({ instruction: final_instruction, files })
+        if (instruction || files.length > 0) {
+          subtasks.push({ instruction, commit_message: commit, files })
         }
       }
     }

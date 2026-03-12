@@ -207,6 +207,16 @@ export const process_chat_response = async (
               selected_files.some((sf) => is_path_match(sf, rel_f))
             )
 
+            const task_files = approved_files.map((rel_f: string) => {
+              const matched_modal_file = files_for_modal.find((f) =>
+                is_path_match(f.file_path, rel_f)
+              )
+              return {
+                path: rel_f,
+                tokens: matched_modal_file?.token_count
+              }
+            })
+
             return {
               text: (
                 st.instruction ||
@@ -217,9 +227,10 @@ export const process_chat_response = async (
               )
                 .toString()
                 .trim(),
+              commit_message: st.commit_message,
               is_checked: false,
               created_at: Date.now() + index,
-              files: approved_files
+              files: task_files
             }
           }
         )
@@ -259,7 +270,9 @@ export const process_chat_response = async (
 
           const approved_first_task_absolute_paths = selected_files.filter(
             (sf) =>
-              first_task.files.some((rel_f: string) => is_path_match(sf, rel_f))
+              first_task.files.some((rel_f: any) =>
+                is_path_match(sf, rel_f.path)
+              )
           )
 
           const presented_files = files_for_modal.map((f) => f.file_path)
@@ -291,6 +304,13 @@ export const process_chat_response = async (
             caret_position: panel_provider.caret_position
           })
 
+          if (first_task.commit_message) {
+            panel_provider.send_message({
+              command: 'SET_ACTIVE_COMMIT_MESSAGE',
+              commit_message: first_task.commit_message
+            } as any)
+          }
+
           if (was_frf) {
             shared_context_state.switch_context_state(true)
           }
@@ -313,6 +333,22 @@ export const process_chat_response = async (
           new Set([...filtered_current_files, ...selected_files])
         )
         await workspace_provider.set_checked_files(merged_files)
+
+        // Clear the old prompt from cache
+        panel_provider.edit_context_instructions.instructions[
+          panel_provider.edit_context_instructions.active_index
+        ] = ''
+        panel_provider.caret_position = 0
+
+        panel_provider.send_message({
+          command: 'INSTRUCTIONS',
+          ask_about_context: panel_provider.ask_about_context_instructions,
+          edit_context: panel_provider.edit_context_instructions,
+          no_context: panel_provider.no_context_instructions,
+          code_at_cursor: panel_provider.code_at_cursor_instructions,
+          find_relevant_files: panel_provider.find_relevant_files_instructions,
+          caret_position: panel_provider.caret_position
+        })
 
         if (was_frf) {
           shared_context_state.switch_context_state(true)

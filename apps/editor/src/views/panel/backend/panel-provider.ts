@@ -1133,6 +1133,29 @@ export class PanelProvider implements vscode.WebviewViewProvider {
                 await this.send_token_count()
               }
             }
+          } else if ((message as any).command == 'FILL_SCM_COMMIT') {
+            try {
+              const gitExtension = vscode.extensions.getExtension('vscode.git')
+              if (gitExtension) {
+                const git = gitExtension.exports.getAPI(1)
+                if (git.repositories.length > 0) {
+                  git.repositories[0].inputBox.value = (
+                    message as any
+                  ).commit_message
+                  vscode.commands.executeCommand('workbench.view.scm')
+                } else {
+                  vscode.window.showInformationMessage(
+                    'No active Git repositories found.'
+                  )
+                }
+              }
+            } catch (error) {
+              Logger.error({
+                function_name: 'FILL_SCM_COMMIT',
+                message: 'Failed to fill SCM commit message',
+                data: error
+              })
+            }
           }
         } catch (error: any) {
           Logger.error({
@@ -1316,5 +1339,3 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     })
   }
 }
-
-// Note: Ensure 'import * as fs from 'fs'' is added.

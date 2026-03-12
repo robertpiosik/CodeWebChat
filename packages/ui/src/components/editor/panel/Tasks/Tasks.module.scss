@@ -103,6 +103,22 @@
     }
   }
 
+  &__commit {
+    font-size: 11px;
+    color: var(--cwc-text-color);
+    background: var(--vscode-textBlockQuote-background);
+    border-left: 2px solid var(--vscode-textBlockQuote-border);
+    padding: 4px 6px;
+    margin-top: 6px;
+    border-radius: 2px;
+    word-break: break-word;
+
+    &-label {
+      font-weight: bold;
+      opacity: 0.8;
+    }
+  }
+
   &__files {
     display: flex;
     flex-direction: column;
@@ -122,6 +138,12 @@
     gap: 4px;
     word-break: break-word;
     line-height: 1.3;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--vscode-textLink-activeForeground);
+      text-decoration: underline;
+    }
 
     &::before {
       content: '\ea6f';
@@ -130,6 +152,16 @@
       opacity: 0.7;
       flex-shrink: 0;
       margin-top: 1px;
+    }
+
+    &-path {
+      flex-grow: 1;
+    }
+
+    &-tokens {
+      opacity: 0.5;
+      font-size: 10px;
+      white-space: nowrap;
     }
   }
 }
