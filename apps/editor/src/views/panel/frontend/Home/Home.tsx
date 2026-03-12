@@ -82,6 +82,13 @@ export const Home: React.FC<Props> = (props) => {
     } as FrontendMessage)
   }
 
+  const handle_go_to_file = (file_path: string) => {
+    post_message(props.vscode, {
+      command: 'GO_TO_FILE',
+      file_path
+    } as FrontendMessage)
+  }
+
   const handle_create_checkpoint_click = () => {
     post_message(props.vscode, {
       command: 'CREATE_CHECKPOINT'
@@ -260,6 +267,7 @@ export const Home: React.FC<Props> = (props) => {
                         on_forward={(task) => {
                           props.on_task_forward(task)
                         }}
+                        on_go_to_file={handle_go_to_file}
                         placeholder={t('home.tasks.placeholder')}
                       />
                     )}
