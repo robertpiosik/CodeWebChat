@@ -8,7 +8,8 @@ import {
   parse_response,
   FileItem,
   DiffItem,
-  RelevantFilesItem
+  RelevantFilesItem,
+  SubtasksItem
 } from './utils/clipboard-parser'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
@@ -108,16 +109,28 @@ export const process_chat_response = async (
     is_single_root_folder_workspace
   })
 
-  if (clipboard_items.some((item) => item.type == 'relevant-files')) {
-    const relevant_files_item = clipboard_items.find(
-      (item) => item.type == 'relevant-files'
-    ) as RelevantFilesItem
+  const relevant_files_item = clipboard_items.find(
+    (item) => item.type == 'relevant-files'
+  ) as RelevantFilesItem | undefined
+  const subtasks_item = clipboard_items.find(
+    (item) => item.type == 'subtasks'
+  ) as SubtasksItem | undefined
 
+  if (relevant_files_item || subtasks_item) {
     const current_checked_files =
       workspace_provider.get_export_state().regular.checked_files
 
     const workspace_roots = workspace_provider.get_workspace_roots()
-    const all_paths_to_process = new Set<string>(relevant_files_item.file_paths)
+
+    const all_paths_to_process = new Set<string>()
+    if (relevant_files_item) {
+      relevant_files_item.file_paths.forEach((p) => all_paths_to_process.add(p))
+    }
+    if (subtasks_item) {
+      subtasks_item.subtasks.forEach((st: any) =>
+        st.files.forEach((f: string) => all_paths_to_process.add(f))
+      )
+    }
 
     const files_for_modal = (
       await Promise.all(
@@ -178,16 +191,71 @@ export const process_chat_response = async (
         shared_context_state.switch_context_state(false)
       }
 
-      const presented_files = files_for_modal.map((f) => f.file_path)
+      if (subtasks_item) {
+        const tasks_array = subtasks_item.subtasks.map((st: any) => ({
+          id: Math.random().toString(36).substring(7),
+          description: st.instruction,
+          is_done: false,
+          files: st.files
+        }))
 
-      const filtered_current_files = current_checked_files.filter(
-        (f) => !presented_files.includes(f)
-      )
+        const default_workspace =
+          vscode.workspace.workspaceFolders![0].uri.fsPath
+        const tasks_record =
+          context.workspaceState.get<Record<string, any>>(
+            'codeWebChat.tasks'
+          ) || {}
+        tasks_record[default_workspace] = tasks_array
+        await context.workspaceState.update('codeWebChat.tasks', tasks_record)
+        panel_provider.send_message({
+          command: 'TASKS',
+          tasks: tasks_record as any
+        })
 
-      const merged_files = Array.from(
-        new Set([...filtered_current_files, ...selected_files])
-      )
-      await workspace_provider.set_checked_files(merged_files)
+        if (tasks_array.length > 0) {
+          const first_task = tasks_array[0]
+
+          const approved_first_task_files = first_task.files.filter(
+            (f: string) =>
+              selected_files.some((sf) => sf.endsWith(f) || sf.includes(f))
+          )
+
+          const presented_files = files_for_modal.map((f) => f.file_path)
+          const filtered_current_files = current_checked_files.filter(
+            (f) => !presented_files.includes(f)
+          )
+          const merged_files = Array.from(
+            new Set([...filtered_current_files, ...approved_first_task_files])
+          )
+
+          await workspace_provider.set_checked_files(merged_files)
+
+          panel_provider.edit_context_instructions.instructions[
+            panel_provider.edit_context_instructions.active_index
+          ] = first_task.description
+          panel_provider.caret_position = first_task.description.length
+
+          panel_provider.send_message({
+            command: 'INSTRUCTIONS',
+            ask_about_context: panel_provider.ask_about_context_instructions,
+            edit_context: panel_provider.edit_context_instructions,
+            no_context: panel_provider.no_context_instructions,
+            code_at_cursor: panel_provider.code_at_cursor_instructions,
+            find_relevant_files:
+              panel_provider.find_relevant_files_instructions,
+            caret_position: panel_provider.caret_position
+          })
+        }
+      } else {
+        const presented_files = files_for_modal.map((f) => f.file_path)
+        const filtered_current_files = current_checked_files.filter(
+          (f) => !presented_files.includes(f)
+        )
+        const merged_files = Array.from(
+          new Set([...filtered_current_files, ...selected_files])
+        )
+        await workspace_provider.set_checked_files(merged_files)
+      }
 
       if (was_frf) {
         shared_context_state.switch_context_state(true)
@@ -200,6 +268,7 @@ export const process_chat_response = async (
       })
 
       await panel_provider.switch_to_edit_context()
+      panel_provider.send_context_files()
     }
 
     return null
