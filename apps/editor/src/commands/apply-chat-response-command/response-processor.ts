@@ -110,6 +110,26 @@ export const process_chat_response = async (
     is_single_root_folder_workspace
   })
 
+  // Check for single subtask scenario alongside code edits
+  const subtasks_item = clipboard_items.find(
+    (item) => item.type == 'subtasks'
+  ) as SubtasksItem | undefined
+
+  const has_code = clipboard_items.some(
+    (item) =>
+      item.type == 'diff' ||
+      item.type == 'file' ||
+      item.type == 'code-at-cursor'
+  )
+
+  let extracted_commit_message: string | undefined
+
+  if (subtasks_item && subtasks_item.subtasks.length === 1 && has_code) {
+    extracted_commit_message = subtasks_item.subtasks[0].commit_message
+    // Remove subtasks item so it is ignored by handle_meta_items
+    clipboard_items = clipboard_items.filter((item) => item !== subtasks_item)
+  }
+
   // 1. Handle Meta Items (Relevant Files / Subtasks)
   await handle_meta_items(
     clipboard_items,
@@ -120,7 +140,7 @@ export const process_chat_response = async (
   )
 
   // 2. Handle Code Items (Diffs / Files / Code-at-cursor)
-  return await handle_code_items({
+  const result = await handle_code_items({
     clipboard_items,
     chat_response,
     context,
@@ -129,6 +149,16 @@ export const process_chat_response = async (
     is_single_root_folder_workspace,
     on_progress
   })
+
+  // 3. Apply extracted commit message if operation succeeded
+  if (result && extracted_commit_message) {
+    panel_provider.send_message({
+      command: 'SET_ACTIVE_COMMIT_MESSAGE',
+      commit_message: extracted_commit_message
+    } as any)
+  }
+
+  return result
 }
 
 const handle_meta_items = async (
