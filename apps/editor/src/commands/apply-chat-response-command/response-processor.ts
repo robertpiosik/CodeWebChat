@@ -223,21 +223,27 @@ export const process_chat_response = async (
           }
         )
 
-        const default_workspace =
-          vscode.workspace.workspaceFolders![0].uri.fsPath
-        const tasks_record =
-          context.workspaceState.get<Record<string, any>>(
-            'codeWebChat.tasks'
-          ) || {}
-        tasks_record[default_workspace] = tasks_array
-        await context.workspaceState.update('codeWebChat.tasks', tasks_record)
-
-        panel_provider.send_message({
-          command: 'TASKS',
-          tasks: tasks_record as any
-        })
-
         if (tasks_array.length > 1) {
+          // Only save to the task list if there are multiple subtasks
+          const default_workspace =
+            vscode.workspace.workspaceFolders![0].uri.fsPath
+          const tasks_record =
+            context.workspaceState.get<Record<string, any>>(
+              'codeWebChat.tasks'
+            ) || {}
+
+          // Append new tasks to existing ones to prevent data loss
+          tasks_record[default_workspace] = [
+            ...(tasks_record[default_workspace] || []),
+            ...tasks_array
+          ]
+          await context.workspaceState.update('codeWebChat.tasks', tasks_record)
+
+          panel_provider.send_message({
+            command: 'TASKS',
+            tasks: tasks_record as any
+          })
+
           if (was_frf) {
             shared_context_state.switch_context_state(true)
           }
