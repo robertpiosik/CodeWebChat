@@ -119,41 +119,32 @@ export const process_chat_response = async (
     const workspace_roots = workspace_provider.get_workspace_roots()
     const all_paths_to_process = new Set<string>(relevant_files_item.file_paths)
 
-    const files_for_modal = (
-      await Promise.all(
-        Array.from(all_paths_to_process).map(async (rel_path) => {
-          let absolute_path: string | undefined
-          for (const root of workspace_roots) {
-            const potential = path.join(root, rel_path)
-            if (fs.existsSync(potential)) {
-              absolute_path = potential
-              break
-            }
-          }
+    const files_for_modal: {
+      file_path: string
+      relative_path: string
+      token_count: number
+    }[] = []
 
-          let token_count: number | undefined
-          if (absolute_path) {
-            const count =
-              await workspace_provider.calculate_file_tokens(absolute_path)
-            token_count = count.total
-          }
+    for (const rel_path of Array.from(all_paths_to_process)) {
+      let absolute_path: string | undefined
+      for (const root of workspace_roots) {
+        const potential = path.join(root, rel_path)
+        if (fs.existsSync(potential)) {
+          absolute_path = potential
+          break
+        }
+      }
 
-          return {
-            file_path: absolute_path,
-            relative_path: rel_path,
-            token_count
-          }
+      if (absolute_path) {
+        const count =
+          await workspace_provider.calculate_file_tokens(absolute_path)
+        files_for_modal.push({
+          file_path: absolute_path,
+          relative_path: rel_path,
+          token_count: count.total
         })
-      )
-    ).filter(
-      (
-        f
-      ): f is {
-        file_path: string
-        relative_path: string
-        token_count: number
-      } => !!f.file_path
-    )
+      }
+    }
 
     files_for_modal.sort((a, b) =>
       natural_sort(a.relative_path, b.relative_path)

@@ -81,17 +81,17 @@ export const setup_workspace_listeners = (params: {
 
   const file_will_delete_listener = vscode.workspace.onWillDeleteFiles(
     (event) => {
-      const promise = Promise.all(
-        event.files.map(async (uri) => {
-          if (uri.scheme != 'file') return
+      const promise = (async () => {
+        for (const uri of event.files) {
+          if (uri.scheme != 'file') continue
           try {
             const content = (await vscode.workspace.fs.readFile(uri)).toString()
             deleted_files_content_cache.set(uri.fsPath, content)
           } catch (e) {
             // Ignore, e.g. for directories
           }
-        })
-      )
+        }
+      })()
       event.waitUntil(promise)
     }
   )
