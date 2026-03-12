@@ -118,6 +118,14 @@ export const use_panel = (vscode: any) => {
       command: 'SAVE_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE',
       shrink_source_code
     })
+
+    if (shrink_source_code) {
+      set_find_relevant_files_only_file_tree(false)
+      post_message(vscode, {
+        command: 'SAVE_FIND_RELEVANT_FILES_ONLY_FILE_TREE',
+        only_file_tree: false
+      })
+    }
   }
 
   const handle_find_relevant_files_only_file_tree_change = (
@@ -128,6 +136,14 @@ export const use_panel = (vscode: any) => {
       command: 'SAVE_FIND_RELEVANT_FILES_ONLY_FILE_TREE',
       only_file_tree
     })
+
+    if (only_file_tree) {
+      set_find_relevant_files_shrink_source_code(false)
+      post_message(vscode, {
+        command: 'SAVE_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE',
+        shrink_source_code: false
+      })
+    }
   }
 
   useEffect(() => {

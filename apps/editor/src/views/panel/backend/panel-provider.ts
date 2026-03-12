@@ -309,6 +309,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     }
     this.update_providers_shrink_mode()
     this.update_providers_context_state()
+    this.send_token_count()
   }
 
   public async send_checkpoints() {
@@ -374,6 +375,69 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       command: 'CURRENTLY_OPEN_FILE_TEXT',
       text: active_editor ? active_editor.document.getText() : undefined
     })
+  }
+
+  public async send_token_count(default_token_count?: number) {
+    const is_find_relevant_files =
+      (this.mode == MODE.WEB &&
+        this.web_prompt_type == 'find-relevant-files') ||
+      (this.mode == MODE.API && this.api_prompt_type == 'find-relevant-files')
+
+    if (!is_find_relevant_files && default_token_count !== undefined) {
+      this.send_message({
+        command: 'TOKEN_COUNT_UPDATED',
+        token_count: default_token_count
+      })
+      return
+    }
+
+    let total = 0
+
+    try {
+      const open_editors_counts = (this.open_editors_provider as any)
+        .get_checked_files_token_count
+        ? await (
+            this.open_editors_provider as any
+          ).get_checked_files_token_count()
+        : { total: 0, shrink: 0, path: 0 }
+      const workspace_counts =
+        await this.workspace_provider.get_checked_files_token_count()
+
+      if (is_find_relevant_files) {
+        const only_file_tree = this.context.workspaceState.get<boolean>(
+          FIND_RELEVANT_FILES_ONLY_FILE_TREE_STATE_KEY,
+          false
+        )
+        const shrink_source_code = this.context.workspaceState.get<boolean>(
+          FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
+          false
+        )
+
+        if (only_file_tree) {
+          total = (workspace_counts.path || 0) + (open_editors_counts.path || 0)
+        } else if (shrink_source_code) {
+          total =
+            (workspace_counts.shrink || 0) + (open_editors_counts.shrink || 0)
+        } else {
+          total =
+            (workspace_counts.total || 0) + (open_editors_counts.total || 0)
+        }
+      } else {
+        total = (workspace_counts.total || 0) + (open_editors_counts.total || 0)
+      }
+
+      this.send_message({
+        command: 'TOKEN_COUNT_UPDATED',
+        token_count: total
+      })
+    } catch (e) {
+      if (default_token_count !== undefined) {
+        this.send_message({
+          command: 'TOKEN_COUNT_UPDATED',
+          token_count: default_token_count
+        })
+      }
+    }
   }
 
   constructor(params: {
@@ -527,16 +591,15 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       }
     )
 
-    token_count_emitter.on('token-count-updated', (token_count: number) => {
-      if (this._webview_view) {
-        this.send_message({
-          command: 'TOKEN_COUNT_UPDATED',
-          token_count
-        })
-
-        this.send_context_files()
+    token_count_emitter.on(
+      'token-count-updated',
+      async (token_count: number) => {
+        if (this._webview_view) {
+          await this.send_token_count(token_count)
+          this.send_context_files()
+        }
       }
-    })
+    )
 
     this.context.subscriptions.push(this._config_listener)
 
@@ -885,12 +948,14 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_save_web_prompt_type(this, message.prompt_type)
             this.update_providers_shrink_mode()
             this.update_providers_context_state()
+            this.send_token_count()
           } else if (message.command == 'GET_API_PROMPT_TYPE') {
             handle_get_api_prompt_type(this)
           } else if (message.command == 'SAVE_API_PROMPT_TYPE') {
             await handle_save_api_prompt_type(this, message.prompt_type)
             this.update_providers_shrink_mode()
             this.update_providers_context_state()
+            this.send_token_count()
           } else if (message.command == 'GET_EDIT_FORMAT_INSTRUCTIONS') {
             handle_get_edit_format_instructions(this)
           } else if (message.command == 'GET_EDIT_FORMAT') {
@@ -903,6 +968,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_save_mode(this, message)
             this.update_providers_shrink_mode()
             this.update_providers_context_state()
+            this.send_token_count()
           } else if (message.command == 'GET_MODE') {
             handle_get_mode(this)
           } else if (message.command == 'GET_VERSION') {
@@ -1014,6 +1080,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               message.shrink_source_code
             )
             this.update_providers_shrink_mode()
+            this.send_token_count()
           } else if (
             message.command == 'GET_FIND_RELEVANT_FILES_ONLY_FILE_TREE'
           ) {
@@ -1036,6 +1103,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             if ('refresh' in this.open_editors_provider) {
               ;(this.open_editors_provider as any).refresh()
             }
+            this.send_token_count()
           } else if (message.command == 'RELEVANT_FILES_MODAL_RESPONSE') {
             if (this.relevant_files_choice_resolver) {
               this.relevant_files_choice_resolver(message.files)

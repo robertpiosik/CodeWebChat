@@ -203,9 +203,6 @@ export const MainView: React.FC<Props> = (props) => {
   const is_only_file_tree_active =
     is_in_find_relevant_files_prompt_type &&
     props.find_relevant_files_only_file_tree
-  const file_tree_token_count = Math.ceil(
-    props.context_file_paths.join('\n').length / 4
-  )
 
   return (
     <>
@@ -233,14 +230,8 @@ export const MainView: React.FC<Props> = (props) => {
                   props.on_find_relevant_files_shrink_source_code_change
                 }
                 id="shrink-source-code"
-                disabled={props.find_relevant_files_only_file_tree}
               />
-              <label
-                htmlFor="shrink-source-code"
-                style={{
-                  opacity: props.find_relevant_files_only_file_tree ? 0.5 : 1
-                }}
-              >
+              <label htmlFor="shrink-source-code">
                 {t('home.shrink-source-code')}
               </label>
             </div>
@@ -352,7 +343,7 @@ export const MainView: React.FC<Props> = (props) => {
             }
             is_context_disabled={is_in_no_context_prompt_type}
             is_only_file_tree_active={is_only_file_tree_active}
-            file_tree_token_count={file_tree_token_count}
+            file_tree_token_count={props.token_count}
           />
         </div>
 
