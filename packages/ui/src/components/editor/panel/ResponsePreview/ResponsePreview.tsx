@@ -150,8 +150,7 @@ export const ResponsePreview: FC<Props> = (props) => {
     error_count,
     is_fixing_all,
     has_attempted_auto_fix,
-    files_in_preview,
-    props.on_fix_all_failed
+    files_in_preview
   ])
 
   const get_status_text = (file: FileInPreview) => {

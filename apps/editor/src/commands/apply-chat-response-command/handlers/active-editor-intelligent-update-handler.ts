@@ -174,7 +174,9 @@ export const handle_active_editor_intelligent_update = async (params: {
       {
         file_path: target_file_path,
         content: original_content,
-        workspace_name: file_item.workspace_name
+        workspace_name: file_item.workspace_name,
+        ai_content: file_item.content,
+        proposed_content: final_content
       }
     ]
   } catch (error: any) {

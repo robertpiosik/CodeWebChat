@@ -35,7 +35,10 @@ export const prepare_files_from_original_states = async (params: {
     try {
       if (fs.existsSync(sanitized_file_path)) {
         file_exists = true
-        current_content = fs.readFileSync(sanitized_file_path, 'utf8')
+        current_content =
+          state.proposed_content ?? fs.readFileSync(sanitized_file_path, 'utf8')
+      } else if (state.proposed_content !== undefined) {
+        current_content = state.proposed_content
       }
     } catch (error) {
       continue

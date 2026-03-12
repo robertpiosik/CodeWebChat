@@ -224,9 +224,17 @@ export const apply_chat_response_command = (params: {
               try {
                 if (fs.existsSync(sanitized_file_path)) {
                   file_exists = true
-                  const document =
-                    await vscode.workspace.openTextDocument(sanitized_file_path)
-                  current_content = document.getText()
+                  if (state.proposed_content !== undefined) {
+                    current_content = state.proposed_content
+                  } else {
+                    const document =
+                      await vscode.workspace.openTextDocument(
+                        sanitized_file_path
+                      )
+                    current_content = document.getText()
+                  }
+                } else if (state.proposed_content !== undefined) {
+                  current_content = state.proposed_content
                 }
               } catch (error) {
                 continue

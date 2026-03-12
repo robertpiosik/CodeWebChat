@@ -140,7 +140,8 @@ export const handle_fast_replace = async (params: {
               file_path: file.file_path,
               content: original_content,
               workspace_name: file.workspace_name,
-              file_state: 'deleted'
+              file_state: 'deleted',
+              proposed_content: ''
             })
             Logger.info({
               function_name: 'handle_fast_replace',
@@ -197,7 +198,9 @@ export const handle_fast_replace = async (params: {
             file_path: file.file_path,
             content: rename_source_content,
             workspace_name: file.workspace_name,
-            file_path_to_restore: file.renamed_from
+            file_path_to_restore: file.renamed_from,
+            ai_content: file.content,
+            proposed_content: new_content
           })
 
           continue
@@ -224,11 +227,6 @@ export const handle_fast_replace = async (params: {
           const file_uri = vscode.Uri.file(safe_path)
           const document = await vscode.workspace.openTextDocument(file_uri)
           const original_content = document.getText()
-          original_states.push({
-            file_path: file.file_path,
-            content: original_content,
-            workspace_name: file.workspace_name
-          })
           let final_content = file.content
           if (
             original_content.endsWith('\n') &&
@@ -236,6 +234,14 @@ export const handle_fast_replace = async (params: {
           ) {
             final_content += '\n'
           }
+
+          original_states.push({
+            file_path: file.file_path,
+            content: original_content,
+            workspace_name: file.workspace_name,
+            ai_content: file.content,
+            proposed_content: final_content
+          })
 
           const edit = new vscode.WorkspaceEdit()
           edit.replace(
@@ -259,7 +265,9 @@ export const handle_fast_replace = async (params: {
             file_path: file.file_path,
             content: '',
             file_state: 'new',
-            workspace_name: file.workspace_name
+            workspace_name: file.workspace_name,
+            ai_content: file.content,
+            proposed_content: file.content
           })
           const directory = path.dirname(safe_path)
           if (!fs.existsSync(directory)) {
