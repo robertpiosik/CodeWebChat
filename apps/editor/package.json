@@ -258,12 +258,8 @@
         "icon": "$(trash)"
       },
       {
-        "command": "codeWebChat.checkParentFolder",
-        "title": "%codeWebChat.checkParentFolder.title%"
-      },
-      {
-        "command": "codeWebChat.uncheckParentFolder",
-        "title": "%codeWebChat.uncheckParentFolder.title%"
+        "command": "codeWebChat.checkImportedFiles",
+        "title": "%codeWebChat.checkImportedFiles.title%"
       },
       {
         "command": "codeWebChat.referenceInPrompt",
@@ -468,14 +464,6 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.checkParentFolder",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.uncheckParentFolder",
-          "when": "false"
-        },
-        {
           "command": "codeWebChat.referenceInPrompt",
           "when": "false"
         },
@@ -533,6 +521,10 @@
         },
         {
           "command": "codeWebChat.checkReferencingFilesForContext",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.checkImportedFiles",
           "when": "false"
         },
         {
@@ -682,14 +674,9 @@
           "group": "1_modification@2"
         },
         {
-          "command": "codeWebChat.checkParentFolder",
+          "command": "codeWebChat.checkImportedFiles",
           "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
-          "group": "2_modification@1"
-        },
-        {
-          "command": "codeWebChat.uncheckParentFolder",
-          "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
-          "group": "2_modification@1.5"
+          "group": "2_modification@0.5"
         },
         {
           "command": "codeWebChat.referenceInPrompt",
@@ -735,6 +722,11 @@
           "command": "codeWebChat.delete",
           "when": "view == codeWebChatViewWorkspace",
           "group": "1_creation@4"
+        },
+        {
+          "command": "codeWebChat.checkImportedFiles",
+          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && viewItem == file",
+          "group": "1_modification@2.5"
         },
         {
           "command": "codeWebChat.referenceInPrompt",

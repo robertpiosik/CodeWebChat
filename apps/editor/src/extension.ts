@@ -31,14 +31,13 @@ import {
   open_url_command,
   generate_commit_message_command,
   set_ranges_command,
-  check_parent_folder_command,
-  uncheck_parent_folder_command,
   search_files_for_context_commands,
   check_referencing_files_for_context_command,
   check_definition_file_for_context_command,
   rate_command
 } from './commands'
 import { setup_git_discard_file_watcher } from './services/git-discard-file-watcher'
+import { check_imported_files_command } from './commands/check-imported-files-command'
 import { SettingsProvider } from './views/settings/backend/settings-provider'
 import { get_current_preview_url } from './views/panel/backend/message-handlers/handle-open-website'
 
@@ -130,8 +129,7 @@ export async function activate(context: vscode.ExtensionContext) {
     add_file_to_context_command(workspace_provider),
     remove_file_from_context_command(workspace_provider),
     set_ranges_command(workspace_provider, context),
-    check_parent_folder_command(workspace_provider),
-    uncheck_parent_folder_command(workspace_provider),
+    check_imported_files_command(workspace_provider),
     duplicate_workspace_command(workspace_provider, context),
     check_referencing_files_for_context_command(workspace_provider),
     ...search_files_for_context_commands(workspace_provider, context),
