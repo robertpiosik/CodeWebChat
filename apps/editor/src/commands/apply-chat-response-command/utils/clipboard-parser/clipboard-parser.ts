@@ -91,6 +91,7 @@ export const parse_response = (params: {
 }): ClipboardItem[] => {
   const is_single_root_folder_workspace =
     params.is_single_root_folder_workspace ?? true
+  const items: ClipboardItem[] = []
 
   const code_at_cursor_items = parse_code_at_cursor({
     response: params.response,
@@ -98,17 +99,17 @@ export const parse_response = (params: {
   })
 
   if (code_at_cursor_items && code_at_cursor_items.length > 0) {
-    return code_at_cursor_items
+    items.push(...code_at_cursor_items)
   }
 
   const subtasks = parse_subtask_directives(params.response) as SubtasksItem[]
   if (subtasks && subtasks.length > 0) {
-    return subtasks
+    items.push(...subtasks)
   }
 
   const relevant_files = parse_relevant_files({ response: params.response })
   if (relevant_files) {
-    return [relevant_files]
+    items.push(relevant_files)
   }
 
   const processed_response = params.response.replace(/``````/g, '```\n```')
@@ -129,14 +130,15 @@ export const parse_response = (params: {
       is_single_root: is_single_root_folder_workspace
     })
     if (patches_or_text.length) {
-      return patches_or_text
+      items.push(...patches_or_text)
     }
   }
 
-  const items = parse_multiple_files({
+  const file_items = parse_multiple_files({
     response: processed_response,
     is_single_root_folder_workspace
   })
+  items.push(...file_items)
 
   return items
 }
