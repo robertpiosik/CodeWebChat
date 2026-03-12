@@ -93,7 +93,6 @@ import {
   handle_delete_configuration,
   handle_update_last_used_preset_or_group,
   handle_get_find_relevant_files_shrink_source_code,
-  handle_save_find_relevant_files_shrink_source_code,
   handle_return_home_and_switch_to_edit_context
 } from './message-handlers'
 import { SelectionState } from '../types/messages'
@@ -1075,12 +1074,16 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (
             message.command == 'SAVE_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE'
           ) {
-            await handle_save_find_relevant_files_shrink_source_code(
-              this,
+            await this.context.workspaceState.update(
+              FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
               message.shrink_source_code
             )
             this.update_providers_shrink_mode()
-            this.send_token_count()
+            this.workspace_provider.refresh()
+            if ('refresh' in this.open_editors_provider) {
+              ;(this.open_editors_provider as any).refresh()
+            }
+            await this.send_token_count()
           } else if (
             message.command == 'GET_FIND_RELEVANT_FILES_ONLY_FILE_TREE'
           ) {
@@ -1103,7 +1106,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             if ('refresh' in this.open_editors_provider) {
               ;(this.open_editors_provider as any).refresh()
             }
-            this.send_token_count()
+            await this.send_token_count()
           } else if (message.command == 'RELEVANT_FILES_MODAL_RESPONSE') {
             if (this.relevant_files_choice_resolver) {
               this.relevant_files_choice_resolver(message.files)

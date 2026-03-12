@@ -29,6 +29,19 @@ export const ContextUtilisation: React.FC<Props> = (props) => {
     )
   }
 
+  const active_token_count =
+    props.is_only_file_tree_active && props.file_tree_token_count !== undefined
+      ? props.file_tree_token_count
+      : props.current_context_size
+
+  const is_above_threshold =
+    active_token_count > props.context_size_warning_threshold
+  const progress = Math.min(
+    (active_token_count / props.context_size_warning_threshold) * 100,
+    100
+  )
+  const display_progress = active_token_count > 0 ? Math.max(progress, 1) : 0
+
   if (
     props.is_only_file_tree_active &&
     props.file_tree_token_count !== undefined
@@ -36,7 +49,12 @@ export const ContextUtilisation: React.FC<Props> = (props) => {
     return (
       <div className={styles.container}>
         <div className={styles.bar}>
-          <div className={styles.bar__progress} style={{ width: `0%` }} />
+          <div
+            className={cn(styles.bar__progress, {
+              [styles['bar__progress--warning']]: is_above_threshold
+            })}
+            style={{ width: `${display_progress}%` }}
+          />
         </div>
         <span
           className={styles.label}
@@ -48,14 +66,7 @@ export const ContextUtilisation: React.FC<Props> = (props) => {
     )
   }
 
-  const is_above_threshold =
-    props.current_context_size > props.context_size_warning_threshold
-  const progress = Math.min(
-    (props.current_context_size / props.context_size_warning_threshold) * 100,
-    100
-  )
-
-  const formatted_current_size = format_tokens(props.current_context_size)
+  const formatted_current_size = format_tokens(active_token_count)
   const formatted_threshold = format_tokens(
     props.context_size_warning_threshold
   )
@@ -65,14 +76,14 @@ export const ContextUtilisation: React.FC<Props> = (props) => {
   if (!is_above_threshold) {
     const remaining_tokens =
       props.context_size_warning_threshold -
-      (props.current_context_size < 1000
-        ? props.current_context_size
-        : Math.floor(props.current_context_size / 1000) * 1000)
+      (active_token_count < 1000
+        ? active_token_count
+        : Math.floor(active_token_count / 1000) * 1000)
     const formatted_remaining_tokens = format_tokens(remaining_tokens)
     title_text = `${formatted_remaining_tokens} tokens remaining until threshold warning (change in settings)`
   } else {
     const exceeded_by =
-      props.current_context_size - props.context_size_warning_threshold
+      active_token_count - props.context_size_warning_threshold
     const formatted_exceeded_by = format_tokens(exceeded_by)
     title_text = `Threshold of ${formatted_threshold} tokens is exceeded by ${formatted_exceeded_by} tokens`
   }
@@ -84,7 +95,7 @@ export const ContextUtilisation: React.FC<Props> = (props) => {
           className={cn(styles.bar__progress, {
             [styles['bar__progress--warning']]: is_above_threshold
           })}
-          style={{ width: `${progress}%` }}
+          style={{ width: `${display_progress}%` }}
         />
       </div>
       <span className={styles.label} title={title_text}>

@@ -327,7 +327,8 @@ export class TokenCalculator implements vscode.Disposable {
         if (
           cached_file &&
           Array.isArray(cached_file) &&
-          cached_file[0] == mtime
+          cached_file[0] == mtime &&
+          cached_file[2] !== undefined
         ) {
           const tokens = cached_file[1]
           const shrink_tokens = cached_file[2]
@@ -699,12 +700,13 @@ export class TokenCalculator implements vscode.Disposable {
           continue
         }
 
-        if (fs.statSync(file_path).isFile()) {
-          if (this._file_token_counts.has(file_path)) {
-            result.total += this._file_token_counts.get(file_path)!
-            result.shrink += this._file_shrink_token_counts.get(file_path)!
-            result.path += this._file_path_token_counts.get(file_path)!
-          } else {
+        // Fast path: bypass fs.statSync completely if cache hit
+        if (this._file_token_counts.has(file_path)) {
+          result.total += this._file_token_counts.get(file_path)!
+          result.shrink += this._file_shrink_token_counts.get(file_path)!
+          result.path += this._file_path_token_counts.get(file_path)!
+        } else {
+          if (fs.statSync(file_path).isFile()) {
             const count = await this.calculate_file_tokens(file_path)
             result.total += count.total
             result.shrink += count.shrink
