@@ -40,22 +40,26 @@ Your response must begin with "**Relevant files:**", then list paths one under a
 - \`src/hello.ts\`
 - \`src/welcome.ts\`
 
-If the user asks to implement a feature or perform a task, you MUST respond with a plan using the \`<subtasks>\` format. Each \`<instruction>\` must be a highly detailed prompt for the next AI agent who will execute this subtask in 'Edit Context' mode. Include all requirements like writing a commit message if the user requested it. Example:
+If the user asks to implement a feature or perform a task, you MUST respond with a plan using the \`<subtasks>\` format. Wrap the XML block in a markdown code block so it formats nicely in the chat. Each subtask must contain a highly detailed \`<instruction>\` for the next AI agent, a brief \`<commit_message>\`, and the relevant \`<files>\`. Example:
 
+\`\`\`xml
 <subtasks>
 <subtask>
-  <instruction>Implement the greeting logic in hello.ts. Ensure you handle undefined inputs and output a commit message summarizing these changes.</instruction>
+  <instruction>Implement the greeting logic in hello.ts. Ensure you handle undefined inputs.</instruction>
+  <commit_message>feat: add greeting logic and handle undefined inputs</commit_message>
   <files>
     <file>src/hello.ts</file>
   </files>
 </subtask>
 <subtask>
-  <instruction>Export the new functions in index.ts so they are available to other modules. Output a brief commit message for this change as well.</instruction>
+  <instruction>Export the new functions in index.ts so they are available to other modules.</instruction>
+  <commit_message>feat: export greeting functions in index.ts</commit_message>
   <files>
     <file>src/index.ts</file>
   </files>
 </subtask>
 </subtasks>
+\`\`\`
 </system>`
 
 export const find_relevant_files_format_for_panel = `<system>
@@ -69,22 +73,26 @@ Your response must begin with "**Relevant files:**", then list paths one under a
 
 These files contain the core greeting logic and module exports.
 
-If the user asks to implement a feature or perform a task, you MUST respond with a plan using the \`<subtasks>\` format. Each \`<instruction>\` must be a highly detailed prompt for the next AI agent who will execute this subtask in 'Edit Context' mode. Include all requirements like writing a commit message if the user requested it. Example:
+If the user asks to implement a feature or perform a task, you MUST respond with a plan using the \`<subtasks>\` format. Wrap the XML block in a markdown code block so it formats nicely in the chat. Each subtask must contain a highly detailed \`<instruction>\` for the next AI agent, a brief \`<commit_message>\`, and the relevant \`<files>\`. Example:
 
+\`\`\`xml
 <subtasks>
 <subtask>
-  <instruction>Implement the greeting logic in hello.ts. Ensure you handle undefined inputs and output a commit message summarizing these changes.</instruction>
+  <instruction>Implement the greeting logic in hello.ts. Ensure you handle undefined inputs.</instruction>
+  <commit_message>feat: add greeting logic and handle undefined inputs</commit_message>
   <files>
     <file>src/hello.ts</file>
   </files>
 </subtask>
 <subtask>
-  <instruction>Export the new functions in index.ts so they are available to other modules. Output a brief commit message for this change as well.</instruction>
+  <instruction>Export the new functions in index.ts so they are available to other modules.</instruction>
+  <commit_message>feat: export greeting functions in index.ts</commit_message>
   <files>
     <file>src/index.ts</file>
   </files>
 </subtask>
 </subtasks>
+\`\`\`
 </system>`
 
 export const voice_input_instructions =
