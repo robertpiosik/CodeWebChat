@@ -701,57 +701,59 @@ export class WorkspaceProvider
       false
     )
     const show_only_path_tokens = this._is_frf_mode && only_file_tree
+    const show_shrink_tokens = this.use_shrink_token_count
 
-    const total_token_count = show_only_path_tokens
-      ? element.pathTokenCount
-      : this.use_shrink_token_count
-        ? element.shrinkTokenCount
-        : element.tokenCount
+    let active_total = element.tokenCount
+    let active_selected = element.selectedTokenCount
 
-    const selected_token_count = show_only_path_tokens
-      ? element.selectedPathTokenCount
-      : this.use_shrink_token_count
-        ? element.selectedShrinkTokenCount
-        : element.selectedTokenCount
+    if (show_only_path_tokens) {
+      active_total = element.pathTokenCount
+    } else if (show_shrink_tokens) {
+      active_total = element.shrinkTokenCount
+    }
+
+    if (show_only_path_tokens) {
+      active_selected = element.selectedPathTokenCount
+    } else if (show_shrink_tokens) {
+      active_selected = element.selectedShrinkTokenCount
+    }
 
     const formatted_total =
-      total_token_count !== undefined && total_token_count > 0
-        ? display_token_count(total_token_count)
-        : undefined
-
-    const formatted_selected =
-      selected_token_count !== undefined && selected_token_count > 0
-        ? display_token_count(selected_token_count)
+      element.tokenCount !== undefined && element.tokenCount > 0
+        ? display_token_count(element.tokenCount)
         : undefined
 
     let display_description = ''
+    let tooltip_tokens_info = ''
 
-    if (element.isDirectory) {
-      if (formatted_total) {
-        if (formatted_selected && selected_token_count! < total_token_count!) {
-          display_description = `${formatted_total} · ${formatted_selected} selected`
-        } else {
-          display_description = formatted_total
-        }
+    if (formatted_total) {
+      display_description = formatted_total
+      tooltip_tokens_info = `About ${formatted_total} tokens`
+
+      let modified_total_str: string | undefined
+      if (show_only_path_tokens && element.pathTokenCount !== undefined) {
+        modified_total_str = display_token_count(element.pathTokenCount)
+        tooltip_tokens_info = `About ${formatted_total} original tokens (${modified_total_str} Tokens for path only)`
+      } else if (show_shrink_tokens && element.shrinkTokenCount !== undefined) {
+        modified_total_str = display_token_count(element.shrinkTokenCount)
+        tooltip_tokens_info = `About ${formatted_total} original tokens (${modified_total_str} Tokens after shrinking)`
       }
-    } else {
-      display_description = formatted_total ?? ''
-    }
 
-    if (
-      !show_only_path_tokens &&
-      element.pathTokenCount !== undefined &&
-      element.pathTokenCount > 0
-    ) {
-      const path_token_str = `${element.pathTokenCount} path`
-      if (element.isDirectory && formatted_selected) {
-        if (selected_token_count! < total_token_count!) {
-          display_description += ` (${element.selectedPathTokenCount} path selected)`
-        } else {
-          display_description += ` (${path_token_str})`
-        }
-      } else {
-        display_description += ` (${path_token_str})`
+      if (modified_total_str) {
+        display_description += ` (${modified_total_str})`
+      }
+
+      const formatted_selected =
+        active_selected !== undefined && active_selected > 0
+          ? display_token_count(active_selected)
+          : undefined
+
+      if (
+        element.isDirectory &&
+        formatted_selected &&
+        active_selected! < (active_total ?? 0)
+      ) {
+        display_description += ` · ${formatted_selected} selected`
       }
     }
 
@@ -765,29 +767,32 @@ export class WorkspaceProvider
       trimmed_description == '' ? undefined : trimmed_description
 
     const tooltip_parts = [element.resourceUri.fsPath]
-    if (formatted_total) {
-      tooltip_parts.push(`· About ${formatted_total} tokens`)
+    if (tooltip_tokens_info) {
+      tooltip_parts.push(`· ${tooltip_tokens_info}`)
     }
-    if (element.isDirectory && formatted_selected) {
-      if (
-        total_token_count !== undefined &&
-        selected_token_count == total_token_count
-      ) {
+
+    if (
+      element.isDirectory &&
+      active_selected !== undefined &&
+      active_selected > 0
+    ) {
+      if (active_total !== undefined && active_selected === active_total) {
         tooltip_parts.push('· Fully selected')
       } else {
-        tooltip_parts.push(`· ${formatted_selected} selected`)
+        const formatted_sel = display_token_count(active_selected)
+        tooltip_parts.push(`· ${formatted_sel} selected`)
       }
     }
 
     element.tooltip = tooltip_parts.join(' ')
 
     if (element.isWorkspaceRoot) {
-      // Workspace root tooltip is primarily its name and role, token info is appended if available
       let root_tooltip = `${element.label} (Workspace Root)`
-      if (formatted_total) {
-        root_tooltip += ` • About ${formatted_total} tokens`
-        if (formatted_selected) {
-          root_tooltip += ` (${formatted_selected} selected)`
+      if (tooltip_tokens_info) {
+        root_tooltip += ` • ${tooltip_tokens_info}`
+        if (active_selected !== undefined && active_selected > 0) {
+          const formatted_sel = display_token_count(active_selected)
+          root_tooltip += ` (${formatted_sel} selected)`
         }
       }
       element.tooltip = root_tooltip

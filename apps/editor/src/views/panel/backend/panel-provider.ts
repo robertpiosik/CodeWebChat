@@ -1013,6 +1013,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               this,
               message.shrink_source_code
             )
+            this.update_providers_shrink_mode()
           } else if (
             message.command == 'GET_FIND_RELEVANT_FILES_ONLY_FILE_TREE'
           ) {
@@ -1031,6 +1032,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               FIND_RELEVANT_FILES_ONLY_FILE_TREE_STATE_KEY,
               message.only_file_tree
             )
+            this.workspace_provider.refresh()
+            if ('refresh' in this.open_editors_provider) {
+              ;(this.open_editors_provider as any).refresh()
+            }
           } else if (message.command == 'RELEVANT_FILES_MODAL_RESPONSE') {
             if (this.relevant_files_choice_resolver) {
               this.relevant_files_choice_resolver(message.files)
