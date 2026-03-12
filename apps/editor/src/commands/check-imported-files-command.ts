@@ -275,39 +275,23 @@ export const check_imported_files_command = (
       }
 
       const valid_selected = selected_items.filter((i) => i.uri !== undefined)
-      const selected_uris = new Set(
-        valid_selected.map((item) => item.uri!.toString())
-      )
 
-      for (const item of quick_pick_items) {
-        if (item.kind === vscode.QuickPickItemKind.Separator || !item.uri)
-          continue
-        const is_selected = selected_uris.has(item.uri.toString())
+      const shown_paths = quick_pick_items
+        .filter(
+          (item) => item.kind !== vscode.QuickPickItemKind.Separator && item.uri
+        )
+        .map((item) => item.uri!.fsPath)
 
-        if (is_selected !== item.picked) {
-          const state = is_selected
-            ? vscode.TreeItemCheckboxState.Checked
-            : vscode.TreeItemCheckboxState.Unchecked
+      const selected_paths = valid_selected.map((item) => item.uri!.fsPath)
 
-          const file_item = new FileItem(
-            path.basename(item.uri.fsPath),
-            item.uri,
-            vscode.TreeItemCollapsibleState.None,
-            false,
-            state,
-            false,
-            false,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            false
-          )
+      const paths_to_apply = [
+        ...new Set([
+          ...currently_checked.filter((p) => !shown_paths.includes(p)),
+          ...selected_paths
+        ])
+      ]
 
-          await workspace_provider.update_check_state(file_item, state)
-        }
-      }
+      await workspace_provider.set_checked_files(paths_to_apply)
     }
   )
 }

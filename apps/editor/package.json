@@ -725,7 +725,7 @@
         },
         {
           "command": "codeWebChat.checkImportedFiles",
-          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && viewItem == file",
+          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == file || viewItem == contextFile)",
           "group": "1_modification@2.5"
         },
         {
