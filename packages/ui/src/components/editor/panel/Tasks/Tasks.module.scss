@@ -102,6 +102,36 @@
       opacity: 0.5;
     }
   }
+
+  &__files {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 6px;
+
+    &--checked {
+      opacity: 0.5;
+    }
+  }
+
+  &__file {
+    font-size: 11px;
+    color: var(--cwc-text-color-dimmed);
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    word-break: break-word;
+    line-height: 1.3;
+
+    &::before {
+      content: '\ea6f';
+      font-family: 'codicon';
+      font-size: 12px;
+      opacity: 0.7;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+  }
 }
 
 .add-button {

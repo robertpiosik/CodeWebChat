@@ -259,6 +259,20 @@ export const Tasks: React.FC<Props> = (props) => {
               {params.task.text || props.placeholder}
             </div>
           )}
+
+          {params.task.files && params.task.files.length > 0 && (
+            <div
+              className={cn(styles.item__files, {
+                [styles['item__files--checked']]: params.is_visually_checked
+              })}
+            >
+              {params.task.files.map((file, index) => (
+                <div key={index} className={styles.item__file}>
+                  {file}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     )
