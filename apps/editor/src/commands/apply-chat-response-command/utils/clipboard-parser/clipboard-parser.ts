@@ -91,10 +91,15 @@ export const parse_response = (params: {
 }): ClipboardItem[] => {
   const is_single_root_folder_workspace =
     params.is_single_root_folder_workspace ?? true
+
+  // Standardize the response by cleaning up common code block formatting issues
+  const processed_response = params.response.replace(/``````/g, '```\n```')
+
   const items: ClipboardItem[] = []
 
+  // Use processed_response for all parsers to ensure consistency and robustness
   const code_at_cursor_items = parse_code_at_cursor({
-    response: params.response,
+    response: processed_response,
     is_single_root_folder_workspace
   })
 
@@ -102,17 +107,17 @@ export const parse_response = (params: {
     items.push(...code_at_cursor_items)
   }
 
-  const subtasks = parse_subtask_directives(params.response) as SubtasksItem[]
+  const subtasks = parse_subtask_directives(
+    processed_response
+  ) as SubtasksItem[]
   if (subtasks && subtasks.length > 0) {
     items.push(...subtasks)
   }
 
-  const relevant_files = parse_relevant_files({ response: params.response })
+  const relevant_files = parse_relevant_files({ response: processed_response })
   if (relevant_files) {
     items.push(relevant_files)
   }
-
-  const processed_response = params.response.replace(/``````/g, '```\n```')
 
   const hunk_header_regex = /^(@@\s+-\d+(?:,\d+)?\s+\+\d+(?:,\d+)?\s+@@)/m
   const diff_header_regex = /^---\s+.+\n\+\+\+\s+.+/m
