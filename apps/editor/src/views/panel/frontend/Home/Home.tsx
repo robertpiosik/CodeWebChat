@@ -42,7 +42,7 @@ type Props = {
   tasks: Record<string, Task[]>
   on_tasks_change: (root: string, tasks: Task[]) => void
   on_task_delete: (root: string, timestamp: number) => void
-  on_task_forward: (text: string) => void
+  on_task_forward: (task: Task) => void
   is_setup_complete: boolean
 }
 
@@ -79,6 +79,13 @@ export const Home: React.FC<Props> = (props) => {
     post_message(props.vscode, {
       command: 'EXECUTE_COMMAND',
       command_id: 'codeWebChat.settings'
+    } as FrontendMessage)
+  }
+
+  const handle_go_to_file = (file_path: string) => {
+    post_message(props.vscode, {
+      command: 'GO_TO_FILE',
+      file_path
     } as FrontendMessage)
   }
 
@@ -257,9 +264,10 @@ export const Home: React.FC<Props> = (props) => {
                         on_delete={(timestamp) => {
                           handle_delete(workspace_root_folder, timestamp)
                         }}
-                        on_forward={(text) => {
-                          props.on_task_forward(text)
+                        on_forward={(task) => {
+                          props.on_task_forward(task)
                         }}
+                        on_go_to_file={handle_go_to_file}
                         placeholder={t('home.tasks.placeholder')}
                       />
                     )}

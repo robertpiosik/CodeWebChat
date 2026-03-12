@@ -8,7 +8,8 @@ import {
   parse_response,
   FileItem,
   DiffItem,
-  RelevantFilesItem
+  RelevantFilesItem,
+  SubtasksItem
 } from './utils/clipboard-parser'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
@@ -29,6 +30,7 @@ import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provi
 import { natural_sort } from '@/utils/natural-sort'
 import { t } from '@/i18n'
 import { is_truncation_line } from './utils/edit-formats/truncations'
+import { TasksUtils } from '@/utils/tasks-utils'
 
 export type PreviewData = {
   original_states: OriginalFileState[]
@@ -108,86 +110,298 @@ export const process_chat_response = async (
     is_single_root_folder_workspace
   })
 
-  if (clipboard_items.some((item) => item.type == 'relevant-files')) {
-    const relevant_files_item = clipboard_items.find(
-      (item) => item.type == 'relevant-files'
-    ) as RelevantFilesItem
+  // Check for single subtask scenario alongside code edits
+  const subtasks_item = clipboard_items.find(
+    (item) => item.type == 'subtasks'
+  ) as SubtasksItem | undefined
 
-    const current_checked_files =
-      workspace_provider.get_export_state().regular.checked_files
+  const has_code = clipboard_items.some(
+    (item) =>
+      item.type == 'diff' ||
+      item.type == 'file' ||
+      item.type == 'code-at-cursor'
+  )
 
-    const workspace_roots = workspace_provider.get_workspace_roots()
-    const all_paths_to_process = new Set<string>(relevant_files_item.file_paths)
+  let extracted_commit_message: string | undefined
 
-    const files_for_modal = (
-      await Promise.all(
-        Array.from(all_paths_to_process).map(async (rel_path) => {
-          let absolute_path: string | undefined
-          for (const root of workspace_roots) {
-            const potential = path.join(root, rel_path)
-            if (fs.existsSync(potential)) {
-              absolute_path = potential
-              break
+  if (subtasks_item && subtasks_item.subtasks.length === 1 && has_code) {
+    extracted_commit_message = subtasks_item.subtasks[0].commit_message
+    // Remove subtasks item so it is ignored by handle_meta_items
+    clipboard_items = clipboard_items.filter((item) => item !== subtasks_item)
+  }
+
+  // 1. Handle Meta Items (Relevant Files / Subtasks)
+  await handle_meta_items(
+    clipboard_items,
+    context,
+    panel_provider,
+    workspace_provider,
+    is_single_root_folder_workspace
+  )
+
+  // 2. Handle Code Items (Diffs / Files / Code-at-cursor)
+  const result = await handle_code_items({
+    clipboard_items,
+    chat_response,
+    context,
+    panel_provider,
+    args,
+    is_single_root_folder_workspace,
+    on_progress
+  })
+
+  // 3. Apply extracted commit message if operation succeeded
+  if (result && extracted_commit_message) {
+    panel_provider.send_message({
+      command: 'SET_ACTIVE_COMMIT_MESSAGE',
+      commit_message: extracted_commit_message
+    } as any)
+  }
+
+  return result
+}
+
+const handle_meta_items = async (
+  clipboard_items: any[],
+  context: vscode.ExtensionContext,
+  panel_provider: PanelProvider,
+  workspace_provider: WorkspaceProvider,
+  is_single_root_folder_workspace: boolean
+): Promise<void> => {
+  const relevant_files_item = clipboard_items.find(
+    (item) => item.type == 'relevant-files'
+  ) as RelevantFilesItem | undefined
+  const subtasks_item = clipboard_items.find(
+    (item) => item.type == 'subtasks'
+  ) as SubtasksItem | undefined
+
+  if (!relevant_files_item && !subtasks_item) {
+    return
+  }
+
+  const current_checked_files =
+    workspace_provider.get_export_state().regular.checked_files
+
+  const workspace_roots = workspace_provider.get_workspace_roots()
+
+  const all_paths_to_process = new Set<string>()
+  if (relevant_files_item) {
+    relevant_files_item.file_paths.forEach((p) => all_paths_to_process.add(p))
+  }
+  if (subtasks_item) {
+    subtasks_item.subtasks.forEach((st: any) =>
+      st.files.forEach((f: string) => all_paths_to_process.add(f))
+    )
+  }
+
+  const files_for_modal = (
+    await Promise.all(
+      Array.from(all_paths_to_process).map(async (rel_path) => {
+        let absolute_path: string | undefined
+        for (const root of workspace_roots) {
+          const potential = path.join(root, rel_path)
+          if (fs.existsSync(potential)) {
+            absolute_path = potential
+            break
+          }
+        }
+
+        let token_count: number | undefined
+        if (absolute_path) {
+          const count =
+            await workspace_provider.calculate_file_tokens(absolute_path)
+          token_count = count.total
+        }
+
+        return {
+          file_path: absolute_path,
+          relative_path: rel_path,
+          token_count
+        }
+      })
+    )
+  ).filter(
+    (
+      f
+    ): f is {
+      file_path: string
+      relative_path: string
+      token_count: number
+    } => !!f.file_path
+  )
+
+  files_for_modal.sort((a, b) => natural_sort(a.relative_path, b.relative_path))
+
+  panel_provider.send_message({
+    command: 'SHOW_RELEVANT_FILES_MODAL',
+    files: files_for_modal
+  })
+
+  const selected_files = await new Promise<string[] | undefined>((resolve) => {
+    panel_provider.relevant_files_choice_resolver = resolve
+  })
+
+  if (selected_files) {
+    const shared_context_state = panel_provider.shared_context_state
+    const was_frf = workspace_provider.is_frf_mode
+
+    if (was_frf) {
+      shared_context_state.switch_context_state(false)
+    }
+
+    if (subtasks_item) {
+      const is_path_match = (absolute: string, relative: string) => {
+        const norm_abs = absolute.replace(/\\/g, '/')
+        const norm_rel = relative.replace(/\\/g, '/')
+        return norm_abs.endsWith(norm_rel) || norm_abs.includes(norm_rel)
+      }
+
+      const tasks_array = subtasks_item.subtasks.map(
+        (st: any, index: number) => {
+          const raw_files = Array.isArray(st.files) ? st.files : []
+          // Ensure we only store files in the task that the user actually approved in the modal
+          const approved_files = raw_files.filter((rel_f: string) =>
+            selected_files.some((sf) => is_path_match(sf, rel_f))
+          )
+
+          const task_files = approved_files.map((rel_f: string) => {
+            const matched_modal_file = files_for_modal.find((f) =>
+              is_path_match(f.file_path, rel_f)
+            )
+            return {
+              path: rel_f,
+              tokens: matched_modal_file?.token_count
             }
-          }
-
-          let token_count: number | undefined
-          if (absolute_path) {
-            const count =
-              await workspace_provider.calculate_file_tokens(absolute_path)
-            token_count = count.total
-          }
+          })
 
           return {
-            file_path: absolute_path,
-            relative_path: rel_path,
-            token_count
+            text: (
+              st.instruction ||
+              st.description ||
+              st.title ||
+              st.text ||
+              'Execute subtask'
+            )
+              .toString()
+              .trim(),
+            commit_message: st.commit_message,
+            is_checked: false,
+            created_at: Date.now() + index,
+            files: task_files
           }
-        })
+        }
       )
-    ).filter(
-      (
-        f
-      ): f is {
-        file_path: string
-        relative_path: string
-        token_count: number
-      } => !!f.file_path
-    )
 
-    files_for_modal.sort((a, b) =>
-      natural_sort(a.relative_path, b.relative_path)
-    )
+      if (tasks_array.length > 1) {
+        // Only save to the task list if there are multiple subtasks
+        const default_workspace =
+          vscode.workspace.workspaceFolders![0].uri.fsPath
 
-    panel_provider.send_message({
-      command: 'SHOW_RELEVANT_FILES_MODAL',
-      files: files_for_modal
-    })
+        // Use TasksUtils instead of workspaceState to prevent desync with deletion logic
+        const tasks_record = TasksUtils.load_all(context)
 
-    const selected_files = await new Promise<string[] | undefined>(
-      (resolve) => {
-        panel_provider.relevant_files_choice_resolver = resolve
+        // Append new tasks to existing ones to prevent data loss
+        tasks_record[default_workspace] = [
+          ...(tasks_record[default_workspace] || []),
+          ...tasks_array
+        ]
+
+        TasksUtils.save_all({ context, tasks: tasks_record })
+
+        panel_provider.send_message({
+          command: 'TASKS',
+          tasks: tasks_record as any
+        })
+
+        if (was_frf) {
+          shared_context_state.switch_context_state(true)
+        }
+        panel_provider.send_message({ command: 'RETURN_HOME' })
+        panel_provider.send_message({
+          command: 'SHOW_AUTO_CLOSING_MODAL',
+          title: 'Subtasks saved. Select one to start.',
+          type: 'success'
+        })
+      } else if (tasks_array.length === 1) {
+        const first_task = tasks_array[0]
+
+        const approved_first_task_absolute_paths = selected_files.filter((sf) =>
+          first_task.files.some((rel_f: any) => is_path_match(sf, rel_f.path))
+        )
+
+        const presented_files = files_for_modal.map((f) => f.file_path)
+        const filtered_current_files = current_checked_files.filter(
+          (f) => !presented_files.includes(f)
+        )
+        const merged_files = Array.from(
+          new Set([
+            ...filtered_current_files,
+            ...approved_first_task_absolute_paths
+          ])
+        )
+
+        await workspace_provider.set_checked_files(merged_files)
+
+        panel_provider.edit_context_instructions.instructions[
+          panel_provider.edit_context_instructions.active_index
+        ] = first_task.text
+        panel_provider.caret_position = first_task.text.length
+
+        panel_provider.send_message({
+          command: 'INSTRUCTIONS',
+          ask_about_context: panel_provider.ask_about_context_instructions,
+          edit_context: panel_provider.edit_context_instructions,
+          no_context: panel_provider.no_context_instructions,
+          code_at_cursor: panel_provider.code_at_cursor_instructions,
+          find_relevant_files: panel_provider.find_relevant_files_instructions,
+          caret_position: panel_provider.caret_position
+        })
+
+        if (first_task.commit_message) {
+          panel_provider.send_message({
+            command: 'SET_ACTIVE_COMMIT_MESSAGE',
+            commit_message: first_task.commit_message
+          } as any)
+        }
+
+        if (was_frf) {
+          shared_context_state.switch_context_state(true)
+        }
+
+        panel_provider.send_message({
+          command: 'SHOW_AUTO_CLOSING_MODAL',
+          title: 'Subtask ready.',
+          type: 'success'
+        })
+
+        await panel_provider.switch_to_edit_context()
+        panel_provider.send_context_files()
       }
-    )
-
-    if (selected_files) {
-      const shared_context_state = panel_provider.shared_context_state
-      const was_frf = workspace_provider.is_frf_mode
-
-      if (was_frf) {
-        shared_context_state.switch_context_state(false)
-      }
-
+    } else {
       const presented_files = files_for_modal.map((f) => f.file_path)
-
       const filtered_current_files = current_checked_files.filter(
         (f) => !presented_files.includes(f)
       )
-
       const merged_files = Array.from(
         new Set([...filtered_current_files, ...selected_files])
       )
       await workspace_provider.set_checked_files(merged_files)
+
+      // Clear the old prompt from cache
+      panel_provider.edit_context_instructions.instructions[
+        panel_provider.edit_context_instructions.active_index
+      ] = ''
+      panel_provider.caret_position = 0
+
+      panel_provider.send_message({
+        command: 'INSTRUCTIONS',
+        ask_about_context: panel_provider.ask_about_context_instructions,
+        edit_context: panel_provider.edit_context_instructions,
+        no_context: panel_provider.no_context_instructions,
+        code_at_cursor: panel_provider.code_at_cursor_instructions,
+        find_relevant_files: panel_provider.find_relevant_files_instructions,
+        caret_position: panel_provider.caret_position
+      })
 
       if (was_frf) {
         shared_context_state.switch_context_state(true)
@@ -200,10 +414,30 @@ export const process_chat_response = async (
       })
 
       await panel_provider.switch_to_edit_context()
+      panel_provider.send_context_files()
     }
+  }
+}
 
-    return null
-  } else if (clipboard_items.some((item) => item.type == 'diff')) {
+const handle_code_items = async ({
+  clipboard_items,
+  chat_response,
+  context,
+  panel_provider,
+  args,
+  is_single_root_folder_workspace,
+  on_progress
+}: {
+  clipboard_items: any[]
+  chat_response: string
+  context: vscode.ExtensionContext
+  panel_provider: PanelProvider
+  args: CommandArgs | undefined
+  is_single_root_folder_workspace: boolean
+  on_progress: (progress: number) => void
+}): Promise<PreviewData | null> => {
+  // Logic for applying code, diffs, etc.
+  if (clipboard_items.some((item) => item.type == 'diff')) {
     const patches = clipboard_items.filter(
       (item): item is DiffItem => item.type == 'diff'
     )
@@ -325,6 +559,7 @@ export const process_chat_response = async (
 
     return null
   } else {
+    // Check for code-at-cursor
     if (clipboard_items.some((item) => item.type == 'code-at-cursor')) {
       const completion = clipboard_items.find(
         (item) => item.type == 'code-at-cursor'

@@ -74,12 +74,16 @@ type Props = {
   is_setup_complete: boolean
   find_relevant_files_shrink_source_code: boolean
   on_find_relevant_files_shrink_source_code_change: (shrink: boolean) => void
+  find_relevant_files_only_file_tree: boolean
+  on_find_relevant_files_only_file_tree_change: (only: boolean) => void
   tabs_count: number
   active_tab_index: number
   on_tab_change: (index: number) => void
   on_new_tab: () => void
   on_tab_delete: (index: number) => void
   missing_preset?: boolean
+  active_commit_message?: string
+  on_fill_scm_commit: () => void
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -861,12 +865,20 @@ export const Main: React.FC<Props> = (props) => {
       on_find_relevant_files_shrink_source_code_change={
         props.on_find_relevant_files_shrink_source_code_change
       }
+      find_relevant_files_only_file_tree={
+        props.find_relevant_files_only_file_tree
+      }
+      on_find_relevant_files_only_file_tree_change={
+        props.on_find_relevant_files_only_file_tree_change
+      }
       is_setup_complete={props.is_setup_complete}
       tabs_count={props.tabs_count}
       active_tab_index={props.active_tab_index}
       on_tab_change={props.on_tab_change}
       on_new_tab={props.on_new_tab}
       on_tab_delete={props.on_tab_delete}
+      active_commit_message={props.active_commit_message}
+      on_fill_scm_commit={props.on_fill_scm_commit}
     />
   )
 }

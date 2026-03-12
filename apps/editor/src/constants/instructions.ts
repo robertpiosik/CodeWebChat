@@ -39,6 +39,22 @@ Your response must begin with "**Relevant files:**", then list paths one under a
 - \`src/index.ts\`
 - \`src/hello.ts\`
 - \`src/welcome.ts\`
+
+If the task is complex and requires multiple logical steps, break it down into a plan formatted strictly as a Markdown list of subtasks. For simple requests, you can provide just a single subtask. Do NOT use XML. Use the following exact headings:
+
+**Subtasks:**
+
+### Subtask 1
+**Instruction:** Implement the greeting logic in hello.ts. Ensure you handle undefined inputs.
+**Commit message:** feat: add greeting logic and handle undefined inputs
+**Files:**
+- \`src/hello.ts\`
+
+### Subtask 2
+**Instruction:** Export the new functions in index.ts so they are available to other modules.
+**Commit message:** feat: export greeting functions in index.ts
+**Files:**
+- \`src/index.ts\`
 </system>`
 
 export const find_relevant_files_format_for_panel = `<system>
@@ -51,6 +67,22 @@ Your response must begin with "**Relevant files:**", then list paths one under a
 - \`src/welcome.ts\`
 
 These files contain the core greeting logic and module exports.
+
+If the task is complex and requires multiple logical steps, break it down into a plan formatted strictly as a Markdown list of subtasks. For simple requests, you can provide just a single subtask. Do NOT use XML. Use the following exact headings:
+
+**Subtasks:**
+
+### Subtask 1
+**Instruction:** Implement the greeting logic in hello.ts. Ensure you handle undefined inputs.
+**Commit message:** feat: add greeting logic and handle undefined inputs
+**Files:**
+- \`src/hello.ts\`
+
+### Subtask 2
+**Instruction:** Export the new functions in index.ts so they are available to other modules.
+**Commit message:** feat: export greeting functions in index.ts
+**Files:**
+- \`src/index.ts\`
 </system>`
 
 export const voice_input_instructions =

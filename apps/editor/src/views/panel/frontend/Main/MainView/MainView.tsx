@@ -119,12 +119,16 @@ type Props = {
   on_recording_finished: () => void
   find_relevant_files_shrink_source_code: boolean
   on_find_relevant_files_shrink_source_code_change: (shrink: boolean) => void
+  find_relevant_files_only_file_tree: boolean
+  on_find_relevant_files_only_file_tree_change: (only: boolean) => void
   is_setup_complete: boolean
   tabs_count: number
   active_tab_index: number
   on_tab_change: (index: number) => void
   on_new_tab: () => void
   on_tab_delete: (index: number) => void
+  active_commit_message?: string
+  on_fill_scm_commit?: () => void
 }
 
 export const MainView: React.FC<Props> = (props) => {
@@ -198,6 +202,10 @@ export const MainView: React.FC<Props> = (props) => {
     configurations: props.configurations
   })
 
+  const is_only_file_tree_active =
+    is_in_find_relevant_files_prompt_type &&
+    props.find_relevant_files_only_file_tree
+
   return (
     <>
       <Header
@@ -216,15 +224,27 @@ export const MainView: React.FC<Props> = (props) => {
         <UiSeparator height={4} />
 
         {is_in_find_relevant_files_prompt_type && (
-          <div className={styles['shrink-source-code-checkbox']}>
-            <UiCheckbox
-              checked={props.find_relevant_files_shrink_source_code}
-              on_change={props.on_find_relevant_files_shrink_source_code_change}
-              id="shrink-source-code"
-            />
-            <label htmlFor="shrink-source-code">
-              {t('home.shrink-source-code')}
-            </label>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div className={styles['shrink-source-code-checkbox']}>
+              <UiCheckbox
+                checked={props.find_relevant_files_shrink_source_code}
+                on_change={
+                  props.on_find_relevant_files_shrink_source_code_change
+                }
+                id="shrink-source-code"
+              />
+              <label htmlFor="shrink-source-code">
+                {t('home.shrink-source-code')}
+              </label>
+            </div>
+            <div className={styles['shrink-source-code-checkbox']}>
+              <UiCheckbox
+                checked={props.find_relevant_files_only_file_tree}
+                on_change={props.on_find_relevant_files_only_file_tree_change}
+                id="only-file-tree"
+              />
+              <label htmlFor="only-file-tree">{t('home.only-file-tree')}</label>
+            </div>
           </div>
         )}
 
@@ -252,6 +272,55 @@ export const MainView: React.FC<Props> = (props) => {
               props.on_response_history_item_remove
             }
           />
+        )}
+
+        {props.active_commit_message && (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              background: 'var(--vscode-textBlockQuote-background)',
+              borderLeft: '2px solid var(--vscode-textBlockQuote-border)',
+              padding: '8px 12px',
+              marginBottom: '8px',
+              borderRadius: '2px'
+            }}
+          >
+            <div
+              style={{
+                fontSize: '11px',
+                color: 'var(--cwc-text-color)',
+                wordBreak: 'break-word',
+                flexGrow: 1,
+                paddingRight: '12px'
+              }}
+            >
+              <span style={{ fontWeight: 'bold', opacity: 0.8 }}>
+                Pending Commit:
+              </span>{' '}
+              {props.active_commit_message}
+            </div>
+            <button
+              onClick={props.on_fill_scm_commit}
+              style={{
+                background: 'var(--vscode-button-background)',
+                color: 'var(--vscode-button-foreground)',
+                border: 'none',
+                padding: '4px 8px',
+                borderRadius: '2px',
+                cursor: 'pointer',
+                fontSize: '11px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                flexShrink: 0
+              }}
+            >
+              <span className="codicon codicon-git-commit"></span>
+              Fill SCM
+            </button>
+          </div>
         )}
 
         <div className={styles['chat-input-container']}>
@@ -324,6 +393,8 @@ export const MainView: React.FC<Props> = (props) => {
               props.context_size_warning_threshold
             }
             is_context_disabled={is_in_no_context_prompt_type}
+            is_only_file_tree_active={is_only_file_tree_active}
+            file_tree_token_count={props.token_count}
           />
         </div>
 

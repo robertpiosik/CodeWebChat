@@ -27,7 +27,10 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER,
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
-import { FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY } from '@/constants/state-keys'
+import {
+  FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
+  FIND_RELEVANT_FILES_ONLY_FILE_TREE_STATE_KEY
+} from '@/constants/state-keys'
 
 export const handle_copy_prompt = async (params: {
   panel_provider: PanelProvider
@@ -188,9 +191,16 @@ export const handle_copy_prompt = async (params: {
         false
       )
 
+    const only_file_tree =
+      params.panel_provider.context.workspaceState.get<boolean>(
+        FIND_RELEVANT_FILES_ONLY_FILE_TREE_STATE_KEY,
+        false
+      )
+
     const collected = await files_collector.collect_files({
       no_context: params.panel_provider.web_prompt_type == 'no-context',
-      shrink: is_in_find_relevant_files_prompt_type && shrink_source_code
+      shrink: is_in_find_relevant_files_prompt_type && shrink_source_code,
+      only_file_tree: is_in_find_relevant_files_prompt_type && only_file_tree
     })
     const context_text = collected.other_files + collected.recent_files
 

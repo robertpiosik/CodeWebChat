@@ -24,6 +24,7 @@ export class FilesCollector {
     additional_paths?: string[]
     no_context?: boolean
     shrink?: boolean
+    only_file_tree?: boolean
   }): Promise<{ other_files: string; recent_files: string }> {
     const additional_paths = (params?.additional_paths ?? []).map((p) => {
       if (this.workspace_roots.length > 0) {
@@ -64,6 +65,35 @@ export class FilesCollector {
 
           if (stats.isDirectory()) continue
 
+          const workspace_root = this._get_workspace_root_for_file(file_path)
+
+          let display_path = file_path.replace(/\\/g, '/')
+          if (workspace_root) {
+            const relative_path = path
+              .relative(workspace_root, file_path)
+              .replace(/\\/g, '/')
+
+            if (this.workspace_roots.length > 1) {
+              const workspace_name =
+                this.workspace_provider.get_workspace_name(workspace_root)
+              display_path = `${workspace_name}/${relative_path}`
+            } else {
+              display_path = relative_path
+            }
+          }
+
+          if (params?.only_file_tree) {
+            const cached_tokens =
+              this.workspace_provider.get_cached_token_count(file_path)
+            const token_count = cached_tokens?.total || 0
+            const count_str =
+              token_count >= 1000
+                ? `${Number((token_count / 1000).toFixed(1))}k`
+                : token_count.toString()
+            collected_text += `- ${display_path} (${count_str})\n`
+            continue
+          }
+
           let content = fs.readFileSync(file_path, 'utf8')
 
           const range = this.workspace_provider.get_range(file_path)
@@ -76,28 +106,6 @@ export class FilesCollector {
 
           if (params?.shrink) {
             content = shrink_file(content, path.extname(file_path))
-          }
-
-          const workspace_root = this._get_workspace_root_for_file(file_path)
-
-          if (!workspace_root) {
-            collected_text += `<file path="${file_path.replace(
-              /\\/g,
-              '/'
-            )}">\n<![CDATA[\n${content}\n]]>\n</file>\n`
-            continue
-          }
-
-          const relative_path = path
-            .relative(workspace_root, file_path)
-            .replace(/\\/g, '/')
-
-          // Get the workspace name to prefix the path if there are multiple workspaces
-          let display_path = relative_path
-          if (this.workspace_roots.length > 1) {
-            const workspace_name =
-              this.workspace_provider.get_workspace_name(workspace_root)
-            display_path = `${workspace_name}/${relative_path}`
           }
 
           collected_text += `<file path="${display_path}">\n<![CDATA[\n${content}\n]]>\n</file>\n`

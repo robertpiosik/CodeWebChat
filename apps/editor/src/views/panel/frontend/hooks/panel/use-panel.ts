@@ -7,6 +7,7 @@ import {
 import { Checkpoint } from '../../../types/messages'
 import { Mode, MODE } from '../../../types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
+import { Task } from '@shared/types/task'
 import { post_message } from '../../utils/post_message'
 import { use_instructions } from './use-instructions'
 
@@ -57,9 +58,44 @@ export const use_panel = (vscode: any) => {
     find_relevant_files_shrink_source_code,
     set_find_relevant_files_shrink_source_code
   ] = useState<boolean>(false)
+  const [
+    find_relevant_files_only_file_tree,
+    set_find_relevant_files_only_file_tree
+  ] = useState<boolean>(false)
 
-  const handle_task_forward = (text: string) => {
-    handle_instructions_change(text, 'edit-context')
+  const [active_commit_message, set_active_commit_message] = useState<
+    string | undefined
+  >()
+
+  const handle_instructions_change_with_commit_clear = (
+    value: string,
+    prompt_type: any
+  ) => {
+    // If user manually types a new prompt, we keep the commit message unless they clear it entirely
+    if (!value) {
+      set_active_commit_message(undefined)
+    }
+    handle_instructions_change(value, prompt_type)
+  }
+
+  const handle_task_forward = (task: Task) => {
+    handle_mode_change(MODE.WEB)
+    handle_web_prompt_type_change('edit-context')
+    handle_instructions_change_with_commit_clear(task.text, 'edit-context')
+    set_active_commit_message(task.commit_message)
+
+    if (task.files && task.files.length > 0) {
+      const files = task.files
+      // Delay setting the files slightly to allow the backend to finish switching
+      // the workspace context state (which involves async state loading).
+      setTimeout(() => {
+        post_message(vscode, {
+          command: 'SET_TASK_FILES',
+          files: files.map((f) => f.path)
+        })
+      }, 150)
+    }
+
     set_active_view('main')
     set_main_view_scroll_reset_key((k) => k + 1)
   }
@@ -114,6 +150,41 @@ export const use_panel = (vscode: any) => {
       command: 'SAVE_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE',
       shrink_source_code
     })
+
+    if (shrink_source_code) {
+      set_find_relevant_files_only_file_tree(false)
+      post_message(vscode, {
+        command: 'SAVE_FIND_RELEVANT_FILES_ONLY_FILE_TREE',
+        only_file_tree: false
+      })
+    }
+  }
+
+  const handle_find_relevant_files_only_file_tree_change = (
+    only_file_tree: boolean
+  ) => {
+    set_find_relevant_files_only_file_tree(only_file_tree)
+    post_message(vscode, {
+      command: 'SAVE_FIND_RELEVANT_FILES_ONLY_FILE_TREE',
+      only_file_tree
+    })
+
+    if (only_file_tree) {
+      set_find_relevant_files_shrink_source_code(false)
+      post_message(vscode, {
+        command: 'SAVE_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE',
+        shrink_source_code: false
+      })
+    }
+  }
+
+  const handle_fill_scm_commit = () => {
+    if (active_commit_message) {
+      post_message(vscode, {
+        command: 'FILL_SCM_COMMIT',
+        commit_message: active_commit_message
+      })
+    }
   }
 
   useEffect(() => {
@@ -155,8 +226,13 @@ export const use_panel = (vscode: any) => {
         set_setup_progress(message.setup_progress)
       } else if (message.command == 'FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE') {
         set_find_relevant_files_shrink_source_code(message.shrink_source_code)
+      } else if (message.command == 'FIND_RELEVANT_FILES_ONLY_FILE_TREE') {
+        set_find_relevant_files_only_file_tree(message.only_file_tree)
+      } else if (message.command == 'SET_ACTIVE_COMMIT_MESSAGE') {
+        set_active_commit_message(message.commit_message)
       } else if (message.command == 'RETURN_HOME') {
         set_active_view('home')
+        set_active_commit_message(undefined)
       }
     }
     window.addEventListener('message', handle_message)
@@ -173,7 +249,8 @@ export const use_panel = (vscode: any) => {
       { command: 'GET_CHECKPOINTS' },
       { command: 'REQUEST_CAN_UNDO' },
       { command: 'GET_SETUP_PROGRESS' },
-      { command: 'GET_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE' }
+      { command: 'GET_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE' },
+      { command: 'GET_FIND_RELEVANT_FILES_ONLY_FILE_TREE' }
     ]
     initial_messages.forEach((message) => post_message(vscode, message))
 
@@ -296,7 +373,7 @@ export const use_panel = (vscode: any) => {
       : false,
     is_timeline_collapsed,
     handle_task_forward,
-    handle_instructions_change,
+    set_instructions: handle_instructions_change_with_commit_clear,
     handle_web_prompt_type_change,
     handle_api_prompt_type_change,
     handle_mode_change,
@@ -313,8 +390,12 @@ export const use_panel = (vscode: any) => {
     is_setup_complete,
     find_relevant_files_shrink_source_code,
     handle_find_relevant_files_shrink_source_code_change,
+    find_relevant_files_only_file_tree,
+    handle_find_relevant_files_only_file_tree_change,
     handle_tab_change,
     handle_new_tab,
-    handle_tab_delete
+    handle_tab_delete,
+    active_commit_message,
+    handle_fill_scm_commit
   }
 }

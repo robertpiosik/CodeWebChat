@@ -63,7 +63,7 @@ export const Panel = () => {
     presets_collapsed,
     send_with_shift_enter,
     configurations_collapsed,
-    handle_instructions_change,
+    set_instructions,
     handle_web_prompt_type_change,
     handle_api_prompt_type_change,
     handle_mode_change,
@@ -81,10 +81,14 @@ export const Panel = () => {
     handle_set_recording_state,
     find_relevant_files_shrink_source_code,
     handle_find_relevant_files_shrink_source_code_change,
+    find_relevant_files_only_file_tree,
+    handle_find_relevant_files_only_file_tree_change,
     is_setup_complete,
     handle_tab_change,
     handle_new_tab,
-    handle_tab_delete
+    handle_tab_delete,
+    active_commit_message,
+    handle_fill_scm_commit
   } = use_panel(vscode)
 
   const {
@@ -378,7 +382,7 @@ export const Panel = () => {
                     find_relevant_files_instructions.active_index
                   ] || ''
                 }
-                set_instructions={handle_instructions_change}
+                set_instructions={set_instructions}
                 mode={mode}
                 web_prompt_type={web_prompt_type}
                 api_prompt_type={api_prompt_type}
@@ -431,12 +435,20 @@ export const Panel = () => {
                 on_find_relevant_files_shrink_source_code_change={
                   handle_find_relevant_files_shrink_source_code_change
                 }
+                find_relevant_files_only_file_tree={
+                  find_relevant_files_only_file_tree
+                }
+                on_find_relevant_files_only_file_tree_change={
+                  handle_find_relevant_files_only_file_tree_change
+                }
                 is_setup_complete={is_setup_complete}
                 tabs_count={current_state?.instructions.length ?? 0}
                 active_tab_index={current_state?.active_index ?? 0}
                 on_tab_change={handle_tab_change}
                 on_new_tab={handle_new_tab}
                 on_tab_delete={handle_tab_delete}
+                active_commit_message={active_commit_message}
+                on_fill_scm_commit={handle_fill_scm_commit}
               />
             </div>
             <div

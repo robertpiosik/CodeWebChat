@@ -469,6 +469,11 @@ export interface SaveTasksMessage extends BaseMessage {
   tasks: Record<string, Task[]>
 }
 
+export interface SetTaskFilesMessage extends BaseMessage {
+  command: 'SET_TASK_FILES'
+  files: string[]
+}
+
 export interface DeleteTaskMessage extends BaseMessage {
   command: 'DELETE_TASK'
   root: string
@@ -547,6 +552,15 @@ export interface GetFindRelevantFilesShrinkSourceCodeMessage extends BaseMessage
 export interface SaveFindRelevantFilesShrinkSourceCodeMessage extends BaseMessage {
   command: 'SAVE_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE'
   shrink_source_code: boolean
+}
+
+export interface GetFindRelevantFilesOnlyFileTreeMessage extends BaseMessage {
+  command: 'GET_FIND_RELEVANT_FILES_ONLY_FILE_TREE'
+}
+
+export interface SaveFindRelevantFilesOnlyFileTreeMessage extends BaseMessage {
+  command: 'SAVE_FIND_RELEVANT_FILES_ONLY_FILE_TREE'
+  only_file_tree: boolean
 }
 
 export interface GetSetupProgressMessage extends BaseMessage {
@@ -649,6 +663,7 @@ export type FrontendMessage =
   | PreviewSwitchChoiceMessage
   | GetTasksMessage
   | SaveTasksMessage
+  | SetTaskFilesMessage
   | DeleteTaskMessage
   | PreviewGeneratedCodeMessage
   | UpdateFileProgressMessage
@@ -664,9 +679,12 @@ export type FrontendMessage =
   | SetRecordingStateMessage
   | GetFindRelevantFilesShrinkSourceCodeMessage
   | SaveFindRelevantFilesShrinkSourceCodeMessage
+  | GetFindRelevantFilesOnlyFileTreeMessage
+  | SaveFindRelevantFilesOnlyFileTreeMessage
   | GetSetupProgressMessage
   | RequestReturnHomeMessage
   | RelevantFilesModalResponseMessage
+  | { command: 'FILL_SCM_COMMIT'; commit_message: string }
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -915,6 +933,11 @@ export interface FindRelevantFilesShrinkSourceCodeMessage extends BaseMessage {
   shrink_source_code: boolean
 }
 
+export interface FindRelevantFilesOnlyFileTreeMessage extends BaseMessage {
+  command: 'FIND_RELEVANT_FILES_ONLY_FILE_TREE'
+  only_file_tree: boolean
+}
+
 export interface SetupProgressMessage {
   command: 'SETUP_PROGRESS'
   setup_progress: SetupProgress
@@ -983,7 +1006,9 @@ export type BackendMessage =
   | UpdateFileProgressMessage
   | RecordingStateMessage
   | FindRelevantFilesShrinkSourceCodeMessage
+  | FindRelevantFilesOnlyFileTreeMessage
   | SetupProgressMessage
   | InsertSymbolAtCursorMessage
   | ReturnHomeMessage
   | ShowRelevantFilesModalMessage
+  | { command: 'SET_ACTIVE_COMMIT_MESSAGE'; commit_message: string }

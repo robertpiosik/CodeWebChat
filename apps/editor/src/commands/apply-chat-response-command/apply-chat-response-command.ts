@@ -91,8 +91,9 @@ export const apply_chat_response_command = (params: {
         response: chat_response,
         is_single_root_folder_workspace
       })
+
       const is_relevant_files = clipboard_items.some(
-        (item) => item.type == 'relevant-files'
+        (item) => item.type == 'relevant-files' || item.type == 'subtasks'
       )
 
       if (response_preview_promise_resolve && !is_relevant_files) {
@@ -188,7 +189,7 @@ export const apply_chat_response_command = (params: {
           command: 'HIDE_PROGRESS'
         })
 
-        if (preview_data) {
+        if (preview_data && preview_data.original_states.length > 0) {
           let created_at_for_preview = args?.created_at
           if (!args?.files_with_content) {
             let total_lines_added = 0

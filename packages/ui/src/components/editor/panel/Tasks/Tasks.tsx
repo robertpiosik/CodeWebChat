@@ -20,8 +20,9 @@ type Props = {
   on_change: (task: Task) => void
   on_add: () => void
   on_add_subtask?: (parent_task: Task) => void
-  on_forward: (text: string) => void
+  on_forward: (task: Task) => void
   on_delete: (created_at: number) => void
+  on_go_to_file?: (file_path: string) => void
   placeholder: string
 }
 
@@ -75,6 +76,12 @@ export const Tasks: React.FC<Props> = (props) => {
   const handle_check_change = (task: Task, checked: boolean) => {
     const { id, ...rest } = task as any
     props.on_change({ ...rest, is_checked: checked })
+  }
+
+  const format_tokens = (tokens?: number) => {
+    if (tokens === undefined) return ''
+    if (tokens >= 1000) return `(${(tokens / 1000).toFixed(1)}k tokens)`
+    return `(${tokens} tokens)`
   }
 
   const render_item = (params: {
@@ -164,7 +171,7 @@ export const Tasks: React.FC<Props> = (props) => {
                   codicon_icon="forward"
                   on_click={(e) => {
                     e.stopPropagation()
-                    props.on_forward(params.task.text)
+                    props.on_forward(params.task)
                     set_forwarded_timestamp(params.task.created_at)
                   }}
                   title="Use"
@@ -257,6 +264,42 @@ export const Tasks: React.FC<Props> = (props) => {
               }}
             >
               {params.task.text || props.placeholder}
+            </div>
+          )}
+
+          {params.task.commit_message && (
+            <div className={styles.item__commit}>
+              <span className={styles['item__commit-label']}>Commit:</span>{' '}
+              {params.task.commit_message}
+            </div>
+          )}
+
+          {params.task.files && params.task.files.length > 0 && (
+            <div
+              className={cn(styles.item__files, {
+                [styles['item__files--checked']]: params.is_visually_checked
+              })}
+            >
+              {params.task.files.map((file, index) => (
+                <div
+                  key={index}
+                  className={styles.item__file}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    if (props.on_go_to_file) {
+                      props.on_go_to_file(file.path)
+                    }
+                  }}
+                  title={props.on_go_to_file ? 'Click to open file' : undefined}
+                >
+                  <span className={styles['item__file-path']}>{file.path}</span>
+                  {file.tokens !== undefined && (
+                    <span className={styles['item__file-tokens']}>
+                      {format_tokens(file.tokens)}
+                    </span>
+                  )}
+                </div>
+              ))}
             </div>
           )}
         </div>

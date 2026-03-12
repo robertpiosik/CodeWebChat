@@ -4,6 +4,10 @@ import {
   parse_multiple_files,
   parse_relevant_files
 } from './parsers'
+import {
+  parse_subtask_directives,
+  SubtaskDirective
+} from './parsers/subtask-directives-parser'
 
 export type FileItem = {
   type: 'file'
@@ -36,6 +40,11 @@ export type RelevantFilesItem = {
   file_paths: string[]
 }
 
+export type SubtasksItem = {
+  type: 'subtasks'
+  subtasks: SubtaskDirective[]
+}
+
 export type TextItem = {
   type: 'text'
   content: string
@@ -54,6 +63,7 @@ export type ClipboardItem =
   | TextItem
   | InlineFileItem
   | RelevantFilesItem
+  | SubtasksItem
 
 export const extract_workspace_and_path = (params: {
   raw_file_path: string
@@ -82,21 +92,32 @@ export const parse_response = (params: {
   const is_single_root_folder_workspace =
     params.is_single_root_folder_workspace ?? true
 
+  // Standardize the response by cleaning up common code block formatting issues
+  const processed_response = params.response.replace(/``````/g, '```\n```')
+
+  const items: ClipboardItem[] = []
+
+  // Use processed_response for all parsers to ensure consistency and robustness
   const code_at_cursor_items = parse_code_at_cursor({
-    response: params.response,
+    response: processed_response,
     is_single_root_folder_workspace
   })
 
   if (code_at_cursor_items && code_at_cursor_items.length > 0) {
-    return code_at_cursor_items
+    items.push(...code_at_cursor_items)
   }
 
-  const relevant_files = parse_relevant_files({ response: params.response })
+  const subtasks = parse_subtask_directives(
+    processed_response
+  ) as SubtasksItem[]
+  if (subtasks && subtasks.length > 0) {
+    items.push(...subtasks)
+  }
+
+  const relevant_files = parse_relevant_files({ response: processed_response })
   if (relevant_files) {
-    return [relevant_files]
+    items.push(relevant_files)
   }
-
-  const processed_response = params.response.replace(/``````/g, '```\n```')
 
   const hunk_header_regex = /^(@@\s+-\d+(?:,\d+)?\s+\+\d+(?:,\d+)?\s+@@)/m
   const diff_header_regex = /^---\s+.+\n\+\+\+\s+.+/m
@@ -114,14 +135,15 @@ export const parse_response = (params: {
       is_single_root: is_single_root_folder_workspace
     })
     if (patches_or_text.length) {
-      return patches_or_text
+      items.push(...patches_or_text)
     }
   }
 
-  const items = parse_multiple_files({
+  const file_items = parse_multiple_files({
     response: processed_response,
     is_single_root_folder_workspace
   })
+  items.push(...file_items)
 
   return items
 }

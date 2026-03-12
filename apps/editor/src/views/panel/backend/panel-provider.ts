@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
+import * as fs from 'fs'
 import { ChildProcessWithoutNullStreams } from 'child_process'
 import { WebSocketManager } from '@/services/websocket-manager'
 import {
@@ -93,7 +94,6 @@ import {
   handle_delete_configuration,
   handle_update_last_used_preset_or_group,
   handle_get_find_relevant_files_shrink_source_code,
-  handle_save_find_relevant_files_shrink_source_code,
   handle_return_home_and_switch_to_edit_context
 } from './message-handlers'
 import { SelectionState } from '../types/messages'
@@ -112,7 +112,8 @@ import {
   RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY,
   RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY,
   get_recently_used_presets_or_groups_key,
-  FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY
+  FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
+  FIND_RELEVANT_FILES_ONLY_FILE_TREE_STATE_KEY
 } from '@/constants/state-keys'
 import {
   config_preset_to_ui_format,
@@ -308,6 +309,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     }
     this.update_providers_shrink_mode()
     this.update_providers_context_state()
+    this.send_token_count()
   }
 
   public async send_checkpoints() {
@@ -373,6 +375,69 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       command: 'CURRENTLY_OPEN_FILE_TEXT',
       text: active_editor ? active_editor.document.getText() : undefined
     })
+  }
+
+  public async send_token_count(default_token_count?: number) {
+    const is_find_relevant_files =
+      (this.mode == MODE.WEB &&
+        this.web_prompt_type == 'find-relevant-files') ||
+      (this.mode == MODE.API && this.api_prompt_type == 'find-relevant-files')
+
+    if (!is_find_relevant_files && default_token_count !== undefined) {
+      this.send_message({
+        command: 'TOKEN_COUNT_UPDATED',
+        token_count: default_token_count
+      })
+      return
+    }
+
+    let total = 0
+
+    try {
+      const open_editors_counts = (this.open_editors_provider as any)
+        .get_checked_files_token_count
+        ? await (
+            this.open_editors_provider as any
+          ).get_checked_files_token_count()
+        : { total: 0, shrink: 0, path: 0 }
+      const workspace_counts =
+        await this.workspace_provider.get_checked_files_token_count()
+
+      if (is_find_relevant_files) {
+        const only_file_tree = this.context.workspaceState.get<boolean>(
+          FIND_RELEVANT_FILES_ONLY_FILE_TREE_STATE_KEY,
+          false
+        )
+        const shrink_source_code = this.context.workspaceState.get<boolean>(
+          FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
+          false
+        )
+
+        if (only_file_tree) {
+          total = (workspace_counts.path || 0) + (open_editors_counts.path || 0)
+        } else if (shrink_source_code) {
+          total =
+            (workspace_counts.shrink || 0) + (open_editors_counts.shrink || 0)
+        } else {
+          total =
+            (workspace_counts.total || 0) + (open_editors_counts.total || 0)
+        }
+      } else {
+        total = (workspace_counts.total || 0) + (open_editors_counts.total || 0)
+      }
+
+      this.send_message({
+        command: 'TOKEN_COUNT_UPDATED',
+        token_count: total
+      })
+    } catch (e) {
+      if (default_token_count !== undefined) {
+        this.send_message({
+          command: 'TOKEN_COUNT_UPDATED',
+          token_count: default_token_count
+        })
+      }
+    }
   }
 
   constructor(params: {
@@ -526,16 +591,15 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       }
     )
 
-    token_count_emitter.on('token-count-updated', (token_count: number) => {
-      if (this._webview_view) {
-        this.send_message({
-          command: 'TOKEN_COUNT_UPDATED',
-          token_count
-        })
-
-        this.send_context_files()
+    token_count_emitter.on(
+      'token-count-updated',
+      async (token_count: number) => {
+        if (this._webview_view) {
+          await this.send_token_count(token_count)
+          this.send_context_files()
+        }
       }
-    })
+    )
 
     this.context.subscriptions.push(this._config_listener)
 
@@ -884,12 +948,14 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_save_web_prompt_type(this, message.prompt_type)
             this.update_providers_shrink_mode()
             this.update_providers_context_state()
+            this.send_token_count()
           } else if (message.command == 'GET_API_PROMPT_TYPE') {
             handle_get_api_prompt_type(this)
           } else if (message.command == 'SAVE_API_PROMPT_TYPE') {
             await handle_save_api_prompt_type(this, message.prompt_type)
             this.update_providers_shrink_mode()
             this.update_providers_context_state()
+            this.send_token_count()
           } else if (message.command == 'GET_EDIT_FORMAT_INSTRUCTIONS') {
             handle_get_edit_format_instructions(this)
           } else if (message.command == 'GET_EDIT_FORMAT') {
@@ -902,6 +968,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_save_mode(this, message)
             this.update_providers_shrink_mode()
             this.update_providers_context_state()
+            this.send_token_count()
           } else if (message.command == 'GET_MODE') {
             handle_get_mode(this)
           } else if (message.command == 'GET_VERSION') {
@@ -1008,14 +1075,86 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (
             message.command == 'SAVE_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE'
           ) {
-            await handle_save_find_relevant_files_shrink_source_code(
-              this,
+            await this.context.workspaceState.update(
+              FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
               message.shrink_source_code
             )
+            this.update_providers_shrink_mode()
+            this.workspace_provider.refresh()
+            if ('refresh' in this.open_editors_provider) {
+              ;(this.open_editors_provider as any).refresh()
+            }
+            await this.send_token_count()
+          } else if (
+            message.command == 'GET_FIND_RELEVANT_FILES_ONLY_FILE_TREE'
+          ) {
+            const only_file_tree = this.context.workspaceState.get<boolean>(
+              FIND_RELEVANT_FILES_ONLY_FILE_TREE_STATE_KEY,
+              false
+            )
+            this.send_message({
+              command: 'FIND_RELEVANT_FILES_ONLY_FILE_TREE',
+              only_file_tree
+            })
+          } else if (
+            message.command == 'SAVE_FIND_RELEVANT_FILES_ONLY_FILE_TREE'
+          ) {
+            await this.context.workspaceState.update(
+              FIND_RELEVANT_FILES_ONLY_FILE_TREE_STATE_KEY,
+              message.only_file_tree
+            )
+            this.workspace_provider.refresh()
+            if ('refresh' in this.open_editors_provider) {
+              ;(this.open_editors_provider as any).refresh()
+            }
+            await this.send_token_count()
           } else if (message.command == 'RELEVANT_FILES_MODAL_RESPONSE') {
             if (this.relevant_files_choice_resolver) {
               this.relevant_files_choice_resolver(message.files)
               this.relevant_files_choice_resolver = undefined
+            }
+          } else if (message.command == 'SET_TASK_FILES') {
+            if (message.files && message.files.length > 0) {
+              const workspace_roots =
+                this.workspace_provider.get_workspace_roots()
+              const absolute_paths = message.files
+                .map((rel_path: string) => {
+                  for (const root of workspace_roots) {
+                    const potential = path.join(root, rel_path)
+                    if (fs.existsSync(potential)) return potential
+                  }
+                  return null
+                })
+                .filter(Boolean) as string[]
+
+              if (absolute_paths.length > 0) {
+                await this.workspace_provider.set_checked_files(absolute_paths)
+                this.send_context_files()
+                await this.send_token_count()
+              }
+            }
+          } else if ((message as any).command == 'FILL_SCM_COMMIT') {
+            try {
+              const gitExtension = vscode.extensions.getExtension('vscode.git')
+              if (gitExtension) {
+                const git = gitExtension.exports.getAPI(1)
+                if (git.repositories.length > 0) {
+                  git.repositories[0].inputBox.value = (
+                    message as any
+                  ).commit_message
+                  vscode.commands.executeCommand('workbench.view.scm')
+                } else {
+                  vscode.window.showInformationMessage(
+                    'No active Git repositories found.'
+                  )
+                }
+              }
+            } catch (error) {
+              Logger.error({
+                function_name: 'FILL_SCM_COMMIT',
+                message: 'Failed to fill SCM commit message',
+                data: error
+              })
             }
           }
         } catch (error: any) {

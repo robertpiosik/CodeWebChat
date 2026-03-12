@@ -7,7 +7,8 @@ import {
   CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY,
   CONTEXT_CHECKED_PATHS_FRF_STATE_KEY,
   CONTEXT_CHECKED_TIMESTAMPS_FRF_STATE_KEY,
-  RANGES_STATE_KEY
+  RANGES_STATE_KEY,
+  FIND_RELEVANT_FILES_ONLY_FILE_TREE_STATE_KEY
 } from '@/constants/state-keys'
 import { IGNORE_PATTERNS } from '@/constants/ignore-patterns'
 import { natural_sort } from '@/utils/natural-sort'
@@ -695,35 +696,65 @@ export class WorkspaceProvider
 
     element.checkboxState = checkbox_state
 
-    const total_token_count = this.use_shrink_token_count
-      ? element.shrinkTokenCount
-      : element.tokenCount
-    const selected_token_count = this.use_shrink_token_count
-      ? element.selectedShrinkTokenCount
-      : element.selectedTokenCount
+    const only_file_tree = this._context.workspaceState.get<boolean>(
+      FIND_RELEVANT_FILES_ONLY_FILE_TREE_STATE_KEY,
+      false
+    )
+    const show_only_path_tokens = this._is_frf_mode && only_file_tree
+    const show_shrink_tokens = this.use_shrink_token_count
+
+    let active_total = element.tokenCount
+    let active_selected = element.selectedTokenCount
+
+    if (show_only_path_tokens) {
+      active_total = element.pathTokenCount
+    } else if (show_shrink_tokens) {
+      active_total = element.shrinkTokenCount
+    }
+
+    if (show_only_path_tokens) {
+      active_selected = element.selectedPathTokenCount
+    } else if (show_shrink_tokens) {
+      active_selected = element.selectedShrinkTokenCount
+    }
 
     const formatted_total =
-      total_token_count !== undefined && total_token_count > 0
-        ? display_token_count(total_token_count)
-        : undefined
-
-    const formatted_selected =
-      selected_token_count !== undefined && selected_token_count > 0
-        ? display_token_count(selected_token_count)
+      element.tokenCount !== undefined && element.tokenCount > 0
+        ? display_token_count(element.tokenCount)
         : undefined
 
     let display_description = ''
+    let tooltip_tokens_info = ''
 
-    if (element.isDirectory) {
-      if (formatted_total) {
-        if (formatted_selected && selected_token_count! < total_token_count!) {
-          display_description = `${formatted_total} · ${formatted_selected} selected`
-        } else {
-          display_description = formatted_total
-        }
+    if (formatted_total) {
+      display_description = formatted_total
+      tooltip_tokens_info = `About ${formatted_total} tokens`
+
+      let modified_total_str: string | undefined
+      if (show_only_path_tokens && element.pathTokenCount !== undefined) {
+        modified_total_str = display_token_count(element.pathTokenCount)
+        tooltip_tokens_info = `About ${formatted_total} original tokens (${modified_total_str} Tokens for path only)`
+      } else if (show_shrink_tokens && element.shrinkTokenCount !== undefined) {
+        modified_total_str = display_token_count(element.shrinkTokenCount)
+        tooltip_tokens_info = `About ${formatted_total} original tokens (${modified_total_str} Tokens after shrinking)`
       }
-    } else {
-      display_description = formatted_total ?? ''
+
+      if (modified_total_str) {
+        display_description += ` (${modified_total_str})`
+      }
+
+      const formatted_selected =
+        active_selected !== undefined && active_selected > 0
+          ? display_token_count(active_selected)
+          : undefined
+
+      if (
+        element.isDirectory &&
+        formatted_selected &&
+        active_selected! < (active_total ?? 0)
+      ) {
+        display_description += ` · ${formatted_selected} selected`
+      }
     }
 
     if (!element.isDirectory && element.range) {
@@ -736,29 +767,32 @@ export class WorkspaceProvider
       trimmed_description == '' ? undefined : trimmed_description
 
     const tooltip_parts = [element.resourceUri.fsPath]
-    if (formatted_total) {
-      tooltip_parts.push(`· About ${formatted_total} tokens`)
+    if (tooltip_tokens_info) {
+      tooltip_parts.push(`· ${tooltip_tokens_info}`)
     }
-    if (element.isDirectory && formatted_selected) {
-      if (
-        total_token_count !== undefined &&
-        selected_token_count == total_token_count
-      ) {
+
+    if (
+      element.isDirectory &&
+      active_selected !== undefined &&
+      active_selected > 0
+    ) {
+      if (active_total !== undefined && active_selected === active_total) {
         tooltip_parts.push('· Fully selected')
       } else {
-        tooltip_parts.push(`· ${formatted_selected} selected`)
+        const formatted_sel = display_token_count(active_selected)
+        tooltip_parts.push(`· ${formatted_sel} selected`)
       }
     }
 
     element.tooltip = tooltip_parts.join(' ')
 
     if (element.isWorkspaceRoot) {
-      // Workspace root tooltip is primarily its name and role, token info is appended if available
       let root_tooltip = `${element.label} (Workspace Root)`
-      if (formatted_total) {
-        root_tooltip += ` • About ${formatted_total} tokens`
-        if (formatted_selected) {
-          root_tooltip += ` (${formatted_selected} selected)`
+      if (tooltip_tokens_info) {
+        root_tooltip += ` • ${tooltip_tokens_info}`
+        if (active_selected !== undefined && active_selected > 0) {
+          const formatted_sel = display_token_count(active_selected)
+          root_tooltip += ` (${formatted_sel} selected)`
         }
       }
       element.tooltip = root_tooltip
@@ -892,8 +926,10 @@ export class WorkspaceProvider
           false,
           total_tokens.total,
           total_tokens.shrink,
+          total_tokens.path,
           selected_tokens.total,
           selected_tokens.shrink,
+          selected_tokens.path,
           undefined,
           true
         )
@@ -1006,13 +1042,13 @@ export class WorkspaceProvider
 
   public get_cached_token_count(
     file_path: string
-  ): { total: number; shrink: number } | undefined {
+  ): { total: number; shrink: number; path: number } | undefined {
     return this._token_calculator.get_cached_token_count(file_path)
   }
 
   public async calculate_file_tokens(
     file_path: string
-  ): Promise<{ total: number; shrink: number }> {
+  ): Promise<{ total: number; shrink: number; path: number }> {
     return this._token_calculator.calculate_file_tokens(file_path)
   }
 
@@ -1158,8 +1194,10 @@ export class WorkspaceProvider
           false,
           tokens.total,
           tokens.shrink,
+          tokens.path,
           selected_tokens?.total,
           selected_tokens?.shrink,
+          selected_tokens?.path,
           undefined,
           false,
           range
@@ -1425,19 +1463,28 @@ export class WorkspaceProvider
 
   public get_checked_files(): string[] {
     return Array.from(this._checked_items.entries())
-      .filter(
-        ([file_path, state]) =>
-          state == vscode.TreeItemCheckboxState.Checked &&
-          fs.existsSync(file_path) &&
-          (fs.lstatSync(file_path).isFile() ||
-            fs.lstatSync(file_path).isSymbolicLink()) &&
-          (() => {
-            const workspace_root = this.get_workspace_root_for_file(file_path)
-            return workspace_root
-              ? !this.is_excluded(path.relative(workspace_root, file_path))
-              : false
-          })()
-      )
+      .filter(([file_path, state]) => {
+        if (state !== vscode.TreeItemCheckboxState.Checked) return false
+
+        // Fast path: Check caches to avoid slow synchronous fs calls
+        if (this._token_calculator.is_directory_cached(file_path)) return false
+        if (this._token_calculator.is_file_cached(file_path)) {
+          const workspace_root = this.get_workspace_root_for_file(file_path)
+          return workspace_root
+            ? !this.is_excluded(path.relative(workspace_root, file_path))
+            : false
+        }
+
+        // Fallback if not cached
+        if (!fs.existsSync(file_path)) return false
+        const stat = fs.lstatSync(file_path)
+        if (!stat.isFile() && !stat.isSymbolicLink()) return false
+
+        const workspace_root = this.get_workspace_root_for_file(file_path)
+        return workspace_root
+          ? !this.is_excluded(path.relative(workspace_root, file_path))
+          : false
+      })
       .map(([path, _]) => path)
   }
 
@@ -1701,7 +1748,7 @@ export class WorkspaceProvider
 
   public async get_checked_files_token_count(options?: {
     exclude_file_path?: string
-  }): Promise<{ total: number; shrink: number }> {
+  }): Promise<{ total: number; shrink: number; path: number }> {
     return this._token_calculator.get_checked_files_token_count(options)
   }
 
@@ -1825,8 +1872,10 @@ export class FileItem extends vscode.TreeItem {
     public isOpenFile: boolean = false,
     public tokenCount?: number,
     public shrinkTokenCount?: number,
+    public pathTokenCount?: number,
     public selectedTokenCount?: number,
     public selectedShrinkTokenCount?: number,
+    public selectedPathTokenCount?: number,
     description?: string,
     public isWorkspaceRoot: boolean = false,
     public range?: string
