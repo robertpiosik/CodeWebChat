@@ -256,6 +256,14 @@ export class TokenCalculator implements vscode.Disposable {
     this._directory_selected_path_token_counts.clear()
   }
 
+  public is_directory_cached(dir_path: string): boolean {
+    return this._directory_token_counts.has(dir_path)
+  }
+
+  public is_file_cached(file_path: string): boolean {
+    return this._file_token_counts.has(file_path)
+  }
+
   public get_cached_token_count(
     file_path: string
   ): { total: number; shrink: number; path: number } | undefined {
@@ -688,41 +696,29 @@ export class TokenCalculator implements vscode.Disposable {
   public async get_checked_files_token_count(options?: {
     exclude_file_path?: string
   }): Promise<{ total: number; shrink: number; path: number }> {
-    const checked_files = this._provider.get_checked_files()
-    const result = { total: 0, shrink: 0, path: 0 }
+    let result_total = 0
+    let result_shrink = 0
+    let result_path = 0
 
-    for (const file_path of checked_files) {
-      try {
-        if (
-          options?.exclude_file_path &&
-          file_path == options.exclude_file_path
-        ) {
-          continue
-        }
-
-        // Fast path: bypass fs.statSync completely if cache hit
-        if (this._file_token_counts.has(file_path)) {
-          result.total += this._file_token_counts.get(file_path)!
-          result.shrink += this._file_shrink_token_counts.get(file_path)!
-          result.path += this._file_path_token_counts.get(file_path)!
-        } else {
-          if (fs.statSync(file_path).isFile()) {
-            const count = await this.calculate_file_tokens(file_path)
-            result.total += count.total
-            result.shrink += count.shrink
-            result.path += count.path
-          }
-        }
-      } catch (error) {
-        Logger.error({
-          function_name: 'get_checked_files_token_count',
-          message: `Error accessing file ${file_path} for token count`,
-          data: error
-        })
-      }
+    for (const root of this._provider.get_workspace_roots()) {
+      const counts = await this.calculate_directory_selected_tokens(root)
+      result_total += counts.total
+      result_shrink += counts.shrink
+      result_path += counts.path
     }
 
-    return result
+    if (
+      options?.exclude_file_path &&
+      this._provider.get_check_state(options.exclude_file_path) ===
+        vscode.TreeItemCheckboxState.Checked
+    ) {
+      const counts = await this.calculate_file_tokens(options.exclude_file_path)
+      result_total = Math.max(0, result_total - counts.total)
+      result_shrink = Math.max(0, result_shrink - counts.shrink)
+      result_path = Math.max(0, result_path - counts.path)
+    }
+
+    return { total: result_total, shrink: result_shrink, path: result_path }
   }
 
   public dispose() {

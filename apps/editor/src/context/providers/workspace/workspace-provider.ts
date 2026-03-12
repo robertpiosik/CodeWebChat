@@ -1463,19 +1463,28 @@ export class WorkspaceProvider
 
   public get_checked_files(): string[] {
     return Array.from(this._checked_items.entries())
-      .filter(
-        ([file_path, state]) =>
-          state == vscode.TreeItemCheckboxState.Checked &&
-          fs.existsSync(file_path) &&
-          (fs.lstatSync(file_path).isFile() ||
-            fs.lstatSync(file_path).isSymbolicLink()) &&
-          (() => {
-            const workspace_root = this.get_workspace_root_for_file(file_path)
-            return workspace_root
-              ? !this.is_excluded(path.relative(workspace_root, file_path))
-              : false
-          })()
-      )
+      .filter(([file_path, state]) => {
+        if (state !== vscode.TreeItemCheckboxState.Checked) return false
+
+        // Fast path: Check caches to avoid slow synchronous fs calls
+        if (this._token_calculator.is_directory_cached(file_path)) return false
+        if (this._token_calculator.is_file_cached(file_path)) {
+          const workspace_root = this.get_workspace_root_for_file(file_path)
+          return workspace_root
+            ? !this.is_excluded(path.relative(workspace_root, file_path))
+            : false
+        }
+
+        // Fallback if not cached
+        if (!fs.existsSync(file_path)) return false
+        const stat = fs.lstatSync(file_path)
+        if (!stat.isFile() && !stat.isSymbolicLink()) return false
+
+        const workspace_root = this.get_workspace_root_for_file(file_path)
+        return workspace_root
+          ? !this.is_excluded(path.relative(workspace_root, file_path))
+          : false
+      })
       .map(([path, _]) => path)
   }
 
