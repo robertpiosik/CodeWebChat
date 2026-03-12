@@ -90,7 +90,7 @@ export class FilesCollector {
               token_count >= 1000
                 ? `${Number((token_count / 1000).toFixed(1))}k`
                 : token_count.toString()
-            collected_text += `- ${display_path} (${count_str} tokens)\n`
+            collected_text += `- ${display_path} (${count_str})\n`
             continue
           }
 
