@@ -6,7 +6,7 @@ import { Logger } from '@shared/utils/logger'
 import type { IWorkspaceProvider } from '../workspace-provider'
 import { shrink_file } from '@/context/utils/shrink-file'
 
-type TokenData = [number, number, number, number?]
+type TokenData = [number, number, number, number]
 
 type TokenCacheNode = {
   [key: string]: TokenCacheNode | TokenData
@@ -286,7 +286,7 @@ export class TokenCalculator implements vscode.Disposable {
         display_path = `${workspace_name}/${display_path}`
       }
     }
-    return Math.floor(`- ${display_path}\n`.length / 4)
+    return Math.floor(display_path.length / 4)
   }
 
   public async calculate_file_tokens(

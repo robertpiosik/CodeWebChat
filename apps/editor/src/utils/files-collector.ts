@@ -83,7 +83,14 @@ export class FilesCollector {
           }
 
           if (params?.only_file_tree) {
-            collected_text += `- ${display_path}\n`
+            const cached_tokens =
+              this.workspace_provider.get_cached_token_count(file_path)
+            const token_count = cached_tokens?.total || 0
+            const count_str =
+              token_count >= 1000
+                ? `${Number((token_count / 1000).toFixed(1))}k`
+                : token_count.toString()
+            collected_text += `- ${display_path} (${count_str} tokens)\n`
             continue
           }
 
