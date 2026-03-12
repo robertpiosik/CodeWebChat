@@ -69,10 +69,15 @@ export const use_panel = (vscode: any) => {
     handle_instructions_change(task.text, 'edit-context')
 
     if (task.files && task.files.length > 0) {
-      post_message(vscode, {
-        command: 'SET_TASK_FILES',
-        files: task.files
-      })
+      const files = task.files
+      // Delay setting the files slightly to allow the backend to finish switching
+      // the workspace context state (which involves async state loading).
+      setTimeout(() => {
+        post_message(vscode, {
+          command: 'SET_TASK_FILES',
+          files: files
+        })
+      }, 150)
     }
 
     set_active_view('main')
