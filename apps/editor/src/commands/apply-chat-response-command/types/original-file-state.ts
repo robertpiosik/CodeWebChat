@@ -10,6 +10,7 @@ export type OriginalFileState = {
   is_checked?: boolean
   ai_content?: string
   proposed_content?: string
+  current_content?: string
   apply_failed?: boolean
   applied_with_intelligent_update?: boolean
 }

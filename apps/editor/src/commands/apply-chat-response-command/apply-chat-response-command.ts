@@ -267,6 +267,8 @@ export const apply_chat_response_command = (params: {
                 lines_removed: diff_stats.lines_removed,
                 diff_application_method: state.diff_application_method,
                 content: current_content,
+                proposed_content:
+                  state.proposed_content ?? state.ai_content ?? current_content,
                 is_checked: true,
                 apply_failed: state.apply_failed,
                 ai_content: state.ai_content,
@@ -290,6 +292,7 @@ export const apply_chat_response_command = (params: {
                   lines_added: 0,
                   lines_removed: deleted_diff_stats.lines_removed,
                   content: '',
+                  proposed_content: '',
                   is_checked: true
                 })
               }

@@ -36,7 +36,11 @@ export const prepare_files_from_original_states = async (params: {
       if (fs.existsSync(sanitized_file_path)) {
         file_exists = true
         current_content =
-          state.proposed_content ?? fs.readFileSync(sanitized_file_path, 'utf8')
+          state.current_content ??
+          state.proposed_content ??
+          fs.readFileSync(sanitized_file_path, 'utf8')
+      } else if (state.current_content !== undefined) {
+        current_content = state.current_content
       } else if (state.proposed_content !== undefined) {
         current_content = state.proposed_content
       }
@@ -45,7 +49,10 @@ export const prepare_files_from_original_states = async (params: {
     }
 
     let new_content_for_diff = current_content
-    if (state.is_checked === false && state.ai_content !== undefined) {
+    if (state.is_checked === false && state.current_content !== undefined) {
+      current_content = state.current_content
+      new_content_for_diff = state.content
+    } else if (state.is_checked === false && state.ai_content !== undefined) {
       current_content = state.ai_content
       new_content_for_diff = state.content
     }
