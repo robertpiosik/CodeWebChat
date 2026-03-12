@@ -193,20 +193,30 @@ export const process_chat_response = async (
 
       if (subtasks_item) {
         const tasks_array = subtasks_item.subtasks.map(
-          (st: any, index: number) => ({
-            text: (
-              st.instruction ||
-              st.description ||
-              st.title ||
-              st.text ||
-              'Execute subtask'
+          (st: any, index: number) => {
+            const raw_files = Array.isArray(st.files) ? st.files : []
+            // Ensure we only store files in the task that the user actually approved in the modal
+            const approved_files = raw_files.filter((rel_f: string) =>
+              selected_files.some(
+                (sf) => sf.endsWith(rel_f) || sf.includes(rel_f)
+              )
             )
-              .toString()
-              .trim(),
-            is_checked: false,
-            created_at: Date.now() + index,
-            files: Array.isArray(st.files) ? st.files : []
-          })
+
+            return {
+              text: (
+                st.instruction ||
+                st.description ||
+                st.title ||
+                st.text ||
+                'Execute subtask'
+              )
+                .toString()
+                .trim(),
+              is_checked: false,
+              created_at: Date.now() + index,
+              files: approved_files
+            }
+          }
         )
 
         const default_workspace =
@@ -217,15 +227,25 @@ export const process_chat_response = async (
           ) || {}
         tasks_record[default_workspace] = tasks_array
         await context.workspaceState.update('codeWebChat.tasks', tasks_record)
+
         panel_provider.send_message({
           command: 'TASKS',
           tasks: tasks_record as any
         })
 
-        if (tasks_array.length > 0) {
+        if (tasks_array.length > 1) {
+          if (was_frf) {
+            shared_context_state.switch_context_state(true)
+          }
+          panel_provider.send_message({ command: 'RETURN_HOME' })
+          panel_provider.send_message({
+            command: 'SHOW_AUTO_CLOSING_MODAL',
+            title: 'Subtasks saved. Select one to start.',
+            type: 'success'
+          })
+        } else if (tasks_array.length === 1) {
           const first_task = tasks_array[0]
 
-          // Only check the absolute paths that match the first task's relative files
           const approved_first_task_absolute_paths = selected_files.filter(
             (sf) =>
               first_task.files.some(
@@ -261,6 +281,19 @@ export const process_chat_response = async (
               panel_provider.find_relevant_files_instructions,
             caret_position: panel_provider.caret_position
           })
+
+          if (was_frf) {
+            shared_context_state.switch_context_state(true)
+          }
+
+          panel_provider.send_message({
+            command: 'SHOW_AUTO_CLOSING_MODAL',
+            title: 'Subtask ready.',
+            type: 'success'
+          })
+
+          await panel_provider.switch_to_edit_context()
+          panel_provider.send_context_files()
         }
       } else {
         const presented_files = files_for_modal.map((f) => f.file_path)
@@ -271,20 +304,20 @@ export const process_chat_response = async (
           new Set([...filtered_current_files, ...selected_files])
         )
         await workspace_provider.set_checked_files(merged_files)
+
+        if (was_frf) {
+          shared_context_state.switch_context_state(true)
+        }
+
+        panel_provider.send_message({
+          command: 'SHOW_AUTO_CLOSING_MODAL',
+          title: t('command.apply-chat-response.relevant-files.success'),
+          type: 'success'
+        })
+
+        await panel_provider.switch_to_edit_context()
+        panel_provider.send_context_files()
       }
-
-      if (was_frf) {
-        shared_context_state.switch_context_state(true)
-      }
-
-      panel_provider.send_message({
-        command: 'SHOW_AUTO_CLOSING_MODAL',
-        title: t('command.apply-chat-response.relevant-files.success'),
-        type: 'success'
-      })
-
-      await panel_provider.switch_to_edit_context()
-      panel_provider.send_context_files()
     }
 
     return null
