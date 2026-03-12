@@ -192,14 +192,18 @@ export const process_chat_response = async (
       }
 
       if (subtasks_item) {
+        const is_path_match = (absolute: string, relative: string) => {
+          const norm_abs = absolute.replace(/\\/g, '/')
+          const norm_rel = relative.replace(/\\/g, '/')
+          return norm_abs.endsWith(norm_rel) || norm_abs.includes(norm_rel)
+        }
+
         const tasks_array = subtasks_item.subtasks.map(
           (st: any, index: number) => {
             const raw_files = Array.isArray(st.files) ? st.files : []
             // Ensure we only store files in the task that the user actually approved in the modal
             const approved_files = raw_files.filter((rel_f: string) =>
-              selected_files.some(
-                (sf) => sf.endsWith(rel_f) || sf.includes(rel_f)
-              )
+              selected_files.some((sf) => is_path_match(sf, rel_f))
             )
 
             return {
@@ -248,9 +252,7 @@ export const process_chat_response = async (
 
           const approved_first_task_absolute_paths = selected_files.filter(
             (sf) =>
-              first_task.files.some(
-                (rel_f: string) => sf.endsWith(rel_f) || sf.includes(rel_f)
-              )
+              first_task.files.some((rel_f: string) => is_path_match(sf, rel_f))
           )
 
           const presented_files = files_for_modal.map((f) => f.file_path)

@@ -64,6 +64,8 @@ export const use_panel = (vscode: any) => {
   ] = useState<boolean>(false)
 
   const handle_task_forward = (task: Task) => {
+    handle_mode_change(MODE.WEB)
+    handle_web_prompt_type_change('edit-context')
     handle_instructions_change(task.text, 'edit-context')
 
     if (task.files && task.files.length > 0) {
