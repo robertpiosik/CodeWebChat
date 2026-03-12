@@ -1,17 +1,11 @@
 export const shrink_jsx = (content: string): string => {
-  // Split by newline to process line by line, handling both LF and CRLF
   const lines = content.split(/\r?\n/)
   const result: string[] = []
   let is_in_block_comment = false
   let skip_body_depth = 0
-  // Buffer to track context for stripping bodies (e.g. "class Foo ")
   let last_code_buffer = ''
 
   for (const line of lines) {
-    // Capture indentation for use in body stripping
-    const indent_match = line.match(/^\s*/)
-    const current_indent = indent_match ? indent_match[0] : ''
-
     let processed_line = ''
     let i = 0
     let is_in_string: false | '"' | "'" | '`' = false
@@ -61,7 +55,7 @@ export const shrink_jsx = (content: string): string => {
       }
 
       if (char == '/' && next_char == '/') {
-        break // Ignore the rest of the line
+        break
       }
 
       if (char == '/' && next_char == '*') {
@@ -70,34 +64,28 @@ export const shrink_jsx = (content: string): string => {
         continue
       }
 
-      // Handle Function Body Stripping
       if (char == '{') {
         if (skip_body_depth > 0) {
-          // Already skipping, just deepen the level
           skip_body_depth++
           last_code_buffer += char
           i++
           continue
         } else {
-          // Check if we should preserve this block (class, interface, etc.)
-          // We look at last_code_buffer for keywords
           const is_keeper =
-            /(^|\s)(class|interface|enum|namespace|type|import|export)(\s|$)/.test(
+            /(^|\s)(class|interface|enum|namespace|type)(\s|$)/.test(
               last_code_buffer
-            )
-          // Also preserve object literals (preceded by =, :, or open paren for destructuring)
+            ) || /(^|\s)(import|export|default)\s*$/.test(last_code_buffer)
           const is_object_literal = /(=|:|\()\s*$/.test(
             last_code_buffer.trimEnd()
           )
 
           if (!is_keeper && !is_object_literal) {
             skip_body_depth = 1
-            processed_line += `{\n${current_indent}  // ...\n${current_indent}}`
+            processed_line += `{}`
             last_code_buffer += '{}'
             i++
             continue
           } else {
-            // Keeper: reset buffer to avoid false positives in nested scopes
             last_code_buffer = ''
           }
         }
@@ -117,16 +105,12 @@ export const shrink_jsx = (content: string): string => {
       i++
     }
 
-    // We trim the line to actually "shrink" the file.
-    // If a line contained only comments, it becomes empty and is skipped.
     const trimmed = processed_line.trim()
     if (trimmed) {
-      result.push(processed_line.trimEnd())
+      result.push(processed_line.trimEnd().replace(/;+$/, ''))
     }
 
-    // Add a space to buffer for newline to avoid concatenation issues (e.g. "class Foo" + "{")
     last_code_buffer += ' '
-    // Limit buffer size to avoid memory issues, keeping enough for context
     if (last_code_buffer.length > 200) {
       last_code_buffer = last_code_buffer.slice(-200)
     }
