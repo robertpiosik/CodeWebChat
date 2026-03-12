@@ -40,17 +40,17 @@ Your response must begin with "**Relevant files:**", then list paths one under a
 - \`src/hello.ts\`
 - \`src/welcome.ts\`
 
-If \`only_file_tree\` is active and the request is complex, you can instead respond with a plan using the \`<subtasks>\` format. Each subtask should contain the files that need to be edited and a clear instruction. Example:
+If the user asks to implement a feature or perform a task, you MUST respond with a plan using the \`<subtasks>\` format. Each \`<instruction>\` must be a highly detailed prompt for the next AI agent who will execute this subtask in 'Edit Context' mode. Include all requirements like writing a commit message if the user requested it. Example:
 
 <subtasks>
 <subtask>
-  <instruction>Update the greeting logic</instruction>
+  <instruction>Implement the greeting logic in hello.ts. Ensure you handle undefined inputs and output a commit message summarizing these changes.</instruction>
   <files>
     <file>src/hello.ts</file>
   </files>
 </subtask>
 <subtask>
-  <instruction>Export the new functions</instruction>
+  <instruction>Export the new functions in index.ts so they are available to other modules. Output a brief commit message for this change as well.</instruction>
   <files>
     <file>src/index.ts</file>
   </files>
@@ -69,17 +69,17 @@ Your response must begin with "**Relevant files:**", then list paths one under a
 
 These files contain the core greeting logic and module exports.
 
-If \`only_file_tree\` is active and the request is complex, you can instead respond with a plan using the \`<subtasks>\` format. Each subtask should contain the files that need to be edited and a clear instruction. Example:
+If the user asks to implement a feature or perform a task, you MUST respond with a plan using the \`<subtasks>\` format. Each \`<instruction>\` must be a highly detailed prompt for the next AI agent who will execute this subtask in 'Edit Context' mode. Include all requirements like writing a commit message if the user requested it. Example:
 
 <subtasks>
 <subtask>
-  <instruction>Update the greeting logic</instruction>
+  <instruction>Implement the greeting logic in hello.ts. Ensure you handle undefined inputs and output a commit message summarizing these changes.</instruction>
   <files>
     <file>src/hello.ts</file>
   </files>
 </subtask>
 <subtask>
-  <instruction>Export the new functions</instruction>
+  <instruction>Export the new functions in index.ts so they are available to other modules. Output a brief commit message for this change as well.</instruction>
   <files>
     <file>src/index.ts</file>
   </files>

@@ -98,6 +98,9 @@ export const apply_chat_response_command = (params: {
       const subtasks_item = clipboard_items.find(
         (item) => item.type == 'subtasks'
       ) as SubtasksItem | undefined
+      const relevant_files_item = clipboard_items.find(
+        (item) => item.type == 'relevant-files'
+      ) as { type: 'relevant-files'; files: string[] } | undefined
 
       if (response_preview_promise_resolve && !is_relevant_files) {
         const history = params.panel_provider.response_history
@@ -256,9 +259,24 @@ export const apply_chat_response_command = (params: {
 
             params.panel_provider.send_context_files()
           }
+        } else if (relevant_files_item) {
+          const wp = params.workspace_provider as any
+          if (typeof wp.set_checked_files === 'function') {
+            wp.set_checked_files(relevant_files_item.files)
+          } else if (typeof wp.check_file === 'function') {
+            if (typeof wp.uncheck_all_files === 'function') {
+              wp.uncheck_all_files()
+            }
+            for (const file of relevant_files_item.files) {
+              wp.check_file(file)
+            }
+          }
+
+          await params.panel_provider.switch_to_edit_context()
+          params.panel_provider.send_context_files()
         }
 
-        if (preview_data) {
+        if (preview_data && preview_data.original_states.length > 0) {
           let created_at_for_preview = args?.created_at
           if (!args?.files_with_content) {
             let total_lines_added = 0
