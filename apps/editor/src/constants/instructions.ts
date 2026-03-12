@@ -40,7 +40,7 @@ Your response must begin with "**Relevant files:**", then list paths one under a
 - \`src/hello.ts\`
 - \`src/welcome.ts\`
 
-If the user asks to implement a feature or perform a task, you MUST respond with a plan formatted strictly as a Markdown list of subtasks. Do NOT use XML. Use the following exact headings:
+If the task is complex and requires multiple logical steps, break it down into a plan formatted strictly as a Markdown list of subtasks. For simple requests, you can provide just a single subtask. Do NOT use XML. Use the following exact headings:
 
 **Subtasks:**
 
@@ -68,7 +68,7 @@ Your response must begin with "**Relevant files:**", then list paths one under a
 
 These files contain the core greeting logic and module exports.
 
-If the user asks to implement a feature or perform a task, you MUST respond with a plan formatted strictly as a Markdown list of subtasks. Do NOT use XML. Use the following exact headings:
+If the task is complex and requires multiple logical steps, break it down into a plan formatted strictly as a Markdown list of subtasks. For simple requests, you can provide just a single subtask. Do NOT use XML. Use the following exact headings:
 
 **Subtasks:**
 
