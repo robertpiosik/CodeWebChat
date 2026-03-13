@@ -181,9 +181,7 @@ export const check_imported_files_command = (
       )
 
       if (valid_immediate.length == 0 && valid_recursive.length == 0) {
-        vscode.window.showInformationMessage(
-          'No imported files found to check in the workspace.'
-        )
+        vscode.window.showInformationMessage('No imported files found.')
         return
       }
 
