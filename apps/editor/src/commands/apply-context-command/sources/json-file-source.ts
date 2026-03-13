@@ -5,7 +5,10 @@ import { WorkspaceProvider } from '../../../context/providers/workspace/workspac
 import { SavedContext } from '@/types/context'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
-import { apply_saved_context } from '../helpers/applying'
+import {
+  resolve_context_paths,
+  select_context_paths
+} from '../helpers/applying'
 import {
   save_contexts_to_file,
   get_contexts_file_path,
@@ -96,7 +99,7 @@ export const handle_json_file_source = async (
     let name_to_highlight: string | undefined
 
     while (true) {
-      const create_items = () => {
+      const create_items = async () => {
         const items: (vscode.QuickPickItem & {
           context?: SavedContext
           buttons?: vscode.QuickInputButton[]
@@ -112,10 +115,18 @@ export const handle_json_file_source = async (
 
           const is_multi_root = workspace_folders.length > 1
 
+          const primary_workspace_root =
+            workspace_provider.get_workspace_roots()[0] || ''
+
           for (const context of file_contexts) {
+            const resolved_paths = await resolve_context_paths(
+              context,
+              primary_workspace_root,
+              workspace_provider
+            )
             const roots = context_to_roots.get(context.name) || []
-            let description = `${context.paths.length} path${
-              context.paths.length == 1 ? '' : 's'
+            let description = `${resolved_paths.length} file${
+              resolved_paths.length == 1 ? '' : 's'
             }`
 
             if (roots.length > 0 && (roots.length > 1 || is_multi_root)) {
@@ -141,9 +152,9 @@ export const handle_json_file_source = async (
 
       const quick_pick = vscode.window.createQuickPick<any>()
       quick_pick.title = t('command.apply-context.select-saved.title')
-      quick_pick.items = create_items()
       quick_pick.placeholder = t('command.apply-context.select-saved.file')
       quick_pick.buttons = [vscode.QuickInputButtons.Back, open_file_button]
+      quick_pick.items = await create_items()
 
       if (name_to_highlight) {
         const active_item = quick_pick.items.find(
@@ -429,13 +440,55 @@ export const handle_json_file_source = async (
       }
 
       if (selection.context) {
-        const primary_workspace_root =
-          workspace_provider.get_workspace_roots()[0]!
-        const result = await apply_saved_context(
+        const result = await select_context_paths(
           selection.context,
-          primary_workspace_root,
           workspace_provider,
-          extension_context
+          async (remaining_files: string[]) => {
+            const files_by_workspace = group_files_by_workspace(remaining_files)
+            const current_roots =
+              context_to_roots.get(selection.context.name) || []
+            const all_roots = new Set([
+              ...current_roots,
+              ...files_by_workspace.keys()
+            ])
+
+            for (const root of all_roots) {
+              const files = files_by_workspace.get(root) || []
+              const p = get_contexts_file_path(root)
+
+              if (files.length == 0 && !fs.existsSync(p)) continue
+
+              if (files.length > 0) {
+                const dir = path.dirname(p)
+                if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true })
+              }
+
+              let contexts = load_contexts_from_file(p)
+              contexts = contexts.filter(
+                (c) => c.name !== selection.context.name
+              )
+
+              if (files.length > 0) {
+                const condensed_paths = condense_paths(
+                  files,
+                  root,
+                  workspace_provider
+                )
+                const relative_paths = condensed_paths.map((p) =>
+                  p.replace(/\\/g, '/')
+                )
+                contexts.unshift({
+                  name: selection.context.name,
+                  paths: relative_paths
+                })
+              }
+              await save_contexts_to_file(contexts, p)
+            }
+
+            const reloaded = await load_and_merge_file_contexts()
+            file_contexts = reloaded.merged
+            context_to_roots = reloaded.context_to_roots
+          }
         )
         if (result === 'back') {
           continue
