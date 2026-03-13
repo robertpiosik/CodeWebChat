@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
   "description": "Fast and safe way to code with AI (CWC)",
-  "version": "1.885.0",
+  "version": "1.886.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
@@ -570,27 +570,27 @@
         {
           "command": "codeWebChat.searchFilesForContext",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@3.5"
+          "group": "navigation@4"
         },
         {
           "command": "codeWebChat.applyContext",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@4"
+          "group": "navigation@5"
         },
         {
           "command": "codeWebChat.duplicateWorkspace",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@5"
+          "group": "navigation@6"
         },
         {
           "command": "codeWebChat.newFile",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@6"
+          "group": "navigation@7"
         },
         {
           "command": "codeWebChat.newFolder",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@7"
+          "group": "navigation@8"
         },
         {
           "command": "codeWebChat.copyContext",
@@ -676,12 +676,12 @@
         {
           "command": "codeWebChat.checkImportedFiles",
           "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
-          "group": "2_modification@0.5"
+          "group": "2_modification@2"
         },
         {
           "command": "codeWebChat.referenceInPrompt",
           "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
-          "group": "2_modification@2"
+          "group": "2_modification@1"
         },
         {
           "command": "codeWebChat.revealInExplorer",
@@ -696,12 +696,12 @@
         {
           "command": "codeWebChat.openInIntegratedTerminal",
           "when": "view == codeWebChatViewWorkspace && (viewItem == workspaceRoot || viewItem == directory)",
-          "group": "1_modification@7"
+          "group": "1_modification@9"
         },
         {
           "command": "codeWebChat.removeFolderFromWorkspace",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == workspaceRoot || viewItem == contextWorkspaceRoot) && workspaceFolderCount > 1",
-          "group": "1_modification@8"
+          "group": "1_modification@10"
         },
         {
           "command": "codeWebChat.newFile",
@@ -726,7 +726,7 @@
         {
           "command": "codeWebChat.checkImportedFiles",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == file || viewItem == contextFile || viewItem == directory)",
-          "group": "1_modification@2.5"
+          "group": "1_modification@4"
         },
         {
           "command": "codeWebChat.referenceInPrompt",
@@ -736,22 +736,22 @@
         {
           "command": "codeWebChat.searchFilesForContextFromDirectory",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
-          "group": "1_modification@3.5"
+          "group": "1_modification@5"
         },
         {
           "command": "codeWebChat.findInFolder",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
-          "group": "1_modification@4"
+          "group": "1_modification@6"
         },
         {
           "command": "codeWebChat.revealInExplorer",
           "when": "view == codeWebChatViewWorkspace || view == codeWebChatViewContext",
-          "group": "1_modification@5"
+          "group": "1_modification@7"
         },
         {
           "command": "codeWebChat.setRanges",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && viewItem == file",
-          "group": "1_modification@6"
+          "group": "1_modification@8"
         }
       ]
     },
