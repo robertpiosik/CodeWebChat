@@ -14,6 +14,48 @@ export const check_imported_files_command = (
     async (item: FileItem) => {
       if (!item) return
 
+      const is_valid_uri = (uri_str: string): boolean => {
+        const uri = vscode.Uri.parse(uri_str)
+        const file_path = uri.fsPath
+        const workspace_root =
+          workspace_provider.get_workspace_root_for_file(file_path)
+        if (!workspace_root) return false
+        const relative_path = path.relative(workspace_root, file_path)
+        return (
+          !workspace_provider.is_ignored_by_patterns(file_path) &&
+          !workspace_provider.is_excluded(relative_path)
+        )
+      }
+
+      const get_all_files = async (uri: vscode.Uri): Promise<vscode.Uri[]> => {
+        try {
+          const stat = await vscode.workspace.fs.stat(uri)
+          if (stat.type & vscode.FileType.File) {
+            return [uri]
+          } else if (stat.type & vscode.FileType.Directory) {
+            const results: vscode.Uri[] = []
+            const entries = await vscode.workspace.fs.readDirectory(uri)
+            for (const [name, type] of entries) {
+              const child_uri = vscode.Uri.joinPath(uri, name)
+              if (!is_valid_uri(child_uri.toString())) continue
+              if (type & vscode.FileType.File) {
+                results.push(child_uri)
+              } else if (type & vscode.FileType.Directory) {
+                results.push(...(await get_all_files(child_uri)))
+              }
+            }
+            return results
+          }
+        } catch {}
+        return []
+      }
+
+      const starting_uris = await get_all_files(item.resourceUri)
+      if (starting_uris.length === 0) {
+        vscode.window.showInformationMessage('No valid files found to check.')
+        return
+      }
+
       const get_imports_for_uri = async (
         document_uri: vscode.Uri
       ): Promise<string[]> => {
@@ -90,36 +132,27 @@ export const check_imported_files_command = (
 
       const immediate_uris = new Set<string>()
       const recursive_uris = new Set<string>()
-      const visited_uris = new Set<string>([item.resourceUri.toString()])
-
-      const is_valid_uri = (uri_str: string): boolean => {
-        const uri = vscode.Uri.parse(uri_str)
-        const file_path = uri.fsPath
-        const workspace_root =
-          workspace_provider.get_workspace_root_for_file(file_path)
-        if (!workspace_root) return false
-        const relative_path = path.relative(workspace_root, file_path)
-        return (
-          !workspace_provider.is_ignored_by_patterns(file_path) &&
-          !workspace_provider.is_excluded(relative_path)
-        )
-      }
+      const visited_uris = new Set<string>(
+        starting_uris.map((u) => u.toString())
+      )
 
       await vscode.window.withProgress(
         {
-          location: vscode.ProgressLocation.Window,
-          title: 'Checking imported files...'
+          location: vscode.ProgressLocation.Notification,
+          title: 'Processing imports...'
         },
         async () => {
-          const immediate = await get_imports_for_uri(item.resourceUri)
           const queue: vscode.Uri[] = []
 
-          for (const uri_str of immediate) {
-            if (!visited_uris.has(uri_str)) {
-              visited_uris.add(uri_str)
-              if (is_valid_uri(uri_str)) {
-                immediate_uris.add(uri_str)
-                queue.push(vscode.Uri.parse(uri_str))
+          for (const start_uri of starting_uris) {
+            const immediate = await get_imports_for_uri(start_uri)
+            for (const uri_str of immediate) {
+              if (!visited_uris.has(uri_str)) {
+                visited_uris.add(uri_str)
+                if (is_valid_uri(uri_str)) {
+                  immediate_uris.add(uri_str)
+                  queue.push(vscode.Uri.parse(uri_str))
+                }
               }
             }
           }
