@@ -82,22 +82,17 @@ export const use_ghost_text = (params: {
               pre_caret_range.selectNodeContents(params.input_ref.current)
               pre_caret_range.setEnd(range.startContainer, range.startOffset)
               const text_before_cursor = pre_caret_range.toString()
-              const last_word_match = text_before_cursor.match(/[\S]+$/)
+              const last_word_match = text_before_cursor.match(
+                /[a-zA-Z_][a-zA-Z0-9_]*$/
+              )
 
               if (last_word_match) {
-                const last_word_with_prefix = last_word_match[0]
-                const word_start_match =
-                  last_word_with_prefix.match(/[a-zA-Z_]/)
-                if (word_start_match) {
-                  const last_word = last_word_with_prefix.substring(
-                    word_start_match.index ?? 0
-                  )
-                  if (last_word.length >= 2) {
-                    for (const id of identifiers) {
-                      if (id.startsWith(last_word) && id !== last_word) {
-                        potential_ghost_text = id.substring(last_word.length)
-                        break
-                      }
+                const last_word = last_word_match[0]
+                if (last_word.length >= 2) {
+                  for (const id of identifiers) {
+                    if (id.startsWith(last_word) && id !== last_word) {
+                      potential_ghost_text = id.substring(last_word.length)
+                      break
                     }
                   }
                 }
