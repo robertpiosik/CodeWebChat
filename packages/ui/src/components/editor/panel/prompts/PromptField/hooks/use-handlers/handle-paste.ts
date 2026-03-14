@@ -34,11 +34,16 @@ export const create_perform_paste =
     let text_to_insert = text
     let caret_offset_adjustment = 0
 
+    const is_file_in_context =
+      props.currently_open_file_path !== undefined &&
+      (props.context_file_paths ?? []).includes(props.currently_open_file_path)
+
     if (
       !refs.is_shift_pressed_ref.current &&
       props.current_selection &&
       text == props.current_selection.text &&
-      props.currently_open_file_path
+      props.currently_open_file_path &&
+      is_file_in_context
     ) {
       const { start_line, start_col, end_line, end_col } =
         props.current_selection
@@ -97,10 +102,15 @@ export const create_handle_paste =
       return
     }
 
+    const is_file_in_context =
+      props.currently_open_file_path !== undefined &&
+      (props.context_file_paths ?? []).includes(props.currently_open_file_path)
+
     const is_fragment_paste =
       props.current_selection &&
       text == props.current_selection.text &&
-      props.currently_open_file_path
+      props.currently_open_file_path &&
+      is_file_in_context
 
     const has_symbols =
       get_symbol_ranges({
