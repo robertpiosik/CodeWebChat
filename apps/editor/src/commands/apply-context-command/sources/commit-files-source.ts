@@ -151,6 +151,9 @@ export const handle_commit_files_source = async (
 
       // Inner loop for file selection
       while (true) {
+        const currently_checked = workspace_provider.get_checked_files()
+        const currently_checked_set = new Set(currently_checked)
+
         const file_items = await Promise.all(
           valid_files.map(async (f) => {
             const token_count = await workspace_provider.calculate_file_tokens(
@@ -165,7 +168,7 @@ export const handle_commit_files_source = async (
               description: display_dir
                 ? `${formatted_token_count} · ${display_dir}`
                 : formatted_token_count,
-              picked: true,
+              picked: currently_checked_set.has(f.absolute_path),
               file_path: f.absolute_path,
               token_count: token_count.total
             }
@@ -233,7 +236,6 @@ export const handle_commit_files_source = async (
         }
 
         const selected_paths = selected_files.map((item) => item.file_path)
-        const currently_checked = workspace_provider.get_checked_files()
         let paths_to_apply = selected_paths
         let should_continue_file_loop = false
 
