@@ -176,12 +176,6 @@ export const handle_commit_files_source = async (
           })
         )
 
-        const total_tokens = file_items.reduce(
-          (acc, item) => acc + item.token_count,
-          0
-        )
-        const formatted_total = display_token_count(total_tokens)
-
         const quick_pick_files = vscode.window.createQuickPick<any>()
         quick_pick_files.canSelectMany = true
         quick_pick_files.items = file_items
@@ -192,7 +186,18 @@ export const handle_commit_files_source = async (
             hash: selected_commit.hash.substring(0, 7)
           }
         )
-        quick_pick_files.placeholder = `${t('command.apply-context.commit.select-files')} (totalling ${formatted_total} tokens)`
+
+        const update_placeholder = () => {
+          const total = quick_pick_files.selectedItems.reduce(
+            (sum: number, item: any) => sum + item.token_count,
+            0
+          )
+          const total_text =
+            total > 0 ? ` (totalling ${display_token_count(total)} tokens)` : ''
+          quick_pick_files.placeholder = `${t('command.apply-context.commit.select-files')}${total_text}`
+        }
+        update_placeholder()
+        quick_pick_files.onDidChangeSelection(update_placeholder)
         quick_pick_files.buttons = [vscode.QuickInputButtons.Back]
         quick_pick_files.ignoreFocusOut = true
 

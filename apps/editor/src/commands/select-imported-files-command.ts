@@ -450,7 +450,9 @@ export const select_imported_files_command = (
           (sum, item) => sum + (item.tokens || 0),
           0
         )
-        quick_pick.placeholder = `Select imported files (totalling ${display_token_count(total)} tokens)`
+        const total_text =
+          total > 0 ? ` (totalling ${display_token_count(total)} tokens)` : ''
+        quick_pick.placeholder = `Select imported files${total_text}`
       }
       update_placeholder()
       quick_pick.onDidChangeSelection(update_placeholder)
