@@ -1,6 +1,6 @@
+import * as vscode from 'vscode'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { MODE } from '@/views/panel/types/main-view-mode'
-import * as vscode from 'vscode'
 import { LAST_SELECTED_SYMBOL_STATE_KEY } from '@/constants/state-keys'
 import {
   handle_selection_item,

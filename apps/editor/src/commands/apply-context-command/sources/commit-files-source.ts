@@ -20,10 +20,13 @@ export const handle_commit_files_source = async (
     }
 
     while (true) {
-      const log_output = execSync('git log -n 20 --pretty=format:"%H|%s|%ar"', {
-        cwd: repository.rootUri.fsPath,
-        encoding: 'utf-8'
-      })
+      const log_output = execSync(
+        'git log --since="6 months ago" --pretty=format:"%H|%s|%ar"',
+        {
+          cwd: repository.rootUri.fsPath,
+          encoding: 'utf-8'
+        }
+      )
         .toString()
         .trim()
 
