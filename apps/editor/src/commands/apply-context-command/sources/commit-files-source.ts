@@ -4,6 +4,7 @@ import * as fs from 'fs'
 import { execSync } from 'child_process'
 import { WorkspaceProvider } from '../../../context/providers/workspace/workspace-provider'
 import { LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY } from '../../../constants/state-keys'
+import { GIT_LOG_SINCE_DURATION } from '../../../constants/values'
 import { get_git_repository } from '@/utils/git-repository-utils'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
@@ -24,7 +25,7 @@ export const handle_commit_files_source = async (
 
     while (true) {
       const log_output = execSync(
-        'git log --since="6 months ago" --pretty=format:"%H|%s|%ar"',
+        `git log --since="${GIT_LOG_SINCE_DURATION}" --pretty=format:"%H|%s|%ar"`,
         {
           cwd: repository.rootUri.fsPath,
           encoding: 'utf-8'

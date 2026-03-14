@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import { execSync } from 'child_process'
 import { dictionary } from '@shared/constants/dictionary'
 import { LAST_SELECTED_REPOSITORY_IN_SYMBOLS_QUCK_PICK_STATE_KEY } from '@/constants/state-keys'
+import { GIT_LOG_SINCE_DURATION } from '@/constants/values'
 
 export const handle_commit_item = async (
   context: vscode.ExtensionContext,
@@ -107,7 +108,7 @@ export const handle_commit_item = async (
       }
 
       const log_output = execSync(
-        'git log --pretty=format:"%H%n%s%n%cr" -n 50',
+        `git log --pretty=format:"%H%n%s%n%cr" --since="${GIT_LOG_SINCE_DURATION}"`,
         {
           encoding: 'utf-8',
           cwd: selected_folder.uri.fsPath
