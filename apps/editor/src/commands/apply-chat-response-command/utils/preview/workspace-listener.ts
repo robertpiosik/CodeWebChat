@@ -98,6 +98,12 @@ export const setup_workspace_listeners = (params: {
 
   const text_document_change_listener =
     vscode.workspace.onDidChangeTextDocument(async (event) => {
+      if (
+        event.document.uri.scheme != 'file' &&
+        event.document.uri.scheme != 'untitled'
+      )
+        return
+
       const changed_doc_path = event.document.uri.fsPath
       const changed_file_in_preview = params.prepared_files.find(
         (pf) => pf.sanitized_path == changed_doc_path
@@ -130,7 +136,6 @@ export const setup_workspace_listeners = (params: {
         })
       } else {
         const doc = event.document
-        if (doc.uri.scheme != 'file') return
         const workspace_folder = vscode.workspace.getWorkspaceFolder(doc.uri)
         if (!workspace_folder) return
 
