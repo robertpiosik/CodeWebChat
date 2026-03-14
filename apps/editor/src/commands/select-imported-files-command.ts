@@ -86,11 +86,26 @@ export const select_imported_files_command = (
               ].includes(ext)
             ) {
               if (/\b(import|export|require)\b/.test(line)) {
+                in_import_block = true
+              }
+
+              if (in_import_block) {
                 const matches = [...line.matchAll(/["']([^"']+)["']/g)]
-                for (const match of matches) {
-                  positions_to_check.push(
-                    new vscode.Position(i, match.index! + 1)
-                  )
+                if (matches.length > 0) {
+                  for (const match of matches) {
+                    positions_to_check.push(
+                      new vscode.Position(i, match.index! + 1)
+                    )
+                  }
+                  in_import_block = false
+                } else if (
+                  !/\b(import|export|require)\b/.test(line) &&
+                  (/[;]/.test(line) ||
+                    /^\s*(const|let|var|class|function|interface|type|enum)\b/.test(
+                      line
+                    ))
+                ) {
+                  in_import_block = false
                 }
               }
             } else if (ext == '.py') {
@@ -306,15 +321,24 @@ export const select_imported_files_command = (
         },
         async () => {
           const queue: vscode.Uri[] = []
+          const index_queue: vscode.Uri[] = [...starting_uris]
 
-          for (const start_uri of starting_uris) {
-            const immediate = await get_imports_for_uri(start_uri)
-            for (const uri_str of immediate) {
+          while (index_queue.length > 0) {
+            const current_uri = index_queue.shift()!
+            const imports = await get_imports_for_uri(current_uri)
+            for (const uri_str of imports) {
               if (!visited_uris.has(uri_str)) {
                 visited_uris.add(uri_str)
                 if (is_valid_uri(uri_str)) {
                   immediate_uris.add(uri_str)
-                  queue.push(vscode.Uri.parse(uri_str))
+                  const parsed_uri = vscode.Uri.parse(uri_str)
+                  queue.push(parsed_uri)
+
+                  if (
+                    path.parse(parsed_uri.fsPath).name.toLowerCase() == 'index'
+                  ) {
+                    index_queue.push(parsed_uri)
+                  }
                 }
               }
             }
