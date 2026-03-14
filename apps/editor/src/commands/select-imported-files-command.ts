@@ -387,6 +387,7 @@ export const select_imported_files_command = (
       type ImportQuickPickItem = vscode.QuickPickItem & {
         uri?: vscode.Uri
         picked?: boolean
+        tokens?: number
       }
 
       const map_to_quick_pick = async (
@@ -414,6 +415,7 @@ export const select_imported_files_command = (
                 : formatted_token_count,
               picked: is_picked,
               uri: uri,
+              tokens: token_count.total,
               buttons: [open_file_button]
             }
           })
@@ -442,7 +444,17 @@ export const select_imported_files_command = (
       quick_pick.items = quick_pick_items
       quick_pick.selectedItems = quick_pick_items.filter((item) => item.picked)
       quick_pick.canSelectMany = true
-      quick_pick.placeholder = 'Select imported files'
+
+      const update_placeholder = () => {
+        const total = quick_pick.selectedItems.reduce(
+          (sum, item) => sum + (item.tokens || 0),
+          0
+        )
+        quick_pick.placeholder = `Select imported files (totalling ${display_token_count(total)} tokens)`
+      }
+      update_placeholder()
+      quick_pick.onDidChangeSelection(update_placeholder)
+
       quick_pick.title = 'Imported Files'
       quick_pick.ignoreFocusOut = true
       quick_pick.buttons = [close_button]
