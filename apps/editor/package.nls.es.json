@@ -29,7 +29,7 @@
   "codeWebChat.newFile.title": "Nuevo archivo...",
   "codeWebChat.rename.title": "Renombrar...",
   "codeWebChat.delete.title": "Eliminar",
-  "codeWebChat.checkImportedFiles.title": "Marcar archivos importados...",
+  "codeWebChat.selectImportedFiles.title": "Seleccionar archivos importados...",
   "codeWebChat.referenceInPrompt.title": "Referenciar en el prompt",
   "codeWebChat.revealInExplorer.title": "Mostrar en el Explorador",
   "codeWebChat.findInFolder.title": "Buscar en carpeta...",

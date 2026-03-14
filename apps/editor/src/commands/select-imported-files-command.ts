@@ -6,11 +6,11 @@ import {
 } from '../context/providers/workspace/workspace-provider'
 import { display_token_count } from '../utils/display-token-count'
 
-export const check_imported_files_command = (
+export const select_imported_files_command = (
   workspace_provider: WorkspaceProvider
 ) => {
   return vscode.commands.registerCommand(
-    'codeWebChat.checkImportedFiles',
+    'codeWebChat.selectImportedFiles',
     async (item: FileItem) => {
       if (!item) return
 
@@ -52,7 +52,7 @@ export const check_imported_files_command = (
 
       const starting_uris = await get_all_files(item.resourceUri)
       if (starting_uris.length === 0) {
-        vscode.window.showInformationMessage('No valid files found to check.')
+        vscode.window.showInformationMessage('No valid files found to select.')
         return
       }
 
@@ -255,7 +255,7 @@ export const check_imported_files_command = (
       quick_pick.items = quick_pick_items
       quick_pick.selectedItems = quick_pick_items.filter((item) => item.picked)
       quick_pick.canSelectMany = true
-      quick_pick.placeholder = 'Select imported files to check'
+      quick_pick.placeholder = 'Select imported files'
       quick_pick.title = 'Imported Files'
       quick_pick.ignoreFocusOut = true
       quick_pick.buttons = [close_button]

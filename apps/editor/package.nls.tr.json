@@ -29,7 +29,7 @@
   "codeWebChat.newFile.title": "Yeni Dosya...",
   "codeWebChat.rename.title": "Yeniden Adlandır...",
   "codeWebChat.delete.title": "Sil",
-  "codeWebChat.checkImportedFiles.title": "İçe Aktarılan Dosyaları Seç...",
+  "codeWebChat.selectImportedFiles.title": "İçe Aktarılan Dosyaları Seç...",
   "codeWebChat.referenceInPrompt.title": "İstemde Referans Göster",
   "codeWebChat.revealInExplorer.title": "Gezginde Göster",
   "codeWebChat.findInFolder.title": "Klasörde Bul...",

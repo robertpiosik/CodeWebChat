@@ -29,7 +29,7 @@
   "codeWebChat.newFile.title": "새 파일...",
   "codeWebChat.rename.title": "이름 바꾸기...",
   "codeWebChat.delete.title": "삭제",
-  "codeWebChat.checkImportedFiles.title": "가져온 파일 선택...",
+  "codeWebChat.selectImportedFiles.title": "가져온 파일 선택...",
   "codeWebChat.referenceInPrompt.title": "프롬프트에서 참조",
   "codeWebChat.revealInExplorer.title": "탐색기에서 표시",
   "codeWebChat.findInFolder.title": "폴더에서 찾기...",

@@ -29,7 +29,7 @@
   "codeWebChat.newFile.title": "新增檔案...",
   "codeWebChat.rename.title": "重新命名...",
   "codeWebChat.delete.title": "刪除",
-  "codeWebChat.checkImportedFiles.title": "選取匯入的檔案...",
+  "codeWebChat.selectImportedFiles.title": "選擇匯入的檔案...",
   "codeWebChat.referenceInPrompt.title": "在提示詞中參考",
   "codeWebChat.revealInExplorer.title": "在檔案總管中顯示",
   "codeWebChat.findInFolder.title": "在資料夾中尋找...",

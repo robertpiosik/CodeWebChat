@@ -29,7 +29,7 @@
   "codeWebChat.newFile.title": "Nový soubor...",
   "codeWebChat.rename.title": "Přejmenovat...",
   "codeWebChat.delete.title": "Odstranit",
-  "codeWebChat.checkImportedFiles.title": "Vybrat importované soubory...",
+  "codeWebChat.selectImportedFiles.title": "Vybrat importované soubory...",
   "codeWebChat.referenceInPrompt.title": "Odkázat v promptu",
   "codeWebChat.revealInExplorer.title": "Odkrýt v Průzkumníkovi",
   "codeWebChat.findInFolder.title": "Najít ve složce...",

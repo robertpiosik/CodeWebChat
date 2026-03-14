@@ -29,7 +29,7 @@
   "codeWebChat.newFile.title": "新しいファイル...",
   "codeWebChat.rename.title": "名前の変更...",
   "codeWebChat.delete.title": "削除",
-  "codeWebChat.checkImportedFiles.title": "インポートされたファイルを選択...",
+  "codeWebChat.selectImportedFiles.title": "インポートされたファイルを選択...",
   "codeWebChat.referenceInPrompt.title": "プロンプトで参照",
   "codeWebChat.revealInExplorer.title": "エクスプローラーで表示",
   "codeWebChat.findInFolder.title": "フォルダー内を検索...",

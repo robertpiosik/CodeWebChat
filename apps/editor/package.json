@@ -258,8 +258,8 @@
         "icon": "$(trash)"
       },
       {
-        "command": "codeWebChat.checkImportedFiles",
-        "title": "%codeWebChat.checkImportedFiles.title%"
+        "command": "codeWebChat.selectImportedFiles",
+        "title": "%codeWebChat.selectImportedFiles.title%"
       },
       {
         "command": "codeWebChat.referenceInPrompt",
@@ -524,7 +524,7 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.checkImportedFiles",
+          "command": "codeWebChat.selectImportedFiles",
           "when": "false"
         },
         {
@@ -674,7 +674,7 @@
           "group": "1_modification@2"
         },
         {
-          "command": "codeWebChat.checkImportedFiles",
+          "command": "codeWebChat.selectImportedFiles",
           "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
           "group": "2_modification@2"
         },
@@ -724,7 +724,7 @@
           "group": "1_creation@4"
         },
         {
-          "command": "codeWebChat.checkImportedFiles",
+          "command": "codeWebChat.selectImportedFiles",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == file || viewItem == contextFile || viewItem == directory)",
           "group": "1_modification@4"
         },

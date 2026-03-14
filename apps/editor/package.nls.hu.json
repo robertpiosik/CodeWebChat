@@ -29,7 +29,7 @@
   "codeWebChat.newFile.title": "Új fájl...",
   "codeWebChat.rename.title": "Átnevezés...",
   "codeWebChat.delete.title": "Törlés",
-  "codeWebChat.checkImportedFiles.title": "Importált fájlok kijelölése...",
+  "codeWebChat.selectImportedFiles.title": "Importált fájlok kiválasztása...",
   "codeWebChat.referenceInPrompt.title": "Hivatkozás a promptban",
   "codeWebChat.revealInExplorer.title": "Megjelenítés az Intézőben",
   "codeWebChat.findInFolder.title": "Keresés a mappában...",
