@@ -49,6 +49,7 @@ export const handle_commit_files_source = async (
       >()
       quick_pick.items = commits
       quick_pick.placeholder = t('command.apply-context.commit.select')
+      quick_pick.matchOnDetail = true
       quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
       const selected_commit = await new Promise<
