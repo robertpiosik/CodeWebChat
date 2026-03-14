@@ -57,11 +57,6 @@ export class ApiManager {
         is_chain_resolution_scheduled = true
         setTimeout(() => {
           chain_entry.resolve()
-
-          const current_entry = this.waiting_chain.get(params.endpoint_url)
-          if (current_entry && current_entry.resolve === resolve_current) {
-            this.waiting_chain.delete(params.endpoint_url)
-          }
         }, CHAIN_RESOLUTION_DELAY_MS)
       }
     }
@@ -157,10 +152,6 @@ export class ApiManager {
       // Unblock anyone waiting for this request if it was the one in the chain
       if (!is_chain_resolution_scheduled) {
         resolve_current()
-        const chain_entry = this.waiting_chain.get(params.endpoint_url)
-        if (chain_entry && chain_entry.resolve === resolve_current) {
-          this.waiting_chain.delete(params.endpoint_url)
-        }
       }
 
       this.panel_provider.send_message({
