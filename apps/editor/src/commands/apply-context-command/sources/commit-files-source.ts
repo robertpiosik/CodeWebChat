@@ -8,6 +8,7 @@ import { get_git_repository } from '@/utils/git-repository-utils'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
+import { display_token_count } from '@/utils/display-token-count'
 
 export const handle_commit_files_source = async (
   workspace_provider: WorkspaceProvider,
@@ -18,6 +19,8 @@ export const handle_commit_files_source = async (
     if (!repository) {
       return
     }
+
+    let last_selected_commit_hash: string | undefined
 
     while (true) {
       const log_output = execSync(
@@ -50,10 +53,20 @@ export const handle_commit_files_source = async (
       const quick_pick = vscode.window.createQuickPick<
         vscode.QuickPickItem & { hash: string }
       >()
+      quick_pick.title = t('command.apply-context.commit.title')
       quick_pick.items = commits
       quick_pick.placeholder = t('command.apply-context.commit.select')
       quick_pick.matchOnDetail = true
       quick_pick.buttons = [vscode.QuickInputButtons.Back]
+
+      if (last_selected_commit_hash) {
+        const active_item = commits.find(
+          (c) => c.hash === last_selected_commit_hash
+        )
+        if (active_item) {
+          quick_pick.activeItems = [active_item]
+        }
+      }
 
       const selected_commit = await new Promise<
         (vscode.QuickPickItem & { hash: string }) | 'back' | undefined
@@ -91,6 +104,8 @@ export const handle_commit_files_source = async (
       if (!selected_commit) {
         return
       }
+
+      last_selected_commit_hash = selected_commit.hash
 
       const files_output = execSync(
         `git show --name-only --pretty="" ${selected_commit.hash}`,
@@ -136,24 +151,85 @@ export const handle_commit_files_source = async (
 
       // Inner loop for file selection
       while (true) {
-        const file_items = valid_files.map((f) => ({
-          label: path.basename(f.relative_path),
-          description: path.dirname(f.relative_path),
-          picked: true,
-          file_path: f.absolute_path
-        }))
+        const file_items = await Promise.all(
+          valid_files.map(async (f) => {
+            const token_count = await workspace_provider.calculate_file_tokens(
+              f.absolute_path
+            )
+            const formatted_token_count = display_token_count(token_count.total)
+            const dir_name = path.dirname(f.relative_path)
+            const display_dir = dir_name == '.' ? '' : dir_name
 
-        const selected_files = await vscode.window.showQuickPick(file_items, {
-          canPickMany: true,
-          placeHolder: t('command.apply-context.commit.select-files'),
-          title: t('command.apply-context.commit.files-modified', {
-            hash: selected_commit.hash.substring(0, 7)
+            return {
+              label: path.basename(f.relative_path),
+              description: display_dir
+                ? `${formatted_token_count} · ${display_dir}`
+                : formatted_token_count,
+              picked: true,
+              file_path: f.absolute_path,
+              token_count: token_count.total
+            }
           })
-        })
+        )
+
+        const total_tokens = file_items.reduce(
+          (acc, item) => acc + item.token_count,
+          0
+        )
+        const formatted_total = display_token_count(total_tokens)
+
+        const quick_pick_files = vscode.window.createQuickPick<any>()
+        quick_pick_files.canSelectMany = true
+        quick_pick_files.items = file_items
+        quick_pick_files.selectedItems = file_items.filter((i) => i.picked)
+        quick_pick_files.title = t(
+          'command.apply-context.commit.files-modified',
+          {
+            hash: selected_commit.hash.substring(0, 7)
+          }
+        )
+        quick_pick_files.placeholder = `${t('command.apply-context.commit.select-files')} (totalling ${formatted_total} tokens)`
+        quick_pick_files.buttons = [vscode.QuickInputButtons.Back]
+        quick_pick_files.ignoreFocusOut = true
+
+        const selected_files = await new Promise<any[] | 'back' | undefined>(
+          (resolve) => {
+            let is_accepted = false
+            let did_trigger_back = false
+            const disposables: vscode.Disposable[] = []
+
+            disposables.push(
+              quick_pick_files.onDidTriggerButton((button) => {
+                if (button === vscode.QuickInputButtons.Back) {
+                  did_trigger_back = true
+                  resolve('back')
+                  quick_pick_files.hide()
+                }
+              }),
+              quick_pick_files.onDidAccept(() => {
+                is_accepted = true
+                resolve(Array.from(quick_pick_files.selectedItems))
+                quick_pick_files.hide()
+              }),
+              quick_pick_files.onDidHide(() => {
+                if (!is_accepted && !did_trigger_back) {
+                  resolve('back')
+                }
+                disposables.forEach((d) => d.dispose())
+                quick_pick_files.dispose()
+              })
+            )
+
+            quick_pick_files.show()
+          }
+        )
+
+        if (selected_files == 'back') {
+          break
+        }
 
         if (!selected_files || selected_files.length == 0) {
-          // User cancelled file selection (pressed ESC), go back to commit selection
-          break
+          return
         }
 
         const selected_paths = selected_files.map((item) => item.file_path)

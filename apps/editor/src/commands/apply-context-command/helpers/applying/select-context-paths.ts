@@ -65,7 +65,8 @@ export const select_context_paths = async (
               : formatted_token_count,
             picked: currently_checked_set.has(file_path),
             file_path,
-            buttons
+            buttons,
+            token_count: token_count.total
           }
         })
       )
@@ -73,11 +74,17 @@ export const select_context_paths = async (
 
     const quick_pick_items = await create_quick_pick_items(resolved_paths)
 
+    const total_tokens = quick_pick_items.reduce(
+      (acc, item) => acc + item.token_count,
+      0
+    )
+    const formatted_total = display_token_count(total_tokens)
+
     const list_quick_pick = vscode.window.createQuickPick<
-      vscode.QuickPickItem & { file_path: string }
+      vscode.QuickPickItem & { file_path: string; token_count: number }
     >()
     list_quick_pick.title = context.name
-    list_quick_pick.placeholder = 'Select files to apply to context'
+    list_quick_pick.placeholder = `Select files to apply to context (totalling ${formatted_total} tokens)`
     list_quick_pick.canSelectMany = true
     list_quick_pick.ignoreFocusOut = true
     list_quick_pick.items = quick_pick_items
@@ -85,7 +92,10 @@ export const select_context_paths = async (
     list_quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
     const list_selection = await new Promise<
-      | readonly (vscode.QuickPickItem & { file_path: string })[]
+      | readonly (vscode.QuickPickItem & {
+          file_path: string
+          token_count: number
+        })[]
       | 'back'
       | undefined
     >((resolve) => {
@@ -134,6 +144,12 @@ export const select_context_paths = async (
             (i) => i.picked
           )
 
+          const new_total = list_quick_pick.items.reduce(
+            (acc, item) => acc + item.token_count,
+            0
+          )
+          list_quick_pick.placeholder = `Select files to apply to context (totalling ${display_token_count(new_total)} tokens)`
+
           const choice = await vscode.window.showInformationMessage(
             'Removed from context.',
             'Undo'
@@ -163,6 +179,12 @@ export const select_context_paths = async (
             list_quick_pick.selectedItems = list_quick_pick.items.filter(
               (i) => i.picked
             )
+
+            const undo_total = list_quick_pick.items.reduce(
+              (acc, item) => acc + item.token_count,
+              0
+            )
+            list_quick_pick.placeholder = `Select files to apply to context (totalling ${display_token_count(undo_total)} tokens)`
           }
         }
       })

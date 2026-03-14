@@ -521,6 +521,24 @@ export const apply_context = {
     hu: 'Nem találhatók commitok a tárolóban.',
     bg: 'Няма намерени къмити в хранилището.'
   },
+  'command.apply-context.commit.title': {
+    en: 'Commits',
+    pl: 'Commity',
+    'zh-cn': '提交',
+    ja: 'コミット',
+    'zh-tw': '提交',
+    de: 'Commits',
+    es: 'Commits',
+    fr: 'Commits',
+    'pt-br': 'Commits',
+    ru: 'Коммиты',
+    ko: '커밋',
+    it: 'Commit',
+    tr: 'İşlemeler',
+    cs: 'Commity',
+    hu: 'Commitok',
+    bg: 'Къмити'
+  },
   'command.apply-context.commit.select': {
     en: 'Select a commit to load modified files from',
     pl: 'Wybierz commit, z którego załadować zmodyfikowane pliki',

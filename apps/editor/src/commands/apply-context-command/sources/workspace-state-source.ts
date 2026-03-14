@@ -16,6 +16,7 @@ import {
   save_contexts_for_workspace,
   load_and_merge_global_contexts
 } from '../helpers/saving'
+import { display_token_count } from '../../../utils/display-token-count'
 import { t } from '@/i18n'
 
 let active_deletion_timestamp: number | undefined
@@ -78,8 +79,20 @@ export const handle_workspace_state_source = async (
               primary_workspace_root,
               workspace_provider
             )
+
+            const token_counts = await Promise.all(
+              resolved_paths.map((p) =>
+                workspace_provider.calculate_file_tokens(p)
+              )
+            )
+            const total_tokens = token_counts.reduce(
+              (acc, tc) => acc + tc.total,
+              0
+            )
+            const formatted_tokens = display_token_count(total_tokens)
+
             const roots = context_to_roots.get(context.name) || []
-            let description = `${resolved_paths.length} file${
+            let description = `${formatted_tokens} · ${resolved_paths.length} file${
               resolved_paths.length == 1 ? '' : 's'
             }`
 
