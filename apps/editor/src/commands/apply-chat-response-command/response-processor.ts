@@ -5,10 +5,10 @@ import { OriginalFileState } from './types/original-file-state'
 import { ApiConfiguration } from '@shared/types/response-history-item'
 import { handle_restore_preview } from './handlers/restore-preview-handler'
 import {
-  parse_response,
   FileItem,
   DiffItem,
-  RelevantFilesItem
+  RelevantFilesItem,
+  ClipboardItem
 } from './utils/clipboard-parser'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
@@ -49,26 +49,27 @@ export type CommandArgs = {
   api_configuration?: ApiConfiguration
 }
 
-export const process_chat_response = async (
-  args: CommandArgs | undefined,
-  chat_response: string,
-  context: vscode.ExtensionContext,
-  panel_provider: PanelProvider,
+export const process_chat_response = async (params: {
+  args: CommandArgs | undefined
+  chat_response: string
+  clipboard_items: ClipboardItem[]
+  context: vscode.ExtensionContext
+  panel_provider: PanelProvider
   workspace_provider: WorkspaceProvider
-): Promise<PreviewData | null> => {
+}): Promise<PreviewData | null> => {
   const on_progress = (progress: number) => {
-    panel_provider.send_message({
+    params.panel_provider.send_message({
       command: 'SHOW_PROGRESS',
       title: t('common.progress.preparing-preview'),
       progress
     })
   }
 
-  if (args?.files_with_content) {
-    const result = await handle_restore_preview(args.files_with_content)
+  if (params.args?.files_with_content) {
+    const result = await handle_restore_preview(params.args.files_with_content)
     if (result.success && result.original_states) {
       const augmented_states = result.original_states.map((state) => {
-        const file_in_preview = args?.files_with_content!.find(
+        const file_in_preview = params.args?.files_with_content!.find(
           (f) =>
             f.file_path === state.file_path &&
             f.workspace_name === state.workspace_name
@@ -86,15 +87,15 @@ export const process_chat_response = async (
         }
       })
       update_undo_button_state({
-        context,
-        panel_provider,
+        context: params.context,
+        panel_provider: params.panel_provider,
         states: augmented_states,
-        applied_content: chat_response,
-        original_editor_state: args?.original_editor_state
+        applied_content: params.chat_response,
+        original_editor_state: params.args?.original_editor_state
       })
       return {
         original_states: augmented_states,
-        chat_response
+        chat_response: params.chat_response
       }
     }
     return null
@@ -103,20 +104,15 @@ export const process_chat_response = async (
   const is_single_root_folder_workspace =
     vscode.workspace.workspaceFolders?.length == 1
 
-  let clipboard_items = parse_response({
-    response: chat_response,
-    is_single_root_folder_workspace
-  })
-
-  if (clipboard_items.some((item) => item.type == 'relevant-files')) {
-    const relevant_files_item = clipboard_items.find(
+  if (params.clipboard_items.some((item) => item.type == 'relevant-files')) {
+    const relevant_files_item = params.clipboard_items.find(
       (item) => item.type == 'relevant-files'
     ) as RelevantFilesItem
 
     const current_checked_files =
-      workspace_provider.get_export_state().regular.checked_files
+      params.workspace_provider.get_export_state().regular.checked_files
 
-    const workspace_roots = workspace_provider.get_workspace_roots()
+    const workspace_roots = params.workspace_provider.get_workspace_roots()
     const all_paths_to_process = new Set<string>(relevant_files_item.file_paths)
 
     const files_for_modal: {
@@ -137,7 +133,7 @@ export const process_chat_response = async (
 
       if (absolute_path) {
         const count =
-          await workspace_provider.calculate_file_tokens(absolute_path)
+          await params.workspace_provider.calculate_file_tokens(absolute_path)
         files_for_modal.push({
           file_path: absolute_path,
           relative_path: rel_path,
@@ -150,20 +146,20 @@ export const process_chat_response = async (
       natural_sort(a.relative_path, b.relative_path)
     )
 
-    panel_provider.send_message({
+    params.panel_provider.send_message({
       command: 'SHOW_RELEVANT_FILES_MODAL',
       files: files_for_modal
     })
 
     const selected_files = await new Promise<string[] | undefined>(
       (resolve) => {
-        panel_provider.relevant_files_choice_resolver = resolve
+        params.panel_provider.relevant_files_choice_resolver = resolve
       }
     )
 
     if (selected_files) {
-      const shared_context_state = panel_provider.shared_context_state
-      const was_frf = workspace_provider.is_frf_mode
+      const shared_context_state = params.panel_provider.shared_context_state
+      const was_frf = params.workspace_provider.is_frf_mode
 
       if (was_frf) {
         shared_context_state.switch_context_state(false)
@@ -178,24 +174,24 @@ export const process_chat_response = async (
       const merged_files = Array.from(
         new Set([...filtered_current_files, ...selected_files])
       )
-      await workspace_provider.set_checked_files(merged_files)
+      await params.workspace_provider.set_checked_files(merged_files)
 
       if (was_frf) {
         shared_context_state.switch_context_state(true)
       }
 
-      panel_provider.send_message({
+      params.panel_provider.send_message({
         command: 'SHOW_AUTO_CLOSING_MODAL',
         title: t('command.apply-chat-response.relevant-files.success'),
         type: 'success'
       })
 
-      await panel_provider.switch_to_edit_context()
+      await params.panel_provider.switch_to_edit_context()
     }
 
     return null
-  } else if (clipboard_items.some((item) => item.type == 'diff')) {
-    const patches = clipboard_items.filter(
+  } else if (params.clipboard_items.some((item) => item.type == 'diff')) {
+    const patches = params.clipboard_items.filter(
       (item): item is DiffItem => item.type == 'diff'
     )
     const rename_map = new Map<string, string>()
@@ -279,11 +275,11 @@ export const process_chat_response = async (
       set_new_paths_in_original_states(all_original_states)
       await apply_file_relocations(all_original_states)
       update_undo_button_state({
-        context,
-        panel_provider,
+        context: params.context,
+        panel_provider: params.panel_provider,
         states: all_original_states,
-        applied_content: chat_response,
-        original_editor_state: args?.original_editor_state
+        applied_content: params.chat_response,
+        original_editor_state: params.args?.original_editor_state
       })
     }
 
@@ -310,14 +306,14 @@ export const process_chat_response = async (
       }
       return {
         original_states: all_original_states,
-        chat_response
+        chat_response: params.chat_response
       }
     }
 
     return null
   } else {
-    if (clipboard_items.some((item) => item.type == 'code-at-cursor')) {
-      const completion = clipboard_items.find(
+    if (params.clipboard_items.some((item) => item.type == 'code-at-cursor')) {
+      const completion = params.clipboard_items.find(
         (item) => item.type == 'code-at-cursor'
       )!
       const workspace_map = new Map<string, string>()
@@ -372,9 +368,9 @@ export const process_chat_response = async (
         completion.content +
         original_content.slice(position_offset)
 
-      if (!args) args = {}
-      if (!args.original_editor_state) {
-        args.original_editor_state = {
+      if (!params.args) params.args = {}
+      if (!params.args.original_editor_state) {
+        params.args.original_editor_state = {
           file_path: safe_path,
           position: {
             line: line_index,
@@ -383,7 +379,7 @@ export const process_chat_response = async (
         }
       }
 
-      clipboard_items = [
+      params.clipboard_items = [
         {
           type: 'file',
           file_path: completion.file_path,
@@ -393,11 +389,13 @@ export const process_chat_response = async (
       ]
     }
 
-    const files = clipboard_items.filter(
+    const files = params.clipboard_items.filter(
       (item): item is FileItem => item.type == 'file'
     )
+
     if (files.length == 0) {
       const editor = vscode.window.activeTextEditor
+
       if (editor) {
         const choice = await vscode.window.showWarningMessage(
           t('command.apply-chat-response.warning.no-code-blocks.title'),
@@ -419,13 +417,15 @@ export const process_chat_response = async (
             .asRelativePath(document.uri, !is_single_root_folder_workspace)
             .replace(/\\/g, '/')
 
-          const fake_chat_response = `\`\`\`\n// ${file_path_for_block}\n${chat_response}\n\`\`\``
+          const fake_chat_response = `\`\`\`\n// ${file_path_for_block}\n${params.chat_response}\n\`\`\``
 
-          const api_providers_manager = new ModelProvidersManager(context)
+          const api_providers_manager = new ModelProvidersManager(
+            params.context
+          )
           const config_result = await get_intelligent_update_config(
             api_providers_manager,
             false,
-            context
+            params.context
           )
 
           if (!config_result) {
@@ -433,7 +433,6 @@ export const process_chat_response = async (
           }
 
           const { provider, config: intelligent_update_config } = config_result
-
           const endpoint_url = provider.base_url
 
           const intelligent_update_states =
@@ -442,23 +441,23 @@ export const process_chat_response = async (
               api_key: provider.api_key,
               config: intelligent_update_config,
               chat_response: fake_chat_response,
-              context: context,
+              context: params.context,
               is_single_root_folder_workspace,
-              panel_provider
+              panel_provider: params.panel_provider
             })
 
           if (intelligent_update_states) {
             update_undo_button_state({
-              context,
-              panel_provider,
+              context: params.context,
+              panel_provider: params.panel_provider,
               states: intelligent_update_states,
-              applied_content: chat_response,
-              original_editor_state: args?.original_editor_state
+              applied_content: params.chat_response,
+              original_editor_state: params.args?.original_editor_state
             })
 
             return {
               original_states: intelligent_update_states,
-              chat_response
+              chat_response: params.chat_response
             }
           }
           return null
@@ -528,7 +527,11 @@ export const process_chat_response = async (
 
         failed_files.forEach((file) => {
           successful_states.push(
-            create_failed_file_state(file, default_workspace, workspace_map)
+            create_failed_file_state({
+              file,
+              default_workspace,
+              workspace_map
+            })
           )
         })
       }
@@ -558,7 +561,11 @@ export const process_chat_response = async (
 
         failed_files.forEach((file) => {
           successful_states.push(
-            create_failed_file_state(file, default_workspace, workspace_map)
+            create_failed_file_state({
+              file,
+              default_workspace,
+              workspace_map
+            })
           )
         })
       }
@@ -582,19 +589,23 @@ export const process_chat_response = async (
 
     if (operation_success && final_original_states) {
       update_undo_button_state({
-        context,
-        panel_provider,
+        context: params.context,
+        panel_provider: params.panel_provider,
         states: final_original_states,
-        applied_content: chat_response,
-        original_editor_state: args?.original_editor_state
+        applied_content: params.chat_response,
+        original_editor_state: params.args?.original_editor_state
       })
 
       return {
         original_states: final_original_states,
-        chat_response
+        chat_response: params.chat_response
       }
     } else {
-      update_undo_button_state({ context, panel_provider, states: null })
+      update_undo_button_state({
+        context: params.context,
+        panel_provider: params.panel_provider,
+        states: null
+      })
       Logger.info({
         function_name: 'process_chat_response',
         message: 'Operation concluded without success.'
@@ -613,16 +624,19 @@ export const process_chat_response = async (
   }
 }
 
-const create_failed_file_state = (
-  file: FileItem,
-  default_workspace: string,
+const create_failed_file_state = (params: {
+  file: FileItem
+  default_workspace: string
   workspace_map: Map<string, string>
-): OriginalFileState => {
-  let workspace_root = default_workspace
-  if (file.workspace_name && workspace_map.has(file.workspace_name)) {
-    workspace_root = workspace_map.get(file.workspace_name)!
+}): OriginalFileState => {
+  let workspace_root = params.default_workspace
+  if (
+    params.file.workspace_name &&
+    params.workspace_map.has(params.file.workspace_name)
+  ) {
+    workspace_root = params.workspace_map.get(params.file.workspace_name)!
   }
-  const safe_path = create_safe_path(workspace_root, file.file_path)
+  const safe_path = create_safe_path(workspace_root, params.file.file_path)
   let content = ''
 
   if (safe_path && fs.existsSync(safe_path)) {
@@ -632,10 +646,10 @@ const create_failed_file_state = (
   }
 
   return {
-    file_path: file.file_path,
-    workspace_name: file.workspace_name,
+    file_path: params.file.file_path,
+    workspace_name: params.file.workspace_name,
     content,
     apply_failed: true,
-    ai_content: file.content
+    ai_content: params.file.content
   }
 }

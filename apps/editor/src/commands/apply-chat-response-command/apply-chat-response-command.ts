@@ -176,13 +176,14 @@ export const apply_chat_response_command = (params: {
           })
         }
 
-        const preview_data = await process_chat_response(
+        const preview_data = await process_chat_response({
           args,
           chat_response,
-          params.context,
-          params.panel_provider,
-          params.workspace_provider
-        )
+          clipboard_items,
+          context: params.context,
+          panel_provider: params.panel_provider,
+          workspace_provider: params.workspace_provider
+        })
 
         params.panel_provider.send_message({
           command: 'HIDE_PROGRESS'
