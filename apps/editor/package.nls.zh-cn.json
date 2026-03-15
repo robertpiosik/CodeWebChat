@@ -41,6 +41,7 @@
   "codeWebChat.setRanges.title": "设置范围...",
   "codeWebChat.searchFilesForContext.title": "搜索上下文文件...",
   "codeWebChat.searchFilesForContextFromDirectory.title": "搜索上下文文件...",
+  "codeWebChat.findRelevantFiles.title": "查找相关文件...",
   "codeWebChat.checkReferencingFilesForContext.title": "选中引用上下文的文件",
   "codeWebChat.checkDefinitionFileForContext.title": "选中上下文的定义文件",
   "codeWebChat.openInIntegratedTerminal.title": "在集成终端中打开",

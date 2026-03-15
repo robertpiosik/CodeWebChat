@@ -41,6 +41,7 @@
   "codeWebChat.setRanges.title": "Establecer rangos...",
   "codeWebChat.searchFilesForContext.title": "Buscar archivos para el contexto...",
   "codeWebChat.searchFilesForContextFromDirectory.title": "Buscar archivos para el contexto...",
+  "codeWebChat.findRelevantFiles.title": "Encontrar archivos relevantes...",
   "codeWebChat.checkReferencingFilesForContext.title": "Marcar archivos que referencian para el contexto",
   "codeWebChat.checkDefinitionFileForContext.title": "Marcar archivo de definición para el contexto",
   "codeWebChat.openInIntegratedTerminal.title": "Abrir en terminal integrado",

@@ -41,6 +41,7 @@
   "codeWebChat.setRanges.title": "設定範圍...",
   "codeWebChat.searchFilesForContext.title": "為上下文搜尋檔案...",
   "codeWebChat.searchFilesForContextFromDirectory.title": "為上下文搜尋檔案...",
+  "codeWebChat.findRelevantFiles.title": "尋找相關檔案...",
   "codeWebChat.checkReferencingFilesForContext.title": "選取參考上下文的檔案",
   "codeWebChat.checkDefinitionFileForContext.title": "選取上下文的定義檔案",
   "codeWebChat.openInIntegratedTerminal.title": "在整合式終端機中開啟",

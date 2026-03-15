@@ -41,6 +41,7 @@
   "codeWebChat.setRanges.title": "Définir les plages...",
   "codeWebChat.searchFilesForContext.title": "Rechercher des fichiers pour le contexte...",
   "codeWebChat.searchFilesForContextFromDirectory.title": "Rechercher des fichiers pour le contexte...",
+  "codeWebChat.findRelevantFiles.title": "Trouver des fichiers pertinents...",
   "codeWebChat.checkReferencingFilesForContext.title": "Cocher les fichiers faisant référence au contexte",
   "codeWebChat.checkDefinitionFileForContext.title": "Cocher le fichier de définition pour le contexte",
   "codeWebChat.openInIntegratedTerminal.title": "Ouvrir dans le terminal intégré",

@@ -41,6 +41,7 @@
   "codeWebChat.setRanges.title": "範囲を設定...",
   "codeWebChat.searchFilesForContext.title": "コンテキストのファイルを検索...",
   "codeWebChat.searchFilesForContextFromDirectory.title": "コンテキストのファイルを検索...",
+  "codeWebChat.findRelevantFiles.title": "関連するファイルを検索...",
   "codeWebChat.checkReferencingFilesForContext.title": "コンテキストを参照しているファイルを選択",
   "codeWebChat.checkDefinitionFileForContext.title": "コンテキストの定義ファイルを選択",
   "codeWebChat.openInIntegratedTerminal.title": "統合ターミナルで開く",

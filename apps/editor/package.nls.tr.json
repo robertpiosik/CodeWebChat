@@ -41,6 +41,7 @@
   "codeWebChat.setRanges.title": "Aralıkları Ayarla...",
   "codeWebChat.searchFilesForContext.title": "Bağlam İçin Dosya Ara...",
   "codeWebChat.searchFilesForContextFromDirectory.title": "Bağlam İçin Dosya Ara...",
+  "codeWebChat.findRelevantFiles.title": "İlgili dosyaları bul...",
   "codeWebChat.checkReferencingFilesForContext.title": "Bağlama Referans Veren Dosyaları Seç",
   "codeWebChat.checkDefinitionFileForContext.title": "Bağlam İçin Tanım Dosyasını Seç",
   "codeWebChat.openInIntegratedTerminal.title": "Entegre Terminalde Aç",

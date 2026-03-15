@@ -18,17 +18,17 @@ import { build_user_content } from '../utils/build-user-content'
 import { RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY } from '@/constants/state-keys'
 import { display_token_count } from '../utils/display-token-count'
 import {
-  LAST_FIND_RELEVANT_FILES_IN_DIRECTORY_INSTRUCTIONS_STATE_KEY,
-  LAST_FIND_RELEVANT_FILES_IN_DIRECTORY_SHRINK_STATE_KEY
+  LAST_FIND_RELEVANT_FILES_QUERY_STATE_KEY,
+  LAST_FIND_RELEVANT_FILES_SHRINK_STATE_KEY
 } from '../constants/state-keys'
 import { shrink_file } from '../context/utils/shrink-file/shrink-file'
 
-export const find_relevant_files_in_directory_command = (
+export const find_relevant_files_command = (
   workspace_provider: WorkspaceProvider,
   extension_context: vscode.ExtensionContext
 ) => {
   return vscode.commands.registerCommand(
-    'codeWebChat.findRelevantFilesInDirectory',
+    'codeWebChat.findRelevantFiles',
     async (item?: any) => {
       let folder_path = item?.resourceUri?.fsPath
 
@@ -50,7 +50,7 @@ export const find_relevant_files_in_directory_command = (
 
       let initial_instructions =
         extension_context.workspaceState.get<string>(
-          LAST_FIND_RELEVANT_FILES_IN_DIRECTORY_INSTRUCTIONS_STATE_KEY
+          LAST_FIND_RELEVANT_FILES_QUERY_STATE_KEY
         ) || ''
 
       while (true) {
@@ -66,13 +66,13 @@ export const find_relevant_files_in_directory_command = (
         }
 
         await extension_context.workspaceState.update(
-          LAST_FIND_RELEVANT_FILES_IN_DIRECTORY_INSTRUCTIONS_STATE_KEY,
+          LAST_FIND_RELEVANT_FILES_QUERY_STATE_KEY,
           instructions
         )
         initial_instructions = instructions
 
         const should_shrink = extension_context.workspaceState.get<boolean>(
-          LAST_FIND_RELEVANT_FILES_IN_DIRECTORY_SHRINK_STATE_KEY,
+          LAST_FIND_RELEVANT_FILES_SHRINK_STATE_KEY,
           false
         )
 
@@ -187,7 +187,7 @@ export const find_relevant_files_in_directory_command = (
         }
 
         await extension_context.workspaceState.update(
-          LAST_FIND_RELEVANT_FILES_IN_DIRECTORY_SHRINK_STATE_KEY,
+          LAST_FIND_RELEVANT_FILES_SHRINK_STATE_KEY,
           shrink_result
         )
 
@@ -457,7 +457,7 @@ export const find_relevant_files_in_directory_command = (
         } catch (error) {
           if (!axios.isCancel(error)) {
             Logger.error({
-              function_name: 'find_relevant_files_in_directory_command',
+              function_name: 'find_relevant_files_command',
               message: 'Error finding relevant files',
               data: error
             })

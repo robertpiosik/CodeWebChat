@@ -41,6 +41,7 @@
   "codeWebChat.setRanges.title": "Imposta intervalli...",
   "codeWebChat.searchFilesForContext.title": "Cerca file per il contesto...",
   "codeWebChat.searchFilesForContextFromDirectory.title": "Cerca file per il contesto...",
+  "codeWebChat.findRelevantFiles.title": "Trova file rilevanti...",
   "codeWebChat.checkReferencingFilesForContext.title": "Seleziona i file che fanno riferimento al contesto",
   "codeWebChat.checkDefinitionFileForContext.title": "Seleziona il file di definizione per il contesto",
   "codeWebChat.openInIntegratedTerminal.title": "Apri nel terminale integrato",

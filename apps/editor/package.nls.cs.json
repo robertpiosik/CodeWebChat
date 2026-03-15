@@ -41,6 +41,7 @@
   "codeWebChat.setRanges.title": "Nastavit rozsahy...",
   "codeWebChat.searchFilesForContext.title": "Hledat soubory pro kontext...",
   "codeWebChat.searchFilesForContextFromDirectory.title": "Hledat soubory pro kontext...",
+  "codeWebChat.findRelevantFiles.title": "Najít relevantní soubory...",
   "codeWebChat.checkReferencingFilesForContext.title": "Vybrat odkazující soubory pro kontext",
   "codeWebChat.checkDefinitionFileForContext.title": "Vybrat soubor definice pro kontext",
   "codeWebChat.openInIntegratedTerminal.title": "Otevřít v integrovaném terminálu",

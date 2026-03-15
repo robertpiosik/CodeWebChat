@@ -332,8 +332,8 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.findRelevantFilesInDirectory",
-        "title": "Find relevant files",
+        "command": "codeWebChat.findRelevantFiles",
+        "title": "%codeWebChat.findRelevantFiles.title%",
         "category": "Code Web Chat"
       },
       {
@@ -517,7 +517,7 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.findRelevantFilesInDirectory",
+          "command": "codeWebChat.findRelevantFiles",
           "when": "false"
         },
         {
@@ -705,12 +705,12 @@
         {
           "command": "codeWebChat.openInIntegratedTerminal",
           "when": "view == codeWebChatViewWorkspace && (viewItem == workspaceRoot || viewItem == directory)",
-          "group": "1_modification@9"
+          "group": "1_modification@10"
         },
         {
           "command": "codeWebChat.removeFolderFromWorkspace",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == workspaceRoot || viewItem == contextWorkspaceRoot) && workspaceFolderCount > 1",
-          "group": "1_modification@10"
+          "group": "1_modification@11"
         },
         {
           "command": "codeWebChat.newFile",
@@ -748,24 +748,24 @@
           "group": "1_modification@5"
         },
         {
-          "command": "codeWebChat.findRelevantFilesInDirectory",
-          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
-          "group": "1_modification@5.1"
-        },
-        {
-          "command": "codeWebChat.findInFolder",
+          "command": "codeWebChat.findRelevantFiles",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
           "group": "1_modification@6"
         },
         {
+          "command": "codeWebChat.findInFolder",
+          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
+          "group": "1_modification@7"
+        },
+        {
           "command": "codeWebChat.revealInExplorer",
           "when": "view == codeWebChatViewWorkspace || view == codeWebChatViewContext",
-          "group": "1_modification@7"
+          "group": "1_modification@8"
         },
         {
           "command": "codeWebChat.setRanges",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && viewItem == file",
-          "group": "1_modification@8"
+          "group": "1_modification@9"
         }
       ]
     },
