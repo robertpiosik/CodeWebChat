@@ -22,6 +22,7 @@ import {
   LAST_FIND_RELEVANT_FILES_SHRINK_STATE_KEY
 } from '../constants/state-keys'
 import { shrink_file } from '../context/utils/shrink-file/shrink-file'
+import { t } from '@/i18n'
 
 export const find_relevant_files_command = (
   workspace_provider: WorkspaceProvider,
@@ -44,7 +45,9 @@ export const find_relevant_files_command = (
       }
 
       if (!folder_path) {
-        vscode.window.showErrorMessage('No folder selected.')
+        vscode.window.showErrorMessage(
+          t('command.find-relevant-files.error.no-folder-selected')
+        )
         return
       }
 
@@ -55,9 +58,9 @@ export const find_relevant_files_command = (
 
       while (true) {
         const instructions = await vscode.window.showInputBox({
-          title: 'Find Relevant Files',
-          prompt: 'Enter instructions to find relevant files',
-          placeHolder: 'e.g., changing password',
+          title: t('command.find-relevant-files.input.title'),
+          prompt: t('command.find-relevant-files.input.prompt'),
+          placeHolder: t('command.find-relevant-files.input.placeholder'),
           value: initial_instructions
         })
 
@@ -95,7 +98,7 @@ export const find_relevant_files_command = (
         await vscode.window.withProgress(
           {
             location: vscode.ProgressLocation.Window,
-            title: 'Analyzing directory...'
+            title: t('command.find-relevant-files.progress.analyzing')
           },
           async () => {
             for (const file_path of all_files) {
@@ -137,19 +140,21 @@ export const find_relevant_files_command = (
 
         const shrink_items: vscode.QuickPickItem[] = [
           {
-            label: 'Send files in full',
+            label: t('command.find-relevant-files.shrink.full'),
             description: `${display_token_count(full_tokens)} tokens`
           },
           {
-            label: 'Strip function bodies and comments',
+            label: t('command.find-relevant-files.shrink.strip'),
             description: `${display_token_count(shrink_tokens)} tokens`
           }
         ]
 
         const shrink_quick_pick = vscode.window.createQuickPick()
         shrink_quick_pick.items = shrink_items
-        shrink_quick_pick.title = 'Find Relevant Files'
-        shrink_quick_pick.placeholder = 'Decide whether files should be shrunk'
+        shrink_quick_pick.title = t('command.find-relevant-files.input.title')
+        shrink_quick_pick.placeholder = t(
+          'command.find-relevant-files.shrink.placeholder'
+        )
         shrink_quick_pick.activeItems = [
           should_shrink ? shrink_items[1] : shrink_items[0]
         ]
@@ -166,7 +171,7 @@ export const find_relevant_files_command = (
             shrink_quick_pick.onDidAccept(() => {
               resolve(
                 shrink_quick_pick.selectedItems[0].label ==
-                  'Strip function bodies and comments'
+                  t('command.find-relevant-files.shrink.strip')
               )
               shrink_quick_pick.hide()
             })
@@ -200,7 +205,7 @@ export const find_relevant_files_command = (
         if (configs.length === 0) {
           vscode.commands.executeCommand('codeWebChat.settings')
           vscode.window.showInformationMessage(
-            'No configurations found for Find Relevant Files.'
+            t('command.find-relevant-files.error.no-configs')
           )
           return
         }
@@ -225,7 +230,9 @@ export const find_relevant_files_command = (
           selected_config.provider_name
         )
         if (!provider) {
-          vscode.window.showErrorMessage('API Provider not found.')
+          vscode.window.showErrorMessage(
+            t('command.find-relevant-files.error.provider-not-found')
+          )
           return
         }
 
@@ -280,15 +287,19 @@ export const find_relevant_files_command = (
           const completion_result = await vscode.window.withProgress(
             {
               location: vscode.ProgressLocation.Notification,
-              title: 'Finding relevant files...',
+              title: t('command.find-relevant-files.progress.finding'),
               cancellable: true
             },
             async (progress, token) => {
               token.onCancellationRequested(() => {
-                cancel_token_source.cancel('User canceled')
+                cancel_token_source.cancel(
+                  t('command.find-relevant-files.cancel.user')
+                )
               })
 
-              progress.report({ message: 'Waiting for server...' })
+              progress.report({
+                message: t('common.progress.waiting-for-server')
+              })
 
               return await make_api_request({
                 endpoint_url: provider.base_url,
@@ -296,10 +307,10 @@ export const find_relevant_files_command = (
                 body,
                 cancellation_token: cancel_token_source.token,
                 on_chunk: () => {
-                  progress.report({ message: 'Receiving...' })
+                  progress.report({ message: t('common.progress.receiving') })
                 },
                 on_thinking_chunk: () => {
-                  progress.report({ message: 'Thinking...' })
+                  progress.report({ message: t('common.progress.thinking') })
                 }
               })
             }
@@ -320,7 +331,9 @@ export const find_relevant_files_command = (
             }
 
             if (extracted_files.length === 0) {
-              vscode.window.showInformationMessage('No relevant files found.')
+              vscode.window.showInformationMessage(
+                t('command.find-relevant-files.error.no-files-found')
+              )
               return
             }
 
@@ -336,7 +349,7 @@ export const find_relevant_files_command = (
 
             const open_file_button = {
               iconPath: new vscode.ThemeIcon('go-to-file'),
-              tooltip: 'Go to file'
+              tooltip: t('common.go-to-file')
             }
 
             const quick_pick_items = await Promise.all(
@@ -370,13 +383,15 @@ export const find_relevant_files_command = (
               currently_checked.includes(item.file_path)
             )
             quick_pick.canSelectMany = true
-            quick_pick.title = 'Search Results'
-            quick_pick.placeholder = 'Select files to add to context'
+            quick_pick.title = t('command.find-relevant-files.quick-pick.title')
+            quick_pick.placeholder = t(
+              'command.find-relevant-files.quick-pick.placeholder'
+            )
             quick_pick.ignoreFocusOut = true
 
             const close_button = {
               iconPath: new vscode.ThemeIcon('close'),
-              tooltip: 'Close'
+              tooltip: t('common.close')
             }
             quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
 
@@ -411,7 +426,9 @@ export const find_relevant_files_command = (
                     })
                   } catch (error) {
                     vscode.window.showErrorMessage(
-                      `Error opening file: ${String(error)}`
+                      t('command.find-relevant-files.error.opening-file', {
+                        error: String(error)
+                      })
                     )
                   }
                 }
@@ -449,7 +466,9 @@ export const find_relevant_files_command = (
               ).length
 
               vscode.window.showInformationMessage(
-                `Added ${newly_selected_count} file(s) to context.`
+                t('command.find-relevant-files.success.added', {
+                  count: newly_selected_count
+                })
               )
               break
             }
@@ -462,7 +481,7 @@ export const find_relevant_files_command = (
               data: error
             })
             vscode.window.showErrorMessage(
-              'Error finding relevant files. Check console.'
+              t('command.find-relevant-files.error.finding')
             )
           }
           break

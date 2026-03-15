@@ -13,6 +13,7 @@ import { new_file } from './new-file'
 import { new_folder } from './new-folder'
 import { rename } from './rename'
 import { rate } from './rate'
+import { find_relevant_files } from './find-relevant-files'
 
 export const commands = {
   ...checkpoints,
@@ -29,5 +30,6 @@ export const commands = {
   ...new_file,
   ...new_folder,
   ...rename,
-  ...rate
+  ...rate,
+  ...find_relevant_files
 }
