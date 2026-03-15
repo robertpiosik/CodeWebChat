@@ -445,6 +445,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         this.send_message({
           command: 'RESET_APPLY_BUTTON_TEMPORARY_DISABLED_STATE'
         })
+        handle_get_tasks(this)
       }
     })
 
