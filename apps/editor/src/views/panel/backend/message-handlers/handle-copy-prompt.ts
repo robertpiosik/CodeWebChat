@@ -158,7 +158,7 @@ export const handle_copy_prompt = async (params: {
       const instructions_to_use =
         config_find_relevant_files_instructions ||
         find_relevant_files_instructions
-      system_instructions_xml = `${instructions_to_use}\n${find_relevant_files_format_for_panel}`
+      system_instructions_xml = `${find_relevant_files_format_for_panel}\n${instructions_to_use}`
     }
 
     const text = context_text

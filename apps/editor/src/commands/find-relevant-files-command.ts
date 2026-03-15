@@ -56,13 +56,49 @@ export const find_relevant_files_command = (
           LAST_FIND_RELEVANT_FILES_QUERY_STATE_KEY
         ) || ''
 
+      const close_button = {
+        iconPath: new vscode.ThemeIcon('close'),
+        tooltip: t('common.close')
+      }
+
       while (true) {
-        const instructions = await vscode.window.showInputBox({
-          title: t('command.find-relevant-files.input.title'),
-          prompt: t('command.find-relevant-files.input.prompt'),
-          placeHolder: t('command.find-relevant-files.input.placeholder'),
-          value: initial_instructions
-        })
+        const input_box = vscode.window.createInputBox()
+        input_box.title = t('command.find-relevant-files.input.title')
+        input_box.prompt = t('command.find-relevant-files.input.prompt')
+        input_box.placeholder = t(
+          'command.find-relevant-files.input.placeholder'
+        )
+        input_box.value = initial_instructions
+        input_box.buttons = [close_button]
+
+        const instructions = await new Promise<string | undefined>(
+          (resolve) => {
+            let is_resolved = false
+            const disposables: vscode.Disposable[] = []
+
+            disposables.push(
+              input_box.onDidTriggerButton((button) => {
+                if (button === close_button) {
+                  resolve(undefined)
+                  input_box.hide()
+                }
+              }),
+              input_box.onDidAccept(() => {
+                is_resolved = true
+                resolve(input_box.value)
+                input_box.hide()
+              }),
+              input_box.onDidHide(() => {
+                if (!is_resolved) {
+                  resolve(undefined)
+                }
+                disposables.forEach((d) => d.dispose())
+                input_box.dispose()
+              })
+            )
+            input_box.show()
+          }
+        )
 
         if (!instructions) {
           return
@@ -252,7 +288,7 @@ export const find_relevant_files_command = (
           config_find_relevant_files_instructions ||
           find_relevant_files_instructions
 
-        const system_instructions_xml = `${instructions_to_use}\n${find_relevant_files_format}`
+        const system_instructions_xml = `${find_relevant_files_format}\n${instructions_to_use}`
         const part2 = `${system_instructions_xml}\n${instructions}`
 
         const user_content = build_user_content({
@@ -389,10 +425,6 @@ export const find_relevant_files_command = (
             )
             quick_pick.ignoreFocusOut = true
 
-            const close_button = {
-              iconPath: new vscode.ThemeIcon('close'),
-              tooltip: t('common.close')
-            }
             quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
 
             const selected = await new Promise<
@@ -443,6 +475,10 @@ export const find_relevant_files_command = (
 
             if (selected === 'back') {
               continue
+            }
+
+            if (!selected) {
+              return
             }
 
             if (selected) {
