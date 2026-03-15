@@ -395,12 +395,12 @@
           "group": "1_action@4"
         },
         {
-          "command": "codeWebChat.checkDefinitionFileForContext",
-          "group": "1_action@6"
-        },
-        {
           "command": "codeWebChat.checkReferencingFilesForContext",
           "group": "1_action@5"
+        },
+        {
+          "command": "codeWebChat.checkDefinitionFileForContext",
+          "group": "1_action@6"
         }
       ],
       "commandPalette": [
@@ -577,6 +577,11 @@
           "group": "navigation@2"
         },
         {
+          "command": "codeWebChat.copyContext",
+          "when": "view == codeWebChatViewWorkspace",
+          "group": "navigation@3"
+        },
+        {
           "command": "codeWebChat.searchFilesForContext",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@4"
@@ -600,11 +605,6 @@
           "command": "codeWebChat.newFolder",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@8"
-        },
-        {
-          "command": "codeWebChat.copyContext",
-          "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@3"
         },
         {
           "command": "codeWebChat.collapseWorkspaceFolders",
@@ -637,14 +637,14 @@
           "group": "navigation@5"
         },
         {
-          "command": "codeWebChat.openRepository",
-          "when": "view == codeWebChatView",
-          "group": "navigation@2"
-        },
-        {
           "command": "codeWebChat.documentation",
           "when": "view == codeWebChatView",
           "group": "navigation@1"
+        },
+        {
+          "command": "codeWebChat.openRepository",
+          "when": "view == codeWebChatView",
+          "group": "navigation@2"
         }
       ],
       "scm/title": [
@@ -683,34 +683,24 @@
           "group": "1_modification@2"
         },
         {
-          "command": "codeWebChat.selectImportedFiles",
-          "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
-          "group": "2_modification@2"
-        },
-        {
           "command": "codeWebChat.referenceInPrompt",
           "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
           "group": "2_modification@1"
         },
         {
-          "command": "codeWebChat.revealInExplorer",
+          "command": "codeWebChat.selectImportedFiles",
           "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
-          "group": "2_modification@3"
+          "group": "2_modification@2"
         },
         {
           "command": "codeWebChat.setRanges",
           "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
+          "group": "2_modification@3"
+        },
+        {
+          "command": "codeWebChat.revealInExplorer",
+          "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
           "group": "2_modification@4"
-        },
-        {
-          "command": "codeWebChat.openInIntegratedTerminal",
-          "when": "view == codeWebChatViewWorkspace && (viewItem == workspaceRoot || viewItem == directory)",
-          "group": "1_modification@10"
-        },
-        {
-          "command": "codeWebChat.removeFolderFromWorkspace",
-          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == workspaceRoot || viewItem == contextWorkspaceRoot) && workspaceFolderCount > 1",
-          "group": "1_modification@11"
         },
         {
           "command": "codeWebChat.newFile",
@@ -733,14 +723,14 @@
           "group": "1_creation@4"
         },
         {
-          "command": "codeWebChat.selectImportedFiles",
-          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == file || viewItem == contextFile || viewItem == directory)",
-          "group": "1_modification@4"
-        },
-        {
           "command": "codeWebChat.referenceInPrompt",
           "when": "view == codeWebChatViewWorkspace || view == codeWebChatViewContext",
           "group": "1_modification@3"
+        },
+        {
+          "command": "codeWebChat.selectImportedFiles",
+          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == file || viewItem == contextFile || viewItem == directory)",
+          "group": "1_modification@4"
         },
         {
           "command": "codeWebChat.searchFilesForContextFromDirectory",
@@ -753,19 +743,29 @@
           "group": "1_modification@6"
         },
         {
+          "command": "codeWebChat.setRanges",
+          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && viewItem == file",
+          "group": "1_modification@7"
+        },
+        {
+          "command": "codeWebChat.removeFolderFromWorkspace",
+          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == workspaceRoot || viewItem == contextWorkspaceRoot) && workspaceFolderCount > 1",
+          "group": "1_modification@8"
+        },
+        {
           "command": "codeWebChat.findInFolder",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
-          "group": "1_modification@7"
+          "group": "2_external@1"
         },
         {
           "command": "codeWebChat.revealInExplorer",
           "when": "view == codeWebChatViewWorkspace || view == codeWebChatViewContext",
-          "group": "1_modification@8"
+          "group": "2_external@2"
         },
         {
-          "command": "codeWebChat.setRanges",
-          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && viewItem == file",
-          "group": "1_modification@9"
+          "command": "codeWebChat.openInIntegratedTerminal",
+          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == workspaceRoot || viewItem == directory || viewItem == contextWorkspaceRoot || viewItem == contextDirectory)",
+          "group": "2_external@3"
         }
       ]
     },
