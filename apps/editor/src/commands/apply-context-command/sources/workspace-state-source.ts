@@ -32,7 +32,9 @@ export const handle_workspace_state_source = async (
     }
 
     let { merged: internal_contexts, context_to_roots } = refresh_contexts()
-    const LABEL_NEW_ENTRY = t('command.apply-context.new-entry.label')
+    const LABEL_SAVE_NEW_CONTEXT = t(
+      'command.apply-context.save-new-context.label'
+    )
 
     const sync_button = {
       iconPath: new vscode.ThemeIcon('sync'),
@@ -57,7 +59,7 @@ export const handle_workspace_state_source = async (
           index?: number
         })[] = []
 
-        items.push({ label: LABEL_NEW_ENTRY })
+        items.push({ label: LABEL_SAVE_NEW_CONTEXT })
 
         if (contexts.length > 0) {
           items.push({
@@ -152,7 +154,7 @@ export const handle_workspace_state_source = async (
               context?: SavedContext
             }
 
-            if (selectedItem.label === LABEL_NEW_ENTRY) {
+            if (selectedItem.label === LABEL_SAVE_NEW_CONTEXT) {
               const checked_files = workspace_provider.get_checked_files()
               if (checked_files.length == 0) {
                 active_dialog_count++

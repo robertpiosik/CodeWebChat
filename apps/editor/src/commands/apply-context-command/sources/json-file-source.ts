@@ -76,7 +76,9 @@ export const handle_json_file_source = async (
     let { merged: file_contexts, context_to_roots } =
       await load_and_merge_file_contexts()
     const workspace_folders = vscode.workspace.workspaceFolders || []
-    const LABEL_NEW_ENTRY = t('command.apply-context.new-entry.label')
+    const LABEL_SAVE_NEW_CONTEXT = t(
+      'command.apply-context.save-new-context.label'
+    )
 
     const sync_button = {
       iconPath: new vscode.ThemeIcon('sync'),
@@ -106,7 +108,7 @@ export const handle_json_file_source = async (
           buttons?: vscode.QuickInputButton[]
         })[] = []
 
-        items.push({ label: LABEL_NEW_ENTRY })
+        items.push({ label: LABEL_SAVE_NEW_CONTEXT })
 
         if (file_contexts.length > 0) {
           items.push({
@@ -396,7 +398,7 @@ export const handle_json_file_source = async (
         continue
       }
 
-      if (selection.label === LABEL_NEW_ENTRY) {
+      if (selection.label === LABEL_SAVE_NEW_CONTEXT) {
         const checked_files = workspace_provider.get_checked_files()
         if (checked_files.length == 0) {
           active_dialog_count++
