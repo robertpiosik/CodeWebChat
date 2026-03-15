@@ -18,20 +18,20 @@ import { FindRelevantFilesMessage } from '@/views/panel/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
 import {
   find_relevant_files_instructions,
-  find_relevant_files_format
+  find_relevant_files_format_for_panel
 } from '@/constants/instructions'
 import { build_user_content } from '@/utils/build-user-content'
 import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-symbols'
 
-const get_find_relevant_files_config = async (
-  api_providers_manager: ModelProvidersManager,
-  show_quick_pick: boolean = false,
-  context: vscode.ExtensionContext,
-  panel_provider: PanelProvider,
+const get_find_relevant_files_config = async (params: {
+  api_providers_manager: ModelProvidersManager
+  show_quick_pick?: boolean
+  context: vscode.ExtensionContext
+  panel_provider: PanelProvider
   config_id?: string
-): Promise<{ provider: Provider; config: ToolConfig } | undefined> => {
+}): Promise<{ provider: Provider; config: ToolConfig } | undefined> => {
   const find_relevant_files_configs =
-    await api_providers_manager.get_find_relevant_files_tool_configs()
+    await params.api_providers_manager.get_find_relevant_files_tool_configs()
 
   if (find_relevant_files_configs.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
@@ -43,32 +43,35 @@ const get_find_relevant_files_config = async (
 
   let selected_config: ToolConfig | null = null
 
-  if (config_id !== undefined) {
+  if (params.config_id !== undefined) {
     selected_config =
       find_relevant_files_configs.find(
-        (c) => get_tool_config_id(c) == config_id
+        (c) => get_tool_config_id(c) == params.config_id
       ) || null
     if (selected_config) {
       let recents =
-        context.workspaceState.get<string[]>(
+        params.context.workspaceState.get<string[]>(
           RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY
         ) || []
-      recents = [config_id, ...recents.filter((id) => id != config_id)]
-      context.workspaceState.update(
+      recents = [
+        params.config_id,
+        ...recents.filter((id) => id != params.config_id)
+      ]
+      params.context.workspaceState.update(
         RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY,
         recents
       )
 
-      if (panel_provider) {
-        panel_provider.send_message({
+      if (params.panel_provider) {
+        params.panel_provider.send_message({
           command: 'SELECTED_CONFIGURATION_CHANGED',
           prompt_type: 'find-relevant-files',
-          id: config_id
+          id: params.config_id
         })
       }
     }
-  } else if (!show_quick_pick) {
-    const recents = context.workspaceState.get<string[]>(
+  } else if (!params.show_quick_pick) {
+    const recents = params.context.workspaceState.get<string[]>(
       RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY
     )
     const last_selected_id = recents?.[0]
@@ -81,14 +84,14 @@ const get_find_relevant_files_config = async (
     }
   }
 
-  if (!selected_config || show_quick_pick) {
+  if (!selected_config || params.show_quick_pick) {
     type Item = vscode.QuickPickItem & {
       config?: ToolConfig
       id?: string
     }
     const create_items = async (): Promise<Item[]> => {
       const recent_ids =
-        context.workspaceState.get<string[]>(
+        params.context.workspaceState.get<string[]>(
           RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY
         ) || []
 
@@ -168,7 +171,7 @@ const get_find_relevant_files_config = async (
       }
     ]
 
-    const recents = context.workspaceState.get<string[]>(
+    const recents = params.context.workspaceState.get<string[]>(
       RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY
     )
     const last_selected_id = recents?.[0]
@@ -208,27 +211,27 @@ const get_find_relevant_files_config = async (
           }
 
           let recents =
-            context.workspaceState.get<string[]>(
+            params.context.workspaceState.get<string[]>(
               RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY
             ) || []
           recents = [
             selected.id!,
             ...recents.filter((id) => id !== selected.id)
           ]
-          context.workspaceState.update(
+          params.context.workspaceState.update(
             RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY,
             recents
           )
 
-          if (panel_provider) {
-            panel_provider.send_message({
+          if (params.panel_provider) {
+            params.panel_provider.send_message({
               command: 'SELECTED_CONFIGURATION_CHANGED',
               prompt_type: 'find-relevant-files',
               id: selected.id!
             })
           }
 
-          const provider = await api_providers_manager.get_provider(
+          const provider = await params.api_providers_manager.get_provider(
             selected.config.provider_name
           )
           if (!provider) {
@@ -257,7 +260,7 @@ const get_find_relevant_files_config = async (
     )
   }
 
-  const provider = await api_providers_manager.get_provider(
+  const provider = await params.api_providers_manager.get_provider(
     selected_config.provider_name
   )
 
@@ -334,13 +337,13 @@ export const handle_find_relevant_files = async (
   let should_show_quick_pick = message.use_quick_pick
 
   while (true) {
-    const config_result = await get_find_relevant_files_config(
+    const config_result = await get_find_relevant_files_config({
       api_providers_manager,
-      should_show_quick_pick,
-      panel_provider.context,
+      show_quick_pick: should_show_quick_pick,
+      context: panel_provider.context,
       panel_provider,
-      current_config_id
-    )
+      config_id: current_config_id
+    })
 
     if (!config_result) {
       return
@@ -359,7 +362,7 @@ export const handle_find_relevant_files = async (
     const instructions_to_use =
       config_find_relevant_files_instructions ||
       find_relevant_files_instructions
-    const system_instructions_xml = `${instructions_to_use}\n${find_relevant_files_format}`
+    const system_instructions_xml = `${instructions_to_use}\n${find_relevant_files_format_for_panel}`
 
     const part1 = `<files>\n${collected.other_files}`
     const part2 = `${collected.recent_files}</files>\n${skill_definitions}${system_instructions_xml}\n${processed_instructions}`

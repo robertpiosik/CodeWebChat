@@ -86,6 +86,11 @@ export const LAST_SELECTED_BROWSER_ID_STATE_KEY = 'last-selected-browser-id'
 export const LAST_SEARCH_FILES_FOR_CONTEXT_QUERY_STATE_KEY =
   'last-search-files-for-context-query'
 
+export const LAST_FIND_RELEVANT_FILES_IN_DIRECTORY_INSTRUCTIONS_STATE_KEY =
+  'last-find-relevant-files-in-directory-instructions'
+export const LAST_FIND_RELEVANT_FILES_IN_DIRECTORY_SHRINK_STATE_KEY =
+  'last-find-relevant-files-in-directory-shrink'
+
 export type DuplicateWorkspaceContext = {
   checked_files: string[]
   checked_files_timestamps: Record<string, number>

@@ -32,13 +32,13 @@ export const find_relevant_files_instructions =
   "Find all files building modules of the task's scope."
 
 export const find_relevant_files_format = `<system>
-Your response must begin with "**Relevant files:**", then list paths one under another. Don't send anything else. Example:
+Your response must contain paths of relevant files enclosed in "relevant-files" and "file-path" XML tags. Don't send anything else. Example:
 
-**Relevant files:**
-
-- \`src/index.ts\`
-- \`src/hello.ts\`
-- \`src/welcome.ts\`
+<relevant-files>
+<file-path>src/index.ts</file-path>
+<file-path>src/hello.ts</file-path>
+<file-path>src/welcome.ts</file-path>
+</relevant-files>
 </system>`
 
 export const find_relevant_files_format_for_panel = `<system>

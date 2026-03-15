@@ -4,7 +4,7 @@ import { FilesCollector } from '@/utils/files-collector'
 import {
   code_at_cursor_instructions_for_panel,
   find_relevant_files_instructions,
-  find_relevant_files_format
+  find_relevant_files_format_for_panel
 } from '@/constants/instructions'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import { MODE } from '@/views/panel/types/main-view-mode'
@@ -158,7 +158,7 @@ export const handle_copy_prompt = async (params: {
       const instructions_to_use =
         config_find_relevant_files_instructions ||
         find_relevant_files_instructions
-      system_instructions_xml = `${instructions_to_use}\n${find_relevant_files_format}`
+      system_instructions_xml = `${instructions_to_use}\n${find_relevant_files_format_for_panel}`
     }
 
     const text = context_text

@@ -269,8 +269,15 @@ export const search_files_for_context_commands = (
           selected_items as (vscode.QuickPickItem & { file_path: string })[]
         ).map((item) => item.file_path)
 
+        const unchecked_paths = matched_files.filter(
+          (file_path) => !selected_paths.includes(file_path)
+        )
+
         const paths_to_apply = [
-          ...new Set([...currently_checked, ...selected_paths])
+          ...new Set([
+            ...currently_checked.filter((p) => !unchecked_paths.includes(p)),
+            ...selected_paths
+          ])
         ]
 
         Logger.info({
