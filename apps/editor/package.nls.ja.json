@@ -7,7 +7,7 @@
   "codeWebChat.redoContextSelection.title": "コンテキスト選択をやり直す",
   "codeWebChat.duplicateWorkspace.title": "新しいウィンドウでワークスペースを複製",
   "codeWebChat.copyContextOpenEditors.title": "開いているエディターのコンテキストをコピー",
-  "codeWebChat.rate.title": "評価",
+  "codeWebChat.documentation.title": "ドキュメント",
   "codeWebChat.openRepository.title": "GitHubでスターをつける",
   "codeWebChat.checkAll.title": "すべて選択",
   "codeWebChat.clearChecks.title": "選択をクリア",

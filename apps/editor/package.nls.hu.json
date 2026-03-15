@@ -7,7 +7,7 @@
   "codeWebChat.redoContextSelection.title": "Kontextus kiválasztásának újraismétlése",
   "codeWebChat.duplicateWorkspace.title": "Munkaterület duplikálása új ablakban",
   "codeWebChat.copyContextOpenEditors.title": "Nyitott szerkesztők kontextusának másolása",
-  "codeWebChat.rate.title": "Értékelés",
+  "codeWebChat.documentation.title": "Dokumentáció",
   "codeWebChat.openRepository.title": "Csillagozás a GitHubon",
   "codeWebChat.checkAll.title": "Összes kijelölése",
   "codeWebChat.clearChecks.title": "Kijelölések törlése",

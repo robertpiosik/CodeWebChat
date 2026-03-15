@@ -7,7 +7,7 @@
   "codeWebChat.redoContextSelection.title": "重做上下文选择",
   "codeWebChat.duplicateWorkspace.title": "在新窗口中复制工作区",
   "codeWebChat.copyContextOpenEditors.title": "复制打开的编辑器的上下文",
-  "codeWebChat.rate.title": "评分",
+  "codeWebChat.documentation.title": "文档",
   "codeWebChat.openRepository.title": "在 GitHub 上点赞 (Star)",
   "codeWebChat.checkAll.title": "全选",
   "codeWebChat.clearChecks.title": "清除选中",

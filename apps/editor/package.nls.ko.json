@@ -7,7 +7,7 @@
   "codeWebChat.redoContextSelection.title": "컨텍스트 선택 다시 실행",
   "codeWebChat.duplicateWorkspace.title": "새 창에서 작업 영역 복제",
   "codeWebChat.copyContextOpenEditors.title": "열린 편집기의 컨텍스트 복사",
-  "codeWebChat.rate.title": "평가하기",
+  "codeWebChat.documentation.title": "문서",
   "codeWebChat.openRepository.title": "GitHub에서 별표 주기",
   "codeWebChat.checkAll.title": "모두 선택",
   "codeWebChat.clearChecks.title": "선택 취소",

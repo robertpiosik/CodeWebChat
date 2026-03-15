@@ -124,10 +124,10 @@
         "icon": "$(copy)"
       },
       {
-        "command": "codeWebChat.rate",
-        "title": "%codeWebChat.rate.title%",
+        "command": "codeWebChat.documentation",
+        "title": "%codeWebChat.documentation.title%",
         "category": "Code Web Chat",
-        "icon": "$(star-empty)"
+        "icon": "$(book)"
       },
       {
         "command": "codeWebChat.openRepository",
@@ -492,7 +492,7 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.rate",
+          "command": "codeWebChat.documentation",
           "when": "false"
         },
         {
@@ -630,10 +630,10 @@
         {
           "command": "codeWebChat.openRepository",
           "when": "view == codeWebChatView",
-          "group": "navigation@1"
+          "group": "navigation@2"
         },
         {
-          "command": "codeWebChat.rate",
+          "command": "codeWebChat.documentation",
           "when": "view == codeWebChatView",
           "group": "navigation@1"
         }
