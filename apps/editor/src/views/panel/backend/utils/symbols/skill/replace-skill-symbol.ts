@@ -4,7 +4,7 @@ import { Logger } from '@shared/utils/logger'
 import {
   agents,
   discover_skills
-} from '../message-handlers/handle-hash-sign-quick-pick/symbols/skill-symbol'
+} from '../../../message-handlers/handle-hash-sign-quick-pick/symbols/skill-symbol'
 
 export const replace_skill_symbol = async (params: {
   instruction: string

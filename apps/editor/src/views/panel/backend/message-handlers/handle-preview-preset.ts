@@ -2,18 +2,7 @@ import * as vscode from 'vscode'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { PreviewPresetMessage } from '@/views/panel/types/messages'
 import { FilesCollector } from '@/utils/files-collector'
-import { replace_selection_symbol } from '@/views/panel/backend/utils/replace-selection-symbol'
-import { replace_saved_context_symbol } from '@/views/panel/backend/utils/replace-saved-context-symbol'
-import {
-  replace_changes_symbol,
-  replace_context_at_commit_symbol,
-  replace_commit_symbol
-} from '@/views/panel/backend/utils/replace-git-symbols'
 import { Preset } from '@shared/types/preset'
-import { replace_skill_symbol } from '@/views/panel/backend/utils/replace-skill-symbol'
-import { replace_image_symbol } from '@/views/panel/backend/utils/replace-image-symbol'
-import { replace_pasted_text_symbol } from '../utils/replace-pasted-text-symbol'
-import { replace_fragment_symbol } from '../utils/replace-fragment-symbol'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import { dictionary } from '@shared/constants/dictionary'
 import {
@@ -22,6 +11,7 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER,
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
+import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-symbols'
 
 export const handle_preview_preset = async (
   panel_provider: PanelProvider,
@@ -61,75 +51,15 @@ export const handle_preview_preset = async (
     const system_instructions =
       config.get<string>('chatCodeCompletionsInstructions') || ''
 
-    let processed_completion_instructions = current_instructions
-    let skill_definitions = ''
-
-    if (processed_completion_instructions.includes('#Selection')) {
-      processed_completion_instructions = replace_selection_symbol(
-        processed_completion_instructions
-      )
-    }
-
-    if (processed_completion_instructions.includes('#Changes(')) {
-      const result = await replace_changes_symbol({
-        instruction: processed_completion_instructions
-      })
-      processed_completion_instructions = result.instruction
-      skill_definitions += result.changes_definitions
-    }
-
-    if (processed_completion_instructions.includes('#Commit(')) {
-      const result = await replace_commit_symbol({
-        instruction: processed_completion_instructions
-      })
-      processed_completion_instructions = result.instruction
-      skill_definitions += result.commit_definitions
-    }
-
-    if (processed_completion_instructions.includes('#ContextAtCommit(')) {
-      processed_completion_instructions =
-        await replace_context_at_commit_symbol({
-          instruction: processed_completion_instructions,
-          workspace_provider: panel_provider.workspace_provider
-        })
-    }
-
-    if (processed_completion_instructions.includes('#SavedContext(')) {
-      const result = await replace_saved_context_symbol({
-        instruction: processed_completion_instructions,
-        context: panel_provider.context,
-        workspace_provider: panel_provider.workspace_provider
-      })
-      processed_completion_instructions = result.instruction
-      skill_definitions += result.context_definitions
-    }
-
-    if (processed_completion_instructions.includes('#Skill(')) {
-      const result = await replace_skill_symbol({
-        instruction: processed_completion_instructions
-      })
-      processed_completion_instructions = result.instruction
-      skill_definitions += result.skill_definitions
-    }
-
-    if (processed_completion_instructions.includes('#Image(')) {
-      processed_completion_instructions = await replace_image_symbol({
-        instruction: processed_completion_instructions,
-        remove: true
-      })
-    }
-
-    if (processed_completion_instructions.includes('#PastedText(')) {
-      processed_completion_instructions = await replace_pasted_text_symbol({
-        instruction: processed_completion_instructions
-      })
-    }
-
-    if (processed_completion_instructions.includes('<fragment')) {
-      processed_completion_instructions = replace_fragment_symbol(
-        processed_completion_instructions
-      )
-    }
+    const {
+      instruction: processed_completion_instructions,
+      skill_definitions
+    } = await replace_symbols({
+      instruction: current_instructions,
+      context: panel_provider.context,
+      workspace_provider: panel_provider.workspace_provider,
+      remove_images: true
+    })
 
     const missing_text_tag = processed_completion_instructions
       ? `<missing_text>${processed_completion_instructions}</missing_text>`
@@ -137,7 +67,7 @@ export const handle_preview_preset = async (
 
     text_to_send = `<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}${missing_text_tag}${text_after_cursor}\n]]>\n</file>\n</files>\n${skill_definitions}${system_instructions}`
   } else if (panel_provider.web_prompt_type != 'code-at-cursor') {
-    let instructions = apply_preset_affixes_to_instruction({
+    const instructions = apply_preset_affixes_to_instruction({
       instruction: current_instructions,
       preset_name: message.preset.name!,
       presets_config_key: panel_provider.get_presets_config_key(),
@@ -147,82 +77,19 @@ export const handle_preview_preset = async (
       }
     })
 
-    const has_selection =
-      !!active_editor &&
-      !active_editor.selection.isEmpty &&
-      instructions.includes('#Selection')
-
     const collected =
       panel_provider.web_prompt_type != 'no-context'
         ? await files_collector.collect_files({})
         : { other_files: '', recent_files: '' }
     const context_text = collected.other_files + collected.recent_files
 
-    if (has_selection) {
-      instructions = replace_selection_symbol(instructions)
-    }
-
-    let processed_instructions = instructions
-    let skill_definitions = ''
-
-    if (processed_instructions.includes('#Changes(')) {
-      const result = await replace_changes_symbol({
-        instruction: processed_instructions
-      })
-      processed_instructions = result.instruction
-      skill_definitions += result.changes_definitions
-    }
-
-    if (processed_instructions.includes('#Commit(')) {
-      const result = await replace_commit_symbol({
-        instruction: processed_instructions
-      })
-      processed_instructions = result.instruction
-      skill_definitions += result.commit_definitions
-    }
-
-    if (processed_instructions.includes('#ContextAtCommit(')) {
-      processed_instructions = await replace_context_at_commit_symbol({
-        instruction: processed_instructions,
-        workspace_provider: panel_provider.workspace_provider
-      })
-    }
-
-    if (processed_instructions.includes('#SavedContext(')) {
-      const result = await replace_saved_context_symbol({
-        instruction: processed_instructions,
+    const { instruction: processed_instructions, skill_definitions } =
+      await replace_symbols({
+        instruction: instructions,
         context: panel_provider.context,
-        workspace_provider: panel_provider.workspace_provider
+        workspace_provider: panel_provider.workspace_provider,
+        remove_images: true
       })
-      processed_instructions = result.instruction
-      skill_definitions += result.context_definitions
-    }
-
-    if (processed_instructions.includes('#Skill(')) {
-      const result = await replace_skill_symbol({
-        instruction: processed_instructions
-      })
-      processed_instructions = result.instruction
-      skill_definitions += result.skill_definitions
-    }
-
-    if (processed_instructions.includes('#Image(')) {
-      processed_instructions = await replace_image_symbol({
-        instruction: processed_instructions,
-        remove: true
-      })
-    }
-
-    if (processed_instructions.includes('#PastedText(')) {
-      processed_instructions = await replace_pasted_text_symbol({
-        instruction: processed_instructions
-      })
-    }
-
-    // New fragment handling for non‑cursor prompts
-    if (processed_instructions.includes('<fragment')) {
-      processed_instructions = replace_fragment_symbol(processed_instructions)
-    }
 
     let system_instructions_xml = ''
     if (panel_provider.web_prompt_type == 'edit-context') {

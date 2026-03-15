@@ -13,19 +13,7 @@ import {
 } from '@/constants/state-keys'
 import { EditFormat } from '@shared/types/edit-format'
 import { ToolConfig } from '@/services/model-providers-manager'
-import {
-  replace_changes_symbol,
-  replace_commit_symbol,
-  replace_context_at_commit_symbol
-} from '@/views/panel/backend/utils/replace-git-symbols'
-import { replace_saved_context_symbol } from '@/views/panel/backend/utils/replace-saved-context-symbol'
-import { replace_selection_symbol } from '@/views/panel/backend/utils/replace-selection-symbol'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { replace_skill_symbol } from '@/views/panel/backend/utils/replace-skill-symbol'
-import { replace_image_symbol } from '@/views/panel/backend/utils/replace-image-symbol'
-import { replace_pasted_text_symbol } from '../utils/replace-pasted-text-symbol'
-import { replace_website_symbol } from '../utils/replace-website-symbol'
-import { replace_fragment_symbol } from '../utils/replace-fragment-symbol'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { EditContextMessage } from '@/views/panel/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
@@ -37,6 +25,7 @@ import {
 } from '@/constants/edit-format-instructions'
 import { default_system_instructions } from '@shared/constants/default-system-instructions'
 import { build_user_content } from '@/utils/build-user-content'
+import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-symbols'
 
 const get_edit_context_config = async (params: {
   api_providers_manager: ModelProvidersManager
@@ -311,14 +300,12 @@ export const handle_edit_context = async (
     panel_provider.context
   )
 
-  const editor = vscode.window.activeTextEditor
-
   const files_collector = new FilesCollector({
     workspace_provider: panel_provider.workspace_provider,
     open_editors_provider: panel_provider.open_editors_provider
   })
 
-  let instructions = panel_provider.current_edit_context_instruction
+  const instructions = panel_provider.current_edit_context_instruction
 
   if (!instructions) {
     panel_provider.send_message({
@@ -329,78 +316,12 @@ export const handle_edit_context = async (
     return
   }
 
-  const has_selection =
-    !!editor && !editor.selection.isEmpty && instructions.includes('#Selection')
-
-  if (has_selection) {
-    instructions = replace_selection_symbol(instructions)
-  }
-
-  let processed_instructions = instructions
-  let skill_definitions = ''
-
-  if (processed_instructions.includes('#Changes(')) {
-    const result = await replace_changes_symbol({
-      instruction: processed_instructions
-    })
-    processed_instructions = result.instruction
-    skill_definitions += result.changes_definitions
-  }
-
-  if (processed_instructions.includes('#Commit(')) {
-    const result = await replace_commit_symbol({
-      instruction: processed_instructions
-    })
-    processed_instructions = result.instruction
-    skill_definitions += result.commit_definitions
-  }
-
-  if (processed_instructions.includes('#ContextAtCommit(')) {
-    processed_instructions = await replace_context_at_commit_symbol({
-      instruction: processed_instructions,
-      workspace_provider: panel_provider.workspace_provider
-    })
-  }
-
-  if (processed_instructions.includes('#SavedContext(')) {
-    const result = await replace_saved_context_symbol({
-      instruction: processed_instructions,
+  const { instruction: processed_instructions, skill_definitions } =
+    await replace_symbols({
+      instruction: instructions,
       context: panel_provider.context,
       workspace_provider: panel_provider.workspace_provider
     })
-    processed_instructions = result.instruction
-    skill_definitions += result.context_definitions
-  }
-
-  if (processed_instructions.includes('#Skill(')) {
-    const result = await replace_skill_symbol({
-      instruction: processed_instructions
-    })
-    processed_instructions = result.instruction
-    skill_definitions += result.skill_definitions
-  }
-
-  if (processed_instructions.includes('#Image(')) {
-    processed_instructions = await replace_image_symbol({
-      instruction: processed_instructions
-    })
-  }
-
-  if (processed_instructions.includes('#PastedText(')) {
-    processed_instructions = await replace_pasted_text_symbol({
-      instruction: processed_instructions
-    })
-  }
-
-  if (processed_instructions.includes('#Website(')) {
-    processed_instructions = await replace_website_symbol({
-      instruction: processed_instructions
-    })
-  }
-
-  if (processed_instructions.includes('<fragment')) {
-    processed_instructions = replace_fragment_symbol(processed_instructions)
-  }
 
   panel_provider.api_prompt_type == 'find-relevant-files'
   const collected = await files_collector.collect_files({})

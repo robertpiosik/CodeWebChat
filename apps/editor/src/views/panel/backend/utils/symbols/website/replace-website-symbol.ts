@@ -2,7 +2,7 @@ import * as os from 'os'
 import * as path from 'path'
 import * as fs from 'fs'
 import * as crypto from 'crypto'
-import { fetch_and_save_website } from './website-fetcher'
+import { fetch_and_save_website } from '../../website-fetcher'
 
 export const replace_website_symbol = async (params: {
   instruction: string
