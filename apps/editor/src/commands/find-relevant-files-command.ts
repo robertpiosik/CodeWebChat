@@ -431,16 +431,8 @@ export const find_relevant_files_command = (
             }
             xml_files += `</files>`
 
-            const config_settings =
-              vscode.workspace.getConfiguration('codeWebChat')
-            const config_find_relevant_files_instructions =
-              config_settings.get<string>('findRelevantFilesInstructions')
-            const instructions_to_use =
-              config_find_relevant_files_instructions ||
-              find_relevant_files_instructions
-
-            const system_instructions_xml = `${find_relevant_files_format}\n${instructions_to_use}`
-            const part2 = `${system_instructions_xml}\nTask:\n${instructions}`
+            const system_instructions_xml = `${find_relevant_files_format}\n${find_relevant_files_instructions}`
+            const part2 = `${system_instructions_xml}\n${instructions}`
 
             const user_content = build_user_content({
               provider_name: provider.name,

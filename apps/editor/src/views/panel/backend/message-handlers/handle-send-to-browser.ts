@@ -196,14 +196,7 @@ export const handle_send_to_browser = async (params: {
         } else if (
           params.panel_provider.web_prompt_type == 'find-relevant-files'
         ) {
-          const config = vscode.workspace.getConfiguration('codeWebChat')
-          const config_find_relevant_files_instructions = config.get<string>(
-            'findRelevantFilesInstructions'
-          )
-          const instructions_to_use =
-            config_find_relevant_files_instructions ||
-            find_relevant_files_instructions
-          system_instructions_xml = `${find_relevant_files_format_for_panel}\n${instructions_to_use}\nTask:`
+          system_instructions_xml = `${find_relevant_files_format_for_panel}\n${find_relevant_files_instructions}`
         }
 
         return {

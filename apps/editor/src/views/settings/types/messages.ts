@@ -325,15 +325,6 @@ export interface OpenExternalUrlMessage {
   url: string
 }
 
-export interface GetFindRelevantFilesInstructionsMessage {
-  command: 'GET_FIND_RELEVANT_FILES_INSTRUCTIONS'
-}
-
-export interface UpdateFindRelevantFilesInstructionsMessage {
-  command: 'UPDATE_FIND_RELEVANT_FILES_INSTRUCTIONS'
-  instructions: string
-}
-
 export type FrontendMessage =
   | GetModelProvidersMessage
   | ReorderModelProvidersMessage
@@ -400,8 +391,6 @@ export type FrontendMessage =
   | UpdateExtendedCacheDurationForAnthropicMessage
   | OpenKeybindingsMessage
   | OpenExternalUrlMessage
-  | GetFindRelevantFilesInstructionsMessage
-  | UpdateFindRelevantFilesInstructionsMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface ModelProvidersMessage {
@@ -519,11 +508,6 @@ export interface ExtendedCacheDurationForAnthropicMessage {
   enabled: boolean
 }
 
-export interface FindRelevantFilesInstructionsMessage {
-  command: 'FIND_RELEVANT_FILES_INSTRUCTIONS'
-  instructions: string
-}
-
 export type BackendMessage =
   | ModelProvidersMessage
   | CodeAtCursorConfigurationsMessage
@@ -548,4 +532,3 @@ export type BackendMessage =
   | ShowSectionMessage
   | FixAllAutomaticallyMessage
   | ExtendedCacheDurationForAnthropicMessage
-  | FindRelevantFilesInstructionsMessage

@@ -151,14 +151,7 @@ export const handle_copy_prompt = async (params: {
         system_instructions_xml = `<system>\n${edit_format_instructions}\n</system>`
       }
     } else if (is_in_find_relevant_files_prompt_type) {
-      const config = vscode.workspace.getConfiguration('codeWebChat')
-      const config_find_relevant_files_instructions = config.get<string>(
-        'findRelevantFilesInstructions'
-      )
-      const instructions_to_use =
-        config_find_relevant_files_instructions ||
-        find_relevant_files_instructions
-      system_instructions_xml = `${find_relevant_files_format_for_panel}\n${instructions_to_use}\nTask:`
+      system_instructions_xml = `${find_relevant_files_format_for_panel}\n${find_relevant_files_instructions}`
     }
 
     const text = context_text

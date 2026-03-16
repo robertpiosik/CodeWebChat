@@ -43,7 +43,6 @@ export const Settings = () => {
       settings_hook.send_with_shift_enter !== undefined &&
       settings_hook.check_new_files !== undefined &&
       settings_hook.clear_checks_in_workspace_behavior !== undefined &&
-      settings_hook.find_relevant_files_instructions !== undefined &&
       settings_hook.fix_all_automatically !== undefined &&
       settings_hook.extended_cache_duration_for_anthropic !== undefined
     )
@@ -98,9 +97,6 @@ export const Settings = () => {
       extended_cache_duration_for_anthropic={
         settings_hook.extended_cache_duration_for_anthropic!
       }
-      find_relevant_files_instructions={
-        settings_hook.find_relevant_files_instructions!
-      }
       fix_all_automatically={settings_hook.fix_all_automatically!}
       set_providers={settings_hook.set_providers}
       set_code_at_cursor_configs={settings_hook.set_code_at_cursor_configs}
@@ -121,9 +117,6 @@ export const Settings = () => {
       }
       on_commit_instructions_change={
         settings_hook.handle_commit_instructions_change
-      }
-      on_find_relevant_files_instructions_change={
-        settings_hook.handle_find_relevant_files_instructions_change
       }
       on_include_prompts_in_commit_messages_change={
         settings_hook.handle_include_prompts_in_commit_messages_change

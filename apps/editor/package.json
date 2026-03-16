@@ -870,10 +870,6 @@
           "type": "string",
           "scope": "resource"
         },
-        "codeWebChat.findRelevantFilesInstructions": {
-          "type": "string",
-          "scope": "resource"
-        },
         "codeWebChat.fixAllAutomatically": {
           "type": "boolean",
           "scope": "resource",

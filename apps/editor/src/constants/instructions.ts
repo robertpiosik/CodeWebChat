@@ -29,7 +29,7 @@ export const commit_message_instructions =
   "Write a brief and precise summary for the changes, limited to a single sentence. Because the summary will be used for a commit message, don't use any markdown formatting and don't include a trailing dot. Use an imperative tone to ensure clarity and focus on the primary change or purpose."
 
 export const find_relevant_files_instructions =
-  "Find all files building modules of the task's scope."
+  "Find all files building modules of the following task's scope:"
 
 export const find_relevant_files_format = `<system>
 Your response must contain paths of relevant files enclosed in "relevant-files" and "file-path" XML tags. Don't send anything else. Example:
