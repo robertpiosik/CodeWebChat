@@ -450,7 +450,7 @@ export const find_relevant_files_command = (
               find_relevant_files_instructions
 
             const system_instructions_xml = `${find_relevant_files_format}\n${instructions_to_use}`
-            const part2 = `${system_instructions_xml}\n${instructions}`
+            const part2 = `${system_instructions_xml}\nTask:\n${instructions}`
 
             const user_content = build_user_content({
               provider_name: provider.name,

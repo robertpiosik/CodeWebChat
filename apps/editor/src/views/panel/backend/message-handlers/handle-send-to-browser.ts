@@ -203,7 +203,7 @@ export const handle_send_to_browser = async (params: {
           const instructions_to_use =
             config_find_relevant_files_instructions ||
             find_relevant_files_instructions
-          system_instructions_xml = `${find_relevant_files_format_for_panel}\n${instructions_to_use}`
+          system_instructions_xml = `${find_relevant_files_format_for_panel}\n${instructions_to_use}\nTask:`
         }
 
         return {
@@ -249,7 +249,7 @@ export const handle_send_to_browser = async (params: {
   }
 }
 
-async function show_preset_quick_pick(params: {
+const show_preset_quick_pick = async (params: {
   presets: ConfigPresetFormat[]
   context: vscode.ExtensionContext
   prompt_type: WebPromptType
@@ -257,7 +257,7 @@ async function show_preset_quick_pick(params: {
   get_is_preset_disabled: (preset: ConfigPresetFormat) => boolean
   is_in_code_completions_mode: boolean
   current_instructions: string
-}): Promise<{ preset_names: string[] } | null> {
+}): Promise<{ preset_names: string[] } | null> => {
   const { presets, context, prompt_type, panel_provider } = params
 
   const quick_pick = vscode.window.createQuickPick<
@@ -453,13 +453,13 @@ async function show_preset_quick_pick(params: {
   })
 }
 
-async function resolve_presets(params: {
+const resolve_presets = async (params: {
   panel_provider: PanelProvider
   preset_name?: string
   group_name?: string
   show_quick_pick?: boolean
   context: vscode.ExtensionContext
-}): Promise<{ preset_names: string[] }> {
+}): Promise<{ preset_names: string[] }> => {
   const recents_key = get_recently_used_presets_or_groups_key(
     params.panel_provider.web_prompt_type
   )

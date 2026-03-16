@@ -365,7 +365,7 @@ export const handle_find_relevant_files = async (
     const system_instructions_xml = `${find_relevant_files_format_for_panel}\n${instructions_to_use}`
 
     const part1 = `<files>\n${collected.other_files}`
-    const part2 = `${collected.recent_files}</files>\n${skill_definitions}${system_instructions_xml}\n${processed_instructions}`
+    const part2 = `${collected.recent_files}</files>\n${skill_definitions}${system_instructions_xml}\nTask:\n${processed_instructions}`
 
     const user_content = build_user_content({
       provider_name: provider.name,
