@@ -5,7 +5,8 @@ import * as path from 'path'
 import * as net from 'net'
 import {
   ConnectedBrowser,
-  InitializeChatMessage
+  InitializeChatMessage,
+  WebSocketMessage
 } from '@shared/types/websocket-message'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
@@ -142,7 +143,7 @@ export class WebSocketManager {
 
     this.client.on('message', async (data) => {
       try {
-        const message = JSON.parse(data.toString())
+        const message = JSON.parse(data.toString()) as WebSocketMessage
         Logger.info({
           function_name: '_connect_as_client',
           message: 'Incoming WS message',
@@ -159,7 +160,7 @@ export class WebSocketManager {
           vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
             raw_instructions: message.raw_instructions,
             edit_format: message.edit_format,
-            chatbot_url: message.chatbot_url
+            chatbot_url: message.url
           })
         }
       } catch (error) {
