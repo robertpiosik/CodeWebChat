@@ -314,6 +314,11 @@ export const create_handle_key_down = (
       return
     }
 
+    if (selection?.isCollapsed && refs.raw_caret_pos_ref.current === 0) {
+      e.preventDefault()
+      return
+    }
+
     if (e.ctrlKey || e.metaKey) {
       e.preventDefault()
       const raw_pos = refs.raw_caret_pos_ref.current
