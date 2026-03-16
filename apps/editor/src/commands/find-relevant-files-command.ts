@@ -121,8 +121,7 @@ export const find_relevant_files_command = (
           folder_path
 
         let full_tokens = 0
-        let full_content_length = 0
-        let shrunk_content_length = 0
+        let shrink_tokens = 0
 
         const files_data: {
           file_path: string
@@ -156,23 +155,14 @@ export const find_relevant_files_command = (
                   shrunk_content
                 })
 
-                full_content_length += content.length
-                shrunk_content_length += shrunk_content.length
-
                 const token_count =
                   await workspace_provider.calculate_file_tokens(file_path)
                 full_tokens += token_count.total
+                shrink_tokens += token_count.shrink
               } catch (e) {}
             }
           }
         )
-
-        const shrink_tokens =
-          full_content_length > 0
-            ? Math.floor(
-                full_tokens * (shrunk_content_length / full_content_length)
-              )
-            : 0
 
         let go_back_to_input = false
         while (true) {
