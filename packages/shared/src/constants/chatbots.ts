@@ -212,10 +212,10 @@ export const CHATBOTS = {
   Together: {
     url: 'https://chat.together.ai/',
     models: {
+      'glm-5': { label: 'GLM-5' },
       'deepseek-v3.1': { label: 'DeepSeek V3.1' },
-      'glm-4.7': { label: 'GLM-4.7' },
-      'kimi-k2': { label: 'Kimi K2' },
-      'gpt-oss-120b': { label: 'GPT OSS 120B' }
+      'kimi-k2.5': { label: 'Kimi K2.5' },
+      'minimax-m2.5': { label: 'MiniMax-M2.5' }
     }
   } as Chatbot,
   Yuanbao: {
