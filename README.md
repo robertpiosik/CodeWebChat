@@ -17,7 +17,7 @@ Code Web Chat (CWC) is a free and open-source, privacy-first **AI coding toolkit
 - APIs—remote and local model providers
 
 **🌱 Sustainable AI coding** \
-Since context files are part of your instructions, [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching/) is leveraged across tasks. Make your quotas last longer or reduce input token costs by up to 90%.
+Since context files are part of your instructions, [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching/) is leveraged across tasks. Make your chatbot quotas last longer or reduce input token costs by up to 90%.
 
 <br/>
 
