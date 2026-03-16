@@ -16,9 +16,6 @@ Code Web Chat (CWC) is a free and open-source, privacy-first **AI coding toolkit
 - chatbots—Gemini, ChatGPT, Claude, etc.
 - APIs—remote and local model providers
 
-**🌱 Sustainable AI coding** \
-Zero [function calling](https://developers.openai.com/api/docs/guides/function-calling/) design and CWC’s intelligent file ordering enables [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching/) across tasks. Make your chatbot quotas last longer or lower token costs by up to 90%. Enable blazing fast local inference!
-
 <br/>
 
 <p align="center"><i>Select relevant files, type instructions...</i></p>
@@ -36,6 +33,10 @@ Zero [function calling](https://developers.openai.com/api/docs/guides/function-c
 <p align="center"><i>Apply from clipboard...</i></p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-3.png"></p>
+
+## 🌱 Sustainable AI coding
+
+Zero [function calling](https://developers.openai.com/api/docs/guides/function-calling/) design and CWC’s intelligent file ordering enables [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching/) across tasks. Make your chatbot quotas last longer or lower token costs by up to 90%. Enable blazing fast local inference!
 
 ## Enabling autofill
 
