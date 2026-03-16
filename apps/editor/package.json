@@ -882,93 +882,6 @@
         "codeWebChat.chatPresetsForAskAboutContext": {
           "type": "array",
           "scope": "resource",
-          "default": [
-            {
-              "name": "Popular"
-            },
-            {
-              "name": "(1)",
-              "chatbot": "ChatGPT"
-            },
-            {
-              "name": "(2)",
-              "chatbot": "Claude"
-            },
-            {
-              "name": "(3)",
-              "chatbot": "Gemini"
-            },
-            {
-              "name": "(4)",
-              "chatbot": "Grok"
-            },
-            {
-              "name": "(5)",
-              "chatbot": "DeepSeek"
-            },
-            {},
-            {
-              "name": "Others"
-            },
-            {
-              "name": "(6)",
-              "chatbot": "AI Studio",
-              "systemInstructions": "You're a helpful coding assistant."
-            },
-            {
-              "name": "(7)",
-              "chatbot": "Arena"
-            },
-            {
-              "name": "(8)",
-              "chatbot": "Copilot"
-            },
-            {
-              "name": "(9)",
-              "chatbot": "Doubao"
-            },
-            {
-              "name": "(10)",
-              "chatbot": "GitHub Copilot"
-            },
-            {
-              "name": "(11)",
-              "chatbot": "HuggingChat"
-            },
-            {
-              "name": "(12)",
-              "chatbot": "Kimi"
-            },
-            {
-              "name": "(13)",
-              "chatbot": "Mistral"
-            },
-            {
-              "name": "(14)",
-              "chatbot": "Open WebUI"
-            },
-            {
-              "name": "(15)",
-              "chatbot": "OpenRouter"
-            },
-            {
-              "name": "(16)",
-              "chatbot": "Qwen"
-            },
-            {
-              "name": "(17)",
-              "chatbot": "Together"
-            },
-            {
-              "name": "(18)",
-              "chatbot": "Yuanbao"
-            },
-            {
-              "name": "(19)",
-              "chatbot": "Z.AI"
-            },
-            {}
-          ],
           "items": {
             "type": "object",
             "properties": {
@@ -1051,93 +964,6 @@
         "codeWebChat.chatPresetsForEditContext": {
           "type": "array",
           "scope": "resource",
-          "default": [
-            {
-              "name": "Popular"
-            },
-            {
-              "name": "(1)",
-              "chatbot": "ChatGPT"
-            },
-            {
-              "name": "(2)",
-              "chatbot": "Claude"
-            },
-            {
-              "name": "(3)",
-              "chatbot": "Gemini"
-            },
-            {
-              "name": "(4)",
-              "chatbot": "Grok"
-            },
-            {
-              "name": "(5)",
-              "chatbot": "DeepSeek"
-            },
-            {},
-            {
-              "name": "Others"
-            },
-            {
-              "name": "(6)",
-              "chatbot": "AI Studio",
-              "systemInstructions": "You're a helpful coding assistant."
-            },
-            {
-              "name": "(7)",
-              "chatbot": "Arena"
-            },
-            {
-              "name": "(8)",
-              "chatbot": "Copilot"
-            },
-            {
-              "name": "(9)",
-              "chatbot": "Doubao"
-            },
-            {
-              "name": "(10)",
-              "chatbot": "GitHub Copilot"
-            },
-            {
-              "name": "(11)",
-              "chatbot": "HuggingChat"
-            },
-            {
-              "name": "(12)",
-              "chatbot": "Kimi"
-            },
-            {
-              "name": "(13)",
-              "chatbot": "Mistral"
-            },
-            {
-              "name": "(14)",
-              "chatbot": "Open WebUI"
-            },
-            {
-              "name": "(15)",
-              "chatbot": "OpenRouter"
-            },
-            {
-              "name": "(16)",
-              "chatbot": "Qwen"
-            },
-            {
-              "name": "(17)",
-              "chatbot": "Together"
-            },
-            {
-              "name": "(18)",
-              "chatbot": "Yuanbao"
-            },
-            {
-              "name": "(19)",
-              "chatbot": "Z.AI"
-            },
-            {}
-          ],
           "items": {
             "type": "object",
             "properties": {
@@ -1220,93 +1046,6 @@
         "codeWebChat.chatPresetsForCodeAtCursor": {
           "type": "array",
           "scope": "resource",
-          "default": [
-            {
-              "name": "Popular"
-            },
-            {
-              "name": "(1)",
-              "chatbot": "ChatGPT"
-            },
-            {
-              "name": "(2)",
-              "chatbot": "Claude"
-            },
-            {
-              "name": "(3)",
-              "chatbot": "Gemini"
-            },
-            {
-              "name": "(4)",
-              "chatbot": "Grok"
-            },
-            {
-              "name": "(5)",
-              "chatbot": "DeepSeek"
-            },
-            {},
-            {
-              "name": "Others"
-            },
-            {
-              "name": "(6)",
-              "chatbot": "AI Studio",
-              "systemInstructions": "You're a helpful coding assistant."
-            },
-            {
-              "name": "(7)",
-              "chatbot": "Arena"
-            },
-            {
-              "name": "(8)",
-              "chatbot": "Copilot"
-            },
-            {
-              "name": "(9)",
-              "chatbot": "Doubao"
-            },
-            {
-              "name": "(10)",
-              "chatbot": "GitHub Copilot"
-            },
-            {
-              "name": "(11)",
-              "chatbot": "HuggingChat"
-            },
-            {
-              "name": "(12)",
-              "chatbot": "Kimi"
-            },
-            {
-              "name": "(13)",
-              "chatbot": "Mistral"
-            },
-            {
-              "name": "(14)",
-              "chatbot": "Open WebUI"
-            },
-            {
-              "name": "(15)",
-              "chatbot": "OpenRouter"
-            },
-            {
-              "name": "(16)",
-              "chatbot": "Qwen"
-            },
-            {
-              "name": "(17)",
-              "chatbot": "Together"
-            },
-            {
-              "name": "(18)",
-              "chatbot": "Yuanbao"
-            },
-            {
-              "name": "(19)",
-              "chatbot": "Z.AI"
-            },
-            {}
-          ],
           "items": {
             "type": "object",
             "properties": {
@@ -1361,93 +1100,6 @@
         "codeWebChat.chatPresetsForFindRelevantFiles": {
           "type": "array",
           "scope": "resource",
-          "default": [
-            {
-              "name": "Popular"
-            },
-            {
-              "name": "(1)",
-              "chatbot": "ChatGPT"
-            },
-            {
-              "name": "(2)",
-              "chatbot": "Claude"
-            },
-            {
-              "name": "(3)",
-              "chatbot": "Gemini"
-            },
-            {
-              "name": "(4)",
-              "chatbot": "Grok"
-            },
-            {
-              "name": "(5)",
-              "chatbot": "DeepSeek"
-            },
-            {},
-            {
-              "name": "Others"
-            },
-            {
-              "name": "(6)",
-              "chatbot": "AI Studio",
-              "systemInstructions": "You're a helpful coding assistant."
-            },
-            {
-              "name": "(7)",
-              "chatbot": "Arena"
-            },
-            {
-              "name": "(8)",
-              "chatbot": "Copilot"
-            },
-            {
-              "name": "(9)",
-              "chatbot": "Doubao"
-            },
-            {
-              "name": "(10)",
-              "chatbot": "GitHub Copilot"
-            },
-            {
-              "name": "(11)",
-              "chatbot": "HuggingChat"
-            },
-            {
-              "name": "(12)",
-              "chatbot": "Kimi"
-            },
-            {
-              "name": "(13)",
-              "chatbot": "Mistral"
-            },
-            {
-              "name": "(14)",
-              "chatbot": "Open WebUI"
-            },
-            {
-              "name": "(15)",
-              "chatbot": "OpenRouter"
-            },
-            {
-              "name": "(16)",
-              "chatbot": "Qwen"
-            },
-            {
-              "name": "(17)",
-              "chatbot": "Together"
-            },
-            {
-              "name": "(18)",
-              "chatbot": "Yuanbao"
-            },
-            {
-              "name": "(19)",
-              "chatbot": "Z.AI"
-            },
-            {}
-          ],
           "items": {
             "type": "object",
             "properties": {
@@ -1502,93 +1154,6 @@
         "codeWebChat.chatPresetsForNoContext": {
           "type": "array",
           "scope": "resource",
-          "default": [
-            {
-              "name": "Popular"
-            },
-            {
-              "name": "(1)",
-              "chatbot": "ChatGPT"
-            },
-            {
-              "name": "(2)",
-              "chatbot": "Claude"
-            },
-            {
-              "name": "(3)",
-              "chatbot": "Gemini"
-            },
-            {
-              "name": "(4)",
-              "chatbot": "Grok"
-            },
-            {
-              "name": "(5)",
-              "chatbot": "DeepSeek"
-            },
-            {},
-            {
-              "name": "Others"
-            },
-            {
-              "name": "(6)",
-              "chatbot": "AI Studio",
-              "systemInstructions": "You're a helpful coding assistant."
-            },
-            {
-              "name": "(7)",
-              "chatbot": "Arena"
-            },
-            {
-              "name": "(8)",
-              "chatbot": "Copilot"
-            },
-            {
-              "name": "(9)",
-              "chatbot": "Doubao"
-            },
-            {
-              "name": "(10)",
-              "chatbot": "GitHub Copilot"
-            },
-            {
-              "name": "(11)",
-              "chatbot": "HuggingChat"
-            },
-            {
-              "name": "(12)",
-              "chatbot": "Kimi"
-            },
-            {
-              "name": "(13)",
-              "chatbot": "Mistral"
-            },
-            {
-              "name": "(14)",
-              "chatbot": "Open WebUI"
-            },
-            {
-              "name": "(15)",
-              "chatbot": "OpenRouter"
-            },
-            {
-              "name": "(16)",
-              "chatbot": "Qwen"
-            },
-            {
-              "name": "(17)",
-              "chatbot": "Together"
-            },
-            {
-              "name": "(18)",
-              "chatbot": "Yuanbao"
-            },
-            {
-              "name": "(19)",
-              "chatbot": "Z.AI"
-            },
-            {}
-          ],
           "items": {
             "type": "object",
             "properties": {
@@ -1671,7 +1236,6 @@
         "codeWebChat.promptTemplatesForAskAboutContext": {
           "type": "array",
           "scope": "resource",
-          "default": [],
           "items": {
             "type": "object",
             "properties": {
@@ -1690,7 +1254,6 @@
         "codeWebChat.promptTemplatesForEditContext": {
           "type": "array",
           "scope": "resource",
-          "default": [],
           "items": {
             "type": "object",
             "properties": {
@@ -1709,7 +1272,6 @@
         "codeWebChat.promptTemplatesForCodeAtCursor": {
           "type": "array",
           "scope": "resource",
-          "default": [],
           "items": {
             "type": "object",
             "properties": {
@@ -1728,7 +1290,6 @@
         "codeWebChat.promptTemplatesForNoContext": {
           "type": "array",
           "scope": "resource",
-          "default": [],
           "items": {
             "type": "object",
             "properties": {
@@ -1747,7 +1308,6 @@
         "codeWebChat.promptTemplatesForFindRelevantFiles": {
           "type": "array",
           "scope": "resource",
-          "default": [],
           "items": {
             "type": "object",
             "properties": {
@@ -1766,7 +1326,6 @@
         "codeWebChat.modelProviders": {
           "type": "array",
           "scope": "resource",
-          "default": [],
           "items": {
             "type": "object",
             "properties": {
@@ -1786,7 +1345,6 @@
         "codeWebChat.configurationsForCodeAtCursor": {
           "type": "array",
           "scope": "resource",
-          "default": [],
           "items": {
             "type": "object",
             "properties": {
@@ -1818,7 +1376,6 @@
         "codeWebChat.configurationsForFindRelevantFiles": {
           "type": "array",
           "scope": "resource",
-          "default": [],
           "items": {
             "type": "object",
             "properties": {
@@ -1850,7 +1407,6 @@
         "codeWebChat.configurationsForEditContext": {
           "type": "array",
           "scope": "resource",
-          "default": [],
           "items": {
             "type": "object",
             "properties": {
@@ -1882,7 +1438,6 @@
         "codeWebChat.configurationsForIntelligentUpdate": {
           "type": "array",
           "scope": "resource",
-          "default": [],
           "items": {
             "type": "object",
             "properties": {
@@ -1914,7 +1469,6 @@
         "codeWebChat.configurationsForCommitMessages": {
           "type": "array",
           "scope": "resource",
-          "default": [],
           "items": {
             "type": "object",
             "properties": {
@@ -1946,7 +1500,6 @@
         "codeWebChat.configurationsForVoiceInput": {
           "type": "array",
           "scope": "resource",
-          "default": [],
           "items": {
             "type": "object",
             "properties": {
