@@ -228,13 +228,15 @@ export const MainView: React.FC<Props> = (props) => {
           </div>
         )}
 
-        {!props.is_connected && props.mode == MODE.WEB && (
-          <>
-            <div className={styles['browser-extension-message']}>
-              <UiBrowserExtensionMessage />
-            </div>
-          </>
-        )}
+        {!props.is_connected &&
+          props.mode == MODE.WEB &&
+          props.presets.length > 0 && (
+            <>
+              <div className={styles['browser-extension-message']}>
+                <UiBrowserExtensionMessage />
+              </div>
+            </>
+          )}
 
         {props.response_history.length > 0 && (
           <UiResponses
