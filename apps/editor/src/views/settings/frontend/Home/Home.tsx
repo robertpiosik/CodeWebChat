@@ -680,7 +680,7 @@ export const Home: React.FC<Props> = (props) => {
               configurations={props.find_relevant_files_configs}
               set_configurations={props.set_find_relevant_files_configs}
               tool_name="FIND_RELEVANT_FILES"
-              can_have_default={false}
+              can_have_default={true}
               on_add={(params) =>
                 props.on_add_config('FIND_RELEVANT_FILES', params)
               }
@@ -693,6 +693,12 @@ export const Home: React.FC<Props> = (props) => {
               }
               on_delete={(id) =>
                 props.on_delete_config('FIND_RELEVANT_FILES', id)
+              }
+              on_set_default={(id) =>
+                props.on_set_default_config('FIND_RELEVANT_FILES', id)
+              }
+              on_unset_default={() =>
+                props.on_unset_default_config('FIND_RELEVANT_FILES')
               }
             />
           </UiGroup>

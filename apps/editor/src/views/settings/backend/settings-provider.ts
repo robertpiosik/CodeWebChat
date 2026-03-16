@@ -232,6 +232,14 @@ export class SettingsProvider {
             message.configuration_id,
             'find-relevant-files'
           )
+        } else if (
+          message.command == 'SET_DEFAULT_FIND_RELEVANT_FILES_CONFIGURATION'
+        ) {
+          await handle_set_default_configuration(
+            this,
+            message.configuration_id,
+            'find-relevant-files'
+          )
         } else if (message.command == 'GET_VOICE_INPUT_CONFIGURATIONS') {
           await handle_get_configurations({
             provider: this,

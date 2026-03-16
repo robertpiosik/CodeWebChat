@@ -289,6 +289,16 @@ export const use_settings = (vscode: any) => {
           is_default: c.id == configuration_id
         }))
       )
+    } else if (
+      tool_name == 'FIND_RELEVANT_FILES' &&
+      find_relevant_files_configs
+    ) {
+      set_find_relevant_files_configs(
+        find_relevant_files_configs.map((c) => ({
+          ...c,
+          is_default: c.id == configuration_id
+        }))
+      )
     } else if (tool_name == 'COMMIT_MESSAGES' && commit_messages_configs) {
       set_commit_messages_configs(
         commit_messages_configs.map((c) => ({
@@ -325,6 +335,16 @@ export const use_settings = (vscode: any) => {
     } else if (tool_name == 'VOICE_INPUT' && voice_input_configs) {
       set_voice_input_configs(
         voice_input_configs.map((c) => ({
+          ...c,
+          is_default: false
+        }))
+      )
+    } else if (
+      tool_name == 'FIND_RELEVANT_FILES' &&
+      find_relevant_files_configs
+    ) {
+      set_find_relevant_files_configs(
+        find_relevant_files_configs.map((c) => ({
           ...c,
           is_default: false
         }))

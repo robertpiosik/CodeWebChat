@@ -112,6 +112,11 @@ export interface DeleteFindRelevantFilesConfigurationMessage {
   configuration_id: string
 }
 
+export interface SetDefaultFindRelevantFilesConfigurationMessage {
+  command: 'SET_DEFAULT_FIND_RELEVANT_FILES_CONFIGURATION'
+  configuration_id: string | null
+}
+
 export interface GetVoiceInputConfigurationsMessage {
   command: 'GET_VOICE_INPUT_CONFIGURATIONS'
 }
@@ -349,6 +354,7 @@ export type FrontendMessage =
   | GetFindRelevantFilesConfigurationsMessage
   | ReorderFindRelevantFilesConfigurationsMessage
   | DeleteFindRelevantFilesConfigurationMessage
+  | SetDefaultFindRelevantFilesConfigurationMessage
   | GetVoiceInputConfigurationsMessage
   | ReorderVoiceInputConfigurationsMessage
   | DeleteVoiceInputConfigurationMessage
