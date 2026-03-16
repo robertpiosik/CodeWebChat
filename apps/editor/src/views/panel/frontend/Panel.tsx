@@ -102,7 +102,7 @@ export const Panel = () => {
     preview_item_created_at,
     fix_all_automatically,
     handle_discard_user_changes_in_preview,
-    chatbot_url,
+    url,
     api_configuration
   } = use_preview_manager(vscode)
 
@@ -279,7 +279,7 @@ export const Panel = () => {
       raw_instructions: item.raw_instructions,
       files: item.files,
       created_at: item.created_at,
-      chatbot_url: item.chatbot_url,
+      url: item.url,
       api_configuration: item.api_configuration
     })
   }
@@ -633,11 +633,8 @@ export const Panel = () => {
                 post_message(vscode, { command: 'RESPONSE_PREVIEW', files: [] })
               }}
               header_slot={
-                chatbot_url ? (
-                  <UiIconButton
-                    codicon_icon="link-external"
-                    href={chatbot_url}
-                  />
+                url ? (
+                  <UiIconButton codicon_icon="link-external" href={url} />
                 ) : undefined
               }
               footer_slot={

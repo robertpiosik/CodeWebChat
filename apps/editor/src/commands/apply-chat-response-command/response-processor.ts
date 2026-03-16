@@ -35,22 +35,21 @@ export type PreviewData = {
   chat_response: string
 }
 
-export type CommandArgs = {
+export type ApplyChatResponseCommandArgs = {
   response?: string
   raw_instructions?: string
-  edit_format?: string
   original_editor_state?: {
     file_path: string
     position: { line: number; character: number }
   }
   files_with_content?: FileInPreview[]
   created_at?: number
-  chatbot_url?: string
+  url?: string
   api_configuration?: ApiConfiguration
 }
 
 export const process_chat_response = async (params: {
-  args: CommandArgs | undefined
+  args: ApplyChatResponseCommandArgs | undefined
   chat_response: string
   clipboard_items: ClipboardItem[]
   context: vscode.ExtensionContext

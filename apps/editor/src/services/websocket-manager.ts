@@ -15,6 +15,7 @@ import { Logger } from '@shared/utils/logger'
 import { Preset } from '@shared/types/preset'
 import { ConfigPresetFormat } from '@/views/panel/backend/utils/preset-format-converters'
 import { LAST_SELECTED_BROWSER_ID_STATE_KEY } from '@/constants/state-keys'
+import { ApplyChatResponseCommandArgs } from '@/commands/apply-chat-response-command/response-processor'
 
 /**
  * Bridges the current workspace window and websocket server that runs in a separate process.
@@ -159,9 +160,8 @@ export class WebSocketManager {
         } else if (message.action == 'apply-chat-response') {
           vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
             raw_instructions: message.raw_instructions,
-            edit_format: message.edit_format,
-            chatbot_url: message.url
-          })
+            url: message.url
+          } as ApplyChatResponseCommandArgs)
         }
       } catch (error) {
         Logger.error({

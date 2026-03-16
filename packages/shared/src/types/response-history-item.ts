@@ -13,6 +13,6 @@ export type ResponseHistoryItem = {
   lines_added?: number
   lines_removed?: number
   files?: FileInPreview[]
-  chatbot_url?: string
+  url?: string
   api_configuration?: ApiConfiguration
 }

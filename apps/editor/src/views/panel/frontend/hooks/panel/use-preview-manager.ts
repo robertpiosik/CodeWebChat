@@ -10,7 +10,7 @@ export const use_preview_manager = (vscode: any) => {
   const [preview_item_created_at, set_preview_item_created_at] =
     useState<number>()
   const [fix_all_automatically, set_fix_all_automatically] = useState(false)
-  const [chatbot_url, set_chatbot_url] = useState<string>()
+  const [url, set_url] = useState<string>()
   const [api_configuration, set_api_configuration] =
     useState<ApiConfiguration>()
 
@@ -33,7 +33,7 @@ export const use_preview_manager = (vscode: any) => {
         set_raw_instructions(message.raw_instructions)
         set_preview_item_created_at(message.created_at)
         set_fix_all_automatically(message.fix_all_automatically ?? false)
-        set_chatbot_url(message.chatbot_url)
+        set_url(message.url)
         set_api_configuration(message.api_configuration)
       } else if (message.command == 'UPDATE_FILE_IN_PREVIEW') {
         set_items_in_preview((current_items) => {
@@ -98,7 +98,7 @@ export const use_preview_manager = (vscode: any) => {
         set_items_in_preview(undefined)
         set_raw_instructions(undefined)
         set_preview_item_created_at(undefined)
-        set_chatbot_url(undefined)
+        set_url(undefined)
         set_api_configuration(undefined)
       }
     }
@@ -111,7 +111,7 @@ export const use_preview_manager = (vscode: any) => {
     items_in_preview,
     set_items_in_preview,
     raw_instructions,
-    chatbot_url,
+    url,
     preview_item_created_at,
     fix_all_automatically,
     handle_discard_user_changes_in_preview,

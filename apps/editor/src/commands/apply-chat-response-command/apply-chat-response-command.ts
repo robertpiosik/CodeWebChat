@@ -16,7 +16,10 @@ import {
   preview_handler,
   ongoing_preview_cleanup_promise
 } from './utils/preview-handler'
-import { process_chat_response, CommandArgs } from './response-processor'
+import {
+  process_chat_response,
+  ApplyChatResponseCommandArgs
+} from './response-processor'
 import { Checkpoint } from '../checkpoints-command/types'
 import { CHECKPOINTS_STATE_KEY } from '@/constants/state-keys'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
@@ -57,7 +60,7 @@ export const apply_chat_response_command = (params: {
 
   return vscode.commands.registerCommand(
     'codeWebChat.applyChatResponse',
-    async (args?: CommandArgs) => {
+    async (args?: ApplyChatResponseCommandArgs) => {
       if (!vscode.workspace.workspaceFolders?.length) {
         vscode.window.showErrorMessage(
           dictionary.error_message.NO_WORKSPACE_FOLDER_OPEN
@@ -102,7 +105,7 @@ export const apply_chat_response_command = (params: {
           response: chat_response,
           raw_instructions: args?.raw_instructions,
           created_at: Date.now(),
-          chatbot_url: args?.chatbot_url,
+          url: args?.url,
           api_configuration: args?.api_configuration
         }
 
@@ -329,7 +332,7 @@ export const apply_chat_response_command = (params: {
                   lines_added: total_lines_added,
                   lines_removed: total_lines_removed,
                   files: files_for_history,
-                  chatbot_url: args?.chatbot_url,
+                  url: args?.url,
                   api_configuration: args?.api_configuration
                 }
 
@@ -354,7 +357,7 @@ export const apply_chat_response_command = (params: {
             original_editor_state: args?.original_editor_state,
             raw_instructions: args?.raw_instructions,
             created_at: created_at_for_preview,
-            chatbot_url: args?.chatbot_url,
+            url: args?.url,
             api_configuration: args?.api_configuration
           })
 

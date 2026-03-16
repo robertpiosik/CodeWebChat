@@ -21,7 +21,7 @@ export const preview_handler = async (params: {
   }
   raw_instructions?: string
   created_at?: number
-  chatbot_url?: string
+  url?: string
   api_configuration?: ApiConfiguration
 }): Promise<boolean> => {
   let resolve_cleanup_promise: () => void
@@ -37,7 +37,7 @@ export const preview_handler = async (params: {
       chat_response: params.chat_response,
       context: params.context,
       created_at: params.created_at,
-      chatbot_url: params.chatbot_url,
+      url: params.url,
       api_configuration: params.api_configuration
     })
 

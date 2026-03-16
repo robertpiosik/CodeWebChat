@@ -398,7 +398,7 @@ export interface ApplyResponseFromHistoryMessage extends BaseMessage {
   raw_instructions?: string
   files?: FileInPreview[]
   created_at: number
-  chatbot_url?: string
+  url?: string
   api_configuration?: ApiConfiguration
 }
 
@@ -810,7 +810,7 @@ export interface ResponsePreviewStartedMessage extends BaseMessage {
   raw_instructions?: string
   created_at?: number
   fix_all_automatically?: boolean
-  chatbot_url?: string
+  url?: string
   api_configuration?: ApiConfiguration
 }
 

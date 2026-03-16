@@ -26,7 +26,7 @@ export const preview = async (params: {
   chat_response: string
   context: vscode.ExtensionContext
   created_at?: number
-  chatbot_url?: string
+  url?: string
   api_configuration?: ApiConfiguration
 }): Promise<{
   accepted_files: PreviewableFile[]
@@ -139,7 +139,7 @@ export const preview = async (params: {
         raw_instructions: params.raw_instructions,
         created_at: params.created_at,
         fix_all_automatically,
-        chatbot_url: params.chatbot_url,
+        url: params.url,
         api_configuration: params.api_configuration
       })
     }
