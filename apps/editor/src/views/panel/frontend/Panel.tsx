@@ -447,6 +447,7 @@ export const Panel = () => {
               <Home
                 vscode={vscode}
                 is_active={active_view == 'home'}
+                is_connected={is_connected}
                 on_go_forward={() => set_active_view('main')}
                 on_chatbots_click={() => {
                   set_active_view('main')

@@ -44,6 +44,7 @@ type Props = {
   on_task_delete: (root: string, timestamp: number) => void
   on_task_forward: (text: string) => void
   is_setup_complete: boolean
+  is_connected: boolean
 }
 
 export const Home: React.FC<Props> = (props) => {
@@ -159,7 +160,7 @@ export const Home: React.FC<Props> = (props) => {
               ref={mode_ref}
             >
               <UiModeButton
-                pre="Autofill"
+                pre={props.is_connected ? 'Autofill' : 'Copy for'}
                 label="Chatbots"
                 on_click={props.on_chatbots_click}
                 is_compact={is_mode_sticky}
