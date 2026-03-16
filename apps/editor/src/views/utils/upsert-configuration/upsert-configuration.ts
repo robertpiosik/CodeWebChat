@@ -33,15 +33,27 @@ export const upsert_configuration = async (params: {
 
   let get_configs: () => Promise<ToolConfig[]>
   let save_configs: (configs: ToolConfig[]) => Promise<void>
+  let get_default_config: (() => Promise<ToolConfig | undefined>) | undefined
+  let set_default_config:
+    | ((config: ToolConfig | null) => Promise<void>)
+    | undefined
 
   if (params.tool_type == 'code-at-cursor') {
     get_configs = () => providers_manager.get_code_completions_tool_configs()
     save_configs = (configs) =>
       providers_manager.save_code_completions_tool_configs(configs)
+    get_default_config = () =>
+      providers_manager.get_default_code_completions_config()
+    set_default_config = (c) =>
+      providers_manager.set_default_code_completions_config(c)
   } else if (params.tool_type == 'commit-messages') {
     get_configs = () => providers_manager.get_commit_messages_tool_configs()
     save_configs = (configs) =>
       providers_manager.save_commit_messages_tool_configs(configs)
+    get_default_config = () =>
+      providers_manager.get_default_commit_messages_config()
+    set_default_config = (c) =>
+      providers_manager.set_default_commit_messages_config(c)
   } else if (params.tool_type == 'edit-context') {
     get_configs = () => providers_manager.get_edit_context_tool_configs()
     save_configs = (configs) =>
@@ -50,14 +62,26 @@ export const upsert_configuration = async (params: {
     get_configs = () => providers_manager.get_intelligent_update_tool_configs()
     save_configs = (configs) =>
       providers_manager.save_intelligent_update_tool_configs(configs)
+    get_default_config = () =>
+      providers_manager.get_default_intelligent_update_config()
+    set_default_config = (c) =>
+      providers_manager.set_default_intelligent_update_config(c)
   } else if (params.tool_type == 'find-relevant-files') {
     get_configs = () => providers_manager.get_find_relevant_files_tool_configs()
     save_configs = (configs) =>
       providers_manager.save_find_relevant_files_tool_configs(configs)
+    get_default_config = () =>
+      providers_manager.get_default_find_relevant_files_config()
+    set_default_config = (c) =>
+      providers_manager.set_default_find_relevant_files_config(c)
   } else if (params.tool_type == 'voice-input') {
     get_configs = () => providers_manager.get_voice_input_tool_configs()
     save_configs = (configs) =>
       providers_manager.save_voice_input_tool_configs(configs)
+    get_default_config = () =>
+      providers_manager.get_default_voice_input_config()
+    set_default_config = (c) =>
+      providers_manager.set_default_voice_input_config(c)
   } else {
     throw new Error(`Unknown tool type: ${params.tool_type}`)
   }
@@ -115,6 +139,7 @@ export const upsert_configuration = async (params: {
 
   let config_to_edit: ToolConfig
   let original_id: string | undefined
+  let was_default = false
 
   if (params.configuration_id || params.duplicate_from_id) {
     const target_id = params.configuration_id || params.duplicate_from_id
@@ -132,6 +157,12 @@ export const upsert_configuration = async (params: {
     config_to_edit = { ...configs[config_index] }
     if (params.configuration_id) {
       original_id = params.configuration_id
+      if (get_default_config) {
+        const def_config = await get_default_config()
+        if (def_config && get_tool_config_id(def_config) === original_id) {
+          was_default = true
+        }
+      }
     } else if (params.duplicate_from_id) {
       actual_insertion_index = config_index + 1
     }
@@ -521,6 +552,10 @@ export const upsert_configuration = async (params: {
   }
 
   await save_configs(configs)
+
+  if (was_default && set_default_config) {
+    await set_default_config(updated_config)
+  }
 }
 
 const verify_reasoning_effort = async (params: {
