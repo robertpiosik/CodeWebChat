@@ -303,16 +303,16 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     <div className={styles.container}>
       {props.missing_configuration ? (
         <div className={styles.warning}>
-          <div className={styles.warning__inner}>Missing configuration</div>
+          <div className={styles.warning__inner}>Add a configuration</div>
         </div>
       ) : !!props.current_selection && props.prompt_type == 'code-at-cursor' ? (
         <div className={styles.warning}>
-          <div className={styles.warning__inner}>Selection found</div>
+          <div className={styles.warning__inner}>Remove the text selection</div>
         </div>
       ) : props.prompt_type == 'code-at-cursor' &&
         !props.currently_open_file_path ? (
         <div className={styles.warning}>
-          <div className={styles.warning__inner}>Missing active editor</div>
+          <div className={styles.warning__inner}>Open a file</div>
         </div>
       ) : null}
 
