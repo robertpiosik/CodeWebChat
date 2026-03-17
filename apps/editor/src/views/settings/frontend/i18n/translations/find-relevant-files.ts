@@ -1,6 +1,6 @@
 export const find_relevant_files = {
   'find-relevant-files.subtitle': {
-    en: 'Find files using natural language description',
+    en: 'Find files using natural language description.',
     pl: 'Znajdź pliki za pomocą opisu w języku naturalnym.',
     'zh-cn': '使用自然语言描述查找文件。',
     ja: '自然言語の説明を使用してファイルを検索します。',
