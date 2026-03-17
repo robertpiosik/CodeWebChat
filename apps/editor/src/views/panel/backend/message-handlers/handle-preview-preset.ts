@@ -154,7 +154,7 @@ export const handle_preview_preset = async (
   if (sent) {
     panel_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
-      title: 'Opened in the connected browser',
+      title: 'Continue in theconnected browser',
       type: 'success'
     })
   }

@@ -16,6 +16,7 @@ import { Preset } from '@shared/types/preset'
 import { ConfigPresetFormat } from '@/views/panel/backend/utils/preset-format-converters'
 import { LAST_SELECTED_BROWSER_ID_STATE_KEY } from '@/constants/state-keys'
 import { ApplyChatResponseCommandArgs } from '@/commands/apply-chat-response-command/response-processor'
+import { WebPromptType } from '@shared/types/prompt-types'
 
 /**
  * Bridges the current workspace window and websocket server that runs in a separate process.
@@ -315,7 +316,7 @@ export class WebSocketManager {
       preset_name: string
       raw_instructions?: string
       edit_format?: string
-      prompt_type: any
+      prompt_type?: WebPromptType
     }>
     presets_config_key: string
   }): Promise<boolean> {
@@ -328,6 +329,7 @@ export class WebSocketManager {
       config.get<ConfigPresetFormat[]>(params.presets_config_key) ?? []
     const gemini_user_id = config.get<number | null>('geminiUserId')
     const ai_studio_user_id = config.get<number | null>('aiStudioUserId')
+    const reuse_last_tab = config.get<boolean>('reuseLastTab', false)
 
     const target_browser_id = await this._select_browser()
     if (target_browser_id === undefined) {
@@ -405,7 +407,8 @@ export class WebSocketManager {
         client_id: this.client_id || 0, // 0 is a temporary fallback and should be removed few weeks from 28.03.25
         raw_instructions: chat.raw_instructions,
         edit_format: chat.edit_format,
-        prompt_type: chat.prompt_type
+        prompt_type: chat.prompt_type,
+        reuse_last_tab
       }
 
       Logger.info({
@@ -424,7 +427,7 @@ export class WebSocketManager {
     instruction: string
     preset: Preset
     raw_instructions: string
-    prompt_type: any
+    prompt_type?: WebPromptType
   }): Promise<boolean> {
     if (!this.has_connected_browsers) {
       throw new Error('Does not have connected browsers.')
@@ -438,6 +441,7 @@ export class WebSocketManager {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const gemini_user_number = config.get<number | null>('geminiUserNumber')
     const ai_studio_user_id = config.get<number | null>('aiStudioUserId')
+    const reuse_last_tab = config.get<boolean>('reuseLastTab', false)
 
     const chatbot = CHATBOTS[params.preset.chatbot as keyof typeof CHATBOTS]
     let url: string
@@ -507,7 +511,8 @@ export class WebSocketManager {
       options: params.preset.options,
       client_id: this.client_id || 0, // 0 is a temporary fallback and should be removed few weeks from 28.03.25
       raw_instructions: params.raw_instructions,
-      prompt_type: params.prompt_type
+      prompt_type: params.prompt_type,
+      reuse_last_tab
     }
 
     Logger.info({

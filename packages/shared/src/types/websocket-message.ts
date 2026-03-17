@@ -1,3 +1,5 @@
+import { WebPromptType } from './prompt-types'
+
 export type Chat = {
   url: string
   model?: string
@@ -30,7 +32,8 @@ export type InitializeChatMessage = {
   options?: string[]
   raw_instructions?: string
   edit_format?: string
-  prompt_type?: any
+  prompt_type?: WebPromptType
+  reuse_last_tab?: boolean
 }
 
 export type BrowserConnectionStatusMessage = {

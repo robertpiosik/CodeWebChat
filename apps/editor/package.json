@@ -827,6 +827,11 @@
           "scope": "resource",
           "default": false
         },
+        "codeWebChat.reuseLastTab": {
+          "type": "boolean",
+          "scope": "resource",
+          "default": false
+        },
         "codeWebChat.clearChecksInWorkspaceBehavior": {
           "type": "string",
           "scope": "resource",

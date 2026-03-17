@@ -254,6 +254,12 @@ export const general = {
     hu: 'Új fájlok automatikus bevonása a kontextusba.',
     bg: 'Автоматично включване на нови файлове в контекста.'
   },
+  'general.reuse-last-tab.title': {
+    en: 'Reuse Last Tab'
+  },
+  'general.reuse-last-tab.description': {
+    en: 'Whether should autofill prompt in the same browser tab.'
+  },
   'general.send-with-shift-enter.title': {
     en: 'Send with Shift+Enter',
     pl: 'Wyślij za pomocą Shift+Enter',

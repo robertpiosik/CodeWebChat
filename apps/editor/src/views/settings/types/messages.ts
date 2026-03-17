@@ -279,6 +279,15 @@ export interface UpdateCheckNewFilesMessage {
   enabled: boolean
 }
 
+export interface GetReuseLastTabMessage {
+  command: 'GET_REUSE_LAST_TAB'
+}
+
+export interface UpdateReuseLastTabMessage {
+  command: 'UPDATE_REUSE_LAST_TAB'
+  enabled: boolean
+}
+
 export interface GetClearChecksInWorkspaceBehaviorMessage {
   command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
 }
@@ -379,6 +388,8 @@ export type FrontendMessage =
   | UpdateSendWithShiftEnterMessage
   | GetCheckNewFilesMessage
   | UpdateCheckNewFilesMessage
+  | GetReuseLastTabMessage
+  | UpdateReuseLastTabMessage
   | GetClearChecksInWorkspaceBehaviorMessage
   | UpdateClearChecksInWorkspaceBehaviorMessage
   | UpsertConfigurationMessage
@@ -488,6 +499,11 @@ export interface CheckNewFilesMessage {
   enabled: boolean
 }
 
+export interface ReuseLastTabMessage {
+  command: 'REUSE_LAST_TAB'
+  enabled: boolean
+}
+
 export interface ClearChecksInWorkspaceBehaviorMessage {
   command: 'CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
   value: 'ignore-open-editors' | 'uncheck-all'
@@ -528,6 +544,7 @@ export type BackendMessage =
   | AiStudioUserIdMessage
   | SendWithShiftEnterMessage
   | CheckNewFilesMessage
+  | ReuseLastTabMessage
   | ClearChecksInWorkspaceBehaviorMessage
   | ShowSectionMessage
   | FixAllAutomaticallyMessage

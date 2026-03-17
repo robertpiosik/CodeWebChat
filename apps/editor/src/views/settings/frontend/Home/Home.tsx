@@ -100,6 +100,7 @@ type Props = {
   ai_studio_user_id: number | null
   send_with_shift_enter: boolean
   check_new_files: boolean
+  reuse_last_tab: boolean
   are_automatic_checkpoints_disabled: boolean
   checkpoint_lifespan: number
   edit_format_instructions: EditFormatInstructions
@@ -129,6 +130,7 @@ type Props = {
   on_ai_studio_user_id_change: (id: number | null) => void
   on_send_with_shift_enter_change: (enabled: boolean) => void
   on_check_new_files_change: (enabled: boolean) => void
+  on_reuse_last_tab_change: (enabled: boolean) => void
   on_clear_checks_in_workspace_behavior_change: (
     value: 'ignore-open-editors' | 'uncheck-all'
   ) => void
@@ -341,6 +343,8 @@ export const Home: React.FC<Props> = (props) => {
           }
           check_new_files={props.check_new_files}
           on_check_new_files_change={props.on_check_new_files_change}
+          reuse_last_tab={props.reuse_last_tab}
+          on_reuse_last_tab_change={props.on_reuse_last_tab_change}
           clear_checks_in_workspace_behavior={
             props.clear_checks_in_workspace_behavior
           }

@@ -27,6 +27,7 @@ type Props = {
   are_automatic_checkpoints_disabled: boolean
   send_with_shift_enter: boolean
   check_new_files: boolean
+  reuse_last_tab: boolean
   checkpoint_lifespan: number
   gemini_user_id: number | null
   ai_studio_user_id: number | null
@@ -35,6 +36,7 @@ type Props = {
   on_automatic_checkpoints_toggle: (disabled: boolean) => void
   on_send_with_shift_enter_change: (enabled: boolean) => void
   on_check_new_files_change: (enabled: boolean) => void
+  on_reuse_last_tab_change: (enabled: boolean) => void
   on_checkpoint_lifespan_change: (hours: number | undefined) => void
   clear_checks_in_workspace_behavior: ClearChecksBehavior
   edit_format_instructions: EditFormatInstructions
@@ -252,6 +254,16 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               <UiToggler
                 is_on={props.send_with_shift_enter}
                 on_toggle={props.on_send_with_shift_enter_change}
+              />
+            }
+          />
+          <UiItem
+            title={t('general.reuse-last-tab.title')}
+            description={t('general.reuse-last-tab.description')}
+            slot_right={
+              <UiToggler
+                is_on={props.reuse_last_tab}
+                on_toggle={props.on_reuse_last_tab_change}
               />
             }
           />

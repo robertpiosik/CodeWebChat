@@ -14,6 +14,7 @@ interface ChatQueueItem {
 
 const chat_queue: ChatQueueItem[] = []
 let is_processing = false
+let last_opened_tab_id: number | undefined
 
 const CHAT_INITIALIZATION_TIMEOUT = 5000
 
@@ -86,14 +87,7 @@ const process_next_chat = async () => {
   const { 'selected-firefox-container': selected_firefox_container_id } =
     await browser.storage.local.get('selected-firefox-container')
 
-  const create_tab_options: any = {
-    active: true
-  }
-
-  if (selected_firefox_container_id) {
-    create_tab_options.cookieStoreId = selected_firefox_container_id
-  }
-
+  let target_url = ''
   // OpenRouter is a special case—model handling via search params
   if (current_chat_message.url == 'https://openrouter.ai/chat') {
     // https://openrouter.ai/chat?models=openrouter/quasar-alpha
@@ -101,14 +95,34 @@ const process_next_chat = async () => {
     if (current_chat_message.model) {
       search_params.set('models', current_chat_message.model)
     }
-    const open_router_url = `${
+    target_url = `${
       current_chat_message.url
     }?${search_params.toString()}#cwc-${batch_id}`
-    create_tab_options.url = open_router_url
-    browser.tabs.create(create_tab_options)
   } else {
-    create_tab_options.url = `${current_chat_message.url}#cwc-${batch_id}`
-    browser.tabs.create(create_tab_options)
+    target_url = `${current_chat_message.url}#cwc-${batch_id}`
+  }
+
+  let tab_reused = false
+  if (last_opened_tab_id !== undefined && current_chat_message.reuse_last_tab) {
+    try {
+      await browser.tabs.get(last_opened_tab_id)
+      await browser.tabs.update(last_opened_tab_id, {
+        url: target_url,
+        active: true
+      })
+      tab_reused = true
+    } catch {
+      last_opened_tab_id = undefined
+    }
+  }
+
+  if (!tab_reused) {
+    const create_tab_options: any = { active: true, url: target_url }
+    if (selected_firefox_container_id) {
+      create_tab_options.cookieStoreId = selected_firefox_container_id
+    }
+    const new_tab = await browser.tabs.create(create_tab_options)
+    last_opened_tab_id = new_tab.id
   }
 
   current_queue_item.timeout_id = setTimeout(() => {

@@ -22,6 +22,7 @@ import {
   handle_get_ai_studio_user_id,
   handle_get_model_providers,
   handle_get_send_with_shift_enter,
+  handle_get_reuse_last_tab,
   handle_update_checkpoint_lifespan,
   handle_get_checkpoint_lifespan,
   handle_reorder_configuration,
@@ -38,6 +39,7 @@ import {
   handle_update_gemini_user_id,
   handle_update_ai_studio_user_id,
   handle_update_send_with_shift_enter,
+  handle_update_reuse_last_tab,
   handle_upsert_configuration,
   handle_open_ignore_patterns_settings,
   handle_open_allow_patterns_settings,
@@ -334,6 +336,10 @@ export class SettingsProvider {
           await handle_get_check_new_files(this)
         } else if (message.command == 'UPDATE_CHECK_NEW_FILES') {
           await handle_update_check_new_files(message)
+        } else if (message.command == 'GET_REUSE_LAST_TAB') {
+          await handle_get_reuse_last_tab(this)
+        } else if (message.command == 'UPDATE_REUSE_LAST_TAB') {
+          await handle_update_reuse_last_tab(message)
         } else if (
           message.command == 'GET_ARE_AUTOMATIC_CHECKPOINTS_DISABLED'
         ) {
@@ -415,6 +421,7 @@ export class SettingsProvider {
           void handle_get_ai_studio_user_id(this)
           void handle_get_send_with_shift_enter(this)
           void handle_get_check_new_files(this)
+          void handle_get_reuse_last_tab(this)
           void handle_get_fix_all_automatically(this)
           void handle_get_extended_cache_duration_for_anthropic(this)
         }
