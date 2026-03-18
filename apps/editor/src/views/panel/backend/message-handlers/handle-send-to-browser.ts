@@ -232,7 +232,7 @@ export const handle_send_to_browser = async (params: {
   if (sent) {
     params.panel_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
-      title: 'Continue in theconnected browser',
+      title: 'Continue in the connected browser',
       type: 'success'
     })
   }
