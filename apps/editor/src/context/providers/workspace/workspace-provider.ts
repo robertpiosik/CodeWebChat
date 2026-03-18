@@ -5,8 +5,6 @@ import ignore, { Ignore } from 'ignore'
 import {
   CONTEXT_CHECKED_PATHS_STATE_KEY,
   CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY,
-  CONTEXT_CHECKED_PATHS_FRF_STATE_KEY,
-  CONTEXT_CHECKED_TIMESTAMPS_FRF_STATE_KEY,
   RANGES_STATE_KEY
 } from '@/constants/state-keys'
 import { IGNORE_PATTERNS } from '@/constants/ignore-patterns'
@@ -226,50 +224,36 @@ export class WorkspaceProvider
   }
 
   private async _save_checked_files_state(): Promise<void> {
+    if (this._is_frf_mode) return
+
     const checked_paths = this.get_all_checked_paths()
-    const paths_key = this._is_frf_mode
-      ? CONTEXT_CHECKED_PATHS_FRF_STATE_KEY
-      : CONTEXT_CHECKED_PATHS_STATE_KEY
-    const times_key = this._is_frf_mode
-      ? CONTEXT_CHECKED_TIMESTAMPS_FRF_STATE_KEY
-      : CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY
-    await this._context.workspaceState.update(paths_key, checked_paths)
     await this._context.workspaceState.update(
-      times_key,
+      CONTEXT_CHECKED_PATHS_STATE_KEY,
+      checked_paths
+    )
+    await this._context.workspaceState.update(
+      CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY,
       Object.fromEntries(this._checked_timestamps)
     )
   }
 
   public load_checked_files_state() {
     const load = async () => {
-      await this.gitignore_initialization
-      const prev_mode = this._is_frf_mode
-
-      this._is_frf_mode = false
       const reg_paths = this._context.workspaceState.get<string[]>(
         CONTEXT_CHECKED_PATHS_STATE_KEY
       )
       const reg_times = this._context.workspaceState.get<
         Record<string, number>
       >(CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY)
+
+      await this.gitignore_initialization
+      const prev_mode = this._is_frf_mode
+
+      this._is_frf_mode = false
       if (reg_paths && reg_paths.length > 0) {
         await this.set_checked_files(
           reg_paths,
           reg_times ? new Map(Object.entries(reg_times)) : undefined
-        )
-      }
-
-      this._is_frf_mode = true
-      const frf_paths = this._context.workspaceState.get<string[]>(
-        CONTEXT_CHECKED_PATHS_FRF_STATE_KEY
-      )
-      const frf_times = this._context.workspaceState.get<
-        Record<string, number>
-      >(CONTEXT_CHECKED_TIMESTAMPS_FRF_STATE_KEY)
-      if (frf_paths && frf_paths.length > 0) {
-        await this.set_checked_files(
-          frf_paths,
-          frf_times ? new Map(Object.entries(frf_times)) : undefined
         )
       }
 
