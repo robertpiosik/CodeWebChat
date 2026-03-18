@@ -165,10 +165,21 @@ export const apply_chat_response_command = (params: {
             }
           }
 
-          params.panel_provider.send_message({
-            command: 'SHOW_PROGRESS',
-            title: t('common.progress.preparing-preview')
-          })
+          const has_valid_blocks =
+            (args?.files_with_content && args.files_with_content.length > 0) ||
+            clipboard_items.some(
+              (item) =>
+                item.type == 'file' ||
+                item.type == 'diff' ||
+                item.type == 'code-at-cursor'
+            )
+
+          if (has_valid_blocks) {
+            params.panel_provider.send_message({
+              command: 'SHOW_PROGRESS',
+              title: t('common.progress.preparing-preview')
+            })
+          }
 
           before_checkpoint = await create_checkpoint({
             workspace_provider: params.workspace_provider,
