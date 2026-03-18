@@ -545,12 +545,18 @@ export const restore_checkpoint = async (params: {
       ? 'Successfully reverted changes.'
       : 'Checkpoint has been restored.'
 
-    if (params.options?.show_auto_closing_modal_on_success) {
+    if (params.checkpoint.trigger == 'response-accepted') {
+      params.panel_provider.send_message({
+        command: 'SHOW_PROGRESS',
+        title: message.endsWith('.') ? message.slice(0, -1) : message,
+        cancellable: false,
+        delay_visibility: true
+      })
+    } else if (params.options?.show_auto_closing_modal_on_success) {
       params.panel_provider.send_message({
         command: 'SHOW_AUTO_CLOSING_MODAL',
         title: message.slice(0, -1),
-        type: 'success',
-        non_dismissable: true
+        type: 'success'
       })
     } else if (temp_checkpoint) {
       const action = await vscode.window.showInformationMessage(

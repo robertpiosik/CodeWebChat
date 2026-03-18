@@ -878,6 +878,12 @@ export interface ShowAutoClosingModalMessage extends BaseMessage {
   non_dismissable?: boolean
 }
 
+export interface ShowNeverClosingModalMessage extends BaseMessage {
+  command: 'SHOW_NEVER_CLOSING_MODAL'
+  title: string
+  type: 'success' | 'warning' | 'error' | 'info'
+}
+
 export interface UpdateFileInPreviewMessage extends BaseMessage {
   command: 'UPDATE_FILE_IN_PREVIEW'
   file: FileInPreview
@@ -974,6 +980,7 @@ export type BackendMessage =
   | ShowApiManagerProgressMessage
   | HideApiManagerProgressMessage
   | ShowAutoClosingModalMessage
+  | ShowNeverClosingModalMessage
   | UpdateFileInPreviewMessage
   | CollapsedStatesMessage
   | CheckpointsMessage

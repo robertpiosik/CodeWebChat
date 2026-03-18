@@ -88,6 +88,8 @@ export const use_modal_manager = () => {
         set_is_preview_ongoing_modal_visible(true)
       } else if (message.command == 'SHOW_RELEVANT_FILES_MODAL') {
         set_relevant_files_modal_data({ files: message.files })
+      } else if (message.command == 'RESPONSE_PREVIEW_STARTED') {
+        set_progress_state(undefined)
       }
     }
 
