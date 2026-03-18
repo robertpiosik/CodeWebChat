@@ -48,7 +48,7 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 - [Chrome Web Store](https://chromewebstore.google.com/detail/autofill-for-code-web-chat/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/autofill-for-code-web-chat/)
 
-**List of supported chatbots:**
+**Supported chatbots:**
 
 - AI Studio
 - Arena
@@ -76,9 +76,18 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 > [!NOTE]
 > Use [forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) of port _55155_ when using remote machine via SSH.
 
-## API tools
+## Call APIs
 
-From code editing to commit messages, CWC supports your software development efforts without leaving the editor. Bring Your Own Key (BYOK) for a model provider of choice. Self-host with [Ollama](https://ollama.com/search) or [LM Studio](https://lmstudio.ai/).
+CWC supports your software development efforts without leaving the editor. Bring Your Own Key (BYOK) for a model provider of choice. Self-host with [Ollama](https://ollama.com/search) or [LM Studio](https://lmstudio.ai/).
+
+**Built-in API tools:**
+
+- Intelligent Update
+- Edit Context
+- Code at Cursor
+- Find Relevant Files
+- Commit Messages
+- Voice Input
 
 ## Enterprise security
 
