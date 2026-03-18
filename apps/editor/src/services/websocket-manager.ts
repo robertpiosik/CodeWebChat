@@ -329,7 +329,10 @@ export class WebSocketManager {
       config.get<ConfigPresetFormat[]>(params.presets_config_key) ?? []
     const gemini_user_id = config.get<number | null>('geminiUserId')
     const ai_studio_user_id = config.get<number | null>('aiStudioUserId')
-    const reuse_last_tab = config.get<boolean>('reuseLastTab', false)
+    const reuse_last_tab =
+      params.chats.length > 1
+        ? false
+        : config.get<boolean>('reuseLastTab', false)
 
     const target_browser_id = await this._select_browser()
     if (target_browser_id === undefined) {
