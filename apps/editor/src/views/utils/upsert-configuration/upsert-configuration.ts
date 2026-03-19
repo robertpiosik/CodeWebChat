@@ -348,6 +348,13 @@ export const upsert_configuration = async (params: {
           tool_type: params.tool_type
         })
         if (new_model !== undefined) {
+          if (
+            updated_config.provider_name != new_provider.provider_name ||
+            updated_config.model != new_model
+          ) {
+            delete updated_config.temperature
+            delete updated_config.reasoning_effort
+          }
           updated_config.provider_name = new_provider.provider_name
           updated_config.model = new_model
           break
