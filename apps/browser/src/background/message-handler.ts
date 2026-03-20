@@ -15,6 +15,7 @@ interface ChatQueueItem {
 const chat_queue: ChatQueueItem[] = []
 let is_processing = false
 let last_opened_tab_id: number | undefined
+let is_finished_responding = false
 
 const CHAT_INITIALIZATION_TIMEOUT = 5000
 
@@ -102,15 +103,28 @@ const process_next_chat = async () => {
     target_url = `${current_chat_message.url}#cwc-${batch_id}`
   }
 
+  const expects_apply_response_button =
+    current_chat_message.prompt_type == 'edit-context' ||
+    current_chat_message.prompt_type == 'code-at-cursor' ||
+    current_chat_message.prompt_type == 'find-relevant-files'
+
   let tab_reused = false
-  if (last_opened_tab_id !== undefined && current_chat_message.reuse_last_tab) {
+  if (
+    last_opened_tab_id !== undefined &&
+    current_chat_message.reuse_last_tab &&
+    (!expects_apply_response_button || is_finished_responding)
+  ) {
     try {
-      await browser.tabs.get(last_opened_tab_id)
-      await browser.tabs.update(last_opened_tab_id, {
-        url: target_url,
-        active: true
-      })
-      tab_reused = true
+      const tab = await browser.tabs.get(last_opened_tab_id)
+      if (tab.active) {
+        await browser.tabs.update(last_opened_tab_id, {
+          url: target_url,
+          active: true
+        })
+        tab_reused = true
+      } else {
+        last_opened_tab_id = undefined
+      }
     } catch {
       last_opened_tab_id = undefined
     }
@@ -124,6 +138,8 @@ const process_next_chat = async () => {
     const new_tab = await browser.tabs.create(create_tab_options)
     last_opened_tab_id = new_tab.id
   }
+
+  is_finished_responding = false
 
   current_queue_item.timeout_id = setTimeout(() => {
     console.warn(
@@ -160,7 +176,7 @@ const handle_chat_initialized = async () => {
 
 export const setup_message_listeners = () => {
   browser.runtime.onMessage.addListener(
-    (message: any, _: any, __: any): any => {
+    (message: any, sender: any, _: any): any => {
       if (is_message(message)) {
         if (message.action == 'chat-initialized') {
           handle_chat_initialized()
@@ -172,6 +188,10 @@ export const setup_message_listeners = () => {
             edit_format: message.edit_format,
             url: message.url
           } as ApplyChatResponseMessage)
+        } else if (message.action == 'finished-responding') {
+          if (sender.tab?.id && sender.tab.id == last_opened_tab_id) {
+            is_finished_responding = true
+          }
         }
       }
       return false

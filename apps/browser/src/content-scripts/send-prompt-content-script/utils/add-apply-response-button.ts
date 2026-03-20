@@ -68,9 +68,19 @@ export function observe_for_responses(params: {
   footer_selector: string
   add_buttons: (footer: Element) => void
 }) {
+  let has_sent_finished_responding = true
+
   const observer = new MutationObserver(() => {
     if (params.is_generating()) {
+      has_sent_finished_responding = false
       return
+    }
+
+    if (!has_sent_finished_responding) {
+      browser.runtime.sendMessage<Message>({
+        action: 'finished-responding'
+      })
+      has_sent_finished_responding = true
     }
 
     const all_footers = document.querySelectorAll(params.footer_selector)

@@ -10,4 +10,11 @@ type ApplyChatResponseMessage = {
   url?: string
 }
 
-export type Message = ChatInitializedMessage | ApplyChatResponseMessage
+type FinishedRespondingMessage = {
+  action: 'finished-responding'
+}
+
+export type Message =
+  | ChatInitializedMessage
+  | ApplyChatResponseMessage
+  | FinishedRespondingMessage
