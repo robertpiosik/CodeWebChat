@@ -103,16 +103,11 @@ const process_next_chat = async () => {
     target_url = `${current_chat_message.url}#cwc-${batch_id}`
   }
 
-  const expects_apply_response_button =
-    current_chat_message.prompt_type == 'edit-context' ||
-    current_chat_message.prompt_type == 'code-at-cursor' ||
-    current_chat_message.prompt_type == 'find-relevant-files'
-
   let tab_reused = false
   if (
     last_opened_tab_id !== undefined &&
     current_chat_message.reuse_last_tab &&
-    (!expects_apply_response_button || is_finished_responding)
+    is_finished_responding
   ) {
     try {
       const tab = await browser.tabs.get(last_opened_tab_id)
