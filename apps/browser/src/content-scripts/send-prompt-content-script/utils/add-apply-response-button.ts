@@ -81,14 +81,13 @@ export function observe_for_responses(params: {
         action: 'finished-responding'
       })
       has_sent_finished_responding = true
+      show_response_ready_notification({ chatbot_name: params.chatbot_name })
     }
 
     const all_footers = document.querySelectorAll(params.footer_selector)
     if (all_footers.length == 0) {
       return
     }
-
-    show_response_ready_notification({ chatbot_name: params.chatbot_name })
 
     all_footers.forEach((footer) => {
       params.add_buttons(footer)
