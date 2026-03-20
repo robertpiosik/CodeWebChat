@@ -365,8 +365,7 @@ export const dictionary = {
       'An error occurred during code completion. See console for details.',
     EDIT_CONTEXT_ERROR:
       'An error occurred during context editing. See console for details.',
-    CONFIGURATION_ALREADY_EXISTS:
-      'A configuration with these properties already exists.',
+    CONFIGURATION_ALREADY_EXISTS: 'Identical configuration already exists.',
     CONFIGURATION_NOT_FOUND: 'Configuration not found.',
     APPLYING_CHANGES_GENERIC_ERROR: (msg: string) =>
       `An error occurred while applying changes (${msg}).`
