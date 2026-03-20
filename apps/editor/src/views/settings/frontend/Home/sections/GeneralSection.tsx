@@ -455,7 +455,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           />
         </UiGroup>
 
-        <UiGroup title={t('general.presets.title')}>
+        <UiGroup title={t('general.chatbots.title')}>
           <UiItem
             title={t('general.gemini-user-id.title')}
             description={t('general.gemini-user-id.description')}
