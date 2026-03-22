@@ -95,7 +95,7 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 > [!NOTE]
 > Use [forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) of port _55155_ when using remote machine via SSH.
 
-## Call APIs
+## Calling APIs
 
 CWC supports your software development efforts without leaving the editor. Bring Your Own Key (BYOK) for a model provider of choice. Self-host with [Ollama](https://ollama.com/search) or [LM Studio](https://lmstudio.ai/).
 
