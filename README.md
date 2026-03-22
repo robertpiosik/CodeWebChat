@@ -16,27 +16,27 @@ Code Web Chat (CWC) is a free and open-source, privacy-first **AI coding toolkit
 - chatbots—ChatGPT, Claude, Gemini, etc.
 - APIs—remote and local model providers
 
-_Implement complex featurs and fix the most daunting bugs without a single tool call. In mere seconds!_
+_Implement features and fix bugs without a single tool call, in mere seconds!_
 
 <br/>
 
-<p align="center"><i>Select context files, type instructions...</i></p>
+<p align="center">Select context files, type instructions...</p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
 
 <br/>
 
-<p align="center"><i>Copy the response when ready...</i></p>
+<p align="center">Copy the response when ready...</p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-2.png"></p>
 
 <br/>
 
-<p align="center"><i>Apply from clipboard...</i></p>
+<p align="center">Apply from clipboard...</p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-3.png"></p>
 
-## Built for prompt caching
+## Cost-efficiency
 
 With its static context approach, CWC offers first-class support for [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching/). Make your chatbot quotas last longer or lower token costs by up to 90% when calling APIs. Minimize latency of self-hosted models.
 
