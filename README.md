@@ -51,7 +51,7 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 
 Other prompt types, like "Code at cursor" follow a similar pattern.
 
-Workflow based on a single turn exchanges facilitates persistent utilization of prompt caching.
+Workflow based on a single-turn exchanges facilitates persistent utilization of prompt caching.
 
 ## Prompt caching
 
