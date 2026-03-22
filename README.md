@@ -38,15 +38,18 @@ _Implement features and fix bugs without a single tool call, in mere seconds!_
 
 ## Introduction
 
-In the world of AI coding, agents like Claude Code or Codex rely on "Function Calling" (where the AI asks "the harness" to read a file, waits for the tool to respond, then reads another). CWC flips this by letting you provide context files upfront in a single, well-structured XML message ("Edit context" prompt type):
+In the world of AI coding, agents like Claude Code or Codex rely on "Function Calling" (where the AI asks "the harness" to read a file, waits for the tool to respond, then reads another). CWC flips this by letting you provide context files upfront in a single, well-structured XML message:
 
 ```
+---------------------------
+"Edit context" prompt type.
+---------------------------
 <files>[the selected files]</files>
 <system>[edit format instructions]</system>
 [user-typed instructions]
 ```
 
-Other prompt types like "Code at cursor" follow a similar pattern.
+Other prompt types, like "Code at cursor" follow a similar pattern.
 
 Workflow based on a single turn exchanges facilitates persistent utilization of prompt caching.
 
