@@ -2,7 +2,7 @@ import { useRef, useCallback } from 'react'
 import { MODE, Mode } from '@/views/panel/types/main-view-mode'
 import { use_is_narrow_viewport, use_is_mac } from '@shared/hooks'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
-import { Dropdown as UiDropdown } from '@ui/components/editor/panel/Dropdown'
+import { PromptTypeDropdown } from '@ui/components/editor/panel/PromptTypeDropdown'
 import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
 import styles from './Header.module.scss'
 import {
@@ -74,7 +74,7 @@ export const Header: React.FC<Props> = (props) => {
           ref={dropdown_container_ref}
         >
           {props.mode == MODE.WEB && (
-            <UiDropdown
+            <PromptTypeDropdown
               options={Object.entries(web_prompt_type_labels).map(
                 ([value, label]) => ({
                   value: value as WebPromptType,
@@ -94,7 +94,7 @@ export const Header: React.FC<Props> = (props) => {
             />
           )}
           {props.mode == MODE.API && (
-            <UiDropdown
+            <PromptTypeDropdown
               options={Object.entries(api_prompt_type_labels).map(
                 ([value, label]) => ({
                   value: value as ApiPromptType,

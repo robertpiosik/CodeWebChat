@@ -44,16 +44,13 @@
     overflow: hidden;
     flex: 1;
     min-width: 0;
-    > span {
-      font-size: 14px !important;
-    }
-  }
 
-  &__label {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-variant-numeric: tabular-nums;
+    > span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
   }
 
   &__right {
@@ -65,9 +62,7 @@
   &:hover,
   &[data-selected='true'] {
     background-color: var(--vscode-list-activeSelectionBackground);
-    & > span {
-      color: var(--vscode-list-activeSelectionForeground);
-    }
+    color: var(--vscode-list-activeSelectionForeground);
   }
 }
 

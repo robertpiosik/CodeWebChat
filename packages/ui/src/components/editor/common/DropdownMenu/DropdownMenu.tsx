@@ -50,7 +50,7 @@ export const DropdownMenu: React.FC<DropdownMenu.Props> = (props) => {
                     style={{ visibility: item.checked ? 'visible' : 'hidden' }}
                   />
                 )}
-                <span className={styles.item__label}>
+                <span>
                   {should_underline ? (
                     <>
                       <span className={styles.underlined}>

@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
-import styles from './Dropdown.module.scss'
+import styles from './PromptTypeDropdown.module.scss'
 import cn from 'classnames'
 import { DropdownMenu } from '../../common/DropdownMenu'
 
-export namespace Dropdown {
+export namespace PromptTypeDropdown {
   export type Option<T extends string> = {
     value: T
     label: string
@@ -21,7 +21,9 @@ export namespace Dropdown {
   }
 }
 
-export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
+export const PromptTypeDropdown = <T extends string>(
+  props: PromptTypeDropdown.Props<T>
+) => {
   const [is_open, set_is_open] = useState(false)
   const [just_opened, set_just_opened] = useState(false)
   const container_ref = useRef<HTMLDivElement>(null)
