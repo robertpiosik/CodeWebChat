@@ -18,9 +18,6 @@ Code Web Chat (CWC) is a free and open-source, privacy-first **AI coding toolkit
 
 Implement complex featurs and fix the most daunting bugs in record time, without a single tool call.
 
-> [!TIP]
-> Elevate your workflow with smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)).
-
 <br/>
 
 <p align="center"><i>Select relevant files, type instructions...</i></p>
@@ -71,6 +68,9 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 - Together
 - Yuanbao
 - Z AI
+
+> [!TIP]
+> Elevate your workflow with smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)).
 
 > [!IMPORTANT]
 > The _Apply response_ button placed under responses is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button. Review the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/apps/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) to learn about implementation details.
