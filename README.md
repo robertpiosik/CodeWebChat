@@ -13,8 +13,8 @@
 
 Code Web Chat (CWC) is a free and open-source, privacy-first **AI coding toolkit for VS Code**. It helps construct zero-overhead, XML-formatted prompts with files and instructions for:
 
-- chatbots—ChatGPT, Claude, Gemini, etc.
-- APIs—remote and local model providers
+- **chatbots**—ChatGPT, Claude, Gemini, etc.
+- **APIs**—remote and local model providers
 
 _Implement features and fix bugs without a single tool call, in mere seconds!_
 
@@ -35,6 +35,20 @@ _Implement features and fix bugs without a single tool call, in mere seconds!_
 <p align="center">Apply from clipboard...</p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-3.png"></p>
+
+## Introduction
+
+In the world of AI coding, agents like Claude Code or Codex rely on "Function Calling" (where the AI asks "the harness" to read a file, waits for the tool to respond, then reads another). CWC flips this by letting you provide the full context upfront in a single, well-structured XML message.
+
+"Edit context" prompt type:
+
+```
+<files>[the selected files]</files>
+<system>[edit format instructions]</system>
+[user-typed instructions]
+```
+
+Other prompt types like "Code at cursor" follow a similar pattern.
 
 ## Cost-efficiency
 
