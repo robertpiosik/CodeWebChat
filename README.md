@@ -55,7 +55,7 @@ Workflow based on a single-turn exchanges facilitates persistent utilization of 
 
 ## Prompt caching
 
-With its static context approach, CWC heavily utilizes prompt caching. Make your chatbot quotas last longer or lower token costs by up to 90% when calling APIs. Minimize latency of self-hosted models.
+With its static context approach, CWC optimizes prompt caching via smart file ordering based on update and selection recency. Make your chatbot quotas last longer or lower token costs by up to 90% when calling APIs. Minimize latency of self-hosted models.
 
 ## Enabling autofill
 
