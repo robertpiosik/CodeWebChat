@@ -39,7 +39,7 @@ Implement complex featurs and fix the most daunting bugs without a single tool c
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-3.png"></p>
 
-## Cost efficiency
+## Built for prompt caching
 
 With its static context approach, CWC offers first-class support for [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching/). Make your chatbot quotas last longer or lower token costs by up to 90% when calling APIs. Minimize latency of self-hosted models.
 
