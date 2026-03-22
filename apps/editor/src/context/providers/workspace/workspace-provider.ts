@@ -465,6 +465,11 @@ export class WorkspaceProvider
     const workspace_root = this.get_workspace_root_for_file(changed_file_path)
     if (!workspace_root) return
 
+    // Early exit if the file is ignored/excluded to avoid unnecessary processing
+    if (this.is_ignored_by_patterns(changed_file_path)) {
+      return
+    }
+
     if (
       ['.gitignore', '.cursorignore', '.codeiumignore'].includes(
         path.basename(changed_file_path)
@@ -499,25 +504,23 @@ export class WorkspaceProvider
     const workspace_root = this.get_workspace_root_for_file(created_file_path)
     if (!workspace_root) return
 
-    if (
-      ['.gitignore', '.cursorignore', '.codeiumignore'].includes(
-        path.basename(created_file_path)
-      )
-    ) {
+    const basename = path.basename(created_file_path)
+    if (['.gitignore', '.cursorignore', '.codeiumignore'].includes(basename)) {
+      return
+    }
+
+    if (this.is_ignored_by_patterns(created_file_path)) {
       return
     }
 
     this._file_workspace_map.set(created_file_path, workspace_root)
-
     const parent_dir = path.dirname(created_file_path)
     const relative_path = path.relative(workspace_root, created_file_path)
 
     let is_directory = false
     try {
       is_directory = fs.statSync(created_file_path).isDirectory()
-    } catch {
-      // Ignore if file was deleted quickly
-    }
+    } catch {}
 
     if (is_directory) {
       await this._load_all_gitignore_files()
@@ -527,10 +530,7 @@ export class WorkspaceProvider
       .getConfiguration('codeWebChat')
       .get<boolean>('checkNewFiles')
 
-    if (
-      !this.is_excluded(is_directory ? relative_path + '/' : relative_path) &&
-      !this.is_ignored_by_patterns(created_file_path)
-    ) {
+    if (!this.is_excluded(is_directory ? relative_path + '/' : relative_path)) {
       if (check_new_files) {
         this._checked_items.set(
           created_file_path,
