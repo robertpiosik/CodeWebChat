@@ -50,9 +50,11 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 
 Other prompt types like "Code at cursor" follow a similar pattern.
 
-## Cost-efficiency
+Workflow based on a single turn exchanges facilitates persistent utilization of prompt caching.
 
-With its static context approach, CWC offers first-class support for [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching/). Make your chatbot quotas last longer or lower token costs by up to 90% when calling APIs. Minimize latency of self-hosted models.
+## Prompt caching
+
+With its static context approach, CWC offers first-class support for prompt caching. Make your chatbot quotas last longer or lower token costs by up to 90% when calling APIs. Minimize latency of self-hosted models.
 
 ## Enabling autofill
 
