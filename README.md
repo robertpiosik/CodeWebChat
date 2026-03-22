@@ -51,6 +51,9 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 
 Other prompt types, like "Code at cursor" follow a similar pattern.
 
+> [!TIP]
+> Got lost in the codebase? Use "Find relevant files" prompt type with a rough file selection.
+
 Workflow based on a single-turn exchanges facilitates persistent utilization of prompt caching.
 
 ## Prompt caching
