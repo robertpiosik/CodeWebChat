@@ -20,7 +20,7 @@ Implement complex featurs and fix the most daunting bugs in record time, without
 
 <br/>
 
-<p align="center"><i>Select relevant files, type instructions...</i></p>
+<p align="center"><i>Select context files, type instructions...</i></p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
 
