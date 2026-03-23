@@ -69,9 +69,7 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 ```
 <files>[the selected files]</files>
 <file path="[active file]">
-<![CDATA[
-[text before cursor]<missing_text>[user-typed instructions]</missing_text>[text after cursor]
-]]>
+[code before cursor]<missing_text>[user-typed instructions]</missing_text>[code after cursor]
 </file>
 </files>
 <system>[code at cursor instructions]</system>
