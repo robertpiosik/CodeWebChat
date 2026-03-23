@@ -1,3 +1,5 @@
+import browser from 'webextension-polyfill'
+import { Message } from '@/types/messages'
 import { Chatbot } from '../types/chatbot'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { show_response_ready_notification } from '../utils/show-response-ready-notification'
@@ -436,7 +438,15 @@ export const ai_studio: Chatbot = {
               (span) => span.textContent?.trim() == 'thumb_up'
             )
           if (has_thumb_up) {
-            show_response_ready_notification({ chatbot_name: 'AI Studio' })
+            const has_apply_button = !!footer.querySelector(
+              '.cwc-apply-response-button'
+            )
+            if (!has_apply_button) {
+              browser.runtime.sendMessage<Message>({
+                action: 'finished-responding'
+              })
+              show_response_ready_notification({ chatbot_name: 'AI Studio' })
+            }
             add_buttons(footer)
           }
         })
