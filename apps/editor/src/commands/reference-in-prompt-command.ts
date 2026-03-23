@@ -11,12 +11,29 @@ export const reference_in_prompt_command = (params: {
 }) => {
   return vscode.commands.registerCommand(
     'codeWebChat.referenceInPrompt',
-    async (uri: FileItem) => {
+    async (uri?: any) => {
       if (!params.panel_provider || !params.workspace_provider) {
         return
       }
 
-      const file_path = uri.resourceUri.fsPath
+      let active_uri: vscode.Uri | undefined
+      let is_directory = false
+      let target_item = uri
+
+      if (uri && uri.resourceUri) {
+        active_uri = uri.resourceUri
+        is_directory = !!uri.isDirectory
+      } else if (uri && uri.fsPath) {
+        active_uri = uri
+        target_item = { resourceUri: active_uri, isDirectory: false }
+      } else if (vscode.window.activeTextEditor) {
+        active_uri = vscode.window.activeTextEditor.document.uri
+        target_item = { resourceUri: active_uri, isDirectory: false }
+      }
+
+      if (!active_uri) return
+
+      const file_path = active_uri.fsPath
 
       const workspace_root =
         params.workspace_provider.get_workspace_root_for_file(file_path)
@@ -33,12 +50,12 @@ export const reference_in_prompt_command = (params: {
         .includes(file_path)
 
       const is_partially_checked =
-        uri.isDirectory &&
+        is_directory &&
         params.workspace_provider.is_partially_checked(file_path)
 
       if (!is_checked && !is_partially_checked) {
         await params.workspace_provider.update_check_state(
-          uri,
+          target_item as FileItem,
           vscode.TreeItemCheckboxState.Checked
         )
       }
