@@ -48,7 +48,7 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 ```
 <files>[the selected files]</files>
 <system>[edit format instructions]</system>
-[user-typed instructions]
+[user-typed prompt]
 ```
 
 </details>
@@ -58,7 +58,7 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 
 ```
 <files>[the selected files]</files>
-[user-typed instructions]
+[user-typed prompt]
 ```
 
 </details>
@@ -67,12 +67,13 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 <summary>Code at cursor</summary>
 
 ```
-<files>[the selected files]</files>
+<files>
+[the selected files]
 <file path="[active file]">
-[code before cursor]<missing_text>[user-typed instructions]</missing_text>[code after cursor]
+[code before cursor]<missing_text>[user-typed prompt]</missing_text>[code after cursor]
 </file>
 </files>
-<system>[code at cursor instructions]</system>
+[code at cursor instructions]
 ```
 
 </details>
@@ -82,8 +83,9 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 
 ```
 <files>[the selected files]</files>
-<system>[find relevant files format and instructions]</system>
-[user-typed instructions]
+<system>[output format]</system>
+[find relevant files instructions]
+[user-typed prompt]
 ```
 
 </details>
@@ -92,7 +94,7 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 <summary>No context</summary>
 
 ```
-[user-typed instructions]
+[user-typed prompt]
 ```
 
 </details>
