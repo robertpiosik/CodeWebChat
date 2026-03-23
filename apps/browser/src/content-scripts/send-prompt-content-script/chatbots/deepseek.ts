@@ -80,7 +80,7 @@ export const deepseek: Chatbot = {
     input_element.value = params.message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
   },
-  inject_apply_response_button: (params) => {
+  setup_observer: (params) => {
     const add_buttons = (footer: Element) => {
       add_apply_response_button({
         client_id: params.client_id,
@@ -130,7 +130,7 @@ export const deepseek: Chatbot = {
         )
       },
       footer_selector: 'div.ds-message + div + div > div.ds-flex',
-      add_buttons
+      add_buttons: params.inject_button ? add_buttons : undefined
     })
   }
 }

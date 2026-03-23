@@ -89,7 +89,7 @@ export const mistral: Chatbot = {
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
     await new Promise((r) => requestAnimationFrame(r))
   },
-  inject_apply_response_button: (params) => {
+  setup_observer: (params) => {
     const add_buttons = (footer: Element) => {
       add_apply_response_button({
         client_id: params.client_id,
@@ -134,7 +134,7 @@ export const mistral: Chatbot = {
           !document.querySelector(footer_selector) ||
           !!document.querySelector('form rect[rx="2"]'),
         footer_selector,
-        add_buttons
+        add_buttons: params.inject_button ? add_buttons : undefined
       })
     })
   }

@@ -66,7 +66,7 @@ export function observe_for_responses(params: {
   chatbot_name: string
   is_generating: () => boolean
   footer_selector: string
-  add_buttons: (footer: Element) => void
+  add_buttons?: (footer: Element) => void
 }) {
   let has_sent_finished_responding = true
 
@@ -84,13 +84,17 @@ export function observe_for_responses(params: {
       show_response_ready_notification({ chatbot_name: params.chatbot_name })
     }
 
+    if (!params.add_buttons) {
+      return
+    }
+
     const all_footers = document.querySelectorAll(params.footer_selector)
     if (all_footers.length == 0) {
       return
     }
 
     all_footers.forEach((footer) => {
-      params.add_buttons(footer)
+      params.add_buttons!(footer)
     })
   })
 

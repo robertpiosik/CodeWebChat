@@ -106,7 +106,7 @@ export const grok: Chatbot = {
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
     input_element.focus()
   },
-  inject_apply_response_button: (params) => {
+  setup_observer: (params) => {
     const add_buttons = (footer: Element) => {
       add_apply_response_button({
         client_id: params.client_id,
@@ -139,7 +139,7 @@ export const grok: Chatbot = {
           'path[d="M4 9.2v5.6c0 1.116 0 1.673.11 2.134a4 4 0 0 0 2.956 2.956c.46.11 1.018.11 2.134.11h5.6c1.116 0 1.673 0 2.134-.11a4 4 0 0 0 2.956-2.956c.11-.46.11-1.018.11-2.134V9.2c0-1.116 0-1.673-.11-2.134a4 4 0 0 0-2.956-2.955C16.474 4 15.916 4 14.8 4H9.2c-1.116 0-1.673 0-2.134.11a4 4 0 0 0-2.955 2.956C4 7.526 4 8.084 4 9.2Z"]'
         ),
       footer_selector: 'div.items-start div.action-buttons > div',
-      add_buttons
+      add_buttons: params.inject_button ? add_buttons : undefined
     })
   }
 }

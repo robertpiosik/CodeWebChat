@@ -127,7 +127,7 @@ export const claude: Chatbot = {
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
     input_element.focus()
   },
-  inject_apply_response_button: (params) => {
+  setup_observer: (params) => {
     const add_buttons = (footer: Element) => {
       add_apply_response_button({
         client_id: params.client_id,
@@ -162,7 +162,7 @@ export const claude: Chatbot = {
       chatbot_name: 'Claude',
       is_generating: () => !!document.querySelector(stop_button_selector),
       footer_selector,
-      add_buttons
+      add_buttons: params.inject_button ? add_buttons : undefined
     })
   }
 }

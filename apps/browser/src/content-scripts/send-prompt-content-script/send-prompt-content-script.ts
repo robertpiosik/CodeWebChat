@@ -227,24 +227,26 @@ const main = async () => {
 
     await browser.storage.local.remove(storage_key)
 
-    if (
-      chatbot?.inject_apply_response_button &&
-      (stored_data.prompt_type == 'edit-context' ||
+    if (chatbot?.setup_observer) {
+      const inject_button =
+        stored_data.prompt_type == 'edit-context' ||
         stored_data.prompt_type == 'code-at-cursor' ||
-        stored_data.prompt_type == 'find-relevant-files')
-    ) {
+        stored_data.prompt_type == 'find-relevant-files'
+
       sessionStorage.setItem(
         session_data_key,
         JSON.stringify({
           client_id: stored_data.client_id,
           raw_instructions: stored_data.raw_instructions,
-          edit_format: stored_data.edit_format
+          edit_format: stored_data.edit_format,
+          inject_button
         })
       )
-      chatbot.inject_apply_response_button({
+      chatbot.setup_observer({
         client_id: stored_data.client_id,
         raw_instructions: stored_data.raw_instructions,
-        edit_format: stored_data.edit_format
+        edit_format: stored_data.edit_format,
+        inject_button
       })
     } else {
       sessionStorage.removeItem(session_data_key)
@@ -254,11 +256,12 @@ const main = async () => {
     if (session_data_str && chatbot) {
       try {
         const session_data = JSON.parse(session_data_str)
-        if (chatbot.inject_apply_response_button) {
-          chatbot.inject_apply_response_button({
+        if (chatbot.setup_observer) {
+          chatbot.setup_observer({
             client_id: session_data.client_id,
             raw_instructions: session_data.raw_instructions,
-            edit_format: session_data.edit_format
+            edit_format: session_data.edit_format,
+            inject_button: session_data.inject_button ?? true
           })
         }
       } catch (e) {

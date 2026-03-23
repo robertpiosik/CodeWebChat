@@ -375,7 +375,7 @@ export const ai_studio: Chatbot = {
 
     await close_panel()
   },
-  inject_apply_response_button: (params) => {
+  setup_observer: (params) => {
     const add_buttons = (footer: Element) => {
       add_apply_response_button({
         client_id: params.client_id,
@@ -424,6 +424,7 @@ export const ai_studio: Chatbot = {
     // AI Studio is quite sluggish with showing already generated tokens,
     // therefore we handle waiting for finished response differently than
     // in other chatbots.
+    let has_sent_finished_responding = true
     let debounce_timer: NodeJS.Timeout
     const observer = new MutationObserver(() => {
       clearTimeout(debounce_timer)
@@ -438,16 +439,17 @@ export const ai_studio: Chatbot = {
               (span) => span.textContent?.trim() == 'thumb_up'
             )
           if (has_thumb_up) {
-            const has_apply_button = !!footer.querySelector(
-              '.cwc-apply-response-button'
-            )
-            if (!has_apply_button) {
+            const has_been_processed = footer.hasAttribute('data-cwc-processed')
+            if (!has_been_processed) {
               browser.runtime.sendMessage<Message>({
                 action: 'finished-responding'
               })
               show_response_ready_notification({ chatbot_name: 'AI Studio' })
+              footer.setAttribute('data-cwc-processed', 'true')
             }
-            add_buttons(footer)
+            if (params.inject_button) {
+              add_buttons(footer)
+            }
           }
         })
       }, 100)

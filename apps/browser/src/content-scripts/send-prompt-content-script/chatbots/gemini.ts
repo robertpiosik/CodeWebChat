@@ -151,7 +151,7 @@ export const gemini: Chatbot = {
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
     input_element.focus()
   },
-  inject_apply_response_button: (params) => {
+  setup_observer: (params) => {
     const add_buttons = (footer: Element) => {
       add_apply_response_button({
         client_id: params.client_id,
@@ -182,7 +182,7 @@ export const gemini: Chatbot = {
       is_generating: () =>
         !!document.querySelector('mat-icon[fonticon="stop"]'),
       footer_selector: 'message-actions > div > div',
-      add_buttons
+      add_buttons: params.inject_button ? add_buttons : undefined
     })
   }
 }

@@ -32,7 +32,7 @@ export const arena: Chatbot = {
     input_element.value = params.message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
   },
-  inject_apply_response_button: (params) => {
+  setup_observer: (params) => {
     const add_buttons = (footer: Element) => {
       add_apply_response_button({
         client_id: params.client_id,
@@ -65,7 +65,7 @@ export const arena: Chatbot = {
       is_generating: () => !!document.querySelector('ol .animate-spin'),
       footer_selector:
         'ol .bg-surface-primary > div:last-child > div.text-text-primary',
-      add_buttons
+      add_buttons: params.inject_button ? add_buttons : undefined
     })
   }
 }

@@ -54,7 +54,7 @@ export const z_ai: Chatbot = {
     input_element.value = params.message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
   },
-  inject_apply_response_button: (params) => {
+  setup_observer: (params) => {
     const add_buttons = (footer: Element) => {
       add_apply_response_button({
         client_id: params.client_id,
@@ -83,7 +83,7 @@ export const z_ai: Chatbot = {
       is_generating: () =>
         !document.querySelector('button[id="send-message-button"]'),
       footer_selector: '.chat-assistant + div',
-      add_buttons
+      add_buttons: params.inject_button ? add_buttons : undefined
     })
   }
 }

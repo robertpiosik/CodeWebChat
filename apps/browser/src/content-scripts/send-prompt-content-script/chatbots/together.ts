@@ -79,7 +79,7 @@ export const together: Chatbot = {
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
     input_element.focus()
   },
-  inject_apply_response_button: (params) => {
+  setup_observer: (params) => {
     const add_buttons = (footer: Element) => {
       add_apply_response_button({
         client_id: params.client_id,
@@ -109,7 +109,7 @@ export const together: Chatbot = {
       is_generating: () =>
         !!document.querySelector('button[data-testid="stop-button"]'),
       footer_selector: 'div[data-testid="assistant-message-toolbar"]',
-      add_buttons
+      add_buttons: params.inject_button ? add_buttons : undefined
     })
   }
 }

@@ -130,7 +130,7 @@ export const chatgpt: Chatbot = {
     input_element.innerText = params.message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
   },
-  inject_apply_response_button: (params) => {
+  setup_observer: (params) => {
     const add_buttons = (footer: Element) => {
       add_apply_response_button({
         client_id: params.client_id,
@@ -161,7 +161,7 @@ export const chatgpt: Chatbot = {
       is_generating: () =>
         !!document.querySelector('button[data-testid="stop-button"]'),
       footer_selector: '.agent-turn > div:nth-of-type(2) > div',
-      add_buttons
+      add_buttons: params.inject_button ? add_buttons : undefined
     })
   }
 }

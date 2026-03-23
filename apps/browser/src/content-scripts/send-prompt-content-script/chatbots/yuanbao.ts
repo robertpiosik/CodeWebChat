@@ -35,7 +35,7 @@ export const yuanbao: Chatbot = {
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
     input_element.focus()
   },
-  inject_apply_response_button: (params) => {
+  setup_observer: (params) => {
     const add_buttons = (footer: Element) => {
       add_apply_response_button({
         client_id: params.client_id,
@@ -64,7 +64,7 @@ export const yuanbao: Chatbot = {
       chatbot_name: 'Yuanbao',
       is_generating: () => !!document.querySelector('rect[x="7.71448"]'),
       footer_selector: '.agent-chat__toolbar__right',
-      add_buttons
+      add_buttons: params.inject_button ? add_buttons : undefined
     })
   }
 }
