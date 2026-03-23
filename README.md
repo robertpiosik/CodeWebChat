@@ -148,7 +148,7 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 
 ## Calling APIs
 
-**CWC includes built-in API tools.** Bring Your Own Key (BYOK) for a model provider of choice. Self-host with [Ollama](https://ollama.com/search) or [LM Studio](https://lmstudio.ai/).
+CWC includes useful API tools. Bring Your Own Key (BYOK) for a model provider of choice. Self-host with [Ollama](https://ollama.com/search) or [LM Studio](https://lmstudio.ai/).
 
 - **Intelligent Update**—Integrate changes from malformed responses.
 - **Edit Context**—Pair-programming using natural language instructions.
