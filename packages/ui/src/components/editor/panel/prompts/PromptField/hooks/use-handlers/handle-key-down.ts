@@ -319,6 +319,29 @@ export const create_handle_key_down = (
       return
     }
 
+    if (selection?.isCollapsed && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+      const raw_pos = refs.raw_caret_pos_ref.current
+      const text_before = props.value.substring(0, raw_pos)
+      const backticks_count = (text_before.match(/`/g) || []).length
+
+      if (
+        backticks_count > 0 &&
+        backticks_count % 2 == 0 &&
+        text_before.endsWith('`')
+      ) {
+        const start_pos = text_before.lastIndexOf('`', raw_pos - 2)
+        if (start_pos != -1) {
+          e.preventDefault()
+          const new_value =
+            props.value.substring(0, start_pos) + props.value.substring(raw_pos)
+
+          refs.has_modified_current_entry_ref.current = true
+          utils.update_value(new_value, start_pos)
+          return
+        }
+      }
+    }
+
     if (e.ctrlKey || e.metaKey) {
       e.preventDefault()
       const raw_pos = refs.raw_caret_pos_ref.current
