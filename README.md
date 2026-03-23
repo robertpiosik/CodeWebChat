@@ -40,8 +40,10 @@ _Implement features and fix bugs without a single tool call, in mere seconds!_
 
 In the world of AI coding, agents like Claude Code or Codex rely on "Function Calling" (where the AI asks "the harness" to read a file, waits for the tool to respond, then reads another). CWC flips this by letting you provide context files upfront in a single, well-structured XML message.
 
+**Prompt types:**
+
 <details>
-<summary>"Edit context" prompt type.</summary>
+<summary>"Edit context"</summary>
 
 ```
 <files>[the selected files]</files>
@@ -51,7 +53,51 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 
 </details>
 
-Other prompt types, like "Code at cursor" follow a similar pattern.
+<details>
+<summary>"Ask about context"</summary>
+
+```
+<files>[the selected files]</files>
+[user-typed instructions]
+```
+
+</details>
+
+<details>
+<summary>"Code at cursor"</summary>
+
+```
+<files>[the selected files]</files>
+<file path="[active file]">
+<![CDATA[
+[text before cursor]<missing_text>[user-typed instructions]</missing_text>[text after cursor]
+]]>
+</file>
+</files>
+<system>[code at cursor instructions]</system>
+```
+
+</details>
+
+<details>
+<summary>"Find relevant files"</summary>
+
+```
+<files>[the selected files]</files>
+<system>[find relevant files format and instructions]</system>
+[user-typed instructions]
+```
+
+</details>
+
+<details>
+<summary>"No context"</summary>
+
+```
+[user-typed instructions]
+```
+
+</details>
 
 > [!TIP]
 > Got lost in the codebase? Use "Find relevant files" prompt type with a rough file selection.
