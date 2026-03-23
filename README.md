@@ -43,7 +43,7 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 **Prompt types:**
 
 <details>
-<summary>"Edit context"</summary>
+<summary>Edit context</summary>
 
 ```
 <files>[the selected files]</files>
@@ -54,7 +54,7 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 </details>
 
 <details>
-<summary>"Ask about context"</summary>
+<summary>Ask about context</summary>
 
 ```
 <files>[the selected files]</files>
@@ -64,7 +64,7 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 </details>
 
 <details>
-<summary>"Code at cursor"</summary>
+<summary>Code at cursor</summary>
 
 ```
 <files>[the selected files]</files>
@@ -78,7 +78,7 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 </details>
 
 <details>
-<summary>"Find relevant files"</summary>
+<summary>Find relevant files</summary>
 
 ```
 <files>[the selected files]</files>
@@ -89,7 +89,7 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 </details>
 
 <details>
-<summary>"No context"</summary>
+<summary>No context</summary>
 
 ```
 [user-typed instructions]
