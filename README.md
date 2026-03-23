@@ -47,7 +47,7 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 
 ```
 <files>[the selected files]</files>
-<system>[edit format instructions]</system>
+<system>[edit format (e.g. whole or diff) instructions]</system>
 [user-typed prompt]
 ```
 
@@ -73,7 +73,7 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 [code before cursor]<missing_text>[user-typed prompt]</missing_text>[code after cursor]
 </file>
 </files>
-[code at cursor instructions]
+[predefined instructions]
 ```
 
 </details>
@@ -84,7 +84,7 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 ```
 <files>[the selected files]</files>
 <system>[output format]</system>
-[find relevant files instructions]
+[predefined instructions]
 [user-typed prompt]
 ```
 
@@ -148,16 +148,14 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 
 ## Calling APIs
 
-CWC supports your software development efforts without leaving the editor. Bring Your Own Key (BYOK) for a model provider of choice. Self-host with [Ollama](https://ollama.com/search) or [LM Studio](https://lmstudio.ai/).
+**CWC includes built-in API tools.** Bring Your Own Key (BYOK) for a model provider of choice. Self-host with [Ollama](https://ollama.com/search) or [LM Studio](https://lmstudio.ai/).
 
-**Built-in API tools:**
-
-- Intelligent Update
-- Edit Context
-- Code at Cursor
-- Find Relevant Files
-- Commit Messages
-- Voice Input
+- **Intelligent Update**—Integrate changes from malformed responses.
+- **Edit Context**—Pair-programming using natural language instructions.
+- **Code at Cursor**—Accurate inline code from reasoning models.
+- **Find Relevant Files**—Find files using natural language description.
+- **Commit Messages**—Meaningful summaries of changes in your style.
+- **Voice Input**—Transcribe speech to text in the prompt field.
 
 ## Enterprise security
 
@@ -171,28 +169,28 @@ CWC supports your software development efforts without leaving the editor. Bring
 
 ### Code at Cursor
 
-- `Code Web Chat: Code at Cursor` - Get an inline snippet while using the current context.
-- `Code Web Chat: Code at Cursor using...` - Inline snippet with configuration selection.
-- `Code Web Chat: Code at Cursor with Instructions` - Inline snippet with instructions.
-- `Code Web Chat: Code at Cursor with Instructions using...` - Inline snippet with instructions and configuration selection.
+- `Code at Cursor` - Get an inline snippet while using the current context.
+- `Code at Cursor using...` - Inline snippet with configuration selection.
+- `Code at Cursor with Instructions` - Inline snippet with instructions.
+- `Code at Cursor with Instructions using...` - Inline snippet with instructions and configuration selection.
 
 ### Checkpoints
 
-- `Code Web Chat: Checkpoints` - Restore the overall workspace state to the saved checkpoint.
-- `Code Web Chat: Create New Checkpoint` - Save the current state of the workspace.
+- `Checkpoints` - Restore the overall workspace state to the saved checkpoint.
+- `Create New Checkpoint` - Save the current state of the workspace.
 
 ### Context
 
-- `Code Web Chat: Apply Context` - Apply a saved context or save the current file selection.
-- `Code Web Chat: Add File to Context` - Search and add file (or parent folder via file action) to the context.
-- `Code Web Chat: Remove File from Context` - Search and remove file (or parent folder via file action) from the context.
-- `Code Web Chat: Search Files for Context` - Search and add files containing specific keywords to the context.
-- `Code Web Chat: Copy Context` - Copy XML-formatted checked files from the Workspace view to the clipboard.
-- `Code Web Chat: Copy Context of Open Editors` - Copy XML-formatted checked files from the Open Editors view to the clipboard.
+- `Apply Context` - Apply a saved context or save the current file selection.
+- `Add File to Context` - Search and add file (or parent folder via file action) to the context.
+- `Remove File from Context` - Search and remove file (or parent folder via file action) from the context.
+- `Search Files for Context` - Search and add files containing specific keywords to the context.
+- `Copy Context` - Copy XML-formatted checked files from the Workspace view to the clipboard.
+- `Copy Context of Open Editors` - Copy XML-formatted checked files from the Open Editors view to the clipboard.
 
 ### Commit messages
 
-- `Code Web Chat: Commit Changes` - Generate commit message and commit.
+- `Commit Changes` - Generate commit message and commit.
 
 ## Contributing
 
