@@ -1,9 +1,15 @@
-import { FileInPreview } from '@shared/types/file-in-preview'
+import {
+  FileInPreview,
+  RelevantFileInPreview
+} from '@shared/types/file-in-preview'
 import * as vscode from 'vscode'
 
 export type PreviewDecision =
   | { jump_to: { file_path: string; workspace_name?: string } }
-  | { accepted_files: FileInPreview[]; created_at?: number }
+  | {
+      accepted_files: (FileInPreview | RelevantFileInPreview)[]
+      created_at?: number
+    }
 
 export type PreviewResult = {
   decision: PreviewDecision

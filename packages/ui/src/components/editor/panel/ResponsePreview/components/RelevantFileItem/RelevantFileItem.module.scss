@@ -1,0 +1,71 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.file {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 1px solid var(--cwc-border-color-dimmed);
+  padding: 0 8px;
+  margin: 0 12px;
+  height: 34px;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--vscode-list-hoverBackground);
+    border-color: var(--cwc-border-color);
+
+    .file__actions {
+      display: flex;
+    }
+  }
+
+  &--selected {
+    background-color: var(--vscode-list-inactiveSelectionBackground);
+
+    &:hover {
+      background-color: var(--vscode-list-inactiveSelectionBackground);
+    }
+  }
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow: hidden;
+
+    &__label {
+      flex: 1;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+
+      > span:last-child {
+        opacity: 0.7;
+        margin-left: 0.5em;
+        font-size: 0.9em;
+      }
+    }
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__actions {
+    display: none;
+    align-items: center;
+  }
+
+  &__tokens {
+    font-size: 12px;
+    color: var(--cwc-text-color-dimmed);
+    font-variant-numeric: tabular-nums;
+  }
+}

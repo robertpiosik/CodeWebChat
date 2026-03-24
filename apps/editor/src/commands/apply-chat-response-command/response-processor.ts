@@ -29,6 +29,9 @@ import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provi
 import { natural_sort } from '@/utils/natural-sort'
 import { t } from '@/i18n'
 import { is_truncation_line } from './utils/edit-formats/truncations'
+import { RelevantFileInPreview } from '@shared/types/file-in-preview'
+import { PreviewDecision } from './utils/preview/types'
+import { set_response_preview_promise_resolve } from './utils/preview/preview'
 
 export type PreviewData = {
   original_states: OriginalFileState[]
@@ -43,6 +46,7 @@ export type ApplyChatResponseCommandArgs = {
     position: { line: number; character: number }
   }
   files_with_content?: FileInPreview[]
+  relevant_files?: RelevantFileInPreview[]
   created_at?: number
   url?: string
   api_configuration?: ApiConfiguration
@@ -65,39 +69,44 @@ export const process_chat_response = async (params: {
   }
 
   if (params.args?.files_with_content) {
-    const result = await handle_restore_preview(params.args.files_with_content)
-    if (result.success && result.original_states) {
-      const augmented_states = result.original_states.map((state) => {
-        const file_in_preview = params.args?.files_with_content!.find(
-          (f) =>
-            f.file_path === state.file_path &&
-            f.workspace_name === state.workspace_name
-        )
+    const files = params.args.files_with_content.filter(
+      (f) => f.type === 'file'
+    ) as FileInPreview[]
+    if (files.length > 0) {
+      const result = await handle_restore_preview(files)
+      if (result.success && result.original_states) {
+        const augmented_states = result.original_states.map((state) => {
+          const file_in_preview = files.find(
+            (f) =>
+              f.file_path === state.file_path &&
+              f.workspace_name === state.workspace_name
+          )
+          return {
+            ...state,
+            ai_content: file_in_preview?.ai_content,
+            proposed_content:
+              file_in_preview?.proposed_content ?? file_in_preview?.content,
+            current_content: file_in_preview?.content,
+            is_checked: file_in_preview?.is_checked,
+            apply_failed: file_in_preview?.apply_failed,
+            applied_with_intelligent_update:
+              file_in_preview?.applied_with_intelligent_update
+          }
+        })
+        update_undo_button_state({
+          context: params.context,
+          panel_provider: params.panel_provider,
+          states: augmented_states,
+          applied_content: params.chat_response,
+          original_editor_state: params.args?.original_editor_state
+        })
         return {
-          ...state,
-          ai_content: file_in_preview?.ai_content,
-          proposed_content:
-            file_in_preview?.proposed_content ?? file_in_preview?.content,
-          current_content: file_in_preview?.content,
-          is_checked: file_in_preview?.is_checked,
-          apply_failed: file_in_preview?.apply_failed,
-          applied_with_intelligent_update:
-            file_in_preview?.applied_with_intelligent_update
+          original_states: augmented_states,
+          chat_response: params.chat_response
         }
-      })
-      update_undo_button_state({
-        context: params.context,
-        panel_provider: params.panel_provider,
-        states: augmented_states,
-        applied_content: params.chat_response,
-        original_editor_state: params.args?.original_editor_state
-      })
-      return {
-        original_states: augmented_states,
-        chat_response: params.chat_response
       }
+      return null
     }
-    return null
   }
 
   const is_single_root_folder_workspace =
@@ -114,49 +123,99 @@ export const process_chat_response = async (params: {
     const workspace_roots = params.workspace_provider.get_workspace_roots()
     const all_paths_to_process = new Set<string>(relevant_files_item.file_paths)
 
-    const files_for_modal: {
-      file_path: string
-      relative_path: string
-      token_count: number
-    }[] = []
+    const files_for_preview: RelevantFileInPreview[] = []
 
     for (const rel_path of Array.from(all_paths_to_process)) {
       let absolute_path: string | undefined
+      let matched_workspace_root: string | undefined
       for (const root of workspace_roots) {
         const potential = path.join(root, rel_path)
         if (fs.existsSync(potential)) {
           absolute_path = potential
+          matched_workspace_root = root
           break
         }
       }
 
-      if (absolute_path) {
+      if (absolute_path && matched_workspace_root) {
         const count =
           await params.workspace_provider.calculate_file_tokens(absolute_path)
-        files_for_modal.push({
-          file_path: absolute_path,
-          relative_path: rel_path,
+
+        let workspace_name: string | undefined
+        if (workspace_roots.length > 1) {
+          workspace_name = params.workspace_provider.get_workspace_name(
+            matched_workspace_root
+          )
+        }
+
+        let is_checked = true
+        if (params.args?.relevant_files) {
+          const history_file = params.args.relevant_files.find(
+            (f) =>
+              f.file_path === rel_path && f.workspace_name === workspace_name
+          )
+          if (history_file) {
+            is_checked = history_file.is_checked
+          }
+        }
+
+        files_for_preview.push({
+          type: 'relevant-file',
+          file_path: rel_path,
+          absolute_path: absolute_path,
+          workspace_name,
+          is_checked,
           token_count: count.total
         })
       }
     }
 
-    files_for_modal.sort((a, b) =>
-      natural_sort(a.relative_path, b.relative_path)
-    )
+    files_for_preview.sort((a, b) => natural_sort(a.file_path, b.file_path))
 
+    const created_at_for_preview = params.args?.created_at ?? Date.now()
+
+    const history = params.panel_provider.response_history
+    if (!params.args?.created_at) {
+      const new_item = {
+        response: params.chat_response,
+        raw_instructions: params.args?.raw_instructions,
+        created_at: created_at_for_preview,
+        relevant_files: files_for_preview,
+        url: params.args?.url,
+        api_configuration: params.args?.api_configuration
+      }
+      history.push(new_item)
+    } else {
+      const existing = history.find(
+        (i) => i.created_at === params.args!.created_at
+      )
+      if (existing) {
+        existing.relevant_files = files_for_preview
+      }
+    }
     params.panel_provider.send_message({
-      command: 'SHOW_RELEVANT_FILES_MODAL',
-      files: files_for_modal
+      command: 'RESPONSE_HISTORY',
+      history
     })
 
-    const selected_files = await new Promise<string[] | undefined>(
-      (resolve) => {
-        params.panel_provider.relevant_files_choice_resolver = resolve
-      }
-    )
+    params.panel_provider.send_message({
+      command: 'RESPONSE_PREVIEW_STARTED',
+      items: files_for_preview,
+      raw_instructions: params.args?.raw_instructions,
+      created_at: created_at_for_preview,
+      url: params.args?.url,
+      api_configuration: params.args?.api_configuration
+    })
 
-    if (selected_files) {
+    const decision = await new Promise<PreviewDecision>((resolve) => {
+      set_response_preview_promise_resolve(resolve)
+    }).finally(() => {
+      set_response_preview_promise_resolve(undefined)
+    })
+
+    params.panel_provider.send_message({ command: 'RESPONSE_PREVIEW_FINISHED' })
+
+    if ('accepted_files' in decision && decision.accepted_files.length > 0) {
       const shared_context_state = params.panel_provider.shared_context_state
       const was_frf = params.workspace_provider.is_frf_mode
 
@@ -164,7 +223,9 @@ export const process_chat_response = async (params: {
         shared_context_state.switch_context_state(false)
       }
 
-      const presented_files = files_for_modal.map((f) => f.file_path)
+      const accepted_files = decision.accepted_files as RelevantFileInPreview[]
+      const presented_files = files_for_preview.map((f) => f.absolute_path!)
+      const selected_files = accepted_files.map((f) => f.absolute_path!)
 
       const filtered_current_files = current_checked_files.filter(
         (f) => !presented_files.includes(f)
@@ -186,6 +247,16 @@ export const process_chat_response = async (params: {
       })
 
       await params.panel_provider.switch_to_edit_context()
+    } else if ('created_at' in decision && decision.created_at) {
+      const history = params.panel_provider.response_history
+      const new_history = history.filter(
+        (item) => item.created_at !== created_at_for_preview
+      )
+      params.panel_provider.response_history = new_history
+      params.panel_provider.send_message({
+        command: 'RESPONSE_HISTORY',
+        history: new_history
+      })
     }
 
     return null

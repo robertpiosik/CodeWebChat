@@ -1,5 +1,9 @@
 import { EditFormat } from '@shared/types/edit-format'
-import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
+import {
+  FileInPreview,
+  RelevantFileInPreview,
+  ItemInPreview
+} from '@shared/types/file-in-preview'
 import {
   ResponseHistoryItem,
   ApiConfiguration
@@ -312,7 +316,7 @@ export interface RequestCurrentlyOpenFileTextMessage extends BaseMessage {
 
 export interface ResponsePreviewMessage extends BaseMessage {
   command: 'RESPONSE_PREVIEW'
-  files: FileInPreview[]
+  files: (FileInPreview | RelevantFileInPreview)[]
   created_at?: number
 }
 
@@ -397,6 +401,7 @@ export interface ApplyResponseFromHistoryMessage extends BaseMessage {
   response: string
   raw_instructions?: string
   files?: FileInPreview[]
+  relevant_files?: RelevantFileInPreview[]
   created_at: number
   url?: string
   api_configuration?: ApiConfiguration
@@ -568,11 +573,6 @@ export interface InsertSymbolAtCursorMessage extends BaseMessage {
   target: 'preset-prefix' | 'preset-suffix'
 }
 
-export interface RelevantFilesModalResponseMessage extends BaseMessage {
-  command: 'RELEVANT_FILES_MODAL_RESPONSE'
-  files?: string[]
-}
-
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -666,7 +666,6 @@ export type FrontendMessage =
   | SaveFindRelevantFilesShrinkSourceCodeMessage
   | GetSetupProgressMessage
   | RequestReturnHomeMessage
-  | RelevantFilesModalResponseMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -926,14 +925,6 @@ export interface SetupProgressMessage {
   setup_progress: SetupProgress
 }
 
-export interface ShowRelevantFilesModalMessage extends BaseMessage {
-  command: 'SHOW_RELEVANT_FILES_MODAL'
-  files: {
-    file_path: string
-    relative_path: string
-    token_count?: number
-  }[]
-}
 export interface RecordingStateMessage extends BaseMessage {
   command: 'RECORDING_STATE'
   is_recording: boolean
@@ -993,4 +984,3 @@ export type BackendMessage =
   | SetupProgressMessage
   | InsertSymbolAtCursorMessage
   | ReturnHomeMessage
-  | ShowRelevantFilesModalMessage

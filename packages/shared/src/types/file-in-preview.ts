@@ -29,7 +29,17 @@ export type InlineFileInPreview = {
   language?: string
 }
 
+export type RelevantFileInPreview = {
+  type: 'relevant-file'
+  file_path: string
+  absolute_path?: string
+  workspace_name?: string
+  is_checked: boolean
+  token_count?: number
+}
+
 export type ItemInPreview =
   | FileInPreview
   | TextContentInPreview
   | InlineFileInPreview
+  | RelevantFileInPreview

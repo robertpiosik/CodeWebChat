@@ -14,7 +14,11 @@ import { close_preview_diff_editors, show_diff_with_actions } from './vscode-ui'
 import { PreparedFile, PreviewableFile } from './types'
 import { ItemInPreview } from '@shared/types/file-in-preview'
 
-export { response_preview_promise_resolve } from './vscode-ui'
+export {
+  response_preview_promise_resolve,
+  get_response_preview_promise_resolve,
+  set_response_preview_promise_resolve
+} from './vscode-ui'
 export { toggle_file_preview_state } from './workspace-listener'
 export { discard_user_changes_in_preview } from './workspace-listener'
 export { set_file_applied_with_intelligent_update } from './workspace-listener'

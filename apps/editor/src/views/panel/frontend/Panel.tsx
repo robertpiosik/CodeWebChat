@@ -14,11 +14,9 @@ import { Modal as UiModal } from '@ui/components/editor/panel/modals/Modal'
 import { ProgressModal as UiProgressModal } from '@ui/components/editor/panel/modals/ProgressModal'
 import { ApiManagerModal as UiApiManagerModal } from '@ui/components/editor/panel/modals/ApiManagerModal'
 import { QRCodeModal as UiQRCodeModal } from '@ui/components/editor/panel/modals/QRCodeModal'
-import { RelevantFilesModal as UiRelevantFilesModal } from '@ui/components/editor/panel/modals/RelevantFilesModal'
 import { AutoClosingModal as UiAutoClosingModal } from '@ui/components/editor/panel/modals/AutoClosingModal'
 import { EditCheckpointDescriptionModal as UiEditCheckpointDescriptionModal } from '@ui/components/editor/panel/modals/EditCheckpointDescriptionModal'
 import { use_panel } from './hooks/panel/use-panel'
-import { FileInPreview } from '@shared/types/file-in-preview'
 import { LayoutContext } from './contexts/LayoutContext'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Layout } from './components/Layout/Layout'
@@ -139,9 +137,7 @@ export const Panel = () => {
     auto_closing_modal_data,
     set_auto_closing_modal_data,
     is_preview_ongoing_modal_visible,
-    set_is_preview_ongoing_modal_visible,
-    relevant_files_modal_data,
-    set_relevant_files_modal_data
+    set_is_preview_ongoing_modal_visible
   } = use_modal_manager()
 
   const [checkpoint_to_edit, set_checkpoint_to_edit] = useState<
@@ -276,6 +272,7 @@ export const Panel = () => {
       response: item.response,
       raw_instructions: item.raw_instructions,
       files: item.files,
+      relevant_files: item.relevant_files,
       created_at: item.created_at,
       url: item.url,
       api_configuration: item.api_configuration
@@ -661,8 +658,10 @@ export const Panel = () => {
                   }}
                   on_accept={() => {
                     const accepted_files = items_in_preview.filter(
-                      (f) => f.type == 'file' && f.is_checked
-                    ) as FileInPreview[]
+                      (f) =>
+                        (f.type == 'file' || f.type == 'relevant-file') &&
+                        f.is_checked
+                    ) as any
                     set_response_history([])
                     set_selected_history_item_created_at(undefined)
                     post_message(vscode, {
@@ -673,7 +672,9 @@ export const Panel = () => {
                   }}
                   is_accept_disabled={
                     items_in_preview.filter(
-                      (f) => f.type == 'file' && f.is_checked
+                      (f) =>
+                        (f.type == 'file' || f.type == 'relevant-file') &&
+                        f.is_checked
                     ).length == 0 ||
                     items_in_preview.some(
                       (f) => f.type == 'file' && f.is_applying
@@ -704,7 +705,7 @@ export const Panel = () => {
                 on_toggle_file={(file) => {
                   set_items_in_preview((current_items) =>
                     current_items?.map((f) =>
-                      f.type == 'file' &&
+                      (f.type == 'file' || f.type == 'relevant-file') &&
                       f.file_path == file.file_path &&
                       f.workspace_name == file.workspace_name
                         ? { ...f, is_checked: file.is_checked }
@@ -814,34 +815,6 @@ export const Panel = () => {
                     }
                   : undefined
               }
-            />
-          </div>
-        )}
-
-        {relevant_files_modal_data && (
-          <div className={styles.slot}>
-            <UiRelevantFilesModal
-              files={relevant_files_modal_data.files}
-              on_accept={(files) => {
-                post_message(vscode, {
-                  command: 'RELEVANT_FILES_MODAL_RESPONSE',
-                  files
-                })
-                set_relevant_files_modal_data(undefined)
-              }}
-              on_cancel={() => {
-                post_message(vscode, {
-                  command: 'RELEVANT_FILES_MODAL_RESPONSE',
-                  files: undefined
-                })
-                set_relevant_files_modal_data(undefined)
-              }}
-              on_go_to_file={(file_path) => {
-                post_message(vscode, {
-                  command: 'OPEN_FILE_AND_SELECT',
-                  file_path
-                })
-              }}
             />
           </div>
         )}

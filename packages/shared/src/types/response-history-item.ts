@@ -1,4 +1,4 @@
-import { FileInPreview } from './file-in-preview'
+import { FileInPreview, RelevantFileInPreview } from './file-in-preview'
 
 export type ApiConfiguration = {
   provider: string
@@ -13,6 +13,8 @@ export type ResponseHistoryItem = {
   lines_added?: number
   lines_removed?: number
   files?: FileInPreview[]
+  relevant_files?: RelevantFileInPreview[]
   url?: string
   api_configuration?: ApiConfiguration
+  is_unviewed?: boolean
 }

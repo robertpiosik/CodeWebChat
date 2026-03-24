@@ -55,12 +55,11 @@ export const Responses: React.FC<Props> = (props) => {
             }}
           >
             <div className={styles.responses__item__content__instructions}>
-              {item.lines_added === undefined &&
-                item.lines_removed === undefined && (
-                  <span
-                    className={`codicon codicon-circle-filled ${styles['responses__item__content__instructions__new-indicator']}`}
-                  />
-                )}
+              {item.is_unviewed ? (
+                <span
+                  className={`codicon codicon-circle-filled ${styles['responses__item__content__instructions__new-indicator']}`}
+                />
+              ) : null}
               {item.raw_instructions ? (
                 <span>
                   {simplify_prompt_symbols({ prompt: item.raw_instructions })}

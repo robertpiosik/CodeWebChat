@@ -40,10 +40,6 @@ export const use_modal_manager = () => {
     set_is_preview_ongoing_modal_visible
   ] = useState(false)
 
-  const [relevant_files_modal_data, set_relevant_files_modal_data] = useState<{
-    files: { file_path: string; relative_path: string; token_count?: number }[]
-  }>()
-
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
@@ -86,8 +82,6 @@ export const use_modal_manager = () => {
         })
       } else if (message.command == 'SHOW_PREVIEW_ONGOING_MODAL') {
         set_is_preview_ongoing_modal_visible(true)
-      } else if (message.command == 'SHOW_RELEVANT_FILES_MODAL') {
-        set_relevant_files_modal_data({ files: message.files })
       } else if (message.command == 'RESPONSE_PREVIEW_STARTED') {
         set_progress_state(undefined)
       }
@@ -104,8 +98,6 @@ export const use_modal_manager = () => {
     auto_closing_modal_data,
     set_auto_closing_modal_data,
     is_preview_ongoing_modal_visible,
-    set_is_preview_ongoing_modal_visible,
-    relevant_files_modal_data,
-    set_relevant_files_modal_data
+    set_is_preview_ongoing_modal_visible
   }
 }

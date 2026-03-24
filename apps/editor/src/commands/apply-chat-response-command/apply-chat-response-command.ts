@@ -9,7 +9,7 @@ import { get_checkpoint_path } from '../checkpoints-command/utils'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
-import { response_preview_promise_resolve } from './utils/preview/preview'
+import { get_response_preview_promise_resolve } from './utils/preview/preview'
 import { get_diff_stats } from './utils/preview/diff-utils'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import {
@@ -32,7 +32,6 @@ import {
 import { parse_response } from './utils/clipboard-parser'
 
 let in_progress = false
-let placeholder_created_at_for_update: number | undefined
 
 interface SavedEditorState {
   uri: string
@@ -84,7 +83,9 @@ export const apply_chat_response_command = (params: {
         return
       }
 
-      if (in_progress && !response_preview_promise_resolve) {
+      const resolve_fn = get_response_preview_promise_resolve()
+
+      if (in_progress && !resolve_fn) {
         return
       }
 
@@ -94,26 +95,30 @@ export const apply_chat_response_command = (params: {
         response: chat_response,
         is_single_root_folder_workspace
       })
-      const is_relevant_files = clipboard_items.some(
-        (item) => item.type == 'relevant-files'
-      )
-
-      if (response_preview_promise_resolve && !is_relevant_files) {
+      if (resolve_fn) {
         const history = params.panel_provider.response_history
 
-        const new_item: ResponseHistoryItem = {
-          response: chat_response,
-          raw_instructions: args?.raw_instructions,
-          created_at: Date.now(),
-          url: args?.url,
-          api_configuration: args?.api_configuration
-        }
+        let created_at_for_switch: number
 
-        history.push(new_item)
-        params.panel_provider.send_message({
-          command: 'RESPONSE_HISTORY',
-          history
-        })
+        if (!args?.created_at) {
+          const new_item: ResponseHistoryItem = {
+            response: chat_response,
+            raw_instructions: args?.raw_instructions,
+            created_at: Date.now(),
+            url: args?.url,
+            api_configuration: args?.api_configuration,
+            is_unviewed: true
+          }
+
+          created_at_for_switch = new_item.created_at
+          history.push(new_item)
+          params.panel_provider.send_message({
+            command: 'RESPONSE_HISTORY',
+            history
+          })
+        } else {
+          created_at_for_switch = args.created_at
+        }
 
         if (params.panel_provider.preview_switch_choice_resolver) {
           // The "switch preview" modal is already visible for a previous
@@ -129,8 +134,8 @@ export const apply_chat_response_command = (params: {
         params.panel_provider.preview_switch_choice_resolver = undefined
 
         if (choice == 'Switch') {
-          placeholder_created_at_for_update = new_item.created_at
-          response_preview_promise_resolve({ accepted_files: [] })
+          args = { ...args, created_at: created_at_for_switch }
+          resolve_fn({ accepted_files: [] })
           if (ongoing_preview_cleanup_promise) {
             await ongoing_preview_cleanup_promise
           }
@@ -141,10 +146,27 @@ export const apply_chat_response_command = (params: {
       }
 
       in_progress = true
+
+      if (args?.created_at) {
+        const target_created_at = args.created_at
+        const history = params.panel_provider.response_history
+        const existing = history.find((i) => i.created_at === target_created_at)
+        if (existing && existing.is_unviewed !== false) {
+          existing.is_unviewed = false
+          params.panel_provider.send_message({
+            command: 'RESPONSE_HISTORY',
+            history
+          })
+        }
+      }
+
       let before_checkpoint: Checkpoint | undefined
       let saved_tab_groups: SavedTabGroups | undefined
 
       try {
+        const is_relevant_files = clipboard_items.some(
+          (i) => i.type == 'relevant-files'
+        )
         if (!is_relevant_files) {
           // Save current tab groups before entering preview
           saved_tab_groups = {
@@ -167,6 +189,7 @@ export const apply_chat_response_command = (params: {
 
           const has_valid_blocks =
             (args?.files_with_content && args.files_with_content.length > 0) ||
+            (args?.relevant_files && args.relevant_files.length > 0) ||
             clipboard_items.some(
               (item) =>
                 item.type == 'file' ||
@@ -314,41 +337,28 @@ export const apply_chat_response_command = (params: {
             }
             const history = params.panel_provider.response_history
 
-            if (placeholder_created_at_for_update) {
-              const item_to_update = history.find(
-                (i) => i.created_at === placeholder_created_at_for_update
-              )
-              if (item_to_update) {
-                item_to_update.files = files_for_history
-                item_to_update.lines_added = total_lines_added
-                item_to_update.lines_removed = total_lines_removed
-              }
-              created_at_for_preview = placeholder_created_at_for_update
-              placeholder_created_at_for_update = undefined
+            const item_to_update =
+              args?.created_at &&
+              history.find((i) => i.created_at === args.created_at)
+
+            if (item_to_update) {
+              item_to_update.files = files_for_history
+              item_to_update.lines_added = total_lines_added
+              item_to_update.lines_removed = total_lines_removed
             } else {
-              const item_to_update =
-                args?.created_at &&
-                history.find((i) => i.created_at === args.created_at)
-
-              if (item_to_update) {
-                item_to_update.files = files_for_history
-                item_to_update.lines_added = total_lines_added
-                item_to_update.lines_removed = total_lines_removed
-              } else {
-                created_at_for_preview = Date.now()
-                const new_item: ResponseHistoryItem = {
-                  response: preview_data.chat_response,
-                  raw_instructions: args?.raw_instructions,
-                  created_at: created_at_for_preview,
-                  lines_added: total_lines_added,
-                  lines_removed: total_lines_removed,
-                  files: files_for_history,
-                  url: args?.url,
-                  api_configuration: args?.api_configuration
-                }
-
-                history.push(new_item)
+              created_at_for_preview = Date.now()
+              const new_item: ResponseHistoryItem = {
+                response: preview_data.chat_response,
+                raw_instructions: args?.raw_instructions,
+                created_at: created_at_for_preview,
+                lines_added: total_lines_added,
+                lines_removed: total_lines_removed,
+                files: files_for_history,
+                url: args?.url,
+                api_configuration: args?.api_configuration
               }
+
+              history.push(new_item)
             }
 
             params.panel_provider.send_message({

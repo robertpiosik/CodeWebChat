@@ -6,6 +6,15 @@ export let response_preview_promise_resolve:
   | ((decision: PreviewDecision) => void)
   | undefined
 
+export const get_response_preview_promise_resolve = () =>
+  response_preview_promise_resolve
+
+export const set_response_preview_promise_resolve = (
+  resolve: ((decision: PreviewDecision) => void) | undefined
+) => {
+  response_preview_promise_resolve = resolve
+}
+
 export const close_preview_diff_editors = async (
   prepared_files: PreparedFile[]
 ): Promise<void> => {

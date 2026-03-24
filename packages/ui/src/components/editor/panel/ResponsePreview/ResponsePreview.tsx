@@ -1,10 +1,19 @@
 import { FC, useRef, useState, useMemo, useEffect } from 'react'
-import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
+import {
+  FileInPreview,
+  RelevantFileInPreview,
+  ItemInPreview
+} from '@shared/types/file-in-preview'
 import { ApiConfiguration } from '@shared/types/response-history-item'
 import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
 import cn from 'classnames'
 import styles from './ResponsePreview.module.scss'
-import { TextItem, InlineFileItem, FileItem } from './components'
+import {
+  TextItem,
+  InlineFileItem,
+  FileItem,
+  RelevantFileItem
+} from './components'
 import { Scrollable } from '../Scrollable'
 
 type Props = {
@@ -91,12 +100,18 @@ export const ResponsePreview: FC<Props> = (props) => {
   }
 
   const files_in_preview = useMemo(
-    () => props.items.filter((i) => 'file_path' in i) as FileInPreview[],
+    () =>
+      props.items.filter(
+        (i) => i.type == 'file' || i.type == 'relevant-file'
+      ) as (FileInPreview | RelevantFileInPreview)[],
     [props.items]
   )
 
   const applying_files = useMemo(
-    () => files_in_preview.filter((f) => f.is_applying),
+    () =>
+      files_in_preview.filter(
+        (f) => f.type === 'file' && f.is_applying
+      ) as FileInPreview[],
     [files_in_preview]
   )
 
@@ -112,6 +127,7 @@ export const ResponsePreview: FC<Props> = (props) => {
     () =>
       files_in_preview.filter(
         (f) =>
+          f.type === 'file' &&
           f.diff_application_method == 'search_and_replace' &&
           !f.applied_with_intelligent_update &&
           !f.is_applying
@@ -123,7 +139,10 @@ export const ResponsePreview: FC<Props> = (props) => {
     () =>
       files_in_preview.filter(
         (f) =>
-          f.apply_failed && !f.applied_with_intelligent_update && !f.is_applying
+          f.type === 'file' &&
+          f.apply_failed &&
+          !f.applied_with_intelligent_update &&
+          !f.is_applying
       ).length,
     [files_in_preview]
   )
@@ -138,7 +157,12 @@ export const ResponsePreview: FC<Props> = (props) => {
       set_is_fixing_all(true)
       set_has_attempted_auto_fix(true)
       const files_to_fix = files_in_preview
-        .filter((f) => f.apply_failed && !f.applied_with_intelligent_update)
+        .filter(
+          (f) =>
+            f.type === 'file' &&
+            f.apply_failed &&
+            !f.applied_with_intelligent_update
+        )
         .map((f) => ({
           file_path: f.file_path,
           workspace_name: f.workspace_name
@@ -267,6 +291,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                 const files_to_fix = files_in_preview
                   .filter(
                     (f) =>
+                      f.type === 'file' &&
                       f.apply_failed &&
                       !f.applied_with_intelligent_update &&
                       !f.is_applying
@@ -350,6 +375,31 @@ export const ResponsePreview: FC<Props> = (props) => {
                     props.on_cancel_intelligent_update({
                       file_path: file.file_path,
                       workspace_name: file.workspace_name
+                    })
+                  }
+                  on_go_to_file={() =>
+                    props.on_go_to_file({
+                      file_path: file.file_path,
+                      workspace_name: file.workspace_name
+                    })
+                  }
+                />
+              )
+            } else if (item.type == 'relevant-file') {
+              const file = item
+              return (
+                <RelevantFileItem
+                  key={index}
+                  file={file}
+                  is_selected={index === last_clicked_file_index}
+                  has_multiple_workspaces={props.has_multiple_workspaces}
+                  total_files_count={files_in_preview.length}
+                  on_click={() => {}}
+                  on_toggle={(checked) =>
+                    props.on_toggle_file({
+                      file_path: file.file_path,
+                      workspace_name: file.workspace_name,
+                      is_checked: checked
                     })
                   }
                   on_go_to_file={() =>
