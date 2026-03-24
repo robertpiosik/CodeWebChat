@@ -5,7 +5,7 @@ import { WorkspaceProvider } from '../../../context/providers/workspace/workspac
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { display_token_count } from '../../../utils/display-token-count'
-import { LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY } from '../../../constants/state-keys'
+import { LAST_APPLY_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY } from '../../../constants/state-keys'
 import { t } from '@/i18n'
 
 export const handle_unstaged_files_source = async (
@@ -200,7 +200,7 @@ export const handle_unstaged_files_source = async (
 
           const last_choice_label =
             extension_context.workspaceState.get<string>(
-              LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY
+              LAST_APPLY_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY
             )
 
           const quick_pick_merge = vscode.window.createQuickPick()
@@ -250,7 +250,7 @@ export const handle_unstaged_files_source = async (
             return
           } else {
             await extension_context.workspaceState.update(
-              LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY,
+              LAST_APPLY_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY,
               choice.label
             )
 

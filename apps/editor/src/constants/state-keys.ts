@@ -10,8 +10,10 @@ export const LAST_RANGES_SAVE_LOCATION_STATE_KEY = 'last-ranges-save-location'
 export const LAST_APPLY_CONTEXT_OPTION_STATE_KEY = 'last-apply-context-option'
 export const CONTEXT_CHECKED_PATHS_STATE_KEY = 'context-checked-paths'
 export const CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY = 'context-checked-timestamps'
-export const LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY =
-  'last-context-merge-replace-option'
+export const LAST_APPLY_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY =
+  'last-apply-context-merge-replace-option'
+export const LAST_FIND_RELEVANT_FILES_MERGE_REPLACE_OPTION_STATE_KEY =
+  'last-find-relevant-files-merge-replace-option'
 export const LAST_REFACTOR_INSTRUCTION_SOURCE_STATE_KEY =
   'last-refactor-instruction-source'
 export const LAST_REFACTOR_INSTRUCTION_STATE_KEY = 'last-refactor-instruction'

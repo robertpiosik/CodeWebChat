@@ -3,7 +3,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { execSync } from 'child_process'
 import { WorkspaceProvider } from '../../../context/providers/workspace/workspace-provider'
-import { LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY } from '../../../constants/state-keys'
+import { LAST_APPLY_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY } from '../../../constants/state-keys'
 import { GIT_LOG_SINCE_DURATION } from '../../../constants/values'
 import { get_git_repository } from '@/utils/git-repository-utils'
 import { Logger } from '@shared/utils/logger'
@@ -274,7 +274,7 @@ export const handle_commit_files_source = async (
 
             const last_choice_label =
               extension_context.workspaceState.get<string>(
-                LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY
+                LAST_APPLY_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY
               )
 
             const quick_pick = vscode.window.createQuickPick()
@@ -321,7 +321,7 @@ export const handle_commit_files_source = async (
               return
             } else {
               await extension_context.workspaceState.update(
-                LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY,
+                LAST_APPLY_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY,
                 choice.label
               )
 

@@ -131,7 +131,8 @@ export const find_relevant_files_command = (
             const apply_result = await show_results_and_apply({
               extracted_files: api_result,
               analysis,
-              workspace_provider
+              workspace_provider,
+              extension_context
             })
 
             if (apply_result === 'back') {
