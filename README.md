@@ -102,7 +102,7 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 > [!TIP]
 > Got lost in the codebase? Use "Find relevant files" prompt type and search with natural language!
 
-Workflow based on a single-turn exchanges facilitates persistent utilization of prompt caching.
+Workflow based on a single-turn exchanges facilitates persistent utilization of prompt caching...
 
 ## Prompt caching
 
