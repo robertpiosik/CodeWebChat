@@ -44,7 +44,7 @@ import { get_current_preview_url } from './views/panel/backend/message-handlers/
 // Store WebSocketServer instance at module level
 let websocket_server_instance: WebSocketManager | null = null
 
-export async function activate(context: vscode.ExtensionContext) {
+export const activate = async (context: vscode.ExtensionContext) => {
   const { workspace_provider, open_editors_provider, shared_context_state } =
     await context_initialization(context)
 
