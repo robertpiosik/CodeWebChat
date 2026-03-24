@@ -237,8 +237,22 @@ export const handle_json_file_source = async (
           }
         })
 
-        quick_pick.onDidAccept(() => {
+        quick_pick.onDidAccept(async () => {
           const item = quick_pick.selectedItems[0]
+
+          if (item.label === LABEL_SAVE_NEW_CONTEXT) {
+            const checked_files = workspace_provider.get_checked_files()
+            if (checked_files.length == 0) {
+              active_dialog_count++
+              await vscode.window.showWarningMessage(
+                dictionary.warning_message.NOTHING_IN_CONTEXT_TO_SAVE
+              )
+              active_dialog_count--
+              quick_pick.show()
+              return
+            }
+          }
+
           quick_pick.hide()
           resolve_once(item)
         })
@@ -259,6 +273,7 @@ export const handle_json_file_source = async (
 
       quick_pick.dispose()
 
+      if (!selection) return
       if (selection == 'back') return 'back'
       if (selection == 'exit') return
       if (selection == 'retry') continue
@@ -400,14 +415,6 @@ export const handle_json_file_source = async (
 
       if (selection.label === LABEL_SAVE_NEW_CONTEXT) {
         const checked_files = workspace_provider.get_checked_files()
-        if (checked_files.length == 0) {
-          active_dialog_count++
-          await vscode.window.showWarningMessage(
-            dictionary.warning_message.NOTHING_IN_CONTEXT_TO_SAVE
-          )
-          active_dialog_count--
-          continue
-        }
 
         active_dialog_count++
         const name = await ask_for_new_context_name(true)
