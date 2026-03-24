@@ -155,29 +155,27 @@ export const Panel = () => {
   const { viewing_donations, set_viewing_donations, ...donations_state } =
     use_latest_donations()
 
-  const prev_web_prompt_type = useRef(web_prompt_type)
-  const prev_api_prompt_type = useRef(api_prompt_type)
+  const prev_active_prompt_type = useRef(
+    mode == MODE.WEB ? web_prompt_type : api_prompt_type
+  )
 
   useEffect(() => {
-    const switched_web =
-      web_prompt_type == 'find-relevant-files' &&
-      prev_web_prompt_type.current != 'find-relevant-files' &&
-      prev_web_prompt_type.current !== undefined
-    const switched_api =
-      api_prompt_type == 'find-relevant-files' &&
-      prev_api_prompt_type.current != 'find-relevant-files' &&
-      prev_api_prompt_type.current !== undefined
+    const active_prompt_type =
+      mode == MODE.WEB ? web_prompt_type : api_prompt_type
 
-    if (switched_web || switched_api) {
+    if (
+      active_prompt_type == 'find-relevant-files' &&
+      prev_active_prompt_type.current != 'find-relevant-files' &&
+      prev_active_prompt_type.current !== undefined
+    ) {
       set_auto_closing_modal_data({
         title:
           'Context temporarily cleared, make rough selection on the file tree',
         type: 'info'
       })
     }
-    prev_web_prompt_type.current = web_prompt_type
-    prev_api_prompt_type.current = api_prompt_type
-  }, [web_prompt_type, api_prompt_type])
+    prev_active_prompt_type.current = active_prompt_type
+  }, [web_prompt_type, api_prompt_type, mode])
 
   if (
     ask_about_context_instructions === undefined ||
