@@ -127,6 +127,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     input_ref,
     is_focused: is_focused && should_show_ghost_text,
     currently_open_file_text: props.currently_open_file_text,
+    context_file_paths: props.context_file_paths,
     caret_position
   })
 

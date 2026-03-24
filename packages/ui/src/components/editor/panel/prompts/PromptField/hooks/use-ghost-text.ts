@@ -12,6 +12,7 @@ export const use_ghost_text = (params: {
   input_ref: RefObject<HTMLDivElement>
   is_focused: boolean
   currently_open_file_text?: string
+  context_file_paths?: string[]
   caret_position: number
 }) => {
   const [ghost_text, set_ghost_text] = useState('')
@@ -37,13 +38,32 @@ export const use_ghost_text = (params: {
   }, [params.is_focused, params.value, can_show_ghost_text])
 
   const identifiers = useMemo(() => {
-    if (!params.currently_open_file_text) return new Set<string>()
-    const matches = params.currently_open_file_text.match(
-      /[a-zA-Z_][a-zA-Z0-9_]*/g
-    )
-    if (!matches) return new Set<string>()
-    return new Set(matches.filter((id) => id.length >= 3))
-  }, [params.currently_open_file_text])
+    const match_set = new Set<string>()
+
+    if (params.currently_open_file_text) {
+      const matches = params.currently_open_file_text.match(
+        /[a-zA-Z_][a-zA-Z0-9_]*/g
+      )
+      if (matches) {
+        for (const m of matches) {
+          if (m.length >= 3) match_set.add(m)
+        }
+      }
+    }
+
+    if (params.context_file_paths) {
+      for (const path of params.context_file_paths) {
+        const matches = path.match(/[a-zA-Z_][a-zA-Z0-9_]*/g)
+        if (matches) {
+          for (const m of matches) {
+            if (m.length >= 3) match_set.add(m)
+          }
+        }
+      }
+    }
+
+    return match_set
+  }, [params.currently_open_file_text, params.context_file_paths])
 
   useEffect(() => {
     if (ghost_text_debounce_timer_ref.current) {
