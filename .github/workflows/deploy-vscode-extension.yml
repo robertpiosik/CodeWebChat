@@ -52,7 +52,6 @@ jobs:
           pnpm build
 
       - name: Publish to VS Code Marketplace
-        continue-on-error: true
         run: |
           cd apps/editor
           npx @vscode/vsce publish --no-dependencies -p ${{ secrets.VSCE_PAT }}
@@ -60,7 +59,6 @@ jobs:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
 
       - name: Publish to Open VSX Registry
-        continue-on-error: true
         run: |
           cd apps/editor
           npx ovsx publish --no-dependencies -p ${{ secrets.OVSX_PAT }}

@@ -8,7 +8,7 @@ import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
 import { Section as UiSection } from '@ui/components/editor/settings/Section'
 import { SortableList } from '@ui/components/editor/settings/SortableList'
 import { IconButton } from '@ui/components/editor/common/IconButton'
-import { Dropdown as UiDropdown } from '@ui/components/editor/common/Dropdown'
+import { DefaultConfigurationSelector } from '@ui/components/editor/settings/DefaultConfigurationSelector'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
 import { Button as UiButton } from '@ui/components/editor/common/Button'
@@ -159,6 +159,7 @@ type Props = {
     tool_name: ToolType,
     configuration_id: string | null
   ) => void
+  on_select_default_config: (tool_name: ToolType) => void
   on_open_external_url: (url: string) => void
   scroll_to_section_on_load?: NavItem
 }
@@ -297,14 +298,6 @@ export const Home: React.FC<Props> = (props) => {
     e.preventDefault()
     handle_scroll_to_section(item_id)
   }
-
-  const config_options = [
-    { value: '', label: t('action.none') },
-    ...props.configurations.map((c) => ({
-      value: c.id,
-      label: `${c.model} (${c.description})`
-    }))
-  ]
 
   return (
     <div style={{ height: '100vh' }}>
@@ -563,16 +556,20 @@ export const Home: React.FC<Props> = (props) => {
           <UiGroup>
             <UiItem
               title={t('action.default-configuration')}
-              slot_right={
-                <UiDropdown
-                  options={config_options}
-                  value={props.defaults['intelligent-update'] || ''}
-                  onChange={(val) =>
-                    props.on_set_default_config(
-                      'intelligent-update',
-                      val || null
-                    )
+              slot_below={
+                <DefaultConfigurationSelector
+                  value={props.defaults['intelligent-update'] || null}
+                  configurations={props.configurations}
+                  on_unset={() =>
+                    props.on_set_default_config('intelligent-update', null)
                   }
+                  on_select={() =>
+                    props.on_select_default_config('intelligent-update')
+                  }
+                  translations={{
+                    select_default: t('action.select-default-configuration'),
+                    unset: t('action.unset-default')
+                  }}
                 />
               }
             />
@@ -636,13 +633,20 @@ export const Home: React.FC<Props> = (props) => {
           <UiGroup>
             <UiItem
               title={t('action.default-configuration')}
-              slot_right={
-                <UiDropdown
-                  options={config_options}
-                  value={props.defaults['code-at-cursor'] || ''}
-                  onChange={(val) =>
-                    props.on_set_default_config('code-at-cursor', val || null)
+              slot_below={
+                <DefaultConfigurationSelector
+                  value={props.defaults['code-at-cursor'] || null}
+                  configurations={props.configurations}
+                  on_unset={() =>
+                    props.on_set_default_config('code-at-cursor', null)
                   }
+                  on_select={() =>
+                    props.on_select_default_config('code-at-cursor')
+                  }
+                  translations={{
+                    select_default: t('action.select-default-configuration'),
+                    unset: t('action.unset-default')
+                  }}
                 />
               }
             />
@@ -673,16 +677,20 @@ export const Home: React.FC<Props> = (props) => {
           <UiGroup>
             <UiItem
               title={t('action.default-configuration')}
-              slot_right={
-                <UiDropdown
-                  options={config_options}
-                  value={props.defaults['find-relevant-files'] || ''}
-                  onChange={(val) =>
-                    props.on_set_default_config(
-                      'find-relevant-files',
-                      val || null
-                    )
+              slot_below={
+                <DefaultConfigurationSelector
+                  value={props.defaults['find-relevant-files'] || null}
+                  configurations={props.configurations}
+                  on_unset={() =>
+                    props.on_set_default_config('find-relevant-files', null)
                   }
+                  on_select={() =>
+                    props.on_select_default_config('find-relevant-files')
+                  }
+                  translations={{
+                    select_default: t('action.select-default-configuration'),
+                    unset: t('action.unset-default')
+                  }}
                 />
               }
             />
@@ -700,13 +708,20 @@ export const Home: React.FC<Props> = (props) => {
           <UiGroup>
             <UiItem
               title={t('action.default-configuration')}
-              slot_right={
-                <UiDropdown
-                  options={config_options}
-                  value={props.defaults['commit-messages'] || ''}
-                  onChange={(val) =>
-                    props.on_set_default_config('commit-messages', val || null)
+              slot_below={
+                <DefaultConfigurationSelector
+                  value={props.defaults['commit-messages'] || null}
+                  configurations={props.configurations}
+                  on_unset={() =>
+                    props.on_set_default_config('commit-messages', null)
                   }
+                  on_select={() =>
+                    props.on_select_default_config('commit-messages')
+                  }
+                  translations={{
+                    select_default: t('action.select-default-configuration'),
+                    unset: t('action.unset-default')
+                  }}
                 />
               }
             />
@@ -775,13 +790,20 @@ export const Home: React.FC<Props> = (props) => {
           <UiGroup>
             <UiItem
               title={t('action.default-configuration')}
-              slot_right={
-                <UiDropdown
-                  options={config_options}
-                  value={props.defaults['voice-input'] || ''}
-                  onChange={(val) =>
-                    props.on_set_default_config('voice-input', val || null)
+              slot_below={
+                <DefaultConfigurationSelector
+                  value={props.defaults['voice-input'] || null}
+                  configurations={props.configurations}
+                  on_unset={() =>
+                    props.on_set_default_config('voice-input', null)
                   }
+                  on_select={() =>
+                    props.on_select_default_config('voice-input')
+                  }
+                  translations={{
+                    select_default: t('action.select-default-configuration'),
+                    unset: t('action.unset-default')
+                  }}
                 />
               }
             />

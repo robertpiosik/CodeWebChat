@@ -65,6 +65,11 @@ export interface SetDefaultConfigurationMessage {
   configuration_id: string | null
 }
 
+export interface SelectDefaultConfigurationMessage {
+  command: 'SELECT_DEFAULT_CONFIGURATION'
+  tool_name: ToolType
+}
+
 export interface GetCommitMessageInstructionsMessage {
   command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS'
 }
@@ -253,6 +258,7 @@ export type FrontendMessage =
   | ReorderConfigurationsMessage
   | DeleteConfigurationMessage
   | SetDefaultConfigurationMessage
+  | SelectDefaultConfigurationMessage
   | GetCommitMessageInstructionsMessage
   | UpdateCommitMessageInstructionsMessage
   | GetIncludePromptsInCommitMessagesMessage

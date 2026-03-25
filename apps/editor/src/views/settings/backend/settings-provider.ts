@@ -28,6 +28,7 @@ import {
   handle_reorder_configuration,
   handle_reorder_model_providers,
   handle_set_default_configuration,
+  handle_select_default_configuration,
   handle_update_check_new_files,
   handle_update_clear_checks_in_workspace_behavior,
   handle_update_are_automatic_checkpoints_disabled,
@@ -140,6 +141,8 @@ export class SettingsProvider {
             message.configuration_id,
             message.tool_name
           )
+        } else if (message.command == 'SELECT_DEFAULT_CONFIGURATION') {
+          await handle_select_default_configuration(this, message)
         } else if (message.command == 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS') {
           await handle_get_edit_context_system_instructions(this)
         } else if (

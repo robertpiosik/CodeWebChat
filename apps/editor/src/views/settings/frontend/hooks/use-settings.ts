@@ -232,6 +232,13 @@ export const use_settings = (vscode: any) => {
     } as FrontendMessage)
   }
 
+  const handle_select_default_config = (tool_name: ToolType) => {
+    post_message(vscode, {
+      command: 'SELECT_DEFAULT_CONFIGURATION',
+      tool_name
+    } as FrontendMessage)
+  }
+
   const handle_commit_instructions_change = (instructions: string) =>
     post_message(vscode, {
       command: 'UPDATE_COMMIT_MESSAGE_INSTRUCTIONS',
@@ -411,6 +418,7 @@ export const use_settings = (vscode: any) => {
     handle_duplicate_config,
     handle_delete_config,
     handle_set_default_config,
+    handle_select_default_config,
     handle_voice_input_instructions_change,
     handle_commit_instructions_change,
     handle_include_prompts_in_commit_messages_change,

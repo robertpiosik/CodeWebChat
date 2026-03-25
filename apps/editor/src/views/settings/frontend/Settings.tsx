@@ -155,6 +155,7 @@ export const Settings = () => {
       on_duplicate_config={settings_hook.handle_duplicate_config}
       on_delete_config={settings_hook.handle_delete_config}
       on_set_default_config={settings_hook.handle_set_default_config}
+      on_select_default_config={settings_hook.handle_select_default_config}
       on_open_external_url={settings_hook.handle_open_external_url}
       scroll_to_section_on_load={scroll_to_section_on_load}
     />
