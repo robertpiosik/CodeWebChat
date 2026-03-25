@@ -46,29 +46,6 @@ export const PromptTypeDropdown = <T extends string>(
     set_just_opened(false)
   }
 
-  const handle_wheel = (event: React.WheelEvent<HTMLDivElement>) => {
-    event.preventDefault()
-    event.stopPropagation()
-
-    const current_index = props.options.findIndex(
-      (option) => option.value === props.selected_value
-    )
-    if (current_index == -1) {
-      return
-    }
-
-    const options_count = props.options.length
-    if (options_count <= 1) return
-
-    let next_index
-    if (event.deltaY < 0) {
-      next_index = (current_index - 1 + options_count) % options_count
-    } else {
-      next_index = (current_index + 1) % options_count
-    }
-    props.on_change(props.options[next_index].value)
-  }
-
   const handle_mouse_leave = () => {
     opened_by_shortcut.current = false
     set_is_open(false)
@@ -133,7 +110,6 @@ export const PromptTypeDropdown = <T extends string>(
     <div
       className={cn(styles.container, { [styles['button--open']]: is_open })}
       ref={container_ref}
-      onWheel={handle_wheel}
       onMouseLeave={handle_mouse_leave}
     >
       <button
