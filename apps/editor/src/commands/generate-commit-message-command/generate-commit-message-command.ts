@@ -8,7 +8,6 @@ import { display_token_count } from '../../utils/display-token-count'
 import { get_commit_message_config } from './utils/get-commit-message-config'
 import { build_commit_message_prompt } from './utils/build-commit-message-prompt'
 import { generate_commit_message_with_api } from './utils/generate-commit-message-with-api'
-import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { t } from '@/i18n'
 import axios from 'axios'
 import { PromptsForCommitMessagesUtils } from '../../utils/prompts-for-commit-messages-utils'
@@ -50,7 +49,6 @@ export const generate_commit_message_command = (
   }) => {
     let files_staged_by_action = false
     let is_single_change_flow = false
-    const api_providers_manager = new ModelProvidersManager(context)
     let force_quick_pick = false
     const selection_state: { files?: string[] } = {}
 
@@ -69,10 +67,6 @@ export const generate_commit_message_command = (
       } else if (files_staged_by_action) {
         was_empty_stage = true
       }
-
-      const default_config =
-        await api_providers_manager.get_default_commit_messages_config()
-      const has_default_config = !!default_config
 
       const show_back_button =
         was_empty_stage && !is_single_change_flow && !params.source_control
@@ -153,17 +147,7 @@ export const generate_commit_message_command = (
               tooltip: t('command.commit-message.input.accept')
             }
 
-            if (has_default_config && !files_staged_by_action) {
-              input_box.buttons = [
-                accept_button,
-                {
-                  iconPath: new vscode.ThemeIcon('close'),
-                  tooltip: t('common.close')
-                }
-              ]
-            } else {
-              input_box.buttons = [accept_button, vscode.QuickInputButtons.Back]
-            }
+            input_box.buttons = [accept_button, vscode.QuickInputButtons.Back]
 
             let is_resolved = false
 
@@ -172,10 +156,7 @@ export const generate_commit_message_command = (
                 is_resolved = true
                 resolve(input_box.value)
                 input_box.hide()
-              } else if (
-                button === vscode.QuickInputButtons.Back ||
-                button.tooltip == t('common.close')
-              ) {
+              } else if (button === vscode.QuickInputButtons.Back) {
                 is_resolved = true
                 resolve('back')
                 input_box.hide()
@@ -200,13 +181,7 @@ export const generate_commit_message_command = (
         )
 
         if (edited_message == 'back') {
-          if (has_default_config) {
-            if (files_staged_by_action) {
-              await vscode.commands.executeCommand('git.unstageAll')
-            } else {
-              return
-            }
-          }
+          force_quick_pick = true
           continue
         }
 
