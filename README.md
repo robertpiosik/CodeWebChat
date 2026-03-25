@@ -36,7 +36,7 @@ Code Web Chat (CWC) is a free and open-source, privacy-first **AI coding toolkit
 
 ## Introduction
 
-In the world of AI coding, agents like Claude Code or Codex rely on "Function Calling" (where the AI asks "the harness" to read a file, waits for the tool to respond, then reads another). CWC flips this by letting you provide context files upfront to let you quickly iterate on instructions without polluting the context window.
+In the world of AI coding, agents like Claude Code or Codex rely on "Function Calling" (where the AI asks "the harness" to read a file, waits for the tool to respond, then reads another). CWC flips this by letting you provide context files upfront for fast iterations on instructions without polluting the context window.
 
 **Prompt types:**
 
@@ -44,8 +44,8 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 <summary>Edit context</summary>
 
 ```
-<files>[the selected files]</files>
-<system>[edit format (e.g. diff) instructions]</system>
+<files>[current file tree selection]</files>
+<system>[edit format instructions]</system>
 [user-typed prompt]
 ```
 
@@ -55,7 +55,7 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 <summary>Ask about context</summary>
 
 ```
-<files>[the selected files]</files>
+<files>[current file tree selection]</files>
 [user-typed prompt]
 ```
 
@@ -66,12 +66,12 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 
 ```
 <files>
-[the selected files]
+[current file tree selection]
 <file path="[active file]">
 [code before cursor]<missing_text>[user-typed prompt]</missing_text>[code after cursor]
 </file>
 </files>
-[predefined instructions]
+[instructions for the missing text]
 ```
 
 </details>
@@ -80,9 +80,9 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 <summary>Find relevant files</summary>
 
 ```
-<files>[the selected files]</files>
-<system>[output format]</system>
-[predefined instructions]
+<files>[current file tree selection]</files>
+<system>[output format instructions]</system>
+Find all files building modules of the following task's scope:
 [user-typed prompt]
 ```
 
