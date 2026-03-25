@@ -11,12 +11,12 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 </p>
 
-Code Web Chat (CWC) is a free and open-source, privacy-first **AI coding toolkit for VS Code**. It helps construct zero-overhead, XML-formatted prompts with files and instructions for:
+Code Web Chat (CWC) is a free and open-source, privacy-first **AI coding toolkit for VS Code**. It helps construct zero-overhead, XML-formatted prompts for:
 
 - **chatbots**—ChatGPT, Claude, Gemini, etc.
 - **APIs**—remote and local model providers
 
-_Implement features and fix bugs without a single tool call, in mere seconds!_
+Great for all tasks where iteration speed on instructions without polluting the context window matter most!
 
 <br/>
 
