@@ -47,7 +47,7 @@ In the world of AI coding, agents like Claude Code or Codex rely on "Function Ca
 
 ```
 <files>[the selected files]</files>
-<system>[edit format (e.g. whole or diff) instructions]</system>
+<system>[edit format (e.g. diff) instructions]</system>
 [user-typed prompt]
 ```
 
