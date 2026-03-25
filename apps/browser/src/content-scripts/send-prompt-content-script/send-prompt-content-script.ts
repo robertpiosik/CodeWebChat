@@ -27,11 +27,7 @@ import {
 // In case url changes on load
 const current_url = window.location.href
 
-const hash = window.location.hash
 const hash_prefix_new = '#cwc'
-const is_cwc_hash = hash.startsWith(hash_prefix_new)
-
-const batch_id = hash.substring(hash_prefix_new.length + 1)
 
 const ai_studio_url = 'https://aistudio.google.com/'
 const is_ai_studio = current_url.startsWith(ai_studio_url)
@@ -177,6 +173,10 @@ const initialize_chat = async (params: { message: string; chat: Chat }) => {
 const main = async () => {
   const session_data_key = 'cwc-session-data'
 
+  const hash = window.location.hash
+  const is_cwc_hash = hash.startsWith(hash_prefix_new)
+  const batch_id = hash.substring(hash_prefix_new.length + 1)
+
   if (is_cwc_hash) {
     history.replaceState(
       null,
@@ -270,6 +270,13 @@ const main = async () => {
     }
   }
 }
+
+// Hash changes when reusing a tab
+window.addEventListener('hashchange', () => {
+  if (window.location.hash.startsWith(hash_prefix_new)) {
+    main()
+  }
+})
 
 if (document.readyState == 'loading') {
   document.addEventListener('DOMContentLoaded', main)

@@ -424,7 +424,6 @@ export const ai_studio: Chatbot = {
     // AI Studio is quite sluggish with showing already generated tokens,
     // therefore we handle waiting for finished response differently than
     // in other chatbots.
-    let has_sent_finished_responding = true
     let debounce_timer: NodeJS.Timeout
     const observer = new MutationObserver(() => {
       clearTimeout(debounce_timer)
