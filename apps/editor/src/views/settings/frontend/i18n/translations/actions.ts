@@ -340,5 +340,41 @@ export const actions = {
     cs: 'Nástroj API',
     hu: 'API Eszköz',
     bg: 'API Инструмент'
+  },
+  'action.default-configuration': {
+    en: 'Default Configuration',
+    pl: 'Domyślna konfiguracja',
+    'zh-cn': '默认配置',
+    ja: 'デフォルト設定',
+    'zh-tw': '預設設定',
+    de: 'Standardkonfiguration',
+    es: 'Configuración predeterminada',
+    fr: 'Configuration par défaut',
+    'pt-br': 'Configuração Padrão',
+    ru: 'Конфигурация по умолчанию',
+    ko: '기본 구성',
+    it: 'Configurazione predefinita',
+    tr: 'Varsayılan Yapılandırma',
+    cs: 'Výchozí konfigurace',
+    hu: 'Alapértelmezett Konfiguráció',
+    bg: 'Конфигурация по подразбиране'
+  },
+  'action.none': {
+    en: 'None',
+    pl: 'Brak',
+    'zh-cn': '无',
+    ja: 'なし',
+    'zh-tw': '無',
+    de: 'Keine',
+    es: 'Ninguno',
+    fr: 'Aucun',
+    'pt-br': 'Nenhum',
+    ru: 'Нет',
+    ko: '없음',
+    it: 'Nessuno',
+    tr: 'Hiçbiri',
+    cs: 'Žádný',
+    hu: 'Nincs',
+    bg: 'Няма'
   }
 } as const

@@ -25,12 +25,7 @@ export type InstructionsState = {
 
 export type SetupProgress = {
   has_model_provider: boolean
-  has_configuration_for_edit_context: boolean
-  has_configuration_for_intelligent_update: boolean
-  has_configuration_for_find_relevant_files: boolean
-  has_configuration_for_code_at_cursor: boolean
-  has_configuration_for_voice_input: boolean
-  has_configuration_for_commit_messages: boolean
+  has_configuration: boolean
 }
 
 export interface PreviewGeneratedCodeMessage extends BaseMessage {
@@ -558,7 +553,7 @@ export interface GetSetupProgressMessage extends BaseMessage {
   command: 'GET_SETUP_PROGRESS'
 }
 
-export interface SetupProgressMessage {
+export interface SetupProgressMessage extends BaseMessage {
   command: 'SETUP_PROGRESS'
   setup_progress: SetupProgress
 }
@@ -918,11 +913,6 @@ export interface TasksMessage extends BaseMessage {
 export interface FindRelevantFilesShrinkSourceCodeMessage extends BaseMessage {
   command: 'FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE'
   shrink_source_code: boolean
-}
-
-export interface SetupProgressMessage {
-  command: 'SETUP_PROGRESS'
-  setup_progress: SetupProgress
 }
 
 export interface RecordingStateMessage extends BaseMessage {

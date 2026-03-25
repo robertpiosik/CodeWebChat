@@ -1343,69 +1343,7 @@
             ]
           }
         },
-        "codeWebChat.configurationsForCodeAtCursor": {
-          "type": "array",
-          "scope": "resource",
-          "items": {
-            "type": "object",
-            "properties": {
-              "providerName": {
-                "type": "string"
-              },
-              "model": {
-                "type": "string"
-              },
-              "temperature": {
-                "type": "number"
-              },
-              "reasoningEffort": {
-                "type": "string"
-              },
-              "isDefault": {
-                "type": "boolean"
-              },
-              "isPinned": {
-                "type": "boolean"
-              }
-            },
-            "required": [
-              "providerName",
-              "model"
-            ]
-          }
-        },
-        "codeWebChat.configurationsForFindRelevantFiles": {
-          "type": "array",
-          "scope": "resource",
-          "items": {
-            "type": "object",
-            "properties": {
-              "providerName": {
-                "type": "string"
-              },
-              "model": {
-                "type": "string"
-              },
-              "temperature": {
-                "type": "number"
-              },
-              "reasoningEffort": {
-                "type": "string"
-              },
-              "isDefault": {
-                "type": "boolean"
-              },
-              "isPinned": {
-                "type": "boolean"
-              }
-            },
-            "required": [
-              "providerName",
-              "model"
-            ]
-          }
-        },
-        "codeWebChat.configurationsForEditContext": {
+        "codeWebChat.configurations": {
           "type": "array",
           "scope": "resource",
           "items": {
@@ -1428,98 +1366,20 @@
               },
               "isPinned": {
                 "type": "boolean"
-              }
-            },
-            "required": [
-              "providerName",
-              "model"
-            ]
-          }
-        },
-        "codeWebChat.configurationsForIntelligentUpdate": {
-          "type": "array",
-          "scope": "resource",
-          "items": {
-            "type": "object",
-            "properties": {
-              "providerName": {
-                "type": "string"
               },
-              "model": {
-                "type": "string"
-              },
-              "temperature": {
-                "type": "number"
-              },
-              "reasoningEffort": {
-                "type": "string"
-              },
-              "isDefault": {
+              "isDefaultForCodeAtCursor": {
                 "type": "boolean"
               },
-              "isPinned": {
-                "type": "boolean"
-              }
-            },
-            "required": [
-              "providerName",
-              "model"
-            ]
-          }
-        },
-        "codeWebChat.configurationsForCommitMessages": {
-          "type": "array",
-          "scope": "resource",
-          "items": {
-            "type": "object",
-            "properties": {
-              "providerName": {
-                "type": "string"
-              },
-              "model": {
-                "type": "string"
-              },
-              "temperature": {
-                "type": "number"
-              },
-              "reasoningEffort": {
-                "type": "string"
-              },
-              "isDefault": {
+              "isDefaultForFindRelevantFiles": {
                 "type": "boolean"
               },
-              "isPinned": {
-                "type": "boolean"
-              }
-            },
-            "required": [
-              "providerName",
-              "model"
-            ]
-          }
-        },
-        "codeWebChat.configurationsForVoiceInput": {
-          "type": "array",
-          "scope": "resource",
-          "items": {
-            "type": "object",
-            "properties": {
-              "providerName": {
-                "type": "string"
-              },
-              "model": {
-                "type": "string"
-              },
-              "temperature": {
-                "type": "number"
-              },
-              "reasoningEffort": {
-                "type": "string"
-              },
-              "isDefault": {
+              "isDefaultForIntelligentUpdate": {
                 "type": "boolean"
               },
-              "isPinned": {
+              "isDefaultForCommitMessages": {
+                "type": "boolean"
+              },
+              "isDefaultForVoiceInput": {
                 "type": "boolean"
               }
             },

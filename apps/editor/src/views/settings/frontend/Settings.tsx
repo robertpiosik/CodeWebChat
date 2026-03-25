@@ -7,6 +7,7 @@ import { Home } from './Home/Home'
 type NavItem =
   | 'general'
   | 'model-providers'
+  | 'configurations'
   | 'intelligent-update'
   | 'edit-context'
   | 'code-at-cursor'
@@ -24,13 +25,9 @@ export const Settings = () => {
   const all_data_loaded = useMemo(() => {
     return (
       settings_hook.providers !== undefined &&
-      settings_hook.code_at_cursor_configs !== undefined &&
-      settings_hook.commit_messages_configs !== undefined &&
-      settings_hook.edit_context_configs !== undefined &&
+      settings_hook.configurations !== undefined &&
+      settings_hook.defaults !== undefined &&
       settings_hook.edit_context_system_instructions !== undefined &&
-      settings_hook.voice_input_configs !== undefined &&
-      settings_hook.intelligent_update_configs !== undefined &&
-      settings_hook.find_relevant_files_configs !== undefined &&
       settings_hook.voice_input_instructions !== undefined &&
       settings_hook.commit_message_instructions !== undefined &&
       settings_hook.include_prompts_in_commit_messages !== undefined &&
@@ -66,15 +63,11 @@ export const Settings = () => {
   return (
     <Home
       providers={settings_hook.providers!}
-      code_at_cursor_configs={settings_hook.code_at_cursor_configs!}
-      commit_messages_configs={settings_hook.commit_messages_configs!}
-      edit_context_configs={settings_hook.edit_context_configs!}
+      configurations={settings_hook.configurations!}
+      defaults={settings_hook.defaults!}
       edit_context_system_instructions={
         settings_hook.edit_context_system_instructions!
       }
-      voice_input_configs={settings_hook.voice_input_configs!}
-      intelligent_update_configs={settings_hook.intelligent_update_configs!}
-      find_relevant_files_configs={settings_hook.find_relevant_files_configs!}
       context_size_warning_threshold={
         settings_hook.context_size_warning_threshold!
       }
@@ -101,16 +94,7 @@ export const Settings = () => {
       }
       fix_all_automatically={settings_hook.fix_all_automatically!}
       set_providers={settings_hook.set_providers}
-      set_code_at_cursor_configs={settings_hook.set_code_at_cursor_configs}
-      set_commit_messages_configs={settings_hook.set_commit_messages_configs}
-      set_edit_context_configs={settings_hook.set_edit_context_configs}
-      set_voice_input_configs={settings_hook.set_voice_input_configs}
-      set_intelligent_update_configs={
-        settings_hook.set_intelligent_update_configs
-      }
-      set_find_relevant_files_configs={
-        settings_hook.set_find_relevant_files_configs
-      }
+      set_configurations={settings_hook.set_configurations}
       on_context_size_warning_threshold_change={
         settings_hook.handle_context_size_warning_threshold_change
       }
@@ -171,7 +155,6 @@ export const Settings = () => {
       on_duplicate_config={settings_hook.handle_duplicate_config}
       on_delete_config={settings_hook.handle_delete_config}
       on_set_default_config={settings_hook.handle_set_default_config}
-      on_unset_default_config={settings_hook.handle_unset_default_config}
       on_open_external_url={settings_hook.handle_open_external_url}
       scroll_to_section_on_load={scroll_to_section_on_load}
     />

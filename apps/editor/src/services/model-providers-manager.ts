@@ -126,18 +126,9 @@ export class ModelProvidersManager {
     return config
   }
 
-  private _get_tool_configs_from_settings(settings_key: string): ToolConfig[] {
+  private _get_tool_configs_from_settings(): ToolConfig[] {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const settings_configs = config.get<
-      {
-        providerName: string
-        model: string
-        temperature?: number
-        reasoningEffort?: string
-        systemInstructionsOverride?: string
-        isPinned?: boolean
-      }[]
-    >(settings_key, [])
+    const settings_configs = config.get<any[]>('configurations', [])
 
     const tool_configs: ToolConfig[] = settings_configs.map((sc) => {
       return {
@@ -155,12 +146,9 @@ export class ModelProvidersManager {
     )
   }
 
-  private async _save_tool_configs_to_settings(
-    settings_key: string,
-    configs: ToolConfig[]
-  ) {
+  private async _save_tool_configs_to_settings(configs: ToolConfig[]) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const old_settings_configs = config.get<any[]>(settings_key, [])
+    const old_settings_configs = config.get<any[]>('configurations', [])
 
     const new_settings_configs = configs.map((c) => {
       const old_config = old_settings_configs.find((oldC) =>
@@ -170,18 +158,25 @@ export class ModelProvidersManager {
         providerName: c.provider_name,
         model: c.model,
         temperature: c.temperature,
-        isDefault: old_config?.isDefault || false
+        isDefaultForCodeAtCursor: old_config?.isDefaultForCodeAtCursor || false,
+        isDefaultForFindRelevantFiles:
+          old_config?.isDefaultForFindRelevantFiles || false,
+        isDefaultForIntelligentUpdate:
+          old_config?.isDefaultForIntelligentUpdate || false,
+        isDefaultForCommitMessages:
+          old_config?.isDefaultForCommitMessages || false,
+        isDefaultForVoiceInput: old_config?.isDefaultForVoiceInput || false
       }
       if (c.reasoning_effort !== undefined)
         new_config.reasoningEffort = c.reasoning_effort
       if (c.system_instructions_override !== undefined)
         new_config.systemInstructionsOverride = c.system_instructions_override
-      if (c.is_pinned) new_config.isPinned = c.is_pinned
+      if (c.is_pinned !== undefined) new_config.isPinned = c.is_pinned
       return new_config
     })
 
     await config.update(
-      settings_key,
+      'configurations',
       new_settings_configs,
       vscode.ConfigurationTarget.Global
     )
@@ -203,22 +198,12 @@ export class ModelProvidersManager {
   }
 
   private _get_default_tool_config_from_settings(
-    settings_key: string
+    default_key: string
   ): ToolConfig | undefined {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const settings_configs = config.get<
-      {
-        providerName: string
-        model: string
-        temperature?: number
-        reasoningEffort?: string
-        systemInstructionsOverride?: string
-        isDefault?: boolean
-        isPinned?: boolean
-      }[]
-    >(settings_key, [])
+    const settings_configs = config.get<any[]>('configurations', [])
     const default_config_from_settings = settings_configs.find(
-      (c) => c.isDefault
+      (c) => c[default_key]
     )
 
     if (default_config_from_settings) {
@@ -238,21 +223,21 @@ export class ModelProvidersManager {
   }
 
   private async _set_default_tool_config_in_settings(
-    settings_key: string,
+    default_key: string,
     config_to_set: ToolConfig | null
   ) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const settings_configs = config.get<any[]>(settings_key, [])
+    const settings_configs = config.get<any[]>('configurations', [])
 
     const new_settings_configs = settings_configs.map((c) => {
       const is_default =
         config_to_set !== null &&
         this._are_configs_effectively_equal(c, config_to_set)
-      return { ...c, isDefault: is_default }
+      return { ...c, [default_key]: is_default }
     })
 
     await config.update(
-      settings_key,
+      'configurations',
       new_settings_configs,
       vscode.ConfigurationTarget.Global
     )
@@ -260,7 +245,7 @@ export class ModelProvidersManager {
 
   public async get_code_completions_tool_configs(): Promise<CodeCompletionsConfigs> {
     await this._load_promise
-    return this._get_tool_configs_from_settings('configurationsForCodeAtCursor')
+    return this._get_tool_configs_from_settings()
   }
 
   public async get_default_code_completions_config(): Promise<
@@ -268,13 +253,13 @@ export class ModelProvidersManager {
   > {
     await this._load_promise
     return this._get_default_tool_config_from_settings(
-      'configurationsForCodeAtCursor'
+      'isDefaultForCodeAtCursor'
     )
   }
 
   public async set_default_code_completions_config(config: ToolConfig | null) {
     await this._set_default_tool_config_in_settings(
-      'configurationsForCodeAtCursor',
+      'isDefaultForCodeAtCursor',
       config
     )
   }
@@ -282,29 +267,21 @@ export class ModelProvidersManager {
   public async save_code_completions_tool_configs(
     configs: CodeCompletionsConfigs
   ) {
-    await this._save_tool_configs_to_settings(
-      'configurationsForCodeAtCursor',
-      configs
-    )
+    await this._save_tool_configs_to_settings(configs)
   }
 
   public async get_edit_context_tool_configs(): Promise<EditContextConfigs> {
     await this._load_promise
-    return this._get_tool_configs_from_settings('configurationsForEditContext')
+    return this._get_tool_configs_from_settings()
   }
 
   public async save_edit_context_tool_configs(configs: EditContextConfigs) {
-    await this._save_tool_configs_to_settings(
-      'configurationsForEditContext',
-      configs
-    )
+    await this._save_tool_configs_to_settings(configs)
   }
 
   public async get_commit_messages_tool_configs(): Promise<CommitMessagesConfigs> {
     await this._load_promise
-    return this._get_tool_configs_from_settings(
-      'configurationsForCommitMessages'
-    )
+    return this._get_tool_configs_from_settings()
   }
 
   public async get_default_commit_messages_config(): Promise<
@@ -312,13 +289,13 @@ export class ModelProvidersManager {
   > {
     await this._load_promise
     return this._get_default_tool_config_from_settings(
-      'configurationsForCommitMessages'
+      'isDefaultForCommitMessages'
     )
   }
 
   public async set_default_commit_messages_config(config: ToolConfig | null) {
     await this._set_default_tool_config_in_settings(
-      'configurationsForCommitMessages',
+      'isDefaultForCommitMessages',
       config
     )
   }
@@ -326,17 +303,12 @@ export class ModelProvidersManager {
   public async save_commit_messages_tool_configs(
     configs: CommitMessagesConfigs
   ) {
-    await this._save_tool_configs_to_settings(
-      'configurationsForCommitMessages',
-      configs
-    )
+    await this._save_tool_configs_to_settings(configs)
   }
 
   public async get_intelligent_update_tool_configs(): Promise<IntelligentUpdateConfigs> {
     await this._load_promise
-    return this._get_tool_configs_from_settings(
-      'configurationsForIntelligentUpdate'
-    )
+    return this._get_tool_configs_from_settings()
   }
 
   public async get_default_intelligent_update_config(): Promise<
@@ -344,7 +316,7 @@ export class ModelProvidersManager {
   > {
     await this._load_promise
     return this._get_default_tool_config_from_settings(
-      'configurationsForIntelligentUpdate'
+      'isDefaultForIntelligentUpdate'
     )
   }
 
@@ -352,7 +324,7 @@ export class ModelProvidersManager {
     config: ToolConfig | null
   ) {
     await this._set_default_tool_config_in_settings(
-      'configurationsForIntelligentUpdate',
+      'isDefaultForIntelligentUpdate',
       config
     )
   }
@@ -360,17 +332,12 @@ export class ModelProvidersManager {
   public async save_intelligent_update_tool_configs(
     configs: IntelligentUpdateConfigs
   ) {
-    await this._save_tool_configs_to_settings(
-      'configurationsForIntelligentUpdate',
-      configs
-    )
+    await this._save_tool_configs_to_settings(configs)
   }
 
   public async get_find_relevant_files_tool_configs(): Promise<FindRelevantFilesConfigs> {
     await this._load_promise
-    return this._get_tool_configs_from_settings(
-      'configurationsForFindRelevantFiles'
-    )
+    return this._get_tool_configs_from_settings()
   }
 
   public async get_default_find_relevant_files_config(): Promise<
@@ -378,7 +345,7 @@ export class ModelProvidersManager {
   > {
     await this._load_promise
     return this._get_default_tool_config_from_settings(
-      'configurationsForFindRelevantFiles'
+      'isDefaultForFindRelevantFiles'
     )
   }
 
@@ -386,7 +353,7 @@ export class ModelProvidersManager {
     config: ToolConfig | null
   ) {
     await this._set_default_tool_config_in_settings(
-      'configurationsForFindRelevantFiles',
+      'isDefaultForFindRelevantFiles',
       config
     )
   }
@@ -394,38 +361,30 @@ export class ModelProvidersManager {
   public async save_find_relevant_files_tool_configs(
     configs: FindRelevantFilesConfigs
   ) {
-    await this._save_tool_configs_to_settings(
-      'configurationsForFindRelevantFiles',
-      configs
-    )
+    await this._save_tool_configs_to_settings(configs)
   }
 
   public async get_voice_input_tool_configs(): Promise<VoiceInputConfigs> {
     await this._load_promise
-    return this._get_tool_configs_from_settings('configurationsForVoiceInput')
+    return this._get_tool_configs_from_settings()
   }
 
   public async get_default_voice_input_config(): Promise<
     ToolConfig | undefined
   > {
     await this._load_promise
-    return this._get_default_tool_config_from_settings(
-      'configurationsForVoiceInput'
-    )
+    return this._get_default_tool_config_from_settings('isDefaultForVoiceInput')
   }
 
   public async set_default_voice_input_config(config: ToolConfig | null) {
     await this._set_default_tool_config_in_settings(
-      'configurationsForVoiceInput',
+      'isDefaultForVoiceInput',
       config
     )
   }
 
   public async save_voice_input_tool_configs(configs: VoiceInputConfigs) {
-    await this._save_tool_configs_to_settings(
-      'configurationsForVoiceInput',
-      configs
-    )
+    await this._save_tool_configs_to_settings(configs)
   }
 
   public async update_provider_name_in_configs(params: {
@@ -435,28 +394,17 @@ export class ModelProvidersManager {
     const { old_name, new_name } = params
     const config = vscode.workspace.getConfiguration('codeWebChat')
 
-    const settings_keys = [
-      'configurationsForCodeAtCursor',
-      'configurationsForEditContext',
-      'configurationsForIntelligentUpdate',
-      'configurationsForCommitMessages',
-      'configurationsForFindRelevantFiles',
-      'configurationsForVoiceInput'
-    ]
-
-    for (const key of settings_keys) {
-      const configs = config.get<{ providerName: string }[]>(key, [])
-      const updated_configs = configs.map((c) => {
-        if (c.providerName === old_name) {
-          return { ...c, providerName: new_name }
-        }
-        return c
-      })
-      await config.update(
-        key,
-        updated_configs,
-        vscode.ConfigurationTarget.Global
-      )
-    }
+    const configs = config.get<{ providerName: string }[]>('configurations', [])
+    const updated_configs = configs.map((c) => {
+      if (c.providerName === old_name) {
+        return { ...c, providerName: new_name }
+      }
+      return c
+    })
+    await config.update(
+      'configurations',
+      updated_configs,
+      vscode.ConfigurationTarget.Global
+    )
   }
 }

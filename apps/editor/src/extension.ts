@@ -9,7 +9,8 @@ import {
   migrate_instructions_state_cleanup,
   migrate_checkpoints_title_to_trigger,
   migrate_model_providers_type,
-  migrate_prune_context_to_find_relevant_files
+  migrate_prune_context_to_find_relevant_files,
+  migrate_merge_configurations
 } from './migrations'
 import {
   apply_chat_response_command,
@@ -63,6 +64,8 @@ export const activate = async (context: vscode.ExtensionContext) => {
     await migrate_model_providers_type(context)
     // 10 March 2026
     await migrate_prune_context_to_find_relevant_files(context)
+    // 25 March 2026
+    await migrate_merge_configurations(context)
   }
 
   await migrations()

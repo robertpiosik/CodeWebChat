@@ -128,47 +128,17 @@ export class SettingsProvider {
             provider: this,
             provider_name: message.provider_name
           })
-        } else if (message.command == 'GET_CODE_AT_CURSOR_CONFIGURATIONS') {
-          await handle_get_configurations({
-            provider: this,
-            type: 'code-at-cursor'
-          })
-        } else if (message.command == 'REORDER_CODE_AT_CURSOR_CONFIGURATIONS') {
-          await handle_reorder_configuration(
-            this,
-            message.configurations,
-            'code-at-cursor'
-          )
-        } else if (message.command == 'DELETE_CODE_AT_CURSOR_CONFIGURATION') {
-          await handle_delete_configuration(
-            this,
-            message.configuration_id,
-            'code-at-cursor'
-          )
-        } else if (
-          message.command == 'SET_DEFAULT_CODE_AT_CURSOR_CONFIGURATION'
-        ) {
+        } else if (message.command == 'GET_CONFIGURATIONS') {
+          await handle_get_configurations(this)
+        } else if (message.command == 'REORDER_CONFIGURATIONS') {
+          await handle_reorder_configuration(this, message.configurations)
+        } else if (message.command == 'DELETE_CONFIGURATION') {
+          await handle_delete_configuration(this, message.configuration_id)
+        } else if (message.command == 'SET_DEFAULT_CONFIGURATION') {
           await handle_set_default_configuration(
             this,
             message.configuration_id,
-            'code-at-cursor'
-          )
-        } else if (message.command == 'GET_EDIT_CONTEXT_CONFIGURATIONS') {
-          await handle_get_configurations({
-            provider: this,
-            type: 'edit-context'
-          })
-        } else if (message.command == 'REORDER_EDIT_CONTEXT_CONFIGURATIONS') {
-          await handle_reorder_configuration(
-            this,
-            message.configurations,
-            'edit-context'
-          )
-        } else if (message.command == 'DELETE_EDIT_CONTEXT_CONFIGURATION') {
-          await handle_delete_configuration(
-            this,
-            message.configuration_id,
-            'edit-context'
+            message.tool_name
           )
         } else if (message.command == 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS') {
           await handle_get_edit_context_system_instructions(this)
@@ -180,116 +150,6 @@ export class SettingsProvider {
           await handle_get_edit_format_instructions(this)
         } else if (message.command == 'UPDATE_EDIT_FORMAT_INSTRUCTIONS') {
           await handle_update_edit_format_instructions(message)
-        } else if (message.command == 'GET_INTELLIGENT_UPDATE_CONFIGURATIONS') {
-          await handle_get_configurations({
-            provider: this,
-            type: 'intelligent-update'
-          })
-        } else if (
-          message.command == 'REORDER_INTELLIGENT_UPDATE_CONFIGURATIONS'
-        ) {
-          await handle_reorder_configuration(
-            this,
-            message.configurations,
-            'intelligent-update'
-          )
-        } else if (
-          message.command == 'DELETE_INTELLIGENT_UPDATE_CONFIGURATION'
-        ) {
-          await handle_delete_configuration(
-            this,
-            message.configuration_id,
-            'intelligent-update'
-          )
-        } else if (
-          message.command == 'SET_DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION'
-        ) {
-          await handle_set_default_configuration(
-            this,
-            message.configuration_id,
-            'intelligent-update'
-          )
-        } else if (
-          message.command == 'GET_FIND_RELEVANT_FILES_CONFIGURATIONS'
-        ) {
-          await handle_get_configurations({
-            provider: this,
-            type: 'find-relevant-files'
-          })
-        } else if (
-          message.command == 'REORDER_FIND_RELEVANT_FILES_CONFIGURATIONS'
-        ) {
-          await handle_reorder_configuration(
-            this,
-            message.configurations,
-            'find-relevant-files'
-          )
-        } else if (
-          message.command == 'DELETE_FIND_RELEVANT_FILES_CONFIGURATION'
-        ) {
-          await handle_delete_configuration(
-            this,
-            message.configuration_id,
-            'find-relevant-files'
-          )
-        } else if (
-          message.command == 'SET_DEFAULT_FIND_RELEVANT_FILES_CONFIGURATION'
-        ) {
-          await handle_set_default_configuration(
-            this,
-            message.configuration_id,
-            'find-relevant-files'
-          )
-        } else if (message.command == 'GET_VOICE_INPUT_CONFIGURATIONS') {
-          await handle_get_configurations({
-            provider: this,
-            type: 'voice-input'
-          })
-        } else if (message.command == 'REORDER_VOICE_INPUT_CONFIGURATIONS') {
-          await handle_reorder_configuration(
-            this,
-            message.configurations,
-            'voice-input'
-          )
-        } else if (message.command == 'DELETE_VOICE_INPUT_CONFIGURATION') {
-          await handle_delete_configuration(
-            this,
-            message.configuration_id,
-            'voice-input'
-          )
-        } else if (message.command == 'SET_DEFAULT_VOICE_INPUT_CONFIGURATION') {
-          await handle_set_default_configuration(
-            this,
-            message.configuration_id,
-            'voice-input'
-          )
-        } else if (message.command == 'GET_COMMIT_MESSAGES_CONFIGURATIONS') {
-          await handle_get_configurations({
-            provider: this,
-            type: 'commit-messages'
-          })
-        } else if (
-          message.command == 'REORDER_COMMIT_MESSAGES_CONFIGURATIONS'
-        ) {
-          await handle_reorder_configuration(
-            this,
-            message.configurations,
-            'commit-messages'
-          )
-        } else if (message.command == 'DELETE_COMMIT_MESSAGES_CONFIGURATION') {
-          await handle_delete_configuration(
-            this,
-            message.configuration_id,
-            'commit-messages'
-          )
-        } else if (
-          message.command == 'SET_DEFAULT_COMMIT_MESSAGES_CONFIGURATION'
-        ) {
-          await handle_set_default_configuration(
-            this,
-            message.configuration_id,
-            'commit-messages'
-          )
         } else if (message.command == 'GET_COMMIT_MESSAGE_INSTRUCTIONS') {
           await handle_get_commit_message_instructions(this)
         } else if (message.command == 'UPDATE_COMMIT_MESSAGE_INSTRUCTIONS') {
@@ -384,32 +244,9 @@ export class SettingsProvider {
       vscode.workspace.onDidChangeConfiguration((e) => {
         if (e.affectsConfiguration('codeWebChat')) {
           void handle_get_model_providers(this)
-          void handle_get_configurations({
-            provider: this,
-            type: 'code-at-cursor'
-          })
-          void handle_get_configurations({
-            provider: this,
-            type: 'commit-messages'
-          })
-          void handle_get_configurations({
-            provider: this,
-            type: 'edit-context'
-          })
+          void handle_get_configurations(this)
           void handle_get_edit_context_system_instructions(this)
           void handle_get_edit_format_instructions(this)
-          void handle_get_configurations({
-            provider: this,
-            type: 'voice-input'
-          })
-          void handle_get_configurations({
-            provider: this,
-            type: 'intelligent-update'
-          })
-          void handle_get_configurations({
-            provider: this,
-            type: 'find-relevant-files'
-          })
           void handle_get_context_size_warning_threshold(this)
           void handle_get_commit_message_instructions(this)
           void handle_get_voice_input_instructions(this)

@@ -13,44 +13,22 @@ export const handle_set_default_configuration = async (
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(provider.context)
 
-  let get_configs: () => Promise<ToolConfig[]>
-  let set_default_config: (config: ToolConfig | null) => Promise<void>
+  const configs = await providers_manager.get_code_completions_tool_configs()
+  const config_to_set = configuration_id
+    ? configs.find((c) => get_tool_config_id(c) == configuration_id) || null
+    : null
 
   if (type == 'code-at-cursor') {
-    get_configs = () => providers_manager.get_code_completions_tool_configs()
-    set_default_config = (c) =>
-      providers_manager.set_default_code_completions_config(c)
+    await providers_manager.set_default_code_completions_config(config_to_set)
   } else if (type == 'intelligent-update') {
-    get_configs = () => providers_manager.get_intelligent_update_tool_configs()
-    set_default_config = (c) =>
-      providers_manager.set_default_intelligent_update_config(c)
+    await providers_manager.set_default_intelligent_update_config(config_to_set)
   } else if (type == 'commit-messages') {
-    get_configs = () => providers_manager.get_commit_messages_tool_configs()
-    set_default_config = (c) =>
-      providers_manager.set_default_commit_messages_config(c)
+    await providers_manager.set_default_commit_messages_config(config_to_set)
   } else if (type == 'find-relevant-files') {
-    get_configs = () => providers_manager.get_find_relevant_files_tool_configs()
-    set_default_config = (c) =>
-      providers_manager.set_default_find_relevant_files_config(c)
+    await providers_manager.set_default_find_relevant_files_config(
+      config_to_set
+    )
   } else if (type == 'voice-input') {
-    get_configs = () => providers_manager.get_voice_input_tool_configs()
-    set_default_config = (c) =>
-      providers_manager.set_default_voice_input_config(c)
-  } else {
-    throw new Error(`Unknown tool type: ${type}`)
-  }
-
-  if (configuration_id === null) {
-    await set_default_config(null)
-    return
-  }
-
-  const configs = await get_configs()
-  const config_to_set_as_default = configs.find(
-    (c) => get_tool_config_id(c) == configuration_id
-  )
-
-  if (config_to_set_as_default) {
-    await set_default_config(config_to_set_as_default)
+    await providers_manager.set_default_voice_input_config(config_to_set)
   }
 }

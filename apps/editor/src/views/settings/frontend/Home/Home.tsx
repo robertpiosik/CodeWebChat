@@ -4,9 +4,11 @@ import { NavigationItem as UiNavigationItem } from '@ui/components/editor/settin
 import { ModelProvidersSection } from './sections/ModelProvidersSection'
 import { NavigationDivider as UiNavigationDivider } from '@ui/components/editor/settings/NavigationDivider'
 import { Item as UiItem } from '@ui/components/editor/settings/Item'
-import { ApiToolConfigurationSection } from './sections/ApiToolConfigurationSection'
 import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
 import { Section as UiSection } from '@ui/components/editor/settings/Section'
+import { SortableList } from '@ui/components/editor/settings/SortableList'
+import { IconButton } from '@ui/components/editor/common/IconButton'
+import { Dropdown as UiDropdown } from '@ui/components/editor/common/Dropdown'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
 import { Button as UiButton } from '@ui/components/editor/common/Button'
@@ -18,6 +20,7 @@ import {
   EditFormatInstructions
 } from '@/views/settings/types/messages'
 import { GeneralSection } from './sections/GeneralSection'
+import { ToolType } from '@/views/settings/types/tools'
 import {
   Translation,
   use_translation,
@@ -32,6 +35,7 @@ import { default_system_instructions } from '@shared/constants/default-system-in
 type NavItem =
   | 'general'
   | 'model-providers'
+  | 'configurations'
   | 'intelligent-update'
   | 'edit-context'
   | 'code-at-cursor'
@@ -53,6 +57,11 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
     type: 'item',
     id: 'model-providers',
     label: 'sidebar.model-providers'
+  },
+  {
+    type: 'item',
+    id: 'configurations',
+    label: 'sidebar.configurations'
   },
   { type: 'divider', text: 'sidebar.api-tools' },
   {
@@ -85,13 +94,9 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
 
 type Props = {
   providers: ProviderForClient[]
-  code_at_cursor_configs: ConfigurationForClient[]
-  commit_messages_configs: ConfigurationForClient[]
-  edit_context_configs: ConfigurationForClient[]
-  voice_input_configs: ConfigurationForClient[]
+  configurations: ConfigurationForClient[]
+  defaults: Record<ToolType, string | null>
   edit_context_system_instructions: string
-  intelligent_update_configs: ConfigurationForClient[]
-  find_relevant_files_configs: ConfigurationForClient[]
   voice_input_instructions: string
   commit_message_instructions: string
   include_prompts_in_commit_messages: boolean
@@ -108,12 +113,7 @@ type Props = {
   extended_cache_duration_for_anthropic: boolean
   fix_all_automatically: boolean
   set_providers: (providers: ProviderForClient[]) => void
-  set_edit_context_configs: (configs: ConfigurationForClient[]) => void
-  set_code_at_cursor_configs: (configs: ConfigurationForClient[]) => void
-  set_intelligent_update_configs: (configs: ConfigurationForClient[]) => void
-  set_voice_input_configs: (configs: ConfigurationForClient[]) => void
-  set_find_relevant_files_configs: (configs: ConfigurationForClient[]) => void
-  set_commit_messages_configs: (configs: ConfigurationForClient[]) => void
+  set_configurations: (configs: ConfigurationForClient[]) => void
   on_context_size_warning_threshold_change: (
     threshold: number | undefined
   ) => void
@@ -147,19 +147,18 @@ type Props = {
   on_delete_provider: (provider_name: string) => void
   on_edit_provider: (provider_name: string) => void
   on_reorder_providers: (reordered_providers: ProviderForClient[]) => void
-  on_add_config: (
-    tool_name: string,
-    params?: { insertion_index?: number; create_on_top?: boolean }
+  on_add_config: (params?: {
+    insertion_index?: number
+    create_on_top?: boolean
+  }) => void
+  on_reorder_configs: (reordered: ConfigurationForClient[]) => void
+  on_edit_config: (configuration_id: string) => void
+  on_duplicate_config: (configuration_id: string) => void
+  on_delete_config: (configuration_id: string) => void
+  on_set_default_config: (
+    tool_name: ToolType,
+    configuration_id: string | null
   ) => void
-  on_reorder_configs: (
-    tool_name: string,
-    reordered: ConfigurationForClient[]
-  ) => void
-  on_edit_config: (tool_name: string, configuration_id: string) => void
-  on_duplicate_config: (tool_name: string, configuration_id: string) => void
-  on_delete_config: (tool_name: string, configuration_id: string) => void
-  on_set_default_config: (tool_name: string, configuration_id: string) => void
-  on_unset_default_config: (tool_name: string) => void
   on_open_external_url: (url: string) => void
   scroll_to_section_on_load?: NavItem
 }
@@ -171,6 +170,7 @@ export const Home: React.FC<Props> = (props) => {
   const section_refs = useRef<Record<NavItem, HTMLDivElement | null>>({
     general: null,
     'model-providers': null,
+    configurations: null,
     'intelligent-update': null,
     'edit-context': null,
     'code-at-cursor': null,
@@ -208,6 +208,10 @@ export const Home: React.FC<Props> = (props) => {
     (is_stuck: boolean) => handle_stuck_change('model-providers', is_stuck),
     [handle_stuck_change]
   )
+  const configurations_on_stuck_change = useCallback(
+    (is_stuck: boolean) => handle_stuck_change('configurations', is_stuck),
+    [handle_stuck_change]
+  )
   const edit_context_on_stuck_change = useCallback(
     (is_stuck: boolean) => handle_stuck_change('edit-context', is_stuck),
     [handle_stuck_change]
@@ -236,18 +240,8 @@ export const Home: React.FC<Props> = (props) => {
   const get_has_warning = (id: NavItem): boolean => {
     if (id == 'model-providers') {
       return props.providers.length == 0
-    } else if (id == 'edit-context') {
-      return props.edit_context_configs.length == 0
-    } else if (id == 'intelligent-update') {
-      return props.intelligent_update_configs.length == 0
-    } else if (id == 'find-relevant-files') {
-      return props.find_relevant_files_configs.length == 0
-    } else if (id == 'code-at-cursor') {
-      return props.code_at_cursor_configs.length == 0
-    } else if (id == 'voice-input') {
-      return props.voice_input_configs.length == 0
-    } else if (id == 'commit-messages') {
-      return props.commit_messages_configs.length == 0
+    } else if (id == 'configurations') {
+      return props.configurations.length == 0
     } else {
       return false
     }
@@ -303,6 +297,14 @@ export const Home: React.FC<Props> = (props) => {
     e.preventDefault()
     handle_scroll_to_section(item_id)
   }
+
+  const config_options = [
+    { value: '', label: t('action.none') },
+    ...props.configurations.map((c) => ({
+      value: c.id,
+      label: `${c.model} (${c.description})`
+    }))
+  ]
 
   return (
     <div style={{ height: '100vh' }}>
@@ -459,54 +461,119 @@ export const Home: React.FC<Props> = (props) => {
             />
           </UiGroup>
         </UiSection>
+
+        <UiSection
+          ref={(el) => (section_refs.current['configurations'] = el)}
+          title={t('sidebar.configurations')}
+          subtitle={t('configurations.subtitle')}
+          on_stuck_change={configurations_on_stuck_change}
+          actions={
+            <UiButton on_click={() => props.on_add_config()}>
+              {t('action.add-new')}
+            </UiButton>
+          }
+        >
+          <UiNotice type="info">{t('configurations.notice')}</UiNotice>
+          {props.configurations.length == 0 && (
+            <UiNotice type="warning">
+              {t('message.missing-configuration')}
+            </UiNotice>
+          )}
+          <UiGroup>
+            {props.configurations && (
+              <SortableList
+                items={props.configurations}
+                on_reorder={(reordered) => {
+                  props.set_configurations(reordered)
+                  props.on_reorder_configs(reordered)
+                }}
+                on_add={props.on_add_config}
+                translations={{
+                  add_title: t('action.add-new'),
+                  item_text: t('action.configuration'),
+                  items_text: t('action.configurations'),
+                  items_text_many: t('action.configurations-many')
+                }}
+                render_content={(config) => (
+                  <div
+                    style={{
+                      flex: 1,
+                      overflow: 'hidden',
+                      whiteSpace: 'nowrap',
+                      textOverflow: 'ellipsis'
+                    }}
+                  >
+                    <span>{config.model}</span>
+                    <span
+                      style={{
+                        marginLeft: '0.5em',
+                        opacity: 0.7,
+                        fontSize: '0.9em'
+                      }}
+                    >
+                      {config.description}
+                    </span>
+                  </div>
+                )}
+                render_actions={(config, index) => (
+                  <>
+                    <IconButton
+                      codicon_icon="insert"
+                      title={t('action.insert-configuration')}
+                      on_click={() =>
+                        props.on_add_config({ insertion_index: index })
+                      }
+                    />
+                    <IconButton
+                      codicon_icon="files"
+                      title={t('action.duplicate-configuration')}
+                      on_click={(e) => {
+                        e.stopPropagation()
+                        props.on_duplicate_config(config.id)
+                      }}
+                    />
+                    <IconButton
+                      codicon_icon="edit"
+                      title={t('action.edit-configuration')}
+                      on_click={() => props.on_edit_config(config.id)}
+                    />
+                    <IconButton
+                      codicon_icon="trash"
+                      title={t('action.delete-configuration')}
+                      on_click={(e) => {
+                        e.stopPropagation()
+                        props.on_delete_config(config.id)
+                      }}
+                    />
+                  </>
+                )}
+              />
+            )}
+          </UiGroup>
+        </UiSection>
+
         <UiSection
           ref={(el) => (section_refs.current['intelligent-update'] = el)}
           group={t('section.api-tool')}
           title={t('sidebar.intelligent-update')}
           subtitle={t('intelligent-update.subtitle')}
           on_stuck_change={intelligent_update_on_stuck_change}
-          actions={
-            <UiButton
-              on_click={() =>
-                props.on_add_config('INTELLIGENT_UPDATE', {
-                  create_on_top: true
-                })
-              }
-            >
-              {t('action.add-new')}
-            </UiButton>
-          }
         >
           <UiNotice type="info">{t('intelligent-update.notice')}</UiNotice>
-          {props.intelligent_update_configs.length == 0 && (
-            <UiNotice type="warning">
-              {t('message.missing-configuration')}
-            </UiNotice>
-          )}
           <UiGroup>
-            <ApiToolConfigurationSection
-              configurations={props.intelligent_update_configs}
-              set_configurations={props.set_intelligent_update_configs}
-              tool_name="INTELLIGENT_UPDATE"
-              can_have_default={true}
-              on_add={(params) =>
-                props.on_add_config('INTELLIGENT_UPDATE', params)
-              }
-              on_reorder={(reordered) =>
-                props.on_reorder_configs('INTELLIGENT_UPDATE', reordered)
-              }
-              on_edit={(id) => props.on_edit_config('INTELLIGENT_UPDATE', id)}
-              on_duplicate={(id) =>
-                props.on_duplicate_config('INTELLIGENT_UPDATE', id)
-              }
-              on_delete={(id) =>
-                props.on_delete_config('INTELLIGENT_UPDATE', id)
-              }
-              on_set_default={(id) =>
-                props.on_set_default_config('INTELLIGENT_UPDATE', id)
-              }
-              on_unset_default={() =>
-                props.on_unset_default_config('INTELLIGENT_UPDATE')
+            <UiItem
+              title={t('action.default-configuration')}
+              slot_right={
+                <UiDropdown
+                  options={config_options}
+                  value={props.defaults['intelligent-update'] || ''}
+                  onChange={(val) =>
+                    props.on_set_default_config(
+                      'intelligent-update',
+                      val || null
+                    )
+                  }
+                />
               }
             />
             <UiItem
@@ -530,38 +597,9 @@ export const Home: React.FC<Props> = (props) => {
           title={t('sidebar.edit-context')}
           subtitle={t('edit-context.subtitle')}
           on_stuck_change={edit_context_on_stuck_change}
-          actions={
-            <UiButton
-              on_click={() =>
-                props.on_add_config('EDIT_CONTEXT', { create_on_top: true })
-              }
-            >
-              {t('action.add-new')}
-            </UiButton>
-          }
         >
           <UiNotice type="info">{t('edit-context.notice')}</UiNotice>
-          {props.edit_context_configs.length == 0 && (
-            <UiNotice type="warning">
-              {t('message.missing-configuration')}
-            </UiNotice>
-          )}
           <UiGroup>
-            <ApiToolConfigurationSection
-              configurations={props.edit_context_configs}
-              set_configurations={props.set_edit_context_configs}
-              tool_name="EDIT_CONTEXT"
-              can_have_default={false}
-              on_add={(params) => props.on_add_config('EDIT_CONTEXT', params)}
-              on_reorder={(reordered) =>
-                props.on_reorder_configs('EDIT_CONTEXT', reordered)
-              }
-              on_edit={(id) => props.on_edit_config('EDIT_CONTEXT', id)}
-              on_duplicate={(id) =>
-                props.on_duplicate_config('EDIT_CONTEXT', id)
-              }
-              on_delete={(id) => props.on_delete_config('EDIT_CONTEXT', id)}
-            />
             <UiItem
               title={t('edit-context.system-instructions.title')}
               description={t('edit-context.system-instructions.description')}
@@ -593,42 +631,19 @@ export const Home: React.FC<Props> = (props) => {
           title={t('sidebar.code-at-cursor')}
           subtitle={t('code-at-cursor.subtitle')}
           on_stuck_change={code_at_cursor_on_stuck_change}
-          actions={
-            <UiButton
-              on_click={() =>
-                props.on_add_config('CODE_AT_CURSOR', { create_on_top: true })
-              }
-            >
-              {t('action.add-new')}
-            </UiButton>
-          }
         >
           <UiNotice type="info">{t('code-at-cursor.notice')}</UiNotice>
-          {props.code_at_cursor_configs.length == 0 && (
-            <UiNotice type="warning">
-              {t('message.missing-configuration')}
-            </UiNotice>
-          )}
           <UiGroup>
-            <ApiToolConfigurationSection
-              configurations={props.code_at_cursor_configs}
-              set_configurations={props.set_code_at_cursor_configs}
-              tool_name="CODE_AT_CURSOR"
-              can_have_default={true}
-              on_add={(params) => props.on_add_config('CODE_AT_CURSOR', params)}
-              on_reorder={(reordered) =>
-                props.on_reorder_configs('CODE_AT_CURSOR', reordered)
-              }
-              on_edit={(id) => props.on_edit_config('CODE_AT_CURSOR', id)}
-              on_duplicate={(id) =>
-                props.on_duplicate_config('CODE_AT_CURSOR', id)
-              }
-              on_delete={(id) => props.on_delete_config('CODE_AT_CURSOR', id)}
-              on_set_default={(id) =>
-                props.on_set_default_config('CODE_AT_CURSOR', id)
-              }
-              on_unset_default={() =>
-                props.on_unset_default_config('CODE_AT_CURSOR')
+            <UiItem
+              title={t('action.default-configuration')}
+              slot_right={
+                <UiDropdown
+                  options={config_options}
+                  value={props.defaults['code-at-cursor'] || ''}
+                  onChange={(val) =>
+                    props.on_set_default_config('code-at-cursor', val || null)
+                  }
+                />
               }
             />
             <UiItem
@@ -653,48 +668,22 @@ export const Home: React.FC<Props> = (props) => {
           title={t('sidebar.find-relevant-files')}
           subtitle={t('find-relevant-files.subtitle')}
           on_stuck_change={find_relevant_files_on_stuck_change}
-          actions={
-            <UiButton
-              on_click={() =>
-                props.on_add_config('FIND_RELEVANT_FILES', {
-                  create_on_top: true
-                })
-              }
-            >
-              {t('action.add-new')}
-            </UiButton>
-          }
         >
           <UiNotice type="info">{t('find-relevant-files.notice')}</UiNotice>
-          {props.find_relevant_files_configs.length == 0 && (
-            <UiNotice type="warning">
-              {t('message.missing-configuration')}
-            </UiNotice>
-          )}
           <UiGroup>
-            <ApiToolConfigurationSection
-              configurations={props.find_relevant_files_configs}
-              set_configurations={props.set_find_relevant_files_configs}
-              tool_name="FIND_RELEVANT_FILES"
-              can_have_default={true}
-              on_add={(params) =>
-                props.on_add_config('FIND_RELEVANT_FILES', params)
-              }
-              on_reorder={(reordered) =>
-                props.on_reorder_configs('FIND_RELEVANT_FILES', reordered)
-              }
-              on_edit={(id) => props.on_edit_config('FIND_RELEVANT_FILES', id)}
-              on_duplicate={(id) =>
-                props.on_duplicate_config('FIND_RELEVANT_FILES', id)
-              }
-              on_delete={(id) =>
-                props.on_delete_config('FIND_RELEVANT_FILES', id)
-              }
-              on_set_default={(id) =>
-                props.on_set_default_config('FIND_RELEVANT_FILES', id)
-              }
-              on_unset_default={() =>
-                props.on_unset_default_config('FIND_RELEVANT_FILES')
+            <UiItem
+              title={t('action.default-configuration')}
+              slot_right={
+                <UiDropdown
+                  options={config_options}
+                  value={props.defaults['find-relevant-files'] || ''}
+                  onChange={(val) =>
+                    props.on_set_default_config(
+                      'find-relevant-files',
+                      val || null
+                    )
+                  }
+                />
               }
             />
           </UiGroup>
@@ -706,44 +695,19 @@ export const Home: React.FC<Props> = (props) => {
           title={t('sidebar.commit-messages')}
           subtitle={t('commit-messages.subtitle')}
           on_stuck_change={commit_messages_on_stuck_change}
-          actions={
-            <UiButton
-              on_click={() =>
-                props.on_add_config('COMMIT_MESSAGES', { create_on_top: true })
-              }
-            >
-              {t('action.add-new')}
-            </UiButton>
-          }
         >
           <UiNotice type="info">{t('commit-messages.notice')}</UiNotice>
-          {props.commit_messages_configs.length == 0 && (
-            <UiNotice type="warning">
-              {t('message.missing-configuration')}
-            </UiNotice>
-          )}
           <UiGroup>
-            <ApiToolConfigurationSection
-              configurations={props.commit_messages_configs}
-              set_configurations={props.set_commit_messages_configs}
-              tool_name="COMMIT_MESSAGES"
-              can_have_default={true}
-              on_add={(params) =>
-                props.on_add_config('COMMIT_MESSAGES', params)
-              }
-              on_reorder={(reordered) =>
-                props.on_reorder_configs('COMMIT_MESSAGES', reordered)
-              }
-              on_edit={(id) => props.on_edit_config('COMMIT_MESSAGES', id)}
-              on_duplicate={(id) =>
-                props.on_duplicate_config('COMMIT_MESSAGES', id)
-              }
-              on_delete={(id) => props.on_delete_config('COMMIT_MESSAGES', id)}
-              on_set_default={(id) =>
-                props.on_set_default_config('COMMIT_MESSAGES', id)
-              }
-              on_unset_default={() =>
-                props.on_unset_default_config('COMMIT_MESSAGES')
+            <UiItem
+              title={t('action.default-configuration')}
+              slot_right={
+                <UiDropdown
+                  options={config_options}
+                  value={props.defaults['commit-messages'] || ''}
+                  onChange={(val) =>
+                    props.on_set_default_config('commit-messages', val || null)
+                  }
+                />
               }
             />
             <UiItem
@@ -787,17 +751,6 @@ export const Home: React.FC<Props> = (props) => {
           title={t('sidebar.voice-input')}
           subtitle={t('voice-input.subtitle')}
           on_stuck_change={voice_input_on_stuck_change}
-          actions={
-            <UiButton
-              on_click={() =>
-                props.on_add_config('VOICE_INPUT', {
-                  create_on_top: true
-                })
-              }
-            >
-              {t('action.add-new')}
-            </UiButton>
-          }
         >
           <UiNotice type="info">
             <Translation
@@ -819,31 +772,17 @@ export const Home: React.FC<Props> = (props) => {
               }}
             />
           </UiNotice>
-          {props.voice_input_configs.length == 0 && (
-            <UiNotice type="warning">
-              {t('message.missing-configuration')}
-            </UiNotice>
-          )}
           <UiGroup>
-            <ApiToolConfigurationSection
-              configurations={props.voice_input_configs}
-              set_configurations={props.set_voice_input_configs}
-              tool_name="VOICE_INPUT"
-              can_have_default={true}
-              on_add={(params) => props.on_add_config('VOICE_INPUT', params)}
-              on_reorder={(reordered) =>
-                props.on_reorder_configs('VOICE_INPUT', reordered)
-              }
-              on_edit={(id) => props.on_edit_config('VOICE_INPUT', id)}
-              on_duplicate={(id) =>
-                props.on_duplicate_config('VOICE_INPUT', id)
-              }
-              on_delete={(id) => props.on_delete_config('VOICE_INPUT', id)}
-              on_set_default={(id) =>
-                props.on_set_default_config('VOICE_INPUT', id)
-              }
-              on_unset_default={() =>
-                props.on_unset_default_config('VOICE_INPUT')
+            <UiItem
+              title={t('action.default-configuration')}
+              slot_right={
+                <UiDropdown
+                  options={config_options}
+                  value={props.defaults['voice-input'] || ''}
+                  onChange={(val) =>
+                    props.on_set_default_config('voice-input', val || null)
+                  }
+                />
               }
             />
             <UiItem

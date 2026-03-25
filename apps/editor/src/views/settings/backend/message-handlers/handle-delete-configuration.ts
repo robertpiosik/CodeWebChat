@@ -1,15 +1,12 @@
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import { delete_configuration } from '../../../utils/delete-configuration'
-import { ToolType } from '@/views/settings/types/tools'
 
 export const handle_delete_configuration = async (
   provider: SettingsProvider,
-  configuration_id: string,
-  type: ToolType
+  configuration_id: string
 ): Promise<void> => {
   await delete_configuration({
     context: provider.context,
-    configuration_id,
-    type
+    configuration_id
   })
 }

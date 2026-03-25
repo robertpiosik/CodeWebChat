@@ -330,35 +330,16 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
   public async send_setup_progress() {
     const providers_manager = new ModelProvidersManager(this.context)
-    const [
-      providers,
-      edit_context,
-      intelligent_update,
-      find_relevant_files,
-      code_at_cursor,
-      voice_input,
-      commit_messages
-    ] = await Promise.all([
+    const [providers, configs] = await Promise.all([
       providers_manager.get_providers(),
-      providers_manager.get_edit_context_tool_configs(),
-      providers_manager.get_intelligent_update_tool_configs(),
-      providers_manager.get_find_relevant_files_tool_configs(),
-      providers_manager.get_code_completions_tool_configs(),
-      providers_manager.get_voice_input_tool_configs(),
-      providers_manager.get_commit_messages_tool_configs()
+      providers_manager.get_code_completions_tool_configs()
     ])
 
     this.send_message({
       command: 'SETUP_PROGRESS',
       setup_progress: {
         has_model_provider: providers.length > 0,
-        has_configuration_for_edit_context: edit_context.length > 0,
-        has_configuration_for_intelligent_update: intelligent_update.length > 0,
-        has_configuration_for_find_relevant_files:
-          find_relevant_files.length > 0,
-        has_configuration_for_code_at_cursor: code_at_cursor.length > 0,
-        has_configuration_for_voice_input: voice_input.length > 0,
-        has_configuration_for_commit_messages: commit_messages.length > 0
+        has_configuration: configs.length > 0
       }
     })
   }
@@ -485,11 +466,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           this._send_context_size_warning_threshold()
         }
 
-        const all_api_config_keys = [
-          'codeWebChat.configurationsForEditContext',
-          'codeWebChat.configurationsForCodeAtCursor',
-          'codeWebChat.configurationsForFindRelevantFiles'
-        ]
+        const all_api_config_keys = ['codeWebChat.configurations']
 
         if (
           all_api_config_keys.some((key) => event.affectsConfiguration(key))
@@ -499,12 +476,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
         const setup_progress_keys = [
           'codeWebChat.modelProviders',
-          'codeWebChat.configurationsForEditContext',
-          'codeWebChat.configurationsForCodeAtCursor',
-          'codeWebChat.configurationsForFindRelevantFiles',
-          'codeWebChat.configurationsForIntelligentUpdate',
-          'codeWebChat.configurationsForCommitMessages',
-          'codeWebChat.configurationsForVoiceInput'
+          'codeWebChat.configurations'
         ]
 
         if (

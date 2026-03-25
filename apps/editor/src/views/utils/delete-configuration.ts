@@ -5,68 +5,15 @@ import {
   ToolConfig
 } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
-import { ToolType } from '../settings/types/tools'
 
 export const delete_configuration = async (params: {
   context: vscode.ExtensionContext
   configuration_id: string
-  type: ToolType
 }): Promise<void> => {
   const providers_manager = new ModelProvidersManager(params.context)
 
-  let get_configs: () => Promise<ToolConfig[]>
-  let save_configs: (configs: ToolConfig[]) => Promise<void>
-  let get_default_config: (() => Promise<ToolConfig | undefined>) | undefined
-  let set_default_config:
-    | ((config: ToolConfig | null) => Promise<void>)
-    | undefined
-
-  if (params.type == 'code-at-cursor') {
-    get_configs = () => providers_manager.get_code_completions_tool_configs()
-    save_configs = (c) =>
-      providers_manager.save_code_completions_tool_configs(c)
-    get_default_config = () =>
-      providers_manager.get_default_code_completions_config()
-    set_default_config = (c) =>
-      providers_manager.set_default_code_completions_config(c)
-  } else if (params.type == 'edit-context') {
-    get_configs = () => providers_manager.get_edit_context_tool_configs()
-    save_configs = (c) => providers_manager.save_edit_context_tool_configs(c)
-  } else if (params.type == 'intelligent-update') {
-    get_configs = () => providers_manager.get_intelligent_update_tool_configs()
-    save_configs = (c) =>
-      providers_manager.save_intelligent_update_tool_configs(c)
-    get_default_config = () =>
-      providers_manager.get_default_intelligent_update_config()
-    set_default_config = (c) =>
-      providers_manager.set_default_intelligent_update_config(c)
-  } else if (params.type == 'commit-messages') {
-    get_configs = () => providers_manager.get_commit_messages_tool_configs()
-    save_configs = (c) => providers_manager.save_commit_messages_tool_configs(c)
-    get_default_config = () =>
-      providers_manager.get_default_commit_messages_config()
-    set_default_config = (c) =>
-      providers_manager.set_default_commit_messages_config(c)
-  } else if (params.type == 'find-relevant-files') {
-    get_configs = () => providers_manager.get_find_relevant_files_tool_configs()
-    save_configs = (c) =>
-      providers_manager.save_find_relevant_files_tool_configs(c)
-    get_default_config = () =>
-      providers_manager.get_default_find_relevant_files_config()
-    set_default_config = (c) =>
-      providers_manager.set_default_find_relevant_files_config(c)
-  } else if (params.type == 'voice-input') {
-    get_configs = () => providers_manager.get_voice_input_tool_configs()
-    save_configs = (c) => providers_manager.save_voice_input_tool_configs(c)
-    get_default_config = () =>
-      providers_manager.get_default_voice_input_config()
-    set_default_config = (c) =>
-      providers_manager.set_default_voice_input_config(c)
-  } else {
-    throw new Error(`Unknown tool type: ${params.type}`)
-  }
-
-  const original_configs = await get_configs()
+  const original_configs =
+    await providers_manager.get_code_completions_tool_configs()
   const config_to_delete = original_configs.find(
     (c) => get_tool_config_id(c) === params.configuration_id
   )
@@ -91,15 +38,5 @@ export const delete_configuration = async (params: {
   const updated_configs = original_configs.filter(
     (c) => get_tool_config_id(c) !== params.configuration_id
   )
-  await save_configs(updated_configs)
-
-  if (get_default_config && set_default_config) {
-    const original_default_config = await get_default_config()
-    if (
-      original_default_config &&
-      get_tool_config_id(original_default_config) === params.configuration_id
-    ) {
-      await set_default_config(null)
-    }
-  }
+  await providers_manager.save_code_completions_tool_configs(updated_configs)
 }

@@ -13,23 +13,12 @@ export const use_settings = (vscode: any) => {
   const [providers, set_providers] = useState<ProviderForClient[] | undefined>(
     undefined
   )
-  const [code_at_cursor_configs, set_code_at_cursor_configs] = useState<
+  const [configurations, set_configurations] = useState<
     ConfigurationForClient[] | undefined
   >(undefined)
-  const [commit_messages_configs, set_commit_messages_configs] = useState<
-    ConfigurationForClient[] | undefined
+  const [defaults, set_defaults] = useState<
+    Record<ToolType, string | null> | undefined
   >(undefined)
-  const [edit_context_configs, set_edit_context_configs] = useState<
-    ConfigurationForClient[] | undefined
-  >(undefined)
-  const [intelligent_update_configs, set_intelligent_update_configs] = useState<
-    ConfigurationForClient[] | undefined
-  >(undefined)
-  const [voice_input_configs, set_voice_input_configs] = useState<
-    ConfigurationForClient[] | undefined
-  >(undefined)
-  const [find_relevant_files_configs, set_find_relevant_files_configs] =
-    useState<ConfigurationForClient[] | undefined>(undefined)
   const [commit_message_instructions, set_commit_message_instructions] =
     useState<string | undefined>(undefined)
   const [voice_input_instructions, set_voice_input_instructions] = useState<
@@ -84,13 +73,8 @@ export const use_settings = (vscode: any) => {
 
   useEffect(() => {
     post_message(vscode, { command: 'GET_MODEL_PROVIDERS' })
-    post_message(vscode, { command: 'GET_CODE_AT_CURSOR_CONFIGURATIONS' })
-    post_message(vscode, { command: 'GET_COMMIT_MESSAGES_CONFIGURATIONS' })
-    post_message(vscode, { command: 'GET_EDIT_CONTEXT_CONFIGURATIONS' })
+    post_message(vscode, { command: 'GET_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS' })
-    post_message(vscode, { command: 'GET_INTELLIGENT_UPDATE_CONFIGURATIONS' })
-    post_message(vscode, { command: 'GET_VOICE_INPUT_CONFIGURATIONS' })
-    post_message(vscode, { command: 'GET_FIND_RELEVANT_FILES_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_INCLUDE_PROMPTS_IN_COMMIT_MESSAGES' })
     post_message(vscode, { command: 'GET_VOICE_INPUT_INSTRUCTIONS' })
@@ -115,20 +99,11 @@ export const use_settings = (vscode: any) => {
       const message = event.data
       if (message.command == 'MODEL_PROVIDERS') {
         set_providers(message.providers)
-      } else if (message.command == 'CODE_AT_CURSOR_CONFIGURATIONS') {
-        set_code_at_cursor_configs(message.configurations)
-      } else if (message.command == 'COMMIT_MESSAGES_CONFIGURATIONS') {
-        set_commit_messages_configs(message.configurations)
-      } else if (message.command == 'EDIT_CONTEXT_CONFIGURATIONS') {
-        set_edit_context_configs(message.configurations)
+      } else if (message.command == 'CONFIGURATIONS') {
+        set_configurations(message.configurations)
+        set_defaults(message.defaults)
       } else if (message.command == 'EDIT_CONTEXT_SYSTEM_INSTRUCTIONS') {
         set_edit_context_system_instructions(message.instructions)
-      } else if (message.command == 'INTELLIGENT_UPDATE_CONFIGURATIONS') {
-        set_intelligent_update_configs(message.configurations)
-      } else if (message.command == 'VOICE_INPUT_CONFIGURATIONS') {
-        set_voice_input_configs(message.configurations)
-      } else if (message.command == 'FIND_RELEVANT_FILES_CONFIGURATIONS') {
-        set_find_relevant_files_configs(message.configurations)
       } else if (message.command == 'COMMIT_MESSAGE_INSTRUCTIONS') {
         set_commit_message_instructions(message.instructions)
       } else if (message.command == 'INCLUDE_PROMPTS_IN_COMMIT_MESSAGES') {
@@ -204,160 +179,56 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_add_config = (
-    tool_name: string,
-    params?: { insertion_index?: number; create_on_top?: boolean }
-  ) => {
-    const tool_type = tool_name.toLowerCase().replace(/_/g, '-') as ToolType
+  const handle_add_config = (params?: {
+    insertion_index?: number
+    create_on_top?: boolean
+  }) => {
     post_message(vscode, {
       command: 'UPSERT_CONFIGURATION',
-      tool_type,
       insertion_index: params?.insertion_index,
       create_on_top: params?.create_on_top
     })
   }
 
-  const handle_reorder_configs = (
-    tool_name: string,
-    reordered: ConfigurationForClient[]
-  ) => {
+  const handle_reorder_configs = (reordered: ConfigurationForClient[]) => {
     post_message(vscode, {
-      command: `REORDER_${tool_name}_CONFIGURATIONS`,
+      command: 'REORDER_CONFIGURATIONS',
       configurations: reordered
     } as FrontendMessage)
   }
 
-  const handle_edit_config = (tool_name: string, configuration_id: string) => {
-    const tool_type = tool_name.toLowerCase().replace(/_/g, '-') as ToolType
+  const handle_edit_config = (configuration_id: string) => {
     post_message(vscode, {
       command: 'UPSERT_CONFIGURATION',
-      tool_type,
       configuration_id
     })
   }
 
-  const handle_duplicate_config = (
-    tool_name: string,
-    configuration_id: string
-  ) => {
-    const tool_type = tool_name.toLowerCase().replace(/_/g, '-') as ToolType
+  const handle_duplicate_config = (configuration_id: string) => {
     post_message(vscode, {
       command: 'UPSERT_CONFIGURATION',
-      tool_type,
       duplicate_from_id: configuration_id
     })
   }
 
-  const handle_delete_config = (
-    tool_name: string,
-    configuration_id: string
-  ) => {
+  const handle_delete_config = (configuration_id: string) => {
     post_message(vscode, {
-      command: `DELETE_${tool_name}_CONFIGURATION`,
+      command: 'DELETE_CONFIGURATION',
       configuration_id
     } as FrontendMessage)
   }
 
   const handle_set_default_config = (
-    tool_name: string,
-    configuration_id: string
+    tool_name: ToolType,
+    configuration_id: string | null
   ) => {
-    if (tool_name == 'CODE_AT_CURSOR' && code_at_cursor_configs) {
-      set_code_at_cursor_configs(
-        code_at_cursor_configs.map((c) => ({
-          ...c,
-          is_default: c.id == configuration_id
-        }))
-      )
-    } else if (
-      tool_name == 'INTELLIGENT_UPDATE' &&
-      intelligent_update_configs
-    ) {
-      set_intelligent_update_configs(
-        intelligent_update_configs.map((c) => ({
-          ...c,
-          is_default: c.id == configuration_id
-        }))
-      )
-    } else if (tool_name == 'VOICE_INPUT' && voice_input_configs) {
-      set_voice_input_configs(
-        voice_input_configs.map((c) => ({
-          ...c,
-          is_default: c.id == configuration_id
-        }))
-      )
-    } else if (
-      tool_name == 'FIND_RELEVANT_FILES' &&
-      find_relevant_files_configs
-    ) {
-      set_find_relevant_files_configs(
-        find_relevant_files_configs.map((c) => ({
-          ...c,
-          is_default: c.id == configuration_id
-        }))
-      )
-    } else if (tool_name == 'COMMIT_MESSAGES' && commit_messages_configs) {
-      set_commit_messages_configs(
-        commit_messages_configs.map((c) => ({
-          ...c,
-          is_default: c.id == configuration_id
-        }))
-      )
+    if (defaults) {
+      set_defaults({ ...defaults, [tool_name]: configuration_id })
     }
-
     post_message(vscode, {
-      command: `SET_DEFAULT_${tool_name}_CONFIGURATION`,
+      command: 'SET_DEFAULT_CONFIGURATION',
+      tool_name,
       configuration_id
-    } as FrontendMessage)
-  }
-
-  const handle_unset_default_config = (tool_name: string) => {
-    if (tool_name == 'CODE_AT_CURSOR' && code_at_cursor_configs) {
-      set_code_at_cursor_configs(
-        code_at_cursor_configs.map((c) => ({
-          ...c,
-          is_default: false
-        }))
-      )
-    } else if (
-      tool_name == 'INTELLIGENT_UPDATE' &&
-      intelligent_update_configs
-    ) {
-      set_intelligent_update_configs(
-        intelligent_update_configs.map((c) => ({
-          ...c,
-          is_default: false
-        }))
-      )
-    } else if (tool_name == 'VOICE_INPUT' && voice_input_configs) {
-      set_voice_input_configs(
-        voice_input_configs.map((c) => ({
-          ...c,
-          is_default: false
-        }))
-      )
-    } else if (
-      tool_name == 'FIND_RELEVANT_FILES' &&
-      find_relevant_files_configs
-    ) {
-      set_find_relevant_files_configs(
-        find_relevant_files_configs.map((c) => ({
-          ...c,
-          is_default: false
-        }))
-      )
-    } else if (tool_name == 'COMMIT_MESSAGES' && commit_messages_configs) {
-      set_commit_messages_configs(
-        commit_messages_configs.map((c) => ({
-          ...c,
-          is_default: false
-        }))
-      )
-    }
-
-    post_message(vscode, {
-      command: `SET_DEFAULT_${tool_name}_CONFIGURATION`,
-      configuration_id: null
     } as FrontendMessage)
   }
 
@@ -511,18 +382,9 @@ export const use_settings = (vscode: any) => {
   return {
     providers,
     set_providers,
-    code_at_cursor_configs,
-    set_code_at_cursor_configs,
-    commit_messages_configs,
-    set_commit_messages_configs,
-    edit_context_configs,
-    set_edit_context_configs,
-    intelligent_update_configs,
-    set_intelligent_update_configs,
-    voice_input_configs,
-    set_voice_input_configs,
-    find_relevant_files_configs,
-    set_find_relevant_files_configs,
+    configurations,
+    set_configurations,
+    defaults,
     voice_input_instructions,
     commit_message_instructions,
     include_prompts_in_commit_messages,
@@ -549,7 +411,6 @@ export const use_settings = (vscode: any) => {
     handle_duplicate_config,
     handle_delete_config,
     handle_set_default_config,
-    handle_unset_default_config,
     handle_voice_input_instructions_change,
     handle_commit_instructions_change,
     handle_include_prompts_in_commit_messages_change,

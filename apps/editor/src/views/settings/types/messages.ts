@@ -10,7 +10,6 @@ export type ConfigurationForClient = {
   id: string
   model: string
   description: string
-  is_default?: boolean
 }
 
 export type EditFormatInstructions = {
@@ -46,112 +45,23 @@ export interface EditCustomModelProviderMessage {
   provider_name: string
 }
 
-export interface GetCodeAtCursorConfigurationsMessage {
-  command: 'GET_CODE_AT_CURSOR_CONFIGURATIONS'
+export interface GetConfigurationsMessage {
+  command: 'GET_CONFIGURATIONS'
 }
 
-export interface ReorderCodeAtCursorConfigurationsMessage {
-  command: 'REORDER_CODE_AT_CURSOR_CONFIGURATIONS'
+export interface ReorderConfigurationsMessage {
+  command: 'REORDER_CONFIGURATIONS'
   configurations: ConfigurationForClient[]
 }
 
-export interface DeleteCodeAtCursorConfigurationMessage {
-  command: 'DELETE_CODE_AT_CURSOR_CONFIGURATION'
+export interface DeleteConfigurationMessage {
+  command: 'DELETE_CONFIGURATION'
   configuration_id: string
 }
 
-export interface SetDefaultCodeAtCursorConfigurationMessage {
-  command: 'SET_DEFAULT_CODE_AT_CURSOR_CONFIGURATION'
-  configuration_id: string | null
-}
-
-export interface GetEditContextConfigurationsMessage {
-  command: 'GET_EDIT_CONTEXT_CONFIGURATIONS'
-}
-
-export interface ReorderEditContextConfigurationsMessage {
-  command: 'REORDER_EDIT_CONTEXT_CONFIGURATIONS'
-  configurations: ConfigurationForClient[]
-}
-
-export interface DeleteEditContextConfigurationMessage {
-  command: 'DELETE_EDIT_CONTEXT_CONFIGURATION'
-  configuration_id: string
-}
-
-export interface GetIntelligentUpdateConfigurationsMessage {
-  command: 'GET_INTELLIGENT_UPDATE_CONFIGURATIONS'
-}
-
-export interface ReorderIntelligentUpdateConfigurationsMessage {
-  command: 'REORDER_INTELLIGENT_UPDATE_CONFIGURATIONS'
-  configurations: ConfigurationForClient[]
-}
-
-export interface DeleteIntelligentUpdateConfigurationMessage {
-  command: 'DELETE_INTELLIGENT_UPDATE_CONFIGURATION'
-  configuration_id: string
-}
-
-export interface SetDefaultIntelligentUpdateConfigurationMessage {
-  command: 'SET_DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION'
-  configuration_id: string | null
-}
-
-export interface GetFindRelevantFilesConfigurationsMessage {
-  command: 'GET_FIND_RELEVANT_FILES_CONFIGURATIONS'
-}
-
-export interface ReorderFindRelevantFilesConfigurationsMessage {
-  command: 'REORDER_FIND_RELEVANT_FILES_CONFIGURATIONS'
-  configurations: ConfigurationForClient[]
-}
-
-export interface DeleteFindRelevantFilesConfigurationMessage {
-  command: 'DELETE_FIND_RELEVANT_FILES_CONFIGURATION'
-  configuration_id: string
-}
-
-export interface SetDefaultFindRelevantFilesConfigurationMessage {
-  command: 'SET_DEFAULT_FIND_RELEVANT_FILES_CONFIGURATION'
-  configuration_id: string | null
-}
-
-export interface GetVoiceInputConfigurationsMessage {
-  command: 'GET_VOICE_INPUT_CONFIGURATIONS'
-}
-
-export interface ReorderVoiceInputConfigurationsMessage {
-  command: 'REORDER_VOICE_INPUT_CONFIGURATIONS'
-  configurations: ConfigurationForClient[]
-}
-
-export interface DeleteVoiceInputConfigurationMessage {
-  command: 'DELETE_VOICE_INPUT_CONFIGURATION'
-  configuration_id: string
-}
-
-export interface SetDefaultVoiceInputConfigurationMessage {
-  command: 'SET_DEFAULT_VOICE_INPUT_CONFIGURATION'
-  configuration_id: string | null
-}
-
-export interface GetCommitMessagesConfigurationsMessage {
-  command: 'GET_COMMIT_MESSAGES_CONFIGURATIONS'
-}
-
-export interface ReorderCommitMessagesConfigurationsMessage {
-  command: 'REORDER_COMMIT_MESSAGES_CONFIGURATIONS'
-  configurations: ConfigurationForClient[]
-}
-
-export interface DeleteCommitMessagesConfigurationMessage {
-  command: 'DELETE_COMMIT_MESSAGES_CONFIGURATION'
-  configuration_id: string
-}
-
-export interface SetDefaultCommitMessagesConfigurationMessage {
-  command: 'SET_DEFAULT_COMMIT_MESSAGES_CONFIGURATION'
+export interface SetDefaultConfigurationMessage {
+  command: 'SET_DEFAULT_CONFIGURATION'
+  tool_name: ToolType
   configuration_id: string | null
 }
 
@@ -299,7 +209,6 @@ export interface UpdateClearChecksInWorkspaceBehaviorMessage {
 
 export interface UpsertConfigurationMessage {
   command: 'UPSERT_CONFIGURATION'
-  tool_type: ToolType
   configuration_id?: string
   insertion_index?: number
   create_on_top?: boolean
@@ -340,29 +249,10 @@ export type FrontendMessage =
   | AddModelProviderMessage
   | DeleteModelProviderMessage
   | EditCustomModelProviderMessage
-  | GetCodeAtCursorConfigurationsMessage
-  | ReorderCodeAtCursorConfigurationsMessage
-  | DeleteCodeAtCursorConfigurationMessage
-  | SetDefaultCodeAtCursorConfigurationMessage
-  | GetEditContextConfigurationsMessage
-  | ReorderEditContextConfigurationsMessage
-  | DeleteEditContextConfigurationMessage
-  | GetIntelligentUpdateConfigurationsMessage
-  | ReorderIntelligentUpdateConfigurationsMessage
-  | DeleteIntelligentUpdateConfigurationMessage
-  | SetDefaultIntelligentUpdateConfigurationMessage
-  | GetFindRelevantFilesConfigurationsMessage
-  | ReorderFindRelevantFilesConfigurationsMessage
-  | DeleteFindRelevantFilesConfigurationMessage
-  | SetDefaultFindRelevantFilesConfigurationMessage
-  | GetVoiceInputConfigurationsMessage
-  | ReorderVoiceInputConfigurationsMessage
-  | DeleteVoiceInputConfigurationMessage
-  | SetDefaultVoiceInputConfigurationMessage
-  | GetCommitMessagesConfigurationsMessage
-  | ReorderCommitMessagesConfigurationsMessage
-  | DeleteCommitMessagesConfigurationMessage
-  | SetDefaultCommitMessagesConfigurationMessage
+  | GetConfigurationsMessage
+  | ReorderConfigurationsMessage
+  | DeleteConfigurationMessage
+  | SetDefaultConfigurationMessage
   | GetCommitMessageInstructionsMessage
   | UpdateCommitMessageInstructionsMessage
   | GetIncludePromptsInCommitMessagesMessage
@@ -409,34 +299,10 @@ export interface ModelProvidersMessage {
   providers: ProviderForClient[]
 }
 
-export interface CodeAtCursorConfigurationsMessage {
-  command: 'CODE_AT_CURSOR_CONFIGURATIONS'
+export interface ConfigurationsMessage {
+  command: 'CONFIGURATIONS'
   configurations: ConfigurationForClient[]
-}
-
-export interface EditContextConfigurationsMessage {
-  command: 'EDIT_CONTEXT_CONFIGURATIONS'
-  configurations: ConfigurationForClient[]
-}
-
-export interface IntelligentUpdateConfigurationsMessage {
-  command: 'INTELLIGENT_UPDATE_CONFIGURATIONS'
-  configurations: ConfigurationForClient[]
-}
-
-export interface FindRelevantFilesConfigurationsMessage {
-  command: 'FIND_RELEVANT_FILES_CONFIGURATIONS'
-  configurations: ConfigurationForClient[]
-}
-
-export interface VoiceInputConfigurationsMessage {
-  command: 'VOICE_INPUT_CONFIGURATIONS'
-  configurations: ConfigurationForClient[]
-}
-
-export interface CommitMessagesConfigurationsMessage {
-  command: 'COMMIT_MESSAGES_CONFIGURATIONS'
-  configurations: ConfigurationForClient[]
+  defaults: Record<ToolType, string | null>
 }
 
 export interface CommitMessageInstructionsMessage {
@@ -526,12 +392,7 @@ export interface ExtendedCacheDurationForAnthropicMessage {
 
 export type BackendMessage =
   | ModelProvidersMessage
-  | CodeAtCursorConfigurationsMessage
-  | EditContextConfigurationsMessage
-  | IntelligentUpdateConfigurationsMessage
-  | FindRelevantFilesConfigurationsMessage
-  | VoiceInputConfigurationsMessage
-  | CommitMessagesConfigurationsMessage
+  | ConfigurationsMessage
   | CommitMessageInstructionsMessage
   | IncludePromptsInCommitMessagesMessage
   | VoiceInputInstructionsMessage

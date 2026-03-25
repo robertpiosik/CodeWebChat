@@ -8,7 +8,7 @@ export const handle_upsert_configuration = async (
 ): Promise<void> => {
   await upsert_configuration({
     context: provider.context,
-    tool_type: message.tool_type,
+    tool_type: 'code-at-cursor',
     configuration_id: message.configuration_id,
     insertion_index: message.insertion_index,
     create_on_top: message.create_on_top,
