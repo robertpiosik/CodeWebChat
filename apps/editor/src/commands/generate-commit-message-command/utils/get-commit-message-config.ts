@@ -38,8 +38,7 @@ export const get_commit_message_config = async (
       : await api_providers_manager.get_default_commit_messages_config()
 
   if (!commit_message_config) {
-    const configs =
-      await api_providers_manager.get_commit_messages_tool_configs()
+    const configs = await api_providers_manager.get_tool_configs()
 
     if (configs.length == 0) {
       vscode.commands.executeCommand('codeWebChat.settings')

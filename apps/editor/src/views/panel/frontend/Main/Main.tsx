@@ -90,9 +90,8 @@ export const Main: React.FC<Props> = (props) => {
     selected_preset_or_group_name_by_mode,
     set_selected_preset_or_group_name_by_mode
   ] = useState<{ [T in WebPromptType]?: string }>()
-  const [all_configurations, set_all_configurations] = useState<{
-    [T in ApiPromptType]?: ApiToolConfiguration[]
-  }>()
+  const [all_configurations, set_all_configurations] =
+    useState<ApiToolConfiguration[]>()
   const [
     selected_configuration_id_by_prompt_type,
     set_selected_configuration_id_by_prompt_type
@@ -417,8 +416,7 @@ export const Main: React.FC<Props> = (props) => {
     reordered_configs: (UiConfigurations.Configuration & { id: string })[]
   ) => {
     if (all_configurations && props.api_prompt_type) {
-      const current_api_configs = all_configurations[props.api_prompt_type]
-      if (!current_api_configs) return
+      const current_api_configs = all_configurations
 
       const reordered_api_tool_configs = reordered_configs
         .map((ui_config) => {
@@ -430,14 +428,10 @@ export const Main: React.FC<Props> = (props) => {
         return
       }
 
-      set_all_configurations({
-        ...all_configurations,
-        [props.api_prompt_type]: reordered_api_tool_configs
-      })
+      set_all_configurations(reordered_api_tool_configs)
 
       post_message(props.vscode, {
         command: 'REORDER_API_TOOL_CONFIGURATIONS',
-        prompt_type: props.api_prompt_type,
         configurations: reordered_api_tool_configs
       })
     }
@@ -456,7 +450,6 @@ export const Main: React.FC<Props> = (props) => {
   const handle_delete_configuration = (id: string) => {
     post_message(props.vscode, {
       command: 'DELETE_CONFIGURATION',
-      api_prompt_type: props.api_prompt_type,
       configuration_id: id
     })
   }
@@ -470,13 +463,10 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const handle_toggle_pinned_configuration = (id: string) => {
-    if (props.api_prompt_type) {
-      post_message(props.vscode, {
-        command: 'TOGGLE_PINNED_API_TOOL_CONFIGURATION',
-        prompt_type: props.api_prompt_type,
-        configuration_id: id
-      })
-    }
+    post_message(props.vscode, {
+      command: 'TOGGLE_PINNED_API_TOOL_CONFIGURATION',
+      configuration_id: id
+    })
   }
 
   const handle_create_preset_group_or_separator = (
@@ -752,9 +742,7 @@ export const Main: React.FC<Props> = (props) => {
     selected_preset_or_group_name_by_mode?.[props.web_prompt_type]
 
   const configurations_for_current_mode =
-    all_configurations && props.mode == MODE.API
-      ? all_configurations[props.api_prompt_type]
-      : []
+    all_configurations && props.mode == MODE.API ? all_configurations : []
 
   return (
     <MainView

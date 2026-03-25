@@ -18,7 +18,7 @@ export const get_code_at_cursor_config = async (params: {
   panel_provider?: PanelProvider
 }): Promise<{ provider: any; config: any } | undefined> => {
   const code_at_cursor_configs =
-    await params.api_providers_manager.get_code_completions_tool_configs()
+    await params.api_providers_manager.get_tool_configs()
 
   if (code_at_cursor_configs.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')

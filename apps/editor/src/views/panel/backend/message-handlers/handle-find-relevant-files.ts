@@ -31,7 +31,7 @@ const get_find_relevant_files_config = async (params: {
   config_id?: string
 }): Promise<{ provider: Provider; config: ToolConfig } | undefined> => {
   const find_relevant_files_configs =
-    await params.api_providers_manager.get_find_relevant_files_tool_configs()
+    await params.api_providers_manager.get_tool_configs()
 
   if (find_relevant_files_configs.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')

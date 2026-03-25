@@ -1,12 +1,5 @@
 import * as vscode from 'vscode'
-import { ManageConfigurationsMessage } from '@/views/panel/types/messages'
 
-export const handle_manage_configurations = async (
-  message: ManageConfigurationsMessage
-): Promise<void> => {
-  const section =
-    message.api_prompt_type == 'edit-context'
-      ? 'edit-context'
-      : 'code-at-cursor'
-  await vscode.commands.executeCommand('codeWebChat.settings', section)
+export const handle_manage_configurations = async (): Promise<void> => {
+  await vscode.commands.executeCommand('codeWebChat.settings', 'configurations')
 }

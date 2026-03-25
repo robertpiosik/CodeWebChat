@@ -332,7 +332,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     const providers_manager = new ModelProvidersManager(this.context)
     const [providers, configs] = await Promise.all([
       providers_manager.get_providers(),
-      providers_manager.get_code_completions_tool_configs()
+      providers_manager.get_tool_configs()
     ])
 
     this.send_message({
@@ -943,7 +943,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               preset_name: message.preset_name
             })
           } else if (message.command == 'MANAGE_CONFIGURATIONS') {
-            await handle_manage_configurations(message)
+            await handle_manage_configurations()
           } else if (message.command == 'GET_COLLAPSED_STATES') {
             handle_get_collapsed_states(this)
           } else if (message.command == 'SAVE_COMPONENT_COLLAPSED_STATE') {

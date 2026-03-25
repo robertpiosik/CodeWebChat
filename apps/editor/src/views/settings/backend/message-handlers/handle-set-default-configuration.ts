@@ -1,8 +1,7 @@
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
   ModelProvidersManager,
-  get_tool_config_id,
-  ToolConfig
+  get_tool_config_id
 } from '@/services/model-providers-manager'
 import { ToolType } from '@/views/settings/types/tools'
 
@@ -13,7 +12,7 @@ export const handle_set_default_configuration = async (
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(provider.context)
 
-  const configs = await providers_manager.get_code_completions_tool_configs()
+  const configs = await providers_manager.get_tool_configs()
   const config_to_set = configuration_id
     ? configs.find((c) => get_tool_config_id(c) == configuration_id) || null
     : null

@@ -25,7 +25,7 @@ const get_code_at_cursor_config = async (
   config_id?: string
 ): Promise<{ provider: any; config: any } | undefined> => {
   const code_completions_configs =
-    await api_providers_manager.get_code_completions_tool_configs()
+    await api_providers_manager.get_tool_configs()
 
   if (code_completions_configs.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')

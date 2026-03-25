@@ -19,7 +19,7 @@ export const get_intelligent_update_config = async (
   context: vscode.ExtensionContext
 ): Promise<{ provider: any; config: ToolConfig } | undefined> => {
   const intelligent_update_configs =
-    await api_providers_manager.get_intelligent_update_tool_configs()
+    await api_providers_manager.get_tool_configs()
 
   if (intelligent_update_configs.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')

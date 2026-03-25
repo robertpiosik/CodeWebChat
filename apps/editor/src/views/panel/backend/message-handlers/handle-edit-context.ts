@@ -35,7 +35,7 @@ const get_edit_context_config = async (params: {
   config_id?: string
 }): Promise<{ provider: Provider; config: ToolConfig } | undefined> => {
   const edit_context_configs =
-    await params.api_providers_manager.get_edit_context_tool_configs()
+    await params.api_providers_manager.get_tool_configs()
 
   if (edit_context_configs.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')

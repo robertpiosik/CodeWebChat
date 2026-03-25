@@ -22,8 +22,7 @@ export const handle_get_configurations = async (
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(provider.context)
 
-  const saved_configs =
-    await providers_manager.get_code_completions_tool_configs()
+  const saved_configs = await providers_manager.get_tool_configs()
 
   const def_cac = await providers_manager.get_default_code_completions_config()
   const def_iu = await providers_manager.get_default_intelligent_update_config()

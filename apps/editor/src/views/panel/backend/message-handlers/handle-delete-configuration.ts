@@ -7,7 +7,6 @@ export const handle_delete_configuration = async (
 ): Promise<void> => {
   await delete_configuration({
     context: provider.context,
-    configuration_id: message.configuration_id,
-    type: message.api_prompt_type
+    configuration_id: message.configuration_id
   })
 }

@@ -55,8 +55,7 @@ const stop_recording = async (panel_provider: PanelProvider) => {
       const model_providers_manager = new ModelProvidersManager(
         panel_provider.context
       )
-      const configs =
-        await model_providers_manager.get_voice_input_tool_configs()
+      const configs = await model_providers_manager.get_tool_configs()
 
       if (configs.length == 0) return
 
@@ -283,7 +282,7 @@ export const handle_voice_input = async (
     const model_providers_manager = new ModelProvidersManager(
       panel_provider.context
     )
-    const configs = await model_providers_manager.get_voice_input_tool_configs()
+    const configs = await model_providers_manager.get_tool_configs()
 
     if (configs.length == 0) {
       vscode.window.showWarningMessage('No configuration found', {

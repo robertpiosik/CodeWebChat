@@ -13,60 +13,19 @@ export const handle_reorder_api_tool_configurations = async (
   const providers_manager = new ModelProvidersManager(panel_provider.context)
   const reordered_ids = message.configurations.map((p) => p.id)
 
-  if (message.prompt_type == 'edit-context') {
-    const current_configs =
-      await providers_manager.get_edit_context_tool_configs()
-    const reordered_configs = reordered_ids
-      .map((id) => {
-        const found = current_configs.find((p) => get_tool_config_id(p) === id)
-        if (!found) {
-          console.error(`Config with id ${id} not found during reorder.`)
-          return null
-        }
-        return found
-      })
-      .filter((p): p is ToolConfig => p !== null)
+  const current_configs = await providers_manager.get_tool_configs()
+  const reordered_configs = reordered_ids
+    .map((id) => {
+      const found = current_configs.find((p) => get_tool_config_id(p) === id)
+      if (!found) {
+        console.error(`Config with id ${id} not found during reorder.`)
+        return null
+      }
+      return found
+    })
+    .filter((p): p is ToolConfig => p !== null)
 
-    if (reordered_configs.length === current_configs.length) {
-      await providers_manager.save_edit_context_tool_configs(reordered_configs)
-    }
-  } else if (message.prompt_type == 'code-at-cursor') {
-    const current_configs =
-      await providers_manager.get_code_completions_tool_configs()
-    const reordered_configs = reordered_ids
-      .map((id) => {
-        const found = current_configs.find((p) => get_tool_config_id(p) === id)
-        if (!found) {
-          console.error(`Config with id ${id} not found during reorder.`)
-          return null
-        }
-        return found
-      })
-      .filter((p): p is ToolConfig => p !== null)
-
-    if (reordered_configs.length === current_configs.length) {
-      await providers_manager.save_code_completions_tool_configs(
-        reordered_configs
-      )
-    }
-  } else if (message.prompt_type == 'find-relevant-files') {
-    const current_configs =
-      await providers_manager.get_find_relevant_files_tool_configs()
-    const reordered_configs = reordered_ids
-      .map((id) => {
-        const found = current_configs.find((p) => get_tool_config_id(p) === id)
-        if (!found) {
-          console.error(`Config with id ${id} not found during reorder.`)
-          return null
-        }
-        return found
-      })
-      .filter((p): p is ToolConfig => p !== null)
-
-    if (reordered_configs.length === current_configs.length) {
-      await providers_manager.save_find_relevant_files_tool_configs(
-        reordered_configs
-      )
-    }
+  if (reordered_configs.length === current_configs.length) {
+    await providers_manager.save_tool_configs(reordered_configs)
   }
 }

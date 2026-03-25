@@ -1,8 +1,7 @@
 import * as vscode from 'vscode'
 import {
   ModelProvidersManager,
-  get_tool_config_id,
-  ToolConfig
+  get_tool_config_id
 } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
 
@@ -12,8 +11,7 @@ export const delete_configuration = async (params: {
 }): Promise<void> => {
   const providers_manager = new ModelProvidersManager(params.context)
 
-  const original_configs =
-    await providers_manager.get_code_completions_tool_configs()
+  const original_configs = await providers_manager.get_tool_configs()
   const config_to_delete = original_configs.find(
     (c) => get_tool_config_id(c) === params.configuration_id
   )
@@ -38,5 +36,5 @@ export const delete_configuration = async (params: {
   const updated_configs = original_configs.filter(
     (c) => get_tool_config_id(c) !== params.configuration_id
   )
-  await providers_manager.save_code_completions_tool_configs(updated_configs)
+  await providers_manager.save_tool_configs(updated_configs)
 }

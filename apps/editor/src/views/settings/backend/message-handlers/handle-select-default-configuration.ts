@@ -12,7 +12,7 @@ export const handle_select_default_configuration = async (
   message: SelectDefaultConfigurationMessage
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(provider.context)
-  const configs = await providers_manager.get_code_completions_tool_configs()
+  const configs = await providers_manager.get_tool_configs()
 
   if (configs.length === 0) {
     vscode.window.showInformationMessage(

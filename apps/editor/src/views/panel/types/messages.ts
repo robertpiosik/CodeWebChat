@@ -45,12 +45,10 @@ export type SelectionState = {
 
 export type ApiToolConfiguration = {
   id: string
-  provider_type: string
   provider_name: string
   model: string
   temperature?: number
   reasoning_effort?: string
-  is_default?: boolean
   is_pinned?: boolean
 }
 
@@ -291,13 +289,11 @@ export interface GetApiToolConfigurationsMessage extends BaseMessage {
 
 export interface ReorderApiToolConfigurationsMessage extends BaseMessage {
   command: 'REORDER_API_TOOL_CONFIGURATIONS'
-  prompt_type: ApiPromptType
   configurations: ApiToolConfiguration[]
 }
 
 export interface TogglePinnedApiToolConfigurationMessage extends BaseMessage {
   command: 'TOGGLE_PINNED_API_TOOL_CONFIGURATION'
-  prompt_type: ApiPromptType
   configuration_id: string
 }
 
@@ -384,7 +380,6 @@ export interface FixAllFailedFilesMessage extends BaseMessage {
 
 export interface ManageConfigurationsMessage extends BaseMessage {
   command: 'MANAGE_CONFIGURATIONS'
-  api_prompt_type: ApiPromptType
 }
 
 export interface UndoMessage extends BaseMessage {
@@ -506,7 +501,6 @@ export interface UpsertConfigurationMessage extends BaseMessage {
 
 export interface DeleteConfigurationMessage extends BaseMessage {
   command: 'DELETE_CONFIGURATION'
-  api_prompt_type: ApiPromptType
   configuration_id: string
 }
 
@@ -698,7 +692,7 @@ export interface PresetsMessage extends BaseMessage {
 
 export interface ApiToolConfigurationsMessage extends BaseMessage {
   command: 'API_TOOL_CONFIGURATIONS'
-  configurations: { [T in ApiPromptType]?: ApiToolConfiguration[] }
+  configurations: ApiToolConfiguration[]
 }
 
 export interface EditorStateChangedMessage extends BaseMessage {

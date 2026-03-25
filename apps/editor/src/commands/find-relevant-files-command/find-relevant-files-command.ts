@@ -76,8 +76,7 @@ export const find_relevant_files_command = (
           const api_providers_manager = new ModelProvidersManager(
             extension_context
           )
-          const configs =
-            await api_providers_manager.get_find_relevant_files_tool_configs()
+          const configs = await api_providers_manager.get_tool_configs()
 
           if (configs.length === 0) {
             vscode.commands.executeCommand('codeWebChat.settings')
