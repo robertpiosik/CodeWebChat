@@ -405,7 +405,6 @@ export interface SaveComponentCollapsedStateMessage extends BaseMessage {
   command: 'SAVE_COMPONENT_COLLAPSED_STATE'
   component: 'presets' | 'configurations' | 'timeline' | 'tasks'
   is_collapsed: boolean
-  prompt_type?: WebPromptType | ApiPromptType
 }
 
 export interface GetCheckpointsMessage extends BaseMessage {
@@ -879,8 +878,8 @@ export interface UpdateFileInPreviewMessage extends BaseMessage {
 
 export interface CollapsedStatesMessage extends BaseMessage {
   command: 'COLLAPSED_STATES'
-  presets_collapsed_by_web_mode: { [mode in WebPromptType]?: boolean }
-  configurations_collapsed_by_api_mode: { [mode in ApiPromptType]?: boolean }
+  presets_collapsed: boolean
+  configurations_collapsed: boolean
   are_tasks_collapsed: boolean
   is_timeline_collapsed: boolean
 }

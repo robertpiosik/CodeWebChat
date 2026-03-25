@@ -43,14 +43,11 @@ export const use_panel = (vscode: any) => {
   const [context_size_warning_threshold, set_context_size_warning_threshold] =
     useState<number>()
   const [can_undo, set_can_undo] = useState<boolean>(false)
-  const [presets_collapsed_by_web_mode, set_presets_collapsed_by_web_mode] =
-    useState<{ [mode in WebPromptType]?: boolean }>({})
+  const [presets_collapsed, set_presets_collapsed] = useState(false)
   const [send_with_shift_enter, set_send_with_shift_enter] = useState(false)
   const [is_timeline_collapsed, set_is_timeline_collapsed] = useState(false)
-  const [
-    configurations_collapsed_by_api_mode,
-    set_configurations_collapsed_by_api_mode
-  ] = useState<{ [mode in ApiPromptType]?: boolean }>({})
+  const [configurations_collapsed, set_configurations_collapsed] =
+    useState(false)
   const [is_recording, set_is_recording] = useState(false)
   const [setup_progress, set_setup_progress] = useState<SetupProgress>()
   const [
@@ -130,10 +127,8 @@ export const use_panel = (vscode: any) => {
       } else if (message.command == 'API_PROMPT_TYPE') {
         set_api_mode(message.prompt_type)
       } else if (message.command == 'COLLAPSED_STATES') {
-        set_presets_collapsed_by_web_mode(message.presets_collapsed_by_web_mode)
-        set_configurations_collapsed_by_api_mode(
-          message.configurations_collapsed_by_api_mode
-        )
+        set_presets_collapsed(message.presets_collapsed)
+        set_configurations_collapsed(message.configurations_collapsed)
         set_is_timeline_collapsed(message.is_timeline_collapsed)
       } else if (message.command == 'CHECKPOINTS') {
         set_checkpoints(message.checkpoints)
@@ -234,30 +229,20 @@ export const use_panel = (vscode: any) => {
   }
 
   const handle_presets_collapsed_change = (is_collapsed: boolean) => {
-    if (!web_prompt_type) return
-    set_presets_collapsed_by_web_mode((prev) => ({
-      ...prev,
-      [web_prompt_type]: is_collapsed
-    }))
+    set_presets_collapsed(is_collapsed)
     post_message(vscode, {
       command: 'SAVE_COMPONENT_COLLAPSED_STATE',
       component: 'presets',
-      is_collapsed,
-      prompt_type: web_prompt_type
+      is_collapsed
     })
   }
 
   const handle_configurations_collapsed_change = (is_collapsed: boolean) => {
-    if (!api_prompt_type) return
-    set_configurations_collapsed_by_api_mode((prev) => ({
-      ...prev,
-      [api_prompt_type]: is_collapsed
-    }))
+    set_configurations_collapsed(is_collapsed)
     post_message(vscode, {
       command: 'SAVE_COMPONENT_COLLAPSED_STATE',
       component: 'configurations',
-      is_collapsed,
-      prompt_type: api_prompt_type
+      is_collapsed
     })
   }
 
@@ -287,13 +272,9 @@ export const use_panel = (vscode: any) => {
     set_chat_input_focus_and_select_key,
     context_size_warning_threshold,
     can_undo,
-    presets_collapsed: web_prompt_type
-      ? (presets_collapsed_by_web_mode[web_prompt_type] ?? false)
-      : false,
+    presets_collapsed,
     send_with_shift_enter,
-    configurations_collapsed: api_prompt_type
-      ? (configurations_collapsed_by_api_mode[api_prompt_type] ?? false)
-      : false,
+    configurations_collapsed,
     is_timeline_collapsed,
     handle_task_forward,
     handle_instructions_change,

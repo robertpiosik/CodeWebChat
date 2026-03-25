@@ -1,12 +1,11 @@
 import {
   ARE_TASKS_COLLAPSED_STATE_KEY,
-  get_configurations_collapsed_state_key,
-  get_presets_collapsed_state_key,
+  CONFIGURATIONS_COLLAPSED_STATE_KEY,
+  PRESETS_COLLAPSED_STATE_KEY,
   IS_TIMELINE_COLLAPSED_STATE_KEY
 } from '@/constants/state-keys'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { SaveComponentCollapsedStateMessage } from '@/views/panel/types/messages'
-import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 
 export const handle_save_component_collapsed_state = async (
   panel_provider: PanelProvider,
@@ -14,14 +13,12 @@ export const handle_save_component_collapsed_state = async (
 ): Promise<void> => {
   if (message.component == 'presets') {
     await panel_provider.context.globalState.update(
-      get_presets_collapsed_state_key(message.prompt_type as WebPromptType),
+      PRESETS_COLLAPSED_STATE_KEY,
       message.is_collapsed
     )
   } else if (message.component == 'configurations') {
     await panel_provider.context.globalState.update(
-      get_configurations_collapsed_state_key(
-        message.prompt_type as ApiPromptType
-      ),
+      CONFIGURATIONS_COLLAPSED_STATE_KEY,
       message.is_collapsed
     )
   } else if (message.component == 'timeline') {
