@@ -138,6 +138,9 @@ export const preview = async (params: {
 
     if (params.panel_provider) {
       params.panel_provider.send_message({
+        command: 'HIDE_PROGRESS'
+      })
+      params.panel_provider.send_message({
         command: 'RESPONSE_PREVIEW_STARTED',
         items: items_for_preview,
         raw_instructions: params.raw_instructions,

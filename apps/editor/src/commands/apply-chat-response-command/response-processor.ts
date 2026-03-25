@@ -199,6 +199,10 @@ export const process_chat_response = async (params: {
     })
 
     params.panel_provider.send_message({
+      command: 'HIDE_PROGRESS'
+    })
+
+    params.panel_provider.send_message({
       command: 'RESPONSE_PREVIEW_STARTED',
       items: files_for_preview,
       raw_instructions: params.args?.raw_instructions,

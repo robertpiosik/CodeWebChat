@@ -222,9 +222,11 @@ export const apply_chat_response_command = (params: {
           workspace_provider: params.workspace_provider
         })
 
-        params.panel_provider.send_message({
-          command: 'HIDE_PROGRESS'
-        })
+        if (!preview_data) {
+          params.panel_provider.send_message({
+            command: 'HIDE_PROGRESS'
+          })
+        }
 
         if (preview_data) {
           let created_at_for_preview = args?.created_at
