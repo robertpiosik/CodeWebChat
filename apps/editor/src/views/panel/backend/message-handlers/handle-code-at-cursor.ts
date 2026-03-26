@@ -5,6 +5,7 @@ import { FilesCollector } from '@/utils/files-collector'
 import {
   ModelProvidersManager,
   ToolConfig,
+  Provider,
   get_tool_config_id
 } from '@/services/model-providers-manager'
 import { Logger } from '@shared/utils/logger'
@@ -23,7 +24,7 @@ const get_code_at_cursor_config = async (
   context: vscode.ExtensionContext,
   panel_provider: PanelProvider,
   config_id?: string
-): Promise<{ provider: any; config: any } | undefined> => {
+): Promise<{ provider: Provider; config: ToolConfig } | undefined> => {
   const code_completions_configs =
     await api_providers_manager.get_tool_configs()
 
@@ -155,7 +156,7 @@ const get_code_at_cursor_config = async (
       }
     }
 
-    return new Promise<{ provider: any; config: any } | undefined>(
+    return new Promise<{ provider: Provider; config: ToolConfig } | undefined>(
       (resolve) => {
         quick_pick.onDidAccept(async () => {
           const selected = quick_pick.selectedItems[0] as any

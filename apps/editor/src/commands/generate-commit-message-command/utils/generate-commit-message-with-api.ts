@@ -6,11 +6,12 @@ import { display_token_count } from '@/utils/display-token-count'
 import { Logger } from '@shared/utils/logger'
 import { strip_wrapping_quotes } from './strip-wrapping-quotes'
 import { CommitMessageConfig } from './get-commit-message-config'
+import { Provider } from '@/services/model-providers-manager'
 import { t } from '@/i18n'
 
 export const generate_commit_message_with_api = async (params: {
   endpoint_url: string
-  provider: any
+  provider: Provider
   config: CommitMessageConfig
   message: string
 }): Promise<string> => {

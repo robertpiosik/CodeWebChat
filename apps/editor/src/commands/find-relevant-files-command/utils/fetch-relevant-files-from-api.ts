@@ -9,13 +9,14 @@ import { apply_reasoning_effort } from '../../../utils/apply-reasoning-effort'
 import { build_user_content } from '../../../utils/build-user-content'
 import { Logger } from '@shared/utils/logger'
 import { FileData } from './analyze-workspace-files'
+import { Provider } from '../../../services/model-providers-manager'
 import { t } from '@/i18n'
 
 export const fetch_relevant_files_from_api = async (
   files_data: FileData[],
   shrink_result: boolean,
   instructions: string,
-  provider: any,
+  provider: Provider,
   selected_config: any
 ): Promise<string[] | 'cancel' | 'error_no_files' | 'error'> => {
   let xml_files = `<files>\n`

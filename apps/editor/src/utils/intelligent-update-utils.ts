@@ -3,6 +3,7 @@ import axios, { CancelToken } from 'axios'
 import {
   ModelProvidersManager,
   ToolConfig,
+  Provider,
   get_tool_config_id
 } from '@/services/model-providers-manager'
 import { RECENTLY_USED_INTELLIGENT_UPDATE_CONFIG_IDS_STATE_KEY } from '../constants/state-keys'
@@ -17,7 +18,7 @@ export const get_intelligent_update_config = async (
   api_providers_manager: ModelProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext
-): Promise<{ provider: any; config: ToolConfig } | undefined> => {
+): Promise<{ provider: Provider; config: ToolConfig } | undefined> => {
   const intelligent_update_configs =
     await api_providers_manager.get_tool_configs()
 
@@ -132,7 +133,7 @@ export const get_intelligent_update_config = async (
       }
     }
 
-    return new Promise<{ provider: any; config: ToolConfig } | undefined>(
+    return new Promise<{ provider: Provider; config: ToolConfig } | undefined>(
       (resolve) => {
         quick_pick.onDidTriggerButton((button) => {
           if (button.tooltip == 'Close') {
@@ -213,7 +214,7 @@ export const get_intelligent_update_config = async (
 export const process_file = async (params: {
   endpoint_url: string
   api_key: string
-  provider: any
+  provider: Provider
   model: string
   temperature?: number
   reasoning_effort?: string
