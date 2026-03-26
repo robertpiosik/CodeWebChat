@@ -168,6 +168,7 @@ export const select_imported_files_command = (
       quick_pick.items = quick_pick_items
       quick_pick.selectedItems = quick_pick_items.filter((item) => item.picked)
       quick_pick.canSelectMany = true
+      quick_pick.matchOnDescription = true
 
       const update_placeholder = () => {
         const total = quick_pick.selectedItems.reduce(
