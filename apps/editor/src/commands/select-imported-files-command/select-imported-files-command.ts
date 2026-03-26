@@ -32,16 +32,23 @@ export const select_imported_files_command = (
         starting_uris.map((u) => u.toString())
       )
 
+      let is_cancelled = false
+
       await vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: 'Processing imports...'
+          title: 'Processing imports...',
+          cancellable: true
         },
-        async () => {
+        async (progress, token) => {
           const queue: vscode.Uri[] = []
 
           for (const starting_uri of starting_uris) {
-            const imports = await get_imports_for_uri(starting_uri)
+            if (token.isCancellationRequested) {
+              is_cancelled = true
+              break
+            }
+            const imports = await get_imports_for_uri(starting_uri, token)
             for (const uri_str of imports) {
               if (!visited_uris.has(uri_str)) {
                 visited_uris.add(uri_str)
@@ -54,8 +61,12 @@ export const select_imported_files_command = (
           }
 
           while (queue.length > 0) {
+            if (token.isCancellationRequested) {
+              is_cancelled = true
+              break
+            }
             const current_uri = queue.shift()!
-            const imports = await get_imports_for_uri(current_uri)
+            const imports = await get_imports_for_uri(current_uri, token)
             for (const uri_str of imports) {
               if (!visited_uris.has(uri_str)) {
                 visited_uris.add(uri_str)
@@ -68,6 +79,10 @@ export const select_imported_files_command = (
           }
         }
       )
+
+      if (is_cancelled) {
+        return
+      }
 
       const valid_immediate = Array.from(immediate_uris).map((u) =>
         vscode.Uri.parse(u)

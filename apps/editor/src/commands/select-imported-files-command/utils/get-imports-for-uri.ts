@@ -2,7 +2,8 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 
 export const get_imports_for_uri = async (
-  document_uri: vscode.Uri
+  document_uri: vscode.Uri,
+  token?: vscode.CancellationToken
 ): Promise<string[]> => {
   const found_uris = new Set<string>()
   try {
@@ -235,6 +236,9 @@ export const get_imports_for_uri = async (
     }
 
     for (const position of positions_to_check) {
+      if (token?.isCancellationRequested) {
+        break
+      }
       try {
         const definitions = await vscode.commands.executeCommand<
           vscode.Location[] | vscode.LocationLink[]
