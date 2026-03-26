@@ -558,7 +558,7 @@ const verify_reasoning_effort = async (params: {
     cancel_source.cancel('User cancelled')
   })
 
-  const body: any = {
+  const body = {
     model: params.model,
     messages: [
       {
