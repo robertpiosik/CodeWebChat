@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
-import { WorkspaceProvider } from '../../../../context/providers/workspace/workspace-provider'
 import { is_valid_uri } from './is-valid-uri'
+import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 
 export const get_all_files = async (
   uri: vscode.Uri,
@@ -19,7 +19,8 @@ export const get_all_files = async (
         if (type & vscode.FileType.File) {
           results.push(child_uri)
         } else if (type & vscode.FileType.Directory) {
-          results.push(...(await get_all_files(child_uri, workspace_provider)))
+          const child_files = await get_all_files(child_uri, workspace_provider)
+          results.push(...child_files)
         }
       }
       return results

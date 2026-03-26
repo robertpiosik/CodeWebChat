@@ -153,7 +153,8 @@ export const select_imported_files_command = (
           label: 'immediate',
           kind: vscode.QuickPickItemKind.Separator
         })
-        quick_pick_items.push(...(await map_to_quick_pick(valid_immediate)))
+        const immediate_items = await map_to_quick_pick(valid_immediate)
+        quick_pick_items.push(...immediate_items)
       }
 
       if (valid_recursive.length > 0) {
@@ -161,7 +162,8 @@ export const select_imported_files_command = (
           label: 'recursive',
           kind: vscode.QuickPickItemKind.Separator
         })
-        quick_pick_items.push(...(await map_to_quick_pick(valid_recursive)))
+        const recursive_items = await map_to_quick_pick(valid_recursive)
+        quick_pick_items.push(...recursive_items)
       }
 
       const quick_pick = vscode.window.createQuickPick<ImportQuickPickItem>()
