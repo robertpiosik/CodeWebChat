@@ -24,7 +24,7 @@ export const PROVIDERS = {
     base_url: 'https://api.fireworks.ai/inference/v1'
   },
   Google: {
-    base_url: 'https://generativelanguage.googleapis.com/v1beta/openai'
+    base_url: 'https://generativelanguage.googleapis.com/v1beta/openai/v1'
   },
   Groq: {
     base_url: 'https://api.groq.com/openai/v1'
