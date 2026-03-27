@@ -112,7 +112,7 @@ Find all files building modules of the following task's scope:
 > [!TIP]
 > Got lost in the codebase? Use "Find relevant files" prompt type and search files with natural language!
 
-CWC's workflow based on a single-turn exchanges facilitates persistent utilization of prompt caching...
+CWC's workflow based on a single-turns is designed for an effective prompt caching...
 
 ## Prompt caching
 
