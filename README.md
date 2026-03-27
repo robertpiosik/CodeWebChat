@@ -91,16 +91,6 @@ Find all files building modules of the following task's scope:
 </details>
 
 <details>
-<summary>Commit message</summary>
-
-```
-<files>[staged files diffs and contents]</files>
-[commit message instructions]
-```
-
-</details>
-
-<details>
 <summary>No context</summary>
 
 ```
