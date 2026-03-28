@@ -100,7 +100,7 @@ Find all files building modules of the following task's scope:
 </details>
 
 > [!TIP]
-> Got lost in the codebase? Use "Find relevant files" prompt type and search files with natural language!
+> Got lost in the codebase? Search files with natural language using "Find relevant files" prompt type!
 
 CWC's workflow based on a single-turns is designed for an effective prompt caching...
 
