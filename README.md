@@ -26,7 +26,7 @@ Code Web Chat (CWC) is a free and open-source, privacy-first **AI coding toolkit
 
 <br/>
 
-<p align="center"><i>Apply the response when ready...</i></p>
+<p align="center"><i>Apply when ready...</i></p>
 
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-2.png"></p>
 
