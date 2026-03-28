@@ -16,6 +16,8 @@ Code Web Chat (CWC) is a free and open-source, privacy-first **AI coding toolkit
 - **chatbots**—ChatGPT, Claude, Gemini, etc.
 - **APIs**—remote and local model providers
 
+...and integrate suggested edits, code at cursor, relevant files, and more.
+
 <br/>
 
 <p align="center">Select context files, type instructions...</p>
