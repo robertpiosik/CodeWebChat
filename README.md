@@ -90,9 +90,6 @@ Find all files building modules of the following task's scope:
 
 </details>
 
-> [!TIP]
-> Got lost in the codebase? Search files with natural language using "Find relevant files" prompt type!
-
 <details>
 <summary>No context</summary>
 
@@ -101,6 +98,9 @@ Find all files building modules of the following task's scope:
 ```
 
 </details>
+
+> [!TIP]
+> Got lost in the codebase? Accurately search files for context with model's full intelligence using the "Find relevant files" prompt type!
 
 ## Prompt caching
 
