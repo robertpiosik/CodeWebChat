@@ -99,9 +99,6 @@ Find all files building modules of the following task's scope:
 
 </details>
 
-> [!TIP]
-> Got lost in the codebase? Accurately search files for context with model's full intelligence using the "Find relevant files" prompt type!
-
 ## Prompt caching
 
 With its static context approach, CWC optimizes [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) via smart file ordering based on update and selection recency. Make your chatbot quotas last longer or lower token costs by up to 90% when calling APIs. Minimize latency of self-hosted models.
