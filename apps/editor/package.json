@@ -1,7 +1,7 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
-  "description": "Coding prompts for chatbots (CWC)",
+  "description": "Connect VS Code with chatbots (CWC)",
   "version": "1.908.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
