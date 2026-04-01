@@ -748,11 +748,6 @@
           "group": "1_modification@7"
         },
         {
-          "command": "codeWebChat.removeFolderFromWorkspace",
-          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == workspaceRoot || viewItem == contextWorkspaceRoot) && workspaceFolderCount > 1",
-          "group": "1_modification@8"
-        },
-        {
           "command": "codeWebChat.findInFolder",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
           "group": "2_external@1"
@@ -766,6 +761,11 @@
           "command": "codeWebChat.openInIntegratedTerminal",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == workspaceRoot || viewItem == directory || viewItem == contextWorkspaceRoot || viewItem == contextDirectory)",
           "group": "2_external@3"
+        },
+        {
+          "command": "codeWebChat.removeFolderFromWorkspace",
+          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == workspaceRoot || viewItem == contextWorkspaceRoot) && workspaceFolderCount > 1",
+          "group": "2_external@4"
         }
       ]
     },
