@@ -104,7 +104,7 @@ Find all files building modules of the following task's scope:
 
 ## Prompt caching
 
-With its static context approach, [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) is utilized across tasks via smart file ordering based on update and selection recency.
+With its static context approach, **[prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) is utilized across tasks** via smart file ordering based on update and selection recency.
 
 Make your chatbot quotas last longer or lower token costs by up to 90% when calling APIs. Minimize latency of self-hosted models.
 
