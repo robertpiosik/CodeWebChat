@@ -122,7 +122,11 @@ export const handle_active_editor_intelligent_update = async (params: {
     const updated_content = await process_file({
       endpoint_url: params.endpoint_url,
       api_key: params.api_key,
-      provider: { name: params.config.provider_name },
+      provider: {
+        name: params.config.provider_name,
+        base_url: params.endpoint_url,
+        api_key: params.api_key
+      },
       model: params.config.model,
       temperature: params.config.temperature,
       reasoning_effort: params.config.reasoning_effort,
