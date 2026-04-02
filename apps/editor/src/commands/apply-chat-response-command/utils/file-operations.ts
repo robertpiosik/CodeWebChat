@@ -224,15 +224,16 @@ export const create_file_if_needed = async (params: {
 const relocate_file = async (params: {
   old_path: string
   new_path: string
-  workspace_root: string
+  old_workspace_root: string
+  new_workspace_root: string
 }): Promise<boolean> => {
   try {
     const old_safe_path = create_safe_path(
-      params.workspace_root,
+      params.old_workspace_root,
       params.old_path
     )
     const new_safe_path = create_safe_path(
-      params.workspace_root,
+      params.new_workspace_root,
       params.new_path
     )
 
@@ -276,7 +277,7 @@ const relocate_file = async (params: {
 
     await remove_directory_if_empty({
       dir_path: path.dirname(old_safe_path),
-      workspace_root: params.workspace_root
+      workspace_root: params.old_workspace_root
     })
 
     Logger.info({
@@ -314,22 +315,40 @@ export const apply_file_relocations = async (
   const default_workspace = vscode.workspace.workspaceFolders[0].uri.fsPath
 
   for (const state of original_states) {
-    if (state.new_file_path && state.new_file_path !== state.file_path) {
+    if (
+      state.new_file_path &&
+      (state.new_file_path !== state.file_path ||
+        state.new_workspace_name !== state.workspace_name)
+    ) {
       let workspace_root = default_workspace
       if (state.workspace_name && workspace_map.has(state.workspace_name)) {
         workspace_root = workspace_map.get(state.workspace_name)!
       }
 
+      let new_workspace_root = workspace_root
+      if (
+        state.new_workspace_name &&
+        workspace_map.has(state.new_workspace_name)
+      ) {
+        new_workspace_root = workspace_map.get(state.new_workspace_name)!
+      }
+
       const success = await relocate_file({
         old_path: state.file_path,
         new_path: state.new_file_path,
-        workspace_root
+        old_workspace_root: workspace_root,
+        new_workspace_root: new_workspace_root
       })
 
       if (success) {
         state.file_path_to_restore = state.file_path
+        state.restore_workspace_name = state.workspace_name
         state.file_path = state.new_file_path
+        if (state.new_workspace_name) {
+          state.workspace_name = state.new_workspace_name
+        }
         state.new_file_path = undefined
+        state.new_workspace_name = undefined
       }
     }
   }
@@ -446,16 +465,27 @@ export const undo_files = async (params: {
       } else {
         let file_was_relocated = false
         if (state.file_path_to_restore) {
+          let restore_workspace_root = default_workspace
+          if (
+            state.restore_workspace_name &&
+            workspace_map.has(state.restore_workspace_name)
+          ) {
+            restore_workspace_root = workspace_map.get(
+              state.restore_workspace_name
+            )!
+          }
+
           if (safe_path && (await uri_exists(vscode.Uri.file(safe_path)))) {
             await relocate_file({
               old_path: state.file_path,
               new_path: state.file_path_to_restore,
-              workspace_root
+              old_workspace_root: workspace_root,
+              new_workspace_root: restore_workspace_root
             })
             file_was_relocated = true
           }
           safe_path = create_safe_path(
-            workspace_root,
+            restore_workspace_root,
             state.file_path_to_restore
           )
         }

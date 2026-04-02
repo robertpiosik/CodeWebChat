@@ -9,6 +9,7 @@ export const create_or_update_file_item = (params: {
   results: (FileItem | TextItem | InlineFileItem)[]
   mode?: 'overwrite' | 'append'
   renamed_from?: string
+  renamed_from_workspace?: string
   is_deleted?: boolean
 }) => {
   if (!params.file_name) {
@@ -71,6 +72,10 @@ export const create_or_update_file_item = (params: {
       existing_file.renamed_from = params.renamed_from
     }
 
+    if (params.renamed_from_workspace !== undefined) {
+      existing_file.renamed_from_workspace = params.renamed_from_workspace
+    }
+
     if (params.is_deleted !== undefined) {
       existing_file.is_deleted = params.is_deleted
     }
@@ -81,6 +86,7 @@ export const create_or_update_file_item = (params: {
       content: processed_content,
       workspace_name: params.workspace_name,
       renamed_from: params.renamed_from,
+      renamed_from_workspace: params.renamed_from_workspace,
       is_deleted: params.is_deleted
     }
     params.file_ref_map.set(file_key, new_file)

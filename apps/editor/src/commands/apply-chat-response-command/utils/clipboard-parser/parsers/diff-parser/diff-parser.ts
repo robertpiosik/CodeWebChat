@@ -97,7 +97,7 @@ const process_collected_patch_lines = (params: {
       })
     patch.new_file_path = new_relative
     if (new_workspace && new_workspace !== workspace_name) {
-      patch.workspace_name = new_workspace
+      patch.new_workspace_name = new_workspace
     }
   }
 
@@ -353,7 +353,7 @@ const process_text_for_file_operations = (params: {
         new_info.workspace_name &&
         new_info.workspace_name !== old_info.workspace_name
       ) {
-        patch.workspace_name = new_info.workspace_name
+        patch.new_workspace_name = new_info.workspace_name
       }
       items.push(patch)
     } else {

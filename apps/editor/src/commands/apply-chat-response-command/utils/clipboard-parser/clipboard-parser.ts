@@ -11,6 +11,7 @@ export type FileItem = {
   content: string
   workspace_name?: string
   renamed_from?: string
+  renamed_from_workspace?: string
   is_deleted?: boolean
 }
 
@@ -20,6 +21,7 @@ export type DiffItem = {
   content: string
   workspace_name?: string
   new_file_path?: string
+  new_workspace_name?: string
 }
 
 export type CodeAtCursorItem = {

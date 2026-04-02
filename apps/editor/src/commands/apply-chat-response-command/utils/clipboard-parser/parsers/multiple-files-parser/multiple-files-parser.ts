@@ -30,6 +30,7 @@ export const parse_multiple_files = (params: {
 
   let state = 'TEXT'
   let renamed_from_path: string | undefined = undefined
+  let renamed_from_workspace: string | undefined = undefined
   let current_file_name = ''
   let current_content = ''
   let is_first_content_line = false
@@ -236,13 +237,15 @@ export const parse_multiple_files = (params: {
           results
         })
         current_text_block = ''
-        const { relative_path } = extract_and_set_workspace_path({
-          raw_file_path: renamed_file_match[1],
-          is_single_root_folder_workspace:
-            params.is_single_root_folder_workspace
-        })
+        const { relative_path, workspace_name: old_workspace_name } =
+          extract_and_set_workspace_path({
+            raw_file_path: renamed_file_match[1],
+            is_single_root_folder_workspace:
+              params.is_single_root_folder_workspace
+          })
 
         renamed_from_path = relative_path
+        renamed_from_workspace = old_workspace_name
 
         const {
           relative_path: new_relative_path,
@@ -259,7 +262,8 @@ export const parse_multiple_files = (params: {
           workspace_name: new_workspace_name,
           file_ref_map,
           results,
-          renamed_from: renamed_from_path
+          renamed_from: renamed_from_path,
+          renamed_from_workspace
         })
 
         last_seen_file_path_comment = renamed_file_match[2]
@@ -275,6 +279,7 @@ export const parse_multiple_files = (params: {
         .match(/^###\s+Deleted file:\s*`([^`]+)`$/i)
       if (deleted_file_match && deleted_file_match[1]) {
         renamed_from_path = undefined
+        renamed_from_workspace = undefined
         flush_text_block({
           text_block: current_text_block,
           results
@@ -398,6 +403,7 @@ export const parse_multiple_files = (params: {
           last_seen_file_path_comment = extracted_filename
           if (!line.trim().match(/^###\s+Renamed file:/i)) {
             renamed_from_path = undefined
+            renamed_from_workspace = undefined
           }
 
           last_seen_file_path_was_header = is_header_line
@@ -441,6 +447,7 @@ export const parse_multiple_files = (params: {
             }
             if (is_followed_by_code_block) {
               renamed_from_path = undefined
+              renamed_from_workspace = undefined
               last_seen_file_path_comment = trimmed
               last_seen_file_path_was_header = false
               header_path_already_used = false
@@ -466,10 +473,12 @@ export const parse_multiple_files = (params: {
             file_ref_map,
             results,
             mode: current_block_mode,
-            renamed_from: renamed_from_path
+            renamed_from: renamed_from_path,
+            renamed_from_workspace
           })
 
           renamed_from_path = undefined
+          renamed_from_workspace = undefined
           current_file_name = ''
           current_content = ''
           current_workspace_name = undefined
@@ -500,10 +509,12 @@ export const parse_multiple_files = (params: {
               file_ref_map,
               results,
               mode: current_block_mode,
-              renamed_from: renamed_from_path
+              renamed_from: renamed_from_path,
+              renamed_from_workspace
             })
 
             renamed_from_path = undefined
+            renamed_from_workspace = undefined
             current_file_name = ''
             current_content = ''
             current_workspace_name = undefined
@@ -655,10 +666,12 @@ export const parse_multiple_files = (params: {
           file_ref_map,
           results,
           mode: current_block_mode,
-          renamed_from: renamed_from_path
+          renamed_from: renamed_from_path,
+          renamed_from_workspace
         })
 
         renamed_from_path = undefined
+        renamed_from_workspace = undefined
         if (!current_file_name) {
           results.push({
             type: 'inline-file',
@@ -788,7 +801,8 @@ export const parse_multiple_files = (params: {
                   file_ref_map,
                   results,
                   mode: current_block_mode,
-                  renamed_from: renamed_from_path
+                  renamed_from: renamed_from_path,
+                  renamed_from_workspace
                 })
               }
               current_content = ''
@@ -890,10 +904,12 @@ export const parse_multiple_files = (params: {
       file_ref_map,
       results,
       mode: current_block_mode,
-      renamed_from: renamed_from_path
+      renamed_from: renamed_from_path,
+      renamed_from_workspace
     })
   } else if (state == 'TEXT' && current_text_block.trim()) {
     renamed_from_path = undefined
+    renamed_from_workspace = undefined
     flush_text_block({
       text_block: current_text_block,
       results

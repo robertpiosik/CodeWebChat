@@ -525,7 +525,8 @@ export const setup_workspace_listeners = (params: {
             content: old_original_content,
             file_state: 'new',
             workspace_name: new_workspace_folder.name,
-            file_path_to_restore: old_relative
+            file_path_to_restore: old_relative,
+            restore_workspace_name: old_workspace_folder?.name
           })
 
           // Notify UI
@@ -630,7 +631,8 @@ export const setup_workspace_listeners = (params: {
             content: new_content,
             file_state: 'new',
             workspace_name: new_workspace_folder.name,
-            file_path_to_restore: old_relative
+            file_path_to_restore: old_relative,
+            restore_workspace_name: old_workspace_folder?.name
           })
           params.prepared_files.push(created_prepared, deleted_prepared)
 

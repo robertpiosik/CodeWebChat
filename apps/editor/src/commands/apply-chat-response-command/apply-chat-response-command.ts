@@ -327,7 +327,8 @@ export const apply_chat_response_command = (params: {
                 files_for_history.push({
                   type: 'file',
                   file_path: state.file_path_to_restore,
-                  workspace_name: state.workspace_name,
+                  workspace_name:
+                    state.restore_workspace_name ?? state.workspace_name,
                   file_state: 'deleted',
                   lines_added: 0,
                   lines_removed: deleted_diff_stats.lines_removed,

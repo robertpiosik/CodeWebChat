@@ -111,14 +111,22 @@ export const handle_fast_replace = async (params: {
       if (file.is_deleted) {
         // If the file was also renamed (moved then deleted), we need to ensure the source is deleted too.
         if (file.renamed_from) {
+          let old_workspace_root = default_workspace
+          if (
+            file.renamed_from_workspace &&
+            workspace_map.has(file.renamed_from_workspace)
+          ) {
+            old_workspace_root = workspace_map.get(file.renamed_from_workspace)!
+          }
+
           const source_info = await read_rename_source_file({
             renamed_from: file.renamed_from,
-            workspace_root
+            workspace_root: old_workspace_root
           })
           if (source_info) {
             await cleanup_rename_source({
               source_path: source_info.path,
-              workspace_root
+              workspace_root: old_workspace_root
             })
           }
         }
@@ -161,19 +169,33 @@ export const handle_fast_replace = async (params: {
 
       let rename_source_path: string | undefined
       let rename_source_content: string | undefined
+      let rename_source_workspace_root: string | undefined
 
       if (file.renamed_from) {
+        let old_workspace_root = default_workspace
+        if (
+          file.renamed_from_workspace &&
+          workspace_map.has(file.renamed_from_workspace)
+        ) {
+          old_workspace_root = workspace_map.get(file.renamed_from_workspace)!
+        }
+
         const source_info = await read_rename_source_file({
           renamed_from: file.renamed_from,
-          workspace_root
+          workspace_root: old_workspace_root
         })
         if (source_info) {
           rename_source_path = source_info.path
           rename_source_content = source_info.content
+          rename_source_workspace_root = old_workspace_root
         }
       }
 
-      if (rename_source_path && rename_source_content !== undefined) {
+      if (
+        rename_source_path &&
+        rename_source_content !== undefined &&
+        rename_source_workspace_root
+      ) {
         try {
           let new_content = file.content
           if (new_content == '') {
@@ -182,7 +204,7 @@ export const handle_fast_replace = async (params: {
 
           await cleanup_rename_source({
             source_path: rename_source_path,
-            workspace_root
+            workspace_root: rename_source_workspace_root
           })
 
           const directory = path.dirname(safe_path)
@@ -199,6 +221,7 @@ export const handle_fast_replace = async (params: {
             content: rename_source_content,
             workspace_name: file.workspace_name,
             file_path_to_restore: file.renamed_from,
+            restore_workspace_name: file.renamed_from_workspace,
             ai_content: file.content,
             proposed_content: new_content
           })

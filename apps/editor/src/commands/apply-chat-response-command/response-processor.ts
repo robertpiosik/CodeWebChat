@@ -268,18 +268,28 @@ export const process_chat_response = async (params: {
     const patches = params.clipboard_items.filter(
       (item): item is DiffItem => item.type == 'diff'
     )
-    const rename_map = new Map<string, string>()
+    const rename_map = new Map<
+      string,
+      { new_path: string; new_workspace?: string }
+    >()
     patches.forEach((patch) => {
       if (patch.new_file_path && patch.file_path) {
-        rename_map.set(patch.file_path, patch.new_file_path)
+        const key = `${patch.workspace_name || ''}:${patch.file_path}`
+        rename_map.set(key, {
+          new_path: patch.new_file_path,
+          new_workspace: patch.new_workspace_name
+        })
       }
     })
 
     const set_new_paths_in_original_states = (states: OriginalFileState[]) => {
       if (!rename_map.size) return
       states.forEach((state) => {
-        if (rename_map.has(state.file_path)) {
-          state.new_file_path = rename_map.get(state.file_path)!
+        const key = `${state.workspace_name || ''}:${state.file_path}`
+        if (rename_map.has(key)) {
+          const rename_info = rename_map.get(key)!
+          state.new_file_path = rename_info.new_path
+          state.new_workspace_name = rename_info.new_workspace
         }
       })
     }

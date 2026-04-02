@@ -108,8 +108,18 @@ export const prepare_files_from_original_states = async (params: {
     })
 
     if (state.file_path_to_restore) {
+      let restore_workspace_root = params.default_workspace
+      if (
+        state.restore_workspace_name &&
+        params.workspace_map.has(state.restore_workspace_name)
+      ) {
+        restore_workspace_root = params.workspace_map.get(
+          state.restore_workspace_name
+        )!
+      }
+
       const restored_sanitized_file_path = create_safe_path(
-        workspace_root,
+        restore_workspace_root,
         state.file_path_to_restore
       )
       if (!restored_sanitized_file_path) {
@@ -137,7 +147,7 @@ export const prepare_files_from_original_states = async (params: {
         type: 'file',
         file_path: state.file_path_to_restore,
         content: restored_current_content,
-        workspace_name: state.workspace_name,
+        workspace_name: state.restore_workspace_name ?? state.workspace_name,
         file_state: 'deleted',
         lines_added: restored_diff_stats.lines_added,
         lines_removed: restored_diff_stats.lines_removed,
