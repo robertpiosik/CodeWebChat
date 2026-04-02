@@ -137,6 +137,19 @@ export class OpenEditorsProvider
     return this._workspace_provider.get_workspace_root_for_file(file_path)
   }
 
+  private _is_file_ignored(file_path: string): boolean {
+    if (this._workspace_provider.is_ignored_by_patterns(file_path)) {
+      return true
+    }
+    const workspace_root = this._get_containing_workspace_root(file_path)
+    if (workspace_root) {
+      return this._workspace_provider.is_excluded(
+        path.relative(workspace_root, file_path)
+      )
+    }
+    return false
+  }
+
   private _uncheck_ignored_files() {
     const checked_files = this.get_checked_files()
 
@@ -232,9 +245,12 @@ export class OpenEditorsProvider
   }
   getTreeItem(element: FileItem): vscode.TreeItem {
     const key = element.resourceUri.fsPath
-    const checkbox_state = this._is_no_context_mode
-      ? undefined
-      : (this._checked_items.get(key) ?? vscode.TreeItemCheckboxState.Unchecked)
+    const is_ignored = this._is_file_ignored(key)
+    const checkbox_state =
+      this._is_no_context_mode || is_ignored
+        ? undefined
+        : (this._checked_items.get(key) ??
+          vscode.TreeItemCheckboxState.Unchecked)
 
     element.checkboxState = checkbox_state
 
@@ -245,7 +261,7 @@ export class OpenEditorsProvider
     let final_description = element.description || ''
 
     const prefix_parts: string[] = []
-    if (token_count !== undefined) {
+    if (token_count !== undefined && !is_ignored) {
       prefix_parts.push(display_token_count(token_count))
     }
     if (element.range) {
@@ -308,10 +324,7 @@ export class OpenEditorsProvider
       }
 
       const file_name = path.basename(file_path)
-
-      if (this._workspace_provider.is_ignored_by_patterns(file_path)) {
-        continue
-      }
+      const is_ignored = this._is_file_ignored(file_path)
 
       let checkbox_state = this._checked_items.get(file_path)
 
@@ -319,7 +332,7 @@ export class OpenEditorsProvider
         const is_checked_in_workspace =
           this._is_file_checked_in_workspace(file_path)
 
-        if (is_checked_in_workspace) {
+        if (is_checked_in_workspace && !is_ignored) {
           checkbox_state = vscode.TreeItemCheckboxState.Checked
         } else {
           checkbox_state = vscode.TreeItemCheckboxState.Unchecked
@@ -343,20 +356,21 @@ export class OpenEditorsProvider
       }
 
       const range = this._workspace_provider.get_range(file_path)
-      const tokens =
-        this._workspace_provider.get_cached_token_count(file_path) ||
-        (await this._workspace_provider.calculate_file_tokens(file_path))
+      const tokens = is_ignored
+        ? undefined
+        : this._workspace_provider.get_cached_token_count(file_path) ||
+          (await this._workspace_provider.calculate_file_tokens(file_path))
 
       const item = new FileItem(
         file_name,
         file_uri,
         vscode.TreeItemCollapsibleState.None,
         false,
-        this._is_no_context_mode ? undefined : checkbox_state,
+        this._is_no_context_mode || is_ignored ? undefined : checkbox_state,
         false,
         true,
-        tokens.total,
-        tokens.shrink,
+        tokens?.total,
+        tokens?.shrink,
         undefined,
         undefined,
         description,
@@ -428,8 +442,7 @@ export class OpenEditorsProvider
       const file_path = uri.fsPath
 
       if (!this._is_file_in_any_workspace(file_path)) continue
-
-      if (this._workspace_provider.is_ignored_by_patterns(file_path)) continue
+      if (this._is_file_ignored(file_path)) continue
 
       this._checked_items.set(file_path, vscode.TreeItemCheckboxState.Checked)
 
@@ -458,8 +471,7 @@ export class OpenEditorsProvider
 
     for (const file_path of file_paths) {
       if (!fs.existsSync(file_path)) continue
-
-      if (this._workspace_provider.is_ignored_by_patterns(file_path)) continue
+      if (this._is_file_ignored(file_path)) continue
 
       this._checked_items.set(file_path, vscode.TreeItemCheckboxState.Checked)
 
