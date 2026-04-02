@@ -704,22 +704,22 @@
         },
         {
           "command": "codeWebChat.newFile",
-          "when": "view == codeWebChatViewWorkspace && viewItem == directory",
+          "when": "view == codeWebChatViewWorkspace && (viewItem == directory || viewItem == workspaceRoot)",
           "group": "1_creation@1"
         },
         {
           "command": "codeWebChat.newFolder",
-          "when": "view == codeWebChatViewWorkspace && viewItem == directory",
+          "when": "view == codeWebChatViewWorkspace && (viewItem == directory || viewItem == workspaceRoot)",
           "group": "1_creation@2"
         },
         {
           "command": "codeWebChat.rename",
-          "when": "view == codeWebChatViewWorkspace",
+          "when": "view == codeWebChatViewWorkspace && viewItem != workspaceRoot",
           "group": "1_creation@3"
         },
         {
           "command": "codeWebChat.delete",
-          "when": "view == codeWebChatViewWorkspace",
+          "when": "view == codeWebChatViewWorkspace && viewItem != workspaceRoot",
           "group": "1_creation@4"
         },
         {
