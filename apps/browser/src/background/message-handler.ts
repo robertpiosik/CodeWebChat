@@ -104,6 +104,7 @@ const process_next_chat = async () => {
   }
 
   let tab_reused = false
+
   if (
     last_opened_tab_id !== undefined &&
     current_chat_message.reuse_last_tab &&
@@ -117,8 +118,6 @@ const process_next_chat = async () => {
           active: true
         })
         tab_reused = true
-      } else {
-        last_opened_tab_id = undefined
       }
     } catch {
       last_opened_tab_id = undefined
