@@ -18,6 +18,40 @@ export const apply_diff = (params: {
   use_strict_whitespace?: boolean
 }): string => {
   const original_code_normalized = params.original_code.replace(/\r\n/g, '\n')
+
+  if (original_code_normalized.trim() == '') {
+    const patch_normalized = params.diff_patch.replace(/\r\n/g, '\n')
+    const patch_lines = patch_normalized.split('\n')
+    let has_additions = false
+    let in_hunk = false
+    const result_lines: string[] = []
+
+    for (const line of patch_lines) {
+      if (line.startsWith('@@')) {
+        in_hunk = true
+        continue
+      }
+      if (!in_hunk) continue
+
+      if (line.startsWith('+')) {
+        result_lines.push(line.substring(1))
+        has_additions = true
+      } else if (line.startsWith(' ')) {
+        result_lines.push(line.substring(1))
+      } else if (line == '') {
+        result_lines.push('')
+      }
+    }
+
+    if (has_additions) {
+      let final_string = result_lines.join('\n')
+      if (final_string.length > 0 && !final_string.endsWith('\n')) {
+        final_string += '\n'
+      }
+      return final_string
+    }
+  }
+
   const original_code_lines = original_code_normalized.split(/^/m)
   const original_code_lines_normalized: { key: number; value: string }[] = []
 
