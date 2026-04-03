@@ -184,11 +184,14 @@ CWC includes all the essential API tools. Bring Your Own Key (BYOK) for a model 
 - `Search Files for Context` - Search and add files containing specific keywords to the context.
 - `Copy Context` - Copy XML-formatted checked files from the Workspace view to the clipboard.
 - `Copy Context of Open Editors` - Copy XML-formatted checked files from the Open Editors view to the clipboard.
-- `Copy Edit Format Instructions` - Copy XML-formatted edit format instructions to the clipboard.
 
 ### Commit messages
 
 - `Commit Changes` - Generate commit message and commit.
+
+## Misc
+
+- `Copy Edit Format Instructions` - Copy XML-formatted edit format instructions to the clipboard.
 
 ## Contributing
 
