@@ -1,0 +1,2 @@
+# TTS
+GEMINI_API_KEY=

@@ -233,21 +233,21 @@ export const apply_diff = (params: {
 
     let max_trim_top = 0
     for (let k = 0; k < safe_trim_indices.length; k++) {
-      if (safe_trim_indices[k] === k) {
+      if (safe_trim_indices[k] == k) {
         max_trim_top = k + 1
       } else {
         break
       }
     }
 
-    if (max_trim_top > 0 && safe_trim_indices.length === max_trim_top) {
+    if (max_trim_top > 0 && safe_trim_indices.length == max_trim_top) {
       if (
         max_trim_top < block.replace_lines.length &&
         block.replace_lines[max_trim_top].search_index === null
       ) {
         let has_deletion = true
         for (let r = max_trim_top + 1; r < block.replace_lines.length; r++) {
-          if (block.replace_lines[r].search_index === max_trim_top) {
+          if (block.replace_lines[r].search_index == max_trim_top) {
             has_deletion = false
             break
           }
@@ -268,7 +268,7 @@ export const apply_diff = (params: {
 
     for (let trim_cnt = 0; trim_cnt <= max_trim_top; trim_cnt++) {
       const current_search_lines = block.search_lines.slice(trim_cnt)
-      if (current_search_lines.length === 0) continue
+      if (current_search_lines.length == 0) continue
 
       for (
         let j = previous_found_index;
@@ -342,7 +342,11 @@ export const apply_diff = (params: {
       const has_additions = block.replace_lines.some(
         (l) => l.search_index === null
       )
-      if (has_additions && block.after_search_lines.length > 0) {
+      const is_noop =
+        block.search_lines.length == block.after_search_lines.length &&
+        block.search_lines.every((v, i) => v == block.after_search_lines[i])
+
+      if (has_additions && block.after_search_lines.length > 0 && !is_noop) {
         const check_start = Math.max(
           0,
           matched_info.start_index - block.after_search_lines.length
@@ -364,12 +368,12 @@ export const apply_diff = (params: {
             const a_val = block.after_search_lines[after_ptr]
             const o_val = original_code_lines_normalized[orig_ptr].value
 
-            if (a_val === o_val) {
+            if (a_val == o_val) {
               after_ptr++
               orig_ptr++
-            } else if (o_val === '~nnn') {
+            } else if (o_val == '~nnn') {
               orig_ptr++
-            } else if (a_val === '~nnn') {
+            } else if (a_val == '~nnn') {
               after_ptr++
             } else {
               break
@@ -423,7 +427,14 @@ export const apply_diff = (params: {
       block.search_to_original_map.values()
     )
 
-    for (const line of block.replace_lines) {
+    const search_count =
+      block.actual_original_line_count || block.search_lines.length
+    const end_original_idx = start_index + search_count - 1
+
+    for (let i = 0; i < block.replace_lines.length; i++) {
+      const line = block.replace_lines[i]
+      const is_last_replace_line = i === block.replace_lines.length - 1
+
       if (line.search_index != null) {
         const original_idx = block.search_to_original_map.get(line.search_index)
         if (original_idx != undefined) {
@@ -438,7 +449,8 @@ export const apply_diff = (params: {
           let content = original_code_lines[original_idx]
           if (
             !content.endsWith('\n') &&
-            original_idx < original_code_lines.length - 1
+            (original_idx < original_code_lines.length - 1 ||
+              !is_last_replace_line)
           ) {
             content += '\n'
           }
@@ -446,13 +458,19 @@ export const apply_diff = (params: {
           last_original_idx = original_idx
         }
       } else {
-        replacement_content.push(line.content)
+        let content = line.content
+        if (
+          is_last_replace_line &&
+          original_code_lines.length > 0 &&
+          end_original_idx === original_code_lines.length - 1 &&
+          !original_code_lines[original_code_lines.length - 1].endsWith('\n')
+        ) {
+          content = content.replace(/\n$/, '')
+        }
+        replacement_content.push(content)
       }
     }
 
-    const search_count =
-      block.actual_original_line_count || block.search_lines.length
-    const end_original_idx = start_index + search_count - 1
     for (let skip = last_original_idx + 1; skip <= end_original_idx; skip++) {
       if (
         original_code_lines_normalized[skip].value == '~nnn' &&
