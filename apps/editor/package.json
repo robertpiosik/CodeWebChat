@@ -311,6 +311,12 @@
         "category": "Code Web Chat"
       },
       {
+        "command": "codeWebChat.copyEditFormatInstructions",
+        "title": "Copy Edit Format Instructions",
+        "icon": "$(copy)",
+        "category": "Code Web Chat"
+      },
+      {
         "command": "codeWebChat.setRanges",
         "title": "%codeWebChat.setRanges.title%",
         "category": "Code Web Chat"
@@ -511,6 +517,9 @@
         {
           "command": "codeWebChat.copyCommitMessagePrompt",
           "when": "false"
+        },
+        {
+          "command": "codeWebChat.copyEditFormatInstructions"
         },
         {
           "command": "codeWebChat.searchFilesForContextFromDirectory",
