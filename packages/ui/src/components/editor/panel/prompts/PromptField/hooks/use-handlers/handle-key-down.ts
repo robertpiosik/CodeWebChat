@@ -55,6 +55,10 @@ export const create_handle_key_down = (
   }
 
   const handle_space_key = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!props.voice_input_push_to_talk) {
+      return false
+    }
+
     if (e.repeat) {
       e.preventDefault()
       return true

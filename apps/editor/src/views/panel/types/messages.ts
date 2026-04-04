@@ -561,6 +561,10 @@ export interface InsertSymbolAtCursorMessage extends BaseMessage {
   target: 'preset-prefix' | 'preset-suffix'
 }
 
+export interface GetVoiceInputPushToTalkMessage extends BaseMessage {
+  command: 'GET_VOICE_INPUT_PUSH_TO_TALK'
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -654,6 +658,7 @@ export type FrontendMessage =
   | SaveFindRelevantFilesShrinkSourceCodeMessage
   | GetSetupProgressMessage
   | RequestReturnHomeMessage
+  | GetVoiceInputPushToTalkMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -917,6 +922,11 @@ export interface ReturnHomeMessage extends BaseMessage {
   command: 'RETURN_HOME'
 }
 
+export interface VoiceInputPushToTalkMessage extends BaseMessage {
+  command: 'VOICE_INPUT_PUSH_TO_TALK'
+  enabled: boolean
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | FocusPromptFieldMessage
@@ -967,3 +977,4 @@ export type BackendMessage =
   | SetupProgressMessage
   | InsertSymbolAtCursorMessage
   | ReturnHomeMessage
+  | VoiceInputPushToTalkMessage

@@ -97,6 +97,15 @@ export interface UpdateVoiceInputInstructionsMessage {
   instructions: string
 }
 
+export interface GetVoiceInputPushToTalkMessage {
+  command: 'GET_VOICE_INPUT_PUSH_TO_TALK'
+}
+
+export interface UpdateVoiceInputPushToTalkMessage {
+  command: 'UPDATE_VOICE_INPUT_PUSH_TO_TALK'
+  enabled: boolean
+}
+
 export interface GetEditContextSystemInstructionsMessage {
   command: 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS'
 }
@@ -265,6 +274,8 @@ export type FrontendMessage =
   | UpdateIncludePromptsInCommitMessagesMessage
   | GetVoiceInputInstructionsMessage
   | UpdateVoiceInputInstructionsMessage
+  | GetVoiceInputPushToTalkMessage
+  | UpdateVoiceInputPushToTalkMessage
   | GetEditContextSystemInstructionsMessage
   | UpdateEditContextSystemInstructionsMessage
   | GetEditFormatInstructionsMessage
@@ -324,6 +335,11 @@ export interface IncludePromptsInCommitMessagesMessage {
 export interface VoiceInputInstructionsMessage {
   command: 'VOICE_INPUT_INSTRUCTIONS'
   instructions: string
+}
+
+export interface VoiceInputPushToTalkMessage {
+  command: 'VOICE_INPUT_PUSH_TO_TALK'
+  enabled: boolean
 }
 
 export interface EditContextSystemInstructionsMessage {
@@ -402,6 +418,7 @@ export type BackendMessage =
   | CommitMessageInstructionsMessage
   | IncludePromptsInCommitMessagesMessage
   | VoiceInputInstructionsMessage
+  | VoiceInputPushToTalkMessage
   | EditContextSystemInstructionsMessage
   | EditFormatInstructionsMessage
   | ContextSizeWarningThresholdMessage

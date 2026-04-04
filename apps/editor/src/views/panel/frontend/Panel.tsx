@@ -82,7 +82,8 @@ export const Panel = () => {
     is_setup_complete,
     handle_tab_change,
     handle_new_tab,
-    handle_tab_delete
+    handle_tab_delete,
+    voice_input_push_to_talk
   } = use_panel(vscode)
 
   const {
@@ -432,6 +433,7 @@ export const Panel = () => {
                 on_tab_change={handle_tab_change}
                 on_new_tab={handle_new_tab}
                 on_tab_delete={handle_tab_delete}
+                voice_input_push_to_talk={voice_input_push_to_talk}
               />
             </div>
             <div

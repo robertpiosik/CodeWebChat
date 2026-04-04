@@ -98,6 +98,7 @@ type Props = {
   defaults: Record<ToolType, string | null>
   edit_context_system_instructions: string
   voice_input_instructions: string
+  voice_input_push_to_talk: boolean
   commit_message_instructions: string
   include_prompts_in_commit_messages: boolean
   context_size_warning_threshold: number
@@ -124,6 +125,7 @@ type Props = {
   ) => void
   on_edit_context_system_instructions_change: (instructions: string) => void
   on_voice_input_instructions_change: (instructions: string) => void
+  on_voice_input_push_to_talk_change: (enabled: boolean) => void
   on_automatic_checkpoints_toggle: (disabled: boolean) => void
   on_checkpoint_lifespan_change: (hours: number | undefined) => void
   on_gemini_user_id_change: (id: number | null) => void
@@ -828,6 +830,16 @@ export const Home: React.FC<Props> = (props) => {
                       )
                     }
                   }}
+                />
+              }
+            />
+            <UiItem
+              title={t('voice-input.push-to-talk.title')}
+              description={t('voice-input.push-to-talk.description')}
+              slot_right={
+                <UiToggler
+                  is_on={props.voice_input_push_to_talk}
+                  on_toggle={props.on_voice_input_push_to_talk_change}
                 />
               }
             />

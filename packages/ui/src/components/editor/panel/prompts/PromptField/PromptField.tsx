@@ -77,6 +77,7 @@ export type PromptFieldProps = {
   on_tab_delete: (index: number) => void
   missing_configuration: boolean
   missing_preset: boolean
+  voice_input_push_to_talk?: boolean
 }
 
 export const PromptField: React.FC<PromptFieldProps> = (props) => {

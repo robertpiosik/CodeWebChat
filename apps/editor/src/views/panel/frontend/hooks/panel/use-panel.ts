@@ -54,6 +54,8 @@ export const use_panel = (vscode: any) => {
     find_relevant_files_shrink_source_code,
     set_find_relevant_files_shrink_source_code
   ] = useState<boolean>(false)
+  const [voice_input_push_to_talk, set_voice_input_push_to_talk] =
+    useState(false)
 
   const handle_task_forward = (text: string) => {
     handle_instructions_change(text, 'edit-context')
@@ -152,6 +154,8 @@ export const use_panel = (vscode: any) => {
         set_find_relevant_files_shrink_source_code(message.shrink_source_code)
       } else if (message.command == 'RETURN_HOME') {
         set_active_view('home')
+      } else if (message.command == 'VOICE_INPUT_PUSH_TO_TALK') {
+        set_voice_input_push_to_talk(message.enabled)
       }
     }
     window.addEventListener('message', handle_message)
@@ -168,7 +172,8 @@ export const use_panel = (vscode: any) => {
       { command: 'GET_CHECKPOINTS' },
       { command: 'REQUEST_CAN_UNDO' },
       { command: 'GET_SETUP_PROGRESS' },
-      { command: 'GET_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE' }
+      { command: 'GET_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE' },
+      { command: 'GET_VOICE_INPUT_PUSH_TO_TALK' }
     ]
     initial_messages.forEach((message) => post_message(vscode, message))
 
@@ -296,6 +301,7 @@ export const use_panel = (vscode: any) => {
     handle_find_relevant_files_shrink_source_code_change,
     handle_tab_change,
     handle_new_tab,
-    handle_tab_delete
+    handle_tab_delete,
+    voice_input_push_to_talk
   }
 }

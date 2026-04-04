@@ -80,6 +80,7 @@ type Props = {
   on_new_tab: () => void
   on_tab_delete: (index: number) => void
   missing_preset?: boolean
+  voice_input_push_to_talk: boolean
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -855,6 +856,7 @@ export const Main: React.FC<Props> = (props) => {
       on_tab_change={props.on_tab_change}
       on_new_tab={props.on_new_tab}
       on_tab_delete={props.on_tab_delete}
+      voice_input_push_to_talk={props.voice_input_push_to_talk}
     />
   )
 }

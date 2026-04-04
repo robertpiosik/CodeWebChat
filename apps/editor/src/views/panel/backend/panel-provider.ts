@@ -328,6 +328,15 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     })
   }
 
+  private _send_voice_input_push_to_talk() {
+    const config = vscode.workspace.getConfiguration('codeWebChat')
+    const enabled = config.get<boolean>('voiceInputPushToTalk', false)
+    this.send_message({
+      command: 'VOICE_INPUT_PUSH_TO_TALK',
+      enabled
+    })
+  }
+
   public async send_setup_progress() {
     const providers_manager = new ModelProvidersManager(this.context)
     const [providers, configs] = await Promise.all([
@@ -491,6 +500,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
         if (event.affectsConfiguration('codeWebChat.sendWithShiftEnter')) {
           this._send_send_with_shift_enter()
+        }
+
+        if (event.affectsConfiguration('codeWebChat.voiceInputPushToTalk')) {
+          this._send_voice_input_push_to_talk()
         }
       }
     )
@@ -1002,6 +1015,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               this,
               message.shrink_source_code
             )
+          } else if (message.command == 'GET_VOICE_INPUT_PUSH_TO_TALK') {
+            this._send_voice_input_push_to_talk()
           }
         } catch (error: any) {
           Logger.error({

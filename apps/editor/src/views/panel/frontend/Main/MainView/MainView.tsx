@@ -125,6 +125,7 @@ type Props = {
   on_tab_change: (index: number) => void
   on_new_tab: () => void
   on_tab_delete: (index: number) => void
+  voice_input_push_to_talk: boolean
 }
 
 export const MainView: React.FC<Props> = (props) => {
@@ -319,6 +320,7 @@ export const MainView: React.FC<Props> = (props) => {
               props.mode == MODE.API && props.configurations.length == 0
             }
             missing_preset={props.mode == MODE.WEB && props.presets.length == 0}
+            voice_input_push_to_talk={props.voice_input_push_to_talk}
           />
           <UiContextUtilisation
             current_context_size={props.token_count}

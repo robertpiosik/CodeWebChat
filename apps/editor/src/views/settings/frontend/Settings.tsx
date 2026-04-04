@@ -29,6 +29,7 @@ export const Settings = () => {
       settings_hook.defaults !== undefined &&
       settings_hook.edit_context_system_instructions !== undefined &&
       settings_hook.voice_input_instructions !== undefined &&
+      settings_hook.voice_input_push_to_talk !== undefined &&
       settings_hook.commit_message_instructions !== undefined &&
       settings_hook.include_prompts_in_commit_messages !== undefined &&
       settings_hook.context_size_warning_threshold !== undefined &&
@@ -75,6 +76,7 @@ export const Settings = () => {
         settings_hook.include_prompts_in_commit_messages!
       }
       voice_input_instructions={settings_hook.voice_input_instructions!}
+      voice_input_push_to_talk={settings_hook.voice_input_push_to_talk!}
       commit_message_instructions={settings_hook.commit_message_instructions!}
       edit_format_instructions={settings_hook.edit_format_instructions!}
       are_automatic_checkpoints_disabled={
@@ -100,6 +102,9 @@ export const Settings = () => {
       }
       on_voice_input_instructions_change={
         settings_hook.handle_voice_input_instructions_change
+      }
+      on_voice_input_push_to_talk_change={
+        settings_hook.handle_voice_input_push_to_talk_change
       }
       on_commit_instructions_change={
         settings_hook.handle_commit_instructions_change

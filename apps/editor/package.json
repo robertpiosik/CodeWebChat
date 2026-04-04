@@ -809,6 +809,10 @@
           "type": "string",
           "scope": "resource"
         },
+        "codeWebChat.voiceInputPushToTalk": {
+          "type": "boolean",
+          "scope": "resource"
+        },
         "codeWebChat.extendedCacheDurationForAnthropic": {
           "type": "boolean",
           "scope": "resource"

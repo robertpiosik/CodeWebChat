@@ -88,5 +88,41 @@ export const voice_input = {
     cs: 'Instrukce pro model ke zpracování hlasového vstupu.',
     hu: 'Utasítások a modellnek a hangbemenet feldolgozásához.',
     bg: 'Инструкции към модела за гласово въвеждане.'
+  },
+  'voice-input.push-to-talk.title': {
+    en: 'Push-To-Talk',
+    pl: 'Naciśnij i mów',
+    'zh-cn': '一键通',
+    ja: 'プッシュトゥトーク',
+    'zh-tw': '一鍵通',
+    de: 'Push-To-Talk',
+    es: 'Pulsar para hablar',
+    fr: 'Appuyer pour parler',
+    'pt-br': 'Aperte para Falar',
+    ru: 'Нажми и говори',
+    ko: '눌러서 말하기',
+    it: 'Premi per parlare',
+    tr: 'Bas Konuş',
+    cs: 'Stiskni a mluv',
+    hu: 'Gombnyomásos beszéd',
+    bg: 'Натисни за говорене'
+  },
+  'voice-input.push-to-talk.description': {
+    en: 'Hold spacebar to talk.',
+    pl: 'Przytrzymaj spację, aby mówić.',
+    'zh-cn': '按住空格键说话。',
+    ja: 'スペースキーを押し続けて話します。',
+    'zh-tw': '按住空白鍵說話。',
+    de: 'Halten Sie die Leertaste gedrückt, um zu sprechen.',
+    es: 'Mantén presionada la barra espaciadora para hablar.',
+    fr: "Maintenez la barre d'espace pour parler.",
+    'pt-br': 'Segure a barra de espaço para falar.',
+    ru: 'Удерживайте пробел, чтобы говорить.',
+    ko: '스페이스바를 길게 눌러 말하세요.',
+    it: 'Tieni premuta la barra spaziatrice per parlare.',
+    tr: 'Konuşmak için boşluk tuşunu basılı tutun.',
+    cs: 'Podržením mezerníku můžete mluvit.',
+    hu: 'Beszédhez tartsa lenyomva a szóközt.',
+    bg: 'Задръжте интервал, за да говорите.'
   }
 } as const
