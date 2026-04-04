@@ -252,15 +252,6 @@ export const context_initialization = async (
             const file_uri = vscode.Uri.file(file_path)
             const content_uint8_array =
               await vscode.workspace.fs.readFile(file_uri)
-            let content = new TextDecoder().decode(content_uint8_array)
-
-            const range = workspace_provider.get_range(file_path)
-            if (range) {
-              content = workspace_provider.apply_range_to_content(
-                content,
-                range
-              )
-            }
 
             let display_path: string
             const workspace_folder =
@@ -274,6 +265,24 @@ export const context_initialization = async (
               display_path = `${workspace_folder.name}:${relative_path}`
             } else {
               display_path = vscode.workspace.asRelativePath(file_path)
+            }
+
+            if (content_uint8_array.includes(0)) {
+              context_text += `<file path="${display_path.replace(
+                /\\/g,
+                '/'
+              )}">\nBinary file\n</file>\n`
+              continue
+            }
+
+            let content = new TextDecoder().decode(content_uint8_array)
+
+            const range = workspace_provider.get_range(file_path)
+            if (range) {
+              content = workspace_provider.apply_range_to_content(
+                content,
+                range
+              )
             }
 
             context_text += `<file path="${display_path.replace(

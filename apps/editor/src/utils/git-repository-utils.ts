@@ -128,11 +128,15 @@ export const prepare_staged_changes = async (
               // UNTRACKED
               status = 'created'
               const content = await vscode.workspace.fs.readFile(change.uri)
-              full_content = Buffer.from(content).toString('utf8')
-              const lines = full_content.split('\n')
-              final_diff_content =
-                `@@ -0,0 +1,${lines.length} @@\n` +
-                lines.map((l: string) => '+' + l).join('\n')
+              if (content.includes(0)) {
+                final_diff_content = 'Binary file added'
+              } else {
+                full_content = Buffer.from(content).toString('utf8')
+                const lines = full_content.split('\n')
+                final_diff_content =
+                  `@@ -0,0 +1,${lines.length} @@\n` +
+                  lines.map((l: string) => '+' + l).join('\n')
+              }
             } else {
               const raw_diff = execSync(`git diff -- "${change.uri.fsPath}"`, {
                 cwd: repository.rootUri.fsPath
@@ -152,17 +156,30 @@ export const prepare_staged_changes = async (
                   status = 'created'
                 }
 
-                const hunk_start_index = raw_diff.indexOf('\n@@ ')
-                if (hunk_start_index !== -1) {
-                  final_diff_content = raw_diff.substring(hunk_start_index + 1)
-                } else if (raw_diff.startsWith('@@ ')) {
-                  final_diff_content = raw_diff
-                }
+                if (
+                  raw_diff.includes('\nBinary files ') ||
+                  raw_diff.startsWith('Binary files ')
+                ) {
+                  final_diff_content = 'Binary file modified'
+                } else {
+                  const hunk_start_index = raw_diff.indexOf('\n@@ ')
+                  if (hunk_start_index !== -1) {
+                    final_diff_content = raw_diff.substring(
+                      hunk_start_index + 1
+                    )
+                  } else if (raw_diff.startsWith('@@ ')) {
+                    final_diff_content = raw_diff
+                  }
 
-                try {
-                  const content = await vscode.workspace.fs.readFile(change.uri)
-                  full_content = Buffer.from(content).toString('utf8')
-                } catch (e) {}
+                  try {
+                    const content = await vscode.workspace.fs.readFile(
+                      change.uri
+                    )
+                    if (!content.includes(0)) {
+                      full_content = Buffer.from(content).toString('utf8')
+                    }
+                  } catch (e) {}
+                }
               }
             }
           } catch (e) {}

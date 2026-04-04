@@ -31,6 +31,7 @@ export const build_commit_message_prompt = async (
     let final_diff_content = full_file_diff
     let file_path: string | undefined
     let is_deleted = false
+    const is_binary = lines.some((l) => l.startsWith('Binary files '))
 
     if (new_path && new_path != '/dev/null') {
       file_path = new_path
@@ -75,11 +76,19 @@ export const build_commit_message_prompt = async (
         }
       }
 
-      const hunk_start_index = final_diff_content.indexOf('\n@@ ')
-      if (hunk_start_index != -1) {
-        final_diff_content = final_diff_content.substring(hunk_start_index + 1)
-      } else if (!final_diff_content.startsWith('@@ ')) {
-        final_diff_content = ''
+      if (is_binary) {
+        if (status == 'created') final_diff_content = 'Binary file created'
+        else if (status == 'deleted') final_diff_content = 'Binary file deleted'
+        else final_diff_content = 'Binary file modified'
+      } else {
+        const hunk_start_index = final_diff_content.indexOf('\n@@ ')
+        if (hunk_start_index != -1) {
+          final_diff_content = final_diff_content.substring(
+            hunk_start_index + 1
+          )
+        } else if (!final_diff_content.startsWith('@@ ')) {
+          final_diff_content = ''
+        }
       }
 
       changes_content += `<file path="${file_path}" status="${status}"`
@@ -89,7 +98,7 @@ export const build_commit_message_prompt = async (
       changes_content += '>\n'
       changes_content += `<![CDATA[\n${final_diff_content.trimEnd()}\n]]>\n`
 
-      if (!is_deleted && file_path) {
+      if (!is_deleted && file_path && !is_binary) {
         try {
           let full_content = ''
           try {
@@ -97,9 +106,11 @@ export const build_commit_message_prompt = async (
           } catch (e) {
             const uri = vscode.Uri.joinPath(repository.rootUri, file_path)
             const content = await vscode.workspace.fs.readFile(uri)
-            full_content = Buffer.from(content).toString('utf8')
+            if (!content.includes(0)) {
+              full_content = Buffer.from(content).toString('utf8')
+            }
           }
-          if (full_content) {
+          if (full_content && !full_content.includes('\0')) {
             const full_content_tokens = Math.ceil(full_content.length / 4)
             if (full_content_tokens <= MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE) {
               changes_content += `<![CDATA[\n${full_content.trimEnd()}\n]]>\n`
