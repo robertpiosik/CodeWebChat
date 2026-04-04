@@ -124,7 +124,15 @@ export const select_imported_files_command = (
               workspace_provider.get_workspace_root_for_file(file_path)!
             const relative_path = path.relative(workspace_root, file_path)
             const dir_name = path.dirname(relative_path)
-            const display_dir = dir_name == '.' ? '' : dir_name
+            let display_dir = dir_name == '.' ? '' : dir_name
+
+            if (workspace_provider.get_workspace_roots().length > 1) {
+              const workspace_name =
+                workspace_provider.get_workspace_name(workspace_root)
+              display_dir = display_dir
+                ? `${workspace_name}/${display_dir}`
+                : workspace_name
+            }
 
             const token_count =
               await workspace_provider.calculate_file_tokens(file_path)

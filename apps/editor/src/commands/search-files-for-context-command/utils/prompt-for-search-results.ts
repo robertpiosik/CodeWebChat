@@ -32,7 +32,18 @@ export const prompt_for_search_results = async (params: {
         : file_path
 
       const dir_name = path.dirname(relative_path)
-      const display_dir = dir_name === '.' ? '' : dir_name
+      let display_dir = dir_name == '.' ? '' : dir_name
+
+      if (
+        workspace_root &&
+        params.workspace_provider.get_workspace_roots().length > 1
+      ) {
+        const workspace_name =
+          params.workspace_provider.get_workspace_name(workspace_root)
+        display_dir = display_dir
+          ? `${workspace_name}/${display_dir}`
+          : workspace_name
+      }
 
       const token_count =
         await params.workspace_provider.calculate_file_tokens(file_path)
