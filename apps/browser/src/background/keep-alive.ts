@@ -1,4 +1,5 @@
 import browser from 'webextension-polyfill'
+import { check_and_recover_connection } from './websocket'
 
 export const setup_keep_alive = () => {
   if (!browser.browserAction) {
@@ -16,6 +17,7 @@ export const setup_keep_alive = () => {
     chrome.runtime.onInstalled.addListener(create_keep_alive_alarm)
     chrome.alarms.onAlarm.addListener(() => {
       create_keep_alive_alarm()
+      check_and_recover_connection()
     })
   }
 }

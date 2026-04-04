@@ -5,6 +5,7 @@ import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
 import browser from 'webextension-polyfill'
 let websocket: WebSocket | null = null
 let is_reconnecting = false
+let last_ping_timestamp = Date.now()
 
 export const check_server_health = async (): Promise<boolean> => {
   try {
@@ -15,12 +16,34 @@ export const check_server_health = async (): Promise<boolean> => {
   }
 }
 
+export const check_and_recover_connection = () => {
+  if (websocket?.readyState === WebSocket.OPEN) {
+    // Server sends ping every 10s. If we missed pings (e.g., system slept), connection is a zombie.
+    if (Date.now() - last_ping_timestamp > 20000) {
+      console.warn(
+        'WebSocket connection is stale (no recent pings). Force reconnecting...'
+      )
+      websocket.close()
+    }
+  } else if (
+    !is_reconnecting &&
+    websocket?.readyState !== WebSocket.CONNECTING
+  ) {
+    connect_websocket()
+  }
+}
+
 export const connect_websocket = async (): Promise<void> => {
-  if (is_reconnecting || websocket?.readyState === WebSocket.OPEN) {
+  if (
+    is_reconnecting ||
+    websocket?.readyState === WebSocket.OPEN ||
+    websocket?.readyState === WebSocket.CONNECTING
+  ) {
     return
   }
 
   is_reconnecting = true
+  last_ping_timestamp = Date.now()
 
   try {
     const is_healthy = await check_server_health()
@@ -44,12 +67,17 @@ export const connect_websocket = async (): Promise<void> => {
     websocket.onopen = () => {
       console.log('Connected with the VS Code!')
       is_reconnecting = false
+      last_ping_timestamp = Date.now()
     }
 
     websocket.onmessage = async (event) => {
-      const message = JSON.parse(event.data) as WebSocketMessage
+      const message = JSON.parse(event.data)
+      if (message.action === 'ping') {
+        last_ping_timestamp = Date.now()
+        return
+      }
       console.debug(message)
-      handle_messages(message)
+      handle_messages(message as WebSocketMessage)
     }
 
     websocket.onclose = () => {
