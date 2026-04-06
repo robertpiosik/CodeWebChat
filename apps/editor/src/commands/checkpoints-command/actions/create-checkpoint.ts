@@ -30,6 +30,7 @@ export const create_checkpoint = async (params: {
   panel_provider: PanelProvider
   trigger?: CheckpointTrigger
   description?: string
+  silent?: boolean
 }): Promise<Checkpoint | undefined> => {
   try {
     const trigger = params.trigger ?? 'manual'
@@ -233,13 +234,15 @@ export const create_checkpoint = async (params: {
     let did_show_modal = false
 
     try {
-      timer = setTimeout(() => {
-        did_show_modal = true
-        params.panel_provider.send_message({
-          command: 'SHOW_PROGRESS',
-          title: 'Creating checkpoint...'
-        })
-      }, 1000)
+      if (!params.silent) {
+        timer = setTimeout(() => {
+          did_show_modal = true
+          params.panel_provider.send_message({
+            command: 'SHOW_PROGRESS',
+            title: 'Creating checkpoint...'
+          })
+        }, 1000)
+      }
 
       await create_checkpoint_task()
     } finally {

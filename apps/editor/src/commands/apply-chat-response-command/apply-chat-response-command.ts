@@ -209,7 +209,8 @@ export const apply_chat_response_command = (params: {
             context: params.context,
             panel_provider: params.panel_provider,
             trigger: 'before-response-previewed',
-            description: args?.raw_instructions
+            description: args?.raw_instructions,
+            silent: true
           })
         }
 

@@ -44,6 +44,38 @@ export const restore_checkpoint = async (params: {
     return
   }
 
+  const title = params.options?.skip_confirmation
+    ? 'Reverting...'
+    : 'Restoring checkpoint...'
+
+  let current_progress = 0
+  let progress_reporter: vscode.Progress<{ message?: string; increment?: number }> | undefined
+
+  if (!params.options?.use_native_progress) {
+    params.panel_provider.send_message({
+      command: 'SHOW_PROGRESS',
+      title,
+      progress: current_progress,
+      delay_visibility: false
+    })
+    progress_reporter = {
+      report: (value) => {
+        if (value.increment) {
+          current_progress += value.increment
+          params.panel_provider.send_message({
+            command: 'SHOW_PROGRESS',
+            title,
+            progress: Math.min(current_progress, 100),
+            delay_visibility: false
+          })
+        }
+      }
+    }
+  }
+
+  const main_task = async (native_progress?: vscode.Progress<{ message?: string; increment?: number }>) => {
+    const progress = native_progress || progress_reporter
+
   if (
     params.checkpoint.trigger == 'response-accepted' &&
     params.checkpoint.description
@@ -100,7 +132,8 @@ export const restore_checkpoint = async (params: {
           workspace_provider: params.workspace_provider,
           context: params.context,
           panel_provider: params.panel_provider,
-          trigger: 'before-checkpoint-restored'
+          trigger: 'before-checkpoint-restored',
+          silent: true
         })
       }
 
@@ -148,15 +181,6 @@ export const restore_checkpoint = async (params: {
       CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
       Date.now()
     )
-
-    const title = params.options?.skip_confirmation
-      ? 'Reverting...'
-      : 'Restoring checkpoint...'
-
-    // This is the task that was inside withProgress
-    const restoration_task = async (
-      progress: vscode.Progress<{ message?: string; increment?: number }>
-    ) => {
       const checkpoint_dir_path = get_checkpoint_path(
         params.checkpoint.timestamp
       )
@@ -419,49 +443,6 @@ export const restore_checkpoint = async (params: {
           progress
         })
       }
-    }
-
-    if (params.options?.use_native_progress) {
-      await vscode.window.withProgress(
-        {
-          location: vscode.ProgressLocation.Notification,
-          title,
-          cancellable: false
-        },
-        restoration_task
-      )
-    } else {
-      let current_progress = 0
-      params.panel_provider.send_message({
-        command: 'SHOW_PROGRESS',
-        title,
-        progress: current_progress,
-        delay_visibility: true
-      })
-      const progress: vscode.Progress<{
-        message?: string
-        increment?: number
-      }> = {
-        report: (value) => {
-          if (value.increment) {
-            current_progress += value.increment
-            params.panel_provider.send_message({
-              command: 'SHOW_PROGRESS',
-              title,
-              progress: Math.min(current_progress, 100),
-              delay_visibility: true
-            })
-          }
-        }
-      }
-      try {
-        await restoration_task(progress)
-      } finally {
-        params.panel_provider.send_message({
-          command: 'HIDE_PROGRESS'
-        })
-      }
-    }
 
     if (params.checkpoint.response_history) {
       params.panel_provider.response_history =
@@ -540,50 +521,6 @@ export const restore_checkpoint = async (params: {
         })
       }
     }
-
-    const message = params.options?.skip_confirmation
-      ? 'Successfully reverted changes.'
-      : 'Checkpoint has been restored.'
-
-    if (params.checkpoint.trigger == 'response-accepted') {
-      params.panel_provider.send_message({
-        command: 'SHOW_PROGRESS',
-        title: message.endsWith('.') ? message.slice(0, -1) : message,
-        cancellable: false,
-        delay_visibility: true
-      })
-    } else if (params.options?.show_auto_closing_modal_on_success) {
-      params.panel_provider.send_message({
-        command: 'SHOW_AUTO_CLOSING_MODAL',
-        title: message.slice(0, -1),
-        type: 'success'
-      })
-    } else if (temp_checkpoint) {
-      const action = await vscode.window.showInformationMessage(
-        message,
-        'Revert'
-      )
-      if (action == 'Revert') {
-        await restore_checkpoint({
-          checkpoint: temp_checkpoint,
-          workspace_provider: params.workspace_provider,
-          context: params.context,
-          panel_provider: params.panel_provider,
-          options: { skip_confirmation: true, use_native_progress: true }
-        })
-        await delete_checkpoint({
-          context: params.context,
-          checkpoint_to_delete: temp_checkpoint,
-          panel_provider: params.panel_provider
-        })
-        await params.context.workspaceState.update(
-          TEMPORARY_CHECKPOINT_STATE_KEY,
-          undefined
-        )
-      }
-    } else {
-      vscode.window.showInformationMessage(message)
-    }
   } catch (err: any) {
     await params.context.workspaceState.update(
       CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
@@ -603,5 +540,77 @@ export const restore_checkpoint = async (params: {
         undefined
       )
     }
+    throw err
+  }
+
+  return temp_checkpoint
+}
+
+  let temp_check: Checkpoint | undefined
+  try {
+    if (params.options?.use_native_progress) {
+      temp_check = await vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+          title,
+          cancellable: false
+        },
+        main_task
+      )
+    } else {
+      temp_check = await main_task()
+    }
+  } catch (e) {
+    return
+  } finally {
+    if (!params.options?.use_native_progress) {
+      params.panel_provider.send_message({
+        command: 'HIDE_PROGRESS'
+      })
+    }
+  }
+
+  const message = params.options?.skip_confirmation
+    ? 'Successfully reverted changes.'
+    : 'Checkpoint has been restored.'
+
+  if (params.checkpoint.trigger == 'response-accepted') {
+    params.panel_provider.send_message({
+      command: 'SHOW_PROGRESS',
+      title: message.endsWith('.') ? message.slice(0, -1) : message,
+      cancellable: false,
+      delay_visibility: true
+    })
+  } else if (params.options?.show_auto_closing_modal_on_success) {
+    params.panel_provider.send_message({
+      command: 'SHOW_AUTO_CLOSING_MODAL',
+      title: message.slice(0, -1),
+      type: 'success'
+    })
+  } else if (temp_check) {
+    const action = await vscode.window.showInformationMessage(
+      message,
+      'Revert'
+    )
+    if (action == 'Revert') {
+      await restore_checkpoint({
+        checkpoint: temp_check,
+        workspace_provider: params.workspace_provider,
+        context: params.context,
+        panel_provider: params.panel_provider,
+        options: { skip_confirmation: true, use_native_progress: true }
+      })
+      await delete_checkpoint({
+        context: params.context,
+        checkpoint_to_delete: temp_check,
+        panel_provider: params.panel_provider
+      })
+      await params.context.workspaceState.update(
+        TEMPORARY_CHECKPOINT_STATE_KEY,
+        undefined
+      )
+    }
+  } else {
+    vscode.window.showInformationMessage(message)
   }
 }
