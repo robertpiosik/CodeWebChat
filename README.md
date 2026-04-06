@@ -189,10 +189,6 @@ CWC includes all the essential API tools. Bring Your Own Key (BYOK) for a model 
 
 - `Commit Changes` - Generate commit message and commit.
 
-## Misc
-
-- `Copy Edit Format Instructions` - Copy XML-formatted edit format instructions to the clipboard.
-
 ## Contributing
 
 All contributions are welcome. Feel free to submit pull requests, feature requests and bug reports.
