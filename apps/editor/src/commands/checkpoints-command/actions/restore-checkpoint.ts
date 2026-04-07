@@ -49,13 +49,14 @@ export const restore_checkpoint = async (params: {
     : 'Restoring checkpoint...'
 
   let current_progress = 0
-  let progress_reporter: vscode.Progress<{ message?: string; increment?: number }> | undefined
+  let progress_reporter:
+    | vscode.Progress<{ message?: string; increment?: number }>
+    | undefined
 
   if (!params.options?.use_native_progress) {
     params.panel_provider.send_message({
       command: 'SHOW_PROGRESS',
       title,
-      progress: current_progress,
       delay_visibility: false
     })
     progress_reporter = {
@@ -73,114 +74,117 @@ export const restore_checkpoint = async (params: {
     }
   }
 
-  const main_task = async (native_progress?: vscode.Progress<{ message?: string; increment?: number }>) => {
+  const main_task = async (
+    native_progress?: vscode.Progress<{ message?: string; increment?: number }>
+  ) => {
     const progress = native_progress || progress_reporter
 
-  if (
-    params.checkpoint.trigger == 'response-accepted' &&
-    params.checkpoint.description
-  ) {
-    PromptsForCommitMessagesUtils.remove({
-      context: params.context,
-      prompt: params.checkpoint.description
-    })
-  }
+    if (
+      params.checkpoint.trigger == 'response-accepted' &&
+      params.checkpoint.description
+    ) {
+      PromptsForCommitMessagesUtils.remove({
+        context: params.context,
+        prompt: params.checkpoint.description
+      })
+    }
 
-  let open_files: {
-    uri: vscode.Uri
-    viewColumn: vscode.ViewColumn
-    isActive: boolean
-  }[] = []
+    let open_files: {
+      uri: vscode.Uri
+      viewColumn: vscode.ViewColumn
+      isActive: boolean
+    }[] = []
 
-  if (params.checkpoint.active_tabs) {
-    open_files = params.checkpoint.active_tabs.map((tab) => ({
-      uri: vscode.Uri.parse(tab.uri),
-      viewColumn: tab.view_column as vscode.ViewColumn,
-      isActive: tab.is_active && tab.is_group_active
-    }))
-  } else {
-    const tab_groups = vscode.window.tabGroups.all
-    for (const group of tab_groups) {
-      for (const tab of group.tabs) {
-        if (tab.input instanceof vscode.TabInputText) {
-          open_files.push({
-            uri: (tab.input as vscode.TabInputText).uri,
-            viewColumn: group.viewColumn,
-            isActive: tab.isActive && group.isActive
-          })
+    if (params.checkpoint.active_tabs) {
+      open_files = params.checkpoint.active_tabs.map((tab) => ({
+        uri: vscode.Uri.parse(tab.uri),
+        viewColumn: tab.view_column as vscode.ViewColumn,
+        isActive: tab.is_active && tab.is_group_active
+      }))
+    } else {
+      const tab_groups = vscode.window.tabGroups.all
+      for (const group of tab_groups) {
+        for (const tab of group.tabs) {
+          if (tab.input instanceof vscode.TabInputText) {
+            open_files.push({
+              uri: (tab.input as vscode.TabInputText).uri,
+              viewColumn: group.viewColumn,
+              isActive: tab.isActive && group.isActive
+            })
+          }
         }
       }
     }
-  }
 
-  let temp_checkpoint: Checkpoint | undefined
-  try {
-    if (response_preview_promise_resolve) {
-      response_preview_promise_resolve({ accepted_files: [] })
-      if (ongoing_preview_cleanup_promise) {
-        await ongoing_preview_cleanup_promise
-      }
-    }
-
-    if (!params.options?.skip_confirmation) {
-      const checkpoints = await get_checkpoints(params.context)
-      if (
-        checkpoints.length > 0 &&
-        checkpoints[0].trigger != 'before-checkpoint-restored'
-      ) {
-        await create_checkpoint({
-          workspace_provider: params.workspace_provider,
-          context: params.context,
-          panel_provider: params.panel_provider,
-          trigger: 'before-checkpoint-restored',
-          silent: true
-        })
+    let temp_checkpoint: Checkpoint | undefined
+    try {
+      if (response_preview_promise_resolve) {
+        response_preview_promise_resolve({ accepted_files: [] })
+        if (ongoing_preview_cleanup_promise) {
+          await ongoing_preview_cleanup_promise
+        }
       }
 
-      const old_temp_checkpoint = params.context.workspaceState.get<Checkpoint>(
-        TEMPORARY_CHECKPOINT_STATE_KEY
-      )
-      if (old_temp_checkpoint) {
-        try {
-          const checkpoint_path = get_checkpoint_path(
-            old_temp_checkpoint.timestamp
+      if (!params.options?.skip_confirmation) {
+        const checkpoints = await get_checkpoints(params.context)
+        if (
+          checkpoints.length > 0 &&
+          checkpoints[0].trigger != 'before-checkpoint-restored'
+        ) {
+          await create_checkpoint({
+            workspace_provider: params.workspace_provider,
+            context: params.context,
+            panel_provider: params.panel_provider,
+            trigger: 'before-checkpoint-restored',
+            silent: true
+          })
+        }
+
+        const old_temp_checkpoint =
+          params.context.workspaceState.get<Checkpoint>(
+            TEMPORARY_CHECKPOINT_STATE_KEY
           )
-          await vscode.workspace.fs.delete(vscode.Uri.file(checkpoint_path), {
-            recursive: true
-          })
-        } catch (error) {
-          Logger.warn({
-            function_name: 'restore_checkpoint',
-            message: 'Could not delete old temporary checkpoint file',
-            data: error
-          })
+        if (old_temp_checkpoint) {
+          try {
+            const checkpoint_path = get_checkpoint_path(
+              old_temp_checkpoint.timestamp
+            )
+            await vscode.workspace.fs.delete(vscode.Uri.file(checkpoint_path), {
+              recursive: true
+            })
+          } catch (error) {
+            Logger.warn({
+              function_name: 'restore_checkpoint',
+              message: 'Could not delete old temporary checkpoint file',
+              data: error
+            })
+          }
         }
-      }
 
-      temp_checkpoint = await create_temporary_checkpoint(
-        params.workspace_provider
+        temp_checkpoint = await create_temporary_checkpoint(
+          params.workspace_provider
+        )
+        await params.context.workspaceState.update(
+          TEMPORARY_CHECKPOINT_STATE_KEY,
+          temp_checkpoint
+        )
+      }
+    } catch (err: any) {
+      vscode.window.showErrorMessage(
+        `Failed to create temporary checkpoint for revert: ${err.message}`
       )
       await params.context.workspaceState.update(
         TEMPORARY_CHECKPOINT_STATE_KEY,
-        temp_checkpoint
+        undefined
       )
+      return
     }
-  } catch (err: any) {
-    vscode.window.showErrorMessage(
-      `Failed to create temporary checkpoint for revert: ${err.message}`
-    )
-    await params.context.workspaceState.update(
-      TEMPORARY_CHECKPOINT_STATE_KEY,
-      undefined
-    )
-    return
-  }
 
-  try {
-    await params.context.workspaceState.update(
-      CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
-      Date.now()
-    )
+    try {
+      await params.context.workspaceState.update(
+        CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
+        Date.now()
+      )
       const checkpoint_dir_path = get_checkpoint_path(
         params.checkpoint.timestamp
       )
@@ -444,107 +448,108 @@ export const restore_checkpoint = async (params: {
         })
       }
 
-    if (params.checkpoint.response_history) {
-      params.panel_provider.response_history =
-        params.checkpoint.response_history
-      params.panel_provider.send_message({
-        command: 'RESPONSE_HISTORY',
-        history: params.checkpoint.response_history
-      })
-    } else {
-      params.panel_provider.response_history = []
-      params.panel_provider.send_message({
-        command: 'RESPONSE_HISTORY',
-        history: []
-      })
-    }
-
-    const active_file = open_files.find((f) => f.isActive)
-
-    for (const file of open_files) {
-      if (active_file && file === active_file) {
-        continue
-      }
-      try {
-        await vscode.workspace.fs.stat(file.uri)
-        const doc = await vscode.workspace.openTextDocument(file.uri)
-        await vscode.window.showTextDocument(doc, {
-          viewColumn: file.viewColumn,
-          preserveFocus: true,
-          preview: false
+      if (params.checkpoint.response_history) {
+        params.panel_provider.response_history =
+          params.checkpoint.response_history
+        params.panel_provider.send_message({
+          command: 'RESPONSE_HISTORY',
+          history: params.checkpoint.response_history
         })
-      } catch {}
-    }
-
-    if (active_file) {
-      try {
-        await vscode.workspace.fs.stat(active_file.uri)
-        const doc = await vscode.workspace.openTextDocument(active_file.uri)
-        await vscode.window.showTextDocument(doc, {
-          viewColumn: active_file.viewColumn,
-          preserveFocus: false,
-          preview: false
-        })
-      } catch {}
-    }
-
-    if (params.checkpoint.checked_files) {
-      await params.context.workspaceState.update(
-        CONTEXT_CHECKED_PATHS_STATE_KEY,
-        params.checkpoint.checked_files
-      )
-      params.workspace_provider.load_checked_files_state()
-    }
-
-    await params.context.workspaceState.update(
-      CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
-      undefined
-    )
-
-    if (
-      params.checkpoint.trigger == 'response-accepted' &&
-      params.checkpoint.response_preview_item_created_at &&
-      params.checkpoint.response_history
-    ) {
-      const item_to_preview = params.checkpoint.response_history.find(
-        (item) =>
-          item.created_at == params.checkpoint.response_preview_item_created_at
-      )
-      if (item_to_preview) {
-        vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
-          response: item_to_preview.response,
-          raw_instructions: item_to_preview.raw_instructions,
-          files_with_content: item_to_preview.files,
-          created_at: item_to_preview.created_at,
-          url: item_to_preview.url,
-          api_configuration: item_to_preview.api_configuration
+      } else {
+        params.panel_provider.response_history = []
+        params.panel_provider.send_message({
+          command: 'RESPONSE_HISTORY',
+          history: []
         })
       }
-    }
-  } catch (err: any) {
-    await params.context.workspaceState.update(
-      CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
-      undefined
-    )
-    vscode.window.showErrorMessage(
-      `Failed to restore checkpoint: ${err.message}`
-    )
-    if (temp_checkpoint) {
-      await delete_checkpoint({
-        context: params.context,
-        checkpoint_to_delete: temp_checkpoint,
-        panel_provider: params.panel_provider
-      })
+
+      const active_file = open_files.find((f) => f.isActive)
+
+      for (const file of open_files) {
+        if (active_file && file === active_file) {
+          continue
+        }
+        try {
+          await vscode.workspace.fs.stat(file.uri)
+          const doc = await vscode.workspace.openTextDocument(file.uri)
+          await vscode.window.showTextDocument(doc, {
+            viewColumn: file.viewColumn,
+            preserveFocus: true,
+            preview: false
+          })
+        } catch {}
+      }
+
+      if (active_file) {
+        try {
+          await vscode.workspace.fs.stat(active_file.uri)
+          const doc = await vscode.workspace.openTextDocument(active_file.uri)
+          await vscode.window.showTextDocument(doc, {
+            viewColumn: active_file.viewColumn,
+            preserveFocus: false,
+            preview: false
+          })
+        } catch {}
+      }
+
+      if (params.checkpoint.checked_files) {
+        await params.context.workspaceState.update(
+          CONTEXT_CHECKED_PATHS_STATE_KEY,
+          params.checkpoint.checked_files
+        )
+        params.workspace_provider.load_checked_files_state()
+      }
+
       await params.context.workspaceState.update(
-        TEMPORARY_CHECKPOINT_STATE_KEY,
+        CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
         undefined
       )
-    }
-    throw err
-  }
 
-  return temp_checkpoint
-}
+      if (
+        params.checkpoint.trigger == 'response-accepted' &&
+        params.checkpoint.response_preview_item_created_at &&
+        params.checkpoint.response_history
+      ) {
+        const item_to_preview = params.checkpoint.response_history.find(
+          (item) =>
+            item.created_at ==
+            params.checkpoint.response_preview_item_created_at
+        )
+        if (item_to_preview) {
+          vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
+            response: item_to_preview.response,
+            raw_instructions: item_to_preview.raw_instructions,
+            files_with_content: item_to_preview.files,
+            created_at: item_to_preview.created_at,
+            url: item_to_preview.url,
+            api_configuration: item_to_preview.api_configuration
+          })
+        }
+      }
+    } catch (err: any) {
+      await params.context.workspaceState.update(
+        CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
+        undefined
+      )
+      vscode.window.showErrorMessage(
+        `Failed to restore checkpoint: ${err.message}`
+      )
+      if (temp_checkpoint) {
+        await delete_checkpoint({
+          context: params.context,
+          checkpoint_to_delete: temp_checkpoint,
+          panel_provider: params.panel_provider
+        })
+        await params.context.workspaceState.update(
+          TEMPORARY_CHECKPOINT_STATE_KEY,
+          undefined
+        )
+      }
+      throw err
+    }
+
+    return temp_checkpoint
+  }
 
   let temp_check: Checkpoint | undefined
   try {
@@ -588,10 +593,7 @@ export const restore_checkpoint = async (params: {
       type: 'success'
     })
   } else if (temp_check) {
-    const action = await vscode.window.showInformationMessage(
-      message,
-      'Revert'
-    )
+    const action = await vscode.window.showInformationMessage(message, 'Revert')
     if (action == 'Revert') {
       await restore_checkpoint({
         checkpoint: temp_check,

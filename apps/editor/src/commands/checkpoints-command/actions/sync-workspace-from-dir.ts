@@ -28,7 +28,6 @@ export const sync_workspace_from_dir = async (params: {
           workspace_provider: params.workspace_provider,
           progress: params.progress
         })
-      } else {
       }
     }
   } else {
