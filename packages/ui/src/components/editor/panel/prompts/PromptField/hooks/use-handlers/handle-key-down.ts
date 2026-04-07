@@ -74,8 +74,9 @@ export const create_handle_key_down = (
       const value = refs.props_ref.current.value
 
       if (
-        current_raw_pos >= 2 &&
-        value.substring(current_raw_pos - 2, current_raw_pos) == '  '
+        (current_raw_pos >= 2 &&
+          value.substring(current_raw_pos - 2, current_raw_pos) == '  ') ||
+        (current_raw_pos == 1 && value.charAt(0) == ' ')
       ) {
         const new_value =
           value.substring(0, current_raw_pos - 1) +

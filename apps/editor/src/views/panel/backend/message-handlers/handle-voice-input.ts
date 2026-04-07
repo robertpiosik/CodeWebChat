@@ -238,7 +238,7 @@ const stop_recording = async (panel_provider: PanelProvider) => {
       })
 
       if (result?.response) {
-        if (result.response.trim().toUpperCase() === 'INAUDIBLE') {
+        if (result.response.trim().toUpperCase() == 'INAUDIBLE') {
           panel_provider.send_message({
             command: 'SHOW_AUTO_CLOSING_MODAL',
             title: 'Inaudible voice input',
