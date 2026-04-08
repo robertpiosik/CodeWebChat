@@ -9,12 +9,20 @@ export const show_ghost_text = async (params: {
   const controller = vscode.languages.registerInlineCompletionItemProvider(
     { pattern: '**' },
     {
-      provideInlineCompletionItems: () => {
-        const item = {
-          insertText: params.ghost_text,
-          range: new vscode.Range(params.position, params.position)
+      provideInlineCompletionItems: (doc, pos) => {
+        if (
+          doc.uri.toString() === document.uri.toString() &&
+          pos.line === params.position.line &&
+          pos.character === params.position.character
+        ) {
+          return [
+            new vscode.InlineCompletionItem(
+              params.ghost_text,
+              new vscode.Range(params.position, params.position)
+            )
+          ]
         }
-        return [item]
+        return []
       }
     }
   )
