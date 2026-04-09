@@ -11,7 +11,7 @@ export const ai_studio: Chatbot = {
   wait_until_ready: async () => {
     await new Promise((resolve) => {
       const check_for_element = () => {
-        if (!document.querySelector('ms-incognito-mode-toggle > button')) {
+        if (!document.querySelector('ms-zero-state')) {
           setTimeout(check_for_element, 100)
           return
         }
@@ -128,25 +128,6 @@ export const ai_studio: Chatbot = {
 
     if (options.includes('hide-panel') && supported_options?.['hide-panel']) {
       sessionStorage.setItem('should-hide-panel', 'true')
-    }
-
-    if (
-      options.includes('temporary-chat') &&
-      supported_options?.['temporary-chat']
-    ) {
-      const temp_toggle = document.querySelector(
-        'ms-incognito-mode-toggle > button'
-      ) as HTMLElement
-      if (!temp_toggle) {
-        report_initialization_error({
-          function_name: 'set_options',
-          log_message: 'Temporary chat toggle not found'
-        })
-        return
-      }
-      if (!temp_toggle.classList.contains('ms-button-active')) {
-        temp_toggle.click()
-      }
     }
 
     if (supported_options?.['grounding-with-google-search']) {

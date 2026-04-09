@@ -33,39 +33,26 @@ export const CHATBOTS = {
     supports_thinking_budget: true,
     default_system_instructions: "You're a helpful coding assistant.",
     supported_options: {
-      'temporary-chat': 'Temporary chat',
       'hide-panel': 'Hide panel',
       'disable-thinking': 'Disable thinking',
       'grounding-with-google-search': 'Grounding with Google Search',
       'url-context': 'URL context'
     },
     models: {
-      'gemini-3.1-pro-preview': {
-        label: 'Gemini 3.1 Pro Preview',
-        disabled_options: ['disable-thinking'],
-        supported_reasoning_efforts: ['Low', 'Medium', 'High']
-      },
-      'gemini-3-pro-preview': {
-        label: 'Gemini 3 Pro Preview',
-        disabled_options: ['disable-thinking'],
-        supported_reasoning_efforts: ['Low', 'High']
-      },
       'gemini-3-flash-preview': {
         label: 'Gemini 3 Flash Preview',
         disabled_options: ['disable-thinking'],
         supported_reasoning_efforts: ['Minimal', 'Low', 'Medium', 'High']
       },
+      'gemini-3.1-pro-preview': {
+        label: 'Gemini 3.1 Pro Preview',
+        disabled_options: ['disable-thinking'],
+        supported_reasoning_efforts: ['Low', 'Medium', 'High']
+      },
       'gemini-3.1-flash-lite-preview': {
         label: 'Gemini 3.1 Flash Lite Preview',
         disabled_options: ['disable-thinking'],
         supported_reasoning_efforts: ['Minimal', 'Low', 'Medium', 'High']
-      },
-      'gemini-2.5-pro': {
-        label: 'Gemini 2.5 Pro',
-        disabled_options: ['disable-thinking']
-      },
-      'gemini-2.5-flash': {
-        label: 'Gemini 2.5 Flash'
       }
     }
   } as Chatbot,
