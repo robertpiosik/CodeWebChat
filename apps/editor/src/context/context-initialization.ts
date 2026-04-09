@@ -17,6 +17,7 @@ import {
   type DuplicateWorkspaceContext
 } from '../constants/state-keys'
 import { ContextProvider } from './providers/context/context-provider'
+import { is_binary_file } from '../utils/is-binary'
 
 export const token_count_emitter = new EventEmitter()
 
@@ -267,11 +268,11 @@ export const context_initialization = async (
               display_path = vscode.workspace.asRelativePath(file_path)
             }
 
-            if (content_uint8_array.includes(0)) {
+            if (is_binary_file(file_path, content_uint8_array)) {
               context_text += `<file path="${display_path.replace(
                 /\\/g,
                 '/'
-              )}">\nBinary file\n</file>\n`
+              )}">Binary file</file>\n`
               continue
             }
 

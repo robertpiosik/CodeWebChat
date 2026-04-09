@@ -4,6 +4,7 @@ import { WorkspaceProvider } from '../context/providers/workspace/workspace-prov
 import { natural_sort } from '@/utils/natural-sort'
 import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
 import { shrink_file } from '../context/utils/shrink-file/shrink-file'
+import { is_binary_file } from './is-binary'
 
 export class FilesCollector {
   private workspace_provider: WorkspaceProvider
@@ -64,18 +65,23 @@ export class FilesCollector {
 
           if (stats.isDirectory()) continue
 
-          let content = fs.readFileSync(file_path, 'utf8')
+          const buffer = fs.readFileSync(file_path)
+          const is_binary = is_binary_file(file_path, buffer)
 
-          const range = this.workspace_provider.get_range(file_path)
-          if (range) {
-            content = this.workspace_provider.apply_range_to_content(
-              content,
-              range
-            )
-          }
+          let content = is_binary ? 'Binary file' : buffer.toString('utf8')
 
-          if (params?.shrink) {
-            content = shrink_file(content, path.extname(file_path))
+          if (!is_binary) {
+            const range = this.workspace_provider.get_range(file_path)
+            if (range) {
+              content = this.workspace_provider.apply_range_to_content(
+                content,
+                range
+              )
+            }
+
+            if (params?.shrink) {
+              content = shrink_file(content, path.extname(file_path))
+            }
           }
 
           const workspace_root = this._get_workspace_root_for_file(file_path)

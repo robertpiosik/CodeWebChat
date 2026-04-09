@@ -5,6 +5,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import type { IWorkspaceProvider } from '../workspace-provider'
 import { shrink_file } from '@/context/utils/shrink-file'
+import { is_binary_file } from '@/utils/is-binary'
 
 type TokenData = [number, number, number]
 
@@ -306,7 +307,7 @@ export class TokenCalculator implements vscode.Disposable {
 
     try {
       const buffer = await fs.promises.readFile(file_path)
-      const is_binary = buffer.includes(0)
+      const is_binary = is_binary_file(file_path, buffer)
 
       let content = is_binary ? 'Binary file' : buffer.toString('utf8')
 
