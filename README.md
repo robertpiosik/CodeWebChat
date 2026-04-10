@@ -155,13 +155,15 @@ CWC includes all the essential API tools. Bring Your Own Key (BYOK) for a model 
 - **Commit Messages**—Meaningful summaries of changes in your style.
 - **Voice Input**—Transcribe speech to text in the prompt field.
 
-## Enterprise security
+## Privacy
 
-**Zero function calling**. This design choice eliminates the risk of dangerous command executions and prompt injections.
+Code Web Chat doesn’t communicate to any server for so-called telemetry.
 
-**Operates exclusively on your machine**. When using the browser extension for prompt autofill, data is moved via editor-browser communication channel run on local Websockets. For API tools, model providers are called directly.
+Zero function calling design eliminates the risk of dangerous command executions and prompt injections.
 
-**Zero telemetry.** No usage data is collected and sent to third-party servers.
+When autofilling in chatbots, data is moved via editor-browser communication channel run on local Websockets.
+
+When calling APIs, requests are sent directly to model providers.
 
 ## Commands
 
