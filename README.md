@@ -161,7 +161,7 @@ Code Web Chat doesn’t communicate to any server for so-called telemetry.
 
 Zero function calling design eliminates the risk of dangerous command executions and prompt injections.
 
-When autofilling in chatbots, data is moved via editor-browser communication channel run on local Websockets.
+When autofilling in chatbots, the editor-browser communication runs on local Websockets.
 
 When calling APIs, requests are sent directly to model providers.
 
