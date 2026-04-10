@@ -27,6 +27,7 @@ import Reddit from '../../../../assets/icons/reddit.svg'
 import X from '../../../../assets/icons/x.svg'
 import Yuanbao from '../../../../assets/icons/yuanbao.svg'
 import ZAI from '../../../../assets/icons/z-ai.svg'
+import Meta from '../../../../assets/icons/meta.svg'
 
 export namespace Icon {
   export type Variant =
@@ -57,6 +58,7 @@ export namespace Icon {
     | 'TOGETHER'
     | 'REDDIT'
     | 'X'
+    | 'META'
     | 'YUANBAO'
     | 'Z_AI'
 
@@ -149,6 +151,9 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
       break
     case 'X':
       icon = <X />
+      break
+    case 'META':
+      icon = <Meta />
       break
     case 'YUANBAO':
       icon = <Yuanbao />

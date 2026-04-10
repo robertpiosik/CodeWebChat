@@ -21,6 +21,7 @@ export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   HuggingChat: 'HUGGING_CHAT',
   Kimi: 'KIMI',
   Mistral: 'MISTRAL',
+  "Meta AI": 'META',
   Arena: 'ARENA',
   'Open WebUI': 'OPEN_WEBUI',
   OpenRouter: 'OPENROUTER',

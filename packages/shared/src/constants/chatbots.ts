@@ -148,6 +148,9 @@ export const CHATBOTS = {
   Kimi: {
     url: 'https://www.kimi.com/'
   } as Chatbot,
+  'Meta AI': {
+    url: 'https://www.meta.ai/'
+  } as Chatbot,
   Mistral: {
     url: 'https://chat.mistral.ai/chat',
     supports_url_override: true,

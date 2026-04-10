@@ -16,6 +16,7 @@ import {
   qwen,
   yuanbao,
   doubao,
+  meta,
   kimi,
   arena,
   together,
@@ -77,6 +78,9 @@ const is_doubao = current_url.startsWith(doubao_url)
 const kimi_url = 'https://www.kimi.com/'
 const is_kimi = current_url.startsWith(kimi_url)
 
+const meta_url = 'https://www.meta.ai/'
+const is_meta = current_url.startsWith(meta_url)
+
 const together_url = 'https://chat.together.ai/'
 const is_together = current_url.startsWith(together_url)
 
@@ -119,6 +123,8 @@ if (is_ai_studio) {
   chatbot = yuanbao
 } else if (is_doubao) {
   chatbot = doubao
+} else if (is_meta) {
+  chatbot = meta
 } else if (is_kimi) {
   chatbot = kimi
 } else if (is_together) {
