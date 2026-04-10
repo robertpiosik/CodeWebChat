@@ -129,13 +129,14 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 - Grok
 - HuggingChat
 - Kimi
+- Meta
 - Mistral
 - Open WebUI
 - OpenRouter
 - Qwen
 - Together
 - Yuanbao
-- Z AI
+- Z
 
 > [!IMPORTANT]
 > The _Apply response_ button placed under responses is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button. Review the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/apps/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) to learn about implementation details.

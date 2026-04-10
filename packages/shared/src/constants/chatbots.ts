@@ -211,7 +211,7 @@ export const CHATBOTS = {
   Yuanbao: {
     url: 'https://yuanbao.tencent.com/chat'
   } as Chatbot,
-  'Z.AI': {
+  Z: {
     url: 'https://chat.z.ai/',
     supported_options: {
       'deep-think': 'Deep Think'
