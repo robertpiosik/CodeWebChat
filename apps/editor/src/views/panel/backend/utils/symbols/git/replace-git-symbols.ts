@@ -7,10 +7,42 @@ import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provi
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 
+const patch_diff_paths = (
+  diff_text: string,
+  path_prefix: string,
+  file_path: string,
+  old_path?: string,
+  new_path?: string
+): string => {
+  const lines = diff_text.split('\n')
+  const a_path_orig = old_path || file_path
+  const b_path_orig = new_path || file_path
+
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].startsWith('diff --git ')) {
+      lines[i] = `diff --git a/${path_prefix}/${a_path_orig} b/${path_prefix}/${b_path_orig}`
+    } else if (lines[i].startsWith('--- a/')) {
+      lines[i] = `--- a/${path_prefix}/${a_path_orig}`
+    } else if (lines[i].startsWith('+++ b/')) {
+      lines[i] = `+++ b/${path_prefix}/${b_path_orig}`
+    } else if (lines[i].startsWith('rename from ')) {
+      lines[i] = `rename from ${path_prefix}/${lines[i].substring('rename from '.length)}`
+    } else if (lines[i].startsWith('rename to ')) {
+      lines[i] = `rename to ${path_prefix}/${lines[i].substring('rename to '.length)}`
+    } else if (lines[i].startsWith('copy from ')) {
+      lines[i] = `copy from ${path_prefix}/${lines[i].substring('copy from '.length)}`
+    } else if (lines[i].startsWith('copy to ')) {
+      lines[i] = `copy to ${path_prefix}/${lines[i].substring('copy to '.length)}`
+    }
+  }
+  return lines.join('\n')
+}
+
 const build_changes_xml = (
   diff: string,
   cwd: string,
-  diff_base: string
+  diff_base: string,
+  path_prefix?: string
 ): string => {
   // Split diff into per-file sections. Each section starts with 'diff --git '.
   const file_diffs = diff.split(/^diff --git /m).filter((d) => d.trim() != '')
@@ -21,7 +53,7 @@ const build_changes_xml = (
   let changes_content = ''
 
   for (const file_diff_content of file_diffs) {
-    const full_file_diff = 'diff --git ' + file_diff_content
+    let full_file_diff = 'diff --git ' + file_diff_content
     const lines = full_file_diff.split('\n')
     const old_path_line = lines.find((l) => l.startsWith('--- a/'))
     const new_path_line = lines.find((l) => l.startsWith('+++ b/'))
@@ -46,7 +78,9 @@ const build_changes_xml = (
     }
 
     if (file_path) {
-      changes_content += `<file path="${file_path}">\n`
+      const display_path = path_prefix ? `${path_prefix}/${file_path}` : file_path
+
+      changes_content += `<file path="${display_path}">\n`
 
       let file_content = ''
       try {
@@ -67,6 +101,17 @@ const build_changes_xml = (
           })
         }
       }
+
+      if (path_prefix) {
+        full_file_diff = patch_diff_paths(
+          full_file_diff,
+          path_prefix,
+          file_path,
+          old_path,
+          new_path
+        )
+      }
+
       changes_content += `<![CDATA[\n${full_file_diff}\n]]>\n`
       if (file_content) {
         changes_content += `<![CDATA[\n${file_content}\n]]>\n`
@@ -168,7 +213,8 @@ export const replace_changes_symbol = async (params: {
         const replacement_text = build_changes_xml(
           diff,
           target_folder.uri.fsPath,
-          diff_base
+          diff_base,
+          workspace_folders.length > 1 ? folder_name : undefined
         )
         changes_definitions += replacement_text
         result_instruction = result_instruction.replace(
@@ -266,7 +312,8 @@ const build_commit_changes_xml = (
   diff: string,
   cwd: string,
   commit_hash: string,
-  commit_message?: string
+  commit_message?: string,
+  path_prefix?: string
 ): string => {
   const file_diffs = diff.split(/^diff --git /m).filter((d) => d.trim() != '')
 
@@ -277,7 +324,7 @@ const build_commit_changes_xml = (
   let changes_content = ''
 
   for (const file_diff_content of file_diffs) {
-    const full_file_diff = 'diff --git ' + file_diff_content
+    let full_file_diff = 'diff --git ' + file_diff_content
     const lines = full_file_diff.split('\n')
     const old_path_line = lines.find((l) => l.startsWith('--- a/'))
     const new_path_line = lines.find((l) => l.startsWith('+++ b/'))
@@ -318,7 +365,20 @@ const build_commit_changes_xml = (
         }
       }
 
-      changes_content += `<file path="${file_path}">\n`
+      const display_path = path_prefix ? `${path_prefix}/${file_path}` : file_path
+
+      changes_content += `<file path="${display_path}">\n`
+
+      if (path_prefix) {
+        full_file_diff = patch_diff_paths(
+          full_file_diff,
+          path_prefix,
+          file_path,
+          old_path,
+          new_path
+        )
+      }
+
       changes_content += `<![CDATA[\n${full_file_diff}\n]]>\n`
       if (file_content) {
         changes_content += `<![CDATA[\n${file_content}\n]]>\n`
@@ -386,7 +446,8 @@ export const replace_commit_symbol = async (params: {
         diff,
         target_folder.uri.fsPath,
         commit_hash,
-        commit_message
+        commit_message,
+        workspace_folders.length > 1 ? folder_name : undefined
       )
       commit_definitions += replacement_text
 
