@@ -1,6 +1,7 @@
 import * as WebSocket from 'ws'
 import * as vscode from 'vscode'
 import * as child_process from 'child_process'
+import * as http from 'http'
 import * as path from 'path'
 import * as net from 'net'
 import {
@@ -49,8 +50,9 @@ export class WebSocketManager {
           resolve(true)
         })
         .once('listening', () => {
-          tester.close()
-          resolve(false)
+          tester.close(() => {
+            resolve(false)
+          })
         })
         .listen(port)
     })
@@ -58,12 +60,6 @@ export class WebSocketManager {
 
   private async _initialize_server() {
     try {
-      const port_in_use = await this._is_port_in_use(this.port)
-
-      if (!port_in_use) {
-        await this._start_server_process()
-      }
-
       this._connect_as_client()
     } catch (error) {
       Logger.error({
@@ -85,21 +81,22 @@ export class WebSocketManager {
     )
 
     try {
-      const process = child_process.fork(server_script_path, [], {
+      const spawned = child_process.spawn(process.execPath, [server_script_path], {
         detached: true,
-        stdio: 'ignore'
+        stdio: 'ignore',
+        env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' }
       })
 
-      if (process.pid) {
-        process.unref()
+      if (spawned.pid) {
+        spawned.unref()
       }
 
       Logger.info({
         function_name: '_start_server_process',
-        message: `Started WebSocket server process with PID: ${process.pid}`
+        message: `Started WebSocket server process with PID: ${spawned.pid}`
       })
 
-      return new Promise<void>((resolve) => setTimeout(resolve, 1000))
+      return this._wait_for_server_ready()
     } catch (error) {
       Logger.error({
         function_name: '_start_server_process',
@@ -108,6 +105,41 @@ export class WebSocketManager {
       })
       throw error
     }
+  }
+
+  private _wait_for_server_ready(
+    retries = 20,
+    interval_ms = 250
+  ): Promise<void> {
+    return new Promise((resolve, reject) => {
+      let attempts = 0
+
+      const check = () => {
+        const req = http.get(
+          `http://localhost:${this.port}/health`,
+          (res) => {
+            if (res.statusCode === 200) {
+              resolve()
+            } else {
+              retry()
+            }
+          }
+        )
+        req.on('error', retry)
+        req.end()
+      }
+
+      const retry = () => {
+        attempts++
+        if (attempts >= retries) {
+          reject(new Error(`WebSocket server did not become ready after ${retries} attempts`))
+        } else {
+          setTimeout(check, interval_ms)
+        }
+      }
+
+      check()
+    })
   }
 
   private async _connect_as_client() {
