@@ -44,6 +44,11 @@
       text-decoration: underline;
     }
   }
+
+  > hr {
+    border-top: none;
+    border-color: var(--cwc-border-color-dimmed);
+  }
 }
 
 .header {
