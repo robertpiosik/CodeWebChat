@@ -163,7 +163,7 @@ Zero function calling design eliminates the risk of dangerous command executions
 
 When autofilling in chatbots, the editor-browser communication runs on local Websockets.
 
-When calling APIs, requests are sent directly to model providers.
+When calling APIs, requests are sent directly to the configured model providers.
 
 ## Commands
 
