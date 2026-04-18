@@ -21,14 +21,14 @@ export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   HuggingChat: 'HUGGING_CHAT',
   Kimi: 'KIMI',
   Mistral: 'MISTRAL',
-  "Meta AI": 'META',
+  'Meta AI': 'META',
   Arena: 'ARENA',
   'Open WebUI': 'OPEN_WEBUI',
   OpenRouter: 'OPENROUTER',
   Qwen: 'QWEN',
   Together: 'TOGETHER',
   Yuanbao: 'YUANBAO',
-  'Z.AI': 'Z_AI'
+  Z: 'Z_AI'
 }
 
 export namespace Presets {
