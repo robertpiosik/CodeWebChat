@@ -41,7 +41,7 @@ Code Web Chat (CWC) is a free and open-source, privacy-first **AI coding toolkit
 
 ## Introduction
 
-In the world of AI coding, agents like Claude Code or Codex rely on "Function Calling" (where the AI asks "the harness" to read a file, waits for the tool to respond, then reads another). CWC flips this by letting you provide context files upfront for quality outputs in a matter of seconds.
+In the world of AI coding, agents like Claude Code or Codex rely on "Function Calling" (where the AI asks "the harness" to read a file, waits for the tool to respond, then reads another). CWC flips this by letting you provide context files upfront for the best accuracy, cost-efficiency and speed.
 
 **Zero-overhead, XML-formatted prompt types:**
 
@@ -104,9 +104,11 @@ Find all files building modules of the following task's scope:
 
 ## Prompt caching
 
-Thanks to its static context design, **[prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) is utilized across tasks** via context files ordering based on update and selection recency.
+Because context files are ordered based on update and selection recency, **[prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) is utilized across tasks**.
 
-Make your chatbot quotas last longer or lower token costs by up to 90% when calling APIs. Minimize latency of self-hosted models.
+Your chatbot quotas last longer and token costs are lower by up to 90% when calling APIs.
+
+Local models doesn't feel slow anymore!
 
 ## Enabling autofill
 
