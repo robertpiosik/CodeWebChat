@@ -16,7 +16,7 @@ Code Web Chat (CWC) is a free and open-source, privacy-first **AI coding toolkit
 - **chatbots**—ChatGPT, Claude, Gemini, etc.
 - **APIs**—remote and local model providers
 
-...and apply multi-file edits, code at cursor, relevant files for context, and more!
+...and apply multi-file edits, code at cursor, find relevant files for context, and more!
 
 > [!TIP]
 > Elevate your workflow with smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)).
@@ -41,9 +41,9 @@ Code Web Chat (CWC) is a free and open-source, privacy-first **AI coding toolkit
 
 ## Introduction
 
-In the world of AI coding, agents like Claude Code or Codex rely on "Function Calling" (where the AI asks "the harness" to read a file, waits for the tool to respond, then reads another). CWC flips this by letting you provide context files upfront for the best accuracy, cost-efficiency and speed.
+In the world of AI coding, agents like Claude Code or Codex rely on "Function Calling" (where the AI asks "the harness" to read a file, waits for the tool to respond, then reads another). CWC flips this! By providing concrete context files upfront you guide the model in the right direction and save time with simpler prompts.
 
-**Zero-overhead, XML-formatted prompt types:**
+**XML structure of CWC's prompt types:**
 
 <details>
 <summary>Edit context</summary>
@@ -104,7 +104,7 @@ Find all files building modules of the following task's scope:
 
 ## Prompt caching
 
-Because context files are ordered based on update and selection recency, **[prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) is utilized across tasks**.
+With CWC it's natural to work with single-turns and with context files ordered based on update and selection recency, **[prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) is effectively utilized across tasks**.
 
 Your chatbot quotas last longer and token costs are lower by up to 90% when calling APIs.
 
