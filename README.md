@@ -104,7 +104,7 @@ Find all files building modules of the following task's scope:
 
 ## Prompt caching
 
-With CWC, it's natural to start new chats (send fresh messages). With context files ordered based on update and selection recency, **[prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) is effectively utilized across tasks**.
+When working with CWC, it's natural to start new chats (send fresh messages) instead of continuing a long conversation. With context files ordered based on update and selection recency, **[prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) is effectively utilized across tasks**.
 
 Your chatbot quotas last longer and token costs are lower by up to 90% when calling APIs.
 
