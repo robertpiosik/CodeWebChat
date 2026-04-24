@@ -141,6 +141,7 @@ export const generate_commit_message_command = (
             input_box.value = commit_message
             input_box.title = t('command.commit-message.input.title')
             input_box.prompt = t('command.commit-message.input.prompt')
+            input_box.ignoreFocusOut = true
 
             const accept_button = {
               iconPath: new vscode.ThemeIcon('check'),
