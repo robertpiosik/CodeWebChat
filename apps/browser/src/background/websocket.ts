@@ -1,6 +1,5 @@
 import { WebSocketMessage } from '@shared/types/websocket-message'
 import { handle_messages } from './message-handler'
-import { CONFIG } from './config'
 import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
 import browser from 'webextension-polyfill'
 let websocket: WebSocket | null = null
@@ -23,12 +22,13 @@ export const check_and_recover_connection = () => {
       console.warn(
         'WebSocket connection is stale (no recent pings). Force reconnecting...'
       )
+      is_reconnecting = false
       websocket.close()
     }
-  } else if (
-    !is_reconnecting &&
-    websocket?.readyState !== WebSocket.CONNECTING
-  ) {
+  }
+
+  if (!is_reconnecting && websocket?.readyState !== WebSocket.OPEN &&
+      websocket?.readyState !== WebSocket.CONNECTING) {
     connect_websocket()
   }
 }
@@ -49,10 +49,8 @@ export const connect_websocket = async (): Promise<void> => {
     const is_healthy = await check_server_health()
     if (!is_healthy) {
       console.debug('Server health check failed, retrying in 5 seconds...')
-      setTimeout(() => {
-        is_reconnecting = false
-        connect_websocket()
-      }, CONFIG.RECONNECT_DELAY)
+      // Let the periodic alarm drive the next retry — setTimeout is unreliable in service workers
+      is_reconnecting = false
       return
     }
 
@@ -84,7 +82,7 @@ export const connect_websocket = async (): Promise<void> => {
       console.log('Disconnected from VS Code, attempting to reconnect...')
       websocket = null
       is_reconnecting = false
-      setTimeout(connect_websocket, CONFIG.RECONNECT_DELAY)
+      // Reconnect attempt will be driven by the next alarm tick
     }
 
     websocket.onerror = () => {
@@ -93,7 +91,6 @@ export const connect_websocket = async (): Promise<void> => {
     }
   } catch {
     is_reconnecting = false
-    setTimeout(connect_websocket, CONFIG.RECONNECT_DELAY)
   }
 }
 
