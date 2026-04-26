@@ -60,16 +60,18 @@ export const get_git_repository = async (
       repo.state.workingTreeChanges.length > 0
   )
 
-  const repositories_to_show =
-    repositories_with_changes.length > 0
-      ? repositories_with_changes
-      : repositories
-
-  if (repositories_to_show.length == 1) {
-    return repositories_to_show[0]
+  if (repositories_with_changes.length == 0) {
+    vscode.window.showInformationMessage(
+      dictionary.information_message.NO_CHANGES_TO_COMMIT
+    )
+    return null
   }
 
-  const picks = repositories_to_show.map((repo) => {
+  if (repositories_with_changes.length == 1) {
+    return repositories_with_changes[0]
+  }
+
+  const picks = repositories_with_changes.map((repo) => {
     const folder = vscode.workspace.getWorkspaceFolder(repo.rootUri)
     return {
       label: folder ? folder.name : path.basename(repo.rootUri.fsPath),
