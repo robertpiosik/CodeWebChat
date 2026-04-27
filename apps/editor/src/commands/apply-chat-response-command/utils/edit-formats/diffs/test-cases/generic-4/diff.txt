@@ -10,7 +10,7 @@
  
 -          const term = keywords_input.trim().toLowerCase()
 +          const term = keywords_input.trim()
-           if (term.length === 0) return
+           if (term.length == 0) return
  
 -          const keywords = [[term]]
 -

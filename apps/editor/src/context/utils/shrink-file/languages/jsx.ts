@@ -232,13 +232,13 @@ export const shrink_jsx = (content: string): string => {
         if (/(^|\W)return$/.test(last_code_buffer) && /\W/.test(char)) {
           block_stack[block_stack.length - 1].is_skipped = false
           const prefix =
-            processed_line.length === 0 ? line.match(/^\s*/)?.[0] || '' : ''
+            processed_line.length == 0 ? line.match(/^\s*/)?.[0] || '' : ''
           processed_line += prefix + 'return'
         }
       }
 
       if (
-        (block_stack.length === 0 ||
+        (block_stack.length == 0 ||
           !block_stack[block_stack.length - 1].is_skipped) &&
         use_effect_start_depth === -1
       ) {

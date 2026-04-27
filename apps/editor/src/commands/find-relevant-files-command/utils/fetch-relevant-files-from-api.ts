@@ -86,7 +86,7 @@ export const fetch_relevant_files_from_api = async (
         const file_matches = match[1].matchAll(/<file-path>(.*?)<\/file-path>/g)
         for (const m of file_matches) extracted_files.push(m[1].trim())
       }
-      return extracted_files.length === 0 ? 'error_no_files' : extracted_files
+      return extracted_files.length == 0 ? 'error_no_files' : extracted_files
     }
     return 'cancel'
   } catch (error) {

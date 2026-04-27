@@ -14,7 +14,7 @@ export const handle_select_default_configuration = async (
   const providers_manager = new ModelProvidersManager(provider.context)
   const configs = await providers_manager.get_tool_configs()
 
-  if (configs.length === 0) {
+  if (configs.length == 0) {
     vscode.window.showInformationMessage(
       'No configurations available. Please create one first.'
     )

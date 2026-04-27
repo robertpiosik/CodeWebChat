@@ -512,7 +512,7 @@ export const WithTabs = () => {
 
   const handle_tab_delete = (index: number) => {
     const new_tabs = tabs.filter((_, i) => i !== index)
-    if (new_tabs.length === 0) {
+    if (new_tabs.length == 0) {
       set_tabs([''])
       set_active_index(0)
     } else {

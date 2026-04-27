@@ -78,7 +78,7 @@ export const find_relevant_files_command = (
           )
           const configs = await api_providers_manager.get_tool_configs()
 
-          if (configs.length === 0) {
+          if (configs.length == 0) {
             vscode.commands.executeCommand('codeWebChat.settings')
             vscode.window.showInformationMessage(
               t('command.find-relevant-files.error.no-configs')

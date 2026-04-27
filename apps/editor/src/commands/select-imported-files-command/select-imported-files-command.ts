@@ -21,7 +21,7 @@ export const select_imported_files_command = (
         item.resourceUri,
         workspace_provider
       )
-      if (starting_uris.length === 0) {
+      if (starting_uris.length == 0) {
         vscode.window.showInformationMessage('No valid files found to select.')
         return
       }

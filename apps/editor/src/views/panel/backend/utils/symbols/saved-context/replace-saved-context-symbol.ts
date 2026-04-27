@@ -17,7 +17,7 @@ export const replace_saved_context_symbol = async (params: {
   let context_definitions = ''
 
   const matches = [...result_instruction.matchAll(regex)]
-  if (matches.length === 0) {
+  if (matches.length == 0) {
     return { instruction: result_instruction, context_definitions: '' }
   }
 

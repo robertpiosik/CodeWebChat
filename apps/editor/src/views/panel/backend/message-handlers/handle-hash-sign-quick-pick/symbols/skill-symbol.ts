@@ -247,7 +247,7 @@ export const handle_skill_item = async (): Promise<
       discover_skills(agent.global_skills_dir).length > 0
   )
 
-  if (detected_agents.length === 0) {
+  if (detected_agents.length == 0) {
     vscode.window.showInformationMessage(
       'No supported coding agents with skills detected.'
     )
@@ -323,7 +323,7 @@ export const handle_skill_item = async (): Promise<
 
     const skills = discover_skills(agent.global_skills_dir)
 
-    if (skills.length === 0) {
+    if (skills.length == 0) {
       vscode.window.showInformationMessage(
         `No skills found for ${agent.display_name}.`
       )

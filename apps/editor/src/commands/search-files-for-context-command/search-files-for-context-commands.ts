@@ -59,7 +59,7 @@ export const search_files_for_context_commands = (
         initial_search_term = search_term_input
 
         const search_term = search_term_input.trim()
-        if (search_term.length === 0) return
+        if (search_term.length == 0) return
 
         let all_files: string[] = []
 
@@ -78,7 +78,7 @@ export const search_files_for_context_commands = (
           search_term
         })
 
-        if (matched_files.length === 0) {
+        if (matched_files.length == 0) {
           vscode.window.showInformationMessage(t('command.search.no-files'))
           continue
         }
@@ -89,11 +89,11 @@ export const search_files_for_context_commands = (
           workspace_provider
         })
 
-        if (selected_items === 'back') {
+        if (selected_items == 'back') {
           continue
         }
 
-        if (!selected_items || selected_items.length === 0) {
+        if (!selected_items) {
           return
         }
 

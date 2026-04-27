@@ -190,7 +190,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
       {!props.is_collapsed && (
         <>
           <div className={styles.configurations}>
-            {props.configurations.length === 0 && (
+            {props.configurations.length == 0 && (
               <div className={styles.empty}>{props.translations.empty}</div>
             )}
             <ReactSortable

@@ -29,7 +29,7 @@ export const prompt_for_search_term = async (
       }),
       input_box.onDidAccept(() => {
         const value = input_box.value.trim()
-        if (value.length === 0) {
+        if (value.length == 0) {
           input_box.validationMessage = t('command.search.validation-empty')
           return
         }

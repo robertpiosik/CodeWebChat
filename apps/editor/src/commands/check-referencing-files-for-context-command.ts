@@ -51,7 +51,7 @@ export const check_referencing_files_for_context_command = (
           }
         )
 
-        if (matched_files.length === 0) {
+        if (matched_files.length == 0) {
           vscode.window.showInformationMessage(
             t('command.context.check-references.no-files')
           )
@@ -164,7 +164,7 @@ export const check_referencing_files_for_context_command = (
           quick_pick.show()
         })
 
-        if (!selected_items || selected_items.length == 0) {
+        if (!selected_items) {
           return
         }
 
@@ -176,11 +176,12 @@ export const check_referencing_files_for_context_command = (
             .map((m) => m.file_path)
             .filter((file_path) => !selected_paths_set.has(file_path))
         )
-        const currently_checked_filtered = currently_checked.filter(
+        const latest_checked = workspace_provider.get_checked_files()
+        const latest_checked_filtered = latest_checked.filter(
           (file) => !unselected_files_set.has(file)
         )
         const paths_to_apply = [
-          ...new Set([...currently_checked_filtered, ...selected_paths])
+          ...new Set([...latest_checked_filtered, ...selected_paths])
         ]
 
         Logger.info({

@@ -146,7 +146,7 @@ export class SharedContextState {
   }
 
   async undo() {
-    if (this._undo_stack.length === 0) return
+    if (this._undo_stack.length == 0) return
 
     const current_state = {
       files: Array.from(this._checked_files).sort()
@@ -162,7 +162,7 @@ export class SharedContextState {
   }
 
   async redo() {
-    if (this._redo_stack.length === 0) return
+    if (this._redo_stack.length == 0) return
 
     const current_state = {
       files: Array.from(this._checked_files).sort()
