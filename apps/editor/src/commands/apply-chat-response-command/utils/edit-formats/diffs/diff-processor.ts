@@ -25,6 +25,7 @@ export const apply_diff = (params: {
     let has_additions = false
     let in_hunk = false
     const result_lines: string[] = []
+    let seen_content = false
 
     for (const line of patch_lines) {
       if (line.startsWith('@@')) {
@@ -33,13 +34,27 @@ export const apply_diff = (params: {
       }
       if (!in_hunk) continue
 
+      let line_to_add: string | null = null
+      let is_addition = false
+
       if (line.startsWith('+')) {
-        result_lines.push(line.substring(1))
+        line_to_add = line.substring(1)
+        is_addition = true
         has_additions = true
       } else if (line.startsWith(' ')) {
-        result_lines.push(line.substring(1))
+        line_to_add = line.substring(1)
       } else if (line == '') {
-        result_lines.push('')
+        line_to_add = ''
+      }
+
+      if (line_to_add !== null) {
+        if (!seen_content) {
+          if (!is_addition && line_to_add.trim() == '') {
+            continue
+          }
+          seen_content = true
+        }
+        result_lines.push(line_to_add)
       }
     }
 

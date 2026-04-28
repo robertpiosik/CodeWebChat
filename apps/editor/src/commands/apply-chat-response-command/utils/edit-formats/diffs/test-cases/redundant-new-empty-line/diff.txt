@@ -1,0 +1,5 @@
+--- a/index.ts
++++ b/index.ts
+@@ -1,2 +1,2 @@
+
++export * from './b'
