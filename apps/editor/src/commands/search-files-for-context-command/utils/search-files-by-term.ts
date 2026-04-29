@@ -3,6 +3,12 @@ import * as fs from 'fs'
 import { Logger } from '@shared/utils/logger'
 import { create_search_regex } from './create-search-regex'
 
+const IGNORED_FILES = new Set([
+  'pnpm-lock.yaml',
+  'package-lock.json',
+  'yarn.lock'
+])
+
 export const search_files_by_term = async (params: {
   files: string[]
   search_term: string
@@ -13,6 +19,10 @@ export const search_files_by_term = async (params: {
   for (const file_path of params.files) {
     try {
       const file_name = path.basename(file_path)
+
+      if (IGNORED_FILES.has(file_name)) {
+        continue
+      }
 
       if (regex.test(file_name)) {
         matched_files.push(file_path)
