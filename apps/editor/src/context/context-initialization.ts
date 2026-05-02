@@ -263,7 +263,7 @@ export const context_initialization = async (
                 workspace_folder.uri.fsPath,
                 file_path
               )
-              display_path = `${workspace_folder.name}:${relative_path}`
+              display_path = `${workspace_folder.name}/${relative_path}`
             } else {
               display_path = vscode.workspace.asRelativePath(file_path)
             }

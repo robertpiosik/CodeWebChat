@@ -115,24 +115,24 @@ def subtract(a, b):
 
 ### Renamed file: \`src/examples/math_utils.py\` (old) \`src/examples/calculator.py\` (new)`
 
-export const EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER = `${intro}, followed by a markdown code block showing the original and updated code snippets with Git-style merge conflict markers. Example:
+export const EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER = `${intro}, followed by a markdown code block showing the original and updated code snippets with Git-style merge conflict syntax. Example:
 Changed greeting to wishes.
 
 ### Updated file: \`src/examples/hello.py\`
 
 \`\`\`python
-<<<<<<< HEAD
+<<<<<<< SEARCH
 GREETING = "Welcome everyone!"
 =======
 WISHES = "Have a nice day!"
->>>>>>>
-<<<<<<< HEAD
+>>>>>>> REPLACE
+<<<<<<< SEARCH
  def show_greeting():
    print(GREETING)
 =======
  def show_wishes():
    print(WISHES)
->>>>>>>
+>>>>>>> REPLACE
 \`\`\`
 
 Created a simple calculator with addition and subtraction.
