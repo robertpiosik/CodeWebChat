@@ -14,6 +14,7 @@ export const prompt_for_config = async (params: {
   extension_context: vscode.ExtensionContext
   configs: ToolConfig[]
   tokens_to_process: number
+  force_prompt?: boolean
 }): Promise<
   | { config: ToolConfig; provider: Provider; skipped: boolean }
   | 'back'
@@ -22,16 +23,20 @@ export const prompt_for_config = async (params: {
   let selected_config: ToolConfig | undefined = undefined
   let skipped = false
 
-  const default_config =
-    await params.api_providers_manager.get_default_find_relevant_files_config()
+  if (!params.force_prompt) {
+    const default_config =
+      await params.api_providers_manager.get_default_find_relevant_files_config()
 
-  if (default_config) {
-    selected_config = default_config
-    skipped = true
-  } else if (params.configs.length === 1) {
-    selected_config = params.configs[0]
-    skipped = true
-  } else {
+    if (default_config) {
+      selected_config = default_config
+      skipped = true
+    } else if (params.configs.length === 1) {
+      selected_config = params.configs[0]
+      skipped = true
+    }
+  }
+
+  if (!selected_config) {
     const create_items = () => {
       const recent_ids =
         params.extension_context.workspaceState.get<string[]>(

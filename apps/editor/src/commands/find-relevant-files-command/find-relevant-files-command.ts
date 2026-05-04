@@ -87,6 +87,7 @@ export const find_relevant_files_command = (
           }
 
           let go_back_to_shrink = false
+          let force_prompt = false
           while (true) {
             const tokens_to_process = shrink_result
               ? analysis.shrink_tokens
@@ -95,8 +96,11 @@ export const find_relevant_files_command = (
               api_providers_manager,
               extension_context,
               configs,
-              tokens_to_process
+              tokens_to_process,
+              force_prompt
             })
+
+            force_prompt = false
 
             if (config_result === 'back') {
               go_back_to_shrink = true
@@ -118,7 +122,11 @@ export const find_relevant_files_command = (
               selected_config
             )
 
-            if (api_result === 'cancel' || api_result === 'error') return
+            if (api_result === 'cancel') return
+            if (api_result === 'error') {
+              force_prompt = true
+              continue
+            }
             if (api_result === 'error_no_files') {
               vscode.window.showWarningMessage(
                 t('command.find-relevant-files.error.no-files-found')
