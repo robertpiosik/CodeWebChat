@@ -138,13 +138,12 @@ CWC includes all the essential API tools. Bring Your Own Key (BYOK) for a model 
 
 ## Privacy
 
+The editor-browser communication for chatbot autofill runs on local Websockets.
+When calling APIs, requests are sent directly to the configured model providers.
+
 Code Web Chat doesn’t communicate to any server for so-called telemetry.
 
 Zero function calling design eliminates the risk of dangerous command executions and prompt injections.
-
-When autofilling in chatbots, the editor-browser communication runs on local Websockets.
-
-When calling APIs, requests are sent directly to the configured model providers.
 
 ## Commands
 
