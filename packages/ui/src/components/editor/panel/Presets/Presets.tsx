@@ -78,7 +78,6 @@ export namespace Presets {
       selected: string
       add_new: string
       add_new_tooltip: string
-      initialize_tooltip: string
       copy_tooltip: string
       pin_tooltip: string
       unpin_tooltip: string
@@ -186,7 +185,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   props.on_preset_click(preset.name!)
                 }}
                 role="button"
-                title={props.translations.initialize_tooltip}
               >
                 <div className={styles.presets__item__left}>
                   <div className={styles.presets__item__left__icon}>
@@ -476,7 +474,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       }
                     }}
                     role="button"
-                    title={props.translations.initialize_tooltip}
                   >
                     <div className={styles.presets__item__left}>
                       <div

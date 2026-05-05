@@ -30,7 +30,6 @@ const mock_translations = {
   empty: 'No configurations created yet.',
   add_new: 'Add New',
   add_new_tooltip: 'Add new',
-  initialize_tooltip: 'Initialize',
   pin_tooltip: 'Pin',
   unpin_tooltip: 'Unpin',
   insert_tooltip: 'Insert a new configuration below/above',

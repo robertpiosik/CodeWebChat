@@ -17,24 +17,6 @@ export const actions = {
     hu: 'Új Hozzáadása',
     bg: 'Добавяне на нов'
   },
-  'action.initialize': {
-    en: 'Initialize',
-    pl: 'Zainicjuj',
-    'zh-cn': '初始化',
-    ja: '初期化',
-    'zh-tw': '初始化',
-    de: 'Initialisieren',
-    es: 'Inicializar',
-    fr: 'Initialiser',
-    'pt-br': 'Inicializar',
-    ru: 'Инициализировать',
-    ko: '초기화',
-    it: 'Inizializza',
-    tr: 'Başlat',
-    cs: 'Inicializovat',
-    hu: 'Inicializálás',
-    bg: 'Инициализиране'
-  },
   'action.copy': {
     en: 'Copy to clipboard',
     pl: 'Skopiuj do schowka',

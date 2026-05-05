@@ -56,7 +56,6 @@ const mock_translations = {
   selected: 'selected',
   add_new: 'Add New',
   add_new_tooltip: 'Add new',
-  initialize_tooltip: 'Initialize',
   copy_tooltip: 'Copy to clipboard',
   pin_tooltip: 'Pin',
   unpin_tooltip: 'Unpin',

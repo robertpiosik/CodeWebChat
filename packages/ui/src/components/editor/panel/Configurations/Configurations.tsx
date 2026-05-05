@@ -36,7 +36,6 @@ export namespace Configurations {
       empty: string
       add_new: string
       add_new_tooltip: string
-      initialize_tooltip: string
       pin_tooltip: string
       unpin_tooltip: string
       insert_tooltip: string
@@ -74,7 +73,6 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
         })}
         onClick={() => props.on_configuration_click(configuration.id)}
         role="button"
-        title={props.translations.initialize_tooltip}
       >
         <div className={styles.configurations__item__left}>
           {!is_dragging_disabled && (
