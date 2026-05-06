@@ -11,33 +11,6 @@ type Props = {
 
 export const TextItem: FC<Props> = (props) => {
   const header_ref = useRef<HTMLDivElement>(null)
-  const mouse_moved = useRef(false)
-  const has_selection = useRef(false)
-
-  const handle_mouse_down = () => {
-    mouse_moved.current = false
-
-    const selection = window.getSelection()
-    has_selection.current =
-      (selection && selection.toString().length > 0) || false
-  }
-
-  const handle_mouse_move = () => {
-    mouse_moved.current = true
-  }
-
-  const handle_mouse_up = () => {
-    const selection = window.getSelection()
-    const has_selection_now =
-      (selection && selection.toString().length > 0) || false
-
-    if (
-      (!mouse_moved.current && !has_selection.current) ||
-      (mouse_moved.current && !has_selection_now)
-    ) {
-      props.on_toggle(header_ref.current!)
-    }
-  }
 
   return (
     <div className={styles.container}>
@@ -57,9 +30,6 @@ export const TextItem: FC<Props> = (props) => {
       {props.is_expanded && (
         <div
           className={styles.text}
-          onMouseDown={handle_mouse_down}
-          onMouseMove={handle_mouse_move}
-          onMouseUp={handle_mouse_up}
         >
           <ReactMarkdown>{props.content}</ReactMarkdown>
           <div
