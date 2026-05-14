@@ -249,7 +249,7 @@ export const handle_skill_item = async (): Promise<
 
   if (detected_agents.length == 0) {
     vscode.window.showInformationMessage(
-      'No supported coding agents with skills detected.'
+      'No supported agents with skills detected.'
     )
     return 'continue'
   }
