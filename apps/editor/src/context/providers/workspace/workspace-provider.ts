@@ -7,6 +7,7 @@ import {
   CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY,
   RANGES_STATE_KEY
 } from '@/constants/state-keys'
+import { IGNORED_LOCK_FILES } from '@/constants/ignored-lock-files'
 import { natural_sort } from '@/utils/natural-sort'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
@@ -1612,7 +1613,7 @@ export class WorkspaceProvider
       this._user_ignore_patterns.add(patterns)
     }
 
-    this._user_ignore_patterns.add('node_modules')
+    this._user_ignore_patterns.add(['node_modules', ...IGNORED_LOCK_FILES])
 
     const allow_patterns = config.get<string[]>('allowPatterns')
     this._user_allow_patterns = ignore()

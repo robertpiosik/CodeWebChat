@@ -2,12 +2,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { Logger } from '@shared/utils/logger'
 import { create_search_regex } from './create-search-regex'
-
-const IGNORED_FILES = new Set([
-  'pnpm-lock.yaml',
-  'package-lock.json',
-  'yarn.lock'
-])
+import { IGNORED_LOCK_FILES } from '@/constants/ignored-lock-files'
 
 export const search_files_by_term = async (params: {
   files: string[]
@@ -20,7 +15,7 @@ export const search_files_by_term = async (params: {
     try {
       const file_name = path.basename(file_path)
 
-      if (IGNORED_FILES.has(file_name)) {
+      if (IGNORED_LOCK_FILES.includes(file_name)) {
         continue
       }
 
