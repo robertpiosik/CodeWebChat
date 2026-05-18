@@ -2,7 +2,8 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import {
   get_git_repository,
-  prepare_staged_changes
+  prepare_staged_changes,
+  GitRepository
 } from '../../utils/git-repository-utils'
 import { display_token_count } from '../../utils/display-token-count'
 import { get_commit_message_config } from './utils/get-commit-message-config'
@@ -23,11 +24,10 @@ export const generate_commit_message_command = (
   context: vscode.ExtensionContext
 ) => {
   const get_prompt_data = async (
-    source_control?: vscode.SourceControl,
+    repository: GitRepository,
+    is_source_control_action: boolean,
     selection_state?: { files?: string[] }
   ) => {
-    const repository = await get_git_repository(source_control)
-    if (!repository) return null
     await vscode.workspace.saveAll()
     await repository.status()
     const was_empty_stage = (repository.state.indexChanges || []).length == 0
@@ -35,7 +35,7 @@ export const generate_commit_message_command = (
     const is_single_change = was_empty_stage && working_tree_changes.length == 1
     const diff = await prepare_staged_changes(
       repository,
-      !!source_control,
+      is_source_control_action,
       selection_state
     )
     if (!diff) return null
@@ -52,10 +52,17 @@ export const generate_commit_message_command = (
     let force_quick_pick = false
     const selection_state: { files?: string[] } = {}
 
+    const repository = await get_git_repository(params.source_control)
+    if (!repository) return
+
     while (true) {
-      const data = await get_prompt_data(params.source_control, selection_state)
+      const data = await get_prompt_data(
+        repository,
+        !!params.source_control,
+        selection_state
+      )
       if (!data) return
-      const { repository, message_prompt, is_single_change } = data
+      const { message_prompt, is_single_change } = data
       let { was_empty_stage } = data
 
       // token count for the prompt, used in the config UI
@@ -284,7 +291,9 @@ export const generate_commit_message_command = (
   const copy_command = vscode.commands.registerCommand(
     'codeWebChat.copyCommitMessagePrompt',
     async (source_control?: vscode.SourceControl) => {
-      const data = await get_prompt_data(source_control)
+      const repository = await get_git_repository(source_control)
+      if (!repository) return
+      const data = await get_prompt_data(repository, !!source_control)
       if (!data) return
       const { was_empty_stage, message_prompt } = data
 
