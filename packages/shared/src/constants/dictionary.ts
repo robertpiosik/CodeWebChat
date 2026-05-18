@@ -293,8 +293,6 @@ export const dictionary = {
     API_RATE_LIMIT_EXCEEDED: 'API request failed. Rate limit exceeded.',
     API_PAYLOAD_TOO_LARGE: 'API request failed. The context is too large.',
     API_BAD_REQUEST: 'API request failed. Bad request.',
-    API_ENDPOINT_UNAVAILABLE:
-      'Endpoint is currently unable to handle the request.',
     API_INVALID_KEY: 'API request failed. Invalid API key.',
     API_REQUEST_FAILED: 'API request failed. Check console for details.',
     FAILED_TO_CREATE_ITEM: (item_id: string, error: any) =>

@@ -248,15 +248,42 @@ export const make_api_request = async (params: {
         : {})
     }
 
-    const response: AxiosResponse<NodeJS.ReadableStream> = await axios.post(
-      request_url,
-      request_body,
-      {
-        headers,
-        cancelToken: params.cancellation_token,
-        responseType: 'stream'
+    let response: AxiosResponse<NodeJS.ReadableStream>
+    let attempt = 0
+    const MAX_RETRIES = 10
+    const RETRY_DELAY_MS = 500
+
+    while (true) {
+      try {
+        response = await axios.post(request_url, request_body, {
+          headers,
+          cancelToken: params.cancellation_token,
+          responseType: 'stream'
+        })
+        break
+      } catch (error) {
+        const status = axios.isAxiosError(error)
+          ? error.response?.status
+          : undefined
+        if (
+          axios.isAxiosError(error) &&
+          status &&
+          status >= 500 &&
+          status < 600 &&
+          attempt < MAX_RETRIES
+        ) {
+          attempt++
+          Logger.warn({
+            function_name: 'make_api_request',
+            message: `API ${status} error encountered. Retrying (${attempt}/${MAX_RETRIES}) in 1s...`,
+            data: error.message
+          })
+          await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS))
+        } else {
+          throw error
+        }
       }
-    )
+    }
 
     response.data.setEncoding('utf8')
 
@@ -393,10 +420,6 @@ export const make_api_request = async (params: {
       )
     } else if (axios.isAxiosError(error) && error.response?.status == 400) {
       vscode.window.showErrorMessage(dictionary.error_message.API_BAD_REQUEST)
-    } else if (axios.isAxiosError(error) && error.response?.status == 503) {
-      vscode.window.showErrorMessage(
-        dictionary.error_message.API_ENDPOINT_UNAVAILABLE
-      )
     } else if (axios.isAxiosError(error) && error.response?.status == 401) {
       vscode.window.showErrorMessage(dictionary.error_message.API_INVALID_KEY)
     } else {
