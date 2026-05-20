@@ -47,7 +47,7 @@ Because it's not possible to train a model to keep architectural order in the re
 
 It also makes simple prompts just work!
 
-Generated XML-formatted prompts are zero-overhead:
+**Generated XML-formatted prompts are zero-overhead:**
 
 <details>
 <summary>Edit context</summary>
