@@ -34,24 +34,20 @@ export const CHATBOTS = {
     default_system_instructions: "You're a helpful coding assistant.",
     supported_options: {
       'hide-panel': 'Hide panel',
-      'disable-thinking': 'Disable thinking',
       'grounding-with-google-search': 'Grounding with Google Search',
       'url-context': 'URL context'
     },
     models: {
-      'gemini-3-flash-preview': {
-        label: 'Gemini 3 Flash Preview',
-        disabled_options: ['disable-thinking'],
+      'gemini-3.5-flash': {
+        label: 'Gemini 3.5 Flash',
         supported_reasoning_efforts: ['Minimal', 'Low', 'Medium', 'High']
       },
       'gemini-3.1-pro-preview': {
         label: 'Gemini 3.1 Pro Preview',
-        disabled_options: ['disable-thinking'],
         supported_reasoning_efforts: ['Low', 'Medium', 'High']
       },
-      'gemini-3.1-flash-lite-preview': {
-        label: 'Gemini 3.1 Flash Lite Preview',
-        disabled_options: ['disable-thinking'],
+      'gemini-3.1-flash-lite': {
+        label: 'Gemini 3.1 Flash Lite',
         supported_reasoning_efforts: ['Minimal', 'Low', 'Medium', 'High']
       }
     }
@@ -101,9 +97,11 @@ export const CHATBOTS = {
     supports_url_override: true,
     url_override_label: 'Gem URL',
     url_override_disabled_options: ['temporary-chat'],
+    supports_reasoning_effort: true,
+    supported_reasoning_efforts: ['Standard', 'Extended'],
     models: {
-      fast: { label: 'Fast' },
-      thinking: { label: 'Thinking' },
+      'flash-lite': { label: 'Flash-Lite' },
+      flash: { label: 'Flash' },
       pro: { label: 'Pro' }
     }
   } as Chatbot,

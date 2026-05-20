@@ -1058,7 +1058,20 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             (preset_config) =>
               !preset_config.chatbot || CHATBOTS[preset_config.chatbot]
           )
-          .map((preset_config) => config_preset_to_ui_format(preset_config))
+          .map((preset_config) => {
+            let model = preset_config.model
+            if (preset_config.chatbot && model) {
+              const chatbot_info = CHATBOTS[preset_config.chatbot]
+              const is_user_provided_supported =
+                chatbot_info.supports_user_provided_model
+              const is_model_predefined = chatbot_info.models?.[model]
+
+              if (!is_user_provided_supported && !is_model_predefined) {
+                model = undefined
+              }
+            }
+            return config_preset_to_ui_format({ ...preset_config, model })
+          })
         return [prompt_type, presets_ui]
       })
     ) as { [T in WebPromptType]: Preset[] }

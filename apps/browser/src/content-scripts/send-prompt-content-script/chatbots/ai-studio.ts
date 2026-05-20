@@ -103,28 +103,6 @@ export const ai_studio: Chatbot = {
       await new Promise((r) => requestAnimationFrame(r))
     }
     const supported_options = CHATBOTS['AI Studio'].supported_options
-    const thinking_toggle = document.querySelector(
-      'mat-slide-toggle[data-test-toggle="enable-thinking"] button'
-    ) as HTMLElement
-    if (!thinking_toggle) {
-      report_initialization_error({
-        function_name: 'set_options',
-        log_message: 'Thinking toggle not found'
-      })
-    } else {
-      if (
-        options.includes('disable-thinking') &&
-        supported_options?.['disable-thinking']
-      ) {
-        if (thinking_toggle.getAttribute('aria-checked') == 'true') {
-          thinking_toggle.click()
-        }
-      } else {
-        if (thinking_toggle?.getAttribute('aria-checked') == 'false') {
-          thinking_toggle.click()
-        }
-      }
-    }
 
     if (options.includes('hide-panel') && supported_options?.['hide-panel']) {
       sessionStorage.setItem('should-hide-panel', 'true')
