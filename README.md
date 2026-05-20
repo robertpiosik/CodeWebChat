@@ -41,9 +41,11 @@ Code Web Chat (CWC) is a free and open-source, privacy-first **AI coding toolkit
 
 ## Introduction
 
-In the world of AI coding, agents like Claude Code or Codex rely on "Function Calling" (where the AI asks "the harness" to read a file, waits for the tool to respond, then reads another). CWC flips this! By providing files upfront the model has everything it needs from the start, so you can save time and tokens.
+In the world of AI coding, agents like Claude Code or Codex rely on "function calling" (where the AI asks "the harness" to read a file, waits for the tool to respond, then reads another). CWC flips this! By providing files upfront the model has everything it needs from the start, so you can save time and tokens.
 
-Generated prompts are zero-overhead (click an example to expand):
+Because it's not possible to train a model to keep architectural order in the repository (interconnectedness of things are unique patterns), we believe actively 'ticking' folders and files on a file tree is an essential activity when interacting with LLMs.
+
+Generated XML-formatted prompts are zero-overhead (click an example to expand):
 
 <details>
 <summary>Edit context</summary>
@@ -87,7 +89,7 @@ When working with CWC, it's natural to start new chats (send fresh messages) ins
 
 Your chatbot quotas last longer and token costs are lower by up to 90% when calling APIs.
 
-Local models doesn't feel slow anymore!
+Local models doesn't feel slow anymore.
 
 ## Enabling autofill
 
