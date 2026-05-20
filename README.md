@@ -87,10 +87,6 @@ Generated XML-formatted prompts are zero-overhead (click an example to expand):
 
 When working with CWC, it's natural to start new chats (send fresh messages) instead of continuing a long conversation. With context files ordered based on update and selection recency, **[prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) is effectively utilized across tasks**.
 
-Your chatbot quotas last longer and token costs are lower by up to 90% when calling APIs.
-
-Local models doesn't feel slow anymore.
-
 ## Enabling autofill
 
 Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser) and never copy and paste again.
