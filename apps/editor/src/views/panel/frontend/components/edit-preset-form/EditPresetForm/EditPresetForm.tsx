@@ -307,62 +307,6 @@ export const EditPresetForm: React.FC<Props> = (props) => {
             </UiField>
           )}
 
-          <UiField label="Name" html_for="name">
-            <UiInput
-              id="name"
-              type="text"
-              value={name && /^\(\d+\)$/.test(name) ? '' : name!}
-              on_change={set_name}
-              placeholder={chatbot || 'Group'}
-            />
-          </UiField>
-
-          {supports_port && (
-            <UiField
-              label="Port"
-              html_for="port"
-              info={
-                chatbot == 'Open WebUI' && (
-                  <>
-                    Used for localhost. For networked instances leave empty and
-                    setup a proxy server for <code>http://openwebui/</code>.
-                  </>
-                )
-              }
-            >
-              <UiInput
-                id="port"
-                type="text"
-                value={String(port ?? '')}
-                on_change={(value) => {
-                  const num = parseInt(value, 10)
-                  set_port(isNaN(num) ? undefined : num)
-                }}
-                placeholder="e.g. 3000"
-                on_key_down={(e) =>
-                  !/[0-9]/.test(e.key) &&
-                  e.key != 'Backspace' &&
-                  e.preventDefault()
-                }
-              />
-            </UiField>
-          )}
-
-          {supports_url_override && (
-            <UiField
-              label={chatbot_config?.url_override_label || 'URL override'}
-              html_for="new-url"
-              info="Use a smart workspace for your coding tasks."
-            >
-              <UiInput
-                id="new-url"
-                type="text"
-                value={new_url || ''}
-                on_change={set_new_url}
-              />
-            </UiField>
-          )}
-
           {supports_reasoning_effort && (
             <UiField
               label="Reasoning Effort"
@@ -417,6 +361,62 @@ export const EditPresetForm: React.FC<Props> = (props) => {
                   e.key != 'Backspace' &&
                   e.preventDefault()
                 }
+              />
+            </UiField>
+          )}
+
+          <UiField label="Name" html_for="name">
+            <UiInput
+              id="name"
+              type="text"
+              value={name && /^\(\d+\)$/.test(name) ? '' : name!}
+              on_change={set_name}
+              placeholder={chatbot || 'Group'}
+            />
+          </UiField>
+
+          {supports_port && (
+            <UiField
+              label="Port"
+              html_for="port"
+              info={
+                chatbot == 'Open WebUI' && (
+                  <>
+                    Used for localhost. For networked instances leave empty and
+                    setup a proxy server for <code>http://openwebui/</code>.
+                  </>
+                )
+              }
+            >
+              <UiInput
+                id="port"
+                type="text"
+                value={String(port ?? '')}
+                on_change={(value) => {
+                  const num = parseInt(value, 10)
+                  set_port(isNaN(num) ? undefined : num)
+                }}
+                placeholder="e.g. 3000"
+                on_key_down={(e) =>
+                  !/[0-9]/.test(e.key) &&
+                  e.key != 'Backspace' &&
+                  e.preventDefault()
+                }
+              />
+            </UiField>
+          )}
+
+          {supports_url_override && (
+            <UiField
+              label={chatbot_config?.url_override_label || 'URL override'}
+              html_for="new-url"
+              info="Use a smart workspace for your coding tasks."
+            >
+              <UiInput
+                id="new-url"
+                type="text"
+                value={new_url || ''}
+                on_change={set_new_url}
               />
             </UiField>
           )}
