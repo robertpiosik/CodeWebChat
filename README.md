@@ -45,7 +45,7 @@ In the world of AI coding, agents like Claude Code or Codex rely on "function ca
 
 As it's not possible to train a model to keep architectural order in the codebase (interconnectedness of things are unique patterns), and while CWC provides all the essential tools for necessary housekeeping, it never holds you back when developing new features.
 
-**Generated XML-formatted prompts are zero-overhead:**
+**Zero-overhead prompts for the best token efficiency**
 
 <details>
 <summary>Edit context</summary>
@@ -82,6 +82,8 @@ As it's not possible to train a model to keep architectural order in the codebas
 ```
 
 </details>
+
+...and more!
 
 ## Prompt caching
 
