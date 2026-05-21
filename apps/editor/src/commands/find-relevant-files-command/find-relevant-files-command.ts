@@ -6,7 +6,6 @@ import {
   LAST_FIND_RELEVANT_FILES_SHRINK_STATE_KEY
 } from '../../constants/state-keys'
 import { t } from '@/i18n'
-
 import { get_target_folder_path } from './utils/get-target-folder-path'
 import { prompt_for_instructions } from './utils/prompt-for-instructions'
 import { analyze_workspace_files } from './utils/analyze-workspace-files'

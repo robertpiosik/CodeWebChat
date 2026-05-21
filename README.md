@@ -83,7 +83,17 @@ As it's not possible to train a model to keep architectural order in the codebas
 
 </details>
 
-...and more!
+<details>
+<summary>Find relevant files</summary>
+
+```
+<files>[current file tree selection]</files>
+<system>[response format instructions]</system>
+Find all files building modules of the following task's scope:
+[user-typed prompt]
+```
+
+</details>
 
 ## Prompt caching
 
