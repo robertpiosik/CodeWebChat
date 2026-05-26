@@ -1,7 +1,6 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
-import { FileItem } from '../context/providers/workspace/workspace-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 
@@ -17,18 +16,13 @@ export const reference_in_prompt_command = (params: {
       }
 
       let active_uri: vscode.Uri | undefined
-      let is_directory = false
-      let target_item = uri
 
       if (uri && uri.resourceUri) {
         active_uri = uri.resourceUri
-        is_directory = !!uri.isDirectory
       } else if (uri && uri.fsPath) {
         active_uri = uri
-        target_item = { resourceUri: active_uri, isDirectory: false }
       } else if (vscode.window.activeTextEditor) {
         active_uri = vscode.window.activeTextEditor.document.uri
-        target_item = { resourceUri: active_uri, isDirectory: false }
       }
 
       if (!active_uri) return
@@ -43,21 +37,6 @@ export const reference_in_prompt_command = (params: {
           dictionary.warning_message.CANNOT_REFERENCE_FILE_OUTSIDE_WORKSPACE
         )
         return
-      }
-
-      const is_checked = params.workspace_provider
-        .get_all_checked_paths()
-        .includes(file_path)
-
-      const is_partially_checked =
-        is_directory &&
-        params.workspace_provider.is_partially_checked(file_path)
-
-      if (!is_checked && !is_partially_checked) {
-        await params.workspace_provider.update_check_state(
-          target_item as FileItem,
-          vscode.TreeItemCheckboxState.Checked
-        )
       }
 
       let relative_path = path.relative(workspace_root, file_path)
