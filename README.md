@@ -45,7 +45,7 @@ In the world of AI coding, agents like Claude Code or Codex rely on "function ca
 
 As it's not possible to train a model to keep architectural order in the codebase (interconnectedness of things are unique patterns), and while CWC provides all the essential tools for necessary housekeeping, it never holds you back when developing new features.
 
-**Zero-overhead prompts for the best token efficiency:**
+**The best token efficiency with zero-overhead prompts:**
 
 <details>
 <summary>Edit context</summary>
