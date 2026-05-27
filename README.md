@@ -46,7 +46,7 @@ In the world of AI coding, agents like Claude Code or Codex rely on "function ca
 Although selecting files for every task sounds like a chore, it builds codebase understanding, maintains coding skills and lets you prompt the model with simpler, easier to iterate on instructions.
 
 > [!TIP]
-> Not sure what to select? CWC can help you reliably find relevant files with a chatbot or an API call.
+> Not sure what to select? CWC can help you reliably find relevant files using a dedicated prompt type.
 
 **Review structure of main prompts:**
 
