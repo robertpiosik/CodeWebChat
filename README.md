@@ -13,7 +13,7 @@
 
 Code Web Chat is a free and open-source, privacy-first AI coding toolkit for VS Code.
 
-**CWC constructs token-efficient prompts for:**
+**CWC helps you construct token-efficient prompts for:**
 
 - **chatbots**—ChatGPT, Claude, Gemini, etc.
 - **APIs**—remote and local model providers
