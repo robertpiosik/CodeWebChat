@@ -13,10 +13,10 @@
 
 Code Web Chat is a free and open-source AI coding toolkit for VS Code.
 
-- enhances the native file explorer
-- prepares prompts with the selected files for chatbots and APIs
-- integrates multi-file edits with easy rollback
-- generates commit messages, and more!
+- enhanced the native file explorer
+- prompts with the selected files for chatbots and APIs
+- multi-file edits integration with easy rollback
+- code at cursor, commit messages, and more!
 
 <br/>
 
