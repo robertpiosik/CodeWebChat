@@ -14,8 +14,8 @@
 Code Web Chat is a free and open-source AI coding toolkit for VS Code.
 
 - enhances the native file explorer
-- prepares file-dense prompts
-- integrates multi-file edits
+- prepares prompts with the selected files for chatbots and APIs
+- integrates multi-file edits with easy rollback
 - generates commit messages, and more!
 
 <br/>
@@ -43,7 +43,7 @@ In the world of AI coding, agents like Codex or Claude Code rely on "function ca
 > [!TIP]
 > Not sure what files should you select? CWC helps you find relevant files using a dedicated prompt type.
 
-**Review structure of main prompts:**
+**Generated prompts are XML-formatted:**
 
 <details>
 <summary>Edit context</summary>
