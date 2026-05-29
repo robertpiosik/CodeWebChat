@@ -17,7 +17,7 @@ Code Web Chat is a token-efficient AI coding toolkit for VS Code.
 - enhanced native file explorer
 - prompts with selected files for chatbots and APIs
 - multi-file edits integration with easy rollback
-- code at cursor, commit messages, and more!
+- code at cursor, commit messages, and more
 
 <br/>
 
