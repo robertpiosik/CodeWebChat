@@ -15,8 +15,8 @@ Code Web Chat (CWC) is a token-efficient AI coding toolkit for VS Code.
 
 - free and open-source
 - enhances the native file explorer
-- send file-dense prompts with free chatbots
-- multi-file edits integration with easy rollback
+- no-cost AI coding with free chatbots
+- interactive chat response previewing
 - code at cursor, commit messages, and more
 
 <br/>
@@ -96,7 +96,7 @@ Find all files building modules of the following task's scope:
 
 ## Prompt caching
 
-When working with CWC, it's natural to start new chats (send fresh messages) instead of continuing a long conversation. With context files ordered based on update and selection recency, **[prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) is effectively utilized across tasks**.
+When working with CWC, it's natural to start new chats (send fresh messages) instead of continuing a hallucination-prone long conversation. With context files ordered based on edit and selection recency, **[prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) is effectively utilized across tasks**.
 
 ## Enabling autofill
 
@@ -139,7 +139,7 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 
 ## Calling APIs
 
-CWC includes all the essential API tools. Bring Your Own Key (BYOK) for a model provider of choice. Use self-hosted model provider like [Ollama](https://ollama.com/search) or [LM Studio](https://lmstudio.ai/).
+All the essential API tools to get the job done. Bring Your Own Key (BYOK) for a model provider of choice. Use self-hosted model provider like [Ollama](https://ollama.com/search) or [LM Studio](https://lmstudio.ai/).
 
 - **Intelligent Update**—Integrate changes from malformed responses.
 - **Edit Context**—Pair-programming using natural language instructions.
@@ -150,12 +150,10 @@ CWC includes all the essential API tools. Bring Your Own Key (BYOK) for a model 
 
 ## Privacy
 
+The extension doesn’t communicate with any server for so-called telemetry.
+
 The editor-browser communication for chatbot autofill runs on local Websockets. \
 When calling APIs, requests are sent directly to the configured model providers.
-
-Code Web Chat doesn’t communicate to any server for so-called telemetry.
-
-Zero function calling design eliminates the risk of dangerous command executions and prompt injections.
 
 ## Commands
 
