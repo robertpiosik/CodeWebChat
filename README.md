@@ -50,7 +50,7 @@ In the world of AI coding, agents like Codex or Claude Code rely on "function ca
 <summary>Edit context</summary>
 
 ```
-<files>[current file tree selection]</files>
+<files>[current file selection]</files>
 <system>[edit format instructions]</system>
 [user-typed prompt]
 ```
@@ -61,7 +61,7 @@ In the world of AI coding, agents like Codex or Claude Code rely on "function ca
 <summary>Ask about context</summary>
 
 ```
-<files>[current file tree selection]</files>
+<files>[current file selection]</files>
 [user-typed prompt]
 ```
 
@@ -72,7 +72,7 @@ In the world of AI coding, agents like Codex or Claude Code rely on "function ca
 
 ```
 <files>
-[current file tree selection]
+[rough file selection]
 <file path="[active file]">
 [code before cursor]<missing_text>[user-typed prompt]</missing_text>[code after cursor]
 </file>
