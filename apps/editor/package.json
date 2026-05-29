@@ -1,8 +1,8 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
-  "description": "Token-efficient AI coding toolkit (CWC)",
-  "version": "1.924.0",
+  "description": "CWC is a token-efficient AI coding toolkit",
+  "version": "1.925.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
