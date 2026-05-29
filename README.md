@@ -15,7 +15,7 @@ Code Web Chat (CWC) is a token-efficient AI coding toolkit for VS Code.
 
 - free and open-source
 - enhanced native file explorer
-- prompts with selected files for free chatbots and APIs
+- file-dense prompts for free chatbots and APIs
 - multi-file edits integration with easy rollback
 - code at cursor, commit messages, and more
 
