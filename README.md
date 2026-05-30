@@ -180,9 +180,23 @@ When calling APIs, requests are sent directly to the configured model providers.
 
 - `Commit Changes` - Generate commit message and commit.
 
-## Contributing
+## Build from source
 
-All contributions are welcome. Feel free to submit pull requests, feature requests and bug reports.
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v20.x recommended)
+- [pnpm](https://pnpm.io/)
+
+### Steps
+
+1. Clone the repository:
+   `git clone https://github.com/robertpiosik/CodeWebChat.git && cd CodeWebChat`
+2. Install workspace dependencies:
+   `pnpm install`
+3. Navigate to the editor app and build the package:
+   `cd apps/editor && pnpm run build`
+4. Install the generated `.vsix` file in VS Code:
+   Open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`), run **Extensions: Install from VSIX...**, and select the newly created file.
 
 <hr />
 
