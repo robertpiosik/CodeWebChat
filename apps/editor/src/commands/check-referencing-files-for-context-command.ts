@@ -32,9 +32,13 @@ export const check_referencing_files_for_context_command = (
 
             if (!locations) return []
 
+            const current_file_path = document.uri.fsPath
             const file_map = new Map<string, vscode.Range>()
             locations.forEach((loc) => {
               const file_path = loc.uri.fsPath
+
+              if (file_path == current_file_path) return
+
               if (
                 workspace_provider.get_workspace_root_for_file(file_path) &&
                 !workspace_provider.is_ignored_by_patterns(file_path)
