@@ -13,6 +13,7 @@
 
 Code Web Chat (CWC) connects VS Code with 15+ free chatbots.
 
+- TOS-compliant
 - free and open-source
 - built independently
 - zero telemetry
