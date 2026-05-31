@@ -37,7 +37,7 @@ Code Web Chat (CWC) is an AI coding toolkit for VS Code designed for the best to
 
 ## Introduction
 
-In the world of AI coding, agents like Codex or Claude Code rely on "function calling" (where the AI asks "the harness" to read a file, waits for the tool to respond, then reads another). CWC flips this by letting you pick files directly from the file explorer, so that the model has everything it needs from the start.
+In the world of AI coding, agents like Codex or Claude Code rely on "function calling" (where the AI asks "the harness" to read a file, waits for the tool to respond, then reads another). CWC flips this! Context is fully selectible on the native, enhanced file explorer, so files are sent with insturctions in a single message, so the model has everything it needs from the start.
 
 > [!TIP]
 > Even if you're not sure about which files to select, CWC helps select them intelligently (by composing a special prompt with rough selection) or statically (using LSP).
