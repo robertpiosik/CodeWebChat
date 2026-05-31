@@ -48,7 +48,7 @@ CWC flips this!
 Here, context is managed by you, directly from the native file explorer so the model has everything it needs to generate accurate response from the start.
 
 > [!TIP]
-> Even if you're not sure which files should be selected, the tool offers both 'intelligent' and static ways to find all the necessary files, including valuable examples.
+> Even if you're not sure what should be in context, the tool offers both 'intelligent' and static ways to find all the necessary files, including valuable examples.
 
 **Generated prompts are XML-formatted:**
 
