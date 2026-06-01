@@ -41,11 +41,11 @@ Code Web Chat (CWC) connects VS Code with 15+ free chatbots.
 
 ## Introduction
 
-In the world of AI coding, agents like Codex or Claude Code rely on "function calling" (where the AI asks "the harness" to read a file, waits for the tool to respond, then reads another).
+In the world of AI coding, agents like Codex or Claude Code rely on "tool calling" (where the AI asks "the harness" to read a file, waits for the tool to respond, then reads another).
 
 CWC flips this!
 
-Here, context is managed by you, directly from the native file explorer so the model has everything it needs to generate accurate edits without a single tool call.
+Here, context is managed by you, directly from the native file explorer so the model has everything it needs without a single tool call.
 
 > [!TIP]
 > Even if you're not sure what should be in context, the tool offers both 'intelligent' and static ways to find all the necessary files, including valuable examples.
