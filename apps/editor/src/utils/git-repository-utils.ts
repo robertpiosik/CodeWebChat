@@ -20,9 +20,7 @@ export type GitRepository = {
   show: (ref: string, path: string) => Promise<string>
 }
 
-export const get_git_repository = async (
-  source_control?: vscode.SourceControl
-): Promise<GitRepository | null> => {
+export const get_all_git_repositories = (): GitRepository[] | null => {
   const git_extension = vscode.extensions.getExtension('vscode.git')
   if (!git_extension) {
     vscode.window.showErrorMessage(
@@ -40,6 +38,54 @@ export const get_git_repository = async (
     )
     return null
   }
+
+  return repositories
+}
+
+export const get_git_repository = async (
+  source_control?: vscode.SourceControl
+): Promise<GitRepository | null> => {
+  const repositories = get_all_git_repositories()
+  if (!repositories) return null
+
+  if (source_control?.rootUri) {
+    const repository = repositories.find(
+      (repo) => repo.rootUri.toString() === source_control.rootUri!.toString()
+    )
+    if (repository) {
+      return repository
+    }
+  }
+
+  if (repositories.length == 1) {
+    return repositories[0]
+  }
+
+  const picks = repositories.map((repo) => {
+    const folder = vscode.workspace.getWorkspaceFolder(repo.rootUri)
+    return {
+      label: folder ? folder.name : path.basename(repo.rootUri.fsPath),
+      description: repo.rootUri.fsPath,
+      repository: repo
+    }
+  })
+
+  const selected = await vscode.window.showQuickPick(picks, {
+    placeHolder: t('command.commit-message.select-repository')
+  })
+
+  if (!selected) {
+    return null
+  }
+
+  return selected.repository
+}
+
+export const get_repository_for_commit = async (
+  source_control?: vscode.SourceControl
+): Promise<GitRepository | null> => {
+  const repositories = get_all_git_repositories()
+  if (!repositories) return null
 
   if (source_control?.rootUri) {
     const repository = repositories.find(

@@ -1,9 +1,9 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import {
-  get_git_repository,
   prepare_staged_changes,
-  GitRepository
+  GitRepository,
+  get_repository_for_commit
 } from '../../utils/git-repository-utils'
 import { display_token_count } from '../../utils/display-token-count'
 import { get_commit_message_config } from './utils/get-commit-message-config'
@@ -14,6 +14,7 @@ import axios from 'axios'
 import { PromptsForCommitMessagesUtils } from '../../utils/prompts-for-commit-messages-utils'
 import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
 import { MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE } from '@/constants/values'
+import { dictionary } from '@shared/constants/dictionary'
 
 const truncate_prompt = (text: string): string => {
   if (text.length <= MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE) return text
@@ -52,7 +53,7 @@ export const generate_commit_message_command = (
     let force_quick_pick = false
     const selection_state: { files?: string[] } = {}
 
-    const repository = await get_git_repository(params.source_control)
+    const repository = await get_repository_for_commit(params.source_control)
     if (!repository) return
 
     while (true) {
@@ -291,7 +292,7 @@ export const generate_commit_message_command = (
   const copy_command = vscode.commands.registerCommand(
     'codeWebChat.copyCommitMessagePrompt',
     async (source_control?: vscode.SourceControl) => {
-      const repository = await get_git_repository(source_control)
+      const repository = await get_repository_for_commit(source_control)
       if (!repository) return
       const data = await get_prompt_data(repository, !!source_control)
       if (!data) return
