@@ -155,7 +155,8 @@ All the essential API tools to get the job done. Bring Your Own Key (BYOK) for a
 
 The extension doesn’t communicate with any server for so-called telemetry.
 
-The editor-browser communication for chatbot autofill runs on local Websockets. \
+The editor-browser communication for chatbot autofill runs on local WebSockets.
+
 When calling APIs, requests are sent directly to the configured model providers.
 
 ## Commands
