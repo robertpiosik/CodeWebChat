@@ -71,43 +71,6 @@ export const home = {
     hu: 'Kattintson szöveg hozzáadásához...',
     bg: 'Кликнете, за да добавите текст...'
   },
-  'home.footer.license': {
-    en: 'Released under the {link}',
-    pl: 'Wydano na {link}',
-    'zh-cn': '在 {link} 下发布',
-    ja: '{link} の下で公開',
-    'zh-tw': '在 {link} 下發佈',
-    de: 'Veröffentlicht unter der {link}',
-    es: 'Publicado bajo la {link}',
-    fr: 'Publié sous la {link}',
-    'pt-br': 'Lançado sob a {link}',
-    ru: 'Распространяется по {link}',
-    ko: '{link}에 따라 출시됨',
-    it: 'Rilasciato sotto la {link}',
-    tr: '{link} kapsamında yayınlanmıştır',
-    cs: 'Vydáno pod {link}',
-    hu: '{link} alatt kiadva',
-    bg: 'Публикуван под {link}'
-  },
-  'home.footer.license.name': {
-    en: 'GPL-3.0 license',
-    pl: 'licencji GPL-3.0',
-    'zh-cn': 'GPL-3.0 许可证',
-    ja: 'GPL-3.0 ライセンス',
-    'zh-tw': 'GPL-3.0 許可證',
-    de: 'GPL-3.0-Lizenz',
-    es: 'licencia GPL-3.0',
-    fr: 'licence GPL-3.0',
-    'pt-br': 'licença GPL-3.0',
-    ru: 'лицензией GPL-3.0',
-    ko: 'GPL-3.0 라이선스',
-    it: 'licenza GPL-3.0',
-    tr: 'GPL-3.0 lisansı',
-    cs: 'licencí GPL-3.0',
-
-    hu: 'GPL-3.0 licenc',
-    bg: 'GPL-3.0 лиценз'
-  },
   'home.footer.copyright': {
     en: 'Copyright © {year} {link}',
     pl: 'Copyright © {year} {link}',

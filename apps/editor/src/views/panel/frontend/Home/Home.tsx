@@ -327,18 +327,6 @@ export const Home: React.FC<Props> = (props) => {
               <div>{props.version}</div>
               <div>
                 <Translation
-                  id="home.footer.license"
-                  components={{
-                    link: (
-                      <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE">
-                        {t('home.footer.license.name')}
-                      </a>
-                    )
-                  }}
-                />
-              </div>
-              <div>
-                <Translation
                   id="home.footer.copyright"
                   components={{
                     year: new Date().getFullYear().toString(),
