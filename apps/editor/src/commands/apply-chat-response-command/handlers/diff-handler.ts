@@ -8,6 +8,42 @@ import { create_safe_path } from '@/utils/path-sanitizer'
 import { apply_diff } from '../utils/edit-formats/diffs'
 import { remove_directory_if_empty } from '../utils/file-operations'
 
+export const sanitize_patch_content = (
+  patch_content: string,
+  workspace_name?: string
+): string => {
+  if (!workspace_name) return patch_content
+
+  const lines = patch_content.split('\n')
+  return lines.map(line => {
+    if (line.startsWith('--- a/')) {
+      const match = line.match(/^--- a\/(.+)$/)
+      if (match && match[1].startsWith(`${workspace_name}/`)) {
+        return `--- a/${match[1].substring(workspace_name.length + 1)}`
+      }
+    } else if (line.startsWith('+++ b/')) {
+      const match = line.match(/^\+\+\+ b\/(.+)$/)
+      if (match && match[1].startsWith(`${workspace_name}/`)) {
+        return `+++ b/${match[1].substring(workspace_name.length + 1)}`
+      }
+    } else if (line.startsWith('diff --git ')) {
+      const match = line.match(/^diff --git a\/(.+) b\/(.+)$/)
+      if (match) {
+        let path_a = match[1]
+        let path_b = match[2]
+        if (path_a.startsWith(`${workspace_name}/`)) {
+          path_a = path_a.substring(workspace_name.length + 1)
+        }
+        if (path_b.startsWith(`${workspace_name}/`)) {
+          path_b = path_b.substring(workspace_name.length + 1)
+        }
+        return `diff --git a/${path_a} b/${path_b}`
+      }
+    }
+    return line
+  }).join('\n')
+}
+
 const INDENTATION_BASED_EXTENSIONS = new Set(['.py', '.yaml', '.yml'])
 
 const is_indentation_based_file = (file_path: string): boolean => {
@@ -21,39 +57,6 @@ interface PatchFileInfo {
   is_new?: boolean
   is_deleted?: boolean
   is_renaming?: boolean
-}
-
-export const normalize_patch_paths = (
-  patch_content: string,
-  workspace_path: string
-): string => {
-  const workspace_name = path.basename(workspace_path)
-  const lines = patch_content.split('\n')
-  const normalized_lines = lines.map((line) => {
-    if (line.startsWith('--- ') && line != '--- /dev/null') {
-      const match = line.match(/^--- (a\/)?(.+)$/)
-      if (match) {
-        const prefix = match[1] || 'a/'
-        let path_part = match[2]
-        if (path_part.startsWith(`${workspace_name}/`)) {
-          path_part = path_part.substring(workspace_name.length + 1)
-        }
-        return `--- ${prefix}${path_part}`
-      }
-    } else if (line.startsWith('+++ ') && line != '+++ /dev/null') {
-      const match = line.match(/^\+\+\+ (b\/)?(.+)$/)
-      if (match) {
-        const prefix = match[1] || 'b/'
-        let path_part = match[2]
-        if (path_part.startsWith(`${workspace_name}/`)) {
-          path_part = path_part.substring(workspace_name.length + 1)
-        }
-        return `+++ ${prefix}${path_part}`
-      }
-    }
-    return line
-  })
-  return normalized_lines.join('\n')
 }
 
 const parse_patch_header = (
@@ -75,7 +78,7 @@ const parse_patch_header = (
       if (line == '--- /dev/null') {
         is_new = true
       } else {
-        const from_match = line.match(/^--- (?:a\/)?(.+)$/)
+        const from_match = line.match(/^--- a\/(.+)$/)
         if (from_match && from_match[1]) {
           from_path = from_match[1]
         }
@@ -85,7 +88,7 @@ const parse_patch_header = (
       if (line == '+++ /dev/null') {
         is_deleted = true
       } else {
-        const match = line.match(/^\+\+\+ (?:b\/)?(.+)$/)
+        const match = line.match(/^\+\+\+ b\/(.+)$/)
         if (match && match[1]) {
           to_path = match[1]
         }
@@ -483,7 +486,6 @@ export const apply_git_patch = async (
   original_states?: OriginalFileState[]
   diff_application_method?: 'recount' | 'search_and_replace'
 }> => {
-  patch_content = normalize_patch_paths(patch_content, workspace_path)
   const patch_info = parse_patch_header(patch_content, workspace_path)
 
   if (patch_info.is_new) {

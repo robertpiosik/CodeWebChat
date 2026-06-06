@@ -13,7 +13,7 @@ import {
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
-import { apply_git_patch } from './handlers/diff-handler'
+import { apply_git_patch, sanitize_patch_content } from './handlers/diff-handler'
 import { apply_file_relocations } from './utils/file-operations'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { get_intelligent_update_config } from '@/utils/intelligent-update-utils'
@@ -320,13 +320,17 @@ export const process_chat_response = async (params: {
         workspace_path = workspace_map.get(patch.workspace_name)!
       }
 
-      const result = await apply_git_patch(patch.content, workspace_path)
+      const sanitized_patch_content = sanitize_patch_content(
+        patch.content,
+        patch.workspace_name
+      )
+      const result = await apply_git_patch(sanitized_patch_content, workspace_path)
 
       if (result.success) {
         if (result.diff_application_method && result.original_states) {
           for (const state of result.original_states) {
             state.diff_application_method = result.diff_application_method
-            state.ai_content = patch.content
+            state.ai_content = sanitized_patch_content
           }
         }
         if (result.original_states) {
@@ -346,7 +350,7 @@ export const process_chat_response = async (params: {
         if (result.original_states) {
           for (const state of result.original_states) {
             state.apply_failed = true
-            state.ai_content = patch.content
+            state.ai_content = sanitized_patch_content
           }
           all_original_states = all_original_states.concat(
             result.original_states
