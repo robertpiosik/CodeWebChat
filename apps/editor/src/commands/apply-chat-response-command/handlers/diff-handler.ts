@@ -23,6 +23,39 @@ interface PatchFileInfo {
   is_renaming?: boolean
 }
 
+export const normalize_patch_paths = (
+  patch_content: string,
+  workspace_path: string
+): string => {
+  const workspace_name = path.basename(workspace_path)
+  const lines = patch_content.split('\n')
+  const normalized_lines = lines.map((line) => {
+    if (line.startsWith('--- ') && line != '--- /dev/null') {
+      const match = line.match(/^--- (a\/)?(.+)$/)
+      if (match) {
+        const prefix = match[1] || 'a/'
+        let path_part = match[2]
+        if (path_part.startsWith(`${workspace_name}/`)) {
+          path_part = path_part.substring(workspace_name.length + 1)
+        }
+        return `--- ${prefix}${path_part}`
+      }
+    } else if (line.startsWith('+++ ') && line != '+++ /dev/null') {
+      const match = line.match(/^\+\+\+ (b\/)?(.+)$/)
+      if (match) {
+        const prefix = match[1] || 'b/'
+        let path_part = match[2]
+        if (path_part.startsWith(`${workspace_name}/`)) {
+          path_part = path_part.substring(workspace_name.length + 1)
+        }
+        return `+++ ${prefix}${path_part}`
+      }
+    }
+    return line
+  })
+  return normalized_lines.join('\n')
+}
+
 const parse_patch_header = (
   patch_content: string,
   workspace_path?: string
@@ -42,7 +75,7 @@ const parse_patch_header = (
       if (line == '--- /dev/null') {
         is_new = true
       } else {
-        const from_match = line.match(/^--- a\/(.+)$/)
+        const from_match = line.match(/^--- (?:a\/)?(.+)$/)
         if (from_match && from_match[1]) {
           from_path = from_match[1]
         }
@@ -52,7 +85,7 @@ const parse_patch_header = (
       if (line == '+++ /dev/null') {
         is_deleted = true
       } else {
-        const match = line.match(/^\+\+\+ b\/(.+)$/)
+        const match = line.match(/^\+\+\+ (?:b\/)?(.+)$/)
         if (match && match[1]) {
           to_path = match[1]
         }
@@ -450,6 +483,7 @@ export const apply_git_patch = async (
   original_states?: OriginalFileState[]
   diff_application_method?: 'recount' | 'search_and_replace'
 }> => {
+  patch_content = normalize_patch_paths(patch_content, workspace_path)
   const patch_info = parse_patch_header(patch_content, workspace_path)
 
   if (patch_info.is_new) {
