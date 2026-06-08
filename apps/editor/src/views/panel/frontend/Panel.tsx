@@ -243,14 +243,10 @@ export const Panel = () => {
     return undefined
   }
 
-  const has_affixes =
-    !!updated_preset?.prompt_prefix || !!updated_preset?.prompt_suffix
   const has_instructions = !!get_current_instructions().trim()
   const is_preview_disabled =
     !is_connected ||
-    (!has_affixes &&
-      !has_instructions &&
-      web_prompt_type != 'code-at-cursor') ||
+    (!has_instructions && web_prompt_type != 'code-at-cursor') ||
     (web_prompt_type == 'code-at-cursor' &&
       (!currently_open_file_path || !!current_selection))
 
@@ -540,10 +536,9 @@ export const Panel = () => {
                           : web_prompt_type == 'code-at-cursor' &&
                               !!current_selection
                             ? 'Unable to work with text selection'
-                            : !has_affixes &&
-                                !has_instructions &&
+                            : !has_instructions &&
                                 web_prompt_type != 'code-at-cursor'
-                              ? 'Enter instructions or affixes to preview'
+                              ? 'Enter instructions to preview'
                               : ''
                     }
                   >
@@ -555,13 +550,6 @@ export const Panel = () => {
               <EditPresetForm
                 preset={updating_preset}
                 on_update={set_updated_preset}
-                on_insert_symbol_click={(target) => {
-                  post_message(vscode, {
-                    command: 'SHOW_HASH_SIGN_QUICK_PICK',
-                    is_for_code_completions: false,
-                    target
-                  })
-                }}
                 pick_model={(chatbot_name, current_model_id) => {
                   post_message(vscode, {
                     command: 'PICK_MODEL',

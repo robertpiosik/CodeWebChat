@@ -8,10 +8,6 @@ import { Field as UiField } from '@ui/components/editor/panel/Field'
 import { Slider as UiSlider } from '@ui/components/editor/panel/Slider'
 import { Input as UiInput } from '@ui/components/editor/common/Input'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
-import {
-  PromptTemplate as UiPromptTemplate,
-  PromptTemplateHandle
-} from '@ui/components/editor/panel/prompts/PromptTemplate'
 import { BackendMessage } from '@/views/panel/types/messages'
 import { PresetOption as UiPresetOption } from '@ui/components/editor/panel/PresetOption'
 import { Scrollable as UiScrollable } from '@ui/components/editor/panel/Scrollable'
@@ -26,18 +22,13 @@ type Props = {
     supported_efforts: string[],
     current_effort?: string
   ) => void
-  on_insert_symbol_click: (target: 'preset-prefix' | 'preset-suffix') => void
 }
 
 /**
  * Preset can have a "group" variant (when chatbot is not set). It is used to:
  * - initialize all selected presets below it,
- * - add additional prefix and suffix to each preset below it.
  */
 export const EditPresetForm: React.FC<Props> = (props) => {
-  const prefix_ref = useRef<PromptTemplateHandle>(null)
-  const suffix_ref = useRef<PromptTemplateHandle>(null)
-
   const [chatbot, set_chatbot] = useState(props.preset.chatbot)
   const [name, set_name] = useState(props.preset.name)
   const [temperature, set_temperature] = useState(props.preset.temperature)
@@ -54,18 +45,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
   )
   const [port, set_port] = useState(props.preset.port)
   const [new_url, set_new_url] = useState(props.preset.new_url)
-  const [prompt_prefix, set_prompt_prefix] = useState(
-    props.preset.prompt_prefix
-  )
-  const [prompt_suffix, set_prompt_suffix] = useState(
-    props.preset.prompt_suffix
-  )
   const [options, set_options] = useState<string[]>(props.preset.options || [])
-  const [active_field, set_active_field] = useState<
-    'prompt_prefix' | 'prompt_suffix' | null
-  >(null)
-  const [is_prompt_template_collapsed, set_is_prompt_template_collapsed] =
-    useState(!(props.preset.prompt_prefix || props.preset.prompt_suffix))
   const [is_sampling_collapsed, set_is_sampling_collapsed] = useState(
     props.preset.temperature === undefined && props.preset.top_p === undefined
   )
@@ -121,8 +101,6 @@ export const EditPresetForm: React.FC<Props> = (props) => {
       props.on_update({
         name,
         chatbot,
-        ...(prompt_prefix ? { prompt_prefix } : {}),
-        ...(prompt_suffix ? { prompt_suffix } : {}),
         ...(temperature !== undefined && temperature != 1
           ? { temperature }
           : {}),
@@ -140,8 +118,6 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     } else {
       props.on_update({
         name,
-        ...(prompt_prefix ? { prompt_prefix } : {}),
-        ...(prompt_suffix ? { prompt_suffix } : {})
       })
     }
   }, [
@@ -155,8 +131,6 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     system_instructions,
     port,
     new_url,
-    prompt_prefix,
-    prompt_suffix,
     options
   ])
 
@@ -196,42 +170,11 @@ export const EditPresetForm: React.FC<Props> = (props) => {
         handle_chatbot_change(message.chatbot_id as keyof typeof CHATBOTS)
       } else if (message.command == 'NEWLY_PICKED_REASONING_EFFORT') {
         set_reasoning_effort(message.effort)
-      } else if (message.command == 'INSERT_SYMBOL_AT_CURSOR') {
-        const ref = message.target == 'preset-prefix' ? prefix_ref : suffix_ref
-        const set_text =
-          message.target == 'preset-prefix'
-            ? set_prompt_prefix
-            : set_prompt_suffix
-        const text =
-          message.target == 'preset-prefix' ? prompt_prefix : prompt_suffix
-
-        if (ref.current) {
-          const start = ref.current.get_caret_position()
-          const end = start
-          const before = (text || '').substring(0, start)
-          const after = (text || '').substring(end)
-
-          const is_after_hash_sign = before.endsWith('#')
-          const prefix_before = is_after_hash_sign
-            ? before.slice(0, -1)
-            : before
-
-          const new_text = prefix_before + message.text + after
-          set_text(new_text)
-
-          setTimeout(() => {
-            if (ref.current) {
-              ref.current.focus()
-              const new_caret = prefix_before.length + message.text.length
-              ref.current.set_caret_position(new_caret)
-            }
-          }, 0)
-        }
       }
     }
     window.addEventListener('message', handle_message)
     return () => window.removeEventListener('message', handle_message)
-  }, [active_field, prompt_prefix, prompt_suffix])
+  }, [])
 
   const supported_reasoning_efforts = useMemo(() => {
     return (
@@ -534,56 +477,6 @@ export const EditPresetForm: React.FC<Props> = (props) => {
             )}
           </UiFieldset>
         )}
-
-        <UiFieldset
-          label="Prompt template"
-          is_collapsed={is_prompt_template_collapsed}
-          on_toggle_collapsed={() =>
-            set_is_prompt_template_collapsed(!is_prompt_template_collapsed)
-          }
-        >
-          <UiField
-            label={chatbot ? 'Prompt Prefix' : 'Group Prefix'}
-            html_for="prefix"
-            info={
-              chatbot
-                ? 'Text prepended to all prompts used with this preset.'
-                : "Text prepended to all prompts used with this group's presets."
-            }
-          >
-            <UiPromptTemplate
-              id="prefix"
-              ref={prefix_ref}
-              value={prompt_prefix}
-              on_change={(value) => set_prompt_prefix(value)}
-              on_focus={() => set_active_field('prompt_prefix')}
-              on_insert_symbol_click={() =>
-                props.on_insert_symbol_click('preset-prefix')
-              }
-            />
-          </UiField>
-
-          <UiField
-            label={chatbot ? 'Prompt Suffix' : 'Group Suffix'}
-            html_for="suffix"
-            info={
-              chatbot
-                ? 'Text appended to all prompts used with this preset.'
-                : "Text appended to all prompts used with this group's presets."
-            }
-          >
-            <UiPromptTemplate
-              id="suffix"
-              ref={suffix_ref}
-              value={prompt_suffix}
-              on_change={(value) => set_prompt_suffix(value)}
-              on_focus={() => set_active_field('prompt_suffix')}
-              on_insert_symbol_click={() =>
-                props.on_insert_symbol_click('preset-suffix')
-              }
-            />
-          </UiField>
-        </UiFieldset>
       </div>
     </UiScrollable>
   )

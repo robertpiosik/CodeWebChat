@@ -30,7 +30,6 @@ const presets: Presets.Preset[] = [
   {
     name: 'ChatGPT for documentation',
     chatbot: 'ChatGPT' as keyof typeof CHATBOTS,
-    prompt_prefix: 'Please review and improve documentation',
     is_pinned: true
   },
   {

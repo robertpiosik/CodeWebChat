@@ -1,7 +1,6 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import * as vscode from 'vscode'
 import { FilesCollector } from '@/utils/files-collector'
-import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import {
   code_at_cursor_instructions_for_panel,
   find_relevant_files_instructions,
@@ -159,15 +158,10 @@ export const handle_send_to_browser = async (params: {
 
     const prepared_chats = await Promise.all(
       resolved_preset_names.map(async (preset_name) => {
-        const instructions = apply_preset_affixes_to_instruction({
-          instruction: current_instructions,
-          preset_name: preset_name,
-          presets_config_key: params.panel_provider.get_presets_config_key()
-        })
 
         const { instruction: processed_instructions, skill_definitions } =
           await replace_symbols({
-            instruction: instructions,
+            instruction: current_instructions,
             context: params.panel_provider.context,
             workspace_provider: params.panel_provider.workspace_provider,
             remove_images: true
@@ -367,9 +361,7 @@ const show_preset_quick_pick = async (params: {
         if (params.get_is_preset_disabled(preset)) {
           if (
             !params.is_in_code_completions_mode &&
-            !params.current_instructions &&
-            !preset.promptPrefix &&
-            !preset.promptSuffix
+            !params.current_instructions
           ) {
             params.panel_provider.send_message({
               command: 'SHOW_AUTO_CLOSING_MODAL',
@@ -496,12 +488,7 @@ const resolve_presets = async (params: {
         (is_in_code_completions_mode &&
           (!params.panel_provider.currently_open_file_path ||
             !!params.panel_provider.current_selection)) ||
-        (!is_in_code_completions_mode &&
-          !(
-            current_instructions ||
-            preset.promptPrefix ||
-            preset.promptSuffix
-          )))) ||
+        (!is_in_code_completions_mode && !current_instructions))) ||
     false
 
   if (params.preset_name !== undefined) {
@@ -510,9 +497,7 @@ const resolve_presets = async (params: {
       if (get_is_preset_disabled(preset)) {
         if (
           !is_in_code_completions_mode &&
-          !current_instructions &&
-          !preset.promptPrefix &&
-          !preset.promptSuffix
+          !current_instructions
         ) {
           params.panel_provider.send_message({
             command: 'SHOW_AUTO_CLOSING_MODAL',
@@ -554,11 +539,9 @@ const resolve_presets = async (params: {
           (p) => p.name && !preset_names.includes(p.name)
         )
         const any_disabled_due_to_instructions = disabled_presets.some(
-          (p) =>
+          () =>
             !is_in_code_completions_mode &&
-            !current_instructions &&
-            !p.promptPrefix &&
-            !p.promptSuffix
+            !current_instructions
         )
         if (any_disabled_due_to_instructions) {
           vscode.window.showWarningMessage(
@@ -572,11 +555,9 @@ const resolve_presets = async (params: {
 
     if (default_presets_in_group.length > 0) {
       const any_disabled_due_to_instructions = default_presets_in_group.some(
-        (p) =>
+        () =>
           !is_in_code_completions_mode &&
-          !current_instructions &&
-          !p.promptPrefix &&
-          !p.promptSuffix
+          !current_instructions
       )
       if (any_disabled_due_to_instructions) {
         params.panel_provider.send_message({
@@ -617,9 +598,7 @@ const resolve_presets = async (params: {
           if (get_is_preset_disabled(item)) {
             if (
               !is_in_code_completions_mode &&
-              !current_instructions &&
-              !item.promptPrefix &&
-              !item.promptSuffix
+              !current_instructions
             ) {
               params.panel_provider.send_message({
                 command: 'SHOW_AUTO_CLOSING_MODAL',

@@ -253,7 +253,6 @@ export interface ShowAtSignQuickPickMessage extends BaseMessage {
 export interface ShowHashSignQuickPickMessage extends BaseMessage {
   command: 'SHOW_HASH_SIGN_QUICK_PICK'
   is_for_code_completions: boolean
-  target?: 'prompt-field' | 'preset-prefix' | 'preset-suffix'
 }
 
 export interface CancelApiRequestMessage extends BaseMessage {
@@ -553,12 +552,6 @@ export interface SetupProgressMessage extends BaseMessage {
 
 export interface RequestReturnHomeMessage extends BaseMessage {
   command: 'REQUEST_RETURN_HOME'
-}
-
-export interface InsertSymbolAtCursorMessage extends BaseMessage {
-  command: 'INSERT_SYMBOL_AT_CURSOR'
-  text: string
-  target: 'preset-prefix' | 'preset-suffix'
 }
 
 export interface GetVoiceInputPushToTalkMessage extends BaseMessage {
@@ -975,6 +968,5 @@ export type BackendMessage =
   | RecordingStateMessage
   | FindRelevantFilesShrinkSourceCodeMessage
   | SetupProgressMessage
-  | InsertSymbolAtCursorMessage
   | ReturnHomeMessage
   | VoiceInputPushToTalkMessage

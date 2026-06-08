@@ -29,9 +29,7 @@ export const handle_delete_preset_group_or_separator = async (
     item_type = 'group'
     const item_name = item_to_delete.name
     const is_unnamed = !item_name || /^\(\d+\)$/.test(item_name.trim())
-    const has_affixes =
-      !!item_to_delete.promptPrefix || !!item_to_delete.promptSuffix
-    should_show_confirmation = !is_unnamed || has_affixes
+    should_show_confirmation = !is_unnamed
   } else {
     // It's a separator
     item_type = 'separator'

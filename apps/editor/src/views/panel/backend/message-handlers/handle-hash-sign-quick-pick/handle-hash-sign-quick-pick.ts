@@ -159,7 +159,6 @@ export const handle_hash_sign_quick_pick = async (
   panel_provider: PanelProvider,
   context: vscode.ExtensionContext,
   is_for_code_completions: boolean,
-  target?: 'prompt-field' | 'preset-prefix' | 'preset-suffix'
 ): Promise<void> => {
   const is_find_relevant_files =
     (panel_provider.mode == MODE.WEB &&
@@ -174,21 +173,12 @@ export const handle_hash_sign_quick_pick = async (
   })
 
   if (!replacement) {
-    if (!target || target == 'prompt-field') {
       panel_provider.send_message({
         command: 'FOCUS_PROMPT_FIELD'
       })
-    }
     return
   }
 
-  if (target == 'preset-prefix' || target == 'preset-suffix') {
-    panel_provider.send_message({
-      command: 'INSERT_SYMBOL_AT_CURSOR',
-      text: replacement,
-      target
-    })
-  } else {
     const current_text = panel_provider.current_instruction
 
     const is_after_hash_sign = current_text
@@ -203,5 +193,4 @@ export const handle_hash_sign_quick_pick = async (
     panel_provider.send_message({
       command: 'FOCUS_PROMPT_FIELD'
     })
-  }
 }

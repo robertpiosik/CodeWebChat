@@ -41,8 +41,6 @@ export const handle_update_preset = async (
     return (
       a.name == b.name &&
       a.chatbot == b.chatbot &&
-      a.prompt_prefix == b.prompt_prefix &&
-      a.prompt_suffix == b.prompt_suffix &&
       a.model == b.model &&
       a.temperature === b.temperature && // can be undefined and 0
       a.top_p === b.top_p && // same

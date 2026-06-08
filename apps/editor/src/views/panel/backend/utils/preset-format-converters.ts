@@ -4,8 +4,6 @@ import { Preset } from '@shared/types/preset'
 export type ConfigPresetFormat = {
   name?: string
   chatbot?: keyof typeof CHATBOTS
-  promptPrefix?: string
-  promptSuffix?: string
   model?: string
   temperature?: number
   topP?: number
@@ -26,8 +24,6 @@ export const config_preset_to_ui_format = (
   return {
     name: config_preset.name,
     chatbot: config_preset.chatbot,
-    prompt_prefix: config_preset.promptPrefix,
-    prompt_suffix: config_preset.promptSuffix,
     model: config_preset.model,
     temperature: config_preset.temperature,
     top_p: config_preset.topP,
@@ -49,8 +45,6 @@ export const ui_preset_to_config_format = (
   return {
     name: preset.name || undefined,
     chatbot: preset.chatbot,
-    promptPrefix: preset.prompt_prefix,
-    promptSuffix: preset.prompt_suffix,
     model: preset.model,
     temperature: preset.temperature,
     topP: preset.top_p,

@@ -250,8 +250,6 @@ export const Main: React.FC<Props> = (props) => {
         presets: updated_presets.map((preset) => ({
           name: preset.name,
           chatbot: preset.chatbot,
-          prompt_prefix: preset.prompt_prefix,
-          prompt_suffix: preset.prompt_suffix,
           model: preset.model,
           temperature: preset.temperature,
           top_p: preset.top_p,
@@ -286,8 +284,6 @@ export const Main: React.FC<Props> = (props) => {
         presets: updated_presets.map((preset) => ({
           name: preset.name,
           chatbot: preset.chatbot,
-          prompt_prefix: preset.prompt_prefix,
-          prompt_suffix: preset.prompt_suffix,
           model: preset.model,
           temperature: preset.temperature,
           top_p: preset.top_p,
@@ -322,8 +318,6 @@ export const Main: React.FC<Props> = (props) => {
         presets: updated_presets.map((preset) => ({
           name: preset.name,
           chatbot: preset.chatbot,
-          prompt_prefix: preset.prompt_prefix,
-          prompt_suffix: preset.prompt_suffix,
           model: preset.model,
           temperature: preset.temperature,
           top_p: preset.top_p,
@@ -383,8 +377,6 @@ export const Main: React.FC<Props> = (props) => {
       presets: reordered_presets.map((preset) => ({
         name: preset.name,
         chatbot: preset.chatbot,
-        prompt_prefix: preset.prompt_prefix,
-        prompt_suffix: preset.prompt_suffix,
         model: preset.model,
         temperature: preset.temperature,
         top_p: preset.top_p,

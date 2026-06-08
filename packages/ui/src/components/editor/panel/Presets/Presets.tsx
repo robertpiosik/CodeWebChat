@@ -36,8 +36,6 @@ export namespace Presets {
     name?: string
     model?: string
     chatbot?: keyof typeof CHATBOTS
-    prompt_prefix?: string
-    prompt_suffix?: string
     is_selected?: boolean
     is_collapsed?: boolean
     is_pinned?: boolean
@@ -200,16 +198,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   className={styles.presets__item__right}
                   onClick={(e) => e.stopPropagation()}
                 >
-                  {(preset.prompt_prefix || preset.prompt_suffix) && (
-                    <IconButton
-                      codicon_icon="copy"
-                      title={props.translations.copy_tooltip}
-                      on_click={(e) => {
-                        e.stopPropagation()
-                        props.on_preset_copy(preset.name!)
-                      }}
-                    />
-                  )}
                   <IconButton
                     codicon_icon={preset.is_pinned ? 'pinned' : 'pin'}
                     title={
@@ -544,17 +532,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                           }}
                         />
                       )}
-                      {preset.chatbot &&
-                        (preset.prompt_prefix || preset.prompt_suffix) && (
-                          <IconButton
-                            codicon_icon="copy"
-                            title={props.translations.copy_tooltip}
-                            on_click={(e) => {
-                              e.stopPropagation()
-                              props.on_preset_copy(preset.name!)
-                            }}
-                          />
-                        )}
                       {preset.chatbot && (
                         <IconButton
                           codicon_icon={preset.is_pinned ? 'pinned' : 'pin'}

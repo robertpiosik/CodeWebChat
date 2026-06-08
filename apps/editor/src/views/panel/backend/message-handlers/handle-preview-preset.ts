@@ -3,7 +3,6 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { PreviewPresetMessage } from '@/views/panel/types/messages'
 import { FilesCollector } from '@/utils/files-collector'
 import { Preset } from '@shared/types/preset'
-import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import { dictionary } from '@shared/constants/dictionary'
 import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE,
@@ -67,15 +66,6 @@ export const handle_preview_preset = async (
 
     text_to_send = `<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}${missing_text_tag}${text_after_cursor}\n]]>\n</file>\n</files>\n${skill_definitions}${system_instructions}`
   } else if (panel_provider.web_prompt_type != 'code-at-cursor') {
-    const instructions = apply_preset_affixes_to_instruction({
-      instruction: current_instructions,
-      preset_name: message.preset.name!,
-      presets_config_key: panel_provider.get_presets_config_key(),
-      override_affixes: {
-        promptPrefix: message.preset.prompt_prefix,
-        promptSuffix: message.preset.prompt_suffix
-      }
-    })
 
     const collected =
       panel_provider.web_prompt_type != 'no-context'
@@ -85,7 +75,7 @@ export const handle_preview_preset = async (
 
     const { instruction: processed_instructions, skill_definitions } =
       await replace_symbols({
-        instruction: instructions,
+        instruction: current_instructions,
         context: panel_provider.context,
         workspace_provider: panel_provider.workspace_provider,
         remove_images: true
@@ -131,8 +121,6 @@ export const handle_preview_preset = async (
   const preset_for_preview: Preset = {
     name: message.preset.name,
     chatbot: message.preset.chatbot,
-    prompt_prefix: message.preset.prompt_prefix,
-    prompt_suffix: message.preset.prompt_suffix,
     model: message.preset.model,
     temperature: message.preset.temperature,
     top_p: message.preset.top_p,

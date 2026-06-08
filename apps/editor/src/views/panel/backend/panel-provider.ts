@@ -895,7 +895,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               this,
               this.context,
               message.is_for_code_completions,
-              message.target
             )
           } else if (message.command == 'GO_TO_FILE') {
             handle_go_to_file(message)
