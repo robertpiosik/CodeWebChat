@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Preset } from '@shared/types/preset'
 import { BackendMessage } from '../../../types/messages'
-import { post_message } from '../../utils/post_message'
+import { post_message } from '../../utils/post-message'
 
 export const use_preset_editing = (vscode: any) => {
   const [updating_preset, set_updating_preset] = useState<Preset>()

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { BackendMessage } from '../../../types/messages'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
-import { post_message } from '../../utils/post_message'
+import { post_message } from '../../utils/post-message'
 
 export const use_response_history = (vscode: any) => {
   const [response_history, set_response_history] = useState<

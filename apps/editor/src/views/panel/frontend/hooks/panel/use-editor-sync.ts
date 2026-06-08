@@ -4,7 +4,7 @@ import {
   FrontendMessage,
   SelectionState
 } from '../../../types/messages'
-import { post_message } from '../../utils/post_message'
+import { post_message } from '../../utils/post-message'
 
 export const use_editor_sync = (vscode: any) => {
   const [currently_open_file_path, set_currently_open_file_path] = useState<

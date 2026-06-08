@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { BackendMessage } from '../../../types/messages'
-import { post_message } from '../../utils/post_message'
+import { post_message } from '../../utils/post-message'
 import { ApiConfiguration } from '@shared/types/response-history-item'
 import { ItemInPreview } from '@shared/types/file-in-preview'
 

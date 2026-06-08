@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Task } from '@shared/types/task'
 import { BackendMessage } from '../../types/messages'
-import { post_message } from '../utils/post_message'
+import { post_message } from '../utils/post-message'
 
 export const use_tasks = (vscode: any) => {
   const [tasks, set_tasks] = useState<Record<string, Task[]>>({})

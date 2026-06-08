@@ -12,7 +12,7 @@ import {
   SelectionState
 } from '@/views/panel/types/messages'
 import { ApiToolConfiguration } from '@/views/panel/types/messages'
-import { post_message } from '../utils/post_message'
+import { post_message } from '../utils/post-message'
 import { Configurations as UiConfigurations } from '@ui/components/editor/panel/Configurations'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 

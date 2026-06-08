@@ -4,7 +4,7 @@ import { Scrollable as UiScrollable } from '@ui/components/editor/panel/Scrollab
 import { Timeline as UiTimeline } from '@ui/components/editor/panel/Timeline'
 import { ModeButton as UiModeButton } from '@ui/components/editor/panel/ModeButton'
 import cn from 'classnames'
-import { post_message } from '../utils/post_message'
+import { post_message } from '../utils/post-message'
 import { Checkpoint, FrontendMessage } from '@/views/panel/types/messages'
 import { Responses as UiResponses } from '@ui/components/editor/panel/Responses'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
