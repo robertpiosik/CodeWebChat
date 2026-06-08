@@ -7,6 +7,7 @@ import { OriginalFileState } from '../types/original-file-state'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { apply_diff } from '../utils/edit-formats/diffs'
 import { remove_directory_if_empty } from '../utils/file-operations'
+import { DiffItem } from '../utils/clipboard-parser'
 
 export const sanitize_patch_content = (
   patch_content: string,
@@ -130,20 +131,28 @@ const parse_patch_header = (
 }
 
 export const extract_file_paths_from_patch = (
-  patch_content: string
+  patch_content: string,
+  fallback_patch?: DiffItem
 ): string[] => {
   const { from_path, to_path } = parse_patch_header(patch_content)
   const paths = new Set<string>()
   if (from_path) paths.add(from_path)
   if (to_path) paths.add(to_path)
+
+  if (paths.size === 0 && fallback_patch) {
+    if (fallback_patch.file_path) paths.add(fallback_patch.file_path)
+    if (fallback_patch.new_file_path) paths.add(fallback_patch.new_file_path)
+  }
   return Array.from(paths)
 }
 
 export const store_original_file_states = async (
   patch_content: string,
-  workspace_path: string
+  workspace_path: string,
+  workspace_name?: string,
+  fallback_patch?: DiffItem
 ): Promise<OriginalFileState[]> => {
-  const file_paths = extract_file_paths_from_patch(patch_content)
+  const file_paths = extract_file_paths_from_patch(patch_content, fallback_patch)
   const original_states: OriginalFileState[] = []
 
   for (const file_path of file_paths) {
@@ -164,7 +173,7 @@ export const store_original_file_states = async (
         original_states.push({
           file_path,
           content,
-          workspace_name: path.basename(workspace_path)
+          workspace_name
         })
       } catch (error) {
         Logger.error({
@@ -178,7 +187,7 @@ export const store_original_file_states = async (
         file_path,
         content: '',
         file_state: 'new',
-        workspace_name: path.basename(workspace_path)
+        workspace_name
       })
     }
   }
@@ -292,13 +301,15 @@ const process_modified_files = async (
 
 const handle_new_file_patch = async (
   patch_content: string,
-  workspace_path: string
+  workspace_path: string,
+  workspace_name?: string,
+  fallback_patch?: DiffItem
 ): Promise<{
   success: boolean
   original_states?: OriginalFileState[]
   diff_application_method?: 'recount' | 'search_and_replace'
 }> => {
-  const file_paths = extract_file_paths_from_patch(patch_content)
+  const file_paths = extract_file_paths_from_patch(patch_content, fallback_patch)
   if (file_paths.length != 1) {
     Logger.error({
       function_name: 'handle_new_file_patch',
@@ -323,7 +334,9 @@ const handle_new_file_patch = async (
   // `store_original_file_states` will correctly identify this as a new file.
   const original_states = await store_original_file_states(
     patch_content,
-    workspace_path
+    workspace_path,
+    workspace_name,
+    fallback_patch
   )
 
   try {
@@ -364,13 +377,15 @@ const handle_new_file_patch = async (
 
 const handle_deleted_file_patch = async (
   patch_content: string,
-  workspace_path: string
+  workspace_path: string,
+  workspace_name?: string,
+  fallback_patch?: DiffItem
 ): Promise<{
   success: boolean
   original_states?: OriginalFileState[]
   diff_application_method?: 'recount' | 'search_and_replace'
 }> => {
-  const file_paths = extract_file_paths_from_patch(patch_content)
+  const file_paths = extract_file_paths_from_patch(patch_content, fallback_patch)
   if (file_paths.length != 1) {
     Logger.error({
       function_name: 'handle_deleted_file_patch',
@@ -395,7 +410,9 @@ const handle_deleted_file_patch = async (
 
   const original_states = await store_original_file_states(
     patch_content,
-    workspace_path
+    workspace_path,
+    workspace_name,
+    fallback_patch
   )
 
   try {
@@ -480,7 +497,9 @@ const process_diff = async (params: {
 
 export const apply_git_patch = async (
   patch_content: string,
-  workspace_path: string
+  workspace_path: string,
+  workspace_name?: string,
+  patch?: DiffItem
 ): Promise<{
   success: boolean
   original_states?: OriginalFileState[]
@@ -489,21 +508,23 @@ export const apply_git_patch = async (
   const patch_info = parse_patch_header(patch_content, workspace_path)
 
   if (patch_info.is_new) {
-    return handle_new_file_patch(patch_content, workspace_path)
+    return handle_new_file_patch(patch_content, workspace_path, workspace_name, patch)
   }
 
   if (patch_info.is_deleted) {
-    return handle_deleted_file_patch(patch_content, workspace_path)
+    return handle_deleted_file_patch(patch_content, workspace_path, workspace_name, patch)
   }
 
   let closed_files: vscode.Uri[] = []
   let original_states: OriginalFileState[] | undefined
 
   try {
-    const file_paths = extract_file_paths_from_patch(patch_content)
+    const file_paths = extract_file_paths_from_patch(patch_content, patch)
     original_states = await store_original_file_states(
       patch_content,
-      workspace_path
+      workspace_path,
+      workspace_name,
+      patch
     )
 
     closed_files = await close_files_in_all_editor_groups(
@@ -557,6 +578,9 @@ export const apply_git_patch = async (
         data: { error: last_error }
       })
       try {
+        if (file_paths.length == 0) {
+          throw new Error('No file paths could be extracted from patch')
+        }
         const file_path_safe = create_safe_path(workspace_path, file_paths[0])
         if (file_path_safe == null) throw new Error('File path is null')
 

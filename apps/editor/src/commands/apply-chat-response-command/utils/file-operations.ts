@@ -333,12 +333,25 @@ export const apply_file_relocations = async (
         new_workspace_root = workspace_map.get(state.new_workspace_name)!
       }
 
-      const success = await relocate_file({
-        old_path: state.file_path,
-        new_path: state.new_file_path,
-        old_workspace_root: workspace_root,
-        new_workspace_root: new_workspace_root
-      })
+      const old_safe_path = create_safe_path(workspace_root, state.file_path)
+      const new_safe_path = create_safe_path(new_workspace_root, state.new_file_path)
+
+      if (!old_safe_path || !new_safe_path) continue
+
+      const old_exists = await uri_exists(vscode.Uri.file(old_safe_path))
+      const new_exists = await uri_exists(vscode.Uri.file(new_safe_path))
+
+      let success = false
+      if (old_exists) {
+        success = await relocate_file({
+          old_path: state.file_path,
+          new_path: state.new_file_path,
+          old_workspace_root: workspace_root,
+          new_workspace_root: new_workspace_root
+        })
+      } else if (new_exists) {
+        success = true
+      }
 
       if (success) {
         state.file_path_to_restore = state.file_path

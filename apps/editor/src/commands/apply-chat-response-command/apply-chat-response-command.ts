@@ -91,10 +91,12 @@ export const apply_chat_response_command = (params: {
 
       const is_single_root_folder_workspace =
         (vscode.workspace.workspaceFolders?.length ?? 0) <= 1
+
       const clipboard_items = parse_response({
         response: chat_response,
         is_single_root_folder_workspace
       })
+
       if (resolve_fn) {
         const history = params.panel_provider.response_history
 

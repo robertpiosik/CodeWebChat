@@ -277,13 +277,13 @@ export const process_chat_response = async (params: {
         const key = `${patch.workspace_name || ''}:${patch.file_path}`
         rename_map.set(key, {
           new_path: patch.new_file_path,
-          new_workspace: patch.new_workspace_name
+            new_workspace: patch.new_workspace_name || patch.workspace_name
         })
       }
     })
 
-    const set_new_paths_in_original_states = (states: OriginalFileState[]) => {
-      if (!rename_map.size) return
+    const set_new_paths_in_original_states = (states: OriginalFileState[]): OriginalFileState[] => {
+      if (!rename_map.size) return states
       states.forEach((state) => {
         const key = `${state.workspace_name || ''}:${state.file_path}`
         if (rename_map.has(key)) {
@@ -291,6 +291,21 @@ export const process_chat_response = async (params: {
           state.new_file_path = rename_info.new_path
           state.new_workspace_name = rename_info.new_workspace
         }
+      })
+
+      const target_paths = new Set<string>()
+      rename_map.forEach((val) => {
+        target_paths.add(`${val.new_workspace || ''}:${val.new_path}`)
+      })
+
+      return states.filter((state) => {
+        if (state.file_state == 'new') {
+          const key = `${state.workspace_name || ''}:${state.file_path}`
+          if (target_paths.has(key)) {
+            return false
+          }
+        }
+        return true
       })
     }
 
@@ -324,7 +339,7 @@ export const process_chat_response = async (params: {
         patch.content,
         patch.workspace_name
       )
-      const result = await apply_git_patch(sanitized_patch_content, workspace_path)
+      const result = await apply_git_patch(sanitized_patch_content, workspace_path, patch.workspace_name, patch)
 
       if (result.success) {
         if (result.diff_application_method && result.original_states) {
@@ -360,7 +375,7 @@ export const process_chat_response = async (params: {
     }
 
     if (all_original_states.length > 0) {
-      set_new_paths_in_original_states(all_original_states)
+      all_original_states = set_new_paths_in_original_states(all_original_states)
       await apply_file_relocations(all_original_states)
       update_undo_button_state({
         context: params.context,
