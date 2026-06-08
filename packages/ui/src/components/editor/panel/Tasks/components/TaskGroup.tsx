@@ -35,7 +35,6 @@ export const TaskGroup: React.FC<TaskGroupProps> = (props) => {
         setList={props.on_reorder}
         className={props.className}
         animation={150}
-        group="tasks"
         filter="textarea"
         preventOnFilter={false}
       >
