@@ -195,8 +195,8 @@ describe('diff-processor', () => {
       expect(result).toBe(expected)
     })
 
-    it('applies diff with generic test case 9 correctly', async () => {
-      const test_case = 'generic-9'
+    it('applies diff with loose gap matching correctly', async () => {
+      const test_case = 'loose-gap-match'
       const original = load_test_case_file('', test_case, 'original.txt')
       const diff = load_test_case_file('', test_case, 'diff.txt')
       const expected = load_test_case_file('', test_case, 'expected.txt')
