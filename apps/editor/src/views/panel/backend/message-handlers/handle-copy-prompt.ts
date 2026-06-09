@@ -6,7 +6,6 @@ import {
   find_relevant_files_instructions,
   find_relevant_files_format_for_panel
 } from '@/constants/instructions'
-import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import { MODE } from '@/views/panel/types/main-view-mode'
 import { dictionary } from '@shared/constants/dictionary'
 import {
@@ -29,15 +28,6 @@ export const handle_copy_prompt = async (params: {
   })
 
   const active_editor = vscode.window.activeTextEditor
-
-  let final_instruction = params.instructions
-  if (params.preset_name !== undefined) {
-    final_instruction = apply_preset_affixes_to_instruction({
-      instruction: params.instructions,
-      preset_name: params.preset_name,
-      presets_config_key: params.panel_provider.get_presets_config_key()
-    })
-  }
 
   const is_in_code_completions_prompt_type =
     (params.panel_provider.mode == MODE.WEB &&
@@ -85,7 +75,7 @@ export const handle_copy_prompt = async (params: {
       instruction: processed_completion_instructions,
       skill_definitions
     } = await replace_symbols({
-      instruction: final_instruction,
+      instruction: params.instructions,
       context: params.panel_provider.context,
       workspace_provider: params.panel_provider.workspace_provider,
       remove_images: true
@@ -119,7 +109,7 @@ export const handle_copy_prompt = async (params: {
 
     const { instruction: processed_instructions, skill_definitions } =
       await replace_symbols({
-        instruction: final_instruction,
+        instruction: params.instructions,
         context: params.panel_provider.context,
         workspace_provider: params.panel_provider.workspace_provider,
         remove_images: true
