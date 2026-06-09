@@ -12,7 +12,5 @@ export type Preset = {
   options?: string[]
   port?: number
   new_url?: string
-  is_selected?: boolean
-  is_collapsed?: boolean
   is_pinned?: boolean
 }

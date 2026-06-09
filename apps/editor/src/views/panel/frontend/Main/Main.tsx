@@ -88,8 +88,8 @@ export const Main: React.FC<Props> = (props) => {
     [T in WebPromptType]: Preset[]
   }>()
   const [
-    selected_preset_or_group_name_by_mode,
-    set_selected_preset_or_group_name_by_mode
+    selected_preset_name_by_mode,
+    set_selected_preset_name_by_mode
   ] = useState<{ [T in WebPromptType]?: string }>()
   const [all_configurations, set_all_configurations] =
     useState<ApiToolConfiguration[]>()
@@ -121,8 +121,8 @@ export const Main: React.FC<Props> = (props) => {
       switch (message.command) {
         case 'PRESETS':
           set_all_presets((message as PresetsMessage).presets)
-          set_selected_preset_or_group_name_by_mode(
-            (message as PresetsMessage).selected_preset_or_group_name_by_mode
+          set_selected_preset_name_by_mode(
+            (message as PresetsMessage).selected_preset_name_by_mode
           )
           set_selected_configuration_id_by_prompt_type(
             (message as PresetsMessage).selected_configuration_id_by_prompt_type
@@ -157,8 +157,8 @@ export const Main: React.FC<Props> = (props) => {
           set_chat_edit_format(message.chat_edit_format)
           set_api_edit_format(message.api_edit_format)
           break
-        case 'SELECTED_PRESET_OR_GROUP_CHANGED':
-          set_selected_preset_or_group_name_by_mode((prev) => ({
+        case 'SELECTED_PRESET_CHANGED':
+          set_selected_preset_name_by_mode((prev) => ({
             ...prev,
             [message.prompt_type]: message.name
           }))
@@ -233,40 +233,6 @@ export const Main: React.FC<Props> = (props) => {
     }
   }
 
-  const handle_toggle_selected_preset = (name: string) => {
-    if (all_presets) {
-      const presets_for_current_mode = all_presets[props.web_prompt_type]
-      const updated_presets = presets_for_current_mode.map((p) =>
-        p.name == name ? { ...p, is_selected: !p.is_selected } : p
-      )
-
-      set_all_presets({
-        ...all_presets,
-        [props.web_prompt_type]: updated_presets
-      })
-
-      post_message(props.vscode, {
-        command: 'REPLACE_PRESETS',
-        presets: updated_presets.map((preset) => ({
-          name: preset.name,
-          chatbot: preset.chatbot,
-          model: preset.model,
-          temperature: preset.temperature,
-          top_p: preset.top_p,
-          thinking_budget: preset.thinking_budget,
-          reasoning_effort: preset.reasoning_effort,
-          system_instructions: preset.system_instructions,
-          options: preset.options,
-          port: preset.port,
-          new_url: preset.new_url,
-          is_selected: preset.is_selected || undefined,
-          is_collapsed: preset.is_collapsed || undefined,
-          is_pinned: preset.is_pinned || undefined
-        }))
-      })
-    }
-  }
-
   const handle_toggle_preset_pinned = (name: string) => {
     if (all_presets) {
       const presets_for_current_mode = all_presets[props.web_prompt_type]
@@ -293,42 +259,6 @@ export const Main: React.FC<Props> = (props) => {
           options: preset.options,
           port: preset.port,
           new_url: preset.new_url,
-          is_selected: preset.is_selected || undefined,
-          is_collapsed: preset.is_collapsed || undefined,
-          is_pinned: preset.is_pinned || undefined
-        }))
-      })
-    }
-  }
-
-  const handle_toggle_group_collapsed = (name: string) => {
-    if (all_presets) {
-      const presets_for_current_mode = all_presets[props.web_prompt_type]
-      const updated_presets = presets_for_current_mode.map((p) =>
-        p.name == name ? { ...p, is_collapsed: !p.is_collapsed } : p
-      )
-
-      set_all_presets({
-        ...all_presets,
-        [props.web_prompt_type]: updated_presets
-      })
-
-      post_message(props.vscode, {
-        command: 'REPLACE_PRESETS',
-        presets: updated_presets.map((preset) => ({
-          name: preset.name,
-          chatbot: preset.chatbot,
-          model: preset.model,
-          temperature: preset.temperature,
-          top_p: preset.top_p,
-          thinking_budget: preset.thinking_budget,
-          reasoning_effort: preset.reasoning_effort,
-          system_instructions: preset.system_instructions,
-          options: preset.options,
-          port: preset.port,
-          new_url: preset.new_url,
-          is_selected: preset.is_selected || undefined,
-          is_collapsed: preset.is_collapsed || undefined,
           is_pinned: preset.is_pinned || undefined
         }))
       })
@@ -337,14 +267,12 @@ export const Main: React.FC<Props> = (props) => {
 
   const handle_initialize_chats = (params: {
     preset_name?: string
-    group_name?: string
     show_quick_pick?: boolean
     invocation_count: number
   }) => {
     post_message(props.vscode, {
       command: 'SEND_TO_BROWSER',
       preset_name: params.preset_name,
-      group_name: params.group_name,
       show_quick_pick: params.show_quick_pick,
       invocation_count: params.invocation_count
     })
@@ -386,8 +314,6 @@ export const Main: React.FC<Props> = (props) => {
         options: preset.options,
         port: preset.port,
         new_url: preset.new_url,
-        is_selected: preset.is_selected,
-        is_collapsed: preset.is_collapsed,
         is_pinned: preset.is_pinned
       }))
     })
@@ -462,12 +388,12 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_create_preset_group_or_separator = (
+  const handle_create_preset = (
     placement?: 'top' | 'bottom',
     reference_index?: number
   ) => {
     post_message(props.vscode, {
-      command: 'CREATE_PRESET_GROUP_OR_SEPARATOR',
+      command: 'CREATE_PRESET',
       placement,
       reference_index
     })
@@ -481,16 +407,16 @@ export const Main: React.FC<Props> = (props) => {
     if (preset) props.on_preset_edit(preset)
   }
 
-  const handle_duplicate_preset_group_or_separator = (index: number) => {
+  const handle_duplicate_preset = (index: number) => {
     post_message(props.vscode, {
-      command: 'DUPLICATE_PRESET_GROUP_OR_SEPARATOR',
+      command: 'DUPLICATE_PRESET',
       index
     })
   }
 
-  const handle_delete_preset_group_or_separator = (index: number) => {
+  const handle_delete_preset = (index: number) => {
     post_message(props.vscode, {
-      command: 'DELETE_PRESET_GROUP_OR_SEPARATOR',
+      command: 'DELETE_PRESET',
       index
     })
   }
@@ -731,8 +657,8 @@ export const Main: React.FC<Props> = (props) => {
 
   const presets_for_current_mode = all_presets[props.web_prompt_type]
 
-  const selected_preset_or_group_name =
-    selected_preset_or_group_name_by_mode?.[props.web_prompt_type]
+  const selected_preset_name =
+    selected_preset_name_by_mode?.[props.web_prompt_type]
 
   const configurations_for_current_mode =
     all_configurations && props.mode == MODE.API ? all_configurations : []
@@ -756,8 +682,8 @@ export const Main: React.FC<Props> = (props) => {
       on_curly_braces_click={handle_curly_braces_click}
       is_connected={props.is_connected}
       presets={presets_for_current_mode}
-      on_create_preset_group_or_separator={
-        handle_create_preset_group_or_separator
+      on_create_preset={
+        handle_create_preset
       }
       currently_open_file_path={props.currently_open_file_path}
       on_quick_action_click={handle_quick_action_click}
@@ -775,16 +701,10 @@ export const Main: React.FC<Props> = (props) => {
       on_api_edit_format_change={handle_api_edit_format_change}
       on_presets_reorder={handle_presets_reorder}
       on_preset_edit={handle_preset_edit}
-      on_duplicate_preset_group_or_separator={
-        handle_duplicate_preset_group_or_separator
-      }
-      on_delete_preset_group_or_separator={
-        handle_delete_preset_group_or_separator
-      }
-      on_toggle_selected_preset={handle_toggle_selected_preset}
+      on_duplicate_preset={handle_duplicate_preset}
+      on_delete_preset={handle_delete_preset}
       on_toggle_preset_pinned={handle_toggle_preset_pinned}
-      on_toggle_group_collapsed={handle_toggle_group_collapsed}
-      selected_preset_or_group_name={selected_preset_or_group_name}
+      selected_preset_name={selected_preset_name}
       selected_configuration_id={
         selected_configuration_id_by_prompt_type?.[props.api_prompt_type]
       }

@@ -115,7 +115,6 @@ export interface SendToBrowserMessage extends BaseMessage {
   command: 'SEND_TO_BROWSER'
   invocation_count: number
   preset_name?: string
-  group_name?: string
   show_quick_pick?: boolean
 }
 
@@ -163,18 +162,18 @@ export interface UpdatePresetMessage extends BaseMessage {
   origin: 'back_button' | 'save_button'
 }
 
-export interface DeletePresetGroupOrSeparatorMessage extends BaseMessage {
-  command: 'DELETE_PRESET_GROUP_OR_SEPARATOR'
+export interface DeletePresetMessage extends BaseMessage {
+  command: 'DELETE_PRESET'
   index: number
 }
 
-export interface DuplicatePresetGroupOrSeparatorMessage extends BaseMessage {
-  command: 'DUPLICATE_PRESET_GROUP_OR_SEPARATOR'
+export interface DuplicatePresetMessage extends BaseMessage {
+  command: 'DUPLICATE_PRESET'
   index: number
 }
 
-export interface CreatePresetGroupOrSeparatorMessage extends BaseMessage {
-  command: 'CREATE_PRESET_GROUP_OR_SEPARATOR'
+export interface CreatePresetMessage extends BaseMessage {
+  command: 'CREATE_PRESET'
   placement?: 'top' | 'bottom'
   reference_index?: number
 }
@@ -576,9 +575,9 @@ export type FrontendMessage =
   | SaveHistoryMessage
   | GetContextSizeWarningThresholdMessage
   | UpdatePresetMessage
-  | DeletePresetGroupOrSeparatorMessage
-  | DuplicatePresetGroupOrSeparatorMessage
-  | CreatePresetGroupOrSeparatorMessage
+  | DeletePresetMessage
+  | DuplicatePresetMessage
+  | CreatePresetMessage
   | ExecuteCommandMessage
   | ShowPromptTemplateQuickPickMessage
   | PreviewPresetMessage
@@ -683,7 +682,7 @@ export interface EditFormatInstructionsMessage extends BaseMessage {
 export interface PresetsMessage extends BaseMessage {
   command: 'PRESETS'
   presets: { [T in WebPromptType]: Preset[] }
-  selected_preset_or_group_name_by_mode?: { [T in WebPromptType]?: string }
+  selected_preset_name_by_mode?: { [T in WebPromptType]?: string }
   selected_configuration_id_by_prompt_type?: { [T in ApiPromptType]?: string }
 }
 
@@ -808,10 +807,10 @@ export interface WorkspaceStateMessage extends BaseMessage {
   folder_count: number
 }
 
-export interface SelectedPresetOrGroupChangedMessage extends BaseMessage {
-  command: 'SELECTED_PRESET_OR_GROUP_CHANGED'
+export interface SelectedPresetChangedMessage extends BaseMessage {
+  command: 'SELECTED_PRESET_CHANGED'
   prompt_type: WebPromptType
-  name?: string
+  name: string
 }
 
 export interface SelectedConfigurationChangedMessage extends BaseMessage {
@@ -950,7 +949,7 @@ export type BackendMessage =
   | ResponsePreviewStartedMessage
   | ResponsePreviewFinishedMessage
   | WorkspaceStateMessage
-  | SelectedPresetOrGroupChangedMessage
+  | SelectedPresetChangedMessage
   | SelectedConfigurationChangedMessage
   | ShowProgressMessage
   | HideProgressMessage

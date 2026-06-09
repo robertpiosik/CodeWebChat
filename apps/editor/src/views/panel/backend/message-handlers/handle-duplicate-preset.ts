@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
-import { DuplicatePresetGroupOrSeparatorMessage } from '@/views/panel/types/messages'
+import { DuplicatePresetMessage } from '@/views/panel/types/messages'
 import { ConfigPresetFormat } from '@/views/panel/backend/utils/preset-format-converters'
 
 const generate_unique_name = (
@@ -36,9 +36,9 @@ const generate_unique_name = (
   }
   return new_name
 }
-export const handle_duplicate_preset_group_or_separator = async (
+export const handle_duplicate_preset = async (
   panel_provider: PanelProvider,
-  message: DuplicatePresetGroupOrSeparatorMessage,
+  message: DuplicatePresetMessage,
   webview_view: vscode.WebviewView
 ): Promise<void> => {
   const original_index = message.index
@@ -55,67 +55,6 @@ export const handle_duplicate_preset_group_or_separator = async (
   }
 
   const preset_to_duplicate = current_presets[original_index]
-
-  const is_group = !preset_to_duplicate.chatbot && preset_to_duplicate.name
-  if (is_group) {
-    const items_to_duplicate_from = [preset_to_duplicate]
-    let end_of_group_index = original_index
-
-    for (let i = original_index + 1; i < current_presets.length; i++) {
-      const item = current_presets[i]
-      if (!item.chatbot && item.name) {
-        break
-      }
-      items_to_duplicate_from.push(item)
-      end_of_group_index = i
-      if (!item.chatbot && !item.name) {
-        break
-      }
-    }
-
-    const duplicated_items: ConfigPresetFormat[] = []
-    const temporary_preset_list = [...current_presets]
-
-    for (const item of items_to_duplicate_from) {
-      if (item.name) {
-        const new_name = generate_unique_name(item.name, temporary_preset_list)
-        const duplicated_item = { ...item, name: new_name, isPinned: false }
-        duplicated_items.push(duplicated_item)
-        temporary_preset_list.push(duplicated_item)
-      } else {
-        duplicated_items.push({ ...item })
-      }
-    }
-
-    const updated_presets = [...current_presets]
-    updated_presets.splice(end_of_group_index + 1, 0, ...duplicated_items)
-
-    try {
-      await config.update(presets_config_key, updated_presets, true)
-      panel_provider.send_presets_to_webview(webview_view.webview)
-    } catch (error) {
-      vscode.window.showErrorMessage(
-        dictionary.error_message.FAILED_TO_DUPLICATE_PRESET(error)
-      )
-    }
-    return
-  }
-
-  if (!preset_to_duplicate.chatbot && !preset_to_duplicate.name) {
-    const duplicated_preset = { ...preset_to_duplicate }
-    const updated_presets = [...current_presets]
-    updated_presets.splice(original_index + 1, 0, duplicated_preset)
-
-    try {
-      await config.update(presets_config_key, updated_presets, true)
-      panel_provider.send_presets_to_webview(webview_view.webview)
-    } catch (error) {
-      vscode.window.showErrorMessage(
-        dictionary.error_message.FAILED_TO_DUPLICATE_PRESET(error)
-      )
-    }
-    return
-  }
 
   const new_name = generate_unique_name(
     preset_to_duplicate.name,

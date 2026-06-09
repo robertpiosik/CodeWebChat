@@ -13,28 +13,17 @@ const presets: Presets.Preset[] = [
     is_pinned: true
   },
   {
-    name: 'Code Review Group',
-    is_collapsed: false
-  },
-  {
     name: 'Code review with AI Studio',
-    chatbot: 'AI Studio' as keyof typeof CHATBOTS,
-    is_selected: true
+    chatbot: 'AI Studio' as keyof typeof CHATBOTS
   },
   {
     name: 'Security check with Claude',
-    chatbot: 'Claude' as keyof typeof CHATBOTS,
-    is_selected: true
+    chatbot: 'Claude' as keyof typeof CHATBOTS
   },
-  {},
   {
     name: 'ChatGPT for documentation',
     chatbot: 'ChatGPT' as keyof typeof CHATBOTS,
     is_pinned: true
-  },
-  {
-    name: 'Development Tasks',
-    is_collapsed: true
   },
   {
     name: 'Bug analysis',
@@ -49,10 +38,8 @@ const presets: Presets.Preset[] = [
 const mock_translations = {
   title: 'Presets',
   empty: 'No presets created yet.',
-  group: 'Group',
   preset: 'preset',
   presets: 'presets',
-  selected: 'selected',
   add_new: 'Add New',
   add_new_tooltip: 'Add new',
   copy_tooltip: 'Copy to clipboard',
@@ -62,8 +49,6 @@ const mock_translations = {
   edit_tooltip: 'Edit',
   delete_tooltip: 'Delete',
   insert_tooltip: 'Insert a new item below/above',
-  run_selected_tooltip: 'Run Selected Presets',
-  select_multi_tooltip: 'Select for multi-initialization'
 }
 
 export const Primary = () => {
@@ -78,12 +63,9 @@ export const Primary = () => {
       on_preset_click={(name) => {
         console.log('on_preset_click', name)
       }}
-      on_group_click={(name) => {
-        console.log('on_group_click', name)
-      }}
       on_create={(placement, reference_index) => {
         console.log(
-          'on_create_preset_group_or_separator',
+          'on_create_preset',
           placement,
           reference_index
         )
@@ -94,19 +76,13 @@ export const Primary = () => {
       }
       on_preset_edit={(name) => console.log('on_preset_edit', name)}
       on_duplicate={(index) =>
-        console.log('on_duplicate_preset_group_or_separator', index)
+        console.log('on_duplicate_preset', index)
       }
       on_delete={(index) =>
-        console.log('on_delete_preset_group_or_separator', index)
-      }
-      on_toggle_selected_preset={(name) =>
-        console.log('on_toggle_selected_preset', name)
+        console.log('on_delete_preset', index)
       }
       on_toggle_preset_pinned={(name) =>
         console.log('on_toggle_preset_pinned', name)
-      }
-      on_toggle_group_collapsed={(name) =>
-        console.log('on_toggle_group_collapsed', name)
       }
       selected_preset_name="ChatGPT for documentation"
       is_collapsed={false}

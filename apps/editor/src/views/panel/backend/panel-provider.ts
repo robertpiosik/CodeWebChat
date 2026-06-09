@@ -23,11 +23,11 @@ import {
   handle_copy_prompt,
   handle_send_to_browser,
   handle_update_preset,
-  handle_delete_preset_group_or_separator,
+  handle_delete_preset,
   handle_create_checkpoint,
   handle_clear_all_checkpoints,
-  handle_duplicate_preset_group_or_separator,
-  handle_create_preset_group_or_separator,
+  handle_duplicate_preset,
+  handle_create_preset,
   handle_preview_preset,
   handle_save_edit_format,
   handle_replace_presets,
@@ -791,7 +791,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_send_to_browser({
               panel_provider: this,
               preset_name: message.preset_name,
-              group_name: message.group_name,
               show_quick_pick: message.show_quick_pick,
               invocation_count: message.invocation_count
             })
@@ -817,20 +816,20 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             this._send_send_with_shift_enter()
           } else if (message.command == 'UPDATE_PRESET') {
             await handle_update_preset(this, message, webview_view)
-          } else if (message.command == 'DELETE_PRESET_GROUP_OR_SEPARATOR') {
-            await handle_delete_preset_group_or_separator(
+          } else if (message.command == 'DELETE_PRESET') {
+            await handle_delete_preset(
               this,
               message,
               webview_view
             )
-          } else if (message.command == 'DUPLICATE_PRESET_GROUP_OR_SEPARATOR') {
-            await handle_duplicate_preset_group_or_separator(
+          } else if (message.command == 'DUPLICATE_PRESET') {
+            await handle_duplicate_preset(
               this,
               message,
               webview_view
             )
-          } else if (message.command == 'CREATE_PRESET_GROUP_OR_SEPARATOR') {
-            await handle_create_preset_group_or_separator(this, message)
+          } else if (message.command == 'CREATE_PRESET') {
+            await handle_create_preset(this, message)
           } else if (message.command == 'UNDO') {
             await handle_undo(this)
           } else if (message.command == 'APPLY_RESPONSE_FROM_HISTORY') {
@@ -1054,8 +1053,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           config.get<ConfigPresetFormat[]>(presets_config_key, []) || []
         const presets_ui = presets_config
           .filter(
-            (preset_config) =>
-              !preset_config.chatbot || CHATBOTS[preset_config.chatbot]
+            (preset_config) => preset_config.chatbot && CHATBOTS[preset_config.chatbot]
           )
           .map((preset_config) => {
             let model = preset_config.model
@@ -1077,7 +1075,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     this.send_message({
       command: 'PRESETS',
       presets: all_presets,
-      selected_preset_or_group_name_by_mode: Object.fromEntries(
+      selected_preset_name_by_mode: Object.fromEntries(
         web_prompt_types.map((prompt_type) => {
           const presets_for_mode = all_presets[prompt_type]
           let selected_name: string | undefined = undefined
@@ -1087,17 +1085,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             this.context.globalState.get<string[]>(key, [])
           const last_selected = recents[0]
           if (last_selected) {
-            if (last_selected == 'Ungrouped') {
-              const first_group_index = presets_for_mode.findIndex(
-                (p) => !p.chatbot
-              )
-              if (
-                first_group_index > 0 ||
-                (first_group_index == -1 && presets_for_mode.length > 0)
-              ) {
-                selected_name = last_selected
-              }
-            } else if (presets_for_mode.some((p) => p.name === last_selected)) {
+            if (presets_for_mode.some((p) => p.name === last_selected)) {
               selected_name = last_selected
             }
           }

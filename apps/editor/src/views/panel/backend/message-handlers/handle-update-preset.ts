@@ -22,15 +22,13 @@ export const handle_update_preset = async (
     (p) => p.name == message.updating_preset.name
   )
 
-  const item_type = message.updating_preset.chatbot ? 'preset' : 'group'
-
   if (preset_index == -1) {
     console.error(
-      `${item_type} with original name "${message.updating_preset.name}" not found.`
+      `preset with original name "${message.updating_preset.name}" not found.`
     )
     vscode.window.showErrorMessage(
       dictionary.error_message.COULD_NOT_UPDATE_ITEM_NOT_FOUND(
-        item_type,
+        'preset',
         message.updating_preset.name!
       )
     )
@@ -50,14 +48,12 @@ export const handle_update_preset = async (
       JSON.stringify(a.options) == JSON.stringify(b.options) &&
       a.port == b.port &&
       a.new_url == b.new_url &&
-      a.is_selected == b.is_selected &&
       a.is_pinned == b.is_pinned
     )
   }
 
   const final_updated_preset = {
     ...message.updated_preset,
-    is_collapsed: message.updating_preset.is_collapsed
   }
 
   const has_changes = !are_presets_equal(
@@ -76,12 +72,12 @@ export const handle_update_preset = async (
     const save_changes_button = 'Save'
     const discard_changes = 'Discard changes'
     const result = await vscode.window.showInformationMessage(
-      dictionary.information_message.CONFIRM_SAVE_CHANGES_TO_ITEM(item_type),
+      dictionary.information_message.CONFIRM_SAVE_CHANGES_TO_ITEM('preset'),
       {
         modal: true,
         detail:
           dictionary.information_message.UNSAVED_CHANGES_TO_ITEM_WILL_BE_LOST(
-            item_type
+            'preset'
           )
       },
       save_changes_button,
@@ -101,10 +97,7 @@ export const handle_update_preset = async (
   }
 
   const updated_ui_preset = { ...final_updated_preset }
-  if (
-    item_type == 'preset' &&
-    (!updated_ui_preset.name || !updated_ui_preset.name.trim())
-  ) {
+  if (!updated_ui_preset.name || !updated_ui_preset.name.trim()) {
     let counter = 1
     while (true) {
       const candidate = `(${counter})`

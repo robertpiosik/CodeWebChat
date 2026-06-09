@@ -24,13 +24,12 @@ type Props = {
   scroll_reset_key: number
   initialize_chats: (params: {
     preset_name?: string
-    group_name?: string
     show_quick_pick?: boolean
     invocation_count: number
   }) => void
   copy_to_clipboard: (preset_name?: string) => void
   on_show_home: () => void
-  on_create_preset_group_or_separator: (
+  on_create_preset: (
     placement?: 'top' | 'bottom',
     reference_index?: number
   ) => void
@@ -68,12 +67,10 @@ type Props = {
   on_api_edit_format_change: (edit_format: EditFormat) => void
   on_presets_reorder: (reordered_presets: Preset[]) => void
   on_preset_edit: (preset_name: string) => void
-  on_duplicate_preset_group_or_separator: (index: number) => void
-  on_delete_preset_group_or_separator: (index: number) => void
-  on_toggle_selected_preset: (name: string) => void
+  on_duplicate_preset: (index: number) => void
+  on_delete_preset: (index: number) => void
   on_toggle_preset_pinned: (name: string) => void
-  on_toggle_group_collapsed: (name: string) => void
-  selected_preset_or_group_name?: string
+  selected_preset_name?: string
   selected_configuration_id?: string
   instructions: string
   set_instructions: (value: string) => void
@@ -193,7 +190,7 @@ export const MainView: React.FC<Props> = (props) => {
 
   const last_choice_button_title = use_last_choice_button_title({
     mode: props.mode,
-    selected_preset_or_group_name: props.selected_preset_or_group_name,
+    selected_preset_or_group_name: props.selected_preset_name,
     presets: props.presets,
     selected_configuration_id: props.selected_configuration_id,
     configurations: props.configurations
@@ -343,7 +340,7 @@ export const MainView: React.FC<Props> = (props) => {
                 props.web_prompt_type == 'code-at-cursor'
               }
               presets={props.presets}
-              on_create={props.on_create_preset_group_or_separator}
+              on_create={props.on_create_preset}
               on_preset_click={(preset_name) =>
                 props.initialize_chats({
                   preset_name,
@@ -351,30 +348,20 @@ export const MainView: React.FC<Props> = (props) => {
                   invocation_count: current_invocation_count
                 })
               }
-              on_group_click={(group_name) =>
-                props.initialize_chats({
-                  group_name,
-                  invocation_count: current_invocation_count
-                })
-              }
               on_preset_copy={props.copy_to_clipboard}
               on_preset_edit={props.on_preset_edit}
               on_presets_reorder={props.on_presets_reorder}
-              on_duplicate={props.on_duplicate_preset_group_or_separator}
-              on_delete={props.on_delete_preset_group_or_separator}
-              on_toggle_selected_preset={props.on_toggle_selected_preset}
+              on_duplicate={props.on_duplicate_preset}
+              on_delete={props.on_delete_preset}
               on_toggle_preset_pinned={props.on_toggle_preset_pinned}
-              on_toggle_group_collapsed={props.on_toggle_group_collapsed}
-              selected_preset_name={props.selected_preset_or_group_name}
+              selected_preset_name={props.selected_preset_name}
               is_collapsed={props.presets_collapsed}
               on_toggle_collapsed={props.on_presets_collapsed_change}
               translations={{
                 title: t('presets.title'),
                 empty: t('presets.empty'),
-                group: t('presets.group'),
                 preset: t('presets.preset'),
                 presets: t('presets.presets'),
-                selected: t('presets.selected'),
                 add_new: t('action.add-new'),
                 add_new_tooltip: t('action.add-new'),
                 copy_tooltip: t('action.copy'),
@@ -383,9 +370,7 @@ export const MainView: React.FC<Props> = (props) => {
                 duplicate_tooltip: t('action.duplicate-preset'),
                 edit_tooltip: t('action.edit'),
                 delete_tooltip: t('action.delete'),
-                insert_tooltip: t('action.insert-preset'),
-                run_selected_tooltip: t('action.run-selected'),
-                select_multi_tooltip: t('action.select-multi')
+                insert_tooltip: t('action.insert-preset')
               }}
             />
           </>

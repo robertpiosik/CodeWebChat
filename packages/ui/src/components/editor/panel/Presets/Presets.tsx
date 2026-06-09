@@ -6,7 +6,6 @@ import { Icon } from '../../common/Icon'
 import { Button } from '../../common/Button'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { ListHeader } from '../ListHeader'
-import { SimpleCheckbox } from '../../common/SimpleCheckbox'
 
 export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   'AI Studio': 'AI_STUDIO',
@@ -36,8 +35,6 @@ export namespace Presets {
     name?: string
     model?: string
     chatbot?: keyof typeof CHATBOTS
-    is_selected?: boolean
-    is_collapsed?: boolean
     is_pinned?: boolean
   }
 
@@ -54,26 +51,21 @@ export namespace Presets {
     has_context: boolean
     presets: Preset[]
     on_preset_click: (preset_name: string) => void
-    on_group_click: (group_name: string) => void
     on_create: (placement?: 'top' | 'bottom', reference_index?: number) => void
     on_preset_copy: (name: string) => void
     on_presets_reorder: (reordered_presets: Preset[]) => void
     on_preset_edit: (name: string) => void
     on_duplicate: (index: number) => void
     on_delete: (index: number) => void
-    on_toggle_selected_preset: (name: string) => void
     on_toggle_preset_pinned: (name: string) => void
-    on_toggle_group_collapsed: (name: string) => void
     selected_preset_name?: string
     is_collapsed: boolean
     on_toggle_collapsed: (is_collapsed: boolean) => void
     translations: {
       title: string
       empty: string
-      group: string
       preset: string
       presets: string
-      selected: string
       add_new: string
       add_new_tooltip: string
       copy_tooltip: string
@@ -83,8 +75,6 @@ export namespace Presets {
       edit_tooltip: string
       delete_tooltip: string
       insert_tooltip: string
-      run_selected_tooltip: string
-      select_multi_tooltip: string
     }
   }
 }
@@ -104,39 +94,8 @@ export const Presets: React.FC<Presets.Props> = (props) => {
   const get_visible_presets = (
     presets: Presets.Preset[]
   ): (Presets.Preset & { original_index: number })[] => {
-    const visible_presets: (Presets.Preset & { original_index: number })[] = []
-    let is_in_collapsed_group = false
-    for (const [index, preset] of presets.entries()) {
-      if (
-        is_in_collapsed_group &&
-        (preset.chatbot || preset.name === undefined) &&
-        presets[index - 1]?.name
-      ) {
-        continue
-      }
-      if (!preset.chatbot) {
-        is_in_collapsed_group = !!preset.is_collapsed
-      } else {
-        is_in_collapsed_group = false
-      }
-      visible_presets.push({ ...preset, original_index: index })
-    }
-    return visible_presets
+    return presets.map((preset, index) => ({ ...preset, original_index: index }))
   }
-
-  const preset_indices_in_group = new Set<number>()
-  let current_group_active = false
-  props.presets.forEach((p, index) => {
-    if (!p.chatbot) {
-      if (p.name) {
-        current_group_active = true
-      } else {
-        current_group_active = false
-      }
-    } else if (current_group_active) {
-      preset_indices_in_group.add(index)
-    }
-  })
 
   const sortable_list = with_ids(get_visible_presets(props.presets))
 
@@ -274,166 +233,26 @@ export const Presets: React.FC<Presets.Props> = (props) => {
 
                 if (!has_order_changed) return
 
-                // Handle normal preset/group reordering
                 const new_visible_presets = new_state.map(
                   ({ id, ...preset }) => preset
                 ) as Presets.Preset[]
 
-                const reordered_presets: Presets.Preset[] = []
-
-                for (const preset of new_visible_presets) {
-                  reordered_presets.push(preset)
-
-                  if (!preset.chatbot && preset.is_collapsed) {
-                    // It's a collapsed group. Find its children in original list and add them.
-                    const original_index = props.presets.findIndex(
-                      (p) => p.name == preset.name
-                    )
-
-                    if (original_index != -1) {
-                      for (
-                        let i = original_index + 1;
-                        i < props.presets.length;
-                        i++
-                      ) {
-                        const child_candidate = props.presets[i]
-                        if (
-                          ((child_candidate.chatbot && child_candidate.name) ||
-                            !child_candidate.name) &&
-                          props.presets[i - 1].name
-                        ) {
-                          reordered_presets.push(child_candidate)
-                        } else {
-                          break
-                        }
-                      }
-                    }
-                  }
-                }
-                props.on_presets_reorder(reordered_presets)
+                props.on_presets_reorder(new_visible_presets)
               }}
               animation={150}
             >
               {sortable_list.map((preset, index) => {
-                if (!preset.chatbot && !preset.name) {
-                  const is_previous_in_group =
-                    index > 0 &&
-                    preset_indices_in_group.has(
-                      sortable_list[index - 1].original_index
-                    )
-
-                  return (
-                    <div
-                      key={preset.id}
-                      className={cn(
-                        styles.presets__item,
-                        styles['presets__item--separator'],
-                        {
-                          [styles['presets__item--separator--ending']]:
-                            is_previous_in_group
-                        }
-                      )}
-                    >
-                      <div className={styles.presets__item__left}>
-                        <div
-                          className={styles['presets__item__left__drag-handle']}
-                        >
-                          <span className="codicon codicon-gripper" />
-                        </div>
-                      </div>
-                      <div
-                        className={styles.presets__item__right}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <IconButton
-                          codicon_icon="insert"
-                          title={props.translations.insert_tooltip}
-                          on_click={(e) => {
-                            e.stopPropagation()
-                            props.on_create(undefined, preset.original_index!)
-                          }}
-                        />
-                        <IconButton
-                          codicon_icon="files"
-                          title={props.translations.duplicate_tooltip}
-                          on_click={(e) => {
-                            e.stopPropagation()
-                            props.on_duplicate(preset.original_index!)
-                          }}
-                        />
-                        <IconButton
-                          codicon_icon="trash"
-                          title={props.translations.delete_tooltip}
-                          on_click={(e) => {
-                            e.stopPropagation()
-                            props.on_delete(preset.original_index!)
-                          }}
-                        />
-                      </div>
-                    </div>
-                  )
-                }
-
                 const is_unnamed =
                   !preset.name || /^\(\d+\)$/.test(preset.name.trim())
-                let display_name: string
-                if (preset.chatbot) {
-                  // Preset (has chatbot)
-                  display_name = is_unnamed
-                    ? preset.chatbot
-                    : preset.name!.replace(/ \(\d+\)$/, '')
-                } else {
-                  // Group (no chatbot)
-                  display_name = is_unnamed
-                    ? props.translations.group
-                    : preset.name!.replace(/ \(\d+\)$/, '')
-                }
+                const display_name = is_unnamed
+                  ? preset.chatbot!
+                  : preset.name!.replace(/ \(\d+\)$/, '')
 
                 const get_subtitle = (): string => {
                   const { chatbot, model } = preset
 
-                  if (!chatbot) {
-                    const group_index = props.presets.findIndex(
-                      (p) => p.name == preset.name
-                    )
-
-                    if (group_index !== -1) {
-                      let preset_count = 0
-                      let selected_count = 0
-                      for (
-                        let i = group_index + 1;
-                        i < props.presets.length;
-                        i++
-                      ) {
-                        const child_preset = props.presets[i]
-                        if (!child_preset.chatbot || !child_preset.name) {
-                          break
-                        }
-                        preset_count++
-                        if (child_preset.is_selected) {
-                          selected_count++
-                        }
-                      }
-                      if (preset.is_collapsed) {
-                        let text = `${preset_count} ${
-                          preset_count == 1
-                            ? props.translations.preset
-                            : props.translations.presets
-                        }`
-                        if (selected_count > 0) {
-                          text += ` · ${selected_count} ${
-                            props.translations.selected
-                          }`
-                        }
-                        return text
-                      }
-                    }
-
-                    return model || ''
-                  }
-
                   const model_display_name = model
-                    ? CHATBOTS[chatbot].models?.[model]?.label || model
+                    ? CHATBOTS[chatbot!].models?.[model]?.label || model
                     : null
 
                   if (is_unnamed) {
@@ -444,7 +263,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     return `${chatbot} · ${model_display_name}`
                   }
 
-                  return chatbot
+                  return chatbot!
                 }
 
                 return (
@@ -455,11 +274,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         props.selected_preset_name == preset.name
                     })}
                     onClick={() => {
-                      if (preset.chatbot) {
-                        props.on_preset_click(preset.name!)
-                      } else {
-                        props.on_toggle_group_collapsed(preset.name!)
-                      }
+                      props.on_preset_click(preset.name!)
                     }}
                     role="button"
                   >
@@ -472,44 +287,9 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       >
                         <span className="codicon codicon-gripper" />
                       </div>
-                      {preset.chatbot &&
-                        preset_indices_in_group.has(preset.original_index) && (
-                          <div
-                            className={
-                              styles['presets__item__left__indent-guide']
-                            }
-                          />
-                        )}
-                      {preset.chatbot &&
-                        preset_indices_in_group.has(preset.original_index) && (
-                          <SimpleCheckbox
-                            checked={!!preset.is_selected}
-                            on_change={() =>
-                              props.on_toggle_selected_preset(preset.name!)
-                            }
-                            title={props.translations.select_multi_tooltip}
-                          />
-                        )}
-                      {preset.chatbot && (
-                        <div className={styles.presets__item__left__icon}>
-                          <Icon variant={chatbot_to_icon[preset.chatbot]} />
-                        </div>
-                      )}
-                      {!preset.chatbot && (
-                        <div
-                          className={
-                            styles['presets__item__left__collapse-icon']
-                          }
-                          style={{ cursor: 'pointer' }}
-                        >
-                          <span
-                            className={cn('codicon', {
-                              'codicon-chevron-right': preset.is_collapsed,
-                              'codicon-chevron-down': !preset.is_collapsed
-                            })}
-                          />
-                        </div>
-                      )}
+                      <div className={styles.presets__item__left__icon}>
+                        <Icon variant={chatbot_to_icon[preset.chatbot!]} />
+                      </div>
                       <div className={styles.presets__item__left__text}>
                         <span>{display_name}</span>
                         <span>{get_subtitle()}</span>
@@ -522,30 +302,18 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         e.stopPropagation()
                       }}
                     >
-                      {!preset.chatbot && (
-                        <IconButton
-                          codicon_icon="run-coverage"
-                          title={props.translations.run_selected_tooltip}
-                          on_click={(e) => {
-                            e.stopPropagation()
-                            props.on_group_click(preset.name!)
-                          }}
-                        />
-                      )}
-                      {preset.chatbot && (
-                        <IconButton
-                          codicon_icon={preset.is_pinned ? 'pinned' : 'pin'}
-                          title={
-                            preset.is_pinned
-                              ? props.translations.unpin_tooltip
-                              : props.translations.pin_tooltip
-                          }
-                          on_click={(e) => {
-                            e.stopPropagation()
-                            props.on_toggle_preset_pinned(preset.name!)
-                          }}
-                        />
-                      )}
+                      <IconButton
+                        codicon_icon={preset.is_pinned ? 'pinned' : 'pin'}
+                        title={
+                          preset.is_pinned
+                            ? props.translations.unpin_tooltip
+                            : props.translations.pin_tooltip
+                        }
+                        on_click={(e) => {
+                          e.stopPropagation()
+                          props.on_toggle_preset_pinned(preset.name!)
+                        }}
+                      />
                       <IconButton
                         codicon_icon="insert"
                         title={props.translations.insert_tooltip}
