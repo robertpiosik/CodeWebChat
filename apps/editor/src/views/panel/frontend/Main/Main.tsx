@@ -84,9 +84,7 @@ type Props = {
 }
 
 export const Main: React.FC<Props> = (props) => {
-  const [all_presets, set_all_presets] = useState<{
-    [T in WebPromptType]: Preset[]
-  }>()
+  const [all_presets, set_all_presets] = useState<Preset[]>()
   const [
     selected_preset_name_by_mode,
     set_selected_preset_name_by_mode
@@ -235,15 +233,11 @@ export const Main: React.FC<Props> = (props) => {
 
   const handle_toggle_preset_pinned = (name: string) => {
     if (all_presets) {
-      const presets_for_current_mode = all_presets[props.web_prompt_type]
-      const updated_presets = presets_for_current_mode.map((p) =>
+      const updated_presets = all_presets.map((p) =>
         p.name == name ? { ...p, is_pinned: !p.is_pinned } : p
       )
 
-      set_all_presets({
-        ...all_presets,
-        [props.web_prompt_type]: updated_presets
-      })
+      set_all_presets(updated_presets)
 
       post_message(props.vscode, {
         command: 'REPLACE_PRESETS',
@@ -294,10 +288,7 @@ export const Main: React.FC<Props> = (props) => {
 
   const handle_presets_reorder = (reordered_presets: Preset[]) => {
     if (all_presets) {
-      set_all_presets({
-        ...all_presets,
-        [current_prompt_type]: reordered_presets
-      })
+      set_all_presets(reordered_presets)
     }
 
     post_message(props.vscode, {
@@ -334,16 +325,14 @@ export const Main: React.FC<Props> = (props) => {
   const handle_configurations_reorder = (
     reordered_configs: (UiConfigurations.Configuration & { id: string })[]
   ) => {
-    if (all_configurations && props.api_prompt_type) {
-      const current_api_configs = all_configurations
-
+    if (all_configurations) {
       const reordered_api_tool_configs = reordered_configs
         .map((ui_config) => {
-          return current_api_configs.find((c) => c.id === ui_config.id)!
+          return all_configurations.find((c) => c.id === ui_config.id)!
         })
         .filter(Boolean)
 
-      if (reordered_api_tool_configs.length !== current_api_configs.length) {
+      if (reordered_api_tool_configs.length !== all_configurations.length) {
         return
       }
 
@@ -357,13 +346,11 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const handle_edit_configuration = (id: string) => {
-    if (props.api_prompt_type) {
-      post_message(props.vscode, {
-        command: 'UPSERT_CONFIGURATION',
-        tool_type: props.api_prompt_type,
-        configuration_id: id
-      })
-    }
+    post_message(props.vscode, {
+      command: 'UPSERT_CONFIGURATION',
+      tool_type: props.api_prompt_type,
+      configuration_id: id
+    })
   }
 
   const handle_delete_configuration = (id: string) => {
@@ -400,10 +387,7 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const handle_preset_edit = (name: string) => {
-    const current_presets = all_presets
-      ? all_presets[props.web_prompt_type]
-      : []
-    const preset = current_presets.find((preset) => preset.name == name)
+    const preset = all_presets?.find((preset) => preset.name == name)
     if (preset) props.on_preset_edit(preset)
   }
 
@@ -655,13 +639,11 @@ export const Main: React.FC<Props> = (props) => {
     return <></>
   }
 
-  const presets_for_current_mode = all_presets[props.web_prompt_type]
-
   const selected_preset_name =
     selected_preset_name_by_mode?.[props.web_prompt_type]
 
-  const configurations_for_current_mode =
-    all_configurations && props.mode == MODE.API ? all_configurations : []
+  const configurations =
+    props.mode == MODE.API && all_configurations ? all_configurations : []
 
   return (
     <MainView
@@ -669,7 +651,7 @@ export const Main: React.FC<Props> = (props) => {
       on_show_home={props.on_show_home}
       initialize_chats={handle_initialize_chats}
       copy_to_clipboard={handle_copy_to_clipboard}
-      configurations={configurations_for_current_mode || []}
+      configurations={configurations}
       on_configuration_click={handle_configuration_click}
       on_configurations_reorder={handle_configurations_reorder}
       on_toggle_pinned_configuration={handle_toggle_pinned_configuration}
@@ -681,7 +663,7 @@ export const Main: React.FC<Props> = (props) => {
       on_hash_sign_click={handle_hash_sign_click}
       on_curly_braces_click={handle_curly_braces_click}
       is_connected={props.is_connected}
-      presets={presets_for_current_mode}
+      presets={all_presets || []}
       on_create_preset={
         handle_create_preset
       }

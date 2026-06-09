@@ -124,7 +124,6 @@ export const Panel = () => {
   const {
     updating_preset,
     set_updating_preset,
-    updated_preset,
     set_updated_preset,
     edit_preset_back_click_handler,
     edit_preset_save_handler,
@@ -521,30 +520,28 @@ export const Panel = () => {
               footer_slot={
                 <EditPresetFormFooter on_save={edit_preset_save_handler} />
               }
-              title={`Edit ${!updated_preset?.chatbot ? 'Group' : 'Preset'}`}
+              title="Edit Preset"
               header_slot={
-                updated_preset?.chatbot && (
-                  <UiTextButton
-                    on_click={handle_preview_preset}
-                    disabled={is_preview_disabled}
-                    title={
-                      !is_connected
-                        ? 'Unable to preview when not connected'
+                <UiTextButton
+                  on_click={handle_preview_preset}
+                  disabled={is_preview_disabled}
+                  title={
+                    !is_connected
+                      ? 'Unable to preview when not connected'
+                      : web_prompt_type == 'code-at-cursor' &&
+                          !currently_open_file_path
+                        ? 'Cannot preview in code completion mode without an active editor'
                         : web_prompt_type == 'code-at-cursor' &&
-                            !currently_open_file_path
-                          ? 'Cannot preview in code completion mode without an active editor'
-                          : web_prompt_type == 'code-at-cursor' &&
-                              !!current_selection
-                            ? 'Unable to work with text selection'
-                            : !has_instructions &&
-                                web_prompt_type != 'code-at-cursor'
-                              ? 'Enter instructions to preview'
-                              : ''
-                    }
-                  >
-                    Preview
-                  </UiTextButton>
-                )
+                            !!current_selection
+                          ? 'Unable to work with text selection'
+                          : !has_instructions &&
+                              web_prompt_type != 'code-at-cursor'
+                            ? 'Enter instructions to preview'
+                            : ''
+                  }
+                >
+                  Preview
+                </UiTextButton>
               }
             >
               <EditPresetForm

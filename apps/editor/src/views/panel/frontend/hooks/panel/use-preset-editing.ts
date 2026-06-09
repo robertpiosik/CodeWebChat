@@ -48,7 +48,6 @@ export const use_preset_editing = (vscode: any) => {
   return {
     updating_preset,
     set_updating_preset,
-    updated_preset,
     set_updated_preset,
     edit_preset_back_click_handler,
     edit_preset_save_handler,

@@ -11,7 +11,6 @@ import { ApiManager } from '@/services/api-manager'
 import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { token_count_emitter } from '@/context/context-initialization'
-import { Preset } from '@shared/types/preset'
 import { EditFormat } from '@shared/types/edit-format'
 import {
   get_checkpoints,
@@ -447,11 +446,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       (event) => {
         if (!this._webview_view) return
         const all_preset_keys = [
-          'codeWebChat.chatPresetsForAskAboutContext',
-          'codeWebChat.chatPresetsForEditContext',
-          'codeWebChat.chatPresetsForCodeAtCursor',
-          'codeWebChat.chatPresetsForFindRelevantFiles',
-          'codeWebChat.chatPresetsForNoContext'
+          'codeWebChat.chatPresets'
         ]
         if (all_preset_keys.some((key) => event.affectsConfiguration(key))) {
           this.send_presets_to_webview(this._webview_view.webview)
@@ -475,11 +470,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           this._send_context_size_warning_threshold()
         }
 
-        const all_api_config_keys = ['codeWebChat.configurations']
-
-        if (
-          all_api_config_keys.some((key) => event.affectsConfiguration(key))
-        ) {
+        if (event.affectsConfiguration('codeWebChat.configurations')) {
           handle_get_api_tool_configurations(this)
         }
 
@@ -633,20 +624,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   }
 
   public get_presets_config_key(): string {
-    const mode =
-      this.mode == MODE.API ? this.api_prompt_type : this.web_prompt_type
-    switch (mode) {
-      case 'ask-about-context':
-        return 'chatPresetsForAskAboutContext'
-      case 'edit-context':
-        return 'chatPresetsForEditContext'
-      case 'code-at-cursor':
-        return 'chatPresetsForCodeAtCursor'
-      case 'find-relevant-files':
-        return 'chatPresetsForFindRelevantFiles'
-      case 'no-context':
-        return 'chatPresetsForNoContext'
-    }
+    return 'chatPresets'
   }
 
   public cancel_all_intelligent_updates() {
@@ -1039,45 +1017,29 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       'code-at-cursor',
       'no-context'
     ]
-    const mode_to_config_key: Record<WebPromptType, string> = {
-      'ask-about-context': 'chatPresetsForAskAboutContext',
-      'edit-context': 'chatPresetsForEditContext',
-      'code-at-cursor': 'chatPresetsForCodeAtCursor',
-      'find-relevant-files': 'chatPresetsForFindRelevantFiles',
-      'no-context': 'chatPresetsForNoContext'
-    }
-    const all_presets = Object.fromEntries(
-      web_prompt_types.map((prompt_type) => {
-        const presets_config_key = mode_to_config_key[prompt_type]
-        const presets_config =
-          config.get<ConfigPresetFormat[]>(presets_config_key, []) || []
-        const presets_ui = presets_config
-          .filter(
-            (preset_config) => preset_config.chatbot && CHATBOTS[preset_config.chatbot]
-          )
-          .map((preset_config) => {
-            let model = preset_config.model
-            if (preset_config.chatbot && model) {
-              const chatbot_info = CHATBOTS[preset_config.chatbot]
-              const is_user_provided_supported =
-                chatbot_info.supports_user_provided_model
-              const is_model_predefined = chatbot_info.models?.[model]
 
-              if (!is_user_provided_supported && !is_model_predefined) {
-                model = undefined
-              }
-            }
-            return config_preset_to_ui_format({ ...preset_config, model })
-          })
-        return [prompt_type, presets_ui]
+    const presets_config = config.get<ConfigPresetFormat[]>('chatPresets', []) || []
+    const presets_ui = presets_config
+      .filter((preset_config) => preset_config.chatbot && CHATBOTS[preset_config.chatbot])
+      .map((preset_config) => {
+        let model = preset_config.model
+        if (preset_config.chatbot && model) {
+          const chatbot_info = CHATBOTS[preset_config.chatbot]
+          const is_user_provided_supported = chatbot_info.supports_user_provided_model
+          const is_model_predefined = chatbot_info.models?.[model]
+
+          if (!is_user_provided_supported && !is_model_predefined) {
+            model = undefined
+          }
+        }
+        return config_preset_to_ui_format({ ...preset_config, model })
       })
-    ) as { [T in WebPromptType]: Preset[] }
+
     this.send_message({
       command: 'PRESETS',
-      presets: all_presets,
+      presets: presets_ui,
       selected_preset_name_by_mode: Object.fromEntries(
         web_prompt_types.map((prompt_type) => {
-          const presets_for_mode = all_presets[prompt_type]
           let selected_name: string | undefined = undefined
           const key = get_recently_used_presets_or_groups_key(prompt_type)
           const recents =
@@ -1085,7 +1047,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             this.context.globalState.get<string[]>(key, [])
           const last_selected = recents[0]
           if (last_selected) {
-            if (presets_for_mode.some((p) => p.name === last_selected)) {
+            if (presets_ui.some((p) => p.name === last_selected)) {
               selected_name = last_selected
             }
           }
