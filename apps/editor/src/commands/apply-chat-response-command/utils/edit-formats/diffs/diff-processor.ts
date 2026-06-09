@@ -1,6 +1,7 @@
 type ReplaceLine = {
   content: string
   search_index: number | null
+  insert_after_search_index: number
 }
 
 type SearchBlock = {
@@ -156,6 +157,7 @@ export const apply_diff = (params: {
 
   let inside_replace_block = false
   let current_block_has_changes = false
+  let current_search_index_tracker = -1
 
   const push_block = () => {
     if (search_chunks.length > 0 || replace_chunks.length > 0) {
@@ -175,6 +177,7 @@ export const apply_diff = (params: {
     after_search_chunks = []
     inside_replace_block = false
     current_block_has_changes = false
+    current_search_index_tracker = -1
   }
 
   for (let i = 0; i < patch_lines_normalized.length; i++) {
@@ -202,6 +205,8 @@ export const apply_diff = (params: {
       } else {
         search_chunks.push(line.replace(/^-/, '').replace(/^~/, ''))
       }
+      
+      current_search_index_tracker = search_chunks.length - 1
 
       if (!line.startsWith('-')) {
         if (line.startsWith('~nnn')) {
@@ -214,12 +219,14 @@ export const apply_diff = (params: {
       if (line.startsWith('~nnn')) {
         replace_chunks.push({
           content: line_original.replace(/^~nnn/, '') + '\n',
-          search_index: search_chunks.length - 1
+          search_index: search_chunks.length - 1,
+          insert_after_search_index: current_search_index_tracker
         })
       } else if (line.startsWith('~')) {
         replace_chunks.push({
           content: line_original + '\n',
-          search_index: search_chunks.length - 1
+          search_index: search_chunks.length - 1,
+          insert_after_search_index: current_search_index_tracker
         })
       }
 
@@ -233,13 +240,15 @@ export const apply_diff = (params: {
       if (line.startsWith('+~nnn')) {
         replace_chunks.push({
           content: line_original.replace(/^\+~nnn/, '') + '\n',
-          search_index: null
+          search_index: null,
+          insert_after_search_index: current_search_index_tracker
         })
         after_search_chunks.push('~nnn')
       } else {
         replace_chunks.push({
           content: line_original.replace(/^\+/, '') + '\n',
-          search_index: null
+          search_index: null,
+          insert_after_search_index: current_search_index_tracker
         })
         after_search_chunks.push(line.replace(/^\+/, ''))
       }
@@ -315,6 +324,7 @@ export const apply_diff = (params: {
     } | null = null
     let used_trim_top = 0
 
+    // Pass 1: Strict Match
     for (let trim_cnt = 0; trim_cnt <= max_trim_top; trim_cnt++) {
       const current_search_lines = block.search_lines.slice(trim_cnt)
       if (current_search_lines.length == 0) continue
@@ -347,9 +357,6 @@ export const apply_diff = (params: {
             search_ptr++
             original_ptr++
           } else if (o_val == '~nnn') {
-            matched_indices.push(
-              original_code_lines_normalized[original_ptr].key
-            )
             original_ptr++
           } else if (s_val == '~nnn') {
             search_ptr++
@@ -360,8 +367,8 @@ export const apply_diff = (params: {
 
         if (search_ptr == current_search_lines.length) {
           matched_info = {
-            start_index: matched_indices[0],
-            actual_count: matched_indices.length,
+            start_index: matched_indices.length > 0 ? matched_indices[0] : original_code_lines_normalized[j].key,
+            actual_count: matched_indices.length > 0 ? matched_indices[matched_indices.length - 1] - matched_indices[0] + 1 : 0,
             map: current_search_to_original
           }
           found = true
@@ -372,6 +379,80 @@ export const apply_diff = (params: {
       if (found) {
         used_trim_top = trim_cnt
         break
+      }
+    }
+
+    // Pass 2: Loose / Gap Match (if strict match wasn't found)
+    if (!found) {
+      for (let trim_cnt = 0; trim_cnt <= max_trim_top; trim_cnt++) {
+        const current_search_lines = block.search_lines.slice(trim_cnt)
+        if (current_search_lines.length == 0) continue
+
+        for (
+          let j = previous_found_index;
+          j < original_code_lines_normalized.length;
+          j++
+        ) {
+          let search_ptr = 0
+          let original_ptr = j
+          const matched_indices: number[] = []
+          const current_search_to_original = new Map<number, number>()
+          let match_failed = false
+
+          while (
+            search_ptr < current_search_lines.length &&
+            original_ptr < original_code_lines_normalized.length
+          ) {
+            const s_val = current_search_lines[search_ptr]
+            const o_val = original_code_lines_normalized[original_ptr].value
+
+            if (s_val == o_val) {
+              current_search_to_original.set(
+                search_ptr + trim_cnt,
+                original_code_lines_normalized[original_ptr].key
+              )
+              matched_indices.push(
+                original_code_lines_normalized[original_ptr].key
+              )
+              search_ptr++
+              original_ptr++
+            } else if (o_val == '~nnn') {
+              original_ptr++
+            } else if (s_val == '~nnn') {
+              search_ptr++
+            } else {
+              // Loose gap skipping (look ahead in original code up to 50 lines for the missing match)
+              let found_ahead = false
+              const max_lookahead = 50
+              for (let k = 1; k <= max_lookahead && original_ptr + k < original_code_lines_normalized.length; k++) {
+                if (original_code_lines_normalized[original_ptr + k].value == s_val) {
+                  found_ahead = true
+                  original_ptr += k
+                  break
+                }
+              }
+              if (!found_ahead) {
+                match_failed = true
+                break
+              }
+            }
+          }
+
+          if (!match_failed && search_ptr == current_search_lines.length) {
+            matched_info = {
+              start_index: matched_indices.length > 0 ? matched_indices[0] : original_code_lines_normalized[j].key,
+              actual_count: matched_indices.length > 0 ? matched_indices[matched_indices.length - 1] - matched_indices[0] + 1 : 0,
+              map: current_search_to_original
+            }
+            found = true
+            break
+          }
+        }
+
+        if (found) {
+          used_trim_top = trim_cnt
+          break
+        }
       }
     }
 
@@ -387,7 +468,6 @@ export const apply_diff = (params: {
         )
       }
 
-      // Check if the patch is already applied by matching the after-side
       const has_additions = block.replace_lines.some(
         (l) => l.search_index === null
       )
@@ -488,10 +568,7 @@ export const apply_diff = (params: {
         const original_idx = block.search_to_original_map.get(line.search_index)
         if (original_idx != undefined) {
           for (let skip = last_original_idx + 1; skip < original_idx; skip++) {
-            if (
-              original_code_lines_normalized[skip].value == '~nnn' &&
-              !matched_original_indices.has(skip)
-            ) {
+            if (!matched_original_indices.has(skip)) {
               replacement_content.push(original_code_lines[skip])
             }
           }
@@ -507,6 +584,23 @@ export const apply_diff = (params: {
           last_original_idx = original_idx
         }
       } else {
+        let target_original_idx = last_original_idx
+        if (line.insert_after_search_index != null && line.insert_after_search_index >= 0) {
+          const mapped_idx = block.search_to_original_map.get(line.insert_after_search_index)
+          if (mapped_idx != undefined) {
+            target_original_idx = mapped_idx
+          }
+        }
+
+        for (let skip = last_original_idx + 1; skip <= target_original_idx; skip++) {
+          if (!matched_original_indices.has(skip)) {
+            replacement_content.push(original_code_lines[skip])
+          }
+        }
+        if (target_original_idx > last_original_idx) {
+          last_original_idx = target_original_idx
+        }
+
         let content = line.content
         if (
           is_last_replace_line &&
@@ -521,10 +615,7 @@ export const apply_diff = (params: {
     }
 
     for (let skip = last_original_idx + 1; skip <= end_original_idx; skip++) {
-      if (
-        original_code_lines_normalized[skip].value == '~nnn' &&
-        !matched_original_indices.has(skip)
-      ) {
+      if (!matched_original_indices.has(skip)) {
         replacement_content.push(original_code_lines[skip])
       }
     }

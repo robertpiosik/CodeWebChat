@@ -1,0 +1,9 @@
+--- a/apps/editor/src/views/panel/backend/message-handlers/index.ts
++++ b/apps/editor/src/views/panel/backend/message-handlers/index.ts
+@@ -1,5 +1,5 @@
+-export * from './handle-create-preset-group-or-separator'
+-export * from './handle-delete-preset-group-or-separator'
+-export * from './handle-duplicate-preset-group-or-separator'
++export * from './handle-create-preset'
++export * from './handle-delete-preset'
++export * from './handle-duplicate-preset'
