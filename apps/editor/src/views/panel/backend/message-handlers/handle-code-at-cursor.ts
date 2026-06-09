@@ -387,7 +387,7 @@ export const handle_code_at_cursor = async (
                     character: position.character
                   }
                 },
-                api_configuration: {
+                recent_api_configuration: {
                   provider: code_completions_config.provider_name,
                   model: code_completions_config.model,
                   reasoning_effort: code_completions_config.reasoning_effort

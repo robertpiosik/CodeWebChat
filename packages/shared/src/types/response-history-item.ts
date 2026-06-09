@@ -1,6 +1,6 @@
 import { FileInPreview, RelevantFileInPreview } from './file-in-preview'
 
-export type ApiConfiguration = {
+export type RecentApiConfiguration = {
   provider: string
   model: string
   reasoning_effort?: string
@@ -15,6 +15,6 @@ export type ResponseHistoryItem = {
   files?: FileInPreview[]
   relevant_files?: RelevantFileInPreview[]
   url?: string
-  api_configuration?: ApiConfiguration
+  recent_api_configuration?: RecentApiConfiguration
   is_unviewed?: boolean
 }

@@ -6,12 +6,12 @@ import { MODE, Mode } from '@/views/panel/types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import {
   BackendMessage,
-  ApiToolConfigurationsMessage,
+  ApiConfigurationsMessage,
   PresetsMessage,
   FrontendMessage,
   SelectionState
 } from '@/views/panel/types/messages'
-import { ApiToolConfiguration } from '@/views/panel/types/messages'
+import { ApiConfiguration } from '@/views/panel/types/messages'
 import { post_message } from '../utils/post-message'
 import { Configurations as UiConfigurations } from '@ui/components/editor/panel/Configurations'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
@@ -90,7 +90,7 @@ export const Main: React.FC<Props> = (props) => {
     set_selected_preset_name_by_mode
   ] = useState<{ [T in WebPromptType]?: string }>()
   const [all_configurations, set_all_configurations] =
-    useState<ApiToolConfiguration[]>()
+    useState<ApiConfiguration[]>()
   const [
     selected_configuration_id_by_prompt_type,
     set_selected_configuration_id_by_prompt_type
@@ -126,9 +126,9 @@ export const Main: React.FC<Props> = (props) => {
             (message as PresetsMessage).selected_configuration_id_by_prompt_type
           )
           break
-        case 'API_TOOL_CONFIGURATIONS':
+        case 'API_CONFIGURATIONS':
           set_all_configurations(
-            (message as ApiToolConfigurationsMessage).configurations
+            (message as ApiConfigurationsMessage).configurations
           )
           break
         case 'CHAT_HISTORY':
@@ -177,7 +177,7 @@ export const Main: React.FC<Props> = (props) => {
       { command: 'GET_HISTORY' },
       { command: 'GET_INSTRUCTIONS' },
       { command: 'GET_EDIT_FORMAT' },
-      { command: 'GET_API_TOOL_CONFIGURATIONS' }
+      { command: 'GET_API_CONFIGURATIONS' }
     ]
     initial_messages.forEach((message) => post_message(props.vscode, message))
 
@@ -326,21 +326,21 @@ export const Main: React.FC<Props> = (props) => {
     reordered_configs: (UiConfigurations.Configuration & { id: string })[]
   ) => {
     if (all_configurations) {
-      const reordered_api_tool_configs = reordered_configs
+      const reordered_api_configs = reordered_configs
         .map((ui_config) => {
           return all_configurations.find((c) => c.id === ui_config.id)!
         })
         .filter(Boolean)
 
-      if (reordered_api_tool_configs.length !== all_configurations.length) {
+      if (reordered_api_configs.length !== all_configurations.length) {
         return
       }
 
-      set_all_configurations(reordered_api_tool_configs)
+      set_all_configurations(reordered_api_configs)
 
       post_message(props.vscode, {
-        command: 'REORDER_API_TOOL_CONFIGURATIONS',
-        configurations: reordered_api_tool_configs
+        command: 'REORDER_API_CONFIGURATIONS',
+        configurations: reordered_api_configs
       })
     }
   }
@@ -370,7 +370,7 @@ export const Main: React.FC<Props> = (props) => {
 
   const handle_toggle_pinned_configuration = (id: string) => {
     post_message(props.vscode, {
-      command: 'TOGGLE_PINNED_API_TOOL_CONFIGURATION',
+      command: 'TOGGLE_PINNED_API_CONFIGURATION',
       configuration_id: id
     })
   }

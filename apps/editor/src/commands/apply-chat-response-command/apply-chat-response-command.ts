@@ -108,7 +108,7 @@ export const apply_chat_response_command = (params: {
             raw_instructions: args?.raw_instructions,
             created_at: Date.now(),
             url: args?.url,
-            api_configuration: args?.api_configuration,
+            recent_api_configuration: args?.recent_api_configuration,
             is_unviewed: true
           }
 
@@ -361,7 +361,7 @@ export const apply_chat_response_command = (params: {
                 lines_removed: total_lines_removed,
                 files: files_for_history,
                 url: args?.url,
-                api_configuration: args?.api_configuration
+                recent_api_configuration: args?.recent_api_configuration
               }
 
               history.push(new_item)
@@ -385,7 +385,7 @@ export const apply_chat_response_command = (params: {
             raw_instructions: args?.raw_instructions,
             created_at: created_at_for_preview,
             url: args?.url,
-            api_configuration: args?.api_configuration
+            recent_api_configuration: args?.recent_api_configuration
           })
 
           if (changes_accepted) {

@@ -522,7 +522,7 @@ export const restore_checkpoint = async (params: {
             files_with_content: item_to_preview.files,
             created_at: item_to_preview.created_at,
             url: item_to_preview.url,
-            api_configuration: item_to_preview.api_configuration
+            recent_api_configuration: item_to_preview.recent_api_configuration
           })
         }
       }

@@ -400,7 +400,7 @@ export const handle_find_relevant_files = async (
         vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
           response: result.response,
           raw_instructions: instructions,
-          api_configuration: {
+          recent_api_configuration: {
             provider: find_relevant_files_config.provider_name,
             model: find_relevant_files_config.model,
             reasoning_effort: find_relevant_files_config.reasoning_effort

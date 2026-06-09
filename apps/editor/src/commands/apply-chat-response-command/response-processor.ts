@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
 import { OriginalFileState } from './types/original-file-state'
-import { ApiConfiguration } from '@shared/types/response-history-item'
+import { RecentApiConfiguration } from '@shared/types/response-history-item'
 import { handle_restore_preview } from './handlers/restore-preview-handler'
 import {
   FileItem,
@@ -49,7 +49,7 @@ export type ApplyChatResponseCommandArgs = {
   relevant_files?: RelevantFileInPreview[]
   created_at?: number
   url?: string
-  api_configuration?: ApiConfiguration
+  recent_api_configuration?: RecentApiConfiguration
 }
 
 export const process_chat_response = async (params: {
@@ -182,7 +182,7 @@ export const process_chat_response = async (params: {
         created_at: created_at_for_preview,
         relevant_files: files_for_preview,
         url: params.args?.url,
-        api_configuration: params.args?.api_configuration
+        recent_api_configuration: params.args?.recent_api_configuration
       }
       history.push(new_item)
     } else {
@@ -208,7 +208,7 @@ export const process_chat_response = async (params: {
       raw_instructions: params.args?.raw_instructions,
       created_at: created_at_for_preview,
       url: params.args?.url,
-      api_configuration: params.args?.api_configuration
+      recent_api_configuration: params.args?.recent_api_configuration
     })
 
     const decision = await new Promise<PreviewDecision>((resolve) => {

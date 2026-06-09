@@ -52,9 +52,9 @@ import {
   handle_get_workspace_state,
   handle_get_version,
   handle_show_prompt_template_quick_pick,
-  handle_get_api_tool_configurations,
-  handle_reorder_api_tool_configurations,
-  handle_toggle_pinned_api_tool_configuration,
+  handle_get_api_configurations,
+  handle_reorder_api_configurations,
+  handle_toggle_pinned_api_configuration,
   handle_pick_model,
   handle_pick_chatbot,
   handle_pick_reasoning_effort,
@@ -471,7 +471,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         }
 
         if (event.affectsConfiguration('codeWebChat.configurations')) {
-          handle_get_api_tool_configurations(this)
+          handle_get_api_configurations(this)
         }
 
         const setup_progress_keys = [
@@ -831,14 +831,14 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             }
           } else if (message.command == 'CANCEL_API_MANAGER_REQUEST') {
             this.api_manager.cancel_api_call(message.id)
-          } else if (message.command == 'GET_API_TOOL_CONFIGURATIONS') {
-            await handle_get_api_tool_configurations(this)
-          } else if (message.command == 'REORDER_API_TOOL_CONFIGURATIONS') {
-            await handle_reorder_api_tool_configurations(this, message)
+          } else if (message.command == 'GET_API_CONFIGURATIONS') {
+            await handle_get_api_configurations(this)
+          } else if (message.command == 'REORDER_API_CONFIGURATIONS') {
+            await handle_reorder_api_configurations(this, message)
           } else if (
-            message.command == 'TOGGLE_PINNED_API_TOOL_CONFIGURATION'
+            message.command == 'TOGGLE_PINNED_API_CONFIGURATION'
           ) {
-            await handle_toggle_pinned_api_tool_configuration(this, message)
+            await handle_toggle_pinned_api_configuration(this, message)
           } else if (message.command == 'SAVE_WEB_PROMPT_TYPE') {
             await handle_save_web_prompt_type(this, message.prompt_type)
             this.update_providers_shrink_mode()

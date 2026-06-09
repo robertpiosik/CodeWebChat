@@ -11,6 +11,7 @@ export const handle_apply_response_from_history = async (
     relevant_files: message.relevant_files,
     created_at: message.created_at,
     url: message.url,
-    api_configuration: message.api_configuration
+    recent_api_configuration: message.recent_api_configuration
   })
 }
+

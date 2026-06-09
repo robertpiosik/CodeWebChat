@@ -11,7 +11,7 @@ import { MODE, Mode } from '@/views/panel/types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Scrollable as UiScrollable } from '@ui/components/editor/panel/Scrollable'
 import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/components/editor/panel/BrowserExtensionMessage'
-import { ApiToolConfiguration } from '@/views/panel/types/messages'
+import { ApiConfiguration } from '@/views/panel/types/messages'
 import { use_last_choice_button_title } from './hooks/use-last-choice-button-title'
 import { ContextUtilisation as UiContextUtilisation } from '@ui/components/editor/panel/ContextUtilisation'
 import { Header } from './components/Header'
@@ -39,7 +39,7 @@ type Props = {
   on_quick_action_click: (command: string) => void
   is_connected: boolean
   presets: Preset[]
-  configurations: ApiToolConfiguration[]
+  configurations: ApiConfiguration[]
   on_configuration_click: (id: string) => void
   on_configurations_reorder: (
     reordered_configurations: UiConfigurations.Configuration[]

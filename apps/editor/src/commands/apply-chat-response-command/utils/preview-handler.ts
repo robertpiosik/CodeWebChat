@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '../types/original-file-state'
-import { ApiConfiguration } from '@shared/types/response-history-item'
+import { RecentApiConfiguration } from '@shared/types/response-history-item'
 import { undo_files } from './file-operations'
 import { preview } from './preview'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
@@ -22,7 +22,7 @@ export const preview_handler = async (params: {
   raw_instructions?: string
   created_at?: number
   url?: string
-  api_configuration?: ApiConfiguration
+  recent_api_configuration?: RecentApiConfiguration
 }): Promise<boolean> => {
   let resolve_cleanup_promise: () => void
   ongoing_preview_cleanup_promise = new Promise((resolve) => {
@@ -38,7 +38,7 @@ export const preview_handler = async (params: {
       context: params.context,
       created_at: params.created_at,
       url: params.url,
-      api_configuration: params.api_configuration
+      recent_api_configuration: params.recent_api_configuration
     })
 
     if (preview_result === null || preview_result.accepted_files.length == 0) {

@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { MODE, Mode } from '@/views/panel/types/main-view-mode'
-import { ApiToolConfiguration } from '@/views/panel/types/messages'
+import { ApiConfiguration } from '@/views/panel/types/messages'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { Preset } from '@shared/types/preset'
 
@@ -9,7 +9,7 @@ export const use_last_choice_button_title = (params: {
   selected_preset_or_group_name?: string
   presets: Preset[]
   selected_configuration_id?: string
-  configurations: ApiToolConfiguration[]
+  configurations: ApiConfiguration[]
 }): string | undefined => {
   return useMemo(() => {
     if (params.mode == MODE.WEB) {

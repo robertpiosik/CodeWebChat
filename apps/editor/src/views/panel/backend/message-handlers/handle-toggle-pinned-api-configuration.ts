@@ -3,12 +3,12 @@ import {
   ModelProvidersManager,
   get_tool_config_id
 } from '@/services/model-providers-manager'
-import { TogglePinnedApiToolConfigurationMessage } from '@/views/panel/types/messages'
-import { handle_get_api_tool_configurations } from './handle-get-api-tool-configurations'
+import { TogglePinnedApiConfigurationMessage } from '@/views/panel/types/messages'
+import { handle_get_api_configurations } from './handle-get-api-configurations'
 
-export const handle_toggle_pinned_api_tool_configuration = async (
+export const handle_toggle_pinned_api_configuration = async (
   panel_provider: PanelProvider,
-  message: TogglePinnedApiToolConfigurationMessage
+  message: TogglePinnedApiConfigurationMessage
 ): Promise<void> => {
   const { configuration_id } = message
   const providers_manager = new ModelProvidersManager(panel_provider.context)
@@ -20,5 +20,5 @@ export const handle_toggle_pinned_api_tool_configuration = async (
   config.is_pinned = !config.is_pinned
 
   await providers_manager.save_tool_configs(configs)
-  await handle_get_api_tool_configurations(panel_provider)
+  await handle_get_api_configurations(panel_provider)
 }

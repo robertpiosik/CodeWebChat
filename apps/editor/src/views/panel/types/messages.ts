@@ -6,7 +6,7 @@ import {
 } from '@shared/types/file-in-preview'
 import {
   ResponseHistoryItem,
-  ApiConfiguration
+  RecentApiConfiguration
 } from '@shared/types/response-history-item'
 import { Preset } from '@shared/types/preset'
 import { Task } from '@shared/types/task'
@@ -43,7 +43,7 @@ export type SelectionState = {
   end_col: number
 }
 
-export type ApiToolConfiguration = {
+export type ApiConfiguration = {
   id: string
   provider_name: string
   model: string
@@ -281,17 +281,17 @@ export interface SaveApiPromptTypeMessage extends BaseMessage {
   prompt_type: ApiPromptType
 }
 
-export interface GetApiToolConfigurationsMessage extends BaseMessage {
-  command: 'GET_API_TOOL_CONFIGURATIONS'
+export interface GetApiConfigurationsMessage extends BaseMessage {
+  command: 'GET_API_CONFIGURATIONS'
 }
 
-export interface ReorderApiToolConfigurationsMessage extends BaseMessage {
-  command: 'REORDER_API_TOOL_CONFIGURATIONS'
-  configurations: ApiToolConfiguration[]
+export interface ReorderApiConfigurationsMessage extends BaseMessage {
+  command: 'REORDER_API_CONFIGURATIONS'
+  configurations: ApiConfiguration[]
 }
 
-export interface TogglePinnedApiToolConfigurationMessage extends BaseMessage {
-  command: 'TOGGLE_PINNED_API_TOOL_CONFIGURATION'
+export interface TogglePinnedApiConfigurationMessage extends BaseMessage {
+  command: 'TOGGLE_PINNED_API_CONFIGURATION'
   configuration_id: string
 }
 
@@ -392,7 +392,7 @@ export interface ApplyResponseFromHistoryMessage extends BaseMessage {
   relevant_files?: RelevantFileInPreview[]
   created_at: number
   url?: string
-  api_configuration?: ApiConfiguration
+  recent_api_configuration?: RecentApiConfiguration
 }
 
 export interface GetCollapsedStatesMessage extends BaseMessage {
@@ -598,9 +598,9 @@ export type FrontendMessage =
   | GetWebPromptTypeMessage
   | GetApiPromptTypeMessage
   | SaveApiPromptTypeMessage
-  | GetApiToolConfigurationsMessage
-  | ReorderApiToolConfigurationsMessage
-  | TogglePinnedApiToolConfigurationMessage
+  | GetApiConfigurationsMessage
+  | ReorderApiConfigurationsMessage
+  | TogglePinnedApiConfigurationMessage
   | GetVersionMessage
   | RequestCurrentlyOpenFileTextMessage
   | ResponsePreviewMessage
@@ -686,9 +686,9 @@ export interface PresetsMessage extends BaseMessage {
   selected_configuration_id_by_prompt_type?: { [T in ApiPromptType]?: string }
 }
 
-export interface ApiToolConfigurationsMessage extends BaseMessage {
-  command: 'API_TOOL_CONFIGURATIONS'
-  configurations: ApiToolConfiguration[]
+export interface ApiConfigurationsMessage extends BaseMessage {
+  command: 'API_CONFIGURATIONS'
+  configurations: ApiConfiguration[]
 }
 
 export interface EditorStateChangedMessage extends BaseMessage {
@@ -795,7 +795,7 @@ export interface ResponsePreviewStartedMessage extends BaseMessage {
   created_at?: number
   fix_all_automatically?: boolean
   url?: string
-  api_configuration?: ApiConfiguration
+  recent_api_configuration?: RecentApiConfiguration
 }
 
 export interface ResponsePreviewFinishedMessage extends BaseMessage {
@@ -925,7 +925,7 @@ export type BackendMessage =
   | ConnectionStatusMessage
   | EditFormatMessage
   | EditFormatInstructionsMessage
-  | ApiToolConfigurationsMessage
+  | ApiConfigurationsMessage
   | PresetsMessage
   | EditorStateChangedMessage
   | EditorSelectionChangedMessage

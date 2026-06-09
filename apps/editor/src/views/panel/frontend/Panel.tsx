@@ -102,7 +102,7 @@ export const Panel = () => {
     fix_all_automatically,
     handle_discard_user_changes_in_preview,
     url,
-    api_configuration
+    recent_api_configuration
   } = use_preview_manager(vscode)
 
   const {
@@ -271,7 +271,7 @@ export const Panel = () => {
       relevant_files: item.relevant_files,
       created_at: item.created_at,
       url: item.url,
-      api_configuration: item.api_configuration
+      recent_api_configuration: item.recent_api_configuration
     })
   }
 
@@ -674,7 +674,7 @@ export const Panel = () => {
                 items={items_in_preview}
                 fix_all_automatically={fix_all_automatically}
                 raw_instructions={raw_instructions}
-                api_configuration={api_configuration}
+                recent_api_configuration={recent_api_configuration}
                 has_multiple_workspaces={workspace_folder_count > 1}
                 on_focus_file={(file) => {
                   post_message(vscode, {

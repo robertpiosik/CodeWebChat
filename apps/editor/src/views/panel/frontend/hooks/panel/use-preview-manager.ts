@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { BackendMessage } from '../../../types/messages'
 import { post_message } from '../../utils/post-message'
-import { ApiConfiguration } from '@shared/types/response-history-item'
+import { RecentApiConfiguration } from '@shared/types/response-history-item'
 import { ItemInPreview } from '@shared/types/file-in-preview'
 
 export const use_preview_manager = (vscode: any) => {
@@ -11,8 +11,8 @@ export const use_preview_manager = (vscode: any) => {
     useState<number>()
   const [fix_all_automatically, set_fix_all_automatically] = useState(false)
   const [url, set_url] = useState<string>()
-  const [api_configuration, set_api_configuration] =
-    useState<ApiConfiguration>()
+  const [recent_api_configuration, set_recent_api_configuration] =
+    useState<RecentApiConfiguration>()
 
   const handle_discard_user_changes_in_preview = (file: {
     file_path: string
@@ -34,7 +34,7 @@ export const use_preview_manager = (vscode: any) => {
         set_preview_item_created_at(message.created_at)
         set_fix_all_automatically(message.fix_all_automatically ?? false)
         set_url(message.url)
-        set_api_configuration(message.api_configuration)
+        set_recent_api_configuration(message.recent_api_configuration)
       } else if (message.command == 'UPDATE_FILE_IN_PREVIEW') {
         set_items_in_preview((current_items) => {
           const items = current_items ?? []
@@ -99,7 +99,7 @@ export const use_preview_manager = (vscode: any) => {
         set_raw_instructions(undefined)
         set_preview_item_created_at(undefined)
         set_url(undefined)
-        set_api_configuration(undefined)
+        set_recent_api_configuration(undefined)
       }
     }
 
@@ -115,6 +115,6 @@ export const use_preview_manager = (vscode: any) => {
     preview_item_created_at,
     fix_all_automatically,
     handle_discard_user_changes_in_preview,
-    api_configuration
+    recent_api_configuration
   }
 }

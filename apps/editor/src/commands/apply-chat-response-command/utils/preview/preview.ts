@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import { dictionary } from '@shared/constants/dictionary'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
-import { ApiConfiguration } from '@shared/types/response-history-item'
+import { RecentApiConfiguration } from '@shared/types/response-history-item'
 import { setup_workspace_listeners } from './workspace-listener'
 import { prepare_files_from_original_states } from './file-preparer'
 import { parse_response } from '../clipboard-parser/clipboard-parser'
@@ -31,7 +31,7 @@ export const preview = async (params: {
   context: vscode.ExtensionContext
   created_at?: number
   url?: string
-  api_configuration?: ApiConfiguration
+  recent_api_configuration?: RecentApiConfiguration
 }): Promise<{
   accepted_files: PreviewableFile[]
   rejected_states: OriginalFileState[]
@@ -147,7 +147,7 @@ export const preview = async (params: {
         created_at: params.created_at,
         fix_all_automatically,
         url: params.url,
-        api_configuration: params.api_configuration
+        recent_api_configuration: params.recent_api_configuration
       })
     }
 
