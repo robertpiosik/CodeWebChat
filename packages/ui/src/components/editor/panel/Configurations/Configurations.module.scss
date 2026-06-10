@@ -3,12 +3,6 @@
   flex-direction: column;
 }
 
-.missing-config {
-  padding: 2px 12px 0 12px;
-  font-weight: 500;
-  font-style: italic;
-}
-
 .configurations {
   display: flex;
   flex-direction: column;
@@ -59,6 +53,16 @@
         }
       }
 
+      &__icon {
+        display: flex;
+
+        > svg {
+          fill: var(--vscode-icon-foreground);
+          width: 16px;
+          height: 16px;
+        }
+      }
+
       &__text {
         overflow: hidden;
         text-overflow: ellipsis;
@@ -84,23 +88,6 @@
 .empty {
   padding: 0 12px 0 34px;
   color: var(--cwc-text-color-dimmed);
-}
-
-.arrow-animate {
-  animation: arrow-left-move 2s infinite;
-  font-weight: 600 !important;
-}
-
-@keyframes arrow-left-move {
-  0% {
-    transform: translateX(0);
-  }
-  50% {
-    transform: translateX(-8px);
-  }
-  100% {
-    transform: translateX(0);
-  }
 }
 
 .footer {

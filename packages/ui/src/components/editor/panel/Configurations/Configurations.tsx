@@ -4,19 +4,18 @@ import { ReactSortable } from 'react-sortablejs'
 import { IconButton } from '../../common/IconButton'
 import { Button } from '../../common/Button'
 import { ListHeader } from '../ListHeader'
+import { Icon } from '../../common/Icon'
 
 export namespace Configurations {
   export type Configuration = {
     id: string
-    model: string
-    provider_name: string
-    temperature?: number
-    reasoning_effort?: string
+    title: string
+    details?: string[]
+    icon?: Icon.Variant
     is_pinned?: boolean
   }
 
   export type Props = {
-    api_prompt_type: 'edit-context' | 'code-at-cursor' | 'find-relevant-files'
     configurations: Configuration[]
     on_configuration_click: (id: string) => void
     on_reorder: (configurations: Configuration[]) => void
@@ -35,13 +34,12 @@ export namespace Configurations {
       title: string
       empty: string
       add_new: string
-      add_new_tooltip: string
-      pin_tooltip: string
-      unpin_tooltip: string
-      insert_tooltip: string
-      edit_tooltip: string
-      delete_tooltip: string
-      duplicate_tooltip: string
+      pin: string
+      unpin: string
+      insert: string
+      edit: string
+      delete: string
+      duplicate_configuration: string
     }
   }
 }
@@ -54,16 +52,6 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
     is_dragging_disabled: boolean,
     index_for_insertion?: number
   ) => {
-    const description_parts = [configuration.provider_name]
-    if (configuration.reasoning_effort) {
-      description_parts.push(`${configuration.reasoning_effort}`)
-    }
-    if (configuration.temperature != null) {
-      description_parts.push(`${configuration.temperature}`)
-    }
-
-    const description = description_parts.join(' · ')
-
     return (
       <div
         key={configuration.id}
@@ -85,9 +73,14 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
               <span className="codicon codicon-gripper" />
             </div>
           )}
+          {configuration.icon && (
+            <div className={styles.configurations__item__left__icon}>
+              <Icon variant={configuration.icon} />
+            </div>
+          )}
           <div className={styles.configurations__item__left__text}>
-            <span>{configuration.model}</span>
-            <span>{description}</span>
+            <span>{configuration.title}</span>
+            {configuration.details && configuration.details.length > 0 && <span>{configuration.details.join(' · ')}</span>}
           </div>
         </div>
         <div
@@ -101,8 +94,8 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
               codicon_icon={configuration.is_pinned ? 'pinned' : 'pin'}
               title={
                 configuration.is_pinned
-                  ? props.translations.unpin_tooltip
-                  : props.translations.pin_tooltip
+                  ? props.translations.unpin
+                  : props.translations.pin
               }
               on_click={(e) => {
                 e.stopPropagation()
@@ -110,10 +103,10 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
               }}
             />
           )}
-          {!is_dragging_disabled && (
+          {!is_dragging_disabled && props.on_create && (
             <IconButton
               codicon_icon="insert"
-              title={props.translations.insert_tooltip}
+              title={props.translations.insert}
               on_click={(e) => {
                 e.stopPropagation()
                 props.on_create({ insertion_index: index_for_insertion })
@@ -123,7 +116,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
           {props.on_duplicate && (
             <IconButton
               codicon_icon="files"
-              title={props.translations.duplicate_tooltip}
+              title={props.translations.duplicate_configuration}
               on_click={(e) => {
                 e.stopPropagation()
                 props.on_duplicate(configuration.id)
@@ -133,7 +126,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
           {props.on_edit && (
             <IconButton
               codicon_icon="edit"
-              title={props.translations.edit_tooltip}
+              title={props.translations.edit}
               on_click={(e) => {
                 e.stopPropagation()
                 props.on_edit(configuration.id)
@@ -143,7 +136,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
           {props.on_delete && (
             <IconButton
               codicon_icon="trash"
-              title={props.translations.delete_tooltip}
+              title={props.translations.delete}
               on_click={(e) => {
                 e.stopPropagation()
                 props.on_delete(configuration.id)
@@ -181,7 +174,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
               e.stopPropagation()
               props.on_create({ create_on_top: true })
             }}
-            title={props.translations.add_new_tooltip}
+            title={props.translations.add_new}
           />
         }
       />
@@ -212,7 +205,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
             </ReactSortable>
           </div>
           <div className={styles.footer}>
-            <Button on_click={() => props.on_create()}>
+            <Button on_click={() => props.on_create && props.on_create({})}>
               {props.translations.add_new}
             </Button>
           </div>

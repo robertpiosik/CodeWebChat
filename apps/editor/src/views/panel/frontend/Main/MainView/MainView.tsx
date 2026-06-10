@@ -1,6 +1,5 @@
 import styles from './MainView.module.scss'
 import { Configurations as UiConfigurations } from '@ui/components/editor/panel/Configurations'
-import { Presets as UiPresets } from '@ui/components/editor/panel/Presets'
 import { PromptField as UiPromptField } from '@ui/components/editor/panel/prompts/PromptField'
 import { Separator as UiSeparator } from '@ui/components/editor/panel/Separator'
 import { Preset } from '@shared/types/preset'
@@ -19,6 +18,8 @@ import { use_invocation_counts } from './hooks/use-invocation-counts'
 import { SelectionState } from '@/views/panel/types/messages'
 import { use_translation } from '../../i18n/use-translation'
 import { Checkbox as UiCheckbox } from '@ui/components/editor/common/Checkbox'
+import { Icon } from '@ui/components/editor/common/Icon'
+import { CHATBOTS } from '@shared/constants/chatbots'
 
 type Props = {
   scroll_reset_key: number
@@ -125,6 +126,29 @@ type Props = {
   voice_input_push_to_talk: boolean
 }
 
+const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
+  'AI Studio': 'AI_STUDIO',
+  ChatGPT: 'CHATGPT',
+  Claude: 'CLAUDE',
+  Copilot: 'COPILOT',
+  DeepSeek: 'DEEPSEEK',
+  Doubao: 'DOUBAO',
+  Gemini: 'GEMINI',
+  'GitHub Copilot': 'GITHUB_COPILOT',
+  Grok: 'GROK',
+  HuggingChat: 'HUGGING_CHAT',
+  Kimi: 'KIMI',
+  Mistral: 'MISTRAL',
+  'Meta AI': 'META',
+  Arena: 'ARENA',
+  'Open WebUI': 'OPEN_WEBUI',
+  OpenRouter: 'OPENROUTER',
+  Qwen: 'QWEN',
+  Together: 'TOGETHER',
+  Yuanbao: 'YUANBAO',
+  Z: 'Z_AI'
+}
+
 export const MainView: React.FC<Props> = (props) => {
   const { t } = use_translation()
 
@@ -195,6 +219,51 @@ export const MainView: React.FC<Props> = (props) => {
     selected_configuration_id: props.selected_configuration_id,
     configurations: props.configurations
   })
+
+  const web_configurations: UiConfigurations.Configuration[] = props.presets.map(
+    (preset, index) => {
+      const is_unnamed = !preset.name || /^\(\d+\)$/.test(preset.name.trim())
+      const display_name = is_unnamed
+        ? preset.chatbot!
+        : preset.name!.replace(/ \(\d+\)$/, '')
+
+      const get_details = (): string[] => {
+        const { chatbot, model } = preset
+        const model_display_name =
+          model && chatbot ? CHATBOTS[chatbot].models?.[model]?.label || model : null
+
+        if (is_unnamed) return model_display_name ? [model_display_name] : []
+        if (model_display_name) return [chatbot!, model_display_name]
+        return chatbot ? [chatbot] : []
+      }
+
+      return {
+        id: preset.name ?? `unnamed-${index}`,
+        title: display_name,
+        details: get_details(),
+        is_pinned: preset.is_pinned,
+        icon: preset.chatbot ? chatbot_to_icon[preset.chatbot] : undefined,
+      }
+    }
+  )
+
+  const api_configurations: UiConfigurations.Configuration[] = props.configurations.map(
+    (c) => {
+      const details = [c.provider_name]
+      if (c.reasoning_effort) {
+        details.push(`${c.reasoning_effort}`)
+      }
+      if (c.temperature != null) {
+        details.push(`${c.temperature}`)
+      }
+      return {
+        id: c.id,
+        title: c.model,
+        details,
+        is_pinned: c.is_pinned
+      }
+    }
+  )
 
   return (
     <>
@@ -331,46 +400,52 @@ export const MainView: React.FC<Props> = (props) => {
         {props.mode == MODE.WEB && (
           <>
             <UiSeparator height={8} />
-            <UiPresets
-              web_prompt_type={props.web_prompt_type}
-              is_connected={props.is_connected}
-              has_instructions={!!props.instructions}
-              has_context={props.token_count > 0}
-              is_in_code_completions_mode={
-                props.web_prompt_type == 'code-at-cursor'
+            <UiConfigurations
+              configurations={web_configurations}
+              on_create={(params) =>
+                props.on_create_preset(
+                  params?.create_on_top ? 'top' : 'bottom',
+                  params?.insertion_index
+                )
               }
-              presets={props.presets}
-              on_create={props.on_create_preset}
-              on_preset_click={(preset_name) =>
+              on_configuration_click={(id) => {
                 props.initialize_chats({
-                  preset_name,
+                  preset_name: id,
                   show_quick_pick: false,
                   invocation_count: current_invocation_count
                 })
-              }
-              on_preset_copy={props.copy_to_clipboard}
-              on_preset_edit={props.on_preset_edit}
-              on_presets_reorder={props.on_presets_reorder}
-              on_duplicate={props.on_duplicate_preset}
-              on_delete={props.on_delete_preset}
-              on_toggle_preset_pinned={props.on_toggle_preset_pinned}
-              selected_preset_name={props.selected_preset_name}
+              }}
+              on_edit={(id) => props.on_preset_edit(id)}
+              on_reorder={(reordered) => {
+                const new_presets = reordered.map((c) => {
+                  return props.presets.find(
+                    (p, i) => (p.name ?? `unnamed-${i}`) === c.id
+                  )!
+                })
+                props.on_presets_reorder(new_presets)
+              }}
+              on_duplicate={(id) => {
+                const idx = props.presets.findIndex((p, i) => (p.name ?? `unnamed-${i}`) === id)
+                props.on_duplicate_preset(idx)
+              }}
+              on_delete={(id) => {
+                const idx = props.presets.findIndex((p, i) => (p.name ?? `unnamed-${i}`) === id)
+                props.on_delete_preset(idx)
+              }}
+              on_toggle_pinned={(id) => props.on_toggle_preset_pinned(id)}
+              selected_configuration_id={props.selected_preset_name}
               is_collapsed={props.presets_collapsed}
               on_toggle_collapsed={props.on_presets_collapsed_change}
               translations={{
                 title: t('presets.title'),
                 empty: t('presets.empty'),
-                preset: t('presets.preset'),
-                presets: t('presets.presets'),
                 add_new: t('action.add-new'),
-                add_new_tooltip: t('action.add-new'),
-                copy_tooltip: t('action.copy'),
-                pin_tooltip: t('action.pin'),
-                unpin_tooltip: t('action.unpin'),
-                duplicate_tooltip: t('action.duplicate-preset'),
-                edit_tooltip: t('action.edit'),
-                delete_tooltip: t('action.delete'),
-                insert_tooltip: t('action.insert-preset')
+                pin: t('action.pin'),
+                unpin: t('action.unpin'),
+                duplicate_configuration: t('action.duplicate-configuration'),
+                edit: t('action.edit'),
+                delete: t('action.delete'),
+                insert: t('action.insert-configuration'),
               }}
             />
           </>
@@ -380,10 +455,9 @@ export const MainView: React.FC<Props> = (props) => {
           <>
             <UiSeparator height={8} />
             <UiConfigurations
-              api_prompt_type={props.api_prompt_type}
-              configurations={props.configurations}
+              configurations={api_configurations}
               on_configuration_click={props.on_configuration_click}
-              on_reorder={props.on_configurations_reorder}
+              on_reorder={(reordered) => props.on_configurations_reorder(reordered)}
               on_toggle_pinned={props.on_toggle_pinned_configuration}
               on_edit={props.on_edit_configuration}
               on_delete={props.on_delete_configuration}
@@ -396,13 +470,12 @@ export const MainView: React.FC<Props> = (props) => {
                 title: t('configurations.title'),
                 empty: t('configurations.empty'),
                 add_new: t('action.add-new'),
-                add_new_tooltip: t('action.add-new'),
-                pin_tooltip: t('action.pin'),
-                unpin_tooltip: t('action.unpin'),
-                insert_tooltip: t('action.insert-configuration'),
-                edit_tooltip: t('action.edit'),
-                delete_tooltip: t('action.delete'),
-                duplicate_tooltip: t('action.duplicate-configuration')
+                pin: t('action.pin'),
+                unpin: t('action.unpin'),
+                insert: t('action.insert-configuration'),
+                edit: t('action.edit'),
+                delete: t('action.delete'),
+                duplicate_configuration: t('action.duplicate-configuration')
               }}
             />
           </>
