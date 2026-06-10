@@ -71,7 +71,7 @@ export const RECENTLY_USED_VOICE_INPUT_CONFIG_IDS_STATE_KEY =
   'recently-used-voice-input-config-ids'
 
 export const PRESETS_COLLAPSED_STATE_KEY = 'presets-collapsed'
-export const CONFIGURATIONS_COLLAPSED_STATE_KEY = 'configurations-collapsed'
+export const API_CONFIGURATIONS_COLLAPSED_STATE_KEY = 'api-configurations-collapsed'
 
 export const get_recently_used_presets_or_groups_key = (
   web_prompt_type: string

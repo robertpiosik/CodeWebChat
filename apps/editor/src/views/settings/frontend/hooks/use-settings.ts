@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import {
   BackendMessage,
   EditFormatInstructions,
-  ConfigurationForClient,
+  ApiConfigurationForClient,
   ProviderForClient,
   FrontendMessage
 } from '@/views/settings/types/messages'
@@ -13,8 +13,8 @@ export const use_settings = (vscode: any) => {
   const [providers, set_providers] = useState<ProviderForClient[] | undefined>(
     undefined
   )
-  const [configurations, set_configurations] = useState<
-    ConfigurationForClient[] | undefined
+  const [api_configurations, set_api_configurations] = useState<
+    ApiConfigurationForClient[] | undefined
   >(undefined)
   const [defaults, set_defaults] = useState<
     Record<ToolType, string | null> | undefined
@@ -76,7 +76,7 @@ export const use_settings = (vscode: any) => {
 
   useEffect(() => {
     post_message(vscode, { command: 'GET_MODEL_PROVIDERS' })
-    post_message(vscode, { command: 'GET_CONFIGURATIONS' })
+    post_message(vscode, { command: 'GET_API_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_INCLUDE_PROMPTS_IN_COMMIT_MESSAGES' })
@@ -103,8 +103,8 @@ export const use_settings = (vscode: any) => {
       const message = event.data
       if (message.command == 'MODEL_PROVIDERS') {
         set_providers(message.providers)
-      } else if (message.command == 'CONFIGURATIONS') {
-        set_configurations(message.configurations)
+      } else if (message.command == 'API_CONFIGURATIONS') {
+        set_api_configurations(message.api_configurations)
         set_defaults(message.defaults)
       } else if (message.command == 'EDIT_CONTEXT_SYSTEM_INSTRUCTIONS') {
         set_edit_context_system_instructions(message.instructions)
@@ -185,62 +185,62 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_add_config = (params?: {
+  const handle_add_api_configuration = (params?: {
     insertion_index?: number
     create_on_top?: boolean
   }) => {
     post_message(vscode, {
-      command: 'UPSERT_CONFIGURATION',
+      command: 'UPSERT_API_CONFIGURATION',
       insertion_index: params?.insertion_index,
       create_on_top: params?.create_on_top
     })
   }
 
-  const handle_reorder_configs = (reordered: ConfigurationForClient[]) => {
+  const handle_reorder_api_configurations = (reordered: ApiConfigurationForClient[]) => {
     post_message(vscode, {
-      command: 'REORDER_CONFIGURATIONS',
-      configurations: reordered
+      command: 'REORDER_API_CONFIGURATIONS',
+      api_configurations: reordered
     } as FrontendMessage)
   }
 
-  const handle_edit_config = (configuration_id: string) => {
+  const handle_edit_api_configuration = (api_configuration_id: string) => {
     post_message(vscode, {
-      command: 'UPSERT_CONFIGURATION',
-      configuration_id
+      command: 'UPSERT_API_CONFIGURATION',
+      api_configuration_id
     })
   }
 
-  const handle_duplicate_config = (configuration_id: string) => {
+  const handle_duplicate_api_configuration = (api_configuration_id: string) => {
     post_message(vscode, {
-      command: 'UPSERT_CONFIGURATION',
-      duplicate_from_id: configuration_id
+      command: 'UPSERT_API_CONFIGURATION',
+      duplicate_from_id: api_configuration_id
     })
   }
 
-  const handle_delete_config = (configuration_id: string) => {
+  const handle_delete_api_configuration = (api_configuration_id: string) => {
     post_message(vscode, {
-      command: 'DELETE_CONFIGURATION',
-      configuration_id
+      command: 'DELETE_API_CONFIGURATION',
+      api_configuration_id
     } as FrontendMessage)
   }
 
-  const handle_set_default_config = (
+  const handle_set_default_api_configuration = (
     tool_name: ToolType,
-    configuration_id: string | null
+    api_configuration_id: string | null
   ) => {
     if (defaults) {
-      set_defaults({ ...defaults, [tool_name]: configuration_id })
+      set_defaults({ ...defaults, [tool_name]: api_configuration_id })
     }
     post_message(vscode, {
-      command: 'SET_DEFAULT_CONFIGURATION',
+      command: 'SET_DEFAULT_API_CONFIGURATION',
       tool_name,
-      configuration_id
+      api_configuration_id
     } as FrontendMessage)
   }
 
-  const handle_select_default_config = (tool_name: ToolType) => {
+  const handle_select_default_api_configuration = (tool_name: ToolType) => {
     post_message(vscode, {
-      command: 'SELECT_DEFAULT_CONFIGURATION',
+      command: 'SELECT_DEFAULT_API_CONFIGURATION',
       tool_name
     } as FrontendMessage)
   }
@@ -403,8 +403,8 @@ export const use_settings = (vscode: any) => {
   return {
     providers,
     set_providers,
-    configurations,
-    set_configurations,
+    api_configurations,
+    set_api_configurations,
     defaults,
     voice_input_instructions,
     voice_input_push_to_talk,
@@ -427,13 +427,13 @@ export const use_settings = (vscode: any) => {
     handle_add_provider,
     handle_delete_provider,
     handle_edit_provider,
-    handle_add_config,
-    handle_reorder_configs,
-    handle_edit_config,
-    handle_duplicate_config,
-    handle_delete_config,
-    handle_set_default_config,
-    handle_select_default_config,
+    handle_add_api_configuration,
+    handle_reorder_api_configurations,
+    handle_edit_api_configuration,
+    handle_duplicate_api_configuration,
+    handle_delete_api_configuration,
+    handle_set_default_api_configuration,
+    handle_select_default_api_configuration,
     handle_voice_input_instructions_change,
     handle_voice_input_push_to_talk_change,
     handle_commit_instructions_change,

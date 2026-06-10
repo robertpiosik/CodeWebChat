@@ -4,24 +4,24 @@ import {
   ModelProvidersManager,
   get_tool_config_id
 } from '@/services/model-providers-manager'
-import { SelectDefaultConfigurationMessage } from '@/views/settings/types/messages'
-import { handle_set_default_configuration } from './handle-set-default-configuration'
+import { SelectDefaultApiConfigurationMessage } from '@/views/settings/types/messages'
+import { handle_set_default_api_configuration } from './handle-set-default-api-configuration'
 
-export const handle_select_default_configuration = async (
+export const handle_select_default_api_configuration = async (
   provider: SettingsProvider,
-  message: SelectDefaultConfigurationMessage
+  message: SelectDefaultApiConfigurationMessage
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(provider.context)
-  const configs = await providers_manager.get_tool_configs()
+  const api_configurations = await providers_manager.get_tool_configs()
 
-  if (configs.length == 0) {
+  if (api_configurations.length == 0) {
     vscode.window.showInformationMessage(
-      'No configurations available. Please create one first.'
+      'No API configurations available. Please create one first.'
     )
     return
   }
 
-  const items = configs.map((c) => {
+  const items = api_configurations.map((c) => {
     const description_parts = [c.provider_name]
     if (c.temperature != null) {
       description_parts.push(`${c.temperature}`)
@@ -33,12 +33,12 @@ export const handle_select_default_configuration = async (
     return {
       label: c.model,
       description: description_parts.join(' · '),
-      config_id: get_tool_config_id(c)
+      api_configuration_id: get_tool_config_id(c)
     }
   })
 
   const quick_pick = vscode.window.createQuickPick<
-    vscode.QuickPickItem & { config_id: string }
+    vscode.QuickPickItem & { api_configuration_id: string }
   >()
 
   quick_pick.items = items
@@ -61,9 +61,9 @@ export const handle_select_default_configuration = async (
   quick_pick.onDidAccept(async () => {
     const selected = quick_pick.selectedItems[0]
     if (selected) {
-      await handle_set_default_configuration(
+      await handle_set_default_api_configuration(
         provider,
-        selected.config_id,
+        selected.api_configuration_id,
         message.tool_name
       )
     }

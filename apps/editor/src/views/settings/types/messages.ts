@@ -6,7 +6,7 @@ export type ProviderForClient = {
   base_url: string
 }
 
-export type ConfigurationForClient = {
+export type ApiConfigurationForClient = {
   id: string
   model: string
   description: string
@@ -45,28 +45,28 @@ export interface EditCustomModelProviderMessage {
   provider_name: string
 }
 
-export interface GetConfigurationsMessage {
-  command: 'GET_CONFIGURATIONS'
+export interface GetApiConfigurationsMessage {
+  command: 'GET_API_CONFIGURATIONS'
 }
 
-export interface ReorderConfigurationsMessage {
-  command: 'REORDER_CONFIGURATIONS'
-  configurations: ConfigurationForClient[]
+export interface ReorderApiConfigurationsMessage {
+  command: 'REORDER_API_CONFIGURATIONS'
+  api_configurations: ApiConfigurationForClient[]
 }
 
-export interface DeleteConfigurationMessage {
-  command: 'DELETE_CONFIGURATION'
-  configuration_id: string
+export interface DeleteApiConfigurationMessage {
+  command: 'DELETE_API_CONFIGURATION'
+  api_configuration_id: string
 }
 
-export interface SetDefaultConfigurationMessage {
-  command: 'SET_DEFAULT_CONFIGURATION'
+export interface SetDefaultApiConfigurationMessage {
+  command: 'SET_DEFAULT_API_CONFIGURATION'
   tool_name: ToolType
-  configuration_id: string | null
+  api_configuration_id: string | null
 }
 
-export interface SelectDefaultConfigurationMessage {
-  command: 'SELECT_DEFAULT_CONFIGURATION'
+export interface SelectDefaultApiConfigurationMessage {
+  command: 'SELECT_DEFAULT_API_CONFIGURATION'
   tool_name: ToolType
 }
 
@@ -221,9 +221,9 @@ export interface UpdateClearChecksInWorkspaceBehaviorMessage {
   value: 'ignore-open-editors' | 'uncheck-all'
 }
 
-export interface UpsertConfigurationMessage {
-  command: 'UPSERT_CONFIGURATION'
-  configuration_id?: string
+export interface UpsertApiConfigurationMessage {
+  command: 'UPSERT_API_CONFIGURATION'
+  api_configuration_id?: string
   insertion_index?: number
   create_on_top?: boolean
   duplicate_from_id?: string
@@ -263,11 +263,11 @@ export type FrontendMessage =
   | AddModelProviderMessage
   | DeleteModelProviderMessage
   | EditCustomModelProviderMessage
-  | GetConfigurationsMessage
-  | ReorderConfigurationsMessage
-  | DeleteConfigurationMessage
-  | SetDefaultConfigurationMessage
-  | SelectDefaultConfigurationMessage
+  | GetApiConfigurationsMessage
+  | ReorderApiConfigurationsMessage
+  | DeleteApiConfigurationMessage
+  | SetDefaultApiConfigurationMessage
+  | SelectDefaultApiConfigurationMessage
   | GetCommitMessageInstructionsMessage
   | UpdateCommitMessageInstructionsMessage
   | GetIncludePromptsInCommitMessagesMessage
@@ -299,7 +299,7 @@ export type FrontendMessage =
   | UpdateReuseLastTabMessage
   | GetClearChecksInWorkspaceBehaviorMessage
   | UpdateClearChecksInWorkspaceBehaviorMessage
-  | UpsertConfigurationMessage
+  | UpsertApiConfigurationMessage
   | OpenEditorSettingsMessage
   | OpenIgnorePatternsSettingsMessage
   | OpenAllowPatternsSettingsMessage
@@ -316,9 +316,9 @@ export interface ModelProvidersMessage {
   providers: ProviderForClient[]
 }
 
-export interface ConfigurationsMessage {
-  command: 'CONFIGURATIONS'
-  configurations: ConfigurationForClient[]
+export interface ApiConfigurationsMessage {
+  command: 'API_CONFIGURATIONS'
+  api_configurations: ApiConfigurationForClient[]
   defaults: Record<ToolType, string | null>
 }
 
@@ -414,7 +414,7 @@ export interface ExtendedCacheDurationForAnthropicMessage {
 
 export type BackendMessage =
   | ModelProvidersMessage
-  | ConfigurationsMessage
+  | ApiConfigurationsMessage
   | CommitMessageInstructionsMessage
   | IncludePromptsInCommitMessagesMessage
   | VoiceInputInstructionsMessage

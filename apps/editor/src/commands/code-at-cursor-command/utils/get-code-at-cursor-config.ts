@@ -184,7 +184,7 @@ export const get_code_at_cursor_config = async (params: {
 
           if (params.panel_provider) {
             params.panel_provider.send_message({
-              command: 'SELECTED_CONFIGURATION_CHANGED',
+              command: 'SELECTED_API_CONFIGURATION_CHANGED',
               prompt_type: 'code-at-cursor',
               id: selected.id
             })

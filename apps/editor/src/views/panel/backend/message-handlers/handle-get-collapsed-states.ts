@@ -1,6 +1,6 @@
 import {
   ARE_TASKS_COLLAPSED_STATE_KEY,
-  CONFIGURATIONS_COLLAPSED_STATE_KEY,
+  API_CONFIGURATIONS_COLLAPSED_STATE_KEY,
   PRESETS_COLLAPSED_STATE_KEY,
   IS_TIMELINE_COLLAPSED_STATE_KEY
 } from '@/constants/state-keys'
@@ -14,7 +14,7 @@ export const handle_get_collapsed_states = (panel_provider: PanelProvider) => {
       false
     ),
     api_configurations_collapsed: panel_provider.context.globalState.get<boolean>(
-      CONFIGURATIONS_COLLAPSED_STATE_KEY,
+      API_CONFIGURATIONS_COLLAPSED_STATE_KEY,
       false
     ),
     is_timeline_collapsed: panel_provider.context.workspaceState.get<boolean>(

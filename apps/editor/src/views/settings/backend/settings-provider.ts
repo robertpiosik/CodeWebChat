@@ -10,7 +10,7 @@ import {
   handle_get_check_new_files,
   handle_get_clear_checks_in_workspace_behavior,
   handle_get_are_automatic_checkpoints_disabled,
-  handle_get_configurations,
+  handle_get_api_configurations,
   handle_get_commit_message_instructions,
   handle_get_voice_input_instructions,
   handle_get_voice_input_push_to_talk,
@@ -26,10 +26,10 @@ import {
   handle_get_reuse_last_tab,
   handle_update_checkpoint_lifespan,
   handle_get_checkpoint_lifespan,
-  handle_reorder_configuration,
+  handle_reorder_api_configurations,
   handle_reorder_model_providers,
-  handle_set_default_configuration,
-  handle_select_default_configuration,
+  handle_set_default_api_configuration,
+  handle_select_default_api_configuration,
   handle_update_check_new_files,
   handle_update_clear_checks_in_workspace_behavior,
   handle_update_are_automatic_checkpoints_disabled,
@@ -131,20 +131,20 @@ export class SettingsProvider {
             provider: this,
             provider_name: message.provider_name
           })
-        } else if (message.command == 'GET_CONFIGURATIONS') {
-          await handle_get_configurations(this)
-        } else if (message.command == 'REORDER_CONFIGURATIONS') {
-          await handle_reorder_configuration(this, message.configurations)
-        } else if (message.command == 'DELETE_CONFIGURATION') {
-          await handle_delete_api_configuration(this, message.configuration_id)
-        } else if (message.command == 'SET_DEFAULT_CONFIGURATION') {
-          await handle_set_default_configuration(
+        } else if (message.command == 'GET_API_CONFIGURATIONS') {
+          await handle_get_api_configurations(this)
+        } else if (message.command == 'REORDER_API_CONFIGURATIONS') {
+          await handle_reorder_api_configurations(this, message.api_configurations)
+        } else if (message.command == 'DELETE_API_CONFIGURATION') {
+          await handle_delete_api_configuration(this, message.api_configuration_id)
+        } else if (message.command == 'SET_DEFAULT_API_CONFIGURATION') {
+          await handle_set_default_api_configuration(
             this,
-            message.configuration_id,
+            message.api_configuration_id,
             message.tool_name
           )
-        } else if (message.command == 'SELECT_DEFAULT_CONFIGURATION') {
-          await handle_select_default_configuration(this, message)
+        } else if (message.command == 'SELECT_DEFAULT_API_CONFIGURATION') {
+          await handle_select_default_api_configuration(this, message)
         } else if (message.command == 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS') {
           await handle_get_edit_context_system_instructions(this)
         } else if (
@@ -225,7 +225,7 @@ export class SettingsProvider {
           await handle_open_ignore_patterns_settings()
         } else if (message.command == 'OPEN_ALLOW_PATTERNS_SETTINGS') {
           await handle_open_allow_patterns_settings()
-        } else if (message.command == 'UPSERT_CONFIGURATION') {
+        } else if (message.command == 'UPSERT_API_CONFIGURATION') {
           await handle_upsert_api_configuration(this, message)
         } else if (message.command == 'GET_FIX_ALL_AUTOMATICALLY') {
           await handle_get_fix_all_automatically(this)
@@ -253,7 +253,7 @@ export class SettingsProvider {
       vscode.workspace.onDidChangeConfiguration((e) => {
         if (e.affectsConfiguration('codeWebChat')) {
           void handle_get_model_providers(this)
-          void handle_get_configurations(this)
+          void handle_get_api_configurations(this)
           void handle_get_edit_context_system_instructions(this)
           void handle_get_edit_format_instructions(this)
           void handle_get_context_size_warning_threshold(this)

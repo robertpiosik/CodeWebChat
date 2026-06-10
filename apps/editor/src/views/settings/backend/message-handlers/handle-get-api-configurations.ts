@@ -4,25 +4,25 @@ import {
   ToolConfig,
   get_tool_config_id
 } from '@/services/model-providers-manager'
-import { ConfigurationForClient } from '@/views/settings/types/messages'
+import { ApiConfigurationForClient } from '@/views/settings/types/messages'
 
-const create_description = (config: ToolConfig): string => {
-  const description_parts = [config.provider_name]
-  if (config.temperature != null) {
-    description_parts.push(`${config.temperature}`)
+const create_description = (api_configuration: ToolConfig): string => {
+  const description_parts = [api_configuration.provider_name]
+  if (api_configuration.temperature != null) {
+    description_parts.push(`${api_configuration.temperature}`)
   }
-  if (config.reasoning_effort) {
-    description_parts.push(`${config.reasoning_effort}`)
+  if (api_configuration.reasoning_effort) {
+    description_parts.push(`${api_configuration.reasoning_effort}`)
   }
   return description_parts.join(' · ')
 }
 
-export const handle_get_configurations = async (
+export const handle_get_api_configurations = async (
   provider: SettingsProvider
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(provider.context)
 
-  const saved_configs = await providers_manager.get_tool_configs()
+  const saved_api_configurations = await providers_manager.get_tool_configs()
 
   const def_cac = await providers_manager.get_default_code_completions_config()
   const def_iu = await providers_manager.get_default_intelligent_update_config()
@@ -31,19 +31,19 @@ export const handle_get_configurations = async (
     await providers_manager.get_default_find_relevant_files_config()
   const def_vi = await providers_manager.get_default_voice_input_config()
 
-  const configs_for_client: ConfigurationForClient[] = saved_configs.map(
-    (config) => {
+  const api_configurations_for_client: ApiConfigurationForClient[] = saved_api_configurations.map(
+    (api_configuration) => {
       return {
-        id: get_tool_config_id(config),
-        model: config.model,
-        description: create_description(config)
+        id: get_tool_config_id(api_configuration),
+        model: api_configuration.model,
+        description: create_description(api_configuration)
       }
     }
   )
 
   provider.postMessage({
-    command: 'CONFIGURATIONS',
-    configurations: configs_for_client,
+    command: 'API_CONFIGURATIONS',
+    api_configurations: api_configurations_for_client,
     defaults: {
       'code-at-cursor': def_cac ? get_tool_config_id(def_cac) : null,
       'intelligent-update': def_iu ? get_tool_config_id(def_iu) : null,

@@ -25,7 +25,7 @@ export const Settings = () => {
   const all_data_loaded = useMemo(() => {
     return (
       settings_hook.providers !== undefined &&
-      settings_hook.configurations !== undefined &&
+      settings_hook.api_configurations !== undefined &&
       settings_hook.defaults !== undefined &&
       settings_hook.edit_context_system_instructions !== undefined &&
       settings_hook.voice_input_instructions !== undefined &&
@@ -64,7 +64,7 @@ export const Settings = () => {
   return (
     <Home
       providers={settings_hook.providers!}
-      configurations={settings_hook.configurations!}
+      api_configurations={settings_hook.api_configurations!}
       defaults={settings_hook.defaults!}
       edit_context_system_instructions={
         settings_hook.edit_context_system_instructions!
@@ -96,7 +96,7 @@ export const Settings = () => {
       }
       fix_all_automatically={settings_hook.fix_all_automatically!}
       set_providers={settings_hook.set_providers}
-      set_configurations={settings_hook.set_configurations}
+      set_api_configurations={settings_hook.set_api_configurations}
       on_context_size_warning_threshold_change={
         settings_hook.handle_context_size_warning_threshold_change
       }
@@ -154,13 +154,13 @@ export const Settings = () => {
       on_add_provider={settings_hook.handle_add_provider}
       on_delete_provider={settings_hook.handle_delete_provider}
       on_edit_provider={settings_hook.handle_edit_provider}
-      on_add_config={settings_hook.handle_add_config}
-      on_reorder_configs={settings_hook.handle_reorder_configs}
-      on_edit_config={settings_hook.handle_edit_config}
-      on_duplicate_config={settings_hook.handle_duplicate_config}
-      on_delete_config={settings_hook.handle_delete_config}
-      on_set_default_config={settings_hook.handle_set_default_config}
-      on_select_default_config={settings_hook.handle_select_default_config}
+      on_add_api_configuration={settings_hook.handle_add_api_configuration}
+      on_reorder_api_configurations={settings_hook.handle_reorder_api_configurations}
+      on_edit_api_configuration={settings_hook.handle_edit_api_configuration}
+      on_duplicate_api_configuration={settings_hook.handle_duplicate_api_configuration}
+      on_delete_api_configuration={settings_hook.handle_delete_api_configuration}
+      on_set_default_api_configuration={settings_hook.handle_set_default_api_configuration}
+      on_select_default_api_configuration={settings_hook.handle_select_default_api_configuration}
       on_open_external_url={settings_hook.handle_open_external_url}
       scroll_to_section_on_load={scroll_to_section_on_load}
     />

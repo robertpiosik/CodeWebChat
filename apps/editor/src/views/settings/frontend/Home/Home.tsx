@@ -15,7 +15,7 @@ import { Button as UiButton } from '@ui/components/editor/common/Button'
 import { TextButton as UiTextButton } from '@ui/components/editor/settings/TextButton'
 import { Notice as UiNotice } from '@ui/components/editor/settings/Notice'
 import {
-  ConfigurationForClient,
+  ApiConfigurationForClient,
   ProviderForClient,
   EditFormatInstructions
 } from '@/views/settings/types/messages'
@@ -94,7 +94,7 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
 
 type Props = {
   providers: ProviderForClient[]
-  configurations: ConfigurationForClient[]
+  api_configurations: ApiConfigurationForClient[]
   defaults: Record<ToolType, string | null>
   edit_context_system_instructions: string
   voice_input_instructions: string
@@ -114,7 +114,7 @@ type Props = {
   extended_cache_duration_for_anthropic: boolean
   fix_all_automatically: boolean
   set_providers: (providers: ProviderForClient[]) => void
-  set_configurations: (configs: ConfigurationForClient[]) => void
+  set_api_configurations: (configurations: ApiConfigurationForClient[]) => void
   on_context_size_warning_threshold_change: (
     threshold: number | undefined
   ) => void
@@ -149,19 +149,19 @@ type Props = {
   on_delete_provider: (provider_name: string) => void
   on_edit_provider: (provider_name: string) => void
   on_reorder_providers: (reordered_providers: ProviderForClient[]) => void
-  on_add_config: (params?: {
+  on_add_api_configuration: (params?: {
     insertion_index?: number
     create_on_top?: boolean
   }) => void
-  on_reorder_configs: (reordered: ConfigurationForClient[]) => void
-  on_edit_config: (configuration_id: string) => void
-  on_duplicate_config: (configuration_id: string) => void
-  on_delete_config: (configuration_id: string) => void
-  on_set_default_config: (
+  on_reorder_api_configurations: (reordered: ApiConfigurationForClient[]) => void
+  on_edit_api_configuration: (api_configuration_id: string) => void
+  on_duplicate_api_configuration: (api_configuration_id: string) => void
+  on_delete_api_configuration: (api_configuration_id: string) => void
+  on_set_default_api_configuration: (
     tool_name: ToolType,
-    configuration_id: string | null
+    api_configuration_id: string | null
   ) => void
-  on_select_default_config: (tool_name: ToolType) => void
+  on_select_default_api_configuration: (tool_name: ToolType) => void
   on_open_external_url: (url: string) => void
   scroll_to_section_on_load?: NavItem
 }
@@ -244,7 +244,7 @@ export const Home: React.FC<Props> = (props) => {
     if (id == 'model-providers') {
       return props.providers.length == 0
     } else if (id == 'configurations') {
-      return props.configurations.length == 0
+      return props.api_configurations.length == 0
     } else {
       return false
     }
@@ -463,33 +463,33 @@ export const Home: React.FC<Props> = (props) => {
           subtitle={t('configurations.subtitle')}
           on_stuck_change={configurations_on_stuck_change}
           actions={
-            <UiButton on_click={() => props.on_add_config()}>
+            <UiButton on_click={() => props.on_add_api_configuration()}>
               {t('action.add-new')}
             </UiButton>
           }
         >
           <UiNotice type="info">{t('configurations.notice')}</UiNotice>
-          {props.configurations.length == 0 && (
+          {props.api_configurations.length == 0 && (
             <UiNotice type="warning">
               {t('message.missing-configuration')}
             </UiNotice>
           )}
           <UiGroup>
-            {props.configurations && (
+            {props.api_configurations && (
               <SortableList
-                items={props.configurations}
+                items={props.api_configurations}
                 on_reorder={(reordered) => {
-                  props.set_configurations(reordered)
-                  props.on_reorder_configs(reordered)
+                  props.set_api_configurations(reordered)
+                  props.on_reorder_api_configurations(reordered)
                 }}
-                on_add={props.on_add_config}
+                on_add={props.on_add_api_configuration}
                 translations={{
                   add_title: t('action.add-new'),
                   item_text: t('action.configuration'),
                   items_text: t('action.configurations'),
                   items_text_many: t('action.configurations-many')
                 }}
-                render_content={(config) => (
+                render_content={(api_configuration) => (
                   <div
                     style={{
                       flex: 1,
@@ -498,7 +498,7 @@ export const Home: React.FC<Props> = (props) => {
                       textOverflow: 'ellipsis'
                     }}
                   >
-                    <span>{config.model}</span>
+                    <span>{api_configuration.model}</span>
                     <span
                       style={{
                         marginLeft: '0.5em',
@@ -506,17 +506,17 @@ export const Home: React.FC<Props> = (props) => {
                         fontSize: '0.9em'
                       }}
                     >
-                      {config.description}
+                      {api_configuration.description}
                     </span>
                   </div>
                 )}
-                render_actions={(config, index) => (
+                render_actions={(api_configuration, index) => (
                   <>
                     <IconButton
                       codicon_icon="insert"
                       title={t('action.insert-configuration')}
                       on_click={() =>
-                        props.on_add_config({ insertion_index: index })
+                        props.on_add_api_configuration({ insertion_index: index })
                       }
                     />
                     <IconButton
@@ -524,20 +524,20 @@ export const Home: React.FC<Props> = (props) => {
                       title={t('action.duplicate-configuration')}
                       on_click={(e) => {
                         e.stopPropagation()
-                        props.on_duplicate_config(config.id)
+                        props.on_duplicate_api_configuration(api_configuration.id)
                       }}
                     />
                     <IconButton
                       codicon_icon="edit"
                       title={t('action.edit-configuration')}
-                      on_click={() => props.on_edit_config(config.id)}
+                      on_click={() => props.on_edit_api_configuration(api_configuration.id)}
                     />
                     <IconButton
                       codicon_icon="trash"
                       title={t('action.delete-configuration')}
                       on_click={(e) => {
                         e.stopPropagation()
-                        props.on_delete_config(config.id)
+                        props.on_delete_api_configuration(api_configuration.id)
                       }}
                     />
                   </>
@@ -561,12 +561,12 @@ export const Home: React.FC<Props> = (props) => {
               slot_below={
                 <DefaultConfigurationSelector
                   value={props.defaults['intelligent-update'] || null}
-                  configurations={props.configurations}
+                  configurations={props.api_configurations}
                   on_unset={() =>
-                    props.on_set_default_config('intelligent-update', null)
+                    props.on_set_default_api_configuration('intelligent-update', null)
                   }
                   on_select={() =>
-                    props.on_select_default_config('intelligent-update')
+                    props.on_select_default_api_configuration('intelligent-update')
                   }
                   translations={{
                     select_default: t('action.select-default-configuration'),
@@ -638,12 +638,12 @@ export const Home: React.FC<Props> = (props) => {
               slot_below={
                 <DefaultConfigurationSelector
                   value={props.defaults['code-at-cursor'] || null}
-                  configurations={props.configurations}
+                  configurations={props.api_configurations}
                   on_unset={() =>
-                    props.on_set_default_config('code-at-cursor', null)
+                    props.on_set_default_api_configuration('code-at-cursor', null)
                   }
                   on_select={() =>
-                    props.on_select_default_config('code-at-cursor')
+                    props.on_select_default_api_configuration('code-at-cursor')
                   }
                   translations={{
                     select_default: t('action.select-default-configuration'),
@@ -682,12 +682,12 @@ export const Home: React.FC<Props> = (props) => {
               slot_below={
                 <DefaultConfigurationSelector
                   value={props.defaults['find-relevant-files'] || null}
-                  configurations={props.configurations}
+                  configurations={props.api_configurations}
                   on_unset={() =>
-                    props.on_set_default_config('find-relevant-files', null)
+                    props.on_set_default_api_configuration('find-relevant-files', null)
                   }
                   on_select={() =>
-                    props.on_select_default_config('find-relevant-files')
+                    props.on_select_default_api_configuration('find-relevant-files')
                   }
                   translations={{
                     select_default: t('action.select-default-configuration'),
@@ -713,12 +713,12 @@ export const Home: React.FC<Props> = (props) => {
               slot_below={
                 <DefaultConfigurationSelector
                   value={props.defaults['commit-messages'] || null}
-                  configurations={props.configurations}
+                  configurations={props.api_configurations}
                   on_unset={() =>
-                    props.on_set_default_config('commit-messages', null)
+                    props.on_set_default_api_configuration('commit-messages', null)
                   }
                   on_select={() =>
-                    props.on_select_default_config('commit-messages')
+                    props.on_select_default_api_configuration('commit-messages')
                   }
                   translations={{
                     select_default: t('action.select-default-configuration'),
@@ -795,12 +795,12 @@ export const Home: React.FC<Props> = (props) => {
               slot_below={
                 <DefaultConfigurationSelector
                   value={props.defaults['voice-input'] || null}
-                  configurations={props.configurations}
+                  configurations={props.api_configurations}
                   on_unset={() =>
-                    props.on_set_default_config('voice-input', null)
+                    props.on_set_default_api_configuration('voice-input', null)
                   }
                   on_select={() =>
-                    props.on_select_default_config('voice-input')
+                    props.on_select_default_api_configuration('voice-input')
                   }
                   translations={{
                     select_default: t('action.select-default-configuration'),
