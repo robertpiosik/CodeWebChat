@@ -23,7 +23,7 @@ const get_code_at_cursor_config = async (
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext,
   panel_provider: PanelProvider,
-  config_id?: string
+  api_configuration_id?: string
 ): Promise<{ provider: Provider; config: ToolConfig } | undefined> => {
   const code_completions_configs =
     await api_providers_manager.get_tool_configs()
@@ -38,16 +38,16 @@ const get_code_at_cursor_config = async (
 
   let selected_config: ToolConfig | null = null
 
-  if (config_id !== undefined) {
+  if (api_configuration_id !== undefined) {
     selected_config =
       code_completions_configs.find(
-        (c) => get_tool_config_id(c) == config_id
+        (c) => get_tool_config_id(c) == api_configuration_id
       ) || null
     if (selected_config && panel_provider) {
       panel_provider.send_message({
-        command: 'SELECTED_CONFIGURATION_CHANGED',
+        command: 'SELECTED_API_CONFIGURATION_CHANGED',
         prompt_type: 'code-at-cursor',
-        id: config_id
+        id: api_configuration_id
       })
     }
   } else if (!show_quick_pick) {
@@ -131,7 +131,7 @@ const get_code_at_cursor_config = async (
       if (other_configs.length > 0) {
         if (recent_configs.length > 0) {
           items.push({
-            label: 'other configurations',
+            label: 'other API configurations',
             kind: vscode.QuickPickItemKind.Separator
           })
         }
@@ -143,7 +143,7 @@ const get_code_at_cursor_config = async (
 
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = create_items()
-    quick_pick.placeholder = 'Select code completions configuration'
+    quick_pick.placeholder = 'Select code completions API configuration'
     quick_pick.matchOnDescription = true
 
     const items = quick_pick.items as (vscode.QuickPickItem & { id: string })[]
@@ -179,7 +179,7 @@ const get_code_at_cursor_config = async (
 
           if (panel_provider) {
             panel_provider.send_message({
-              command: 'SELECTED_CONFIGURATION_CHANGED',
+              command: 'SELECTED_API_CONFIGURATION_CHANGED',
               prompt_type: 'code-at-cursor',
               id: selected.id
             })
@@ -251,7 +251,7 @@ export const handle_code_at_cursor = async (
     message.use_quick_pick,
     panel_provider.context,
     panel_provider,
-    message.config_id
+    message.api_configuration_id
   )
 
   if (!config_result) {

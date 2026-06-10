@@ -8,8 +8,8 @@ export const use_last_choice_button_title = (params: {
   mode: Mode
   selected_preset_or_group_name?: string
   presets: Preset[]
-  selected_configuration_id?: string
-  configurations: ApiConfiguration[]
+  selected_api_configuration_id?: string
+  api_configurations: ApiConfiguration[]
 }): string | undefined => {
   return useMemo(() => {
     if (params.mode == MODE.WEB) {
@@ -58,9 +58,9 @@ export const use_last_choice_button_title = (params: {
       }
     } else {
       // MODE.API
-      if (params.selected_configuration_id !== undefined) {
-        const configuration = params.configurations.find(
-          (c) => c.id === params.selected_configuration_id
+      if (params.selected_api_configuration_id !== undefined) {
+        const configuration = params.api_configurations.find(
+          (c) => c.id === params.selected_api_configuration_id
         )
         if (configuration) {
           const description_parts = [configuration.provider_name]
@@ -77,7 +77,8 @@ export const use_last_choice_button_title = (params: {
     params.mode,
     params.selected_preset_or_group_name,
     params.presets,
-    params.selected_configuration_id,
-    params.configurations
+    params.selected_api_configuration_id,
+    params.api_configurations
   ])
 }
+

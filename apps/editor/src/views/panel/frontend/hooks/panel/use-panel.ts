@@ -46,7 +46,7 @@ export const use_panel = (vscode: any) => {
   const [presets_collapsed, set_presets_collapsed] = useState(false)
   const [send_with_shift_enter, set_send_with_shift_enter] = useState(false)
   const [is_timeline_collapsed, set_is_timeline_collapsed] = useState(false)
-  const [configurations_collapsed, set_configurations_collapsed] =
+  const [api_configurations_collapsed, set_api_configurations_collapsed] =
     useState(false)
   const [is_recording, set_is_recording] = useState(false)
   const [setup_progress, set_setup_progress] = useState<SetupProgress>()
@@ -130,7 +130,7 @@ export const use_panel = (vscode: any) => {
         set_api_mode(message.prompt_type)
       } else if (message.command == 'COLLAPSED_STATES') {
         set_presets_collapsed(message.presets_collapsed)
-        set_configurations_collapsed(message.configurations_collapsed)
+        set_api_configurations_collapsed(message.api_configurations_collapsed)
         set_is_timeline_collapsed(message.is_timeline_collapsed)
       } else if (message.command == 'CHECKPOINTS') {
         set_checkpoints(message.checkpoints)
@@ -242,11 +242,11 @@ export const use_panel = (vscode: any) => {
     })
   }
 
-  const handle_configurations_collapsed_change = (is_collapsed: boolean) => {
-    set_configurations_collapsed(is_collapsed)
+  const handle_api_configurations_collapsed_change = (is_collapsed: boolean) => {
+    set_api_configurations_collapsed(is_collapsed)
     post_message(vscode, {
       command: 'SAVE_COMPONENT_COLLAPSED_STATE',
-      component: 'configurations',
+      component: 'api-configurations',
       is_collapsed
     })
   }
@@ -279,7 +279,7 @@ export const use_panel = (vscode: any) => {
     can_undo,
     presets_collapsed,
     send_with_shift_enter,
-    configurations_collapsed,
+    api_configurations_collapsed,
     is_timeline_collapsed,
     handle_task_forward,
     handle_instructions_change,
@@ -288,7 +288,7 @@ export const use_panel = (vscode: any) => {
     handle_mode_change,
     handle_presets_collapsed_change,
     handle_timeline_collapsed_change,
-    handle_configurations_collapsed_change,
+    handle_api_configurations_collapsed_change,
     handle_paste_image,
     handle_open_image,
     handle_paste_long_text,

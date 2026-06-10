@@ -13,7 +13,7 @@ export const handle_get_collapsed_states = (panel_provider: PanelProvider) => {
       PRESETS_COLLAPSED_STATE_KEY,
       false
     ),
-    configurations_collapsed: panel_provider.context.globalState.get<boolean>(
+    api_configurations_collapsed: panel_provider.context.globalState.get<boolean>(
       CONFIGURATIONS_COLLAPSED_STATE_KEY,
       false
     ),

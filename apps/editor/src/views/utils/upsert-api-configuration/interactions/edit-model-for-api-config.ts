@@ -12,7 +12,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import { ToolType } from '../../../settings/types/tools'
 import { verify_model } from './verify-model'
 
-export const edit_model_for_config = async (params: {
+export const edit_model_for_api_config = async (params: {
   config: ToolConfig
   providers_manager: ModelProvidersManager
   model_fetcher: ModelFetcher
@@ -122,7 +122,7 @@ export const edit_model_for_config = async (params: {
     }
   } catch (error) {
     Logger.error({
-      function_name: 'edit_model_for_config',
+      function_name: 'edit_model_for_api_config',
       message: 'Failed to fetch models',
       data: error
     })

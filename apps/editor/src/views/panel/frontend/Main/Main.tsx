@@ -56,8 +56,8 @@ type Props = {
   presets_collapsed: boolean
   on_presets_collapsed_change: (is_collapsed: boolean) => void
   send_with_shift_enter: boolean
-  configurations_collapsed: boolean
-  on_configurations_collapsed_change: (is_collapsed: boolean) => void
+  api_configurations_collapsed: boolean
+  on_api_configurations_collapsed_change: (is_collapsed: boolean) => void
   currently_open_file_text?: string
   on_pasted_lines_click: (path: string, start?: string, end?: string) => void
   are_keyboard_shortcuts_disabled: boolean
@@ -89,11 +89,11 @@ export const Main: React.FC<Props> = (props) => {
     selected_preset_name_by_mode,
     set_selected_preset_name_by_mode
   ] = useState<{ [T in WebPromptType]?: string }>()
-  const [all_configurations, set_all_configurations] =
+  const [all_api_configurations, set_all_api_configurations] =
     useState<ApiConfiguration[]>()
   const [
-    selected_configuration_id_by_prompt_type,
-    set_selected_configuration_id_by_prompt_type
+    selected_api_configuration_id_by_prompt_type,
+    set_selected_api_configuration_id_by_prompt_type
   ] = useState<{ [T in ApiPromptType]?: string }>()
   const [ask_history, set_ask_history] = useState<string[]>()
   const [edit_history, set_edit_history] = useState<string[]>()
@@ -122,12 +122,12 @@ export const Main: React.FC<Props> = (props) => {
           set_selected_preset_name_by_mode(
             (message as PresetsMessage).selected_preset_name_by_mode
           )
-          set_selected_configuration_id_by_prompt_type(
-            (message as PresetsMessage).selected_configuration_id_by_prompt_type
+          set_selected_api_configuration_id_by_prompt_type(
+            (message as PresetsMessage).selected_api_configuration_id_by_prompt_type
           )
           break
         case 'API_CONFIGURATIONS':
-          set_all_configurations(
+          set_all_api_configurations(
             (message as ApiConfigurationsMessage).configurations
           )
           break
@@ -161,8 +161,8 @@ export const Main: React.FC<Props> = (props) => {
             [message.prompt_type]: message.name
           }))
           break
-        case 'SELECTED_CONFIGURATION_CHANGED':
-          set_selected_configuration_id_by_prompt_type((prev) => ({
+        case 'SELECTED_API_CONFIGURATION_CHANGED':
+          set_selected_api_configuration_id_by_prompt_type((prev) => ({
             ...prev,
             [message.prompt_type]: message.id
           }))
@@ -310,33 +310,33 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_create_configuration = (params?: {
+  const handle_create_api_configuration = (params?: {
     create_on_top?: boolean
     insertion_index?: number
   }) => {
     post_message(props.vscode, {
-      command: 'UPSERT_CONFIGURATION',
+      command: 'UPSERT_API_CONFIGURATION',
       tool_type: props.api_prompt_type,
       create_on_top: params?.create_on_top,
       insertion_index: params?.insertion_index
     })
   }
 
-  const handle_configurations_reorder = (
+  const handle_api_configurations_reorder = (
     reordered_configs: (UiConfigurations.Configuration & { id: string })[]
   ) => {
-    if (all_configurations) {
+    if (all_api_configurations) {
       const reordered_api_configs = reordered_configs
         .map((ui_config) => {
-          return all_configurations.find((c) => c.id === ui_config.id)!
+          return all_api_configurations.find((c) => c.id === ui_config.id)!
         })
         .filter(Boolean)
 
-      if (reordered_api_configs.length !== all_configurations.length) {
+      if (reordered_api_configs.length !== all_api_configurations.length) {
         return
       }
 
-      set_all_configurations(reordered_api_configs)
+      set_all_api_configurations(reordered_api_configs)
 
       post_message(props.vscode, {
         command: 'REORDER_API_CONFIGURATIONS',
@@ -345,33 +345,33 @@ export const Main: React.FC<Props> = (props) => {
     }
   }
 
-  const handle_edit_configuration = (id: string) => {
+  const handle_edit_api_configuration = (id: string) => {
     post_message(props.vscode, {
-      command: 'UPSERT_CONFIGURATION',
+      command: 'UPSERT_API_CONFIGURATION',
       tool_type: props.api_prompt_type,
-      configuration_id: id
+      api_configuration_id: id
     })
   }
 
-  const handle_delete_configuration = (id: string) => {
+  const handle_delete_api_configuration = (id: string) => {
     post_message(props.vscode, {
-      command: 'DELETE_CONFIGURATION',
-      configuration_id: id
+      command: 'DELETE_API_CONFIGURATION',
+      api_configuration_id: id
     })
   }
 
-  const handle_duplicate_configuration = (id: string) => {
+  const handle_duplicate_api_configuration = (id: string) => {
     post_message(props.vscode, {
-      command: 'UPSERT_CONFIGURATION',
+      command: 'UPSERT_API_CONFIGURATION',
       tool_type: props.api_prompt_type,
       duplicate_from_id: id
     })
   }
 
-  const handle_toggle_pinned_configuration = (id: string) => {
+  const handle_toggle_pinned_api_configuration = (id: string) => {
     post_message(props.vscode, {
       command: 'TOGGLE_PINNED_API_CONFIGURATION',
-      configuration_id: id
+      api_configuration_id: id
     })
   }
 
@@ -550,28 +550,28 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_configuration_click = (id: string) => {
+  const handle_api_configuration_click = (id: string) => {
     const instruction = get_current_instructions()
 
     if (props.api_prompt_type == 'edit-context') {
       post_message(props.vscode, {
         command: 'EDIT_CONTEXT',
         use_quick_pick: false,
-        config_id: id,
+        api_configuration_id: id,
         invocation_count: 1
       })
     } else if (props.api_prompt_type == 'code-at-cursor') {
       post_message(props.vscode, {
         command: 'CODE_AT_CURSOR',
         use_quick_pick: false,
-        config_id: id,
+        api_configuration_id: id,
         invocation_count: 1
       })
     } else if (props.api_prompt_type == 'find-relevant-files') {
       post_message(props.vscode, {
         command: 'FIND_RELEVANT_FILES',
         use_quick_pick: false,
-        config_id: id,
+        api_configuration_id: id,
         invocation_count: 1
       })
     }
@@ -625,7 +625,7 @@ export const Main: React.FC<Props> = (props) => {
 
   if (
     all_presets === undefined ||
-    all_configurations === undefined ||
+    all_api_configurations === undefined ||
     ask_history === undefined ||
     edit_history === undefined ||
     no_context_history === undefined ||
@@ -642,8 +642,8 @@ export const Main: React.FC<Props> = (props) => {
   const selected_preset_name =
     selected_preset_name_by_mode?.[props.web_prompt_type]
 
-  const configurations =
-    props.mode == MODE.API && all_configurations ? all_configurations : []
+  const api_configurations =
+    props.mode == MODE.API && all_api_configurations ? all_api_configurations : []
 
   return (
     <MainView
@@ -651,14 +651,14 @@ export const Main: React.FC<Props> = (props) => {
       on_show_home={props.on_show_home}
       initialize_chats={handle_initialize_chats}
       copy_to_clipboard={handle_copy_to_clipboard}
-      configurations={configurations}
-      on_configuration_click={handle_configuration_click}
-      on_configurations_reorder={handle_configurations_reorder}
-      on_toggle_pinned_configuration={handle_toggle_pinned_configuration}
-      on_edit_configuration={handle_edit_configuration}
-      on_delete_configuration={handle_delete_configuration}
-      on_duplicate_configuration={handle_duplicate_configuration}
-      on_create_configuration={handle_create_configuration}
+      api_configurations={api_configurations}
+      on_api_configuration_click={handle_api_configuration_click}
+      on_api_configurations_reorder={handle_api_configurations_reorder}
+      on_toggle_pinned_api_configuration={handle_toggle_pinned_api_configuration}
+      on_edit_api_configuration={handle_edit_api_configuration}
+      on_delete_api_configuration={handle_delete_api_configuration}
+      on_duplicate_api_configuration={handle_duplicate_api_configuration}
+      on_create_api_configuration={handle_create_api_configuration}
       on_at_sign_click={handle_at_sign_click}
       on_hash_sign_click={handle_hash_sign_click}
       on_curly_braces_click={handle_curly_braces_click}
@@ -687,8 +687,8 @@ export const Main: React.FC<Props> = (props) => {
       on_delete_preset={handle_delete_preset}
       on_toggle_preset_pinned={handle_toggle_preset_pinned}
       selected_preset_name={selected_preset_name}
-      selected_configuration_id={
-        selected_configuration_id_by_prompt_type?.[props.api_prompt_type]
+      selected_api_configuration_id={
+        selected_api_configuration_id_by_prompt_type?.[props.api_prompt_type]
       }
       instructions={instructions}
       set_instructions={set_instructions}
@@ -720,9 +720,9 @@ export const Main: React.FC<Props> = (props) => {
       presets_collapsed={props.presets_collapsed}
       send_with_shift_enter={props.send_with_shift_enter}
       on_presets_collapsed_change={props.on_presets_collapsed_change}
-      configurations_collapsed={props.configurations_collapsed}
-      on_configurations_collapsed_change={
-        props.on_configurations_collapsed_change
+      api_configurations_collapsed={props.api_configurations_collapsed}
+      on_api_configurations_collapsed_change={
+        props.on_api_configurations_collapsed_change
       }
       on_go_to_file={handle_go_to_file}
       on_pasted_lines_click={props.on_pasted_lines_click}

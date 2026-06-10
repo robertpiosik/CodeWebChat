@@ -32,7 +32,7 @@ const get_edit_context_config = async (params: {
   show_quick_pick?: boolean
   context: vscode.ExtensionContext
   panel_provider: PanelProvider
-  config_id?: string
+  api_configuration_id?: string
 }): Promise<{ provider: Provider; config: ToolConfig } | undefined> => {
   const edit_context_configs =
     await params.api_providers_manager.get_tool_configs()
@@ -47,10 +47,10 @@ const get_edit_context_config = async (params: {
 
   let selected_config: ToolConfig | null = null
 
-  if (params.config_id !== undefined) {
+  if (params.api_configuration_id !== undefined) {
     selected_config =
       edit_context_configs.find(
-        (c) => get_tool_config_id(c) == params.config_id
+        (c) => get_tool_config_id(c) == params.api_configuration_id
       ) || null
     if (selected_config) {
       let recents =
@@ -58,8 +58,8 @@ const get_edit_context_config = async (params: {
           RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY
         ) || []
       recents = [
-        params.config_id,
-        ...recents.filter((id) => id != params.config_id)
+        params.api_configuration_id,
+        ...recents.filter((id) => id != params.api_configuration_id)
       ]
       params.context.workspaceState.update(
         RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY,
@@ -68,9 +68,9 @@ const get_edit_context_config = async (params: {
 
       if (params.panel_provider) {
         params.panel_provider.send_message({
-          command: 'SELECTED_CONFIGURATION_CHANGED',
+          command: 'SELECTED_API_CONFIGURATION_CHANGED',
           prompt_type: 'edit-context',
-          id: params.config_id
+          id: params.api_configuration_id
         })
       }
     }
@@ -153,7 +153,7 @@ const get_edit_context_config = async (params: {
       if (other_configs.length > 0) {
         if (recent_configs.length > 0) {
           items.push({
-            label: 'other configurations',
+            label: 'other API configurations',
             kind: vscode.QuickPickItemKind.Separator
           })
         }
@@ -165,8 +165,8 @@ const get_edit_context_config = async (params: {
 
     const quick_pick = vscode.window.createQuickPick<Item>()
     quick_pick.items = await create_items()
-    quick_pick.title = 'Configurations'
-    quick_pick.placeholder = 'Select configuration'
+    quick_pick.title = 'API Configurations'
+    quick_pick.placeholder = 'Select an API configuration'
     quick_pick.matchOnDescription = true
     quick_pick.buttons = [
       {
@@ -229,7 +229,7 @@ const get_edit_context_config = async (params: {
 
           if (params.panel_provider) {
             params.panel_provider.send_message({
-              command: 'SELECTED_CONFIGURATION_CHANGED',
+              command: 'SELECTED_API_CONFIGURATION_CHANGED',
               prompt_type: 'edit-context',
               id: selected.id!
             })
@@ -336,7 +336,7 @@ export const handle_edit_context = async (
     return
   }
 
-  let current_config_id = message.config_id
+  let current_api_configuration_id = message.api_configuration_id
   let should_show_quick_pick = message.use_quick_pick
 
   while (true) {
@@ -345,7 +345,7 @@ export const handle_edit_context = async (
       show_quick_pick: should_show_quick_pick,
       context: panel_provider.context,
       panel_provider,
-      config_id: current_config_id
+      api_configuration_id: current_api_configuration_id
     })
 
     if (!config_result) {
@@ -488,7 +488,7 @@ export const handle_edit_context = async (
       return
     } else {
       should_show_quick_pick = true
-      current_config_id = undefined
+      current_api_configuration_id = undefined
     }
   }
 }

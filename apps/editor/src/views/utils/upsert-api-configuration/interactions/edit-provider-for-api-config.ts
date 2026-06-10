@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 
-export const edit_provider_for_config = async (
+export const edit_provider_for_api_config = async (
   providers_manager: ModelProvidersManager,
   current_provider_name?: string
 ) => {

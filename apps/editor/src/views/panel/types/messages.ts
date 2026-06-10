@@ -25,7 +25,7 @@ export type InstructionsState = {
 
 export type SetupProgress = {
   has_model_provider: boolean
-  has_configuration: boolean
+  has_api_configuration: boolean
 }
 
 export interface PreviewGeneratedCodeMessage extends BaseMessage {
@@ -226,21 +226,21 @@ export interface GetModeMessage extends BaseMessage {
 export interface EditContextMessage extends BaseMessage {
   command: 'EDIT_CONTEXT'
   use_quick_pick: boolean
-  config_id?: string
+  api_configuration_id?: string
   invocation_count: number
 }
 
 export interface CodeAtCursorMessage extends BaseMessage {
   command: 'CODE_AT_CURSOR'
   use_quick_pick: boolean
-  config_id?: string
+  api_configuration_id?: string
   invocation_count: number
 }
 
 export interface FindRelevantFilesMessage extends BaseMessage {
   command: 'FIND_RELEVANT_FILES'
   use_quick_pick: boolean
-  config_id?: string
+  api_configuration_id?: string
   invocation_count: number
 }
 
@@ -292,7 +292,7 @@ export interface ReorderApiConfigurationsMessage extends BaseMessage {
 
 export interface TogglePinnedApiConfigurationMessage extends BaseMessage {
   command: 'TOGGLE_PINNED_API_CONFIGURATION'
-  configuration_id: string
+  api_configuration_id: string
 }
 
 export interface GetVersionMessage extends BaseMessage {
@@ -376,8 +376,8 @@ export interface FixAllFailedFilesMessage extends BaseMessage {
   files: { file_path: string; workspace_name?: string }[]
 }
 
-export interface ManageConfigurationsMessage extends BaseMessage {
-  command: 'MANAGE_CONFIGURATIONS'
+export interface ManageApiConfigurationsMessage extends BaseMessage {
+  command: 'MANAGE_API_CONFIGURATIONS'
 }
 
 export interface UndoMessage extends BaseMessage {
@@ -401,7 +401,7 @@ export interface GetCollapsedStatesMessage extends BaseMessage {
 
 export interface SaveComponentCollapsedStateMessage extends BaseMessage {
   command: 'SAVE_COMPONENT_COLLAPSED_STATE'
-  component: 'presets' | 'configurations' | 'timeline' | 'tasks'
+  component: 'presets' | 'api-configurations' | 'timeline' | 'tasks'
   is_collapsed: boolean
 }
 
@@ -487,18 +487,18 @@ export interface OpenWebsiteMessage extends BaseMessage {
   url: string
 }
 
-export interface UpsertConfigurationMessage extends BaseMessage {
-  command: 'UPSERT_CONFIGURATION'
+export interface UpsertApiConfigurationMessage extends BaseMessage {
+  command: 'UPSERT_API_CONFIGURATION'
   tool_type: ToolType
-  configuration_id?: string
+  api_configuration_id?: string
   duplicate_from_id?: string
   create_on_top?: boolean
   insertion_index?: number
 }
 
-export interface DeleteConfigurationMessage extends BaseMessage {
-  command: 'DELETE_CONFIGURATION'
-  configuration_id: string
+export interface DeleteApiConfigurationMessage extends BaseMessage {
+  command: 'DELETE_API_CONFIGURATION'
+  api_configuration_id: string
 }
 
 export interface SavePromptImageMessage extends BaseMessage {
@@ -616,7 +616,7 @@ export type FrontendMessage =
   | CancelIntelligentUpdateFileInPreviewMessage
   | UpdateLastUsedPresetMessage
   | FixAllFailedFilesMessage
-  | ManageConfigurationsMessage
+  | ManageApiConfigurationsMessage
   | UndoMessage
   | ApplyResponseFromHistoryMessage
   | GetCollapsedStatesMessage
@@ -637,8 +637,8 @@ export type FrontendMessage =
   | PreviewGeneratedCodeMessage
   | UpdateFileProgressMessage
   | OpenExternalUrlMessage
-  | UpsertConfigurationMessage
-  | DeleteConfigurationMessage
+  | UpsertApiConfigurationMessage
+  | DeleteApiConfigurationMessage
   | SavePromptImageMessage
   | OpenPromptImageMessage
   | SavePromptPastedTextMessage
@@ -683,7 +683,7 @@ export interface PresetsMessage extends BaseMessage {
   command: 'PRESETS'
   presets: Preset[]
   selected_preset_name_by_mode?: { [T in WebPromptType]?: string }
-  selected_configuration_id_by_prompt_type?: { [T in ApiPromptType]?: string }
+  selected_api_configuration_id_by_prompt_type?: { [T in ApiPromptType]?: string }
 }
 
 export interface ApiConfigurationsMessage extends BaseMessage {
@@ -813,8 +813,8 @@ export interface SelectedPresetChangedMessage extends BaseMessage {
   name: string
 }
 
-export interface SelectedConfigurationChangedMessage extends BaseMessage {
-  command: 'SELECTED_CONFIGURATION_CHANGED'
+export interface SelectedApiConfigurationChangedMessage extends BaseMessage {
+  command: 'SELECTED_API_CONFIGURATION_CHANGED'
   prompt_type: ApiPromptType
   id: string
 }
@@ -876,7 +876,7 @@ export interface UpdateFileInPreviewMessage extends BaseMessage {
 export interface CollapsedStatesMessage extends BaseMessage {
   command: 'COLLAPSED_STATES'
   presets_collapsed: boolean
-  configurations_collapsed: boolean
+  api_configurations_collapsed: boolean
   are_tasks_collapsed: boolean
   is_timeline_collapsed: boolean
 }
@@ -950,7 +950,7 @@ export type BackendMessage =
   | ResponsePreviewFinishedMessage
   | WorkspaceStateMessage
   | SelectedPresetChangedMessage
-  | SelectedConfigurationChangedMessage
+  | SelectedApiConfigurationChangedMessage
   | ShowProgressMessage
   | HideProgressMessage
   | ShowApiManagerProgressMessage

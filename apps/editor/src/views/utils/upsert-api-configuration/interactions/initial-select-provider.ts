@@ -45,7 +45,7 @@ export const initial_select_provider = async (
         } as any,
         ...provider_items
       ]
-      quick_pick.title = 'New Configuration'
+      quick_pick.title = 'New API Configuration'
       quick_pick.placeholder = 'Select a model provider'
       const close_button: vscode.QuickInputButton = {
         iconPath: new vscode.ThemeIcon('close'),

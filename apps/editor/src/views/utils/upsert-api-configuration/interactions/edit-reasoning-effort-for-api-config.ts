@@ -1,12 +1,12 @@
 import * as vscode from 'vscode'
 
-export const edit_reasoning_effort_for_config = async (
+export const edit_reasoning_effort_for_api_config = async (
   current_effort?: string
 ) => {
   const effort_options: vscode.QuickPickItem[] = [
     {
       label: 'Unset',
-      description: 'Remove reasoning effort from the configuration'
+      description: 'Remove reasoning effort from the API configuration'
     }
   ]
 
@@ -21,7 +21,7 @@ export const edit_reasoning_effort_for_config = async (
   return await new Promise<string | null | undefined>((resolve) => {
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = effort_options
-    quick_pick.title = 'Edit Configuration'
+    quick_pick.title = 'Edit API Configuration'
     quick_pick.placeholder = 'Select reasoning effort'
     quick_pick.buttons = [vscode.QuickInputButtons.Back]
     if (current_effort) {

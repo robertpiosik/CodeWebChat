@@ -66,7 +66,7 @@ import {
   handle_intelligent_update_file_in_preview,
   handle_response_preview,
   handle_get_collapsed_states,
-  handle_manage_configurations,
+  handle_manage_api_configurations,
   handle_save_component_collapsed_state,
   handle_undo,
   handle_delete_checkpoint,
@@ -88,8 +88,8 @@ import {
   handle_voice_input,
   handle_open_website,
   handle_cancel_intelligent_update_file_in_preview,
-  handle_upsert_configuration,
-  handle_delete_configuration,
+  handle_upsert_api_configuration,
+  handle_delete_api_configuration,
   handle_update_last_used_preset_or_group,
   handle_get_find_relevant_files_shrink_source_code,
   handle_save_find_relevant_files_shrink_source_code,
@@ -347,7 +347,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       command: 'SETUP_PROGRESS',
       setup_progress: {
         has_model_provider: providers.length > 0,
-        has_configuration: configs.length > 0
+        has_api_configuration: configs.length > 0
       }
     })
   }
@@ -931,8 +931,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               panel_provider: this,
               preset_name: message.preset_name
             })
-          } else if (message.command == 'MANAGE_CONFIGURATIONS') {
-            await handle_manage_configurations()
+          } else if (message.command == 'MANAGE_API_CONFIGURATIONS') {
+            await handle_manage_api_configurations()
           } else if (message.command == 'GET_COLLAPSED_STATES') {
             handle_get_collapsed_states(this)
           } else if (message.command == 'SAVE_COMPONENT_COLLAPSED_STATE') {
@@ -949,6 +949,14 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_delete_task(this, message)
           } else if (message.command == 'PREVIEW_GENERATED_CODE') {
             await handle_preview_generated_code(message)
+          } else if (message.command == 'UPDATE_FILE_PROGRESS') {
+            // Handle the message internally instead of invoking a command
+          } else if (message.command == 'OPEN_EXTERNAL_URL') {
+            await handle_open_external_url(message)
+          } else if (message.command == 'UPSERT_API_CONFIGURATION') {
+            await handle_upsert_api_configuration(this, message)
+          } else if (message.command == 'DELETE_API_CONFIGURATION') {
+            await handle_delete_api_configuration(this, message)
           } else if (message.command == 'REQUEST_CAN_UNDO') {
             handle_request_can_undo(this)
           } else if (message.command == 'FIX_ALL_FAILED_FILES') {
@@ -956,12 +964,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               panel_provider: this,
               files_to_fix: message.files
             })
-          } else if (message.command == 'UPSERT_CONFIGURATION') {
-            await handle_upsert_configuration(this, message)
-          } else if (message.command == 'DELETE_CONFIGURATION') {
-            await handle_delete_configuration(this, message)
-          } else if (message.command == 'OPEN_EXTERNAL_URL') {
-            await handle_open_external_url(message)
           } else if (message.command == 'SAVE_PROMPT_IMAGE') {
             await handle_save_prompt_image(this, message)
           } else if (message.command == 'OPEN_PROMPT_IMAGE') {
@@ -1054,7 +1056,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           return [prompt_type, selected_name]
         })
       ),
-      selected_configuration_id_by_prompt_type: {
+      selected_api_configuration_id_by_prompt_type: {
         'edit-context': (this.context.workspaceState.get<string[]>(
           RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY
         ) || [])[0],

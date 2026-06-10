@@ -10,11 +10,11 @@ export const handle_toggle_pinned_api_configuration = async (
   panel_provider: PanelProvider,
   message: TogglePinnedApiConfigurationMessage
 ): Promise<void> => {
-  const { configuration_id } = message
+  const { api_configuration_id } = message
   const providers_manager = new ModelProvidersManager(panel_provider.context)
   const configs = await providers_manager.get_tool_configs()
 
-  const config = configs.find((c) => get_tool_config_id(c) == configuration_id)
+  const config = configs.find((c) => get_tool_config_id(c) == api_configuration_id)
   if (!config) return
 
   config.is_pinned = !config.is_pinned

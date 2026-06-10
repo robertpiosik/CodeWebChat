@@ -1,12 +1,12 @@
 import * as vscode from 'vscode'
 import { ToolConfig } from '@/services/model-providers-manager'
 
-export const edit_system_instructions_override_for_config = async (
+export const edit_system_instructions_override_for_api_config = async (
   config: ToolConfig
 ): Promise<string | null | undefined> => {
   return await new Promise<string | null | undefined>((resolve) => {
     const input = vscode.window.createInputBox()
-    input.title = 'Edit Configuration'
+    input.title = 'Edit API Configuration'
     input.value = config.system_instructions_override ?? ''
     input.prompt = 'Enter system instructions.'
 

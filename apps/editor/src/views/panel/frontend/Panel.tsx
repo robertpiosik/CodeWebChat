@@ -60,13 +60,13 @@ export const Panel = () => {
     can_undo,
     presets_collapsed,
     send_with_shift_enter,
-    configurations_collapsed,
+    api_configurations_collapsed,
     handle_instructions_change,
     handle_web_prompt_type_change,
     handle_api_prompt_type_change,
     handle_mode_change,
     handle_presets_collapsed_change,
-    handle_configurations_collapsed_change,
+    handle_api_configurations_collapsed_change,
     is_timeline_collapsed,
     handle_timeline_collapsed_change,
     handle_task_forward,
@@ -400,9 +400,9 @@ export const Panel = () => {
                 presets_collapsed={presets_collapsed}
                 send_with_shift_enter={send_with_shift_enter}
                 on_presets_collapsed_change={handle_presets_collapsed_change}
-                configurations_collapsed={configurations_collapsed}
-                on_configurations_collapsed_change={
-                  handle_configurations_collapsed_change
+                api_configurations_collapsed={api_configurations_collapsed}
+                on_api_configurations_collapsed_change={
+                  handle_api_configurations_collapsed_change
                 }
                 on_pasted_lines_click={handle_pasted_lines_click}
                 currently_open_file_text={currently_open_file_text}

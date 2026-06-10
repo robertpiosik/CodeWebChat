@@ -8,11 +8,11 @@ import {
 import { dictionary } from '@shared/constants/dictionary'
 import { ModelFetcher } from '@/services/model-fetcher'
 import {
-  edit_model_for_config,
-  edit_provider_for_config,
-  edit_reasoning_effort_for_config,
-  edit_temperature_for_config,
-  edit_system_instructions_override_for_config,
+  edit_model_for_api_config,
+  edit_provider_for_api_config,
+  edit_reasoning_effort_for_api_config,
+  edit_temperature_for_api_config,
+  edit_system_instructions_override_for_api_config,
   initial_select_model,
   initial_select_provider
 } from './interactions'
@@ -20,10 +20,10 @@ import axios from 'axios'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { ToolType } from '@/views/settings/types/tools'
 
-export const upsert_configuration = async (params: {
+export const upsert_api_configuration = async (params: {
   context: vscode.ExtensionContext
   tool_type: ToolType
-  configuration_id?: string
+  api_configuration_id?: string
   duplicate_from_id?: string
   create_on_top?: boolean
   insertion_index?: number
@@ -74,8 +74,8 @@ export const upsert_configuration = async (params: {
       (resolve) => {
         const quick_pick = vscode.window.createQuickPick()
         quick_pick.items = [
-          { label: 'Insert a new configuration above' },
-          { label: 'Insert a new configuration below' }
+          { label: 'Insert a new API configuration above' },
+          { label: 'Insert a new API configuration below' }
         ]
         quick_pick.title = 'Placement'
         quick_pick.placeholder = 'Where to insert?'
@@ -111,7 +111,7 @@ export const upsert_configuration = async (params: {
     if (!position_quick_pick) return
 
     actual_insertion_index =
-      position_quick_pick == 'Insert a new configuration above'
+      position_quick_pick == 'Insert a new API configuration above'
         ? params.insertion_index
         : params.insertion_index + 1
   }
@@ -120,8 +120,8 @@ export const upsert_configuration = async (params: {
   let original_id: string | undefined
   let was_default = false
 
-  if (params.configuration_id || params.duplicate_from_id) {
-    const target_id = params.configuration_id || params.duplicate_from_id
+  if (params.api_configuration_id || params.duplicate_from_id) {
+    const target_id = params.api_configuration_id || params.duplicate_from_id
     const config_index = configs.findIndex(
       (c) => get_tool_config_id(c) == target_id
     )
@@ -134,8 +134,8 @@ export const upsert_configuration = async (params: {
     }
 
     config_to_edit = { ...configs[config_index] }
-    if (params.configuration_id) {
-      original_id = params.configuration_id
+    if (params.api_configuration_id) {
+      original_id = params.api_configuration_id
       if (get_default_config) {
         const def_config = await get_default_config()
         if (def_config && get_tool_config_id(def_config) === original_id) {
@@ -205,8 +205,8 @@ export const upsert_configuration = async (params: {
         const quick_pick = vscode.window.createQuickPick()
         quick_pick.items = items
         quick_pick.title = original_id
-          ? 'Edit Configuration'
-          : 'New Configuration'
+          ? 'Edit API Configuration'
+          : 'New API Configuration'
         quick_pick.placeholder = 'Select a property to edit'
         const close_button: vscode.QuickInputButton = {
           iconPath: new vscode.ThemeIcon('save'),
@@ -301,7 +301,7 @@ export const upsert_configuration = async (params: {
       let current_provider_name = updated_config.provider_name
 
       while (true) {
-        const new_provider = await edit_provider_for_config(
+        const new_provider = await edit_provider_for_api_config(
           providers_manager,
           current_provider_name
         )
@@ -320,7 +320,7 @@ export const upsert_configuration = async (params: {
               ? updated_config.model
               : ''
         }
-        const new_model = await edit_model_for_config({
+        const new_model = await edit_model_for_api_config({
           config: temp_config,
           providers_manager,
           model_fetcher,
@@ -341,7 +341,7 @@ export const upsert_configuration = async (params: {
       }
     } else if (selected_option == 'Reasoning Effort') {
       while (true) {
-        const new_effort = await edit_reasoning_effort_for_config(
+        const new_effort = await edit_reasoning_effort_for_api_config(
           updated_config.reasoning_effort
         )
         if (new_effort === undefined) break
@@ -427,7 +427,7 @@ export const upsert_configuration = async (params: {
         >((resolve) => {
           const quick_pick = vscode.window.createQuickPick()
           quick_pick.items = advanced_items
-          quick_pick.title = 'Edit Configuration'
+          quick_pick.title = 'Edit API Configuration'
           quick_pick.placeholder = 'Select a property to edit'
           quick_pick.buttons = [vscode.QuickInputButtons.Back]
           if (last_advanced_label) {
@@ -478,14 +478,14 @@ export const upsert_configuration = async (params: {
         last_advanced_label = selected_advanced.label
 
         if (selected_advanced.label == 'Temperature') {
-          const new_temp = await edit_temperature_for_config(updated_config)
+          const new_temp = await edit_temperature_for_api_config(updated_config)
           if (new_temp !== undefined) {
             updated_config.temperature =
               new_temp === null ? undefined : new_temp
           }
         } else if (selected_advanced.label == 'System Instructions') {
           const new_instr =
-            await edit_system_instructions_override_for_config(updated_config)
+            await edit_system_instructions_override_for_api_config(updated_config)
           if (new_instr !== undefined) {
             updated_config.system_instructions_override =
               new_instr === null ? undefined : new_instr

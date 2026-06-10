@@ -5,7 +5,7 @@ import {
 } from '@/views/settings/types/messages'
 import {
   handle_upsert_model_provider,
-  handle_delete_configuration,
+  handle_delete_api_configuration,
   handle_delete_model_provider,
   handle_get_check_new_files,
   handle_get_clear_checks_in_workspace_behavior,
@@ -43,7 +43,7 @@ import {
   handle_update_ai_studio_user_id,
   handle_update_send_with_shift_enter,
   handle_update_reuse_last_tab,
-  handle_upsert_configuration,
+  handle_upsert_api_configuration,
   handle_open_ignore_patterns_settings,
   handle_open_allow_patterns_settings,
   handle_get_fix_all_automatically,
@@ -136,7 +136,7 @@ export class SettingsProvider {
         } else if (message.command == 'REORDER_CONFIGURATIONS') {
           await handle_reorder_configuration(this, message.configurations)
         } else if (message.command == 'DELETE_CONFIGURATION') {
-          await handle_delete_configuration(this, message.configuration_id)
+          await handle_delete_api_configuration(this, message.configuration_id)
         } else if (message.command == 'SET_DEFAULT_CONFIGURATION') {
           await handle_set_default_configuration(
             this,
@@ -226,7 +226,7 @@ export class SettingsProvider {
         } else if (message.command == 'OPEN_ALLOW_PATTERNS_SETTINGS') {
           await handle_open_allow_patterns_settings()
         } else if (message.command == 'UPSERT_CONFIGURATION') {
-          await handle_upsert_configuration(this, message)
+          await handle_upsert_api_configuration(this, message)
         } else if (message.command == 'GET_FIX_ALL_AUTOMATICALLY') {
           await handle_get_fix_all_automatically(this)
         } else if (message.command == 'UPDATE_FIX_ALL_AUTOMATICALLY') {

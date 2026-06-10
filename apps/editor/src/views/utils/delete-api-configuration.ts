@@ -5,25 +5,25 @@ import {
 } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
 
-export const delete_configuration = async (params: {
+export const delete_api_configuration = async (params: {
   context: vscode.ExtensionContext
-  configuration_id: string
+  api_configuration_id: string
 }): Promise<void> => {
   const providers_manager = new ModelProvidersManager(params.context)
 
-  const original_configs = await providers_manager.get_tool_configs()
-  const config_to_delete = original_configs.find(
-    (c) => get_tool_config_id(c) === params.configuration_id
+  const original_api_configs = await providers_manager.get_tool_configs()
+  const api_config_to_delete = original_api_configs.find(
+    (c) => get_tool_config_id(c) === params.api_configuration_id
   )
-  if (!config_to_delete) return
+  if (!api_config_to_delete) return
 
   const confirmation = await vscode.window.showWarningMessage(
     dictionary.warning_message.PLEASE_CONFIRM,
     {
       modal: true,
       detail: dictionary.warning_message.CONFIRM_DELETE_CONFIGURATION(
-        config_to_delete.model,
-        config_to_delete.provider_name
+        api_config_to_delete.model,
+        api_config_to_delete.provider_name
       )
     },
     'Delete'
@@ -33,8 +33,8 @@ export const delete_configuration = async (params: {
     return
   }
 
-  const updated_configs = original_configs.filter(
-    (c) => get_tool_config_id(c) !== params.configuration_id
+  const updated_api_configs = original_api_configs.filter(
+    (c) => get_tool_config_id(c) !== params.api_configuration_id
   )
-  await providers_manager.save_tool_configs(updated_configs)
+  await providers_manager.save_tool_configs(updated_api_configs)
 }

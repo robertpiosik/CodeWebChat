@@ -16,7 +16,7 @@ export const handle_save_component_collapsed_state = async (
       PRESETS_COLLAPSED_STATE_KEY,
       message.is_collapsed
     )
-  } else if (message.component == 'configurations') {
+  } else if (message.component == 'api-configurations') {
     await panel_provider.context.globalState.update(
       CONFIGURATIONS_COLLAPSED_STATE_KEY,
       message.is_collapsed

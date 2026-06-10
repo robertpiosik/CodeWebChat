@@ -40,16 +40,16 @@ type Props = {
   on_quick_action_click: (command: string) => void
   is_connected: boolean
   presets: Preset[]
-  configurations: ApiConfiguration[]
-  on_configuration_click: (id: string) => void
-  on_configurations_reorder: (
+  api_configurations: ApiConfiguration[]
+  on_api_configuration_click: (id: string) => void
+  on_api_configurations_reorder: (
     reordered_configurations: UiConfigurations.Configuration[]
   ) => void
-  on_toggle_pinned_configuration: (id: string) => void
-  on_edit_configuration: (id: string) => void
-  on_delete_configuration: (id: string) => void
-  on_duplicate_configuration: (id: string) => void
-  on_create_configuration: (params?: {
+  on_toggle_pinned_api_configuration: (id: string) => void
+  on_edit_api_configuration: (id: string) => void
+  on_delete_api_configuration: (id: string) => void
+  on_duplicate_api_configuration: (id: string) => void
+  on_create_api_configuration: (params?: {
     create_on_top?: boolean
     insertion_index?: number
   }) => void
@@ -72,7 +72,7 @@ type Props = {
   on_delete_preset: (index: number) => void
   on_toggle_preset_pinned: (name: string) => void
   selected_preset_name?: string
-  selected_configuration_id?: string
+  selected_api_configuration_id?: string
   instructions: string
   set_instructions: (value: string) => void
   on_caret_position_change: (caret_position: number) => void
@@ -99,8 +99,8 @@ type Props = {
   presets_collapsed: boolean
   on_presets_collapsed_change: (is_collapsed: boolean) => void
   send_with_shift_enter: boolean
-  configurations_collapsed: boolean
-  on_configurations_collapsed_change: (is_collapsed: boolean) => void
+  api_configurations_collapsed: boolean
+  on_api_configurations_collapsed_change: (is_collapsed: boolean) => void
   currently_open_file_text?: string
   on_go_to_file: (file_path: string) => void
   on_pasted_lines_click: (path: string, start?: string, end?: string) => void
@@ -216,8 +216,8 @@ export const MainView: React.FC<Props> = (props) => {
     mode: props.mode,
     selected_preset_or_group_name: props.selected_preset_name,
     presets: props.presets,
-    selected_configuration_id: props.selected_configuration_id,
-    configurations: props.configurations
+    selected_api_configuration_id: props.selected_api_configuration_id,
+    api_configurations: props.api_configurations
   })
 
   const web_configurations: UiConfigurations.Configuration[] = props.presets.map(
@@ -247,7 +247,7 @@ export const MainView: React.FC<Props> = (props) => {
     }
   )
 
-  const api_configurations: UiConfigurations.Configuration[] = props.configurations.map(
+  const api_configurations_ui: UiConfigurations.Configuration[] = props.api_configurations.map(
     (c) => {
       const details = [c.provider_name]
       if (c.reasoning_effort) {
@@ -383,7 +383,7 @@ export const MainView: React.FC<Props> = (props) => {
             on_new_tab={props.on_new_tab}
             on_tab_delete={props.on_tab_delete}
             missing_configuration={
-              props.mode == MODE.API && props.configurations.length == 0
+              props.mode == MODE.API && props.api_configurations.length == 0
             }
             missing_preset={props.mode == MODE.WEB && props.presets.length == 0}
             voice_input_push_to_talk={props.voice_input_push_to_talk}
@@ -455,17 +455,17 @@ export const MainView: React.FC<Props> = (props) => {
           <>
             <UiSeparator height={8} />
             <UiConfigurations
-              configurations={api_configurations}
-              on_configuration_click={props.on_configuration_click}
-              on_reorder={(reordered) => props.on_configurations_reorder(reordered)}
-              on_toggle_pinned={props.on_toggle_pinned_configuration}
-              on_edit={props.on_edit_configuration}
-              on_delete={props.on_delete_configuration}
-              on_duplicate={props.on_duplicate_configuration}
-              selected_configuration_id={props.selected_configuration_id}
-              on_create={props.on_create_configuration}
-              is_collapsed={props.configurations_collapsed}
-              on_toggle_collapsed={props.on_configurations_collapsed_change}
+              configurations={api_configurations_ui}
+              on_configuration_click={props.on_api_configuration_click}
+              on_reorder={(reordered) => props.on_api_configurations_reorder(reordered)}
+              on_toggle_pinned={props.on_toggle_pinned_api_configuration}
+              on_edit={props.on_edit_api_configuration}
+              on_delete={props.on_delete_api_configuration}
+              on_duplicate={props.on_duplicate_api_configuration}
+              selected_configuration_id={props.selected_api_configuration_id}
+              on_create={props.on_create_api_configuration}
+              is_collapsed={props.api_configurations_collapsed}
+              on_toggle_collapsed={props.on_api_configurations_collapsed_change}
               translations={{
                 title: t('configurations.title'),
                 empty: t('configurations.empty'),

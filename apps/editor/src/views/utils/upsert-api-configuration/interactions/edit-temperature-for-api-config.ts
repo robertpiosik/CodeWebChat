@@ -1,12 +1,12 @@
 import * as vscode from 'vscode'
 import { ToolConfig } from '@/services/model-providers-manager'
 
-export const edit_temperature_for_config = async (
+export const edit_temperature_for_api_config = async (
   config: ToolConfig
 ): Promise<number | null | undefined> => {
   return await new Promise<number | null | undefined>((resolve) => {
     const input = vscode.window.createInputBox()
-    input.title = 'Edit Configuration'
+    input.title = 'Edit API Configuration'
     input.value = config.temperature?.toString() ?? ''
     input.prompt = 'Enter a value between 0 and 2.'
     input.placeholder = 'Temperature'
