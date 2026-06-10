@@ -1,7 +1,30 @@
 import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
 
-const MIGRATION_ID = 'merge-chat-presets-migration-202606095'
+const MIGRATION_ID = 'merge-chat-presets-migration-2026060951'
+
+function arePresetsIdentical(p1: any, p2: any): boolean {
+  const c1 = { ...p1 }
+  const c2 = { ...p2 }
+  delete c1.name
+  delete c1.promptPrefix
+  delete c1.promptSuffix
+  delete c2.name
+  delete c2.promptPrefix
+  delete c2.promptSuffix
+
+  const stringify = (obj: any) => {
+    if (!obj || typeof obj != 'object') return JSON.stringify(obj)
+    const sortedKeys = Object.keys(obj).sort()
+    const sortedObj: any = {}
+    for (const key of sortedKeys) {
+      sortedObj[key] = obj[key]
+    }
+    return JSON.stringify(sortedObj)
+  }
+
+  return stringify(c1) == stringify(c2)
+}
 
 export async function migrate_merge_chat_presets(
   context: vscode.ExtensionContext
@@ -34,6 +57,10 @@ export async function migrate_merge_chat_presets(
           const base_name = preset.name?.trim()
           if (!base_name) continue
           
+          if (final_presets.some(existing => arePresetsIdentical(existing, preset))) {
+            continue
+          }
+
           let name = base_name
           const match = base_name.match(/^(.*?)\s*\((\d+)\)$/)
           let prefix = base_name
