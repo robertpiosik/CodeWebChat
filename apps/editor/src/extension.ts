@@ -13,7 +13,8 @@ import {
   migrate_merge_configurations,
   migrate_preset_affix_to_prompt_template,
   migrate_remove_preset_groups_and_separators,
-  migrate_merge_chat_presets
+  migrate_merge_chat_presets,
+  migrate_chat_presets_to_web_configurations
 } from './migrations'
 import {
   apply_chat_response_command,
@@ -75,6 +76,8 @@ export const activate = async (context: vscode.ExtensionContext) => {
     await migrate_remove_preset_groups_and_separators(context)
     // 9 June 2026
     await migrate_merge_chat_presets(context)
+    // 11 June 2026
+    await migrate_chat_presets_to_web_configurations(context)
   }
 
   await migrations()

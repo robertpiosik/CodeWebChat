@@ -445,10 +445,12 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     this._config_listener = vscode.workspace.onDidChangeConfiguration(
       (event) => {
         if (!this._webview_view) return
-        const all_web_configuration_keys = [
-          'codeWebChat.chatPresets'
-        ]
-        if (all_web_configuration_keys.some((key) => event.affectsConfiguration(key))) {
+        const all_web_configuration_keys = ['codeWebChat.webConfigurations']
+        if (
+          all_web_configuration_keys.some((key) =>
+            event.affectsConfiguration(key)
+          )
+        ) {
           this.send_web_configurations_to_webview(this._webview_view.webview)
         }
 
@@ -624,7 +626,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   }
 
   public get_web_configurations_config_key(): string {
-    return 'chatPresets'
+    return 'webConfigurations'
   }
 
   public cancel_all_intelligent_updates() {
@@ -795,11 +797,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'UPDATE_WEB_CONFIGURATION') {
             await handle_update_web_configuration(this, message, webview_view)
           } else if (message.command == 'DELETE_WEB_CONFIGURATION') {
-            await handle_delete_web_configuration(
-              this,
-              message,
-              webview_view
-            )
+            await handle_delete_web_configuration(this, message, webview_view)
           } else if (message.command == 'DUPLICATE_WEB_CONFIGURATION') {
             await handle_duplicate_web_configuration(
               this,
@@ -835,9 +833,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_get_api_configurations(this)
           } else if (message.command == 'REORDER_API_CONFIGURATIONS') {
             await handle_reorder_api_configurations(this, message)
-          } else if (
-            message.command == 'TOGGLE_PINNED_API_CONFIGURATION'
-          ) {
+          } else if (message.command == 'TOGGLE_PINNED_API_CONFIGURATION') {
             await handle_toggle_pinned_api_configuration(this, message)
           } else if (message.command == 'SAVE_WEB_PROMPT_TYPE') {
             await handle_save_web_prompt_type(this, message.prompt_type)
@@ -871,7 +867,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_hash_sign_quick_pick(
               this,
               this.context,
-              message.is_for_code_completions,
+              message.is_for_code_completions
             )
           } else if (message.command == 'GO_TO_FILE') {
             handle_go_to_file(message)
@@ -1012,22 +1008,17 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
   public send_web_configurations_to_webview(_: vscode.Webview) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const web_prompt_types: WebPromptType[] = [
-      'ask-about-context',
-      'find-relevant-files',
-      'edit-context',
-      'code-at-cursor',
-      'no-context'
-    ]
 
-    const web_configurations_config = config.get<ConfigWebConfigurationFormat[]>('chatPresets', []) || []
+    const web_configurations_config =
+      config.get<ConfigWebConfigurationFormat[]>('webConfigurations', []) || []
     const web_configurations_ui = web_configurations_config
       .filter((config) => config.chatbot && CHATBOTS[config.chatbot])
       .map((config) => {
         let model = config.model
         if (config.chatbot && model) {
           const chatbot_info = CHATBOTS[config.chatbot]
-          const is_user_provided_supported = chatbot_info.supports_user_provided_model
+          const is_user_provided_supported =
+            chatbot_info.supports_user_provided_model
           const is_model_predefined = chatbot_info.models?.[model]
 
           if (!is_user_provided_supported && !is_model_predefined) {
@@ -1036,6 +1027,14 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         }
         return config_web_configuration_to_ui_format({ ...config, model })
       })
+
+    const web_prompt_types: WebPromptType[] = [
+      'ask-about-context',
+      'find-relevant-files',
+      'edit-context',
+      'code-at-cursor',
+      'no-context'
+    ]
 
     this.send_message({
       command: 'WEB_CONFIGURATIONS',

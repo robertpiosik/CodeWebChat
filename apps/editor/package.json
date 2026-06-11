@@ -884,7 +884,7 @@
           "scope": "resource",
           "default": false
         },
-        "codeWebChat.chatPresets": {
+        "codeWebChat.webConfigurations": {
           "type": "array",
           "scope": "resource",
           "items": {

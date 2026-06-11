@@ -8,4 +8,4 @@ export * from './migrate-merge-configurations'
 export * from './migrate-preset-affix-to-prompt-template'
 export * from './migrate-remove-preset-groups-and-separators'
 export * from './migrate-merge-chat-presets'
-
+export * from './migrate-chat-presets-to-web-configurations'
