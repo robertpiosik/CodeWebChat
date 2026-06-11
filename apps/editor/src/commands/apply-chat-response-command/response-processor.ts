@@ -525,24 +525,24 @@ export const process_chat_response = async (params: {
           const api_providers_manager = new ModelProvidersManager(
             params.context
           )
-          const config_result = await get_intelligent_update_config(
+          const api_configuration_result = await get_intelligent_update_config(
             api_providers_manager,
             false,
             params.context
           )
 
-          if (!config_result) {
+          if (!api_configuration_result) {
             return null
           }
 
-          const { provider, config: intelligent_update_config } = config_result
-          const endpoint_url = provider.base_url
+          const { model_provider, api_configuration: intelligent_update_api_configuration } = api_configuration_result
+          const endpoint_url = model_provider.base_url
 
           const intelligent_update_states =
             await handle_active_editor_intelligent_update({
               endpoint_url,
-              api_key: provider.api_key,
-              config: intelligent_update_config,
+              api_key: model_provider.api_key,
+              api_configuration: intelligent_update_api_configuration,
               chat_response: fake_chat_response,
               context: params.context,
               is_single_root_folder_workspace,

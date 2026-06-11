@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { Provider } from '@/services/model-providers-manager'
+import { ModelProvider } from '@/services/model-providers-manager'
 import {
   ModelFetcher,
   MODELS_ROUTE_NOT_FOUND_ERROR
@@ -11,20 +11,20 @@ import { verify_model } from './verify-model'
 
 export const initial_select_model = async (
   model_fetcher: ModelFetcher,
-  provider: Provider,
+  model_provider: ModelProvider,
   tool_type?: ToolType
 ): Promise<string | undefined> => {
   let base_url: string | undefined
 
   try {
-    base_url = provider.base_url
+    base_url = model_provider.base_url
 
     if (!base_url)
-      throw new Error(`Base URL not found for provider ${provider.name}`)
+      throw new Error(`Base URL not found for model provider ${model_provider.name}`)
 
     const models = await model_fetcher.get_models({
       base_url,
-      api_key: provider.api_key
+      api_key: model_provider.api_key
     })
 
     if (models.length > 0) {
@@ -86,7 +86,7 @@ export const initial_select_model = async (
           await verify_model({
             model: selected_model,
             base_url,
-            api_key: provider.api_key,
+            api_key: model_provider.api_key,
             is_voice_input: tool_type == 'voice-input'
           })
         ) {
@@ -105,7 +105,7 @@ export const initial_select_model = async (
       error.message == MODELS_ROUTE_NOT_FOUND_ERROR
     ) {
       vscode.window.showInformationMessage(
-        dictionary.information_message.MODELS_ROUTE_NOT_FOUND(provider.name),
+        dictionary.information_message.MODELS_ROUTE_NOT_FOUND(model_provider.name),
         { modal: true }
       )
     } else {
@@ -131,7 +131,7 @@ export const initial_select_model = async (
       (await verify_model({
         model,
         base_url,
-        api_key: provider.api_key,
+        api_key: model_provider.api_key,
         is_voice_input: tool_type == 'voice-input'
       }))
     ) {

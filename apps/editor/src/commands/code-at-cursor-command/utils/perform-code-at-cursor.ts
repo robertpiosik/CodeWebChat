@@ -12,7 +12,7 @@ import { apply_reasoning_effort } from '../../../utils/apply-reasoning-effort'
 import { t } from '@/i18n'
 import { build_user_content } from '../../../utils/build-user-content'
 
-import { get_code_at_cursor_config } from './get-code-at-cursor-config'
+import { get_code_at_cursor_api_configuration } from './get-code-at-cursor-config'
 import { show_ghost_text } from './show-ghost-text'
 
 export const perform_code_at_cursor = async (params: {
@@ -22,7 +22,7 @@ export const perform_code_at_cursor = async (params: {
   with_completion_instructions: boolean
   show_quick_pick?: boolean
   completion_instructions?: string
-  config_id?: string
+  api_configuration_id?: string
   panel_provider?: PanelProvider
 }) => {
   const api_providers_manager = new ModelProvidersManager(params.context)
@@ -49,27 +49,27 @@ export const perform_code_at_cursor = async (params: {
   }
 
   let force_show_quick_pick = params.show_quick_pick || false
-  let current_config_id = params.config_id
+  let current_api_configuration_id = params.api_configuration_id
 
   while (true) {
-    const config_result = await get_code_at_cursor_config({
+    const api_configuration_result = await get_code_at_cursor_api_configuration({
       api_providers_manager,
       show_quick_pick: force_show_quick_pick,
       context: params.context,
-      config_id: current_config_id,
+      api_configuration_id: current_api_configuration_id,
       panel_provider: params.panel_provider
     })
 
-    if (!config_result) {
+    if (!api_configuration_result) {
       return
     }
 
     force_show_quick_pick = false
-    current_config_id = undefined
+    current_api_configuration_id = undefined
 
-    const { provider, config: code_at_cursor_config } = config_result
+    const { model_provider, api_configuration: code_at_cursor_api_configuration } = api_configuration_result
 
-    if (!code_at_cursor_config.provider_name) {
+    if (!code_at_cursor_api_configuration.model_provider_name) {
       vscode.window.showErrorMessage(
         dictionary.error_message.API_PROVIDER_NOT_SPECIFIED_FOR_CODE_AT_CURSOR
       )
@@ -79,7 +79,7 @@ export const perform_code_at_cursor = async (params: {
       })
       force_show_quick_pick = true
       continue
-    } else if (!code_at_cursor_config.model) {
+    } else if (!code_at_cursor_api_configuration.model) {
       vscode.window.showErrorMessage(
         dictionary.error_message.MODEL_NOT_SPECIFIED_FOR_CODE_AT_CURSOR
       )
@@ -91,7 +91,7 @@ export const perform_code_at_cursor = async (params: {
       continue
     }
 
-    const endpoint_url = provider.base_url
+    const endpoint_url = model_provider.base_url
 
     const editor = vscode.window.activeTextEditor
     if (editor) {
@@ -134,7 +134,7 @@ export const perform_code_at_cursor = async (params: {
       }${text_after_cursor}\n]]>\n</file>\n</files>\n${code_at_cursor_instructions}`
 
       const user_content = build_user_content({
-        provider_name: provider.name,
+        model_provider_name: model_provider.name,
         part1,
         part2
       })
@@ -148,14 +148,14 @@ export const perform_code_at_cursor = async (params: {
 
       const body: { [key: string]: any } = {
         messages,
-        model: code_at_cursor_config.model,
-        temperature: code_at_cursor_config.temperature
+        model: code_at_cursor_api_configuration.model,
+        temperature: code_at_cursor_api_configuration.temperature
       }
 
       apply_reasoning_effort({
         body,
-        provider,
-        reasoning_effort: code_at_cursor_config.reasoning_effort
+        model_provider,
+        reasoning_effort: code_at_cursor_api_configuration.reasoning_effort
       })
 
       const cursor_listener = vscode.window.onDidChangeTextEditorSelection(
@@ -186,7 +186,7 @@ export const perform_code_at_cursor = async (params: {
 
             return await make_api_request({
               endpoint_url,
-              api_key: provider.api_key,
+              api_key: model_provider.api_key,
               body,
               cancellation_token: cancel_token_source.token,
               on_chunk: () => {

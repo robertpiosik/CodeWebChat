@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import {
   ModelProvidersManager,
-  ToolConfig
+  ApiConfiguration
 } from '@/services/model-providers-manager'
 import {
   ModelFetcher,
@@ -12,28 +12,28 @@ import { dictionary } from '@shared/constants/dictionary'
 import { ToolType } from '../../../settings/types/tools'
 import { verify_model } from './verify-model'
 
-export const edit_model_for_api_config = async (params: {
-  config: ToolConfig
+export const edit_model_for_api_configuration = async (params: {
+  api_configuration: ApiConfiguration
   providers_manager: ModelProvidersManager
   model_fetcher: ModelFetcher
   tool_type?: ToolType
 }) => {
-  const provider_from_manager = await params.providers_manager.get_provider(
-    params.config.provider_name
+  const model_provider_from_manager = await params.providers_manager.get_model_provider(
+    params.api_configuration.model_provider_name
   )
-  if (!provider_from_manager) {
+  if (!model_provider_from_manager) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.PROVIDER_NOT_FOUND(params.config.provider_name)
+      dictionary.error_message.MODEL_PROVIDER_NOT_FOUND_BY_NAME(params.api_configuration.model_provider_name)
     )
     return undefined
   }
 
-  const base_url = provider_from_manager.base_url
+  const base_url = model_provider_from_manager.base_url
 
   if (!base_url) {
     vscode.window.showErrorMessage(
       dictionary.error_message.BASE_URL_NOT_FOUND_FOR_PROVIDER(
-        params.config.provider_name
+        params.api_configuration.model_provider_name
       )
     )
     return undefined
@@ -42,7 +42,7 @@ export const edit_model_for_api_config = async (params: {
   try {
     const models = await params.model_fetcher.get_models({
       base_url,
-      api_key: provider_from_manager.api_key
+      api_key: model_provider_from_manager.api_key
     })
 
     if (models.length > 0) {
@@ -52,7 +52,7 @@ export const edit_model_for_api_config = async (params: {
         detail: model.description
       }))
 
-      let last_selected_model_id = params.config.model
+      let last_selected_model_id = params.api_configuration.model
 
       while (true) {
         const selected_model_item = await new Promise<
@@ -106,7 +106,7 @@ export const edit_model_for_api_config = async (params: {
           await verify_model({
             model,
             base_url,
-            api_key: provider_from_manager.api_key,
+            api_key: model_provider_from_manager.api_key,
             is_voice_input: params.tool_type == 'voice-input'
           })
         ) {
@@ -116,7 +116,7 @@ export const edit_model_for_api_config = async (params: {
     } else {
       vscode.window.showWarningMessage(
         dictionary.warning_message.NO_MODELS_FOUND_MANUAL_ENTRY(
-          params.config.provider_name
+          params.api_configuration.model_provider_name
         )
       )
     }
@@ -132,7 +132,7 @@ export const edit_model_for_api_config = async (params: {
     ) {
       vscode.window.showInformationMessage(
         dictionary.information_message.MODELS_ROUTE_NOT_FOUND_MANUAL_ENTRY(
-          params.config.provider_name
+          params.api_configuration.model_provider_name
         ),
         { modal: true }
       )
@@ -148,7 +148,7 @@ export const edit_model_for_api_config = async (params: {
   while (true) {
     const new_model_input = await vscode.window.showInputBox({
       title: 'Models',
-      value: params.config.model,
+      value: params.api_configuration.model,
       prompt: `Enter a model name (ID)`
     })
 
@@ -159,7 +159,7 @@ export const edit_model_for_api_config = async (params: {
       await verify_model({
         model,
         base_url,
-        api_key: provider_from_manager.api_key,
+        api_key: model_provider_from_manager.api_key,
         is_voice_input: params.tool_type == 'voice-input'
       })
     ) {

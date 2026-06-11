@@ -9,14 +9,14 @@ export const handle_delete_model_provider = async (
   message: DeleteModelProviderMessage
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(provider.context)
-  const provider_name_to_delete = message.provider_name
+  const model_provider_name_to_delete = message.provider_name
 
   const confirmation = await vscode.window.showWarningMessage(
     dictionary.warning_message.PLEASE_CONFIRM,
     {
       modal: true,
       detail: dictionary.warning_message.CONFIRM_DELETE_MODEL_PROVIDER(
-        provider_name_to_delete
+        model_provider_name_to_delete
       )
     },
     'Delete'
@@ -26,9 +26,9 @@ export const handle_delete_model_provider = async (
     return
   }
 
-  const original_providers = await providers_manager.get_providers()
-  const updated_providers = original_providers.filter(
-    (p) => p.name !== provider_name_to_delete
+  const original_model_providers = await providers_manager.get_model_providers()
+  const updated_model_providers = original_model_providers.filter(
+    (p) => p.name != model_provider_name_to_delete
   )
-  await providers_manager.save_providers(updated_providers)
+  await providers_manager.save_model_providers(updated_model_providers)
 }

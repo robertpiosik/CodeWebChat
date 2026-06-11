@@ -1,14 +1,14 @@
 import * as vscode from 'vscode'
 import { SECRET_STORAGE_MODEL_PROVIDERS_KEY } from '@/constants/secret-storage-keys'
 
-export type Provider = {
+export type ModelProvider = {
   name: string
   base_url: string
   api_key: string
 }
 
-export type ToolConfig = {
-  provider_name: string
+export type ApiConfiguration = {
+  model_provider_name: string
   model: string
   temperature?: number
   reasoning_effort?: string
@@ -16,19 +16,19 @@ export type ToolConfig = {
   is_pinned?: boolean
 }
 
-export const get_tool_config_id = (config: ToolConfig): string => {
+export const get_api_configuration_id = (api_configuration: ApiConfiguration): string => {
   return [
-    config.provider_name,
-    config.model,
-    config.temperature,
-    config.reasoning_effort ?? ''
+    api_configuration.model_provider_name,
+    api_configuration.model,
+    api_configuration.temperature,
+    api_configuration.reasoning_effort ?? ''
   ]
     .filter((v) => v !== null && v !== undefined)
     .join(':')
 }
 
 export class ModelProvidersManager {
-  private _providers: Provider[] = []
+  private _model_providers: ModelProvider[] = []
   private _load_promise: Promise<void>
 
   constructor(private readonly _vscode: vscode.ExtensionContext) {
@@ -38,7 +38,7 @@ export class ModelProvidersManager {
   private async _load_providers() {
     try {
       const config = vscode.workspace.getConfiguration('codeWebChat')
-      const provider_configs = config.get<
+      const model_provider_configs = config.get<
         {
           name: string
           baseUrl: string
@@ -49,84 +49,84 @@ export class ModelProvidersManager {
         SECRET_STORAGE_MODEL_PROVIDERS_KEY
       )
       const saved_providers_with_keys = providers_json
-        ? (JSON.parse(providers_json) as Provider[])
+        ? (JSON.parse(providers_json) as ModelProvider[])
         : []
 
-      this._providers = provider_configs.map((provider_config) => {
-        const provider_with_key = saved_providers_with_keys.find(
+      this._model_providers = model_provider_configs.map((provider_config) => {
+        const model_provider_with_key = saved_providers_with_keys.find(
           (p) => p.name == provider_config.name
         )
-        const provider: Provider = {
+        const model_provider: ModelProvider = {
           name: provider_config.name,
-          api_key: provider_with_key?.api_key || '',
+          api_key: model_provider_with_key?.api_key || '',
           base_url: provider_config.baseUrl || ''
         }
-        return provider
+        return model_provider
       })
     } catch (error) {
       console.error('Error loading providers:', error)
-      this._providers = []
+      this._model_providers = []
     }
   }
 
-  public async save_providers(providers: Provider[]) {
+  public async save_model_providers(model_providers: ModelProvider[]) {
     try {
       // Save full provider info to secret storage
       await this._vscode.secrets.store(
         SECRET_STORAGE_MODEL_PROVIDERS_KEY,
-        JSON.stringify(providers)
+        JSON.stringify(model_providers)
       )
 
       // Save provider config to settings
-      const provider_configs = providers.map((p) => {
+      const model_provider_configs = model_providers.map((p) => {
         return { name: p.name, baseUrl: p.base_url }
       })
       const config = vscode.workspace.getConfiguration('codeWebChat')
       await config.update(
         'modelProviders',
-        provider_configs,
+        model_provider_configs,
         vscode.ConfigurationTarget.Global
       )
 
-      this._providers = providers
+      this._model_providers = model_providers
     } catch (error) {
       console.error('Error saving providers:', error)
       throw error
     }
   }
 
-  public async get_providers(): Promise<Provider[]> {
+  public async get_model_providers(): Promise<ModelProvider[]> {
     await this._load_promise
-    return this._providers
+    return this._model_providers
   }
 
-  public async get_provider(name: string): Promise<Provider | undefined> {
+  public async get_model_provider(name: string): Promise<ModelProvider | undefined> {
     await this._load_promise
-    return this._providers.find((provider) => provider.name == name)
+    return this._model_providers.find((model_provider) => model_provider.name == name)
   }
 
-  private _validate_tool_config(
-    config: ToolConfig | undefined
-  ): ToolConfig | undefined {
-    if (!config) return undefined
+  private _validate_api_configuration(
+    api_configuration: ApiConfiguration | undefined
+  ): ApiConfiguration | undefined {
+    if (!api_configuration) return undefined
 
-    const provider = this._providers.find((p) => p.name == config.provider_name)
+    const model_provider = this._model_providers.find((p) => p.name == api_configuration.model_provider_name)
 
-    if (!provider) {
+    if (!model_provider) {
       return undefined
     }
 
-    return config
+    return api_configuration
   }
 
-  public async get_tool_configs(): Promise<ToolConfig[]> {
+  public async get_api_configurations(): Promise<ApiConfiguration[]> {
     await this._load_promise
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const settings_configs = config.get<any[]>('configurations', [])
 
-    const tool_configs: ToolConfig[] = settings_configs.map((sc) => {
+    const api_configurations: ApiConfiguration[] = settings_configs.map((sc) => {
       return {
-        provider_name: sc.providerName,
+        model_provider_name: sc.providerName,
         model: sc.model,
         temperature: sc.temperature,
         reasoning_effort: sc.reasoningEffort,
@@ -135,21 +135,21 @@ export class ModelProvidersManager {
       }
     })
 
-    return tool_configs.filter(
-      (c) => this._validate_tool_config(c) !== undefined
+    return api_configurations.filter(
+      (c) => this._validate_api_configuration(c) !== undefined
     )
   }
 
-  public async save_tool_configs(configs: ToolConfig[]) {
+  public async save_api_configurations(api_configurations: ApiConfiguration[]) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const old_settings_configs = config.get<any[]>('configurations', [])
 
-    const new_settings_configs = configs.map((c) => {
+    const new_settings_configs = api_configurations.map((c) => {
       const old_config = old_settings_configs.find((oldC) =>
-        this._are_configs_effectively_equal(oldC, c)
+        this._are_api_configurations_effectively_equal(oldC, c)
       )
       const new_config: any = {
-        providerName: c.provider_name,
+        providerName: c.model_provider_name,
         model: c.model,
         temperature: c.temperature,
         isDefaultForCodeAtCursor: old_config?.isDefaultForCodeAtCursor || false,
@@ -176,24 +176,24 @@ export class ModelProvidersManager {
     )
   }
 
-  private _are_configs_effectively_equal(
+  private _are_api_configurations_effectively_equal(
     settings_config: any,
-    tool_config: ToolConfig
+    api_configuration: ApiConfiguration
   ): boolean {
     return (
-      settings_config.providerName === tool_config.provider_name &&
-      settings_config.model === tool_config.model &&
-      settings_config.temperature === tool_config.temperature &&
+      settings_config.providerName === api_configuration.model_provider_name &&
+      settings_config.model === api_configuration.model &&
+      settings_config.temperature === api_configuration.temperature &&
       (settings_config.reasoningEffort ?? undefined) ===
-        (tool_config.reasoning_effort ?? undefined) &&
+        (api_configuration.reasoning_effort ?? undefined) &&
       (settings_config.systemInstructionsOverride ?? undefined) ===
-        (tool_config.system_instructions_override ?? undefined)
+        (api_configuration.system_instructions_override ?? undefined)
     )
   }
 
-  private _get_default_tool_config_from_settings(
+  private _get_default_api_configuration_from_settings(
     default_key: string
-  ): ToolConfig | undefined {
+  ): ApiConfiguration | undefined {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const settings_configs = config.get<any[]>('configurations', [])
     const default_config_from_settings = settings_configs.find(
@@ -201,8 +201,8 @@ export class ModelProvidersManager {
     )
 
     if (default_config_from_settings) {
-      const tool_config: ToolConfig = {
-        provider_name: default_config_from_settings.providerName,
+      const api_configuration: ApiConfiguration = {
+        model_provider_name: default_config_from_settings.providerName,
         model: default_config_from_settings.model,
         temperature: default_config_from_settings.temperature,
         reasoning_effort: default_config_from_settings.reasoningEffort,
@@ -210,15 +210,15 @@ export class ModelProvidersManager {
           default_config_from_settings.systemInstructionsOverride,
         is_pinned: default_config_from_settings.isPinned
       }
-      const validated_config = this._validate_tool_config(tool_config)
+      const validated_config = this._validate_api_configuration(api_configuration)
       if (validated_config) return validated_config
     }
     return undefined
   }
 
-  private async _set_default_tool_config_in_settings(
+  private async _set_default_api_configuration_in_settings(
     default_key: string,
-    config_to_set: ToolConfig | null
+    config_to_set: ApiConfiguration | null
   ) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const settings_configs = config.get<any[]>('configurations', [])
@@ -226,7 +226,7 @@ export class ModelProvidersManager {
     const new_settings_configs = settings_configs.map((c) => {
       const is_default =
         config_to_set !== null &&
-        this._are_configs_effectively_equal(c, config_to_set)
+        this._are_api_configurations_effectively_equal(c, config_to_set)
       return { ...c, [default_key]: is_default }
     })
 
@@ -237,89 +237,89 @@ export class ModelProvidersManager {
     )
   }
 
-  public async get_default_code_completions_config(): Promise<
-    ToolConfig | undefined
+  public async get_default_code_completions_api_configuration(): Promise<
+    ApiConfiguration | undefined
   > {
     await this._load_promise
-    return this._get_default_tool_config_from_settings(
+    return this._get_default_api_configuration_from_settings(
       'isDefaultForCodeAtCursor'
     )
   }
 
-  public async set_default_code_completions_config(config: ToolConfig | null) {
-    await this._set_default_tool_config_in_settings(
+  public async set_default_code_completions_api_configuration(api_configuration: ApiConfiguration | null) {
+    await this._set_default_api_configuration_in_settings(
       'isDefaultForCodeAtCursor',
-      config
+      api_configuration
     )
   }
 
-  public async get_default_commit_messages_config(): Promise<
-    ToolConfig | undefined
+  public async get_default_commit_messages_api_configuration(): Promise<
+    ApiConfiguration | undefined
   > {
     await this._load_promise
-    return this._get_default_tool_config_from_settings(
+    return this._get_default_api_configuration_from_settings(
       'isDefaultForCommitMessages'
     )
   }
 
-  public async set_default_commit_messages_config(config: ToolConfig | null) {
-    await this._set_default_tool_config_in_settings(
+  public async set_default_commit_messages_api_configuration(api_configuration: ApiConfiguration | null) {
+    await this._set_default_api_configuration_in_settings(
       'isDefaultForCommitMessages',
-      config
+      api_configuration
     )
   }
 
-  public async get_default_intelligent_update_config(): Promise<
-    ToolConfig | undefined
+  public async get_default_intelligent_update_api_configuration(): Promise<
+    ApiConfiguration | undefined
   > {
     await this._load_promise
-    return this._get_default_tool_config_from_settings(
+    return this._get_default_api_configuration_from_settings(
       'isDefaultForIntelligentUpdate'
     )
   }
 
-  public async set_default_intelligent_update_config(
-    config: ToolConfig | null
+  public async set_default_intelligent_update_api_configuration(
+    api_configuration: ApiConfiguration | null
   ) {
-    await this._set_default_tool_config_in_settings(
+    await this._set_default_api_configuration_in_settings(
       'isDefaultForIntelligentUpdate',
-      config
+      api_configuration
     )
   }
 
-  public async get_default_find_relevant_files_config(): Promise<
-    ToolConfig | undefined
+  public async get_default_find_relevant_files_api_configuration(): Promise<
+    ApiConfiguration | undefined
   > {
     await this._load_promise
-    return this._get_default_tool_config_from_settings(
+    return this._get_default_api_configuration_from_settings(
       'isDefaultForFindRelevantFiles'
     )
   }
 
-  public async set_default_find_relevant_files_config(
-    config: ToolConfig | null
+  public async set_default_find_relevant_files_api_configuration(
+    api_configuration: ApiConfiguration | null
   ) {
-    await this._set_default_tool_config_in_settings(
+    await this._set_default_api_configuration_in_settings(
       'isDefaultForFindRelevantFiles',
-      config
+      api_configuration
     )
   }
 
-  public async get_default_voice_input_config(): Promise<
-    ToolConfig | undefined
+  public async get_default_voice_input_api_configuration(): Promise<
+    ApiConfiguration | undefined
   > {
     await this._load_promise
-    return this._get_default_tool_config_from_settings('isDefaultForVoiceInput')
+    return this._get_default_api_configuration_from_settings('isDefaultForVoiceInput')
   }
 
-  public async set_default_voice_input_config(config: ToolConfig | null) {
-    await this._set_default_tool_config_in_settings(
+  public async set_default_voice_input_api_configuration(api_configuration: ApiConfiguration | null) {
+    await this._set_default_api_configuration_in_settings(
       'isDefaultForVoiceInput',
-      config
+      api_configuration
     )
   }
 
-  public async update_provider_name_in_configs(params: {
+  public async update_model_provider_name_in_api_configurations(params: {
     old_name: string
     new_name: string
   }): Promise<void> {

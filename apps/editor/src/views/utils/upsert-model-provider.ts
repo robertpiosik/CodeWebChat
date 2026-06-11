@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import axios from 'axios'
 import {
   ModelProvidersManager,
-  Provider
+  ModelProvider
 } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
 import { PROVIDERS } from '@/constants/providers'
@@ -13,11 +13,11 @@ const normalize_base_url = (url: string): string => {
 
 export const upsert_model_provider = async (params: {
   context: vscode.ExtensionContext
-  provider_name?: string
+  model_provider_name?: string
   insertion_index?: number
   create_on_top?: boolean
   show_back_button?: boolean
-}): Promise<Provider | undefined> => {
+}): Promise<ModelProvider | undefined> => {
   const providers_manager = new ModelProvidersManager(params.context)
 
   const prompt_for_name = async (params: {
@@ -186,26 +186,26 @@ export const upsert_model_provider = async (params: {
     })
   }
 
-  const run_edit_loop = async (provider_to_edit: Provider): Promise<void> => {
+  const run_edit_loop = async (model_provider_to_edit: ModelProvider): Promise<void> => {
     while (true) {
       const items: (vscode.QuickPickItem & { id: string })[] = [
         {
           label: 'Name',
           id: 'rename',
-          detail: provider_to_edit.name
+          detail: model_provider_to_edit.name
         },
         {
           label: 'Base URL',
           id: 'edit-url',
-          description: provider_to_edit.base_url ? undefined : '⚠ Not set',
-          detail: provider_to_edit.base_url
+          description: model_provider_to_edit.base_url ? undefined : '⚠ Not set',
+          detail: model_provider_to_edit.base_url
         },
         {
           label: 'API key',
           id: 'change-key',
-          description: provider_to_edit.api_key ? undefined : 'Not set',
-          detail: provider_to_edit.api_key
-            ? `...${provider_to_edit.api_key.slice(-4)}`
+          description: model_provider_to_edit.api_key ? undefined : 'Not set',
+          detail: model_provider_to_edit.api_key
+            ? `...${model_provider_to_edit.api_key.slice(-4)}`
             : undefined
         }
       ]
@@ -251,47 +251,47 @@ export const upsert_model_provider = async (params: {
 
       if (selected_id == 'rename') {
         const new_name = await prompt_for_name({
-          current_name: provider_to_edit.name,
+          current_name: model_provider_to_edit.name,
           is_creation: false,
           show_back: true
         })
         if (new_name == 'BACK') continue
-        if (new_name && new_name != provider_to_edit.name) {
-          provider_to_edit.name = new_name
+        if (new_name && new_name != model_provider_to_edit.name) {
+          model_provider_to_edit.name = new_name
         }
       } else if (selected_id == 'edit-url') {
         const new_url = await prompt_for_url({
-          current_url: provider_to_edit.base_url,
+          current_url: model_provider_to_edit.base_url,
           show_back: true,
           is_required: true
         })
         if (new_url == 'BACK') continue
         if (new_url !== undefined) {
-          provider_to_edit.base_url = normalize_base_url(new_url)
+          model_provider_to_edit.base_url = normalize_base_url(new_url)
         }
       } else if (selected_id == 'change-key') {
         const {
           value: new_key,
           accepted,
           back
-        } = await prompt_for_key(provider_to_edit.api_key, true)
+        } = await prompt_for_key(model_provider_to_edit.api_key, true)
         if (back) continue
         if (accepted) {
           const trimmed_key = new_key.trim()
-          if (trimmed_key !== provider_to_edit.api_key) {
-            if (trimmed_key == '' && provider_to_edit.api_key) {
+          if (trimmed_key !== model_provider_to_edit.api_key) {
+            if (trimmed_key == '' && model_provider_to_edit.api_key) {
               const confirmation = await vscode.window.showWarningMessage(
                 dictionary.warning_message.CONFIRM_CLEAR_API_KEY(
-                  provider_to_edit.name
+                  model_provider_to_edit.name
                 ),
                 { modal: true },
                 'Clear API Key'
               )
               if (confirmation == 'Clear API Key') {
-                provider_to_edit.api_key = ''
+                model_provider_to_edit.api_key = ''
               }
             } else {
-              provider_to_edit.api_key = trimmed_key
+              model_provider_to_edit.api_key = trimmed_key
             }
           }
         }
@@ -348,20 +348,20 @@ export const upsert_model_provider = async (params: {
         : params.insertion_index + 1
   }
 
-  let working_provider: Provider | undefined
+  let working_model_provider: ModelProvider | undefined
   let original_name: string | undefined
 
-  if (params.provider_name) {
-    const existing = await providers_manager.get_provider(params.provider_name)
+  if (params.model_provider_name) {
+    const existing = await providers_manager.get_model_provider(params.model_provider_name)
     if (!existing) {
       vscode.window.showErrorMessage(
         dictionary.error_message.MODEL_PROVIDER_NOT_FOUND_BY_NAME(
-          params.provider_name
+          params.model_provider_name
         )
       )
       return
     }
-    working_provider = { ...existing }
+    working_model_provider = { ...existing }
     original_name = existing.name
   } else {
     const show_add_options = async (): Promise<{
@@ -463,22 +463,22 @@ export const upsert_model_provider = async (params: {
             api_key = value.trim()
           }
 
-          const providers = await providers_manager.get_providers()
+          const model_providers = await providers_manager.get_model_providers()
 
           let final_name = new_name
           let counter = 1
-          while (providers.some((p) => p.name == final_name)) {
+          while (model_providers.some((p) => p.name == final_name)) {
             final_name = `${new_name} (${counter})`
             counter++
           }
 
-          const new_provider: Provider = {
+          const new_model_provider: ModelProvider = {
             name: final_name,
             base_url: info.base_url,
             api_key
           }
-          await providers_manager.save_providers([...providers, new_provider])
-          return new_provider
+          await providers_manager.save_model_providers([...model_providers, new_model_provider])
+          return new_model_provider
         }
         if (back_to_options) continue
       } else {
@@ -519,7 +519,7 @@ export const upsert_model_provider = async (params: {
 
         if (back_to_options) continue
 
-        working_provider = {
+        working_model_provider = {
           name: new_name,
           base_url: normalize_base_url(new_url),
           api_key: ''
@@ -529,11 +529,11 @@ export const upsert_model_provider = async (params: {
     }
   }
 
-  if (working_provider) {
+  if (working_model_provider) {
     while (true) {
-      await run_edit_loop(working_provider)
+      await run_edit_loop(working_model_provider)
 
-      if (!working_provider.base_url) {
+      if (!working_model_provider.base_url) {
         const selection = await vscode.window.showWarningMessage(
           'A Base URL is required for custom model providers.',
           { modal: true },
@@ -549,55 +549,55 @@ export const upsert_model_provider = async (params: {
     }
   }
 
-  if (working_provider.base_url && !working_provider.base_url.endsWith('/v1')) {
+  if (working_model_provider.base_url && !working_model_provider.base_url.endsWith('/v1')) {
     try {
       const headers: { [key: string]: string } = {}
-      if (working_provider.api_key) {
-        headers['Authorization'] = `Bearer ${working_provider.api_key}`
+      if (working_model_provider.api_key) {
+        headers['Authorization'] = `Bearer ${working_model_provider.api_key}`
       }
-      await axios.get(`${working_provider.base_url}/v1/models`, {
+      await axios.get(`${working_model_provider.base_url}/v1/models`, {
         timeout: 2000,
         headers
       })
-      working_provider.base_url = `${working_provider.base_url}/v1`
+      working_model_provider.base_url = `${working_model_provider.base_url}/v1`
     } catch (error) {}
   }
 
-  const providers = await providers_manager.get_providers()
-  let updated_providers = [...providers]
+  const model_providers = await providers_manager.get_model_providers()
+  let updated_model_providers = [...model_providers]
 
-  let final_name = working_provider.name
+  let final_name = working_model_provider.name
   let counter = 1
   while (
-    updated_providers.some(
+    updated_model_providers.some(
       (p) => p.name == final_name && p.name != original_name
     )
   ) {
-    final_name = `${working_provider.name} (${counter})`
+    final_name = `${working_model_provider.name} (${counter})`
     counter++
   }
-  working_provider.name = final_name
+  working_model_provider.name = final_name
 
   if (original_name) {
-    updated_providers = updated_providers.map((p) =>
-      p.name == original_name ? working_provider! : p
+    updated_model_providers = updated_model_providers.map((p) =>
+      p.name == original_name ? working_model_provider! : p
     )
-    if (original_name != working_provider.name) {
-      await providers_manager.update_provider_name_in_configs({
+    if (original_name != working_model_provider.name) {
+      await providers_manager.update_model_provider_name_in_api_configurations({
         old_name: original_name,
-        new_name: working_provider.name
+        new_name: working_model_provider.name
       })
     }
   } else {
     if (params.create_on_top) {
-      updated_providers.unshift(working_provider)
+      updated_model_providers.unshift(working_model_provider)
     } else if (actual_insertion_index !== undefined) {
-      updated_providers.splice(actual_insertion_index, 0, working_provider)
+      updated_model_providers.splice(actual_insertion_index, 0, working_model_provider)
     } else {
-      updated_providers.push(working_provider)
+      updated_model_providers.push(working_model_provider)
     }
   }
 
-  await providers_manager.save_providers(updated_providers)
-  return working_provider
+  await providers_manager.save_model_providers(updated_model_providers)
+  return working_model_provider
 }

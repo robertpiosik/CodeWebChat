@@ -9,14 +9,14 @@ import { apply_reasoning_effort } from '../../../utils/apply-reasoning-effort'
 import { build_user_content } from '../../../utils/build-user-content'
 import { Logger } from '@shared/utils/logger'
 import { FileData } from './analyze-workspace-files'
-import { Provider } from '../../../services/model-providers-manager'
+import { ModelProvider } from '../../../services/model-providers-manager'
 import { t } from '@/i18n'
 
 export const fetch_relevant_files_from_api = async (
   files_data: FileData[],
   shrink_result: boolean,
   instructions: string,
-  provider: Provider,
+  model_provider: ModelProvider,
   selected_config: any
 ): Promise<string[] | 'cancel' | 'error_no_files' | 'error'> => {
   let xml_files = `<files>\n`
@@ -29,7 +29,7 @@ export const fetch_relevant_files_from_api = async (
   const system_instructions_xml = `${find_relevant_files_format}\n${find_relevant_files_instructions}`
   const part2 = `${system_instructions_xml}\n${instructions}`
   const user_content = build_user_content({
-    provider_name: provider.name,
+    model_provider_name: model_provider.name,
     part1: xml_files,
     part2,
     disable_cache: true
@@ -44,7 +44,7 @@ export const fetch_relevant_files_from_api = async (
 
   apply_reasoning_effort({
     body,
-    provider,
+    model_provider,
     reasoning_effort: selected_config.reasoning_effort
   })
 
@@ -65,8 +65,8 @@ export const fetch_relevant_files_from_api = async (
         })
         progress.report({ message: t('common.progress.waiting-for-server') })
         return await make_api_request({
-          endpoint_url: provider.base_url,
-          api_key: provider.api_key,
+          endpoint_url: model_provider.base_url,
+          api_key: model_provider.api_key,
           body,
           cancellation_token: cancel_token_source.token,
           on_chunk: () =>

@@ -1,7 +1,7 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import {
   ModelProvidersManager,
-  get_tool_config_id
+  get_api_configuration_id
 } from '@/services/model-providers-manager'
 import { ApiConfiguration } from '@/views/panel/types/messages'
 
@@ -10,11 +10,11 @@ export const handle_get_api_configurations = async (
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(panel_provider.context)
 
-  const configs = await providers_manager.get_tool_configs()
+  const api_configurations_list = await providers_manager.get_api_configurations()
 
-  const configurations: ApiConfiguration[] = configs.map((config) => ({
-    ...config,
-    id: get_tool_config_id(config)
+  const configurations: ApiConfiguration[] = api_configurations_list.map((api_configuration) => ({
+    ...api_configuration,
+    id: get_api_configuration_id(api_configuration)
   }))
 
   panel_provider.send_message({

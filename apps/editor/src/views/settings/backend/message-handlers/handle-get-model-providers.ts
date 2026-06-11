@@ -5,9 +5,9 @@ export const handle_get_model_providers = async (
   provider: SettingsProvider
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(provider.context)
-  const saved_providers = await providers_manager.get_providers()
+  const saved_model_providers = await providers_manager.get_model_providers()
 
-  const providers_for_client = saved_providers.map((p) => {
+  const model_providers_for_client = saved_model_providers.map((p) => {
     const api_key_mask = p.api_key ? `...${p.api_key.slice(-4)}` : ''
 
     return {
@@ -19,6 +19,6 @@ export const handle_get_model_providers = async (
 
   provider.postMessage({
     command: 'MODEL_PROVIDERS',
-    providers: providers_for_client
+    providers: model_providers_for_client
   })
 }

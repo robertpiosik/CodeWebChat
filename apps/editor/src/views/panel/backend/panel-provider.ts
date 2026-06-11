@@ -338,15 +338,15 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
   public async send_setup_progress() {
     const providers_manager = new ModelProvidersManager(this.context)
-    const [providers, configs] = await Promise.all([
-      providers_manager.get_providers(),
-      providers_manager.get_tool_configs()
+    const [model_providers, configs] = await Promise.all([
+      providers_manager.get_model_providers(),
+      providers_manager.get_api_configurations()
     ])
 
     this.send_message({
       command: 'SETUP_PROGRESS',
       setup_progress: {
-        has_model_provider: providers.length > 0,
+        has_model_provider: model_providers.length > 0,
         has_api_configuration: configs.length > 0
       }
     })

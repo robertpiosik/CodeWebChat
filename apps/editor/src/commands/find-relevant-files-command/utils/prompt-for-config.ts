@@ -1,156 +1,156 @@
 import * as vscode from 'vscode'
 import {
   ModelProvidersManager,
-  get_tool_config_id,
-  ToolConfig,
-  Provider
+  get_api_configuration_id,
+  ApiConfiguration,
+  ModelProvider
 } from '../../../services/model-providers-manager'
 import { RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY } from '../../../constants/state-keys'
 import { display_token_count } from '../../../utils/display-token-count'
 import { t } from '@/i18n'
 
-export const prompt_for_config = async (params: {
+export const prompt_for_api_configuration = async (params: {
   api_providers_manager: ModelProvidersManager
   extension_context: vscode.ExtensionContext
-  configs: ToolConfig[]
+  api_configurations: ApiConfiguration[]
   tokens_to_process: number
   force_prompt?: boolean
 }): Promise<
-  | { config: ToolConfig; provider: Provider; skipped: boolean }
+  | { api_configuration: ApiConfiguration; model_provider: ModelProvider; skipped: boolean }
   | 'back'
   | 'cancel'
 > => {
-  let selected_config: ToolConfig | undefined = undefined
+  let selected_api_configuration: ApiConfiguration | undefined = undefined
   let skipped = false
 
   if (!params.force_prompt) {
-    const default_config =
-      await params.api_providers_manager.get_default_find_relevant_files_config()
+    const default_api_configuration =
+      await params.api_providers_manager.get_default_find_relevant_files_api_configuration()
 
-    if (default_config) {
-      selected_config = default_config
+    if (default_api_configuration) {
+      selected_api_configuration = default_api_configuration
       skipped = true
-    } else if (params.configs.length === 1) {
-      selected_config = params.configs[0]
+    } else if (params.api_configurations.length === 1) {
+      selected_api_configuration = params.api_configurations[0]
       skipped = true
     }
   }
 
-  if (!selected_config) {
+  if (!selected_api_configuration) {
     const create_items = () => {
       const recent_ids =
         params.extension_context.workspaceState.get<string[]>(
           RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY
         ) || []
-      const matched_recent_configs: ToolConfig[] = []
-      const remaining_configs: ToolConfig[] = []
+      const matched_recent_api_configurations: ApiConfiguration[] = []
+      const remaining_api_configurations: ApiConfiguration[] = []
 
-      params.configs.forEach((config: ToolConfig) => {
-        const id = get_tool_config_id(config)
+      params.api_configurations.forEach((api_configuration: ApiConfiguration) => {
+        const id = get_api_configuration_id(api_configuration)
         if (recent_ids.includes(id)) {
-          matched_recent_configs.push(config)
+          matched_recent_api_configurations.push(api_configuration)
         } else {
-          remaining_configs.push(config)
+          remaining_api_configurations.push(api_configuration)
         }
       })
 
-      matched_recent_configs.sort((a, b) => {
-        const id_a = get_tool_config_id(a)
-        const id_b = get_tool_config_id(b)
+      matched_recent_api_configurations.sort((a, b) => {
+        const id_a = get_api_configuration_id(a)
+        const id_b = get_api_configuration_id(b)
         return recent_ids.indexOf(id_a) - recent_ids.indexOf(id_b)
       })
 
-      const map_config_to_item = (config: ToolConfig) => {
-        const description_parts = [config.provider_name]
-        if (config.temperature != null)
-          description_parts.push(`${config.temperature}`)
-        if (config.reasoning_effort)
-          description_parts.push(`${config.reasoning_effort}`)
+      const map_api_configuration_to_item = (api_configuration: ApiConfiguration) => {
+        const description_parts = [api_configuration.model_provider_name]
+        if (api_configuration.temperature != null)
+          description_parts.push(`${api_configuration.temperature}`)
+        if (api_configuration.reasoning_effort)
+          description_parts.push(`${api_configuration.reasoning_effort}`)
 
         return {
-          label: config.model,
+          label: api_configuration.model,
           description: description_parts.join(' · '),
-          config,
-          id: get_tool_config_id(config)
+          api_configuration,
+          id: get_api_configuration_id(api_configuration)
         }
       }
 
       const items: (vscode.QuickPickItem & {
-        config?: ToolConfig
+        api_configuration?: ApiConfiguration
         id?: string
       })[] = []
 
-      if (matched_recent_configs.length > 0) {
+      if (matched_recent_api_configurations.length > 0) {
         items.push({
           label: t('common.separator.recently-used'),
           kind: vscode.QuickPickItemKind.Separator
         })
-        items.push(...matched_recent_configs.map(map_config_to_item))
+        items.push(...matched_recent_api_configurations.map(map_api_configuration_to_item))
       }
-      if (remaining_configs.length > 0) {
-        if (matched_recent_configs.length > 0) {
+      if (remaining_api_configurations.length > 0) {
+        if (matched_recent_api_configurations.length > 0) {
           items.push({
             label: t('common.config.other'),
             kind: vscode.QuickPickItemKind.Separator
           })
         }
-        items.push(...remaining_configs.map(map_config_to_item))
+        items.push(...remaining_api_configurations.map(map_api_configuration_to_item))
       }
       return items
     }
 
-    const config_quick_pick = vscode.window.createQuickPick()
-    config_quick_pick.items = create_items()
-    config_quick_pick.title = t('common.config.title')
-    config_quick_pick.placeholder = t('common.config.placeholder-with-tokens', {
+    const api_configuration_quick_pick = vscode.window.createQuickPick()
+    api_configuration_quick_pick.items = create_items()
+    api_configuration_quick_pick.title = t('common.config.title')
+    api_configuration_quick_pick.placeholder = t('common.config.placeholder-with-tokens', {
       tokens: display_token_count(params.tokens_to_process)
     })
-    config_quick_pick.matchOnDescription = true
-    config_quick_pick.buttons = [vscode.QuickInputButtons.Back]
+    api_configuration_quick_pick.matchOnDescription = true
+    api_configuration_quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
-    const items = config_quick_pick.items as (vscode.QuickPickItem & {
+    const items = api_configuration_quick_pick.items as (vscode.QuickPickItem & {
       id?: string
     })[]
     const first_selectable = items.find(
       (i) => i.kind !== vscode.QuickPickItemKind.Separator
     )
     if (first_selectable) {
-      config_quick_pick.activeItems = [first_selectable]
+      api_configuration_quick_pick.activeItems = [first_selectable]
     }
 
-    const config_result = await new Promise<ToolConfig | 'back' | 'cancel'>(
+    const api_configuration_result = await new Promise<ApiConfiguration | 'back' | 'cancel'>(
       (resolve) => {
         let is_resolved = false
-        config_quick_pick.onDidTriggerButton((button) => {
+        api_configuration_quick_pick.onDidTriggerButton((button) => {
           if (button === vscode.QuickInputButtons.Back) {
             is_resolved = true
             resolve('back')
-            config_quick_pick.hide()
+            api_configuration_quick_pick.hide()
           }
         })
-        config_quick_pick.onDidAccept(() => {
+        api_configuration_quick_pick.onDidAccept(() => {
           is_resolved = true
-          const selected = config_quick_pick.selectedItems[0] as any
-          resolve(selected?.config)
-          config_quick_pick.hide()
+          const selected = api_configuration_quick_pick.selectedItems[0] as any
+          resolve(selected?.api_configuration)
+          api_configuration_quick_pick.hide()
         })
-        config_quick_pick.onDidHide(() => {
+        api_configuration_quick_pick.onDidHide(() => {
           if (!is_resolved) {
             resolve('cancel')
           }
-          config_quick_pick.dispose()
+          api_configuration_quick_pick.dispose()
         })
-        config_quick_pick.show()
+        api_configuration_quick_pick.show()
       }
     )
 
-    if (config_result === 'back') return 'back'
-    if (config_result === 'cancel') return 'cancel'
-    selected_config = config_result
+    if (api_configuration_result === 'back') return 'back'
+    if (api_configuration_result === 'cancel') return 'cancel'
+    selected_api_configuration = api_configuration_result
   }
 
-  if (selected_config) {
-    const selected_id = get_tool_config_id(selected_config)
+  if (selected_api_configuration) {
+    const selected_id = get_api_configuration_id(selected_api_configuration)
     const recents =
       params.extension_context.workspaceState.get<string[]>(
         RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY
@@ -165,15 +165,15 @@ export const prompt_for_config = async (params: {
     )
   }
 
-  const provider = await params.api_providers_manager.get_provider(
-    selected_config.provider_name
+  const model_provider = await params.api_providers_manager.get_model_provider(
+    selected_api_configuration.model_provider_name
   )
-  if (!provider) {
+  if (!model_provider) {
     vscode.window.showErrorMessage(
       t('command.find-relevant-files.error.provider-not-found')
     )
     return 'cancel'
   }
 
-  return { config: selected_config, provider, skipped }
+  return { api_configuration: selected_api_configuration, model_provider, skipped }
 }

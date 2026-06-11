@@ -2,9 +2,9 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { ReorderApiConfigurationsMessage } from '@/views/panel/types/messages'
 import {
   ModelProvidersManager,
-  ToolConfig
+  ApiConfiguration
 } from '@/services/model-providers-manager'
-import { get_tool_config_id } from '@/services/model-providers-manager'
+import { get_api_configuration_id } from '@/services/model-providers-manager'
 
 export const handle_reorder_api_configurations = async (
   panel_provider: PanelProvider,
@@ -13,19 +13,19 @@ export const handle_reorder_api_configurations = async (
   const providers_manager = new ModelProvidersManager(panel_provider.context)
   const reordered_ids = message.configurations.map((p) => p.id)
 
-  const current_configs = await providers_manager.get_tool_configs()
-  const reordered_configs = reordered_ids
+  const current_api_configurations = await providers_manager.get_api_configurations()
+  const reordered_api_configurations = reordered_ids
     .map((id) => {
-      const found = current_configs.find((p) => get_tool_config_id(p) === id)
+      const found = current_api_configurations.find((p) => get_api_configuration_id(p) === id)
       if (!found) {
         console.error(`Config with id ${id} not found during reorder.`)
         return null
       }
       return found
     })
-    .filter((p): p is ToolConfig => p !== null)
+    .filter((p): p is ApiConfiguration => p !== null)
 
-  if (reordered_configs.length === current_configs.length) {
-    await providers_manager.save_tool_configs(reordered_configs)
+  if (reordered_api_configurations.length === current_api_configurations.length) {
+    await providers_manager.save_api_configurations(reordered_api_configurations)
   }
 }

@@ -4,8 +4,8 @@ import { spawn } from 'child_process'
 import { Logger } from '@shared/utils/logger'
 import {
   ModelProvidersManager,
-  ToolConfig,
-  get_tool_config_id
+  ApiConfiguration,
+  get_api_configuration_id
 } from '@/services/model-providers-manager'
 import * as vscode from 'vscode'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
@@ -55,68 +55,68 @@ const stop_recording = async (panel_provider: PanelProvider) => {
       const model_providers_manager = new ModelProvidersManager(
         panel_provider.context
       )
-      const configs = await model_providers_manager.get_tool_configs()
+      const api_configurations = await model_providers_manager.get_api_configurations()
 
-      if (configs.length == 0) return
+      if (api_configurations.length == 0) return
 
-      let config: ToolConfig | undefined =
-        await model_providers_manager.get_default_voice_input_config()
+      let api_configuration: ApiConfiguration | undefined =
+        await model_providers_manager.get_default_voice_input_api_configuration()
 
-      if (!config) {
-        if (configs.length == 1) {
-          config = configs[0]
+      if (!api_configuration) {
+        if (api_configurations.length == 1) {
+          api_configuration = api_configurations[0]
         } else {
           const recent_ids =
             panel_provider.context.workspaceState.get<string[]>(
               RECENTLY_USED_VOICE_INPUT_CONFIG_IDS_STATE_KEY
             ) || []
 
-          const matched_recent_configs: ToolConfig[] = []
-          const remaining_configs: ToolConfig[] = []
+          const matched_recent_api_configurations: ApiConfiguration[] = []
+          const remaining_api_configurations: ApiConfiguration[] = []
 
-          configs.forEach((config) => {
-            const id = get_tool_config_id(config)
+          api_configurations.forEach((api_configuration) => {
+            const id = get_api_configuration_id(api_configuration)
             if (recent_ids.includes(id)) {
-              matched_recent_configs.push(config)
+              matched_recent_api_configurations.push(api_configuration)
             } else {
-              remaining_configs.push(config)
+              remaining_api_configurations.push(api_configuration)
             }
           })
 
-          matched_recent_configs.sort((a, b) => {
-            const id_a = get_tool_config_id(a)
-            const id_b = get_tool_config_id(b)
+          matched_recent_api_configurations.sort((a, b) => {
+            const id_a = get_api_configuration_id(a)
+            const id_b = get_api_configuration_id(b)
             return recent_ids.indexOf(id_a) - recent_ids.indexOf(id_b)
           })
 
-          const map_config_to_item = (config: ToolConfig) => ({
-            label: config.model,
-            description: config.provider_name,
-            config,
-            id: get_tool_config_id(config)
+          const map_api_configuration_to_item = (api_configuration: ApiConfiguration) => ({
+            label: api_configuration.model,
+            description: api_configuration.model_provider_name,
+            api_configuration,
+            id: get_api_configuration_id(api_configuration)
           })
 
           const items: (vscode.QuickPickItem & {
-            config?: ToolConfig
+            api_configuration?: ApiConfiguration
             id?: string
           })[] = []
 
-          if (matched_recent_configs.length > 0) {
+          if (matched_recent_api_configurations.length > 0) {
             items.push({
               label: 'recently used',
               kind: vscode.QuickPickItemKind.Separator
             })
-            items.push(...matched_recent_configs.map(map_config_to_item))
+            items.push(...matched_recent_api_configurations.map(map_api_configuration_to_item))
           }
 
-          if (remaining_configs.length > 0) {
-            if (matched_recent_configs.length > 0) {
+          if (remaining_api_configurations.length > 0) {
+            if (matched_recent_api_configurations.length > 0) {
               items.push({
                 label: 'other configurations',
                 kind: vscode.QuickPickItemKind.Separator
               })
             }
-            items.push(...remaining_configs.map(map_config_to_item))
+            items.push(...remaining_api_configurations.map(map_api_configuration_to_item))
           }
 
           const quick_pick = vscode.window.createQuickPick()
@@ -132,7 +132,7 @@ const stop_recording = async (panel_provider: PanelProvider) => {
 
           const selected = await new Promise<
             | (vscode.QuickPickItem & {
-                config?: ToolConfig
+                api_configuration?: ApiConfiguration
                 id?: string
               })
             | undefined
@@ -155,8 +155,8 @@ const stop_recording = async (panel_provider: PanelProvider) => {
             quick_pick.show()
           })
 
-          if (selected && selected.config) {
-            config = selected.config
+          if (selected && selected.api_configuration) {
+            api_configuration = selected.api_configuration
 
             let recents =
               panel_provider.context.workspaceState.get<string[]>(
@@ -183,25 +183,25 @@ const stop_recording = async (panel_provider: PanelProvider) => {
         cancellable: true
       })
 
-      const provider = await model_providers_manager.get_provider(
-        config!.provider_name
+      const model_provider = await model_providers_manager.get_model_provider(
+        api_configuration!.model_provider_name
       )
 
-      if (!provider) {
+      if (!model_provider) {
         vscode.window.showErrorMessage(
-          `Provider ${config.provider_name} not found.`
+          `Model Provider ${api_configuration.model_provider_name} not found.`
         )
         return
       }
 
-      const endpoint_url = provider.base_url
+      const endpoint_url = model_provider.base_url
 
       const instructions = vscode.workspace
         .getConfiguration('codeWebChat')
         .get<string>('voiceInputInstructions')
 
       const body: { [key: string]: any } = {
-        model: config.model,
+        model: api_configuration.model,
         messages: [
           {
             role: 'user',
@@ -224,15 +224,15 @@ const stop_recording = async (panel_provider: PanelProvider) => {
 
       apply_reasoning_effort({
         body,
-        provider,
-        reasoning_effort: config.reasoning_effort
+        model_provider,
+        reasoning_effort: api_configuration.reasoning_effort
       })
 
       panel_provider.api_call_cancel_token_source = axios.CancelToken.source()
 
       const result = await make_api_request({
         endpoint_url,
-        api_key: provider.api_key,
+        api_key: model_provider.api_key,
         body,
         cancellation_token: panel_provider.api_call_cancel_token_source.token
       })
@@ -282,9 +282,9 @@ export const handle_voice_input = async (
     const model_providers_manager = new ModelProvidersManager(
       panel_provider.context
     )
-    const configs = await model_providers_manager.get_tool_configs()
+    const api_configurations = await model_providers_manager.get_api_configurations()
 
-    if (configs.length == 0) {
+    if (api_configurations.length == 0) {
       vscode.window.showWarningMessage('No configuration found', {
         modal: true,
         detail:

@@ -1,20 +1,20 @@
 import * as vscode from 'vscode'
 import {
   ModelProvidersManager,
-  ToolConfig,
-  get_tool_config_id,
-  Provider
+  ApiConfiguration,
+  get_api_configuration_id,
+  ModelProvider
 } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
 import { ModelFetcher } from '@/services/model-fetcher'
 import {
-  edit_model_for_api_config,
-  edit_provider_for_api_config,
+  edit_model_for_api_configuration,
+  edit_provider_for_api_configuration,
   edit_reasoning_effort_for_api_config,
-  edit_temperature_for_api_config,
-  edit_system_instructions_override_for_api_config,
+  edit_temperature_for_api_configuration,
+  edit_system_instructions_override_for_api_configuration,
   initial_select_model,
-  initial_select_provider
+  initial_select_model_provider
 } from './interactions'
 import axios from 'axios'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
@@ -31,41 +31,41 @@ export const upsert_api_configuration = async (params: {
   const providers_manager = new ModelProvidersManager(params.context)
   const model_fetcher = new ModelFetcher()
 
-  let get_default_config: (() => Promise<ToolConfig | undefined>) | undefined
-  let set_default_config:
-    | ((config: ToolConfig | null) => Promise<void>)
+  let get_default_api_configuration: (() => Promise<ApiConfiguration | undefined>) | undefined
+  let set_default_api_configuration:
+    | ((api_configuration: ApiConfiguration | null) => Promise<void>)
     | undefined
 
   if (params.tool_type == 'code-at-cursor') {
-    get_default_config = () =>
-      providers_manager.get_default_code_completions_config()
-    set_default_config = (c) =>
-      providers_manager.set_default_code_completions_config(c)
+    get_default_api_configuration = () =>
+      providers_manager.get_default_code_completions_api_configuration()
+    set_default_api_configuration = (c) =>
+      providers_manager.set_default_code_completions_api_configuration(c)
   } else if (params.tool_type == 'commit-messages') {
-    get_default_config = () =>
-      providers_manager.get_default_commit_messages_config()
-    set_default_config = (c) =>
-      providers_manager.set_default_commit_messages_config(c)
+    get_default_api_configuration = () =>
+      providers_manager.get_default_commit_messages_api_configuration()
+    set_default_api_configuration = (c) =>
+      providers_manager.set_default_commit_messages_api_configuration(c)
   } else if (params.tool_type == 'intelligent-update') {
-    get_default_config = () =>
-      providers_manager.get_default_intelligent_update_config()
-    set_default_config = (c) =>
-      providers_manager.set_default_intelligent_update_config(c)
+    get_default_api_configuration = () =>
+      providers_manager.get_default_intelligent_update_api_configuration()
+    set_default_api_configuration = (c) =>
+      providers_manager.set_default_intelligent_update_api_configuration(c)
   } else if (params.tool_type == 'find-relevant-files') {
-    get_default_config = () =>
-      providers_manager.get_default_find_relevant_files_config()
-    set_default_config = (c) =>
-      providers_manager.set_default_find_relevant_files_config(c)
+    get_default_api_configuration = () =>
+      providers_manager.get_default_find_relevant_files_api_configuration()
+    set_default_api_configuration = (c) =>
+      providers_manager.set_default_find_relevant_files_api_configuration(c)
   } else if (params.tool_type == 'voice-input') {
-    get_default_config = () =>
-      providers_manager.get_default_voice_input_config()
-    set_default_config = (c) =>
-      providers_manager.set_default_voice_input_config(c)
+    get_default_api_configuration = () =>
+      providers_manager.get_default_voice_input_api_configuration()
+    set_default_api_configuration = (c) =>
+      providers_manager.set_default_voice_input_api_configuration(c)
   } else if (params.tool_type !== 'edit-context') {
     throw new Error(`Unknown tool type: ${params.tool_type}`)
   }
 
-  const configs = await providers_manager.get_tool_configs()
+  const api_configurations = await providers_manager.get_api_configurations()
 
   let actual_insertion_index: number | undefined
 
@@ -116,83 +116,83 @@ export const upsert_api_configuration = async (params: {
         : params.insertion_index + 1
   }
 
-  let config_to_edit: ToolConfig
+  let api_configuration_to_edit: ApiConfiguration
   let original_id: string | undefined
   let was_default = false
 
   if (params.api_configuration_id || params.duplicate_from_id) {
     const target_id = params.api_configuration_id || params.duplicate_from_id
-    const config_index = configs.findIndex(
-      (c) => get_tool_config_id(c) == target_id
+    const api_configuration_index = api_configurations.findIndex(
+      (c) => get_api_configuration_id(c) == target_id
     )
 
-    if (config_index == -1) {
+    if (api_configuration_index == -1) {
       vscode.window.showErrorMessage(
         dictionary.error_message.CONFIGURATION_NOT_FOUND
       )
       return
     }
 
-    config_to_edit = { ...configs[config_index] }
+    api_configuration_to_edit = { ...api_configurations[api_configuration_index] }
     if (params.api_configuration_id) {
       original_id = params.api_configuration_id
-      if (get_default_config) {
-        const def_config = await get_default_config()
-        if (def_config && get_tool_config_id(def_config) === original_id) {
+      if (get_default_api_configuration) {
+        const def_config = await get_default_api_configuration()
+        if (def_config && get_api_configuration_id(def_config) === original_id) {
           was_default = true
         }
       }
     } else if (params.duplicate_from_id) {
-      actual_insertion_index = config_index + 1
+      actual_insertion_index = api_configuration_index + 1
     }
   } else {
-    let selected_provider: Provider | undefined
+    let selected_model_provider: ModelProvider | undefined
     let selected_model: string | undefined
 
     while (true) {
-      selected_provider = await initial_select_provider(
+      selected_model_provider = await initial_select_model_provider(
         params.context,
         providers_manager,
-        selected_provider?.name
+        selected_model_provider?.name
       )
-      if (!selected_provider) return
+      if (!selected_model_provider) return
 
       selected_model = await initial_select_model(
         model_fetcher,
-        selected_provider,
+        selected_model_provider,
         params.tool_type
       )
       if (selected_model) break
     }
 
-    config_to_edit = {
-      provider_name: selected_provider!.name,
+    api_configuration_to_edit = {
+      model_provider_name: selected_model_provider!.name,
       model: selected_model,
       temperature: undefined
     }
   }
 
-  const updated_config = config_to_edit
-  const starting_config = { ...updated_config }
+  const updated_api_configuration = api_configuration_to_edit
+  const starting_api_configuration = { ...updated_api_configuration }
   let last_selected_label: string | undefined
 
   while (true) {
     const has_changes =
-      JSON.stringify(updated_config) !== JSON.stringify(starting_config)
+      JSON.stringify(updated_api_configuration) !== JSON.stringify(starting_api_configuration)
 
     const items: vscode.QuickPickItem[] = [
       {
         label: 'Model',
-        description: updated_config.provider_name,
-        detail: updated_config.model
+        description: updated_api_configuration.model_provider_name,
+        detail: updated_api_configuration.model
       }
     ]
 
     const reasoning_effort_item: vscode.QuickPickItem = {
       label: 'Reasoning Effort',
-      detail: updated_config.reasoning_effort
+      detail: updated_api_configuration.reasoning_effort
     }
-    if (updated_config.reasoning_effort) {
+    if (updated_api_configuration.reasoning_effort) {
       reasoning_effort_item.buttons = [
         { iconPath: new vscode.ThemeIcon('eraser'), tooltip: 'Unset' }
       ]
@@ -229,7 +229,7 @@ export const upsert_api_configuration = async (params: {
         disposables.push(
           quick_pick.onDidTriggerItemButton((e) => {
             if (e.item.label == 'Reasoning Effort') {
-              delete updated_config.reasoning_effort
+              delete updated_api_configuration.reasoning_effort
               accepted = true
               resolve({ label: 'REFRESH' })
               quick_pick.hide()
@@ -244,24 +244,24 @@ export const upsert_api_configuration = async (params: {
             if (button === close_button) {
               quick_pick.hide()
             } else if (button === discard_button) {
-              Object.keys(updated_config).forEach(
-                (key) => delete (updated_config as any)[key]
+              Object.keys(updated_api_configuration).forEach(
+                (key) => delete (updated_api_configuration as any)[key]
               )
-              Object.assign(updated_config, starting_config)
+              Object.assign(updated_api_configuration, starting_api_configuration)
 
               const reset_items: vscode.QuickPickItem[] = [
                 {
                   label: 'Model',
-                  description: updated_config.provider_name,
-                  detail: updated_config.model
+                  description: updated_api_configuration.model_provider_name,
+                  detail: updated_api_configuration.model
                 }
               ]
 
               const reset_reasoning_item: vscode.QuickPickItem = {
                 label: 'Reasoning Effort',
-                detail: updated_config.reasoning_effort
+                detail: updated_api_configuration.reasoning_effort
               }
-              if (updated_config.reasoning_effort) {
+              if (updated_api_configuration.reasoning_effort) {
                 reset_reasoning_item.buttons = [
                   {
                     iconPath: new vscode.ThemeIcon('clear-all'),
@@ -298,61 +298,61 @@ export const upsert_api_configuration = async (params: {
     const selected_option = selected_item.label
 
     if (selected_option == 'Model') {
-      let current_provider_name = updated_config.provider_name
+      let current_model_provider_name = updated_api_configuration.model_provider_name
 
       while (true) {
-        const new_provider = await edit_provider_for_api_config(
+        const new_model_provider = await edit_model_provider_for_api_configuration(
           providers_manager,
-          current_provider_name
+          current_model_provider_name
         )
 
-        if (!new_provider) {
+        if (!new_model_provider) {
           break
         }
 
-        current_provider_name = new_provider.provider_name
+        current_model_provider_name = new_model_provider.model_provider_name
 
-        const temp_config = {
-          ...updated_config,
-          provider_name: new_provider.provider_name,
+        const temp_api_configuration = {
+          ...updated_api_configuration,
+          model_provider_name: new_model_provider.model_provider_name,
           model:
-            new_provider.provider_name === updated_config.provider_name
-              ? updated_config.model
+            new_model_provider.model_provider_name === updated_api_configuration.model_provider_name
+              ? updated_api_configuration.model
               : ''
         }
-        const new_model = await edit_model_for_api_config({
-          config: temp_config,
+        const new_model = await edit_model_for_api_configuration({
+          api_configuration: temp_api_configuration,
           providers_manager,
           model_fetcher,
           tool_type: params.tool_type
         })
         if (new_model !== undefined) {
           if (
-            updated_config.provider_name != new_provider.provider_name ||
-            updated_config.model != new_model
+            updated_api_configuration.model_provider_name != new_model_provider.model_provider_name ||
+            updated_api_configuration.model != new_model
           ) {
-            delete updated_config.temperature
-            delete updated_config.reasoning_effort
+            delete updated_api_configuration.temperature
+            delete updated_api_configuration.reasoning_effort
           }
-          updated_config.provider_name = new_provider.provider_name
-          updated_config.model = new_model
+          updated_api_configuration.model_provider_name = new_model_provider.model_provider_name
+          updated_api_configuration.model = new_model
           break
         }
       }
     } else if (selected_option == 'Reasoning Effort') {
       while (true) {
         const new_effort = await edit_reasoning_effort_for_api_config(
-          updated_config.reasoning_effort
+          updated_api_configuration.reasoning_effort
         )
         if (new_effort === undefined) break
 
         let is_valid = true
         if (new_effort !== null) {
-          const provider = await providers_manager.get_provider(
-            updated_config.provider_name
+          const model_provider = await providers_manager.get_model_provider(
+            updated_api_configuration.model_provider_name
           )
-          if (provider) {
-            const base_url = provider.base_url
+          if (model_provider) {
+            const base_url = model_provider.base_url
 
             if (base_url) {
               try {
@@ -365,10 +365,10 @@ export const upsert_api_configuration = async (params: {
                   async (_progress, token) => {
                     await verify_reasoning_effort({
                       endpoint_url: base_url!,
-                      api_key: provider.api_key,
-                      model: updated_config.model,
+                      api_key: model_provider.api_key,
+                      model: updated_api_configuration.model,
                       reasoning_effort: new_effort as string,
-                      provider,
+                      model_provider,
                       cancellation_token: token
                     })
                   }
@@ -386,7 +386,7 @@ export const upsert_api_configuration = async (params: {
         }
 
         if (is_valid) {
-          updated_config.reasoning_effort =
+          updated_api_configuration.reasoning_effort =
             new_effort === null ? undefined : (new_effort as any)
           break
         }
@@ -397,9 +397,9 @@ export const upsert_api_configuration = async (params: {
         const temperature_item: vscode.QuickPickItem = {
           label: 'Temperature',
           description: 'Leave empty with reasoning models',
-          detail: updated_config.temperature?.toString()
+          detail: updated_api_configuration.temperature?.toString()
         }
-        if (updated_config.temperature != null) {
+        if (updated_api_configuration.temperature != null) {
           temperature_item.buttons = [
             { iconPath: new vscode.ThemeIcon('eraser'), tooltip: 'Unset' }
           ]
@@ -411,9 +411,9 @@ export const upsert_api_configuration = async (params: {
           const system_instr_item: vscode.QuickPickItem = {
             label: 'System Instructions',
             description: 'Overrides global system instructions',
-            detail: updated_config.system_instructions_override
+            detail: updated_api_configuration.system_instructions_override
           }
-          if (updated_config.system_instructions_override) {
+          if (updated_api_configuration.system_instructions_override) {
             system_instr_item.buttons = [
               { iconPath: new vscode.ThemeIcon('eraser'), tooltip: 'Unset' }
             ]
@@ -442,12 +442,12 @@ export const upsert_api_configuration = async (params: {
           disposables.push(
             quick_pick.onDidTriggerItemButton((e) => {
               if (e.item.label == 'Temperature') {
-                delete updated_config.temperature
+                delete updated_api_configuration.temperature
                 accepted = true
                 resolve({ label: 'REFRESH' })
                 quick_pick.hide()
               } else if (e.item.label === 'System Instructions') {
-                delete updated_config.system_instructions_override
+                delete updated_api_configuration.system_instructions_override
                 accepted = true
                 resolve({ label: 'REFRESH' })
                 quick_pick.hide()
@@ -478,16 +478,16 @@ export const upsert_api_configuration = async (params: {
         last_advanced_label = selected_advanced.label
 
         if (selected_advanced.label == 'Temperature') {
-          const new_temp = await edit_temperature_for_api_config(updated_config)
+          const new_temp = await edit_temperature_for_api_configuration(updated_api_configuration)
           if (new_temp !== undefined) {
-            updated_config.temperature =
+            updated_api_configuration.temperature =
               new_temp === null ? undefined : new_temp
           }
         } else if (selected_advanced.label == 'System Instructions') {
           const new_instr =
-            await edit_system_instructions_override_for_api_config(updated_config)
+            await edit_system_instructions_override_for_api_configuration(updated_api_configuration)
           if (new_instr !== undefined) {
-            updated_config.system_instructions_override =
+            updated_api_configuration.system_instructions_override =
               new_instr === null ? undefined : new_instr
           }
         }
@@ -495,19 +495,19 @@ export const upsert_api_configuration = async (params: {
     }
   }
 
-  const new_id = get_tool_config_id(updated_config)
+  const new_id = get_api_configuration_id(updated_api_configuration)
 
   if (original_id) {
-    const original_config = configs.find(
-      (c) => get_tool_config_id(c) === original_id
+    const original_api_configuration = api_configurations.find(
+      (c) => get_api_configuration_id(c) === original_id
     )
-    if (JSON.stringify(original_config) === JSON.stringify(updated_config)) {
+    if (JSON.stringify(original_api_configuration) === JSON.stringify(updated_api_configuration)) {
       return
     }
 
     if (
       new_id !== original_id &&
-      configs.some((c) => get_tool_config_id(c) === new_id)
+      api_configurations.some((c) => get_api_configuration_id(c) === new_id)
     ) {
       vscode.window.showErrorMessage(
         dictionary.error_message.CONFIGURATION_ALREADY_EXISTS
@@ -515,32 +515,32 @@ export const upsert_api_configuration = async (params: {
       return
     }
 
-    const index = configs.findIndex(
-      (c) => get_tool_config_id(c) === original_id
+    const index = api_configurations.findIndex(
+      (c) => get_api_configuration_id(c) === original_id
     )
     if (index !== -1) {
-      configs[index] = updated_config
+      api_configurations[index] = updated_api_configuration
     }
   } else {
-    if (configs.some((c) => get_tool_config_id(c) === new_id)) {
+    if (api_configurations.some((c) => get_api_configuration_id(c) === new_id)) {
       vscode.window.showErrorMessage(
         dictionary.error_message.CONFIGURATION_ALREADY_EXISTS
       )
       return
     }
     if (params.create_on_top) {
-      configs.unshift(updated_config)
+      api_configurations.unshift(updated_api_configuration)
     } else if (actual_insertion_index !== undefined) {
-      configs.splice(actual_insertion_index, 0, updated_config)
+      api_configurations.splice(actual_insertion_index, 0, updated_api_configuration)
     } else {
-      configs.push(updated_config)
+      api_configurations.push(updated_api_configuration)
     }
   }
 
-  await providers_manager.save_tool_configs(configs)
+  await providers_manager.save_api_configurations(api_configurations)
 
-  if (was_default && set_default_config) {
-    await set_default_config(updated_config)
+  if (was_default && set_default_api_configuration) {
+    await set_default_api_configuration(updated_api_configuration)
   }
 }
 
@@ -549,7 +549,7 @@ const verify_reasoning_effort = async (params: {
   api_key?: string
   model: string
   reasoning_effort: string
-  provider: Provider
+  model_provider: ModelProvider
   cancellation_token: vscode.CancellationToken
 }): Promise<void> => {
   const cancel_source = axios.CancelToken.source()
@@ -572,7 +572,7 @@ const verify_reasoning_effort = async (params: {
 
   apply_reasoning_effort({
     body,
-    provider: params.provider,
+    model_provider: params.model_provider,
     reasoning_effort: params.reasoning_effort as any
   })
 

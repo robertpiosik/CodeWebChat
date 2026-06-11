@@ -1,27 +1,27 @@
 import * as vscode from 'vscode'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 
-export const edit_provider_for_api_config = async (
+export const edit_model_provider_for_api_configuration = async (
   providers_manager: ModelProvidersManager,
-  current_provider_name?: string
+  current_model_provider_name?: string
 ) => {
-  const providers = await providers_manager.get_providers()
-  const provider_items = providers.map((p) => ({
+  const model_providers = await providers_manager.get_model_providers()
+  const model_provider_items = model_providers.map((p) => ({
     label: p.name,
-    provider: p
+    model_provider: p
   }))
-  const selected_provider_item = await new Promise<
-    (typeof provider_items)[0] | undefined
+  const selected_model_provider_item = await new Promise<
+    (typeof model_provider_items)[0] | undefined
   >((resolve) => {
     const quick_pick =
-      vscode.window.createQuickPick<(typeof provider_items)[0]>()
-    quick_pick.items = provider_items
+      vscode.window.createQuickPick<(typeof model_provider_items)[0]>()
+    quick_pick.items = model_provider_items
     quick_pick.title = 'Model Providers'
     quick_pick.placeholder = 'Select a model provider'
     quick_pick.buttons = [vscode.QuickInputButtons.Back]
-    if (current_provider_name) {
-      const active = provider_items.find(
-        (p) => p.label === current_provider_name
+    if (current_model_provider_name) {
+      const active = model_provider_items.find(
+        (p) => p.label === current_model_provider_name
       )
       if (active) quick_pick.activeItems = [active]
     }
@@ -48,10 +48,9 @@ export const edit_provider_for_api_config = async (
     quick_pick.show()
   })
 
-  if (selected_provider_item) {
+  if (selected_model_provider_item) {
     return {
-      provider_name: selected_provider_item.provider.name,
-      provider_type: selected_provider_item.provider.type
+      model_provider_name: selected_model_provider_item.model_provider.name
     }
   }
   return undefined

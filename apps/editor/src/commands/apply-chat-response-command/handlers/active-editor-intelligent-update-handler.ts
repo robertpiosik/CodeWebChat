@@ -9,7 +9,7 @@ import { sanitize_file_name, create_safe_path } from '@/utils/path-sanitizer'
 import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import {
-  ToolConfig,
+  ApiConfiguration,
   ModelProvidersManager
 } from '@/services/model-providers-manager'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
@@ -22,7 +22,7 @@ import {
 export const handle_active_editor_intelligent_update = async (params: {
   endpoint_url: string
   api_key: string
-  config: ToolConfig
+  api_configuration: ApiConfiguration
   chat_response: string
   context: vscode.ExtensionContext
   is_single_root_folder_workspace: boolean
@@ -122,14 +122,14 @@ export const handle_active_editor_intelligent_update = async (params: {
     const updated_content = await process_file({
       endpoint_url: params.endpoint_url,
       api_key: params.api_key,
-      provider: {
-        name: params.config.provider_name,
+      model_provider: {
+        name: params.api_configuration.model_provider_name,
         base_url: params.endpoint_url,
         api_key: params.api_key
       },
-      model: params.config.model,
-      temperature: params.config.temperature,
-      reasoning_effort: params.config.reasoning_effort,
+      model: params.api_configuration.model,
+      temperature: params.api_configuration.temperature,
+      reasoning_effort: params.api_configuration.reasoning_effort,
       file_path: target_file_path,
       file_content: original_content,
       instruction: file_item.content,
@@ -200,18 +200,18 @@ export const handle_active_editor_intelligent_update = async (params: {
       )
 
       const api_providers_manager = new ModelProvidersManager(params.context)
-      const config_result = await get_intelligent_update_config(
+      const api_configuration_result = await get_intelligent_update_config(
         api_providers_manager,
         true,
         params.context
       )
 
-      if (config_result) {
+      if (api_configuration_result) {
         return await handle_active_editor_intelligent_update({
           ...params,
-          endpoint_url: config_result.provider.base_url,
-          api_key: config_result.provider.api_key,
-          config: config_result.config
+          endpoint_url: api_configuration_result.model_provider.base_url,
+          api_key: api_configuration_result.model_provider.api_key,
+          api_configuration: api_configuration_result.api_configuration
         })
       }
     }

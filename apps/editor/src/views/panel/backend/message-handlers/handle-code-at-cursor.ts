@@ -4,9 +4,9 @@ import { code_at_cursor_instructions_for_panel } from '@/constants/instructions'
 import { FilesCollector } from '@/utils/files-collector'
 import {
   ModelProvidersManager,
-  ToolConfig,
-  Provider,
-  get_tool_config_id
+  ApiConfiguration,
+  ModelProvider,
+  get_api_configuration_id
 } from '@/services/model-providers-manager'
 import { Logger } from '@shared/utils/logger'
 import { RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY } from '@/constants/state-keys'
@@ -18,17 +18,17 @@ import { randomUUID } from 'crypto'
 import { build_user_content } from '@/utils/build-user-content'
 import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-symbols'
 
-const get_code_at_cursor_config = async (
+const get_code_at_cursor_api_configuration = async (
   api_providers_manager: ModelProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext,
   panel_provider: PanelProvider,
   api_configuration_id?: string
-): Promise<{ provider: Provider; config: ToolConfig } | undefined> => {
-  const code_completions_configs =
-    await api_providers_manager.get_tool_configs()
+): Promise<{ model_provider: ModelProvider; api_configuration: ApiConfiguration } | undefined> => {
+  const code_completions_api_configurations =
+    await api_providers_manager.get_api_configurations()
 
-  if (code_completions_configs.length == 0) {
+  if (code_completions_api_configurations.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
       dictionary.information_message.NO_CODE_AT_CURSOR_CONFIGURATIONS_FOUND
@@ -36,14 +36,14 @@ const get_code_at_cursor_config = async (
     return
   }
 
-  let selected_config: ToolConfig | null = null
+  let selected_api_configuration: ApiConfiguration | null = null
 
   if (api_configuration_id !== undefined) {
-    selected_config =
-      code_completions_configs.find(
-        (c) => get_tool_config_id(c) == api_configuration_id
+    selected_api_configuration =
+      code_completions_api_configurations.find(
+        (c) => get_api_configuration_id(c) == api_configuration_id
       ) || null
-    if (selected_config && panel_provider) {
+    if (selected_api_configuration && panel_provider) {
       panel_provider.send_message({
         command: 'SELECTED_API_CONFIGURATION_CHANGED',
         prompt_type: 'code-at-cursor',
@@ -56,86 +56,86 @@ const get_code_at_cursor_config = async (
     )
     const last_selected_id = recents?.[0]
     if (last_selected_id) {
-      selected_config =
-        code_completions_configs.find(
-          (c) => get_tool_config_id(c) === last_selected_id
+      selected_api_configuration =
+        code_completions_api_configurations.find(
+          (c) => get_api_configuration_id(c) === last_selected_id
         ) || null
     }
 
-    if (!selected_config && code_completions_configs.length > 0) {
-      selected_config = code_completions_configs[0]
+    if (!selected_api_configuration && code_completions_api_configurations.length > 0) {
+      selected_api_configuration = code_completions_api_configurations[0]
     }
   }
 
-  if (!selected_config || show_quick_pick) {
+  if (!selected_api_configuration || show_quick_pick) {
     const create_items = () => {
       const recent_ids =
         context.workspaceState.get<string[]>(
           RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
         ) || []
 
-      const matched_recent_configs: ToolConfig[] = []
-      const remaining_configs: ToolConfig[] = []
+      const matched_recent_api_configurations: ApiConfiguration[] = []
+      const remaining_api_configurations: ApiConfiguration[] = []
 
-      code_completions_configs.forEach((config) => {
-        const id = get_tool_config_id(config)
+      code_completions_api_configurations.forEach((api_configuration) => {
+        const id = get_api_configuration_id(api_configuration)
         if (recent_ids.includes(id)) {
-          matched_recent_configs.push(config)
+          matched_recent_api_configurations.push(api_configuration)
         } else {
-          remaining_configs.push(config)
+          remaining_api_configurations.push(api_configuration)
         }
       })
 
-      matched_recent_configs.sort((a, b) => {
-        const idA = get_tool_config_id(a)
-        const idB = get_tool_config_id(b)
+      matched_recent_api_configurations.sort((a, b) => {
+        const idA = get_api_configuration_id(a)
+        const idB = get_api_configuration_id(b)
         return recent_ids.indexOf(idA) - recent_ids.indexOf(idB)
       })
 
-      const recent_configs = matched_recent_configs
-      const other_configs = remaining_configs
+      const recent_api_configurations = matched_recent_api_configurations
+      const other_api_configurations = remaining_api_configurations
 
-      const map_config_to_item = (config: ToolConfig) => {
-        const description_parts = [config.provider_name]
-        if (config.temperature != null) {
-          description_parts.push(`${config.temperature}`)
+      const map_api_configuration_to_item = (api_configuration: ApiConfiguration) => {
+        const description_parts = [api_configuration.model_provider_name]
+        if (api_configuration.temperature != null) {
+          description_parts.push(`${api_configuration.temperature}`)
         }
-        if (config.reasoning_effort) {
-          description_parts.push(`${config.reasoning_effort}`)
+        if (api_configuration.reasoning_effort) {
+          description_parts.push(`${api_configuration.reasoning_effort}`)
         }
 
         const buttons: vscode.QuickInputButton[] = []
 
         return {
-          label: config.model,
+          label: api_configuration.model,
           description: description_parts.join(' · '),
           buttons,
-          config,
-          id: get_tool_config_id(config)
+          api_configuration,
+          id: get_api_configuration_id(api_configuration)
         }
       }
 
       const items: (vscode.QuickPickItem & {
-        config?: ToolConfig
+        api_configuration?: ApiConfiguration
         id?: string
       })[] = []
 
-      if (recent_configs.length > 0) {
+      if (recent_api_configurations.length > 0) {
         items.push({
           label: 'recently used',
           kind: vscode.QuickPickItemKind.Separator
         })
-        items.push(...recent_configs.map(map_config_to_item))
+        items.push(...recent_api_configurations.map(map_api_configuration_to_item))
       }
 
-      if (other_configs.length > 0) {
-        if (recent_configs.length > 0) {
+      if (other_api_configurations.length > 0) {
+        if (recent_api_configurations.length > 0) {
           items.push({
             label: 'other API configurations',
             kind: vscode.QuickPickItemKind.Separator
           })
         }
-        items.push(...other_configs.map(map_config_to_item))
+        items.push(...other_api_configurations.map(map_api_configuration_to_item))
       }
 
       return items
@@ -156,13 +156,13 @@ const get_code_at_cursor_config = async (
       }
     }
 
-    return new Promise<{ provider: Provider; config: ToolConfig } | undefined>(
+    return new Promise<{ model_provider: ModelProvider; api_configuration: ApiConfiguration } | undefined>(
       (resolve) => {
         quick_pick.onDidAccept(async () => {
           const selected = quick_pick.selectedItems[0] as any
           quick_pick.hide()
 
-          if (!selected || !selected.config) {
+          if (!selected || !selected.api_configuration) {
             resolve(undefined)
             return
           }
@@ -185,10 +185,10 @@ const get_code_at_cursor_config = async (
             })
           }
 
-          const provider = await api_providers_manager.get_provider(
-            selected.config.provider_name
+          const model_provider = await api_providers_manager.get_model_provider(
+            selected.api_configuration.model_provider_name
           )
-          if (!provider) {
+          if (!model_provider) {
             vscode.window.showErrorMessage(
               dictionary.error_message.API_PROVIDER_NOT_FOUND
             )
@@ -197,8 +197,8 @@ const get_code_at_cursor_config = async (
           }
 
           resolve({
-            provider,
-            config: selected.config
+            model_provider,
+            api_configuration: selected.api_configuration
           })
         })
 
@@ -215,24 +215,24 @@ const get_code_at_cursor_config = async (
     )
   }
 
-  const provider = await api_providers_manager.get_provider(
-    selected_config.provider_name
+  const model_provider = await api_providers_manager.get_model_provider(
+    selected_api_configuration.model_provider_name
   )
 
-  if (!provider) {
+  if (!model_provider) {
     vscode.window.showErrorMessage(
       dictionary.error_message.API_PROVIDER_NOT_FOUND
     )
     Logger.warn({
-      function_name: 'get_code_at_cursor_config',
+      function_name: 'get_code_at_cursor_api_configuration',
       message: 'API provider not found for Code Completions tool.'
     })
     return
   }
 
   return {
-    provider,
-    config: selected_config
+    model_provider,
+    api_configuration: selected_api_configuration
   }
 }
 
@@ -246,7 +246,7 @@ export const handle_code_at_cursor = async (
   const completion_instructions =
     panel_provider.current_code_at_cursor_instruction
 
-  const config_result = await get_code_at_cursor_config(
+  const api_configuration_result = await get_code_at_cursor_api_configuration(
     api_providers_manager,
     message.use_quick_pick,
     panel_provider.context,
@@ -254,13 +254,13 @@ export const handle_code_at_cursor = async (
     message.api_configuration_id
   )
 
-  if (!config_result) {
+  if (!api_configuration_result) {
     return
   }
 
-  const { provider, config: code_completions_config } = config_result
+  const { model_provider, api_configuration: code_completions_api_configuration } = api_configuration_result
 
-  if (!code_completions_config.provider_name) {
+  if (!code_completions_api_configuration.model_provider_name) {
     vscode.window.showErrorMessage(
       dictionary.error_message.API_PROVIDER_NOT_SPECIFIED_FOR_CODE_AT_CURSOR
     )
@@ -269,7 +269,7 @@ export const handle_code_at_cursor = async (
       message: 'API provider is not specified for Code Completions tool.'
     })
     return
-  } else if (!code_completions_config.model) {
+  } else if (!code_completions_api_configuration.model) {
     vscode.window.showErrorMessage(
       dictionary.error_message.MODEL_NOT_SPECIFIED_FOR_CODE_AT_CURSOR
     )
@@ -280,7 +280,7 @@ export const handle_code_at_cursor = async (
     return
   }
 
-  const endpoint_url = provider.base_url
+  const endpoint_url = model_provider.base_url
 
   const editor = vscode.window.activeTextEditor
   if (editor) {
@@ -333,7 +333,7 @@ export const handle_code_at_cursor = async (
     }${text_after_cursor}\n]]>\n</file>\n</files>\n${skill_definitions}${main_instructions}`
 
     const user_content = build_user_content({
-      provider_name: provider.name,
+      model_provider_name: model_provider.name,
       part1,
       part2
     })
@@ -347,14 +347,14 @@ export const handle_code_at_cursor = async (
 
     const body: { [key: string]: any } = {
       messages,
-      model: code_completions_config.model,
-      temperature: code_completions_config.temperature
+      model: code_completions_api_configuration.model,
+      temperature: code_completions_api_configuration.temperature
     }
 
     apply_reasoning_effort({
       body,
-      provider,
-      reasoning_effort: code_completions_config.reasoning_effort
+      model_provider,
+      reasoning_effort: code_completions_api_configuration.reasoning_effort
     })
 
     let error_occurred = false
@@ -366,12 +366,12 @@ export const handle_code_at_cursor = async (
         try {
           const result = await panel_provider.api_manager.get({
             endpoint_url,
-            api_key: provider.api_key,
+            api_key: model_provider.api_key,
             body,
             request_id,
-            provider_name: code_completions_config.provider_name,
-            model: code_completions_config.model,
-            reasoning_effort: code_completions_config.reasoning_effort
+            provider_name: code_completions_api_configuration.model_provider_name,
+            model: code_completions_api_configuration.model,
+            reasoning_effort: code_completions_api_configuration.reasoning_effort
           })
 
           if (result) {
@@ -388,9 +388,9 @@ export const handle_code_at_cursor = async (
                   }
                 },
                 recent_api_configuration: {
-                  provider: code_completions_config.provider_name,
-                  model: code_completions_config.model,
-                  reasoning_effort: code_completions_config.reasoning_effort
+                  model_provider: code_completions_api_configuration.model_provider_name,
+                  model: code_completions_api_configuration.model,
+                  reasoning_effort: code_completions_api_configuration.reasoning_effort
                 }
               }
             )

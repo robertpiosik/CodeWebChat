@@ -3,9 +3,9 @@ import { FilesCollector } from '@/utils/files-collector'
 import { Logger } from '@shared/utils/logger'
 import {
   ModelProvidersManager,
-  get_tool_config_id,
-  Provider,
-  ToolConfig
+  get_api_configuration_id,
+  ModelProvider,
+  ApiConfiguration
 } from '@/services/model-providers-manager'
 import axios from 'axios'
 import {
@@ -23,17 +23,17 @@ import {
 import { build_user_content } from '@/utils/build-user-content'
 import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-symbols'
 
-const get_find_relevant_files_config = async (params: {
+const get_find_relevant_files_api_configuration = async (params: {
   api_providers_manager: ModelProvidersManager
   show_quick_pick?: boolean
   context: vscode.ExtensionContext
   panel_provider: PanelProvider
   api_configuration_id?: string
-}): Promise<{ provider: Provider; config: ToolConfig } | undefined> => {
-  const find_relevant_files_configs =
-    await params.api_providers_manager.get_tool_configs()
+}): Promise<{ model_provider: ModelProvider; api_configuration: ApiConfiguration } | undefined> => {
+  const find_relevant_files_api_configurations =
+    await params.api_providers_manager.get_api_configurations()
 
-  if (find_relevant_files_configs.length == 0) {
+  if (find_relevant_files_api_configurations.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
       dictionary.information_message.NO_FIND_RELEVANT_FILES_CONFIGURATIONS_FOUND
@@ -41,14 +41,14 @@ const get_find_relevant_files_config = async (params: {
     return
   }
 
-  let selected_config: ToolConfig | null = null
+  let selected_api_configuration: ApiConfiguration | null = null
 
   if (params.api_configuration_id !== undefined) {
-    selected_config =
-      find_relevant_files_configs.find(
-        (c) => get_tool_config_id(c) == params.api_configuration_id
+    selected_api_configuration =
+      find_relevant_files_api_configurations.find(
+        (c) => get_api_configuration_id(c) == params.api_configuration_id
       ) || null
-    if (selected_config) {
+    if (selected_api_configuration) {
       let recents =
         params.context.workspaceState.get<string[]>(
           RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY
@@ -77,16 +77,16 @@ const get_find_relevant_files_config = async (params: {
     const last_selected_id = recents?.[0]
 
     if (last_selected_id) {
-      selected_config =
-        find_relevant_files_configs.find(
-          (c) => get_tool_config_id(c) == last_selected_id
+      selected_api_configuration =
+        find_relevant_files_api_configurations.find(
+          (c) => get_api_configuration_id(c) == last_selected_id
         ) || null
     }
   }
 
-  if (!selected_config || params.show_quick_pick) {
+  if (!selected_api_configuration || params.show_quick_pick) {
     type Item = vscode.QuickPickItem & {
-      config?: ToolConfig
+      api_configuration?: ApiConfiguration
       id?: string
     }
     const create_items = async (): Promise<Item[]> => {
@@ -95,65 +95,65 @@ const get_find_relevant_files_config = async (params: {
           RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY
         ) || []
 
-      const matched_recent_configs: ToolConfig[] = []
-      const remaining_configs: ToolConfig[] = []
+      const matched_recent_api_configurations: ApiConfiguration[] = []
+      const remaining_api_configurations: ApiConfiguration[] = []
 
-      find_relevant_files_configs.forEach((config) => {
-        const id = get_tool_config_id(config)
+      find_relevant_files_api_configurations.forEach((api_configuration) => {
+        const id = get_api_configuration_id(api_configuration)
         if (recent_ids.includes(id)) {
-          matched_recent_configs.push(config)
+          matched_recent_api_configurations.push(api_configuration)
         } else {
-          remaining_configs.push(config)
+          remaining_api_configurations.push(api_configuration)
         }
       })
 
-      matched_recent_configs.sort((a, b) => {
-        const idA = get_tool_config_id(a)
-        const idB = get_tool_config_id(b)
+      matched_recent_api_configurations.sort((a, b) => {
+        const idA = get_api_configuration_id(a)
+        const idB = get_api_configuration_id(b)
         return recent_ids.indexOf(idA) - recent_ids.indexOf(idB)
       })
 
-      const recent_configs = matched_recent_configs
-      const other_configs = remaining_configs
+      const recent_api_configurations = matched_recent_api_configurations
+      const other_api_configurations = remaining_api_configurations
 
-      const map_config_to_item = (config: ToolConfig) => {
-        const description_parts = [config.provider_name]
-        if (config.temperature != null) {
-          description_parts.push(`${config.temperature}`)
+      const map_api_configuration_to_item = (api_configuration: ApiConfiguration) => {
+        const description_parts = [api_configuration.model_provider_name]
+        if (api_configuration.temperature != null) {
+          description_parts.push(`${api_configuration.temperature}`)
         }
-        if (config.reasoning_effort) {
-          description_parts.push(`${config.reasoning_effort}`)
+        if (api_configuration.reasoning_effort) {
+          description_parts.push(`${api_configuration.reasoning_effort}`)
         }
 
         const buttons: vscode.QuickInputButton[] = []
 
         return {
-          label: config.model,
+          label: api_configuration.model,
           description: description_parts.join(' · '),
           buttons,
-          config,
-          id: get_tool_config_id(config)
+          api_configuration,
+          id: get_api_configuration_id(api_configuration)
         }
       }
 
       const items: Item[] = []
 
-      if (recent_configs.length > 0) {
+      if (recent_api_configurations.length > 0) {
         items.push({
           label: 'recently used',
           kind: vscode.QuickPickItemKind.Separator
         })
-        items.push(...recent_configs.map(map_config_to_item))
+        items.push(...recent_api_configurations.map(map_api_configuration_to_item))
       }
 
-      if (other_configs.length > 0) {
-        if (recent_configs.length > 0) {
+      if (other_api_configurations.length > 0) {
+        if (recent_api_configurations.length > 0) {
           items.push({
             label: 'other API configurations',
             kind: vscode.QuickPickItemKind.Separator
           })
         }
-        items.push(...other_configs.map(map_config_to_item))
+        items.push(...other_api_configurations.map(map_api_configuration_to_item))
       }
 
       return items
@@ -189,7 +189,7 @@ const get_find_relevant_files_config = async (params: {
       }
     }
 
-    return new Promise<{ provider: Provider; config: ToolConfig } | undefined>(
+    return new Promise<{ model_provider: ModelProvider; api_configuration: ApiConfiguration } | undefined>(
       (resolve) => {
         let accepted = false
 
@@ -205,7 +205,7 @@ const get_find_relevant_files_config = async (params: {
           const selected = quick_pick.selectedItems[0]
           quick_pick.hide()
 
-          if (!selected || !selected.config) {
+          if (!selected || !selected.api_configuration) {
             resolve(undefined)
             return
           }
@@ -231,10 +231,10 @@ const get_find_relevant_files_config = async (params: {
             })
           }
 
-          const provider = await params.api_providers_manager.get_provider(
-            selected.config.provider_name
+          const model_provider = await params.api_providers_manager.get_model_provider(
+            selected.api_configuration.model_provider_name
           )
-          if (!provider) {
+          if (!model_provider) {
             vscode.window.showErrorMessage(
               dictionary.error_message.API_PROVIDER_NOT_FOUND
             )
@@ -243,8 +243,8 @@ const get_find_relevant_files_config = async (params: {
           }
 
           resolve({
-            provider,
-            config: selected.config
+            model_provider,
+            api_configuration: selected.api_configuration
           })
         })
 
@@ -260,24 +260,24 @@ const get_find_relevant_files_config = async (params: {
     )
   }
 
-  const provider = await params.api_providers_manager.get_provider(
-    selected_config.provider_name
+  const model_provider = await params.api_providers_manager.get_model_provider(
+    selected_api_configuration.model_provider_name
   )
 
-  if (!provider) {
+  if (!model_provider) {
     vscode.window.showErrorMessage(
       dictionary.error_message.API_PROVIDER_NOT_FOUND
     )
     Logger.warn({
-      function_name: 'get_find_relevant_files_config',
+      function_name: 'get_find_relevant_files_api_configuration',
       message: 'API provider not found for Find Relevant Files tool.'
     })
     return
   }
 
   return {
-    provider,
-    config: selected_config
+    model_provider,
+    api_configuration: selected_api_configuration
   }
 }
 
@@ -337,7 +337,7 @@ export const handle_find_relevant_files = async (
   let should_show_quick_pick = message.use_quick_pick
 
   while (true) {
-    const config_result = await get_find_relevant_files_config({
+    const api_configuration_result = await get_find_relevant_files_api_configuration({
       api_providers_manager,
       show_quick_pick: should_show_quick_pick,
       context: panel_provider.context,
@@ -345,15 +345,15 @@ export const handle_find_relevant_files = async (
       api_configuration_id: current_api_configuration_id
     })
 
-    if (!config_result) {
+    if (!api_configuration_result) {
       return
     }
 
     panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
 
-    const { provider, config: find_relevant_files_config } = config_result
+    const { model_provider, api_configuration: find_relevant_files_api_configuration } = api_configuration_result
 
-    const endpoint_url = provider.base_url
+    const endpoint_url = model_provider.base_url
 
     const system_instructions_xml = `${find_relevant_files_format_for_panel}\n${find_relevant_files_instructions}`
 
@@ -361,7 +361,7 @@ export const handle_find_relevant_files = async (
     const part2 = `${collected.recent_files}</files>\n${skill_definitions}${system_instructions_xml}\n${processed_instructions}`
 
     const user_content = build_user_content({
-      provider_name: provider.name,
+      model_provider_name: model_provider.name,
       part1,
       part2,
       disable_cache: true
@@ -376,24 +376,24 @@ export const handle_find_relevant_files = async (
 
     const body: { [key: string]: any } = {
       messages,
-      model: find_relevant_files_config.model,
-      temperature: find_relevant_files_config.temperature
+      model: find_relevant_files_api_configuration.model,
+      temperature: find_relevant_files_api_configuration.temperature
     }
 
     apply_reasoning_effort({
       body,
-      provider,
-      reasoning_effort: find_relevant_files_config.reasoning_effort
+      model_provider,
+      reasoning_effort: find_relevant_files_api_configuration.reasoning_effort
     })
 
     try {
       const result = await panel_provider.api_manager.get({
         endpoint_url,
-        api_key: provider.api_key,
+        api_key: model_provider.api_key,
         body,
-        provider_name: find_relevant_files_config.provider_name,
-        model: find_relevant_files_config.model,
-        reasoning_effort: find_relevant_files_config.reasoning_effort
+        provider_name: find_relevant_files_api_configuration.model_provider_name,
+        model: find_relevant_files_api_configuration.model,
+        reasoning_effort: find_relevant_files_api_configuration.reasoning_effort
       })
 
       if (result) {
@@ -401,9 +401,9 @@ export const handle_find_relevant_files = async (
           response: result.response,
           raw_instructions: instructions,
           recent_api_configuration: {
-            provider: find_relevant_files_config.provider_name,
-            model: find_relevant_files_config.model,
-            reasoning_effort: find_relevant_files_config.reasoning_effort
+            model_provider: find_relevant_files_api_configuration.model_provider_name,
+            model: find_relevant_files_api_configuration.model,
+            reasoning_effort: find_relevant_files_api_configuration.reasoning_effort
           }
         })
         return

@@ -96,17 +96,17 @@ export const handle_intelligent_update_file_in_preview = async (
   const api_providers_manager = new ModelProvidersManager(
     panel_provider.context
   )
-  const config_result = await get_intelligent_update_config(
+  const api_configuration_result = await get_intelligent_update_config(
     api_providers_manager,
     force_model_selection ?? false,
     panel_provider.context
   )
-  if (!config_result) return
+  if (!api_configuration_result) return
 
-  const { provider: api_provider, config: intelligent_update_config } =
-    config_result
+  const { model_provider: api_model_provider, api_configuration: intelligent_update_api_configuration } =
+    api_configuration_result
 
-  const endpoint_url = api_provider.base_url
+  const endpoint_url = api_model_provider.base_url
 
   const default_workspace_path =
     vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
@@ -174,11 +174,11 @@ export const handle_intelligent_update_file_in_preview = async (
 
   const content_promise = process_file({
     endpoint_url: endpoint_url,
-    api_key: api_provider.api_key,
-    provider: api_provider,
-    model: intelligent_update_config.model,
-    temperature: intelligent_update_config.temperature,
-    reasoning_effort: intelligent_update_config.reasoning_effort,
+    api_key: api_model_provider.api_key,
+    model_provider: api_model_provider,
+    model: intelligent_update_api_configuration.model,
+    temperature: intelligent_update_api_configuration.temperature,
+    reasoning_effort: intelligent_update_api_configuration.reasoning_effort,
     file_path: file_path,
     file_content: file_state.content,
     instruction: instructions,

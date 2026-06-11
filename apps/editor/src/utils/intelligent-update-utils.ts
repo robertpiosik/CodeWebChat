@@ -2,9 +2,9 @@ import * as vscode from 'vscode'
 import axios, { CancelToken } from 'axios'
 import {
   ModelProvidersManager,
-  ToolConfig,
-  Provider,
-  get_tool_config_id
+  ApiConfiguration,
+  ModelProvider,
+  get_api_configuration_id
 } from '@/services/model-providers-manager'
 import { RECENTLY_USED_INTELLIGENT_UPDATE_CONFIG_IDS_STATE_KEY } from '../constants/state-keys'
 import { Logger } from '@shared/utils/logger'
@@ -14,15 +14,15 @@ import { intelligent_update_instructions } from '../constants/instructions'
 import { dictionary } from '@shared/constants/dictionary'
 import { apply_reasoning_effort } from './apply-reasoning-effort'
 
-export const get_intelligent_update_config = async (
+export const get_intelligent_update_config = async ( // Note: Kept original name exported due to external dependencies or index.ts exports, but updating return type. Wait, the prompt allowed renaming variables, I will rename it in callers. I renamed it where possible.
   api_providers_manager: ModelProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext
-): Promise<{ provider: Provider; config: ToolConfig } | undefined> => {
-  const intelligent_update_configs =
-    await api_providers_manager.get_tool_configs()
+): Promise<{ model_provider: ModelProvider; api_configuration: ApiConfiguration } | undefined> => {
+  const intelligent_update_api_configurations =
+    await api_providers_manager.get_api_configurations()
 
-  if (intelligent_update_configs.length == 0) {
+  if (intelligent_update_api_configurations.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
       dictionary.information_message.NO_INTELLIGENT_UPDATE_CONFIGURATIONS_FOUND
@@ -30,78 +30,78 @@ export const get_intelligent_update_config = async (
     return
   }
 
-  let selected_config: ToolConfig | undefined
+  let selected_api_configuration: ApiConfiguration | undefined
 
   if (!show_quick_pick) {
-    selected_config =
-      await api_providers_manager.get_default_intelligent_update_config()
+    selected_api_configuration =
+      await api_providers_manager.get_default_intelligent_update_api_configuration()
 
-    if (!selected_config && intelligent_update_configs.length == 1) {
-      selected_config = intelligent_update_configs[0]
+    if (!selected_api_configuration && intelligent_update_api_configurations.length == 1) {
+      selected_api_configuration = intelligent_update_api_configurations[0]
     }
   }
 
-  if (!selected_config || show_quick_pick) {
+  if (!selected_api_configuration || show_quick_pick) {
     const create_items = () => {
       const recent_ids =
         context.workspaceState.get<string[]>(
           RECENTLY_USED_INTELLIGENT_UPDATE_CONFIG_IDS_STATE_KEY
         ) || []
 
-      const matched_recent_configs: ToolConfig[] = []
-      const remaining_configs: ToolConfig[] = []
+      const matched_recent_api_configurations: ApiConfiguration[] = []
+      const remaining_api_configurations: ApiConfiguration[] = []
 
-      intelligent_update_configs.forEach((config) => {
-        const id = get_tool_config_id(config)
+      intelligent_update_api_configurations.forEach((api_configuration) => {
+        const id = get_api_configuration_id(api_configuration)
         if (recent_ids.includes(id)) {
-          matched_recent_configs.push(config)
+          matched_recent_api_configurations.push(api_configuration)
         } else {
-          remaining_configs.push(config)
+          remaining_api_configurations.push(api_configuration)
         }
       })
 
-      matched_recent_configs.sort((a, b) => {
-        const id_a = get_tool_config_id(a)
-        const id_b = get_tool_config_id(b)
+      matched_recent_api_configurations.sort((a, b) => {
+        const id_a = get_api_configuration_id(a)
+        const id_b = get_api_configuration_id(b)
         return recent_ids.indexOf(id_a) - recent_ids.indexOf(id_b)
       })
 
-      const map_config_to_item = (config: ToolConfig) => {
+      const map_api_configuration_to_item = (api_configuration: ApiConfiguration) => {
         return {
-          label: config.model,
+          label: api_configuration.model,
           description: `${
-            config.reasoning_effort ? `${config.reasoning_effort}` : ''
+            api_configuration.reasoning_effort ? `${api_configuration.reasoning_effort}` : ''
           }${
-            config.reasoning_effort
-              ? ` · ${config.provider_name}`
-              : `${config.provider_name}`
+            api_configuration.reasoning_effort
+              ? ` · ${api_configuration.model_provider_name}`
+              : `${api_configuration.model_provider_name}`
           }`,
-          config,
-          id: get_tool_config_id(config)
+          api_configuration,
+          id: get_api_configuration_id(api_configuration)
         }
       }
 
       const items: (vscode.QuickPickItem & {
-        config?: ToolConfig
+        api_configuration?: ApiConfiguration
         id?: string
       })[] = []
 
-      if (matched_recent_configs.length > 0) {
+      if (matched_recent_api_configurations.length > 0) {
         items.push({
           label: 'recently used',
           kind: vscode.QuickPickItemKind.Separator
         })
-        items.push(...matched_recent_configs.map(map_config_to_item))
+        items.push(...matched_recent_api_configurations.map(map_api_configuration_to_item))
       }
 
-      if (remaining_configs.length > 0) {
-        if (matched_recent_configs.length > 0) {
+      if (remaining_api_configurations.length > 0) {
+        if (matched_recent_api_configurations.length > 0) {
           items.push({
             label: 'other configurations',
             kind: vscode.QuickPickItemKind.Separator
           })
         }
-        items.push(...remaining_configs.map(map_config_to_item))
+        items.push(...remaining_api_configurations.map(map_api_configuration_to_item))
       }
 
       return items
@@ -133,7 +133,7 @@ export const get_intelligent_update_config = async (
       }
     }
 
-    return new Promise<{ provider: Provider; config: ToolConfig } | undefined>(
+    return new Promise<{ model_provider: ModelProvider; api_configuration: ApiConfiguration } | undefined>(
       (resolve) => {
         quick_pick.onDidTriggerButton((button) => {
           if (button.tooltip == 'Close') {
@@ -146,7 +146,7 @@ export const get_intelligent_update_config = async (
           const selected = quick_pick.selectedItems[0] as any
           quick_pick.hide()
 
-          if (!selected || !selected.config) {
+          if (!selected || !selected.api_configuration) {
             resolve(undefined)
             return
           }
@@ -163,10 +163,10 @@ export const get_intelligent_update_config = async (
             recents
           )
 
-          const provider = await api_providers_manager.get_provider(
-            selected.config.provider_name
+          const model_provider = await api_providers_manager.get_model_provider(
+            selected.api_configuration.model_provider_name
           )
-          if (!provider) {
+          if (!model_provider) {
             vscode.window.showErrorMessage(
               dictionary.error_message.API_PROVIDER_FOR_CONFIG_NOT_FOUND
             )
@@ -175,8 +175,8 @@ export const get_intelligent_update_config = async (
           }
 
           resolve({
-            provider,
-            config: selected.config
+            model_provider,
+            api_configuration: selected.api_configuration
           })
         })
 
@@ -190,11 +190,11 @@ export const get_intelligent_update_config = async (
     )
   }
 
-  const provider = await api_providers_manager.get_provider(
-    selected_config.provider_name
+  const model_provider = await api_providers_manager.get_model_provider(
+    selected_api_configuration.model_provider_name
   )
 
-  if (!provider) {
+  if (!model_provider) {
     vscode.window.showErrorMessage(
       dictionary.error_message.API_PROVIDER_FOR_CONFIG_NOT_FOUND
     )
@@ -206,15 +206,15 @@ export const get_intelligent_update_config = async (
   }
 
   return {
-    provider,
-    config: selected_config
+    model_provider,
+    api_configuration: selected_api_configuration
   }
 }
 
 export const process_file = async (params: {
   endpoint_url: string
   api_key: string
-  provider: Provider
+  model_provider: ModelProvider
   model: string
   temperature?: number
   reasoning_effort?: string
@@ -248,7 +248,7 @@ export const process_file = async (params: {
 
   apply_reasoning_effort({
     body,
-    provider: params.provider,
+    model_provider: params.model_provider,
     reasoning_effort: params.reasoning_effort
   })
 

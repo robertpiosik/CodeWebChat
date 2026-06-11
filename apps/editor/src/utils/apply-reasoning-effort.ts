@@ -1,11 +1,11 @@
-import { ToolConfig, Provider } from '@/services/model-providers-manager'
+import { ApiConfiguration, ModelProvider } from '@/services/model-providers-manager'
 
 export const apply_reasoning_effort = (params: {
   body: { [key: string]: any }
-  provider: Provider
-  reasoning_effort?: ToolConfig['reasoning_effort']
+  model_provider: ModelProvider
+  reasoning_effort?: ApiConfiguration['reasoning_effort']
 }) => {
-  if (params.provider.base_url == 'https://openrouter.ai/api/v1') {
+  if (params.model_provider.base_url == 'https://openrouter.ai/api/v1') {
     if (params.reasoning_effort) {
       if (params.reasoning_effort == 'none') {
         params.body.reasoning = { enabled: false }
@@ -14,7 +14,7 @@ export const apply_reasoning_effort = (params: {
       }
     }
   } else if (
-    params.provider.base_url ==
+    params.model_provider.base_url ==
     'https://generativelanguage.googleapis.com/v1beta/openai/v1'
   ) {
     params.body.extra_body = {

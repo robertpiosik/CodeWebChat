@@ -10,7 +10,7 @@ import { get_target_folder_path } from './utils/get-target-folder-path'
 import { prompt_for_instructions } from './utils/prompt-for-instructions'
 import { analyze_workspace_files } from './utils/analyze-workspace-files'
 import { prompt_for_shrink_mode } from './utils/prompt-for-shrink-mode'
-import { prompt_for_config } from './utils/prompt-for-config'
+import { prompt_for_api_configuration } from './utils/prompt-for-config'
 import { fetch_relevant_files_from_api } from './utils/fetch-relevant-files-from-api'
 import { show_results_and_apply } from './utils/show-results-and-apply'
 
@@ -75,9 +75,9 @@ export const find_relevant_files_command = (
           const api_providers_manager = new ModelProvidersManager(
             extension_context
           )
-          const configs = await api_providers_manager.get_tool_configs()
+          const api_configurations = await api_providers_manager.get_api_configurations()
 
-          if (configs.length == 0) {
+          if (api_configurations.length == 0) {
             vscode.commands.executeCommand('codeWebChat.settings')
             vscode.window.showInformationMessage(
               t('command.find-relevant-files.error.no-configs')
@@ -91,34 +91,34 @@ export const find_relevant_files_command = (
             const tokens_to_process = shrink_result
               ? analysis.shrink_tokens
               : analysis.full_tokens
-            const config_result = await prompt_for_config({
+            const api_configuration_result = await prompt_for_api_configuration({
               api_providers_manager,
               extension_context,
-              configs,
+              api_configurations,
               tokens_to_process,
               force_prompt
             })
 
             force_prompt = false
 
-            if (config_result === 'back') {
+            if (api_configuration_result === 'back') {
               go_back_to_shrink = true
               break
             }
-            if (config_result === 'cancel') return
+            if (api_configuration_result === 'cancel') return
 
             const {
-              config: selected_config,
-              provider,
-              skipped: skipped_config
-            } = config_result
+              api_configuration: selected_api_configuration,
+              model_provider,
+              skipped: skipped_api_configuration
+            } = api_configuration_result
 
             const api_result = await fetch_relevant_files_from_api(
               analysis.files_data,
               shrink_result as boolean,
               instructions,
-              provider,
-              selected_config
+              model_provider,
+              selected_api_configuration
             )
 
             if (api_result === 'cancel') return
@@ -142,7 +142,7 @@ export const find_relevant_files_command = (
             })
 
             if (apply_result === 'back') {
-              if (skipped_config) {
+              if (skipped_api_configuration) {
                 go_back_to_shrink = true
                 break
               } else continue

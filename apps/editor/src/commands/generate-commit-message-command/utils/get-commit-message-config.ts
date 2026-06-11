@@ -1,8 +1,8 @@
 import * as vscode from 'vscode'
 import {
   ModelProvidersManager,
-  get_tool_config_id,
-  ToolConfig
+  get_api_configuration_id,
+  ApiConfiguration
 } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
@@ -10,37 +10,37 @@ import { display_token_count } from '@/utils/display-token-count'
 import { RECENTLY_USED_COMMIT_MESSAGES_CONFIG_IDS_STATE_KEY } from '@/constants/state-keys'
 import { t } from '@/i18n'
 
-export interface CommitMessageConfig {
-  provider_name: string
+export interface CommitMessageApiConfiguration {
+  model_provider_name: string
   model: string
   temperature?: number
   reasoning_effort?: string
 }
 
-export const get_commit_message_config = async (
+export const get_commit_message_api_configuration = async (
   context: vscode.ExtensionContext,
   show_back_button: boolean = true,
   force_quick_pick: boolean = false,
   token_count?: number
 ): Promise<
   | {
-      config: CommitMessageConfig
-      provider: any
+      api_configuration: CommitMessageApiConfiguration
+      model_provider: any
       endpoint_url: string
     }
   | 'back'
   | null
 > => {
   const api_providers_manager = new ModelProvidersManager(context)
-  let commit_message_config: CommitMessageConfig | null | undefined | 'back' =
+  let commit_message_api_configuration: CommitMessageApiConfiguration | null | undefined | 'back' =
     force_quick_pick
       ? undefined
-      : await api_providers_manager.get_default_commit_messages_config()
+      : await api_providers_manager.get_default_commit_messages_api_configuration()
 
-  if (!commit_message_config) {
-    const configs = await api_providers_manager.get_tool_configs()
+  if (!commit_message_api_configuration) {
+    const api_configurations = await api_providers_manager.get_api_configurations()
 
-    if (configs.length == 0) {
+    if (api_configurations.length == 0) {
       vscode.commands.executeCommand('codeWebChat.settings')
       vscode.window.showInformationMessage(
         dictionary.information_message.NO_COMMIT_MESSAGES_CONFIGURATIONS_FOUND
@@ -48,74 +48,74 @@ export const get_commit_message_config = async (
       return null
     }
 
-    if (configs.length == 1 && !force_quick_pick) {
-      commit_message_config = configs[0]
-    } else if (configs.length >= 1) {
+    if (api_configurations.length == 1 && !force_quick_pick) {
+      commit_message_api_configuration = api_configurations[0]
+    } else if (api_configurations.length >= 1) {
       const create_items = () => {
         const recent_ids =
           context.workspaceState.get<string[]>(
             RECENTLY_USED_COMMIT_MESSAGES_CONFIG_IDS_STATE_KEY
           ) || []
 
-        const matched_recent_configs: ToolConfig[] = []
-        const remaining_configs: ToolConfig[] = []
+        const matched_recent_api_configurations: ApiConfiguration[] = []
+        const remaining_api_configurations: ApiConfiguration[] = []
 
-        configs.forEach((config) => {
-          const id = get_tool_config_id(config)
+        api_configurations.forEach((api_configuration) => {
+          const id = get_api_configuration_id(api_configuration)
           if (recent_ids.includes(id)) {
-            matched_recent_configs.push(config)
+            matched_recent_api_configurations.push(api_configuration)
           } else {
-            remaining_configs.push(config)
+            remaining_api_configurations.push(api_configuration)
           }
         })
 
-        matched_recent_configs.sort((a, b) => {
-          const id_a = get_tool_config_id(a)
-          const id_b = get_tool_config_id(b)
+        matched_recent_api_configurations.sort((a, b) => {
+          const id_a = get_api_configuration_id(a)
+          const id_b = get_api_configuration_id(b)
           return recent_ids.indexOf(id_a) - recent_ids.indexOf(id_b)
         })
 
-        const recent_configs = matched_recent_configs
-        const other_configs = remaining_configs
+        const recent_api_configurations = matched_recent_api_configurations
+        const other_api_configurations = remaining_api_configurations
 
-        const map_config_to_item = (config: ToolConfig) => {
-          const description_parts = [config.provider_name]
-          if (config.reasoning_effort) {
-            description_parts.push(`${config.reasoning_effort}`)
+        const map_api_configuration_to_item = (api_configuration: ApiConfiguration) => {
+          const description_parts = [api_configuration.model_provider_name]
+          if (api_configuration.reasoning_effort) {
+            description_parts.push(`${api_configuration.reasoning_effort}`)
           }
-          if (config.temperature != null) {
-            description_parts.push(`${config.temperature}`)
+          if (api_configuration.temperature != null) {
+            description_parts.push(`${api_configuration.temperature}`)
           }
 
           return {
-            label: config.model,
+            label: api_configuration.model,
             description: description_parts.join(' · '),
-            config,
-            id: get_tool_config_id(config)
+            api_configuration,
+            id: get_api_configuration_id(api_configuration)
           }
         }
 
         const items: (vscode.QuickPickItem & {
-          config?: ToolConfig
+          api_configuration?: ApiConfiguration
           id?: string
         })[] = []
 
-        if (recent_configs.length > 0) {
+        if (recent_api_configurations.length > 0) {
           items.push({
             label: t('common.separator.recently-used'),
             kind: vscode.QuickPickItemKind.Separator
           })
-          items.push(...recent_configs.map(map_config_to_item))
+          items.push(...recent_api_configurations.map(map_api_configuration_to_item))
         }
 
-        if (other_configs.length > 0) {
-          if (recent_configs.length > 0) {
+        if (other_api_configurations.length > 0) {
+          if (recent_api_configurations.length > 0) {
             items.push({
               label: t('common.config.other'),
               kind: vscode.QuickPickItemKind.Separator
             })
           }
-          items.push(...other_configs.map(map_config_to_item))
+          items.push(...other_api_configurations.map(map_api_configuration_to_item))
         }
 
         return items
@@ -157,8 +157,8 @@ export const get_commit_message_config = async (
         }
       }
 
-      commit_message_config = await new Promise<
-        CommitMessageConfig | 'back' | undefined
+      commit_message_api_configuration = await new Promise<
+        CommitMessageApiConfiguration | 'back' | undefined
       >((resolve) => {
         quick_pick.onDidTriggerButton((button) => {
           if (button === vscode.QuickInputButtons.Back) {
@@ -174,7 +174,7 @@ export const get_commit_message_config = async (
           const selected = quick_pick.selectedItems[0] as any
           quick_pick.hide()
 
-          if (selected && selected.config) {
+          if (selected && selected.api_configuration) {
             let recents =
               context.workspaceState.get<string[]>(
                 RECENTLY_USED_COMMIT_MESSAGES_CONFIG_IDS_STATE_KEY
@@ -188,7 +188,7 @@ export const get_commit_message_config = async (
               recents
             )
 
-            resolve(selected.config)
+            resolve(selected.api_configuration)
           } else {
             resolve(undefined)
           }
@@ -206,34 +206,34 @@ export const get_commit_message_config = async (
     }
   }
 
-  if (commit_message_config === 'back') {
+  if (commit_message_api_configuration === 'back') {
     return 'back'
   }
 
-  if (!commit_message_config) {
+  if (!commit_message_api_configuration) {
     return null
   }
 
-  const provider = await api_providers_manager.get_provider(
-    commit_message_config.provider_name
+  const model_provider = await api_providers_manager.get_model_provider(
+    commit_message_api_configuration.model_provider_name
   )
 
-  if (!provider) {
+  if (!model_provider) {
     vscode.window.showErrorMessage(
       dictionary.error_message.API_PROVIDER_FOR_CONFIG_NOT_FOUND
     )
     Logger.warn({
-      function_name: 'get_commit_message_config',
+      function_name: 'get_commit_message_api_configuration',
       message: 'API provider not found for Commit Messages tool.'
     })
     return null
   }
 
-  const endpoint_url = provider.base_url
+  const endpoint_url = model_provider.base_url
 
   return {
-    config: commit_message_config,
-    provider,
+    api_configuration: commit_message_api_configuration,
+    model_provider,
     endpoint_url
   }
 }

@@ -5,14 +5,14 @@ import { make_api_request } from '@/utils/make-api-request'
 import { display_token_count } from '@/utils/display-token-count'
 import { Logger } from '@shared/utils/logger'
 import { strip_wrapping_quotes } from './strip-wrapping-quotes'
-import { CommitMessageConfig } from './get-commit-message-config'
-import { Provider } from '@/services/model-providers-manager'
+import { ModelProvider } from '@/services/model-providers-manager'
 import { t } from '@/i18n'
+import { CommitMessageApiConfiguration } from './get-commit-message-config'
 
 export const generate_commit_message_with_api = async (params: {
   endpoint_url: string
-  provider: Provider
-  config: CommitMessageConfig
+  model_provider: ModelProvider
+  api_configuration: CommitMessageApiConfiguration
   message: string
 }): Promise<string> => {
   const messages = [
@@ -24,14 +24,14 @@ export const generate_commit_message_with_api = async (params: {
 
   const body = {
     messages,
-    model: params.config.model,
-    temperature: params.config.temperature
+    model: params.api_configuration.model,
+    temperature: params.api_configuration.temperature
   }
 
   apply_reasoning_effort({
     body,
-    provider: params.provider,
-    reasoning_effort: params.config.reasoning_effort
+    model_provider: params.model_provider,
+    reasoning_effort: params.api_configuration.reasoning_effort
   })
 
   const token_count = Math.ceil(params.message.length / 4)
@@ -58,7 +58,7 @@ export const generate_commit_message_with_api = async (params: {
       try {
         const response_result = await make_api_request({
           endpoint_url: params.endpoint_url,
-          api_key: params.provider.api_key,
+          api_key: params.model_provider.api_key,
           body,
           cancellation_token: cancel_token_source.token,
           on_chunk: () => {

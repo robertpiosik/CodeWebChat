@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
   ModelProvidersManager,
-  get_tool_config_id
+  get_api_configuration_id
 } from '@/services/model-providers-manager'
 import { SelectDefaultApiConfigurationMessage } from '@/views/settings/types/messages'
 import { handle_set_default_api_configuration } from './handle-set-default-api-configuration'
@@ -12,7 +12,7 @@ export const handle_select_default_api_configuration = async (
   message: SelectDefaultApiConfigurationMessage
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(provider.context)
-  const api_configurations = await providers_manager.get_tool_configs()
+  const api_configurations = await providers_manager.get_api_configurations()
 
   if (api_configurations.length == 0) {
     vscode.window.showInformationMessage(
@@ -22,7 +22,7 @@ export const handle_select_default_api_configuration = async (
   }
 
   const items = api_configurations.map((c) => {
-    const description_parts = [c.provider_name]
+    const description_parts = [c.model_provider_name]
     if (c.temperature != null) {
       description_parts.push(`${c.temperature}`)
     }
@@ -33,7 +33,7 @@ export const handle_select_default_api_configuration = async (
     return {
       label: c.model,
       description: description_parts.join(' · '),
-      api_configuration_id: get_tool_config_id(c)
+      api_configuration_id: get_api_configuration_id(c)
     }
   })
 

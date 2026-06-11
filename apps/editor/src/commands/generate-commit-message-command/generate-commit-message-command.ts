@@ -6,7 +6,7 @@ import {
   get_repository_for_commit
 } from '../../utils/git-repository-utils'
 import { display_token_count } from '../../utils/display-token-count'
-import { get_commit_message_config } from './utils/get-commit-message-config'
+import { get_commit_message_api_configuration } from './utils/get-commit-message-config'
 import { build_commit_message_prompt } from './utils/build-commit-message-prompt'
 import { generate_commit_message_with_api } from './utils/generate-commit-message-with-api'
 import { t } from '@/i18n'
@@ -14,7 +14,6 @@ import axios from 'axios'
 import { PromptsForCommitMessagesUtils } from '../../utils/prompts-for-commit-messages-utils'
 import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
 import { MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE } from '@/constants/values'
-import { dictionary } from '@shared/constants/dictionary'
 
 const truncate_prompt = (text: string): string => {
   if (text.length <= MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE) return text
@@ -79,7 +78,7 @@ export const generate_commit_message_command = (
       const show_back_button =
         was_empty_stage && !is_single_change_flow && !params.source_control
 
-      const api_config_data = await get_commit_message_config(
+      const api_configuration_data = await get_commit_message_api_configuration(
         context,
         show_back_button,
         force_quick_pick,
@@ -88,7 +87,7 @@ export const generate_commit_message_command = (
 
       force_quick_pick = false
 
-      if (api_config_data == 'back') {
+      if (api_configuration_data == 'back') {
         if (was_empty_stage) {
           if (!show_back_button) {
             await vscode.commands.executeCommand('git.unstageAll')
@@ -102,7 +101,7 @@ export const generate_commit_message_command = (
         return
       }
 
-      if (!api_config_data) {
+      if (!api_configuration_data) {
         if (was_empty_stage) {
           await vscode.commands.executeCommand('git.unstageAll')
         }
@@ -112,9 +111,9 @@ export const generate_commit_message_command = (
       let commit_message: string
       try {
         commit_message = await generate_commit_message_with_api({
-          endpoint_url: api_config_data.endpoint_url,
-          provider: api_config_data.provider,
-          config: api_config_data.config,
+          endpoint_url: api_configuration_data.endpoint_url,
+          model_provider: api_configuration_data.model_provider,
+          api_configuration: api_configuration_data.api_configuration,
           message: message_prompt
         })
       } catch (error) {

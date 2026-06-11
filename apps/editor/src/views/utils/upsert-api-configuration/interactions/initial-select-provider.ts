@@ -1,41 +1,41 @@
 import * as vscode from 'vscode'
 import {
   ModelProvidersManager,
-  Provider
+  ModelProvider
 } from '@/services/model-providers-manager'
 import { upsert_model_provider } from '../../upsert-model-provider'
 
-export const initial_select_provider = async (
+export const initial_select_model_provider = async (
   context: vscode.ExtensionContext,
   providers_manager: ModelProvidersManager,
-  last_selected_provider_name?: string
-): Promise<Provider | undefined> => {
+  last_selected_model_provider_name?: string
+): Promise<ModelProvider | undefined> => {
   while (true) {
-    const providers = await providers_manager.get_providers()
+    const model_providers = await providers_manager.get_model_providers()
 
-    if (providers.length == 0) {
-      const new_provider = await upsert_model_provider({ context })
-      if (new_provider) {
-        return new_provider
+    if (model_providers.length == 0) {
+      const new_model_provider = await upsert_model_provider({ context })
+      if (new_model_provider) {
+        return new_model_provider
       }
       return undefined
     }
 
-    const provider_items = providers.map((p) => ({
+    const model_provider_items = model_providers.map((p) => ({
       label: p.name,
-      provider: p
+      model_provider: p
     }))
     const add_new_item = {
       label: '$(plus) New model provider...',
-      provider: undefined
+      model_provider: undefined
     }
 
     const selected = await new Promise<
-      { label: string; provider?: Provider } | undefined
+      { label: string; model_provider?: ModelProvider } | undefined
     >((resolve) => {
       const quick_pick = vscode.window.createQuickPick<{
         label: string
-        provider?: Provider
+        model_provider?: ModelProvider
       }>()
       quick_pick.items = [
         add_new_item,
@@ -43,7 +43,7 @@ export const initial_select_provider = async (
           label: 'model providers',
           kind: vscode.QuickPickItemKind.Separator
         } as any,
-        ...provider_items
+        ...model_provider_items
       ]
       quick_pick.title = 'New API Configuration'
       quick_pick.placeholder = 'Select a model provider'
@@ -52,9 +52,9 @@ export const initial_select_provider = async (
         tooltip: 'Close'
       }
       quick_pick.buttons = [close_button]
-      if (last_selected_provider_name) {
-        const active = provider_items.find(
-          (p) => p.label == last_selected_provider_name
+      if (last_selected_model_provider_name) {
+        const active = model_provider_items.find(
+          (p) => p.label == last_selected_model_provider_name
         )
         if (active) quick_pick.activeItems = [active]
       }
@@ -86,16 +86,16 @@ export const initial_select_provider = async (
     }
 
     if (selected.label == add_new_item.label) {
-      const new_provider = await upsert_model_provider({
+      const new_model_provider = await upsert_model_provider({
         context,
         show_back_button: true
       })
-      if (new_provider) {
-        return new_provider
+      if (new_model_provider) {
+        return new_model_provider
       }
       continue
     }
 
-    return selected.provider
+    return selected.model_provider
   }
 }
