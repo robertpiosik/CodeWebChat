@@ -14,9 +14,8 @@ export const handle_update_web_configuration = async (
   webview_view: vscode.WebviewView
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const web_configurations_config_key = panel_provider.get_web_configurations_config_key()
   const current_web_configurations =
-    config.get<ConfigWebConfigurationFormat[]>(web_configurations_config_key, []) || []
+    config.get<ConfigWebConfigurationFormat[]>('webConfigurations', []) || []
 
   const web_configuration_index = current_web_configurations.findIndex(
     (p) => p.name == message.updating_web_configuration.name
@@ -146,7 +145,7 @@ export const handle_update_web_configuration = async (
   updated_web_configurations[web_configuration_index] = ui_web_configuration_to_config_format(updated_ui_web_configuration)
 
   await config.update(
-    web_configurations_config_key,
+    'webConfigurations',
     updated_web_configurations,
     vscode.ConfigurationTarget.Global
   )

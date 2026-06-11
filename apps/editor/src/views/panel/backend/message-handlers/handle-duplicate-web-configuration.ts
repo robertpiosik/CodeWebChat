@@ -43,9 +43,8 @@ export const handle_duplicate_web_configuration = async (
 ): Promise<void> => {
   const original_index = message.index
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const web_configurations_config_key = panel_provider.get_web_configurations_config_key()
   const current_web_configurations =
-    config.get<ConfigWebConfigurationFormat[]>(web_configurations_config_key, []) || []
+    config.get<ConfigWebConfigurationFormat[]>('webConfigurations', []) || []
 
   if (original_index < 0 || original_index >= current_web_configurations.length) {
     vscode.window.showErrorMessage(
@@ -70,7 +69,7 @@ export const handle_duplicate_web_configuration = async (
   updated_web_configurations.splice(original_index + 1, 0, duplicated_web_configuration)
 
   try {
-    await config.update(web_configurations_config_key, updated_web_configurations, true)
+    await config.update('webConfigurations', updated_web_configurations, true)
     panel_provider.send_web_configurations_to_webview(webview_view.webview)
   } catch (error) {
     vscode.window.showErrorMessage(

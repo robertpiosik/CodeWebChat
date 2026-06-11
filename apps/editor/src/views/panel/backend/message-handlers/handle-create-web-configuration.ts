@@ -16,9 +16,8 @@ const create_web_configuration = async (params: {
   chatbot: keyof typeof CHATBOTS
 }) => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const web_configurations_config_key = params.panel_provider.get_web_configurations_config_key()
   const current_web_configurations =
-    config.get<ConfigWebConfigurationFormat[]>(web_configurations_config_key, []) || []
+    config.get<ConfigWebConfigurationFormat[]>('webConfigurations', []) || []
 
   let copy_number = 0
   let new_name: string
@@ -47,7 +46,7 @@ const create_web_configuration = async (params: {
       command: 'WEB_CONFIGURATION_CREATED',
       web_configuration: config_web_configuration_to_ui_format(new_web_configuration)
     })
-    await config.update(web_configurations_config_key, updated_web_configurations, true)
+    await config.update('webConfigurations', updated_web_configurations, true)
   } catch (error) {
     vscode.window.showErrorMessage(
       dictionary.error_message.FAILED_TO_CREATE_ITEM(ITEM_NAME_WEB_CONFIGURATION, error)

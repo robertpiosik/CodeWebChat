@@ -154,7 +154,10 @@ const start_processing = async () => {
 const handle_initialize_chat_message = async (
   message: InitializeChatMessage
 ) => {
-  chat_queue.push({ message })
+  const count = message.invocation_count || 1
+  for (let i = 0; i < count; i++) {
+    chat_queue.push({ message })
+  }
   await start_processing()
 }
 

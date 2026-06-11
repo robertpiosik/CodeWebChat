@@ -14,7 +14,7 @@ import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { WebConfiguration } from '@shared/types/web-configuration'
-import { ConfigPresetFormat } from '@/views/panel/backend/utils/preset-format-converters'
+import { ConfigWebConfigurationFormat } from '@/views/panel/backend/utils/web-configuration-format-converters'
 import { LAST_SELECTED_BROWSER_ID_STATE_KEY } from '@/constants/state-keys'
 import { ApplyChatResponseCommandArgs } from '@/commands/apply-chat-response-command/response-processor'
 import { WebPromptType } from '@shared/types/prompt-types'
@@ -342,27 +342,25 @@ export class WebSocketManager {
     })
   }
 
-  public async initialize_chats(params: {
-    chats: Array<{
-      text: string
-      web_configuration_name: string
-      raw_instructions?: string
-      edit_format?: string
-      prompt_type?: WebPromptType
-    }>
-    web_configurations_config_key: string
+  public async initialize_chat(params: {
+    text: string
+    web_configuration_name: string
+    raw_instructions?: string
+    edit_format?: string
+    prompt_type?: WebPromptType
+    invocation_count: number
   }): Promise<boolean> {
     if (!this.has_connected_browsers) {
       throw new Error('Does not have connected browsers.')
     }
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const web_chat_presets =
-      config.get<ConfigPresetFormat[]>(params.web_configurations_config_key) ?? []
+    const web_configurations =
+      config.get<ConfigWebConfigurationFormat[]>('webConfigurations') ?? []
     const gemini_user_id = config.get<number | null>('geminiUserId')
     const ai_studio_user_id = config.get<number | null>('aiStudioUserId')
     const reuse_last_tab =
-      params.chats.length > 1
+      params.invocation_count > 1
         ? false
         : config.get<boolean>('reuseLastTab', false)
 
@@ -371,96 +369,95 @@ export class WebSocketManager {
       return false
     }
 
-    for (const chat of params.chats) {
-      const preset = web_chat_presets.find((p) => p.name == chat.web_configuration_name)
-      if (!preset) {
-        continue
-      }
+    const web_configuration = web_configurations.find((p) => p.name == params.web_configuration_name)
+    if (!web_configuration) {
+      return false
+    }
 
-      const chatbot = CHATBOTS[preset.chatbot as keyof typeof CHATBOTS]
-      let url: string
-      if (preset.chatbot == 'AI Studio') {
-        let base_url = chatbot.url
-        if (ai_studio_user_id !== null && ai_studio_user_id !== undefined) {
-          base_url = base_url.replace(
-            'https://aistudio.google.com/',
-            `https://aistudio.google.com/u/${ai_studio_user_id}/`
-          )
-        }
-        if (preset.model) {
-          url = `${base_url}?model=${preset.model}`
-        } else {
-          url = base_url
-        }
-      } else if (preset.chatbot == 'Open WebUI') {
-        if (preset.port) {
-          url = `http://localhost:${preset.port}/`
-        } else {
-          url = 'http://openwebui/'
-        }
-      } else if (preset.chatbot == 'Arena') {
-        if (preset.model) {
-          url = `https://arena.ai/?mode=direct&model=${preset.model}`
-        } else {
-          url = chatbot.url
-        }
-      } else if (preset.chatbot == 'Gemini' && gemini_user_id) {
-        url = `https://gemini.google.com/u/${gemini_user_id}/app`
-      } else if (chatbot.supports_url_override && preset.newUrl) {
-        try {
-          const original_domain = new URL(chatbot.url).hostname
-          const new_domain = new URL(preset.newUrl).hostname
-          if (original_domain == new_domain) {
-            url = preset.newUrl
-          } else {
-            url = chatbot.url
-            vscode.window.showWarningMessage(
-              dictionary.warning_message.URL_OVERRIDE_DIFFERENT_DOMAIN(
-                preset.name!
-              )
-            )
-          }
-        } catch (error) {
-          url = chatbot.url
-        }
+    const chatbot = CHATBOTS[web_configuration.chatbot as keyof typeof CHATBOTS]
+    let url: string
+    if (web_configuration.chatbot == 'AI Studio') {
+      let base_url = chatbot.url
+      if (ai_studio_user_id !== null && ai_studio_user_id !== undefined) {
+        base_url = base_url.replace(
+          'https://aistudio.google.com/',
+          `https://aistudio.google.com/u/${ai_studio_user_id}/`
+        )
+      }
+      if (web_configuration.model) {
+        url = `${base_url}?model=${web_configuration.model}`
+      } else {
+        url = base_url
+      }
+    } else if (web_configuration.chatbot == 'Open WebUI') {
+      if (web_configuration.port) {
+        url = `http://localhost:${web_configuration.port}/`
+      } else {
+        url = 'http://openwebui/'
+      }
+    } else if (web_configuration.chatbot == 'Arena') {
+      if (web_configuration.model) {
+        url = `https://arena.ai/?mode=direct&model=${web_configuration.model}`
       } else {
         url = chatbot.url
       }
-
-      const message: InitializeChatMessage = {
-        action: 'initialize-chat',
-        text: chat.text,
-        url,
-        model: preset.model,
-        temperature: preset.temperature,
-        target_browser_id,
-        top_p: preset.topP,
-        thinking_budget: preset.thinkingBudget,
-        reasoning_effort: preset.reasoningEffort,
-        system_instructions: preset.systemInstructions,
-        options: preset.options,
-        client_id: this.client_id || 0, // 0 is a temporary fallback and should be removed few weeks from 28.03.25
-        raw_instructions: chat.raw_instructions,
-        edit_format: chat.edit_format,
-        prompt_type: chat.prompt_type,
-        reuse_last_tab
+    } else if (web_configuration.chatbot == 'Gemini' && gemini_user_id) {
+      url = `https://gemini.google.com/u/${gemini_user_id}/app`
+    } else if (chatbot.supports_url_override && web_configuration.newUrl) {
+      try {
+        const original_domain = new URL(chatbot.url).hostname
+        const new_domain = new URL(web_configuration.newUrl).hostname
+        if (original_domain == new_domain) {
+          url = web_configuration.newUrl
+        } else {
+          url = chatbot.url
+          vscode.window.showWarningMessage(
+            dictionary.warning_message.URL_OVERRIDE_DIFFERENT_DOMAIN(
+              web_configuration.name!
+            )
+          )
+        }
+      } catch (error) {
+        url = chatbot.url
       }
-
-      Logger.info({
-        function_name: 'initialize_chats',
-        message: 'Sending initialize chat message',
-        data: message
-      })
-
-      this.client?.send(JSON.stringify(message))
+    } else {
+      url = chatbot.url
     }
+
+    const message: InitializeChatMessage = {
+      action: 'initialize-chat',
+      text: params.text,
+      url,
+      model: web_configuration.model,
+      temperature: web_configuration.temperature,
+      target_browser_id,
+      top_p: web_configuration.topP,
+      thinking_budget: web_configuration.thinkingBudget,
+      reasoning_effort: web_configuration.reasoningEffort,
+      system_instructions: web_configuration.systemInstructions,
+      options: web_configuration.options,
+      client_id: this.client_id || 0, // 0 is a temporary fallback and should be removed few weeks from 28.03.25
+      raw_instructions: params.raw_instructions,
+      edit_format: params.edit_format,
+      prompt_type: params.prompt_type,
+      reuse_last_tab,
+      invocation_count: params.invocation_count
+    }
+
+    Logger.info({
+      function_name: 'initialize_chat',
+      message: 'Sending initialize chat message',
+      data: message
+    })
+
+    this.client?.send(JSON.stringify(message))
 
     return true
   }
 
-  public async preview_preset(params: {
+  public async preview_web_configuration(params: {
     instruction: string
-    preset: WebConfiguration
+    web_configuration: WebConfiguration
     raw_instructions: string
     prompt_type?: WebPromptType
   }): Promise<boolean> {
@@ -478,9 +475,9 @@ export class WebSocketManager {
     const ai_studio_user_id = config.get<number | null>('aiStudioUserId')
     const reuse_last_tab = config.get<boolean>('reuseLastTab', false)
 
-    const chatbot = CHATBOTS[params.preset.chatbot as keyof typeof CHATBOTS]
+    const chatbot = CHATBOTS[params.web_configuration.chatbot as keyof typeof CHATBOTS]
     let url: string
-    if (params.preset.chatbot == 'AI Studio') {
+    if (params.web_configuration.chatbot == 'AI Studio') {
       let base_url = chatbot.url
       if (ai_studio_user_id !== null && ai_studio_user_id !== undefined) {
         base_url = base_url.replace(
@@ -488,40 +485,40 @@ export class WebSocketManager {
           `https://aistudio.google.com/u/${ai_studio_user_id}/`
         )
       }
-      if (params.preset.model) {
-        url = `${base_url}?model=${params.preset.model}`
+      if (params.web_configuration.model) {
+        url = `${base_url}?model=${params.web_configuration.model}`
       } else {
         url = base_url
       }
-    } else if (params.preset.chatbot == 'Open WebUI') {
-      if (params.preset.port) {
-        url = `http://localhost:${params.preset.port}/`
+    } else if (params.web_configuration.chatbot == 'Open WebUI') {
+      if (params.web_configuration.port) {
+        url = `http://localhost:${params.web_configuration.port}/`
       } else {
         url = 'http://openwebui/'
       }
-    } else if (params.preset.chatbot == 'Arena') {
-      if (params.preset.model) {
-        url = `https://arena.ai/?mode=direct&model=${params.preset.model}`
+    } else if (params.web_configuration.chatbot == 'Arena') {
+      if (params.web_configuration.model) {
+        url = `https://arena.ai/?mode=direct&model=${params.web_configuration.model}`
       } else {
         url = chatbot.url
       }
     } else if (
-      params.preset.chatbot == 'Gemini' &&
+      params.web_configuration.chatbot == 'Gemini' &&
       gemini_user_number !== undefined &&
       gemini_user_number !== null
     ) {
       url = `https://gemini.google.com/u/${gemini_user_number}`
-    } else if (chatbot.supports_url_override && params.preset.new_url) {
+    } else if (chatbot.supports_url_override && params.web_configuration.new_url) {
       try {
         const original_domain = new URL(chatbot.url).hostname
-        const new_domain = new URL(params.preset.new_url).hostname
+        const new_domain = new URL(params.web_configuration.new_url).hostname
         if (original_domain == new_domain) {
-          url = params.preset.new_url
+          url = params.web_configuration.new_url
         } else {
           url = chatbot.url
           vscode.window.showWarningMessage(
             dictionary.warning_message.URL_OVERRIDE_DIFFERENT_DOMAIN(
-              params.preset.name!
+              params.web_configuration.name!
             )
           )
         }
@@ -536,14 +533,14 @@ export class WebSocketManager {
       action: 'initialize-chat',
       text: params.instruction,
       url,
-      model: params.preset.model,
-      temperature: params.preset.temperature,
+      model: params.web_configuration.model,
+      temperature: params.web_configuration.temperature,
       target_browser_id,
-      top_p: params.preset.top_p,
-      thinking_budget: params.preset.thinking_budget,
-      reasoning_effort: params.preset.reasoning_effort,
-      system_instructions: params.preset.system_instructions,
-      options: params.preset.options,
+      top_p: params.web_configuration.top_p,
+      thinking_budget: params.web_configuration.thinking_budget,
+      reasoning_effort: params.web_configuration.reasoning_effort,
+      system_instructions: params.web_configuration.system_instructions,
+      options: params.web_configuration.options,
       client_id: this.client_id || 0, // 0 is a temporary fallback and should be removed few weeks from 28.03.25
       raw_instructions: params.raw_instructions,
       prompt_type: params.prompt_type,
@@ -551,8 +548,8 @@ export class WebSocketManager {
     }
 
     Logger.info({
-      function_name: 'preview_preset',
-      message: 'Sending preview preset message',
+      function_name: 'preview_web_configuration',
+      message: 'Sending preview web configuration message',
       data: message
     })
 

@@ -8,12 +8,11 @@ export const handle_replace_web_configurations = async (
   message: ReplaceWebConfigurationsMessage
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const web_configurations_config_key = panel_provider.get_web_configurations_config_key()
   const config_formatted_web_configurations = message.web_configurations.map((web_configuration) =>
     ui_web_configuration_to_config_format(web_configuration)
   )
   await config.update(
-    web_configurations_config_key,
+    'webConfigurations',
     config_formatted_web_configurations,
     vscode.ConfigurationTarget.Global
   )

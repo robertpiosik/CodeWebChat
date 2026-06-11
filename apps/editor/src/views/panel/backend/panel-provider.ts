@@ -110,7 +110,7 @@ import {
   RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY,
   RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY,
   RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY,
-  get_recently_used_presets_or_groups_key,
+  get_recently_used_web_configurations_key,
   FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY
 } from '@/constants/state-keys'
 import {
@@ -445,12 +445,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     this._config_listener = vscode.workspace.onDidChangeConfiguration(
       (event) => {
         if (!this._webview_view) return
-        const all_web_configuration_keys = ['codeWebChat.webConfigurations']
-        if (
-          all_web_configuration_keys.some((key) =>
-            event.affectsConfiguration(key)
-          )
-        ) {
+        if (event.affectsConfiguration('codeWebChat.webConfigurations')) {
           this.send_web_configurations_to_webview(this._webview_view.webview)
         }
 
@@ -623,10 +618,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         this.send_currently_open_file_text()
       }
     })
-  }
-
-  public get_web_configurations_config_key(): string {
-    return 'webConfigurations'
   }
 
   public cancel_all_intelligent_updates() {
@@ -1042,13 +1033,13 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       selected_web_configuration_name_by_mode: Object.fromEntries(
         web_prompt_types.map((prompt_type) => {
           let selected_name: string | undefined = undefined
-          const key = get_recently_used_presets_or_groups_key(prompt_type)
+          const key = get_recently_used_web_configurations_key(prompt_type)
           const recents =
             this.context.workspaceState.get<string[]>(key) ??
             this.context.globalState.get<string[]>(key, [])
           const last_selected = recents[0]
           if (last_selected) {
-            if (web_configurations_ui.some((p) => p.name === last_selected)) {
+            if (web_configurations_ui.some((p) => p.name == last_selected)) {
               selected_name = last_selected
             }
           }

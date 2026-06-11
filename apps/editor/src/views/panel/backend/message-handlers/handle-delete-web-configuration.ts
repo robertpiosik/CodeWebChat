@@ -11,9 +11,8 @@ export const handle_delete_web_configuration = async (
 ): Promise<void> => {
   const { index } = message
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const web_configurations_config_key = panel_provider.get_web_configurations_config_key()
   const current_web_configurations =
-    config.get<ConfigWebConfigurationFormat[]>(web_configurations_config_key, []) || []
+    config.get<ConfigWebConfigurationFormat[]>('webConfigurations', []) || []
 
   if (index < 0 || index >= current_web_configurations.length) return
 
@@ -43,7 +42,7 @@ export const handle_delete_web_configuration = async (
 
   try {
     await config.update(
-      web_configurations_config_key,
+      'webConfigurations',
       updated_web_configurations,
       vscode.ConfigurationTarget.Global
     )

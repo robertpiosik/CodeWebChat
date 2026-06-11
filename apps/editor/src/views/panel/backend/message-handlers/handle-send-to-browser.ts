@@ -7,7 +7,7 @@ import {
   find_relevant_files_format_for_panel
 } from '@/constants/instructions'
 import {
-  get_recently_used_presets_or_groups_key,
+  get_recently_used_web_configurations_key,
   FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY
 } from '@/constants/state-keys'
 import { ConfigWebConfigurationFormat } from '../utils/web-configuration-format-converters'
@@ -51,17 +51,17 @@ export const handle_send_to_browser = async (params: {
     return
   }
 
-  const resolution = await resolve_web_configurations({
+  const resolution = await resolve_web_configuration({
     panel_provider: params.panel_provider,
     web_configuration_name: params.web_configuration_name,
     context: params.panel_provider.context,
     show_quick_pick: params.show_quick_pick
   })
 
-  if (resolution.web_configuration_names.length == 0) {
+  if (!resolution.web_configuration_name) {
     return
   }
-  const resolved_web_configuration_names = resolution.web_configuration_names
+  const resolved_web_configuration_name = resolution.web_configuration_name
 
   if (params.web_configuration_name !== undefined) {
     handle_update_last_used_web_configuration_or_group({
@@ -121,19 +121,13 @@ export const handle_send_to_browser = async (params: {
         : '<missing_text>'
     }${payload.after}\n${skill_definitions}${main_instructions}`
 
-    const chats = resolved_web_configuration_names.flatMap((web_configuration_name) => {
-      return Array.from({ length: params.invocation_count }).map(() => ({
-        text,
-        web_configuration_name,
-        raw_instructions: processed_completion_instructions,
-        prompt_type: params.panel_provider.web_prompt_type
-      }))
-    })
-
     sent =
-      await params.panel_provider.websocket_server_instance.initialize_chats({
-        chats,
-        web_configurations_config_key: params.panel_provider.get_web_configurations_config_key()
+      await params.panel_provider.websocket_server_instance.initialize_chat({
+        text,
+        web_configuration_name: resolved_web_configuration_name,
+        raw_instructions: processed_completion_instructions,
+        prompt_type: params.panel_provider.web_prompt_type,
+        invocation_count: params.invocation_count
       })
   } else {
     const additional_paths: string[] = []
@@ -153,70 +147,59 @@ export const handle_send_to_browser = async (params: {
     })
     const context_text = collected.other_files + collected.recent_files
 
-    const prepared_chats = await Promise.all(
-      resolved_web_configuration_names.map(async (web_configuration_name) => {
-
-        const { instruction: processed_instructions, skill_definitions } =
-          await replace_symbols({
-            instruction: current_instructions,
-            context: params.panel_provider.context,
-            workspace_provider: params.panel_provider.workspace_provider,
-            remove_images: true
-          })
-
-        let system_instructions_xml = ''
-        if (params.panel_provider.web_prompt_type == 'edit-context') {
-          const config = vscode.workspace.getConfiguration('codeWebChat')
-          const instructions_key = {
-            whole: 'editFormatInstructionsWhole',
-            truncated: 'editFormatInstructionsTruncated',
-            'before-after': 'editFormatInstructionsBeforeAfter',
-            diff: 'editFormatInstructionsDiff'
-          }[params.panel_provider.chat_edit_format]
-          const default_instructions = {
-            whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
-            truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
-            'before-after': EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER,
-            diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
-          }[params.panel_provider.chat_edit_format]
-          const edit_format_instructions =
-            config.get<string>(instructions_key) || default_instructions
-          if (edit_format_instructions) {
-            system_instructions_xml = `<system>\n${edit_format_instructions}\n</system>`
-          }
-        } else if (
-          params.panel_provider.web_prompt_type == 'find-relevant-files'
-        ) {
-          system_instructions_xml = `${find_relevant_files_format_for_panel}\n${find_relevant_files_instructions}`
-        }
-
-        return {
-          text: context_text
-            ? `<files>\n${context_text}</files>\n${skill_definitions}${
-                system_instructions_xml ? system_instructions_xml + '\n' : ''
-              }${processed_instructions}`
-            : `${
-                system_instructions_xml ? system_instructions_xml + '\n' : ''
-              }${skill_definitions}${processed_instructions}`,
-          web_configuration_name,
-          raw_instructions: current_instructions,
-          prompt_type: params.panel_provider.web_prompt_type,
-          edit_format:
-            params.panel_provider.web_prompt_type == 'edit-context'
-              ? params.panel_provider.chat_edit_format
-              : undefined
-        }
+    const { instruction: processed_instructions, skill_definitions } =
+      await replace_symbols({
+        instruction: current_instructions,
+        context: params.panel_provider.context,
+        workspace_provider: params.panel_provider.workspace_provider,
+        remove_images: true
       })
-    )
 
-    const chats = prepared_chats.flatMap((chat) =>
-      Array.from({ length: params.invocation_count }).map(() => ({ ...chat }))
-    )
+    let system_instructions_xml = ''
+    if (params.panel_provider.web_prompt_type == 'edit-context') {
+      const config = vscode.workspace.getConfiguration('codeWebChat')
+      const instructions_key = {
+        whole: 'editFormatInstructionsWhole',
+        truncated: 'editFormatInstructionsTruncated',
+        'before-after': 'editFormatInstructionsBeforeAfter',
+        diff: 'editFormatInstructionsDiff'
+      }[params.panel_provider.chat_edit_format]
+      const default_instructions = {
+        whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
+        truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
+        'before-after': EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER,
+        diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
+      }[params.panel_provider.chat_edit_format]
+      const edit_format_instructions =
+        config.get<string>(instructions_key) || default_instructions
+      if (edit_format_instructions) {
+        system_instructions_xml = `<system>\n${edit_format_instructions}\n</system>`
+      }
+    } else if (
+      params.panel_provider.web_prompt_type == 'find-relevant-files'
+    ) {
+      system_instructions_xml = `${find_relevant_files_format_for_panel}\n${find_relevant_files_instructions}`
+    }
+
+    const text = context_text
+      ? `<files>\n${context_text}</files>\n${skill_definitions}${
+          system_instructions_xml ? system_instructions_xml + '\n' : ''
+        }${processed_instructions}`
+      : `${
+          system_instructions_xml ? system_instructions_xml + '\n' : ''
+        }${skill_definitions}${processed_instructions}`
 
     sent =
-      await params.panel_provider.websocket_server_instance.initialize_chats({
-        chats,
-        web_configurations_config_key: params.panel_provider.get_web_configurations_config_key()
+      await params.panel_provider.websocket_server_instance.initialize_chat({
+        text,
+        web_configuration_name: resolved_web_configuration_name,
+        raw_instructions: current_instructions,
+        prompt_type: params.panel_provider.web_prompt_type,
+        edit_format:
+          params.panel_provider.web_prompt_type == 'edit-context'
+            ? params.panel_provider.chat_edit_format
+            : undefined,
+        invocation_count: params.invocation_count
       })
   }
 
@@ -241,14 +224,14 @@ const show_web_configuration_quick_pick = async (params: {
   get_is_web_configuration_disabled: (web_configuration: ConfigWebConfigurationFormat) => boolean
   is_in_code_completions_mode: boolean
   current_instructions: string
-}): Promise<{ web_configuration_names: string[] } | null> => {
+}): Promise<{ web_configuration_name: string | undefined } | null> => {
   const { web_configurations, context, prompt_type, panel_provider } = params
 
   const quick_pick = vscode.window.createQuickPick<
     vscode.QuickPickItem & { web_configuration_name?: string }
   >()
 
-  const recents_key = get_recently_used_presets_or_groups_key(prompt_type)
+  const recents_key = get_recently_used_web_configurations_key(prompt_type)
   const recent_names =
     context.workspaceState.get<string[]>(recents_key) ??
     context.globalState.get<string[]>(recents_key) ??
@@ -327,10 +310,10 @@ const show_web_configuration_quick_pick = async (params: {
     if (last_item) quick_pick.activeItems = [last_item]
   }
 
-  return new Promise<{ web_configuration_names: string[] } | null>((resolve) => {
+  return new Promise<{ web_configuration_name: string | undefined } | null>((resolve) => {
     const disposables: vscode.Disposable[] = []
     let resolved = false
-    const do_resolve = (value: { web_configuration_names: string[] } | null) => {
+    const do_resolve = (value: { web_configuration_name: string | undefined } | null) => {
       if (resolved) return
       resolved = true
       resolve(value)
@@ -364,11 +347,11 @@ const show_web_configuration_quick_pick = async (params: {
             panel_provider,
             web_configuration_name: selected.web_configuration_name
           })
-          do_resolve({ web_configuration_names: [selected.web_configuration_name] })
+          do_resolve({ web_configuration_name: selected.web_configuration_name })
         }
       } else {
         quick_pick.hide()
-        do_resolve({ web_configuration_names: [] })
+        do_resolve({ web_configuration_name: undefined })
       }
     })
 
@@ -386,18 +369,17 @@ const show_web_configuration_quick_pick = async (params: {
   })
 }
 
-const resolve_web_configurations = async (params: {
+const resolve_web_configuration = async (params: {
   panel_provider: PanelProvider
   web_configuration_name?: string
   show_quick_pick?: boolean
   context: vscode.ExtensionContext
-}): Promise<{ web_configuration_names: string[] }> => {
-  const recents_key = get_recently_used_presets_or_groups_key(
+}): Promise<{ web_configuration_name: string | undefined }> => {
+  const recents_key = get_recently_used_web_configurations_key(
     params.panel_provider.web_prompt_type
   )
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const web_configurations_config_key = params.panel_provider.get_web_configurations_config_key()
-  const all_web_configurations = config.get<ConfigWebConfigurationFormat[]>(web_configurations_config_key, [])
+  const all_web_configurations = config.get<ConfigWebConfigurationFormat[]>('webConfigurations', [])
   const is_in_code_completions_mode =
     params.panel_provider.web_prompt_type == 'code-at-cursor'
 
@@ -452,9 +434,9 @@ const resolve_web_configurations = async (params: {
             type: 'warning'
           })
         }
-        return { web_configuration_names: [] }
+        return { web_configuration_name: undefined }
       }
-      return { web_configuration_names: [params.web_configuration_name] }
+      return { web_configuration_name: params.web_configuration_name }
     }
   }
 
@@ -484,9 +466,9 @@ const resolve_web_configurations = async (params: {
                 type: 'warning'
               })
             }
-            return { web_configuration_names: [] }
+            return { web_configuration_name: undefined }
           } else {
-            return { web_configuration_names: [last_selected_name] }
+            return { web_configuration_name: last_selected_name }
           }
         }
       }
@@ -503,5 +485,5 @@ const resolve_web_configurations = async (params: {
     current_instructions
   })
 
-  return resolution ?? { web_configuration_names: [] }
+  return resolution ?? { web_configuration_name: undefined }
 }

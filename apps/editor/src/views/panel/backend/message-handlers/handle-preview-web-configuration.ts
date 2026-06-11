@@ -132,9 +132,9 @@ export const handle_preview_web_configuration = async (
     new_url: message.web_configuration.new_url
   }
 
-  const sent = await panel_provider.websocket_server_instance.preview_preset({
+  const sent = await panel_provider.websocket_server_instance.preview_web_configuration({
     instruction: text_to_send,
-    preset: web_configuration_for_preview,
+    web_configuration: web_configuration_for_preview,
     prompt_type: panel_provider.web_prompt_type,
     raw_instructions: current_instructions
   })

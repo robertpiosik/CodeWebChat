@@ -1,5 +1,5 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { get_recently_used_presets_or_groups_key } from '@/constants/state-keys'
+import { get_recently_used_web_configurations_key } from '@/constants/state-keys'
 
 export const handle_update_last_used_web_configuration_or_group = (params: {
   panel_provider: PanelProvider
@@ -8,7 +8,7 @@ export const handle_update_last_used_web_configuration_or_group = (params: {
   const name_to_save = params.web_configuration_name
 
   if (name_to_save) {
-    const recents_key = get_recently_used_presets_or_groups_key(
+    const recents_key = get_recently_used_web_configurations_key(
       params.panel_provider.web_prompt_type
     )
     const recents =

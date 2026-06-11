@@ -34,6 +34,7 @@ export type InitializeChatMessage = {
   edit_format?: string
   prompt_type?: WebPromptType
   reuse_last_tab?: boolean
+  invocation_count?: number
 }
 
 export type BrowserConnectionStatusMessage = {
