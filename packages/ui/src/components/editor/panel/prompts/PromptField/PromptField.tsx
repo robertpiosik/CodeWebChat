@@ -76,7 +76,6 @@ export type PromptFieldProps = {
   on_new_tab: () => void
   on_tab_delete: (index: number) => void
   missing_configuration: boolean
-  missing_preset: boolean
   voice_input_push_to_talk?: boolean
 }
 
@@ -535,7 +534,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               {(!props.is_web_mode ||
                 (props.is_web_mode &&
                   props.is_connected &&
-                  !props.missing_preset)) && (
+                  !props.missing_configuration)) && (
                 <>
                   {!(
                     props.prompt_type == 'find-relevant-files' &&
@@ -681,7 +680,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                 </>
               )}
               {((props.is_web_mode && !props.is_connected) ||
-                props.missing_preset) && (
+                props.missing_configuration) && (
                 <>
                   {props.is_recording ? (
                     <button

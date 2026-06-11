@@ -383,9 +383,9 @@ export const MainView: React.FC<Props> = (props) => {
             on_new_tab={props.on_new_tab}
             on_tab_delete={props.on_tab_delete}
             missing_configuration={
-              props.mode == MODE.API && props.api_configurations.length == 0
+              (props.mode == MODE.API && props.api_configurations.length == 0) ||
+              (props.mode == MODE.WEB && props.web_configurations.length == 0)
             }
-            missing_preset={props.mode == MODE.WEB && props.web_configurations.length == 0}
             voice_input_push_to_talk={props.voice_input_push_to_talk}
           />
           <UiContextUtilisation
