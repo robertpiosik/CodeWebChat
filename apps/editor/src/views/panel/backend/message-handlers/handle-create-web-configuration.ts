@@ -3,30 +3,30 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import {
-  config_preset_to_ui_format,
-  ConfigPresetFormat
-} from '@/views/panel/backend/utils/preset-format-converters'
-import { CreatePresetMessage } from '@/views/panel/types/messages'
+  config_web_configuration_to_ui_format,
+  ConfigWebConfigurationFormat
+} from '@/views/panel/backend/utils/web-configuration-format-converters'
+import { CreateWebConfigurationMessage } from '@/views/panel/types/messages'
 
-const ITEM_NAME_PRESET = 'Preset'
+const ITEM_NAME_WEB_CONFIGURATION = 'Web Configuration'
 
-const create_preset = async (params: {
+const create_web_configuration = async (params: {
   panel_provider: PanelProvider
   insertion_index?: number
   chatbot: keyof typeof CHATBOTS
 }) => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const presets_config_key = params.panel_provider.get_presets_config_key()
-  const current_presets =
-    config.get<ConfigPresetFormat[]>(presets_config_key, []) || []
+  const web_configurations_config_key = params.panel_provider.get_web_configurations_config_key()
+  const current_web_configurations =
+    config.get<ConfigWebConfigurationFormat[]>(web_configurations_config_key, []) || []
 
   let copy_number = 0
   let new_name: string
   do {
     new_name = `(${copy_number++})`
-  } while (current_presets.some((p) => p.name == new_name))
+  } while (current_web_configurations.some((p) => p.name == new_name))
 
-  const new_preset: ConfigPresetFormat = {
+  const new_web_configuration: ConfigWebConfigurationFormat = {
     name: new_name,
     chatbot: params.chatbot,
     model: Object.keys(CHATBOTS[params.chatbot].models ?? {})[0],
@@ -35,29 +35,29 @@ const create_preset = async (params: {
       : undefined
   }
 
-  const updated_presets = [...current_presets]
+  const updated_web_configurations = [...current_web_configurations]
   if (params.insertion_index !== undefined) {
-    updated_presets.splice(params.insertion_index, 0, new_preset)
+    updated_web_configurations.splice(params.insertion_index, 0, new_web_configuration)
   } else {
-    updated_presets.push(new_preset)
+    updated_web_configurations.push(new_web_configuration)
   }
 
   try {
     params.panel_provider.send_message({
-      command: 'PRESET_CREATED',
-      preset: config_preset_to_ui_format(new_preset)
+      command: 'WEB_CONFIGURATION_CREATED',
+      web_configuration: config_web_configuration_to_ui_format(new_web_configuration)
     })
-    await config.update(presets_config_key, updated_presets, true)
+    await config.update(web_configurations_config_key, updated_web_configurations, true)
   } catch (error) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.FAILED_TO_CREATE_ITEM(ITEM_NAME_PRESET, error)
+      dictionary.error_message.FAILED_TO_CREATE_ITEM(ITEM_NAME_WEB_CONFIGURATION, error)
     )
   }
 }
 
-export const handle_create_preset = async (
+export const handle_create_web_configuration = async (
   panel_provider: PanelProvider,
-  message: CreatePresetMessage
+  message: CreateWebConfigurationMessage
 ): Promise<void> => {
   let insertion_index: number | undefined
 
@@ -125,7 +125,7 @@ export const handle_create_preset = async (
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = items
     quick_pick.title = 'Chatbots'
-    quick_pick.placeholder = 'Choose a chatbot for the new preset'
+    quick_pick.placeholder = 'Choose a chatbot for the new web configuration'
     quick_pick.buttons = [
       {
         iconPath: new vscode.ThemeIcon('close'),
@@ -144,7 +144,7 @@ export const handle_create_preset = async (
           ?.label as keyof typeof CHATBOTS
         quick_pick.hide()
         if (selected_chatbot) {
-          await create_preset({
+          await create_web_configuration({
             panel_provider,
             insertion_index,
             chatbot: selected_chatbot

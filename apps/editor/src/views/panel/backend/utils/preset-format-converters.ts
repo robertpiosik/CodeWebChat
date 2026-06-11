@@ -1,5 +1,5 @@
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { Preset } from '@shared/types/preset'
+import { Preset } from '@shared/types/web-configuration'
 
 export type ConfigPresetFormat = {
   name?: string

@@ -10,7 +10,7 @@ import {
   get_recently_used_presets_or_groups_key,
   FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY
 } from '@/constants/state-keys'
-import { ConfigPresetFormat } from '../utils/preset-format-converters'
+import { ConfigWebConfigurationFormat } from '../utils/web-configuration-format-converters'
 import { MODE } from '@/views/panel/types/main-view-mode'
 import { WebPromptType } from '@shared/types/prompt-types'
 import { CHATBOTS } from '@shared/constants/chatbots'
@@ -21,12 +21,12 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER,
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
-import { handle_update_last_used_preset_or_group } from './handle-update-last-used-preset-or-group'
+import { handle_update_last_used_web_configuration_or_group } from './handle-update-last-used-web-configuration-or-group'
 import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-symbols'
 
 export const handle_send_to_browser = async (params: {
   panel_provider: PanelProvider
-  preset_name?: string
+  web_configuration_name?: string
   show_quick_pick?: boolean
   invocation_count: number
 }): Promise<void> => {
@@ -51,22 +51,22 @@ export const handle_send_to_browser = async (params: {
     return
   }
 
-  const resolution = await resolve_presets({
+  const resolution = await resolve_web_configurations({
     panel_provider: params.panel_provider,
-    preset_name: params.preset_name,
+    web_configuration_name: params.web_configuration_name,
     context: params.panel_provider.context,
     show_quick_pick: params.show_quick_pick
   })
 
-  if (resolution.preset_names.length == 0) {
+  if (resolution.web_configuration_names.length == 0) {
     return
   }
-  const resolved_preset_names = resolution.preset_names
+  const resolved_web_configuration_names = resolution.web_configuration_names
 
-  if (params.preset_name !== undefined) {
-    handle_update_last_used_preset_or_group({
+  if (params.web_configuration_name !== undefined) {
+    handle_update_last_used_web_configuration_or_group({
       panel_provider: params.panel_provider,
-      preset_name: params.preset_name
+      web_configuration_name: params.web_configuration_name
     })
   }
 
@@ -121,10 +121,10 @@ export const handle_send_to_browser = async (params: {
         : '<missing_text>'
     }${payload.after}\n${skill_definitions}${main_instructions}`
 
-    const chats = resolved_preset_names.flatMap((preset_name) => {
+    const chats = resolved_web_configuration_names.flatMap((web_configuration_name) => {
       return Array.from({ length: params.invocation_count }).map(() => ({
         text,
-        preset_name,
+        web_configuration_name,
         raw_instructions: processed_completion_instructions,
         prompt_type: params.panel_provider.web_prompt_type
       }))
@@ -133,7 +133,7 @@ export const handle_send_to_browser = async (params: {
     sent =
       await params.panel_provider.websocket_server_instance.initialize_chats({
         chats,
-        presets_config_key: params.panel_provider.get_presets_config_key()
+        web_configurations_config_key: params.panel_provider.get_web_configurations_config_key()
       })
   } else {
     const additional_paths: string[] = []
@@ -154,7 +154,7 @@ export const handle_send_to_browser = async (params: {
     const context_text = collected.other_files + collected.recent_files
 
     const prepared_chats = await Promise.all(
-      resolved_preset_names.map(async (preset_name) => {
+      resolved_web_configuration_names.map(async (web_configuration_name) => {
 
         const { instruction: processed_instructions, skill_definitions } =
           await replace_symbols({
@@ -198,7 +198,7 @@ export const handle_send_to_browser = async (params: {
             : `${
                 system_instructions_xml ? system_instructions_xml + '\n' : ''
               }${skill_definitions}${processed_instructions}`,
-          preset_name,
+          web_configuration_name,
           raw_instructions: current_instructions,
           prompt_type: params.panel_provider.web_prompt_type,
           edit_format:
@@ -216,7 +216,7 @@ export const handle_send_to_browser = async (params: {
     sent =
       await params.panel_provider.websocket_server_instance.initialize_chats({
         chats,
-        presets_config_key: params.panel_provider.get_presets_config_key()
+        web_configurations_config_key: params.panel_provider.get_web_configurations_config_key()
       })
   }
 
@@ -228,24 +228,24 @@ export const handle_send_to_browser = async (params: {
     })
   }
 
-  if (!params.preset_name) {
+  if (!params.web_configuration_name) {
     params.panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
   }
 }
 
-const show_preset_quick_pick = async (params: {
-  presets: ConfigPresetFormat[]
+const show_web_configuration_quick_pick = async (params: {
+  web_configurations: ConfigWebConfigurationFormat[]
   context: vscode.ExtensionContext
   prompt_type: WebPromptType
   panel_provider: PanelProvider
-  get_is_preset_disabled: (preset: ConfigPresetFormat) => boolean
+  get_is_web_configuration_disabled: (web_configuration: ConfigWebConfigurationFormat) => boolean
   is_in_code_completions_mode: boolean
   current_instructions: string
-}): Promise<{ preset_names: string[] } | null> => {
-  const { presets, context, prompt_type, panel_provider } = params
+}): Promise<{ web_configuration_names: string[] } | null> => {
+  const { web_configurations, context, prompt_type, panel_provider } = params
 
   const quick_pick = vscode.window.createQuickPick<
-    vscode.QuickPickItem & { preset_name?: string }
+    vscode.QuickPickItem & { web_configuration_name?: string }
   >()
 
   const recents_key = get_recently_used_presets_or_groups_key(prompt_type)
@@ -256,33 +256,33 @@ const show_preset_quick_pick = async (params: {
 
   if (recent_names.length == 0) {
     vscode.window.showWarningMessage(
-      dictionary.warning_message.NO_RECENTLY_USED_PRESETS_OR_GROUPS
+      dictionary.warning_message.NO_RECENTLY_USED_PRESETS_OR_GROUPS // the dictionary key is kept, string may differ
     )
     return null
   }
 
   const items = recent_names
     .map((name) => {
-      const item = presets.find((p) => p.name == name)
+      const item = web_configurations.find((p) => p.name == name)
 
       if (item && item.chatbot) {
-        const preset = item
-        const is_unnamed = !preset.name || /^\(\d+\)$/.test(preset.name.trim())
+        const web_configuration = item
+        const is_unnamed = !web_configuration.name || /^\(\d+\)$/.test(web_configuration.name.trim())
         const chatbot_models =
-          CHATBOTS[preset.chatbot as keyof typeof CHATBOTS]?.models
-        const model = preset.model
-          ? chatbot_models?.[preset.model]?.label || preset.model
+          CHATBOTS[web_configuration.chatbot as keyof typeof CHATBOTS]?.models
+        const model = web_configuration.model
+          ? chatbot_models?.[web_configuration.model]?.label || web_configuration.model
           : ''
         return {
           label: `${
             is_unnamed
-              ? preset.chatbot!
-              : preset.name!.replace(/\s*\(\d+\)$/, '')
+              ? web_configuration.chatbot!
+              : web_configuration.name!.replace(/\s*\(\d+\)$/, '')
           }`,
-          preset_name: preset.name,
+          web_configuration_name: web_configuration.name,
           description: is_unnamed
             ? model
-            : `${preset.chatbot}${model ? ` · ${model}` : ''}`
+            : `${web_configuration.chatbot}${model ? ` · ${model}` : ''}`
         }
       }
       return null
@@ -314,23 +314,23 @@ const show_preset_quick_pick = async (params: {
 
   const last_selected_name = recent_names[0]
 
-  let last_selected_preset_name: string | undefined
+  let last_selected_web_configuration_name: string | undefined
   if (last_selected_name) {
-    const item = presets.find((p) => p.name == last_selected_name)
-    if (item && item.chatbot) last_selected_preset_name = last_selected_name
+    const item = web_configurations.find((p) => p.name == last_selected_name)
+    if (item && item.chatbot) last_selected_web_configuration_name = last_selected_name
   }
 
-  if (last_selected_preset_name) {
+  if (last_selected_web_configuration_name) {
     const last_item = quick_pick.items.find(
-      (item) => item.preset_name == last_selected_preset_name
+      (item) => item.web_configuration_name == last_selected_web_configuration_name
     )
     if (last_item) quick_pick.activeItems = [last_item]
   }
 
-  return new Promise<{ preset_names: string[] } | null>((resolve) => {
+  return new Promise<{ web_configuration_names: string[] } | null>((resolve) => {
     const disposables: vscode.Disposable[] = []
     let resolved = false
-    const do_resolve = (value: { preset_names: string[] } | null) => {
+    const do_resolve = (value: { web_configuration_names: string[] } | null) => {
       if (resolved) return
       resolved = true
       resolve(value)
@@ -345,30 +345,30 @@ const show_preset_quick_pick = async (params: {
         return
       }
 
-      if (selected.preset_name) {
-        const preset = presets.find((p) => p.name == selected.preset_name)!
-        if (params.get_is_preset_disabled(preset)) {
+      if (selected.web_configuration_name) {
+        const web_configuration = web_configurations.find((p) => p.name == selected.web_configuration_name)!
+        if (params.get_is_web_configuration_disabled(web_configuration)) {
           if (
             !params.is_in_code_completions_mode &&
             !params.current_instructions
           ) {
             params.panel_provider.send_message({
               command: 'SHOW_AUTO_CLOSING_MODAL',
-              title: 'Type something to use this preset',
+              title: 'Type something to use this web configuration',
               type: 'warning'
             })
           }
           do_resolve(null)
         } else {
-          handle_update_last_used_preset_or_group({
+          handle_update_last_used_web_configuration_or_group({
             panel_provider,
-            preset_name: selected.preset_name
+            web_configuration_name: selected.web_configuration_name
           })
-          do_resolve({ preset_names: [selected.preset_name] })
+          do_resolve({ web_configuration_names: [selected.web_configuration_name] })
         }
       } else {
         quick_pick.hide()
-        do_resolve({ preset_names: [] })
+        do_resolve({ web_configuration_names: [] })
       }
     })
 
@@ -386,18 +386,18 @@ const show_preset_quick_pick = async (params: {
   })
 }
 
-const resolve_presets = async (params: {
+const resolve_web_configurations = async (params: {
   panel_provider: PanelProvider
-  preset_name?: string
+  web_configuration_name?: string
   show_quick_pick?: boolean
   context: vscode.ExtensionContext
-}): Promise<{ preset_names: string[] }> => {
+}): Promise<{ web_configuration_names: string[] }> => {
   const recents_key = get_recently_used_presets_or_groups_key(
     params.panel_provider.web_prompt_type
   )
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const presets_config_key = params.panel_provider.get_presets_config_key()
-  const all_presets = config.get<ConfigPresetFormat[]>(presets_config_key, [])
+  const web_configurations_config_key = params.panel_provider.get_web_configurations_config_key()
+  const all_web_configurations = config.get<ConfigWebConfigurationFormat[]>(web_configurations_config_key, [])
   const is_in_code_completions_mode =
     params.panel_provider.web_prompt_type == 'code-at-cursor'
 
@@ -429,8 +429,8 @@ const resolve_presets = async (params: {
       ] || ''
   }
 
-  const get_is_preset_disabled = (preset: ConfigPresetFormat) =>
-    (preset.chatbot &&
+  const get_is_web_configuration_disabled = (web_configuration: ConfigWebConfigurationFormat) =>
+    (web_configuration.chatbot &&
       (!params.panel_provider.websocket_server_instance.is_connected_with_browser() ||
         (is_in_code_completions_mode &&
           (!params.panel_provider.currently_open_file_path ||
@@ -438,29 +438,29 @@ const resolve_presets = async (params: {
         (!is_in_code_completions_mode && !current_instructions))) ||
     false
 
-  if (params.preset_name !== undefined) {
-    const preset = all_presets.find((p) => p.name == params.preset_name)
-    if (preset) {
-      if (get_is_preset_disabled(preset)) {
+  if (params.web_configuration_name !== undefined) {
+    const web_configuration = all_web_configurations.find((p) => p.name == params.web_configuration_name)
+    if (web_configuration) {
+      if (get_is_web_configuration_disabled(web_configuration)) {
         if (
           !is_in_code_completions_mode &&
           !current_instructions
         ) {
           params.panel_provider.send_message({
             command: 'SHOW_AUTO_CLOSING_MODAL',
-            title: 'Type something to use this preset',
+            title: 'Type something to use this web configuration',
             type: 'warning'
           })
         }
-        return { preset_names: [] }
+        return { web_configuration_names: [] }
       }
-      return { preset_names: [params.preset_name] }
+      return { web_configuration_names: [params.web_configuration_name] }
     }
   }
 
   if (
     !params.show_quick_pick &&
-    params.preset_name === undefined
+    params.web_configuration_name === undefined
   ) {
     // Try to use last selection if "Send" button is clicked without specific preset
     const recents =
@@ -469,39 +469,39 @@ const resolve_presets = async (params: {
       []
     const last_selected_name = recents[0]
     if (last_selected_name) {
-      const item = all_presets.find((p) => p.name === last_selected_name)
+      const item = all_web_configurations.find((p) => p.name === last_selected_name)
       if (item) {
         if (item.chatbot) {
-          // It's a preset
-          if (get_is_preset_disabled(item)) {
+          // It's a web_configuration
+          if (get_is_web_configuration_disabled(item)) {
             if (
               !is_in_code_completions_mode &&
               !current_instructions
             ) {
               params.panel_provider.send_message({
                 command: 'SHOW_AUTO_CLOSING_MODAL',
-                title: 'Type something to use this preset',
+                title: 'Type something to use this web configuration',
                 type: 'warning'
               })
             }
-            return { preset_names: [] }
+            return { web_configuration_names: [] }
           } else {
-            return { preset_names: [last_selected_name] }
+            return { web_configuration_names: [last_selected_name] }
           }
         }
       }
     }
   }
 
-  const resolution = await show_preset_quick_pick({
-    presets: all_presets,
+  const resolution = await show_web_configuration_quick_pick({
+    web_configurations: all_web_configurations,
     context: params.context,
     prompt_type: params.panel_provider.web_prompt_type,
     panel_provider: params.panel_provider,
-    get_is_preset_disabled,
+    get_is_web_configuration_disabled,
     is_in_code_completions_mode,
     current_instructions
   })
 
-  return resolution ?? { preset_names: [] }
+  return resolution ?? { web_configuration_names: [] }
 }

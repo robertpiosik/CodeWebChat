@@ -1,11 +1,11 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { get_recently_used_presets_or_groups_key } from '@/constants/state-keys'
 
-export const handle_update_last_used_preset_or_group = (params: {
+export const handle_update_last_used_web_configuration_or_group = (params: {
   panel_provider: PanelProvider
-  preset_name?: string
+  web_configuration_name?: string
 }) => {
-  const name_to_save = params.preset_name
+  const name_to_save = params.web_configuration_name
 
   if (name_to_save) {
     const recents_key = get_recently_used_presets_or_groups_key(
@@ -27,7 +27,7 @@ export const handle_update_last_used_preset_or_group = (params: {
     params.panel_provider.context.globalState.update(recents_key, new_recents)
 
     params.panel_provider.send_message({
-      command: 'SELECTED_PRESET_CHANGED',
+      command: 'SELECTED_WEB_CONFIGURATION_CHANGED',
       prompt_type: params.panel_provider.web_prompt_type,
       name: name_to_save
     })

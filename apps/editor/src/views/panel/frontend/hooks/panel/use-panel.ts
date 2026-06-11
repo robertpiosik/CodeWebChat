@@ -43,7 +43,7 @@ export const use_panel = (vscode: any) => {
   const [context_size_warning_threshold, set_context_size_warning_threshold] =
     useState<number>()
   const [can_undo, set_can_undo] = useState<boolean>(false)
-  const [presets_collapsed, set_presets_collapsed] = useState(false)
+  const [web_configurations_collapsed, set_web_configurations_collapsed] = useState(false)
   const [send_with_shift_enter, set_send_with_shift_enter] = useState(false)
   const [is_timeline_collapsed, set_is_timeline_collapsed] = useState(false)
   const [api_configurations_collapsed, set_api_configurations_collapsed] =
@@ -129,7 +129,7 @@ export const use_panel = (vscode: any) => {
       } else if (message.command == 'API_PROMPT_TYPE') {
         set_api_mode(message.prompt_type)
       } else if (message.command == 'COLLAPSED_STATES') {
-        set_presets_collapsed(message.presets_collapsed)
+        set_web_configurations_collapsed(message.web_configurations_collapsed)
         set_api_configurations_collapsed(message.api_configurations_collapsed)
         set_is_timeline_collapsed(message.is_timeline_collapsed)
       } else if (message.command == 'CHECKPOINTS') {
@@ -233,11 +233,11 @@ export const use_panel = (vscode: any) => {
     })
   }
 
-  const handle_presets_collapsed_change = (is_collapsed: boolean) => {
-    set_presets_collapsed(is_collapsed)
+  const handle_web_configurations_collapsed_change = (is_collapsed: boolean) => {
+    set_web_configurations_collapsed(is_collapsed)
     post_message(vscode, {
       command: 'SAVE_COMPONENT_COLLAPSED_STATE',
-      component: 'presets',
+      component: 'web-configurations',
       is_collapsed
     })
   }
@@ -277,7 +277,7 @@ export const use_panel = (vscode: any) => {
     set_chat_input_focus_and_select_key,
     context_size_warning_threshold,
     can_undo,
-    presets_collapsed,
+    web_configurations_collapsed,
     send_with_shift_enter,
     api_configurations_collapsed,
     is_timeline_collapsed,
@@ -286,7 +286,7 @@ export const use_panel = (vscode: any) => {
     handle_web_prompt_type_change,
     handle_api_prompt_type_change,
     handle_mode_change,
-    handle_presets_collapsed_change,
+    handle_web_configurations_collapsed_change,
     handle_timeline_collapsed_change,
     handle_api_configurations_collapsed_change,
     handle_paste_image,

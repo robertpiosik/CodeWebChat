@@ -169,7 +169,7 @@ export const dictionary = {
       `Are you sure you want to clear the API key for ${provider_name}? This action cannot be undone.`,
     CONFIRM_DELETE_CONTEXT: (context_name: string) =>
       `Are you sure you want to delete context "${context_name}"?`,
-    CONFIRM_DELETE_ITEM: (item_type: 'file' | 'folder' | 'group' | 'preset') =>
+    CONFIRM_DELETE_ITEM: (item_type: 'file' | 'folder' | 'group' | 'configuration') =>
       `Are you sure you want to delete this ${item_type}?`,
     CONFIRM_DELETE_NAMED_ITEM: (item_type: string, name: string) =>
       `Are you sure you want to delete ${item_type} "${name}"?`,

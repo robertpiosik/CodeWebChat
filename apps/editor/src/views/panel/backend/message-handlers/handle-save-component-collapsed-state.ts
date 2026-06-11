@@ -1,7 +1,7 @@
 import {
   ARE_TASKS_COLLAPSED_STATE_KEY,
   API_CONFIGURATIONS_COLLAPSED_STATE_KEY,
-  PRESETS_COLLAPSED_STATE_KEY,
+  WEB_CONFIGURATIONS_COLLAPSED_STATE_KEY,
   IS_TIMELINE_COLLAPSED_STATE_KEY
 } from '@/constants/state-keys'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
@@ -11,9 +11,9 @@ export const handle_save_component_collapsed_state = async (
   panel_provider: PanelProvider,
   message: SaveComponentCollapsedStateMessage
 ): Promise<void> => {
-  if (message.component == 'presets') {
+  if (message.component == 'web-configurations') {
     await panel_provider.context.globalState.update(
-      PRESETS_COLLAPSED_STATE_KEY,
+      WEB_CONFIGURATIONS_COLLAPSED_STATE_KEY,
       message.is_collapsed
     )
   } else if (message.component == 'api-configurations') {

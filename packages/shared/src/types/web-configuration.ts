@@ -1,6 +1,6 @@
 import { CHATBOTS } from '../constants/chatbots'
 
-export type Preset = {
+export type WebConfiguration = {
   name?: string
   chatbot?: keyof typeof CHATBOTS
   model?: string

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Main } from './Main'
 import { Button as UiButton } from '@ui/components/editor/common/Button'
 import { Page as UiPage } from '@ui/components/editor/panel/Page'
-import { EditPresetForm } from '@/views/panel/frontend/components/edit-preset-form/EditPresetForm'
+import { EditWebConfigurationForm } from '@/views/panel/frontend/components/edit-web-configuration-form/EditWebConfigurationForm'
 import { TextButton as UiTextButton } from '@ui/components/editor/panel/TextButton'
 import { MODE } from '../types/main-view-mode'
 import { Home } from './Home'
@@ -21,7 +21,7 @@ import { LayoutContext } from './contexts/LayoutContext'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Layout } from './components/Layout/Layout'
 import { ResponsePreviewFooter as UiResponsePreviewFooter } from '@ui/components/editor/panel/ResponsePreviewFooter'
-import { EditPresetFormFooter } from './components/edit-preset-form/EditPresetFormFooter'
+import { EditWebConfigurationFormFooter } from './components/edit-web-configuration-form/EditWebConfigurationFormFooter'
 import { Donations as UiDonations } from '@ui/components/editor/panel/Donations/Donations'
 import { use_latest_donations } from './hooks/latest-donations'
 import { DonationsFooter } from './components/donations/DonationsFooter'
@@ -31,7 +31,7 @@ import { use_tasks } from './hooks/use-tasks'
 import { use_response_history } from './hooks/panel/use-response-history'
 import { use_preview_manager } from './hooks/panel/use-preview-manager'
 import { use_editor_sync } from './hooks/panel/use-editor-sync'
-import { use_preset_editing } from './hooks/panel/use-preset-editing'
+import { use_web_configuration_editing } from './hooks/panel/use-web-configuration-editing'
 
 const vscode = acquireVsCodeApi()
 
@@ -58,14 +58,14 @@ export const Panel = () => {
     set_chat_input_focus_and_select_key,
     context_size_warning_threshold,
     can_undo,
-    presets_collapsed,
+    web_configurations_collapsed,
     send_with_shift_enter,
     api_configurations_collapsed,
     handle_instructions_change,
     handle_web_prompt_type_change,
     handle_api_prompt_type_change,
     handle_mode_change,
-    handle_presets_collapsed_change,
+    handle_web_configurations_collapsed_change,
     handle_api_configurations_collapsed_change,
     is_timeline_collapsed,
     handle_timeline_collapsed_change,
@@ -122,13 +122,13 @@ export const Panel = () => {
   } = use_tasks(vscode)
 
   const {
-    updating_preset,
-    set_updating_preset,
-    set_updated_preset,
-    edit_preset_back_click_handler,
-    edit_preset_save_handler,
-    handle_preview_preset
-  } = use_preset_editing(vscode)
+    updating_web_configuration,
+    set_updating_web_configuration,
+    set_updated_web_configuration,
+    edit_web_configuration_back_click_handler,
+    edit_web_configuration_save_handler,
+    handle_preview_web_configuration
+  } = use_web_configuration_editing(vscode)
 
   const {
     progress_state,
@@ -311,7 +311,7 @@ export const Panel = () => {
 
   const current_state = get_current_instructions_state()
   const are_keyboard_shortcuts_disabled =
-    !!updating_preset || !!items_in_preview || active_view != 'main'
+    !!updating_web_configuration || !!items_in_preview || active_view != 'main'
 
   return (
     <LayoutContext.Provider value={layout_context_value}>
@@ -332,13 +332,13 @@ export const Panel = () => {
                   are_keyboard_shortcuts_disabled
                 }
                 vscode={vscode}
-                on_preset_edit={(preset) => {
+                on_web_configuration_edit={(web_configuration) => {
                   post_message(vscode, {
-                    command: 'UPDATE_LAST_USED_PRESET',
-                    preset_name: preset.name!
+                    command: 'UPDATE_LAST_USED_WEB_CONFIGURATION',
+                    web_configuration_name: web_configuration.name!
                   })
-                  set_updating_preset(preset)
-                  set_updated_preset(preset)
+                  set_updating_web_configuration(web_configuration)
+                  set_updated_web_configuration(web_configuration)
                 }}
                 is_connected={is_connected}
                 on_show_home={() => {
@@ -397,9 +397,9 @@ export const Panel = () => {
                 chat_input_focus_key={chat_input_focus_key}
                 context_size_warning_threshold={context_size_warning_threshold}
                 context_file_paths={context_file_paths}
-                presets_collapsed={presets_collapsed}
+                web_configurations_collapsed={web_configurations_collapsed}
                 send_with_shift_enter={send_with_shift_enter}
-                on_presets_collapsed_change={handle_presets_collapsed_change}
+                on_web_configurations_collapsed_change={handle_web_configurations_collapsed_change}
                 api_configurations_collapsed={api_configurations_collapsed}
                 on_api_configurations_collapsed_change={
                   handle_api_configurations_collapsed_change
@@ -513,17 +513,17 @@ export const Panel = () => {
           </Layout>
         </div>
 
-        {updating_preset && (
+        {updating_web_configuration && (
           <div className={styles.slot}>
             <UiPage
-              on_back_click={edit_preset_back_click_handler}
+              on_back_click={edit_web_configuration_back_click_handler}
               footer_slot={
-                <EditPresetFormFooter on_save={edit_preset_save_handler} />
+                <EditWebConfigurationFormFooter on_save={edit_web_configuration_save_handler} />
               }
-              title="Edit Preset"
+              title="Edit Web Configuration"
               header_slot={
                 <UiTextButton
-                  on_click={handle_preview_preset}
+                  on_click={handle_preview_web_configuration}
                   disabled={is_preview_disabled}
                   title={
                     !is_connected
@@ -544,9 +544,9 @@ export const Panel = () => {
                 </UiTextButton>
               }
             >
-              <EditPresetForm
-                preset={updating_preset}
-                on_update={set_updated_preset}
+              <EditWebConfigurationForm
+                web_configuration={updating_web_configuration}
+                on_update={set_updated_web_configuration}
                 pick_model={(chatbot_name, current_model_id) => {
                   post_message(vscode, {
                     command: 'PICK_MODEL',

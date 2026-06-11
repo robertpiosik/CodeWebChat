@@ -8,7 +8,7 @@ import {
   ResponseHistoryItem,
   RecentApiConfiguration
 } from '@shared/types/response-history-item'
-import { Preset } from '@shared/types/preset'
+import { WebConfiguration } from '@shared/types/web-configuration'
 import { Task } from '@shared/types/task'
 import { Mode } from './main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
@@ -45,7 +45,7 @@ export type SelectionState = {
 
 export type ApiConfiguration = {
   id: string
-  provider_name: string
+  model_provider_name: string
   model: string
   temperature?: number
   reasoning_effort?: string
@@ -102,26 +102,26 @@ export interface GetConnectionStatusMessage extends BaseMessage {
   command: 'GET_CONNECTION_STATUS'
 }
 
-export interface GetPresetsMessage extends BaseMessage {
-  command: 'GET_PRESETS'
+export interface GetWebConfigurationsMessage extends BaseMessage {
+  command: 'GET_WEB_CONFIGURATIONS'
 }
 
-export interface ReplacePresetsMessage extends BaseMessage {
-  command: 'REPLACE_PRESETS'
-  presets: Preset[]
+export interface ReplaceWebConfigurationsMessage extends BaseMessage {
+  command: 'REPLACE_WEB_CONFIGURATIONS'
+  web_configurations: WebConfiguration[]
 }
 
 export interface SendToBrowserMessage extends BaseMessage {
   command: 'SEND_TO_BROWSER'
   invocation_count: number
-  preset_name?: string
+  web_configuration_name?: string
   show_quick_pick?: boolean
 }
 
 export interface CopyPromptMessage extends BaseMessage {
   command: 'COPY_PROMPT'
   instructions: string
-  preset_name?: string
+  web_configuration_name?: string
 }
 
 export interface RequestEditorStateMessage extends BaseMessage {
@@ -155,25 +155,25 @@ export interface GetContextSizeWarningThresholdMessage extends BaseMessage {
   command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD'
 }
 
-export interface UpdatePresetMessage extends BaseMessage {
-  command: 'UPDATE_PRESET'
-  updating_preset: Preset
-  updated_preset: Preset
+export interface UpdateWebConfigurationMessage extends BaseMessage {
+  command: 'UPDATE_WEB_CONFIGURATION'
+  updating_web_configuration: WebConfiguration
+  updated_web_configuration: WebConfiguration
   origin: 'back_button' | 'save_button'
 }
 
-export interface DeletePresetMessage extends BaseMessage {
-  command: 'DELETE_PRESET'
+export interface DeleteWebConfigurationMessage extends BaseMessage {
+  command: 'DELETE_WEB_CONFIGURATION'
   index: number
 }
 
-export interface DuplicatePresetMessage extends BaseMessage {
-  command: 'DUPLICATE_PRESET'
+export interface DuplicateWebConfigurationMessage extends BaseMessage {
+  command: 'DUPLICATE_WEB_CONFIGURATION'
   index: number
 }
 
-export interface CreatePresetMessage extends BaseMessage {
-  command: 'CREATE_PRESET'
+export interface CreateWebConfigurationMessage extends BaseMessage {
+  command: 'CREATE_WEB_CONFIGURATION'
   placement?: 'top' | 'bottom'
   reference_index?: number
 }
@@ -187,9 +187,9 @@ export interface ShowPromptTemplateQuickPickMessage extends BaseMessage {
   command: 'SHOW_PROMPT_TEMPLATE_QUICK_PICK'
 }
 
-export interface PreviewPresetMessage extends BaseMessage {
-  command: 'PREVIEW_PRESET'
-  preset: Preset
+export interface PreviewWebConfigurationMessage extends BaseMessage {
+  command: 'PREVIEW_WEB_CONFIGURATION'
+  web_configuration: WebConfiguration
 }
 
 export interface CaretPositionChangedWebviewMessage extends BaseMessage {
@@ -353,9 +353,9 @@ export interface GetWorkspaceStateMessage extends BaseMessage {
   command: 'GET_WORKSPACE_STATE'
 }
 
-export interface UpdateLastUsedPresetMessage extends BaseMessage {
-  command: 'UPDATE_LAST_USED_PRESET'
-  preset_name: string
+export interface UpdateLastUsedWebConfigurationMessage extends BaseMessage {
+  command: 'UPDATE_LAST_USED_WEB_CONFIGURATION'
+  web_configuration_name: string
 }
 
 export interface IntelligentUpdateFileInPreviewMessage extends BaseMessage {
@@ -401,7 +401,7 @@ export interface GetCollapsedStatesMessage extends BaseMessage {
 
 export interface SaveComponentCollapsedStateMessage extends BaseMessage {
   command: 'SAVE_COMPONENT_COLLAPSED_STATE'
-  component: 'presets' | 'api-configurations' | 'timeline' | 'tasks'
+  component: 'web-configurations' | 'api-configurations' | 'timeline' | 'tasks'
   is_collapsed: boolean
 }
 
@@ -564,8 +564,8 @@ export type FrontendMessage =
   | GetEditFormatInstructionsMessage
   | SaveEditFormatMessage
   | GetConnectionStatusMessage
-  | GetPresetsMessage
-  | ReplacePresetsMessage
+  | GetWebConfigurationsMessage
+  | ReplaceWebConfigurationsMessage
   | SendToBrowserMessage
   | CopyPromptMessage
   | RequestEditorStateMessage
@@ -574,13 +574,13 @@ export type FrontendMessage =
   | GetResponseHistoryMessage
   | SaveHistoryMessage
   | GetContextSizeWarningThresholdMessage
-  | UpdatePresetMessage
-  | DeletePresetMessage
-  | DuplicatePresetMessage
-  | CreatePresetMessage
+  | UpdateWebConfigurationMessage
+  | DeleteWebConfigurationMessage
+  | DuplicateWebConfigurationMessage
+  | CreateWebConfigurationMessage
   | ExecuteCommandMessage
   | ShowPromptTemplateQuickPickMessage
-  | PreviewPresetMessage
+  | PreviewWebConfigurationMessage
   | CaretPositionChangedWebviewMessage
   | PickModelMessage
   | PickChatbotMessage
@@ -614,7 +614,7 @@ export type FrontendMessage =
   | GetWorkspaceStateMessage
   | IntelligentUpdateFileInPreviewMessage
   | CancelIntelligentUpdateFileInPreviewMessage
-  | UpdateLastUsedPresetMessage
+  | UpdateLastUsedWebConfigurationMessage
   | FixAllFailedFilesMessage
   | ManageApiConfigurationsMessage
   | UndoMessage
@@ -679,10 +679,10 @@ export interface EditFormatInstructionsMessage extends BaseMessage {
   instructions: Record<EditFormat, string>
 }
 
-export interface PresetsMessage extends BaseMessage {
-  command: 'PRESETS'
-  presets: Preset[]
-  selected_preset_name_by_mode?: { [T in WebPromptType]?: string }
+export interface WebConfigurationsMessage extends BaseMessage {
+  command: 'WEB_CONFIGURATIONS'
+  web_configurations: WebConfiguration[]
+  selected_web_configuration_name_by_mode?: { [T in WebPromptType]?: string }
   selected_api_configuration_id_by_prompt_type?: { [T in ApiPromptType]?: string }
 }
 
@@ -725,13 +725,13 @@ export interface ContextSizeWarningThresholdMessage extends BaseMessage {
   threshold: number
 }
 
-export interface PresetCreatedMessage extends BaseMessage {
-  command: 'PRESET_CREATED'
-  preset: Preset
+export interface WebConfigurationCreatedMessage extends BaseMessage {
+  command: 'WEB_CONFIGURATION_CREATED'
+  web_configuration: WebConfiguration
 }
 
-export interface PresetUpdatedMessage extends BaseMessage {
-  command: 'PRESET_UPDATED'
+export interface WebConfigurationUpdatedMessage extends BaseMessage {
+  command: 'WEB_CONFIGURATION_UPDATED'
 }
 
 export interface NewlyPickedModelMessage extends BaseMessage {
@@ -807,8 +807,8 @@ export interface WorkspaceStateMessage extends BaseMessage {
   folder_count: number
 }
 
-export interface SelectedPresetChangedMessage extends BaseMessage {
-  command: 'SELECTED_PRESET_CHANGED'
+export interface SelectedWebConfigurationChangedMessage extends BaseMessage {
+  command: 'SELECTED_WEB_CONFIGURATION_CHANGED'
   prompt_type: WebPromptType
   name: string
 }
@@ -875,7 +875,7 @@ export interface UpdateFileInPreviewMessage extends BaseMessage {
 
 export interface CollapsedStatesMessage extends BaseMessage {
   command: 'COLLAPSED_STATES'
-  presets_collapsed: boolean
+  web_configurations_collapsed: boolean
   api_configurations_collapsed: boolean
   are_tasks_collapsed: boolean
   is_timeline_collapsed: boolean
@@ -926,15 +926,15 @@ export type BackendMessage =
   | EditFormatMessage
   | EditFormatInstructionsMessage
   | ApiConfigurationsMessage
-  | PresetsMessage
+  | WebConfigurationsMessage
   | EditorStateChangedMessage
   | EditorSelectionChangedMessage
   | ChatHistoryMessage
   | ResponseHistoryMessage
   | TokenCountMessage
   | ContextSizeWarningThresholdMessage
-  | PresetCreatedMessage
-  | PresetUpdatedMessage
+  | WebConfigurationCreatedMessage
+  | WebConfigurationUpdatedMessage
   | NewlyPickedModelMessage
   | NewlyPickedChatbotMessage
   | NewlyPickedReasoningEffortMessage
@@ -949,7 +949,7 @@ export type BackendMessage =
   | ResponsePreviewStartedMessage
   | ResponsePreviewFinishedMessage
   | WorkspaceStateMessage
-  | SelectedPresetChangedMessage
+  | SelectedWebConfigurationChangedMessage
   | SelectedApiConfigurationChangedMessage
   | ShowProgressMessage
   | HideProgressMessage

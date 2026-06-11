@@ -1,8 +1,8 @@
 import * as vscode from 'vscode'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { PreviewPresetMessage } from '@/views/panel/types/messages'
+import { PreviewWebConfigurationMessage } from '@/views/panel/types/messages'
 import { FilesCollector } from '@/utils/files-collector'
-import { Preset } from '@shared/types/preset'
+import { WebConfiguration } from '@shared/types/web-configuration'
 import { dictionary } from '@shared/constants/dictionary'
 import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE,
@@ -12,9 +12,9 @@ import {
 } from '@/constants/edit-format-instructions'
 import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-symbols'
 
-export const handle_preview_preset = async (
+export const handle_preview_web_configuration = async (
   panel_provider: PanelProvider,
-  message: PreviewPresetMessage
+  message: PreviewWebConfigurationMessage
 ): Promise<void> => {
   await vscode.workspace.saveAll()
 
@@ -118,23 +118,23 @@ export const handle_preview_preset = async (
     return
   }
 
-  const preset_for_preview: Preset = {
-    name: message.preset.name,
-    chatbot: message.preset.chatbot,
-    model: message.preset.model,
-    temperature: message.preset.temperature,
-    top_p: message.preset.top_p,
-    thinking_budget: message.preset.thinking_budget,
-    reasoning_effort: message.preset.reasoning_effort,
-    system_instructions: message.preset.system_instructions,
-    options: message.preset.options,
-    port: message.preset.port,
-    new_url: message.preset.new_url
+  const web_configuration_for_preview: WebConfiguration = {
+    name: message.web_configuration.name,
+    chatbot: message.web_configuration.chatbot,
+    model: message.web_configuration.model,
+    temperature: message.web_configuration.temperature,
+    top_p: message.web_configuration.top_p,
+    thinking_budget: message.web_configuration.thinking_budget,
+    reasoning_effort: message.web_configuration.reasoning_effort,
+    system_instructions: message.web_configuration.system_instructions,
+    options: message.web_configuration.options,
+    port: message.web_configuration.port,
+    new_url: message.web_configuration.new_url
   }
 
   const sent = await panel_provider.websocket_server_instance.preview_preset({
     instruction: text_to_send,
-    preset: preset_for_preview,
+    preset: web_configuration_for_preview,
     prompt_type: panel_provider.web_prompt_type,
     raw_instructions: current_instructions
   })

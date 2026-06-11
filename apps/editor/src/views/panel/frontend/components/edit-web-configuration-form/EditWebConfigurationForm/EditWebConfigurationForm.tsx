@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import cn from 'classnames'
-import styles from './EditPresetForm.module.scss'
+import styles from './EditWebConfigurationForm.module.scss'
 import dropdown_styles from '@ui/components/editor/common/Dropdown/Dropdown.module.scss'
-import { Preset } from '@shared/types/preset'
+import { WebConfiguration } from '@shared/types/web-configuration'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { Field as UiField } from '@ui/components/editor/panel/Field'
 import { Slider as UiSlider } from '@ui/components/editor/panel/Slider'
@@ -14,8 +14,8 @@ import { Scrollable as UiScrollable } from '@ui/components/editor/panel/Scrollab
 import { Fieldset as UiFieldset } from '@ui/components/editor/panel/Fieldset'
 
 type Props = {
-  preset: Preset
-  on_update: (updated_preset: Preset) => void
+  web_configuration: WebConfiguration
+  on_update: (updated_web_configuration: WebConfiguration) => void
   pick_model: (chatbot_name: string, current_model_id?: string) => void
   pick_chatbot: (chatbot_id?: keyof typeof CHATBOTS) => void
   pick_reasoning_effort: (
@@ -25,32 +25,32 @@ type Props = {
 }
 
 /**
- * Preset can have a "group" variant (when chatbot is not set). It is used to:
- * - initialize all selected presets below it,
+ * Web Configuration can have a "group" variant (when chatbot is not set). It is used to:
+ * - initialize all selected web configurations below it,
  */
-export const EditPresetForm: React.FC<Props> = (props) => {
-  const [chatbot, set_chatbot] = useState(props.preset.chatbot)
-  const [name, set_name] = useState(props.preset.name)
-  const [temperature, set_temperature] = useState(props.preset.temperature)
-  const [top_p, set_top_p] = useState(props.preset.top_p)
+export const EditWebConfigurationForm: React.FC<Props> = (props) => {
+  const [chatbot, set_chatbot] = useState(props.web_configuration.chatbot)
+  const [name, set_name] = useState(props.web_configuration.name)
+  const [temperature, set_temperature] = useState(props.web_configuration.temperature)
+  const [top_p, set_top_p] = useState(props.web_configuration.top_p)
   const [thinking_budget, set_thinking_budget] = useState(
-    props.preset.thinking_budget
+    props.web_configuration.thinking_budget
   )
   const [reasoning_effort, set_reasoning_effort] = useState(
-    props.preset.reasoning_effort
+    props.web_configuration.reasoning_effort
   )
-  const [model, set_model] = useState(props.preset.model)
+  const [model, set_model] = useState(props.web_configuration.model)
   const [system_instructions, set_system_instructions] = useState(
-    props.preset.system_instructions
+    props.web_configuration.system_instructions
   )
-  const [port, set_port] = useState(props.preset.port)
-  const [new_url, set_new_url] = useState(props.preset.new_url)
-  const [options, set_options] = useState<string[]>(props.preset.options || [])
+  const [port, set_port] = useState(props.web_configuration.port)
+  const [new_url, set_new_url] = useState(props.web_configuration.new_url)
+  const [options, set_options] = useState<string[]>(props.web_configuration.options || [])
   const [is_sampling_collapsed, set_is_sampling_collapsed] = useState(
-    props.preset.temperature === undefined && props.preset.top_p === undefined
+    props.web_configuration.temperature === undefined && props.web_configuration.top_p === undefined
   )
   const [is_options_collapsed, set_is_options_collapsed] = useState(
-    !props.preset.options?.length
+    !props.web_configuration.options?.length
   )
 
   const chatbot_config = chatbot ? CHATBOTS[chatbot] : undefined
@@ -112,8 +112,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
         ...(port !== undefined ? { port } : {}),
         ...(new_url ? { new_url } : {}),
         ...(options.length ? { options } : {}),
-        is_selected: props.preset.is_selected,
-        is_pinned: props.preset.is_pinned
+        is_pinned: props.web_configuration.is_pinned
       })
     } else {
       props.on_update({

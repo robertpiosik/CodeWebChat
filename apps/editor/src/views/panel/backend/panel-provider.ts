@@ -21,15 +21,15 @@ import {
 import {
   handle_copy_prompt,
   handle_send_to_browser,
-  handle_update_preset,
-  handle_delete_preset,
+  handle_update_web_configuration,
+  handle_delete_web_configuration,
   handle_create_checkpoint,
   handle_clear_all_checkpoints,
-  handle_duplicate_preset,
-  handle_create_preset,
-  handle_preview_preset,
+  handle_duplicate_web_configuration,
+  handle_create_web_configuration,
+  handle_preview_web_configuration,
   handle_save_edit_format,
-  handle_replace_presets,
+  handle_replace_web_configurations,
   handle_get_connection_status,
   handle_get_history,
   handle_apply_response_from_history,
@@ -90,7 +90,7 @@ import {
   handle_cancel_intelligent_update_file_in_preview,
   handle_upsert_api_configuration,
   handle_delete_api_configuration,
-  handle_update_last_used_preset_or_group,
+  handle_update_last_used_web_configuration_or_group,
   handle_get_find_relevant_files_shrink_source_code,
   handle_save_find_relevant_files_shrink_source_code,
   handle_return_home_and_switch_to_edit_context
@@ -114,9 +114,9 @@ import {
   FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY
 } from '@/constants/state-keys'
 import {
-  config_preset_to_ui_format,
-  ConfigPresetFormat
-} from '@/views/panel/backend/utils/preset-format-converters'
+  config_web_configuration_to_ui_format,
+  ConfigWebConfigurationFormat
+} from '@/views/panel/backend/utils/web-configuration-format-converters'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { MODE, Mode } from '../types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
@@ -445,11 +445,11 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     this._config_listener = vscode.workspace.onDidChangeConfiguration(
       (event) => {
         if (!this._webview_view) return
-        const all_preset_keys = [
+        const all_web_configuration_keys = [
           'codeWebChat.chatPresets'
         ]
-        if (all_preset_keys.some((key) => event.affectsConfiguration(key))) {
-          this.send_presets_to_webview(this._webview_view.webview)
+        if (all_web_configuration_keys.some((key) => event.affectsConfiguration(key))) {
+          this.send_web_configurations_to_webview(this._webview_view.webview)
         }
 
         if (
@@ -623,7 +623,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     })
   }
 
-  public get_presets_config_key(): string {
+  public get_web_configurations_config_key(): string {
     return 'chatPresets'
   }
 
@@ -763,22 +763,22 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_save_instructions(this, message)
           } else if (message.command == 'GET_CONNECTION_STATUS') {
             handle_get_connection_status(this)
-          } else if (message.command == 'GET_PRESETS') {
-            this.send_presets_to_webview(webview_view.webview)
+          } else if (message.command == 'GET_WEB_CONFIGURATIONS') {
+            this.send_web_configurations_to_webview(webview_view.webview)
           } else if (message.command == 'SEND_TO_BROWSER') {
             await handle_send_to_browser({
               panel_provider: this,
-              preset_name: message.preset_name,
+              web_configuration_name: message.web_configuration_name,
               show_quick_pick: message.show_quick_pick,
               invocation_count: message.invocation_count
             })
-          } else if (message.command == 'PREVIEW_PRESET') {
-            await handle_preview_preset(this, message)
+          } else if (message.command == 'PREVIEW_WEB_CONFIGURATION') {
+            await handle_preview_web_configuration(this, message)
           } else if (message.command == 'COPY_PROMPT') {
             await handle_copy_prompt({
               panel_provider: this,
               instructions: message.instructions,
-              preset_name: message.preset_name
+              web_configuration_name: message.web_configuration_name
             })
           } else if (message.command == 'REQUEST_EDITOR_STATE') {
             handle_request_editor_state(this)
@@ -788,26 +788,26 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             this._send_context_size_warning_threshold()
           } else if (message.command == 'REQUEST_CURRENTLY_OPEN_FILE_TEXT') {
             this.send_currently_open_file_text()
-          } else if (message.command == 'REPLACE_PRESETS') {
-            await handle_replace_presets(this, message)
+          } else if (message.command == 'REPLACE_WEB_CONFIGURATIONS') {
+            await handle_replace_web_configurations(this, message)
           } else if (message.command == 'GET_SEND_WITH_SHIFT_ENTER') {
             this._send_send_with_shift_enter()
-          } else if (message.command == 'UPDATE_PRESET') {
-            await handle_update_preset(this, message, webview_view)
-          } else if (message.command == 'DELETE_PRESET') {
-            await handle_delete_preset(
+          } else if (message.command == 'UPDATE_WEB_CONFIGURATION') {
+            await handle_update_web_configuration(this, message, webview_view)
+          } else if (message.command == 'DELETE_WEB_CONFIGURATION') {
+            await handle_delete_web_configuration(
               this,
               message,
               webview_view
             )
-          } else if (message.command == 'DUPLICATE_PRESET') {
-            await handle_duplicate_preset(
+          } else if (message.command == 'DUPLICATE_WEB_CONFIGURATION') {
+            await handle_duplicate_web_configuration(
               this,
               message,
               webview_view
             )
-          } else if (message.command == 'CREATE_PRESET') {
-            await handle_create_preset(this, message)
+          } else if (message.command == 'CREATE_WEB_CONFIGURATION') {
+            await handle_create_web_configuration(this, message)
           } else if (message.command == 'UNDO') {
             await handle_undo(this)
           } else if (message.command == 'APPLY_RESPONSE_FROM_HISTORY') {
@@ -926,10 +926,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_pick_chatbot(this, message)
           } else if (message.command == 'PICK_REASONING_EFFORT') {
             await handle_pick_reasoning_effort(this, message)
-          } else if (message.command == 'UPDATE_LAST_USED_PRESET') {
-            handle_update_last_used_preset_or_group({
+          } else if (message.command == 'UPDATE_LAST_USED_WEB_CONFIGURATION') {
+            handle_update_last_used_web_configuration_or_group({
               panel_provider: this,
-              preset_name: message.preset_name
+              web_configuration_name: message.web_configuration_name
             })
           } else if (message.command == 'MANAGE_API_CONFIGURATIONS') {
             await handle_manage_api_configurations()
@@ -1010,7 +1010,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     )
   }
 
-  public send_presets_to_webview(_: vscode.Webview) {
+  public send_web_configurations_to_webview(_: vscode.Webview) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const web_prompt_types: WebPromptType[] = [
       'ask-about-context',
@@ -1020,13 +1020,13 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       'no-context'
     ]
 
-    const presets_config = config.get<ConfigPresetFormat[]>('chatPresets', []) || []
-    const presets_ui = presets_config
-      .filter((preset_config) => preset_config.chatbot && CHATBOTS[preset_config.chatbot])
-      .map((preset_config) => {
-        let model = preset_config.model
-        if (preset_config.chatbot && model) {
-          const chatbot_info = CHATBOTS[preset_config.chatbot]
+    const web_configurations_config = config.get<ConfigWebConfigurationFormat[]>('chatPresets', []) || []
+    const web_configurations_ui = web_configurations_config
+      .filter((config) => config.chatbot && CHATBOTS[config.chatbot])
+      .map((config) => {
+        let model = config.model
+        if (config.chatbot && model) {
+          const chatbot_info = CHATBOTS[config.chatbot]
           const is_user_provided_supported = chatbot_info.supports_user_provided_model
           const is_model_predefined = chatbot_info.models?.[model]
 
@@ -1034,13 +1034,13 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             model = undefined
           }
         }
-        return config_preset_to_ui_format({ ...preset_config, model })
+        return config_web_configuration_to_ui_format({ ...config, model })
       })
 
     this.send_message({
-      command: 'PRESETS',
-      presets: presets_ui,
-      selected_preset_name_by_mode: Object.fromEntries(
+      command: 'WEB_CONFIGURATIONS',
+      web_configurations: web_configurations_ui,
+      selected_web_configuration_name_by_mode: Object.fromEntries(
         web_prompt_types.map((prompt_type) => {
           let selected_name: string | undefined = undefined
           const key = get_recently_used_presets_or_groups_key(prompt_type)
@@ -1049,7 +1049,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             this.context.globalState.get<string[]>(key, [])
           const last_selected = recents[0]
           if (last_selected) {
-            if (presets_ui.some((p) => p.name === last_selected)) {
+            if (web_configurations_ui.some((p) => p.name === last_selected)) {
               selected_name = last_selected
             }
           }

@@ -13,7 +13,7 @@ import { CHATBOTS } from '@shared/constants/chatbots'
 import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
-import { Preset } from '@shared/types/preset'
+import { WebConfiguration } from '@shared/types/web-configuration'
 import { ConfigPresetFormat } from '@/views/panel/backend/utils/preset-format-converters'
 import { LAST_SELECTED_BROWSER_ID_STATE_KEY } from '@/constants/state-keys'
 import { ApplyChatResponseCommandArgs } from '@/commands/apply-chat-response-command/response-processor'
@@ -345,12 +345,12 @@ export class WebSocketManager {
   public async initialize_chats(params: {
     chats: Array<{
       text: string
-      preset_name: string
+      web_configuration_name: string
       raw_instructions?: string
       edit_format?: string
       prompt_type?: WebPromptType
     }>
-    presets_config_key: string
+    web_configurations_config_key: string
   }): Promise<boolean> {
     if (!this.has_connected_browsers) {
       throw new Error('Does not have connected browsers.')
@@ -358,7 +358,7 @@ export class WebSocketManager {
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const web_chat_presets =
-      config.get<ConfigPresetFormat[]>(params.presets_config_key) ?? []
+      config.get<ConfigPresetFormat[]>(params.web_configurations_config_key) ?? []
     const gemini_user_id = config.get<number | null>('geminiUserId')
     const ai_studio_user_id = config.get<number | null>('aiStudioUserId')
     const reuse_last_tab =
@@ -372,7 +372,7 @@ export class WebSocketManager {
     }
 
     for (const chat of params.chats) {
-      const preset = web_chat_presets.find((p) => p.name == chat.preset_name)
+      const preset = web_chat_presets.find((p) => p.name == chat.web_configuration_name)
       if (!preset) {
         continue
       }
@@ -460,7 +460,7 @@ export class WebSocketManager {
 
   public async preview_preset(params: {
     instruction: string
-    preset: Preset
+    preset: WebConfiguration
     raw_instructions: string
     prompt_type?: WebPromptType
   }): Promise<boolean> {

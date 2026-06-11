@@ -143,24 +143,6 @@ export const actions = {
     hu: 'Konfiguráció beszúrása',
     bg: 'Вмъкване на конфигурация'
   },
-  'action.run-selected': {
-    en: 'Run Selected Presets',
-    pl: 'Uruchom wybrane presety',
-    'zh-cn': '运行选定的预设',
-    ja: '選択したプリセットを実行',
-    'zh-tw': '執行選定的預設',
-    de: 'Ausgewählte Voreinstellungen ausführen',
-    es: 'Ejecutar ajustes preestablecidos seleccionados',
-    fr: 'Exécuter les préréglages sélectionnés',
-    'pt-br': 'Executar Predefinições Selecionadas',
-    ru: 'Запустить выбранные пресеты',
-    ko: '선택한 사전 설정 실행',
-    it: 'Esegui preimpostazioni selezionate',
-    tr: 'Seçili Ön Ayarları Çalıştır',
-    cs: 'Spustit vybrané předvolby',
-    hu: 'Kiválasztott Előbeállítások Futtatása',
-    bg: 'Изпълнение на избраните шаблони'
-  },
   'action.select-multi': {
     en: 'Select for multi-initialization',
     pl: 'Wybierz do wielokrotnej inicjalizacji',

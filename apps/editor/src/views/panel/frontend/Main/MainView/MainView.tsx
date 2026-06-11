@@ -2,7 +2,7 @@ import styles from './MainView.module.scss'
 import { Configurations as UiConfigurations } from '@ui/components/editor/panel/Configurations'
 import { PromptField as UiPromptField } from '@ui/components/editor/panel/prompts/PromptField'
 import { Separator as UiSeparator } from '@ui/components/editor/panel/Separator'
-import { Preset } from '@shared/types/preset'
+import { WebConfiguration } from '@shared/types/web-configuration'
 import { Responses as UiResponses } from '@ui/components/editor/panel/Responses'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { EditFormat } from '@shared/types/edit-format'
@@ -24,13 +24,13 @@ import { CHATBOTS } from '@shared/constants/chatbots'
 type Props = {
   scroll_reset_key: number
   initialize_chats: (params: {
-    preset_name?: string
+    web_configuration_name?: string
     show_quick_pick?: boolean
     invocation_count: number
   }) => void
-  copy_to_clipboard: (preset_name?: string) => void
+  copy_to_clipboard: (web_configuration_name?: string) => void
   on_show_home: () => void
-  on_create_preset: (
+  on_create_web_configuration: (
     placement?: 'top' | 'bottom',
     reference_index?: number
   ) => void
@@ -39,7 +39,7 @@ type Props = {
   on_curly_braces_click: () => void
   on_quick_action_click: (command: string) => void
   is_connected: boolean
-  presets: Preset[]
+  web_configurations: WebConfiguration[]
   api_configurations: ApiConfiguration[]
   on_api_configuration_click: (id: string) => void
   on_api_configurations_reorder: (
@@ -66,12 +66,12 @@ type Props = {
   api_edit_format: EditFormat
   on_chat_edit_format_change: (edit_format: EditFormat) => void
   on_api_edit_format_change: (edit_format: EditFormat) => void
-  on_presets_reorder: (reordered_presets: Preset[]) => void
-  on_preset_edit: (preset_name: string) => void
-  on_duplicate_preset: (index: number) => void
-  on_delete_preset: (index: number) => void
-  on_toggle_preset_pinned: (name: string) => void
-  selected_preset_name?: string
+  on_web_configurations_reorder: (reordered_web_configurations: WebConfiguration[]) => void
+  on_web_configuration_edit: (web_configuration_name: string) => void
+  on_duplicate_web_configuration: (index: number) => void
+  on_delete_web_configuration: (index: number) => void
+  on_toggle_web_configuration_pinned: (name: string) => void
+  selected_web_configuration_name?: string
   selected_api_configuration_id?: string
   instructions: string
   set_instructions: (value: string) => void
@@ -96,8 +96,8 @@ type Props = {
   on_selected_history_item_change: (created_at: number) => void
   on_response_history_item_remove: (created_at: number) => void
   context_file_paths: string[]
-  presets_collapsed: boolean
-  on_presets_collapsed_change: (is_collapsed: boolean) => void
+  web_configurations_collapsed: boolean
+  on_web_configurations_collapsed_change: (is_collapsed: boolean) => void
   send_with_shift_enter: boolean
   api_configurations_collapsed: boolean
   on_api_configurations_collapsed_change: (is_collapsed: boolean) => void
@@ -214,21 +214,21 @@ export const MainView: React.FC<Props> = (props) => {
 
   const last_choice_button_title = use_last_choice_button_title({
     mode: props.mode,
-    selected_preset_or_group_name: props.selected_preset_name,
-    presets: props.presets,
+    selected_web_configuration_or_group_name: props.selected_web_configuration_name,
+    web_configurations: props.web_configurations,
     selected_api_configuration_id: props.selected_api_configuration_id,
     api_configurations: props.api_configurations
   })
 
-  const web_configurations: UiConfigurations.Configuration[] = props.presets.map(
-    (preset, index) => {
-      const is_unnamed = !preset.name || /^\(\d+\)$/.test(preset.name.trim())
+  const web_configurations: UiConfigurations.Configuration[] = props.web_configurations.map(
+    (web_configuration, index) => {
+      const is_unnamed = !web_configuration.name || /^\(\d+\)$/.test(web_configuration.name.trim())
       const display_name = is_unnamed
-        ? preset.chatbot!
-        : preset.name!.replace(/ \(\d+\)$/, '')
+        ? web_configuration.chatbot!
+        : web_configuration.name!.replace(/ \(\d+\)$/, '')
 
       const get_details = (): string[] => {
-        const { chatbot, model } = preset
+        const { chatbot, model } = web_configuration
         const model_display_name =
           model && chatbot ? CHATBOTS[chatbot].models?.[model]?.label || model : null
 
@@ -238,18 +238,18 @@ export const MainView: React.FC<Props> = (props) => {
       }
 
       return {
-        id: preset.name ?? `unnamed-${index}`,
+        id: web_configuration.name ?? `unnamed-${index}`,
         title: display_name,
         details: get_details(),
-        is_pinned: preset.is_pinned,
-        icon: preset.chatbot ? chatbot_to_icon[preset.chatbot] : undefined,
+        is_pinned: web_configuration.is_pinned,
+        icon: web_configuration.chatbot ? chatbot_to_icon[web_configuration.chatbot] : undefined,
       }
     }
   )
 
   const api_configurations_ui: UiConfigurations.Configuration[] = props.api_configurations.map(
     (c) => {
-      const details = [c.provider_name]
+      const details = [c.model_provider_name]
       if (c.reasoning_effort) {
         details.push(`${c.reasoning_effort}`)
       }
@@ -297,7 +297,7 @@ export const MainView: React.FC<Props> = (props) => {
 
         {!props.is_connected &&
           props.mode == MODE.WEB &&
-          props.presets.length > 0 && (
+          props.web_configurations.length > 0 && (
             <>
               <div className={styles['browser-extension-message']}>
                 <UiBrowserExtensionMessage />
@@ -385,7 +385,7 @@ export const MainView: React.FC<Props> = (props) => {
             missing_configuration={
               props.mode == MODE.API && props.api_configurations.length == 0
             }
-            missing_preset={props.mode == MODE.WEB && props.presets.length == 0}
+            missing_preset={props.mode == MODE.WEB && props.web_configurations.length == 0}
             voice_input_push_to_talk={props.voice_input_push_to_talk}
           />
           <UiContextUtilisation
@@ -403,49 +403,49 @@ export const MainView: React.FC<Props> = (props) => {
             <UiConfigurations
               configurations={web_configurations}
               on_create={(params) =>
-                props.on_create_preset(
+                props.on_create_web_configuration(
                   params?.create_on_top ? 'top' : 'bottom',
                   params?.insertion_index
                 )
               }
               on_configuration_click={(id) => {
                 props.initialize_chats({
-                  preset_name: id,
+                  web_configuration_name: id,
                   show_quick_pick: false,
                   invocation_count: current_invocation_count
                 })
               }}
-              on_edit={(id) => props.on_preset_edit(id)}
+              on_edit={(id) => props.on_web_configuration_edit(id)}
               on_reorder={(reordered) => {
-                const new_presets = reordered.map((c) => {
-                  return props.presets.find(
+                const new_web_configurations = reordered.map((c) => {
+                  return props.web_configurations.find(
                     (p, i) => (p.name ?? `unnamed-${i}`) === c.id
                   )!
                 })
-                props.on_presets_reorder(new_presets)
+                props.on_web_configurations_reorder(new_web_configurations)
               }}
               on_duplicate={(id) => {
-                const idx = props.presets.findIndex((p, i) => (p.name ?? `unnamed-${i}`) === id)
-                props.on_duplicate_preset(idx)
+                const idx = props.web_configurations.findIndex((p, i) => (p.name ?? `unnamed-${i}`) === id)
+                props.on_duplicate_web_configuration(idx)
               }}
               on_delete={(id) => {
-                const idx = props.presets.findIndex((p, i) => (p.name ?? `unnamed-${i}`) === id)
-                props.on_delete_preset(idx)
+                const idx = props.web_configurations.findIndex((p, i) => (p.name ?? `unnamed-${i}`) === id)
+                props.on_delete_web_configuration(idx)
               }}
-              on_toggle_pinned={(id) => props.on_toggle_preset_pinned(id)}
-              selected_configuration_id={props.selected_preset_name}
-              is_collapsed={props.presets_collapsed}
-              on_toggle_collapsed={props.on_presets_collapsed_change}
+              on_toggle_pinned={(id) => props.on_toggle_web_configuration_pinned(id)}
+              selected_configuration_id={props.selected_web_configuration_name}
+              is_collapsed={props.web_configurations_collapsed}
+              on_toggle_collapsed={props.on_web_configurations_collapsed_change}
               translations={{
-                title: t('presets.title'),
-                empty: t('presets.empty'),
+                title: t('configurations.title'),
+                empty: t('configurations.empty'),
                 add_new: t('action.add-new'),
                 pin: t('action.pin'),
                 unpin: t('action.unpin'),
-                duplicate_configuration: t('action.duplicate-configuration'),
+                insert: t('action.insert-configuration'),
                 edit: t('action.edit'),
                 delete: t('action.delete'),
-                insert: t('action.insert-configuration'),
+                duplicate_configuration: t('action.duplicate-configuration')
               }}
             />
           </>

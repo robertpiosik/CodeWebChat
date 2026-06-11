@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { MainView } from './MainView'
-import { Preset } from '@shared/types/preset'
+import { WebConfiguration } from '@shared/types/web-configuration'
 import { EditFormat } from '@shared/types/edit-format'
 import { MODE, Mode } from '@/views/panel/types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import {
   BackendMessage,
   ApiConfigurationsMessage,
-  PresetsMessage,
+  WebConfigurationsMessage,
   FrontendMessage,
   SelectionState
 } from '@/views/panel/types/messages'
@@ -24,7 +24,7 @@ type Props = {
   on_response_history_item_click: (item: ResponseHistoryItem) => void
   on_response_history_item_remove: (created_at: number) => void
   vscode: any
-  on_preset_edit: (preset: Preset) => void
+  on_web_configuration_edit: (web_configuration: WebConfiguration) => void
   on_show_home: () => void
   is_connected: boolean
   ask_instructions: string
@@ -53,8 +53,8 @@ type Props = {
   chat_input_focus_key: number
   context_size_warning_threshold: number
   context_file_paths: string[]
-  presets_collapsed: boolean
-  on_presets_collapsed_change: (is_collapsed: boolean) => void
+  web_configurations_collapsed: boolean
+  on_web_configurations_collapsed_change: (is_collapsed: boolean) => void
   send_with_shift_enter: boolean
   api_configurations_collapsed: boolean
   on_api_configurations_collapsed_change: (is_collapsed: boolean) => void
@@ -79,15 +79,15 @@ type Props = {
   on_tab_change: (index: number) => void
   on_new_tab: () => void
   on_tab_delete: (index: number) => void
-  missing_preset?: boolean
+  missing_web_configuration?: boolean
   voice_input_push_to_talk: boolean
 }
 
 export const Main: React.FC<Props> = (props) => {
-  const [all_presets, set_all_presets] = useState<Preset[]>()
+  const [all_web_configurations, set_all_web_configurations] = useState<WebConfiguration[]>()
   const [
-    selected_preset_name_by_mode,
-    set_selected_preset_name_by_mode
+    selected_web_configuration_name_by_mode,
+    set_selected_web_configuration_name_by_mode
   ] = useState<{ [T in WebPromptType]?: string }>()
   const [all_api_configurations, set_all_api_configurations] =
     useState<ApiConfiguration[]>()
@@ -117,13 +117,13 @@ export const Main: React.FC<Props> = (props) => {
     const handle_message = async (event: MessageEvent) => {
       const message = event.data as BackendMessage
       switch (message.command) {
-        case 'PRESETS':
-          set_all_presets((message as PresetsMessage).presets)
-          set_selected_preset_name_by_mode(
-            (message as PresetsMessage).selected_preset_name_by_mode
+        case 'WEB_CONFIGURATIONS':
+          set_all_web_configurations((message as WebConfigurationsMessage).web_configurations)
+          set_selected_web_configuration_name_by_mode(
+            (message as WebConfigurationsMessage).selected_web_configuration_name_by_mode
           )
           set_selected_api_configuration_id_by_prompt_type(
-            (message as PresetsMessage).selected_api_configuration_id_by_prompt_type
+            (message as WebConfigurationsMessage).selected_api_configuration_id_by_prompt_type
           )
           break
         case 'API_CONFIGURATIONS':
@@ -141,8 +141,8 @@ export const Main: React.FC<Props> = (props) => {
         case 'TOKEN_COUNT_UPDATED':
           set_token_count(message.token_count)
           break
-        case 'PRESET_CREATED':
-          props.on_preset_edit(message.preset)
+        case 'WEB_CONFIGURATION_CREATED':
+          props.on_web_configuration_edit(message.web_configuration)
           break
         case 'INSTRUCTIONS':
           if (
@@ -155,8 +155,8 @@ export const Main: React.FC<Props> = (props) => {
           set_chat_edit_format(message.chat_edit_format)
           set_api_edit_format(message.api_edit_format)
           break
-        case 'SELECTED_PRESET_CHANGED':
-          set_selected_preset_name_by_mode((prev) => ({
+        case 'SELECTED_WEB_CONFIGURATION_CHANGED':
+          set_selected_web_configuration_name_by_mode((prev) => ({
             ...prev,
             [message.prompt_type]: message.name
           }))
@@ -173,7 +173,7 @@ export const Main: React.FC<Props> = (props) => {
     window.addEventListener('message', handle_message)
 
     const initial_messages: FrontendMessage[] = [
-      { command: 'GET_PRESETS' },
+      { command: 'GET_WEB_CONFIGURATIONS' },
       { command: 'GET_HISTORY' },
       { command: 'GET_INSTRUCTIONS' },
       { command: 'GET_EDIT_FORMAT' },
@@ -231,42 +231,42 @@ export const Main: React.FC<Props> = (props) => {
     }
   }
 
-  const handle_toggle_preset_pinned = (name: string) => {
-    if (all_presets) {
-      const updated_presets = all_presets.map((p) =>
+  const handle_toggle_web_configuration_pinned = (name: string) => {
+    if (all_web_configurations) {
+      const updated_web_configurations = all_web_configurations.map((p) =>
         p.name == name ? { ...p, is_pinned: !p.is_pinned } : p
       )
 
-      set_all_presets(updated_presets)
+      set_all_web_configurations(updated_web_configurations)
 
       post_message(props.vscode, {
-        command: 'REPLACE_PRESETS',
-        presets: updated_presets.map((preset) => ({
-          name: preset.name,
-          chatbot: preset.chatbot,
-          model: preset.model,
-          temperature: preset.temperature,
-          top_p: preset.top_p,
-          thinking_budget: preset.thinking_budget,
-          reasoning_effort: preset.reasoning_effort,
-          system_instructions: preset.system_instructions,
-          options: preset.options,
-          port: preset.port,
-          new_url: preset.new_url,
-          is_pinned: preset.is_pinned || undefined
+        command: 'REPLACE_WEB_CONFIGURATIONS',
+        web_configurations: updated_web_configurations.map((web_configuration) => ({
+          name: web_configuration.name,
+          chatbot: web_configuration.chatbot,
+          model: web_configuration.model,
+          temperature: web_configuration.temperature,
+          top_p: web_configuration.top_p,
+          thinking_budget: web_configuration.thinking_budget,
+          reasoning_effort: web_configuration.reasoning_effort,
+          system_instructions: web_configuration.system_instructions,
+          options: web_configuration.options,
+          port: web_configuration.port,
+          new_url: web_configuration.new_url,
+          is_pinned: web_configuration.is_pinned || undefined
         }))
       })
     }
   }
 
   const handle_initialize_chats = (params: {
-    preset_name?: string
+    web_configuration_name?: string
     show_quick_pick?: boolean
     invocation_count: number
   }) => {
     post_message(props.vscode, {
       command: 'SEND_TO_BROWSER',
-      preset_name: params.preset_name,
+      web_configuration_name: params.web_configuration_name,
       show_quick_pick: params.show_quick_pick,
       invocation_count: params.invocation_count
     })
@@ -274,11 +274,11 @@ export const Main: React.FC<Props> = (props) => {
     update_chat_history(instructions)
   }
 
-  const handle_copy_to_clipboard = (preset_name?: string) => {
+  const handle_copy_to_clipboard = (web_configuration_name?: string) => {
     post_message(props.vscode, {
       command: 'COPY_PROMPT',
       instructions,
-      preset_name
+      web_configuration_name
     })
 
     if (instructions.trim()) {
@@ -286,26 +286,26 @@ export const Main: React.FC<Props> = (props) => {
     }
   }
 
-  const handle_presets_reorder = (reordered_presets: Preset[]) => {
-    if (all_presets) {
-      set_all_presets(reordered_presets)
+  const handle_web_configurations_reorder = (reordered_web_configurations: WebConfiguration[]) => {
+    if (all_web_configurations) {
+      set_all_web_configurations(reordered_web_configurations)
     }
 
     post_message(props.vscode, {
-      command: 'REPLACE_PRESETS',
-      presets: reordered_presets.map((preset) => ({
-        name: preset.name,
-        chatbot: preset.chatbot,
-        model: preset.model,
-        temperature: preset.temperature,
-        top_p: preset.top_p,
-        thinking_budget: preset.thinking_budget,
-        reasoning_effort: preset.reasoning_effort,
-        system_instructions: preset.system_instructions,
-        options: preset.options,
-        port: preset.port,
-        new_url: preset.new_url,
-        is_pinned: preset.is_pinned
+      command: 'REPLACE_WEB_CONFIGURATIONS',
+      web_configurations: reordered_web_configurations.map((web_configuration) => ({
+        name: web_configuration.name,
+        chatbot: web_configuration.chatbot,
+        model: web_configuration.model,
+        temperature: web_configuration.temperature,
+        top_p: web_configuration.top_p,
+        thinking_budget: web_configuration.thinking_budget,
+        reasoning_effort: web_configuration.reasoning_effort,
+        system_instructions: web_configuration.system_instructions,
+        options: web_configuration.options,
+        port: web_configuration.port,
+        new_url: web_configuration.new_url,
+        is_pinned: web_configuration.is_pinned
       }))
     })
   }
@@ -375,32 +375,32 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_create_preset = (
+  const handle_create_web_configuration = (
     placement?: 'top' | 'bottom',
     reference_index?: number
   ) => {
     post_message(props.vscode, {
-      command: 'CREATE_PRESET',
+      command: 'CREATE_WEB_CONFIGURATION',
       placement,
       reference_index
     })
   }
 
-  const handle_preset_edit = (name: string) => {
-    const preset = all_presets?.find((preset) => preset.name == name)
-    if (preset) props.on_preset_edit(preset)
+  const handle_web_configuration_edit = (name: string) => {
+    const web_configuration = all_web_configurations?.find((config) => config.name == name)
+    if (web_configuration) props.on_web_configuration_edit(web_configuration)
   }
 
-  const handle_duplicate_preset = (index: number) => {
+  const handle_duplicate_web_configuration = (index: number) => {
     post_message(props.vscode, {
-      command: 'DUPLICATE_PRESET',
+      command: 'DUPLICATE_WEB_CONFIGURATION',
       index
     })
   }
 
-  const handle_delete_preset = (index: number) => {
+  const handle_delete_web_configuration = (index: number) => {
     post_message(props.vscode, {
-      command: 'DELETE_PRESET',
+      command: 'DELETE_WEB_CONFIGURATION',
       index
     })
   }
@@ -624,7 +624,7 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   if (
-    all_presets === undefined ||
+    all_web_configurations === undefined ||
     all_api_configurations === undefined ||
     ask_history === undefined ||
     edit_history === undefined ||
@@ -639,8 +639,8 @@ export const Main: React.FC<Props> = (props) => {
     return <></>
   }
 
-  const selected_preset_name =
-    selected_preset_name_by_mode?.[props.web_prompt_type]
+  const selected_web_configuration_name =
+    selected_web_configuration_name_by_mode?.[props.web_prompt_type]
 
   const api_configurations =
     props.mode == MODE.API && all_api_configurations ? all_api_configurations : []
@@ -663,9 +663,9 @@ export const Main: React.FC<Props> = (props) => {
       on_hash_sign_click={handle_hash_sign_click}
       on_curly_braces_click={handle_curly_braces_click}
       is_connected={props.is_connected}
-      presets={all_presets || []}
-      on_create_preset={
-        handle_create_preset
+      web_configurations={all_web_configurations || []}
+      on_create_web_configuration={
+        handle_create_web_configuration
       }
       currently_open_file_path={props.currently_open_file_path}
       on_quick_action_click={handle_quick_action_click}
@@ -681,12 +681,12 @@ export const Main: React.FC<Props> = (props) => {
       api_edit_format={api_edit_format}
       on_chat_edit_format_change={handle_chat_edit_format_change}
       on_api_edit_format_change={handle_api_edit_format_change}
-      on_presets_reorder={handle_presets_reorder}
-      on_preset_edit={handle_preset_edit}
-      on_duplicate_preset={handle_duplicate_preset}
-      on_delete_preset={handle_delete_preset}
-      on_toggle_preset_pinned={handle_toggle_preset_pinned}
-      selected_preset_name={selected_preset_name}
+      on_web_configurations_reorder={handle_web_configurations_reorder}
+      on_web_configuration_edit={handle_web_configuration_edit}
+      on_duplicate_web_configuration={handle_duplicate_web_configuration}
+      on_delete_web_configuration={handle_delete_web_configuration}
+      on_toggle_web_configuration_pinned={handle_toggle_web_configuration_pinned}
+      selected_web_configuration_name={selected_web_configuration_name}
       selected_api_configuration_id={
         selected_api_configuration_id_by_prompt_type?.[props.api_prompt_type]
       }
@@ -717,9 +717,9 @@ export const Main: React.FC<Props> = (props) => {
       on_selected_history_item_change={props.on_selected_history_item_change}
       on_response_history_item_remove={props.on_response_history_item_remove}
       context_file_paths={props.context_file_paths}
-      presets_collapsed={props.presets_collapsed}
+      web_configurations_collapsed={props.web_configurations_collapsed}
       send_with_shift_enter={props.send_with_shift_enter}
-      on_presets_collapsed_change={props.on_presets_collapsed_change}
+      on_web_configurations_collapsed_change={props.on_web_configurations_collapsed_change}
       api_configurations_collapsed={props.api_configurations_collapsed}
       on_api_configurations_collapsed_change={
         props.on_api_configurations_collapsed_change

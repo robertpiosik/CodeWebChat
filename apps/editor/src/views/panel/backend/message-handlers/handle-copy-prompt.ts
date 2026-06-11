@@ -20,7 +20,7 @@ import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-sym
 export const handle_copy_prompt = async (params: {
   panel_provider: PanelProvider
   instructions: string
-  preset_name?: string
+  web_configuration_name?: string
 }): Promise<void> => {
   const files_collector = new FilesCollector({
     workspace_provider: params.panel_provider.workspace_provider,
