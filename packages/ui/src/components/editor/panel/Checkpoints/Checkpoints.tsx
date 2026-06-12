@@ -47,7 +47,13 @@ export const Checkpoints: React.FC<Props> = (props) => {
         >
           <div className={styles.item__connector}>
             <div className={styles.item__marker}>
-              <div className={styles.item__dot} />
+              {item.is_starred ? (
+                <span
+                  className={cn('codicon', 'codicon-star-full', styles.item__star)}
+                />
+              ) : (
+                <div className={styles.item__dot} />
+              )}
             </div>
             {item.description && <div className={styles.item__line} />}
           </div>
@@ -60,15 +66,6 @@ export const Checkpoints: React.FC<Props> = (props) => {
           <div className={styles.item__content}>
             <div className={styles['item__content__title-bar']}>
               <span title="Restore checkpoint">
-                {item.is_starred && (
-                  <span
-                    className={cn(
-                      'codicon',
-                      'codicon-star-full',
-                      styles['item__star-prefix']
-                    )}
-                  />
-                )}
                 {item.label}
               </span>
               <div className={styles.item__actions}>
