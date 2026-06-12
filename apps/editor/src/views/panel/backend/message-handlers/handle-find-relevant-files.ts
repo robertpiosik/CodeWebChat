@@ -23,6 +23,7 @@ import {
 import { build_user_content } from '@/utils/build-user-content'
 import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-symbols'
 import { split_recent_and_rest_configurations } from '@/views/panel/backend/utils/split-recent-and-rest-configurations'
+import { t } from '@/i18n'
 
 const get_find_relevant_files_api_configuration = async (params: {
   api_providers_manager: ModelProvidersManager
@@ -127,7 +128,7 @@ const get_find_relevant_files_api_configuration = async (params: {
 
       if (recent_api_configurations.length > 0) {
         items.push({
-          label: 'recently used',
+          label: t('common.separator.recently-used'),
           kind: vscode.QuickPickItemKind.Separator
         })
         items.push(...recent_api_configurations.map(map_api_configuration_to_item))
@@ -136,7 +137,7 @@ const get_find_relevant_files_api_configuration = async (params: {
       if (other_api_configurations.length > 0) {
         if (recent_api_configurations.length > 0) {
           items.push({
-            label: 'other API configurations',
+            label: t('common.config.other'),
             kind: vscode.QuickPickItemKind.Separator
           })
         }
@@ -148,13 +149,13 @@ const get_find_relevant_files_api_configuration = async (params: {
 
     const quick_pick = vscode.window.createQuickPick<Item>()
     quick_pick.items = await create_items()
-    quick_pick.title = 'Configurations'
+    quick_pick.title = t('common.config.title')
     quick_pick.placeholder = 'Select a configuration'
     quick_pick.matchOnDescription = true
     quick_pick.buttons = [
       {
         iconPath: new vscode.ThemeIcon('close'),
-        tooltip: 'Close'
+        tooltip: t('common.close')
       }
     ]
 
@@ -181,7 +182,7 @@ const get_find_relevant_files_api_configuration = async (params: {
         let accepted = false
 
         quick_pick.onDidTriggerButton((button) => {
-          if (button.tooltip == 'Close') {
+          if (button.tooltip == t('common.close')) {
             resolve(undefined)
             quick_pick.hide()
           }

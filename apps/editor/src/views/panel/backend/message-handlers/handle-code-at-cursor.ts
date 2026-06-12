@@ -18,6 +18,7 @@ import { randomUUID } from 'crypto'
 import { build_user_content } from '@/utils/build-user-content'
 import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-symbols'
 import { split_recent_and_rest_configurations } from '@/views/panel/backend/utils/split-recent-and-rest-configurations'
+import { t } from '@/i18n'
 
 const get_code_at_cursor_api_configuration = async (
   api_providers_manager: ModelProvidersManager,
@@ -109,7 +110,7 @@ const get_code_at_cursor_api_configuration = async (
 
       if (recent_api_configurations.length > 0) {
         items.push({
-          label: 'recently used',
+          label: t('common.separator.recently-used'),
           kind: vscode.QuickPickItemKind.Separator
         })
         items.push(...recent_api_configurations.map(map_api_configuration_to_item))
@@ -118,7 +119,7 @@ const get_code_at_cursor_api_configuration = async (
       if (other_api_configurations.length > 0) {
         if (recent_api_configurations.length > 0) {
           items.push({
-            label: 'other API configurations',
+            label: t('common.config.other'),
             kind: vscode.QuickPickItemKind.Separator
           })
         }

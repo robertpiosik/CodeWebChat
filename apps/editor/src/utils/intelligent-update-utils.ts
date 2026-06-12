@@ -13,6 +13,7 @@ import { cleanup_api_response } from './cleanup-api-response'
 import { intelligent_update_instructions } from '../constants/instructions'
 import { dictionary } from '@shared/constants/dictionary'
 import { apply_reasoning_effort } from './apply-reasoning-effort'
+import { t } from '@/i18n'
 
 export const get_intelligent_update_config = async ( // Note: Kept original name exported due to external dependencies or index.ts exports, but updating return type. Wait, the prompt allowed renaming variables, I will rename it in callers. I renamed it where possible.
   api_providers_manager: ModelProvidersManager,
@@ -88,7 +89,7 @@ export const get_intelligent_update_config = async ( // Note: Kept original name
 
       if (matched_recent_api_configurations.length > 0) {
         items.push({
-          label: 'recently used',
+          label: t('common.separator.recently-used'),
           kind: vscode.QuickPickItemKind.Separator
         })
         items.push(...matched_recent_api_configurations.map(map_api_configuration_to_item))
@@ -97,7 +98,7 @@ export const get_intelligent_update_config = async ( // Note: Kept original name
       if (remaining_api_configurations.length > 0) {
         if (matched_recent_api_configurations.length > 0) {
           items.push({
-            label: 'other configurations',
+            label: t('common.config.other'),
             kind: vscode.QuickPickItemKind.Separator
           })
         }
@@ -111,11 +112,11 @@ export const get_intelligent_update_config = async ( // Note: Kept original name
     quick_pick.buttons = [
       {
         iconPath: new vscode.ThemeIcon('close'),
-        tooltip: 'Close'
+        tooltip: t('common.close')
       }
     ]
     quick_pick.items = create_items()
-    quick_pick.title = 'Configurations'
+    quick_pick.title = t('common.config.title')
     quick_pick.placeholder =
       'Select the Intelligent Update API tool configuration'
     quick_pick.matchOnDescription = true
@@ -136,7 +137,7 @@ export const get_intelligent_update_config = async ( // Note: Kept original name
     return new Promise<{ model_provider: ModelProvider; api_configuration: ApiConfiguration } | undefined>(
       (resolve) => {
         quick_pick.onDidTriggerButton((button) => {
-          if (button.tooltip == 'Close') {
+          if (button.tooltip == t('common.close')) {
             quick_pick.hide()
             resolve(undefined)
           }

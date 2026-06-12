@@ -24,6 +24,7 @@ import {
 import { handle_update_last_used_web_configuration_or_group } from './handle-update-last-used-web-configuration-or-group'
 import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-symbols'
 import { split_recent_and_rest_configurations } from '@/views/panel/backend/utils/split-recent-and-rest-configurations'
+import { t } from '@/i18n'
 
 export const handle_send_to_browser = async (params: {
   panel_provider: PanelProvider
@@ -276,7 +277,7 @@ const show_web_configuration_quick_pick = async (params: {
 
   if (matched_recent.length > 0) {
     items.push({
-      label: 'recently used',
+      label: t('common.separator.recently-used'),
       kind: vscode.QuickPickItemKind.Separator
     })
     items.push(...matched_recent.map(map_web_configuration_to_item))
@@ -285,7 +286,7 @@ const show_web_configuration_quick_pick = async (params: {
   if (remaining.length > 0) {
     if (matched_recent.length > 0) {
       items.push({
-        label: 'other configurations',
+        label: t('common.config.other'),
         kind: vscode.QuickPickItemKind.Separator
       })
     }
@@ -294,12 +295,12 @@ const show_web_configuration_quick_pick = async (params: {
 
   quick_pick.items = items
   quick_pick.placeholder = 'Select a configuration'
-  quick_pick.title = 'Configurations'
+  quick_pick.title = t('common.config.title')
   quick_pick.matchOnDescription = true
 
   const close_button = {
     iconPath: new vscode.ThemeIcon('close'),
-    tooltip: 'Close'
+    tooltip: t('common.close')
   }
   quick_pick.buttons = [close_button]
 

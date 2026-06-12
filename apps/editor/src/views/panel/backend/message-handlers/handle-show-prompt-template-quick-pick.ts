@@ -3,6 +3,7 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { MODE } from '@/views/panel/types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { dictionary } from '@shared/constants/dictionary'
+import { t } from '@/i18n'
 
 type PromptTemplate = {
   name?: string
@@ -58,7 +59,7 @@ export const handle_show_prompt_template_quick_pick = async (
   templates_quick_pick.placeholder =
     'Select a prompt template or create a new one'
   templates_quick_pick.buttons = [
-    { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
+    { iconPath: new vscode.ThemeIcon('close'), tooltip: t('common.close') }
   ]
 
   const edit_button = {
@@ -88,7 +89,7 @@ export const handle_show_prompt_template_quick_pick = async (
     if (templates.length > 0) {
       if (!search_value) {
         items.push({
-          label: 'recently used',
+          label: t('common.separator.recently-used'),
           kind: vscode.QuickPickItemKind.Separator
         })
       }
