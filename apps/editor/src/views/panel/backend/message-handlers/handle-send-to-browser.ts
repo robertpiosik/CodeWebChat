@@ -354,16 +354,6 @@ const show_web_configuration_quick_pick = async (params: {
 
       const web_configuration = valid_web_configurations.find((p) => p.name == selected.web_configuration_name)!
       if (params.get_is_web_configuration_disabled(web_configuration)) {
-        if (
-          !params.is_in_code_completions_mode &&
-          !params.current_instructions
-        ) {
-          params.panel_provider.send_message({
-            command: 'SHOW_AUTO_CLOSING_MODAL',
-            title: 'Type something to use this web configuration',
-            type: 'warning'
-          })
-        }
         do_resolve(null)
       } else {
         handle_update_last_used_web_configuration_or_group({
@@ -435,24 +425,13 @@ const resolve_web_configuration = async (params: {
       (!params.panel_provider.websocket_server_instance.is_connected_with_browser() ||
         (is_in_code_completions_mode &&
           (!params.panel_provider.currently_open_file_path ||
-            !!params.panel_provider.current_selection)) ||
-        (!is_in_code_completions_mode && !current_instructions))) ||
+            !!params.panel_provider.current_selection)))) ||
     false
 
   if (params.web_configuration_name !== undefined) {
     const web_configuration = all_web_configurations.find((p) => p.name == params.web_configuration_name)
     if (web_configuration) {
       if (get_is_web_configuration_disabled(web_configuration)) {
-        if (
-          !is_in_code_completions_mode &&
-          !current_instructions
-        ) {
-          params.panel_provider.send_message({
-            command: 'SHOW_AUTO_CLOSING_MODAL',
-            title: 'Type something to use this web configuration',
-            type: 'warning'
-          })
-        }
         return { web_configuration_name: undefined }
       }
       return { web_configuration_name: params.web_configuration_name }
@@ -473,18 +452,7 @@ const resolve_web_configuration = async (params: {
       const item = all_web_configurations.find((p) => p.name === last_selected_name)
       if (item) {
         if (item.chatbot) {
-          // It's a web_configuration
           if (get_is_web_configuration_disabled(item)) {
-            if (
-              !is_in_code_completions_mode &&
-              !current_instructions
-            ) {
-              params.panel_provider.send_message({
-                command: 'SHOW_AUTO_CLOSING_MODAL',
-                title: 'Type something to use this web configuration',
-                type: 'warning'
-              })
-            }
             return { web_configuration_name: undefined }
           } else {
             return { web_configuration_name: last_selected_name }

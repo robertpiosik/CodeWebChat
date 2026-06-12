@@ -400,7 +400,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         >
           {props.last_choice_button_title && show_submit_tooltip && (
             <Tooltip
-              message={props.last_choice_button_title}
+              message={`Send with ${props.last_choice_button_title}`}
               offset={28}
               align="right"
             />
@@ -650,8 +650,24 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   {is_dropdown_open && (
                     <DropdownMenu
                       items={[
+                        ...(!props.value &&
+                        props.prompt_type != 'code-at-cursor' &&
+                        props.is_web_mode
+                          ? [
+                              {
+                                label: 'Send',
+                                shortcut: is_mac ? '↩' : 'Enter',
+                                on_click: () => {
+                                  handle_submit({
+                                    stopPropagation: () => {}
+                                  } as any)
+                                  close_dropdown()
+                                }
+                              }
+                            ]
+                          : []),
                         {
-                          label: 'Select...',
+                          label: 'Send with...',
                           shortcut: is_mac ? '⌘↩' : 'Ctrl+Enter',
                           on_click: handle_select_click
                         },
