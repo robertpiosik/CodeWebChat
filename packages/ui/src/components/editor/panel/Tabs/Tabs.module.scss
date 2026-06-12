@@ -1,6 +1,7 @@
 .tabs {
   height: 28px;
   padding: 0 12px;
+  margin-bottom: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -29,6 +30,10 @@
     cursor: pointer;
     position: relative;
 
+    &:hover {
+      color: var(--cwc-text-color);
+    }
+
     &::after {
       content: '';
       position: absolute;
@@ -43,13 +48,8 @@
       outline: none;
     }
 
-    &:hover {
-      opacity: 1;
-    }
-
     &--active {
-      opacity: 1;
-      color: var(--vscode-foreground);
+      color: var(--cwc-text-color);
 
       &::after {
         background-color: var(--vscode-button-background);
