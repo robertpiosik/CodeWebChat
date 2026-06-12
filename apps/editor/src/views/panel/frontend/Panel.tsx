@@ -44,6 +44,7 @@ export const Panel = () => {
     version,
     apply_button_enabling_trigger_count,
     checkpoints,
+    has_temp_checkpoint,
     is_connected,
     ask_about_context_instructions,
     edit_context_instructions,
@@ -67,8 +68,6 @@ export const Panel = () => {
     handle_mode_change,
     handle_web_configurations_collapsed_change,
     handle_api_configurations_collapsed_change,
-    is_timeline_collapsed,
-    handle_timeline_collapsed_change,
     handle_task_forward,
     handle_paste_image,
     handle_open_image,
@@ -115,10 +114,8 @@ export const Panel = () => {
 
   const {
     tasks,
-    are_tasks_collapsed,
     handle_tasks_change,
     handle_task_delete,
-    handle_tasks_collapsed_change
   } = use_tasks(vscode)
 
   const {
@@ -457,6 +454,10 @@ export const Panel = () => {
                 }}
                 version={version}
                 checkpoints={checkpoints}
+                has_temp_checkpoint={has_temp_checkpoint}
+                on_restore_temp_checkpoint={() => {
+                  post_message(vscode, { command: 'RESTORE_TEMP_CHECKPOINT' })
+                }}
                 response_history={response_history}
                 on_response_history_item_click={
                   handle_response_history_item_click
@@ -493,10 +494,6 @@ export const Panel = () => {
                     })
                   }
                 }}
-                is_timeline_collapsed={is_timeline_collapsed}
-                on_timeline_collapsed_change={handle_timeline_collapsed_change}
-                are_tasks_collapsed={are_tasks_collapsed}
-                on_tasks_collapsed_change={handle_tasks_collapsed_change}
                 on_delete_checkpoint={(timestamp) => {
                   post_message(vscode, {
                     command: 'DELETE_CHECKPOINT',

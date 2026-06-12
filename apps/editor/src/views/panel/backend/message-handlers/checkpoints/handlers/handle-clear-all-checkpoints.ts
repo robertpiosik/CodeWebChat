@@ -1,12 +1,12 @@
 import * as vscode from 'vscode'
-import { PanelProvider } from '../panel-provider'
+import { PanelProvider } from '../../../panel-provider'
 import {
   clear_all_checkpoints,
   get_checkpoints
-} from '@/commands/checkpoints-command/actions'
+} from '../actions'
 import { dictionary } from '@shared/constants/dictionary'
 import { TEMPORARY_CHECKPOINT_STATE_KEY } from '@/constants/state-keys'
-import type { Checkpoint } from '@/commands/checkpoints-command/types'
+import type { Checkpoint } from '../types'
 
 export const handle_clear_all_checkpoints = async (
   panel_provider: PanelProvider

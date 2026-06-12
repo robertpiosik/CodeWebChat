@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import { Timeline, TimelineItemProps } from './Timeline'
+import { Checkpoints, CheckpointsItemProps } from './Checkpoints'
 
 export default {
-  component: Timeline
+  component: Checkpoints
 }
 
-const initialItems: TimelineItemProps[] = [
+const initialItems: CheckpointsItemProps[] = [
   {
     id: 1,
     timestamp: Date.now() - 5 * 60 * 1000,
@@ -44,6 +44,7 @@ const initialItems: TimelineItemProps[] = [
 
 export const Default = () => {
   const [items, set_items] = useState(initialItems)
+
   const handle_toggle_starred = (id: string | number) => {
     set_items((prevItems) =>
       prevItems.map((item) =>
@@ -51,6 +52,7 @@ export const Default = () => {
       )
     )
   }
+
   return (
     <div
       style={{
@@ -58,7 +60,7 @@ export const Default = () => {
         backgroundColor: 'var(--vscode-sideBar-background)'
       }}
     >
-      <Timeline
+      <Checkpoints
         items={items}
         on_toggle_starred={handle_toggle_starred}
         on_item_click={(id) => alert(`Restore checkpoint: ${id}`)}
@@ -74,7 +76,7 @@ export const SingleItem = () => (
       backgroundColor: 'var(--vscode-sideBar-background)'
     }}
   >
-    <Timeline
+    <Checkpoints
       items={[initialItems[0]]}
       on_toggle_starred={() => {}}
       on_item_click={(id) => alert(`Restore checkpoint: ${id}`)}
@@ -89,7 +91,7 @@ export const NoDescription = () => (
       backgroundColor: 'var(--vscode-sideBar-background)'
     }}
   >
-    <Timeline
+    <Checkpoints
       items={[
         {
           id: 1,

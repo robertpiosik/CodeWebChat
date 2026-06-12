@@ -1,9 +1,9 @@
-import { PanelProvider } from '../panel-provider'
+import { PanelProvider } from '../../../panel-provider'
 import { DeleteCheckpointMessage } from '@/views/panel/types/messages'
 import {
   delete_checkpoint_with_undo,
   get_checkpoints
-} from '@/commands/checkpoints-command/actions'
+} from '../actions'
 
 export const handle_delete_checkpoint = async (
   panel_provider: PanelProvider,

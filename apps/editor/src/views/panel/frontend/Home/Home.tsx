@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import styles from './Home.module.scss'
 import { Scrollable as UiScrollable } from '@ui/components/editor/panel/Scrollable'
-import { Timeline as UiTimeline } from '@ui/components/editor/panel/Timeline'
+import { Checkpoints as UiCheckpoints } from '@ui/components/editor/panel/Checkpoints'
 import { ModeButton as UiModeButton } from '@ui/components/editor/panel/ModeButton'
 import cn from 'classnames'
 import { post_message } from '../utils/post-message'
@@ -9,13 +9,12 @@ import { Checkpoint, FrontendMessage } from '@/views/panel/types/messages'
 import { Responses as UiResponses } from '@ui/components/editor/panel/Responses'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Separator as UiSeparator } from '@ui/components/editor/panel/Separator'
-import { ListHeader as UiListHeader } from '@ui/components/editor/panel/ListHeader'
+import { Tabs as UiTabs } from '@ui/components/editor/panel/Tabs'
 import { Translation, use_translation } from '../i18n/use-translation'
 import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
 import { Tasks as UiTasks } from '@ui/components/editor/panel/Tasks'
 import { Task } from '@shared/types/task'
 import { use_tasks } from './hooks/use-tasks'
-import { use_timeline_scroll } from './hooks/use-timeline-scroll'
 import { SettingsButton as UiSettingsButton } from '@ui/components/editor/panel/SettingsButton'
 
 type Props = {
@@ -26,6 +25,8 @@ type Props = {
   on_api_calls_click: () => void
   version: string
   checkpoints: Checkpoint[]
+  has_temp_checkpoint: boolean
+  on_restore_temp_checkpoint: () => void
   on_toggle_checkpoint_starred: (timestamp: number) => void
   on_restore_checkpoint: (timestamp: number) => void
   response_history: ResponseHistoryItem[]
@@ -35,10 +36,6 @@ type Props = {
   on_response_history_item_remove: (created_at: number) => void
   on_edit_checkpoint_description: (timestamp: number) => void
   on_delete_checkpoint: (timestamp: number) => void
-  is_timeline_collapsed: boolean
-  on_timeline_collapsed_change: (is_collapsed: boolean) => void
-  are_tasks_collapsed: boolean
-  on_tasks_collapsed_change: (is_collapsed: boolean) => void
   tasks: Record<string, Task[]>
   on_tasks_change: (root: string, tasks: Task[]) => void
   on_task_delete: (root: string, timestamp: number) => void
@@ -50,6 +47,7 @@ type Props = {
 export const Home: React.FC<Props> = (props) => {
   const { t } = use_translation()
   const [is_mode_sticky, set_is_mode_sticky] = useState(false)
+  const [active_tab, set_active_tab] = useState<'tasks' | 'checkpoints'>('tasks')
   const full_mode_height_ref = useRef<number>(0)
   const responses_ref = useRef<HTMLDivElement>(null)
   const mode_ref = useRef<HTMLDivElement>(null)
@@ -72,9 +70,6 @@ export const Home: React.FC<Props> = (props) => {
     handle_add_subtask,
     handle_delete
   } = use_tasks(props.on_tasks_change, props.on_task_delete)
-
-  const { is_timeline_reached, timeline_ref, handle_scroll_to_timeline } =
-    use_timeline_scroll()
 
   const handle_settings_click = () => {
     post_message(props.vscode, {
@@ -175,151 +170,158 @@ export const Home: React.FC<Props> = (props) => {
 
             <UiSeparator height={8} />
 
-            <UiListHeader
-              title={t('home.tasks')}
-              is_collapsed={props.are_tasks_collapsed}
-              on_toggle_collapsed={() =>
-                props.on_tasks_collapsed_change(!props.are_tasks_collapsed)
-              }
+            <UiTabs
+              tabs={[
+                { id: 'tasks', label: t('home.tasks') },
+                { id: 'checkpoints', label: t('home.checkpoints') }
+              ]}
+              active_tab={active_tab}
+              on_tab_change={(id) => set_active_tab(id as 'tasks' | 'checkpoints')}
               actions={
-                Object.keys(props.tasks).length == 1 ? (
-                  <UiIconButton
-                    codicon_icon="add"
-                    title={t('home.tasks.add')}
-                    on_click={(e) => {
-                      e.stopPropagation()
-                      const roots = Object.keys(props.tasks)
-                      if (roots.length > 0) {
-                        handle_add(roots[0], props.tasks[roots[0]], 'top')
-                        if (props.are_tasks_collapsed) {
-                          props.on_tasks_collapsed_change(false)
-                        }
-                      }
-                    }}
-                  />
-                ) : undefined
-              }
-            />
-            {!props.are_tasks_collapsed &&
-              Object.keys(props.tasks).length == 1 &&
-              props.tasks[Object.keys(props.tasks)[0]].length == 0 && (
-                <div className={styles.inner__empty}>
-                  {t('home.tasks.empty')}
-                </div>
-              )}
-            {!props.are_tasks_collapsed &&
-              Object.entries(props.tasks)
-                .filter(([_, tasks], __, arr) =>
-                  arr.length == 1 ? tasks.length > 0 : true
-                )
-                .map(([workspace_root_folder, tasks], _, entries) => (
-                  <div
-                    key={workspace_root_folder}
-                    className={styles.inner__tasks}
-                  >
-                    {entries.length > 1 && (
-                      <div className={styles['inner__tasks-header']}>
-                        <span>
-                          {workspace_root_folder.split(/[\\/]/).pop() ||
-                            workspace_root_folder}
-                        </span>
-                        <button
-                          className={styles['add-button']}
-                          title={t('home.tasks.add')}
-                          onClick={() => {
-                            handle_add(workspace_root_folder, tasks, 'top')
-                          }}
-                        />
-                      </div>
-                    )}
-                    {tasks.length > 0 && (
-                      <UiTasks
-                        tasks={tasks}
-                        on_reorder={(new_tasks) =>
-                          handle_reorder(workspace_root_folder, new_tasks)
-                        }
-                        on_change={(updated_task) => {
-                          handle_change(
-                            workspace_root_folder,
-                            tasks,
-                            updated_task
-                          )
-                        }}
-                        on_add={() => {
-                          handle_add(workspace_root_folder, tasks)
-                        }}
-                        on_add_subtask={(parent_task) => {
-                          handle_add_subtask(
-                            workspace_root_folder,
-                            tasks,
-                            parent_task
-                          )
-                        }}
-                        on_delete={(timestamp) => {
-                          handle_delete(workspace_root_folder, timestamp)
-                        }}
-                        on_forward={(text) => {
-                          props.on_task_forward(text)
-                        }}
-                        placeholder={t('home.tasks.placeholder')}
-                      />
-                    )}
-                  </div>
-                ))}
-
-            <UiListHeader
-              ref={timeline_ref}
-              title={t('home.timeline')}
-              is_collapsed={props.is_timeline_collapsed}
-              on_toggle_collapsed={() =>
-                props.on_timeline_collapsed_change(!props.is_timeline_collapsed)
-              }
-              actions={
-                <>
-                  <UiIconButton
-                    codicon_icon="add"
-                    title={t('home.timeline.new-checkpoint')}
-                    on_click={(e) => {
-                      e.stopPropagation()
-                      handle_create_checkpoint_click()
-                    }}
-                  />
-                  {props.checkpoints.length > 0 && (
+                active_tab == 'tasks' ? (
+                  Object.keys(props.tasks).length == 1 ? (
                     <UiIconButton
-                      codicon_icon="trash"
-                      title={t('home.timeline.delete-all')}
+                      codicon_icon="add"
+                      title={t('home.tasks.add')}
                       on_click={(e) => {
                         e.stopPropagation()
-                        handle_delete_all_checkpoints_click()
+                        const roots = Object.keys(props.tasks)
+                        if (roots.length > 0) {
+                          handle_add(roots[0], props.tasks[roots[0]], 'top')
+                        }
                       }}
                     />
-                  )}
-                </>
+                  ) : undefined
+                ) : (
+                  <>
+                    {props.has_temp_checkpoint && (
+                      <UiIconButton
+                        codicon_icon="discard"
+                        title={'command.checkpoints.revert-last'}
+                        on_click={(e) => {
+                          e.stopPropagation()
+                          props.on_restore_temp_checkpoint()
+                        }}
+                      />
+                    )}
+                    <UiIconButton
+                      codicon_icon="add"
+                      title={t('home.checkpoints.new-checkpoint')}
+                      on_click={(e) => {
+                        e.stopPropagation()
+                        handle_create_checkpoint_click()
+                      }}
+                    />
+                    {props.checkpoints.length > 0 && (
+                      <UiIconButton
+                        codicon_icon="trash"
+                        title={t('home.checkpoints.delete-all')}
+                        on_click={(e) => {
+                          e.stopPropagation()
+                          handle_delete_all_checkpoints_click()
+                        }}
+                      />
+                    )}
+                  </>
+                )
               }
             />
-            {!props.is_timeline_collapsed &&
-              (props.checkpoints.length > 0 ? (
-                <UiTimeline
-                  items={props.checkpoints.map((c) => ({
-                    id: c.timestamp,
-                    label: t(`command.checkpoints.trigger.${c.trigger}` as any),
-                    timestamp: c.timestamp,
-                    description: c.description,
-                    is_starred: c.is_starred,
-                    can_edit: c.trigger == 'manual'
-                  }))}
-                  on_toggle_starred={(id) =>
-                    props.on_toggle_checkpoint_starred(id)
-                  }
-                  on_item_click={(id) => props.on_restore_checkpoint(id)}
-                  on_edit={props.on_edit_checkpoint_description}
-                  on_delete={props.on_delete_checkpoint}
-                />
-              ) : (
-                <div className={styles.inner__empty}>
-                  {t('home.timeline.empty')}
-                </div>
-              ))}
+
+            {active_tab == 'tasks' && (
+              <>
+                {Object.keys(props.tasks).length == 1 &&
+                  props.tasks[Object.keys(props.tasks)[0]].length == 0 && (
+                    <div className={styles.inner__empty}>
+                      {t('home.tasks.empty')}
+                    </div>
+                  )}
+                {Object.entries(props.tasks)
+                  .filter(([_, tasks], __, arr) =>
+                    arr.length == 1 ? tasks.length > 0 : true
+                  )
+                  .map(([workspace_root_folder, tasks], _, entries) => (
+                    <div
+                      key={workspace_root_folder}
+                      className={styles.inner__tasks}
+                    >
+                      {entries.length > 1 && (
+                        <div className={styles['inner__tasks-header']}>
+                          <span>
+                            {workspace_root_folder.split(/[\\/]/).pop() ||
+                              workspace_root_folder}
+                          </span>
+                          <button
+                            className={styles['add-button']}
+                            title={t('home.tasks.add')}
+                            onClick={() => {
+                              handle_add(workspace_root_folder, tasks, 'top')
+                            }}
+                          />
+                        </div>
+                      )}
+                      {tasks.length > 0 && (
+                        <UiTasks
+                          tasks={tasks}
+                          on_reorder={(new_tasks) =>
+                            handle_reorder(workspace_root_folder, new_tasks)
+                          }
+                          on_change={(updated_task) => {
+                            handle_change(
+                              workspace_root_folder,
+                              tasks,
+                              updated_task
+                            )
+                          }}
+                          on_add={() => {
+                            handle_add(workspace_root_folder, tasks)
+                          }}
+                          on_add_subtask={(parent_task) => {
+                            handle_add_subtask(
+                              workspace_root_folder,
+                              tasks,
+                              parent_task
+                            )
+                          }}
+                          on_delete={(timestamp) => {
+                            handle_delete(workspace_root_folder, timestamp)
+                          }}
+                          on_forward={(text) => {
+                            props.on_task_forward(text)
+                          }}
+                          placeholder={t('home.tasks.placeholder')}
+                        />
+                      )}
+                    </div>
+                  ))}
+              </>
+            )}
+
+            {active_tab == 'checkpoints' && (
+              <>
+                {props.checkpoints.length > 0 ? (
+                  <UiCheckpoints
+                    items={props.checkpoints.map((c) => ({
+                      id: c.timestamp,
+                      label: t(`command.checkpoints.trigger.${c.trigger}` as any),
+                      timestamp: c.timestamp,
+                      description: c.description,
+                      is_starred: c.is_starred,
+                      can_edit: c.trigger == 'manual'
+                    }))}
+                    on_toggle_starred={(id) =>
+                      props.on_toggle_checkpoint_starred(id)
+                    }
+                    on_item_click={(id) => props.on_restore_checkpoint(id)}
+                    on_edit={props.on_edit_checkpoint_description}
+                    on_delete={props.on_delete_checkpoint}
+                  />
+                ) : (
+                  <div className={styles.inner__empty}>
+                    {t('home.checkpoints.empty')}
+                  </div>
+                )}
+              </>
+            )}
           </div>
 
           <div className={styles.bottom}>
@@ -339,21 +341,6 @@ export const Home: React.FC<Props> = (props) => {
         </div>
       </UiScrollable>
 
-      {!is_timeline_reached && (
-        <button
-          className={styles['scroll-to-timeline']}
-          onClick={handle_scroll_to_timeline}
-        >
-          <span
-            className={cn(
-              'codicon',
-              'codicon-arrow-down',
-              styles['scroll-to-timeline__icon']
-            )}
-          />
-          <span>{t('home.timeline.scroll')}</span>
-        </button>
-      )}
     </>
   )
 }

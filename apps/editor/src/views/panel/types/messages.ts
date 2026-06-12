@@ -401,12 +401,16 @@ export interface GetCollapsedStatesMessage extends BaseMessage {
 
 export interface SaveComponentCollapsedStateMessage extends BaseMessage {
   command: 'SAVE_COMPONENT_COLLAPSED_STATE'
-  component: 'web-configurations' | 'api-configurations' | 'timeline' | 'tasks'
+  component: 'web-configurations' | 'api-configurations'
   is_collapsed: boolean
 }
 
 export interface GetCheckpointsMessage extends BaseMessage {
   command: 'GET_CHECKPOINTS'
+}
+
+export interface RestoreTempCheckpointMessage extends BaseMessage {
+  command: 'RESTORE_TEMP_CHECKPOINT'
 }
 
 export interface CreateCheckpointMessage extends BaseMessage {
@@ -625,6 +629,7 @@ export type FrontendMessage =
   | CreateCheckpointMessage
   | ToggleCheckpointStarMessage
   | RestoreCheckpointMessage
+  | RestoreTempCheckpointMessage
   | RemoveResponseHistoryItemMessage
   | UpdateCheckpointDescriptionMessage
   | DeleteCheckpointMessage
@@ -877,13 +882,12 @@ export interface CollapsedStatesMessage extends BaseMessage {
   command: 'COLLAPSED_STATES'
   web_configurations_collapsed: boolean
   api_configurations_collapsed: boolean
-  are_tasks_collapsed: boolean
-  is_timeline_collapsed: boolean
 }
 
 export interface CheckpointsMessage extends BaseMessage {
   command: 'CHECKPOINTS'
   checkpoints: Checkpoint[]
+  has_temp_checkpoint?: boolean
 }
 
 export interface CurrentlyOpenFileTextMessage extends BaseMessage {

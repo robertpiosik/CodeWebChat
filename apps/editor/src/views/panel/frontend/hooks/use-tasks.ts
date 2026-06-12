@@ -5,7 +5,6 @@ import { post_message } from '../utils/post-message'
 
 export const use_tasks = (vscode: any) => {
   const [tasks, set_tasks] = useState<Record<string, Task[]>>({})
-  const [are_tasks_collapsed, set_are_tasks_collapsed] = useState(false)
 
   const handle_tasks_change = (root: string, updated_tasks: Task[]) => {
     const new_tasks = { ...tasks, [root]: updated_tasks }
@@ -24,22 +23,11 @@ export const use_tasks = (vscode: any) => {
     })
   }
 
-  const handle_tasks_collapsed_change = (is_collapsed: boolean) => {
-    set_are_tasks_collapsed(is_collapsed)
-    post_message(vscode, {
-      command: 'SAVE_COMPONENT_COLLAPSED_STATE',
-      component: 'tasks',
-      is_collapsed
-    })
-  }
-
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
       if (message.command == 'TASKS') {
         set_tasks(message.tasks)
-      } else if (message.command == 'COLLAPSED_STATES') {
-        set_are_tasks_collapsed(message.are_tasks_collapsed)
       }
     }
 
@@ -51,9 +39,8 @@ export const use_tasks = (vscode: any) => {
 
   return {
     tasks,
-    are_tasks_collapsed,
     handle_tasks_change,
     handle_task_delete,
-    handle_tasks_collapsed_change
   }
 }
+

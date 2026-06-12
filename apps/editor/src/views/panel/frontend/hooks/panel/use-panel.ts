@@ -20,6 +20,7 @@ export const use_panel = (vscode: any) => {
     set_apply_button_enabling_trigger_count
   ] = useState(0)
   const [checkpoints, set_checkpoints] = useState<Checkpoint[]>([])
+  const [has_temp_checkpoint, set_has_temp_checkpoint] = useState(false)
   const [is_connected, set_is_connected] = useState<boolean>()
   const [mode, set_mode] = useState<Mode>()
   const [web_prompt_type, set_web_mode] = useState<WebPromptType>()
@@ -45,7 +46,6 @@ export const use_panel = (vscode: any) => {
   const [can_undo, set_can_undo] = useState<boolean>(false)
   const [web_configurations_collapsed, set_web_configurations_collapsed] = useState(false)
   const [send_with_shift_enter, set_send_with_shift_enter] = useState(false)
-  const [is_timeline_collapsed, set_is_timeline_collapsed] = useState(false)
   const [api_configurations_collapsed, set_api_configurations_collapsed] =
     useState(false)
   const [is_recording, set_is_recording] = useState(false)
@@ -131,9 +131,9 @@ export const use_panel = (vscode: any) => {
       } else if (message.command == 'COLLAPSED_STATES') {
         set_web_configurations_collapsed(message.web_configurations_collapsed)
         set_api_configurations_collapsed(message.api_configurations_collapsed)
-        set_is_timeline_collapsed(message.is_timeline_collapsed)
       } else if (message.command == 'CHECKPOINTS') {
         set_checkpoints(message.checkpoints)
+        set_has_temp_checkpoint(message.has_temp_checkpoint ?? false)
       } else if (message.command == 'SEND_WITH_SHIFT_ENTER') {
         set_send_with_shift_enter(message.enabled)
       } else if (message.command == 'FOCUS_PROMPT_FIELD') {
@@ -179,15 +179,6 @@ export const use_panel = (vscode: any) => {
 
     return () => window.removeEventListener('message', handle_message)
   }, [])
-
-  const handle_timeline_collapsed_change = (is_collapsed: boolean) => {
-    set_is_timeline_collapsed(is_collapsed)
-    post_message(vscode, {
-      command: 'SAVE_COMPONENT_COLLAPSED_STATE',
-      component: 'timeline',
-      is_collapsed
-    })
-  }
 
   const handle_web_prompt_type_change = (prompt_type: WebPromptType) => {
     set_web_mode(prompt_type)
@@ -263,6 +254,7 @@ export const use_panel = (vscode: any) => {
     version,
     apply_button_enabling_trigger_count,
     checkpoints,
+    has_temp_checkpoint,
     is_connected,
     ask_about_context_instructions,
     edit_context_instructions,
@@ -280,14 +272,12 @@ export const use_panel = (vscode: any) => {
     web_configurations_collapsed,
     send_with_shift_enter,
     api_configurations_collapsed,
-    is_timeline_collapsed,
     handle_task_forward,
     handle_instructions_change,
     handle_web_prompt_type_change,
     handle_api_prompt_type_change,
     handle_mode_change,
     handle_web_configurations_collapsed_change,
-    handle_timeline_collapsed_change,
     handle_api_configurations_collapsed_change,
     handle_paste_image,
     handle_open_image,

@@ -13,11 +13,8 @@ import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provi
 import { token_count_emitter } from '@/context/context-initialization'
 import { EditFormat } from '@shared/types/edit-format'
 import {
-  get_checkpoints,
-  toggle_checkpoint_star,
-  restore_checkpoint,
-  update_checkpoint_description
-} from '@/commands/checkpoints-command/actions'
+  get_checkpoints
+} from './message-handlers/checkpoints/actions'
 import {
   handle_copy_prompt,
   handle_send_to_browser,
@@ -93,7 +90,11 @@ import {
   handle_update_last_used_web_configuration_or_group,
   handle_get_find_relevant_files_shrink_source_code,
   handle_save_find_relevant_files_shrink_source_code,
-  handle_return_home_and_switch_to_edit_context
+  handle_return_home_and_switch_to_edit_context,
+  handle_toggle_checkpoint_star,
+  handle_restore_checkpoint,
+  handle_restore_temp_checkpoint,
+  handle_update_checkpoint_description
 } from './message-handlers'
 import { SelectionState } from '../types/messages'
 import {
@@ -111,7 +112,8 @@ import {
   RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY,
   RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY,
   get_recently_used_web_configurations_key,
-  FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY
+  FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
+  TEMPORARY_CHECKPOINT_STATE_KEY
 } from '@/constants/state-keys'
 import {
   config_web_configuration_to_ui_format,
@@ -121,12 +123,14 @@ import { CHATBOTS } from '@shared/constants/chatbots'
 import { MODE, Mode } from '../types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Logger } from '@shared/utils/logger'
+import { get_checkpoint_path } from './message-handlers/checkpoints/utils'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { CancelTokenSource } from 'axios'
 import { dictionary } from '@shared/constants/dictionary'
 import { DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD } from '@/constants/values'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { SharedContextState } from '@/context/shared-context-state'
+import { Checkpoint } from './message-handlers/checkpoints/types'
 
 export class PanelProvider implements vscode.WebviewViewProvider {
   public readonly extension_uri: vscode.Uri
@@ -307,6 +311,27 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
   public async send_checkpoints() {
     const checkpoints = await get_checkpoints(this.context)
+
+    let has_temp_checkpoint = false
+    const temp_checkpoint = this.context.workspaceState.get<Checkpoint>(
+      TEMPORARY_CHECKPOINT_STATE_KEY
+    )
+    if (temp_checkpoint) {
+      const three_hours_in_ms = 3 * 60 * 60 * 1000
+      if (Date.now() - temp_checkpoint.timestamp < three_hours_in_ms) {
+        try {
+          const checkpoint_path = get_checkpoint_path(temp_checkpoint.timestamp)
+          await vscode.workspace.fs.stat(vscode.Uri.file(checkpoint_path))
+          has_temp_checkpoint = true
+        } catch {
+          await this.context.workspaceState.update(
+            TEMPORARY_CHECKPOINT_STATE_KEY,
+            undefined
+          )
+        }
+      }
+    }
+
     this.send_message({
       command: 'CHECKPOINTS',
       checkpoints: checkpoints.map((c) => ({
@@ -314,7 +339,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         trigger: c.trigger,
         description: c.description,
         is_starred: c.is_starred
-      }))
+      })),
+      has_temp_checkpoint
     })
   }
 
@@ -482,7 +508,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           this.send_setup_progress()
         }
 
-        if (event.affectsConfiguration('codeWebChat.isTimelineCollapsed')) {
+        if (event.affectsConfiguration('codeWebChat.areCheckpointsCollapsed')) {
           handle_get_collapsed_states(this)
         }
 
@@ -709,34 +735,13 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'CREATE_CHECKPOINT') {
             await handle_create_checkpoint(this)
           } else if (message.command == 'TOGGLE_CHECKPOINT_STAR') {
-            await toggle_checkpoint_star({
-              context: this.context,
-              timestamp: message.timestamp,
-              panel_provider: this
-            })
+            await handle_toggle_checkpoint_star(this, message)
           } else if (message.command == 'RESTORE_CHECKPOINT') {
-            const checkpoints = await get_checkpoints(this.context)
-            const checkpoint_to_restore = checkpoints.find(
-              (c) => c.timestamp == message.timestamp
-            )
-            if (checkpoint_to_restore) {
-              await restore_checkpoint({
-                checkpoint: checkpoint_to_restore,
-                workspace_provider: this.workspace_provider,
-                context: this.context,
-                panel_provider: this,
-                options: {
-                  show_auto_closing_modal_on_success: true
-                }
-              })
-            }
+            await handle_restore_checkpoint(this, message)
+          } else if (message.command == 'RESTORE_TEMP_CHECKPOINT') {
+            await handle_restore_temp_checkpoint(this)
           } else if (message.command == 'UPDATE_CHECKPOINT_DESCRIPTION') {
-            await update_checkpoint_description({
-              context: this.context,
-              timestamp: message.timestamp,
-              description: message.description,
-              panel_provider: this
-            })
+            await handle_update_checkpoint_description(this, message)
           } else if (message.command == 'DELETE_CHECKPOINT') {
             await handle_delete_checkpoint(this, message)
           } else if (message.command == 'CLEAR_ALL_CHECKPOINTS') {

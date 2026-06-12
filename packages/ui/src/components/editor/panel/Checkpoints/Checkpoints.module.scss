@@ -1,4 +1,4 @@
-.timeline {
+.checkpoints {
   display: flex;
   flex-direction: column;
 }
@@ -6,7 +6,7 @@
 .item {
   display: flex;
   position: relative;
-  padding: 0 12px;
+  padding: 0 12px 0 10px;
   cursor: pointer;
 
   &:hover {
@@ -32,17 +32,18 @@
     color: var(--cwc-text-color-dimmed);
     white-space: nowrap;
     width: 60px;
-    text-align: right;
+    text-align: left;
     overflow: hidden;
     text-overflow: ellipsis;
     padding-top: 3px;
+    margin-right: 8px;
   }
 
   &__connector {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 0 8px 0 4px;
+    margin: 0 8px 0 0;
     flex-shrink: 0;
   }
 

@@ -46,7 +46,7 @@ export const INSTRUCTIONS_FIND_RELEVANT_FILES_STATE_KEY =
   'instructions-find-relevant-files'
 
 export const ARE_TASKS_COLLAPSED_STATE_KEY = 'are-tasks-collapsed'
-export const IS_TIMELINE_COLLAPSED_STATE_KEY = 'is-timeline-collapsed'
+export const ARE_CHECKPOINTS_COLLAPSED_STATE_KEY = 'are-checkpoints-collapsed'
 
 export const HISTORY_ASK_STATE_KEY = 'history-ask'
 export const HISTORY_EDIT_STATE_KEY = 'history-edit'

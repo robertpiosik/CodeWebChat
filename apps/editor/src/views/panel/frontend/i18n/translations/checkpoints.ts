@@ -1,23 +1,23 @@
 export const checkpoints = {
-  'home.timeline': {
-    en: 'Timeline',
-    pl: 'Oś czasu',
-    'zh-cn': '时间线',
-    ja: 'タイムライン',
-    'zh-tw': '時間軸',
-    de: 'Zeitachse',
-    es: 'Línea de tiempo',
-    fr: 'Chronologie',
-    'pt-br': 'Linha do Tempo',
-    ru: 'Таймлайн',
-    ko: '타임라인',
-    it: 'Sequenza temporale',
-    tr: 'Zaman Çizelgesi',
-    cs: 'Časová osa',
-    hu: 'Idővonal',
-    bg: 'Хронология'
+  'home.checkpoints': {
+    en: 'Checkpoints',
+    pl: 'Punkty kontrolne',
+    'zh-cn': '检查点',
+    ja: 'チェックポイント',
+    'zh-tw': '檢查點',
+    de: 'Checkpoints',
+    es: 'Puntos de control',
+    fr: 'Points de contrôle',
+    'pt-br': 'Pontos de verificação',
+    ru: 'Контрольные точки',
+    ko: '체크포인트',
+    it: 'Punti di controllo',
+    tr: 'Kontrol Noktaları',
+    cs: 'Kontrolní body',
+    hu: 'Ellenőrzőpontok',
+    bg: 'Контролни точки'
   },
-  'home.timeline.empty': {
+  'home.checkpoints.empty': {
     en: 'No checkpoints created yet.',
     pl: 'Nie utworzono jeszcze żadnych punktów kontrolnych.',
     'zh-cn': '尚未创建检查点。',
@@ -35,7 +35,7 @@ export const checkpoints = {
     hu: 'Még nincsenek ellenőrzőpontok létrehozva.',
     bg: 'Все още няма създадени контролни точки.'
   },
-  'home.timeline.new-checkpoint': {
+  'home.checkpoints.new-checkpoint': {
     en: 'New Checkpoint',
     pl: 'Nowy punkt kontrolny',
     'zh-cn': '新检查点',
@@ -53,7 +53,7 @@ export const checkpoints = {
     hu: 'Új Ellenőrzőpont',
     bg: 'Нова контролна точка'
   },
-  'home.timeline.delete-all': {
+  'home.checkpoints.delete-all': {
     en: 'Delete all checkpoints',
     pl: 'Usuń wszystkie punkty kontrolne',
     'zh-cn': '删除所有检查点',
@@ -71,23 +71,23 @@ export const checkpoints = {
     hu: 'Összes ellenőrzőpont törlése',
     bg: 'Изтриване на всички контролни точки'
   },
-  'home.timeline.scroll': {
-    en: 'Timeline',
-    pl: 'Oś czasu',
-    'zh-cn': '时间线',
-    ja: 'タイムライン',
-    'zh-tw': '時間軸',
-    de: 'Zeitachse',
-    es: 'Línea de tiempo',
-    fr: 'Chronologie',
-    'pt-br': 'Linha do Tempo',
-    ru: 'Таймлайн',
-    ko: '타임라인',
-    it: 'Sequenza temporale',
-    tr: 'Zaman Çizelgesi',
-    cs: 'Časová osa',
-    hu: 'Idővonal',
-    bg: 'Хронология'
+  'home.checkpoints.scroll': {
+    en: 'Checkpoints',
+    pl: 'Punkty kontrolne',
+    'zh-cn': '检查点',
+    ja: 'チェックポイント',
+    'zh-tw': '檢查點',
+    de: 'Checkpoints',
+    es: 'Puntos de control',
+    fr: 'Points de contrôle',
+    'pt-br': 'Pontos de verificação',
+    ru: 'Контрольные точки',
+    ko: '체크포인트',
+    it: 'Punti di controllo',
+    tr: 'Kontrol Noktaları',
+    cs: 'Kontrolní body',
+    hu: 'Ellenőrzőpontok',
+    bg: 'Контролни точки'
   },
   'command.checkpoints.trigger.manual': {
     en: 'Manual',
