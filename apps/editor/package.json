@@ -876,6 +876,20 @@
         "codeWebChat.webConfigurations": {
           "type": "array",
           "scope": "resource",
+          "default": [
+            {
+              "name": "(0)",
+              "chatbot": "Gemini"
+            },
+            {
+              "name": "(1)",
+              "chatbot": "ChatGPT"
+            },
+            {
+              "name": "(2)",
+              "chatbot": "Claude"
+            }
+          ],
           "items": {
             "type": "object",
             "properties": {
