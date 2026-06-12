@@ -168,11 +168,6 @@ When calling APIs, requests are sent directly to the configured model providers.
 - `Code at Cursor with Instructions` - Inline snippet with instructions.
 - `Code at Cursor with Instructions using...` - Inline snippet with instructions and configuration selection.
 
-### Checkpoints
-
-- `Checkpoints` - Restore the overall workspace state to the saved checkpoint.
-- `Create New Checkpoint` - Save the current state of the workspace.
-
 ### Context
 
 - `Apply Context` - Apply a saved context or save the current file selection.
