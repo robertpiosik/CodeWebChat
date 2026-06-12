@@ -278,17 +278,6 @@
         "icon": "$(search)"
       },
       {
-        "command": "codeWebChat.checkpoints",
-        "title": "%codeWebChat.checkpoints.title%",
-        "category": "Code Web Chat",
-        "icon": "$(history)"
-      },
-      {
-        "command": "codeWebChat.createNewCheckpoint",
-        "title": "%codeWebChat.createNewCheckpoint.title%",
-        "category": "Code Web Chat"
-      },
-      {
         "command": "codeWebChat.settings",
         "title": "%codeWebChat.settings.title%",
         "category": "Code Web Chat"

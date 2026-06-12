@@ -1,11 +1,6 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
-import {
-  create_checkpoint,
-  delete_checkpoint
-} from '../checkpoints-command/actions'
 import { FileInPreview } from '@shared/types/file-in-preview'
-import { get_checkpoint_path } from '../checkpoints-command/utils'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
@@ -20,7 +15,6 @@ import {
   process_chat_response,
   ApplyChatResponseCommandArgs
 } from './response-processor'
-import { Checkpoint } from '../checkpoints-command/types'
 import { CHECKPOINTS_STATE_KEY } from '@/constants/state-keys'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { ApiManager } from '@/services/api-manager'
@@ -30,6 +24,9 @@ import {
   CwcPreviewProvider
 } from './utils/preview/virtual-document-provider'
 import { parse_response } from './utils/clipboard-parser'
+import { Checkpoint } from '@/views/panel/backend/message-handlers/checkpoints/types'
+import { create_checkpoint, delete_checkpoint } from '@/views/panel/backend/message-handlers/checkpoints/actions'
+import { get_checkpoint_path } from '@/views/panel/backend/message-handlers/checkpoints/utils'
 
 let in_progress = false
 
