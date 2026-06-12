@@ -26,6 +26,7 @@ import {
 import { default_system_instructions } from '@shared/constants/default-system-instructions'
 import { build_user_content } from '@/utils/build-user-content'
 import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-symbols'
+import { split_recent_and_rest_configurations } from '@/views/panel/backend/utils/split-recent-and-rest-configurations'
 
 const get_edit_context_api_configuration = async (params: {
   api_providers_manager: ModelProvidersManager
@@ -99,26 +100,12 @@ const get_edit_context_api_configuration = async (params: {
           RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY
         ) || []
 
-      const matched_recent_api_configurations: ApiConfiguration[] = []
-      const remaining_api_configurations: ApiConfiguration[] = []
-
-      edit_context_api_configurations.forEach((api_configuration) => {
-        const id = get_api_configuration_id(api_configuration)
-        if (recent_ids.includes(id)) {
-          matched_recent_api_configurations.push(api_configuration)
-        } else {
-          remaining_api_configurations.push(api_configuration)
-        }
-      })
-
-      matched_recent_api_configurations.sort((a, b) => {
-        const idA = get_api_configuration_id(a)
-        const idB = get_api_configuration_id(b)
-        return recent_ids.indexOf(idA) - recent_ids.indexOf(idB)
-      })
-
-      const recent_api_configurations = matched_recent_api_configurations
-      const other_api_configurations = remaining_api_configurations
+      const { recent: recent_api_configurations, rest: other_api_configurations } =
+        split_recent_and_rest_configurations(
+          edit_context_api_configurations,
+          recent_ids,
+          get_api_configuration_id
+        )
 
       const map_api_configuration_to_item = (api_configuration: ApiConfiguration) => {
         const description_parts = [api_configuration.model_provider_name]
@@ -153,7 +140,7 @@ const get_edit_context_api_configuration = async (params: {
       if (other_api_configurations.length > 0) {
         if (recent_api_configurations.length > 0) {
           items.push({
-            label: 'other API configurations',
+            label: 'other configurations',
             kind: vscode.QuickPickItemKind.Separator
           })
         }
@@ -165,8 +152,8 @@ const get_edit_context_api_configuration = async (params: {
 
     const quick_pick = vscode.window.createQuickPick<Item>()
     quick_pick.items = await create_items()
-    quick_pick.title = 'API Configurations'
-    quick_pick.placeholder = 'Select an API configuration'
+    quick_pick.title = 'Configurations'
+    quick_pick.placeholder = 'Select a configuration'
     quick_pick.matchOnDescription = true
     quick_pick.buttons = [
       {

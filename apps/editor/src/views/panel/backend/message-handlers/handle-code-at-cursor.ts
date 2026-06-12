@@ -17,6 +17,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import { randomUUID } from 'crypto'
 import { build_user_content } from '@/utils/build-user-content'
 import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-symbols'
+import { split_recent_and_rest_configurations } from '@/views/panel/backend/utils/split-recent-and-rest-configurations'
 
 const get_code_at_cursor_api_configuration = async (
   api_providers_manager: ModelProvidersManager,
@@ -74,26 +75,12 @@ const get_code_at_cursor_api_configuration = async (
           RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
         ) || []
 
-      const matched_recent_api_configurations: ApiConfiguration[] = []
-      const remaining_api_configurations: ApiConfiguration[] = []
-
-      code_completions_api_configurations.forEach((api_configuration) => {
-        const id = get_api_configuration_id(api_configuration)
-        if (recent_ids.includes(id)) {
-          matched_recent_api_configurations.push(api_configuration)
-        } else {
-          remaining_api_configurations.push(api_configuration)
-        }
-      })
-
-      matched_recent_api_configurations.sort((a, b) => {
-        const idA = get_api_configuration_id(a)
-        const idB = get_api_configuration_id(b)
-        return recent_ids.indexOf(idA) - recent_ids.indexOf(idB)
-      })
-
-      const recent_api_configurations = matched_recent_api_configurations
-      const other_api_configurations = remaining_api_configurations
+      const { recent: recent_api_configurations, rest: other_api_configurations } =
+        split_recent_and_rest_configurations(
+          code_completions_api_configurations,
+          recent_ids,
+          get_api_configuration_id
+        )
 
       const map_api_configuration_to_item = (api_configuration: ApiConfiguration) => {
         const description_parts = [api_configuration.model_provider_name]

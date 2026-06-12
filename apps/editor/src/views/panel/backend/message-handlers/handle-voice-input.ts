@@ -13,6 +13,7 @@ import axios from 'axios'
 import { make_api_request } from '@/utils/make-api-request'
 import { voice_input_instructions } from '@/constants/instructions'
 import { RECENTLY_USED_VOICE_INPUT_CONFIG_IDS_STATE_KEY } from '@/constants/state-keys'
+import { split_recent_and_rest_configurations } from '@/views/panel/backend/utils/split-recent-and-rest-configurations'
 
 const MIN_RECORDING_DURATION = 1000
 
@@ -71,23 +72,14 @@ const stop_recording = async (panel_provider: PanelProvider) => {
               RECENTLY_USED_VOICE_INPUT_CONFIG_IDS_STATE_KEY
             ) || []
 
-          const matched_recent_api_configurations: ApiConfiguration[] = []
-          const remaining_api_configurations: ApiConfiguration[] = []
-
-          api_configurations.forEach((api_configuration) => {
-            const id = get_api_configuration_id(api_configuration)
-            if (recent_ids.includes(id)) {
-              matched_recent_api_configurations.push(api_configuration)
-            } else {
-              remaining_api_configurations.push(api_configuration)
-            }
-          })
-
-          matched_recent_api_configurations.sort((a, b) => {
-            const id_a = get_api_configuration_id(a)
-            const id_b = get_api_configuration_id(b)
-            return recent_ids.indexOf(id_a) - recent_ids.indexOf(id_b)
-          })
+          const {
+            recent: matched_recent_api_configurations,
+            rest: remaining_api_configurations
+          } = split_recent_and_rest_configurations(
+            api_configurations,
+            recent_ids,
+            get_api_configuration_id
+          )
 
           const map_api_configuration_to_item = (api_configuration: ApiConfiguration) => ({
             label: api_configuration.model,

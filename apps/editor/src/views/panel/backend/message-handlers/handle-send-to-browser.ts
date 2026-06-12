@@ -23,6 +23,7 @@ import {
 } from '@/constants/edit-format-instructions'
 import { handle_update_last_used_web_configuration_or_group } from './handle-update-last-used-web-configuration-or-group'
 import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-symbols'
+import { split_recent_and_rest_configurations } from '@/views/panel/backend/utils/split-recent-and-rest-configurations'
 
 export const handle_send_to_browser = async (params: {
   panel_provider: PanelProvider
@@ -227,6 +228,14 @@ const show_web_configuration_quick_pick = async (params: {
 }): Promise<{ web_configuration_name: string | undefined } | null> => {
   const { web_configurations, context, prompt_type, panel_provider } = params
 
+  const valid_web_configurations = web_configurations.filter((c) => c.chatbot)
+
+  if (valid_web_configurations.length == 0) {
+    vscode.commands.executeCommand('codeWebChat.settings')
+    vscode.window.showInformationMessage('No configurations found.')
+    return null
+  }
+
   const quick_pick = vscode.window.createQuickPick<
     vscode.QuickPickItem & { web_configuration_name?: string }
   >()
@@ -237,50 +246,55 @@ const show_web_configuration_quick_pick = async (params: {
     context.globalState.get<string[]>(recents_key) ??
     []
 
-  if (recent_names.length == 0) {
-    vscode.window.showWarningMessage(
-      dictionary.warning_message.NO_RECENTLY_USED_PRESETS_OR_GROUPS // the dictionary key is kept, string may differ
-    )
-    return null
+  const { recent: matched_recent, rest: remaining } = split_recent_and_rest_configurations(
+    valid_web_configurations,
+    recent_names,
+    (c) => c.name
+  )
+
+  const map_web_configuration_to_item = (web_configuration: ConfigWebConfigurationFormat) => {
+    const is_unnamed = !web_configuration.name || /^\(\d+\)$/.test(web_configuration.name.trim())
+    const chatbot_models =
+      CHATBOTS[web_configuration.chatbot as keyof typeof CHATBOTS]?.models
+    const model = web_configuration.model
+      ? chatbot_models?.[web_configuration.model]?.label || web_configuration.model
+      : ''
+    return {
+      label: `${
+        is_unnamed
+          ? web_configuration.chatbot!
+          : web_configuration.name!.replace(/\s*\(\d+\)$/, '')
+      }`,
+      web_configuration_name: web_configuration.name,
+      description: is_unnamed
+        ? model
+        : `${web_configuration.chatbot}${model ? ` · ${model}` : ''}`
+    }
   }
 
-  const items = recent_names
-    .map((name) => {
-      const item = web_configurations.find((p) => p.name == name)
+  const items: (vscode.QuickPickItem & { web_configuration_name?: string })[] = []
 
-      if (item && item.chatbot) {
-        const web_configuration = item
-        const is_unnamed = !web_configuration.name || /^\(\d+\)$/.test(web_configuration.name.trim())
-        const chatbot_models =
-          CHATBOTS[web_configuration.chatbot as keyof typeof CHATBOTS]?.models
-        const model = web_configuration.model
-          ? chatbot_models?.[web_configuration.model]?.label || web_configuration.model
-          : ''
-        return {
-          label: `${
-            is_unnamed
-              ? web_configuration.chatbot!
-              : web_configuration.name!.replace(/\s*\(\d+\)$/, '')
-          }`,
-          web_configuration_name: web_configuration.name,
-          description: is_unnamed
-            ? model
-            : `${web_configuration.chatbot}${model ? ` · ${model}` : ''}`
-        }
-      }
-      return null
+  if (matched_recent.length > 0) {
+    items.push({
+      label: 'recently used',
+      kind: vscode.QuickPickItemKind.Separator
     })
-    .filter((i): i is NonNullable<typeof i> => i !== null)
+    items.push(...matched_recent.map(map_web_configuration_to_item))
+  }
+
+  if (remaining.length > 0) {
+    if (matched_recent.length > 0) {
+      items.push({
+        label: 'other configurations',
+        kind: vscode.QuickPickItemKind.Separator
+      })
+    }
+    items.push(...remaining.map(map_web_configuration_to_item))
+  }
 
   quick_pick.items = items
-  if (items.length == 0) {
-    vscode.window.showWarningMessage(
-      dictionary.warning_message.NO_RECENTLY_USED_PRESETS_OR_GROUPS
-    )
-    return null
-  }
-  quick_pick.placeholder = 'Search recently used presets'
-  quick_pick.title = 'Recently Used Presets'
+  quick_pick.placeholder = 'Select a configuration'
+  quick_pick.title = 'Configurations'
   quick_pick.matchOnDescription = true
 
   const close_button = {
@@ -297,17 +311,27 @@ const show_web_configuration_quick_pick = async (params: {
 
   const last_selected_name = recent_names[0]
 
-  let last_selected_web_configuration_name: string | undefined
   if (last_selected_name) {
-    const item = web_configurations.find((p) => p.name == last_selected_name)
-    if (item && item.chatbot) last_selected_web_configuration_name = last_selected_name
-  }
-
-  if (last_selected_web_configuration_name) {
     const last_item = quick_pick.items.find(
-      (item) => item.web_configuration_name == last_selected_web_configuration_name
+      (item) => item.web_configuration_name == last_selected_name
     )
-    if (last_item) quick_pick.activeItems = [last_item]
+    if (last_item) {
+      quick_pick.activeItems = [last_item]
+    } else if (items.length > 0) {
+      const first_selectable = items.find(
+        (i) => i.kind != vscode.QuickPickItemKind.Separator
+      )
+      if (first_selectable) {
+        quick_pick.activeItems = [first_selectable]
+      }
+    }
+  } else if (items.length > 0) {
+    const first_selectable = items.find(
+      (i) => i.kind != vscode.QuickPickItemKind.Separator
+    )
+    if (first_selectable) {
+      quick_pick.activeItems = [first_selectable]
+    }
   }
 
   return new Promise<{ web_configuration_name: string | undefined } | null>((resolve) => {
@@ -322,36 +346,31 @@ const show_web_configuration_quick_pick = async (params: {
     quick_pick.onDidAccept(async () => {
       const selected = quick_pick.selectedItems[0] as any
 
-      if (!selected) {
+      if (!selected || !selected.web_configuration_name) {
         quick_pick.hide()
         do_resolve(null)
         return
       }
 
-      if (selected.web_configuration_name) {
-        const web_configuration = web_configurations.find((p) => p.name == selected.web_configuration_name)!
-        if (params.get_is_web_configuration_disabled(web_configuration)) {
-          if (
-            !params.is_in_code_completions_mode &&
-            !params.current_instructions
-          ) {
-            params.panel_provider.send_message({
-              command: 'SHOW_AUTO_CLOSING_MODAL',
-              title: 'Type something to use this web configuration',
-              type: 'warning'
-            })
-          }
-          do_resolve(null)
-        } else {
-          handle_update_last_used_web_configuration_or_group({
-            panel_provider,
-            web_configuration_name: selected.web_configuration_name
+      const web_configuration = valid_web_configurations.find((p) => p.name == selected.web_configuration_name)!
+      if (params.get_is_web_configuration_disabled(web_configuration)) {
+        if (
+          !params.is_in_code_completions_mode &&
+          !params.current_instructions
+        ) {
+          params.panel_provider.send_message({
+            command: 'SHOW_AUTO_CLOSING_MODAL',
+            title: 'Type something to use this web configuration',
+            type: 'warning'
           })
-          do_resolve({ web_configuration_name: selected.web_configuration_name })
         }
+        do_resolve(null)
       } else {
-        quick_pick.hide()
-        do_resolve({ web_configuration_name: undefined })
+        handle_update_last_used_web_configuration_or_group({
+          panel_provider,
+          web_configuration_name: selected.web_configuration_name
+        })
+        do_resolve({ web_configuration_name: selected.web_configuration_name })
       }
     })
 
