@@ -160,5 +160,24 @@ export const checkpoints = {
     cs: 'Před obnovením kontrolního bodu',
     hu: 'Ellenőrzőpont visszaállítása előtt',
     bg: 'Преди възстановяване на контролна точка'
+  },
+  'command.checkpoints.revert-last': {
+    en: 'Revert last restored checkpoint',
+    pl: 'Cofnij ostatnie przywrócenie',
+    'zh-cn': '撤销上次恢复',
+    ja: '最後の復元を元に戻す',
+    'zh-tw': '撤銷上次還原',
+    de: 'Wiederherstellung rückgängig machen',
+    es: 'Deshacer última restauración',
+    fr: 'Annuler la dernière restauration',
+    'pt-br': 'Desfazer última restauração',
+    ru: 'Отменить последнее восстановление',
+    ko: '마지막 복원 취소',
+    it: 'Annulla ultimo ripristino',
+    tr: 'Son geri yüklemeyi geri al',
+    cs: 'Vrátit poslední obnovení',
+    hu: 'Visszaállítás visszavonása',
+    bg: 'Отмяна на възстановяването'
   }
 } as const
+

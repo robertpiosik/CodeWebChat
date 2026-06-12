@@ -197,7 +197,7 @@ export const Home: React.FC<Props> = (props) => {
                     {props.has_temp_checkpoint && (
                       <UiIconButton
                         codicon_icon="discard"
-                        title={'command.checkpoints.revert-last'}
+                        title={t('command.checkpoints.revert-last')}
                         on_click={(e) => {
                           e.stopPropagation()
                           props.on_restore_temp_checkpoint()

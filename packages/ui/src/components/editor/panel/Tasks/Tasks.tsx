@@ -58,13 +58,35 @@ export const Tasks: React.FC<Props> = (props) => {
   const [editing_timestamp, set_editing_timestamp] = useState<number | null>(
     null
   )
+  const [editing_initial_text, set_editing_initial_text] = useState<string>('')
   const [forwarded_timestamp, set_forwarded_timestamp] = useState<
     number | null
   >(null)
   const [copied_timestamp, set_copied_timestamp] = useState<number | null>(null)
   const prevent_edit_ref = useRef(false)
 
-  use_auto_focus_new_task(props.tasks, set_editing_timestamp)
+  const handle_set_editing = (timestamp: number | null, text?: string) => {
+    set_editing_timestamp(timestamp)
+    if (text !== undefined) {
+      set_editing_initial_text(text)
+    }
+  }
+
+  use_auto_focus_new_task(props.tasks, handle_set_editing)
+
+  const handle_stop_editing = (task: Task) => {
+    if (editing_timestamp !== task.created_at) return
+    set_editing_timestamp(null)
+    if (!task.text.trim()) {
+      const has_children = task.children && task.children.length > 0
+      if (!editing_initial_text.trim() && !has_children) {
+        props.on_delete(task.created_at)
+      } else if (editing_initial_text.trim()) {
+        const { id, ...rest } = task as any
+        props.on_change({ ...rest, text: editing_initial_text })
+      }
+    }
+  }
 
   const tree = useMemo(() => add_ids(props.tasks), [props.tasks])
 
@@ -200,11 +222,13 @@ export const Tasks: React.FC<Props> = (props) => {
                 on_mouse_down={
                   is_editing ? (e) => e.preventDefault() : undefined
                 }
-                on_click={() =>
-                  set_editing_timestamp(
-                    is_editing ? null : params.task.created_at
-                  )
-                }
+                on_click={() => {
+                  if (is_editing) {
+                    handle_stop_editing(params.task)
+                  } else {
+                    handle_set_editing(params.task.created_at, params.task.text)
+                  }
+                }}
                 title={is_editing ? 'Done' : 'Edit'}
               />
               <IconButton
@@ -226,11 +250,12 @@ export const Tasks: React.FC<Props> = (props) => {
                 props.on_change({ ...rest, text: value })
               }}
               autofocus
-              on_blur={() => set_editing_timestamp(null)}
+              on_blur={() => {
+                handle_stop_editing(params.task)
+              }}
               on_key_down={(e) => {
                 if (e.key == 'Enter' && !e.shiftKey) {
                   e.preventDefault()
-                  set_editing_timestamp(null)
                 }
               }}
             />
@@ -253,7 +278,7 @@ export const Tasks: React.FC<Props> = (props) => {
               }}
               onClick={() => {
                 if (prevent_edit_ref.current) return
-                set_editing_timestamp(params.task.created_at)
+                handle_set_editing(params.task.created_at, params.task.text)
               }}
             >
               {params.task.text || props.placeholder}

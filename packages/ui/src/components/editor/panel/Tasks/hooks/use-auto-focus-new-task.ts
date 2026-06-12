@@ -3,7 +3,7 @@ import { Task } from '@shared/types/task'
 
 export const use_auto_focus_new_task = (
   tasks: Task[],
-  set_editing_timestamp: (timestamp: number | null) => void
+  set_editing_timestamp: (timestamp: number | null, text?: string) => void
 ) => {
   const prev_ids_ref = useRef<Set<number>>(new Set())
   const is_first_render = useRef(true)
@@ -34,7 +34,7 @@ export const use_auto_focus_new_task = (
     if (added_ids.length == 1) {
       const new_task = id_to_task.get(added_ids[0])
       if (new_task && new_task.text == '') {
-        set_editing_timestamp(added_ids[0])
+        set_editing_timestamp(added_ids[0], '')
       }
     }
 
