@@ -16,7 +16,7 @@
   flex-direction: column;
   gap: 30px;
   width: var(--sidebar-width);
-  top: 60px;
+  top: calc(40px - 5px);
   left: 30px;
   @media (min-width: 770px) {
     left: 60px;
