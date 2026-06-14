@@ -71,6 +71,24 @@ export const home = {
     hu: 'Kattintson szöveg hozzáadásához...',
     bg: 'Кликнете, за да добавите текст...'
   },
+  'home.folder': {
+    en: 'Folder',
+    pl: 'Folder',
+    'zh-cn': '文件夹',
+    ja: 'フォルダー',
+    'zh-tw': '資料夾',
+    de: 'Ordner',
+    es: 'Carpeta',
+    fr: 'Dossier',
+    'pt-br': 'Pasta',
+    ru: 'Папка',
+    ko: '폴더',
+    it: 'Cartella',
+    tr: 'Klasör',
+    cs: 'Složka',
+    hu: 'Mappa',
+    bg: 'Папка'
+  },
   'home.footer.copyright': {
     en: 'Copyright © {year} {link}',
     pl: 'Copyright © {year} {link}',
