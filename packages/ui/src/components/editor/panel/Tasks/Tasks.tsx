@@ -184,6 +184,9 @@ export const Tasks: React.FC<Props> = (props) => {
               {params.task.text && (
                 <IconButton
                   codicon_icon="forward"
+                  on_mouse_down={
+                    is_editing ? (e) => e.preventDefault() : undefined
+                  }
                   on_click={(e) => {
                     e.stopPropagation()
                     props.on_forward(params.task.text)
@@ -203,6 +206,9 @@ export const Tasks: React.FC<Props> = (props) => {
                     copied_timestamp == params.task.created_at
                       ? { cursor: 'default' }
                       : undefined
+                  }
+                  on_mouse_down={
+                    is_editing ? (e) => e.preventDefault() : undefined
                   }
                   on_click={(e) => {
                     e.stopPropagation()
@@ -233,6 +239,9 @@ export const Tasks: React.FC<Props> = (props) => {
               />
               <IconButton
                 codicon_icon="trash"
+                on_mouse_down={
+                  is_editing ? (e) => e.preventDefault() : undefined
+                }
                 on_click={(e) => {
                   e.stopPropagation()
                   props.on_delete(params.task.created_at)

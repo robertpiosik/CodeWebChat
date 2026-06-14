@@ -32,7 +32,15 @@ export const TaskGroup: React.FC<TaskGroupProps> = (props) => {
     <>
       <ReactSortable<SortableTask>
         list={props.items}
-        setList={props.on_reorder}
+        setList={(new_items) => {
+          if (
+            new_items.length !== props.items.length ||
+            new_items.every((it, index) => it.id == props.items[index].id)
+          ) {
+            return
+          }
+          props.on_reorder(new_items)
+        }}
         className={props.className}
         animation={150}
         filter="textarea"
