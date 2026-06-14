@@ -88,12 +88,17 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       position: sticky;
       top: 10px;
-      animation: stickyFadeIn var(--transition-duration-150)
+      animation: stickyFadeIn var(--transition-duration-250)
         var(--transition-timing-function);
 
       &::after {
         height: 20px;
       }
+    }
+
+    &--hiding {
+      animation: stickyFadeOut var(--transition-duration-250)
+        var(--transition-timing-function) forwards;
     }
   }
 
@@ -151,11 +156,22 @@
 @keyframes stickyFadeIn {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-15px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes stickyFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-15px);
   }
 }
 

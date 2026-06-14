@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import styles from './Home.module.scss'
 import { Scrollable as UiScrollable } from '@ui/components/editor/panel/Scrollable'
 import { Checkpoints as UiCheckpoints } from '@ui/components/editor/panel/Checkpoints'
@@ -15,6 +15,7 @@ import { IconButton as UiIconButton } from '@ui/components/editor/common/IconBut
 import { Tasks as UiTasks } from '@ui/components/editor/panel/Tasks'
 import { Task } from '@shared/types/task'
 import { use_tasks } from './hooks/use-tasks'
+import { use_sticky_mode } from './hooks/use-sticky-mode'
 import { SettingsButton as UiSettingsButton } from '@ui/components/editor/panel/SettingsButton'
 
 type Props = {
@@ -46,11 +47,8 @@ type Props = {
 
 export const Home: React.FC<Props> = (props) => {
   const { t } = use_translation()
-  const [is_mode_sticky, set_is_mode_sticky] = useState(false)
   const [active_tab, set_active_tab] = useState<'tasks' | 'checkpoints'>('tasks')
-  const full_mode_height_ref = useRef<number>(0)
-  const responses_ref = useRef<HTMLDivElement>(null)
-  const mode_ref = useRef<HTMLDivElement>(null)
+  const { is_mode_sticky, is_hiding, responses_ref, mode_ref, handle_scroll } = use_sticky_mode()
 
   useEffect(() => {
     const handle_mouse_up = (event: MouseEvent) => {
@@ -106,22 +104,7 @@ export const Home: React.FC<Props> = (props) => {
         />
       </div>
 
-      <UiScrollable
-        on_scroll={(top) => {
-          const responses_height = responses_ref.current?.clientHeight || 0
-          const current_mode_height = mode_ref.current?.offsetHeight || 0
-
-          if (!is_mode_sticky && current_mode_height > 0) {
-            full_mode_height_ref.current = current_mode_height
-          }
-
-          const height_to_use = is_mode_sticky
-            ? full_mode_height_ref.current
-            : current_mode_height
-
-          set_is_mode_sticky(top > responses_height + height_to_use + 4)
-        }}
-      >
+      <UiScrollable on_scroll={handle_scroll}>
         <div
           className={cn(styles.content, {
             [styles['content--sticky']]: is_mode_sticky
@@ -150,7 +133,8 @@ export const Home: React.FC<Props> = (props) => {
 
             <div
               className={cn(styles.inner__mode, {
-                [styles['inner__mode--sticky']]: is_mode_sticky
+                [styles['inner__mode--sticky']]: is_mode_sticky,
+                [styles['inner__mode--hiding']]: is_hiding
               })}
               ref={mode_ref}
             >
