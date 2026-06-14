@@ -17,6 +17,7 @@ import { Task } from '@shared/types/task'
 import { use_tasks } from './hooks/use-tasks'
 import { use_sticky_mode } from './hooks/use-sticky-mode'
 import { SettingsButton as UiSettingsButton } from '@ui/components/editor/panel/SettingsButton'
+import { InlineDropdown as UiInlineDropdown } from '@ui/components/editor/panel/InlineDropdown'
 
 type Props = {
   vscode: any
@@ -48,7 +49,11 @@ type Props = {
 export const Home: React.FC<Props> = (props) => {
   const { t } = use_translation()
   const [active_tab, set_active_tab] = useState<'tasks' | 'checkpoints'>('tasks')
+  const [active_workspace_root, set_active_workspace_root] = useState<string>()
   const { is_mode_sticky, is_hiding, responses_ref, mode_ref, handle_scroll } = use_sticky_mode()
+
+  const roots = Object.keys(props.tasks)
+  const active_root = active_workspace_root && roots.includes(active_workspace_root) ? active_workspace_root : roots[0]
 
   useEffect(() => {
     const handle_mouse_up = (event: MouseEvent) => {
@@ -163,19 +168,32 @@ export const Home: React.FC<Props> = (props) => {
               on_tab_change={(id) => set_active_tab(id as 'tasks' | 'checkpoints')}
               actions={
                 active_tab == 'tasks' ? (
-                  Object.keys(props.tasks).length == 1 ? (
-                    <UiIconButton
-                      codicon_icon="add"
-                      title={t('home.tasks.add')}
-                      on_click={(e) => {
-                        e.stopPropagation()
-                        const roots = Object.keys(props.tasks)
-                        if (roots.length > 0) {
-                          handle_add(roots[0], props.tasks[roots[0]], 'top')
-                        }
-                      }}
-                    />
-                  ) : undefined
+                  <>
+                    {roots.length > 1 && (
+                      <div className={styles['inner__workspace-dropdown']}>
+                        <UiInlineDropdown
+                          options={roots.map((root) => ({
+                            value: root,
+                            label: root.split(/[\\/]/).pop() || root
+                          }))}
+                          selected_value={active_root!}
+                          on_change={(val) => set_active_workspace_root(val)}
+                        />
+                      </div>
+                    )}
+                    {roots.length > 0 && (
+                      <UiIconButton
+                        codicon_icon="add"
+                        title={t('home.tasks.add')}
+                        on_click={(e) => {
+                          e.stopPropagation()
+                          if (active_root) {
+                            handle_add(active_root, props.tasks[active_root], 'top')
+                          }
+                        }}
+                      />
+                    )}
+                  </>
                 ) : (
                   <>
                     {props.has_temp_checkpoint && (
@@ -213,70 +231,43 @@ export const Home: React.FC<Props> = (props) => {
 
             {active_tab == 'tasks' && (
               <>
-                {Object.keys(props.tasks).length == 1 &&
-                  props.tasks[Object.keys(props.tasks)[0]].length == 0 && (
-                    <div className={styles.inner__empty}>
-                      {t('home.tasks.empty')}
-                    </div>
-                  )}
-                {Object.entries(props.tasks)
-                  .filter(([_, tasks], __, arr) =>
-                    arr.length == 1 ? tasks.length > 0 : true
-                  )
-                  .map(([workspace_root_folder, tasks], _, entries) => (
-                    <div
-                      key={workspace_root_folder}
-                      className={styles.inner__tasks}
-                    >
-                      {entries.length > 1 && (
-                        <div className={styles['inner__tasks-header']}>
-                          <span>
-                            {workspace_root_folder.split(/[\\/]/).pop() ||
-                              workspace_root_folder}
-                          </span>
-                          <button
-                            className={styles['add-button']}
-                            title={t('home.tasks.add')}
-                            onClick={() => {
-                              handle_add(workspace_root_folder, tasks, 'top')
-                            }}
-                          />
-                        </div>
-                      )}
-                      {tasks.length > 0 && (
-                        <UiTasks
-                          tasks={tasks}
-                          on_reorder={(new_tasks) =>
-                            handle_reorder(workspace_root_folder, new_tasks)
-                          }
-                          on_change={(updated_task) => {
-                            handle_change(
-                              workspace_root_folder,
-                              tasks,
-                              updated_task
-                            )
-                          }}
-                          on_add={() => {
-                            handle_add(workspace_root_folder, tasks)
-                          }}
-                          on_add_subtask={(parent_task) => {
-                            handle_add_subtask(
-                              workspace_root_folder,
-                              tasks,
-                              parent_task
-                            )
-                          }}
-                          on_delete={(timestamp) => {
-                            handle_delete(workspace_root_folder, timestamp)
-                          }}
-                          on_forward={(text) => {
-                            props.on_task_forward(text)
-                          }}
-                          placeholder={t('home.tasks.placeholder')}
-                        />
-                      )}
-                    </div>
-                  ))}
+                {roots.length == 0 && (
+                  <div className={styles.inner__empty}>
+                    {t('home.tasks.empty')}
+                  </div>
+                )}
+                {active_root && (
+                  <div className={styles.inner__tasks}>
+                    {props.tasks[active_root].length == 0 ? (
+                      <div className={styles.inner__empty}>
+                        {t('home.tasks.empty')}
+                      </div>
+                    ) : (
+                      <UiTasks
+                        tasks={props.tasks[active_root]}
+                        on_reorder={(new_tasks) =>
+                          handle_reorder(active_root, new_tasks)
+                        }
+                        on_change={(updated_task) => {
+                          handle_change(active_root, props.tasks[active_root], updated_task)
+                        }}
+                        on_add={() => {
+                          handle_add(active_root, props.tasks[active_root])
+                        }}
+                        on_add_subtask={(parent_task) => {
+                          handle_add_subtask(active_root, props.tasks[active_root], parent_task)
+                        }}
+                        on_delete={(timestamp) => {
+                          handle_delete(active_root, timestamp)
+                        }}
+                        on_forward={(text) => {
+                          props.on_task_forward(text)
+                        }}
+                        placeholder={t('home.tasks.placeholder')}
+                      />
+                    )}
+                  </div>
+                )}
               </>
             )}
 

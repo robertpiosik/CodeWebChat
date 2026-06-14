@@ -114,19 +114,14 @@
     width: 100%;
   }
 
-  &__tasks {
-    width: 100%;
+  &__workspace-dropdown {
+    position: relative;
+    height: 24px;
+    flex: 1;
   }
 
-  &__tasks-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1px 14px 3px 12px;
-    font-size: 11px;
-    font-weight: bold;
-    color: var(--cwc-text-color-dimmed);
-    opacity: 0.8;
+  &__tasks {
+    width: 100%;
   }
 }
 
@@ -174,37 +169,3 @@
     transform: translateY(-15px);
   }
 }
-
-.add-button {
-  appearance: none;
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-  height: 16px;
-  width: 16px;
-  color: var(--vscode-icon-foreground);
-  position: relative;
-  cursor: pointer;
-  flex-shrink: 0;
-
-  &:focus {
-    outline: none;
-  }
-
-  &::before {
-    font-family: 'codicon';
-    font-size: 14px;
-    content: '\ea60';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0.6;
-  }
-
-  &:hover::before {
-    opacity: 1;
-  }
-}
-

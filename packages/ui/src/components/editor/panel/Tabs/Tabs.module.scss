@@ -1,11 +1,11 @@
 .tabs {
-  height: 28px;
+  height: 26px;
   padding: 0 12px;
   margin-bottom: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--cwc-border-color-dimmed);
+  gap: 14px;
 
   &__list {
     display: flex;
@@ -60,5 +60,8 @@
   &__actions {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
+    flex: 1;
+    gap: 8px;
   }
 }

@@ -1,8 +1,8 @@
-import { PromptTypeDropdown } from './PromptTypeDropdown'
+import { InlineDropdown } from './InlineDropdown'
 import { useState } from 'react'
 
 export default {
-  component: PromptTypeDropdown
+  component: InlineDropdown
 }
 
 export const Default = () => {
@@ -14,7 +14,7 @@ export const Default = () => {
 
   return (
     <div style={{ width: '200px' }}>
-      <PromptTypeDropdown
+      <InlineDropdown
         options={options}
         selected_value={selected}
         on_change={set_selected}
@@ -32,7 +32,7 @@ export const WithInfo = () => {
 
   return (
     <div style={{ width: '200px' }}>
-      <PromptTypeDropdown
+      <InlineDropdown
         options={options}
         selected_value={selected}
         on_change={set_selected}
@@ -51,7 +51,7 @@ export const LongList = () => {
 
   return (
     <div style={{ width: '200px' }}>
-      <PromptTypeDropdown
+      <InlineDropdown
         options={options}
         selected_value={selected}
         on_change={set_selected}
