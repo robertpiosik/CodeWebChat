@@ -52,6 +52,22 @@ export const CHATBOTS = {
       }
     }
   } as Chatbot,
+  Astraflow: {
+    url: 'https://astraflow.ucloud-global.com',
+    supports_custom_temperature: true,
+    supports_custom_top_p: true,
+    supports_system_instructions: true,
+    supports_user_provided_model: true,
+    default_system_instructions: "You're a helpful coding assistant."
+  } as Chatbot,
+  'Astraflow CN': {
+    url: 'https://astraflow.ucloud.cn',
+    supports_custom_temperature: true,
+    supports_custom_top_p: true,
+    supports_system_instructions: true,
+    supports_user_provided_model: true,
+    default_system_instructions: "You're a helpful coding assistant."
+  } as Chatbot,
   Arena: {
     url: 'https://arena.ai/',
     supports_user_provided_model: true
