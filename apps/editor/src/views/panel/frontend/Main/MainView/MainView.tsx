@@ -228,13 +228,24 @@ export const MainView: React.FC<Props> = (props) => {
         : web_configuration.name!.replace(/ \(\d+\)$/, '')
 
       const get_details = (): string[] => {
-        const { chatbot, model } = web_configuration
+        const { chatbot, model, reasoning_effort } = web_configuration
         const model_display_name =
           model && chatbot ? CHATBOTS[chatbot].models?.[model]?.label || model : null
 
-        if (is_unnamed) return model_display_name ? [model_display_name] : []
-        if (model_display_name) return [chatbot!, model_display_name]
-        return chatbot ? [chatbot] : []
+        const details: string[] = []
+        if (is_unnamed) {
+          if (model_display_name) details.push(model_display_name)
+        } else if (model_display_name) {
+          details.push(chatbot!, model_display_name)
+        } else if (chatbot) {
+          details.push(chatbot)
+        }
+
+        if (reasoning_effort) {
+          details.push(reasoning_effort)
+        }
+
+        return details
       }
 
       return {
