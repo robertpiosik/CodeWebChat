@@ -260,6 +260,18 @@ const show_web_configuration_quick_pick = async (params: {
     const model = web_configuration.model
       ? chatbot_models?.[web_configuration.model]?.label || web_configuration.model
       : ''
+
+      const details: string[] = []
+      if (!is_unnamed && web_configuration.chatbot) {
+        details.push(web_configuration.chatbot)
+      }
+      if (model) {
+        details.push(model)
+      }
+      if (web_configuration.reasoningEffort) {
+        details.push(web_configuration.reasoningEffort)
+      }
+
     return {
       label: `${
         is_unnamed
@@ -267,9 +279,7 @@ const show_web_configuration_quick_pick = async (params: {
           : web_configuration.name!.replace(/\s*\(\d+\)$/, '')
       }`,
       web_configuration_name: web_configuration.name,
-      description: is_unnamed
-        ? model
-        : `${web_configuration.chatbot}${model ? ` · ${model}` : ''}`
+        description: details.join(' · ')
     }
   }
 

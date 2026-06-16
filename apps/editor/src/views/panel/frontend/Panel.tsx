@@ -32,7 +32,6 @@ import { use_response_history } from './hooks/panel/use-response-history'
 import { use_preview_manager } from './hooks/panel/use-preview-manager'
 import { use_editor_sync } from './hooks/panel/use-editor-sync'
 import { use_web_configuration_editing } from './hooks/panel/use-web-configuration-editing'
-import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 
 const vscode = acquireVsCodeApi()
 
@@ -148,22 +147,14 @@ export const Panel = () => {
 
   const active_prompt_type =
     mode == MODE.WEB ? web_prompt_type : api_prompt_type
-  const [previous_web_prompt_type, set_previous_web_prompt_type] =
-    useState<WebPromptType>('edit-context')
-  const [previous_api_prompt_type, set_previous_api_prompt_type] =
-    useState<ApiPromptType>('edit-context')
+  const [is_context_modal_dismissed, set_is_context_modal_dismissed] =
+    useState(false)
 
   useEffect(() => {
-    if (web_prompt_type && web_prompt_type !== 'find-relevant-files') {
-      set_previous_web_prompt_type(web_prompt_type)
+    if (active_prompt_type !== 'find-relevant-files') {
+      set_is_context_modal_dismissed(false)
     }
-  }, [web_prompt_type])
-
-  useEffect(() => {
-    if (api_prompt_type && api_prompt_type !== 'find-relevant-files') {
-      set_previous_api_prompt_type(api_prompt_type)
-    }
-  }, [api_prompt_type])
+  }, [active_prompt_type])
 
   if (
     ask_about_context_instructions === undefined ||
@@ -813,28 +804,25 @@ export const Panel = () => {
           </div>
         )}
 
-        {active_prompt_type == 'find-relevant-files' && token_count == 0 && (
-          <div className={styles.slot}>
-            <UiModal
-              title="Make rough context selection"
-              icon="info"
-              footer_slot={
-                <UiButton
-                  is_secondary
-                  on_click={() => {
-                    if (mode == MODE.WEB) {
-                      handle_web_prompt_type_change(previous_web_prompt_type)
-                    } else {
-                      handle_api_prompt_type_change(previous_api_prompt_type)
-                    }
-                  }}
-                >
-                  Go back
-                </UiButton>
-              }
-            />
-          </div>
-        )}
+        {active_prompt_type == 'find-relevant-files' &&
+          token_count == 0 &&
+          !is_context_modal_dismissed && (
+            <div className={styles.slot}>
+              <UiModal
+                title="Make context selection"
+                icon="info"
+                on_background_click={() => set_is_context_modal_dismissed(true)}
+                footer_slot={
+                  <UiButton
+                    is_secondary
+                    on_click={() => set_is_context_modal_dismissed(true)}
+                  >
+                    Close
+                  </UiButton>
+                }
+              />
+            </div>
+          )}
 
         {auto_closing_modal_data && (
           <div className={styles.slot}>
