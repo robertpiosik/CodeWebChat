@@ -147,14 +147,6 @@ export const Panel = () => {
 
   const active_prompt_type =
     mode == MODE.WEB ? web_prompt_type : api_prompt_type
-  const [is_context_modal_dismissed, set_is_context_modal_dismissed] =
-    useState(false)
-
-  useEffect(() => {
-    if (active_prompt_type !== 'find-relevant-files') {
-      set_is_context_modal_dismissed(false)
-    }
-  }, [active_prompt_type])
 
   if (
     ask_about_context_instructions === undefined ||
@@ -803,26 +795,6 @@ export const Panel = () => {
             />
           </div>
         )}
-
-        {active_prompt_type == 'find-relevant-files' &&
-          token_count == 0 &&
-          !is_context_modal_dismissed && (
-            <div className={styles.slot}>
-              <UiModal
-                title="Make context selection"
-                icon="info"
-                on_background_click={() => set_is_context_modal_dismissed(true)}
-                footer_slot={
-                  <UiButton
-                    is_secondary
-                    on_click={() => set_is_context_modal_dismissed(true)}
-                  >
-                    Close
-                  </UiButton>
-                }
-              />
-            </div>
-          )}
 
         {auto_closing_modal_data && (
           <div className={styles.slot}>

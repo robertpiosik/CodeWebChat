@@ -66,7 +66,9 @@ type Props = {
   api_edit_format: EditFormat
   on_chat_edit_format_change: (edit_format: EditFormat) => void
   on_api_edit_format_change: (edit_format: EditFormat) => void
-  on_web_configurations_reorder: (reordered_web_configurations: WebConfiguration[]) => void
+  on_web_configurations_reorder: (
+    reordered_web_configurations: WebConfiguration[]
+  ) => void
   on_web_configuration_edit: (web_configuration_name: string) => void
   on_duplicate_web_configuration: (index: number) => void
   on_delete_web_configuration: (index: number) => void
@@ -152,6 +154,13 @@ const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
 export const MainView: React.FC<Props> = (props) => {
   const { t } = use_translation()
 
+  const is_in_edit_context_prompt_type =
+    (props.mode == MODE.WEB && props.web_prompt_type == 'edit-context') ||
+    (props.mode == MODE.API && props.api_prompt_type == 'edit-context')
+
+  const is_in_ask_about_context_prompt_type =
+    props.mode == MODE.WEB && props.web_prompt_type == 'ask-about-context'
+
   const is_in_code_completions_prompt_type =
     (props.mode == MODE.WEB && props.web_prompt_type == 'code-at-cursor') ||
     (props.mode == MODE.API && props.api_prompt_type == 'code-at-cursor')
@@ -167,6 +176,28 @@ export const MainView: React.FC<Props> = (props) => {
 
   const is_in_no_context_prompt_type =
     props.mode == MODE.WEB && props.web_prompt_type == 'no-context'
+
+  let warning: string | undefined
+  if (
+    (props.mode == MODE.API && props.api_configurations.length == 0) ||
+    (props.mode == MODE.WEB && props.web_configurations.length == 0)
+  ) {
+    warning = 'Add a configuration'
+  } else if (!!props.current_selection && is_in_code_completions_prompt_type) {
+    warning = 'Remove the text selection'
+  } else if (
+    is_in_code_completions_prompt_type &&
+    !props.currently_open_file_path
+  ) {
+    warning = 'Open a file'
+  } else if (
+    (is_in_edit_context_prompt_type ||
+      is_in_find_relevant_files_prompt_type ||
+      is_in_ask_about_context_prompt_type) &&
+    props.token_count == 0
+  ) {
+    warning = 'Select context files'
+  }
 
   const { current_invocation_count, handle_invocation_count_change } =
     use_invocation_counts({
@@ -214,15 +245,18 @@ export const MainView: React.FC<Props> = (props) => {
 
   const last_choice_button_title = use_last_choice_button_title({
     mode: props.mode,
-    selected_web_configuration_or_group_name: props.selected_web_configuration_name,
+    selected_web_configuration_or_group_name:
+      props.selected_web_configuration_name,
     web_configurations: props.web_configurations,
     selected_api_configuration_id: props.selected_api_configuration_id,
     api_configurations: props.api_configurations
   })
 
-  const web_configurations: UiConfigurations.Configuration[] = props.web_configurations.map(
-    (web_configuration, index) => {
-      const is_unnamed = !web_configuration.name || /^\(\d+\)$/.test(web_configuration.name.trim())
+  const web_configurations: UiConfigurations.Configuration[] =
+    props.web_configurations.map((web_configuration, index) => {
+      const is_unnamed =
+        !web_configuration.name ||
+        /^\(\d+\)$/.test(web_configuration.name.trim())
       const display_name = is_unnamed
         ? web_configuration.chatbot!
         : web_configuration.name!.replace(/ \(\d+\)$/, '')
@@ -230,7 +264,9 @@ export const MainView: React.FC<Props> = (props) => {
       const get_details = (): string[] => {
         const { chatbot, model, reasoning_effort } = web_configuration
         const model_display_name =
-          model && chatbot ? CHATBOTS[chatbot].models?.[model]?.label || model : null
+          model && chatbot
+            ? CHATBOTS[chatbot].models?.[model]?.label || model
+            : null
 
         const details: string[] = []
         if (is_unnamed) {
@@ -253,13 +289,14 @@ export const MainView: React.FC<Props> = (props) => {
         title: display_name,
         details: get_details(),
         is_pinned: web_configuration.is_pinned,
-        icon: web_configuration.chatbot ? chatbot_to_icon[web_configuration.chatbot] : undefined,
+        icon: web_configuration.chatbot
+          ? chatbot_to_icon[web_configuration.chatbot]
+          : undefined
       }
-    }
-  )
+    })
 
-  const api_configurations_ui: UiConfigurations.Configuration[] = props.api_configurations.map(
-    (c) => {
+  const api_configurations_ui: UiConfigurations.Configuration[] =
+    props.api_configurations.map((c) => {
       const details = [c.model_provider_name]
       if (c.reasoning_effort) {
         details.push(`${c.reasoning_effort}`)
@@ -273,8 +310,7 @@ export const MainView: React.FC<Props> = (props) => {
         details,
         is_pinned: c.is_pinned
       }
-    }
-  )
+    })
 
   return (
     <>
@@ -393,11 +429,9 @@ export const MainView: React.FC<Props> = (props) => {
             on_tab_change={props.on_tab_change}
             on_new_tab={props.on_new_tab}
             on_tab_delete={props.on_tab_delete}
-            missing_configuration={
-              (props.mode == MODE.API && props.api_configurations.length == 0) ||
-              (props.mode == MODE.WEB && props.web_configurations.length == 0)
-            }
+            warning={warning}
             voice_input_push_to_talk={props.voice_input_push_to_talk}
+            token_count={props.token_count}
           />
           <UiContextUtilisation
             current_context_size={props.token_count}
@@ -436,14 +470,20 @@ export const MainView: React.FC<Props> = (props) => {
                 props.on_web_configurations_reorder(new_web_configurations)
               }}
               on_duplicate={(id) => {
-                const idx = props.web_configurations.findIndex((p, i) => (p.name ?? `unnamed-${i}`) === id)
+                const idx = props.web_configurations.findIndex(
+                  (p, i) => (p.name ?? `unnamed-${i}`) === id
+                )
                 props.on_duplicate_web_configuration(idx)
               }}
               on_delete={(id) => {
-                const idx = props.web_configurations.findIndex((p, i) => (p.name ?? `unnamed-${i}`) === id)
+                const idx = props.web_configurations.findIndex(
+                  (p, i) => (p.name ?? `unnamed-${i}`) === id
+                )
                 props.on_delete_web_configuration(idx)
               }}
-              on_toggle_pinned={(id) => props.on_toggle_web_configuration_pinned(id)}
+              on_toggle_pinned={(id) =>
+                props.on_toggle_web_configuration_pinned(id)
+              }
               selected_configuration_id={props.selected_web_configuration_name}
               is_collapsed={props.web_configurations_collapsed}
               on_toggle_collapsed={props.on_web_configurations_collapsed_change}
@@ -468,7 +508,9 @@ export const MainView: React.FC<Props> = (props) => {
             <UiConfigurations
               configurations={api_configurations_ui}
               on_configuration_click={props.on_api_configuration_click}
-              on_reorder={(reordered) => props.on_api_configurations_reorder(reordered)}
+              on_reorder={(reordered) =>
+                props.on_api_configurations_reorder(reordered)
+              }
               on_toggle_pinned={props.on_toggle_pinned_api_configuration}
               on_edit={props.on_edit_api_configuration}
               on_delete={props.on_delete_api_configuration}

@@ -155,16 +155,16 @@ export const use_handlers = (
   ])
 
   useEffect(() => {
-    if (params.input_ref.current && !props.missing_configuration) {
+    if (params.input_ref.current && !props.warning) {
       requestAnimationFrame(() => {
         if (!params.input_ref.current) return
         params.input_ref.current.focus({ preventScroll: true })
       })
     }
-  }, [props.focus_key, props.missing_configuration])
+  }, [props.focus_key, props.warning])
 
   useEffect(() => {
-    if (params.input_ref.current && !props.missing_configuration) {
+    if (params.input_ref.current && !props.warning) {
       requestAnimationFrame(() => {
         if (!params.input_ref.current) return
         params.input_ref.current.focus({ preventScroll: true })
@@ -182,7 +182,7 @@ export const use_handlers = (
     }
   }, [
     props.focus_and_select_key,
-    props.missing_configuration,
+    props.warning,
     props.prompt_type
   ])
 

@@ -75,8 +75,9 @@ export type PromptFieldProps = {
   on_tab_change: (index: number) => void
   on_new_tab: () => void
   on_tab_delete: (index: number) => void
-  missing_configuration: boolean
+  warning?: string
   voice_input_push_to_talk?: boolean
+  token_count: number
 }
 
 export const PromptField: React.FC<PromptFieldProps> = (props) => {
@@ -257,15 +258,15 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const placeholder = useMemo(() => {
     if (props.prompt_type == 'code-at-cursor') {
       if (props.chat_history.length > 0) {
-        return 'Completion instructions (⇅ for history)'
+        return 'Optional instructions (⇅ for history)'
       } else {
-        return 'Completion instructions'
+        return 'Optional instructions'
       }
     }
 
     return props.chat_history.length > 0
-      ? 'Type something (⇅ for history)'
-      : 'Type something'
+      ? 'Type instructions (⇅ for history)'
+      : 'Type instructions'
   }, [props.prompt_type, props.chat_history])
 
   const edit_format_shortcuts: Record<EditFormat, string> = useMemo(() => {
@@ -302,27 +303,16 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
   return (
     <div className={styles.container}>
-      {props.missing_configuration ? (
+      {props.warning ? (
         <div className={styles.warning}>
-          <div className={styles.warning__inner}>Add a configuration</div>
-        </div>
-      ) : !!props.current_selection && props.prompt_type == 'code-at-cursor' ? (
-        <div className={styles.warning}>
-          <div className={styles.warning__inner}>Remove the text selection</div>
-        </div>
-      ) : props.prompt_type == 'code-at-cursor' &&
-        !props.currently_open_file_path ? (
-        <div className={styles.warning}>
-          <div className={styles.warning__inner}>Open a file</div>
+          <div className={styles.warning__inner}>{props.warning}</div>
         </div>
       ) : null}
 
       <div
         className={cn(styles.container__inner, {
           [styles['container__inner--disabled']]:
-            props.missing_configuration ||
-            (props.prompt_type == 'code-at-cursor' &&
-              (!!props.current_selection || !props.currently_open_file_path)),
+            !!props.warning,
           [styles['container__inner--selecting']]: is_text_selecting
         })}
         onKeyDown={handle_container_key_down}
@@ -533,8 +523,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             <div className={styles['footer__right__submit']} ref={dropdown_ref}>
               {(!props.is_web_mode ||
                 (props.is_web_mode &&
-                  props.is_connected &&
-                  !props.missing_configuration)) && (
+                  props.is_connected)) && (
                 <>
                   {!(
                     props.prompt_type == 'find-relevant-files' &&
@@ -695,8 +684,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   )}
                 </>
               )}
-              {((props.is_web_mode && !props.is_connected) ||
-                props.missing_configuration) && (
+              {((props.is_web_mode && !props.is_connected)) && (
                 <>
                   {props.is_recording ? (
                     <button

@@ -48,8 +48,7 @@ export const Empty = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    missing_configuration={false}
-    missing_preset={false}
+    token_count={0}
   />
 )
 
@@ -96,8 +95,7 @@ export const WithText = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    missing_configuration={false}
-    missing_preset={false}
+    token_count={0}
   />
 )
 
@@ -144,8 +142,7 @@ export const LongText = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    missing_configuration={false}
-    missing_preset={false}
+    token_count={0}
   />
 )
 
@@ -192,8 +189,7 @@ export const WithPlaceholderSavedContext = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    missing_configuration={false}
-    missing_preset={false}
+    token_count={0}
   />
 )
 
@@ -246,8 +242,7 @@ export const WithPlaceholderSelection = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    missing_configuration={false}
-    missing_preset={false}
+    token_count={0}
   />
 )
 
@@ -294,8 +289,7 @@ export const WithCommit = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    missing_configuration={false}
-    missing_preset={false}
+    token_count={0}
   />
 )
 
@@ -342,8 +336,7 @@ export const WithCommitWithQuotes = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    missing_configuration={false}
-    missing_preset={false}
+    token_count={0}
   />
 )
 export const WithContextAtCommit = () => (
@@ -389,8 +382,7 @@ export const WithContextAtCommit = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    missing_configuration={false}
-    missing_preset={false}
+    token_count={0}
   />
 )
 
@@ -441,8 +433,7 @@ export const WithEditFormatSelector = () => {
       on_tab_change={() => {}}
       on_new_tab={() => {}}
       on_tab_delete={() => {}}
-      missing_configuration={false}
-      missing_preset={false}
+      token_count={0}
     />
   )
 }
@@ -490,8 +481,7 @@ export const WithFilePaths = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    missing_configuration={false}
-    missing_preset={false}
+    token_count={0}
   />
 )
 
@@ -566,15 +556,14 @@ export const WithTabs = () => {
       on_tab_change={set_active_index}
       on_new_tab={handle_new_tab}
       on_tab_delete={handle_tab_delete}
-      missing_configuration={false}
-      missing_preset={false}
+      token_count={0}
     />
   )
 }
 
-export const MissingPreset = () => (
+export const WithWarning = () => (
   <PromptField
-    value="I want to copy this even if there are no presets"
+    value="I want to copy this even if there is a warning"
     chat_history={[]}
     on_change={(value) => console.log('Changed:', value)}
     on_submit={() => console.log('Submitted')}
@@ -611,7 +600,7 @@ export const MissingPreset = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    missing_configuration={false}
-    missing_preset={true}
+    token_count={0}
+    warning="Add a configuration"
   />
 )
