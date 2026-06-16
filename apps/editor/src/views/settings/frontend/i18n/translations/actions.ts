@@ -394,5 +394,23 @@ export const actions = {
     cs: 'Žádný',
     hu: 'Nincs',
     bg: 'Няма'
+  },
+  'action.restore-default': {
+    en: 'Restore default',
+    pl: 'Przywróć domyślne',
+    'zh-cn': '恢复默认',
+    ja: 'デフォルトにリセット',
+    'zh-tw': '恢復預設',
+    de: 'Auf Standard zurücksetzen',
+    es: 'Restablecer a predeterminado',
+    fr: 'Réinitialiser par défaut',
+    'pt-br': 'Redefinir para o padrão',
+    ru: 'Сбросить по умолчанию',
+    ko: '기본값으로 재설정',
+    it: 'Ripristina predefinito',
+    tr: 'Varsayılana sıfırla',
+    cs: 'Obnovit výchozí',
+    hu: 'Alapértelmezett visszaállítása',
+    bg: 'Възстановяване по подразбиране'
   }
 } as const

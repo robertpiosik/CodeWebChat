@@ -6,6 +6,7 @@ import { Item as UiItem } from '@ui/components/editor/settings/Item'
 import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
 import { Section as UiSection } from '@ui/components/editor/settings/Section'
 import { TextButton as UiTextButton } from '@ui/components/editor/settings/TextButton'
+import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { EditFormatInstructions } from '@/views/settings/types/messages'
 import {
@@ -68,12 +69,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
       truncated: '',
       search_replace: '',
       diff: ''
-    })
-    const [instructions_visibility, set_instructions_visibility] = useState({
-      whole: false,
-      truncated: false,
-      search_replace: false,
-      diff: false
     })
 
     useEffect(() => {
@@ -181,6 +176,15 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             ? EDIT_FORMAT_INSTRUCTIONS_DIFF
             : prev.diff
       }))
+    }
+
+    const handle_reset_instruction = (
+      key: keyof EditFormatInstructions,
+      default_value: string
+    ) => {
+      const new_instructions = { ...instructions, [key]: default_value }
+      set_instructions(new_instructions)
+      props.on_edit_format_instructions_change(new_instructions)
     }
 
     return (
@@ -327,132 +331,143 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           <UiItem
             title={t('general.edit-format.whole.title')}
             description={t('general.edit-format.whole.description')}
-            slot_right={
-              <UiTextButton
-                on_click={() =>
-                  set_instructions_visibility((prev) => ({
-                    ...prev,
-                    whole: !prev.whole
-                  }))
-                }
-              >
-                {instructions_visibility.whole
-                  ? t('general.edit-format.hide')
-                  : t('general.edit-format.show')}
-              </UiTextButton>
-            }
-            slot_below={
-              instructions_visibility.whole && (
-                <UiTextarea
-                  value={instructions.whole}
-                  min_rows={3}
-                  on_change={(value) =>
-                    set_instructions((prev) => ({ ...prev, whole: value }))
-                  }
-                  on_blur={handle_instructions_blur}
-                />
-              )
-            }
-          />
+            is_toggleable
+            translations={{
+              expand: t('general.edit-format.expand'),
+              collapse: t('general.edit-format.collapse')
+            }}
+          slot_right={
+            instructions.whole != '' &&
+            instructions.whole != EDIT_FORMAT_INSTRUCTIONS_WHOLE ? (
+              <UiIconButton
+                codicon_icon="discard"
+                title={t('action.restore-default')}
+                on_click={(e) => {
+                  e.stopPropagation()
+                  handle_reset_instruction('whole', EDIT_FORMAT_INSTRUCTIONS_WHOLE)
+                }}
+              />
+            ) : undefined
+          }
+          >
+            <UiTextarea
+              value={instructions.whole}
+              min_rows={3}
+              on_change={(value) =>
+                set_instructions((prev) => ({ ...prev, whole: value }))
+              }
+              on_blur={handle_instructions_blur}
+            />
+          </UiItem>
 
           <UiItem
             title={t('general.edit-format.truncated.title')}
             description={t('general.edit-format.truncated.description')}
-            slot_right={
-              <UiTextButton
-                on_click={() =>
-                  set_instructions_visibility((prev) => ({
-                    ...prev,
-                    truncated: !prev.truncated
-                  }))
-                }
-              >
-                {instructions_visibility.truncated
-                  ? t('general.edit-format.hide')
-                  : t('general.edit-format.show')}
-              </UiTextButton>
-            }
-            slot_below={
-              instructions_visibility.truncated && (
-                <UiTextarea
-                  value={instructions.truncated}
-                  min_rows={3}
-                  on_change={(value) =>
-                    set_instructions((prev) => ({
-                      ...prev,
-                      truncated: value
-                    }))
-                  }
-                  on_blur={handle_instructions_blur}
-                />
-              )
-            }
-          />
+            is_toggleable
+            translations={{
+              expand: t('general.edit-format.expand'),
+              collapse: t('general.edit-format.collapse')
+            }}
+          slot_right={
+            instructions.truncated != '' &&
+            instructions.truncated != EDIT_FORMAT_INSTRUCTIONS_TRUNCATED ? (
+              <UiIconButton
+                codicon_icon="discard"
+                title={t('action.restore-default')}
+                on_click={(e) => {
+                  e.stopPropagation()
+                  handle_reset_instruction(
+                    'truncated',
+                    EDIT_FORMAT_INSTRUCTIONS_TRUNCATED
+                  )
+                }}
+              />
+            ) : undefined
+          }
+          >
+            <UiTextarea
+              value={instructions.truncated}
+              min_rows={3}
+              on_change={(value) =>
+                set_instructions((prev) => ({
+                  ...prev,
+                  truncated: value
+                }))
+              }
+              on_blur={handle_instructions_blur}
+            />
+          </UiItem>
 
           <UiItem
             title={t('general.edit-format.search-replace.title')}
             description={t('general.edit-format.search-replace.description')}
-            slot_right={
-              <UiTextButton
-                on_click={() =>
-                  set_instructions_visibility((prev) => ({
-                    ...prev,
-                    search_replace: !prev.search_replace
-                  }))
-                }
-              >
-                {instructions_visibility.search_replace
-                  ? t('general.edit-format.hide')
-                  : t('general.edit-format.show')}
-              </UiTextButton>
-            }
-            slot_below={
-              instructions_visibility.search_replace && (
-                <UiTextarea
-                  value={instructions.search_replace}
-                  min_rows={3}
-                  on_change={(value) =>
-                    set_instructions((prev) => ({
-                      ...prev,
-                      search_replace: value
-                    }))
-                  }
-                  on_blur={handle_instructions_blur}
-                />
-              )
-            }
-          />
+            is_toggleable
+            translations={{
+              expand: t('general.edit-format.expand'),
+              collapse: t('general.edit-format.collapse')
+            }}
+          slot_right={
+            instructions.search_replace != '' &&
+            instructions.search_replace !=
+              EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE ? (
+              <UiIconButton
+                codicon_icon="discard"
+                title={t('action.restore-default')}
+                on_click={(e) => {
+                  e.stopPropagation()
+                  handle_reset_instruction(
+                    'search_replace',
+                    EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE
+                  )
+                }}
+              />
+            ) : undefined
+          }
+          >
+            <UiTextarea
+              value={instructions.search_replace}
+              min_rows={3}
+              on_change={(value) =>
+                set_instructions((prev) => ({
+                  ...prev,
+                  search_replace: value
+                }))
+              }
+              on_blur={handle_instructions_blur}
+            />
+          </UiItem>
 
           <UiItem
             title={t('general.edit-format.diff.title')}
             description={t('general.edit-format.diff.description')}
-            slot_right={
-              <UiTextButton
-                on_click={() =>
-                  set_instructions_visibility((prev) => ({
-                    ...prev,
-                    diff: !prev.diff
-                  }))
-                }
-              >
-                {instructions_visibility.diff
-                  ? t('general.edit-format.hide')
-                  : t('general.edit-format.show')}
-              </UiTextButton>
-            }
-            slot_below={
-              instructions_visibility.diff && (
-                <UiTextarea
-                  value={instructions.diff}
-                  min_rows={3}
-                  on_change={(value) =>
-                    set_instructions((prev) => ({ ...prev, diff: value }))
-                  }
-                  on_blur={handle_instructions_blur}
-                />
-              )
-            }
-          />
+            is_toggleable
+            translations={{
+              expand: t('general.edit-format.expand'),
+              collapse: t('general.edit-format.collapse')
+            }}
+          slot_right={
+            instructions.diff != '' &&
+            instructions.diff != EDIT_FORMAT_INSTRUCTIONS_DIFF ? (
+              <UiIconButton
+                codicon_icon="discard"
+                title={t('action.restore-default')}
+                on_click={(e) => {
+                  e.stopPropagation()
+                  handle_reset_instruction('diff', EDIT_FORMAT_INSTRUCTIONS_DIFF)
+                }}
+              />
+            ) : undefined
+          }
+          >
+            <UiTextarea
+              value={instructions.diff}
+              min_rows={3}
+              on_change={(value) =>
+                set_instructions((prev) => ({ ...prev, diff: value }))
+              }
+              on_blur={handle_instructions_blur}
+            />
+          </UiItem>
         </UiGroup>
 
         <UiGroup title={t('general.chatbots.title')}>

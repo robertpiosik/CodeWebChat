@@ -29,10 +29,25 @@ export const Default: Story = {
   }
 }
 
-export const SlotBelow: Story = {
+export const WithChildren: Story = {
   args: {
     title: 'API Key',
     description:
-      'Enter your API key for the selected model provider. It will be stored securely.'
+      'Enter your API key for the selected model provider. It will be stored securely.',
+    children: <div>Input goes here</div>
   }
 }
+
+export const Toggleable: Story = {
+  args: {
+    title: 'Advanced Settings',
+    description: 'Toggle to see more advanced options.',
+    is_toggleable: true,
+    translations: {
+      expand: 'Expand',
+      collapse: 'Collapse'
+    },
+    children: <div>Advanced content goes here</div>
+  }
+}
+

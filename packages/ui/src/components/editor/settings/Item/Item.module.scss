@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 12px;
 }
 
 .main {
@@ -10,6 +9,16 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  padding: 12px;
+
+  &--toggleable {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  &--hoverable:hover:not(:has(button:hover, a:hover)) {
+    background-color: var(--vscode-toolbar-hoverBackground);
+  }
 }
 
 .content {
@@ -21,6 +30,9 @@
 
   &__right {
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 }
 
@@ -34,4 +46,5 @@
 
 .below {
   width: 100%;
+  padding: 0 12px 12px 12px;
 }

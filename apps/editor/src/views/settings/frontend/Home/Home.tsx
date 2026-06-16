@@ -558,23 +558,22 @@ export const Home: React.FC<Props> = (props) => {
           <UiGroup>
             <UiItem
               title={t('action.default-configuration')}
-              slot_below={
-                <DefaultConfigurationSelector
-                  value={props.defaults['intelligent-update'] || null}
-                  configurations={props.api_configurations}
-                  on_unset={() =>
-                    props.on_set_default_api_configuration('intelligent-update', null)
-                  }
-                  on_select={() =>
-                    props.on_select_default_api_configuration('intelligent-update')
-                  }
-                  translations={{
-                    select_default: t('action.select-default-configuration'),
-                    unset: t('action.unset-default')
-                  }}
-                />
-              }
-            />
+            >
+              <DefaultConfigurationSelector
+                value={props.defaults['intelligent-update'] || null}
+                configurations={props.api_configurations}
+                on_unset={() =>
+                  props.on_set_default_api_configuration('intelligent-update', null)
+                }
+                on_select={() =>
+                  props.on_select_default_api_configuration('intelligent-update')
+                }
+                translations={{
+                  select_default: t('action.select-default-configuration'),
+                  unset: t('action.unset-default')
+                }}
+              />
+            </UiItem>
             <UiItem
               title={t('intelligent-update.fix-all-automatically.title')}
               description={t(
@@ -602,25 +601,24 @@ export const Home: React.FC<Props> = (props) => {
             <UiItem
               title={t('edit-context.system-instructions.title')}
               description={t('edit-context.system-instructions.description')}
-              slot_below={
-                <UiTextarea
-                  value={edit_context_instructions}
-                  on_change={set_edit_context_instructions}
-                  on_blur={() => {
-                    props.on_edit_context_system_instructions_change(
-                      edit_context_instructions
-                    )
-                    if (
-                      edit_context_instructions == '' &&
-                      props.edit_context_system_instructions ==
-                        default_system_instructions
-                    ) {
-                      set_edit_context_instructions(default_system_instructions)
-                    }
-                  }}
-                />
-              }
-            />
+            >
+              <UiTextarea
+                value={edit_context_instructions}
+                on_change={set_edit_context_instructions}
+                on_blur={() => {
+                  props.on_edit_context_system_instructions_change(
+                    edit_context_instructions
+                  )
+                  if (
+                    edit_context_instructions == '' &&
+                    props.edit_context_system_instructions ==
+                      default_system_instructions
+                  ) {
+                    set_edit_context_instructions(default_system_instructions)
+                  }
+                }}
+              />
+            </UiItem>
           </UiGroup>
         </UiSection>
 
@@ -635,23 +633,22 @@ export const Home: React.FC<Props> = (props) => {
           <UiGroup>
             <UiItem
               title={t('action.default-configuration')}
-              slot_below={
-                <DefaultConfigurationSelector
-                  value={props.defaults['code-at-cursor'] || null}
-                  configurations={props.api_configurations}
-                  on_unset={() =>
-                    props.on_set_default_api_configuration('code-at-cursor', null)
-                  }
-                  on_select={() =>
-                    props.on_select_default_api_configuration('code-at-cursor')
-                  }
-                  translations={{
-                    select_default: t('action.select-default-configuration'),
-                    unset: t('action.unset-default')
-                  }}
-                />
-              }
-            />
+            >
+              <DefaultConfigurationSelector
+                value={props.defaults['code-at-cursor'] || null}
+                configurations={props.api_configurations}
+                on_unset={() =>
+                  props.on_set_default_api_configuration('code-at-cursor', null)
+                }
+                on_select={() =>
+                  props.on_select_default_api_configuration('code-at-cursor')
+                }
+                translations={{
+                  select_default: t('action.select-default-configuration'),
+                  unset: t('action.unset-default')
+                }}
+              />
+            </UiItem>
             <UiItem
               title={t('code-at-cursor.keyboard-shortcut.title')}
               description={t('code-at-cursor.keyboard-shortcut.description')}
@@ -679,23 +676,22 @@ export const Home: React.FC<Props> = (props) => {
           <UiGroup>
             <UiItem
               title={t('action.default-configuration')}
-              slot_below={
-                <DefaultConfigurationSelector
-                  value={props.defaults['find-relevant-files'] || null}
-                  configurations={props.api_configurations}
-                  on_unset={() =>
-                    props.on_set_default_api_configuration('find-relevant-files', null)
-                  }
-                  on_select={() =>
-                    props.on_select_default_api_configuration('find-relevant-files')
-                  }
-                  translations={{
-                    select_default: t('action.select-default-configuration'),
-                    unset: t('action.unset-default')
-                  }}
-                />
-              }
-            />
+            >
+              <DefaultConfigurationSelector
+                value={props.defaults['find-relevant-files'] || null}
+                configurations={props.api_configurations}
+                on_unset={() =>
+                  props.on_set_default_api_configuration('find-relevant-files', null)
+                }
+                on_select={() =>
+                  props.on_select_default_api_configuration('find-relevant-files')
+                }
+                translations={{
+                  select_default: t('action.select-default-configuration'),
+                  unset: t('action.unset-default')
+                }}
+              />
+            </UiItem>
           </UiGroup>
         </UiSection>
 
@@ -710,45 +706,43 @@ export const Home: React.FC<Props> = (props) => {
           <UiGroup>
             <UiItem
               title={t('action.default-configuration')}
-              slot_below={
-                <DefaultConfigurationSelector
-                  value={props.defaults['commit-messages'] || null}
-                  configurations={props.api_configurations}
-                  on_unset={() =>
-                    props.on_set_default_api_configuration('commit-messages', null)
-                  }
-                  on_select={() =>
-                    props.on_select_default_api_configuration('commit-messages')
-                  }
-                  translations={{
-                    select_default: t('action.select-default-configuration'),
-                    unset: t('action.unset-default')
-                  }}
-                />
-              }
-            />
+            >
+              <DefaultConfigurationSelector
+                value={props.defaults['commit-messages'] || null}
+                configurations={props.api_configurations}
+                on_unset={() =>
+                  props.on_set_default_api_configuration('commit-messages', null)
+                }
+                on_select={() =>
+                  props.on_select_default_api_configuration('commit-messages')
+                }
+                translations={{
+                  select_default: t('action.select-default-configuration'),
+                  unset: t('action.unset-default')
+                }}
+              />
+            </UiItem>
             <UiItem
               title={t('commit-messages.instructions.title')}
               description={t('commit-messages.instructions.description')}
-              slot_below={
-                <UiTextarea
-                  value={commit_instructions}
-                  on_change={set_commit_instructions}
-                  on_blur={() => {
-                    props.on_commit_instructions_change(commit_instructions)
-                    if (
-                      commit_instructions == '' &&
-                      props.commit_message_instructions ==
-                        default_commit_message_instructions
-                    ) {
-                      set_commit_instructions(
-                        default_commit_message_instructions
-                      )
-                    }
-                  }}
-                />
-              }
-            />
+            >
+              <UiTextarea
+                value={commit_instructions}
+                on_change={set_commit_instructions}
+                on_blur={() => {
+                  props.on_commit_instructions_change(commit_instructions)
+                  if (
+                    commit_instructions == '' &&
+                    props.commit_message_instructions ==
+                      default_commit_message_instructions
+                  ) {
+                    set_commit_instructions(
+                      default_commit_message_instructions
+                    )
+                  }
+                }}
+              />
+            </UiItem>
             <UiItem
               title={t('commit-messages.include-prompts.title')}
               description={t('commit-messages.include-prompts.description')}
@@ -792,47 +786,45 @@ export const Home: React.FC<Props> = (props) => {
           <UiGroup>
             <UiItem
               title={t('action.default-configuration')}
-              slot_below={
-                <DefaultConfigurationSelector
-                  value={props.defaults['voice-input'] || null}
-                  configurations={props.api_configurations}
-                  on_unset={() =>
-                    props.on_set_default_api_configuration('voice-input', null)
-                  }
-                  on_select={() =>
-                    props.on_select_default_api_configuration('voice-input')
-                  }
-                  translations={{
-                    select_default: t('action.select-default-configuration'),
-                    unset: t('action.unset-default')
-                  }}
-                />
-              }
-            />
+            >
+              <DefaultConfigurationSelector
+                value={props.defaults['voice-input'] || null}
+                configurations={props.api_configurations}
+                on_unset={() =>
+                  props.on_set_default_api_configuration('voice-input', null)
+                }
+                on_select={() =>
+                  props.on_select_default_api_configuration('voice-input')
+                }
+                translations={{
+                  select_default: t('action.select-default-configuration'),
+                  unset: t('action.unset-default')
+                }}
+              />
+            </UiItem>
             <UiItem
               title={t('voice-input.instructions.title')}
               description={t('voice-input.instructions.description')}
-              slot_below={
-                <UiTextarea
-                  value={voice_input_instructions}
-                  on_change={set_voice_input_instructions}
-                  on_blur={() => {
-                    props.on_voice_input_instructions_change(
-                      voice_input_instructions
+            >
+              <UiTextarea
+                value={voice_input_instructions}
+                on_change={set_voice_input_instructions}
+                on_blur={() => {
+                  props.on_voice_input_instructions_change(
+                    voice_input_instructions
+                  )
+                  if (
+                    voice_input_instructions == '' &&
+                    props.voice_input_instructions ==
+                      default_voice_input_instructions
+                  ) {
+                    set_voice_input_instructions(
+                      default_voice_input_instructions
                     )
-                    if (
-                      voice_input_instructions == '' &&
-                      props.voice_input_instructions ==
-                        default_voice_input_instructions
-                    ) {
-                      set_voice_input_instructions(
-                        default_voice_input_instructions
-                      )
-                    }
-                  }}
-                />
-              }
-            />
+                  }
+                }}
+              />
+            </UiItem>
             <UiItem
               title={t('voice-input.push-to-talk.title')}
               description={t('voice-input.push-to-talk.description')}
