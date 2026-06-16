@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Main } from './Main'
 import { Button as UiButton } from '@ui/components/editor/common/Button'
 import { Page as UiPage } from '@ui/components/editor/panel/Page'
@@ -144,9 +144,6 @@ export const Panel = () => {
 
   const { viewing_donations, set_viewing_donations, ...donations_state } =
     use_latest_donations()
-
-  const active_prompt_type =
-    mode == MODE.WEB ? web_prompt_type : api_prompt_type
 
   if (
     ask_about_context_instructions === undefined ||
