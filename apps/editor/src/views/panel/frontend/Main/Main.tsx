@@ -81,6 +81,7 @@ type Props = {
   on_tab_delete: (index: number) => void
   missing_web_configuration?: boolean
   voice_input_push_to_talk: boolean
+  token_count: number
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -102,7 +103,6 @@ export const Main: React.FC<Props> = (props) => {
     useState<string[]>()
   const [find_relevant_files_history, set_find_relevant_files_history] =
     useState<string[]>()
-  const [token_count, set_token_count] = useState<number>(0)
   const [chat_edit_format, set_chat_edit_format] = useState<EditFormat>()
   const [api_edit_format, set_api_edit_format] = useState<EditFormat>()
   const [caret_position_to_set, set_caret_position_to_set] = useState<
@@ -137,9 +137,6 @@ export const Main: React.FC<Props> = (props) => {
           set_no_context_history(message.no_context || [])
           set_code_completions_history(message.code_at_cursor || [])
           set_find_relevant_files_history(message.find_relevant_files || [])
-          break
-        case 'TOKEN_COUNT_UPDATED':
-          set_token_count(message.token_count)
           break
         case 'WEB_CONFIGURATION_CREATED':
           props.on_web_configuration_edit(message.web_configuration)
@@ -671,7 +668,7 @@ export const Main: React.FC<Props> = (props) => {
       on_quick_action_click={handle_quick_action_click}
       current_selection={props.current_selection}
       chat_history={current_history || []}
-      token_count={token_count}
+        token_count={props.token_count}
       web_prompt_type={props.web_prompt_type}
       api_prompt_type={props.api_prompt_type}
       context_size_warning_threshold={props.context_size_warning_threshold}

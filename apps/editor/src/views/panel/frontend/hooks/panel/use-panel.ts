@@ -28,6 +28,7 @@ export const use_panel = (vscode: any) => {
   const [chat_input_focus_key, set_chat_input_focus_key] = useState(0)
   const [chat_input_focus_and_select_key, set_chat_input_focus_and_select_key] =
     useState(0)
+  const [token_count, set_token_count] = useState<number>(0)
 
   const {
     ask_about_context_instructions,
@@ -156,6 +157,8 @@ export const use_panel = (vscode: any) => {
         set_active_view('home')
       } else if (message.command == 'VOICE_INPUT_PUSH_TO_TALK') {
         set_voice_input_push_to_talk(message.enabled)
+      } else if (message.command == 'TOKEN_COUNT_UPDATED') {
+        set_token_count(message.token_count)
       }
     }
     window.addEventListener('message', handle_message)
@@ -292,6 +295,7 @@ export const use_panel = (vscode: any) => {
     handle_tab_change,
     handle_new_tab,
     handle_tab_delete,
-    voice_input_push_to_talk
+    voice_input_push_to_talk,
+    token_count
   }
 }

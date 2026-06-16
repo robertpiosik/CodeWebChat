@@ -82,7 +82,8 @@ export const Panel = () => {
     handle_tab_change,
     handle_new_tab,
     handle_tab_delete,
-    voice_input_push_to_talk
+    voice_input_push_to_talk,
+    token_count
   } = use_panel(vscode)
 
   const {
@@ -148,27 +149,14 @@ export const Panel = () => {
   const { viewing_donations, set_viewing_donations, ...donations_state } =
     use_latest_donations()
 
-  const prev_active_prompt_type = useRef(
-    mode == MODE.WEB ? web_prompt_type : api_prompt_type
-  )
+  const active_prompt_type = mode == MODE.WEB ? web_prompt_type : api_prompt_type
+  const [is_find_files_modal_dismissed, set_is_find_files_modal_dismissed] = useState(false)
 
   useEffect(() => {
-    const active_prompt_type =
-      mode == MODE.WEB ? web_prompt_type : api_prompt_type
-
-    if (
-      active_prompt_type == 'find-relevant-files' &&
-      prev_active_prompt_type.current != 'find-relevant-files' &&
-      prev_active_prompt_type.current !== undefined
-    ) {
-      set_auto_closing_modal_data({
-        title:
-          'Context temporarily cleared, make rough selection on the file tree',
-        type: 'info'
-      })
+    if (active_prompt_type !== 'find-relevant-files' || token_count > 0) {
+      set_is_find_files_modal_dismissed(false)
     }
-    prev_active_prompt_type.current = active_prompt_type
-  }, [web_prompt_type, api_prompt_type, mode])
+  }, [active_prompt_type, token_count])
 
   if (
     ask_about_context_instructions === undefined ||
@@ -426,6 +414,7 @@ export const Panel = () => {
                 on_new_tab={handle_new_tab}
                 on_tab_delete={handle_tab_delete}
                 voice_input_push_to_talk={voice_input_push_to_talk}
+                token_count={token_count}
               />
             </div>
             <div
@@ -809,6 +798,24 @@ export const Panel = () => {
               title={active_qr_wallet.name}
               value={active_qr_wallet.address}
               on_close={() => set_active_qr_wallet(undefined)}
+            />
+          </div>
+        )}
+
+        {active_prompt_type == 'find-relevant-files' && token_count == 0 && !is_find_files_modal_dismissed && (
+          <div className={styles.slot}>
+            <UiModal
+              title="Make rough context selection"
+              icon="info"
+              on_background_click={() => set_is_find_files_modal_dismissed(true)}
+              footer_slot={
+                <UiButton
+                  is_secondary
+                  on_click={() => set_is_find_files_modal_dismissed(true)}
+                >
+                  Close
+                </UiButton>
+              }
             />
           </div>
         )}
