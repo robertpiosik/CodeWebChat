@@ -18,7 +18,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
-  EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER,
+  EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
 import { handle_update_last_used_web_configuration_or_group } from './handle-update-last-used-web-configuration-or-group'
@@ -163,13 +163,13 @@ export const handle_send_to_browser = async (params: {
       const instructions_key = {
         whole: 'editFormatInstructionsWhole',
         truncated: 'editFormatInstructionsTruncated',
-        'before-after': 'editFormatInstructionsBeforeAfter',
+        'search-replace': 'editFormatInstructionsSearchReplace',
         diff: 'editFormatInstructionsDiff'
       }[params.panel_provider.chat_edit_format]
       const default_instructions = {
         whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
         truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
-        'before-after': EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER,
+        'search-replace': EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
         diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
       }[params.panel_provider.chat_edit_format]
       const edit_format_instructions =

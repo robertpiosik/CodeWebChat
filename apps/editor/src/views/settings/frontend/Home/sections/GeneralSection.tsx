@@ -13,7 +13,7 @@ import {
   DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD
 } from '@/constants/values'
 import {
-  EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER,
+  EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
   EDIT_FORMAT_INSTRUCTIONS_DIFF,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
   EDIT_FORMAT_INSTRUCTIONS_WHOLE
@@ -66,13 +66,13 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
     const [instructions, set_instructions] = useState<EditFormatInstructions>({
       whole: '',
       truncated: '',
-      before_after: '',
+      search_replace: '',
       diff: ''
     })
     const [instructions_visibility, set_instructions_visibility] = useState({
       whole: false,
       truncated: false,
-      before_after: false,
+      search_replace: false,
       diff: false
     })
 
@@ -169,12 +169,12 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             EDIT_FORMAT_INSTRUCTIONS_TRUNCATED
             ? EDIT_FORMAT_INSTRUCTIONS_TRUNCATED
             : prev.truncated,
-        before_after:
-          prev.before_after == '' &&
-          props.edit_format_instructions.before_after ==
-            EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER
-            ? EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER
-            : prev.before_after,
+        search_replace:
+          prev.search_replace == '' &&
+          props.edit_format_instructions.search_replace ==
+            EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE
+            ? EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE
+            : prev.search_replace,
         diff:
           prev.diff == '' &&
           props.edit_format_instructions.diff == EDIT_FORMAT_INSTRUCTIONS_DIFF
@@ -390,31 +390,31 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           />
 
           <UiItem
-            title={t('general.edit-format.before-after.title')}
-            description={t('general.edit-format.before-after.description')}
+            title={t('general.edit-format.search-replace.title')}
+            description={t('general.edit-format.search-replace.description')}
             slot_right={
               <UiTextButton
                 on_click={() =>
                   set_instructions_visibility((prev) => ({
                     ...prev,
-                    before_after: !prev.before_after
+                    search_replace: !prev.search_replace
                   }))
                 }
               >
-                {instructions_visibility.before_after
+                {instructions_visibility.search_replace
                   ? t('general.edit-format.hide')
                   : t('general.edit-format.show')}
               </UiTextButton>
             }
             slot_below={
-              instructions_visibility.before_after && (
+              instructions_visibility.search_replace && (
                 <UiTextarea
-                  value={instructions.before_after}
+                  value={instructions.search_replace}
                   min_rows={3}
                   on_change={(value) =>
                     set_instructions((prev) => ({
                       ...prev,
-                      before_after: value
+                      search_replace: value
                     }))
                   }
                   on_blur={handle_instructions_blur}

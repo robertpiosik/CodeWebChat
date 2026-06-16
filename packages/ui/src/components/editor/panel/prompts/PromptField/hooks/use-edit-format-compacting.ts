@@ -5,14 +5,14 @@ export const use_edit_format_compacting = () => {
   const { container_ref, compact_step, report_width } = use_compacting(4)
   const format_whole_ref = useRef<HTMLButtonElement>(null)
   const format_truncated_ref = useRef<HTMLButtonElement>(null)
-  const format_before_after_ref = useRef<HTMLButtonElement>(null)
+  const format_search_replace_ref = useRef<HTMLButtonElement>(null)
   const format_diff_ref = useRef<HTMLButtonElement>(null)
 
   useLayoutEffect(() => {
     const refs = [
       format_whole_ref,
       format_truncated_ref,
-      format_before_after_ref,
+      format_search_replace_ref,
       format_diff_ref
     ]
 
@@ -31,7 +31,7 @@ export const use_edit_format_compacting = () => {
     compact_step,
     format_whole_ref,
     format_truncated_ref,
-    format_before_after_ref,
+    format_search_replace_ref,
     format_diff_ref
   }
 }

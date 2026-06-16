@@ -856,7 +856,7 @@
           "type": "string",
           "scope": "resource"
         },
-        "codeWebChat.editFormatInstructionsBeforeAfter": {
+        "codeWebChat.editFormatInstructionsSearchReplace": {
           "type": "string",
           "scope": "resource"
         },

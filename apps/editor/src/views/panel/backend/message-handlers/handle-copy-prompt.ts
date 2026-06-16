@@ -11,7 +11,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
-  EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER,
+  EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
 import { FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY } from '@/constants/state-keys'
@@ -126,13 +126,13 @@ export const handle_copy_prompt = async (params: {
       const instructions_key = {
         whole: 'editFormatInstructionsWhole',
         truncated: 'editFormatInstructionsTruncated',
-        'before-after': 'editFormatInstructionsBeforeAfter',
+        'search-replace': 'editFormatInstructionsSearchReplace',
         diff: 'editFormatInstructionsDiff'
       }[edit_format]
       const default_instructions = {
         whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
         truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
-        'before-after': EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER,
+        'search-replace': EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
         diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
       }[edit_format]
       const edit_format_instructions =

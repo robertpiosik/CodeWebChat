@@ -15,7 +15,7 @@ export type ApiConfigurationForClient = {
 export type EditFormatInstructions = {
   whole: string
   truncated: string
-  before_after: string
+  search_replace: string
   diff: string
 }
 

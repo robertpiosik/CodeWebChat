@@ -115,7 +115,7 @@ def subtract(a, b):
 
 ### Renamed file: \`src/examples/math_utils.py\` (old) \`src/examples/calculator.py\` (new)`
 
-export const EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER = `${intro}, followed by a markdown code block showing the original and updated code snippets with Git-style merge conflict syntax. Example:
+export const EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE = `${intro}, followed by a markdown code block showing the original and updated code snippets with Git-style merge conflict syntax. Example:
 Changed greeting to wishes.
 
 ### Updated file: \`src/examples/hello.py\`

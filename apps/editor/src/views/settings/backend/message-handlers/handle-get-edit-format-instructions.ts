@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
-  EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER,
+  EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
   EDIT_FORMAT_INSTRUCTIONS_DIFF,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
   EDIT_FORMAT_INSTRUCTIONS_WHOLE
@@ -21,9 +21,9 @@ export const handle_get_edit_format_instructions = async (
     diff:
       config.get('editFormatInstructionsDiff', '') ||
       EDIT_FORMAT_INSTRUCTIONS_DIFF,
-    before_after:
-      config.get('editFormatInstructionsBeforeAfter', '') ||
-      EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER
+    search_replace:
+      config.get('editFormatInstructionsSearchReplace', '') ||
+      EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE
   }
   provider.postMessage({
     command: 'EDIT_FORMAT_INSTRUCTIONS',

@@ -72,8 +72,8 @@ export const use_keyboard_shortcuts = (
             case 'KeyT':
               format = 'truncated'
               break
-            case 'KeyB':
-              format = 'before-after'
+            case 'KeyS':
+              format = 'search-replace'
               break
             case 'KeyD':
               format = 'diff'

@@ -19,7 +19,7 @@ import {
   get_highlighted_text
 } from '../shared/symbols'
 
-export type EditFormat = 'whole' | 'truncated' | 'diff' | 'before-after'
+export type EditFormat = 'whole' | 'truncated' | 'diff' | 'search-replace'
 
 export type SelectionState = {
   text: string
@@ -274,7 +274,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     return {
       whole: `(${modifier}W)`,
       truncated: `(${modifier}T)`,
-      'before-after': `(${modifier}B)`,
+      'search-replace': `(${modifier}S)`,
       diff: `(${modifier}D)`
     }
   }, [is_mac])
@@ -284,7 +284,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     compact_step,
     format_whole_ref,
     format_truncated_ref,
-    format_before_after_ref,
+    format_search_replace_ref,
     format_diff_ref
   } = use_edit_format_compacting()
 
@@ -439,20 +439,20 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                 display: props.show_edit_format_selector ? 'flex' : 'none'
               }}
             >
-              {(['whole', 'truncated', 'before-after', 'diff'] as const).map(
+              {(['whole', 'truncated', 'search-replace', 'diff'] as const).map(
                 (format) => {
                   const is_compact =
-                    (format == 'before-after' && compact_step >= 1) ||
+                    (format == 'search-replace' && compact_step >= 1) ||
                     (format == 'truncated' && compact_step >= 2) ||
                     (format == 'whole' && compact_step >= 3) ||
                     (format == 'diff' && compact_step >= 4)
 
                   const button_text = is_compact
-                    ? format == 'before-after'
-                      ? 'b/a'
+                    ? format == 'search-replace'
+                      ? 's/r'
                       : format.charAt(0)
-                    : format == 'before-after'
-                      ? 'before/after'
+                    : format == 'search-replace'
+                      ? 'search/replace'
                       : format
 
                   const is_selected = props.edit_format == format
@@ -461,7 +461,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   let ref = null
                   if (format == 'whole') ref = format_whole_ref
                   if (format == 'truncated') ref = format_truncated_ref
-                  if (format == 'before-after') ref = format_before_after_ref
+                  if (format == 'search-replace') ref = format_search_replace_ref
                   if (format == 'diff') ref = format_diff_ref
 
                   return (
@@ -484,8 +484,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       {is_compact && hovered_edit_format == format && (
                         <Tooltip
                           message={
-                            format == 'before-after'
-                              ? 'Before and After'
+                            format == 'search-replace'
+                              ? 'Search and Replace'
                               : format.charAt(0).toUpperCase() + format.slice(1)
                           }
                           align="center"
