@@ -34,6 +34,7 @@ export interface IWorkspaceProvider {
     frf: { checked_files: string[]; checked_timestamps: Record<string, number> }
   }
   readonly is_frf_mode: boolean
+  readonly is_no_context_mode: boolean
 }
 
 export class WorkspaceProvider
@@ -67,6 +68,10 @@ export class WorkspaceProvider
 
   public get is_frf_mode(): boolean {
     return this._is_frf_mode
+  }
+
+  public get is_no_context_mode(): boolean {
+    return this._is_no_context_mode
   }
 
   private get _checked_items() {
@@ -692,7 +697,7 @@ export class WorkspaceProvider
         : undefined
 
     const formatted_selected =
-      selected_token_count !== undefined && selected_token_count > 0
+      selected_token_count !== undefined && selected_token_count > 0 && !this._is_no_context_mode
         ? display_token_count(selected_token_count)
         : undefined
 

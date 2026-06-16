@@ -134,12 +134,14 @@ export const context_initialization = async (
   const update_view_badges = async () => {
     let context_token_count = 0
     if (context_provider && context_view) {
-      const token_counts =
-        await workspace_provider.get_checked_files_token_count()
-      const files_count = workspace_provider.use_shrink_token_count
-        ? token_counts.shrink
-        : token_counts.total
-      context_token_count = files_count
+      if (!workspace_provider.is_no_context_mode) {
+        const token_counts =
+          await workspace_provider.get_checked_files_token_count()
+        const files_count = workspace_provider.use_shrink_token_count
+          ? token_counts.shrink
+          : token_counts.total
+        context_token_count = files_count
+      }
 
       workspace_view.badge = {
         value: round_token_count_for_badge(context_token_count),
