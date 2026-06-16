@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Main } from './Main'
 import { Button as UiButton } from '@ui/components/editor/common/Button'
 import { Page as UiPage } from '@ui/components/editor/panel/Page'
@@ -32,6 +32,7 @@ import { use_response_history } from './hooks/panel/use-response-history'
 import { use_preview_manager } from './hooks/panel/use-preview-manager'
 import { use_editor_sync } from './hooks/panel/use-editor-sync'
 import { use_web_configuration_editing } from './hooks/panel/use-web-configuration-editing'
+import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 
 const vscode = acquireVsCodeApi()
 
@@ -113,11 +114,7 @@ export const Panel = () => {
     handle_remove_response_history_item
   } = use_response_history(vscode)
 
-  const {
-    tasks,
-    handle_tasks_change,
-    handle_task_delete,
-  } = use_tasks(vscode)
+  const { tasks, handle_tasks_change, handle_task_delete } = use_tasks(vscode)
 
   const {
     updating_web_configuration,
@@ -149,14 +146,24 @@ export const Panel = () => {
   const { viewing_donations, set_viewing_donations, ...donations_state } =
     use_latest_donations()
 
-  const active_prompt_type = mode == MODE.WEB ? web_prompt_type : api_prompt_type
-  const [is_find_files_modal_dismissed, set_is_find_files_modal_dismissed] = useState(false)
+  const active_prompt_type =
+    mode == MODE.WEB ? web_prompt_type : api_prompt_type
+  const [previous_web_prompt_type, set_previous_web_prompt_type] =
+    useState<WebPromptType>('edit-context')
+  const [previous_api_prompt_type, set_previous_api_prompt_type] =
+    useState<ApiPromptType>('edit-context')
 
   useEffect(() => {
-    if (active_prompt_type !== 'find-relevant-files' || token_count > 0) {
-      set_is_find_files_modal_dismissed(false)
+    if (web_prompt_type && web_prompt_type !== 'find-relevant-files') {
+      set_previous_web_prompt_type(web_prompt_type)
     }
-  }, [active_prompt_type, token_count])
+  }, [web_prompt_type])
+
+  useEffect(() => {
+    if (api_prompt_type && api_prompt_type !== 'find-relevant-files') {
+      set_previous_api_prompt_type(api_prompt_type)
+    }
+  }, [api_prompt_type])
 
   if (
     ask_about_context_instructions === undefined ||
@@ -384,7 +391,9 @@ export const Panel = () => {
                 context_file_paths={context_file_paths}
                 web_configurations_collapsed={web_configurations_collapsed}
                 send_with_shift_enter={send_with_shift_enter}
-                on_web_configurations_collapsed_change={handle_web_configurations_collapsed_change}
+                on_web_configurations_collapsed_change={
+                  handle_web_configurations_collapsed_change
+                }
                 api_configurations_collapsed={api_configurations_collapsed}
                 on_api_configurations_collapsed_change={
                   handle_api_configurations_collapsed_change
@@ -504,7 +513,9 @@ export const Panel = () => {
             <UiPage
               on_back_click={edit_web_configuration_back_click_handler}
               footer_slot={
-                <EditWebConfigurationFormFooter on_save={edit_web_configuration_save_handler} />
+                <EditWebConfigurationFormFooter
+                  on_save={edit_web_configuration_save_handler}
+                />
               }
               title="Edit Web Configuration"
               header_slot={
@@ -802,18 +813,23 @@ export const Panel = () => {
           </div>
         )}
 
-        {active_prompt_type == 'find-relevant-files' && token_count == 0 && !is_find_files_modal_dismissed && (
+        {active_prompt_type == 'find-relevant-files' && token_count == 0 && (
           <div className={styles.slot}>
             <UiModal
               title="Make rough context selection"
               icon="info"
-              on_background_click={() => set_is_find_files_modal_dismissed(true)}
               footer_slot={
                 <UiButton
                   is_secondary
-                  on_click={() => set_is_find_files_modal_dismissed(true)}
+                  on_click={() => {
+                    if (mode == MODE.WEB) {
+                      handle_web_prompt_type_change(previous_web_prompt_type)
+                    } else {
+                      handle_api_prompt_type_change(previous_api_prompt_type)
+                    }
+                  }}
                 >
-                  Close
+                  Go back
                 </UiButton>
               }
             />
