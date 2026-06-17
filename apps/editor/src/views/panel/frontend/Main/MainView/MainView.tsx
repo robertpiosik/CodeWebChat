@@ -184,7 +184,7 @@ export const MainView: React.FC<Props> = (props) => {
   ) {
     warning = 'Add a configuration'
   } else if (!!props.current_selection && is_in_code_completions_prompt_type) {
-    warning = 'Remove the text selection'
+    warning = 'Remove text selection'
   } else if (
     is_in_code_completions_prompt_type &&
     !props.currently_open_file_path
