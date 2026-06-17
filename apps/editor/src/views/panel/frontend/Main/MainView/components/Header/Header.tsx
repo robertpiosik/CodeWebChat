@@ -42,7 +42,7 @@ export const Header: React.FC<Props> = (props) => {
     }
   }, [props.mode, props.on_mode_change])
 
-  use_keyboard_shortcuts({
+  const { is_alt_pressed } = use_keyboard_shortcuts({
     mode: props.mode,
     handle_heading_click,
     on_web_prompt_type_change: props.on_web_prompt_type_change,
@@ -62,9 +62,12 @@ export const Header: React.FC<Props> = (props) => {
         <button
           className={styles['header__left__toggler']}
           onClick={handle_heading_click}
-          title={`Change mode (${is_mac ? '⌘Esc' : 'Ctrl+Esc'})`}
+          title={`Change mode (${is_mac ? '⌥Esc' : 'Alt+Esc'})`}
         >
-          {props.mode == MODE.WEB ? MODE.WEB : MODE.API}
+          <span>
+            {props.mode == MODE.WEB ? MODE.WEB : MODE.API}
+          </span>
+          {is_alt_pressed && <span className={styles['header__left__toggler__esc']}>esc</span>}
         </button>
       </div>
 

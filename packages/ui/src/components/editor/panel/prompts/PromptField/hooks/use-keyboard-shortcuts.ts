@@ -112,7 +112,7 @@ export const use_keyboard_shortcuts = (
   const handle_container_key_down = (
     e: React.KeyboardEvent<HTMLDivElement>
   ) => {
-    if (e.key == 'Escape' && !e.ctrlKey && !e.metaKey) {
+    if (e.key == 'Escape' && !e.ctrlKey && !e.metaKey && !e.altKey) {
       if (props.is_recording) {
         props.on_recording_finished()
       }

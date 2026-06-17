@@ -508,6 +508,7 @@ export const create_handle_key_down = (
     }
 
     if (key == 'Escape') {
+      if (e.altKey) return
       handle_escape_key()
       return
     }

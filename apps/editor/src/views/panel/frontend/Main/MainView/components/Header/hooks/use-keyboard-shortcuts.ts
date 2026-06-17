@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { use_is_mac } from '@shared/hooks'
 import { MODE, Mode } from '@/views/panel/types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
@@ -25,9 +25,12 @@ export const use_keyboard_shortcuts = ({
   is_disabled
 }: UseKeyboardShortcutsParams) => {
   const is_mac = use_is_mac()
+  const [is_alt_pressed, set_is_alt_pressed] = useState(false)
 
   useEffect(() => {
     const handle_key_down = (event: KeyboardEvent) => {
+      if (event.key == 'Alt') set_is_alt_pressed(true)
+
       if (is_disabled) return
 
       if (
@@ -40,11 +43,22 @@ export const use_keyboard_shortcuts = ({
         on_show_home()
       } else if (
         event.key == 'Escape' &&
-        ((is_mac && event.metaKey) || (!is_mac && event.ctrlKey))
+        event.altKey &&
+        !event.metaKey &&
+        !event.ctrlKey &&
+        !event.shiftKey
       ) {
         event.preventDefault()
         handle_heading_click()
       }
+    }
+
+    const handle_key_up = (event: KeyboardEvent) => {
+      if (event.key == 'Alt') set_is_alt_pressed(false)
+    }
+
+    const handle_blur = () => {
+      set_is_alt_pressed(false)
     }
 
     const handle_mouse_up = (event: MouseEvent) => {
@@ -56,10 +70,14 @@ export const use_keyboard_shortcuts = ({
     }
 
     window.addEventListener('keydown', handle_key_down)
+    window.addEventListener('keyup', handle_key_up)
+    window.addEventListener('blur', handle_blur)
     window.addEventListener('mouseup', handle_mouse_up)
 
     return () => {
       window.removeEventListener('keydown', handle_key_down)
+      window.removeEventListener('keyup', handle_key_up)
+      window.removeEventListener('blur', handle_blur)
       window.removeEventListener('mouseup', handle_mouse_up)
     }
   }, [is_disabled, on_show_home, is_mac, handle_heading_click])
@@ -103,4 +121,6 @@ export const use_keyboard_shortcuts = ({
       window.removeEventListener('keydown', handle_key_down)
     }
   }, [mode, on_web_prompt_type_change, on_api_prompt_type_change, is_disabled])
+
+  return { is_alt_pressed }
 }

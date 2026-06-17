@@ -28,6 +28,7 @@
       line-height: 1;
       white-space: nowrap;
       letter-spacing: 1px;
+      position: relative;
 
       &:focus {
         outline: none;
@@ -35,6 +36,21 @@
 
       &:hover {
         background-color: var(--vscode-toolbar-hoverBackground);
+      }
+
+      &__esc {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: var(--vscode-sideBar-background);
+        color: var(--vscode-foreground);
+        border: 1px solid var(--cwc-border-color-dimmed);
+        padding: 2px 4px 3px 4px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-family: var(--vscode-font-family);
+        letter-spacing: normal;
       }
     }
   }
