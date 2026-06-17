@@ -75,6 +75,16 @@
     border-radius: 999px;
     margin: 0 8px;
     font-weight: 500;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: inherit;
+      background-color: var(--vscode-input-background);
+    }
 
     &::before {
       font-family: 'codicon';
