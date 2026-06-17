@@ -100,6 +100,12 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     }
   }, [props.value])
 
+  useEffect(() => {
+    if (props.warning && input_ref.current) {
+      input_ref.current.blur()
+    }
+  }, [props.warning])
+
   const toggle_invocation_dropdown = useCallback(() => {
     set_is_invocation_dropdown_open((prev) => !prev)
   }, [])
@@ -222,7 +228,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           raw_text: props.value,
           context_file_paths: props.context_file_paths ?? []
         })
-        input_ref.current.focus()
+          input_ref.current.focus()
         set_caret_position_for_div(input_ref.current, display_pos)
       } else if (is_focused) {
         set_caret_position_for_div(input_ref.current, selection_start)
