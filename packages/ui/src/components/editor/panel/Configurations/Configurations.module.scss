@@ -24,6 +24,19 @@
       }
     }
 
+    &--disabled-invocation {
+      cursor: default;
+
+      &:hover {
+        background-color: unset;
+      }
+
+      .configurations__item__left__icon,
+      .configurations__item__left__text {
+        opacity: var(--disabled-opacity);
+      }
+    }
+
     &--highlighted {
       background-color: var(--vscode-list-inactiveSelectionBackground);
 

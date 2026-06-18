@@ -219,7 +219,10 @@ export const Panel = () => {
     !is_connected ||
     (!has_instructions && web_prompt_type != 'code-at-cursor') ||
     (web_prompt_type == 'code-at-cursor' &&
-      (!currently_open_file_path || !!current_selection))
+      (!currently_open_file_path || !!current_selection)) ||
+    (web_prompt_type != 'code-at-cursor' &&
+      web_prompt_type != 'no-context' &&
+      token_count == 0)
 
   const handle_apply_click = () => {
     post_message(vscode, {
@@ -499,26 +502,13 @@ export const Panel = () => {
               }
               title="Edit Web Configuration"
               header_slot={
-                <UiTextButton
-                  on_click={handle_preview_web_configuration}
-                  disabled={is_preview_disabled}
-                  title={
-                    !is_connected
-                      ? 'Unable to preview when not connected'
-                      : web_prompt_type == 'code-at-cursor' &&
-                          !currently_open_file_path
-                        ? 'Cannot preview in code completion mode without an active editor'
-                        : web_prompt_type == 'code-at-cursor' &&
-                            !!current_selection
-                          ? 'Unable to work with text selection'
-                          : !has_instructions &&
-                              web_prompt_type != 'code-at-cursor'
-                            ? 'Enter instructions to preview'
-                            : ''
-                  }
-                >
-                  Preview
-                </UiTextButton>
+                !is_preview_disabled && (
+                  <UiTextButton
+                    on_click={handle_preview_web_configuration}
+                  >
+                    Preview
+                  </UiTextButton>
+                )
               }
             >
               <EditWebConfigurationForm

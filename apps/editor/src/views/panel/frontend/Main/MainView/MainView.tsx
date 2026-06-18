@@ -447,12 +447,13 @@ export const MainView: React.FC<Props> = (props) => {
             <UiSeparator height={8} />
             <UiConfigurations
               configurations={web_configurations}
-              on_create={(params) =>
+              disable_invocation={!!warning}
+              on_create={(params) => {
                 props.on_create_web_configuration(
                   params?.create_on_top ? 'top' : 'bottom',
                   params?.insertion_index
                 )
-              }
+              }}
               on_configuration_click={(id) => {
                 props.initialize_chats({
                   web_configuration_name: id,
@@ -464,26 +465,26 @@ export const MainView: React.FC<Props> = (props) => {
               on_reorder={(reordered) => {
                 const new_web_configurations = reordered.map((c) => {
                   return props.web_configurations.find(
-                    (p, i) => (p.name ?? `unnamed-${i}`) === c.id
+                    (p, i) => (p.name ?? `unnamed-${i}`) == c.id
                   )!
                 })
                 props.on_web_configurations_reorder(new_web_configurations)
               }}
               on_duplicate={(id) => {
                 const idx = props.web_configurations.findIndex(
-                  (p, i) => (p.name ?? `unnamed-${i}`) === id
+                  (p, i) => (p.name ?? `unnamed-${i}`) == id
                 )
                 props.on_duplicate_web_configuration(idx)
               }}
               on_delete={(id) => {
                 const idx = props.web_configurations.findIndex(
-                  (p, i) => (p.name ?? `unnamed-${i}`) === id
+                  (p, i) => (p.name ?? `unnamed-${i}`) == id
                 )
                 props.on_delete_web_configuration(idx)
               }}
-              on_toggle_pinned={(id) =>
+              on_toggle_pinned={(id) => {
                 props.on_toggle_web_configuration_pinned(id)
-              }
+              }}
               selected_configuration_id={props.selected_web_configuration_name}
               is_collapsed={props.web_configurations_collapsed}
               on_toggle_collapsed={props.on_web_configurations_collapsed_change}
@@ -507,6 +508,7 @@ export const MainView: React.FC<Props> = (props) => {
             <UiSeparator height={8} />
             <UiConfigurations
               configurations={api_configurations_ui}
+              disable_invocation={!!warning}
               on_configuration_click={props.on_api_configuration_click}
               on_reorder={(reordered) =>
                 props.on_api_configurations_reorder(reordered)
