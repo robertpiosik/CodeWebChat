@@ -37,7 +37,7 @@ export const intelligent_update = {
     bg: 'Заявката включва оригиналния файл и грешния код.'
   },
   'intelligent-update.auto-run-intelligent-update.title': {
-    en: 'Auto-run Intelligent Update',
+    en: 'Auto-Run Intelligent Update',
     pl: 'Automatycznie uruchom inteligentną integrację',
     'zh-cn': '自动运行智能更新',
     ja: 'インテリジェントアップデートを自動実行',

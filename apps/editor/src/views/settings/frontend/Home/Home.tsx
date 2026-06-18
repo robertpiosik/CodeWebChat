@@ -595,7 +595,6 @@ export const Home: React.FC<Props> = (props) => {
 
         <UiSection
           ref={(el) => (section_refs.current['edit-context'] = el)}
-          group={t('section.api-tool')}
           title={t('sidebar.edit-context')}
           subtitle={t('edit-context.subtitle')}
           on_stuck_change={edit_context_on_stuck_change}
@@ -628,7 +627,6 @@ export const Home: React.FC<Props> = (props) => {
 
         <UiSection
           ref={(el) => (section_refs.current['code-at-cursor'] = el)}
-          group={t('section.api-tool')}
           title={t('sidebar.code-at-cursor')}
           subtitle={t('code-at-cursor.subtitle')}
           on_stuck_change={code_at_cursor_on_stuck_change}
@@ -653,7 +651,6 @@ export const Home: React.FC<Props> = (props) => {
 
         <UiSection
           ref={(el) => (section_refs.current['commit-messages'] = el)}
-          group={t('section.api-tool')}
           title={t('sidebar.commit-messages')}
           subtitle={t('commit-messages.subtitle')}
           on_stuck_change={commit_messages_on_stuck_change}
@@ -696,7 +693,6 @@ export const Home: React.FC<Props> = (props) => {
 
         <UiSection
           ref={(el) => (section_refs.current['voice-input'] = el)}
-          group={t('section.api-tool')}
           title={t('sidebar.voice-input')}
           subtitle={t('voice-input.subtitle')}
           on_stuck_change={voice_input_on_stuck_change}

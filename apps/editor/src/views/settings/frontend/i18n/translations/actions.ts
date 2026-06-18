@@ -341,24 +341,6 @@ export const actions = {
     hu: 'Hiányzó konfiguráció.',
     bg: 'Липсваща конфигурация.'
   },
-  'section.api-tool': {
-    en: 'API Tool',
-    pl: 'Narzędzie API',
-    'zh-cn': 'API 工具',
-    ja: 'API ツール',
-    'zh-tw': 'API 工具',
-    de: 'API-Tool',
-    es: 'Herramienta API',
-    fr: 'Outil API',
-    'pt-br': 'Ferramenta API',
-    ru: 'Инструмент API',
-    ko: 'API 도구',
-    it: 'Strumento API',
-    tr: 'API Aracı',
-    cs: 'Nástroj API',
-    hu: 'API Eszköz',
-    bg: 'API Инструмент'
-  },
   'action.default-configuration': {
     en: 'Default Configuration',
     pl: 'Domyślna konfiguracja',

@@ -7,7 +7,6 @@ type Props = {
   subtitle: React.ReactNode
   children: React.ReactNode
   on_stuck_change: (is_stuck: boolean) => void
-  group?: string
   actions?: React.ReactNode
 }
 
@@ -97,9 +96,6 @@ export const Section = forwardRef<HTMLDivElement, Props>((props, ref) => {
             title={`${props.title}—${props.subtitle}`}
           >
             <div className={styles.header__title}>
-              {props.group && (
-                <span className={styles.header__group}>{props.group}: </span>
-              )}
               {props.title}
             </div>
             <div className={styles.header__subtitle}>{props.subtitle}</div>

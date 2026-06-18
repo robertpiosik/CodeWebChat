@@ -73,7 +73,7 @@ export const general = {
     bg: 'Отваряне на настройки на редактора'
   },
   'general.ignore-patterns.title': {
-    en: 'Ignore patterns',
+    en: 'Ignore Patterns',
     pl: 'Wzorce ignorowania',
     'zh-cn': '忽略模式',
     ja: '除外パターン',
@@ -127,7 +127,7 @@ export const general = {
     bg: 'Отваряне на файла с настройки'
   },
   'general.allow-patterns.title': {
-    en: 'Allow patterns',
+    en: 'Allow Patterns',
     pl: 'Wzorce zezwalania',
     'zh-cn': '允许模式',
     ja: '許可パターン',
