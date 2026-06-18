@@ -2,13 +2,11 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { Layout as UiLayout } from '@ui/components/editor/settings/Layout'
 import { NavigationItem as UiNavigationItem } from '@ui/components/editor/settings/NavigationItem'
 import { ModelProvidersSection } from './sections/ModelProvidersSection'
+import { ConfigurationsSection } from './sections/ConfigurationsSection'
 import { NavigationDivider as UiNavigationDivider } from '@ui/components/editor/settings/NavigationDivider'
 import { Item as UiItem } from '@ui/components/editor/settings/Item'
 import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
 import { Section as UiSection } from '@ui/components/editor/settings/Section'
-import { SortableList } from '@ui/components/editor/settings/SortableList'
-import { IconButton } from '@ui/components/editor/common/IconButton'
-import { DefaultConfigurationSelector } from '@ui/components/editor/settings/DefaultConfigurationSelector'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
 import { Button as UiButton } from '@ui/components/editor/common/Button'
@@ -437,161 +435,20 @@ export const Home: React.FC<Props> = (props) => {
           </UiGroup>
         </UiSection>
 
-        <UiSection
+        <ConfigurationsSection
           ref={(el) => (section_refs.current['configurations'] = el)}
-          title={t('sidebar.configurations')}
-          subtitle={t('configurations.subtitle')}
+          api_configurations={props.api_configurations}
+          defaults={props.defaults}
+          set_api_configurations={props.set_api_configurations}
+          on_reorder_api_configurations={props.on_reorder_api_configurations}
+          on_add_api_configuration={props.on_add_api_configuration}
+          on_duplicate_api_configuration={props.on_duplicate_api_configuration}
+          on_edit_api_configuration={props.on_edit_api_configuration}
+          on_delete_api_configuration={props.on_delete_api_configuration}
+          on_set_default_api_configuration={props.on_set_default_api_configuration}
+          on_select_default_api_configuration={props.on_select_default_api_configuration}
           on_stuck_change={configurations_on_stuck_change}
-          actions={
-            <UiButton on_click={() => props.on_add_api_configuration()}>
-              {t('action.add-new')}
-            </UiButton>
-          }
-        >
-          <UiNotice type="info">{t('configurations.notice')}</UiNotice>
-          {props.api_configurations.length == 0 && (
-            <UiNotice type="warning">
-              {t('message.missing-configuration')}
-            </UiNotice>
-          )}
-          <UiGroup>
-            {props.api_configurations && (
-              <SortableList
-                items={props.api_configurations}
-                on_reorder={(reordered) => {
-                  props.set_api_configurations(reordered)
-                  props.on_reorder_api_configurations(reordered)
-                }}
-                on_add={props.on_add_api_configuration}
-                translations={{
-                  add_title: t('action.add-new'),
-                  item_text: t('action.configuration'),
-                  items_text: t('action.configurations'),
-                  items_text_many: t('action.configurations-many')
-                }}
-                render_content={(api_configuration) => (
-                  <div
-                    style={{
-                      flex: 1,
-                      overflow: 'hidden',
-                      whiteSpace: 'nowrap',
-                      textOverflow: 'ellipsis'
-                    }}
-                  >
-                    <span>{api_configuration.model}</span>
-                    <span
-                      style={{
-                        marginLeft: '0.5em',
-                        opacity: 0.7,
-                        fontSize: '0.9em'
-                      }}
-                    >
-                      {api_configuration.description}
-                    </span>
-                  </div>
-                )}
-                render_actions={(api_configuration, index) => (
-                  <>
-                    <IconButton
-                      codicon_icon="insert"
-                      title={t('action.insert-configuration')}
-                      on_click={() =>
-                        props.on_add_api_configuration({ insertion_index: index })
-                      }
-                    />
-                    <IconButton
-                      codicon_icon="files"
-                      title={t('action.duplicate-configuration')}
-                      on_click={(e) => {
-                        e.stopPropagation()
-                        props.on_duplicate_api_configuration(api_configuration.id)
-                      }}
-                    />
-                    <IconButton
-                      codicon_icon="edit"
-                      title={t('action.edit-configuration')}
-                      on_click={() => props.on_edit_api_configuration(api_configuration.id)}
-                    />
-                    <IconButton
-                      codicon_icon="trash"
-                      title={t('action.delete-configuration')}
-                      on_click={(e) => {
-                        e.stopPropagation()
-                        props.on_delete_api_configuration(api_configuration.id)
-                      }}
-                    />
-                  </>
-                )}
-              />
-            )}
-          </UiGroup>
-          <UiGroup title={t('action.default-configurations')}>
-            <UiItem title={t('sidebar.intelligent-update')}>
-              <DefaultConfigurationSelector
-                value={props.defaults['intelligent-update'] || null}
-                configurations={props.api_configurations}
-                on_unset={() =>
-                  props.on_set_default_api_configuration('intelligent-update', null)
-                }
-                on_select={() =>
-                  props.on_select_default_api_configuration('intelligent-update')
-                }
-                translations={{
-                  select_default: t('action.select-default-configuration'),
-                  unset: t('action.unset-default')
-                }}
-              />
-            </UiItem>
-            <UiItem title={t('sidebar.code-at-cursor')}>
-              <DefaultConfigurationSelector
-                value={props.defaults['code-at-cursor'] || null}
-                configurations={props.api_configurations}
-                on_unset={() =>
-                  props.on_set_default_api_configuration('code-at-cursor', null)
-                }
-                on_select={() =>
-                  props.on_select_default_api_configuration('code-at-cursor')
-                }
-                translations={{
-                  select_default: t('action.select-default-configuration'),
-                  unset: t('action.unset-default')
-                }}
-              />
-            </UiItem>
-            <UiItem title={t('sidebar.commit-messages')}>
-              <DefaultConfigurationSelector
-                value={props.defaults['commit-messages'] || null}
-                configurations={props.api_configurations}
-                on_unset={() =>
-                  props.on_set_default_api_configuration('commit-messages', null)
-                }
-                on_select={() =>
-                  props.on_select_default_api_configuration('commit-messages')
-                }
-                translations={{
-                  select_default: t('action.select-default-configuration'),
-                  unset: t('action.unset-default')
-                }}
-              />
-            </UiItem>
-            <UiItem title={t('sidebar.voice-input')}>
-              <DefaultConfigurationSelector
-                value={props.defaults['voice-input'] || null}
-                configurations={props.api_configurations}
-                on_unset={() =>
-                  props.on_set_default_api_configuration('voice-input', null)
-                }
-                on_select={() =>
-                  props.on_select_default_api_configuration('voice-input')
-                }
-                translations={{
-                  select_default: t('action.select-default-configuration'),
-                  unset: t('action.unset-default')
-                }}
-              />
-            </UiItem>
-          </UiGroup>
-        </UiSection>
+        />
 
         <UiSection
           ref={(el) => (section_refs.current['edit-context'] = el)}

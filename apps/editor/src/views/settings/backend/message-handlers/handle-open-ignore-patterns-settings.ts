@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
+import { t } from '@/i18n'
 
 export const handle_open_ignore_patterns_settings = async (): Promise<void> => {
   const workspaceFolders = vscode.workspace.workspaceFolders
@@ -15,12 +16,11 @@ export const handle_open_ignore_patterns_settings = async (): Promise<void> => {
       (resolve) => {
         const quick_pick = vscode.window.createQuickPick<(typeof items)[0]>()
         quick_pick.items = items
-        quick_pick.title = 'Workspaces'
-        quick_pick.placeholder =
-          'Select workspace folder to configure ignore patterns'
+        quick_pick.title = t('handlers.settings.allow-patterns.title')
+        quick_pick.placeholder = t('handlers.settings.ignore-patterns.placeholder')
         const close_button: vscode.QuickInputButton = {
           iconPath: new vscode.ThemeIcon('close'),
-          tooltip: 'Close'
+          tooltip: t('common.close')
         }
         quick_pick.buttons = [close_button]
         let is_accepted = false
@@ -85,7 +85,7 @@ export const handle_open_ignore_patterns_settings = async (): Promise<void> => {
     await vscode.window.showTextDocument(doc)
   } catch (e) {
     vscode.window.showErrorMessage(
-      `Could not open settings file at ${settingsPath}`
+      t('handlers.settings.error.could-not-open-settings', { path: settingsPath })
     )
   }
 }

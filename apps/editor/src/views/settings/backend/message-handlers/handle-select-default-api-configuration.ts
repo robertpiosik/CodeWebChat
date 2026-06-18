@@ -6,6 +6,7 @@ import {
 } from '@/services/model-providers-manager'
 import { SelectDefaultApiConfigurationMessage } from '@/views/settings/types/messages'
 import { handle_set_default_api_configuration } from './handle-set-default-api-configuration'
+import { t } from '@/i18n'
 
 export const handle_select_default_api_configuration = async (
   provider: SettingsProvider,
@@ -16,7 +17,7 @@ export const handle_select_default_api_configuration = async (
 
   if (api_configurations.length == 0) {
     vscode.window.showInformationMessage(
-      'No API configurations available. Please create one first.'
+      t('handlers.settings.api-config.no-configs')
     )
     return
   }
@@ -42,13 +43,13 @@ export const handle_select_default_api_configuration = async (
   >()
 
   quick_pick.items = items
-  quick_pick.title = 'Configurations'
-  quick_pick.placeholder = 'Select default configuration'
+  quick_pick.title = t('common.config.title')
+  quick_pick.placeholder = t('handlers.settings.api-config.placeholder')
   quick_pick.matchOnDescription = true
 
   const close_button: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('close'),
-    tooltip: 'Close'
+    tooltip: t('common.close')
   }
   quick_pick.buttons = [close_button]
 

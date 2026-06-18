@@ -1,14 +1,8 @@
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-}
-
 .info {
   display: flex;
   align-items: center;
   overflow: hidden;
+  color: var(--vscode-foreground);
 }
 
 .model {
@@ -26,6 +20,3 @@
   margin-left: 0.5em;
 }
 
-.actions {
-  margin-left: 12px;
-}

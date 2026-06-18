@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from './DefaultConfigurationSelector.module.scss'
 import { TextButton } from '../TextButton'
+import { Item } from '../Item'
 
 export namespace DefaultConfigurationSelector {
   export type Configuration = {
@@ -10,11 +11,12 @@ export namespace DefaultConfigurationSelector {
   }
 
   export type Translations = {
-    select_default: string
+    select: string
     unset: string
   }
 
   export type Props = {
+    title: string
     value: string | null
     configurations: Configuration[]
     on_unset: () => void
@@ -30,25 +32,34 @@ export const DefaultConfigurationSelector: React.FC<
 
   if (!selected_config) {
     return (
-      <TextButton on_click={props.on_select}>
-        {props.translations.select_default}
-      </TextButton>
+      <Item
+        title={props.title}
+        slot_right={
+          <TextButton on_click={props.on_select}>
+            {props.translations.select}
+          </TextButton>
+        }
+      />
     )
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.info}>
-        <span className={styles.model}>{selected_config.model}</span>
-        <span className={styles.description}>
-          {selected_config.description}
-        </span>
-      </div>
-      <div className={styles.actions}>
+    <Item
+      title={props.title}
+      description={
+        <div className={styles.info}>
+          <span className={styles.model}>{selected_config.model}</span>
+          <span className={styles.description}>
+            {selected_config.description}
+          </span>
+        </div>
+      }
+      slot_right={
         <TextButton on_click={props.on_unset}>
           {props.translations.unset}
         </TextButton>
-      </div>
-    </div>
+      }
+    />
   )
 }
+

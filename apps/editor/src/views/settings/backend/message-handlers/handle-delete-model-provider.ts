@@ -3,6 +3,7 @@ import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { DeleteModelProviderMessage } from '@/views/settings/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
+import { t } from '@/i18n'
 
 export const handle_delete_model_provider = async (
   provider: SettingsProvider,
@@ -19,10 +20,10 @@ export const handle_delete_model_provider = async (
         model_provider_name_to_delete
       )
     },
-    'Delete'
+    t('common.delete')
   )
 
-  if (confirmation != 'Delete') {
+  if (confirmation != t('common.delete')) {
     return
   }
 
