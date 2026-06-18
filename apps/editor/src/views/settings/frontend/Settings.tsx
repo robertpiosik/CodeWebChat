@@ -2,12 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { use_settings } from './hooks/use-settings'
 import { post_message } from './utils/post-message'
 import { BackendMessage } from '../types/messages'
-import { Home } from './Home/Home'
-
-type NavItem =
-  | 'general'
-  | 'model-providers'
-  | 'configurations'
+import { Home, NavItem } from './Home/Home'
 
 const vscode = acquireVsCodeApi()
 

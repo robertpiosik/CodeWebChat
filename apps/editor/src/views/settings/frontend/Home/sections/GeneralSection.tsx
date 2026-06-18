@@ -20,6 +20,7 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE
 } from '@/constants/edit-format-instructions'
 import { use_translation } from '../../i18n/use-translation'
+import { NavItem } from '../Home'
 
 type ClearChecksBehavior = 'ignore-open-editors' | 'uncheck-all'
 
@@ -54,7 +55,7 @@ type Props = {
   on_open_ignore_patterns_settings: () => void
   on_open_allow_patterns_settings: () => void
   on_open_keybindings: (search?: string) => void
-  on_stuck_change: (is_stuck: boolean) => void
+  set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void
   auto_run_intelligent_update: boolean
   on_auto_run_intelligent_update_change: (enabled: boolean) => void
   include_prompts_in_commit_messages: boolean
@@ -199,7 +200,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
         ref={ref}
         title={t('sidebar.general')}
         subtitle={t('general.subtitle')}
-        on_stuck_change={props.on_stuck_change}
       >
         <UiGroup>
           <UiItem
@@ -335,219 +335,225 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           />
         </UiGroup>
 
-        <UiGroup title={t('general.checkpoints.title')}>
-          <UiItem
-            title={t('general.automatic-checkpoints.title')}
-            description={t('general.automatic-checkpoints.description')}
+        <div ref={(el) => props.set_section_ref('checkpoints', el)}>
+          <UiGroup title={t('general.checkpoints.title')}>
+            <UiItem
+              title={t('general.automatic-checkpoints.title')}
+              description={t('general.automatic-checkpoints.description')}
+              slot_right={
+                <UiToggler
+                  is_on={!props.are_automatic_checkpoints_disabled}
+                  on_toggle={(is_on) =>
+                    props.on_automatic_checkpoints_toggle(!is_on)
+                  }
+                />
+              }
+            />
+            <UiItem
+              title={t('general.checkpoint-lifespan.title')}
+              description={t('general.checkpoint-lifespan.description')}
+              slot_right={
+                <UiInput
+                  type="number"
+                  value={checkpoint_lifespan?.toString() || ''}
+                  on_change={(val) =>
+                    set_checkpoint_lifespan(
+                      val == '' ? undefined : parseInt(val, 10)
+                    )
+                  }
+                  on_blur={handle_checkpoint_lifespan_blur}
+                  max_width={100}
+                />
+              }
+            />
+          </UiGroup>
+        </div>
+
+        <div ref={(el) => props.set_section_ref('edit-format', el)}>
+          <UiGroup title={t('general.edit-formats.title')}>
+            <UiItem
+              title={t('general.edit-format.whole.title')}
+              description={t('general.edit-format.whole.description')}
+              is_toggleable
+              translations={{
+                expand: t('general.edit-format.expand'),
+                collapse: t('general.edit-format.collapse')
+              }}
             slot_right={
-              <UiToggler
-                is_on={!props.are_automatic_checkpoints_disabled}
-                on_toggle={(is_on) =>
-                  props.on_automatic_checkpoints_toggle(!is_on)
+              instructions.whole != '' &&
+              instructions.whole != EDIT_FORMAT_INSTRUCTIONS_WHOLE ? (
+                <UiIconButton
+                  codicon_icon="discard"
+                  title={t('general.action.restore-default')}
+                  on_click={(e) => {
+                    e.stopPropagation()
+                    handle_reset_instruction('whole', EDIT_FORMAT_INSTRUCTIONS_WHOLE)
+                  }}
+                />
+              ) : undefined
+            }
+            >
+              <UiTextarea
+                value={instructions.whole}
+                min_rows={3}
+                on_change={(value) =>
+                  set_instructions((prev) => ({ ...prev, whole: value }))
                 }
+                on_blur={handle_instructions_blur}
               />
-            }
-          />
-          <UiItem
-            title={t('general.checkpoint-lifespan.title')}
-            description={t('general.checkpoint-lifespan.description')}
+            </UiItem>
+
+            <UiItem
+              title={t('general.edit-format.truncated.title')}
+              description={t('general.edit-format.truncated.description')}
+              is_toggleable
+              translations={{
+                expand: t('general.edit-format.expand'),
+                collapse: t('general.edit-format.collapse')
+              }}
             slot_right={
-              <UiInput
-                type="number"
-                value={checkpoint_lifespan?.toString() || ''}
-                on_change={(val) =>
-                  set_checkpoint_lifespan(
-                    val == '' ? undefined : parseInt(val, 10)
-                  )
+              instructions.truncated != '' &&
+              instructions.truncated != EDIT_FORMAT_INSTRUCTIONS_TRUNCATED ? (
+                <UiIconButton
+                  codicon_icon="discard"
+                  title={t('general.action.restore-default')}
+                  on_click={(e) => {
+                    e.stopPropagation()
+                    handle_reset_instruction(
+                      'truncated',
+                      EDIT_FORMAT_INSTRUCTIONS_TRUNCATED
+                    )
+                  }}
+                />
+              ) : undefined
+            }
+            >
+              <UiTextarea
+                value={instructions.truncated}
+                min_rows={3}
+                on_change={(value) =>
+                  set_instructions((prev) => ({
+                    ...prev,
+                    truncated: value
+                  }))
                 }
-                on_blur={handle_checkpoint_lifespan_blur}
-                max_width={100}
+                on_blur={handle_instructions_blur}
               />
-            }
-          />
-        </UiGroup>
+            </UiItem>
 
-        <UiGroup title={t('general.edit-format-instructions.title')}>
-          <UiItem
-            title={t('general.edit-format.whole.title')}
-            description={t('general.edit-format.whole.description')}
-            is_toggleable
-            translations={{
-              expand: t('general.edit-format.expand'),
-              collapse: t('general.edit-format.collapse')
-            }}
-          slot_right={
-            instructions.whole != '' &&
-            instructions.whole != EDIT_FORMAT_INSTRUCTIONS_WHOLE ? (
-              <UiIconButton
-                codicon_icon="discard"
-                title={t('general.action.restore-default')}
-                on_click={(e) => {
-                  e.stopPropagation()
-                  handle_reset_instruction('whole', EDIT_FORMAT_INSTRUCTIONS_WHOLE)
-                }}
-              />
-            ) : undefined
-          }
-          >
-            <UiTextarea
-              value={instructions.whole}
-              min_rows={3}
-              on_change={(value) =>
-                set_instructions((prev) => ({ ...prev, whole: value }))
-              }
-              on_blur={handle_instructions_blur}
-            />
-          </UiItem>
-
-          <UiItem
-            title={t('general.edit-format.truncated.title')}
-            description={t('general.edit-format.truncated.description')}
-            is_toggleable
-            translations={{
-              expand: t('general.edit-format.expand'),
-              collapse: t('general.edit-format.collapse')
-            }}
-          slot_right={
-            instructions.truncated != '' &&
-            instructions.truncated != EDIT_FORMAT_INSTRUCTIONS_TRUNCATED ? (
-              <UiIconButton
-                codicon_icon="discard"
-                title={t('general.action.restore-default')}
-                on_click={(e) => {
-                  e.stopPropagation()
-                  handle_reset_instruction(
-                    'truncated',
-                    EDIT_FORMAT_INSTRUCTIONS_TRUNCATED
-                  )
-                }}
-              />
-            ) : undefined
-          }
-          >
-            <UiTextarea
-              value={instructions.truncated}
-              min_rows={3}
-              on_change={(value) =>
-                set_instructions((prev) => ({
-                  ...prev,
-                  truncated: value
-                }))
-              }
-              on_blur={handle_instructions_blur}
-            />
-          </UiItem>
-
-          <UiItem
-            title={t('general.edit-format.search-replace.title')}
-            description={t('general.edit-format.search-replace.description')}
-            is_toggleable
-            translations={{
-              expand: t('general.edit-format.expand'),
-              collapse: t('general.edit-format.collapse')
-            }}
-          slot_right={
-            instructions.search_replace != '' &&
-            instructions.search_replace !=
-              EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE ? (
-              <UiIconButton
-                codicon_icon="discard"
-                title={t('general.action.restore-default')}
-                on_click={(e) => {
-                  e.stopPropagation()
-                  handle_reset_instruction(
-                    'search_replace',
-                    EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE
-                  )
-                }}
-              />
-            ) : undefined
-          }
-          >
-            <UiTextarea
-              value={instructions.search_replace}
-              min_rows={3}
-              on_change={(value) =>
-                set_instructions((prev) => ({
-                  ...prev,
-                  search_replace: value
-                }))
-              }
-              on_blur={handle_instructions_blur}
-            />
-          </UiItem>
-
-          <UiItem
-            title={t('general.edit-format.diff.title')}
-            description={t('general.edit-format.diff.description')}
-            is_toggleable
-            translations={{
-              expand: t('general.edit-format.expand'),
-              collapse: t('general.edit-format.collapse')
-            }}
-          slot_right={
-            instructions.diff != '' &&
-            instructions.diff != EDIT_FORMAT_INSTRUCTIONS_DIFF ? (
-              <UiIconButton
-                codicon_icon="discard"
-                title={t('general.action.restore-default')}
-                on_click={(e) => {
-                  e.stopPropagation()
-                  handle_reset_instruction('diff', EDIT_FORMAT_INSTRUCTIONS_DIFF)
-                }}
-              />
-            ) : undefined
-          }
-          >
-            <UiTextarea
-              value={instructions.diff}
-              min_rows={3}
-              on_change={(value) =>
-                set_instructions((prev) => ({ ...prev, diff: value }))
-              }
-              on_blur={handle_instructions_blur}
-            />
-          </UiItem>
-        </UiGroup>
-
-        <UiGroup title={t('general.chatbots.title')}>
-          <UiItem
-            title={t('general.reuse-last-tab.title')}
-            description={t('general.reuse-last-tab.description')}
+            <UiItem
+              title={t('general.edit-format.search-replace.title')}
+              description={t('general.edit-format.search-replace.description')}
+              is_toggleable
+              translations={{
+                expand: t('general.edit-format.expand'),
+                collapse: t('general.edit-format.collapse')
+              }}
             slot_right={
-              <UiToggler
-                is_on={props.reuse_last_tab}
-                on_toggle={props.on_reuse_last_tab_change}
-              />
+              instructions.search_replace != '' &&
+              instructions.search_replace !=
+                EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE ? (
+                <UiIconButton
+                  codicon_icon="discard"
+                  title={t('general.action.restore-default')}
+                  on_click={(e) => {
+                    e.stopPropagation()
+                    handle_reset_instruction(
+                      'search_replace',
+                      EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE
+                    )
+                  }}
+                />
+              ) : undefined
             }
-          />
-          <UiItem
-            title={t('general.gemini-user-id.title')}
-            description={t('general.gemini-user-id.description')}
+            >
+              <UiTextarea
+                value={instructions.search_replace}
+                min_rows={3}
+                on_change={(value) =>
+                  set_instructions((prev) => ({
+                    ...prev,
+                    search_replace: value
+                  }))
+                }
+                on_blur={handle_instructions_blur}
+              />
+            </UiItem>
+
+            <UiItem
+              title={t('general.edit-format.diff.title')}
+              description={t('general.edit-format.diff.description')}
+              is_toggleable
+              translations={{
+                expand: t('general.edit-format.expand'),
+                collapse: t('general.edit-format.collapse')
+              }}
             slot_right={
-              <UiInput
-                type="number"
-                value={gemini_user_id_str}
-                on_change={set_gemini_user_id_str}
-                on_blur={handle_gemini_user_id_blur}
-                max_width={60}
-              />
+              instructions.diff != '' &&
+              instructions.diff != EDIT_FORMAT_INSTRUCTIONS_DIFF ? (
+                <UiIconButton
+                  codicon_icon="discard"
+                  title={t('general.action.restore-default')}
+                  on_click={(e) => {
+                    e.stopPropagation()
+                    handle_reset_instruction('diff', EDIT_FORMAT_INSTRUCTIONS_DIFF)
+                  }}
+                />
+              ) : undefined
             }
-          />
-          <UiItem
-            title={t('general.ai-studio-user-id.title')}
-            description={t('general.ai-studio-user-id.description')}
-            slot_right={
-              <UiInput
-                type="number"
-                value={ai_studio_user_id_str}
-                on_change={set_ai_studio_user_id_str}
-                on_blur={handle_ai_studio_user_id_blur}
-                max_width={60}
+            >
+              <UiTextarea
+                value={instructions.diff}
+                min_rows={3}
+                on_change={(value) =>
+                  set_instructions((prev) => ({ ...prev, diff: value }))
+                }
+                on_blur={handle_instructions_blur}
               />
-            }
-          />
-        </UiGroup>
+            </UiItem>
+          </UiGroup>
+        </div>
+
+        <div ref={(el) => props.set_section_ref('chatbots', el)}>
+          <UiGroup title={t('general.chatbots.title')}>
+            <UiItem
+              title={t('general.reuse-last-tab.title')}
+              description={t('general.reuse-last-tab.description')}
+              slot_right={
+                <UiToggler
+                  is_on={props.reuse_last_tab}
+                  on_toggle={props.on_reuse_last_tab_change}
+                />
+              }
+            />
+            <UiItem
+              title={t('general.gemini-user-id.title')}
+              description={t('general.gemini-user-id.description')}
+              slot_right={
+                <UiInput
+                  type="number"
+                  value={gemini_user_id_str}
+                  on_change={set_gemini_user_id_str}
+                  on_blur={handle_gemini_user_id_blur}
+                  max_width={60}
+                />
+              }
+            />
+            <UiItem
+              title={t('general.ai-studio-user-id.title')}
+              description={t('general.ai-studio-user-id.description')}
+              slot_right={
+                <UiInput
+                  type="number"
+                  value={ai_studio_user_id_str}
+                  on_change={set_ai_studio_user_id_str}
+                  on_blur={handle_ai_studio_user_id_blur}
+                  max_width={60}
+                />
+              }
+            />
+          </UiGroup>
+        </div>
 
       </UiSection>
     )

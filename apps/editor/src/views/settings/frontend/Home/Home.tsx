@@ -27,17 +27,37 @@ import {
 } from '@/constants/instructions'
 import { default_system_instructions } from '@shared/constants/default-system-instructions'
 
-type NavItem =
+export type NavItem =
   | 'general'
+  | 'checkpoints'
+  | 'edit-format'
+  | 'chatbots'
   | 'model-providers'
   | 'configurations'
+  | 'defaults'
+  | 'instructions'
 
-type NavConfigItem = { id: NavItem; label: TranslationKey }
+type NavConfigItem = { id: NavItem; label: TranslationKey; is_nested?: boolean }
 
 const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   {
     id: 'general',
     label: 'sidebar.general'
+  },
+  {
+    id: 'checkpoints',
+    label: 'general.checkpoints.title',
+    is_nested: true
+  },
+  {
+    id: 'edit-format',
+    label: 'general.edit-formats.title',
+    is_nested: true
+  },
+  {
+    id: 'chatbots',
+    label: 'general.chatbots.title',
+    is_nested: true
   },
   {
     id: 'model-providers',
@@ -47,6 +67,16 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
     id: 'configurations',
     label: 'sidebar.configurations'
   },
+  {
+    id: 'defaults',
+    label: 'configurations.defaults.title',
+    is_nested: true
+  },
+  {
+    id: 'instructions',
+    label: 'configurations.instructions.title',
+    is_nested: true
+  }
 ]
 
 type Props = {
@@ -129,43 +159,23 @@ export const Home: React.FC<Props> = (props) => {
   const scroll_container_ref = useRef<HTMLDivElement>(null)
   const section_refs = useRef<Record<NavItem, HTMLDivElement | null>>({
     general: null,
+    checkpoints: null,
+    'edit-format': null,
+    chatbots: null,
     'model-providers': null,
-    configurations: null
+    configurations: null,
+    defaults: null,
+    instructions: null
   })
+
+  const set_section_ref = useCallback((id: NavItem, el: HTMLDivElement | null) => {
+    section_refs.current[id] = el
+  }, [])
+
   const [commit_instructions, set_commit_instructions] = useState('')
   const [voice_input_instructions, set_voice_input_instructions] = useState('')
   const [edit_context_instructions, set_edit_context_instructions] =
     useState('')
-  const [stuck_sections, set_stuck_sections] = useState(new Set<NavItem>())
-
-  const handle_stuck_change = useCallback((id: NavItem, is_stuck: boolean) => {
-    set_stuck_sections((prev) => {
-      const is_currently_stuck = prev.has(id)
-      if (is_stuck === is_currently_stuck) {
-        return prev
-      }
-      const next = new Set(prev)
-      if (is_stuck) {
-        next.add(id)
-      } else {
-        next.delete(id)
-      }
-      return next
-    })
-  }, [])
-
-  const general_on_stuck_change = useCallback(
-    (is_stuck: boolean) => handle_stuck_change('general', is_stuck),
-    [handle_stuck_change]
-  )
-  const model_providers_on_stuck_change = useCallback(
-    (is_stuck: boolean) => handle_stuck_change('model-providers', is_stuck),
-    [handle_stuck_change]
-  )
-  const configurations_on_stuck_change = useCallback(
-    (is_stuck: boolean) => handle_stuck_change('configurations', is_stuck),
-    [handle_stuck_change]
-  )
 
   const get_has_warning = (id: NavItem): boolean => {
     if (id == 'model-providers') {
@@ -177,9 +187,37 @@ export const Home: React.FC<Props> = (props) => {
     }
   }
 
-  const nav_item_ids = NAV_ITEMS_CONFIG.map((item) => item.id)
-  const active_nav_item_id =
-    nav_item_ids.filter((id) => stuck_sections.has(id)).pop() || nav_item_ids[0]
+  const [active_nav_item_id, set_active_nav_item_id] = useState<NavItem>(NAV_ITEMS_CONFIG[0].id)
+
+  useEffect(() => {
+    const scroll_container = scroll_container_ref.current
+    if (!scroll_container) return
+
+    const handle_scroll = () => {
+      const container_rect = scroll_container.getBoundingClientRect()
+      let new_active_id = NAV_ITEMS_CONFIG[0].id
+
+      for (const item of NAV_ITEMS_CONFIG) {
+        const el = section_refs.current[item.id]
+        if (el) {
+          const rect = el.getBoundingClientRect()
+          if (rect.top <= container_rect.top + 150) {
+            new_active_id = item.id
+          }
+        }
+      }
+      set_active_nav_item_id(new_active_id)
+    }
+
+    scroll_container.addEventListener('scroll', handle_scroll)
+    window.addEventListener('resize', handle_scroll)
+    setTimeout(handle_scroll, 50)
+
+    return () => {
+      scroll_container.removeEventListener('scroll', handle_scroll)
+      window.removeEventListener('resize', handle_scroll)
+    }
+  }, [])
 
   useEffect(() => {
     set_commit_instructions(props.commit_message_instructions || '')
@@ -202,7 +240,14 @@ export const Home: React.FC<Props> = (props) => {
       const section_rect = section.getBoundingClientRect()
 
       const offset = section_rect.top - container_rect.top
-      const target_scroll_top = scroll_container.scrollTop + offset
+
+      let extra_offset = 0
+      const is_subsection = NAV_ITEMS_CONFIG.find((i) => i.id === item_id)?.is_nested
+      if (is_subsection) {
+        extra_offset = -112
+      }
+
+      const target_scroll_top = scroll_container.scrollTop + offset + extra_offset
 
       scroll_container.scrollTo({
         top: target_scroll_top,
@@ -240,12 +285,15 @@ export const Home: React.FC<Props> = (props) => {
               is_active={item.id === active_nav_item_id}
               has_warning={get_has_warning(item.id)}
               on_click={(e) => handle_nav_click(e, item.id)}
+              is_nested={item.is_nested}
+              is_last_nested={item.is_nested && !NAV_ITEMS_CONFIG[i + 1]?.is_nested}
             />
           )
         })}
       >
         <GeneralSection
-          ref={(el) => (section_refs.current['general'] = el)}
+          ref={(el) => set_section_ref('general', el)}
+          set_section_ref={set_section_ref}
           context_size_warning_threshold={props.context_size_warning_threshold}
           on_context_size_warning_threshold_change={
             props.on_context_size_warning_threshold_change
@@ -288,7 +336,6 @@ export const Home: React.FC<Props> = (props) => {
           ai_studio_user_id={props.ai_studio_user_id}
           on_gemini_user_id_change={props.on_gemini_user_id_change}
           on_ai_studio_user_id_change={props.on_ai_studio_user_id_change}
-          on_stuck_change={general_on_stuck_change}
           auto_run_intelligent_update={props.auto_run_intelligent_update}
           on_auto_run_intelligent_update_change={props.on_auto_run_intelligent_update_change}
           include_prompts_in_commit_messages={props.include_prompts_in_commit_messages}
@@ -298,10 +345,9 @@ export const Home: React.FC<Props> = (props) => {
         />
 
         <UiSection
-          ref={(el) => (section_refs.current['model-providers'] = el)}
+          ref={(el) => set_section_ref('model-providers', el)}
           title={t('sidebar.model-providers')}
           subtitle={t('model-providers.subtitle')}
-          on_stuck_change={model_providers_on_stuck_change}
           actions={
             <UiButton on_click={() => props.on_add_provider()}>
               {t('action.add-new')}
@@ -381,7 +427,8 @@ export const Home: React.FC<Props> = (props) => {
         </UiSection>
 
         <ConfigurationsSection
-          ref={(el) => (section_refs.current['configurations'] = el)}
+          ref={(el) => set_section_ref('configurations', el)}
+          set_section_ref={set_section_ref}
           api_configurations={props.api_configurations}
           defaults={props.defaults}
           set_api_configurations={props.set_api_configurations}
@@ -392,7 +439,6 @@ export const Home: React.FC<Props> = (props) => {
           on_delete_api_configuration={props.on_delete_api_configuration}
           on_set_default_api_configuration={props.on_set_default_api_configuration}
           on_select_default_api_configuration={props.on_select_default_api_configuration}
-          on_stuck_change={configurations_on_stuck_change}
           edit_context_instructions={edit_context_instructions}
           commit_instructions={commit_instructions}
           voice_input_instructions={voice_input_instructions}

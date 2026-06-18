@@ -7,6 +7,8 @@ type Props = {
   on_click: (e: React.MouseEvent<HTMLAnchorElement>) => void
   is_active: boolean
   has_warning?: boolean
+  is_nested?: boolean
+  is_last_nested?: boolean
 }
 
 export const NavigationItem: React.FC<Props> = (props) => {
@@ -14,7 +16,9 @@ export const NavigationItem: React.FC<Props> = (props) => {
     <a
       href={props.href}
       className={cn(styles.container, {
-        [styles['container--active']]: props.is_active
+        [styles['container--active']]: props.is_active,
+        [styles['container--nested']]: props.is_nested,
+        [styles['container--last-nested']]: props.is_last_nested
       })}
       onClick={props.on_click}
     >

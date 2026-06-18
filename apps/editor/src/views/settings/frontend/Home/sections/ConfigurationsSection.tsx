@@ -11,6 +11,7 @@ import { DefaultConfigurationSelector } from '@ui/components/editor/settings/Def
 import { ApiConfigurationForClient } from '@/views/settings/types/messages'
 import { ToolType } from '@/views/settings/types/tools'
 import { use_translation } from '../../i18n/use-translation'
+import { NavItem } from '../Home'
 
 type Props = {
   api_configurations: ApiConfigurationForClient[]
@@ -29,7 +30,7 @@ type Props = {
     api_configuration_id: string | null
   ) => void
   on_select_default_api_configuration: (tool_name: ToolType) => void
-  on_stuck_change: (is_stuck: boolean) => void
+  set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void
   edit_context_instructions: string
   commit_instructions: string
   voice_input_instructions: string
@@ -50,7 +51,6 @@ export const ConfigurationsSection = forwardRef<HTMLDivElement, Props>(
         ref={ref}
         title={t('sidebar.configurations')}
         subtitle={t('configurations.subtitle')}
-        on_stuck_change={props.on_stuck_change}
         actions={
           <UiButton on_click={() => props.on_add_api_configuration()}>
             {t('action.add-new')}
@@ -134,100 +134,104 @@ export const ConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             />
           )}
         </UiGroup>
-        <UiGroup title={t('configurations.default-configurations.title')}>
-            <DefaultConfigurationSelector
-              title={t('configurations.tool.intelligent-update')}
-              value={props.defaults['intelligent-update'] || null}
-              configurations={props.api_configurations}
-              on_unset={() =>
-                props.on_set_default_api_configuration('intelligent-update', null)
-              }
-              on_select={() =>
-                props.on_select_default_api_configuration('intelligent-update')
-              }
-              translations={{
-                select: t('configurations.action.select-default'),
-                unset: t('configurations.action.unset-default')
-              }}
-            />
-            <DefaultConfigurationSelector
-              title={t('configurations.tool.code-at-cursor')}
-              value={props.defaults['code-at-cursor'] || null}
-              configurations={props.api_configurations}
-              on_unset={() =>
-                props.on_set_default_api_configuration('code-at-cursor', null)
-              }
-              on_select={() =>
-                props.on_select_default_api_configuration('code-at-cursor')
-              }
-              translations={{
-                select: t('configurations.action.select-default'),
-                unset: t('configurations.action.unset-default')
-              }}
-            />
-            <DefaultConfigurationSelector
-              title={t('configurations.tool.commit-messages')}
-              value={props.defaults['commit-messages'] || null}
-              configurations={props.api_configurations}
-              on_unset={() =>
-                props.on_set_default_api_configuration('commit-messages', null)
-              }
-              on_select={() =>
-                props.on_select_default_api_configuration('commit-messages')
-              }
-              translations={{
-                select: t('configurations.action.select-default'),
-                unset: t('configurations.action.unset-default')
-              }}
-            />
-            <DefaultConfigurationSelector
-              title={t('configurations.tool.voice-input')}
-              value={props.defaults['voice-input'] || null}
-              configurations={props.api_configurations}
-              on_unset={() =>
-                props.on_set_default_api_configuration('voice-input', null)
-              }
-              on_select={() =>
-                props.on_select_default_api_configuration('voice-input')
-              }
-              translations={{
-                select: t('configurations.action.select-default'),
-                unset: t('configurations.action.unset-default')
-              }}
-            />
-        </UiGroup>
-        <UiGroup title={t('configurations.instructions.title')}>
-          <UiItem
-            title={t('configurations.edit-context-system-instructions.title')}
-            description={t('configurations.edit-context-system-instructions.description')}
-          >
-            <UiTextarea
-              value={props.edit_context_instructions}
-              on_change={props.set_edit_context_instructions}
-              on_blur={props.on_edit_context_instructions_blur}
-            />
-          </UiItem>
-          <UiItem
-            title={t('configurations.commit-message-instructions.title')}
-            description={t('configurations.commit-message-instructions.description')}
-          >
-            <UiTextarea
-              value={props.commit_instructions}
-              on_change={props.set_commit_instructions}
-              on_blur={props.on_commit_instructions_blur}
-            />
-          </UiItem>
-          <UiItem
-            title={t('configurations.voice-input-instructions.title')}
-            description={t('configurations.voice-input-instructions.description')}
-          >
-            <UiTextarea
-              value={props.voice_input_instructions}
-              on_change={props.set_voice_input_instructions}
-              on_blur={props.on_voice_input_instructions_blur}
-            />
-          </UiItem>
-        </UiGroup>
+        <div ref={(el) => props.set_section_ref('defaults', el)}>
+          <UiGroup title={t('configurations.defaults.title')}>
+              <DefaultConfigurationSelector
+                title={t('configurations.tool.intelligent-update')}
+                value={props.defaults['intelligent-update'] || null}
+                configurations={props.api_configurations}
+                on_unset={() =>
+                  props.on_set_default_api_configuration('intelligent-update', null)
+                }
+                on_select={() =>
+                  props.on_select_default_api_configuration('intelligent-update')
+                }
+                translations={{
+                  select: t('configurations.action.select-default'),
+                  unset: t('configurations.action.unset-default')
+                }}
+              />
+              <DefaultConfigurationSelector
+                title={t('configurations.tool.code-at-cursor')}
+                value={props.defaults['code-at-cursor'] || null}
+                configurations={props.api_configurations}
+                on_unset={() =>
+                  props.on_set_default_api_configuration('code-at-cursor', null)
+                }
+                on_select={() =>
+                  props.on_select_default_api_configuration('code-at-cursor')
+                }
+                translations={{
+                  select: t('configurations.action.select-default'),
+                  unset: t('configurations.action.unset-default')
+                }}
+              />
+              <DefaultConfigurationSelector
+                title={t('configurations.tool.commit-messages')}
+                value={props.defaults['commit-messages'] || null}
+                configurations={props.api_configurations}
+                on_unset={() =>
+                  props.on_set_default_api_configuration('commit-messages', null)
+                }
+                on_select={() =>
+                  props.on_select_default_api_configuration('commit-messages')
+                }
+                translations={{
+                  select: t('configurations.action.select-default'),
+                  unset: t('configurations.action.unset-default')
+                }}
+              />
+              <DefaultConfigurationSelector
+                title={t('configurations.tool.voice-input')}
+                value={props.defaults['voice-input'] || null}
+                configurations={props.api_configurations}
+                on_unset={() =>
+                  props.on_set_default_api_configuration('voice-input', null)
+                }
+                on_select={() =>
+                  props.on_select_default_api_configuration('voice-input')
+                }
+                translations={{
+                  select: t('configurations.action.select-default'),
+                  unset: t('configurations.action.unset-default')
+                }}
+              />
+          </UiGroup>
+        </div>
+        <div ref={(el) => props.set_section_ref('instructions', el)}>
+          <UiGroup title={t('configurations.instructions.title')}>
+            <UiItem
+              title={t('configurations.edit-context-system-instructions.title')}
+              description={t('configurations.edit-context-system-instructions.description')}
+            >
+              <UiTextarea
+                value={props.edit_context_instructions}
+                on_change={props.set_edit_context_instructions}
+                on_blur={props.on_edit_context_instructions_blur}
+              />
+            </UiItem>
+            <UiItem
+              title={t('configurations.commit-message-instructions.title')}
+              description={t('configurations.commit-message-instructions.description')}
+            >
+              <UiTextarea
+                value={props.commit_instructions}
+                on_change={props.set_commit_instructions}
+                on_blur={props.on_commit_instructions_blur}
+              />
+            </UiItem>
+            <UiItem
+              title={t('configurations.voice-input-instructions.title')}
+              description={t('configurations.voice-input-instructions.description')}
+            >
+              <UiTextarea
+                value={props.voice_input_instructions}
+                on_change={props.set_voice_input_instructions}
+                on_blur={props.on_voice_input_instructions_blur}
+              />
+            </UiItem>
+          </UiGroup>
+        </div>
       </UiSection>
     )
   }
