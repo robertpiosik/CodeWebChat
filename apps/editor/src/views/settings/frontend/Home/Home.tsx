@@ -29,6 +29,7 @@ import { default_system_instructions } from '@shared/constants/default-system-in
 
 export type NavItem =
   | 'general'
+  | 'prompt-field'
   | 'checkpoints'
   | 'edit-format'
   | 'chatbots'
@@ -45,13 +46,18 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
     label: 'sidebar.general'
   },
   {
+    id: 'prompt-field',
+    label: 'general.prompt-field.title',
+    is_nested: true
+  },
+  {
     id: 'checkpoints',
     label: 'general.checkpoints.title',
     is_nested: true
   },
   {
     id: 'edit-format',
-    label: 'general.edit-formats.title',
+    label: 'general.edit-format-instructions.title',
     is_nested: true
   },
   {
@@ -159,6 +165,7 @@ export const Home: React.FC<Props> = (props) => {
   const scroll_container_ref = useRef<HTMLDivElement>(null)
   const section_refs = useRef<Record<NavItem, HTMLDivElement | null>>({
     general: null,
+    'prompt-field': null,
     checkpoints: null,
     'edit-format': null,
     chatbots: null,

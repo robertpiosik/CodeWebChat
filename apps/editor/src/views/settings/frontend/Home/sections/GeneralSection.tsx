@@ -270,26 +270,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
           <UiItem
-            title={t('general.send-with-shift-enter.title')}
-            description={t('general.send-with-shift-enter.description')}
-            slot_right={
-              <UiToggler
-                is_on={props.send_with_shift_enter}
-                on_toggle={props.on_send_with_shift_enter_change}
-              />
-            }
-          />
-          <UiItem
-            title={t('general.voice-input.push-to-talk.title')}
-            description={t('general.voice-input.push-to-talk.description')}
-            slot_right={
-              <UiToggler
-                is_on={props.voice_input_push_to_talk}
-                on_toggle={props.on_voice_input_push_to_talk_change}
-              />
-            }
-          />
-          <UiItem
             title={t('general.include-prompts-in-commit-messages.title')}
             description={t('general.include-prompts-in-commit-messages.description')}
             slot_right={
@@ -335,6 +315,31 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           />
         </UiGroup>
 
+        <div ref={(el) => props.set_section_ref('prompt-field', el)}>
+          <UiGroup title={t('general.prompt-field.title')}>
+            <UiItem
+              title={t('general.send-with-shift-enter.title')}
+              description={t('general.send-with-shift-enter.description')}
+              slot_right={
+                <UiToggler
+                  is_on={props.send_with_shift_enter}
+                  on_toggle={props.on_send_with_shift_enter_change}
+                />
+              }
+            />
+            <UiItem
+              title={t('general.voice-input.push-to-talk.title')}
+              description={t('general.voice-input.push-to-talk.description')}
+              slot_right={
+                <UiToggler
+                  is_on={props.voice_input_push_to_talk}
+                  on_toggle={props.on_voice_input_push_to_talk_change}
+                />
+              }
+            />
+          </UiGroup>
+        </div>
+
         <div ref={(el) => props.set_section_ref('checkpoints', el)}>
           <UiGroup title={t('general.checkpoints.title')}>
             <UiItem
@@ -370,7 +375,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
         </div>
 
         <div ref={(el) => props.set_section_ref('edit-format', el)}>
-          <UiGroup title={t('general.edit-formats.title')}>
+          <UiGroup title={t('general.edit-format-instructions.title')}>
             <UiItem
               title={t('general.edit-format.whole.title')}
               description={t('general.edit-format.whole.description')}
