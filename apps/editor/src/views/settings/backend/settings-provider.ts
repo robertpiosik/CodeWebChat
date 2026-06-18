@@ -46,8 +46,8 @@ import {
   handle_upsert_api_configuration,
   handle_open_ignore_patterns_settings,
   handle_open_allow_patterns_settings,
-  handle_get_fix_all_automatically,
-  handle_update_fix_all_automatically,
+  handle_get_auto_run_intelligent_update,
+  handle_update_auto_run_intelligent_update,
   handle_get_extended_cache_duration_for_anthropic,
   handle_update_extended_cache_duration_for_anthropic,
   handle_open_keybindings,
@@ -227,10 +227,10 @@ export class SettingsProvider {
           await handle_open_allow_patterns_settings()
         } else if (message.command == 'UPSERT_API_CONFIGURATION') {
           await handle_upsert_api_configuration(this, message)
-        } else if (message.command == 'GET_FIX_ALL_AUTOMATICALLY') {
-          await handle_get_fix_all_automatically(this)
-        } else if (message.command == 'UPDATE_FIX_ALL_AUTOMATICALLY') {
-          await handle_update_fix_all_automatically(message)
+        } else if (message.command == 'GET_AUTO_RUN_INTELLIGENT_UPDATE') {
+          await handle_get_auto_run_intelligent_update(this)
+        } else if (message.command == 'UPDATE_AUTO_RUN_INTELLIGENT_UPDATE') {
+          await handle_update_auto_run_intelligent_update(message)
         } else if (
           message.command == 'GET_EXTENDED_CACHE_DURATION_FOR_ANTHROPIC'
         ) {
@@ -269,7 +269,7 @@ export class SettingsProvider {
           void handle_get_send_with_shift_enter(this)
           void handle_get_check_new_files(this)
           void handle_get_reuse_last_tab(this)
-          void handle_get_fix_all_automatically(this)
+          void handle_get_auto_run_intelligent_update(this)
           void handle_get_extended_cache_duration_for_anthropic(this)
         }
       })

@@ -36,10 +36,8 @@ type NavItem =
   | 'general'
   | 'model-providers'
   | 'configurations'
-  | 'intelligent-update'
   | 'edit-context'
   | 'code-at-cursor'
-  | 'find-relevant-files'
   | 'commit-messages'
   | 'voice-input'
 
@@ -64,21 +62,11 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
     label: 'sidebar.configurations'
   },
   { type: 'divider', text: 'sidebar.api-tools' },
-  {
-    type: 'item',
-    id: 'intelligent-update',
-    label: 'sidebar.intelligent-update'
-  },
   { type: 'item', id: 'edit-context', label: 'sidebar.edit-context' },
   {
     type: 'item',
     id: 'code-at-cursor',
     label: 'sidebar.code-at-cursor'
-  },
-  {
-    type: 'item',
-    id: 'find-relevant-files',
-    label: 'sidebar.find-relevant-files'
   },
   {
     type: 'item',
@@ -112,7 +100,7 @@ type Props = {
   edit_format_instructions: EditFormatInstructions
   clear_checks_in_workspace_behavior: 'ignore-open-editors' | 'uncheck-all'
   extended_cache_duration_for_anthropic: boolean
-  fix_all_automatically: boolean
+  auto_run_intelligent_update: boolean
   set_providers: (providers: ProviderForClient[]) => void
   set_api_configurations: (configurations: ApiConfigurationForClient[]) => void
   on_context_size_warning_threshold_change: (
@@ -136,7 +124,7 @@ type Props = {
   on_clear_checks_in_workspace_behavior_change: (
     value: 'ignore-open-editors' | 'uncheck-all'
   ) => void
-  on_fix_all_automatically_change: (enabled: boolean) => void
+  on_auto_run_intelligent_update_change: (enabled: boolean) => void
   on_extended_cache_duration_for_anthropic_change: (enabled: boolean) => void
   on_open_keybindings: (search?: string) => void
   on_open_editor_settings: () => void
@@ -174,10 +162,8 @@ export const Home: React.FC<Props> = (props) => {
     general: null,
     'model-providers': null,
     configurations: null,
-    'intelligent-update': null,
     'edit-context': null,
     'code-at-cursor': null,
-    'find-relevant-files': null,
     'commit-messages': null,
     'voice-input': null
   })
@@ -223,16 +209,8 @@ export const Home: React.FC<Props> = (props) => {
     (is_stuck: boolean) => handle_stuck_change('code-at-cursor', is_stuck),
     [handle_stuck_change]
   )
-  const intelligent_update_on_stuck_change = useCallback(
-    (is_stuck: boolean) => handle_stuck_change('intelligent-update', is_stuck),
-    [handle_stuck_change]
-  )
   const voice_input_on_stuck_change = useCallback(
     (is_stuck: boolean) => handle_stuck_change('voice-input', is_stuck),
-    [handle_stuck_change]
-  )
-  const find_relevant_files_on_stuck_change = useCallback(
-    (is_stuck: boolean) => handle_stuck_change('find-relevant-files', is_stuck),
     [handle_stuck_change]
   )
   const commit_messages_on_stuck_change = useCallback(
@@ -372,6 +350,8 @@ export const Home: React.FC<Props> = (props) => {
           on_gemini_user_id_change={props.on_gemini_user_id_change}
           on_ai_studio_user_id_change={props.on_ai_studio_user_id_change}
           on_stuck_change={general_on_stuck_change}
+          auto_run_intelligent_update={props.auto_run_intelligent_update}
+          on_auto_run_intelligent_update_change={props.on_auto_run_intelligent_update_change}
         />
 
         <UiSection
@@ -545,20 +525,8 @@ export const Home: React.FC<Props> = (props) => {
               />
             )}
           </UiGroup>
-        </UiSection>
-
-        <UiSection
-          ref={(el) => (section_refs.current['intelligent-update'] = el)}
-          group={t('section.api-tool')}
-          title={t('sidebar.intelligent-update')}
-          subtitle={t('intelligent-update.subtitle')}
-          on_stuck_change={intelligent_update_on_stuck_change}
-        >
-          <UiNotice type="info">{t('intelligent-update.notice')}</UiNotice>
-          <UiGroup>
-            <UiItem
-              title={t('action.default-configuration')}
-            >
+          <UiGroup title={t('action.default-configurations')}>
+            <UiItem title={t('sidebar.intelligent-update')}>
               <DefaultConfigurationSelector
                 value={props.defaults['intelligent-update'] || null}
                 configurations={props.api_configurations}
@@ -574,18 +542,54 @@ export const Home: React.FC<Props> = (props) => {
                 }}
               />
             </UiItem>
-            <UiItem
-              title={t('intelligent-update.fix-all-automatically.title')}
-              description={t(
-                'intelligent-update.fix-all-automatically.description'
-              )}
-              slot_right={
-                <UiToggler
-                  is_on={props.fix_all_automatically}
-                  on_toggle={props.on_fix_all_automatically_change}
-                />
-              }
-            />
+            <UiItem title={t('sidebar.code-at-cursor')}>
+              <DefaultConfigurationSelector
+                value={props.defaults['code-at-cursor'] || null}
+                configurations={props.api_configurations}
+                on_unset={() =>
+                  props.on_set_default_api_configuration('code-at-cursor', null)
+                }
+                on_select={() =>
+                  props.on_select_default_api_configuration('code-at-cursor')
+                }
+                translations={{
+                  select_default: t('action.select-default-configuration'),
+                  unset: t('action.unset-default')
+                }}
+              />
+            </UiItem>
+            <UiItem title={t('sidebar.commit-messages')}>
+              <DefaultConfigurationSelector
+                value={props.defaults['commit-messages'] || null}
+                configurations={props.api_configurations}
+                on_unset={() =>
+                  props.on_set_default_api_configuration('commit-messages', null)
+                }
+                on_select={() =>
+                  props.on_select_default_api_configuration('commit-messages')
+                }
+                translations={{
+                  select_default: t('action.select-default-configuration'),
+                  unset: t('action.unset-default')
+                }}
+              />
+            </UiItem>
+            <UiItem title={t('sidebar.voice-input')}>
+              <DefaultConfigurationSelector
+                value={props.defaults['voice-input'] || null}
+                configurations={props.api_configurations}
+                on_unset={() =>
+                  props.on_set_default_api_configuration('voice-input', null)
+                }
+                on_select={() =>
+                  props.on_select_default_api_configuration('voice-input')
+                }
+                translations={{
+                  select_default: t('action.select-default-configuration'),
+                  unset: t('action.unset-default')
+                }}
+              />
+            </UiItem>
           </UiGroup>
         </UiSection>
 
@@ -632,24 +636,6 @@ export const Home: React.FC<Props> = (props) => {
           <UiNotice type="info">{t('code-at-cursor.notice')}</UiNotice>
           <UiGroup>
             <UiItem
-              title={t('action.default-configuration')}
-            >
-              <DefaultConfigurationSelector
-                value={props.defaults['code-at-cursor'] || null}
-                configurations={props.api_configurations}
-                on_unset={() =>
-                  props.on_set_default_api_configuration('code-at-cursor', null)
-                }
-                on_select={() =>
-                  props.on_select_default_api_configuration('code-at-cursor')
-                }
-                translations={{
-                  select_default: t('action.select-default-configuration'),
-                  unset: t('action.unset-default')
-                }}
-              />
-            </UiItem>
-            <UiItem
               title={t('code-at-cursor.keyboard-shortcut.title')}
               description={t('code-at-cursor.keyboard-shortcut.description')}
               slot_right={
@@ -666,36 +652,6 @@ export const Home: React.FC<Props> = (props) => {
         </UiSection>
 
         <UiSection
-          ref={(el) => (section_refs.current['find-relevant-files'] = el)}
-          group={t('section.api-tool')}
-          title={t('sidebar.find-relevant-files')}
-          subtitle={t('find-relevant-files.subtitle')}
-          on_stuck_change={find_relevant_files_on_stuck_change}
-        >
-          <UiNotice type="info">{t('find-relevant-files.notice')}</UiNotice>
-          <UiGroup>
-            <UiItem
-              title={t('action.default-configuration')}
-            >
-              <DefaultConfigurationSelector
-                value={props.defaults['find-relevant-files'] || null}
-                configurations={props.api_configurations}
-                on_unset={() =>
-                  props.on_set_default_api_configuration('find-relevant-files', null)
-                }
-                on_select={() =>
-                  props.on_select_default_api_configuration('find-relevant-files')
-                }
-                translations={{
-                  select_default: t('action.select-default-configuration'),
-                  unset: t('action.unset-default')
-                }}
-              />
-            </UiItem>
-          </UiGroup>
-        </UiSection>
-
-        <UiSection
           ref={(el) => (section_refs.current['commit-messages'] = el)}
           group={t('section.api-tool')}
           title={t('sidebar.commit-messages')}
@@ -704,24 +660,6 @@ export const Home: React.FC<Props> = (props) => {
         >
           <UiNotice type="info">{t('commit-messages.notice')}</UiNotice>
           <UiGroup>
-            <UiItem
-              title={t('action.default-configuration')}
-            >
-              <DefaultConfigurationSelector
-                value={props.defaults['commit-messages'] || null}
-                configurations={props.api_configurations}
-                on_unset={() =>
-                  props.on_set_default_api_configuration('commit-messages', null)
-                }
-                on_select={() =>
-                  props.on_select_default_api_configuration('commit-messages')
-                }
-                translations={{
-                  select_default: t('action.select-default-configuration'),
-                  unset: t('action.unset-default')
-                }}
-              />
-            </UiItem>
             <UiItem
               title={t('commit-messages.instructions.title')}
               description={t('commit-messages.instructions.description')}
@@ -784,24 +722,6 @@ export const Home: React.FC<Props> = (props) => {
             />
           </UiNotice>
           <UiGroup>
-            <UiItem
-              title={t('action.default-configuration')}
-            >
-              <DefaultConfigurationSelector
-                value={props.defaults['voice-input'] || null}
-                configurations={props.api_configurations}
-                on_unset={() =>
-                  props.on_set_default_api_configuration('voice-input', null)
-                }
-                on_select={() =>
-                  props.on_select_default_api_configuration('voice-input')
-                }
-                translations={{
-                  select_default: t('action.select-default-configuration'),
-                  unset: t('action.unset-default')
-                }}
-              />
-            </UiItem>
             <UiItem
               title={t('voice-input.instructions.title')}
               description={t('voice-input.instructions.description')}

@@ -48,7 +48,7 @@ type Props = {
     files: { file_path: string; workspace_name?: string }[]
   ) => void
   raw_instructions?: string
-  fix_all_automatically?: boolean
+  auto_run_intelligent_update?: boolean
   recent_api_configuration?: RecentApiConfiguration
 }
 
@@ -149,7 +149,7 @@ export const ResponsePreview: FC<Props> = (props) => {
 
   useEffect(() => {
     if (
-      props.fix_all_automatically &&
+      props.auto_run_intelligent_update &&
       error_count > 0 &&
       !is_fixing_all &&
       !has_attempted_auto_fix
@@ -170,7 +170,7 @@ export const ResponsePreview: FC<Props> = (props) => {
       props.on_fix_all_failed(files_to_fix)
     }
   }, [
-    props.fix_all_automatically,
+    props.auto_run_intelligent_update,
     error_count,
     is_fixing_all,
     has_attempted_auto_fix,

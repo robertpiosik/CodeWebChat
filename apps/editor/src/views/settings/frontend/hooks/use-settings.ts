@@ -66,7 +66,7 @@ export const use_settings = (vscode: any) => {
     clear_checks_in_workspace_behavior,
     set_clear_checks_in_workspace_behavior
   ] = useState<'ignore-open-editors' | 'uncheck-all' | undefined>(undefined)
-  const [fix_all_automatically, set_fix_all_automatically] = useState<
+  const [auto_run_intelligent_update, set_auto_run_intelligent_update] = useState<
     boolean | undefined
   >(undefined)
   const [
@@ -92,7 +92,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_CHECK_NEW_FILES' })
     post_message(vscode, { command: 'GET_REUSE_LAST_TAB' })
     post_message(vscode, { command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR' })
-    post_message(vscode, { command: 'GET_FIX_ALL_AUTOMATICALLY' })
+    post_message(vscode, { command: 'GET_AUTO_RUN_INTELLIGENT_UPDATE' })
     post_message(vscode, {
       command: 'GET_EXTENDED_CACHE_DURATION_FOR_ANTHROPIC'
     })
@@ -136,8 +136,8 @@ export const use_settings = (vscode: any) => {
         set_reuse_last_tab(message.enabled)
       } else if (message.command == 'CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR') {
         set_clear_checks_in_workspace_behavior(message.value)
-      } else if (message.command == 'FIX_ALL_AUTOMATICALLY') {
-        set_fix_all_automatically(message.enabled)
+      } else if (message.command == 'AUTO_RUN_INTELLIGENT_UPDATE') {
+        set_auto_run_intelligent_update(message.enabled)
       } else if (message.command == 'EXTENDED_CACHE_DURATION_FOR_ANTHROPIC') {
         set_extended_cache_duration_for_anthropic(message.enabled)
       }
@@ -368,10 +368,10 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_fix_all_automatically_change = (enabled: boolean) => {
-    set_fix_all_automatically(enabled)
+  const handle_auto_run_intelligent_update_change = (enabled: boolean) => {
+    set_auto_run_intelligent_update(enabled)
     post_message(vscode, {
-      command: 'UPDATE_FIX_ALL_AUTOMATICALLY',
+      command: 'UPDATE_AUTO_RUN_INTELLIGENT_UPDATE',
       enabled
     })
   }
@@ -421,7 +421,7 @@ export const use_settings = (vscode: any) => {
     check_new_files,
     reuse_last_tab,
     clear_checks_in_workspace_behavior,
-    fix_all_automatically,
+    auto_run_intelligent_update,
     extended_cache_duration_for_anthropic,
     handle_reorder_providers,
     handle_add_provider,
@@ -452,7 +452,7 @@ export const use_settings = (vscode: any) => {
     handle_check_new_files_change,
     handle_reuse_last_tab_change,
     handle_clear_checks_in_workspace_behavior_change,
-    handle_fix_all_automatically_change,
+    handle_auto_run_intelligent_update_change,
     handle_extended_cache_duration_for_anthropic_change,
     handle_open_keybindings,
     handle_open_external_url

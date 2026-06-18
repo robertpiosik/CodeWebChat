@@ -868,7 +868,7 @@
           "type": "string",
           "scope": "resource"
         },
-        "codeWebChat.fixAllAutomatically": {
+        "codeWebChat.autoRunIntelligentUpdate": {
           "type": "boolean",
           "scope": "resource",
           "default": false

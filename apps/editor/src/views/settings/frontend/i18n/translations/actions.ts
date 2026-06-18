@@ -377,6 +377,24 @@ export const actions = {
     hu: 'Alapértelmezett Konfiguráció',
     bg: 'Конфигурация по подразбиране'
   },
+  'action.default-configurations': {
+    en: 'Default configurations',
+    pl: 'Domyślne konfiguracje',
+    'zh-cn': '默认配置',
+    ja: 'デフォルト設定',
+    'zh-tw': '預設設定',
+    de: 'Standardkonfigurationen',
+    es: 'Configuraciones predeterminadas',
+    fr: 'Configurations par défaut',
+    'pt-br': 'Configurações Padrão',
+    ru: 'Конфигурации по умолчанию',
+    ko: '기본 구성',
+    it: 'Configurazioni predefinite',
+    tr: 'Varsayılan Yapılandırmalar',
+    cs: 'Výchozí konfigurace',
+    hu: 'Alapértelmezett Konfigurációk',
+    bg: 'Конфигурации по подразбиране'
+  },
   'action.none': {
     en: 'None',
     pl: 'Brak',

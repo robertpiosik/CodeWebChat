@@ -54,6 +54,8 @@ type Props = {
   on_open_ignore_patterns_settings: () => void
   on_open_allow_patterns_settings: () => void
   on_stuck_change: (is_stuck: boolean) => void
+  auto_run_intelligent_update: boolean
+  on_auto_run_intelligent_update_change: (enabled: boolean) => void
 }
 
 export const GeneralSection = forwardRef<HTMLDivElement, Props>(
@@ -262,12 +264,14 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
           <UiItem
-            title={t('general.reuse-last-tab.title')}
-            description={t('general.reuse-last-tab.description')}
+            title={t('intelligent-update.auto-run-intelligent-update.title')}
+            description={t(
+              'intelligent-update.auto-run-intelligent-update.description'
+            )}
             slot_right={
               <UiToggler
-                is_on={props.reuse_last_tab}
-                on_toggle={props.on_reuse_last_tab_change}
+                is_on={props.auto_run_intelligent_update}
+                on_toggle={props.on_auto_run_intelligent_update_change}
               />
             }
           />
@@ -472,6 +476,16 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
 
         <UiGroup title={t('general.chatbots.title')}>
           <UiItem
+            title={t('general.reuse-last-tab.title')}
+            description={t('general.reuse-last-tab.description')}
+            slot_right={
+              <UiToggler
+                is_on={props.reuse_last_tab}
+                on_toggle={props.on_reuse_last_tab_change}
+              />
+            }
+          />
+          <UiItem
             title={t('general.gemini-user-id.title')}
             description={t('general.gemini-user-id.description')}
             slot_right={
@@ -498,6 +512,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
         </UiGroup>
+
       </UiSection>
     )
   }

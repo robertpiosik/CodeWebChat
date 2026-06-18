@@ -99,7 +99,7 @@ export const Panel = () => {
     set_items_in_preview,
     raw_instructions,
     preview_item_created_at,
-    fix_all_automatically,
+    auto_run_intelligent_update,
     handle_discard_user_changes_in_preview,
     url,
     recent_api_configuration
@@ -649,7 +649,7 @@ export const Panel = () => {
             >
               <UiResponsePreview
                 items={items_in_preview}
-                fix_all_automatically={fix_all_automatically}
+                auto_run_intelligent_update={auto_run_intelligent_update}
                 raw_instructions={raw_instructions}
                 recent_api_configuration={recent_api_configuration}
                 has_multiple_workspaces={workspace_folder_count > 1}

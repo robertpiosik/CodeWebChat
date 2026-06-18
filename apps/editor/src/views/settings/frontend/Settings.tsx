@@ -8,10 +8,8 @@ type NavItem =
   | 'general'
   | 'model-providers'
   | 'configurations'
-  | 'intelligent-update'
   | 'edit-context'
   | 'code-at-cursor'
-  | 'find-relevant-files'
   | 'commit-messages'
   | 'voice-input'
 
@@ -42,7 +40,7 @@ export const Settings = () => {
       settings_hook.check_new_files !== undefined &&
       settings_hook.reuse_last_tab !== undefined &&
       settings_hook.clear_checks_in_workspace_behavior !== undefined &&
-      settings_hook.fix_all_automatically !== undefined &&
+      settings_hook.auto_run_intelligent_update !== undefined &&
       settings_hook.extended_cache_duration_for_anthropic !== undefined
     )
   }, [settings_hook])
@@ -94,7 +92,7 @@ export const Settings = () => {
       extended_cache_duration_for_anthropic={
         settings_hook.extended_cache_duration_for_anthropic!
       }
-      fix_all_automatically={settings_hook.fix_all_automatically!}
+      auto_run_intelligent_update={settings_hook.auto_run_intelligent_update!}
       set_providers={settings_hook.set_providers}
       set_api_configurations={settings_hook.set_api_configurations}
       on_context_size_warning_threshold_change={
@@ -136,8 +134,8 @@ export const Settings = () => {
       }
       on_check_new_files_change={settings_hook.handle_check_new_files_change}
       on_reuse_last_tab_change={settings_hook.handle_reuse_last_tab_change}
-      on_fix_all_automatically_change={
-        settings_hook.handle_fix_all_automatically_change
+      on_auto_run_intelligent_update_change={
+        settings_hook.handle_auto_run_intelligent_update_change
       }
       on_extended_cache_duration_for_anthropic_change={
         settings_hook.handle_extended_cache_duration_for_anthropic_change

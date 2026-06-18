@@ -229,12 +229,12 @@ export interface UpsertApiConfigurationMessage {
   duplicate_from_id?: string
 }
 
-export interface GetFixAllAutomaticallyMessage {
-  command: 'GET_FIX_ALL_AUTOMATICALLY'
+export interface GetAutoRunIntelligentUpdateMessage {
+  command: 'GET_AUTO_RUN_INTELLIGENT_UPDATE'
 }
 
-export interface UpdateFixAllAutomaticallyMessage {
-  command: 'UPDATE_FIX_ALL_AUTOMATICALLY'
+export interface UpdateAutoRunIntelligentUpdateMessage {
+  command: 'UPDATE_AUTO_RUN_INTELLIGENT_UPDATE'
   enabled: boolean
 }
 
@@ -303,8 +303,8 @@ export type FrontendMessage =
   | OpenEditorSettingsMessage
   | OpenIgnorePatternsSettingsMessage
   | OpenAllowPatternsSettingsMessage
-  | GetFixAllAutomaticallyMessage
-  | UpdateFixAllAutomaticallyMessage
+  | GetAutoRunIntelligentUpdateMessage
+  | UpdateAutoRunIntelligentUpdateMessage
   | GetExtendedCacheDurationForAnthropicMessage
   | UpdateExtendedCacheDurationForAnthropicMessage
   | OpenKeybindingsMessage
@@ -402,8 +402,8 @@ export interface ShowSectionMessage {
   section: string
 }
 
-export interface FixAllAutomaticallyMessage {
-  command: 'FIX_ALL_AUTOMATICALLY'
+export interface AutoRunIntelligentUpdateMessage {
+  command: 'AUTO_RUN_INTELLIGENT_UPDATE'
   enabled: boolean
 }
 
@@ -431,5 +431,5 @@ export type BackendMessage =
   | ReuseLastTabMessage
   | ClearChecksInWorkspaceBehaviorMessage
   | ShowSectionMessage
-  | FixAllAutomaticallyMessage
+  | AutoRunIntelligentUpdateMessage
   | ExtendedCacheDurationForAnthropicMessage

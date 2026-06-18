@@ -131,8 +131,8 @@ export const preview = async (params: {
     }
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const fix_all_automatically = config.get<boolean>(
-      'fixAllAutomatically',
+    const auto_run_intelligent_update = config.get<boolean>(
+      'autoRunIntelligentUpdate',
       false
     )
 
@@ -145,7 +145,7 @@ export const preview = async (params: {
         items: items_for_preview,
         raw_instructions: params.raw_instructions,
         created_at: params.created_at,
-        fix_all_automatically,
+        auto_run_intelligent_update,
         url: params.url,
         recent_api_configuration: params.recent_api_configuration
       })
