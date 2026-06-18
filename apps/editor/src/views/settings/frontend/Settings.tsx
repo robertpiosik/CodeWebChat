@@ -8,10 +8,6 @@ type NavItem =
   | 'general'
   | 'model-providers'
   | 'configurations'
-  | 'edit-context'
-  | 'code-at-cursor'
-  | 'commit-messages'
-  | 'voice-input'
 
 const vscode = acquireVsCodeApi()
 

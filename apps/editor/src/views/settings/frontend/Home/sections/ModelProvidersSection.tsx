@@ -31,8 +31,8 @@ export const ModelProvidersSection: React.FC<ModelProvidersSectionProps> = (
       on_add={props.on_add_provider}
       translations={{
         add_title: t('action.add-new'),
-        item_text: t('action.model-provider'),
-        items_text: t('action.model-providers')
+        item_text: t('model-providers.item'),
+        items_text: t('model-providers.items')
       }}
       render_content={(provider) => {
         const is_localhost =
@@ -79,17 +79,17 @@ export const ModelProvidersSection: React.FC<ModelProvidersSectionProps> = (
           <>
             <IconButton
               codicon_icon="insert"
-              title={t('action.insert-provider')}
+              title={t('model-providers.action.insert')}
               on_click={() => props.on_add_provider({ insertion_index: index })}
             />
             <IconButton
               codicon_icon="edit"
-              title={t('action.edit-provider')}
+              title={t('model-providers.action.edit')}
               on_click={() => props.on_edit_provider(provider.name)}
             />
             <IconButton
               codicon_icon="trash"
-              title={t('action.delete-provider')}
+              title={t('model-providers.action.delete')}
               on_click={() => props.on_delete_provider(provider.name)}
             />
           </>

@@ -3,14 +3,11 @@ import { Layout as UiLayout } from '@ui/components/editor/settings/Layout'
 import { NavigationItem as UiNavigationItem } from '@ui/components/editor/settings/NavigationItem'
 import { ModelProvidersSection } from './sections/ModelProvidersSection'
 import { ConfigurationsSection } from './sections/ConfigurationsSection'
-import { NavigationDivider as UiNavigationDivider } from '@ui/components/editor/settings/NavigationDivider'
 import { Item as UiItem } from '@ui/components/editor/settings/Item'
 import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
 import { Section as UiSection } from '@ui/components/editor/settings/Section'
-import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
 import { Button as UiButton } from '@ui/components/editor/common/Button'
-import { TextButton as UiTextButton } from '@ui/components/editor/settings/TextButton'
 import { Notice as UiNotice } from '@ui/components/editor/settings/Notice'
 import {
   ApiConfigurationForClient,
@@ -34,48 +31,22 @@ type NavItem =
   | 'general'
   | 'model-providers'
   | 'configurations'
-  | 'edit-context'
-  | 'code-at-cursor'
-  | 'commit-messages'
-  | 'voice-input'
 
-type NavConfigItem =
-  | { type: 'item'; id: NavItem; label: TranslationKey }
-  | { type: 'divider'; text?: TranslationKey }
+type NavConfigItem = { id: NavItem; label: TranslationKey }
 
 const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   {
-    type: 'item',
     id: 'general',
     label: 'sidebar.general'
   },
   {
-    type: 'item',
     id: 'model-providers',
     label: 'sidebar.model-providers'
   },
   {
-    type: 'item',
     id: 'configurations',
     label: 'sidebar.configurations'
   },
-  { type: 'divider', text: 'sidebar.api-tools' },
-  { type: 'item', id: 'edit-context', label: 'sidebar.edit-context' },
-  {
-    type: 'item',
-    id: 'code-at-cursor',
-    label: 'sidebar.code-at-cursor'
-  },
-  {
-    type: 'item',
-    id: 'commit-messages',
-    label: 'sidebar.commit-messages'
-  },
-  {
-    type: 'item',
-    id: 'voice-input',
-    label: 'sidebar.voice-input'
-  }
 ]
 
 type Props = {
@@ -159,11 +130,7 @@ export const Home: React.FC<Props> = (props) => {
   const section_refs = useRef<Record<NavItem, HTMLDivElement | null>>({
     general: null,
     'model-providers': null,
-    configurations: null,
-    'edit-context': null,
-    'code-at-cursor': null,
-    'commit-messages': null,
-    'voice-input': null
+    configurations: null
   })
   const [commit_instructions, set_commit_instructions] = useState('')
   const [voice_input_instructions, set_voice_input_instructions] = useState('')
@@ -199,22 +166,6 @@ export const Home: React.FC<Props> = (props) => {
     (is_stuck: boolean) => handle_stuck_change('configurations', is_stuck),
     [handle_stuck_change]
   )
-  const edit_context_on_stuck_change = useCallback(
-    (is_stuck: boolean) => handle_stuck_change('edit-context', is_stuck),
-    [handle_stuck_change]
-  )
-  const code_at_cursor_on_stuck_change = useCallback(
-    (is_stuck: boolean) => handle_stuck_change('code-at-cursor', is_stuck),
-    [handle_stuck_change]
-  )
-  const voice_input_on_stuck_change = useCallback(
-    (is_stuck: boolean) => handle_stuck_change('voice-input', is_stuck),
-    [handle_stuck_change]
-  )
-  const commit_messages_on_stuck_change = useCallback(
-    (is_stuck: boolean) => handle_stuck_change('commit-messages', is_stuck),
-    [handle_stuck_change]
-  )
 
   const get_has_warning = (id: NavItem): boolean => {
     if (id == 'model-providers') {
@@ -226,10 +177,7 @@ export const Home: React.FC<Props> = (props) => {
     }
   }
 
-  const nav_item_ids = NAV_ITEMS_CONFIG.filter(
-    (item): item is Extract<NavConfigItem, { type: 'item' }> =>
-      item.type == 'item'
-  ).map((item) => item.id)
+  const nav_item_ids = NAV_ITEMS_CONFIG.map((item) => item.id)
   const active_nav_item_id =
     nav_item_ids.filter((id) => stuck_sections.has(id)).pop() || nav_item_ids[0]
 
@@ -283,14 +231,6 @@ export const Home: React.FC<Props> = (props) => {
         ref={scroll_container_ref}
         title={t('sidebar.settings')}
         sidebar={NAV_ITEMS_CONFIG.map((item, i) => {
-          if (item.type == 'divider') {
-            return (
-              <UiNavigationDivider
-                key={i}
-                text={item.text ? t(item.text) : undefined}
-              />
-            )
-          }
 
           return (
             <UiNavigationItem
@@ -343,6 +283,7 @@ export const Home: React.FC<Props> = (props) => {
           on_open_allow_patterns_settings={
             props.on_open_allow_patterns_settings
           }
+          on_open_keybindings={props.on_open_keybindings}
           gemini_user_id={props.gemini_user_id}
           ai_studio_user_id={props.ai_studio_user_id}
           on_gemini_user_id_change={props.on_gemini_user_id_change}
@@ -350,6 +291,10 @@ export const Home: React.FC<Props> = (props) => {
           on_stuck_change={general_on_stuck_change}
           auto_run_intelligent_update={props.auto_run_intelligent_update}
           on_auto_run_intelligent_update_change={props.on_auto_run_intelligent_update_change}
+          include_prompts_in_commit_messages={props.include_prompts_in_commit_messages}
+          on_include_prompts_in_commit_messages_change={props.on_include_prompts_in_commit_messages_change}
+          voice_input_push_to_talk={props.voice_input_push_to_talk}
+          on_voice_input_push_to_talk_change={props.on_voice_input_push_to_talk_change}
         />
 
         <UiSection
@@ -448,168 +393,51 @@ export const Home: React.FC<Props> = (props) => {
           on_set_default_api_configuration={props.on_set_default_api_configuration}
           on_select_default_api_configuration={props.on_select_default_api_configuration}
           on_stuck_change={configurations_on_stuck_change}
+          edit_context_instructions={edit_context_instructions}
+          commit_instructions={commit_instructions}
+          voice_input_instructions={voice_input_instructions}
+          set_edit_context_instructions={set_edit_context_instructions}
+          set_commit_instructions={set_commit_instructions}
+          set_voice_input_instructions={set_voice_input_instructions}
+          on_edit_context_instructions_blur={() => {
+            props.on_edit_context_system_instructions_change(
+              edit_context_instructions
+            )
+            if (
+              edit_context_instructions == '' &&
+              props.edit_context_system_instructions ==
+                default_system_instructions
+            ) {
+              set_edit_context_instructions(default_system_instructions)
+            }
+          }}
+          on_commit_instructions_blur={() => {
+            props.on_commit_instructions_change(commit_instructions)
+            if (
+              commit_instructions == '' &&
+              props.commit_message_instructions ==
+                default_commit_message_instructions
+            ) {
+              set_commit_instructions(
+                default_commit_message_instructions
+              )
+            }
+          }}
+          on_voice_input_instructions_blur={() => {
+            props.on_voice_input_instructions_change(
+              voice_input_instructions
+            )
+            if (
+              voice_input_instructions == '' &&
+              props.voice_input_instructions ==
+                default_voice_input_instructions
+            ) {
+              set_voice_input_instructions(
+                default_voice_input_instructions
+              )
+            }
+          }}
         />
-
-        <UiSection
-          ref={(el) => (section_refs.current['edit-context'] = el)}
-          title={t('sidebar.edit-context')}
-          subtitle={t('edit-context.subtitle')}
-          on_stuck_change={edit_context_on_stuck_change}
-        >
-          <UiNotice type="info">{t('edit-context.notice')}</UiNotice>
-          <UiGroup>
-            <UiItem
-              title={t('edit-context.system-instructions.title')}
-              description={t('edit-context.system-instructions.description')}
-            >
-              <UiTextarea
-                value={edit_context_instructions}
-                on_change={set_edit_context_instructions}
-                on_blur={() => {
-                  props.on_edit_context_system_instructions_change(
-                    edit_context_instructions
-                  )
-                  if (
-                    edit_context_instructions == '' &&
-                    props.edit_context_system_instructions ==
-                      default_system_instructions
-                  ) {
-                    set_edit_context_instructions(default_system_instructions)
-                  }
-                }}
-              />
-            </UiItem>
-          </UiGroup>
-        </UiSection>
-
-        <UiSection
-          ref={(el) => (section_refs.current['code-at-cursor'] = el)}
-          title={t('sidebar.code-at-cursor')}
-          subtitle={t('code-at-cursor.subtitle')}
-          on_stuck_change={code_at_cursor_on_stuck_change}
-        >
-          <UiNotice type="info">{t('code-at-cursor.notice')}</UiNotice>
-          <UiGroup>
-            <UiItem
-              title={t('code-at-cursor.keyboard-shortcut.title')}
-              description={t('code-at-cursor.keyboard-shortcut.description')}
-              slot_right={
-                <UiTextButton
-                  on_click={() =>
-                    props.on_open_keybindings('codeWebChat.codeAtCursor')
-                  }
-                >
-                  {t('code-at-cursor.keyboard-shortcut.action')}
-                </UiTextButton>
-              }
-            />
-          </UiGroup>
-        </UiSection>
-
-        <UiSection
-          ref={(el) => (section_refs.current['commit-messages'] = el)}
-          title={t('sidebar.commit-messages')}
-          subtitle={t('commit-messages.subtitle')}
-          on_stuck_change={commit_messages_on_stuck_change}
-        >
-          <UiNotice type="info">{t('commit-messages.notice')}</UiNotice>
-          <UiGroup>
-            <UiItem
-              title={t('commit-messages.instructions.title')}
-              description={t('commit-messages.instructions.description')}
-            >
-              <UiTextarea
-                value={commit_instructions}
-                on_change={set_commit_instructions}
-                on_blur={() => {
-                  props.on_commit_instructions_change(commit_instructions)
-                  if (
-                    commit_instructions == '' &&
-                    props.commit_message_instructions ==
-                      default_commit_message_instructions
-                  ) {
-                    set_commit_instructions(
-                      default_commit_message_instructions
-                    )
-                  }
-                }}
-              />
-            </UiItem>
-            <UiItem
-              title={t('commit-messages.include-prompts.title')}
-              description={t('commit-messages.include-prompts.description')}
-              slot_right={
-                <UiToggler
-                  is_on={props.include_prompts_in_commit_messages}
-                  on_toggle={props.on_include_prompts_in_commit_messages_change}
-                />
-              }
-            />
-          </UiGroup>
-        </UiSection>
-
-        <UiSection
-          ref={(el) => (section_refs.current['voice-input'] = el)}
-          title={t('sidebar.voice-input')}
-          subtitle={t('voice-input.subtitle')}
-          on_stuck_change={voice_input_on_stuck_change}
-        >
-          <UiNotice type="info">
-            <Translation
-              id="voice-input.notice"
-              components={{
-                link: (
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      props.on_open_external_url(
-                        'https://ai.google.dev/gemini-api/docs/audio'
-                      )
-                    }}
-                  >
-                    {t('voice-input.notice.link')}
-                  </a>
-                )
-              }}
-            />
-          </UiNotice>
-          <UiGroup>
-            <UiItem
-              title={t('voice-input.instructions.title')}
-              description={t('voice-input.instructions.description')}
-            >
-              <UiTextarea
-                value={voice_input_instructions}
-                on_change={set_voice_input_instructions}
-                on_blur={() => {
-                  props.on_voice_input_instructions_change(
-                    voice_input_instructions
-                  )
-                  if (
-                    voice_input_instructions == '' &&
-                    props.voice_input_instructions ==
-                      default_voice_input_instructions
-                  ) {
-                    set_voice_input_instructions(
-                      default_voice_input_instructions
-                    )
-                  }
-                }}
-              />
-            </UiItem>
-            <UiItem
-              title={t('voice-input.push-to-talk.title')}
-              description={t('voice-input.push-to-talk.description')}
-              slot_right={
-                <UiToggler
-                  is_on={props.voice_input_push_to_talk}
-                  on_toggle={props.on_voice_input_push_to_talk_change}
-                />
-              }
-            />
-          </UiGroup>
-        </UiSection>
       </UiLayout>
     </div>
   )

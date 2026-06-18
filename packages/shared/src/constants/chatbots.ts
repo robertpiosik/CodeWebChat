@@ -198,13 +198,7 @@ export const CHATBOTS = {
     }
   } as Chatbot,
   Together: {
-    url: 'https://chat.together.ai/',
-    models: {
-      'glm-5': { label: 'GLM-5' },
-      'deepseek-v3.1': { label: 'DeepSeek V3.1' },
-      'kimi-k2.5': { label: 'Kimi K2.5' },
-      'minimax-m2.5': { label: 'MiniMax-M2.5' }
-    }
+    url: 'https://chat.together.ai/'
   } as Chatbot,
   Yuanbao: {
     url: 'https://yuanbao.tencent.com/chat'

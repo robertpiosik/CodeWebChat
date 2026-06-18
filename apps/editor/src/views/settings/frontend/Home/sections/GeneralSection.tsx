@@ -53,9 +53,14 @@ type Props = {
   on_open_editor_settings: () => void
   on_open_ignore_patterns_settings: () => void
   on_open_allow_patterns_settings: () => void
+  on_open_keybindings: (search?: string) => void
   on_stuck_change: (is_stuck: boolean) => void
   auto_run_intelligent_update: boolean
   on_auto_run_intelligent_update_change: (enabled: boolean) => void
+  include_prompts_in_commit_messages: boolean
+  on_include_prompts_in_commit_messages_change: (enabled: boolean) => void
+  voice_input_push_to_talk: boolean
+  on_voice_input_push_to_talk_change: (enabled: boolean) => void
 }
 
 export const GeneralSection = forwardRef<HTMLDivElement, Props>(
@@ -225,6 +230,17 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
           <UiItem
+            title={t('general.code-at-cursor.keyboard-shortcut.title')}
+            description={t('general.code-at-cursor.keyboard-shortcut.description')}
+            slot_right={
+              <UiTextButton
+                on_click={() => props.on_open_keybindings('codeWebChat.codeAtCursor')}
+              >
+                {t('general.code-at-cursor.keyboard-shortcut.action')}
+              </UiTextButton>
+            }
+          />
+          <UiItem
             title={t('general.context-size-warning-threshold.title')}
             description={t(
               'general.context-size-warning-threshold.description'
@@ -264,9 +280,29 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
           <UiItem
-            title={t('intelligent-update.auto-run-intelligent-update.title')}
+            title={t('general.voice-input.push-to-talk.title')}
+            description={t('general.voice-input.push-to-talk.description')}
+            slot_right={
+              <UiToggler
+                is_on={props.voice_input_push_to_talk}
+                on_toggle={props.on_voice_input_push_to_talk_change}
+              />
+            }
+          />
+          <UiItem
+            title={t('general.include-prompts-in-commit-messages.title')}
+            description={t('general.include-prompts-in-commit-messages.description')}
+            slot_right={
+              <UiToggler
+                is_on={props.include_prompts_in_commit_messages}
+                on_toggle={props.on_include_prompts_in_commit_messages_change}
+              />
+            }
+          />
+          <UiItem
+            title={t('general.intelligent-update.auto-run.title')}
             description={t(
-              'intelligent-update.auto-run-intelligent-update.description'
+              'general.intelligent-update.auto-run.description'
             )}
             slot_right={
               <UiToggler
@@ -345,7 +381,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             instructions.whole != EDIT_FORMAT_INSTRUCTIONS_WHOLE ? (
               <UiIconButton
                 codicon_icon="discard"
-                title={t('action.restore-default')}
+                title={t('general.action.restore-default')}
                 on_click={(e) => {
                   e.stopPropagation()
                   handle_reset_instruction('whole', EDIT_FORMAT_INSTRUCTIONS_WHOLE)
@@ -377,7 +413,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             instructions.truncated != EDIT_FORMAT_INSTRUCTIONS_TRUNCATED ? (
               <UiIconButton
                 codicon_icon="discard"
-                title={t('action.restore-default')}
+                title={t('general.action.restore-default')}
                 on_click={(e) => {
                   e.stopPropagation()
                   handle_reset_instruction(
@@ -416,7 +452,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE ? (
               <UiIconButton
                 codicon_icon="discard"
-                title={t('action.restore-default')}
+                title={t('general.action.restore-default')}
                 on_click={(e) => {
                   e.stopPropagation()
                   handle_reset_instruction(
@@ -454,7 +490,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             instructions.diff != EDIT_FORMAT_INSTRUCTIONS_DIFF ? (
               <UiIconButton
                 codicon_icon="discard"
-                title={t('action.restore-default')}
+                title={t('general.action.restore-default')}
                 on_click={(e) => {
                   e.stopPropagation()
                   handle_reset_instruction('diff', EDIT_FORMAT_INSTRUCTIONS_DIFF)
