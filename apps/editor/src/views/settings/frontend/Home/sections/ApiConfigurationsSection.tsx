@@ -42,7 +42,7 @@ type Props = {
   on_voice_input_instructions_blur: () => void
 }
 
-export const ConfigurationsSection = forwardRef<HTMLDivElement, Props>(
+export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
   (props, ref) => {
     const { t } = use_translation()
 
@@ -237,4 +237,4 @@ export const ConfigurationsSection = forwardRef<HTMLDivElement, Props>(
   }
 )
 
-ConfigurationsSection.displayName = 'ConfigurationsSection'
+ApiConfigurationsSection.displayName = 'ApiConfigurationsSection'

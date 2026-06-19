@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { Layout as UiLayout } from '@ui/components/editor/settings/Layout'
 import { NavigationItem as UiNavigationItem } from '@ui/components/editor/settings/NavigationItem'
 import { ModelProvidersSection } from './sections/ModelProvidersSection'
-import { ConfigurationsSection } from './sections/ConfigurationsSection'
+import { ApiConfigurationsSection } from './sections/ApiConfigurationsSection'
 import { Item as UiItem } from '@ui/components/editor/settings/Item'
 import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
 import { Section as UiSection } from '@ui/components/editor/settings/Section'
@@ -353,7 +353,7 @@ export const Home: React.FC<Props> = (props) => {
 
         <UiSection
           ref={(el) => set_section_ref('model-providers', el)}
-          title={t('sidebar.model-providers')}
+          title={t('sections.model-providers')}
           subtitle={t('model-providers.subtitle')}
           actions={
             <UiButton on_click={() => props.on_add_provider()}>
@@ -433,7 +433,7 @@ export const Home: React.FC<Props> = (props) => {
           </UiGroup>
         </UiSection>
 
-        <ConfigurationsSection
+        <ApiConfigurationsSection
           ref={(el) => set_section_ref('configurations', el)}
           set_section_ref={set_section_ref}
           api_configurations={props.api_configurations}

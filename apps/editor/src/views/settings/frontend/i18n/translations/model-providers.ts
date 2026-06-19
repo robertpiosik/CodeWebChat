@@ -1,21 +1,6 @@
 export const model_providers = {
   'model-providers.subtitle': {
-    en: 'Manage API keys and access tokens.',
-    pl: 'Zarządzaj kluczami API i tokenami dostępu.',
-    'zh-cn': '管理 API 密钥和访问令牌。',
-    ja: 'API キーとアクセストークンを管理します。',
-    'zh-tw': '管理 API 金鑰和存取權杖。',
-    de: 'API-Schlüssel und Zugriffstoken verwalten.',
-    es: 'Gestionar claves API y tokens de acceso.',
-    fr: "Gérer les clés API et les jetons d'accès.",
-    'pt-br': 'Gerenciar chaves de API e tokens de acesso.',
-    ru: 'Управление API ключами и токенами доступа.',
-    ko: 'API 키 및 액세스 토큰을 관리합니다.',
-    it: 'Gestisci le chiavi API e i token di accesso.',
-    tr: 'API anahtarlarını ve erişim belirteçlerini yönetin.',
-    cs: 'Správa API klíčů a přístupových tokenů.',
-    hu: 'API kulcsok és hozzáférési tokenek kezelése.',
-    bg: 'Управление на API ключове и токени за достъп.'
+    en: 'Make API calls to predefined endpoints or add a custom one.'
   },
   'model-providers.notice.credentials': {
     en: 'Credentials are stored securely in the {link} on your machine.',
