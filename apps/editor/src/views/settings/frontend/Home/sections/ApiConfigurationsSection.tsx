@@ -140,8 +140,8 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             />
           )}
         </UiGroup>
-        <div ref={(el) => props.set_section_ref('defaults', el)}>
-          <UiGroup title={t('configurations.defaults.title')}>
+        <div ref={(el) => props.set_section_ref('default-configurations', el)}>
+          <UiGroup title={t('configurations.default-configurations.title')}>
               <DefaultConfigurationSelector
                 title={t('configurations.tool.intelligent-update')}
                 value={props.defaults['intelligent-update'] || null}

@@ -35,7 +35,7 @@ export type NavItem =
   | 'chatbots'
   | 'model-providers'
   | 'configurations'
-  | 'defaults'
+  | 'default-configurations'
   | 'instructions'
 
 type NavConfigItem = { id: NavItem; label: TranslationKey; is_nested?: boolean }
@@ -74,8 +74,8 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
     label: 'sections.api-configurations'
   },
   {
-    id: 'defaults',
-    label: 'configurations.defaults.title',
+    id: 'default-configurations',
+    label: 'configurations.default-configurations.title',
     is_nested: true
   },
   {
@@ -171,7 +171,7 @@ export const Home: React.FC<Props> = (props) => {
     chatbots: null,
     'model-providers': null,
     configurations: null,
-    defaults: null,
+    'default-configurations': null,
     instructions: null
   })
 
