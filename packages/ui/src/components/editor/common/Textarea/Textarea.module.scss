@@ -29,7 +29,7 @@
   justify-content: center;
   cursor: pointer;
   color: var(--vscode-icon-foreground);
-  opacity: 0.5;
+  opacity: var(--dimmed-opacity);
   margin-left: 6px;
   margin-top: -1px;
 
