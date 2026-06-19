@@ -162,6 +162,24 @@ export const configurations = {
     hu: 'Alapértelmezett törlése',
     bg: 'Премахни подразбиране'
   },
+  'configurations.action.restore-default': {
+    en: 'Restore to default',
+    pl: 'Przywróć domyślne',
+    'zh-cn': '恢复默认',
+    ja: 'デフォルトに戻す',
+    'zh-tw': '恢復預設',
+    de: 'Auf Standard zurücksetzen',
+    es: 'Restaurar predeterminado',
+    fr: 'Restaurer par défaut',
+    'pt-br': 'Restaurar padrão',
+    ru: 'Восстановить по умолчанию',
+    ko: '기본값으로 복원',
+    it: 'Ripristina predefinito',
+    tr: 'Varsayılana geri yükle',
+    cs: 'Obnovit výchozí',
+    hu: 'Alapértelmezett visszaállítása',
+    bg: 'Възстанови по подразбиране'
+  },
   'configurations.item': {
     en: 'configuration',
     pl: 'konfiguracja',

@@ -40,6 +40,12 @@ type Props = {
   on_edit_context_instructions_blur: () => void
   on_commit_instructions_blur: () => void
   on_voice_input_instructions_blur: () => void
+  default_edit_context_instructions: string
+  default_commit_instructions: string
+  default_voice_input_instructions: string
+  on_restore_edit_context_instructions: () => void
+  on_restore_commit_instructions: () => void
+  on_restore_voice_input_instructions: () => void
 }
 
 export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
@@ -203,6 +209,19 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             <UiItem
               title={t('configurations.edit-context-system-instructions.title')}
               description={t('configurations.edit-context-system-instructions.description')}
+              slot_right={
+                props.edit_context_instructions !==
+                  props.default_edit_context_instructions && (
+                  <IconButton
+                    codicon_icon="discard"
+                    title={t('configurations.action.restore-default')}
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      props.on_restore_edit_context_instructions()
+                    }}
+                  />
+                )
+              }
             >
               <UiTextarea
                 value={props.edit_context_instructions}
@@ -213,6 +232,19 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             <UiItem
               title={t('configurations.commit-message-instructions.title')}
               description={t('configurations.commit-message-instructions.description')}
+              slot_right={
+                props.commit_instructions !==
+                  props.default_commit_instructions && (
+                  <IconButton
+                    codicon_icon="discard"
+                    title={t('configurations.action.restore-default')}
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      props.on_restore_commit_instructions()
+                    }}
+                  />
+                )
+              }
             >
               <UiTextarea
                 value={props.commit_instructions}
@@ -223,6 +255,19 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             <UiItem
               title={t('configurations.voice-input-instructions.title')}
               description={t('configurations.voice-input-instructions.description')}
+              slot_right={
+                props.voice_input_instructions !==
+                  props.default_voice_input_instructions && (
+                  <IconButton
+                    codicon_icon="discard"
+                    title={t('configurations.action.restore-default')}
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      props.on_restore_voice_input_instructions()
+                    }}
+                  />
+                )
+              }
             >
               <UiTextarea
                 value={props.voice_input_instructions}

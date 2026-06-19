@@ -490,6 +490,27 @@ export const Home: React.FC<Props> = (props) => {
               )
             }
           }}
+          default_edit_context_instructions={default_system_instructions}
+          default_commit_instructions={default_commit_message_instructions}
+          default_voice_input_instructions={default_voice_input_instructions}
+          on_restore_edit_context_instructions={() => {
+            set_edit_context_instructions(default_system_instructions)
+            props.on_edit_context_system_instructions_change(
+              default_system_instructions
+            )
+          }}
+          on_restore_commit_instructions={() => {
+            set_commit_instructions(default_commit_message_instructions)
+            props.on_commit_instructions_change(
+              default_commit_message_instructions
+            )
+          }}
+          on_restore_voice_input_instructions={() => {
+            set_voice_input_instructions(default_voice_input_instructions)
+            props.on_voice_input_instructions_change(
+              default_voice_input_instructions
+            )
+          }}
         />
       </UiLayout>
     </div>
