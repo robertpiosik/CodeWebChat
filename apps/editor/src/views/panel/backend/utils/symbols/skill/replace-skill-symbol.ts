@@ -57,7 +57,9 @@ export const replace_skill_symbol = async (params: {
             if (stats.isDirectory()) {
               collect_files(file_path)
             } else if (stats.isFile()) {
-              if (file_name.toLowerCase() == 'readme.md') continue
+              const lower_name = file_name.toLowerCase()
+              if (lower_name == 'readme.md' || lower_name.startsWith('license'))
+                continue
               const content = fs.readFileSync(file_path, 'utf-8')
               const relative_path = path
                 .relative(skill.path, file_path)
