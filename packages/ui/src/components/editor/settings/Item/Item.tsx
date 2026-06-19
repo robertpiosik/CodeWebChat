@@ -19,11 +19,14 @@ export const Item: React.FC<Props> = (props) => {
   const [is_expanded, set_is_expanded] = useState(false)
 
   return (
-    <div className={styles.container}>
+    <div
+      className={cn(styles.container, {
+        [styles['container--hoverable']]: props.is_toggleable && !is_expanded
+      })}
+    >
       <div
         className={cn(styles.main, {
           [styles['main--toggleable']]: props.is_toggleable,
-          [styles['main--hoverable']]: props.is_toggleable && !is_expanded
         })}
         onClick={props.is_toggleable ? () => set_is_expanded(!is_expanded) : undefined}
       >
