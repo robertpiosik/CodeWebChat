@@ -1,19 +1,64 @@
-.textarea {
+.wrapper {
+  position: relative;
+  width: 100%;
   border: 1px solid var(--cwc-border-color);
   background: var(--vscode-input-background);
   color: var(--vscode-input-foreground);
   padding: 4px 6px;
   border-radius: 4px;
-  width: 100%;
-  resize: none;
-  overflow: hidden;
+  cursor: text;
+  box-sizing: border-box;
 
   &:hover {
     border-color: var(--cwc-border-color-hover);
   }
 
-  &:focus {
-    outline: none;
+  &:focus-within {
     border-color: var(--vscode-focusBorder);
+  }
+}
+
+.action {
+  float: right;
+  position: relative;
+  z-index: 1;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--vscode-icon-foreground);
+  opacity: 0.5;
+  margin-left: 6px;
+  margin-top: -1px;
+
+  &::before {
+    font-size: 13px;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.textarea {
+  outline: none;
+  border: none;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  line-height: 1.4;
+  position: relative;
+
+  &--empty::before {
+    content: attr(data-placeholder);
+    position: absolute;
+    color: var(--vscode-input-placeholderForeground);
+    pointer-events: none;
   }
 }

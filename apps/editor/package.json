@@ -1146,7 +1146,6 @@
     "path-browserify": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-textarea-autosize": "^8.5.9",
     "rimraf": "^6.0.1",
     "simplebar-react": "^3.3.1",
     "ui": "workspace:*",

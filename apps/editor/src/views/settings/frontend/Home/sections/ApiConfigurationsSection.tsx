@@ -209,70 +209,52 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             <UiItem
               title={t('configurations.edit-context-system-instructions.title')}
               description={t('configurations.edit-context-system-instructions.description')}
-              slot_right={
-                props.edit_context_instructions !==
-                  props.default_edit_context_instructions && (
-                  <IconButton
-                    codicon_icon="discard"
-                    title={t('configurations.action.restore-default')}
-                    on_click={(e) => {
-                      e.stopPropagation()
-                      props.on_restore_edit_context_instructions()
-                    }}
-                  />
-                )
-              }
             >
               <UiTextarea
                 value={props.edit_context_instructions}
                 on_change={props.set_edit_context_instructions}
                 on_blur={props.on_edit_context_instructions_blur}
+                action_icon={
+                  props.edit_context_instructions !== props.default_edit_context_instructions
+                    ? 'discard'
+                    : undefined
+                }
+                action_title={t('configurations.action.restore-default')}
+                on_action_click={props.on_restore_edit_context_instructions}
               />
             </UiItem>
             <UiItem
               title={t('configurations.commit-message-instructions.title')}
               description={t('configurations.commit-message-instructions.description')}
-              slot_right={
-                props.commit_instructions !==
-                  props.default_commit_instructions && (
-                  <IconButton
-                    codicon_icon="discard"
-                    title={t('configurations.action.restore-default')}
-                    on_click={(e) => {
-                      e.stopPropagation()
-                      props.on_restore_commit_instructions()
-                    }}
-                  />
-                )
-              }
             >
               <UiTextarea
                 value={props.commit_instructions}
                 on_change={props.set_commit_instructions}
                 on_blur={props.on_commit_instructions_blur}
+                action_icon={
+                  props.commit_instructions !== props.default_commit_instructions
+                    ? 'discard'
+                    : undefined
+                }
+                action_title={t('configurations.action.restore-default')}
+                on_action_click={props.on_restore_commit_instructions}
               />
             </UiItem>
             <UiItem
               title={t('configurations.voice-input-instructions.title')}
               description={t('configurations.voice-input-instructions.description')}
-              slot_right={
-                props.voice_input_instructions !==
-                  props.default_voice_input_instructions && (
-                  <IconButton
-                    codicon_icon="discard"
-                    title={t('configurations.action.restore-default')}
-                    on_click={(e) => {
-                      e.stopPropagation()
-                      props.on_restore_voice_input_instructions()
-                    }}
-                  />
-                )
-              }
             >
               <UiTextarea
                 value={props.voice_input_instructions}
                 on_change={props.set_voice_input_instructions}
                 on_blur={props.on_voice_input_instructions_blur}
+                action_icon={
+                  props.voice_input_instructions !== props.default_voice_input_instructions
+                    ? 'discard'
+                    : undefined
+                }
+                action_title={t('configurations.action.restore-default')}
+                on_action_click={props.on_restore_voice_input_instructions}
               />
             </UiItem>
           </UiGroup>

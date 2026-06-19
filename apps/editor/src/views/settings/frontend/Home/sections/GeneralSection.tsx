@@ -6,7 +6,6 @@ import { Item as UiItem } from '@ui/components/editor/settings/Item'
 import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
 import { Section as UiSection } from '@ui/components/editor/settings/Section'
 import { TextButton as UiTextButton } from '@ui/components/editor/settings/TextButton'
-import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { EditFormatInstructions } from '@/views/settings/types/messages'
 import {
@@ -384,19 +383,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 expand: t('general.edit-format.expand'),
                 collapse: t('general.edit-format.collapse')
               }}
-            slot_right={
-              instructions.whole != '' &&
-              instructions.whole != EDIT_FORMAT_INSTRUCTIONS_WHOLE ? (
-                <UiIconButton
-                  codicon_icon="discard"
-                  title={t('general.action.restore-default')}
-                  on_click={(e) => {
-                    e.stopPropagation()
-                    handle_reset_instruction('whole', EDIT_FORMAT_INSTRUCTIONS_WHOLE)
-                  }}
-                />
-              ) : undefined
-            }
             >
               <UiTextarea
                 value={instructions.whole}
@@ -405,6 +391,14 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                   set_instructions((prev) => ({ ...prev, whole: value }))
                 }
                 on_blur={handle_instructions_blur}
+                action_icon={
+                  instructions.whole != '' &&
+                  instructions.whole != EDIT_FORMAT_INSTRUCTIONS_WHOLE
+                    ? 'discard'
+                    : undefined
+                }
+                action_title={t('general.action.restore-default')}
+                on_action_click={() => handle_reset_instruction('whole', EDIT_FORMAT_INSTRUCTIONS_WHOLE)}
               />
             </UiItem>
 
@@ -416,22 +410,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 expand: t('general.edit-format.expand'),
                 collapse: t('general.edit-format.collapse')
               }}
-            slot_right={
-              instructions.truncated != '' &&
-              instructions.truncated != EDIT_FORMAT_INSTRUCTIONS_TRUNCATED ? (
-                <UiIconButton
-                  codicon_icon="discard"
-                  title={t('general.action.restore-default')}
-                  on_click={(e) => {
-                    e.stopPropagation()
-                    handle_reset_instruction(
-                      'truncated',
-                      EDIT_FORMAT_INSTRUCTIONS_TRUNCATED
-                    )
-                  }}
-                />
-              ) : undefined
-            }
             >
               <UiTextarea
                 value={instructions.truncated}
@@ -443,6 +421,14 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                   }))
                 }
                 on_blur={handle_instructions_blur}
+                action_icon={
+                  instructions.truncated != '' &&
+                  instructions.truncated != EDIT_FORMAT_INSTRUCTIONS_TRUNCATED
+                    ? 'discard'
+                    : undefined
+                }
+                action_title={t('general.action.restore-default')}
+                on_action_click={() => handle_reset_instruction('truncated', EDIT_FORMAT_INSTRUCTIONS_TRUNCATED)}
               />
             </UiItem>
 
@@ -454,23 +440,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 expand: t('general.edit-format.expand'),
                 collapse: t('general.edit-format.collapse')
               }}
-            slot_right={
-              instructions.search_replace != '' &&
-              instructions.search_replace !=
-                EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE ? (
-                <UiIconButton
-                  codicon_icon="discard"
-                  title={t('general.action.restore-default')}
-                  on_click={(e) => {
-                    e.stopPropagation()
-                    handle_reset_instruction(
-                      'search_replace',
-                      EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE
-                    )
-                  }}
-                />
-              ) : undefined
-            }
             >
               <UiTextarea
                 value={instructions.search_replace}
@@ -482,6 +451,14 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                   }))
                 }
                 on_blur={handle_instructions_blur}
+                action_icon={
+                  instructions.search_replace != '' &&
+                  instructions.search_replace != EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE
+                    ? 'discard'
+                    : undefined
+                }
+                action_title={t('general.action.restore-default')}
+                on_action_click={() => handle_reset_instruction('search_replace', EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE)}
               />
             </UiItem>
 
@@ -493,19 +470,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 expand: t('general.edit-format.expand'),
                 collapse: t('general.edit-format.collapse')
               }}
-            slot_right={
-              instructions.diff != '' &&
-              instructions.diff != EDIT_FORMAT_INSTRUCTIONS_DIFF ? (
-                <UiIconButton
-                  codicon_icon="discard"
-                  title={t('general.action.restore-default')}
-                  on_click={(e) => {
-                    e.stopPropagation()
-                    handle_reset_instruction('diff', EDIT_FORMAT_INSTRUCTIONS_DIFF)
-                  }}
-                />
-              ) : undefined
-            }
             >
               <UiTextarea
                 value={instructions.diff}
@@ -514,6 +478,14 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                   set_instructions((prev) => ({ ...prev, diff: value }))
                 }
                 on_blur={handle_instructions_blur}
+                action_icon={
+                  instructions.diff != '' &&
+                  instructions.diff != EDIT_FORMAT_INSTRUCTIONS_DIFF
+                    ? 'discard'
+                    : undefined
+                }
+                action_title={t('general.action.restore-default')}
+                on_action_click={() => handle_reset_instruction('diff', EDIT_FORMAT_INSTRUCTIONS_DIFF)}
               />
             </UiItem>
           </UiGroup>

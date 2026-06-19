@@ -32,3 +32,19 @@ export const WithValue = () => {
     />
   )
 }
+
+export const WithAction = () => {
+  const [value, set_value] = useState('Some text with an action')
+
+  return (
+    <Textarea
+      value={value}
+      on_change={set_value}
+      placeholder="Text area with action"
+      min_rows={3}
+      action_icon="clear-all"
+      action_title="Clear text"
+      on_action_click={() => set_value('')}
+    />
+  )
+}
