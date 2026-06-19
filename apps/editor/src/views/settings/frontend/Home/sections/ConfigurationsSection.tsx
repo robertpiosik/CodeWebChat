@@ -49,7 +49,7 @@ export const ConfigurationsSection = forwardRef<HTMLDivElement, Props>(
     return (
       <UiSection
         ref={ref}
-        title={t('sidebar.configurations')}
+        title={t('sections.api-configurations')}
         subtitle={t('configurations.subtitle')}
         actions={
           <UiButton on_click={() => props.on_add_api_configuration()}>

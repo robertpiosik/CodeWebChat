@@ -1,5 +1,5 @@
-export const sidebar = {
-  'sidebar.settings': {
+export const sections = {
+  'sections.settings': {
     en: 'Settings',
     pl: 'Ustawienia',
     'zh-cn': '设置',
@@ -17,7 +17,7 @@ export const sidebar = {
     hu: 'Beállítások',
     bg: 'Настройки'
   },
-  'sidebar.general': {
+  'sections.general': {
     en: 'General',
     pl: 'Ogólne',
     'zh-cn': '常规',
@@ -35,7 +35,7 @@ export const sidebar = {
     hu: 'Általános',
     bg: 'Общи'
   },
-  'sidebar.model-providers': {
+  'sections.model-providers': {
     en: 'Model Providers',
     pl: 'Dostawcy modeli',
     'zh-cn': '模型提供商',
@@ -53,22 +53,22 @@ export const sidebar = {
     hu: 'Modell Szolgáltatók',
     bg: 'Доставчици на модели'
   },
-  'sidebar.configurations': {
-    en: 'Configurations',
-    pl: 'Konfiguracje',
-    'zh-cn': '配置',
+  'sections.api-configurations': {
+    en: 'API Configurations',
+    pl: 'Konfiguracje API',
+    'zh-cn': 'API 配置',
     ja: '設定',
     'zh-tw': '設定',
-    de: 'Konfigurationen',
-    es: 'Configuraciones',
-    fr: 'Configurations',
-    'pt-br': 'Configurações',
-    ru: 'Конфигурации',
-    ko: '구성',
-    it: 'Configurazioni',
-    tr: 'Yapılandırmalar',
-    cs: 'Konfigurace',
-    hu: 'Konfigurációk',
-    bg: 'Конфигурации'
+    de: 'API-Konfigurationen',
+    es: 'Configuraciones de API',
+    fr: 'Configurations API',
+    'pt-br': 'Configurações de API',
+    ru: 'Конфигурации API',
+    ko: 'API 구성',
+    it: 'Configurazioni API',
+    tr: 'API Yapılandırmaları',
+    cs: 'Konfigurace API',
+    hu: 'API Konfigurációk',
+    bg: 'API Конфигурации'
   }
 } as const

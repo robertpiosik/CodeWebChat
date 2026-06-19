@@ -43,7 +43,7 @@ type NavConfigItem = { id: NavItem; label: TranslationKey; is_nested?: boolean }
 const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   {
     id: 'general',
-    label: 'sidebar.general'
+    label: 'sections.general'
   },
   {
     id: 'prompt-field',
@@ -67,11 +67,11 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   },
   {
     id: 'model-providers',
-    label: 'sidebar.model-providers'
+    label: 'sections.model-providers'
   },
   {
     id: 'configurations',
-    label: 'sidebar.configurations'
+    label: 'sections.api-configurations'
   },
   {
     id: 'defaults',
@@ -281,7 +281,7 @@ export const Home: React.FC<Props> = (props) => {
     <div style={{ height: '100vh' }}>
       <UiLayout
         ref={scroll_container_ref}
-        title={t('sidebar.settings')}
+        title={t('sections.settings')}
         sidebar={NAV_ITEMS_CONFIG.map((item, i) => {
 
           return (

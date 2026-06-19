@@ -1,11 +1,11 @@
 import { actions } from './actions'
 import { general } from './general'
 import { model_providers } from './model-providers'
-import { sidebar } from './sidebar'
+import { sections } from './sections'
 import { configurations } from './configurations'
 
 export const translations = {
-  ...sidebar,
+  ...sections,
   ...actions,
   ...general,
   ...model_providers,

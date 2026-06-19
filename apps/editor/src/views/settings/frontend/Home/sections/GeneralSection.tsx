@@ -198,7 +198,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
     return (
       <UiSection
         ref={ref}
-        title={t('sidebar.general')}
+        title={t('sections.general')}
         subtitle={t('general.subtitle')}
       >
         <UiGroup>
@@ -238,25 +238,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               >
                 {t('general.code-at-cursor.keyboard-shortcut.action')}
               </UiTextButton>
-            }
-          />
-          <UiItem
-            title={t('general.context-size-warning-threshold.title')}
-            description={t(
-              'general.context-size-warning-threshold.description'
-            )}
-            slot_right={
-              <UiInput
-                type="number"
-                value={context_size_warning_threshold?.toString() ?? ''}
-                on_change={(val) =>
-                  set_context_size_warning_threshold(
-                    val == '' ? undefined : parseInt(val, 10)
-                  )
-                }
-                on_blur={handle_context_size_warning_threshold_blur}
-                max_width={100}
-              />
             }
           />
           <UiItem
@@ -317,6 +298,25 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
 
         <div ref={(el) => props.set_section_ref('prompt-field', el)}>
           <UiGroup title={t('general.prompt-field.title')}>
+            <UiItem
+              title={t('general.context-size-warning-threshold.title')}
+              description={t(
+                'general.context-size-warning-threshold.description'
+              )}
+              slot_right={
+                <UiInput
+                  type="number"
+                  value={context_size_warning_threshold?.toString() ?? ''}
+                  on_change={(val) =>
+                    set_context_size_warning_threshold(
+                      val == '' ? undefined : parseInt(val, 10)
+                    )
+                  }
+                  on_blur={handle_context_size_warning_threshold_blur}
+                  max_width={100}
+                />
+              }
+            />
             <UiItem
               title={t('general.send-with-shift-enter.title')}
               description={t('general.send-with-shift-enter.description')}

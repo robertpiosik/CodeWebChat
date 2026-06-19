@@ -937,21 +937,21 @@ export const general = {
     bg: 'Натисни за говорене'
   },
   'general.voice-input.push-to-talk.description': {
-    en: 'Hold spacebar to talk when using voice input.',
-    pl: 'Przytrzymaj spację, aby mówić podczas wprowadzania głosowego.',
-    'zh-cn': '使用语音输入时按住空格键说话。',
-    ja: '音声入力を使用する際にスペースキーを押し続けて話します。',
-    'zh-tw': '使用語音輸入時按住空白鍵說話。',
-    de: 'Halten Sie die Leertaste gedrückt, um bei der Spracheingabe zu sprechen.',
-    es: 'Mantén presionada la barra espaciadora para hablar al usar la entrada de voz.',
-    fr: "Maintenez la barre d'espace pour parler lors de l'utilisation de la saisie vocale.",
-    'pt-br': 'Segure a barra de espaço para falar ao usar a entrada de voz.',
-    ru: 'Удерживайте пробел, чтобы говорить при использовании голосового ввода.',
-    ko: '음성 입력을 사용할 때 스페이스바를 길게 눌러 말하세요.',
-    it: "Tieni premuta la barra spaziatrice per parlare quando usi l'input vocale.",
-    tr: 'Ses girişini kullanırken konuşmak için boşluk tuşunu basılı tutun.',
-    cs: 'Při používání hlasového vstupu podržte mezerník pro mluvení.',
-    hu: 'Hangbemenet használatakor beszédhez tartsa lenyomva a szóközt.',
-    bg: 'Задръжте интервал, за да говорите при гласово въвеждане.'
+    en: 'Hold spacebar to activate voice input.',
+    pl: 'Przytrzymaj spację, aby aktywować wprowadzanie głosowe.',
+    'zh-cn': '按住空格键激活语音输入。',
+    ja: 'スペースキーを押し続けて音声入力を有効にします。',
+    'zh-tw': '按住空白鍵啟用語音輸入。',
+    de: 'Halten Sie die Leertaste gedrückt, um die Spracheingabe zu aktivieren.',
+    es: 'Mantén presionada la barra espaciadora para activar la entrada de voz.',
+    fr: "Maintenez la barre d'espace pour activer la saisie vocale.",
+    'pt-br': 'Mantenha a barra de espaço pressionada para ativar a entrada de voz.',
+    ru: 'Удерживайте пробел, чтобы активировать голосовой ввод.',
+    ko: '스페이스바를 길게 눌러 음성 입력을 활성화하세요.',
+    it: "Tieni premuta la barra spaziatrice per attivare l'inserimento vocale.",
+    tr: 'Sesle girişi etkinleştirmek için boşluk tuşuna basılı tutun.',
+    cs: 'Podržením mezerníku aktivujete hlasový vstup.',
+    hu: 'Tartsa lenyomva a szóköz billentyűt a hangbemenet aktiválásához.',
+    bg: 'Задръжте интервала, за да активирате гласовото въвеждане.'
   }
 } as const
