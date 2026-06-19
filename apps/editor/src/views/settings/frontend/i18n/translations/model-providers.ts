@@ -1,6 +1,22 @@
 export const model_providers = {
   'model-providers.subtitle': {
-    en: 'Make API calls to predefined endpoints or add a custom one.'
+    en: 'Setup from predefined endpoints or add a custom one.',
+    pl: 'Skonfiguruj z predefiniowanych endpointów lub dodaj własny.',
+    'zh-cn': '从预定义端点进行设置或添加自定义端点。',
+    ja: '事前定義されたエンドポイントから設定するか、カスタムエンドポイントを追加します。',
+    'zh-tw': '從預定義端點進行設定或新增自定義端點。',
+    de: 'Richten Sie vordefinierte Endpunkte ein oder fügen Sie einen benutzerdefinierten hinzu.',
+    es: 'Configurar a partir de puntos de conexión predefinidos o añadir uno personalizado.',
+    fr: 'Configurer à partir de points de terminaison prédéfinis ou en ajouter un personnalisé.',
+    'pt-br':
+      'Configurar a partir de endpoints predefinidos ou adicionar um personalizado.',
+    ru: 'Настройка из предопределенных конечных точек или добавление пользовательской.',
+    ko: '사전 정의된 엔드포인트에서 설정하거나 사용자 정의 엔드포인트를 추가합니다.',
+    it: 'Configura da endpoint predefiniti o aggiungine uno personalizzato.',
+    tr: 'Önceden tanımlanmış uç noktalardan kurulum yapın veya özel bir tane ekleyin.',
+    cs: 'Nastavení z předdefinovaných koncových bodů nebo přidání vlastního.',
+    hu: 'Beállítás előre definiált végpontokból vagy egyedi hozzáadása.',
+    bg: 'Настройка от предефинирани крайни точки или добавяне на персонализирана.'
   },
   'model-providers.notice.credentials': {
     en: 'Credentials are stored securely in the {link} on your machine.',
