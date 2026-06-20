@@ -23,9 +23,6 @@
   "engines": {
     "vscode": "^1.96.0"
   },
-  "sponsor": {
-    "url": "https://github.com/sponsors/robertpiosik"
-  },
   "categories": [
     "Programming Languages",
     "Machine Learning",
