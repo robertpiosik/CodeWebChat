@@ -53,6 +53,7 @@ import {
   handle_open_keybindings,
   handle_open_external_url
 } from './message-handlers'
+import { config_web_configuration_to_ui_format } from '@/views/panel/backend/utils/web-configuration-format-converters'
 
 export class SettingsProvider {
   private _webview_panel: vscode.WebviewPanel | undefined
@@ -63,6 +64,18 @@ export class SettingsProvider {
     private readonly _extensionUri: vscode.Uri,
     public readonly context: vscode.ExtensionContext
   ) {}
+
+  private _send_web_configurations() {
+    const config = vscode.workspace.getConfiguration('codeWebChat')
+    const web_configurations_config = config.get<any[]>('webConfigurations', []) || []
+
+    this.postMessage({
+      command: 'WEB_CONFIGURATIONS',
+      web_configurations: web_configurations_config
+        .filter((c: any) => c.chatbot)
+        .map((c: any) => config_web_configuration_to_ui_format(c))
+    })
+  }
 
   public createOrShow(section_to_show?: string) {
     const column = vscode.window.activeTextEditor
@@ -243,6 +256,12 @@ export class SettingsProvider {
           await handle_open_keybindings(message)
         } else if (message.command == 'OPEN_EXTERNAL_URL') {
           await handle_open_external_url(message)
+        } else if (message.command == 'GET_WEB_CONFIGURATIONS') {
+          this._send_web_configurations()
+        } else if (message.command == 'REORDER_WEB_CONFIGURATIONS') {
+        } else if (message.command == 'DELETE_WEB_CONFIGURATION') {
+        } else if (message.command == 'UPSERT_WEB_CONFIGURATION') {
+          
         }
       },
       null,
@@ -271,6 +290,7 @@ export class SettingsProvider {
           void handle_get_reuse_last_tab(this)
           void handle_get_auto_run_intelligent_update(this)
           void handle_get_extended_cache_duration_for_anthropic(this)
+          this._send_web_configurations()
         }
       })
     )

@@ -15,6 +15,7 @@ export const Settings = () => {
     return (
       settings_hook.providers !== undefined &&
       settings_hook.api_configurations !== undefined &&
+      settings_hook.web_configurations !== undefined &&
       settings_hook.defaults !== undefined &&
       settings_hook.edit_context_system_instructions !== undefined &&
       settings_hook.voice_input_instructions !== undefined &&
@@ -150,6 +151,13 @@ export const Settings = () => {
       on_delete_api_configuration={settings_hook.handle_delete_api_configuration}
       on_set_default_api_configuration={settings_hook.handle_set_default_api_configuration}
       on_select_default_api_configuration={settings_hook.handle_select_default_api_configuration}
+      web_configurations={settings_hook.web_configurations!}
+      set_web_configurations={settings_hook.set_web_configurations}
+      on_reorder_web_configurations={settings_hook.handle_reorder_web_configurations}
+      on_add_web_configuration={settings_hook.handle_add_web_configuration}
+      on_duplicate_web_configuration={settings_hook.handle_duplicate_web_configuration}
+      on_edit_web_configuration={settings_hook.handle_edit_web_configuration}
+      on_delete_web_configuration={settings_hook.handle_delete_web_configuration}
       on_open_external_url={settings_hook.handle_open_external_url}
       scroll_to_section_on_load={scroll_to_section_on_load}
     />

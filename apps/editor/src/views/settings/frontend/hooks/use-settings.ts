@@ -4,6 +4,7 @@ import {
   EditFormatInstructions,
   ApiConfigurationForClient,
   ProviderForClient,
+  WebConfigurationForClient,
   FrontendMessage
 } from '@/views/settings/types/messages'
 import { ToolType } from '@/views/settings/types/tools'
@@ -15,6 +16,9 @@ export const use_settings = (vscode: any) => {
   )
   const [api_configurations, set_api_configurations] = useState<
     ApiConfigurationForClient[] | undefined
+  >(undefined)
+  const [web_configurations, set_web_configurations] = useState<
+    WebConfigurationForClient[] | undefined
   >(undefined)
   const [defaults, set_defaults] = useState<
     Record<ToolType, string | null> | undefined
@@ -77,6 +81,7 @@ export const use_settings = (vscode: any) => {
   useEffect(() => {
     post_message(vscode, { command: 'GET_MODEL_PROVIDERS' })
     post_message(vscode, { command: 'GET_API_CONFIGURATIONS' })
+    post_message(vscode, { command: 'GET_WEB_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_INCLUDE_PROMPTS_IN_COMMIT_MESSAGES' })
@@ -106,6 +111,8 @@ export const use_settings = (vscode: any) => {
       } else if (message.command == 'API_CONFIGURATIONS') {
         set_api_configurations(message.api_configurations)
         set_defaults(message.defaults)
+      } else if (message.command == 'WEB_CONFIGURATIONS') {
+        set_web_configurations(message.web_configurations)
       } else if (message.command == 'EDIT_CONTEXT_SYSTEM_INSTRUCTIONS') {
         set_edit_context_system_instructions(message.instructions)
       } else if (message.command == 'COMMIT_MESSAGE_INSTRUCTIONS') {
@@ -243,6 +250,45 @@ export const use_settings = (vscode: any) => {
       command: 'SELECT_DEFAULT_API_CONFIGURATION',
       tool_name
     } as FrontendMessage)
+  }
+
+  const handle_reorder_web_configurations = (reordered: WebConfigurationForClient[]) => {
+    post_message(vscode, {
+      command: 'REORDER_WEB_CONFIGURATIONS',
+      web_configurations: reordered
+    })
+  }
+
+  const handle_add_web_configuration = (params?: {
+    insertion_index?: number
+    create_on_top?: boolean
+  }) => {
+    post_message(vscode, {
+      command: 'UPSERT_WEB_CONFIGURATION',
+      insertion_index: params?.insertion_index,
+      create_on_top: params?.create_on_top
+    })
+  }
+
+  const handle_duplicate_web_configuration = (web_configuration_id: string) => {
+    post_message(vscode, {
+      command: 'UPSERT_WEB_CONFIGURATION',
+      duplicate_from_id: web_configuration_id
+    })
+  }
+
+  const handle_edit_web_configuration = (web_configuration_id: string) => {
+    post_message(vscode, {
+      command: 'UPSERT_WEB_CONFIGURATION',
+      web_configuration_id
+    })
+  }
+
+  const handle_delete_web_configuration = (web_configuration_id: string) => {
+    post_message(vscode, {
+      command: 'DELETE_WEB_CONFIGURATION',
+      web_configuration_id
+    })
   }
 
   const handle_commit_instructions_change = (instructions: string) =>
@@ -405,6 +451,8 @@ export const use_settings = (vscode: any) => {
     set_providers,
     api_configurations,
     set_api_configurations,
+    web_configurations,
+    set_web_configurations,
     defaults,
     voice_input_instructions,
     voice_input_push_to_talk,
@@ -434,6 +482,11 @@ export const use_settings = (vscode: any) => {
     handle_delete_api_configuration,
     handle_set_default_api_configuration,
     handle_select_default_api_configuration,
+    handle_reorder_web_configurations,
+    handle_add_web_configuration,
+    handle_duplicate_web_configuration,
+    handle_edit_web_configuration,
+    handle_delete_web_configuration,
     handle_voice_input_instructions_change,
     handle_voice_input_push_to_talk_change,
     handle_commit_instructions_change,

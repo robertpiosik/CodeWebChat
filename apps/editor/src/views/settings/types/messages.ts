@@ -1,12 +1,13 @@
 import { ToolType } from './tools'
+import { WebConfiguration } from '@shared/types/web-configuration'
 
-export type ProviderForClient = {
+export type Provider = {
   name: string
   api_key_mask: string
   base_url: string
 }
 
-export type ApiConfigurationForClient = {
+export type ApiConfiguration = {
   id: string
   model: string
   description: string
@@ -26,7 +27,7 @@ export interface GetModelProvidersMessage {
 
 export interface ReorderModelProvidersMessage {
   command: 'REORDER_MODEL_PROVIDERS'
-  providers: ProviderForClient[]
+  providers: Provider[]
 }
 
 export interface AddModelProviderMessage {
@@ -51,7 +52,7 @@ export interface GetApiConfigurationsMessage {
 
 export interface ReorderApiConfigurationsMessage {
   command: 'REORDER_API_CONFIGURATIONS'
-  api_configurations: ApiConfigurationForClient[]
+  api_configurations: ApiConfiguration[]
 }
 
 export interface DeleteApiConfigurationMessage {
@@ -257,6 +258,28 @@ export interface OpenExternalUrlMessage {
   url: string
 }
 
+export interface GetWebConfigurationsMessage {
+  command: 'GET_WEB_CONFIGURATIONS'
+}
+export interface ReorderWebConfigurationsMessage {
+  command: 'REORDER_WEB_CONFIGURATIONS'
+}
+export interface ReorderWebConfigurationsMessage {
+  command: 'REORDER_WEB_CONFIGURATIONS'
+  web_configurations: WebConfiguration[]
+}
+export interface DeleteWebConfigurationMessage {
+  command: 'DELETE_WEB_CONFIGURATION'
+  web_configuration_id: string
+}
+export interface UpsertWebConfigurationMessage {
+  command: 'UPSERT_WEB_CONFIGURATION'
+  web_configuration_id?: string
+  insertion_index?: number
+  create_on_top?: boolean
+  duplicate_from_id?: string
+}
+
 export type FrontendMessage =
   | GetModelProvidersMessage
   | ReorderModelProvidersMessage
@@ -309,16 +332,20 @@ export type FrontendMessage =
   | UpdateExtendedCacheDurationForAnthropicMessage
   | OpenKeybindingsMessage
   | OpenExternalUrlMessage
+  | GetWebConfigurationsMessage
+  | ReorderWebConfigurationsMessage
+  | DeleteWebConfigurationMessage
+  | UpsertWebConfigurationMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface ModelProvidersMessage {
   command: 'MODEL_PROVIDERS'
-  providers: ProviderForClient[]
+  providers: Provider[]
 }
 
 export interface ApiConfigurationsMessage {
   command: 'API_CONFIGURATIONS'
-  api_configurations: ApiConfigurationForClient[]
+  api_configurations: ApiConfiguration[]
   defaults: Record<ToolType, string | null>
 }
 
@@ -412,6 +439,11 @@ export interface ExtendedCacheDurationForAnthropicMessage {
   enabled: boolean
 }
 
+export interface WebConfigurationsMessage {
+  command: 'WEB_CONFIGURATIONS'
+  web_configurations: WebConfiguration[]
+}
+
 export type BackendMessage =
   | ModelProvidersMessage
   | ApiConfigurationsMessage
@@ -433,3 +465,5 @@ export type BackendMessage =
   | ShowSectionMessage
   | AutoRunIntelligentUpdateMessage
   | ExtendedCacheDurationForAnthropicMessage
+  | WebConfigurationsMessage
+

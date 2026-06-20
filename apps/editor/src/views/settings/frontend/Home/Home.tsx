@@ -10,10 +10,11 @@ import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
 import { Button as UiButton } from '@ui/components/editor/common/Button'
 import { Notice as UiNotice } from '@ui/components/editor/settings/Notice'
 import {
-  ApiConfigurationForClient,
-  ProviderForClient,
+  ApiConfiguration,
+  Provider,
   EditFormatInstructions
 } from '@/views/settings/types/messages'
+import { WebConfiguration } from '@shared/types/web-configuration'
 import { GeneralSection } from './sections/GeneralSection'
 import { ToolType } from '@/views/settings/types/tools'
 import {
@@ -21,6 +22,7 @@ import {
   use_translation,
   TranslationKey
 } from '../i18n/use-translation'
+import { WebConfigurationsSection } from './sections/WebConfigurationsSection'
 import {
   commit_message_instructions as default_commit_message_instructions,
   voice_input_instructions as default_voice_input_instructions
@@ -32,9 +34,9 @@ export type NavItem =
   | 'prompt-field'
   | 'checkpoints'
   | 'edit-format'
-  | 'chatbots'
   | 'model-providers'
-  | 'configurations'
+  | 'api-configurations'
+  | 'web-configurations'
   | 'default-configurations'
   | 'instructions'
 
@@ -57,20 +59,19 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   },
   {
     id: 'edit-format',
-    label: 'general.edit-format-instructions.title',
+    label: 'general.edit-formats.title',
     is_nested: true
   },
   {
-    id: 'chatbots',
-    label: 'general.chatbots.title',
-    is_nested: true
+    id: 'web-configurations',
+    label: 'sections.web-configurations' as any
   },
   {
     id: 'model-providers',
     label: 'sections.model-providers'
   },
   {
-    id: 'configurations',
+    id: 'api-configurations',
     label: 'sections.api-configurations'
   },
   {
@@ -86,8 +87,9 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
 ]
 
 type Props = {
-  providers: ProviderForClient[]
-  api_configurations: ApiConfigurationForClient[]
+  providers: Provider[]
+  api_configurations: ApiConfiguration[]
+  web_configurations: WebConfiguration[]
   defaults: Record<ToolType, string | null>
   edit_context_system_instructions: string
   voice_input_instructions: string
@@ -106,8 +108,9 @@ type Props = {
   clear_checks_in_workspace_behavior: 'ignore-open-editors' | 'uncheck-all'
   extended_cache_duration_for_anthropic: boolean
   auto_run_intelligent_update: boolean
-  set_providers: (providers: ProviderForClient[]) => void
-  set_api_configurations: (configurations: ApiConfigurationForClient[]) => void
+  set_providers: (providers: Provider[]) => void
+  set_api_configurations: (configurations: ApiConfiguration[]) => void
+  set_web_configurations: (configurations: WebConfiguration[]) => void
   on_context_size_warning_threshold_change: (
     threshold: number | undefined
   ) => void
@@ -141,12 +144,12 @@ type Props = {
   }) => void
   on_delete_provider: (provider_name: string) => void
   on_edit_provider: (provider_name: string) => void
-  on_reorder_providers: (reordered_providers: ProviderForClient[]) => void
+  on_reorder_providers: (reordered_providers: Provider[]) => void
   on_add_api_configuration: (params?: {
     insertion_index?: number
     create_on_top?: boolean
   }) => void
-  on_reorder_api_configurations: (reordered: ApiConfigurationForClient[]) => void
+  on_reorder_api_configurations: (reordered: ApiConfiguration[]) => void
   on_edit_api_configuration: (api_configuration_id: string) => void
   on_duplicate_api_configuration: (api_configuration_id: string) => void
   on_delete_api_configuration: (api_configuration_id: string) => void
@@ -155,6 +158,14 @@ type Props = {
     api_configuration_id: string | null
   ) => void
   on_select_default_api_configuration: (tool_name: ToolType) => void
+  on_reorder_web_configurations: (reordered: WebConfiguration[]) => void
+  on_add_web_configuration: (params?: {
+    insertion_index?: number
+    create_on_top?: boolean
+  }) => void
+  on_duplicate_web_configuration: (id: string) => void
+  on_edit_web_configuration: (id: string) => void
+  on_delete_web_configuration: (id: string) => void
   on_open_external_url: (url: string) => void
   scroll_to_section_on_load?: NavItem
 }
@@ -168,16 +179,19 @@ export const Home: React.FC<Props> = (props) => {
     'prompt-field': null,
     checkpoints: null,
     'edit-format': null,
-    chatbots: null,
     'model-providers': null,
-    configurations: null,
+    'api-configurations': null,
+    'web-configurations': null,
     'default-configurations': null,
     instructions: null
   })
 
-  const set_section_ref = useCallback((id: NavItem, el: HTMLDivElement | null) => {
-    section_refs.current[id] = el
-  }, [])
+  const set_section_ref = useCallback(
+    (id: NavItem, el: HTMLDivElement | null) => {
+      section_refs.current[id] = el
+    },
+    []
+  )
 
   const [commit_instructions, set_commit_instructions] = useState('')
   const [voice_input_instructions, set_voice_input_instructions] = useState('')
@@ -187,14 +201,18 @@ export const Home: React.FC<Props> = (props) => {
   const get_has_warning = (id: NavItem): boolean => {
     if (id == 'model-providers') {
       return props.providers.length == 0
-    } else if (id == 'configurations') {
+    } else if (id == 'api-configurations') {
       return props.api_configurations.length == 0
+    } else if (id == 'web-configurations') {
+      return props.web_configurations.length == 0
     } else {
       return false
     }
   }
 
-  const [active_nav_item_id, set_active_nav_item_id] = useState<NavItem>(NAV_ITEMS_CONFIG[0].id)
+  const [active_nav_item_id, set_active_nav_item_id] = useState<NavItem>(
+    NAV_ITEMS_CONFIG[0].id
+  )
 
   useEffect(() => {
     const scroll_container = scroll_container_ref.current
@@ -249,12 +267,15 @@ export const Home: React.FC<Props> = (props) => {
       const offset = section_rect.top - container_rect.top
 
       let extra_offset = 0
-      const is_subsection = NAV_ITEMS_CONFIG.find((i) => i.id === item_id)?.is_nested
+      const is_subsection = NAV_ITEMS_CONFIG.find(
+        (i) => i.id === item_id
+      )?.is_nested
       if (is_subsection) {
         extra_offset = -112
       }
 
-      const target_scroll_top = scroll_container.scrollTop + offset + extra_offset
+      const target_scroll_top =
+        scroll_container.scrollTop + offset + extra_offset
 
       scroll_container.scrollTo({
         top: target_scroll_top,
@@ -283,7 +304,6 @@ export const Home: React.FC<Props> = (props) => {
         ref={scroll_container_ref}
         title={t('sections.settings')}
         sidebar={NAV_ITEMS_CONFIG.map((item, i) => {
-
           return (
             <UiNavigationItem
               key={i}
@@ -293,7 +313,9 @@ export const Home: React.FC<Props> = (props) => {
               has_warning={get_has_warning(item.id)}
               on_click={(e) => handle_nav_click(e, item.id)}
               is_nested={item.is_nested}
-              is_last_nested={item.is_nested && !NAV_ITEMS_CONFIG[i + 1]?.is_nested}
+              is_last_nested={
+                item.is_nested && !NAV_ITEMS_CONFIG[i + 1]?.is_nested
+              }
             />
           )
         })}
@@ -339,16 +361,36 @@ export const Home: React.FC<Props> = (props) => {
             props.on_open_allow_patterns_settings
           }
           on_open_keybindings={props.on_open_keybindings}
+          auto_run_intelligent_update={props.auto_run_intelligent_update}
+          on_auto_run_intelligent_update_change={
+            props.on_auto_run_intelligent_update_change
+          }
+          include_prompts_in_commit_messages={
+            props.include_prompts_in_commit_messages
+          }
+          on_include_prompts_in_commit_messages_change={
+            props.on_include_prompts_in_commit_messages_change
+          }
+          voice_input_push_to_talk={props.voice_input_push_to_talk}
+          on_voice_input_push_to_talk_change={
+            props.on_voice_input_push_to_talk_change
+          }
+        />
+
+        <WebConfigurationsSection
+          ref={(el) => set_section_ref('web-configurations', el)}
+          set_section_ref={set_section_ref}
+          web_configurations={props.web_configurations}
+          set_web_configurations={props.set_web_configurations}
+          on_reorder_web_configurations={props.on_reorder_web_configurations}
+          on_add_web_configuration={props.on_add_web_configuration}
+          on_duplicate_web_configuration={props.on_duplicate_web_configuration}
+          on_edit_web_configuration={props.on_edit_web_configuration}
+          on_delete_web_configuration={props.on_delete_web_configuration}
           gemini_user_id={props.gemini_user_id}
           ai_studio_user_id={props.ai_studio_user_id}
           on_gemini_user_id_change={props.on_gemini_user_id_change}
           on_ai_studio_user_id_change={props.on_ai_studio_user_id_change}
-          auto_run_intelligent_update={props.auto_run_intelligent_update}
-          on_auto_run_intelligent_update_change={props.on_auto_run_intelligent_update_change}
-          include_prompts_in_commit_messages={props.include_prompts_in_commit_messages}
-          on_include_prompts_in_commit_messages_change={props.on_include_prompts_in_commit_messages_change}
-          voice_input_push_to_talk={props.voice_input_push_to_talk}
-          on_voice_input_push_to_talk_change={props.on_voice_input_push_to_talk_change}
         />
 
         <UiSection
@@ -434,7 +476,7 @@ export const Home: React.FC<Props> = (props) => {
         </UiSection>
 
         <ApiConfigurationsSection
-          ref={(el) => set_section_ref('configurations', el)}
+          ref={(el) => set_section_ref('api-configurations', el)}
           set_section_ref={set_section_ref}
           api_configurations={props.api_configurations}
           defaults={props.defaults}
@@ -444,8 +486,12 @@ export const Home: React.FC<Props> = (props) => {
           on_duplicate_api_configuration={props.on_duplicate_api_configuration}
           on_edit_api_configuration={props.on_edit_api_configuration}
           on_delete_api_configuration={props.on_delete_api_configuration}
-          on_set_default_api_configuration={props.on_set_default_api_configuration}
-          on_select_default_api_configuration={props.on_select_default_api_configuration}
+          on_set_default_api_configuration={
+            props.on_set_default_api_configuration
+          }
+          on_select_default_api_configuration={
+            props.on_select_default_api_configuration
+          }
           edit_context_instructions={edit_context_instructions}
           commit_instructions={commit_instructions}
           voice_input_instructions={voice_input_instructions}
@@ -471,23 +517,16 @@ export const Home: React.FC<Props> = (props) => {
               props.commit_message_instructions ==
                 default_commit_message_instructions
             ) {
-              set_commit_instructions(
-                default_commit_message_instructions
-              )
+              set_commit_instructions(default_commit_message_instructions)
             }
           }}
           on_voice_input_instructions_blur={() => {
-            props.on_voice_input_instructions_change(
-              voice_input_instructions
-            )
+            props.on_voice_input_instructions_change(voice_input_instructions)
             if (
               voice_input_instructions == '' &&
-              props.voice_input_instructions ==
-                default_voice_input_instructions
+              props.voice_input_instructions == default_voice_input_instructions
             ) {
-              set_voice_input_instructions(
-                default_voice_input_instructions
-              )
+              set_voice_input_instructions(default_voice_input_instructions)
             }
           }}
           default_edit_context_instructions={default_system_instructions}

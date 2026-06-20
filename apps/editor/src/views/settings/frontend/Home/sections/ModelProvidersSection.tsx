@@ -1,11 +1,11 @@
-import { ProviderForClient } from '@/views/settings/types/messages'
+import { Provider } from '@/views/settings/types/messages'
 import { SortableList } from '@ui/components/editor/settings/SortableList'
 import { IconButton } from '@ui/components/editor/common/IconButton'
 import { use_translation } from '../../i18n/use-translation'
 
 type ModelProvidersSectionProps = {
-  providers: ProviderForClient[] | undefined
-  on_reorder: (reordered_providers: ProviderForClient[]) => void
+  providers: Provider[] | undefined
+  on_reorder: (reordered_providers: Provider[]) => void
   on_add_provider: (params?: {
     insertion_index?: number
     create_on_top?: boolean

@@ -8,16 +8,16 @@ import { Button as UiButton } from '@ui/components/editor/common/Button'
 import { SortableList } from '@ui/components/editor/settings/SortableList'
 import { IconButton } from '@ui/components/editor/common/IconButton'
 import { DefaultConfigurationSelector } from '@ui/components/editor/settings/DefaultConfigurationSelector'
-import { ApiConfigurationForClient } from '@/views/settings/types/messages'
+import { ApiConfiguration } from '@/views/settings/types/messages'
 import { ToolType } from '@/views/settings/types/tools'
 import { use_translation } from '../../i18n/use-translation'
 import { NavItem } from '../Home'
 
 type Props = {
-  api_configurations: ApiConfigurationForClient[]
+  api_configurations: ApiConfiguration[]
   defaults: Record<ToolType, string | null>
-  set_api_configurations: (configurations: ApiConfigurationForClient[]) => void
-  on_reorder_api_configurations: (reordered: ApiConfigurationForClient[]) => void
+  set_api_configurations: (configurations: ApiConfiguration[]) => void
+  on_reorder_api_configurations: (reordered: ApiConfiguration[]) => void
   on_add_api_configuration: (params?: {
     insertion_index?: number
     create_on_top?: boolean

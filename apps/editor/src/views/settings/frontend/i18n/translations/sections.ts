@@ -70,5 +70,23 @@ export const sections = {
     cs: 'Konfigurace API',
     hu: 'API Konfigurációk',
     bg: 'API Конфигурации'
+  },
+  'sections.web-configurations': {
+    en: 'Web Configurations',
+    pl: 'Konfiguracje webowe',
+    'zh-cn': '网络配置',
+    ja: 'Web 設定',
+    'zh-tw': '網路設定',
+    de: 'Webkonfigurationen',
+    es: 'Configuraciones Web',
+    fr: 'Configurations Web',
+    'pt-br': 'Configurações Web',
+    ru: 'Веб-конфигурации',
+    ko: '웹 구성',
+    it: 'Configurazioni Web',
+    tr: 'Web Yapılandırmaları',
+    cs: 'Webové konfigurace',
+    hu: 'Webes Konfigurációk',
+    bg: 'Уеб конфигурации'
   }
 } as const

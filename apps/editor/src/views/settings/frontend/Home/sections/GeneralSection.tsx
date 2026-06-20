@@ -30,10 +30,6 @@ type Props = {
   check_new_files: boolean
   reuse_last_tab: boolean
   checkpoint_lifespan: number
-  gemini_user_id: number | null
-  ai_studio_user_id: number | null
-  on_gemini_user_id_change: (id: number | null) => void
-  on_ai_studio_user_id_change: (id: number | null) => void
   on_automatic_checkpoints_toggle: (disabled: boolean) => void
   on_send_with_shift_enter_change: (enabled: boolean) => void
   on_check_new_files_change: (enabled: boolean) => void
@@ -69,8 +65,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
     const [context_size_warning_threshold, set_context_size_warning_threshold] =
       useState<number>()
     const [checkpoint_lifespan, set_checkpoint_lifespan] = useState<number>()
-    const [gemini_user_id_str, set_gemini_user_id_str] = useState('')
-    const [ai_studio_user_id_str, set_ai_studio_user_id_str] = useState('')
     const [instructions, set_instructions] = useState<EditFormatInstructions>({
       whole: '',
       truncated: '',
@@ -85,23 +79,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
     useEffect(() => {
       set_checkpoint_lifespan(props.checkpoint_lifespan)
     }, [props.checkpoint_lifespan])
-
-    useEffect(() => {
-      set_gemini_user_id_str(
-        props.gemini_user_id === null || props.gemini_user_id === undefined
-          ? ''
-          : String(props.gemini_user_id)
-      )
-    }, [props.gemini_user_id])
-
-    useEffect(() => {
-      set_ai_studio_user_id_str(
-        props.ai_studio_user_id === null ||
-          props.ai_studio_user_id === undefined
-          ? ''
-          : String(props.ai_studio_user_id)
-      )
-    }, [props.ai_studio_user_id])
 
     useEffect(() => {
       if (props.edit_format_instructions) {
@@ -131,28 +108,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
       } else {
         props.on_checkpoint_lifespan_change(undefined)
         set_checkpoint_lifespan(CHECKPOINT_DEFAULT_LIFESPAN)
-      }
-    }
-
-    const handle_gemini_user_id_blur = () => {
-      if (gemini_user_id_str == '') {
-        props.on_gemini_user_id_change(null)
-        return
-      }
-      const num_id = parseInt(gemini_user_id_str, 10)
-      if (!isNaN(num_id) && num_id >= 0) {
-        props.on_gemini_user_id_change(num_id)
-      }
-    }
-
-    const handle_ai_studio_user_id_blur = () => {
-      if (ai_studio_user_id_str == '') {
-        props.on_ai_studio_user_id_change(null)
-        return
-      }
-      const num_id = parseInt(ai_studio_user_id_str, 10)
-      if (!isNaN(num_id) && num_id >= 0) {
-        props.on_ai_studio_user_id_change(num_id)
       }
     }
 
@@ -246,6 +201,16 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               <UiToggler
                 is_on={props.check_new_files}
                 on_toggle={props.on_check_new_files_change}
+              />
+            }
+          />
+          <UiItem
+            title={t('general.reuse-last-tab.title')}
+            description={t('general.reuse-last-tab.description')}
+            slot_right={
+              <UiToggler
+                is_on={props.reuse_last_tab}
+                on_toggle={props.on_reuse_last_tab_change}
               />
             }
           />
@@ -374,7 +339,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
         </div>
 
         <div ref={(el) => props.set_section_ref('edit-format', el)}>
-          <UiGroup title={t('general.edit-format-instructions.title')}>
+          <UiGroup title={t('general.edit-formats.title')}>
             <UiItem
               title={t('general.edit-format.whole.title')}
               description={t('general.edit-format.whole.description')}
@@ -488,47 +453,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 on_action_click={() => handle_reset_instruction('diff', EDIT_FORMAT_INSTRUCTIONS_DIFF)}
               />
             </UiItem>
-          </UiGroup>
-        </div>
-
-        <div ref={(el) => props.set_section_ref('chatbots', el)}>
-          <UiGroup title={t('general.chatbots.title')}>
-            <UiItem
-              title={t('general.reuse-last-tab.title')}
-              description={t('general.reuse-last-tab.description')}
-              slot_right={
-                <UiToggler
-                  is_on={props.reuse_last_tab}
-                  on_toggle={props.on_reuse_last_tab_change}
-                />
-              }
-            />
-            <UiItem
-              title={t('general.gemini-user-id.title')}
-              description={t('general.gemini-user-id.description')}
-              slot_right={
-                <UiInput
-                  type="number"
-                  value={gemini_user_id_str}
-                  on_change={set_gemini_user_id_str}
-                  on_blur={handle_gemini_user_id_blur}
-                  max_width={60}
-                />
-              }
-            />
-            <UiItem
-              title={t('general.ai-studio-user-id.title')}
-              description={t('general.ai-studio-user-id.description')}
-              slot_right={
-                <UiInput
-                  type="number"
-                  value={ai_studio_user_id_str}
-                  on_change={set_ai_studio_user_id_str}
-                  on_blur={handle_ai_studio_user_id_blur}
-                  max_width={60}
-                />
-              }
-            />
           </UiGroup>
         </div>
 
