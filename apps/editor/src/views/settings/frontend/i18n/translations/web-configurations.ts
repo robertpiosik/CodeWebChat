@@ -18,7 +18,7 @@ export const web_configurations = {
     bg: 'Конфигуриране на чатботове и техните модели за уеб употреба.'
   },
   'web-configurations.notice': {
-    en: 'Web configurations allow you to use various chatbots from the browser.',
+    en: 'Web configurations allow you to use various chatbots in the browser.',
     pl: 'Konfiguracje webowe pozwalają na korzystanie z różnych chatbotów z poziomu przeglądarki.',
     'zh-cn': '网络配置允许您在浏览器中使用各种聊天机器人。',
     ja: 'Web 設定を使用すると、ブラウザからさまざまなチャットボットを使用できます。',
@@ -26,7 +26,8 @@ export const web_configurations = {
     de: 'Mit Webkonfigurationen können Sie verschiedene Chatbots über den Browser nutzen.',
     es: 'Las configuraciones web te permiten usar varios chatbots desde el navegador.',
     fr: 'Les configurations web vous permettent d’utiliser divers chatbots depuis le navigateur.',
-    'pt-br': 'As configurações web permitem que você use vários chatbots no navegador.',
+    'pt-br':
+      'As configurações web permitem que você use vários chatbots no navegador.',
     ru: 'Веб-конфигурации позволяют использовать различные чат-боты из браузера.',
     ko: '웹 구성을 사용하면 브라우저에서 다양한 챗봇을 사용할 수 있습니다.',
     it: 'Le configurazioni web ti consentono di utilizzare vari chatbot dal browser.',

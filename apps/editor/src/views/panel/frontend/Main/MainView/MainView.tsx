@@ -447,7 +447,7 @@ export const MainView: React.FC<Props> = (props) => {
             <UiSeparator height={8} />
             <UiConfigurations
               configurations={web_configurations}
-              disable_invocation={!!warning}
+              disable_invocation={!!warning || !props.is_connected}
               on_create={(params) => {
                 props.on_create_web_configuration(
                   params?.create_on_top ? 'top' : 'bottom',
