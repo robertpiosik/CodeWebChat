@@ -1618,7 +1618,7 @@ export class WorkspaceProvider
       this._user_ignore_patterns.add(patterns)
     }
 
-    this._user_ignore_patterns.add(['node_modules', ...IGNORED_LOCK_FILES])
+    this._user_ignore_patterns.add(['node_modules', '.DS_Store', ...IGNORED_LOCK_FILES])
 
     const allow_patterns = config.get<string[]>('allowPatterns')
     this._user_allow_patterns = ignore()
