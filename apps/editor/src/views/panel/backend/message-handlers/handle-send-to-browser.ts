@@ -10,7 +10,7 @@ import {
   get_recently_used_web_configurations_key,
   FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY
 } from '@/constants/state-keys'
-import { ConfigWebConfigurationFormat } from '../utils/web-configuration-format-converters'
+import { ConfigWebConfigurationFormat } from '@/views/utils/web-configuration-format-converters'
 import { MODE } from '@/views/panel/types/main-view-mode'
 import { WebPromptType } from '@shared/types/prompt-types'
 import { CHATBOTS } from '@shared/constants/chatbots'

@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { DuplicateWebConfigurationMessage } from '@/views/panel/types/messages'
-import { ConfigWebConfigurationFormat } from '@/views/panel/backend/utils/web-configuration-format-converters'
+import { ConfigWebConfigurationFormat } from '@/views/utils/web-configuration-format-converters'
 
 const generate_unique_name = (
   base_name: string | undefined,

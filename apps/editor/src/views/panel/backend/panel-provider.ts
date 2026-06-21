@@ -118,7 +118,7 @@ import {
 import {
   config_web_configuration_to_ui_format,
   ConfigWebConfigurationFormat
-} from '@/views/panel/backend/utils/web-configuration-format-converters'
+} from '@/views/utils/web-configuration-format-converters'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { MODE, Mode } from '../types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
@@ -787,7 +787,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'REQUEST_CURRENTLY_OPEN_FILE_TEXT') {
             this.send_currently_open_file_text()
           } else if (message.command == 'REPLACE_WEB_CONFIGURATIONS') {
-            await handle_replace_web_configurations(this, message)
+            await handle_replace_web_configurations(message)
           } else if (message.command == 'GET_SEND_WITH_SHIFT_ENTER') {
             this._send_send_with_shift_enter()
           } else if (message.command == 'UPDATE_WEB_CONFIGURATION') {

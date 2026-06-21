@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { DeleteWebConfigurationMessage } from '@/views/panel/types/messages'
-import { ConfigWebConfigurationFormat } from '@/views/panel/backend/utils/web-configuration-format-converters'
+import { ConfigWebConfigurationFormat } from '@/views/utils/web-configuration-format-converters'
 
 export const handle_delete_web_configuration = async (
   panel_provider: PanelProvider,

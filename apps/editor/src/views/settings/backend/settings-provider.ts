@@ -53,7 +53,7 @@ import {
   handle_open_keybindings,
   handle_open_external_url
 } from './message-handlers'
-import { config_web_configuration_to_ui_format } from '@/views/panel/backend/utils/web-configuration-format-converters'
+import { config_web_configuration_to_ui_format } from '@/views/utils/web-configuration-format-converters'
 
 export class SettingsProvider {
   private _webview_panel: vscode.WebviewPanel | undefined

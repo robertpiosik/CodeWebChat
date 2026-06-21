@@ -6,7 +6,7 @@ import { WebConfiguration } from '@shared/types/web-configuration'
 import {
   ConfigWebConfigurationFormat,
   ui_web_configuration_to_config_format
-} from '@/views/panel/backend/utils/web-configuration-format-converters'
+} from '@/views/utils/web-configuration-format-converters'
 
 export const handle_update_web_configuration = async (
   panel_provider: PanelProvider,

@@ -1,10 +1,8 @@
 import * as vscode from 'vscode'
 import { ReplaceWebConfigurationsMessage } from '@/views/panel/types/messages'
-import { ui_web_configuration_to_config_format } from '@/views/panel/backend/utils/web-configuration-format-converters'
-import { PanelProvider } from '../panel-provider'
+import { ui_web_configuration_to_config_format } from '@/views/utils/web-configuration-format-converters'
 
 export const handle_replace_web_configurations = async (
-  panel_provider: PanelProvider,
   message: ReplaceWebConfigurationsMessage
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')

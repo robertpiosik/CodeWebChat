@@ -5,7 +5,7 @@ import { CHATBOTS } from '@shared/constants/chatbots'
 import {
   config_web_configuration_to_ui_format,
   ConfigWebConfigurationFormat
-} from '@/views/panel/backend/utils/web-configuration-format-converters'
+} from '@/views/utils/web-configuration-format-converters'
 import { CreateWebConfigurationMessage } from '@/views/panel/types/messages'
 
 const ITEM_NAME_WEB_CONFIGURATION = 'Web Configuration'
