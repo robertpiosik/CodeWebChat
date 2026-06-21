@@ -9,7 +9,7 @@ export const use_web_configuration_editing = (vscode: any) => {
 
   const edit_web_configuration_back_click_handler = () => {
     post_message(vscode, {
-      command: 'UPDATE_WEB_CONFIGURATION',
+      command: 'UPSERT_WEB_CONFIGURATION',
       updating_web_configuration: updating_web_configuration!,
       updated_web_configuration: updated_web_configuration!,
       origin: 'back_button'
@@ -18,7 +18,7 @@ export const use_web_configuration_editing = (vscode: any) => {
 
   const edit_web_configuration_save_handler = () => {
     post_message(vscode, {
-      command: 'UPDATE_WEB_CONFIGURATION',
+      command: 'UPSERT_WEB_CONFIGURATION',
       updating_web_configuration: updating_web_configuration!,
       updated_web_configuration: updated_web_configuration!,
       origin: 'save_button'

@@ -9,12 +9,12 @@ import { dictionary } from '@shared/constants/dictionary'
 import { ModelFetcher } from '@/services/model-fetcher'
 import {
   edit_model_for_api_configuration,
-  edit_provider_for_api_configuration,
   edit_reasoning_effort_for_api_config,
   edit_temperature_for_api_configuration,
   edit_system_instructions_override_for_api_configuration,
   initial_select_model,
-  initial_select_model_provider
+  initial_select_model_provider,
+  edit_model_provider_for_api_configuration
 } from './interactions'
 import axios from 'axios'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
@@ -27,7 +27,7 @@ export const upsert_api_configuration = async (params: {
   duplicate_from_id?: string
   create_on_top?: boolean
   insertion_index?: number
-}): Promise<void> => {
+}): Promise<ApiConfiguration | undefined> => {
   const providers_manager = new ModelProvidersManager(params.context)
   const model_fetcher = new ModelFetcher()
 
@@ -108,7 +108,7 @@ export const upsert_api_configuration = async (params: {
         quick_pick.show()
       }
     )
-    if (!position_quick_pick) return
+    if (!position_quick_pick) return undefined
 
     actual_insertion_index =
       position_quick_pick == 'Insert a new API configuration above'
@@ -130,7 +130,7 @@ export const upsert_api_configuration = async (params: {
       vscode.window.showErrorMessage(
         dictionary.error_message.CONFIGURATION_NOT_FOUND
       )
-      return
+      return undefined
     }
 
     api_configuration_to_edit = { ...api_configurations[api_configuration_index] }
@@ -155,7 +155,7 @@ export const upsert_api_configuration = async (params: {
         providers_manager,
         selected_model_provider?.name
       )
-      if (!selected_model_provider) return
+      if (!selected_model_provider) return undefined
 
       selected_model = await initial_select_model(
         model_fetcher,
@@ -502,7 +502,7 @@ export const upsert_api_configuration = async (params: {
       (c) => get_api_configuration_id(c) === original_id
     )
     if (JSON.stringify(original_api_configuration) === JSON.stringify(updated_api_configuration)) {
-      return
+      return undefined
     }
 
     if (
@@ -512,7 +512,7 @@ export const upsert_api_configuration = async (params: {
       vscode.window.showErrorMessage(
         dictionary.error_message.CONFIGURATION_ALREADY_EXISTS
       )
-      return
+      return undefined
     }
 
     const index = api_configurations.findIndex(
@@ -526,7 +526,7 @@ export const upsert_api_configuration = async (params: {
       vscode.window.showErrorMessage(
         dictionary.error_message.CONFIGURATION_ALREADY_EXISTS
       )
-      return
+      return undefined
     }
     if (params.create_on_top) {
       api_configurations.unshift(updated_api_configuration)
@@ -539,9 +539,11 @@ export const upsert_api_configuration = async (params: {
 
   await providers_manager.save_api_configurations(api_configurations)
 
-  if (was_default && set_default_api_configuration) {
+  if (set_default_api_configuration) {
     await set_default_api_configuration(updated_api_configuration)
   }
+
+  return updated_api_configuration
 }
 
 const verify_reasoning_effort = async (params: {

@@ -138,9 +138,6 @@ export const Main: React.FC<Props> = (props) => {
           set_code_completions_history(message.code_at_cursor || [])
           set_find_relevant_files_history(message.find_relevant_files || [])
           break
-        case 'WEB_CONFIGURATION_CREATED':
-          props.on_web_configuration_edit(message.web_configuration)
-          break
         case 'INSTRUCTIONS':
           if (
             message.caret_position !== undefined &&
@@ -325,11 +322,11 @@ export const Main: React.FC<Props> = (props) => {
     if (all_api_configurations) {
       const reordered_api_configs = reordered_configs
         .map((ui_config) => {
-          return all_api_configurations.find((c) => c.id === ui_config.id)!
+          return all_api_configurations.find((c) => c.id == ui_config.id)!
         })
         .filter(Boolean)
 
-      if (reordered_api_configs.length !== all_api_configurations.length) {
+      if (reordered_api_configs.length != all_api_configurations.length) {
         return
       }
 
@@ -377,7 +374,7 @@ export const Main: React.FC<Props> = (props) => {
     reference_index?: number
   ) => {
     post_message(props.vscode, {
-      command: 'CREATE_WEB_CONFIGURATION',
+      command: 'UPSERT_WEB_CONFIGURATION',
       placement,
       reference_index
     })

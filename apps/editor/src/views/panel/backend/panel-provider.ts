@@ -18,12 +18,11 @@ import {
 import {
   handle_copy_prompt,
   handle_send_to_browser,
-  handle_update_web_configuration,
+  handle_upsert_web_configuration,
   handle_delete_web_configuration,
   handle_create_checkpoint,
   handle_clear_all_checkpoints,
   handle_duplicate_web_configuration,
-  handle_create_web_configuration,
   handle_preview_web_configuration,
   handle_save_edit_format,
   handle_replace_web_configurations,
@@ -790,8 +789,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_replace_web_configurations(message)
           } else if (message.command == 'GET_SEND_WITH_SHIFT_ENTER') {
             this._send_send_with_shift_enter()
-          } else if (message.command == 'UPDATE_WEB_CONFIGURATION') {
-            await handle_update_web_configuration(this, message, webview_view)
+          } else if (message.command == 'UPSERT_WEB_CONFIGURATION') {
+            await handle_upsert_web_configuration(this, message)
           } else if (message.command == 'DELETE_WEB_CONFIGURATION') {
             await handle_delete_web_configuration(this, message, webview_view)
           } else if (message.command == 'DUPLICATE_WEB_CONFIGURATION') {
@@ -800,8 +799,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               message,
               webview_view
             )
-          } else if (message.command == 'CREATE_WEB_CONFIGURATION') {
-            await handle_create_web_configuration(this, message)
           } else if (message.command == 'UNDO') {
             await handle_undo(this)
           } else if (message.command == 'APPLY_RESPONSE_FROM_HISTORY') {

@@ -155,11 +155,13 @@ export interface GetContextSizeWarningThresholdMessage extends BaseMessage {
   command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD'
 }
 
-export interface UpdateWebConfigurationMessage extends BaseMessage {
-  command: 'UPDATE_WEB_CONFIGURATION'
-  updating_web_configuration: WebConfiguration
-  updated_web_configuration: WebConfiguration
-  origin: 'back_button' | 'save_button'
+export interface UpsertWebConfigurationMessage extends BaseMessage {
+  command: 'UPSERT_WEB_CONFIGURATION'
+  placement?: 'top' | 'bottom'
+  reference_index?: number
+  updating_web_configuration?: WebConfiguration
+  updated_web_configuration?: WebConfiguration
+  origin?: 'back_button' | 'save_button'
 }
 
 export interface DeleteWebConfigurationMessage extends BaseMessage {
@@ -170,12 +172,6 @@ export interface DeleteWebConfigurationMessage extends BaseMessage {
 export interface DuplicateWebConfigurationMessage extends BaseMessage {
   command: 'DUPLICATE_WEB_CONFIGURATION'
   index: number
-}
-
-export interface CreateWebConfigurationMessage extends BaseMessage {
-  command: 'CREATE_WEB_CONFIGURATION'
-  placement?: 'top' | 'bottom'
-  reference_index?: number
 }
 
 export interface ExecuteCommandMessage extends BaseMessage {
@@ -578,10 +574,9 @@ export type FrontendMessage =
   | GetResponseHistoryMessage
   | SaveHistoryMessage
   | GetContextSizeWarningThresholdMessage
-  | UpdateWebConfigurationMessage
+  | UpsertWebConfigurationMessage
   | DeleteWebConfigurationMessage
   | DuplicateWebConfigurationMessage
-  | CreateWebConfigurationMessage
   | ExecuteCommandMessage
   | ShowPromptTemplateQuickPickMessage
   | PreviewWebConfigurationMessage
@@ -728,11 +723,6 @@ export interface TokenCountMessage extends BaseMessage {
 export interface ContextSizeWarningThresholdMessage extends BaseMessage {
   command: 'CONTEXT_SIZE_WARNING_THRESHOLD'
   threshold: number
-}
-
-export interface WebConfigurationCreatedMessage extends BaseMessage {
-  command: 'WEB_CONFIGURATION_CREATED'
-  web_configuration: WebConfiguration
 }
 
 export interface WebConfigurationUpdatedMessage extends BaseMessage {
@@ -937,7 +927,6 @@ export type BackendMessage =
   | ResponseHistoryMessage
   | TokenCountMessage
   | ContextSizeWarningThresholdMessage
-  | WebConfigurationCreatedMessage
   | WebConfigurationUpdatedMessage
   | NewlyPickedModelMessage
   | NewlyPickedChatbotMessage
