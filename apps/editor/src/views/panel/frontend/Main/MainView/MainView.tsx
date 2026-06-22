@@ -71,7 +71,7 @@ type Props = {
   ) => void
   on_web_configuration_edit: (web_configuration_name: string) => void
   on_duplicate_web_configuration: (index: number) => void
-  on_delete_web_configuration: (index: number) => void
+  on_delete_web_configuration: (name: string) => void
   on_toggle_web_configuration_pinned: (name: string) => void
   selected_web_configuration_name?: string
   selected_api_configuration_id?: string
@@ -477,10 +477,7 @@ export const MainView: React.FC<Props> = (props) => {
                 props.on_duplicate_web_configuration(idx)
               }}
               on_delete={(id) => {
-                const idx = props.web_configurations.findIndex(
-                  (p, i) => (p.name ?? `unnamed-${i}`) == id
-                )
-                props.on_delete_web_configuration(idx)
+                props.on_delete_web_configuration(id)
               }}
               on_toggle_pinned={(id) => {
                 props.on_toggle_web_configuration_pinned(id)

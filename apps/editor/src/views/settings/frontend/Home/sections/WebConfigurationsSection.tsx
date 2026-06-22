@@ -23,7 +23,7 @@ type Props = {
   }) => void
   on_duplicate_web_configuration: (id: string) => void
   on_edit_web_configuration: (id: string) => void
-  on_delete_web_configuration: (id: string) => void
+  on_delete_web_configuration: (name: string) => void
   set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void
   gemini_user_id: number | null
   ai_studio_user_id: number | null

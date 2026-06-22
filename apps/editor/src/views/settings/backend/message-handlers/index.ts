@@ -46,3 +46,8 @@ export * from './handle-get-extended-cache-duration-for-anthropic'
 export * from './handle-update-extended-cache-duration-for-anthropic'
 export * from './handle-open-keybindings'
 export * from './handle-open-external-url'
+export * from './handle-delete-web-configuration'
+export * from './handle-reorder-web-configurations'
+export * from './handle-create-web-configuration'
+
+

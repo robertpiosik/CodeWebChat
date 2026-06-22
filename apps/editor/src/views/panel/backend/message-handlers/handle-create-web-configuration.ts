@@ -1,12 +1,12 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { UpsertWebConfigurationMessage } from '@/views/panel/types/messages'
-import { upsert_web_configuration } from '@/views/utils/upsert-web-configuration'
+import { CreateWebConfigurationMessage } from '@/views/panel/types/messages'
+import { create_web_configuration } from '@/views/utils/create-web-configuration'
 
-export const handle_upsert_web_configuration = async (
+export const handle_create_web_configuration = async (
   panel_provider: PanelProvider,
-  message: UpsertWebConfigurationMessage
+  message: CreateWebConfigurationMessage
 ): Promise<void> => {
-  const new_config = await upsert_web_configuration(message)
+  const new_config = await create_web_configuration(message)
 
   if (new_config && new_config.name) {
     panel_provider.send_message({

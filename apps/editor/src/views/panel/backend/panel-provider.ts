@@ -18,14 +18,16 @@ import {
 import {
   handle_copy_prompt,
   handle_send_to_browser,
-  handle_upsert_web_configuration,
+  handle_create_web_configuration,
+  handle_update_web_configuration,
   handle_delete_web_configuration,
   handle_create_checkpoint,
   handle_clear_all_checkpoints,
   handle_duplicate_web_configuration,
   handle_preview_web_configuration,
   handle_save_edit_format,
-  handle_replace_web_configurations,
+  handle_reorder_web_configurations,
+  handle_toggle_pinned_web_configuration,
   handle_get_connection_status,
   handle_get_history,
   handle_apply_response_from_history,
@@ -785,14 +787,18 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             this._send_context_size_warning_threshold()
           } else if (message.command == 'REQUEST_CURRENTLY_OPEN_FILE_TEXT') {
             this.send_currently_open_file_text()
-          } else if (message.command == 'REPLACE_WEB_CONFIGURATIONS') {
-            await handle_replace_web_configurations(message)
+          } else if (message.command == 'REORDER_WEB_CONFIGURATIONS') {
+            await handle_reorder_web_configurations(message)
+          } else if (message.command == 'TOGGLE_PINNED_WEB_CONFIGURATION') {
+            await handle_toggle_pinned_web_configuration(message)
           } else if (message.command == 'GET_SEND_WITH_SHIFT_ENTER') {
             this._send_send_with_shift_enter()
-          } else if (message.command == 'UPSERT_WEB_CONFIGURATION') {
-            await handle_upsert_web_configuration(this, message)
+          } else if (message.command == 'CREATE_WEB_CONFIGURATION') {
+            await handle_create_web_configuration(this, message)
+          } else if (message.command == 'UPDATE_WEB_CONFIGURATION') {
+            await handle_update_web_configuration(this, message)
           } else if (message.command == 'DELETE_WEB_CONFIGURATION') {
-            await handle_delete_web_configuration(this, message, webview_view)
+            await handle_delete_web_configuration( message)
           } else if (message.command == 'DUPLICATE_WEB_CONFIGURATION') {
             await handle_duplicate_web_configuration(
               this,

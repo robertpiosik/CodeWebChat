@@ -263,17 +263,14 @@ export interface GetWebConfigurationsMessage {
 }
 export interface ReorderWebConfigurationsMessage {
   command: 'REORDER_WEB_CONFIGURATIONS'
-}
-export interface ReorderWebConfigurationsMessage {
-  command: 'REORDER_WEB_CONFIGURATIONS'
   web_configurations: WebConfiguration[]
 }
 export interface DeleteWebConfigurationMessage {
   command: 'DELETE_WEB_CONFIGURATION'
-  web_configuration_id: string
+  name: string
 }
-export interface UpsertWebConfigurationMessage {
-  command: 'UPSERT_WEB_CONFIGURATION'
+export interface CreateWebConfigurationMessage {
+  command: 'CREATE_WEB_CONFIGURATION'
   web_configuration_id?: string
   insertion_index?: number
   create_on_top?: boolean
@@ -335,7 +332,7 @@ export type FrontendMessage =
   | GetWebConfigurationsMessage
   | ReorderWebConfigurationsMessage
   | DeleteWebConfigurationMessage
-  | UpsertWebConfigurationMessage
+  | CreateWebConfigurationMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface ModelProvidersMessage {

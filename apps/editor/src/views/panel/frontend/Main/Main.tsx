@@ -234,21 +234,8 @@ export const Main: React.FC<Props> = (props) => {
       set_all_web_configurations(updated_web_configurations)
 
       post_message(props.vscode, {
-        command: 'REPLACE_WEB_CONFIGURATIONS',
-        web_configurations: updated_web_configurations.map((web_configuration) => ({
-          name: web_configuration.name,
-          chatbot: web_configuration.chatbot,
-          model: web_configuration.model,
-          temperature: web_configuration.temperature,
-          top_p: web_configuration.top_p,
-          thinking_budget: web_configuration.thinking_budget,
-          reasoning_effort: web_configuration.reasoning_effort,
-          system_instructions: web_configuration.system_instructions,
-          options: web_configuration.options,
-          port: web_configuration.port,
-          new_url: web_configuration.new_url,
-          is_pinned: web_configuration.is_pinned || undefined
-        }))
+        command: 'TOGGLE_PINNED_WEB_CONFIGURATION',
+        web_configuration_name: name
       })
     }
   }
@@ -286,7 +273,7 @@ export const Main: React.FC<Props> = (props) => {
     }
 
     post_message(props.vscode, {
-      command: 'REPLACE_WEB_CONFIGURATIONS',
+      command: 'REORDER_WEB_CONFIGURATIONS',
       web_configurations: reordered_web_configurations.map((web_configuration) => ({
         name: web_configuration.name,
         chatbot: web_configuration.chatbot,
@@ -374,7 +361,7 @@ export const Main: React.FC<Props> = (props) => {
     reference_index?: number
   ) => {
     post_message(props.vscode, {
-      command: 'UPSERT_WEB_CONFIGURATION',
+      command: 'CREATE_WEB_CONFIGURATION',
       placement,
       reference_index
     })
@@ -392,10 +379,10 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_delete_web_configuration = (index: number) => {
+  const handle_delete_web_configuration = (name: string) => {
     post_message(props.vscode, {
       command: 'DELETE_WEB_CONFIGURATION',
-      index
+      name
     })
   }
 

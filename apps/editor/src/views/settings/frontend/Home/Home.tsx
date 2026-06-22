@@ -165,7 +165,7 @@ type Props = {
   }) => void
   on_duplicate_web_configuration: (id: string) => void
   on_edit_web_configuration: (id: string) => void
-  on_delete_web_configuration: (id: string) => void
+  on_delete_web_configuration: (name: string) => void
   on_open_external_url: (url: string) => void
   scroll_to_section_on_load?: NavItem
 }

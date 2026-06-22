@@ -2,23 +2,23 @@ import { useEffect, useState } from 'react'
 import {
   BackendMessage,
   EditFormatInstructions,
-  ApiConfigurationForClient,
-  ProviderForClient,
-  WebConfigurationForClient,
+  ApiConfiguration,
+  Provider,
   FrontendMessage
 } from '@/views/settings/types/messages'
 import { ToolType } from '@/views/settings/types/tools'
 import { post_message } from '../utils/post-message'
+import { WebConfiguration } from '@shared/types/web-configuration'
 
 export const use_settings = (vscode: any) => {
-  const [providers, set_providers] = useState<ProviderForClient[] | undefined>(
+  const [providers, set_providers] = useState<Provider[] | undefined>(
     undefined
   )
   const [api_configurations, set_api_configurations] = useState<
-    ApiConfigurationForClient[] | undefined
+    ApiConfiguration[] | undefined
   >(undefined)
   const [web_configurations, set_web_configurations] = useState<
-    WebConfigurationForClient[] | undefined
+    WebConfiguration[] | undefined
   >(undefined)
   const [defaults, set_defaults] = useState<
     Record<ToolType, string | null> | undefined
@@ -158,7 +158,7 @@ export const use_settings = (vscode: any) => {
   }, [])
 
   const handle_reorder_providers = (
-    reordered_providers: ProviderForClient[]
+    reordered_providers: Provider[]
   ) => {
     set_providers(reordered_providers)
     post_message(vscode, {
@@ -203,7 +203,7 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_reorder_api_configurations = (reordered: ApiConfigurationForClient[]) => {
+  const handle_reorder_api_configurations = (reordered: ApiConfiguration[]) => {
     post_message(vscode, {
       command: 'REORDER_API_CONFIGURATIONS',
       api_configurations: reordered
@@ -252,7 +252,7 @@ export const use_settings = (vscode: any) => {
     } as FrontendMessage)
   }
 
-  const handle_reorder_web_configurations = (reordered: WebConfigurationForClient[]) => {
+  const handle_reorder_web_configurations = (reordered: WebConfiguration[]) => {
     post_message(vscode, {
       command: 'REORDER_WEB_CONFIGURATIONS',
       web_configurations: reordered
@@ -264,7 +264,7 @@ export const use_settings = (vscode: any) => {
     create_on_top?: boolean
   }) => {
     post_message(vscode, {
-      command: 'UPSERT_WEB_CONFIGURATION',
+      command: 'CREATE_WEB_CONFIGURATION',
       insertion_index: params?.insertion_index,
       create_on_top: params?.create_on_top
     })
@@ -272,22 +272,22 @@ export const use_settings = (vscode: any) => {
 
   const handle_duplicate_web_configuration = (web_configuration_id: string) => {
     post_message(vscode, {
-      command: 'UPSERT_WEB_CONFIGURATION',
+      command: 'CREATE_WEB_CONFIGURATION',
       duplicate_from_id: web_configuration_id
     })
   }
 
   const handle_edit_web_configuration = (web_configuration_id: string) => {
     post_message(vscode, {
-      command: 'UPSERT_WEB_CONFIGURATION',
+      command: 'CREATE_WEB_CONFIGURATION',
       web_configuration_id
     })
   }
 
-  const handle_delete_web_configuration = (web_configuration_id: string) => {
+  const handle_delete_web_configuration = (name: string) => {
     post_message(vscode, {
       command: 'DELETE_WEB_CONFIGURATION',
-      web_configuration_id
+      name
     })
   }
 

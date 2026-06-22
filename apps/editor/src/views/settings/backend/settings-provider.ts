@@ -51,7 +51,10 @@ import {
   handle_get_extended_cache_duration_for_anthropic,
   handle_update_extended_cache_duration_for_anthropic,
   handle_open_keybindings,
-  handle_open_external_url
+  handle_open_external_url,
+  handle_delete_web_configuration,
+  handle_reorder_web_configurations,
+  handle_create_web_configuration
 } from './message-handlers'
 import { config_web_configuration_to_ui_format } from '@/views/utils/web-configuration-format-converters'
 
@@ -67,7 +70,8 @@ export class SettingsProvider {
 
   private _send_web_configurations() {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const web_configurations_config = config.get<any[]>('webConfigurations', []) || []
+    const web_configurations_config =
+      config.get<any[]>('webConfigurations', []) || []
 
     this.postMessage({
       command: 'WEB_CONFIGURATIONS',
@@ -147,9 +151,15 @@ export class SettingsProvider {
         } else if (message.command == 'GET_API_CONFIGURATIONS') {
           await handle_get_api_configurations(this)
         } else if (message.command == 'REORDER_API_CONFIGURATIONS') {
-          await handle_reorder_api_configurations(this, message.api_configurations)
+          await handle_reorder_api_configurations(
+            this,
+            message.api_configurations
+          )
         } else if (message.command == 'DELETE_API_CONFIGURATION') {
-          await handle_delete_api_configuration(this, message.api_configuration_id)
+          await handle_delete_api_configuration(
+            this,
+            message.api_configuration_id
+          )
         } else if (message.command == 'SET_DEFAULT_API_CONFIGURATION') {
           await handle_set_default_api_configuration(
             this,
@@ -259,9 +269,11 @@ export class SettingsProvider {
         } else if (message.command == 'GET_WEB_CONFIGURATIONS') {
           this._send_web_configurations()
         } else if (message.command == 'REORDER_WEB_CONFIGURATIONS') {
+          await handle_reorder_web_configurations(message)
         } else if (message.command == 'DELETE_WEB_CONFIGURATION') {
-        } else if (message.command == 'UPSERT_WEB_CONFIGURATION') {
-          
+          await handle_delete_web_configuration(message.name)
+        } else if (message.command == 'CREATE_WEB_CONFIGURATION') {
+          await handle_create_web_configuration(message)
         }
       },
       null,

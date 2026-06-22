@@ -106,9 +106,14 @@ export interface GetWebConfigurationsMessage extends BaseMessage {
   command: 'GET_WEB_CONFIGURATIONS'
 }
 
-export interface ReplaceWebConfigurationsMessage extends BaseMessage {
-  command: 'REPLACE_WEB_CONFIGURATIONS'
+export interface ReorderWebConfigurationsMessage extends BaseMessage {
+  command: 'REORDER_WEB_CONFIGURATIONS'
   web_configurations: WebConfiguration[]
+}
+
+export interface TogglePinnedWebConfigurationMessage extends BaseMessage {
+  command: 'TOGGLE_PINNED_WEB_CONFIGURATION'
+  web_configuration_name: string
 }
 
 export interface SendToBrowserMessage extends BaseMessage {
@@ -155,18 +160,22 @@ export interface GetContextSizeWarningThresholdMessage extends BaseMessage {
   command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD'
 }
 
-export interface UpsertWebConfigurationMessage extends BaseMessage {
-  command: 'UPSERT_WEB_CONFIGURATION'
+export interface CreateWebConfigurationMessage extends BaseMessage {
+  command: 'CREATE_WEB_CONFIGURATION'
   placement?: 'top' | 'bottom'
   reference_index?: number
-  updating_web_configuration?: WebConfiguration
-  updated_web_configuration?: WebConfiguration
+}
+
+export interface UpdateWebConfigurationMessage extends BaseMessage {
+  command: 'UPDATE_WEB_CONFIGURATION'
+  updating_web_configuration: WebConfiguration
+  updated_web_configuration: WebConfiguration
   origin?: 'back_button' | 'save_button'
 }
 
 export interface DeleteWebConfigurationMessage extends BaseMessage {
   command: 'DELETE_WEB_CONFIGURATION'
-  index: number
+  name: string
 }
 
 export interface DuplicateWebConfigurationMessage extends BaseMessage {
@@ -565,7 +574,8 @@ export type FrontendMessage =
   | SaveEditFormatMessage
   | GetConnectionStatusMessage
   | GetWebConfigurationsMessage
-  | ReplaceWebConfigurationsMessage
+  | ReorderWebConfigurationsMessage
+  | TogglePinnedWebConfigurationMessage
   | SendToBrowserMessage
   | CopyPromptMessage
   | RequestEditorStateMessage
@@ -574,7 +584,8 @@ export type FrontendMessage =
   | GetResponseHistoryMessage
   | SaveHistoryMessage
   | GetContextSizeWarningThresholdMessage
-  | UpsertWebConfigurationMessage
+  | CreateWebConfigurationMessage
+  | UpdateWebConfigurationMessage
   | DeleteWebConfigurationMessage
   | DuplicateWebConfigurationMessage
   | ExecuteCommandMessage
