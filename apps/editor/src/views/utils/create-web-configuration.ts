@@ -4,6 +4,7 @@ import { CHATBOTS } from '@shared/constants/chatbots'
 import {
   ConfigWebConfigurationFormat
 } from './web-configuration-format-converters'
+import { generate_unique_name } from './generate-unique-name'
 
 export const create_web_configuration = async (params: {
   placement?: 'top' | 'bottom'
@@ -107,11 +108,10 @@ export const create_web_configuration = async (params: {
 
   if (!selected_chatbot) return undefined
 
-  let copy_number = 0
-  let new_name: string
-  do {
-    new_name = `(${copy_number++})`
-  } while (current_web_configurations.some((p) => p.name == new_name))
+  const new_name = generate_unique_name(
+    undefined,
+    current_web_configurations.map(c => c.name)
+  )
 
   const new_web_configuration: ConfigWebConfigurationFormat = {
     name: new_name,

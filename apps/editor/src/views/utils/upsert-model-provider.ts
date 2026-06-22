@@ -6,6 +6,7 @@ import {
 } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
 import { PROVIDERS } from '@/constants/providers'
+import { generate_unique_name } from './generate-unique-name'
 
 const normalize_base_url = (url: string): string => {
   return url.trim().replace(/\/+$/, '')
@@ -465,12 +466,10 @@ export const upsert_model_provider = async (params: {
 
           const model_providers = await providers_manager.get_model_providers()
 
-          let final_name = new_name
-          let counter = 1
-          while (model_providers.some((p) => p.name == final_name)) {
-            final_name = `${new_name} (${counter})`
-            counter++
-          }
+          const final_name = generate_unique_name(
+            new_name,
+            model_providers.map((p) => p.name)
+          )
 
           const new_model_provider: ModelProvider = {
             name: final_name,
@@ -566,17 +565,12 @@ export const upsert_model_provider = async (params: {
   const model_providers = await providers_manager.get_model_providers()
   let updated_model_providers = [...model_providers]
 
-  let final_name = working_model_provider.name
-  let counter = 1
-  while (
-    updated_model_providers.some(
-      (p) => p.name == final_name && p.name != original_name
-    )
-  ) {
-    final_name = `${working_model_provider.name} (${counter})`
-    counter++
-  }
-  working_model_provider.name = final_name
+  working_model_provider.name = generate_unique_name(
+    working_model_provider.name,
+    updated_model_providers
+      .filter((p) => p.name !== original_name)
+      .map((p) => p.name)
+  )
 
   if (original_name) {
     updated_model_providers = updated_model_providers.map((p) =>

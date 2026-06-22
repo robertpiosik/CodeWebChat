@@ -58,6 +58,9 @@ export const handle_update_web_configuration = async (
   )
 
   if (!has_changes) {
+    panel_provider.send_message({
+      command: 'WEB_CONFIGURATION_UPDATED'
+    })
     return
   }
 
@@ -77,6 +80,9 @@ export const handle_update_web_configuration = async (
     )
 
     if (result == discard_changes) {
+      panel_provider.send_message({
+        command: 'WEB_CONFIGURATION_UPDATED'
+      })
       return
     }
 
