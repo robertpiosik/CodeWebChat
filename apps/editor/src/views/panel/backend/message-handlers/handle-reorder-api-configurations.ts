@@ -1,6 +1,6 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { ReorderApiConfigurationsMessage } from '@/views/panel/types/messages'
-import { reorder_api_configurations } from '@/views/utils/reorder-api-configurations'
+import { reorder_api_configurations } from '@/views/actions/reorder-api-configurations'
 
 export const handle_reorder_api_configurations = async (
   panel_provider: PanelProvider,

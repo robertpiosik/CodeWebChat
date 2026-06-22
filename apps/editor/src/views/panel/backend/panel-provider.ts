@@ -12,9 +12,7 @@ import { OpenEditorsProvider } from '@/context/providers/open-editors/open-edito
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { token_count_emitter } from '@/context/context-initialization'
 import { EditFormat } from '@shared/types/edit-format'
-import {
-  get_checkpoints
-} from './message-handlers/checkpoints/actions'
+import { get_checkpoints } from './message-handlers/checkpoints/actions'
 import {
   handle_copy_prompt,
   handle_send_to_browser,
@@ -798,13 +796,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'UPDATE_WEB_CONFIGURATION') {
             await handle_update_web_configuration(this, message)
           } else if (message.command == 'DELETE_WEB_CONFIGURATION') {
-            await handle_delete_web_configuration( message)
+            await handle_delete_web_configuration(message)
           } else if (message.command == 'DUPLICATE_WEB_CONFIGURATION') {
-            await handle_duplicate_web_configuration(
-              this,
-              message,
-              webview_view
-            )
+            await handle_duplicate_web_configuration(message)
           } else if (message.command == 'UNDO') {
             await handle_undo(this)
           } else if (message.command == 'APPLY_RESPONSE_FROM_HISTORY') {

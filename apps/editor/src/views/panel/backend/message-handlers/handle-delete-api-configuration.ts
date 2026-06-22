@@ -1,5 +1,5 @@
 import { PanelProvider } from '../panel-provider'
-import { delete_api_configuration } from '@/views/utils/delete-api-configuration'
+import { delete_api_configuration } from '@/views/actions/delete-api-configuration'
 
 export const handle_delete_api_configuration = async (
   provider: PanelProvider,

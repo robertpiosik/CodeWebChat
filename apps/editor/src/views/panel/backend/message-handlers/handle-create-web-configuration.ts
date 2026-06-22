@@ -1,6 +1,6 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { CreateWebConfigurationMessage } from '@/views/panel/types/messages'
-import { create_web_configuration } from '@/views/utils/create-web-configuration'
+import { create_web_configuration } from '@/views/actions/create-web-configuration'
 
 export const handle_create_web_configuration = async (
   panel_provider: PanelProvider,

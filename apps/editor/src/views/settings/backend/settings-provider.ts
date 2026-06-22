@@ -54,7 +54,8 @@ import {
   handle_open_external_url,
   handle_delete_web_configuration,
   handle_reorder_web_configurations,
-  handle_create_web_configuration
+  handle_create_web_configuration,
+  handle_duplicate_web_configuration
 } from './message-handlers'
 import { config_web_configuration_to_ui_format } from '@/views/utils/web-configuration-format-converters'
 
@@ -272,6 +273,8 @@ export class SettingsProvider {
           await handle_reorder_web_configurations(message)
         } else if (message.command == 'DELETE_WEB_CONFIGURATION') {
           await handle_delete_web_configuration(message.name)
+        } else if (message.command == 'DUPLICATE_WEB_CONFIGURATION') {
+          await handle_duplicate_web_configuration(message)
         } else if (message.command == 'CREATE_WEB_CONFIGURATION') {
           await handle_create_web_configuration(message)
         }

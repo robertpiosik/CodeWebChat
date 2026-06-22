@@ -269,12 +269,16 @@ export interface DeleteWebConfigurationMessage {
   command: 'DELETE_WEB_CONFIGURATION'
   name: string
 }
+export interface DuplicateWebConfigurationMessage {
+  command: 'DUPLICATE_WEB_CONFIGURATION'
+  name: string
+}
+
 export interface CreateWebConfigurationMessage {
   command: 'CREATE_WEB_CONFIGURATION'
   web_configuration_id?: string
   insertion_index?: number
   create_on_top?: boolean
-  duplicate_from_id?: string
 }
 
 export type FrontendMessage =
@@ -332,6 +336,7 @@ export type FrontendMessage =
   | GetWebConfigurationsMessage
   | ReorderWebConfigurationsMessage
   | DeleteWebConfigurationMessage
+  | DuplicateWebConfigurationMessage
   | CreateWebConfigurationMessage
 
 // === FROM BACKEND TO FRONTEND ===

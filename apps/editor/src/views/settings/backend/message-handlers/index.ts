@@ -49,5 +49,6 @@ export * from './handle-open-external-url'
 export * from './handle-delete-web-configuration'
 export * from './handle-reorder-web-configurations'
 export * from './handle-create-web-configuration'
+export * from './handle-duplicate-web-configuration'
 
 

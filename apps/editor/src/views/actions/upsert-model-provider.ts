@@ -6,7 +6,7 @@ import {
 } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
 import { PROVIDERS } from '@/constants/providers'
-import { generate_unique_name } from './generate-unique-name'
+import { generate_unique_name } from '../utils/generate-unique-name'
 
 const normalize_base_url = (url: string): string => {
   return url.trim().replace(/\/+$/, '')

@@ -1,5 +1,5 @@
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
-import { delete_api_configuration } from '../../../utils/delete-api-configuration'
+import { delete_api_configuration } from '../../../actions/delete-api-configuration'
 
 export const handle_delete_api_configuration = async (
   provider: SettingsProvider,

@@ -180,7 +180,7 @@ export interface DeleteWebConfigurationMessage extends BaseMessage {
 
 export interface DuplicateWebConfigurationMessage extends BaseMessage {
   command: 'DUPLICATE_WEB_CONFIGURATION'
-  index: number
+  name: string
 }
 
 export interface ExecuteCommandMessage extends BaseMessage {

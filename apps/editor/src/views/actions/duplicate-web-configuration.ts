@@ -1,20 +1,22 @@
 import * as vscode from 'vscode'
 import { dictionary } from '@shared/constants/dictionary'
 import { ConfigWebConfigurationFormat } from '@/views/utils/web-configuration-format-converters'
-import { generate_unique_name } from './generate-unique-name'
+import { generate_unique_name } from '../utils/generate-unique-name'
 
 
 export const duplicate_web_configuration = async (params: {
-  index: number
+  name: string
 }): Promise<void> => {
-  const original_index = params.index
+  const original_name = params.name
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const current_web_configurations =
     config.get<ConfigWebConfigurationFormat[]>('webConfigurations', []) || []
 
-  if (original_index < 0 || original_index >= current_web_configurations.length) {
+  const original_index = current_web_configurations.findIndex((c, i) => (c.name ?? `unnamed-${i}`) === original_name)
+
+  if (original_index === -1) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.PRESET_NOT_FOUND(`at index ${original_index}`)
+      dictionary.error_message.PRESET_NOT_FOUND(`with name ${original_name}`)
     )
     return
   }
@@ -22,8 +24,8 @@ export const duplicate_web_configuration = async (params: {
   const web_configuration_to_duplicate = current_web_configurations[original_index]
 
   const new_name = generate_unique_name(
-    web_configuration_to_duplicate.name,
-    current_web_configurations.map(c => c.name)
+    web_configuration_to_duplicate.name || 'unnamed',
+    current_web_configurations.map((c, i) => c.name ?? `unnamed-${i}`)
   )
 
   const duplicated_web_configuration = {

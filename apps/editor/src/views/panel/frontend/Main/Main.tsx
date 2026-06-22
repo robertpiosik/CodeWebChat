@@ -372,10 +372,10 @@ export const Main: React.FC<Props> = (props) => {
     if (web_configuration) props.on_web_configuration_edit(web_configuration)
   }
 
-  const handle_duplicate_web_configuration = (index: number) => {
+  const handle_duplicate_web_configuration = (name: string) => {
     post_message(props.vscode, {
       command: 'DUPLICATE_WEB_CONFIGURATION',
-      index
+      name
     })
   }
 

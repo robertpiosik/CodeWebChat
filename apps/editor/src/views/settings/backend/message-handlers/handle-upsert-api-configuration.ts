@@ -1,6 +1,6 @@
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import { UpsertApiConfigurationMessage } from '@/views/settings/types/messages'
-import { upsert_api_configuration } from '@/views/utils/upsert-api-configuration/upsert-api-configuration'
+import { upsert_api_configuration } from '@/views/actions/upsert-api-configuration/upsert-api-configuration'
 
 export const handle_upsert_api_configuration = async (
   provider: SettingsProvider,

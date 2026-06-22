@@ -1,5 +1,5 @@
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
-import { reorder_api_configurations } from '@/views/utils/reorder-api-configurations'
+import { reorder_api_configurations } from '@/views/actions/reorder-api-configurations'
 
 export const handle_reorder_api_configurations = async (
   provider: SettingsProvider,

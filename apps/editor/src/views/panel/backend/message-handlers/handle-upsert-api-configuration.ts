@@ -1,5 +1,5 @@
 import { PanelProvider } from '../panel-provider'
-import { upsert_api_configuration } from '@/views/utils/upsert-api-configuration/upsert-api-configuration'
+import { upsert_api_configuration } from '@/views/actions/upsert-api-configuration/upsert-api-configuration'
 import { get_api_configuration_id } from '@/services/model-providers-manager'
 
 export const handle_upsert_api_configuration = async (

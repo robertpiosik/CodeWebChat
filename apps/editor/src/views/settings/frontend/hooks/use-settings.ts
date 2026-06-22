@@ -272,8 +272,8 @@ export const use_settings = (vscode: any) => {
 
   const handle_duplicate_web_configuration = (web_configuration_id: string) => {
     post_message(vscode, {
-      command: 'CREATE_WEB_CONFIGURATION',
-      duplicate_from_id: web_configuration_id
+      command: 'DUPLICATE_WEB_CONFIGURATION',
+      name: web_configuration_id
     })
   }
 

@@ -1,10 +1,8 @@
 import * as vscode from 'vscode'
 import { dictionary } from '@shared/constants/dictionary'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import {
-  ConfigWebConfigurationFormat
-} from './web-configuration-format-converters'
-import { generate_unique_name } from './generate-unique-name'
+import { ConfigWebConfigurationFormat } from '../utils/web-configuration-format-converters'
+import { generate_unique_name } from '../utils/generate-unique-name'
 
 export const create_web_configuration = async (params: {
   placement?: 'top' | 'bottom'
