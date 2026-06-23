@@ -49,9 +49,6 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
   const [is_sampling_collapsed, set_is_sampling_collapsed] = useState(
     props.web_configuration.temperature === undefined && props.web_configuration.top_p === undefined
   )
-  const [is_options_collapsed, set_is_options_collapsed] = useState(
-    (props.web_configuration.options || []).length == 0
-  )
 
   const chatbot_config = chatbot ? CHATBOTS[chatbot] : undefined
   const models = useMemo(() => chatbot_config?.models || {}, [chatbot_config])
@@ -384,10 +381,6 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
           Object.keys(chatbot_config?.supported_options || {}).length > 0 && (
             <UiFieldset
               label="Options"
-              is_collapsed={is_options_collapsed}
-              on_toggle_collapsed={() =>
-                set_is_options_collapsed(!is_options_collapsed)
-              }
             >
               <div className={styles.options}>
                 {Object.entries(chatbot_config!.supported_options!).map(

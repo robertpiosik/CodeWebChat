@@ -442,7 +442,7 @@ export const MainView: React.FC<Props> = (props) => {
 
         {props.mode == MODE.WEB && (
           <>
-            <UiSeparator height={8} />
+            <UiSeparator height={6} />
             <UiConfigurations
               configurations={web_configurations}
               disable_invocation={!!warning || !props.is_connected}
@@ -497,7 +497,7 @@ export const MainView: React.FC<Props> = (props) => {
 
         {props.mode == MODE.API && (
           <>
-            <UiSeparator height={8} />
+            <UiSeparator height={6} />
             <UiConfigurations
               configurations={api_configurations_ui}
               disable_invocation={!!warning}
