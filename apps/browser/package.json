@@ -40,7 +40,6 @@
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "@types/webextension-polyfill": "^0.12.4",
-    "@vscode/codicons": "^0.0.40",
     "classnames": "^2.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -1,7 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import cn from 'classnames'
 import styles from './EditWebConfigurationForm.module.scss'
-import dropdown_styles from '@ui/components/editor/common/Dropdown/Dropdown.module.scss'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { Field as UiField } from '@ui/components/editor/panel/Field'
@@ -12,6 +10,7 @@ import { BackendMessage } from '@/views/panel/types/messages'
 import { PresetOption as UiPresetOption } from '@ui/components/editor/panel/PresetOption'
 import { Scrollable as UiScrollable } from '@ui/components/editor/panel/Scrollable'
 import { Fieldset as UiFieldset } from '@ui/components/editor/panel/Fieldset'
+import { QuickPickButton as UiQuickPickButton } from '@ui/components/editor/common/QuickPickButton'
 
 type Props = {
   web_configuration: WebConfiguration
@@ -31,7 +30,9 @@ type Props = {
 export const EditWebConfigurationForm: React.FC<Props> = (props) => {
   const [chatbot, set_chatbot] = useState(props.web_configuration.chatbot)
   const [name, set_name] = useState(props.web_configuration.name)
-  const [temperature, set_temperature] = useState(props.web_configuration.temperature)
+  const [temperature, set_temperature] = useState(
+    props.web_configuration.temperature
+  )
   const [top_p, set_top_p] = useState(props.web_configuration.top_p)
   const [thinking_budget, set_thinking_budget] = useState(
     props.web_configuration.thinking_budget
@@ -45,9 +46,12 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
   )
   const [port, set_port] = useState(props.web_configuration.port)
   const [new_url, set_new_url] = useState(props.web_configuration.new_url)
-  const [options, set_options] = useState<string[]>(props.web_configuration.options || [])
+  const [options, set_options] = useState<string[]>(
+    props.web_configuration.options || []
+  )
   const [is_sampling_collapsed, set_is_sampling_collapsed] = useState(
-    props.web_configuration.temperature === undefined && props.web_configuration.top_p === undefined
+    props.web_configuration.temperature === undefined &&
+      props.web_configuration.top_p === undefined
   )
 
   const chatbot_config = chatbot ? CHATBOTS[chatbot] : undefined
@@ -113,7 +117,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
       })
     } else {
       props.on_update({
-        name,
+        name
       })
     }
   }, [
@@ -194,43 +198,27 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
         <UiFieldset label="General">
           {chatbot && (
             <UiField label="Chatbot" html_for="chatbot">
-              <button
-                className={dropdown_styles.button}
+              <UiQuickPickButton
+                label={chatbot}
                 onClick={(e) => {
                   e.stopPropagation()
                   props.pick_chatbot(chatbot)
                 }}
-              >
-                <span>{chatbot}</span>
-                <span
-                  className={cn(
-                    'codicon codicon-chevron-down',
-                    dropdown_styles.chevron
-                  )}
-                />
-              </button>
+              />
             </UiField>
           )}
 
           {(Object.keys(models).length > 0 || chatbot == 'OpenRouter') && (
             <UiField label="Model" html_for="model">
-              <button
-                className={dropdown_styles.button}
+              <UiQuickPickButton
+                label={model_info?.label || model || 'Select model'}
                 onClick={(e) => {
                   e.stopPropagation()
                   if (chatbot) {
                     props.pick_model(chatbot, model)
                   }
                 }}
-              >
-                <span>{model_info?.label || model || 'Select model'}</span>
-                <span
-                  className={cn(
-                    'codicon codicon-chevron-down',
-                    dropdown_styles.chevron
-                  )}
-                />
-              </button>
+              />
             </UiField>
           )}
 
@@ -254,8 +242,13 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
                 chatbot == 'OpenRouter' ? ' Requires a reasoning model.' : ''
               }`}
             >
-              <button
-                className={dropdown_styles.button}
+              <UiQuickPickButton
+                label={
+                  reasoning_effort
+                    ? reasoning_effort.charAt(0).toUpperCase() +
+                      reasoning_effort.slice(1)
+                    : '—'
+                }
                 onClick={(e) => {
                   e.stopPropagation()
                   props.pick_reasoning_effort(
@@ -263,20 +256,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
                     reasoning_effort
                   )
                 }}
-              >
-                <span>
-                  {reasoning_effort
-                    ? reasoning_effort.charAt(0).toUpperCase() +
-                      reasoning_effort.slice(1)
-                    : '—'}
-                </span>
-                <span
-                  className={cn(
-                    'codicon codicon-chevron-down',
-                    dropdown_styles.chevron
-                  )}
-                />
-              </button>
+              />
             </UiField>
           )}
 
@@ -349,7 +329,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
             <UiField
               label={chatbot_config?.url_override_label || 'URL override'}
               html_for="new-url"
-              info="Use a smart workspace for your coding tasks."
+              info="Elevate your workflow with smart workspaces."
             >
               <UiInput
                 id="new-url"
@@ -379,9 +359,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
 
         {chatbot &&
           Object.keys(chatbot_config?.supported_options || {}).length > 0 && (
-            <UiFieldset
-              label="Options"
-            >
+            <UiFieldset label="Options">
               <div className={styles.options}>
                 {Object.entries(chatbot_config!.supported_options!).map(
                   ([key, label]) => {
@@ -394,6 +372,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
                     if (model_info?.disabled_options?.includes(key)) {
                       return null
                     }
+
                     return (
                       <UiPresetOption
                         key={key}

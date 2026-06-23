@@ -1,0 +1,15 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+  padding: 4px 7px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.icon {
+  color: var(--vscode-icon-foreground);
+}
