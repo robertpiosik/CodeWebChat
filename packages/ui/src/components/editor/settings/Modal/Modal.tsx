@@ -13,7 +13,7 @@ const ModalRoot: React.FC<ModalProps> = ({ children, on_close }) => {
       className={styles.overlay}
       onClick={on_close}
     >
-      <div onClick={(e) => e.stopPropagation()}>
+      <div onClick={(e) => e.stopPropagation()} className={styles.inner}>
         {children}
       </div>
     </div>

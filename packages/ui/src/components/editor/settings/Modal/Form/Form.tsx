@@ -10,11 +10,17 @@ export type FormProps = {
   save_label?: string
 }
 
-export const Form: React.FC<FormProps> = ({ title, children, on_save, on_cancel, save_label = 'Save' }) => {
+export const Form: React.FC<FormProps> = ({
+  title,
+  children,
+  on_save,
+  on_cancel,
+  save_label = 'Save'
+}) => {
   return (
     <div className={styles.form}>
       <div className={styles.header}>{title}</div>
-      <div className={styles.body}>{children}</div>
+      {children}
       <div className={styles.footer}>
         {on_cancel && (
           <Button is_secondary on_click={on_cancel}>

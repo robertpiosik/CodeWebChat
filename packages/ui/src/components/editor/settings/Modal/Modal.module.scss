@@ -4,9 +4,20 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: color-mix(
+    in srgb,
+    var(--vscode-editor-background) 50%,
+    transparent
+  );
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9999;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.inner {
+  display: flex;
+  max-height: 100%;
 }

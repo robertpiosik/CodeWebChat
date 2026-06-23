@@ -1,13 +1,11 @@
 .form {
   display: flex;
   flex-direction: column;
-  padding: 24px;
   background-color: var(--vscode-editor-background);
   color: var(--vscode-editor-foreground);
   border-radius: 8px;
-  min-width: 300px;
-  gap: 24px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 350px;
+  border: 1px solid var(--cwc-border-color);
 }
 
 .header {
@@ -15,14 +13,13 @@
   font-size: 16px;
   font-weight: 600;
   margin: 0;
-}
-
-.body {
-  flex: 1;
+  padding: 12px;
 }
 
 .footer {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+  padding: 12px;
+  border-top: 1px solid var(--cwc-border-color-dimmed);
 }

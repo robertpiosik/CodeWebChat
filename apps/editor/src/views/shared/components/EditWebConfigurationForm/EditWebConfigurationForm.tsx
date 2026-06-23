@@ -50,7 +50,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
     props.web_configuration.temperature === undefined && props.web_configuration.top_p === undefined
   )
   const [is_options_collapsed, set_is_options_collapsed] = useState(
-    !props.web_configuration.options?.length
+    (props.web_configuration.options || []).length == 0
   )
 
   const chatbot_config = chatbot ? CHATBOTS[chatbot] : undefined
