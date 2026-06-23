@@ -6,19 +6,20 @@ import { Home, NavItem } from './Home/Home'
 import { use_web_configuration_editing } from './hooks/use-web-configuration-editing'
 import { Modal as UiModal } from '@ui/components/editor/settings/Modal'
 import { EditWebConfigurationForm } from '@/views/shared/components/EditWebConfigurationForm'
-import { WebConfiguration } from '@shared/types/web-configuration'
 
 const vscode = acquireVsCodeApi()
 
 export const Settings = () => {
   const settings_hook = use_settings(vscode)
-  const { updating_web_configuration, set_updating_web_configuration } =
-    use_web_configuration_editing()
+  const {
+    updating_web_configuration,
+    set_updating_web_configuration,
+    set_updated_web_configuration,
+    edit_web_configuration_cancel_handler,
+    edit_web_configuration_save_handler
+  } = use_web_configuration_editing(vscode)
   const [scroll_to_section_on_load, set_scroll_to_section_on_load] =
     useState<NavItem>()
-  const [updated_web_configuration, set_updated_web_configuration] = useState<
-    WebConfiguration | undefined
-  >()
 
   const all_data_loaded = useMemo(() => {
     return (
@@ -47,17 +48,11 @@ export const Settings = () => {
   }, [settings_hook])
 
   useEffect(() => {
-    set_updated_web_configuration(updating_web_configuration)
-  }, [updating_web_configuration])
-
-  useEffect(() => {
     if (!all_data_loaded) return
     post_message(vscode, { command: 'SETTINGS_UI_READY' })
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       if (event.data.command == 'SHOW_SECTION') {
         set_scroll_to_section_on_load(event.data.section as NavItem)
-      } else if (event.data.command == 'WEB_CONFIGURATION_UPDATED') {
-        set_updating_web_configuration(undefined)
       }
     }
     window.addEventListener('message', handle_message)
@@ -201,44 +196,11 @@ export const Settings = () => {
         scroll_to_section_on_load={scroll_to_section_on_load}
       />
       {updating_web_configuration && (
-        <UiModal
-          on_close={() => {
-            if (updated_web_configuration) {
-              post_message(vscode, {
-                command: 'UPDATE_WEB_CONFIGURATION',
-                updating_web_configuration,
-                updated_web_configuration,
-                origin: 'cancel'
-              })
-            } else {
-              set_updating_web_configuration(undefined)
-            }
-          }}
-        >
+        <UiModal on_close={edit_web_configuration_cancel_handler}>
           <UiModal.Form
             title="Edit Configuration"
-            on_save={() => {
-              if (updated_web_configuration) {
-                post_message(vscode, {
-                  command: 'UPDATE_WEB_CONFIGURATION',
-                  updating_web_configuration,
-                  updated_web_configuration,
-                  origin: 'save'
-                })
-              }
-            }}
-            on_cancel={() => {
-              if (updated_web_configuration) {
-                post_message(vscode, {
-                  command: 'UPDATE_WEB_CONFIGURATION',
-                  updating_web_configuration,
-                  updated_web_configuration,
-                  origin: 'cancel'
-                })
-              } else {
-                set_updating_web_configuration(undefined)
-              }
-            }}
+            on_save={edit_web_configuration_save_handler}
+            on_cancel={edit_web_configuration_cancel_handler}
           >
             <EditWebConfigurationForm
               web_configuration={updating_web_configuration}
