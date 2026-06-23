@@ -1,9 +1,9 @@
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { PickReasoningEffortMessage } from '@/views/panel/types/messages'
+import { SettingsProvider } from '@/views/settings/backend/settings-provider'
+import { PickReasoningEffortMessage } from '@/views/settings/types/messages'
 import { pick_reasoning_effort } from '@/views/actions/pick-reasoning-effort'
 
 export const handle_pick_reasoning_effort = async (
-  panel_provider: PanelProvider,
+  settings_provider: SettingsProvider,
   message: PickReasoningEffortMessage
 ): Promise<void> => {
   const result = await pick_reasoning_effort({
@@ -11,7 +11,7 @@ export const handle_pick_reasoning_effort = async (
     current_effort: message.current_effort
   })
   if (result) {
-    panel_provider.send_message({
+    settings_provider.postMessage({
       command: 'NEWLY_PICKED_REASONING_EFFORT',
       effort: result.effort
     })

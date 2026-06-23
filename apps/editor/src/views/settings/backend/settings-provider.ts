@@ -55,7 +55,11 @@ import {
   handle_delete_web_configuration,
   handle_reorder_web_configurations,
   handle_create_web_configuration,
-  handle_duplicate_web_configuration
+  handle_duplicate_web_configuration,
+  handle_pick_chatbot,
+  handle_pick_model,
+  handle_pick_reasoning_effort,
+  handle_update_web_configuration
 } from './message-handlers'
 import { config_web_configuration_to_ui_format } from '@/views/utils/web-configuration-format-converters'
 
@@ -277,6 +281,14 @@ export class SettingsProvider {
           await handle_duplicate_web_configuration(message)
         } else if (message.command == 'CREATE_WEB_CONFIGURATION') {
           await handle_create_web_configuration(message)
+        } else if (message.command == 'PICK_CHATBOT') {
+          await handle_pick_chatbot(this, message)
+        } else if (message.command == 'PICK_MODEL') {
+          await handle_pick_model(this, message)
+        } else if (message.command == 'PICK_REASONING_EFFORT') {
+          await handle_pick_reasoning_effort(this, message)
+        } else if (message.command == 'UPDATE_WEB_CONFIGURATION') {
+          await handle_update_web_configuration(this, message)
         }
       },
       null,

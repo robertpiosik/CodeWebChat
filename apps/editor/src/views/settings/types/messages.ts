@@ -281,6 +281,29 @@ export interface CreateWebConfigurationMessage {
   create_on_top?: boolean
 }
 
+export interface PickModelMessage {
+  command: 'PICK_MODEL'
+  chatbot_name: string
+  current_model_id?: string
+}
+
+export interface PickChatbotMessage {
+  command: 'PICK_CHATBOT'
+  chatbot_id?: string
+}
+
+export interface PickReasoningEffortMessage {
+  command: 'PICK_REASONING_EFFORT'
+  supported_efforts: string[]
+  current_effort?: string
+}
+
+export interface UpdateWebConfigurationMessage {
+  command: 'UPDATE_WEB_CONFIGURATION'
+  updating_web_configuration: WebConfiguration
+  updated_web_configuration: WebConfiguration
+}
+
 export type FrontendMessage =
   | GetModelProvidersMessage
   | ReorderModelProvidersMessage
@@ -338,6 +361,10 @@ export type FrontendMessage =
   | DeleteWebConfigurationMessage
   | DuplicateWebConfigurationMessage
   | CreateWebConfigurationMessage
+  | PickModelMessage
+  | PickChatbotMessage
+  | PickReasoningEffortMessage
+  | UpdateWebConfigurationMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface ModelProvidersMessage {
@@ -446,6 +473,21 @@ export interface WebConfigurationsMessage {
   web_configurations: WebConfiguration[]
 }
 
+export interface NewlyPickedModelMessage {
+  command: 'NEWLY_PICKED_MODEL'
+  model_id: string
+}
+
+export interface NewlyPickedChatbotMessage {
+  command: 'NEWLY_PICKED_CHATBOT'
+  chatbot_id: string
+}
+
+export interface NewlyPickedReasoningEffortMessage {
+  command: 'NEWLY_PICKED_REASONING_EFFORT'
+  effort?: string
+}
+
 export type BackendMessage =
   | ModelProvidersMessage
   | ApiConfigurationsMessage
@@ -468,4 +510,6 @@ export type BackendMessage =
   | AutoRunIntelligentUpdateMessage
   | ExtendedCacheDurationForAnthropicMessage
   | WebConfigurationsMessage
-
+  | NewlyPickedModelMessage
+  | NewlyPickedChatbotMessage
+  | NewlyPickedReasoningEffortMessage

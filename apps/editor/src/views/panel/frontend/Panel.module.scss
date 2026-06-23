@@ -24,3 +24,11 @@
     display: none;
   }
 }
+
+.edit-web-configuration-footer {
+  display: flex;
+
+  > button {
+    flex: 1;
+  }
+}

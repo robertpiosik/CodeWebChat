@@ -5,14 +5,20 @@ import { BackendMessage } from '../types/messages'
 import { Home, NavItem } from './Home/Home'
 import { use_web_configuration_editing } from './hooks/use-web-configuration-editing'
 import { Modal as UiModal } from '@ui/components/editor/settings/Modal'
+import { EditWebConfigurationForm } from '@/views/shared/components/EditWebConfigurationForm'
+import { WebConfiguration } from '@shared/types/web-configuration'
 
 const vscode = acquireVsCodeApi()
 
 export const Settings = () => {
   const settings_hook = use_settings(vscode)
-  const { updating_web_configuration, set_updating_web_configuration } = use_web_configuration_editing()
+  const { updating_web_configuration, set_updating_web_configuration } =
+    use_web_configuration_editing()
   const [scroll_to_section_on_load, set_scroll_to_section_on_load] =
     useState<NavItem>()
+  const [updated_web_configuration, set_updated_web_configuration] = useState<
+    WebConfiguration | undefined
+  >()
 
   const all_data_loaded = useMemo(() => {
     return (
@@ -39,6 +45,10 @@ export const Settings = () => {
       settings_hook.extended_cache_duration_for_anthropic !== undefined
     )
   }, [settings_hook])
+
+  useEffect(() => {
+    set_updated_web_configuration(updating_web_configuration)
+  }, [updating_web_configuration])
 
   useEffect(() => {
     if (!all_data_loaded) return
@@ -149,17 +159,31 @@ export const Settings = () => {
         on_delete_provider={settings_hook.handle_delete_provider}
         on_edit_provider={settings_hook.handle_edit_provider}
         on_add_api_configuration={settings_hook.handle_add_api_configuration}
-        on_reorder_api_configurations={settings_hook.handle_reorder_api_configurations}
+        on_reorder_api_configurations={
+          settings_hook.handle_reorder_api_configurations
+        }
         on_edit_api_configuration={settings_hook.handle_edit_api_configuration}
-        on_duplicate_api_configuration={settings_hook.handle_duplicate_api_configuration}
-        on_delete_api_configuration={settings_hook.handle_delete_api_configuration}
-        on_set_default_api_configuration={settings_hook.handle_set_default_api_configuration}
-        on_select_default_api_configuration={settings_hook.handle_select_default_api_configuration}
+        on_duplicate_api_configuration={
+          settings_hook.handle_duplicate_api_configuration
+        }
+        on_delete_api_configuration={
+          settings_hook.handle_delete_api_configuration
+        }
+        on_set_default_api_configuration={
+          settings_hook.handle_set_default_api_configuration
+        }
+        on_select_default_api_configuration={
+          settings_hook.handle_select_default_api_configuration
+        }
         web_configurations={settings_hook.web_configurations!}
         set_web_configurations={settings_hook.set_web_configurations}
-        on_reorder_web_configurations={settings_hook.handle_reorder_web_configurations}
+        on_reorder_web_configurations={
+          settings_hook.handle_reorder_web_configurations
+        }
         on_add_web_configuration={settings_hook.handle_add_web_configuration}
-        on_duplicate_web_configuration={settings_hook.handle_duplicate_web_configuration}
+        on_duplicate_web_configuration={
+          settings_hook.handle_duplicate_web_configuration
+        }
         on_edit_web_configuration={(id) => {
           const config = settings_hook.web_configurations?.find(
             (c, index) => (c.name ?? `unnamed-${index}`) === id
@@ -168,20 +192,49 @@ export const Settings = () => {
             set_updating_web_configuration(config)
           }
         }}
-        on_delete_web_configuration={settings_hook.handle_delete_web_configuration}
+        on_delete_web_configuration={
+          settings_hook.handle_delete_web_configuration
+        }
         on_open_external_url={settings_hook.handle_open_external_url}
         scroll_to_section_on_load={scroll_to_section_on_load}
       />
       {updating_web_configuration && (
         <UiModal on_close={() => set_updating_web_configuration(undefined)}>
           <UiModal.Form
-            title="Edit Web Configuration"
-            on_save={() => set_updating_web_configuration(undefined)}
+            title="Edit Configuration"
+            on_save={() => {
+              if (updated_web_configuration) {
+                post_message(vscode, {
+                  command: 'UPDATE_WEB_CONFIGURATION',
+                  updating_web_configuration,
+                  updated_web_configuration
+                })
+              }
+              set_updating_web_configuration(undefined)
+            }}
             on_cancel={() => set_updating_web_configuration(undefined)}
           >
-            <div style={{ textAlign: 'center' }}>
-              {updating_web_configuration.name}
-            </div>
+            <EditWebConfigurationForm
+              web_configuration={updating_web_configuration}
+              on_update={set_updated_web_configuration}
+              pick_model={(chatbot_name, current_model_id) => {
+                post_message(vscode, {
+                  command: 'PICK_MODEL',
+                  chatbot_name,
+                  current_model_id
+                })
+              }}
+              pick_chatbot={(chatbot_id) => {
+                post_message(vscode, { command: 'PICK_CHATBOT', chatbot_id })
+              }}
+              pick_reasoning_effort={(supported_efforts, current_effort) => {
+                post_message(vscode, {
+                  command: 'PICK_REASONING_EFFORT',
+                  supported_efforts,
+                  current_effort
+                })
+              }}
+            />
           </UiModal.Form>
         </UiModal>
       )}

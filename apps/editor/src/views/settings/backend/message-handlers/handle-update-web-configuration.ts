@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { dictionary } from '@shared/constants/dictionary'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { UpdateWebConfigurationMessage } from '@/views/panel/types/messages'
+import { SettingsProvider } from '@/views/settings/backend/settings-provider'
+import { UpdateWebConfigurationMessage } from '@/views/settings/types/messages'
 import {
   ConfigWebConfigurationFormat,
   ui_web_configuration_to_config_format
@@ -10,7 +10,7 @@ import { generate_unique_name } from '@/views/utils/generate-unique-name'
 import { are_web_configurations_equal } from '@/views/utils/are-web-configurations-equal'
 
 export const handle_update_web_configuration = async (
-  panel_provider: PanelProvider,
+  settings_provider: SettingsProvider,
   message: UpdateWebConfigurationMessage
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
@@ -42,37 +42,7 @@ export const handle_update_web_configuration = async (
   )
 
   if (!has_changes) {
-    panel_provider.send_message({
-      command: 'WEB_CONFIGURATION_UPDATED'
-    })
     return
-  }
-
-  if (message.origin == 'back_button') {
-    const save_changes_button = 'Save'
-    const discard_changes = 'Discard changes'
-    const result = await vscode.window.showInformationMessage(
-      dictionary.information_message.CONFIRM_SAVE_CHANGES_TO_ITEM('web configuration'),
-      {
-        modal: true,
-        detail: dictionary.information_message.UNSAVED_CHANGES_TO_ITEM_WILL_BE_LOST(
-          'web configuration'
-        )
-      },
-      save_changes_button,
-      discard_changes
-    )
-
-    if (result == discard_changes) {
-      panel_provider.send_message({
-        command: 'WEB_CONFIGURATION_UPDATED'
-      })
-      return
-    }
-
-    if (result != save_changes_button) {
-      return
-    }
   }
 
   const updated_ui_web_configuration = { ...final_updated_web_configuration }
@@ -96,16 +66,4 @@ export const handle_update_web_configuration = async (
     updated_web_configurations,
     vscode.ConfigurationTarget.Global
   )
-
-  if (updated_ui_web_configuration && updated_ui_web_configuration.name) {
-    panel_provider.send_message({
-      command: 'SELECTED_WEB_CONFIGURATION_CHANGED',
-      prompt_type: panel_provider.web_prompt_type,
-      name: updated_ui_web_configuration.name
-    })
-  }
-
-  panel_provider.send_message({
-    command: 'WEB_CONFIGURATION_UPDATED'
-  })
 }

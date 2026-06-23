@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Main } from './Main'
 import { Button as UiButton } from '@ui/components/editor/common/Button'
 import { Page as UiPage } from '@ui/components/editor/panel/Page'
-import { EditWebConfigurationForm } from '@/views/panel/frontend/components/edit-web-configuration-form/EditWebConfigurationForm'
+import { EditWebConfigurationForm } from '@/views/shared/components/EditWebConfigurationForm'
 import { TextButton as UiTextButton } from '@ui/components/editor/panel/TextButton'
 import { MODE } from '../types/main-view-mode'
 import { Home } from './Home'
@@ -21,7 +21,6 @@ import { LayoutContext } from './contexts/LayoutContext'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Layout } from './components/Layout/Layout'
 import { ResponsePreviewFooter as UiResponsePreviewFooter } from '@ui/components/editor/panel/ResponsePreviewFooter'
-import { EditWebConfigurationFormFooter } from './components/edit-web-configuration-form/EditWebConfigurationFormFooter'
 import { Donations as UiDonations } from '@ui/components/editor/panel/Donations/Donations'
 import { use_latest_donations } from './hooks/latest-donations'
 import { DonationsFooter } from './components/donations/DonationsFooter'
@@ -496,11 +495,13 @@ export const Panel = () => {
             <UiPage
               on_back_click={edit_web_configuration_back_click_handler}
               footer_slot={
-                <EditWebConfigurationFormFooter
-                  on_save={edit_web_configuration_save_handler}
-                />
+                <div className={styles['edit-web-configuration-footer']}>
+                  <UiButton on_click={edit_web_configuration_save_handler}>
+                    Save
+                  </UiButton>
+                </div>
               }
-              title="Edit Web Configuration"
+              title="Edit Configuration"
               header_slot={
                 !is_preview_disabled && (
                   <UiTextButton

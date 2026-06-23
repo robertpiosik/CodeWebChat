@@ -14,7 +14,7 @@ export const duplicate_web_configuration = async (params: {
 
   const original_index = current_web_configurations.findIndex((c, i) => (c.name ?? `unnamed-${i}`) === original_name)
 
-  if (original_index === -1) {
+  if (original_index == -1) {
     vscode.window.showErrorMessage(
       dictionary.error_message.PRESET_NOT_FOUND(`with name ${original_name}`)
     )
