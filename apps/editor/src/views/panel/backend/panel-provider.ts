@@ -117,7 +117,7 @@ import {
 import {
   config_web_configuration_to_ui_format,
   ConfigWebConfigurationFormat
-} from '@/views/utils/web-configuration-format-converters'
+} from '@/utils/web-configuration-format-converters'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { MODE, Mode } from '../types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'

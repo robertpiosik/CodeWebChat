@@ -10,7 +10,7 @@ import {
   get_recently_used_web_configurations_key,
   FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY
 } from '@/constants/state-keys'
-import { ConfigWebConfigurationFormat } from '@/views/utils/web-configuration-format-converters'
+import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 import { MODE } from '@/views/panel/types/main-view-mode'
 import { WebPromptType } from '@shared/types/prompt-types'
 import { CHATBOTS } from '@shared/constants/chatbots'
@@ -177,9 +177,7 @@ export const handle_send_to_browser = async (params: {
       if (edit_format_instructions) {
         system_instructions_xml = `<system>\n${edit_format_instructions}\n</system>`
       }
-    } else if (
-      params.panel_provider.web_prompt_type == 'find-relevant-files'
-    ) {
+    } else if (params.panel_provider.web_prompt_type == 'find-relevant-files') {
       system_instructions_xml = `${find_relevant_files_format_for_panel}\n${find_relevant_files_instructions}`
     }
 
@@ -223,7 +221,9 @@ const show_web_configuration_quick_pick = async (params: {
   context: vscode.ExtensionContext
   prompt_type: WebPromptType
   panel_provider: PanelProvider
-  get_is_web_configuration_disabled: (web_configuration: ConfigWebConfigurationFormat) => boolean
+  get_is_web_configuration_disabled: (
+    web_configuration: ConfigWebConfigurationFormat
+  ) => boolean
   is_in_code_completions_mode: boolean
   current_instructions: string
 }): Promise<{ web_configuration_name: string | undefined } | null> => {
@@ -247,30 +247,35 @@ const show_web_configuration_quick_pick = async (params: {
     context.globalState.get<string[]>(recents_key) ??
     []
 
-  const { recent: matched_recent, rest: remaining } = split_recent_and_rest_configurations(
-    valid_web_configurations,
-    recent_names,
-    (c) => c.name
-  )
+  const { recent: matched_recent, rest: remaining } =
+    split_recent_and_rest_configurations(
+      valid_web_configurations,
+      recent_names,
+      (c) => c.name
+    )
 
-  const map_web_configuration_to_item = (web_configuration: ConfigWebConfigurationFormat) => {
-    const is_unnamed = !web_configuration.name || /^\(\d+\)$/.test(web_configuration.name.trim())
+  const map_web_configuration_to_item = (
+    web_configuration: ConfigWebConfigurationFormat
+  ) => {
+    const is_unnamed =
+      !web_configuration.name || /^\(\d+\)$/.test(web_configuration.name.trim())
     const chatbot_models =
       CHATBOTS[web_configuration.chatbot as keyof typeof CHATBOTS]?.models
     const model = web_configuration.model
-      ? chatbot_models?.[web_configuration.model]?.label || web_configuration.model
+      ? chatbot_models?.[web_configuration.model]?.label ||
+        web_configuration.model
       : ''
 
-      const details: string[] = []
-      if (!is_unnamed && web_configuration.chatbot) {
-        details.push(web_configuration.chatbot)
-      }
-      if (model) {
-        details.push(model)
-      }
-      if (web_configuration.reasoningEffort) {
-        details.push(web_configuration.reasoningEffort)
-      }
+    const details: string[] = []
+    if (!is_unnamed && web_configuration.chatbot) {
+      details.push(web_configuration.chatbot)
+    }
+    if (model) {
+      details.push(model)
+    }
+    if (web_configuration.reasoningEffort) {
+      details.push(web_configuration.reasoningEffort)
+    }
 
     return {
       label: `${
@@ -279,11 +284,12 @@ const show_web_configuration_quick_pick = async (params: {
           : web_configuration.name!.replace(/\s*\(\d+\)$/, '')
       }`,
       web_configuration_name: web_configuration.name,
-        description: details.join(' · ')
+      description: details.join(' · ')
     }
   }
 
-  const items: (vscode.QuickPickItem & { web_configuration_name?: string })[] = []
+  const items: (vscode.QuickPickItem & { web_configuration_name?: string })[] =
+    []
 
   if (matched_recent.length > 0) {
     items.push({
@@ -345,48 +351,56 @@ const show_web_configuration_quick_pick = async (params: {
     }
   }
 
-  return new Promise<{ web_configuration_name: string | undefined } | null>((resolve) => {
-    const disposables: vscode.Disposable[] = []
-    let resolved = false
-    const do_resolve = (value: { web_configuration_name: string | undefined } | null) => {
-      if (resolved) return
-      resolved = true
-      resolve(value)
+  return new Promise<{ web_configuration_name: string | undefined } | null>(
+    (resolve) => {
+      const disposables: vscode.Disposable[] = []
+      let resolved = false
+      const do_resolve = (
+        value: { web_configuration_name: string | undefined } | null
+      ) => {
+        if (resolved) return
+        resolved = true
+        resolve(value)
+      }
+
+      quick_pick.onDidAccept(async () => {
+        const selected = quick_pick.selectedItems[0] as any
+
+        if (!selected || !selected.web_configuration_name) {
+          quick_pick.hide()
+          do_resolve(null)
+          return
+        }
+
+        const web_configuration = valid_web_configurations.find(
+          (p) => p.name == selected.web_configuration_name
+        )!
+        if (params.get_is_web_configuration_disabled(web_configuration)) {
+          do_resolve(null)
+        } else {
+          handle_update_last_used_web_configuration_or_group({
+            panel_provider,
+            web_configuration_name: selected.web_configuration_name
+          })
+          do_resolve({
+            web_configuration_name: selected.web_configuration_name
+          })
+        }
+      })
+
+      quick_pick.onDidHide(() => {
+        disposables.forEach((d) => d.dispose())
+        quick_pick.dispose()
+        if (!resolved) {
+          panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
+          do_resolve(null)
+        }
+      })
+
+      disposables.push(quick_pick)
+      quick_pick.show()
     }
-
-    quick_pick.onDidAccept(async () => {
-      const selected = quick_pick.selectedItems[0] as any
-
-      if (!selected || !selected.web_configuration_name) {
-        quick_pick.hide()
-        do_resolve(null)
-        return
-      }
-
-      const web_configuration = valid_web_configurations.find((p) => p.name == selected.web_configuration_name)!
-      if (params.get_is_web_configuration_disabled(web_configuration)) {
-        do_resolve(null)
-      } else {
-        handle_update_last_used_web_configuration_or_group({
-          panel_provider,
-          web_configuration_name: selected.web_configuration_name
-        })
-        do_resolve({ web_configuration_name: selected.web_configuration_name })
-      }
-    })
-
-    quick_pick.onDidHide(() => {
-      disposables.forEach((d) => d.dispose())
-      quick_pick.dispose()
-      if (!resolved) {
-        panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
-        do_resolve(null)
-      }
-    })
-
-    disposables.push(quick_pick)
-    quick_pick.show()
-  })
+  )
 }
 
 const resolve_web_configuration = async (params: {
@@ -399,7 +413,10 @@ const resolve_web_configuration = async (params: {
     params.panel_provider.web_prompt_type
   )
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const all_web_configurations = config.get<ConfigWebConfigurationFormat[]>('webConfigurations', [])
+  const all_web_configurations = config.get<ConfigWebConfigurationFormat[]>(
+    'webConfigurations',
+    []
+  )
   const is_in_code_completions_mode =
     params.panel_provider.web_prompt_type == 'code-at-cursor'
 
@@ -431,7 +448,9 @@ const resolve_web_configuration = async (params: {
       ] || ''
   }
 
-  const get_is_web_configuration_disabled = (web_configuration: ConfigWebConfigurationFormat) =>
+  const get_is_web_configuration_disabled = (
+    web_configuration: ConfigWebConfigurationFormat
+  ) =>
     (web_configuration.chatbot &&
       (!params.panel_provider.websocket_server_instance.is_connected_with_browser() ||
         (is_in_code_completions_mode &&
@@ -440,7 +459,9 @@ const resolve_web_configuration = async (params: {
     false
 
   if (params.web_configuration_name !== undefined) {
-    const web_configuration = all_web_configurations.find((p) => p.name == params.web_configuration_name)
+    const web_configuration = all_web_configurations.find(
+      (p) => p.name == params.web_configuration_name
+    )
     if (web_configuration) {
       if (get_is_web_configuration_disabled(web_configuration)) {
         return { web_configuration_name: undefined }
@@ -449,10 +470,7 @@ const resolve_web_configuration = async (params: {
     }
   }
 
-  if (
-    !params.show_quick_pick &&
-    params.web_configuration_name === undefined
-  ) {
+  if (!params.show_quick_pick && params.web_configuration_name === undefined) {
     // Try to use last selection if "Send" button is clicked without specific preset
     const recents =
       params.context.workspaceState.get<string[]>(recents_key) ??
@@ -460,7 +478,9 @@ const resolve_web_configuration = async (params: {
       []
     const last_selected_name = recents[0]
     if (last_selected_name) {
-      const item = all_web_configurations.find((p) => p.name === last_selected_name)
+      const item = all_web_configurations.find(
+        (p) => p.name === last_selected_name
+      )
       if (item) {
         if (item.chatbot) {
           if (get_is_web_configuration_disabled(item)) {

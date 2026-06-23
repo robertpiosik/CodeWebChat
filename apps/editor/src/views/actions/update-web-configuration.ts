@@ -4,7 +4,7 @@ import { WebConfiguration } from '@shared/types/web-configuration'
 import {
   ConfigWebConfigurationFormat,
   ui_web_configuration_to_config_format
-} from '../utils/web-configuration-format-converters'
+} from '@/utils/web-configuration-format-converters'
 import { generate_unique_name } from '../utils/generate-unique-name'
 import { are_web_configurations_equal } from '../utils/are-web-configurations-equal'
 
@@ -34,7 +34,9 @@ export const update_web_configuration = async (params: {
     return { success: false, has_changes: false }
   }
 
-  const final_updated_web_configuration = { ...params.updated_web_configuration }
+  const final_updated_web_configuration = {
+    ...params.updated_web_configuration
+  }
 
   const has_changes = !are_web_configurations_equal(
     params.updating_web_configuration,
@@ -48,12 +50,15 @@ export const update_web_configuration = async (params: {
   if (params.origin == 'cancel') {
     const save_changes_button = 'Save'
     const result = await vscode.window.showWarningMessage(
-      dictionary.information_message.CONFIRM_SAVE_CHANGES_TO_ITEM('web configuration'),
+      dictionary.information_message.CONFIRM_SAVE_CHANGES_TO_ITEM(
+        'web configuration'
+      ),
       {
         modal: true,
-        detail: dictionary.information_message.UNSAVED_CHANGES_TO_ITEM_WILL_BE_LOST(
-          'web configuration'
-        )
+        detail:
+          dictionary.information_message.UNSAVED_CHANGES_TO_ITEM_WILL_BE_LOST(
+            'web configuration'
+          )
       },
       save_changes_button
     )
@@ -75,9 +80,8 @@ export const update_web_configuration = async (params: {
   )
 
   const updated_web_configurations = [...current_web_configurations]
-  updated_web_configurations[web_configuration_index] = ui_web_configuration_to_config_format(
-    updated_ui_web_configuration
-  )
+  updated_web_configurations[web_configuration_index] =
+    ui_web_configuration_to_config_format(updated_ui_web_configuration)
 
   await config.update(
     'webConfigurations',

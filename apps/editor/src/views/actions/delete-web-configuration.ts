@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { dictionary } from '@shared/constants/dictionary'
-import { ConfigWebConfigurationFormat } from '@/views/utils/web-configuration-format-converters'
+import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 
 export const delete_web_configuration = async (params: {
   name: string

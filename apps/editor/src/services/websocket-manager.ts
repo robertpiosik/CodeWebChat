@@ -14,7 +14,7 @@ import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { WebConfiguration } from '@shared/types/web-configuration'
-import { ConfigWebConfigurationFormat } from '@/views/utils/web-configuration-format-converters'
+import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 import { LAST_SELECTED_BROWSER_ID_STATE_KEY } from '@/constants/state-keys'
 import { ApplyChatResponseCommandArgs } from '@/commands/apply-chat-response-command/response-processor'
 import { WebPromptType } from '@shared/types/prompt-types'
@@ -81,11 +81,15 @@ export class WebSocketManager {
     )
 
     try {
-      const spawned = child_process.spawn(process.execPath, [server_script_path], {
-        detached: true,
-        stdio: 'ignore',
-        env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' }
-      })
+      const spawned = child_process.spawn(
+        process.execPath,
+        [server_script_path],
+        {
+          detached: true,
+          stdio: 'ignore',
+          env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' }
+        }
+      )
 
       if (spawned.pid) {
         spawned.unref()
@@ -115,16 +119,13 @@ export class WebSocketManager {
       let attempts = 0
 
       const check = () => {
-        const req = http.get(
-          `http://localhost:${this.port}/health`,
-          (res) => {
-            if (res.statusCode === 200) {
-              resolve()
-            } else {
-              retry()
-            }
+        const req = http.get(`http://localhost:${this.port}/health`, (res) => {
+          if (res.statusCode === 200) {
+            resolve()
+          } else {
+            retry()
           }
-        )
+        })
         req.on('error', retry)
         req.end()
       }
@@ -132,7 +133,11 @@ export class WebSocketManager {
       const retry = () => {
         attempts++
         if (attempts >= retries) {
-          reject(new Error(`WebSocket server did not become ready after ${retries} attempts`))
+          reject(
+            new Error(
+              `WebSocket server did not become ready after ${retries} attempts`
+            )
+          )
         } else {
           setTimeout(check, interval_ms)
         }
@@ -369,7 +374,9 @@ export class WebSocketManager {
       return false
     }
 
-    const web_configuration = web_configurations.find((p) => p.name == params.web_configuration_name)
+    const web_configuration = web_configurations.find(
+      (p) => p.name == params.web_configuration_name
+    )
     if (!web_configuration) {
       return false
     }
@@ -475,7 +482,8 @@ export class WebSocketManager {
     const ai_studio_user_id = config.get<number | null>('aiStudioUserId')
     const reuse_last_tab = config.get<boolean>('reuseLastTab', false)
 
-    const chatbot = CHATBOTS[params.web_configuration.chatbot as keyof typeof CHATBOTS]
+    const chatbot =
+      CHATBOTS[params.web_configuration.chatbot as keyof typeof CHATBOTS]
     let url: string
     if (params.web_configuration.chatbot == 'AI Studio') {
       let base_url = chatbot.url
@@ -508,7 +516,10 @@ export class WebSocketManager {
       gemini_user_number !== null
     ) {
       url = `https://gemini.google.com/u/${gemini_user_number}`
-    } else if (chatbot.supports_url_override && params.web_configuration.new_url) {
+    } else if (
+      chatbot.supports_url_override &&
+      params.web_configuration.new_url
+    ) {
       try {
         const original_domain = new URL(chatbot.url).hostname
         const new_domain = new URL(params.web_configuration.new_url).hostname
