@@ -327,6 +327,8 @@ export const MainView: React.FC<Props> = (props) => {
         is_setup_complete={props.is_setup_complete}
       />
       <UiScrollable scroll_to_top_key={props.scroll_reset_key}>
+        <UiSeparator height={4} />
+
         {is_in_find_relevant_files_prompt_type && (
           <div className={styles['shrink-source-code-checkbox']}>
             <UiCheckbox
