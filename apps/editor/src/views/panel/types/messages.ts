@@ -170,7 +170,7 @@ export interface UpdateWebConfigurationMessage extends BaseMessage {
   command: 'UPDATE_WEB_CONFIGURATION'
   updating_web_configuration: WebConfiguration
   updated_web_configuration: WebConfiguration
-  origin?: 'back_button' | 'save_button'
+  origin?: 'cancel' | 'save'
 }
 
 export interface DeleteWebConfigurationMessage extends BaseMessage {

@@ -56,6 +56,8 @@ export const Settings = () => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       if (event.data.command == 'SHOW_SECTION') {
         set_scroll_to_section_on_load(event.data.section as NavItem)
+      } else if (event.data.command == 'WEB_CONFIGURATION_UPDATED') {
+        set_updating_web_configuration(undefined)
       }
     }
     window.addEventListener('message', handle_message)
@@ -199,7 +201,20 @@ export const Settings = () => {
         scroll_to_section_on_load={scroll_to_section_on_load}
       />
       {updating_web_configuration && (
-        <UiModal on_close={() => set_updating_web_configuration(undefined)}>
+        <UiModal
+          on_close={() => {
+            if (updated_web_configuration) {
+              post_message(vscode, {
+                command: 'UPDATE_WEB_CONFIGURATION',
+                updating_web_configuration,
+                updated_web_configuration,
+                origin: 'cancel'
+              })
+            } else {
+              set_updating_web_configuration(undefined)
+            }
+          }}
+        >
           <UiModal.Form
             title="Edit Configuration"
             on_save={() => {
@@ -207,12 +222,23 @@ export const Settings = () => {
                 post_message(vscode, {
                   command: 'UPDATE_WEB_CONFIGURATION',
                   updating_web_configuration,
-                  updated_web_configuration
+                  updated_web_configuration,
+                  origin: 'save'
                 })
               }
-              set_updating_web_configuration(undefined)
             }}
-            on_cancel={() => set_updating_web_configuration(undefined)}
+            on_cancel={() => {
+              if (updated_web_configuration) {
+                post_message(vscode, {
+                  command: 'UPDATE_WEB_CONFIGURATION',
+                  updating_web_configuration,
+                  updated_web_configuration,
+                  origin: 'cancel'
+                })
+              } else {
+                set_updating_web_configuration(undefined)
+              }
+            }}
           >
             <EditWebConfigurationForm
               web_configuration={updating_web_configuration}

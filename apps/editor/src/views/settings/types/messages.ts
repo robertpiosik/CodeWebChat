@@ -302,6 +302,7 @@ export interface UpdateWebConfigurationMessage {
   command: 'UPDATE_WEB_CONFIGURATION'
   updating_web_configuration: WebConfiguration
   updated_web_configuration: WebConfiguration
+  origin?: 'cancel' | 'save'
 }
 
 export type FrontendMessage =
@@ -488,6 +489,10 @@ export interface NewlyPickedReasoningEffortMessage {
   effort?: string
 }
 
+export interface WebConfigurationUpdatedMessage {
+  command: 'WEB_CONFIGURATION_UPDATED'
+}
+
 export type BackendMessage =
   | ModelProvidersMessage
   | ApiConfigurationsMessage
@@ -513,3 +518,5 @@ export type BackendMessage =
   | NewlyPickedModelMessage
   | NewlyPickedChatbotMessage
   | NewlyPickedReasoningEffortMessage
+  | WebConfigurationUpdatedMessage
+

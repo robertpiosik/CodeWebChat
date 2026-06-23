@@ -12,7 +12,7 @@ export const use_web_configuration_editing = (vscode: any) => {
       command: 'UPDATE_WEB_CONFIGURATION',
       updating_web_configuration: updating_web_configuration!,
       updated_web_configuration: updated_web_configuration!,
-      origin: 'back_button'
+      origin: 'cancel'
     })
   }
 
@@ -21,7 +21,7 @@ export const use_web_configuration_editing = (vscode: any) => {
       command: 'UPDATE_WEB_CONFIGURATION',
       updating_web_configuration: updating_web_configuration!,
       updated_web_configuration: updated_web_configuration!,
-      origin: 'save_button'
+      origin: 'save'
     })
   }
 
