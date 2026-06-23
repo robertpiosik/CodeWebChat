@@ -1,0 +1,28 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  background-color: var(--vscode-editor-background);
+  color: var(--vscode-editor-foreground);
+  border-radius: 8px;
+  min-width: 300px;
+  gap: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.header {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.body {
+  flex: 1;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}

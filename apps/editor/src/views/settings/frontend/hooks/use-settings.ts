@@ -277,13 +277,6 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_edit_web_configuration = (web_configuration_id: string) => {
-    post_message(vscode, {
-      command: 'CREATE_WEB_CONFIGURATION',
-      web_configuration_id
-    })
-  }
-
   const handle_delete_web_configuration = (name: string) => {
     post_message(vscode, {
       command: 'DELETE_WEB_CONFIGURATION',
@@ -485,7 +478,6 @@ export const use_settings = (vscode: any) => {
     handle_reorder_web_configurations,
     handle_add_web_configuration,
     handle_duplicate_web_configuration,
-    handle_edit_web_configuration,
     handle_delete_web_configuration,
     handle_voice_input_instructions_change,
     handle_voice_input_push_to_talk_change,
