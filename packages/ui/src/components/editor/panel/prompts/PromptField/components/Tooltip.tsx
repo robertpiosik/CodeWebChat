@@ -24,9 +24,11 @@ export const Tooltip: React.FC<TooltipProps> = (params) => (
         : undefined
     }
   >
-    {params.message}
-    {params.details && (
-      <span className={styles.tooltip__details}>{params.details}</span>
-    )}
+    <span>
+      {params.message}
+      {params.details && (
+        <span className={styles.tooltip__details}>{params.details}</span>
+      )}
+    </span>
   </div>
 )

@@ -60,6 +60,13 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
   (props, ref) => {
     const { t } = use_translation()
 
+    const has_gemini = props.web_configurations.some(
+      (c) => c.chatbot == 'Gemini'
+    )
+    const has_ai_studio = props.web_configurations.some(
+      (c) => c.chatbot == 'AI Studio'
+    )
+
     const [gemini_user_id_str, set_gemini_user_id_str] = useState('')
     const [ai_studio_user_id_str, set_ai_studio_user_id_str] = useState('')
 
@@ -257,32 +264,36 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                 )}
               />
             )}
-            <UiItem
-              title={t('preferences.gemini-user-id.title')}
-              description={t('preferences.gemini-user-id.description')}
-              slot_right={
-                <UiInput
-                  type="number"
-                  value={gemini_user_id_str}
-                  on_change={set_gemini_user_id_str}
-                  on_blur={handle_gemini_user_id_blur}
-                  max_width={60}
-                />
-              }
-            />
-            <UiItem
-              title={t('preferences.ai-studio-user-id.title')}
-              description={t('preferences.ai-studio-user-id.description')}
-              slot_right={
-                <UiInput
-                  type="number"
-                  value={ai_studio_user_id_str}
-                  on_change={set_ai_studio_user_id_str}
-                  on_blur={handle_ai_studio_user_id_blur}
-                  max_width={60}
-                />
-              }
-            />
+            {has_gemini && (
+              <UiItem
+                title={t('preferences.gemini-user-id.title')}
+                description={t('preferences.gemini-user-id.description')}
+                slot_right={
+                  <UiInput
+                    type="number"
+                    value={gemini_user_id_str}
+                    on_change={set_gemini_user_id_str}
+                    on_blur={handle_gemini_user_id_blur}
+                    max_width={60}
+                  />
+                }
+              />
+            )}
+            {has_ai_studio && (
+              <UiItem
+                title={t('preferences.ai-studio-user-id.title')}
+                description={t('preferences.ai-studio-user-id.description')}
+                slot_right={
+                  <UiInput
+                    type="number"
+                    value={ai_studio_user_id_str}
+                    on_change={set_ai_studio_user_id_str}
+                    on_blur={handle_ai_studio_user_id_blur}
+                    max_width={60}
+                  />
+                }
+              />
+            )}
           </UiGroup>
         </div>
       </UiSection>

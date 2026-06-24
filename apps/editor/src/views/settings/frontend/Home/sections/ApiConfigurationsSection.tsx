@@ -254,69 +254,81 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                 )}
               />
             )}
-            <DefaultConfigurationSelector
-              title={t('configurations.tool.intelligent-update')}
-              value={props.defaults['intelligent-update'] || null}
-              configurations={props.api_configurations}
-              on_unset={() =>
-                props.on_set_default_api_configuration(
-                  'intelligent-update',
-                  null
-                )
-              }
-              on_select={() =>
-                props.on_select_default_api_configuration('intelligent-update')
-              }
-              translations={{
-                select: t('configurations.action.select-default'),
-                unset: t('configurations.action.unset-default')
-              }}
-            />
-            <DefaultConfigurationSelector
-              title={t('configurations.tool.code-at-cursor')}
-              value={props.defaults['code-at-cursor'] || null}
-              configurations={props.api_configurations}
-              on_unset={() =>
-                props.on_set_default_api_configuration('code-at-cursor', null)
-              }
-              on_select={() =>
-                props.on_select_default_api_configuration('code-at-cursor')
-              }
-              translations={{
-                select: t('configurations.action.select-default'),
-                unset: t('configurations.action.unset-default')
-              }}
-            />
-            <DefaultConfigurationSelector
-              title={t('configurations.tool.commit-messages')}
-              value={props.defaults['commit-messages'] || null}
-              configurations={props.api_configurations}
-              on_unset={() =>
-                props.on_set_default_api_configuration('commit-messages', null)
-              }
-              on_select={() =>
-                props.on_select_default_api_configuration('commit-messages')
-              }
-              translations={{
-                select: t('configurations.action.select-default'),
-                unset: t('configurations.action.unset-default')
-              }}
-            />
-            <DefaultConfigurationSelector
-              title={t('configurations.tool.voice-input')}
-              value={props.defaults['voice-input'] || null}
-              configurations={props.api_configurations}
-              on_unset={() =>
-                props.on_set_default_api_configuration('voice-input', null)
-              }
-              on_select={() =>
-                props.on_select_default_api_configuration('voice-input')
-              }
-              translations={{
-                select: t('configurations.action.select-default'),
-                unset: t('configurations.action.unset-default')
-              }}
-            />
+            {props.api_configurations.length > 0 && (
+              <>
+                <DefaultConfigurationSelector
+                  title={t('configurations.tool.intelligent-update')}
+                  value={props.defaults['intelligent-update'] || null}
+                  configurations={props.api_configurations}
+                  on_unset={() =>
+                    props.on_set_default_api_configuration(
+                      'intelligent-update',
+                      null
+                    )
+                  }
+                  on_select={() =>
+                    props.on_select_default_api_configuration(
+                      'intelligent-update'
+                    )
+                  }
+                  translations={{
+                    select: t('configurations.action.select-default'),
+                    unset: t('configurations.action.unset-default')
+                  }}
+                />
+                <DefaultConfigurationSelector
+                  title={t('configurations.tool.code-at-cursor')}
+                  value={props.defaults['code-at-cursor'] || null}
+                  configurations={props.api_configurations}
+                  on_unset={() =>
+                    props.on_set_default_api_configuration(
+                      'code-at-cursor',
+                      null
+                    )
+                  }
+                  on_select={() =>
+                    props.on_select_default_api_configuration('code-at-cursor')
+                  }
+                  translations={{
+                    select: t('configurations.action.select-default'),
+                    unset: t('configurations.action.unset-default')
+                  }}
+                />
+                <DefaultConfigurationSelector
+                  title={t('configurations.tool.commit-messages')}
+                  value={props.defaults['commit-messages'] || null}
+                  configurations={props.api_configurations}
+                  on_unset={() =>
+                    props.on_set_default_api_configuration(
+                      'commit-messages',
+                      null
+                    )
+                  }
+                  on_select={() =>
+                    props.on_select_default_api_configuration('commit-messages')
+                  }
+                  translations={{
+                    select: t('configurations.action.select-default'),
+                    unset: t('configurations.action.unset-default')
+                  }}
+                />
+                <DefaultConfigurationSelector
+                  title={t('configurations.tool.voice-input')}
+                  value={props.defaults['voice-input'] || null}
+                  configurations={props.api_configurations}
+                  on_unset={() =>
+                    props.on_set_default_api_configuration('voice-input', null)
+                  }
+                  on_select={() =>
+                    props.on_select_default_api_configuration('voice-input')
+                  }
+                  translations={{
+                    select: t('configurations.action.select-default'),
+                    unset: t('configurations.action.unset-default')
+                  }}
+                />
+              </>
+            )}
           </UiGroup>
         </div>
         <div ref={(el) => props.set_section_ref('instructions', el)}>
