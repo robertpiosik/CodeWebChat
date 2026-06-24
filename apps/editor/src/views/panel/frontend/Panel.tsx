@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Main } from './Main'
 import { Button as UiButton } from '@ui/components/editor/common/Button'
 import { Page as UiPage } from '@ui/components/editor/panel/Page'
-import { EditWebConfigurationForm } from '@/views/shared/components/EditWebConfigurationForm'
+import { EditWebConfigurationForm } from '@/views/components/EditWebConfigurationForm'
 import { TextButton as UiTextButton } from '@ui/components/editor/panel/TextButton'
 import { MODE } from '../types/main-view-mode'
 import { Home } from './Home'
@@ -504,9 +504,7 @@ export const Panel = () => {
               title="Edit Configuration"
               header_slot={
                 !is_preview_disabled && (
-                  <UiTextButton
-                    on_click={handle_preview_web_configuration}
-                  >
+                  <UiTextButton on_click={handle_preview_web_configuration}>
                     Preview
                   </UiTextButton>
                 )

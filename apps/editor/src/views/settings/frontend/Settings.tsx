@@ -5,7 +5,7 @@ import { BackendMessage } from '../types/messages'
 import { Home, NavItem } from './Home/Home'
 import { use_web_configuration_editing } from './hooks/use-web-configuration-editing'
 import { Modal as UiModal } from '@ui/components/editor/settings/Modal'
-import { EditWebConfigurationForm } from '@/views/shared/components/EditWebConfigurationForm'
+import { EditWebConfigurationForm } from '@/views/components/EditWebConfigurationForm'
 
 const vscode = acquireVsCodeApi()
 

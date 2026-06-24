@@ -61,7 +61,7 @@ import {
   handle_pick_reasoning_effort,
   handle_update_web_configuration
 } from './message-handlers'
-import { config_web_configuration_to_ui_format } from '@/views/utils/web-configuration-format-converters'
+import { config_web_configuration_to_ui_format } from '@/utils/web-configuration-format-converters'
 
 export class SettingsProvider {
   private _webview_panel: vscode.WebviewPanel | undefined
