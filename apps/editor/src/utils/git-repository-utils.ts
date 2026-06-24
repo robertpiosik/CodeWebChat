@@ -137,31 +137,33 @@ export const get_repository_for_commit = async (
   return selected.repository
 }
 
-export const prepare_staged_changes = async (
-  repository: GitRepository,
-  stage_all_if_none_staged: boolean = false,
+export const prepare_staged_changes = async (params: {
+  repository: GitRepository
+  stage_all_if_none_staged?: boolean
   selection_state?: { files?: string[] }
-): Promise<string | null> => {
-  await repository.status()
-  const staged_changes = repository.state.indexChanges || []
+}): Promise<string | null> => {
+  await params.repository.status()
+  const staged_changes = params.repository.state.indexChanges || []
 
   if (
     staged_changes.length == 0 &&
-    repository.state.workingTreeChanges.length > 0
+    params.repository.state.workingTreeChanges.length > 0
   ) {
     let files_to_stage: string[] = []
 
-    if (stage_all_if_none_staged) {
-      files_to_stage = repository.state.workingTreeChanges.map(
+    if (params.stage_all_if_none_staged) {
+      files_to_stage = params.repository.state.workingTreeChanges.map(
         (change: any) => change.uri.fsPath
       )
-    } else if (repository.state.workingTreeChanges.length == 1) {
-      files_to_stage = [repository.state.workingTreeChanges[0].uri.fsPath]
+    } else if (params.repository.state.workingTreeChanges.length == 1) {
+      files_to_stage = [
+        params.repository.state.workingTreeChanges[0].uri.fsPath
+      ]
     } else {
       const items = await Promise.all(
-        repository.state.workingTreeChanges.map(async (change: any) => {
+        params.repository.state.workingTreeChanges.map(async (change: any) => {
           const relative_path = path.relative(
-            repository.rootUri.fsPath,
+            params.repository.rootUri.fsPath,
             change.uri.fsPath
           )
           const dir_name = path.dirname(relative_path)
@@ -187,7 +189,7 @@ export const prepare_staged_changes = async (
               }
             } else {
               const raw_diff = execSync(`git diff -- "${change.uri.fsPath}"`, {
-                cwd: repository.rootUri.fsPath
+                cwd: params.repository.rootUri.fsPath
               }).toString()
 
               if (
@@ -279,9 +281,9 @@ export const prepare_staged_changes = async (
         const quick_pick = vscode.window.createQuickPick<any>()
         quick_pick.items = items
 
-        if (selection_state?.files) {
+        if (params.selection_state?.files) {
           quick_pick.selectedItems = items.filter((i) =>
-            selection_state.files!.includes(i.fsPath)
+            params.selection_state!.files!.includes(i.fsPath)
           )
         } else {
           quick_pick.selectedItems = items
@@ -319,8 +321,10 @@ export const prepare_staged_changes = async (
 
         quick_pick.onDidAccept(() => {
           const selected_items = Array.from(quick_pick.selectedItems)
-          if (selection_state) {
-            selection_state.files = selected_items.map((i: any) => i.fsPath)
+          if (params.selection_state) {
+            params.selection_state.files = selected_items.map(
+              (i: any) => i.fsPath
+            )
           }
           resolve(selected_items)
           quick_pick.hide()
@@ -345,13 +349,13 @@ export const prepare_staged_changes = async (
       .map((file: string) => `"${file.replace(/"/g, '\\"')}"`)
       .join(' ')
     execSync(`git add -- ${file_args}`, {
-      cwd: repository.rootUri.fsPath
+      cwd: params.repository.rootUri.fsPath
     })
-    await repository.status()
+    await params.repository.status()
   }
 
   const diff = execSync('git diff --staged', {
-    cwd: repository.rootUri.fsPath
+    cwd: params.repository.rootUri.fsPath
   }).toString()
 
   if (!diff || diff.length == 0) {

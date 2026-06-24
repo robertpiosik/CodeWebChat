@@ -23,24 +23,34 @@ const truncate_prompt = (text: string): string => {
 export const generate_commit_message_command = (
   context: vscode.ExtensionContext
 ) => {
-  const get_prompt_data = async (
-    repository: GitRepository,
-    is_source_control_action: boolean,
+  const get_prompt_data = async (params: {
+    repository: GitRepository
+    stage_all_if_none_staged: boolean
     selection_state?: { files?: string[] }
-  ) => {
+  }) => {
     await vscode.workspace.saveAll()
-    await repository.status()
-    const was_empty_stage = (repository.state.indexChanges || []).length == 0
-    const working_tree_changes = repository.state.workingTreeChanges || []
+    await params.repository.status()
+    const was_empty_stage =
+      (params.repository.state.indexChanges || []).length == 0
+    const working_tree_changes =
+      params.repository.state.workingTreeChanges || []
     const is_single_change = was_empty_stage && working_tree_changes.length == 1
-    const diff = await prepare_staged_changes(
-      repository,
-      is_source_control_action,
-      selection_state
-    )
+    const diff = await prepare_staged_changes({
+      repository: params.repository,
+      stage_all_if_none_staged: params.stage_all_if_none_staged,
+      selection_state: params.selection_state
+    })
     if (!diff) return null
-    const message_prompt = await build_commit_message_prompt(diff, repository)
-    return { repository, was_empty_stage, message_prompt, is_single_change }
+    const message_prompt = await build_commit_message_prompt(
+      diff,
+      params.repository
+    )
+    return {
+      repository: params.repository,
+      was_empty_stage,
+      message_prompt,
+      is_single_change
+    }
   }
 
   const run_generate_action = async (params: {
@@ -56,11 +66,11 @@ export const generate_commit_message_command = (
     if (!repository) return
 
     while (true) {
-      const data = await get_prompt_data(
+      const data = await get_prompt_data({
         repository,
-        !!params.source_control,
+        stage_all_if_none_staged: !!params.source_control,
         selection_state
-      )
+      })
       if (!data) return
       const { message_prompt, is_single_change } = data
       let { was_empty_stage } = data
@@ -137,9 +147,12 @@ export const generate_commit_message_command = (
         .getConfiguration('codeWebChat')
         .get<boolean>('includePromptsInCommitMessages', true)
 
-      const relevant_prompts = all_prompts.filter((p) =>
-        p.files.some((file) => staged_files.includes(file))
-      )
+      const relevant_prompts = all_prompts
+        .filter((p) => p.files.some((file) => staged_files.includes(file)))
+        .filter(
+          (p, index, self) =>
+            index == self.findIndex((sp) => sp.prompt == p.prompt)
+        )
 
       if (params.should_commit) {
         const edited_message = await new Promise<string | 'back' | undefined>(
@@ -293,7 +306,10 @@ export const generate_commit_message_command = (
     async (source_control?: vscode.SourceControl) => {
       const repository = await get_repository_for_commit(source_control)
       if (!repository) return
-      const data = await get_prompt_data(repository, !!source_control)
+      const data = await get_prompt_data({
+        repository,
+        stage_all_if_none_staged: !!source_control
+      })
       if (!data) return
       const { was_empty_stage, message_prompt } = data
 
