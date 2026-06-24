@@ -7,7 +7,7 @@ import { Logger } from '@shared/utils/logger'
 export const pick_model = async (params: {
   chatbot_name: string
   current_model_id?: string
-}): Promise<string | undefined> => {
+}): Promise<{ model_id: string } | undefined> => {
   try {
     let items: (vscode.QuickPickItem & { model_id: string })[] = []
 
@@ -20,7 +20,8 @@ export const pick_model = async (params: {
         model_id: model.id
       }))
     } else {
-      const chatbot_config = CHATBOTS[params.chatbot_name as keyof typeof CHATBOTS]
+      const chatbot_config =
+        CHATBOTS[params.chatbot_name as keyof typeof CHATBOTS]
       if (chatbot_config && chatbot_config.models) {
         items = Object.entries(chatbot_config.models).map(([id, data]) => ({
           label: (data as any).label || id,
@@ -35,8 +36,12 @@ export const pick_model = async (params: {
     quick_pick.placeholder = 'Choose a model'
 
     if (params.current_model_id) {
-      const active_item = items.find((i) => i.model_id === params.current_model_id)
+      const active_item = items.find(
+        (i) => i.model_id === params.current_model_id
+      )
       if (active_item) quick_pick.activeItems = [active_item]
+    } else {
+      quick_pick.activeItems = [items[0]]
     }
 
     quick_pick.buttons = [
@@ -52,13 +57,13 @@ export const pick_model = async (params: {
       }
     })
 
-    return new Promise<string | undefined>((resolve) => {
+    return new Promise<{ model_id: string } | undefined>((resolve) => {
       let accepted = false
       quick_pick.onDidAccept(() => {
         accepted = true
         const selected = quick_pick.selectedItems[0] as any
         quick_pick.hide()
-        resolve(selected?.model_id)
+        resolve(selected ? { model_id: selected.model_id } : undefined)
       })
 
       quick_pick.onDidHide(() => {

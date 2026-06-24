@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './DefaultConfigurationSelector.module.scss'
-import { TextButton } from '../TextButton'
+import { TextButton } from '../../common/TextButton'
 import { Item } from '../Item'
 
 export namespace DefaultConfigurationSelector {
@@ -62,4 +62,3 @@ export const DefaultConfigurationSelector: React.FC<
     />
   )
 }
-

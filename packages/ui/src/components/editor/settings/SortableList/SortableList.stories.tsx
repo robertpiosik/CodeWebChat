@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { SortableList } from './SortableList'
 import { Radio } from '../../common/Radio'
 import { IconButton } from '../../common/IconButton'
-import { TextButton } from '../TextButton'
+import { TextButton } from '../../common/TextButton'
 
 export default {
   component: SortableList

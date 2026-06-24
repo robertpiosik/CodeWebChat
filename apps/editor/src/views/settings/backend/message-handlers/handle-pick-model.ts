@@ -6,14 +6,14 @@ export const handle_pick_model = async (
   settings_provider: SettingsProvider,
   message: PickModelMessage
 ): Promise<void> => {
-  const selected = await pick_model({
+  const result = await pick_model({
     chatbot_name: message.chatbot_name,
     current_model_id: message.current_model_id
   })
-  if (selected) {
+  if (result) {
     settings_provider.postMessage({
       command: 'NEWLY_PICKED_MODEL',
-      model_id: selected
+      model_id: result.model_id
     })
   }
 }

@@ -694,7 +694,9 @@ export interface WebConfigurationsMessage extends BaseMessage {
   command: 'WEB_CONFIGURATIONS'
   web_configurations: WebConfiguration[]
   selected_web_configuration_name_by_mode?: { [T in WebPromptType]?: string }
-  selected_api_configuration_id_by_prompt_type?: { [T in ApiPromptType]?: string }
+  selected_api_configuration_id_by_prompt_type?: {
+    [T in ApiPromptType]?: string
+  }
 }
 
 export interface ApiConfigurationsMessage extends BaseMessage {
@@ -752,7 +754,7 @@ export interface NewlyPickedChatbotMessage extends BaseMessage {
 
 export interface NewlyPickedReasoningEffortMessage extends BaseMessage {
   command: 'NEWLY_PICKED_REASONING_EFFORT'
-  effort?: string
+  effort: string
 }
 
 export interface ModeMessage extends BaseMessage {

@@ -2,10 +2,13 @@
   border: 1px solid var(--cwc-border-color);
   background: var(--vscode-input-background);
   color: var(--vscode-input-foreground);
-  padding: 4px 6px;
+  padding: 0 6px;
+  height: 28px;
   border-radius: 4px;
   width: 100%;
   outline: none;
+  display: flex;
+  align-items: center;
 
   &:hover {
     border-color: var(--cwc-border-color-hover);

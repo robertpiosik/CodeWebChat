@@ -8,13 +8,8 @@ type Props = {
   on_toggle_collapsed?: () => void
 }
 
-export const Fieldset: React.FC<Props> = ({
-  label,
-  children,
-  is_collapsed,
-  on_toggle_collapsed
-}) => {
-  if (is_collapsed !== undefined) {
+export const Fieldset: React.FC<Props> = (props) => {
+  if (props.is_collapsed !== undefined) {
     return (
       <div className={styles.fieldset}>
         <div
@@ -22,19 +17,19 @@ export const Fieldset: React.FC<Props> = ({
             styles.fieldset__label,
             styles['fieldset__label--interactive']
           )}
-          onClick={on_toggle_collapsed}
+          onClick={props.on_toggle_collapsed}
           role="button"
         >
-          <span className={styles['fieldset__label__text']}>{label}</span>
+          <span className={styles['fieldset__label__text']}>{props.label}</span>
           <span
             className={cn('codicon', {
-              'codicon-chevron-down': !is_collapsed,
-              'codicon-chevron-right': is_collapsed
+              'codicon-chevron-down': !props.is_collapsed,
+              'codicon-chevron-right': props.is_collapsed
             })}
           />
         </div>
-        {!is_collapsed && (
-          <div className={styles.fieldset__content}>{children}</div>
+        {!props.is_collapsed && (
+          <div className={styles.fieldset__content}>{props.children}</div>
         )}
       </div>
     )
@@ -42,8 +37,10 @@ export const Fieldset: React.FC<Props> = ({
 
   return (
     <div className={styles.fieldset}>
-      {label && <div className={styles.fieldset__label}>{label}</div>}
-      <div className={styles.fieldset__content}>{children}</div>
+      {props.label && (
+        <div className={styles.fieldset__label}>{props.label}</div>
+      )}
+      <div className={styles.fieldset__content}>{props.children}</div>
     </div>
   )
 }

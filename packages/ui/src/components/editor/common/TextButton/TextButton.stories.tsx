@@ -1,8 +1,19 @@
 import { TextButton } from './TextButton'
-import { useState } from 'react'
 
 export default {
-  component: TextButton
+  component: TextButton,
+  decorators: [
+    (Story: any) => (
+      <div
+        style={{
+          padding: '1rem',
+          backgroundColor: 'var(--vscode-sideBar-background)'
+        }}
+      >
+        <Story />
+      </div>
+    )
+  ]
 }
 
 export const Primary = () => (

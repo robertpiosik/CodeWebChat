@@ -4,8 +4,9 @@
   justify-content: space-between;
   background: var(--vscode-input-background);
   color: var(--vscode-input-foreground);
-  padding: 4px 7px;
+  padding: 0 3px 0 7px;
   border-radius: 4px;
+  height: 28px;
   cursor: pointer;
   width: 100%;
 }

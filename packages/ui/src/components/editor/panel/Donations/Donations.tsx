@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import cn from 'classnames'
 import { Scrollable } from '../Scrollable'
 import { Fieldset } from '../Fieldset'
-import { TextButton } from '../TextButton'
+import { TextButton } from '../../common/TextButton'
 
 const get_href_from_url_like_string = (text: string): string | null => {
   if (/\s/.test(text)) {

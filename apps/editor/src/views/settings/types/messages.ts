@@ -486,7 +486,7 @@ export interface NewlyPickedChatbotMessage {
 
 export interface NewlyPickedReasoningEffortMessage {
   command: 'NEWLY_PICKED_REASONING_EFFORT'
-  effort?: string
+  effort: string
 }
 
 export interface WebConfigurationUpdatedMessage {
@@ -519,4 +519,3 @@ export type BackendMessage =
   | NewlyPickedChatbotMessage
   | NewlyPickedReasoningEffortMessage
   | WebConfigurationUpdatedMessage
-

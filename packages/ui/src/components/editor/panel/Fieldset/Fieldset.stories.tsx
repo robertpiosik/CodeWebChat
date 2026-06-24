@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Fieldset } from './Fieldset'
-import { Field } from '../Field'
+import { Field } from '../../common/Field'
 
 export default {
   component: Fieldset

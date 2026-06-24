@@ -3,14 +3,12 @@ import * as vscode from 'vscode'
 export const pick_reasoning_effort = async (params: {
   supported_efforts: string[]
   current_effort?: string
-}): Promise<{ effort?: string } | undefined> => {
-  const items: (vscode.QuickPickItem & { effort?: string })[] = [
-    { label: 'Unset', effort: undefined },
-    ...params.supported_efforts.map((effort) => ({
+}): Promise<{ effort: string } | undefined> => {
+  const items: (vscode.QuickPickItem & { effort: string })[] =
+    params.supported_efforts.map((effort) => ({
       label: effort.charAt(0).toUpperCase() + effort.slice(1),
       effort
     }))
-  ]
 
   const quick_pick = vscode.window.createQuickPick()
   quick_pick.items = items
@@ -37,7 +35,7 @@ export const pick_reasoning_effort = async (params: {
     }
   })
 
-  return new Promise<{ effort?: string } | undefined>((resolve) => {
+  return new Promise<{ effort: string } | undefined>((resolve) => {
     let accepted = false
     quick_pick.onDidAccept(() => {
       accepted = true

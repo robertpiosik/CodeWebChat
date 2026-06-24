@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import styles from './EditWebConfigurationForm.module.scss'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { Field as UiField } from '@ui/components/editor/panel/Field'
+import { Field as UiField } from '@ui/components/editor/common/Field'
 import { Slider as UiSlider } from '@ui/components/editor/panel/Slider'
 import { Input as UiInput } from '@ui/components/editor/common/Input'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
@@ -11,6 +11,7 @@ import { PresetOption as UiPresetOption } from '@ui/components/editor/panel/Pres
 import { Scrollable as UiScrollable } from '@ui/components/editor/panel/Scrollable'
 import { Fieldset as UiFieldset } from '@ui/components/editor/panel/Fieldset'
 import { QuickPickButton as UiQuickPickButton } from '@ui/components/editor/common/QuickPickButton'
+import { TextButton as UiTextButton } from '@ui/components/editor/common/TextButton'
 
 type Props = {
   web_configuration: WebConfiguration
@@ -195,7 +196,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
   return (
     <UiScrollable>
       <div className={styles.form}>
-        <UiFieldset label="General">
+        <UiFieldset>
           {chatbot && (
             <UiField label="Chatbot" html_for="chatbot">
               <UiQuickPickButton
@@ -209,9 +210,19 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
           )}
 
           {(Object.keys(models).length > 0 || chatbot == 'OpenRouter') && (
-            <UiField label="Model" html_for="model">
+            <UiField
+              label="Model"
+              html_for="model"
+              action={
+                model !== undefined && (
+                  <UiTextButton on_click={() => set_model(undefined)}>
+                    Unset
+                  </UiTextButton>
+                )
+              }
+            >
               <UiQuickPickButton
-                label={model_info?.label || model || 'Select model'}
+                label={model_info?.label || model || '—'}
                 onClick={(e) => {
                   e.stopPropagation()
                   if (chatbot) {
@@ -223,7 +234,17 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
           )}
 
           {supports_user_provided_model && (
-            <UiField label="Model" html_for="custom-model">
+            <UiField
+              label="Model"
+              html_for="custom-model"
+              action={
+                model !== undefined && (
+                  <UiTextButton on_click={() => set_model(undefined)}>
+                    Unset
+                  </UiTextButton>
+                )
+              }
+            >
               <UiInput
                 id="custom-model"
                 type="text"
@@ -241,6 +262,15 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
               info={`Controls how much the model thinks.${
                 chatbot == 'OpenRouter' ? ' Requires a reasoning model.' : ''
               }`}
+              action={
+                reasoning_effort !== undefined && (
+                  <UiTextButton
+                    on_click={() => set_reasoning_effort(undefined)}
+                  >
+                    Unset
+                  </UiTextButton>
+                )
+              }
             >
               <UiQuickPickButton
                 label={

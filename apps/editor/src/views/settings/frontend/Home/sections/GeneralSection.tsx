@@ -5,7 +5,7 @@ import { Dropdown as UiDropdown } from '@ui/components/editor/common/Dropdown'
 import { Item as UiItem } from '@ui/components/editor/settings/Item'
 import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
 import { Section as UiSection } from '@ui/components/editor/settings/Section'
-import { TextButton as UiTextButton } from '@ui/components/editor/settings/TextButton'
+import { TextButton as UiTextButton } from '@ui/components/editor/common/TextButton'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { EditFormatInstructions } from '@/views/settings/types/messages'
 import {
@@ -185,10 +185,14 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           />
           <UiItem
             title={t('general.code-at-cursor.keyboard-shortcut.title')}
-            description={t('general.code-at-cursor.keyboard-shortcut.description')}
+            description={t(
+              'general.code-at-cursor.keyboard-shortcut.description'
+            )}
             slot_right={
               <UiTextButton
-                on_click={() => props.on_open_keybindings('codeWebChat.codeAtCursor')}
+                on_click={() =>
+                  props.on_open_keybindings('codeWebChat.codeAtCursor')
+                }
               >
                 {t('general.code-at-cursor.keyboard-shortcut.action')}
               </UiTextButton>
@@ -216,7 +220,9 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           />
           <UiItem
             title={t('general.include-prompts-in-commit-messages.title')}
-            description={t('general.include-prompts-in-commit-messages.description')}
+            description={t(
+              'general.include-prompts-in-commit-messages.description'
+            )}
             slot_right={
               <UiToggler
                 is_on={props.include_prompts_in_commit_messages}
@@ -226,9 +232,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           />
           <UiItem
             title={t('general.intelligent-update.auto-run.title')}
-            description={t(
-              'general.intelligent-update.auto-run.description'
-            )}
+            description={t('general.intelligent-update.auto-run.description')}
             slot_right={
               <UiToggler
                 is_on={props.auto_run_intelligent_update}
@@ -363,7 +367,12 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                     : undefined
                 }
                 action_title={t('general.action.restore-default')}
-                on_action_click={() => handle_reset_instruction('whole', EDIT_FORMAT_INSTRUCTIONS_WHOLE)}
+                on_action_click={() =>
+                  handle_reset_instruction(
+                    'whole',
+                    EDIT_FORMAT_INSTRUCTIONS_WHOLE
+                  )
+                }
               />
             </UiItem>
 
@@ -393,7 +402,12 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                     : undefined
                 }
                 action_title={t('general.action.restore-default')}
-                on_action_click={() => handle_reset_instruction('truncated', EDIT_FORMAT_INSTRUCTIONS_TRUNCATED)}
+                on_action_click={() =>
+                  handle_reset_instruction(
+                    'truncated',
+                    EDIT_FORMAT_INSTRUCTIONS_TRUNCATED
+                  )
+                }
               />
             </UiItem>
 
@@ -418,12 +432,18 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 on_blur={handle_instructions_blur}
                 action_icon={
                   instructions.search_replace != '' &&
-                  instructions.search_replace != EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE
+                  instructions.search_replace !=
+                    EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE
                     ? 'discard'
                     : undefined
                 }
                 action_title={t('general.action.restore-default')}
-                on_action_click={() => handle_reset_instruction('search_replace', EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE)}
+                on_action_click={() =>
+                  handle_reset_instruction(
+                    'search_replace',
+                    EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE
+                  )
+                }
               />
             </UiItem>
 
@@ -450,12 +470,16 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                     : undefined
                 }
                 action_title={t('general.action.restore-default')}
-                on_action_click={() => handle_reset_instruction('diff', EDIT_FORMAT_INSTRUCTIONS_DIFF)}
+                on_action_click={() =>
+                  handle_reset_instruction(
+                    'diff',
+                    EDIT_FORMAT_INSTRUCTIONS_DIFF
+                  )
+                }
               />
             </UiItem>
           </UiGroup>
         </div>
-
       </UiSection>
     )
   }
