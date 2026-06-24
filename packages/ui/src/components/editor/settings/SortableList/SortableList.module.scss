@@ -3,6 +3,18 @@
   flex-direction: column;
   --row-height: 40px;
   background-color: var(--cwc-bg-tertiary);
+  border-top: 1px solid var(--cwc-border-color-dimmed);
+
+  &:first-of-type {
+    border-top-width: 0;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+
+  &:last-of-type {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
 }
 
 .header {

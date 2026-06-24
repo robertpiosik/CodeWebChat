@@ -7,6 +7,19 @@
   &--hoverable:hover:not(:has(button:hover, a:hover)) {
     background-color: var(--vscode-toolbar-hoverBackground);
   }
+
+  border-top: 1px solid var(--cwc-border-color-dimmed);
+
+  &:first-of-type {
+    border-top-width: 0;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+
+  &:last-of-type {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
 }
 
 .main {

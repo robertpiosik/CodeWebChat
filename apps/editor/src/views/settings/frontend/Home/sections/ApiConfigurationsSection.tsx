@@ -73,26 +73,6 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
         title={t('sections.api-configurations')}
         subtitle={t('configurations.subtitle')}
       >
-        <UiNotice type="info">
-          <Translation
-            id="model-providers.notice.credentials"
-            components={{
-              link: (
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    props.on_open_external_url(
-                      'https://code.visualstudio.com/api/references/vscode-api#SecretStorage'
-                    )
-                  }}
-                >
-                  SecretStorage
-                </a>
-              )
-            }}
-          />
-        </UiNotice>
         <UiGroup>
           <UiItem
             title={t('preferences.intelligent-update.auto-run.title')}
@@ -109,12 +89,39 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
         </UiGroup>
 
         <div ref={(el) => props.set_section_ref('model-providers', el)}>
-          <UiGroup title={t('sections.model-providers')}>
-            {props.providers.length == 0 && (
-              <UiNotice type="warning">
-                {t('model-providers.notice.missing')}
-              </UiNotice>
-            )}
+          <UiGroup
+            title={t('sections.model-providers')}
+            notices_slot={
+              <>
+                <UiNotice type="info">
+                  <Translation
+                    id="model-providers.notice.credentials"
+                    components={{
+                      link: (
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            props.on_open_external_url(
+                              'https://code.visualstudio.com/api/references/vscode-api#SecretStorage'
+                            )
+                          }}
+                        >
+                          SecretStorage
+                        </a>
+                      )
+                    }}
+                  />
+                </UiNotice>
+
+                {!props.providers.length && (
+                  <UiNotice type="warning">
+                    {t('model-providers.notice.missing')}
+                  </UiNotice>
+                )}
+              </>
+            }
+          >
             <ModelProvidersSection
               providers={props.providers}
               on_reorder={(reordered) => {
@@ -162,12 +169,16 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
         </div>
 
         <div ref={(el) => props.set_section_ref('api-configurations', el)}>
-          <UiGroup title={t('web-configurations.configurations.title')}>
-            {props.api_configurations.length == 0 && (
-              <UiNotice type="warning">
-                {t('configurations.notice.missing')}
-              </UiNotice>
-            )}
+          <UiGroup
+            title={t('web-configurations.configurations.title')}
+            notices_slot={
+              !props.api_configurations.length ? (
+                <UiNotice type="warning">
+                  {t('configurations.notice.missing')}
+                </UiNotice>
+              ) : undefined
+            }
+          >
             {props.api_configurations && (
               <SortableList
                 items={props.api_configurations}
