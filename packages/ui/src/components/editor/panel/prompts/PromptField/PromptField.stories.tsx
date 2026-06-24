@@ -52,7 +52,10 @@ export const Empty = () => (
     translations={{
       invocation_count: 'Invocation count',
       voice_input: 'Voice input',
-      exit_voice_input: 'Exit voice input'
+      exit_voice_input: 'Exit voice input',
+      reference_file: 'Reference file',
+      insert_symbol: 'Insert symbol',
+      prompt_templates: 'Prompt templates'
     }}
   />
 )
@@ -104,7 +107,10 @@ export const WithText = () => (
     translations={{
       invocation_count: 'Invocation count',
       voice_input: 'Voice input',
-      exit_voice_input: 'Exit voice input'
+      exit_voice_input: 'Exit voice input',
+      reference_file: 'Reference file',
+      insert_symbol: 'Insert symbol',
+      prompt_templates: 'Prompt templates'
     }}
   />
 )
@@ -156,7 +162,10 @@ export const LongText = () => (
     translations={{
       invocation_count: 'Invocation count',
       voice_input: 'Voice input',
-      exit_voice_input: 'Exit voice input'
+      exit_voice_input: 'Exit voice input',
+      reference_file: 'Reference file',
+      insert_symbol: 'Insert symbol',
+      prompt_templates: 'Prompt templates'
     }}
   />
 )
@@ -208,7 +217,10 @@ export const WithPlaceholderSavedContext = () => (
     translations={{
       invocation_count: 'Invocation count',
       voice_input: 'Voice input',
-      exit_voice_input: 'Exit voice input'
+      exit_voice_input: 'Exit voice input',
+      reference_file: 'Reference file',
+      insert_symbol: 'Insert symbol',
+      prompt_templates: 'Prompt templates'
     }}
   />
 )
@@ -266,7 +278,10 @@ export const WithPlaceholderSelection = () => (
     translations={{
       invocation_count: 'Invocation count',
       voice_input: 'Voice input',
-      exit_voice_input: 'Exit voice input'
+      exit_voice_input: 'Exit voice input',
+      reference_file: 'Reference file',
+      insert_symbol: 'Insert symbol',
+      prompt_templates: 'Prompt templates'
     }}
   />
 )
@@ -318,7 +333,10 @@ export const WithCommit = () => (
     translations={{
       invocation_count: 'Invocation count',
       voice_input: 'Voice input',
-      exit_voice_input: 'Exit voice input'
+      exit_voice_input: 'Exit voice input',
+      reference_file: 'Reference file',
+      insert_symbol: 'Insert symbol',
+      prompt_templates: 'Prompt templates'
     }}
   />
 )
@@ -370,7 +388,10 @@ export const WithCommitWithQuotes = () => (
     translations={{
       invocation_count: 'Invocation count',
       voice_input: 'Voice input',
-      exit_voice_input: 'Exit voice input'
+      exit_voice_input: 'Exit voice input',
+      reference_file: 'Reference file',
+      insert_symbol: 'Insert symbol',
+      prompt_templates: 'Prompt templates'
     }}
   />
 )
@@ -421,7 +442,10 @@ export const WithContextAtCommit = () => (
     translations={{
       invocation_count: 'Invocation count',
       voice_input: 'Voice input',
-      exit_voice_input: 'Exit voice input'
+      exit_voice_input: 'Exit voice input',
+      reference_file: 'Reference file',
+      insert_symbol: 'Insert symbol',
+      prompt_templates: 'Prompt templates'
     }}
   />
 )
@@ -477,7 +501,10 @@ export const WithEditFormatSelector = () => {
       translations={{
         invocation_count: 'Invocation count',
         voice_input: 'Voice input',
-        exit_voice_input: 'Exit voice input'
+        exit_voice_input: 'Exit voice input',
+        reference_file: 'Reference file',
+        insert_symbol: 'Insert symbol',
+        prompt_templates: 'Prompt templates'
       }}
     />
   )
@@ -530,7 +557,10 @@ export const WithFilePaths = () => (
     translations={{
       invocation_count: 'Invocation count',
       voice_input: 'Voice input',
-      exit_voice_input: 'Exit voice input'
+      exit_voice_input: 'Exit voice input',
+      reference_file: 'Reference file',
+      insert_symbol: 'Insert symbol',
+      prompt_templates: 'Prompt templates'
     }}
   />
 )
@@ -610,7 +640,10 @@ export const WithTabs = () => {
       translations={{
         invocation_count: 'Invocation count',
         voice_input: 'Voice input',
-        exit_voice_input: 'Exit voice input'
+        exit_voice_input: 'Exit voice input',
+        reference_file: 'Reference file',
+        insert_symbol: 'Insert symbol',
+        prompt_templates: 'Prompt templates'
       }}
     />
   )
@@ -659,7 +692,10 @@ export const WithWarning = () => (
     translations={{
       invocation_count: 'Invocation count',
       voice_input: 'Voice input',
-      exit_voice_input: 'Exit voice input'
+      exit_voice_input: 'Exit voice input',
+      reference_file: 'Reference file',
+      insert_symbol: 'Insert symbol',
+      prompt_templates: 'Prompt templates'
     }}
     warning="Add a configuration"
   />

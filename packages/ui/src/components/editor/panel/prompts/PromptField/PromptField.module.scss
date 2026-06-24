@@ -173,6 +173,7 @@
       height: var(--size);
       width: var(--size);
       border-radius: 5px;
+      position: relative;
 
       &:hover {
         background-color: var(--vscode-toolbar-hoverBackground);

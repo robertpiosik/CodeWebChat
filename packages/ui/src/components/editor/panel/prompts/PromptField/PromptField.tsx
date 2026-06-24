@@ -82,6 +82,9 @@ export type PromptFieldProps = {
     invocation_count: string
     voice_input: string
     exit_voice_input: string
+    reference_file: string
+    insert_symbol: string
+    prompt_templates: string
   }
 }
 
@@ -100,6 +103,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [is_recording_hovered, set_is_recording_hovered] = useState(false)
   const [is_invocation_count_hovered, set_is_invocation_count_hovered] =
     useState(false)
+  const [hovered_left_action, set_hovered_left_action] = useState<
+    'at' | 'hash' | 'curly' | null
+  >(null)
 
   useEffect(() => {
     if (!props.value) {
@@ -400,6 +406,27 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             }
           }}
         >
+          {hovered_left_action == 'at' && (
+            <Tooltip
+              message={props.translations.reference_file}
+              align="left"
+              offset={9}
+            />
+          )}
+          {hovered_left_action == 'hash' && (
+            <Tooltip
+              message={props.translations.insert_symbol}
+              align="left"
+              offset={28}
+            />
+          )}
+          {hovered_left_action == 'curly' && (
+            <Tooltip
+              message={props.translations.prompt_templates}
+              align="left"
+              offset={48}
+            />
+          )}
           {props.last_choice_tooltip && show_submit_tooltip && (
             <Tooltip
               message={`Send with ${props.last_choice_tooltip.name}`}
@@ -439,21 +466,24 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                 props.on_at_sign_click()
               }}
               className={cn(styles['footer__left__button'])}
-              title="Reference File"
+              onMouseEnter={() => set_hovered_left_action('at')}
+              onMouseLeave={() => set_hovered_left_action(null)}
             >
               <Icon variant="AT_SIGN" />
             </button>
             <button
               onClick={props.on_hash_sign_click}
               className={cn(styles['footer__left__button'])}
-              title="Insert Symbol"
+              onMouseEnter={() => set_hovered_left_action('hash')}
+              onMouseLeave={() => set_hovered_left_action(null)}
             >
               <Icon variant="HASH_SIGN" />
             </button>
             <button
               onClick={props.on_curly_braces_click}
               className={cn(styles['footer__left__button'])}
-              title="Prompt Templates"
+              onMouseEnter={() => set_hovered_left_action('curly')}
+              onMouseLeave={() => set_hovered_left_action(null)}
             >
               <Icon variant="CURLY_BRACES" />
             </button>

@@ -435,7 +435,10 @@ export const MainView: React.FC<Props> = (props) => {
             translations={{
               invocation_count: t('prompt-field.invocation-count'),
               voice_input: t('prompt-field.voice-input'),
-              exit_voice_input: t('prompt-field.exit-voice-input')
+              exit_voice_input: t('prompt-field.exit-voice-input'),
+              reference_file: t('prompt-field.reference-file'),
+              insert_symbol: t('prompt-field.insert-symbol'),
+              prompt_templates: t('prompt-field.prompt-templates')
             }}
           />
           <UiContextUtilisation
