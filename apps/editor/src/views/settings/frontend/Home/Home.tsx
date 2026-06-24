@@ -1,12 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { Layout as UiLayout } from '@ui/components/editor/settings/Layout'
 import { NavigationItem as UiNavigationItem } from '@ui/components/editor/settings/NavigationItem'
-import { ModelProvidersSection } from './sections/ModelProvidersSection'
 import { ApiConfigurationsSection } from './sections/ApiConfigurationsSection'
 import { Item as UiItem } from '@ui/components/editor/settings/Item'
 import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
 import { Section as UiSection } from '@ui/components/editor/settings/Section'
-import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
 import { Button as UiButton } from '@ui/components/editor/common/Button'
 import { Notice as UiNotice } from '@ui/components/editor/settings/Notice'
 import {
@@ -36,7 +34,9 @@ export type NavItem =
   | 'edit-format'
   | 'model-providers'
   | 'api-configurations'
+  | 'api-configurations-list'
   | 'web-configurations'
+  | 'web-configurations-list'
   | 'default-configurations'
   | 'instructions'
 
@@ -64,15 +64,26 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   },
   {
     id: 'web-configurations',
-    label: 'sections.web-configurations' as any
+    label: 'sections.chatbots'
   },
   {
-    id: 'model-providers',
-    label: 'sections.model-providers'
+    id: 'web-configurations-list',
+    label: 'web-configurations.configurations.title',
+    is_nested: true
   },
   {
     id: 'api-configurations',
     label: 'sections.api-configurations'
+  },
+  {
+    id: 'model-providers',
+    label: 'sections.model-providers',
+    is_nested: true
+  },
+  {
+    id: 'api-configurations-list',
+    label: 'web-configurations.configurations.title',
+    is_nested: true
   },
   {
     id: 'default-configurations',
@@ -181,7 +192,9 @@ export const Home: React.FC<Props> = (props) => {
     'edit-format': null,
     'model-providers': null,
     'api-configurations': null,
+    'api-configurations-list': null,
     'web-configurations': null,
+    'web-configurations-list': null,
     'default-configurations': null,
     instructions: null
   })
@@ -333,8 +346,6 @@ export const Home: React.FC<Props> = (props) => {
           }
           check_new_files={props.check_new_files}
           on_check_new_files_change={props.on_check_new_files_change}
-          reuse_last_tab={props.reuse_last_tab}
-          on_reuse_last_tab_change={props.on_reuse_last_tab_change}
           clear_checks_in_workspace_behavior={
             props.clear_checks_in_workspace_behavior
           }
@@ -361,10 +372,6 @@ export const Home: React.FC<Props> = (props) => {
             props.on_open_allow_patterns_settings
           }
           on_open_keybindings={props.on_open_keybindings}
-          auto_run_intelligent_update={props.auto_run_intelligent_update}
-          on_auto_run_intelligent_update_change={
-            props.on_auto_run_intelligent_update_change
-          }
           include_prompts_in_commit_messages={
             props.include_prompts_in_commit_messages
           }
@@ -387,97 +394,34 @@ export const Home: React.FC<Props> = (props) => {
           on_duplicate_web_configuration={props.on_duplicate_web_configuration}
           on_edit_web_configuration={props.on_edit_web_configuration}
           on_delete_web_configuration={props.on_delete_web_configuration}
+          reuse_last_tab={props.reuse_last_tab}
+          on_reuse_last_tab_change={props.on_reuse_last_tab_change}
           gemini_user_id={props.gemini_user_id}
           ai_studio_user_id={props.ai_studio_user_id}
           on_gemini_user_id_change={props.on_gemini_user_id_change}
           on_ai_studio_user_id_change={props.on_ai_studio_user_id_change}
         />
 
-        <UiSection
-          ref={(el) => set_section_ref('model-providers', el)}
-          title={t('sections.model-providers')}
-          subtitle={t('model-providers.subtitle')}
-          actions={
-            <UiButton on_click={() => props.on_add_provider()}>
-              {t('action.add-new')}
-            </UiButton>
-          }
-        >
-          <UiNotice type="info">
-            <Translation
-              id="model-providers.notice.credentials"
-              components={{
-                link: (
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      props.on_open_external_url(
-                        'https://code.visualstudio.com/api/references/vscode-api#SecretStorage'
-                      )
-                    }}
-                  >
-                    SecretStorage
-                  </a>
-                )
-              }}
-            />
-          </UiNotice>
-          {props.providers.length == 0 && (
-            <UiNotice type="warning">
-              {t('model-providers.notice.missing')}
-            </UiNotice>
-          )}
-          <UiGroup>
-            <ModelProvidersSection
-              providers={props.providers}
-              on_reorder={(reordered) => {
-                props.set_providers(reordered)
-                props.on_reorder_providers(reordered)
-              }}
-              on_add_provider={props.on_add_provider}
-              on_delete_provider={props.on_delete_provider}
-              on_edit_provider={props.on_edit_provider}
-            />
-            <UiItem
-              title={t('model-providers.extended-cache.anthropic.title')}
-              description={
-                <Translation
-                  id="model-providers.extended-cache.anthropic.description"
-                  components={{
-                    link: (
-                      <a
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault()
-                          props.on_open_external_url(
-                            'https://platform.claude.com/docs/en/build-with-claude/prompt-caching'
-                          )
-                        }}
-                      >
-                        {t(
-                          'model-providers.extended-cache.anthropic.learn-more'
-                        )}
-                      </a>
-                    )
-                  }}
-                />
-              }
-              slot_right={
-                <UiToggler
-                  is_on={props.extended_cache_duration_for_anthropic}
-                  on_toggle={
-                    props.on_extended_cache_duration_for_anthropic_change
-                  }
-                />
-              }
-            />
-          </UiGroup>
-        </UiSection>
-
         <ApiConfigurationsSection
           ref={(el) => set_section_ref('api-configurations', el)}
           set_section_ref={set_section_ref}
+          providers={props.providers}
+          set_providers={props.set_providers}
+          on_add_provider={props.on_add_provider}
+          on_delete_provider={props.on_delete_provider}
+          on_edit_provider={props.on_edit_provider}
+          on_reorder_providers={props.on_reorder_providers}
+          extended_cache_duration_for_anthropic={
+            props.extended_cache_duration_for_anthropic
+          }
+          on_extended_cache_duration_for_anthropic_change={
+            props.on_extended_cache_duration_for_anthropic_change
+          }
+          auto_run_intelligent_update={props.auto_run_intelligent_update}
+          on_auto_run_intelligent_update_change={
+            props.on_auto_run_intelligent_update_change
+          }
+          on_open_external_url={props.on_open_external_url}
           api_configurations={props.api_configurations}
           defaults={props.defaults}
           set_api_configurations={props.set_api_configurations}

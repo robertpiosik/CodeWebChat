@@ -7,7 +7,6 @@ type Props = {
   subtitle: React.ReactNode
   children: React.ReactNode
   on_stuck_change?: (is_stuck: boolean) => void
-  actions?: React.ReactNode
 }
 
 export const Section = forwardRef<HTMLDivElement, Props>((props, ref) => {
@@ -95,14 +94,9 @@ export const Section = forwardRef<HTMLDivElement, Props>((props, ref) => {
             className={styles.header__content}
             title={`${props.title}—${props.subtitle}`}
           >
-            <div className={styles.header__title}>
-              {props.title}
-            </div>
+            <div className={styles.header__title}>{props.title}</div>
             <div className={styles.header__subtitle}>{props.subtitle}</div>
           </div>
-          {props.actions && (
-            <div className={styles.header__actions}>{props.actions}</div>
-          )}
         </div>
       </div>
       {props.children}

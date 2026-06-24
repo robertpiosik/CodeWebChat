@@ -28,12 +28,10 @@ type Props = {
   are_automatic_checkpoints_disabled: boolean
   send_with_shift_enter: boolean
   check_new_files: boolean
-  reuse_last_tab: boolean
   checkpoint_lifespan: number
   on_automatic_checkpoints_toggle: (disabled: boolean) => void
   on_send_with_shift_enter_change: (enabled: boolean) => void
   on_check_new_files_change: (enabled: boolean) => void
-  on_reuse_last_tab_change: (enabled: boolean) => void
   on_checkpoint_lifespan_change: (hours: number | undefined) => void
   clear_checks_in_workspace_behavior: ClearChecksBehavior
   edit_format_instructions: EditFormatInstructions
@@ -51,8 +49,6 @@ type Props = {
   on_open_allow_patterns_settings: () => void
   on_open_keybindings: (search?: string) => void
   set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void
-  auto_run_intelligent_update: boolean
-  on_auto_run_intelligent_update_change: (enabled: boolean) => void
   include_prompts_in_commit_messages: boolean
   on_include_prompts_in_commit_messages_change: (enabled: boolean) => void
   voice_input_push_to_talk: boolean
@@ -209,16 +205,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
           <UiItem
-            title={t('general.reuse-last-tab.title')}
-            description={t('general.reuse-last-tab.description')}
-            slot_right={
-              <UiToggler
-                is_on={props.reuse_last_tab}
-                on_toggle={props.on_reuse_last_tab_change}
-              />
-            }
-          />
-          <UiItem
             title={t('general.include-prompts-in-commit-messages.title')}
             description={t(
               'general.include-prompts-in-commit-messages.description'
@@ -227,16 +213,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               <UiToggler
                 is_on={props.include_prompts_in_commit_messages}
                 on_toggle={props.on_include_prompts_in_commit_messages_change}
-              />
-            }
-          />
-          <UiItem
-            title={t('general.intelligent-update.auto-run.title')}
-            description={t('general.intelligent-update.auto-run.description')}
-            slot_right={
-              <UiToggler
-                is_on={props.auto_run_intelligent_update}
-                on_toggle={props.on_auto_run_intelligent_update_change}
               />
             }
           />

@@ -54,7 +54,7 @@ export const sections = {
     bg: 'Доставчици на модели'
   },
   'sections.api-configurations': {
-    en: 'API Configurations',
+    en: 'API Calls',
     pl: 'Konfiguracje API',
     'zh-cn': 'API 配置',
     ja: '設定',
@@ -71,22 +71,22 @@ export const sections = {
     hu: 'API Konfigurációk',
     bg: 'API Конфигурации'
   },
-  'sections.web-configurations': {
-    en: 'Web Configurations',
-    pl: 'Konfiguracje webowe',
-    'zh-cn': '网络配置',
-    ja: 'Web 設定',
-    'zh-tw': '網路設定',
-    de: 'Webkonfigurationen',
-    es: 'Configuraciones Web',
-    fr: 'Configurations Web',
-    'pt-br': 'Configurações Web',
-    ru: 'Веб-конфигурации',
-    ko: '웹 구성',
-    it: 'Configurazioni Web',
-    tr: 'Web Yapılandırmaları',
-    cs: 'Webové konfigurace',
-    hu: 'Webes Konfigurációk',
-    bg: 'Уеб конфигурации'
+  'sections.chatbots': {
+    en: 'Chatbots',
+    pl: 'Chatboty',
+    'zh-cn': '聊天机器人',
+    ja: 'チャットボット',
+    'zh-tw': '聊天機器人',
+    de: 'Chatbots',
+    es: 'Chatbots',
+    fr: 'Chatbots',
+    'pt-br': 'Chatbots',
+    ru: 'Чат-боты',
+    ko: '챗봇',
+    it: 'Chatbot',
+    tr: 'Sohbet Botları',
+    cs: 'Chatboti',
+    hu: 'Chatbotok',
+    bg: 'Чатботове'
   }
 } as const
