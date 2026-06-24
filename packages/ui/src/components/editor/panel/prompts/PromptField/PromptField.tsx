@@ -49,7 +49,7 @@ export type PromptFieldProps = {
   on_caret_position_set?: () => void
   focus_key?: number
   focus_and_select_key?: number
-  last_choice_button_title?: string
+  last_choice_tooltip?: { name: string; details?: string }
   show_edit_format_selector?: boolean
   edit_format?: EditFormat
   on_edit_format_change?: (format: EditFormat) => void
@@ -78,6 +78,11 @@ export type PromptFieldProps = {
   warning?: string
   voice_input_push_to_talk?: boolean
   token_count: number
+  translations: {
+    invocation_count: string
+    voice_input: string
+    exit_voice_input: string
+  }
 }
 
 export const PromptField: React.FC<PromptFieldProps> = (props) => {
@@ -93,6 +98,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [hovered_edit_format, set_hovered_edit_format] =
     useState<EditFormat | null>(null)
   const [is_recording_hovered, set_is_recording_hovered] = useState(false)
+  const [is_invocation_count_hovered, set_is_invocation_count_hovered] =
+    useState(false)
 
   useEffect(() => {
     if (!props.value) {
@@ -228,7 +235,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           raw_text: props.value,
           context_file_paths: props.context_file_paths ?? []
         })
-          input_ref.current.focus()
+        input_ref.current.focus()
         set_caret_position_for_div(input_ref.current, display_pos)
       } else if (is_focused) {
         set_caret_position_for_div(input_ref.current, selection_start)
@@ -317,8 +324,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
       <div
         className={cn(styles.container__inner, {
-          [styles['container__inner--disabled']]:
-            !!props.warning,
+          [styles['container__inner--disabled']]: !!props.warning,
           [styles['container__inner--selecting']]: is_text_selecting
         })}
         onKeyDown={handle_container_key_down}
@@ -394,10 +400,31 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             }
           }}
         >
-          {props.last_choice_button_title && show_submit_tooltip && (
+          {props.last_choice_tooltip && show_submit_tooltip && (
             <Tooltip
-              message={`Send with ${props.last_choice_button_title}`}
+              message={`Send with ${props.last_choice_tooltip.name}`}
+              details={props.last_choice_tooltip.details}
               offset={28}
+              align="right"
+            />
+          )}
+          {is_invocation_count_hovered && !is_invocation_dropdown_open && (
+            <Tooltip
+              message={props.translations.invocation_count}
+              details={is_mac ? '⌥X 1-5' : 'Alt+X 1-5'}
+              offset={48}
+              align="right"
+            />
+          )}
+          {is_recording_hovered && (
+            <Tooltip
+              message={
+                props.is_recording
+                  ? props.translations.exit_voice_input
+                  : props.translations.voice_input
+              }
+              details={is_mac ? '⇧⌘Space' : 'Ctrl+Shift+Space'}
+              offset={props.is_web_mode && !props.is_connected ? 12 : 28}
               align="right"
             />
           )}
@@ -467,7 +494,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   let ref = null
                   if (format == 'whole') ref = format_whole_ref
                   if (format == 'truncated') ref = format_truncated_ref
-                  if (format == 'search-replace') ref = format_search_replace_ref
+                  if (format == 'search-replace')
+                    ref = format_search_replace_ref
                   if (format == 'diff') ref = format_diff_ref
 
                   return (
@@ -528,8 +556,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
             <div className={styles['footer__right__submit']} ref={dropdown_ref}>
               {(!props.is_web_mode ||
-                (props.is_web_mode &&
-                  props.is_connected)) && (
+                (props.is_web_mode && props.is_connected)) && (
                 <>
                   {!(
                     props.prompt_type == 'find-relevant-files' &&
@@ -549,7 +576,12 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                           set_is_invocation_dropdown_open((prev) => !prev)
                           close_dropdown()
                         }}
-                        title={`Invocation count ${is_mac ? '(⌥X 1-5)' : '(Alt+X 1-5)'}`}
+                        onMouseEnter={() =>
+                          set_is_invocation_count_hovered(true)
+                        }
+                        onMouseLeave={() =>
+                          set_is_invocation_count_hovered(false)
+                        }
                       >
                         {props.invocation_count}×
                       </button>
@@ -585,9 +617,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       }}
                       onMouseEnter={() => set_is_recording_hovered(true)}
                       onMouseLeave={() => set_is_recording_hovered(false)}
-                      title={`Exit voice input ${
-                        is_mac ? '(⇧⌘Space)' : '(Ctrl+Shift+Space)'
-                      }`}
                     />
                   ) : !props.value && props.prompt_type != 'code-at-cursor' ? (
                     <button
@@ -603,9 +632,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       }}
                       onMouseEnter={() => set_is_recording_hovered(true)}
                       onMouseLeave={() => set_is_recording_hovered(false)}
-                      title={`Voice input ${
-                        is_mac ? '(⇧⌘Space)' : '(Ctrl+Shift+Space)'
-                      }`}
                     />
                   ) : (
                     <button
@@ -674,7 +700,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         ...(props.value || props.prompt_type == 'code-at-cursor'
                           ? [
                               {
-                                label: 'Voice input',
+                                label: props.translations.voice_input,
                                 shortcut: is_mac
                                   ? '⇧⌘Space'
                                   : 'Ctrl+Shift+Space',
@@ -690,7 +716,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   )}
                 </>
               )}
-              {((props.is_web_mode && !props.is_connected)) && (
+              {props.is_web_mode && !props.is_connected && (
                 <>
                   {props.is_recording ? (
                     <button
@@ -709,9 +735,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       }}
                       onMouseEnter={() => set_is_recording_hovered(true)}
                       onMouseLeave={() => set_is_recording_hovered(false)}
-                      title={`Exit voice input ${
-                        is_mac ? '(⇧⌘Space)' : '(Ctrl+Shift+Space)'
-                      }`}
                     />
                   ) : !props.value ? (
                     <button
@@ -727,9 +750,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       }}
                       onMouseEnter={() => set_is_recording_hovered(true)}
                       onMouseLeave={() => set_is_recording_hovered(false)}
-                      title={`Voice input ${
-                        is_mac ? '(⇧⌘Space)' : '(Ctrl+Shift+Space)'
-                      }`}
                     />
                   ) : (
                     <>
@@ -773,7 +793,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         <DropdownMenu
                           items={[
                             {
-                              label: 'Voice input',
+                              label: props.translations.voice_input,
                               shortcut: is_mac ? '⇧⌘Space' : 'Ctrl+Shift+Space',
                               on_click: () => {
                                 props.on_recording_started()

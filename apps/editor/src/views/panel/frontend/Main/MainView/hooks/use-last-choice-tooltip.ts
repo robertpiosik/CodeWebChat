@@ -4,54 +4,65 @@ import { ApiConfiguration } from '@/views/panel/types/messages'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { WebConfiguration } from '@shared/types/web-configuration'
 
-export const use_last_choice_button_title = (params: {
+export const use_last_choice_tooltip = (params: {
   mode: Mode
   selected_web_configuration_or_group_name?: string
   web_configurations: WebConfiguration[]
   selected_api_configuration_id?: string
   api_configurations: ApiConfiguration[]
-}): string | undefined => {
+}): { name: string; details?: string } | undefined => {
   return useMemo(() => {
     if (params.mode == MODE.WEB) {
       if (params.selected_web_configuration_or_group_name) {
         if (params.selected_web_configuration_or_group_name == 'Ungrouped') {
-          return 'Ungrouped'
+          return { name: 'Ungrouped' }
         } else {
           const web_configuration = params.web_configurations.find(
             (p) => p.name == params.selected_web_configuration_or_group_name
           )
           if (web_configuration) {
             const is_unnamed =
-              !web_configuration.name || /^\(\d+\)$/.test(web_configuration.name.trim())
+              !web_configuration.name ||
+              /^\(\d+\)$/.test(web_configuration.name.trim())
             let display_name: string
             if (web_configuration.chatbot) {
-              display_name = is_unnamed ? web_configuration.chatbot : web_configuration.name!
+              display_name = is_unnamed
+                ? web_configuration.chatbot
+                : web_configuration.name!
             } else {
-              display_name = is_unnamed ? 'Unnamed group' : web_configuration.name!
+              display_name = is_unnamed
+                ? 'Unnamed group'
+                : web_configuration.name!
             }
 
-            const get_subtitle = (): string => {
-              const { chatbot, model } = web_configuration
+            const get_details = (): string => {
+              const { chatbot, model, reasoning_effort } = web_configuration
+              let base: string
               if (!chatbot) {
-                return model || ''
+                base = model || ''
+              } else {
+                const model_display_name = model
+                  ? CHATBOTS[chatbot].models?.[model]?.label || model
+                  : null
+                if (is_unnamed) {
+                  base = model_display_name || ''
+                } else if (model_display_name) {
+                  base = `${chatbot} · ${model_display_name}`
+                } else {
+                  base = chatbot
+                }
               }
-              const model_display_name = model
-                ? CHATBOTS[chatbot].models?.[model]?.label || model
-                : null
-              if (is_unnamed) {
-                return model_display_name || ''
+              if (reasoning_effort) {
+                base = base ? `${base} · ${reasoning_effort}` : reasoning_effort
               }
-              if (model_display_name) {
-                return `${chatbot} · ${model_display_name}`
-              }
-              return chatbot
+              return base
             }
 
-            const subtitle = get_subtitle()
-            if (subtitle) {
-              return `${display_name} (${subtitle})`
+            const details = get_details()
+            if (details) {
+              return { name: display_name, details }
             } else {
-              return display_name
+              return { name: display_name }
             }
           }
         }
@@ -68,7 +79,7 @@ export const use_last_choice_button_title = (params: {
             description_parts.push(`${configuration.reasoning_effort}`)
           }
           const description = description_parts.join(' · ')
-          return `${configuration.model} (${description})`
+          return { name: configuration.model, details: description }
         }
       }
     }
@@ -81,4 +92,3 @@ export const use_last_choice_button_title = (params: {
     params.api_configurations
   ])
 }
-

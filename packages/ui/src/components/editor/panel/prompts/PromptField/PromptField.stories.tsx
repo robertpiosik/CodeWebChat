@@ -49,6 +49,11 @@ export const Empty = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     token_count={0}
+    translations={{
+      invocation_count: 'Invocation count',
+      voice_input: 'Voice input',
+      exit_voice_input: 'Exit voice input'
+    }}
   />
 )
 
@@ -96,6 +101,11 @@ export const WithText = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     token_count={0}
+    translations={{
+      invocation_count: 'Invocation count',
+      voice_input: 'Voice input',
+      exit_voice_input: 'Exit voice input'
+    }}
   />
 )
 
@@ -143,6 +153,11 @@ export const LongText = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     token_count={0}
+    translations={{
+      invocation_count: 'Invocation count',
+      voice_input: 'Voice input',
+      exit_voice_input: 'Exit voice input'
+    }}
   />
 )
 
@@ -190,6 +205,11 @@ export const WithPlaceholderSavedContext = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     token_count={0}
+    translations={{
+      invocation_count: 'Invocation count',
+      voice_input: 'Voice input',
+      exit_voice_input: 'Exit voice input'
+    }}
   />
 )
 
@@ -243,6 +263,11 @@ export const WithPlaceholderSelection = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     token_count={0}
+    translations={{
+      invocation_count: 'Invocation count',
+      voice_input: 'Voice input',
+      exit_voice_input: 'Exit voice input'
+    }}
   />
 )
 
@@ -290,6 +315,11 @@ export const WithCommit = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     token_count={0}
+    translations={{
+      invocation_count: 'Invocation count',
+      voice_input: 'Voice input',
+      exit_voice_input: 'Exit voice input'
+    }}
   />
 )
 
@@ -337,6 +367,11 @@ export const WithCommitWithQuotes = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     token_count={0}
+    translations={{
+      invocation_count: 'Invocation count',
+      voice_input: 'Voice input',
+      exit_voice_input: 'Exit voice input'
+    }}
   />
 )
 export const WithContextAtCommit = () => (
@@ -383,6 +418,11 @@ export const WithContextAtCommit = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     token_count={0}
+    translations={{
+      invocation_count: 'Invocation count',
+      voice_input: 'Voice input',
+      exit_voice_input: 'Exit voice input'
+    }}
   />
 )
 
@@ -434,6 +474,11 @@ export const WithEditFormatSelector = () => {
       on_new_tab={() => {}}
       on_tab_delete={() => {}}
       token_count={0}
+      translations={{
+        invocation_count: 'Invocation count',
+        voice_input: 'Voice input',
+        exit_voice_input: 'Exit voice input'
+      }}
     />
   )
 }
@@ -482,6 +527,11 @@ export const WithFilePaths = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     token_count={0}
+    translations={{
+      invocation_count: 'Invocation count',
+      voice_input: 'Voice input',
+      exit_voice_input: 'Exit voice input'
+    }}
   />
 )
 
@@ -557,6 +607,11 @@ export const WithTabs = () => {
       on_new_tab={handle_new_tab}
       on_tab_delete={handle_tab_delete}
       token_count={0}
+      translations={{
+        invocation_count: 'Invocation count',
+        voice_input: 'Voice input',
+        exit_voice_input: 'Exit voice input'
+      }}
     />
   )
 }
@@ -601,6 +656,11 @@ export const WithWarning = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     token_count={0}
+    translations={{
+      invocation_count: 'Invocation count',
+      voice_input: 'Voice input',
+      exit_voice_input: 'Exit voice input'
+    }}
     warning="Add a configuration"
   />
 )

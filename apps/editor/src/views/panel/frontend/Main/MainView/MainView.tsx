@@ -11,7 +11,7 @@ import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Scrollable as UiScrollable } from '@ui/components/editor/panel/Scrollable'
 import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/components/editor/panel/BrowserExtensionMessage'
 import { ApiConfiguration } from '@/views/panel/types/messages'
-import { use_last_choice_button_title } from './hooks/use-last-choice-button-title'
+import { use_last_choice_tooltip } from './hooks/use-last-choice-tooltip'
 import { ContextUtilisation as UiContextUtilisation } from '@ui/components/editor/panel/ContextUtilisation'
 import { Header } from './components/Header'
 import { use_invocation_counts } from './hooks/use-invocation-counts'
@@ -243,7 +243,7 @@ export const MainView: React.FC<Props> = (props) => {
     }
   }
 
-  const last_choice_button_title = use_last_choice_button_title({
+  const last_choice_tooltip = use_last_choice_tooltip({
     mode: props.mode,
     selected_web_configuration_or_group_name:
       props.selected_web_configuration_name,
@@ -397,7 +397,7 @@ export const MainView: React.FC<Props> = (props) => {
             on_caret_position_set={props.on_caret_position_set}
             focus_and_select_key={props.chat_input_focus_and_select_key}
             focus_key={props.chat_input_focus_key}
-            last_choice_button_title={last_choice_button_title}
+            last_choice_tooltip={last_choice_tooltip}
             show_edit_format_selector={show_edit_format_selector}
             edit_format={
               props.mode == MODE.WEB
@@ -432,6 +432,11 @@ export const MainView: React.FC<Props> = (props) => {
             warning={warning}
             voice_input_push_to_talk={props.voice_input_push_to_talk}
             token_count={props.token_count}
+            translations={{
+              invocation_count: t('prompt-field.invocation-count'),
+              voice_input: t('prompt-field.voice-input'),
+              exit_voice_input: t('prompt-field.exit-voice-input')
+            }}
           />
           <UiContextUtilisation
             current_context_size={props.token_count}

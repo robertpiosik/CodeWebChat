@@ -3,9 +3,10 @@ import cn from 'classnames'
 import styles from './Tooltip.module.scss'
 
 export type TooltipProps = {
-  message: string
+  message: React.ReactNode
   align: 'left' | 'right' | 'center'
   is_warning?: boolean
+  details?: React.ReactNode
   offset?: number
 }
 
@@ -24,5 +25,8 @@ export const Tooltip: React.FC<TooltipProps> = (params) => (
     }
   >
     {params.message}
+    {params.details && (
+      <span className={styles.tooltip__details}>{params.details}</span>
+    )}
   </div>
 )
