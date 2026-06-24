@@ -4,7 +4,6 @@ import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
 import { Notice as UiNotice } from '@ui/components/editor/settings/Notice'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { Item as UiItem } from '@ui/components/editor/settings/Item'
-import { Button as UiButton } from '@ui/components/editor/common/Button'
 import { SortableList } from '@ui/components/editor/settings/SortableList'
 import { IconButton } from '@ui/components/editor/common/IconButton'
 import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
@@ -244,11 +243,6 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                 )}
               />
             )}
-          </UiGroup>
-        </div>
-
-        <div ref={(el) => props.set_section_ref('default-configurations', el)}>
-          <UiGroup title={t('configurations.default-configurations.title')}>
             <DefaultConfigurationSelector
               title={t('configurations.tool.intelligent-update')}
               value={props.defaults['intelligent-update'] || null}

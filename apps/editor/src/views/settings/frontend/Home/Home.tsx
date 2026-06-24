@@ -30,7 +30,6 @@ export type NavItem =
   | 'api-calls'
   | 'model-providers'
   | 'api-configurations'
-  | 'default-configurations'
   | 'instructions'
 
 type NavConfigItem = { id: NavItem; label: TranslationKey; is_nested?: boolean }
@@ -86,11 +85,6 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   {
     id: 'api-configurations',
     label: 'web-configurations.configurations.title',
-    is_nested: true
-  },
-  {
-    id: 'default-configurations',
-    label: 'configurations.default-configurations.title',
     is_nested: true
   },
   {
@@ -200,7 +194,6 @@ export const Home: React.FC<Props> = (props) => {
     'api-calls': null,
     'model-providers': null,
     'api-configurations': null,
-    'default-configurations': null,
     instructions: null
   })
 
