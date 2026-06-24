@@ -88,12 +88,15 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       position: sticky;
       top: 10px;
-      animation: stickyFadeIn var(--transition-duration-250)
-        var(--transition-timing-function);
 
       &::after {
         height: 20px;
       }
+    }
+
+    &--animating-in {
+      animation: stickyFadeIn var(--transition-duration-250)
+        var(--transition-timing-function);
     }
 
     &--hiding {

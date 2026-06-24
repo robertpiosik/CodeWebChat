@@ -52,8 +52,14 @@ export const Home: React.FC<Props> = (props) => {
     'tasks'
   )
   const [active_workspace_root, set_active_workspace_root] = useState<string>()
-  const { is_mode_sticky, is_hiding, responses_ref, mode_ref, handle_scroll } =
-    use_sticky_mode()
+  const {
+    is_mode_sticky,
+    is_hiding,
+    is_animating_in,
+    responses_ref,
+    mode_ref,
+    handle_scroll
+  } = use_sticky_mode(props.is_active)
 
   const roots = Object.keys(props.tasks)
   const active_root =
@@ -145,6 +151,7 @@ export const Home: React.FC<Props> = (props) => {
             <div
               className={cn(styles.inner__mode, {
                 [styles['inner__mode--sticky']]: is_mode_sticky,
+                [styles['inner__mode--animating-in']]: is_animating_in,
                 [styles['inner__mode--hiding']]: is_hiding
               })}
               ref={mode_ref}
