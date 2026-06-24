@@ -2,24 +2,15 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { Layout as UiLayout } from '@ui/components/editor/settings/Layout'
 import { NavigationItem as UiNavigationItem } from '@ui/components/editor/settings/NavigationItem'
 import { ApiConfigurationsSection } from './sections/ApiConfigurationsSection'
-import { Item as UiItem } from '@ui/components/editor/settings/Item'
-import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
-import { Section as UiSection } from '@ui/components/editor/settings/Section'
-import { Button as UiButton } from '@ui/components/editor/common/Button'
-import { Notice as UiNotice } from '@ui/components/editor/settings/Notice'
 import {
   ApiConfiguration,
   Provider,
   EditFormatInstructions
 } from '@/views/settings/types/messages'
 import { WebConfiguration } from '@shared/types/web-configuration'
-import { GeneralSection } from './sections/GeneralSection'
+import { PreferencesSection } from './sections/PreferencesSection'
 import { ToolType } from '@/views/settings/types/tools'
-import {
-  Translation,
-  use_translation,
-  TranslationKey
-} from '../i18n/use-translation'
+import { use_translation, TranslationKey } from '../i18n/use-translation'
 import { WebConfigurationsSection } from './sections/WebConfigurationsSection'
 import {
   commit_message_instructions as default_commit_message_instructions,
@@ -28,15 +19,17 @@ import {
 import { default_system_instructions } from '@shared/constants/default-system-instructions'
 
 export type NavItem =
-  | 'general'
+  | 'preferences'
   | 'prompt-field'
   | 'checkpoints'
+  | 'commit-messages'
   | 'edit-format'
+  | 'misc'
+  | 'chatbots'
+  | 'web-configurations'
+  | 'api-calls'
   | 'model-providers'
   | 'api-configurations'
-  | 'api-configurations-list'
-  | 'web-configurations'
-  | 'web-configurations-list'
   | 'default-configurations'
   | 'instructions'
 
@@ -44,35 +37,45 @@ type NavConfigItem = { id: NavItem; label: TranslationKey; is_nested?: boolean }
 
 const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   {
-    id: 'general',
-    label: 'sections.general'
+    id: 'preferences',
+    label: 'sections.preferences'
   },
   {
     id: 'prompt-field',
-    label: 'general.prompt-field.title',
+    label: 'preferences.prompt-field.title',
     is_nested: true
   },
   {
     id: 'checkpoints',
-    label: 'general.checkpoints.title',
+    label: 'preferences.checkpoints.title',
+    is_nested: true
+  },
+  {
+    id: 'commit-messages',
+    label: 'preferences.commit-messages.title',
     is_nested: true
   },
   {
     id: 'edit-format',
-    label: 'general.edit-formats.title',
+    label: 'preferences.edit-formats.title',
     is_nested: true
   },
   {
-    id: 'web-configurations',
+    id: 'misc',
+    label: 'preferences.misc.title',
+    is_nested: true
+  },
+  {
+    id: 'chatbots',
     label: 'sections.chatbots'
   },
   {
-    id: 'web-configurations-list',
+    id: 'web-configurations',
     label: 'web-configurations.configurations.title',
     is_nested: true
   },
   {
-    id: 'api-configurations',
+    id: 'api-calls',
     label: 'sections.api-configurations'
   },
   {
@@ -81,7 +84,7 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
     is_nested: true
   },
   {
-    id: 'api-configurations-list',
+    id: 'api-configurations',
     label: 'web-configurations.configurations.title',
     is_nested: true
   },
@@ -186,15 +189,17 @@ export const Home: React.FC<Props> = (props) => {
 
   const scroll_container_ref = useRef<HTMLDivElement>(null)
   const section_refs = useRef<Record<NavItem, HTMLDivElement | null>>({
-    general: null,
+    preferences: null,
     'prompt-field': null,
     checkpoints: null,
+    'commit-messages': null,
     'edit-format': null,
+    misc: null,
+    chatbots: null,
+    'web-configurations': null,
+    'api-calls': null,
     'model-providers': null,
     'api-configurations': null,
-    'api-configurations-list': null,
-    'web-configurations': null,
-    'web-configurations-list': null,
     'default-configurations': null,
     instructions: null
   })
@@ -214,9 +219,9 @@ export const Home: React.FC<Props> = (props) => {
   const get_has_warning = (id: NavItem): boolean => {
     if (id == 'model-providers') {
       return props.providers.length == 0
-    } else if (id == 'api-configurations') {
+    } else if (id == 'api-calls' || id == 'api-configurations') {
       return props.api_configurations.length == 0
-    } else if (id == 'web-configurations') {
+    } else if (id == 'chatbots' || id == 'web-configurations') {
       return props.web_configurations.length == 0
     } else {
       return false
@@ -333,8 +338,8 @@ export const Home: React.FC<Props> = (props) => {
           )
         })}
       >
-        <GeneralSection
-          ref={(el) => set_section_ref('general', el)}
+        <PreferencesSection
+          ref={(el) => set_section_ref('preferences', el)}
           set_section_ref={set_section_ref}
           context_size_warning_threshold={props.context_size_warning_threshold}
           on_context_size_warning_threshold_change={
@@ -385,7 +390,7 @@ export const Home: React.FC<Props> = (props) => {
         />
 
         <WebConfigurationsSection
-          ref={(el) => set_section_ref('web-configurations', el)}
+          ref={(el) => set_section_ref('chatbots', el)}
           set_section_ref={set_section_ref}
           web_configurations={props.web_configurations}
           set_web_configurations={props.set_web_configurations}
@@ -403,7 +408,7 @@ export const Home: React.FC<Props> = (props) => {
         />
 
         <ApiConfigurationsSection
-          ref={(el) => set_section_ref('api-configurations', el)}
+          ref={(el) => set_section_ref('api-calls', el)}
           set_section_ref={set_section_ref}
           providers={props.providers}
           set_providers={props.set_providers}

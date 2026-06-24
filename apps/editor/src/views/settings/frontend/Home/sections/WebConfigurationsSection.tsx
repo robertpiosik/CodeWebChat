@@ -113,8 +113,8 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
         )}
         <UiGroup>
           <UiItem
-            title={t('general.reuse-last-tab.title')}
-            description={t('general.reuse-last-tab.description')}
+            title={t('preferences.reuse-last-tab.title')}
+            description={t('preferences.reuse-last-tab.description')}
             slot_right={
               <UiToggler
                 is_on={props.reuse_last_tab}
@@ -123,7 +123,7 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             }
           />
         </UiGroup>
-        <div ref={(el) => props.set_section_ref('web-configurations-list', el)}>
+        <div ref={(el) => props.set_section_ref('web-configurations', el)}>
           <UiGroup title={t('web-configurations.configurations.title')}>
             {props.web_configurations && (
               <SortableList
@@ -258,8 +258,8 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
               />
             )}
             <UiItem
-              title={t('general.gemini-user-id.title')}
-              description={t('general.gemini-user-id.description')}
+              title={t('preferences.gemini-user-id.title')}
+              description={t('preferences.gemini-user-id.description')}
               slot_right={
                 <UiInput
                   type="number"
@@ -271,8 +271,8 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
               }
             />
             <UiItem
-              title={t('general.ai-studio-user-id.title')}
-              description={t('general.ai-studio-user-id.description')}
+              title={t('preferences.ai-studio-user-id.title')}
+              description={t('preferences.ai-studio-user-id.description')}
               slot_right={
                 <UiInput
                   type="number"

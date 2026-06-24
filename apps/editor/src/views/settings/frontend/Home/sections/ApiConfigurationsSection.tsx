@@ -96,8 +96,10 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
         </UiNotice>
         <UiGroup>
           <UiItem
-            title={t('general.intelligent-update.auto-run.title')}
-            description={t('general.intelligent-update.auto-run.description')}
+            title={t('preferences.intelligent-update.auto-run.title')}
+            description={t(
+              'preferences.intelligent-update.auto-run.description'
+            )}
             slot_right={
               <UiToggler
                 is_on={props.auto_run_intelligent_update}
@@ -160,7 +162,7 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
           </UiGroup>
         </div>
 
-        <div ref={(el) => props.set_section_ref('api-configurations-list', el)}>
+        <div ref={(el) => props.set_section_ref('api-configurations', el)}>
           <UiGroup title={t('web-configurations.configurations.title')}>
             {props.api_configurations.length == 0 && (
               <UiNotice type="warning">
