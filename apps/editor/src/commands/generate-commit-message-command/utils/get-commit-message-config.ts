@@ -32,13 +32,17 @@ export const get_commit_message_api_configuration = async (
   | null
 > => {
   const api_providers_manager = new ModelProvidersManager(context)
-  let commit_message_api_configuration: CommitMessageApiConfiguration | null | undefined | 'back' =
-    force_quick_pick
-      ? undefined
-      : await api_providers_manager.get_default_commit_messages_api_configuration()
+  let commit_message_api_configuration:
+    | CommitMessageApiConfiguration
+    | null
+    | undefined
+    | 'back' = force_quick_pick
+    ? undefined
+    : await api_providers_manager.get_default_commit_messages_api_configuration()
 
   if (!commit_message_api_configuration) {
-    const api_configurations = await api_providers_manager.get_api_configurations()
+    const api_configurations =
+      await api_providers_manager.get_api_configurations()
 
     if (api_configurations.length == 0) {
       vscode.commands.executeCommand('codeWebChat.settings')
@@ -78,13 +82,12 @@ export const get_commit_message_api_configuration = async (
         const recent_api_configurations = matched_recent_api_configurations
         const other_api_configurations = remaining_api_configurations
 
-        const map_api_configuration_to_item = (api_configuration: ApiConfiguration) => {
+        const map_api_configuration_to_item = (
+          api_configuration: ApiConfiguration
+        ) => {
           const description_parts = [api_configuration.model_provider_name]
           if (api_configuration.reasoning_effort) {
             description_parts.push(`${api_configuration.reasoning_effort}`)
-          }
-          if (api_configuration.temperature != null) {
-            description_parts.push(`${api_configuration.temperature}`)
           }
 
           return {
@@ -105,7 +108,9 @@ export const get_commit_message_api_configuration = async (
             label: t('common.separator.recently-used'),
             kind: vscode.QuickPickItemKind.Separator
           })
-          items.push(...recent_api_configurations.map(map_api_configuration_to_item))
+          items.push(
+            ...recent_api_configurations.map(map_api_configuration_to_item)
+          )
         }
 
         if (other_api_configurations.length > 0) {
@@ -115,7 +120,9 @@ export const get_commit_message_api_configuration = async (
               kind: vscode.QuickPickItemKind.Separator
             })
           }
-          items.push(...other_api_configurations.map(map_api_configuration_to_item))
+          items.push(
+            ...other_api_configurations.map(map_api_configuration_to_item)
+          )
         }
 
         return items

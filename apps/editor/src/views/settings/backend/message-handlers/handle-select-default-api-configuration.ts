@@ -24,9 +24,6 @@ export const handle_select_default_api_configuration = async (
 
   const items = api_configurations.map((c) => {
     const description_parts = [c.model_provider_name]
-    if (c.temperature != null) {
-      description_parts.push(`${c.temperature}`)
-    }
     if (c.reasoning_effort) {
       description_parts.push(`${c.reasoning_effort}`)
     }

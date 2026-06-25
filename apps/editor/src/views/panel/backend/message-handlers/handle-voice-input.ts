@@ -57,7 +57,8 @@ const stop_recording = async (panel_provider: PanelProvider) => {
       const model_providers_manager = new ModelProvidersManager(
         panel_provider.context
       )
-      const api_configurations = await model_providers_manager.get_api_configurations()
+      const api_configurations =
+        await model_providers_manager.get_api_configurations()
 
       if (api_configurations.length == 0) return
 
@@ -82,12 +83,21 @@ const stop_recording = async (panel_provider: PanelProvider) => {
             get_api_configuration_id
           )
 
-          const map_api_configuration_to_item = (api_configuration: ApiConfiguration) => ({
-            label: api_configuration.model,
-            description: api_configuration.model_provider_name,
-            api_configuration,
-            id: get_api_configuration_id(api_configuration)
-          })
+          const map_api_configuration_to_item = (
+            api_configuration: ApiConfiguration
+          ) => {
+            const description_parts = [api_configuration.model_provider_name]
+            if (api_configuration.reasoning_effort) {
+              description_parts.push(`${api_configuration.reasoning_effort}`)
+            }
+
+            return {
+              label: api_configuration.model,
+              description: description_parts.join(' · '),
+              api_configuration,
+              id: get_api_configuration_id(api_configuration)
+            }
+          }
 
           const items: (vscode.QuickPickItem & {
             api_configuration?: ApiConfiguration
@@ -99,7 +109,11 @@ const stop_recording = async (panel_provider: PanelProvider) => {
               label: t('common.separator.recently-used'),
               kind: vscode.QuickPickItemKind.Separator
             })
-            items.push(...matched_recent_api_configurations.map(map_api_configuration_to_item))
+            items.push(
+              ...matched_recent_api_configurations.map(
+                map_api_configuration_to_item
+              )
+            )
           }
 
           if (remaining_api_configurations.length > 0) {
@@ -109,7 +123,9 @@ const stop_recording = async (panel_provider: PanelProvider) => {
                 kind: vscode.QuickPickItemKind.Separator
               })
             }
-            items.push(...remaining_api_configurations.map(map_api_configuration_to_item))
+            items.push(
+              ...remaining_api_configurations.map(map_api_configuration_to_item)
+            )
           }
 
           const quick_pick = vscode.window.createQuickPick()
@@ -275,7 +291,8 @@ export const handle_voice_input = async (
     const model_providers_manager = new ModelProvidersManager(
       panel_provider.context
     )
-    const api_configurations = await model_providers_manager.get_api_configurations()
+    const api_configurations =
+      await model_providers_manager.get_api_configurations()
 
     if (api_configurations.length == 0) {
       vscode.window.showWarningMessage('No configuration found', {

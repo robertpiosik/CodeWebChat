@@ -51,7 +51,10 @@ export const get_code_at_cursor_api_configuration = async (params: {
             (c) => get_api_configuration_id(c) == last_selected_id
           ) || null
       }
-      if (!selected_api_configuration && code_at_cursor_api_configurations.length > 0) {
+      if (
+        !selected_api_configuration &&
+        code_at_cursor_api_configurations.length > 0
+      ) {
         selected_api_configuration = code_at_cursor_api_configurations[0]
       }
     }
@@ -85,11 +88,10 @@ export const get_code_at_cursor_api_configuration = async (params: {
       const recent_api_configurations = matched_recent_api_configurations
       const other_api_configurations = remaining_api_configurations
 
-      const map_api_configuration_to_item = (api_configuration: ApiConfiguration) => {
+      const map_api_configuration_to_item = (
+        api_configuration: ApiConfiguration
+      ) => {
         const description_parts = [api_configuration.model_provider_name]
-        if (api_configuration.temperature != null) {
-          description_parts.push(`${api_configuration.temperature}`)
-        }
         if (api_configuration.reasoning_effort) {
           description_parts.push(`${api_configuration.reasoning_effort}`)
         }
@@ -115,7 +117,9 @@ export const get_code_at_cursor_api_configuration = async (params: {
           label: t('common.separator.recently-used'),
           kind: vscode.QuickPickItemKind.Separator
         })
-        items.push(...recent_api_configurations.map(map_api_configuration_to_item))
+        items.push(
+          ...recent_api_configurations.map(map_api_configuration_to_item)
+        )
       }
 
       if (other_api_configurations.length > 0) {
@@ -125,7 +129,9 @@ export const get_code_at_cursor_api_configuration = async (params: {
             kind: vscode.QuickPickItemKind.Separator
           })
         }
-        items.push(...other_api_configurations.map(map_api_configuration_to_item))
+        items.push(
+          ...other_api_configurations.map(map_api_configuration_to_item)
+        )
       }
 
       return items
@@ -154,67 +160,68 @@ export const get_code_at_cursor_api_configuration = async (params: {
       }
     }
 
-    return new Promise<{ model_provider: any; api_configuration: any } | undefined>(
-      (resolve) => {
-        quick_pick.onDidTriggerButton((button) => {
-          if (button.tooltip == t('common.close')) {
-            quick_pick.hide()
-            resolve(undefined)
-          }
-        })
-
-        quick_pick.onDidAccept(async () => {
-          const selected = quick_pick.selectedItems[0] as any
+    return new Promise<
+      { model_provider: any; api_configuration: any } | undefined
+    >((resolve) => {
+      quick_pick.onDidTriggerButton((button) => {
+        if (button.tooltip == t('common.close')) {
           quick_pick.hide()
+          resolve(undefined)
+        }
+      })
 
-          if (!selected || !selected.api_configuration) {
-            resolve(undefined)
-            return
-          }
+      quick_pick.onDidAccept(async () => {
+        const selected = quick_pick.selectedItems[0] as any
+        quick_pick.hide()
 
-          let recents =
-            params.context.workspaceState.get<string[]>(
-              RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
-            ) || []
-          recents = [selected.id, ...recents.filter((id) => id != selected.id)]
-          params.context.workspaceState.update(
-            RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY,
-            recents
-          )
+        if (!selected || !selected.api_configuration) {
+          resolve(undefined)
+          return
+        }
 
-          if (params.panel_provider) {
-            params.panel_provider.send_message({
-              command: 'SELECTED_API_CONFIGURATION_CHANGED',
-              prompt_type: 'code-at-cursor',
-              id: selected.id
-            })
-          }
+        let recents =
+          params.context.workspaceState.get<string[]>(
+            RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
+          ) || []
+        recents = [selected.id, ...recents.filter((id) => id != selected.id)]
+        params.context.workspaceState.update(
+          RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY,
+          recents
+        )
 
-          const model_provider = await params.api_providers_manager.get_model_provider(
+        if (params.panel_provider) {
+          params.panel_provider.send_message({
+            command: 'SELECTED_API_CONFIGURATION_CHANGED',
+            prompt_type: 'code-at-cursor',
+            id: selected.id
+          })
+        }
+
+        const model_provider =
+          await params.api_providers_manager.get_model_provider(
             selected.api_configuration.model_provider_name
           )
-          if (!model_provider) {
-            vscode.window.showErrorMessage(
-              dictionary.error_message.API_PROVIDER_NOT_FOUND
-            )
-            resolve(undefined)
-            return
-          }
-
-          resolve({
-            model_provider,
-            api_configuration: selected.api_configuration
-          })
-        })
-
-        quick_pick.onDidHide(() => {
-          quick_pick.dispose()
+        if (!model_provider) {
+          vscode.window.showErrorMessage(
+            dictionary.error_message.API_PROVIDER_NOT_FOUND
+          )
           resolve(undefined)
-        })
+          return
+        }
 
-        quick_pick.show()
-      }
-    )
+        resolve({
+          model_provider,
+          api_configuration: selected.api_configuration
+        })
+      })
+
+      quick_pick.onDidHide(() => {
+        quick_pick.dispose()
+        resolve(undefined)
+      })
+
+      quick_pick.show()
+    })
   }
 
   const model_provider = await params.api_providers_manager.get_model_provider(

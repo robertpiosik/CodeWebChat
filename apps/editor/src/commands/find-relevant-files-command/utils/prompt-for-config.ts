@@ -16,7 +16,11 @@ export const prompt_for_api_configuration = async (params: {
   tokens_to_process: number
   force_prompt?: boolean
 }): Promise<
-  | { api_configuration: ApiConfiguration; model_provider: ModelProvider; skipped: boolean }
+  | {
+      api_configuration: ApiConfiguration
+      model_provider: ModelProvider
+      skipped: boolean
+    }
   | 'back'
   | 'cancel'
 > => {
@@ -45,14 +49,16 @@ export const prompt_for_api_configuration = async (params: {
       const matched_recent_api_configurations: ApiConfiguration[] = []
       const remaining_api_configurations: ApiConfiguration[] = []
 
-      params.api_configurations.forEach((api_configuration: ApiConfiguration) => {
-        const id = get_api_configuration_id(api_configuration)
-        if (recent_ids.includes(id)) {
-          matched_recent_api_configurations.push(api_configuration)
-        } else {
-          remaining_api_configurations.push(api_configuration)
+      params.api_configurations.forEach(
+        (api_configuration: ApiConfiguration) => {
+          const id = get_api_configuration_id(api_configuration)
+          if (recent_ids.includes(id)) {
+            matched_recent_api_configurations.push(api_configuration)
+          } else {
+            remaining_api_configurations.push(api_configuration)
+          }
         }
-      })
+      )
 
       matched_recent_api_configurations.sort((a, b) => {
         const id_a = get_api_configuration_id(a)
@@ -60,10 +66,10 @@ export const prompt_for_api_configuration = async (params: {
         return recent_ids.indexOf(id_a) - recent_ids.indexOf(id_b)
       })
 
-      const map_api_configuration_to_item = (api_configuration: ApiConfiguration) => {
+      const map_api_configuration_to_item = (
+        api_configuration: ApiConfiguration
+      ) => {
         const description_parts = [api_configuration.model_provider_name]
-        if (api_configuration.temperature != null)
-          description_parts.push(`${api_configuration.temperature}`)
         if (api_configuration.reasoning_effort)
           description_parts.push(`${api_configuration.reasoning_effort}`)
 
@@ -85,7 +91,11 @@ export const prompt_for_api_configuration = async (params: {
           label: t('common.separator.recently-used'),
           kind: vscode.QuickPickItemKind.Separator
         })
-        items.push(...matched_recent_api_configurations.map(map_api_configuration_to_item))
+        items.push(
+          ...matched_recent_api_configurations.map(
+            map_api_configuration_to_item
+          )
+        )
       }
       if (remaining_api_configurations.length > 0) {
         if (matched_recent_api_configurations.length > 0) {
@@ -94,7 +104,9 @@ export const prompt_for_api_configuration = async (params: {
             kind: vscode.QuickPickItemKind.Separator
           })
         }
-        items.push(...remaining_api_configurations.map(map_api_configuration_to_item))
+        items.push(
+          ...remaining_api_configurations.map(map_api_configuration_to_item)
+        )
       }
       return items
     }
@@ -102,15 +114,19 @@ export const prompt_for_api_configuration = async (params: {
     const api_configuration_quick_pick = vscode.window.createQuickPick()
     api_configuration_quick_pick.items = create_items()
     api_configuration_quick_pick.title = t('common.config.title')
-    api_configuration_quick_pick.placeholder = t('common.config.placeholder-with-tokens', {
-      tokens: display_token_count(params.tokens_to_process)
-    })
+    api_configuration_quick_pick.placeholder = t(
+      'common.config.placeholder-with-tokens',
+      {
+        tokens: display_token_count(params.tokens_to_process)
+      }
+    )
     api_configuration_quick_pick.matchOnDescription = true
     api_configuration_quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
-    const items = api_configuration_quick_pick.items as (vscode.QuickPickItem & {
-      id?: string
-    })[]
+    const items =
+      api_configuration_quick_pick.items as (vscode.QuickPickItem & {
+        id?: string
+      })[]
     const first_selectable = items.find(
       (i) => i.kind !== vscode.QuickPickItemKind.Separator
     )
@@ -118,31 +134,31 @@ export const prompt_for_api_configuration = async (params: {
       api_configuration_quick_pick.activeItems = [first_selectable]
     }
 
-    const api_configuration_result = await new Promise<ApiConfiguration | 'back' | 'cancel'>(
-      (resolve) => {
-        let is_resolved = false
-        api_configuration_quick_pick.onDidTriggerButton((button) => {
-          if (button === vscode.QuickInputButtons.Back) {
-            is_resolved = true
-            resolve('back')
-            api_configuration_quick_pick.hide()
-          }
-        })
-        api_configuration_quick_pick.onDidAccept(() => {
+    const api_configuration_result = await new Promise<
+      ApiConfiguration | 'back' | 'cancel'
+    >((resolve) => {
+      let is_resolved = false
+      api_configuration_quick_pick.onDidTriggerButton((button) => {
+        if (button === vscode.QuickInputButtons.Back) {
           is_resolved = true
-          const selected = api_configuration_quick_pick.selectedItems[0] as any
-          resolve(selected?.api_configuration)
+          resolve('back')
           api_configuration_quick_pick.hide()
-        })
-        api_configuration_quick_pick.onDidHide(() => {
-          if (!is_resolved) {
-            resolve('cancel')
-          }
-          api_configuration_quick_pick.dispose()
-        })
-        api_configuration_quick_pick.show()
-      }
-    )
+        }
+      })
+      api_configuration_quick_pick.onDidAccept(() => {
+        is_resolved = true
+        const selected = api_configuration_quick_pick.selectedItems[0] as any
+        resolve(selected?.api_configuration)
+        api_configuration_quick_pick.hide()
+      })
+      api_configuration_quick_pick.onDidHide(() => {
+        if (!is_resolved) {
+          resolve('cancel')
+        }
+        api_configuration_quick_pick.dispose()
+      })
+      api_configuration_quick_pick.show()
+    })
 
     if (api_configuration_result === 'back') return 'back'
     if (api_configuration_result === 'cancel') return 'cancel'
@@ -175,5 +191,9 @@ export const prompt_for_api_configuration = async (params: {
     return 'cancel'
   }
 
-  return { api_configuration: selected_api_configuration, model_provider, skipped }
+  return {
+    api_configuration: selected_api_configuration,
+    model_provider,
+    skipped
+  }
 }

@@ -35,7 +35,10 @@ const get_edit_context_api_configuration = async (params: {
   context: vscode.ExtensionContext
   panel_provider: PanelProvider
   api_configuration_id?: string
-}): Promise<{ model_provider: ModelProvider; api_configuration: ApiConfiguration } | undefined> => {
+}): Promise<
+  | { model_provider: ModelProvider; api_configuration: ApiConfiguration }
+  | undefined
+> => {
   const edit_context_api_configurations =
     await params.api_providers_manager.get_api_configurations()
 
@@ -101,18 +104,19 @@ const get_edit_context_api_configuration = async (params: {
           RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY
         ) || []
 
-      const { recent: recent_api_configurations, rest: other_api_configurations } =
-        split_recent_and_rest_configurations(
-          edit_context_api_configurations,
-          recent_ids,
-          get_api_configuration_id
-        )
+      const {
+        recent: recent_api_configurations,
+        rest: other_api_configurations
+      } = split_recent_and_rest_configurations(
+        edit_context_api_configurations,
+        recent_ids,
+        get_api_configuration_id
+      )
 
-      const map_api_configuration_to_item = (api_configuration: ApiConfiguration) => {
+      const map_api_configuration_to_item = (
+        api_configuration: ApiConfiguration
+      ) => {
         const description_parts = [api_configuration.model_provider_name]
-        if (api_configuration.temperature != null) {
-          description_parts.push(`${api_configuration.temperature}`)
-        }
         if (api_configuration.reasoning_effort) {
           description_parts.push(`${api_configuration.reasoning_effort}`)
         }
@@ -135,7 +139,9 @@ const get_edit_context_api_configuration = async (params: {
           label: t('common.separator.recently-used'),
           kind: vscode.QuickPickItemKind.Separator
         })
-        items.push(...recent_api_configurations.map(map_api_configuration_to_item))
+        items.push(
+          ...recent_api_configurations.map(map_api_configuration_to_item)
+        )
       }
 
       if (other_api_configurations.length > 0) {
@@ -145,7 +151,9 @@ const get_edit_context_api_configuration = async (params: {
             kind: vscode.QuickPickItemKind.Separator
           })
         }
-        items.push(...other_api_configurations.map(map_api_configuration_to_item))
+        items.push(
+          ...other_api_configurations.map(map_api_configuration_to_item)
+        )
       }
 
       return items
@@ -181,80 +189,79 @@ const get_edit_context_api_configuration = async (params: {
       }
     }
 
-    return new Promise<{ model_provider: ModelProvider; api_configuration: ApiConfiguration } | undefined>(
-      (resolve) => {
-        let accepted = false
+    return new Promise<
+      | { model_provider: ModelProvider; api_configuration: ApiConfiguration }
+      | undefined
+    >((resolve) => {
+      let accepted = false
 
-        quick_pick.onDidTriggerButton((button) => {
-          if (button.tooltip == t('common.close')) {
-            resolve(undefined)
-            quick_pick.hide()
-          }
-        })
-
-        quick_pick.onDidAccept(async () => {
-          accepted = true
-          const selected = quick_pick.selectedItems[0]
+      quick_pick.onDidTriggerButton((button) => {
+        if (button.tooltip == t('common.close')) {
+          resolve(undefined)
           quick_pick.hide()
+        }
+      })
 
-          if (!selected || !selected.api_configuration) {
-            resolve(undefined)
-            return
-          }
+      quick_pick.onDidAccept(async () => {
+        accepted = true
+        const selected = quick_pick.selectedItems[0]
+        quick_pick.hide()
 
-          let recents =
-            params.context.workspaceState.get<string[]>(
-              RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY
-            ) || []
-          recents = [
-            selected.id!,
-            ...recents.filter((id) => id !== selected.id)
-          ]
-          params.context.workspaceState.update(
-            RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY,
-            recents
-          )
+        if (!selected || !selected.api_configuration) {
+          resolve(undefined)
+          return
+        }
 
-          if (params.panel_provider) {
-            params.panel_provider.send_message({
-              command: 'SELECTED_API_CONFIGURATION_CHANGED',
-              prompt_type: 'edit-context',
-              id: selected.id!
-            })
-          }
+        let recents =
+          params.context.workspaceState.get<string[]>(
+            RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY
+          ) || []
+        recents = [selected.id!, ...recents.filter((id) => id !== selected.id)]
+        params.context.workspaceState.update(
+          RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY,
+          recents
+        )
 
-          const model_provider = await params.api_providers_manager.get_model_provider(
+        if (params.panel_provider) {
+          params.panel_provider.send_message({
+            command: 'SELECTED_API_CONFIGURATION_CHANGED',
+            prompt_type: 'edit-context',
+            id: selected.id!
+          })
+        }
+
+        const model_provider =
+          await params.api_providers_manager.get_model_provider(
             selected.api_configuration.model_provider_name
           )
-          if (!model_provider) {
-            vscode.window.showErrorMessage(
-              dictionary.error_message.API_PROVIDER_NOT_FOUND
-            )
-            resolve(undefined)
-            return
-          }
+        if (!model_provider) {
+          vscode.window.showErrorMessage(
+            dictionary.error_message.API_PROVIDER_NOT_FOUND
+          )
+          resolve(undefined)
+          return
+        }
 
-          resolve({
-            model_provider,
-            api_configuration: selected.api_configuration
+        resolve({
+          model_provider,
+          api_configuration: selected.api_configuration
+        })
+      })
+
+      quick_pick.onDidHide(() => {
+        quick_pick.dispose()
+        if (params.panel_provider) {
+          params.panel_provider.send_message({
+            command: 'FOCUS_PROMPT_FIELD'
           })
-        })
+        }
+        if (!accepted) {
+          resolve(undefined)
+        }
+      })
 
-        quick_pick.onDidHide(() => {
-          quick_pick.dispose()
-          if (params.panel_provider) {
-            params.panel_provider.send_message({
-              command: 'FOCUS_PROMPT_FIELD'
-            })
-          }
-          if (!accepted) {
-            resolve(undefined)
-          }
-        })
-
-        quick_pick.show()
-      }
-    )
+      quick_pick.show()
+    })
   }
 
   const model_provider = await params.api_providers_manager.get_model_provider(
@@ -340,7 +347,10 @@ export const handle_edit_context = async (
       return
     }
 
-    const { model_provider, api_configuration: edit_context_api_configuration } = api_configuration_result
+    const {
+      model_provider,
+      api_configuration: edit_context_api_configuration
+    } = api_configuration_result
 
     const endpoint_url = model_provider.base_url
 
@@ -439,9 +449,11 @@ export const handle_edit_context = async (
               raw_instructions: instructions,
               edit_format,
               recent_api_configuration: {
-                model_provider: edit_context_api_configuration.model_provider_name,
+                model_provider:
+                  edit_context_api_configuration.model_provider_name,
                 model: edit_context_api_configuration.model,
-                reasoning_effort: edit_context_api_configuration.reasoning_effort
+                reasoning_effort:
+                  edit_context_api_configuration.reasoning_effort
               }
             })
             return true
