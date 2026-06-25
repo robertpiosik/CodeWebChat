@@ -9,9 +9,7 @@ export const handle_upsert_api_configuration = async (
   await upsert_api_configuration({
     context: provider.context,
     tool_type: 'code-at-cursor',
-    api_configuration_id: message.api_configuration_id,
     insertion_index: message.insertion_index,
-    create_on_top: message.create_on_top,
-    duplicate_from_id: message.duplicate_from_id
+    create_on_top: message.create_on_top
   })
 }

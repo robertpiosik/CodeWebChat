@@ -48,7 +48,6 @@ type Props = {
   on_toggle_pinned_api_configuration: (id: string) => void
   on_edit_api_configuration: (id: string) => void
   on_delete_api_configuration: (id: string) => void
-  on_duplicate_api_configuration: (id: string) => void
   on_create_api_configuration: (params?: {
     create_on_top?: boolean
     insertion_index?: number
@@ -70,7 +69,6 @@ type Props = {
     reordered_web_configurations: WebConfiguration[]
   ) => void
   on_web_configuration_edit: (web_configuration_name: string) => void
-  on_duplicate_web_configuration: (name: string) => void
   on_delete_web_configuration: (name: string) => void
   on_toggle_web_configuration_pinned: (name: string) => void
   selected_web_configuration_name?: string
@@ -478,9 +476,6 @@ export const MainView: React.FC<Props> = (props) => {
                 })
                 props.on_web_configurations_reorder(new_web_configurations)
               }}
-              on_duplicate={(id) => {
-                props.on_duplicate_web_configuration(id)
-              }}
               on_delete={(id) => {
                 props.on_delete_web_configuration(id)
               }}
@@ -498,8 +493,7 @@ export const MainView: React.FC<Props> = (props) => {
                 unpin: t('action.unpin'),
                 insert: t('action.insert-configuration'),
                 edit: t('action.edit'),
-                delete: t('action.delete'),
-                duplicate_configuration: t('action.duplicate-configuration')
+                delete: t('action.delete')
               }}
             />
           </>
@@ -518,7 +512,6 @@ export const MainView: React.FC<Props> = (props) => {
               on_toggle_pinned={props.on_toggle_pinned_api_configuration}
               on_edit={props.on_edit_api_configuration}
               on_delete={props.on_delete_api_configuration}
-              on_duplicate={props.on_duplicate_api_configuration}
               selected_configuration_id={props.selected_api_configuration_id}
               on_create={props.on_create_api_configuration}
               is_collapsed={props.api_configurations_collapsed}
@@ -531,8 +524,7 @@ export const MainView: React.FC<Props> = (props) => {
                 unpin: t('action.unpin'),
                 insert: t('action.insert-configuration'),
                 edit: t('action.edit'),
-                delete: t('action.delete'),
-                duplicate_configuration: t('action.duplicate-configuration')
+                delete: t('action.delete')
               }}
             />
           </>

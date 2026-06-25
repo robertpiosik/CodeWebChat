@@ -27,7 +27,6 @@ export namespace Configurations {
     }) => void
     on_edit: (id: string) => void
     on_delete: (id: string) => void
-    on_duplicate: (id: string) => void
     disable_invocation?: boolean
     is_collapsed: boolean
     on_toggle_collapsed: (is_collapsed: boolean) => void
@@ -40,7 +39,6 @@ export namespace Configurations {
       insert: string
       edit: string
       delete: string
-      duplicate_configuration: string
     }
   }
 }
@@ -58,7 +56,8 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
         key={configuration.id}
         className={cn(styles.configurations__item, {
           [styles['configurations__item--highlighted']]:
-            !props.disable_invocation && props.selected_configuration_id == configuration.id,
+            !props.disable_invocation &&
+            props.selected_configuration_id == configuration.id,
           [styles['configurations__item--disabled-invocation']]:
             props.disable_invocation
         })}
@@ -87,7 +86,9 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
           )}
           <div className={styles.configurations__item__left__text}>
             <span>{configuration.title}</span>
-            {configuration.details && configuration.details.length > 0 && <span>{configuration.details.join(' · ')}</span>}
+            {configuration.details && configuration.details.length > 0 && (
+              <span>{configuration.details.join(' · ')}</span>
+            )}
           </div>
         </div>
         <div
@@ -117,16 +118,6 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
               on_click={(e) => {
                 e.stopPropagation()
                 props.on_create({ insertion_index: index_for_insertion })
-              }}
-            />
-          )}
-          {props.on_duplicate && (
-            <IconButton
-              codicon_icon="files"
-              title={props.translations.duplicate_configuration}
-              on_click={(e) => {
-                e.stopPropagation()
-                props.on_duplicate(configuration.id)
               }}
             />
           )}

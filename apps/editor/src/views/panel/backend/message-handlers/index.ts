@@ -1,7 +1,6 @@
 export * from './handle-copy-prompt'
 export * from './handle-apply-response-from-history'
 export * from './handle-delete-web-configuration'
-export * from './handle-duplicate-web-configuration'
 export * from './handle-get-connection-status'
 export * from './handle-get-history'
 export * from './handle-get-instructions'

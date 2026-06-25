@@ -25,6 +25,7 @@ type Props = {
   on_response_history_item_remove: (created_at: number) => void
   vscode: any
   on_web_configuration_edit: (web_configuration: WebConfiguration) => void
+  on_api_configuration_edit: (api_configuration: ApiConfiguration) => void
   on_show_home: () => void
   is_connected: boolean
   ask_instructions: string
@@ -85,7 +86,8 @@ type Props = {
 }
 
 export const Main: React.FC<Props> = (props) => {
-  const [all_web_configurations, set_all_web_configurations] = useState<WebConfiguration[]>()
+  const [all_web_configurations, set_all_web_configurations] =
+    useState<WebConfiguration[]>()
   const [
     selected_web_configuration_name_by_mode,
     set_selected_web_configuration_name_by_mode
@@ -118,12 +120,16 @@ export const Main: React.FC<Props> = (props) => {
       const message = event.data as BackendMessage
       switch (message.command) {
         case 'WEB_CONFIGURATIONS':
-          set_all_web_configurations((message as WebConfigurationsMessage).web_configurations)
+          set_all_web_configurations(
+            (message as WebConfigurationsMessage).web_configurations
+          )
           set_selected_web_configuration_name_by_mode(
-            (message as WebConfigurationsMessage).selected_web_configuration_name_by_mode
+            (message as WebConfigurationsMessage)
+              .selected_web_configuration_name_by_mode
           )
           set_selected_api_configuration_id_by_prompt_type(
-            (message as WebConfigurationsMessage).selected_api_configuration_id_by_prompt_type
+            (message as WebConfigurationsMessage)
+              .selected_api_configuration_id_by_prompt_type
           )
           break
         case 'API_CONFIGURATIONS':
@@ -267,27 +273,31 @@ export const Main: React.FC<Props> = (props) => {
     }
   }
 
-  const handle_web_configurations_reorder = (reordered_web_configurations: WebConfiguration[]) => {
+  const handle_web_configurations_reorder = (
+    reordered_web_configurations: WebConfiguration[]
+  ) => {
     if (all_web_configurations) {
       set_all_web_configurations(reordered_web_configurations)
     }
 
     post_message(props.vscode, {
       command: 'REORDER_WEB_CONFIGURATIONS',
-      web_configurations: reordered_web_configurations.map((web_configuration) => ({
-        name: web_configuration.name,
-        chatbot: web_configuration.chatbot,
-        model: web_configuration.model,
-        temperature: web_configuration.temperature,
-        top_p: web_configuration.top_p,
-        thinking_budget: web_configuration.thinking_budget,
-        reasoning_effort: web_configuration.reasoning_effort,
-        system_instructions: web_configuration.system_instructions,
-        options: web_configuration.options,
-        port: web_configuration.port,
-        new_url: web_configuration.new_url,
-        is_pinned: web_configuration.is_pinned
-      }))
+      web_configurations: reordered_web_configurations.map(
+        (web_configuration) => ({
+          name: web_configuration.name,
+          chatbot: web_configuration.chatbot,
+          model: web_configuration.model,
+          temperature: web_configuration.temperature,
+          top_p: web_configuration.top_p,
+          thinking_budget: web_configuration.thinking_budget,
+          reasoning_effort: web_configuration.reasoning_effort,
+          system_instructions: web_configuration.system_instructions,
+          options: web_configuration.options,
+          port: web_configuration.port,
+          new_url: web_configuration.new_url,
+          is_pinned: web_configuration.is_pinned
+        })
+      )
     })
   }
 
@@ -327,25 +337,14 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const handle_edit_api_configuration = (id: string) => {
-    post_message(props.vscode, {
-      command: 'UPSERT_API_CONFIGURATION',
-      tool_type: props.api_prompt_type,
-      api_configuration_id: id
-    })
+    const config = all_api_configurations?.find((c) => c.id == id)
+    if (config) props.on_api_configuration_edit(config)
   }
 
   const handle_delete_api_configuration = (id: string) => {
     post_message(props.vscode, {
       command: 'DELETE_API_CONFIGURATION',
       api_configuration_id: id
-    })
-  }
-
-  const handle_duplicate_api_configuration = (id: string) => {
-    post_message(props.vscode, {
-      command: 'UPSERT_API_CONFIGURATION',
-      tool_type: props.api_prompt_type,
-      duplicate_from_id: id
     })
   }
 
@@ -368,15 +367,10 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const handle_web_configuration_edit = (name: string) => {
-    const web_configuration = all_web_configurations?.find((config) => config.name == name)
+    const web_configuration = all_web_configurations?.find(
+      (config) => config.name == name
+    )
     if (web_configuration) props.on_web_configuration_edit(web_configuration)
-  }
-
-  const handle_duplicate_web_configuration = (name: string) => {
-    post_message(props.vscode, {
-      command: 'DUPLICATE_WEB_CONFIGURATION',
-      name
-    })
   }
 
   const handle_delete_web_configuration = (name: string) => {
@@ -624,7 +618,9 @@ export const Main: React.FC<Props> = (props) => {
     selected_web_configuration_name_by_mode?.[props.web_prompt_type]
 
   const api_configurations =
-    props.mode == MODE.API && all_api_configurations ? all_api_configurations : []
+    props.mode == MODE.API && all_api_configurations
+      ? all_api_configurations
+      : []
 
   return (
     <MainView
@@ -635,24 +631,23 @@ export const Main: React.FC<Props> = (props) => {
       api_configurations={api_configurations}
       on_api_configuration_click={handle_api_configuration_click}
       on_api_configurations_reorder={handle_api_configurations_reorder}
-      on_toggle_pinned_api_configuration={handle_toggle_pinned_api_configuration}
+      on_toggle_pinned_api_configuration={
+        handle_toggle_pinned_api_configuration
+      }
       on_edit_api_configuration={handle_edit_api_configuration}
       on_delete_api_configuration={handle_delete_api_configuration}
-      on_duplicate_api_configuration={handle_duplicate_api_configuration}
       on_create_api_configuration={handle_create_api_configuration}
       on_at_sign_click={handle_at_sign_click}
       on_hash_sign_click={handle_hash_sign_click}
       on_curly_braces_click={handle_curly_braces_click}
       is_connected={props.is_connected}
       web_configurations={all_web_configurations || []}
-      on_create_web_configuration={
-        handle_create_web_configuration
-      }
+      on_create_web_configuration={handle_create_web_configuration}
       currently_open_file_path={props.currently_open_file_path}
       on_quick_action_click={handle_quick_action_click}
       current_selection={props.current_selection}
       chat_history={current_history || []}
-        token_count={props.token_count}
+      token_count={props.token_count}
       web_prompt_type={props.web_prompt_type}
       api_prompt_type={props.api_prompt_type}
       context_size_warning_threshold={props.context_size_warning_threshold}
@@ -664,9 +659,10 @@ export const Main: React.FC<Props> = (props) => {
       on_api_edit_format_change={handle_api_edit_format_change}
       on_web_configurations_reorder={handle_web_configurations_reorder}
       on_web_configuration_edit={handle_web_configuration_edit}
-      on_duplicate_web_configuration={handle_duplicate_web_configuration}
       on_delete_web_configuration={handle_delete_web_configuration}
-      on_toggle_web_configuration_pinned={handle_toggle_web_configuration_pinned}
+      on_toggle_web_configuration_pinned={
+        handle_toggle_web_configuration_pinned
+      }
       selected_web_configuration_name={selected_web_configuration_name}
       selected_api_configuration_id={
         selected_api_configuration_id_by_prompt_type?.[props.api_prompt_type]
@@ -700,7 +696,9 @@ export const Main: React.FC<Props> = (props) => {
       context_file_paths={props.context_file_paths}
       web_configurations_collapsed={props.web_configurations_collapsed}
       send_with_shift_enter={props.send_with_shift_enter}
-      on_web_configurations_collapsed_change={props.on_web_configurations_collapsed_change}
+      on_web_configurations_collapsed_change={
+        props.on_web_configurations_collapsed_change
+      }
       api_configurations_collapsed={props.api_configurations_collapsed}
       on_api_configurations_collapsed_change={
         props.on_api_configurations_collapsed_change

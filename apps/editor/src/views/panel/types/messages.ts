@@ -50,6 +50,7 @@ export type ApiConfiguration = {
   temperature?: number
   reasoning_effort?: string
   is_pinned?: boolean
+  system_instructions_override?: string
 }
 
 export type CheckpointTrigger =
@@ -175,11 +176,6 @@ export interface UpdateWebConfigurationMessage extends BaseMessage {
 
 export interface DeleteWebConfigurationMessage extends BaseMessage {
   command: 'DELETE_WEB_CONFIGURATION'
-  name: string
-}
-
-export interface DuplicateWebConfigurationMessage extends BaseMessage {
-  command: 'DUPLICATE_WEB_CONFIGURATION'
   name: string
 }
 
@@ -499,8 +495,6 @@ export interface OpenWebsiteMessage extends BaseMessage {
 export interface UpsertApiConfigurationMessage extends BaseMessage {
   command: 'UPSERT_API_CONFIGURATION'
   tool_type: ToolType
-  api_configuration_id?: string
-  duplicate_from_id?: string
   create_on_top?: boolean
   insertion_index?: number
 }
@@ -566,6 +560,32 @@ export interface GetVoiceInputPushToTalkMessage extends BaseMessage {
   command: 'GET_VOICE_INPUT_PUSH_TO_TALK'
 }
 
+export interface UpdateApiConfigurationMessage extends BaseMessage {
+  command: 'UPDATE_API_CONFIGURATION'
+  updating_api_configuration: ApiConfiguration
+  updated_api_configuration: ApiConfiguration
+  origin?: 'cancel' | 'save'
+}
+
+export interface PickModelProviderMessage extends BaseMessage {
+  command: 'PICK_MODEL_PROVIDER'
+  current_model_provider_name?: string
+}
+
+export interface PickApiModelMessage extends BaseMessage {
+  command: 'PICK_API_MODEL'
+  model_provider_name: string
+  current_model?: string
+  tool_type: ToolType
+}
+
+export interface PickApiReasoningEffortMessage extends BaseMessage {
+  command: 'PICK_API_REASONING_EFFORT'
+  current_effort?: string
+  model_provider_name: string
+  model: string
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -587,7 +607,6 @@ export type FrontendMessage =
   | CreateWebConfigurationMessage
   | UpdateWebConfigurationMessage
   | DeleteWebConfigurationMessage
-  | DuplicateWebConfigurationMessage
   | ExecuteCommandMessage
   | ShowPromptTemplateQuickPickMessage
   | PreviewWebConfigurationMessage
@@ -662,6 +681,10 @@ export type FrontendMessage =
   | GetSetupProgressMessage
   | RequestReturnHomeMessage
   | GetVoiceInputPushToTalkMessage
+  | UpdateApiConfigurationMessage
+  | PickModelProviderMessage
+  | PickApiModelMessage
+  | PickApiReasoningEffortMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -926,6 +949,25 @@ export interface VoiceInputPushToTalkMessage extends BaseMessage {
   enabled: boolean
 }
 
+export interface NewlyPickedModelProviderMessage extends BaseMessage {
+  command: 'NEWLY_PICKED_MODEL_PROVIDER'
+  model_provider_name: string
+}
+
+export interface NewlyPickedApiModelMessage extends BaseMessage {
+  command: 'NEWLY_PICKED_API_MODEL'
+  model_id: string
+}
+
+export interface NewlyPickedApiReasoningEffortMessage extends BaseMessage {
+  command: 'NEWLY_PICKED_API_REASONING_EFFORT'
+  effort?: string
+}
+
+export interface ApiConfigurationUpdatedMessage extends BaseMessage {
+  command: 'API_CONFIGURATION_UPDATED'
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | FocusPromptFieldMessage
@@ -975,3 +1017,7 @@ export type BackendMessage =
   | SetupProgressMessage
   | ReturnHomeMessage
   | VoiceInputPushToTalkMessage
+  | NewlyPickedModelProviderMessage
+  | NewlyPickedApiModelMessage
+  | NewlyPickedApiReasoningEffortMessage
+  | ApiConfigurationUpdatedMessage

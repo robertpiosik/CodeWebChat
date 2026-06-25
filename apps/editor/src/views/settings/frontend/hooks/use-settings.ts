@@ -11,9 +11,7 @@ import { post_message } from '../utils/post-message'
 import { WebConfiguration } from '@shared/types/web-configuration'
 
 export const use_settings = (vscode: any) => {
-  const [providers, set_providers] = useState<Provider[] | undefined>(
-    undefined
-  )
+  const [providers, set_providers] = useState<Provider[] | undefined>(undefined)
   const [api_configurations, set_api_configurations] = useState<
     ApiConfiguration[] | undefined
   >(undefined)
@@ -70,9 +68,8 @@ export const use_settings = (vscode: any) => {
     clear_checks_in_workspace_behavior,
     set_clear_checks_in_workspace_behavior
   ] = useState<'ignore-open-editors' | 'uncheck-all' | undefined>(undefined)
-  const [auto_run_intelligent_update, set_auto_run_intelligent_update] = useState<
-    boolean | undefined
-  >(undefined)
+  const [auto_run_intelligent_update, set_auto_run_intelligent_update] =
+    useState<boolean | undefined>(undefined)
   const [
     extended_cache_duration_for_anthropic,
     set_extended_cache_duration_for_anthropic
@@ -157,9 +154,7 @@ export const use_settings = (vscode: any) => {
     }
   }, [])
 
-  const handle_reorder_providers = (
-    reordered_providers: Provider[]
-  ) => {
+  const handle_reorder_providers = (reordered_providers: Provider[]) => {
     set_providers(reordered_providers)
     post_message(vscode, {
       command: 'REORDER_MODEL_PROVIDERS',
@@ -217,13 +212,6 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_duplicate_api_configuration = (api_configuration_id: string) => {
-    post_message(vscode, {
-      command: 'UPSERT_API_CONFIGURATION',
-      duplicate_from_id: api_configuration_id
-    })
-  }
-
   const handle_delete_api_configuration = (api_configuration_id: string) => {
     post_message(vscode, {
       command: 'DELETE_API_CONFIGURATION',
@@ -267,13 +255,6 @@ export const use_settings = (vscode: any) => {
       command: 'CREATE_WEB_CONFIGURATION',
       insertion_index: params?.insertion_index,
       create_on_top: params?.create_on_top
-    })
-  }
-
-  const handle_duplicate_web_configuration = (web_configuration_id: string) => {
-    post_message(vscode, {
-      command: 'DUPLICATE_WEB_CONFIGURATION',
-      name: web_configuration_id
     })
   }
 
@@ -471,13 +452,11 @@ export const use_settings = (vscode: any) => {
     handle_add_api_configuration,
     handle_reorder_api_configurations,
     handle_edit_api_configuration,
-    handle_duplicate_api_configuration,
     handle_delete_api_configuration,
     handle_set_default_api_configuration,
     handle_select_default_api_configuration,
     handle_reorder_web_configurations,
     handle_add_web_configuration,
-    handle_duplicate_web_configuration,
     handle_delete_web_configuration,
     handle_voice_input_instructions_change,
     handle_voice_input_push_to_talk_change,

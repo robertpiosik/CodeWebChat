@@ -227,7 +227,6 @@ export interface UpsertApiConfigurationMessage {
   api_configuration_id?: string
   insertion_index?: number
   create_on_top?: boolean
-  duplicate_from_id?: string
 }
 
 export interface GetAutoRunIntelligentUpdateMessage {
@@ -267,10 +266,6 @@ export interface ReorderWebConfigurationsMessage {
 }
 export interface DeleteWebConfigurationMessage {
   command: 'DELETE_WEB_CONFIGURATION'
-  name: string
-}
-export interface DuplicateWebConfigurationMessage {
-  command: 'DUPLICATE_WEB_CONFIGURATION'
   name: string
 }
 
@@ -360,7 +355,6 @@ export type FrontendMessage =
   | GetWebConfigurationsMessage
   | ReorderWebConfigurationsMessage
   | DeleteWebConfigurationMessage
-  | DuplicateWebConfigurationMessage
   | CreateWebConfigurationMessage
   | PickModelMessage
   | PickChatbotMessage

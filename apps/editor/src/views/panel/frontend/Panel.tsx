@@ -31,6 +31,8 @@ import { use_response_history } from './hooks/panel/use-response-history'
 import { use_preview_manager } from './hooks/panel/use-preview-manager'
 import { use_editor_sync } from './hooks/panel/use-editor-sync'
 import { use_web_configuration_editing } from './hooks/panel/use-web-configuration-editing'
+import { use_api_configuration_editing } from './hooks/panel/use-api-configuration-editing'
+import { EditApiConfigurationForm } from '@/views/components/EditApiConfigurationForm'
 
 const vscode = acquireVsCodeApi()
 
@@ -122,6 +124,14 @@ export const Panel = () => {
     edit_web_configuration_save_handler,
     handle_preview_web_configuration
   } = use_web_configuration_editing(vscode)
+
+  const {
+    updating_api_configuration,
+    set_updating_api_configuration,
+    set_updated_api_configuration,
+    edit_api_configuration_back_click_handler,
+    edit_api_configuration_save_handler
+  } = use_api_configuration_editing(vscode)
 
   const {
     progress_state,
@@ -285,7 +295,10 @@ export const Panel = () => {
 
   const current_state = get_current_instructions_state()
   const are_keyboard_shortcuts_disabled =
-    !!updating_web_configuration || !!items_in_preview || active_view != 'main'
+    !!updating_web_configuration ||
+    !!updating_api_configuration ||
+    !!items_in_preview ||
+    active_view != 'main'
 
   return (
     <LayoutContext.Provider value={layout_context_value}>
@@ -313,6 +326,10 @@ export const Panel = () => {
                   })
                   set_updating_web_configuration(web_configuration)
                   set_updated_web_configuration(web_configuration)
+                }}
+                on_api_configuration_edit={(api_configuration) => {
+                  set_updating_api_configuration(api_configuration)
+                  set_updated_api_configuration(api_configuration)
                 }}
                 is_connected={is_connected}
                 on_show_home={() => {
@@ -528,6 +545,49 @@ export const Panel = () => {
                     command: 'PICK_REASONING_EFFORT',
                     supported_efforts,
                     current_effort
+                  })
+                }}
+              />
+            </UiPage>
+          </div>
+        )}
+
+        {updating_api_configuration && (
+          <div className={styles.slot}>
+            <UiPage
+              on_back_click={edit_api_configuration_back_click_handler}
+              footer_slot={
+                <div className={styles['edit-web-configuration-footer']}>
+                  <UiButton on_click={edit_api_configuration_save_handler}>
+                    Save
+                  </UiButton>
+                </div>
+              }
+              title="Edit API Configuration"
+            >
+              <EditApiConfigurationForm
+                api_configuration={updating_api_configuration}
+                on_update={set_updated_api_configuration}
+                pick_model_provider={(current) => {
+                  post_message(vscode, {
+                    command: 'PICK_MODEL_PROVIDER',
+                    current_model_provider_name: current
+                  })
+                }}
+                pick_model={(provider, current) => {
+                  post_message(vscode, {
+                    command: 'PICK_API_MODEL',
+                    model_provider_name: provider,
+                    current_model: current,
+                    tool_type: api_prompt_type
+                  })
+                }}
+                pick_reasoning_effort={(provider, model, current) => {
+                  post_message(vscode, {
+                    command: 'PICK_API_REASONING_EFFORT',
+                    model_provider_name: provider,
+                    model,
+                    current_effort: current
                   })
                 }}
               />

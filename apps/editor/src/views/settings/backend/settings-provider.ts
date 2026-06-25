@@ -55,7 +55,6 @@ import {
   handle_delete_web_configuration,
   handle_reorder_web_configurations,
   handle_create_web_configuration,
-  handle_duplicate_web_configuration,
   handle_pick_chatbot,
   handle_pick_model,
   handle_pick_reasoning_effort,
@@ -277,8 +276,6 @@ export class SettingsProvider {
           await handle_reorder_web_configurations(message)
         } else if (message.command == 'DELETE_WEB_CONFIGURATION') {
           await handle_delete_web_configuration(message.name)
-        } else if (message.command == 'DUPLICATE_WEB_CONFIGURATION') {
-          await handle_duplicate_web_configuration(message)
         } else if (message.command == 'CREATE_WEB_CONFIGURATION') {
           await handle_create_web_configuration(message)
         } else if (message.command == 'PICK_CHATBOT') {

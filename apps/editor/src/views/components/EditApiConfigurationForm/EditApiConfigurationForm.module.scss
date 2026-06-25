@@ -1,0 +1,21 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0 12px 12px 12px;
+}
+
+.clear {
+  color: var(--vscode-textLink-foreground);
+  white-space: nowrap;
+  font-size: 12px;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  &:hover:not(:disabled) {
+    text-decoration: underline;
+  }
+}

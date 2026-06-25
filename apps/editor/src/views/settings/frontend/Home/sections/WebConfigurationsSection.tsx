@@ -21,7 +21,6 @@ type Props = {
     insertion_index?: number
     create_on_top?: boolean
   }) => void
-  on_duplicate_web_configuration: (id: string) => void
   on_edit_web_configuration: (id: string) => void
   on_delete_web_configuration: (name: string) => void
   set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void
@@ -236,14 +235,6 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                           insertion_index: index
                         })
                       }
-                    />
-                    <IconButton
-                      codicon_icon="files"
-                      title={t('web-configurations.action.duplicate')}
-                      on_click={(e) => {
-                        e.stopPropagation()
-                        props.on_duplicate_web_configuration(config.id)
-                      }}
                     />
                     <IconButton
                       codicon_icon="edit"

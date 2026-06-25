@@ -21,7 +21,6 @@ import {
   handle_delete_web_configuration,
   handle_create_checkpoint,
   handle_clear_all_checkpoints,
-  handle_duplicate_web_configuration,
   handle_preview_web_configuration,
   handle_save_edit_format,
   handle_reorder_web_configurations,
@@ -95,6 +94,10 @@ import {
   handle_restore_temp_checkpoint,
   handle_update_checkpoint_description
 } from './message-handlers'
+import { handle_update_api_configuration } from './message-handlers/handle-update-api-configuration'
+import { handle_pick_model_provider } from './message-handlers/handle-pick-model-provider'
+import { handle_pick_api_model } from './message-handlers/handle-pick-api-model'
+import { handle_pick_api_reasoning_effort } from './message-handlers/handle-pick-api-reasoning-effort'
 import { SelectionState } from '../types/messages'
 import {
   API_EDIT_FORMAT_STATE_KEY,
@@ -797,8 +800,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_update_web_configuration(this, message)
           } else if (message.command == 'DELETE_WEB_CONFIGURATION') {
             await handle_delete_web_configuration(message)
-          } else if (message.command == 'DUPLICATE_WEB_CONFIGURATION') {
-            await handle_duplicate_web_configuration(message)
           } else if (message.command == 'UNDO') {
             await handle_undo(this)
           } else if (message.command == 'APPLY_RESPONSE_FROM_HISTORY') {
@@ -944,6 +945,14 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_open_external_url(message)
           } else if (message.command == 'UPSERT_API_CONFIGURATION') {
             await handle_upsert_api_configuration(this, message)
+          } else if (message.command == 'UPDATE_API_CONFIGURATION') {
+            await handle_update_api_configuration(this, message)
+          } else if (message.command == 'PICK_MODEL_PROVIDER') {
+            await handle_pick_model_provider(this, message)
+          } else if (message.command == 'PICK_API_MODEL') {
+            await handle_pick_api_model(this, message)
+          } else if (message.command == 'PICK_API_REASONING_EFFORT') {
+            await handle_pick_api_reasoning_effort(this, message)
           } else if (message.command == 'DELETE_API_CONFIGURATION') {
             await handle_delete_api_configuration(this, message)
           } else if (message.command == 'REQUEST_CAN_UNDO') {

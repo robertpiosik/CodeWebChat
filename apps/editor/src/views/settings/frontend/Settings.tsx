@@ -160,9 +160,6 @@ export const Settings = () => {
           settings_hook.handle_reorder_api_configurations
         }
         on_edit_api_configuration={settings_hook.handle_edit_api_configuration}
-        on_duplicate_api_configuration={
-          settings_hook.handle_duplicate_api_configuration
-        }
         on_delete_api_configuration={
           settings_hook.handle_delete_api_configuration
         }
@@ -178,9 +175,6 @@ export const Settings = () => {
           settings_hook.handle_reorder_web_configurations
         }
         on_add_web_configuration={settings_hook.handle_add_web_configuration}
-        on_duplicate_web_configuration={
-          settings_hook.handle_duplicate_web_configuration
-        }
         on_edit_web_configuration={(id) => {
           const config = settings_hook.web_configurations?.find(
             (c, index) => (c.name ?? `unnamed-${index}`) === id

@@ -10,7 +10,7 @@ export const handle_upsert_model_provider = async (params: {
 }): Promise<void> => {
   await upsert_model_provider({
     context: params.provider.context,
-    provider_name: params.provider_name,
+    model_provider_name: params.provider_name,
     insertion_index: params.insertion_index,
     create_on_top: params.create_on_top
   })

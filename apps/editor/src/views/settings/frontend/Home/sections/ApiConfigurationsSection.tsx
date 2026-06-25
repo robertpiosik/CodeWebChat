@@ -32,7 +32,6 @@ type Props = {
   }) => void
   on_delete_provider: (provider_name: string) => void
   on_edit_provider: (provider_name: string) => void
-  on_duplicate_api_configuration: (api_configuration_id: string) => void
   on_edit_api_configuration: (api_configuration_id: string) => void
   on_delete_api_configuration: (api_configuration_id: string) => void
   on_set_default_api_configuration: (
@@ -224,16 +223,6 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                           insertion_index: index
                         })
                       }
-                    />
-                    <IconButton
-                      codicon_icon="files"
-                      title={t('configurations.action.duplicate')}
-                      on_click={(e) => {
-                        e.stopPropagation()
-                        props.on_duplicate_api_configuration(
-                          api_configuration.id
-                        )
-                      }}
                     />
                     <IconButton
                       codicon_icon="edit"

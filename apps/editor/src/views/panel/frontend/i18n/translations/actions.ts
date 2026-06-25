@@ -71,24 +71,6 @@ export const actions = {
     hu: 'Rögzítés feloldása',
     bg: 'Откачане'
   },
-  'action.duplicate-configuration': {
-    en: 'Duplicate configuration',
-    pl: 'Duplikuj konfigurację',
-    'zh-cn': '复制配置',
-    ja: '設定を複製',
-    'zh-tw': '複製設定',
-    de: 'Konfiguration duplizieren',
-    es: 'Duplicar configuración',
-    fr: 'Dupliquer la configuration',
-    'pt-br': 'Duplicar configuração',
-    ru: 'Дублировать конфигурацию',
-    ko: '구성 복제',
-    it: 'Duplica configurazione',
-    tr: 'Yapılandırmayı çoğalt',
-    cs: 'Duplikovat konfiguraci',
-    hu: 'Konfiguráció duplikálása',
-    bg: 'Дублиране на конфигурация'
-  },
   'action.edit': {
     en: 'Edit',
     pl: 'Edytuj',

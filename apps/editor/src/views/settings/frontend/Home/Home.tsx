@@ -159,7 +159,6 @@ type Props = {
   }) => void
   on_reorder_api_configurations: (reordered: ApiConfiguration[]) => void
   on_edit_api_configuration: (api_configuration_id: string) => void
-  on_duplicate_api_configuration: (api_configuration_id: string) => void
   on_delete_api_configuration: (api_configuration_id: string) => void
   on_set_default_api_configuration: (
     tool_name: ToolType,
@@ -171,7 +170,6 @@ type Props = {
     insertion_index?: number
     create_on_top?: boolean
   }) => void
-  on_duplicate_web_configuration: (id: string) => void
   on_edit_web_configuration: (id: string) => void
   on_delete_web_configuration: (name: string) => void
   on_open_external_url: (url: string) => void
@@ -389,7 +387,6 @@ export const Home: React.FC<Props> = (props) => {
           set_web_configurations={props.set_web_configurations}
           on_reorder_web_configurations={props.on_reorder_web_configurations}
           on_add_web_configuration={props.on_add_web_configuration}
-          on_duplicate_web_configuration={props.on_duplicate_web_configuration}
           on_edit_web_configuration={props.on_edit_web_configuration}
           on_delete_web_configuration={props.on_delete_web_configuration}
           reuse_last_tab={props.reuse_last_tab}
@@ -425,7 +422,6 @@ export const Home: React.FC<Props> = (props) => {
           set_api_configurations={props.set_api_configurations}
           on_reorder_api_configurations={props.on_reorder_api_configurations}
           on_add_api_configuration={props.on_add_api_configuration}
-          on_duplicate_api_configuration={props.on_duplicate_api_configuration}
           on_edit_api_configuration={props.on_edit_api_configuration}
           on_delete_api_configuration={props.on_delete_api_configuration}
           on_set_default_api_configuration={
