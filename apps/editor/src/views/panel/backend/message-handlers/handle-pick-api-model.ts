@@ -1,6 +1,6 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { PickApiModelMessage } from '@/views/panel/types/messages'
-import { edit_model_for_api_configuration } from '@/views/actions/upsert-api-configuration/interactions'
+import { edit_model_for_api_configuration } from '@/views/actions/update-api-configuration/interactions'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { ModelFetcher } from '@/services/model-fetcher'
 

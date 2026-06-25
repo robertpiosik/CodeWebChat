@@ -20,7 +20,9 @@ export const initial_select_model = async (
     base_url = model_provider.base_url
 
     if (!base_url)
-      throw new Error(`Base URL not found for model provider ${model_provider.name}`)
+      throw new Error(
+        `Base URL not found for model provider ${model_provider.name}`
+      )
 
     const models = await model_fetcher.get_models({
       base_url,
@@ -105,7 +107,9 @@ export const initial_select_model = async (
       error.message == MODELS_ROUTE_NOT_FOUND_ERROR
     ) {
       vscode.window.showInformationMessage(
-        dictionary.information_message.MODELS_ROUTE_NOT_FOUND(model_provider.name),
+        dictionary.information_message.MODELS_ROUTE_NOT_FOUND(
+          model_provider.name
+        ),
         { modal: true }
       )
     } else {

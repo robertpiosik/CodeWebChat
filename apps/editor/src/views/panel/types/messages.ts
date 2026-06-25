@@ -492,8 +492,8 @@ export interface OpenWebsiteMessage extends BaseMessage {
   url: string
 }
 
-export interface UpsertApiConfigurationMessage extends BaseMessage {
-  command: 'UPSERT_API_CONFIGURATION'
+export interface CreateApiConfigurationMessage extends BaseMessage {
+  command: 'CREATE_API_CONFIGURATION'
   tool_type: ToolType
   create_on_top?: boolean
   insertion_index?: number
@@ -667,7 +667,7 @@ export type FrontendMessage =
   | PreviewGeneratedCodeMessage
   | UpdateFileProgressMessage
   | OpenExternalUrlMessage
-  | UpsertApiConfigurationMessage
+  | CreateApiConfigurationMessage
   | DeleteApiConfigurationMessage
   | SavePromptImageMessage
   | OpenPromptImageMessage

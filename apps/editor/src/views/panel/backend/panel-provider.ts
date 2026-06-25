@@ -83,7 +83,7 @@ import {
   handle_voice_input,
   handle_open_website,
   handle_cancel_intelligent_update_file_in_preview,
-  handle_upsert_api_configuration,
+  handle_create_api_configuration,
   handle_delete_api_configuration,
   handle_update_last_used_web_configuration_or_group,
   handle_get_find_relevant_files_shrink_source_code,
@@ -943,8 +943,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             // Handle the message internally instead of invoking a command
           } else if (message.command == 'OPEN_EXTERNAL_URL') {
             await handle_open_external_url(message)
-          } else if (message.command == 'UPSERT_API_CONFIGURATION') {
-            await handle_upsert_api_configuration(this, message)
+          } else if (message.command == 'CREATE_API_CONFIGURATION') {
+            await handle_create_api_configuration(this, message)
           } else if (message.command == 'UPDATE_API_CONFIGURATION') {
             await handle_update_api_configuration(this, message)
           } else if (message.command == 'PICK_MODEL_PROVIDER') {

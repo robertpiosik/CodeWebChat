@@ -1,12 +1,12 @@
 import { PanelProvider } from '../panel-provider'
-import { upsert_api_configuration } from '@/views/actions/upsert-api-configuration/upsert-api-configuration'
+import { create_api_configuration } from '@/views/actions/create-api-configuration/create-api-configuration'
 import { get_api_configuration_id } from '@/services/model-providers-manager'
 
-export const handle_upsert_api_configuration = async (
+export const handle_create_api_configuration = async (
   provider: PanelProvider,
   message: any
 ): Promise<void> => {
-  const new_config = await upsert_api_configuration({
+  const new_config = await create_api_configuration({
     context: provider.context,
     tool_type: message.tool_type,
     create_on_top: message.create_on_top,

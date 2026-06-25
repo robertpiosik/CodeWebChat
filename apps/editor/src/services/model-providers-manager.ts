@@ -16,7 +16,9 @@ export type ApiConfiguration = {
   is_pinned?: boolean
 }
 
-export const get_api_configuration_id = (api_configuration: ApiConfiguration): string => {
+export const get_api_configuration_id = (
+  api_configuration: ApiConfiguration
+): string => {
   return [
     api_configuration.model_provider_name,
     api_configuration.model,
@@ -100,9 +102,13 @@ export class ModelProvidersManager {
     return this._model_providers
   }
 
-  public async get_model_provider(name: string): Promise<ModelProvider | undefined> {
+  public async get_model_provider(
+    name: string
+  ): Promise<ModelProvider | undefined> {
     await this._load_promise
-    return this._model_providers.find((model_provider) => model_provider.name == name)
+    return this._model_providers.find(
+      (model_provider) => model_provider.name == name
+    )
   }
 
   private _validate_api_configuration(
@@ -110,7 +116,9 @@ export class ModelProvidersManager {
   ): ApiConfiguration | undefined {
     if (!api_configuration) return undefined
 
-    const model_provider = this._model_providers.find((p) => p.name == api_configuration.model_provider_name)
+    const model_provider = this._model_providers.find(
+      (p) => p.name == api_configuration.model_provider_name
+    )
 
     if (!model_provider) {
       return undefined
@@ -124,16 +132,18 @@ export class ModelProvidersManager {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const settings_configs = config.get<any[]>('configurations', [])
 
-    const api_configurations: ApiConfiguration[] = settings_configs.map((sc) => {
-      return {
-        model_provider_name: sc.providerName,
-        model: sc.model,
-        temperature: sc.temperature,
-        reasoning_effort: sc.reasoningEffort,
-        system_instructions_override: sc.systemInstructionsOverride,
-        is_pinned: sc.isPinned
+    const api_configurations: ApiConfiguration[] = settings_configs.map(
+      (sc) => {
+        return {
+          model_provider_name: sc.providerName,
+          model: sc.model,
+          temperature: sc.temperature,
+          reasoning_effort: sc.reasoningEffort,
+          system_instructions_override: sc.systemInstructionsOverride,
+          is_pinned: sc.isPinned
+        }
       }
-    })
+    )
 
     return api_configurations.filter(
       (c) => this._validate_api_configuration(c) !== undefined
@@ -151,16 +161,19 @@ export class ModelProvidersManager {
       const new_config: any = {
         providerName: c.model_provider_name,
         model: c.model,
-        temperature: c.temperature,
-        isDefaultForCodeAtCursor: old_config?.isDefaultForCodeAtCursor || false,
-        isDefaultForFindRelevantFiles:
-          old_config?.isDefaultForFindRelevantFiles || false,
-        isDefaultForIntelligentUpdate:
-          old_config?.isDefaultForIntelligentUpdate || false,
-        isDefaultForCommitMessages:
-          old_config?.isDefaultForCommitMessages || false,
-        isDefaultForVoiceInput: old_config?.isDefaultForVoiceInput || false
+        temperature: c.temperature
       }
+
+      if (old_config?.isDefaultForCodeAtCursor)
+        new_config.isDefaultForCodeAtCursor = true
+      if (old_config?.isDefaultForFindRelevantFiles)
+        new_config.isDefaultForFindRelevantFiles = true
+      if (old_config?.isDefaultForIntelligentUpdate)
+        new_config.isDefaultForIntelligentUpdate = true
+      if (old_config?.isDefaultForCommitMessages)
+        new_config.isDefaultForCommitMessages = true
+      if (old_config?.isDefaultForVoiceInput)
+        new_config.isDefaultForVoiceInput = true
       if (c.reasoning_effort !== undefined)
         new_config.reasoningEffort = c.reasoning_effort
       if (c.system_instructions_override !== undefined)
@@ -210,7 +223,8 @@ export class ModelProvidersManager {
           default_config_from_settings.systemInstructionsOverride,
         is_pinned: default_config_from_settings.isPinned
       }
-      const validated_config = this._validate_api_configuration(api_configuration)
+      const validated_config =
+        this._validate_api_configuration(api_configuration)
       if (validated_config) return validated_config
     }
     return undefined
@@ -227,7 +241,14 @@ export class ModelProvidersManager {
       const is_default =
         config_to_set !== null &&
         this._are_api_configurations_effectively_equal(c, config_to_set)
-      return { ...c, [default_key]: is_default }
+
+      const new_c = { ...c }
+      if (is_default) {
+        new_c[default_key] = true
+      } else {
+        delete new_c[default_key]
+      }
+      return new_c
     })
 
     await config.update(
@@ -246,7 +267,9 @@ export class ModelProvidersManager {
     )
   }
 
-  public async set_default_code_completions_api_configuration(api_configuration: ApiConfiguration | null) {
+  public async set_default_code_completions_api_configuration(
+    api_configuration: ApiConfiguration | null
+  ) {
     await this._set_default_api_configuration_in_settings(
       'isDefaultForCodeAtCursor',
       api_configuration
@@ -262,7 +285,9 @@ export class ModelProvidersManager {
     )
   }
 
-  public async set_default_commit_messages_api_configuration(api_configuration: ApiConfiguration | null) {
+  public async set_default_commit_messages_api_configuration(
+    api_configuration: ApiConfiguration | null
+  ) {
     await this._set_default_api_configuration_in_settings(
       'isDefaultForCommitMessages',
       api_configuration
@@ -309,10 +334,14 @@ export class ModelProvidersManager {
     ApiConfiguration | undefined
   > {
     await this._load_promise
-    return this._get_default_api_configuration_from_settings('isDefaultForVoiceInput')
+    return this._get_default_api_configuration_from_settings(
+      'isDefaultForVoiceInput'
+    )
   }
 
-  public async set_default_voice_input_api_configuration(api_configuration: ApiConfiguration | null) {
+  public async set_default_voice_input_api_configuration(
+    api_configuration: ApiConfiguration | null
+  ) {
     await this._set_default_api_configuration_in_settings(
       'isDefaultForVoiceInput',
       api_configuration

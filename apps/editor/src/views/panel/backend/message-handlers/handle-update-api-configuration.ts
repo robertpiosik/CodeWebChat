@@ -1,6 +1,6 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { UpdateApiConfigurationMessage } from '@/views/panel/types/messages'
-import { update_api_configuration } from '@/views/actions/update-api-configuration'
+import { update_api_configuration } from '@/views/actions/update-api-configuration/update-api-configuration'
 import { handle_get_api_configurations } from './handle-get-api-configurations'
 
 export const handle_update_api_configuration = async (

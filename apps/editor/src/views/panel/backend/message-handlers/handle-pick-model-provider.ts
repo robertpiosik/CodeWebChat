@@ -1,6 +1,6 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { PickModelProviderMessage } from '@/views/panel/types/messages'
-import { edit_model_provider_for_api_configuration } from '@/views/actions/upsert-api-configuration/interactions'
+import { edit_model_provider_for_api_configuration } from '@/views/actions/update-api-configuration/interactions'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 
 export const handle_pick_model_provider = async (

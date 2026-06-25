@@ -13,7 +13,7 @@ import {
 } from './interactions'
 import { ToolType } from '@/views/settings/types/tools'
 
-export const upsert_api_configuration = async (params: {
+export const create_api_configuration = async (params: {
   context: vscode.ExtensionContext
   tool_type: ToolType
   create_on_top?: boolean

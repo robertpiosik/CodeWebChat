@@ -10,7 +10,7 @@ import {
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { ToolType } from '../../../settings/types/tools'
-import { verify_model } from './verify-model'
+import { verify_model } from '../../create-api-configuration/interactions/verify-model'
 
 export const edit_model_for_api_configuration = async (params: {
   api_configuration: ApiConfiguration
@@ -18,12 +18,15 @@ export const edit_model_for_api_configuration = async (params: {
   model_fetcher: ModelFetcher
   tool_type?: ToolType
 }) => {
-  const model_provider_from_manager = await params.providers_manager.get_model_provider(
-    params.api_configuration.model_provider_name
-  )
+  const model_provider_from_manager =
+    await params.providers_manager.get_model_provider(
+      params.api_configuration.model_provider_name
+    )
   if (!model_provider_from_manager) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.MODEL_PROVIDER_NOT_FOUND_BY_NAME(params.api_configuration.model_provider_name)
+      dictionary.error_message.MODEL_PROVIDER_NOT_FOUND_BY_NAME(
+        params.api_configuration.model_provider_name
+      )
     )
     return undefined
   }

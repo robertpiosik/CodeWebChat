@@ -306,7 +306,7 @@ export const Main: React.FC<Props> = (props) => {
     insertion_index?: number
   }) => {
     post_message(props.vscode, {
-      command: 'UPSERT_API_CONFIGURATION',
+      command: 'CREATE_API_CONFIGURATION',
       tool_type: props.api_prompt_type,
       create_on_top: params?.create_on_top,
       insertion_index: params?.insertion_index

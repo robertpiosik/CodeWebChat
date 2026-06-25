@@ -4,7 +4,7 @@ import {
   ModelProvidersManager,
   get_api_configuration_id
 } from '@/services/model-providers-manager'
-import { ApiConfiguration } from '../panel/types/messages'
+import { ApiConfiguration } from '@/views/panel/types/messages'
 
 export const update_api_configuration = async (params: {
   context: vscode.ExtensionContext
