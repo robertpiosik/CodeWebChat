@@ -66,7 +66,11 @@ export const edit_model_for_api_configuration = async (params: {
           quick_pick.items = model_items
           quick_pick.title = 'Models'
           quick_pick.placeholder = 'Choose a model'
-          quick_pick.buttons = [vscode.QuickInputButtons.Back]
+          const close_button: vscode.QuickInputButton = {
+            iconPath: new vscode.ThemeIcon('close'),
+            tooltip: 'Close'
+          }
+          quick_pick.buttons = [close_button]
           if (last_selected_model_id) {
             const active = model_items.find(
               (item) =>
@@ -84,7 +88,7 @@ export const edit_model_for_api_configuration = async (params: {
               quick_pick.hide()
             }),
             quick_pick.onDidTriggerButton((button) => {
-              if (button === vscode.QuickInputButtons.Back) {
+              if (button === close_button) {
                 quick_pick.hide()
               }
             }),

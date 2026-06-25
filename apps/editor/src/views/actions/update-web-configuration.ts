@@ -12,26 +12,35 @@ export const update_web_configuration = async (params: {
   updating_web_configuration: WebConfiguration
   updated_web_configuration: WebConfiguration
   origin?: 'cancel' | 'save'
+  is_new?: boolean
+  insertion_index?: number
 }): Promise<{ success: boolean; has_changes: boolean; new_name?: string }> => {
+  if (params.is_new && params.origin === 'cancel') {
+    return { success: true, has_changes: false }
+  }
+
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const current_web_configurations =
     config.get<ConfigWebConfigurationFormat[]>('webConfigurations', []) || []
 
-  const web_configuration_index = current_web_configurations.findIndex(
-    (p) => p.name == params.updating_web_configuration.name
-  )
+  let web_configuration_index = -1
+  if (!params.is_new) {
+    web_configuration_index = current_web_configurations.findIndex(
+      (p) => p.name == params.updating_web_configuration.name
+    )
 
-  if (web_configuration_index == -1) {
-    console.error(
-      `web configuration with original name "${params.updating_web_configuration.name}" not found.`
-    )
-    vscode.window.showErrorMessage(
-      dictionary.error_message.COULD_NOT_UPDATE_ITEM_NOT_FOUND(
-        'web configuration',
-        params.updating_web_configuration.name!
+    if (web_configuration_index == -1 && params.origin != 'cancel') {
+      console.error(
+        `web configuration with original name "${params.updating_web_configuration.name}" not found.`
       )
-    )
-    return { success: false, has_changes: false }
+      vscode.window.showErrorMessage(
+        dictionary.error_message.COULD_NOT_UPDATE_ITEM_NOT_FOUND(
+          'web configuration',
+          params.updating_web_configuration.name!
+        )
+      )
+      return { success: false, has_changes: false }
+    }
   }
 
   const final_updated_web_configuration = {
@@ -43,7 +52,7 @@ export const update_web_configuration = async (params: {
     final_updated_web_configuration
   )
 
-  if (!has_changes) {
+  if (!has_changes && !params.is_new) {
     return { success: true, has_changes: false }
   }
 
@@ -70,9 +79,12 @@ export const update_web_configuration = async (params: {
 
   const updated_ui_web_configuration = { ...final_updated_web_configuration }
 
-  const other_names = current_web_configurations
-    .filter((_, index) => index != web_configuration_index)
-    .map((c) => c.name)
+  let other_names = current_web_configurations.map((c) => c.name)
+  if (!params.is_new && web_configuration_index !== -1) {
+    other_names = current_web_configurations
+      .filter((_, index) => index != web_configuration_index)
+      .map((c) => c.name)
+  }
 
   updated_ui_web_configuration.name = generate_unique_name(
     updated_ui_web_configuration.name,
@@ -80,8 +92,22 @@ export const update_web_configuration = async (params: {
   )
 
   const updated_web_configurations = [...current_web_configurations]
-  updated_web_configurations[web_configuration_index] =
-    ui_web_configuration_to_config_format(updated_ui_web_configuration)
+  if (params.is_new) {
+    if (params.insertion_index !== undefined) {
+      updated_web_configurations.splice(
+        params.insertion_index,
+        0,
+        ui_web_configuration_to_config_format(updated_ui_web_configuration)
+      )
+    } else {
+      updated_web_configurations.push(
+        ui_web_configuration_to_config_format(updated_ui_web_configuration)
+      )
+    }
+  } else if (web_configuration_index !== -1) {
+    updated_web_configurations[web_configuration_index] =
+      ui_web_configuration_to_config_format(updated_ui_web_configuration)
+  }
 
   await config.update(
     'webConfigurations',

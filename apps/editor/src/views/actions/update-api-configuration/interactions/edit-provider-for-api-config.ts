@@ -18,7 +18,11 @@ export const edit_model_provider_for_api_configuration = async (
     quick_pick.items = model_provider_items
     quick_pick.title = 'Model Providers'
     quick_pick.placeholder = 'Select a model provider'
-    quick_pick.buttons = [vscode.QuickInputButtons.Back]
+    const close_button: vscode.QuickInputButton = {
+      iconPath: new vscode.ThemeIcon('close'),
+      tooltip: 'Close'
+    }
+    quick_pick.buttons = [close_button]
     if (current_model_provider_name) {
       const active = model_provider_items.find(
         (p) => p.label === current_model_provider_name
@@ -35,7 +39,7 @@ export const edit_model_provider_for_api_configuration = async (
         quick_pick.hide()
       }),
       quick_pick.onDidTriggerButton((button) => {
-        if (button === vscode.QuickInputButtons.Back) {
+        if (button === close_button) {
           quick_pick.hide()
         }
       }),

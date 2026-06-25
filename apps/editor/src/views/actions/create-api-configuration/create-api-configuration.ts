@@ -18,34 +18,11 @@ export const create_api_configuration = async (params: {
   tool_type: ToolType
   create_on_top?: boolean
   insertion_index?: number
-}): Promise<ApiConfiguration | undefined> => {
+}): Promise<
+  { config: ApiConfiguration; insertion_index?: number } | undefined
+> => {
   const providers_manager = new ModelProvidersManager(params.context)
   const model_fetcher = new ModelFetcher()
-
-  let set_default_api_configuration:
-    | ((api_configuration: ApiConfiguration | null) => Promise<void>)
-    | undefined
-
-  if (params.tool_type == 'code-at-cursor') {
-    set_default_api_configuration = (c) =>
-      providers_manager.set_default_code_completions_api_configuration(c)
-  } else if (params.tool_type == 'commit-messages') {
-    set_default_api_configuration = (c) =>
-      providers_manager.set_default_commit_messages_api_configuration(c)
-  } else if (params.tool_type == 'intelligent-update') {
-    set_default_api_configuration = (c) =>
-      providers_manager.set_default_intelligent_update_api_configuration(c)
-  } else if (params.tool_type == 'find-relevant-files') {
-    set_default_api_configuration = (c) =>
-      providers_manager.set_default_find_relevant_files_api_configuration(c)
-  } else if (params.tool_type == 'voice-input') {
-    set_default_api_configuration = (c) =>
-      providers_manager.set_default_voice_input_api_configuration(c)
-  } else if (params.tool_type !== 'edit-context') {
-    throw new Error(`Unknown tool type: ${params.tool_type}`)
-  }
-
-  const api_configurations = await providers_manager.get_api_configurations()
 
   let actual_insertion_index: number | undefined
 
@@ -121,32 +98,12 @@ export const create_api_configuration = async (params: {
     temperature: undefined
   }
 
-  const new_id = get_api_configuration_id(api_configuration_to_add)
-
-  if (api_configurations.some((c) => get_api_configuration_id(c) === new_id)) {
-    vscode.window.showErrorMessage(
-      dictionary.error_message.CONFIGURATION_ALREADY_EXISTS
-    )
-    return undefined
-  }
-
   if (params.create_on_top) {
-    api_configurations.unshift(api_configuration_to_add)
-  } else if (actual_insertion_index !== undefined) {
-    api_configurations.splice(
-      actual_insertion_index,
-      0,
-      api_configuration_to_add
-    )
-  } else {
-    api_configurations.push(api_configuration_to_add)
+    actual_insertion_index = 0
   }
 
-  await providers_manager.save_api_configurations(api_configurations)
-
-  if (set_default_api_configuration) {
-    await set_default_api_configuration(api_configuration_to_add)
+  return {
+    config: api_configuration_to_add,
+    insertion_index: actual_insertion_index
   }
-
-  return api_configuration_to_add
 }

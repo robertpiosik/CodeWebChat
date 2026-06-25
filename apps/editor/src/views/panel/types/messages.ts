@@ -18,6 +18,19 @@ export interface BaseMessage {
   command: string
 }
 
+export interface StartWebConfigurationCreationMessage extends BaseMessage {
+  command: 'START_WEB_CONFIGURATION_CREATION'
+  web_configuration: WebConfiguration
+  insertion_index?: number
+}
+
+export interface StartApiConfigurationCreationMessage extends BaseMessage {
+  command: 'START_API_CONFIGURATION_CREATION'
+  api_configuration: ApiConfiguration
+  insertion_index?: number
+  tool_type?: ToolType
+}
+
 export type InstructionsState = {
   instructions: string[]
   active_index: number
@@ -172,6 +185,8 @@ export interface UpdateWebConfigurationMessage extends BaseMessage {
   updating_web_configuration: WebConfiguration
   updated_web_configuration: WebConfiguration
   origin?: 'cancel' | 'save'
+  is_new?: boolean
+  insertion_index?: number
 }
 
 export interface DeleteWebConfigurationMessage extends BaseMessage {
@@ -565,6 +580,9 @@ export interface UpdateApiConfigurationMessage extends BaseMessage {
   updating_api_configuration: ApiConfiguration
   updated_api_configuration: ApiConfiguration
   origin?: 'cancel' | 'save'
+  is_new?: boolean
+  insertion_index?: number
+  tool_type?: ToolType
 }
 
 export interface PickModelProviderMessage extends BaseMessage {
@@ -1021,3 +1039,5 @@ export type BackendMessage =
   | NewlyPickedApiModelMessage
   | NewlyPickedApiReasoningEffortMessage
   | ApiConfigurationUpdatedMessage
+  | StartWebConfigurationCreationMessage
+  | StartApiConfigurationCreationMessage

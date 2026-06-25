@@ -122,7 +122,9 @@ export const Panel = () => {
     set_updated_web_configuration,
     edit_web_configuration_back_click_handler,
     edit_web_configuration_save_handler,
-    handle_preview_web_configuration
+    handle_preview_web_configuration,
+    set_is_new_web_configuration,
+    set_web_configuration_insertion_index
   } = use_web_configuration_editing(vscode)
 
   const {
@@ -130,7 +132,9 @@ export const Panel = () => {
     set_updating_api_configuration,
     set_updated_api_configuration,
     edit_api_configuration_back_click_handler,
-    edit_api_configuration_save_handler
+    edit_api_configuration_save_handler,
+    set_is_new_api_configuration,
+    set_api_configuration_insertion_index
   } = use_api_configuration_editing(vscode)
 
   const {
@@ -326,10 +330,14 @@ export const Panel = () => {
                   })
                   set_updating_web_configuration(web_configuration)
                   set_updated_web_configuration(web_configuration)
+                  set_is_new_web_configuration(false)
+                  set_web_configuration_insertion_index(undefined)
                 }}
                 on_api_configuration_edit={(api_configuration) => {
                   set_updating_api_configuration(api_configuration)
                   set_updated_api_configuration(api_configuration)
+                  set_is_new_api_configuration(false)
+                  set_api_configuration_insertion_index(undefined)
                 }}
                 is_connected={is_connected}
                 on_show_home={() => {

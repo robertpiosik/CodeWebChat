@@ -1,5 +1,4 @@
 import * as vscode from 'vscode'
-import { dictionary } from '@shared/constants/dictionary'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 import { generate_unique_name } from '../utils/generate-unique-name'
@@ -7,7 +6,9 @@ import { generate_unique_name } from '../utils/generate-unique-name'
 export const create_web_configuration = async (params: {
   placement?: 'top' | 'bottom'
   reference_index?: number
-}): Promise<ConfigWebConfigurationFormat | undefined> => {
+}): Promise<
+  { config: ConfigWebConfigurationFormat; insertion_index?: number } | undefined
+> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const current_web_configurations =
     config.get<ConfigWebConfigurationFormat[]>('webConfigurations', []) || []
@@ -128,20 +129,5 @@ export const create_web_configuration = async (params: {
       : undefined
   }
 
-  const updated_web_configurations = [...current_web_configurations]
-  if (insertion_index !== undefined) {
-    updated_web_configurations.splice(insertion_index, 0, new_web_configuration)
-  } else {
-    updated_web_configurations.push(new_web_configuration)
-  }
-
-  try {
-    await config.update('webConfigurations', updated_web_configurations, true)
-    return new_web_configuration
-  } catch (error) {
-    vscode.window.showErrorMessage(
-      dictionary.error_message.FAILED_TO_CREATE_ITEM('Web Configuration', error)
-    )
-    return undefined
-  }
+  return { config: new_web_configuration, insertion_index }
 }

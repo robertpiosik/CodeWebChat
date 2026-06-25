@@ -4,26 +4,23 @@ export const edit_reasoning_effort_for_api_config = async (
   current_effort?: string
 ) => {
   const effort_options: vscode.QuickPickItem[] = [
-    {
-      label: 'Unset',
-      description: 'Remove reasoning effort from the API configuration'
-    }
-  ]
-
-  effort_options.push(
     { label: 'None' },
     { label: 'Minimal' },
     { label: 'Low' },
     { label: 'Medium' },
     { label: 'High' }
-  )
+  ]
 
-  return await new Promise<string | null | undefined>((resolve) => {
+  return await new Promise<string | undefined>((resolve) => {
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = effort_options
     quick_pick.title = 'Edit API Configuration'
     quick_pick.placeholder = 'Select reasoning effort'
-    quick_pick.buttons = [vscode.QuickInputButtons.Back]
+    const close_button: vscode.QuickInputButton = {
+      iconPath: new vscode.ThemeIcon('close'),
+      tooltip: 'Close'
+    }
+    quick_pick.buttons = [close_button]
     if (current_effort) {
       const active = effort_options.find(
         (item) => item.label.toLowerCase() === current_effort.toLowerCase()
@@ -39,16 +36,14 @@ export const edit_reasoning_effort_for_api_config = async (
         accepted = true
         const selected = quick_pick.selectedItems[0]
         if (selected) {
-          resolve(
-            selected.label == 'Unset' ? null : selected.label.toLowerCase()
-          )
+          resolve(selected.label.toLowerCase())
         } else {
           resolve(undefined)
         }
         quick_pick.hide()
       }),
       quick_pick.onDidTriggerButton((button) => {
-        if (button === vscode.QuickInputButtons.Back) {
+        if (button === close_button) {
           quick_pick.hide()
         }
       }),
