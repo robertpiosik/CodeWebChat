@@ -31,8 +31,8 @@ export const dictionary = {
       'No saved contexts remaining in the JSON file.',
     COMMIT_SEEMS_EMPTY: (commit_hash: string) =>
       `Commit ${commit_hash} seems empty.`,
-    CONFIRM_SAVE_CHANGES_TO_ITEM: (item_type: string) =>
-      `Save changes to the ${item_type}?`,
+    CONFIRM_DISCARD_UNSAVED_CHANGES: (item_type: string) =>
+      `Discard unsaved changes to the ${item_type}?`,
     COULD_NOT_UNDO_ANOTHER_CHECKPOINT_DELETED:
       'Could not undo. Another checkpoint was deleted.',
     NO_FILE_PATHS_FOUND_IN_CLIPBOARD: 'No file paths found in the clipboard.',
@@ -106,7 +106,7 @@ export const dictionary = {
     TEMPLATE_RESTORED: 'Template has been restored.',
     UNNAMED_TEMPLATE_DELETED: 'Unnamed template has been deleted.',
     UNSAVED_CHANGES_TO_ITEM_WILL_BE_LOST: (item_type: string) =>
-      `If you don't save, updates to the ${item_type} will be lost.`,
+      `If you discard, updates to the ${item_type} will be lost.`,
     BASE_URL_DOES_NOT_END_WITH_V1:
       'The Base URL does not end with "/v1". Many OpenAI-compatible APIs require this. Would you like to add it?'
   },
@@ -169,8 +169,9 @@ export const dictionary = {
       `Are you sure you want to clear the API key for ${provider_name}? This action cannot be undone.`,
     CONFIRM_DELETE_CONTEXT: (context_name: string) =>
       `Are you sure you want to delete context "${context_name}"?`,
-    CONFIRM_DELETE_ITEM: (item_type: 'file' | 'folder' | 'group' | 'configuration') =>
-      `Are you sure you want to delete this ${item_type}?`,
+    CONFIRM_DELETE_ITEM: (
+      item_type: 'file' | 'folder' | 'group' | 'configuration'
+    ) => `Are you sure you want to delete this ${item_type}?`,
     CONFIRM_DELETE_NAMED_ITEM: (item_type: string, name: string) =>
       `Are you sure you want to delete ${item_type} "${name}"?`,
     CONTEXT_ALREADY_SAVED: (context_name: string) =>

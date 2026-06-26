@@ -14,7 +14,7 @@ export const edit_reasoning_effort_for_api_config = async (
   return await new Promise<string | undefined>((resolve) => {
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = effort_options
-    quick_pick.title = 'Edit API Configuration'
+    quick_pick.title = 'Edit Configuration'
     quick_pick.placeholder = 'Select reasoning effort'
     const close_button: vscode.QuickInputButton = {
       iconPath: new vscode.ThemeIcon('close'),

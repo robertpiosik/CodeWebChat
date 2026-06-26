@@ -28,7 +28,7 @@ export namespace DefaultConfigurationSelector {
 export const DefaultConfigurationSelector: React.FC<
   DefaultConfigurationSelector.Props
 > = (props) => {
-  const selected_config = props.configurations.find((c) => c.id === props.value)
+  const selected_config = props.configurations.find((c) => c.id == props.value)
 
   if (!selected_config) {
     return (

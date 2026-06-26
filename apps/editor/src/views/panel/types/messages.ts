@@ -588,6 +588,7 @@ export interface UpdateApiConfigurationMessage extends BaseMessage {
 export interface PickModelProviderMessage extends BaseMessage {
   command: 'PICK_MODEL_PROVIDER'
   current_model_provider_name?: string
+  tool_type: ToolType
 }
 
 export interface PickApiModelMessage extends BaseMessage {

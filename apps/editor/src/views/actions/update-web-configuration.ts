@@ -57,9 +57,9 @@ export const update_web_configuration = async (params: {
   }
 
   if (params.origin == 'cancel') {
-    const save_changes_button = 'Save'
+    const discard_button = 'Discard'
     const result = await vscode.window.showWarningMessage(
-      dictionary.information_message.CONFIRM_SAVE_CHANGES_TO_ITEM(
+      dictionary.information_message.CONFIRM_DISCARD_UNSAVED_CHANGES(
         'web configuration'
       ),
       {
@@ -69,12 +69,14 @@ export const update_web_configuration = async (params: {
             'web configuration'
           )
       },
-      save_changes_button
+      discard_button
     )
 
-    if (result != save_changes_button) {
-      return { success: true, has_changes: false }
+    if (result != discard_button) {
+      return { success: false, has_changes: true }
     }
+
+    return { success: true, has_changes: false }
   }
 
   const updated_ui_web_configuration = { ...final_updated_web_configuration }

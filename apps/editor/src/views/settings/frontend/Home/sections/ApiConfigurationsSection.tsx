@@ -4,14 +4,14 @@ import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
 import { Notice as UiNotice } from '@ui/components/editor/settings/Notice'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { Item as UiItem } from '@ui/components/editor/settings/Item'
-import { SortableList } from '@ui/components/editor/settings/SortableList'
-import { IconButton } from '@ui/components/editor/common/IconButton'
 import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
 import { DefaultConfigurationSelector } from '@ui/components/editor/settings/DefaultConfigurationSelector'
 import { ApiConfiguration, Provider } from '@/views/settings/types/messages'
 import { ToolType } from '@/views/settings/types/tools'
 import { Translation, use_translation } from '../../i18n/use-translation'
 import { ModelProvidersSection } from './ModelProvidersSection'
+import { SortableList } from '@ui/components/editor/settings/SortableList'
+import { IconButton } from '@ui/components/editor/common/IconButton'
 import { NavItem } from '../Home'
 
 type Props = {
@@ -21,19 +21,19 @@ type Props = {
   set_providers: (providers: Provider[]) => void
   set_api_configurations: (configurations: ApiConfiguration[]) => void
   on_reorder_providers: (reordered: Provider[]) => void
-  on_reorder_api_configurations: (reordered: ApiConfiguration[]) => void
   on_add_provider: (params?: {
-    insertion_index?: number
-    create_on_top?: boolean
-  }) => void
-  on_add_api_configuration: (params?: {
     insertion_index?: number
     create_on_top?: boolean
   }) => void
   on_delete_provider: (provider_name: string) => void
   on_edit_provider: (provider_name: string) => void
-  on_edit_api_configuration: (api_configuration_id: string) => void
-  on_delete_api_configuration: (api_configuration_id: string) => void
+  on_reorder_api_configurations: (reordered: ApiConfiguration[]) => void
+  on_add_api_configuration: (params?: {
+    insertion_index?: number
+    create_on_top?: boolean
+  }) => void
+  on_delete_api_configuration: (id: string) => void
+  on_edit_api_configuration: (id: string) => void
   on_set_default_api_configuration: (
     tool_name: ToolType,
     api_configuration_id: string | null
@@ -65,6 +65,19 @@ type Props = {
 export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
   (props, ref) => {
     const { t } = use_translation()
+
+    const selector_configurations = props.api_configurations.map((config) => {
+      const details: string[] = [config.model_provider_name]
+      if (config.reasoning_effort) {
+        details.push(config.reasoning_effort)
+      }
+
+      return {
+        id: config.id,
+        model: config.model,
+        description: details.join(' · ')
+      }
+    })
 
     return (
       <UiSection
@@ -188,36 +201,48 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                 on_add={props.on_add_api_configuration}
                 translations={{
                   add_title: t('action.add-new'),
-                  item_text: t('configurations.item'),
-                  items_text: t('configurations.items'),
-                  items_text_many: t('configurations.items-many')
+                  item_text: t('web-configurations.item'),
+                  items_text: t('web-configurations.items'),
+                  items_text_many: t('web-configurations.items-many')
                 }}
-                render_content={(api_configuration) => (
-                  <div
-                    style={{
-                      flex: 1,
-                      overflow: 'hidden',
-                      whiteSpace: 'nowrap',
-                      textOverflow: 'ellipsis'
-                    }}
-                  >
-                    <span>{api_configuration.model}</span>
-                    <span
+                render_content={(config) => {
+                  const details: string[] = [config.model_provider_name]
+                  if (config.reasoning_effort) {
+                    details.push(config.reasoning_effort)
+                  }
+                  if (config.temperature !== undefined) {
+                    details.push(`T: ${config.temperature}`)
+                  }
+
+                  return (
+                    <div
                       style={{
-                        marginLeft: '0.5em',
-                        opacity: 0.7,
-                        fontSize: '0.9em'
+                        flex: 1,
+                        overflow: 'hidden',
+                        whiteSpace: 'nowrap',
+                        textOverflow: 'ellipsis'
                       }}
                     >
-                      {api_configuration.description}
-                    </span>
-                  </div>
-                )}
-                render_actions={(api_configuration, index) => (
+                      <span>{config.model}</span>
+                      {details.length > 0 && (
+                        <span
+                          style={{
+                            marginLeft: '0.5em',
+                            opacity: 0.7,
+                            fontSize: '0.9em'
+                          }}
+                        >
+                          {details.join(' · ')}
+                        </span>
+                      )}
+                    </div>
+                  )
+                }}
+                render_actions={(config, index) => (
                   <>
                     <IconButton
                       codicon_icon="insert"
-                      title={t('configurations.action.insert')}
+                      title={t('web-configurations.action.insert')}
                       on_click={() =>
                         props.on_add_api_configuration({
                           insertion_index: index
@@ -226,17 +251,17 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                     />
                     <IconButton
                       codicon_icon="edit"
-                      title={t('configurations.action.edit')}
+                      title={t('web-configurations.action.edit')}
                       on_click={() =>
-                        props.on_edit_api_configuration(api_configuration.id)
+                        props.on_edit_api_configuration(config.id)
                       }
                     />
                     <IconButton
                       codicon_icon="trash"
-                      title={t('configurations.action.delete')}
+                      title={t('web-configurations.action.delete')}
                       on_click={(e) => {
                         e.stopPropagation()
-                        props.on_delete_api_configuration(api_configuration.id)
+                        props.on_delete_api_configuration(config.id)
                       }}
                     />
                   </>
@@ -248,7 +273,7 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                 <DefaultConfigurationSelector
                   title={t('configurations.tool.intelligent-update')}
                   value={props.defaults['intelligent-update'] || null}
-                  configurations={props.api_configurations}
+                  configurations={selector_configurations}
                   on_unset={() =>
                     props.on_set_default_api_configuration(
                       'intelligent-update',
@@ -268,7 +293,7 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                 <DefaultConfigurationSelector
                   title={t('configurations.tool.code-at-cursor')}
                   value={props.defaults['code-at-cursor'] || null}
-                  configurations={props.api_configurations}
+                  configurations={selector_configurations}
                   on_unset={() =>
                     props.on_set_default_api_configuration(
                       'code-at-cursor',
@@ -286,7 +311,7 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                 <DefaultConfigurationSelector
                   title={t('configurations.tool.commit-messages')}
                   value={props.defaults['commit-messages'] || null}
-                  configurations={props.api_configurations}
+                  configurations={selector_configurations}
                   on_unset={() =>
                     props.on_set_default_api_configuration(
                       'commit-messages',
@@ -304,7 +329,7 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                 <DefaultConfigurationSelector
                   title={t('configurations.tool.voice-input')}
                   value={props.defaults['voice-input'] || null}
-                  configurations={props.api_configurations}
+                  configurations={selector_configurations}
                   on_unset={() =>
                     props.on_set_default_api_configuration('voice-input', null)
                   }

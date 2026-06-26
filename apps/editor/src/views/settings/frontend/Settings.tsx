@@ -4,8 +4,10 @@ import { post_message } from './utils/post-message'
 import { BackendMessage } from '../types/messages'
 import { Home, NavItem } from './Home/Home'
 import { use_web_configuration_editing } from './hooks/use-web-configuration-editing'
+import { use_api_configuration_editing } from './hooks/use-api-configuration-editing'
 import { Modal as UiModal } from '@ui/components/editor/settings/Modal'
 import { EditWebConfigurationForm } from '@/views/components/EditWebConfigurationForm'
+import { EditApiConfigurationForm } from '@/views/components/EditApiConfigurationForm'
 
 const vscode = acquireVsCodeApi()
 
@@ -18,6 +20,15 @@ export const Settings = () => {
     edit_web_configuration_cancel_handler,
     edit_web_configuration_save_handler
   } = use_web_configuration_editing(vscode)
+
+  const {
+    updating_api_configuration,
+    set_updating_api_configuration,
+    set_updated_api_configuration,
+    edit_api_configuration_cancel_handler,
+    edit_api_configuration_save_handler
+  } = use_api_configuration_editing(vscode)
+
   const [scroll_to_section_on_load, set_scroll_to_section_on_load] =
     useState<NavItem>()
 
@@ -155,19 +166,24 @@ export const Settings = () => {
         on_add_provider={settings_hook.handle_add_provider}
         on_delete_provider={settings_hook.handle_delete_provider}
         on_edit_provider={settings_hook.handle_edit_provider}
-        on_add_api_configuration={settings_hook.handle_add_api_configuration}
-        on_reorder_api_configurations={
-          settings_hook.handle_reorder_api_configurations
-        }
-        on_edit_api_configuration={settings_hook.handle_edit_api_configuration}
-        on_delete_api_configuration={
-          settings_hook.handle_delete_api_configuration
-        }
         on_set_default_api_configuration={
           settings_hook.handle_set_default_api_configuration
         }
         on_select_default_api_configuration={
           settings_hook.handle_select_default_api_configuration
+        }
+        on_reorder_api_configurations={
+          settings_hook.handle_reorder_api_configurations
+        }
+        on_add_api_configuration={settings_hook.handle_add_api_configuration}
+        on_edit_api_configuration={(id) => {
+          const config = settings_hook.api_configurations?.find(
+            (c) => c.id == id
+          )
+          if (config) set_updating_api_configuration(config)
+        }}
+        on_delete_api_configuration={
+          settings_hook.handle_delete_api_configuration
         }
         web_configurations={settings_hook.web_configurations!}
         set_web_configurations={settings_hook.set_web_configurations}
@@ -214,6 +230,41 @@ export const Settings = () => {
                   command: 'PICK_REASONING_EFFORT',
                   supported_efforts,
                   current_effort
+                })
+              }}
+            />
+          </UiModal.Form>
+        </UiModal>
+      )}
+      {updating_api_configuration && (
+        <UiModal on_close={edit_api_configuration_cancel_handler}>
+          <UiModal.Form
+            title="Edit Configuration"
+            on_save={edit_api_configuration_save_handler}
+            on_cancel={edit_api_configuration_cancel_handler}
+          >
+            <EditApiConfigurationForm
+              api_configuration={updating_api_configuration}
+              on_update={set_updated_api_configuration}
+              pick_model_provider={(current) => {
+                post_message(vscode, {
+                  command: 'PICK_MODEL_PROVIDER',
+                  current_model_provider_name: current
+                })
+              }}
+              pick_model={(provider, current) => {
+                post_message(vscode, {
+                  command: 'PICK_API_MODEL',
+                  model_provider_name: provider,
+                  current_model: current
+                })
+              }}
+              pick_reasoning_effort={(provider, model, current) => {
+                post_message(vscode, {
+                  command: 'PICK_API_REASONING_EFFORT',
+                  model_provider_name: provider,
+                  model,
+                  current_effort: current
                 })
               }}
             />

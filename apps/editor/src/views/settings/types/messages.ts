@@ -9,8 +9,12 @@ export type Provider = {
 
 export type ApiConfiguration = {
   id: string
+  model_provider_name: string
   model: string
-  description: string
+  temperature?: number
+  reasoning_effort?: string
+  is_pinned?: boolean
+  system_instructions_override?: string
 }
 
 export type EditFormatInstructions = {
@@ -48,16 +52,6 @@ export interface EditCustomModelProviderMessage {
 
 export interface GetApiConfigurationsMessage {
   command: 'GET_API_CONFIGURATIONS'
-}
-
-export interface ReorderApiConfigurationsMessage {
-  command: 'REORDER_API_CONFIGURATIONS'
-  api_configurations: ApiConfiguration[]
-}
-
-export interface DeleteApiConfigurationMessage {
-  command: 'DELETE_API_CONFIGURATION'
-  api_configuration_id: string
 }
 
 export interface SetDefaultApiConfigurationMessage {
@@ -222,13 +216,6 @@ export interface UpdateClearChecksInWorkspaceBehaviorMessage {
   value: 'ignore-open-editors' | 'uncheck-all'
 }
 
-export interface UpsertApiConfigurationMessage {
-  command: 'UPSERT_API_CONFIGURATION'
-  api_configuration_id?: string
-  insertion_index?: number
-  create_on_top?: boolean
-}
-
 export interface GetAutoRunIntelligentUpdateMessage {
   command: 'GET_AUTO_RUN_INTELLIGENT_UPDATE'
 }
@@ -300,6 +287,53 @@ export interface UpdateWebConfigurationMessage {
   origin?: 'cancel' | 'save'
 }
 
+export interface CreateApiConfigurationMessage {
+  command: 'CREATE_API_CONFIGURATION'
+  tool_type?: ToolType
+  create_on_top?: boolean
+  insertion_index?: number
+}
+
+export interface UpdateApiConfigurationMessage {
+  command: 'UPDATE_API_CONFIGURATION'
+  updating_api_configuration: ApiConfiguration
+  updated_api_configuration: ApiConfiguration
+  origin?: 'cancel' | 'save'
+  is_new?: boolean
+  insertion_index?: number
+  tool_type?: ToolType
+}
+
+export interface DeleteApiConfigurationMessage {
+  command: 'DELETE_API_CONFIGURATION'
+  api_configuration_id: string
+}
+
+export interface ReorderApiConfigurationsMessage {
+  command: 'REORDER_API_CONFIGURATIONS'
+  api_configurations: ApiConfiguration[]
+}
+
+export interface PickModelProviderMessage {
+  command: 'PICK_MODEL_PROVIDER'
+  current_model_provider_name?: string
+  tool_type?: ToolType
+}
+
+export interface PickApiModelMessage {
+  command: 'PICK_API_MODEL'
+  model_provider_name: string
+  current_model?: string
+  tool_type?: ToolType
+}
+
+export interface PickApiReasoningEffortMessage {
+  command: 'PICK_API_REASONING_EFFORT'
+  current_effort?: string
+  model_provider_name: string
+  model: string
+}
+
 export type FrontendMessage =
   | GetModelProvidersMessage
   | ReorderModelProvidersMessage
@@ -307,8 +341,6 @@ export type FrontendMessage =
   | DeleteModelProviderMessage
   | EditCustomModelProviderMessage
   | GetApiConfigurationsMessage
-  | ReorderApiConfigurationsMessage
-  | DeleteApiConfigurationMessage
   | SetDefaultApiConfigurationMessage
   | SelectDefaultApiConfigurationMessage
   | GetCommitMessageInstructionsMessage
@@ -342,7 +374,6 @@ export type FrontendMessage =
   | UpdateReuseLastTabMessage
   | GetClearChecksInWorkspaceBehaviorMessage
   | UpdateClearChecksInWorkspaceBehaviorMessage
-  | UpsertApiConfigurationMessage
   | OpenEditorSettingsMessage
   | OpenIgnorePatternsSettingsMessage
   | OpenAllowPatternsSettingsMessage
@@ -360,6 +391,13 @@ export type FrontendMessage =
   | PickChatbotMessage
   | PickReasoningEffortMessage
   | UpdateWebConfigurationMessage
+  | CreateApiConfigurationMessage
+  | UpdateApiConfigurationMessage
+  | DeleteApiConfigurationMessage
+  | ReorderApiConfigurationsMessage
+  | PickModelProviderMessage
+  | PickApiModelMessage
+  | PickApiReasoningEffortMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface ModelProvidersMessage {
@@ -487,6 +525,32 @@ export interface WebConfigurationUpdatedMessage {
   command: 'WEB_CONFIGURATION_UPDATED'
 }
 
+export interface StartApiConfigurationCreationMessage {
+  command: 'START_API_CONFIGURATION_CREATION'
+  api_configuration: ApiConfiguration
+  insertion_index?: number
+  tool_type?: ToolType
+}
+
+export interface ApiConfigurationUpdatedMessage {
+  command: 'API_CONFIGURATION_UPDATED'
+}
+
+export interface NewlyPickedModelProviderMessage {
+  command: 'NEWLY_PICKED_MODEL_PROVIDER'
+  model_provider_name: string
+}
+
+export interface NewlyPickedApiModelMessage {
+  command: 'NEWLY_PICKED_API_MODEL'
+  model_id: string
+}
+
+export interface NewlyPickedApiReasoningEffortMessage {
+  command: 'NEWLY_PICKED_API_REASONING_EFFORT'
+  effort?: string
+}
+
 export type BackendMessage =
   | ModelProvidersMessage
   | ApiConfigurationsMessage
@@ -513,3 +577,8 @@ export type BackendMessage =
   | NewlyPickedChatbotMessage
   | NewlyPickedReasoningEffortMessage
   | WebConfigurationUpdatedMessage
+  | StartApiConfigurationCreationMessage
+  | ApiConfigurationUpdatedMessage
+  | NewlyPickedModelProviderMessage
+  | NewlyPickedApiModelMessage
+  | NewlyPickedApiReasoningEffortMessage

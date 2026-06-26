@@ -5,7 +5,6 @@ import {
 } from '@/views/settings/types/messages'
 import {
   handle_upsert_model_provider,
-  handle_delete_api_configuration,
   handle_delete_model_provider,
   handle_get_check_new_files,
   handle_get_clear_checks_in_workspace_behavior,
@@ -26,7 +25,6 @@ import {
   handle_get_reuse_last_tab,
   handle_update_checkpoint_lifespan,
   handle_get_checkpoint_lifespan,
-  handle_reorder_api_configurations,
   handle_reorder_model_providers,
   handle_set_default_api_configuration,
   handle_select_default_api_configuration,
@@ -43,7 +41,6 @@ import {
   handle_update_ai_studio_user_id,
   handle_update_send_with_shift_enter,
   handle_update_reuse_last_tab,
-  handle_upsert_api_configuration,
   handle_open_ignore_patterns_settings,
   handle_open_allow_patterns_settings,
   handle_get_auto_run_intelligent_update,
@@ -58,7 +55,14 @@ import {
   handle_pick_chatbot,
   handle_pick_model,
   handle_pick_reasoning_effort,
-  handle_update_web_configuration
+  handle_update_web_configuration,
+  handle_create_api_configuration,
+  handle_update_api_configuration,
+  handle_delete_api_configuration,
+  handle_reorder_api_configurations,
+  handle_pick_model_provider,
+  handle_pick_api_model,
+  handle_pick_api_reasoning_effort
 } from './message-handlers'
 import { config_web_configuration_to_ui_format } from '@/utils/web-configuration-format-converters'
 
@@ -154,16 +158,6 @@ export class SettingsProvider {
           })
         } else if (message.command == 'GET_API_CONFIGURATIONS') {
           await handle_get_api_configurations(this)
-        } else if (message.command == 'REORDER_API_CONFIGURATIONS') {
-          await handle_reorder_api_configurations(
-            this,
-            message.api_configurations
-          )
-        } else if (message.command == 'DELETE_API_CONFIGURATION') {
-          await handle_delete_api_configuration(
-            this,
-            message.api_configuration_id
-          )
         } else if (message.command == 'SET_DEFAULT_API_CONFIGURATION') {
           await handle_set_default_api_configuration(
             this,
@@ -252,8 +246,6 @@ export class SettingsProvider {
           await handle_open_ignore_patterns_settings()
         } else if (message.command == 'OPEN_ALLOW_PATTERNS_SETTINGS') {
           await handle_open_allow_patterns_settings()
-        } else if (message.command == 'UPSERT_API_CONFIGURATION') {
-          await handle_upsert_api_configuration(this, message)
         } else if (message.command == 'GET_AUTO_RUN_INTELLIGENT_UPDATE') {
           await handle_get_auto_run_intelligent_update(this)
         } else if (message.command == 'UPDATE_AUTO_RUN_INTELLIGENT_UPDATE') {
@@ -286,6 +278,20 @@ export class SettingsProvider {
           await handle_pick_reasoning_effort(this, message)
         } else if (message.command == 'UPDATE_WEB_CONFIGURATION') {
           await handle_update_web_configuration(this, message)
+        } else if (message.command == 'CREATE_API_CONFIGURATION') {
+          await handle_create_api_configuration(this, message)
+        } else if (message.command == 'UPDATE_API_CONFIGURATION') {
+          await handle_update_api_configuration(this, message)
+        } else if (message.command == 'DELETE_API_CONFIGURATION') {
+          await handle_delete_api_configuration(this, message)
+        } else if (message.command == 'REORDER_API_CONFIGURATIONS') {
+          await handle_reorder_api_configurations(this, message)
+        } else if (message.command == 'PICK_MODEL_PROVIDER') {
+          await handle_pick_model_provider(this, message)
+        } else if (message.command == 'PICK_API_MODEL') {
+          await handle_pick_api_model(this, message)
+        } else if (message.command == 'PICK_API_REASONING_EFFORT') {
+          await handle_pick_api_reasoning_effort(this, message)
         }
       },
       null,

@@ -571,7 +571,7 @@ export const Panel = () => {
                   </UiButton>
                 </div>
               }
-              title="Edit API Configuration"
+              title="Edit Configuration"
             >
               <EditApiConfigurationForm
                 api_configuration={updating_api_configuration}
@@ -579,7 +579,8 @@ export const Panel = () => {
                 pick_model_provider={(current) => {
                   post_message(vscode, {
                     command: 'PICK_MODEL_PROVIDER',
-                    current_model_provider_name: current
+                    current_model_provider_name: current,
+                    tool_type: api_prompt_type
                   })
                 }}
                 pick_model={(provider, current) => {

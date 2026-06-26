@@ -153,18 +153,18 @@ type Props = {
   on_delete_provider: (provider_name: string) => void
   on_edit_provider: (provider_name: string) => void
   on_reorder_providers: (reordered_providers: Provider[]) => void
-  on_add_api_configuration: (params?: {
-    insertion_index?: number
-    create_on_top?: boolean
-  }) => void
-  on_reorder_api_configurations: (reordered: ApiConfiguration[]) => void
-  on_edit_api_configuration: (api_configuration_id: string) => void
-  on_delete_api_configuration: (api_configuration_id: string) => void
   on_set_default_api_configuration: (
     tool_name: ToolType,
     api_configuration_id: string | null
   ) => void
   on_select_default_api_configuration: (tool_name: ToolType) => void
+  on_reorder_api_configurations: (reordered: ApiConfiguration[]) => void
+  on_add_api_configuration: (params?: {
+    insertion_index?: number
+    create_on_top?: boolean
+  }) => void
+  on_edit_api_configuration: (id: string) => void
+  on_delete_api_configuration: (id: string) => void
   on_reorder_web_configurations: (reordered: WebConfiguration[]) => void
   on_add_web_configuration: (params?: {
     insertion_index?: number
@@ -420,16 +420,16 @@ export const Home: React.FC<Props> = (props) => {
           api_configurations={props.api_configurations}
           defaults={props.defaults}
           set_api_configurations={props.set_api_configurations}
-          on_reorder_api_configurations={props.on_reorder_api_configurations}
-          on_add_api_configuration={props.on_add_api_configuration}
-          on_edit_api_configuration={props.on_edit_api_configuration}
-          on_delete_api_configuration={props.on_delete_api_configuration}
           on_set_default_api_configuration={
             props.on_set_default_api_configuration
           }
           on_select_default_api_configuration={
             props.on_select_default_api_configuration
           }
+          on_reorder_api_configurations={props.on_reorder_api_configurations}
+          on_add_api_configuration={props.on_add_api_configuration}
+          on_edit_api_configuration={props.on_edit_api_configuration}
+          on_delete_api_configuration={props.on_delete_api_configuration}
           edit_context_instructions={edit_context_instructions}
           commit_instructions={commit_instructions}
           voice_input_instructions={voice_input_instructions}

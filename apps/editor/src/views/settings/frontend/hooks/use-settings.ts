@@ -187,38 +187,6 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_add_api_configuration = (params?: {
-    insertion_index?: number
-    create_on_top?: boolean
-  }) => {
-    post_message(vscode, {
-      command: 'UPSERT_API_CONFIGURATION',
-      insertion_index: params?.insertion_index,
-      create_on_top: params?.create_on_top
-    })
-  }
-
-  const handle_reorder_api_configurations = (reordered: ApiConfiguration[]) => {
-    post_message(vscode, {
-      command: 'REORDER_API_CONFIGURATIONS',
-      api_configurations: reordered
-    } as FrontendMessage)
-  }
-
-  const handle_edit_api_configuration = (api_configuration_id: string) => {
-    post_message(vscode, {
-      command: 'UPSERT_API_CONFIGURATION',
-      api_configuration_id
-    })
-  }
-
-  const handle_delete_api_configuration = (api_configuration_id: string) => {
-    post_message(vscode, {
-      command: 'DELETE_API_CONFIGURATION',
-      api_configuration_id
-    } as FrontendMessage)
-  }
-
   const handle_set_default_api_configuration = (
     tool_name: ToolType,
     api_configuration_id: string | null
@@ -238,6 +206,32 @@ export const use_settings = (vscode: any) => {
       command: 'SELECT_DEFAULT_API_CONFIGURATION',
       tool_name
     } as FrontendMessage)
+  }
+
+  const handle_reorder_api_configurations = (reordered: ApiConfiguration[]) => {
+    set_api_configurations(reordered)
+    post_message(vscode, {
+      command: 'REORDER_API_CONFIGURATIONS',
+      api_configurations: reordered
+    })
+  }
+
+  const handle_add_api_configuration = (params?: {
+    insertion_index?: number
+    create_on_top?: boolean
+  }) => {
+    post_message(vscode, {
+      command: 'CREATE_API_CONFIGURATION',
+      insertion_index: params?.insertion_index,
+      create_on_top: params?.create_on_top
+    })
+  }
+
+  const handle_delete_api_configuration = (id: string) => {
+    post_message(vscode, {
+      command: 'DELETE_API_CONFIGURATION',
+      api_configuration_id: id
+    })
   }
 
   const handle_reorder_web_configurations = (reordered: WebConfiguration[]) => {
@@ -449,12 +443,11 @@ export const use_settings = (vscode: any) => {
     handle_add_provider,
     handle_delete_provider,
     handle_edit_provider,
-    handle_add_api_configuration,
-    handle_reorder_api_configurations,
-    handle_edit_api_configuration,
-    handle_delete_api_configuration,
     handle_set_default_api_configuration,
     handle_select_default_api_configuration,
+    handle_reorder_api_configurations,
+    handle_add_api_configuration,
+    handle_delete_api_configuration,
     handle_reorder_web_configurations,
     handle_add_web_configuration,
     handle_delete_web_configuration,
