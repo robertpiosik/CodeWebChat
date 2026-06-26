@@ -44,8 +44,6 @@ export const update_api_configuration = async (params: {
   const has_changes =
     params.updating_api_configuration.id !==
       get_api_configuration_id(params.updated_api_configuration) ||
-    params.updating_api_configuration.system_instructions_override !==
-      params.updated_api_configuration.system_instructions_override ||
     params.updating_api_configuration.is_pinned !==
       params.updated_api_configuration.is_pinned
 
@@ -84,8 +82,6 @@ export const update_api_configuration = async (params: {
     model: params.updated_api_configuration.model,
     temperature: params.updated_api_configuration.temperature,
     reasoning_effort: params.updated_api_configuration.reasoning_effort,
-    system_instructions_override:
-      params.updated_api_configuration.system_instructions_override,
     is_pinned: params.updated_api_configuration.is_pinned
   }
 

@@ -3,7 +3,6 @@ import styles from './EditApiConfigurationForm.module.scss'
 import { ApiConfiguration } from '@/views/panel/types/messages'
 import { Field as UiField } from '@ui/components/editor/common/Field'
 import { Slider as UiSlider } from '@ui/components/editor/panel/Slider'
-import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { BackendMessage } from '@/views/panel/types/messages'
 import { Scrollable as UiScrollable } from '@ui/components/editor/panel/Scrollable'
 import { Fieldset as UiFieldset } from '@ui/components/editor/panel/Fieldset'
@@ -33,8 +32,6 @@ export const EditApiConfigurationForm: React.FC<Props> = (props) => {
   const [reasoning_effort, set_reasoning_effort] = useState(
     props.api_configuration.reasoning_effort
   )
-  const [system_instructions_override, set_system_instructions_override] =
-    useState(props.api_configuration.system_instructions_override)
 
   const [is_sampling_collapsed, set_is_sampling_collapsed] = useState(
     props.api_configuration.temperature === undefined
@@ -46,16 +43,9 @@ export const EditApiConfigurationForm: React.FC<Props> = (props) => {
       model_provider_name,
       model,
       temperature,
-      reasoning_effort,
-      system_instructions_override
+      reasoning_effort
     })
-  }, [
-    model_provider_name,
-    model,
-    temperature,
-    reasoning_effort,
-    system_instructions_override
-  ])
+  }, [model_provider_name, model, temperature, reasoning_effort])
 
   useEffect(() => {
     const handle_message = (event: MessageEvent) => {
@@ -127,20 +117,6 @@ export const EditApiConfigurationForm: React.FC<Props> = (props) => {
                   )
                 }
               }}
-            />
-          </UiField>
-
-          <UiField
-            label="System Instructions Override"
-            html_for="instructions"
-            info="Optional tone and style instructions for the model."
-          >
-            <UiTextarea
-              id="instructions"
-              value={system_instructions_override || ''}
-              on_change={set_system_instructions_override}
-              min_rows={2}
-              placeholder="Overrides global system instructions"
             />
           </UiField>
         </UiFieldset>

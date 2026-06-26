@@ -12,7 +12,6 @@ export type ApiConfiguration = {
   model: string
   temperature?: number
   reasoning_effort?: string
-  system_instructions_override?: string
   is_pinned?: boolean
 }
 
@@ -139,7 +138,6 @@ export class ModelProvidersManager {
           model: sc.model,
           temperature: sc.temperature,
           reasoning_effort: sc.reasoningEffort,
-          system_instructions_override: sc.systemInstructionsOverride,
           is_pinned: sc.isPinned
         }
       }
@@ -176,8 +174,6 @@ export class ModelProvidersManager {
         new_config.isDefaultForVoiceInput = true
       if (c.reasoning_effort !== undefined)
         new_config.reasoningEffort = c.reasoning_effort
-      if (c.system_instructions_override !== undefined)
-        new_config.systemInstructionsOverride = c.system_instructions_override
       if (c.is_pinned !== undefined) new_config.isPinned = c.is_pinned
       return new_config
     })
@@ -198,9 +194,7 @@ export class ModelProvidersManager {
       settings_config.model === api_configuration.model &&
       settings_config.temperature === api_configuration.temperature &&
       (settings_config.reasoningEffort ?? undefined) ===
-        (api_configuration.reasoning_effort ?? undefined) &&
-      (settings_config.systemInstructionsOverride ?? undefined) ===
-        (api_configuration.system_instructions_override ?? undefined)
+        (api_configuration.reasoning_effort ?? undefined)
     )
   }
 
@@ -219,8 +213,6 @@ export class ModelProvidersManager {
         model: default_config_from_settings.model,
         temperature: default_config_from_settings.temperature,
         reasoning_effort: default_config_from_settings.reasoningEffort,
-        system_instructions_override:
-          default_config_from_settings.systemInstructionsOverride,
         is_pinned: default_config_from_settings.isPinned
       }
       const validated_config =

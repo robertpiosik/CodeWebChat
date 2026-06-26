@@ -1059,9 +1059,6 @@
               "reasoningEffort": {
                 "type": "string"
               },
-              "systemInstructionsOverride": {
-                "type": "string"
-              },
               "isPinned": {
                 "type": "boolean"
               },

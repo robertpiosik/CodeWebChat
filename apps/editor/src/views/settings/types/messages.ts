@@ -14,7 +14,6 @@ export type ApiConfiguration = {
   temperature?: number
   reasoning_effort?: string
   is_pinned?: boolean
-  system_instructions_override?: string
 }
 
 export type EditFormatInstructions = {
