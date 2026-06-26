@@ -5,7 +5,7 @@
   "codeWebChat.checkpoints.title": "체크포인트",
   "codeWebChat.undoContextSelection.title": "컨텍스트 선택 실행 취소",
   "codeWebChat.redoContextSelection.title": "컨텍스트 선택 다시 실행",
-  "codeWebChat.duplicateWorkspace.title": "새 창에서 작업 영역 복제",
+  "codeWebChat.duplicateWorkspace.title": "작업 영역 복제",
   "codeWebChat.copyContextOpenEditors.title": "열린 편집기의 컨텍스트 복사",
   "codeWebChat.documentation.title": "문서",
   "codeWebChat.openRepository.title": "GitHub에서 별표 주기",
@@ -46,5 +46,7 @@
   "codeWebChat.checkDefinitionFileForContext.title": "컨텍스트에 대한 정의 파일 선택",
   "codeWebChat.openInIntegratedTerminal.title": "통합 터미널에서 열기",
   "codeWebChat.removeFolderFromWorkspace.title": "작업 영역에서 폴더 제거",
-  "codeWebChat.openWebsitePreviewUrl.title": "브라우저에서 URL 열기"
+  "codeWebChat.openWebsitePreviewUrl.title": "브라우저에서 URL 열기",
+  "codeWebChat.checkModifiedFiles.title": "수정된 파일 선택",
+  "codeWebChat.checkCommitFiles.title": "커밋에서 파일 선택"
 }

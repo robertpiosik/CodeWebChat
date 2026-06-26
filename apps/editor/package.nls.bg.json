@@ -5,7 +5,7 @@
   "codeWebChat.checkpoints.title": "Контролни точки",
   "codeWebChat.undoContextSelection.title": "Отмени избора на контекст",
   "codeWebChat.redoContextSelection.title": "Възстанови избора на контекст",
-  "codeWebChat.duplicateWorkspace.title": "Дублирай работното пространство в нов прозорец",
+  "codeWebChat.duplicateWorkspace.title": "Дублирай работното пространство",
   "codeWebChat.copyContextOpenEditors.title": "Копирай контекста на отворените редактори",
   "codeWebChat.documentation.title": "Документация",
   "codeWebChat.openRepository.title": "Дай звезда в GitHub",
@@ -46,5 +46,7 @@
   "codeWebChat.checkDefinitionFileForContext.title": "Маркирай дефиниращия файл за контекста",
   "codeWebChat.openInIntegratedTerminal.title": "Отвори във вградения терминал",
   "codeWebChat.removeFolderFromWorkspace.title": "Премахни папката от работното пространство",
-  "codeWebChat.openWebsitePreviewUrl.title": "Отвори URL в браузъра"
+  "codeWebChat.openWebsitePreviewUrl.title": "Отвори URL в браузъра",
+  "codeWebChat.checkModifiedFiles.title": "Маркирай променените файлове",
+  "codeWebChat.checkCommitFiles.title": "Маркирай файлове от commit"
 }

@@ -348,6 +348,16 @@
         "command": "codeWebChat.openWebsitePreviewUrl",
         "title": "%codeWebChat.openWebsitePreviewUrl.title%",
         "icon": "$(link-external)"
+      },
+      {
+        "command": "codeWebChat.checkModifiedFiles",
+        "title": "%codeWebChat.checkModifiedFiles.title%",
+        "category": "Code Web Chat"
+      },
+      {
+        "command": "codeWebChat.checkCommitFiles",
+        "title": "%codeWebChat.checkCommitFiles.title%",
+        "category": "Code Web Chat"
       }
     ],
     "submenus": [
@@ -529,6 +539,14 @@
         {
           "command": "codeWebChat.openWebsitePreviewUrl",
           "when": "codeWebChat.websitePreviewActive"
+        },
+        {
+          "command": "codeWebChat.checkModifiedFiles",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.checkCommitFiles",
+          "when": "false"
         }
       ],
       "view/title": [
@@ -580,7 +598,7 @@
         {
           "command": "codeWebChat.duplicateWorkspace",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@6"
+          "group": "1_more@3"
         },
         {
           "command": "codeWebChat.newFile",
@@ -596,6 +614,16 @@
           "command": "codeWebChat.collapseWorkspaceFolders",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@9"
+        },
+        {
+          "command": "codeWebChat.checkModifiedFiles",
+          "when": "view == codeWebChatViewWorkspace",
+          "group": "1_more@1"
+        },
+        {
+          "command": "codeWebChat.checkCommitFiles",
+          "when": "view == codeWebChatViewWorkspace",
+          "group": "1_more@2"
         },
         {
           "command": "codeWebChat.checkAllOpenEditors",

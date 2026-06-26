@@ -5,7 +5,7 @@
   "codeWebChat.checkpoints.title": "Kontrolní body",
   "codeWebChat.undoContextSelection.title": "Zpět výběr kontextu",
   "codeWebChat.redoContextSelection.title": "Znovu výběr kontextu",
-  "codeWebChat.duplicateWorkspace.title": "Duplikovat pracovní prostor v novém okně",
+  "codeWebChat.duplicateWorkspace.title": "Duplikovat pracovní prostor",
   "codeWebChat.copyContextOpenEditors.title": "Kopírovat kontext otevřených editorů",
   "codeWebChat.documentation.title": "Dokumentace",
   "codeWebChat.openRepository.title": "Dát hvězdičku na GitHubu",
@@ -46,5 +46,7 @@
   "codeWebChat.checkDefinitionFileForContext.title": "Vybrat soubor definice pro kontext",
   "codeWebChat.openInIntegratedTerminal.title": "Otevřít v integrovaném terminálu",
   "codeWebChat.removeFolderFromWorkspace.title": "Odebrat složku z pracovního prostoru",
-  "codeWebChat.openWebsitePreviewUrl.title": "Otevřít URL v prohlížeči"
+  "codeWebChat.openWebsitePreviewUrl.title": "Otevřít URL v prohlížeči",
+  "codeWebChat.checkModifiedFiles.title": "Vybrat upravené soubory",
+  "codeWebChat.checkCommitFiles.title": "Vybrat soubory z commitu"
 }

@@ -5,7 +5,7 @@
   "codeWebChat.checkpoints.title": "Checkpoints",
   "codeWebChat.undoContextSelection.title": "Kontextauswahl rückgängig machen",
   "codeWebChat.redoContextSelection.title": "Kontextauswahl wiederherstellen",
-  "codeWebChat.duplicateWorkspace.title": "Arbeitsbereich in neuem Fenster duplizieren",
+  "codeWebChat.duplicateWorkspace.title": "Arbeitsbereich duplizieren",
   "codeWebChat.copyContextOpenEditors.title": "Kontext geöffneter Editoren kopieren",
   "codeWebChat.documentation.title": "Dokumentation",
   "codeWebChat.openRepository.title": "Auf GitHub mit Stern versehen",
@@ -46,5 +46,7 @@
   "codeWebChat.checkDefinitionFileForContext.title": "Definitionsdatei für Kontext auswählen",
   "codeWebChat.openInIntegratedTerminal.title": "In integriertem Terminal öffnen",
   "codeWebChat.removeFolderFromWorkspace.title": "Ordner aus Arbeitsbereich entfernen",
-  "codeWebChat.openWebsitePreviewUrl.title": "URL im Browser öffnen"
+  "codeWebChat.openWebsitePreviewUrl.title": "URL im Browser öffnen",
+  "codeWebChat.checkModifiedFiles.title": "Geänderte Dateien auswählen",
+  "codeWebChat.checkCommitFiles.title": "Dateien aus Commit auswählen"
 }

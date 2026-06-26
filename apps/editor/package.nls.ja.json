@@ -5,7 +5,7 @@
   "codeWebChat.checkpoints.title": "チェックポイント",
   "codeWebChat.undoContextSelection.title": "コンテキスト選択を元に戻す",
   "codeWebChat.redoContextSelection.title": "コンテキスト選択をやり直す",
-  "codeWebChat.duplicateWorkspace.title": "新しいウィンドウでワークスペースを複製",
+  "codeWebChat.duplicateWorkspace.title": "ワークスペースを複製",
   "codeWebChat.copyContextOpenEditors.title": "開いているエディターのコンテキストをコピー",
   "codeWebChat.documentation.title": "ドキュメント",
   "codeWebChat.openRepository.title": "GitHubでスターをつける",
@@ -46,5 +46,7 @@
   "codeWebChat.checkDefinitionFileForContext.title": "コンテキストの定義ファイルを選択",
   "codeWebChat.openInIntegratedTerminal.title": "統合ターミナルで開く",
   "codeWebChat.removeFolderFromWorkspace.title": "ワークスペースからフォルダーを削除",
-  "codeWebChat.openWebsitePreviewUrl.title": "ブラウザーでURLを開く"
+  "codeWebChat.openWebsitePreviewUrl.title": "ブラウザーでURLを開く",
+  "codeWebChat.checkModifiedFiles.title": "変更されたファイルを選択",
+  "codeWebChat.checkCommitFiles.title": "コミットからのファイルを選択"
 }

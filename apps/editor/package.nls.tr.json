@@ -5,7 +5,7 @@
   "codeWebChat.checkpoints.title": "Kontrol Noktaları",
   "codeWebChat.undoContextSelection.title": "Bağlam Seçimini Geri Al",
   "codeWebChat.redoContextSelection.title": "Bağlam Seçimini Yinele",
-  "codeWebChat.duplicateWorkspace.title": "Çalışma Alanını Yeni Pencerede Çoğalt",
+  "codeWebChat.duplicateWorkspace.title": "Çalışma Alanını Çoğalt",
   "codeWebChat.copyContextOpenEditors.title": "Açık Düzenleyicilerin Bağlamını Kopyala",
   "codeWebChat.documentation.title": "Belgeler",
   "codeWebChat.openRepository.title": "GitHub'da Yıldız Ver",
@@ -46,5 +46,7 @@
   "codeWebChat.checkDefinitionFileForContext.title": "Bağlam İçin Tanım Dosyasını Seç",
   "codeWebChat.openInIntegratedTerminal.title": "Entegre Terminalde Aç",
   "codeWebChat.removeFolderFromWorkspace.title": "Klasörü Çalışma Alanından Kaldır",
-  "codeWebChat.openWebsitePreviewUrl.title": "URL'yi Tarayıcıda Aç"
+  "codeWebChat.openWebsitePreviewUrl.title": "URL'yi Tarayıcıda Aç",
+  "codeWebChat.checkModifiedFiles.title": "Değiştirilen Dosyaları Seç",
+  "codeWebChat.checkCommitFiles.title": "Bir İşlemeden (Commit) Dosyaları Seç"
 }

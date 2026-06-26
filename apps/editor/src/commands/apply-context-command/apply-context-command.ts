@@ -4,10 +4,8 @@ import * as path from 'path'
 import { WorkspaceProvider } from '../../context/providers/workspace/workspace-provider'
 import { LAST_APPLY_CONTEXT_OPTION_STATE_KEY } from '../../constants/state-keys'
 import {
-  handle_unstaged_files_source,
   handle_json_file_source,
-  handle_workspace_state_source,
-  handle_commit_files_source
+  handle_workspace_state_source
 } from './sources'
 import {
   load_all_contexts,
@@ -27,7 +25,7 @@ export const apply_context_command = (params: {
       let show_main_menu = true
       let last_main_selection_value =
         params.extension_context.workspaceState.get<
-          'internal' | 'file' | 'unstaged' | 'commit_files' | string | undefined
+          'internal' | 'file' | string | undefined
         >(LAST_APPLY_CONTEXT_OPTION_STATE_KEY)
 
       while (show_main_menu) {
@@ -45,7 +43,7 @@ export const apply_context_command = (params: {
         }
 
         const main_quick_pick_options: (vscode.QuickPickItem & {
-          value: 'internal' | 'file' | 'unstaged' | 'commit_files' | string
+          value: 'internal' | 'file' | string
         })[] = []
 
         main_quick_pick_options.push({
@@ -70,19 +68,9 @@ export const apply_context_command = (params: {
           buttons: [open_file_button]
         })
 
-        main_quick_pick_options.push({
-          label: t('command.apply-context.sources.unstaged-files'),
-          value: 'unstaged'
-        })
-
-        main_quick_pick_options.push({
-          label: t('command.apply-context.sources.commit-files'),
-          value: 'commit_files'
-        })
-
         const main_quick_pick = vscode.window.createQuickPick<
           vscode.QuickPickItem & {
-            value: 'internal' | 'file' | 'unstaged' | 'commit_files' | string
+            value: 'internal' | 'file' | string
           }
         >()
         main_quick_pick.title = t('command.apply-context.sources.title')
@@ -104,7 +92,7 @@ export const apply_context_command = (params: {
 
         const main_selection = await new Promise<
           | (vscode.QuickPickItem & {
-              value: 'internal' | 'file' | 'unstaged' | 'commit_files' | string
+              value: 'internal' | 'file' | string
               triggeredButton?: vscode.QuickInputButton
             })
           | undefined
@@ -205,22 +193,6 @@ export const apply_context_command = (params: {
             params.workspace_provider,
             params.extension_context,
             params.on_context_selected
-          )
-          if (result == 'back') {
-            show_main_menu = true
-          }
-        } else if (main_selection.value == 'unstaged') {
-          const result = await handle_unstaged_files_source(
-            params.workspace_provider,
-            params.extension_context
-          )
-          if (result == 'back') {
-            show_main_menu = true
-          }
-        } else if (main_selection.value == 'commit_files') {
-          const result = await handle_commit_files_source(
-            params.workspace_provider,
-            params.extension_context
           )
           if (result == 'back') {
             show_main_menu = true

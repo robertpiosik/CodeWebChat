@@ -5,7 +5,7 @@
   "codeWebChat.checkpoints.title": "Контрольные точки",
   "codeWebChat.undoContextSelection.title": "Отменить выбор контекста",
   "codeWebChat.redoContextSelection.title": "Повторить выбор контекста",
-  "codeWebChat.duplicateWorkspace.title": "Дублировать рабочую область в новом окне",
+  "codeWebChat.duplicateWorkspace.title": "Дублировать рабочую область",
   "codeWebChat.copyContextOpenEditors.title": "Копировать контекст открытых редакторов",
   "codeWebChat.documentation.title": "Документация",
   "codeWebChat.openRepository.title": "Поставить звезду на GitHub",
@@ -46,5 +46,7 @@
   "codeWebChat.checkDefinitionFileForContext.title": "Отметить файл определения для контекста",
   "codeWebChat.openInIntegratedTerminal.title": "Открыть во встроенном терминале",
   "codeWebChat.removeFolderFromWorkspace.title": "Удалить папку из рабочей области",
-  "codeWebChat.openWebsitePreviewUrl.title": "Открыть URL в браузере"
+  "codeWebChat.openWebsitePreviewUrl.title": "Открыть URL в браузере",
+  "codeWebChat.checkModifiedFiles.title": "Отметить измененные файлы",
+  "codeWebChat.checkCommitFiles.title": "Отметить файлы из коммита"
 }

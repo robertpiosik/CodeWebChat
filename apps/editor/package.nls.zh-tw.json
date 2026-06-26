@@ -5,7 +5,7 @@
   "codeWebChat.checkpoints.title": "檢查點",
   "codeWebChat.undoContextSelection.title": "復原上下文選取",
   "codeWebChat.redoContextSelection.title": "重做上下文選取",
-  "codeWebChat.duplicateWorkspace.title": "在新視窗複製工作區",
+  "codeWebChat.duplicateWorkspace.title": "複製工作區",
   "codeWebChat.copyContextOpenEditors.title": "複製開啟中編輯器的上下文",
   "codeWebChat.documentation.title": "文件",
   "codeWebChat.openRepository.title": "在 GitHub 上給星 (Star)",
@@ -46,5 +46,7 @@
   "codeWebChat.checkDefinitionFileForContext.title": "選取上下文的定義檔案",
   "codeWebChat.openInIntegratedTerminal.title": "在整合式終端機中開啟",
   "codeWebChat.removeFolderFromWorkspace.title": "從工作區移除資料夾",
-  "codeWebChat.openWebsitePreviewUrl.title": "在瀏覽器中開啟 URL"
+  "codeWebChat.openWebsitePreviewUrl.title": "在瀏覽器中開啟 URL",
+  "codeWebChat.checkModifiedFiles.title": "選取修改的檔案",
+  "codeWebChat.checkCommitFiles.title": "選取提交中的檔案"
 }
