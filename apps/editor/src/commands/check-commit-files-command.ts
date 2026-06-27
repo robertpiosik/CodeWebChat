@@ -61,7 +61,9 @@ export const check_commit_files_command = (
           quick_pick.items = commits
           quick_pick.placeholder = t('command.apply-context.commit.select')
           quick_pick.matchOnDetail = true
-          quick_pick.buttons = []
+          quick_pick.buttons = [
+            { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
+          ]
 
           if (last_selected_commit_hash) {
             const active_item = commits.find(
@@ -82,6 +84,9 @@ export const check_commit_files_command = (
               quick_pick.onDidTriggerButton((button) => {
                 if (button === vscode.QuickInputButtons.Back) {
                   resolve('back')
+                  quick_pick.hide()
+                } else {
+                  resolve(undefined)
                   quick_pick.hide()
                 }
               }),

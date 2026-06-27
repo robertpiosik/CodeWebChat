@@ -47,6 +47,6 @@
   "codeWebChat.openInIntegratedTerminal.title": "Otwórz w zintegrowanym terminalu",
   "codeWebChat.removeFolderFromWorkspace.title": "Usuń folder z obszaru roboczego",
   "codeWebChat.openWebsitePreviewUrl.title": "Otwórz URL w przeglądarce",
-  "codeWebChat.checkModifiedFiles.title": "Zaznacz zmodyfikowane pliki",
-  "codeWebChat.checkCommitFiles.title": "Zaznacz pliki z commita"
+  "codeWebChat.checkUnstagedFiles.title": "Zaznacz zmodyfikowane pliki",
+  "codeWebChat.checkCommitFiles.title": "Zaznacz pliki z commita..."
 }

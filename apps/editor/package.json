@@ -350,8 +350,8 @@
         "icon": "$(link-external)"
       },
       {
-        "command": "codeWebChat.checkModifiedFiles",
-        "title": "%codeWebChat.checkModifiedFiles.title%",
+        "command": "codeWebChat.checkUnstagedFiles",
+        "title": "%codeWebChat.checkUnstagedFiles.title%",
         "category": "Code Web Chat"
       },
       {
@@ -541,7 +541,7 @@
           "when": "codeWebChat.websitePreviewActive"
         },
         {
-          "command": "codeWebChat.checkModifiedFiles",
+          "command": "codeWebChat.checkUnstagedFiles",
           "when": "false"
         },
         {
@@ -616,7 +616,7 @@
           "group": "navigation@9"
         },
         {
-          "command": "codeWebChat.checkModifiedFiles",
+          "command": "codeWebChat.checkUnstagedFiles",
           "when": "view == codeWebChatViewWorkspace",
           "group": "1_more@1"
         },

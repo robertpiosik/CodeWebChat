@@ -47,6 +47,6 @@
   "codeWebChat.openInIntegratedTerminal.title": "Открыть во встроенном терминале",
   "codeWebChat.removeFolderFromWorkspace.title": "Удалить папку из рабочей области",
   "codeWebChat.openWebsitePreviewUrl.title": "Открыть URL в браузере",
-  "codeWebChat.checkModifiedFiles.title": "Отметить измененные файлы",
-  "codeWebChat.checkCommitFiles.title": "Отметить файлы из коммита"
+  "codeWebChat.checkUnstagedFiles.title": "Отметить измененные файлы",
+  "codeWebChat.checkCommitFiles.title": "Отметить файлы из коммита..."
 }

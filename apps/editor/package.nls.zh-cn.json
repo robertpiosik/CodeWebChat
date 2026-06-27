@@ -47,6 +47,6 @@
   "codeWebChat.openInIntegratedTerminal.title": "在集成终端中打开",
   "codeWebChat.removeFolderFromWorkspace.title": "从工作区移除文件夹",
   "codeWebChat.openWebsitePreviewUrl.title": "在浏览器中打开 URL",
-  "codeWebChat.checkModifiedFiles.title": "选中修改的文件",
-  "codeWebChat.checkCommitFiles.title": "选中提交中的文件"
+  "codeWebChat.checkUnstagedFiles.title": "选中修改的文件",
+  "codeWebChat.checkCommitFiles.title": "选中提交中的文件..."
 }

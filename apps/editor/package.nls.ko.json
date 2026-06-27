@@ -47,6 +47,6 @@
   "codeWebChat.openInIntegratedTerminal.title": "통합 터미널에서 열기",
   "codeWebChat.removeFolderFromWorkspace.title": "작업 영역에서 폴더 제거",
   "codeWebChat.openWebsitePreviewUrl.title": "브라우저에서 URL 열기",
-  "codeWebChat.checkModifiedFiles.title": "수정된 파일 선택",
-  "codeWebChat.checkCommitFiles.title": "커밋에서 파일 선택"
+  "codeWebChat.checkUnstagedFiles.title": "수정된 파일 선택",
+  "codeWebChat.checkCommitFiles.title": "커밋에서 파일 선택..."
 }

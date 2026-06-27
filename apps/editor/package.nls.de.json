@@ -47,6 +47,6 @@
   "codeWebChat.openInIntegratedTerminal.title": "In integriertem Terminal öffnen",
   "codeWebChat.removeFolderFromWorkspace.title": "Ordner aus Arbeitsbereich entfernen",
   "codeWebChat.openWebsitePreviewUrl.title": "URL im Browser öffnen",
-  "codeWebChat.checkModifiedFiles.title": "Geänderte Dateien auswählen",
-  "codeWebChat.checkCommitFiles.title": "Dateien aus Commit auswählen"
+  "codeWebChat.checkUnstagedFiles.title": "Geänderte Dateien auswählen",
+  "codeWebChat.checkCommitFiles.title": "Dateien aus Commit auswählen..."
 }

@@ -8,12 +8,12 @@ import { display_token_count } from '../utils/display-token-count'
 import { LAST_APPLY_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY } from '../constants/state-keys'
 import { t } from '@/i18n'
 
-export const check_modified_files_command = (
+export const check_unstaged_files_command = (
   workspace_provider: WorkspaceProvider,
   extension_context: vscode.ExtensionContext
 ): vscode.Disposable => {
   return vscode.commands.registerCommand(
-    'codeWebChat.checkModifiedFiles',
+    'codeWebChat.checkUnstagedFiles',
     async () => {
       try {
         const git_extension =
@@ -123,12 +123,19 @@ export const check_modified_files_command = (
           quick_pick.selectedItems = quick_pick_items.filter(
             (item) => item.picked
           )
+          quick_pick.buttons = [
+            { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
+          ]
 
           const selected_items = await new Promise<
             | readonly (vscode.QuickPickItem & { file_path: string })[]
             | undefined
           >((resolve) => {
             let is_accepted = false
+
+            quick_pick.onDidTriggerButton((_button) => {
+              quick_pick.hide()
+            })
 
             quick_pick.onDidTriggerItemButton(async (e) => {
               if (e.button.tooltip == t('common.go-to-file')) {
@@ -293,8 +300,8 @@ export const check_modified_files_command = (
           )
         )
         Logger.error({
-          function_name: 'check_modified_files_command',
-          message: 'Failed to select modified files',
+          function_name: 'check_unstaged_files_command',
+          message: 'Failed to select unstaged files',
           data: error
         })
       }
