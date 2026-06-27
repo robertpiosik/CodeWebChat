@@ -133,10 +133,16 @@
         "icon": "$(github-alt)"
       },
       {
-        "command": "codeWebChat.applyContext",
-        "title": "%codeWebChat.applyContext.title%",
+        "command": "codeWebChat.saveContextSelection",
+        "title": "%codeWebChat.saveContextSelection.title%",
         "category": "Code Web Chat",
-        "icon": "$(checklist)"
+        "icon": "$(save)"
+      },
+      {
+        "command": "codeWebChat.restoreContextSelection",
+        "title": "%codeWebChat.restoreContextSelection.title%",
+        "category": "Code Web Chat",
+        "icon": "$(history)"
       },
       {
         "command": "codeWebChat.checkAll",
@@ -591,11 +597,6 @@
           "group": "navigation@4"
         },
         {
-          "command": "codeWebChat.applyContext",
-          "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@5"
-        },
-        {
           "command": "codeWebChat.duplicateWorkspace",
           "when": "view == codeWebChatViewWorkspace",
           "group": "1_more@3"
@@ -616,14 +617,24 @@
           "group": "navigation@9"
         },
         {
-          "command": "codeWebChat.checkUnstagedFiles",
+          "command": "codeWebChat.saveContextSelection",
           "when": "view == codeWebChatViewWorkspace",
           "group": "1_more@1"
         },
         {
-          "command": "codeWebChat.checkCommitFiles",
+          "command": "codeWebChat.restoreContextSelection",
           "when": "view == codeWebChatViewWorkspace",
           "group": "1_more@2"
+        },
+        {
+          "command": "codeWebChat.checkUnstagedFiles",
+          "when": "view == codeWebChatViewWorkspace",
+          "group": "1_more@4"
+        },
+        {
+          "command": "codeWebChat.checkCommitFiles",
+          "when": "view == codeWebChatViewWorkspace",
+          "group": "1_more@5"
         },
         {
           "command": "codeWebChat.checkAllOpenEditors",

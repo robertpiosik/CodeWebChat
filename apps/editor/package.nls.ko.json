@@ -1,5 +1,6 @@
 {
-  "codeWebChat.applyContext.title": "컨텍스트 적용",
+  "codeWebChat.saveContextSelection.title": "컨텍스트 선택 저장",
+  "codeWebChat.restoreContextSelection.title": "컨텍스트 선택 복원",
   "codeWebChat.applyChatResponse.title": "채팅 응답 적용",
   "codeWebChat.copyContext.title": "컨텍스트 복사",
   "codeWebChat.checkpoints.title": "체크포인트",

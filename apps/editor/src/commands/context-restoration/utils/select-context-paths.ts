@@ -1,24 +1,25 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import { SavedContext } from '@/types/context'
-import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
+import { WorkspaceProvider } from '../../../context/providers/workspace/workspace-provider'
 import { resolve_context_paths } from './resolve-context-paths'
-import { display_token_count } from '../../../../utils/display-token-count'
+import { display_token_count } from '../../../utils/display-token-count'
 import { t } from '@/i18n'
 
 let active_deletion_timestamp: number | undefined
 
-export const select_context_paths = async (
-  context: SavedContext,
-  workspace_provider: WorkspaceProvider,
+export const select_context_paths = async (params: {
+  context: SavedContext
+  workspace_provider: WorkspaceProvider
   update_context_paths?: (remaining_files: string[]) => Promise<void>
-): Promise<'back' | void> => {
-  const primary_workspace_root = workspace_provider.get_workspace_roots()[0]!
-  let resolved_paths = await resolve_context_paths(
-    context,
-    primary_workspace_root,
-    workspace_provider
-  )
+}): Promise<'back' | void> => {
+  const primary_workspace_root =
+    params.workspace_provider.get_workspace_roots()[0]!
+  let resolved_paths = await resolve_context_paths({
+    context: params.context,
+    workspace_root: primary_workspace_root,
+    workspace_provider: params.workspace_provider
+  })
 
   const delete_button = {
     iconPath: new vscode.ThemeIcon('trash'),
@@ -26,21 +27,21 @@ export const select_context_paths = async (
   }
 
   while (true) {
-    const create_quick_pick_items = async (
-      paths: string[],
+    const create_quick_pick_items = async (local_params: {
+      paths: string[]
       selected_paths_override?: Set<string>
-    ) => {
-      const currently_checked = workspace_provider.get_checked_files()
+    }) => {
+      const currently_checked = params.workspace_provider.get_checked_files()
       const currently_checked_set =
-        selected_paths_override || new Set(currently_checked)
+        local_params.selected_paths_override || new Set(currently_checked)
 
       return Promise.all(
-        paths.map(async (file_path) => {
+        local_params.paths.map(async (file_path) => {
           const token_count =
-            await workspace_provider.calculate_file_tokens(file_path)
+            await params.workspace_provider.calculate_file_tokens(file_path)
           const formatted_token_count = display_token_count(token_count.total)
           const workspace_root =
-            workspace_provider.get_workspace_root_for_file(file_path)
+            params.workspace_provider.get_workspace_root_for_file(file_path)
           const relative_path = workspace_root
             ? path.relative(workspace_root, file_path)
             : file_path
@@ -54,7 +55,7 @@ export const select_context_paths = async (
             }
           ]
 
-          if (update_context_paths) {
+          if (params.update_context_paths) {
             buttons.push(delete_button)
           }
 
@@ -72,12 +73,14 @@ export const select_context_paths = async (
       )
     }
 
-    const quick_pick_items = await create_quick_pick_items(resolved_paths)
+    const quick_pick_items = await create_quick_pick_items({
+      paths: resolved_paths
+    })
 
     const list_quick_pick = vscode.window.createQuickPick<
       vscode.QuickPickItem & { file_path: string; token_count: number }
     >()
-    list_quick_pick.title = context.name
+    list_quick_pick.title = params.context.name
     list_quick_pick.canSelectMany = true
     list_quick_pick.ignoreFocusOut = true
     list_quick_pick.items = quick_pick_items
@@ -134,17 +137,17 @@ export const select_context_paths = async (
           const original_paths = [...resolved_paths]
           resolved_paths = resolved_paths.filter((p) => p !== deleted_path)
 
-          if (update_context_paths) {
-            await update_context_paths(resolved_paths)
+          if (params.update_context_paths) {
+            await params.update_context_paths(resolved_paths)
           }
 
           const current_selected = new Set(
             list_quick_pick.selectedItems.map((i) => i.file_path)
           )
-          list_quick_pick.items = await create_quick_pick_items(
-            resolved_paths,
-            current_selected
-          )
+          list_quick_pick.items = await create_quick_pick_items({
+            paths: resolved_paths,
+            selected_paths_override: current_selected
+          })
           list_quick_pick.selectedItems = list_quick_pick.items.filter(
             (i) => i.picked
           )
@@ -166,16 +169,16 @@ export const select_context_paths = async (
 
           if (choice === 'Undo') {
             resolved_paths = original_paths
-            if (update_context_paths) {
-              await update_context_paths(resolved_paths)
+            if (params.update_context_paths) {
+              await params.update_context_paths(resolved_paths)
             }
             const current_selected_undo = new Set(
               list_quick_pick.selectedItems.map((i) => i.file_path)
             )
-            list_quick_pick.items = await create_quick_pick_items(
-              resolved_paths,
-              current_selected_undo
-            )
+            list_quick_pick.items = await create_quick_pick_items({
+              paths: resolved_paths,
+              selected_paths_override: current_selected_undo
+            })
             list_quick_pick.selectedItems = list_quick_pick.items.filter(
               (i) => i.picked
             )
@@ -204,11 +207,14 @@ export const select_context_paths = async (
     if (Array.isArray(list_selection)) {
       const new_checked = list_selection.map((i) => i.file_path)
       const select_paths_set = new Set(resolved_paths)
-      const current_checked_files = workspace_provider.get_checked_files()
+      const current_checked_files =
+        params.workspace_provider.get_checked_files()
       const final_checked = current_checked_files
         .filter((p) => !select_paths_set.has(p))
         .concat(new_checked)
-      await workspace_provider.set_checked_files([...new Set(final_checked)])
+      await params.workspace_provider.set_checked_files([
+        ...new Set(final_checked)
+      ])
       return undefined
     }
   }

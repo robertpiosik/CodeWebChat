@@ -1,4 +1,4 @@
-export const apply_context = {
+export const context_selection = {
   'command.apply-context.sources.workspace-state': {
     en: 'Workspace state',
     pl: 'Stan obszaru roboczego',
@@ -306,22 +306,22 @@ export const apply_context = {
     bg: 'Изтриване'
   },
   'command.apply-context.select-saved.title': {
-    en: 'Saved Contexts',
-    pl: 'Zapisane konteksty',
-    'zh-cn': '已保存的上下文',
-    ja: '保存されたコンテキスト',
-    'zh-tw': '已儲存的上下文',
-    de: 'Gespeicherte Kontexte',
-    es: 'Contextos guardados',
-    fr: 'Contextes enregistrés',
-    'pt-br': 'Contextos salvos',
-    ru: 'Сохраненные контексты',
-    ko: '저장된 컨텍스트',
-    it: 'Contesti salvati',
-    tr: 'Kaydedilmiş Bağlamlar',
-    cs: 'Uložené kontexty',
-    hu: 'Mentett kontextusok',
-    bg: 'Запазени контексти'
+    en: 'Saved Entries',
+    pl: 'Zapisane wpisy',
+    'zh-cn': '已保存的条目',
+    ja: '保存されたエントリ',
+    'zh-tw': '已儲存的項目',
+    de: 'Gespeicherte Einträge',
+    es: 'Entradas guardadas',
+    fr: 'Entrées enregistrées',
+    'pt-br': 'Entradas salvas',
+    ru: 'Сохраненные записи',
+    ko: '저장된 항목',
+    it: 'Voci salvate',
+    tr: 'Kaydedilmiş Girişler',
+    cs: 'Uložené záznamy',
+    hu: 'Mentett bejegyzések',
+    bg: 'Запазени записи'
   },
   'command.apply-context.select-saved.workspace': {
     en: 'Saved contexts (from workspace state)',
@@ -790,5 +790,49 @@ export const apply_context = {
     cs: 'Jak byste chtěli aplikovat "{name}"?',
     hu: 'Hogyan szeretné alkalmazni a(z) "{name}" kontextust?',
     bg: 'Как бихте искали да приложите "{name}"?'
+  },
+  'command.save-context-selection.title': {
+    en: 'Save Context Selection',
+    pl: 'Zapisz wybór kontekstu',
+    'zh-cn': '保存上下文选择',
+    ja: 'コンテキスト選択を保存',
+    'zh-tw': '儲存上下文選擇',
+    de: 'Kontextauswahl speichern',
+    es: 'Guardar selección de contexto',
+    fr: 'Enregistrer la sélection de contexte',
+    'pt-br': 'Salvar Seleção de Contexto',
+    ru: 'Сохранить выбор контекста',
+    ko: '컨텍스트 선택 저장',
+    it: 'Salva selezione contesto',
+    tr: 'Bağlam Seçimini Kaydet',
+    cs: 'Uložit výběr kontextu',
+    hu: 'Kontextus választás mentése',
+    bg: 'Запазване на избора на контекст'
+  },
+  'command.restore-context-selection.title': {
+    en: 'Restore Context Selection',
+    pl: 'Przywróć wybór kontekstu',
+    'zh-cn': '恢复上下文选择',
+    ja: 'コンテキスト選択を復元',
+    'zh-tw': '還原上下文選擇',
+    de: 'Kontextauswahl wiederherstellen',
+    es: 'Restaurar selección de contexto',
+    fr: 'Restaurer la sélection de contexte',
+    'pt-br': 'Restaurar Seleção de Contexto',
+    ru: 'Восстановить выбор контекста',
+    ko: '컨텍스트 선택 복원',
+    it: 'Ripristina selezione contesto',
+    tr: 'Bağlam Seçimini Geri Yükle',
+    cs: 'Obnovit výběr kontextu',
+    hu: 'Kontextus választás visszaállítása',
+    bg: 'Възстановяване на избора на контекст'
+  },
+  'command.context-selection.overwrite.prompt': {
+    en: 'Overwrite context "{name}"?',
+    pl: 'Nadpisać kontekst "{name}"?'
+  },
+  'command.context-selection.overwrite.action': {
+    en: 'Overwrite',
+    pl: 'Nadpisz'
   }
 } as const

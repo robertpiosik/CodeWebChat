@@ -1,5 +1,6 @@
 {
-  "codeWebChat.applyContext.title": "Применить контекст",
+  "codeWebChat.saveContextSelection.title": "Сохранить выбор контекста",
+  "codeWebChat.restoreContextSelection.title": "Восстановить выбор контекста",
   "codeWebChat.applyChatResponse.title": "Применить ответ чата",
   "codeWebChat.copyContext.title": "Копировать контекст",
   "codeWebChat.checkpoints.title": "Контрольные точки",

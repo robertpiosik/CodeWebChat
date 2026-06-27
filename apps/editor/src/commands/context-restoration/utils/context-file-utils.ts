@@ -7,20 +7,23 @@ export const get_contexts_file_path = (workspace_root: string): string => {
   return path.join(workspace_root, '.vscode', 'contexts.json')
 }
 
-export const flatten_contexts = (
-  items: any[],
-  parent_name = ''
-): SavedContext[] => {
+export const flatten_contexts = (params: {
+  items: any[]
+  parent_name?: string
+}): SavedContext[] => {
   const result: SavedContext[] = []
-  if (!Array.isArray(items)) return result
+  if (!Array.isArray(params.items)) return result
+  const parent_name_resolved = params.parent_name || ''
 
-  for (const item of items) {
+  for (const item of params.items) {
     if (typeof item != 'object' || item === null) continue
 
     const name = item.name
     if (typeof name != 'string' || !name) continue
 
-    const current_name = parent_name ? `${parent_name}/${name}` : name
+    const current_name = parent_name_resolved
+      ? `${parent_name_resolved}/${name}`
+      : name
 
     if (
       Array.isArray(item.paths) &&
@@ -33,7 +36,9 @@ export const flatten_contexts = (
     }
 
     if (Array.isArray(item.children)) {
-      result.push(...flatten_contexts(item.children, current_name))
+      result.push(
+        ...flatten_contexts({ items: item.children, parent_name: current_name })
+      )
     }
   }
   return result
@@ -44,7 +49,7 @@ export const load_contexts_from_file = (file_path: string): SavedContext[] => {
     if (fs.existsSync(file_path)) {
       const content = fs.readFileSync(file_path, 'utf8')
       const parsed = JSON.parse(content)
-      return flatten_contexts(parsed)
+      return flatten_contexts({ items: parsed })
     }
   } catch (error) {
     console.error(`Error reading contexts file from ${file_path}:`, error)
@@ -82,38 +87,42 @@ export const load_all_contexts = async (): Promise<
   return contexts_by_name
 }
 
-export const save_contexts_to_file = async (
-  contexts: SavedContext[],
+export const save_contexts_to_file = async (params: {
+  contexts: SavedContext[]
   file_path: string
-): Promise<void> => {
+}): Promise<void> => {
   try {
-    const dir_path = path.dirname(file_path)
+    const dir_path = path.dirname(params.file_path)
     if (!fs.existsSync(dir_path)) {
       fs.mkdirSync(dir_path, { recursive: true })
     }
 
-    if (contexts.length == 0) {
-      if (fs.existsSync(file_path)) {
-        fs.unlinkSync(file_path)
+    if (params.contexts.length == 0) {
+      if (fs.existsSync(params.file_path)) {
+        fs.unlinkSync(params.file_path)
       }
     } else {
-      fs.writeFileSync(file_path, JSON.stringify(contexts, null, 2), 'utf8')
+      fs.writeFileSync(
+        params.file_path,
+        JSON.stringify(params.contexts, null, 2),
+        'utf8'
+      )
     }
   } catch (error: any) {
     throw new Error(`Failed to save contexts to file: ${error.message}`)
   }
 }
 
-export const resolve_unique_context_name = (
-  base_name: string,
+export const resolve_unique_context_name = (params: {
+  base_name: string
   existing_names: string[]
-): string => {
-  let name = base_name
+}): string => {
+  let name = params.base_name
   let counter = 1
-  const existing_set = new Set(existing_names)
+  const existing_set = new Set(params.existing_names)
 
   while (existing_set.has(name)) {
-    name = `${base_name} (${counter})`
+    name = `${params.base_name} (${counter})`
     counter++
   }
 

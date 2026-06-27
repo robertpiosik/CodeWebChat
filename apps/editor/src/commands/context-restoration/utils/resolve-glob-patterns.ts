@@ -1,22 +1,22 @@
 import * as path from 'path'
 import * as fs from 'fs'
 import * as glob from 'glob'
-import { WorkspaceProvider } from '../../../../context/providers/workspace/workspace-provider'
+import { WorkspaceProvider } from '../../../context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'
 
-export const resolve_glob_patterns = async (
-  patterns: string[],
+export const resolve_glob_patterns = async (params: {
+  patterns: string[]
   workspace_provider: WorkspaceProvider
-): Promise<string[]> => {
+}): Promise<string[]> => {
   const all_files_in_cache = new Set<string>()
 
-  for (const root of workspace_provider.get_workspace_roots()) {
-    const files = await workspace_provider.find_all_files(root)
+  for (const root of params.workspace_provider.get_workspace_roots()) {
+    const files = await params.workspace_provider.find_all_files(root)
     files.forEach((file) => all_files_in_cache.add(file))
   }
 
   let resolved_final_paths: Set<string>
-  const has_positive_include_directives = patterns.some(
+  const has_positive_include_directives = params.patterns.some(
     (p) => !p.startsWith('!')
   )
 
@@ -26,7 +26,7 @@ export const resolve_glob_patterns = async (
     resolved_final_paths = new Set<string>()
   }
 
-  for (const pattern_string of patterns) {
+  for (const pattern_string of params.patterns) {
     const is_exclude = pattern_string.startsWith('!')
     const current_actual_pattern = is_exclude
       ? pattern_string.substring(1)

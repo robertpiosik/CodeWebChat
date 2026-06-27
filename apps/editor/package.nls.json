@@ -1,5 +1,6 @@
 {
-  "codeWebChat.applyContext.title": "Apply Context",
+  "codeWebChat.saveContextSelection.title": "Save Context Selection",
+  "codeWebChat.restoreContextSelection.title": "Restore Context Selection",
   "codeWebChat.applyChatResponse.title": "Apply Chat Response",
   "codeWebChat.copyContext.title": "Copy context",
   "codeWebChat.checkpoints.title": "Checkpoints",

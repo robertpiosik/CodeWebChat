@@ -28,28 +28,28 @@ const load_all_global_contexts_data = (
   return {}
 }
 
-export const load_contexts_for_workspace = (
-  context: vscode.ExtensionContext,
+export const load_contexts_for_workspace = (params: {
+  context: vscode.ExtensionContext
   workspace_root: string
-): SavedContext[] => {
-  const all_data = load_all_global_contexts_data(context)
-  return all_data[workspace_root] || []
+}): SavedContext[] => {
+  const all_data = load_all_global_contexts_data(params.context)
+  return all_data[params.workspace_root] || []
 }
 
-export const save_contexts_for_workspace = (
-  context: vscode.ExtensionContext,
-  workspace_root: string,
+export const save_contexts_for_workspace = (params: {
+  context: vscode.ExtensionContext
+  workspace_root: string
   contexts: SavedContext[]
-) => {
-  const file_path = get_global_contexts_file_path(context)
+}) => {
+  const file_path = get_global_contexts_file_path(params.context)
   const dir_path = path.dirname(file_path)
 
   if (!fs.existsSync(dir_path)) {
     fs.mkdirSync(dir_path, { recursive: true })
   }
 
-  const all_data = load_all_global_contexts_data(context)
-  all_data[workspace_root] = contexts
+  const all_data = load_all_global_contexts_data(params.context)
+  all_data[params.workspace_root] = params.contexts
 
   const filtered_data: GlobalContextsData = {}
   for (const root in all_data) {
@@ -78,7 +78,10 @@ export const load_and_merge_global_contexts = (
 
   for (const folder of workspace_folders) {
     const root = folder.uri.fsPath
-    const contexts = load_contexts_for_workspace(context, root)
+    const contexts = load_contexts_for_workspace({
+      context,
+      workspace_root: root
+    })
 
     for (const c of contexts) {
       if (!contexts_by_name.has(c.name)) {

@@ -28,12 +28,14 @@ export const group_files_by_workspace = (
   return files_by_workspace
 }
 
-export const condense_paths = (
-  paths: string[],
-  workspace_root: string,
+export const condense_paths = (params: {
+  paths: string[]
+  workspace_root: string
   workspace_provider: WorkspaceProvider
-): string[] => {
-  const relative_paths = paths.map((p) => path.relative(workspace_root, p))
+}): string[] => {
+  const relative_paths = params.paths.map((p) =>
+    path.relative(params.workspace_root, p)
+  )
   const selected_paths_set = new Set(relative_paths)
 
   const dir_to_children: Map<string, string[]> = new Map()
@@ -46,16 +48,19 @@ export const condense_paths = (
     dir_to_children.get(parent_dir)!.push(rel_path)
   }
 
-  const are_all_files_selected = (
-    dir_path: string,
+  const are_all_files_selected = (local_params: {
+    dir_path: string
     condensed_paths_set: Set<string>
-  ): boolean => {
+  }): boolean => {
     try {
-      if (selected_paths_set.has(dir_path)) {
+      if (selected_paths_set.has(local_params.dir_path)) {
         return true
       }
 
-      const abs_dir_path = path.join(workspace_root, dir_path)
+      const abs_dir_path = path.join(
+        params.workspace_root,
+        local_params.dir_path
+      )
       if (
         !fs.existsSync(abs_dir_path) ||
         !fs.lstatSync(abs_dir_path).isDirectory()
@@ -66,28 +71,32 @@ export const condense_paths = (
       const all_entries = fs.readdirSync(abs_dir_path)
 
       for (const entry of all_entries) {
-        const entry_path = path.join(dir_path, entry)
-        const abs_entry_path = path.join(workspace_root, entry_path)
+        const entry_path = path.join(local_params.dir_path, entry)
+        const abs_entry_path = path.join(params.workspace_root, entry_path)
 
         const current_workspace_root =
-          workspace_provider.get_workspace_root_for_file(abs_entry_path) ||
-          workspace_root
+          params.workspace_provider.get_workspace_root_for_file(
+            abs_entry_path
+          ) || params.workspace_root
         const relative_entry_path = path.relative(
           current_workspace_root,
           abs_entry_path
         )
-        if (workspace_provider.is_excluded(relative_entry_path)) {
+        if (params.workspace_provider.is_excluded(relative_entry_path)) {
           continue
         }
 
-        if (workspace_provider.is_ignored_by_patterns(abs_entry_path)) {
+        if (params.workspace_provider.is_ignored_by_patterns(abs_entry_path)) {
           continue
         }
 
         if (fs.lstatSync(abs_entry_path).isDirectory()) {
           if (
-            !condensed_paths_set.has(entry_path) &&
-            !are_all_files_selected(entry_path, condensed_paths_set)
+            !local_params.condensed_paths_set.has(entry_path) &&
+            !are_all_files_selected({
+              dir_path: entry_path,
+              condensed_paths_set: local_params.condensed_paths_set
+            })
           ) {
             return false
           }
@@ -100,7 +109,7 @@ export const condense_paths = (
 
       return true
     } catch (error) {
-      console.error(`Error checking directory ${dir_path}:`, error)
+      console.error(`Error checking directory ${local_params.dir_path}:`, error)
       return false
     }
   }
@@ -124,7 +133,12 @@ export const condense_paths = (
   for (const dir of directories) {
     if (dir == '.') continue
 
-    if (are_all_files_selected(dir, condensed_paths)) {
+    if (
+      are_all_files_selected({
+        dir_path: dir,
+        condensed_paths_set: condensed_paths
+      })
+    ) {
       for (const file of dir_to_children.get(dir) || []) {
         condensed_paths.delete(file)
       }
@@ -142,18 +156,18 @@ export const condense_paths = (
   return Array.from(condensed_paths)
 }
 
-export const add_workspace_prefix = (
-  relative_paths: string[],
+export const add_workspace_prefix = (params: {
+  relative_paths: string[]
   workspace_root: string
-): string[] => {
+}): string[] => {
   const workspaceFolders = vscode.workspace.workspaceFolders || []
   const currentWorkspace = workspaceFolders.find(
-    (folder) => folder.uri.fsPath === workspace_root
+    (folder) => folder.uri.fsPath === params.workspace_root
   )
 
   if (!currentWorkspace || workspaceFolders.length <= 1) {
-    return relative_paths
+    return params.relative_paths
   }
 
-  return relative_paths.map((p) => `${currentWorkspace.name}:${p}`)
+  return params.relative_paths.map((p) => `${currentWorkspace.name}:${p}`)
 }

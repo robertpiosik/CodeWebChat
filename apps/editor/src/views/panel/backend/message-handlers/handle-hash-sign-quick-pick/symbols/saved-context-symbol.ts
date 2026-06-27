@@ -1,8 +1,8 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import { dictionary } from '@shared/constants/dictionary'
-import { load_and_merge_global_contexts } from '@/commands/apply-context-command/helpers/saving'
-import { load_and_merge_file_contexts } from '@/commands/apply-context-command/sources'
+import { load_and_merge_global_contexts } from '@/commands/context-restoration/utils/global-storage-utils'
+import { load_and_merge_file_contexts } from '@/commands/context-restoration/utils/file-contexts'
 import { LAST_SELECTED_CONTEXT_SOURCE_IN_SYMBOLS_QUICK_PICK_STATE_KEY } from '@/constants/state-keys'
 
 export const handle_saved_context_item = async (

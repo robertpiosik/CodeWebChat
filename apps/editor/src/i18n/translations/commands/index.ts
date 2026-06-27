@@ -2,7 +2,7 @@ import { checkpoints } from './checkpoints'
 import { generate_commit_message } from './generate-commit-message'
 import { code_at_cursor } from './code-at-cursor'
 import { apply_chat_response } from './apply-chat-response'
-import { apply_context } from './apply-context'
+import { context_selection } from './context-selection'
 import { add_file_to_context } from './add-file-to-context'
 import { check_definition_file_for_context } from './check-definition-file-for-context'
 import { check_referencing_files_for_context } from './check-referencing-files-for-context'
@@ -20,7 +20,7 @@ export const commands = {
   ...generate_commit_message,
   ...code_at_cursor,
   ...apply_chat_response,
-  ...apply_context,
+  ...context_selection,
   ...add_file_to_context,
   ...check_definition_file_for_context,
   ...check_referencing_files_for_context,

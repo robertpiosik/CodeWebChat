@@ -19,7 +19,8 @@ import {
 } from './migrations'
 import {
   apply_chat_response_command,
-  apply_context_command,
+  save_context_selection_command,
+  restore_context_selection_command,
   add_file_to_context_command,
   remove_file_from_context_command,
   code_at_cursor_commands,
@@ -133,10 +134,14 @@ export const activate = async (context: vscode.ExtensionContext) => {
     save_all_command(),
     new_file_command(),
     new_folder_command(),
-    apply_context_command({
+    save_context_selection_command({
       workspace_provider,
-      on_context_selected: () => {},
       extension_context: context
+    }),
+    restore_context_selection_command({
+      workspace_provider,
+      extension_context: context,
+      on_context_selected: () => {}
     }),
     check_unstaged_files_command(workspace_provider, context),
     check_commit_files_command(workspace_provider, context),
