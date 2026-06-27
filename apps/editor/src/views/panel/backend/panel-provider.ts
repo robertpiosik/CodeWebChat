@@ -495,13 +495,13 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           this._send_context_size_warning_threshold()
         }
 
-        if (event.affectsConfiguration('codeWebChat.configurations')) {
+        if (event.affectsConfiguration('codeWebChat.apiConfigurations')) {
           handle_get_api_configurations(this)
         }
 
         const setup_progress_keys = [
           'codeWebChat.modelProviders',
-          'codeWebChat.configurations'
+          'codeWebChat.apiConfigurations'
         ]
 
         if (

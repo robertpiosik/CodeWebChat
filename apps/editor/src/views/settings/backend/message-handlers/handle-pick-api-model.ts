@@ -1,7 +1,7 @@
 import { SettingsProvider } from '../settings-provider'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { ModelFetcher } from '@/services/model-fetcher'
-import { edit_model_for_api_configuration } from '@/views/actions/update-api-configuration/interactions'
+import { edit_model_for_api_configuration } from '@/views/actions/api/update/interactions'
 
 export const handle_pick_api_model = async (
   provider: SettingsProvider,

@@ -26,7 +26,9 @@ export const pick_chatbot = async (params: {
   ]
 
   if (params.current_chatbot_id) {
-    const active_item = items.find((item) => item.label == params.current_chatbot_id)
+    const active_item = items.find(
+      (item) => item.label == params.current_chatbot_id
+    )
     if (active_item) {
       quick_pick.activeItems = [active_item]
     }
@@ -42,7 +44,9 @@ export const pick_chatbot = async (params: {
     let accepted = false
     quick_pick.onDidAccept(() => {
       accepted = true
-      const selected = quick_pick.selectedItems[0]?.label as keyof typeof CHATBOTS | undefined
+      const selected = quick_pick.selectedItems[0]?.label as
+        | keyof typeof CHATBOTS
+        | undefined
       quick_pick.hide()
       resolve(selected)
     })

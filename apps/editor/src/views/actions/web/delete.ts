@@ -2,9 +2,7 @@ import * as vscode from 'vscode'
 import { dictionary } from '@shared/constants/dictionary'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 
-export const delete_web_configuration = async (params: {
-  name: string
-}): Promise<void> => {
+export const remove = async (params: { name: string }): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const current_web_configurations =
     config.get<ConfigWebConfigurationFormat[]>('webConfigurations', []) || []

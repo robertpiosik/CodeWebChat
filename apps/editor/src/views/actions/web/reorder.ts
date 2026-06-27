@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { ui_web_configuration_to_config_format } from '@/utils/web-configuration-format-converters'
 
-export const reorder_web_configurations = async (params: {
+export const reorder = async (params: {
   reordered_web_configurations: WebConfiguration[]
 }): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')

@@ -3,7 +3,7 @@ import {
   ModelProvidersManager,
   ModelProvider
 } from '@/services/model-providers-manager'
-import { upsert_model_provider } from '../../upsert-model-provider'
+import { upsert_provider } from '../../upsert-provider'
 
 export const initial_select_model_provider = async (
   context: vscode.ExtensionContext,
@@ -14,7 +14,7 @@ export const initial_select_model_provider = async (
     const model_providers = await providers_manager.get_model_providers()
 
     if (model_providers.length == 0) {
-      const new_model_provider = await upsert_model_provider({ context })
+      const new_model_provider = await upsert_provider({ context })
       if (new_model_provider) {
         return new_model_provider
       }
@@ -86,7 +86,7 @@ export const initial_select_model_provider = async (
     }
 
     if (selected.label == add_new_item.label) {
-      const new_model_provider = await upsert_model_provider({
+      const new_model_provider = await upsert_provider({
         context,
         show_back_button: true
       })

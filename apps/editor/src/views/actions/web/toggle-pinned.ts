@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 
-export const toggle_pinned_web_configuration = async (params: {
+export const toggle_pinned = async (params: {
   web_configuration_name: string
 }): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')

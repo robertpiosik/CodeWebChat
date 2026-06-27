@@ -1,5 +1,5 @@
 import { PanelProvider } from '../panel-provider'
-import { create_api_configuration } from '@/views/actions/create-api-configuration/create-api-configuration'
+import { create } from '@/views/actions/api/create/create'
 import { get_api_configuration_id } from '@/services/model-providers-manager'
 import { CreateApiConfigurationMessage } from '../../types/messages'
 
@@ -7,7 +7,7 @@ export const handle_create_api_configuration = async (
   provider: PanelProvider,
   message: CreateApiConfigurationMessage
 ): Promise<void> => {
-  const result = await create_api_configuration({
+  const result = await create({
     context: provider.context,
     tool_type: message.tool_type,
     create_on_top: message.create_on_top,

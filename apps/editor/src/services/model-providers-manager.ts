@@ -129,7 +129,7 @@ export class ModelProvidersManager {
   public async get_api_configurations(): Promise<ApiConfiguration[]> {
     await this._load_promise
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const settings_configs = config.get<any[]>('configurations', [])
+    const settings_configs = config.get<any[]>('apiConfigurations', [])
 
     const api_configurations: ApiConfiguration[] = settings_configs.map(
       (sc) => {
@@ -150,7 +150,7 @@ export class ModelProvidersManager {
 
   public async save_api_configurations(api_configurations: ApiConfiguration[]) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const old_settings_configs = config.get<any[]>('configurations', [])
+    const old_settings_configs = config.get<any[]>('apiConfigurations', [])
 
     const new_settings_configs = api_configurations.map((c) => {
       const old_config = old_settings_configs.find((oldC) =>
@@ -179,7 +179,7 @@ export class ModelProvidersManager {
     })
 
     await config.update(
-      'configurations',
+      'apiConfigurations',
       new_settings_configs,
       vscode.ConfigurationTarget.Global
     )
@@ -202,7 +202,7 @@ export class ModelProvidersManager {
     default_key: string
   ): ApiConfiguration | undefined {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const settings_configs = config.get<any[]>('configurations', [])
+    const settings_configs = config.get<any[]>('apiConfigurations', [])
     const default_config_from_settings = settings_configs.find(
       (c) => c[default_key]
     )
@@ -227,7 +227,7 @@ export class ModelProvidersManager {
     config_to_set: ApiConfiguration | null
   ) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const settings_configs = config.get<any[]>('configurations', [])
+    const settings_configs = config.get<any[]>('apiConfigurations', [])
 
     const new_settings_configs = settings_configs.map((c) => {
       const is_default =
@@ -244,7 +244,7 @@ export class ModelProvidersManager {
     })
 
     await config.update(
-      'configurations',
+      'apiConfigurations',
       new_settings_configs,
       vscode.ConfigurationTarget.Global
     )
@@ -347,7 +347,10 @@ export class ModelProvidersManager {
     const { old_name, new_name } = params
     const config = vscode.workspace.getConfiguration('codeWebChat')
 
-    const configs = config.get<{ providerName: string }[]>('configurations', [])
+    const configs = config.get<{ providerName: string }[]>(
+      'apiConfigurations',
+      []
+    )
     const updated_configs = configs.map((c) => {
       if (c.providerName == old_name) {
         return { ...c, providerName: new_name }
@@ -355,7 +358,7 @@ export class ModelProvidersManager {
       return c
     })
     await config.update(
-      'configurations',
+      'apiConfigurations',
       updated_configs,
       vscode.ConfigurationTarget.Global
     )

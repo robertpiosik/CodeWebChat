@@ -1,8 +1,8 @@
 import { DeleteWebConfigurationMessage } from '@/views/panel/types/messages'
-import { delete_web_configuration } from '@/views/actions/delete-web-configuration'
+import { remove } from '@/views/actions/web/delete'
 
 export const handle_delete_web_configuration = async (
   message: DeleteWebConfigurationMessage
 ): Promise<void> => {
-  await delete_web_configuration({ name: message.name })
+  await remove({ name: message.name })
 }

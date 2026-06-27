@@ -5,13 +5,14 @@ import {
 } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
 
-export const delete_api_configuration = async (params: {
+export const remove = async (params: {
   context: vscode.ExtensionContext
   api_configuration_id: string
 }): Promise<void> => {
   const providers_manager = new ModelProvidersManager(params.context)
 
-  const original_api_configurations = await providers_manager.get_api_configurations()
+  const original_api_configurations =
+    await providers_manager.get_api_configurations()
   const api_config_to_delete = original_api_configurations.find(
     (c) => get_api_configuration_id(c) === params.api_configuration_id
   )

@@ -9,8 +9,8 @@ import {
 } from '@/services/model-fetcher'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
-import { ToolType } from '../../../settings/types/tools'
-import { verify_model } from '../../create-api-configuration/interactions/verify-model'
+import { verify_model } from '../../create/interactions/verify-model'
+import { ToolType } from '@/views/settings/types/tools'
 
 export const edit_model_for_api_configuration = async (params: {
   api_configuration: ApiConfiguration

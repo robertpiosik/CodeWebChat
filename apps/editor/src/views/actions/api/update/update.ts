@@ -7,7 +7,7 @@ import {
 import { ApiConfiguration } from '@/views/panel/types/messages'
 import { ToolType } from '@/views/settings/types/tools'
 
-export const update_api_configuration = async (params: {
+export const update = async (params: {
   context: vscode.ExtensionContext
   updating_api_configuration: ApiConfiguration
   updated_api_configuration: ApiConfiguration

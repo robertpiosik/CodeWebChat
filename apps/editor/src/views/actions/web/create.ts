@@ -1,9 +1,9 @@
 import * as vscode from 'vscode'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
-import { generate_unique_name } from '../utils/generate-unique-name'
+import { generate_unique_name } from '@/views/utils/generate-unique-name'
 
-export const create_web_configuration = async (params: {
+export const create = async (params: {
   placement?: 'top' | 'bottom'
   reference_index?: number
 }): Promise<

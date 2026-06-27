@@ -1069,7 +1069,7 @@
             ]
           }
         },
-        "codeWebChat.configurations": {
+        "codeWebChat.apiConfigurations": {
           "type": "array",
           "scope": "resource",
           "items": {

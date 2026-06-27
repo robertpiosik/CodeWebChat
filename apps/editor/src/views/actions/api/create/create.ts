@@ -2,10 +2,8 @@ import * as vscode from 'vscode'
 import {
   ModelProvidersManager,
   ApiConfiguration,
-  get_api_configuration_id,
   ModelProvider
 } from '@/services/model-providers-manager'
-import { dictionary } from '@shared/constants/dictionary'
 import { ModelFetcher } from '@/services/model-fetcher'
 import {
   initial_select_model,
@@ -13,7 +11,7 @@ import {
 } from './interactions'
 import { ToolType } from '@/views/settings/types/tools'
 
-export const create_api_configuration = async (params: {
+export const create = async (params: {
   context: vscode.ExtensionContext
   tool_type: ToolType
   create_on_top?: boolean

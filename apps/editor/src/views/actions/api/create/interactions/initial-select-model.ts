@@ -6,8 +6,8 @@ import {
 } from '@/services/model-fetcher'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
-import { ToolType } from '../../../settings/types/tools'
 import { verify_model } from './verify-model'
+import { ToolType } from '@/views/settings/types/tools'
 
 export const initial_select_model = async (
   model_fetcher: ModelFetcher,

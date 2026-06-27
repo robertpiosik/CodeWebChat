@@ -6,13 +6,13 @@ import {
 } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
 import { PROVIDERS } from '@/constants/providers'
-import { generate_unique_name } from '../utils/generate-unique-name'
+import { generate_unique_name } from '@/views/utils/generate-unique-name'
 
 const normalize_base_url = (url: string): string => {
   return url.trim().replace(/\/+$/, '')
 }
 
-export const upsert_model_provider = async (params: {
+export const upsert_provider = async (params: {
   context: vscode.ExtensionContext
   model_provider_name?: string
   insertion_index?: number
@@ -187,7 +187,9 @@ export const upsert_model_provider = async (params: {
     })
   }
 
-  const run_edit_loop = async (model_provider_to_edit: ModelProvider): Promise<void> => {
+  const run_edit_loop = async (
+    model_provider_to_edit: ModelProvider
+  ): Promise<void> => {
     while (true) {
       const items: (vscode.QuickPickItem & { id: string })[] = [
         {
@@ -198,7 +200,9 @@ export const upsert_model_provider = async (params: {
         {
           label: 'Base URL',
           id: 'edit-url',
-          description: model_provider_to_edit.base_url ? undefined : '⚠ Not set',
+          description: model_provider_to_edit.base_url
+            ? undefined
+            : '⚠ Not set',
           detail: model_provider_to_edit.base_url
         },
         {
@@ -353,7 +357,9 @@ export const upsert_model_provider = async (params: {
   let original_name: string | undefined
 
   if (params.model_provider_name) {
-    const existing = await providers_manager.get_model_provider(params.model_provider_name)
+    const existing = await providers_manager.get_model_provider(
+      params.model_provider_name
+    )
     if (!existing) {
       vscode.window.showErrorMessage(
         dictionary.error_message.MODEL_PROVIDER_NOT_FOUND_BY_NAME(
@@ -476,7 +482,10 @@ export const upsert_model_provider = async (params: {
             base_url: info.base_url,
             api_key
           }
-          await providers_manager.save_model_providers([...model_providers, new_model_provider])
+          await providers_manager.save_model_providers([
+            ...model_providers,
+            new_model_provider
+          ])
           return new_model_provider
         }
         if (back_to_options) continue
@@ -548,7 +557,10 @@ export const upsert_model_provider = async (params: {
     }
   }
 
-  if (working_model_provider.base_url && !working_model_provider.base_url.endsWith('/v1')) {
+  if (
+    working_model_provider.base_url &&
+    !working_model_provider.base_url.endsWith('/v1')
+  ) {
     try {
       const headers: { [key: string]: string } = {}
       if (working_model_provider.api_key) {
@@ -586,7 +598,11 @@ export const upsert_model_provider = async (params: {
     if (params.create_on_top) {
       updated_model_providers.unshift(working_model_provider)
     } else if (actual_insertion_index !== undefined) {
-      updated_model_providers.splice(actual_insertion_index, 0, working_model_provider)
+      updated_model_providers.splice(
+        actual_insertion_index,
+        0,
+        working_model_provider
+      )
     } else {
       updated_model_providers.push(working_model_provider)
     }

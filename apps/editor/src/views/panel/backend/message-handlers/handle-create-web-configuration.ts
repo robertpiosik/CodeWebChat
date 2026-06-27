@@ -1,12 +1,12 @@
 import { config_web_configuration_to_ui_format } from '@/utils/web-configuration-format-converters'
 import { PanelProvider } from '../panel-provider'
-import { create_web_configuration } from '@/views/actions/create-web-configuration'
+import { create } from '@/views/actions/web/create'
 
 export const handle_create_web_configuration = async (
   provider: PanelProvider,
   message: any
 ): Promise<void> => {
-  const result = await create_web_configuration({
+  const result = await create({
     placement: message.placement,
     reference_index: message.reference_index
   })

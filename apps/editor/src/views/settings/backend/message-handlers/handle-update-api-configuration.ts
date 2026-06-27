@@ -1,11 +1,11 @@
 import { SettingsProvider } from '../settings-provider'
-import { update_api_configuration } from '@/views/actions/update-api-configuration/update-api-configuration'
+import { update } from '@/views/actions/api/update/update'
 
 export const handle_update_api_configuration = async (
   provider: SettingsProvider,
   message: any
 ): Promise<void> => {
-  const result = await update_api_configuration({
+  const result = await update({
     context: provider.context,
     updating_api_configuration: message.updating_api_configuration,
     updated_api_configuration: message.updated_api_configuration,

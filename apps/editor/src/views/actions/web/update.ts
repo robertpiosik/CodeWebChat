@@ -5,10 +5,10 @@ import {
   ConfigWebConfigurationFormat,
   ui_web_configuration_to_config_format
 } from '@/utils/web-configuration-format-converters'
-import { generate_unique_name } from '../utils/generate-unique-name'
-import { are_web_configurations_equal } from '../utils/are-web-configurations-equal'
+import { are_web_configurations_equal } from '@/views/utils/are-web-configurations-equal'
+import { generate_unique_name } from '@/views/utils/generate-unique-name'
 
-export const update_web_configuration = async (params: {
+export const update = async (params: {
   updating_web_configuration: WebConfiguration
   updated_web_configuration: WebConfiguration
   origin?: 'cancel' | 'save'

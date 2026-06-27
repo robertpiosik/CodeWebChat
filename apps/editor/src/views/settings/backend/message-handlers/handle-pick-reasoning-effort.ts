@@ -1,6 +1,6 @@
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import { PickReasoningEffortMessage } from '@/views/settings/types/messages'
-import { pick_reasoning_effort } from '@/views/actions/pick-reasoning-effort'
+import { pick_reasoning_effort } from '@/views/actions/api/pick-reasoning-effort'
 
 export const handle_pick_reasoning_effort = async (
   settings_provider: SettingsProvider,
