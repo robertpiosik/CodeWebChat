@@ -429,7 +429,6 @@ export const MainView: React.FC<Props> = (props) => {
             on_tab_delete={props.on_tab_delete}
             warning={warning}
             voice_input_push_to_talk={props.voice_input_push_to_talk}
-            token_count={props.token_count}
             translations={{
               invocation_count: t('prompt-field.invocation-count'),
               voice_input: t('prompt-field.voice-input'),

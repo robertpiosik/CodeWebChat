@@ -48,7 +48,6 @@ export const Empty = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    token_count={0}
     translations={{
       invocation_count: 'Invocation count',
       voice_input: 'Voice input',
@@ -103,7 +102,6 @@ export const WithText = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    token_count={0}
     translations={{
       invocation_count: 'Invocation count',
       voice_input: 'Voice input',
@@ -158,7 +156,6 @@ export const LongText = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    token_count={0}
     translations={{
       invocation_count: 'Invocation count',
       voice_input: 'Voice input',
@@ -213,7 +210,6 @@ export const WithPlaceholderSavedContext = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    token_count={0}
     translations={{
       invocation_count: 'Invocation count',
       voice_input: 'Voice input',
@@ -274,7 +270,6 @@ export const WithPlaceholderSelection = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    token_count={0}
     translations={{
       invocation_count: 'Invocation count',
       voice_input: 'Voice input',
@@ -329,7 +324,6 @@ export const WithCommit = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    token_count={0}
     translations={{
       invocation_count: 'Invocation count',
       voice_input: 'Voice input',
@@ -384,7 +378,6 @@ export const WithCommitWithQuotes = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    token_count={0}
     translations={{
       invocation_count: 'Invocation count',
       voice_input: 'Voice input',
@@ -438,7 +431,6 @@ export const WithContextAtCommit = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    token_count={0}
     translations={{
       invocation_count: 'Invocation count',
       voice_input: 'Voice input',
@@ -497,7 +489,6 @@ export const WithEditFormatSelector = () => {
       on_tab_change={() => {}}
       on_new_tab={() => {}}
       on_tab_delete={() => {}}
-      token_count={0}
       translations={{
         invocation_count: 'Invocation count',
         voice_input: 'Voice input',
@@ -553,7 +544,6 @@ export const WithFilePaths = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    token_count={0}
     translations={{
       invocation_count: 'Invocation count',
       voice_input: 'Voice input',
@@ -636,7 +626,6 @@ export const WithTabs = () => {
       on_tab_change={set_active_index}
       on_new_tab={handle_new_tab}
       on_tab_delete={handle_tab_delete}
-      token_count={0}
       translations={{
         invocation_count: 'Invocation count',
         voice_input: 'Voice input',
@@ -688,7 +677,6 @@ export const WithWarning = () => (
     on_tab_change={() => {}}
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
-    token_count={0}
     translations={{
       invocation_count: 'Invocation count',
       voice_input: 'Voice input',

@@ -77,7 +77,6 @@ export type PromptFieldProps = {
   on_tab_delete: (index: number) => void
   warning?: string
   voice_input_push_to_talk?: boolean
-  token_count: number
   translations: {
     invocation_count: string
     voice_input: string
