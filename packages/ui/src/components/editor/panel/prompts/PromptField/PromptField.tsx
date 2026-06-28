@@ -466,7 +466,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           {is_invocation_count_hovered && !is_invocation_dropdown_open && (
             <Tooltip
               message={props.translations.invocation_count}
-              details={is_mac ? '⌥X 1-5' : 'Alt+X 1-5'}
+              details={is_mac ? '⌥X 1-3' : 'Alt+X 1-3'}
               offset={48}
               align="right"
             />
@@ -645,7 +645,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       </button>
                       {is_invocation_dropdown_open && (
                         <DropdownMenu
-                          items={[1, 2, 3, 4, 5].map((count) => ({
+                          items={[1, 2, 3].map((count) => ({
                             label: `${count}×`,
                             checked: count == props.invocation_count,
                             shortcut: is_mac ? `⌥X ${count}` : `Alt+X ${count}`,

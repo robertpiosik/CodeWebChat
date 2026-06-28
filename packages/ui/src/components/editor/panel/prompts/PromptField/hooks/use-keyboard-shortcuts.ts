@@ -46,12 +46,6 @@ export const use_keyboard_shortcuts = (
           case 'Digit3':
             count = 3
             break
-          case 'Digit4':
-            count = 4
-            break
-          case 'Digit5':
-            count = 5
-            break
         }
 
         if (count > 0) {
