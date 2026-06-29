@@ -41,7 +41,7 @@ import {
   check_referencing_files_for_context_command,
   check_definition_file_for_context_command,
   find_relevant_files_command,
-  check_unstaged_files_command,
+  select_unstaged_files_command,
   check_commit_files_command
 } from './commands'
 import { setup_git_discard_file_watcher } from './services/git-discard-file-watcher'
@@ -143,7 +143,7 @@ export const activate = async (context: vscode.ExtensionContext) => {
       extension_context: context,
       on_context_selected: () => {}
     }),
-    check_unstaged_files_command(workspace_provider, context),
+    select_unstaged_files_command(workspace_provider, context),
     check_commit_files_command(workspace_provider, context),
     rename_command(),
     delete_command(),

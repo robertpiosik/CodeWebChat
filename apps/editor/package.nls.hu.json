@@ -48,6 +48,6 @@
   "codeWebChat.openInIntegratedTerminal.title": "Megnyitás az integrált terminálban",
   "codeWebChat.removeFolderFromWorkspace.title": "Mappa eltávolítása a munkaterületről",
   "codeWebChat.openWebsitePreviewUrl.title": "URL megnyitása a böngészőben",
-  "codeWebChat.checkUnstagedFiles.title": "Módosított fájlok kijelölése",
+  "codeWebChat.selectUnstagedFiles.title": "Módosított fájlok kijelölése",
   "codeWebChat.checkCommitFiles.title": "Commit fájljainak kijelölése..."
 }

@@ -8,12 +8,12 @@ import { display_token_count } from '../utils/display-token-count'
 import { LAST_APPLY_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY } from '../constants/state-keys'
 import { t } from '@/i18n'
 
-export const check_unstaged_files_command = (
+export const select_unstaged_files_command = (
   workspace_provider: WorkspaceProvider,
   extension_context: vscode.ExtensionContext
 ): vscode.Disposable => {
   return vscode.commands.registerCommand(
-    'codeWebChat.checkUnstagedFiles',
+    'codeWebChat.selectUnstagedFiles',
     async () => {
       try {
         const git_extension =
@@ -300,7 +300,7 @@ export const check_unstaged_files_command = (
           )
         )
         Logger.error({
-          function_name: 'check_unstaged_files_command',
+          function_name: 'select_unstaged_files_command',
           message: 'Failed to select unstaged files',
           data: error
         })
