@@ -19,7 +19,7 @@ import {
 } from '../utils/git-utils'
 import * as path from 'path'
 import { Logger } from '@shared/utils/logger'
-import { PanelProvider } from '../../../panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { response_preview_promise_resolve } from '@/commands/apply-chat-response-command/utils/preview'
 

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
-import { create_checkpoint } from '../actions'
-import type { PanelProvider } from '../../../panel-provider'
+import { create_checkpoint } from '@/features/checkpoints/actions'
+import type { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 
 export const handle_create_checkpoint = async (

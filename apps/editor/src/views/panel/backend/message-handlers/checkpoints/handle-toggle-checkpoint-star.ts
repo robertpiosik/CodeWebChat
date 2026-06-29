@@ -1,5 +1,5 @@
-import { PanelProvider } from '../../../panel-provider'
-import { toggle_checkpoint_star } from '../actions'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { toggle_checkpoint_star } from '@/features/checkpoints/actions'
 import { ToggleCheckpointStarMessage } from '@/views/panel/types/messages'
 
 export const handle_toggle_checkpoint_star = async (

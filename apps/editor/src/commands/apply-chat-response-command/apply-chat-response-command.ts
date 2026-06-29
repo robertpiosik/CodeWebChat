@@ -24,9 +24,12 @@ import {
   CwcPreviewProvider
 } from './utils/preview/virtual-document-provider'
 import { parse_response } from './utils/clipboard-parser'
-import { Checkpoint } from '@/views/panel/backend/message-handlers/checkpoints/types'
-import { create_checkpoint, delete_checkpoint } from '@/views/panel/backend/message-handlers/checkpoints/actions'
-import { get_checkpoint_path } from '@/views/panel/backend/message-handlers/checkpoints/utils'
+import { Checkpoint } from '@/features/checkpoints/types'
+import {
+  create_checkpoint,
+  delete_checkpoint
+} from '@/features/checkpoints/actions'
+import { get_checkpoint_path } from '@/features/checkpoints/utils'
 
 let in_progress = false
 

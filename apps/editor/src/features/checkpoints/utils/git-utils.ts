@@ -99,8 +99,7 @@ export const get_git_diff = async (
       try {
         const stats = await fs.stat(absolute_path)
         mtime = Math.floor(stats.mtimeMs)
-      } catch {
-      }
+      } catch {}
 
       let diff_chunk = ''
       let cache_path = ''
@@ -117,8 +116,7 @@ export const get_git_diff = async (
           const cached_diff = await fs.readFile(cache_path, 'utf8')
           total_diff += cached_diff
           continue
-        } catch {
-        }
+        } catch {}
       }
 
       try {
@@ -148,8 +146,7 @@ export const get_git_diff = async (
         if (mtime > 0 && cache_path) {
           try {
             await fs.writeFile(cache_path, diff_chunk, 'utf8')
-          } catch (e) {
-          }
+          } catch (e) {}
         }
       }
     }

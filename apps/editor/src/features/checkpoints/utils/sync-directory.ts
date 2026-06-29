@@ -13,7 +13,7 @@ const count_sync_operations = async (params: {
   try {
     await vscode.workspace.fs.stat(params.dest_dir)
   } catch (e) {
-    return 1 
+    return 1
   }
 
   const dest_entries = await vscode.workspace.fs.readDirectory(params.dest_dir)
@@ -54,10 +54,10 @@ const count_sync_operations = async (params: {
           dest_dir: dest_uri
         })
       } else {
-        count++ 
+        count++
       }
     } else if (type === vscode.FileType.File) {
-      count++ 
+      count++
     }
   }
 

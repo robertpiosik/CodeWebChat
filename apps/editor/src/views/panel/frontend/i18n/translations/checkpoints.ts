@@ -178,6 +178,23 @@ export const checkpoints = {
     cs: 'Vrátit poslední obnovení',
     hu: 'Visszaállítás visszavonása',
     bg: 'Отмяна на възстановяването'
+  },
+  'command.checkpoints.trigger.commit': {
+    en: 'Committed',
+    pl: 'Zakomitowano',
+    'zh-cn': '已提交',
+    ja: 'コミット済み',
+    'zh-tw': '已提交',
+    de: 'Committed',
+    es: 'Confirmado',
+    fr: 'Commit validé',
+    'pt-br': 'Comitado',
+    ru: 'Зафиксировано',
+    ko: '커밋됨',
+    it: 'Commit effettuato',
+    tr: 'İşlendi',
+    cs: 'Zapsáno',
+    hu: 'Véglegesítve',
+    bg: 'Комитнато'
   }
 } as const
-

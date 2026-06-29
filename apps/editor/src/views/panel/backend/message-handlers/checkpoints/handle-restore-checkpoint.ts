@@ -1,5 +1,8 @@
-import { PanelProvider } from '../../../panel-provider'
-import { get_checkpoints, restore_checkpoint } from '../actions'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import {
+  get_checkpoints,
+  restore_checkpoint
+} from '@/features/checkpoints/actions'
 import { RestoreCheckpointMessage } from '@/views/panel/types/messages'
 
 export const handle_restore_checkpoint = async (

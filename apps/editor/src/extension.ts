@@ -170,7 +170,11 @@ export const activate = async (context: vscode.ExtensionContext) => {
         settings_provider.createOrShow(section)
       }
     ),
-    generate_commit_message_command(context),
+    generate_commit_message_command(
+      context,
+      panel_provider,
+      workspace_provider
+    ),
     vscode.commands.registerCommand(
       'codeWebChat.openWebsitePreviewUrl',
       async () => {

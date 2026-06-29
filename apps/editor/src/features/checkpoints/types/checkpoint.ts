@@ -19,6 +19,7 @@ export type CheckpointTrigger =
   | 'before-response-previewed'
   | 'before-checkpoint-restored'
   | 'temporary'
+  | 'commit'
 
 export interface Checkpoint {
   timestamp: number

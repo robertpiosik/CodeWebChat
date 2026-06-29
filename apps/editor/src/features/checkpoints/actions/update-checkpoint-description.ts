@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { CHECKPOINTS_STATE_KEY } from '@/constants/state-keys'
 import type { Checkpoint } from '../types'
-import { PanelProvider } from '../../../panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 
 export const update_checkpoint_description = async (params: {
   context: vscode.ExtensionContext

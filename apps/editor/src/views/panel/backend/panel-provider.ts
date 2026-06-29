@@ -12,7 +12,7 @@ import { OpenEditorsProvider } from '@/context/providers/open-editors/open-edito
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { token_count_emitter } from '@/context/context-initialization'
 import { EditFormat } from '@shared/types/edit-format'
-import { get_checkpoints } from './message-handlers/checkpoints/actions'
+import { get_checkpoints } from '@/features/checkpoints/actions'
 import {
   handle_copy_prompt,
   handle_send_to_browser,
@@ -125,14 +125,14 @@ import { CHATBOTS } from '@shared/constants/chatbots'
 import { MODE, Mode } from '../types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Logger } from '@shared/utils/logger'
-import { get_checkpoint_path } from './message-handlers/checkpoints/utils'
+import { get_checkpoint_path } from '@/features/checkpoints/utils'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { CancelTokenSource } from 'axios'
 import { dictionary } from '@shared/constants/dictionary'
 import { DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD } from '@/constants/values'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { SharedContextState } from '@/context/shared-context-state'
-import { Checkpoint } from './message-handlers/checkpoints/types'
+import { Checkpoint } from '@/features/checkpoints/types'
 
 export class PanelProvider implements vscode.WebviewViewProvider {
   public readonly extension_uri: vscode.Uri

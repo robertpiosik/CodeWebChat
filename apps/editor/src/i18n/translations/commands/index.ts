@@ -1,4 +1,3 @@
-import { checkpoints } from './checkpoints'
 import { generate_commit_message } from './generate-commit-message'
 import { code_at_cursor } from './code-at-cursor'
 import { apply_chat_response } from './apply-chat-response'
@@ -16,7 +15,6 @@ import { rate } from './rate'
 import { find_relevant_files } from './find-relevant-files'
 
 export const commands = {
-  ...checkpoints,
   ...generate_commit_message,
   ...code_at_cursor,
   ...apply_chat_response,

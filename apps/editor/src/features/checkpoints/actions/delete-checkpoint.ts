@@ -3,7 +3,7 @@ import { CHECKPOINTS_STATE_KEY } from '@/constants/state-keys'
 import type { Checkpoint } from '../types'
 import { get_checkpoint_path } from '../utils'
 import { Logger } from '@shared/utils/logger'
-import { PanelProvider } from '../../../panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 
 export const delete_checkpoint = async (params: {

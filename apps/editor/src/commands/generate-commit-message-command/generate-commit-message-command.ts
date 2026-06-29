@@ -14,6 +14,9 @@ import axios from 'axios'
 import { PromptsForCommitMessagesUtils } from '../../utils/prompts-for-commit-messages-utils'
 import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
 import { MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE } from '@/constants/values'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
+import { create_checkpoint } from '@/features/checkpoints/actions'
 
 const truncate_prompt = (text: string): string => {
   if (text.length <= MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE) return text
@@ -21,7 +24,9 @@ const truncate_prompt = (text: string): string => {
 }
 
 export const generate_commit_message_command = (
-  context: vscode.ExtensionContext
+  context: vscode.ExtensionContext,
+  panel_provider: PanelProvider,
+  workspace_provider: WorkspaceProvider
 ) => {
   const get_prompt_data = async (params: {
     repository: GitRepository
@@ -258,7 +263,8 @@ export const generate_commit_message_command = (
                   .join('\n')
               : ''
 
-          repository.inputBox.value = edited_message + selected_prompts_text
+          const commit_message_value = edited_message + selected_prompts_text
+          repository.inputBox.value = commit_message_value
           await vscode.commands.executeCommand('git.commit', repository)
           PromptsForCommitMessagesUtils.remove_committed_files({
             context,
@@ -266,6 +272,16 @@ export const generate_commit_message_command = (
             prompts: relevant_prompts.map((p) => p.prompt),
             committed_files: staged_files
           })
+
+          const subject_line = commit_message_value.split('\n')[0].trim()
+          create_checkpoint({
+            workspace_provider,
+            context,
+            panel_provider,
+            trigger: 'commit',
+            description: subject_line,
+            silent: true
+          }).catch(() => {})
         } else if (was_empty_stage) {
           await vscode.commands.executeCommand('git.unstageAll')
         }

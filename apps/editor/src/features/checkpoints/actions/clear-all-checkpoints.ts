@@ -6,7 +6,7 @@ import {
 import { get_checkpoint_path } from '../utils'
 import { get_checkpoints } from './get-checkpoints'
 import { Logger } from '@shared/utils/logger'
-import { PanelProvider } from '../../../panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import type { Checkpoint } from '../types'
 
 export const clear_all_checkpoints = async (

@@ -1,5 +1,5 @@
-import { PanelProvider } from '../../../panel-provider'
-import { update_checkpoint_description } from '../actions'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { update_checkpoint_description } from '@/features/checkpoints/actions'
 import { UpdateCheckpointDescriptionMessage } from '@/views/panel/types/messages'
 
 export const handle_update_checkpoint_description = async (

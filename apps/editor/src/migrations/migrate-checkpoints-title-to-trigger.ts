@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
 import { CHECKPOINTS_STATE_KEY } from '../constants/state-keys'
-import type { Checkpoint } from '../commands/checkpoints-command/types'
+import { Checkpoint } from '@/features/checkpoints/types'
 
 const MIGRATION_ID = 'checkpoints-title-to-trigger-migration-20260302'
 
