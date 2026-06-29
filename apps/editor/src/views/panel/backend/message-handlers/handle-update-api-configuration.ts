@@ -1,5 +1,5 @@
 import { PanelProvider } from '../panel-provider'
-import { update } from '@/views/actions/api/update/update'
+import { update } from '@/views/shared/actions/api/update/update'
 
 export const handle_update_api_configuration = async (
   provider: PanelProvider,

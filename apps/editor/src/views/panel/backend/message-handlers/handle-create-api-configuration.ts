@@ -1,5 +1,5 @@
 import { PanelProvider } from '../panel-provider'
-import { create } from '@/views/actions/api/create/create'
+import { create } from '@/views/shared/actions/api/create/create'
 import { get_api_configuration_id } from '@/services/model-providers-manager'
 import { CreateApiConfigurationMessage } from '../../types/messages'
 

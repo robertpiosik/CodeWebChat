@@ -1,5 +1,5 @@
 import { ReorderWebConfigurationsMessage } from '@/views/panel/types/messages'
-import { reorder } from '@/views/actions/web/reorder'
+import { reorder } from '@/views/shared/actions/web/reorder'
 
 export const handle_reorder_web_configurations = async (
   message: ReorderWebConfigurationsMessage

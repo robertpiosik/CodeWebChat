@@ -1,6 +1,6 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { PickReasoningEffortMessage } from '@/views/panel/types/messages'
-import { pick_reasoning_effort } from '@/views/actions/api/pick-reasoning-effort'
+import { pick_reasoning_effort } from '@/views/shared/actions/api/pick-reasoning-effort'
 
 export const handle_pick_reasoning_effort = async (
   panel_provider: PanelProvider,

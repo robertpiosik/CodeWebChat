@@ -1,5 +1,5 @@
 import { SettingsProvider } from '../settings-provider'
-import { update } from '@/views/actions/api/update/update'
+import { update } from '@/views/shared/actions/api/update/update'
 
 export const handle_update_api_configuration = async (
   provider: SettingsProvider,

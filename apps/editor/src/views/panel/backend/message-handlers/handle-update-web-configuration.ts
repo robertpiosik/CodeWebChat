@@ -1,5 +1,5 @@
 import { PanelProvider } from '../panel-provider'
-import { update } from '@/views/actions/web/update'
+import { update } from '@/views/shared/actions/web/update'
 
 export const handle_update_web_configuration = async (
   provider: PanelProvider,
@@ -24,6 +24,6 @@ export const handle_update_web_configuration = async (
       })
     }
 
-    provider.send_web_configurations_to_webview(provider._webview_view!.webview)
+    provider.send_web_configurations_to_webview(provider.webview_view!.webview)
   }
 }

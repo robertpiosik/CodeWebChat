@@ -1,7 +1,7 @@
 import {
   create_translation,
   TranslationContext
-} from '../../../hooks/use-translation'
+} from '../../../shared/hooks/use-translation'
 import { translations } from './translations/index'
 
 export { TranslationContext }

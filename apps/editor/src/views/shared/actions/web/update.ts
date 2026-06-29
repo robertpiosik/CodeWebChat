@@ -5,8 +5,7 @@ import {
   ConfigWebConfigurationFormat,
   ui_web_configuration_to_config_format
 } from '@/utils/web-configuration-format-converters'
-import { are_web_configurations_equal } from '@/views/utils/are-web-configurations-equal'
-import { generate_unique_name } from '@/views/utils/generate-unique-name'
+import { generate_unique_name } from '@/views/shared/utils/generate-unique-name'
 
 export const update = async (params: {
   updating_web_configuration: WebConfiguration
@@ -47,9 +46,21 @@ export const update = async (params: {
     ...params.updated_web_configuration
   }
 
-  const has_changes = !are_web_configurations_equal(
-    params.updating_web_configuration,
-    final_updated_web_configuration
+  const a = params.updating_web_configuration
+  const b = final_updated_web_configuration
+  const has_changes = !(
+    a.name == b.name &&
+    a.chatbot == b.chatbot &&
+    a.model == b.model &&
+    a.temperature === b.temperature &&
+    a.top_p === b.top_p &&
+    a.thinking_budget === b.thinking_budget &&
+    a.reasoning_effort == b.reasoning_effort &&
+    a.system_instructions == b.system_instructions &&
+    JSON.stringify(a.options) == JSON.stringify(b.options) &&
+    a.port == b.port &&
+    a.new_url == b.new_url &&
+    a.is_pinned == b.is_pinned
   )
 
   if (!has_changes && !params.is_new) {

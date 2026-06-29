@@ -1,4 +1,4 @@
-import { pick_chatbot } from '@/views/actions/web/pick-chatbot'
+import { pick_chatbot } from '@/views/shared/actions/web/pick-chatbot'
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import { PickChatbotMessage } from '@/views/settings/types/messages'
 

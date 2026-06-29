@@ -1,6 +1,6 @@
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import { PickModelMessage } from '@/views/settings/types/messages'
-import { pick_model } from '@/views/actions/web/pick-model'
+import { pick_model } from '@/views/shared/actions/web/pick-model'
 
 export const handle_pick_model = async (
   settings_provider: SettingsProvider,

@@ -1,5 +1,5 @@
 import { TogglePinnedWebConfigurationMessage } from '@/views/panel/types/messages'
-import { toggle_pinned } from '@/views/actions/web/toggle-pinned'
+import { toggle_pinned } from '@/views/shared/actions/web/toggle-pinned'
 
 export const handle_toggle_pinned_web_configuration = async (
   message: TogglePinnedWebConfigurationMessage

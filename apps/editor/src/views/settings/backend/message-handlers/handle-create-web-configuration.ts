@@ -1,5 +1,5 @@
 import { CreateWebConfigurationMessage } from '@/views/settings/types/messages'
-import { create } from '@/views/actions/web/create'
+import { create } from '@/views/shared/actions/web/create'
 
 export const handle_create_web_configuration = async (
   message: CreateWebConfigurationMessage

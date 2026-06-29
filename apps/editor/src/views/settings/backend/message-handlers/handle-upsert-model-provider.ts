@@ -1,6 +1,6 @@
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import { handle_get_model_providers } from './handle-get-model-providers'
-import { upsert_provider } from '../../../actions/api/upsert-provider'
+import { upsert_provider } from '../../../shared/actions/api/upsert-provider'
 
 export const handle_upsert_model_provider = async (params: {
   provider: SettingsProvider

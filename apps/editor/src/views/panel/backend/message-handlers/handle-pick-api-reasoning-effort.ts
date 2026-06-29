@@ -1,10 +1,10 @@
 import * as vscode from 'vscode'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { PickApiReasoningEffortMessage } from '@/views/panel/types/messages'
-import { edit_reasoning_effort_for_api_config } from '@/views/actions/api/update/interactions'
+import { edit_reasoning_effort_for_api_config } from '@/views/shared/actions/api/update/interactions'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
-import { verify_reasoning_effort } from '@/views/actions/api/create/interactions'
+import { verify_reasoning_effort } from '@/views/shared/actions/api/create/interactions'
 
 export const handle_pick_api_reasoning_effort = async (
   panel_provider: PanelProvider,

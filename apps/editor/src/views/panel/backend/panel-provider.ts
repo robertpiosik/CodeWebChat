@@ -141,7 +141,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public readonly context: vscode.ExtensionContext
   public readonly websocket_server_instance: WebSocketManager
   public readonly shared_context_state: SharedContextState
-  private _webview_view: vscode.WebviewView | undefined
+  public webview_view: vscode.WebviewView | undefined
   private _config_listener: vscode.Disposable | undefined
   public currently_open_file_path?: string
   public current_selection: SelectionState | null = null
@@ -404,7 +404,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     this.shared_context_state = params.shared_context_state
 
     this.websocket_server_instance.on_connection_status_change((connected) => {
-      if (this._webview_view) {
+      if (this.webview_view) {
         this.send_message({
           command: 'CONNECTION_STATUS',
           connected
@@ -472,9 +472,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
     this._config_listener = vscode.workspace.onDidChangeConfiguration(
       (event) => {
-        if (!this._webview_view) return
+        if (!this.webview_view) return
         if (event.affectsConfiguration('codeWebChat.webConfigurations')) {
-          this.send_web_configurations_to_webview(this._webview_view.webview)
+          this.send_web_configurations_to_webview(this.webview_view.webview)
         }
 
         if (
@@ -525,7 +525,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     )
 
     token_count_emitter.on('token-count-updated', (token_count: number) => {
-      if (this._webview_view) {
+      if (this.webview_view) {
         this.send_message({
           command: 'TOKEN_COUNT_UPDATED',
           token_count
@@ -566,7 +566,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
       if (display_path != this.currently_open_file_path) {
         this.currently_open_file_path = display_path
-        if (this._webview_view) {
+        if (this.webview_view) {
           this.send_message({
             command: 'EDITOR_STATE_CHANGED',
             currently_open_file_path: display_path
@@ -600,7 +600,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
       if (has_changed) {
         this.current_selection = new_selection
-        if (this._webview_view) {
+        if (this.webview_view) {
           this.send_message({
             command: 'EDITOR_SELECTION_CHANGED',
             current_selection: new_selection
@@ -625,7 +625,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       }
 
       this.current_selection = new_selection
-      if (this._webview_view) {
+      if (this.webview_view) {
         this.send_message({
           command: 'EDITOR_SELECTION_CHANGED',
           current_selection: new_selection
@@ -694,8 +694,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   }
 
   public send_message(message: BackendMessage) {
-    if (this._webview_view) {
-      this._webview_view.webview.postMessage(message)
+    if (this.webview_view) {
+      this.webview_view.webview.postMessage(message)
     }
   }
 
@@ -720,7 +720,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     _: vscode.WebviewViewResolveContext,
     __: vscode.CancellationToken
   ) {
-    this._webview_view = webview_view
+    this.webview_view = webview_view
 
     webview_view.webview.options = {
       enableScripts: true,
@@ -1072,7 +1072,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   }
 
   private _send_context_size_warning_threshold() {
-    if (!this._webview_view) return
+    if (!this.webview_view) return
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const threshold =
       config.get<number>('contextSizeWarningThreshold') ||

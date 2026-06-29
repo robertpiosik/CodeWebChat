@@ -1,6 +1,6 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { PickModelMessage } from '@/views/panel/types/messages'
-import { pick_model } from '@/views/actions/web/pick-model'
+import { pick_model } from '@/views/shared/actions/web/pick-model'
 
 export const handle_pick_model = async (
   panel_provider: PanelProvider,

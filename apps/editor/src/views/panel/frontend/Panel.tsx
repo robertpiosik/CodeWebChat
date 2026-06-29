@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Main } from './Main'
 import { Button as UiButton } from '@ui/components/editor/common/Button'
 import { Page as UiPage } from '@ui/components/editor/panel/Page'
-import { EditWebConfigurationForm } from '@/views/components/EditWebConfigurationForm'
+import { EditWebConfigurationForm } from '@/views/shared/forms/EditWebConfigurationForm'
 import { TextButton as UiTextButton } from '@ui/components/editor/common/TextButton'
 import { MODE } from '../types/main-view-mode'
 import { Home } from './Home'
@@ -32,7 +32,7 @@ import { use_preview_manager } from './hooks/panel/use-preview-manager'
 import { use_editor_sync } from './hooks/panel/use-editor-sync'
 import { use_web_configuration_editing } from './hooks/panel/use-web-configuration-editing'
 import { use_api_configuration_editing } from './hooks/panel/use-api-configuration-editing'
-import { EditApiConfigurationForm } from '@/views/components/EditApiConfigurationForm'
+import { EditApiConfigurationForm } from '@/views/shared/forms/EditApiConfigurationForm'
 
 const vscode = acquireVsCodeApi()
 

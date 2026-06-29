@@ -15,7 +15,7 @@ export const generate_unique_name = (
   const base_for_duplication =
     existing_number_str !== undefined && original_base_name !== undefined
       ? original_base_name
-      : (name_to_check || '')
+      : name_to_check || ''
 
   let copy_number =
     existing_number_str !== undefined

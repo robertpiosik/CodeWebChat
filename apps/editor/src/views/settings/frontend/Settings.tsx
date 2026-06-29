@@ -6,8 +6,8 @@ import { Home, NavItem } from './Home/Home'
 import { use_web_configuration_editing } from './hooks/use-web-configuration-editing'
 import { use_api_configuration_editing } from './hooks/use-api-configuration-editing'
 import { Modal as UiModal } from '@ui/components/editor/settings/Modal'
-import { EditWebConfigurationForm } from '@/views/components/EditWebConfigurationForm'
-import { EditApiConfigurationForm } from '@/views/components/EditApiConfigurationForm'
+import { EditWebConfigurationForm } from '@/views/shared/forms/EditWebConfigurationForm'
+import { EditApiConfigurationForm } from '@/views/shared/forms/EditApiConfigurationForm'
 
 const vscode = acquireVsCodeApi()
 
