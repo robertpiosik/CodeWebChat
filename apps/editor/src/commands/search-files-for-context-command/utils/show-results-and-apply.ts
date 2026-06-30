@@ -77,10 +77,8 @@ export const show_results_and_apply = async (params: {
       currently_checked.includes(item.file_path)
     )
     quick_pick.canSelectMany = true
-    quick_pick.title = t('command.find-relevant-files.quick-pick.title')
-    quick_pick.placeholder = t(
-      'command.find-relevant-files.quick-pick.placeholder'
-    )
+    quick_pick.title = t('command.search.results')
+    quick_pick.placeholder = t('command.search.select-files')
     quick_pick.ignoreFocusOut = true
     quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
 
@@ -118,7 +116,7 @@ export const show_results_and_apply = async (params: {
             await vscode.window.showTextDocument(doc, { preview: true })
           } catch (error) {
             vscode.window.showErrorMessage(
-              t('command.find-relevant-files.error.opening-file', {
+              t('command.search.error.opening-file', {
                 error: String(error)
               })
             )
@@ -259,9 +257,7 @@ export const show_results_and_apply = async (params: {
 
     await params.workspace_provider.set_checked_files(paths_to_apply)
 
-    vscode.window.showInformationMessage(
-      t('command.find-relevant-files.success.added')
-    )
+    vscode.window.showInformationMessage(t('command.search.success.added'))
 
     return 'success'
   }

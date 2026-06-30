@@ -7,9 +7,24 @@ import { IGNORED_LOCK_FILES } from '@/constants/ignored-lock-files'
 export const search_files_by_term = async (params: {
   files: string[]
   search_term: string
+  search_mode: 'phrase' | 'keywords' | 'intelligent'
 }): Promise<string[]> => {
   const matched_files: string[] = []
-  const regex = create_search_regex(params.search_term)
+
+  let regexes: RegExp[] = []
+  if (params.search_mode === 'keywords') {
+    const keywords = params.search_term
+      .split(',')
+      .map((k) => k.trim())
+      .filter((k) => k.length > 0)
+    regexes = keywords.map((k) => create_search_regex(k))
+  } else {
+    regexes = [create_search_regex(params.search_term)]
+  }
+
+  if (regexes.length === 0) return []
+
+  const matches_all = (text: string) => regexes.every((r) => r.test(text))
 
   for (const file_path of params.files) {
     try {
@@ -19,7 +34,7 @@ export const search_files_by_term = async (params: {
         continue
       }
 
-      if (regex.test(file_name)) {
+      if (matches_all(file_name)) {
         matched_files.push(file_path)
         continue
       }
@@ -31,7 +46,7 @@ export const search_files_by_term = async (params: {
 
       const content = await fs.promises.readFile(file_path, 'utf-8')
 
-      if (regex.test(content)) {
+      if (matches_all(content)) {
         matched_files.push(file_path)
       }
     } catch (error) {

@@ -8,6 +8,7 @@ import { create_search_regex } from './create-search-regex'
 export const prompt_for_search_results = async (params: {
   matched_files: string[]
   search_term: string
+  search_mode: 'phrase' | 'keywords' | 'intelligent'
   workspace_provider: WorkspaceProvider
 }): Promise<
   readonly (vscode.QuickPickItem & { file_path: string })[] | undefined | 'back'
@@ -110,14 +111,27 @@ export const prompt_for_search_results = async (params: {
           const doc = await vscode.workspace.openTextDocument(e.item.file_path)
 
           const text = doc.getText()
-          const regex = create_search_regex(params.search_term)
-          const match = regex.exec(text)
+
+          let regexes: RegExp[] = []
+          if (params.search_mode === 'keywords') {
+            regexes = params.search_term
+              .split(',')
+              .map((k) => k.trim())
+              .filter((k) => k.length > 0)
+              .map((k) => create_search_regex(k))
+          } else {
+            regexes = [create_search_regex(params.search_term)]
+          }
 
           let selection: vscode.Range | undefined
-          if (match) {
-            const start_pos = doc.positionAt(match.index)
-            const end_pos = doc.positionAt(match.index + match[0].length)
-            selection = new vscode.Range(start_pos, end_pos)
+          for (const regex of regexes) {
+            const match = regex.exec(text)
+            if (match) {
+              const start_pos = doc.positionAt(match.index)
+              const end_pos = doc.positionAt(match.index + match[0].length)
+              selection = new vscode.Range(start_pos, end_pos)
+              break
+            }
           }
 
           await vscode.window.showTextDocument(doc, {

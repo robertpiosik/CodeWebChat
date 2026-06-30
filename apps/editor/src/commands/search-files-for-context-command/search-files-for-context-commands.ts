@@ -1,14 +1,25 @@
 import * as vscode from 'vscode'
 import { WorkspaceProvider } from '../../context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'
-import { LAST_SEARCH_FILES_FOR_CONTEXT_QUERY_STATE_KEY } from '../../constants/state-keys'
+import {
+  LAST_SEARCH_FILES_FOR_CONTEXT_QUERY_STATE_KEY,
+  LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY,
+  LAST_FIND_RELEVANT_FILES_SHRINK_STATE_KEY
+} from '../../constants/state-keys'
 import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 
 import { get_target_folder_path } from './utils/get-target-folder-path'
+import { prompt_for_search_mode } from './utils/prompt-for-search-mode'
 import { prompt_for_search_term } from './utils/prompt-for-search-term'
 import { search_files_by_term } from './utils/search-files-by-term'
 import { prompt_for_search_results } from './utils/prompt-for-search-results'
+import { analyze_workspace_files } from './utils/analyze-workspace-files'
+import { prompt_for_shrink_mode } from './utils/prompt-for-shrink-mode'
+import { prompt_for_api_configuration } from './utils/prompt-for-config'
+import { fetch_relevant_files_from_api } from './utils/fetch-relevant-files-from-api'
+import { show_results_and_apply } from './utils/show-results-and-apply'
+import { ModelProvidersManager } from '../../services/model-providers-manager'
 
 export const search_files_for_context_commands = (
   workspace_provider: WorkspaceProvider,
@@ -21,6 +32,11 @@ export const search_files_for_context_commands = (
       extension_context.workspaceState.get<string>(
         LAST_SEARCH_FILES_FOR_CONTEXT_QUERY_STATE_KEY
       ) || ''
+
+    let initial_search_mode =
+      extension_context.workspaceState.get<
+        'phrase' | 'keywords' | 'intelligent'
+      >(LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY) || 'phrase'
 
     let should_auto_submit = false
 
@@ -41,12 +57,27 @@ export const search_files_for_context_commands = (
     while (true) {
       try {
         let search_term_input: string | undefined
+        let search_mode: 'phrase' | 'keywords' | 'intelligent' | undefined =
+          initial_search_mode
 
         if (should_auto_submit && initial_search_term.length > 0) {
           search_term_input = initial_search_term
           should_auto_submit = false // Only auto-submit on the first iteration
         } else {
-          const result = await prompt_for_search_term(initial_search_term)
+          search_mode = await prompt_for_search_mode(initial_search_mode)
+          if (!search_mode) return
+
+          initial_search_mode = search_mode
+          await extension_context.workspaceState.update(
+            LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY,
+            search_mode
+          )
+
+          const result = await prompt_for_search_term(
+            initial_search_term,
+            search_mode
+          )
+          if (result.back) continue
           if (!result.value) return
           search_term_input = result.value
         }
@@ -60,6 +91,133 @@ export const search_files_for_context_commands = (
 
         const search_term = search_term_input.trim()
         if (search_term.length == 0) return
+
+        if (search_mode === 'intelligent') {
+          const target_folder =
+            folder_path || workspace_provider.get_workspace_roots()[0]
+
+          if (!target_folder) {
+            vscode.window.showErrorMessage(
+              t('command.search.error.no-folder-selected')
+            )
+            continue
+          }
+
+          const analysis = await analyze_workspace_files({
+            workspace_provider,
+            folder_path: target_folder
+          })
+
+          let go_back_to_input = false
+          while (true) {
+            const should_shrink = extension_context.workspaceState.get<boolean>(
+              LAST_FIND_RELEVANT_FILES_SHRINK_STATE_KEY,
+              false
+            )
+            const shrink_result = await prompt_for_shrink_mode({
+              should_shrink,
+              full_tokens: analysis.full_tokens,
+              shrink_tokens: analysis.shrink_tokens
+            })
+
+            if (shrink_result === 'back') {
+              go_back_to_input = true
+              break
+            }
+            if (shrink_result === 'cancel') return
+
+            await extension_context.workspaceState.update(
+              LAST_FIND_RELEVANT_FILES_SHRINK_STATE_KEY,
+              shrink_result
+            )
+
+            const api_providers_manager = new ModelProvidersManager(
+              extension_context
+            )
+            const api_configurations =
+              await api_providers_manager.get_api_configurations()
+
+            if (api_configurations.length == 0) {
+              vscode.commands.executeCommand('codeWebChat.settings')
+              vscode.window.showInformationMessage(
+                t('command.search.error.no-configs')
+              )
+              return
+            }
+
+            let go_back_to_shrink = false
+            let force_prompt = false
+            while (true) {
+              const tokens_to_process = shrink_result
+                ? analysis.shrink_tokens
+                : analysis.full_tokens
+              const api_configuration_result =
+                await prompt_for_api_configuration({
+                  api_providers_manager,
+                  extension_context,
+                  api_configurations,
+                  tokens_to_process,
+                  force_prompt
+                })
+
+              force_prompt = false
+
+              if (api_configuration_result === 'back') {
+                go_back_to_shrink = true
+                break
+              }
+              if (api_configuration_result === 'cancel') return
+
+              const {
+                api_configuration: selected_api_configuration,
+                model_provider,
+                skipped: skipped_api_configuration
+              } = api_configuration_result
+
+              const api_result = await fetch_relevant_files_from_api(
+                analysis.files_data,
+                shrink_result as boolean,
+                search_term,
+                model_provider,
+                selected_api_configuration
+              )
+
+              if (api_result === 'cancel') return
+              if (api_result === 'error') {
+                force_prompt = true
+                continue
+              }
+              if (api_result === 'error_no_files') {
+                vscode.window.showWarningMessage(t('command.search.no-files'))
+                go_back_to_input = true
+                break
+              }
+
+              const apply_result = await show_results_and_apply({
+                extracted_files: api_result,
+                analysis,
+                workspace_provider,
+                extension_context
+              })
+
+              if (apply_result === 'back') {
+                if (skipped_api_configuration) {
+                  go_back_to_shrink = true
+                  break
+                } else continue
+              }
+
+              if (apply_result === 'cancel' || apply_result === 'success')
+                return
+            }
+
+            if (go_back_to_shrink) continue
+            if (go_back_to_input) break
+          }
+
+          if (go_back_to_input) continue
+          return
+        }
 
         let all_files: string[] = []
 
@@ -75,7 +233,8 @@ export const search_files_for_context_commands = (
 
         const matched_files = await search_files_by_term({
           files: all_files,
-          search_term
+          search_term,
+          search_mode
         })
 
         if (matched_files.length == 0) {
@@ -86,6 +245,7 @@ export const search_files_for_context_commands = (
         const selected_items = await prompt_for_search_results({
           matched_files,
           search_term,
+          search_mode,
           workspace_provider
         })
 

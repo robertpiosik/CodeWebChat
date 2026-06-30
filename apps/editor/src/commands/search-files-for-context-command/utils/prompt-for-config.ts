@@ -185,9 +185,7 @@ export const prompt_for_api_configuration = async (params: {
     selected_api_configuration.model_provider_name
   )
   if (!model_provider) {
-    vscode.window.showErrorMessage(
-      t('command.find-relevant-files.error.provider-not-found')
-    )
+    vscode.window.showErrorMessage(t('command.search.error.provider-not-found'))
     return 'cancel'
   }
 

@@ -37,7 +37,7 @@ export const analyze_workspace_files = async (params: {
   await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Window,
-      title: t('command.find-relevant-files.progress.analyzing')
+      title: t('command.search.progress.analyzing')
     },
     async () => {
       for (const file_path of all_files) {

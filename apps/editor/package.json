@@ -324,11 +324,6 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.findRelevantFiles",
-        "title": "%codeWebChat.findRelevantFiles.title%",
-        "category": "Code Web Chat"
-      },
-      {
         "command": "codeWebChat.selectReferencingFiles",
         "title": "%codeWebChat.selectReferencingFiles.title%",
         "category": "Code Web Chat"
@@ -516,10 +511,6 @@
         },
         {
           "command": "codeWebChat.searchFilesForContextFromDirectory",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.findRelevantFiles",
           "when": "false"
         },
         {
@@ -768,14 +759,9 @@
           "group": "1_modification@6"
         },
         {
-          "command": "codeWebChat.findRelevantFiles",
-          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
-          "group": "1_modification@7"
-        },
-        {
           "command": "codeWebChat.setRanges",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && viewItem == file",
-          "group": "1_modification@8"
+          "group": "1_modification@7"
         },
         {
           "command": "codeWebChat.findInFolder",

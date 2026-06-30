@@ -42,7 +42,6 @@
   "codeWebChat.setRanges.title": "Задай диапазони...",
   "codeWebChat.searchFilesForContext.title": "Търси файлове за контекста...",
   "codeWebChat.searchFilesForContextFromDirectory.title": "Търси файлове за контекста...",
-  "codeWebChat.findRelevantFiles.title": "Намери подходящи файлове...",
   "codeWebChat.selectReferencingFiles.title": "Избери рефериращите файлове...",
   "codeWebChat.selectDefinitionFile.title": "Изберете файл с дефиниция",
   "codeWebChat.openInIntegratedTerminal.title": "Отвори във вградения терминал",

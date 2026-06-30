@@ -70,8 +70,10 @@ export const RECENTLY_USED_INTELLIGENT_UPDATE_CONFIG_IDS_STATE_KEY =
 export const RECENTLY_USED_VOICE_INPUT_CONFIG_IDS_STATE_KEY =
   'recently-used-voice-input-config-ids'
 
-export const WEB_CONFIGURATIONS_COLLAPSED_STATE_KEY = 'web-configurations-collapsed'
-export const API_CONFIGURATIONS_COLLAPSED_STATE_KEY = 'api-configurations-collapsed'
+export const WEB_CONFIGURATIONS_COLLAPSED_STATE_KEY =
+  'web-configurations-collapsed'
+export const API_CONFIGURATIONS_COLLAPSED_STATE_KEY =
+  'api-configurations-collapsed'
 
 export const get_recently_used_web_configurations_key = (
   web_prompt_type: string
@@ -81,6 +83,9 @@ export const LAST_SELECTED_BROWSER_ID_STATE_KEY = 'last-selected-browser-id'
 
 export const LAST_SEARCH_FILES_FOR_CONTEXT_QUERY_STATE_KEY =
   'last-search-files-for-context-query'
+
+export const LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY =
+  'last-search-files-for-context-mode'
 
 export const LAST_FIND_RELEVANT_FILES_QUERY_STATE_KEY =
   'last-find-relevant-files-query'
