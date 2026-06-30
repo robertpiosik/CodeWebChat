@@ -891,7 +891,7 @@
           "type": "string",
           "scope": "resource"
         },
-        "codeWebChat.editContextSystemInstructions": {
+        "codeWebChat.editFilesSystemInstructions": {
           "type": "string",
           "scope": "resource"
         },

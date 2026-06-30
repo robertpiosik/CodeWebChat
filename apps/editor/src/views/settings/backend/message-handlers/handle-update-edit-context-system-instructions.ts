@@ -8,7 +8,7 @@ export const handle_update_edit_context_system_instructions = async (
   await vscode.workspace
     .getConfiguration('codeWebChat')
     .update(
-      'editContextSystemInstructions',
+      'editFilesSystemInstructions',
       message.instructions == '' ||
         message.instructions == default_system_instructions
         ? undefined

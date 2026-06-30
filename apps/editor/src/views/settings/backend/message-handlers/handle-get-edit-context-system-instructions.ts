@@ -7,7 +7,7 @@ export const handle_get_edit_context_system_instructions = async (
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const instructions =
-    config.get<string>('editContextSystemInstructions') ||
+    config.get<string>('editFilesSystemInstructions') ||
     default_system_instructions
   provider.postMessage({
     command: 'EDIT_CONTEXT_SYSTEM_INSTRUCTIONS',

@@ -386,7 +386,7 @@ export const handle_edit_context = async (
     const system_instructions =
       vscode.workspace
         .getConfiguration('codeWebChat')
-        .get<string>('editContextSystemInstructions') ||
+        .get<string>('editFilesSystemInstructions') ||
       default_system_instructions
 
     const part1 = `<files>\n${collected.other_files}`
