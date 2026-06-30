@@ -43,11 +43,11 @@
   "codeWebChat.searchFilesForContext.title": "Rechercher des fichiers pour le contexte...",
   "codeWebChat.searchFilesForContextFromDirectory.title": "Rechercher des fichiers pour le contexte...",
   "codeWebChat.findRelevantFiles.title": "Trouver des fichiers pertinents...",
-  "codeWebChat.checkReferencingFilesForContext.title": "Cocher les fichiers faisant référence au contexte",
-  "codeWebChat.checkDefinitionFileForContext.title": "Cocher le fichier de définition pour le contexte",
+  "codeWebChat.selectReferencingFiles.title": "Sélectionner les fichiers de référence",
+  "codeWebChat.selectDefinitionFile.title": "Sélectionner le fichier de définition",
   "codeWebChat.openInIntegratedTerminal.title": "Ouvrir dans le terminal intégré",
   "codeWebChat.removeFolderFromWorkspace.title": "Retirer le dossier de l'espace de travail",
   "codeWebChat.openWebsitePreviewUrl.title": "Ouvrir l'URL dans le navigateur",
   "codeWebChat.selectUnstagedFiles.title": "Cocher les fichiers modifiés",
-  "codeWebChat.checkCommitFiles.title": "Cocher les fichiers d'un commit..."
+  "codeWebChat.selectCommitFiles.title": "Cocher les fichiers d'un commit..."
 }

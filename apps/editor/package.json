@@ -329,13 +329,13 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.checkReferencingFilesForContext",
-        "title": "%codeWebChat.checkReferencingFilesForContext.title%",
+        "command": "codeWebChat.selectReferencingFiles",
+        "title": "%codeWebChat.selectReferencingFiles.title%",
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.checkDefinitionFileForContext",
-        "title": "%codeWebChat.checkDefinitionFileForContext.title%",
+        "command": "codeWebChat.selectDefinitionFile",
+        "title": "%codeWebChat.selectDefinitionFile.title%",
         "category": "Code Web Chat"
       },
       {
@@ -397,11 +397,11 @@
           "group": "1_action@4"
         },
         {
-          "command": "codeWebChat.checkReferencingFilesForContext",
+          "command": "codeWebChat.selectReferencingFiles",
           "group": "1_action@5"
         },
         {
-          "command": "codeWebChat.checkDefinitionFileForContext",
+          "command": "codeWebChat.selectDefinitionFile",
           "group": "1_action@6"
         }
       ],
@@ -527,11 +527,11 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.checkDefinitionFileForContext",
+          "command": "codeWebChat.selectDefinitionFile",
           "when": "false"
         },
         {
-          "command": "codeWebChat.checkReferencingFilesForContext",
+          "command": "codeWebChat.selectReferencingFiles",
           "when": "false"
         },
         {

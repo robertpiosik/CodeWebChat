@@ -43,11 +43,11 @@
   "codeWebChat.searchFilesForContext.title": "Hledat soubory pro kontext...",
   "codeWebChat.searchFilesForContextFromDirectory.title": "Hledat soubory pro kontext...",
   "codeWebChat.findRelevantFiles.title": "Najít relevantní soubory...",
-  "codeWebChat.checkReferencingFilesForContext.title": "Vybrat odkazující soubory pro kontext",
-  "codeWebChat.checkDefinitionFileForContext.title": "Vybrat soubor definice pro kontext",
+  "codeWebChat.selectReferencingFiles.title": "Vybrat odkazující soubory",
+  "codeWebChat.selectDefinitionFile.title": "Vybrat soubor definice",
   "codeWebChat.openInIntegratedTerminal.title": "Otevřít v integrovaném terminálu",
   "codeWebChat.removeFolderFromWorkspace.title": "Odebrat složku z pracovního prostoru",
   "codeWebChat.openWebsitePreviewUrl.title": "Otevřít URL v prohlížeči",
   "codeWebChat.selectUnstagedFiles.title": "Vybrat upravené soubory",
-  "codeWebChat.checkCommitFiles.title": "Vybrat soubory z commitu..."
+  "codeWebChat.selectCommitFiles.title": "Vybrat soubory z commitu..."
 }

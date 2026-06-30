@@ -43,11 +43,11 @@
   "codeWebChat.searchFilesForContext.title": "Bağlam İçin Dosya Ara...",
   "codeWebChat.searchFilesForContextFromDirectory.title": "Bağlam İçin Dosya Ara...",
   "codeWebChat.findRelevantFiles.title": "İlgili dosyaları bul...",
-  "codeWebChat.checkReferencingFilesForContext.title": "Bağlama Referans Veren Dosyaları Seç",
-  "codeWebChat.checkDefinitionFileForContext.title": "Bağlam İçin Tanım Dosyasını Seç",
+  "codeWebChat.selectReferencingFiles.title": "Referans Veren Dosyaları Seç",
+  "codeWebChat.selectDefinitionFile.title": "Tanım Dosyasını Seç",
   "codeWebChat.openInIntegratedTerminal.title": "Entegre Terminalde Aç",
   "codeWebChat.removeFolderFromWorkspace.title": "Klasörü Çalışma Alanından Kaldır",
   "codeWebChat.openWebsitePreviewUrl.title": "URL'yi Tarayıcıda Aç",
   "codeWebChat.selectUnstagedFiles.title": "Değiştirilen Dosyaları Seç",
-  "codeWebChat.checkCommitFiles.title": "Bir İşlemeden (Commit) Dosyaları Seç..."
+  "codeWebChat.selectCommitFiles.title": "Bir İşlemeden (Commit) Dosyaları Seç..."
 }

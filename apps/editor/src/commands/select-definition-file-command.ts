@@ -3,11 +3,11 @@ import { WorkspaceProvider } from '../context/providers/workspace/workspace-prov
 import { Logger } from '@shared/utils/logger'
 import { t } from '../i18n'
 
-export const check_definition_file_for_context_command = (
+export const select_definition_file_command = (
   workspace_provider: WorkspaceProvider
 ) => {
   return vscode.commands.registerCommand(
-    'codeWebChat.checkDefinitionFileForContext',
+    'codeWebChat.selectDefinitionFile',
     async () => {
       const editor = vscode.window.activeTextEditor
       if (!editor) {
@@ -21,7 +21,7 @@ export const check_definition_file_for_context_command = (
         const definition_uri = await vscode.window.withProgress(
           {
             location: vscode.ProgressLocation.Window,
-            title: t('command.context.check-definition.resolving')
+            title: t('command.context.select-definition.resolving')
           },
           async () => {
             const result = await vscode.commands.executeCommand<
@@ -42,7 +42,7 @@ export const check_definition_file_for_context_command = (
 
         if (!definition_uri) {
           vscode.window.showInformationMessage(
-            t('command.context.check-definition.no-definition')
+            t('command.context.select-definition.no-definition')
           )
           return
         }
@@ -51,14 +51,14 @@ export const check_definition_file_for_context_command = (
 
         if (!workspace_provider.get_workspace_root_for_file(file_path)) {
           vscode.window.showWarningMessage(
-            t('command.context.check-definition.outside-workspace')
+            t('command.context.select-definition.outside-workspace')
           )
           return
         }
 
         if (workspace_provider.is_ignored_by_patterns(file_path)) {
           vscode.window.showWarningMessage(
-            t('command.context.check-definition.ignored')
+            t('command.context.select-definition.ignored')
           )
           return
         }
@@ -74,11 +74,11 @@ export const check_definition_file_for_context_command = (
           added = true
         }
 
-        const open_button = t('command.context.check-definition.open-file')
+        const open_button = t('command.context.select-definition.open-file')
 
         const message = added
-          ? t('command.context.check-definition.added')
-          : t('command.context.check-definition.already-in-context')
+          ? t('command.context.select-definition.added')
+          : t('command.context.select-definition.already-in-context')
 
         const selection = await vscode.window.showInformationMessage(
           message,
@@ -91,12 +91,12 @@ export const check_definition_file_for_context_command = (
         }
       } catch (error) {
         vscode.window.showErrorMessage(
-          t('command.context.check-definition.failed', {
+          t('command.context.select-definition.failed', {
             error: error instanceof Error ? error.message : String(error)
           })
         )
         Logger.error({
-          function_name: 'check_definition_file_for_context_command',
+          function_name: 'select_definition_file_command',
           message: 'Error resolving definition',
           data: error
         })

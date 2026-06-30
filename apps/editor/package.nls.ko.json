@@ -43,11 +43,11 @@
   "codeWebChat.searchFilesForContext.title": "컨텍스트에 대한 파일 검색...",
   "codeWebChat.searchFilesForContextFromDirectory.title": "컨텍스트에 대한 파일 검색...",
   "codeWebChat.findRelevantFiles.title": "관련 파일 찾기...",
-  "codeWebChat.checkReferencingFilesForContext.title": "컨텍스트를 참조하는 파일 선택",
-  "codeWebChat.checkDefinitionFileForContext.title": "컨텍스트에 대한 정의 파일 선택",
+  "codeWebChat.selectReferencingFiles.title": "참조하는 파일 선택",
+  "codeWebChat.selectDefinitionFile.title": "정의 파일 선택",
   "codeWebChat.openInIntegratedTerminal.title": "통합 터미널에서 열기",
   "codeWebChat.removeFolderFromWorkspace.title": "작업 영역에서 폴더 제거",
   "codeWebChat.openWebsitePreviewUrl.title": "브라우저에서 URL 열기",
   "codeWebChat.selectUnstagedFiles.title": "수정된 파일 선택",
-  "codeWebChat.checkCommitFiles.title": "커밋에서 파일 선택..."
+  "codeWebChat.selectCommitFiles.title": "커밋에서 파일 선택..."
 }

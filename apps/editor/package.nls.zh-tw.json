@@ -43,11 +43,11 @@
   "codeWebChat.searchFilesForContext.title": "為上下文搜尋檔案...",
   "codeWebChat.searchFilesForContextFromDirectory.title": "為上下文搜尋檔案...",
   "codeWebChat.findRelevantFiles.title": "尋找相關檔案...",
-  "codeWebChat.checkReferencingFilesForContext.title": "選取參考上下文的檔案",
-  "codeWebChat.checkDefinitionFileForContext.title": "選取上下文的定義檔案",
+  "codeWebChat.selectReferencingFiles.title": "選擇參考檔案",
+  "codeWebChat.selectDefinitionFile.title": "選擇定義檔案",
   "codeWebChat.openInIntegratedTerminal.title": "在整合式終端機中開啟",
   "codeWebChat.removeFolderFromWorkspace.title": "從工作區移除資料夾",
   "codeWebChat.openWebsitePreviewUrl.title": "在瀏覽器中開啟 URL",
   "codeWebChat.selectUnstagedFiles.title": "選取修改的檔案",
-  "codeWebChat.checkCommitFiles.title": "選取提交中的檔案..."
+  "codeWebChat.selectCommitFiles.title": "選取提交中的檔案..."
 }

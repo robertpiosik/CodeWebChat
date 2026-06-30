@@ -38,11 +38,11 @@ import {
   generate_commit_message_command,
   set_ranges_command,
   search_files_for_context_commands,
-  check_referencing_files_for_context_command,
-  check_definition_file_for_context_command,
+  select_referencing_files_command,
+  select_definition_file_command,
   find_relevant_files_command,
   select_unstaged_files_command,
-  check_commit_files_command
+  select_commit_files_command
 } from './commands'
 import { setup_git_discard_file_watcher } from './services/git-discard-file-watcher'
 import { select_imported_files_command } from './commands/select-imported-files-command'
@@ -144,7 +144,7 @@ export const activate = async (context: vscode.ExtensionContext) => {
       on_context_selected: () => {}
     }),
     select_unstaged_files_command(workspace_provider, context),
-    check_commit_files_command(workspace_provider, context),
+    select_commit_files_command(workspace_provider, context),
     rename_command(),
     delete_command(),
     add_file_to_context_command(workspace_provider),
@@ -152,10 +152,10 @@ export const activate = async (context: vscode.ExtensionContext) => {
     set_ranges_command(workspace_provider, context),
     select_imported_files_command(workspace_provider),
     duplicate_workspace_command(workspace_provider, context),
-    check_referencing_files_for_context_command(workspace_provider),
+    select_referencing_files_command(workspace_provider),
     ...search_files_for_context_commands(workspace_provider, context),
     find_relevant_files_command(workspace_provider, context),
-    check_definition_file_for_context_command(workspace_provider),
+    select_definition_file_command(workspace_provider),
     open_url_command({
       command: 'codeWebChat.documentation',
       url: 'https://codeweb.chat/'

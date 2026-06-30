@@ -5,11 +5,11 @@ import { Logger } from '@shared/utils/logger'
 import { display_token_count } from '../utils/display-token-count'
 import { t } from '../i18n'
 
-export const check_referencing_files_for_context_command = (
+export const select_referencing_files_command = (
   workspace_provider: WorkspaceProvider
 ) => {
   return vscode.commands.registerCommand(
-    'codeWebChat.checkReferencingFilesForContext',
+    'codeWebChat.selectReferencingFiles',
     async () => {
       const editor = vscode.window.activeTextEditor
       if (!editor) {
@@ -23,7 +23,7 @@ export const check_referencing_files_for_context_command = (
         const matched_files = await vscode.window.withProgress(
           {
             location: vscode.ProgressLocation.Window,
-            title: t('command.context.check-references.searching')
+            title: t('command.context.select-references.searching')
           },
           async () => {
             const locations = await vscode.commands.executeCommand<
@@ -57,7 +57,7 @@ export const check_referencing_files_for_context_command = (
 
         if (matched_files.length == 0) {
           vscode.window.showInformationMessage(
-            t('command.context.check-references.no-files')
+            t('command.context.select-references.no-files')
           )
           return
         }
@@ -105,9 +105,9 @@ export const check_referencing_files_for_context_command = (
         )
         quick_pick.canSelectMany = true
         quick_pick.placeholder = t(
-          'command.context.check-references.select-files'
+          'command.context.select-references.select-files'
         )
-        quick_pick.title = t('command.context.check-references.search-results')
+        quick_pick.title = t('command.context.select-references.search-results')
         quick_pick.ignoreFocusOut = true
 
         const close_button = {
@@ -157,7 +157,7 @@ export const check_referencing_files_for_context_command = (
                 })
               } catch (error) {
                 vscode.window.showErrorMessage(
-                  t('command.context.check-references.error-opening', {
+                  t('command.context.select-references.error-opening', {
                     error: String(error)
                   })
                 )
@@ -195,16 +195,16 @@ export const check_referencing_files_for_context_command = (
 
         await workspace_provider.set_checked_files(paths_to_apply)
         vscode.window.showInformationMessage(
-          t('command.context.check-references.context-updated')
+          t('command.context.select-references.context-updated')
         )
       } catch (error) {
         vscode.window.showErrorMessage(
-          t('command.context.check-references.failed', {
+          t('command.context.select-references.failed', {
             error: error instanceof Error ? error.message : String(error)
           })
         )
         Logger.error({
-          function_name: 'check_referencing_files_for_context_command',
+          function_name: 'select_referencing_files_command',
           message: 'Error searching references',
           data: error
         })

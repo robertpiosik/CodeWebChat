@@ -43,11 +43,11 @@
   "codeWebChat.searchFilesForContext.title": "Искать файлы для контекста...",
   "codeWebChat.searchFilesForContextFromDirectory.title": "Искать файлы для контекста...",
   "codeWebChat.findRelevantFiles.title": "Найти подходящие файлы...",
-  "codeWebChat.checkReferencingFilesForContext.title": "Отметить файлы, ссылающиеся на контекст",
-  "codeWebChat.checkDefinitionFileForContext.title": "Отметить файл определения для контекста",
+  "codeWebChat.selectReferencingFiles.title": "Выбрать ссылающиеся файлы",
+  "codeWebChat.selectDefinitionFile.title": "Выбрать файл определения",
   "codeWebChat.openInIntegratedTerminal.title": "Открыть во встроенном терминале",
   "codeWebChat.removeFolderFromWorkspace.title": "Удалить папку из рабочей области",
   "codeWebChat.openWebsitePreviewUrl.title": "Открыть URL в браузере",
   "codeWebChat.selectUnstagedFiles.title": "Отметить измененные файлы",
-  "codeWebChat.checkCommitFiles.title": "Отметить файлы из коммита..."
+  "codeWebChat.selectCommitFiles.title": "Отметить файлы из коммита..."
 }

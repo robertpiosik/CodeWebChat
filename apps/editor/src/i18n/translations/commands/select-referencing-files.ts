@@ -1,5 +1,5 @@
-export const check_referencing_files_for_context = {
-  'command.context.check-references.searching': {
+export const select_referencing_files = {
+  'command.context.select-references.searching': {
     en: 'Searching for references...',
     pl: 'Wyszukiwanie odwołań...',
     'zh-cn': '正在搜索引用...',
@@ -17,7 +17,7 @@ export const check_referencing_files_for_context = {
     hu: 'Hivatkozások keresése...',
     bg: 'Търсене на референции...'
   },
-  'command.context.check-references.no-files': {
+  'command.context.select-references.no-files': {
     en: 'No references found.',
     pl: 'Nie znaleziono odwołań.',
     'zh-cn': '未找到引用。',
@@ -35,25 +35,25 @@ export const check_referencing_files_for_context = {
     hu: 'Nem találhatók hivatkozások.',
     bg: 'Не са намерени референции.'
   },
-  'command.context.check-references.select-files': {
-    en: 'Select files to check for context',
-    pl: 'Wybierz pliki do zaznaczenia w kontekście',
-    'zh-cn': '选择要勾选上下文的文件',
-    ja: 'コンテキストでチェックするファイルを選択',
-    'zh-tw': '選擇要勾選上下文的檔案',
-    de: 'Dateien zur Überprüfung im Kontext auswählen',
-    es: 'Seleccione archivos para verificar el contexto',
-    fr: 'Sélectionnez les fichiers à vérifier pour le contexte',
-    'pt-br': 'Selecione arquivos para verificar no contexto',
-    ru: 'Выберите файлы для добавления в контекст',
-    ko: '컨텍스트에서 확인할 파일 선택',
-    it: 'Seleziona i file da verificare per il contesto',
-    tr: 'Bağlam için işaretlenecek dosyaları seçin',
-    cs: 'Vyberte soubory k zaškrtnutí v kontextu',
-    hu: 'Válassza ki a kontextushoz ellenőrizendő fájlokat',
-    bg: 'Изберете файлове за проверка в контекста'
+  'command.context.select-references.select-files': {
+    en: 'Select referencing files',
+    pl: 'Wybierz pliki odwołujące się',
+    'zh-cn': '选择引用文件',
+    ja: '参照しているファイルを選択',
+    'zh-tw': '選擇參考檔案',
+    de: 'Referenzierende Dateien auswählen',
+    es: 'Seleccionar archivos que referencian',
+    fr: 'Sélectionnez les fichiers de référence',
+    'pt-br': 'Selecionar arquivos de referência',
+    ru: 'Выберите ссылающиеся файлы',
+    ko: '참조하는 파일 선택',
+    it: 'Seleziona i file di riferimento',
+    tr: 'Referans veren dosyaları seçin',
+    cs: 'Vyberte odkazující soubory',
+    hu: 'Hivatkozó fájlok kiválasztása',
+    bg: 'Изберете рефериращите файлове'
   },
-  'command.context.check-references.search-results': {
+  'command.context.select-references.search-results': {
     en: 'Search Results',
     pl: 'Wyniki wyszukiwania',
     'zh-cn': '搜索结果',
@@ -71,7 +71,7 @@ export const check_referencing_files_for_context = {
     hu: 'Keresési eredmények',
     bg: 'Резултати от търсенето'
   },
-  'command.context.check-references.context-updated': {
+  'command.context.select-references.context-updated': {
     en: 'Context updated.',
     pl: 'Kontekst zaktualizowany.',
     'zh-cn': '上下文已更新。',
@@ -89,7 +89,7 @@ export const check_referencing_files_for_context = {
     hu: 'Kontextus frissítve.',
     bg: 'Контекстът е актуализиран.'
   },
-  'command.context.check-references.error-opening': {
+  'command.context.select-references.error-opening': {
     en: 'Error opening file: {error}',
     pl: 'Błąd otwierania pliku: {error}',
     'zh-cn': '打开文件出错：{error}',
@@ -107,7 +107,7 @@ export const check_referencing_files_for_context = {
     hu: 'Hiba a fájl megnyitásakor: {error}',
     bg: 'Грешка при отваряне на файл: {error}'
   },
-  'command.context.check-references.failed': {
+  'command.context.select-references.failed': {
     en: 'Reference check failed: {error}',
     pl: 'Sprawdzenie odwołań nie powiodło się: {error}',
     'zh-cn': '引用检查失败：{error}',

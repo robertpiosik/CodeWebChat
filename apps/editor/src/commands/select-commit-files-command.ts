@@ -11,12 +11,12 @@ import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 import { display_token_count } from '@/utils/display-token-count'
 
-export const check_commit_files_command = (
+export const select_commit_files_command = (
   workspace_provider: WorkspaceProvider,
   extension_context: vscode.ExtensionContext
 ): vscode.Disposable => {
   return vscode.commands.registerCommand(
-    'codeWebChat.checkCommitFiles',
+    'codeWebChat.selectCommitFiles',
     async () => {
       try {
         const repository = await get_git_repository()
@@ -372,7 +372,7 @@ export const check_commit_files_command = (
           }`
         )
         Logger.error({
-          function_name: 'check_commit_files_command',
+          function_name: 'select_commit_files_command',
           message: 'Error handling commit files command',
           data: error
         })

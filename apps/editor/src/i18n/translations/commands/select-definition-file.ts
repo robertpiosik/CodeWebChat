@@ -1,5 +1,5 @@
-export const check_definition_file_for_context = {
-  'command.context.check-definition.resolving': {
+export const select_definition_file = {
+  'command.context.select-definition.resolving': {
     en: 'Resolving definition...',
     pl: 'Rozwiązywanie definicji...',
     'zh-cn': '正在解析定义...',
@@ -17,7 +17,7 @@ export const check_definition_file_for_context = {
     hu: 'Definíció feloldása...',
     bg: 'Разрешаване на дефиницията...'
   },
-  'command.context.check-definition.no-definition': {
+  'command.context.select-definition.no-definition': {
     en: 'No definition found.',
     pl: 'Nie znaleziono definicji.',
     'zh-cn': '未找到定义。',
@@ -35,7 +35,7 @@ export const check_definition_file_for_context = {
     hu: 'Nem található definíció.',
     bg: 'Не е намерена дефиниция.'
   },
-  'command.context.check-definition.outside-workspace': {
+  'command.context.select-definition.outside-workspace': {
     en: 'Definition found is outside the workspace.',
     pl: 'Znaleziona definicja znajduje się poza obszarem roboczym.',
     'zh-cn': '找到的定义在工作区之外。',
@@ -53,7 +53,7 @@ export const check_definition_file_for_context = {
     hu: 'A talált definíció a munkaterületen kívül esik.',
     bg: 'Намерената дефиниция е извън работното пространство.'
   },
-  'command.context.check-definition.ignored': {
+  'command.context.select-definition.ignored': {
     en: 'Definition found is in an ignored file.',
     pl: 'Znaleziona definicja znajduje się w ignorowanym pliku.',
     'zh-cn': '找到的定义在一个被忽略的文件中。',
@@ -71,7 +71,7 @@ export const check_definition_file_for_context = {
     hu: 'A talált definíció egy figyelmen kívül hagyott fájlban van.',
     bg: 'Намерената дефиниция е в игнориран файл.'
   },
-  'command.context.check-definition.added': {
+  'command.context.select-definition.added': {
     en: 'Added definition to context.',
     pl: 'Dodano definicję do kontekstu.',
     'zh-cn': '已将定义添加到上下文。',
@@ -89,7 +89,7 @@ export const check_definition_file_for_context = {
     hu: 'Definíció hozzáadva a kontextushoz.',
     bg: 'Дефиницията е добавена към контекста.'
   },
-  'command.context.check-definition.already-in-context': {
+  'command.context.select-definition.already-in-context': {
     en: 'The definition is already in context.',
     pl: 'Definicja jest już w kontekście.',
     'zh-cn': '该定义已在上下文中。',
@@ -107,7 +107,7 @@ export const check_definition_file_for_context = {
     hu: 'A definíció már a kontextusban van.',
     bg: 'Дефиницията вече е в контекста.'
   },
-  'command.context.check-definition.open-file': {
+  'command.context.select-definition.open-file': {
     en: 'Open File',
     pl: 'Otwórz plik',
     'zh-cn': '打开文件',
@@ -125,8 +125,8 @@ export const check_definition_file_for_context = {
     hu: 'Fájl megnyitása',
     bg: 'Отваряне на файл'
   },
-  'command.context.check-definition.failed': {
-    en: 'Check definition failed: {error}',
+  'command.context.select-definition.failed': {
+    en: 'Select definition file failed: {error}',
     pl: 'Sprawdzenie definicji nie powiodło się: {error}',
     'zh-cn': '检查定义失败：{error}',
     ja: '定義の確認に失敗しました: {error}',
