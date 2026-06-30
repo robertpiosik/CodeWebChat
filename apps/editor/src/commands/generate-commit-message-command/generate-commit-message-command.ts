@@ -6,9 +6,11 @@ import {
   get_repository_for_commit
 } from '../../utils/git-repository-utils'
 import { display_token_count } from '../../utils/display-token-count'
-import { get_commit_message_api_configuration } from './utils/get-commit-message-config'
-import { build_commit_message_prompt } from './utils/build-commit-message-prompt'
-import { generate_commit_message_with_api } from './utils/generate-commit-message-with-api'
+import {
+  get_commit_message_api_configuration,
+  build_commit_message_prompt,
+  generate_commit_message_with_api
+} from '@/features/commit-messages'
 import { t } from '@/i18n'
 import axios from 'axios'
 import { PromptsForCommitMessagesUtils } from '../../utils/prompts-for-commit-messages-utils'

@@ -20,7 +20,7 @@ export type GitRepository = {
   show: (ref: string, path: string) => Promise<string>
 }
 
-export const get_all_git_repositories = (): GitRepository[] | null => {
+const get_all_git_repositories = (): GitRepository[] | null => {
   const git_extension = vscode.extensions.getExtension('vscode.git')
   if (!git_extension) {
     vscode.window.showErrorMessage(
