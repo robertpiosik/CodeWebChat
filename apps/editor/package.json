@@ -361,8 +361,8 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.checkCommitFiles",
-        "title": "%codeWebChat.checkCommitFiles.title%",
+        "command": "codeWebChat.selectCommitFiles",
+        "title": "%codeWebChat.selectCommitFiles.title%",
         "category": "Code Web Chat"
       }
     ],
@@ -551,7 +551,7 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.checkCommitFiles",
+          "command": "codeWebChat.selectCommitFiles",
           "when": "false"
         }
       ],
@@ -627,7 +627,7 @@
           "group": "1_more@4"
         },
         {
-          "command": "codeWebChat.checkCommitFiles",
+          "command": "codeWebChat.selectCommitFiles",
           "when": "view == codeWebChatViewWorkspace",
           "group": "1_more@5"
         },
