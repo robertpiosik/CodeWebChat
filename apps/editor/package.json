@@ -754,23 +754,28 @@
         },
         {
           "command": "codeWebChat.selectImportedFiles",
-          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == file || viewItem == contextFile || viewItem == directory)",
+          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == file || viewItem == contextFile || viewItem == directory || viewItem == contextDirectory || viewItem == workspaceRoot || viewItem == contextWorkspaceRoot)",
           "group": "1_modification@4"
+        },
+        {
+          "command": "codeWebChat.selectReferencingFiles",
+          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == directory || viewItem == contextDirectory || viewItem == workspaceRoot || viewItem == contextWorkspaceRoot)",
+          "group": "1_modification@5"
         },
         {
           "command": "codeWebChat.searchFilesForContextFromDirectory",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
-          "group": "1_modification@5"
+          "group": "1_modification@6"
         },
         {
           "command": "codeWebChat.findRelevantFiles",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
-          "group": "1_modification@6"
+          "group": "1_modification@7"
         },
         {
           "command": "codeWebChat.setRanges",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && viewItem == file",
-          "group": "1_modification@7"
+          "group": "1_modification@8"
         },
         {
           "command": "codeWebChat.findInFolder",

@@ -43,7 +43,7 @@
   "codeWebChat.searchFilesForContext.title": "コンテキストのファイルを検索...",
   "codeWebChat.searchFilesForContextFromDirectory.title": "コンテキストのファイルを検索...",
   "codeWebChat.findRelevantFiles.title": "関連するファイルを検索...",
-  "codeWebChat.selectReferencingFiles.title": "参照しているファイルを選択",
+  "codeWebChat.selectReferencingFiles.title": "参照しているファイルを選択...",
   "codeWebChat.selectDefinitionFile.title": "定義ファイルを選択",
   "codeWebChat.openInIntegratedTerminal.title": "統合ターミナルで開く",
   "codeWebChat.removeFolderFromWorkspace.title": "ワークスペースからフォルダーを削除",

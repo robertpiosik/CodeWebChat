@@ -43,7 +43,7 @@
   "codeWebChat.searchFilesForContext.title": "Искать файлы для контекста...",
   "codeWebChat.searchFilesForContextFromDirectory.title": "Искать файлы для контекста...",
   "codeWebChat.findRelevantFiles.title": "Найти подходящие файлы...",
-  "codeWebChat.selectReferencingFiles.title": "Выбрать ссылающиеся файлы",
+  "codeWebChat.selectReferencingFiles.title": "Выбрать ссылающиеся файлы...",
   "codeWebChat.selectDefinitionFile.title": "Выбрать файл определения",
   "codeWebChat.openInIntegratedTerminal.title": "Открыть во встроенном терминале",
   "codeWebChat.removeFolderFromWorkspace.title": "Удалить папку из рабочей области",

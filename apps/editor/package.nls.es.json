@@ -43,7 +43,7 @@
   "codeWebChat.searchFilesForContext.title": "Buscar archivos para el contexto...",
   "codeWebChat.searchFilesForContextFromDirectory.title": "Buscar archivos para el contexto...",
   "codeWebChat.findRelevantFiles.title": "Encontrar archivos relevantes...",
-  "codeWebChat.selectReferencingFiles.title": "Seleccionar archivos que referencian",
+  "codeWebChat.selectReferencingFiles.title": "Seleccionar archivos que referencian...",
   "codeWebChat.selectDefinitionFile.title": "Seleccionar archivo de definición",
   "codeWebChat.openInIntegratedTerminal.title": "Abrir en terminal integrado",
   "codeWebChat.removeFolderFromWorkspace.title": "Eliminar carpeta del espacio de trabajo",

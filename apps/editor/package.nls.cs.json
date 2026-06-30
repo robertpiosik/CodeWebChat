@@ -43,7 +43,7 @@
   "codeWebChat.searchFilesForContext.title": "Hledat soubory pro kontext...",
   "codeWebChat.searchFilesForContextFromDirectory.title": "Hledat soubory pro kontext...",
   "codeWebChat.findRelevantFiles.title": "Najít relevantní soubory...",
-  "codeWebChat.selectReferencingFiles.title": "Vybrat odkazující soubory",
+  "codeWebChat.selectReferencingFiles.title": "Vybrat odkazující soubory...",
   "codeWebChat.selectDefinitionFile.title": "Vybrat soubor definice",
   "codeWebChat.openInIntegratedTerminal.title": "Otevřít v integrovaném terminálu",
   "codeWebChat.removeFolderFromWorkspace.title": "Odebrat složku z pracovního prostoru",

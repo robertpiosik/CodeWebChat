@@ -1,59 +1,217 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
+import {
+  WorkspaceProvider,
+  FileItem
+} from '../context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'
 import { display_token_count } from '../utils/display-token-count'
 import { t } from '../i18n'
+import { get_all_files } from './select-imported-files-command/utils/get-all-files'
 
 export const select_referencing_files_command = (
   workspace_provider: WorkspaceProvider
 ) => {
   return vscode.commands.registerCommand(
     'codeWebChat.selectReferencingFiles',
-    async () => {
-      const editor = vscode.window.activeTextEditor
-      if (!editor) {
-        return
-      }
-
+    async (item?: FileItem) => {
       try {
-        const document = editor.document
-        const position = editor.selection.active
+        let is_folder = false
+        if (item && item.resourceUri) {
+          try {
+            const stat = await vscode.workspace.fs.stat(item.resourceUri)
+            is_folder = (stat.type & vscode.FileType.Directory) !== 0
+          } catch {}
+        }
 
-        const matched_files = await vscode.window.withProgress(
-          {
-            location: vscode.ProgressLocation.Window,
-            title: t('command.context.select-references.searching')
-          },
-          async () => {
-            const locations = await vscode.commands.executeCommand<
-              vscode.Location[]
-            >('vscode.executeReferenceProvider', document.uri, position)
+        let matched_files: { file_path: string; range: vscode.Range }[] = []
 
-            if (!locations) return []
+        if (is_folder && item?.resourceUri) {
+          const folder_uri = item.resourceUri
+          const starting_uris = await get_all_files(
+            folder_uri,
+            workspace_provider
+          )
 
-            const current_file_path = document.uri.fsPath
-            const file_map = new Map<string, vscode.Range>()
-            locations.forEach((loc) => {
-              const file_path = loc.uri.fsPath
+          if (starting_uris.length == 0) {
+            vscode.window.showInformationMessage(
+              t('command.context.select-references.no-files')
+            )
+            return
+          }
 
-              if (file_path == current_file_path) return
+          const file_map = new Map<string, vscode.Range>()
+          let is_cancelled = false
 
-              if (
-                workspace_provider.get_workspace_root_for_file(file_path) &&
-                !workspace_provider.is_ignored_by_patterns(file_path)
-              ) {
-                if (!file_map.has(file_path)) {
-                  file_map.set(file_path, loc.range)
+          await vscode.window.withProgress(
+            {
+              location: vscode.ProgressLocation.Notification,
+              title: t('command.context.select-references.searching'),
+              cancellable: true
+            },
+            async (progress, token) => {
+              let processed_files = 0
+              for (const uri of starting_uris) {
+                if (token.isCancellationRequested) {
+                  is_cancelled = true
+                  break
                 }
+
+                try {
+                  const symbols = await vscode.commands.executeCommand<
+                    vscode.DocumentSymbol[] | vscode.SymbolInformation[]
+                  >('vscode.executeDocumentSymbolProvider', uri)
+
+                  if (!symbols) {
+                    processed_files++
+                    continue
+                  }
+
+                  const positions: vscode.Position[] = []
+                  const top_level_containers = new Set<string>()
+
+                  const traverse = (syms: any[]) => {
+                    for (const sym of syms) {
+                      if (sym.selectionRange) {
+                        positions.push(sym.selectionRange.start)
+                        const is_container =
+                          sym.kind === vscode.SymbolKind.Module ||
+                          sym.kind === vscode.SymbolKind.Namespace ||
+                          sym.kind === vscode.SymbolKind.Package
+
+                        if (
+                          is_container &&
+                          sym.children &&
+                          sym.children.length > 0
+                        ) {
+                          traverse(sym.children)
+                        }
+                      } else if (sym.location) {
+                        const is_container =
+                          sym.kind === vscode.SymbolKind.Module ||
+                          sym.kind === vscode.SymbolKind.Namespace ||
+                          sym.kind === vscode.SymbolKind.Package
+
+                        if (is_container) {
+                          top_level_containers.add(sym.name)
+                        }
+
+                        if (
+                          !sym.containerName ||
+                          top_level_containers.has(sym.containerName)
+                        ) {
+                          positions.push(sym.location.range.start)
+                        }
+                      }
+                    }
+                  }
+                  traverse(symbols)
+
+                  for (let i = 0; i < positions.length; i++) {
+                    if (token.isCancellationRequested) {
+                      is_cancelled = true
+                      break
+                    }
+                    const position = positions[i]
+
+                    progress.report({
+                      message: `${path.basename(uri.fsPath)} (${i + 1}/${positions.length})`
+                    })
+
+                    const locations = await vscode.commands.executeCommand<
+                      vscode.Location[]
+                    >('vscode.executeReferenceProvider', uri, position)
+
+                    if (locations) {
+                      locations.forEach((loc) => {
+                        const file_path = loc.uri.fsPath
+                        if (file_path == uri.fsPath) return
+                        if (
+                          workspace_provider.get_workspace_root_for_file(
+                            file_path
+                          ) &&
+                          !workspace_provider.is_ignored_by_patterns(file_path)
+                        ) {
+                          if (!file_map.has(file_path)) {
+                            file_map.set(file_path, loc.range)
+                          }
+                        }
+                      })
+                    }
+                  }
+                } catch (err) {
+                  Logger.error({
+                    function_name: 'select_referencing_files_command',
+                    message: `Error processing symbols for ${uri.fsPath}`,
+                    data: err
+                  })
+                }
+
+                processed_files++
+                progress.report({
+                  increment: (1 / starting_uris.length) * 100,
+                  message: `${processed_files}/${starting_uris.length}`
+                })
               }
-            })
-            return Array.from(file_map.entries()).map(([file_path, range]) => ({
+            }
+          )
+
+          if (is_cancelled) {
+            return
+          }
+
+          matched_files = Array.from(file_map.entries()).map(
+            ([file_path, range]) => ({
               file_path,
               range
-            }))
+            })
+          )
+        } else {
+          const editor = vscode.window.activeTextEditor
+          if (!editor) {
+            return
           }
-        )
+
+          const document = editor.document
+          const position = editor.selection.active
+
+          matched_files = await vscode.window.withProgress(
+            {
+              location: vscode.ProgressLocation.Window,
+              title: t('command.context.select-references.searching')
+            },
+            async () => {
+              const locations = await vscode.commands.executeCommand<
+                vscode.Location[]
+              >('vscode.executeReferenceProvider', document.uri, position)
+
+              if (!locations) return []
+
+              const current_file_path = document.uri.fsPath
+              const file_map = new Map<string, vscode.Range>()
+              locations.forEach((loc) => {
+                const file_path = loc.uri.fsPath
+
+                if (file_path == current_file_path) return
+
+                if (
+                  workspace_provider.get_workspace_root_for_file(file_path) &&
+                  !workspace_provider.is_ignored_by_patterns(file_path)
+                ) {
+                  if (!file_map.has(file_path)) {
+                    file_map.set(file_path, loc.range)
+                  }
+                }
+              })
+              return Array.from(file_map.entries()).map(
+                ([file_path, range]) => ({
+                  file_path,
+                  range
+                })
+              )
+            }
+          )
+        }
 
         if (matched_files.length == 0) {
           vscode.window.showInformationMessage(

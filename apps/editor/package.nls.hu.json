@@ -43,7 +43,7 @@
   "codeWebChat.searchFilesForContext.title": "Fájlok keresése a kontextushoz...",
   "codeWebChat.searchFilesForContextFromDirectory.title": "Fájlok keresése a kontextushoz...",
   "codeWebChat.findRelevantFiles.title": "Releváns fájlok keresése...",
-  "codeWebChat.selectReferencingFiles.title": "Hivatkozó fájlok kiválasztása",
+  "codeWebChat.selectReferencingFiles.title": "Hivatkozó fájlok kiválasztása...",
   "codeWebChat.selectDefinitionFile.title": "Definíciós fájl kiválasztása",
   "codeWebChat.openInIntegratedTerminal.title": "Megnyitás az integrált terminálban",
   "codeWebChat.removeFolderFromWorkspace.title": "Mappa eltávolítása a munkaterületről",

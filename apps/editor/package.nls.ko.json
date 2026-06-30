@@ -43,7 +43,7 @@
   "codeWebChat.searchFilesForContext.title": "컨텍스트에 대한 파일 검색...",
   "codeWebChat.searchFilesForContextFromDirectory.title": "컨텍스트에 대한 파일 검색...",
   "codeWebChat.findRelevantFiles.title": "관련 파일 찾기...",
-  "codeWebChat.selectReferencingFiles.title": "참조하는 파일 선택",
+  "codeWebChat.selectReferencingFiles.title": "참조하는 파일 선택...",
   "codeWebChat.selectDefinitionFile.title": "정의 파일 선택",
   "codeWebChat.openInIntegratedTerminal.title": "통합 터미널에서 열기",
   "codeWebChat.removeFolderFromWorkspace.title": "작업 영역에서 폴더 제거",
