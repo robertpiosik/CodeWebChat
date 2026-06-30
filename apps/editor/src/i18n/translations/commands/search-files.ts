@@ -1,4 +1,4 @@
-export const search_files_for_context = {
+export const search_files = {
   'command.search.title': {
     en: 'Search',
     pl: 'Szukaj',
@@ -216,22 +216,22 @@ export const search_files_for_context = {
     bg: 'Сливане на избраните файлове с текущия контекст'
   },
   'command.search.failed': {
-    en: 'Search files for context failed: {error}',
-    pl: 'Wyszukiwanie plików do kontekstu nie powiodło się: {error}',
-    'zh-cn': '搜索上下文文件失败：{error}',
-    ja: 'コンテキストのファイル検索に失敗しました: {error}',
-    'zh-tw': '搜尋上下文檔案失敗：{error}',
-    de: 'Dateisuche für Kontext fehlgeschlagen: {error}',
-    es: 'Error al buscar archivos para el contexto: {error}',
-    fr: 'Échec de la recherche de fichiers pour le contexte : {error}',
-    'pt-br': 'Falha ao buscar arquivos para o contexto: {error}',
-    ru: 'Ошибка поиска файлов для контекста: {error}',
-    ko: '컨텍스트 파일 검색 실패: {error}',
-    it: 'Ricerca file per il contesto non riuscita: {error}',
-    tr: 'Bağlam için dosya arama başarısız oldu: {error}',
-    cs: 'Hledání souborů pro kontext selhalo: {error}',
-    hu: 'Fájlok keresése a kontextushoz sikertelen: {error}',
-    bg: 'Търсенето на файлове за контекста е неуспешно: {error}'
+    en: 'Search files failed: {error}',
+    pl: 'Wyszukiwanie plików nie powiodło się: {error}',
+    'zh-cn': '搜索文件失败：{error}',
+    ja: 'ファイル検索に失敗しました: {error}',
+    'zh-tw': '搜尋檔案失敗：{error}',
+    de: 'Dateisuche fehlgeschlagen: {error}',
+    es: 'Error al buscar archivos: {error}',
+    fr: 'Échec de la recherche de fichiers : {error}',
+    'pt-br': 'Falha ao buscar arquivos: {error}',
+    ru: 'Ошибка поиска файлов: {error}',
+    ko: '파일 검색 실패: {error}',
+    it: 'Ricerca file non riuscita: {error}',
+    tr: 'Dosya arama başarısız oldu: {error}',
+    cs: 'Hledání souborů selhalo: {error}',
+    hu: 'Fájlok keresése sikertelen: {error}',
+    bg: 'Търсенето на файлове е неуспешно: {error}'
   },
   'command.search.mode.title': {
     en: 'Search Mode',

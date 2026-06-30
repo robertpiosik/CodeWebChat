@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
   "description": "Connect VS Code with free chatbots (CWC)",
-  "version": "1.949.0",
+  "version": "1.950.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
@@ -308,19 +308,19 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.searchFilesForContext",
-        "title": "%codeWebChat.searchFilesForContext.title%",
+        "command": "codeWebChat.searchFiles",
+        "title": "%codeWebChat.searchFiles.title%",
         "category": "Code Web Chat",
         "icon": "$(search)"
       },
       {
-        "command": "codeWebChat.searchFilesForContextFromDirectory",
-        "title": "%codeWebChat.searchFilesForContextFromDirectory.title%",
+        "command": "codeWebChat.searchFilesFromDirectory",
+        "title": "%codeWebChat.searchFilesFromDirectory.title%",
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.searchFilesForContextFromFile",
-        "title": "%codeWebChat.searchFilesForContext.title%",
+        "command": "codeWebChat.searchFilesFromFile",
+        "title": "%codeWebChat.searchFiles.title%",
         "category": "Code Web Chat"
       },
       {
@@ -510,11 +510,11 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.searchFilesForContextFromDirectory",
+          "command": "codeWebChat.searchFilesFromDirectory",
           "when": "false"
         },
         {
-          "command": "codeWebChat.searchFilesForContextFromFile",
+          "command": "codeWebChat.searchFilesFromFile",
           "when": "false"
         },
         {
@@ -583,7 +583,7 @@
           "group": "navigation@3"
         },
         {
-          "command": "codeWebChat.searchFilesForContext",
+          "command": "codeWebChat.searchFiles",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@4"
         },
@@ -754,7 +754,7 @@
           "group": "1_modification@5"
         },
         {
-          "command": "codeWebChat.searchFilesForContextFromDirectory",
+          "command": "codeWebChat.searchFilesFromDirectory",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
           "group": "1_modification@6"
         },

@@ -6,7 +6,7 @@ import { add_file_to_context } from './add-file-to-context'
 import { select_definition_file } from './select-definition-file'
 import { select_referencing_files } from './select-referencing-files'
 import { remove_file_from_context } from './remove-file-from-context'
-import { search_files_for_context } from './search-files-for-context'
+import { search_files } from './search-files'
 import { set_ranges } from './set-ranges'
 import { new_file } from './new-file'
 import { new_folder } from './new-folder'
@@ -22,7 +22,7 @@ export const commands = {
   ...select_definition_file,
   ...select_referencing_files,
   ...remove_file_from_context,
-  ...search_files_for_context,
+  ...search_files,
   ...set_ranges,
   ...new_file,
   ...new_folder,

@@ -37,7 +37,7 @@ import {
   open_url_command,
   generate_commit_message_command,
   set_ranges_command,
-  search_files_for_context_commands,
+  search_files_commands,
   select_referencing_files_command,
   select_definition_file_command,
   select_unstaged_files_command,
@@ -152,7 +152,7 @@ export const activate = async (context: vscode.ExtensionContext) => {
     select_imported_files_command(workspace_provider),
     duplicate_workspace_command(workspace_provider, context),
     select_referencing_files_command(workspace_provider),
-    ...search_files_for_context_commands(workspace_provider, context),
+    ...search_files_commands(workspace_provider, context),
     select_definition_file_command(workspace_provider),
     open_url_command({
       command: 'codeWebChat.documentation',

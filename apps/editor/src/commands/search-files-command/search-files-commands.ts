@@ -21,7 +21,7 @@ import { fetch_relevant_files_from_api } from './utils/fetch-relevant-files-from
 import { show_results_and_apply } from './utils/show-results-and-apply'
 import { ModelProvidersManager } from '../../services/model-providers-manager'
 
-export const search_files_for_context_commands = (
+export const search_files_commands = (
   workspace_provider: WorkspaceProvider,
   extension_context: vscode.ExtensionContext
 ) => {
@@ -296,8 +296,8 @@ export const search_files_for_context_commands = (
           })
         )
         Logger.error({
-          function_name: 'search_files_for_context_command',
-          message: 'Error searching files for context',
+          function_name: 'search_files_command',
+          message: 'Error searching files',
           data: error
         })
         break
@@ -306,15 +306,15 @@ export const search_files_for_context_commands = (
   }
 
   return [
-    vscode.commands.registerCommand('codeWebChat.searchFilesForContext', () =>
+    vscode.commands.registerCommand('codeWebChat.searchFiles', () =>
       search_handler()
     ),
     vscode.commands.registerCommand(
-      'codeWebChat.searchFilesForContextFromDirectory',
+      'codeWebChat.searchFilesFromDirectory',
       (item: any) => search_handler(item)
     ),
     vscode.commands.registerCommand(
-      'codeWebChat.searchFilesForContextFromFile',
+      'codeWebChat.searchFilesFromFile',
       (item: any) => search_handler(item, true)
     )
   ]
