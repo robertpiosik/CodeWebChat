@@ -35,7 +35,7 @@ export const handle_show_prompt_template_quick_pick = async (
     case 'code-at-cursor':
       prompt_templates_key = 'promptTemplatesForCodeAtCursor'
       break
-    case 'no-context':
+    case 'without-files':
       prompt_templates_key = 'promptTemplatesForNoContext'
       break
     case 'find-relevant-files':

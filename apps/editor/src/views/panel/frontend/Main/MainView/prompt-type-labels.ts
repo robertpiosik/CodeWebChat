@@ -5,7 +5,7 @@ export const web_prompt_type_labels: Record<WebPromptType, string> = {
   'ask-about-context': 'Ask about context',
   'code-at-cursor': 'Code at cursor',
   'find-relevant-files': 'Find relevant files',
-  'no-context': 'No context'
+  'without-files': 'Without files'
 }
 export const WEB_PROMPT_TYPES = Object.keys(
   web_prompt_type_labels

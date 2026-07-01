@@ -204,7 +204,7 @@ export const Panel = () => {
       state = ask_about_context_instructions
     } else if (prompt_type == 'edit-files') {
       state = edit_context_instructions
-    } else if (prompt_type == 'no-context') {
+    } else if (prompt_type == 'without-files') {
       state = no_context_instructions
     } else if (prompt_type == 'find-relevant-files') {
       state = find_relevant_files_instructions
@@ -220,7 +220,7 @@ export const Panel = () => {
     if (prompt_type == 'ask-about-context')
       return ask_about_context_instructions
     if (prompt_type == 'edit-files') return edit_context_instructions
-    if (prompt_type == 'no-context') return no_context_instructions
+    if (prompt_type == 'without-files') return no_context_instructions
     if (prompt_type == 'code-at-cursor') return code_at_cursor_instructions
     if (prompt_type == 'find-relevant-files')
       return find_relevant_files_instructions
@@ -234,7 +234,7 @@ export const Panel = () => {
     (web_prompt_type == 'code-at-cursor' &&
       (!currently_open_file_path || !!current_selection)) ||
     (web_prompt_type != 'code-at-cursor' &&
-      web_prompt_type != 'no-context' &&
+      web_prompt_type != 'without-files' &&
       token_count == 0)
 
   const handle_apply_click = () => {

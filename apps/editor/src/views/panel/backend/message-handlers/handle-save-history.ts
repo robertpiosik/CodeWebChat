@@ -22,7 +22,7 @@ export const handle_save_history = async (
     case 'edit-files':
       key = HISTORY_EDIT_STATE_KEY
       break
-    case 'no-context':
+    case 'without-files':
       key = HISTORY_NO_CONTEXT_STATE_KEY
       break
     case 'code-at-cursor':

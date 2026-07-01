@@ -30,7 +30,7 @@ export const use_instructions = (
     prompt_type:
       | 'ask-about-context'
       | 'edit-files'
-      | 'no-context'
+      | 'without-files'
       | 'code-at-cursor'
       | 'find-relevant-files'
   ) => {
@@ -62,7 +62,7 @@ export const use_instructions = (
       )
     } else if (prompt_type == 'edit-files') {
       update_state(edit_context_instructions, set_edit_context_instructions)
-    } else if (prompt_type == 'no-context') {
+    } else if (prompt_type == 'without-files') {
       update_state(no_context_instructions, set_no_context_instructions)
     } else if (prompt_type == 'code-at-cursor') {
       update_state(code_at_cursor_instructions, set_code_at_cursor_instructions)
@@ -98,7 +98,7 @@ export const use_instructions = (
       update(ask_about_context_instructions, set_ask_about_context_instructions)
     } else if (prompt_type == 'edit-files') {
       update(edit_context_instructions, set_edit_context_instructions)
-    } else if (prompt_type == 'no-context') {
+    } else if (prompt_type == 'without-files') {
       update(no_context_instructions, set_no_context_instructions)
     } else if (prompt_type == 'code-at-cursor') {
       update(code_at_cursor_instructions, set_code_at_cursor_instructions)
@@ -137,7 +137,7 @@ export const use_instructions = (
       update(ask_about_context_instructions, set_ask_about_context_instructions)
     } else if (prompt_type == 'edit-files') {
       update(edit_context_instructions, set_edit_context_instructions)
-    } else if (prompt_type == 'no-context') {
+    } else if (prompt_type == 'without-files') {
       update(no_context_instructions, set_no_context_instructions)
     } else if (prompt_type == 'code-at-cursor') {
       update(code_at_cursor_instructions, set_code_at_cursor_instructions)
@@ -184,7 +184,7 @@ export const use_instructions = (
       update(ask_about_context_instructions, set_ask_about_context_instructions)
     } else if (prompt_type == 'edit-files') {
       update(edit_context_instructions, set_edit_context_instructions)
-    } else if (prompt_type == 'no-context') {
+    } else if (prompt_type == 'without-files') {
       update(no_context_instructions, set_no_context_instructions)
     } else if (prompt_type == 'code-at-cursor') {
       update(code_at_cursor_instructions, set_code_at_cursor_instructions)

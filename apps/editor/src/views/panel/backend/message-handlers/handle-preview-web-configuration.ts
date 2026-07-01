@@ -67,7 +67,7 @@ export const handle_preview_web_configuration = async (
     text_to_send = `<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}${missing_text_tag}${text_after_cursor}\n]]>\n</file>\n</files>\n${skill_definitions}${system_instructions}`
   } else if (panel_provider.web_prompt_type != 'code-at-cursor') {
     const collected =
-      panel_provider.web_prompt_type != 'no-context'
+      panel_provider.web_prompt_type != 'without-files'
         ? await files_collector.collect_files({})
         : { other_files: '', recent_files: '' }
     const context_text = collected.other_files + collected.recent_files

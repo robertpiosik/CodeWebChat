@@ -238,7 +238,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     const type = this.prompt_type
     if (type == 'ask-about-context') return this.ask_about_context_instructions
     if (type == 'edit-files') return this.edit_context_instructions
-    if (type == 'no-context') return this.no_context_instructions
+    if (type == 'without-files') return this.no_context_instructions
     if (type == 'code-at-cursor') return this.code_at_cursor_instructions
     return this.find_relevant_files_instructions
   }
@@ -277,7 +277,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       (this.mode == MODE.API && this.api_prompt_type == 'find-relevant-files')
 
     const is_no_context =
-      this.mode == MODE.WEB && this.web_prompt_type == 'no-context'
+      this.mode == MODE.WEB && this.web_prompt_type == 'without-files'
 
     this.shared_context_state.switch_context_state(is_find_relevant_files)
 
@@ -1029,7 +1029,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       'find-relevant-files',
       'edit-files',
       'code-at-cursor',
-      'no-context'
+      'without-files'
     ]
 
     this.send_message({

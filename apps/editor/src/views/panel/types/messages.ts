@@ -95,7 +95,7 @@ export interface SaveInstructionsMessage extends BaseMessage {
     | 'edit-files'
     | 'code-at-cursor'
     | 'find-relevant-files'
-    | 'no-context'
+    | 'without-files'
 }
 
 export interface GetEditFormat extends BaseMessage {
@@ -167,7 +167,7 @@ export interface SaveHistoryMessage extends BaseMessage {
     | 'edit-files'
     | 'code-at-cursor'
     | 'find-relevant-files'
-    | 'no-context'
+    | 'without-files'
 }
 
 export interface GetContextSizeWarningThresholdMessage extends BaseMessage {

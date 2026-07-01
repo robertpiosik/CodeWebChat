@@ -102,7 +102,7 @@ export const handle_copy_prompt = async (params: {
       )
 
     const collected = await files_collector.collect_files({
-      no_context: params.panel_provider.web_prompt_type == 'no-context',
+      no_context: params.panel_provider.web_prompt_type == 'without-files',
       shrink: is_in_find_relevant_files_prompt_type && shrink_source_code
     })
     const context_text = collected.other_files + collected.recent_files

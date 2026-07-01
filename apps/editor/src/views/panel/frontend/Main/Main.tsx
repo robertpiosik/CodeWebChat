@@ -38,7 +38,7 @@ type Props = {
     prompt_type:
       | 'ask-about-context'
       | 'edit-files'
-      | 'no-context'
+      | 'without-files'
       | 'code-at-cursor'
       | 'find-relevant-files'
   ) => void
@@ -203,7 +203,7 @@ export const Main: React.FC<Props> = (props) => {
     } else if (current_prompt_type == 'edit-files') {
       history = edit_history
       set_history = set_edit_history
-    } else if (current_prompt_type == 'no-context') {
+    } else if (current_prompt_type == 'without-files') {
       history = no_context_history
       set_history = set_no_context_history
     } else if (current_prompt_type == 'code-at-cursor') {
@@ -414,7 +414,7 @@ export const Main: React.FC<Props> = (props) => {
     if (current_prompt_type == 'ask-about-context')
       return props.ask_instructions
     if (current_prompt_type == 'edit-files') return props.edit_instructions
-    if (current_prompt_type == 'no-context')
+    if (current_prompt_type == 'without-files')
       return props.no_context_instructions
     return ''
   }
@@ -573,7 +573,7 @@ export const Main: React.FC<Props> = (props) => {
       ? props.ask_instructions
       : current_prompt_type == 'edit-files'
         ? props.edit_instructions
-        : current_prompt_type == 'no-context'
+        : current_prompt_type == 'without-files'
           ? props.no_context_instructions
           : current_prompt_type == 'code-at-cursor'
             ? props.code_completions_instructions
@@ -590,7 +590,7 @@ export const Main: React.FC<Props> = (props) => {
     current_history = ask_history
   } else if (current_prompt_type == 'edit-files') {
     current_history = edit_history
-  } else if (current_prompt_type == 'no-context') {
+  } else if (current_prompt_type == 'without-files') {
     current_history = no_context_history
   } else if (current_prompt_type == 'code-at-cursor') {
     current_history = code_completions_history

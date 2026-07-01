@@ -203,7 +203,7 @@ const main = async () => {
         | 'edit-files'
         | 'code-at-cursor'
         | 'find-relevant-files'
-        | 'no-context'
+        | 'without-files'
     }
 
     if (!stored_data) {

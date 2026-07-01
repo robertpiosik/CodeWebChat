@@ -30,7 +30,7 @@ export const handle_save_instructions = async (
       INSTRUCTIONS_EDIT_FILES_STATE_KEY,
       instruction_state
     )
-  } else if (prompt_type == 'no-context') {
+  } else if (prompt_type == 'without-files') {
     panel_provider.no_context_instructions = instruction_state
     await panel_provider.context.workspaceState.update(
       INSTRUCTIONS_NO_CONTEXT_STATE_KEY,

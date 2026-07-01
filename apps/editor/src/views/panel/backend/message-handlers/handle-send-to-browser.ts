@@ -142,7 +142,7 @@ export const handle_send_to_browser = async (params: {
 
     const collected = await files_collector.collect_files({
       additional_paths,
-      no_context: params.panel_provider.web_prompt_type == 'no-context',
+      no_context: params.panel_provider.web_prompt_type == 'without-files',
       shrink:
         params.panel_provider.web_prompt_type == 'find-relevant-files' &&
         shrink_source_code
@@ -436,7 +436,7 @@ const resolve_web_configuration = async (params: {
       params.panel_provider.edit_context_instructions.instructions[
         params.panel_provider.edit_context_instructions.active_index
       ] || ''
-  } else if (params.panel_provider.web_prompt_type == 'no-context') {
+  } else if (params.panel_provider.web_prompt_type == 'without-files') {
     current_instructions =
       params.panel_provider.no_context_instructions.instructions[
         params.panel_provider.no_context_instructions.active_index
