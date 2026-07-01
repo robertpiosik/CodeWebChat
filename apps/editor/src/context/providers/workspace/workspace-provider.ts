@@ -123,15 +123,15 @@ export class WorkspaceProvider
   public gitignore_initialization: Promise<void>
   public ranges_initialization: Promise<void>
   public use_shrink_token_count: boolean = false
-  private _context_view_collapsible_state: vscode.TreeItemCollapsibleState =
+  private _selected_files_view_collapsible_state: vscode.TreeItemCollapsibleState =
     vscode.TreeItemCollapsibleState.Expanded
   private _workspace_view_collapsible_state: vscode.TreeItemCollapsibleState =
     vscode.TreeItemCollapsibleState.Collapsed
 
-  public set_context_view_collapsible_state(
+  public set_selected_files_view_collapsible_state(
     state: vscode.TreeItemCollapsibleState
   ) {
-    this._context_view_collapsible_state = state
+    this._selected_files_view_collapsible_state = state
   }
 
   public set_workspace_view_collapsible_state(
@@ -697,7 +697,9 @@ export class WorkspaceProvider
         : undefined
 
     const formatted_selected =
-      selected_token_count !== undefined && selected_token_count > 0 && !this._is_no_context_mode
+      selected_token_count !== undefined &&
+      selected_token_count > 0 &&
+      !this._is_no_context_mode
         ? display_token_count(selected_token_count)
         : undefined
 
@@ -803,7 +805,9 @@ export class WorkspaceProvider
     }
   }
 
-  public async getContextViewChildren(element?: FileItem): Promise<FileItem[]> {
+  public async getSelectedFilesViewChildren(
+    element?: FileItem
+  ): Promise<FileItem[]> {
     await this.gitignore_initialization
     await this.ranges_initialization
 
@@ -836,7 +840,7 @@ export class WorkspaceProvider
   }
 
   private async _get_workspace_folder_items(
-    context_view = false
+    is_selected_files_view = false
   ): Promise<FileItem[]> {
     const items: FileItem[] = []
     for (let i = 0; i < this._workspace_roots.length; i++) {
@@ -846,7 +850,7 @@ export class WorkspaceProvider
         continue
       }
 
-      if (context_view) {
+      if (is_selected_files_view) {
         const state = this._checked_items.get(root)
         const is_partially_checked = this._partially_checked_dirs.has(root)
         if (
@@ -869,8 +873,8 @@ export class WorkspaceProvider
         new FileItem(
           name,
           uri,
-          context_view
-            ? this._context_view_collapsible_state
+          is_selected_files_view
+            ? this._selected_files_view_collapsible_state
             : this._workspace_view_collapsible_state,
           true,
           this._is_no_context_mode
@@ -887,7 +891,7 @@ export class WorkspaceProvider
           true
         )
       )
-      if (context_view) {
+      if (is_selected_files_view) {
         const last_item = items[items.length - 1]
         last_item.contextValue = 'contextWorkspaceRoot'
       }
@@ -1007,7 +1011,7 @@ export class WorkspaceProvider
 
   private async _get_files_and_directories(
     dir_path: string,
-    context_view = false
+    is_selected_files_view = false
   ): Promise<FileItem[]> {
     const items: FileItem[] = []
     try {
@@ -1049,7 +1053,7 @@ export class WorkspaceProvider
 
         const relative_path = path.relative(workspace_root, full_path)
 
-        if (context_view) {
+        if (is_selected_files_view) {
           const state = this._checked_items.get(full_path)
           const is_partially_checked =
             this._partially_checked_dirs.has(full_path)
@@ -1137,8 +1141,8 @@ export class WorkspaceProvider
           entry.name,
           uri,
           is_directory
-            ? context_view
-              ? this._context_view_collapsible_state
+            ? is_selected_files_view
+              ? this._selected_files_view_collapsible_state
               : this._workspace_view_collapsible_state
             : vscode.TreeItemCollapsibleState.None,
           is_directory,
@@ -1154,7 +1158,7 @@ export class WorkspaceProvider
           range
         )
 
-        if (context_view) {
+        if (is_selected_files_view) {
           item.contextValue = item.isDirectory
             ? 'contextDirectory'
             : 'contextFile'
@@ -1618,7 +1622,11 @@ export class WorkspaceProvider
       this._user_ignore_patterns.add(patterns)
     }
 
-    this._user_ignore_patterns.add(['node_modules', '.DS_Store', ...IGNORED_LOCK_FILES])
+    this._user_ignore_patterns.add([
+      'node_modules',
+      '.DS_Store',
+      ...IGNORED_LOCK_FILES
+    ])
 
     const allow_patterns = config.get<string[]>('allowPatterns')
     this._user_allow_patterns = ignore()

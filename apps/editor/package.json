@@ -68,8 +68,8 @@
           "initialSize": 1
         },
         {
-          "id": "codeWebChatViewContext",
-          "name": "Context",
+          "id": "codeWebChatViewSelectedFiles",
+          "name": "Selected Files",
           "icon": "resources/activity-bar-icon.svg",
           "visibility": "collapsed",
           "initialSize": 1
@@ -549,22 +549,22 @@
       "view/title": [
         {
           "command": "codeWebChat.undoContextSelection",
-          "when": "view == codeWebChatViewContext",
+          "when": "view == codeWebChatViewSelectedFiles",
           "group": "navigation@1"
         },
         {
           "command": "codeWebChat.redoContextSelection",
-          "when": "view == codeWebChatViewContext",
+          "when": "view == codeWebChatViewSelectedFiles",
           "group": "navigation@2"
         },
         {
           "command": "codeWebChat.expandContextFolders",
-          "when": "view == codeWebChatViewContext",
+          "when": "view == codeWebChatViewSelectedFiles",
           "group": "navigation@3"
         },
         {
           "command": "codeWebChat.collapseContextFolders",
-          "when": "view == codeWebChatViewContext",
+          "when": "view == codeWebChatViewSelectedFiles",
           "group": "navigation@4"
         },
         {
@@ -740,47 +740,47 @@
         },
         {
           "command": "codeWebChat.referenceInPrompt",
-          "when": "view == codeWebChatViewWorkspace || view == codeWebChatViewContext",
+          "when": "view == codeWebChatViewWorkspace || view == codeWebChatViewSelectedFiles",
           "group": "1_modification@3"
         },
         {
           "command": "codeWebChat.selectImportedFiles",
-          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == file || viewItem == contextFile || viewItem == directory || viewItem == contextDirectory || viewItem == workspaceRoot || viewItem == contextWorkspaceRoot)",
+          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewSelectedFiles) && (viewItem == file || viewItem == contextFile || viewItem == directory || viewItem == contextDirectory || viewItem == workspaceRoot || viewItem == contextWorkspaceRoot)",
           "group": "1_modification@4"
         },
         {
           "command": "codeWebChat.selectReferencingFiles",
-          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == directory || viewItem == contextDirectory || viewItem == workspaceRoot || viewItem == contextWorkspaceRoot)",
+          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewSelectedFiles) && (viewItem == directory || viewItem == contextDirectory || viewItem == workspaceRoot || viewItem == contextWorkspaceRoot)",
           "group": "1_modification@5"
         },
         {
           "command": "codeWebChat.searchFilesFromDirectory",
-          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
+          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewSelectedFiles) && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
           "group": "1_modification@6"
         },
         {
           "command": "codeWebChat.setRanges",
-          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && viewItem == file",
+          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewSelectedFiles) && viewItem == file",
           "group": "1_modification@7"
         },
         {
           "command": "codeWebChat.findInFolder",
-          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
+          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewSelectedFiles) && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
           "group": "2_external@1"
         },
         {
           "command": "codeWebChat.revealInExplorer",
-          "when": "view == codeWebChatViewWorkspace || view == codeWebChatViewContext",
+          "when": "view == codeWebChatViewWorkspace || view == codeWebChatViewSelectedFiles",
           "group": "2_external@2"
         },
         {
           "command": "codeWebChat.openInIntegratedTerminal",
-          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == workspaceRoot || viewItem == directory || viewItem == contextWorkspaceRoot || viewItem == contextDirectory)",
+          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewSelectedFiles) && (viewItem == workspaceRoot || viewItem == directory || viewItem == contextWorkspaceRoot || viewItem == contextDirectory)",
           "group": "2_external@3"
         },
         {
           "command": "codeWebChat.removeFolderFromWorkspace",
-          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == workspaceRoot || viewItem == contextWorkspaceRoot) && workspaceFolderCount > 1",
+          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewSelectedFiles) && (viewItem == workspaceRoot || viewItem == contextWorkspaceRoot) && workspaceFolderCount > 1",
           "group": "2_external@4"
         }
       ]

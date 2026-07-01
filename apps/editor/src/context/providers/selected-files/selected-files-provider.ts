@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { WorkspaceProvider, FileItem } from '../workspace/workspace-provider'
 
-export class ContextProvider implements vscode.TreeDataProvider<FileItem> {
+export class SelectedFilesProvider implements vscode.TreeDataProvider<FileItem> {
   private _onDidChangeTreeData: vscode.EventEmitter<
     FileItem | undefined | null | void
   > = new vscode.EventEmitter<FileItem | undefined | null | void>()
@@ -26,7 +26,7 @@ export class ContextProvider implements vscode.TreeDataProvider<FileItem> {
   }
 
   getChildren(element?: FileItem): vscode.ProviderResult<FileItem[]> {
-    return this._workspace_provider.getContextViewChildren(element)
+    return this._workspace_provider.getSelectedFilesViewChildren(element)
   }
 
   dispose() {

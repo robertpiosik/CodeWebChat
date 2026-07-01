@@ -16,7 +16,7 @@ import {
   RANGES_STATE_KEY,
   type DuplicateWorkspaceContext
 } from '../constants/state-keys'
-import { ContextProvider } from './providers/context/context-provider'
+import { SelectedFilesProvider } from './providers/selected-files/selected-files-provider'
 import { is_binary_file } from '../utils/is-binary'
 
 export const token_count_emitter = new EventEmitter()
@@ -117,8 +117,8 @@ export const context_initialization = async (
     workspace_folders,
     context
   })
-  const context_provider = new ContextProvider(workspace_provider)
-  context.subscriptions.push(context_provider)
+  const selected_files_provider = new SelectedFilesProvider(workspace_provider)
+  context.subscriptions.push(selected_files_provider)
 
   const open_editors_provider = new OpenEditorsProvider({
     workspace_folders,
@@ -133,7 +133,7 @@ export const context_initialization = async (
 
   const update_view_badges = async () => {
     let context_token_count = 0
-    if (context_provider && context_view) {
+    if (selected_files_provider && selected_files_view) {
       if (!workspace_provider.is_no_context_mode) {
         const token_counts =
           await workspace_provider.get_checked_files_token_count()
@@ -149,7 +149,7 @@ export const context_initialization = async (
           ? `About ${context_token_count} tokens in context`
           : ''
       }
-      context_view.badge = undefined
+      selected_files_view.badge = undefined
     }
     token_count_emitter.emit('token-count-updated', context_token_count)
   }
@@ -180,13 +180,16 @@ export const context_initialization = async (
     manageCheckboxStateManually: true
   })
 
-  let context_view = vscode.window.createTreeView('codeWebChatViewContext', {
-    treeDataProvider: context_provider,
-    manageCheckboxStateManually: true
-  })
+  let selected_files_view = vscode.window.createTreeView(
+    'codeWebChatViewSelectedFiles',
+    {
+      treeDataProvider: selected_files_provider,
+      manageCheckboxStateManually: true
+    }
+  )
 
   register_workspace_view_handlers(workspace_view)
-  register_workspace_view_handlers(context_view)
+  register_workspace_view_handlers(selected_files_view)
 
   const open_editors_view = vscode.window.createTreeView(
     'codeWebChatViewOpenEditors',
@@ -200,7 +203,7 @@ export const context_initialization = async (
     workspace_provider,
     open_editors_provider,
     workspace_view,
-    context_view,
+    selected_files_view,
     open_editors_view
   )
 
@@ -315,37 +318,43 @@ export const context_initialization = async (
     vscode.commands.registerCommand(
       'codeWebChat.expandContextFolders',
       async () => {
-        workspace_provider.set_context_view_collapsible_state(
+        workspace_provider.set_selected_files_view_collapsible_state(
           vscode.TreeItemCollapsibleState.Expanded
         )
-        context_view.dispose()
+        selected_files_view.dispose()
         await new Promise((resolve) => setTimeout(resolve, 0))
 
-        context_view = vscode.window.createTreeView('codeWebChatViewContext', {
-          treeDataProvider: context_provider,
-          manageCheckboxStateManually: true
-        })
+        selected_files_view = vscode.window.createTreeView(
+          'codeWebChatViewSelectedFiles',
+          {
+            treeDataProvider: selected_files_provider,
+            manageCheckboxStateManually: true
+          }
+        )
 
-        register_workspace_view_handlers(context_view)
-        context.subscriptions.push(context_view)
+        register_workspace_view_handlers(selected_files_view)
+        context.subscriptions.push(selected_files_view)
       }
     ),
     vscode.commands.registerCommand(
       'codeWebChat.collapseContextFolders',
       async () => {
-        workspace_provider.set_context_view_collapsible_state(
+        workspace_provider.set_selected_files_view_collapsible_state(
           vscode.TreeItemCollapsibleState.Collapsed
         )
-        context_view.dispose()
+        selected_files_view.dispose()
         await new Promise((resolve) => setTimeout(resolve, 0))
 
-        context_view = vscode.window.createTreeView('codeWebChatViewContext', {
-          treeDataProvider: context_provider,
-          manageCheckboxStateManually: true
-        })
+        selected_files_view = vscode.window.createTreeView(
+          'codeWebChatViewSelectedFiles',
+          {
+            treeDataProvider: selected_files_provider,
+            manageCheckboxStateManually: true
+          }
+        )
 
-        register_workspace_view_handlers(context_view)
-        context.subscriptions.push(context_view)
+        register_workspace_view_handlers(selected_files_view)
+        context.subscriptions.push(selected_files_view)
       }
     ),
     vscode.commands.registerCommand(
