@@ -40,56 +40,6 @@ export const grok: Chatbot = {
       }
     }
   },
-  set_model: async (chat) => {
-    const model = chat.model
-    if (!model) return
-
-    const model_selector_buttons = document.querySelectorAll(
-      'button[id="model-select-trigger"]'
-    ) as NodeListOf<HTMLButtonElement>
-    if (!model_selector_buttons || model_selector_buttons.length == 0) {
-      report_initialization_error({
-        function_name: 'set_model',
-        log_message: 'Model selector button not found'
-      })
-      return
-    }
-
-    const model_selector_button =
-      model_selector_buttons[model_selector_buttons.length - 1]
-    const model_label_to_find = CHATBOTS['Grok'].models?.[model]?.label
-    if (!model_label_to_find) return
-
-    if (model_selector_button.textContent == model_label_to_find) {
-      return
-    }
-
-    model_selector_button.dispatchEvent(
-      new PointerEvent('pointerdown', { bubbles: true })
-    )
-    await new Promise((r) => setTimeout(r, 150))
-
-    const dropdowns = document.querySelectorAll(
-      'div[data-radix-popper-content-wrapper]'
-    ) as NodeListOf<HTMLDivElement>
-    const dropdown = dropdowns[dropdowns.length - 1]
-    if (!dropdown) {
-      report_initialization_error({
-        function_name: 'set_model',
-        log_message: 'Model dropdown not found'
-      })
-      return
-    }
-
-    const options = dropdown.querySelectorAll('div[role="menuitem"]')
-    for (const option of Array.from(options)) {
-      if (option.textContent?.startsWith(model_label_to_find)) {
-        ;(option as HTMLElement).click()
-        break
-      }
-    }
-    await new Promise((r) => setTimeout(r, 250))
-  },
   enter_message: async (params) => {
     const input_element = document.querySelector(
       'div[contenteditable="true"]'

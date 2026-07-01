@@ -130,14 +130,7 @@ export const CHATBOTS = {
     supports_url_override: true,
     url_override_label: 'Project URL',
     url_override_disabled_options: ['private'],
-    supported_options: { private: 'Private' },
-    models: {
-      auto: { label: 'Auto' },
-      fast: { label: 'Fast' },
-      expert: { label: 'Expert' },
-      'grok-4-1-thinking': { label: 'Grok 4.1 Thinking' },
-      heavy: { label: 'Heavy' }
-    }
+    supported_options: { private: 'Private' }
   } as Chatbot,
   HuggingChat: {
     url: 'https://huggingface.co/chat/',
