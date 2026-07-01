@@ -37,7 +37,7 @@ type Props = {
     value: string,
     prompt_type:
       | 'ask-about-context'
-      | 'edit-context'
+      | 'edit-files'
       | 'no-context'
       | 'code-at-cursor'
       | 'find-relevant-files'
@@ -200,7 +200,7 @@ export const Main: React.FC<Props> = (props) => {
     if (current_prompt_type == 'ask-about-context') {
       history = ask_history
       set_history = set_ask_history
-    } else if (current_prompt_type == 'edit-context') {
+    } else if (current_prompt_type == 'edit-files') {
       history = edit_history
       set_history = set_edit_history
     } else if (current_prompt_type == 'no-context') {
@@ -413,7 +413,7 @@ export const Main: React.FC<Props> = (props) => {
     }
     if (current_prompt_type == 'ask-about-context')
       return props.ask_instructions
-    if (current_prompt_type == 'edit-context') return props.edit_instructions
+    if (current_prompt_type == 'edit-files') return props.edit_instructions
     if (current_prompt_type == 'no-context')
       return props.no_context_instructions
     return ''
@@ -528,7 +528,7 @@ export const Main: React.FC<Props> = (props) => {
   const handle_api_configuration_click = (id: string) => {
     const instruction = get_current_instructions()
 
-    if (props.api_prompt_type == 'edit-context') {
+    if (props.api_prompt_type == 'edit-files') {
       post_message(props.vscode, {
         command: 'EDIT_CONTEXT',
         use_quick_pick: false,
@@ -571,7 +571,7 @@ export const Main: React.FC<Props> = (props) => {
   const instructions =
     current_prompt_type == 'ask-about-context'
       ? props.ask_instructions
-      : current_prompt_type == 'edit-context'
+      : current_prompt_type == 'edit-files'
         ? props.edit_instructions
         : current_prompt_type == 'no-context'
           ? props.no_context_instructions
@@ -588,7 +588,7 @@ export const Main: React.FC<Props> = (props) => {
   let current_history: string[] | undefined
   if (current_prompt_type == 'ask-about-context') {
     current_history = ask_history
-  } else if (current_prompt_type == 'edit-context') {
+  } else if (current_prompt_type == 'edit-files') {
     current_history = edit_history
   } else if (current_prompt_type == 'no-context') {
     current_history = no_context_history

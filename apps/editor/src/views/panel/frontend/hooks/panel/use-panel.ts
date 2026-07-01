@@ -45,7 +45,8 @@ export const use_panel = (vscode: any) => {
   const [context_size_warning_threshold, set_context_size_warning_threshold] =
     useState<number>()
   const [can_undo, set_can_undo] = useState<boolean>(false)
-  const [web_configurations_collapsed, set_web_configurations_collapsed] = useState(false)
+  const [web_configurations_collapsed, set_web_configurations_collapsed] =
+    useState(false)
   const [send_with_shift_enter, set_send_with_shift_enter] = useState(false)
   const [api_configurations_collapsed, set_api_configurations_collapsed] =
     useState(false)
@@ -59,7 +60,7 @@ export const use_panel = (vscode: any) => {
     useState(false)
 
   const handle_task_forward = (text: string) => {
-    handle_instructions_change(text, 'edit-context')
+    handle_instructions_change(text, 'edit-files')
     set_active_view('main')
     set_main_view_scroll_reset_key((k) => k + 1)
   }
@@ -208,7 +209,7 @@ export const use_panel = (vscode: any) => {
 
     if (new_mode == MODE.API && web_prompt_type) {
       if (
-        web_prompt_type == 'edit-context' ||
+        web_prompt_type == 'edit-files' ||
         web_prompt_type == 'code-at-cursor' ||
         web_prompt_type == 'find-relevant-files'
       ) {
@@ -227,7 +228,9 @@ export const use_panel = (vscode: any) => {
     })
   }
 
-  const handle_web_configurations_collapsed_change = (is_collapsed: boolean) => {
+  const handle_web_configurations_collapsed_change = (
+    is_collapsed: boolean
+  ) => {
     set_web_configurations_collapsed(is_collapsed)
     post_message(vscode, {
       command: 'SAVE_COMPONENT_COLLAPSED_STATE',
@@ -236,7 +239,9 @@ export const use_panel = (vscode: any) => {
     })
   }
 
-  const handle_api_configurations_collapsed_change = (is_collapsed: boolean) => {
+  const handle_api_configurations_collapsed_change = (
+    is_collapsed: boolean
+  ) => {
     set_api_configurations_collapsed(is_collapsed)
     post_message(vscode, {
       command: 'SAVE_COMPONENT_COLLAPSED_STATE',

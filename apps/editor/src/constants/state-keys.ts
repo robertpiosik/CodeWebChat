@@ -37,7 +37,7 @@ export const WEB_MODE_STATE_KEY = 'web-mode'
 export const API_MODE_STATE_KEY = 'api-mode'
 export const PANEL_MODE_STATE_KEY = 'panel-mode'
 
-export const INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY = 'instructions-edit-context'
+export const INSTRUCTIONS_EDIT_FILES_STATE_KEY = 'instructions-edit-files'
 export const INSTRUCTIONS_ASK_STATE_KEY = 'instructions-ask'
 export const INSTRUCTIONS_NO_CONTEXT_STATE_KEY = 'instructions-no-context'
 export const INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY =
@@ -62,7 +62,7 @@ export const RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY =
 export const RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY =
   'recently-used-find-relevant-files-config-ids'
 export const RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY =
-  'recently-used-edit-context-config-ids'
+  'recently-used-edit-files-config-ids'
 export const RECENTLY_USED_COMMIT_MESSAGES_CONFIG_IDS_STATE_KEY =
   'recently-used-commit-messages-config-ids'
 export const RECENTLY_USED_INTELLIGENT_UPDATE_CONFIG_IDS_STATE_KEY =

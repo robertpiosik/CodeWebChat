@@ -29,7 +29,7 @@ export const handle_show_prompt_template_quick_pick = async (
     case 'ask-about-context':
       prompt_templates_key = 'promptTemplatesForAskAboutContext'
       break
-    case 'edit-context':
+    case 'edit-files':
       prompt_templates_key = 'promptTemplatesForEditContext'
       break
     case 'code-at-cursor':

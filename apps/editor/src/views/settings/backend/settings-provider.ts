@@ -16,7 +16,7 @@ import {
   handle_get_include_prompts_in_commit_messages,
   handle_update_include_prompts_in_commit_messages,
   handle_get_context_size_warning_threshold,
-  handle_get_edit_context_system_instructions,
+  handle_get_edit_files_system_instructions,
   handle_get_edit_format_instructions,
   handle_get_gemini_user_id,
   handle_get_ai_studio_user_id,
@@ -35,7 +35,7 @@ import {
   handle_update_voice_input_instructions,
   handle_update_voice_input_push_to_talk,
   handle_update_context_size_warning_threshold,
-  handle_update_edit_context_system_instructions,
+  handle_update_edit_files_system_instructions,
   handle_update_edit_format_instructions,
   handle_update_gemini_user_id,
   handle_update_ai_studio_user_id,
@@ -167,11 +167,11 @@ export class SettingsProvider {
         } else if (message.command == 'SELECT_DEFAULT_API_CONFIGURATION') {
           await handle_select_default_api_configuration(this, message)
         } else if (message.command == 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS') {
-          await handle_get_edit_context_system_instructions(this)
+          await handle_get_edit_files_system_instructions(this)
         } else if (
           message.command == 'UPDATE_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS'
         ) {
-          await handle_update_edit_context_system_instructions(message)
+          await handle_update_edit_files_system_instructions(message)
         } else if (message.command == 'GET_EDIT_FORMAT_INSTRUCTIONS') {
           await handle_get_edit_format_instructions(this)
         } else if (message.command == 'UPDATE_EDIT_FORMAT_INSTRUCTIONS') {
@@ -303,7 +303,7 @@ export class SettingsProvider {
         if (e.affectsConfiguration('codeWebChat')) {
           void handle_get_model_providers(this)
           void handle_get_api_configurations(this)
-          void handle_get_edit_context_system_instructions(this)
+          void handle_get_edit_files_system_instructions(this)
           void handle_get_edit_format_instructions(this)
           void handle_get_context_size_warning_threshold(this)
           void handle_get_commit_message_instructions(this)

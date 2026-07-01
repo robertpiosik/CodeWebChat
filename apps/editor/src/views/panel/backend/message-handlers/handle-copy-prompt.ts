@@ -117,7 +117,7 @@ export const handle_copy_prompt = async (params: {
 
     let system_instructions_xml = ''
 
-    if (params.panel_provider.web_prompt_type == 'edit-context') {
+    if (params.panel_provider.web_prompt_type == 'edit-files') {
       const edit_format =
         params.panel_provider.mode == MODE.WEB
           ? params.panel_provider.chat_edit_format

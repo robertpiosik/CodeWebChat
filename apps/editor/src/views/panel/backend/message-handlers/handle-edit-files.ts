@@ -29,7 +29,7 @@ import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-sym
 import { split_recent_and_rest_configurations } from '@/views/panel/backend/utils/split-recent-and-rest-configurations'
 import { t } from '@/i18n'
 
-const get_edit_context_api_configuration = async (params: {
+const get_edit_files_api_configuration = async (params: {
   api_providers_manager: ModelProvidersManager
   show_quick_pick?: boolean
   context: vscode.ExtensionContext
@@ -74,7 +74,7 @@ const get_edit_context_api_configuration = async (params: {
       if (params.panel_provider) {
         params.panel_provider.send_message({
           command: 'SELECTED_API_CONFIGURATION_CHANGED',
-          prompt_type: 'edit-context',
+          prompt_type: 'edit-files',
           id: params.api_configuration_id
         })
       }
@@ -225,7 +225,7 @@ const get_edit_context_api_configuration = async (params: {
         if (params.panel_provider) {
           params.panel_provider.send_message({
             command: 'SELECTED_API_CONFIGURATION_CHANGED',
-            prompt_type: 'edit-context',
+            prompt_type: 'edit-files',
             id: selected.id!
           })
         }
@@ -273,7 +273,7 @@ const get_edit_context_api_configuration = async (params: {
       dictionary.error_message.API_PROVIDER_NOT_FOUND
     )
     Logger.warn({
-      function_name: 'get_edit_context_api_configuration',
+      function_name: 'get_edit_files_api_configuration',
       message: 'API provider not found for Edit Context tool.'
     })
     return
@@ -285,7 +285,7 @@ const get_edit_context_api_configuration = async (params: {
   }
 }
 
-export const handle_edit_context = async (
+export const handle_edit_files = async (
   panel_provider: PanelProvider,
   message: EditContextMessage
 ): Promise<void> => {
@@ -335,7 +335,7 @@ export const handle_edit_context = async (
   let should_show_quick_pick = message.use_quick_pick
 
   while (true) {
-    const api_configuration_result = await get_edit_context_api_configuration({
+    const api_configuration_result = await get_edit_files_api_configuration({
       api_providers_manager,
       show_quick_pick: should_show_quick_pick,
       context: panel_provider.context,
@@ -463,7 +463,7 @@ export const handle_edit_context = async (
             return false
           }
           Logger.error({
-            function_name: 'handle_edit_context',
+            function_name: 'handle_edit_files',
             message: 'edit context task error',
             data: error
           })

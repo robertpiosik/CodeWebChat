@@ -158,7 +158,7 @@ export const handle_send_to_browser = async (params: {
       })
 
     let system_instructions_xml = ''
-    if (params.panel_provider.web_prompt_type == 'edit-context') {
+    if (params.panel_provider.web_prompt_type == 'edit-files') {
       const config = vscode.workspace.getConfiguration('codeWebChat')
       const instructions_key = {
         whole: 'editFormatInstructionsWhole',
@@ -196,7 +196,7 @@ export const handle_send_to_browser = async (params: {
         raw_instructions: current_instructions,
         prompt_type: params.panel_provider.web_prompt_type,
         edit_format:
-          params.panel_provider.web_prompt_type == 'edit-context'
+          params.panel_provider.web_prompt_type == 'edit-files'
             ? params.panel_provider.chat_edit_format
             : undefined,
         invocation_count: params.invocation_count
@@ -431,7 +431,7 @@ const resolve_web_configuration = async (params: {
       params.panel_provider.ask_about_context_instructions.instructions[
         params.panel_provider.ask_about_context_instructions.active_index
       ] || ''
-  } else if (params.panel_provider.web_prompt_type == 'edit-context') {
+  } else if (params.panel_provider.web_prompt_type == 'edit-files') {
     current_instructions =
       params.panel_provider.edit_context_instructions.instructions[
         params.panel_provider.edit_context_instructions.active_index

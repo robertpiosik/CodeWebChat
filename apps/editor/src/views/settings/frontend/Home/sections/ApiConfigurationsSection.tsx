@@ -348,9 +348,9 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
         <div ref={(el) => props.set_section_ref('instructions', el)}>
           <UiGroup title={t('configurations.instructions.title')}>
             <UiItem
-              title={t('configurations.edit-context-system-instructions.title')}
+              title={t('configurations.edit-files-system-instructions.title')}
               description={t(
-                'configurations.edit-context-system-instructions.description'
+                'configurations.edit-files-system-instructions.description'
               )}
             >
               <UiTextarea

@@ -1,5 +1,5 @@
 export type SupportedTool =
   | 'code-at-cursor'
-  | 'edit-context'
+  | 'edit-files'
   | 'intelligent-update'
   | 'commit-messages'

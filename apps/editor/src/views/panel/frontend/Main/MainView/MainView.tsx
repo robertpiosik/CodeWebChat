@@ -153,8 +153,8 @@ export const MainView: React.FC<Props> = (props) => {
   const { t } = use_translation()
 
   const is_in_edit_context_prompt_type =
-    (props.mode == MODE.WEB && props.web_prompt_type == 'edit-context') ||
-    (props.mode == MODE.API && props.api_prompt_type == 'edit-context')
+    (props.mode == MODE.WEB && props.web_prompt_type == 'edit-files') ||
+    (props.mode == MODE.API && props.api_prompt_type == 'edit-files')
 
   const is_in_ask_about_context_prompt_type =
     props.mode == MODE.WEB && props.web_prompt_type == 'ask-about-context'
@@ -169,8 +169,8 @@ export const MainView: React.FC<Props> = (props) => {
     (props.mode == MODE.API && props.api_prompt_type == 'find-relevant-files')
 
   const show_edit_format_selector =
-    (props.mode == MODE.WEB && props.web_prompt_type == 'edit-context') ||
-    (props.mode == MODE.API && props.api_prompt_type == 'edit-context')
+    (props.mode == MODE.WEB && props.web_prompt_type == 'edit-files') ||
+    (props.mode == MODE.API && props.api_prompt_type == 'edit-files')
 
   const is_in_no_context_prompt_type =
     props.mode == MODE.WEB && props.web_prompt_type == 'no-context'

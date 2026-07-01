@@ -202,7 +202,7 @@ export const Panel = () => {
 
     if (prompt_type == 'ask-about-context') {
       state = ask_about_context_instructions
-    } else if (prompt_type == 'edit-context') {
+    } else if (prompt_type == 'edit-files') {
       state = edit_context_instructions
     } else if (prompt_type == 'no-context') {
       state = no_context_instructions
@@ -219,7 +219,7 @@ export const Panel = () => {
     const prompt_type = mode == MODE.WEB ? web_prompt_type : api_prompt_type
     if (prompt_type == 'ask-about-context')
       return ask_about_context_instructions
-    if (prompt_type == 'edit-context') return edit_context_instructions
+    if (prompt_type == 'edit-files') return edit_context_instructions
     if (prompt_type == 'no-context') return no_context_instructions
     if (prompt_type == 'code-at-cursor') return code_at_cursor_instructions
     if (prompt_type == 'find-relevant-files')
@@ -447,14 +447,14 @@ export const Panel = () => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
                   handle_mode_change(MODE.WEB)
-                  handle_web_prompt_type_change('edit-context')
+                  handle_web_prompt_type_change('edit-files')
                   set_chat_input_focus_and_select_key((k) => k + 1)
                 }}
                 on_api_calls_click={() => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
                   handle_mode_change(MODE.API)
-                  handle_api_prompt_type_change('edit-context')
+                  handle_api_prompt_type_change('edit-files')
                   set_chat_input_focus_and_select_key((k) => k + 1)
                 }}
                 version={version}

@@ -33,7 +33,7 @@ import {
   handle_get_instructions,
   handle_request_editor_state,
   handle_request_editor_selection_state,
-  handle_edit_context,
+  handle_edit_files,
   handle_code_at_cursor,
   handle_get_edit_format,
   handle_get_edit_format_instructions,
@@ -88,7 +88,7 @@ import {
   handle_update_last_used_web_configuration_or_group,
   handle_get_find_relevant_files_shrink_source_code,
   handle_save_find_relevant_files_shrink_source_code,
-  handle_return_home_and_switch_to_edit_context,
+  handle_return_home_and_switch_to_edit_files,
   handle_toggle_checkpoint_star,
   handle_restore_checkpoint,
   handle_restore_temp_checkpoint,
@@ -106,7 +106,7 @@ import {
   INSTRUCTIONS_ASK_STATE_KEY,
   INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY,
   INSTRUCTIONS_FIND_RELEVANT_FILES_STATE_KEY,
-  INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY,
+  INSTRUCTIONS_EDIT_FILES_STATE_KEY,
   INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
   PANEL_MODE_STATE_KEY,
   WEB_MODE_STATE_KEY,
@@ -237,7 +237,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public get active_instructions_state(): InstructionsState {
     const type = this.prompt_type
     if (type == 'ask-about-context') return this.ask_about_context_instructions
-    if (type == 'edit-context') return this.edit_context_instructions
+    if (type == 'edit-files') return this.edit_context_instructions
     if (type == 'no-context') return this.no_context_instructions
     if (type == 'code-at-cursor') return this.code_at_cursor_instructions
     return this.find_relevant_files_instructions
@@ -285,26 +285,20 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     this.open_editors_provider.set_no_context_mode(is_no_context)
   }
 
-  public async switch_to_edit_context() {
+  public async switch_to_edit_files() {
     if (this.mode == MODE.WEB) {
-      this.web_prompt_type = 'edit-context'
-      await this.context.workspaceState.update(
-        WEB_MODE_STATE_KEY,
-        'edit-context'
-      )
+      this.web_prompt_type = 'edit-files'
+      await this.context.workspaceState.update(WEB_MODE_STATE_KEY, 'edit-files')
       this.send_message({
         command: 'WEB_PROMPT_TYPE',
-        prompt_type: 'edit-context'
+        prompt_type: 'edit-files'
       })
     } else {
-      this.api_prompt_type = 'edit-context'
-      await this.context.workspaceState.update(
-        API_MODE_STATE_KEY,
-        'edit-context'
-      )
+      this.api_prompt_type = 'edit-files'
+      await this.context.workspaceState.update(API_MODE_STATE_KEY, 'edit-files')
       this.send_message({
         command: 'API_PROMPT_TYPE',
-        prompt_type: 'edit-context'
+        prompt_type: 'edit-files'
       })
     }
     this.update_providers_shrink_mode()
@@ -413,7 +407,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     })
 
     this.edit_context_instructions = this._load_instructions(
-      INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY
+      INSTRUCTIONS_EDIT_FILES_STATE_KEY
     )
     this.ask_about_context_instructions = this._load_instructions(
       INSTRUCTIONS_ASK_STATE_KEY
@@ -443,11 +437,11 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
     this.web_prompt_type = this.context.workspaceState.get<WebPromptType>(
       WEB_MODE_STATE_KEY,
-      'edit-context'
+      'edit-files'
     )
     this.api_prompt_type = this.context.workspaceState.get<ApiPromptType>(
       API_MODE_STATE_KEY,
-      'edit-context'
+      'edit-files'
     )
 
     this.update_providers_shrink_mode()
@@ -807,7 +801,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'EXECUTE_COMMAND') {
             await vscode.commands.executeCommand(message.command_id)
           } else if (message.command == 'EDIT_CONTEXT') {
-            await handle_edit_context(this, message)
+            await handle_edit_files(this, message)
           } else if (message.command == 'CODE_AT_CURSOR') {
             await handle_code_at_cursor(this, message)
           } else if (message.command == 'FIND_RELEVANT_FILES') {
@@ -979,7 +973,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'GET_SETUP_PROGRESS') {
             await this.send_setup_progress()
           } else if (message.command == 'REQUEST_RETURN_HOME') {
-            await handle_return_home_and_switch_to_edit_context(this)
+            await handle_return_home_and_switch_to_edit_files(this)
           } else if (
             message.command == 'GET_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE'
           ) {
@@ -1033,7 +1027,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     const web_prompt_types: WebPromptType[] = [
       'ask-about-context',
       'find-relevant-files',
-      'edit-context',
+      'edit-files',
       'code-at-cursor',
       'no-context'
     ]
@@ -1058,7 +1052,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         })
       ),
       selected_api_configuration_id_by_prompt_type: {
-        'edit-context': (this.context.workspaceState.get<string[]>(
+        'edit-files': (this.context.workspaceState.get<string[]>(
           RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY
         ) || [])[0],
         'code-at-cursor': (this.context.workspaceState.get<string[]>(

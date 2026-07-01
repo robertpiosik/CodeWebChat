@@ -29,7 +29,7 @@ export const use_instructions = (
     value: string,
     prompt_type:
       | 'ask-about-context'
-      | 'edit-context'
+      | 'edit-files'
       | 'no-context'
       | 'code-at-cursor'
       | 'find-relevant-files'
@@ -60,7 +60,7 @@ export const use_instructions = (
         ask_about_context_instructions,
         set_ask_about_context_instructions
       )
-    } else if (prompt_type == 'edit-context') {
+    } else if (prompt_type == 'edit-files') {
       update_state(edit_context_instructions, set_edit_context_instructions)
     } else if (prompt_type == 'no-context') {
       update_state(no_context_instructions, set_no_context_instructions)
@@ -96,7 +96,7 @@ export const use_instructions = (
 
     if (prompt_type == 'ask-about-context') {
       update(ask_about_context_instructions, set_ask_about_context_instructions)
-    } else if (prompt_type == 'edit-context') {
+    } else if (prompt_type == 'edit-files') {
       update(edit_context_instructions, set_edit_context_instructions)
     } else if (prompt_type == 'no-context') {
       update(no_context_instructions, set_no_context_instructions)
@@ -135,7 +135,7 @@ export const use_instructions = (
 
     if (prompt_type == 'ask-about-context') {
       update(ask_about_context_instructions, set_ask_about_context_instructions)
-    } else if (prompt_type == 'edit-context') {
+    } else if (prompt_type == 'edit-files') {
       update(edit_context_instructions, set_edit_context_instructions)
     } else if (prompt_type == 'no-context') {
       update(no_context_instructions, set_no_context_instructions)
@@ -182,7 +182,7 @@ export const use_instructions = (
 
     if (prompt_type == 'ask-about-context') {
       update(ask_about_context_instructions, set_ask_about_context_instructions)
-    } else if (prompt_type == 'edit-context') {
+    } else if (prompt_type == 'edit-files') {
       update(edit_context_instructions, set_edit_context_instructions)
     } else if (prompt_type == 'no-context') {
       update(no_context_instructions, set_no_context_instructions)

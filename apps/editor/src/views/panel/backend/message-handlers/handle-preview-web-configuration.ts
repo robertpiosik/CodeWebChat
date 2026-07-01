@@ -66,7 +66,6 @@ export const handle_preview_web_configuration = async (
 
     text_to_send = `<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}${missing_text_tag}${text_after_cursor}\n]]>\n</file>\n</files>\n${skill_definitions}${system_instructions}`
   } else if (panel_provider.web_prompt_type != 'code-at-cursor') {
-
     const collected =
       panel_provider.web_prompt_type != 'no-context'
         ? await files_collector.collect_files({})
@@ -82,7 +81,7 @@ export const handle_preview_web_configuration = async (
       })
 
     let system_instructions_xml = ''
-    if (panel_provider.web_prompt_type == 'edit-context') {
+    if (panel_provider.web_prompt_type == 'edit-files') {
       const config = vscode.workspace.getConfiguration('codeWebChat')
       const instructions_key = {
         whole: 'editFormatInstructionsWhole',
@@ -132,12 +131,13 @@ export const handle_preview_web_configuration = async (
     new_url: message.web_configuration.new_url
   }
 
-  const sent = await panel_provider.websocket_server_instance.preview_web_configuration({
-    instruction: text_to_send,
-    web_configuration: web_configuration_for_preview,
-    prompt_type: panel_provider.web_prompt_type,
-    raw_instructions: current_instructions
-  })
+  const sent =
+    await panel_provider.websocket_server_instance.preview_web_configuration({
+      instruction: text_to_send,
+      web_configuration: web_configuration_for_preview,
+      prompt_type: panel_provider.web_prompt_type,
+      raw_instructions: current_instructions
+    })
 
   if (sent) {
     panel_provider.send_message({

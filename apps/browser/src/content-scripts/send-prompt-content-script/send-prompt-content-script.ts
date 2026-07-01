@@ -200,7 +200,7 @@ const main = async () => {
       edit_format?: string
       prompt_type?:
         | 'ask-about-context'
-        | 'edit-context'
+        | 'edit-files'
         | 'code-at-cursor'
         | 'find-relevant-files'
         | 'no-context'
@@ -235,7 +235,7 @@ const main = async () => {
 
     if (chatbot?.setup_observer) {
       const inject_button =
-        stored_data.prompt_type == 'edit-context' ||
+        stored_data.prompt_type == 'edit-files' ||
         stored_data.prompt_type == 'code-at-cursor' ||
         stored_data.prompt_type == 'find-relevant-files'
 

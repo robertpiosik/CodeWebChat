@@ -40,7 +40,7 @@ export const handle_get_api_configurations = async (
       'commit-messages': def_cm ? get_api_configuration_id(def_cm) : null,
       'find-relevant-files': def_frf ? get_api_configuration_id(def_frf) : null,
       'voice-input': def_vi ? get_api_configuration_id(def_vi) : null,
-      'edit-context': null
+      'edit-files': null
     }
   })
 }

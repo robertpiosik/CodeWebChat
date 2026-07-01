@@ -323,7 +323,7 @@ export const configurations = {
     hu: 'Utasítások',
     bg: 'Инструкции'
   },
-  'configurations.edit-context-system-instructions.title': {
+  'configurations.edit-files-system-instructions.title': {
     en: 'Edit Context System Instructions',
     pl: 'Instrukcje systemowe edycji kontekstu',
     'zh-cn': '编辑上下文系统指令',
@@ -341,7 +341,7 @@ export const configurations = {
     hu: 'Kontextus Szerkesztés Rendszer Utasítások',
     bg: 'Системни инструкции за редактиране на контекст'
   },
-  'configurations.edit-context-system-instructions.description': {
+  'configurations.edit-files-system-instructions.description': {
     en: 'Tone and style instructions for the model when using the Edit Context prompt type with API calls.',
     pl: 'Instrukcje dotyczące tonu i stylu dla modelu przy użyciu typu promptu Edycji Kontekstu z zapytaniami API.',
     'zh-cn': '使用编辑上下文提示类型进行 API 调用时，模型的语气和样式说明。',
