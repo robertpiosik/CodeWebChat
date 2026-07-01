@@ -66,7 +66,7 @@ type Props = {
   on_open_website: (url: string) => void
   on_paste_image: (base64_content: string) => void
   on_open_image: (hash: string) => void
-  on_paste_text: (text: string) => void
+  on_paste_long_text: (text: string) => void
   on_open_pasted_text: (hash: string) => void
   on_paste_url: (url: string) => void
   is_recording: boolean
@@ -710,7 +710,7 @@ export const Main: React.FC<Props> = (props) => {
       on_open_website={props.on_open_website}
       on_paste_image={props.on_paste_image}
       on_open_image={props.on_open_image}
-      on_paste_text={props.on_paste_text}
+      on_paste_long_text={props.on_paste_long_text}
       on_open_pasted_text={props.on_open_pasted_text}
       on_paste_url={props.on_paste_url}
       is_recording={props.is_recording}

@@ -120,7 +120,7 @@ export const create_handle_paste =
 
     if (
       !refs.is_shift_pressed_ref.current &&
-      text.includes('\n') &&
+      (text.includes('\n') || text.length > 100) &&
       !is_fragment_paste &&
       !has_symbols
     ) {
@@ -162,7 +162,7 @@ export const create_handle_paste =
           refs.raw_caret_pos_ref.current = raw_start
         }
       }
-      props.on_paste_pasted_text(text)
+      props.on_paste_long_text(text)
       return
     }
 
