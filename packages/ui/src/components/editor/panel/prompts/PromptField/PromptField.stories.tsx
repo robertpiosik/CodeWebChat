@@ -646,7 +646,7 @@ export const WithWarning = () => (
     on_submit={() => console.log('Submitted')}
     on_copy={() => console.log('Copied')}
     is_connected={true}
-    prompt_type="ask-about-context"
+    prompt_type="ask-about-files"
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}

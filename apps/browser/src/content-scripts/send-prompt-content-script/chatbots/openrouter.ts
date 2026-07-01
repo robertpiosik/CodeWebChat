@@ -25,6 +25,23 @@ const show_options_modal = async (function_name: string) => {
   }
   options_button.click()
   await new Promise((r) => requestAnimationFrame(r))
+
+  const advanced_settings_button = Array.from(
+    document.querySelectorAll('div[role="dialog"] button')
+  ).find(
+    (button) => button.textContent?.trim() == 'Advanced Settings'
+  ) as HTMLButtonElement
+
+  if (!advanced_settings_button) {
+    report_initialization_error({
+      function_name,
+      log_message: 'Advanced settings button not found'
+    })
+    return false
+  }
+
+  advanced_settings_button.click()
+  await new Promise((r) => requestAnimationFrame(r))
   return true
 }
 
@@ -74,10 +91,11 @@ export const openrouter: Chatbot = {
       await close_options_modal('enter_system_instructions')
       return
     }
-    const custom_system_instructions_button =
-      textarea.parentElement?.parentElement?.querySelector(
-        'div > button:last-child'
-      )
+    const custom_system_instructions_button = Array.from(
+      document.querySelectorAll('div[role="dialog"] button')
+    ).find(
+      (button) => button.textContent?.trim() == 'Custom'
+    ) as HTMLButtonElement
     if (!custom_system_instructions_button) {
       report_initialization_error({
         function_name: 'enter_system_instructions',
@@ -86,11 +104,29 @@ export const openrouter: Chatbot = {
       await close_options_modal('enter_system_instructions')
       return
     }
-    ;(custom_system_instructions_button as HTMLElement)?.click()
+    custom_system_instructions_button.click()
     await new Promise((r) => requestAnimationFrame(r))
-    textarea.focus()
-    textarea.value = system_instructions
-    textarea.blur()
+
+    const active_textarea = document.querySelector(
+      'div[role="dialog"] textarea'
+    ) as HTMLTextAreaElement
+    if (!active_textarea) {
+      report_initialization_error({
+        function_name: 'enter_system_instructions',
+        log_message: 'System instructions textarea disappeared'
+      })
+      await close_options_modal('enter_system_instructions')
+      return
+    }
+
+    active_textarea.focus()
+    const nativeTextAreaValueSetter = Object.getOwnPropertyDescriptor(
+      window.HTMLTextAreaElement.prototype,
+      'value'
+    )?.set
+    nativeTextAreaValueSetter?.call(active_textarea, system_instructions)
+    active_textarea.dispatchEvent(new Event('input', { bubbles: true }))
+    active_textarea.blur()
     await close_options_modal('enter_system_instructions')
   },
   set_options: async (chat) => {
@@ -104,7 +140,7 @@ export const openrouter: Chatbot = {
     // Only some models support this option
     if (reasoning_toggle) {
       if (options.includes('disable-reasoning')) {
-        if (reasoning_toggle.getAttribute('data-state') == 'checked') {
+        if (reasoning_toggle.hasAttribute('data-checked')) {
           reasoning_toggle.click()
         }
       }
@@ -156,7 +192,12 @@ export const openrouter: Chatbot = {
       return
     }
     temperature_input.focus()
-    temperature_input.value = temperature.toString()
+    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+      window.HTMLInputElement.prototype,
+      'value'
+    )?.set
+    nativeInputValueSetter?.call(temperature_input, temperature.toString())
+    temperature_input.dispatchEvent(new Event('input', { bubbles: true }))
     temperature_input.blur()
     await close_options_modal('set_temperature')
   },
@@ -202,7 +243,12 @@ export const openrouter: Chatbot = {
       return
     }
     top_p_input.focus()
-    top_p_input.value = top_p.toString()
+    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+      window.HTMLInputElement.prototype,
+      'value'
+    )?.set
+    nativeInputValueSetter?.call(top_p_input, top_p.toString())
+    top_p_input.dispatchEvent(new Event('input', { bubbles: true }))
     top_p_input.blur()
     await close_options_modal('set_top_p')
   },
@@ -221,7 +267,7 @@ export const openrouter: Chatbot = {
 
     const reasoning_button = Array.from(dialog.querySelectorAll('button')).find(
       (button) =>
-        ['Minimal', 'Low', 'Medium', 'High'].includes(
+        ['None', 'Minimal', 'Low', 'Medium', 'High', 'XHigh', 'Max'].includes(
           button.textContent?.trim() || ''
         )
     ) as HTMLButtonElement
@@ -231,25 +277,29 @@ export const openrouter: Chatbot = {
       return
     }
 
-    if (reasoning_button.textContent != reasoning_effort) {
+    if (
+      reasoning_button.textContent?.trim().toLowerCase() !==
+      reasoning_effort.toLowerCase()
+    ) {
       reasoning_button.click()
       await new Promise((resolve) => setTimeout(resolve, 500)) // Opening animation must finish
-      const dropdown = document.querySelector(
-        'div[data-radix-popper-content-wrapper]'
-      )
-      if (!dropdown) {
+
+      const options = document.querySelectorAll('div[role="option"]')
+      if (options.length === 0) {
         report_initialization_error({
           function_name: 'set_reasoning_effort',
-          log_message: 'Reasoning effort dropdown not found'
+          log_message: 'Reasoning effort options not found'
         })
         await close_options_modal('set_reasoning_effort')
         return
       }
 
-      const options = dropdown.querySelectorAll('div[role="option"]')
       let found = false
       for (const option of Array.from(options)) {
-        if (option.textContent.toLowerCase() == reasoning_effort) {
+        if (
+          option.textContent?.trim().toLowerCase() ===
+          reasoning_effort.toLowerCase()
+        ) {
           ;(option as HTMLElement).click()
           found = true
           break

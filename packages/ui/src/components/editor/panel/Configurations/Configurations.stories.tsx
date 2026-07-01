@@ -76,9 +76,6 @@ export const Default = () => {
       on_delete={(id) => {
         console.log('on_delete', id)
       }}
-      on_duplicate={(id) => {
-        console.log('on_duplicate', id)
-      }}
       on_reorder={(configs) => {
         console.log('on_reorder', configs)
       }}
@@ -109,9 +106,6 @@ export const Presets = () => {
       }}
       on_delete={(id) => {
         console.log('on_delete', id)
-      }}
-      on_duplicate={(id) => {
-        console.log('on_duplicate', id)
       }}
       on_reorder={(configs) => {
         console.log('on_reorder', configs)
@@ -146,9 +140,6 @@ export const Empty = () => (
     }}
     on_delete={(id) => {
       console.log('on_delete', id)
-    }}
-    on_duplicate={(id) => {
-      console.log('on_duplicate', id)
     }}
     on_reorder={(configs) => {
       console.log('on_reorder', configs)

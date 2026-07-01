@@ -180,7 +180,8 @@ export const CHATBOTS = {
       'Low',
       'Medium',
       'High',
-      'XHigh'
+      'XHigh',
+      'Max'
     ],
     default_system_instructions: "You're a helpful coding assistant.",
     supported_options: {

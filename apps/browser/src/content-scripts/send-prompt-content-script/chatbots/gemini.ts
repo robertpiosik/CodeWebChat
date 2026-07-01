@@ -10,7 +10,9 @@ export const gemini: Chatbot = {
   wait_until_ready: async () => {
     await new Promise((resolve) => {
       const check_for_element = () => {
-        if (document.querySelector('button[data-test-id="bard-mode-menu-button"]')) {
+        if (
+          document.querySelector('button[data-test-id="bard-mode-menu-button"]')
+        ) {
           resolve(null)
         } else {
           setTimeout(check_for_element, 100)
@@ -18,6 +20,7 @@ export const gemini: Chatbot = {
       }
       check_for_element()
     })
+    await new Promise((resolve) => setTimeout(resolve, 500))
   },
   set_model: async (chat) => {
     const model = chat.model
@@ -38,7 +41,8 @@ export const gemini: Chatbot = {
       }
 
       const model_label = CHATBOTS['Gemini'].models[model].label
-      const trigger_text = model_selector_trigger.textContent?.trim().toLowerCase() || ''
+      const trigger_text =
+        model_selector_trigger.textContent?.trim().toLowerCase() || ''
       const target_label_lower = model_label.toLowerCase()
       if (
         trigger_text.includes(target_label_lower) &&
@@ -49,8 +53,7 @@ export const gemini: Chatbot = {
 
       model_selector_trigger.click()
       await new Promise((r) => requestAnimationFrame(r))
-      const menu_content =
-        document.querySelector('gem-menu')
+      const menu_content = document.querySelector('gem-menu')
       if (!menu_content) {
         report_initialization_error({
           function_name: 'set_model',
@@ -58,7 +61,9 @@ export const gemini: Chatbot = {
         })
         return
       }
-      const model_options = Array.from(menu_content.querySelectorAll('[role="menuitem"]'))
+      const model_options = Array.from(
+        menu_content.querySelectorAll('[role="menuitem"]')
+      )
       let found = false
       for (const option of model_options) {
         const label_element = option.querySelector('.label')
@@ -107,10 +112,14 @@ export const gemini: Chatbot = {
 
     const thinking_level_item = Array.from(
       menu_content.querySelectorAll('gem-menu-item')
-    ).find((item) => item.getAttribute('value') == 'thinking_level') as HTMLElement
+    ).find(
+      (item) => item.getAttribute('value') == 'thinking_level'
+    ) as HTMLElement
 
     if (!thinking_level_item) {
-      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+      document.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
+      )
       return
     }
 
@@ -119,14 +128,18 @@ export const gemini: Chatbot = {
       ?.textContent?.trim()
 
     if (current_level?.toLowerCase() == reasoning_effort.toLowerCase()) {
-      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+      document.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
+      )
       return
     }
 
     thinking_level_item.click()
     await new Promise((resolve) => requestAnimationFrame(resolve))
 
-    const all_menu_items = Array.from(document.querySelectorAll('gem-menu-item'))
+    const all_menu_items = Array.from(
+      document.querySelectorAll('gem-menu-item')
+    )
     let found = false
     for (const option of all_menu_items) {
       const label_element = option.querySelector('.label')
@@ -139,7 +152,9 @@ export const gemini: Chatbot = {
     }
 
     if (!found) {
-      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+      document.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
+      )
     }
 
     await new Promise((resolve) => requestAnimationFrame(resolve))
