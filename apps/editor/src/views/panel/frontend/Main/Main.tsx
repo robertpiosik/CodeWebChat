@@ -36,7 +36,7 @@ type Props = {
   set_instructions: (
     value: string,
     prompt_type:
-      | 'ask-about-context'
+      | 'ask-about-files'
       | 'edit-files'
       | 'without-files'
       | 'code-at-cursor'
@@ -197,7 +197,7 @@ export const Main: React.FC<Props> = (props) => {
     let history: string[] | undefined
     let set_history: React.Dispatch<React.SetStateAction<string[] | undefined>>
 
-    if (current_prompt_type == 'ask-about-context') {
+    if (current_prompt_type == 'ask-about-files') {
       history = ask_history
       set_history = set_ask_history
     } else if (current_prompt_type == 'edit-files') {
@@ -411,8 +411,7 @@ export const Main: React.FC<Props> = (props) => {
     } else if (current_prompt_type == 'find-relevant-files') {
       return props.find_relevant_files_instructions
     }
-    if (current_prompt_type == 'ask-about-context')
-      return props.ask_instructions
+    if (current_prompt_type == 'ask-about-files') return props.ask_instructions
     if (current_prompt_type == 'edit-files') return props.edit_instructions
     if (current_prompt_type == 'without-files')
       return props.no_context_instructions
@@ -569,7 +568,7 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const instructions =
-    current_prompt_type == 'ask-about-context'
+    current_prompt_type == 'ask-about-files'
       ? props.ask_instructions
       : current_prompt_type == 'edit-files'
         ? props.edit_instructions
@@ -586,7 +585,7 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   let current_history: string[] | undefined
-  if (current_prompt_type == 'ask-about-context') {
+  if (current_prompt_type == 'ask-about-files') {
     current_history = ask_history
   } else if (current_prompt_type == 'edit-files') {
     current_history = edit_history

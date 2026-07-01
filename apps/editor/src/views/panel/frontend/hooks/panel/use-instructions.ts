@@ -28,7 +28,7 @@ export const use_instructions = (
   const handle_instructions_change = (
     value: string,
     prompt_type:
-      | 'ask-about-context'
+      | 'ask-about-files'
       | 'edit-files'
       | 'without-files'
       | 'code-at-cursor'
@@ -55,7 +55,7 @@ export const use_instructions = (
       })
     }
 
-    if (prompt_type == 'ask-about-context') {
+    if (prompt_type == 'ask-about-files') {
       update_state(
         ask_about_context_instructions,
         set_ask_about_context_instructions
@@ -94,7 +94,7 @@ export const use_instructions = (
       })
     }
 
-    if (prompt_type == 'ask-about-context') {
+    if (prompt_type == 'ask-about-files') {
       update(ask_about_context_instructions, set_ask_about_context_instructions)
     } else if (prompt_type == 'edit-files') {
       update(edit_context_instructions, set_edit_context_instructions)
@@ -133,7 +133,7 @@ export const use_instructions = (
       })
     }
 
-    if (prompt_type == 'ask-about-context') {
+    if (prompt_type == 'ask-about-files') {
       update(ask_about_context_instructions, set_ask_about_context_instructions)
     } else if (prompt_type == 'edit-files') {
       update(edit_context_instructions, set_edit_context_instructions)
@@ -180,7 +180,7 @@ export const use_instructions = (
       })
     }
 
-    if (prompt_type == 'ask-about-context') {
+    if (prompt_type == 'ask-about-files') {
       update(ask_about_context_instructions, set_ask_about_context_instructions)
     } else if (prompt_type == 'edit-files') {
       update(edit_context_instructions, set_edit_context_instructions)

@@ -2,7 +2,7 @@ import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 
 export const web_prompt_type_labels: Record<WebPromptType, string> = {
   'edit-files': 'Edit files',
-  'ask-about-context': 'Ask about context',
+  'ask-about-files': 'Ask about files',
   'code-at-cursor': 'Code at cursor',
   'find-relevant-files': 'Find relevant files',
   'without-files': 'Without files'

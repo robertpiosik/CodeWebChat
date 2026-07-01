@@ -236,7 +236,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
   public get active_instructions_state(): InstructionsState {
     const type = this.prompt_type
-    if (type == 'ask-about-context') return this.ask_about_context_instructions
+    if (type == 'ask-about-files') return this.ask_about_context_instructions
     if (type == 'edit-files') return this.edit_context_instructions
     if (type == 'without-files') return this.no_context_instructions
     if (type == 'code-at-cursor') return this.code_at_cursor_instructions
@@ -1025,7 +1025,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       })
 
     const web_prompt_types: WebPromptType[] = [
-      'ask-about-context',
+      'ask-about-files',
       'find-relevant-files',
       'edit-files',
       'code-at-cursor',

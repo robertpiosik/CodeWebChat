@@ -1,6 +1,6 @@
 export type WebPromptType =
   | 'edit-files'
-  | 'ask-about-context'
+  | 'ask-about-files'
   | 'code-at-cursor'
   | 'find-relevant-files'
   | 'without-files'

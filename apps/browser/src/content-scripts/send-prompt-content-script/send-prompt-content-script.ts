@@ -199,7 +199,7 @@ const main = async () => {
       raw_instructions?: string
       edit_format?: string
       prompt_type?:
-        | 'ask-about-context'
+        | 'ask-about-files'
         | 'edit-files'
         | 'code-at-cursor'
         | 'find-relevant-files'

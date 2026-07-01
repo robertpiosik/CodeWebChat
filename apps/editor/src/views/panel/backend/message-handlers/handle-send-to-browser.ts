@@ -426,7 +426,7 @@ const resolve_web_configuration = async (params: {
       params.panel_provider.code_at_cursor_instructions.instructions[
         params.panel_provider.code_at_cursor_instructions.active_index
       ] || ''
-  } else if (params.panel_provider.web_prompt_type == 'ask-about-context') {
+  } else if (params.panel_provider.web_prompt_type == 'ask-about-files') {
     current_instructions =
       params.panel_provider.ask_about_context_instructions.instructions[
         params.panel_provider.ask_about_context_instructions.active_index

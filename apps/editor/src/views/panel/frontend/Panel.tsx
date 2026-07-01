@@ -200,7 +200,7 @@ export const Panel = () => {
     }
     const prompt_type = mode == MODE.WEB ? web_prompt_type : api_prompt_type
 
-    if (prompt_type == 'ask-about-context') {
+    if (prompt_type == 'ask-about-files') {
       state = ask_about_context_instructions
     } else if (prompt_type == 'edit-files') {
       state = edit_context_instructions
@@ -217,8 +217,7 @@ export const Panel = () => {
 
   const get_current_instructions_state = () => {
     const prompt_type = mode == MODE.WEB ? web_prompt_type : api_prompt_type
-    if (prompt_type == 'ask-about-context')
-      return ask_about_context_instructions
+    if (prompt_type == 'ask-about-files') return ask_about_context_instructions
     if (prompt_type == 'edit-files') return edit_context_instructions
     if (prompt_type == 'without-files') return no_context_instructions
     if (prompt_type == 'code-at-cursor') return code_at_cursor_instructions

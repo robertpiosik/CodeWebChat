@@ -157,7 +157,7 @@ export const MainView: React.FC<Props> = (props) => {
     (props.mode == MODE.API && props.api_prompt_type == 'edit-files')
 
   const is_in_ask_about_context_prompt_type =
-    props.mode == MODE.WEB && props.web_prompt_type == 'ask-about-context'
+    props.mode == MODE.WEB && props.web_prompt_type == 'ask-about-files'
 
   const is_in_code_completions_prompt_type =
     (props.mode == MODE.WEB && props.web_prompt_type == 'code-at-cursor') ||

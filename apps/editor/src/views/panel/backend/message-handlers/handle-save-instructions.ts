@@ -18,7 +18,7 @@ export const handle_save_instructions = async (
   const { prompt_type, instruction } = message as any
   const instruction_state = instruction as InstructionsState
 
-  if (prompt_type == 'ask-about-context') {
+  if (prompt_type == 'ask-about-files') {
     panel_provider.ask_about_context_instructions = instruction_state
     await panel_provider.context.workspaceState.update(
       INSTRUCTIONS_ASK_STATE_KEY,

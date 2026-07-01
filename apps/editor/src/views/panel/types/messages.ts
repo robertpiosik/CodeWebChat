@@ -91,7 +91,7 @@ export interface SaveInstructionsMessage extends BaseMessage {
   command: 'SAVE_INSTRUCTIONS'
   instruction: InstructionsState
   prompt_type:
-    | 'ask-about-context'
+    | 'ask-about-files'
     | 'edit-files'
     | 'code-at-cursor'
     | 'find-relevant-files'
@@ -163,7 +163,7 @@ export interface SaveHistoryMessage extends BaseMessage {
   command: 'SAVE_HISTORY'
   messages: string[]
   prompt_type:
-    | 'ask-about-context'
+    | 'ask-about-files'
     | 'edit-files'
     | 'code-at-cursor'
     | 'find-relevant-files'
