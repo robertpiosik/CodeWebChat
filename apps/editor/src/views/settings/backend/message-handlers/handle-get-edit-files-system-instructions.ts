@@ -10,7 +10,7 @@ export const handle_get_edit_files_system_instructions = async (
     config.get<string>('editFilesSystemInstructions') ||
     default_system_instructions
   provider.postMessage({
-    command: 'EDIT_CONTEXT_SYSTEM_INSTRUCTIONS',
+    command: 'EDIT_FILES_SYSTEM_INSTRUCTIONS',
     instructions
   })
 }

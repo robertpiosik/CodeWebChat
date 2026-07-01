@@ -166,11 +166,9 @@ export class SettingsProvider {
           )
         } else if (message.command == 'SELECT_DEFAULT_API_CONFIGURATION') {
           await handle_select_default_api_configuration(this, message)
-        } else if (message.command == 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS') {
+        } else if (message.command == 'GET_EDIT_FILES_SYSTEM_INSTRUCTIONS') {
           await handle_get_edit_files_system_instructions(this)
-        } else if (
-          message.command == 'UPDATE_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS'
-        ) {
+        } else if (message.command == 'UPDATE_EDIT_FILES_SYSTEM_INSTRUCTIONS') {
           await handle_update_edit_files_system_instructions(message)
         } else if (message.command == 'GET_EDIT_FORMAT_INSTRUCTIONS') {
           await handle_get_edit_format_instructions(this)

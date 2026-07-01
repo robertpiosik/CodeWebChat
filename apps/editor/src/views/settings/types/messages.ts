@@ -100,12 +100,12 @@ export interface UpdateVoiceInputPushToTalkMessage {
   enabled: boolean
 }
 
-export interface GetEditContextSystemInstructionsMessage {
-  command: 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS'
+export interface GetEditFilesSystemInstructionsMessage {
+  command: 'GET_EDIT_FILES_SYSTEM_INSTRUCTIONS'
 }
 
-export interface UpdateEditContextSystemInstructionsMessage {
-  command: 'UPDATE_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS'
+export interface UpdateEditFilesSystemInstructionsMessage {
+  command: 'UPDATE_EDIT_FILES_SYSTEM_INSTRUCTIONS'
   instructions: string
 }
 
@@ -350,8 +350,8 @@ export type FrontendMessage =
   | UpdateVoiceInputInstructionsMessage
   | GetVoiceInputPushToTalkMessage
   | UpdateVoiceInputPushToTalkMessage
-  | GetEditContextSystemInstructionsMessage
-  | UpdateEditContextSystemInstructionsMessage
+  | GetEditFilesSystemInstructionsMessage
+  | UpdateEditFilesSystemInstructionsMessage
   | GetEditFormatInstructionsMessage
   | UpdateEditFormatInstructionsMessage
   | SettingsUiReadyMessage
@@ -430,8 +430,8 @@ export interface VoiceInputPushToTalkMessage {
   enabled: boolean
 }
 
-export interface EditContextSystemInstructionsMessage {
-  command: 'EDIT_CONTEXT_SYSTEM_INSTRUCTIONS'
+export interface EditFilesSystemInstructionsMessage {
+  command: 'EDIT_FILES_SYSTEM_INSTRUCTIONS'
   instructions: string
 }
 
@@ -557,7 +557,7 @@ export type BackendMessage =
   | IncludePromptsInCommitMessagesMessage
   | VoiceInputInstructionsMessage
   | VoiceInputPushToTalkMessage
-  | EditContextSystemInstructionsMessage
+  | EditFilesSystemInstructionsMessage
   | EditFormatInstructionsMessage
   | ContextSizeWarningThresholdMessage
   | AreAutomaticCheckpointsDisabledMessage

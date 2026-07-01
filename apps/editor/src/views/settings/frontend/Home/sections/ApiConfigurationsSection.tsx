@@ -40,19 +40,19 @@ type Props = {
   ) => void
   on_select_default_api_configuration: (tool_name: ToolType) => void
   set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void
-  edit_context_instructions: string
+  edit_files_instructions: string
   commit_instructions: string
   voice_input_instructions: string
-  set_edit_context_instructions: (instructions: string) => void
+  set_edit_files_instructions: (instructions: string) => void
   set_commit_instructions: (instructions: string) => void
   set_voice_input_instructions: (instructions: string) => void
-  on_edit_context_instructions_blur: () => void
+  on_edit_files_instructions_blur: () => void
   on_commit_instructions_blur: () => void
   on_voice_input_instructions_blur: () => void
-  default_edit_context_instructions: string
+  default_edit_files_instructions: string
   default_commit_instructions: string
   default_voice_input_instructions: string
-  on_restore_edit_context_instructions: () => void
+  on_restore_edit_files_instructions: () => void
   on_restore_commit_instructions: () => void
   on_restore_voice_input_instructions: () => void
   extended_cache_duration_for_anthropic: boolean
@@ -354,17 +354,17 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
               )}
             >
               <UiTextarea
-                value={props.edit_context_instructions}
-                on_change={props.set_edit_context_instructions}
-                on_blur={props.on_edit_context_instructions_blur}
+                value={props.edit_files_instructions}
+                on_change={props.set_edit_files_instructions}
+                on_blur={props.on_edit_files_instructions_blur}
                 action_icon={
-                  props.edit_context_instructions !==
-                  props.default_edit_context_instructions
+                  props.edit_files_instructions !==
+                  props.default_edit_files_instructions
                     ? 'discard'
                     : undefined
                 }
                 action_title={t('configurations.action.restore-default')}
-                on_action_click={props.on_restore_edit_context_instructions}
+                on_action_click={props.on_restore_edit_files_instructions}
               />
             </UiItem>
             <UiItem

@@ -99,7 +99,7 @@ type Props = {
   api_configurations: ApiConfiguration[]
   web_configurations: WebConfiguration[]
   defaults: Record<ToolType, string | null>
-  edit_context_system_instructions: string
+  edit_files_system_instructions: string
   voice_input_instructions: string
   voice_input_push_to_talk: boolean
   commit_message_instructions: string
@@ -127,7 +127,7 @@ type Props = {
   on_edit_format_instructions_change: (
     instructions: EditFormatInstructions
   ) => void
-  on_edit_context_system_instructions_change: (instructions: string) => void
+  on_edit_files_system_instructions_change: (instructions: string) => void
   on_voice_input_instructions_change: (instructions: string) => void
   on_voice_input_push_to_talk_change: (enabled: boolean) => void
   on_automatic_checkpoints_toggle: (disabled: boolean) => void
@@ -204,8 +204,7 @@ export const Home: React.FC<Props> = (props) => {
 
   const [commit_instructions, set_commit_instructions] = useState('')
   const [voice_input_instructions, set_voice_input_instructions] = useState('')
-  const [edit_context_instructions, set_edit_context_instructions] =
-    useState('')
+  const [edit_files_instructions, set_edit_files_instructions] = useState('')
 
   const get_has_warning = (id: NavItem): boolean => {
     if (id == 'model-providers') {
@@ -262,8 +261,8 @@ export const Home: React.FC<Props> = (props) => {
   }, [props.voice_input_instructions])
 
   useEffect(() => {
-    set_edit_context_instructions(props.edit_context_system_instructions || '')
-  }, [props.edit_context_system_instructions])
+    set_edit_files_instructions(props.edit_files_system_instructions || '')
+  }, [props.edit_files_system_instructions])
 
   const handle_scroll_to_section = (item_id: NavItem) => {
     const section = section_refs.current[item_id]
@@ -430,22 +429,22 @@ export const Home: React.FC<Props> = (props) => {
           on_add_api_configuration={props.on_add_api_configuration}
           on_edit_api_configuration={props.on_edit_api_configuration}
           on_delete_api_configuration={props.on_delete_api_configuration}
-          edit_context_instructions={edit_context_instructions}
+          edit_files_instructions={edit_files_instructions}
           commit_instructions={commit_instructions}
           voice_input_instructions={voice_input_instructions}
-          set_edit_context_instructions={set_edit_context_instructions}
+          set_edit_files_instructions={set_edit_files_instructions}
           set_commit_instructions={set_commit_instructions}
           set_voice_input_instructions={set_voice_input_instructions}
-          on_edit_context_instructions_blur={() => {
-            props.on_edit_context_system_instructions_change(
-              edit_context_instructions
+          on_edit_files_instructions_blur={() => {
+            props.on_edit_files_system_instructions_change(
+              edit_files_instructions
             )
             if (
-              edit_context_instructions == '' &&
-              props.edit_context_system_instructions ==
+              edit_files_instructions == '' &&
+              props.edit_files_system_instructions ==
                 default_system_instructions
             ) {
-              set_edit_context_instructions(default_system_instructions)
+              set_edit_files_instructions(default_system_instructions)
             }
           }}
           on_commit_instructions_blur={() => {
@@ -467,12 +466,12 @@ export const Home: React.FC<Props> = (props) => {
               set_voice_input_instructions(default_voice_input_instructions)
             }
           }}
-          default_edit_context_instructions={default_system_instructions}
+          default_edit_files_instructions={default_system_instructions}
           default_commit_instructions={default_commit_message_instructions}
           default_voice_input_instructions={default_voice_input_instructions}
-          on_restore_edit_context_instructions={() => {
-            set_edit_context_instructions(default_system_instructions)
-            props.on_edit_context_system_instructions_change(
+          on_restore_edit_files_instructions={() => {
+            set_edit_files_instructions(default_system_instructions)
+            props.on_edit_files_system_instructions_change(
               default_system_instructions
             )
           }}

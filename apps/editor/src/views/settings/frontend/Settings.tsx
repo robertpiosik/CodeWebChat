@@ -38,7 +38,7 @@ export const Settings = () => {
       settings_hook.api_configurations !== undefined &&
       settings_hook.web_configurations !== undefined &&
       settings_hook.defaults !== undefined &&
-      settings_hook.edit_context_system_instructions !== undefined &&
+      settings_hook.edit_files_system_instructions !== undefined &&
       settings_hook.voice_input_instructions !== undefined &&
       settings_hook.voice_input_push_to_talk !== undefined &&
       settings_hook.commit_message_instructions !== undefined &&
@@ -78,8 +78,8 @@ export const Settings = () => {
         providers={settings_hook.providers!}
         api_configurations={settings_hook.api_configurations!}
         defaults={settings_hook.defaults!}
-        edit_context_system_instructions={
-          settings_hook.edit_context_system_instructions!
+        edit_files_system_instructions={
+          settings_hook.edit_files_system_instructions!
         }
         context_size_warning_threshold={
           settings_hook.context_size_warning_threshold!
@@ -124,8 +124,8 @@ export const Settings = () => {
         on_include_prompts_in_commit_messages_change={
           settings_hook.handle_include_prompts_in_commit_messages_change
         }
-        on_edit_context_system_instructions_change={
-          settings_hook.handle_edit_context_system_instructions_change
+        on_edit_files_system_instructions_change={
+          settings_hook.handle_edit_files_system_instructions_change
         }
         on_edit_format_instructions_change={
           settings_hook.handle_edit_format_instructions_change

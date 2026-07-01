@@ -324,8 +324,8 @@ export const configurations = {
     bg: 'Инструкции'
   },
   'configurations.edit-files-system-instructions.title': {
-    en: 'Edit Context System Instructions',
-    pl: 'Instrukcje systemowe edycji kontekstu',
+    en: 'Edit Files System Instructions',
+    pl: 'Instrukcje systemowe edycji plików',
     'zh-cn': '编辑上下文系统指令',
     ja: 'コンテキスト編集のシステム指示',
     'zh-tw': '編輯上下文系統指令',
@@ -342,8 +342,8 @@ export const configurations = {
     bg: 'Системни инструкции за редактиране на контекст'
   },
   'configurations.edit-files-system-instructions.description': {
-    en: 'Tone and style instructions for the model when using the Edit Context prompt type with API calls.',
-    pl: 'Instrukcje dotyczące tonu i stylu dla modelu przy użyciu typu promptu Edycji Kontekstu z zapytaniami API.',
+    en: 'Tone and style instructions for the model when using the Edit Files prompt type with API calls.',
+    pl: 'Instrukcje dotyczące tonu i stylu dla modelu przy użyciu typu promptu Edycji Plików z zapytaniami API.',
     'zh-cn': '使用编辑上下文提示类型进行 API 调用时，模型的语气和样式说明。',
     ja: 'API 呼び出しでコンテキスト編集プロンプトタイプを使用する際のモデルのトーンとスタイルの指示。',
     'zh-tw': '使用編輯上下文提示類型進行 API 呼叫時，模型的語氣和樣式說明。',
