@@ -1,5 +1,4 @@
 import { Chatbot } from '../types/chatbot'
-import { CHATBOTS } from '@shared/constants/chatbots'
 import {
   add_apply_response_button,
   observe_for_responses
@@ -18,68 +17,6 @@ export const github_copilot: Chatbot = {
       }
       check_for_element()
     })
-  },
-  set_model: async (chat) => {
-    const model = chat.model
-    if (!model) return
-
-    const model_selector_button = document.querySelector(
-      'form button[aria-haspopup="true"]'
-    ) as HTMLButtonElement
-    if (!model_selector_button) {
-      report_initialization_error({
-        function_name: 'set_model',
-        log_message: 'Model selector button not found'
-      })
-      return
-    }
-
-    const model_label_to_find =
-      CHATBOTS['GitHub Copilot'].models?.[model]?.label
-    if (!model_label_to_find) return
-
-    if (model_selector_button.textContent?.includes(model_label_to_find)) {
-      return
-    }
-
-    model_selector_button.click()
-    await new Promise((resolve) => setTimeout(resolve, 150))
-
-    const options_container = document.querySelector(
-      'div[data-component="AnchoredOverlay"][data-width-medium]'
-    )
-    if (!options_container) {
-      report_initialization_error({
-        function_name: 'set_model',
-        log_message: 'Model options container not found'
-      })
-      model_selector_button.click()
-      return
-    }
-
-    const options = options_container.querySelectorAll(
-      'li[role="menuitemradio"]'
-    )
-
-    let found = false
-    for (const option of Array.from(options)) {
-      if (option.textContent?.includes(model_label_to_find)) {
-        ;(option as HTMLElement).click()
-        found = true
-        break
-      }
-    }
-
-    if (!found) {
-      report_initialization_error({
-        function_name: 'set_model',
-        log_message: `Model option "${model_label_to_find}" not found`
-      })
-      // click again to close dropdown
-      model_selector_button.click()
-    }
-
-    await new Promise((r) => requestAnimationFrame(r))
   },
   enter_message: async (params) => {
     const input_element = document.querySelector(

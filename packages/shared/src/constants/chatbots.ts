@@ -73,11 +73,6 @@ export const CHATBOTS = {
     url_override_disabled_options: ['incognito-chat'],
     supported_options: {
       'incognito-chat': 'Incognito chat'
-    },
-    models: {
-      'sonnet-4-5': { label: 'Sonnet 4.5' },
-      'haiku-4-5': { label: 'Haiku 4.5' },
-      'opus-4-6': { label: 'Opus 4.6' }
     }
   } as Chatbot,
   Copilot: {
@@ -108,22 +103,7 @@ export const CHATBOTS = {
   'GitHub Copilot': {
     url: 'https://github.com/copilot',
     supports_url_override: true,
-    url_override_label: 'Space URL',
-    models: {
-      'gpt-5-mini': { label: 'GPT-5 mini' },
-      'grok-code-fast-1': { label: 'Grok Code Fast 1' },
-      'gemini-3-flash': { label: 'Gemini 3 Flash' },
-      'claude-haiku-4.5': { label: 'Claude Haiku 4.5' },
-      'gpt-4.1': { label: 'GPT-4.1' },
-      'gpt-4o': { label: 'GPT-4o' },
-      'gpt-5': { label: 'GPT-5' },
-      'gpt-5.1': { label: 'GPT-5.1' },
-      'gpt-5.2': { label: 'GPT-5.2' },
-      'claude-sonnet-4': { label: 'Claude Sonnet 4' },
-      'claude-sonnet-4.5': { label: 'Claude Sonnet 4.5' },
-      'claude-opus-4.5': { label: 'Claude Opus 4.5' },
-      'gemini-3-pro': { label: 'Gemini 3 Pro' }
-    }
+    url_override_label: 'Space URL'
   } as Chatbot,
   Grok: {
     url: 'https://grok.com/',

@@ -24,58 +24,6 @@ export const claude: Chatbot = {
     })
     await new Promise((resolve) => setTimeout(resolve, 1000))
   },
-  set_model: async (chat) => {
-    const model = chat.model
-    if (!model) return
-    const model_selector_button = document.querySelector(
-      'button[data-testid="model-selector-dropdown"]'
-    ) as HTMLButtonElement
-    if (!model_selector_button) {
-      report_initialization_error({
-        function_name: 'set_model',
-        log_message: 'Model selector button not found'
-      })
-      return
-    }
-
-    const model_name_to_find = CHATBOTS['Claude'].models?.[model]?.label
-    if (!model_name_to_find) {
-      report_initialization_error({
-        function_name: 'set_model',
-        log_message: `Model "${model}" not found`
-      })
-      return
-    }
-
-    if (model_selector_button.textContent?.includes(model_name_to_find)) {
-      return
-    }
-
-    model_selector_button.dispatchEvent(
-      new PointerEvent('pointerdown', { bubbles: true })
-    )
-    await new Promise((r) => requestAnimationFrame(r))
-
-    const menu_items = document.querySelectorAll(
-      'div[data-radix-popper-content-wrapper] div[role="menuitem"]'
-    )
-
-    if (menu_items.length == 0) {
-      report_initialization_error({
-        function_name: 'set_model',
-        log_message: 'Model selector menu items not found'
-      })
-      return
-    }
-
-    for (const item of Array.from(menu_items)) {
-      if (item.textContent?.includes(model_name_to_find)) {
-        ;(item as HTMLElement).click()
-        break
-      }
-    }
-    await new Promise((r) => requestAnimationFrame(r))
-  },
   set_options: async (chat) => {
     const options = chat.options
     if (!options) return
