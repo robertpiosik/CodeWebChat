@@ -811,6 +811,10 @@ export class WorkspaceProvider
     await this.gitignore_initialization
     await this.ranges_initialization
 
+    if (this._is_no_context_mode) {
+      return []
+    }
+
     if (element) {
       const dir_path = element.resourceUri.fsPath
       if (element.isDirectory) {
