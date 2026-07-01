@@ -97,14 +97,14 @@
         "icon": "$(copy)"
       },
       {
-        "command": "codeWebChat.undoContextSelection",
-        "title": "%codeWebChat.undoContextSelection.title%",
+        "command": "codeWebChat.undoSelection",
+        "title": "%codeWebChat.undoSelection.title%",
         "category": "Code Web Chat",
         "icon": "$(discard)"
       },
       {
-        "command": "codeWebChat.redoContextSelection",
-        "title": "%codeWebChat.redoContextSelection.title%",
+        "command": "codeWebChat.redoSelection",
+        "title": "%codeWebChat.redoSelection.title%",
         "category": "Code Web Chat",
         "icon": "$(redo)"
       },
@@ -402,11 +402,11 @@
       ],
       "commandPalette": [
         {
-          "command": "codeWebChat.undoContextSelection",
+          "command": "codeWebChat.undoSelection",
           "when": "false"
         },
         {
-          "command": "codeWebChat.redoContextSelection",
+          "command": "codeWebChat.redoSelection",
           "when": "false"
         },
         {
@@ -548,12 +548,12 @@
       ],
       "view/title": [
         {
-          "command": "codeWebChat.undoContextSelection",
+          "command": "codeWebChat.undoSelection",
           "when": "view == codeWebChatViewSelectedFiles",
           "group": "navigation@1"
         },
         {
-          "command": "codeWebChat.redoContextSelection",
+          "command": "codeWebChat.redoSelection",
           "when": "view == codeWebChatViewSelectedFiles",
           "group": "navigation@2"
         },

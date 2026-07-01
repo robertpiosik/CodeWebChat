@@ -208,13 +208,11 @@ export const activate = async (context: vscode.ExtensionContext) => {
         }
       }
     ),
-    vscode.commands.registerCommand(
-      'codeWebChat.undoContextSelection',
-      async () => shared_context_state.undo()
+    vscode.commands.registerCommand('codeWebChat.undoSelection', async () =>
+      shared_context_state.undo()
     ),
-    vscode.commands.registerCommand(
-      'codeWebChat.redoContextSelection',
-      async () => shared_context_state.redo()
+    vscode.commands.registerCommand('codeWebChat.redoSelection', async () =>
+      shared_context_state.redo()
     ),
     vscode.commands.registerCommand(
       'codeWebChat.openInIntegratedTerminal',
