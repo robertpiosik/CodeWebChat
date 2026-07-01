@@ -194,7 +194,7 @@ export const MainView: React.FC<Props> = (props) => {
       is_in_ask_about_context_prompt_type) &&
     props.token_count == 0
   ) {
-    warning = 'Select context files'
+    warning = 'Select files'
   }
 
   const { current_invocation_count, handle_invocation_count_change } =
