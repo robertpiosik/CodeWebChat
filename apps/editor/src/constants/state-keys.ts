@@ -58,27 +58,26 @@ export const HISTORY_WITHOUT_FILES_STATE_KEY = 'history-without-files'
 export const FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY =
   'find-relevant-files-shrink-source-code'
 
-export const RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY =
-  'recently-used-code-at-cursor-config-ids'
-export const RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY =
-  'recently-used-find-relevant-files-config-ids'
-export const RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY =
-  'recently-used-edit-files-config-ids'
-export const RECENTLY_USED_COMMIT_MESSAGES_CONFIG_IDS_STATE_KEY =
-  'recently-used-commit-messages-config-ids'
-export const RECENTLY_USED_INTELLIGENT_UPDATE_CONFIG_IDS_STATE_KEY =
-  'recently-used-intelligent-update-config-ids'
-export const RECENTLY_USED_VOICE_INPUT_CONFIG_IDS_STATE_KEY =
-  'recently-used-voice-input-config-ids'
+export const LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY =
+  'last-used-code-at-cursor-config-id'
+export const LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY =
+  'last-used-find-relevant-files-config-id'
+export const LAST_USED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY =
+  'last-used-edit-files-config-id'
+export const LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY =
+  'last-used-commit-messages-config-id'
+export const LAST_USED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY =
+  'last-used-intelligent-update-config-id'
+export const LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY =
+  'last-used-voice-input-config-id'
 
 export const WEB_CONFIGURATIONS_COLLAPSED_STATE_KEY =
   'web-configurations-collapsed'
 export const API_CONFIGURATIONS_COLLAPSED_STATE_KEY =
   'api-configurations-collapsed'
 
-export const get_recently_used_web_configurations_key = (
-  web_prompt_type: string
-) => `recently-used-web-configurations-${web_prompt_type}`
+export const get_last_used_web_configuration_key = (web_prompt_type: string) =>
+  `last-used-web-configuration-${web_prompt_type}`
 
 export const LAST_SELECTED_BROWSER_ID_STATE_KEY = 'last-selected-browser-id'
 

@@ -1,5 +1,5 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { get_recently_used_web_configurations_key } from '@/constants/state-keys'
+import { get_last_used_web_configuration_key } from '@/constants/state-keys'
 
 export const handle_update_last_used_web_configuration_or_group = (params: {
   panel_provider: PanelProvider
@@ -8,17 +8,11 @@ export const handle_update_last_used_web_configuration_or_group = (params: {
   const name_to_save = params.web_configuration_name
 
   if (name_to_save) {
-    const recents_key = get_recently_used_web_configurations_key(
+    const recents_key = get_last_used_web_configuration_key(
       params.panel_provider.web_prompt_type
     )
-    const recents =
-      params.panel_provider.context.workspaceState.get<string[]>(recents_key) ??
-      params.panel_provider.context.globalState.get<string[]>(recents_key, [])
 
-    const new_recents = [
-      name_to_save,
-      ...recents.filter((r) => r != name_to_save)
-    ].slice(0, 10)
+    const new_recents = name_to_save
 
     params.panel_provider.context.workspaceState.update(
       recents_key,

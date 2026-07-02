@@ -1,14 +1,11 @@
 import * as vscode from 'vscode'
-import {
-  ModelProvidersManager,
-  get_api_configuration_id,
-  ApiConfiguration
-} from '@/services/model-providers-manager'
+import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { display_token_count } from '@/utils/display-token-count'
-import { RECENTLY_USED_COMMIT_MESSAGES_CONFIG_IDS_STATE_KEY } from '@/constants/state-keys'
+import { LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { t } from '@/i18n'
+import { show_api_configuration_quick_pick } from '@/utils/show-api-configuration-quick-pick'
 
 export interface CommitMessageApiConfiguration {
   model_provider_name: string
@@ -55,161 +52,33 @@ export const get_commit_message_api_configuration = async (
     if (api_configurations.length == 1 && !force_quick_pick) {
       commit_message_api_configuration = api_configurations[0]
     } else if (api_configurations.length >= 1) {
-      const create_items = () => {
-        const recent_ids =
-          context.workspaceState.get<string[]>(
-            RECENTLY_USED_COMMIT_MESSAGES_CONFIG_IDS_STATE_KEY
-          ) || []
+      const last_selected_id = context.workspaceState.get<string>(
+        LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY
+      )
 
-        const matched_recent_api_configurations: ApiConfiguration[] = []
-        const remaining_api_configurations: ApiConfiguration[] = []
-
-        api_configurations.forEach((api_configuration) => {
-          const id = get_api_configuration_id(api_configuration)
-          if (recent_ids.includes(id)) {
-            matched_recent_api_configurations.push(api_configuration)
-          } else {
-            remaining_api_configurations.push(api_configuration)
-          }
-        })
-
-        matched_recent_api_configurations.sort((a, b) => {
-          const id_a = get_api_configuration_id(a)
-          const id_b = get_api_configuration_id(b)
-          return recent_ids.indexOf(id_a) - recent_ids.indexOf(id_b)
-        })
-
-        const recent_api_configurations = matched_recent_api_configurations
-        const other_api_configurations = remaining_api_configurations
-
-        const map_api_configuration_to_item = (
-          api_configuration: ApiConfiguration
-        ) => {
-          const description_parts = [api_configuration.model_provider_name]
-          if (api_configuration.reasoning_effort) {
-            description_parts.push(`${api_configuration.reasoning_effort}`)
-          }
-
-          return {
-            label: api_configuration.model,
-            description: description_parts.join(' · '),
-            api_configuration,
-            id: get_api_configuration_id(api_configuration)
-          }
-        }
-
-        const items: (vscode.QuickPickItem & {
-          api_configuration?: ApiConfiguration
-          id?: string
-        })[] = []
-
-        if (recent_api_configurations.length > 0) {
-          items.push({
-            label: t('common.separator.recently-used'),
-            kind: vscode.QuickPickItemKind.Separator
-          })
-          items.push(
-            ...recent_api_configurations.map(map_api_configuration_to_item)
-          )
-        }
-
-        if (other_api_configurations.length > 0) {
-          if (recent_api_configurations.length > 0) {
-            items.push({
-              label: t('common.config.other'),
-              kind: vscode.QuickPickItemKind.Separator
-            })
-          }
-          items.push(
-            ...other_api_configurations.map(map_api_configuration_to_item)
-          )
-        }
-
-        return items
-      }
-
-      const quick_pick = vscode.window.createQuickPick()
-
-      if (show_back_button) {
-        quick_pick.buttons = [vscode.QuickInputButtons.Back]
-      } else {
-        quick_pick.buttons = [
-          {
-            iconPath: new vscode.ThemeIcon('close'),
-            tooltip: t('common.close')
-          }
-        ]
-      }
-
-      quick_pick.items = create_items()
-      quick_pick.title = t('common.config.title')
-      quick_pick.placeholder =
+      const placeholder =
         token_count != null
           ? t('common.config.placeholder-with-tokens', {
               tokens: display_token_count(token_count)
             })
           : t('common.config.placeholder')
-      quick_pick.matchOnDescription = true
 
-      const items = quick_pick.items as (vscode.QuickPickItem & {
-        id: string
-      })[]
-
-      if (items.length > 0) {
-        const first_selectable = items.find(
-          (i) => i.kind != vscode.QuickPickItemKind.Separator
-        )
-        if (first_selectable) {
-          quick_pick.activeItems = [first_selectable]
-        }
-      }
-
-      commit_message_api_configuration = await new Promise<
-        CommitMessageApiConfiguration | 'back' | undefined
-      >((resolve) => {
-        quick_pick.onDidTriggerButton((button) => {
-          if (button === vscode.QuickInputButtons.Back) {
-            quick_pick.hide()
-            resolve('back')
-          } else if (button.tooltip === t('common.close')) {
-            quick_pick.hide()
-            resolve(undefined)
-          }
-        })
-
-        quick_pick.onDidAccept(async () => {
-          const selected = quick_pick.selectedItems[0] as any
-          quick_pick.hide()
-
-          if (selected && selected.api_configuration) {
-            let recents =
-              context.workspaceState.get<string[]>(
-                RECENTLY_USED_COMMIT_MESSAGES_CONFIG_IDS_STATE_KEY
-              ) || []
-            recents = [
-              selected.id,
-              ...recents.filter((id) => id != selected.id)
-            ]
-            context.workspaceState.update(
-              RECENTLY_USED_COMMIT_MESSAGES_CONFIG_IDS_STATE_KEY,
-              recents
-            )
-
-            resolve(selected.api_configuration)
-          } else {
-            resolve(undefined)
-          }
-        })
-
-        quick_pick.onDidHide(() => {
-          quick_pick.dispose()
-          if (quick_pick.selectedItems.length == 0) {
-            resolve('back')
-          }
-        })
-
-        quick_pick.show()
+      const result = await show_api_configuration_quick_pick({
+        api_configurations,
+        last_selected_id,
+        placeholder,
+        show_back_button
       })
+
+      if (result === 'back' || !result) {
+        commit_message_api_configuration = 'back'
+      } else {
+        context.workspaceState.update(
+          LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY,
+          result.id
+        )
+        commit_message_api_configuration = result.api_configuration
+      }
     }
   }
 

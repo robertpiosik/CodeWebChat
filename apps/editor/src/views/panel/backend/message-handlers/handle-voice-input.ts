@@ -4,17 +4,15 @@ import { spawn } from 'child_process'
 import { Logger } from '@shared/utils/logger'
 import {
   ModelProvidersManager,
-  ApiConfiguration,
-  get_api_configuration_id
+  ApiConfiguration
 } from '@/services/model-providers-manager'
 import * as vscode from 'vscode'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import axios from 'axios'
 import { make_api_request } from '@/utils/make-api-request'
 import { voice_input_instructions } from '@/constants/instructions'
-import { RECENTLY_USED_VOICE_INPUT_CONFIG_IDS_STATE_KEY } from '@/constants/state-keys'
-import { split_recent_and_rest_configurations } from '@/views/panel/backend/utils/split-recent-and-rest-configurations'
-import { t } from '@/i18n'
+import { LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
+import { show_api_configuration_quick_pick } from '@/utils/show-api-configuration-quick-pick'
 
 const MIN_RECORDING_DURATION = 1000
 
@@ -69,119 +67,25 @@ const stop_recording = async (panel_provider: PanelProvider) => {
         if (api_configurations.length == 1) {
           api_configuration = api_configurations[0]
         } else {
-          const recent_ids =
-            panel_provider.context.workspaceState.get<string[]>(
-              RECENTLY_USED_VOICE_INPUT_CONFIG_IDS_STATE_KEY
-            ) || []
-
-          const {
-            recent: matched_recent_api_configurations,
-            rest: remaining_api_configurations
-          } = split_recent_and_rest_configurations(
-            api_configurations,
-            recent_ids,
-            get_api_configuration_id
+          const recent_id = panel_provider.context.workspaceState.get<string>(
+            LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY
           )
 
-          const map_api_configuration_to_item = (
-            api_configuration: ApiConfiguration
-          ) => {
-            const description_parts = [api_configuration.model_provider_name]
-            if (api_configuration.reasoning_effort) {
-              description_parts.push(`${api_configuration.reasoning_effort}`)
-            }
-
-            return {
-              label: api_configuration.model,
-              description: description_parts.join(' · '),
-              api_configuration,
-              id: get_api_configuration_id(api_configuration)
-            }
-          }
-
-          const items: (vscode.QuickPickItem & {
-            api_configuration?: ApiConfiguration
-            id?: string
-          })[] = []
-
-          if (matched_recent_api_configurations.length > 0) {
-            items.push({
-              label: t('common.separator.recently-used'),
-              kind: vscode.QuickPickItemKind.Separator
-            })
-            items.push(
-              ...matched_recent_api_configurations.map(
-                map_api_configuration_to_item
-              )
-            )
-          }
-
-          if (remaining_api_configurations.length > 0) {
-            if (matched_recent_api_configurations.length > 0) {
-              items.push({
-                label: t('common.config.other'),
-                kind: vscode.QuickPickItemKind.Separator
-              })
-            }
-            items.push(
-              ...remaining_api_configurations.map(map_api_configuration_to_item)
-            )
-          }
-
-          const quick_pick = vscode.window.createQuickPick()
-          quick_pick.items = items
-          quick_pick.title = t('common.config.title')
-          quick_pick.placeholder = 'Select a configuration'
-          quick_pick.buttons = [
-            {
-              iconPath: new vscode.ThemeIcon('close'),
-              tooltip: t('common.close')
-            }
-          ]
-
-          const selected = await new Promise<
-            | (vscode.QuickPickItem & {
-                api_configuration?: ApiConfiguration
-                id?: string
-              })
-            | undefined
-          >((resolve) => {
-            quick_pick.onDidTriggerButton((button) => {
-              if (button.tooltip == t('common.close')) {
-                resolve(undefined)
-                quick_pick.hide()
-              }
-            })
-            quick_pick.onDidAccept(() => {
-              const selected = quick_pick.selectedItems[0] as any
-              resolve(selected)
-              quick_pick.hide()
-            })
-            quick_pick.onDidHide(() => {
-              resolve(undefined)
-              quick_pick.dispose()
-            })
-            quick_pick.show()
+          const result = await show_api_configuration_quick_pick({
+            api_configurations,
+            last_selected_id: recent_id
           })
 
-          if (selected && selected.api_configuration) {
-            api_configuration = selected.api_configuration
-
-            let recents =
-              panel_provider.context.workspaceState.get<string[]>(
-                RECENTLY_USED_VOICE_INPUT_CONFIG_IDS_STATE_KEY
-              ) || []
-            recents = [
-              selected.id!,
-              ...recents.filter((id) => id != selected.id!)
-            ]
-            panel_provider.context.workspaceState.update(
-              RECENTLY_USED_VOICE_INPUT_CONFIG_IDS_STATE_KEY,
-              recents
-            )
-          } else {
+          if (!result || result === 'back') {
             return
           }
+
+          api_configuration = result.api_configuration
+
+          panel_provider.context.workspaceState.update(
+            LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY,
+            result.id
+          )
         }
       }
 

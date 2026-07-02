@@ -110,10 +110,10 @@ import {
   INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
   PANEL_MODE_STATE_KEY,
   WEB_MODE_STATE_KEY,
-  RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY,
-  RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY,
-  RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY,
-  get_recently_used_web_configurations_key,
+  LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
+  LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY,
+  LAST_USED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY,
+  get_last_used_web_configuration_key,
   FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
   TEMPORARY_CHECKPOINT_STATE_KEY
 } from '@/constants/state-keys'
@@ -1038,11 +1038,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       selected_web_configuration_name_by_mode: Object.fromEntries(
         web_prompt_types.map((prompt_type) => {
           let selected_name: string | undefined = undefined
-          const key = get_recently_used_web_configurations_key(prompt_type)
-          const recents =
-            this.context.workspaceState.get<string[]>(key) ??
-            this.context.globalState.get<string[]>(key, [])
-          const last_selected = recents[0]
+          const key = get_last_used_web_configuration_key(prompt_type)
+          const last_selected =
+            this.context.workspaceState.get<string>(key) ??
+            this.context.globalState.get<string>(key)
           if (last_selected) {
             if (web_configurations_ui.some((p) => p.name == last_selected)) {
               selected_name = last_selected
@@ -1052,15 +1051,15 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         })
       ),
       selected_api_configuration_id_by_prompt_type: {
-        'edit-files': (this.context.workspaceState.get<string[]>(
-          RECENTLY_USED_EDIT_CONTEXT_CONFIG_IDS_STATE_KEY
-        ) || [])[0],
-        'code-at-cursor': (this.context.workspaceState.get<string[]>(
-          RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
-        ) || [])[0],
-        'find-relevant-files': (this.context.workspaceState.get<string[]>(
-          RECENTLY_USED_FIND_RELEVANT_FILES_CONFIG_IDS_STATE_KEY
-        ) || [])[0]
+        'edit-files': this.context.workspaceState.get<string>(
+          LAST_USED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY
+        ),
+        'code-at-cursor': this.context.workspaceState.get<string>(
+          LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
+        ),
+        'find-relevant-files': this.context.workspaceState.get<string>(
+          LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY
+        )
       }
     })
   }

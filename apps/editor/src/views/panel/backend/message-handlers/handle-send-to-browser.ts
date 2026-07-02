@@ -7,7 +7,7 @@ import {
   find_relevant_files_format_for_panel
 } from '@/constants/instructions'
 import {
-  get_recently_used_web_configurations_key,
+  get_last_used_web_configuration_key,
   FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY
 } from '@/constants/state-keys'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
@@ -23,7 +23,6 @@ import {
 } from '@/constants/edit-format-instructions'
 import { handle_update_last_used_web_configuration_or_group } from './handle-update-last-used-web-configuration-or-group'
 import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-symbols'
-import { split_recent_and_rest_configurations } from '@/views/panel/backend/utils/split-recent-and-rest-configurations'
 import { t } from '@/i18n'
 
 export const handle_send_to_browser = async (params: {
@@ -241,18 +240,10 @@ const show_web_configuration_quick_pick = async (params: {
     vscode.QuickPickItem & { web_configuration_name?: string }
   >()
 
-  const recents_key = get_recently_used_web_configurations_key(prompt_type)
-  const recent_names =
-    context.workspaceState.get<string[]>(recents_key) ??
-    context.globalState.get<string[]>(recents_key) ??
-    []
-
-  const { recent: matched_recent, rest: remaining } =
-    split_recent_and_rest_configurations(
-      valid_web_configurations,
-      recent_names,
-      (c) => c.name
-    )
+  const recents_key = get_last_used_web_configuration_key(prompt_type)
+  const last_selected_name =
+    context.workspaceState.get<string>(recents_key) ??
+    context.globalState.get<string>(recents_key)
 
   const map_web_configuration_to_item = (
     web_configuration: ConfigWebConfigurationFormat
@@ -291,23 +282,14 @@ const show_web_configuration_quick_pick = async (params: {
   const items: (vscode.QuickPickItem & { web_configuration_name?: string })[] =
     []
 
-  if (matched_recent.length > 0) {
-    items.push({
-      label: t('common.separator.recently-used'),
-      kind: vscode.QuickPickItemKind.Separator
-    })
-    items.push(...matched_recent.map(map_web_configuration_to_item))
+  const pinned = valid_web_configurations.filter((c: any) => c.isPinned)
+  if (pinned.length > 0) {
+    items.push({ label: 'Pinned', kind: vscode.QuickPickItemKind.Separator })
+    items.push(...pinned.map(map_web_configuration_to_item))
+    items.push({ label: 'All', kind: vscode.QuickPickItemKind.Separator })
   }
 
-  if (remaining.length > 0) {
-    if (matched_recent.length > 0) {
-      items.push({
-        label: t('common.config.other'),
-        kind: vscode.QuickPickItemKind.Separator
-      })
-    }
-    items.push(...remaining.map(map_web_configuration_to_item))
-  }
+  items.push(...valid_web_configurations.map(map_web_configuration_to_item))
 
   quick_pick.items = items
   quick_pick.placeholder = 'Select a configuration'
@@ -325,8 +307,6 @@ const show_web_configuration_quick_pick = async (params: {
       quick_pick.hide()
     }
   })
-
-  const last_selected_name = recent_names[0]
 
   if (last_selected_name) {
     const last_item = quick_pick.items.find(
@@ -409,7 +389,7 @@ const resolve_web_configuration = async (params: {
   show_quick_pick?: boolean
   context: vscode.ExtensionContext
 }): Promise<{ web_configuration_name: string | undefined }> => {
-  const recents_key = get_recently_used_web_configurations_key(
+  const recents_key = get_last_used_web_configuration_key(
     params.panel_provider.web_prompt_type
   )
   const config = vscode.workspace.getConfiguration('codeWebChat')
@@ -472,11 +452,10 @@ const resolve_web_configuration = async (params: {
 
   if (!params.show_quick_pick && params.web_configuration_name === undefined) {
     // Try to use last selection if "Send" button is clicked without specific preset
-    const recents =
-      params.context.workspaceState.get<string[]>(recents_key) ??
-      params.context.globalState.get<string[]>(recents_key) ??
-      []
-    const last_selected_name = recents[0]
+    const last_selected_name =
+      params.context.workspaceState.get<string>(recents_key) ??
+      params.context.globalState.get<string>(recents_key)
+
     if (last_selected_name) {
       const item = all_web_configurations.find(
         (p) => p.name === last_selected_name
