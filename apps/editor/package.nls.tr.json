@@ -1,6 +1,6 @@
 {
-  "codeWebChat.saveContextSelection.title": "Bağlam Seçimini Kaydet",
-  "codeWebChat.restoreContextSelection.title": "Bağlam Seçimini Geri Yükle",
+  "codeWebChat.saveCurrentSelection.title": "Bağlam Seçimini Kaydet",
+  "codeWebChat.restoreSavedSelection.title": "Bağlam Seçimini Geri Yükle",
   "codeWebChat.applyChatResponse.title": "Sohbet Yanıtını Uygula",
   "codeWebChat.copyContext.title": "Bağlamı Kopyala",
   "codeWebChat.checkpoints.title": "Kontrol Noktaları",

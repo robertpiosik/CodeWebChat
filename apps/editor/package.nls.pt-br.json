@@ -1,6 +1,6 @@
 {
-  "codeWebChat.saveContextSelection.title": "Salvar Seleção de Contexto",
-  "codeWebChat.restoreContextSelection.title": "Restaurar Seleção de Contexto",
+  "codeWebChat.saveCurrentSelection.title": "Salvar Seleção de Contexto",
+  "codeWebChat.restoreSavedSelection.title": "Restaurar Seleção de Contexto",
   "codeWebChat.applyChatResponse.title": "Aplicar Resposta do Chat",
   "codeWebChat.copyContext.title": "Copiar Contexto",
   "codeWebChat.checkpoints.title": "Checkpoints",

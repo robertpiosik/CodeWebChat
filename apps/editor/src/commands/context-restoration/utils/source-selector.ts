@@ -25,7 +25,7 @@ export const select_context_source = async (params: {
   })[] = []
 
   main_quick_pick_options.push({
-    label: t('command.apply-context.sources.workspace-state'),
+    label: t('command.context-restoration.sources.workspace-state'),
     description: `${internal_contexts.length} ${
       internal_contexts.length == 1 ? 'entry' : 'entries'
     }`,
@@ -34,11 +34,11 @@ export const select_context_source = async (params: {
 
   const open_file_button = {
     iconPath: new vscode.ThemeIcon('go-to-file'),
-    tooltip: t('command.apply-context.action.open-json')
+    tooltip: t('command.context-restoration.action.open-json')
   }
 
   main_quick_pick_options.push({
-    label: t('command.apply-context.sources.json-file'),
+    label: t('command.context-restoration.sources.json-file'),
     description: `${file_contexts_count} ${
       file_contexts_count == 1 ? 'entry' : 'entries'
     }`,
@@ -51,7 +51,9 @@ export const select_context_source = async (params: {
   >()
   main_quick_pick.title = params.title
   main_quick_pick.items = main_quick_pick_options
-  main_quick_pick.placeholder = t('command.apply-context.sources.placeholder')
+  main_quick_pick.placeholder = t(
+    'command.context-restoration.sources.placeholder'
+  )
   main_quick_pick.buttons = [
     { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
   ]

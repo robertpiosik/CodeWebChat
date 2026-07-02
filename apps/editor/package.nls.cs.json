@@ -1,6 +1,6 @@
 {
-  "codeWebChat.saveContextSelection.title": "Uložit výběr kontextu",
-  "codeWebChat.restoreContextSelection.title": "Obnovit výběr kontextu",
+  "codeWebChat.saveCurrentSelection.title": "Uložit výběr kontextu",
+  "codeWebChat.restoreSavedSelection.title": "Obnovit výběr kontextu",
   "codeWebChat.applyChatResponse.title": "Použít odpověď chatu",
   "codeWebChat.copyContext.title": "Kopírovat kontext",
   "codeWebChat.checkpoints.title": "Kontrolní body",

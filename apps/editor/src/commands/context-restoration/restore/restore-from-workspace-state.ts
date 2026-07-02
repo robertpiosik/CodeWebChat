@@ -27,11 +27,11 @@ export const restore_from_workspace_state = async (params: {
 
     const edit_button = {
       iconPath: new vscode.ThemeIcon('edit'),
-      tooltip: t('command.apply-context.action.rename')
+      tooltip: t('command.context-restoration.action.rename')
     }
     const delete_button = {
       iconPath: new vscode.ThemeIcon('trash'),
-      tooltip: t('command.apply-context.action.delete')
+      tooltip: t('command.context-restoration.action.delete')
     }
 
     while (true) {
@@ -44,7 +44,7 @@ export const restore_from_workspace_state = async (params: {
 
         if (contexts.length > 0) {
           items.push({
-            label: t('command.apply-context.recent-entries'),
+            label: t('command.context-restoration.recent-entries'),
             kind: vscode.QuickPickItemKind.Separator
           })
 
@@ -71,8 +71,10 @@ export const restore_from_workspace_state = async (params: {
       }
 
       const quick_pick = vscode.window.createQuickPick()
-      quick_pick.title = t('command.apply-context.select-saved.title')
-      quick_pick.placeholder = t('command.apply-context.select-saved.workspace')
+      quick_pick.title = t('command.context-restoration.select-saved.title')
+      quick_pick.placeholder = t(
+        'command.context-restoration.select-saved.workspace'
+      )
       quick_pick.buttons = [vscode.QuickInputButtons.Back]
       quick_pick.items = await create_quick_pick_items(internal_contexts)
 
@@ -115,8 +117,8 @@ export const restore_from_workspace_state = async (params: {
             if (event.button === edit_button) {
               active_dialog_count++
               const input_box = vscode.window.createInputBox()
-              input_box.title = t('command.apply-context.rename.title')
-              input_box.prompt = t('command.apply-context.rename.prompt')
+              input_box.title = t('command.context-restoration.rename.title')
+              input_box.prompt = t('command.context-restoration.rename.prompt')
               input_box.value = item.context.name
 
               const new_name = await new Promise<string | undefined | 'back'>(
@@ -127,7 +129,7 @@ export const restore_from_workspace_state = async (params: {
                     const trimmed = value.trim()
                     if (!trimmed) {
                       input_box.validationMessage = t(
-                        'command.apply-context.rename.empty'
+                        'command.context-restoration.rename.empty'
                       )
                       return false
                     }
@@ -138,7 +140,7 @@ export const restore_from_workspace_state = async (params: {
                       )
                     ) {
                       input_box.validationMessage = t(
-                        'command.apply-context.rename.exists'
+                        'command.context-restoration.rename.exists'
                       )
                       return false
                     }
@@ -248,7 +250,7 @@ export const restore_from_workspace_state = async (params: {
               if (active_deletion_timestamp !== current_timestamp) {
                 if (choice == 'Undo')
                   vscode.window.showInformationMessage(
-                    t('command.apply-context.undo.failed')
+                    t('command.context-restoration.undo.failed')
                   )
                 quick_pick.show()
                 return

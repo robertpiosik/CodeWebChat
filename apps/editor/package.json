@@ -133,14 +133,14 @@
         "icon": "$(github-alt)"
       },
       {
-        "command": "codeWebChat.saveContextSelection",
-        "title": "%codeWebChat.saveContextSelection.title%",
+        "command": "codeWebChat.saveCurrentSelection",
+        "title": "%codeWebChat.saveCurrentSelection.title%",
         "category": "Code Web Chat",
         "icon": "$(save)"
       },
       {
-        "command": "codeWebChat.restoreContextSelection",
-        "title": "%codeWebChat.restoreContextSelection.title%",
+        "command": "codeWebChat.restoreSavedSelection",
+        "title": "%codeWebChat.restoreSavedSelection.title%",
         "category": "Code Web Chat",
         "icon": "$(history)"
       },
@@ -603,12 +603,12 @@
           "group": "navigation@9"
         },
         {
-          "command": "codeWebChat.saveContextSelection",
+          "command": "codeWebChat.saveCurrentSelection",
           "when": "view == codeWebChatViewWorkspace",
           "group": "1_more@1"
         },
         {
-          "command": "codeWebChat.restoreContextSelection",
+          "command": "codeWebChat.restoreSavedSelection",
           "when": "view == codeWebChatViewWorkspace",
           "group": "1_more@2"
         },

@@ -1,7 +1,7 @@
 import { generate_commit_message } from './generate-commit-message'
 import { code_at_cursor } from './code-at-cursor'
 import { apply_chat_response } from './apply-chat-response'
-import { context_selection } from './context-selection'
+import { context_restoration } from './context-restoration'
 import { add_file_to_context } from './add-file-to-context'
 import { select_definition_file } from './select-definition-file'
 import { select_referencing_files } from './select-referencing-files'
@@ -17,7 +17,7 @@ export const commands = {
   ...generate_commit_message,
   ...code_at_cursor,
   ...apply_chat_response,
-  ...context_selection,
+  ...context_restoration,
   ...add_file_to_context,
   ...select_definition_file,
   ...select_referencing_files,

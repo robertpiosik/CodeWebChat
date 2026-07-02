@@ -5,13 +5,13 @@ import { restore_from_workspace_state } from './restore-from-workspace-state'
 import { restore_from_json_file } from './restore-from-json-file'
 import { t } from '@/i18n'
 
-export const restore_context_selection_command = (params: {
+export const restore_saved_selection_command = (params: {
   workspace_provider: WorkspaceProvider
   on_context_selected: () => void
   extension_context: vscode.ExtensionContext
 }): vscode.Disposable => {
   return vscode.commands.registerCommand(
-    'codeWebChat.restoreContextSelection',
+    'codeWebChat.restoreSavedSelection',
     async () => {
       let show_main_menu = true
 
@@ -20,7 +20,7 @@ export const restore_context_selection_command = (params: {
 
         const source = await select_context_source({
           extension_context: params.extension_context,
-          title: t('command.apply-context.sources.title')
+          title: t('command.context-restoration.source.title')
         })
 
         if (!source) return

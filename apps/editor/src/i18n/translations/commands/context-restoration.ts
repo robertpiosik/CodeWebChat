@@ -1,5 +1,5 @@
-export const context_selection = {
-  'command.apply-context.sources.workspace-state': {
+export const context_restoration = {
+  'command.context-restoration.sources.workspace-state': {
     en: 'Workspace state',
     pl: 'Stan obszaru roboczego',
     'zh-cn': '工作区状态',
@@ -17,7 +17,7 @@ export const context_selection = {
     hu: 'Munkaterület állapota',
     bg: 'Състояние на работното пространство'
   },
-  'command.apply-context.sources.json-file': {
+  'command.context-restoration.sources.json-file': {
     en: 'JSON file',
     pl: 'Plik JSON',
     'zh-cn': 'JSON 文件',
@@ -35,7 +35,7 @@ export const context_selection = {
     hu: 'JSON fájl',
     bg: 'JSON файл'
   },
-  'command.apply-context.sources.unstaged-files': {
+  'command.context-restoration.sources.unstaged-files': {
     en: 'Unstaged files',
     pl: 'Nieprzygotowane pliki',
     'zh-cn': '未暂存的文件',
@@ -53,7 +53,7 @@ export const context_selection = {
     hu: 'Nem előkészített fájlok',
     bg: 'Неиндексирани файлове'
   },
-  'command.apply-context.sources.commit-files': {
+  'command.context-restoration.sources.commit-files': {
     en: 'Files of a commit...',
     pl: 'Pliki z commita...',
     'zh-cn': '提交的文件...',
@@ -71,25 +71,43 @@ export const context_selection = {
     hu: 'Egy commit fájljai...',
     bg: 'Файлове от commit...'
   },
-  'command.apply-context.sources.title': {
-    en: 'Context Sources',
-    pl: 'Źródła kontekstu',
-    'zh-cn': '上下文来源',
-    ja: 'コンテキストソース',
-    'zh-tw': '上下文來源',
-    de: 'Kontextquellen',
-    es: 'Fuentes de contexto',
-    fr: 'Sources de contexte',
-    'pt-br': 'Fontes de contexto',
-    ru: 'Источники контекста',
-    ko: '컨텍스트 소스',
-    it: 'Fonti di contesto',
-    tr: 'Bağlam Kaynakları',
-    cs: 'Zdroje kontextu',
-    hu: 'Kontextus források',
-    bg: 'Източници на контекст'
+  'command.context-restoration.destination.title': {
+    en: 'Destination',
+    pl: 'Miejsce docelowe',
+    'zh-cn': '目标',
+    ja: '宛先',
+    'zh-tw': '目標',
+    de: 'Ziel',
+    es: 'Destino',
+    fr: 'Destination',
+    'pt-br': 'Destino',
+    ru: 'Место назначения',
+    ko: '대상',
+    it: 'Destinazione',
+    tr: 'Hedef',
+    cs: 'Cíl',
+    hu: 'Cél',
+    bg: 'Дестинация'
   },
-  'command.apply-context.sources.placeholder': {
+  'command.context-restoration.source.title': {
+    en: 'Source',
+    pl: 'Źródło',
+    'zh-cn': '来源',
+    ja: 'ソース',
+    'zh-tw': '來源',
+    de: 'Quelle',
+    es: 'Origen',
+    fr: 'Source',
+    'pt-br': 'Fonte',
+    ru: 'Источник',
+    ko: '소스',
+    it: 'Origine',
+    tr: 'Kaynak',
+    cs: 'Zdroj',
+    hu: 'Forrás',
+    bg: 'Източник'
+  },
+  'command.context-restoration.sources.placeholder': {
     en: 'Select option',
     pl: 'Wybierz opcję',
     'zh-cn': '选择选项',
@@ -107,7 +125,7 @@ export const context_selection = {
     hu: 'Válasszon opciót',
     bg: 'Изберете опция'
   },
-  'command.apply-context.action.open-json': {
+  'command.context-restoration.action.open-json': {
     en: 'Open contexts.json',
     pl: 'Otwórz contexts.json',
     'zh-cn': '打开 contexts.json',
@@ -125,7 +143,7 @@ export const context_selection = {
     hu: 'contexts.json megnyitása',
     bg: 'Отваряне на contexts.json'
   },
-  'command.apply-context.action.replace.label': {
+  'command.context-restoration.action.replace.label': {
     en: 'Replace',
     pl: 'Zastąp',
     'zh-cn': '替换',
@@ -143,7 +161,7 @@ export const context_selection = {
     hu: 'Csere',
     bg: 'Замяна'
   },
-  'command.apply-context.action.replace.description': {
+  'command.context-restoration.action.replace.description': {
     en: 'Replace the current context with the selected one',
     pl: 'Zastąp obecny kontekst wybranym',
     'zh-cn': '用所选上下文替换当前上下文',
@@ -161,7 +179,7 @@ export const context_selection = {
     hu: 'Az aktuális kontextus cseréje a kiválasztottra',
     bg: 'Замяна на текущия контекст с избрания'
   },
-  'command.apply-context.action.merge.label': {
+  'command.context-restoration.action.merge.label': {
     en: 'Merge',
     pl: 'Połącz',
     'zh-cn': '合并',
@@ -179,7 +197,7 @@ export const context_selection = {
     hu: 'Összevonás',
     bg: 'Сливане'
   },
-  'command.apply-context.action.merge.description': {
+  'command.context-restoration.action.merge.description': {
     en: 'Merge the selected context with the current one',
     pl: 'Połącz wybrany kontekst z obecnym',
     'zh-cn': '将选定的上下文与当前上下文合并',
@@ -197,7 +215,7 @@ export const context_selection = {
     hu: 'A kiválasztott kontextus összevonása az aktuálissal',
     bg: 'Сливане на избрания контекст с текущия'
   },
-  'command.apply-context.save-new-context.label': {
+  'command.context-restoration.save-new-context.label': {
     en: '$(add) Save new context...',
     pl: '$(add) Zapisz nowy kontekst...',
     'zh-cn': '$(add) 保存新上下文...',
@@ -215,7 +233,7 @@ export const context_selection = {
     hu: '$(add) Új kontextus mentése...',
     bg: '$(add) Запазване на нов контекст...'
   },
-  'command.apply-context.recent-entries': {
+  'command.context-restoration.recent-entries': {
     en: 'recent entries',
     pl: 'ostatnie wpisy',
     'zh-cn': '最近的条目',
@@ -233,7 +251,7 @@ export const context_selection = {
     hu: 'legutóbbi bejegyzések',
     bg: 'скорошни записи'
   },
-  'command.apply-context.entries-az': {
+  'command.context-restoration.entries-az': {
     en: 'entries (A-Z)',
     pl: 'wpisy (A-Z)',
     'zh-cn': '条目 (A-Z)',
@@ -251,7 +269,7 @@ export const context_selection = {
     hu: 'bejegyzések (A-Z)',
     bg: 'записи (А-Я)'
   },
-  'command.apply-context.action.update': {
+  'command.context-restoration.action.update': {
     en: 'Update with currently selected files',
     pl: 'Zaktualizuj obecnie zaznaczonymi plikami',
     'zh-cn': '使用当前选定的文件更新',
@@ -269,7 +287,7 @@ export const context_selection = {
     hu: 'Frissítés a jelenleg kiválasztott fájlokkal',
     bg: 'Актуализиране с текущо избраните файлове'
   },
-  'command.apply-context.action.rename': {
+  'command.context-restoration.action.rename': {
     en: 'Rename',
     pl: 'Zmień nazwę',
     'zh-cn': '重命名',
@@ -287,7 +305,7 @@ export const context_selection = {
     hu: 'Átnevezés',
     bg: 'Преименуване'
   },
-  'command.apply-context.action.delete': {
+  'command.context-restoration.action.delete': {
     en: 'Delete',
     pl: 'Usuń',
     'zh-cn': '删除',
@@ -305,7 +323,7 @@ export const context_selection = {
     hu: 'Törlés',
     bg: 'Изтриване'
   },
-  'command.apply-context.select-saved.title': {
+  'command.context-restoration.select-saved.title': {
     en: 'Saved Entries',
     pl: 'Zapisane wpisy',
     'zh-cn': '已保存的条目',
@@ -323,7 +341,7 @@ export const context_selection = {
     hu: 'Mentett bejegyzések',
     bg: 'Запазени записи'
   },
-  'command.apply-context.select-saved.workspace': {
+  'command.context-restoration.select-saved.workspace': {
     en: 'Saved contexts (from workspace state)',
     pl: 'Wybierz zapisany kontekst (ze stanu obszaru roboczego)',
     'zh-cn': '选择已保存的上下文 (来自工作区状态)',
@@ -341,7 +359,7 @@ export const context_selection = {
     hu: 'Mentett kontextus kiválasztása (a munkaterület állapotából)',
     bg: 'Изберете запазен контекст (от състоянието на работното пространство)'
   },
-  'command.apply-context.select-saved.file': {
+  'command.context-restoration.select-saved.file': {
     en: 'Saved contexts (from .vscode/contexts.json)',
     pl: 'Wybierz zapisany kontekst (z .vscode/contexts.json)',
     'zh-cn': '选择已保存的上下文 (来自 .vscode/contexts.json)',
@@ -359,7 +377,7 @@ export const context_selection = {
     hu: 'Mentett kontextus kiválasztása (.vscode/contexts.json-ból)',
     bg: 'Изберете запазен контекст (от .vscode/contexts.json)'
   },
-  'command.apply-context.rename.title': {
+  'command.context-restoration.rename.title': {
     en: 'Rename Context',
     pl: 'Zmień nazwę kontekstu',
     'zh-cn': '重命名上下文',
@@ -377,7 +395,7 @@ export const context_selection = {
     hu: 'Kontextus átnevezése',
     bg: 'Преименуване на контекста'
   },
-  'command.apply-context.rename.prompt': {
+  'command.context-restoration.rename.prompt': {
     en: 'Enter new name for context.',
     pl: 'Wprowadź nową nazwę dla kontekstu.',
     'zh-cn': '输入上下文的新名称。',
@@ -395,7 +413,7 @@ export const context_selection = {
     hu: 'Adja meg a kontextus új nevét.',
     bg: 'Въведете ново име за контекста.'
   },
-  'command.apply-context.rename.empty': {
+  'command.context-restoration.rename.empty': {
     en: 'Name cannot be empty',
     pl: 'Nazwa nie może być pusta',
     'zh-cn': '名称不能为空',
@@ -413,7 +431,7 @@ export const context_selection = {
     hu: 'A név nem lehet üres',
     bg: 'Името не може да бъде празно'
   },
-  'command.apply-context.rename.exists': {
+  'command.context-restoration.rename.exists': {
     en: 'A context with this name already exists',
     pl: 'Kontekst o tej nazwie już istnieje',
     'zh-cn': '已存在同名上下文',
@@ -431,7 +449,7 @@ export const context_selection = {
     hu: 'Már létezik ilyen nevű kontextus',
     bg: 'Вече съществува контекст с това име'
   },
-  'command.apply-context.undo.failed': {
+  'command.context-restoration.undo.failed': {
     en: 'Could not undo as another context was deleted.',
     pl: 'Nie udało się cofnąć, ponieważ usunięto inny kontekst.',
     'zh-cn': '无法撤销，因为已删除了另一个上下文。',
@@ -449,7 +467,7 @@ export const context_selection = {
     hu: 'Nem sikerült visszavonni, mert egy másik kontextust töröltek.',
     bg: 'Отмяната е невъзможна, тъй като беше изтрит друг контекст.'
   },
-  'command.apply-context.select-folder': {
+  'command.context-restoration.select-folder': {
     en: 'Select workspace folder',
     pl: 'Wybierz folder obszaru roboczego',
     'zh-cn': '选择工作区文件夹',
@@ -467,7 +485,7 @@ export const context_selection = {
     hu: 'Munkaterület mappa kiválasztása',
     bg: 'Изберете папка на работното пространство'
   },
-  'command.apply-context.delete.prompt': {
+  'command.context-restoration.delete.prompt': {
     en: 'Delete context "{name}"?',
     pl: 'Usunąć kontekst "{name}"?',
     'zh-cn': '删除上下文“{name}”？',
@@ -485,7 +503,7 @@ export const context_selection = {
     hu: 'Törli a(z) "{name}" kontextust?',
     bg: 'Изтриване на контекст "{name}"?'
   },
-  'command.apply-context.delete.action': {
+  'command.context-restoration.delete.action': {
     en: 'Delete',
     pl: 'Usuń',
     'zh-cn': '删除',
@@ -503,7 +521,7 @@ export const context_selection = {
     hu: 'Törlés',
     bg: 'Изтриване'
   },
-  'command.apply-context.commit.no-commits': {
+  'command.context-restoration.commit.no-commits': {
     en: 'No commits found in the repository.',
     pl: 'Brak commitów w repozytorium.',
     'zh-cn': '未在存储库中找到提交。',
@@ -521,7 +539,7 @@ export const context_selection = {
     hu: 'Nem találhatók commitok a tárolóban.',
     bg: 'Няма намерени къмити в хранилището.'
   },
-  'command.apply-context.commit.title': {
+  'command.context-restoration.commit.title': {
     en: 'Commits',
     pl: 'Commity',
     'zh-cn': '提交',
@@ -539,7 +557,7 @@ export const context_selection = {
     hu: 'Commitok',
     bg: 'Къмити'
   },
-  'command.apply-context.commit.select': {
+  'command.context-restoration.commit.select': {
     en: 'Select a commit to load modified files from',
     pl: 'Wybierz commit, z którego załadować zmodyfikowane pliki',
     'zh-cn': '选择一个提交以加载修改的文件',
@@ -557,7 +575,7 @@ export const context_selection = {
     hu: 'Válasszon egy commitot a módosított fájlok betöltéséhez',
     bg: 'Изберете commit за зареждане на модифицирани файлове'
   },
-  'command.apply-context.commit.no-modified': {
+  'command.context-restoration.commit.no-modified': {
     en: 'No files modified in this commit.',
     pl: 'Brak zmodyfikowanych plików w tym commicie.',
     'zh-cn': '此提交未修改任何文件。',
@@ -575,7 +593,7 @@ export const context_selection = {
     hu: 'Ebben a commitban nincsenek módosított fájlok.',
     bg: 'Няма модифицирани файлове в този commit.'
   },
-  'command.apply-context.commit.no-valid': {
+  'command.context-restoration.commit.no-valid': {
     en: 'No valid existing files found from this commit.',
     pl: 'Brak prawidłowych istniejących plików z tego commita.',
     'zh-cn': '在此提交中未找到有效的现有文件。',
@@ -593,7 +611,7 @@ export const context_selection = {
     hu: 'Nem találhatók érvényes létező fájlok ebből a commitból.',
     bg: 'Не са намерени валидни съществуващи файлове от този commit.'
   },
-  'command.apply-context.commit.select-files': {
+  'command.context-restoration.commit.select-files': {
     en: 'Select files to add to context',
     pl: 'Wybierz pliki do dodania do kontekstu',
     'zh-cn': '选择要添加到上下文的文件',
@@ -611,7 +629,7 @@ export const context_selection = {
     hu: 'Válasszon fájlokat a kontextushoz adáshoz',
     bg: 'Изберете файлове за добавяне към контекста'
   },
-  'command.apply-context.commit.files-modified': {
+  'command.context-restoration.commit.files-modified': {
     en: 'Files modified in {hash}',
     pl: 'Pliki zmodyfikowane w {hash}',
     'zh-cn': '在 {hash} 中修改的文件',
@@ -629,7 +647,7 @@ export const context_selection = {
     hu: 'A(z) {hash} commitban módosított fájlok',
     bg: 'Файлове, модифицирани в {hash}'
   },
-  'command.apply-context.commit.apply': {
+  'command.context-restoration.commit.apply': {
     en: 'How would you like to apply files from commit {hash}?',
     pl: 'Jak chcesz zastosować pliki z commita {hash}?',
     'zh-cn': '您想如何应用提交 {hash} 中的文件？',
@@ -647,7 +665,7 @@ export const context_selection = {
     hu: 'Hogyan szeretné alkalmazni a(z) {hash} commitból származó fájlokat?',
     bg: 'Как бихте искали да приложите файлове от commit {hash}?'
   },
-  'command.apply-context.unstaged.title': {
+  'command.context-restoration.unstaged.title': {
     en: 'Unstaged Files',
     pl: 'Nieprzygotowane pliki',
     'zh-cn': '未暂存文件',
@@ -665,7 +683,7 @@ export const context_selection = {
     hu: 'Nem előkészített fájlok',
     bg: 'Неиндексирани файлове'
   },
-  'command.apply-context.unstaged.include': {
+  'command.context-restoration.unstaged.include': {
     en: 'Select files to include',
     pl: 'Wybierz pliki do włączenia',
     'zh-cn': '选择要包含的文件',
@@ -683,7 +701,7 @@ export const context_selection = {
     hu: 'Válassza ki a belefoglalandó fájlokat',
     bg: 'Изберете файлове за включване'
   },
-  'command.apply-context.unstaged.apply': {
+  'command.context-restoration.unstaged.apply': {
     en: 'How would you like to apply the {count} selected files?',
     pl: 'W jaki sposób chcesz zastosować {count} zaznaczonych plików?',
     'zh-cn': '您希望如何应用选定的 {count} 个文件？',
@@ -701,7 +719,7 @@ export const context_selection = {
     hu: 'Hogyan szeretné alkalmazni a(z) {count} kiválasztott fájlt?',
     bg: 'Как искате да приложите избраните {count} файла?'
   },
-  'command.apply-context.ask-name.prompt': {
+  'command.context-restoration.ask-name.prompt': {
     en: 'Enter a name for this context',
     pl: 'Wprowadź nazwę dla tego kontekstu',
     'zh-cn': '输入此上下文的名称',
@@ -719,7 +737,7 @@ export const context_selection = {
     hu: 'Adjon meg egy nevet ehhez a kontextushoz',
     bg: 'Въведете име за този контекст'
   },
-  'command.apply-context.ask-name.placeholder': {
+  'command.context-restoration.ask-name.placeholder': {
     en: 'e.g., Backend API Context',
     pl: 'np. Backend API Context',
     'zh-cn': '例如：后端 API 上下文',
@@ -737,7 +755,7 @@ export const context_selection = {
     hu: 'pl. Backend API kontextus',
     bg: 'напр., Backend API Context'
   },
-  'command.apply-context.ask-name.empty': {
+  'command.context-restoration.ask-name.empty': {
     en: 'Context name cannot be empty.',
     pl: 'Nazwa kontekstu nie może być pusta.',
     'zh-cn': '上下文名称不能为空。',
@@ -755,7 +773,7 @@ export const context_selection = {
     hu: 'A kontextus neve nem lehet üres.',
     bg: 'Името на контекста не може да бъде празно.'
   },
-  'command.apply-context.ask-name.title': {
+  'command.context-restoration.ask-name.title': {
     en: 'New Entry',
     pl: 'Nowy wpis',
     'zh-cn': '新条目',
@@ -773,7 +791,7 @@ export const context_selection = {
     hu: 'Új bejegyzés',
     bg: 'Нов запис'
   },
-  'command.apply-context.apply.placeholder': {
+  'command.context-restoration.apply.placeholder': {
     en: 'How would you like to apply "{name}"?',
     pl: 'W jaki sposób chcesz zastosować "{name}"?',
     'zh-cn': '你想如何应用 "{name}"？',
@@ -827,11 +845,11 @@ export const context_selection = {
     hu: 'Kontextus választás visszaállítása',
     bg: 'Възстановяване на избора на контекст'
   },
-  'command.context-selection.overwrite.prompt': {
+  'command.context-restoration.overwrite.prompt': {
     en: 'Overwrite context "{name}"?',
     pl: 'Nadpisać kontekst "{name}"?'
   },
-  'command.context-selection.overwrite.action': {
+  'command.context-restoration.overwrite.action': {
     en: 'Overwrite',
     pl: 'Nadpisz'
   }

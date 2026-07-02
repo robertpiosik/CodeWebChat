@@ -1,6 +1,6 @@
 {
-  "codeWebChat.saveContextSelection.title": "コンテキスト選択を保存",
-  "codeWebChat.restoreContextSelection.title": "コンテキスト選択を復元",
+  "codeWebChat.saveCurrentSelection.title": "コンテキスト選択を保存",
+  "codeWebChat.restoreSavedSelection.title": "コンテキスト選択を復元",
   "codeWebChat.applyChatResponse.title": "チャットの応答を適用",
   "codeWebChat.copyContext.title": "コンテキストをコピー",
   "codeWebChat.checkpoints.title": "チェックポイント",

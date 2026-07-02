@@ -27,11 +27,11 @@ export const restore_from_json_file = async (params: {
 
     const edit_button = {
       iconPath: new vscode.ThemeIcon('edit'),
-      tooltip: t('command.apply-context.action.rename')
+      tooltip: t('command.context-restoration.action.rename')
     }
     const delete_button = {
       iconPath: new vscode.ThemeIcon('trash'),
-      tooltip: t('command.apply-context.action.delete')
+      tooltip: t('command.context-restoration.action.delete')
     }
 
     let active_dialog_count = 0
@@ -46,7 +46,7 @@ export const restore_from_json_file = async (params: {
 
         if (file_contexts.length > 0) {
           items.push({
-            label: t('command.apply-context.entries-az'),
+            label: t('command.context-restoration.entries-az'),
             kind: vscode.QuickPickItemKind.Separator
           })
 
@@ -70,8 +70,10 @@ export const restore_from_json_file = async (params: {
       }
 
       const quick_pick = vscode.window.createQuickPick<any>()
-      quick_pick.title = t('command.apply-context.select-saved.title')
-      quick_pick.placeholder = t('command.apply-context.select-saved.file')
+      quick_pick.title = t('command.context-restoration.select-saved.title')
+      quick_pick.placeholder = t(
+        'command.context-restoration.select-saved.file'
+      )
       quick_pick.buttons = [vscode.QuickInputButtons.Back]
       quick_pick.items = await create_items()
 
@@ -127,7 +129,7 @@ export const restore_from_json_file = async (params: {
         if (selection.triggeredButton === edit_button) {
           active_dialog_count++
           const input = vscode.window.createInputBox()
-          input.title = t('command.apply-context.rename.title')
+          input.title = t('command.context-restoration.rename.title')
           input.value = old_name
           const new_name = await new Promise<string | undefined>((resolve) => {
             input.onDidAccept(() => {
@@ -169,13 +171,13 @@ export const restore_from_json_file = async (params: {
         } else if (selection.triggeredButton === delete_button) {
           active_dialog_count++
           const choice = await vscode.window.showInformationMessage(
-            t('command.apply-context.delete.prompt', { name: old_name }),
+            t('command.context-restoration.delete.prompt', { name: old_name }),
             { modal: true },
-            t('command.apply-context.delete.action')
+            t('command.context-restoration.delete.action')
           )
           active_dialog_count--
 
-          if (choice == t('command.apply-context.delete.action')) {
+          if (choice == t('command.context-restoration.delete.action')) {
             const roots_to_update = context_to_roots.get(old_name) || []
             for (const root of roots_to_update) {
               const p = get_contexts_file_path(root)

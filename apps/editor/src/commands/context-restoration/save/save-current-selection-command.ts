@@ -6,12 +6,12 @@ import { save_to_json_file } from './save-to-json-file'
 import { t } from '@/i18n'
 import { dictionary } from '@shared/constants/dictionary'
 
-export const save_context_selection_command = (params: {
+export const save_current_selection_command = (params: {
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
 }): vscode.Disposable => {
   return vscode.commands.registerCommand(
-    'codeWebChat.saveContextSelection',
+    'codeWebChat.saveCurrentSelection',
     async () => {
       const checked_files = params.workspace_provider.get_checked_files()
       if (checked_files.length == 0) {
@@ -28,7 +28,7 @@ export const save_context_selection_command = (params: {
 
         const source = await select_context_source({
           extension_context: params.extension_context,
-          title: t('command.apply-context.sources.title')
+          title: t('command.context-restoration.destination.title')
         })
 
         if (!source) return

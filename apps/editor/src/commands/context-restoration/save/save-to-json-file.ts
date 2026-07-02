@@ -23,7 +23,7 @@ export const save_to_json_file = async (params: {
   const { merged: file_contexts, context_to_roots } =
     await load_and_merge_file_contexts()
   const LABEL_SAVE_NEW_CONTEXT = t(
-    'command.apply-context.save-new-context.label'
+    'command.context-restoration.save-new-context.label'
   )
 
   while (true) {
@@ -32,7 +32,7 @@ export const save_to_json_file = async (params: {
 
     if (file_contexts.length > 0) {
       items.push({
-        label: t('command.apply-context.entries-az'),
+        label: t('command.context-restoration.entries-az'),
         kind: vscode.QuickPickItemKind.Separator
       })
       for (const context of file_contexts) {
@@ -52,7 +52,7 @@ export const save_to_json_file = async (params: {
     }
 
     const quick_pick = vscode.window.createQuickPick<any>()
-    quick_pick.title = t('command.apply-context.select-saved.title')
+    quick_pick.title = t('command.context-restoration.select-saved.title')
     quick_pick.placeholder = 'Select a context to overwrite or create a new one'
     quick_pick.items = items
     quick_pick.buttons = [vscode.QuickInputButtons.Back]
@@ -117,12 +117,14 @@ export const save_to_json_file = async (params: {
     if (selection.context) {
       const context_name = selection.context.name
       const choice = await vscode.window.showWarningMessage(
-        t('command.context-selection.overwrite.prompt', { name: context_name }),
+        t('command.context-restoration.overwrite.prompt', {
+          name: context_name
+        }),
         { modal: true },
-        t('command.context-selection.overwrite.action')
+        t('command.context-restoration.overwrite.action')
       )
 
-      if (choice === t('command.context-selection.overwrite.action')) {
+      if (choice === t('command.context-restoration.overwrite.action')) {
         const current_roots = context_to_roots.get(context_name) || []
         const all_roots = new Set([
           ...current_roots,

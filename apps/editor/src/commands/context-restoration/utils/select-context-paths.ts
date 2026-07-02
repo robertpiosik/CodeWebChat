@@ -23,7 +23,7 @@ export const select_context_paths = async (params: {
 
   const delete_button = {
     iconPath: new vscode.ThemeIcon('trash'),
-    tooltip: t('command.apply-context.action.delete')
+    tooltip: t('command.context-restoration.action.delete')
   }
 
   while (true) {
@@ -161,7 +161,7 @@ export const select_context_paths = async (params: {
           if (active_deletion_timestamp !== current_timestamp) {
             if (choice === 'Undo') {
               vscode.window.showInformationMessage(
-                t('command.apply-context.undo.failed')
+                t('command.context-restoration.undo.failed')
               )
             }
             return

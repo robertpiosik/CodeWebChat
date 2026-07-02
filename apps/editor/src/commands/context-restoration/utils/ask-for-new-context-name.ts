@@ -5,9 +5,9 @@ export const ask_for_new_context_name = async (
   with_back_button: boolean
 ): Promise<string | 'back' | undefined> => {
   const input_box = vscode.window.createInputBox()
-  input_box.title = t('command.apply-context.ask-name.title')
-  input_box.prompt = t('command.apply-context.ask-name.prompt')
-  input_box.placeholder = t('command.apply-context.ask-name.placeholder')
+  input_box.title = t('command.context-restoration.ask-name.title')
+  input_box.prompt = t('command.context-restoration.ask-name.prompt')
+  input_box.placeholder = t('command.context-restoration.ask-name.placeholder')
 
   return new Promise((resolve) => {
     let accepted = false
@@ -18,7 +18,7 @@ export const ask_for_new_context_name = async (
         const value = input_box.value.trim()
         if (value.length == 0) {
           input_box.validationMessage = t(
-            'command.apply-context.ask-name.empty'
+            'command.context-restoration.ask-name.empty'
           )
           return
         }
