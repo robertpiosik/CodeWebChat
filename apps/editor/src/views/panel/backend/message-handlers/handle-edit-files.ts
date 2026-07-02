@@ -30,7 +30,7 @@ import { split_recent_and_rest_configurations } from '@/views/panel/backend/util
 import { t } from '@/i18n'
 
 const get_edit_files_api_configuration = async (params: {
-  api_providers_manager: ModelProvidersManager
+  model_providers_manager: ModelProvidersManager
   show_quick_pick?: boolean
   context: vscode.ExtensionContext
   panel_provider: PanelProvider
@@ -40,7 +40,7 @@ const get_edit_files_api_configuration = async (params: {
   | undefined
 > => {
   const edit_context_api_configurations =
-    await params.api_providers_manager.get_api_configurations()
+    await params.model_providers_manager.get_api_configurations()
 
   if (edit_context_api_configurations.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
@@ -231,7 +231,7 @@ const get_edit_files_api_configuration = async (params: {
         }
 
         const model_provider =
-          await params.api_providers_manager.get_model_provider(
+          await params.model_providers_manager.get_model_provider(
             selected.api_configuration.model_provider_name
           )
         if (!model_provider) {
@@ -264,9 +264,10 @@ const get_edit_files_api_configuration = async (params: {
     })
   }
 
-  const model_provider = await params.api_providers_manager.get_model_provider(
-    selected_api_configuration.model_provider_name
-  )
+  const model_provider =
+    await params.model_providers_manager.get_model_provider(
+      selected_api_configuration.model_provider_name
+    )
 
   if (!model_provider) {
     vscode.window.showErrorMessage(
@@ -291,7 +292,7 @@ export const handle_edit_files = async (
 ): Promise<void> => {
   await vscode.workspace.saveAll()
 
-  const api_providers_manager = new ModelProvidersManager(
+  const model_providers_manager = new ModelProvidersManager(
     panel_provider.context
   )
 
@@ -336,7 +337,7 @@ export const handle_edit_files = async (
 
   while (true) {
     const api_configuration_result = await get_edit_files_api_configuration({
-      api_providers_manager,
+      model_providers_manager,
       show_quick_pick: should_show_quick_pick,
       context: panel_provider.context,
       panel_provider,

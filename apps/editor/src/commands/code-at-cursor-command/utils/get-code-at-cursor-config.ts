@@ -11,14 +11,14 @@ import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 
 export const get_code_at_cursor_api_configuration = async (params: {
-  api_providers_manager: ModelProvidersManager
+  model_providers_manager: ModelProvidersManager
   show_quick_pick?: boolean
   context: vscode.ExtensionContext
   api_configuration_id?: string
   panel_provider?: PanelProvider
 }): Promise<{ model_provider: any; api_configuration: any } | undefined> => {
   const code_at_cursor_api_configurations =
-    await params.api_providers_manager.get_api_configurations()
+    await params.model_providers_manager.get_api_configurations()
 
   if (code_at_cursor_api_configurations.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
@@ -37,7 +37,7 @@ export const get_code_at_cursor_api_configuration = async (params: {
       ) || null
   } else if (!params.show_quick_pick) {
     const default_api_configuration =
-      await params.api_providers_manager.get_default_code_completions_api_configuration()
+      await params.model_providers_manager.get_default_code_completions_api_configuration()
     if (default_api_configuration) {
       selected_api_configuration = default_api_configuration
     } else {
@@ -198,7 +198,7 @@ export const get_code_at_cursor_api_configuration = async (params: {
         }
 
         const model_provider =
-          await params.api_providers_manager.get_model_provider(
+          await params.model_providers_manager.get_model_provider(
             selected.api_configuration.model_provider_name
           )
         if (!model_provider) {
@@ -224,9 +224,10 @@ export const get_code_at_cursor_api_configuration = async (params: {
     })
   }
 
-  const model_provider = await params.api_providers_manager.get_model_provider(
-    selected_api_configuration.model_provider_name
-  )
+  const model_provider =
+    await params.model_providers_manager.get_model_provider(
+      selected_api_configuration.model_provider_name
+    )
 
   if (!model_provider) {
     vscode.window.showErrorMessage(

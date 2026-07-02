@@ -199,9 +199,9 @@ export const handle_active_editor_intelligent_update = async (params: {
         dictionary.error_message.ERROR_APPLYING_CHANGES(error.message)
       )
 
-      const api_providers_manager = new ModelProvidersManager(params.context)
+      const model_providers_manager = new ModelProvidersManager(params.context)
       const api_configuration_result = await get_intelligent_update_config(
-        api_providers_manager,
+        model_providers_manager,
         true,
         params.context
       )

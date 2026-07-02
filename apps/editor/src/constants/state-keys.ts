@@ -54,6 +54,7 @@ export const HISTORY_CODE_AT_CURSOR_STATE_KEY = 'history-code-at-cursor'
 export const HISTORY_FIND_RELEVANT_FILES_STATE_KEY =
   'history-find-relevant-files'
 export const HISTORY_WITHOUT_FILES_STATE_KEY = 'history-without-files'
+
 export const FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY =
   'find-relevant-files-shrink-source-code'
 

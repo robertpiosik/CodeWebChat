@@ -31,18 +31,18 @@ export const get_commit_message_api_configuration = async (
   | 'back'
   | null
 > => {
-  const api_providers_manager = new ModelProvidersManager(context)
+  const model_providers_manager = new ModelProvidersManager(context)
   let commit_message_api_configuration:
     | CommitMessageApiConfiguration
     | null
     | undefined
     | 'back' = force_quick_pick
     ? undefined
-    : await api_providers_manager.get_default_commit_messages_api_configuration()
+    : await model_providers_manager.get_default_commit_messages_api_configuration()
 
   if (!commit_message_api_configuration) {
     const api_configurations =
-      await api_providers_manager.get_api_configurations()
+      await model_providers_manager.get_api_configurations()
 
     if (api_configurations.length == 0) {
       vscode.commands.executeCommand('codeWebChat.settings')
@@ -221,7 +221,7 @@ export const get_commit_message_api_configuration = async (
     return null
   }
 
-  const model_provider = await api_providers_manager.get_model_provider(
+  const model_provider = await model_providers_manager.get_model_provider(
     commit_message_api_configuration.model_provider_name
   )
 

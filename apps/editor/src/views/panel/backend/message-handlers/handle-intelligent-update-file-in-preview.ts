@@ -93,18 +93,20 @@ export const handle_intelligent_update_file_in_preview = async (
     return
   }
 
-  const api_providers_manager = new ModelProvidersManager(
+  const model_providers_manager = new ModelProvidersManager(
     panel_provider.context
   )
   const api_configuration_result = await get_intelligent_update_config(
-    api_providers_manager,
+    model_providers_manager,
     force_model_selection ?? false,
     panel_provider.context
   )
   if (!api_configuration_result) return
 
-  const { model_provider: api_model_provider, api_configuration: intelligent_update_api_configuration } =
-    api_configuration_result
+  const {
+    model_provider: api_model_provider,
+    api_configuration: intelligent_update_api_configuration
+  } = api_configuration_result
 
   const endpoint_url = api_model_provider.base_url
 

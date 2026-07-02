@@ -121,11 +121,11 @@ export const search_files_commands = (
                 shrink_result
               )
 
-              const api_providers_manager = new ModelProvidersManager(
+              const model_providers_manager = new ModelProvidersManager(
                 extension_context
               )
               const api_configurations =
-                await api_providers_manager.get_api_configurations()
+                await model_providers_manager.get_api_configurations()
 
               if (api_configurations.length == 0) {
                 vscode.commands.executeCommand('codeWebChat.settings')
@@ -144,7 +144,7 @@ export const search_files_commands = (
                   : analysis.full_tokens
                 const api_configuration_result =
                   await prompt_for_api_configuration({
-                    api_providers_manager,
+                    model_providers_manager,
                     extension_context,
                     api_configurations,
                     tokens_to_process,

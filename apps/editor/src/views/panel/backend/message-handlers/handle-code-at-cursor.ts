@@ -21,14 +21,17 @@ import { split_recent_and_rest_configurations } from '@/views/panel/backend/util
 import { t } from '@/i18n'
 
 const get_code_at_cursor_api_configuration = async (
-  api_providers_manager: ModelProvidersManager,
+  model_providers_manager: ModelProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext,
   panel_provider: PanelProvider,
   api_configuration_id?: string
-): Promise<{ model_provider: ModelProvider; api_configuration: ApiConfiguration } | undefined> => {
+): Promise<
+  | { model_provider: ModelProvider; api_configuration: ApiConfiguration }
+  | undefined
+> => {
   const code_completions_api_configurations =
-    await api_providers_manager.get_api_configurations()
+    await model_providers_manager.get_api_configurations()
 
   if (code_completions_api_configurations.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
@@ -64,7 +67,10 @@ const get_code_at_cursor_api_configuration = async (
         ) || null
     }
 
-    if (!selected_api_configuration && code_completions_api_configurations.length > 0) {
+    if (
+      !selected_api_configuration &&
+      code_completions_api_configurations.length > 0
+    ) {
       selected_api_configuration = code_completions_api_configurations[0]
     }
   }
@@ -76,14 +82,18 @@ const get_code_at_cursor_api_configuration = async (
           RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
         ) || []
 
-      const { recent: recent_api_configurations, rest: other_api_configurations } =
-        split_recent_and_rest_configurations(
-          code_completions_api_configurations,
-          recent_ids,
-          get_api_configuration_id
-        )
+      const {
+        recent: recent_api_configurations,
+        rest: other_api_configurations
+      } = split_recent_and_rest_configurations(
+        code_completions_api_configurations,
+        recent_ids,
+        get_api_configuration_id
+      )
 
-      const map_api_configuration_to_item = (api_configuration: ApiConfiguration) => {
+      const map_api_configuration_to_item = (
+        api_configuration: ApiConfiguration
+      ) => {
         const description_parts = [api_configuration.model_provider_name]
         if (api_configuration.temperature != null) {
           description_parts.push(`${api_configuration.temperature}`)
@@ -113,7 +123,9 @@ const get_code_at_cursor_api_configuration = async (
           label: t('common.separator.recently-used'),
           kind: vscode.QuickPickItemKind.Separator
         })
-        items.push(...recent_api_configurations.map(map_api_configuration_to_item))
+        items.push(
+          ...recent_api_configurations.map(map_api_configuration_to_item)
+        )
       }
 
       if (other_api_configurations.length > 0) {
@@ -123,7 +135,9 @@ const get_code_at_cursor_api_configuration = async (
             kind: vscode.QuickPickItemKind.Separator
           })
         }
-        items.push(...other_api_configurations.map(map_api_configuration_to_item))
+        items.push(
+          ...other_api_configurations.map(map_api_configuration_to_item)
+        )
       }
 
       return items
@@ -144,66 +158,67 @@ const get_code_at_cursor_api_configuration = async (
       }
     }
 
-    return new Promise<{ model_provider: ModelProvider; api_configuration: ApiConfiguration } | undefined>(
-      (resolve) => {
-        quick_pick.onDidAccept(async () => {
-          const selected = quick_pick.selectedItems[0] as any
-          quick_pick.hide()
+    return new Promise<
+      | { model_provider: ModelProvider; api_configuration: ApiConfiguration }
+      | undefined
+    >((resolve) => {
+      quick_pick.onDidAccept(async () => {
+        const selected = quick_pick.selectedItems[0] as any
+        quick_pick.hide()
 
-          if (!selected || !selected.api_configuration) {
-            resolve(undefined)
-            return
-          }
-
-          let recents =
-            context.workspaceState.get<string[]>(
-              RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
-            ) || []
-          recents = [selected.id, ...recents.filter((id) => id != selected.id)]
-          context.workspaceState.update(
-            RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY,
-            recents
-          )
-
-          if (panel_provider) {
-            panel_provider.send_message({
-              command: 'SELECTED_API_CONFIGURATION_CHANGED',
-              prompt_type: 'code-at-cursor',
-              id: selected.id
-            })
-          }
-
-          const model_provider = await api_providers_manager.get_model_provider(
-            selected.api_configuration.model_provider_name
-          )
-          if (!model_provider) {
-            vscode.window.showErrorMessage(
-              dictionary.error_message.API_PROVIDER_NOT_FOUND
-            )
-            resolve(undefined)
-            return
-          }
-
-          resolve({
-            model_provider,
-            api_configuration: selected.api_configuration
-          })
-        })
-
-        quick_pick.onDidHide(() => {
-          quick_pick.dispose()
-          if (panel_provider) {
-            panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
-          }
+        if (!selected || !selected.api_configuration) {
           resolve(undefined)
-        })
+          return
+        }
 
-        quick_pick.show()
-      }
-    )
+        let recents =
+          context.workspaceState.get<string[]>(
+            RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY
+          ) || []
+        recents = [selected.id, ...recents.filter((id) => id != selected.id)]
+        context.workspaceState.update(
+          RECENTLY_USED_CODE_AT_CURSOR_CONFIG_IDS_STATE_KEY,
+          recents
+        )
+
+        if (panel_provider) {
+          panel_provider.send_message({
+            command: 'SELECTED_API_CONFIGURATION_CHANGED',
+            prompt_type: 'code-at-cursor',
+            id: selected.id
+          })
+        }
+
+        const model_provider = await model_providers_manager.get_model_provider(
+          selected.api_configuration.model_provider_name
+        )
+        if (!model_provider) {
+          vscode.window.showErrorMessage(
+            dictionary.error_message.API_PROVIDER_NOT_FOUND
+          )
+          resolve(undefined)
+          return
+        }
+
+        resolve({
+          model_provider,
+          api_configuration: selected.api_configuration
+        })
+      })
+
+      quick_pick.onDidHide(() => {
+        quick_pick.dispose()
+        if (panel_provider) {
+          panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
+        }
+        resolve(undefined)
+      })
+
+      quick_pick.show()
+    })
   }
 
-  const model_provider = await api_providers_manager.get_model_provider(
+  const model_provider = await model_providers_manager.get_model_provider(
     selected_api_configuration.model_provider_name
   )
 
@@ -228,14 +243,14 @@ export const handle_code_at_cursor = async (
   panel_provider: PanelProvider,
   message: CodeAtCursorMessage
 ): Promise<void> => {
-  const api_providers_manager = new ModelProvidersManager(
+  const model_providers_manager = new ModelProvidersManager(
     panel_provider.context
   )
   const completion_instructions =
     panel_provider.current_code_at_cursor_instruction
 
   const api_configuration_result = await get_code_at_cursor_api_configuration(
-    api_providers_manager,
+    model_providers_manager,
     message.use_quick_pick,
     panel_provider.context,
     panel_provider,
@@ -246,7 +261,10 @@ export const handle_code_at_cursor = async (
     return
   }
 
-  const { model_provider, api_configuration: code_completions_api_configuration } = api_configuration_result
+  const {
+    model_provider,
+    api_configuration: code_completions_api_configuration
+  } = api_configuration_result
 
   if (!code_completions_api_configuration.model_provider_name) {
     vscode.window.showErrorMessage(
@@ -357,9 +375,11 @@ export const handle_code_at_cursor = async (
             api_key: model_provider.api_key,
             body,
             request_id,
-            provider_name: code_completions_api_configuration.model_provider_name,
+            provider_name:
+              code_completions_api_configuration.model_provider_name,
             model: code_completions_api_configuration.model,
-            reasoning_effort: code_completions_api_configuration.reasoning_effort
+            reasoning_effort:
+              code_completions_api_configuration.reasoning_effort
           })
 
           if (result) {
@@ -376,9 +396,11 @@ export const handle_code_at_cursor = async (
                   }
                 },
                 recent_api_configuration: {
-                  model_provider: code_completions_api_configuration.model_provider_name,
+                  model_provider:
+                    code_completions_api_configuration.model_provider_name,
                   model: code_completions_api_configuration.model,
-                  reasoning_effort: code_completions_api_configuration.reasoning_effort
+                  reasoning_effort:
+                    code_completions_api_configuration.reasoning_effort
                 }
               }
             )

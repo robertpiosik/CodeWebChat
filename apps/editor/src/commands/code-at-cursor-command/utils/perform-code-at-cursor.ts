@@ -25,7 +25,7 @@ export const perform_code_at_cursor = async (params: {
   api_configuration_id?: string
   panel_provider?: PanelProvider
 }) => {
-  const api_providers_manager = new ModelProvidersManager(params.context)
+  const model_providers_manager = new ModelProvidersManager(params.context)
 
   let completion_instructions: string | undefined =
     params.completion_instructions
@@ -52,13 +52,15 @@ export const perform_code_at_cursor = async (params: {
   let current_api_configuration_id = params.api_configuration_id
 
   while (true) {
-    const api_configuration_result = await get_code_at_cursor_api_configuration({
-      api_providers_manager,
-      show_quick_pick: force_show_quick_pick,
-      context: params.context,
-      api_configuration_id: current_api_configuration_id,
-      panel_provider: params.panel_provider
-    })
+    const api_configuration_result = await get_code_at_cursor_api_configuration(
+      {
+        model_providers_manager,
+        show_quick_pick: force_show_quick_pick,
+        context: params.context,
+        api_configuration_id: current_api_configuration_id,
+        panel_provider: params.panel_provider
+      }
+    )
 
     if (!api_configuration_result) {
       return
@@ -67,7 +69,10 @@ export const perform_code_at_cursor = async (params: {
     force_show_quick_pick = false
     current_api_configuration_id = undefined
 
-    const { model_provider, api_configuration: code_at_cursor_api_configuration } = api_configuration_result
+    const {
+      model_provider,
+      api_configuration: code_at_cursor_api_configuration
+    } = api_configuration_result
 
     if (!code_at_cursor_api_configuration.model_provider_name) {
       vscode.window.showErrorMessage(

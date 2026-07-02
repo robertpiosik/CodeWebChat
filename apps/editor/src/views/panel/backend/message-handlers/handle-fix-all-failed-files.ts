@@ -56,18 +56,20 @@ export const handle_fix_all_failed_files = async (params: {
     is_single_root_folder_workspace
   })
 
-  const api_providers_manager = new ModelProvidersManager(
+  const model_providers_manager = new ModelProvidersManager(
     params.panel_provider.context
   )
   const api_configuration_result = await get_intelligent_update_config(
-    api_providers_manager,
+    model_providers_manager,
     params.force_model_selection ?? false,
     params.panel_provider.context
   )
   if (!api_configuration_result) return
 
-  const { model_provider: api_model_provider, api_configuration: intelligent_update_api_configuration } =
-    api_configuration_result
+  const {
+    model_provider: api_model_provider,
+    api_configuration: intelligent_update_api_configuration
+  } = api_configuration_result
 
   const endpoint_url = api_model_provider.base_url
 
@@ -191,7 +193,8 @@ export const handle_fix_all_failed_files = async (params: {
             model_provider: api_model_provider,
             model: intelligent_update_api_configuration.model,
             temperature: intelligent_update_api_configuration.temperature,
-            reasoning_effort: intelligent_update_api_configuration.reasoning_effort,
+            reasoning_effort:
+              intelligent_update_api_configuration.reasoning_effort,
             file_path: file_path,
             file_content: file_state.content,
             instruction: instructions,

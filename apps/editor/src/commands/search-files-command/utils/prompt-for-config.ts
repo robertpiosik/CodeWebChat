@@ -10,7 +10,7 @@ import { display_token_count } from '../../../utils/display-token-count'
 import { t } from '@/i18n'
 
 export const prompt_for_api_configuration = async (params: {
-  api_providers_manager: ModelProvidersManager
+  model_providers_manager: ModelProvidersManager
   extension_context: vscode.ExtensionContext
   api_configurations: ApiConfiguration[]
   tokens_to_process: number
@@ -29,7 +29,7 @@ export const prompt_for_api_configuration = async (params: {
 
   if (!params.force_prompt) {
     const default_api_configuration =
-      await params.api_providers_manager.get_default_find_relevant_files_api_configuration()
+      await params.model_providers_manager.get_default_find_relevant_files_api_configuration()
 
     if (default_api_configuration) {
       selected_api_configuration = default_api_configuration
@@ -181,9 +181,10 @@ export const prompt_for_api_configuration = async (params: {
     )
   }
 
-  const model_provider = await params.api_providers_manager.get_model_provider(
-    selected_api_configuration.model_provider_name
-  )
+  const model_provider =
+    await params.model_providers_manager.get_model_provider(
+      selected_api_configuration.model_provider_name
+    )
   if (!model_provider) {
     vscode.window.showErrorMessage(t('command.search.error.provider-not-found'))
     return 'cancel'

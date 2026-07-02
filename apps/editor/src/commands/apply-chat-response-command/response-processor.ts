@@ -13,7 +13,10 @@ import {
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
-import { apply_git_patch, sanitize_patch_content } from './handlers/diff-handler'
+import {
+  apply_git_patch,
+  sanitize_patch_content
+} from './handlers/diff-handler'
 import { apply_file_relocations } from './utils/file-operations'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { get_intelligent_update_config } from '@/utils/intelligent-update-utils'
@@ -250,7 +253,7 @@ export const process_chat_response = async (params: {
         type: 'success'
       })
 
-      await params.panel_provider.switch_to_edit_context()
+      await params.panel_provider.switch_to_edit_files()
     } else if ('created_at' in decision && decision.created_at) {
       const history = params.panel_provider.response_history
       const new_history = history.filter(
@@ -277,12 +280,14 @@ export const process_chat_response = async (params: {
         const key = `${patch.workspace_name || ''}:${patch.file_path}`
         rename_map.set(key, {
           new_path: patch.new_file_path,
-            new_workspace: patch.new_workspace_name || patch.workspace_name
+          new_workspace: patch.new_workspace_name || patch.workspace_name
         })
       }
     })
 
-    const set_new_paths_in_original_states = (states: OriginalFileState[]): OriginalFileState[] => {
+    const set_new_paths_in_original_states = (
+      states: OriginalFileState[]
+    ): OriginalFileState[] => {
       if (!rename_map.size) return states
       states.forEach((state) => {
         const key = `${state.workspace_name || ''}:${state.file_path}`
@@ -339,7 +344,12 @@ export const process_chat_response = async (params: {
         patch.content,
         patch.workspace_name
       )
-      const result = await apply_git_patch(sanitized_patch_content, workspace_path, patch.workspace_name, patch)
+      const result = await apply_git_patch(
+        sanitized_patch_content,
+        workspace_path,
+        patch.workspace_name,
+        patch
+      )
 
       if (result.success) {
         if (result.diff_application_method && result.original_states) {
@@ -375,7 +385,8 @@ export const process_chat_response = async (params: {
     }
 
     if (all_original_states.length > 0) {
-      all_original_states = set_new_paths_in_original_states(all_original_states)
+      all_original_states =
+        set_new_paths_in_original_states(all_original_states)
       await apply_file_relocations(all_original_states)
       update_undo_button_state({
         context: params.context,
@@ -522,11 +533,11 @@ export const process_chat_response = async (params: {
 
           const fake_chat_response = `\`\`\`\n// ${file_path_for_block}\n${params.chat_response}\n\`\`\``
 
-          const api_providers_manager = new ModelProvidersManager(
+          const model_providers_manager = new ModelProvidersManager(
             params.context
           )
           const api_configuration_result = await get_intelligent_update_config(
-            api_providers_manager,
+            model_providers_manager,
             false,
             params.context
           )
@@ -535,7 +546,10 @@ export const process_chat_response = async (params: {
             return null
           }
 
-          const { model_provider, api_configuration: intelligent_update_api_configuration } = api_configuration_result
+          const {
+            model_provider,
+            api_configuration: intelligent_update_api_configuration
+          } = api_configuration_result
           const endpoint_url = model_provider.base_url
 
           const intelligent_update_states =
