@@ -422,7 +422,7 @@ export const Main: React.FC<Props> = (props) => {
     const instruction = get_current_instructions()
 
     post_message(props.vscode, {
-      command: 'EDIT_CONTEXT',
+      command: 'EDIT_FILES',
       use_quick_pick: false,
       invocation_count
     })
@@ -436,7 +436,7 @@ export const Main: React.FC<Props> = (props) => {
     const instruction = get_current_instructions()
 
     post_message(props.vscode, {
-      command: 'EDIT_CONTEXT',
+      command: 'EDIT_FILES',
       use_quick_pick: true,
       invocation_count
     })
@@ -529,7 +529,7 @@ export const Main: React.FC<Props> = (props) => {
 
     if (props.api_prompt_type == 'edit-files') {
       post_message(props.vscode, {
-        command: 'EDIT_CONTEXT',
+        command: 'EDIT_FILES',
         use_quick_pick: false,
         api_configuration_id: id,
         invocation_count: 1

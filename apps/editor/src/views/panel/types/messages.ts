@@ -239,8 +239,8 @@ export interface GetModeMessage extends BaseMessage {
   command: 'GET_MODE'
 }
 
-export interface EditContextMessage extends BaseMessage {
-  command: 'EDIT_CONTEXT'
+export interface EditFilesMessage extends BaseMessage {
+  command: 'EDIT_FILES'
   use_quick_pick: boolean
   api_configuration_id?: string
   invocation_count: number
@@ -635,7 +635,7 @@ export type FrontendMessage =
   | PickReasoningEffortMessage
   | SaveModeMessage
   | GetModeMessage
-  | EditContextMessage
+  | EditFilesMessage
   | CancelApiRequestMessage
   | CodeAtCursorMessage
   | FindRelevantFilesMessage
@@ -709,7 +709,7 @@ export type FrontendMessage =
 export interface InstructionsMessage extends BaseMessage {
   command: 'INSTRUCTIONS'
   ask_about_context: InstructionsState
-  edit_context: InstructionsState
+  edit_files: InstructionsState
   no_context: InstructionsState
   code_at_cursor: InstructionsState
   find_relevant_files: InstructionsState

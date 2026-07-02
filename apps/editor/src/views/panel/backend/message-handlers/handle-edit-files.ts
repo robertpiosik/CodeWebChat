@@ -15,7 +15,7 @@ import { EditFormat } from '@shared/types/edit-format'
 import { ApiConfiguration } from '@/services/model-providers-manager'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
-import { EditContextMessage } from '@/views/panel/types/messages'
+import { EditFilesMessage } from '@/views/panel/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
 import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE,
@@ -287,7 +287,7 @@ const get_edit_files_api_configuration = async (params: {
 
 export const handle_edit_files = async (
   panel_provider: PanelProvider,
-  message: EditContextMessage
+  message: EditFilesMessage
 ): Promise<void> => {
   await vscode.workspace.saveAll()
 

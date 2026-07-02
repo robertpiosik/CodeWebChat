@@ -201,7 +201,7 @@ export const use_instructions = (
       const message = event.data
       if (message.command == 'INSTRUCTIONS') {
         set_ask_about_context_instructions(message.ask_about_context)
-        set_edit_context_instructions(message.edit_context)
+        set_edit_context_instructions(message.edit_files)
         set_no_context_instructions(message.no_context)
         set_code_at_cursor_instructions(message.code_at_cursor)
         set_find_relevant_files_instructions(message.find_relevant_files)

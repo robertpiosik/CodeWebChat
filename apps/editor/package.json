@@ -962,7 +962,7 @@
             }
           }
         },
-        "codeWebChat.promptTemplatesForAskAboutContext": {
+        "codeWebChat.promptTemplatesForAskAboutFiles": {
           "type": "array",
           "scope": "resource",
           "items": {
@@ -980,7 +980,7 @@
             ]
           }
         },
-        "codeWebChat.promptTemplatesForEditContext": {
+        "codeWebChat.promptTemplatesForEditFiles": {
           "type": "array",
           "scope": "resource",
           "items": {
@@ -1016,7 +1016,7 @@
             ]
           }
         },
-        "codeWebChat.promptTemplatesForNoContext": {
+        "codeWebChat.promptTemplatesForWithoutFiles": {
           "type": "array",
           "scope": "resource",
           "items": {

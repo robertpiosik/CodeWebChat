@@ -27,16 +27,16 @@ export const handle_show_prompt_template_quick_pick = async (
   let prompt_templates_key: string | undefined
   switch (prompt_type) {
     case 'ask-about-files':
-      prompt_templates_key = 'promptTemplatesForAskAboutContext'
+      prompt_templates_key = 'promptTemplatesForAskAboutFiles'
       break
     case 'edit-files':
-      prompt_templates_key = 'promptTemplatesForEditContext'
+      prompt_templates_key = 'promptTemplatesForEditFiles'
       break
     case 'code-at-cursor':
       prompt_templates_key = 'promptTemplatesForCodeAtCursor'
       break
     case 'without-files':
-      prompt_templates_key = 'promptTemplatesForNoContext'
+      prompt_templates_key = 'promptTemplatesForWithoutFiles'
       break
     case 'find-relevant-files':
       prompt_templates_key = 'promptTemplatesForFindRelevantFiles'

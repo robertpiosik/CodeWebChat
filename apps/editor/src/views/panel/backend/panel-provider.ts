@@ -800,7 +800,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_apply_response_from_history(message)
           } else if (message.command == 'EXECUTE_COMMAND') {
             await vscode.commands.executeCommand(message.command_id)
-          } else if (message.command == 'EDIT_CONTEXT') {
+          } else if (message.command == 'EDIT_FILES') {
             await handle_edit_files(this, message)
           } else if (message.command == 'CODE_AT_CURSOR') {
             await handle_code_at_cursor(this, message)
@@ -1151,7 +1151,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     this.send_message({
       command: 'INSTRUCTIONS',
       ask_about_context: this.ask_about_context_instructions,
-      edit_context: this.edit_context_instructions,
+      edit_files: this.edit_context_instructions,
       no_context: this.no_context_instructions,
       code_at_cursor: this.code_at_cursor_instructions,
       find_relevant_files: this.find_relevant_files_instructions,
