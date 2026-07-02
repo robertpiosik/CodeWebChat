@@ -91,7 +91,7 @@ export const EditApiConfigurationForm: React.FC<Props> = (props) => {
           <UiField
             label="Reasoning Effort"
             html_for="reasoning-effort"
-            info="Controls how much the model thinks."
+            info="Controls how much the model 'thinks'."
             action={
               reasoning_effort !== undefined && (
                 <UiTextButton on_click={() => set_reasoning_effort(undefined)}>

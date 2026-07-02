@@ -259,7 +259,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
             <UiField
               label="Reasoning Effort"
               html_for="reasoning-effort"
-              info={`Controls how much the model thinks.${
+              info={`Controls how much the model 'thinks'.${
                 chatbot == 'OpenRouter' ? ' Requires a reasoning model.' : ''
               }`}
               action={
