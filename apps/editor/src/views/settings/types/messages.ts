@@ -5,6 +5,7 @@ export type Provider = {
   name: string
   api_key_mask: string
   base_url: string
+  extended_cache?: boolean
 }
 
 export type ApiConfiguration = {
@@ -219,15 +220,6 @@ export interface UpdateAutoRunIntelligentUpdateMessage {
   enabled: boolean
 }
 
-export interface GetExtendedCacheDurationForAnthropicMessage {
-  command: 'GET_EXTENDED_CACHE_DURATION_FOR_ANTHROPIC'
-}
-
-export interface UpdateExtendedCacheDurationForAnthropicMessage {
-  command: 'UPDATE_EXTENDED_CACHE_DURATION_FOR_ANTHROPIC'
-  enabled: boolean
-}
-
 export interface OpenKeybindingsMessage {
   command: 'OPEN_KEYBINDINGS'
   search?: string
@@ -337,6 +329,7 @@ export interface UpdateModelProviderMessage {
     base_url: string
     api_key?: string
     is_api_key_cleared?: boolean
+    extended_cache?: boolean
   }
   origin?: 'cancel' | 'save'
   is_new?: boolean
@@ -388,8 +381,6 @@ export type FrontendMessage =
   | OpenAllowPatternsSettingsMessage
   | GetAutoRunIntelligentUpdateMessage
   | UpdateAutoRunIntelligentUpdateMessage
-  | GetExtendedCacheDurationForAnthropicMessage
-  | UpdateExtendedCacheDurationForAnthropicMessage
   | OpenKeybindingsMessage
   | OpenExternalUrlMessage
   | GetWebConfigurationsMessage
@@ -506,11 +497,6 @@ export interface AutoRunIntelligentUpdateMessage {
   enabled: boolean
 }
 
-export interface ExtendedCacheDurationForAnthropicMessage {
-  command: 'EXTENDED_CACHE_DURATION_FOR_ANTHROPIC'
-  enabled: boolean
-}
-
 export interface WebConfigurationsMessage {
   command: 'WEB_CONFIGURATIONS'
   web_configurations: WebConfiguration[]
@@ -592,7 +578,6 @@ export type BackendMessage =
   | ClearChecksInWorkspaceBehaviorMessage
   | ShowSectionMessage
   | AutoRunIntelligentUpdateMessage
-  | ExtendedCacheDurationForAnthropicMessage
   | WebConfigurationsMessage
   | NewlyPickedModelMessage
   | NewlyPickedChatbotMessage

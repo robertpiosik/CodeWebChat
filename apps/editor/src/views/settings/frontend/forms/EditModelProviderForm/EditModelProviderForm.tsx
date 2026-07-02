@@ -5,12 +5,14 @@ import { Field as UiField } from '@ui/components/editor/common/Field'
 import { Input as UiInput } from '@ui/components/editor/common/Input'
 import { Scrollable as UiScrollable } from '@ui/components/editor/panel/Scrollable'
 import { Fieldset as UiFieldset } from '@ui/components/editor/panel/Fieldset'
+import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
 
 export type ModelProviderDraft = {
   name: string
   base_url: string
   api_key?: string
   is_api_key_cleared?: boolean
+  extended_cache?: boolean
 }
 
 type Props = {
@@ -23,15 +25,19 @@ export const EditModelProviderForm: React.FC<Props> = (props) => {
   const [base_url, set_base_url] = useState(props.provider.base_url)
   const [api_key, set_api_key] = useState('')
   const [is_api_key_cleared, set_is_api_key_cleared] = useState(false)
+  const [extended_cache, set_extended_cache] = useState(
+    props.provider.extended_cache || false
+  )
 
   useEffect(() => {
     props.on_update({
       name,
       base_url,
       api_key: api_key || undefined,
-      is_api_key_cleared
+      is_api_key_cleared,
+      extended_cache
     })
-  }, [name, base_url, api_key, is_api_key_cleared])
+  }, [name, base_url, api_key, is_api_key_cleared, extended_cache])
 
   return (
     <UiScrollable>
@@ -92,6 +98,15 @@ export const EditModelProviderForm: React.FC<Props> = (props) => {
               }
             />
           </UiField>
+
+          {base_url.includes('api.anthropic.com') && (
+            <UiField label="Extended Cache (1 hour)">
+              <UiToggler
+                is_on={extended_cache}
+                on_toggle={set_extended_cache}
+              />
+            </UiField>
+          )}
         </UiFieldset>
       </div>
     </UiScrollable>

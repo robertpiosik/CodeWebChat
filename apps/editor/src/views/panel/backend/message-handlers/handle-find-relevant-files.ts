@@ -361,7 +361,7 @@ export const handle_find_relevant_files = async (
     const part2 = `${collected.recent_files}</files>\n${skill_definitions}${system_instructions_xml}\n${processed_instructions}`
 
     const user_content = build_user_content({
-      model_provider_name: model_provider.name,
+      model_provider,
       part1,
       part2,
       disable_cache: true

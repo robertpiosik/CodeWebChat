@@ -22,6 +22,7 @@ export const handle_update_model_provider = async (
       a.base_url !== b.base_url ||
       (b.api_key !== undefined && b.api_key !== '') ||
       b.is_api_key_cleared ||
+      a.extended_cache !== b.extended_cache ||
       false
   } else if (message.is_new) {
     has_changes = true
@@ -101,6 +102,7 @@ export const handle_update_model_provider = async (
     working_provider = { ...updated_providers[existing_index] }
     working_provider.name = message.provider.name.trim()
     working_provider.base_url = normalize_base_url(message.provider.base_url)
+    working_provider.extended_cache = message.provider.extended_cache
 
     if (message.provider.is_api_key_cleared) {
       working_provider.api_key = ''
@@ -127,7 +129,8 @@ export const handle_update_model_provider = async (
     working_provider = {
       name: message.provider.name.trim(),
       base_url: normalize_base_url(message.provider.base_url),
-      api_key: message.provider.api_key?.trim() || ''
+      api_key: message.provider.api_key?.trim() || '',
+      extended_cache: message.provider.extended_cache
     }
 
     working_provider.name = generate_unique_name(

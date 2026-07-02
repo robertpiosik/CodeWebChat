@@ -29,7 +29,7 @@ export const fetch_relevant_files_from_api = async (
   const system_instructions_xml = `${find_relevant_files_format}\n${find_relevant_files_instructions}`
   const part2 = `${system_instructions_xml}\n${instructions}`
   const user_content = build_user_content({
-    model_provider_name: model_provider.name,
+    model_provider,
     part1: xml_files,
     part2,
     disable_cache: true

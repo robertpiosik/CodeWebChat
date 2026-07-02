@@ -64,8 +64,7 @@ export const Settings = () => {
       settings_hook.check_new_files !== undefined &&
       settings_hook.reuse_last_tab !== undefined &&
       settings_hook.clear_checks_in_workspace_behavior !== undefined &&
-      settings_hook.auto_run_intelligent_update !== undefined &&
-      settings_hook.extended_cache_duration_for_anthropic !== undefined
+      settings_hook.auto_run_intelligent_update !== undefined
     )
   }, [settings_hook])
 
@@ -114,9 +113,6 @@ export const Settings = () => {
         clear_checks_in_workspace_behavior={
           settings_hook.clear_checks_in_workspace_behavior!
         }
-        extended_cache_duration_for_anthropic={
-          settings_hook.extended_cache_duration_for_anthropic!
-        }
         auto_run_intelligent_update={settings_hook.auto_run_intelligent_update!}
         set_providers={settings_hook.set_providers}
         set_api_configurations={settings_hook.set_api_configurations}
@@ -161,9 +157,6 @@ export const Settings = () => {
         on_reuse_last_tab_change={settings_hook.handle_reuse_last_tab_change}
         on_auto_run_intelligent_update_change={
           settings_hook.handle_auto_run_intelligent_update_change
-        }
-        on_extended_cache_duration_for_anthropic_change={
-          settings_hook.handle_extended_cache_duration_for_anthropic_change
         }
         on_open_keybindings={settings_hook.handle_open_keybindings}
         on_open_editor_settings={settings_hook.handle_open_editor_settings}

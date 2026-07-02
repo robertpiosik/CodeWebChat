@@ -78,7 +78,8 @@ export const handle_add_model_provider = async (
     provider: {
       name: new_name,
       base_url: new_base_url,
-      api_key_mask: ''
+      api_key_mask: '',
+      extended_cache: undefined
     },
     insertion_index: message.insertion_index,
     create_on_top: message.create_on_top

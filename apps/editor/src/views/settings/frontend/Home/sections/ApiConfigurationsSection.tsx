@@ -55,8 +55,6 @@ type Props = {
   on_restore_edit_files_instructions: () => void
   on_restore_commit_instructions: () => void
   on_restore_voice_input_instructions: () => void
-  extended_cache_duration_for_anthropic: boolean
-  on_extended_cache_duration_for_anthropic_change: (enabled: boolean) => void
   auto_run_intelligent_update: boolean
   on_auto_run_intelligent_update_change: (enabled: boolean) => void
   on_open_external_url: (url: string) => void
@@ -143,39 +141,6 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
               on_add_provider={props.on_add_provider}
               on_delete_provider={props.on_delete_provider}
               on_edit_provider={props.on_edit_provider}
-            />
-            <UiItem
-              title={t('model-providers.extended-cache.anthropic.title')}
-              description={
-                <Translation
-                  id="model-providers.extended-cache.anthropic.description"
-                  components={{
-                    link: (
-                      <a
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault()
-                          props.on_open_external_url(
-                            'https://platform.claude.com/docs/en/build-with-claude/prompt-caching'
-                          )
-                        }}
-                      >
-                        {t(
-                          'model-providers.extended-cache.anthropic.learn-more'
-                        )}
-                      </a>
-                    )
-                  }}
-                />
-              }
-              slot_right={
-                <UiToggler
-                  is_on={props.extended_cache_duration_for_anthropic}
-                  on_toggle={
-                    props.on_extended_cache_duration_for_anthropic_change
-                  }
-                />
-              }
             />
           </UiGroup>
         </div>

@@ -114,7 +114,6 @@ type Props = {
   checkpoint_lifespan: number
   edit_format_instructions: EditFormatInstructions
   clear_checks_in_workspace_behavior: 'ignore-open-editors' | 'uncheck-all'
-  extended_cache_duration_for_anthropic: boolean
   auto_run_intelligent_update: boolean
   set_providers: (providers: Provider[]) => void
   set_api_configurations: (configurations: ApiConfiguration[]) => void
@@ -141,7 +140,6 @@ type Props = {
     value: 'ignore-open-editors' | 'uncheck-all'
   ) => void
   on_auto_run_intelligent_update_change: (enabled: boolean) => void
-  on_extended_cache_duration_for_anthropic_change: (enabled: boolean) => void
   on_open_keybindings: (search?: string) => void
   on_open_editor_settings: () => void
   on_open_ignore_patterns_settings: () => void
@@ -405,12 +403,6 @@ export const Home: React.FC<Props> = (props) => {
           on_delete_provider={props.on_delete_provider}
           on_edit_provider={props.on_edit_provider}
           on_reorder_providers={props.on_reorder_providers}
-          extended_cache_duration_for_anthropic={
-            props.extended_cache_duration_for_anthropic
-          }
-          on_extended_cache_duration_for_anthropic_change={
-            props.on_extended_cache_duration_for_anthropic_change
-          }
           auto_run_intelligent_update={props.auto_run_intelligent_update}
           on_auto_run_intelligent_update_change={
             props.on_auto_run_intelligent_update_change

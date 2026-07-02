@@ -396,7 +396,7 @@ export const handle_edit_files = async (
     }${processed_instructions}`
 
     const user_content = build_user_content({
-      model_provider_name: model_provider.name,
+      model_provider,
       part1,
       part2
     })

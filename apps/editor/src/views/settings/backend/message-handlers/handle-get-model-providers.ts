@@ -13,7 +13,8 @@ export const handle_get_model_providers = async (
     return {
       name: p.name,
       api_key_mask,
-      base_url: p.base_url
+      base_url: p.base_url,
+      extended_cache: p.extended_cache
     }
   })
 

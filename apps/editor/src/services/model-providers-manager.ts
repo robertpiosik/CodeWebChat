@@ -5,6 +5,7 @@ export type ModelProvider = {
   name: string
   base_url: string
   api_key: string
+  extended_cache?: boolean
 }
 
 export type ApiConfiguration = {
@@ -43,6 +44,7 @@ export class ModelProvidersManager {
         {
           name: string
           baseUrl: string
+          extendedCache?: boolean
         }[]
       >('modelProviders', [])
 
@@ -60,7 +62,8 @@ export class ModelProvidersManager {
         const model_provider: ModelProvider = {
           name: provider_config.name,
           api_key: model_provider_with_key?.api_key || '',
-          base_url: provider_config.baseUrl || ''
+          base_url: provider_config.baseUrl || '',
+          extended_cache: provider_config.extendedCache
         }
         return model_provider
       })
@@ -80,7 +83,11 @@ export class ModelProvidersManager {
 
       // Save provider config to settings
       const model_provider_configs = model_providers.map((p) => {
-        return { name: p.name, baseUrl: p.base_url }
+        return {
+          name: p.name,
+          baseUrl: p.base_url,
+          extendedCache: p.extended_cache
+        }
       })
       const config = vscode.workspace.getConfiguration('codeWebChat')
       await config.update(

@@ -68,10 +68,6 @@ export const use_settings = (vscode: any) => {
   ] = useState<'ignore-open-editors' | 'uncheck-all' | undefined>(undefined)
   const [auto_run_intelligent_update, set_auto_run_intelligent_update] =
     useState<boolean | undefined>(undefined)
-  const [
-    extended_cache_duration_for_anthropic,
-    set_extended_cache_duration_for_anthropic
-  ] = useState<boolean | undefined>(undefined)
 
   useEffect(() => {
     post_message(vscode, { command: 'GET_MODEL_PROVIDERS' })
@@ -93,9 +89,6 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_REUSE_LAST_TAB' })
     post_message(vscode, { command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR' })
     post_message(vscode, { command: 'GET_AUTO_RUN_INTELLIGENT_UPDATE' })
-    post_message(vscode, {
-      command: 'GET_EXTENDED_CACHE_DURATION_FOR_ANTHROPIC'
-    })
   }, [vscode])
 
   useEffect(() => {
@@ -140,8 +133,6 @@ export const use_settings = (vscode: any) => {
         set_clear_checks_in_workspace_behavior(message.value)
       } else if (message.command == 'AUTO_RUN_INTELLIGENT_UPDATE') {
         set_auto_run_intelligent_update(message.enabled)
-      } else if (message.command == 'EXTENDED_CACHE_DURATION_FOR_ANTHROPIC') {
-        set_extended_cache_duration_for_anthropic(message.enabled)
       }
     }
 
@@ -379,16 +370,6 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_extended_cache_duration_for_anthropic_change = (
-    enabled: boolean
-  ) => {
-    set_extended_cache_duration_for_anthropic(enabled)
-    post_message(vscode, {
-      command: 'UPDATE_EXTENDED_CACHE_DURATION_FOR_ANTHROPIC',
-      enabled
-    })
-  }
-
   const handle_open_keybindings = (search?: string) => {
     post_message(vscode, {
       command: 'OPEN_KEYBINDINGS',
@@ -427,7 +408,6 @@ export const use_settings = (vscode: any) => {
     reuse_last_tab,
     clear_checks_in_workspace_behavior,
     auto_run_intelligent_update,
-    extended_cache_duration_for_anthropic,
     handle_reorder_providers,
     handle_add_provider,
     handle_delete_provider,
@@ -458,7 +438,6 @@ export const use_settings = (vscode: any) => {
     handle_reuse_last_tab_change,
     handle_clear_checks_in_workspace_behavior_change,
     handle_auto_run_intelligent_update_change,
-    handle_extended_cache_duration_for_anthropic_change,
     handle_open_keybindings,
     handle_open_external_url
   }

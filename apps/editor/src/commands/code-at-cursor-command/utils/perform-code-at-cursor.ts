@@ -139,7 +139,7 @@ export const perform_code_at_cursor = async (params: {
       }${text_after_cursor}\n]]>\n</file>\n</files>\n${code_at_cursor_instructions}`
 
       const user_content = build_user_content({
-        model_provider_name: model_provider.name,
+        model_provider,
         part1,
         part2
       })

@@ -339,7 +339,7 @@ export const handle_code_at_cursor = async (
     }${text_after_cursor}\n]]>\n</file>\n</files>\n${skill_definitions}${main_instructions}`
 
     const user_content = build_user_content({
-      model_provider_name: model_provider.name,
+      model_provider,
       part1,
       part2
     })

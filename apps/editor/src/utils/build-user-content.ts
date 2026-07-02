@@ -1,7 +1,7 @@
-import * as vscode from 'vscode'
+import { ModelProvider } from '@/services/model-providers-manager'
 
 export const build_user_content = (params: {
-  model_provider_name: string
+  model_provider: ModelProvider
   part1: string
   part2: string
   disable_cache?: boolean
@@ -30,10 +30,12 @@ export const build_user_content = (params: {
     return parsed
   }
 
-  if (params.model_provider_name == 'Anthropic') {
+  if (
+    params.model_provider.name == 'Anthropic' ||
+    params.model_provider.base_url.includes('api.anthropic.com')
+  ) {
     const cache_control: any = { type: 'ephemeral' }
-    const config = vscode.workspace.getConfiguration('codeWebChat')
-    if (config.get('extendedCacheDurationForAnthropic')) {
+    if (params.model_provider.extended_cache) {
       cache_control.ttl = '1h'
     }
 
