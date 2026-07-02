@@ -81,8 +81,12 @@ export const get_recently_used_web_configurations_key = (
 
 export const LAST_SELECTED_BROWSER_ID_STATE_KEY = 'last-selected-browser-id'
 
-export const LAST_SEARCH_FILES_FOR_CONTEXT_QUERY_STATE_KEY =
-  'last-search-files-for-context-query'
+export const LAST_SEARCH_FILES_PHRASE_QUERY_STATE_KEY =
+  'last-search-files-phrase-query'
+export const LAST_SEARCH_FILES_KEYWORDS_QUERY_STATE_KEY =
+  'last-search-files-keywords-query'
+export const LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY =
+  'last-search-files-intelligent-query'
 
 export const LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY =
   'last-search-files-for-context-mode'

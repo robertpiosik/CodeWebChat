@@ -2,7 +2,9 @@ import * as vscode from 'vscode'
 import { WorkspaceProvider } from '../../context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'
 import {
-  LAST_SEARCH_FILES_FOR_CONTEXT_QUERY_STATE_KEY,
+  LAST_SEARCH_FILES_PHRASE_QUERY_STATE_KEY,
+  LAST_SEARCH_FILES_KEYWORDS_QUERY_STATE_KEY,
+  LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY,
   LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY,
   LAST_FIND_RELEVANT_FILES_SHRINK_STATE_KEY
 } from '../../constants/state-keys'
@@ -25,80 +27,55 @@ export const search_files_commands = (
   workspace_provider: WorkspaceProvider,
   extension_context: vscode.ExtensionContext
 ) => {
-  const search_handler = async (item?: any, auto_submit: boolean = false) => {
+  const search_handler = async (item?: any) => {
     const folder_path = await get_target_folder_path(item)
-
-    let initial_search_term =
-      extension_context.workspaceState.get<string>(
-        LAST_SEARCH_FILES_FOR_CONTEXT_QUERY_STATE_KEY
-      ) || ''
 
     let initial_search_mode =
       extension_context.workspaceState.get<
         'phrase' | 'keywords' | 'intelligent'
       >(LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY) || 'phrase'
 
-    let should_auto_submit = false
-
-    const active_editor = vscode.window.activeTextEditor
-    if (active_editor) {
-      const selection = active_editor.selection
-      if (!selection.isEmpty) {
-        const selected_text = active_editor.document.getText(selection).trim()
-        if (selected_text.length > 0) {
-          initial_search_term = selected_text
-          if (auto_submit) {
-            should_auto_submit = true
-          }
-        }
-      }
-    }
-
     while (true) {
       try {
-        let search_mode: 'phrase' | 'keywords' | 'intelligent' =
-          initial_search_mode
+        const mode_result = await prompt_for_search_mode(initial_search_mode)
+        if (!mode_result) return
 
-        if (!should_auto_submit) {
-          const mode_result = await prompt_for_search_mode(initial_search_mode)
-          if (!mode_result) return
-
-          initial_search_mode = mode_result
-          search_mode = mode_result
-          await extension_context.workspaceState.update(
-            LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY,
-            search_mode
-          )
-        }
+        initial_search_mode = mode_result
+        const search_mode = mode_result
+        await extension_context.workspaceState.update(
+          LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY,
+          search_mode
+        )
 
         let go_back_to_mode = false
         let break_outer = false
 
         while (true) {
-          let search_term_input: string | undefined
+          const state_key =
+            search_mode == 'phrase'
+              ? LAST_SEARCH_FILES_PHRASE_QUERY_STATE_KEY
+              : search_mode == 'keywords'
+                ? LAST_SEARCH_FILES_KEYWORDS_QUERY_STATE_KEY
+                : LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY
 
-          if (should_auto_submit && initial_search_term.length > 0) {
-            search_term_input = initial_search_term
-            should_auto_submit = false
-          } else {
-            const result = await prompt_for_search_term(
-              initial_search_term,
-              search_mode
-            )
-            if (result.back) {
-              go_back_to_mode = true
-              break
-            }
-            if (!result.value) return
-            search_term_input = result.value
+          const initial_search_term =
+            extension_context.workspaceState.get<string>(state_key) || ''
+
+          const result = await prompt_for_search_term(
+            initial_search_term,
+            search_mode
+          )
+          if (result.back) {
+            go_back_to_mode = true
+            break
           }
+          if (!result.value) return
+          const search_term_input = result.value
 
           await extension_context.workspaceState.update(
-            LAST_SEARCH_FILES_FOR_CONTEXT_QUERY_STATE_KEY,
+            state_key,
             search_term_input
           )
-
-          initial_search_term = search_term_input
 
           const search_term = search_term_input.trim()
           if (search_term.length == 0) return
@@ -338,7 +315,7 @@ export const search_files_commands = (
     ),
     vscode.commands.registerCommand(
       'codeWebChat.searchFilesFromFile',
-      (item: any) => search_handler(item, true)
+      (item: any) => search_handler(item)
     )
   ]
 }
