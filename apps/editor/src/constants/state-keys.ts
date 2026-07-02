@@ -48,12 +48,12 @@ export const INSTRUCTIONS_FIND_RELEVANT_FILES_STATE_KEY =
 export const ARE_TASKS_COLLAPSED_STATE_KEY = 'are-tasks-collapsed'
 export const ARE_CHECKPOINTS_COLLAPSED_STATE_KEY = 'are-checkpoints-collapsed'
 
-export const HISTORY_ASK_STATE_KEY = 'history-ask'
-export const HISTORY_EDIT_STATE_KEY = 'history-edit'
+export const HISTORY_ASK_ABOUT_FILES_STATE_KEY = 'history-ask-about-files'
+export const HISTORY_EDIT_FILES_STATE_KEY = 'history-edit-files'
 export const HISTORY_CODE_AT_CURSOR_STATE_KEY = 'history-code-at-cursor'
 export const HISTORY_FIND_RELEVANT_FILES_STATE_KEY =
   'history-find-relevant-files'
-export const HISTORY_NO_CONTEXT_STATE_KEY = 'history-no-context'
+export const HISTORY_WITHOUT_FILES_STATE_KEY = 'history-without-files'
 export const FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY =
   'find-relevant-files-shrink-source-code'
 

@@ -758,9 +758,9 @@ export interface EditorSelectionChangedMessage extends BaseMessage {
 
 export interface ChatHistoryMessage extends BaseMessage {
   command: 'CHAT_HISTORY'
-  ask_about_context: string[]
-  edit_context: string[]
-  no_context: string[]
+  ask_about_files: string[]
+  edit_files: string[]
+  without_files: string[]
   code_at_cursor: string[]
   find_relevant_files: string[]
 }

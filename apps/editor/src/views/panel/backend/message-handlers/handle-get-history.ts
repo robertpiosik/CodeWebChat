@@ -1,36 +1,35 @@
 import {
-  HISTORY_ASK_STATE_KEY,
+  HISTORY_ASK_ABOUT_FILES_STATE_KEY,
   HISTORY_CODE_AT_CURSOR_STATE_KEY,
-  HISTORY_EDIT_STATE_KEY,
-  HISTORY_NO_CONTEXT_STATE_KEY,
+  HISTORY_EDIT_FILES_STATE_KEY,
+  HISTORY_WITHOUT_FILES_STATE_KEY,
   HISTORY_FIND_RELEVANT_FILES_STATE_KEY,
   HistoryEntry
 } from '@/constants/state-keys'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 
 export const handle_get_history = (panel_provider: PanelProvider) => {
-  const ask_history = panel_provider.context.workspaceState.get<HistoryEntry[]>(
-    HISTORY_ASK_STATE_KEY,
-    []
-  )
-  const edit_history = panel_provider.context.workspaceState.get<
+  const edit_files_history = panel_provider.context.workspaceState.get<
     HistoryEntry[]
-  >(HISTORY_EDIT_STATE_KEY, [])
+  >(HISTORY_EDIT_FILES_STATE_KEY, [])
+  const ask_about_files_history = panel_provider.context.workspaceState.get<
+    HistoryEntry[]
+  >(HISTORY_ASK_ABOUT_FILES_STATE_KEY, [])
   const code_completions_history = panel_provider.context.workspaceState.get<
     HistoryEntry[]
   >(HISTORY_CODE_AT_CURSOR_STATE_KEY, [])
-  const no_context_history = panel_provider.context.workspaceState.get<
+  const without_files_history = panel_provider.context.workspaceState.get<
     HistoryEntry[]
-  >(HISTORY_NO_CONTEXT_STATE_KEY, [])
+  >(HISTORY_WITHOUT_FILES_STATE_KEY, [])
   const find_relevant_files_history = panel_provider.context.workspaceState.get<
     HistoryEntry[]
   >(HISTORY_FIND_RELEVANT_FILES_STATE_KEY, [])
 
   panel_provider.send_message({
     command: 'CHAT_HISTORY',
-    ask_about_context: ask_history.map((h) => h.text),
-    edit_context: edit_history.map((h) => h.text),
-    no_context: no_context_history.map((h) => h.text),
+    ask_about_files: ask_about_files_history.map((h) => h.text),
+    edit_files: edit_files_history.map((h) => h.text),
+    without_files: without_files_history.map((h) => h.text),
     code_at_cursor: code_completions_history.map((h) => h.text),
     find_relevant_files: find_relevant_files_history.map((h) => h.text)
   })

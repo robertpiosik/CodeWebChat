@@ -98,9 +98,11 @@ export const Main: React.FC<Props> = (props) => {
     selected_api_configuration_id_by_prompt_type,
     set_selected_api_configuration_id_by_prompt_type
   ] = useState<{ [T in ApiPromptType]?: string }>()
-  const [ask_history, set_ask_history] = useState<string[]>()
-  const [edit_history, set_edit_history] = useState<string[]>()
-  const [no_context_history, set_no_context_history] = useState<string[]>()
+  const [ask_about_files_history, set_ask_about_files_history] =
+    useState<string[]>()
+  const [edit_files_history, set_edit_files_history] = useState<string[]>()
+  const [without_files_history, set_without_files_history] =
+    useState<string[]>()
   const [code_completions_history, set_code_completions_history] =
     useState<string[]>()
   const [find_relevant_files_history, set_find_relevant_files_history] =
@@ -138,9 +140,9 @@ export const Main: React.FC<Props> = (props) => {
           )
           break
         case 'CHAT_HISTORY':
-          set_ask_history(message.ask_about_context || [])
-          set_edit_history(message.edit_context || [])
-          set_no_context_history(message.no_context || [])
+          set_ask_about_files_history(message.ask_about_files || [])
+          set_edit_files_history(message.edit_files || [])
+          set_without_files_history(message.without_files || [])
           set_code_completions_history(message.code_at_cursor || [])
           set_find_relevant_files_history(message.find_relevant_files || [])
           break
@@ -198,14 +200,14 @@ export const Main: React.FC<Props> = (props) => {
     let set_history: React.Dispatch<React.SetStateAction<string[] | undefined>>
 
     if (current_prompt_type == 'ask-about-files') {
-      history = ask_history
-      set_history = set_ask_history
+      history = ask_about_files_history
+      set_history = set_ask_about_files_history
     } else if (current_prompt_type == 'edit-files') {
-      history = edit_history
-      set_history = set_edit_history
+      history = edit_files_history
+      set_history = set_edit_files_history
     } else if (current_prompt_type == 'without-files') {
-      history = no_context_history
-      set_history = set_no_context_history
+      history = without_files_history
+      set_history = set_without_files_history
     } else if (current_prompt_type == 'code-at-cursor') {
       history = code_completions_history
       set_history = set_code_completions_history
@@ -586,11 +588,11 @@ export const Main: React.FC<Props> = (props) => {
 
   let current_history: string[] | undefined
   if (current_prompt_type == 'ask-about-files') {
-    current_history = ask_history
+    current_history = ask_about_files_history
   } else if (current_prompt_type == 'edit-files') {
-    current_history = edit_history
+    current_history = edit_files_history
   } else if (current_prompt_type == 'without-files') {
-    current_history = no_context_history
+    current_history = without_files_history
   } else if (current_prompt_type == 'code-at-cursor') {
     current_history = code_completions_history
   } else if (current_prompt_type == 'find-relevant-files') {
@@ -600,9 +602,9 @@ export const Main: React.FC<Props> = (props) => {
   if (
     all_web_configurations === undefined ||
     all_api_configurations === undefined ||
-    ask_history === undefined ||
-    edit_history === undefined ||
-    no_context_history === undefined ||
+    ask_about_files_history === undefined ||
+    edit_files_history === undefined ||
+    without_files_history === undefined ||
     code_completions_history === undefined ||
     find_relevant_files_history === undefined ||
     is_in_code_completions_mode === undefined ||

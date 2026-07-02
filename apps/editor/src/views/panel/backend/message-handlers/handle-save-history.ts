@@ -1,8 +1,8 @@
 import {
-  HISTORY_ASK_STATE_KEY,
+  HISTORY_ASK_ABOUT_FILES_STATE_KEY,
   HISTORY_CODE_AT_CURSOR_STATE_KEY,
-  HISTORY_EDIT_STATE_KEY,
-  HISTORY_NO_CONTEXT_STATE_KEY,
+  HISTORY_EDIT_FILES_STATE_KEY,
+  HISTORY_WITHOUT_FILES_STATE_KEY,
   HistoryEntry,
   HISTORY_FIND_RELEVANT_FILES_STATE_KEY
 } from '@/constants/state-keys'
@@ -17,13 +17,13 @@ export const handle_save_history = async (
 
   switch (message.prompt_type) {
     case 'ask-about-files':
-      key = HISTORY_ASK_STATE_KEY
+      key = HISTORY_ASK_ABOUT_FILES_STATE_KEY
       break
     case 'edit-files':
-      key = HISTORY_EDIT_STATE_KEY
+      key = HISTORY_EDIT_FILES_STATE_KEY
       break
     case 'without-files':
-      key = HISTORY_NO_CONTEXT_STATE_KEY
+      key = HISTORY_WITHOUT_FILES_STATE_KEY
       break
     case 'code-at-cursor':
       key = HISTORY_CODE_AT_CURSOR_STATE_KEY
