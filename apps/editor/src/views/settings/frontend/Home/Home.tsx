@@ -209,9 +209,9 @@ export const Home: React.FC<Props> = (props) => {
   const get_has_warning = (id: NavItem): boolean => {
     if (id == 'model-providers') {
       return props.providers.length == 0
-    } else if (id == 'api-calls' || id == 'api-configurations') {
+    } else if (id == 'api-configurations') {
       return props.api_configurations.length == 0
-    } else if (id == 'chatbots' || id == 'web-configurations') {
+    } else if (id == 'web-configurations') {
       return props.web_configurations.length == 0
     } else {
       return false
