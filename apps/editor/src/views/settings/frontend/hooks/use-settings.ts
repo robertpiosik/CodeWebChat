@@ -178,13 +178,6 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_edit_provider = (provider_name: string) => {
-    post_message(vscode, {
-      command: 'EDIT_CUSTOM_MODEL_PROVIDER',
-      provider_name
-    })
-  }
-
   const handle_set_default_api_configuration = (
     tool_name: ToolType,
     api_configuration_id: string | null
@@ -438,7 +431,6 @@ export const use_settings = (vscode: any) => {
     handle_reorder_providers,
     handle_add_provider,
     handle_delete_provider,
-    handle_edit_provider,
     handle_set_default_api_configuration,
     handle_select_default_api_configuration,
     handle_reorder_api_configurations,

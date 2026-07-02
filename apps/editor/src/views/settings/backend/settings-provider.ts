@@ -4,7 +4,8 @@ import {
   FrontendMessage
 } from '@/views/settings/types/messages'
 import {
-  handle_upsert_model_provider,
+  handle_add_model_provider,
+  handle_update_model_provider,
   handle_delete_model_provider,
   handle_get_check_new_files,
   handle_get_clear_checks_in_workspace_behavior,
@@ -144,18 +145,11 @@ export class SettingsProvider {
         } else if (message.command == 'REORDER_MODEL_PROVIDERS') {
           await handle_reorder_model_providers(this, message)
         } else if (message.command == 'ADD_MODEL_PROVIDER') {
-          await handle_upsert_model_provider({
-            provider: this,
-            insertion_index: message.insertion_index,
-            create_on_top: message.create_on_top
-          })
+          await handle_add_model_provider(this, message)
         } else if (message.command == 'DELETE_MODEL_PROVIDER') {
           await handle_delete_model_provider(this, message)
-        } else if (message.command == 'EDIT_CUSTOM_MODEL_PROVIDER') {
-          await handle_upsert_model_provider({
-            provider: this,
-            provider_name: message.provider_name
-          })
+        } else if (message.command == 'UPDATE_MODEL_PROVIDER') {
+          await handle_update_model_provider(this, message)
         } else if (message.command == 'GET_API_CONFIGURATIONS') {
           await handle_get_api_configurations(this)
         } else if (message.command == 'SET_DEFAULT_API_CONFIGURATION') {

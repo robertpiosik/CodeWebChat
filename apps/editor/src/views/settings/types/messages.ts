@@ -44,11 +44,6 @@ export interface DeleteModelProviderMessage {
   provider_name: string
 }
 
-export interface EditCustomModelProviderMessage {
-  command: 'EDIT_CUSTOM_MODEL_PROVIDER'
-  provider_name: string
-}
-
 export interface GetApiConfigurationsMessage {
   command: 'GET_API_CONFIGURATIONS'
 }
@@ -333,12 +328,27 @@ export interface PickApiReasoningEffortMessage {
   model: string
 }
 
+export interface UpdateModelProviderMessage {
+  command: 'UPDATE_MODEL_PROVIDER'
+  original_name?: string
+  updating_model_provider?: Provider
+  provider: {
+    name: string
+    base_url: string
+    api_key?: string
+    is_api_key_cleared?: boolean
+  }
+  origin?: 'cancel' | 'save'
+  is_new?: boolean
+  insertion_index?: number
+  create_on_top?: boolean
+}
+
 export type FrontendMessage =
   | GetModelProvidersMessage
   | ReorderModelProvidersMessage
   | AddModelProviderMessage
   | DeleteModelProviderMessage
-  | EditCustomModelProviderMessage
   | GetApiConfigurationsMessage
   | SetDefaultApiConfigurationMessage
   | SelectDefaultApiConfigurationMessage
@@ -397,6 +407,7 @@ export type FrontendMessage =
   | PickModelProviderMessage
   | PickApiModelMessage
   | PickApiReasoningEffortMessage
+  | UpdateModelProviderMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface ModelProvidersMessage {
@@ -550,6 +561,17 @@ export interface NewlyPickedApiReasoningEffortMessage {
   effort?: string
 }
 
+export interface StartModelProviderCreationMessage {
+  command: 'START_MODEL_PROVIDER_CREATION'
+  provider: Provider
+  insertion_index?: number
+  create_on_top?: boolean
+}
+
+export interface ModelProviderUpdatedMessage {
+  command: 'MODEL_PROVIDER_UPDATED'
+}
+
 export type BackendMessage =
   | ModelProvidersMessage
   | ApiConfigurationsMessage
@@ -581,3 +603,5 @@ export type BackendMessage =
   | NewlyPickedModelProviderMessage
   | NewlyPickedApiModelMessage
   | NewlyPickedApiReasoningEffortMessage
+  | StartModelProviderCreationMessage
+  | ModelProviderUpdatedMessage

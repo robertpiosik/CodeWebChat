@@ -5,9 +5,11 @@ import { BackendMessage } from '../types/messages'
 import { Home, NavItem } from './Home/Home'
 import { use_web_configuration_editing } from './hooks/use-web-configuration-editing'
 import { use_api_configuration_editing } from './hooks/use-api-configuration-editing'
+import { use_model_provider_editing } from './hooks/use-model-provider-editing'
 import { Modal as UiModal } from '@ui/components/editor/settings/Modal'
 import { EditWebConfigurationForm } from '@/views/shared/forms/EditWebConfigurationForm'
 import { EditApiConfigurationForm } from '@/views/shared/forms/EditApiConfigurationForm'
+import { EditModelProviderForm } from './forms/EditModelProviderForm'
 
 const vscode = acquireVsCodeApi()
 
@@ -28,6 +30,15 @@ export const Settings = () => {
     edit_api_configuration_cancel_handler,
     edit_api_configuration_save_handler
   } = use_api_configuration_editing(vscode)
+
+  const {
+    updating_model_provider,
+    set_updating_model_provider,
+    set_updated_model_provider,
+    edit_model_provider_cancel_handler,
+    edit_model_provider_save_handler,
+    set_is_new_model_provider
+  } = use_model_provider_editing(vscode)
 
   const [scroll_to_section_on_load, set_scroll_to_section_on_load] =
     useState<NavItem>()
@@ -165,7 +176,18 @@ export const Settings = () => {
         on_reorder_providers={settings_hook.handle_reorder_providers}
         on_add_provider={settings_hook.handle_add_provider}
         on_delete_provider={settings_hook.handle_delete_provider}
-        on_edit_provider={settings_hook.handle_edit_provider}
+        on_edit_provider={(provider_name) => {
+          const provider = settings_hook.providers?.find(
+            (p) => p.name == provider_name
+          )
+          if (provider) {
+            set_updating_model_provider({
+              original_name: provider.name,
+              provider
+            })
+            set_is_new_model_provider(false)
+          }
+        }}
         on_set_default_api_configuration={
           settings_hook.handle_set_default_api_configuration
         }
@@ -267,6 +289,20 @@ export const Settings = () => {
                   current_effort: current
                 })
               }}
+            />
+          </UiModal.Form>
+        </UiModal>
+      )}
+      {updating_model_provider && (
+        <UiModal on_close={edit_model_provider_cancel_handler}>
+          <UiModal.Form
+            title="Edit Model Provider"
+            on_save={edit_model_provider_save_handler}
+            on_cancel={edit_model_provider_cancel_handler}
+          >
+            <EditModelProviderForm
+              provider={updating_model_provider.provider}
+              on_update={set_updated_model_provider}
             />
           </UiModal.Form>
         </UiModal>
