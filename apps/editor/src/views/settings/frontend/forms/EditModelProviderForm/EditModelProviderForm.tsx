@@ -18,6 +18,7 @@ export type ModelProviderDraft = {
 type Props = {
   provider: Provider
   on_update: (draft: ModelProviderDraft) => void
+  on_open_external_url: (url: string) => void
 }
 
 export const EditModelProviderForm: React.FC<Props> = (props) => {
@@ -100,7 +101,26 @@ export const EditModelProviderForm: React.FC<Props> = (props) => {
           </UiField>
 
           {base_url.includes('api.anthropic.com') && (
-            <UiField label="Extended Cache (1 hour)">
+            <UiField
+              label="Extended Cache"
+              info={
+                <>
+                  By default, automatic caching uses a 5-minute TTL. You can{' '}
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      props.on_open_external_url(
+                        'https://platform.claude.com/docs/en/build-with-claude/prompt-caching#ttl-support'
+                      )
+                    }}
+                  >
+                    extend it to 1-hour
+                  </a>{' '}
+                  for all requests including the selected files.
+                </>
+              }
+            >
               <UiToggler
                 is_on={extended_cache}
                 on_toggle={set_extended_cache}

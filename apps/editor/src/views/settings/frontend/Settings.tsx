@@ -296,6 +296,7 @@ export const Settings = () => {
             <EditModelProviderForm
               provider={updating_model_provider.provider}
               on_update={set_updated_model_provider}
+              on_open_external_url={settings_hook.handle_open_external_url}
             />
           </UiModal.Form>
         </UiModal>
