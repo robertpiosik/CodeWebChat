@@ -119,9 +119,28 @@
 
   &__workspace-dropdown {
     position: relative;
+    display: flex;
+    align-items: center;
     height: 24px;
-    flex: 1;
-    margin-right: 6px;
+    min-width: 0;
+    margin-right: 2px;
+
+    &-button {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--vscode-descriptionForeground);
+      font-size: 11px;
+      min-width: 0;
+      padding: 2px 4px;
+      border-radius: 5px;
+
+      &:hover {
+        background-color: var(--vscode-toolbar-hoverBackground);
+        color: var(--vscode-icon-foreground);
+      }
+    }
   }
 
   &__tasks {

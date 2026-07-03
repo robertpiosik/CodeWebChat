@@ -26,7 +26,6 @@ import { use_latest_donations } from './hooks/latest-donations'
 import { DonationsFooter } from './components/donations/DonationsFooter'
 import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
 import { use_modal_manager } from './hooks/use-modal-manager'
-import { use_tasks } from './hooks/use-tasks'
 import { use_response_history } from './hooks/panel/use-response-history'
 import { use_preview_manager } from './hooks/panel/use-preview-manager'
 import { use_editor_sync } from './hooks/panel/use-editor-sync'
@@ -113,8 +112,6 @@ export const Panel = () => {
     set_selected_history_item_created_at,
     handle_remove_response_history_item
   } = use_response_history(vscode)
-
-  const { tasks, handle_tasks_change, handle_task_delete } = use_tasks(vscode)
 
   const {
     updating_web_configuration,
@@ -504,9 +501,6 @@ export const Panel = () => {
                     timestamp
                   })
                 }}
-                tasks={tasks}
-                on_tasks_change={handle_tasks_change}
-                on_task_delete={handle_task_delete}
                 on_task_forward={handle_task_forward}
                 is_setup_complete={is_setup_complete}
               />

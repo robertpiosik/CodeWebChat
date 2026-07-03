@@ -605,6 +605,12 @@ export interface PickApiReasoningEffortMessage extends BaseMessage {
   model: string
 }
 
+export interface PickTasksWorkspaceMessage extends BaseMessage {
+  command: 'PICK_TASKS_WORKSPACE'
+  roots: string[]
+  active_root?: string
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -704,6 +710,7 @@ export type FrontendMessage =
   | PickModelProviderMessage
   | PickApiModelMessage
   | PickApiReasoningEffortMessage
+  | PickTasksWorkspaceMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -987,6 +994,11 @@ export interface ApiConfigurationUpdatedMessage extends BaseMessage {
   command: 'API_CONFIGURATION_UPDATED'
 }
 
+export interface TasksWorkspacePickedMessage extends BaseMessage {
+  command: 'TASKS_WORKSPACE_PICKED'
+  root: string
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | FocusPromptFieldMessage
@@ -1042,3 +1054,4 @@ export type BackendMessage =
   | ApiConfigurationUpdatedMessage
   | StartWebConfigurationCreationMessage
   | StartApiConfigurationCreationMessage
+  | TasksWorkspacePickedMessage

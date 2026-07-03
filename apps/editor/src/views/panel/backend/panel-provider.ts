@@ -92,7 +92,8 @@ import {
   handle_toggle_checkpoint_star,
   handle_restore_checkpoint,
   handle_restore_temp_checkpoint,
-  handle_update_checkpoint_description
+  handle_update_checkpoint_description,
+  handle_pick_tasks_workspace
 } from './message-handlers'
 import { handle_update_api_configuration } from './message-handlers/handle-update-api-configuration'
 import { handle_pick_model_provider } from './message-handlers/handle-pick-model-provider'
@@ -987,6 +988,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             )
           } else if (message.command == 'GET_VOICE_INPUT_PUSH_TO_TALK') {
             this._send_voice_input_push_to_talk()
+          } else if (message.command == 'PICK_TASKS_WORKSPACE') {
+            await handle_pick_tasks_workspace(this, message)
           }
         } catch (error: any) {
           Logger.error({

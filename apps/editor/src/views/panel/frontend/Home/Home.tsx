@@ -5,7 +5,11 @@ import { Checkpoints as UiCheckpoints } from '@ui/components/editor/panel/Checkp
 import { ModeButton as UiModeButton } from '@ui/components/editor/panel/ModeButton'
 import cn from 'classnames'
 import { post_message } from '../utils/post-message'
-import { Checkpoint, FrontendMessage } from '@/views/panel/types/messages'
+import {
+  Checkpoint,
+  FrontendMessage,
+  BackendMessage
+} from '@/views/panel/types/messages'
 import { Responses as UiResponses } from '@ui/components/editor/panel/Responses'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Separator as UiSeparator } from '@ui/components/editor/panel/Separator'
@@ -13,11 +17,9 @@ import { Tabs as UiTabs } from '@ui/components/editor/panel/Tabs'
 import { Translation, use_translation } from '../i18n/use-translation'
 import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
 import { Tasks as UiTasks } from '@ui/components/editor/panel/Tasks'
-import { Task } from '@shared/types/task'
 import { use_tasks } from './hooks/use-tasks'
 import { use_sticky_mode } from './hooks/use-sticky-mode'
 import { SettingsButton as UiSettingsButton } from '@ui/components/editor/panel/SettingsButton'
-import { InlineDropdown as UiInlineDropdown } from '@ui/components/editor/panel/InlineDropdown'
 
 type Props = {
   vscode: any
@@ -38,9 +40,6 @@ type Props = {
   on_response_history_item_remove: (created_at: number) => void
   on_edit_checkpoint_description: (timestamp: number) => void
   on_delete_checkpoint: (timestamp: number) => void
-  tasks: Record<string, Task[]>
-  on_tasks_change: (root: string, tasks: Task[]) => void
-  on_task_delete: (root: string, timestamp: number) => void
   on_task_forward: (text: string) => void
   is_setup_complete: boolean
   is_connected: boolean
@@ -61,11 +60,31 @@ export const Home: React.FC<Props> = (props) => {
     handle_scroll
   } = use_sticky_mode(props.is_active)
 
-  const roots = Object.keys(props.tasks)
+  const {
+    tasks,
+    handle_reorder,
+    handle_change,
+    handle_add,
+    handle_add_subtask,
+    handle_delete
+  } = use_tasks(props.vscode)
+
+  const roots = Object.keys(tasks)
   const active_root =
     active_workspace_root && roots.includes(active_workspace_root)
       ? active_workspace_root
       : roots[0]
+
+  useEffect(() => {
+    const handle_message = (event: MessageEvent<BackendMessage>) => {
+      const message = event.data
+      if (message.command == 'TASKS_WORKSPACE_PICKED') {
+        set_active_workspace_root(message.root)
+      }
+    }
+    window.addEventListener('message', handle_message)
+    return () => window.removeEventListener('message', handle_message)
+  }, [])
 
   useEffect(() => {
     const handle_mouse_up = (event: MouseEvent) => {
@@ -77,14 +96,6 @@ export const Home: React.FC<Props> = (props) => {
     window.addEventListener('mouseup', handle_mouse_up)
     return () => window.removeEventListener('mouseup', handle_mouse_up)
   }, [props.is_active, props.on_go_forward])
-
-  const {
-    handle_reorder,
-    handle_change,
-    handle_add,
-    handle_add_subtask,
-    handle_delete
-  } = use_tasks(props.on_tasks_change, props.on_task_delete)
 
   const handle_settings_click = () => {
     post_message(props.vscode, {
@@ -186,15 +197,32 @@ export const Home: React.FC<Props> = (props) => {
                   <>
                     {roots.length > 1 && (
                       <div className={styles['inner__workspace-dropdown']}>
-                        <UiInlineDropdown
-                          options={roots.map((root) => ({
-                            value: root,
-                            label: root.split(/[\\/]/).pop() || root
-                          }))}
-                          selected_value={active_root!}
-                          on_change={(val) => set_active_workspace_root(val)}
-                          info={t('home.folder')}
-                        />
+                        <div
+                          className={styles['inner__workspace-dropdown-button']}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            post_message(props.vscode, {
+                              command: 'PICK_TASKS_WORKSPACE',
+                              roots,
+                              active_root
+                            } as FrontendMessage)
+                          }}
+                          title={t('home.folder')}
+                        >
+                          <span
+                            style={{
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap'
+                            }}
+                          >
+                            {active_root?.split(/[\\/]/).pop() || active_root}
+                          </span>
+                          <span
+                            className="codicon codicon-unfold"
+                            style={{ fontSize: '12px', flexShrink: 0 }}
+                          />
+                        </div>
                       </div>
                     )}
                     {roots.length > 0 && (
@@ -204,11 +232,7 @@ export const Home: React.FC<Props> = (props) => {
                         on_click={(e) => {
                           e.stopPropagation()
                           if (active_root) {
-                            handle_add(
-                              active_root,
-                              props.tasks[active_root],
-                              'top'
-                            )
+                            handle_add(active_root, tasks[active_root], 'top')
                           }
                         }}
                       />
@@ -258,30 +282,30 @@ export const Home: React.FC<Props> = (props) => {
                 )}
                 {active_root && (
                   <div className={styles.inner__tasks}>
-                    {props.tasks[active_root].length == 0 ? (
+                    {tasks[active_root].length == 0 ? (
                       <div className={styles.inner__empty}>
                         {t('home.tasks.empty')}
                       </div>
                     ) : (
                       <UiTasks
-                        tasks={props.tasks[active_root]}
+                        tasks={tasks[active_root]}
                         on_reorder={(new_tasks) =>
                           handle_reorder(active_root, new_tasks)
                         }
                         on_change={(updated_task) => {
                           handle_change(
                             active_root,
-                            props.tasks[active_root],
+                            tasks[active_root],
                             updated_task
                           )
                         }}
                         on_add={() => {
-                          handle_add(active_root, props.tasks[active_root])
+                          handle_add(active_root, tasks[active_root])
                         }}
                         on_add_subtask={(parent_task) => {
                           handle_add_subtask(
                             active_root,
-                            props.tasks[active_root],
+                            tasks[active_root],
                             parent_task
                           )
                         }}
