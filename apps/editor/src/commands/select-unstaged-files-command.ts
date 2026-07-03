@@ -115,8 +115,10 @@ export const select_unstaged_files_command = (
           const quick_pick = vscode.window.createQuickPick<
             vscode.QuickPickItem & { file_path: string }
           >()
-          quick_pick.title = t('command.apply-context.unstaged.title')
-          quick_pick.placeholder = t('command.apply-context.unstaged.include')
+          quick_pick.title = t('command.context-restoration.unstaged.title')
+          quick_pick.placeholder = t(
+            'command.context-restoration.unstaged.include'
+          )
           quick_pick.canSelectMany = true
           quick_pick.items = quick_pick_items
           quick_pick.ignoreFocusOut = true
@@ -189,15 +191,15 @@ export const select_unstaged_files_command = (
             if (!is_identical) {
               const quick_pick_options = [
                 {
-                  label: t('command.apply-context.action.replace.label'),
+                  label: t('command.context-restoration.action.replace.label'),
                   description: t(
-                    'command.apply-context.action.replace.description'
+                    'command.context-restoration.action.replace.description'
                   )
                 },
                 {
-                  label: t('command.apply-context.action.merge.label'),
+                  label: t('command.context-restoration.action.merge.label'),
                   description: t(
-                    'command.apply-context.action.merge.description'
+                    'command.context-restoration.action.merge.description'
                   )
                 }
               ]
@@ -210,7 +212,7 @@ export const select_unstaged_files_command = (
               const quick_pick_merge = vscode.window.createQuickPick()
               quick_pick_merge.items = quick_pick_options
               quick_pick_merge.placeholder = t(
-                'command.apply-context.unstaged.apply',
+                'command.context-restoration.unstaged.apply',
                 {
                   count: selected_paths.length
                 }
@@ -259,7 +261,8 @@ export const select_unstaged_files_command = (
                 )
 
                 if (
-                  choice.label == t('command.apply-context.action.merge.label')
+                  choice.label ==
+                  t('command.context-restoration.action.merge.label')
                 ) {
                   paths_to_apply = [
                     ...new Set([...currently_checked, ...selected_paths])

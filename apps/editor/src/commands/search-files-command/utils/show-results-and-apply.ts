@@ -167,12 +167,14 @@ export const show_results_and_apply = async (params: {
 
       const quick_pick_options = [
         {
-          label: t('command.apply-context.action.replace.label'),
-          description: t('command.apply-context.action.replace.description')
+          label: t('command.context-restoration.action.replace.label'),
+          description: t(
+            'command.context-restoration.action.replace.description'
+          )
         },
         {
-          label: t('command.apply-context.action.merge.label'),
-          description: t('command.apply-context.action.merge.description')
+          label: t('command.context-restoration.action.merge.label'),
+          description: t('command.context-restoration.action.merge.description')
         }
       ]
 
@@ -183,9 +185,12 @@ export const show_results_and_apply = async (params: {
 
       const quick_pick_merge = vscode.window.createQuickPick()
       quick_pick_merge.items = quick_pick_options
-      quick_pick_merge.placeholder = t('command.apply-context.unstaged.apply', {
-        count: selected_paths.length
-      })
+      quick_pick_merge.placeholder = t(
+        'command.context-restoration.unstaged.apply',
+        {
+          count: selected_paths.length
+        }
+      )
       quick_pick_merge.buttons = [vscode.QuickInputButtons.Back]
 
       if (last_choice_label) {
@@ -229,7 +234,9 @@ export const show_results_and_apply = async (params: {
           choice.label
         )
 
-        if (choice.label == t('command.apply-context.action.merge.label')) {
+        if (
+          choice.label == t('command.context-restoration.action.merge.label')
+        ) {
           paths_to_apply = [
             ...new Set([
               ...currently_checked.filter((p) => !unchecked_paths.includes(p)),
