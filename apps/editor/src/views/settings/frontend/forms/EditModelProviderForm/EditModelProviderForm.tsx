@@ -6,6 +6,7 @@ import { Input as UiInput } from '@ui/components/editor/common/Input'
 import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
 import { Fieldset as UiFieldset } from '@ui/components/editor/panel/Fieldset'
 import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
+import { use_translation } from '../../i18n/use-translation'
 
 export type ModelProviderDraft = {
   name: string
@@ -22,6 +23,7 @@ type Props = {
 }
 
 export const EditModelProviderForm: React.FC<Props> = (props) => {
+  const { t } = use_translation()
   const [name, set_name] = useState(props.provider.name)
   const [base_url, set_base_url] = useState(props.provider.base_url)
   const [api_key, set_api_key] = useState('')
@@ -44,28 +46,31 @@ export const EditModelProviderForm: React.FC<Props> = (props) => {
     <UiScrollable top_shadow>
       <div className={styles.form}>
         <UiFieldset>
-          <UiField label="Name" html_for="name">
+          <UiField label={t('model-providers.form.name.label')} html_for="name">
             <UiInput
               id="name"
               type="text"
               value={name}
               on_change={set_name}
-              placeholder="e.g. OpenAI"
+              placeholder={t('model-providers.form.name.placeholder')}
             />
           </UiField>
 
-          <UiField label="Base URL" html_for="base_url">
+          <UiField
+            label={t('model-providers.form.base-url.label')}
+            html_for="base_url"
+          >
             <UiInput
               id="base_url"
               type="text"
               value={base_url}
               on_change={set_base_url}
-              placeholder="e.g. https://api.openai.com/v1"
+              placeholder={t('model-providers.form.base-url.placeholder')}
             />
           </UiField>
 
           <UiField
-            label="API Key"
+            label={t('model-providers.form.api-key.label')}
             html_for="api_key"
             action={
               (props.provider.api_key_mask || api_key) &&
@@ -77,7 +82,7 @@ export const EditModelProviderForm: React.FC<Props> = (props) => {
                     set_is_api_key_cleared(true)
                   }}
                 >
-                  Clear
+                  {t('model-providers.form.api-key.action.clear')}
                 </button>
               ) : undefined
             }
@@ -92,20 +97,20 @@ export const EditModelProviderForm: React.FC<Props> = (props) => {
               }}
               placeholder={
                 is_api_key_cleared
-                  ? 'API Key cleared'
+                  ? t('model-providers.form.api-key.placeholder.cleared')
                   : props.provider.api_key_mask
                     ? `...${props.provider.api_key_mask.slice(-4)}`
-                    : 'Enter API Key'
+                    : t('model-providers.form.api-key.placeholder.default')
               }
             />
           </UiField>
 
           {base_url.includes('api.anthropic.com') && (
             <UiField
-              label="Extended Cache"
+              label={t('model-providers.extended-cache.anthropic.title')}
               info={
                 <>
-                  By default, automatic caching uses a 5-minute TTL. You can{' '}
+                  {t('model-providers.extended-cache.anthropic.description')}{' '}
                   <a
                     href="#"
                     onClick={(e) => {
@@ -115,9 +120,8 @@ export const EditModelProviderForm: React.FC<Props> = (props) => {
                       )
                     }}
                   >
-                    extend it to 1-hour
-                  </a>{' '}
-                  for all requests including the selected files.
+                    {t('model-providers.extended-cache.anthropic.learn-more')}
+                  </a>
                 </>
               }
             >
