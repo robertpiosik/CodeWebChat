@@ -38,13 +38,13 @@ const get_edit_files_api_configuration = async (params: {
   | { model_provider: ModelProvider; api_configuration: ApiConfiguration }
   | undefined
 > => {
-  const edit_context_api_configurations =
+  const edit_files_api_configurations =
     await params.model_providers_manager.get_api_configurations()
 
-  if (edit_context_api_configurations.length == 0) {
+  if (edit_files_api_configurations.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
-      dictionary.information_message.NO_EDIT_CONTEXT_CONFIGURATIONS_FOUND
+      dictionary.information_message.NO_EDIT_FILES_CONFIGURATIONS_FOUND
     )
     return
   }
@@ -53,7 +53,7 @@ const get_edit_files_api_configuration = async (params: {
 
   if (params.api_configuration_id !== undefined) {
     selected_api_configuration =
-      edit_context_api_configurations.find(
+      edit_files_api_configurations.find(
         (c) => get_api_configuration_id(c) == params.api_configuration_id
       ) || null
     if (selected_api_configuration) {
@@ -77,7 +77,7 @@ const get_edit_files_api_configuration = async (params: {
 
     if (last_selected_id) {
       selected_api_configuration =
-        edit_context_api_configurations.find(
+        edit_files_api_configurations.find(
           (c) => get_api_configuration_id(c) == last_selected_id
         ) || null
     }
@@ -89,7 +89,7 @@ const get_edit_files_api_configuration = async (params: {
     )
 
     const result = await show_api_configuration_quick_pick({
-      api_configurations: edit_context_api_configurations,
+      api_configurations: edit_files_api_configurations,
       last_selected_id
     })
 
@@ -132,7 +132,7 @@ const get_edit_files_api_configuration = async (params: {
     )
     Logger.warn({
       function_name: 'get_edit_files_api_configuration',
-      message: 'API provider not found for Edit Context tool.'
+      message: 'API provider not found for Edit Files tool.'
     })
     return
   }
@@ -205,10 +205,8 @@ export const handle_edit_files = async (
       return
     }
 
-    const {
-      model_provider,
-      api_configuration: edit_context_api_configuration
-    } = api_configuration_result
+    const { model_provider, api_configuration: edit_files_api_configuration } =
+      api_configuration_result
 
     const endpoint_url = model_provider.base_url
 
@@ -280,14 +278,14 @@ export const handle_edit_files = async (
       async () => {
         const body: { [key: string]: any } = {
           messages,
-          model: edit_context_api_configuration.model,
-          temperature: edit_context_api_configuration.temperature
+          model: edit_files_api_configuration.model,
+          temperature: edit_files_api_configuration.temperature
         }
 
         apply_reasoning_effort({
           body,
           model_provider,
-          reasoning_effort: edit_context_api_configuration.reasoning_effort
+          reasoning_effort: edit_files_api_configuration.reasoning_effort
         })
 
         try {
@@ -295,9 +293,9 @@ export const handle_edit_files = async (
             endpoint_url,
             api_key: model_provider.api_key,
             body,
-            provider_name: edit_context_api_configuration.model_provider_name,
-            model: edit_context_api_configuration.model,
-            reasoning_effort: edit_context_api_configuration.reasoning_effort
+            provider_name: edit_files_api_configuration.model_provider_name,
+            model: edit_files_api_configuration.model,
+            reasoning_effort: edit_files_api_configuration.reasoning_effort
           })
 
           if (result) {
@@ -307,10 +305,9 @@ export const handle_edit_files = async (
               edit_format,
               recent_api_configuration: {
                 model_provider:
-                  edit_context_api_configuration.model_provider_name,
-                model: edit_context_api_configuration.model,
-                reasoning_effort:
-                  edit_context_api_configuration.reasoning_effort
+                  edit_files_api_configuration.model_provider_name,
+                model: edit_files_api_configuration.model,
+                reasoning_effort: edit_files_api_configuration.reasoning_effort
               }
             })
             return true
@@ -322,12 +319,12 @@ export const handle_edit_files = async (
           }
           Logger.error({
             function_name: 'handle_edit_files',
-            message: 'edit context task error',
+            message: 'edit files task error',
             data: error
           })
           if (!error_occurred) {
             vscode.window.showErrorMessage(
-              dictionary.error_message.EDIT_CONTEXT_ERROR
+              dictionary.error_message.EDIT_FILES_ERROR
             )
             error_occurred = true
           }

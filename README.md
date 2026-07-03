@@ -145,7 +145,7 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 All the essential API tools to get the job done. Bring Your Own Key (BYOK) for a model provider of choice. Use self-hosted model provider like [Ollama](https://ollama.com/search) or [LM Studio](https://lmstudio.ai/).
 
 - **Intelligent Update**—Integrate changes from malformed responses.
-- **Edit Context**—Pair-programming using natural language instructions.
+- **Edit Files**—Pair-programming using natural language instructions.
 - **Code at Cursor**—Accurate inline code from reasoning models.
 - **Find Relevant Files**—Find files using natural language description.
 - **Commit Messages**—Meaningful summaries of changes in your style.

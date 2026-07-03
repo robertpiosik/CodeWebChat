@@ -76,8 +76,8 @@ export const dictionary = {
       `No checked files in the "${folder_name}" repository for commit ${commit_hash}.`,
     NO_DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION:
       'No default "Intelligent Update" configuration found. Please set one as default in the settings.',
-    NO_EDIT_CONTEXT_CONFIGURATIONS_FOUND:
-      'No "Edit Context" configurations found. Please add one in settings.',
+    NO_EDIT_FILES_CONFIGURATIONS_FOUND:
+      'No "Edit Files" configurations found. Please add one in settings.',
     DELETED_CONTEXT_FROM_ALL_ROOTS: 'Deleted context.',
     NO_HISTORY_FOR_PROMPT_TYPE:
       'No history to show for the current prompt type.',
@@ -362,8 +362,8 @@ export const dictionary = {
     API_KEY_MISSING: 'API key is missing. Please add it in the Settings tab.',
     CODE_COMPLETION_ERROR:
       'An error occurred during code completion. See console for details.',
-    EDIT_CONTEXT_ERROR:
-      'An error occurred during context editing. See console for details.',
+    EDIT_FILES_ERROR:
+      'An error occurred during file editing. See console for details.',
     CONFIGURATION_ALREADY_EXISTS: 'Identical configuration already exists.',
     CONFIGURATION_NOT_FOUND: 'Configuration not found.',
     APPLYING_CHANGES_GENERIC_ERROR: (msg: string) =>
