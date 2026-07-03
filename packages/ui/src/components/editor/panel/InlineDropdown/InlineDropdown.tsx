@@ -16,6 +16,7 @@ export namespace InlineDropdown {
     on_change: (value: T) => void
     max_width?: number
     menu_max_width?: number | string
+    menu_max_height?: number | string
     info?: string
     title?: string
   }
@@ -146,6 +147,7 @@ export const InlineDropdown = <T extends string>(
           }))}
           underline_non_selected_items={opened_by_shortcut.current}
           max_width={props.menu_max_width}
+          max_height={props.menu_max_height}
           info={props.info}
         />
       )}

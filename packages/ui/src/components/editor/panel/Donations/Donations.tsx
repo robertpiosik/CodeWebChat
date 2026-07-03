@@ -1,7 +1,7 @@
 import styles from './Donations.module.scss'
 import { useEffect, useRef, useState } from 'react'
 import cn from 'classnames'
-import { Scrollable } from '../Scrollable'
+import { Scrollable } from '../../common/Scrollable'
 import { Fieldset } from '../Fieldset'
 import { TextButton } from '../../common/TextButton'
 
@@ -143,7 +143,7 @@ export const Donations: React.FC<DonationsProps> = (props) => {
 
   return (
     <>
-      <Scrollable>
+      <Scrollable top_shadow>
         <div className={styles.container}>
           <div className={styles.about}>
             Hey there! Donating is a great way to show your support for the

@@ -18,10 +18,13 @@ type Props = {
   on_scroll?: (top: number) => void
   on_scrolled_change?: (is_scrolled: boolean) => void
   scroll_trigger?: number
+  top_shadow?: boolean
+  bottom_shadow?: boolean
 }
 
 export const Scrollable = forwardRef<any, Props>((props, ref) => {
   const [has_top_shadow, set_has_top_shadow] = useState(false)
+  const [has_bottom_shadow, set_has_bottom_shadow] = useState(false)
   const simplebar_ref = useRef<any>(null)
 
   useImperativeHandle(ref, () => simplebar_ref.current)
@@ -48,7 +51,11 @@ export const Scrollable = forwardRef<any, Props>((props, ref) => {
       const { scrollTop, scrollHeight, clientHeight } = scroll_element
       const is_scrollable = scrollHeight > clientHeight
       const is_scrolled = is_scrollable && scrollTop > 0
+      const is_scrolled_bottom =
+        Math.ceil(scrollTop + clientHeight) >= scrollHeight
+
       set_has_top_shadow(is_scrolled)
+      set_has_bottom_shadow(is_scrollable && !is_scrolled_bottom)
       if (props.on_scroll) props.on_scroll(scrollTop)
       if (props.on_scrolled_change) props.on_scrolled_change(is_scrolled)
     }
@@ -86,7 +93,9 @@ export const Scrollable = forwardRef<any, Props>((props, ref) => {
   return (
     <div
       className={cn(styles.scrollable, {
-        [styles['scrollable--shadow']]: has_top_shadow
+        [styles['scrollable--shadow']]: props.top_shadow && has_top_shadow,
+        [styles['scrollable--bottom-shadow']]:
+          props.bottom_shadow && has_bottom_shadow
       })}
     >
       <SimpleBar

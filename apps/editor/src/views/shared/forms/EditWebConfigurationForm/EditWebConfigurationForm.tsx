@@ -8,7 +8,7 @@ import { Input as UiInput } from '@ui/components/editor/common/Input'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { BackendMessage } from '@/views/panel/types/messages'
 import { PresetOption as UiPresetOption } from '@ui/components/editor/panel/PresetOption'
-import { Scrollable as UiScrollable } from '@ui/components/editor/panel/Scrollable'
+import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
 import { Fieldset as UiFieldset } from '@ui/components/editor/panel/Fieldset'
 import { QuickPickButton as UiQuickPickButton } from '@ui/components/editor/common/QuickPickButton'
 import { TextButton as UiTextButton } from '@ui/components/editor/common/TextButton'
@@ -194,7 +194,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
   }, [reasoning_effort, supported_reasoning_efforts])
 
   return (
-    <UiScrollable>
+    <UiScrollable top_shadow>
       <div className={styles.form}>
         <UiFieldset>
           {chatbot && (

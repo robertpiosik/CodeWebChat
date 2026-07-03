@@ -4,7 +4,7 @@ import { ApiConfiguration } from '@/views/panel/types/messages'
 import { Field as UiField } from '@ui/components/editor/common/Field'
 import { Slider as UiSlider } from '@ui/components/editor/panel/Slider'
 import { BackendMessage } from '@/views/panel/types/messages'
-import { Scrollable as UiScrollable } from '@ui/components/editor/panel/Scrollable'
+import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
 import { Fieldset as UiFieldset } from '@ui/components/editor/panel/Fieldset'
 import { QuickPickButton as UiQuickPickButton } from '@ui/components/editor/common/QuickPickButton'
 import { TextButton as UiTextButton } from '@ui/components/editor/common/TextButton'
@@ -63,7 +63,7 @@ export const EditApiConfigurationForm: React.FC<Props> = (props) => {
   }, [])
 
   return (
-    <UiScrollable>
+    <UiScrollable top_shadow>
       <div className={styles.form}>
         <UiFieldset>
           <UiField label="Model Provider" html_for="model-provider">

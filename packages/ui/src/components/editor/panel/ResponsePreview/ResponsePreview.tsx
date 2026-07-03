@@ -14,7 +14,7 @@ import {
   FileItem,
   RelevantFileItem
 } from './components'
-import { Scrollable } from '../Scrollable'
+import { Scrollable } from '../../common/Scrollable'
 
 type Props = {
   items: ItemInPreview[]
@@ -215,6 +215,7 @@ export const ResponsePreview: FC<Props> = (props) => {
 
   return (
     <Scrollable
+      top_shadow
       ref={scrollable_ref}
       initial_scroll_top={scroll_top_ref.current}
       scroll_trigger={expanded_text_items.size}

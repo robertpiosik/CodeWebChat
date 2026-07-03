@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import styles from './Home.module.scss'
-import { Scrollable as UiScrollable } from '@ui/components/editor/panel/Scrollable'
+import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
 import { Checkpoints as UiCheckpoints } from '@ui/components/editor/panel/Checkpoints'
 import { ModeButton as UiModeButton } from '@ui/components/editor/panel/ModeButton'
 import cn from 'classnames'
@@ -121,7 +121,7 @@ export const Home: React.FC<Props> = (props) => {
         />
       </div>
 
-      <UiScrollable on_scroll={handle_scroll}>
+      <UiScrollable on_scroll={handle_scroll} top_shadow>
         <div
           className={cn(styles.content, {
             [styles['content--sticky']]: is_mode_sticky

@@ -64,10 +64,10 @@ export const Header: React.FC<Props> = (props) => {
           onClick={handle_heading_click}
           title={`Change mode (${is_mac ? '⌥Esc' : 'Alt+Esc'})`}
         >
-          <span>
-            {props.mode == MODE.WEB ? MODE.WEB : MODE.API}
-          </span>
-          {is_alt_pressed && <span className={styles['header__left__toggler__esc']}>esc</span>}
+          <span>{props.mode == MODE.WEB ? MODE.WEB : MODE.API}</span>
+          {is_alt_pressed && (
+            <span className={styles['header__left__toggler__esc']}>esc</span>
+          )}
         </button>
       </div>
 
@@ -87,7 +87,7 @@ export const Header: React.FC<Props> = (props) => {
               )}
               selected_value={props.web_prompt_type}
               on_change={props.on_web_prompt_type_change}
-              menu_max_width="calc(100vw - 52px)"
+              menu_max_height="calc(100vh - 80px)"
               info={t('header.prompt-type')}
               title={
                 is_mac
@@ -107,7 +107,7 @@ export const Header: React.FC<Props> = (props) => {
               )}
               selected_value={props.api_prompt_type}
               on_change={props.on_api_prompt_type_change}
-              menu_max_width="calc(100vw - 60px)"
+              menu_max_height="calc(100vh - 80px)"
               info={is_narrow_viewport ? undefined : t('header.prompt-type')}
               title={
                 is_mac

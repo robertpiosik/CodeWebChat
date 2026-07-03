@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import cn from 'classnames'
-import { Scrollable } from '../../Scrollable'
+import { Scrollable } from '../../../common/Scrollable'
 import styles from './Modal.module.scss'
 
 export type ModalIconType = 'success' | 'warning' | 'error' | 'info'
@@ -83,7 +83,7 @@ export const Modal: React.FC<Props> = (props) => {
         {props.content_slot &&
           (props.content_max_height ? (
             <div className={styles.scrollable}>
-              <Scrollable max_height={props.content_max_height}>
+              <Scrollable top_shadow max_height={props.content_max_height}>
                 <div className={styles.scrollable__inner}>
                   {props.content_slot}
                 </div>

@@ -8,7 +8,7 @@ import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { EditFormat } from '@shared/types/edit-format'
 import { MODE, Mode } from '@/views/panel/types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
-import { Scrollable as UiScrollable } from '@ui/components/editor/panel/Scrollable'
+import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
 import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/components/editor/panel/BrowserExtensionMessage'
 import { ApiConfiguration } from '@/views/panel/types/messages'
 import { use_last_choice_tooltip } from './hooks/use-last-choice-tooltip'
@@ -324,7 +324,7 @@ export const MainView: React.FC<Props> = (props) => {
         are_keyboard_shortcuts_disabled={props.are_keyboard_shortcuts_disabled}
         is_setup_complete={props.is_setup_complete}
       />
-      <UiScrollable scroll_to_top_key={props.scroll_reset_key}>
+      <UiScrollable scroll_to_top_key={props.scroll_reset_key} top_shadow>
         <UiSeparator height={4} />
 
         {is_in_find_relevant_files_prompt_type && (

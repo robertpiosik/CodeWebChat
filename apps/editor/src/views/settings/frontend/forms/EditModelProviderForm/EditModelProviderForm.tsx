@@ -3,7 +3,7 @@ import styles from './EditModelProviderForm.module.scss'
 import { Provider } from '@/views/settings/types/messages'
 import { Field as UiField } from '@ui/components/editor/common/Field'
 import { Input as UiInput } from '@ui/components/editor/common/Input'
-import { Scrollable as UiScrollable } from '@ui/components/editor/panel/Scrollable'
+import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
 import { Fieldset as UiFieldset } from '@ui/components/editor/panel/Fieldset'
 import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
 
@@ -40,7 +40,7 @@ export const EditModelProviderForm: React.FC<Props> = (props) => {
   }, [name, base_url, api_key, is_api_key_cleared, extended_cache])
 
   return (
-    <UiScrollable>
+    <UiScrollable top_shadow>
       <div className={styles.form}>
         <UiFieldset>
           <UiField label="Name" html_for="name">

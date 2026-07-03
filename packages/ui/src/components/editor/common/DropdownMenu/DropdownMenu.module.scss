@@ -13,8 +13,12 @@
     border-radius: 8px;
     border: 1px solid var(--cwc-border-color-dimmed);
     box-shadow: 0 0 8px 2px var(--vscode-widget-shadow);
-    padding: 4px;
+    overflow: hidden;
   }
+}
+
+.content {
+  padding: 4px;
 }
 
 .header {
