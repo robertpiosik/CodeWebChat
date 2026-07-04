@@ -28,18 +28,17 @@ const start_recording = (panel_provider: PanelProvider) => {
 
     panel_provider.recording_process.on('error', (error: any) => {
       if (error.code == 'ENOENT') {
-        let error_message =
-          'The "rec" command was not found. Please install SoX to use voice input.'
+        let error_message = 'Please install SoX to use voice input.'
 
         if (process.platform == 'darwin') {
           error_message =
-            'The "rec" command was not found. Please install SoX to use voice input (e.g., run "brew install sox" in your terminal).'
+            'Please install SoX to use voice input (run "brew install sox" in your terminal).'
         } else if (process.platform == 'linux') {
           error_message =
-            'The "rec" command was not found. Please install SoX to use voice input (e.g., run "sudo apt install sox" in your terminal).'
+            'Please install SoX to use voice input (run "sudo apt install sox" in your terminal).'
         } else if (process.platform == 'win32') {
           error_message =
-            'The "rec" command was not found. Please install SoX to use voice input (e.g., run "winget install sox.sox" and add it to your PATH).'
+            'Please install SoX to use voice input (run "winget install sox.sox" and add it to your PATH).'
         }
 
         vscode.window.showErrorMessage(error_message)
