@@ -12,7 +12,10 @@ import axios from 'axios'
 import { make_api_request } from '@/utils/make-api-request'
 import { voice_input_instructions } from '@/constants/instructions'
 import { LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
-import { show_api_configuration_quick_pick } from '@/utils/show-api-configuration-quick-pick'
+import {
+  show_configuration_quick_pick,
+  map_api_configuration_to_item
+} from '@/utils/show-configuration-quick-pick'
 
 const MIN_RECORDING_DURATION = 1000
 
@@ -109,8 +112,9 @@ const stop_recording = async (panel_provider: PanelProvider) => {
             LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY
           )
 
-          const result = await show_api_configuration_quick_pick({
-            api_configurations,
+          const result = await show_configuration_quick_pick({
+            items: api_configurations,
+            map_item: map_api_configuration_to_item,
             last_selected_id: recent_id
           })
 
@@ -118,7 +122,7 @@ const stop_recording = async (panel_provider: PanelProvider) => {
             return
           }
 
-          api_configuration = result.api_configuration
+          api_configuration = result.item
 
           panel_provider.context.workspaceState.update(
             LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY,
@@ -140,7 +144,7 @@ const stop_recording = async (panel_provider: PanelProvider) => {
 
       if (!model_provider) {
         vscode.window.showErrorMessage(
-          `Model Provider ${api_configuration.model_provider_name} not found.`
+          `Model Provider ${api_configuration!.model_provider_name} not found.`
         )
         return
       }

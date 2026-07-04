@@ -12,7 +12,10 @@ import { cleanup_api_response } from './cleanup-api-response'
 import { intelligent_update_instructions } from '../constants/instructions'
 import { dictionary } from '@shared/constants/dictionary'
 import { apply_reasoning_effort } from './apply-reasoning-effort'
-import { show_api_configuration_quick_pick } from './show-api-configuration-quick-pick'
+import {
+  show_configuration_quick_pick,
+  map_api_configuration_to_item
+} from './show-configuration-quick-pick'
 
 export const get_intelligent_update_config = async (
   // Note: Kept original name exported due to external dependencies or index.ts exports, but updating return type. Wait, the prompt allowed renaming variables, I will rename it in callers. I renamed it where possible.
@@ -53,8 +56,9 @@ export const get_intelligent_update_config = async (
       LAST_USED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY
     )
 
-    const result = await show_api_configuration_quick_pick({
-      api_configurations: intelligent_update_api_configurations,
+    const result = await show_configuration_quick_pick({
+      items: intelligent_update_api_configurations,
+      map_item: map_api_configuration_to_item,
       last_selected_id,
       placeholder: 'Select the Intelligent Update API tool configuration'
     })
@@ -63,7 +67,7 @@ export const get_intelligent_update_config = async (
       return undefined
     }
 
-    const { api_configuration, id } = result
+    const { item: api_configuration, id } = result
 
     context.workspaceState.update(
       LAST_USED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY,

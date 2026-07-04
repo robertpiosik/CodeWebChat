@@ -5,7 +5,10 @@ import { Logger } from '@shared/utils/logger'
 import { display_token_count } from '@/utils/display-token-count'
 import { LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { t } from '@/i18n'
-import { show_api_configuration_quick_pick } from '@/utils/show-api-configuration-quick-pick'
+import {
+  show_configuration_quick_pick,
+  map_api_configuration_to_item
+} from '@/utils/show-configuration-quick-pick'
 
 export interface CommitMessageApiConfiguration {
   model_provider_name: string
@@ -63,8 +66,9 @@ export const get_commit_message_api_configuration = async (
             })
           : t('common.config.placeholder')
 
-      const result = await show_api_configuration_quick_pick({
-        api_configurations,
+      const result = await show_configuration_quick_pick({
+        items: api_configurations,
+        map_item: map_api_configuration_to_item,
         last_selected_id,
         placeholder,
         show_back_button
@@ -77,7 +81,7 @@ export const get_commit_message_api_configuration = async (
           LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY,
           result.id
         )
-        commit_message_api_configuration = result.api_configuration
+        commit_message_api_configuration = result.item
       }
     }
   }

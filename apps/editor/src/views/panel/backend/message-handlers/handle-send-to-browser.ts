@@ -23,7 +23,7 @@ import {
 } from '@/constants/edit-format-instructions'
 import { handle_update_last_used_web_configuration_or_group } from './handle-update-last-used-web-configuration-or-group'
 import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-symbols'
-import { t } from '@/i18n'
+import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
 
 export const handle_send_to_browser = async (params: {
   panel_provider: PanelProvider
@@ -236,151 +236,68 @@ const show_web_configuration_quick_pick = async (params: {
     return null
   }
 
-  const quick_pick = vscode.window.createQuickPick<
-    vscode.QuickPickItem & { web_configuration_name?: string }
-  >()
-
   const recents_key = get_last_used_web_configuration_key(prompt_type)
   const last_selected_name =
     context.workspaceState.get<string>(recents_key) ??
     context.globalState.get<string>(recents_key)
 
-  const map_web_configuration_to_item = (
-    web_configuration: ConfigWebConfigurationFormat
-  ) => {
-    const is_unnamed =
-      !web_configuration.name || /^\(\d+\)$/.test(web_configuration.name.trim())
-    const chatbot_models =
-      CHATBOTS[web_configuration.chatbot as keyof typeof CHATBOTS]?.models
-    const model = web_configuration.model
-      ? chatbot_models?.[web_configuration.model]?.label ||
-        web_configuration.model
-      : ''
+  const result = await show_configuration_quick_pick({
+    items: valid_web_configurations,
+    map_item: (web_configuration) => {
+      const is_unnamed =
+        !web_configuration.name ||
+        /^\(\d+\)$/.test(web_configuration.name.trim())
+      const chatbot_models =
+        CHATBOTS[web_configuration.chatbot as keyof typeof CHATBOTS]?.models
+      const model = web_configuration.model
+        ? chatbot_models?.[web_configuration.model]?.label ||
+          web_configuration.model
+        : ''
 
-    const details: string[] = []
-    if (!is_unnamed && web_configuration.chatbot) {
-      details.push(web_configuration.chatbot)
-    }
-    if (model) {
-      details.push(model)
-    }
-    if (web_configuration.reasoningEffort) {
-      details.push(web_configuration.reasoningEffort)
-    }
+      const details: string[] = []
+      if (!is_unnamed && web_configuration.chatbot) {
+        details.push(web_configuration.chatbot)
+      }
+      if (model) {
+        details.push(model)
+      }
+      if (web_configuration.reasoningEffort) {
+        details.push(web_configuration.reasoningEffort)
+      }
 
-    return {
-      label: `${
-        is_unnamed
-          ? web_configuration.chatbot!
-          : web_configuration.name!.replace(/\s*\(\d+\)$/, '')
-      }`,
-      web_configuration_name: web_configuration.name,
-      description: details.join(' · ')
-    }
-  }
-
-  const items: (vscode.QuickPickItem & { web_configuration_name?: string })[] =
-    []
-
-  const pinned = valid_web_configurations.filter((c: any) => c.isPinned)
-  if (pinned.length > 0) {
-    items.push({ label: 'pinned', kind: vscode.QuickPickItemKind.Separator })
-    items.push(...pinned.map(map_web_configuration_to_item))
-    items.push({ label: 'all', kind: vscode.QuickPickItemKind.Separator })
-  }
-
-  items.push(...valid_web_configurations.map(map_web_configuration_to_item))
-
-  quick_pick.items = items
-  quick_pick.placeholder = 'Select a configuration'
-  quick_pick.title = t('common.config.title')
-  quick_pick.matchOnDescription = true
-
-  const close_button = {
-    iconPath: new vscode.ThemeIcon('close'),
-    tooltip: t('common.close')
-  }
-  quick_pick.buttons = [close_button]
-
-  quick_pick.onDidTriggerButton((button) => {
-    if (button === close_button) {
-      quick_pick.hide()
-    }
+      return {
+        label: `${
+          is_unnamed
+            ? web_configuration.chatbot!
+            : web_configuration.name!.replace(/\s*\(\d+\)$/, '')
+        }`,
+        description: details.join(' · '),
+        id: web_configuration.name || '',
+        is_pinned: web_configuration.isPinned
+      }
+    },
+    last_selected_id: last_selected_name
   })
 
-  if (last_selected_name) {
-    const last_item = quick_pick.items.find(
-      (item) => item.web_configuration_name == last_selected_name
-    )
-    if (last_item) {
-      quick_pick.activeItems = [last_item]
-    } else if (items.length > 0) {
-      const first_selectable = items.find(
-        (i) => i.kind != vscode.QuickPickItemKind.Separator
-      )
-      if (first_selectable) {
-        quick_pick.activeItems = [first_selectable]
-      }
-    }
-  } else if (items.length > 0) {
-    const first_selectable = items.find(
-      (i) => i.kind != vscode.QuickPickItemKind.Separator
-    )
-    if (first_selectable) {
-      quick_pick.activeItems = [first_selectable]
-    }
+  if (!result || result === 'back') {
+    panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
+    return null
   }
 
-  return new Promise<{ web_configuration_name: string | undefined } | null>(
-    (resolve) => {
-      const disposables: vscode.Disposable[] = []
-      let resolved = false
-      const do_resolve = (
-        value: { web_configuration_name: string | undefined } | null
-      ) => {
-        if (resolved) return
-        resolved = true
-        resolve(value)
-      }
+  const web_configuration = result.item
 
-      quick_pick.onDidAccept(async () => {
-        const selected = quick_pick.selectedItems[0] as any
+  if (params.get_is_web_configuration_disabled(web_configuration)) {
+    return null
+  }
 
-        if (!selected || !selected.web_configuration_name) {
-          quick_pick.hide()
-          do_resolve(null)
-          return
-        }
+  if (web_configuration.name) {
+    handle_update_last_used_web_configuration_or_group({
+      panel_provider,
+      web_configuration_name: web_configuration.name
+    })
+  }
 
-        const web_configuration = valid_web_configurations.find(
-          (p) => p.name == selected.web_configuration_name
-        )!
-        if (params.get_is_web_configuration_disabled(web_configuration)) {
-          do_resolve(null)
-        } else {
-          handle_update_last_used_web_configuration_or_group({
-            panel_provider,
-            web_configuration_name: selected.web_configuration_name
-          })
-          do_resolve({
-            web_configuration_name: selected.web_configuration_name
-          })
-        }
-      })
-
-      quick_pick.onDidHide(() => {
-        disposables.forEach((d) => d.dispose())
-        quick_pick.dispose()
-        if (!resolved) {
-          panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
-          do_resolve(null)
-        }
-      })
-
-      disposables.push(quick_pick)
-      quick_pick.show()
-    }
-  )
+  return { web_configuration_name: web_configuration.name }
 }
 
 const resolve_web_configuration = async (params: {

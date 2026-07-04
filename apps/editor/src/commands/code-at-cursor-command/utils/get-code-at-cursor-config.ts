@@ -9,7 +9,10 @@ import { LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY } from '@/constants/state-
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
-import { show_api_configuration_quick_pick } from '@/utils/show-api-configuration-quick-pick'
+import {
+  show_configuration_quick_pick,
+  map_api_configuration_to_item
+} from '@/utils/show-configuration-quick-pick'
 
 export const get_code_at_cursor_api_configuration = async (params: {
   model_providers_manager: ModelProvidersManager
@@ -65,8 +68,9 @@ export const get_code_at_cursor_api_configuration = async (params: {
       LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
     )
 
-    const result = await show_api_configuration_quick_pick({
-      api_configurations: code_at_cursor_api_configurations,
+    const result = await show_configuration_quick_pick({
+      items: code_at_cursor_api_configurations,
+      map_item: map_api_configuration_to_item,
       last_selected_id,
       placeholder: t('command.code-at-cursor.config.placeholder')
     })
@@ -75,7 +79,7 @@ export const get_code_at_cursor_api_configuration = async (params: {
       return undefined
     }
 
-    const { api_configuration, id } = result
+    const { item: api_configuration, id } = result
 
     params.context.workspaceState.update(
       LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,

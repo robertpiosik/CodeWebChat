@@ -26,7 +26,10 @@ import {
 import { default_system_instructions } from '@shared/constants/default-system-instructions'
 import { build_user_content } from '@/utils/build-user-content'
 import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-symbols'
-import { show_api_configuration_quick_pick } from '@/utils/show-api-configuration-quick-pick'
+import {
+  show_configuration_quick_pick,
+  map_api_configuration_to_item
+} from '@/utils/show-configuration-quick-pick'
 
 const get_edit_files_api_configuration = async (params: {
   model_providers_manager: ModelProvidersManager
@@ -88,8 +91,9 @@ const get_edit_files_api_configuration = async (params: {
       LAST_USED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY
     )
 
-    const result = await show_api_configuration_quick_pick({
-      api_configurations: edit_files_api_configurations,
+    const result = await show_configuration_quick_pick({
+      items: edit_files_api_configurations,
+      map_item: map_api_configuration_to_item,
       last_selected_id
     })
 
@@ -103,7 +107,7 @@ const get_edit_files_api_configuration = async (params: {
       return undefined
     }
 
-    const { api_configuration, id } = result
+    const { item: api_configuration, id } = result
 
     params.context.workspaceState.update(
       LAST_USED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY,

@@ -17,7 +17,10 @@ import { dictionary } from '@shared/constants/dictionary'
 import { randomUUID } from 'crypto'
 import { build_user_content } from '@/utils/build-user-content'
 import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-symbols'
-import { show_api_configuration_quick_pick } from '@/utils/show-api-configuration-quick-pick'
+import {
+  show_configuration_quick_pick,
+  map_api_configuration_to_item
+} from '@/utils/show-configuration-quick-pick'
 
 const get_code_at_cursor_api_configuration = async (
   model_providers_manager: ModelProvidersManager,
@@ -78,8 +81,9 @@ const get_code_at_cursor_api_configuration = async (
       LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
     )
 
-    const result = await show_api_configuration_quick_pick({
-      api_configurations: code_completions_api_configurations,
+    const result = await show_configuration_quick_pick({
+      items: code_completions_api_configurations,
+      map_item: map_api_configuration_to_item,
       last_selected_id,
       placeholder: 'Select code completions API configuration'
     })
@@ -92,7 +96,7 @@ const get_code_at_cursor_api_configuration = async (
       return undefined
     }
 
-    const { api_configuration, id } = result
+    const { item: api_configuration, id } = result
 
     context.workspaceState.update(
       LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,

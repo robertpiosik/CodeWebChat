@@ -8,7 +8,10 @@ import {
 import { LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY } from '../../../constants/state-keys'
 import { display_token_count } from '../../../utils/display-token-count'
 import { t } from '@/i18n'
-import { show_api_configuration_quick_pick } from '../../../utils/show-api-configuration-quick-pick'
+import {
+  show_configuration_quick_pick,
+  map_api_configuration_to_item
+} from '../../../utils/show-configuration-quick-pick'
 
 export const prompt_for_api_configuration = async (params: {
   model_providers_manager: ModelProvidersManager
@@ -51,8 +54,9 @@ export const prompt_for_api_configuration = async (params: {
       tokens: display_token_count(params.tokens_to_process)
     })
 
-    const result = await show_api_configuration_quick_pick({
-      api_configurations: params.api_configurations,
+    const result = await show_configuration_quick_pick({
+      items: params.api_configurations,
+      map_item: map_api_configuration_to_item,
       last_selected_id,
       placeholder,
       show_back_button: true
@@ -60,7 +64,7 @@ export const prompt_for_api_configuration = async (params: {
 
     if (result === 'back') return 'back'
     if (!result) return 'cancel'
-    selected_api_configuration = result.api_configuration
+    selected_api_configuration = result.item
   }
 
   if (selected_api_configuration) {
