@@ -53,9 +53,9 @@ export const show_api_configuration_quick_pick = async (
   const items: Item[] = []
   const pinned = api_configurations.filter((c) => c.is_pinned)
   if (pinned.length > 0) {
-    items.push({ label: 'Pinned', kind: vscode.QuickPickItemKind.Separator })
+    items.push({ label: 'pinned', kind: vscode.QuickPickItemKind.Separator })
     items.push(...pinned.map(map_api_configuration_to_item))
-    items.push({ label: 'All', kind: vscode.QuickPickItemKind.Separator })
+    items.push({ label: 'all', kind: vscode.QuickPickItemKind.Separator })
   }
   items.push(...api_configurations.map(map_api_configuration_to_item))
 

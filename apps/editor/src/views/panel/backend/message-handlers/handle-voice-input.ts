@@ -21,8 +21,47 @@ const start_recording = (panel_provider: PanelProvider) => {
   panel_provider.recording_start_time = Date.now()
   try {
     panel_provider.recording_process = spawn('rec', ['-q', '-t', 'wav', '-'])
+
     panel_provider.recording_process.stdout.on('data', (chunk: Buffer) => {
       panel_provider.audio_chunks.push(chunk)
+    })
+
+    panel_provider.recording_process.on('error', (error: any) => {
+      if (error.code == 'ENOENT') {
+        let error_message =
+          'The "rec" command was not found. Please install SoX to use voice input.'
+
+        if (process.platform == 'darwin') {
+          error_message =
+            'The "rec" command was not found. Please install SoX to use voice input (e.g., run "brew install sox" in your terminal).'
+        } else if (process.platform == 'linux') {
+          error_message =
+            'The "rec" command was not found. Please install SoX to use voice input (e.g., run "sudo apt install sox" in your terminal).'
+        } else if (process.platform == 'win32') {
+          error_message =
+            'The "rec" command was not found. Please install SoX to use voice input (e.g., run "winget install sox.sox" and add it to your PATH).'
+        }
+
+        vscode.window.showErrorMessage(error_message)
+      } else {
+        vscode.window.showErrorMessage(
+          'Failed to start recording: ' + error.message
+        )
+      }
+
+      Logger.error({
+        function_name: 'start_recording',
+        message: 'Failed to start recording process',
+        data: { error }
+      })
+
+      // Ensure the UI state resets if recording failed to start
+      panel_provider.is_recording = false
+      panel_provider.send_message({
+        command: 'RECORDING_STATE',
+        is_recording: false
+      })
+      panel_provider.recording_process = null
     })
   } catch (error: any) {
     Logger.error({

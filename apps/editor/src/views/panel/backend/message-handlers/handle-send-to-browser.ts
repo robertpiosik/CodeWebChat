@@ -284,9 +284,9 @@ const show_web_configuration_quick_pick = async (params: {
 
   const pinned = valid_web_configurations.filter((c: any) => c.isPinned)
   if (pinned.length > 0) {
-    items.push({ label: 'Pinned', kind: vscode.QuickPickItemKind.Separator })
+    items.push({ label: 'pinned', kind: vscode.QuickPickItemKind.Separator })
     items.push(...pinned.map(map_web_configuration_to_item))
-    items.push({ label: 'All', kind: vscode.QuickPickItemKind.Separator })
+    items.push({ label: 'all', kind: vscode.QuickPickItemKind.Separator })
   }
 
   items.push(...valid_web_configurations.map(map_web_configuration_to_item))
