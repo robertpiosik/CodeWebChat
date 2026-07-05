@@ -16,6 +16,7 @@ import {
   show_configuration_quick_pick,
   map_api_configuration_to_item
 } from '@/utils/show-configuration-quick-pick'
+import { t } from '@/i18n'
 
 const MIN_RECORDING_DURATION = 1000
 
@@ -31,23 +32,26 @@ const start_recording = (panel_provider: PanelProvider) => {
 
     panel_provider.recording_process.on('error', (error: any) => {
       if (error.code == 'ENOENT') {
-        let error_message = 'Please install SoX to use voice input.'
+        let error_message = t('handlers.panel.voice-input.error.sox-missing')
 
         if (process.platform == 'darwin') {
-          error_message =
-            'Please install SoX to use voice input (run "brew install sox" in your terminal).'
+          error_message = t('handlers.panel.voice-input.error.sox-missing.mac')
         } else if (process.platform == 'linux') {
-          error_message =
-            'Please install SoX to use voice input (run "sudo apt install sox" in your terminal).'
+          error_message = t(
+            'handlers.panel.voice-input.error.sox-missing.linux'
+          )
         } else if (process.platform == 'win32') {
-          error_message =
-            'Please install SoX to use voice input (run "winget install sox.sox" and add it to your PATH).'
+          error_message = t(
+            'handlers.panel.voice-input.error.sox-missing.windows'
+          )
         }
 
         vscode.window.showErrorMessage(error_message)
       } else {
         vscode.window.showErrorMessage(
-          'Failed to start recording: ' + error.message
+          t('handlers.panel.voice-input.error.start-failed', {
+            error: error.message
+          })
         )
       }
 
@@ -133,7 +137,7 @@ const stop_recording = async (panel_provider: PanelProvider) => {
 
       panel_provider.send_message({
         command: 'SHOW_PROGRESS',
-        title: 'Transcribing...',
+        title: t('handlers.panel.voice-input.progress.transcribing'),
         show_elapsed_time: true,
         cancellable: true
       })
@@ -144,7 +148,9 @@ const stop_recording = async (panel_provider: PanelProvider) => {
 
       if (!model_provider) {
         vscode.window.showErrorMessage(
-          `Model Provider ${api_configuration!.model_provider_name} not found.`
+          t('handlers.panel.voice-input.error.provider-not-found', {
+            name: api_configuration!.model_provider_name
+          })
         )
         return
       }
@@ -196,7 +202,7 @@ const stop_recording = async (panel_provider: PanelProvider) => {
         if (result.response.trim().toUpperCase() == 'INAUDIBLE') {
           panel_provider.send_message({
             command: 'SHOW_AUTO_CLOSING_MODAL',
-            title: 'Inaudible voice input',
+            title: t('handlers.panel.voice-input.warning.inaudible'),
             type: 'warning'
           })
         } else {
@@ -214,7 +220,9 @@ const stop_recording = async (panel_provider: PanelProvider) => {
         data: { error }
       })
       vscode.window.showErrorMessage(
-        'Failed to process audio: ' + error.message
+        t('handlers.panel.voice-input.error.process-failed', {
+          error: error.message
+        })
       )
     } finally {
       panel_provider.api_call_cancel_token_source = null
@@ -229,7 +237,7 @@ export const handle_voice_input = async (
   panel_provider: PanelProvider,
   message: SetRecordingStateMessage
 ) => {
-  if (panel_provider.is_recording === message.is_recording) {
+  if (panel_provider.is_recording == message.is_recording) {
     return
   }
 
@@ -241,11 +249,13 @@ export const handle_voice_input = async (
       await model_providers_manager.get_api_configurations()
 
     if (api_configurations.length == 0) {
-      vscode.window.showWarningMessage('No configuration found', {
-        modal: true,
-        detail:
-          'Add a "Voice Input" configuration in settings to use this feature.'
-      })
+      vscode.window.showWarningMessage(
+        t('handlers.panel.voice-input.warning.no-config.title'),
+        {
+          modal: true,
+          detail: t('handlers.panel.voice-input.warning.no-config.detail')
+        }
+      )
       panel_provider.send_message({
         command: 'RECORDING_STATE',
         is_recording: false

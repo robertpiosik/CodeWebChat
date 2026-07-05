@@ -2,13 +2,15 @@ import * as vscode from 'vscode'
 import { commands } from './translations/commands'
 import { common } from './translations/common'
 import { settings_handlers } from './translations/handlers/settings'
+import { panel_voice_input } from './translations/handlers/panel/voice-input'
 
 export type TranslationKey = keyof typeof translations
 
 const translations = {
   ...commands,
   ...common,
-  ...settings_handlers
+  ...settings_handlers,
+  ...panel_voice_input
 }
 
 export const t = (
