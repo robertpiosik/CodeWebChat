@@ -1,6 +1,7 @@
 import styles from './Section.module.scss'
 import { forwardRef, useRef, useState, useEffect } from 'react'
 import cn from 'classnames'
+import { SECTION_HEADER_HEIGHT } from '../../../../constants/sizes'
 
 type Props = {
   title: string
@@ -82,11 +83,12 @@ export const Section = forwardRef<HTMLDivElement, Props>((props, ref) => {
       }}
       className={styles.container}
     >
-      <div className={styles.class_marker} ref={class_marker_ref} />
+      <div className={styles['class-marker']} ref={class_marker_ref} />
       <div
         className={cn(styles.header, {
           [styles['header--stuck']]: add_stuck_class
         })}
+        style={{ height: SECTION_HEADER_HEIGHT }}
       >
         <div className={styles.header__marker} ref={marker_ref} />
         <div className={styles.header__top}>

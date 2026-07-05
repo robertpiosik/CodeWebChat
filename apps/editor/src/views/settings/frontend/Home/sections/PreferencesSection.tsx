@@ -51,6 +51,11 @@ type Props = {
   set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void
   include_prompts_in_commit_messages: boolean
   on_include_prompts_in_commit_messages_change: (enabled: boolean) => void
+  commit_instructions: string
+  set_commit_instructions: (instructions: string) => void
+  on_commit_instructions_blur: () => void
+  default_commit_instructions: string
+  on_restore_commit_instructions: () => void
 }
 
 export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
@@ -146,55 +151,106 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
     return (
       <UiSection
         ref={ref}
-        title={t('sections.preferences')}
+        title={t('sections.general')}
         subtitle={t('preferences.subtitle')}
       >
-        <UiGroup>
-          <UiItem
-            title={t('preferences.open-editor-settings.title')}
-            description={t('preferences.open-editor-settings.description')}
-            slot_right={
-              <UiTextButton on_click={props.on_open_editor_settings}>
-                {t('preferences.open-editor-settings.action')}
-              </UiTextButton>
-            }
-          />
-          <UiItem
-            title={t('preferences.ignore-patterns.title')}
-            description={t('preferences.ignore-patterns.description')}
-            slot_right={
-              <UiTextButton on_click={props.on_open_ignore_patterns_settings}>
-                {t('preferences.ignore-patterns.action')}
-              </UiTextButton>
-            }
-          />
-          <UiItem
-            title={t('preferences.allow-patterns.title')}
-            description={t('preferences.allow-patterns.description')}
-            slot_right={
-              <UiTextButton on_click={props.on_open_allow_patterns_settings}>
-                {t('preferences.allow-patterns.action')}
-              </UiTextButton>
-            }
-          />
-          <UiItem
-            title={t('preferences.code-at-cursor.keyboard-shortcut.title')}
-            description={t(
-              'preferences.code-at-cursor.keyboard-shortcut.description'
-            )}
-            slot_right={
-              <UiTextButton
-                on_click={() =>
-                  props.on_open_keybindings('codeWebChat.codeAtCursor')
-                }
-              >
-                {t('preferences.code-at-cursor.keyboard-shortcut.action')}
-              </UiTextButton>
-            }
-          />
-        </UiGroup>
+        <div
+          ref={(el) =>
+            props.set_section_ref('section:preferences:group:open-links', el)
+          }
+        >
+          <UiGroup title={t('preferences.open-links.title')}>
+            <UiItem
+              title={t('preferences.open-editor-settings.title')}
+              description={t('preferences.open-editor-settings.description')}
+              slot_right={
+                <UiTextButton on_click={props.on_open_editor_settings}>
+                  {t('preferences.open-editor-settings.action')}
+                </UiTextButton>
+              }
+            />
+            <UiItem
+              title={t('preferences.ignore-patterns.title')}
+              description={t('preferences.ignore-patterns.description')}
+              slot_right={
+                <UiTextButton on_click={props.on_open_ignore_patterns_settings}>
+                  {t('preferences.ignore-patterns.action')}
+                </UiTextButton>
+              }
+            />
+            <UiItem
+              title={t('preferences.allow-patterns.title')}
+              description={t('preferences.allow-patterns.description')}
+              slot_right={
+                <UiTextButton on_click={props.on_open_allow_patterns_settings}>
+                  {t('preferences.allow-patterns.action')}
+                </UiTextButton>
+              }
+            />
+            <UiItem
+              title={t('preferences.code-at-cursor.keyboard-shortcut.title')}
+              description={t(
+                'preferences.code-at-cursor.keyboard-shortcut.description'
+              )}
+              slot_right={
+                <UiTextButton
+                  on_click={() =>
+                    props.on_open_keybindings('codeWebChat.codeAtCursor')
+                  }
+                >
+                  {t('preferences.code-at-cursor.keyboard-shortcut.action')}
+                </UiTextButton>
+              }
+            />
+          </UiGroup>
+        </div>
 
-        <div ref={(el) => props.set_section_ref('prompt-field', el)}>
+        <div
+          ref={(el) =>
+            props.set_section_ref('section:preferences:group:context', el)
+          }
+        >
+          <UiGroup title={t('preferences.context.title')}>
+            <UiItem
+              title={t('preferences.check-new-files.title')}
+              description={t('preferences.check-new-files.description')}
+              slot_right={
+                <UiToggler
+                  is_on={props.check_new_files}
+                  on_toggle={props.on_check_new_files_change}
+                />
+              }
+            />
+            <UiItem
+              title={t('preferences.clear-checks-in-workspace-behavior.title')}
+              description={t(
+                'preferences.clear-checks-in-workspace-behavior.description'
+              )}
+              slot_right={
+                <UiDropdown
+                  options={[
+                    {
+                      value: 'ignore-open-editors',
+                      label: t('preferences.clear-checks.ignore-open-editors')
+                    },
+                    {
+                      value: 'uncheck-all',
+                      label: t('preferences.clear-checks.uncheck-all')
+                    }
+                  ]}
+                  value={props.clear_checks_in_workspace_behavior}
+                  onChange={props.on_clear_checks_in_workspace_behavior_change}
+                />
+              }
+            />
+          </UiGroup>
+        </div>
+
+        <div
+          ref={(el) =>
+            props.set_section_ref('section:preferences:group:prompt-field', el)
+          }
+        >
           <UiGroup title={t('preferences.prompt-field.title')}>
             <UiItem
               title={t('preferences.context-size-warning-threshold.title')}
@@ -228,7 +284,11 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
           </UiGroup>
         </div>
 
-        <div ref={(el) => props.set_section_ref('checkpoints', el)}>
+        <div
+          ref={(el) =>
+            props.set_section_ref('section:preferences:group:checkpoints', el)
+          }
+        >
           <UiGroup title={t('preferences.checkpoints.title')}>
             <UiItem
               title={t('preferences.automatic-checkpoints.title')}
@@ -262,7 +322,14 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
           </UiGroup>
         </div>
 
-        <div ref={(el) => props.set_section_ref('commit-messages', el)}>
+        <div
+          ref={(el) =>
+            props.set_section_ref(
+              'section:preferences:group:commit-messages',
+              el
+            )
+          }
+        >
           <UiGroup title={t('preferences.commit-messages.title')}>
             <UiItem
               title={t('preferences.include-prompts-in-commit-messages.title')}
@@ -276,18 +343,48 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
                 />
               }
             />
+            <UiItem
+              title={t('preferences.commit-message-instructions.title')}
+              description={t(
+                'preferences.commit-message-instructions.description'
+              )}
+              is_toggleable
+              translations={{
+                expand: t('common.expand'),
+                collapse: t('common.collapse')
+              }}
+            >
+              <UiTextarea
+                value={props.commit_instructions}
+                min_rows={3}
+                on_change={props.set_commit_instructions}
+                on_blur={props.on_commit_instructions_blur}
+                action_icon={
+                  props.commit_instructions !==
+                  props.default_commit_instructions
+                    ? 'discard'
+                    : undefined
+                }
+                action_title={t('preferences.action.restore-default')}
+                on_action_click={props.on_restore_commit_instructions}
+              />
+            </UiItem>
           </UiGroup>
         </div>
 
-        <div ref={(el) => props.set_section_ref('edit-format', el)}>
+        <div
+          ref={(el) =>
+            props.set_section_ref('section:preferences:group:edit-format', el)
+          }
+        >
           <UiGroup title={t('preferences.edit-formats.title')}>
             <UiItem
               title={t('preferences.edit-format.whole.title')}
               description={t('preferences.edit-format.whole.description')}
               is_toggleable
               translations={{
-                expand: t('preferences.edit-format.expand'),
-                collapse: t('preferences.edit-format.collapse')
+                expand: t('common.expand'),
+                collapse: t('common.collapse')
               }}
             >
               <UiTextarea
@@ -318,8 +415,8 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
               description={t('preferences.edit-format.truncated.description')}
               is_toggleable
               translations={{
-                expand: t('preferences.edit-format.expand'),
-                collapse: t('preferences.edit-format.collapse')
+                expand: t('common.expand'),
+                collapse: t('common.collapse')
               }}
             >
               <UiTextarea
@@ -355,8 +452,8 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
               )}
               is_toggleable
               translations={{
-                expand: t('preferences.edit-format.expand'),
-                collapse: t('preferences.edit-format.collapse')
+                expand: t('common.expand'),
+                collapse: t('common.collapse')
               }}
             >
               <UiTextarea
@@ -391,8 +488,8 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
               description={t('preferences.edit-format.diff.description')}
               is_toggleable
               translations={{
-                expand: t('preferences.edit-format.expand'),
-                collapse: t('preferences.edit-format.collapse')
+                expand: t('common.expand'),
+                collapse: t('common.collapse')
               }}
             >
               <UiTextarea
@@ -417,43 +514,6 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
                 }
               />
             </UiItem>
-          </UiGroup>
-        </div>
-
-        <div ref={(el) => props.set_section_ref('misc', el)}>
-          <UiGroup title={t('preferences.misc.title')}>
-            <UiItem
-              title={t('preferences.check-new-files.title')}
-              description={t('preferences.check-new-files.description')}
-              slot_right={
-                <UiToggler
-                  is_on={props.check_new_files}
-                  on_toggle={props.on_check_new_files_change}
-                />
-              }
-            />
-            <UiItem
-              title={t('preferences.clear-checks-in-workspace-behavior.title')}
-              description={t(
-                'preferences.clear-checks-in-workspace-behavior.description'
-              )}
-              slot_right={
-                <UiDropdown
-                  options={[
-                    {
-                      value: 'ignore-open-editors',
-                      label: t('preferences.clear-checks.ignore-open-editors')
-                    },
-                    {
-                      value: 'uncheck-all',
-                      label: t('preferences.clear-checks.uncheck-all')
-                    }
-                  ]}
-                  value={props.clear_checks_in_workspace_behavior}
-                  onChange={props.on_clear_checks_in_workspace_behavior_change}
-                />
-              }
-            />
           </UiGroup>
         </div>
       </UiSection>

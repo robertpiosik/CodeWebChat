@@ -1,24 +1,24 @@
 import cn from 'classnames'
-import styles from './NavigationItem.module.scss'
+import styles from './NavigationItemGroup.module.scss'
 
 type Props = {
   label: string
   href: string
   on_click: (e: React.MouseEvent<HTMLAnchorElement>) => void
   is_active: boolean
+  is_parent_active?: boolean
   has_warning?: boolean
-  is_nested?: boolean
-  is_last_nested?: boolean
+  is_last?: boolean
 }
 
-export const NavigationItem: React.FC<Props> = (props) => {
+export const NavigationItemGroup: React.FC<Props> = (props) => {
   return (
     <a
       href={props.href}
       className={cn(styles.container, {
+        [styles['container--parent-active']]: props.is_parent_active,
         [styles['container--active']]: props.is_active,
-        [styles['container--nested']]: props.is_nested,
-        [styles['container--last-nested']]: props.is_last_nested
+        [styles['container--last']]: props.is_last
       })}
       onClick={props.on_click}
     >

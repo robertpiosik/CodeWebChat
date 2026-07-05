@@ -117,19 +117,14 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             {t('web-configurations.notice.missing')}
           </UiNotice>
         )}
-        <UiGroup>
-          <UiItem
-            title={t('preferences.reuse-last-tab.title')}
-            description={t('preferences.reuse-last-tab.description')}
-            slot_right={
-              <UiToggler
-                is_on={props.reuse_last_tab}
-                on_toggle={props.on_reuse_last_tab_change}
-              />
-            }
-          />
-        </UiGroup>
-        <div ref={(el) => props.set_section_ref('web-configurations', el)}>
+        <div
+          ref={(el) =>
+            props.set_section_ref(
+              'section:chatbots:group:web-configurations',
+              el
+            )
+          }
+        >
           <UiGroup title={t('web-configurations.configurations.title')}>
             {props.web_configurations && (
               <SortableList
@@ -257,8 +252,8 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             )}
             {has_gemini && (
               <UiItem
-                title={t('preferences.gemini-user-id.title')}
-                description={t('preferences.gemini-user-id.description')}
+                title={t('web-configurations.gemini-user-id.title')}
+                description={t('web-configurations.gemini-user-id.description')}
                 slot_right={
                   <UiInput
                     type="number"
@@ -272,8 +267,10 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             )}
             {has_ai_studio && (
               <UiItem
-                title={t('preferences.ai-studio-user-id.title')}
-                description={t('preferences.ai-studio-user-id.description')}
+                title={t('web-configurations.ai-studio-user-id.title')}
+                description={t(
+                  'web-configurations.ai-studio-user-id.description'
+                )}
                 slot_right={
                   <UiInput
                     type="number"
@@ -285,6 +282,24 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                 }
               />
             )}
+          </UiGroup>
+        </div>
+        <div
+          ref={(el) =>
+            props.set_section_ref('section:chatbots:group:chatbots-other', el)
+          }
+        >
+          <UiGroup title={t('web-configurations.behavior.title')}>
+            <UiItem
+              title={t('web-configurations.reuse-last-tab.title')}
+              description={t('web-configurations.reuse-last-tab.description')}
+              slot_right={
+                <UiToggler
+                  is_on={props.reuse_last_tab}
+                  on_toggle={props.on_reuse_last_tab_change}
+                />
+              }
+            />
           </UiGroup>
         </div>
       </UiSection>

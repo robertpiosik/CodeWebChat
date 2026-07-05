@@ -1,6 +1,7 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { Layout as UiLayout } from '@ui/components/editor/settings/Layout'
-import { NavigationItem as UiNavigationItem } from '@ui/components/editor/settings/NavigationItem'
+import { NavigationItemSection as UiNavigationItemSection } from '@ui/components/editor/settings/NavigationItemSection'
+import { NavigationItemGroup as UiNavigationItemGroup } from '@ui/components/editor/settings/NavigationItemGroup'
 import { ApiConfigurationsSection } from './sections/ApiConfigurationsSection'
 import {
   ApiConfiguration,
@@ -14,80 +15,87 @@ import { use_translation, TranslationKey } from '../i18n/use-translation'
 import { WebConfigurationsSection } from './sections/WebConfigurationsSection'
 import { commit_message_instructions as default_commit_message_instructions } from '@/constants/instructions'
 import { default_system_instructions } from '@shared/constants/default-system-instructions'
+import { GROUP_TITLE_HEIGHT, SECTION_HEADER_HEIGHT } from '@ui/constants/sizes'
 
 export type NavItem =
-  | 'preferences'
-  | 'prompt-field'
-  | 'checkpoints'
-  | 'commit-messages'
-  | 'edit-format'
-  | 'misc'
-  | 'chatbots'
-  | 'web-configurations'
-  | 'api-calls'
-  | 'model-providers'
-  | 'api-configurations'
-  | 'instructions'
+  | 'section:preferences'
+  | 'section:preferences:group:open-links'
+  | 'section:preferences:group:context'
+  | 'section:preferences:group:prompt-field'
+  | 'section:preferences:group:checkpoints'
+  | 'section:preferences:group:commit-messages'
+  | 'section:preferences:group:edit-format'
+  | 'section:chatbots'
+  | 'section:chatbots:group:web-configurations'
+  | 'section:chatbots:group:chatbots-other'
+  | 'section:api-calls'
+  | 'section:api-calls:group:model-providers'
+  | 'section:api-calls:group:api-configurations'
+  | 'section:api-calls:group:api-behavior'
+  | 'section:api-calls:group:system-instructions'
 
-type NavConfigItem = { id: NavItem; label: TranslationKey; is_nested?: boolean }
+type NavConfigItem = { id: NavItem; label: TranslationKey }
 
 const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   {
-    id: 'preferences',
-    label: 'sections.preferences'
+    id: 'section:preferences',
+    label: 'sections.general'
   },
   {
-    id: 'prompt-field',
-    label: 'preferences.prompt-field.title',
-    is_nested: true
+    id: 'section:preferences:group:open-links',
+    label: 'preferences.open-links.title'
   },
   {
-    id: 'checkpoints',
-    label: 'preferences.checkpoints.title',
-    is_nested: true
+    id: 'section:preferences:group:context',
+    label: 'preferences.context.title'
   },
   {
-    id: 'commit-messages',
-    label: 'preferences.commit-messages.title',
-    is_nested: true
+    id: 'section:preferences:group:prompt-field',
+    label: 'preferences.prompt-field.title'
   },
   {
-    id: 'edit-format',
-    label: 'preferences.edit-formats.title',
-    is_nested: true
+    id: 'section:preferences:group:checkpoints',
+    label: 'preferences.checkpoints.title'
   },
   {
-    id: 'misc',
-    label: 'preferences.misc.title',
-    is_nested: true
+    id: 'section:preferences:group:commit-messages',
+    label: 'preferences.commit-messages.title'
   },
   {
-    id: 'chatbots',
+    id: 'section:preferences:group:edit-format',
+    label: 'preferences.edit-formats.title'
+  },
+  {
+    id: 'section:chatbots',
     label: 'sections.chatbots'
   },
   {
-    id: 'web-configurations',
-    label: 'web-configurations.configurations.title',
-    is_nested: true
+    id: 'section:chatbots:group:web-configurations',
+    label: 'web-configurations.configurations.title'
   },
   {
-    id: 'api-calls',
+    id: 'section:chatbots:group:chatbots-other',
+    label: 'web-configurations.behavior.title'
+  },
+  {
+    id: 'section:api-calls',
     label: 'sections.api-configurations'
   },
   {
-    id: 'model-providers',
-    label: 'sections.model-providers',
-    is_nested: true
+    id: 'section:api-calls:group:model-providers',
+    label: 'sections.model-providers'
   },
   {
-    id: 'api-configurations',
-    label: 'web-configurations.configurations.title',
-    is_nested: true
+    id: 'section:api-calls:group:api-configurations',
+    label: 'configurations.title'
   },
   {
-    id: 'instructions',
-    label: 'configurations.instructions.title',
-    is_nested: true
+    id: 'section:api-calls:group:api-behavior',
+    label: 'configurations.behavior.title'
+  },
+  {
+    id: 'section:api-calls:group:system-instructions',
+    label: 'configurations.system-instructions.title'
   }
 ]
 
@@ -172,18 +180,21 @@ export const Home: React.FC<Props> = (props) => {
 
   const scroll_container_ref = useRef<HTMLDivElement>(null)
   const section_refs = useRef<Record<NavItem, HTMLDivElement | null>>({
-    preferences: null,
-    'prompt-field': null,
-    checkpoints: null,
-    'commit-messages': null,
-    'edit-format': null,
-    misc: null,
-    chatbots: null,
-    'web-configurations': null,
-    'api-calls': null,
-    'model-providers': null,
-    'api-configurations': null,
-    instructions: null
+    'section:preferences': null,
+    'section:preferences:group:open-links': null,
+    'section:preferences:group:context': null,
+    'section:preferences:group:prompt-field': null,
+    'section:preferences:group:checkpoints': null,
+    'section:preferences:group:commit-messages': null,
+    'section:preferences:group:edit-format': null,
+    'section:chatbots': null,
+    'section:chatbots:group:web-configurations': null,
+    'section:chatbots:group:chatbots-other': null,
+    'section:api-calls': null,
+    'section:api-calls:group:model-providers': null,
+    'section:api-calls:group:api-configurations': null,
+    'section:api-calls:group:api-behavior': null,
+    'section:api-calls:group:system-instructions': null
   })
 
   const set_section_ref = useCallback(
@@ -197,11 +208,11 @@ export const Home: React.FC<Props> = (props) => {
   const [edit_files_instructions, set_edit_files_instructions] = useState('')
 
   const get_has_warning = (id: NavItem): boolean => {
-    if (id == 'model-providers') {
+    if (id == 'section:api-calls:group:model-providers') {
       return props.providers.length == 0
-    } else if (id == 'api-configurations') {
+    } else if (id == 'section:api-calls:group:api-configurations') {
       return props.api_configurations.length == 0
-    } else if (id == 'web-configurations') {
+    } else if (id == 'section:chatbots:group:web-configurations') {
       return props.web_configurations.length == 0
     } else {
       return false
@@ -211,6 +222,19 @@ export const Home: React.FC<Props> = (props) => {
   const [active_nav_item_id, set_active_nav_item_id] = useState<NavItem>(
     NAV_ITEMS_CONFIG[0].id
   )
+
+  const active_parent_id = useMemo(() => {
+    let current_parent: NavItem | null = null
+    for (const item of NAV_ITEMS_CONFIG) {
+      if (item.id.startsWith('section:') && !item.id.includes(':group:')) {
+        current_parent = item.id
+      }
+      if (item.id === active_nav_item_id) {
+        return item.id.includes(':group:') ? current_parent : null
+      }
+    }
+    return null
+  }, [active_nav_item_id])
 
   useEffect(() => {
     const scroll_container = scroll_container_ref.current
@@ -224,7 +248,10 @@ export const Home: React.FC<Props> = (props) => {
         const el = section_refs.current[item.id]
         if (el) {
           const rect = el.getBoundingClientRect()
-          if (rect.top <= container_rect.top + 150) {
+          if (
+            rect.top <=
+            container_rect.top + SECTION_HEADER_HEIGHT + GROUP_TITLE_HEIGHT
+          ) {
             new_active_id = item.id
           }
         }
@@ -262,10 +289,10 @@ export const Home: React.FC<Props> = (props) => {
 
       let extra_offset = 0
       const is_subsection = NAV_ITEMS_CONFIG.find(
-        (i) => i.id === item_id
-      )?.is_nested
+        (i) => i.id == item_id
+      )?.id.includes(':group:')
       if (is_subsection) {
-        extra_offset = -112
+        extra_offset = -SECTION_HEADER_HEIGHT
       }
 
       const target_scroll_top =
@@ -298,24 +325,49 @@ export const Home: React.FC<Props> = (props) => {
         ref={scroll_container_ref}
         title={t('sections.settings')}
         sidebar={NAV_ITEMS_CONFIG.map((item, i) => {
+          let current_parent: NavItem | null = null
+          for (let j = i; j >= 0; j--) {
+            if (
+              NAV_ITEMS_CONFIG[j].id.startsWith('section:') &&
+              !NAV_ITEMS_CONFIG[j].id.includes(':group:')
+            ) {
+              current_parent = NAV_ITEMS_CONFIG[j].id
+              break
+            }
+          }
+          const is_parent_active =
+            current_parent === active_nav_item_id ||
+            current_parent === active_parent_id
+
+          if (item.id.includes(':group:')) {
+            return (
+              <UiNavigationItemGroup
+                key={i}
+                href={`#${item.id}`}
+                label={t(item.label)}
+                is_active={item.id == active_nav_item_id}
+                is_parent_active={is_parent_active}
+                has_warning={get_has_warning(item.id)}
+                on_click={(e) => handle_nav_click(e, item.id)}
+                is_last={!NAV_ITEMS_CONFIG[i + 1]?.id.includes(':group:')}
+              />
+            )
+          }
+
           return (
-            <UiNavigationItem
+            <UiNavigationItemSection
               key={i}
-              href={`#${item.id}`}
               label={t(item.label)}
-              is_active={item.id === active_nav_item_id}
-              has_warning={get_has_warning(item.id)}
-              on_click={(e) => handle_nav_click(e, item.id)}
-              is_nested={item.is_nested}
-              is_last_nested={
-                item.is_nested && !NAV_ITEMS_CONFIG[i + 1]?.is_nested
+              is_active={
+                item.id == active_nav_item_id || item.id == active_parent_id
               }
+              has_warning={get_has_warning(item.id)}
             />
           )
         })}
       >
         <PreferencesSection
-          ref={(el) => set_section_ref('preferences', el)}
+          ref={(el) => set_section_ref('section:preferences', el)}
           set_section_ref={set_section_ref}
           context_size_warning_threshold={props.context_size_warning_threshold}
           on_context_size_warning_threshold_change={
@@ -359,10 +411,29 @@ export const Home: React.FC<Props> = (props) => {
           on_include_prompts_in_commit_messages_change={
             props.on_include_prompts_in_commit_messages_change
           }
+          commit_instructions={commit_instructions}
+          set_commit_instructions={set_commit_instructions}
+          on_commit_instructions_blur={() => {
+            props.on_commit_instructions_change(commit_instructions)
+            if (
+              commit_instructions == '' &&
+              props.commit_message_instructions ==
+                default_commit_message_instructions
+            ) {
+              set_commit_instructions(default_commit_message_instructions)
+            }
+          }}
+          default_commit_instructions={default_commit_message_instructions}
+          on_restore_commit_instructions={() => {
+            set_commit_instructions(default_commit_message_instructions)
+            props.on_commit_instructions_change(
+              default_commit_message_instructions
+            )
+          }}
         />
 
         <WebConfigurationsSection
-          ref={(el) => set_section_ref('chatbots', el)}
+          ref={(el) => set_section_ref('section:chatbots', el)}
           set_section_ref={set_section_ref}
           web_configurations={props.web_configurations}
           set_web_configurations={props.set_web_configurations}
@@ -379,7 +450,7 @@ export const Home: React.FC<Props> = (props) => {
         />
 
         <ApiConfigurationsSection
-          ref={(el) => set_section_ref('api-calls', el)}
+          ref={(el) => set_section_ref('section:api-calls', el)}
           set_section_ref={set_section_ref}
           providers={props.providers}
           set_providers={props.set_providers}
@@ -406,9 +477,7 @@ export const Home: React.FC<Props> = (props) => {
           on_edit_api_configuration={props.on_edit_api_configuration}
           on_delete_api_configuration={props.on_delete_api_configuration}
           edit_files_instructions={edit_files_instructions}
-          commit_instructions={commit_instructions}
           set_edit_files_instructions={set_edit_files_instructions}
-          set_commit_instructions={set_commit_instructions}
           on_edit_files_instructions_blur={() => {
             props.on_edit_files_system_instructions_change(
               edit_files_instructions
@@ -421,28 +490,11 @@ export const Home: React.FC<Props> = (props) => {
               set_edit_files_instructions(default_system_instructions)
             }
           }}
-          on_commit_instructions_blur={() => {
-            props.on_commit_instructions_change(commit_instructions)
-            if (
-              commit_instructions == '' &&
-              props.commit_message_instructions ==
-                default_commit_message_instructions
-            ) {
-              set_commit_instructions(default_commit_message_instructions)
-            }
-          }}
           default_edit_files_instructions={default_system_instructions}
-          default_commit_instructions={default_commit_message_instructions}
           on_restore_edit_files_instructions={() => {
             set_edit_files_instructions(default_system_instructions)
             props.on_edit_files_system_instructions_change(
               default_system_instructions
-            )
-          }}
-          on_restore_commit_instructions={() => {
-            set_commit_instructions(default_commit_message_instructions)
-            props.on_commit_instructions_change(
-              default_commit_message_instructions
             )
           }}
         />

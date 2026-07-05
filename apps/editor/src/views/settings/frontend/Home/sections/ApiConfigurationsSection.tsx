@@ -2,10 +2,10 @@ import { forwardRef } from 'react'
 import { Section as UiSection } from '@ui/components/editor/settings/Section'
 import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
 import { Notice as UiNotice } from '@ui/components/editor/settings/Notice'
-import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { Item as UiItem } from '@ui/components/editor/settings/Item'
 import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
 import { DefaultConfigurationSelector } from '@ui/components/editor/settings/DefaultConfigurationSelector'
+import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { ApiConfiguration, Provider } from '@/views/settings/types/messages'
 import { ToolType } from '@/views/settings/types/tools'
 import { Translation, use_translation } from '../../i18n/use-translation'
@@ -40,19 +40,14 @@ type Props = {
   ) => void
   on_select_default_api_configuration: (tool_name: ToolType) => void
   set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void
-  edit_files_instructions: string
-  commit_instructions: string
-  set_edit_files_instructions: (instructions: string) => void
-  set_commit_instructions: (instructions: string) => void
-  on_edit_files_instructions_blur: () => void
-  on_commit_instructions_blur: () => void
-  default_edit_files_instructions: string
-  default_commit_instructions: string
-  on_restore_edit_files_instructions: () => void
-  on_restore_commit_instructions: () => void
   auto_run_intelligent_update: boolean
   on_auto_run_intelligent_update_change: (enabled: boolean) => void
   on_open_external_url: (url: string) => void
+  edit_files_instructions: string
+  set_edit_files_instructions: (instructions: string) => void
+  on_edit_files_instructions_blur: () => void
+  default_edit_files_instructions: string
+  on_restore_edit_files_instructions: () => void
 }
 
 export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
@@ -78,55 +73,37 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
         title={t('sections.api-configurations')}
         subtitle={t('configurations.subtitle')}
       >
-        <UiGroup>
-          <UiItem
-            title={t('preferences.intelligent-update.auto-run.title')}
-            description={t(
-              'preferences.intelligent-update.auto-run.description'
-            )}
-            slot_right={
-              <UiToggler
-                is_on={props.auto_run_intelligent_update}
-                on_toggle={props.on_auto_run_intelligent_update_change}
-              />
-            }
+        <UiNotice type="info">
+          <Translation
+            id="model-providers.notice.credentials"
+            components={{
+              link: (
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    props.on_open_external_url(
+                      'https://code.visualstudio.com/api/references/vscode-api#SecretStorage'
+                    )
+                  }}
+                >
+                  SecretStorage
+                </a>
+              )
+            }}
           />
-        </UiGroup>
-
-        <div ref={(el) => props.set_section_ref('model-providers', el)}>
-          <UiGroup
-            title={t('sections.model-providers')}
-            notices_slot={
-              <>
-                <UiNotice type="info">
-                  <Translation
-                    id="model-providers.notice.credentials"
-                    components={{
-                      link: (
-                        <a
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault()
-                            props.on_open_external_url(
-                              'https://code.visualstudio.com/api/references/vscode-api#SecretStorage'
-                            )
-                          }}
-                        >
-                          SecretStorage
-                        </a>
-                      )
-                    }}
-                  />
-                </UiNotice>
-
-                {!props.providers.length && (
-                  <UiNotice type="warning">
-                    {t('model-providers.notice.missing')}
-                  </UiNotice>
-                )}
-              </>
-            }
-          >
+        </UiNotice>
+        <div
+          ref={(el) =>
+            props.set_section_ref('section:api-calls:group:model-providers', el)
+          }
+        >
+          <UiGroup title={t('sections.model-providers')}>
+            {!props.providers.length && (
+              <UiNotice type="warning">
+                {t('model-providers.notice.missing')}
+              </UiNotice>
+            )}
             <ModelProvidersSection
               providers={props.providers}
               on_reorder={(reordered) => {
@@ -140,17 +117,20 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
           </UiGroup>
         </div>
 
-        <div ref={(el) => props.set_section_ref('api-configurations', el)}>
-          <UiGroup
-            title={t('web-configurations.configurations.title')}
-            notices_slot={
-              !props.api_configurations.length ? (
-                <UiNotice type="warning">
-                  {t('configurations.notice.missing')}
-                </UiNotice>
-              ) : undefined
-            }
-          >
+        <div
+          ref={(el) =>
+            props.set_section_ref(
+              'section:api-calls:group:api-configurations',
+              el
+            )
+          }
+        >
+          <UiGroup title={t('configurations.title')}>
+            {!props.api_configurations.length && (
+              <UiNotice type="warning">
+                {t('configurations.notice.missing')}
+              </UiNotice>
+            )}
             {props.api_configurations && (
               <SortableList
                 items={props.api_configurations}
@@ -161,9 +141,9 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                 on_add={props.on_add_api_configuration}
                 translations={{
                   add_title: t('action.add-new'),
-                  item_text: t('web-configurations.item'),
-                  items_text: t('web-configurations.items'),
-                  items_text_many: t('web-configurations.items-many')
+                  item_text: t('configurations.item'),
+                  items_text: t('configurations.items'),
+                  items_text_many: t('configurations.items-many')
                 }}
                 render_content={(config) => {
                   const details: string[] = [config.model_provider_name]
@@ -202,7 +182,7 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                   <>
                     <IconButton
                       codicon_icon="insert"
-                      title={t('web-configurations.action.insert')}
+                      title={t('configurations.action.insert')}
                       on_click={() =>
                         props.on_add_api_configuration({
                           insertion_index: index
@@ -211,14 +191,14 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                     />
                     <IconButton
                       codicon_icon="edit"
-                      title={t('web-configurations.action.edit')}
+                      title={t('configurations.action.edit')}
                       on_click={() =>
                         props.on_edit_api_configuration(config.id)
                       }
                     />
                     <IconButton
                       codicon_icon="trash"
-                      title={t('web-configurations.action.delete')}
+                      title={t('configurations.action.delete')}
                       on_click={(e) => {
                         e.stopPropagation()
                         props.on_delete_api_configuration(config.id)
@@ -290,16 +270,54 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             )}
           </UiGroup>
         </div>
-        <div ref={(el) => props.set_section_ref('instructions', el)}>
-          <UiGroup title={t('configurations.instructions.title')}>
+
+        <div
+          ref={(el) =>
+            props.set_section_ref('section:api-calls:group:api-behavior', el)
+          }
+        >
+          <UiGroup title={t('configurations.behavior.title')}>
+            <UiItem
+              title={t('configurations.intelligent-update.auto-run.title')}
+              description={t(
+                'configurations.intelligent-update.auto-run.description'
+              )}
+              slot_right={
+                <UiToggler
+                  is_on={props.auto_run_intelligent_update}
+                  on_toggle={props.on_auto_run_intelligent_update_change}
+                />
+              }
+            />
+          </UiGroup>
+        </div>
+
+        <div
+          ref={(el) =>
+            props.set_section_ref(
+              'section:api-calls:group:system-instructions',
+              el
+            )
+          }
+        >
+          <UiGroup
+            title={t('configurations.system-instructions.title')}
+            is_last
+          >
             <UiItem
               title={t('configurations.edit-files-system-instructions.title')}
               description={t(
                 'configurations.edit-files-system-instructions.description'
               )}
+              is_toggleable
+              translations={{
+                expand: t('common.expand'),
+                collapse: t('common.collapse')
+              }}
             >
               <UiTextarea
                 value={props.edit_files_instructions}
+                min_rows={3}
                 on_change={props.set_edit_files_instructions}
                 on_blur={props.on_edit_files_instructions_blur}
                 action_icon={
@@ -308,28 +326,8 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                     ? 'discard'
                     : undefined
                 }
-                action_title={t('configurations.action.restore-default')}
+                action_title={t('preferences.action.restore-default')}
                 on_action_click={props.on_restore_edit_files_instructions}
-              />
-            </UiItem>
-            <UiItem
-              title={t('configurations.commit-message-instructions.title')}
-              description={t(
-                'configurations.commit-message-instructions.description'
-              )}
-            >
-              <UiTextarea
-                value={props.commit_instructions}
-                on_change={props.set_commit_instructions}
-                on_blur={props.on_commit_instructions_blur}
-                action_icon={
-                  props.commit_instructions !==
-                  props.default_commit_instructions
-                    ? 'discard'
-                    : undefined
-                }
-                action_title={t('configurations.action.restore-default')}
-                on_action_click={props.on_restore_commit_instructions}
               />
             </UiItem>
           </UiGroup>

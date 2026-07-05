@@ -17,8 +17,8 @@ export const sections = {
     hu: 'Beállítások',
     bg: 'Настройки'
   },
-  'sections.preferences': {
-    en: 'Preferences',
+  'sections.general': {
+    en: 'General',
     pl: 'Ogólne',
     'zh-cn': '常规',
     ja: '一般',

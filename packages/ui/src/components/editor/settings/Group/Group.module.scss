@@ -1,17 +1,12 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 
 .title {
+  display: flex;
+  align-items: center;
   font-size: 12px;
   padding-left: 12px;
   color: var(--cwc-text-color-dimmed);
-}
-
-.notices {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 }

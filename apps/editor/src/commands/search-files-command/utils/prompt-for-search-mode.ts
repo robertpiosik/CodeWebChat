@@ -37,6 +37,7 @@ export const prompt_for_search_mode = async (
   quick_pick.items = items
   quick_pick.activeItems = [active_item]
   quick_pick.title = t('command.search.mode.title')
+  quick_pick.placeholder = t('command.search.mode.placeholder')
   quick_pick.ignoreFocusOut = false
   quick_pick.buttons = [close_button]
 

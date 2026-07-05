@@ -8,49 +8,50 @@
   color: var(--vscode-foreground);
   text-decoration: none;
   cursor: pointer;
-  height: 32px;
-  transition: background-color 0.1s;
+  transition:
+    background-color var(--transition-duration-150),
+    opacity var(--transition-duration-250);
+
+  font-size: 13px;
+  height: 26px;
+  padding-left: 20px;
+  position: relative;
+  opacity: 0.6;
 
   &:hover {
     background-color: var(--cwc-bg-tertiary);
     text-decoration: none;
   }
 
+  &::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: currentColor;
+    opacity: 0.2;
+  }
+
+  &--parent-active {
+    opacity: 1;
+  }
+
   &--active {
     background-color: var(--cwc-bg-secondary);
+    opacity: 1;
 
     &:hover {
       background-color: var(--cwc-bg-secondary);
     }
-  }
-
-  &--nested {
-    font-size: 13px;
-    height: 26px;
-    padding-left: 20px;
-    position: relative;
-    opacity: 0.6;
 
     &::before {
-      content: '';
-      position: absolute;
-      left: 10px;
-      top: 0;
-      bottom: 0;
-      width: 1px;
-      background-color: currentColor;
-      opacity: 0.2;
-    }
-
-    &.container--active {
-      opacity: 1;
-      &::before {
-        opacity: 0.4;
-      }
+      opacity: 0.4;
     }
   }
 
-  &--last-nested {
+  &--last {
     margin-bottom: 8px;
   }
 }

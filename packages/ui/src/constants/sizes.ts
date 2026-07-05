@@ -1,0 +1,2 @@
+export const SECTION_HEADER_HEIGHT = 102
+export const GROUP_TITLE_HEIGHT = 40
