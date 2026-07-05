@@ -23,12 +23,6 @@ export const use_settings = (vscode: any) => {
   >(undefined)
   const [commit_message_instructions, set_commit_message_instructions] =
     useState<string | undefined>(undefined)
-  const [voice_input_instructions, set_voice_input_instructions] = useState<
-    string | undefined
-  >(undefined)
-  const [voice_input_push_to_talk, set_voice_input_push_to_talk] = useState<
-    boolean | undefined
-  >(undefined)
   const [
     include_prompts_in_commit_messages,
     set_include_prompts_in_commit_messages
@@ -76,8 +70,6 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_EDIT_FILES_SYSTEM_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_INCLUDE_PROMPTS_IN_COMMIT_MESSAGES' })
-    post_message(vscode, { command: 'GET_VOICE_INPUT_INSTRUCTIONS' })
-    post_message(vscode, { command: 'GET_VOICE_INPUT_PUSH_TO_TALK' })
     post_message(vscode, { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' })
     post_message(vscode, { command: 'GET_EDIT_FORMAT_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_ARE_AUTOMATIC_CHECKPOINTS_DISABLED' })
@@ -107,10 +99,6 @@ export const use_settings = (vscode: any) => {
         set_commit_message_instructions(message.instructions)
       } else if (message.command == 'INCLUDE_PROMPTS_IN_COMMIT_MESSAGES') {
         set_include_prompts_in_commit_messages(message.enabled)
-      } else if (message.command == 'VOICE_INPUT_INSTRUCTIONS') {
-        set_voice_input_instructions(message.instructions)
-      } else if (message.command == 'VOICE_INPUT_PUSH_TO_TALK') {
-        set_voice_input_push_to_talk(message.enabled)
       } else if (message.command == 'CONTEXT_SIZE_WARNING_THRESHOLD') {
         set_context_size_warning_threshold(message.threshold)
       } else if (message.command == 'EDIT_FORMAT_INSTRUCTIONS') {
@@ -257,20 +245,6 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_voice_input_instructions_change = (instructions: string) =>
-    post_message(vscode, {
-      command: 'UPDATE_VOICE_INPUT_INSTRUCTIONS',
-      instructions
-    })
-
-  const handle_voice_input_push_to_talk_change = (enabled: boolean) => {
-    set_voice_input_push_to_talk(enabled)
-    post_message(vscode, {
-      command: 'UPDATE_VOICE_INPUT_PUSH_TO_TALK',
-      enabled
-    })
-  }
-
   const handle_edit_files_system_instructions_change = (instructions: string) =>
     post_message(vscode, {
       command: 'UPDATE_EDIT_FILES_SYSTEM_INSTRUCTIONS',
@@ -392,8 +366,6 @@ export const use_settings = (vscode: any) => {
     web_configurations,
     set_web_configurations,
     defaults,
-    voice_input_instructions,
-    voice_input_push_to_talk,
     commit_message_instructions,
     include_prompts_in_commit_messages,
     edit_files_system_instructions,
@@ -419,8 +391,6 @@ export const use_settings = (vscode: any) => {
     handle_reorder_web_configurations,
     handle_add_web_configuration,
     handle_delete_web_configuration,
-    handle_voice_input_instructions_change,
-    handle_voice_input_push_to_talk_change,
     handle_commit_instructions_change,
     handle_include_prompts_in_commit_messages_change,
     handle_edit_files_system_instructions_change,

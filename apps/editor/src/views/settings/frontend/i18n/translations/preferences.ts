@@ -953,42 +953,5 @@ export const preferences = {
     cs: 'Použít výchozí konfiguraci k okamžité integraci.',
     hu: 'Alapértelmezett konfiguráció a hibás fájlok azonnali integrálásához.',
     bg: 'Използване на конфигурация по подразбиране за интегриране.'
-  },
-  'preferences.voice-input.push-to-talk.title': {
-    en: 'Push-To-Talk',
-    pl: 'Naciśnij i mów',
-    'zh-cn': '一键通',
-    ja: 'プッシュトゥトーク',
-    'zh-tw': '一鍵通',
-    de: 'Push-To-Talk',
-    es: 'Pulsar para hablar',
-    fr: 'Appuyer pour parler',
-    'pt-br': 'Aperte para Falar',
-    ru: 'Нажми и говори',
-    ko: '눌러서 말하기',
-    it: 'Premi per parlare',
-    tr: 'Bas Konuş',
-    cs: 'Stiskni a mluv',
-    hu: 'Gombnyomásos beszéd',
-    bg: 'Натисни за говорене'
-  },
-  'preferences.voice-input.push-to-talk.description': {
-    en: 'Hold spacebar to activate voice input.',
-    pl: 'Przytrzymaj spację, aby aktywować wprowadzanie głosowe.',
-    'zh-cn': '按住空格键激活语音输入。',
-    ja: 'スペースキーを押し続けて音声入力を有効にします。',
-    'zh-tw': '按住空白鍵啟用語音輸入。',
-    de: 'Halten Sie die Leertaste gedrückt, um die Spracheingabe zu aktivieren.',
-    es: 'Mantén presionada la barra espaciadora para activar la entrada de voz.',
-    fr: "Maintenez la barre d'espace pour activer la saisie vocale.",
-    'pt-br':
-      'Mantenha a barra de espaço pressionada para ativar a entrada de voz.',
-    ru: 'Удерживайте пробел, чтобы активировать голосовой ввод.',
-    ko: '스페이스바를 길게 눌러 음성 입력을 활성화하세요.',
-    it: "Tieni premuta la barra spaziatrice per attivare l'inserimento vocale.",
-    tr: 'Sesle girişi etkinleştirmek için boşluk tuşuna basılı tutun.',
-    cs: 'Podržením mezerníku aktivujete hlasový vstup.',
-    hu: 'Tartsa lenyomva a szóköz billentyűt a hangbemenet aktiválásához.',
-    bg: 'Задръжте интервала, за да активирате гласовото въвеждане.'
   }
 } as const

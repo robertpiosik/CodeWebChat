@@ -50,8 +50,6 @@ export const Settings = () => {
       settings_hook.web_configurations !== undefined &&
       settings_hook.defaults !== undefined &&
       settings_hook.edit_files_system_instructions !== undefined &&
-      settings_hook.voice_input_instructions !== undefined &&
-      settings_hook.voice_input_push_to_talk !== undefined &&
       settings_hook.commit_message_instructions !== undefined &&
       settings_hook.include_prompts_in_commit_messages !== undefined &&
       settings_hook.context_size_warning_threshold !== undefined &&
@@ -97,8 +95,6 @@ export const Settings = () => {
         include_prompts_in_commit_messages={
           settings_hook.include_prompts_in_commit_messages!
         }
-        voice_input_instructions={settings_hook.voice_input_instructions!}
-        voice_input_push_to_talk={settings_hook.voice_input_push_to_talk!}
         commit_message_instructions={settings_hook.commit_message_instructions!}
         edit_format_instructions={settings_hook.edit_format_instructions!}
         are_automatic_checkpoints_disabled={
@@ -118,12 +114,6 @@ export const Settings = () => {
         set_api_configurations={settings_hook.set_api_configurations}
         on_context_size_warning_threshold_change={
           settings_hook.handle_context_size_warning_threshold_change
-        }
-        on_voice_input_instructions_change={
-          settings_hook.handle_voice_input_instructions_change
-        }
-        on_voice_input_push_to_talk_change={
-          settings_hook.handle_voice_input_push_to_talk_change
         }
         on_commit_instructions_change={
           settings_hook.handle_commit_instructions_change

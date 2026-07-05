@@ -78,24 +78,6 @@ export interface UpdateIncludePromptsInCommitMessagesMessage {
   enabled: boolean
 }
 
-export interface GetVoiceInputInstructionsMessage {
-  command: 'GET_VOICE_INPUT_INSTRUCTIONS'
-}
-
-export interface UpdateVoiceInputInstructionsMessage {
-  command: 'UPDATE_VOICE_INPUT_INSTRUCTIONS'
-  instructions: string
-}
-
-export interface GetVoiceInputPushToTalkMessage {
-  command: 'GET_VOICE_INPUT_PUSH_TO_TALK'
-}
-
-export interface UpdateVoiceInputPushToTalkMessage {
-  command: 'UPDATE_VOICE_INPUT_PUSH_TO_TALK'
-  enabled: boolean
-}
-
 export interface GetEditFilesSystemInstructionsMessage {
   command: 'GET_EDIT_FILES_SYSTEM_INSTRUCTIONS'
 }
@@ -349,10 +331,6 @@ export type FrontendMessage =
   | UpdateCommitMessageInstructionsMessage
   | GetIncludePromptsInCommitMessagesMessage
   | UpdateIncludePromptsInCommitMessagesMessage
-  | GetVoiceInputInstructionsMessage
-  | UpdateVoiceInputInstructionsMessage
-  | GetVoiceInputPushToTalkMessage
-  | UpdateVoiceInputPushToTalkMessage
   | GetEditFilesSystemInstructionsMessage
   | UpdateEditFilesSystemInstructionsMessage
   | GetEditFormatInstructionsMessage
@@ -419,16 +397,6 @@ export interface CommitMessageInstructionsMessage {
 
 export interface IncludePromptsInCommitMessagesMessage {
   command: 'INCLUDE_PROMPTS_IN_COMMIT_MESSAGES'
-  enabled: boolean
-}
-
-export interface VoiceInputInstructionsMessage {
-  command: 'VOICE_INPUT_INSTRUCTIONS'
-  instructions: string
-}
-
-export interface VoiceInputPushToTalkMessage {
-  command: 'VOICE_INPUT_PUSH_TO_TALK'
   enabled: boolean
 }
 
@@ -563,8 +531,6 @@ export type BackendMessage =
   | ApiConfigurationsMessage
   | CommitMessageInstructionsMessage
   | IncludePromptsInCommitMessagesMessage
-  | VoiceInputInstructionsMessage
-  | VoiceInputPushToTalkMessage
   | EditFilesSystemInstructionsMessage
   | EditFormatInstructionsMessage
   | ContextSizeWarningThresholdMessage

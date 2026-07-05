@@ -4,4 +4,3 @@ export type ToolType =
   | 'edit-files'
   | 'intelligent-update'
   | 'find-relevant-files'
-  | 'voice-input'

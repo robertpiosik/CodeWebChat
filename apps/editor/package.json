@@ -812,10 +812,6 @@
           "scope": "resource",
           "default": true
         },
-        "codeWebChat.voiceInputInstructions": {
-          "type": "string",
-          "scope": "resource"
-        },
         "codeWebChat.voiceInputPushToTalk": {
           "type": "boolean",
           "scope": "resource"

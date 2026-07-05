@@ -51,8 +51,6 @@ type Props = {
   set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void
   include_prompts_in_commit_messages: boolean
   on_include_prompts_in_commit_messages_change: (enabled: boolean) => void
-  voice_input_push_to_talk: boolean
-  on_voice_input_push_to_talk_change: (enabled: boolean) => void
 }
 
 export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
@@ -224,18 +222,6 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
                 <UiToggler
                   is_on={props.send_with_shift_enter}
                   on_toggle={props.on_send_with_shift_enter_change}
-                />
-              }
-            />
-            <UiItem
-              title={t('preferences.voice-input.push-to-talk.title')}
-              description={t(
-                'preferences.voice-input.push-to-talk.description'
-              )}
-              slot_right={
-                <UiToggler
-                  is_on={props.voice_input_push_to_talk}
-                  on_toggle={props.on_voice_input_push_to_talk_change}
                 />
               }
             />

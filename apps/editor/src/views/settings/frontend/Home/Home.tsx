@@ -12,10 +12,7 @@ import { PreferencesSection } from './sections/PreferencesSection'
 import { ToolType } from '@/views/settings/types/tools'
 import { use_translation, TranslationKey } from '../i18n/use-translation'
 import { WebConfigurationsSection } from './sections/WebConfigurationsSection'
-import {
-  commit_message_instructions as default_commit_message_instructions,
-  voice_input_instructions as default_voice_input_instructions
-} from '@/constants/instructions'
+import { commit_message_instructions as default_commit_message_instructions } from '@/constants/instructions'
 import { default_system_instructions } from '@shared/constants/default-system-instructions'
 
 export type NavItem =
@@ -100,8 +97,6 @@ type Props = {
   web_configurations: WebConfiguration[]
   defaults: Record<ToolType, string | null>
   edit_files_system_instructions: string
-  voice_input_instructions: string
-  voice_input_push_to_talk: boolean
   commit_message_instructions: string
   include_prompts_in_commit_messages: boolean
   context_size_warning_threshold: number
@@ -127,8 +122,6 @@ type Props = {
     instructions: EditFormatInstructions
   ) => void
   on_edit_files_system_instructions_change: (instructions: string) => void
-  on_voice_input_instructions_change: (instructions: string) => void
-  on_voice_input_push_to_talk_change: (enabled: boolean) => void
   on_automatic_checkpoints_toggle: (disabled: boolean) => void
   on_checkpoint_lifespan_change: (hours: number | undefined) => void
   on_gemini_user_id_change: (id: number | null) => void
@@ -201,7 +194,6 @@ export const Home: React.FC<Props> = (props) => {
   )
 
   const [commit_instructions, set_commit_instructions] = useState('')
-  const [voice_input_instructions, set_voice_input_instructions] = useState('')
   const [edit_files_instructions, set_edit_files_instructions] = useState('')
 
   const get_has_warning = (id: NavItem): boolean => {
@@ -253,10 +245,6 @@ export const Home: React.FC<Props> = (props) => {
   useEffect(() => {
     set_commit_instructions(props.commit_message_instructions || '')
   }, [props.commit_message_instructions])
-
-  useEffect(() => {
-    set_voice_input_instructions(props.voice_input_instructions || '')
-  }, [props.voice_input_instructions])
 
   useEffect(() => {
     set_edit_files_instructions(props.edit_files_system_instructions || '')
@@ -371,10 +359,6 @@ export const Home: React.FC<Props> = (props) => {
           on_include_prompts_in_commit_messages_change={
             props.on_include_prompts_in_commit_messages_change
           }
-          voice_input_push_to_talk={props.voice_input_push_to_talk}
-          on_voice_input_push_to_talk_change={
-            props.on_voice_input_push_to_talk_change
-          }
         />
 
         <WebConfigurationsSection
@@ -423,10 +407,8 @@ export const Home: React.FC<Props> = (props) => {
           on_delete_api_configuration={props.on_delete_api_configuration}
           edit_files_instructions={edit_files_instructions}
           commit_instructions={commit_instructions}
-          voice_input_instructions={voice_input_instructions}
           set_edit_files_instructions={set_edit_files_instructions}
           set_commit_instructions={set_commit_instructions}
-          set_voice_input_instructions={set_voice_input_instructions}
           on_edit_files_instructions_blur={() => {
             props.on_edit_files_system_instructions_change(
               edit_files_instructions
@@ -449,18 +431,8 @@ export const Home: React.FC<Props> = (props) => {
               set_commit_instructions(default_commit_message_instructions)
             }
           }}
-          on_voice_input_instructions_blur={() => {
-            props.on_voice_input_instructions_change(voice_input_instructions)
-            if (
-              voice_input_instructions == '' &&
-              props.voice_input_instructions == default_voice_input_instructions
-            ) {
-              set_voice_input_instructions(default_voice_input_instructions)
-            }
-          }}
           default_edit_files_instructions={default_system_instructions}
           default_commit_instructions={default_commit_message_instructions}
-          default_voice_input_instructions={default_voice_input_instructions}
           on_restore_edit_files_instructions={() => {
             set_edit_files_instructions(default_system_instructions)
             props.on_edit_files_system_instructions_change(
@@ -471,12 +443,6 @@ export const Home: React.FC<Props> = (props) => {
             set_commit_instructions(default_commit_message_instructions)
             props.on_commit_instructions_change(
               default_commit_message_instructions
-            )
-          }}
-          on_restore_voice_input_instructions={() => {
-            set_voice_input_instructions(default_voice_input_instructions)
-            props.on_voice_input_instructions_change(
-              default_voice_input_instructions
             )
           }}
         />

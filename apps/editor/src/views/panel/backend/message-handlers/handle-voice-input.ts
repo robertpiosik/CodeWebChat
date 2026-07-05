@@ -157,10 +157,6 @@ const stop_recording = async (panel_provider: PanelProvider) => {
 
       const endpoint_url = model_provider.base_url
 
-      const instructions = vscode.workspace
-        .getConfiguration('codeWebChat')
-        .get<string>('voiceInputInstructions')
-
       const body: { [key: string]: any } = {
         model: api_configuration.model,
         messages: [
@@ -169,7 +165,7 @@ const stop_recording = async (panel_provider: PanelProvider) => {
             content: [
               {
                 type: 'text',
-                text: instructions || voice_input_instructions
+                text: voice_input_instructions
               },
               {
                 type: 'input_audio',

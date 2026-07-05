@@ -287,24 +287,6 @@ export const configurations = {
     hu: 'Commit Üzenetek',
     bg: 'Съобщения за commit'
   },
-  'configurations.tool.voice-input': {
-    en: 'Voice Input',
-    pl: 'Wprowadzanie głosowe',
-    'zh-cn': '语音输入',
-    ja: '音声入力',
-    'zh-tw': '語音輸入',
-    de: 'Spracheingabe',
-    es: 'Entrada de voz',
-    fr: 'Saisie vocale',
-    'pt-br': 'Entrada de Voz',
-    ru: 'Голосовой ввод',
-    ko: '음성 입력',
-    it: 'Input vocale',
-    tr: 'Ses Girişi',
-    cs: 'Hlasový vstup',
-    hu: 'Hangbemenet',
-    bg: 'Гласово въвеждане'
-  },
   'configurations.instructions.title': {
     en: 'Instructions',
     pl: 'Instrukcje',
@@ -398,41 +380,5 @@ export const configurations = {
     cs: 'Popište styl a konvence (např. Conventional Commits) pro generovanou zprávu.',
     hu: 'Stílus és konvenciók (pl. Conventional Commits) leírása.',
     bg: 'Опишете стил (напр. Conventional Commits) за съобщението.'
-  },
-  'configurations.voice-input-instructions.title': {
-    en: 'Voice Input Instructions',
-    pl: 'Instrukcje wprowadzania głosowego',
-    'zh-cn': '语音输入说明',
-    ja: '音声入力の指示',
-    'zh-tw': '語音輸入說明',
-    de: 'Spracheingabe-Anweisungen',
-    es: 'Instrucciones de entrada de voz',
-    fr: 'Instructions de saisie vocale',
-    'pt-br': 'Instruções de Entrada de Voz',
-    ru: 'Инструкции для голосового ввода',
-    ko: '음성 입력 지침',
-    it: 'Istruzioni input vocale',
-    tr: 'Ses Girişi Talimatları',
-    cs: 'Instrukce hlasového vstupu',
-    hu: 'Hangbemenet Utasítások',
-    bg: 'Инструкции за гласово въвеждане'
-  },
-  'configurations.voice-input-instructions.description': {
-    en: 'How the model should process the audio recording.',
-    pl: 'Jak model powinien przetwarzać nagranie audio.',
-    'zh-cn': '模型应如何处理音频录制。',
-    ja: 'モデルが音声録音を処理する方法。',
-    'zh-tw': '模型應如何處理音訊錄音。',
-    de: 'Wie das Modell die Audioaufnahme verarbeiten soll.',
-    es: 'Cómo debe procesar el modelo la grabación de audio.',
-    fr: "Comment le modèle doit traiter l'enregistrement audio.",
-    'pt-br': 'Como o modelo deve processar a gravação de áudio.',
-    ru: 'Как модель должна обрабатывать аудиозапись.',
-    ko: '모델이 오디오 녹음을 처리하는 방법.',
-    it: 'Come il modello deve elaborare la registrazione audio.',
-    tr: 'Modelin ses kaydını nasıl işlemesi gerektiği.',
-    cs: 'Jak by měl model zpracovávat zvukový záznam.',
-    hu: 'Hogyan dolgozza fel a modell a hangfelvételt.',
-    bg: 'Как моделът трябва да обработва аудио записа.'
   }
 } as const

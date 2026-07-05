@@ -42,19 +42,14 @@ type Props = {
   set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void
   edit_files_instructions: string
   commit_instructions: string
-  voice_input_instructions: string
   set_edit_files_instructions: (instructions: string) => void
   set_commit_instructions: (instructions: string) => void
-  set_voice_input_instructions: (instructions: string) => void
   on_edit_files_instructions_blur: () => void
   on_commit_instructions_blur: () => void
-  on_voice_input_instructions_blur: () => void
   default_edit_files_instructions: string
   default_commit_instructions: string
-  default_voice_input_instructions: string
   on_restore_edit_files_instructions: () => void
   on_restore_commit_instructions: () => void
-  on_restore_voice_input_instructions: () => void
   auto_run_intelligent_update: boolean
   on_auto_run_intelligent_update_change: (enabled: boolean) => void
   on_open_external_url: (url: string) => void
@@ -291,21 +286,6 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                     unset: t('configurations.action.unset-default')
                   }}
                 />
-                <DefaultConfigurationSelector
-                  title={t('configurations.tool.voice-input')}
-                  value={props.defaults['voice-input'] || null}
-                  configurations={selector_configurations}
-                  on_unset={() =>
-                    props.on_set_default_api_configuration('voice-input', null)
-                  }
-                  on_select={() =>
-                    props.on_select_default_api_configuration('voice-input')
-                  }
-                  translations={{
-                    select: t('configurations.action.select-default'),
-                    unset: t('configurations.action.unset-default')
-                  }}
-                />
               </>
             )}
           </UiGroup>
@@ -350,26 +330,6 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                 }
                 action_title={t('configurations.action.restore-default')}
                 on_action_click={props.on_restore_commit_instructions}
-              />
-            </UiItem>
-            <UiItem
-              title={t('configurations.voice-input-instructions.title')}
-              description={t(
-                'configurations.voice-input-instructions.description'
-              )}
-            >
-              <UiTextarea
-                value={props.voice_input_instructions}
-                on_change={props.set_voice_input_instructions}
-                on_blur={props.on_voice_input_instructions_blur}
-                action_icon={
-                  props.voice_input_instructions !==
-                  props.default_voice_input_instructions
-                    ? 'discard'
-                    : undefined
-                }
-                action_title={t('configurations.action.restore-default')}
-                on_action_click={props.on_restore_voice_input_instructions}
               />
             </UiItem>
           </UiGroup>
