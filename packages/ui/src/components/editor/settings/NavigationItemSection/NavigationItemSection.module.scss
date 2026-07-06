@@ -9,6 +9,7 @@
   height: 32px;
   transition: background-color 0.1s;
   opacity: var(--dimmed-opacity);
+  font-weight: 500;
 
   &--active {
     opacity: 1;
