@@ -1,8 +1,5 @@
 .menu {
-  position: absolute;
-  top: 100%;
   padding-top: 4px;
-  right: 0;
   z-index: 2;
   width: max-content;
   text-align: left;
@@ -78,4 +75,13 @@
 
 .underlined {
   text-decoration: underline;
+}
+
+.anchored {
+  position: fixed;
+  z-index: 1;
+
+  & > * {
+    position: static;
+  }
 }

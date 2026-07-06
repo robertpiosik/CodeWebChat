@@ -26,6 +26,8 @@ type Props = {
   is_setup_complete: boolean
 }
 
+const MENU_MAX_HEIGHT = 'calc(100vh - 38px)'
+
 export const Header: React.FC<Props> = (props) => {
   const { t } = use_translation()
   const header_ref = useRef<HTMLDivElement>(null)
@@ -87,13 +89,14 @@ export const Header: React.FC<Props> = (props) => {
               )}
               selected_value={props.web_prompt_type}
               on_change={props.on_web_prompt_type_change}
-              menu_max_height="calc(100vh - 80px)"
+              menu_max_height={MENU_MAX_HEIGHT}
               info={t('header.prompt-type')}
               title={
                 is_mac
                   ? 'Change prompt type (⇧⌥)'
                   : 'Change prompt type (Shift+Alt)'
               }
+              match_button_width
             />
           )}
           {props.mode == MODE.API && (
@@ -107,13 +110,14 @@ export const Header: React.FC<Props> = (props) => {
               )}
               selected_value={props.api_prompt_type}
               on_change={props.on_api_prompt_type_change}
-              menu_max_height="calc(100vh - 80px)"
+              menu_max_height={MENU_MAX_HEIGHT}
               info={is_narrow_viewport ? undefined : t('header.prompt-type')}
               title={
                 is_mac
                   ? 'Change prompt type (⇧⌥)'
                   : 'Change prompt type (Shift+Alt)'
               }
+              match_button_width
             />
           )}
         </div>

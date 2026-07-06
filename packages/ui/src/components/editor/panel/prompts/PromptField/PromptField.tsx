@@ -11,6 +11,7 @@ import { use_edit_format_compacting } from './hooks/use-edit-format-compacting'
 import { DropdownMenu } from '../../../common/DropdownMenu'
 import { use_is_mac } from '@shared/hooks'
 import { Tooltip } from './components'
+import { use_click_outside } from '../../../../../hooks/use-click-outside'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import {
   get_caret_position_from_div,
@@ -106,6 +107,17 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     'at' | 'hash' | 'curly' | null
   >(null)
 
+  const invocation_button_ref = useRef<HTMLButtonElement>(null)
+  const chevron_button_ref = useRef<HTMLButtonElement>(null)
+  const disconnected_chevron_button_ref = useRef<HTMLButtonElement>(null)
+  const invocation_container_ref = useRef<HTMLDivElement>(null)
+
+  use_click_outside(
+    invocation_container_ref,
+    useCallback(() => set_is_invocation_dropdown_open(false), []),
+    is_invocation_dropdown_open
+  )
+
   useEffect(() => {
     const has_submit_button =
       (!props.is_web_mode || (props.is_web_mode && props.is_connected)) &&
@@ -167,8 +179,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     handle_copy_click,
     handle_select_click
   } = use_dropdown(props)
-
-  const invocation_dropdown_ref = useRef<HTMLDivElement>(null)
 
   const { ghost_text, handle_accept_ghost_text } = use_ghost_text({
     value: props.value,
@@ -281,26 +291,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     props.value,
     props.context_file_paths
   ])
-
-  useEffect(() => {
-    if (input_ref.current) {
-      const handle_click_outside = (event: MouseEvent) => {
-        if (
-          invocation_dropdown_ref.current &&
-          !invocation_dropdown_ref.current.contains(event.target as Node)
-        ) {
-          set_is_invocation_dropdown_open(false)
-        }
-      }
-
-      if (is_invocation_dropdown_open) {
-        document.addEventListener('mousedown', handle_click_outside)
-      }
-      return () => {
-        document.removeEventListener('mousedown', handle_click_outside)
-      }
-    }
-  }, [is_invocation_dropdown_open])
 
   const placeholder = useMemo(() => {
     if (props.prompt_type == 'code-at-cursor') {
@@ -622,9 +612,10 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   ) && (
                     <div
                       className={styles['footer__right__invocation-count']}
-                      ref={invocation_dropdown_ref}
+                      ref={invocation_container_ref}
                     >
                       <button
+                        ref={invocation_button_ref}
                         className={cn(
                           styles['footer__right__submit__button'],
                           styles['footer__right__invocation-count__button']
@@ -643,19 +634,19 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       >
                         {props.invocation_count}×
                       </button>
-                      {is_invocation_dropdown_open && (
-                        <DropdownMenu
-                          items={[1, 2, 3].map((count) => ({
-                            label: `${count}×`,
-                            checked: count == props.invocation_count,
-                            shortcut: is_mac ? `⌥X ${count}` : `Alt+X ${count}`,
-                            on_click: () => {
-                              props.on_invocation_count_change(count)
-                              set_is_invocation_dropdown_open(false)
-                            }
-                          }))}
-                        />
-                      )}
+                      <DropdownMenu
+                        anchor_ref={invocation_button_ref}
+                        is_open={is_invocation_dropdown_open}
+                        items={[1, 2, 3].map((count) => ({
+                          label: `${count}×`,
+                          checked: count == props.invocation_count,
+                          shortcut: is_mac ? `⌥X ${count}` : `Alt+X ${count}`,
+                          on_click: () => {
+                            props.on_invocation_count_change(count)
+                            set_is_invocation_dropdown_open(false)
+                          }
+                        }))}
+                      />
                     </div>
                   )}
                   {props.is_recording ? (
@@ -705,6 +696,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                     />
                   )}
                   <button
+                    ref={chevron_button_ref}
                     className={cn(
                       styles['footer__right__submit__button'],
                       styles['footer__right__submit__button--chevron']
@@ -726,52 +718,50 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       )}
                     />
                   </button>
-                  {is_dropdown_open && (
-                    <DropdownMenu
-                      items={[
-                        ...(!props.value &&
-                        props.prompt_type != 'code-at-cursor' &&
-                        props.is_web_mode
-                          ? [
-                              {
-                                label: 'Send',
-                                shortcut: is_mac ? '↩' : 'Enter',
-                                on_click: () => {
-                                  handle_submit({
-                                    stopPropagation: () => {}
-                                  } as any)
-                                  close_dropdown()
-                                }
+                  <DropdownMenu
+                    anchor_ref={chevron_button_ref}
+                    is_open={is_dropdown_open}
+                    items={[
+                      ...(!props.value &&
+                      props.prompt_type != 'code-at-cursor' &&
+                      props.is_web_mode
+                        ? [
+                            {
+                              label: 'Send',
+                              shortcut: is_mac ? '↩' : 'Enter',
+                              on_click: () => {
+                                handle_submit({
+                                  stopPropagation: () => {}
+                                } as any)
+                                close_dropdown()
                               }
-                            ]
-                          : []),
-                        {
-                          label: 'Send with...',
-                          shortcut: is_mac ? '⌘↩' : 'Ctrl+Enter',
-                          on_click: handle_select_click
-                        },
-                        {
-                          label: 'Copy prompt',
-                          shortcut: is_mac ? '⌘C' : 'Ctrl+C',
-                          on_click: handle_copy_click
-                        },
-                        ...(props.value || props.prompt_type == 'code-at-cursor'
-                          ? [
-                              {
-                                label: props.translations.voice_input,
-                                shortcut: is_mac
-                                  ? '⇧⌘Space'
-                                  : 'Ctrl+Shift+Space',
-                                on_click: () => {
-                                  props.on_recording_started()
-                                  close_dropdown()
-                                }
+                            }
+                          ]
+                        : []),
+                      {
+                        label: 'Send with...',
+                        shortcut: is_mac ? '⌘↩' : 'Ctrl+Enter',
+                        on_click: handle_select_click
+                      },
+                      {
+                        label: 'Copy prompt',
+                        shortcut: is_mac ? '⌘C' : 'Ctrl+C',
+                        on_click: handle_copy_click
+                      },
+                      ...(props.value || props.prompt_type == 'code-at-cursor'
+                        ? [
+                            {
+                              label: props.translations.voice_input,
+                              shortcut: is_mac ? '⇧⌘Space' : 'Ctrl+Shift+Space',
+                              on_click: () => {
+                                props.on_recording_started()
+                                close_dropdown()
                               }
-                            ]
-                          : [])
-                      ]}
-                    />
-                  )}
+                            }
+                          ]
+                        : [])
+                    ]}
+                  />
                 </>
               )}
               {props.is_web_mode && !props.is_connected && (
@@ -825,6 +815,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         title="Copy prompt"
                       />
                       <button
+                        ref={disconnected_chevron_button_ref}
                         className={cn(
                           styles['footer__right__submit__button'],
                           styles['footer__right__submit__button--chevron']
@@ -847,20 +838,20 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                           )}
                         />
                       </button>
-                      {is_dropdown_open && (
-                        <DropdownMenu
-                          items={[
-                            {
-                              label: props.translations.voice_input,
-                              shortcut: is_mac ? '⇧⌘Space' : 'Ctrl+Shift+Space',
-                              on_click: () => {
-                                props.on_recording_started()
-                                close_dropdown()
-                              }
+                      <DropdownMenu
+                        anchor_ref={disconnected_chevron_button_ref}
+                        is_open={is_dropdown_open}
+                        items={[
+                          {
+                            label: props.translations.voice_input,
+                            shortcut: is_mac ? '⇧⌘Space' : 'Ctrl+Shift+Space',
+                            on_click: () => {
+                              props.on_recording_started()
+                              close_dropdown()
                             }
-                          ]}
-                        />
-                      )}
+                          }
+                        ]}
+                      />
                     </>
                   )}
                 </>

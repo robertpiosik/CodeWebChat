@@ -1,7 +1,8 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import styles from './InlineDropdown.module.scss'
 import cn from 'classnames'
 import { DropdownMenu } from '../../common/DropdownMenu'
+import { use_click_outside } from '../../../../hooks/use-click-outside'
 
 export namespace InlineDropdown {
   export type Option<T extends string> = {
@@ -19,6 +20,7 @@ export namespace InlineDropdown {
     menu_max_height?: number | string
     info?: string
     title?: string
+    match_button_width?: boolean
   }
 }
 
@@ -53,23 +55,14 @@ export const InlineDropdown = <T extends string>(
     set_just_opened(false)
   }
 
-  useEffect(() => {
-    const handle_click_outside = (event: MouseEvent) => {
-      if (
-        container_ref.current &&
-        !container_ref.current.contains(event.target as Node)
-      ) {
-        opened_by_shortcut.current = false
-        set_is_open(false)
-        set_just_opened(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handle_click_outside)
-    return () => {
-      document.removeEventListener('mousedown', handle_click_outside)
-    }
-  }, [])
+  use_click_outside(
+    container_ref,
+    useCallback(() => {
+      opened_by_shortcut.current = false
+      set_is_open(false)
+      set_just_opened(false)
+    }, [])
+  )
 
   useEffect(() => {
     set_is_open(false)
@@ -137,20 +130,23 @@ export const InlineDropdown = <T extends string>(
         )}
       </button>
 
-      {is_open && (
-        <DropdownMenu
-          items={props.options.map((option) => ({
-            label: option.label,
-            on_click: () => handle_select(option.value),
-            is_selected: just_opened && option.value == props.selected_value,
-            shortcut: option.shortcut
-          }))}
-          underline_non_selected_items={opened_by_shortcut.current}
-          max_width={props.menu_max_width}
-          max_height={props.menu_max_height}
-          info={props.info}
-        />
-      )}
+      <DropdownMenu
+        anchor_ref={container_ref}
+        is_open={is_open}
+        match_anchor_width={props.match_button_width}
+        items={props.options.map((option) => ({
+          label: option.label,
+          on_click: () => handle_select(option.value),
+          is_selected: just_opened && option.value == props.selected_value,
+          shortcut: option.shortcut
+        }))}
+        underline_non_selected_items={opened_by_shortcut.current}
+        max_width={props.menu_max_width}
+        max_height={props.menu_max_height}
+        width={props.match_button_width ? '100%' : undefined}
+        min_width={props.match_button_width ? 0 : undefined}
+        info={props.info}
+      />
     </div>
   )
 }

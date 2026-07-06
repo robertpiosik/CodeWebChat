@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useLayoutEffect, useRef } from 'react'
 import { Scrollable } from '../Scrollable'
 import styles from './DropdownMenu.module.scss'
 
@@ -16,13 +16,58 @@ export namespace DropdownMenu {
     underline_non_selected_items?: boolean
     max_width?: number | string
     max_height?: number | string
+    width?: number | string
+    min_width?: number | string
     info?: string
+    anchor_ref?: React.RefObject<HTMLElement>
+    is_open?: boolean
+    match_anchor_width?: boolean
   }
 }
 
 export const DropdownMenu: React.FC<DropdownMenu.Props> = (props) => {
   const [is_preselection_respected, set_is_preselection_respected] =
     useState<boolean>(true)
+
+  const dropdown_ref = useRef<HTMLDivElement>(null)
+  const [anchor_style, set_anchor_style] = useState<React.CSSProperties>({})
+
+  useLayoutEffect(() => {
+    if (props.is_open && props.anchor_ref?.current && dropdown_ref.current) {
+      const anchor_rect = props.anchor_ref.current.getBoundingClientRect()
+      const dropdown_rect = dropdown_ref.current.getBoundingClientRect()
+
+      let top = anchor_rect.bottom
+      let left = props.match_anchor_width
+        ? anchor_rect.left
+        : anchor_rect.right - dropdown_rect.width
+      let width: string | undefined
+
+      if (props.match_anchor_width) {
+        width = `${anchor_rect.width}px`
+      } else if (left < 0) {
+        left = 4
+      } else if (left + dropdown_rect.width > window.innerWidth) {
+        left = window.innerWidth - dropdown_rect.width - 4
+      }
+
+      const viewport_height = window.innerHeight
+      if (top + dropdown_rect.height > viewport_height - 4) {
+        const overflow = top + dropdown_rect.height - (viewport_height - 4)
+        top -= overflow
+      }
+
+      set_anchor_style({
+        top: `${top}px`,
+        left: `${left}px`,
+        width
+      })
+    } else if (!props.is_open) {
+      set_anchor_style({})
+    }
+  }, [props.is_open, props.match_anchor_width, props.items])
+
+  if (props.anchor_ref && !props.is_open) return null
 
   const has_any_checked = props.items.some((item) => item.checked)
 
@@ -75,8 +120,15 @@ export const DropdownMenu: React.FC<DropdownMenu.Props> = (props) => {
     </div>
   )
 
-  return (
-    <div className={styles.menu} style={{ maxWidth: props.max_width }}>
+  const menu = (
+    <div
+      className={styles.menu}
+      style={{
+        maxWidth: props.max_width,
+        width: props.width,
+        minWidth: props.min_width
+      }}
+    >
       <div className={styles.menu__inner}>
         {props.max_height ? (
           <Scrollable
@@ -96,4 +148,14 @@ export const DropdownMenu: React.FC<DropdownMenu.Props> = (props) => {
       </div>
     </div>
   )
+
+  if (props.anchor_ref) {
+    return (
+      <div ref={dropdown_ref} style={anchor_style} className={styles.anchored}>
+        {menu}
+      </div>
+    )
+  }
+
+  return menu
 }
