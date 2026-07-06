@@ -13,7 +13,9 @@ export const Layout = forwardRef<HTMLDivElement, Props>((props, ref) => {
     <div className={styles.container}>
       <div className={styles.sidebar}>
         <div className={styles.sidebar__title}>{props.title}</div>
-        <div className={styles.sidebar__navigation}>{props.sidebar}</div>
+        <SimpleBar className={styles.sidebar__scroll}>
+          <div className={styles.sidebar__navigation}>{props.sidebar}</div>
+        </SimpleBar>
       </div>
       <div className={styles.content}>
         <SimpleBar scrollableNodeProps={{ ref }}>

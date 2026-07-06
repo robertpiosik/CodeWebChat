@@ -16,8 +16,10 @@
   flex-direction: column;
   gap: 31px;
   width: var(--sidebar-width);
-  top: calc(40px - 5px);
+  top: 35px;
+  bottom: 0;
   left: 30px;
+  overflow: hidden;
   @media (min-width: 770px) {
     left: 60px;
   }
@@ -34,6 +36,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  &__scroll {
+    flex: 1;
+    min-height: 0;
   }
 
   &__navigation {
