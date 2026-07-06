@@ -29,7 +29,9 @@ export const use_keyboard_shortcuts = ({
 
   useEffect(() => {
     const handle_key_down = (event: KeyboardEvent) => {
-      if (event.key == 'Alt') set_is_alt_pressed(true)
+      set_is_alt_pressed(
+        event.altKey && !event.shiftKey && !event.ctrlKey && !event.metaKey
+      )
 
       if (is_disabled) return
 
@@ -54,7 +56,9 @@ export const use_keyboard_shortcuts = ({
     }
 
     const handle_key_up = (event: KeyboardEvent) => {
-      if (event.key == 'Alt') set_is_alt_pressed(false)
+      set_is_alt_pressed(
+        event.altKey && !event.shiftKey && !event.ctrlKey && !event.metaKey
+      )
     }
 
     const handle_blur = () => {

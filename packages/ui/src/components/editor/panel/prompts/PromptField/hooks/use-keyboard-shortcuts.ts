@@ -12,7 +12,7 @@ export const use_keyboard_shortcuts = (
 
   useEffect(() => {
     const handle_key_down = (e: KeyboardEvent) => {
-      if (e.key == 'Alt') set_is_alt_pressed(true)
+      set_is_alt_pressed(e.altKey && !e.shiftKey && !e.ctrlKey && !e.metaKey)
 
       if (
         params.on_toggle_invocation_dropdown &&
@@ -82,7 +82,7 @@ export const use_keyboard_shortcuts = (
       }
     }
     const handle_key_up = (e: KeyboardEvent) => {
-      if (e.key == 'Alt') set_is_alt_pressed(false)
+      set_is_alt_pressed(e.altKey && !e.shiftKey && !e.ctrlKey && !e.metaKey)
     }
     const handle_blur = () => {
       set_is_alt_pressed(false)
