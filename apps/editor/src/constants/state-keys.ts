@@ -85,6 +85,8 @@ export const LAST_SEARCH_FILES_PHRASE_QUERY_STATE_KEY =
   'last-search-files-phrase-query'
 export const LAST_SEARCH_FILES_KEYWORDS_QUERY_STATE_KEY =
   'last-search-files-keywords-query'
+export const LAST_SEARCH_FILES_KEYWORDS_MATCH_MODE_STATE_KEY =
+  'last-search-files-keywords-match-mode'
 export const LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY =
   'last-search-files-intelligent-query'
 

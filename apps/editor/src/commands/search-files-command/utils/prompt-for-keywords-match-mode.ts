@@ -1,26 +1,19 @@
 import * as vscode from 'vscode'
 import { t } from '@/i18n'
 
-export const prompt_for_search_mode = async (
-  last_mode: 'phrase' | 'keywords' | 'intelligent'
-): Promise<'phrase' | 'keywords' | 'intelligent' | undefined> => {
-  const items: (vscode.QuickPickItem & {
-    mode: 'phrase' | 'keywords' | 'intelligent'
-  })[] = [
+export const prompt_for_keywords_match_mode = async (
+  last_mode: 'all' | 'some'
+): Promise<'all' | 'some' | 'back' | undefined> => {
+  const items: (vscode.QuickPickItem & { mode: 'all' | 'some' })[] = [
     {
-      label: t('command.search.mode.phrase'),
-      description: t('command.search.mode.phrase-description'),
-      mode: 'phrase'
+      label: t('command.search.keywords.match-mode.all'),
+      description: t('command.search.keywords.match-mode.all-description'),
+      mode: 'all'
     },
     {
-      label: t('command.search.mode.keywords'),
-      description: t('command.search.mode.keywords-description'),
-      mode: 'keywords'
-    },
-    {
-      label: t('command.search.mode.intelligent'),
-      description: t('command.search.mode.intelligent-description'),
-      mode: 'intelligent'
+      label: t('command.search.keywords.match-mode.some'),
+      description: t('command.search.keywords.match-mode.some-description'),
+      mode: 'some'
     }
   ]
 
@@ -32,20 +25,23 @@ export const prompt_for_search_mode = async (
   }
 
   const quick_pick = vscode.window.createQuickPick<
-    vscode.QuickPickItem & { mode: 'phrase' | 'keywords' | 'intelligent' }
+    vscode.QuickPickItem & { mode: 'all' | 'some' }
   >()
   quick_pick.items = items
   quick_pick.activeItems = [active_item]
-  quick_pick.title = t('command.search.mode.title')
-  quick_pick.placeholder = t('command.search.mode.placeholder')
+  quick_pick.title = t('command.search.keywords.match-mode.title')
+  quick_pick.placeholder = t('command.search.keywords.match-mode.placeholder')
   quick_pick.ignoreFocusOut = false
-  quick_pick.buttons = [close_button]
+  quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
 
   return new Promise((resolve) => {
     let is_resolved = false
 
     quick_pick.onDidTriggerButton((button) => {
-      if (button === close_button) {
+      if (button === vscode.QuickInputButtons.Back) {
+        resolve('back')
+        quick_pick.hide()
+      } else if (button === close_button) {
         resolve(undefined)
         quick_pick.hide()
       }

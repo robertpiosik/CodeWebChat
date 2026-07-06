@@ -38,7 +38,7 @@ export const prompt_for_api_configuration = async (params: {
     if (default_api_configuration) {
       selected_api_configuration = default_api_configuration
       skipped = true
-    } else if (params.api_configurations.length === 1) {
+    } else if (params.api_configurations.length == 1) {
       selected_api_configuration = params.api_configurations[0]
       skipped = true
     }
@@ -62,7 +62,7 @@ export const prompt_for_api_configuration = async (params: {
       show_back_button: true
     })
 
-    if (result === 'back') return 'back'
+    if (result == 'back') return 'back'
     if (!result) return 'cancel'
     selected_api_configuration = result.item
   }

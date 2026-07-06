@@ -8,11 +8,12 @@ export const search_files_by_term = async (params: {
   files: string[]
   search_term: string
   search_mode: 'phrase' | 'keywords' | 'intelligent'
+  keywords_match_mode?: 'all' | 'some'
 }): Promise<string[]> => {
   const matched_files: string[] = []
 
   let regexes: RegExp[] = []
-  if (params.search_mode === 'keywords') {
+  if (params.search_mode == 'keywords') {
     const keywords = params.search_term
       .split(',')
       .map((k) => k.trim())
@@ -22,9 +23,17 @@ export const search_files_by_term = async (params: {
     regexes = [create_search_regex(params.search_term)]
   }
 
-  if (regexes.length === 0) return []
+  if (regexes.length == 0) return []
 
-  const matches_all = (text: string) => regexes.every((r) => r.test(text))
+  const matches_condition = (text: string) => {
+    if (
+      params.search_mode == 'keywords' &&
+      params.keywords_match_mode == 'some'
+    ) {
+      return regexes.some((r) => r.test(text))
+    }
+    return regexes.every((r) => r.test(text))
+  }
 
   for (const file_path of params.files) {
     try {
@@ -34,7 +43,7 @@ export const search_files_by_term = async (params: {
         continue
       }
 
-      if (matches_all(file_name)) {
+      if (matches_condition(file_name)) {
         matched_files.push(file_path)
         continue
       }
@@ -46,7 +55,7 @@ export const search_files_by_term = async (params: {
 
       const content = await fs.promises.readFile(file_path, 'utf-8')
 
-      if (matches_all(content)) {
+      if (matches_condition(content)) {
         matched_files.push(file_path)
       }
     } catch (error) {

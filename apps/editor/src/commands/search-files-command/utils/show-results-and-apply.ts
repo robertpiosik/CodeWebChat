@@ -134,7 +134,7 @@ export const show_results_and_apply = async (params: {
       quick_pick.show()
     })
 
-    if (list_selection === 'back' || list_selection === 'cancel') {
+    if (list_selection == 'back' || list_selection == 'cancel') {
       return list_selection
     }
 
@@ -224,7 +224,7 @@ export const show_results_and_apply = async (params: {
         quick_pick_merge.show()
       })
 
-      if (choice === 'back') {
+      if (choice == 'back') {
         should_continue_loop = true
       } else if (!choice) {
         return 'cancel'

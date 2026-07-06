@@ -113,7 +113,7 @@ export const prompt_for_search_results = async (params: {
           const text = doc.getText()
 
           let regexes: RegExp[] = []
-          if (params.search_mode === 'keywords') {
+          if (params.search_mode == 'keywords') {
             regexes = params.search_term
               .split(',')
               .map((k) => k.trim())
@@ -140,7 +140,7 @@ export const prompt_for_search_results = async (params: {
           })
         } catch (error) {
           vscode.window.showErrorMessage(
-            t('command.context.check-references.error-opening', {
+            t('command.search.error.opening-file', {
               error: String(error)
             })
           )

@@ -39,7 +39,7 @@ export const prompt_for_shrink_mode = async (params: {
     shrink_quick_pick.onDidAccept(() => {
       is_resolved = true
       resolve(
-        shrink_quick_pick.selectedItems[0].label ===
+        shrink_quick_pick.selectedItems[0].label ==
           t('command.search.shrink.strip')
       )
       shrink_quick_pick.hide()

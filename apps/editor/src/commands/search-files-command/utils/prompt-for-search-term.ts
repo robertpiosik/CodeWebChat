@@ -13,9 +13,9 @@ export const prompt_for_search_term = async (
   const input_box = vscode.window.createInputBox()
   input_box.title = t('command.search.title')
   input_box.prompt =
-    mode === 'keywords'
+    mode == 'keywords'
       ? t('command.search.prompt.keywords')
-      : mode === 'intelligent'
+      : mode == 'intelligent'
         ? t('command.search.prompt.intelligent')
         : t('command.search.prompt')
   input_box.placeholder = t('command.search.placeholder')
