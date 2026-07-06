@@ -72,14 +72,17 @@ export const show_configuration_quick_pick = async <T>(
     mapped: map_item(c)
   }))
   const pinned = mapped_configs.filter((c) => c.mapped.is_pinned)
+  const unpinned = mapped_configs.filter((c) => !c.mapped.is_pinned)
 
   if (pinned.length > 0) {
     items.push({ label: 'pinned', kind: vscode.QuickPickItemKind.Separator })
     items.push(...pinned.map((c) => map_to_quick_pick_item(c.config)))
-    items.push({ label: 'all', kind: vscode.QuickPickItemKind.Separator })
+    if (unpinned.length > 0) {
+      items.push({ label: 'all', kind: vscode.QuickPickItemKind.Separator })
+    }
   }
 
-  items.push(...mapped_configs.map((c) => map_to_quick_pick_item(c.config)))
+  items.push(...unpinned.map((c) => map_to_quick_pick_item(c.config)))
 
   const quick_pick = vscode.window.createQuickPick<PickItem>()
   quick_pick.items = items
