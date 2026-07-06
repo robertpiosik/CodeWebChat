@@ -9,7 +9,7 @@ import {
   EditFormatInstructions
 } from '@/views/settings/types/messages'
 import { WebConfiguration } from '@shared/types/web-configuration'
-import { PreferencesSection } from './sections/PreferencesSection'
+import { GeneralSection } from './sections/GeneralSection'
 import { ToolType } from '@/views/settings/types/tools'
 import { use_translation, TranslationKey } from '../i18n/use-translation'
 import { WebConfigurationsSection } from './sections/WebConfigurationsSection'
@@ -18,13 +18,13 @@ import { default_system_instructions } from '@shared/constants/default-system-in
 import { GROUP_TITLE_HEIGHT, SECTION_HEADER_HEIGHT } from '@ui/constants/sizes'
 
 export type NavItem =
-  | 'section:preferences'
-  | 'section:preferences:group:open-links'
-  | 'section:preferences:group:context'
-  | 'section:preferences:group:prompt-field'
-  | 'section:preferences:group:checkpoints'
-  | 'section:preferences:group:commit-messages'
-  | 'section:preferences:group:edit-format'
+  | 'section:general'
+  | 'section:general:group:open-links'
+  | 'section:general:group:context'
+  | 'section:general:group:prompt-field'
+  | 'section:general:group:checkpoints'
+  | 'section:general:group:commit-messages'
+  | 'section:general:group:edit-format'
   | 'section:chatbots'
   | 'section:chatbots:group:web-configurations'
   | 'section:chatbots:group:chatbots-other'
@@ -38,32 +38,32 @@ type NavConfigItem = { id: NavItem; label: TranslationKey }
 
 const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   {
-    id: 'section:preferences',
+    id: 'section:general',
     label: 'sections.general'
   },
   {
-    id: 'section:preferences:group:open-links',
-    label: 'preferences.open-links.title'
+    id: 'section:general:group:open-links',
+    label: 'general.open-links.title'
   },
   {
-    id: 'section:preferences:group:context',
-    label: 'preferences.context.title'
+    id: 'section:general:group:context',
+    label: 'general.context.title'
   },
   {
-    id: 'section:preferences:group:prompt-field',
-    label: 'preferences.prompt-field.title'
+    id: 'section:general:group:prompt-field',
+    label: 'general.prompt-field.title'
   },
   {
-    id: 'section:preferences:group:checkpoints',
-    label: 'preferences.checkpoints.title'
+    id: 'section:general:group:checkpoints',
+    label: 'general.checkpoints.title'
   },
   {
-    id: 'section:preferences:group:commit-messages',
-    label: 'preferences.commit-messages.title'
+    id: 'section:general:group:commit-messages',
+    label: 'general.commit-messages.title'
   },
   {
-    id: 'section:preferences:group:edit-format',
-    label: 'preferences.edit-formats.title'
+    id: 'section:general:group:edit-format',
+    label: 'general.edit-formats.title'
   },
   {
     id: 'section:chatbots',
@@ -180,13 +180,13 @@ export const Home: React.FC<Props> = (props) => {
 
   const scroll_container_ref = useRef<HTMLDivElement>(null)
   const section_refs = useRef<Record<NavItem, HTMLDivElement | null>>({
-    'section:preferences': null,
-    'section:preferences:group:open-links': null,
-    'section:preferences:group:context': null,
-    'section:preferences:group:prompt-field': null,
-    'section:preferences:group:checkpoints': null,
-    'section:preferences:group:commit-messages': null,
-    'section:preferences:group:edit-format': null,
+    'section:general': null,
+    'section:general:group:open-links': null,
+    'section:general:group:context': null,
+    'section:general:group:prompt-field': null,
+    'section:general:group:checkpoints': null,
+    'section:general:group:commit-messages': null,
+    'section:general:group:edit-format': null,
     'section:chatbots': null,
     'section:chatbots:group:web-configurations': null,
     'section:chatbots:group:chatbots-other': null,
@@ -366,8 +366,8 @@ export const Home: React.FC<Props> = (props) => {
           )
         })}
       >
-        <PreferencesSection
-          ref={(el) => set_section_ref('section:preferences', el)}
+        <GeneralSection
+          ref={(el) => set_section_ref('section:general', el)}
           set_section_ref={set_section_ref}
           context_size_warning_threshold={props.context_size_warning_threshold}
           on_context_size_warning_threshold_change={

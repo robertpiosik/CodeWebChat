@@ -1,5 +1,5 @@
-export const preferences = {
-  'preferences.subtitle': {
+export const general = {
+  'general.subtitle': {
     en: 'Configure your experience.',
     pl: 'Skonfiguruj swoje środowisko.',
     'zh-cn': '配置您的体验。',
@@ -17,7 +17,7 @@ export const preferences = {
     hu: 'Állítsa be az élményt.',
     bg: 'Конфигурирайте своя опит.'
   },
-  'preferences.open-links.title': {
+  'general.open-links.title': {
     en: 'Open...',
     pl: 'Otwórz...',
     'zh-cn': '打开...',
@@ -35,7 +35,7 @@ export const preferences = {
     hu: 'Megnyitás...',
     bg: 'Отваряне...'
   },
-  'preferences.open-editor-settings.title': {
+  'general.open-editor-settings.title': {
     en: 'Open Editor Settings',
     pl: 'Otwórz ustawienia edytora',
     'zh-cn': '打开编辑器设置',
@@ -53,7 +53,7 @@ export const preferences = {
     hu: 'Szerkesztő Beállításainak Megnyitása',
     bg: 'Отваряне на настройки на редактора'
   },
-  'preferences.open-editor-settings.description': {
+  'general.open-editor-settings.description': {
     en: 'For general editor settings, visit the Editor Settings Page.',
     pl: 'Aby uzyskać ogólne ustawienia edytora, odwiedź stronę ustawień edytora.',
     'zh-cn': '有关常规编辑器设置，请访问编辑器设置页面。',
@@ -72,7 +72,7 @@ export const preferences = {
     hu: 'Az általános beállításokhoz látogassa meg a Beállítások oldalt.',
     bg: 'За общи настройки посетете страницата с настройки.'
   },
-  'preferences.open-editor-settings.action': {
+  'general.open-editor-settings.action': {
     en: 'Open Editor Settings',
     pl: 'Otwórz ustawienia edytora',
     'zh-cn': '打开编辑器设置',
@@ -90,7 +90,7 @@ export const preferences = {
     hu: 'Szerkesztő Beállításainak Megnyitása',
     bg: 'Отваряне на настройки на редактора'
   },
-  'preferences.ignore-patterns.title': {
+  'general.ignore-patterns.title': {
     en: 'Ignore Patterns',
     pl: 'Wzorce ignorowania',
     'zh-cn': '忽略模式',
@@ -108,7 +108,7 @@ export const preferences = {
     hu: 'Mellőzendő Minták',
     bg: 'Шаблони за игнориране'
   },
-  'preferences.ignore-patterns.description': {
+  'general.ignore-patterns.description': {
     en: "Glob patterns that you don't want to place in .gitignore files.",
     pl: 'Wzorce glob, których nie chcesz umieszczać w plikach .gitignore.',
     'zh-cn': '您不想放在 .gitignore 文件中的 Glob 模式。',
@@ -126,7 +126,7 @@ export const preferences = {
     hu: 'Glob minták, amiket nem akar .gitignore fájlokba tenni.',
     bg: 'Glob шаблони, които не искате в .gitignore.'
   },
-  'preferences.ignore-patterns.action': {
+  'general.ignore-patterns.action': {
     en: 'Open Settings File',
     pl: 'Otwórz plik ustawień',
     'zh-cn': '打开设置文件',
@@ -144,7 +144,7 @@ export const preferences = {
     hu: 'Beállításfájl Megnyitása',
     bg: 'Отваряне на файла с настройки'
   },
-  'preferences.allow-patterns.title': {
+  'general.allow-patterns.title': {
     en: 'Allow Patterns',
     pl: 'Wzorce zezwalania',
     'zh-cn': '允许模式',
@@ -162,7 +162,7 @@ export const preferences = {
     hu: 'Engedélyezett Minták',
     bg: 'Разрешени шаблони'
   },
-  'preferences.allow-patterns.description': {
+  'general.allow-patterns.description': {
     en: 'Glob patterns that you want to include despite being ignored by .gitignore.',
     pl: 'Wzorce glob, które chcesz dołączyć mimo ignorowania przez .gitignore.',
     'zh-cn': '尽管被 .gitignore 忽略，您仍希望包含的 Glob 模式。',
@@ -181,7 +181,7 @@ export const preferences = {
     hu: 'Glob minták, amiket be akar vonni a .gitignore ellenére.',
     bg: 'Glob шаблони за включване въпреки .gitignore.'
   },
-  'preferences.allow-patterns.action': {
+  'general.allow-patterns.action': {
     en: 'Open Settings File',
     pl: 'Otwórz plik ustawień',
     'zh-cn': '打开设置文件',
@@ -199,7 +199,7 @@ export const preferences = {
     hu: 'Beállításfájl Megnyitása',
     bg: 'Отваряне на файла с настройки'
   },
-  'preferences.context-size-warning-threshold.title': {
+  'general.context-size-warning-threshold.title': {
     en: 'Context Size Warning Threshold',
     pl: 'Próg ostrzeżenia o rozmiarze kontekstu',
     'zh-cn': '上下文大小警告阈值',
@@ -217,7 +217,7 @@ export const preferences = {
     hu: 'Kontextus Méret Figyelmeztetési Küszöb',
     bg: 'Праг за предупреждение за размер на контекст'
   },
-  'preferences.context-size-warning-threshold.description': {
+  'general.context-size-warning-threshold.description': {
     en: 'A virtual context size limit.',
     pl: 'Wirtualny limit rozmiaru kontekstu.',
     'zh-cn': '虚拟上下文大小限制。',
@@ -235,7 +235,7 @@ export const preferences = {
     hu: 'Egy virtuális kontextusméret-korlát.',
     bg: 'Виртуален лимит за размер на контекста.'
   },
-  'preferences.check-new-files.title': {
+  'general.check-new-files.title': {
     en: 'Check New Files',
     pl: 'Sprawdź nowe pliki',
     'zh-cn': '检查新文件',
@@ -253,7 +253,7 @@ export const preferences = {
     hu: 'Új Fájlok Ellenőrzése',
     bg: 'Проверка на нови файлове'
   },
-  'preferences.check-new-files.description': {
+  'general.check-new-files.description': {
     en: 'Automatically include newly created files in context.',
     pl: 'Automatycznie uwzględniaj nowo utworzone pliki w kontekście.',
     'zh-cn': '自动将新创建的文件包含在上下文中。',
@@ -271,7 +271,7 @@ export const preferences = {
     hu: 'Új fájlok automatikus bevonása a kontextusba.',
     bg: 'Автоматично включване на нови файлове в контекста.'
   },
-  'preferences.send-with-shift-enter.title': {
+  'general.send-with-shift-enter.title': {
     en: 'Send with Shift+Enter',
     pl: 'Wyślij za pomocą Shift+Enter',
     'zh-cn': '使用 Shift+Enter 发送',
@@ -289,7 +289,7 @@ export const preferences = {
     hu: 'Küldés Shift+Enterrel',
     bg: 'Изпращане с Shift+Enter'
   },
-  'preferences.send-with-shift-enter.description': {
+  'general.send-with-shift-enter.description': {
     en: 'Use Shift+Enter to send messages and Enter to insert a new line.',
     pl: 'Użyj Shift+Enter, aby wysłać wiadomość, a Enter, aby wstawić nowy wiersz.',
     'zh-cn': '使用 Shift+Enter 发送消息，使用 Enter 插入新行。',
@@ -307,7 +307,7 @@ export const preferences = {
     hu: 'Üzenetküldés Shift+Enterrel, új sor Enterrel.',
     bg: 'Използвайте Shift+Enter за изпращане, Enter за нов ред.'
   },
-  'preferences.commit-messages.title': {
+  'general.commit-messages.title': {
     en: 'Commit Messages',
     pl: 'Wiadomości commitów',
     'zh-cn': '提交信息',
@@ -325,7 +325,7 @@ export const preferences = {
     hu: 'Commit Üzenetek',
     bg: 'Съобщения за commit'
   },
-  'preferences.include-prompts-in-commit-messages.title': {
+  'general.include-prompts-in-commit-messages.title': {
     en: 'Include Prompts in Commit Messages',
     pl: 'Dołącz prompty do wiadomości commitów',
     'zh-cn': '在提交信息中包含提示',
@@ -343,7 +343,7 @@ export const preferences = {
     hu: 'Kérdések bevonása a commit üzenetekbe',
     bg: 'Включване на промптове в съобщенията за commit'
   },
-  'preferences.include-prompts-in-commit-messages.description': {
+  'general.include-prompts-in-commit-messages.description': {
     en: 'Attach prompts used to edit files to the generated commit messages.',
     pl: 'Dołącz prompty użyte do edycji plików do generowanych wiadomości commitów.',
     'zh-cn': '将用于编辑文件的提示附加到生成的提交信息中。',
@@ -362,7 +362,7 @@ export const preferences = {
     hu: 'A fájlok szerkesztéséhez használt promptok csatolása a generált commit üzenetekhez.',
     bg: 'Прикачване на промптовете, използвани за редактиране на файловете към съобщенията за commit.'
   },
-  'preferences.commit-message-instructions.title': {
+  'general.commit-message-instructions.title': {
     en: 'Commit Message Instructions',
     pl: 'Instrukcje wiadomości commitu',
     'zh-cn': '提交信息说明',
@@ -380,7 +380,7 @@ export const preferences = {
     hu: 'Commit Üzenet Utasítások',
     bg: 'Инструкции за съобщения за commit'
   },
-  'preferences.commit-message-instructions.description': {
+  'general.commit-message-instructions.description': {
     en: 'Describe style and conventions (e.g. Conventional Commits, gitmoji) for the generated commit message.',
     pl: 'Opisz styl i konwencje (np. Conventional Commits, gitmoji) dla generowanej wiadomości commitu.',
     'zh-cn':
@@ -402,7 +402,7 @@ export const preferences = {
     bg: 'Опишете стил (напр. Conventional Commits) за съобщението.'
   },
 
-  'preferences.clear-checks-in-workspace-behavior.title': {
+  'general.clear-checks-in-workspace-behavior.title': {
     en: 'Clear Checks in Workspace Behavior',
     pl: 'Zachowanie czyszczenia zaznaczeń w obszarze roboczym',
     'zh-cn': '工作区中“清除检查”的行为',
@@ -420,7 +420,7 @@ export const preferences = {
     hu: 'Kijelölés Törlése a Munkaterületen',
     bg: 'Поведение при изчистване на избора'
   },
-  'preferences.clear-checks-in-workspace-behavior.description': {
+  'general.clear-checks-in-workspace-behavior.description': {
     en: "Behavior of the 'Clear Checks' button in the Workspace view.",
     pl: "Zachowanie przycisku 'Wyczyść zaznaczenia' w widoku obszaru roboczego.",
     'zh-cn': '工作区视图中“清除检查”按钮的行为。',
@@ -439,7 +439,7 @@ export const preferences = {
     hu: "A 'Kijelölés Törlése' gomb viselkedése.",
     bg: "Поведение на бутона 'Изчистване' в работното пространство."
   },
-  'preferences.clear-checks.ignore-open-editors': {
+  'general.clear-checks.ignore-open-editors': {
     en: 'Ignore Open Editors',
     pl: 'Ignoruj otwarte edytory',
     'zh-cn': '忽略打开的编辑器',
@@ -457,7 +457,7 @@ export const preferences = {
     hu: 'Nyitott Szerkesztők Figyelmen Kívül Hagyása',
     bg: 'Игнориране на отворени редактори'
   },
-  'preferences.clear-checks.uncheck-all': {
+  'general.clear-checks.uncheck-all': {
     en: 'Uncheck All',
     pl: 'Odznacz wszystko',
     'zh-cn': '取消全选',
@@ -475,7 +475,7 @@ export const preferences = {
     hu: 'Minden Kijelölés Törlése',
     bg: 'Размаркиране на всички'
   },
-  'preferences.prompt-field.title': {
+  'general.prompt-field.title': {
     en: 'Prompt Field',
     pl: 'Pole promptu',
     'zh-cn': '提示字段',
@@ -493,7 +493,7 @@ export const preferences = {
     hu: 'Prompt mező',
     bg: 'Поле за промпт'
   },
-  'preferences.checkpoints.title': {
+  'general.checkpoints.title': {
     en: 'Checkpoints',
     pl: 'Punkty kontrolne',
     'zh-cn': '检查点',
@@ -511,7 +511,7 @@ export const preferences = {
     hu: 'Ellenőrzőpontok',
     bg: 'Контролни точки'
   },
-  'preferences.automatic-checkpoints.title': {
+  'general.automatic-checkpoints.title': {
     en: 'Automatic Checkpoints',
     pl: 'Automatyczne punkty kontrolne',
     'zh-cn': '自动检查点',
@@ -529,7 +529,7 @@ export const preferences = {
     hu: 'Automatikus Ellenőrzőpontok',
     bg: 'Автоматични контролни точки'
   },
-  'preferences.automatic-checkpoints.description': {
+  'general.automatic-checkpoints.description': {
     en: 'A checkpoint will be created whenever a response is accepted or changes committed.',
     pl: 'Punkt kontrolny zostanie utworzony po zaakceptowaniu odpowiedzi lub zatwierdzeniu zmian.',
     'zh-cn': '每当接受响应或提交更改时，都会创建一个检查点。',
@@ -548,7 +548,7 @@ export const preferences = {
     hu: 'Ellenőrzőpont jön létre válasz elfogadásakor vagy commitnál.',
     bg: 'Създава се контролна точка при приемане на отговор.'
   },
-  'preferences.checkpoint-lifespan.title': {
+  'general.checkpoint-lifespan.title': {
     en: 'Checkpoint Lifespan',
     pl: 'Czas życia punktów kontrolnych',
     'zh-cn': '检查点生命周期',
@@ -566,7 +566,7 @@ export const preferences = {
     hu: 'Ellenőrzőpontok Élettartama',
     bg: 'Продължителност на контролните точки'
   },
-  'preferences.checkpoint-lifespan.description': {
+  'general.checkpoint-lifespan.description': {
     en: 'The lifespan of checkpoints in hours. Checkpoints older than this will be automatically deleted.',
     pl: 'Czas życia punktów kontrolnych w godzinach. Starsze zostaną automatycznie usunięte.',
     'zh-cn': '检查点的生命周期（小时）。早于此时间的检查点将被自动删除。',
@@ -585,7 +585,7 @@ export const preferences = {
     hu: 'Élettartam órákban. A régebbiek automatikusan törlődnek.',
     bg: 'Продължителност в часове. Старите се изтриват.'
   },
-  'preferences.edit-formats.title': {
+  'general.edit-formats.title': {
     en: 'Edit Formats',
     pl: 'Formaty edycji',
     'zh-cn': '编辑格式',
@@ -603,7 +603,7 @@ export const preferences = {
     hu: 'Szerkesztési formátumok',
     bg: 'Формати за редактиране'
   },
-  'preferences.edit-format.whole.title': {
+  'general.edit-format.whole.title': {
     en: 'Whole',
     pl: 'Całość',
     'zh-cn': '全部',
@@ -621,7 +621,7 @@ export const preferences = {
     hu: 'Teljes',
     bg: 'Цялостен'
   },
-  'preferences.edit-format.whole.description': {
+  'general.edit-format.whole.description': {
     en: "Instructions for generating code in 'whole' edit format.",
     pl: "Instrukcje generowania kodu w formacie edycji 'całość'.",
     'zh-cn': '以“全部”编辑格式生成代码的说明。',
@@ -639,7 +639,7 @@ export const preferences = {
     hu: "Utasítások kód generálásához 'teljes' formátumban.",
     bg: "Инструкции за генериране на код във формат 'цялостен'."
   },
-  'preferences.edit-format.truncated.title': {
+  'general.edit-format.truncated.title': {
     en: 'Truncated',
     pl: 'Skrócony',
     'zh-cn': '截断',
@@ -657,7 +657,7 @@ export const preferences = {
     hu: 'Csonkított',
     bg: 'Съкратен'
   },
-  'preferences.edit-format.truncated.description': {
+  'general.edit-format.truncated.description': {
     en: "Instructions for generating code in 'truncated' edit format.",
     pl: "Instrukcje generowania kodu w formacie edycji 'skrócony'.",
     'zh-cn': '以“截断”编辑格式生成代码的说明。',
@@ -675,7 +675,7 @@ export const preferences = {
     hu: "Utasítások kód generálásához 'csonkított' formátumban.",
     bg: "Инструкции за генериране на код във формат 'съкратен'."
   },
-  'preferences.edit-format.search-replace.title': {
+  'general.edit-format.search-replace.title': {
     en: 'Search and Replace',
     pl: 'Wyszukaj i zamień',
     'zh-cn': '搜索和替换',
@@ -693,7 +693,7 @@ export const preferences = {
     hu: 'Keresés és Csere',
     bg: 'Търсене и заместване'
   },
-  'preferences.edit-format.search-replace.description': {
+  'general.edit-format.search-replace.description': {
     en: "Instructions for generating code in 'search/replace' edit format.",
     pl: "Instrukcje generowania kodu w formacie edycji 'wyszukaj/zamień'.",
     'zh-cn': '以“搜索/替换”编辑格式生成代码的说明。',
@@ -711,7 +711,7 @@ export const preferences = {
     hu: "Utasítások kód generálásához 'keresés/csere' formátumban.",
     bg: "Инструкции за генериране на код във формат 'търсене/заместване'."
   },
-  'preferences.edit-format.diff.title': {
+  'general.edit-format.diff.title': {
     en: 'Diff',
     pl: 'Diff',
     'zh-cn': '差异 (Diff)',
@@ -729,7 +729,7 @@ export const preferences = {
     hu: 'Diff',
     bg: 'Diff'
   },
-  'preferences.edit-format.diff.description': {
+  'general.edit-format.diff.description': {
     en: "Instructions for generating code in 'diff' edit format.",
     pl: "Instrukcje generowania kodu w formacie edycji 'diff'.",
     'zh-cn': '以“差异”编辑格式生成代码的说明。',
@@ -747,7 +747,7 @@ export const preferences = {
     hu: "Utasítások kód generálásához 'diff' formátumban.",
     bg: "Инструкции за генериране на код във формат 'diff'."
   },
-  'preferences.context.title': {
+  'general.context.title': {
     en: 'Context',
     pl: 'Kontekst',
     'zh-cn': '上下文',
@@ -765,7 +765,7 @@ export const preferences = {
     hu: 'Kontextus',
     bg: 'Контекст'
   },
-  'preferences.action.restore-default': {
+  'general.action.restore-default': {
     en: 'Restore default',
     pl: 'Przywróć domyślne',
     'zh-cn': '恢复默认',
@@ -783,7 +783,7 @@ export const preferences = {
     hu: 'Alapértelmezett visszaállítása',
     bg: 'Възстановяване по подразбиране'
   },
-  'preferences.code-at-cursor.keyboard-shortcut.title': {
+  'general.code-at-cursor.keyboard-shortcut.title': {
     en: 'Code at Cursor Shortcuts',
     pl: 'Skróty klawiaturowe uzupełniania',
     'zh-cn': '光标处代码快捷键',
@@ -801,7 +801,7 @@ export const preferences = {
     hu: 'Kód a kurzornál billentyűparancsok',
     bg: 'Клавишни комбинации за код на курсора'
   },
-  'preferences.code-at-cursor.keyboard-shortcut.description': {
+  'general.code-at-cursor.keyboard-shortcut.description': {
     en: 'Setup keyboard shortcuts for triggering autocompletion.',
     pl: 'Skonfiguruj skróty klawiaturowe do wyzwalania autouzupełniania.',
     'zh-cn': '设置触发自动补全的键盘快捷键。',
@@ -820,7 +820,7 @@ export const preferences = {
     hu: 'Billentyűparancsok beállítása az automatikus kiegészítés elindításához.',
     bg: 'Настройване на клавишни комбинации за задействане на автоматично довършване.'
   },
-  'preferences.code-at-cursor.keyboard-shortcut.action': {
+  'general.code-at-cursor.keyboard-shortcut.action': {
     en: 'Open Keyboard Shortcuts',
     pl: 'Otwórz skróty klawiaturowe',
     'zh-cn': '打开键盘快捷键',

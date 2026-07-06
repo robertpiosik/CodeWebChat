@@ -20,8 +20,8 @@ export const create = async (params: {
       (resolve) => {
         const quick_pick = vscode.window.createQuickPick()
         quick_pick.items = [
-          { label: 'Insert a new item above' },
-          { label: 'Insert a new item below' }
+          { label: 'Insert above' },
+          { label: 'Insert below' }
         ]
         quick_pick.title = 'Placement'
         quick_pick.placeholder = 'Where to insert?'
@@ -58,7 +58,7 @@ export const create = async (params: {
     if (!position_quick_pick) return undefined
 
     insertion_index =
-      position_quick_pick == 'Insert a new item above'
+      position_quick_pick == 'Insert above'
         ? params.reference_index
         : params.reference_index + 1
   } else if (params.placement == 'top') {

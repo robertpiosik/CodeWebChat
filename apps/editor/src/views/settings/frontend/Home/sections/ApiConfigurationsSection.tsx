@@ -326,7 +326,7 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                     ? 'discard'
                     : undefined
                 }
-                action_title={t('preferences.action.restore-default')}
+                action_title={t('general.action.restore-default')}
                 on_action_click={props.on_restore_edit_files_instructions}
               />
             </UiItem>

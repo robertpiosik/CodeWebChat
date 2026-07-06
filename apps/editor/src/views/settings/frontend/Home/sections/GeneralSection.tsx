@@ -58,7 +58,7 @@ type Props = {
   on_restore_commit_instructions: () => void
 }
 
-export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
+export const GeneralSection = forwardRef<HTMLDivElement, Props>(
   (props, ref) => {
     const { t } = use_translation()
     const [context_size_warning_threshold, set_context_size_warning_threshold] =
@@ -152,45 +152,45 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
       <UiSection
         ref={ref}
         title={t('sections.general')}
-        subtitle={t('preferences.subtitle')}
+        subtitle={t('general.subtitle')}
       >
         <div
           ref={(el) =>
-            props.set_section_ref('section:preferences:group:open-links', el)
+            props.set_section_ref('section:general:group:open-links', el)
           }
         >
-          <UiGroup title={t('preferences.open-links.title')}>
+          <UiGroup title={t('general.open-links.title')}>
             <UiItem
-              title={t('preferences.open-editor-settings.title')}
-              description={t('preferences.open-editor-settings.description')}
+              title={t('general.open-editor-settings.title')}
+              description={t('general.open-editor-settings.description')}
               slot_right={
                 <UiTextButton on_click={props.on_open_editor_settings}>
-                  {t('preferences.open-editor-settings.action')}
+                  {t('general.open-editor-settings.action')}
                 </UiTextButton>
               }
             />
             <UiItem
-              title={t('preferences.ignore-patterns.title')}
-              description={t('preferences.ignore-patterns.description')}
+              title={t('general.ignore-patterns.title')}
+              description={t('general.ignore-patterns.description')}
               slot_right={
                 <UiTextButton on_click={props.on_open_ignore_patterns_settings}>
-                  {t('preferences.ignore-patterns.action')}
+                  {t('general.ignore-patterns.action')}
                 </UiTextButton>
               }
             />
             <UiItem
-              title={t('preferences.allow-patterns.title')}
-              description={t('preferences.allow-patterns.description')}
+              title={t('general.allow-patterns.title')}
+              description={t('general.allow-patterns.description')}
               slot_right={
                 <UiTextButton on_click={props.on_open_allow_patterns_settings}>
-                  {t('preferences.allow-patterns.action')}
+                  {t('general.allow-patterns.action')}
                 </UiTextButton>
               }
             />
             <UiItem
-              title={t('preferences.code-at-cursor.keyboard-shortcut.title')}
+              title={t('general.code-at-cursor.keyboard-shortcut.title')}
               description={t(
-                'preferences.code-at-cursor.keyboard-shortcut.description'
+                'general.code-at-cursor.keyboard-shortcut.description'
               )}
               slot_right={
                 <UiTextButton
@@ -198,7 +198,7 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
                     props.on_open_keybindings('codeWebChat.codeAtCursor')
                   }
                 >
-                  {t('preferences.code-at-cursor.keyboard-shortcut.action')}
+                  {t('general.code-at-cursor.keyboard-shortcut.action')}
                 </UiTextButton>
               }
             />
@@ -207,13 +207,13 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
 
         <div
           ref={(el) =>
-            props.set_section_ref('section:preferences:group:context', el)
+            props.set_section_ref('section:general:group:context', el)
           }
         >
-          <UiGroup title={t('preferences.context.title')}>
+          <UiGroup title={t('general.context.title')}>
             <UiItem
-              title={t('preferences.check-new-files.title')}
-              description={t('preferences.check-new-files.description')}
+              title={t('general.check-new-files.title')}
+              description={t('general.check-new-files.description')}
               slot_right={
                 <UiToggler
                   is_on={props.check_new_files}
@@ -222,20 +222,20 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
               }
             />
             <UiItem
-              title={t('preferences.clear-checks-in-workspace-behavior.title')}
+              title={t('general.clear-checks-in-workspace-behavior.title')}
               description={t(
-                'preferences.clear-checks-in-workspace-behavior.description'
+                'general.clear-checks-in-workspace-behavior.description'
               )}
               slot_right={
                 <UiDropdown
                   options={[
                     {
                       value: 'ignore-open-editors',
-                      label: t('preferences.clear-checks.ignore-open-editors')
+                      label: t('general.clear-checks.ignore-open-editors')
                     },
                     {
                       value: 'uncheck-all',
-                      label: t('preferences.clear-checks.uncheck-all')
+                      label: t('general.clear-checks.uncheck-all')
                     }
                   ]}
                   value={props.clear_checks_in_workspace_behavior}
@@ -248,14 +248,14 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
 
         <div
           ref={(el) =>
-            props.set_section_ref('section:preferences:group:prompt-field', el)
+            props.set_section_ref('section:general:group:prompt-field', el)
           }
         >
-          <UiGroup title={t('preferences.prompt-field.title')}>
+          <UiGroup title={t('general.prompt-field.title')}>
             <UiItem
-              title={t('preferences.context-size-warning-threshold.title')}
+              title={t('general.context-size-warning-threshold.title')}
               description={t(
-                'preferences.context-size-warning-threshold.description'
+                'general.context-size-warning-threshold.description'
               )}
               slot_right={
                 <UiInput
@@ -272,8 +272,8 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
               }
             />
             <UiItem
-              title={t('preferences.send-with-shift-enter.title')}
-              description={t('preferences.send-with-shift-enter.description')}
+              title={t('general.send-with-shift-enter.title')}
+              description={t('general.send-with-shift-enter.description')}
               slot_right={
                 <UiToggler
                   is_on={props.send_with_shift_enter}
@@ -286,13 +286,13 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
 
         <div
           ref={(el) =>
-            props.set_section_ref('section:preferences:group:checkpoints', el)
+            props.set_section_ref('section:general:group:checkpoints', el)
           }
         >
-          <UiGroup title={t('preferences.checkpoints.title')}>
+          <UiGroup title={t('general.checkpoints.title')}>
             <UiItem
-              title={t('preferences.automatic-checkpoints.title')}
-              description={t('preferences.automatic-checkpoints.description')}
+              title={t('general.automatic-checkpoints.title')}
+              description={t('general.automatic-checkpoints.description')}
               slot_right={
                 <UiToggler
                   is_on={!props.are_automatic_checkpoints_disabled}
@@ -303,8 +303,8 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
               }
             />
             <UiItem
-              title={t('preferences.checkpoint-lifespan.title')}
-              description={t('preferences.checkpoint-lifespan.description')}
+              title={t('general.checkpoint-lifespan.title')}
+              description={t('general.checkpoint-lifespan.description')}
               slot_right={
                 <UiInput
                   type="number"
@@ -324,17 +324,14 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
 
         <div
           ref={(el) =>
-            props.set_section_ref(
-              'section:preferences:group:commit-messages',
-              el
-            )
+            props.set_section_ref('section:general:group:commit-messages', el)
           }
         >
-          <UiGroup title={t('preferences.commit-messages.title')}>
+          <UiGroup title={t('general.commit-messages.title')}>
             <UiItem
-              title={t('preferences.include-prompts-in-commit-messages.title')}
+              title={t('general.include-prompts-in-commit-messages.title')}
               description={t(
-                'preferences.include-prompts-in-commit-messages.description'
+                'general.include-prompts-in-commit-messages.description'
               )}
               slot_right={
                 <UiToggler
@@ -344,10 +341,8 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
               }
             />
             <UiItem
-              title={t('preferences.commit-message-instructions.title')}
-              description={t(
-                'preferences.commit-message-instructions.description'
-              )}
+              title={t('general.commit-message-instructions.title')}
+              description={t('general.commit-message-instructions.description')}
               is_toggleable
               translations={{
                 expand: t('common.expand'),
@@ -365,7 +360,7 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
                     ? 'discard'
                     : undefined
                 }
-                action_title={t('preferences.action.restore-default')}
+                action_title={t('general.action.restore-default')}
                 on_action_click={props.on_restore_commit_instructions}
               />
             </UiItem>
@@ -374,13 +369,13 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
 
         <div
           ref={(el) =>
-            props.set_section_ref('section:preferences:group:edit-format', el)
+            props.set_section_ref('section:general:group:edit-format', el)
           }
         >
-          <UiGroup title={t('preferences.edit-formats.title')}>
+          <UiGroup title={t('general.edit-formats.title')}>
             <UiItem
-              title={t('preferences.edit-format.whole.title')}
-              description={t('preferences.edit-format.whole.description')}
+              title={t('general.edit-format.whole.title')}
+              description={t('general.edit-format.whole.description')}
               is_toggleable
               translations={{
                 expand: t('common.expand'),
@@ -400,7 +395,7 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
                     ? 'discard'
                     : undefined
                 }
-                action_title={t('preferences.action.restore-default')}
+                action_title={t('general.action.restore-default')}
                 on_action_click={() =>
                   handle_reset_instruction(
                     'whole',
@@ -411,8 +406,8 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
             </UiItem>
 
             <UiItem
-              title={t('preferences.edit-format.truncated.title')}
-              description={t('preferences.edit-format.truncated.description')}
+              title={t('general.edit-format.truncated.title')}
+              description={t('general.edit-format.truncated.description')}
               is_toggleable
               translations={{
                 expand: t('common.expand'),
@@ -435,7 +430,7 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
                     ? 'discard'
                     : undefined
                 }
-                action_title={t('preferences.action.restore-default')}
+                action_title={t('general.action.restore-default')}
                 on_action_click={() =>
                   handle_reset_instruction(
                     'truncated',
@@ -446,10 +441,8 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
             </UiItem>
 
             <UiItem
-              title={t('preferences.edit-format.search-replace.title')}
-              description={t(
-                'preferences.edit-format.search-replace.description'
-              )}
+              title={t('general.edit-format.search-replace.title')}
+              description={t('general.edit-format.search-replace.description')}
               is_toggleable
               translations={{
                 expand: t('common.expand'),
@@ -473,7 +466,7 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
                     ? 'discard'
                     : undefined
                 }
-                action_title={t('preferences.action.restore-default')}
+                action_title={t('general.action.restore-default')}
                 on_action_click={() =>
                   handle_reset_instruction(
                     'search_replace',
@@ -484,8 +477,8 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
             </UiItem>
 
             <UiItem
-              title={t('preferences.edit-format.diff.title')}
-              description={t('preferences.edit-format.diff.description')}
+              title={t('general.edit-format.diff.title')}
+              description={t('general.edit-format.diff.description')}
               is_toggleable
               translations={{
                 expand: t('common.expand'),
@@ -505,7 +498,7 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
                     ? 'discard'
                     : undefined
                 }
-                action_title={t('preferences.action.restore-default')}
+                action_title={t('general.action.restore-default')}
                 on_action_click={() =>
                   handle_reset_instruction(
                     'diff',
@@ -521,4 +514,4 @@ export const PreferencesSection = forwardRef<HTMLDivElement, Props>(
   }
 )
 
-PreferencesSection.displayName = 'PreferencesSection'
+GeneralSection.displayName = 'GeneralSection'

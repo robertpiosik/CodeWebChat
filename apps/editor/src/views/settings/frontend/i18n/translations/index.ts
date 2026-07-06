@@ -1,6 +1,6 @@
 import { actions } from './actions'
 import { common } from './common'
-import { preferences } from './preferences'
+import { general } from './general'
 import { model_providers } from './model-providers'
 import { sections } from './sections'
 import { configurations } from './configurations'
@@ -10,7 +10,7 @@ export const translations = {
   ...sections,
   ...actions,
   ...common,
-  ...preferences,
+  ...general,
   ...model_providers,
   ...configurations,
   ...web_configurations
