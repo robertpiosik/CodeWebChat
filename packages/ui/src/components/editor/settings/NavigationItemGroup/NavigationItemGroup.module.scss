@@ -16,7 +16,7 @@
   height: 26px;
   padding-left: 20px;
   position: relative;
-  opacity: 0.6;
+  opacity: var(--dimmed-opacity);
 
   &:hover {
     background-color: var(--cwc-bg-tertiary);

@@ -8,9 +8,10 @@
   color: var(--vscode-textLink-foreground);
   height: 32px;
   transition: background-color 0.1s;
+  opacity: var(--dimmed-opacity);
 
   &--active {
-    font-weight: 600;
+    opacity: 1;
   }
 }
 
