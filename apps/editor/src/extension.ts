@@ -4,17 +4,6 @@ import { PanelProvider } from './views/panel/backend/panel-provider'
 import { WebSocketManager } from './services/websocket-manager'
 import { ApiManager } from './services/api-manager'
 import {
-  migrate_token_cache_cleanup,
-  migrate_configurations_code_completions_to_code_at_cursor,
-  migrate_instructions_state_cleanup,
-  migrate_checkpoints_title_to_trigger,
-  migrate_model_providers_type,
-  migrate_prune_context_to_find_relevant_files,
-  migrate_merge_configurations,
-  migrate_preset_affix_to_prompt_template,
-  migrate_remove_preset_groups_and_separators,
-  migrate_merge_chat_presets,
-  migrate_chat_presets_to_web_configurations,
   migrate_configurations_to_api_configurations,
   migrate_edit_context_to_edit_files_system_instructions,
   migrate_prompt_templates_suffixes
@@ -60,28 +49,6 @@ export const activate = async (context: vscode.ExtensionContext) => {
   websocket_server_instance = new WebSocketManager(context)
 
   const migrations = async () => {
-    // 12 January 2026
-    await migrate_token_cache_cleanup(context)
-    // 30 January 2026
-    await migrate_configurations_code_completions_to_code_at_cursor(context)
-    // 14 February 2026
-    await migrate_instructions_state_cleanup(context)
-    // 2 March 2026
-    await migrate_checkpoints_title_to_trigger(context)
-    // 5 March 2026
-    await migrate_model_providers_type(context)
-    // 10 March 2026
-    await migrate_prune_context_to_find_relevant_files(context)
-    // 25 March 2026
-    await migrate_merge_configurations(context)
-    // 8 June 2026
-    await migrate_preset_affix_to_prompt_template(context)
-    // 8 June 2026
-    await migrate_remove_preset_groups_and_separators(context)
-    // 9 June 2026
-    await migrate_merge_chat_presets(context)
-    // 11 June 2026
-    await migrate_chat_presets_to_web_configurations(context)
     // 26 June 2026
     await migrate_configurations_to_api_configurations(context)
     // 1 July 2026
