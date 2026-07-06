@@ -14,6 +14,7 @@ import { build_user_content } from '../../../utils/build-user-content'
 
 import { get_code_at_cursor_api_configuration } from './get-code-at-cursor-config'
 import { show_ghost_text } from './show-ghost-text'
+import { build_prompt } from '../../../utils/prompt-builder'
 
 export const perform_code_at_cursor = async (params: {
   file_tree_provider: any
@@ -129,14 +130,16 @@ export const perform_code_at_cursor = async (params: {
 
       const collected = await files_collector.collect_files()
 
-      const part1 = `<files>\n${collected.other_files}`
-      const part2 = `${collected.recent_files}<file path="${vscode.workspace.asRelativePath(
-        document.uri
-      )}">\n<![CDATA[\n${text_before_cursor}${
-        completion_instructions
-          ? `<missing_text>${completion_instructions}</missing_text>`
-          : '<missing_text>'
-      }${text_after_cursor}\n]]>\n</file>\n</files>\n${code_at_cursor_instructions}`
+      const { part1, part2 } = build_prompt({
+        other_files: collected.other_files,
+        recent_files: collected.recent_files,
+        active_file_context: `### File: \`${vscode.workspace.asRelativePath(document.uri)}\`\n\n\`\`\`\n${text_before_cursor}${
+          completion_instructions
+            ? `<missing_text>${completion_instructions}</missing_text>`
+            : '<missing_text>'
+        }${text_after_cursor}\n\`\`\`\n\n`,
+        system_instructions: code_at_cursor_instructions
+      })
 
       const user_content = build_user_content({
         model_provider,

@@ -30,6 +30,7 @@ import {
   show_configuration_quick_pick,
   map_api_configuration_to_item
 } from '@/utils/show-configuration-quick-pick'
+import { build_prompt } from '@/utils/prompt-builder'
 
 const get_edit_files_api_configuration = async (params: {
   model_providers_manager: ModelProvidersManager
@@ -238,9 +239,9 @@ export const handle_edit_files = async (
     const edit_format_instructions =
       config.get<string>(instructions_key) || default_instructions
 
-    let system_instructions_xml = ''
+    let formatted_system_instructions = ''
     if (edit_format_instructions) {
-      system_instructions_xml = `<system>\n${edit_format_instructions}\n</system>`
+      formatted_system_instructions = `# System\n\n${edit_format_instructions}`
     }
 
     const system_instructions =
@@ -249,10 +250,13 @@ export const handle_edit_files = async (
         .get<string>('editFilesSystemInstructions') ||
       default_system_instructions
 
-    const part1 = `<files>\n${collected.other_files}`
-    const part2 = `${collected.recent_files}</files>\n${skill_definitions}${
-      system_instructions_xml ? system_instructions_xml + '\n' : ''
-    }${processed_instructions}`
+    const { part1, part2 } = build_prompt({
+      other_files: collected.other_files,
+      recent_files: collected.recent_files,
+      skill_definitions,
+      system_instructions: formatted_system_instructions,
+      user_instructions: processed_instructions
+    })
 
     const user_content = build_user_content({
       model_provider,

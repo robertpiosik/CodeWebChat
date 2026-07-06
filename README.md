@@ -50,14 +50,20 @@ Here, context is managed by you, directly in the native file explorer so the mod
 > [!TIP]
 > Even if you're not sure what should be in context, the tool offers both 'intelligent' and static ways to find all the necessary files, including valuable examples.
 
-**Generated prompts are XML-formatted:**
+**Generated prompts are structured as follows:**
 
 <details>
 <summary>Edit context</summary>
 
 ```
-<files>[current file selection]</files>
-<system>[edit format instructions]</system>
+# Files
+[current file selection]
+
+# System
+[edit format instructions]
+
+---
+
 [user-typed prompt]
 ```
 
@@ -67,7 +73,8 @@ Here, context is managed by you, directly in the native file explorer so the mod
 <summary>Ask about context</summary>
 
 ```
-<files>[current file selection]</files>
+# Files
+[current file selection]
 [user-typed prompt]
 ```
 
@@ -76,15 +83,15 @@ Here, context is managed by you, directly in the native file explorer so the mod
 <details>
 <summary>Code at cursor</summary>
 
-```
-<files>
+````
+# Files
 [rough file selection]
-<file path="[active file]">
-[code before cursor]<missing_text>[user-typed prompt]</missing_text>[code after cursor]
-</file>
-</files>
-[instructions for the missing text]
+### File: `[active file]`
 ```
+[code before cursor]<missing_text>[user-typed prompt]</missing_text>[code after cursor]
+```
+[instructions for the missing text]
+````
 
 </details>
 
@@ -92,9 +99,16 @@ Here, context is managed by you, directly in the native file explorer so the mod
 <summary>Find relevant files</summary>
 
 ```
-<files>[current file tree selection]</files>
-<system>[response format instructions]</system>
-Find all files building modules of the following task's scope:
+# Files
+[current file tree selection]
+
+# System
+[response format instructions]
+
+Find a complete set of relevant files according to the following query:
+
+---
+
 [user-typed prompt]
 ```
 

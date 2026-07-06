@@ -6,7 +6,9 @@ export const code_at_cursor_instructions_for_panel = (params: {
   row: number
   column: number
 }) => `Find correct replacement text for the <missing_text> symbol.
-<system>
+
+# System
+
 Your response must begin with a markdown heading identifying the file and the cursor position, followed by a markdown code block containing the replacement text, followed by a brief explanation. The heading must be: "### Code at cursor: \`${
   params.file_path
 }\` (${params.row + 1}:${
@@ -19,8 +21,7 @@ Your response must begin with a markdown heading identifying the file and the cu
 !== undefined
 \`\`\`
 
-The variable is possibly not defined.
-</system>`
+The variable is possibly not defined.`
 
 export const intelligent_update_instructions =
   "Refactor the file according to the attached changes without explanations or any other text. Print the file in full because I have a disability which means I can't type and need to be able to just copy and paste."
@@ -31,17 +32,18 @@ export const commit_message_instructions =
 export const find_relevant_files_instructions =
   'Find a complete set of relevant files according to the following query:'
 
-export const find_relevant_files_format = `<system>
+export const find_relevant_files_format = `# System
+
 Your response must contain paths of relevant files enclosed in "relevant-files" and "file-path" XML tags. Don't send anything else. Example:
 
 <relevant-files>
 <file-path>src/index.ts</file-path>
 <file-path>src/hello.ts</file-path>
 <file-path>src/welcome.ts</file-path>
-</relevant-files>
-</system>`
+</relevant-files>`
 
-export const find_relevant_files_format_for_panel = `<system>
+export const find_relevant_files_format_for_panel = `# System
+
 Your response must begin with "**Relevant files:**", then list paths one under another, followed by a brief explanation. Example:
 
 **Relevant files:**
@@ -50,8 +52,7 @@ Your response must begin with "**Relevant files:**", then list paths one under a
 - \`src/hello.ts\`
 - \`src/welcome.ts\`
 
-These files contain the core greeting logic and module exports.
-</system>`
+These files contain the core greeting logic and module exports.`
 
 export const voice_input_instructions =
   'Respond with a transcription of the following audio recording or text "INAUDIBLE", and nothing else.'

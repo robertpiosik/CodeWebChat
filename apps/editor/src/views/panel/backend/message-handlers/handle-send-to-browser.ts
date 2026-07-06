@@ -24,12 +24,13 @@ import {
 import { handle_update_last_used_web_configuration_or_group } from './handle-update-last-used-web-configuration-or-group'
 import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-symbols'
 import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
+import { build_prompt } from '@/utils/prompt-builder'
 
 export const handle_send_to_browser = async (params: {
   panel_provider: PanelProvider
+  invocation_count: number
   web_configuration_name?: string
   show_quick_pick?: boolean
-  invocation_count: number
 }): Promise<void> => {
   if (
     params.panel_provider.mode == MODE.WEB &&
@@ -111,16 +112,16 @@ export const handle_send_to_browser = async (params: {
       column: position.character
     })
 
-    const payload = {
-      before: `<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}`,
-      after: `${text_after_cursor}\n]]>\n</file>\n</files>`
-    }
-
-    const text = `${payload.before}${
-      processed_completion_instructions
-        ? `<missing_text>${processed_completion_instructions}</missing_text>`
-        : '<missing_text>'
-    }${payload.after}\n${skill_definitions}${main_instructions}`
+    const { full_prompt: text } = build_prompt({
+      context_text,
+      active_file_context: `### File: \`${relative_path}\`\n\n\`\`\`\n${text_before_cursor}${
+        processed_completion_instructions
+          ? `<missing_text>${processed_completion_instructions}</missing_text>`
+          : '<missing_text>'
+      }${text_after_cursor}\n\`\`\`\n\n`,
+      skill_definitions,
+      system_instructions: main_instructions
+    })
 
     sent =
       await params.panel_provider.websocket_server_instance.initialize_chat({
@@ -156,7 +157,7 @@ export const handle_send_to_browser = async (params: {
         remove_images: true
       })
 
-    let system_instructions_xml = ''
+    let formatted_system_instructions = ''
     if (params.panel_provider.web_prompt_type == 'edit-files') {
       const config = vscode.workspace.getConfiguration('codeWebChat')
       const instructions_key = {
@@ -174,19 +175,18 @@ export const handle_send_to_browser = async (params: {
       const edit_format_instructions =
         config.get<string>(instructions_key) || default_instructions
       if (edit_format_instructions) {
-        system_instructions_xml = `<system>\n${edit_format_instructions}\n</system>`
+        formatted_system_instructions = `# System\n\n${edit_format_instructions}`
       }
     } else if (params.panel_provider.web_prompt_type == 'find-relevant-files') {
-      system_instructions_xml = `${find_relevant_files_format_for_panel}\n${find_relevant_files_instructions}`
+      formatted_system_instructions = `${find_relevant_files_format_for_panel}\n\n${find_relevant_files_instructions}`
     }
 
-    const text = context_text
-      ? `<files>\n${context_text}</files>\n${skill_definitions}${
-          system_instructions_xml ? system_instructions_xml + '\n' : ''
-        }${processed_instructions}`
-      : `${
-          system_instructions_xml ? system_instructions_xml + '\n' : ''
-        }${skill_definitions}${processed_instructions}`
+    const { full_prompt: text } = build_prompt({
+      context_text,
+      skill_definitions,
+      system_instructions: formatted_system_instructions,
+      user_instructions: processed_instructions
+    })
 
     sent =
       await params.panel_provider.websocket_server_instance.initialize_chat({

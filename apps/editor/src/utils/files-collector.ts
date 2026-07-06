@@ -86,27 +86,25 @@ export class FilesCollector {
 
           const workspace_root = this._get_workspace_root_for_file(file_path)
 
-          if (!workspace_root) {
-            collected_text += `<file path="${file_path.replace(
-              /\\/g,
-              '/'
-            )}">\n<![CDATA[\n${content}\n]]>\n</file>\n`
-            continue
+          let display_path = file_path.replace(/\\/g, '/')
+          if (workspace_root) {
+            const relative_path = path
+              .relative(workspace_root, file_path)
+              .replace(/\\/g, '/')
+
+            display_path = relative_path
+            if (this.workspace_roots.length > 1) {
+              const workspace_name =
+                this.workspace_provider.get_workspace_name(workspace_root)
+              display_path = `${workspace_name}/${relative_path}`
+            }
           }
 
-          const relative_path = path
-            .relative(workspace_root, file_path)
-            .replace(/\\/g, '/')
-
-          // Get the workspace name to prefix the path if there are multiple workspaces
-          let display_path = relative_path
-          if (this.workspace_roots.length > 1) {
-            const workspace_name =
-              this.workspace_provider.get_workspace_name(workspace_root)
-            display_path = `${workspace_name}/${relative_path}`
+          if (is_binary) {
+            collected_text += `### File: \`${display_path}\`\n\nBinary file\n\n`
+          } else {
+            collected_text += `### File: \`${display_path}\`\n\n\`\`\`\n${content}\n\`\`\`\n\n`
           }
-
-          collected_text += `<file path="${display_path}">\n<![CDATA[\n${content}\n]]>\n</file>\n`
         } catch (error) {
           console.error(`Error reading file ${file_path}:`, error)
         }

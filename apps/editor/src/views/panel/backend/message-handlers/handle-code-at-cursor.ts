@@ -21,6 +21,7 @@ import {
   show_configuration_quick_pick,
   map_api_configuration_to_item
 } from '@/utils/show-configuration-quick-pick'
+import { build_prompt } from '@/utils/prompt-builder'
 
 const get_code_at_cursor_api_configuration = async (
   model_providers_manager: ModelProvidersManager,
@@ -227,12 +228,17 @@ export const handle_code_at_cursor = async (
 
     const collected = await files_collector.collect_files()
 
-    const part1 = `<files>\n${collected.other_files}`
-    const part2 = `${collected.recent_files}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}${
-      processed_completion_instructions
-        ? `<missing_text>${processed_completion_instructions}</missing_text>`
-        : '<missing_text>'
-    }${text_after_cursor}\n]]>\n</file>\n</files>\n${skill_definitions}${main_instructions}`
+    const { part1, part2 } = build_prompt({
+      other_files: collected.other_files,
+      recent_files: collected.recent_files,
+      active_file_context: `### File: \`${relative_path}\`\n\n\`\`\`\n${text_before_cursor}${
+        processed_completion_instructions
+          ? `<missing_text>${processed_completion_instructions}</missing_text>`
+          : '<missing_text>'
+      }${text_after_cursor}\n\`\`\`\n\n`,
+      skill_definitions,
+      system_instructions: main_instructions
+    })
 
     const user_content = build_user_content({
       model_provider,

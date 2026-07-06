@@ -316,22 +316,24 @@ export class TokenCalculator implements vscode.Disposable {
       }
 
       const wrap_content = (text: string) => {
-        if (!workspace_root) {
-          return `<file path="${file_path.replace(
-            /\\/g,
-            '/'
-          )}">\n<![CDATA[\n${text}\n]]>\n</file>\n`
-        } else {
+        let display_path = file_path.replace(/\\/g, '/')
+        if (workspace_root) {
           const relative_path = path
             .relative(workspace_root, file_path)
             .replace(/\\/g, '/')
           if (this._provider.get_workspace_roots().length > 1) {
             const workspace_name =
               this._provider.get_workspace_name(workspace_root)
-            return `<file path="${workspace_name}/${relative_path}">\n<![CDATA[\n${text}\n]]>\n</file>\n`
+            display_path = `${workspace_name}/${relative_path}`
           } else {
-            return `<file path="${relative_path}">\n<![CDATA[\n${text}\n]]>\n</file>\n`
+            display_path = relative_path
           }
+        }
+
+        if (is_binary) {
+          return `### File: \`${display_path}\`\n\nBinary file\n\n`
+        } else {
+          return `### File: \`${display_path}\`\n\n\`\`\`\n${text}\n\`\`\`\n\n`
         }
       }
 

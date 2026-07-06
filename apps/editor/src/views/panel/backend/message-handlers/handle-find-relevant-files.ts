@@ -26,6 +26,7 @@ import {
   show_configuration_quick_pick,
   map_api_configuration_to_item
 } from '@/utils/show-configuration-quick-pick'
+import { build_prompt } from '@/utils/prompt-builder'
 
 const get_find_relevant_files_api_configuration = async (params: {
   model_providers_manager: ModelProvidersManager
@@ -215,10 +216,15 @@ export const handle_find_relevant_files = async (
 
     const endpoint_url = model_provider.base_url
 
-    const system_instructions_xml = `${find_relevant_files_format_for_panel}\n${find_relevant_files_instructions}`
+    const formatted_system_instructions = `${find_relevant_files_format_for_panel}\n\n${find_relevant_files_instructions}`
 
-    const part1 = `<files>\n${collected.other_files}`
-    const part2 = `${collected.recent_files}</files>\n${skill_definitions}${system_instructions_xml}\n${processed_instructions}`
+    const { part1, part2 } = build_prompt({
+      other_files: collected.other_files,
+      recent_files: collected.recent_files,
+      skill_definitions,
+      system_instructions: formatted_system_instructions,
+      user_instructions: processed_instructions
+    })
 
     const user_content = build_user_content({
       model_provider,
