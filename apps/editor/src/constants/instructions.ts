@@ -5,9 +5,7 @@ export const code_at_cursor_instructions_for_panel = (params: {
   file_path: string
   row: number
   column: number
-}) => `Find correct replacement text for the <missing_text> symbol.
-
-# System
+}) => `# System
 
 Your response must begin with a markdown heading identifying the file and the cursor position, followed by a markdown code block containing the replacement text, followed by a brief explanation. The heading must be: "### Code at cursor: \`${
   params.file_path
@@ -21,7 +19,12 @@ Your response must begin with a markdown heading identifying the file and the cu
 !== undefined
 \`\`\`
 
-The variable is possibly not defined.`
+The variable is possibly not defined.
+
+---
+
+Find correct replacement text for the <missing_text> symbol.
+`
 
 export const intelligent_update_instructions =
   "Refactor the file according to the attached changes without explanations or any other text. Print the file in full because I have a disability which means I can't type and need to be able to just copy and paste."
