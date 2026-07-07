@@ -11,7 +11,7 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
 import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-symbols'
-import { build_prompt } from '@/utils/prompt-builder'
+import { PromptBuilder } from '@/utils/prompt-builder'
 
 export const handle_preview_web_configuration = async (
   panel_provider: PanelProvider,
@@ -65,7 +65,7 @@ export const handle_preview_web_configuration = async (
       ? `<missing_text>${processed_completion_instructions}</missing_text>`
       : '<missing_text>'
 
-    const { full_prompt } = build_prompt({
+    const { full_prompt } = PromptBuilder.build_prompt({
       context_text,
       active_file: {
         filepath: relative_path,
@@ -112,7 +112,7 @@ export const handle_preview_web_configuration = async (
       }
     }
 
-    const { full_prompt: built_prompt } = build_prompt({
+    const { full_prompt: built_prompt } = PromptBuilder.build_prompt({
       context_text,
       skill_definitions,
       system_instructions: formatted_system_instructions,

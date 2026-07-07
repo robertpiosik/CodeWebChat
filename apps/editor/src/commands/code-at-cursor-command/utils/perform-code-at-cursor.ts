@@ -13,7 +13,7 @@ import { t } from '@/i18n'
 import { build_user_content } from '../../../utils/build-user-content'
 import { get_code_at_cursor_api_configuration } from './get-code-at-cursor-config'
 import { show_ghost_text } from './show-ghost-text'
-import { build_prompt } from '../../../utils/prompt-builder'
+import { PromptBuilder } from '../../../utils/prompt-builder'
 
 export const perform_code_at_cursor = async (params: {
   file_tree_provider: any
@@ -129,7 +129,7 @@ export const perform_code_at_cursor = async (params: {
 
       const collected = await files_collector.collect_files()
 
-      const { part1, part2 } = build_prompt({
+      const { part1, part2 } = PromptBuilder.build_prompt({
         other_files: collected.other_files,
         recent_files: collected.recent_files,
         active_file: {

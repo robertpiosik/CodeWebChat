@@ -18,7 +18,7 @@ import {
 } from '../constants/state-keys'
 import { SelectedFilesProvider } from './providers/selected-files/selected-files-provider'
 import { is_binary_file } from '../utils/is-binary'
-import { build_prompt, build_file_context } from '../utils/prompt-builder'
+import { PromptBuilder } from '../utils/prompt-builder'
 
 export const token_count_emitter = new EventEmitter()
 
@@ -230,7 +230,8 @@ export const context_initialization = async (
         return
       }
 
-      context_text = build_prompt({ context_text }).full_prompt + '\n'
+      context_text =
+        PromptBuilder.build_prompt({ context_text }).full_prompt + '\n'
       await vscode.env.clipboard.writeText(context_text)
       vscode.window.showInformationMessage(
         dictionary.information_message.CONTEXT_COPIED_TO_CLIPBOARD
@@ -275,7 +276,7 @@ export const context_initialization = async (
             }
 
             if (is_binary_file(file_path, content_uint8_array)) {
-              context_text += build_file_context({
+              context_text += PromptBuilder.build_file_context({
                 filepath: display_path,
                 is_binary: true
               })
@@ -292,7 +293,7 @@ export const context_initialization = async (
               )
             }
 
-            context_text += build_file_context({
+            context_text += PromptBuilder.build_file_context({
               filepath: display_path,
               content
             })
@@ -308,7 +309,8 @@ export const context_initialization = async (
 
         if (context_text == '') return
 
-        context_text = build_prompt({ context_text }).full_prompt + '\n'
+        context_text =
+          PromptBuilder.build_prompt({ context_text }).full_prompt + '\n'
         await vscode.env.clipboard.writeText(context_text)
         vscode.window.showInformationMessage(
           dictionary.information_message

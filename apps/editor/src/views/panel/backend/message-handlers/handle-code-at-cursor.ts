@@ -21,7 +21,7 @@ import {
   show_configuration_quick_pick,
   map_api_configuration_to_item
 } from '@/utils/show-configuration-quick-pick'
-import { build_prompt } from '@/utils/prompt-builder'
+import { PromptBuilder } from '@/utils/prompt-builder'
 
 const get_code_at_cursor_api_configuration = async (
   model_providers_manager: ModelProvidersManager,
@@ -228,7 +228,7 @@ export const handle_code_at_cursor = async (
 
     const collected = await files_collector.collect_files()
 
-    const { part1, part2 } = build_prompt({
+    const { part1, part2 } = PromptBuilder.build_prompt({
       other_files: collected.other_files,
       recent_files: collected.recent_files,
       active_file: {

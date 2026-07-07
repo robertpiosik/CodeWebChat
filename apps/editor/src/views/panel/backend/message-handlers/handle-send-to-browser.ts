@@ -24,7 +24,7 @@ import {
 import { handle_update_last_used_web_configuration_or_group } from './handle-update-last-used-web-configuration-or-group'
 import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-symbols'
 import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
-import { build_prompt } from '@/utils/prompt-builder'
+import { PromptBuilder } from '@/utils/prompt-builder'
 
 export const handle_send_to_browser = async (params: {
   panel_provider: PanelProvider
@@ -112,7 +112,7 @@ export const handle_send_to_browser = async (params: {
       column: position.character
     })
 
-    const { full_prompt: text } = build_prompt({
+    const { full_prompt: text } = PromptBuilder.build_prompt({
       context_text,
       active_file: {
         filepath: relative_path,
@@ -184,7 +184,7 @@ export const handle_send_to_browser = async (params: {
       formatted_system_instructions = `${find_relevant_files_format_for_panel}\n\n${find_relevant_files_instructions}`
     }
 
-    const { full_prompt: text } = build_prompt({
+    const { full_prompt: text } = PromptBuilder.build_prompt({
       context_text,
       skill_definitions,
       system_instructions: formatted_system_instructions,

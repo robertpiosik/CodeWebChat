@@ -26,7 +26,7 @@ import {
   show_configuration_quick_pick,
   map_api_configuration_to_item
 } from '@/utils/show-configuration-quick-pick'
-import { build_prompt } from '@/utils/prompt-builder'
+import { PromptBuilder } from '@/utils/prompt-builder'
 
 const get_find_relevant_files_api_configuration = async (params: {
   model_providers_manager: ModelProvidersManager
@@ -218,7 +218,7 @@ export const handle_find_relevant_files = async (
 
     const formatted_system_instructions = `${find_relevant_files_format_for_panel}\n\n${find_relevant_files_instructions}`
 
-    const { part1, part2 } = build_prompt({
+    const { part1, part2 } = PromptBuilder.build_prompt({
       other_files: collected.other_files,
       recent_files: collected.recent_files,
       skill_definitions,

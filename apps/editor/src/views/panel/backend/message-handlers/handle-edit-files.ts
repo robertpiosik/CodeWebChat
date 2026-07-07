@@ -30,7 +30,7 @@ import {
   show_configuration_quick_pick,
   map_api_configuration_to_item
 } from '@/utils/show-configuration-quick-pick'
-import { build_prompt } from '@/utils/prompt-builder'
+import { PromptBuilder } from '@/utils/prompt-builder'
 
 const get_edit_files_api_configuration = async (params: {
   model_providers_manager: ModelProvidersManager
@@ -250,7 +250,7 @@ export const handle_edit_files = async (
         .get<string>('editFilesSystemInstructions') ||
       default_system_instructions
 
-    const { part1, part2 } = build_prompt({
+    const { part1, part2 } = PromptBuilder.build_prompt({
       other_files: collected.other_files,
       recent_files: collected.recent_files,
       skill_definitions,

@@ -16,7 +16,7 @@ import {
 } from '@/constants/edit-format-instructions'
 import { FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY } from '@/constants/state-keys'
 import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-symbols'
-import { build_prompt } from '@/utils/prompt-builder'
+import { PromptBuilder } from '@/utils/prompt-builder'
 
 export const handle_copy_prompt = async (params: {
   panel_provider: PanelProvider
@@ -86,7 +86,7 @@ export const handle_copy_prompt = async (params: {
       ? `<missing_text>${processed_completion_instructions}</missing_text>`
       : '<missing_text>'
 
-    const { full_prompt: text } = build_prompt({
+    const { full_prompt: text } = PromptBuilder.build_prompt({
       context_text,
       active_file: {
         filepath: relative_path,
@@ -153,7 +153,7 @@ export const handle_copy_prompt = async (params: {
       formatted_system_instructions = `${find_relevant_files_format_for_panel}\n\n${find_relevant_files_instructions}`
     }
 
-    const { full_prompt: text } = build_prompt({
+    const { full_prompt: text } = PromptBuilder.build_prompt({
       context_text,
       skill_definitions,
       system_instructions: formatted_system_instructions,
