@@ -1,4 +1,4 @@
-export const code_at_cursor = {
+export const translations = {
   'command.code-at-cursor.instructions.placeholder': {
     en: 'Enter completion instructions',
     pl: 'Wprowadź instrukcje ukończenia',

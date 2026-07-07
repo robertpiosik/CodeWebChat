@@ -1,4 +1,4 @@
-export const add_file_to_context = {
+export const translations = {
   'command.context.add.select-workspace': {
     en: 'Select a workspace folder to browse files',
     pl: 'Wybierz folder obszaru roboczego, aby przeglądać pliki',

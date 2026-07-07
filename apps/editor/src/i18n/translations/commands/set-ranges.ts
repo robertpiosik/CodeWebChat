@@ -1,4 +1,4 @@
-export const set_ranges = {
+export const translations = {
   'command.ranges.not-in-workspace': {
     en: 'File is not in a workspace folder.',
     pl: 'Plik nie znajduje się w folderze obszaru roboczego.',

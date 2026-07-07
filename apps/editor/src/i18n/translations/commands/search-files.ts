@@ -1,4 +1,4 @@
-export const search_files = {
+export const translations = {
   'command.search.title': {
     en: 'Search',
     pl: 'Szukaj',

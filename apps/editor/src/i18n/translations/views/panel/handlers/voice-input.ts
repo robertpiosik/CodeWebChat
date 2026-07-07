@@ -1,5 +1,5 @@
-export const panel_voice_input = {
-  'handlers.panel.voice-input.error.sox-missing': {
+export const translations = {
+  'views.panel.handlers.voice-input.error.sox-missing': {
     en: 'Please install SoX to record audio.',
     pl: 'Zainstaluj SoX, aby nagrywać dźwięk.',
     'zh-cn': '请安装 SoX 以录制音频。',
@@ -17,7 +17,7 @@ export const panel_voice_input = {
     hu: 'Kérjük, telepítse a SoX-ot hang rögzítéséhez.',
     bg: 'Моля, инсталирайте SoX, за да записвате аудио.'
   },
-  'handlers.panel.voice-input.error.sox-missing.mac': {
+  'views.panel.handlers.voice-input.error.sox-missing.mac': {
     en: 'Please install SoX to record audio (run "brew install sox" in your terminal).',
     pl: 'Zainstaluj SoX, aby nagrywać dźwięk (uruchom "brew install sox" w terminalu).',
     'zh-cn': '请安装 SoX 以录制音频（在终端中运行 "brew install sox"）。',
@@ -36,7 +36,7 @@ export const panel_voice_input = {
     hu: 'Kérjük, telepítse a SoX-ot hang rögzítéséhez (futtassa a "brew install sox" parancsot a terminálban).',
     bg: 'Моля, инсталирайте SoX, за да записвате аудио (изпълнете "brew install sox" във вашия терминал).'
   },
-  'handlers.panel.voice-input.error.sox-missing.linux': {
+  'views.panel.handlers.voice-input.error.sox-missing.linux': {
     en: 'Please install SoX to record audio (run "sudo apt install sox" in your terminal).',
     pl: 'Zainstaluj SoX, aby nagrywać dźwięk (uruchom "sudo apt install sox" w terminalu).',
     'zh-cn': '请安装 SoX 以录制音频（在终端中运行 "sudo apt install sox"）。',
@@ -55,7 +55,7 @@ export const panel_voice_input = {
     hu: 'Kérjük, telepítse a SoX-ot hang rögzítéséhez (futtassa a "sudo apt install sox" parancsot a terminálban).',
     bg: 'Моля, инсталирайте SoX, за да записвате аудио (изпълнете "sudo apt install sox" във вашия терминал).'
   },
-  'handlers.panel.voice-input.error.sox-missing.windows': {
+  'views.panel.handlers.voice-input.error.sox-missing.windows': {
     en: 'Please install SoX to record audio (run "winget install sox.sox" and add it to your PATH).',
     pl: 'Zainstaluj SoX, aby nagrywać dźwięk (uruchom "winget install sox.sox" i dodaj do zmiennej PATH).',
     'zh-cn':
@@ -76,7 +76,7 @@ export const panel_voice_input = {
     hu: 'Kérjük, telepítse a SoX-ot hang rögzítéséhez (futtassa a "winget install sox.sox" parancsot és adja hozzá a PATH-hez).',
     bg: 'Моля, инсталирайте SoX, за да записвате аудио (изпълнете "winget install sox.sox" и го добавете към PATH).'
   },
-  'handlers.panel.voice-input.error.start-failed': {
+  'views.panel.handlers.voice-input.error.start-failed': {
     en: 'Failed to start recording: {error}',
     pl: 'Nie udało się rozpocząć nagrywania: {error}',
     'zh-cn': '无法开始录音：{error}',
@@ -94,7 +94,7 @@ export const panel_voice_input = {
     hu: 'Nem sikerült elindítani a felvételt: {error}',
     bg: 'Неуспешно стартиране на записа: {error}'
   },
-  'handlers.panel.voice-input.progress.transcribing': {
+  'views.panel.handlers.voice-input.progress.transcribing': {
     en: 'Transcribing...',
     pl: 'Transkrypcja...',
     'zh-cn': '正在转录...',
@@ -112,7 +112,7 @@ export const panel_voice_input = {
     hu: 'Átírás...',
     bg: 'Транскрибиране...'
   },
-  'handlers.panel.voice-input.error.provider-not-found': {
+  'views.panel.handlers.voice-input.error.provider-not-found': {
     en: 'Model Provider {name} not found.',
     pl: 'Nie znaleziono dostawcy modelu {name}.',
     'zh-cn': '未找到模型提供商 {name}。',
@@ -130,7 +130,7 @@ export const panel_voice_input = {
     hu: 'A(z) {name} modell szolgáltató nem található.',
     bg: 'Доставчикът на модел {name} не е намерен.'
   },
-  'handlers.panel.voice-input.warning.inaudible': {
+  'views.panel.handlers.voice-input.warning.inaudible': {
     en: 'Inaudible voice input',
     pl: 'Nierozpoznano mowy',
     'zh-cn': '无法听清的语音输入',
@@ -148,7 +148,7 @@ export const panel_voice_input = {
     hu: 'Nem hallható hangbemenet',
     bg: 'Неразбираем гласов вход'
   },
-  'handlers.panel.voice-input.error.process-failed': {
+  'views.panel.handlers.voice-input.error.process-failed': {
     en: 'Failed to process audio: {error}',
     pl: 'Nie udało się przetworzyć dźwięku: {error}',
     'zh-cn': '处理音频失败：{error}',
@@ -166,7 +166,7 @@ export const panel_voice_input = {
     hu: 'Hangfeldolgozás sikertelen: {error}',
     bg: 'Неуспешна обработка на аудиото: {error}'
   },
-  'handlers.panel.voice-input.warning.no-config.title': {
+  'views.panel.handlers.voice-input.warning.no-config.title': {
     en: 'No configuration found',
     pl: 'Nie znaleziono konfiguracji',
     'zh-cn': '未找到配置',
@@ -184,7 +184,7 @@ export const panel_voice_input = {
     hu: 'Nem található konfiguráció',
     bg: 'Не е намерена конфигурация'
   },
-  'handlers.panel.voice-input.warning.no-config.detail': {
+  'views.panel.handlers.voice-input.warning.no-config.detail': {
     en: 'Add a "Voice Input" configuration in settings to use this feature.',
     pl: 'Dodaj konfigurację "Wprowadzanie głosowe" w ustawieniach, aby użyć tej funkcji.',
     'zh-cn': '在设置中添加“语音输入”配置以使用此功能。',

@@ -32,24 +32,28 @@ const start_recording = (panel_provider: PanelProvider) => {
 
     panel_provider.recording_process.on('error', (error: any) => {
       if (error.code == 'ENOENT') {
-        let error_message = t('handlers.panel.voice-input.error.sox-missing')
+        let error_message = t(
+          'views.panel.handlers.voice-input.error.sox-missing'
+        )
 
         if (process.platform == 'darwin') {
-          error_message = t('handlers.panel.voice-input.error.sox-missing.mac')
+          error_message = t(
+            'views.panel.handlers.voice-input.error.sox-missing.mac'
+          )
         } else if (process.platform == 'linux') {
           error_message = t(
-            'handlers.panel.voice-input.error.sox-missing.linux'
+            'views.panel.handlers.voice-input.error.sox-missing.linux'
           )
         } else if (process.platform == 'win32') {
           error_message = t(
-            'handlers.panel.voice-input.error.sox-missing.windows'
+            'views.panel.handlers.voice-input.error.sox-missing.windows'
           )
         }
 
         vscode.window.showErrorMessage(error_message)
       } else {
         vscode.window.showErrorMessage(
-          t('handlers.panel.voice-input.error.start-failed', {
+          t('views.panel.handlers.voice-input.error.start-failed', {
             error: error.message
           })
         )
@@ -137,7 +141,7 @@ const stop_recording = async (panel_provider: PanelProvider) => {
 
       panel_provider.send_message({
         command: 'SHOW_PROGRESS',
-        title: t('handlers.panel.voice-input.progress.transcribing'),
+        title: t('views.panel.handlers.voice-input.progress.transcribing'),
         show_elapsed_time: true,
         cancellable: true
       })
@@ -148,7 +152,7 @@ const stop_recording = async (panel_provider: PanelProvider) => {
 
       if (!model_provider) {
         vscode.window.showErrorMessage(
-          t('handlers.panel.voice-input.error.provider-not-found', {
+          t('views.panel.handlers.voice-input.error.provider-not-found', {
             name: api_configuration!.model_provider_name
           })
         )
@@ -198,7 +202,7 @@ const stop_recording = async (panel_provider: PanelProvider) => {
         if (result.response.trim().toUpperCase() == 'INAUDIBLE') {
           panel_provider.send_message({
             command: 'SHOW_AUTO_CLOSING_MODAL',
-            title: t('handlers.panel.voice-input.warning.inaudible'),
+            title: t('views.panel.handlers.voice-input.warning.inaudible'),
             type: 'warning'
           })
         } else {
@@ -216,7 +220,7 @@ const stop_recording = async (panel_provider: PanelProvider) => {
         data: { error }
       })
       vscode.window.showErrorMessage(
-        t('handlers.panel.voice-input.error.process-failed', {
+        t('views.panel.handlers.voice-input.error.process-failed', {
           error: error.message
         })
       )
@@ -246,10 +250,10 @@ export const handle_voice_input = async (
 
     if (api_configurations.length == 0) {
       vscode.window.showWarningMessage(
-        t('handlers.panel.voice-input.warning.no-config.title'),
+        t('views.panel.handlers.voice-input.warning.no-config.title'),
         {
           modal: true,
-          detail: t('handlers.panel.voice-input.warning.no-config.detail')
+          detail: t('views.panel.handlers.voice-input.warning.no-config.detail')
         }
       )
       panel_provider.send_message({

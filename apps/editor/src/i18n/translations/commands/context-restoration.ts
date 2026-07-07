@@ -1,4 +1,4 @@
-export const context_restoration = {
+export const translations = {
   'command.context-restoration.sources.workspace-state': {
     en: 'Workspace state',
     pl: 'Stan obszaru roboczego',

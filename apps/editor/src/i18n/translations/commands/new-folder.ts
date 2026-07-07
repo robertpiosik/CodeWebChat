@@ -1,4 +1,4 @@
-export const new_folder = {
+export const translations = {
   'command.files.new-folder.title': {
     en: 'New Folder',
     pl: 'Nowy folder',

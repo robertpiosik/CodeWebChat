@@ -1,4 +1,4 @@
-export const select_definition_file = {
+export const translations = {
   'command.context.select-definition.resolving': {
     en: 'Resolving definition...',
     pl: 'Rozwiązywanie definicji...',

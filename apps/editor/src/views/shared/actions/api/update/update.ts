@@ -6,6 +6,7 @@ import {
 } from '@/services/model-providers-manager'
 import { ApiConfiguration } from '@/views/panel/types/messages'
 import { ToolType } from '@/views/settings/types/tools'
+import { t } from '@/i18n'
 
 export const update = async (params: {
   context: vscode.ExtensionContext
@@ -50,15 +51,14 @@ export const update = async (params: {
   if (params.origin == 'cancel') {
     const discard_button = 'Discard'
     const result = await vscode.window.showWarningMessage(
-      dictionary.information_message.CONFIRM_DISCARD_UNSAVED_CHANGES(
-        'API configuration'
-      ),
+      t('views.common.handlers.common.confirm-discard-unsaved-changes', {
+        item_type: 'API configuration'
+      }),
       {
         modal: true,
-        detail:
-          dictionary.information_message.UNSAVED_CHANGES_TO_ITEM_WILL_BE_LOST(
-            'API configuration'
-          )
+        detail: t('views.common.handlers.common.unsaved-changes-will-be-lost', {
+          item_type: 'API configuration'
+        })
       },
       discard_button
     )

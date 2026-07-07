@@ -1,4 +1,4 @@
-export const rename = {
+export const translations = {
   'command.files.rename.prompt': {
     en: 'Enter new name',
     pl: 'Wprowadź nową nazwę',

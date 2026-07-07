@@ -1,16 +1,22 @@
 import * as vscode from 'vscode'
 import { commands } from './translations/commands'
-import { common } from './translations/common'
-import { settings_handlers } from './translations/handlers/settings'
-import { panel_voice_input } from './translations/handlers/panel/voice-input'
+import { translations as common } from './translations/common'
+import { translations as views_settings_handlers_open_allow_patterns_settings } from './translations/views/settings/handlers/open-allow-patterns-settings'
+import { translations as views_settings_handlers_open_ignore_patterns_settings } from './translations/views/settings/handlers/open-ignore-patterns-settings'
+import { translations as views_settings_handlers_select_default_api_configuration } from './translations/views/settings/handlers/select-default-api-configuration'
+import { translations as views_panel_handlers_voice_input } from './translations/views/panel/handlers/voice-input'
+import { translations as views_handlers_common } from './translations/views/common/handlers/common'
 
 export type TranslationKey = keyof typeof translations
 
 const translations = {
   ...commands,
   ...common,
-  ...settings_handlers,
-  ...panel_voice_input
+  ...views_settings_handlers_open_allow_patterns_settings,
+  ...views_settings_handlers_open_ignore_patterns_settings,
+  ...views_settings_handlers_select_default_api_configuration,
+  ...views_panel_handlers_voice_input,
+  ...views_handlers_common
 }
 
 export const t = (

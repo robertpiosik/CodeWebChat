@@ -16,8 +16,12 @@ export const handle_open_allow_patterns_settings = async (): Promise<void> => {
       (resolve) => {
         const quick_pick = vscode.window.createQuickPick<(typeof items)[0]>()
         quick_pick.items = items
-        quick_pick.title = t('handlers.settings.allow-patterns.title')
-        quick_pick.placeholder = t('handlers.settings.allow-patterns.placeholder')
+        quick_pick.title = t(
+          'views.settings.handlers.open-allow-patterns-settings.title'
+        )
+        quick_pick.placeholder = t(
+          'views.settings.handlers.open-allow-patterns-settings.placeholder'
+        )
         const close_button: vscode.QuickInputButton = {
           iconPath: new vscode.ThemeIcon('close'),
           tooltip: t('common.close')
@@ -85,7 +89,10 @@ export const handle_open_allow_patterns_settings = async (): Promise<void> => {
     await vscode.window.showTextDocument(doc)
   } catch (e) {
     vscode.window.showErrorMessage(
-      t('handlers.settings.error.could-not-open-settings', { path: settingsPath })
+      t(
+        'views.settings.handlers.open-allow-patterns-settings.error.could-not-open-settings',
+        { path: settingsPath }
+      )
     )
   }
 }

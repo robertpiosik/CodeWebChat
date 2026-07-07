@@ -1,8 +1,8 @@
 import * as vscode from 'vscode'
-import { dictionary } from '@shared/constants/dictionary'
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import { UpdateWebConfigurationMessage } from '@/views/settings/types/messages'
 import { update } from '@/views/shared/actions/web/update'
+import { t } from '@/i18n'
 
 export const handle_update_web_configuration = async (
   settings_provider: SettingsProvider,
@@ -11,15 +11,14 @@ export const handle_update_web_configuration = async (
   if (message.is_new && message.origin === 'cancel') {
     const discard_button = 'Discard'
     const result = await vscode.window.showWarningMessage(
-      dictionary.information_message.CONFIRM_DISCARD_UNSAVED_CHANGES(
-        'web configuration'
-      ),
+      t('views.common.handlers.common.confirm-discard-unsaved-changes', {
+        item_type: 'web configuration'
+      }),
       {
         modal: true,
-        detail:
-          dictionary.information_message.UNSAVED_CHANGES_TO_ITEM_WILL_BE_LOST(
-            'web configuration'
-          )
+        detail: t('views.common.handlers.common.unsaved-changes-will-be-lost', {
+          item_type: 'web configuration'
+        })
       },
       discard_button
     )

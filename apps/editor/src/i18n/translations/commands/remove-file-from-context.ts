@@ -1,4 +1,4 @@
-export const remove_file_from_context = {
+export const translations = {
   'command.context.remove.no-files': {
     en: 'No files currently in context.',
     pl: 'Brak plików aktualnie w kontekście.',

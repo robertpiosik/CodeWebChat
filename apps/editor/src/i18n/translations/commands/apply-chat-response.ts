@@ -1,4 +1,4 @@
-export const apply_chat_response = {
+export const translations = {
   'command.apply-chat-response.warning.no-code-blocks.title': {
     en: 'No valid code blocks found',
     pl: 'Nie znaleziono prawidłowych bloków z kodem',

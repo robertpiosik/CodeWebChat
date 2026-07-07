@@ -1,4 +1,4 @@
-export const common = {
+export const translations = {
   'common.close': {
     en: 'Close',
     pl: 'Zamknij',

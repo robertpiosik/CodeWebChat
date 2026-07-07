@@ -6,6 +6,7 @@ import {
   ui_web_configuration_to_config_format
 } from '@/utils/web-configuration-format-converters'
 import { generate_unique_name } from '@/views/shared/utils/generate-unique-name'
+import { t } from '@/i18n'
 
 export const update = async (params: {
   updating_web_configuration: WebConfiguration
@@ -70,15 +71,14 @@ export const update = async (params: {
   if (params.origin == 'cancel') {
     const discard_button = 'Discard'
     const result = await vscode.window.showWarningMessage(
-      dictionary.information_message.CONFIRM_DISCARD_UNSAVED_CHANGES(
-        'web configuration'
-      ),
+      t('views.common.handlers.common.confirm-discard-unsaved-changes', {
+        item_type: 'web configuration'
+      }),
       {
         modal: true,
-        detail:
-          dictionary.information_message.UNSAVED_CHANGES_TO_ITEM_WILL_BE_LOST(
-            'web configuration'
-          )
+        detail: t('views.common.handlers.common.unsaved-changes-will-be-lost', {
+          item_type: 'web configuration'
+        })
       },
       discard_button
     )

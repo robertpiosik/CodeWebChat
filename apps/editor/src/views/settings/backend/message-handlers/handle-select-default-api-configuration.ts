@@ -17,7 +17,7 @@ export const handle_select_default_api_configuration = async (
 
   if (api_configurations.length == 0) {
     vscode.window.showInformationMessage(
-      t('handlers.settings.api-config.no-configs')
+      t('views.settings.handlers.select-default-api-configuration.no-configs')
     )
     return
   }
@@ -41,7 +41,9 @@ export const handle_select_default_api_configuration = async (
 
   quick_pick.items = items
   quick_pick.title = t('common.config.title')
-  quick_pick.placeholder = t('handlers.settings.api-config.placeholder')
+  quick_pick.placeholder = t(
+    'views.settings.handlers.select-default-api-configuration.placeholder'
+  )
   quick_pick.matchOnDescription = true
 
   const close_button: vscode.QuickInputButton = {

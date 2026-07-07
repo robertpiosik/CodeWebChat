@@ -1,4 +1,4 @@
-export const rate = {
+export const translations = {
   'command.rate.title': {
     en: 'Rate Extension',
     pl: 'Oceń rozszerzenie',

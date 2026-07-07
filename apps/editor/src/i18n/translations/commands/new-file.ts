@@ -1,4 +1,4 @@
-export const new_file = {
+export const translations = {
   'command.files.new-file.title': {
     en: 'New File',
     pl: 'Nowy plik',

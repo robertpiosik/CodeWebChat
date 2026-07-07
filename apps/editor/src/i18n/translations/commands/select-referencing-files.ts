@@ -1,4 +1,4 @@
-export const select_referencing_files = {
+export const translations = {
   'command.context.select-references.searching': {
     en: 'Searching for references...',
     pl: 'Wyszukiwanie odwołań...',

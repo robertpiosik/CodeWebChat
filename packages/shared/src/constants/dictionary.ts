@@ -31,8 +31,6 @@ export const dictionary = {
       'No saved contexts remaining in the JSON file.',
     COMMIT_SEEMS_EMPTY: (commit_hash: string) =>
       `Commit ${commit_hash} seems empty.`,
-    CONFIRM_DISCARD_UNSAVED_CHANGES: (item_type: string) =>
-      `Discard unsaved changes to the ${item_type}?`,
     COULD_NOT_UNDO_ANOTHER_CHECKPOINT_DELETED:
       'Could not undo. Another checkpoint was deleted.',
     NO_FILE_PATHS_FOUND_IN_CLIPBOARD: 'No file paths found in the clipboard.',
@@ -105,8 +103,6 @@ export const dictionary = {
     CRUNCHING_TOKEN_COUNTS: 'Please wait, crunching token counts...',
     TEMPLATE_RESTORED: 'Template has been restored.',
     UNNAMED_TEMPLATE_DELETED: 'Unnamed template has been deleted.',
-    UNSAVED_CHANGES_TO_ITEM_WILL_BE_LOST: (item_type: string) =>
-      `If you discard, updates to the ${item_type} will be lost.`,
     BASE_URL_DOES_NOT_END_WITH_V1:
       'The Base URL does not end with "/v1". Many OpenAI-compatible APIs require this. Would you like to add it?'
   },
