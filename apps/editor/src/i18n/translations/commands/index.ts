@@ -13,7 +13,7 @@ import { translations as new_folder } from './new-folder'
 import { translations as rename } from './rename'
 import { translations as rate } from './rate'
 
-export const commands = {
+export const translations = {
   ...generate_commit_message,
   ...code_at_cursor,
   ...apply_chat_response,

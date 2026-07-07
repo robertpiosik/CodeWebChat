@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { commands } from './translations/commands'
+import { translations as commands } from './translations/commands'
 import { translations as common } from './translations/common'
 import { translations as views_settings_handlers_open_allow_patterns_settings } from './translations/views/settings/handlers/open-allow-patterns-settings'
 import { translations as views_settings_handlers_open_ignore_patterns_settings } from './translations/views/settings/handlers/open-ignore-patterns-settings'
