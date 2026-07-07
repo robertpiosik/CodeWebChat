@@ -42,13 +42,13 @@ export const handle_send_to_browser = async (params: {
     return
   }
 
-  const is_in_code_completions_mode =
+  const is_in_code_at_cursor_mode =
     params.panel_provider.web_prompt_type == 'code-at-cursor'
   const current_instructions = params.panel_provider.current_instruction
 
   const active_editor = vscode.window.activeTextEditor
 
-  if (is_in_code_completions_mode && !active_editor) {
+  if (is_in_code_at_cursor_mode && !active_editor) {
     vscode.window.showWarningMessage(dictionary.warning_message.NO_EDITOR_OPEN)
     return
   }
@@ -81,7 +81,7 @@ export const handle_send_to_browser = async (params: {
 
   let sent = false
 
-  if (is_in_code_completions_mode) {
+  if (is_in_code_at_cursor_mode) {
     const document = active_editor!.document
     const position = active_editor!.selection.active
 
@@ -114,11 +114,14 @@ export const handle_send_to_browser = async (params: {
 
     const { full_prompt: text } = build_prompt({
       context_text,
-      active_file_context: `### File: \`${relative_path}\`\n\n\`\`\`\n${text_before_cursor}${
-        processed_completion_instructions
-          ? `<missing_text>${processed_completion_instructions}</missing_text>`
-          : '<missing_text>'
-      }${text_after_cursor}\n\`\`\`\n\n`,
+      active_file: {
+        filepath: relative_path,
+        content: `${text_before_cursor}${
+          processed_completion_instructions
+            ? `<missing_text>${processed_completion_instructions}</missing_text>`
+            : '<missing_text>'
+        }${text_after_cursor}`
+      },
       skill_definitions,
       system_instructions: main_instructions
     })
@@ -223,7 +226,7 @@ const show_web_configuration_quick_pick = async (params: {
   get_is_web_configuration_disabled: (
     web_configuration: ConfigWebConfigurationFormat
   ) => boolean
-  is_in_code_completions_mode: boolean
+  is_in_code_at_cursor_mode: boolean
   current_instructions: string
 }): Promise<{ web_configuration_name: string | undefined } | null> => {
   const { web_configurations, context, prompt_type, panel_provider } = params
@@ -314,7 +317,7 @@ const resolve_web_configuration = async (params: {
     'webConfigurations',
     []
   )
-  const is_in_code_completions_mode =
+  const is_in_code_at_cursor_mode =
     params.panel_provider.web_prompt_type == 'code-at-cursor'
 
   let current_instructions = ''
@@ -350,7 +353,7 @@ const resolve_web_configuration = async (params: {
   ) =>
     (web_configuration.chatbot &&
       (!params.panel_provider.websocket_server_instance.is_connected_with_browser() ||
-        (is_in_code_completions_mode &&
+        (is_in_code_at_cursor_mode &&
           (!params.panel_provider.currently_open_file_path ||
             !!params.panel_provider.current_selection)))) ||
     false
@@ -395,7 +398,7 @@ const resolve_web_configuration = async (params: {
     prompt_type: params.panel_provider.web_prompt_type,
     panel_provider: params.panel_provider,
     get_is_web_configuration_disabled,
-    is_in_code_completions_mode,
+    is_in_code_at_cursor_mode,
     current_instructions
   })
 

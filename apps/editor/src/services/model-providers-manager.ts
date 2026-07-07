@@ -257,7 +257,7 @@ export class ModelProvidersManager {
     )
   }
 
-  public async get_default_code_completions_api_configuration(): Promise<
+  public async get_default_code_at_cursor_api_configuration(): Promise<
     ApiConfiguration | undefined
   > {
     await this._load_promise
@@ -266,7 +266,7 @@ export class ModelProvidersManager {
     )
   }
 
-  public async set_default_code_completions_api_configuration(
+  public async set_default_code_at_cursor_api_configuration(
     api_configuration: ApiConfiguration | null
   ) {
     await this._set_default_api_configuration_in_settings(

@@ -19,7 +19,7 @@ const skill_label = '$(thinking) Skill'
 
 const hash_sign_quick_pick = async (params: {
   context: vscode.ExtensionContext
-  is_for_code_completions: boolean
+  is_for_code_at_cursor: boolean
   is_find_relevant_files: boolean
 }): Promise<string | undefined> => {
   let items: vscode.QuickPickItem[] = [
@@ -158,7 +158,7 @@ const hash_sign_quick_pick = async (params: {
 export const handle_hash_sign_quick_pick = async (
   panel_provider: PanelProvider,
   context: vscode.ExtensionContext,
-  is_for_code_completions: boolean,
+  is_for_code_at_cursor: boolean
 ): Promise<void> => {
   const is_find_relevant_files =
     (panel_provider.mode == MODE.WEB &&
@@ -168,29 +168,29 @@ export const handle_hash_sign_quick_pick = async (
 
   const replacement = await hash_sign_quick_pick({
     context,
-    is_for_code_completions,
+    is_for_code_at_cursor,
     is_find_relevant_files
   })
 
   if (!replacement) {
-      panel_provider.send_message({
-        command: 'FOCUS_PROMPT_FIELD'
-      })
-    return
-  }
-
-    const current_text = panel_provider.current_instruction
-
-    const is_after_hash_sign = current_text
-      .slice(0, panel_provider.caret_position)
-      .endsWith('#')
-    if (is_after_hash_sign) {
-      panel_provider.add_text_at_cursor_position(replacement, 1)
-    } else {
-      panel_provider.add_text_at_cursor_position(replacement)
-    }
-
     panel_provider.send_message({
       command: 'FOCUS_PROMPT_FIELD'
     })
+    return
+  }
+
+  const current_text = panel_provider.current_instruction
+
+  const is_after_hash_sign = current_text
+    .slice(0, panel_provider.caret_position)
+    .endsWith('#')
+  if (is_after_hash_sign) {
+    panel_provider.add_text_at_cursor_position(replacement, 1)
+  } else {
+    panel_provider.add_text_at_cursor_position(replacement)
+  }
+
+  panel_provider.send_message({
+    command: 'FOCUS_PROMPT_FIELD'
+  })
 }

@@ -121,7 +121,7 @@ export const update = async (params: {
 
   if (params.is_new && params.tool_type) {
     if (params.tool_type == 'code-at-cursor') {
-      await providers_manager.set_default_code_completions_api_configuration(
+      await providers_manager.set_default_code_at_cursor_api_configuration(
         new_config as any
       )
     } else if (params.tool_type == 'commit-messages') {

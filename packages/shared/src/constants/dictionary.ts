@@ -39,7 +39,7 @@ export const dictionary = {
     NO_MATCHING_FILES_FOUND_FOR_CLIPBOARD_PATHS:
       'No matching files found in workspace for the paths in clipboard.',
     NO_CODE_AT_CURSOR_CONFIGURATIONS_FOUND:
-      'No "Code Completions" configurations found. Please add one in settings.',
+      'No "Code at Cursor" configurations found. Please add one in settings.',
     NO_FIND_RELEVANT_FILES_CONFIGURATIONS_FOUND:
       'No "Find Relevant Files" configurations found. Please add one in settings.',
     NO_RECENT_CHANGES_TO_UNDO:
@@ -131,11 +131,11 @@ export const dictionary = {
     NO_OPEN_EDITORS_SELECTED: 'No open editors selected.',
     NO_EDITOR_OPEN: 'No editor is open.',
     CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITH_SELECTION:
-      'Cannot copy prompt in code completion mode with an active selection.',
+      'Cannot copy prompt in code at cursor mode with an active selection.',
     CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITHOUT_EDITOR:
-      'Cannot copy prompt in code completion mode without an active editor.',
+      'Cannot copy prompt in code at cursor mode without an active editor.',
     CANNOT_PREVIEW_IN_CODE_COMPLETION_WITHOUT_EDITOR:
-      'Cannot preview in code completion mode without an active editor.',
+      'Cannot preview in code at cursor mode without an active editor.',
     BROWSER_EXTENSION_NOT_CONNECTED:
       'Browser extension is not connected. Please install or reload it.',
     PRESETS_NOT_RUN_DUE_TO_MISSING_INSTRUCTIONS:
@@ -356,12 +356,12 @@ export const dictionary = {
     NO_WORKSPACE_PROVIDER: 'No workspace provider available.',
     NO_WORKSPACE_ROOT: 'No workspace root found.',
     API_PROVIDER_NOT_SPECIFIED_FOR_CODE_AT_CURSOR:
-      'API provider is not specified for Code Completions tool.',
+      'API provider is not specified for Code at Cursor tool.',
     MODEL_NOT_SPECIFIED_FOR_CODE_AT_CURSOR:
-      'Model is not specified for Code Completions tool.',
+      'Model is not specified for Code at Cursor tool.',
     API_KEY_MISSING: 'API key is missing. Please add it in the Settings tab.',
     CODE_COMPLETION_ERROR:
-      'An error occurred during code completion. See console for details.',
+      'An error occurred during code at cursor operation. See console for details.',
     EDIT_FILES_ERROR:
       'An error occurred during file editing. See console for details.',
     CONFIGURATION_ALREADY_EXISTS: 'Identical configuration already exists.',

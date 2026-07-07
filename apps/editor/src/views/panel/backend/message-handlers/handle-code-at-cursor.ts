@@ -33,10 +33,10 @@ const get_code_at_cursor_api_configuration = async (
   | { model_provider: ModelProvider; api_configuration: ApiConfiguration }
   | undefined
 > => {
-  const code_completions_api_configurations =
+  const code_at_cursor_api_configurations =
     await model_providers_manager.get_api_configurations()
 
-  if (code_completions_api_configurations.length == 0) {
+  if (code_at_cursor_api_configurations.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
       dictionary.information_message.NO_CODE_AT_CURSOR_CONFIGURATIONS_FOUND
@@ -48,7 +48,7 @@ const get_code_at_cursor_api_configuration = async (
 
   if (api_configuration_id !== undefined) {
     selected_api_configuration =
-      code_completions_api_configurations.find(
+      code_at_cursor_api_configurations.find(
         (c) => get_api_configuration_id(c) == api_configuration_id
       ) || null
     if (selected_api_configuration && panel_provider) {
@@ -64,16 +64,16 @@ const get_code_at_cursor_api_configuration = async (
     )
     if (last_selected_id) {
       selected_api_configuration =
-        code_completions_api_configurations.find(
+        code_at_cursor_api_configurations.find(
           (c) => get_api_configuration_id(c) === last_selected_id
         ) || null
     }
 
     if (
       !selected_api_configuration &&
-      code_completions_api_configurations.length > 0
+      code_at_cursor_api_configurations.length > 0
     ) {
-      selected_api_configuration = code_completions_api_configurations[0]
+      selected_api_configuration = code_at_cursor_api_configurations[0]
     }
   }
 
@@ -83,10 +83,10 @@ const get_code_at_cursor_api_configuration = async (
     )
 
     const result = await show_configuration_quick_pick({
-      items: code_completions_api_configurations,
+      items: code_at_cursor_api_configurations,
       map_item: map_api_configuration_to_item,
       last_selected_id,
-      placeholder: 'Select code completions API configuration'
+      placeholder: 'Select code at cursor API configuration'
     })
 
     if (panel_provider) {
@@ -160,25 +160,25 @@ export const handle_code_at_cursor = async (
 
   const {
     model_provider,
-    api_configuration: code_completions_api_configuration
+    api_configuration: code_at_cursor_api_configuration
   } = api_configuration_result
 
-  if (!code_completions_api_configuration.model_provider_name) {
+  if (!code_at_cursor_api_configuration.model_provider_name) {
     vscode.window.showErrorMessage(
       dictionary.error_message.API_PROVIDER_NOT_SPECIFIED_FOR_CODE_AT_CURSOR
     )
     Logger.warn({
       function_name: 'handle_code_at_cursor',
-      message: 'API provider is not specified for Code Completions tool.'
+      message: 'API provider is not specified for Code at Cursor tool.'
     })
     return
-  } else if (!code_completions_api_configuration.model) {
+  } else if (!code_at_cursor_api_configuration.model) {
     vscode.window.showErrorMessage(
       dictionary.error_message.MODEL_NOT_SPECIFIED_FOR_CODE_AT_CURSOR
     )
     Logger.warn({
       function_name: 'handle_code_at_cursor',
-      message: 'Model is not specified for Code Completions tool.'
+      message: 'Model is not specified for Code at Cursor tool.'
     })
     return
   }
@@ -231,11 +231,14 @@ export const handle_code_at_cursor = async (
     const { part1, part2 } = build_prompt({
       other_files: collected.other_files,
       recent_files: collected.recent_files,
-      active_file_context: `### File: \`${relative_path}\`\n\n\`\`\`\n${text_before_cursor}${
-        processed_completion_instructions
-          ? `<missing_text>${processed_completion_instructions}</missing_text>`
-          : '<missing_text>'
-      }${text_after_cursor}\n\`\`\`\n\n`,
+      active_file: {
+        filepath: relative_path,
+        content: `${text_before_cursor}${
+          processed_completion_instructions
+            ? `<missing_text>${processed_completion_instructions}</missing_text>`
+            : '<missing_text>'
+        }${text_after_cursor}`
+      },
       skill_definitions,
       system_instructions: main_instructions
     })
@@ -255,14 +258,14 @@ export const handle_code_at_cursor = async (
 
     const body: { [key: string]: any } = {
       messages,
-      model: code_completions_api_configuration.model,
-      temperature: code_completions_api_configuration.temperature
+      model: code_at_cursor_api_configuration.model,
+      temperature: code_at_cursor_api_configuration.temperature
     }
 
     apply_reasoning_effort({
       body,
       model_provider,
-      reasoning_effort: code_completions_api_configuration.reasoning_effort
+      reasoning_effort: code_at_cursor_api_configuration.reasoning_effort
     })
 
     let error_occurred = false
@@ -277,11 +280,9 @@ export const handle_code_at_cursor = async (
             api_key: model_provider.api_key,
             body,
             request_id,
-            provider_name:
-              code_completions_api_configuration.model_provider_name,
-            model: code_completions_api_configuration.model,
-            reasoning_effort:
-              code_completions_api_configuration.reasoning_effort
+            provider_name: code_at_cursor_api_configuration.model_provider_name,
+            model: code_at_cursor_api_configuration.model,
+            reasoning_effort: code_at_cursor_api_configuration.reasoning_effort
           })
 
           if (result) {
@@ -299,10 +300,10 @@ export const handle_code_at_cursor = async (
                 },
                 recent_api_configuration: {
                   model_provider:
-                    code_completions_api_configuration.model_provider_name,
-                  model: code_completions_api_configuration.model,
+                    code_at_cursor_api_configuration.model_provider_name,
+                  model: code_at_cursor_api_configuration.model,
                   reasoning_effort:
-                    code_completions_api_configuration.reasoning_effort
+                    code_at_cursor_api_configuration.reasoning_effort
                 }
               }
             )

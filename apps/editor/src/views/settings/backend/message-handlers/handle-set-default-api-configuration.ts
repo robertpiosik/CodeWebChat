@@ -20,7 +20,7 @@ export const handle_set_default_api_configuration = async (
     : null
 
   if (type == 'code-at-cursor') {
-    await providers_manager.set_default_code_completions_api_configuration(
+    await providers_manager.set_default_code_at_cursor_api_configuration(
       api_configuration_to_set
     )
   } else if (type == 'intelligent-update') {

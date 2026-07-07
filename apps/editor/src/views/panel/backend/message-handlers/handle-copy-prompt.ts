@@ -30,14 +30,14 @@ export const handle_copy_prompt = async (params: {
 
   const active_editor = vscode.window.activeTextEditor
 
-  const is_in_code_completions_prompt_type =
+  const is_in_code_at_cursor_prompt_type =
     (params.panel_provider.mode == MODE.WEB &&
       params.panel_provider.web_prompt_type == 'code-at-cursor') ||
     (params.panel_provider.mode == MODE.API &&
       params.panel_provider.api_prompt_type == 'code-at-cursor')
 
   if (
-    is_in_code_completions_prompt_type &&
+    is_in_code_at_cursor_prompt_type &&
     active_editor &&
     !active_editor.selection.isEmpty
   ) {
@@ -48,7 +48,7 @@ export const handle_copy_prompt = async (params: {
     return
   }
 
-  if (is_in_code_completions_prompt_type && active_editor) {
+  if (is_in_code_at_cursor_prompt_type && active_editor) {
     const document = active_editor.document
     const position = active_editor.selection.active
     const active_path = document.uri.fsPath
@@ -88,13 +88,16 @@ export const handle_copy_prompt = async (params: {
 
     const { full_prompt: text } = build_prompt({
       context_text,
-      active_file_context: `### File: \`${relative_path}\`\n\n\`\`\`\n${text_before_cursor}${missing_text_tag}${text_after_cursor}\n\`\`\`\n\n`,
+      active_file: {
+        filepath: relative_path,
+        content: `${text_before_cursor}${missing_text_tag}${text_after_cursor}`
+      },
       skill_definitions,
       system_instructions
     })
 
     vscode.env.clipboard.writeText(text.trim())
-  } else if (!is_in_code_completions_prompt_type) {
+  } else if (!is_in_code_at_cursor_prompt_type) {
     const is_in_find_relevant_files_prompt_type =
       (params.panel_provider.mode == MODE.WEB &&
         params.panel_provider.web_prompt_type == 'find-relevant-files') ||

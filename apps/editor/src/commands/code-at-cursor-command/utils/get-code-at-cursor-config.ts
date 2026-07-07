@@ -41,7 +41,7 @@ export const get_code_at_cursor_api_configuration = async (params: {
       ) || null
   } else if (!params.show_quick_pick) {
     const default_api_configuration =
-      await params.model_providers_manager.get_default_code_completions_api_configuration()
+      await params.model_providers_manager.get_default_code_at_cursor_api_configuration()
     if (default_api_configuration) {
       selected_api_configuration = default_api_configuration
     } else {
@@ -108,7 +108,7 @@ export const get_code_at_cursor_api_configuration = async (params: {
     )
     Logger.warn({
       function_name: 'get_code_at_cursor_api_configuration',
-      message: 'API provider not found for Code Completions tool.'
+      message: 'API provider not found for Code at Cursor tool.'
     })
     return
   }

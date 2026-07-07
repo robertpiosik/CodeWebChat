@@ -21,7 +21,7 @@ export const handle_get_api_configurations = async (
   )
 
   const def_cac =
-    await providers_manager.get_default_code_completions_api_configuration()
+    await providers_manager.get_default_code_at_cursor_api_configuration()
   const def_iu =
     await providers_manager.get_default_intelligent_update_api_configuration()
   const def_cm =

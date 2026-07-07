@@ -31,7 +31,7 @@ type Props = {
   ask_instructions: string
   edit_instructions: string
   no_context_instructions: string
-  code_completions_instructions: string
+  code_at_cursor_instructions: string
   find_relevant_files_instructions: string
   set_instructions: (
     value: string,
@@ -103,7 +103,7 @@ export const Main: React.FC<Props> = (props) => {
   const [edit_files_history, set_edit_files_history] = useState<string[]>()
   const [without_files_history, set_without_files_history] =
     useState<string[]>()
-  const [code_completions_history, set_code_completions_history] =
+  const [code_at_cursor_history, set_code_at_cursor_history] =
     useState<string[]>()
   const [find_relevant_files_history, set_find_relevant_files_history] =
     useState<string[]>()
@@ -113,7 +113,7 @@ export const Main: React.FC<Props> = (props) => {
     number | undefined
   >()
 
-  const is_in_code_completions_mode =
+  const is_in_code_at_cursor_mode =
     (props.mode == MODE.WEB && props.web_prompt_type == 'code-at-cursor') ||
     (props.mode == MODE.API && props.api_prompt_type == 'code-at-cursor')
 
@@ -143,7 +143,7 @@ export const Main: React.FC<Props> = (props) => {
           set_ask_about_files_history(message.ask_about_files || [])
           set_edit_files_history(message.edit_files || [])
           set_without_files_history(message.without_files || [])
-          set_code_completions_history(message.code_at_cursor || [])
+          set_code_at_cursor_history(message.code_at_cursor || [])
           set_find_relevant_files_history(message.find_relevant_files || [])
           break
         case 'INSTRUCTIONS':
@@ -209,8 +209,8 @@ export const Main: React.FC<Props> = (props) => {
       history = without_files_history
       set_history = set_without_files_history
     } else if (current_prompt_type == 'code-at-cursor') {
-      history = code_completions_history
-      set_history = set_code_completions_history
+      history = code_at_cursor_history
+      set_history = set_code_at_cursor_history
     } else if (current_prompt_type == 'find-relevant-files') {
       history = find_relevant_files_history
       set_history = set_find_relevant_files_history
@@ -408,8 +408,8 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const get_current_instructions = () => {
-    if (is_in_code_completions_mode) {
-      return props.code_completions_instructions
+    if (is_in_code_at_cursor_mode) {
+      return props.code_at_cursor_instructions
     } else if (current_prompt_type == 'find-relevant-files') {
       return props.find_relevant_files_instructions
     }
@@ -509,14 +509,14 @@ export const Main: React.FC<Props> = (props) => {
   const handle_at_sign_click = () => {
     post_message(props.vscode, {
       command: 'SHOW_AT_SIGN_QUICK_PICK',
-      is_for_code_completions: is_in_code_completions_mode
+      is_for_code_at_cursor: is_in_code_at_cursor_mode
     })
   }
 
   const handle_hash_sign_click = () => {
     post_message(props.vscode, {
       command: 'SHOW_HASH_SIGN_QUICK_PICK',
-      is_for_code_completions: is_in_code_completions_mode
+      is_for_code_at_cursor: is_in_code_at_cursor_mode
     })
   }
 
@@ -577,7 +577,7 @@ export const Main: React.FC<Props> = (props) => {
         : current_prompt_type == 'without-files'
           ? props.no_context_instructions
           : current_prompt_type == 'code-at-cursor'
-            ? props.code_completions_instructions
+            ? props.code_at_cursor_instructions
             : current_prompt_type == 'find-relevant-files'
               ? props.find_relevant_files_instructions
               : ''
@@ -594,7 +594,7 @@ export const Main: React.FC<Props> = (props) => {
   } else if (current_prompt_type == 'without-files') {
     current_history = without_files_history
   } else if (current_prompt_type == 'code-at-cursor') {
-    current_history = code_completions_history
+    current_history = code_at_cursor_history
   } else if (current_prompt_type == 'find-relevant-files') {
     current_history = find_relevant_files_history
   }
@@ -605,9 +605,9 @@ export const Main: React.FC<Props> = (props) => {
     ask_about_files_history === undefined ||
     edit_files_history === undefined ||
     without_files_history === undefined ||
-    code_completions_history === undefined ||
+    code_at_cursor_history === undefined ||
     find_relevant_files_history === undefined ||
-    is_in_code_completions_mode === undefined ||
+    is_in_code_at_cursor_mode === undefined ||
     instructions === undefined ||
     chat_edit_format === undefined ||
     api_edit_format === undefined

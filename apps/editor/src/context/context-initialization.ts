@@ -18,7 +18,7 @@ import {
 } from '../constants/state-keys'
 import { SelectedFilesProvider } from './providers/selected-files/selected-files-provider'
 import { is_binary_file } from '../utils/is-binary'
-import { build_prompt } from '../utils/prompt-builder'
+import { build_prompt, build_file_context } from '../utils/prompt-builder'
 
 export const token_count_emitter = new EventEmitter()
 
@@ -275,10 +275,10 @@ export const context_initialization = async (
             }
 
             if (is_binary_file(file_path, content_uint8_array)) {
-              context_text += `### File: \`${display_path.replace(
-                /\\/g,
-                '/'
-              )}\`\n\nBinary file\n\n`
+              context_text += build_file_context({
+                filepath: display_path,
+                is_binary: true
+              })
               continue
             }
 
@@ -292,10 +292,10 @@ export const context_initialization = async (
               )
             }
 
-            context_text += `### File: \`${display_path.replace(
-              /\\/g,
-              '/'
-            )}\`\n\n\`\`\`\n${content}\n\`\`\`\n\n`
+            context_text += build_file_context({
+              filepath: display_path,
+              content
+            })
           } catch (error: any) {
             vscode.window.showErrorMessage(
               dictionary.error_message.ERROR_READING_FILE(

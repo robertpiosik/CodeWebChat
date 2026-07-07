@@ -11,7 +11,6 @@ import { dictionary } from '@shared/constants/dictionary'
 import { apply_reasoning_effort } from '../../../utils/apply-reasoning-effort'
 import { t } from '@/i18n'
 import { build_user_content } from '../../../utils/build-user-content'
-
 import { get_code_at_cursor_api_configuration } from './get-code-at-cursor-config'
 import { show_ghost_text } from './show-ghost-text'
 import { build_prompt } from '../../../utils/prompt-builder'
@@ -81,7 +80,7 @@ export const perform_code_at_cursor = async (params: {
       )
       Logger.warn({
         function_name: 'perform_code_at_cursor',
-        message: 'API provider is not specified for Code Completions tool.'
+        message: 'API provider is not specified for Code at Cursor tool.'
       })
       force_show_quick_pick = true
       continue
@@ -91,7 +90,7 @@ export const perform_code_at_cursor = async (params: {
       )
       Logger.warn({
         function_name: 'perform_code_at_cursor',
-        message: 'Model is not specified for Code Completions tool.'
+        message: 'Model is not specified for Code at Cursor tool.'
       })
       force_show_quick_pick = true
       continue
@@ -133,11 +132,14 @@ export const perform_code_at_cursor = async (params: {
       const { part1, part2 } = build_prompt({
         other_files: collected.other_files,
         recent_files: collected.recent_files,
-        active_file_context: `### File: \`${vscode.workspace.asRelativePath(document.uri)}\`\n\n\`\`\`\n${text_before_cursor}${
-          completion_instructions
-            ? `<missing_text>${completion_instructions}</missing_text>`
-            : '<missing_text>'
-        }${text_after_cursor}\n\`\`\`\n\n`,
+        active_file: {
+          filepath: vscode.workspace.asRelativePath(document.uri),
+          content: `${text_before_cursor}${
+            completion_instructions
+              ? `<missing_text>${completion_instructions}</missing_text>`
+              : '<missing_text>'
+          }${text_after_cursor}`
+        },
         system_instructions: code_at_cursor_instructions
       })
 

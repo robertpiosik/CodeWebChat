@@ -159,7 +159,7 @@ export const MainView: React.FC<Props> = (props) => {
   const is_in_ask_about_context_prompt_type =
     props.mode == MODE.WEB && props.web_prompt_type == 'ask-about-files'
 
-  const is_in_code_completions_prompt_type =
+  const is_in_code_at_cursor_prompt_type =
     (props.mode == MODE.WEB && props.web_prompt_type == 'code-at-cursor') ||
     (props.mode == MODE.API && props.api_prompt_type == 'code-at-cursor')
 
@@ -181,10 +181,10 @@ export const MainView: React.FC<Props> = (props) => {
     (props.mode == MODE.WEB && props.web_configurations.length == 0)
   ) {
     warning = 'Add a configuration'
-  } else if (!!props.current_selection && is_in_code_completions_prompt_type) {
+  } else if (!!props.current_selection && is_in_code_at_cursor_prompt_type) {
     warning = 'Remove text selection'
   } else if (
-    is_in_code_completions_prompt_type &&
+    is_in_code_at_cursor_prompt_type &&
     !props.currently_open_file_path
   ) {
     warning = 'Open a file'
@@ -212,7 +212,7 @@ export const MainView: React.FC<Props> = (props) => {
     if (props.mode == MODE.WEB) {
       props.initialize_chats({ invocation_count: current_invocation_count })
     } else {
-      if (is_in_code_completions_prompt_type) {
+      if (is_in_code_at_cursor_prompt_type) {
         props.on_code_at_cursor_click(current_invocation_count)
       } else if (is_in_find_relevant_files_prompt_type) {
         props.on_find_relevant_files_click(current_invocation_count)
@@ -229,7 +229,7 @@ export const MainView: React.FC<Props> = (props) => {
         invocation_count: current_invocation_count
       })
     } else {
-      if (is_in_code_completions_prompt_type) {
+      if (is_in_code_at_cursor_prompt_type) {
         props.on_code_at_cursor_with_quick_pick_click(current_invocation_count)
       } else if (is_in_find_relevant_files_prompt_type) {
         props.on_find_relevant_files_with_quick_pick_click(

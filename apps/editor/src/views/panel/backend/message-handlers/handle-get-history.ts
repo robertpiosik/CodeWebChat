@@ -15,7 +15,7 @@ export const handle_get_history = (panel_provider: PanelProvider) => {
   const ask_about_files_history = panel_provider.context.workspaceState.get<
     HistoryEntry[]
   >(HISTORY_ASK_ABOUT_FILES_STATE_KEY, [])
-  const code_completions_history = panel_provider.context.workspaceState.get<
+  const code_at_cursor_history = panel_provider.context.workspaceState.get<
     HistoryEntry[]
   >(HISTORY_CODE_AT_CURSOR_STATE_KEY, [])
   const without_files_history = panel_provider.context.workspaceState.get<
@@ -30,7 +30,7 @@ export const handle_get_history = (panel_provider: PanelProvider) => {
     ask_about_files: ask_about_files_history.map((h) => h.text),
     edit_files: edit_files_history.map((h) => h.text),
     without_files: without_files_history.map((h) => h.text),
-    code_at_cursor: code_completions_history.map((h) => h.text),
+    code_at_cursor: code_at_cursor_history.map((h) => h.text),
     find_relevant_files: find_relevant_files_history.map((h) => h.text)
   })
 }

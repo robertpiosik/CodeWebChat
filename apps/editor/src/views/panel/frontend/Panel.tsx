@@ -185,14 +185,14 @@ export const Panel = () => {
     )
   }
 
-  const is_for_code_completions =
+  const is_for_code_at_cursor =
     (mode == MODE.WEB && web_prompt_type == 'code-at-cursor') ||
     (mode == MODE.API && api_prompt_type == 'code-at-cursor')
 
   const get_current_instructions = () => {
     let state: { instructions: string[]; active_index: number } | undefined
 
-    if (is_for_code_completions && code_at_cursor_instructions) {
+    if (is_for_code_at_cursor && code_at_cursor_instructions) {
       state = code_at_cursor_instructions
     }
     const prompt_type = mode == MODE.WEB ? web_prompt_type : api_prompt_type
@@ -354,7 +354,7 @@ export const Panel = () => {
                     no_context_instructions.active_index
                   ] || ''
                 }
-                code_completions_instructions={
+                code_at_cursor_instructions={
                   code_at_cursor_instructions.instructions[
                     code_at_cursor_instructions.active_index
                   ] || ''

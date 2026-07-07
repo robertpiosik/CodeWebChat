@@ -67,7 +67,10 @@ export const handle_preview_web_configuration = async (
 
     const { full_prompt } = build_prompt({
       context_text,
-      active_file_context: `### File: \`${relative_path}\`\n\n\`\`\`\n${text_before_cursor}${missing_text_tag}${text_after_cursor}\n\`\`\`\n\n`,
+      active_file: {
+        filepath: relative_path,
+        content: `${text_before_cursor}${missing_text_tag}${text_after_cursor}`
+      },
       skill_definitions,
       system_instructions
     })

@@ -1,8 +1,20 @@
+export const build_file_context = (params: {
+  filepath: string
+  content?: string
+  is_binary?: boolean
+}): string => {
+  const display_path = params.filepath.replace(/\\/g, '/')
+  if (params.is_binary || params.content === undefined) {
+    return `### File: \`${display_path}\`\n\nBinary file\n\n`
+  }
+  return `### File: \`${display_path}\`\n\n\`\`\`\n${params.content}\n\`\`\`\n\n`
+}
+
 export const build_prompt = (params: {
   other_files?: string
   recent_files?: string
   context_text?: string
-  active_file_context?: string
+  active_file?: { filepath: string; content: string }
   skill_definitions?: string
   system_instructions?: string
   user_instructions?: string
@@ -12,16 +24,21 @@ export const build_prompt = (params: {
   let part2 = ''
   let full_prompt = ''
 
+  let active_file_context = ''
+  if (params.active_file) {
+    active_file_context = build_file_context(params.active_file)
+  }
+
   if (params.context_text !== undefined) {
     if (params.context_text) {
       full_prompt += `# Files\n\n${params.context_text}`
     }
-    if (params.active_file_context) {
-      full_prompt += params.active_file_context
+    if (active_file_context) {
+      full_prompt += active_file_context
     }
   } else {
     part1 = `# Files\n\n${params.other_files || ''}`
-    part2 += `${params.recent_files || ''}${params.active_file_context || ''}`
+    part2 += `${params.recent_files || ''}${active_file_context}`
     full_prompt = part1 + part2
   }
 

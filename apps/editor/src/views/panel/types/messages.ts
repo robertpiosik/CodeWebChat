@@ -262,12 +262,12 @@ export interface FindRelevantFilesMessage extends BaseMessage {
 
 export interface ShowAtSignQuickPickMessage extends BaseMessage {
   command: 'SHOW_AT_SIGN_QUICK_PICK'
-  is_for_code_completions: boolean
+  is_for_code_at_cursor: boolean
 }
 
 export interface ShowHashSignQuickPickMessage extends BaseMessage {
   command: 'SHOW_HASH_SIGN_QUICK_PICK'
-  is_for_code_completions: boolean
+  is_for_code_at_cursor: boolean
 }
 
 export interface CancelApiRequestMessage extends BaseMessage {
