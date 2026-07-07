@@ -18,10 +18,6 @@ export const update = async (params: {
 }): Promise<{ success: boolean; has_changes: boolean; new_id?: string }> => {
   const providers_manager = new ModelProvidersManager(params.context)
 
-  if (params.is_new && params.origin === 'cancel') {
-    return { success: true, has_changes: false }
-  }
-
   const api_configurations = await providers_manager.get_api_configurations()
 
   let api_configuration_index = -1
