@@ -20,7 +20,9 @@ export const Settings = () => {
     set_updating_web_configuration,
     set_updated_web_configuration,
     edit_web_configuration_cancel_handler,
-    edit_web_configuration_save_handler
+    edit_web_configuration_save_handler,
+    set_is_new_web_configuration,
+    set_web_configuration_insertion_index
   } = use_web_configuration_editing(vscode)
 
   const {
@@ -202,6 +204,8 @@ export const Settings = () => {
           )
           if (config) {
             set_updating_web_configuration(config)
+            set_is_new_web_configuration(false)
+            set_web_configuration_insertion_index(undefined)
           }
         }}
         on_delete_web_configuration={

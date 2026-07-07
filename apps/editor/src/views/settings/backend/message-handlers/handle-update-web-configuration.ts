@@ -9,7 +9,9 @@ export const handle_update_web_configuration = async (
   const result = await update({
     updating_web_configuration: message.updating_web_configuration,
     updated_web_configuration: message.updated_web_configuration,
-    origin: message.origin
+    origin: message.origin,
+    is_new: message.is_new,
+    insertion_index: message.insertion_index
   })
 
   if (result.success) {

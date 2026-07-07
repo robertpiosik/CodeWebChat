@@ -239,7 +239,7 @@ export class SettingsProvider {
         } else if (message.command == 'DELETE_WEB_CONFIGURATION') {
           await handle_delete_web_configuration(message.name)
         } else if (message.command == 'CREATE_WEB_CONFIGURATION') {
-          await handle_create_web_configuration(message)
+          await handle_create_web_configuration(this, message)
         } else if (message.command == 'PICK_CHATBOT') {
           await handle_pick_chatbot(this, message)
         } else if (message.command == 'PICK_MODEL') {

@@ -253,6 +253,8 @@ export interface UpdateWebConfigurationMessage {
   updating_web_configuration: WebConfiguration
   updated_web_configuration: WebConfiguration
   origin?: 'cancel' | 'save'
+  is_new?: boolean
+  insertion_index?: number
 }
 
 export interface CreateApiConfigurationMessage {
@@ -489,6 +491,12 @@ export interface WebConfigurationUpdatedMessage {
   command: 'WEB_CONFIGURATION_UPDATED'
 }
 
+export interface StartWebConfigurationCreationMessage {
+  command: 'START_WEB_CONFIGURATION_CREATION'
+  web_configuration: WebConfiguration
+  insertion_index?: number
+}
+
 export interface StartApiConfigurationCreationMessage {
   command: 'START_API_CONFIGURATION_CREATION'
   api_configuration: ApiConfiguration
@@ -549,6 +557,7 @@ export type BackendMessage =
   | NewlyPickedChatbotMessage
   | NewlyPickedReasoningEffortMessage
   | WebConfigurationUpdatedMessage
+  | StartWebConfigurationCreationMessage
   | StartApiConfigurationCreationMessage
   | ApiConfigurationUpdatedMessage
   | NewlyPickedModelProviderMessage
