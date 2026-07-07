@@ -18,7 +18,7 @@ export const web_configurations = {
     bg: 'Конфигурации'
   },
   'web-configurations.subtitle': {
-    en: 'Autofill prompts via the browser extension.',
+    en: 'Autofill prompts via browser extension.',
     pl: 'Automatyczne uzupełnianie promptów przez rozszerzenie przeglądarki.',
     'zh-cn': '通过浏览器扩展自动填充提示词。',
     ja: 'ブラウザ拡張機能経由でプロンプトを自動入力します。',

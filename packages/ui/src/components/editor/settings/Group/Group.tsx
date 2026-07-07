@@ -15,8 +15,6 @@ export const Group: React.FC<Props> = (props) => {
   const ref = useRef<HTMLDivElement>(null)
   const [height, setHeight] = useState<number>(0)
 
-  console.log(height)
-
   useEffect(() => {
     if (!props.is_last || !ref.current) return
 
