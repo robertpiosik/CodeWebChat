@@ -156,6 +156,10 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   useEffect(() => {
     if (props.warning && input_ref.current) {
       input_ref.current.blur()
+      const selection = window.getSelection()
+      if (selection) {
+        selection.removeAllRanges()
+      }
     }
   }, [props.warning])
 
