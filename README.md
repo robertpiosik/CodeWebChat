@@ -63,7 +63,7 @@ Here, selected in the explorer view files are sent to the model with every promp
 
 ---
 
-[user-typed prompt]
+[prompt]
 ```
 
 </details>
@@ -74,7 +74,8 @@ Here, selected in the explorer view files are sent to the model with every promp
 ```
 # Files
 [file selection]
-[user-typed prompt]
+
+[prompt]
 ```
 
 </details>
@@ -84,11 +85,13 @@ Here, selected in the explorer view files are sent to the model with every promp
 
 ````
 # Files
-[rough file selection]
+[file selection]
+
 ### File: `[active file]`
 ```
-[code before cursor]<missing_text>[user-typed prompt]</missing_text>[code after cursor]
+[code before cursor]<missing_text>[prompt]</missing_text>[code after cursor]
 ```
+
 [instructions for the missing text]
 ````
 
@@ -108,7 +111,7 @@ Find a complete set of relevant files according to the following query:
 
 ---
 
-[user-typed prompt]
+[prompt]
 ```
 
 </details>
