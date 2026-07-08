@@ -154,7 +154,9 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 
 ## Prompt caching
 
-CWC orders selected files by modification recency. This, combined with its default single-turn interactions, creates a workflow that is extremely cache-friendly. Make your chatbot quota last longer, lower input token costs by up to 90%, and reduce latency by up to 80%.
+CWC orders selected files by modification recency. This, combined with its simple design based on single-turn model interactions, creates a workflow that is extremely cache-friendly.
+
+Make your chatbot quota last longer, lower input token costs by up to 90%, and reduce latency by up to 80%.
 
 ## Privacy
 
