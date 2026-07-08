@@ -150,7 +150,7 @@ export class SettingsProvider {
           await handle_set_default_api_configuration(
             this,
             message.api_configuration_id,
-            message.tool_name
+            message.api_feature
           )
         } else if (message.command == 'SELECT_DEFAULT_API_CONFIGURATION') {
           await handle_select_default_api_configuration(this, message)

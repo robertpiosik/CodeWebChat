@@ -12,7 +12,7 @@ export const handle_update_api_configuration = async (
     origin: message.origin,
     is_new: message.is_new,
     insertion_index: message.insertion_index,
-    tool_type: message.tool_type
+    api_feature: message.api_feature
   })
 
   if (result.success) {
@@ -21,7 +21,7 @@ export const handle_update_api_configuration = async (
     if (message.is_new && message.origin === 'save' && result.new_id) {
       provider.send_message({
         command: 'SELECTED_API_CONFIGURATION_CHANGED',
-        prompt_type: message.tool_type,
+        prompt_type: message.api_feature,
         id: result.new_id
       })
     }

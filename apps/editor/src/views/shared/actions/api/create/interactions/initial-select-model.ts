@@ -7,12 +7,10 @@ import {
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { verify_model } from './verify-model'
-import { ToolType } from '@/views/settings/types/tools'
 
 export const initial_select_model = async (
   model_fetcher: ModelFetcher,
-  model_provider: ModelProvider,
-  tool_type?: ToolType
+  model_provider: ModelProvider
 ): Promise<string | undefined> => {
   let base_url: string | undefined
 
@@ -88,8 +86,7 @@ export const initial_select_model = async (
           await verify_model({
             model: selected_model,
             base_url,
-            api_key: model_provider.api_key,
-            is_voice_input: tool_type == 'voice-input'
+            api_key: model_provider.api_key
           })
         ) {
           return selected_model
@@ -135,8 +132,7 @@ export const initial_select_model = async (
       (await verify_model({
         model,
         base_url,
-        api_key: model_provider.api_key,
-        is_voice_input: tool_type == 'voice-input'
+        api_key: model_provider.api_key
       }))
     ) {
       return model

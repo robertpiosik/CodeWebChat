@@ -9,7 +9,6 @@ export const handle_create_api_configuration = async (
 ): Promise<void> => {
   const result = await create({
     context: provider.context,
-    tool_type: message.tool_type || 'intelligent-update',
     create_on_top: message.create_on_top,
     insertion_index: message.insertion_index
   })
@@ -22,7 +21,7 @@ export const handle_create_api_configuration = async (
         id: get_api_configuration_id(result.config)
       },
       insertion_index: result.insertion_index,
-      tool_type: message.tool_type
+      api_feature: message.api_feature
     })
   }
 }

@@ -32,7 +32,7 @@ export const use_panel = (vscode: any) => {
 
   const {
     ask_about_context_instructions,
-    edit_context_instructions,
+    edit_files_instructions,
     no_context_instructions,
     code_at_cursor_instructions,
     find_relevant_files_instructions,
@@ -265,7 +265,7 @@ export const use_panel = (vscode: any) => {
     has_temp_checkpoint,
     is_connected,
     ask_about_context_instructions,
-    edit_context_instructions,
+    edit_files_instructions,
     no_context_instructions,
     code_at_cursor_instructions,
     find_relevant_files_instructions,

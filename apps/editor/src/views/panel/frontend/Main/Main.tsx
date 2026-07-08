@@ -309,7 +309,7 @@ export const Main: React.FC<Props> = (props) => {
   }) => {
     post_message(props.vscode, {
       command: 'CREATE_API_CONFIGURATION',
-      tool_type: props.api_prompt_type,
+      api_feature: props.api_prompt_type as any,
       create_on_top: params?.create_on_top,
       insertion_index: params?.insertion_index
     })

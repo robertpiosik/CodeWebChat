@@ -9,7 +9,7 @@ import {
 import axios from 'axios'
 import {
   API_EDIT_FORMAT_STATE_KEY,
-  LAST_USED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY
+  LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY
 } from '@/constants/state-keys'
 import { EditFormat } from '@shared/types/edit-format'
 import { ApiConfiguration } from '@/services/model-providers-manager'
@@ -62,7 +62,7 @@ const get_edit_files_api_configuration = async (params: {
       ) || null
     if (selected_api_configuration) {
       params.context.workspaceState.update(
-        LAST_USED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY,
+        LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY,
         params.api_configuration_id
       )
 
@@ -76,7 +76,7 @@ const get_edit_files_api_configuration = async (params: {
     }
   } else if (!params.show_quick_pick) {
     const last_selected_id = params.context.workspaceState.get<string>(
-      LAST_USED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY
+      LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY
     )
 
     if (last_selected_id) {
@@ -89,7 +89,7 @@ const get_edit_files_api_configuration = async (params: {
 
   if (!selected_api_configuration || params.show_quick_pick) {
     const last_selected_id = params.context.workspaceState.get<string>(
-      LAST_USED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY
+      LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY
     )
 
     const result = await show_configuration_quick_pick({
@@ -111,7 +111,7 @@ const get_edit_files_api_configuration = async (params: {
     const { item: api_configuration, id } = result
 
     params.context.workspaceState.update(
-      LAST_USED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY,
+      LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY,
       id
     )
 
@@ -163,7 +163,7 @@ export const handle_edit_files = async (
     open_editors_provider: panel_provider.open_editors_provider
   })
 
-  const instructions = panel_provider.current_edit_context_instruction
+  const instructions = panel_provider.current_edit_files_instruction
 
   if (!instructions) {
     panel_provider.send_message({

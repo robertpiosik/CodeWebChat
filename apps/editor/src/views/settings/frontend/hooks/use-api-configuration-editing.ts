@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react'
 import { ApiConfiguration } from '../../types/messages'
-import { ToolType } from '../../types/tools'
+import { ApiFeature } from '@/views/shared/types/api-features'
 import { post_message } from '../utils/post-message'
 
 export const use_api_configuration_editing = (vscode: any) => {
@@ -14,8 +14,8 @@ export const use_api_configuration_editing = (vscode: any) => {
     api_configuration_insertion_index,
     set_api_configuration_insertion_index
   ] = useState<number>()
-  const [api_configuration_tool_type, set_api_configuration_tool_type] =
-    useState<ToolType>()
+  const [api_configuration_api_feature, set_api_configuration_api_feature] =
+    useState<ApiFeature>()
 
   useEffect(() => {
     const handle_message = (event: MessageEvent) => {
@@ -25,7 +25,7 @@ export const use_api_configuration_editing = (vscode: any) => {
         set_updating_api_configuration(message.api_configuration)
         set_updated_api_configuration(message.api_configuration)
         set_api_configuration_insertion_index(message.insertion_index)
-        set_api_configuration_tool_type(message.tool_type)
+        set_api_configuration_api_feature(message.api_feature)
       } else if (message.command === 'API_CONFIGURATION_UPDATED') {
         set_updating_api_configuration(null)
         set_updated_api_configuration(null)
@@ -45,7 +45,7 @@ export const use_api_configuration_editing = (vscode: any) => {
         origin: 'cancel',
         is_new: is_new_api_configuration,
         insertion_index: api_configuration_insertion_index,
-        tool_type: api_configuration_tool_type
+        api_feature: api_configuration_api_feature
       })
     } else {
       set_updating_api_configuration(null)
@@ -58,7 +58,7 @@ export const use_api_configuration_editing = (vscode: any) => {
     updated_api_configuration,
     is_new_api_configuration,
     api_configuration_insertion_index,
-    api_configuration_tool_type
+    api_configuration_api_feature
   ])
 
   const edit_api_configuration_save_handler = useCallback(() => {
@@ -70,7 +70,7 @@ export const use_api_configuration_editing = (vscode: any) => {
         origin: 'save',
         is_new: is_new_api_configuration,
         insertion_index: api_configuration_insertion_index,
-        tool_type: api_configuration_tool_type
+        api_feature: api_configuration_api_feature
       })
     }
   }, [
@@ -79,7 +79,7 @@ export const use_api_configuration_editing = (vscode: any) => {
     updated_api_configuration,
     is_new_api_configuration,
     api_configuration_insertion_index,
-    api_configuration_tool_type
+    api_configuration_api_feature
   ])
 
   return {

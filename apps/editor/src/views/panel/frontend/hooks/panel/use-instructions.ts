@@ -12,7 +12,7 @@ export const use_instructions = (
 ) => {
   const [ask_about_context_instructions, set_ask_about_context_instructions] =
     useState<InstructionsState | undefined>()
-  const [edit_context_instructions, set_edit_context_instructions] = useState<
+  const [edit_files_instructions, set_edit_files_instructions] = useState<
     InstructionsState | undefined
   >()
   const [no_context_instructions, set_no_context_instructions] = useState<
@@ -61,7 +61,7 @@ export const use_instructions = (
         set_ask_about_context_instructions
       )
     } else if (prompt_type == 'edit-files') {
-      update_state(edit_context_instructions, set_edit_context_instructions)
+      update_state(edit_files_instructions, set_edit_files_instructions)
     } else if (prompt_type == 'without-files') {
       update_state(no_context_instructions, set_no_context_instructions)
     } else if (prompt_type == 'code-at-cursor') {
@@ -97,7 +97,7 @@ export const use_instructions = (
     if (prompt_type == 'ask-about-files') {
       update(ask_about_context_instructions, set_ask_about_context_instructions)
     } else if (prompt_type == 'edit-files') {
-      update(edit_context_instructions, set_edit_context_instructions)
+      update(edit_files_instructions, set_edit_files_instructions)
     } else if (prompt_type == 'without-files') {
       update(no_context_instructions, set_no_context_instructions)
     } else if (prompt_type == 'code-at-cursor') {
@@ -136,7 +136,7 @@ export const use_instructions = (
     if (prompt_type == 'ask-about-files') {
       update(ask_about_context_instructions, set_ask_about_context_instructions)
     } else if (prompt_type == 'edit-files') {
-      update(edit_context_instructions, set_edit_context_instructions)
+      update(edit_files_instructions, set_edit_files_instructions)
     } else if (prompt_type == 'without-files') {
       update(no_context_instructions, set_no_context_instructions)
     } else if (prompt_type == 'code-at-cursor') {
@@ -183,7 +183,7 @@ export const use_instructions = (
     if (prompt_type == 'ask-about-files') {
       update(ask_about_context_instructions, set_ask_about_context_instructions)
     } else if (prompt_type == 'edit-files') {
-      update(edit_context_instructions, set_edit_context_instructions)
+      update(edit_files_instructions, set_edit_files_instructions)
     } else if (prompt_type == 'without-files') {
       update(no_context_instructions, set_no_context_instructions)
     } else if (prompt_type == 'code-at-cursor') {
@@ -201,7 +201,7 @@ export const use_instructions = (
       const message = event.data
       if (message.command == 'INSTRUCTIONS') {
         set_ask_about_context_instructions(message.ask_about_context)
-        set_edit_context_instructions(message.edit_files)
+        set_edit_files_instructions(message.edit_files)
         set_no_context_instructions(message.no_context)
         set_code_at_cursor_instructions(message.code_at_cursor)
         set_find_relevant_files_instructions(message.find_relevant_files)
@@ -215,7 +215,7 @@ export const use_instructions = (
 
   return {
     ask_about_context_instructions,
-    edit_context_instructions,
+    edit_files_instructions,
     no_context_instructions,
     code_at_cursor_instructions,
     find_relevant_files_instructions,

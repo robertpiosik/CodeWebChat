@@ -113,7 +113,7 @@ import {
   WEB_MODE_STATE_KEY,
   LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
   LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY,
-  LAST_USED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY,
+  LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY,
   get_last_used_web_configuration_key,
   FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
   TEMPORARY_CHECKPOINT_STATE_KEY
@@ -151,7 +151,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     instructions: [''],
     active_index: 0
   }
-  public edit_context_instructions: InstructionsState = {
+  public edit_files_instructions: InstructionsState = {
     instructions: [''],
     active_index: 0
   }
@@ -199,10 +199,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     )
   }
 
-  public get current_edit_context_instruction(): string {
+  public get current_edit_files_instruction(): string {
     return (
-      this.edit_context_instructions.instructions[
-        this.edit_context_instructions.active_index
+      this.edit_files_instructions.instructions[
+        this.edit_files_instructions.active_index
       ] || ''
     )
   }
@@ -238,7 +238,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public get active_instructions_state(): InstructionsState {
     const type = this.prompt_type
     if (type == 'ask-about-files') return this.ask_about_context_instructions
-    if (type == 'edit-files') return this.edit_context_instructions
+    if (type == 'edit-files') return this.edit_files_instructions
     if (type == 'without-files') return this.no_context_instructions
     if (type == 'code-at-cursor') return this.code_at_cursor_instructions
     return this.find_relevant_files_instructions
@@ -407,7 +407,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       }
     })
 
-    this.edit_context_instructions = this._load_instructions(
+    this.edit_files_instructions = this._load_instructions(
       INSTRUCTIONS_EDIT_FILES_STATE_KEY
     )
     this.ask_about_context_instructions = this._load_instructions(
@@ -1055,7 +1055,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       ),
       selected_api_configuration_id_by_prompt_type: {
         'edit-files': this.context.workspaceState.get<string>(
-          LAST_USED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY
+          LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY
         ),
         'code-at-cursor': this.context.workspaceState.get<string>(
           LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
@@ -1153,7 +1153,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     this.send_message({
       command: 'INSTRUCTIONS',
       ask_about_context: this.ask_about_context_instructions,
-      edit_files: this.edit_context_instructions,
+      edit_files: this.edit_files_instructions,
       no_context: this.no_context_instructions,
       code_at_cursor: this.code_at_cursor_instructions,
       find_relevant_files: this.find_relevant_files_instructions,

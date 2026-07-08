@@ -62,7 +62,7 @@ export const LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY =
   'last-used-code-at-cursor-config-id'
 export const LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY =
   'last-used-find-relevant-files-config-id'
-export const LAST_USED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY =
+export const LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY =
   'last-used-edit-files-config-id'
 export const LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY =
   'last-used-commit-messages-config-id'

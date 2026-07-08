@@ -10,13 +10,11 @@ import {
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { verify_model } from '../../create/interactions/verify-model'
-import { ToolType } from '@/views/settings/types/tools'
 
 export const edit_model_for_api_configuration = async (params: {
   api_configuration: ApiConfiguration
   providers_manager: ModelProvidersManager
   model_fetcher: ModelFetcher
-  tool_type?: ToolType
 }) => {
   const model_provider_from_manager =
     await params.providers_manager.get_model_provider(
@@ -113,8 +111,7 @@ export const edit_model_for_api_configuration = async (params: {
           await verify_model({
             model,
             base_url,
-            api_key: model_provider_from_manager.api_key,
-            is_voice_input: params.tool_type == 'voice-input'
+            api_key: model_provider_from_manager.api_key
           })
         ) {
           return model
@@ -166,8 +163,7 @@ export const edit_model_for_api_configuration = async (params: {
       await verify_model({
         model,
         base_url,
-        api_key: model_provider_from_manager.api_key,
-        is_voice_input: params.tool_type == 'voice-input'
+        api_key: model_provider_from_manager.api_key
       })
     ) {
       return model

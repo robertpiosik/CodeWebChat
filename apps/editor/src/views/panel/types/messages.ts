@@ -12,7 +12,7 @@ import { WebConfiguration } from '@shared/types/web-configuration'
 import { Task } from '@shared/types/task'
 import { Mode } from './main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
-import { ToolType } from '@/views/settings/types/tools'
+import { ApiFeature } from '@/views/shared/types/api-features'
 
 export interface BaseMessage {
   command: string
@@ -28,7 +28,7 @@ export interface StartApiConfigurationCreationMessage extends BaseMessage {
   command: 'START_API_CONFIGURATION_CREATION'
   api_configuration: ApiConfiguration
   insertion_index?: number
-  tool_type?: ToolType
+  api_feature?: ApiFeature
 }
 
 export type InstructionsState = {
@@ -509,7 +509,7 @@ export interface OpenWebsiteMessage extends BaseMessage {
 
 export interface CreateApiConfigurationMessage extends BaseMessage {
   command: 'CREATE_API_CONFIGURATION'
-  tool_type: ToolType
+  api_feature: ApiFeature
   create_on_top?: boolean
   insertion_index?: number
 }
@@ -582,20 +582,18 @@ export interface UpdateApiConfigurationMessage extends BaseMessage {
   origin?: 'cancel' | 'save'
   is_new?: boolean
   insertion_index?: number
-  tool_type?: ToolType
+  api_feature?: ApiFeature
 }
 
 export interface PickModelProviderMessage extends BaseMessage {
   command: 'PICK_MODEL_PROVIDER'
   current_model_provider_name?: string
-  tool_type: ToolType
 }
 
 export interface PickApiModelMessage extends BaseMessage {
   command: 'PICK_API_MODEL'
   model_provider_name: string
   current_model?: string
-  tool_type: ToolType
 }
 
 export interface PickApiReasoningEffortMessage extends BaseMessage {

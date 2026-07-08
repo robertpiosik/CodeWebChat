@@ -1,4 +1,5 @@
-export type ToolType =
+export type ApiFeature =
+  | 'edit-files'
   | 'code-at-cursor'
   | 'commit-messages'
   | 'intelligent-update'

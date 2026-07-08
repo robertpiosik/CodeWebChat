@@ -12,7 +12,7 @@ export const handle_update_api_configuration = async (
     origin: message.origin,
     is_new: message.is_new,
     insertion_index: message.insertion_index,
-    tool_type: message.tool_type
+    api_feature: message.api_feature
   })
 
   if (result.success) {

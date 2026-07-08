@@ -3,12 +3,12 @@ import {
   ModelProvidersManager,
   get_api_configuration_id
 } from '@/services/model-providers-manager'
-import { ToolType } from '@/views/settings/types/tools'
+import { ApiFeature } from '@/views/shared/types/api-features'
 
 export const handle_set_default_api_configuration = async (
   provider: SettingsProvider,
   api_configuration_id: string | null,
-  type: ToolType
+  type: ApiFeature
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(provider.context)
 

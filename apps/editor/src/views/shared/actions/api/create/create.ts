@@ -9,11 +9,9 @@ import {
   initial_select_model,
   initial_select_model_provider
 } from './interactions'
-import { ToolType } from '@/views/settings/types/tools'
 
 export const create = async (params: {
   context: vscode.ExtensionContext
-  tool_type: ToolType
   create_on_top?: boolean
   insertion_index?: number
 }): Promise<
@@ -84,8 +82,7 @@ export const create = async (params: {
 
     selected_model = await initial_select_model(
       model_fetcher,
-      selected_model_provider,
-      params.tool_type
+      selected_model_provider
     )
     if (selected_model) break
   }

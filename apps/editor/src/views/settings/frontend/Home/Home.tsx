@@ -10,7 +10,7 @@ import {
 } from '@/views/settings/types/messages'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { GeneralSection } from './sections/GeneralSection'
-import { ToolType } from '@/views/settings/types/tools'
+import { ApiFeature } from '@/views/shared/types/api-features'
 import { use_translation, TranslationKey } from '../i18n/use-translation'
 import { WebConfigurationsSection } from './sections/WebConfigurationsSection'
 import { commit_message_instructions as default_commit_message_instructions } from '@/constants/instructions'
@@ -103,7 +103,7 @@ type Props = {
   providers: Provider[]
   api_configurations: ApiConfiguration[]
   web_configurations: WebConfiguration[]
-  defaults: Record<ToolType, string | null>
+  defaults: Record<ApiFeature, string | null>
   edit_files_system_instructions: string
   commit_message_instructions: string
   include_prompts_in_commit_messages: boolean
@@ -153,10 +153,10 @@ type Props = {
   on_edit_provider: (provider_name: string) => void
   on_reorder_providers: (reordered_providers: Provider[]) => void
   on_set_default_api_configuration: (
-    tool_name: ToolType,
+    api_feature: ApiFeature,
     api_configuration_id: string | null
   ) => void
-  on_select_default_api_configuration: (tool_name: ToolType) => void
+  on_select_default_api_configuration: (api_feature: ApiFeature) => void
   on_reorder_api_configurations: (reordered: ApiConfiguration[]) => void
   on_add_api_configuration: (params?: {
     insertion_index?: number

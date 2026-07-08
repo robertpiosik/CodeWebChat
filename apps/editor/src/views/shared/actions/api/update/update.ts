@@ -5,7 +5,7 @@ import {
   get_api_configuration_id
 } from '@/services/model-providers-manager'
 import { ApiConfiguration } from '@/views/panel/types/messages'
-import { ToolType } from '@/views/settings/types/tools'
+import { ApiFeature } from '@/views/shared/types/api-features'
 import { t } from '@/i18n'
 
 export const update = async (params: {
@@ -15,7 +15,7 @@ export const update = async (params: {
   origin?: 'cancel' | 'save'
   is_new?: boolean
   insertion_index?: number
-  tool_type?: ToolType
+  api_feature?: ApiFeature
 }): Promise<{ success: boolean; has_changes: boolean; new_id?: string }> => {
   const providers_manager = new ModelProvidersManager(params.context)
 
@@ -115,24 +115,24 @@ export const update = async (params: {
 
   await providers_manager.save_api_configurations(api_configurations)
 
-  if (params.is_new && params.tool_type) {
-    if (params.tool_type == 'code-at-cursor') {
+  if (params.is_new && params.api_feature) {
+    if (params.api_feature == 'code-at-cursor') {
       await providers_manager.set_default_code_at_cursor_api_configuration(
         new_config as any
       )
-    } else if (params.tool_type == 'commit-messages') {
+    } else if (params.api_feature == 'commit-messages') {
       await providers_manager.set_default_commit_messages_api_configuration(
         new_config as any
       )
-    } else if (params.tool_type == 'intelligent-update') {
+    } else if (params.api_feature == 'intelligent-update') {
       await providers_manager.set_default_intelligent_update_api_configuration(
         new_config as any
       )
-    } else if (params.tool_type == 'find-relevant-files') {
+    } else if (params.api_feature == 'find-relevant-files') {
       await providers_manager.set_default_find_relevant_files_api_configuration(
         new_config as any
       )
-    } else if (params.tool_type == 'voice-input') {
+    } else if (params.api_feature == 'voice-input') {
       await providers_manager.set_default_voice_input_api_configuration(
         new_config as any
       )

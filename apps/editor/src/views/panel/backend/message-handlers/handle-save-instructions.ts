@@ -25,7 +25,7 @@ export const handle_save_instructions = async (
       instruction_state
     )
   } else if (prompt_type == 'edit-files') {
-    panel_provider.edit_context_instructions = instruction_state
+    panel_provider.edit_files_instructions = instruction_state
     await panel_provider.context.workspaceState.update(
       INSTRUCTIONS_EDIT_FILES_STATE_KEY,
       instruction_state

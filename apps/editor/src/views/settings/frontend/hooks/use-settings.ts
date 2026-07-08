@@ -6,7 +6,7 @@ import {
   Provider,
   FrontendMessage
 } from '@/views/settings/types/messages'
-import { ToolType } from '@/views/settings/types/tools'
+import { ApiFeature } from '@/views/shared/types/api-features'
 import { post_message } from '../utils/post-message'
 import { WebConfiguration } from '@shared/types/web-configuration'
 
@@ -19,7 +19,7 @@ export const use_settings = (vscode: any) => {
     WebConfiguration[] | undefined
   >(undefined)
   const [defaults, set_defaults] = useState<
-    Record<ToolType, string | null> | undefined
+    Record<ApiFeature, string | null> | undefined
   >(undefined)
   const [commit_message_instructions, set_commit_message_instructions] =
     useState<string | undefined>(undefined)
@@ -158,23 +158,23 @@ export const use_settings = (vscode: any) => {
   }
 
   const handle_set_default_api_configuration = (
-    tool_name: ToolType,
+    api_feature: ApiFeature,
     api_configuration_id: string | null
   ) => {
     if (defaults) {
-      set_defaults({ ...defaults, [tool_name]: api_configuration_id })
+      set_defaults({ ...defaults, [api_feature]: api_configuration_id })
     }
     post_message(vscode, {
       command: 'SET_DEFAULT_API_CONFIGURATION',
-      tool_name,
+      api_feature,
       api_configuration_id
     } as FrontendMessage)
   }
 
-  const handle_select_default_api_configuration = (tool_name: ToolType) => {
+  const handle_select_default_api_configuration = (api_feature: ApiFeature) => {
     post_message(vscode, {
       command: 'SELECT_DEFAULT_API_CONFIGURATION',
-      tool_name
+      api_feature
     } as FrontendMessage)
   }
 

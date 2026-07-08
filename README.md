@@ -44,7 +44,7 @@ In the world of AI coding, agents like Codex or Claude Code rely on "tool callin
 
 CWC flips this!
 
-Here, selected in the explorer view files are sent to the model with every prompt so it has everything it needs to do the task without a single tool call.
+Here, selected in the explorer view files are sent to the model with your instructions so it has everything it needs to do the task. Get accurate multi-file edits in record time!
 
 > [!TIP]
 > **Not sure what files to select?** Search files using phrase, keywords and **natural language**.

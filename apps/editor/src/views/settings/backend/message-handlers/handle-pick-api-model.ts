@@ -16,8 +16,7 @@ export const handle_pick_api_model = async (
       model: message.current_model
     } as any,
     providers_manager,
-    model_fetcher,
-    tool_type: message.tool_type
+    model_fetcher
   })
 
   if (model) {

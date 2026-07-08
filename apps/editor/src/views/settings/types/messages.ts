@@ -1,4 +1,4 @@
-import { ToolType } from './tools'
+import { ApiFeature } from '@/views/shared/types/api-features'
 import { WebConfiguration } from '@shared/types/web-configuration'
 
 export type Provider = {
@@ -51,13 +51,13 @@ export interface GetApiConfigurationsMessage {
 
 export interface SetDefaultApiConfigurationMessage {
   command: 'SET_DEFAULT_API_CONFIGURATION'
-  tool_name: ToolType
+  api_feature: ApiFeature
   api_configuration_id: string | null
 }
 
 export interface SelectDefaultApiConfigurationMessage {
   command: 'SELECT_DEFAULT_API_CONFIGURATION'
-  tool_name: ToolType
+  api_feature: ApiFeature
 }
 
 export interface GetCommitMessageInstructionsMessage {
@@ -259,7 +259,7 @@ export interface UpdateWebConfigurationMessage {
 
 export interface CreateApiConfigurationMessage {
   command: 'CREATE_API_CONFIGURATION'
-  tool_type?: ToolType
+  api_feature?: ApiFeature
   create_on_top?: boolean
   insertion_index?: number
 }
@@ -271,7 +271,7 @@ export interface UpdateApiConfigurationMessage {
   origin?: 'cancel' | 'save'
   is_new?: boolean
   insertion_index?: number
-  tool_type?: ToolType
+  api_feature?: ApiFeature
 }
 
 export interface DeleteApiConfigurationMessage {
@@ -287,14 +287,12 @@ export interface ReorderApiConfigurationsMessage {
 export interface PickModelProviderMessage {
   command: 'PICK_MODEL_PROVIDER'
   current_model_provider_name?: string
-  tool_type?: ToolType
 }
 
 export interface PickApiModelMessage {
   command: 'PICK_API_MODEL'
   model_provider_name: string
   current_model?: string
-  tool_type?: ToolType
 }
 
 export interface PickApiReasoningEffortMessage {
@@ -389,7 +387,7 @@ export interface ModelProvidersMessage {
 export interface ApiConfigurationsMessage {
   command: 'API_CONFIGURATIONS'
   api_configurations: ApiConfiguration[]
-  defaults: Record<ToolType, string | null>
+  defaults: Record<ApiFeature, string | null>
 }
 
 export interface CommitMessageInstructionsMessage {
@@ -501,7 +499,7 @@ export interface StartApiConfigurationCreationMessage {
   command: 'START_API_CONFIGURATION_CREATION'
   api_configuration: ApiConfiguration
   insertion_index?: number
-  tool_type?: ToolType
+  api_feature?: ApiFeature
 }
 
 export interface ApiConfigurationUpdatedMessage {

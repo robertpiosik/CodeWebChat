@@ -7,7 +7,7 @@ import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
 import { DefaultConfigurationSelector } from '@ui/components/editor/settings/DefaultConfigurationSelector'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { ApiConfiguration, Provider } from '@/views/settings/types/messages'
-import { ToolType } from '@/views/settings/types/tools'
+import { ApiFeature } from '@/views/shared/types/api-features'
 import { Translation, use_translation } from '../../i18n/use-translation'
 import { ModelProvidersSection } from './ModelProvidersSection'
 import { SortableList } from '@ui/components/editor/settings/SortableList'
@@ -17,7 +17,7 @@ import { NavItem } from '../Home'
 type Props = {
   providers: Provider[]
   api_configurations: ApiConfiguration[]
-  defaults: Record<ToolType, string | null>
+  defaults: Record<ApiFeature, string | null>
   set_providers: (providers: Provider[]) => void
   set_api_configurations: (configurations: ApiConfiguration[]) => void
   on_reorder_providers: (reordered: Provider[]) => void
@@ -35,10 +35,10 @@ type Props = {
   on_delete_api_configuration: (id: string) => void
   on_edit_api_configuration: (id: string) => void
   on_set_default_api_configuration: (
-    tool_name: ToolType,
+    api_feature: ApiFeature,
     api_configuration_id: string | null
   ) => void
-  on_select_default_api_configuration: (tool_name: ToolType) => void
+  on_select_default_api_configuration: (api_feature: ApiFeature) => void
   set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void
   auto_run_intelligent_update: boolean
   on_auto_run_intelligent_update_change: (enabled: boolean) => void

@@ -26,8 +26,7 @@ export const handle_pick_model_provider = async (
     const new_model = await edit_model_for_api_configuration({
       api_configuration: temp_api_configuration as any,
       providers_manager,
-      model_fetcher,
-      tool_type: message.tool_type
+      model_fetcher
     })
 
     if (new_model !== undefined) {

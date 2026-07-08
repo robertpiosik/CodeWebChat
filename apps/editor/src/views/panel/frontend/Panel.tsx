@@ -47,7 +47,7 @@ export const Panel = () => {
     has_temp_checkpoint,
     is_connected,
     ask_about_context_instructions,
-    edit_context_instructions,
+    edit_files_instructions,
     no_context_instructions,
     code_at_cursor_instructions,
     find_relevant_files_instructions,
@@ -157,7 +157,7 @@ export const Panel = () => {
 
   if (
     ask_about_context_instructions === undefined ||
-    edit_context_instructions === undefined ||
+    edit_files_instructions === undefined ||
     no_context_instructions === undefined ||
     !version ||
     code_at_cursor_instructions === undefined ||
@@ -200,7 +200,7 @@ export const Panel = () => {
     if (prompt_type == 'ask-about-files') {
       state = ask_about_context_instructions
     } else if (prompt_type == 'edit-files') {
-      state = edit_context_instructions
+      state = edit_files_instructions
     } else if (prompt_type == 'without-files') {
       state = no_context_instructions
     } else if (prompt_type == 'find-relevant-files') {
@@ -215,7 +215,7 @@ export const Panel = () => {
   const get_current_instructions_state = () => {
     const prompt_type = mode == MODE.WEB ? web_prompt_type : api_prompt_type
     if (prompt_type == 'ask-about-files') return ask_about_context_instructions
-    if (prompt_type == 'edit-files') return edit_context_instructions
+    if (prompt_type == 'edit-files') return edit_files_instructions
     if (prompt_type == 'without-files') return no_context_instructions
     if (prompt_type == 'code-at-cursor') return code_at_cursor_instructions
     if (prompt_type == 'find-relevant-files')
@@ -345,8 +345,8 @@ export const Panel = () => {
                   ] || ''
                 }
                 edit_instructions={
-                  edit_context_instructions.instructions[
-                    edit_context_instructions.active_index
+                  edit_files_instructions.instructions[
+                    edit_files_instructions.active_index
                   ] || ''
                 }
                 no_context_instructions={
@@ -572,16 +572,14 @@ export const Panel = () => {
                 pick_model_provider={(current) => {
                   post_message(vscode, {
                     command: 'PICK_MODEL_PROVIDER',
-                    current_model_provider_name: current,
-                    tool_type: api_prompt_type
+                    current_model_provider_name: current
                   })
                 }}
                 pick_model={(provider, current) => {
                   post_message(vscode, {
                     command: 'PICK_API_MODEL',
                     model_provider_name: provider,
-                    current_model: current,
-                    tool_type: api_prompt_type
+                    current_model: current
                   })
                 }}
                 pick_reasoning_effort={(provider, model, current) => {

@@ -333,8 +333,8 @@ const resolve_web_configuration = async (params: {
       ] || ''
   } else if (params.panel_provider.web_prompt_type == 'edit-files') {
     current_instructions =
-      params.panel_provider.edit_context_instructions.instructions[
-        params.panel_provider.edit_context_instructions.active_index
+      params.panel_provider.edit_files_instructions.instructions[
+        params.panel_provider.edit_files_instructions.active_index
       ] || ''
   } else if (params.panel_provider.web_prompt_type == 'without-files') {
     current_instructions =
