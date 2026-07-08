@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import { commit_message_instructions } from '@/constants/instructions'
 import type { GitRepository } from '@/utils/git-repository-utils'
 import { MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE } from '@/constants/values'
+import { PromptBuilder } from '@/utils/prompt-builder'
 
 export const build_commit_message_prompt = async (
   diff: string,
@@ -52,7 +53,7 @@ export const build_commit_message_prompt = async (
     }
 
     if (file_path) {
-      let status = 'updated'
+      let status: 'created' | 'deleted' | 'renamed' | 'updated' = 'updated'
 
       if (is_deleted) {
         status = 'deleted'
@@ -91,20 +92,7 @@ export const build_commit_message_prompt = async (
         }
       }
 
-      if (status == 'created') {
-        changes_content += `### New file: \`${file_path}\`\n\n`
-      } else if (status == 'deleted') {
-        changes_content += `### Deleted file: \`${file_path}\`\n\n`
-      } else if (status == 'renamed') {
-        changes_content += `### Renamed file: \`${old_path_attr}\` (old) \`${file_path}\` (new)\n\n`
-      } else {
-        changes_content += `### Updated file: \`${file_path}\`\n\n`
-      }
-
-      if (final_diff_content.trimEnd()) {
-        changes_content += `\`\`\`diff\n${final_diff_content.trimEnd()}\n\`\`\`\n\n`
-      }
-
+      let file_content_to_pass = undefined
       if (!is_deleted && file_path && !is_binary) {
         try {
           let full_content = ''
@@ -120,13 +108,21 @@ export const build_commit_message_prompt = async (
           if (full_content && !full_content.includes('\0')) {
             const full_content_tokens = Math.ceil(full_content.length / 4)
             if (full_content_tokens <= MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE) {
-              changes_content += `\`\`\`\n${full_content.trimEnd()}\n\`\`\`\n\n`
+              file_content_to_pass = full_content
             }
           }
         } catch (err) {}
       }
+
+      changes_content += PromptBuilder.build_diff_file_context({
+        status,
+        filepath: file_path,
+        old_filepath: old_path_attr,
+        diff_content: final_diff_content,
+        full_content: file_content_to_pass
+      })
     }
   }
 
-  return `${commit_message_prompt}\n\n${changes_content}${commit_message_prompt}`
+  return `${commit_message_prompt}\n\n---\n\n${changes_content}---\n\n${commit_message_prompt}`
 }

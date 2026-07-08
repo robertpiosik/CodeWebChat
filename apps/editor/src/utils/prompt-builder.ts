@@ -11,6 +11,38 @@ export namespace PromptBuilder {
     return `### File: \`${display_path}\`\n\n\`\`\`\n${params.content}\n\`\`\`\n\n`
   }
 
+  export const build_diff_file_context = (params: {
+    status: 'created' | 'deleted' | 'renamed' | 'updated'
+    filepath: string
+    old_filepath?: string
+    diff_content?: string
+    full_content?: string
+  }): string => {
+    let result = ''
+    const display_path = params.filepath.replace(/\\/g, '/')
+
+    if (params.status == 'created') {
+      result += `### New file: \`${display_path}\`\n\n`
+    } else if (params.status == 'deleted') {
+      result += `### Deleted file: \`${display_path}\`\n\n`
+    } else if (params.status == 'renamed' && params.old_filepath) {
+      const old_display_path = params.old_filepath.replace(/\\/g, '/')
+      result += `### Renamed file: \`${old_display_path}\` (old) \`${display_path}\` (new)\n\n`
+    } else {
+      result += `### Updated file: \`${display_path}\`\n\n`
+    }
+
+    if (params.diff_content?.trimEnd()) {
+      result += `\`\`\`diff\n${params.diff_content.trimEnd()}\n\`\`\`\n\n`
+    }
+
+    if (params.full_content?.trimEnd()) {
+      result += `\`\`\`\n${params.full_content.trimEnd()}\n\`\`\`\n\n`
+    }
+
+    return result
+  }
+
   export const build_prompt = (params: {
     other_files?: string
     recent_files?: string

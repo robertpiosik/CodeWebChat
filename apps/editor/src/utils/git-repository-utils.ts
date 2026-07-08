@@ -5,6 +5,7 @@ import * as path from 'path'
 import { t } from '@/i18n'
 import { display_token_count } from './display-token-count'
 import { MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE } from '@/constants/values'
+import { PromptBuilder } from './prompt-builder'
 
 export type GitRepository = {
   rootUri: vscode.Uri
@@ -168,7 +169,7 @@ export const prepare_staged_changes = async (params: {
           )
           const dir_name = path.dirname(relative_path)
 
-          let status = 'updated'
+          let status: 'created' | 'deleted' | 'renamed' | 'updated' = 'updated'
           let is_deleted = false
           let final_diff_content = ''
           let full_content = ''
@@ -239,21 +240,15 @@ export const prepare_staged_changes = async (params: {
           )
           const is_too_large = file_tokens > MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE
 
-          let file_md = ''
-          if (status == 'created') {
-            file_md = `### New file: \`${relative_path}\`\n\n`
-          } else if (status == 'deleted') {
-            file_md = `### Deleted file: \`${relative_path}\`\n\n`
-          } else {
-            file_md = `### Updated file: \`${relative_path}\`\n\n`
-          }
-
-          if (final_diff_content.trimEnd()) {
-            file_md += `\`\`\`diff\n${final_diff_content.trimEnd()}\n\`\`\`\n\n`
-          }
-          if (!is_deleted && full_content && !is_too_large) {
-            file_md += `\`\`\`\n${full_content.trimEnd()}\n\`\`\`\n\n`
-          }
+          const file_md = PromptBuilder.build_diff_file_context({
+            status,
+            filepath: relative_path,
+            diff_content: final_diff_content,
+            full_content:
+              !is_deleted && full_content && !is_too_large
+                ? full_content
+                : undefined
+          })
 
           const token_count = Math.ceil(file_md.length / 4)
           const description_parts = []
