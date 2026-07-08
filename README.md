@@ -11,7 +11,7 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> 
 </p>
 
-Code Web Chat is a chatbot-first AI coding. **Start in VS Code (Cursor, Antigravity, VSCodium, etc.) and continue in your favorite chatbot** or get the job done without leaving the editor!
+Code Web Chat is a chatbot-first AI coding. **Start in VS Code (Cursor, Antigravity, VSCodium, etc.) and continue in ChatGPT, Gemini, Claude (and 15+ more)** or get the job done without leaving the editor!
 
 It's free, built independently and doesn't collect any telemetry.
 
