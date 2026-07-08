@@ -7,6 +7,7 @@ import {
 import { dictionary } from '@shared/constants/dictionary'
 import { PROVIDERS } from '@/constants/providers'
 import { generate_unique_name } from '@/views/shared/utils/generate-unique-name'
+import { t } from '@/i18n'
 
 const normalize_base_url = (url: string): string => {
   return url.trim().replace(/\/+$/, '')
@@ -29,8 +30,12 @@ export const upsert_provider = async (params: {
     return new Promise((resolve) => {
       const input_box = vscode.window.createInputBox()
       input_box.ignoreFocusOut = true
-      input_box.title = params.is_creation ? 'Name' : 'Edit Name'
-      input_box.prompt = 'Name of the custom model provider.'
+      input_box.title = params.is_creation
+        ? t('views.shared.actions.api.upsert-provider.input-name.title-create')
+        : t('views.shared.actions.api.upsert-provider.input-name.title-edit')
+      input_box.prompt = t(
+        'views.shared.actions.api.upsert-provider.input-name.prompt'
+      )
       input_box.value = params.current_name
       if (!params.is_creation) {
         input_box.valueSelection = [0, input_box.value.length]
@@ -60,7 +65,9 @@ export const upsert_provider = async (params: {
           const new_name = input_box.value.trim()
 
           if (!new_name) {
-            input_box.validationMessage = 'Name is required'
+            input_box.validationMessage = t(
+              'views.shared.actions.api.upsert-provider.input-name.validation'
+            )
             return
           }
 
@@ -88,8 +95,12 @@ export const upsert_provider = async (params: {
     return new Promise((resolve) => {
       const input_box = vscode.window.createInputBox()
       input_box.ignoreFocusOut = true
-      input_box.title = 'Edit Base URL'
-      input_box.prompt = 'Enter the base URL.'
+      input_box.title = t(
+        'views.shared.actions.api.upsert-provider.input-url.title'
+      )
+      input_box.prompt = t(
+        'views.shared.actions.api.upsert-provider.input-url.prompt'
+      )
       input_box.value = params.current_url
       input_box.valueSelection = [0, input_box.value.length]
       if (params.show_back) {
@@ -116,7 +127,9 @@ export const upsert_provider = async (params: {
           const new_url = input_box.value.trim()
 
           if (params.is_required && !new_url) {
-            input_box.validationMessage = 'Base URL is required'
+            input_box.validationMessage = t(
+              'views.shared.actions.api.upsert-provider.input-url.validation'
+            )
             return
           }
 
@@ -142,8 +155,12 @@ export const upsert_provider = async (params: {
     return new Promise((resolve) => {
       const input_box = vscode.window.createInputBox()
       input_box.ignoreFocusOut = true
-      input_box.title = 'API Key'
-      input_box.prompt = 'Enter your API key.'
+      input_box.title = t(
+        'views.shared.actions.api.upsert-provider.input-key.title'
+      )
+      input_box.prompt = t(
+        'views.shared.actions.api.upsert-provider.input-key.prompt'
+      )
       input_box.password = true
       input_box.placeholder = current_key ? `...${current_key.slice(-4)}` : ''
 
@@ -193,22 +210,34 @@ export const upsert_provider = async (params: {
     while (true) {
       const items: (vscode.QuickPickItem & { id: string })[] = [
         {
-          label: 'Name',
+          label: t(
+            'views.shared.actions.api.upsert-provider.edit-loop.name-label'
+          ),
           id: 'rename',
           detail: model_provider_to_edit.name
         },
         {
-          label: 'Base URL',
+          label: t(
+            'views.shared.actions.api.upsert-provider.edit-loop.url-label'
+          ),
           id: 'edit-url',
           description: model_provider_to_edit.base_url
             ? undefined
-            : '⚠ Not set',
+            : t(
+                'views.shared.actions.api.upsert-provider.edit-loop.url-not-set'
+              ),
           detail: model_provider_to_edit.base_url
         },
         {
-          label: 'API key',
+          label: t(
+            'views.shared.actions.api.upsert-provider.edit-loop.key-label'
+          ),
           id: 'change-key',
-          description: model_provider_to_edit.api_key ? undefined : 'Not set',
+          description: model_provider_to_edit.api_key
+            ? undefined
+            : t(
+                'views.shared.actions.api.upsert-provider.edit-loop.key-not-set'
+              ),
           detail: model_provider_to_edit.api_key
             ? `...${model_provider_to_edit.api_key.slice(-4)}`
             : undefined
@@ -217,12 +246,18 @@ export const upsert_provider = async (params: {
 
       const quick_pick = vscode.window.createQuickPick()
       quick_pick.items = items
-      quick_pick.title = 'Edit Model Provider'
-      quick_pick.placeholder = 'Select a property to edit'
+      quick_pick.title = t(
+        'views.shared.actions.api.upsert-provider.edit-loop.title'
+      )
+      quick_pick.placeholder = t(
+        'views.shared.actions.api.upsert-provider.edit-loop.placeholder'
+      )
 
       const close_button: vscode.QuickInputButton = {
         iconPath: new vscode.ThemeIcon('save'),
-        tooltip: 'Save and close'
+        tooltip: t(
+          'views.shared.actions.api.upsert-provider.edit-loop.tooltip-save'
+        )
       }
       quick_pick.buttons = [close_button]
 
@@ -285,14 +320,17 @@ export const upsert_provider = async (params: {
           const trimmed_key = new_key.trim()
           if (trimmed_key !== model_provider_to_edit.api_key) {
             if (trimmed_key == '' && model_provider_to_edit.api_key) {
+              const clear_api_key_btn = t(
+                'views.shared.actions.api.upsert-provider.edit-loop.clear-api-key'
+              )
               const confirmation = await vscode.window.showWarningMessage(
                 dictionary.warning_message.CONFIRM_CLEAR_API_KEY(
                   model_provider_to_edit.name
                 ),
                 { modal: true },
-                'Clear API Key'
+                clear_api_key_btn
               )
-              if (confirmation == 'Clear API Key') {
+              if (confirmation == clear_api_key_btn) {
                 model_provider_to_edit.api_key = ''
               }
             } else {
@@ -311,15 +349,23 @@ export const upsert_provider = async (params: {
       (resolve) => {
         const quick_pick = vscode.window.createQuickPick()
         quick_pick.items = [
-          { label: 'Insert a new provider above' },
-          { label: 'Insert a new provider below' }
+          {
+            label: t('views.shared.actions.api.upsert-provider.placement.above')
+          },
+          {
+            label: t('views.shared.actions.api.upsert-provider.placement.below')
+          }
         ]
-        quick_pick.title = 'Placement'
-        quick_pick.placeholder = 'Where to insert?'
+        quick_pick.title = t(
+          'views.shared.actions.api.upsert-provider.placement.title'
+        )
+        quick_pick.placeholder = t(
+          'views.shared.actions.api.upsert-provider.placement.placeholder'
+        )
         quick_pick.buttons = [
           {
             iconPath: new vscode.ThemeIcon('close'),
-            tooltip: 'Close'
+            tooltip: t('common.close')
           }
         ]
 
@@ -348,7 +394,8 @@ export const upsert_provider = async (params: {
     if (!position_quick_pick) return
 
     actual_insertion_index =
-      position_quick_pick == 'Insert a new provider above'
+      position_quick_pick ==
+      t('views.shared.actions.api.upsert-provider.placement.above')
         ? params.insertion_index
         : params.insertion_index + 1
   }
@@ -374,16 +421,22 @@ export const upsert_provider = async (params: {
     const show_add_options = async (): Promise<{
       id?: string
     } | null> => {
-      const custom_label = '$(edit) Custom endpoint...'
+      const custom_label = t(
+        'views.shared.actions.api.upsert-provider.options.custom-label'
+      )
       const available_built_in = Object.entries(PROVIDERS)
 
       const items: vscode.QuickPickItem[] = [
         {
           label: custom_label,
-          description: 'You can use any OpenAI-API compatible provider'
+          description: t(
+            'views.shared.actions.api.upsert-provider.options.custom-desc'
+          )
         },
         {
-          label: 'predefined endpoints',
+          label: t(
+            'views.shared.actions.api.upsert-provider.options.predefined'
+          ),
           kind: vscode.QuickPickItemKind.Separator
         },
         ...available_built_in.map(([id, info]) => ({
@@ -394,13 +447,16 @@ export const upsert_provider = async (params: {
 
       const quick_pick = vscode.window.createQuickPick()
       quick_pick.items = items
-      quick_pick.title = 'Model Providers'
-      quick_pick.placeholder =
-        'Choose a predefined provider or add a custom endpoint'
+      quick_pick.title = t(
+        'views.shared.actions.api.upsert-provider.options.title'
+      )
+      quick_pick.placeholder = t(
+        'views.shared.actions.api.upsert-provider.options.placeholder'
+      )
 
       const close_button: vscode.QuickInputButton = {
         iconPath: new vscode.ThemeIcon('close'),
-        tooltip: 'Close'
+        tooltip: t('common.close')
       }
 
       if (params.show_back_button) {
@@ -542,13 +598,18 @@ export const upsert_provider = async (params: {
       await run_edit_loop(working_model_provider)
 
       if (!working_model_provider.base_url) {
+        const continue_btn = t(
+          'views.shared.actions.api.upsert-provider.warning.continue-editing'
+        )
         const selection = await vscode.window.showWarningMessage(
-          'A Base URL is required for custom model providers.',
+          t(
+            'views.shared.actions.api.upsert-provider.warning.base-url-required'
+          ),
           { modal: true },
-          'Continue Editing'
+          continue_btn
         )
 
-        if (selection == 'Continue Editing') {
+        if (selection == continue_btn) {
           continue
         }
         return

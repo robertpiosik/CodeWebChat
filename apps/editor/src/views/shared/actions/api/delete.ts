@@ -4,6 +4,7 @@ import {
   get_api_configuration_id
 } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
+import { t } from '@/i18n'
 
 export const remove = async (params: {
   context: vscode.ExtensionContext
@@ -18,6 +19,7 @@ export const remove = async (params: {
   )
   if (!api_config_to_delete) return
 
+  const delete_button = t('common.delete')
   const confirmation = await vscode.window.showWarningMessage(
     dictionary.warning_message.PLEASE_CONFIRM,
     {
@@ -27,10 +29,10 @@ export const remove = async (params: {
         api_config_to_delete.model_provider_name
       )
     },
-    'Delete'
+    delete_button
   )
 
-  if (confirmation != 'Delete') {
+  if (confirmation != delete_button) {
     return
   }
 

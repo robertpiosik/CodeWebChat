@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 import { generate_unique_name } from '@/views/shared/utils/generate-unique-name'
+import { t } from '@/i18n'
 
 export const create = async (params: {
   placement?: 'top' | 'bottom'
@@ -20,15 +21,17 @@ export const create = async (params: {
       (resolve) => {
         const quick_pick = vscode.window.createQuickPick()
         quick_pick.items = [
-          { label: 'Insert above' },
-          { label: 'Insert below' }
+          { label: t('views.shared.actions.web.create.placement-above') },
+          { label: t('views.shared.actions.web.create.placement-below') }
         ]
-        quick_pick.title = 'Placement'
-        quick_pick.placeholder = 'Where to insert?'
+        quick_pick.title = t('views.shared.actions.web.create.title')
+        quick_pick.placeholder = t(
+          'views.shared.actions.web.create.placeholder'
+        )
         quick_pick.buttons = [
           {
             iconPath: new vscode.ThemeIcon('close'),
-            tooltip: 'Close'
+            tooltip: t('common.close')
           }
         ]
 
@@ -58,7 +61,8 @@ export const create = async (params: {
     if (!position_quick_pick) return undefined
 
     insertion_index =
-      position_quick_pick == 'Insert above'
+      position_quick_pick ==
+      t('views.shared.actions.web.create.placement-above')
         ? params.reference_index
         : params.reference_index + 1
   } else if (params.placement == 'top') {
@@ -80,12 +84,14 @@ export const create = async (params: {
 
       const quick_pick = vscode.window.createQuickPick()
       quick_pick.items = items
-      quick_pick.title = 'Chatbots'
-      quick_pick.placeholder = 'Choose a chatbot for the new web configuration'
+      quick_pick.title = t('views.shared.actions.web.create.chatbots.title')
+      quick_pick.placeholder = t(
+        'views.shared.actions.web.create.chatbots.placeholder'
+      )
       quick_pick.buttons = [
         {
           iconPath: new vscode.ThemeIcon('close'),
-          tooltip: 'Close'
+          tooltip: t('common.close')
         }
       ]
 

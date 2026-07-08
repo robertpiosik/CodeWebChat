@@ -15,7 +15,7 @@ export const update = async (params: {
   is_new?: boolean
   insertion_index?: number
 }): Promise<{ success: boolean; has_changes: boolean; new_name?: string }> => {
-  if (params.is_new && params.origin === 'cancel') {
+  if (params.is_new && params.origin == 'cancel') {
     return { success: true, has_changes: false }
   }
 
@@ -69,7 +69,7 @@ export const update = async (params: {
   }
 
   if (params.origin == 'cancel') {
-    const discard_button = 'Discard'
+    const discard_button = t('views.shared.actions.web.update.discard')
     const result = await vscode.window.showWarningMessage(
       t('views.common.handlers.common.confirm-discard-unsaved-changes', {
         item_type: 'web configuration'
@@ -117,7 +117,7 @@ export const update = async (params: {
         ui_web_configuration_to_config_format(updated_ui_web_configuration)
       )
     }
-  } else if (web_configuration_index !== -1) {
+  } else if (web_configuration_index != -1) {
     updated_web_configurations[web_configuration_index] =
       ui_web_configuration_to_config_format(updated_ui_web_configuration)
   }

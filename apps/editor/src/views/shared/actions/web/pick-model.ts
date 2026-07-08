@@ -3,6 +3,7 @@ import axios from 'axios'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
+import { t } from '@/i18n'
 
 export const pick_model = async (params: {
   chatbot_name: string
@@ -32,8 +33,10 @@ export const pick_model = async (params: {
 
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = items
-    quick_pick.title = 'Models'
-    quick_pick.placeholder = 'Choose a model'
+    quick_pick.title = t('views.shared.actions.web.pick-model.title')
+    quick_pick.placeholder = t(
+      'views.shared.actions.web.pick-model.placeholder'
+    )
 
     if (params.current_model_id) {
       const active_item = items.find(
@@ -47,12 +50,12 @@ export const pick_model = async (params: {
     quick_pick.buttons = [
       {
         iconPath: new vscode.ThemeIcon('close'),
-        tooltip: 'Close'
+        tooltip: t('common.close')
       }
     ]
 
     quick_pick.onDidTriggerButton((button) => {
-      if (button.tooltip == 'Close') {
+      if (button.tooltip == t('common.close')) {
         quick_pick.hide()
       }
     })
@@ -82,7 +85,7 @@ export const pick_model = async (params: {
     vscode.window.showErrorMessage(
       params.chatbot_name == 'OpenRouter'
         ? dictionary.error_message.FAILED_TO_FETCH_OPEN_ROUTER_MODELS
-        : 'Failed to pick model'
+        : t('views.shared.actions.web.pick-model.error.failed-to-pick')
     )
     return undefined
   }

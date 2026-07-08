@@ -15,8 +15,12 @@ export const verify_model = async (params: {
     {
       location: vscode.ProgressLocation.Notification,
       title: params.is_voice_input
-        ? t('views.common.actions.verify-model.progress.audio')
-        : t('views.common.actions.verify-model.progress.test'),
+        ? t(
+            'views.shared.actions.api.create.interactions.verify-model.progress.audio'
+          )
+        : t(
+            'views.shared.actions.api.create.interactions.verify-model.progress.test'
+          ),
       cancellable: true
     },
     async (_progress, token) => {
@@ -29,7 +33,7 @@ export const verify_model = async (params: {
                   {
                     type: 'text',
                     text: t(
-                      'views.common.actions.verify-model.prompt.transcribe'
+                      'views.shared.actions.api.create.interactions.verify-model.prompt.transcribe'
                     )
                   },
                   {
@@ -42,7 +46,9 @@ export const verify_model = async (params: {
           : [
               {
                 role: 'user',
-                content: t('views.common.actions.verify-model.prompt.test')
+                content: t(
+                  'views.shared.actions.api.create.interactions.verify-model.prompt.test'
+                )
               }
             ]
 
@@ -85,53 +91,84 @@ export const verify_model = async (params: {
   }
 
   const title = params.is_voice_input
-    ? t('views.common.actions.verify-model.warning.audio.title')
-    : t('views.common.actions.verify-model.warning.test.title')
+    ? t(
+        'views.shared.actions.api.create.interactions.verify-model.warning.audio.title'
+      )
+    : t(
+        'views.shared.actions.api.create.interactions.verify-model.warning.test.title'
+      )
   let detail = params.is_voice_input
-    ? t('views.common.actions.verify-model.warning.audio.detail')
-    : t('views.common.actions.verify-model.warning.test.detail')
+    ? t(
+        'views.shared.actions.api.create.interactions.verify-model.warning.audio.detail'
+      )
+    : t(
+        'views.shared.actions.api.create.interactions.verify-model.warning.test.detail'
+      )
 
   if (axios.isAxiosError(error)) {
     if (error.response) {
       const status = error.response.status
-      let reason = t('views.common.actions.verify-model.status.server-error')
+      let reason = t(
+        'views.shared.actions.api.create.interactions.verify-model.status.server-error'
+      )
       switch (status) {
         case 400:
-          reason = t('views.common.actions.verify-model.status.bad-request')
+          reason = t(
+            'views.shared.actions.api.create.interactions.verify-model.status.bad-request'
+          )
           break
         case 401:
-          reason = t('views.common.actions.verify-model.status.authentication')
+          reason = t(
+            'views.shared.actions.api.create.interactions.verify-model.status.authentication'
+          )
           break
         case 403:
-          reason = t('views.common.actions.verify-model.status.forbidden')
+          reason = t(
+            'views.shared.actions.api.create.interactions.verify-model.status.forbidden'
+          )
           break
         case 404:
-          reason = t('views.common.actions.verify-model.status.not-found')
+          reason = t(
+            'views.shared.actions.api.create.interactions.verify-model.status.not-found'
+          )
           break
         case 429:
-          reason = t('views.common.actions.verify-model.status.rate-limit')
+          reason = t(
+            'views.shared.actions.api.create.interactions.verify-model.status.rate-limit'
+          )
           break
         case 500:
-          reason = t('views.common.actions.verify-model.status.internal')
+          reason = t(
+            'views.shared.actions.api.create.interactions.verify-model.status.internal'
+          )
           break
         case 502:
-          reason = t('views.common.actions.verify-model.status.bad-gateway')
+          reason = t(
+            'views.shared.actions.api.create.interactions.verify-model.status.bad-gateway'
+          )
           break
         case 503:
           reason = t(
-            'views.common.actions.verify-model.status.service-unavailable'
+            'views.shared.actions.api.create.interactions.verify-model.status.service-unavailable'
           )
           break
       }
       detail = params.is_voice_input
-        ? t('views.common.actions.verify-model.warning.audio.detail')
-        : t('views.common.actions.verify-model.error.status-code', {
-            status: status.toString(),
-            reason
-          })
+        ? t(
+            'views.shared.actions.api.create.interactions.verify-model.warning.audio.detail'
+          )
+        : t(
+            'views.shared.actions.api.create.interactions.verify-model.error.status-code',
+            {
+              status: status.toString(),
+              reason
+            }
+          )
     } else if (error.code) {
       detail = params.is_voice_input
-        ? t('views.common.actions.verify-model.warning.audio.detail')
+        ? t(
+            'views.shared.actions.api.create.interactions.verify-model.warning.audio.detail'
+          )
         : error.message
     }
   }
@@ -141,7 +178,9 @@ export const verify_model = async (params: {
     return false
   }
 
-  const use_anyway = t('views.common.actions.verify-model.action.use-anyway')
+  const use_anyway = t(
+    'views.shared.actions.api.create.interactions.verify-model.action.use-anyway'
+  )
   const choice = await vscode.window.showWarningMessage(
     title,
     { modal: true, detail },

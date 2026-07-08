@@ -10,6 +10,7 @@ import {
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { verify_model } from '../../create/interactions/verify-model'
+import { t } from '@/i18n'
 
 export const edit_model_for_api_configuration = async (params: {
   api_configuration: ApiConfiguration
@@ -62,11 +63,15 @@ export const edit_model_for_api_configuration = async (params: {
           const quick_pick =
             vscode.window.createQuickPick<(typeof model_items)[0]>()
           quick_pick.items = model_items
-          quick_pick.title = 'Models'
-          quick_pick.placeholder = 'Choose a model'
+          quick_pick.title = t(
+            'views.shared.actions.api.create.interactions.initial-select-model.title'
+          )
+          quick_pick.placeholder = t(
+            'views.shared.actions.api.create.interactions.initial-select-model.placeholder'
+          )
           const close_button: vscode.QuickInputButton = {
             iconPath: new vscode.ThemeIcon('close'),
-            tooltip: 'Close'
+            tooltip: t('common.close')
           }
           quick_pick.buttons = [close_button]
           if (last_selected_model_id) {
@@ -151,9 +156,13 @@ export const edit_model_for_api_configuration = async (params: {
 
   while (true) {
     const new_model_input = await vscode.window.showInputBox({
-      title: 'Models',
+      title: t(
+        'views.shared.actions.api.create.interactions.initial-select-model.title'
+      ),
       value: params.api_configuration.model,
-      prompt: `Enter a model name (ID)`
+      prompt: t(
+        'views.shared.actions.api.update.interactions.edit-model-for-api-config.prompt'
+      )
     })
 
     if (!new_model_input) return undefined

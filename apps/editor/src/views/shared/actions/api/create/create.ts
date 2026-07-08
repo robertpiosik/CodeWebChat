@@ -9,6 +9,7 @@ import {
   initial_select_model,
   initial_select_model_provider
 } from './interactions'
+import { t } from '@/i18n'
 
 export const create = async (params: {
   context: vscode.ExtensionContext
@@ -27,15 +28,19 @@ export const create = async (params: {
       (resolve) => {
         const quick_pick = vscode.window.createQuickPick()
         quick_pick.items = [
-          { label: 'Insert a new API configuration above' },
-          { label: 'Insert a new API configuration below' }
+          {
+            label: t('views.shared.actions.api.create.create.placement-above')
+          },
+          { label: t('views.shared.actions.api.create.create.placement-below') }
         ]
-        quick_pick.title = 'Placement'
-        quick_pick.placeholder = 'Where to insert?'
+        quick_pick.title = t('views.shared.actions.api.create.create.title')
+        quick_pick.placeholder = t(
+          'views.shared.actions.api.create.create.placeholder'
+        )
         quick_pick.buttons = [
           {
             iconPath: new vscode.ThemeIcon('close'),
-            tooltip: 'Close'
+            tooltip: t('common.close')
           }
         ]
 
@@ -64,7 +69,8 @@ export const create = async (params: {
     if (!position_quick_pick) return undefined
 
     actual_insertion_index =
-      position_quick_pick == 'Insert a new API configuration above'
+      position_quick_pick ==
+      t('views.shared.actions.api.create.create.placement-above')
         ? params.insertion_index
         : params.insertion_index + 1
   }

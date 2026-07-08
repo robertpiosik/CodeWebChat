@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import { t } from '@/i18n'
 
 export const edit_reasoning_effort_for_api_config = async (
   current_effort?: string
@@ -14,11 +15,15 @@ export const edit_reasoning_effort_for_api_config = async (
   return await new Promise<string | undefined>((resolve) => {
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = effort_options
-    quick_pick.title = 'Edit Configuration'
-    quick_pick.placeholder = 'Select reasoning effort'
+    quick_pick.title = t(
+      'views.shared.actions.api.update.interactions.edit-reasoning-effort-for-api-config.title'
+    )
+    quick_pick.placeholder = t(
+      'views.shared.actions.api.pick-reasoning-effort.placeholder'
+    )
     const close_button: vscode.QuickInputButton = {
       iconPath: new vscode.ThemeIcon('close'),
-      tooltip: 'Close'
+      tooltip: t('common.close')
     }
     quick_pick.buttons = [close_button]
     if (current_effort) {

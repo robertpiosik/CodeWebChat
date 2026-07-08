@@ -7,6 +7,7 @@ import {
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { verify_model } from './verify-model'
+import { t } from '@/i18n'
 
 export const initial_select_model = async (
   model_fetcher: ModelFetcher,
@@ -41,8 +42,12 @@ export const initial_select_model = async (
           (resolve) => {
             const quick_pick = vscode.window.createQuickPick()
             quick_pick.items = model_items
-            quick_pick.title = 'Models'
-            quick_pick.placeholder = 'Choose a model'
+            quick_pick.title = t(
+              'views.shared.actions.api.create.interactions.initial-select-model.title'
+            )
+            quick_pick.placeholder = t(
+              'views.shared.actions.api.create.interactions.initial-select-model.placeholder'
+            )
             quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
             if (last_selected_model_id) {
@@ -120,8 +125,12 @@ export const initial_select_model = async (
 
   while (true) {
     const input = await vscode.window.showInputBox({
-      title: 'Models',
-      prompt: 'Could not fetch models. Please enter a model name (ID).'
+      title: t(
+        'views.shared.actions.api.create.interactions.initial-select-model.title'
+      ),
+      prompt: t(
+        'views.shared.actions.api.create.interactions.initial-select-model.prompt'
+      )
     })
 
     if (!input) return undefined

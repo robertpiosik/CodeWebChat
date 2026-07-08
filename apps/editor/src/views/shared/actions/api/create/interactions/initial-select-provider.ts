@@ -4,6 +4,7 @@ import {
   ModelProvider
 } from '@/services/model-providers-manager'
 import { upsert_provider } from '../../upsert-provider'
+import { t } from '@/i18n'
 
 export const initial_select_model_provider = async (
   context: vscode.ExtensionContext,
@@ -26,7 +27,9 @@ export const initial_select_model_provider = async (
       model_provider: p
     }))
     const add_new_item = {
-      label: '$(plus) New model provider...',
+      label: t(
+        'views.shared.actions.api.create.interactions.initial-select-provider.add-new'
+      ),
       model_provider: undefined
     }
 
@@ -40,16 +43,22 @@ export const initial_select_model_provider = async (
       quick_pick.items = [
         add_new_item,
         {
-          label: 'model providers',
+          label: t(
+            'views.shared.actions.api.create.interactions.initial-select-provider.separator'
+          ),
           kind: vscode.QuickPickItemKind.Separator
         } as any,
         ...model_provider_items
       ]
-      quick_pick.title = 'New Configuration'
-      quick_pick.placeholder = 'Select a model provider'
+      quick_pick.title = t(
+        'views.shared.actions.api.create.interactions.initial-select-provider.title'
+      )
+      quick_pick.placeholder = t(
+        'views.shared.actions.api.create.interactions.initial-select-provider.placeholder'
+      )
       const close_button: vscode.QuickInputButton = {
         iconPath: new vscode.ThemeIcon('close'),
-        tooltip: 'Close'
+        tooltip: t('common.close')
       }
       quick_pick.buttons = [close_button]
       if (last_selected_model_provider_name) {

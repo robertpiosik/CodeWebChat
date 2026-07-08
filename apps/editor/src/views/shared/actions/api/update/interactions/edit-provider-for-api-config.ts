@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
+import { t } from '@/i18n'
 
 export const edit_model_provider_for_api_configuration = async (
   providers_manager: ModelProvidersManager,
@@ -16,11 +17,15 @@ export const edit_model_provider_for_api_configuration = async (
     const quick_pick =
       vscode.window.createQuickPick<(typeof model_provider_items)[0]>()
     quick_pick.items = model_provider_items
-    quick_pick.title = 'Model Providers'
-    quick_pick.placeholder = 'Select a model provider'
+    quick_pick.title = t(
+      'views.shared.actions.api.upsert-provider.options.title'
+    )
+    quick_pick.placeholder = t(
+      'views.shared.actions.api.create.interactions.initial-select-provider.placeholder'
+    )
     const close_button: vscode.QuickInputButton = {
       iconPath: new vscode.ThemeIcon('close'),
-      tooltip: 'Close'
+      tooltip: t('common.close')
     }
     quick_pick.buttons = [close_button]
     if (current_model_provider_name) {

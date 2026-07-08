@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import { t } from '@/i18n'
 
 export const pick_reasoning_effort = async (params: {
   supported_efforts: string[]
@@ -12,8 +13,10 @@ export const pick_reasoning_effort = async (params: {
 
   const quick_pick = vscode.window.createQuickPick()
   quick_pick.items = items
-  quick_pick.title = 'Reasoning Efforts'
-  quick_pick.placeholder = 'Choose a reasoning effort'
+  quick_pick.title = t('views.shared.actions.api.pick-reasoning-effort.title')
+  quick_pick.placeholder = t(
+    'views.shared.actions.api.pick-reasoning-effort.placeholder'
+  )
 
   if (params.current_effort) {
     const active_item = items.find((i) => i.effort === params.current_effort)
@@ -25,12 +28,12 @@ export const pick_reasoning_effort = async (params: {
   quick_pick.buttons = [
     {
       iconPath: new vscode.ThemeIcon('close'),
-      tooltip: 'Close'
+      tooltip: t('common.close')
     }
   ]
 
   quick_pick.onDidTriggerButton((button) => {
-    if (button.tooltip == 'Close') {
+    if (button.tooltip == t('common.close')) {
       quick_pick.hide()
     }
   })

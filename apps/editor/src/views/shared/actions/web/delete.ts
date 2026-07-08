@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import { dictionary } from '@shared/constants/dictionary'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
+import { t } from '@/i18n'
 
 export const remove = async (params: { name: string }): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
@@ -8,7 +9,7 @@ export const remove = async (params: { name: string }): Promise<void> => {
     config.get<ConfigWebConfigurationFormat[]>('webConfigurations', []) || []
 
   const index = current_web_configurations.findIndex(
-    (c, i) => (c.name ?? `unnamed-${i}`) === params.name
+    (c, i) => (c.name ?? `unnamed-${i}`) == params.name
   )
 
   if (index < 0 || index >= current_web_configurations.length) {
@@ -18,9 +19,11 @@ export const remove = async (params: { name: string }): Promise<void> => {
   const item_to_delete = current_web_configurations[index]
   const item_name = item_to_delete.name
   const is_unnamed = !item_name || /^\(\d+\)$/.test(item_name?.trim() ?? '')
-  const display_item_name = is_unnamed ? 'Unnamed' : item_name!
+  const display_item_name = is_unnamed
+    ? t('views.shared.actions.web.delete.unnamed')
+    : item_name!
 
-  const delete_button = 'Delete'
+  const delete_button = t('common.delete')
   const result = await vscode.window.showWarningMessage(
     dictionary.warning_message.PLEASE_CONFIRM,
     {
