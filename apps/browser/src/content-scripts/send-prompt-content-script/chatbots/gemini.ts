@@ -110,48 +110,29 @@ export const gemini: Chatbot = {
       return
     }
 
-    const thinking_level_item = Array.from(
+    const all_menu_items = Array.from(
       menu_content.querySelectorAll('gem-menu-item')
-    ).find(
-      (item) => item.getAttribute('value') == 'thinking_level'
+    )
+
+    const extended_thinking_item = all_menu_items.find(
+      (item) =>
+        item.querySelector('.label')?.textContent?.trim().toLowerCase() ==
+        'extended thinking'
     ) as HTMLElement
 
-    if (!thinking_level_item) {
+    if (!extended_thinking_item) {
       document.dispatchEvent(
         new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
       )
       return
     }
 
-    const current_level = thinking_level_item
-      .querySelector('.sublabel')
-      ?.textContent?.trim()
+    const is_extended = extended_thinking_item.classList.contains('selected')
+    const target_is_extended = reasoning_effort.toLowerCase() == 'extended'
 
-    if (current_level?.toLowerCase() == reasoning_effort.toLowerCase()) {
-      document.dispatchEvent(
-        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
-      )
-      return
-    }
-
-    thinking_level_item.click()
-    await new Promise((resolve) => requestAnimationFrame(resolve))
-
-    const all_menu_items = Array.from(
-      document.querySelectorAll('gem-menu-item')
-    )
-    let found = false
-    for (const option of all_menu_items) {
-      const label_element = option.querySelector('.label')
-      const text = label_element?.textContent?.trim().toLowerCase()
-      if (text == reasoning_effort.toLowerCase()) {
-        ;(option as HTMLElement).click()
-        found = true
-        break
-      }
-    }
-
-    if (!found) {
+    if (is_extended !== target_is_extended) {
+      extended_thinking_item.click()
+    } else {
       document.dispatchEvent(
         new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
       )
@@ -167,8 +148,7 @@ export const gemini: Chatbot = {
       options.includes('temporary-chat') &&
       supported_options?.['temporary-chat']
     ) {
-      const temp_chat_button_selector =
-        'button[data-test-id="temp-chat-button"]'
+      const temp_chat_button_selector = 'temp-chat-button button'
       let temp_chat_button = document.querySelector(
         temp_chat_button_selector
       ) as HTMLButtonElement
