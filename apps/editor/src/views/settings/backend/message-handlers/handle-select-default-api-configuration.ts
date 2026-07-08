@@ -80,6 +80,7 @@ export const handle_select_default_api_configuration = async (
               is_voice_input: true
             })
             if (!is_valid) {
+              handle_select_default_api_configuration(provider, message)
               return
             }
           }
