@@ -13,7 +13,7 @@ export const build_commit_message_prompt = async (
 
   const file_diffs = diff.split(/^diff --git /m).filter((d) => d.trim() != '')
 
-  let changes_content = '<files>\n'
+  let changes_content = ''
   for (const file_diff_content of file_diffs) {
     const full_file_diff = 'diff --git ' + file_diff_content
     const lines = full_file_diff.split('\n')
@@ -91,12 +91,19 @@ export const build_commit_message_prompt = async (
         }
       }
 
-      changes_content += `<file path="${file_path}" status="${status}"`
-      if (old_path_attr) {
-        changes_content += ` old_path="${old_path_attr}"`
+      if (status == 'created') {
+        changes_content += `### New file: \`${file_path}\`\n\n`
+      } else if (status == 'deleted') {
+        changes_content += `### Deleted file: \`${file_path}\`\n\n`
+      } else if (status == 'renamed') {
+        changes_content += `### Renamed file: \`${old_path_attr}\` (old) \`${file_path}\` (new)\n\n`
+      } else {
+        changes_content += `### Updated file: \`${file_path}\`\n\n`
       }
-      changes_content += '>\n'
-      changes_content += `<![CDATA[\n${final_diff_content.trimEnd()}\n]]>\n`
+
+      if (final_diff_content.trimEnd()) {
+        changes_content += `\`\`\`diff\n${final_diff_content.trimEnd()}\n\`\`\`\n\n`
+      }
 
       if (!is_deleted && file_path && !is_binary) {
         try {
@@ -113,17 +120,13 @@ export const build_commit_message_prompt = async (
           if (full_content && !full_content.includes('\0')) {
             const full_content_tokens = Math.ceil(full_content.length / 4)
             if (full_content_tokens <= MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE) {
-              changes_content += `<![CDATA[\n${full_content.trimEnd()}\n]]>\n`
+              changes_content += `\`\`\`\n${full_content.trimEnd()}\n\`\`\`\n\n`
             }
           }
         } catch (err) {}
       }
-
-      changes_content += `</file>\n`
     }
   }
 
-  changes_content += '</files>'
-
-  return `${commit_message_prompt}\n${changes_content}\n${commit_message_prompt}`
+  return `${commit_message_prompt}\n\n${changes_content}${commit_message_prompt}`
 }

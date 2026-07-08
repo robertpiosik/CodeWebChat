@@ -239,14 +239,23 @@ export const prepare_staged_changes = async (params: {
           )
           const is_too_large = file_tokens > MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE
 
-          let file_xml = `<file path="${relative_path}" status="${status}">\n`
-          file_xml += `<![CDATA[\n${final_diff_content.trimEnd()}\n]]>\n`
-          if (!is_deleted && full_content && !is_too_large) {
-            file_xml += `<![CDATA[\n${full_content.trimEnd()}\n]]>\n`
+          let file_md = ''
+          if (status == 'created') {
+            file_md = `### New file: \`${relative_path}\`\n\n`
+          } else if (status == 'deleted') {
+            file_md = `### Deleted file: \`${relative_path}\`\n\n`
+          } else {
+            file_md = `### Updated file: \`${relative_path}\`\n\n`
           }
-          file_xml += `</file>\n`
 
-          const token_count = Math.ceil(file_xml.length / 4)
+          if (final_diff_content.trimEnd()) {
+            file_md += `\`\`\`diff\n${final_diff_content.trimEnd()}\n\`\`\`\n\n`
+          }
+          if (!is_deleted && full_content && !is_too_large) {
+            file_md += `\`\`\`\n${full_content.trimEnd()}\n\`\`\`\n\n`
+          }
+
+          const token_count = Math.ceil(file_md.length / 4)
           const description_parts = []
 
           if (!is_too_large) {
