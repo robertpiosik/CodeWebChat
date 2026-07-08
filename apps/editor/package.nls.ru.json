@@ -1,6 +1,6 @@
 {
-  "codeWebChat.saveFileSelection.title": "Сохранить выбор контекста",
-  "codeWebChat.restoreFileSelection.title": "Восстановить выбор контекста",
+  "codeWebChat.saveFileSelection.title": "Сохранить выбор файлов",
+  "codeWebChat.restoreFileSelection.title": "Восстановить выбор файлов",
   "codeWebChat.applyChatResponse.title": "Применить ответ чата",
   "codeWebChat.copyContext.title": "Копировать контекст",
   "codeWebChat.checkpoints.title": "Контрольные точки",

@@ -1,6 +1,6 @@
 {
-  "codeWebChat.saveFileSelection.title": "컨텍스트 선택 저장",
-  "codeWebChat.restoreFileSelection.title": "컨텍스트 선택 복원",
+  "codeWebChat.saveFileSelection.title": "파일 선택 저장",
+  "codeWebChat.restoreFileSelection.title": "파일 선택 복원",
   "codeWebChat.applyChatResponse.title": "채팅 응답 적용",
   "codeWebChat.copyContext.title": "컨텍스트 복사",
   "codeWebChat.checkpoints.title": "체크포인트",

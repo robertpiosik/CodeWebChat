@@ -1,6 +1,6 @@
 {
-  "codeWebChat.saveFileSelection.title": "Kontextauswahl speichern",
-  "codeWebChat.restoreFileSelection.title": "Kontextauswahl wiederherstellen",
+  "codeWebChat.saveFileSelection.title": "Dateiauswahl speichern",
+  "codeWebChat.restoreFileSelection.title": "Dateiauswahl wiederherstellen",
   "codeWebChat.applyChatResponse.title": "Chat-Antwort anwenden",
   "codeWebChat.copyContext.title": "Kontext kopieren",
   "codeWebChat.checkpoints.title": "Checkpoints",

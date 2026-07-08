@@ -92,7 +92,7 @@ export const select_context_source = async (params: {
                 label: f.name,
                 folder: f
               })),
-              { placeHolder: 'Select workspace folder' }
+              { placeHolder: t('command.context-restoration.select-folder') }
             )
             if (picked) {
               file_path = get_contexts_file_path(picked.folder.uri.fsPath)

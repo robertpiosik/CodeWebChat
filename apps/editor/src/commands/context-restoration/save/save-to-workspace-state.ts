@@ -49,7 +49,7 @@ export const save_to_workspace_state = async (params: {
 
     const quick_pick = vscode.window.createQuickPick<any>()
     quick_pick.title = t('command.context-restoration.select-saved.title')
-    quick_pick.placeholder = 'Select a context to overwrite or create a new one'
+    quick_pick.placeholder = t('command.context-restoration.save.placeholder')
     quick_pick.items = items
     quick_pick.buttons = [vscode.QuickInputButtons.Back]
 

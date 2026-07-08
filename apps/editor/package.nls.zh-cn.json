@@ -1,6 +1,6 @@
 {
-  "codeWebChat.saveFileSelection.title": "保存上下文选择",
-  "codeWebChat.restoreFileSelection.title": "恢复上下文选择",
+  "codeWebChat.saveFileSelection.title": "保存文件选择",
+  "codeWebChat.restoreFileSelection.title": "恢复文件选择",
   "codeWebChat.applyChatResponse.title": "应用聊天回复",
   "codeWebChat.copyContext.title": "复制上下文",
   "codeWebChat.checkpoints.title": "检查点",

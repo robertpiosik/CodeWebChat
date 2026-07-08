@@ -128,21 +128,49 @@ export const restore_from_json_file = async (params: {
 
         if (selection.triggeredButton === edit_button) {
           active_dialog_count++
-          const input = vscode.window.createInputBox()
-          input.title = t('command.context-restoration.rename.title')
-          input.value = old_name
+          const input_box = vscode.window.createInputBox()
+          input_box.title = t('command.context-restoration.rename.title')
+          input_box.prompt = t('command.context-restoration.rename.prompt')
+          input_box.value = old_name
           const new_name = await new Promise<string | undefined>((resolve) => {
-            input.onDidAccept(() => {
-              if (input.value.trim()) {
-                resolve(input.value.trim())
-                input.hide()
+            let accepted = false
+            const disposables: vscode.Disposable[] = []
+            const validate = (value: string) => {
+              const trimmed = value.trim()
+              if (!trimmed) {
+                input_box.validationMessage = t(
+                  'command.context-restoration.rename.empty'
+                )
+                return false
               }
-            })
-            input.onDidHide(() => {
-              resolve(undefined)
-              input.dispose()
-            })
-            input.show()
+              if (
+                file_contexts.find(
+                  (c) => c.name === trimmed && c.name !== old_name
+                )
+              ) {
+                input_box.validationMessage = t(
+                  'command.context-restoration.rename.exists'
+                )
+                return false
+              }
+              input_box.validationMessage = ''
+              return true
+            }
+            disposables.push(
+              input_box.onDidChangeValue(validate),
+              input_box.onDidAccept(() => {
+                if (!validate(input_box.value)) return
+                accepted = true
+                resolve(input_box.value.trim())
+                input_box.hide()
+              }),
+              input_box.onDidHide(() => {
+                if (!accepted) resolve(undefined)
+                disposables.forEach((d) => d.dispose())
+                input_box.dispose()
+              })
+            )
+            input_box.show()
           })
           active_dialog_count--
 

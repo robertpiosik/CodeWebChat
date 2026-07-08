@@ -1,6 +1,6 @@
 {
-  "codeWebChat.saveFileSelection.title": "コンテキスト選択を保存",
-  "codeWebChat.restoreFileSelection.title": "コンテキスト選択を復元",
+  "codeWebChat.saveFileSelection.title": "ファイル選択を保存",
+  "codeWebChat.restoreFileSelection.title": "ファイル選択を復元",
   "codeWebChat.applyChatResponse.title": "チャットの応答を適用",
   "codeWebChat.copyContext.title": "コンテキストをコピー",
   "codeWebChat.checkpoints.title": "チェックポイント",
