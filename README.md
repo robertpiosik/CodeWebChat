@@ -54,7 +54,7 @@ Here, selected in the explorer view files are sent to the model with every promp
 
 ```
 # Files
-[current file selection]
+[file selection]
 
 # System
 [edit format instructions]
@@ -71,7 +71,7 @@ Here, selected in the explorer view files are sent to the model with every promp
 
 ```
 # Files
-[current file selection]
+[file selection]
 [user-typed prompt]
 ```
 
@@ -97,7 +97,7 @@ Here, selected in the explorer view files are sent to the model with every promp
 
 ```
 # Files
-[current file tree selection]
+[rough file selection]
 
 # System
 [response format instructions]
