@@ -160,9 +160,11 @@ Make your chatbot quota last longer, lower input token costs by up to 90%, and r
 
 ## Privacy
 
-- Zero telemetry.
-- Browser communication over localhost.
-- Model providers called directly.
+CWC is designed to operate 100% on your machine.
+
+- Zero telemetry collection.
+- Browser communication over WebSockets.
+- Model providers requested directly.
 
 ## Commands
 
