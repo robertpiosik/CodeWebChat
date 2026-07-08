@@ -118,7 +118,10 @@ Find a complete set of relevant files according to the following query:
 
 ## Prompt caching
 
-When coding with CWC, it's natural to start new chats (send fresh messages) instead of continuing a hallucination-prone long conversation. With context files ordered based on edit and selection recency, **[prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) is effectively utilized across tasks**.
+With first-class support for [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching), CWC enables unmatched cost-efficiency. Preserve your chatbot quota for longer, lower input token costs by up to 90% and reduce latency by up to 80%.
+
+> [!INFO]
+> **How it works?** Files sent with instructions are ordered by modification and selection recency, making prompt prefix largely unchanged, across tasks!
 
 ## Enabling autofill
 
@@ -190,12 +193,12 @@ When calling APIs, requests are sent directly to the configured model providers.
 - `Add File to Context` - Search and add file (or parent folder via file action) to the context.
 - `Remove File from Context` - Search and remove file (or parent folder via file action) from the context.
 - `Search Files for Context` - Search and add files containing specific keywords to the context.
-- `Copy Context` - Copy XML-formatted checked files from the Workspace view to the clipboard.
-- `Copy Context of Open Editors` - Copy XML-formatted checked files from the Open Editors view to the clipboard.
+- `Copy Context` - Copy all selected files to the clipboard.
+- `Copy Context of Open Editors` - Copy opened and selected files to the clipboard.
 
 ### Commit messages
 
-- `Commit Changes` - Generate commit message and commit.
+- `Commit Changes` - Generate commit message in your preferred style.
 
 ## Build from source
 
