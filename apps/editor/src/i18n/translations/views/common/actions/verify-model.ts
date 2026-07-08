@@ -108,22 +108,22 @@ export const translations = {
     bg: 'Неуспешно тестово съобщение'
   },
   'views.common.actions.verify-model.warning.audio.detail': {
-    en: 'This model may not be suitable for audio transcription.',
-    pl: 'Ten model może nie być odpowiedni do transkrypcji dźwięku.',
-    'zh-cn': '此模型可能不适合用于音频转录。',
-    ja: 'このモデルは音声の書き起こしには適していない可能性があります。',
-    'zh-tw': '此模型可能不適合用於音訊轉錄。',
-    de: 'Dieses Modell ist möglicherweise nicht für die Audiotranskription geeignet.',
-    es: 'Este modelo puede no ser adecuado para la transcripción de audio.',
-    fr: 'Ce modèle peut ne pas convenir pour la transcription audio.',
-    'pt-br': 'Este modelo pode não ser adequado para transcrição de áudio.',
-    ru: 'Эта модель может не подходить для транскрибации аудио.',
-    ko: '이 모델은 오디오 텍스트 변환에 적합하지 않을 수 있습니다.',
-    it: 'Questo modello potrebbe non essere adatto alla trascrizione audio.',
-    tr: 'Bu model ses transkripsiyonu için uygun olmayabilir.',
-    cs: 'Tento model nemusí být vhodný pro přepis zvuku.',
-    hu: 'Ez a modell valószínűleg nem alkalmas hangátírásra.',
-    bg: 'Този модел може да не е подходящ за аудио транскрипция.'
+    en: 'This model is not suitable for audio transcription.',
+    pl: 'Ten model nie jest odpowiedni do transkrypcji nagrania.',
+    'zh-cn': '此模型不适合用于音频转录。',
+    ja: 'このモデルは音声の書き起こしには適していません。',
+    'zh-tw': '此模型不適合用於音訊轉錄。',
+    de: 'Dieses Modell ist nicht für die Audiotranskription geeignet.',
+    es: 'Este modelo no es adecuado para la transcripción de audio.',
+    fr: "Ce modèle n'est pas adapté pour la transcription audio.",
+    'pt-br': 'Este modelo não é adequado para transcrição de áudio.',
+    ru: 'Эта модель не подходит для транскрибации аудио.',
+    ko: '이 모델은 오디오 텍스트 변환에 적합하지 않습니다.',
+    it: 'Questo modello non è adatto alla trascrizione audio.',
+    tr: 'Bu model ses transkripsiyonu için uygun değildir.',
+    cs: 'Tento model není vhodný pro přepis zvuku.',
+    hu: 'Ez a modell nem alkalmas hangátírásra.',
+    bg: 'Този модел не е подходящ за аудио транскрипция.'
   },
   'views.common.actions.verify-model.warning.test.detail': {
     en: 'Error',
@@ -305,25 +305,6 @@ export const translations = {
     hu: 'A szolgáltatás nem elérhető',
     bg: 'Услугата е недостъпна'
   },
-  'views.common.actions.verify-model.error.audio-status-code': {
-    en: 'This model may not be suitable for audio transcription.\n\nStatus code: {status} ({reason})',
-    pl: 'Ten model może nie być odpowiedni do transkrypcji dźwięku.\n\nKod statusu: {status} ({reason})',
-    'zh-cn': '此模型可能不适合用于音频转录。\n\n状态码：{status} ({reason})',
-    ja: 'このモデルは音声の書き起こしには適していない可能性があります。\n\nステータスコード: {status} ({reason})',
-    'zh-tw': '此模型可能不適合用於音訊轉錄。\n\n狀態碼：{status} ({reason})',
-    de: 'Dieses Modell ist möglicherweise nicht für die Audiotranskription geeignet.\n\nStatuscode: {status} ({reason})',
-    es: 'Este modelo puede no ser adecuado para la transcripción de audio.\n\nCódigo de estado: {status} ({reason})',
-    fr: 'Ce modèle peut ne pas convenir pour la transcription audio.\n\nCode d’état : {status} ({reason})',
-    'pt-br':
-      'Este modelo pode não ser adequado para transcrição de áudio.\n\nCódigo de status: {status} ({reason})',
-    ru: 'Эта модель может не подходить для транскрибации аудио.\n\nКод статуса: {status} ({reason})',
-    ko: '이 모델은 오디오 텍스트 변환에 적합하지 않을 수 있습니다.\n\n상태 코드: {status} ({reason})',
-    it: 'Questo modello potrebbe non essere adatto alla trascrizione audio.\n\nCodice di stato: {status} ({reason})',
-    tr: 'Bu model ses transkripsiyonu için uygun olmayabilir.\n\nDurum kodu: {status} ({reason})',
-    cs: 'Tento model nemusí být vhodný pro přepis zvuku.\n\nStavový kód: {status} ({reason})',
-    hu: 'Ez a modell valószínűleg nem alkalmas hangátírásra.\n\nÁllapotkód: {status} ({reason})',
-    bg: 'Този модел може да не е подходящ за аудио транскрипция.\n\nКод на състоянието: {status} ({reason})'
-  },
   'views.common.actions.verify-model.error.status-code': {
     en: 'Status code: {status} ({reason})',
     pl: 'Kod statusu: {status} ({reason})',
@@ -341,25 +322,6 @@ export const translations = {
     cs: 'Stavový kód: {status} ({reason})',
     hu: 'Állapotkód: {status} ({reason})',
     bg: 'Код на състоянието: {status} ({reason})'
-  },
-  'views.common.actions.verify-model.error.audio-error': {
-    en: 'This model may not be suitable for audio transcription.\n\n{error}',
-    pl: 'Ten model może nie być odpowiedni do transkrypcji dźwięku.\n\n{error}',
-    'zh-cn': '此模型可能不适合用于音频转录。\n\n{error}',
-    ja: 'このモデルは音声の書き起こしには適していない可能性があります。\n\n{error}',
-    'zh-tw': '此模型可能不適合用於音訊轉錄。\n\n{error}',
-    de: 'Dieses Modell ist möglicherweise nicht für die Audiotranskription geeignet.\n\n{error}',
-    es: 'Este modelo puede no ser adecuado para la transcripción de audio.\n\n{error}',
-    fr: 'Ce modèle peut ne pas convenir pour la transcription audio.\n\n{error}',
-    'pt-br':
-      'Este modelo pode não ser adequado para transcrição de áudio.\n\n{error}',
-    ru: 'Эта модель может не подходить для транскрибации аудио.\n\n{error}',
-    ko: '이 모델은 오디오 텍스트 변환에 적합하지 않을 수 있습니다.\n\n{error}',
-    it: 'Questo modello potrebbe non essere adatto alla trascrizione audio.\n\n{error}',
-    tr: 'Bu model ses transkripsiyonu için uygun olmayabilir.\n\n{error}',
-    cs: 'Tento model nemusí být vhodný pro přepis zvuku.\n\n{error}',
-    hu: 'Ez a modell valószínűleg nem alkalmas hangátírásra.\n\n{error}',
-    bg: 'Този модел може да не е подходящ за аудио транскрипция.\n\n{error}'
   },
   'views.common.actions.verify-model.action.use-anyway': {
     en: 'Use Anyway',

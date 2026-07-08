@@ -124,21 +124,21 @@ export const verify_model = async (params: {
           break
       }
       detail = params.is_voice_input
-        ? t('views.common.actions.verify-model.error.audio-status-code', {
-            status: status.toString(),
-            reason
-          })
+        ? t('views.common.actions.verify-model.warning.audio.detail')
         : t('views.common.actions.verify-model.error.status-code', {
             status: status.toString(),
             reason
           })
     } else if (error.code) {
       detail = params.is_voice_input
-        ? t('views.common.actions.verify-model.error.audio-error', {
-            error: error.message
-          })
+        ? t('views.common.actions.verify-model.warning.audio.detail')
         : error.message
     }
+  }
+
+  if (params.is_voice_input) {
+    await vscode.window.showWarningMessage(title, { modal: true, detail })
+    return false
   }
 
   const use_anyway = t('views.common.actions.verify-model.action.use-anyway')
