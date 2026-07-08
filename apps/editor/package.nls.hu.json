@@ -1,6 +1,6 @@
 {
-  "codeWebChat.saveCurrentSelection.title": "Kontextus választás mentése",
-  "codeWebChat.restoreSavedSelection.title": "Kontextus választás visszaállítása",
+  "codeWebChat.saveFileSelection.title": "Kontextus választás mentése",
+  "codeWebChat.restoreFileSelection.title": "Kontextus választás visszaállítása",
   "codeWebChat.applyChatResponse.title": "Csevegési válasz alkalmazása",
   "codeWebChat.copyContext.title": "Kontextus másolása",
   "codeWebChat.checkpoints.title": "Ellenőrzőpontok",

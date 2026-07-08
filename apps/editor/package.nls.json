@@ -1,6 +1,6 @@
 {
-  "codeWebChat.saveCurrentSelection.title": "Save Current Selection",
-  "codeWebChat.restoreSavedSelection.title": "Restore Saved Selection",
+  "codeWebChat.saveFileSelection.title": "Save File Selection",
+  "codeWebChat.restoreFileSelection.title": "Restore File Selection",
   "codeWebChat.applyChatResponse.title": "Apply Chat Response",
   "codeWebChat.copyContext.title": "Copy context",
   "codeWebChat.checkpoints.title": "Checkpoints",

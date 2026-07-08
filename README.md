@@ -118,10 +118,14 @@ Find a complete set of relevant files according to the following query:
 
 ## Prompt caching
 
-With first-class support for [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching), CWC enables unmatched cost-efficiency. Preserve your chatbot quota for longer, lower input token costs by up to 90% and reduce latency by up to 80%.
+With first-class support for [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching), CWC enables unmatched cost-efficiency and speed.
+
+- Preserve your chatbot quota for longer
+- Lower input token costs by up to 90%
+- Reduce latency by up to 80%
 
 **How it works?** \
-Files sent with instructions are ordered by modification and selection recency, making prompt prefix largely unchanged, across tasks!
+Selected files are ordered by modification and selection recency, and because task instructions are always placed at the very end of the prompt, it's submitted largery unchanged across tasks!
 
 ## Enabling autofill
 

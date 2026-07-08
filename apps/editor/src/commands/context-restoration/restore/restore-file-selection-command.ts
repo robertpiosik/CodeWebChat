@@ -5,13 +5,13 @@ import { restore_from_workspace_state } from './restore-from-workspace-state'
 import { restore_from_json_file } from './restore-from-json-file'
 import { t } from '@/i18n'
 
-export const restore_saved_selection_command = (params: {
+export const restore_file_selection_command = (params: {
   workspace_provider: WorkspaceProvider
   on_context_selected: () => void
   extension_context: vscode.ExtensionContext
 }): vscode.Disposable => {
   return vscode.commands.registerCommand(
-    'codeWebChat.restoreSavedSelection',
+    'codeWebChat.restoreFileSelection',
     async () => {
       let show_main_menu = true
 

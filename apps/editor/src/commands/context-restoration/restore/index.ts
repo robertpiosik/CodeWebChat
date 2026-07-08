@@ -1,1 +1,1 @@
-export * from './restore-saved-selection-command'
+export * from './restore-file-selection-command'
