@@ -13,7 +13,7 @@
 
 Code Web Chat (CWC) is a chatbot-first AI coding tool. **Start in VS Code (Cursor, Antigravity, VSCodium, etc.), then continue in ChatGPT, Gemini, Claude (plus 15+ more)** or get the job done without leaving your editor!
 
-It's free, built independently and doesn't collect any telemetry.
+It's free, fully-featured and doesn't collect any telemetry.
 
 > [!TIP]
 > Elevate your workflow with smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)).
