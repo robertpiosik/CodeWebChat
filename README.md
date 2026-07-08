@@ -45,7 +45,7 @@ CWC flips this!
 Here, selected in the explorer view files are sent to the model with every prompt so it has everything it needs to do the task without a single tool call.
 
 > [!TIP]
-> **Not sure what files to select?** With CWC you can search files using phrase, keywords and **natural language**.
+> **Not sure what files to select?** Search files using phrase, keywords and **natural language**.
 
 **Generated prompts are structured as follows:**
 
