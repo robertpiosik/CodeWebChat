@@ -154,7 +154,7 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 
 ## Prompt caching
 
-**CWC orders context files by modification and selection recency.** This, combined with instructions placement at the message's very end creates highly cost-efficient system which heavily utilize [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching).
+**CWC orders context files by modification and selection recency.** This, combined with instructions placement at the message's very end creates highly cost-efficient workflow which heavily utilize [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching).
 
 Make your chatbot quota last longer, lower input token costs by up to 90%, and reduce latency by up to 80%.
 
