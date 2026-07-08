@@ -6,6 +6,7 @@ import { translations as views_settings_handlers_open_ignore_patterns_settings }
 import { translations as views_settings_handlers_select_default_api_configuration } from './translations/views/settings/handlers/select-default-api-configuration'
 import { translations as views_panel_handlers_voice_input } from './translations/views/panel/handlers/voice-input'
 import { translations as views_handlers_common } from './translations/views/common/handlers/common'
+import { translations as views_common_actions_verify_model } from './translations/views/common/actions/verify-model'
 
 export type TranslationKey = keyof typeof translations
 
@@ -16,7 +17,8 @@ const translations = {
   ...views_settings_handlers_open_ignore_patterns_settings,
   ...views_settings_handlers_select_default_api_configuration,
   ...views_panel_handlers_voice_input,
-  ...views_handlers_common
+  ...views_handlers_common,
+  ...views_common_actions_verify_model
 }
 
 export const t = (

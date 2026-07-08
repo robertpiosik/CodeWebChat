@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import axios from 'axios'
+import { t } from '@/i18n'
 
 export const verify_model = async (params: {
   model: string
@@ -13,7 +14,9 @@ export const verify_model = async (params: {
   await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: 'Sending test message...',
+      title: params.is_voice_input
+        ? t('views.common.actions.verify-model.progress.audio')
+        : t('views.common.actions.verify-model.progress.test'),
       cancellable: true
     },
     async (_progress, token) => {
@@ -23,7 +26,12 @@ export const verify_model = async (params: {
               {
                 role: 'user',
                 content: [
-                  { type: 'text', text: 'Transcribe this audio.' },
+                  {
+                    type: 'text',
+                    text: t(
+                      'views.common.actions.verify-model.prompt.transcribe'
+                    )
+                  },
                   {
                     type: 'input_audio',
                     input_audio: { data: '', format: 'wav' }
@@ -34,7 +42,7 @@ export const verify_model = async (params: {
           : [
               {
                 role: 'user',
-                content: 'Test'
+                content: t('views.common.actions.verify-model.prompt.test')
               }
             ]
 
@@ -76,49 +84,68 @@ export const verify_model = async (params: {
     return false
   }
 
-  const title = 'Test message failed'
-  let detail = 'Error'
+  const title = params.is_voice_input
+    ? t('views.common.actions.verify-model.warning.audio.title')
+    : t('views.common.actions.verify-model.warning.test.title')
+  let detail = params.is_voice_input
+    ? t('views.common.actions.verify-model.warning.audio.detail')
+    : t('views.common.actions.verify-model.warning.test.detail')
 
   if (axios.isAxiosError(error)) {
     if (error.response) {
       const status = error.response.status
-      let reason = 'Server Error'
+      let reason = t('views.common.actions.verify-model.status.server-error')
       switch (status) {
         case 400:
-          reason = 'Bad Request'
+          reason = t('views.common.actions.verify-model.status.bad-request')
           break
         case 401:
-          reason = 'Authentication Error'
+          reason = t('views.common.actions.verify-model.status.authentication')
           break
         case 403:
-          reason = 'Access Forbidden'
+          reason = t('views.common.actions.verify-model.status.forbidden')
           break
         case 404:
-          reason = 'Model not found'
+          reason = t('views.common.actions.verify-model.status.not-found')
           break
         case 429:
-          reason = 'Rate limit exceeded'
+          reason = t('views.common.actions.verify-model.status.rate-limit')
           break
         case 500:
-          reason = 'Internal Server Error'
+          reason = t('views.common.actions.verify-model.status.internal')
           break
         case 502:
-          reason = 'Bad Gateway'
+          reason = t('views.common.actions.verify-model.status.bad-gateway')
           break
         case 503:
-          reason = 'Service Unavailable'
+          reason = t(
+            'views.common.actions.verify-model.status.service-unavailable'
+          )
           break
       }
-      detail = `Status code: ${status} (${reason})`
+      detail = params.is_voice_input
+        ? t('views.common.actions.verify-model.error.audio-status-code', {
+            status: status.toString(),
+            reason
+          })
+        : t('views.common.actions.verify-model.error.status-code', {
+            status: status.toString(),
+            reason
+          })
     } else if (error.code) {
-      detail = error.message
+      detail = params.is_voice_input
+        ? t('views.common.actions.verify-model.error.audio-error', {
+            error: error.message
+          })
+        : error.message
     }
   }
 
+  const use_anyway = t('views.common.actions.verify-model.action.use-anyway')
   const choice = await vscode.window.showWarningMessage(
     title,
     { modal: true, detail },
-    'Use Anyway'
+    use_anyway
   )
-  return choice == 'Use Anyway'
+  return choice == use_anyway
 }
