@@ -42,7 +42,7 @@ In the world of AI coding, agents like Codex or Claude Code rely on "tool callin
 
 CWC flips this!
 
-Here, context is managed by you, directly in the native file explorer so the model has everything it needs without a single tool call.
+Here, selected in the explorer view files are sent to the model so it has everything it needs to do the task without a single tool call.
 
 > [!TIP]
 > Even if you're not sure what should be in context, the tool offers both 'intelligent' and static ways to find all the necessary files, including valuable examples.
