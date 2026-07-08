@@ -305,6 +305,24 @@ export const configurations = {
     hu: 'Commit Üzenetek',
     bg: 'Съобщения за commit'
   },
+  'configurations.tool.voice-input': {
+    en: 'Voice Input',
+    pl: 'Wprowadzanie głosowe',
+    'zh-cn': '语音输入',
+    ja: '音声入力',
+    'zh-tw': '語音輸入',
+    de: 'Spracheingabe',
+    es: 'Entrada de voz',
+    fr: 'Saisie vocale',
+    'pt-br': 'Entrada de voz',
+    ru: 'Голосовой ввод',
+    ko: '음성 입력',
+    it: 'Input vocale',
+    tr: 'Sesli giriş',
+    cs: 'Hlasový vstup',
+    hu: 'Hangbemenet',
+    bg: 'Гласово въвеждане'
+  },
   'configurations.intelligent-update.auto-run.title': {
     en: 'Auto-Run Intelligent Update',
     pl: 'Automatycznie uruchom inteligentną integrację',

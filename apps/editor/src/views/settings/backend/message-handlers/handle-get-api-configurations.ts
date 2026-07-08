@@ -28,6 +28,8 @@ export const handle_get_api_configurations = async (
     await providers_manager.get_default_commit_messages_api_configuration()
   const def_frf =
     await providers_manager.get_default_find_relevant_files_api_configuration()
+  const def_vi =
+    await providers_manager.get_default_voice_input_api_configuration()
 
   provider.postMessage({
     command: 'API_CONFIGURATIONS',
@@ -37,6 +39,7 @@ export const handle_get_api_configurations = async (
       'intelligent-update': def_iu ? get_api_configuration_id(def_iu) : null,
       'commit-messages': def_cm ? get_api_configuration_id(def_cm) : null,
       'find-relevant-files': def_frf ? get_api_configuration_id(def_frf) : null,
+      'voice-input': def_vi ? get_api_configuration_id(def_vi) : null,
       'edit-files': null
     }
   })

@@ -266,6 +266,21 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                     unset: t('configurations.action.unset-default')
                   }}
                 />
+                <DefaultConfigurationSelector
+                  title={t('configurations.tool.voice-input')}
+                  value={props.defaults['voice-input'] || null}
+                  configurations={selector_configurations}
+                  on_unset={() =>
+                    props.on_set_default_api_configuration('voice-input', null)
+                  }
+                  on_select={() =>
+                    props.on_select_default_api_configuration('voice-input')
+                  }
+                  translations={{
+                    select: t('configurations.action.select-default'),
+                    unset: t('configurations.action.unset-default')
+                  }}
+                />
               </>
             )}
           </UiGroup>

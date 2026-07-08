@@ -64,7 +64,7 @@ export const handle_select_default_api_configuration = async (
       await handle_set_default_api_configuration(
         provider,
         selected.api_configuration_id,
-        message.tool_name
+        message.api_feature
       )
     }
     quick_pick.hide()
