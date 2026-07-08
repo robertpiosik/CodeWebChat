@@ -13,7 +13,7 @@
 
 Code Web Chat is a chatbot-first AI coding. **Start in VS Code (Cursor, Antigravity, VSCodium, etc.) and continue in your favorite chatbot** or get the job done without leaving the editor!
 
-It's free, built independently and has zero telemetry.
+It's free, built independently and doesn't collect any telemetry.
 
 > [!TIP]
 > Elevate your workflow with smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)).
