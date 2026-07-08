@@ -13,7 +13,7 @@
 
 Code Web Chat (CWC) is a chatbot-first AI coding tool. **Start in VS Code (Cursor, Antigravity, VSCodium, etc.), then continue in ChatGPT, Gemini, Claude (plus 15+ more)** or get the job done without leaving your editor!
 
-It's free, fully-featured and doesn't collect any telemetry.
+It's free, fully-featured and doesn't collect telemetry.
 
 Get involved! Join our [discord server](https://discord.gg/KJySXsrSX5).
 
@@ -47,7 +47,7 @@ CWC flips this!
 Here, selected in the explorer view files are sent to the model with your instructions so it has everything it needs to do the task. Get accurate multi-file edits in record time!
 
 > [!TIP]
-> **Not sure what files to select?** Search files using phrase, keywords and **natural language**.
+> **Not sure what files to select?** You can search files using phrase, keywords or **natural language** globally or within the selected folder.
 
 **Generated prompts are structured as follows:**
 
@@ -116,17 +116,6 @@ Find a complete set of relevant files according to the following query:
 
 </details>
 
-## Prompt caching
-
-With first-class support for [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching), CWC enables unmatched cost-efficiency and speed.
-
-- Preserve your chatbot quota for longer
-- Lower input token costs by up to 90%
-- Reduce latency by up to 80%
-
-**How it works?** \
-Selected files are ordered by modification and selection recency, and because task instructions are always placed at the very end of the prompt, it's submitted largery unchanged across tasks!
-
 ## Enabling autofill
 
 Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree/dev/apps/browser) and never copy and paste again.
@@ -163,24 +152,15 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 > [!NOTE]
 > Use [forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) of port _55155_ when using remote machine via SSH.
 
-## Calling APIs
+## Prompt caching
 
-All the essential API tools to get the job done. Bring Your Own Key (BYOK) for a model provider of choice. Use self-hosted model provider like [Ollama](https://ollama.com/search) or [LM Studio](https://lmstudio.ai/).
-
-- **Intelligent Update**—Integrate changes from malformed responses.
-- **Edit Files**—Pair-programming using natural language instructions.
-- **Code at Cursor**—Accurate inline code from reasoning models.
-- **Find Relevant Files**—Find files using natural language description.
-- **Commit Messages**—Meaningful summaries of changes in your style.
-- **Voice Input**—Transcribe speech to text in the prompt field.
+CWC orders selected files by modification recency. This, combined with its default single-turn interactions, creates a workflow that is extremely cache-friendly. Make your chatbot quota last longer, lower input token costs by up to 90%, and reduce latency by up to 80%.
 
 ## Privacy
 
-The extension doesn’t communicate with any server for so-called telemetry.
-
-The editor-browser communication for chatbot autofill runs on local WebSockets.
-
-When calling APIs, requests are sent directly to the configured model providers.
+- zero telemetry
+- browser communication over localhost
+- model providers called directly
 
 ## Commands
 
