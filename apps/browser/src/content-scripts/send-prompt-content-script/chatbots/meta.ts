@@ -21,6 +21,7 @@ export const meta: Chatbot = {
       }
       check_for_element()
     })
+    await new Promise((resolve) => setTimeout(resolve, 500))
   },
   enter_message: async (params) => {
     const input_element = document.querySelector(
