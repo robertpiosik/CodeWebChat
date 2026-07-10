@@ -12,6 +12,7 @@ import { translations as new_file } from './new-file'
 import { translations as new_folder } from './new-folder'
 import { translations as rename } from './rename'
 import { translations as rate } from './rate'
+import { translations as select_unstaged_files } from './select-unstaged-files'
 
 export const translations = {
   ...generate_commit_message,
@@ -27,5 +28,6 @@ export const translations = {
   ...new_file,
   ...new_folder,
   ...rename,
-  ...rate
+  ...rate,
+  ...select_unstaged_files
 }

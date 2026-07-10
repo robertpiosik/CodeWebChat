@@ -101,7 +101,7 @@ export const select_unstaged_files_command = (
                     iconPath: new vscode.ThemeIcon(
                       'git-pull-request-go-to-changes'
                     ),
-                    tooltip: t('command.commit-message.show-diff')
+                    tooltip: t('command.select-unstaged-files.show-diff')
                   },
                   {
                     iconPath: new vscode.ThemeIcon('go-to-file'),
@@ -115,10 +115,8 @@ export const select_unstaged_files_command = (
           const quick_pick = vscode.window.createQuickPick<
             vscode.QuickPickItem & { file_path: string }
           >()
-          quick_pick.title = t('command.context-restoration.unstaged.title')
-          quick_pick.placeholder = t(
-            'command.context-restoration.unstaged.include'
-          )
+          quick_pick.title = t('command.select-unstaged-files.title')
+          quick_pick.placeholder = t('command.select-unstaged-files.include')
           quick_pick.canSelectMany = true
           quick_pick.items = quick_pick_items
           quick_pick.ignoreFocusOut = true
@@ -144,7 +142,7 @@ export const select_unstaged_files_command = (
                 const uri = vscode.Uri.file(e.item.file_path)
                 vscode.window.showTextDocument(uri, { preview: true })
               } else if (
-                e.button.tooltip == t('command.commit-message.show-diff')
+                e.button.tooltip == t('command.select-unstaged-files.show-diff')
               ) {
                 const uri = vscode.Uri.file(e.item.file_path)
                 await vscode.commands.executeCommand('git.openChange', uri)
@@ -191,15 +189,15 @@ export const select_unstaged_files_command = (
             if (!is_identical) {
               const quick_pick_options = [
                 {
-                  label: t('command.context-restoration.action.replace.label'),
+                  label: t('command.select-unstaged-files.replace'),
                   description: t(
-                    'command.context-restoration.action.replace.description'
+                    'command.select-unstaged-files.replace-description'
                   )
                 },
                 {
-                  label: t('command.context-restoration.action.merge.label'),
+                  label: t('command.select-unstaged-files.merge'),
                   description: t(
-                    'command.context-restoration.action.merge.description'
+                    'command.select-unstaged-files.merge-description'
                   )
                 }
               ]
@@ -212,7 +210,7 @@ export const select_unstaged_files_command = (
               const quick_pick_merge = vscode.window.createQuickPick()
               quick_pick_merge.items = quick_pick_options
               quick_pick_merge.placeholder = t(
-                'command.context-restoration.unstaged.apply',
+                'command.select-unstaged-files.apply',
                 {
                   count: selected_paths.length
                 }
@@ -260,10 +258,7 @@ export const select_unstaged_files_command = (
                   choice.label
                 )
 
-                if (
-                  choice.label ==
-                  t('command.context-restoration.action.merge.label')
-                ) {
+                if (choice.label == t('command.select-unstaged-files.merge')) {
                   paths_to_apply = [
                     ...new Set([...currently_checked, ...selected_paths])
                   ]
