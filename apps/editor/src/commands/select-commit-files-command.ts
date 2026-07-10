@@ -39,7 +39,7 @@ export const select_commit_files_command = (
 
           if (!log_output) {
             vscode.window.showInformationMessage(
-              t('command.context-restoration.commit.no-commits')
+              t('command.select-commit-files.no-commits')
             )
             return
           }
@@ -57,11 +57,9 @@ export const select_commit_files_command = (
           const quick_pick = vscode.window.createQuickPick<
             vscode.QuickPickItem & { hash: string }
           >()
-          quick_pick.title = t('command.context-restoration.commit.title')
+          quick_pick.title = t('command.select-commit-files.title')
           quick_pick.items = commits
-          quick_pick.placeholder = t(
-            'command.context-restoration.commit.select'
-          )
+          quick_pick.placeholder = t('command.select-commit-files.select')
           quick_pick.matchOnDetail = true
           quick_pick.buttons = [
             { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
@@ -126,7 +124,7 @@ export const select_commit_files_command = (
 
           if (!files_output) {
             vscode.window.showInformationMessage(
-              t('command.context-restoration.commit.no-modified')
+              t('command.select-commit-files.no-modified')
             )
             continue
           }
@@ -151,7 +149,7 @@ export const select_commit_files_command = (
 
           if (valid_files.length == 0) {
             vscode.window.showInformationMessage(
-              t('command.context-restoration.commit.no-valid')
+              t('command.select-commit-files.no-valid')
             )
             continue
           }
@@ -190,7 +188,7 @@ export const select_commit_files_command = (
             quick_pick_files.items = file_items
             quick_pick_files.selectedItems = file_items.filter((i) => i.picked)
             quick_pick_files.title = t(
-              'command.context-restoration.commit.files-modified',
+              'command.select-commit-files.files-modified',
               {
                 hash: selected_commit.hash.substring(0, 7)
               }
@@ -205,7 +203,7 @@ export const select_commit_files_command = (
                 total > 0
                   ? ` (totalling ${display_token_count(total)} tokens)`
                   : ''
-              quick_pick_files.placeholder = `${t('command.context-restoration.commit.select-files')}${total_text}`
+              quick_pick_files.placeholder = `${t('command.select-commit-files.select-files')}${total_text}`
             }
             update_placeholder()
             quick_pick_files.onDidChangeSelection(update_placeholder)
@@ -272,17 +270,15 @@ export const select_commit_files_command = (
               if (!is_identical) {
                 const quick_pick_options = [
                   {
-                    label: t(
-                      'command.context-restoration.action.replace.label'
-                    ),
+                    label: t('command.select-commit-files.replace'),
                     description: t(
-                      'command.context-restoration.action.replace.description'
+                      'command.select-commit-files.replace-description'
                     )
                   },
                   {
-                    label: t('command.context-restoration.action.merge.label'),
+                    label: t('command.select-commit-files.merge'),
                     description: t(
-                      'command.context-restoration.action.merge.description'
+                      'command.select-commit-files.merge-description'
                     )
                   }
                 ]
@@ -295,7 +291,7 @@ export const select_commit_files_command = (
                 const quick_pick_merge = vscode.window.createQuickPick()
                 quick_pick_merge.items = quick_pick_options
                 quick_pick_merge.placeholder = t(
-                  'command.context-restoration.commit.apply',
+                  'command.select-commit-files.apply',
                   {
                     hash: selected_commit.hash.substring(0, 7)
                   }
@@ -343,10 +339,7 @@ export const select_commit_files_command = (
                     choice.label
                   )
 
-                  if (
-                    choice.label ==
-                    t('command.context-restoration.action.merge.label')
-                  ) {
+                  if (choice.label == t('command.select-commit-files.merge')) {
                     paths_to_apply = [
                       ...new Set([...currently_checked, ...selected_paths])
                     ]
