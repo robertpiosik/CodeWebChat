@@ -10,6 +10,7 @@ import {
 } from './migrations'
 import {
   apply_chat_response_command,
+  copy_context_commands,
   save_file_selection_command,
   restore_file_selection_command,
   add_file_to_context_command,
@@ -100,6 +101,7 @@ export const activate = async (context: vscode.ExtensionContext) => {
   const settings_provider = new SettingsProvider(context.extensionUri, context)
 
   context.subscriptions.push(
+    ...copy_context_commands(workspace_provider, open_editors_provider),
     open_file_from_workspace_command(open_editors_provider),
     close_editor_command(),
     close_all_editors_command(),

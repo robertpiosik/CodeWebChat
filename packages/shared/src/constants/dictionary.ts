@@ -122,7 +122,6 @@ export const dictionary = {
     NOTHING_IN_CONTEXT_TO_SAVE: 'There is nothing in your context to save.',
     CONTEXTS_FILE_NOT_VALID_ARRAY:
       'Contexts file is not a valid array. Starting with empty contexts list.',
-    NO_FILES_SELECTED: 'No files selected or open.',
     NOTHING_SELECTED_IN_CONTEXT: 'Nothing is selected in context.',
     NO_OPEN_EDITORS_SELECTED: 'No open editors selected.',
     NO_EDITOR_OPEN: 'No editor is open.',
