@@ -1,7 +1,5 @@
 import AIStudio from '../../../../assets/icons/ai-studio.svg'
 import AtSign from '../../../../assets/icons/at-sign.svg'
-import BuyMeACoffeeLogo from '../../../../assets/icons/buy-me-a-coffee-logo.svg'
-import BuyMeACoffeeText from '../../../../assets/icons/buy-me-a-coffee-text.svg'
 import Arena from '../../../../assets/icons/arena.svg'
 import ChatGPT from '../../../../assets/icons/openai.svg'
 import Claude from '../../../../assets/icons/claude.svg'
@@ -32,8 +30,6 @@ export namespace Icon {
   export type Variant =
     | 'AI_STUDIO'
     | 'AT_SIGN'
-    | 'BUY_ME_A_COFFEE_LOGO'
-    | 'BUY_ME_A_COFFEE_TEXT'
     | 'CHATGPT'
     | 'CLAUDE'
     | 'CODE_WEB_CHAT_LOGO'
@@ -74,12 +70,6 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
       break
     case 'AT_SIGN':
       icon = <AtSign />
-      break
-    case 'BUY_ME_A_COFFEE_LOGO':
-      icon = <BuyMeACoffeeLogo />
-      break
-    case 'BUY_ME_A_COFFEE_TEXT':
-      icon = <BuyMeACoffeeText />
       break
     case 'CHATGPT':
       icon = <ChatGPT />
