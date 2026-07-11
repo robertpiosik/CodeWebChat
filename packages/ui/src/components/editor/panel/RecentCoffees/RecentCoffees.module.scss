@@ -84,11 +84,11 @@
   }
 }
 
-.donations {
+.coffees {
   padding: 4px 12px 12px 12px;
 }
 
-.donations__inner {
+.coffees__inner {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -97,7 +97,7 @@
     opacity: var(--dimmed-opacity);
   }
 
-  &__donation {
+  &__coffee {
     display: flex;
     flex-direction: column;
     gap: 4px;

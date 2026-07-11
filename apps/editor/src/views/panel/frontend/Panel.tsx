@@ -21,9 +21,9 @@ import { LayoutContext } from './contexts/LayoutContext'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Layout } from './components/Layout/Layout'
 import { ResponsePreviewFooter as UiResponsePreviewFooter } from '@ui/components/editor/panel/ResponsePreviewFooter'
-import { Donations as UiDonations } from '@ui/components/editor/panel/Donations/Donations'
-import { use_latest_donations } from './hooks/latest-donations'
-import { DonationsFooter } from './components/donations/DonationsFooter'
+import { RecentCoffees as UiRecentCoffees } from '@ui/components/editor/panel/RecentCoffees/RecentCoffees'
+import { use_recent_coffees } from './hooks/recent-coffees'
+import { RecentCoffeesFooter } from './components/recent-coffees/RecentCoffeesFooter'
 import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
 import { use_modal_manager } from './hooks/use-modal-manager'
 import { use_response_history } from './hooks/panel/use-response-history'
@@ -152,8 +152,8 @@ export const Panel = () => {
     address: string
   }>()
 
-  const { viewing_donations, set_viewing_donations, ...donations_state } =
-    use_latest_donations()
+  const { viewing_coffees, set_viewing_coffees, ...coffees_state } =
+    use_recent_coffees()
 
   if (
     ask_about_context_instructions === undefined ||
@@ -500,7 +500,7 @@ export const Panel = () => {
                 }}
                 on_task_forward={handle_task_forward}
                 is_setup_complete={is_setup_complete}
-                on_donate_click={() => set_viewing_donations(true)}
+                on_donate_click={() => set_viewing_coffees(true)}
               />
             </div>
           </Layout>
@@ -593,23 +593,23 @@ export const Panel = () => {
           </div>
         )}
 
-        {viewing_donations && (
+        {viewing_coffees && (
           <div className={styles.slot}>
             <UiPage
-              title="Donations"
-              on_back_click={() => set_viewing_donations(false)}
+              title="Recent Coffees"
+              on_back_click={() => set_viewing_coffees(false)}
               footer_slot={
-                <DonationsFooter
-                  on_close={() => set_viewing_donations(false)}
+                <RecentCoffeesFooter
+                  on_close={() => set_viewing_coffees(false)}
                 />
               }
             >
-              <UiDonations
-                donations={donations_state.donations}
-                is_fetching={donations_state.is_fetching}
-                is_revalidating={donations_state.is_revalidating}
-                on_fetch_next_page={donations_state.on_fetch_next_page}
-                has_more={donations_state.has_more}
+              <UiRecentCoffees
+                coffees={coffees_state.coffees}
+                is_fetching={coffees_state.is_fetching}
+                is_revalidating={coffees_state.is_revalidating}
+                on_fetch_next_page={coffees_state.on_fetch_next_page}
+                has_more={coffees_state.has_more}
                 on_show_qr_code={set_active_qr_wallet}
               />
             </UiPage>

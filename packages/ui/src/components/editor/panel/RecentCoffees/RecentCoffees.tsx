@@ -1,4 +1,4 @@
-import styles from './Donations.module.scss'
+import styles from './RecentCoffees.module.scss'
 import { useEffect, useRef, useState } from 'react'
 import cn from 'classnames'
 import { Scrollable } from '../../common/Scrollable'
@@ -68,13 +68,13 @@ const parse_support_message = (
   return { username: href ? username : message, href, after_text: '' }
 }
 
-type Donation = {
+type Coffee = {
   support_message: string
   support_note: string
 }
 
-export type DonationsProps = {
-  donations?: Donation[]
+export type RecentCoffeesProps = {
+  coffees?: Coffee[]
   is_fetching?: boolean
   is_revalidating?: boolean
   on_fetch_next_page: () => void
@@ -82,7 +82,7 @@ export type DonationsProps = {
   on_show_qr_code: (wallet: { name: string; address: string }) => void
 }
 
-export const Donations: React.FC<DonationsProps> = (props) => {
+export const RecentCoffees: React.FC<RecentCoffeesProps> = (props) => {
   const observer_target = useRef<HTMLDivElement>(null)
   const [is_platforms_collapsed, set_platforms_collapsed] = useState(true)
   const [is_wallets_collapsed, set_wallets_collapsed] = useState(true)
@@ -109,10 +109,6 @@ export const Donations: React.FC<DonationsProps> = (props) => {
     {
       label: 'Buy Me A Coffee ↗',
       url: 'https://buymeacoffee.com/robertpiosik'
-    },
-    {
-      label: 'GitHub Sponsors ↗',
-      url: 'https://github.com/sponsors/robertpiosik'
     },
     { label: 'PayPal ↗', url: 'https://www.paypal.com/paypalme/robertpiosik' },
     {
@@ -147,7 +143,7 @@ export const Donations: React.FC<DonationsProps> = (props) => {
         <div className={styles.container}>
           <div className={styles.about}>
             Hey there! Donating is a great way to show your support for the
-            project. Thank you.
+            project. Thank you!
           </div>
           <div className={styles.platforms}>
             <Fieldset
@@ -197,24 +193,24 @@ export const Donations: React.FC<DonationsProps> = (props) => {
             </Fieldset>
           </div>
 
-          <div className={styles.donations}>
+          <div className={styles.coffees}>
             {props.is_fetching ? (
-              <div className={styles.donations__inner}>
-                <div className={styles.donations__inner__donation}>
+              <div className={styles.coffees__inner}>
+                <div className={styles.coffees__inner__coffee}>
                   <div
                     className={styles.skeleton}
                     style={{ width: '25%', height: '14px' }}
                   />
                   <div className={styles.skeleton} style={{ height: '30px' }} />
                 </div>
-                <div className={styles.donations__inner__donation}>
+                <div className={styles.coffees__inner__coffee}>
                   <div
                     className={styles.skeleton}
                     style={{ width: '30%', height: '14px' }}
                   />
                   <div className={styles.skeleton} style={{ height: '30px' }} />
                 </div>
-                <div className={styles.donations__inner__donation}>
+                <div className={styles.coffees__inner__coffee}>
                   <div
                     className={styles.skeleton}
                     style={{ width: '20%', height: '14px' }}
@@ -225,25 +221,20 @@ export const Donations: React.FC<DonationsProps> = (props) => {
             ) : (
               <>
                 <div
-                  className={cn(styles.donations__inner, {
-                    [styles['donations__inner--revalidating']]:
+                  className={cn(styles.coffees__inner, {
+                    [styles['coffees__inner--revalidating']]:
                       props.is_revalidating
                   })}
                 >
-                  {props.donations?.map((donation, index) => (
-                    <div
-                      className={styles.donations__inner__donation}
-                      key={index}
-                    >
+                  {props.coffees?.map((coffee, index) => (
+                    <div className={styles.coffees__inner__coffee} key={index}>
                       {(() => {
                         const { username, href, after_text } =
-                          parse_support_message(donation.support_message)
+                          parse_support_message(coffee.support_message)
                         const title = `${username} ${after_text}`
                         return (
                           <div
-                            className={
-                              styles.donations__inner__donation__header
-                            }
+                            className={styles.coffees__inner__coffee__header}
                             title={title}
                           >
                             <strong>
@@ -259,11 +250,9 @@ export const Donations: React.FC<DonationsProps> = (props) => {
                           </div>
                         )
                       })()}
-                      {donation.support_note && (
-                        <div
-                          className={styles.donations__inner__donation__note}
-                        >
-                          {donation.support_note
+                      {coffee.support_note && (
+                        <div className={styles.coffees__inner__coffee__note}>
+                          {coffee.support_note
                             .split(/<br\s*\/?>/i)
                             .map((line, i, arr) => (
                               <span key={i}>
