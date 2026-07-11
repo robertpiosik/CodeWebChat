@@ -168,14 +168,14 @@ export const use_settings = (vscode: any) => {
       command: 'SET_DEFAULT_API_CONFIGURATION',
       api_feature,
       api_configuration_id
-    } as FrontendMessage)
+    })
   }
 
   const handle_select_default_api_configuration = (api_feature: ApiFeature) => {
     post_message(vscode, {
       command: 'SELECT_DEFAULT_API_CONFIGURATION',
       api_feature
-    } as FrontendMessage)
+    })
   }
 
   const handle_reorder_api_configurations = (reordered: ApiConfiguration[]) => {

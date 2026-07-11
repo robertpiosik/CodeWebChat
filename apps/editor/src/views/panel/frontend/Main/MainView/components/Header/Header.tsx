@@ -9,7 +9,6 @@ import {
   api_prompt_type_labels,
   web_prompt_type_labels
 } from '../../prompt-type-labels'
-import { SettingsButton as UiSettingsButton } from '@ui/components/editor/panel/SettingsButton'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 import { use_translation } from '../../../../i18n/use-translation'
 
@@ -21,9 +20,7 @@ type Props = {
   api_prompt_type: ApiPromptType
   on_web_prompt_type_change: (prompt_type: WebPromptType) => void
   on_api_prompt_type_change: (prompt_type: ApiPromptType) => void
-  on_quick_action_click: (command: string) => void
   are_keyboard_shortcuts_disabled: boolean
-  is_setup_complete: boolean
 }
 
 const MENU_MAX_HEIGHT = 'calc(100vh - 38px)'
@@ -121,12 +118,6 @@ export const Header: React.FC<Props> = (props) => {
             />
           )}
         </div>
-
-        <UiSettingsButton
-          on_click={() => props.on_quick_action_click('codeWebChat.settings')}
-          title="Settings"
-          show_warning_icon={!props.is_setup_complete}
-        />
       </div>
     </div>
   )

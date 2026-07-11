@@ -5,11 +5,7 @@ import { Checkpoints as UiCheckpoints } from '@ui/components/editor/panel/Checkp
 import { ModeButton as UiModeButton } from '@ui/components/editor/panel/ModeButton'
 import cn from 'classnames'
 import { post_message } from '../utils/post-message'
-import {
-  Checkpoint,
-  FrontendMessage,
-  BackendMessage
-} from '@/views/panel/types/messages'
+import { Checkpoint, BackendMessage } from '@/views/panel/types/messages'
 import { Responses as UiResponses } from '@ui/components/editor/panel/Responses'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Separator as UiSeparator } from '@ui/components/editor/panel/Separator'
@@ -19,7 +15,6 @@ import { IconButton as UiIconButton } from '@ui/components/editor/common/IconBut
 import { Tasks as UiTasks } from '@ui/components/editor/panel/Tasks'
 import { use_tasks } from './hooks/use-tasks'
 import { use_sticky_mode } from './hooks/use-sticky-mode'
-import { SettingsButton as UiSettingsButton } from '@ui/components/editor/panel/SettingsButton'
 
 type Props = {
   vscode: any
@@ -97,23 +92,16 @@ export const Home: React.FC<Props> = (props) => {
     return () => window.removeEventListener('mouseup', handle_mouse_up)
   }, [props.is_active, props.on_go_forward])
 
-  const handle_settings_click = () => {
-    post_message(props.vscode, {
-      command: 'EXECUTE_COMMAND',
-      command_id: 'codeWebChat.settings'
-    } as FrontendMessage)
-  }
-
   const handle_create_checkpoint_click = () => {
     post_message(props.vscode, {
       command: 'CREATE_CHECKPOINT'
-    } as FrontendMessage)
+    })
   }
 
   const handle_delete_all_checkpoints_click = () => {
     post_message(props.vscode, {
       command: 'CLEAR_ALL_CHECKPOINTS'
-    } as FrontendMessage)
+    })
   }
 
   return (
@@ -125,11 +113,6 @@ export const Home: React.FC<Props> = (props) => {
           </div>
           <span className={styles['header__text']}>{t('header.home')}</span>
         </div>
-        <UiSettingsButton
-          on_click={handle_settings_click}
-          label={t('header.settings')}
-          show_warning_icon={!props.is_setup_complete}
-        />
       </div>
 
       <UiScrollable on_scroll={handle_scroll} top_shadow>
@@ -205,7 +188,7 @@ export const Home: React.FC<Props> = (props) => {
                               command: 'PICK_TASKS_WORKSPACE',
                               roots,
                               active_root
-                            } as FrontendMessage)
+                            })
                           }}
                           title={t('home.folder')}
                         >

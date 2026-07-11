@@ -320,9 +320,7 @@ export const MainView: React.FC<Props> = (props) => {
         on_web_prompt_type_change={props.on_web_prompt_type_change}
         api_prompt_type={props.api_prompt_type}
         on_api_prompt_type_change={props.on_api_prompt_type_change}
-        on_quick_action_click={props.on_quick_action_click}
         are_keyboard_shortcuts_disabled={props.are_keyboard_shortcuts_disabled}
-        is_setup_complete={props.is_setup_complete}
       />
       <UiScrollable scroll_to_top_key={props.scroll_reset_key} top_shadow>
         <UiSeparator height={4} />

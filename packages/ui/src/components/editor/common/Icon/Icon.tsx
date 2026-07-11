@@ -23,7 +23,6 @@ import OpenRouter from '../../../../assets/icons/openrouter.svg'
 import OpenWebUI from '../../../../assets/icons/open-webui.svg'
 import Qwen from '../../../../assets/icons/qwen.svg'
 import Together from '../../../../assets/icons/together.svg'
-import Reddit from '../../../../assets/icons/reddit.svg'
 import X from '../../../../assets/icons/x.svg'
 import Yuanbao from '../../../../assets/icons/yuanbao.svg'
 import ZAI from '../../../../assets/icons/z-ai.svg'
@@ -56,7 +55,6 @@ export namespace Icon {
     | 'OPEN_WEBUI'
     | 'QWEN'
     | 'TOGETHER'
-    | 'REDDIT'
     | 'X'
     | 'META'
     | 'YUANBAO'
@@ -145,9 +143,6 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
       break
     case 'TOGETHER':
       icon = <Together />
-      break
-    case 'REDDIT':
-      icon = <Reddit />
       break
     case 'X':
       icon = <X />

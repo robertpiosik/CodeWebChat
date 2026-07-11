@@ -130,7 +130,7 @@ export const activate = async (context: vscode.ExtensionContext) => {
     ...search_files_commands(workspace_provider, context),
     select_definition_file_command(workspace_provider),
     open_url_command({
-      command: 'codeWebChat.documentation',
+      command: 'codeWebChat.visitWebsite',
       url: 'https://codeweb.chat/'
     }),
     open_url_command({

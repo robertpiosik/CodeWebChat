@@ -121,10 +121,9 @@
         "icon": "$(copy)"
       },
       {
-        "command": "codeWebChat.documentation",
-        "title": "%codeWebChat.documentation.title%",
-        "category": "Code Web Chat",
-        "icon": "$(book)"
+        "command": "codeWebChat.visitWebsite",
+        "title": "%codeWebChat.visitWebsite.title%",
+        "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.openRepository",
@@ -283,7 +282,8 @@
       {
         "command": "codeWebChat.settings",
         "title": "%codeWebChat.settings.title%",
-        "category": "Code Web Chat"
+        "category": "Code Web Chat",
+        "icon": "$(settings-gear)"
       },
       {
         "command": "codeWebChat.generateCommitMessage",
@@ -494,7 +494,7 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.documentation",
+          "command": "codeWebChat.visitWebsite",
           "when": "false"
         },
         {
@@ -653,14 +653,19 @@
           "group": "navigation@5"
         },
         {
-          "command": "codeWebChat.documentation",
+          "command": "codeWebChat.settings",
           "when": "view == codeWebChatView",
           "group": "navigation@1"
         },
         {
+          "command": "codeWebChat.visitWebsite",
+          "when": "view == codeWebChatView",
+          "group": "1_more@1"
+        },
+        {
           "command": "codeWebChat.openRepository",
           "when": "view == codeWebChatView",
-          "group": "navigation@2"
+          "group": "1_more@2"
         }
       ],
       "scm/title": [

@@ -134,6 +134,7 @@ import { DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD } from '@/constants/values'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { SharedContextState } from '@/context/shared-context-state'
 import { Checkpoint } from '@/features/checkpoints/types'
+import { webview_html } from '@/views/shared/utils/webview-html'
 
 export class PanelProvider implements vscode.WebviewViewProvider {
   public readonly extension_uri: vscode.Uri
@@ -880,7 +881,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
                   f.file_path == message.file_path &&
                   f.workspace_name == message.workspace_name
               )
-              if (file && file.type === 'relevant-file') {
+              if (file && file.type == 'relevant-file') {
                 file.is_checked = message.is_checked
                 this.send_message({
                   command: 'RESPONSE_HISTORY',
@@ -1087,48 +1088,12 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   }
 
   private _get_html_for_webview(webview: vscode.Webview) {
-    const resources_uri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this.extension_uri, 'resources')
-    )
-
-    const script_uri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this.extension_uri, 'out', 'view.js')
-    )
-
-    const style_uri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this.extension_uri, 'out', 'view.css')
-    )
-
-    const bangers_font_uri = webview.asWebviewUri(
-      vscode.Uri.joinPath(
-        this.extension_uri,
-        'resources',
-        'Bangers-Regular.ttf'
-      )
-    )
-
-    return `<!DOCTYPE html>
-<html lang="${vscode.env.language}">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="${style_uri}">
-  <script>
-    window.resources_uri = "${resources_uri}";
-  </script>
-  <style>
-    @font-face {
-      font-family: 'Bangers';
-      src: url('${bangers_font_uri}') format('truetype');
-    }
-    body { overflow: hidden; }
-  </style>
-</head>
-<body>
-  <div id="root"></div>
-  <script src="${script_uri}"></script>
-</body>
-</html>`
+    return webview_html({
+      webview,
+      extension_uri: this.extension_uri,
+      name: 'panel',
+      overflow_hidden: true
+    })
   }
 
   public add_text_at_cursor_position(text: string, chars_to_remove_before = 0) {

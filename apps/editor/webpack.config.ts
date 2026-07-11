@@ -8,7 +8,7 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 const config: ((env: any, argv: any) => webpack.Configuration)[] = [
   // Extension Configuration (Node.js environment)
   (env: any, argv: any): webpack.Configuration => {
-    const is_production = argv.mode === 'production'
+    const is_production = argv.mode == 'production'
     return {
       name: 'extension',
       mode: is_production ? 'production' : 'development',
@@ -95,7 +95,7 @@ const config: ((env: any, argv: any) => webpack.Configuration)[] = [
       mode: isProduction ? 'production' : 'development',
       target: 'web',
       entry: {
-        view: './src/views/panel/frontend/App.tsx',
+        panel: './src/views/panel/frontend/App.tsx',
         settings: './src/views/settings/frontend/App.tsx'
       },
       output: {

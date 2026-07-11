@@ -60,6 +60,7 @@ import {
   handle_pick_api_reasoning_effort
 } from './message-handlers'
 import { config_web_configuration_to_ui_format } from '@/utils/web-configuration-format-converters'
+import { webview_html } from '@/views/shared/utils/webview-html'
 
 export class SettingsProvider {
   private _webview_panel: vscode.WebviewPanel | undefined
@@ -300,39 +301,11 @@ export class SettingsProvider {
   }
 
   private _getHtmlForWebview(webview: vscode.Webview) {
-    const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'out', 'settings.js')
-    )
-    const styleUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'out', 'settings.css')
-    )
-
-    const bangers_font_uri = webview.asWebviewUri(
-      vscode.Uri.joinPath(
-        this._extensionUri,
-        'resources',
-        'Bangers-Regular.ttf'
-      )
-    )
-
-    return `<!DOCTYPE html>
-<html lang="${vscode.env.language}">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="${styleUri}">
-  <style>
-    @font-face {
-      font-family: 'Bangers';
-      src: url('${bangers_font_uri}') format('truetype');
-    }
-  </style>
-  <title>Settings</title>
-</head>
-<body>
-  <div id="root"></div>
-  <script src="${scriptUri}"></script>
-</body>
-</html>`
+    return webview_html({
+      webview,
+      extension_uri: this._extensionUri,
+      name: 'settings',
+      title: 'Settings'
+    })
   }
 }
