@@ -137,6 +137,10 @@ export const activate = async (context: vscode.ExtensionContext) => {
       command: 'codeWebChat.openRepository',
       url: 'https://github.com/robertpiosik/CodeWebChat'
     }),
+    open_url_command({
+      command: 'codeWebChat.followOnX',
+      url: 'https://x.com/CodeWebChat'
+    }),
     vscode.commands.registerCommand(
       'codeWebChat.settings',
       (section?: string) => {

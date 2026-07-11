@@ -46,18 +46,6 @@
       height: 16px;
     }
 
-    &--buy-me-a-coffee {
-      background-color: #f7d600;
-
-      > svg {
-        fill: black;
-      }
-
-      &:hover {
-        background-color: color-mix(in srgb, #f7d600, white 20%);
-      }
-    }
-
     &--reddit {
       background-color: #ff4500;
 

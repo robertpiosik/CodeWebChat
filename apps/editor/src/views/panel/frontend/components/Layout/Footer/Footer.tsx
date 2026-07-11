@@ -7,7 +7,6 @@ import { LayoutContext } from '../../../contexts/LayoutContext'
 import { use_translation } from '../../../i18n/use-translation'
 
 type Props = {
-  on_donate_click: () => void
   are_links_dimmed?: boolean
 }
 
@@ -64,20 +63,6 @@ export const Footer: React.FC<Props> = (props) => {
             [styles['footer__left--dimmed']]: props.are_links_dimmed
           })}
         >
-          <a
-            className={cn(
-              styles['footer__icon-button'],
-              styles['footer__icon-button--buy-me-a-coffee']
-            )}
-            href="#"
-            onClick={(e) => {
-              e.preventDefault()
-              props.on_donate_click()
-            }}
-            title="Donate"
-          >
-            <UiIcon variant="BUY_ME_A_COFFEE_LOGO" />
-          </a>
           <a
             className={cn(
               styles['footer__icon-button'],

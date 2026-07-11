@@ -12,6 +12,7 @@ import { Separator as UiSeparator } from '@ui/components/editor/panel/Separator'
 import { Tabs as UiTabs } from '@ui/components/editor/panel/Tabs'
 import { Translation, use_translation } from '../i18n/use-translation'
 import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
+import { DonateButton as UiDonateButton } from '@ui/components/editor/panel/DonateButton'
 import { Tasks as UiTasks } from '@ui/components/editor/panel/Tasks'
 import { use_tasks } from './hooks/use-tasks'
 import { use_sticky_mode } from './hooks/use-sticky-mode'
@@ -38,6 +39,7 @@ type Props = {
   on_task_forward: (text: string) => void
   is_setup_complete: boolean
   is_connected: boolean
+  on_donate_click: () => void
 }
 
 export const Home: React.FC<Props> = (props) => {
@@ -113,6 +115,10 @@ export const Home: React.FC<Props> = (props) => {
           </div>
           <span className={styles['header__text']}>{t('header.home')}</span>
         </div>
+        <UiDonateButton
+          label="Buy Me A Coffee"
+          on_click={props.on_donate_click}
+        />
       </div>
 
       <UiScrollable on_scroll={handle_scroll} top_shadow>

@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
   "description": "Chatbot-first AI coding (CWC)",
-  "version": "1.968.0",
+  "version": "1.969.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
@@ -130,6 +130,12 @@
         "title": "%codeWebChat.openRepository.title%",
         "category": "Code Web Chat",
         "icon": "$(github-alt)"
+      },
+      {
+        "command": "codeWebChat.followOnX",
+        "title": "%codeWebChat.followOnX.title%",
+        "category": "Code Web Chat",
+        "icon": "$(twitter)"
       },
       {
         "command": "codeWebChat.saveFileSelection",
@@ -482,6 +488,10 @@
           "when": "false"
         },
         {
+          "command": "codeWebChat.followOnX",
+          "when": "false"
+        },
+        {
           "command": "codeWebChat.duplicateWorkspace",
           "when": "false"
         },
@@ -666,6 +676,11 @@
           "command": "codeWebChat.openRepository",
           "when": "view == codeWebChatView",
           "group": "1_more@2"
+        },
+        {
+          "command": "codeWebChat.followOnX",
+          "when": "view == codeWebChatView",
+          "group": "1_more@3"
         }
       ],
       "scm/title": [
