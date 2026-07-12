@@ -108,14 +108,12 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
     return (
       <UiSection
         ref={ref}
-        title={t('sections.chatbots')}
-        subtitle={t('web-configurations.subtitle')}
+        title={t('chatbots.title')}
+        subtitle={t('chatbots.subtitle')}
       >
-        <UiNotice type="info">{t('web-configurations.notice')}</UiNotice>
+        <UiNotice type="info">{t('chatbots.notice')}</UiNotice>
         {props.web_configurations.length == 0 && (
-          <UiNotice type="warning">
-            {t('web-configurations.notice.missing')}
-          </UiNotice>
+          <UiNotice type="warning">{t('chatbots.notice.missing')}</UiNotice>
         )}
         <div
           ref={(el) =>
@@ -125,7 +123,7 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             )
           }
         >
-          <UiGroup title={t('web-configurations.configurations.title')}>
+          <UiGroup title={t('chatbots.configurations.title')}>
             {props.web_configurations && (
               <SortableList
                 items={props.web_configurations.map((c, index) => ({
@@ -142,9 +140,9 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                 on_add={props.on_add_web_configuration}
                 translations={{
                   add_title: t('action.add-new'),
-                  item_text: t('web-configurations.item'),
-                  items_text: t('web-configurations.items'),
-                  items_text_many: t('web-configurations.items-many')
+                  item_text: t('chatbots.item'),
+                  items_text: t('chatbots.items'),
+                  items_text_many: t('chatbots.items-many')
                 }}
                 render_content={(config) => {
                   const is_unnamed =
@@ -224,7 +222,7 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                   <>
                     <IconButton
                       codicon_icon="insert"
-                      title={t('web-configurations.action.insert')}
+                      title={t('chatbots.action.insert')}
                       on_click={() =>
                         props.on_add_web_configuration({
                           insertion_index: index
@@ -233,14 +231,14 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                     />
                     <IconButton
                       codicon_icon="edit"
-                      title={t('web-configurations.action.edit')}
+                      title={t('chatbots.action.edit')}
                       on_click={() =>
                         props.on_edit_web_configuration(config.id)
                       }
                     />
                     <IconButton
                       codicon_icon="trash"
-                      title={t('web-configurations.action.delete')}
+                      title={t('chatbots.action.delete')}
                       on_click={(e) => {
                         e.stopPropagation()
                         props.on_delete_web_configuration(config.id)
@@ -252,8 +250,8 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             )}
             {has_gemini && (
               <UiItem
-                title={t('web-configurations.gemini-user-id.title')}
-                description={t('web-configurations.gemini-user-id.description')}
+                title={t('chatbots.gemini-user-id.title')}
+                description={t('chatbots.gemini-user-id.description')}
                 slot_right={
                   <UiInput
                     type="number"
@@ -267,10 +265,8 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             )}
             {has_ai_studio && (
               <UiItem
-                title={t('web-configurations.ai-studio-user-id.title')}
-                description={t(
-                  'web-configurations.ai-studio-user-id.description'
-                )}
+                title={t('chatbots.ai-studio-user-id.title')}
+                description={t('chatbots.ai-studio-user-id.description')}
                 slot_right={
                   <UiInput
                     type="number"
@@ -289,10 +285,10 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             props.set_section_ref('section:chatbots:group:chatbots-other', el)
           }
         >
-          <UiGroup title={t('web-configurations.behavior.title')}>
+          <UiGroup title={t('chatbots.behavior.title')}>
             <UiItem
-              title={t('web-configurations.reuse-last-tab.title')}
-              description={t('web-configurations.reuse-last-tab.description')}
+              title={t('chatbots.reuse-last-tab.title')}
+              description={t('chatbots.reuse-last-tab.description')}
               slot_right={
                 <UiToggler
                   is_on={props.reuse_last_tab}

@@ -31,6 +31,7 @@ export type NavItem =
   | 'section:api-calls'
   | 'section:api-calls:group:model-providers'
   | 'section:api-calls:group:api-configurations'
+  | 'section:api-calls:group:api-defaults'
   | 'section:api-calls:group:api-behavior'
   | 'section:api-calls:group:system-instructions'
 
@@ -67,35 +68,39 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   },
   {
     id: 'section:chatbots',
-    label: 'sections.chatbots'
+    label: 'chatbots.title'
   },
   {
     id: 'section:chatbots:group:web-configurations',
-    label: 'web-configurations.configurations.title'
+    label: 'chatbots.configurations.title'
   },
   {
     id: 'section:chatbots:group:chatbots-other',
-    label: 'web-configurations.behavior.title'
+    label: 'chatbots.behavior.title'
   },
   {
     id: 'section:api-calls',
-    label: 'sections.api-configurations'
+    label: 'api-calls.title'
   },
   {
     id: 'section:api-calls:group:model-providers',
-    label: 'sections.model-providers'
+    label: 'api-calls.model-providers.title'
   },
   {
     id: 'section:api-calls:group:api-configurations',
-    label: 'configurations.title'
+    label: 'api-calls.configurations.title'
+  },
+  {
+    id: 'section:api-calls:group:api-defaults',
+    label: 'api-calls.configurations.default-configurations.title'
   },
   {
     id: 'section:api-calls:group:api-behavior',
-    label: 'configurations.behavior.title'
+    label: 'api-calls.configurations.behavior.title'
   },
   {
     id: 'section:api-calls:group:system-instructions',
-    label: 'configurations.system-instructions.title'
+    label: 'api-calls.configurations.system-instructions.title'
   }
 ]
 
@@ -193,6 +198,7 @@ export const Home: React.FC<Props> = (props) => {
     'section:api-calls': null,
     'section:api-calls:group:model-providers': null,
     'section:api-calls:group:api-configurations': null,
+    'section:api-calls:group:api-defaults': null,
     'section:api-calls:group:api-behavior': null,
     'section:api-calls:group:system-instructions': null
   })

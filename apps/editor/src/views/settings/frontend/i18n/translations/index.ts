@@ -1,17 +1,15 @@
 import { actions } from './actions'
 import { common } from './common'
 import { general } from './general'
-import { model_providers } from './model-providers'
 import { sections } from './sections'
-import { configurations } from './configurations'
-import { web_configurations } from './web-configurations'
+import { api_calls } from './api-calls'
+import { chatbots } from './chatbots'
 
 export const translations = {
   ...sections,
   ...actions,
   ...common,
   ...general,
-  ...model_providers,
-  ...configurations,
-  ...web_configurations
+  ...api_calls,
+  ...chatbots
 }

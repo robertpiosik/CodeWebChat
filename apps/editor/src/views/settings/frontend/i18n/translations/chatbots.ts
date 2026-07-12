@@ -1,5 +1,23 @@
-export const web_configurations = {
-  'web-configurations.configurations.title': {
+export const chatbots = {
+  'chatbots.title': {
+    en: 'Chatbots',
+    pl: 'Chatboty',
+    'zh-cn': '聊天机器人',
+    ja: 'チャットボット',
+    'zh-tw': '聊天機器人',
+    de: 'Chatbots',
+    es: 'Chatbots',
+    fr: 'Chatbots',
+    'pt-br': 'Chatbots',
+    ru: 'Чат-боты',
+    ko: '챗봇',
+    it: 'Chatbot',
+    tr: 'Sohbet Botları',
+    cs: 'Chatboti',
+    hu: 'Chatbotok',
+    bg: 'Чатботове'
+  },
+  'chatbots.configurations.title': {
     en: 'Configurations',
     pl: 'Konfiguracje',
     'zh-cn': '配置',
@@ -17,7 +35,7 @@ export const web_configurations = {
     hu: 'Konfigurációk',
     bg: 'Конфигурации'
   },
-  'web-configurations.subtitle': {
+  'chatbots.subtitle': {
     en: 'Autofill prompts via browser extension.',
     pl: 'Automatyczne uzupełnianie promptów przez rozszerzenie przeglądarki.',
     'zh-cn': '通过浏览器扩展自动填充提示词。',
@@ -36,7 +54,7 @@ export const web_configurations = {
     hu: 'Promptek automatikus kitöltése a böngészőbővítményen keresztül.',
     bg: 'Автоматично попълване на промптове чрез разширението за браузър.'
   },
-  'web-configurations.notice': {
+  'chatbots.notice': {
     en: 'Communication with the browser uses local WebSockets.',
     pl: 'Komunikacja z przeglądarką odbywa się przez lokalne WebSockety.',
     'zh-cn': '与浏览器的通信使用本地 WebSocket。',
@@ -54,7 +72,7 @@ export const web_configurations = {
     hu: 'A böngészővel való kommunikáció helyi WebSocketeket használ.',
     bg: 'Комуникацията с браузъра използва локални WebSocket.'
   },
-  'web-configurations.notice.missing': {
+  'chatbots.notice.missing': {
     en: 'No web configurations have been added yet.',
     pl: 'Nie dodano jeszcze żadnych konfiguracji webowych.',
     'zh-cn': '尚未添加网络配置。',
@@ -72,7 +90,7 @@ export const web_configurations = {
     hu: 'Még nincsenek hozzáadva webes konfigurációk.',
     bg: 'Все още няма добавени уеб конфигурации.'
   },
-  'web-configurations.action.insert': {
+  'chatbots.action.insert': {
     en: 'Insert a new configuration below/above',
     pl: 'Wstaw nową konfigurację poniżej/powyżej',
     'zh-cn': '在下方/上方插入新配置',
@@ -90,7 +108,7 @@ export const web_configurations = {
     hu: 'Új konfiguráció beszúrása alá/fölé',
     bg: 'Вмъкване на нова конфигурация отдолу/отгоре'
   },
-  'web-configurations.action.edit': {
+  'chatbots.action.edit': {
     en: 'Edit configuration',
     pl: 'Edytuj konfigurację',
     'zh-cn': '编辑配置',
@@ -108,7 +126,7 @@ export const web_configurations = {
     hu: 'Konfiguráció szerkesztése',
     bg: 'Редактиране на конфигурация'
   },
-  'web-configurations.action.duplicate': {
+  'chatbots.action.duplicate': {
     en: 'Duplicate configuration',
     pl: 'Duplikuj konfigurację',
     'zh-cn': '复制配置',
@@ -126,7 +144,7 @@ export const web_configurations = {
     hu: 'Konfiguráció duplikálása',
     bg: 'Дублиране на конфигурация'
   },
-  'web-configurations.action.delete': {
+  'chatbots.action.delete': {
     en: 'Delete configuration',
     pl: 'Usuń konfigurację',
     'zh-cn': '删除配置',
@@ -144,7 +162,7 @@ export const web_configurations = {
     hu: 'Konfiguráció törlése',
     bg: 'Изтриване на конфигурация'
   },
-  'web-configurations.item': {
+  'chatbots.item': {
     en: 'configuration',
     pl: 'konfiguracja',
     'zh-cn': '配置',
@@ -162,7 +180,7 @@ export const web_configurations = {
     hu: 'konfiguráció',
     bg: 'конфигурация'
   },
-  'web-configurations.items': {
+  'chatbots.items': {
     en: 'configurations',
     pl: 'konfiguracje',
     'zh-cn': '配置',
@@ -180,7 +198,7 @@ export const web_configurations = {
     hu: 'konfigurációk',
     bg: 'конфигурации'
   },
-  'web-configurations.items-many': {
+  'chatbots.items-many': {
     en: 'configurations',
     pl: 'konfiguracji',
     'zh-cn': '配置',
@@ -198,7 +216,7 @@ export const web_configurations = {
     hu: 'konfigurációk',
     bg: 'конфигурации'
   },
-  'web-configurations.behavior.title': {
+  'chatbots.behavior.title': {
     en: 'Behavior',
     pl: 'Zachowanie',
     'zh-cn': '行为',
@@ -216,7 +234,7 @@ export const web_configurations = {
     hu: 'Viselkedés',
     bg: 'Поведение'
   },
-  'web-configurations.reuse-last-tab.title': {
+  'chatbots.reuse-last-tab.title': {
     en: 'Reuse Last Tab',
     pl: 'Użyj ponownie ostatniej karty',
     'zh-cn': '重用最后一个标签页',
@@ -234,7 +252,7 @@ export const web_configurations = {
     hu: 'Utolsó Lap Újrafelhasználása',
     bg: 'Повторно използване на последния раздел'
   },
-  'web-configurations.reuse-last-tab.description': {
+  'chatbots.reuse-last-tab.description': {
     en: 'Whether should autofill prompt in the same browser tab.',
     pl: 'Czy automatycznie wypełniać prompt w tej samej karcie przeglądarki.',
     'zh-cn': '是否应在同一浏览器标签页中自动填充提示。',
@@ -253,7 +271,7 @@ export const web_configurations = {
     hu: 'Automatikus kitöltés ugyanazon a böngészőlapon.',
     bg: 'Дали да се попълва автоматично промпт в същия раздел на браузъра.'
   },
-  'web-configurations.gemini-user-id.title': {
+  'chatbots.gemini-user-id.title': {
     en: 'Gemini User ID',
     pl: 'ID użytkownika Gemini',
     'zh-cn': 'Gemini 用户 ID',
@@ -271,7 +289,7 @@ export const web_configurations = {
     hu: 'Gemini Felhasználói ID',
     bg: 'Gemini Потребителски ID'
   },
-  'web-configurations.gemini-user-id.description': {
+  'chatbots.gemini-user-id.description': {
     en: 'Run Gemini chatbot as non-default user. Check URL for the numeric ID.',
     pl: 'Uruchom chatbota Gemini jako użytkownik niedomyślny. Sprawdź URL pod kątem numerycznego ID.',
     'zh-cn': '以非默认用户身份运行 Gemini 聊天机器人。检查 URL 以获取数字 ID。',
@@ -291,7 +309,7 @@ export const web_configurations = {
     hu: 'Gemini futtatása nem alapértelmezettként. ID az URL-ben.',
     bg: 'Стартиране като друг потребител. Проверете URL за ID.'
   },
-  'web-configurations.ai-studio-user-id.title': {
+  'chatbots.ai-studio-user-id.title': {
     en: 'AI Studio User ID',
     pl: 'ID użytkownika AI Studio',
     'zh-cn': 'AI Studio 用户 ID',
@@ -309,7 +327,7 @@ export const web_configurations = {
     hu: 'AI Studio Felhasználói ID',
     bg: 'AI Studio Потребителски ID'
   },
-  'web-configurations.ai-studio-user-id.description': {
+  'chatbots.ai-studio-user-id.description': {
     en: 'Run AI Studio chatbot as non-default user. Check URL for the numeric ID.',
     pl: 'Uruchom chatbota AI Studio jako użytkownik niedomyślny. Sprawdź URL pod kątem numerycznego ID.',
     'zh-cn':
