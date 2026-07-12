@@ -1,4 +1,4 @@
-export const chatbots = {
+export const translations = {
   'chatbots.title': {
     en: 'Chatbots',
     pl: 'Chatboty',

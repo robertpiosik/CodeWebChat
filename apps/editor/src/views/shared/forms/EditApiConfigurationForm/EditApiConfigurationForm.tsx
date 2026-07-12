@@ -8,6 +8,7 @@ import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrolla
 import { Fieldset as UiFieldset } from '@ui/components/editor/panel/Fieldset'
 import { QuickPickButton as UiQuickPickButton } from '@ui/components/editor/common/QuickPickButton'
 import { TextButton as UiTextButton } from '@ui/components/editor/common/TextButton'
+import { use_translation } from '../../i18n/use-translation'
 
 type Props = {
   api_configuration: ApiConfiguration
@@ -22,6 +23,8 @@ type Props = {
 }
 
 export const EditApiConfigurationForm: React.FC<Props> = (props) => {
+  const { t } = use_translation()
+
   const [model_provider_name, set_model_provider_name] = useState(
     props.api_configuration.model_provider_name
   )
@@ -66,7 +69,10 @@ export const EditApiConfigurationForm: React.FC<Props> = (props) => {
     <UiScrollable top_shadow>
       <div className={styles.form}>
         <UiFieldset>
-          <UiField label="Model Provider" html_for="model-provider">
+          <UiField
+            label={t('edit-api-configuration-form.model-provider')}
+            html_for="model-provider"
+          >
             <UiQuickPickButton
               label={model_provider_name || '—'}
               onClick={(e) => {
@@ -76,7 +82,10 @@ export const EditApiConfigurationForm: React.FC<Props> = (props) => {
             />
           </UiField>
 
-          <UiField label="Model" html_for="model">
+          <UiField
+            label={t('edit-api-configuration-form.model')}
+            html_for="model"
+          >
             <UiQuickPickButton
               label={model || '—'}
               onClick={(e) => {
@@ -89,13 +98,13 @@ export const EditApiConfigurationForm: React.FC<Props> = (props) => {
           </UiField>
 
           <UiField
-            label="Reasoning Effort"
+            label={t('edit-api-configuration-form.reasoning-effort')}
             html_for="reasoning-effort"
-            info="Controls how much the model 'thinks'."
+            info={t('edit-api-configuration-form.reasoning-effort.info')}
             action={
               reasoning_effort !== undefined && (
                 <UiTextButton on_click={() => set_reasoning_effort(undefined)}>
-                  Unset
+                  {t('edit-api-configuration-form.unset')}
                 </UiTextButton>
               )
             }
@@ -122,22 +131,22 @@ export const EditApiConfigurationForm: React.FC<Props> = (props) => {
         </UiFieldset>
 
         <UiFieldset
-          label="Sampling parameters"
+          label={t('edit-api-configuration-form.sampling-parameters')}
           is_collapsed={is_sampling_collapsed}
           on_toggle_collapsed={() =>
             set_is_sampling_collapsed(!is_sampling_collapsed)
           }
         >
           <UiField
-            label="Temperature"
-            info="Influences response variety. Lower values are more predictable; higher values are more diverse."
+            label={t('edit-api-configuration-form.temperature')}
+            info={t('edit-api-configuration-form.temperature.info')}
             action={
               temperature !== undefined && (
                 <button
                   className={styles.clear}
                   onClick={() => set_temperature(undefined)}
                 >
-                  Clear
+                  {t('edit-api-configuration-form.clear')}
                 </button>
               )
             }

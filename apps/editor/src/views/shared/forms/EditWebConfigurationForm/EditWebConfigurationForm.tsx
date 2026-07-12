@@ -12,6 +12,7 @@ import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrolla
 import { Fieldset as UiFieldset } from '@ui/components/editor/panel/Fieldset'
 import { QuickPickButton as UiQuickPickButton } from '@ui/components/editor/common/QuickPickButton'
 import { TextButton as UiTextButton } from '@ui/components/editor/common/TextButton'
+import { use_translation, Translation } from '../../i18n/use-translation'
 
 type Props = {
   web_configuration: WebConfiguration
@@ -29,6 +30,8 @@ type Props = {
  * - initialize all selected web configurations below it,
  */
 export const EditWebConfigurationForm: React.FC<Props> = (props) => {
+  const { t } = use_translation()
+
   const [chatbot, set_chatbot] = useState(props.web_configuration.chatbot)
   const [name, set_name] = useState(props.web_configuration.name)
   const [temperature, set_temperature] = useState(
@@ -198,7 +201,10 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
       <div className={styles.form}>
         <UiFieldset>
           {chatbot && (
-            <UiField label="Chatbot" html_for="chatbot">
+            <UiField
+              label={t('edit-web-configuration-form.chatbot')}
+              html_for="chatbot"
+            >
               <UiQuickPickButton
                 label={chatbot}
                 onClick={(e) => {
@@ -211,12 +217,12 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
 
           {(Object.keys(models).length > 0 || chatbot == 'OpenRouter') && (
             <UiField
-              label="Model"
+              label={t('edit-web-configuration-form.model')}
               html_for="model"
               action={
                 model !== undefined && (
                   <UiTextButton on_click={() => set_model(undefined)}>
-                    Unset
+                    {t('edit-web-configuration-form.unset')}
                   </UiTextButton>
                 )
               }
@@ -235,12 +241,12 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
 
           {supports_user_provided_model && (
             <UiField
-              label="Model"
+              label={t('edit-web-configuration-form.model')}
               html_for="custom-model"
               action={
                 model !== undefined && (
                   <UiTextButton on_click={() => set_model(undefined)}>
-                    Unset
+                    {t('edit-web-configuration-form.unset')}
                   </UiTextButton>
                 )
               }
@@ -250,24 +256,28 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
                 type="text"
                 value={model || ''}
                 on_change={set_model}
-                placeholder="Enter model name"
+                placeholder={t('edit-web-configuration-form.model.placeholder')}
               />
             </UiField>
           )}
 
           {supports_reasoning_effort && (
             <UiField
-              label="Reasoning Effort"
+              label={t('edit-web-configuration-form.reasoning-effort')}
               html_for="reasoning-effort"
-              info={`Controls how much the model 'thinks'.${
-                chatbot == 'OpenRouter' ? ' Requires a reasoning model.' : ''
-              }`}
+              info={
+                chatbot == 'OpenRouter'
+                  ? t(
+                      'edit-web-configuration-form.reasoning-effort.info.openrouter'
+                    )
+                  : t('edit-web-configuration-form.reasoning-effort.info')
+              }
               action={
                 reasoning_effort !== undefined && (
                   <UiTextButton
                     on_click={() => set_reasoning_effort(undefined)}
                   >
-                    Unset
+                    {t('edit-web-configuration-form.unset')}
                   </UiTextButton>
                 )
               }
@@ -292,9 +302,9 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
 
           {supports_thinking_budget && !supports_reasoning_effort && (
             <UiField
-              label="Thinking Budget"
+              label={t('edit-web-configuration-form.thinking-budget')}
               html_for="thinking-budget"
-              info="Search for allowed min-max values."
+              info={t('edit-web-configuration-form.thinking-budget.info')}
             >
               <UiInput
                 id="thinking-budget"
@@ -304,7 +314,9 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
                   const num = parseInt(value, 10)
                   set_thinking_budget(isNaN(num) ? undefined : num)
                 }}
-                placeholder="e.g. 8000"
+                placeholder={t(
+                  'edit-web-configuration-form.thinking-budget.placeholder'
+                )}
                 on_key_down={(e) =>
                   !/[0-9]/.test(e.key) &&
                   e.key != 'Backspace' &&
@@ -314,25 +326,35 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
             </UiField>
           )}
 
-          <UiField label="Name" html_for="name">
+          <UiField
+            label={t('edit-web-configuration-form.name')}
+            html_for="name"
+          >
             <UiInput
               id="name"
               type="text"
               value={name && /^\(\d+\)$/.test(name) ? '' : name!}
               on_change={set_name}
-              placeholder={chatbot || 'Group'}
+              placeholder={
+                chatbot ||
+                t('edit-web-configuration-form.name.placeholder.group')
+              }
             />
           </UiField>
 
           {supports_port && (
             <UiField
-              label="Port"
+              label={t('edit-web-configuration-form.port')}
               html_for="port"
               info={
                 chatbot == 'Open WebUI' && (
                   <>
-                    Used for localhost. For networked instances leave empty and
-                    setup a proxy server for <code>http://openwebui/</code>.
+                    <Translation
+                      id="edit-web-configuration-form.port.info"
+                      components={{
+                        code: <code />
+                      }}
+                    />
                   </>
                 )
               }
@@ -345,7 +367,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
                   const num = parseInt(value, 10)
                   set_port(isNaN(num) ? undefined : num)
                 }}
-                placeholder="e.g. 3000"
+                placeholder={t('edit-web-configuration-form.port.placeholder')}
                 on_key_down={(e) =>
                   !/[0-9]/.test(e.key) &&
                   e.key != 'Backspace' &&
@@ -357,9 +379,12 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
 
           {supports_url_override && (
             <UiField
-              label={chatbot_config?.url_override_label || 'URL override'}
+              label={
+                chatbot_config?.url_override_label ||
+                t('edit-web-configuration-form.url-override')
+              }
               html_for="new-url"
-              info="Elevate your workflow with smart workspaces."
+              info={t('edit-web-configuration-form.url-override.info')}
             >
               <UiInput
                 id="new-url"
@@ -372,16 +397,18 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
 
           {supports_system_instructions && (
             <UiField
-              label="System Instructions"
+              label={t('edit-web-configuration-form.system-instructions')}
               html_for="instructions"
-              info="Optional tone and style instructions for the model."
+              info={t('edit-web-configuration-form.system-instructions.info')}
             >
               <UiTextarea
                 id="instructions"
                 value={system_instructions || ''}
                 on_change={set_system_instructions}
                 min_rows={2}
-                placeholder="You're a helpful coding assistant."
+                placeholder={t(
+                  'edit-web-configuration-form.system-instructions.placeholder'
+                )}
               />
             </UiField>
           )}
@@ -389,7 +416,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
 
         {chatbot &&
           Object.keys(chatbot_config?.supported_options || {}).length > 0 && (
-            <UiFieldset label="Options">
+            <UiFieldset label={t('edit-web-configuration-form.options')}>
               <div className={styles.options}>
                 {Object.entries(chatbot_config!.supported_options!).map(
                   ([key, label]) => {
@@ -412,10 +439,15 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
                         disabled={is_disabled_by_url_override}
                         disabled_reason={
                           is_disabled_by_url_override
-                            ? `Not supported with ${
+                            ? t(
+                                'edit-web-configuration-form.options.disabled-reason'
+                              ).replace(
+                                '{label}',
                                 chatbot_config!.url_override_label ||
-                                'Custom URL'
-                              }`
+                                  t(
+                                    'edit-web-configuration-form.options.custom-url'
+                                  )
+                              )
                             : undefined
                         }
                       />
@@ -428,7 +460,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
 
         {(supports_temperature || supports_top_p) && (
           <UiFieldset
-            label="Sampling parameters"
+            label={t('edit-web-configuration-form.sampling-parameters')}
             is_collapsed={is_sampling_collapsed}
             on_toggle_collapsed={() =>
               set_is_sampling_collapsed(!is_sampling_collapsed)
@@ -436,15 +468,15 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
           >
             {supports_temperature && (
               <UiField
-                label="Temperature"
-                info="Influences response variety. Lower values are more predictable; higher values are more diverse."
+                label={t('edit-web-configuration-form.temperature')}
+                info={t('edit-web-configuration-form.temperature.info')}
                 action={
                   temperature !== undefined && (
                     <button
                       className={styles.clear}
                       onClick={() => set_temperature(undefined)}
                     >
-                      Clear
+                      {t('edit-web-configuration-form.clear')}
                     </button>
                   )
                 }
@@ -460,15 +492,15 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
 
             {supports_top_p && (
               <UiField
-                label="Top P"
-                info="Limits token choices to cumulative probability P. Lower values make responses more predictable."
+                label={t('edit-web-configuration-form.top-p')}
+                info={t('edit-web-configuration-form.top-p.info')}
                 action={
                   top_p !== undefined && (
                     <button
                       className={styles.clear}
                       onClick={() => set_top_p(undefined)}
                     >
-                      Clear
+                      {t('edit-web-configuration-form.clear')}
                     </button>
                   )
                 }

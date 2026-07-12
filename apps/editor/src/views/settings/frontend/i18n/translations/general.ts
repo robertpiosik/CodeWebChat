@@ -1,4 +1,4 @@
-export const general = {
+export const translations = {
   'general.subtitle': {
     en: 'Configure your experience.',
     pl: 'Skonfiguruj swoje środowisko.',

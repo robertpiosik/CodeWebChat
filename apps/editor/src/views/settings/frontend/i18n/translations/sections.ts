@@ -1,4 +1,4 @@
-export const sections = {
+export const translations = {
   'sections.settings': {
     en: 'Settings',
     pl: 'Ustawienia',

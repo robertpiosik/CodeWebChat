@@ -1,9 +1,10 @@
-import { actions } from './actions'
-import { common } from './common'
-import { general } from './general'
-import { sections } from './sections'
-import { api_calls } from './api-calls'
-import { chatbots } from './chatbots'
+import { translations as actions } from './actions'
+import { translations as common } from './common'
+import { translations as general } from './general'
+import { translations as sections } from './sections'
+import { translations as api_calls } from './api-calls'
+import { translations as chatbots } from './chatbots'
+import { translations as edit_model_provider_form } from './edit-model-provider-form'
 
 export const translations = {
   ...sections,
@@ -11,5 +12,6 @@ export const translations = {
   ...common,
   ...general,
   ...api_calls,
-  ...chatbots
+  ...chatbots,
+  ...edit_model_provider_form
 }

@@ -1,4 +1,4 @@
-export const common = {
+export const translations = {
   'common.expand': {
     en: 'Expand',
     pl: 'Rozwiń',

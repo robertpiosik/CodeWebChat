@@ -1,4 +1,4 @@
-export const actions = {
+export const translations = {
   'action.add-new': {
     en: 'Add New',
     pl: 'Dodaj...',

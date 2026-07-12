@@ -46,18 +46,21 @@ export const EditModelProviderForm: React.FC<Props> = (props) => {
     <UiScrollable top_shadow>
       <div className={styles.form}>
         <UiFieldset>
-          <UiField label={t('model-providers.form.name.label')} html_for="name">
+          <UiField
+            label={t('edit-model-provider-form.name.label')}
+            html_for="name"
+          >
             <UiInput
               id="name"
               type="text"
               value={name}
               on_change={set_name}
-              placeholder={t('model-providers.form.name.placeholder')}
+              placeholder={t('edit-model-provider-form.name.placeholder')}
             />
           </UiField>
 
           <UiField
-            label={t('model-providers.form.base-url.label')}
+            label={t('edit-model-provider-form.base-url.label')}
             html_for="base_url"
           >
             <UiInput
@@ -65,12 +68,12 @@ export const EditModelProviderForm: React.FC<Props> = (props) => {
               type="text"
               value={base_url}
               on_change={set_base_url}
-              placeholder={t('model-providers.form.base-url.placeholder')}
+              placeholder={t('edit-model-provider-form.base-url.placeholder')}
             />
           </UiField>
 
           <UiField
-            label={t('model-providers.form.api-key.label')}
+            label={t('edit-model-provider-form.api-key.label')}
             html_for="api_key"
             action={
               (props.provider.api_key_mask || api_key) &&
@@ -82,7 +85,7 @@ export const EditModelProviderForm: React.FC<Props> = (props) => {
                     set_is_api_key_cleared(true)
                   }}
                 >
-                  {t('model-providers.form.api-key.action.clear')}
+                  {t('edit-model-provider-form.api-key.action.clear')}
                 </button>
               ) : undefined
             }
@@ -97,20 +100,24 @@ export const EditModelProviderForm: React.FC<Props> = (props) => {
               }}
               placeholder={
                 is_api_key_cleared
-                  ? t('model-providers.form.api-key.placeholder.cleared')
+                  ? t('edit-model-provider-form.api-key.placeholder.cleared')
                   : props.provider.api_key_mask
                     ? `...${props.provider.api_key_mask.slice(-4)}`
-                    : t('model-providers.form.api-key.placeholder.default')
+                    : t('edit-model-provider-form.api-key.placeholder.default')
               }
             />
           </UiField>
 
           {base_url.includes('api.anthropic.com') && (
             <UiField
-              label={t('model-providers.extended-cache.anthropic.title')}
+              label={t(
+                'edit-model-provider-form.extended-cache.anthropic.title'
+              )}
               info={
                 <>
-                  {t('model-providers.extended-cache.anthropic.description')}{' '}
+                  {t(
+                    'edit-model-provider-form.extended-cache.anthropic.description'
+                  )}{' '}
                   <a
                     href="#"
                     onClick={(e) => {
@@ -120,7 +127,9 @@ export const EditModelProviderForm: React.FC<Props> = (props) => {
                       )
                     }}
                   >
-                    {t('model-providers.extended-cache.anthropic.learn-more')}
+                    {t(
+                      'edit-model-provider-form.extended-cache.anthropic.learn-more'
+                    )}
                   </a>
                 </>
               }
