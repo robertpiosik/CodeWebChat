@@ -348,14 +348,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
               html_for="port"
               info={
                 chatbot == 'Open WebUI' && (
-                  <>
-                    <Translation
-                      id="edit-web-configuration-form.port.info"
-                      components={{
-                        code: <code />
-                      }}
-                    />
-                  </>
+                  <Translation id="edit-web-configuration-form.port.info" />
                 )
               }
             >
