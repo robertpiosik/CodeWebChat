@@ -23,6 +23,10 @@
   &--hidden {
     display: none;
   }
+
+  [data-simplebar='init'] {
+    height: 100%;
+  }
 }
 
 .edit-web-configuration-footer {
