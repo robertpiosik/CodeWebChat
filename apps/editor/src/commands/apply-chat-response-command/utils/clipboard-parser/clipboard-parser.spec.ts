@@ -1049,10 +1049,14 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result).toHaveLength(1)
+      expect(result).toHaveLength(2)
       expect(result[0]).toMatchObject({
         type: 'relevant-files',
         file_paths: ['src/hello.ts', 'src/welcome.ts']
+      })
+      expect(result[1]).toMatchObject({
+        type: 'text',
+        content: 'Lorem ipsum.'
       })
     })
   })

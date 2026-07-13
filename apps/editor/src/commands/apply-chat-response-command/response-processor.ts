@@ -32,7 +32,10 @@ import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provi
 import { natural_sort } from '@/utils/natural-sort'
 import { t } from '@/i18n'
 import { is_truncation_line } from './utils/edit-formats/truncations'
-import { RelevantFileInPreview } from '@shared/types/file-in-preview'
+import {
+  RelevantFileInPreview,
+  ItemInPreview
+} from '@shared/types/file-in-preview'
 import { PreviewDecision } from './utils/preview/types'
 import { set_response_preview_promise_resolve } from './utils/preview/preview'
 
@@ -116,64 +119,87 @@ export const process_chat_response = async (params: {
     vscode.workspace.workspaceFolders?.length == 1
 
   if (params.clipboard_items.some((item) => item.type == 'relevant-files')) {
-    const relevant_files_item = params.clipboard_items.find(
-      (item) => item.type == 'relevant-files'
-    ) as RelevantFilesItem
-
     const current_checked_files =
       params.workspace_provider.get_export_state().regular.checked_files
 
     const workspace_roots = params.workspace_provider.get_workspace_roots()
-    const all_paths_to_process = new Set<string>(relevant_files_item.file_paths)
 
     const files_for_preview: RelevantFileInPreview[] = []
+    const items_for_preview: ItemInPreview[] = []
 
-    for (const rel_path of Array.from(all_paths_to_process)) {
-      let absolute_path: string | undefined
-      let matched_workspace_root: string | undefined
-      for (const root of workspace_roots) {
-        const potential = path.join(root, rel_path)
-        if (fs.existsSync(potential)) {
-          absolute_path = potential
-          matched_workspace_root = root
-          break
-        }
-      }
+    for (const item of params.clipboard_items) {
+      if (item.type == 'relevant-files') {
+        const relevant_files_item = item as RelevantFilesItem
+        const all_paths_to_process = new Set<string>(
+          relevant_files_item.file_paths
+        )
 
-      if (absolute_path && matched_workspace_root) {
-        const count =
-          await params.workspace_provider.calculate_file_tokens(absolute_path)
+        const local_files: RelevantFileInPreview[] = []
 
-        let workspace_name: string | undefined
-        if (workspace_roots.length > 1) {
-          workspace_name = params.workspace_provider.get_workspace_name(
-            matched_workspace_root
-          )
-        }
+        for (const rel_path of Array.from(all_paths_to_process)) {
+          let absolute_path: string | undefined
+          let matched_workspace_root: string | undefined
+          for (const root of workspace_roots) {
+            const potential = path.join(root, rel_path)
+            if (fs.existsSync(potential)) {
+              absolute_path = potential
+              matched_workspace_root = root
+              break
+            }
+          }
 
-        let is_checked = true
-        if (params.args?.relevant_files) {
-          const history_file = params.args.relevant_files.find(
-            (f) =>
-              f.file_path === rel_path && f.workspace_name === workspace_name
-          )
-          if (history_file) {
-            is_checked = history_file.is_checked
+          if (absolute_path && matched_workspace_root) {
+            const count =
+              await params.workspace_provider.calculate_file_tokens(
+                absolute_path
+              )
+
+            let workspace_name: string | undefined
+            if (workspace_roots.length > 1) {
+              workspace_name = params.workspace_provider.get_workspace_name(
+                matched_workspace_root
+              )
+            }
+
+            let is_checked = true
+            if (params.args?.relevant_files) {
+              const history_file = params.args.relevant_files.find(
+                (f) =>
+                  f.file_path === rel_path &&
+                  f.workspace_name === workspace_name
+              )
+              if (history_file) {
+                is_checked = history_file.is_checked
+              }
+            }
+
+            local_files.push({
+              type: 'relevant-file',
+              file_path: rel_path,
+              absolute_path: absolute_path,
+              workspace_name,
+              is_checked,
+              token_count: count.total
+            })
           }
         }
 
-        files_for_preview.push({
-          type: 'relevant-file',
-          file_path: rel_path,
-          absolute_path: absolute_path,
-          workspace_name,
-          is_checked,
-          token_count: count.total
+        local_files.sort((a, b) => natural_sort(a.file_path, b.file_path))
+        files_for_preview.push(...local_files)
+        items_for_preview.push(...local_files)
+      } else if (item.type == 'text') {
+        items_for_preview.push({
+          type: 'text',
+          content: item.content
+        })
+      } else if (item.type == 'inline-file') {
+        items_for_preview.push({
+          type: 'inline-file',
+          content: item.content,
+          language: item.language
         })
       }
     }
-
-    files_for_preview.sort((a, b) => natural_sort(a.file_path, b.file_path))
 
     const created_at_for_preview = params.args?.created_at ?? Date.now()
 
@@ -207,7 +233,7 @@ export const process_chat_response = async (params: {
 
     params.panel_provider.send_message({
       command: 'RESPONSE_PREVIEW_STARTED',
-      items: files_for_preview,
+      items: items_for_preview,
       raw_instructions: params.args?.raw_instructions,
       created_at: created_at_for_preview,
       url: params.args?.url,

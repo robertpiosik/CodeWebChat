@@ -1,8 +1,8 @@
-import { RelevantFilesItem } from '../clipboard-parser'
+import { RelevantFilesItem, TextItem } from '../clipboard-parser'
 
 export const parse_relevant_files = (params: {
   response: string
-}): RelevantFilesItem | null => {
+}): (RelevantFilesItem | TextItem)[] | null => {
   const trimmed_response = params.response.trim()
   const lines = trimmed_response.split('\n')
 
@@ -15,6 +15,7 @@ export const parse_relevant_files = (params: {
   }
 
   const file_paths: string[] = []
+  let first_non_list_item_index = -1
 
   for (let i = 1; i < lines.length; i++) {
     const line = lines[i].trim()
@@ -29,15 +30,33 @@ export const parse_relevant_files = (params: {
         file_paths.push(path)
       }
     } else {
+      first_non_list_item_index = i
       break
     }
   }
 
   if (file_paths.length > 0) {
-    return {
-      type: 'relevant-files',
-      file_paths
+    const result: (RelevantFilesItem | TextItem)[] = [
+      {
+        type: 'relevant-files',
+        file_paths
+      }
+    ]
+
+    if (first_non_list_item_index !== -1) {
+      const remainingText = lines
+        .slice(first_non_list_item_index)
+        .join('\n')
+        .trim()
+      if (remainingText) {
+        result.push({
+          type: 'text',
+          content: remainingText
+        })
+      }
     }
+
+    return result
   }
 
   return null

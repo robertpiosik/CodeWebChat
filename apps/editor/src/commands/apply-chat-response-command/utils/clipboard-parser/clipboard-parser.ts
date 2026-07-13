@@ -95,7 +95,7 @@ export const parse_response = (params: {
 
   const relevant_files = parse_relevant_files({ response: params.response })
   if (relevant_files) {
-    return [relevant_files]
+    return relevant_files
   }
 
   const processed_response = params.response.replace(/``````/g, '```\n```')
