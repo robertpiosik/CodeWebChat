@@ -11,11 +11,9 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> 
 </p>
 
-Code Web Chat (CWC) is a chatbot-first AI coding tool. **Start in VS Code (Cursor, Antigravity, VSCodium, etc.), then continue in ChatGPT, Gemini, Claude, etc.** or _Bring Your Own Key_ to stay in the editor!
+Code Web Chat is a chatbot-first AI coding tool. **Start in VS Code (Cursor, Antigravity, VSCodium, etc.), then continue in ChatGPT, Gemini, Claude, etc.** or _Bring Your Own Key_ to stay in the editor!
 
-- totally free
-- works 100% on your machine
-- doesn't collect telemetry
+CWC is free, works 100% on your machine and doesn't collect telemetry.
 
 Get involved! Join our [discord server](https://discord.gg/KJySXsrSX5).
 
