@@ -5,7 +5,7 @@ import {
 } from '../constants/state-keys'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
+import localizedFormat from 'dayjs/plugin/localizedFormat'
 import { t } from '@/i18n'
 import type { Checkpoint } from '@/features/checkpoints/types'
 import {
@@ -21,8 +21,9 @@ import {
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { get_checkpoint_path } from '@/features/checkpoints/utils'
 import { dictionary } from '@shared/constants/dictionary'
+import { checkpoints_emitter } from '@/features/checkpoints/events'
 
-dayjs.extend(relativeTime)
+dayjs.extend(localizedFormat)
 
 export type { Checkpoint } from '@/features/checkpoints/types'
 
@@ -132,7 +133,7 @@ export const checkpoints_command = (params: {
               return {
                 id: c.timestamp.toString(),
                 label: c.is_starred ? `$(star-full) ${labelText}` : labelText,
-                description: dayjs(c.timestamp).fromNow(),
+                description: dayjs(c.timestamp).format('LT'),
                 detail: c.description,
                 checkpoint: c,
                 index,
@@ -258,15 +259,16 @@ export const checkpoints_command = (params: {
               panel_provider: params.panel_provider
             })
             // After reverting, delete the temp checkpoint and clear state.
+            await params.context.workspaceState.update(
+              TEMPORARY_CHECKPOINT_STATE_KEY,
+              undefined
+            )
             await delete_checkpoint({
               context: params.context,
               checkpoint_to_delete: temp_checkpoint,
               panel_provider: params.panel_provider
             })
-            await params.context.workspaceState.update(
-              TEMPORARY_CHECKPOINT_STATE_KEY,
-              undefined
-            )
+            checkpoints_emitter.emit('checkpoints-updated')
           } else if (selected.checkpoint) {
             quick_pick.hide()
             await restore_checkpoint({

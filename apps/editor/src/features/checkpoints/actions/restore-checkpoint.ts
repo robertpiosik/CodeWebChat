@@ -22,6 +22,7 @@ import { ongoing_preview_cleanup_promise } from '@/commands/apply-chat-response-
 import { dictionary } from '@shared/constants/dictionary'
 import { get_git_info } from '../utils/git-utils'
 import { PromptsForCommitMessagesUtils } from '@/utils/prompts-for-commit-messages-utils'
+import { checkpoints_emitter } from '../events'
 
 export const restore_checkpoint = async (params: {
   checkpoint: Checkpoint
@@ -562,6 +563,7 @@ export const restore_checkpoint = async (params: {
         command: 'HIDE_PROGRESS'
       })
     }
+    checkpoints_emitter.emit('checkpoints-updated')
   }
 
   const message = params.options?.skip_confirmation
@@ -591,15 +593,16 @@ export const restore_checkpoint = async (params: {
         panel_provider: params.panel_provider,
         options: { skip_confirmation: true, use_native_progress: true }
       })
+      await params.context.workspaceState.update(
+        TEMPORARY_CHECKPOINT_STATE_KEY,
+        undefined
+      )
       await delete_checkpoint({
         context: params.context,
         checkpoint_to_delete: temp_check,
         panel_provider: params.panel_provider
       })
-      await params.context.workspaceState.update(
-        TEMPORARY_CHECKPOINT_STATE_KEY,
-        undefined
-      )
+      checkpoints_emitter.emit('checkpoints-updated')
     }
   } else {
     vscode.window.showInformationMessage(message)

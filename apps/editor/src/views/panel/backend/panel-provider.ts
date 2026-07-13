@@ -135,6 +135,7 @@ import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { SharedContextState } from '@/context/shared-context-state'
 import { Checkpoint } from '@/features/checkpoints/types'
 import { webview_html } from '@/views/shared/utils/webview-html'
+import { checkpoints_emitter } from '@/features/checkpoints/events'
 
 export class PanelProvider implements vscode.WebviewViewProvider {
   public readonly extension_uri: vscode.Uri
@@ -529,6 +530,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
         this.send_context_files()
       }
+    })
+
+    checkpoints_emitter.on('checkpoints-updated', () => {
+      this.send_checkpoints()
     })
 
     this.context.subscriptions.push(this._config_listener)
