@@ -17,7 +17,7 @@ import {
   remove_file_from_context_command,
   code_at_cursor_commands,
   close_editor_command,
-  checkpoints_command,
+  history_command,
   close_all_editors_command,
   save_all_command,
   new_file_command,
@@ -95,7 +95,7 @@ export const activate = async (context: vscode.ExtensionContext) => {
       context,
       panel_provider
     }),
-    ...checkpoints_command({
+    ...history_command({
       context,
       workspace_provider,
       panel_provider

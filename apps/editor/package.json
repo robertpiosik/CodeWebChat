@@ -286,8 +286,8 @@
         "icon": "$(search)"
       },
       {
-        "command": "codeWebChat.checkpoints",
-        "title": "%codeWebChat.checkpoints.title%",
+        "command": "codeWebChat.history",
+        "title": "%codeWebChat.history.title%",
         "category": "Code Web Chat",
         "icon": "$(history)"
       },
@@ -674,7 +674,7 @@
           "group": "navigation@5"
         },
         {
-          "command": "codeWebChat.checkpoints",
+          "command": "codeWebChat.history",
           "when": "view == codeWebChatView",
           "group": "navigation@1"
         },

@@ -1,23 +1,23 @@
 export const translations = {
-  'command.checkpoints.title': {
-    en: 'Checkpoints',
-    pl: 'Punkty kontrolne',
-    'zh-cn': '检查点',
-    ja: 'チェックポイント',
-    'zh-tw': '檢查點',
-    de: 'Checkpoints',
-    es: 'Puntos de control',
-    fr: 'Points de contrôle',
-    'pt-br': 'Pontos de verificação',
-    ru: 'Контрольные точки',
-    ko: '체크포인트',
-    it: 'Punti di controllo',
-    tr: 'Kontrol Noktaları',
-    cs: 'Kontrolní body',
-    hu: 'Ellenőrzőpontok',
-    bg: 'Контролни точки'
+  'command.history.title': {
+    en: 'History',
+    pl: 'Historia',
+    'zh-cn': '历史记录',
+    ja: '履歴',
+    'zh-tw': '歷史紀錄',
+    de: 'Verlauf',
+    es: 'Historial',
+    fr: 'Historique',
+    'pt-br': 'Histórico',
+    ru: 'История',
+    ko: '기록',
+    it: 'Cronologia',
+    tr: 'Geçmiş',
+    cs: 'Historie',
+    hu: 'Előzmények',
+    bg: 'История'
   },
-  'command.checkpoints.placeholder': {
+  'command.history.placeholder': {
     en: 'Search or select a checkpoint...',
     pl: 'Szukaj lub wybierz punkt kontrolny...',
     'zh-cn': '搜索或选择一个检查点...',
@@ -35,25 +35,25 @@ export const translations = {
     hu: 'Keressen vagy válasszon egy ellenőrzőpontot...',
     bg: 'Търсене или избор на контролна точка...'
   },
-  'command.checkpoints.delete-all': {
-    en: 'Delete all checkpoints',
-    pl: 'Usuń wszystkie punkty kontrolne',
-    'zh-cn': '删除所有检查点',
-    ja: 'すべてのチェックポイントを削除',
-    'zh-tw': '刪除所有檢查點',
-    de: 'Alle Checkpoints löschen',
-    es: 'Eliminar todos los puntos de control',
-    fr: 'Supprimer tous les points de contrôle',
-    'pt-br': 'Excluir todos os pontos de verificação',
-    ru: 'Удалить все контрольные точки',
-    ko: '모든 체크포인트 삭제',
-    it: 'Elimina tutti i punti di controllo',
-    tr: 'Tüm kontrol noktalarını sil',
-    cs: 'Smazat wszystkie kontrolní body',
-    hu: 'Összes ellenőrzőpont törlése',
-    bg: 'Изтриване на всички контролни точки'
+  'command.history.clear-history': {
+    en: 'Clear history',
+    pl: 'Wyczyść historię',
+    'zh-cn': '清除历史记录',
+    ja: '履歴をクリア',
+    'zh-tw': '清除歷史紀錄',
+    de: 'Verlauf löschen',
+    es: 'Borrar historial',
+    fr: "Effacer l'historique",
+    'pt-br': 'Limpar histórico',
+    ru: 'Очистить историю',
+    ko: '기록 지우기',
+    it: 'Cancella cronologia',
+    tr: 'Geçmişi temizle',
+    cs: 'Vymazat historii',
+    hu: 'Előzmények törlése',
+    bg: 'Изчисти историята'
   },
-  'command.checkpoints.revert-last': {
+  'command.history.revert-last': {
     en: 'Revert last restored checkpoint',
     pl: 'Cofnij ostatnie przywrócenie',
     'zh-cn': '撤销上次恢复',
@@ -71,7 +71,7 @@ export const translations = {
     hu: 'Visszaállítás visszavonása',
     bg: 'Отмяна на възстановяването'
   },
-  'command.checkpoints.new': {
+  'command.history.new': {
     en: 'New Checkpoint',
     pl: 'Nowy punkt kontrolny',
     'zh-cn': '新检查点',
@@ -89,7 +89,7 @@ export const translations = {
     hu: 'Új Ellenőrzőpont',
     bg: 'Нова контролна точка'
   },
-  'command.checkpoints.edit-description': {
+  'command.history.edit-description': {
     en: 'Edit Description',
     pl: 'Edytuj opis',
     'zh-cn': '编辑描述',
@@ -107,7 +107,7 @@ export const translations = {
     hu: 'Leírás szerkesztése',
     bg: 'Редактиране на описанието'
   },
-  'command.checkpoints.description.title': {
+  'command.history.description.title': {
     en: 'Edit Checkpoint Description',
     pl: 'Edytuj opis punktu kontrolnego',
     'zh-cn': '编辑检查点描述',
@@ -125,7 +125,7 @@ export const translations = {
     hu: 'Ellenőrzőpont leírásának szerkesztése',
     bg: 'Редактиране на описанието на контролната точка'
   },
-  'command.checkpoints.description.prompt': {
+  'command.history.description.prompt': {
     en: 'Enter a description for this checkpoint',
     pl: 'Wprowadź opis dla tego punktu kontrolnego',
     'zh-cn': '输入此检查点的描述',
@@ -143,7 +143,7 @@ export const translations = {
     hu: 'Adja meg az ellenőrzőpont leírását',
     bg: 'Въведете описание за тази контролна точка'
   },
-  'command.checkpoints.description.placeholder': {
+  'command.history.description.placeholder': {
     en: 'e.g. Added login form',
     pl: 'np. Dodano formularz logowania',
     'zh-cn': '例如：添加了登录表单',
@@ -161,7 +161,7 @@ export const translations = {
     hu: 'pl. Bejelentkezési űrlap hozzáadva',
     bg: 'напр. Добавена е форма за вход'
   },
-  'command.checkpoints.trigger.manual': {
+  'command.history.trigger.manual': {
     en: 'Manual',
     pl: 'Ręczny',
     'zh-cn': '手动',
@@ -179,7 +179,7 @@ export const translations = {
     hu: 'Kézi',
     bg: 'Ръчно'
   },
-  'command.checkpoints.trigger.auto': {
+  'command.history.trigger.auto': {
     en: 'Auto Checkpoint',
     pl: 'Punkt utworzony automatycznie',
     'zh-cn': '自动检查点',
@@ -197,7 +197,7 @@ export const translations = {
     hu: 'Automatikus ellenőrzőpont',
     bg: 'Автоматична контролна точка'
   },
-  'command.checkpoints.trigger.response-accepted': {
+  'command.history.trigger.response-accepted': {
     en: 'Response accepted',
     pl: 'Zaakceptowana odpowiedź',
     'zh-cn': '响应已接受',
@@ -215,7 +215,7 @@ export const translations = {
     hu: 'Válasz elfogadva',
     bg: 'Отговорът е приет'
   },
-  'command.checkpoints.trigger.before-response-previewed': {
+  'command.history.trigger.before-response-previewed': {
     en: 'Before response previewed',
     pl: 'Przed podglądem odpowiedzi',
     'zh-cn': '在预览响应之前',
@@ -233,7 +233,7 @@ export const translations = {
     hu: 'Válasz előnézete előtt',
     bg: 'Преди преглед на отговора'
   },
-  'command.checkpoints.trigger.before-checkpoint-restored': {
+  'command.history.trigger.before-checkpoint-restored': {
     en: 'Before checkpoint restored',
     pl: 'Przed przywróceniem punktu kontrolnego',
     'zh-cn': '在恢复检查点之前',
@@ -251,7 +251,7 @@ export const translations = {
     hu: 'Ellenőrzőpont visszaállítása előtt',
     bg: 'Преди възстановяване на контролна точка'
   },
-  'command.checkpoints.trigger.commit': {
+  'command.history.trigger.commit': {
     en: 'Committed',
     pl: 'Zakomitowano',
     'zh-cn': '已提交',
@@ -269,7 +269,7 @@ export const translations = {
     hu: 'Véglegesítve',
     bg: 'Комитнато'
   },
-  'command.checkpoints.trigger.temporary': {
+  'command.history.trigger.temporary': {
     en: 'Temporary Checkpoint',
     pl: 'Tymczasowy punkt kontrolny',
     'zh-cn': '临时检查点',
@@ -285,6 +285,6 @@ export const translations = {
     tr: 'Geçici Kontrol Noktası',
     cs: 'Dočasný kontrolní bod',
     hu: 'Ideiglenes ellenőrzőpont',
-    bg: 'Временна контролна точка'
+    bg: 'Временная контрольная точка'
   }
 } as const

@@ -175,7 +175,7 @@ export const Home: React.FC<Props> = (props) => {
             <UiTabs
               tabs={[
                 { id: 'tasks', label: t('home.tasks') },
-                { id: 'checkpoints', label: t('home.checkpoints') }
+                { id: 'checkpoints', label: t('home.history') }
               ]}
               active_tab={active_tab}
               on_tab_change={(id) =>

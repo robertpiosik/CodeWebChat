@@ -3,7 +3,7 @@
   "codeWebChat.restoreFileSelection.title": "ファイル選択を復元",
   "codeWebChat.applyChatResponse.title": "チャットの応答を適用",
   "codeWebChat.copyContext.title": "コンテキストをコピー",
-  "codeWebChat.checkpoints.title": "チェックポイント",
+  "codeWebChat.history.title": "履歴",
   "codeWebChat.undoSelection.title": "選択を元に戻す",
   "codeWebChat.redoSelection.title": "選択をやり直す",
   "codeWebChat.duplicateWorkspace.title": "ワークスペースを複製",

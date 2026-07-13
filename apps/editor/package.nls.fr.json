@@ -3,7 +3,7 @@
   "codeWebChat.restoreFileSelection.title": "Restaurer la sélection de fichiers",
   "codeWebChat.applyChatResponse.title": "Appliquer la réponse du chat",
   "codeWebChat.copyContext.title": "Copier le contexte",
-  "codeWebChat.checkpoints.title": "Points de contrôle",
+  "codeWebChat.history.title": "Historique",
   "codeWebChat.undoSelection.title": "Annuler la sélection",
   "codeWebChat.redoSelection.title": "Rétablir la sélection",
   "codeWebChat.duplicateWorkspace.title": "Dupliquer l'espace de travail",

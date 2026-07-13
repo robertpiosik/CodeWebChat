@@ -27,7 +27,7 @@ dayjs.extend(localizedFormat)
 
 export type { Checkpoint } from '@/features/checkpoints/types'
 
-export const checkpoints_command = (params: {
+export const history_command = (params: {
   context: vscode.ExtensionContext
   workspace_provider: WorkspaceProvider
   panel_provider: PanelProvider
@@ -52,15 +52,15 @@ export const checkpoints_command = (params: {
         panel_provider: params.panel_provider
       })
       if (checkpoint) {
-        vscode.commands.executeCommand('codeWebChat.checkpoints', {
+        vscode.commands.executeCommand('codeWebChat.history', {
           highlight_checkpoint: checkpoint
         })
       }
     }
   )
 
-  const checkpoints_command = vscode.commands.registerCommand(
-    'codeWebChat.checkpoints',
+  const history_cmd = vscode.commands.registerCommand(
+    'codeWebChat.history',
     async (args?: { highlight_checkpoint?: Checkpoint }) => {
       if (
         !vscode.workspace.workspaceFolders ||
@@ -77,13 +77,13 @@ export const checkpoints_command = (params: {
         const quick_pick = vscode.window.createQuickPick<
           vscode.QuickPickItem & { id?: string; checkpoint?: Checkpoint }
         >()
-        quick_pick.title = t('command.checkpoints.title')
-        quick_pick.placeholder = t('command.checkpoints.placeholder')
+        quick_pick.title = t('command.history.title')
+        quick_pick.placeholder = t('command.history.placeholder')
         quick_pick.matchOnDetail = true
 
         const clear_all_button: vscode.QuickInputButton = {
           iconPath: new vscode.ThemeIcon('trash'),
-          tooltip: t('command.checkpoints.delete-all')
+          tooltip: t('command.history.clear-history')
         }
 
         const close_button: vscode.QuickInputButton = {
@@ -103,7 +103,7 @@ export const checkpoints_command = (params: {
           if (temp_checkpoint_is_valid) {
             revert_item = {
               id: 'revert-last',
-              label: `$(discard) ${t('command.checkpoints.revert-last')}`
+              label: `$(discard) ${t('command.history.revert-last')}`
             }
           }
 
@@ -127,9 +127,7 @@ export const checkpoints_command = (params: {
                 ]
               : []),
             ...visible_checkpoints.map((c, index) => {
-              const labelText = t(
-                `command.checkpoints.trigger.${c.trigger}` as any
-              )
+              const labelText = t(`command.history.trigger.${c.trigger}` as any)
               return {
                 id: c.timestamp.toString(),
                 label: c.is_starred ? `$(star-full) ${labelText}` : labelText,
@@ -150,7 +148,7 @@ export const checkpoints_command = (params: {
                     ? [
                         {
                           iconPath: new vscode.ThemeIcon('edit'),
-                          tooltip: t('command.checkpoints.edit-description')
+                          tooltip: t('command.history.edit-description')
                         }
                       ]
                     : []),
@@ -169,7 +167,7 @@ export const checkpoints_command = (params: {
             quick_pick.items = [
               {
                 id: 'add-new',
-                label: `$(add) ${t('command.checkpoints.new')}`
+                label: `$(add) ${t('command.history.new')}`
               },
               ...(revert_item ? [revert_item] : []),
               ...checkpoint_items
@@ -233,7 +231,7 @@ export const checkpoints_command = (params: {
               panel_provider: params.panel_provider
             })
             if (checkpoint) {
-              vscode.commands.executeCommand('codeWebChat.checkpoints', {
+              vscode.commands.executeCommand('codeWebChat.history', {
                 highlight_checkpoint: checkpoint
               })
             }
@@ -348,13 +346,13 @@ export const checkpoints_command = (params: {
             return
           }
 
-          if (e.button.tooltip == t('command.checkpoints.edit-description')) {
+          if (e.button.tooltip == t('command.history.edit-description')) {
             notification_count++
             const new_description = await vscode.window.showInputBox({
-              title: t('command.checkpoints.description.title'),
-              prompt: t('command.checkpoints.description.prompt'),
+              title: t('command.history.description.title'),
+              prompt: t('command.history.description.prompt'),
               value: item.checkpoint.description || '',
-              placeHolder: t('command.checkpoints.description.placeholder')
+              placeHolder: t('command.history.description.placeholder')
             })
             notification_count--
 
@@ -437,5 +435,5 @@ export const checkpoints_command = (params: {
     }
   )
 
-  return [checkpoints_command, create_new_checkpoint_command]
+  return [history_cmd, create_new_checkpoint_command]
 }

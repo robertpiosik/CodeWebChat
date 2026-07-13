@@ -3,7 +3,7 @@
   "codeWebChat.restoreFileSelection.title": "Fájlkiválasztás visszaállítása",
   "codeWebChat.applyChatResponse.title": "Csevegési válasz alkalmazása",
   "codeWebChat.copyContext.title": "Kontextus másolása",
-  "codeWebChat.checkpoints.title": "Ellenőrzőpontok",
+  "codeWebChat.history.title": "Előzmények",
   "codeWebChat.undoSelection.title": "Kiválasztás visszavonása",
   "codeWebChat.redoSelection.title": "Kiválasztás újraismétlése",
   "codeWebChat.duplicateWorkspace.title": "Munkaterület duplikálása",

@@ -3,7 +3,7 @@
   "codeWebChat.restoreFileSelection.title": "Dosya Seçimini Geri Yükle",
   "codeWebChat.applyChatResponse.title": "Sohbet Yanıtını Uygula",
   "codeWebChat.copyContext.title": "Bağlamı Kopyala",
-  "codeWebChat.checkpoints.title": "Kontrol Noktaları",
+  "codeWebChat.history.title": "Geçmiş",
   "codeWebChat.undoSelection.title": "Seçimi Geri Al",
   "codeWebChat.redoSelection.title": "Seçimi Yinele",
   "codeWebChat.duplicateWorkspace.title": "Çalışma Alanını Çoğalt",

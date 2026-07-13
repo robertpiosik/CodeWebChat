@@ -3,7 +3,7 @@
   "codeWebChat.restoreFileSelection.title": "Восстановить выбор файлов",
   "codeWebChat.applyChatResponse.title": "Применить ответ чата",
   "codeWebChat.copyContext.title": "Копировать контекст",
-  "codeWebChat.checkpoints.title": "Контрольные точки",
+  "codeWebChat.history.title": "История",
   "codeWebChat.undoSelection.title": "Отменить выбор",
   "codeWebChat.redoSelection.title": "Повторить выбор",
   "codeWebChat.duplicateWorkspace.title": "Дублировать рабочую область",
