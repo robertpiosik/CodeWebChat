@@ -16,20 +16,12 @@ export const select_referencing_files_command = (
     'codeWebChat.selectReferencingFiles',
     async (item?: FileItem) => {
       try {
-        let is_folder = false
-        if (item && item.resourceUri) {
-          try {
-            const stat = await vscode.workspace.fs.stat(item.resourceUri)
-            is_folder = (stat.type & vscode.FileType.Directory) !== 0
-          } catch {}
-        }
-
         let matched_files: { file_path: string; range: vscode.Range }[] = []
 
-        if (is_folder && item?.resourceUri) {
-          const folder_uri = item.resourceUri
+        if (item?.resourceUri) {
+          const target_uri = item.resourceUri
           const starting_uris = await get_all_files(
-            folder_uri,
+            target_uri,
             workspace_provider
           )
 
