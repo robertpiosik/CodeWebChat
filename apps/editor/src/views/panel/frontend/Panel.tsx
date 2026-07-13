@@ -55,8 +55,8 @@ export const Panel = () => {
     web_prompt_type,
     api_prompt_type,
     chat_input_focus_key,
+    set_chat_input_focus_key,
     chat_input_focus_and_select_key,
-    set_chat_input_focus_and_select_key,
     context_size_warning_threshold,
     can_undo,
     web_configurations_collapsed,
@@ -440,15 +440,15 @@ export const Panel = () => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
                   handle_mode_change(MODE.WEB)
-                  handle_web_prompt_type_change('edit-files')
-                  set_chat_input_focus_and_select_key((k) => k + 1)
+                  handle_web_prompt_type_change('edit-files', true)
+                  set_chat_input_focus_key((k) => k + 1)
                 }}
                 on_api_calls_click={() => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
                   handle_mode_change(MODE.API)
-                  handle_api_prompt_type_change('edit-files')
-                  set_chat_input_focus_and_select_key((k) => k + 1)
+                  handle_api_prompt_type_change('edit-files', true)
+                  set_chat_input_focus_key((k) => k + 1)
                 }}
                 version={version}
                 checkpoints={checkpoints}

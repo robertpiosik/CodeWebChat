@@ -184,9 +184,14 @@ export const use_panel = (vscode: any) => {
     return () => window.removeEventListener('message', handle_message)
   }, [])
 
-  const handle_web_prompt_type_change = (prompt_type: WebPromptType) => {
+  const handle_web_prompt_type_change = (
+    prompt_type: WebPromptType,
+    prevent_selection?: boolean
+  ) => {
     set_web_mode(prompt_type)
-    set_chat_input_focus_and_select_key((k) => k + 1)
+    if (!prevent_selection) {
+      set_chat_input_focus_and_select_key((k) => k + 1)
+    }
     set_main_view_scroll_reset_key((k) => k + 1)
     post_message(vscode, {
       command: 'SAVE_WEB_PROMPT_TYPE',
@@ -194,9 +199,14 @@ export const use_panel = (vscode: any) => {
     })
   }
 
-  const handle_api_prompt_type_change = (prompt_type: ApiPromptType) => {
+  const handle_api_prompt_type_change = (
+    prompt_type: ApiPromptType,
+    prevent_selection?: boolean
+  ) => {
     set_api_mode(prompt_type)
-    set_chat_input_focus_and_select_key((k) => k + 1)
+    if (!prevent_selection) {
+      set_chat_input_focus_and_select_key((k) => k + 1)
+    }
     set_main_view_scroll_reset_key((k) => k + 1)
     post_message(vscode, {
       command: 'SAVE_API_PROMPT_TYPE',
@@ -213,10 +223,10 @@ export const use_panel = (vscode: any) => {
         web_prompt_type == 'code-at-cursor' ||
         web_prompt_type == 'find-relevant-files'
       ) {
-        handle_api_prompt_type_change(web_prompt_type)
+        handle_api_prompt_type_change(web_prompt_type, true)
       }
     } else if (new_mode == MODE.WEB && api_prompt_type) {
-      handle_web_prompt_type_change(api_prompt_type)
+      handle_web_prompt_type_change(api_prompt_type, true)
     }
 
     set_mode(new_mode)
@@ -273,8 +283,8 @@ export const use_panel = (vscode: any) => {
     web_prompt_type,
     api_prompt_type,
     chat_input_focus_key,
+    set_chat_input_focus_key,
     chat_input_focus_and_select_key,
-    set_chat_input_focus_and_select_key,
     context_size_warning_threshold,
     can_undo,
     web_configurations_collapsed,

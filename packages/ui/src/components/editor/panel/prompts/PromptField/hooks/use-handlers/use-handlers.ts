@@ -155,16 +155,16 @@ export const use_handlers = (
   ])
 
   useEffect(() => {
-    if (params.input_ref.current && !props.warning) {
+    if (params.input_ref.current && !props_ref.current.warning) {
       requestAnimationFrame(() => {
         if (!params.input_ref.current) return
         params.input_ref.current.focus({ preventScroll: true })
       })
     }
-  }, [props.focus_key, props.warning])
+  }, [props.focus_key])
 
   useEffect(() => {
-    if (params.input_ref.current && !props.warning) {
+    if (params.input_ref.current && !props_ref.current.warning) {
       requestAnimationFrame(() => {
         if (!params.input_ref.current) return
         params.input_ref.current.focus({ preventScroll: true })
@@ -180,11 +180,7 @@ export const use_handlers = (
         }
       })
     }
-  }, [
-    props.focus_and_select_key,
-    props.warning,
-    props.prompt_type
-  ])
+  }, [props.focus_and_select_key])
 
   const update_value = (new_value: string, caret_pos?: number) => {
     if (new_value === props.value) return
