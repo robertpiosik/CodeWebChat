@@ -264,7 +264,7 @@ export const select_imported_files_command = (
           return
         }
 
-        if (selected_items === 'search') {
+        if (selected_items == 'search') {
           const search_result = await search_files({
             files: shown_paths,
             workspace_provider,
@@ -272,7 +272,7 @@ export const select_imported_files_command = (
             show_back_button: true
           })
 
-          if (search_result === 'back') {
+          if (search_result == 'back') {
             continue
           }
 

@@ -221,7 +221,10 @@ export const select_referencing_files_command = (
 
         const currently_checked = workspace_provider.get_checked_files()
 
-        const quick_pick_items = await Promise.all(
+        const quick_pick_items: (vscode.QuickPickItem & {
+          file_path: string
+          range: vscode.Range
+        })[] = await Promise.all(
           matched_files.map(async ({ file_path, range }) => {
             const workspace_root =
               workspace_provider.get_workspace_root_for_file(file_path)

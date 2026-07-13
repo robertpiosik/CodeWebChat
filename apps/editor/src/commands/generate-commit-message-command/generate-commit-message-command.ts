@@ -14,11 +14,11 @@ import {
 import { t } from '@/i18n'
 import axios from 'axios'
 import { PromptsForCommitMessagesUtils } from '../../utils/prompts-for-commit-messages-utils'
-import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
 import { MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE } from '@/constants/values'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { create_checkpoint } from '@/features/checkpoints/actions'
+import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
 
 const truncate_prompt = (text: string): string => {
   if (text.length <= MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE) return text
