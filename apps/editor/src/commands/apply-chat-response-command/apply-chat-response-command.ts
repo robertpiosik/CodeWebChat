@@ -109,7 +109,7 @@ export const apply_chat_response_command = (params: {
             created_at: Date.now(),
             url: args?.url,
             recent_api_configuration: args?.recent_api_configuration,
-            is_unviewed: true
+            is_not_looked_at: true
           }
 
           created_at_for_switch = new_item.created_at
@@ -153,8 +153,8 @@ export const apply_chat_response_command = (params: {
         const target_created_at = args.created_at
         const history = params.panel_provider.response_history
         const existing = history.find((i) => i.created_at === target_created_at)
-        if (existing && existing.is_unviewed !== false) {
-          existing.is_unviewed = false
+        if (existing && existing.is_not_looked_at !== false) {
+          existing.is_not_looked_at = false
           params.panel_provider.send_message({
             command: 'RESPONSE_HISTORY',
             history

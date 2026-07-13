@@ -16,5 +16,5 @@ export type ResponseHistoryItem = {
   relevant_files?: RelevantFileInPreview[]
   url?: string
   recent_api_configuration?: RecentApiConfiguration
-  is_unviewed?: boolean
+  is_not_looked_at?: boolean
 }

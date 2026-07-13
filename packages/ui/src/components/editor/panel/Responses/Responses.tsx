@@ -55,7 +55,7 @@ export const Responses: React.FC<Props> = (props) => {
             }}
           >
             <div className={styles.responses__item__content__instructions}>
-              {item.is_unviewed ? (
+              {item.is_not_looked_at ? (
                 <span
                   className={`codicon codicon-circle-filled ${styles['responses__item__content__instructions__new-indicator']}`}
                 />
