@@ -304,7 +304,7 @@ export const Panel = () => {
     <LayoutContext.Provider value={layout_context_value}>
       <div className={styles.container}>
         <div className={styles.slot}>
-          <Layout are_links_dimmed={active_view == 'main'}>
+          <Layout>
             <div
               className={cn(styles.content, {
                 [styles['content--hidden']]: active_view != 'main'

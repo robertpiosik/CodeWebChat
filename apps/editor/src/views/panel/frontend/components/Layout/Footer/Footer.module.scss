@@ -22,14 +22,6 @@
     padding-left: 12px;
     transition: var(--transition-duration-250) opacity
       var(--transition-timing-function);
-
-    &--dimmed {
-      opacity: var(--disabled-opacity);
-
-      &:hover {
-        opacity: 1;
-      }
-    }
   }
 
   &__icon-button {

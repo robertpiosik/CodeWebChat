@@ -6,11 +6,7 @@ import { use_compacting } from '@shared/hooks'
 import { LayoutContext } from '../../../contexts/LayoutContext'
 import { use_translation } from '../../../i18n/use-translation'
 
-type Props = {
-  are_links_dimmed?: boolean
-}
-
-export const Footer: React.FC<Props> = (props) => {
+export const Footer: React.FC = () => {
   const {
     can_undo,
     on_apply_click,
@@ -57,12 +53,7 @@ export const Footer: React.FC<Props> = (props) => {
   return (
     <>
       <div className={styles.footer} ref={container_ref}>
-        <div
-          ref={left_ref}
-          className={cn(styles.footer__left, {
-            [styles['footer__left--dimmed']]: props.are_links_dimmed
-          })}
-        >
+        <div ref={left_ref} className={styles.footer__left}>
           <a
             className={cn(
               styles['footer__icon-button'],
