@@ -161,6 +161,7 @@ export const handle_send_to_browser = async (params: {
       })
 
     let formatted_system_instructions = ''
+    let user_instructions = processed_instructions
     if (params.panel_provider.web_prompt_type == 'edit-files') {
       const config = vscode.workspace.getConfiguration('codeWebChat')
       const instructions_key = {
@@ -181,14 +182,15 @@ export const handle_send_to_browser = async (params: {
         formatted_system_instructions = `# System\n\n${edit_format_instructions}`
       }
     } else if (params.panel_provider.web_prompt_type == 'find-relevant-files') {
-      formatted_system_instructions = `${find_relevant_files_format_for_panel}\n\n${find_relevant_files_instructions}`
+      formatted_system_instructions = find_relevant_files_format_for_panel
+      user_instructions = `${find_relevant_files_instructions}\n\n${processed_instructions}`
     }
 
     const { full_prompt: text } = PromptBuilder.build_prompt({
       context_text,
       skill_definitions,
       system_instructions: formatted_system_instructions,
-      user_instructions: processed_instructions
+      user_instructions
     })
 
     sent =

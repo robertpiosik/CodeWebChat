@@ -125,6 +125,7 @@ export const handle_copy_prompt = async (params: {
       })
 
     let formatted_system_instructions = ''
+    let user_instructions = processed_instructions
 
     if (params.panel_provider.web_prompt_type == 'edit-files') {
       const edit_format =
@@ -150,14 +151,15 @@ export const handle_copy_prompt = async (params: {
         formatted_system_instructions = `# System\n\n${edit_format_instructions}`
       }
     } else if (is_in_find_relevant_files_prompt_type) {
-      formatted_system_instructions = `${find_relevant_files_format_for_panel}\n\n${find_relevant_files_instructions}`
+      formatted_system_instructions = find_relevant_files_format_for_panel
+      user_instructions = `${find_relevant_files_instructions}\n\n${processed_instructions}`
     }
 
     const { full_prompt: text } = PromptBuilder.build_prompt({
       context_text,
       skill_definitions,
       system_instructions: formatted_system_instructions,
-      user_instructions: processed_instructions
+      user_instructions
     })
 
     vscode.env.clipboard.writeText(text.trim())

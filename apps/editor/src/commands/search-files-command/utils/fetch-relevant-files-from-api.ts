@@ -26,8 +26,7 @@ export const fetch_relevant_files_from_api = async (
   }
   xml_files += `</files>`
 
-  const system_instructions_xml = `${find_relevant_files_format}\n${find_relevant_files_instructions}`
-  const part2 = `${system_instructions_xml}\n${instructions}`
+  const part2 = `${find_relevant_files_format}\n\n${find_relevant_files_instructions}\n\n${instructions}`
   const user_content = build_user_content({
     model_provider,
     part1: xml_files,

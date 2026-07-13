@@ -216,14 +216,12 @@ export const handle_find_relevant_files = async (
 
     const endpoint_url = model_provider.base_url
 
-    const formatted_system_instructions = `${find_relevant_files_format_for_panel}\n\n${find_relevant_files_instructions}`
-
     const { part1, part2 } = PromptBuilder.build_prompt({
       other_files: collected.other_files,
       recent_files: collected.recent_files,
       skill_definitions,
-      system_instructions: formatted_system_instructions,
-      user_instructions: processed_instructions
+      system_instructions: find_relevant_files_format_for_panel,
+      user_instructions: `${find_relevant_files_instructions}\n\n${processed_instructions}`
     })
 
     const user_content = build_user_content({
