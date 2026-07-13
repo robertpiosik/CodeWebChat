@@ -78,6 +78,15 @@ export interface UpdateIncludePromptsInCommitMessagesMessage {
   enabled: boolean
 }
 
+export interface GetFindRelevantFilesInstructionsMessage {
+  command: 'GET_FIND_RELEVANT_FILES_INSTRUCTIONS'
+}
+
+export interface UpdateFindRelevantFilesInstructionsMessage {
+  command: 'UPDATE_FIND_RELEVANT_FILES_INSTRUCTIONS'
+  instructions: string
+}
+
 export interface GetEditFilesSystemInstructionsMessage {
   command: 'GET_EDIT_FILES_SYSTEM_INSTRUCTIONS'
 }
@@ -332,6 +341,8 @@ export type FrontendMessage =
   | GetIncludePromptsInCommitMessagesMessage
   | UpdateIncludePromptsInCommitMessagesMessage
   | GetEditFilesSystemInstructionsMessage
+  | GetFindRelevantFilesInstructionsMessage
+  | UpdateFindRelevantFilesInstructionsMessage
   | UpdateEditFilesSystemInstructionsMessage
   | GetEditFormatInstructionsMessage
   | UpdateEditFormatInstructionsMessage
@@ -402,6 +413,11 @@ export interface IncludePromptsInCommitMessagesMessage {
 
 export interface EditFilesSystemInstructionsMessage {
   command: 'EDIT_FILES_SYSTEM_INSTRUCTIONS'
+  instructions: string
+}
+
+export interface FindRelevantFilesInstructionsMessage {
+  command: 'FIND_RELEVANT_FILES_INSTRUCTIONS'
   instructions: string
 }
 
@@ -538,6 +554,7 @@ export type BackendMessage =
   | CommitMessageInstructionsMessage
   | IncludePromptsInCommitMessagesMessage
   | EditFilesSystemInstructionsMessage
+  | FindRelevantFilesInstructionsMessage
   | EditFormatInstructionsMessage
   | ContextSizeWarningThresholdMessage
   | AreAutomaticCheckpointsDisabledMessage

@@ -183,7 +183,12 @@ export const handle_send_to_browser = async (params: {
       }
     } else if (params.panel_provider.web_prompt_type == 'find-relevant-files') {
       formatted_system_instructions = find_relevant_files_format_for_panel
-      user_instructions = `${find_relevant_files_instructions}\n\n${processed_instructions}`
+
+      const config = vscode.workspace.getConfiguration('codeWebChat')
+      const base_instructions =
+        config.get<string>('findRelevantFilesInstructions') ||
+        find_relevant_files_instructions
+      user_instructions = `${base_instructions}\n\n${processed_instructions}`
     }
 
     const { full_prompt: text } = PromptBuilder.build_prompt({

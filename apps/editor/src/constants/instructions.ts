@@ -33,7 +33,7 @@ export const commit_message_instructions =
   "Write a brief and precise summary for the changes, limited to a single sentence. Because the summary will be used for a commit message, don't use any markdown formatting and don't include a trailing dot. Use an imperative tone to ensure clarity and focus on the primary change or purpose."
 
 export const find_relevant_files_instructions =
-  'Find a complete set of files relevant to the following query (include the primary files as well as any structural files):'
+  'Find a complete set of files relevant to the following query. Include the primary files as well as any structural files.'
 
 export const find_relevant_files_format = `# System
 

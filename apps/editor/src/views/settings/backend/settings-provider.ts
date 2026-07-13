@@ -57,7 +57,9 @@ import {
   handle_reorder_api_configurations,
   handle_pick_model_provider,
   handle_pick_api_model,
-  handle_pick_api_reasoning_effort
+  handle_pick_api_reasoning_effort,
+  handle_get_find_relevant_files_instructions,
+  handle_update_find_relevant_files_instructions
 } from './message-handlers'
 import { config_web_configuration_to_ui_format } from '@/utils/web-configuration-format-converters'
 import { webview_html } from '@/views/shared/utils/webview-html'
@@ -147,6 +149,12 @@ export class SettingsProvider {
           await handle_update_model_provider(this, message)
         } else if (message.command == 'GET_API_CONFIGURATIONS') {
           await handle_get_api_configurations(this)
+        } else if (message.command == 'GET_FIND_RELEVANT_FILES_INSTRUCTIONS') {
+          await handle_get_find_relevant_files_instructions(this)
+        } else if (
+          message.command == 'UPDATE_FIND_RELEVANT_FILES_INSTRUCTIONS'
+        ) {
+          await handle_update_find_relevant_files_instructions(message)
         } else if (message.command == 'SET_DEFAULT_API_CONFIGURATION') {
           await handle_set_default_api_configuration(
             this,
@@ -275,6 +283,7 @@ export class SettingsProvider {
           void handle_get_model_providers(this)
           void handle_get_api_configurations(this)
           void handle_get_edit_files_system_instructions(this)
+          void handle_get_find_relevant_files_instructions(this)
           void handle_get_edit_format_instructions(this)
           void handle_get_context_size_warning_threshold(this)
           void handle_get_commit_message_instructions(this)

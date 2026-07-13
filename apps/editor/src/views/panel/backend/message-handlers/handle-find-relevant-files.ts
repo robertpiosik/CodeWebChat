@@ -216,12 +216,17 @@ export const handle_find_relevant_files = async (
 
     const endpoint_url = model_provider.base_url
 
+    const config = vscode.workspace.getConfiguration('codeWebChat')
+    const base_instructions =
+      config.get<string>('findRelevantFilesInstructions') ||
+      find_relevant_files_instructions
+
     const { part1, part2 } = PromptBuilder.build_prompt({
       other_files: collected.other_files,
       recent_files: collected.recent_files,
       skill_definitions,
       system_instructions: find_relevant_files_format_for_panel,
-      user_instructions: `${find_relevant_files_instructions}\n\n${processed_instructions}`
+      user_instructions: `${base_instructions}\n\n${processed_instructions}`
     })
 
     const user_content = build_user_content({

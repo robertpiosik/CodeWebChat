@@ -3,8 +3,7 @@ import {
   BackendMessage,
   EditFormatInstructions,
   ApiConfiguration,
-  Provider,
-  FrontendMessage
+  Provider
 } from '@/views/settings/types/messages'
 import { ApiFeature } from '@/views/shared/types/api-features'
 import { post_message } from '../utils/post-message'
@@ -29,6 +28,10 @@ export const use_settings = (vscode: any) => {
   ] = useState<boolean | undefined>(undefined)
   const [edit_files_system_instructions, set_edit_files_system_instructions] =
     useState<string | undefined>(undefined)
+  const [
+    find_relevant_files_instructions,
+    set_find_relevant_files_instructions
+  ] = useState<string | undefined>(undefined)
   const [context_size_warning_threshold, set_context_size_warning_threshold] =
     useState<number>()
   const [edit_format_instructions, set_edit_format_instructions] = useState<
@@ -68,6 +71,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_API_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_WEB_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_EDIT_FILES_SYSTEM_INSTRUCTIONS' })
+    post_message(vscode, { command: 'GET_FIND_RELEVANT_FILES_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_INCLUDE_PROMPTS_IN_COMMIT_MESSAGES' })
     post_message(vscode, { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' })
@@ -95,6 +99,8 @@ export const use_settings = (vscode: any) => {
         set_web_configurations(message.web_configurations)
       } else if (message.command == 'EDIT_FILES_SYSTEM_INSTRUCTIONS') {
         set_edit_files_system_instructions(message.instructions)
+      } else if (message.command == 'FIND_RELEVANT_FILES_INSTRUCTIONS') {
+        set_find_relevant_files_instructions(message.instructions)
       } else if (message.command == 'COMMIT_MESSAGE_INSTRUCTIONS') {
         set_commit_message_instructions(message.instructions)
       } else if (message.command == 'INCLUDE_PROMPTS_IN_COMMIT_MESSAGES') {
@@ -251,6 +257,14 @@ export const use_settings = (vscode: any) => {
       instructions
     })
 
+  const handle_find_relevant_files_instructions_change = (
+    instructions: string
+  ) =>
+    post_message(vscode, {
+      command: 'UPDATE_FIND_RELEVANT_FILES_INSTRUCTIONS',
+      instructions
+    })
+
   const handle_open_editor_settings = () =>
     post_message(vscode, { command: 'OPEN_EDITOR_SETTINGS' })
 
@@ -369,6 +383,7 @@ export const use_settings = (vscode: any) => {
     commit_message_instructions,
     include_prompts_in_commit_messages,
     edit_files_system_instructions,
+    find_relevant_files_instructions,
     context_size_warning_threshold,
     edit_format_instructions,
     are_automatic_checkpoints_disabled,
@@ -394,6 +409,7 @@ export const use_settings = (vscode: any) => {
     handle_commit_instructions_change,
     handle_include_prompts_in_commit_messages_change,
     handle_edit_files_system_instructions_change,
+    handle_find_relevant_files_instructions_change,
     handle_open_editor_settings,
     handle_open_ignore_patterns_settings,
     handle_open_allow_patterns_settings,

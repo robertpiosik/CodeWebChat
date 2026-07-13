@@ -26,7 +26,12 @@ export const fetch_relevant_files_from_api = async (
   }
   xml_files += `</files>`
 
-  const part2 = `${find_relevant_files_format}\n\n${find_relevant_files_instructions}\n\n${instructions}`
+  const config = vscode.workspace.getConfiguration('codeWebChat')
+  const base_instructions =
+    config.get<string>('findRelevantFilesInstructions') ||
+    find_relevant_files_instructions
+
+  const part2 = `${find_relevant_files_format}\n\n${base_instructions}\n\n${instructions}`
   const user_content = build_user_content({
     model_provider,
     part1: xml_files,

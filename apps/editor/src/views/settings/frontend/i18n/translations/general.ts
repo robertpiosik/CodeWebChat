@@ -765,6 +765,43 @@ export const translations = {
     hu: 'Kontextus',
     bg: 'Контекст'
   },
+  'general.find-relevant-files-instructions.title': {
+    en: 'Find Relevant Files Instructions',
+    pl: 'Instrukcje znajdowania powiązanych plików',
+    'zh-cn': '查找相关文件的说明',
+    ja: '関連ファイルの検索手順',
+    'zh-tw': '尋找相關檔案的說明',
+    de: 'Anweisungen zum Finden relevanter Dateien',
+    es: 'Instrucciones para encontrar archivos relevantes',
+    fr: 'Instructions pour trouver des fichiers pertinents',
+    'pt-br': 'Instruções para encontrar arquivos relevantes',
+    ru: 'Инструкции по поиску соответствующих файлов',
+    ko: '관련 파일 찾기 지침',
+    it: 'Istruzioni per trovare file pertinenti',
+    tr: 'İlgili Dosyaları Bulma Talimatları',
+    cs: 'Pokyny pro nalezení relevantních souborů',
+    hu: 'Utasítások a releváns fájlok megtalálásához',
+    bg: 'Инструкции за намиране на съответни файлове'
+  },
+  'general.find-relevant-files-instructions.description': {
+    en: 'Describe how the AI should identify and select relevant files for your prompt.',
+    pl: 'Opisz, w jaki sposób sztuczna inteligencja powinna identyfikować i wybierać odpowiednie pliki dla Twojego promptu.',
+    'zh-cn': '描述 AI 应该如何为您的提示识别和选择相关文件。',
+    ja: 'AI がプロンプトに関連するファイルをどのように特定して選択すべきかを記述します。',
+    'zh-tw': '描述 AI 應該如何為您的提示識別和選擇相關檔案。',
+    de: 'Beschreiben Sie, wie die KI relevante Dateien für Ihren Prompt identifizieren und auswählen soll.',
+    es: 'Describe cómo debe la IA identificar y seleccionar archivos relevantes para tu prompt.',
+    fr: "Décrivez comment l'IA doit identifier et sélectionner les fichiers pertinents pour votre prompt.",
+    'pt-br':
+      'Descreva como a IA deve identificar e selecionar arquivos relevantes para o seu prompt.',
+    ru: 'Опишите, как ИИ должен определять и выбирать соответствующие файлы для вашего промпта.',
+    ko: 'AI가 프롬프트와 관련된 파일을 식별하고 선택하는 방법을 설명합니다.',
+    it: "Descrivi come l'IA dovrebbe identificare e selezionare i file pertinenti per il tuo prompt.",
+    tr: 'Yapay zekanın isteminiz için ilgili dosyaları nasıl belirleyip seçeceğini açıklayın.',
+    cs: 'Popište, jak by měla umělá inteligence identifikovat a vybrat relevantní soubory pro váš prompt.',
+    hu: 'Írja le, hogyan kellene az MI-nek azonosítania és kiválasztania a releváns fájlokat a promptjához.',
+    bg: 'Опишете как ИИ трябва да идентифицира и избира съответните файлове за вашия промпт.'
+  },
   'general.action.restore-default': {
     en: 'Restore default',
     pl: 'Przywróć domyślne',

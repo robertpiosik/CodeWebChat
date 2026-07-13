@@ -56,6 +56,11 @@ type Props = {
   on_commit_instructions_blur: () => void
   default_commit_instructions: string
   on_restore_commit_instructions: () => void
+  find_relevant_instructions: string
+  set_find_relevant_instructions: (instructions: string) => void
+  on_find_relevant_instructions_blur: () => void
+  default_find_relevant_instructions: string
+  on_restore_find_relevant_instructions: () => void
 }
 
 export const GeneralSection = forwardRef<HTMLDivElement, Props>(
@@ -243,6 +248,32 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 />
               }
             />
+            <UiItem
+              title={t('general.find-relevant-files-instructions.title')}
+              description={t(
+                'general.find-relevant-files-instructions.description'
+              )}
+              is_toggleable
+              translations={{
+                expand: t('common.expand'),
+                collapse: t('common.collapse')
+              }}
+            >
+              <UiTextarea
+                value={props.find_relevant_instructions}
+                min_rows={3}
+                on_change={props.set_find_relevant_instructions}
+                on_blur={props.on_find_relevant_instructions_blur}
+                action_icon={
+                  props.find_relevant_instructions !=
+                  props.default_find_relevant_instructions
+                    ? 'discard'
+                    : undefined
+                }
+                action_title={t('general.action.restore-default')}
+                on_action_click={props.on_restore_find_relevant_instructions}
+              />
+            </UiItem>
           </UiGroup>
         </div>
 

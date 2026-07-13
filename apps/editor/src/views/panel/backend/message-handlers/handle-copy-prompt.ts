@@ -152,7 +152,12 @@ export const handle_copy_prompt = async (params: {
       }
     } else if (is_in_find_relevant_files_prompt_type) {
       formatted_system_instructions = find_relevant_files_format_for_panel
-      user_instructions = `${find_relevant_files_instructions}\n\n${processed_instructions}`
+
+      const config = vscode.workspace.getConfiguration('codeWebChat')
+      const base_instructions =
+        config.get<string>('findRelevantFilesInstructions') ||
+        find_relevant_files_instructions
+      user_instructions = `${base_instructions}\n\n${processed_instructions}`
     }
 
     const { full_prompt: text } = PromptBuilder.build_prompt({

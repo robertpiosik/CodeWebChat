@@ -924,6 +924,10 @@
           "type": "string",
           "scope": "resource"
         },
+        "codeWebChat.findRelevantFilesInstructions": {
+          "type": "string",
+          "scope": "resource"
+        },
         "codeWebChat.editFilesSystemInstructions": {
           "type": "string",
           "scope": "resource"

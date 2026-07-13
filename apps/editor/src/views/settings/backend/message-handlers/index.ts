@@ -1,3 +1,5 @@
+export * from './handle-get-find-relevant-files-instructions'
+export * from './handle-update-find-relevant-files-instructions'
 export * from './handle-add-model-provider'
 export * from './handle-update-model-provider'
 export * from './handle-get-model-providers'
