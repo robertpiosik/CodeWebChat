@@ -3,9 +3,9 @@ import * as fs from 'fs'
 import {
   create_checkpoint,
   delete_checkpoint
-} from '../checkpoints-command/actions'
+} from '@/features/checkpoints/actions'
 import { FileInPreview } from '@shared/types/file-in-preview'
-import { get_checkpoint_path } from '../checkpoints-command/utils'
+import { get_checkpoint_path } from '@/features/checkpoints/utils'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
@@ -20,7 +20,6 @@ import {
   process_chat_response,
   ApplyChatResponseCommandArgs
 } from './response-processor'
-import { Checkpoint } from '../checkpoints-command/types'
 import { CHECKPOINTS_STATE_KEY } from '@/constants/state-keys'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { ApiManager } from '@/services/api-manager'
@@ -30,6 +29,7 @@ import {
   CwcPreviewProvider
 } from './utils/preview/virtual-document-provider'
 import { parse_response } from './utils/clipboard-parser'
+import { Checkpoint } from '@/features/checkpoints/types'
 
 let in_progress = false
 

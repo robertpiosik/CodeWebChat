@@ -2,12 +2,12 @@ import * as vscode from 'vscode'
 import {
   CHECKPOINTS_STATE_KEY,
   TEMPORARY_CHECKPOINT_STATE_KEY
-} from '../../constants/state-keys'
-import { WorkspaceProvider } from '../../context/providers/workspace/workspace-provider'
+} from '../constants/state-keys'
+import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { t } from '@/i18n'
-import type { Checkpoint } from './types'
+import type { Checkpoint } from '@/features/checkpoints/types'
 import {
   create_checkpoint,
   clear_all_checkpoints,
@@ -17,14 +17,14 @@ import {
   toggle_checkpoint_star,
   ActiveDeleteOperation,
   delete_checkpoint_with_undo
-} from './actions'
+} from '@/features/checkpoints/actions'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { get_checkpoint_path } from './utils'
+import { get_checkpoint_path } from '@/features/checkpoints/utils'
 import { dictionary } from '@shared/constants/dictionary'
 
 dayjs.extend(relativeTime)
 
-export type { Checkpoint } from './types'
+export type { Checkpoint } from '@/features/checkpoints/types'
 
 export const checkpoints_command = (params: {
   context: vscode.ExtensionContext

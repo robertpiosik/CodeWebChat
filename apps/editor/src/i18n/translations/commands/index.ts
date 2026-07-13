@@ -14,6 +14,7 @@ import { translations as rename } from './rename'
 import { translations as rate } from './rate'
 import { translations as select_unstaged_files } from './select-unstaged-files'
 import { translations as select_commit_files } from './select-commit-files'
+import { translations as checkpoints } from './checkpoints'
 
 export const translations = {
   ...generate_commit_message,
@@ -31,5 +32,6 @@ export const translations = {
   ...rename,
   ...rate,
   ...select_unstaged_files,
-  ...select_commit_files
+  ...select_commit_files,
+  ...checkpoints
 }

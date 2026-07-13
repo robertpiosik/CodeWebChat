@@ -674,9 +674,14 @@
           "group": "navigation@5"
         },
         {
-          "command": "codeWebChat.settings",
+          "command": "codeWebChat.checkpoints",
           "when": "view == codeWebChatView",
           "group": "navigation@1"
+        },
+        {
+          "command": "codeWebChat.settings",
+          "when": "view == codeWebChatView",
+          "group": "navigation@2"
         },
         {
           "command": "codeWebChat.visitWebsite",
