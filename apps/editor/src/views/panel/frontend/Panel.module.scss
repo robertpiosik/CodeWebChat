@@ -24,8 +24,10 @@
     display: none;
   }
 
-  [data-simplebar='init'] {
-    height: 100%;
+  :global {
+    .simplebar-content-wrapper {
+      display: flex;
+    }
   }
 }
 

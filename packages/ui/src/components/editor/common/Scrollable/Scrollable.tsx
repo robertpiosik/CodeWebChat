@@ -101,7 +101,7 @@ export const Scrollable = forwardRef<any, Props>((props, ref) => {
       <SimpleBar
         ref={simplebar_ref}
         style={{
-          // height: '100%',
+          height: '100%',
           maxHeight: props.max_height
         }}
       >
