@@ -8,9 +8,12 @@ import { display_token_count } from '../../utils/display-token-count'
 import { is_valid_uri } from './utils/is-valid-uri'
 import { get_all_files } from './utils/get-all-files'
 import { get_imports_for_uri } from './utils/get-imports-for-uri'
+import { t } from '@/i18n'
+import { search_files } from '@/features/search-files'
 
 export const select_imported_files_command = (
-  workspace_provider: WorkspaceProvider
+  workspace_provider: WorkspaceProvider,
+  extension_context: vscode.ExtensionContext
 ) => {
   return vscode.commands.registerCommand(
     'codeWebChat.selectImportedFiles',
@@ -108,6 +111,11 @@ export const select_imported_files_command = (
         tooltip: 'Close'
       }
 
+      const search_button = {
+        iconPath: new vscode.ThemeIcon('search'),
+        tooltip: t('command.search.title')
+      }
+
       type ImportQuickPickItem = vscode.QuickPickItem & {
         uri?: vscode.Uri
         picked?: boolean
@@ -174,82 +182,114 @@ export const select_imported_files_command = (
         quick_pick_items.push(...recursive_items)
       }
 
-      const quick_pick = vscode.window.createQuickPick<ImportQuickPickItem>()
-      quick_pick.items = quick_pick_items
-      quick_pick.selectedItems = quick_pick_items.filter((item) => item.picked)
-      quick_pick.canSelectMany = true
-      quick_pick.matchOnDescription = true
-
-      const update_placeholder = () => {
-        const total = quick_pick.selectedItems.reduce(
-          (sum, item) => sum + (item.tokens || 0),
-          0
-        )
-        const total_text =
-          total > 0 ? ` (totalling ${display_token_count(total)} tokens)` : ''
-        quick_pick.placeholder = `Select imported files${total_text}`
-      }
-      update_placeholder()
-      quick_pick.onDidChangeSelection(update_placeholder)
-
-      quick_pick.title = 'Imported Files'
-      quick_pick.ignoreFocusOut = true
-      quick_pick.buttons = [close_button]
-
-      const selected_items = await new Promise<
-        readonly ImportQuickPickItem[] | undefined
-      >((resolve) => {
-        let is_accepted = false
-
-        quick_pick.onDidTriggerButton((button) => {
-          if (button === close_button) {
-            resolve(undefined)
-            quick_pick.hide()
-          }
-        })
-
-        quick_pick.onDidAccept(() => {
-          is_accepted = true
-          resolve(quick_pick.selectedItems)
-          quick_pick.hide()
-        })
-
-        quick_pick.onDidHide(() => {
-          if (!is_accepted) {
-            resolve(undefined)
-          }
-          quick_pick.dispose()
-        })
-
-        quick_pick.onDidTriggerItemButton(async (e) => {
-          if (e.button === open_file_button && e.item.uri) {
-            try {
-              const doc = await vscode.workspace.openTextDocument(e.item.uri)
-              await vscode.window.showTextDocument(doc, { preview: true })
-            } catch (error) {
-              vscode.window.showErrorMessage(
-                `Error opening file: ${String(error)}`
-              )
-            }
-          }
-        })
-
-        quick_pick.show()
-      })
-
-      if (selected_items === undefined) {
-        return
-      }
-
-      const valid_selected = selected_items.filter((i) => i.uri !== undefined)
-
+      let current_selected_items = quick_pick_items.filter(
+        (item) => item.picked
+      )
+      let selected_paths: string[] = []
       const shown_paths = quick_pick_items
         .filter(
           (item) => item.kind !== vscode.QuickPickItemKind.Separator && item.uri
         )
         .map((item) => item.uri!.fsPath)
 
-      const selected_paths = valid_selected.map((item) => item.uri!.fsPath)
+      while (true) {
+        const quick_pick = vscode.window.createQuickPick<ImportQuickPickItem>()
+        quick_pick.items = quick_pick_items
+        quick_pick.selectedItems = current_selected_items
+        quick_pick.canSelectMany = true
+        quick_pick.matchOnDescription = true
+
+        const update_placeholder = () => {
+          const total = quick_pick.selectedItems.reduce(
+            (sum, item) => sum + (item.tokens || 0),
+            0
+          )
+          const total_text =
+            total > 0 ? ` (totalling ${display_token_count(total)} tokens)` : ''
+          quick_pick.placeholder = `Select imported files${total_text}`
+        }
+        update_placeholder()
+        quick_pick.onDidChangeSelection(update_placeholder)
+
+        quick_pick.title = 'Imported Files'
+        quick_pick.ignoreFocusOut = true
+        quick_pick.buttons = [search_button, close_button]
+
+        const selected_items = await new Promise<
+          readonly ImportQuickPickItem[] | undefined | 'search'
+        >((resolve) => {
+          let is_accepted = false
+
+          quick_pick.onDidTriggerButton((button) => {
+            if (button === close_button) {
+              resolve(undefined)
+              quick_pick.hide()
+            } else if (button === search_button) {
+              current_selected_items = [...quick_pick.selectedItems]
+              resolve('search')
+              quick_pick.hide()
+            }
+          })
+
+          quick_pick.onDidAccept(() => {
+            is_accepted = true
+            resolve(quick_pick.selectedItems)
+            quick_pick.hide()
+          })
+
+          quick_pick.onDidHide(() => {
+            if (!is_accepted) {
+              resolve(undefined)
+            }
+            quick_pick.dispose()
+          })
+
+          quick_pick.onDidTriggerItemButton(async (e) => {
+            if (e.button === open_file_button && e.item.uri) {
+              try {
+                const doc = await vscode.workspace.openTextDocument(e.item.uri)
+                await vscode.window.showTextDocument(doc, { preview: true })
+              } catch (error) {
+                vscode.window.showErrorMessage(
+                  `Error opening file: ${String(error)}`
+                )
+              }
+            }
+          })
+
+          quick_pick.show()
+        })
+
+        if (selected_items === undefined) {
+          return
+        }
+
+        if (selected_items === 'search') {
+          const search_result = await search_files({
+            files: shown_paths,
+            workspace_provider,
+            extension_context,
+            show_back_button: true
+          })
+
+          if (search_result === 'back') {
+            continue
+          }
+
+          if (!search_result) {
+            return
+          }
+
+          selected_paths = search_result.selected_paths
+          break
+        } else {
+          const valid_selected = selected_items.filter(
+            (i) => i.uri !== undefined
+          )
+          selected_paths = valid_selected.map((item) => item.uri!.fsPath)
+          break
+        }
+      }
 
       const paths_to_apply = [
         ...new Set([

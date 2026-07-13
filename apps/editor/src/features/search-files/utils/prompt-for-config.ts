@@ -4,14 +4,14 @@ import {
   get_api_configuration_id,
   ApiConfiguration,
   ModelProvider
-} from '../../../services/model-providers-manager'
-import { LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY } from '../../../constants/state-keys'
-import { display_token_count } from '../../../utils/display-token-count'
+} from '@/services/model-providers-manager'
+import { LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
+import { display_token_count } from '@/utils/display-token-count'
 import { t } from '@/i18n'
 import {
   show_configuration_quick_pick,
   map_api_configuration_to_item
-} from '../../../utils/show-configuration-quick-pick'
+} from '@/utils/show-configuration-quick-pick'
 
 export const prompt_for_api_configuration = async (params: {
   model_providers_manager: ModelProvidersManager

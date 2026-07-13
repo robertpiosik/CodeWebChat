@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import { WorkspaceProvider } from '../../../context/providers/workspace/workspace-provider'
-import { display_token_count } from '../../../utils/display-token-count'
+import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
+import { display_token_count } from '@/utils/display-token-count'
 import { t } from '@/i18n'
 import { create_search_regex } from './create-search-regex'
 
@@ -11,7 +11,7 @@ export const prompt_for_search_results = async (params: {
   search_mode: 'phrase' | 'keywords' | 'intelligent'
   workspace_provider: WorkspaceProvider
 }): Promise<
-  readonly (vscode.QuickPickItem & { file_path: string })[] | undefined | 'back'
+  { selected_paths: string[]; matched_paths: string[] } | undefined | 'back'
 > => {
   const open_file_button = {
     iconPath: new vscode.ThemeIcon('go-to-file'),
@@ -76,9 +76,7 @@ export const prompt_for_search_results = async (params: {
   quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
 
   return new Promise<
-    | readonly (vscode.QuickPickItem & { file_path: string })[]
-    | undefined
-    | 'back'
+    { selected_paths: string[]; matched_paths: string[] } | undefined | 'back'
   >((resolve) => {
     let is_accepted = false
 
@@ -94,7 +92,10 @@ export const prompt_for_search_results = async (params: {
 
     quick_pick.onDidAccept(() => {
       is_accepted = true
-      resolve(quick_pick.selectedItems)
+      resolve({
+        selected_paths: quick_pick.selectedItems.map((item) => item.file_path),
+        matched_paths: params.matched_files
+      })
       quick_pick.hide()
     })
 

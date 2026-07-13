@@ -1,15 +1,15 @@
 import * as vscode from 'vscode'
 import axios from 'axios'
-import { make_api_request } from '../../../utils/make-api-request'
+import { make_api_request } from '@/utils/make-api-request'
 import {
   find_relevant_files_instructions,
   find_relevant_files_format
-} from '../../../constants/instructions'
-import { apply_reasoning_effort } from '../../../utils/apply-reasoning-effort'
-import { build_user_content } from '../../../utils/build-user-content'
+} from '@/constants/instructions'
+import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
+import { build_user_content } from '@/utils/build-user-content'
 import { Logger } from '@shared/utils/logger'
-import { FileData } from './analyze-workspace-files'
-import { ModelProvider } from '../../../services/model-providers-manager'
+import { FileData } from './analyze-files'
+import { ModelProvider } from '@/services/model-providers-manager'
 import { t } from '@/i18n'
 
 export const fetch_relevant_files_from_api = async (
@@ -22,7 +22,7 @@ export const fetch_relevant_files_from_api = async (
   let xml_files = `<files>\n`
   for (const file of files_data) {
     const content_to_use = shrink_result ? file.shrunk_content : file.content
-    xml_files += `<file path="${file.relative_path}">\n<![CDATA[\n${content_to_use}\n]]>\n</file>\n`
+    xml_files += `<file path="${file.display_path}">\n<![CDATA[\n${content_to_use}\n]]>\n</file>\n`
   }
   xml_files += `</files>`
 

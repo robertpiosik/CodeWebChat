@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { display_token_count } from '../../../utils/display-token-count'
+import { display_token_count } from '@/utils/display-token-count'
 import { t } from '@/i18n'
 
 export const prompt_for_shrink_mode = async (params: {

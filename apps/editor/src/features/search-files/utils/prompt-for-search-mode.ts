@@ -2,8 +2,9 @@ import * as vscode from 'vscode'
 import { t } from '@/i18n'
 
 export const prompt_for_search_mode = async (
-  last_mode: 'phrase' | 'keywords' | 'intelligent'
-): Promise<'phrase' | 'keywords' | 'intelligent' | undefined> => {
+  last_mode: 'phrase' | 'keywords' | 'intelligent',
+  show_back_button?: boolean
+): Promise<'phrase' | 'keywords' | 'intelligent' | undefined | 'back'> => {
   const items: (vscode.QuickPickItem & {
     mode: 'phrase' | 'keywords' | 'intelligent'
   })[] = [
@@ -39,13 +40,21 @@ export const prompt_for_search_mode = async (
   quick_pick.title = t('command.search.mode.title')
   quick_pick.placeholder = t('command.search.mode.placeholder')
   quick_pick.ignoreFocusOut = false
-  quick_pick.buttons = [close_button]
+
+  const buttons: vscode.QuickInputButton[] = [close_button]
+  if (show_back_button) {
+    buttons.unshift(vscode.QuickInputButtons.Back)
+  }
+  quick_pick.buttons = buttons
 
   return new Promise((resolve) => {
     let is_resolved = false
 
     quick_pick.onDidTriggerButton((button) => {
-      if (button === close_button) {
+      if (button === vscode.QuickInputButtons.Back) {
+        resolve('back')
+        quick_pick.hide()
+      } else if (button === close_button) {
         resolve(undefined)
         quick_pick.hide()
       }

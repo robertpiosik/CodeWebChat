@@ -130,9 +130,9 @@ export const activate = async (context: vscode.ExtensionContext) => {
     add_file_to_context_command(workspace_provider),
     remove_file_from_context_command(workspace_provider),
     set_ranges_command(workspace_provider, context),
-    select_imported_files_command(workspace_provider),
+    select_imported_files_command(workspace_provider, context),
     duplicate_workspace_command(workspace_provider, context),
-    select_referencing_files_command(workspace_provider),
+    select_referencing_files_command(workspace_provider, context),
     ...search_files_commands(workspace_provider, context),
     select_definition_file_command(workspace_provider),
     open_url_command({

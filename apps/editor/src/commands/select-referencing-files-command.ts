@@ -8,9 +8,11 @@ import { Logger } from '@shared/utils/logger'
 import { display_token_count } from '../utils/display-token-count'
 import { t } from '../i18n'
 import { get_all_files } from './select-imported-files-command/utils/get-all-files'
+import { search_files } from '@/features/search-files'
 
 export const select_referencing_files_command = (
-  workspace_provider: WorkspaceProvider
+  workspace_provider: WorkspaceProvider,
+  extension_context: vscode.ExtensionContext
 ) => {
   return vscode.commands.registerCommand(
     'codeWebChat.selectReferencingFiles',
@@ -246,83 +248,120 @@ export const select_referencing_files_command = (
           })
         )
 
-        const quick_pick = vscode.window.createQuickPick<
-          vscode.QuickPickItem & { file_path: string; range: vscode.Range }
-        >()
-        quick_pick.items = quick_pick_items
-        quick_pick.selectedItems = quick_pick_items.filter((item) =>
+        let current_selected_items = quick_pick_items.filter((item) =>
           currently_checked.includes(item.file_path)
         )
-        quick_pick.canSelectMany = true
-        quick_pick.placeholder = t(
-          'command.context.select-references.select-files'
-        )
-        quick_pick.title = t('command.context.select-references.search-results')
-        quick_pick.ignoreFocusOut = true
+        let selected_paths: string[] = []
 
-        const close_button = {
-          iconPath: new vscode.ThemeIcon('close'),
-          tooltip: t('common.close')
-        }
-        quick_pick.buttons = [close_button]
+        while (true) {
+          const quick_pick = vscode.window.createQuickPick<
+            vscode.QuickPickItem & { file_path: string; range: vscode.Range }
+          >()
+          quick_pick.items = quick_pick_items
+          quick_pick.selectedItems = current_selected_items
+          quick_pick.canSelectMany = true
+          quick_pick.placeholder = t(
+            'command.context.select-references.select-files'
+          )
+          quick_pick.title = t(
+            'command.context.select-references.search-results'
+          )
+          quick_pick.ignoreFocusOut = true
 
-        const selected_items = await new Promise<
-          | readonly (vscode.QuickPickItem & {
-              file_path: string
-              range: vscode.Range
-            })[]
-          | undefined
-        >((resolve) => {
-          let is_accepted = false
+          const close_button = {
+            iconPath: new vscode.ThemeIcon('close'),
+            tooltip: t('common.close')
+          }
+          const search_button = {
+            iconPath: new vscode.ThemeIcon('search'),
+            tooltip: t('command.search.title')
+          }
+          quick_pick.buttons = [search_button, close_button]
 
-          quick_pick.onDidTriggerButton((button) => {
-            if (button === close_button) {
-              resolve(undefined)
-              quick_pick.hide()
-            }
-          })
+          const selected_items = await new Promise<
+            | readonly (vscode.QuickPickItem & {
+                file_path: string
+                range: vscode.Range
+              })[]
+            | undefined
+            | 'search'
+          >((resolve) => {
+            let is_accepted = false
 
-          quick_pick.onDidAccept(() => {
-            is_accepted = true
-            resolve(quick_pick.selectedItems)
-            quick_pick.hide()
-          })
-
-          quick_pick.onDidHide(() => {
-            if (!is_accepted) {
-              resolve(undefined)
-            }
-            quick_pick.dispose()
-          })
-
-          quick_pick.onDidTriggerItemButton(async (e) => {
-            if (e.button === open_file_button) {
-              try {
-                const doc = await vscode.workspace.openTextDocument(
-                  e.item.file_path
-                )
-                await vscode.window.showTextDocument(doc, {
-                  preview: true,
-                  selection: e.item.range
-                })
-              } catch (error) {
-                vscode.window.showErrorMessage(
-                  t('command.context.select-references.error-opening', {
-                    error: String(error)
-                  })
-                )
+            quick_pick.onDidTriggerButton((button) => {
+              if (button === close_button) {
+                resolve(undefined)
+                quick_pick.hide()
+              } else if (button === search_button) {
+                current_selected_items = [...quick_pick.selectedItems]
+                resolve('search')
+                quick_pick.hide()
               }
-            }
+            })
+
+            quick_pick.onDidAccept(() => {
+              is_accepted = true
+              resolve(quick_pick.selectedItems)
+              quick_pick.hide()
+            })
+
+            quick_pick.onDidHide(() => {
+              if (!is_accepted) {
+                resolve(undefined)
+              }
+              quick_pick.dispose()
+            })
+
+            quick_pick.onDidTriggerItemButton(async (e) => {
+              if (e.button === open_file_button) {
+                try {
+                  const doc = await vscode.workspace.openTextDocument(
+                    e.item.file_path
+                  )
+                  await vscode.window.showTextDocument(doc, {
+                    preview: true,
+                    selection: e.item.range
+                  })
+                } catch (error) {
+                  vscode.window.showErrorMessage(
+                    t('command.context.select-references.error-opening', {
+                      error: String(error)
+                    })
+                  )
+                }
+              }
+            })
+
+            quick_pick.show()
           })
 
-          quick_pick.show()
-        })
+          if (!selected_items) {
+            return
+          }
 
-        if (!selected_items) {
-          return
+          if (selected_items === 'search') {
+            const search_result = await search_files({
+              files: matched_files.map((m) => m.file_path),
+              workspace_provider,
+              extension_context,
+              show_back_button: true
+            })
+
+            if (search_result === 'back') {
+              continue
+            }
+
+            if (!search_result) {
+              return
+            }
+
+            selected_paths = search_result.selected_paths
+            break
+          } else {
+            selected_paths = selected_items.map((item) => item.file_path)
+            break
+          }
         }
-
-        const selected_paths = selected_items.map((item) => item.file_path)
 
         const selected_paths_set = new Set(selected_paths)
         const unselected_files_set = new Set(
