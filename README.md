@@ -180,6 +180,11 @@ Make your chatbot quota last longer, lower input token costs by up to 90%, and r
 
 - `Commit Changes` - Generate commit message in your preferred style.
 
+### History
+
+- `History` - Manage saved states of the workspace.
+- `Create New Checkpoint` - Save the current workspace state to the history.
+
 ## Build from source
 
 ### Prerequisites
