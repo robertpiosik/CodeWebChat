@@ -49,12 +49,6 @@ export const InlineDropdown = <T extends string>(
     set_just_opened(false)
   }
 
-  const handle_mouse_leave = () => {
-    opened_by_shortcut.current = false
-    set_is_open(false)
-    set_just_opened(false)
-  }
-
   use_click_outside(
     container_ref,
     useCallback(() => {
@@ -104,7 +98,6 @@ export const InlineDropdown = <T extends string>(
     <div
       className={cn(styles.container, { [styles['button--open']]: is_open })}
       ref={container_ref}
-      onMouseLeave={handle_mouse_leave}
     >
       <button
         className={cn(styles.button, { [styles['button--open']]: is_open })}
