@@ -183,7 +183,7 @@ Make your chatbot quota last longer, lower input token costs by up to 90%, and r
 ### History
 
 - `History` - Manage saved states of the workspace.
-- `Create New Checkpoint` - Save the current workspace state to the history.
+- `Create New Checkpoint` - Create a history entry of the current workspace state.
 
 ## Build from source
 
