@@ -158,14 +158,6 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 
 Make your chatbot quota last longer, lower input token costs by up to 90%, and reduce latency by up to 80%.
 
-## Privacy
-
-CWC is designed to operate 100% on your machine.
-
-- Zero telemetry collection.
-- Browser communication over WebSockets.
-- Model providers requested directly.
-
 ## Commands
 
 ### Code at Cursor
