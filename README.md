@@ -28,12 +28,7 @@ Get involved! Join our [discord server](https://discord.gg/KJySXsrSX5).
 
 Coding capability in LLMs is trained using techniques like [Inverse-Instruct](https://www.researchgate.net/figure/The-overview-of-INVERSE-INSTRUCT-INVERSE-INSTRUCT-utilizes-the-models-own-capability-in_fig1_382079949). A piece of working or intentionally buggy code gets summarized to make up a possible instruction you could use to prompt for edits.
 
-CWC is designed to tap directly into these summarizations by constructing ready to copy&paste, easy to iterate-on prompts.
-
-**_Select relevant files, describe the task and get accurate response in seconds!_**
-
-> [!TIP]
-> Get help in relevant file selection using natural language query with the _Find Relevant Files_ prompt type.
+**_Tap directly into these summarizations with ready to copy&paste, easy to iterate-on prompts!_**
 
 ## Prompt types
 
