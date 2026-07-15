@@ -32,6 +32,9 @@ CWC is designed to tap directly into these summarizations by showing the model f
 
 **_Select relevant files, describe the task and get accurate response in seconds!_**
 
+> [!TIP]
+> Get help in relevant file selection using natural language query with the _Find Relevant Files_ prompt type.
+
 ## Prompt types
 
 CWC constructs simple markdown-formatted prompts for common use-cases (click to expand):
