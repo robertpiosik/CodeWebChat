@@ -39,10 +39,10 @@ Select files, describe changes and get accurate edits in seconds!
 
 ```
 # Files
-[file selection]
+[full contents of selected files with paths]
 
 # System
-[edit format instructions]
+[edit format instructions (~250 tokens)]
 
 ---
 
@@ -56,7 +56,7 @@ Select files, describe changes and get accurate edits in seconds!
 
 ```
 # Files
-[file selection]
+[full contents of selected files with paths]
 
 [prompt]
 ```
@@ -68,7 +68,7 @@ Select files, describe changes and get accurate edits in seconds!
 
 ````
 # Files
-[file selection]
+[full contents of selected files with paths]
 
 ### File: `[active file]`
 ```
