@@ -557,7 +557,7 @@ export const process_chat_response = async (params: {
             .asRelativePath(document.uri, !is_single_root_folder_workspace)
             .replace(/\\/g, '/')
 
-          const fake_chat_response = `\`\`\`\n// ${file_path_for_block}\n${params.chat_response}\n\`\`\``
+          const markdown_response_for_active_editor = `\`\`\`\n// ${file_path_for_block}\n${params.chat_response}\n\`\`\``
 
           const model_providers_manager = new ModelProvidersManager(
             params.context
@@ -583,7 +583,7 @@ export const process_chat_response = async (params: {
               endpoint_url,
               api_key: model_provider.api_key,
               api_configuration: intelligent_update_api_configuration,
-              chat_response: fake_chat_response,
+              chat_response: markdown_response_for_active_editor,
               context: params.context,
               is_single_root_folder_workspace,
               panel_provider: params.panel_provider
@@ -594,13 +594,13 @@ export const process_chat_response = async (params: {
               context: params.context,
               panel_provider: params.panel_provider,
               states: intelligent_update_states,
-              applied_content: fake_chat_response,
+              applied_content: markdown_response_for_active_editor,
               original_editor_state: params.args?.original_editor_state
             })
 
             return {
               original_states: intelligent_update_states,
-              chat_response: fake_chat_response
+              chat_response: markdown_response_for_active_editor
             }
           }
           return null
