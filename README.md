@@ -26,7 +26,7 @@ Get involved! Join our [discord server](https://discord.gg/KJySXsrSX5).
 
 ## Introduction
 
-Coding capability in Large Language Models is trained using techniques like [Inverse-Instruct](https://www.researchgate.net/figure/The-overview-of-INVERSE-INSTRUCT-INVERSE-INSTRUCT-utilizes-the-models-own-capability-in_fig1_382079949). A fragment of working/intentionally buggy code gets summarized to make up a possible instruction you could use to prompt for edits.
+Coding capability in Large Language Models is trained using techniques like [Inverse-Instruct](https://www.researchgate.net/figure/The-overview-of-INVERSE-INSTRUCT-INVERSE-INSTRUCT-utilizes-the-models-own-capability-in_fig1_382079949). A piece of working or intentionally buggy code gets summarized to make up a possible instruction you could use to prompt for edits.
 
 CWC is designed to tap directly into these summarizations by constructing simple, zero-overhead prompts.
 
