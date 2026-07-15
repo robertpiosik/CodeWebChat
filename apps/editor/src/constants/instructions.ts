@@ -1,5 +1,5 @@
 export const code_at_cursor_instructions =
-  'Find correct replacement for the <missing_text> symbol. Respond with replacement text within "replacement" XML tags, without explanations or any other text.\nExample:\n<replacement>!== undefined</replacement>\n'
+  'Find correct replacement for the <missing_text> symbol. Respond with replacement text within "replacement" XML tags, without explanations or any other text.\nExample:\n<replacement>!== undefined</replacement>'
 
 export const code_at_cursor_instructions_for_panel = (params: {
   file_path: string
@@ -23,8 +23,7 @@ The variable is possibly not defined.
 
 ---
 
-Find correct replacement text for the <missing_text> symbol.
-`
+Find correct replacement text for the <missing_text> symbol.`
 
 export const intelligent_update_instructions =
   "Refactor the file according to the attached changes without explanations or any other text. Print the file in full because I have a disability which means I can't type and need to be able to just copy and paste."
