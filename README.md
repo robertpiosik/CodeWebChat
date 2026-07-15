@@ -147,9 +147,9 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 > [!NOTE]
 > Use [forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) of port _55155_ when using remote machine via SSH.
 
-## Prompt caching
+## Built around prompt caching
 
-**CWC orders context files by modification and selection recency.** This, combined with instructions placement at the message's very end creates highly cost-efficient workflow which heavily utilize [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching).
+CWC orders context files by modification and selection recency. This, combined with instructions placement at the message's very end utilizes [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) across single-turn prompts.
 
 Make your chatbot quota last longer, lower input token costs by up to 90%, and reduce latency by up to 80%.
 
