@@ -100,7 +100,12 @@ export const search_files_commands = (
       quick_pick_merge.placeholder = t('command.search.apply-placeholder', {
         count: selected_paths.length
       })
-      quick_pick_merge.buttons = [vscode.QuickInputButtons.Back]
+
+      const close_button = {
+        iconPath: new vscode.ThemeIcon('close'),
+        tooltip: t('common.close')
+      }
+      quick_pick_merge.buttons = [vscode.QuickInputButtons.Back, close_button]
 
       if (last_choice_label) {
         const active_item = quick_pick_options.find(
@@ -118,6 +123,9 @@ export const search_files_commands = (
         quick_pick_merge.onDidTriggerButton((button) => {
           if (button === vscode.QuickInputButtons.Back) {
             resolve_choice('back')
+            quick_pick_merge.hide()
+          } else if (button === close_button) {
+            resolve_choice(undefined)
             quick_pick_merge.hide()
           }
         })
