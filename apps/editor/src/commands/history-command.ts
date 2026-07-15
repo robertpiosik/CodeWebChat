@@ -22,6 +22,7 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { get_checkpoint_path } from '@/features/checkpoints/utils'
 import { dictionary } from '@shared/constants/dictionary'
 import { checkpoints_emitter } from '@/features/checkpoints/events'
+import { get_response_preview_promise_resolve } from '@/commands/apply-chat-response-command/utils/preview/preview'
 
 dayjs.extend(localizedFormat)
 
@@ -37,6 +38,13 @@ export const history_command = (params: {
   const create_new_checkpoint_command = vscode.commands.registerCommand(
     'codeWebChat.createNewCheckpoint',
     async () => {
+      if (get_response_preview_promise_resolve()) {
+        vscode.window.showWarningMessage(
+          t('command.history.disabled-during-preview')
+        )
+        return
+      }
+
       if (
         !vscode.workspace.workspaceFolders ||
         vscode.workspace.workspaceFolders.length == 0
@@ -62,6 +70,13 @@ export const history_command = (params: {
   const history_cmd = vscode.commands.registerCommand(
     'codeWebChat.history',
     async (args?: { highlight_checkpoint?: Checkpoint }) => {
+      if (get_response_preview_promise_resolve()) {
+        vscode.window.showWarningMessage(
+          t('command.history.disabled-during-preview')
+        )
+        return
+      }
+
       if (
         !vscode.workspace.workspaceFolders ||
         vscode.workspace.workspaceFolders.length == 0
