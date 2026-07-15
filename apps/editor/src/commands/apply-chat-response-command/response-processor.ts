@@ -594,13 +594,13 @@ export const process_chat_response = async (params: {
               context: params.context,
               panel_provider: params.panel_provider,
               states: intelligent_update_states,
-              applied_content: params.chat_response,
+              applied_content: fake_chat_response,
               original_editor_state: params.args?.original_editor_state
             })
 
             return {
               original_states: intelligent_update_states,
-              chat_response: params.chat_response
+              chat_response: fake_chat_response
             }
           }
           return null
