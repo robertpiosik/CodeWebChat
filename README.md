@@ -30,7 +30,7 @@ Coding capability in LLMs is trained using techniques like [Inverse-Instruct](ht
 
 CWC is designed to tap directly into these summarizations by showing the model files alongside instructions.
 
-**Select relevant files, describe the task and get accurate output in seconds!**
+**_Select relevant files, describe the task and get accurate response in seconds!_**
 
 ## Prompt types
 
