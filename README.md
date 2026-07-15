@@ -32,7 +32,7 @@ CWC is designed to tap directly into these summarizations by constructing simple
 
 Select files, describe changes and get accurate edits in seconds!
 
-**Generated prompts are structured as follows:**
+**Review CWC's prompt types:**
 
 <details>
 <summary>Edit files</summary>
