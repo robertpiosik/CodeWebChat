@@ -44,10 +44,10 @@ In the world of AI coding, agents like Codex or Claude Code rely on "tool callin
 
 CWC flips this!
 
-Here, selected in the explorer view files are sent to the model with your instructions so it has everything it needs to do the task. Get accurate multi-file edits in record time!
+Here, selected files are sent together with task instructions so that the model has everything it needs to do the task from the start. It's the fastest way to code with AI!
 
 > [!TIP]
-> **Not sure what files to select?** You can search files using phrase, keywords or **natural language** globally or within the selected folder.
+> **Not sure what files to select?** CWC lets you select files relevant to a natural language query!
 
 **Generated prompts are structured as follows:**
 
