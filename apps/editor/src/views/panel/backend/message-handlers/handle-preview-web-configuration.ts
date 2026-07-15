@@ -10,6 +10,12 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
+import {
+  code_at_cursor_instructions_for_panel,
+  find_relevant_files_instructions,
+  find_relevant_files_format_for_panel
+} from '@/constants/instructions'
+import { FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY } from '@/constants/state-keys'
 import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-symbols'
 import { PromptBuilder } from '@/utils/prompt-builder'
 
@@ -47,9 +53,11 @@ export const handle_preview_web_configuration = async (
     const workspace_folder = vscode.workspace.workspaceFolders?.[0].uri.fsPath
     const relative_path = active_path!.replace(workspace_folder + '/', '')
 
-    const config = vscode.workspace.getConfiguration('codeWebChat')
-    const system_instructions =
-      config.get<string>('chatCodeCompletionsInstructions') || ''
+    const main_instructions = code_at_cursor_instructions_for_panel({
+      file_path: relative_path,
+      row: position.line,
+      column: position.character
+    })
 
     const {
       instruction: processed_completion_instructions,
@@ -72,13 +80,23 @@ export const handle_preview_web_configuration = async (
         content: `${text_before_cursor}${missing_text_tag}${text_after_cursor}`
       },
       skill_definitions,
-      system_instructions
+      system_instructions: main_instructions
     })
     text_to_send = full_prompt
   } else if (panel_provider.web_prompt_type != 'code-at-cursor') {
+    const shrink_source_code =
+      panel_provider.context.workspaceState.get<boolean>(
+        FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
+        false
+      )
+
     const collected =
       panel_provider.web_prompt_type != 'without-files'
-        ? await files_collector.collect_files({})
+        ? await files_collector.collect_files({
+            shrink:
+              panel_provider.web_prompt_type == 'find-relevant-files' &&
+              shrink_source_code
+          })
         : { other_files: '', recent_files: '' }
     const context_text = collected.other_files + collected.recent_files
 
@@ -91,6 +109,7 @@ export const handle_preview_web_configuration = async (
       })
 
     let formatted_system_instructions = ''
+    let user_instructions = processed_instructions
     if (panel_provider.web_prompt_type == 'edit-files') {
       const config = vscode.workspace.getConfiguration('codeWebChat')
       const instructions_key = {
@@ -110,13 +129,21 @@ export const handle_preview_web_configuration = async (
       if (edit_format_instructions) {
         formatted_system_instructions = `# System\n\n${edit_format_instructions}`
       }
+    } else if (panel_provider.web_prompt_type == 'find-relevant-files') {
+      formatted_system_instructions = find_relevant_files_format_for_panel
+
+      const config = vscode.workspace.getConfiguration('codeWebChat')
+      const base_instructions =
+        config.get<string>('findRelevantFilesInstructions') ||
+        find_relevant_files_instructions
+      user_instructions = `${base_instructions}\n\n${processed_instructions}`
     }
 
     const { full_prompt: built_prompt } = PromptBuilder.build_prompt({
       context_text,
       skill_definitions,
       system_instructions: formatted_system_instructions,
-      user_instructions: processed_instructions
+      user_instructions
     })
     text_to_send = built_prompt
   } else {
