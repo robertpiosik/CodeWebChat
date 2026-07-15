@@ -22,29 +22,15 @@ Get involved! Join our [discord server](https://discord.gg/KJySXsrSX5).
 
 <br/>
 
-<p align="center"><i>Select context files, type instructions...</i></p>
-
 <p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-1.png"></p>
-
-<br/>
-
-<p align="center"><i>Paste in a chatbot...</i></p>
-
-<p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-2.png"></p>
-
-<br/>
-
-<p align="center"><i>Review edits in the editor...</i></p>
-
-<p align="center"><img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/media/screenshot-3.png"></p>
 
 ## Introduction
 
-In the world of AI coding, agents like Codex or Claude Code rely on "tool calling" (where the AI asks "the harness" to read a file, waits for the tool to respond, then reads another).
+Coding capability in Large Language Models is trained using techniques like [Inverse-Instruct](https://www.researchgate.net/figure/The-overview-of-INVERSE-INSTRUCT-INVERSE-INSTRUCT-utilizes-the-models-own-capability-in_fig1_382079949). A fragment of clean/intentionally buggy code gets summarized to make up a possible instruction developer could use to prompt for edits.
 
-CWC flips this!
+CWC is designed to tap directly into these summarizations by constructing simple, zero-overhead prompts.
 
-Here, selected files are sent together with task instructions so that the model has everything it needs to do the task from the start. It's the fastest way to code with AI!
+Select files, describe changes and get accurate edits in seconds!
 
 **Generated prompts are structured as follows:**
 
