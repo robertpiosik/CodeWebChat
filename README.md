@@ -46,13 +46,10 @@ CWC flips this!
 
 Here, selected files are sent together with task instructions so that the model has everything it needs to do the task from the start. It's the fastest way to code with AI!
 
-> [!TIP]
-> **Not sure what files to select?** CWC lets you select files relevant to a natural language query!
-
 **Generated prompts are structured as follows:**
 
 <details>
-<summary>Edit context</summary>
+<summary>Edit files</summary>
 
 ```
 # Files
@@ -69,7 +66,7 @@ Here, selected files are sent together with task instructions so that the model 
 </details>
 
 <details>
-<summary>Ask about context</summary>
+<summary>Ask about files</summary>
 
 ```
 # Files
@@ -107,11 +104,9 @@ Here, selected files are sent together with task instructions so that the model 
 # System
 [response format instructions]
 
-Find a complete set of relevant files according to the following query:
-
 ---
 
-[prompt]
+Find a complete set of files relevant to the following query. Include the primary files as well as any structural files. [prompt]
 ```
 
 </details>
