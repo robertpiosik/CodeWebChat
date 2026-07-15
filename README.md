@@ -28,11 +28,7 @@ Get involved! Join our [discord server](https://discord.gg/KJySXsrSX5).
 
 Coding capability in LLMs is trained using techniques like [Inverse-Instruct](https://www.researchgate.net/figure/The-overview-of-INVERSE-INSTRUCT-INVERSE-INSTRUCT-utilizes-the-models-own-capability-in_fig1_382079949). A piece of working or intentionally buggy code gets summarized to make up a possible instruction you could use to prompt for edits.
 
-**_Tap directly into these summarizations with ready to copy&paste, easy to iterate-on prompts!_**
-
-## Prompt types
-
-CWC constructs simple markdown-formatted prompts for common use-cases (click to expand):
+**_Tap directly into these summarizations with ready to copy&paste, easy to iterate-on prompts:_**
 
 <details>
 <summary>Edit files</summary>
