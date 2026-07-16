@@ -216,7 +216,7 @@ export const generate_commit_message_command = (
         if (edited_message) {
           let selected_prompts = relevant_prompts
 
-          if (include_prompts_setting && relevant_prompts.length > 0) {
+          if (relevant_prompts.length > 0) {
             const picked = await new Promise<
               typeof relevant_prompts | undefined
             >((resolve) => {
@@ -225,7 +225,11 @@ export const generate_commit_message_command = (
                 label: simplify_prompt_symbols({ prompt: p.prompt }),
                 prompt: p
               }))
-              quick_pick.selectedItems = quick_pick.items
+              if (include_prompts_setting) {
+                quick_pick.selectedItems = quick_pick.items
+              } else {
+                quick_pick.selectedItems = []
+              }
               quick_pick.canSelectMany = true
               quick_pick.title = 'Accepted Prompts'
               quick_pick.placeholder =
@@ -255,7 +259,7 @@ export const generate_commit_message_command = (
           }
 
           const selected_prompts_text =
-            include_prompts_setting && selected_prompts.length > 0
+            selected_prompts.length > 0
               ? '\n\n' +
                 selected_prompts
                   .map(
