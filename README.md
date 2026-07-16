@@ -30,14 +30,14 @@ Coding capability in LLMs is trained using techniques like [Inverse-Instruct](ht
 
 CWC was designed to tap directly into these summarizations by showing the model a complete set of files, together with your instructions from the start.
 
-**_Select relevant files, describe the task and get accurate response in seconds!_**
+This approach encourages intention in file selection, which greatly simplifies instructions, making model's reasoning much shorter.
 
 > [!TIP]
-> Get help in relevant file selection using natural language query with the _Find Relevant Files_ prompt type.
+> Get help in relevant file selection using the _Find Relevant Files_ prompt type and natural language query.
 
 ## Prompt types
 
-CWC constructs simple markdown-formatted prompts for common use-cases (click to expand):
+At its core, CWC constructs simple markdown-formatted prompts for common use-cases (click to expand):
 
 <details>
 <summary>Edit files</summary>
