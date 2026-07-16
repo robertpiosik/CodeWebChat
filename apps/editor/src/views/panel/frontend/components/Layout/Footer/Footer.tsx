@@ -75,18 +75,18 @@ export const Footer: React.FC = () => {
             title={'Integrate copied chat response or a single code block'}
             disabled={is_apply_disabled_temporarily}
           >
+            <span
+              className={cn(
+                styles['footer__action-button__icon'],
+                'codicon',
+                'codicon-clippy'
+              )}
+            />
             <span className={styles['footer__action-button__text']}>
               {compact_step == 0
                 ? t('action.apply-from-clipboard')
                 : t('action.apply')}
             </span>
-            <span
-              className={cn(
-                styles['footer__action-button__icon'],
-                'codicon',
-                'codicon-check'
-              )}
-            />
           </button>
           <button
             className={cn(styles['footer__action-button'], {
@@ -98,16 +98,16 @@ export const Footer: React.FC = () => {
             }
             disabled={!can_undo}
           >
-            <span className={styles['footer__action-button__text']}>
-              {t('action.undo')}
-            </span>
             <span
               className={cn(
                 styles['footer__action-button__icon'],
                 'codicon',
-                'codicon-redo'
+                'codicon-discard'
               )}
             />
+            <span className={styles['footer__action-button__text']}>
+              {t('action.undo')}
+            </span>
           </button>
         </div>
       </div>
