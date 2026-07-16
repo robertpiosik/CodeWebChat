@@ -30,7 +30,7 @@ Coding capability in LLMs is trained using techniques like [Inverse-Instruct](ht
 
 CWC was designed to tap directly into these summarizations by showing the model a complete set of files, together with your instructions from the start.
 
-This approach encourages intention in file selection, which makes simple instructions just work and model's reasoning much shorter.
+This approach encourages intention in file selection, which makes simple instructions just work and model's reasoning much shorter or even not required.
 
 > [!TIP]
 > Get help in relevant file selection using the _Find Relevant Files_ prompt type and natural language query.
