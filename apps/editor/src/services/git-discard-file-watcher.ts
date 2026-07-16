@@ -54,13 +54,13 @@ export const setup_git_discard_file_watcher = (
 
         repo_states.set(workspace_root, current_changes)
 
-        const attach_prompts_setting = vscode.workspace
+        const select_prompts_setting = vscode.workspace
           .getConfiguration('codeWebChat')
-          .get<boolean>('attachAllPromptsInCommitMessagesByDefault', true)
+          .get<boolean>('selectAllPromptsInCommitMessagesByDefault', true)
 
         let relevant_prompts_text = ''
 
-        if (attach_prompts_setting) {
+        if (select_prompts_setting) {
           const all_prompts =
             PromptsForCommitMessagesUtils.load_all(context)[workspace_root] ||
             []

@@ -177,12 +177,12 @@ export class SettingsProvider {
           await handle_update_commit_message_instructions(message)
         } else if (
           message.command ==
-          'GET_ATTACH_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
+          'GET_SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
         ) {
           await handle_get_include_prompts_in_commit_messages(this)
         } else if (
           message.command ==
-          'UPDATE_ATTACH_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
+          'UPDATE_SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
         ) {
           await handle_update_include_prompts_in_commit_messages(message)
         } else if (message.command == 'GET_CONTEXT_SIZE_WARNING_THRESHOLD') {

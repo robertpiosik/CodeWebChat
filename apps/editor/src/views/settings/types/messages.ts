@@ -69,12 +69,12 @@ export interface UpdateCommitMessageInstructionsMessage {
   instructions: string
 }
 
-export interface GetAttachAllPromptsInCommitMessagesByDefaultMessage {
-  command: 'GET_ATTACH_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
+export interface GetSelectAllPromptsInCommitMessagesByDefaultMessage {
+  command: 'GET_SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
 }
 
-export interface UpdateAttachAllPromptsInCommitMessagesByDefaultMessage {
-  command: 'UPDATE_ATTACH_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
+export interface UpdateSelectAllPromptsInCommitMessagesByDefaultMessage {
+  command: 'UPDATE_SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
   enabled: boolean
 }
 
@@ -338,8 +338,8 @@ export type FrontendMessage =
   | SelectDefaultApiConfigurationMessage
   | GetCommitMessageInstructionsMessage
   | UpdateCommitMessageInstructionsMessage
-  | GetAttachAllPromptsInCommitMessagesByDefaultMessage
-  | UpdateAttachAllPromptsInCommitMessagesByDefaultMessage
+  | GetSelectAllPromptsInCommitMessagesByDefaultMessage
+  | UpdateSelectAllPromptsInCommitMessagesByDefaultMessage
   | GetEditFilesSystemInstructionsMessage
   | GetFindRelevantFilesInstructionsMessage
   | UpdateFindRelevantFilesInstructionsMessage
@@ -406,8 +406,8 @@ export interface CommitMessageInstructionsMessage {
   instructions: string
 }
 
-export interface AttachAllPromptsInCommitMessagesByDefaultMessage {
-  command: 'ATTACH_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
+export interface SelectAllPromptsInCommitMessagesByDefaultMessage {
+  command: 'SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
   enabled: boolean
 }
 
@@ -552,7 +552,7 @@ export type BackendMessage =
   | ModelProvidersMessage
   | ApiConfigurationsMessage
   | CommitMessageInstructionsMessage
-  | AttachAllPromptsInCommitMessagesByDefaultMessage
+  | SelectAllPromptsInCommitMessagesByDefaultMessage
   | EditFilesSystemInstructionsMessage
   | FindRelevantFilesInstructionsMessage
   | EditFormatInstructionsMessage

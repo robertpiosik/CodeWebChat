@@ -6,11 +6,11 @@ export const handle_get_include_prompts_in_commit_messages = async (
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const enabled = config.get<boolean>(
-    'attachAllPromptsInCommitMessagesByDefault',
+    'selectAllPromptsInCommitMessagesByDefault',
     true
   )
   provider.postMessage({
-    command: 'ATTACH_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT',
+    command: 'SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT',
     enabled
   })
 }

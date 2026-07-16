@@ -848,7 +848,7 @@
           "type": "string",
           "scope": "resource"
         },
-        "codeWebChat.attachAllPromptsInCommitMessagesByDefault": {
+        "codeWebChat.selectAllPromptsInCommitMessagesByDefault": {
           "type": "boolean",
           "scope": "resource",
           "default": true
