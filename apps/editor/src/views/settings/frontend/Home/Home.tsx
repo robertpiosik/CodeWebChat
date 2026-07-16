@@ -113,7 +113,7 @@ type Props = {
   edit_files_system_instructions: string
   find_relevant_files_instructions: string
   commit_message_instructions: string
-  include_prompts_in_commit_messages: boolean
+  attach_all_prompts_in_commit_messages_by_default: boolean
   context_size_warning_threshold: number
   gemini_user_id: number | null
   ai_studio_user_id: number | null
@@ -132,7 +132,9 @@ type Props = {
     threshold: number | undefined
   ) => void
   on_commit_instructions_change: (instructions: string) => void
-  on_include_prompts_in_commit_messages_change: (enabled: boolean) => void
+  on_attach_all_prompts_in_commit_messages_by_default_change: (
+    enabled: boolean
+  ) => void
   on_edit_format_instructions_change: (
     instructions: EditFormatInstructions
   ) => void
@@ -420,11 +422,11 @@ export const Home: React.FC<Props> = (props) => {
             props.on_open_allow_patterns_settings
           }
           on_open_keybindings={props.on_open_keybindings}
-          include_prompts_in_commit_messages={
-            props.include_prompts_in_commit_messages
+          attach_all_prompts_in_commit_messages_by_default={
+            props.attach_all_prompts_in_commit_messages_by_default
           }
-          on_include_prompts_in_commit_messages_change={
-            props.on_include_prompts_in_commit_messages_change
+          on_attach_all_prompts_in_commit_messages_by_default_change={
+            props.on_attach_all_prompts_in_commit_messages_by_default_change
           }
           commit_instructions={commit_instructions}
           set_commit_instructions={set_commit_instructions}

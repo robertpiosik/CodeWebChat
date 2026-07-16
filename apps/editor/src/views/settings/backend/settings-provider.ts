@@ -176,11 +176,13 @@ export class SettingsProvider {
         } else if (message.command == 'UPDATE_COMMIT_MESSAGE_INSTRUCTIONS') {
           await handle_update_commit_message_instructions(message)
         } else if (
-          message.command == 'GET_INCLUDE_PROMPTS_IN_COMMIT_MESSAGES'
+          message.command ==
+          'GET_ATTACH_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
         ) {
           await handle_get_include_prompts_in_commit_messages(this)
         } else if (
-          message.command == 'UPDATE_INCLUDE_PROMPTS_IN_COMMIT_MESSAGES'
+          message.command ==
+          'UPDATE_ATTACH_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
         ) {
           await handle_update_include_prompts_in_commit_messages(message)
         } else if (message.command == 'GET_CONTEXT_SIZE_WARNING_THRESHOLD') {

@@ -1,13 +1,13 @@
 import * as vscode from 'vscode'
-import { UpdateIncludePromptsInCommitMessagesMessage } from '@/views/settings/types/messages'
+import { UpdateAttachAllPromptsInCommitMessagesByDefaultMessage } from '@/views/settings/types/messages'
 
 export const handle_update_include_prompts_in_commit_messages = async (
-  message: UpdateIncludePromptsInCommitMessagesMessage
+  message: UpdateAttachAllPromptsInCommitMessagesByDefaultMessage
 ): Promise<void> => {
   await vscode.workspace
     .getConfiguration('codeWebChat')
     .update(
-      'includePromptsInCommitMessages',
+      'attachAllPromptsInCommitMessagesByDefault',
       message.enabled,
       vscode.ConfigurationTarget.Global
     )

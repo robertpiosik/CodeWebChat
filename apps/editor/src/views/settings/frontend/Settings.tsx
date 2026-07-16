@@ -54,7 +54,8 @@ export const Settings = () => {
       settings_hook.edit_files_system_instructions !== undefined &&
       settings_hook.find_relevant_files_instructions !== undefined &&
       settings_hook.commit_message_instructions !== undefined &&
-      settings_hook.include_prompts_in_commit_messages !== undefined &&
+      settings_hook.attach_all_prompts_in_commit_messages_by_default !==
+        undefined &&
       settings_hook.context_size_warning_threshold !== undefined &&
       settings_hook.edit_format_instructions !== undefined &&
       settings_hook.are_automatic_checkpoints_disabled !== undefined &&
@@ -98,8 +99,8 @@ export const Settings = () => {
         context_size_warning_threshold={
           settings_hook.context_size_warning_threshold!
         }
-        include_prompts_in_commit_messages={
-          settings_hook.include_prompts_in_commit_messages!
+        attach_all_prompts_in_commit_messages_by_default={
+          settings_hook.attach_all_prompts_in_commit_messages_by_default!
         }
         commit_message_instructions={settings_hook.commit_message_instructions!}
         edit_format_instructions={settings_hook.edit_format_instructions!}
@@ -124,8 +125,8 @@ export const Settings = () => {
         on_commit_instructions_change={
           settings_hook.handle_commit_instructions_change
         }
-        on_include_prompts_in_commit_messages_change={
-          settings_hook.handle_include_prompts_in_commit_messages_change
+        on_attach_all_prompts_in_commit_messages_by_default_change={
+          settings_hook.handle_attach_all_prompts_in_commit_messages_by_default_change
         }
         on_edit_files_system_instructions_change={
           settings_hook.handle_edit_files_system_instructions_change

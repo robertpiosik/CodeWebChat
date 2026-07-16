@@ -49,8 +49,10 @@ type Props = {
   on_open_allow_patterns_settings: () => void
   on_open_keybindings: (search?: string) => void
   set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void
-  include_prompts_in_commit_messages: boolean
-  on_include_prompts_in_commit_messages_change: (enabled: boolean) => void
+  attach_all_prompts_in_commit_messages_by_default: boolean
+  on_attach_all_prompts_in_commit_messages_by_default_change: (
+    enabled: boolean
+  ) => void
   commit_instructions: string
   set_commit_instructions: (instructions: string) => void
   on_commit_instructions_blur: () => void
@@ -360,14 +362,18 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
         >
           <UiGroup title={t('general.commit-messages.title')}>
             <UiItem
-              title={t('general.include-prompts-in-commit-messages.title')}
+              title={t(
+                'general.attach-all-prompts-in-commit-messages-by-default.title'
+              )}
               description={t(
-                'general.include-prompts-in-commit-messages.description'
+                'general.attach-all-prompts-in-commit-messages-by-default.description'
               )}
               slot_right={
                 <UiToggler
-                  is_on={props.include_prompts_in_commit_messages}
-                  on_toggle={props.on_include_prompts_in_commit_messages_change}
+                  is_on={props.attach_all_prompts_in_commit_messages_by_default}
+                  on_toggle={
+                    props.on_attach_all_prompts_in_commit_messages_by_default_change
+                  }
                 />
               }
             />
