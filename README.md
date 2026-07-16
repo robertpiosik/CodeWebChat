@@ -37,7 +37,7 @@ This approach encourages intention in file selection, which greatly simplifies i
 
 ## Prompt types
 
-At its core, CWC constructs simple markdown-formatted prompts for common use-cases (click to expand):
+At its core, CWC constructs simple, markdown-formatted prompts for common use-cases (click to expand):
 
 <details>
 <summary>Edit files</summary>
