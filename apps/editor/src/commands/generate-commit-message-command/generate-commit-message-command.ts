@@ -107,11 +107,11 @@ export const generate_commit_message_command = (
       if (api_configuration_data == 'back') {
         if (was_empty_stage) {
           if (!show_back_button) {
-            await vscode.commands.executeCommand('git.unstageAll')
+            await vscode.commands.executeCommand('git.unstageAll', repository)
             return
           }
 
-          await vscode.commands.executeCommand('git.unstageAll')
+          await vscode.commands.executeCommand('git.unstageAll', repository)
           files_staged_by_action = false
           continue
         }
@@ -120,7 +120,7 @@ export const generate_commit_message_command = (
 
       if (!api_configuration_data) {
         if (was_empty_stage) {
-          await vscode.commands.executeCommand('git.unstageAll')
+          await vscode.commands.executeCommand('git.unstageAll', repository)
         }
         return
       }
@@ -249,7 +249,10 @@ export const generate_commit_message_command = (
 
             if (picked === undefined) {
               if (was_empty_stage) {
-                await vscode.commands.executeCommand('git.unstageAll')
+                await vscode.commands.executeCommand(
+                  'git.unstageAll',
+                  repository
+                )
               }
               break
             }
@@ -287,7 +290,7 @@ export const generate_commit_message_command = (
             silent: true
           }).catch(() => {})
         } else if (was_empty_stage) {
-          await vscode.commands.executeCommand('git.unstageAll')
+          await vscode.commands.executeCommand('git.unstageAll', repository)
         }
       } else {
         const prompts_text =
@@ -342,7 +345,7 @@ export const generate_commit_message_command = (
       )
 
       if (was_empty_stage) {
-        await vscode.commands.executeCommand('git.unstageAll')
+        await vscode.commands.executeCommand('git.unstageAll', repository)
       }
     }
   )
