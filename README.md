@@ -33,7 +33,7 @@ CWC was designed to tap directly into these summarizations by showing the model 
 This approach encourages intention in file selection, which makes simple instructions just work and model's reasoning much shorter or even optional.
 
 > [!TIP]
-> Get help in relevant file selection using the _Find Relevant Files_ prompt type and natural language query.
+> Get help in relevant file selection using the _Find Relevant Files_ prompt type.
 
 ## Prompt types
 
