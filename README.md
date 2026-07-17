@@ -30,7 +30,7 @@ Coding capability in LLMs is trained using techniques like [Inverse-Instruct](ht
 
 By showing the model a complete set of files, together with instructions in a single message, CWC taps directly into these snippet-summarization pairs.
 
-This workflow encourages intention in file selection, which makes simple instructions just work and the required model's reasoning much shorter or even optional.
+This workflow encourages context management (file selection), which makes simple instructions just work and the required model's reasoning much shorter or even optional.
 
 > [!TIP]
 > Get help in relevant file selection using the _Find Relevant Files_ prompt type.
