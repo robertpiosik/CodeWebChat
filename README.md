@@ -40,7 +40,7 @@ Make simple instructions just work and the required model's reasoning much short
 At its core, CWC constructs simple, markdown-formatted prompts for common use-cases (click to expand):
 
 <details>
-<summary>Edit files</summary>
+<summary><strong>Edit files</strong></summary>
 
 Get accurate multi-file edits in a single response.
 
@@ -59,7 +59,7 @@ Get accurate multi-file edits in a single response.
 </details>
 
 <details>
-<summary>Ask about files</summary>
+<summary><strong>Ask about files</strong></summary>
 
 Get help with whatever you're up to.
 
@@ -75,7 +75,7 @@ Get help with whatever you're up to.
 </details>
 
 <details>
-<summary>Code at cursor</summary>
+<summary><strong>Code at cursor</strong></summary>
 
 Get accurate inline snippets from SOTA reasoning models.
 
@@ -94,7 +94,7 @@ Get accurate inline snippets from SOTA reasoning models.
 </details>
 
 <details>
-<summary>Find relevant files</summary>
+<summary><strong>Find relevant files</strong></summary>
 
 Find files relevant to a query from a broad selection.
 
