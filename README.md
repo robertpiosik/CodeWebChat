@@ -100,7 +100,7 @@ Find files relevant to a query from a broad selection.
 
 ```
 # Files
-[rough file selection]
+[broad file selection]
 
 # System
 [response format instructions]
