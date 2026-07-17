@@ -42,6 +42,8 @@ At its core, CWC constructs simple, markdown-formatted prompts for common use-ca
 <details>
 <summary>Edit files</summary>
 
+Get accurate multi-file edits in a single response.
+
 ```
 # Files
 [full contents of selected files with paths]
@@ -59,6 +61,8 @@ At its core, CWC constructs simple, markdown-formatted prompts for common use-ca
 <details>
 <summary>Ask about files</summary>
 
+Get help with whatever you're up to.
+
 ```
 # Files
 [full contents of selected files with paths]
@@ -70,6 +74,8 @@ At its core, CWC constructs simple, markdown-formatted prompts for common use-ca
 
 <details>
 <summary>Code at cursor</summary>
+
+Get accurate inline snippets from SOTA reasoning models.
 
 ````
 # Files
@@ -87,6 +93,8 @@ At its core, CWC constructs simple, markdown-formatted prompts for common use-ca
 
 <details>
 <summary>Find relevant files</summary>
+
+Find files relevant to a query from a broad selection.
 
 ```
 # Files
