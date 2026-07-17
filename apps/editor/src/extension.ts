@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import { context_initialization } from './context/context-initialization'
 import { PanelProvider } from './views/panel/backend/panel-provider'
 import { WebSocketManager } from './services/websocket-manager'
+import { ApiManagerProvider } from './views/api-manager/backend/api-manager-provider'
 import { ApiManager } from './services/api-manager'
 import {
   migrate_configurations_to_api_configurations,
@@ -70,12 +71,37 @@ export const activate = async (context: vscode.ExtensionContext) => {
     shared_context_state
   })
 
+  const api_manager_provider = new ApiManagerProvider(
+    context.extensionUri,
+    context
+  )
+
+  panel_provider.message_listeners.push((message) => {
+    if (
+      message.command === 'SHOW_API_MANAGER_PROGRESS' ||
+      message.command === 'HIDE_API_MANAGER_PROGRESS'
+    ) {
+      api_manager_provider.send_message(message)
+    }
+  })
+
   const api_manager = new ApiManager(panel_provider)
+
+  api_manager_provider.set_api_manager(api_manager)
 
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(
       'codeWebChatView',
       panel_provider,
+      {
+        webviewOptions: {
+          retainContextWhenHidden: true
+        }
+      }
+    ),
+    vscode.window.registerWebviewViewProvider(
+      'apiManagerView',
+      api_manager_provider,
       {
         webviewOptions: {
           retainContextWhenHidden: true

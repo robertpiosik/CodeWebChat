@@ -96,7 +96,8 @@ const config: ((env: any, argv: any) => webpack.Configuration)[] = [
       target: 'web',
       entry: {
         panel: './src/views/panel/frontend/App.tsx',
-        settings: './src/views/settings/frontend/App.tsx'
+        settings: './src/views/settings/frontend/App.tsx',
+        'api-manager': './src/views/api-manager/frontend/App.tsx'
       },
       output: {
         path: path.resolve(__dirname, 'out'),
