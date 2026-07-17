@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import cn from 'classnames'
 import { Scrollable } from '../../../common/Scrollable'
+import { use_progress_times } from '../../../../../hooks/use-progress-times'
 import styles from './ApiManagerModal.module.scss'
 
 type Props = {
@@ -9,7 +10,6 @@ type Props = {
     title: string
     tokens_per_second?: number
     total_tokens?: number
-    delay_visibility?: boolean
     provider_name: string
     model?: string
     reasoning_effort?: string
@@ -26,8 +26,7 @@ const format_tokens = (tokens: number): string => {
 }
 
 export const ApiManagerModal: React.FC<Props> = (props) => {
-  const [start_times, set_start_times] = useState<Record<string, number>>({})
-  const [now, set_now] = useState(Date.now())
+  const { start_times, now } = use_progress_times(props.progress_items)
   const [is_scrolled, set_is_scrolled] = useState(false)
   const [window_width, set_window_width] = useState(window.innerWidth)
 
@@ -38,37 +37,6 @@ export const ApiManagerModal: React.FC<Props> = (props) => {
       window.removeEventListener('resize', handle_resize)
     }
   }, [])
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      set_now(Date.now())
-    }, 100)
-    return () => clearInterval(interval)
-  }, [])
-
-  useEffect(() => {
-    set_start_times((prev) => {
-      const next = { ...prev }
-      let changed = false
-      const current_ids = new Set(props.progress_items.map((i) => i.id))
-
-      props.progress_items.forEach((item) => {
-        if (!next[item.id]) {
-          next[item.id] = Date.now()
-          changed = true
-        }
-      })
-
-      Object.keys(next).forEach((id) => {
-        if (!current_ids.has(id)) {
-          delete next[id]
-          changed = true
-        }
-      })
-
-      return changed ? next : prev
-    })
-  }, [props.progress_items])
 
   return (
     <div
@@ -115,10 +83,6 @@ export const ApiManagerModal: React.FC<Props> = (props) => {
               const item_start_time = start_times[item.id]
               const current_start_time = item_start_time || Date.now()
               const elapsed_ms = now - current_start_time
-
-              if (item.delay_visibility && elapsed_ms < 1000) {
-                return null
-              }
 
               const description_parts = [item.provider_name]
               if (item.reasoning_effort) {
