@@ -67,6 +67,8 @@ Get help with whatever you're up to.
 # Files
 [full contents of selected files with paths]
 
+---
+
 [prompt]
 ```
 
@@ -105,7 +107,8 @@ Find files relevant to a query from a broad selection.
 
 ---
 
-Find a complete set of files relevant to the following query. Include the primary files as well as any structural files. [prompt]
+Find a complete set of files relevant to the following query. Include the primary files as well as any structural files.
+[prompt]
 ```
 
 </details>
