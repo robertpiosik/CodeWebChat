@@ -26,11 +26,11 @@ Get involved! Join our [discord server](https://discord.gg/KJySXsrSX5).
 
 ## Introduction
 
-Coding capability in LLMs is trained using techniques like [Inverse-Instruct](https://www.researchgate.net/figure/The-overview-of-INVERSE-INSTRUCT-INVERSE-INSTRUCT-utilizes-the-models-own-capability-in_fig1_382079949) with exisiting model acting as a summarizer, looking at the code and writing instructions that could realistically output that exact code block.
+Coding capability in LLMs is trained using techniques like [Inverse-Instruct](https://www.researchgate.net/figure/The-overview-of-INVERSE-INSTRUCT-INVERSE-INSTRUCT-utilizes-the-models-own-capability-in_fig1_382079949) with an existing model acting as a summarizer, looking at the code and writing instructions that could realistically output that exact code block.
 
-By showing the model a complete set of files, together with your instructions from the start, CWC was designed to tap directly into these snippet-summarization pairs.
+By showing the model a complete set of files, together with instructions in a single message, CWC taps directly into these snippet-summarization pairs.
 
-This approach encourages intention in file selection, which makes simple instructions just work and the required model's reasoning much shorter or even optional.
+This workflow encourages intention in file selection, which makes simple instructions just work and the required model's reasoning much shorter or even optional.
 
 > [!TIP]
 > Get help in relevant file selection using the _Find Relevant Files_ prompt type.
