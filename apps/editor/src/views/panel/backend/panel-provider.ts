@@ -626,6 +626,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     if (this.webview_view) {
       this.webview_view.webview.postMessage(message)
     }
+    for (const listener of this.message_listeners) {
+      listener(message)
+    }
   }
 
   public show_preview_ongoing_modal() {
