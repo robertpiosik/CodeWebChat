@@ -30,7 +30,7 @@ Coding capability in LLMs is trained using techniques like [Inverse-Instruct](ht
 
 By showing the model a complete set of files and task instructions in a single message, CWC taps directly into these snippet-summarization pairs.
 
-Make simple instructions just work and the required model's reasoning much shorter or even optional!
+Make simple instructions just work and the required reasoning effort lower or even optional!
 
 > [!TIP]
 > Get help in relevant file selection using the _Find Relevant Files_ prompt type.
