@@ -13,10 +13,14 @@ import { Task } from '@shared/types/task'
 import { Mode } from './main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { ApiFeature } from '@/views/shared/types/api-features'
+import {
+  BaseMessage,
+  CancelApiManagerRequestMessage,
+  ShowApiManagerProgressMessage,
+  HideApiManagerProgressMessage
+} from '@/views/shared/types/messages'
 
-export interface BaseMessage {
-  command: string
-}
+export type { BaseMessage }
 
 export interface StartWebConfigurationCreationMessage extends BaseMessage {
   command: 'START_WEB_CONFIGURATION_CREATION'
@@ -257,11 +261,6 @@ export interface ShowHashSignQuickPickMessage extends BaseMessage {
 
 export interface CancelApiRequestMessage extends BaseMessage {
   command: 'CANCEL_API_REQUEST'
-}
-
-export interface CancelApiManagerRequestMessage extends BaseMessage {
-  command: 'CANCEL_API_MANAGER_REQUEST'
-  id: string
 }
 
 export interface GetWebPromptTypeMessage extends BaseMessage {
@@ -830,24 +829,6 @@ export interface ShowProgressMessage extends BaseMessage {
 
 export interface HideProgressMessage extends BaseMessage {
   command: 'HIDE_PROGRESS'
-}
-
-export interface ShowApiManagerProgressMessage extends BaseMessage {
-  command: 'SHOW_API_MANAGER_PROGRESS'
-  id: string
-  title: string
-  tokens_per_second?: number
-  total_tokens?: number
-  cancellable?: boolean
-  delay_visibility?: boolean
-  provider_name: string
-  model?: string
-  reasoning_effort?: string
-}
-
-export interface HideApiManagerProgressMessage extends BaseMessage {
-  command: 'HIDE_API_MANAGER_PROGRESS'
-  id: string
 }
 
 export interface ShowAutoClosingModalMessage extends BaseMessage {

@@ -78,16 +78,7 @@ export const activate = async (context: vscode.ExtensionContext) => {
     context
   )
 
-  panel_provider.message_listeners.push((message) => {
-    if (
-      message.command === 'SHOW_API_MANAGER_PROGRESS' ||
-      message.command === 'HIDE_API_MANAGER_PROGRESS'
-    ) {
-      api_manager_provider.send_message(message)
-    }
-  })
-
-  const api_manager = new ApiManager(panel_provider)
+  const api_manager = new ApiManager(panel_provider, api_manager_provider)
 
   api_manager_provider.set_api_manager(api_manager)
 

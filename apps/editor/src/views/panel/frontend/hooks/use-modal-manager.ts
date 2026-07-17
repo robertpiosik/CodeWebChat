@@ -61,8 +61,6 @@ export const use_modal_manager = () => {
             title: message.title,
             tokens_per_second: message.tokens_per_second,
             total_tokens: message.total_tokens,
-            cancellable: message.cancellable ?? true,
-            delay_visibility: message.delay_visibility,
             provider_name: message.provider_name,
             model: message.model,
             reasoning_effort: message.reasoning_effort
