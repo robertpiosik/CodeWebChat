@@ -1,4 +1,5 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { ApiManagerProvider } from '@/views/api-manager/backend/api-manager-provider'
 import { make_api_request } from '@/utils/make-api-request'
 import axios, { CancelTokenSource } from 'axios'
 import { randomUUID, createHash } from 'crypto'
@@ -9,13 +10,20 @@ const CHAIN_RESOLUTION_DELAY_MS = 5000
 export class ApiManager {
   private cancel_token_sources: Map<string, CancelTokenSource> = new Map()
   private next_allowed_finish_time = 0
-  // Waiting pipeline to utilize KV cache for the same endpoint urls
   private waiting_chain: Map<
     string,
     { promise: Promise<void>; resolve: () => void; body_hash: string }
   > = new Map()
 
-  constructor(private panel_provider: PanelProvider) {}
+  constructor(
+    private panel_provider: PanelProvider,
+    private api_manager_provider: ApiManagerProvider
+  ) {}
+
+  private broadcast_message(message: any) {
+    this.panel_provider.send_message(message)
+    this.api_manager_provider.send_message(message)
+  }
 
   public async get(params: {
     endpoint_url: string
@@ -73,8 +81,7 @@ export class ApiManager {
       const is_queued =
         previous_waiting && previous_waiting.body_hash == body_hash
 
-      // 1. Show appropriate initial state (Queued vs Waiting)
-      this.panel_provider.send_message({
+      this.broadcast_message({
         command: 'SHOW_API_MANAGER_PROGRESS',
         id: request_id,
         title: is_queued ? 'Queued...' : 'Waiting for server...',
@@ -83,7 +90,6 @@ export class ApiManager {
         reasoning_effort: params.reasoning_effort
       })
 
-      // 2. Handle the queuing block if this is a duplicate request
       if (is_queued) {
         if (cancel_token_source.token.reason) {
           throw cancel_token_source.token.reason
@@ -93,8 +99,7 @@ export class ApiManager {
           cancel_token_source.token.promise.then((c) => Promise.reject(c))
         ])
 
-        // 3. Queue cleared, update UI to show we are now hitting the server
-        this.panel_provider.send_message({
+        this.broadcast_message({
           command: 'SHOW_API_MANAGER_PROGRESS',
           id: request_id,
           title: 'Waiting for server...',
@@ -111,7 +116,7 @@ export class ApiManager {
         cancellation_token: cancel_token_source.token,
         on_thinking_chunk: () => {
           schedule_chain_resolution()
-          this.panel_provider.send_message({
+          this.broadcast_message({
             command: 'SHOW_API_MANAGER_PROGRESS',
             id: request_id,
             title: 'Thinking...',
@@ -122,7 +127,7 @@ export class ApiManager {
         },
         on_chunk: (tokens_per_second, total_tokens) => {
           schedule_chain_resolution()
-          this.panel_provider.send_message({
+          this.broadcast_message({
             command: 'SHOW_API_MANAGER_PROGRESS',
             id: request_id,
             title: 'Receiving...',
@@ -149,18 +154,16 @@ export class ApiManager {
 
       return null
     } finally {
-      // Unblock anyone waiting for this request if it was the one in the chain
       if (!is_chain_resolution_scheduled) {
         resolve_current()
       }
 
-      this.panel_provider.send_message({
+      this.broadcast_message({
         command: 'HIDE_API_MANAGER_PROGRESS',
         id: request_id
       })
       this.cancel_token_sources.delete(request_id)
 
-      // Prevent race conditions of the applyChatResponse command when invoked in short successions
       const now = Date.now()
       const wait_until = Math.max(now, this.next_allowed_finish_time)
       const delay = wait_until - now
