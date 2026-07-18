@@ -428,7 +428,6 @@ export const apply_chat_response_command = (params: {
                   CHECKPOINTS_STATE_KEY,
                   checkpoints
                 )
-                await params.panel_provider.send_checkpoints()
               }
             }
 

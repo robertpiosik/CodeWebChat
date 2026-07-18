@@ -22,8 +22,6 @@ import { ongoing_preview_cleanup_promise } from '@/commands/apply-chat-response-
 import { dictionary } from '@shared/constants/dictionary'
 import { get_git_info } from '../utils/git-utils'
 import { PromptsForCommitMessagesUtils } from '@/utils/prompts-for-commit-messages-utils'
-import { checkpoints_emitter } from '../events'
-
 export const restore_checkpoint = async (params: {
   checkpoint: Checkpoint
   workspace_provider: WorkspaceProvider
@@ -31,8 +29,6 @@ export const restore_checkpoint = async (params: {
   panel_provider: PanelProvider
   options?: {
     skip_confirmation?: boolean
-    use_native_progress?: boolean
-    show_auto_closing_modal_on_success?: boolean
   }
 }) => {
   const operation_in_progress = params.context.workspaceState.get<number>(
@@ -49,37 +45,9 @@ export const restore_checkpoint = async (params: {
     ? 'Reverting...'
     : 'Restoring checkpoint...'
 
-  let current_progress = 0
-  let progress_reporter:
-    | vscode.Progress<{ message?: string; increment?: number }>
-    | undefined
-
-  if (!params.options?.use_native_progress) {
-    params.panel_provider.send_message({
-      command: 'SHOW_PROGRESS',
-      title,
-      delay_visibility: false
-    })
-    progress_reporter = {
-      report: (value) => {
-        if (value.increment) {
-          current_progress += value.increment
-          params.panel_provider.send_message({
-            command: 'SHOW_PROGRESS',
-            title,
-            progress: Math.min(current_progress, 100),
-            delay_visibility: false
-          })
-        }
-      }
-    }
-  }
-
   const main_task = async (
-    native_progress?: vscode.Progress<{ message?: string; increment?: number }>
+    progress: vscode.Progress<{ message?: string; increment?: number }>
   ) => {
-    const progress = native_progress || progress_reporter
-
     if (
       params.checkpoint.trigger == 'response-accepted' &&
       params.checkpoint.description
@@ -136,8 +104,7 @@ export const restore_checkpoint = async (params: {
             workspace_provider: params.workspace_provider,
             context: params.context,
             panel_provider: params.panel_provider,
-            trigger: 'before-checkpoint-restored',
-            silent: true
+            trigger: 'before-checkpoint-restored'
           })
         }
 
@@ -543,47 +510,23 @@ export const restore_checkpoint = async (params: {
 
   let temp_check: Checkpoint | undefined
   try {
-    if (params.options?.use_native_progress) {
-      temp_check = await vscode.window.withProgress(
-        {
-          location: vscode.ProgressLocation.Notification,
-          title,
-          cancellable: false
-        },
-        main_task
-      )
-    } else {
-      temp_check = await main_task()
-    }
+    temp_check = await vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title,
+        cancellable: false
+      },
+      main_task
+    )
   } catch (e) {
     return
-  } finally {
-    if (!params.options?.use_native_progress) {
-      params.panel_provider.send_message({
-        command: 'HIDE_PROGRESS'
-      })
-    }
-    checkpoints_emitter.emit('checkpoints-updated')
   }
 
   const message = params.options?.skip_confirmation
     ? 'Successfully reverted changes.'
     : 'Checkpoint has been restored.'
 
-  if (params.checkpoint.trigger == 'response-accepted') {
-    params.panel_provider.send_message({
-      command: 'SHOW_PROGRESS',
-      title: message.endsWith('.') ? message.slice(0, -1) : message,
-      cancellable: false,
-      delay_visibility: true
-    })
-  } else if (params.options?.show_auto_closing_modal_on_success) {
-    params.panel_provider.send_message({
-      command: 'SHOW_AUTO_CLOSING_MODAL',
-      title: message.slice(0, -1),
-      type: 'success'
-    })
-  } else if (temp_check) {
+  if (temp_check) {
     const action = await vscode.window.showInformationMessage(message, 'Revert')
     if (action == 'Revert') {
       await restore_checkpoint({
@@ -591,7 +534,7 @@ export const restore_checkpoint = async (params: {
         workspace_provider: params.workspace_provider,
         context: params.context,
         panel_provider: params.panel_provider,
-        options: { skip_confirmation: true, use_native_progress: true }
+        options: { skip_confirmation: true }
       })
       await params.context.workspaceState.update(
         TEMPORARY_CHECKPOINT_STATE_KEY,
@@ -602,7 +545,6 @@ export const restore_checkpoint = async (params: {
         checkpoint_to_delete: temp_check,
         panel_provider: params.panel_provider
       })
-      checkpoints_emitter.emit('checkpoints-updated')
     }
   } else {
     vscode.window.showInformationMessage(message)

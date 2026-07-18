@@ -4,7 +4,6 @@ import {
   FrontendMessage,
   SetupProgress
 } from '../../../types/messages'
-import { Checkpoint } from '../../../types/messages'
 import { Mode, MODE } from '../../../types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { post_message } from '../../utils/post-message'
@@ -19,8 +18,6 @@ export const use_panel = (vscode: any) => {
     apply_button_enabling_trigger_count,
     set_apply_button_enabling_trigger_count
   ] = useState(0)
-  const [checkpoints, set_checkpoints] = useState<Checkpoint[]>([])
-  const [has_temp_checkpoint, set_has_temp_checkpoint] = useState(false)
   const [is_connected, set_is_connected] = useState<boolean>()
   const [mode, set_mode] = useState<Mode>()
   const [web_prompt_type, set_web_mode] = useState<WebPromptType>()
@@ -133,9 +130,6 @@ export const use_panel = (vscode: any) => {
       } else if (message.command == 'COLLAPSED_STATES') {
         set_web_configurations_collapsed(message.web_configurations_collapsed)
         set_api_configurations_collapsed(message.api_configurations_collapsed)
-      } else if (message.command == 'CHECKPOINTS') {
-        set_checkpoints(message.checkpoints)
-        set_has_temp_checkpoint(message.has_temp_checkpoint ?? false)
       } else if (message.command == 'SEND_WITH_SHIFT_ENTER') {
         set_send_with_shift_enter(message.enabled)
       } else if (message.command == 'FOCUS_PROMPT_FIELD') {
@@ -173,7 +167,6 @@ export const use_panel = (vscode: any) => {
       { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' },
       { command: 'GET_SEND_WITH_SHIFT_ENTER' },
       { command: 'GET_COLLAPSED_STATES' },
-      { command: 'GET_CHECKPOINTS' },
       { command: 'REQUEST_CAN_UNDO' },
       { command: 'GET_SETUP_PROGRESS' },
       { command: 'GET_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE' },
@@ -271,8 +264,6 @@ export const use_panel = (vscode: any) => {
     set_main_view_scroll_reset_key,
     version,
     apply_button_enabling_trigger_count,
-    checkpoints,
-    has_temp_checkpoint,
     is_connected,
     ask_about_context_instructions,
     edit_files_instructions,

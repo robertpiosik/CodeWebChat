@@ -23,7 +23,6 @@ export const delete_checkpoint = async (params: {
     CHECKPOINTS_STATE_KEY,
     updated_checkpoints
   )
-  await params.panel_provider.send_checkpoints()
 
   try {
     const checkpoint_path = get_checkpoint_path(
@@ -74,7 +73,6 @@ export const delete_checkpoint_with_undo = async (params: {
     CHECKPOINTS_STATE_KEY,
     updated_checkpoints
   )
-  await params.panel_provider.send_checkpoints()
   params.on_did_update_checkpoints?.(updated_checkpoints)
 
   const finalize = async () => {
@@ -122,7 +120,6 @@ export const delete_checkpoint_with_undo = async (params: {
         CHECKPOINTS_STATE_KEY,
         current_checkpoints
       )
-      await params.panel_provider.send_checkpoints()
       params.on_did_update_checkpoints?.(current_checkpoints)
 
       params.on_before_show_message?.()

@@ -15,7 +15,6 @@ import { ProgressModal as UiProgressModal } from '@ui/components/editor/panel/mo
 import { ApiManagerModal as UiApiManagerModal } from '@ui/components/editor/panel/modals/ApiManagerModal'
 import { QRCodeModal as UiQRCodeModal } from '@ui/components/editor/panel/modals/QRCodeModal'
 import { AutoClosingModal as UiAutoClosingModal } from '@ui/components/editor/panel/modals/AutoClosingModal'
-import { EditCheckpointDescriptionModal as UiEditCheckpointDescriptionModal } from '@ui/components/editor/panel/modals/EditCheckpointDescriptionModal'
 import { use_panel } from './hooks/panel/use-panel'
 import { LayoutContext } from './contexts/LayoutContext'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
@@ -43,8 +42,6 @@ export const Panel = () => {
     set_main_view_scroll_reset_key,
     version,
     apply_button_enabling_trigger_count,
-    checkpoints,
-    has_temp_checkpoint,
     is_connected,
     ask_about_context_instructions,
     edit_files_instructions,
@@ -144,9 +141,6 @@ export const Panel = () => {
     set_is_preview_ongoing_modal_visible
   } = use_modal_manager()
 
-  const [checkpoint_to_edit, set_checkpoint_to_edit] = useState<
-    { timestamp: number; description: string } | undefined
-  >(undefined)
   const [active_qr_wallet, set_active_qr_wallet] = useState<{
     name: string
     address: string
@@ -451,11 +445,6 @@ export const Panel = () => {
                   set_chat_input_focus_key((k) => k + 1)
                 }}
                 version={version}
-                checkpoints={checkpoints}
-                has_temp_checkpoint={has_temp_checkpoint}
-                on_restore_temp_checkpoint={() => {
-                  post_message(vscode, { command: 'RESTORE_TEMP_CHECKPOINT' })
-                }}
                 response_history={response_history}
                 on_response_history_item_click={
                   handle_response_history_item_click
@@ -469,35 +458,6 @@ export const Panel = () => {
                 on_response_history_item_remove={
                   handle_remove_response_history_item
                 }
-                on_toggle_checkpoint_starred={(timestamp: number) => {
-                  post_message(vscode, {
-                    command: 'TOGGLE_CHECKPOINT_STAR',
-                    timestamp: timestamp
-                  })
-                }}
-                on_restore_checkpoint={(timestamp: number) => {
-                  post_message(vscode, {
-                    command: 'RESTORE_CHECKPOINT',
-                    timestamp
-                  })
-                }}
-                on_edit_checkpoint_description={(timestamp) => {
-                  const checkpoint = checkpoints.find(
-                    (c) => c.timestamp == timestamp
-                  )
-                  if (checkpoint) {
-                    set_checkpoint_to_edit({
-                      timestamp: checkpoint.timestamp,
-                      description: checkpoint.description || ''
-                    })
-                  }
-                }}
-                on_delete_checkpoint={(timestamp) => {
-                  post_message(vscode, {
-                    command: 'DELETE_CHECKPOINT',
-                    timestamp
-                  })
-                }}
                 on_task_forward={handle_task_forward}
                 is_setup_complete={is_setup_complete}
                 on_donate_click={() => set_viewing_coffees(true)}
@@ -848,23 +808,6 @@ export const Panel = () => {
               duration={3000}
               on_close={() => set_auto_closing_modal_data(undefined)}
               non_dismissable={auto_closing_modal_data.non_dismissable}
-            />
-          </div>
-        )}
-
-        {checkpoint_to_edit && (
-          <div className={styles.slot}>
-            <UiEditCheckpointDescriptionModal
-              description={checkpoint_to_edit.description}
-              on_save={(description) => {
-                post_message(vscode, {
-                  command: 'UPDATE_CHECKPOINT_DESCRIPTION',
-                  timestamp: checkpoint_to_edit.timestamp,
-                  description
-                })
-                set_checkpoint_to_edit(undefined)
-              }}
-              on_cancel={() => set_checkpoint_to_edit(undefined)}
             />
           </div>
         )}

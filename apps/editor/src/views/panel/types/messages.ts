@@ -65,21 +65,6 @@ export type ApiConfiguration = {
   is_pinned?: boolean
 }
 
-export type CheckpointTrigger =
-  | 'manual'
-  | 'response-accepted'
-  | 'before-response-previewed'
-  | 'before-checkpoint-restored'
-  | 'temporary'
-  | 'commit'
-
-export type Checkpoint = {
-  timestamp: number
-  trigger: CheckpointTrigger
-  description?: string
-  is_starred?: boolean
-}
-
 export type FileProgressStatus = 'waiting' | 'thinking' | 'receiving'
 
 // === FROM FRONTEND TO BACKEND ===
@@ -421,46 +406,9 @@ export interface SaveComponentCollapsedStateMessage extends BaseMessage {
   is_collapsed: boolean
 }
 
-export interface GetCheckpointsMessage extends BaseMessage {
-  command: 'GET_CHECKPOINTS'
-}
-
-export interface RestoreTempCheckpointMessage extends BaseMessage {
-  command: 'RESTORE_TEMP_CHECKPOINT'
-}
-
-export interface CreateCheckpointMessage extends BaseMessage {
-  command: 'CREATE_CHECKPOINT'
-}
-
-export interface ToggleCheckpointStarMessage extends BaseMessage {
-  command: 'TOGGLE_CHECKPOINT_STAR'
-  timestamp: number
-}
-
-export interface RestoreCheckpointMessage extends BaseMessage {
-  command: 'RESTORE_CHECKPOINT'
-  timestamp: number
-}
-
 export interface RemoveResponseHistoryItemMessage extends BaseMessage {
   command: 'REMOVE_RESPONSE_HISTORY_ITEM'
   created_at: number
-}
-
-export interface UpdateCheckpointDescriptionMessage extends BaseMessage {
-  command: 'UPDATE_CHECKPOINT_DESCRIPTION'
-  timestamp: number
-  description: string
-}
-
-export interface DeleteCheckpointMessage extends BaseMessage {
-  command: 'DELETE_CHECKPOINT'
-  timestamp: number
-}
-
-export interface ClearAllCheckpointsMessage extends BaseMessage {
-  command: 'CLEAR_ALL_CHECKPOINTS'
 }
 
 export interface RequestCanUndoMessage extends BaseMessage {
@@ -673,15 +621,7 @@ export type FrontendMessage =
   | ApplyResponseFromHistoryMessage
   | GetCollapsedStatesMessage
   | SaveComponentCollapsedStateMessage
-  | GetCheckpointsMessage
-  | CreateCheckpointMessage
-  | ToggleCheckpointStarMessage
-  | RestoreCheckpointMessage
-  | RestoreTempCheckpointMessage
   | RemoveResponseHistoryItemMessage
-  | UpdateCheckpointDescriptionMessage
-  | DeleteCheckpointMessage
-  | ClearAllCheckpointsMessage
   | RequestCanUndoMessage
   | PreviewSwitchChoiceMessage
   | GetTasksMessage
@@ -934,12 +874,6 @@ export interface CollapsedStatesMessage extends BaseMessage {
   api_configurations_collapsed: boolean
 }
 
-export interface CheckpointsMessage extends BaseMessage {
-  command: 'CHECKPOINTS'
-  checkpoints: Checkpoint[]
-  has_temp_checkpoint?: boolean
-}
-
 export interface CurrentlyOpenFileTextMessage extends BaseMessage {
   command: 'CURRENTLY_OPEN_FILE_TEXT'
   text?: string
@@ -1036,7 +970,6 @@ export type BackendMessage =
   | ShowNeverClosingModalMessage
   | UpdateFileInPreviewMessage
   | CollapsedStatesMessage
-  | CheckpointsMessage
   | CurrentlyOpenFileTextMessage
   | ShowPreviewOngoingModalMessage
   | TasksMessage

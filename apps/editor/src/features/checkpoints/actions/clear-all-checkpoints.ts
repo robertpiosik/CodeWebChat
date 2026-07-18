@@ -51,7 +51,6 @@ export const clear_all_checkpoints = async (
       undefined
     )
     await context.workspaceState.update(CHECKPOINTS_STATE_KEY, [])
-    await panel_provider.send_checkpoints()
   }
   await vscode.window.withProgress(
     {

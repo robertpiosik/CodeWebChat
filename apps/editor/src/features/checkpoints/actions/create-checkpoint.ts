@@ -29,7 +29,6 @@ export const create_checkpoint = async (params: {
   panel_provider: PanelProvider
   trigger?: CheckpointTrigger
   description?: string
-  silent?: boolean
 }): Promise<Checkpoint | undefined> => {
   try {
     const trigger = params.trigger ?? 'manual'
@@ -220,7 +219,6 @@ export const create_checkpoint = async (params: {
         CHECKPOINTS_STATE_KEY,
         checkpoints
       )
-      await params.panel_provider.send_checkpoints()
       await params.context.workspaceState.update(
         CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
         undefined
@@ -228,29 +226,7 @@ export const create_checkpoint = async (params: {
       new_checkpoint = checkpoint_object
     }
 
-    let timer: ReturnType<typeof setTimeout> | undefined
-    let did_show_modal = false
-
-    try {
-      if (!params.silent) {
-        timer = setTimeout(() => {
-          did_show_modal = true
-          params.panel_provider.send_message({
-            command: 'SHOW_PROGRESS',
-            title: 'Creating checkpoint...'
-          })
-        }, 1000)
-      }
-
-      await create_checkpoint_task()
-    } finally {
-      if (timer) clearTimeout(timer)
-      if (did_show_modal) {
-        params.panel_provider.send_message({
-          command: 'HIDE_PROGRESS'
-        })
-      }
-    }
+    await create_checkpoint_task()
     return new_checkpoint
   } catch (err: any) {
     vscode.window.showErrorMessage(

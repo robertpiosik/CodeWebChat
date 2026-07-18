@@ -12,15 +12,12 @@ import { OpenEditorsProvider } from '@/context/providers/open-editors/open-edito
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { token_count_emitter } from '@/context/context-initialization'
 import { EditFormat } from '@shared/types/edit-format'
-import { get_checkpoints } from '@/features/checkpoints/actions'
 import {
   handle_copy_prompt,
   handle_send_to_browser,
   handle_create_web_configuration,
   handle_update_web_configuration,
   handle_delete_web_configuration,
-  handle_create_checkpoint,
-  handle_clear_all_checkpoints,
   handle_preview_web_configuration,
   handle_save_edit_format,
   handle_reorder_web_configurations,
@@ -64,7 +61,6 @@ import {
   handle_manage_api_configurations,
   handle_save_component_collapsed_state,
   handle_undo,
-  handle_delete_checkpoint,
   handle_request_can_undo,
   handle_preview_generated_code,
   handle_get_tasks,
@@ -89,10 +85,6 @@ import {
   handle_get_find_relevant_files_shrink_source_code,
   handle_save_find_relevant_files_shrink_source_code,
   handle_return_home_and_switch_to_edit_files,
-  handle_toggle_checkpoint_star,
-  handle_restore_checkpoint,
-  handle_restore_temp_checkpoint,
-  handle_update_checkpoint_description,
   handle_pick_tasks_workspace
 } from './message-handlers'
 import { handle_update_api_configuration } from './message-handlers/handle-update-api-configuration'
@@ -115,8 +107,7 @@ import {
   LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY,
   LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY,
   get_last_used_web_configuration_key,
-  FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
-  TEMPORARY_CHECKPOINT_STATE_KEY
+  FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY
 } from '@/constants/state-keys'
 import {
   config_web_configuration_to_ui_format,
@@ -126,16 +117,13 @@ import { CHATBOTS } from '@shared/constants/chatbots'
 import { MODE, Mode } from '../types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Logger } from '@shared/utils/logger'
-import { get_checkpoint_path } from '@/features/checkpoints/utils'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { CancelTokenSource } from 'axios'
 import { dictionary } from '@shared/constants/dictionary'
 import { DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD } from '@/constants/values'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { SharedContextState } from '@/context/shared-context-state'
-import { Checkpoint } from '@/features/checkpoints/types'
 import { webview_html } from '@/views/shared/utils/webview-html'
-import { checkpoints_emitter } from '@/features/checkpoints/events'
 
 export class PanelProvider implements vscode.WebviewViewProvider {
   public readonly extension_uri: vscode.Uri
@@ -182,10 +170,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public api_call_cancel_token_source: CancelTokenSource | null = null
   public api_manager!: ApiManager
   public response_history: ResponseHistoryItem[] = []
-  public active_checkpoint_delete_operation: {
-    finalize: () => Promise<void>
-    timestamp: number
-  } | null = null
 
   // Voice input
   public is_recording = false
@@ -306,41 +290,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     }
     this.update_providers_shrink_mode()
     this.update_providers_context_state()
-  }
-
-  public async send_checkpoints() {
-    const checkpoints = await get_checkpoints(this.context)
-
-    let has_temp_checkpoint = false
-    const temp_checkpoint = this.context.workspaceState.get<Checkpoint>(
-      TEMPORARY_CHECKPOINT_STATE_KEY
-    )
-    if (temp_checkpoint) {
-      const three_hours_in_ms = 3 * 60 * 60 * 1000
-      if (Date.now() - temp_checkpoint.timestamp < three_hours_in_ms) {
-        try {
-          const checkpoint_path = get_checkpoint_path(temp_checkpoint.timestamp)
-          await vscode.workspace.fs.stat(vscode.Uri.file(checkpoint_path))
-          has_temp_checkpoint = true
-        } catch {
-          await this.context.workspaceState.update(
-            TEMPORARY_CHECKPOINT_STATE_KEY,
-            undefined
-          )
-        }
-      }
-    }
-
-    this.send_message({
-      command: 'CHECKPOINTS',
-      checkpoints: checkpoints.map((c) => ({
-        timestamp: c.timestamp,
-        trigger: c.trigger,
-        description: c.description,
-        is_starred: c.is_starred
-      })),
-      has_temp_checkpoint
-    })
   }
 
   private _send_send_with_shift_enter() {
@@ -530,10 +479,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
         this.send_context_files()
       }
-    })
-
-    checkpoints_emitter.on('checkpoints-updated', () => {
-      this.send_checkpoints()
     })
 
     this.context.subscriptions.push(this._config_listener)
@@ -733,23 +678,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     webview_view.webview.onDidReceiveMessage(
       async (message: FrontendMessage) => {
         try {
-          if (message.command == 'GET_CHECKPOINTS') {
-            await this.send_checkpoints()
-          } else if (message.command == 'CREATE_CHECKPOINT') {
-            await handle_create_checkpoint(this)
-          } else if (message.command == 'TOGGLE_CHECKPOINT_STAR') {
-            await handle_toggle_checkpoint_star(this, message)
-          } else if (message.command == 'RESTORE_CHECKPOINT') {
-            await handle_restore_checkpoint(this, message)
-          } else if (message.command == 'RESTORE_TEMP_CHECKPOINT') {
-            await handle_restore_temp_checkpoint(this)
-          } else if (message.command == 'UPDATE_CHECKPOINT_DESCRIPTION') {
-            await handle_update_checkpoint_description(this, message)
-          } else if (message.command == 'DELETE_CHECKPOINT') {
-            await handle_delete_checkpoint(this, message)
-          } else if (message.command == 'CLEAR_ALL_CHECKPOINTS') {
-            await handle_clear_all_checkpoints(this)
-          } else if (message.command == 'GET_HISTORY') {
+          if (message.command == 'GET_HISTORY') {
             handle_get_history(this)
           } else if (message.command == 'GET_RESPONSE_HISTORY') {
             this.send_message({

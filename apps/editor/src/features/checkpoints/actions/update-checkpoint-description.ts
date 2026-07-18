@@ -23,6 +23,5 @@ export const update_checkpoint_description = async (params: {
       CHECKPOINTS_STATE_KEY,
       checkpoints
     )
-    await params.panel_provider.send_checkpoints()
   }
 }

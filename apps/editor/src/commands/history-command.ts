@@ -21,7 +21,6 @@ import {
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { get_checkpoint_path } from '@/features/checkpoints/utils'
 import { dictionary } from '@shared/constants/dictionary'
-import { checkpoints_emitter } from '@/features/checkpoints/events'
 import { get_response_preview_promise_resolve } from '@/commands/apply-chat-response-command/utils/preview/preview'
 
 dayjs.extend(localizedFormat)
@@ -268,7 +267,7 @@ export const history_command = (params: {
               checkpoint: temp_checkpoint,
               workspace_provider: params.workspace_provider,
               context: params.context,
-              options: { skip_confirmation: true, use_native_progress: true },
+              options: { skip_confirmation: true },
               panel_provider: params.panel_provider
             })
             // After reverting, delete the temp checkpoint and clear state.
@@ -281,15 +280,13 @@ export const history_command = (params: {
               checkpoint_to_delete: temp_checkpoint,
               panel_provider: params.panel_provider
             })
-            checkpoints_emitter.emit('checkpoints-updated')
           } else if (selected.checkpoint) {
             quick_pick.hide()
             await restore_checkpoint({
               checkpoint: selected.checkpoint,
               workspace_provider: params.workspace_provider,
               context: params.context,
-              panel_provider: params.panel_provider,
-              options: { use_native_progress: true }
+              panel_provider: params.panel_provider
             })
           }
         })
@@ -381,7 +378,6 @@ export const history_command = (params: {
                   CHECKPOINTS_STATE_KEY,
                   checkpoints
                 )
-                params.panel_provider.send_checkpoints()
               }
             }
             await refresh_and_update_view()

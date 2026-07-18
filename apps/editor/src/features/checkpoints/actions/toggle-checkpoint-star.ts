@@ -22,6 +22,5 @@ export const toggle_checkpoint_star = async (params: {
       CHECKPOINTS_STATE_KEY,
       checkpoints
     )
-    await params.panel_provider.send_checkpoints()
   }
 }
