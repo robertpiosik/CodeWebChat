@@ -49,5 +49,6 @@
   "codeWebChat.removeFolderFromWorkspace.title": "Премахни папката от работното пространство",
   "codeWebChat.openWebsitePreviewUrl.title": "Отвори URL в браузъра",
   "codeWebChat.selectUnstagedFiles.title": "Маркирай променените файлове",
-  "codeWebChat.selectCommitFiles.title": "Маркирай файлове от commit..."
+  "codeWebChat.selectCommitFiles.title": "Маркирай файлове от commit...",
+  "codeWebChat.selectChangedFiles.title": "Избери променени файлове..."
 }

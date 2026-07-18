@@ -34,7 +34,8 @@ import {
   select_referencing_files_command,
   select_definition_file_command,
   select_unstaged_files_command,
-  select_commit_files_command
+  select_commit_files_command,
+  select_changed_files_command
 } from './commands'
 import { setup_git_discard_file_watcher } from './services/git-discard-file-watcher'
 import { select_imported_files_command } from './commands/select-imported-files-command'
@@ -125,6 +126,7 @@ export const activate = async (context: vscode.ExtensionContext) => {
     }),
     select_unstaged_files_command(workspace_provider, context),
     select_commit_files_command(workspace_provider, context),
+    select_changed_files_command(workspace_provider, context),
     rename_command(),
     delete_command(),
     add_file_to_context_command(workspace_provider),

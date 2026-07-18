@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import { execSync } from 'child_process'
 import { dictionary } from '@shared/constants/dictionary'
+import { t } from '@/i18n'
 
 export const handle_changes_item = async (): Promise<
   string | 'continue' | undefined
@@ -20,14 +21,25 @@ export const handle_changes_item = async (): Promise<
       branches: string[]
     }> = []
 
+    let has_any_branches = false
+
     for (const folder of workspace_folders) {
       try {
-        const branches = execSync('git branch --sort=-committerdate', {
+        const branches_output = execSync('git branch --sort=-committerdate', {
           encoding: 'utf-8',
           cwd: folder.uri.fsPath
         })
+          .toString()
+          .trim()
+
+        if (branches_output) {
+          has_any_branches = true
+        }
+
+        const branches = branches_output
           .split('\n')
-          .map((b) => b.trim().replace(/^\* /, ''))
+          .filter((b) => !b.startsWith('* '))
+          .map((b) => b.trim())
           .filter((b) => b.length > 0)
 
         if (branches.length > 0) {
@@ -39,9 +51,16 @@ export const handle_changes_item = async (): Promise<
       }
     }
 
+    if (!has_any_branches) {
+      vscode.window.showInformationMessage(
+        t('views.panel.handlers.hash-sign.changes-symbol.no-branches')
+      )
+      return undefined
+    }
+
     if (all_branches.size == 0) {
-      vscode.window.showErrorMessage(
-        dictionary.error_message.NO_GIT_BRANCHES_FOUND_IN_WORKSPACE
+      vscode.window.showInformationMessage(
+        t('views.panel.handlers.hash-sign.changes-symbol.no-other-branches')
       )
       return undefined
     }

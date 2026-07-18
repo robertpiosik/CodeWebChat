@@ -49,5 +49,6 @@
   "codeWebChat.removeFolderFromWorkspace.title": "Odebrat složku z pracovního prostoru",
   "codeWebChat.openWebsitePreviewUrl.title": "Otevřít URL v prohlížeči",
   "codeWebChat.selectUnstagedFiles.title": "Vybrat upravené soubory",
-  "codeWebChat.selectCommitFiles.title": "Vybrat soubory z commitu..."
+  "codeWebChat.selectCommitFiles.title": "Vybrat soubory z commitu...",
+  "codeWebChat.selectChangedFiles.title": "Vybrat změněné soubory..."
 }
