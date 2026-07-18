@@ -84,7 +84,7 @@ export class ApiManager {
       this.broadcast_message({
         command: 'SHOW_API_MANAGER_PROGRESS',
         id: request_id,
-        title: is_queued ? 'Queued...' : 'Waiting for server...',
+        status: is_queued ? 'Queued...' : 'Waiting for server...',
         provider_name: params.provider_name,
         model: params.model,
         reasoning_effort: params.reasoning_effort
@@ -102,7 +102,7 @@ export class ApiManager {
         this.broadcast_message({
           command: 'SHOW_API_MANAGER_PROGRESS',
           id: request_id,
-          title: 'Waiting for server...',
+          status: 'Waiting for server...',
           provider_name: params.provider_name,
           model: params.model,
           reasoning_effort: params.reasoning_effort
@@ -119,7 +119,7 @@ export class ApiManager {
           this.broadcast_message({
             command: 'SHOW_API_MANAGER_PROGRESS',
             id: request_id,
-            title: 'Thinking...',
+            status: 'Thinking...',
             provider_name: params.provider_name,
             model: params.model,
             reasoning_effort: params.reasoning_effort
@@ -130,7 +130,7 @@ export class ApiManager {
           this.broadcast_message({
             command: 'SHOW_API_MANAGER_PROGRESS',
             id: request_id,
-            title: 'Receiving...',
+            status: 'Receiving...',
             tokens_per_second,
             total_tokens,
             provider_name: params.provider_name,

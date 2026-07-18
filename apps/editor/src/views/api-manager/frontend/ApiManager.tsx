@@ -9,7 +9,7 @@ export const ApiManager = () => {
     Record<
       string,
       {
-        title: string
+        status: string
         tokens_per_second?: number
         total_tokens?: number
         cancellable?: boolean
@@ -27,7 +27,7 @@ export const ApiManager = () => {
         set_api_manager_progress_state((prev) => ({
           ...prev,
           [message.id]: {
-            title: message.title,
+            status: message.status,
             tokens_per_second: message.tokens_per_second,
             total_tokens: message.total_tokens,
             provider_name: message.provider_name,

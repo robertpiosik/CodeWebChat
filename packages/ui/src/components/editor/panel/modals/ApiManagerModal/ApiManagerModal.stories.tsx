@@ -9,7 +9,7 @@ export const Default = () => {
   const [items, set_items] = useState([
     {
       id: '1',
-      title: 'Receiving...',
+      status: 'Receiving...',
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     }
@@ -27,7 +27,7 @@ export const Default = () => {
         set_items([
           {
             id: '1',
-            title: 'Receiving...',
+            status: 'Receiving...',
             provider_name: 'OpenAI',
             model: 'gpt-5.2'
           }
@@ -43,13 +43,13 @@ export const MultipleItems = () => {
   const initial_items = [
     {
       id: '1',
-      title: 'Thinking...',
+      status: 'Thinking...',
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     },
     {
       id: '2',
-      title: 'Receiving...',
+      status: 'Receiving...',
       tokens_per_second: 145,
       total_tokens: 320,
       provider_name: 'OpenAI',
@@ -57,19 +57,19 @@ export const MultipleItems = () => {
     },
     {
       id: '3',
-      title: 'Waiting for connection...',
+      status: 'Waiting for connection...',
       provider_name: 'Anthropic',
       model: 'claude-4-5-sonnet'
     },
     {
       id: '4',
-      title: 'Thinking...',
+      status: 'Thinking...',
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     },
     {
       id: '5',
-      title: 'Receiving...',
+      status: 'Receiving...',
       tokens_per_second: 145,
       total_tokens: 320,
       provider_name: 'OpenAI',
@@ -77,19 +77,19 @@ export const MultipleItems = () => {
     },
     {
       id: '6',
-      title: 'Waiting for connection...',
+      status: 'Waiting for connection...',
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     },
     {
       id: '7',
-      title: 'Thinking...',
+      status: 'Thinking...',
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     },
     {
       id: '8',
-      title: 'Receiving...',
+      status: 'Receiving...',
       tokens_per_second: 145,
       total_tokens: 320,
       provider_name: 'OpenAI',
@@ -97,19 +97,19 @@ export const MultipleItems = () => {
     },
     {
       id: '9',
-      title: 'Waiting for connection...',
+      status: 'Waiting for connection...',
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     },
     {
       id: '10',
-      title: 'Thinking...',
+      status: 'Thinking...',
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     },
     {
       id: '11',
-      title: 'Receiving...',
+      status: 'Receiving...',
       tokens_per_second: 145,
       total_tokens: 320,
       provider_name: 'OpenAI',
@@ -117,19 +117,19 @@ export const MultipleItems = () => {
     },
     {
       id: '12',
-      title: 'Waiting for connection...',
+      status: 'Waiting for connection...',
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     },
     {
       id: '13',
-      title: 'Thinking...',
+      status: 'Thinking...',
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     },
     {
       id: '14',
-      title: 'Receiving...',
+      status: 'Receiving...',
       tokens_per_second: 145,
       total_tokens: 320,
       provider_name: 'OpenAI',
@@ -137,7 +137,7 @@ export const MultipleItems = () => {
     },
     {
       id: '15',
-      title: 'Waiting for connection...',
+      status: 'Waiting for connection...',
       provider_name: 'OpenAI',
       model: 'gpt-5.2'
     }

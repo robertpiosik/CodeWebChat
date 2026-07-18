@@ -15,7 +15,7 @@ export const use_modal_manager = () => {
     Record<
       string,
       {
-        title: string
+        status: string
         tokens_per_second?: number
         total_tokens?: number
         cancellable?: boolean
@@ -58,7 +58,7 @@ export const use_modal_manager = () => {
         set_api_manager_progress_state((prev) => ({
           ...prev,
           [message.id]: {
-            title: message.title,
+            status: message.status,
             tokens_per_second: message.tokens_per_second,
             total_tokens: message.total_tokens,
             provider_name: message.provider_name,
