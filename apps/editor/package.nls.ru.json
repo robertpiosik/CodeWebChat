@@ -49,5 +49,6 @@
   "codeWebChat.removeFolderFromWorkspace.title": "Удалить папку из рабочей области",
   "codeWebChat.openWebsitePreviewUrl.title": "Открыть URL в браузере",
   "codeWebChat.selectUnstagedFiles.title": "Отметить измененные файлы",
-  "codeWebChat.selectCommitFiles.title": "Отметить файлы из коммита..."
+  "codeWebChat.selectCommitFiles.title": "Отметить файлы из коммита...",
+  "codeWebChat.selectChangedFiles.title": "Выбрать измененные файлы..."
 }

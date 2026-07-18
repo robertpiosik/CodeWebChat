@@ -49,5 +49,6 @@
   "codeWebChat.removeFolderFromWorkspace.title": "ワークスペースからフォルダーを削除",
   "codeWebChat.openWebsitePreviewUrl.title": "ブラウザーでURLを開く",
   "codeWebChat.selectUnstagedFiles.title": "変更されたファイルを選択",
-  "codeWebChat.selectCommitFiles.title": "コミットからのファイルを選択..."
+  "codeWebChat.selectCommitFiles.title": "コミットからのファイルを選択...",
+  "codeWebChat.selectChangedFiles.title": "変更されたファイルを選択..."
 }

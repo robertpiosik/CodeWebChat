@@ -49,5 +49,6 @@
   "codeWebChat.removeFolderFromWorkspace.title": "Mappa eltávolítása a munkaterületről",
   "codeWebChat.openWebsitePreviewUrl.title": "URL megnyitása a böngészőben",
   "codeWebChat.selectUnstagedFiles.title": "Módosított fájlok kijelölése",
-  "codeWebChat.selectCommitFiles.title": "Commit fájljainak kijelölése..."
+  "codeWebChat.selectCommitFiles.title": "Commit fájljainak kijelölése...",
+  "codeWebChat.selectChangedFiles.title": "Módosított fájlok kiválasztása..."
 }

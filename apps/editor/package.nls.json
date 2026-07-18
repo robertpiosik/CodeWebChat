@@ -49,5 +49,6 @@
   "codeWebChat.removeFolderFromWorkspace.title": "Remove Folder from Workspace",
   "codeWebChat.openWebsitePreviewUrl.title": "Open URL in Browser",
   "codeWebChat.selectUnstagedFiles.title": "Select Unstaged Files",
-  "codeWebChat.selectCommitFiles.title": "Select Files of Commit..."
+  "codeWebChat.selectCommitFiles.title": "Select Files of Commit...",
+  "codeWebChat.selectChangedFiles.title": "Select Changed Files..."
 }

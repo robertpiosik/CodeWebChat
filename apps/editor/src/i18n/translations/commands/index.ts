@@ -14,6 +14,7 @@ import { translations as rename } from './rename'
 import { translations as rate } from './rate'
 import { translations as select_unstaged_files } from './select-unstaged-files'
 import { translations as select_commit_files } from './select-commit-files'
+import { translations as select_changed_files } from './select-changed-files'
 import { translations as history } from './history'
 
 export const translations = {
@@ -33,5 +34,6 @@ export const translations = {
   ...rate,
   ...select_unstaged_files,
   ...select_commit_files,
+  ...select_changed_files,
   ...history
 }

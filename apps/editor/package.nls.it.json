@@ -49,5 +49,6 @@
   "codeWebChat.removeFolderFromWorkspace.title": "Rimuovi cartella dall'area di lavoro",
   "codeWebChat.openWebsitePreviewUrl.title": "Apri URL nel browser",
   "codeWebChat.selectUnstagedFiles.title": "Seleziona file modificati",
-  "codeWebChat.selectCommitFiles.title": "Seleziona i file da un commit..."
+  "codeWebChat.selectCommitFiles.title": "Seleziona i file da un commit...",
+  "codeWebChat.selectChangedFiles.title": "Seleziona i file modificati..."
 }

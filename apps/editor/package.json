@@ -392,6 +392,11 @@
         "command": "codeWebChat.selectCommitFiles",
         "title": "%codeWebChat.selectCommitFiles.title%",
         "category": "Code Web Chat"
+      },
+      {
+        "command": "codeWebChat.selectChangedFiles",
+        "title": "%codeWebChat.selectChangedFiles.title%",
+        "category": "Code Web Chat"
       }
     ],
     "submenus": [
@@ -579,6 +584,10 @@
           "when": "false"
         },
         {
+          "command": "codeWebChat.selectChangedFiles",
+          "when": "false"
+        },
+        {
           "command": "codeWebChat.selectCommitFiles",
           "when": "false"
         }
@@ -660,9 +669,14 @@
           "group": "1_more@5"
         },
         {
-          "command": "codeWebChat.duplicateWorkspace",
+          "command": "codeWebChat.selectChangedFiles",
           "when": "view == codeWebChatViewWorkspace",
           "group": "1_more@6"
+        },
+        {
+          "command": "codeWebChat.duplicateWorkspace",
+          "when": "view == codeWebChatViewWorkspace",
+          "group": "1_more@7"
         },
         {
           "command": "codeWebChat.checkAllOpenEditors",

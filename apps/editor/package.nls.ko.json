@@ -49,5 +49,6 @@
   "codeWebChat.removeFolderFromWorkspace.title": "작업 영역에서 폴더 제거",
   "codeWebChat.openWebsitePreviewUrl.title": "브라우저에서 URL 열기",
   "codeWebChat.selectUnstagedFiles.title": "수정된 파일 선택",
-  "codeWebChat.selectCommitFiles.title": "커밋에서 파일 선택..."
+  "codeWebChat.selectCommitFiles.title": "커밋에서 파일 선택...",
+  "codeWebChat.selectChangedFiles.title": "변경된 파일 선택..."
 }

@@ -49,5 +49,6 @@
   "codeWebChat.removeFolderFromWorkspace.title": "Klasörü Çalışma Alanından Kaldır",
   "codeWebChat.openWebsitePreviewUrl.title": "URL'yi Tarayıcıda Aç",
   "codeWebChat.selectUnstagedFiles.title": "Değiştirilen Dosyaları Seç",
-  "codeWebChat.selectCommitFiles.title": "Bir İşlemeden (Commit) Dosyaları Seç..."
+  "codeWebChat.selectCommitFiles.title": "Bir İşlemeden (Commit) Dosyaları Seç...",
+  "codeWebChat.selectChangedFiles.title": "Değiştirilmiş Dosyaları Seç..."
 }
