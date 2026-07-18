@@ -10,7 +10,7 @@ export interface CancelApiManagerRequestMessage extends BaseMessage {
 export interface ShowApiManagerProgressMessage extends BaseMessage {
   command: 'SHOW_API_MANAGER_PROGRESS'
   id: string
-  title: string
+  status: string
   tokens_per_second?: number
   total_tokens?: number
   provider_name: string

@@ -7,7 +7,7 @@ import styles from './ApiManagerModal.module.scss'
 type Props = {
   progress_items: {
     id: string
-    title: string
+    status: string
     tokens_per_second?: number
     total_tokens?: number
     provider_name: string
@@ -106,7 +106,7 @@ export const ApiManagerModal: React.FC<Props> = (props) => {
                   </div>
                   <div className={styles.item__bottom}>
                     <div className={styles.item__bottom__status}>
-                      {item.title}
+                      {item.status}
                     </div>
                     <div className={styles.item__bottom__right}>
                       {item.tokens_per_second !== undefined && (
