@@ -23,7 +23,7 @@ export type NavItem =
   | 'section:general:group:open-links'
   | 'section:general:group:context'
   | 'section:general:group:prompt-field'
-  | 'section:general:group:checkpoints'
+  | 'section:general:group:history'
   | 'section:general:group:commit-messages'
   | 'section:general:group:edit-format'
   | 'section:chatbots'
@@ -56,8 +56,8 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
     label: 'general.prompt-field.title'
   },
   {
-    id: 'section:general:group:checkpoints',
-    label: 'general.checkpoints.title'
+    id: 'section:general:group:history',
+    label: 'general.history.title'
   },
   {
     id: 'section:general:group:commit-messages',
@@ -194,7 +194,7 @@ export const Home: React.FC<Props> = (props) => {
     'section:general:group:open-links': null,
     'section:general:group:context': null,
     'section:general:group:prompt-field': null,
-    'section:general:group:checkpoints': null,
+    'section:general:group:history': null,
     'section:general:group:commit-messages': null,
     'section:general:group:edit-format': null,
     'section:chatbots': null,

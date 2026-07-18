@@ -319,10 +319,10 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
 
         <div
           ref={(el) =>
-            props.set_section_ref('section:general:group:checkpoints', el)
+            props.set_section_ref('section:general:group:history', el)
           }
         >
-          <UiGroup title={t('general.checkpoints.title')}>
+          <UiGroup title={t('general.history.title')}>
             <UiItem
               title={t('general.automatic-checkpoints.title')}
               description={t('general.automatic-checkpoints.description')}
