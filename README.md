@@ -26,16 +26,16 @@ Get involved! Join our [discord server](https://discord.gg/KJySXsrSX5).
 
 ## Introduction
 
-Coding capability in LLMs is trained using techniques like [Inverse-Instruct](https://www.researchgate.net/figure/The-overview-of-INVERSE-INSTRUCT-INVERSE-INSTRUCT-utilizes-the-models-own-capability-in_fig1_382079949) with an existing model acting as a summarizer, looking at the code and writing instructions that could realistically output that exact code block.
+This independent project aims to provide developers with a complete set of tools for an efficient AI coding workflow.
 
-CWC is designed to tap directly into these code snippet-summarization training dataset pairs by making file selection for context an essential part of your AI-assisted coding workflow.
+Here, you're the one selecting context files, so LLMs can assist your work in real-time!
 
 > [!TIP]
-> Get help in relevant file selection using the _Find Relevant Files_ prompt type.
+> Get help in task-relevant file selection using the _Find Relevant Files_ [prompt type](#prompt-types).
 
 ## Prompt types
 
-At its core, CWC constructs simple, markdown-formatted prompts for common use-cases (click to expand) you can copy and paste into chatbot of choice or send directly from the editor via an API call.
+At its core, CWC constructs simple, markdown-formatted prompts for common use-cases (click to expand). Copy and paste into chatbot of choice or send directly from the editor via an API call.
 
 <details>
 <summary><strong>Edit files</strong></summary>
