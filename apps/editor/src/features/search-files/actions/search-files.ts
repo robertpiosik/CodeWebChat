@@ -5,12 +5,15 @@ import {
   LAST_SEARCH_FILES_PHRASE_QUERY_STATE_KEY,
   LAST_SEARCH_FILES_KEYWORDS_QUERY_STATE_KEY,
   LAST_SEARCH_FILES_KEYWORDS_MATCH_MODE_STATE_KEY,
+  LAST_SEARCH_FILES_FILENAME_QUERY_STATE_KEY,
+  LAST_SEARCH_FILES_FILENAME_MATCH_MODE_STATE_KEY,
   LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY,
   LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY,
   LAST_FIND_RELEVANT_FILES_SHRINK_STATE_KEY
 } from '@/constants/state-keys'
 import { prompt_for_search_mode } from '../utils/prompt-for-search-mode'
 import { prompt_for_keywords_match_mode } from '../utils/prompt-for-keywords-match-mode'
+import { prompt_for_filename_match_mode } from '../utils/prompt-for-filename-match-mode'
 import { prompt_for_search_term } from '../utils/prompt-for-search-term'
 import { analyze_files } from '../utils/analyze-files'
 import { prompt_for_shrink_mode } from '../utils/prompt-for-shrink-mode'
@@ -32,7 +35,7 @@ export const search_files = async (params: {
 > => {
   let initial_search_mode =
     params.extension_context.workspaceState.get<
-      'phrase' | 'keywords' | 'intelligent'
+      'phrase' | 'keywords' | 'filename' | 'intelligent'
     >(LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY) || 'phrase'
 
   while (true) {
@@ -79,6 +82,25 @@ export const search_files = async (params: {
             LAST_SEARCH_FILES_KEYWORDS_MATCH_MODE_STATE_KEY,
             keywords_match_mode
           )
+        } else if (search_mode == 'filename') {
+          const last_match_mode =
+            params.extension_context.workspaceState.get<'all' | 'some'>(
+              LAST_SEARCH_FILES_FILENAME_MATCH_MODE_STATE_KEY
+            ) || 'all'
+
+          const match_mode_result =
+            await prompt_for_filename_match_mode(last_match_mode)
+          if (match_mode_result == 'back') {
+            go_back_to_mode = true
+            break
+          }
+          if (!match_mode_result) return undefined
+
+          keywords_match_mode = match_mode_result
+          await params.extension_context.workspaceState.update(
+            LAST_SEARCH_FILES_FILENAME_MATCH_MODE_STATE_KEY,
+            keywords_match_mode
+          )
         }
 
         let go_back_to_match_mode = false
@@ -90,7 +112,9 @@ export const search_files = async (params: {
               ? LAST_SEARCH_FILES_PHRASE_QUERY_STATE_KEY
               : search_mode == 'keywords'
                 ? LAST_SEARCH_FILES_KEYWORDS_QUERY_STATE_KEY
-                : LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY
+                : search_mode == 'filename'
+                  ? LAST_SEARCH_FILES_FILENAME_QUERY_STATE_KEY
+                  : LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY
 
           const initial_search_term =
             params.extension_context.workspaceState.get<string>(state_key) || ''
@@ -100,7 +124,7 @@ export const search_files = async (params: {
             search_mode
           )
           if (result.back) {
-            if (search_mode == 'keywords') {
+            if (search_mode == 'keywords' || search_mode == 'filename') {
               go_back_to_match_mode = true
             } else {
               go_back_to_mode = true

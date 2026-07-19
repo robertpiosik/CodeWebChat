@@ -2,11 +2,13 @@ import * as vscode from 'vscode'
 import { t } from '@/i18n'
 
 export const prompt_for_search_mode = async (
-  last_mode: 'phrase' | 'keywords' | 'intelligent',
+  last_mode: 'phrase' | 'keywords' | 'filename' | 'intelligent',
   show_back_button?: boolean
-): Promise<'phrase' | 'keywords' | 'intelligent' | undefined | 'back'> => {
+): Promise<
+  'phrase' | 'keywords' | 'filename' | 'intelligent' | undefined | 'back'
+> => {
   const items: (vscode.QuickPickItem & {
-    mode: 'phrase' | 'keywords' | 'intelligent'
+    mode: 'phrase' | 'keywords' | 'filename' | 'intelligent'
   })[] = [
     {
       label: t('command.search.mode.phrase'),
@@ -17,6 +19,11 @@ export const prompt_for_search_mode = async (
       label: t('command.search.mode.keywords'),
       description: t('command.search.mode.keywords-description'),
       mode: 'keywords'
+    },
+    {
+      label: t('command.search.mode.filename'),
+      description: t('command.search.mode.filename-description'),
+      mode: 'filename'
     },
     {
       label: t('command.search.mode.intelligent'),
@@ -33,7 +40,9 @@ export const prompt_for_search_mode = async (
   }
 
   const quick_pick = vscode.window.createQuickPick<
-    vscode.QuickPickItem & { mode: 'phrase' | 'keywords' | 'intelligent' }
+    vscode.QuickPickItem & {
+      mode: 'phrase' | 'keywords' | 'filename' | 'intelligent'
+    }
   >()
   quick_pick.items = items
   quick_pick.activeItems = [active_item]

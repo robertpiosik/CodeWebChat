@@ -8,7 +8,7 @@ import { create_search_regex } from './create-search-regex'
 export const prompt_for_search_results = async (params: {
   matched_files: string[]
   search_term: string
-  search_mode: 'phrase' | 'keywords' | 'intelligent'
+  search_mode: 'phrase' | 'keywords' | 'filename' | 'intelligent'
   workspace_provider: WorkspaceProvider
 }): Promise<
   { selected_paths: string[]; matched_paths: string[] } | undefined | 'back'
@@ -120,6 +120,8 @@ export const prompt_for_search_results = async (params: {
               .map((k) => k.trim())
               .filter((k) => k.length > 0)
               .map((k) => create_search_regex(k))
+          } else if (params.search_mode == 'filename') {
+            regexes = []
           } else {
             regexes = [create_search_regex(params.search_term)]
           }
