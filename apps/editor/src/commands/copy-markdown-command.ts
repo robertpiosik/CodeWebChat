@@ -8,7 +8,7 @@ import { WorkspaceProvider } from '../context/providers/workspace/workspace-prov
 import { OpenEditorsProvider } from '../context/providers/open-editors/open-editors-provider'
 import { t } from '../i18n'
 
-export const copy_context_commands = (
+export const copy_markdown_commands = (
   workspace_provider: WorkspaceProvider,
   open_editors_provider: OpenEditorsProvider
 ) => {
@@ -18,7 +18,7 @@ export const copy_context_commands = (
   })
 
   return [
-    vscode.commands.registerCommand('codeWebChat.copyContext', async () => {
+    vscode.commands.registerCommand('codeWebChat.copyMarkdown', async () => {
       let context_text = ''
 
       try {
@@ -48,7 +48,7 @@ export const copy_context_commands = (
     }),
 
     vscode.commands.registerCommand(
-      'codeWebChat.copyContextOpenEditors',
+      'codeWebChat.copyMarkdownOpenEditors',
       async () => {
         if (!open_editors_provider) return
         const checked_files = open_editors_provider.get_checked_files()
