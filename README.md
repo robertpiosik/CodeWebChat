@@ -28,7 +28,7 @@ Get involved! Join our [discord server](https://discord.gg/KJySXsrSX5).
 
 This independent project aims to provide developers with a complete set of tools for an efficient AI coding workflow.
 
-Here, you're the one selecting context files, so LLMs can assist your work without the lengthy tool calling, in real-time!
+Here, you're the one selecting context files, so LLMs can assist you without the lengthy tool calling, in real-time!
 
 > [!TIP]
 > Get help in task-relevant file selection using the _Find Relevant Files_ [prompt type](#prompt-types).
