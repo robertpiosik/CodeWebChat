@@ -39,7 +39,7 @@ Editor and browser extensions operate locally—no code, prompts or usage data a
 
 ## Prompt types
 
-At its core, CWC constructs simple, markdown-formatted prompts for common use-cases (click to expand). Copy and paste into chatbot of choice or send directly from the editor via an API call.
+At its core, CWC constructs simple, markdown-formatted prompts for common use-cases (click to expand) you can copy and paste into chatbot of choice or send directly from the editor via an API call.
 
 <details>
 <summary><strong>Edit files</strong></summary>
