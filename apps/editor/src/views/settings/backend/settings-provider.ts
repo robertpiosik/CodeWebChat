@@ -47,6 +47,8 @@ import {
   handle_delete_web_configuration,
   handle_reorder_web_configurations,
   handle_create_web_configuration,
+  handle_get_copy_paths_format,
+  handle_update_copy_paths_format,
   handle_pick_chatbot,
   handle_pick_model,
   handle_pick_reasoning_effort,
@@ -197,6 +199,10 @@ export class SettingsProvider {
           message.command == 'UPDATE_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
         ) {
           await handle_update_clear_checks_in_workspace_behavior(message)
+        } else if (message.command == 'GET_COPY_PATHS_FORMAT') {
+          await handle_get_copy_paths_format(this)
+        } else if (message.command == 'UPDATE_COPY_PATHS_FORMAT') {
+          await handle_update_copy_paths_format(message)
         } else if (message.command == 'GET_GEMINI_USER_ID') {
           await handle_get_gemini_user_id(this)
         } else if (message.command == 'UPDATE_GEMINI_USER_ID') {
@@ -296,6 +302,7 @@ export class SettingsProvider {
           void handle_get_gemini_user_id(this)
           void handle_get_ai_studio_user_id(this)
           void handle_get_send_with_shift_enter(this)
+          void handle_get_copy_paths_format(this)
           void handle_get_check_new_files(this)
           void handle_get_reuse_last_tab(this)
           void handle_get_auto_run_intelligent_update(this)

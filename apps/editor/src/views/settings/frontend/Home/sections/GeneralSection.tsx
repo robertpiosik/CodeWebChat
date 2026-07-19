@@ -41,6 +41,8 @@ type Props = {
   on_clear_checks_in_workspace_behavior_change: (
     value: ClearChecksBehavior
   ) => void
+  copy_paths_format: 'list' | 'tree'
+  on_copy_paths_format_change: (value: 'list' | 'tree') => void
   on_edit_format_instructions_change: (
     instructions: EditFormatInstructions
   ) => void
@@ -247,6 +249,26 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                   ]}
                   value={props.clear_checks_in_workspace_behavior}
                   onChange={props.on_clear_checks_in_workspace_behavior_change}
+                />
+              }
+            />
+            <UiItem
+              title={t('general.copy-paths-format.title')}
+              description={t('general.copy-paths-format.description')}
+              slot_right={
+                <UiDropdown
+                  options={[
+                    {
+                      value: 'list',
+                      label: t('general.copy-paths-format.list')
+                    },
+                    {
+                      value: 'tree',
+                      label: t('general.copy-paths-format.tree')
+                    }
+                  ]}
+                  value={props.copy_paths_format}
+                  onChange={props.on_copy_paths_format_change}
                 />
               }
             />

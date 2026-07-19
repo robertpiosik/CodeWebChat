@@ -124,6 +124,7 @@ type Props = {
   checkpoint_lifespan: number
   edit_format_instructions: EditFormatInstructions
   clear_checks_in_workspace_behavior: 'ignore-open-editors' | 'uncheck-all'
+  copy_paths_format: 'list' | 'tree'
   auto_run_intelligent_update: boolean
   set_providers: (providers: Provider[]) => void
   set_api_configurations: (configurations: ApiConfiguration[]) => void
@@ -150,6 +151,7 @@ type Props = {
   on_clear_checks_in_workspace_behavior_change: (
     value: 'ignore-open-editors' | 'uncheck-all'
   ) => void
+  on_copy_paths_format_change: (value: 'list' | 'tree') => void
   on_auto_run_intelligent_update_change: (enabled: boolean) => void
   on_open_keybindings: (search?: string) => void
   on_open_editor_settings: () => void
@@ -399,6 +401,8 @@ export const Home: React.FC<Props> = (props) => {
           clear_checks_in_workspace_behavior={
             props.clear_checks_in_workspace_behavior
           }
+          copy_paths_format={props.copy_paths_format}
+          on_copy_paths_format_change={props.on_copy_paths_format_change}
           on_clear_checks_in_workspace_behavior_change={
             props.on_clear_checks_in_workspace_behavior_change
           }

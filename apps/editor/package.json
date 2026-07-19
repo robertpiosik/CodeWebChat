@@ -919,6 +919,15 @@
           "default": true,
           "scope": "resource"
         },
+        "codeWebChat.copyPathsFormat": {
+          "type": "string",
+          "scope": "resource",
+          "enum": [
+            "list",
+            "tree"
+          ],
+          "default": "list"
+        },
         "codeWebChat.sendWithShiftEnter": {
           "type": "boolean",
           "scope": "resource",
