@@ -38,8 +38,7 @@ export const handle_changes_item = async (): Promise<
 
         const branches = branches_output
           .split('\n')
-          .filter((b) => !b.startsWith('* '))
-          .map((b) => b.trim())
+          .map((b) => b.replace(/^\*/, '').trim())
           .filter((b) => b.length > 0)
 
         if (branches.length > 0) {
