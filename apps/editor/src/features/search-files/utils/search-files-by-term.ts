@@ -7,10 +7,49 @@ import { IGNORED_LOCK_FILES } from '@/constants/ignored-lock-files'
 export const search_files_by_term = async (params: {
   files: string[]
   search_term: string
-  search_mode: 'phrase' | 'keywords' | 'intelligent'
+  search_mode: 'phrase' | 'keywords' | 'filename' | 'intelligent'
   keywords_match_mode?: 'all' | 'some'
 }): Promise<string[]> => {
   const matched_files: string[] = []
+
+  if (params.search_mode === 'filename') {
+    const keywords = params.search_term
+      .split(',')
+      .map((k) => k.trim())
+      .filter((k) => k.length > 0)
+    const regexes = keywords.map((k) => create_search_regex(k))
+
+    if (regexes.length == 0) return []
+
+    const matches_condition = (text: string) => {
+      if (params.keywords_match_mode == 'some') {
+        return regexes.some((r) => r.test(text))
+      }
+      return regexes.every((r) => r.test(text))
+    }
+
+    for (const file_path of params.files) {
+      try {
+        const file_name = path.basename(file_path)
+
+        if (IGNORED_LOCK_FILES.includes(file_name)) {
+          continue
+        }
+
+        if (matches_condition(file_name)) {
+          matched_files.push(file_path)
+        }
+      } catch (error) {
+        Logger.error({
+          function_name: 'search_files_by_term',
+          message: `Error reading file during search: ${file_path}`,
+          data: error
+        })
+      }
+    }
+
+    return matched_files
+  }
 
   let regexes: RegExp[] = []
   if (params.search_mode == 'keywords') {
@@ -40,11 +79,6 @@ export const search_files_by_term = async (params: {
       const file_name = path.basename(file_path)
 
       if (IGNORED_LOCK_FILES.includes(file_name)) {
-        continue
-      }
-
-      if (matches_condition(file_name)) {
-        matched_files.push(file_path)
         continue
       }
 

@@ -3,7 +3,7 @@ import { t } from '@/i18n'
 
 export const prompt_for_search_term = async (
   initial_search_term: string,
-  mode: 'phrase' | 'keywords' | 'intelligent'
+  mode: 'phrase' | 'keywords' | 'filename' | 'intelligent'
 ): Promise<{ value: string | undefined; back?: boolean }> => {
   const close_button = {
     iconPath: new vscode.ThemeIcon('close'),
@@ -15,9 +15,11 @@ export const prompt_for_search_term = async (
   input_box.prompt =
     mode == 'keywords'
       ? t('command.search.prompt.keywords')
-      : mode == 'intelligent'
-        ? t('command.search.prompt.intelligent')
-        : t('command.search.prompt')
+      : mode == 'filename'
+        ? t('command.search.prompt.filename')
+        : mode == 'intelligent'
+          ? t('command.search.prompt.intelligent')
+          : t('command.search.prompt')
   input_box.placeholder = t('command.search.placeholder')
   input_box.value = initial_search_term
   input_box.ignoreFocusOut = true
