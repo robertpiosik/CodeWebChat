@@ -13,7 +13,7 @@
 
 Code Web Chat is a chatbot-first AI coding tool. **Start in VS Code (Cursor, Antigravity, VSCodium, etc.), then continue in ChatGPT, Gemini, Claude, etc.** or _Bring Your Own Key_ to stay in the editor!
 
-CWC is free, works 100% on your machine and doesn't collect telemetry.
+CWC is free, operates 100% on your machine and doesn't collect telemetry.
 
 Get involved! Join our [discord server](https://discord.gg/KJySXsrSX5).
 
@@ -26,12 +26,16 @@ Get involved! Join our [discord server](https://discord.gg/KJySXsrSX5).
 
 ## Introduction
 
-This independent project aims to provide developers with a complete set of tools for an efficient AI coding workflow.
+This independent project aims to provide developers with a complete set of tools for an efficient AI coding workflow while respecting their privacy.
 
 Here, you're the one selecting context files, so LLMs can assist you without the lengthy tool calling, in real-time!
 
 > [!TIP]
 > Get help in task-relevant file selection using the _Find Relevant Files_ [prompt type](#prompt-types).
+
+## Privacy
+
+Editor and browser extensions operate locally—no code, prompts or usage data are collected. For transparency, all source code is available on GitHub.
 
 ## Prompt types
 
