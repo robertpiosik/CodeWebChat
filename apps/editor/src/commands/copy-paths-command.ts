@@ -5,11 +5,46 @@ import { t } from '../i18n'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { OpenEditorsProvider } from '../context/providers/open-editors/open-editors-provider'
 
+interface TreeNode {
+  [key: string]: TreeNode
+}
+
+const build_tree = (paths: string[]): TreeNode => {
+  const root: TreeNode = {}
+  for (const path of paths) {
+    const parts = path.split('/')
+    let current = root
+    for (const part of parts) {
+      if (!current[part]) {
+        current[part] = {}
+      }
+      current = current[part]
+    }
+  }
+  return root
+}
+
+const print_tree = (node: TreeNode, prefix = ''): string[] => {
+  const keys = Object.keys(node).sort()
+  const lines: string[] = []
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i]
+    const is_last = i == keys.length - 1
+    lines.push(`${prefix}${is_last ? '└── ' : '├── '}${key}`)
+    const child_prefix = prefix + (is_last ? '    ' : '│   ')
+    lines.push(...print_tree(node[key], child_prefix))
+  }
+  return lines
+}
+
 const format_paths = (files: string[]) => {
+  const config = vscode.workspace.getConfiguration('codeWebChat')
+  const format = config.get<'list' | 'tree'>('copyPathsFormat', 'list')
+
   const workspace_folders = vscode.workspace.workspaceFolders
   const is_multi_root = !!workspace_folders && workspace_folders.length > 1
 
-  const paths = files.map((file_path) => {
+  const display_paths = files.map((file_path) => {
     const file_uri = vscode.Uri.file(file_path)
     let display_path: string
     const workspace_folder = vscode.workspace.getWorkspaceFolder(file_uri)
@@ -24,10 +59,15 @@ const format_paths = (files: string[]) => {
       display_path = vscode.workspace.asRelativePath(file_path)
     }
 
-    return `- \`${display_path.replace(/\\/g, '/')}\``
+    return display_path.replace(/\\/g, '/')
   })
 
-  return paths.join('\n')
+  if (format == 'tree') {
+    const root = build_tree(display_paths)
+    return print_tree(root).join('\n')
+  }
+
+  return display_paths.map((display_path) => `- \`${display_path}\``).join('\n')
 }
 
 export const copy_paths_commands = (

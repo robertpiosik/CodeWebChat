@@ -65,6 +65,7 @@ export const Settings = () => {
       settings_hook.send_with_shift_enter !== undefined &&
       settings_hook.check_new_files !== undefined &&
       settings_hook.reuse_last_tab !== undefined &&
+      settings_hook.copy_paths_format !== undefined &&
       settings_hook.clear_checks_in_workspace_behavior !== undefined &&
       settings_hook.auto_run_intelligent_update !== undefined
     )
@@ -115,6 +116,10 @@ export const Settings = () => {
         reuse_last_tab={settings_hook.reuse_last_tab!}
         clear_checks_in_workspace_behavior={
           settings_hook.clear_checks_in_workspace_behavior!
+        }
+        copy_paths_format={settings_hook.copy_paths_format!}
+        on_copy_paths_format_change={
+          settings_hook.handle_copy_paths_format_change
         }
         auto_run_intelligent_update={settings_hook.auto_run_intelligent_update!}
         set_providers={settings_hook.set_providers}

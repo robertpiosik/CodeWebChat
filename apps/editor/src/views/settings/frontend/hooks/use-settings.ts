@@ -63,6 +63,9 @@ export const use_settings = (vscode: any) => {
     clear_checks_in_workspace_behavior,
     set_clear_checks_in_workspace_behavior
   ] = useState<'ignore-open-editors' | 'uncheck-all' | undefined>(undefined)
+  const [copy_paths_format, set_copy_paths_format] = useState<
+    'list' | 'tree' | undefined
+  >(undefined)
   const [auto_run_intelligent_update, set_auto_run_intelligent_update] =
     useState<boolean | undefined>(undefined)
 
@@ -85,6 +88,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_SEND_WITH_SHIFT_ENTER' })
     post_message(vscode, { command: 'GET_CHECK_NEW_FILES' })
     post_message(vscode, { command: 'GET_REUSE_LAST_TAB' })
+    post_message(vscode, { command: 'GET_COPY_PATHS_FORMAT' })
     post_message(vscode, { command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR' })
     post_message(vscode, { command: 'GET_AUTO_RUN_INTELLIGENT_UPDATE' })
   }, [vscode])
@@ -129,6 +133,8 @@ export const use_settings = (vscode: any) => {
         set_reuse_last_tab(message.enabled)
       } else if (message.command == 'CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR') {
         set_clear_checks_in_workspace_behavior(message.value)
+      } else if (message.command == 'COPY_PATHS_FORMAT') {
+        set_copy_paths_format(message.value)
       } else if (message.command == 'AUTO_RUN_INTELLIGENT_UPDATE') {
         set_auto_run_intelligent_update(message.enabled)
       }
@@ -354,6 +360,14 @@ export const use_settings = (vscode: any) => {
     })
   }
 
+  const handle_copy_paths_format_change = (value: 'list' | 'tree') => {
+    set_copy_paths_format(value)
+    post_message(vscode, {
+      command: 'UPDATE_COPY_PATHS_FORMAT',
+      value
+    })
+  }
+
   const handle_auto_run_intelligent_update_change = (enabled: boolean) => {
     set_auto_run_intelligent_update(enabled)
     post_message(vscode, {
@@ -398,6 +412,7 @@ export const use_settings = (vscode: any) => {
     check_new_files,
     reuse_last_tab,
     clear_checks_in_workspace_behavior,
+    copy_paths_format,
     auto_run_intelligent_update,
     handle_reorder_providers,
     handle_add_provider,
@@ -427,6 +442,7 @@ export const use_settings = (vscode: any) => {
     handle_check_new_files_change,
     handle_reuse_last_tab_change,
     handle_clear_checks_in_workspace_behavior_change,
+    handle_copy_paths_format_change,
     handle_auto_run_intelligent_update_change,
     handle_open_keybindings,
     handle_open_external_url
