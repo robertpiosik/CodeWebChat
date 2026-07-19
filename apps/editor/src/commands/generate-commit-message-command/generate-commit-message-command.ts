@@ -1,5 +1,4 @@
 import * as vscode from 'vscode'
-import * as path from 'path'
 import {
   prepare_staged_changes,
   GitRepository,
@@ -52,11 +51,44 @@ export const generate_commit_message_command = (
       diff,
       params.repository
     )
+
+    const diff_file_paths: string[] = []
+    const file_diffs = diff.split(/^diff --git /m).filter((d) => d.trim() != '')
+    for (const file_diff_content of file_diffs) {
+      const full_file_diff = 'diff --git ' + file_diff_content
+      const lines = full_file_diff.split('\n')
+      const old_path_line = lines.find((l) => l.startsWith('--- a/'))
+      const new_path_line = lines.find((l) => l.startsWith('+++ b/'))
+
+      const old_path = old_path_line
+        ? old_path_line.substring('--- a/'.length)
+        : undefined
+      const new_path = new_path_line
+        ? new_path_line.substring('+++ b/'.length)
+        : undefined
+
+      let file_path: string | undefined
+      if (new_path && new_path != '/dev/null') {
+        file_path = new_path
+      } else if (old_path && old_path != '/dev/null') {
+        file_path = old_path
+      } else {
+        const match = lines[0]?.match(/^diff --git a\/(.*) b\/(.*)$/)
+        if (match) {
+          file_path = match[2]
+        }
+      }
+      if (file_path && !diff_file_paths.includes(file_path)) {
+        diff_file_paths.push(file_path)
+      }
+    }
+
     return {
       repository: params.repository,
       was_empty_stage,
       message_prompt,
-      is_single_change
+      is_single_change,
+      staged_files: diff_file_paths
     }
   }
 
@@ -79,7 +111,7 @@ export const generate_commit_message_command = (
         selection_state
       })
       if (!data) return
-      const { message_prompt, is_single_change } = data
+      const { message_prompt, is_single_change, staged_files } = data
       let { was_empty_stage } = data
 
       // token count for the prompt, used in the config UI
@@ -146,9 +178,6 @@ export const generate_commit_message_command = (
       const workspace_root = repository.rootUri.fsPath
       const all_prompts =
         PromptsForCommitMessagesUtils.load_all(context)[workspace_root] || []
-      const staged_files = repository.state.indexChanges.map((change) =>
-        path.relative(workspace_root, change.uri.fsPath).replace(/\\/g, '/')
-      )
 
       const select_prompts_setting = vscode.workspace
         .getConfiguration('codeWebChat')
@@ -286,8 +315,7 @@ export const generate_commit_message_command = (
             context,
             panel_provider,
             trigger: 'commit',
-            description: subject_line,
-            silent: true
+            description: subject_line
           }).catch(() => {})
         } else if (was_empty_stage) {
           await vscode.commands.executeCommand('git.unstageAll', repository)
