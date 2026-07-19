@@ -9,7 +9,11 @@ import { LAST_APPLY_CONTEXT_OPTION_STATE_KEY } from '@/constants/state-keys'
 export const select_context_source = async (params: {
   extension_context: vscode.ExtensionContext
   title: string
-}): Promise<'internal' | 'file' | undefined> => {
+  mode: 'restore' | 'save'
+}): Promise<{
+  source: 'internal' | 'file' | undefined
+  skipped_menu: boolean
+}> => {
   const { merged: internal_contexts } = load_and_merge_global_contexts(
     params.extension_context
   )
@@ -20,31 +24,50 @@ export const select_context_source = async (params: {
     file_contexts_count += info.contexts.length
   }
 
+  if (
+    params.mode == 'restore' &&
+    internal_contexts.length == 0 &&
+    file_contexts_count == 0
+  ) {
+    vscode.window.showInformationMessage(
+      t('command.context-restoration.no-saved')
+    )
+    return { source: undefined, skipped_menu: false }
+  }
+
   const main_quick_pick_options: (vscode.QuickPickItem & {
     value: 'internal' | 'file'
   })[] = []
 
-  main_quick_pick_options.push({
-    label: t('command.context-restoration.sources.workspace-state'),
-    description: `${internal_contexts.length} ${
-      internal_contexts.length == 1 ? 'entry' : 'entries'
-    }`,
-    value: 'internal'
-  })
+  if (params.mode === 'save' || internal_contexts.length > 0) {
+    main_quick_pick_options.push({
+      label: t('command.context-restoration.sources.workspace-state'),
+      description: `${internal_contexts.length} ${
+        internal_contexts.length == 1 ? 'entry' : 'entries'
+      }`,
+      value: 'internal'
+    })
+  }
 
   const open_file_button = {
     iconPath: new vscode.ThemeIcon('go-to-file'),
     tooltip: t('command.context-restoration.action.open-json')
   }
 
-  main_quick_pick_options.push({
-    label: t('command.context-restoration.sources.json-file'),
-    description: `${file_contexts_count} ${
-      file_contexts_count == 1 ? 'entry' : 'entries'
-    }`,
-    value: 'file',
-    buttons: [open_file_button]
-  })
+  if (params.mode === 'save' || file_contexts_count > 0) {
+    main_quick_pick_options.push({
+      label: t('command.context-restoration.sources.json-file'),
+      description: `${file_contexts_count} ${
+        file_contexts_count == 1 ? 'entry' : 'entries'
+      }`,
+      value: 'file',
+      buttons: [open_file_button]
+    })
+  }
+
+  if (params.mode === 'restore' && main_quick_pick_options.length === 1) {
+    return { source: main_quick_pick_options[0].value, skipped_menu: true }
+  }
 
   const main_quick_pick = vscode.window.createQuickPick<
     vscode.QuickPickItem & { value: 'internal' | 'file' }
@@ -127,13 +150,13 @@ export const select_context_source = async (params: {
             LAST_APPLY_CONTEXT_OPTION_STATE_KEY,
             selected.value
           )
-          resolve(selected.value)
+          resolve({ source: selected.value, skipped_menu: false })
         } else {
-          resolve(undefined)
+          resolve({ source: undefined, skipped_menu: false })
         }
       }),
       main_quick_pick.onDidHide(() => {
-        if (!is_accepted) resolve(undefined)
+        if (!is_accepted) resolve({ source: undefined, skipped_menu: false })
         disposables.forEach((d) => d.dispose())
         main_quick_pick.dispose()
       })

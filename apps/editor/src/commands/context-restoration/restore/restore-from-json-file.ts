@@ -20,6 +20,7 @@ export const restore_from_json_file = async (params: {
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
   on_context_selected: () => void
+  show_back_button?: boolean
 }): Promise<'back' | void> => {
   try {
     let { merged: file_contexts, context_to_roots } =
@@ -69,12 +70,17 @@ export const restore_from_json_file = async (params: {
         return items
       }
 
+      const back_or_close_button =
+        params.show_back_button !== false
+          ? vscode.QuickInputButtons.Back
+          : { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
+
       const quick_pick = vscode.window.createQuickPick<any>()
       quick_pick.title = t('command.context-restoration.select-saved.title')
       quick_pick.placeholder = t(
         'command.context-restoration.select-saved.file'
       )
-      quick_pick.buttons = [vscode.QuickInputButtons.Back]
+      quick_pick.buttons = [back_or_close_button]
       quick_pick.items = await create_items()
 
       if (name_to_highlight) {
@@ -95,7 +101,7 @@ export const restore_from_json_file = async (params: {
         }
 
         quick_pick.onDidTriggerButton(async (button) => {
-          if (button === vscode.QuickInputButtons.Back) {
+          if (button === back_or_close_button) {
             quick_pick.hide()
             resolve_once('back')
           }

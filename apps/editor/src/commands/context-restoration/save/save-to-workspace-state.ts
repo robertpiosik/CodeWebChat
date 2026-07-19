@@ -16,11 +16,22 @@ export const save_to_workspace_state = async (params: {
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
 }): Promise<'back' | void> => {
-  const { merged: internal_contexts, context_to_roots } =
+  let { merged: internal_contexts, context_to_roots } =
     load_and_merge_global_contexts(params.extension_context)
   const LABEL_SAVE_NEW_CONTEXT = t(
     'command.context-restoration.save-new-context.label'
   )
+
+  const edit_button = {
+    iconPath: new vscode.ThemeIcon('edit'),
+    tooltip: t('command.context-restoration.action.rename')
+  }
+  const delete_button = {
+    iconPath: new vscode.ThemeIcon('trash'),
+    tooltip: t('command.context-restoration.action.delete')
+  }
+
+  let name_to_highlight: string | undefined
 
   while (true) {
     const items: any[] = []
@@ -42,7 +53,8 @@ export const save_to_workspace_state = async (params: {
         items.push({
           label: context.name,
           description,
-          context
+          context,
+          buttons: [edit_button, delete_button]
         })
       }
     }
@@ -53,12 +65,38 @@ export const save_to_workspace_state = async (params: {
     quick_pick.items = items
     quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
+    if (name_to_highlight) {
+      const active_item = quick_pick.items.find(
+        (i: any) => i.label == name_to_highlight
+      )
+      if (active_item) quick_pick.activeItems = [active_item]
+      name_to_highlight = undefined
+    }
+
     const selection = await new Promise<any>((resolve) => {
+      let is_resolved = false
+      const resolve_once = (val: any) => {
+        if (!is_resolved) {
+          is_resolved = true
+          resolve(val)
+        }
+      }
+
       quick_pick.onDidTriggerButton((btn) => {
-        if (btn === vscode.QuickInputButtons.Back) resolve('back')
+        if (btn === vscode.QuickInputButtons.Back) {
+          quick_pick.hide()
+          resolve_once('back')
+        }
       })
-      quick_pick.onDidAccept(() => resolve(quick_pick.selectedItems[0]))
-      quick_pick.onDidHide(() => resolve(undefined))
+      quick_pick.onDidTriggerItemButton((e) => {
+        quick_pick.hide()
+        resolve_once({ ...e.item, triggeredButton: e.button })
+      })
+      quick_pick.onDidAccept(() => {
+        quick_pick.hide()
+        resolve_once(quick_pick.selectedItems[0])
+      })
+      quick_pick.onDidHide(() => resolve_once(undefined))
       quick_pick.show()
     })
 
@@ -66,6 +104,115 @@ export const save_to_workspace_state = async (params: {
 
     if (!selection) return
     if (selection === 'back') return 'back'
+
+    if (selection.triggeredButton) {
+      const item = selection
+      const old_name = item.context.name
+
+      if (selection.triggeredButton === edit_button) {
+        const input_box = vscode.window.createInputBox()
+        input_box.title = t('command.context-restoration.rename.title')
+        input_box.prompt = t('command.context-restoration.rename.prompt')
+        input_box.value = old_name
+        const new_name = await new Promise<string | undefined>((resolve) => {
+          let accepted = false
+          const disposables: vscode.Disposable[] = []
+          const validate = (value: string) => {
+            const trimmed = value.trim()
+            if (!trimmed) {
+              input_box.validationMessage = t(
+                'command.context-restoration.rename.empty'
+              )
+              return false
+            }
+            if (
+              internal_contexts.find(
+                (c) => c.name === trimmed && c.name !== old_name
+              )
+            ) {
+              input_box.validationMessage = t(
+                'command.context-restoration.rename.exists'
+              )
+              return false
+            }
+            input_box.validationMessage = ''
+            return true
+          }
+
+          disposables.push(
+            input_box.onDidChangeValue(validate),
+            input_box.onDidAccept(() => {
+              if (!validate(input_box.value)) return
+              accepted = true
+              resolve(input_box.value.trim())
+              input_box.hide()
+            }),
+            input_box.onDidHide(() => {
+              if (!accepted) resolve(undefined)
+              disposables.forEach((d) => d.dispose())
+              input_box.dispose()
+            })
+          )
+          input_box.show()
+        })
+
+        if (new_name && new_name !== old_name) {
+          const trimmed_name = new_name
+          const roots = context_to_roots.get(old_name) || []
+          for (const root of roots) {
+            const root_contexts = load_contexts_for_workspace({
+              context: params.extension_context,
+              workspace_root: root
+            })
+            const updated = root_contexts.map((c) =>
+              c.name === old_name ? { ...c, name: trimmed_name } : c
+            )
+            save_contexts_for_workspace({
+              context: params.extension_context,
+              workspace_root: root,
+              contexts: updated
+            })
+          }
+          const reloaded = load_and_merge_global_contexts(
+            params.extension_context
+          )
+          internal_contexts = reloaded.merged
+          context_to_roots = reloaded.context_to_roots
+        }
+        name_to_highlight =
+          new_name && new_name != old_name ? new_name : old_name
+      } else if (selection.triggeredButton === delete_button) {
+        const choice = await vscode.window.showInformationMessage(
+          t('command.context-restoration.delete.prompt', { name: old_name }),
+          { modal: true },
+          t('command.context-restoration.delete.action')
+        )
+
+        if (choice == t('command.context-restoration.delete.action')) {
+          const roots = context_to_roots.get(old_name) || []
+          for (const root of roots) {
+            const root_contexts = load_contexts_for_workspace({
+              context: params.extension_context,
+              workspace_root: root
+            })
+            const new_contexts = root_contexts.filter(
+              (c) => c.name !== old_name
+            )
+            save_contexts_for_workspace({
+              context: params.extension_context,
+              workspace_root: root,
+              contexts: new_contexts
+            })
+          }
+          const reloaded = load_and_merge_global_contexts(
+            params.extension_context
+          )
+          internal_contexts = reloaded.merged
+          context_to_roots = reloaded.context_to_roots
+        }
+      }
+      continue
+    }
 
     const checked_files = params.workspace_provider.get_checked_files()
     const files_by_workspace = group_files_by_workspace(checked_files)
@@ -103,7 +250,12 @@ export const save_to_workspace_state = async (params: {
       vscode.window.showInformationMessage(
         dictionary.information_message.CONTEXT_SAVED_SUCCESSFULLY
       )
-      return
+
+      const reloaded = load_and_merge_global_contexts(params.extension_context)
+      internal_contexts = reloaded.merged
+      context_to_roots = reloaded.context_to_roots
+
+      continue
     }
 
     if (selection.context) {
@@ -153,7 +305,14 @@ export const save_to_workspace_state = async (params: {
         vscode.window.showInformationMessage(
           dictionary.information_message.CONTEXT_UPDATED_SUCCESSFULLY
         )
-        return
+
+        const reloaded = load_and_merge_global_contexts(
+          params.extension_context
+        )
+        internal_contexts = reloaded.merged
+        context_to_roots = reloaded.context_to_roots
+
+        continue
       } else {
         continue
       }
