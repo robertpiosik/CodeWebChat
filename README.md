@@ -28,16 +28,14 @@ Get involved! Join our [discord server](https://discord.gg/KJySXsrSX5).
 
 Coding capability in LLMs is trained using techniques like [Inverse-Instruct](https://www.researchgate.net/figure/The-overview-of-INVERSE-INSTRUCT-INVERSE-INSTRUCT-utilizes-the-models-own-capability-in_fig1_382079949) with an existing model acting as a summarizer, looking at the code and writing instructions that could realistically output that exact code block.
 
-By showing the model a complete set of files and task instructions in a single message, CWC taps directly into these snippet-summarization pairs.
-
-Make simple instructions just work and the required reasoning effort lower or even disabled!
+CWC is designed to tap directly into these code snippet-summarization training dataset pairs by making file selection for context an essential part of your AI-assisted coding workflow.
 
 > [!TIP]
 > Get help in relevant file selection using the _Find Relevant Files_ prompt type.
 
 ## Prompt types
 
-At its core, CWC constructs simple, markdown-formatted prompts for common use-cases (click to expand):
+At its core, CWC constructs simple, markdown-formatted prompts for common use-cases (click to expand) you can copy and paste into chatbot of choice or send directly from the editor via an API call.
 
 <details>
 <summary><strong>Edit files</strong></summary>
@@ -149,11 +147,11 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 > [!NOTE]
 > Use [forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) of port _55155_ when using remote machine via SSH.
 
-## Built around prompt caching
+## Prompt caching
 
-CWC orders context files by modification and selection recency. This, combined with instructions placement at the message's very end utilizes [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) across single-turn prompts.
+CWC orders context files by modification and selection recency. This, combined with instructions placement at the message's very end effecively utilizes [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) across tasks.
 
-Make your chatbot quota last longer, lower input token costs by up to 90%, and reduce latency by up to 80%.
+Make your chatbot quota last longer, lower input token costs by up to 90%, and reduce latency by up to 80%!
 
 ## Commands
 
