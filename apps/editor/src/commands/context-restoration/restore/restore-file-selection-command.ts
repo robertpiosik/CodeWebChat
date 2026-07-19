@@ -18,27 +18,37 @@ export const restore_file_selection_command = (params: {
       while (show_main_menu) {
         show_main_menu = false
 
-        const source = await select_context_source({
+        const { source, skipped_menu } = await select_context_source({
           extension_context: params.extension_context,
-          title: t('command.context-restoration.source.title')
+          title: t('command.context-restoration.source.title'),
+          mode: 'restore'
         })
 
         if (!source) return
 
+        let action_result: 'back' | void = undefined
+
         if (source == 'internal') {
-          const result = await restore_from_workspace_state({
+          action_result = await restore_from_workspace_state({
             workspace_provider: params.workspace_provider,
             extension_context: params.extension_context,
-            on_context_selected: params.on_context_selected
+            on_context_selected: params.on_context_selected,
+            show_back_button: !skipped_menu
           })
-          if (result == 'back') show_main_menu = true
         } else if (source == 'file') {
-          const result = await restore_from_json_file({
+          action_result = await restore_from_json_file({
             workspace_provider: params.workspace_provider,
             extension_context: params.extension_context,
-            on_context_selected: params.on_context_selected
+            on_context_selected: params.on_context_selected,
+            show_back_button: !skipped_menu
           })
-          if (result == 'back') show_main_menu = true
+        }
+
+        if (action_result == 'back') {
+          if (skipped_menu) {
+            return
+          }
+          show_main_menu = true
         }
       }
     }

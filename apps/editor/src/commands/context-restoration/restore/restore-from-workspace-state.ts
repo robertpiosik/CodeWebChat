@@ -19,6 +19,7 @@ export const restore_from_workspace_state = async (params: {
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
   on_context_selected: () => void
+  show_back_button?: boolean
 }): Promise<'back' | void> => {
   try {
     const refresh_contexts = () =>
@@ -70,12 +71,17 @@ export const restore_from_workspace_state = async (params: {
         return items
       }
 
+      const back_or_close_button =
+        params.show_back_button !== false
+          ? vscode.QuickInputButtons.Back
+          : { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
+
       const quick_pick = vscode.window.createQuickPick()
       quick_pick.title = t('command.context-restoration.select-saved.title')
       quick_pick.placeholder = t(
         'command.context-restoration.select-saved.workspace'
       )
-      quick_pick.buttons = [vscode.QuickInputButtons.Back]
+      quick_pick.buttons = [back_or_close_button]
       quick_pick.items = await create_quick_pick_items(internal_contexts)
 
       let active_dialog_count = 0
@@ -90,7 +96,7 @@ export const restore_from_workspace_state = async (params: {
 
         disposables.push(
           quick_pick.onDidTriggerButton((button) => {
-            if (button === vscode.QuickInputButtons.Back) {
+            if (button === back_or_close_button) {
               did_trigger_back = true
               quick_pick.hide()
               resolve('back')

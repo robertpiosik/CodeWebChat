@@ -413,6 +413,24 @@ export const translations = {
     hu: 'Törli a(z) "{name}" kontextust?',
     bg: 'Изтриване на контекст "{name}"?'
   },
+  'command.context-restoration.no-saved': {
+    en: 'No saved contexts found.',
+    pl: 'Nie znaleziono zapisanych kontekstów.',
+    'zh-cn': '未找到已保存的上下文。',
+    ja: '保存されたコンテキストが見つかりません。',
+    'zh-tw': '未找到已儲存的上下文。',
+    de: 'Keine gespeicherten Kontexte gefunden.',
+    es: 'No se encontraron contextos guardados.',
+    fr: 'Aucun contexte enregistré trouvé.',
+    'pt-br': 'Nenhum contexto salvo encontrado.',
+    ru: 'Сохраненные контексты не найдены.',
+    ko: '저장된 컨텍스트를 찾을 수 없습니다.',
+    it: 'Nessun contesto salvato trovato.',
+    tr: 'Kaydedilmiş bağlam bulunamadı.',
+    cs: 'Nebyly nalezeny žádné uložené kontexty.',
+    hu: 'Nem találhatók mentett kontextusok.',
+    bg: 'Не са намерени запазени контексти.'
+  },
   'command.context-restoration.delete.action': {
     en: 'Delete',
     pl: 'Usuń',
