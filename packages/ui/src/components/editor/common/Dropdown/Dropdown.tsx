@@ -89,7 +89,13 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
           ])}
         />
       </button>
-      {is_open && <DropdownMenu items={menu_items} />}
+      {is_open && (
+        <DropdownMenu
+          items={menu_items}
+          anchor_ref={dropdown_ref}
+          is_open={is_open}
+        />
+      )}
     </div>
   )
 }
