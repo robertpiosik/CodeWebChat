@@ -64,7 +64,7 @@ export const use_settings = (vscode: any) => {
     set_clear_checks_in_workspace_behavior
   ] = useState<'ignore-open-editors' | 'uncheck-all' | undefined>(undefined)
   const [copy_paths_format, set_copy_paths_format] = useState<
-    'list' | 'tree' | undefined
+    'bullet-list' | 'comma-separated' | 'ascii-tree' | undefined
   >(undefined)
   const [auto_run_intelligent_update, set_auto_run_intelligent_update] =
     useState<boolean | undefined>(undefined)
@@ -360,7 +360,9 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_copy_paths_format_change = (value: 'list' | 'tree') => {
+  const handle_copy_paths_format_change = (
+    value: 'bullet-list' | 'comma-separated' | 'ascii-tree'
+  ) => {
     set_copy_paths_format(value)
     post_message(vscode, {
       command: 'UPDATE_COPY_PATHS_FORMAT',

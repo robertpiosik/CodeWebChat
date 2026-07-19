@@ -39,7 +39,10 @@ const print_tree = (node: TreeNode, prefix = ''): string[] => {
 
 const format_paths = (files: string[]) => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const format = config.get<'list' | 'tree'>('copyPathsFormat', 'list')
+  const format = config.get<'bullet-list' | 'comma-separated' | 'ascii-tree'>(
+    'copyPathsFormat',
+    'bullet-list'
+  )
 
   const workspace_folders = vscode.workspace.workspaceFolders
   const is_multi_root = !!workspace_folders && workspace_folders.length > 1
@@ -62,9 +65,11 @@ const format_paths = (files: string[]) => {
     return display_path.replace(/\\/g, '/')
   })
 
-  if (format == 'tree') {
+  if (format == 'ascii-tree') {
     const root = build_tree(display_paths)
     return print_tree(root).join('\n')
+  } else if (format == 'comma-separated') {
+    return display_paths.map((display_path) => `\`${display_path}\``).join(', ')
   }
 
   return display_paths.map((display_path) => `- \`${display_path}\``).join('\n')

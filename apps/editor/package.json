@@ -919,10 +919,11 @@
           "type": "string",
           "scope": "resource",
           "enum": [
-            "list",
-            "tree"
+            "bullet-list",
+            "comma-separated",
+            "ascii-tree"
           ],
-          "default": "list"
+          "default": "bullet-list"
         },
         "codeWebChat.sendWithShiftEnter": {
           "type": "boolean",
