@@ -8,6 +8,8 @@
   "codeWebChat.redoSelection.title": "Znovu výběr",
   "codeWebChat.duplicateWorkspace.title": "Duplikovat pracovní prostor",
   "codeWebChat.copyMarkdownOpenEditors.title": "Kopírovat Markdown otevřených editorů",
+  "codeWebChat.copyPaths.title": "Kopírovat cesty",
+  "codeWebChat.copyPathsOpenEditors.title": "Kopírovat cesty otevřených editorů",
   "codeWebChat.visitWebsite.title": "Navštívit webovou stránku",
   "codeWebChat.openRepository.title": "Dát hvězdičku na GitHubu",
   "codeWebChat.followOnX.title": "Sledujte na X",

@@ -8,6 +8,8 @@
   "codeWebChat.redoSelection.title": "Seçimi Yinele",
   "codeWebChat.duplicateWorkspace.title": "Çalışma Alanını Çoğalt",
   "codeWebChat.copyMarkdownOpenEditors.title": "Açık Düzenleyicilerin Markdown'ını Kopyala",
+  "codeWebChat.copyPaths.title": "Yolları Kopyala",
+  "codeWebChat.copyPathsOpenEditors.title": "Açık Düzenleyicilerin Yollarını Kopyala",
   "codeWebChat.visitWebsite.title": "Web sitesini ziyaret et",
   "codeWebChat.openRepository.title": "GitHub'da Yıldız Ver",
   "codeWebChat.followOnX.title": "X'te Takip Et",

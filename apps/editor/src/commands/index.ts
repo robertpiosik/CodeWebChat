@@ -1,5 +1,6 @@
 export * from './apply-chat-response-command'
 export * from './copy-markdown-command'
+export * from './copy-paths-command'
 export * from './add-file-to-context-command'
 export * from './remove-file-from-context-command'
 export * from './close-all-editors-command'

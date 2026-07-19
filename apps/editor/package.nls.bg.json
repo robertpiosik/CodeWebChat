@@ -8,6 +8,8 @@
   "codeWebChat.redoSelection.title": "Възстанови избора",
   "codeWebChat.duplicateWorkspace.title": "Дублирай работното пространство",
   "codeWebChat.copyMarkdownOpenEditors.title": "Копирай Markdown на отворените редактори",
+  "codeWebChat.copyPaths.title": "Копирай пътища",
+  "codeWebChat.copyPathsOpenEditors.title": "Копирай пътища на отворените редактори",
   "codeWebChat.visitWebsite.title": "Посети уебсайта",
   "codeWebChat.openRepository.title": "Дай звезда в GitHub",
   "codeWebChat.followOnX.title": "Последвай в X",

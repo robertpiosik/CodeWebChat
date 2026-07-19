@@ -8,6 +8,8 @@
   "codeWebChat.redoSelection.title": "Rétablir la sélection",
   "codeWebChat.duplicateWorkspace.title": "Dupliquer l'espace de travail",
   "codeWebChat.copyMarkdownOpenEditors.title": "Copier le Markdown des éditeurs ouverts",
+  "codeWebChat.copyPaths.title": "Copier les chemins",
+  "codeWebChat.copyPathsOpenEditors.title": "Copier les chemins des éditeurs ouverts",
   "codeWebChat.visitWebsite.title": "Visiter le site web",
   "codeWebChat.openRepository.title": "Ajouter une étoile sur GitHub",
   "codeWebChat.followOnX.title": "Suivre sur X",
