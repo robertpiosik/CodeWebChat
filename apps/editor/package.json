@@ -111,26 +111,22 @@
       {
         "command": "codeWebChat.duplicateWorkspace",
         "title": "%codeWebChat.duplicateWorkspace.title%",
-        "category": "Code Web Chat",
-        "icon": "$(multiple-windows)"
+        "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.copyMarkdownOpenEditors",
         "title": "%codeWebChat.copyMarkdownOpenEditors.title%",
-        "category": "Code Web Chat",
-        "icon": "$(copy)"
+        "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.copyPaths",
         "title": "%codeWebChat.copyPaths.title%",
-        "category": "Code Web Chat",
-        "icon": "$(list-selection)"
+        "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.copyPathsOpenEditors",
         "title": "%codeWebChat.copyPathsOpenEditors.title%",
-        "category": "Code Web Chat",
-        "icon": "$(list-selection)"
+        "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.visitWebsite",
