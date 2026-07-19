@@ -8,6 +8,8 @@
   "codeWebChat.redoSelection.title": "선택 다시 실행",
   "codeWebChat.duplicateWorkspace.title": "작업 영역 복제",
   "codeWebChat.copyMarkdownOpenEditors.title": "열린 편집기의 Markdown 복사",
+  "codeWebChat.copyPaths.title": "경로 복사",
+  "codeWebChat.copyPathsOpenEditors.title": "열린 편집기의 경로 복사",
   "codeWebChat.visitWebsite.title": "웹사이트 방문",
   "codeWebChat.openRepository.title": "GitHub에서 별표 주기",
   "codeWebChat.followOnX.title": "X에서 팔로우",

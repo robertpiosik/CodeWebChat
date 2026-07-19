@@ -137,6 +137,18 @@
         "icon": "$(copy)"
       },
       {
+        "command": "codeWebChat.copyPaths",
+        "title": "%codeWebChat.copyPaths.title%",
+        "category": "Code Web Chat",
+        "icon": "$(list-selection)"
+      },
+      {
+        "command": "codeWebChat.copyPathsOpenEditors",
+        "title": "%codeWebChat.copyPathsOpenEditors.title%",
+        "category": "Code Web Chat",
+        "icon": "$(list-selection)"
+      },
+      {
         "command": "codeWebChat.visitWebsite",
         "title": "%codeWebChat.visitWebsite.title%",
         "category": "Code Web Chat"
@@ -440,6 +452,14 @@
       ],
       "commandPalette": [
         {
+          "command": "codeWebChat.copyPaths",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.copyPathsOpenEditors",
+          "when": "false"
+        },
+        {
           "command": "codeWebChat.undoSelection",
           "when": "false"
         },
@@ -626,12 +646,17 @@
         {
           "command": "codeWebChat.copyMarkdown",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@3"
+          "group": "2_more@1"
         },
         {
           "command": "codeWebChat.searchFiles",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@4"
+          "group": "navigation@5"
+        },
+        {
+          "command": "codeWebChat.copyPaths",
+          "when": "view == codeWebChatViewWorkspace",
+          "group": "2_more@2"
         },
         {
           "command": "codeWebChat.newFile",
@@ -661,22 +686,22 @@
         {
           "command": "codeWebChat.selectUnstagedFiles",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "2_more@1"
+          "group": "3_more@1"
         },
         {
           "command": "codeWebChat.selectCommitFiles",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "2_more@2"
+          "group": "3_more@2"
         },
         {
           "command": "codeWebChat.selectChangedFiles",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "2_more@3"
+          "group": "3_more@3"
         },
         {
           "command": "codeWebChat.duplicateWorkspace",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "3_more@1"
+          "group": "4_more@1"
         },
         {
           "command": "codeWebChat.checkAllOpenEditors",
@@ -691,17 +716,22 @@
         {
           "command": "codeWebChat.copyMarkdownOpenEditors",
           "when": "view == codeWebChatViewOpenEditors",
-          "group": "navigation@3"
+          "group": "2_more@1"
         },
         {
           "command": "codeWebChat.saveAll",
           "when": "view == codeWebChatViewOpenEditors",
-          "group": "navigation@4"
+          "group": "navigation@5"
+        },
+        {
+          "command": "codeWebChat.copyPathsOpenEditors",
+          "when": "view == codeWebChatViewOpenEditors",
+          "group": "2_more@2"
         },
         {
           "command": "codeWebChat.closeAllEditors",
           "when": "view == codeWebChatViewOpenEditors",
-          "group": "navigation@5"
+          "group": "navigation@6"
         },
         {
           "command": "codeWebChat.history",

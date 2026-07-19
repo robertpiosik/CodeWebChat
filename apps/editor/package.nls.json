@@ -8,6 +8,8 @@
   "codeWebChat.redoSelection.title": "Redo Selection",
   "codeWebChat.duplicateWorkspace.title": "Duplicate Workspace",
   "codeWebChat.copyMarkdownOpenEditors.title": "Copy Markdown of Open Editors",
+  "codeWebChat.copyPaths.title": "Copy Paths",
+  "codeWebChat.copyPathsOpenEditors.title": "Copy Paths of Open Editors",
   "codeWebChat.visitWebsite.title": "Visit Website",
   "codeWebChat.openRepository.title": "Star on GitHub",
   "codeWebChat.followOnX.title": "Follow on X",

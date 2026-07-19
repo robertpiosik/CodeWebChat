@@ -8,6 +8,8 @@
   "codeWebChat.redoSelection.title": "重做選取",
   "codeWebChat.duplicateWorkspace.title": "複製工作區",
   "codeWebChat.copyMarkdownOpenEditors.title": "複製開啟中編輯器的 Markdown",
+  "codeWebChat.copyPaths.title": "複製路徑",
+  "codeWebChat.copyPathsOpenEditors.title": "複製開啟中編輯器的路徑",
   "codeWebChat.visitWebsite.title": "造訪網站",
   "codeWebChat.openRepository.title": "在 GitHub 上給星 (Star)",
   "codeWebChat.followOnX.title": "在 X 上追蹤",
