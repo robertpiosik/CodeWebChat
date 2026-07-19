@@ -38,17 +38,22 @@ export const DropdownMenu: React.FC<DropdownMenu.Props> = (props) => {
       const dropdown_rect = dropdown_ref.current.getBoundingClientRect()
 
       let top = anchor_rect.bottom
+      const actual_dropdown_width = Math.max(
+        dropdown_rect.width,
+        anchor_rect.width
+      )
+
       let left = props.match_anchor_width
         ? anchor_rect.left
-        : anchor_rect.right - dropdown_rect.width
+        : anchor_rect.right - actual_dropdown_width
       let width: string | undefined
 
       if (props.match_anchor_width) {
         width = `${anchor_rect.width}px`
       } else if (left < 0) {
         left = 4
-      } else if (left + dropdown_rect.width > window.innerWidth) {
-        left = window.innerWidth - dropdown_rect.width - 4
+      } else if (left + actual_dropdown_width > window.innerWidth) {
+        left = window.innerWidth - actual_dropdown_width - 4
       }
 
       const viewport_height = window.innerHeight
@@ -60,7 +65,8 @@ export const DropdownMenu: React.FC<DropdownMenu.Props> = (props) => {
       set_anchor_style({
         top: `${top}px`,
         left: `${left}px`,
-        width
+        width,
+        minWidth: `${anchor_rect.width}px`
       })
     } else if (!props.is_open) {
       set_anchor_style({})
