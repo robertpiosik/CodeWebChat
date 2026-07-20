@@ -8,8 +8,8 @@ import {
   FileItem,
   DiffItem,
   RelevantFilesItem,
-  ClipboardItem
-} from './utils/clipboard-parser'
+  ResponseItem
+} from './utils/response-parser'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
@@ -61,7 +61,7 @@ export type ApplyResponseCommandArgs = {
 export const process_response = async (params: {
   args: ApplyResponseCommandArgs | undefined
   response: string
-  clipboard_items: ClipboardItem[]
+  response_items: ResponseItem[]
   context: vscode.ExtensionContext
   panel_provider: PanelProvider
   workspace_provider: WorkspaceProvider
@@ -118,7 +118,7 @@ export const process_response = async (params: {
   const is_single_root_folder_workspace =
     vscode.workspace.workspaceFolders?.length == 1
 
-  if (params.clipboard_items.some((item) => item.type == 'relevant-files')) {
+  if (params.response_items.some((item) => item.type == 'relevant-files')) {
     const current_checked_files =
       params.workspace_provider.get_export_state().regular.checked_files
 
@@ -127,7 +127,7 @@ export const process_response = async (params: {
     const files_for_preview: RelevantFileInPreview[] = []
     const items_for_preview: ItemInPreview[] = []
 
-    for (const item of params.clipboard_items) {
+    for (const item of params.response_items) {
       if (item.type == 'relevant-files') {
         const relevant_files_item = item as RelevantFilesItem
         const all_paths_to_process = new Set<string>(
@@ -293,8 +293,8 @@ export const process_response = async (params: {
     }
 
     return null
-  } else if (params.clipboard_items.some((item) => item.type == 'diff')) {
-    const patches = params.clipboard_items.filter(
+  } else if (params.response_items.some((item) => item.type == 'diff')) {
+    const patches = params.response_items.filter(
       (item): item is DiffItem => item.type == 'diff'
     )
     const rename_map = new Map<
@@ -452,8 +452,8 @@ export const process_response = async (params: {
 
     return null
   } else {
-    if (params.clipboard_items.some((item) => item.type == 'code-at-cursor')) {
-      const completion = params.clipboard_items.find(
+    if (params.response_items.some((item) => item.type == 'code-at-cursor')) {
+      const completion = params.response_items.find(
         (item) => item.type == 'code-at-cursor'
       )!
       const workspace_map = new Map<string, string>()
@@ -519,7 +519,7 @@ export const process_response = async (params: {
         }
       }
 
-      params.clipboard_items = [
+      params.response_items = [
         {
           type: 'file',
           file_path: completion.file_path,
@@ -529,7 +529,7 @@ export const process_response = async (params: {
       ]
     }
 
-    const files = params.clipboard_items.filter(
+    const files = params.response_items.filter(
       (item): item is FileItem => item.type == 'file'
     )
 

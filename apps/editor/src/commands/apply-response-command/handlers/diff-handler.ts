@@ -7,7 +7,7 @@ import { OriginalFileState } from '../types/original-file-state'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { apply_diff } from '../utils/edit-formats/diffs'
 import { remove_directory_if_empty } from '../utils/file-operations'
-import { DiffItem } from '../utils/clipboard-parser'
+import { DiffItem } from '../utils/response-parser'
 
 export const sanitize_patch_content = (
   patch_content: string,

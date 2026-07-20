@@ -1,4 +1,4 @@
-import { parse_response } from '../../../clipboard-parser'
+import { parse_response } from '../../../response-parser'
 import * as fs from 'fs'
 import * as path from 'path'
 

@@ -5,7 +5,7 @@ import { OriginalFileState } from '@/commands/apply-response-command/types/origi
 import { RecentApiConfiguration } from '@shared/types/response-history-item'
 import { setup_workspace_listeners } from './workspace-listener'
 import { prepare_files_from_original_states } from './file-preparer'
-import { parse_response } from '../clipboard-parser/clipboard-parser'
+import { parse_response } from '../response-parser/response-parser'
 import {
   create_temp_files_with_original_content,
   cleanup_temp_files
@@ -71,14 +71,14 @@ export const preview = async (params: {
     const is_single_root_folder_workspace =
       (vscode.workspace.workspaceFolders?.length ?? 0) <= 1
 
-    const clipboard_items = parse_response({
+    const response_items = parse_response({
       response: params.chat_response,
       is_single_root_folder_workspace
     })
 
     const items_for_preview: ItemInPreview[] = []
 
-    if (clipboard_items.length > 0) {
+    if (response_items.length > 0) {
       const prepared_files_map = new Map<string, PreparedFile>()
       for (const pf of prepared_files) {
         const key = is_single_root_folder_workspace
@@ -89,7 +89,7 @@ export const preview = async (params: {
         prepared_files_map.set(key, pf)
       }
 
-      for (const item of clipboard_items) {
+      for (const item of response_items) {
         if (item.type == 'text') {
           items_for_preview.push({ type: 'text', content: item.content })
         } else if (item.type == 'inline-file') {

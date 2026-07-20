@@ -4,7 +4,7 @@ import {
   DiffItem,
   InlineFileItem,
   extract_workspace_and_path
-} from '../../clipboard-parser'
+} from '../../response-parser'
 import {
   normalize_path,
   is_valid_file_path,
@@ -46,7 +46,7 @@ const process_collected_patch_lines = (params: {
       function_name: 'process_collected_patch_lines',
       message: 'Could not extract file path from collected patch lines.',
       data: {
-        clipboard_start: joined_patch_text_for_checks.substring(0, 200),
+        response_start: joined_patch_text_for_checks.substring(0, 200),
         lines_count: lines.length
       }
     })
@@ -803,10 +803,10 @@ const merge_diffs_per_file = (items: DiffParserItem[]): DiffParserItem[] => {
 }
 
 export const extract_diffs = (params: {
-  clipboard_text: string
+  response_text: string
   is_single_root: boolean
 }): DiffParserItem[] => {
-  const normalized_text = params.clipboard_text.replace(/\r\n/g, '\n')
+  const normalized_text = params.response_text.replace(/\r\n/g, '\n')
   const lines = normalized_text.split('\n')
 
   const code_block_regex = /^```(\w*)/

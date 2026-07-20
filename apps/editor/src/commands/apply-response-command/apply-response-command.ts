@@ -29,7 +29,7 @@ import {
   CwcPreviewProvider
 } from './utils/preview/virtual-document-provider'
 import { get_selected_files } from '@/context/get-selected-files'
-import { parse_response } from './utils/clipboard-parser'
+import { parse_response } from './utils/response-parser'
 import { Checkpoint } from '@/features/checkpoints/types'
 
 let in_progress = false
@@ -98,7 +98,7 @@ export const apply_response_command = (params: {
         shared_context_state: params.panel_provider.shared_context_state
       })
 
-      const clipboard_items = parse_response({
+      const response_items = parse_response({
         response,
         is_single_root_folder_workspace,
         workspace_files
@@ -173,7 +173,7 @@ export const apply_response_command = (params: {
       let saved_tab_groups: SavedTabGroups | undefined
 
       try {
-        const is_relevant_files = clipboard_items.some(
+        const is_relevant_files = response_items.some(
           (i) => i.type == 'relevant-files'
         )
         if (!is_relevant_files) {
@@ -199,7 +199,7 @@ export const apply_response_command = (params: {
           const has_valid_blocks =
             (args?.files_with_content && args.files_with_content.length > 0) ||
             (args?.relevant_files && args.relevant_files.length > 0) ||
-            clipboard_items.some(
+            response_items.some(
               (item) =>
                 item.type == 'file' ||
                 item.type == 'diff' ||
@@ -225,7 +225,7 @@ export const apply_response_command = (params: {
         const preview_data = await process_response({
           args,
           response,
-          clipboard_items,
+          response_items,
           context: params.context,
           panel_provider: params.panel_provider,
           workspace_provider: params.workspace_provider

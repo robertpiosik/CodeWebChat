@@ -49,7 +49,7 @@ export type InlineFileItem = {
   language?: string
 }
 
-export type ClipboardItem =
+export type ResponseItem =
   | FileItem
   | DiffItem
   | CodeAtCursorItem
@@ -81,7 +81,7 @@ export const parse_response = (params: {
   response: string
   is_single_root_folder_workspace?: boolean
   workspace_files?: string[]
-}): ClipboardItem[] => {
+}): ResponseItem[] => {
   const is_single_root_folder_workspace =
     params.is_single_root_folder_workspace ?? true
 
@@ -119,7 +119,7 @@ export const parse_response = (params: {
     processed_response.includes('```patch')
   ) {
     const patches_or_text = extract_diffs({
-      clipboard_text: processed_response,
+      response_text: processed_response,
       is_single_root: is_single_root_folder_workspace
     })
     if (patches_or_text.length) {

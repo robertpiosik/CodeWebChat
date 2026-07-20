@@ -1,5 +1,5 @@
 import { extract_path_from_line_of_code } from '@shared/utils/extract-path-from-line-of-code'
-import { FileItem, TextItem, InlineFileItem } from '../../clipboard-parser'
+import { FileItem, TextItem, InlineFileItem } from '../../response-parser'
 import { parse_file_content_only } from '../file-content-only-parser'
 import {
   extract_file_path_from_xml,

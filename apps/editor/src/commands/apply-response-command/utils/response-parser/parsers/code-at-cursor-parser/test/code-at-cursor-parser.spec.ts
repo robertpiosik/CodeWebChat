@@ -2,7 +2,7 @@ import { parse_response } from '../../..'
 import * as fs from 'fs'
 import * as path from 'path'
 
-describe('clipboard-parser', () => {
+describe('response-parser', () => {
   const load_test_case_file = (test_case: string, filename: string): string => {
     return fs.readFileSync(
       path.join(__dirname, 'cases', test_case, filename),

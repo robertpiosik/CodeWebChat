@@ -1,4 +1,4 @@
-import { extract_workspace_and_path } from '../../../clipboard-parser'
+import { extract_workspace_and_path } from '../../../response-parser'
 
 export const extract_and_set_workspace_path = (params: {
   raw_file_path: string

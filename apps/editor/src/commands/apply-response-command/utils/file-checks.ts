@@ -1,4 +1,4 @@
-import { FileItem } from './clipboard-parser'
+import { FileItem } from './response-parser'
 
 export const check_for_conflict_markers = (files: FileItem[]): boolean => {
   for (const file of files) {
