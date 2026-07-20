@@ -28,7 +28,7 @@ export const parse_relevant_files_from_response = (params: {
     if (trimmed.startsWith('-') || trimmed.startsWith('*')) {
       let path = trimmed.substring(1).trim()
       if (path.startsWith('`') && path.endsWith('`')) {
-        path = path.substring(1, path.length - 1)
+        path = path.substring(1, path.length - 1).trim()
       }
       if (path) {
         found_paths.add(path.replace(/[.?!]+$/, ''))
