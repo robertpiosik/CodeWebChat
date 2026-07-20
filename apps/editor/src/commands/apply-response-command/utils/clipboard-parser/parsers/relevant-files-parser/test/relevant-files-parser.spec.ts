@@ -1,10 +1,13 @@
-import { parse_response } from '../../clipboard-parser'
+import { parse_response } from '../../..'
 import * as fs from 'fs'
 import * as path from 'path'
 
 describe('clipboard-parser', () => {
   const load_test_case_file = (test_case: string, filename: string): string => {
-    return fs.readFileSync(path.join(__dirname, test_case, filename), 'utf-8')
+    return fs.readFileSync(
+      path.join(__dirname, 'cases', test_case, filename),
+      'utf-8'
+    )
   }
 
   describe('parse_response relevant files', () => {
