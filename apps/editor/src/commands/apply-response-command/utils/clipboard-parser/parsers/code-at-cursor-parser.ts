@@ -13,7 +13,7 @@ const extract_path_and_position = (
   const match = line.match(path_pos_regex)
 
   if (match) {
-    const path = match[1]
+    const path = match[1].trim()
     const line_num_str = match[2]
     const char_num_str = match[3]
 

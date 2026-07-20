@@ -34,6 +34,7 @@ export const parse_file_content_only = (params: {
 
     extracted_filename = extract_path_from_line_of_code(line)
     if (extracted_filename) {
+      extracted_filename = extracted_filename.trim()
       path_line_idx = i
       break
     }

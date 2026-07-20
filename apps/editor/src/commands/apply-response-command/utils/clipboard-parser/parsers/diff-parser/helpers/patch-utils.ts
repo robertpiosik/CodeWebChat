@@ -54,13 +54,13 @@ export const extract_paths_from_lines = (
   for (const line of lines) {
     const git_diff_match = line.match(/^diff --git a\/(.+?) b\/(.+)$/)
     if (git_diff_match) {
-      if (git_diff_match[2]) to_path = git_diff_match[2]
-      if (git_diff_match[1]) from_path = git_diff_match[1]
+      if (git_diff_match[2]) to_path = git_diff_match[2].trim()
+      if (git_diff_match[1]) from_path = git_diff_match[1].trim()
     }
     const from_match = line.match(/^--- (?:a\/|"a\/)?([^\t"]+)"?(?:\t.*)?$/)
-    if (from_match && from_match[1]) from_path = from_match[1]
+    if (from_match && from_match[1]) from_path = from_match[1].trim()
     const to_match = line.match(/^\+\+\+ (?:b\/|"b\/)?([^\t"]+)"?(?:\t.*)?$/)
-    if (to_match && to_match[1]) to_path = to_match[1]
+    if (to_match && to_match[1]) to_path = to_match[1].trim()
   }
   return { from_path, to_path }
 }
