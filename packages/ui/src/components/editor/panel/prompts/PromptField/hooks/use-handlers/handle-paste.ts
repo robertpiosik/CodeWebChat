@@ -23,12 +23,12 @@ export const create_perform_paste =
     const raw_start = map_display_pos_to_raw_pos({
       display_pos: display_start,
       raw_text: props.value,
-      context_file_paths: props.context_file_paths ?? []
+      context_file_paths: props.selected_files ?? []
     })
     const raw_end = map_display_pos_to_raw_pos({
       display_pos: display_end,
       raw_text: props.value,
-      context_file_paths: props.context_file_paths ?? []
+      context_file_paths: props.selected_files ?? []
     })
 
     let text_to_insert = text
@@ -36,7 +36,7 @@ export const create_perform_paste =
 
     const is_file_in_context =
       props.currently_open_file_path !== undefined &&
-      (props.context_file_paths ?? []).includes(props.currently_open_file_path)
+      (props.selected_files ?? []).includes(props.currently_open_file_path)
 
     if (
       !refs.is_shift_pressed_ref.current &&
@@ -104,7 +104,7 @@ export const create_handle_paste =
 
     const is_file_in_context =
       props.currently_open_file_path !== undefined &&
-      (props.context_file_paths ?? []).includes(props.currently_open_file_path)
+      (props.selected_files ?? []).includes(props.currently_open_file_path)
 
     const is_fragment_paste =
       props.current_selection &&
@@ -115,7 +115,7 @@ export const create_handle_paste =
     const has_symbols =
       get_symbol_ranges({
         text,
-        context_file_paths: props.context_file_paths ?? []
+        selected_files: props.selected_files ?? []
       }).length > 0
 
     if (
@@ -146,12 +146,12 @@ export const create_handle_paste =
           const raw_start = map_display_pos_to_raw_pos({
             display_pos: display_start,
             raw_text: props.value,
-            context_file_paths: props.context_file_paths ?? []
+            context_file_paths: props.selected_files ?? []
           })
           const raw_end = map_display_pos_to_raw_pos({
             display_pos: display_end,
             raw_text: props.value,
-            context_file_paths: props.context_file_paths ?? []
+            context_file_paths: props.selected_files ?? []
           })
 
           const new_value =

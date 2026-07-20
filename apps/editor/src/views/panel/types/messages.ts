@@ -773,8 +773,8 @@ export interface ResetApplyButtonTemporaryDisabledStateMessage extends BaseMessa
   command: 'RESET_APPLY_BUTTON_TEMPORARY_DISABLED_STATE'
 }
 
-export interface ContextFilesMessage extends BaseMessage {
-  command: 'CONTEXT_FILES'
+export interface SelectedFilesMessage extends BaseMessage {
+  command: 'SELECTED_FILES'
   file_paths: string[]
 }
 
@@ -953,7 +953,7 @@ export type BackendMessage =
   | WebPromptTypeMessage
   | ApiPromptTypeMessage
   | VersionMessage
-  | ContextFilesMessage
+  | SelectedFilesMessage
   | SendWithShiftEnterMessage
   | CanUndoChangedMessage
   | ResetApplyButtonTemporaryDisabledStateMessage

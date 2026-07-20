@@ -12,7 +12,7 @@ export const use_ghost_text = (params: {
   input_ref: RefObject<HTMLDivElement>
   is_focused: boolean
   currently_open_file_text?: string
-  context_file_paths?: string[]
+  selected_files?: string[]
   caret_position: number
 }) => {
   const [ghost_text, set_ghost_text] = useState('')
@@ -51,8 +51,8 @@ export const use_ghost_text = (params: {
       }
     }
 
-    if (params.context_file_paths) {
-      for (const path of params.context_file_paths) {
+    if (params.selected_files) {
+      for (const path of params.selected_files) {
         const matches = path.match(/[a-zA-Z_][a-zA-Z0-9_]*/g)
         if (matches) {
           for (const m of matches) {
@@ -63,7 +63,7 @@ export const use_ghost_text = (params: {
     }
 
     return match_set
-  }, [params.currently_open_file_text, params.context_file_paths])
+  }, [params.currently_open_file_text, params.selected_files])
 
   useEffect(() => {
     if (ghost_text_debounce_timer_ref.current) {

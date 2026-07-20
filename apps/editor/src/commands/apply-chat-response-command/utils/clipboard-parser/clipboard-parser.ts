@@ -2,7 +2,7 @@ import {
   extract_diffs,
   parse_code_at_cursor,
   parse_multiple_files,
-  parse_relevant_files
+  parse_relevant_files_from_response
 } from './parsers'
 
 export type FileItem = {
@@ -80,9 +80,21 @@ export const extract_workspace_and_path = (params: {
 export const parse_response = (params: {
   response: string
   is_single_root_folder_workspace?: boolean
+  workspace_files?: string[]
 }): ClipboardItem[] => {
   const is_single_root_folder_workspace =
     params.is_single_root_folder_workspace ?? true
+
+  if (params.workspace_files) {
+    const relevant_files = parse_relevant_files_from_response({
+      response: params.response,
+      workspace_files: params.workspace_files
+    })
+
+    if (relevant_files) {
+      return [relevant_files]
+    }
+  }
 
   const code_at_cursor_items = parse_code_at_cursor({
     response: params.response,
@@ -91,11 +103,6 @@ export const parse_response = (params: {
 
   if (code_at_cursor_items && code_at_cursor_items.length > 0) {
     return code_at_cursor_items
-  }
-
-  const relevant_files = parse_relevant_files({ response: params.response })
-  if (relevant_files) {
-    return relevant_files
   }
 
   const processed_response = params.response.replace(/``````/g, '```\n```')

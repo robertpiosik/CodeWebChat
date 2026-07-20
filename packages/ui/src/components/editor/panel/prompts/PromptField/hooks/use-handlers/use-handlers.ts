@@ -101,7 +101,7 @@ export const use_handlers = (
         const raw_pos = map_display_pos_to_raw_pos({
           display_pos: pos,
           raw_text: props.value,
-          context_file_paths: props.context_file_paths ?? []
+          context_file_paths: props.selected_files ?? []
         })
         raw_caret_pos_ref.current = raw_pos
         props.on_caret_position_change(raw_pos)
@@ -120,7 +120,7 @@ export const use_handlers = (
       document.removeEventListener('selectionchange', on_selection_change)
   }, [
     props.value,
-    props.context_file_paths,
+    props.selected_files,
     params.input_ref,
     props.on_caret_position_change,
     params.set_caret_position
@@ -139,7 +139,7 @@ export const use_handlers = (
             const display_pos = map_raw_pos_to_display_pos({
               raw_pos: caret_pos,
               raw_text: props.value,
-              context_file_paths: props.context_file_paths ?? []
+              context_file_paths: props.selected_files ?? []
             })
             set_caret_position_for_div(params.input_ref.current, display_pos)
             on_set()
@@ -151,7 +151,7 @@ export const use_handlers = (
     props.caret_position_to_set,
     props.on_caret_position_set,
     props.value,
-    props.context_file_paths
+    props.selected_files
   ])
 
   useEffect(() => {
@@ -195,7 +195,7 @@ export const use_handlers = (
         input_ref: params.input_ref,
         new_raw_cursor_pos: caret_pos,
         new_value,
-        context_file_paths: props.context_file_paths ?? []
+        selected_files: props.selected_files ?? []
       })
     }
   }
@@ -203,7 +203,7 @@ export const use_handlers = (
   const { handle_symbol_deletion_by_click, handle_backspace_key } =
     use_symbol_deletion({
       value: props.value,
-      context_file_paths: props.context_file_paths ?? [],
+      context_file_paths: props.selected_files ?? [],
       input_ref: params.input_ref,
       on_delete: (new_value, new_caret_pos) => {
         has_modified_current_entry_ref.current = new_value != ''

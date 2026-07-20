@@ -93,7 +93,7 @@ export const create_handle_key_down = (
           input_ref: params.input_ref,
           new_raw_cursor_pos: current_raw_pos - 1,
           new_value,
-          context_file_paths: refs.props_ref.current.context_file_paths ?? []
+          selected_files: refs.props_ref.current.selected_files ?? []
         })
       }
     }, 300)
@@ -124,7 +124,7 @@ export const create_handle_key_down = (
     const raw_pos = refs.raw_caret_pos_ref.current
     if (raw_pos == 0) return
 
-    const { value, context_file_paths = [] } = props
+    const { value, selected_files = [] } = props
     let i = raw_pos - 1
 
     while (i >= 0 && /\s/.test(value[i])) {
@@ -135,14 +135,14 @@ export const create_handle_key_down = (
         input_ref: params.input_ref,
         new_raw_cursor_pos: 0,
         new_value: value,
-        context_file_paths
+        selected_files
       })
       return
     }
 
     const symbol_ranges = get_symbol_ranges({
       text: value,
-      context_file_paths
+      selected_files
     })
     let new_raw_pos: number | undefined
 
@@ -169,7 +169,7 @@ export const create_handle_key_down = (
       input_ref: params.input_ref,
       new_raw_cursor_pos: new_raw_pos,
       new_value: value,
-      context_file_paths
+      selected_files
     })
   }
 
@@ -177,7 +177,7 @@ export const create_handle_key_down = (
     e: React.KeyboardEvent<HTMLDivElement>
   ) => {
     e.preventDefault()
-    const { value, context_file_paths = [] } = props
+    const { value, selected_files = [] } = props
     const raw_pos = refs.raw_caret_pos_ref.current
     if (raw_pos == value.length) return
 
@@ -189,7 +189,7 @@ export const create_handle_key_down = (
 
     const symbol_ranges = get_symbol_ranges({
       text: value,
-      context_file_paths
+      selected_files
     })
     let new_raw_pos: number | undefined
 
@@ -216,7 +216,7 @@ export const create_handle_key_down = (
       input_ref: params.input_ref,
       new_raw_cursor_pos: new_raw_pos,
       new_value: value,
-      context_file_paths
+      selected_files
     })
   }
 
@@ -237,7 +237,7 @@ export const create_handle_key_down = (
         input_ref: params.input_ref,
         new_raw_cursor_pos: prev_entry.raw_caret_pos,
         new_value: prev_entry.value,
-        context_file_paths: props.context_file_paths ?? []
+        selected_files: props.selected_files ?? []
       })
       state.set_history_index(-1)
       refs.has_modified_current_entry_ref.current = true
@@ -261,7 +261,7 @@ export const create_handle_key_down = (
         input_ref: params.input_ref,
         new_raw_cursor_pos: next_entry.raw_caret_pos,
         new_value: next_entry.value,
-        context_file_paths: props.context_file_paths ?? []
+        selected_files: props.selected_files ?? []
       })
       state.set_history_index(-1)
       refs.has_modified_current_entry_ref.current = true
@@ -303,12 +303,12 @@ export const create_handle_key_down = (
       const raw_start = map_display_pos_to_raw_pos({
         display_pos: display_start,
         raw_text: props.value,
-        context_file_paths: props.context_file_paths ?? []
+        context_file_paths: props.selected_files ?? []
       })
       const raw_end = map_display_pos_to_raw_pos({
         display_pos: display_end,
         raw_text: props.value,
-        context_file_paths: props.context_file_paths ?? []
+        context_file_paths: props.selected_files ?? []
       })
 
       const new_value =
@@ -410,12 +410,12 @@ export const create_handle_key_down = (
       const raw_start = map_display_pos_to_raw_pos({
         display_pos: display_start,
         raw_text: props.value,
-        context_file_paths: props.context_file_paths ?? []
+        context_file_paths: props.selected_files ?? []
       })
       const raw_end = map_display_pos_to_raw_pos({
         display_pos: display_end,
         raw_text: props.value,
-        context_file_paths: props.context_file_paths ?? []
+        context_file_paths: props.selected_files ?? []
       })
 
       const new_value =

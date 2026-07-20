@@ -41,7 +41,7 @@ import { set_response_preview_promise_resolve } from './utils/preview/preview'
 
 export type PreviewData = {
   original_states: OriginalFileState[]
-  chat_response: string
+  response: string
 }
 
 export type ApplyChatResponseCommandArgs = {
@@ -58,9 +58,9 @@ export type ApplyChatResponseCommandArgs = {
   recent_api_configuration?: RecentApiConfiguration
 }
 
-export const process_chat_response = async (params: {
+export const process_response = async (params: {
   args: ApplyChatResponseCommandArgs | undefined
-  chat_response: string
+  response: string
   clipboard_items: ClipboardItem[]
   context: vscode.ExtensionContext
   panel_provider: PanelProvider
@@ -103,12 +103,12 @@ export const process_chat_response = async (params: {
           context: params.context,
           panel_provider: params.panel_provider,
           states: augmented_states,
-          applied_content: params.chat_response,
+          applied_content: params.response,
           original_editor_state: params.args?.original_editor_state
         })
         return {
           original_states: augmented_states,
-          chat_response: params.chat_response
+          response: params.response
         }
       }
       return null
@@ -206,7 +206,7 @@ export const process_chat_response = async (params: {
     const history = params.panel_provider.response_history
     if (!params.args?.created_at) {
       const new_item = {
-        response: params.chat_response,
+        response: params.response,
         raw_instructions: params.args?.raw_instructions,
         created_at: created_at_for_preview,
         relevant_files: files_for_preview,
@@ -418,7 +418,7 @@ export const process_chat_response = async (params: {
         context: params.context,
         panel_provider: params.panel_provider,
         states: all_original_states,
-        applied_content: params.chat_response,
+        applied_content: params.response,
         original_editor_state: params.args?.original_editor_state
       })
     }
@@ -434,7 +434,7 @@ export const process_chat_response = async (params: {
             .map((p) => p.patch.file_path)
 
           Logger.info({
-            function_name: 'process_chat_response',
+            function_name: 'process_response',
             message: 'Patches applied with fallback method',
             data: {
               count: fallback_patches_count,
@@ -446,7 +446,7 @@ export const process_chat_response = async (params: {
       }
       return {
         original_states: all_original_states,
-        chat_response: params.chat_response
+        response: params.response
       }
     }
 
@@ -474,7 +474,7 @@ export const process_chat_response = async (params: {
           dictionary.error_message.FILE_NOT_FOUND(completion.file_path)
         )
         Logger.warn({
-          function_name: 'process_chat_response',
+          function_name: 'process_response',
           message: 'File not found for code completion.',
           data: { file_path: completion.file_path, safe_path }
         })
@@ -557,7 +557,7 @@ export const process_chat_response = async (params: {
             .asRelativePath(document.uri, !is_single_root_folder_workspace)
             .replace(/\\/g, '/')
 
-          const markdown_response_for_active_editor = `\`\`\`\n// ${file_path_for_block}\n${params.chat_response}\n\`\`\``
+          const markdown_response_for_active_editor = `\`\`\`\n// ${file_path_for_block}\n${params.response}\n\`\`\``
 
           const model_providers_manager = new ModelProvidersManager(
             params.context
@@ -600,7 +600,7 @@ export const process_chat_response = async (params: {
 
             return {
               original_states: intelligent_update_states,
-              chat_response: markdown_response_for_active_editor
+              response: markdown_response_for_active_editor
             }
           }
           return null
@@ -628,13 +628,13 @@ export const process_chat_response = async (params: {
     if (has_conflict_markers) {
       selected_mode_label = 'Conflict markers'
       Logger.info({
-        function_name: 'process_chat_response',
+        function_name: 'process_response',
         message: 'Selecting conflict markers mode.'
       })
     } else if (has_truncation_markers) {
       selected_mode_label = 'Truncated'
       Logger.info({
-        function_name: 'process_chat_response',
+        function_name: 'process_response',
         message: 'Selecting truncated edit mode.'
       })
     } else {
@@ -651,7 +651,7 @@ export const process_chat_response = async (params: {
         operation_success = true
       }
       Logger.info({
-        function_name: 'process_chat_response',
+        function_name: 'process_response',
         message: 'Fast replace handler finished.',
         data: { success: result.success }
       })
@@ -684,7 +684,7 @@ export const process_chat_response = async (params: {
         operation_success = true
       }
       Logger.info({
-        function_name: 'process_chat_response',
+        function_name: 'process_response',
         message: 'Truncated handler finished.',
         data: { success: result.success }
       })
@@ -718,13 +718,13 @@ export const process_chat_response = async (params: {
         operation_success = true
       }
       Logger.info({
-        function_name: 'process_chat_response',
+        function_name: 'process_response',
         message: 'Conflict markers handler finished.',
         data: { success: result.success }
       })
     } else {
       Logger.error({
-        function_name: 'process_chat_response',
+        function_name: 'process_response',
         message: 'No valid mode selected or determined.'
       })
       return null
@@ -735,13 +735,13 @@ export const process_chat_response = async (params: {
         context: params.context,
         panel_provider: params.panel_provider,
         states: final_original_states,
-        applied_content: params.chat_response,
+        applied_content: params.response,
         original_editor_state: params.args?.original_editor_state
       })
 
       return {
         original_states: final_original_states,
-        chat_response: params.chat_response
+        response: params.response
       }
     } else {
       update_undo_button_state({
@@ -750,13 +750,13 @@ export const process_chat_response = async (params: {
         states: null
       })
       Logger.info({
-        function_name: 'process_chat_response',
+        function_name: 'process_response',
         message: 'Operation concluded without success.'
       })
     }
 
     Logger.info({
-      function_name: 'process_chat_response',
+      function_name: 'process_response',
       message: 'end',
       data: {
         mode: selected_mode_label,

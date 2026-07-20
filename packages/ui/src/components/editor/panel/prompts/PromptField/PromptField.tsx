@@ -54,7 +54,7 @@ export type PromptFieldProps = {
   show_edit_format_selector?: boolean
   edit_format?: EditFormat
   on_edit_format_change?: (format: EditFormat) => void
-  context_file_paths?: string[]
+  selected_files?: string[]
   currently_open_file_path?: string
   currently_open_file_text?: string
   invocation_count: number
@@ -189,7 +189,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     input_ref,
     is_focused: is_focused && should_show_ghost_text,
     currently_open_file_text: props.currently_open_file_text,
-    context_file_paths: props.context_file_paths,
+    selected_files: props.selected_files,
     caret_position
   })
 
@@ -247,7 +247,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     return get_highlighted_text({
       text: props.value,
       current_selection: props.current_selection,
-      context_file_paths: props.context_file_paths ?? [],
+      context_file_paths: props.selected_files ?? [],
       is_web_mode: props.is_web_mode,
       tabs_config: {
         count: props.tabs_count,
@@ -258,7 +258,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     props.value,
     props.prompt_type,
     props.current_selection,
-    props.context_file_paths,
+    props.selected_files,
     props.is_web_mode,
     props.tabs_count,
     props.active_tab_index
@@ -281,7 +281,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         const display_pos = map_raw_pos_to_display_pos({
           raw_pos: props.value.length,
           raw_text: props.value,
-          context_file_paths: props.context_file_paths ?? []
+          context_file_paths: props.selected_files ?? []
         })
         input_ref.current.focus()
         set_caret_position_for_div(input_ref.current, display_pos)
@@ -293,7 +293,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     highlighted_html,
     props.active_tab_index,
     props.value,
-    props.context_file_paths
+    props.selected_files
   ])
 
   const placeholder = useMemo(() => {

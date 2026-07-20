@@ -15,7 +15,7 @@ export const use_editor_sync = (vscode: any) => {
   const [currently_open_file_text, set_currently_open_file_text] = useState<
     string | undefined
   >(undefined)
-  const [context_file_paths, set_context_file_paths] = useState<string[]>([])
+  const [selected_files, set_selected_files] = useState<string[]>([])
   const [workspace_folder_count, set_workspace_folder_count] =
     useState<number>()
 
@@ -26,8 +26,8 @@ export const use_editor_sync = (vscode: any) => {
         set_currently_open_file_path(message.currently_open_file_path)
       } else if (message.command == 'EDITOR_SELECTION_CHANGED') {
         set_current_selection(message.current_selection)
-      } else if (message.command == 'CONTEXT_FILES') {
-        set_context_file_paths(message.file_paths)
+      } else if (message.command == 'SELECTED_FILES') {
+        set_selected_files(message.file_paths)
       } else if (message.command == 'CURRENTLY_OPEN_FILE_TEXT') {
         set_currently_open_file_text(message.text)
       } else if (message.command == 'WORKSPACE_STATE') {
@@ -52,7 +52,7 @@ export const use_editor_sync = (vscode: any) => {
     currently_open_file_path,
     current_selection,
     currently_open_file_text,
-    context_file_paths,
+    selected_files,
     workspace_folder_count
   }
 }

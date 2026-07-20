@@ -87,7 +87,7 @@ export const Panel = () => {
     currently_open_file_path,
     current_selection,
     currently_open_file_text,
-    context_file_paths,
+    selected_files,
     workspace_folder_count
   } = use_editor_sync(vscode)
 
@@ -382,7 +382,7 @@ export const Panel = () => {
                 }
                 chat_input_focus_key={chat_input_focus_key}
                 context_size_warning_threshold={context_size_warning_threshold}
-                context_file_paths={context_file_paths}
+                selected_files={selected_files}
                 web_configurations_collapsed={web_configurations_collapsed}
                 send_with_shift_enter={send_with_shift_enter}
                 on_web_configurations_collapsed_change={

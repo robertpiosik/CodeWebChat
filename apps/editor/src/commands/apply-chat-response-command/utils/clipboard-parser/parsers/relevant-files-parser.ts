@@ -1,63 +1,63 @@
-import { RelevantFilesItem, TextItem } from '../clipboard-parser'
+type RelevantFilesItem = {
+  type: 'relevant-files'
+  file_paths: string[]
+}
 
-export const parse_relevant_files = (params: {
+export const parse_relevant_files_from_response = (params: {
   response: string
-}): (RelevantFilesItem | TextItem)[] | null => {
+  workspace_files: string[]
+}): RelevantFilesItem | null => {
   const trimmed_response = params.response.trim()
+
+  if (trimmed_response.includes('```')) {
+    return null
+  }
+
+  const found_paths = new Set<string>()
+
+  const inline_matches = trimmed_response.match(/`([^`]+)`/g)
+  if (inline_matches) {
+    inline_matches.forEach((match) => {
+      found_paths.add(match.replace(/`/g, '').trim())
+    })
+  }
+
   const lines = trimmed_response.split('\n')
-
-  if (lines.length == 0) {
-    return null
-  }
-
-  if (!lines[0].trim().match(/^\*\*Relevant files:\*\*/i)) {
-    return null
-  }
-
-  const file_paths: string[] = []
-  let first_non_list_item_index = -1
-
-  for (let i = 1; i < lines.length; i++) {
-    const line = lines[i].trim()
-    if (line == '') continue
-
-    if (line.startsWith('-') || line.startsWith('*')) {
-      let path = line.substring(1).trim()
+  for (const line of lines) {
+    const trimmed = line.trim()
+    if (trimmed.startsWith('-') || trimmed.startsWith('*')) {
+      let path = trimmed.substring(1).trim()
       if (path.startsWith('`') && path.endsWith('`')) {
         path = path.substring(1, path.length - 1)
       }
       if (path) {
-        file_paths.push(path)
+        found_paths.add(path.replace(/[.?!]+$/, ''))
       }
-    } else {
-      first_non_list_item_index = i
-      break
     }
   }
 
-  if (file_paths.length > 0) {
-    const result: (RelevantFilesItem | TextItem)[] = [
-      {
-        type: 'relevant-files',
-        file_paths
-      }
-    ]
+  const words = trimmed_response.replace(/`/g, ' ').split(/[\s,;:'"<>()[\]{}]+/)
+  for (const word of words) {
+    if (word) {
+      const cleaned = word.trim().replace(/[.?!]+$/, '')
+      found_paths.add(cleaned)
 
-    if (first_non_list_item_index !== -1) {
-      const remainingText = lines
-        .slice(first_non_list_item_index)
-        .join('\n')
-        .trim()
-      if (remainingText) {
-        result.push({
-          type: 'text',
-          content: remainingText
-        })
+      if (cleaned.startsWith('./')) {
+        found_paths.add(cleaned.substring(2))
       }
     }
-
-    return result
   }
 
-  return null
+  const valid_paths = Array.from(found_paths)
+    .filter((path) => params.workspace_files.includes(path))
+    .sort((a, b) => params.response.indexOf(a) - params.response.indexOf(b))
+
+  if (valid_paths.length === 0) {
+    return null
+  }
+
+  return {
+    type: 'relevant-files',
+    file_paths: valid_paths
+  }
 }

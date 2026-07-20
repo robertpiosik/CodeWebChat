@@ -21,7 +21,7 @@ export const Empty = () => (
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
-    context_file_paths={[]}
+    selected_files={[]}
     on_curly_braces_click={() => {}}
     invocation_count={1}
     on_invocation_count_change={(count) =>
@@ -73,7 +73,7 @@ export const WithText = () => (
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
-    context_file_paths={[]}
+    selected_files={[]}
     on_curly_braces_click={() => {}}
     invocation_count={1}
     on_invocation_count_change={(count) =>
@@ -125,7 +125,7 @@ export const LongText = () => (
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
-    context_file_paths={[]}
+    selected_files={[]}
     on_curly_braces_click={() => {}}
     invocation_count={1}
     on_invocation_count_change={(count) =>
@@ -177,7 +177,7 @@ export const WithPlaceholderSavedContext = () => (
     on_hash_sign_click={() => console.log('# clicked')}
     is_web_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
-    context_file_paths={[]}
+    selected_files={[]}
     invocation_count={1}
     on_invocation_count_change={(count) =>
       console.log('Invocation count changed:', count)
@@ -235,7 +235,7 @@ export const WithPlaceholderSelection = () => (
     on_hash_sign_click={() => console.log('# clicked')}
     is_web_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
-    context_file_paths={[]}
+    selected_files={[]}
     invocation_count={1}
     on_invocation_count_change={(count) =>
       console.log('Invocation count changed:', count)
@@ -287,7 +287,7 @@ export const WithCommit = () => (
     on_hash_sign_click={() => console.log('# clicked')}
     is_web_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
-    context_file_paths={[]}
+    selected_files={[]}
     invocation_count={1}
     on_invocation_count_change={(count) =>
       console.log('Invocation count changed:', count)
@@ -339,7 +339,7 @@ export const WithCommitWithQuotes = () => (
     on_hash_sign_click={() => console.log('# clicked')}
     is_web_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
-    context_file_paths={[]}
+    selected_files={[]}
     invocation_count={1}
     on_invocation_count_change={(count) =>
       console.log('Invocation count changed:', count)
@@ -390,7 +390,7 @@ export const WithContextAtCommit = () => (
     on_hash_sign_click={() => console.log('# clicked')}
     is_web_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
-    context_file_paths={[]}
+    selected_files={[]}
     invocation_count={1}
     on_invocation_count_change={(count) =>
       console.log('Invocation count changed:', count)
@@ -449,7 +449,7 @@ export const WithEditFormatSelector = () => {
       show_edit_format_selector={true}
       edit_format={edit_format}
       on_edit_format_change={set_edit_format}
-      context_file_paths={[]}
+      selected_files={[]}
       invocation_count={invocation_count}
       on_invocation_count_change={set_invocation_count}
       on_go_to_file={(path) => console.log('Go to file:', path)}
@@ -501,7 +501,7 @@ export const WithFilePaths = () => (
     on_submit_with_control={() => console.log('Submitted with control')}
     on_curly_braces_click={() => {}}
     on_go_to_file={(path) => console.log('Go to file:', path)}
-    context_file_paths={['path/to/my/file.ts']}
+    selected_files={['path/to/my/file.ts']}
     invocation_count={1}
     on_invocation_count_change={(count) =>
       console.log('Invocation count changed:', count)
@@ -581,7 +581,7 @@ export const WithTabs = () => {
       on_submit_with_control={() => console.log('Submitted with control')}
       on_curly_braces_click={() => {}}
       on_go_to_file={(path) => console.log('Go to file:', path)}
-      context_file_paths={['path/to/my/file.ts']}
+      selected_files={['path/to/my/file.ts']}
       invocation_count={1}
       on_invocation_count_change={(count) =>
         console.log('Invocation count changed:', count)
@@ -632,7 +632,7 @@ export const WithWarning = () => (
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
-    context_file_paths={[]}
+    selected_files={[]}
     on_curly_braces_click={() => {}}
     invocation_count={1}
     on_invocation_count_change={(count) =>
