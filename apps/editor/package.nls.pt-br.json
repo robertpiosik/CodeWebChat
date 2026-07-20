@@ -1,7 +1,7 @@
 {
-  "codeWebChat.saveFileSelection.title": "Salvar Seleção de Arquivos...",
-  "codeWebChat.restoreFileSelection.title": "Restaurar Seleção de Arquivos...",
-  "codeWebChat.applyResponse.title": "Aplicar da Área de Transferência",
+  "codeWebChat.saveFileSelection.title": "Salvar Seleção de Arquivos",
+  "codeWebChat.restoreFileSelection.title": "Restaurar Seleção de Arquivos",
+  "codeWebChat.applyResponse.title": "Aplicar Resposta do Chat",
   "codeWebChat.copyMarkdown.title": "Copiar Markdown",
   "codeWebChat.history.title": "Histórico",
   "codeWebChat.undoSelection.title": "Desfazer Seleção",

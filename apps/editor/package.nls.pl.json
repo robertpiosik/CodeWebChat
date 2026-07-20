@@ -1,7 +1,7 @@
 {
-  "codeWebChat.saveFileSelection.title": "Zapisz wybór plików...",
-  "codeWebChat.restoreFileSelection.title": "Przywróć wybór plików...",
-  "codeWebChat.applyResponse.title": "Zastosuj ze schowka",
+  "codeWebChat.saveFileSelection.title": "Zapisz wybór plików",
+  "codeWebChat.restoreFileSelection.title": "Przywróć wybór plików",
+  "codeWebChat.applyResponse.title": "Zintegruj wiadomość czatbota",
   "codeWebChat.copyMarkdown.title": "Kopiuj Markdown",
   "codeWebChat.history.title": "Historia",
   "codeWebChat.undoSelection.title": "Cofnij wybór",

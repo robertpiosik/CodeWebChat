@@ -1,0 +1,13 @@
+```markdown
+```ts
+// src/lorem.ts
+console.log('lorem');
+```
+```
+
+```markdown
+```ts
+// src/ipsum.ts
+console.log('ipsum');
+```
+```

@@ -7,7 +7,7 @@ import {
 } from '@/constants/state-keys'
 import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
 import { dictionary } from '@shared/constants/dictionary'
-import { parse_response } from '@/commands/apply-response-command/utils/response-parser'
+import { parse_response } from '@/commands/apply-response-command/utils/clipboard-parser'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import {
   get_intelligent_update_config,

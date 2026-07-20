@@ -1,7 +1,7 @@
 {
-  "codeWebChat.saveFileSelection.title": "Сохранить выбор файлов...",
-  "codeWebChat.restoreFileSelection.title": "Восстановить выбор файлов...",
-  "codeWebChat.applyResponse.title": "Применить из буфера обмена",
+  "codeWebChat.saveFileSelection.title": "Сохранить выбор файлов",
+  "codeWebChat.restoreFileSelection.title": "Восстановить выбор файлов",
+  "codeWebChat.applyResponse.title": "Применить ответ чата",
   "codeWebChat.copyMarkdown.title": "Копировать Markdown",
   "codeWebChat.history.title": "История",
   "codeWebChat.undoSelection.title": "Отменить выбор",

@@ -4,7 +4,7 @@ import * as fs from 'fs'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { create_safe_path, sanitize_file_name } from '@/utils/path-sanitizer'
-import { FileItem } from '../utils/response-parser'
+import { FileItem } from '../utils/clipboard-parser'
 import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
 import {
   remove_directory_if_empty,

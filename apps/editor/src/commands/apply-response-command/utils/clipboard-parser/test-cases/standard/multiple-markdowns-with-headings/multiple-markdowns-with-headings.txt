@@ -1,0 +1,11 @@
+### New file: `src/hello.md` (lorem ipsum)
+
+```markdown
+## hello
+```
+
+### New file: `src/world.md`
+
+```markdown
+## world
+```

@@ -1,0 +1,17 @@
+```diff
+--- a/src/lorem.ts	2023-10-27 10:00:00.000000000 +0000
++++ b/src/lorem.ts	2023-10-27 10:15:00.000000000 +0000
+@@ -1,3 +1,3 @@
+ console.log("hello")
+-console.log("old lorem")
++console.log("new lorem")
+```
+
+```diff
+--- a/src/ipsum.ts	2023-10-27 10:00:00.000000000 +0000
++++ b/src/ipsum.ts	2023-10-27 10:15:00.000000000 +0000
+@@ -1,3 +1,3 @@
+ console.log("hello")
+-console.log("old ipsum")
++console.log("new ipsum")
+```

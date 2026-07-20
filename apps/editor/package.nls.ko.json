@@ -1,7 +1,7 @@
 {
-  "codeWebChat.saveFileSelection.title": "파일 선택 저장...",
-  "codeWebChat.restoreFileSelection.title": "파일 선택 복원...",
-  "codeWebChat.applyResponse.title": "클립보드에서 적용",
+  "codeWebChat.saveFileSelection.title": "파일 선택 저장",
+  "codeWebChat.restoreFileSelection.title": "파일 선택 복원",
+  "codeWebChat.applyResponse.title": "채팅 응답 적용",
   "codeWebChat.copyMarkdown.title": "Markdown 복사",
   "codeWebChat.history.title": "기록",
   "codeWebChat.undoSelection.title": "선택 실행 취소",

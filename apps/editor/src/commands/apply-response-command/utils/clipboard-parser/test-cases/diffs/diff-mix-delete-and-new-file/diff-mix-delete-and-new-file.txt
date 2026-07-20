@@ -1,0 +1,22 @@
+```diff
+--- a/src/lorem.ts
++++ /dev/null
+deleted file mode 100644
+index 92d844c..0000000
+--- a/src/lorem.ts
++++ /dev/null
+@@ -1,1 +0,0 @@
+-console.log("old lorem")
+```
+
+```diff
+--- /dev/null
++++ b/src/ipsum.ts
+new file mode 100644
+index 0000000..69b662d
+--- /dev/null
++++ b/src/ipsum.ts
+@@ -0,0 +1,2 @@
++console.log("hello")
++console.log("new ipsum")
+```

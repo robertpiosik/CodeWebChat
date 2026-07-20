@@ -1,7 +1,7 @@
 {
-  "codeWebChat.saveFileSelection.title": "Guardar selección de archivos...",
-  "codeWebChat.restoreFileSelection.title": "Restaurar selección de archivos...",
-  "codeWebChat.applyResponse.title": "Aplicar desde el portapapeles",
+  "codeWebChat.saveFileSelection.title": "Guardar selección de archivos",
+  "codeWebChat.restoreFileSelection.title": "Restaurar selección de archivos",
+  "codeWebChat.applyResponse.title": "Aplicar respuesta del chat",
   "codeWebChat.copyMarkdown.title": "Copiar Markdown",
   "codeWebChat.history.title": "Historial",
   "codeWebChat.undoSelection.title": "Deshacer selección",

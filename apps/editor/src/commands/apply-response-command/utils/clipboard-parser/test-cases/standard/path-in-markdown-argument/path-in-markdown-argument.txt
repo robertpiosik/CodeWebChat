@@ -1,0 +1,4 @@
+```javascript name=src/index.js
+const message = "hello world";
+console.log(message);
+```

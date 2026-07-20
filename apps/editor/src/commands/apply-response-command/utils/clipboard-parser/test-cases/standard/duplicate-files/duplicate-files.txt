@@ -1,0 +1,9 @@
+```typescript
+// src/index.ts
+First part
+```
+
+```typescript
+// src/index.ts
+Second part
+```

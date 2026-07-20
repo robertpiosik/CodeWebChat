@@ -1,0 +1,13 @@
+### Renamed file: `src/old.ts` (old) `src/new.ts` (new)
+
+### Updated file: `src/index.ts`
+
+```diff
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -1,3 +1,3 @@
+ console.log("hello")
+-console.log("old message")
++console.log("new message")
+
+```

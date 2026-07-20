@@ -1,0 +1,9 @@
+Some text before.
+
+### Code at cursor: `src/index.ts` (25:5)
+
+```typescript
+console.log("completion");
+```
+
+Some text after.

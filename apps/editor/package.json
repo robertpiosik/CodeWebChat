@@ -260,6 +260,12 @@
         "icon": "$(files)"
       },
       {
+        "command": "codeWebChat.removeFileFromContext",
+        "title": "%codeWebChat.removeFileFromContext.title%",
+        "category": "Code Web Chat",
+        "icon": "$(remove)"
+      },
+      {
         "command": "codeWebChat.applyResponse",
         "title": "%codeWebChat.applyResponse.title%",
         "category": "Code Web Chat"

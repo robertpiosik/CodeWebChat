@@ -1,0 +1,10 @@
+<!-- src/hello-world.html -->
+```html
+<!DOCTYPE html>
+<p>Hello world</p>
+```
+
+<!--src/lorem.css-->
+```css
+.ipsum {}
+```

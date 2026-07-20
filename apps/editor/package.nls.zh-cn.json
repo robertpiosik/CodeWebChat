@@ -1,7 +1,7 @@
 {
-  "codeWebChat.saveFileSelection.title": "保存文件选择...",
-  "codeWebChat.restoreFileSelection.title": "恢复文件选择...",
-  "codeWebChat.applyResponse.title": "从剪贴板应用",
+  "codeWebChat.saveFileSelection.title": "保存文件选择",
+  "codeWebChat.restoreFileSelection.title": "恢复文件选择",
+  "codeWebChat.applyResponse.title": "应用聊天回复",
   "codeWebChat.copyMarkdown.title": "复制 Markdown",
   "codeWebChat.history.title": "历史记录",
   "codeWebChat.undoSelection.title": "撤销选择",

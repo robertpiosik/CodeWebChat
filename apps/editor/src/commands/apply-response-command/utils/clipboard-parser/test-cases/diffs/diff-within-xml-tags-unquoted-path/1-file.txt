@@ -1,0 +1,4 @@
+--- /dev/null
++++ b/src/index.ts
+@@ -0,0 +1,1 @@
++console.log('hello')

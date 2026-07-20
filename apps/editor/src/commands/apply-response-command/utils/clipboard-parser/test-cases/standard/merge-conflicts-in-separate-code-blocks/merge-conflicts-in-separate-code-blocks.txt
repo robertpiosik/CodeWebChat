@@ -1,0 +1,17 @@
+### Updated file: `src\index.ts`
+
+```typescript
+<<<<<<< ORIGINAL
+  console.log("a")
+=======
+  console.log("b")
+>>>>>>> UPDATED
+```
+
+```typescript
+<<<<<<< ORIGINAL
+    console.log("c")
+=======
+    console.log("d")
+>>>>>>> UPDATED
+```

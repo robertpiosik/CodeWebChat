@@ -8,7 +8,7 @@ import {
   LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
 } from '@/constants/state-keys'
 import { Logger } from '@shared/utils/logger'
-import { parse_response } from '@/commands/apply-response-command/utils/response-parser'
+import { parse_response } from '@/commands/apply-response-command/utils/clipboard-parser'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import {
   get_intelligent_update_config,
