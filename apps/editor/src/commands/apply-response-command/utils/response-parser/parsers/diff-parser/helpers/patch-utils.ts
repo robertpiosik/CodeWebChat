@@ -1,4 +1,4 @@
-import { extract_workspace_and_path } from '../../../clipboard-parser'
+import { extract_workspace_and_path } from '../../../response-parser'
 import { strip_quotes } from './path-utils'
 
 export const normalize_header_line = (params: {

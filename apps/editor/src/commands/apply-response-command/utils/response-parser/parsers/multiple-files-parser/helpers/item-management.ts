@@ -1,4 +1,4 @@
-import { FileItem, TextItem, InlineFileItem } from '../../../clipboard-parser'
+import { FileItem, TextItem, InlineFileItem } from '../../../response-parser'
 import { process_conflict_markers } from './text-processing'
 
 export const create_or_update_file_item = (params: {

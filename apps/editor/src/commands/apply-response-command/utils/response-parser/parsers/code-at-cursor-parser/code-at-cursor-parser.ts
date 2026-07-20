@@ -3,7 +3,7 @@ import {
   CodeAtCursorItem,
   TextItem,
   extract_workspace_and_path
-} from '../../clipboard-parser'
+} from '../../response-parser'
 
 const extract_path_and_position = (
   line: string

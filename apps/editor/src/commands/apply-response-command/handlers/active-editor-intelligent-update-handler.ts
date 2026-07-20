@@ -4,7 +4,7 @@ import {
   FileItem,
   DiffItem,
   parse_response
-} from '../utils/clipboard-parser/clipboard-parser'
+} from '../utils/response-parser/response-parser'
 import { sanitize_file_name, create_safe_path } from '@/utils/path-sanitizer'
 import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
