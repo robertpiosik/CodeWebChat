@@ -10,7 +10,14 @@ export const parse_relevant_files_from_response = (params: {
   const trimmed_response = params.response.trim()
 
   if (trimmed_response.includes('```')) {
-    return null
+    const code_blocks = trimmed_response.match(/```[\s\S]*?(?:```|$)/g)
+    const has_valid_path_in_code_blocks = code_blocks?.some((block) =>
+      params.workspace_files.some((file) => block.includes(file))
+    )
+
+    if (!has_valid_path_in_code_blocks) {
+      return null
+    }
   }
 
   const found_paths = new Set<string>()
