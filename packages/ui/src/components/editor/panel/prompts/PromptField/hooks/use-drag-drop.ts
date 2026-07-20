@@ -36,12 +36,12 @@ export const use_drag_drop = (
     const raw_start = map_display_pos_to_raw_pos({
       display_pos: display_start,
       raw_text: props.value,
-      context_file_paths: props.context_file_paths ?? []
+      context_file_paths: props.selected_files ?? []
     })
     const raw_end = map_display_pos_to_raw_pos({
       display_pos: display_end,
       raw_text: props.value,
-      context_file_paths: props.context_file_paths ?? []
+      context_file_paths: props.selected_files ?? []
     })
 
     dragged_text_range_ref.current = { start: raw_start, end: raw_end }
@@ -90,7 +90,7 @@ export const use_drag_drop = (
     let raw_drop_pos = map_display_pos_to_raw_pos({
       display_pos: display_drop_pos,
       raw_text: props.value,
-      context_file_paths: props.context_file_paths ?? []
+      context_file_paths: props.selected_files ?? []
     })
 
     const dragged_text = props.value.substring(
@@ -127,12 +127,12 @@ export const use_drag_drop = (
         const display_start = map_raw_pos_to_display_pos({
           raw_pos: new_raw_selection_start,
           raw_text: new_value,
-          context_file_paths: props.context_file_paths ?? []
+          context_file_paths: props.selected_files ?? []
         })
         const display_end = map_raw_pos_to_display_pos({
           raw_pos: new_raw_selection_end,
           raw_text: new_value,
-          context_file_paths: props.context_file_paths ?? []
+          context_file_paths: props.selected_files ?? []
         })
         set_caret_position_for_div(
           input_ref.current,

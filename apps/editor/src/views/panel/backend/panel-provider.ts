@@ -124,6 +124,7 @@ import { DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD } from '@/constants/values'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { SharedContextState } from '@/context/shared-context-state'
 import { webview_html } from '@/views/shared/utils/webview-html'
+import { get_selected_files } from '@/context/get-selected-files'
 
 export class PanelProvider implements vscode.WebviewViewProvider {
   public readonly extension_uri: vscode.Uri
@@ -412,7 +413,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       vscode.workspace.onDidChangeWorkspaceFolders(() => {
         handle_get_tasks(this)
         handle_get_workspace_state(this)
-        this.send_context_files()
+        this.send_selected_files()
       })
     )
 
@@ -477,7 +478,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           token_count
         })
 
-        this.send_context_files()
+        this.send_selected_files()
       }
     })
 
@@ -600,32 +601,14 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     sources.forEach((item) => item.source.cancel('Preview finished.'))
   }
 
-  public send_context_files() {
-    const workspace_files = this.workspace_provider.get_checked_files()
-
-    const is_multi_root =
-      this.workspace_provider.get_workspace_roots().length > 1
-
-    const file_paths = workspace_files.map((file_path) => {
-      const workspace_root =
-        this.workspace_provider.get_workspace_root_for_file(file_path)
-      if (!workspace_root) {
-        return file_path.replace(/\\/g, '/') // Should not happen for context files
-      }
-      const relative_path = path
-        .relative(workspace_root, file_path)
-        .replace(/\\/g, '/')
-
-      if (is_multi_root) {
-        const workspace_name =
-          this.workspace_provider.get_workspace_name(workspace_root)
-        return `${workspace_name}/${relative_path}`
-      }
-      return relative_path
+  public send_selected_files() {
+    const file_paths = get_selected_files({
+      workspace_provider: this.workspace_provider,
+      shared_context_state: this.shared_context_state
     })
 
     this.send_message({
-      command: 'CONTEXT_FILES',
+      command: 'SELECTED_FILES',
       file_paths
     })
   }

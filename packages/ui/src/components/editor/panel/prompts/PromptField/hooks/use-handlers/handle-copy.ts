@@ -24,12 +24,12 @@ export const create_handle_copy =
     const raw_start = map_display_pos_to_raw_pos({
       display_pos: display_start,
       raw_text: props.value,
-      context_file_paths: props.context_file_paths ?? []
+      context_file_paths: props.selected_files ?? []
     })
     const raw_end = map_display_pos_to_raw_pos({
       display_pos: display_end,
       raw_text: props.value,
-      context_file_paths: props.context_file_paths ?? []
+      context_file_paths: props.selected_files ?? []
     })
 
     const raw_text_slice = props.value.substring(raw_start, raw_end)

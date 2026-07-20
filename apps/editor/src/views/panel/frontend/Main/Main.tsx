@@ -53,7 +53,7 @@ type Props = {
   chat_input_focus_and_select_key: number
   chat_input_focus_key: number
   context_size_warning_threshold: number
-  context_file_paths: string[]
+  selected_files: string[]
   web_configurations_collapsed: boolean
   on_web_configurations_collapsed_change: (is_collapsed: boolean) => void
   send_with_shift_enter: boolean
@@ -694,7 +694,7 @@ export const Main: React.FC<Props> = (props) => {
       selected_history_item_created_at={props.selected_history_item_created_at}
       on_selected_history_item_change={props.on_selected_history_item_change}
       on_response_history_item_remove={props.on_response_history_item_remove}
-      context_file_paths={props.context_file_paths}
+      selected_files={props.selected_files}
       web_configurations_collapsed={props.web_configurations_collapsed}
       send_with_shift_enter={props.send_with_shift_enter}
       on_web_configurations_collapsed_change={

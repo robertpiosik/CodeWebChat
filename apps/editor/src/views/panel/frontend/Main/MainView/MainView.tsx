@@ -95,7 +95,7 @@ type Props = {
   selected_history_item_created_at?: number
   on_selected_history_item_change: (created_at: number) => void
   on_response_history_item_remove: (created_at: number) => void
-  context_file_paths: string[]
+  selected_files: string[]
   web_configurations_collapsed: boolean
   on_web_configurations_collapsed_change: (is_collapsed: boolean) => void
   send_with_shift_enter: boolean
@@ -405,7 +405,7 @@ export const MainView: React.FC<Props> = (props) => {
                 ? props.on_chat_edit_format_change
                 : props.on_api_edit_format_change
             }
-            context_file_paths={props.context_file_paths}
+            selected_files={props.selected_files}
             on_go_to_file={props.on_go_to_file}
             on_pasted_lines_click={props.on_pasted_lines_click}
             on_open_url={props.on_open_url}

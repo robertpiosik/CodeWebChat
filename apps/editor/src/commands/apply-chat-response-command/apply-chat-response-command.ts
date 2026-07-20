@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
+import * as path from 'path'
 import {
   create_checkpoint,
   delete_checkpoint
@@ -17,7 +18,7 @@ import {
   ongoing_preview_cleanup_promise
 } from './utils/preview-handler'
 import {
-  process_chat_response,
+  process_response,
   ApplyChatResponseCommandArgs
 } from './response-processor'
 import { CHECKPOINTS_STATE_KEY } from '@/constants/state-keys'
@@ -28,6 +29,7 @@ import {
   preview_document_provider,
   CwcPreviewProvider
 } from './utils/preview/virtual-document-provider'
+import { get_selected_files } from '@/context/get-selected-files'
 import { parse_response } from './utils/clipboard-parser'
 import { Checkpoint } from '@/features/checkpoints/types'
 
@@ -67,16 +69,16 @@ export const apply_chat_response_command = (params: {
         return
       }
 
-      let chat_response = args?.response
-      if (chat_response === undefined) {
-        chat_response = await vscode.env.clipboard.readText()
-        if (!chat_response) {
+      let response = args?.response
+      if (response === undefined) {
+        response = await vscode.env.clipboard.readText()
+        if (!response) {
           vscode.window.showInformationMessage(
             dictionary.information_message.CLIPBOARD_IS_EMPTY
           )
           return
         }
-      } else if (!chat_response) {
+      } else if (!response) {
         vscode.window.showErrorMessage(
           dictionary.error_message.RESPONSE_TEXT_MISSING
         )
@@ -92,9 +94,16 @@ export const apply_chat_response_command = (params: {
       const is_single_root_folder_workspace =
         (vscode.workspace.workspaceFolders?.length ?? 0) <= 1
 
+      const workspace_files = get_selected_files({
+        workspace_provider: params.workspace_provider,
+        shared_context_state: params.panel_provider.shared_context_state,
+        include_all_path_variations: true
+      })
+
       const clipboard_items = parse_response({
-        response: chat_response,
-        is_single_root_folder_workspace
+        response,
+        is_single_root_folder_workspace,
+        workspace_files
       })
 
       if (resolve_fn) {
@@ -104,7 +113,7 @@ export const apply_chat_response_command = (params: {
 
         if (!args?.created_at) {
           const new_item: ResponseHistoryItem = {
-            response: chat_response,
+            response,
             raw_instructions: args?.raw_instructions,
             created_at: Date.now(),
             url: args?.url,
@@ -215,9 +224,9 @@ export const apply_chat_response_command = (params: {
           })
         }
 
-        const preview_data = await process_chat_response({
+        const preview_data = await process_response({
           args,
-          chat_response,
+          response,
           clipboard_items,
           context: params.context,
           panel_provider: params.panel_provider,
@@ -353,7 +362,7 @@ export const apply_chat_response_command = (params: {
             } else {
               created_at_for_preview = Date.now()
               const new_item: ResponseHistoryItem = {
-                response: preview_data.chat_response,
+                response: preview_data.response,
                 raw_instructions: args?.raw_instructions,
                 created_at: created_at_for_preview,
                 lines_added: total_lines_added,
@@ -377,7 +386,7 @@ export const apply_chat_response_command = (params: {
           ]
           const changes_accepted = await preview_handler({
             original_states: preview_data.original_states,
-            chat_response: preview_data.chat_response,
+            chat_response: preview_data.response,
             panel_provider: params.panel_provider,
             context: params.context,
             original_editor_state: args?.original_editor_state,

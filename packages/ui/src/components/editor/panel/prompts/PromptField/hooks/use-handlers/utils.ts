@@ -6,7 +6,7 @@ import {
 
 export const get_symbol_ranges = (params: {
   text: string
-  context_file_paths: string[]
+  selected_files: string[]
 }): { start: number; end: number }[] => {
   const ranges: { start: number; end: number }[] = []
   const regex =
@@ -17,7 +17,7 @@ export const get_symbol_ranges = (params: {
     const file_path = match[1]
 
     if (file_path) {
-      if (params.context_file_paths.includes(file_path)) {
+      if (params.selected_files.includes(file_path)) {
         ranges.push({ start: match.index, end: match.index + match[0].length })
       }
     } else {
@@ -31,14 +31,14 @@ export const set_caret_position_after_change = (params: {
   input_ref: RefObject<HTMLDivElement>
   new_raw_cursor_pos: number
   new_value: string
-  context_file_paths: string[]
+  selected_files: string[]
 }) => {
   setTimeout(() => {
     if (params.input_ref.current) {
       const display_pos = map_raw_pos_to_display_pos({
         raw_pos: params.new_raw_cursor_pos,
         raw_text: params.new_value,
-        context_file_paths: params.context_file_paths
+        context_file_paths: params.selected_files
       })
       set_caret_position_for_div(params.input_ref.current, display_pos)
     }
