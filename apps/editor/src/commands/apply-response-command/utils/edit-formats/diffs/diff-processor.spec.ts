@@ -263,6 +263,5 @@ describe('diff-processor', () => {
 
       expect(result).toBe(expected)
     })
-
   })
 })

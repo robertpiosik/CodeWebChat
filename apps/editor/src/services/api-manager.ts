@@ -160,7 +160,7 @@ export class ApiManager {
       })
       this.cancel_token_sources.delete(request_id)
 
-      // Prevent race conditions of the applyChatResponse command when invoked in short successions
+      // Prevent race conditions of the applyResponse command when invoked in short successions
       const now = Date.now()
       const wait_until = Math.max(now, this.next_allowed_finish_time)
       const delay = wait_until - now

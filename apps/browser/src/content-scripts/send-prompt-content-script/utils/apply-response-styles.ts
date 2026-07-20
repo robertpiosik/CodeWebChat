@@ -1,4 +1,4 @@
-export const apply_chat_response_button_style = (button: HTMLButtonElement) => {
+export const apply_response_button_style = (button: HTMLButtonElement) => {
   button.style.margin = '4px 8px'
   button.style.padding = '6px 9px'
   button.style.borderRadius = '999px'

@@ -1,7 +1,7 @@
 {
   "codeWebChat.saveFileSelection.title": "Dateiauswahl speichern",
   "codeWebChat.restoreFileSelection.title": "Dateiauswahl wiederherstellen",
-  "codeWebChat.applyChatResponse.title": "Chat-Antwort anwenden",
+  "codeWebChat.applyResponse.title": "Chat-Antwort anwenden",
   "codeWebChat.copyMarkdown.title": "Markdown kopieren",
   "codeWebChat.history.title": "Verlauf",
   "codeWebChat.undoSelection.title": "Auswahl rückgängig machen",

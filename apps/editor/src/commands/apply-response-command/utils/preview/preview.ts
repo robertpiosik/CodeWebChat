@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { dictionary } from '@shared/constants/dictionary'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
+import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
 import { RecentApiConfiguration } from '@shared/types/response-history-item'
 import { setup_workspace_listeners } from './workspace-listener'
 import { prepare_files_from_original_states } from './file-preparer'

@@ -21,7 +21,7 @@ import * as path from 'path'
 import { Logger } from '@shared/utils/logger'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
-import { response_preview_promise_resolve } from '@/commands/apply-chat-response-command/utils/preview'
+import { response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
 
 export const create_checkpoint = async (params: {
   workspace_provider: WorkspaceProvider

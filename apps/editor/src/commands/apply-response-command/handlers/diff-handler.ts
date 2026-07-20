@@ -16,33 +16,35 @@ export const sanitize_patch_content = (
   if (!workspace_name) return patch_content
 
   const lines = patch_content.split('\n')
-  return lines.map(line => {
-    if (line.startsWith('--- a/')) {
-      const match = line.match(/^--- a\/(.+)$/)
-      if (match && match[1].startsWith(`${workspace_name}/`)) {
-        return `--- a/${match[1].substring(workspace_name.length + 1)}`
-      }
-    } else if (line.startsWith('+++ b/')) {
-      const match = line.match(/^\+\+\+ b\/(.+)$/)
-      if (match && match[1].startsWith(`${workspace_name}/`)) {
-        return `+++ b/${match[1].substring(workspace_name.length + 1)}`
-      }
-    } else if (line.startsWith('diff --git ')) {
-      const match = line.match(/^diff --git a\/(.+) b\/(.+)$/)
-      if (match) {
-        let path_a = match[1]
-        let path_b = match[2]
-        if (path_a.startsWith(`${workspace_name}/`)) {
-          path_a = path_a.substring(workspace_name.length + 1)
+  return lines
+    .map((line) => {
+      if (line.startsWith('--- a/')) {
+        const match = line.match(/^--- a\/(.+)$/)
+        if (match && match[1].startsWith(`${workspace_name}/`)) {
+          return `--- a/${match[1].substring(workspace_name.length + 1)}`
         }
-        if (path_b.startsWith(`${workspace_name}/`)) {
-          path_b = path_b.substring(workspace_name.length + 1)
+      } else if (line.startsWith('+++ b/')) {
+        const match = line.match(/^\+\+\+ b\/(.+)$/)
+        if (match && match[1].startsWith(`${workspace_name}/`)) {
+          return `+++ b/${match[1].substring(workspace_name.length + 1)}`
         }
-        return `diff --git a/${path_a} b/${path_b}`
+      } else if (line.startsWith('diff --git ')) {
+        const match = line.match(/^diff --git a\/(.+) b\/(.+)$/)
+        if (match) {
+          let path_a = match[1]
+          let path_b = match[2]
+          if (path_a.startsWith(`${workspace_name}/`)) {
+            path_a = path_a.substring(workspace_name.length + 1)
+          }
+          if (path_b.startsWith(`${workspace_name}/`)) {
+            path_b = path_b.substring(workspace_name.length + 1)
+          }
+          return `diff --git a/${path_a} b/${path_b}`
+        }
       }
-    }
-    return line
-  }).join('\n')
+      return line
+    })
+    .join('\n')
 }
 
 const INDENTATION_BASED_EXTENSIONS = new Set(['.py', '.yaml', '.yml'])
@@ -152,7 +154,10 @@ export const store_original_file_states = async (
   workspace_name?: string,
   fallback_patch?: DiffItem
 ): Promise<OriginalFileState[]> => {
-  const file_paths = extract_file_paths_from_patch(patch_content, fallback_patch)
+  const file_paths = extract_file_paths_from_patch(
+    patch_content,
+    fallback_patch
+  )
   const original_states: OriginalFileState[] = []
 
   for (const file_path of file_paths) {
@@ -309,7 +314,10 @@ const handle_new_file_patch = async (
   original_states?: OriginalFileState[]
   diff_application_method?: 'recount' | 'search_and_replace'
 }> => {
-  const file_paths = extract_file_paths_from_patch(patch_content, fallback_patch)
+  const file_paths = extract_file_paths_from_patch(
+    patch_content,
+    fallback_patch
+  )
   if (file_paths.length != 1) {
     Logger.error({
       function_name: 'handle_new_file_patch',
@@ -385,7 +393,10 @@ const handle_deleted_file_patch = async (
   original_states?: OriginalFileState[]
   diff_application_method?: 'recount' | 'search_and_replace'
 }> => {
-  const file_paths = extract_file_paths_from_patch(patch_content, fallback_patch)
+  const file_paths = extract_file_paths_from_patch(
+    patch_content,
+    fallback_patch
+  )
   if (file_paths.length != 1) {
     Logger.error({
       function_name: 'handle_deleted_file_patch',
@@ -508,11 +519,21 @@ export const apply_git_patch = async (
   const patch_info = parse_patch_header(patch_content, workspace_path)
 
   if (patch_info.is_new) {
-    return handle_new_file_patch(patch_content, workspace_path, workspace_name, patch)
+    return handle_new_file_patch(
+      patch_content,
+      workspace_path,
+      workspace_name,
+      patch
+    )
   }
 
   if (patch_info.is_deleted) {
-    return handle_deleted_file_patch(patch_content, workspace_path, workspace_name, patch)
+    return handle_deleted_file_patch(
+      patch_content,
+      workspace_path,
+      workspace_name,
+      patch
+    )
   }
 
   let closed_files: vscode.Uri[] = []

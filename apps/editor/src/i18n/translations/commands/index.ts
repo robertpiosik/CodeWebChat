@@ -1,6 +1,6 @@
 import { translations as generate_commit_message } from './generate-commit-message'
 import { translations as code_at_cursor } from './code-at-cursor'
-import { translations as apply_chat_response } from './apply-chat-response'
+import { translations as apply_response } from './apply-response'
 import { translations as context_restoration } from './context-restoration'
 import { translations as add_file_to_context } from './add-file-to-context'
 import { translations as select_definition_file } from './select-definition-file'
@@ -20,7 +20,7 @@ import { translations as history } from './history'
 export const translations = {
   ...generate_commit_message,
   ...code_at_cursor,
-  ...apply_chat_response,
+  ...apply_response,
   ...context_restoration,
   ...add_file_to_context,
   ...select_definition_file,

@@ -21,7 +21,7 @@ import {
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { get_checkpoint_path } from '@/features/checkpoints/utils'
 import { dictionary } from '@shared/constants/dictionary'
-import { get_response_preview_promise_resolve } from '@/commands/apply-chat-response-command/utils/preview/preview'
+import { get_response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview/preview'
 
 dayjs.extend(localizedFormat)
 

@@ -6,8 +6,8 @@ import {
 } from '@/constants/state-keys'
 import { dictionary } from '@shared/constants/dictionary'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
-import { undo_files } from '@/commands/apply-chat-response-command/utils/file-operations'
+import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
+import { undo_files } from '@/commands/apply-response-command/utils/file-operations'
 
 export const handle_undo = async (
   panel_provider: PanelProvider

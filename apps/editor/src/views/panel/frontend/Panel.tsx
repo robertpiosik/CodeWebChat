@@ -230,7 +230,7 @@ export const Panel = () => {
   const handle_apply_click = () => {
     post_message(vscode, {
       command: 'EXECUTE_COMMAND',
-      command_id: 'codeWebChat.applyChatResponse'
+      command_id: 'codeWebChat.applyResponse'
     })
   }
 

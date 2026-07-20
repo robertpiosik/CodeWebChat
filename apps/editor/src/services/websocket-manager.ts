@@ -16,7 +16,7 @@ import { Logger } from '@shared/utils/logger'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 import { LAST_SELECTED_BROWSER_ID_STATE_KEY } from '@/constants/state-keys'
-import { ApplyChatResponseCommandArgs } from '@/commands/apply-chat-response-command/response-processor'
+import { ApplyResponseCommandArgs } from '@/commands/apply-response-command/response-processor'
 import { WebPromptType } from '@shared/types/prompt-types'
 
 /**
@@ -195,11 +195,14 @@ export class WebSocketManager {
           this.connected_browsers = message.connected_browsers
           this.has_connected_browsers = this.connected_browsers.length > 0
           this._on_connection_status_change.fire(this.has_connected_browsers)
-        } else if (message.action == 'apply-chat-response') {
-          vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
+        } else if (
+          message.action == 'apply-response' ||
+          (message.action as any) == 'apply-chat-response' // Backward compatibility 20.07.26
+        ) {
+          vscode.commands.executeCommand('codeWebChat.applyResponse', {
             raw_instructions: message.raw_instructions,
             url: message.url
-          } as ApplyChatResponseCommandArgs)
+          } as ApplyResponseCommandArgs)
         }
       } catch (error) {
         Logger.error({

@@ -4,7 +4,7 @@ import browser from 'webextension-polyfill'
 import { apply_response_icon } from '../constants/apply-response-icon'
 import { apply_response_button_title } from '../constants/dictionary'
 import {
-  apply_chat_response_button_style,
+  apply_response_button_style,
   set_button_disabled_state
 } from './apply-response-styles'
 import { show_response_ready_notification } from './show-response-ready-notification'
@@ -40,7 +40,7 @@ export function add_apply_response_button(params: {
   apply_response_button.innerHTML = apply_response_icon
   apply_response_button.classList.add('cwc-apply-response-button')
   apply_response_button.title = apply_response_button_title
-  apply_chat_response_button_style(apply_response_button)
+  apply_response_button_style(apply_response_button)
   if (params.customize_button) params.customize_button(apply_response_button)
 
   apply_response_button.addEventListener('click', async () => {
@@ -49,7 +49,7 @@ export function add_apply_response_button(params: {
       await params.perform_copy(params.footer)
       await new Promise((resolve) => setTimeout(resolve, 500))
       browser.runtime.sendMessage<Message>({
-        action: 'apply-chat-response',
+        action: 'apply-response',
         client_id: params.client_id,
         raw_instructions: params.raw_instructions,
         edit_format: params.edit_format,

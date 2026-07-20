@@ -267,7 +267,7 @@ export const handle_find_relevant_files = async (
       })
 
       if (result) {
-        vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
+        vscode.commands.executeCommand('codeWebChat.applyResponse', {
           response: result.response,
           raw_instructions: instructions,
           recent_api_configuration: {

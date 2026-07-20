@@ -4,7 +4,7 @@ import { ApplyResponseFromHistoryMessage } from '@/views/panel/types/messages'
 export const handle_apply_response_from_history = async (
   message: ApplyResponseFromHistoryMessage
 ): Promise<void> => {
-  await vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
+  await vscode.commands.executeCommand('codeWebChat.applyResponse', {
     response: message.response,
     raw_instructions: message.raw_instructions,
     files_with_content: message.files,
@@ -14,4 +14,3 @@ export const handle_apply_response_from_history = async (
     recent_api_configuration: message.recent_api_configuration
   })
 }
-

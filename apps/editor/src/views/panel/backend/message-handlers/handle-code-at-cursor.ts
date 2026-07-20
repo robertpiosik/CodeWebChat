@@ -286,27 +286,24 @@ export const handle_code_at_cursor = async (
           })
 
           if (result) {
-            await vscode.commands.executeCommand(
-              'codeWebChat.applyChatResponse',
-              {
-                response: result.response,
-                raw_instructions: processed_completion_instructions,
-                original_editor_state: {
-                  file_path: document.uri.fsPath,
-                  position: {
-                    line: position.line,
-                    character: position.character
-                  }
-                },
-                recent_api_configuration: {
-                  model_provider:
-                    code_at_cursor_api_configuration.model_provider_name,
-                  model: code_at_cursor_api_configuration.model,
-                  reasoning_effort:
-                    code_at_cursor_api_configuration.reasoning_effort
+            await vscode.commands.executeCommand('codeWebChat.applyResponse', {
+              response: result.response,
+              raw_instructions: processed_completion_instructions,
+              original_editor_state: {
+                file_path: document.uri.fsPath,
+                position: {
+                  line: position.line,
+                  character: position.character
                 }
+              },
+              recent_api_configuration: {
+                model_provider:
+                  code_at_cursor_api_configuration.model_provider_name,
+                model: code_at_cursor_api_configuration.model,
+                reasoning_effort:
+                  code_at_cursor_api_configuration.reasoning_effort
               }
-            )
+            })
           }
         } catch (err: any) {
           if (axios.isCancel(err)) {

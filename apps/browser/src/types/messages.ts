@@ -2,8 +2,8 @@ type ChatInitializedMessage = {
   action: 'chat-initialized'
 }
 
-type ApplyChatResponseMessage = {
-  action: 'apply-chat-response'
+type ApplyResponseMessage = {
+  action: 'apply-response'
   client_id: number
   raw_instructions?: string
   edit_format?: string
@@ -16,5 +16,5 @@ type FinishedRespondingMessage = {
 
 export type Message =
   | ChatInitializedMessage
-  | ApplyChatResponseMessage
+  | ApplyResponseMessage
   | FinishedRespondingMessage

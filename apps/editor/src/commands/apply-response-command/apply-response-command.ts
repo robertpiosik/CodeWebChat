@@ -18,7 +18,7 @@ import {
 } from './utils/preview-handler'
 import {
   process_response,
-  ApplyChatResponseCommandArgs
+  ApplyResponseCommandArgs
 } from './response-processor'
 import { CHECKPOINTS_STATE_KEY } from '@/constants/state-keys'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
@@ -45,7 +45,7 @@ interface SavedTabGroups {
   active_editor_uri?: string
 }
 
-export const apply_chat_response_command = (params: {
+export const apply_response_command = (params: {
   context: vscode.ExtensionContext
   panel_provider: PanelProvider
   workspace_provider: WorkspaceProvider
@@ -59,8 +59,8 @@ export const apply_chat_response_command = (params: {
   )
 
   return vscode.commands.registerCommand(
-    'codeWebChat.applyChatResponse',
-    async (args?: ApplyChatResponseCommandArgs) => {
+    'codeWebChat.applyResponse',
+    async (args?: ApplyResponseCommandArgs) => {
       if (!vscode.workspace.workspaceFolders?.length) {
         vscode.window.showErrorMessage(
           dictionary.error_message.NO_WORKSPACE_FOLDER_OPEN

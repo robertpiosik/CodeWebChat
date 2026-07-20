@@ -7,7 +7,7 @@ import {
 } from '../utils/clipboard-parser/clipboard-parser'
 import { sanitize_file_name, create_safe_path } from '@/utils/path-sanitizer'
 import { Logger } from '@shared/utils/logger'
-import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
+import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
 import {
   ApiConfiguration,
   ModelProvidersManager

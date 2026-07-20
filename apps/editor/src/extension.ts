@@ -9,7 +9,7 @@ import {
   migrate_prompt_templates_suffixes
 } from './migrations'
 import {
-  apply_chat_response_command,
+  apply_response_command,
   copy_markdown_commands,
   copy_paths_commands,
   save_file_selection_command,
@@ -85,7 +85,7 @@ export const activate = async (context: vscode.ExtensionContext) => {
       }
     ),
     reference_in_prompt_command({ panel_provider, workspace_provider }),
-    apply_chat_response_command({
+    apply_response_command({
       context,
       panel_provider,
       workspace_provider,

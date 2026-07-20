@@ -2,13 +2,13 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { IntelligentUpdateFileInPreviewMessage } from '@/views/panel/types/messages'
-import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
+import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
 import {
   LAST_APPLIED_CHANGES_STATE_KEY,
   LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
 } from '@/constants/state-keys'
 import { Logger } from '@shared/utils/logger'
-import { parse_response } from '@/commands/apply-chat-response-command/utils/clipboard-parser'
+import { parse_response } from '@/commands/apply-response-command/utils/clipboard-parser'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import {
   get_intelligent_update_config,
@@ -17,7 +17,7 @@ import {
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
 import axios from 'axios'
-import { set_file_applied_with_intelligent_update } from '@/commands/apply-chat-response-command/utils/preview'
+import { set_file_applied_with_intelligent_update } from '@/commands/apply-response-command/utils/preview'
 
 export const handle_intelligent_update_file_in_preview = async (
   panel_provider: PanelProvider,
