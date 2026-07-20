@@ -96,8 +96,7 @@ export const apply_chat_response_command = (params: {
 
       const workspace_files = get_selected_files({
         workspace_provider: params.workspace_provider,
-        shared_context_state: params.panel_provider.shared_context_state,
-        include_all_path_variations: true
+        shared_context_state: params.panel_provider.shared_context_state
       })
 
       const clipboard_items = parse_response({
