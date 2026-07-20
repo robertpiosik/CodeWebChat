@@ -171,6 +171,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public api_call_cancel_token_source: CancelTokenSource | null = null
   public api_manager!: ApiManager
   public response_history: ResponseHistoryItem[] = []
+  public message_listeners: ((message: BackendMessage) => void)[] = []
 
   // Voice input
   public is_recording = false
