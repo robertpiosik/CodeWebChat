@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import * as crypto from 'crypto'
-import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
+import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
 import * as vscode from 'vscode'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { get_diff_stats } from './diff-utils'

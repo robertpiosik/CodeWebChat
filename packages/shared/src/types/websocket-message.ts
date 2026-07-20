@@ -42,8 +42,8 @@ export type BrowserConnectionStatusMessage = {
   connected_browsers: ConnectedBrowser[]
 }
 
-export type ApplyChatResponseMessage = {
-  action: 'apply-chat-response'
+export type ApplyResponseMessage = {
+  action: 'apply-response'
   client_id: number
   raw_instructions?: string
   edit_format?: string
@@ -59,4 +59,4 @@ export type WebSocketMessage =
   | InitializeChatMessage
   | BrowserConnectionStatusMessage
   | ClientIdAssignmentMessage
-  | ApplyChatResponseMessage
+  | ApplyResponseMessage

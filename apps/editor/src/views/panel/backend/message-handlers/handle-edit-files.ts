@@ -307,7 +307,7 @@ export const handle_edit_files = async (
           })
 
           if (result) {
-            vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
+            vscode.commands.executeCommand('codeWebChat.applyResponse', {
               response: result.response,
               raw_instructions: instructions,
               edit_format,

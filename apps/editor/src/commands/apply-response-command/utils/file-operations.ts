@@ -4,7 +4,7 @@ import * as fs from 'fs'
 import { create_safe_path, sanitize_file_name } from '@/utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
-import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
+import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
 
 const uri_exists = async (uri: vscode.Uri): Promise<boolean> => {
   try {
@@ -334,7 +334,10 @@ export const apply_file_relocations = async (
       }
 
       const old_safe_path = create_safe_path(workspace_root, state.file_path)
-      const new_safe_path = create_safe_path(new_workspace_root, state.new_file_path)
+      const new_safe_path = create_safe_path(
+        new_workspace_root,
+        state.new_file_path
+      )
 
       if (!old_safe_path || !new_safe_path) continue
 

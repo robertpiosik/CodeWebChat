@@ -1,7 +1,7 @@
 {
   "codeWebChat.saveFileSelection.title": "Uložit výběr souborů",
   "codeWebChat.restoreFileSelection.title": "Obnovit výběr souborů",
-  "codeWebChat.applyChatResponse.title": "Použít odpověď chatu",
+  "codeWebChat.applyResponse.title": "Použít odpověď chatu",
   "codeWebChat.copyMarkdown.title": "Kopírovat Markdown",
   "codeWebChat.history.title": "Historie",
   "codeWebChat.undoSelection.title": "Zpět výběr",

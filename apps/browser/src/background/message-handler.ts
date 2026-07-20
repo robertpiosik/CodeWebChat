@@ -1,7 +1,7 @@
 import {
   WebSocketMessage,
   InitializeChatMessage,
-  ApplyChatResponseMessage
+  ApplyResponseMessage
 } from '@shared/types/websocket-message'
 import browser from 'webextension-polyfill'
 import { send_message_to_server } from './websocket'
@@ -177,14 +177,14 @@ export const setup_message_listeners = () => {
       if (is_message(message)) {
         if (message.action == 'chat-initialized') {
           handle_chat_initialized()
-        } else if (message.action == 'apply-chat-response') {
+        } else if (message.action == 'apply-response') {
           send_message_to_server({
-            action: 'apply-chat-response',
+            action: 'apply-response',
             client_id: message.client_id,
             raw_instructions: message.raw_instructions,
             edit_format: message.edit_format,
             url: message.url
-          } as ApplyChatResponseMessage)
+          } as ApplyResponseMessage)
         } else if (message.action == 'finished-responding') {
           if (sender.tab?.id && sender.tab.id == last_opened_tab_id) {
             is_finished_responding = true

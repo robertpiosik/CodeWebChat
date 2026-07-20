@@ -44,7 +44,7 @@ export type PreviewData = {
   response: string
 }
 
-export type ApplyChatResponseCommandArgs = {
+export type ApplyResponseCommandArgs = {
   response?: string
   raw_instructions?: string
   original_editor_state?: {
@@ -59,7 +59,7 @@ export type ApplyChatResponseCommandArgs = {
 }
 
 export const process_response = async (params: {
-  args: ApplyChatResponseCommandArgs | undefined
+  args: ApplyResponseCommandArgs | undefined
   response: string
   clipboard_items: ClipboardItem[]
   context: vscode.ExtensionContext
@@ -275,7 +275,7 @@ export const process_response = async (params: {
 
       params.panel_provider.send_message({
         command: 'SHOW_AUTO_CLOSING_MODAL',
-        title: t('command.apply-chat-response.relevant-files.success'),
+        title: t('command.apply-response.relevant-files.success'),
         type: 'success'
       })
 
@@ -538,19 +538,16 @@ export const process_response = async (params: {
 
       if (editor) {
         const choice = await vscode.window.showWarningMessage(
-          t('command.apply-chat-response.warning.no-code-blocks.title'),
+          t('command.apply-response.warning.no-code-blocks.title'),
           {
             modal: true,
-            detail: t(
-              'command.apply-chat-response.warning.no-code-blocks.detail'
-            )
+            detail: t('command.apply-response.warning.no-code-blocks.detail')
           },
-          t('command.apply-chat-response.warning.no-code-blocks.action')
+          t('command.apply-response.warning.no-code-blocks.action')
         )
 
         if (
-          choice ==
-          t('command.apply-chat-response.warning.no-code-blocks.action')
+          choice == t('command.apply-response.warning.no-code-blocks.action')
         ) {
           const document = editor.document
           const file_path_for_block = vscode.workspace

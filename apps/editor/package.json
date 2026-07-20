@@ -266,8 +266,8 @@
         "icon": "$(remove)"
       },
       {
-        "command": "codeWebChat.applyChatResponse",
-        "title": "%codeWebChat.applyChatResponse.title%",
+        "command": "codeWebChat.applyResponse",
+        "title": "%codeWebChat.applyResponse.title%",
         "category": "Code Web Chat"
       },
       {

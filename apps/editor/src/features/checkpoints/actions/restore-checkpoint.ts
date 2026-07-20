@@ -17,8 +17,8 @@ import { sync_workspace_from_dir } from './sync-workspace-from-dir'
 import { get_checkpoint_path, sync_directory } from '../utils'
 import { Logger } from '@shared/utils/logger'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { response_preview_promise_resolve } from '@/commands/apply-chat-response-command/utils/preview'
-import { ongoing_preview_cleanup_promise } from '@/commands/apply-chat-response-command/utils/preview-handler'
+import { response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
+import { ongoing_preview_cleanup_promise } from '@/commands/apply-response-command/utils/preview-handler'
 import { dictionary } from '@shared/constants/dictionary'
 import { get_git_info } from '../utils/git-utils'
 import { PromptsForCommitMessagesUtils } from '@/utils/prompts-for-commit-messages-utils'
@@ -473,7 +473,7 @@ export const restore_checkpoint = async (params: {
             params.checkpoint.response_preview_item_created_at
         )
         if (item_to_preview) {
-          vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
+          vscode.commands.executeCommand('codeWebChat.applyResponse', {
             response: item_to_preview.response,
             raw_instructions: item_to_preview.raw_instructions,
             files_with_content: item_to_preview.files,

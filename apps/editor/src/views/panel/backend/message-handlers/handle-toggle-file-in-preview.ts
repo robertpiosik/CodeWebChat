@@ -1,4 +1,4 @@
-import { toggle_file_preview_state } from '@/commands/apply-chat-response-command/utils/preview/preview'
+import { toggle_file_preview_state } from '@/commands/apply-response-command/utils/preview/preview'
 import { ToggleFileInPreviewMessage } from '../../types/messages'
 
 export const handle_toggle_file_in_preview = async (

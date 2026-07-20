@@ -1,5 +1,5 @@
 export const translations = {
-  'command.apply-chat-response.warning.no-code-blocks.title': {
+  'command.apply-response.warning.no-code-blocks.title': {
     en: 'No valid code blocks found',
     pl: 'Nie znaleziono prawidłowych bloków z kodem',
     'zh-cn': '未找到有效的代码块',
@@ -17,7 +17,7 @@ export const translations = {
     hu: 'Nem találhatók érvényes kódblokkok',
     bg: 'Не са намерени валидни кодови блокове'
   },
-  'command.apply-chat-response.warning.no-code-blocks.detail': {
+  'command.apply-response.warning.no-code-blocks.detail': {
     en: 'Apply the clipboard text to the active editor?',
     pl: 'Zastosować tekst ze schowka w aktywnym edytorze?',
     'zh-cn': '将剪贴板文本应用到活动编辑器？',
@@ -35,7 +35,7 @@ export const translations = {
     hu: 'Alkalmazza a vágólap szövegét az aktív szerkesztőben?',
     bg: 'Да се приложи ли текстът от клипборда към активния редактор?'
   },
-  'command.apply-chat-response.warning.no-code-blocks.action': {
+  'command.apply-response.warning.no-code-blocks.action': {
     en: 'Apply with Intelligent Update',
     pl: 'Zastosuj z Inteligentną Ingegracją',
     'zh-cn': '使用智能更新应用',
@@ -53,7 +53,7 @@ export const translations = {
     hu: 'Alkalmazás intelligens frissítéssel',
     bg: 'Прилагане с Интелигентно актуализиране'
   },
-  'command.apply-chat-response.relevant-files.title': {
+  'command.apply-response.relevant-files.title': {
     en: 'Relevant Files',
     pl: 'Pasujące pliki',
     'zh-cn': '相关文件',
@@ -71,7 +71,7 @@ export const translations = {
     hu: 'Releváns fájlok',
     bg: 'Съответни файлове'
   },
-  'command.apply-chat-response.relevant-files.placeholder': {
+  'command.apply-response.relevant-files.placeholder': {
     en: 'Confirm files to include in context',
     pl: 'Wybierz pliki do zaznaczenia w kontekście',
     'zh-cn': '确认要包含在上下文中的文件',
@@ -89,7 +89,7 @@ export const translations = {
     hu: 'Erősítse meg a kontextusba foglalandó fájlokat',
     bg: 'Потвърдете файловете за включване в контекста'
   },
-  'command.apply-chat-response.relevant-files.success': {
+  'command.apply-response.relevant-files.success': {
     en: 'Context has been updated',
     pl: 'Kontekst został zaktualizowany',
     'zh-cn': '上下文已更新',

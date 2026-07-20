@@ -155,7 +155,10 @@ class WebSocketServer {
           }
         }
       }
-    } else if (msg_data.action == 'apply-chat-response') {
+    } else if (
+      msg_data.action == 'apply-response' ||
+      msg_data.action == 'apply-chat-response' // Backward compatibility 20.07.26
+    ) {
       const target_client_id = msg_data.client_id
       const target_client = this.vscode_clients.get(target_client_id)
       if (target_client && target_client.ws.readyState == WebSocket.OPEN) {
