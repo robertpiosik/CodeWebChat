@@ -376,6 +376,11 @@
         "icon": "$(link-external)"
       },
       {
+        "command": "codeWebChat.selectClipboardPaths",
+        "title": "%codeWebChat.selectClipboardPaths.title%",
+        "category": "Code Web Chat"
+      },
+      {
         "command": "codeWebChat.selectUnstagedFiles",
         "title": "%codeWebChat.selectUnstagedFiles.title%",
         "category": "Code Web Chat"
@@ -383,11 +388,6 @@
       {
         "command": "codeWebChat.selectCommitFiles",
         "title": "%codeWebChat.selectCommitFiles.title%",
-        "category": "Code Web Chat"
-      },
-      {
-        "command": "codeWebChat.selectClipboardPaths",
-        "title": "%codeWebChat.selectClipboardPaths.title%",
         "category": "Code Web Chat"
       },
       {
@@ -645,17 +645,17 @@
           "group": "1_more@2"
         },
         {
-          "command": "codeWebChat.selectUnstagedFiles",
+          "command": "codeWebChat.selectClipboardPaths",
           "when": "view == codeWebChatViewWorkspace",
           "group": "3_more@1"
         },
         {
-          "command": "codeWebChat.selectCommitFiles",
+          "command": "codeWebChat.selectUnstagedFiles",
           "when": "view == codeWebChatViewWorkspace",
           "group": "3_more@2"
         },
         {
-          "command": "codeWebChat.selectClipboardPaths",
+          "command": "codeWebChat.selectCommitFiles",
           "when": "view == codeWebChatViewWorkspace",
           "group": "3_more@3"
         },
