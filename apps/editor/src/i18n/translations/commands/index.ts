@@ -2,10 +2,9 @@ import { translations as generate_commit_message } from './generate-commit-messa
 import { translations as code_at_cursor } from './code-at-cursor'
 import { translations as apply_response } from './apply-response'
 import { translations as context_restoration } from './context-restoration'
-import { translations as add_file_to_context } from './add-file-to-context'
+import { translations as select_workspace_file } from './select-workspace-file'
 import { translations as select_definition_file } from './select-definition-file'
 import { translations as select_referencing_files } from './select-referencing-files'
-import { translations as remove_file_from_context } from './remove-file-from-context'
 import { translations as search_files } from './search-files'
 import { translations as set_ranges } from './set-ranges'
 import { translations as new_file } from './new-file'
@@ -23,10 +22,9 @@ export const translations = {
   ...code_at_cursor,
   ...apply_response,
   ...context_restoration,
-  ...add_file_to_context,
+  ...select_workspace_file,
   ...select_definition_file,
   ...select_referencing_files,
-  ...remove_file_from_context,
   ...search_files,
   ...set_ranges,
   ...new_file,

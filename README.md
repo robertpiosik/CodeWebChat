@@ -170,8 +170,8 @@ Make your chatbot quota last longer, lower input token costs by up to 90%, and r
 
 - `Save File Selection...` - Save the current context.
 - `Restore File Selection...` - Restore a saved context.
-- `Remove File from Context` - Search and remove a file from the context.
-- `Search Files...` - Search and add files to the context.
+- `Select Workspace File...` - Select a file from the workspace.
+- `Search Files...` - Select files based on a search query.
 - `Select Clipboard Paths...` - Select files based on paths in your clipboard.
 - `Select Unstaged Files...` - Select files with unstaged changes.
 - `Select Files of Commit...` - Select files modified in a specific commit.
@@ -191,12 +191,11 @@ Make your chatbot quota last longer, lower input token costs by up to 90%, and r
 ### History
 
 - `History` - Manage saved states of the workspace.
-- `Create New Checkpoint` - Create a history entry of the current workspace state.
+- `Create New Checkpoint` - Create a history entry of the workspace state.
 
 ### Actions
 
 - `Apply Chat Response` - Apply a chat response to the codebase.
-- `Open in Integrated Terminal` - Open an integrated terminal.
 
 ### Misc
 

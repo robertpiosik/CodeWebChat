@@ -11,11 +11,14 @@ interface FileQuickPickItem extends vscode.QuickPickItem {
   full_path: string
 }
 
-export const add_file_to_context_command = (
+let last_search_query = ''
+let last_interacted_path: string | undefined = undefined
+
+export const select_workspace_file_command = (
   workspace_provider: WorkspaceProvider
 ) => {
   return vscode.commands.registerCommand(
-    'codeWebChat.addFileToContext',
+    'codeWebChat.selectWorkspaceFile',
     async () => {
       const workspace_roots = workspace_provider.get_workspace_roots()
       if (workspace_roots.length == 0) {
@@ -34,8 +37,12 @@ export const add_file_to_context_command = (
           (resolve) => {
             const quick_pick = vscode.window.createQuickPick()
             quick_pick.items = items
-            quick_pick.placeholder = t('command.context.add.select-workspace')
-            quick_pick.title = t('command.context.workspace-folders')
+            quick_pick.placeholder = t(
+              'command.select-workspace-file.select-workspace'
+            )
+            quick_pick.title = t(
+              'command.select-workspace-file.workspace-folders'
+            )
             quick_pick.buttons = [
               {
                 iconPath: new vscode.ThemeIcon('close'),
@@ -71,9 +78,10 @@ export const add_file_to_context_command = (
       }
 
       const quick_pick = vscode.window.createQuickPick<FileQuickPickItem>()
-      quick_pick.title = t('command.context.workspace-files')
-      quick_pick.placeholder = t('command.context.add.select-file')
+      quick_pick.title = t('command.select-workspace-file.workspace-files')
+      quick_pick.placeholder = t('command.select-workspace-file.select-file')
       quick_pick.matchOnDescription = true
+      quick_pick.value = last_search_query
       quick_pick.buttons = [
         {
           iconPath: new vscode.ThemeIcon('close'),
@@ -82,6 +90,10 @@ export const add_file_to_context_command = (
       ]
       quick_pick.busy = true
       quick_pick.show()
+
+      quick_pick.onDidChangeValue((value) => {
+        last_search_query = value
+      })
 
       quick_pick.onDidTriggerButton((button) => {
         if (button.tooltip == t('common.close')) {
@@ -92,13 +104,14 @@ export const add_file_to_context_command = (
       let is_showing_folder_quick_pick = false
       let file_items_cache: FileQuickPickItem[] = []
 
-      let parent_folder_source_full_path: string | undefined
-
       quick_pick.onDidTriggerItemButton(async (e) => {
         const item = e.item
-        if (e.button.tooltip == t('command.context.add.add-parent-folder')) {
-          parent_folder_source_full_path = item.full_path
+        last_interacted_path = item.full_path
 
+        if (
+          e.button.tooltip ==
+          t('command.select-workspace-file.add-parent-folder')
+        ) {
           const workspace_root = workspace_provider.get_workspace_root_for_file(
             item.full_path
           )
@@ -122,7 +135,7 @@ export const add_file_to_context_command = (
 
           if (folders.length == 0) {
             vscode.window.showInformationMessage(
-              t('command.context.add.no-parent-folders')
+              t('command.select-workspace-file.no-parent-folders')
             )
             return
           }
@@ -131,8 +144,12 @@ export const add_file_to_context_command = (
             label: string
             full_path: string
           }>()
-          folder_quick_pick.title = t('command.context.parent-folders')
-          folder_quick_pick.placeholder = t('command.context.add.select-folder')
+          folder_quick_pick.title = t(
+            'command.select-workspace-file.parent-folders'
+          )
+          folder_quick_pick.placeholder = t(
+            'command.select-workspace-file.select-folder'
+          )
           folder_quick_pick.items = folders.map((f) => ({
             label: f.label,
             full_path: f.full_path
@@ -183,11 +200,12 @@ export const add_file_to_context_command = (
               if (file_items_cache.length > 0) {
                 quick_pick.items = file_items_cache
               }
+              quick_pick.value = last_search_query
               quick_pick.show()
 
-              const source_item = parent_folder_source_full_path
+              const source_item = last_interacted_path
                 ? file_items_cache.find(
-                    (i) => i.full_path === parent_folder_source_full_path
+                    (i) => i.full_path === last_interacted_path
                   )
                 : undefined
 
@@ -202,6 +220,14 @@ export const add_file_to_context_command = (
           is_showing_folder_quick_pick = true
           quick_pick.hide()
           folder_quick_pick.show()
+        } else if (e.button.iconPath instanceof vscode.ThemeIcon) {
+          if (e.button.iconPath.id == 'go-to-file') {
+            await vscode.commands.executeCommand(
+              'vscode.open',
+              vscode.Uri.file(item.full_path)
+            )
+            quick_pick.hide()
+          }
         }
       })
 
@@ -236,18 +262,25 @@ export const add_file_to_context_command = (
               : workspace_name
           }
 
+          const buttons: vscode.QuickInputButton[] = []
+
+          if (has_parent_folder) {
+            buttons.push({
+              iconPath: new vscode.ThemeIcon('folder'),
+              tooltip: t('command.select-workspace-file.add-parent-folder')
+            })
+          }
+
+          buttons.push({
+            iconPath: new vscode.ThemeIcon('go-to-file'),
+            tooltip: t('command.select-workspace-file.go-to-file')
+          })
+
           return {
             label: filename,
             description: directory,
             full_path: file_path,
-            buttons: has_parent_folder
-              ? [
-                  {
-                    iconPath: new vscode.ThemeIcon('folder'),
-                    tooltip: t('command.context.add.add-parent-folder')
-                  }
-                ]
-              : []
+            buttons
           }
         })
 
@@ -261,9 +294,21 @@ export const add_file_to_context_command = (
         quick_pick.items = items
         quick_pick.busy = false
 
+        if (last_interacted_path) {
+          const last_item = items.find(
+            (i) => i.full_path === last_interacted_path
+          )
+          if (last_item) {
+            setTimeout(() => {
+              quick_pick.activeItems = [last_item]
+            }, 0)
+          }
+        }
+
         quick_pick.onDidAccept(async () => {
           const selected = quick_pick.selectedItems[0]
           if (selected) {
+            last_interacted_path = selected.full_path
             const current_checked = workspace_provider.get_checked_files()
             if (!current_checked.includes(selected.full_path)) {
               await workspace_provider.set_checked_files([

@@ -1,5 +1,5 @@
 export const translations = {
-  'command.context.add.select-workspace': {
+  'command.select-workspace-file.select-workspace': {
     en: 'Select a workspace folder to browse files',
     pl: 'Wybierz folder obszaru roboczego, aby przeglądać pliki',
     'zh-cn': '选择一个工作区文件夹以浏览文件',
@@ -17,7 +17,7 @@ export const translations = {
     hu: 'Válasszon munkaterület mappát a fájlok böngészéséhez',
     bg: 'Изберете папка от работното пространство за преглед на файлове'
   },
-  'command.context.workspace-folders': {
+  'command.select-workspace-file.workspace-folders': {
     en: 'Workspace Folders',
     pl: 'Foldery obszaru roboczego',
     'zh-cn': '工作区文件夹',
@@ -35,7 +35,7 @@ export const translations = {
     hu: 'Munkaterület mappák',
     bg: 'Папки на работното пространство'
   },
-  'command.context.workspace-files': {
+  'command.select-workspace-file.workspace-files': {
     en: 'Workspace Files',
     pl: 'Pliki obszaru roboczego',
     'zh-cn': '工作区文件',
@@ -53,7 +53,7 @@ export const translations = {
     hu: 'Munkaterület fájlok',
     bg: 'Файлове на работното пространство'
   },
-  'command.context.add.select-file': {
+  'command.select-workspace-file.select-file': {
     en: 'Select a file to add to context',
     pl: 'Wybierz plik do dodania do kontekstu',
     'zh-cn': '选择要添加到上下文的文件',
@@ -71,7 +71,7 @@ export const translations = {
     hu: 'Válasszon fájlt a kontextushoz adáshoz',
     bg: 'Изберете файл за добавяне към контекста'
   },
-  'command.context.add.add-parent-folder': {
+  'command.select-workspace-file.add-parent-folder': {
     en: 'Add Parent Folder to Context',
     pl: 'Dodaj folder nadrzędny do kontekstu',
     'zh-cn': '将父文件夹添加到上下文',
@@ -89,7 +89,7 @@ export const translations = {
     hu: 'Szülőmappa hozzáadása a kontextushoz',
     bg: 'Добавяне на родителска папка към контекста'
   },
-  'command.context.add.no-parent-folders': {
+  'command.select-workspace-file.no-parent-folders': {
     en: 'No parent folders to add.',
     pl: 'Brak folderów nadrzędnych do dodania.',
     'zh-cn': '没有可添加的父文件夹。',
@@ -107,7 +107,7 @@ export const translations = {
     hu: 'Nincsenek hozzáadható szülőmappák.',
     bg: 'Няма родителски папки за добавяне.'
   },
-  'command.context.parent-folders': {
+  'command.select-workspace-file.parent-folders': {
     en: 'Parent Folders',
     pl: 'Foldery nadrzędne',
     'zh-cn': '父文件夹',
@@ -125,7 +125,7 @@ export const translations = {
     hu: 'Szülőmappák',
     bg: 'Родителски папки'
   },
-  'command.context.add.select-folder': {
+  'command.select-workspace-file.select-folder': {
     en: 'Select a folder to add to context',
     pl: 'Wybierz folder do dodania do kontekstu',
     'zh-cn': '选择要添加到上下文的文件夹',
@@ -142,5 +142,59 @@ export const translations = {
     cs: 'Vyberte složku, kterou chcete přidat do kontextu',
     hu: 'Válasszon mappát a kontextushoz adáshoz',
     bg: 'Изберете папка за добавяне към контекста'
+  },
+  'command.select-workspace-file.add': {
+    en: 'Add to context',
+    pl: 'Dodaj do kontekstu',
+    'zh-cn': '添加到上下文',
+    ja: 'コンテキストに追加',
+    'zh-tw': '加入上下文',
+    de: 'Zum Kontext hinzufügen',
+    es: 'Agregar al contexto',
+    fr: 'Ajouter au contexte',
+    'pt-br': 'Adicionar ao contexto',
+    ru: 'Добавить в контекст',
+    ko: '컨텍스트에 추가',
+    it: 'Aggiungi al contesto',
+    tr: 'Bağlama ekle',
+    cs: 'Přidat do kontextu',
+    hu: 'Hozzáadás a kontextushoz',
+    bg: 'Добавяне към контекста'
+  },
+  'command.select-workspace-file.remove': {
+    en: 'Remove from context',
+    pl: 'Usuń z kontekstu',
+    'zh-cn': '从上下文中移除',
+    ja: 'コンテキストから削除',
+    'zh-tw': '從上下文中移除',
+    de: 'Aus dem Kontext entfernen',
+    es: 'Eliminar del contexto',
+    fr: 'Supprimer du contexte',
+    'pt-br': 'Remover do contexto',
+    ru: 'Удалить из контекста',
+    ko: '컨텍스트에서 제거',
+    it: 'Rimuovi dal contesto',
+    tr: 'Bağlamdan kaldır',
+    cs: 'Odebrat z kontextu',
+    hu: 'Eltávolítás a kontextusból',
+    bg: 'Премахване от контекста'
+  },
+  'command.select-workspace-file.go-to-file': {
+    en: 'Go to file',
+    pl: 'Przejdź do pliku',
+    'zh-cn': '转到文件',
+    ja: 'ファイルへ移動',
+    'zh-tw': '前往檔案',
+    de: 'Gehe zu Datei',
+    es: 'Ir al archivo',
+    fr: 'Aller au fichier',
+    'pt-br': 'Ir para o arquivo',
+    ru: 'Перейти к файлу',
+    ko: '파일로 이동',
+    it: 'Vai al file',
+    tr: 'Dosyaya git',
+    cs: 'Přejít na soubor',
+    hu: 'Ugrás a fájlhoz',
+    bg: 'Към файла'
   }
 } as const

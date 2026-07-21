@@ -238,16 +238,10 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.addFileToContext",
-        "title": "%codeWebChat.addFileToContext.title%",
+        "command": "codeWebChat.selectWorkspaceFile",
+        "title": "%codeWebChat.selectWorkspaceFile.title%",
         "category": "Code Web Chat",
-        "icon": "$(add)"
-      },
-      {
-        "command": "codeWebChat.removeFileFromContext",
-        "title": "%codeWebChat.removeFileFromContext.title%",
-        "category": "Code Web Chat",
-        "icon": "$(remove)"
+        "icon": "$(files)"
       },
       {
         "command": "codeWebChat.applyResponse",
@@ -569,6 +563,10 @@
           "when": "false"
         },
         {
+          "command": "codeWebChat.openInIntegratedTerminal",
+          "when": "false"
+        },
+        {
           "command": "codeWebChat.openWebsitePreviewUrl",
           "when": "codeWebChat.websitePreviewActive"
         }
@@ -650,19 +648,24 @@
           "group": "3_more@1"
         },
         {
-          "command": "codeWebChat.selectUnstagedFiles",
+          "command": "codeWebChat.selectWorkspaceFile",
           "when": "view == codeWebChatViewWorkspace",
           "group": "3_more@2"
         },
         {
-          "command": "codeWebChat.selectCommitFiles",
+          "command": "codeWebChat.selectUnstagedFiles",
           "when": "view == codeWebChatViewWorkspace",
           "group": "3_more@3"
         },
         {
-          "command": "codeWebChat.selectChangedFiles",
+          "command": "codeWebChat.selectCommitFiles",
           "when": "view == codeWebChatViewWorkspace",
           "group": "3_more@4"
+        },
+        {
+          "command": "codeWebChat.selectChangedFiles",
+          "when": "view == codeWebChatViewWorkspace",
+          "group": "3_more@5"
         },
         {
           "command": "codeWebChat.duplicateWorkspace",
