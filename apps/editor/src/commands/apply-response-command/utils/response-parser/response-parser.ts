@@ -2,7 +2,7 @@ import {
   extract_diffs,
   parse_code_at_cursor,
   parse_multiple_files,
-  parse_relevant_files_from_response
+  parse_relevant_files
 } from './parsers'
 
 export type FileItem = {
@@ -86,7 +86,7 @@ export const parse_response = (params: {
     params.is_single_root_folder_workspace ?? true
 
   if (params.workspace_files) {
-    const relevant_files = parse_relevant_files_from_response({
+    const relevant_files = parse_relevant_files({
       response: params.response,
       workspace_files: params.workspace_files
     })

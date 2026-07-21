@@ -1,3 +1,0 @@
-Here are files:
-
-src/hello.ts
