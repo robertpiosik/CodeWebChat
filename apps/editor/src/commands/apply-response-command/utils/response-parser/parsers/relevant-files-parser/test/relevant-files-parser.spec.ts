@@ -20,4 +20,16 @@ describe('relevant files parser', () => {
 
     expect(result).toBeNull()
   })
+
+  it('accepts when including code blocks if it starts with **Relevant files:**', () => {
+    const test_case = 'code-blocks-valid'
+    const text = load_test_case_file(test_case, 'relevant-files.txt')
+    const result = parse_relevant_files({
+      response: text,
+      workspace_files: ['src/hello.ts', 'src/main.ts']
+    })
+
+    expect(result).not.toBeNull()
+    expect(result?.file_paths).toEqual(['src/hello.ts'])
+  })
 })

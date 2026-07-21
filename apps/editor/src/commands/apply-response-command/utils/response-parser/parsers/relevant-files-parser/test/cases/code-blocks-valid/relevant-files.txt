@@ -1,0 +1,7 @@
+**Relevant files:**
+
+`src/hello.ts`
+
+```typescript
+const x = 1;
+```

@@ -1,5 +1,9 @@
-export const extract_paths_from_text = (text: string): string[] => {
+export const extract_paths_from_text = (
+  text: string,
+  workspace_files: string[]
+): string[] => {
   const found_paths = new Set<string>()
+  const workspace_files_set = new Set(workspace_files)
 
   const inline_matches = text.match(/`([^`]+)`/g)
   if (inline_matches) {
@@ -27,12 +31,10 @@ export const extract_paths_from_text = (text: string): string[] => {
     if (word) {
       const cleaned = word.trim().replace(/[.?!]+$/, '')
       found_paths.add(cleaned)
-
-      if (cleaned.startsWith('./')) {
-        found_paths.add(cleaned.substring(2))
-      }
     }
   }
 
   return Array.from(found_paths)
+    .filter((p) => workspace_files_set.has(p))
+    .sort((a, b) => text.indexOf(a) - text.indexOf(b))
 }

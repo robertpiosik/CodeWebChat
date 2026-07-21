@@ -28,11 +28,7 @@ export const select_clipboard_paths_command = (
           workspace_provider
         })
 
-        const found_paths = extract_paths_from_text(text)
-
-        const valid_paths = found_paths
-          .filter((p) => workspace_files.includes(p))
-          .sort((a, b) => text.indexOf(a) - text.indexOf(b))
+        const valid_paths = extract_paths_from_text(text, workspace_files)
 
         if (valid_paths.length === 0) {
           vscode.window.showInformationMessage(

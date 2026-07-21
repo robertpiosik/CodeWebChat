@@ -9,7 +9,8 @@ describe('extract_paths_from_text', () => {
 
 Lorem ipsum.`
 
-    const result = extract_paths_from_text(text)
+    const workspace_files = ['src/hello.ts', 'src/welcome.ts']
+    const result = extract_paths_from_text(text, workspace_files)
 
     expect(result).toContain('src/hello.ts')
     expect(result).toContain('src/welcome.ts')
@@ -20,29 +21,38 @@ Lorem ipsum.`
 
 Lorem ipsum.`
 
-    const result = extract_paths_from_text(text)
+    const workspace_files = ['src/hello.ts', 'src/welcome.ts', 'src/main.ts']
+    const result = extract_paths_from_text(text, workspace_files)
 
     expect(result).toContain('src/hello.ts')
     expect(result).toContain('src/welcome.ts')
     expect(result).toContain('src/main.ts')
   })
 
-  it('handles paths with ./ prefix', () => {
-    const text = 'Please check ./src/main.ts and ./tests/main.spec.ts.'
-    const result = extract_paths_from_text(text)
-
-    expect(result).toContain('./src/main.ts')
-    expect(result).toContain('src/main.ts')
-    expect(result).toContain('./tests/main.spec.ts')
-    expect(result).toContain('tests/main.spec.ts')
-  })
-
   it('strips trailing punctuation', () => {
     const text = 'Look at src/utils.ts, src/types.ts! Also see src/index.ts.'
-    const result = extract_paths_from_text(text)
+    const workspace_files = ['src/utils.ts', 'src/types.ts', 'src/index.ts']
+    const result = extract_paths_from_text(text, workspace_files)
 
     expect(result).toContain('src/utils.ts')
     expect(result).toContain('src/types.ts')
     expect(result).toContain('src/index.ts')
+  })
+
+  it('extracts files in the root directory', () => {
+    const text =
+      'Check out package.json, README.md, and .gitignore for project configurations.'
+    const workspace_files = [
+      'package.json',
+      'README.md',
+      '.gitignore',
+      'src/main.ts'
+    ]
+    const result = extract_paths_from_text(text, workspace_files)
+
+    expect(result).toContain('package.json')
+    expect(result).toContain('README.md')
+    expect(result).toContain('.gitignore')
+    expect(result).not.toContain('src/main.ts')
   })
 })
