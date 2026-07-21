@@ -43,8 +43,8 @@ At its core, CWC constructs simple, markdown-formatted prompts for common use-ca
 
 <details>
 <summary><strong>Edit files</strong></summary>
-<br/>
-Get accurate multi-file edits in a single response.
+
+_Get accurate multi-file edits in a single response._
 
 ```
 # Files
