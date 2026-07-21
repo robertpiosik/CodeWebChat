@@ -1,6 +1,6 @@
 import * as path from 'path'
-import { WorkspaceProvider } from './providers/workspace/workspace-provider'
-import { SharedContextState } from './shared-context-state'
+import { WorkspaceProvider } from '../providers/workspace/workspace-provider'
+import { SharedContextState } from '../shared-context-state'
 
 export const get_selected_files = (params: {
   workspace_provider: WorkspaceProvider

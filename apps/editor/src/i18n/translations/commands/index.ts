@@ -16,6 +16,7 @@ import { translations as select_unstaged_files } from './select-unstaged-files'
 import { translations as select_commit_files } from './select-commit-files'
 import { translations as select_changed_files } from './select-changed-files'
 import { translations as history } from './history'
+import { translations as select_clipboard_paths } from './select-clipboard-paths'
 
 export const translations = {
   ...generate_commit_message,
@@ -35,5 +36,6 @@ export const translations = {
   ...select_unstaged_files,
   ...select_commit_files,
   ...select_changed_files,
-  ...history
+  ...history,
+  ...select_clipboard_paths
 }

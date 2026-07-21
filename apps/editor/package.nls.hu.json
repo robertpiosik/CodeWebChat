@@ -1,6 +1,6 @@
 {
-  "codeWebChat.saveFileSelection.title": "Fájlkiválasztás mentése",
-  "codeWebChat.restoreFileSelection.title": "Fájlkiválasztás visszaállítása",
+  "codeWebChat.saveFileSelection.title": "Fájlkiválasztás mentése...",
+  "codeWebChat.restoreFileSelection.title": "Fájlkiválasztás visszaállítása...",
   "codeWebChat.applyResponse.title": "Csevegési válasz alkalmazása",
   "codeWebChat.copyMarkdown.title": "Markdown másolása",
   "codeWebChat.history.title": "Előzmények",
@@ -50,7 +50,8 @@
   "codeWebChat.openInIntegratedTerminal.title": "Megnyitás az integrált terminálban",
   "codeWebChat.removeFolderFromWorkspace.title": "Mappa eltávolítása a munkaterületről",
   "codeWebChat.openWebsitePreviewUrl.title": "URL megnyitása a böngészőben",
-  "codeWebChat.selectUnstagedFiles.title": "Módosított fájlok kijelölése",
+  "codeWebChat.selectUnstagedFiles.title": "Módosított fájlok kijelölése...",
   "codeWebChat.selectCommitFiles.title": "Commit fájljainak kijelölése...",
+  "codeWebChat.selectClipboardPaths.title": "Vágólap útvonalainak kijelölése...",
   "codeWebChat.selectChangedFiles.title": "Módosított fájlok kiválasztása..."
 }

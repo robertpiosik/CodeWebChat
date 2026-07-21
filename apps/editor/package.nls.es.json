@@ -1,6 +1,6 @@
 {
-  "codeWebChat.saveFileSelection.title": "Guardar selección de archivos",
-  "codeWebChat.restoreFileSelection.title": "Restaurar selección de archivos",
+  "codeWebChat.saveFileSelection.title": "Guardar selección de archivos...",
+  "codeWebChat.restoreFileSelection.title": "Restaurar selección de archivos...",
   "codeWebChat.applyResponse.title": "Aplicar respuesta del chat",
   "codeWebChat.copyMarkdown.title": "Copiar Markdown",
   "codeWebChat.history.title": "Historial",
@@ -50,7 +50,8 @@
   "codeWebChat.openInIntegratedTerminal.title": "Abrir en terminal integrado",
   "codeWebChat.removeFolderFromWorkspace.title": "Eliminar carpeta del espacio de trabajo",
   "codeWebChat.openWebsitePreviewUrl.title": "Abrir URL en el navegador",
-  "codeWebChat.selectUnstagedFiles.title": "Marcar archivos modificados",
+  "codeWebChat.selectUnstagedFiles.title": "Marcar archivos modificados...",
   "codeWebChat.selectCommitFiles.title": "Marcar archivos de un commit...",
+  "codeWebChat.selectClipboardPaths.title": "Seleccionar rutas del portapapeles...",
   "codeWebChat.selectChangedFiles.title": "Seleccionar archivos cambiados..."
 }

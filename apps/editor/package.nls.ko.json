@@ -1,6 +1,6 @@
 {
-  "codeWebChat.saveFileSelection.title": "파일 선택 저장",
-  "codeWebChat.restoreFileSelection.title": "파일 선택 복원",
+  "codeWebChat.saveFileSelection.title": "파일 선택 저장...",
+  "codeWebChat.restoreFileSelection.title": "파일 선택 복원...",
   "codeWebChat.applyResponse.title": "채팅 응답 적용",
   "codeWebChat.copyMarkdown.title": "Markdown 복사",
   "codeWebChat.history.title": "기록",
@@ -50,7 +50,8 @@
   "codeWebChat.openInIntegratedTerminal.title": "통합 터미널에서 열기",
   "codeWebChat.removeFolderFromWorkspace.title": "작업 영역에서 폴더 제거",
   "codeWebChat.openWebsitePreviewUrl.title": "브라우저에서 URL 열기",
-  "codeWebChat.selectUnstagedFiles.title": "수정된 파일 선택",
+  "codeWebChat.selectUnstagedFiles.title": "수정된 파일 선택...",
   "codeWebChat.selectCommitFiles.title": "커밋에서 파일 선택...",
+  "codeWebChat.selectClipboardPaths.title": "클립보드 경로 선택...",
   "codeWebChat.selectChangedFiles.title": "변경된 파일 선택..."
 }

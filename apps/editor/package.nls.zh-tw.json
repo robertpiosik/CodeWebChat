@@ -1,6 +1,6 @@
 {
-  "codeWebChat.saveFileSelection.title": "儲存檔案選擇",
-  "codeWebChat.restoreFileSelection.title": "還原檔案選擇",
+  "codeWebChat.saveFileSelection.title": "儲存檔案選擇...",
+  "codeWebChat.restoreFileSelection.title": "還原檔案選擇...",
   "codeWebChat.applyResponse.title": "套用聊天回覆",
   "codeWebChat.copyMarkdown.title": "複製 Markdown",
   "codeWebChat.history.title": "歷史紀錄",
@@ -50,7 +50,8 @@
   "codeWebChat.openInIntegratedTerminal.title": "在整合式終端機中開啟",
   "codeWebChat.removeFolderFromWorkspace.title": "從工作區移除資料夾",
   "codeWebChat.openWebsitePreviewUrl.title": "在瀏覽器中開啟 URL",
-  "codeWebChat.selectUnstagedFiles.title": "選取修改的檔案",
+  "codeWebChat.selectUnstagedFiles.title": "選取修改的檔案...",
   "codeWebChat.selectCommitFiles.title": "選取提交中的檔案...",
+  "codeWebChat.selectClipboardPaths.title": "選擇剪貼簿路徑...",
   "codeWebChat.selectChangedFiles.title": "選擇更改的檔案..."
 }

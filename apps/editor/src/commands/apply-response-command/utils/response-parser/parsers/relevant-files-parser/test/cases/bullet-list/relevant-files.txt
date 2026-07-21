@@ -1,6 +1,0 @@
-**Relevant files:**
-
-* `src/hello.ts`
-- src/welcome.ts
-
-Lorem ipsum.

@@ -1,4 +1,3 @@
-import { parse_response } from '../../..'
 import * as fs from 'fs'
 import * as path from 'path'
 import { parse_relevant_files_from_response } from '../relevant-files-parser'
@@ -12,35 +11,16 @@ describe('response-parser', () => {
   }
 
   describe('parse_response relevant files', () => {
-    it('parses relevant files from a bullet list', () => {
-      const test_case = 'bullet-list'
-      const text = load_test_case_file(test_case, 'relevant-files.txt')
-      const result = parse_response({
+    it('filters and sorts valid paths from text', () => {
+      const text = 'Look at src/b.ts, then src/a.ts and src/c.ts'
+      const result = parse_relevant_files_from_response({
         response: text,
-        is_single_root_folder_workspace: true,
-        workspace_files: ['src/hello.ts', 'src/welcome.ts']
+        workspace_files: ['src/a.ts', 'src/b.ts']
       })
 
-      expect(result).toHaveLength(1)
-      expect(result[0]).toMatchObject({
+      expect(result).toMatchObject({
         type: 'relevant-files',
-        file_paths: ['src/hello.ts', 'src/welcome.ts']
-      })
-    })
-
-    it('parses relevant files from inline text', () => {
-      const test_case = 'inline'
-      const text = load_test_case_file(test_case, 'relevant-files.txt')
-      const result = parse_response({
-        response: text,
-        is_single_root_folder_workspace: true,
-        workspace_files: ['src/hello.ts', 'src/welcome.ts', 'src/main.ts']
-      })
-
-      expect(result).toHaveLength(1)
-      expect(result[0]).toMatchObject({
-        type: 'relevant-files',
-        file_paths: ['src/hello.ts', 'src/welcome.ts', 'src/main.ts']
+        file_paths: ['src/b.ts', 'src/a.ts']
       })
     })
 

@@ -1,6 +1,6 @@
 {
-  "codeWebChat.saveFileSelection.title": "Dosya Seçimini Kaydet",
-  "codeWebChat.restoreFileSelection.title": "Dosya Seçimini Geri Yükle",
+  "codeWebChat.saveFileSelection.title": "Dosya Seçimini Kaydet...",
+  "codeWebChat.restoreFileSelection.title": "Dosya Seçimini Geri Yükle...",
   "codeWebChat.applyResponse.title": "Sohbet Yanıtını Uygula",
   "codeWebChat.copyMarkdown.title": "Markdown Kopyala",
   "codeWebChat.history.title": "Geçmiş",
@@ -50,7 +50,8 @@
   "codeWebChat.openInIntegratedTerminal.title": "Entegre Terminalde Aç",
   "codeWebChat.removeFolderFromWorkspace.title": "Klasörü Çalışma Alanından Kaldır",
   "codeWebChat.openWebsitePreviewUrl.title": "URL'yi Tarayıcıda Aç",
-  "codeWebChat.selectUnstagedFiles.title": "Değiştirilen Dosyaları Seç",
+  "codeWebChat.selectUnstagedFiles.title": "Değiştirilen Dosyaları Seç...",
   "codeWebChat.selectCommitFiles.title": "Bir İşlemeden (Commit) Dosyaları Seç...",
+  "codeWebChat.selectClipboardPaths.title": "Panodaki Yolları Seç...",
   "codeWebChat.selectChangedFiles.title": "Değiştirilmiş Dosyaları Seç..."
 }

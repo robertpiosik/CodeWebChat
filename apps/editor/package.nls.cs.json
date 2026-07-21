@@ -1,6 +1,6 @@
 {
-  "codeWebChat.saveFileSelection.title": "Uložit výběr souborů",
-  "codeWebChat.restoreFileSelection.title": "Obnovit výběr souborů",
+  "codeWebChat.saveFileSelection.title": "Uložit výběr souborů...",
+  "codeWebChat.restoreFileSelection.title": "Obnovit výběr souborů...",
   "codeWebChat.applyResponse.title": "Použít odpověď chatu",
   "codeWebChat.copyMarkdown.title": "Kopírovat Markdown",
   "codeWebChat.history.title": "Historie",
@@ -50,7 +50,8 @@
   "codeWebChat.openInIntegratedTerminal.title": "Otevřít v integrovaném terminálu",
   "codeWebChat.removeFolderFromWorkspace.title": "Odebrat složku z pracovního prostoru",
   "codeWebChat.openWebsitePreviewUrl.title": "Otevřít URL v prohlížeči",
-  "codeWebChat.selectUnstagedFiles.title": "Vybrat upravené soubory",
+  "codeWebChat.selectUnstagedFiles.title": "Vybrat upravené soubory...",
   "codeWebChat.selectCommitFiles.title": "Vybrat soubory z commitu...",
+  "codeWebChat.selectClipboardPaths.title": "Vybrat cesty ze schránky...",
   "codeWebChat.selectChangedFiles.title": "Vybrat změněné soubory..."
 }

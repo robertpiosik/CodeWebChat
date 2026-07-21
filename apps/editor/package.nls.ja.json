@@ -1,6 +1,6 @@
 {
-  "codeWebChat.saveFileSelection.title": "ファイル選択を保存",
-  "codeWebChat.restoreFileSelection.title": "ファイル選択を復元",
+  "codeWebChat.saveFileSelection.title": "ファイル選択を保存...",
+  "codeWebChat.restoreFileSelection.title": "ファイル選択を復元...",
   "codeWebChat.applyResponse.title": "チャットの応答を適用",
   "codeWebChat.copyMarkdown.title": "Markdownをコピー",
   "codeWebChat.history.title": "履歴",
@@ -50,7 +50,8 @@
   "codeWebChat.openInIntegratedTerminal.title": "統合ターミナルで開く",
   "codeWebChat.removeFolderFromWorkspace.title": "ワークスペースからフォルダーを削除",
   "codeWebChat.openWebsitePreviewUrl.title": "ブラウザーでURLを開く",
-  "codeWebChat.selectUnstagedFiles.title": "変更されたファイルを選択",
+  "codeWebChat.selectUnstagedFiles.title": "変更されたファイルを選択...",
   "codeWebChat.selectCommitFiles.title": "コミットからのファイルを選択...",
+  "codeWebChat.selectClipboardPaths.title": "クリップボードのパスを選択...",
   "codeWebChat.selectChangedFiles.title": "変更されたファイルを選択..."
 }

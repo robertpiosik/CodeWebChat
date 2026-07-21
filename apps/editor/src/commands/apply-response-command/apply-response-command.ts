@@ -28,7 +28,7 @@ import {
   preview_document_provider,
   CwcPreviewProvider
 } from './utils/preview/virtual-document-provider'
-import { get_selected_files } from '@/context/get-selected-files'
+import { get_all_workspace_files } from '@/context/helpers/get-all-workspace-files'
 import { parse_response } from './utils/response-parser'
 import { Checkpoint } from '@/features/checkpoints/types'
 
@@ -93,9 +93,8 @@ export const apply_response_command = (params: {
       const is_single_root_folder_workspace =
         (vscode.workspace.workspaceFolders?.length ?? 0) <= 1
 
-      const workspace_files = get_selected_files({
-        workspace_provider: params.workspace_provider,
-        shared_context_state: params.panel_provider.shared_context_state
+      const workspace_files = await get_all_workspace_files({
+        workspace_provider: params.workspace_provider
       })
 
       const response_items = parse_response({

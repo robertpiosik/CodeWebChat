@@ -1,6 +1,6 @@
 {
-  "codeWebChat.saveFileSelection.title": "Сохранить выбор файлов",
-  "codeWebChat.restoreFileSelection.title": "Восстановить выбор файлов",
+  "codeWebChat.saveFileSelection.title": "Сохранить выбор файлов...",
+  "codeWebChat.restoreFileSelection.title": "Восстановить выбор файлов...",
   "codeWebChat.applyResponse.title": "Применить ответ чата",
   "codeWebChat.copyMarkdown.title": "Копировать Markdown",
   "codeWebChat.history.title": "История",
@@ -50,7 +50,8 @@
   "codeWebChat.openInIntegratedTerminal.title": "Открыть во встроенном терминале",
   "codeWebChat.removeFolderFromWorkspace.title": "Удалить папку из рабочей области",
   "codeWebChat.openWebsitePreviewUrl.title": "Открыть URL в браузере",
-  "codeWebChat.selectUnstagedFiles.title": "Отметить измененные файлы",
+  "codeWebChat.selectUnstagedFiles.title": "Отметить измененные файлы...",
   "codeWebChat.selectCommitFiles.title": "Отметить файлы из коммита...",
+  "codeWebChat.selectClipboardPaths.title": "Выбрать пути из буфера обмена...",
   "codeWebChat.selectChangedFiles.title": "Выбрать измененные файлы..."
 }
