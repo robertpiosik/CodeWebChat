@@ -38,16 +38,16 @@ export const CHATBOTS = {
       'url-context': 'URL context'
     },
     models: {
-      'gemini-3.5-flash': {
-        label: 'Gemini 3.5 Flash',
-        supported_reasoning_efforts: ['Minimal', 'Low', 'Medium', 'High']
-      },
-      'gemini-3.1-pro-preview': {
-        label: 'Gemini 3.1 Pro Preview',
+      'gemini-pro-latest': {
+        label: 'Gemini Pro Latest',
         supported_reasoning_efforts: ['Low', 'Medium', 'High']
       },
-      'gemini-3.1-flash-lite': {
-        label: 'Gemini 3.1 Flash Lite',
+      'gemini-flash-latest': {
+        label: 'Gemini Flash Latest',
+        supported_reasoning_efforts: ['Minimal', 'Low', 'Medium', 'High']
+      },
+      'gemini-flash-lite-latest': {
+        label: 'Gemini Flash-Lite Latest',
         supported_reasoning_efforts: ['Minimal', 'Low', 'Medium', 'High']
       }
     }
