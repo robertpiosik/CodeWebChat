@@ -37,7 +37,7 @@ import {
   handle_at_sign_quick_pick,
   handle_get_web_prompt_type,
   handle_save_web_prompt_type,
-  handle_save_mode,
+  handle_mode_changed,
   handle_get_api_prompt_type,
   handle_save_api_prompt_type,
   handle_get_mode,
@@ -760,8 +760,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_save_edit_format(this, message)
           } else if (message.command == 'CARET_POSITION_CHANGED') {
             this.caret_position = message.caret_position
-          } else if (message.command == 'SAVE_MODE') {
-            await handle_save_mode(this, message)
+          } else if (message.command == 'MODE_CHANGED') {
+            handle_mode_changed(this, message)
             this.update_providers_shrink_mode()
             this.update_providers_context_state()
           } else if (message.command == 'GET_MODE') {

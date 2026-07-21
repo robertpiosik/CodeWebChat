@@ -226,7 +226,7 @@ export const use_panel = (vscode: any) => {
     set_chat_input_focus_key((k) => k + 1)
     set_main_view_scroll_reset_key((k) => k + 1)
     post_message(vscode, {
-      command: 'SAVE_MODE',
+      command: 'MODE_CHANGED',
       mode: new_mode
     })
   }

@@ -215,8 +215,8 @@ export interface PickReasoningEffortMessage extends BaseMessage {
   current_effort?: string
 }
 
-export interface SaveModeMessage extends BaseMessage {
-  command: 'SAVE_MODE'
+export interface ModeChangedMessage extends BaseMessage {
+  command: 'MODE_CHANGED'
   mode: Mode
 }
 
@@ -585,7 +585,7 @@ export type FrontendMessage =
   | PickModelMessage
   | PickChatbotMessage
   | PickReasoningEffortMessage
-  | SaveModeMessage
+  | ModeChangedMessage
   | GetModeMessage
   | EditFilesMessage
   | CancelApiRequestMessage
