@@ -35,7 +35,7 @@ CWC creates a zero-learning-curve workflow integrating context file selection wi
 
 ## Privacy
 
-CWC operates 100% on your machine—no code, prompts or usage data are collected. For transparency, all source code is available on GitHub.
+CWC operates 100% on your machine—no code, prompts or usage data are collected. For transparency, all source code is available on GitHub for audit.
 
 ## Prompt types
 
@@ -168,21 +168,39 @@ Make your chatbot quota last longer, lower input token costs by up to 90%, and r
 
 ### Context
 
-- `Apply Context` - Apply a saved context or save the current file selection.
-- `Add File to Context` - Search and add file (or parent folder via file action) to the context.
-- `Remove File from Context` - Search and remove file (or parent folder via file action) from the context.
-- `Search Files for Context` - Search and add files containing specific keywords to the context.
-- `Copy Context` - Copy all selected files to the clipboard.
-- `Copy Context of Open Editors` - Copy opened and selected files to the clipboard.
+- `Save File Selection...` - Save the current context.
+- `Restore File Selection...` - Restore a saved context.
+- `Remove File from Context` - Search and remove a file from the context.
+- `Search Files...` - Search and add files to the context.
+- `Select Clipboard Paths...` - Select files based on paths in your clipboard.
+- `Select Unstaged Files...` - Select files with unstaged changes.
+- `Select Files of Commit...` - Select files modified in a specific commit.
+- `Select Changed Files...` - Select changed files compared to a branch.
+
+### Copy
+
+- `Copy Markdown` - Copy contents of selected files to the clipboard.
+- `Copy Markdown of Open Editors` - Copy contents of open editors to the clipboard.
+- `Copy Paths` - Copy paths of selected files to the clipboard.
+- `Copy Paths of Open Editors` - Copy paths of open editors to the clipboard.
 
 ### Commit messages
 
-- `Commit Changes` - Generate commit message in your preferred style.
+- `Commit Changes` - Generate commit message in your preferred style and commit.
 
 ### History
 
 - `History` - Manage saved states of the workspace.
 - `Create New Checkpoint` - Create a history entry of the current workspace state.
+
+### Actions
+
+- `Apply Chat Response` - Apply a chat response to the codebase.
+- `Open in Integrated Terminal` - Open an integrated terminal.
+
+### Misc
+
+- `Duplicate Workspace` - Open a duplicate workspace preserving context.
 
 ## Build from source
 
