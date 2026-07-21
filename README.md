@@ -44,7 +44,7 @@ At its core, CWC constructs simple, markdown-formatted prompts for common use-ca
 <details>
 <summary><strong>Edit files</strong></summary>
 
-_Get accurate multi-file edits in a single response._
+_Accurate and fast multi-file edits in a single response._
 
 ```
 # Files
@@ -63,7 +63,7 @@ _Get accurate multi-file edits in a single response._
 <details>
 <summary><strong>Ask about files</strong></summary>
 
-Get help with whatever you're up to.
+_Get help with whatever you're up to._
 
 ```
 # Files
@@ -79,7 +79,7 @@ Get help with whatever you're up to.
 <details>
 <summary><strong>Code at cursor</strong></summary>
 
-Get accurate inline snippets from SOTA reasoning models.
+_TAB completions from SOTA reasoning models._
 
 ````
 # Files
@@ -98,7 +98,7 @@ Get accurate inline snippets from SOTA reasoning models.
 <details>
 <summary><strong>Find relevant files</strong></summary>
 
-Find files relevant to a query from a broad selection.
+_Select files relevant to a natural language query._
 
 ```
 # Files
