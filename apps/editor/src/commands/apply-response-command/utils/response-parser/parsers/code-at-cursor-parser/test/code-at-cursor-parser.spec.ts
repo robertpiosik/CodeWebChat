@@ -12,7 +12,7 @@ describe('response-parser', () => {
 
   describe('parse_response', () => {
     it('parses code completion format with file path, line, and character', () => {
-      const test_case = 'code-completion'
+      const test_case = 'standard'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -30,7 +30,7 @@ describe('response-parser', () => {
     })
 
     it('parses code completion format with surrounding text', () => {
-      const test_case = 'code-completion-with-text'
+      const test_case = 'with-text'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
