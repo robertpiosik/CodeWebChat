@@ -1,4 +1,7 @@
-import { TextItem, extract_workspace_and_path } from '../../../response-parser'
+import {
+  TextItem,
+  extract_workspace_and_path
+} from '../../../../response-parser'
 import {
   extract_path_with_xml_fallback,
   extract_path_from_potential_string

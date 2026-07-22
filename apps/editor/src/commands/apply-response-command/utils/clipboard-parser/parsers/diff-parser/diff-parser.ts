@@ -4,7 +4,7 @@ import {
   DiffItem,
   InlineFileItem,
   extract_workspace_and_path
-} from '../../response-parser'
+} from '../../../response-parser'
 import {
   normalize_path,
   is_valid_file_path,

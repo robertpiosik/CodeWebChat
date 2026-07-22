@@ -1,5 +1,5 @@
 import { extract_path_from_line_of_code } from '@shared/utils/extract-path-from-line-of-code'
-import { FileItem, extract_workspace_and_path } from '../response-parser'
+import { FileItem, extract_workspace_and_path } from '../../response-parser'
 
 export const parse_file_content_only = (params: {
   response: string
