@@ -193,7 +193,7 @@ Make your chatbot quota last longer, lower input token costs by up to 90%, and r
 
 ### Actions
 
-- `Apply Chat Response` - Apply a chat response to the codebase.
+- `Apply from Clipboard` - Apply a chat response to the codebase.
 
 ### Misc
 
