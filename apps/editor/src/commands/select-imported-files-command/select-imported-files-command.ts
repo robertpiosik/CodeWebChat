@@ -25,7 +25,9 @@ export const select_imported_files_command = (
         workspace_provider
       )
       if (starting_uris.length == 0) {
-        vscode.window.showInformationMessage('No valid files found to select.')
+        vscode.window.showInformationMessage(
+          t('command.select-imported-files.no-valid-files')
+        )
         return
       }
 
@@ -40,7 +42,7 @@ export const select_imported_files_command = (
       await vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: 'Processing imports...',
+          title: t('command.select-imported-files.processing'),
           cancellable: true
         },
         async (progress, token) => {
@@ -95,7 +97,9 @@ export const select_imported_files_command = (
       )
 
       if (valid_immediate.length == 0 && valid_recursive.length == 0) {
-        vscode.window.showInformationMessage('No imported files found.')
+        vscode.window.showInformationMessage(
+          t('command.select-imported-files.no-files')
+        )
         return
       }
 
@@ -103,12 +107,12 @@ export const select_imported_files_command = (
 
       const open_file_button = {
         iconPath: new vscode.ThemeIcon('go-to-file'),
-        tooltip: 'Go to file'
+        tooltip: t('command.select-imported-files.go-to-file')
       }
 
       const close_button = {
         iconPath: new vscode.ThemeIcon('close'),
-        tooltip: 'Close'
+        tooltip: t('command.select-imported-files.close')
       }
 
       const search_button = {
@@ -166,7 +170,7 @@ export const select_imported_files_command = (
 
       if (valid_immediate.length > 0) {
         quick_pick_items.push({
-          label: 'immediate',
+          label: t('command.select-imported-files.immediate'),
           kind: vscode.QuickPickItemKind.Separator
         })
         const immediate_items = await map_to_quick_pick(valid_immediate)
@@ -175,7 +179,7 @@ export const select_imported_files_command = (
 
       if (valid_recursive.length > 0) {
         quick_pick_items.push({
-          label: 'recursive',
+          label: t('command.select-imported-files.recursive'),
           kind: vscode.QuickPickItemKind.Separator
         })
         const recursive_items = await map_to_quick_pick(valid_recursive)
@@ -204,14 +208,22 @@ export const select_imported_files_command = (
             (sum, item) => sum + (item.tokens || 0),
             0
           )
-          const total_text =
-            total > 0 ? ` (totalling ${display_token_count(total)} tokens)` : ''
-          quick_pick.placeholder = `Select imported files${total_text}`
+
+          if (total > 0) {
+            quick_pick.placeholder = t(
+              'command.select-imported-files.placeholder-tokens',
+              { tokens: display_token_count(total) }
+            )
+          } else {
+            quick_pick.placeholder = t(
+              'command.select-imported-files.placeholder'
+            )
+          }
         }
         update_placeholder()
         quick_pick.onDidChangeSelection(update_placeholder)
 
-        quick_pick.title = 'Imported Files'
+        quick_pick.title = t('command.select-imported-files.title')
         quick_pick.ignoreFocusOut = true
         quick_pick.buttons = [search_button, close_button]
 
@@ -251,7 +263,9 @@ export const select_imported_files_command = (
                 await vscode.window.showTextDocument(doc, { preview: true })
               } catch (error) {
                 vscode.window.showErrorMessage(
-                  `Error opening file: ${String(error)}`
+                  t('command.select-imported-files.error-opening', {
+                    error: String(error)
+                  })
                 )
               }
             }
@@ -265,22 +279,118 @@ export const select_imported_files_command = (
         }
 
         if (selected_items == 'search') {
-          const search_result = await search_files({
-            files: shown_paths,
-            workspace_provider,
-            extension_context,
-            show_back_button: true
-          })
+          let should_return = false
+          let back_to_main = false
 
-          if (search_result == 'back') {
-            continue
+          while (true) {
+            let paths_for_search = shown_paths
+
+            if (valid_recursive.length > 0) {
+              const scope_selection = await new Promise<
+                'immediate' | 'all' | 'back' | undefined
+              >((resolve) => {
+                const scope_quick_pick = vscode.window.createQuickPick()
+                scope_quick_pick.items = [
+                  { label: t('command.select-imported-files.immediate-only') },
+                  {
+                    label: t(
+                      'command.select-imported-files.immediate-and-recursive'
+                    )
+                  }
+                ]
+                scope_quick_pick.title = t(
+                  'command.select-imported-files.search-scope'
+                )
+                scope_quick_pick.ignoreFocusOut = true
+                scope_quick_pick.buttons = [
+                  vscode.QuickInputButtons.Back,
+                  close_button
+                ]
+
+                let is_accepted = false
+
+                scope_quick_pick.onDidTriggerButton((button) => {
+                  if (button === vscode.QuickInputButtons.Back) {
+                    resolve('back')
+                    scope_quick_pick.hide()
+                  } else if (button === close_button) {
+                    resolve(undefined)
+                    scope_quick_pick.hide()
+                  }
+                })
+
+                scope_quick_pick.onDidAccept(() => {
+                  is_accepted = true
+                  const selected = scope_quick_pick.selectedItems[0]?.label
+                  if (
+                    selected ===
+                    t('command.select-imported-files.immediate-only')
+                  ) {
+                    resolve('immediate')
+                  } else {
+                    resolve('all')
+                  }
+                  scope_quick_pick.hide()
+                })
+
+                scope_quick_pick.onDidHide(() => {
+                  if (!is_accepted) {
+                    resolve(undefined)
+                  }
+                  scope_quick_pick.dispose()
+                })
+
+                scope_quick_pick.show()
+              })
+
+              if (scope_selection === undefined) {
+                should_return = true
+                break
+              }
+
+              if (scope_selection === 'back') {
+                back_to_main = true
+                break
+              }
+
+              if (scope_selection === 'immediate') {
+                paths_for_search = valid_immediate.map((u) => u.fsPath)
+              }
+            }
+
+            const search_result = await search_files({
+              files: paths_for_search,
+              workspace_provider,
+              extension_context,
+              show_back_button: true
+            })
+
+            if (search_result == 'back') {
+              if (valid_recursive.length > 0) {
+                continue
+              } else {
+                back_to_main = true
+                break
+              }
+            }
+
+            if (!search_result) {
+              should_return = true
+              break
+            }
+
+            selected_paths = search_result.selected_paths
+            break
           }
 
-          if (!search_result) {
+          if (should_return) {
             return
           }
 
-          selected_paths = search_result.selected_paths
+          if (back_to_main) {
+            continue
+          }
+
           break
         } else {
           const valid_selected = selected_items.filter(
