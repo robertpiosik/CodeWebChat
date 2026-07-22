@@ -36,21 +36,21 @@ export const header = {
     bg: 'Настройки'
   },
   'header.prompt-type': {
-    en: 'Prompt type',
-    pl: 'Typ promptu',
+    en: 'Prompt types',
+    pl: 'Typy promptu',
     'zh-cn': '提示类型',
-    ja: 'プロンプトタイプ',
+    ja: 'プロンプトの種類',
     'zh-tw': '提示類型',
-    de: 'Prompt-Typ',
-    es: 'Tipo de prompt',
-    fr: 'Type de prompt',
-    'pt-br': 'Tipo de prompt',
-    ru: 'Тип промпта',
+    de: 'Prompt-Typen',
+    es: 'Tipos de prompt',
+    fr: 'Types de prompt',
+    'pt-br': 'Tipos de prompt',
+    ru: 'Типы промптов',
     ko: '프롬프트 유형',
-    it: 'Tipo di prompt',
-    tr: 'İstem türü',
-    cs: 'Typ promptu',
-    hu: 'Prompt típus',
-    bg: 'Тип промпт'
+    it: 'Tipi di prompt',
+    tr: 'Prompt türleri',
+    cs: 'Typy promptů',
+    hu: 'Prompt típusok',
+    bg: 'Типове промптове'
   }
 } as const
