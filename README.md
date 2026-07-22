@@ -26,7 +26,7 @@ Get involved! Join our [discord server](https://discord.gg/KJySXsrSX5).
 
 This independent project aims to provide developers with a complete set of free tools for fast, accurate, and efficient pair programming with AI that augments, rather than replaces, traditional coding.
 
-CWC creates a zero-learning-curve workflow integrating context file selection with prompt writing, making them simpler and easier to iterate on.
+CWC proposes an intuitive workflow that makes context file selection a part of instructions, making them simpler and easier to iterate on.
 
 > [!TIP]
 > Get help in file selection using many included static tools and _Find Relevant Files_ [prompt type](#prompt-types).
