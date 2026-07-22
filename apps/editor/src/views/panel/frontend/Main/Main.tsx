@@ -80,6 +80,7 @@ type Props = {
   on_tab_change: (index: number) => void
   on_new_tab: () => void
   on_tab_delete: (index: number) => void
+  on_tabs_reorder: (new_order: number[]) => void
   missing_web_configuration?: boolean
   voice_input_push_to_talk: boolean
   token_count: number
@@ -730,6 +731,7 @@ export const Main: React.FC<Props> = (props) => {
       on_tab_change={props.on_tab_change}
       on_new_tab={props.on_new_tab}
       on_tab_delete={props.on_tab_delete}
+      on_tabs_reorder={props.on_tabs_reorder}
       voice_input_push_to_talk={props.voice_input_push_to_talk}
     />
   )

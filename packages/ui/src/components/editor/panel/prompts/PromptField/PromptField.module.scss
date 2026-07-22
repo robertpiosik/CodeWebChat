@@ -108,6 +108,10 @@
   letter-spacing: normal;
   min-height: 48px;
 
+  .tabs {
+    display: none;
+  }
+
   &:focus {
     outline: none;
   }

@@ -196,6 +196,49 @@ export const use_instructions = (
     }
   }
 
+  const handle_tabs_reorder = (new_order: number[]) => {
+    const prompt_type = (
+      mode == MODE.WEB ? web_prompt_type : api_prompt_type
+    ) as any
+    const update = (
+      state: InstructionsState | undefined,
+      setter: React.Dispatch<
+        React.SetStateAction<InstructionsState | undefined>
+      >
+    ) => {
+      if (!state) return
+
+      const new_instructions = new_order.map((i) => state.instructions[i])
+      const new_active_index = new_order.indexOf(state.active_index)
+
+      const new_state = {
+        instructions: new_instructions,
+        active_index: new_active_index >= 0 ? new_active_index : 0
+      }
+      setter(new_state)
+      post_message(vscode, {
+        command: 'SAVE_INSTRUCTIONS',
+        instruction: new_state,
+        prompt_type
+      })
+    }
+
+    if (prompt_type == 'ask-about-files') {
+      update(ask_about_context_instructions, set_ask_about_context_instructions)
+    } else if (prompt_type == 'edit-files') {
+      update(edit_files_instructions, set_edit_files_instructions)
+    } else if (prompt_type == 'without-files') {
+      update(no_context_instructions, set_no_context_instructions)
+    } else if (prompt_type == 'code-at-cursor') {
+      update(code_at_cursor_instructions, set_code_at_cursor_instructions)
+    } else if (prompt_type == 'find-relevant-files') {
+      update(
+        find_relevant_files_instructions,
+        set_find_relevant_files_instructions
+      )
+    }
+  }
+
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
@@ -222,6 +265,7 @@ export const use_instructions = (
     handle_instructions_change,
     handle_tab_change,
     handle_new_tab,
-    handle_tab_delete
+    handle_tab_delete,
+    handle_tabs_reorder
   }
 }

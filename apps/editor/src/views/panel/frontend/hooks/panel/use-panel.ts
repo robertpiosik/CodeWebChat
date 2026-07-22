@@ -36,7 +36,8 @@ export const use_panel = (vscode: any) => {
     handle_instructions_change,
     handle_tab_change,
     handle_new_tab,
-    handle_tab_delete
+    handle_tab_delete,
+    handle_tabs_reorder
   } = use_instructions(vscode, mode, web_prompt_type, api_prompt_type)
 
   const [context_size_warning_threshold, set_context_size_warning_threshold] =
@@ -301,6 +302,7 @@ export const use_panel = (vscode: any) => {
     handle_tab_change,
     handle_new_tab,
     handle_tab_delete,
+    handle_tabs_reorder,
     voice_input_push_to_talk,
     token_count
   }

@@ -123,6 +123,7 @@ type Props = {
   on_tab_change: (index: number) => void
   on_new_tab: () => void
   on_tab_delete: (index: number) => void
+  on_tabs_reorder: (new_order: number[]) => void
   voice_input_push_to_talk: boolean
 }
 
@@ -425,6 +426,7 @@ export const MainView: React.FC<Props> = (props) => {
             on_tab_change={props.on_tab_change}
             on_new_tab={props.on_new_tab}
             on_tab_delete={props.on_tab_delete}
+            on_tabs_reorder={props.on_tabs_reorder}
             warning={warning}
             voice_input_push_to_talk={props.voice_input_push_to_talk}
             translations={{
