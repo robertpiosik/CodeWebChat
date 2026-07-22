@@ -643,12 +643,12 @@
           "group": "1_more@2"
         },
         {
-          "command": "codeWebChat.selectClipboardPaths",
+          "command": "codeWebChat.selectWorkspaceFile",
           "when": "view == codeWebChatViewWorkspace",
           "group": "3_more@1"
         },
         {
-          "command": "codeWebChat.selectWorkspaceFile",
+          "command": "codeWebChat.selectClipboardPaths",
           "when": "view == codeWebChatViewWorkspace",
           "group": "3_more@2"
         },

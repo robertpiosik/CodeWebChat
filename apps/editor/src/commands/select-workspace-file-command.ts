@@ -36,7 +36,6 @@ export const select_workspace_file_command = (
         const selected = await new Promise<vscode.QuickPickItem | undefined>(
           (resolve) => {
             const quick_pick = vscode.window.createQuickPick()
-            quick_pick.ignoreFocusOut = true
             quick_pick.items = items
             quick_pick.placeholder = t(
               'command.select-workspace-file.select-workspace'
@@ -44,6 +43,7 @@ export const select_workspace_file_command = (
             quick_pick.title = t(
               'command.select-workspace-file.workspace-folders'
             )
+            quick_pick.ignoreFocusOut = true
             quick_pick.buttons = [
               {
                 iconPath: new vscode.ThemeIcon('close'),
@@ -79,11 +79,11 @@ export const select_workspace_file_command = (
       }
 
       const quick_pick = vscode.window.createQuickPick<FileQuickPickItem>()
-      quick_pick.ignoreFocusOut = true
       quick_pick.title = t('command.select-workspace-file.workspace-files')
       quick_pick.placeholder = t('command.select-workspace-file.select-file')
       quick_pick.matchOnDescription = true
       quick_pick.value = last_search_query
+      quick_pick.ignoreFocusOut = true
       quick_pick.buttons = [
         {
           iconPath: new vscode.ThemeIcon('close'),
@@ -146,7 +146,6 @@ export const select_workspace_file_command = (
             label: string
             full_path: string
           }>()
-          folder_quick_pick.ignoreFocusOut = true
           folder_quick_pick.title = t(
             'command.select-workspace-file.parent-folders'
           )
@@ -157,12 +156,15 @@ export const select_workspace_file_command = (
             label: f.label,
             full_path: f.full_path
           }))
+          folder_quick_pick.ignoreFocusOut = false
           folder_quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
           let folder_accepted = false
+          let go_back = false
 
           folder_quick_pick.onDidTriggerButton((button) => {
             if (button === vscode.QuickInputButtons.Back) {
+              go_back = true
               folder_quick_pick.hide()
             }
           })
@@ -200,22 +202,26 @@ export const select_workspace_file_command = (
             is_showing_folder_quick_pick = false
 
             if (!folder_accepted) {
-              if (file_items_cache.length > 0) {
-                quick_pick.items = file_items_cache
-              }
-              quick_pick.value = last_search_query
-              quick_pick.show()
+              if (go_back) {
+                if (file_items_cache.length > 0) {
+                  quick_pick.items = file_items_cache
+                }
+                quick_pick.value = last_search_query
+                quick_pick.show()
 
-              const source_item = last_interacted_path
-                ? file_items_cache.find(
-                    (i) => i.full_path === last_interacted_path
-                  )
-                : undefined
+                const source_item = last_interacted_path
+                  ? file_items_cache.find(
+                      (i) => i.full_path === last_interacted_path
+                    )
+                  : undefined
 
-              if (source_item) {
-                setTimeout(() => {
-                  quick_pick.activeItems = [source_item]
-                }, 0)
+                if (source_item) {
+                  setTimeout(() => {
+                    quick_pick.activeItems = [source_item]
+                  }, 0)
+                }
+              } else {
+                quick_pick.dispose()
               }
             }
           })
@@ -225,11 +231,11 @@ export const select_workspace_file_command = (
           folder_quick_pick.show()
         } else if (e.button.iconPath instanceof vscode.ThemeIcon) {
           if (e.button.iconPath.id == 'go-to-file') {
+            quick_pick.activeItems = [item]
             await vscode.commands.executeCommand(
               'vscode.open',
               vscode.Uri.file(item.full_path)
             )
-            quick_pick.hide()
           }
         }
       })
