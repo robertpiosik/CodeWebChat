@@ -11,7 +11,7 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> 
 </p>
 
-Code Web Chat is a free, chatbot-first AI coding toolkit. **Start in VS Code (Cursor, Antigravity, VSCodium, etc.), then continue in ChatGPT, Gemini, Claude, etc.** or _Bring Your Own Key_ to stay in the editor!
+AI coding with static context. **Start in VS Code (Cursor, Antigravity, VSCodium, etc.), then continue in ChatGPT, Gemini, Claude, etc.** or _Bring Your Own Key_ to stay in the editor!
 
 Get involved! Join our [discord server](https://discord.gg/KJySXsrSX5).
 
@@ -24,9 +24,11 @@ Get involved! Join our [discord server](https://discord.gg/KJySXsrSX5).
 
 ## Introduction
 
-This independent project aims to provide developers with a complete set of free tools for fast, accurate, and efficient pair programming with AI that augments, rather than replaces, traditional coding.
+This independent project aims to provide developers with a complete set of free tools for pair programming with AI that augments, rather than replaces, traditional coding.
 
-CWC is not a coding agent. Here, you're the one selecting context files which are simply attached to your prompts.
+In CWC you're the one selecting files attached to prompts, so the model has everything it needs from the start.
+
+By devoting all its reasoning directly to the task it's as fast and accurate as it can get.
 
 > [!TIP]
 > Get help in file selection using many included static tools and _Find Relevant Files_ [prompt type](#prompt-types).
