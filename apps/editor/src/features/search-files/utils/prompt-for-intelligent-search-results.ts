@@ -91,8 +91,8 @@ export const prompt_for_intelligent_search_results = async (params: {
     currently_checked.includes(item.file_path)
   )
   quick_pick.canSelectMany = true
-  quick_pick.title = t('command.search.results')
-  quick_pick.placeholder = t('command.search.select-files')
+  quick_pick.title = t('feature.search-files.results')
+  quick_pick.placeholder = t('feature.search-files.select-files')
   quick_pick.ignoreFocusOut = true
   quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
 
@@ -129,7 +129,7 @@ export const prompt_for_intelligent_search_results = async (params: {
           await vscode.window.showTextDocument(doc, { preview: true })
         } catch (error) {
           vscode.window.showErrorMessage(
-            t('command.search.error.opening-file', {
+            t('feature.search-files.error.opening-file', {
               error: String(error)
             })
           )

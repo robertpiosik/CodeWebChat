@@ -11,16 +11,16 @@ export const prompt_for_search_term = async (
   }
 
   const input_box = vscode.window.createInputBox()
-  input_box.title = t('command.search.title')
+  input_box.title = t('feature.search-files.title')
   input_box.prompt =
     mode == 'keywords'
-      ? t('command.search.prompt.keywords')
+      ? t('feature.search-files.prompt.keywords')
       : mode == 'filename'
-        ? t('command.search.prompt.filename')
+        ? t('feature.search-files.prompt.filename')
         : mode == 'intelligent'
-          ? t('command.search.prompt.intelligent')
-          : t('command.search.prompt')
-  input_box.placeholder = t('command.search.placeholder')
+          ? t('feature.search-files.prompt.intelligent')
+          : t('feature.search-files.prompt')
+  input_box.placeholder = t('feature.search-files.placeholder')
   input_box.value = initial_search_term
   input_box.ignoreFocusOut = true
   input_box.buttons = [vscode.QuickInputButtons.Back, close_button]
@@ -43,7 +43,9 @@ export const prompt_for_search_term = async (
         input_box.onDidAccept(() => {
           const value = input_box.value.trim()
           if (value.length == 0) {
-            input_box.validationMessage = t('command.search.validation-empty')
+            input_box.validationMessage = t(
+              'feature.search-files.validation-empty'
+            )
             return
           }
           is_resolved = true

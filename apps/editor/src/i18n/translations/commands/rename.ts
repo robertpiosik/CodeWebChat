@@ -1,5 +1,5 @@
 export const translations = {
-  'command.files.rename.prompt': {
+  'command.rename.prompt': {
     en: 'Enter new name',
     pl: 'Wprowadź nową nazwę',
     'zh-cn': '输入新名称',

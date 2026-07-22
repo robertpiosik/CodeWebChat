@@ -82,12 +82,12 @@ export const search_files_commands = (
 
       const quick_pick_options = [
         {
-          label: t('command.search.replace'),
-          description: t('command.search.replace-description')
+          label: t('command.search-files.replace'),
+          description: t('command.search-files.replace-description')
         },
         {
-          label: t('command.search.merge'),
-          description: t('command.search.merge-description')
+          label: t('command.search-files.merge'),
+          description: t('command.search-files.merge-description')
         }
       ]
 
@@ -97,9 +97,12 @@ export const search_files_commands = (
 
       const quick_pick_merge = vscode.window.createQuickPick()
       quick_pick_merge.items = quick_pick_options
-      quick_pick_merge.placeholder = t('command.search.apply-placeholder', {
-        count: selected_paths.length
-      })
+      quick_pick_merge.placeholder = t(
+        'command.search-files.apply-placeholder',
+        {
+          count: selected_paths.length
+        }
+      )
 
       const close_button = {
         iconPath: new vscode.ThemeIcon('close'),
@@ -150,7 +153,7 @@ export const search_files_commands = (
         choice.label
       )
 
-      if (choice.label == t('command.search.merge')) {
+      if (choice.label == t('command.search-files.merge')) {
         paths_to_apply = [
           ...new Set([
             ...currently_checked.filter((p) => !unchecked_paths.includes(p)),
@@ -187,7 +190,9 @@ export const search_files_commands = (
         )
       )
     } else {
-      vscode.window.showInformationMessage(t('command.search.success.added'))
+      vscode.window.showInformationMessage(
+        t('command.search-files.success.added')
+      )
     }
   }
 

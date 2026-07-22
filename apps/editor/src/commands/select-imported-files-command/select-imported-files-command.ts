@@ -117,7 +117,7 @@ export const select_imported_files_command = (
 
       const search_button = {
         iconPath: new vscode.ThemeIcon('search'),
-        tooltip: t('command.search.title')
+        tooltip: t('command.select-imported-files.search')
       }
 
       type ImportQuickPickItem = vscode.QuickPickItem & {

@@ -1,2 +1,0 @@
-<!-- src/index.ts -->```typescript
-console.log("hello");

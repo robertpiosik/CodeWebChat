@@ -195,13 +195,13 @@ export const generate_commit_message_command = (
           (resolve) => {
             const input_box = vscode.window.createInputBox()
             input_box.value = commit_message
-            input_box.title = t('command.commit-message.input.title')
-            input_box.prompt = t('command.commit-message.input.prompt')
+            input_box.title = t('command.generate-commit-message.input.title')
+            input_box.prompt = t('command.generate-commit-message.input.prompt')
             input_box.ignoreFocusOut = true
 
             const accept_button = {
               iconPath: new vscode.ThemeIcon('check'),
-              tooltip: t('command.commit-message.input.accept')
+              tooltip: t('command.generate-commit-message.input.accept')
             }
 
             input_box.buttons = [accept_button, vscode.QuickInputButtons.Back]
@@ -209,7 +209,10 @@ export const generate_commit_message_command = (
             let is_resolved = false
 
             input_box.onDidTriggerButton((button) => {
-              if (button.tooltip == t('command.commit-message.input.accept')) {
+              if (
+                button.tooltip ==
+                t('command.generate-commit-message.input.accept')
+              ) {
                 is_resolved = true
                 resolve(input_box.value)
                 input_box.hide()
@@ -367,7 +370,7 @@ export const generate_commit_message_command = (
       await vscode.env.clipboard.writeText(message_prompt)
       const token_count = Math.ceil(message_prompt.length / 4)
       vscode.window.showInformationMessage(
-        t('command.commit-message.copied', {
+        t('command.generate-commit-message.copied', {
           tokens: display_token_count(token_count)
         })
       )

@@ -9,19 +9,19 @@ export const prompt_for_shrink_mode = async (params: {
 }): Promise<boolean | 'back' | 'cancel'> => {
   const shrink_items: vscode.QuickPickItem[] = [
     {
-      label: t('command.search.shrink.full'),
+      label: t('feature.search-files.shrink.full'),
       description: `${display_token_count(params.full_tokens)} tokens`
     },
     {
-      label: t('command.search.shrink.strip'),
+      label: t('feature.search-files.shrink.strip'),
       description: `${display_token_count(params.shrink_tokens)} tokens`
     }
   ]
 
   const shrink_quick_pick = vscode.window.createQuickPick()
   shrink_quick_pick.items = shrink_items
-  shrink_quick_pick.title = t('command.search.title')
-  shrink_quick_pick.placeholder = t('command.search.shrink.placeholder')
+  shrink_quick_pick.title = t('feature.search-files.title')
+  shrink_quick_pick.placeholder = t('feature.search-files.shrink.placeholder')
   shrink_quick_pick.activeItems = [
     params.should_shrink ? shrink_items[1] : shrink_items[0]
   ]
@@ -40,7 +40,7 @@ export const prompt_for_shrink_mode = async (params: {
       is_resolved = true
       resolve(
         shrink_quick_pick.selectedItems[0].label ==
-          t('command.search.shrink.strip')
+          t('feature.search-files.shrink.strip')
       )
       shrink_quick_pick.hide()
     })

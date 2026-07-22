@@ -52,8 +52,8 @@ export const new_folder_command = () => {
       }
 
       const input_box = vscode.window.createInputBox()
-      input_box.title = t('command.files.new-folder.title')
-      input_box.prompt = t('command.files.new-folder.prompt')
+      input_box.title = t('command.new-folder.title')
+      input_box.prompt = t('command.new-folder.prompt')
       input_box.placeholder = ''
 
       const close_button = {

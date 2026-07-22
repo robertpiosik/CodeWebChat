@@ -58,12 +58,12 @@ export const fetch_relevant_files_from_api = async (
     const completion_result = await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: t('command.search.progress.finding'),
+        title: t('feature.search-files.progress.finding'),
         cancellable: true
       },
       async (progress, token) => {
         token.onCancellationRequested(() => {
-          cancel_token_source.cancel(t('command.search.cancel.user'))
+          cancel_token_source.cancel(t('feature.search-files.cancel.user'))
         })
         progress.report({ message: t('common.progress.waiting-for-server') })
         return await make_api_request({
@@ -98,7 +98,7 @@ export const fetch_relevant_files_from_api = async (
         message: 'Error finding relevant files',
         data: error
       })
-      vscode.window.showErrorMessage(t('command.search.error.finding'))
+      vscode.window.showErrorMessage(t('feature.search-files.error.finding'))
     }
     return 'error'
   }

@@ -1,5 +1,0 @@
---- a/src/index.ts
-+++ /dev/null
-@@ -1,2 +0,0 @@
--console.log("hello")
--console.log("old message")

@@ -201,6 +201,16 @@ const convert_code_block_to_new_file_diff = (params: {
           )
 
           if (is_just_path_and_location) {
+            if (params.file_path_hint) {
+              if (
+                normalize_path(potential_path) ==
+                normalize_path(params.file_path_hint)
+              ) {
+                path_line_index = i
+              }
+              break
+            }
+
             file_path = normalize_path(potential_path)
             path_line_index = i
             break

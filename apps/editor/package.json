@@ -1,7 +1,7 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
-  "description": "Chatbot-first AI coding (CWC)",
+  "description": "CWC: AI coding with static context",
   "version": "1.988.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",

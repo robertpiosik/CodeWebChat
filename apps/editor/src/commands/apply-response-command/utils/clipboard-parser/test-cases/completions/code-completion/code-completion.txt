@@ -1,5 +1,0 @@
-### Code at cursor: `src/index.ts` (25:5)
-
-```typescript
-console.log("completion");
-```

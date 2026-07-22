@@ -1,5 +1,0 @@
-### Renamed file: `src/welcome.ts` (old) `src/hello-world.ts` (new)
-
-```typescript
-console.log('Hello world!')
-```

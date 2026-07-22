@@ -1,5 +1,5 @@
 export const translations = {
-  'command.files.new-file.title': {
+  'command.new-file.title': {
     en: 'New File',
     pl: 'Nowy plik',
     'zh-cn': '新建文件',
@@ -17,7 +17,7 @@ export const translations = {
     hu: 'Új fájl',
     bg: 'Нов файл'
   },
-  'command.files.new-file.prompt': {
+  'command.new-file.prompt': {
     en: 'Enter file name',
     pl: 'Wprowadź nazwę pliku',
     'zh-cn': '输入文件名',

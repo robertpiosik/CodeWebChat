@@ -1,7 +1,0 @@
-### `src/hello-world.ts`
-
-Lorem ipsum `src/welcome.ts`.
-
-```typescript
-console.log('Hello world!')
-```

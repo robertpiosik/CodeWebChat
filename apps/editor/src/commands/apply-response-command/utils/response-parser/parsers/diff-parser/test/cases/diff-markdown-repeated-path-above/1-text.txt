@@ -1,6 +1,0 @@
-Lorem ipsum.
-```bash
-pnpm add -D prettier
-```
-
-Lorem ipsum.

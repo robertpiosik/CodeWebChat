@@ -1,5 +1,0 @@
-```typescript
-<file path="src/index.ts">
-console.log("hello")
-</file>
-```

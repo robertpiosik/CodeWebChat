@@ -1,5 +1,0 @@
-```php
-<?php
-// src/index.php
-echo "Hello, World!";
-```

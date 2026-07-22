@@ -32,7 +32,7 @@ export const analyze_files = async (params: {
   await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Window,
-      title: t('command.search.progress.analyzing')
+      title: t('feature.search-files.progress.analyzing')
     },
     async () => {
       for (const file_path of params.files) {

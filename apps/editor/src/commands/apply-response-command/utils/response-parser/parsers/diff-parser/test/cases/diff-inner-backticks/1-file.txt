@@ -1,9 +1,0 @@
---- a/src/index.ts
-+++ b/src/index.ts
-@@ -1,5 +1,7 @@
- console.log("hello")
--console.log("old message")
-+```
-+console.log("inner backticks")
-+```
-+console.log("new message")

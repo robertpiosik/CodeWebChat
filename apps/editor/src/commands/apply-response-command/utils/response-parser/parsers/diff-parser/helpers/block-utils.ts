@@ -46,7 +46,6 @@ export const find_file_path_before_block = (params: {
         is_single_root_folder_workspace: params.is_single_root
       })
 
-      // If we find a heading with a path, it takes precedence over anything below it
       if (prev_line.startsWith('###')) {
         return { file_path: extracted, workspace_name }
       }

@@ -19,6 +19,7 @@ export const is_valid_file_path = (potential_path: string): boolean => {
     !trimmed.endsWith('\\') &&
     (trimmed.includes('.') || trimmed.includes('/')) &&
     !trimmed.includes(' ') &&
+    !trimmed.includes('...') &&
     /[a-zA-Z0-9]/.test(trimmed)
   )
 }
@@ -36,7 +37,8 @@ export const extract_path_from_potential_string = (line: string) => {
         (potential_path.includes('/') ||
           potential_path.includes('\\') ||
           potential_path.includes('.')) &&
-        !potential_path.includes(' ')
+        !potential_path.includes(' ') &&
+        !potential_path.includes('...')
       ) {
         extracted = potential_path
       }
@@ -59,6 +61,7 @@ export const extract_path_from_potential_string = (line: string) => {
         potential_path.includes('\\') ||
         potential_path.includes('.')) &&
       !potential_path.endsWith('.') &&
+      !potential_path.includes('...') &&
       /^[a-zA-Z0-9_./@-]+$/.test(potential_path)
     ) {
       extracted = potential_path
@@ -81,7 +84,8 @@ export const extract_path_with_xml_fallback = (line: string) => {
         (potential_path.includes('/') ||
           potential_path.includes('\\') ||
           potential_path.includes('.')) &&
-        !potential_path.includes(' ')
+        !potential_path.includes(' ') &&
+        !potential_path.includes('...')
       ) {
         extracted = potential_path
       }
@@ -93,9 +97,10 @@ export const extract_path_with_xml_fallback = (line: string) => {
     if (match && match[1]) {
       const potential_path = match[1].trim()
       if (
-        potential_path.includes('/') ||
-        potential_path.includes('\\') ||
-        potential_path.includes('.')
+        (potential_path.includes('/') ||
+          potential_path.includes('\\') ||
+          potential_path.includes('.')) &&
+        !potential_path.includes('...')
       ) {
         extracted = potential_path
       }

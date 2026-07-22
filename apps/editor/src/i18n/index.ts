@@ -21,6 +21,7 @@ import { translations as views_shared_actions_web_delete } from './translations/
 import { translations as views_shared_actions_web_pick_chatbot } from './translations/views/shared/actions/web/pick-chatbot'
 import { translations as views_shared_actions_web_pick_model } from './translations/views/shared/actions/web/pick-model'
 import { translations as views_shared_actions_web_update } from './translations/views/shared/actions/web/update'
+import { translations as features_search_files } from './translations/features/search-files'
 
 export type TranslationKey = keyof typeof translations
 
@@ -46,7 +47,8 @@ const translations = {
   ...views_shared_actions_web_delete,
   ...views_shared_actions_web_pick_chatbot,
   ...views_shared_actions_web_pick_model,
-  ...views_shared_actions_web_update
+  ...views_shared_actions_web_update,
+  ...features_search_files
 }
 
 export const t = (

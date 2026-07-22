@@ -1,6 +1,0 @@
-### `src/index.ts`:
-
-```diff
-+console.log("hello")
-+console.log("world")
-```

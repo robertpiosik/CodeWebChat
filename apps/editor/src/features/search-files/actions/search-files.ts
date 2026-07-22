@@ -182,7 +182,7 @@ export const search_files = async (params: {
               if (api_configurations.length == 0) {
                 vscode.commands.executeCommand('codeWebChat.settings')
                 vscode.window.showInformationMessage(
-                  t('command.search.error.no-configs')
+                  t('feature.search-files.error.no-configs')
                 )
                 return undefined
               }
@@ -230,7 +230,9 @@ export const search_files = async (params: {
                   continue
                 }
                 if (api_result == 'error_no_files') {
-                  vscode.window.showWarningMessage(t('command.search.no-files'))
+                  vscode.window.showWarningMessage(
+                    t('feature.search-files.no-files')
+                  )
                   go_back_to_term = true
                   break
                 }
@@ -275,7 +277,9 @@ export const search_files = async (params: {
           })
 
           if (matched_files.length == 0) {
-            vscode.window.showInformationMessage(t('command.search.no-files'))
+            vscode.window.showInformationMessage(
+              t('feature.search-files.no-files')
+            )
             continue
           }
 
@@ -313,7 +317,7 @@ export const search_files = async (params: {
       break
     } catch (error) {
       vscode.window.showErrorMessage(
-        t('command.search.failed', {
+        t('feature.search-files.failed', {
           error: error instanceof Error ? error.message : String(error)
         })
       )

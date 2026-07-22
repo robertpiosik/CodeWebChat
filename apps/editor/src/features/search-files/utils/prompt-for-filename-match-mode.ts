@@ -6,13 +6,17 @@ export const prompt_for_filename_match_mode = async (
 ): Promise<'all' | 'some' | 'back' | undefined> => {
   const items: (vscode.QuickPickItem & { mode: 'all' | 'some' })[] = [
     {
-      label: t('command.search.filename.match-mode.all'),
-      description: t('command.search.filename.match-mode.all-description'),
+      label: t('feature.search-files.filename.match-mode.all'),
+      description: t(
+        'feature.search-files.filename.match-mode.all-description'
+      ),
       mode: 'all'
     },
     {
-      label: t('command.search.filename.match-mode.some'),
-      description: t('command.search.filename.match-mode.some-description'),
+      label: t('feature.search-files.filename.match-mode.some'),
+      description: t(
+        'feature.search-files.filename.match-mode.some-description'
+      ),
       mode: 'some'
     }
   ]
@@ -29,8 +33,10 @@ export const prompt_for_filename_match_mode = async (
   >()
   quick_pick.items = items
   quick_pick.activeItems = [active_item]
-  quick_pick.title = t('command.search.filename.match-mode.title')
-  quick_pick.placeholder = t('command.search.filename.match-mode.placeholder')
+  quick_pick.title = t('feature.search-files.filename.match-mode.title')
+  quick_pick.placeholder = t(
+    'feature.search-files.filename.match-mode.placeholder'
+  )
   quick_pick.ignoreFocusOut = false
   quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
 

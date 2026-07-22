@@ -1,5 +1,0 @@
-Above.
-
-### Deleted file: `src/index.ts`
-
-Below.

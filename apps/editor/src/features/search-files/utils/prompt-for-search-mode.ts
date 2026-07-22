@@ -11,23 +11,23 @@ export const prompt_for_search_mode = async (
     mode: 'phrase' | 'keywords' | 'filename' | 'intelligent'
   })[] = [
     {
-      label: t('command.search.mode.phrase'),
-      description: t('command.search.mode.phrase-description'),
+      label: t('feature.search-files.mode.phrase'),
+      description: t('feature.search-files.mode.phrase-description'),
       mode: 'phrase'
     },
     {
-      label: t('command.search.mode.keywords'),
-      description: t('command.search.mode.keywords-description'),
+      label: t('feature.search-files.mode.keywords'),
+      description: t('feature.search-files.mode.keywords-description'),
       mode: 'keywords'
     },
     {
-      label: t('command.search.mode.filename'),
-      description: t('command.search.mode.filename-description'),
+      label: t('feature.search-files.mode.filename'),
+      description: t('feature.search-files.mode.filename-description'),
       mode: 'filename'
     },
     {
-      label: t('command.search.mode.intelligent'),
-      description: t('command.search.mode.intelligent-description'),
+      label: t('feature.search-files.mode.intelligent'),
+      description: t('feature.search-files.mode.intelligent-description'),
       mode: 'intelligent'
     }
   ]
@@ -46,8 +46,8 @@ export const prompt_for_search_mode = async (
   >()
   quick_pick.items = items
   quick_pick.activeItems = [active_item]
-  quick_pick.title = t('command.search.mode.title')
-  quick_pick.placeholder = t('command.search.mode.placeholder')
+  quick_pick.title = t('feature.search-files.mode.title')
+  quick_pick.placeholder = t('feature.search-files.mode.placeholder')
   quick_pick.ignoreFocusOut = false
 
   const buttons: vscode.QuickInputButton[] = [close_button]

@@ -1,3 +1,0 @@
-`src/hello.ts`, src/welcome.ts `src/main.ts`
-
-Lorem ipsum.

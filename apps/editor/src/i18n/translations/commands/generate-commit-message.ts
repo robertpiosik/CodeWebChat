@@ -1,5 +1,5 @@
 export const translations = {
-  'command.commit-message.input.title': {
+  'command.generate-commit-message.input.title': {
     en: 'Commit Message',
     pl: 'Wiadomość commita',
     'zh-cn': '提交信息',
@@ -17,7 +17,7 @@ export const translations = {
     hu: 'Commit üzenet',
     bg: 'Commit съобщение'
   },
-  'command.commit-message.input.prompt': {
+  'command.generate-commit-message.input.prompt': {
     en: 'Edit the commit message.',
     pl: 'Edytuj wiadomość commita.',
     'zh-cn': '编辑提交信息。',
@@ -35,7 +35,7 @@ export const translations = {
     hu: 'Szerkessze a commit üzenetet.',
     bg: 'Редактирайте commit съобщението.'
   },
-  'command.commit-message.input.accept': {
+  'command.generate-commit-message.input.accept': {
     en: 'Accept',
     pl: 'Akceptuj',
     'zh-cn': '接受',
@@ -53,7 +53,7 @@ export const translations = {
     hu: 'Elfogadás',
     bg: 'Приемане'
   },
-  'command.commit-message.copied': {
+  'command.generate-commit-message.copied': {
     en: 'Commit message prompt copied to clipboard ({tokens} tokens).',
     pl: 'Wiadomość commita skopiowana do schowka ({tokens} tokenów).',
     'zh-cn': '提交信息提示词已复制到剪贴板 ({tokens} 令牌)。',
@@ -72,7 +72,7 @@ export const translations = {
     hu: 'Commit üzenet prompt másolva a vágólapra ({tokens} token).',
     bg: 'Промптът за commit съобщение е копиран в клипборда ({tokens} токена).'
   },
-  'command.commit-message.progress.title': {
+  'command.generate-commit-message.progress.title': {
     en: 'Requested commit message',
     pl: 'Zażądano wiadomości commita',
     'zh-cn': '已请求提交信息',
@@ -90,7 +90,7 @@ export const translations = {
     hu: 'Commit üzenet lekérve',
     bg: 'Заявено е commit съобщение'
   },
-  'command.commit-message.select-repository': {
+  'command.generate-commit-message.select-repository': {
     en: 'Select a repository to generate the commit message for',
     pl: 'Wybierz repozytorium, dla którego chcesz wygenerować wiadomość commita',
     'zh-cn': '选择要生成提交信息的仓库',
@@ -108,7 +108,7 @@ export const translations = {
     hu: 'Válasszon egy tárolót a commit üzenet generálásához',
     bg: 'Изберете хранилище за генериране на commit съобщение'
   },
-  'command.commit-message.unstaged-files': {
+  'command.generate-commit-message.unstaged-files': {
     en: 'Unstaged Files',
     pl: 'Nieprzygotowane pliki',
     'zh-cn': '未暂存的文件',
@@ -126,7 +126,7 @@ export const translations = {
     hu: 'Nem előkészített fájlok',
     bg: 'Неиндексирани файлове'
   },
-  'command.commit-message.select-files': {
+  'command.generate-commit-message.select-files': {
     en: 'Select files to commit',
     pl: 'Wybierz pliki do commita',
     'zh-cn': '选择要提交的文件',
@@ -144,7 +144,7 @@ export const translations = {
     hu: 'Válassza ki a commitálandó fájlokat',
     bg: 'Изберете файлове за commit'
   },
-  'command.commit-message.show-diff': {
+  'command.generate-commit-message.show-diff': {
     en: 'Show Diff',
     pl: 'Pokaż zmiany',
     'zh-cn': '显示差异',

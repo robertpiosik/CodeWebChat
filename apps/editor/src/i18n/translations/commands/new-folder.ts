@@ -1,5 +1,5 @@
 export const translations = {
-  'command.files.new-folder.title': {
+  'command.new-folder.title': {
     en: 'New Folder',
     pl: 'Nowy folder',
     'zh-cn': '新建文件夹',
@@ -17,7 +17,7 @@ export const translations = {
     hu: 'Új mappa',
     bg: 'Нова папка'
   },
-  'command.files.new-folder.prompt': {
+  'command.new-folder.prompt': {
     en: 'Enter folder name',
     pl: 'Wprowadź nazwę folderu',
     'zh-cn': '输入文件夹名',

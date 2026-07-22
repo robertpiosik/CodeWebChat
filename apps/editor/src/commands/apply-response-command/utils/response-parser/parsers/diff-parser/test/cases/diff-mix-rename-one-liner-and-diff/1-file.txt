@@ -1,2 +1,0 @@
---- a/src/old.ts
-+++ b/src/old.ts
