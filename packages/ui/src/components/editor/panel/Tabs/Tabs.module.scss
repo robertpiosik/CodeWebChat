@@ -1,5 +1,5 @@
 .tabs {
-  height: 26px;
+  height: 25px;
   padding: 0 12px;
   margin-bottom: 8px;
   display: flex;
@@ -24,7 +24,6 @@
     display: flex;
     align-items: center;
     font-size: 11px;
-    font-weight: 600;
     text-transform: uppercase;
     color: var(--cwc-text-color-dimmed);
     cursor: pointer;
@@ -37,10 +36,10 @@
     &::after {
       content: '';
       position: absolute;
-      bottom: -1px;
+      bottom: 1px;
       left: 0;
       right: 0;
-      height: 2px;
+      height: 1px;
       background-color: transparent;
     }
 
