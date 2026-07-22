@@ -36,6 +36,7 @@ export const select_workspace_file_command = (
         const selected = await new Promise<vscode.QuickPickItem | undefined>(
           (resolve) => {
             const quick_pick = vscode.window.createQuickPick()
+            quick_pick.ignoreFocusOut = true
             quick_pick.items = items
             quick_pick.placeholder = t(
               'command.select-workspace-file.select-workspace'
@@ -78,6 +79,7 @@ export const select_workspace_file_command = (
       }
 
       const quick_pick = vscode.window.createQuickPick<FileQuickPickItem>()
+      quick_pick.ignoreFocusOut = true
       quick_pick.title = t('command.select-workspace-file.workspace-files')
       quick_pick.placeholder = t('command.select-workspace-file.select-file')
       quick_pick.matchOnDescription = true
@@ -144,6 +146,7 @@ export const select_workspace_file_command = (
             label: string
             full_path: string
           }>()
+          folder_quick_pick.ignoreFocusOut = true
           folder_quick_pick.title = t(
             'command.select-workspace-file.parent-folders'
           )
