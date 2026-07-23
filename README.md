@@ -26,10 +26,12 @@ Get involved! Join our [discord server](https://discord.gg/KJySXsrSX5).
 
 This independent project aims to provide developers with a complete, free toolkit for pair programming with AI that augments, rather than replaces, traditional coding.
 
-CWC lets you select relevant files for the task, so the model has everything it needs from the start!
+## Static context
+
+To make AI coding as fast, accurate and cost-efficient as possible, CWC relies on static context. This means all task-relevant files are sent together with instructions so the model has everything it needs from the start, without a single tool call.
 
 > [!TIP]
-> Get help in file selection using many included static tools and _Find Relevant Files_ [prompt type](#prompt-types).
+> Get help with relevant file selection using keywords, symbol-references, _Find Relevant Files_ [prompt type](#prompt-types), and more.
 
 ## Privacy
 
