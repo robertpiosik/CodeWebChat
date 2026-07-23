@@ -35,7 +35,7 @@ To make AI coding as fast, accurate and cost-efficient as possible, CWC relies o
 
 ## Privacy
 
-CWC operates 100% on your machine—no code, prompts or usage data are collected. For transparency, all source code is publicly accessible on GitHub.
+CWC operates 100% on your machine—no code, prompts or usage data are collected. For transparency, all source code is public on GitHub.
 
 ## Prompt types
 
