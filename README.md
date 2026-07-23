@@ -26,7 +26,7 @@ Get involved! Join our [discord server](https://discord.gg/KJySXsrSX5).
 
 This independent project aims to provide developers with a complete, free toolkit for pair programming with AI that augments, rather than replaces, traditional coding.
 
-Here, you're the one selecting relevant files for the task, so the model has everything it needs from the start!
+CWC lets you select relevant files for the task, so the model has everything it needs from the start!
 
 > [!TIP]
 > Get help in file selection using many included static tools and _Find Relevant Files_ [prompt type](#prompt-types).
