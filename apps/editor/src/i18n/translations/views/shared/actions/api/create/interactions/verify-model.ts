@@ -35,43 +35,6 @@ export const translations = {
     hu: 'Tesztüzenet küldése...',
     bg: 'Изпращане на тестово съобщение...'
   },
-  'views.shared.actions.api.create.interactions.verify-model.prompt.transcribe':
-    {
-      en: 'Transcribe this audio.',
-      pl: 'Przepisz ten dźwięk.',
-      'zh-cn': '转录此音频。',
-      ja: 'この音声を書き起こして。',
-      'zh-tw': '轉錄此音訊。',
-      de: 'Transkribiere dieses Audio.',
-      es: 'Transcribe este audio.',
-      fr: 'Transcrire cet audio.',
-      'pt-br': 'Transcreva este áudio.',
-      ru: 'Транскрибируй это аудио.',
-      ko: '이 오디오를 텍스트로 변환하세요.',
-      it: 'Trascrivi questo audio.',
-      tr: 'Bu sesi metne çevir.',
-      cs: 'Přepiš tento zvuk.',
-      hu: 'Írd át ezt a hangot.',
-      bg: 'Транскрибирай това аудио.'
-    },
-  'views.shared.actions.api.create.interactions.verify-model.prompt.test': {
-    en: 'Test',
-    pl: 'Test',
-    'zh-cn': '测试',
-    ja: 'テスト',
-    'zh-tw': '測試',
-    de: 'Test',
-    es: 'Prueba',
-    fr: 'Test',
-    'pt-br': 'Teste',
-    ru: 'Тест',
-    ko: '테스트',
-    it: 'Test',
-    tr: 'Test',
-    cs: 'Test',
-    hu: 'Teszt',
-    bg: 'Тест'
-  },
   'views.shared.actions.api.create.interactions.verify-model.warning.audio.title':
     {
       en: 'Audio modality not supported',

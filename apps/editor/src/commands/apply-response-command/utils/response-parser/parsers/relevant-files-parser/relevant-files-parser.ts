@@ -13,7 +13,8 @@ export const parse_relevant_files = (params: {
     params.response.includes('### Created file:') ||
     params.response.includes('### Updated file:') ||
     params.response.includes('### Deleted file:') ||
-    params.response.includes('### Renamed file:')
+    params.response.includes('### Renamed file:') ||
+    params.response.includes('### Code at cursor:')
   ) {
     return null
   }

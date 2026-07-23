@@ -31,14 +31,15 @@ export const verify_model = async (params: {
                 role: 'user',
                 content: [
                   {
-                    type: 'text',
-                    text: t(
-                      'views.shared.actions.api.create.interactions.verify-model.prompt.transcribe'
-                    )
-                  },
-                  {
                     type: 'input_audio',
-                    input_audio: { data: '', format: 'wav' }
+                    input_audio: {
+                      data:
+                        'UklGRiR9AABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YQB9' +
+                        // 1 second of silence (16kHz, 16-bit, mono WAV)
+                        'AAAA'.repeat(10667) +
+                        'AA==',
+                      format: 'wav'
+                    }
                   }
                 ]
               }
@@ -46,9 +47,7 @@ export const verify_model = async (params: {
           : [
               {
                 role: 'user',
-                content: t(
-                  'views.shared.actions.api.create.interactions.verify-model.prompt.test'
-                )
+                content: 'Hello!'
               }
             ]
 
@@ -76,6 +75,7 @@ export const verify_model = async (params: {
         success = true
       } catch (e: any) {
         if (!token.isCancellationRequested) {
+          console.log(e.response?.data || e.message)
           error = e
         }
       }
