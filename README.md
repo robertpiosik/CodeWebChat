@@ -33,7 +33,7 @@ Here, you're the one selecting relevant files for the task, so the model has eve
 
 ## Privacy
 
-CWC operates 100% on your machine—no code, prompts or usage data are collected. For transparency, all source code is available on GitHub for audit.
+CWC operates 100% on your machine—no code, prompts or usage data are collected. For transparency, all source code is publicly accessible on GitHub.
 
 ## Prompt types
 
