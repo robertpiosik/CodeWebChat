@@ -26,16 +26,16 @@ Get involved! Join our [discord server](https://discord.gg/KJySXsrSX5).
 
 This independent project aims to provide developers with a complete, free toolkit for pair programming with AI that augments, rather than replaces, traditional coding.
 
+## Privacy
+
+CWC operates 100% on your machine—no code, prompts or usage data are collected. For transparency, all source code is public on GitHub.
+
 ## Static context
 
 To make AI coding as fast, accurate and cost-efficient as possible, CWC relies on static context. This means all task-relevant files are sent together with the prompt in a unified message, so the model has everything it needs from the start, without a single tool call.
 
 > [!TIP]
 > Get help with relevant file selection using keywords, symbol-references or _Find Relevant Files_ [prompt type](#prompt-types).
-
-## Privacy
-
-CWC operates 100% on your machine—no code, prompts or usage data are collected. For transparency, all source code is public on GitHub.
 
 ## Prompt types
 
