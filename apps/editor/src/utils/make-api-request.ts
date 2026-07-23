@@ -9,17 +9,17 @@ type ThinkingStreamCallback = (text: string) => void
 const DATA_PREFIX = 'data: '
 const DONE_TOKEN = '[DONE]'
 
-const process_stream_chunk = (
-  chunk: string,
+const process_stream_chunk = (params: {
+  chunk: string
   buffer: string
-): {
+}): {
   updated_buffer: string
   new_content: string
 } => {
-  let updated_buffer = buffer
+  let updated_buffer = params.buffer
   let new_content = ''
   try {
-    updated_buffer += chunk
+    updated_buffer += params.chunk
     const lines = updated_buffer.split('\n')
     updated_buffer = lines.pop() || ''
 
@@ -291,10 +291,10 @@ export const make_api_request = async (params: {
       let stream_closed = false
 
       response.data.on('data', async (chunk: string) => {
-        const { updated_buffer, new_content } = process_stream_chunk(
+        const { updated_buffer, new_content } = process_stream_chunk({
           chunk,
           buffer
-        )
+        })
         buffer = updated_buffer
         process_content(new_content)
 

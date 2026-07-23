@@ -11,7 +11,14 @@ export const prompt_for_search_term = async (
   }
 
   const input_box = vscode.window.createInputBox()
-  input_box.title = t('feature.search-files.title')
+  input_box.title =
+    mode == 'keywords'
+      ? t('feature.search-files.title.keywords')
+      : mode == 'filename'
+        ? t('feature.search-files.title.filename')
+        : mode == 'intelligent'
+          ? t('feature.search-files.title.intelligent')
+          : t('feature.search-files.title.phrase')
   input_box.prompt =
     mode == 'keywords'
       ? t('feature.search-files.prompt.keywords')

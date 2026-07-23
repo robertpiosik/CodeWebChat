@@ -91,7 +91,9 @@ export const prompt_for_intelligent_search_results = async (params: {
     currently_checked.includes(item.file_path)
   )
   quick_pick.canSelectMany = true
-  quick_pick.title = t('feature.search-files.results')
+
+  quick_pick.title = t('feature.search-files.results.intelligent')
+
   quick_pick.placeholder = t('feature.search-files.select-files')
   quick_pick.ignoreFocusOut = true
   quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]

@@ -11,11 +11,18 @@ export const prompt_for_search_results = async (params: {
   search_mode: 'phrase' | 'keywords' | 'filename' | 'intelligent'
   workspace_provider: WorkspaceProvider
 }): Promise<
-  { selected_paths: string[]; matched_paths: string[] } | undefined | 'back'
+  | { selected_paths: string[]; matched_paths: string[] }
+  | undefined
+  | 'back'
+  | 'intelligent'
 > => {
   const open_file_button = {
     iconPath: new vscode.ThemeIcon('go-to-file'),
     tooltip: t('common.go-to-file')
+  }
+  const intelligent_search_button = {
+    iconPath: new vscode.ThemeIcon('search-sparkle'),
+    tooltip: t('feature.search-files.mode.intelligent')
   }
   const close_button = {
     iconPath: new vscode.ThemeIcon('close'),
@@ -71,12 +78,28 @@ export const prompt_for_search_results = async (params: {
   quick_pick.canSelectMany = true
   quick_pick.matchOnDescription = true
   quick_pick.placeholder = t('feature.search-files.select-files')
-  quick_pick.title = t('feature.search-files.results')
+
+  quick_pick.title =
+    params.search_mode == 'keywords'
+      ? t('feature.search-files.results.keywords')
+      : params.search_mode == 'filename'
+        ? t('feature.search-files.results.filename')
+        : params.search_mode == 'intelligent'
+          ? t('feature.search-files.results.intelligent')
+          : t('feature.search-files.results.phrase')
+
   quick_pick.ignoreFocusOut = true
-  quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
+  quick_pick.buttons = [
+    vscode.QuickInputButtons.Back,
+    intelligent_search_button,
+    close_button
+  ]
 
   return new Promise<
-    { selected_paths: string[]; matched_paths: string[] } | undefined | 'back'
+    | { selected_paths: string[]; matched_paths: string[] }
+    | undefined
+    | 'back'
+    | 'intelligent'
   >((resolve) => {
     let is_accepted = false
 
@@ -86,6 +109,9 @@ export const prompt_for_search_results = async (params: {
         quick_pick.hide()
       } else if (button === close_button) {
         resolve(undefined)
+        quick_pick.hide()
+      } else if (button === intelligent_search_button) {
+        resolve('intelligent')
         quick_pick.hide()
       }
     })
