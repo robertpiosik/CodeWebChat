@@ -31,7 +31,7 @@ This independent project aims to provide developers with a complete, free toolki
 To make AI coding as fast, accurate and cost-efficient as possible, CWC relies on static context. This means all task-relevant files are sent together with the prompt in a single message, so the model has everything it needs from the start, without a single tool call.
 
 > [!TIP]
-> Get help with relevant file selection using keyword search, symbol-references or _Find Relevant Files_ [prompt type](#prompt-types).
+> Get help with relevant file selection using keywords, symbol-references or _Find Relevant Files_ [prompt type](#prompt-types).
 
 ## Privacy
 
