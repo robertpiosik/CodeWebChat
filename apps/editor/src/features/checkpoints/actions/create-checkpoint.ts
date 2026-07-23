@@ -20,8 +20,8 @@ import {
 import * as path from 'path'
 import { Logger } from '@shared/utils/logger'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { dictionary } from '@shared/constants/dictionary'
 import { response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
+import { t } from '@/i18n'
 
 export const create_checkpoint = async (params: {
   workspace_provider: WorkspaceProvider
@@ -54,7 +54,7 @@ export const create_checkpoint = async (params: {
       Date.now() - operation_in_progress < 60 * 1000
     ) {
       vscode.window.showWarningMessage(
-        dictionary.warning_message.CHECKPOINT_OPERATION_IN_PROGRESS
+        t('feature.checkpoints.warning.operation-in-progress')
       )
       return undefined
     }
@@ -230,7 +230,7 @@ export const create_checkpoint = async (params: {
     return new_checkpoint
   } catch (err: any) {
     vscode.window.showErrorMessage(
-      `Failed to create checkpoint: ${err.message}`
+      t('feature.checkpoints.error.create-failed', { error: err.message })
     )
     await params.context.workspaceState.update(
       CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,

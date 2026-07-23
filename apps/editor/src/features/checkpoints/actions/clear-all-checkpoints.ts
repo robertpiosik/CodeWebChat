@@ -6,12 +6,11 @@ import {
 import { get_checkpoint_path } from '../utils'
 import { get_checkpoints } from './get-checkpoints'
 import { Logger } from '@shared/utils/logger'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import type { Checkpoint } from '../types'
+import { t } from '@/i18n'
 
 export const clear_all_checkpoints = async (
-  context: vscode.ExtensionContext,
-  panel_provider: PanelProvider
+  context: vscode.ExtensionContext
 ) => {
   const clear_task = async () => {
     const checkpoints = await get_checkpoints(context)
@@ -55,7 +54,7 @@ export const clear_all_checkpoints = async (
   await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: 'Clearing all checkpoints...',
+      title: t('feature.checkpoints.progress.clearing-all'),
       cancellable: false
     },
     clear_task

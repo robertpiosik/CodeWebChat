@@ -19,9 +19,9 @@ import { Logger } from '@shared/utils/logger'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
 import { ongoing_preview_cleanup_promise } from '@/commands/apply-response-command/utils/preview-handler'
-import { dictionary } from '@shared/constants/dictionary'
 import { get_git_info } from '../utils/git-utils'
 import { PromptsForCommitMessagesUtils } from '@/utils/prompts-for-commit-messages-utils'
+import { t } from '@/i18n'
 export const restore_checkpoint = async (params: {
   checkpoint: Checkpoint
   workspace_provider: WorkspaceProvider
@@ -36,14 +36,14 @@ export const restore_checkpoint = async (params: {
   )
   if (operation_in_progress && Date.now() - operation_in_progress < 60 * 1000) {
     vscode.window.showWarningMessage(
-      dictionary.warning_message.CHECKPOINT_OPERATION_IN_PROGRESS
+      t('feature.checkpoints.warning.operation-in-progress')
     )
     return
   }
 
   const title = params.options?.skip_confirmation
-    ? 'Reverting...'
-    : 'Restoring checkpoint...'
+    ? t('feature.checkpoints.progress.reverting')
+    : t('feature.checkpoints.progress.restoring')
 
   const main_task = async (
     progress: vscode.Progress<{ message?: string; increment?: number }>
@@ -139,7 +139,9 @@ export const restore_checkpoint = async (params: {
       }
     } catch (err: any) {
       vscode.window.showErrorMessage(
-        `Failed to create temporary checkpoint for revert: ${err.message}`
+        t('feature.checkpoints.error.create-temp-failed', {
+          error: err.message
+        })
       )
       await params.context.workspaceState.update(
         TEMPORARY_CHECKPOINT_STATE_KEY,
@@ -202,7 +204,9 @@ export const restore_checkpoint = async (params: {
                     data: e
                   })
                   throw new Error(
-                    `Failed to reject changes for ${folder.name}. Please ensure your git working directory is clean.`
+                    t('feature.checkpoints.error.reject-changes-failed', {
+                      folder: folder.name
+                    })
                   )
                 }
               }
@@ -250,7 +254,9 @@ export const restore_checkpoint = async (params: {
                       }
                     )
                     vscode.window.showWarningMessage(
-                      `Some changes for ${folder.name} could not be applied cleanly during checkpoint restore. Check for .rej files in your workspace.`
+                      t('feature.checkpoints.warning.diff-apply-issues', {
+                        folder: folder.name
+                      })
                     )
                   } catch (rejectErr) {
                     Logger.error({
@@ -259,7 +265,9 @@ export const restore_checkpoint = async (params: {
                       data: rejectErr
                     })
                     throw new Error(
-                      `Failed to apply git diff for ${folder.name}`
+                      t('feature.checkpoints.error.diff-apply-failed', {
+                        folder: folder.name
+                      })
                     )
                   }
                 } finally {
@@ -336,7 +344,9 @@ export const restore_checkpoint = async (params: {
                       }
                     )
                     vscode.window.showWarningMessage(
-                      `Some changes for ${folder.name} could not be applied cleanly during checkpoint restore. Check for .rej files in your workspace.`
+                      t('feature.checkpoints.warning.diff-apply-issues', {
+                        folder: folder.name
+                      })
                     )
                   } catch (rejectErr) {
                     Logger.error({
@@ -345,7 +355,9 @@ export const restore_checkpoint = async (params: {
                       data: rejectErr
                     })
                     throw new Error(
-                      `Failed to apply git diff for ${folder.name}`
+                      t('feature.checkpoints.error.diff-apply-failed', {
+                        folder: folder.name
+                      })
                     )
                   }
                 } finally {
@@ -489,7 +501,7 @@ export const restore_checkpoint = async (params: {
         undefined
       )
       vscode.window.showErrorMessage(
-        `Failed to restore checkpoint: ${err.message}`
+        t('feature.checkpoints.error.restore-failed', { error: err.message })
       )
       if (temp_checkpoint) {
         await delete_checkpoint({
@@ -523,12 +535,16 @@ export const restore_checkpoint = async (params: {
   }
 
   const message = params.options?.skip_confirmation
-    ? 'Successfully reverted changes.'
-    : 'Checkpoint has been restored.'
+    ? t('feature.checkpoints.success.reverted')
+    : t('feature.checkpoints.success.restored')
 
   if (temp_check) {
-    const action = await vscode.window.showInformationMessage(message, 'Revert')
-    if (action == 'Revert') {
+    const action_label = t('feature.checkpoints.action.revert')
+    const action = await vscode.window.showInformationMessage(
+      message,
+      action_label
+    )
+    if (action == action_label) {
       await restore_checkpoint({
         checkpoint: temp_check,
         workspace_provider: params.workspace_provider,

@@ -20,7 +20,6 @@ import {
 } from '@/features/checkpoints/actions'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { get_checkpoint_path } from '@/features/checkpoints/utils'
-import { dictionary } from '@shared/constants/dictionary'
 import { get_response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview/preview'
 
 dayjs.extend(localizedFormat)
@@ -49,7 +48,7 @@ export const history_command = (params: {
         vscode.workspace.workspaceFolders.length == 0
       ) {
         vscode.window.showErrorMessage(
-          dictionary.error_message.CHECKPOINTS_ONLY_IN_WORKSPACE
+          t('command.history.error.checkpoints-only-in-workspace')
         )
         return
       }
@@ -81,7 +80,7 @@ export const history_command = (params: {
         vscode.workspace.workspaceFolders.length == 0
       ) {
         vscode.window.showErrorMessage(
-          dictionary.error_message.CHECKPOINTS_ONLY_IN_WORKSPACE
+          t('command.history.error.checkpoints-only-in-workspace')
         )
         return
       }
@@ -257,8 +256,7 @@ export const history_command = (params: {
               )
             if (!temp_checkpoint) {
               vscode.window.showErrorMessage(
-                dictionary.error_message
-                  .COULD_NOT_FIND_TEMP_CHECKPOINT_TO_REVERT
+                t('command.history.error.could-not-find-temp-checkpoint')
               )
               return
             }
@@ -306,23 +304,23 @@ export const history_command = (params: {
               )
             if (checkpoints.length == 0 && !temp_checkpoint) {
               vscode.window.showInformationMessage(
-                dictionary.information_message.NOTHING_TO_DELETE
+                t('command.history.info.nothing-to-delete')
               )
               quick_pick.show()
               return
             }
 
             const confirmation = await vscode.window.showWarningMessage(
-              dictionary.warning_message.CONFIRM_CLEAR_ALL_CHECKPOINTS,
+              t('command.history.warning.confirm-clear-all'),
               { modal: true },
-              'Clear All'
+              t('command.history.clear-all-button')
             )
 
-            if (confirmation == 'Clear All') {
+            if (confirmation == t('command.history.clear-all-button')) {
               active_delete_operation = null
-              await clear_all_checkpoints(params.context, params.panel_provider)
+              await clear_all_checkpoints(params.context)
               vscode.window.showInformationMessage(
-                dictionary.information_message.ALL_CHECKPOINTS_CLEARED
+                t('command.history.info.all-cleared')
               )
             }
             await refresh_and_update_view()

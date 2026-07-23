@@ -4,7 +4,7 @@ import type { Checkpoint } from '../types'
 import { get_checkpoint_path } from '../utils'
 import { Logger } from '@shared/utils/logger'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { dictionary } from '@shared/constants/dictionary'
+import { t } from '@/i18n'
 
 export const delete_checkpoint = async (params: {
   context: vscode.ExtensionContext
@@ -83,9 +83,9 @@ export const delete_checkpoint_with_undo = async (params: {
       })
     } catch (error: any) {
       vscode.window.showWarningMessage(
-        dictionary.warning_message.COULD_NOT_DELETE_CHECKPOINT_FILES(
-          error.message
-        )
+        t('feature.checkpoints.warning.could-not-delete', {
+          error: error.message
+        })
       )
     }
   }
@@ -94,9 +94,10 @@ export const delete_checkpoint_with_undo = async (params: {
   params.set_active_operation(operation)
 
   params.on_before_show_message?.()
+  const undo_action = t('feature.checkpoints.action.undo')
   const choice = await vscode.window.showInformationMessage(
-    dictionary.information_message.CHECKPOINT_DELETED,
-    'Undo'
+    t('feature.checkpoints.success.deleted'),
+    undo_action
   )
   params.on_after_show_message?.()
 
@@ -106,7 +107,7 @@ export const delete_checkpoint_with_undo = async (params: {
     current_active_op &&
     current_active_op.timestamp === operation.timestamp
   ) {
-    if (choice == 'Undo') {
+    if (choice == undo_action) {
       const current_checkpoints =
         params.context.workspaceState.get<Checkpoint[]>(
           CHECKPOINTS_STATE_KEY,
@@ -124,7 +125,7 @@ export const delete_checkpoint_with_undo = async (params: {
 
       params.on_before_show_message?.()
       await vscode.window.showInformationMessage(
-        dictionary.information_message.CHECKPOINT_RESTORED
+        t('feature.checkpoints.success.restored')
       )
       params.on_after_show_message?.()
 
@@ -135,10 +136,10 @@ export const delete_checkpoint_with_undo = async (params: {
       params.set_active_operation(null)
       return false
     }
-  } else if (choice == 'Undo') {
+  } else if (choice == undo_action) {
     params.on_before_show_message?.()
     await vscode.window.showInformationMessage(
-      dictionary.information_message.COULD_NOT_UNDO_ANOTHER_CHECKPOINT_DELETED
+      t('feature.checkpoints.error.could-not-undo')
     )
     params.on_after_show_message?.()
     return false
