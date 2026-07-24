@@ -302,7 +302,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           raw_text: props.value,
           context_file_paths: props.selected_files ?? []
         })
-        input_ref.current.focus()
+        if (!props.warning) {
+          input_ref.current.focus()
+        }
         set_caret_position_for_div(input_ref.current, display_pos)
       } else if (is_focused) {
         set_caret_position_for_div(input_ref.current, selection_start)
@@ -375,7 +377,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           [styles['container__inner--selecting']]: is_text_selecting
         })}
         onKeyDown={handle_container_key_down}
-        onClick={() => input_ref.current?.focus()}
+        onClick={() => !props.warning && input_ref.current?.focus()}
       >
         <div className={styles['input-wrapper']}>
           {props.tabs_count > 1 ? (
@@ -496,7 +498,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         <div
           className={styles.footer}
           onClick={() => {
-            if (input_ref.current) {
+            if (input_ref.current && !props.warning) {
               input_ref.current.focus()
               const selection = window.getSelection()
               if (selection) {
