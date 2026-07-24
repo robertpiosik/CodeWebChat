@@ -16,7 +16,7 @@ export const prompt_for_intelligent_search_results = async (params: {
 
   for (const extracted of params.extracted_files) {
     const matched = params.analysis.files_data.find(
-      (f) => f.display_path === extracted
+      (f) => f.display_path == extracted
     )
     if (matched) {
       absolute_paths.push(matched.file_path)
@@ -25,7 +25,7 @@ export const prompt_for_intelligent_search_results = async (params: {
       for (const root of roots) {
         const potential_abs = path.join(root, extracted)
         if (
-          params.analysis.files_data.some((f) => f.file_path === potential_abs)
+          params.analysis.files_data.some((f) => f.file_path == potential_abs)
         ) {
           absolute_paths.push(potential_abs)
           break

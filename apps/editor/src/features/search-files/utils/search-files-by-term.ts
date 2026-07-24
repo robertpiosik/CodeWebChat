@@ -18,7 +18,7 @@ export const search_files_by_term = async (params: {
 }): Promise<string[]> => {
   const matched_files: string[] = []
 
-  if (params.search_mode === 'semantic') {
+  if (params.search_mode == 'semantic') {
     const workspace_folders = vscode.workspace.workspaceFolders
     if (!workspace_folders) return []
 
@@ -67,7 +67,7 @@ export const search_files_by_term = async (params: {
       .map((item) => item.file_path)
   }
 
-  if (params.search_mode === 'filename') {
+  if (params.search_mode == 'filename') {
     const keywords = params.search_term
       .split(',')
       .map((k) => k.trim())

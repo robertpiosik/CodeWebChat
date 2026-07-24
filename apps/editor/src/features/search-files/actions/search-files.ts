@@ -188,7 +188,7 @@ export const search_files = async (params: {
               return undefined
             }
 
-            if (selected_items === 'intelligent') {
+            if (selected_items == 'intelligent') {
               const intelligent_result = await perform_intelligent_search_flow({
                 files: matched_files,
                 workspace_provider: params.workspace_provider,
