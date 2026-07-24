@@ -57,6 +57,7 @@ export const Settings = () => {
       settings_hook.select_all_prompts_in_commit_messages_by_default !==
         undefined &&
       settings_hook.context_size_warning_threshold !== undefined &&
+      settings_hook.limit_semantic_search_results !== undefined &&
       settings_hook.edit_format_instructions !== undefined &&
       settings_hook.are_automatic_checkpoints_disabled !== undefined &&
       settings_hook.checkpoint_lifespan !== undefined &&
@@ -100,6 +101,9 @@ export const Settings = () => {
         context_size_warning_threshold={
           settings_hook.context_size_warning_threshold!
         }
+        limit_semantic_search_results={
+          settings_hook.limit_semantic_search_results!
+        }
         select_all_prompts_in_commit_messages_by_default={
           settings_hook.select_all_prompts_in_commit_messages_by_default!
         }
@@ -126,6 +130,9 @@ export const Settings = () => {
         set_api_configurations={settings_hook.set_api_configurations}
         on_context_size_warning_threshold_change={
           settings_hook.handle_context_size_warning_threshold_change
+        }
+        on_limit_semantic_search_results_change={
+          settings_hook.handle_limit_semantic_search_results_change
         }
         on_commit_instructions_change={
           settings_hook.handle_commit_instructions_change

@@ -130,6 +130,15 @@ export interface UpdateContextSizeWarningThresholdMessage {
   threshold: number | null
 }
 
+export interface GetLimitSemanticSearchResultsMessage {
+  command: 'GET_LIMIT_SEMANTIC_SEARCH_RESULTS'
+}
+
+export interface UpdateLimitSemanticSearchResultsMessage {
+  command: 'UPDATE_LIMIT_SEMANTIC_SEARCH_RESULTS'
+  limit: number | null
+}
+
 export interface GetAreAutomaticCheckpointsDisabledMessage {
   command: 'GET_ARE_AUTOMATIC_CHECKPOINTS_DISABLED'
 }
@@ -358,6 +367,8 @@ export type FrontendMessage =
   | SettingsUiReadyMessage
   | GetContextSizeWarningThresholdMessage
   | UpdateContextSizeWarningThresholdMessage
+  | GetLimitSemanticSearchResultsMessage
+  | UpdateLimitSemanticSearchResultsMessage
   | GetAreAutomaticCheckpointsDisabledMessage
   | UpdateAreAutomaticCheckpointsDisabledMessage
   | GetCheckpointLifespanMessage
@@ -440,6 +451,11 @@ export interface EditFormatInstructionsMessage {
 export interface ContextSizeWarningThresholdMessage {
   command: 'CONTEXT_SIZE_WARNING_THRESHOLD'
   threshold: number
+}
+
+export interface LimitSemanticSearchResultsMessage {
+  command: 'LIMIT_SEMANTIC_SEARCH_RESULTS'
+  limit: number
 }
 
 export interface AreAutomaticCheckpointsDisabledMessage {
@@ -573,6 +589,7 @@ export type BackendMessage =
   | FindRelevantFilesInstructionsMessage
   | EditFormatInstructionsMessage
   | ContextSizeWarningThresholdMessage
+  | LimitSemanticSearchResultsMessage
   | AreAutomaticCheckpointsDisabledMessage
   | CheckpointLifespanMessage
   | GeminiUserIdMessage

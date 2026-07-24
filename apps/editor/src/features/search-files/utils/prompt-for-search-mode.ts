@@ -2,13 +2,24 @@ import * as vscode from 'vscode'
 import { t } from '@/i18n'
 
 export const prompt_for_search_mode = async (
-  last_mode: 'phrase' | 'keywords' | 'filename' | 'intelligent',
+  last_mode: 'phrase' | 'keywords' | 'filename' | 'intelligent' | 'semantic',
   show_back_button?: boolean
 ): Promise<
-  'phrase' | 'keywords' | 'filename' | 'intelligent' | undefined | 'back'
+  | 'phrase'
+  | 'keywords'
+  | 'filename'
+  | 'intelligent'
+  | 'semantic'
+  | undefined
+  | 'back'
 > => {
+  const help_button: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('question'),
+    tooltip: 'Semble Quickstart'
+  }
+
   const items: (vscode.QuickPickItem & {
-    mode: 'phrase' | 'keywords' | 'filename' | 'intelligent'
+    mode: 'phrase' | 'keywords' | 'filename' | 'intelligent' | 'semantic'
   })[] = [
     {
       label: t('feature.search-files.mode.phrase'),
@@ -29,6 +40,12 @@ export const prompt_for_search_mode = async (
       label: t('feature.search-files.mode.intelligent'),
       description: t('feature.search-files.mode.intelligent-description'),
       mode: 'intelligent'
+    },
+    {
+      label: t('feature.search-files.mode.semantic'),
+      description: t('feature.search-files.mode.semantic-description'),
+      mode: 'semantic',
+      buttons: [help_button]
     }
   ]
 
@@ -41,7 +58,7 @@ export const prompt_for_search_mode = async (
 
   const quick_pick = vscode.window.createQuickPick<
     vscode.QuickPickItem & {
-      mode: 'phrase' | 'keywords' | 'filename' | 'intelligent'
+      mode: 'phrase' | 'keywords' | 'filename' | 'intelligent' | 'semantic'
     }
   >()
   quick_pick.items = items
@@ -66,6 +83,14 @@ export const prompt_for_search_mode = async (
       } else if (button === close_button) {
         resolve(undefined)
         quick_pick.hide()
+      }
+    })
+
+    quick_pick.onDidTriggerItemButton((e) => {
+      if (e.button === help_button) {
+        vscode.env.openExternal(
+          vscode.Uri.parse('https://github.com/MinishLab/semble#quickstart')
+        )
       }
     })
 

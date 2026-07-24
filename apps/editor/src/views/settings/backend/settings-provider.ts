@@ -14,6 +14,7 @@ import {
   handle_get_commit_message_instructions,
   handle_get_include_prompts_in_commit_messages,
   handle_get_context_size_warning_threshold,
+  handle_get_limit_semantic_search_results,
   handle_get_edit_files_system_instructions,
   handle_get_edit_format_instructions,
   handle_get_gemini_user_id,
@@ -35,6 +36,7 @@ import {
   handle_update_edit_format_instructions,
   handle_update_gemini_user_id,
   handle_update_context_size_warning_threshold,
+  handle_update_limit_semantic_search_results,
   handle_update_ai_studio_user_id,
   handle_update_send_with_shift_enter,
   handle_update_reuse_last_tab,
@@ -191,6 +193,10 @@ export class SettingsProvider {
           await handle_get_context_size_warning_threshold(this)
         } else if (message.command == 'UPDATE_CONTEXT_SIZE_WARNING_THRESHOLD') {
           await handle_update_context_size_warning_threshold(message)
+        } else if (message.command == 'GET_LIMIT_SEMANTIC_SEARCH_RESULTS') {
+          await handle_get_limit_semantic_search_results(this)
+        } else if (message.command == 'UPDATE_LIMIT_SEMANTIC_SEARCH_RESULTS') {
+          await handle_update_limit_semantic_search_results(message)
         } else if (
           message.command == 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
         ) {
@@ -294,6 +300,7 @@ export class SettingsProvider {
           void handle_get_find_relevant_files_instructions(this)
           void handle_get_edit_format_instructions(this)
           void handle_get_context_size_warning_threshold(this)
+          void handle_get_limit_semantic_search_results(this)
           void handle_get_commit_message_instructions(this)
           void handle_get_include_prompts_in_commit_messages(this)
           void handle_get_clear_checks_in_workspace_behavior(this)

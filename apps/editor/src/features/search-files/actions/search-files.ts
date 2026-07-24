@@ -7,7 +7,8 @@ import {
   LAST_SEARCH_FILES_KEYWORDS_MATCH_MODE_STATE_KEY,
   LAST_SEARCH_FILES_FILENAME_QUERY_STATE_KEY,
   LAST_SEARCH_FILES_FILENAME_MATCH_MODE_STATE_KEY,
-  LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY
+  LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY,
+  LAST_SEARCH_FILES_SEMANTIC_QUERY_STATE_KEY
 } from '@/constants/state-keys'
 import { prompt_for_search_mode } from '../utils/prompt-for-search-mode'
 import { prompt_for_keywords_match_mode } from '../utils/prompt-for-keywords-match-mode'
@@ -28,7 +29,7 @@ export const search_files = async (params: {
 > => {
   let initial_search_mode =
     params.extension_context.workspaceState.get<
-      'phrase' | 'keywords' | 'filename' | 'intelligent'
+      'phrase' | 'keywords' | 'filename' | 'intelligent' | 'semantic'
     >(LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY) || 'phrase'
 
   while (true) {
@@ -124,7 +125,9 @@ export const search_files = async (params: {
               ? LAST_SEARCH_FILES_PHRASE_QUERY_STATE_KEY
               : search_mode == 'keywords'
                 ? LAST_SEARCH_FILES_KEYWORDS_QUERY_STATE_KEY
-                : LAST_SEARCH_FILES_FILENAME_QUERY_STATE_KEY
+                : search_mode == 'semantic'
+                  ? LAST_SEARCH_FILES_SEMANTIC_QUERY_STATE_KEY
+                  : LAST_SEARCH_FILES_FILENAME_QUERY_STATE_KEY
 
           const initial_search_term =
             params.extension_context.workspaceState.get<string>(state_key) || ''

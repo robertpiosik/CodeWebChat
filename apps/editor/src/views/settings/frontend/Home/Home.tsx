@@ -115,6 +115,7 @@ type Props = {
   commit_message_instructions: string
   select_all_prompts_in_commit_messages_by_default: boolean
   context_size_warning_threshold: number
+  limit_semantic_search_results: number
   gemini_user_id: number | null
   ai_studio_user_id: number | null
   send_with_shift_enter: boolean
@@ -132,6 +133,7 @@ type Props = {
   on_context_size_warning_threshold_change: (
     threshold: number | undefined
   ) => void
+  on_limit_semantic_search_results_change: (limit: number | undefined) => void
   on_commit_instructions_change: (instructions: string) => void
   on_select_all_prompts_in_commit_messages_by_default_change: (
     enabled: boolean
@@ -394,6 +396,10 @@ export const Home: React.FC<Props> = (props) => {
           on_context_size_warning_threshold_change={
             props.on_context_size_warning_threshold_change
           }
+          limit_semantic_search_results={props.limit_semantic_search_results}
+          on_limit_semantic_search_results_change={
+            props.on_limit_semantic_search_results_change
+          }
           send_with_shift_enter={props.send_with_shift_enter}
           on_send_with_shift_enter_change={
             props.on_send_with_shift_enter_change
@@ -480,6 +486,7 @@ export const Home: React.FC<Props> = (props) => {
               default_find_relevant_files_instructions
             )
           }}
+          on_open_external_url={props.on_open_external_url}
         />
 
         <WebConfigurationsSection

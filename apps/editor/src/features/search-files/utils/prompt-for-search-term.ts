@@ -3,7 +3,7 @@ import { t } from '@/i18n'
 
 export const prompt_for_search_term = async (
   initial_search_term: string,
-  mode: 'phrase' | 'keywords' | 'filename' | 'intelligent'
+  mode: 'phrase' | 'keywords' | 'filename' | 'intelligent' | 'semantic'
 ): Promise<{ value: string | undefined; back?: boolean }> => {
   const close_button = {
     iconPath: new vscode.ThemeIcon('close'),
@@ -18,7 +18,9 @@ export const prompt_for_search_term = async (
         ? t('feature.search-files.title.filename')
         : mode == 'intelligent'
           ? t('feature.search-files.title.intelligent')
-          : t('feature.search-files.title.phrase')
+          : mode == 'semantic'
+            ? t('feature.search-files.title.semantic')
+            : t('feature.search-files.title.phrase')
   input_box.prompt =
     mode == 'keywords'
       ? t('feature.search-files.prompt.keywords')
@@ -26,7 +28,9 @@ export const prompt_for_search_term = async (
         ? t('feature.search-files.prompt.filename')
         : mode == 'intelligent'
           ? t('feature.search-files.prompt.intelligent')
-          : t('feature.search-files.prompt')
+          : mode == 'semantic'
+            ? t('feature.search-files.prompt.semantic')
+            : t('feature.search-files.prompt')
   input_box.placeholder = t('feature.search-files.placeholder')
   input_box.value = initial_search_term
   input_box.ignoreFocusOut = true
