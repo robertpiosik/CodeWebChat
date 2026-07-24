@@ -326,6 +326,27 @@ export const create_handle_key_down = (
 
     if (selection?.isCollapsed && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
       const raw_pos = refs.raw_caret_pos_ref.current
+
+      const symbol_ranges = get_symbol_ranges({
+        text: props.value,
+        selected_files: props.selected_files ?? []
+      })
+
+      const symbol_at_caret = symbol_ranges.find(
+        (range) => range.end === raw_pos
+      )
+
+      if (symbol_at_caret) {
+        e.preventDefault()
+        const new_value =
+          props.value.substring(0, symbol_at_caret.start) +
+          props.value.substring(raw_pos)
+
+        refs.has_modified_current_entry_ref.current = true
+        utils.update_value(new_value, symbol_at_caret.start)
+        return
+      }
+
       const text_before = props.value.substring(0, raw_pos)
       const backticks_count = (text_before.match(/`/g) || []).length
 
