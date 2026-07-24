@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
-import axios from 'axios'
 import { ModelProvider } from '@/services/model-providers-manager'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
+import axios from 'axios'
 
 export const verify_reasoning_effort = async (params: {
   endpoint_url: string
@@ -11,10 +11,10 @@ export const verify_reasoning_effort = async (params: {
   model_provider: ModelProvider
   cancellation_token: vscode.CancellationToken
 }): Promise<void> => {
-  const cancel_source = axios.CancelToken.source()
+  const cancel_token_source = axios.CancelToken.source()
 
   const disposable = params.cancellation_token.onCancellationRequested(() => {
-    cancel_source.cancel('User cancelled')
+    cancel_token_source.cancel('User cancelled')
   })
 
   const body = {
@@ -45,36 +45,44 @@ export const verify_reasoning_effort = async (params: {
             : {}),
           ['Content-Type']: 'application/json'
         },
-        responseType: 'stream',
-        cancelToken: cancel_source.token
+        cancelToken: cancel_token_source.token,
+        responseType: 'stream'
       }
     )
 
     await new Promise<void>((resolve, reject) => {
-      const stream = response.data
-
-      stream.on('data', () => {
-        cancel_source.cancel('Verified')
-        resolve()
+      let resolved = false
+      response.data.on('data', () => {
+        if (!resolved) {
+          resolved = true
+          cancel_token_source.cancel('Verified')
+          resolve()
+        }
       })
-
-      stream.on('error', (err: any) => {
-        reject(err)
+      response.data.on('end', () => {
+        if (!resolved) {
+          resolved = true
+          resolve()
+        }
       })
-
-      stream.on('end', () => {
-        resolve()
+      response.data.on('error', (err: any) => {
+        if (!resolved) {
+          resolved = true
+          reject(err)
+        }
       })
     })
-  } catch (error) {
+  } catch (error: any) {
     if (axios.isCancel(error)) {
-      if (error.message == 'Verified') {
-        return
-      }
-      if (error.message == 'User cancelled') {
+      if (
+        error.message === 'User cancelled' ||
+        params.cancellation_token.isCancellationRequested
+      ) {
         throw new Error('Cancelled')
       }
+      return
     }
+
     throw error
   } finally {
     disposable.dispose()

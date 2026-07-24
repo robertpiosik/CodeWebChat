@@ -29,6 +29,10 @@ export const verify_model = async (params: {
           ? [
               {
                 role: 'user',
+                content: 'Respond with "OK", and nothing else.'
+              },
+              {
+                role: 'user',
                 content: [
                   {
                     type: 'input_audio',
@@ -47,16 +51,21 @@ export const verify_model = async (params: {
           : [
               {
                 role: 'user',
-                content: 'Hello!'
+                content: 'Respond with "OK", and nothing else.'
               }
             ]
+
+        const cancel_token_source = axios.CancelToken.source()
+        const disposable = token.onCancellationRequested(() => {
+          cancel_token_source.cancel('User cancelled')
+        })
 
         await axios.post(
           `${params.base_url}/chat/completions`,
           {
             model: params.model,
             messages,
-            max_tokens: 1
+            stream: true
           },
           {
             headers: {
@@ -65,17 +74,20 @@ export const verify_model = async (params: {
                 ? { Authorization: `Bearer ${params.api_key}` }
                 : {})
             },
-            cancelToken: new axios.CancelToken((c) => {
-              token.onCancellationRequested(() => {
-                c('User cancelled')
-              })
-            })
+            cancelToken: cancel_token_source.token,
+            responseType: 'stream'
           }
         )
+
+        cancel_token_source.cancel('Verified')
+        disposable.dispose()
         success = true
       } catch (e: any) {
-        if (!token.isCancellationRequested) {
-          console.log(e.response?.data || e.message)
+        if (!axios.isCancel(e)) {
+          if (e.response) {
+            e.status = e.response.status
+          }
+          console.log(e.message)
           error = e
         }
       }
@@ -105,9 +117,9 @@ export const verify_model = async (params: {
         'views.shared.actions.api.create.interactions.verify-model.warning.test.detail'
       )
 
-  if (axios.isAxiosError(error)) {
-    if (error.response) {
-      const status = error.response.status
+  if (error) {
+    if (error.status) {
+      const status = error.status
       let reason = t(
         'views.shared.actions.api.create.interactions.verify-model.status.server-error'
       )
@@ -164,7 +176,7 @@ export const verify_model = async (params: {
               reason
             }
           )
-    } else if (error.code) {
+    } else if (error.message) {
       detail = params.is_voice_input
         ? t(
             'views.shared.actions.api.create.interactions.verify-model.warning.audio.detail'
