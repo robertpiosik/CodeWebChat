@@ -1,5 +1,5 @@
 export const translations = {
-  'command.context.select-references.searching': {
+  'command.select-referencing-files.searching': {
     en: 'Searching for references...',
     pl: 'Wyszukiwanie odwołań...',
     'zh-cn': '正在搜索引用...',
@@ -17,7 +17,7 @@ export const translations = {
     hu: 'Hivatkozások keresése...',
     bg: 'Търсене на референции...'
   },
-  'command.context.select-references.no-files': {
+  'command.select-referencing-files.no-files': {
     en: 'No references found.',
     pl: 'Nie znaleziono odwołań.',
     'zh-cn': '未找到引用。',
@@ -35,7 +35,7 @@ export const translations = {
     hu: 'Nem találhatók hivatkozások.',
     bg: 'Не са намерени референции.'
   },
-  'command.context.select-references.select-files': {
+  'command.select-referencing-files.select-files': {
     en: 'Select referencing files',
     pl: 'Wybierz pliki odwołujące się',
     'zh-cn': '选择引用文件',
@@ -53,7 +53,7 @@ export const translations = {
     hu: 'Hivatkozó fájlok kiválasztása',
     bg: 'Изберете рефериращите файлове'
   },
-  'command.context.select-references.search-results': {
+  'command.select-referencing-files.search-results': {
     en: 'Search Results',
     pl: 'Wyniki wyszukiwania',
     'zh-cn': '搜索结果',
@@ -71,7 +71,26 @@ export const translations = {
     hu: 'Keresési eredmények',
     bg: 'Резултати от търсенето'
   },
-  'command.context.select-references.context-updated': {
+  'command.select-referencing-files.search': {
+    en: 'Search',
+    pl: 'Szukaj',
+    'zh-cn': '搜索',
+    ja: '検索',
+    'zh-tw': '搜尋',
+    de: 'Suchen',
+    es: 'Buscar',
+    fr: 'Rechercher',
+    'pt-br': 'Pesquisar',
+    ru: 'Поиск',
+    ko: '검색',
+    it: 'Cerca',
+    tr: 'Ara',
+    cs: 'Hledat',
+    hu: 'Keresés',
+    bg: 'Търсене'
+  },
+
+  'command.select-referencing-files.context-updated': {
     en: 'Context updated.',
     pl: 'Kontekst zaktualizowany.',
     'zh-cn': '上下文已更新。',
@@ -89,7 +108,7 @@ export const translations = {
     hu: 'Kontextus frissítve.',
     bg: 'Контекстът е актуализиран.'
   },
-  'command.context.select-references.error-opening': {
+  'command.select-referencing-files.error-opening': {
     en: 'Error opening file: {error}',
     pl: 'Błąd otwierania pliku: {error}',
     'zh-cn': '打开文件出错：{error}',
@@ -107,7 +126,7 @@ export const translations = {
     hu: 'Hiba a fájl megnyitásakor: {error}',
     bg: 'Грешка при отваряне на файл: {error}'
   },
-  'command.context.select-references.failed': {
+  'command.select-referencing-files.failed': {
     en: 'Reference check failed: {error}',
     pl: 'Sprawdzenie odwołań nie powiodło się: {error}',
     'zh-cn': '引用检查失败：{error}',

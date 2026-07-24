@@ -1,9 +1,6 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import {
-  WorkspaceProvider,
-  FileItem
-} from '../context/providers/workspace/workspace-provider'
+import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'
 import { display_token_count } from '../utils/display-token-count'
 import { t } from '../i18n'
@@ -16,20 +13,98 @@ export const select_referencing_files_command = (
 ) => {
   return vscode.commands.registerCommand(
     'codeWebChat.selectReferencingFiles',
-    async (item?: FileItem) => {
+    async (item?: any) => {
       try {
         let matched_files: { file_path: string; range: vscode.Range }[] = []
 
+        let target_uri: vscode.Uri | undefined
+
+        let should_check_position = false
+        let target_position: vscode.Position | undefined
+
         if (item?.resourceUri) {
-          const target_uri = item.resourceUri
+          target_uri = item.resourceUri
+        } else if (
+          item instanceof vscode.Uri ||
+          (item && item.fsPath && item.scheme)
+        ) {
+          target_uri = item as vscode.Uri
+          const editor = vscode.window.activeTextEditor
+          if (editor && editor.document.uri.fsPath === target_uri.fsPath) {
+            should_check_position = true
+            target_position = editor.selection.active
+          }
+        } else {
+          const editor = vscode.window.activeTextEditor
+          if (editor) {
+            target_uri = editor.document.uri
+            should_check_position = true
+            target_position = editor.selection.active
+          }
+        }
+
+        if (!target_uri) {
+          return
+        }
+
+        let do_whole_file_search = true
+
+        if (should_check_position && target_position) {
+          matched_files = await vscode.window.withProgress(
+            {
+              location: vscode.ProgressLocation.Window,
+              title: t('command.select-referencing-files.searching')
+            },
+            async () => {
+              const locations = await vscode.commands.executeCommand<
+                vscode.Location[]
+              >(
+                'vscode.executeReferenceProvider',
+                target_uri!,
+                target_position!
+              )
+
+              if (!locations || locations.length === 0) return []
+
+              const current_file_path = target_uri!.fsPath
+              const file_map = new Map<string, vscode.Range>()
+              locations.forEach((loc) => {
+                const file_path = loc.uri.fsPath
+
+                if (file_path == current_file_path) return
+
+                if (
+                  workspace_provider.get_workspace_root_for_file(file_path) &&
+                  !workspace_provider.is_ignored_by_patterns(file_path)
+                ) {
+                  if (!file_map.has(file_path)) {
+                    file_map.set(file_path, loc.range)
+                  }
+                }
+              })
+              return Array.from(file_map.entries()).map(
+                ([file_path, range]) => ({
+                  file_path,
+                  range
+                })
+              )
+            }
+          )
+
+          if (matched_files.length > 0) {
+            do_whole_file_search = false
+          }
+        }
+
+        if (do_whole_file_search) {
           const starting_uris = await get_all_files(
-            target_uri,
+            target_uri!,
             workspace_provider
           )
 
           if (starting_uris.length == 0) {
             vscode.window.showInformationMessage(
-              t('command.context.select-references.no-files')
+              t('command.select-referencing-files.no-files')
             )
             return
           }
@@ -40,7 +115,7 @@ export const select_referencing_files_command = (
           await vscode.window.withProgress(
             {
               location: vscode.ProgressLocation.Notification,
-              title: t('command.context.select-references.searching'),
+              title: t('command.select-referencing-files.searching'),
               cancellable: true
             },
             async (progress, token) => {
@@ -160,56 +235,11 @@ export const select_referencing_files_command = (
               range
             })
           )
-        } else {
-          const editor = vscode.window.activeTextEditor
-          if (!editor) {
-            return
-          }
-
-          const document = editor.document
-          const position = editor.selection.active
-
-          matched_files = await vscode.window.withProgress(
-            {
-              location: vscode.ProgressLocation.Window,
-              title: t('command.context.select-references.searching')
-            },
-            async () => {
-              const locations = await vscode.commands.executeCommand<
-                vscode.Location[]
-              >('vscode.executeReferenceProvider', document.uri, position)
-
-              if (!locations) return []
-
-              const current_file_path = document.uri.fsPath
-              const file_map = new Map<string, vscode.Range>()
-              locations.forEach((loc) => {
-                const file_path = loc.uri.fsPath
-
-                if (file_path == current_file_path) return
-
-                if (
-                  workspace_provider.get_workspace_root_for_file(file_path) &&
-                  !workspace_provider.is_ignored_by_patterns(file_path)
-                ) {
-                  if (!file_map.has(file_path)) {
-                    file_map.set(file_path, loc.range)
-                  }
-                }
-              })
-              return Array.from(file_map.entries()).map(
-                ([file_path, range]) => ({
-                  file_path,
-                  range
-                })
-              )
-            }
-          )
         }
 
         if (matched_files.length == 0) {
           vscode.window.showInformationMessage(
-            t('command.context.select-references.no-files')
+            t('command.select-referencing-files.no-files')
           )
           return
         }
@@ -264,10 +294,10 @@ export const select_referencing_files_command = (
           quick_pick.selectedItems = current_selected_items
           quick_pick.canSelectMany = true
           quick_pick.placeholder = t(
-            'command.context.select-references.select-files'
+            'command.select-referencing-files.select-files'
           )
           quick_pick.title = t(
-            'command.context.select-references.search-results'
+            'command.select-referencing-files.search-results'
           )
           quick_pick.ignoreFocusOut = true
 
@@ -277,7 +307,7 @@ export const select_referencing_files_command = (
           }
           const search_button = {
             iconPath: new vscode.ThemeIcon('search'),
-            tooltip: t('command.search.title')
+            tooltip: t('command.select-referencing-files.search')
           }
           quick_pick.buttons = [search_button, close_button]
 
@@ -327,7 +357,7 @@ export const select_referencing_files_command = (
                   })
                 } catch (error) {
                   vscode.window.showErrorMessage(
-                    t('command.context.select-references.error-opening', {
+                    t('command.select-referencing-files.error-opening', {
                       error: String(error)
                     })
                   )
@@ -387,11 +417,11 @@ export const select_referencing_files_command = (
 
         await workspace_provider.set_checked_files(paths_to_apply)
         vscode.window.showInformationMessage(
-          t('command.context.select-references.context-updated')
+          t('command.select-referencing-files.context-updated')
         )
       } catch (error) {
         vscode.window.showErrorMessage(
-          t('command.context.select-references.failed', {
+          t('command.select-referencing-files.failed', {
             error: error instanceof Error ? error.message : String(error)
           })
         )
