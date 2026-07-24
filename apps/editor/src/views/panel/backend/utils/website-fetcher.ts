@@ -1,4 +1,4 @@
-import axios, { CancelToken } from 'axios'
+import axios from 'axios'
 import { JSDOM } from 'jsdom'
 import { Readability, isProbablyReaderable } from '@mozilla/readability'
 import createDOMPurify from 'dompurify'
@@ -100,7 +100,7 @@ export const get_website_file_path = (url: string) => {
 
 export const fetch_and_save_website = async (
   url: string,
-  cancel_token?: CancelToken
+  abort_signal?: AbortSignal
 ): Promise<string | null> => {
   try {
     const file_path = get_website_file_path(url)
@@ -111,7 +111,7 @@ export const fetch_and_save_website = async (
           'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36'
       },
       timeout: 5000,
-      cancelToken: cancel_token
+      signal: abort_signal
     })
 
     if (response.status == 200 && typeof response.data == 'string') {

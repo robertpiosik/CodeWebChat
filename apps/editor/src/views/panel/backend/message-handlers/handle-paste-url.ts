@@ -1,5 +1,4 @@
 import * as vscode from 'vscode'
-import axios from 'axios'
 import { PasteUrlMessage } from '../../types/messages'
 import { PanelProvider } from '../panel-provider'
 import * as fs from 'fs'
@@ -32,8 +31,8 @@ export const handle_paste_url = async (
       return
     }
 
-    const cancel_token_source = axios.CancelToken.source()
-    panel_provider.api_call_cancel_token_source = cancel_token_source
+    const abort_controller = new AbortController()
+    panel_provider.api_call_abort_controller = abort_controller
 
     panel_provider.send_message({
       command: 'SHOW_PROGRESS',
@@ -44,10 +43,10 @@ export const handle_paste_url = async (
 
     let content: string | null = null
     try {
-      content = await fetch_and_save_website(url, cancel_token_source.token)
+      content = await fetch_and_save_website(url, abort_controller.signal)
     } finally {
       panel_provider.send_message({ command: 'HIDE_PROGRESS' })
-      panel_provider.api_call_cancel_token_source = null
+      panel_provider.api_call_abort_controller = null
     }
 
     if (content) {

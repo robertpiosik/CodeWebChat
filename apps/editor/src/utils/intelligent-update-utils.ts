@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import axios, { CancelToken } from 'axios'
+import axios from 'axios'
 import {
   ModelProvidersManager,
   ApiConfiguration,
@@ -108,7 +108,7 @@ export const process_file = async (params: {
   file_path: string
   file_content: string
   instruction: string
-  cancel_token?: CancelToken
+  abort_signal?: AbortSignal
   on_chunk?: (tokens_per_second: number, total_tokens: number) => void
   on_thinking_chunk?: (text: string) => void
 }): Promise<string> => {
@@ -144,7 +144,7 @@ export const process_file = async (params: {
       endpoint_url: params.endpoint_url,
       api_key: params.api_key,
       body,
-      cancellation_token: params.cancel_token,
+      abort_signal: params.abort_signal,
       on_chunk: params.on_chunk,
       on_thinking_chunk: params.on_thinking_chunk,
       rethrow_error: true

@@ -1,14 +1,14 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { ApiManagerProvider } from '@/views/api-manager/backend/api-manager-provider'
 import { make_api_request } from '@/utils/make-api-request'
-import axios, { CancelTokenSource } from 'axios'
+import axios from 'axios'
 import { randomUUID, createHash } from 'crypto'
 import { Logger } from '@shared/utils/logger'
 
 const CHAIN_RESOLUTION_DELAY_MS = 5000
 
 export class ApiManager {
-  private cancel_token_sources: Map<string, CancelTokenSource> = new Map()
+  private abort_controllers: Map<string, AbortController> = new Map()
   private next_allowed_finish_time = 0
   private waiting_chain: Map<
     string,
@@ -35,8 +35,8 @@ export class ApiManager {
     reasoning_effort?: string
   }): Promise<{ response: string; thoughts?: string } | null> {
     const request_id = params.request_id || randomUUID()
-    const cancel_token_source = axios.CancelToken.source()
-    this.cancel_token_sources.set(request_id, cancel_token_source)
+    const abort_controller = new AbortController()
+    this.abort_controllers.set(request_id, abort_controller)
 
     const body_to_hash = JSON.parse(JSON.stringify(params.body))
     delete body_to_hash.reasoning_effort
@@ -91,13 +91,21 @@ export class ApiManager {
       })
 
       if (is_queued) {
-        if (cancel_token_source.token.reason) {
-          throw cancel_token_source.token.reason
+        if (abort_controller.signal.aborted) {
+          throw abort_controller.signal.reason
         }
-        await Promise.race([
-          previous_waiting.promise,
-          cancel_token_source.token.promise.then((c) => Promise.reject(c))
-        ])
+
+        const abort_promise = new Promise<void>((_, reject) => {
+          abort_controller.signal.addEventListener(
+            'abort',
+            () => {
+              reject(abort_controller.signal.reason)
+            },
+            { once: true }
+          )
+        })
+
+        await Promise.race([previous_waiting.promise, abort_promise])
 
         this.broadcast_message({
           command: 'SHOW_API_MANAGER_PROGRESS',
@@ -113,7 +121,7 @@ export class ApiManager {
         endpoint_url: params.endpoint_url,
         api_key: params.api_key,
         body: params.body,
-        cancellation_token: cancel_token_source.token,
+        abort_signal: abort_controller.signal,
         on_thinking_chunk: () => {
           schedule_chain_resolution()
           this.broadcast_message({
@@ -162,7 +170,7 @@ export class ApiManager {
         command: 'HIDE_API_MANAGER_PROGRESS',
         id: request_id
       })
-      this.cancel_token_sources.delete(request_id)
+      this.abort_controllers.delete(request_id)
 
       const now = Date.now()
       const wait_until = Math.max(now, this.next_allowed_finish_time)
@@ -176,17 +184,17 @@ export class ApiManager {
   }
 
   public cancel_api_call(request_id: string) {
-    const source = this.cancel_token_sources.get(request_id)
-    if (source) {
-      source.cancel('Cancelled by user.')
-      this.cancel_token_sources.delete(request_id)
+    const controller = this.abort_controllers.get(request_id)
+    if (controller) {
+      controller.abort('Cancelled by user.')
+      this.abort_controllers.delete(request_id)
     }
   }
 
   public cancel_all_requests() {
-    this.cancel_token_sources.forEach((source) => {
-      source.cancel('Cancelled by user.')
+    this.abort_controllers.forEach((controller) => {
+      controller.abort('Cancelled by user.')
     })
-    this.cancel_token_sources.clear()
+    this.abort_controllers.clear()
   }
 }

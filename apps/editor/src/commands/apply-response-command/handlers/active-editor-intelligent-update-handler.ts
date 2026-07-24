@@ -102,9 +102,9 @@ export const handle_active_editor_intelligent_update = async (params: {
     return null
   }
 
-  const cancel_token_source = axios.CancelToken.source()
+  const abort_controller = new AbortController()
   if (params.panel_provider) {
-    params.panel_provider.api_call_cancel_token_source = cancel_token_source
+    params.panel_provider.api_call_abort_controller = abort_controller
     params.panel_provider.send_message({
       command: 'SHOW_PROGRESS',
       title: 'Thinking...',
@@ -133,7 +133,7 @@ export const handle_active_editor_intelligent_update = async (params: {
       file_path: target_file_path,
       file_content: original_content,
       instruction: file_item.content,
-      cancel_token: cancel_token_source.token,
+      abort_signal: abort_controller.signal,
       on_chunk: (tokens_per_second, total_tokens) => {
         if (params.panel_provider) {
           const estimated_total = Math.ceil(original_content.length / 4)
@@ -221,7 +221,7 @@ export const handle_active_editor_intelligent_update = async (params: {
       params.panel_provider.send_message({
         command: 'HIDE_PROGRESS'
       })
-      params.panel_provider.api_call_cancel_token_source = null
+      params.panel_provider.api_call_abort_controller = null
     }
   }
 }

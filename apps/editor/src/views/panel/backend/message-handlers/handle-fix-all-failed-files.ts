@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import axios, { CancelTokenSource } from 'axios'
+import axios from 'axios'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import {
   LAST_APPLIED_CHANGES_STATE_KEY,
@@ -126,7 +126,7 @@ export const handle_fix_all_failed_files = async (params: {
     })
     .filter((item) => item.instructions && item.safe_path)
 
-  const batch_cancel_sources: CancelTokenSource[] = []
+  const batch_abort_controllers: AbortController[] = []
 
   try {
     await Promise.all(
@@ -136,11 +136,11 @@ export const handle_fix_all_failed_files = async (params: {
         const file_path = file_state.file_path
         const workspace_name = file_state.workspace_name
 
-        const cancel_token_source = axios.CancelToken.source()
-        batch_cancel_sources.push(cancel_token_source)
+        const abort_controller = new AbortController()
+        batch_abort_controllers.push(abort_controller)
 
-        params.panel_provider.intelligent_update_cancel_token_sources.push({
-          source: cancel_token_source,
+        params.panel_provider.intelligent_update_abort_controllers.push({
+          controller: abort_controller,
           file_path,
           workspace_name
         })
@@ -198,7 +198,7 @@ export const handle_fix_all_failed_files = async (params: {
             file_path: file_path,
             file_content: file_state.content,
             instruction: instructions,
-            cancel_token: cancel_token_source.token,
+            abort_signal: abort_controller.signal,
             on_chunk,
             on_thinking_chunk
           })
@@ -253,8 +253,8 @@ export const handle_fix_all_failed_files = async (params: {
               data: { error, file_path }
             })
 
-            batch_cancel_sources.forEach((source) => {
-              source.cancel(
+            batch_abort_controllers.forEach((controller) => {
+              controller.abort(
                 'Batch operation failed, triggering configuration selection.'
               )
             })
@@ -276,11 +276,11 @@ export const handle_fix_all_failed_files = async (params: {
           })
 
           const index =
-            params.panel_provider.intelligent_update_cancel_token_sources.findIndex(
-              (s) => s.source === cancel_token_source
+            params.panel_provider.intelligent_update_abort_controllers.findIndex(
+              (s) => s.controller === abort_controller
             )
           if (index > -1) {
-            params.panel_provider.intelligent_update_cancel_token_sources.splice(
+            params.panel_provider.intelligent_update_abort_controllers.splice(
               index,
               1
             )

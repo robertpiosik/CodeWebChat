@@ -189,13 +189,13 @@ const stop_recording = async (panel_provider: PanelProvider) => {
         reasoning_effort: api_configuration.reasoning_effort
       })
 
-      panel_provider.api_call_cancel_token_source = axios.CancelToken.source()
+      panel_provider.api_call_abort_controller = new AbortController()
 
       const result = await make_api_request({
         endpoint_url,
         api_key: model_provider.api_key,
         body,
-        cancellation_token: panel_provider.api_call_cancel_token_source.token
+        abort_signal: panel_provider.api_call_abort_controller.signal
       })
 
       if (result?.response) {
@@ -225,7 +225,7 @@ const stop_recording = async (panel_provider: PanelProvider) => {
         })
       )
     } finally {
-      panel_provider.api_call_cancel_token_source = null
+      panel_provider.api_call_abort_controller = null
       panel_provider.send_message({
         command: 'HIDE_PROGRESS'
       })

@@ -118,7 +118,6 @@ import { MODE, Mode } from '../types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Logger } from '@shared/utils/logger'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
-import { CancelTokenSource } from 'axios'
 import { dictionary } from '@shared/constants/dictionary'
 import { DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD } from '@/constants/values'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
@@ -163,12 +162,12 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public api_edit_format: EditFormat
   public api_prompt_type: ApiPromptType
   public mode: Mode = MODE.WEB
-  public intelligent_update_cancel_token_sources: {
-    source: CancelTokenSource
+  public intelligent_update_abort_controllers: {
+    controller: AbortController
     file_path: string
     workspace_name?: string
   }[] = []
-  public api_call_cancel_token_source: CancelTokenSource | null = null
+  public api_call_abort_controller: AbortController | null = null
   public api_manager!: ApiManager
   public response_history: ResponseHistoryItem[] = []
   public message_listeners: ((message: BackendMessage) => void)[] = []
@@ -597,9 +596,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   }
 
   public cancel_all_intelligent_updates() {
-    const sources = [...this.intelligent_update_cancel_token_sources]
-    this.intelligent_update_cancel_token_sources = []
-    sources.forEach((item) => item.source.cancel('Preview finished.'))
+    const controllers = [...this.intelligent_update_abort_controllers]
+    this.intelligent_update_abort_controllers = []
+    controllers.forEach((item) => item.controller.abort('Preview finished.'))
   }
 
   public send_selected_files() {
@@ -734,9 +733,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'GET_WEB_PROMPT_TYPE') {
             handle_get_web_prompt_type(this)
           } else if (message.command == 'CANCEL_API_REQUEST') {
-            if (this.api_call_cancel_token_source) {
-              this.api_call_cancel_token_source.cancel('Cancelled by user.')
-              this.api_call_cancel_token_source = null
+            if (this.api_call_abort_controller) {
+              this.api_call_abort_controller.abort('Cancelled by user.')
+              this.api_call_abort_controller = null
             }
           } else if (message.command == 'CANCEL_API_MANAGER_REQUEST') {
             this.api_manager.cancel_api_call(message.id)

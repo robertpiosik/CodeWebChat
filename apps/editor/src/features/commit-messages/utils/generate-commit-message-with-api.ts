@@ -36,7 +36,7 @@ export const generate_commit_message_with_api = async (params: {
 
   const token_count = Math.ceil(params.message.length / 4)
 
-  const cancel_token_source = axios.CancelToken.source()
+  const abort_controller = new AbortController()
 
   return await vscode.window.withProgress(
     {
@@ -46,7 +46,7 @@ export const generate_commit_message_with_api = async (params: {
     },
     async (progress, token) => {
       token.onCancellationRequested(() => {
-        cancel_token_source.cancel('Operation cancelled by user')
+        abort_controller.abort('Operation cancelled by user')
       })
 
       progress.report({
@@ -60,7 +60,7 @@ export const generate_commit_message_with_api = async (params: {
           endpoint_url: params.endpoint_url,
           api_key: params.model_provider.api_key,
           body,
-          cancellation_token: cancel_token_source.token,
+          abort_signal: abort_controller.signal,
           on_chunk: () => {
             progress.report({ message: t('common.progress.receiving') })
           },

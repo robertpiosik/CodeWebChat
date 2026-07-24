@@ -108,7 +108,7 @@ export const perform_code_at_cursor = async (params: {
         )
         return
       }
-      const cancel_token_source = axios.CancelToken.source()
+      const abort_controller = new AbortController()
       const document = editor.document
       const position = editor.selection.active
 
@@ -170,7 +170,7 @@ export const perform_code_at_cursor = async (params: {
 
       const cursor_listener = vscode.window.onDidChangeTextEditorSelection(
         () => {
-          cancel_token_source.cancel(
+          abort_controller.abort(
             t('command.code-at-cursor.cancel.cursor-moved')
           )
         }
@@ -185,9 +185,7 @@ export const perform_code_at_cursor = async (params: {
           },
           async (progress, token) => {
             token.onCancellationRequested(() => {
-              cancel_token_source.cancel(
-                t('command.code-at-cursor.cancel.user')
-              )
+              abort_controller.abort(t('command.code-at-cursor.cancel.user'))
             })
 
             progress.report({
@@ -198,7 +196,7 @@ export const perform_code_at_cursor = async (params: {
               endpoint_url,
               api_key: model_provider.api_key,
               body,
-              cancellation_token: cancel_token_source.token,
+              abort_signal: abort_controller.signal,
               on_chunk: () => {
                 progress.report({ message: t('common.progress.receiving') })
               },

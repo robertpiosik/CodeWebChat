@@ -11,10 +11,10 @@ export const verify_reasoning_effort = async (params: {
   model_provider: ModelProvider
   cancellation_token: vscode.CancellationToken
 }): Promise<void> => {
-  const cancel_token_source = axios.CancelToken.source()
+  const abort_controller = new AbortController()
 
   const disposable = params.cancellation_token.onCancellationRequested(() => {
-    cancel_token_source.cancel('User cancelled')
+    abort_controller.abort('User cancelled')
   })
 
   const body = {
@@ -45,7 +45,7 @@ export const verify_reasoning_effort = async (params: {
             : {}),
           ['Content-Type']: 'application/json'
         },
-        cancelToken: cancel_token_source.token,
+        signal: abort_controller.signal,
         responseType: 'stream'
       }
     )
@@ -55,7 +55,7 @@ export const verify_reasoning_effort = async (params: {
       response.data.on('data', () => {
         if (!resolved) {
           resolved = true
-          cancel_token_source.cancel('Verified')
+          abort_controller.abort('Verified')
           resolve()
         }
       })

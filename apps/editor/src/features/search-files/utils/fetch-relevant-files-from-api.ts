@@ -52,7 +52,7 @@ export const fetch_relevant_files_from_api = async (
     reasoning_effort: selected_config.reasoning_effort
   })
 
-  const cancel_token_source = axios.CancelToken.source()
+  const abort_controller = new AbortController()
 
   try {
     const completion_result = await vscode.window.withProgress(
@@ -63,14 +63,14 @@ export const fetch_relevant_files_from_api = async (
       },
       async (progress, token) => {
         token.onCancellationRequested(() => {
-          cancel_token_source.cancel(t('feature.search-files.cancel.user'))
+          abort_controller.abort(t('feature.search-files.cancel.user'))
         })
         progress.report({ message: t('common.progress.waiting-for-server') })
         return await make_api_request({
           endpoint_url: model_provider.base_url,
           api_key: model_provider.api_key,
           body,
-          cancellation_token: cancel_token_source.token,
+          abort_signal: abort_controller.signal,
           on_chunk: () =>
             progress.report({ message: t('common.progress.receiving') }),
           on_thinking_chunk: () =>

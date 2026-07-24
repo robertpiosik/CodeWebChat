@@ -72,7 +72,7 @@ export const make_api_request = async (params: {
   endpoint_url: string
   api_key?: string
   body: any
-  cancellation_token: any
+  abort_signal?: AbortSignal
   on_chunk?: StreamCallback
   on_thinking_chunk?: ThinkingStreamCallback
   rethrow_error?: boolean
@@ -257,7 +257,7 @@ export const make_api_request = async (params: {
       try {
         response = await axios.post(request_url, request_body, {
           headers,
-          cancelToken: params.cancellation_token,
+          signal: params.abort_signal,
           responseType: 'stream'
         })
         break
@@ -398,8 +398,8 @@ export const make_api_request = async (params: {
       })
     })
   } catch (error) {
-    if (params.cancellation_token?.reason) {
-      throw params.cancellation_token.reason
+    if (params.abort_signal?.aborted) {
+      throw error
     }
 
     if (axios.isCancel(error)) {

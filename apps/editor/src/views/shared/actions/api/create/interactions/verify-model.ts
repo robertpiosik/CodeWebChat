@@ -55,9 +55,9 @@ export const verify_model = async (params: {
               }
             ]
 
-        const cancel_token_source = axios.CancelToken.source()
+        const abort_controller = new AbortController()
         const disposable = token.onCancellationRequested(() => {
-          cancel_token_source.cancel('User cancelled')
+          abort_controller.abort('User cancelled')
         })
 
         await axios.post(
@@ -74,12 +74,12 @@ export const verify_model = async (params: {
                 ? { Authorization: `Bearer ${params.api_key}` }
                 : {})
             },
-            cancelToken: cancel_token_source.token,
+            signal: abort_controller.signal,
             responseType: 'stream'
           }
         )
 
-        cancel_token_source.cancel('Verified')
+        abort_controller.abort('Verified')
         disposable.dispose()
         success = true
       } catch (e: any) {

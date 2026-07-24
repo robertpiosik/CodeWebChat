@@ -1251,7 +1251,7 @@
     "@mozilla/readability": "^0.6.0",
     "@svgr/webpack": "^8.1.0",
     "@vscode/codicons": "^0.0.45",
-    "axios": "^1.10.0",
+    "axios": "^1.18.1",
     "bufferutil": "^4.0.9",
     "classnames": "^2.5.1",
     "dayjs": "^1.11.10",

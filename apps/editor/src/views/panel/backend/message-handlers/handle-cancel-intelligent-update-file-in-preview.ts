@@ -10,17 +10,17 @@ export const handle_cancel_intelligent_update_file_in_preview = (
   const { file_path, workspace_name } = message
 
   const source_index =
-    panel_provider.intelligent_update_cancel_token_sources.findIndex(
+    panel_provider.intelligent_update_abort_controllers.findIndex(
       (s) => s.file_path === file_path && s.workspace_name === workspace_name
     )
 
   if (source_index > -1) {
-    const { source } =
-      panel_provider.intelligent_update_cancel_token_sources[source_index]
+    const { controller } =
+      panel_provider.intelligent_update_abort_controllers[source_index]
 
-    source.cancel('User cancelled the operation')
+    controller.abort('User cancelled the operation')
 
-    panel_provider.intelligent_update_cancel_token_sources.splice(
+    panel_provider.intelligent_update_abort_controllers.splice(
       source_index,
 
       1

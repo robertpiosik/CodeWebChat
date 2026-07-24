@@ -125,9 +125,9 @@ export const handle_intelligent_update_file_in_preview = async (
   const safe_path = create_safe_path(workspace_root, file_path)
   if (!safe_path) return
 
-  const cancel_token_source = axios.CancelToken.source()
-  panel_provider.intelligent_update_cancel_token_sources.push({
-    source: cancel_token_source,
+  const abort_controller = new AbortController()
+  panel_provider.intelligent_update_abort_controllers.push({
+    controller: abort_controller,
     file_path,
     workspace_name
   })
@@ -184,7 +184,7 @@ export const handle_intelligent_update_file_in_preview = async (
     file_path: file_path,
     file_content: file_state.content,
     instruction: instructions,
-    cancel_token: cancel_token_source.token,
+    abort_signal: abort_controller.signal,
     on_chunk,
     on_thinking_chunk
   })
@@ -244,12 +244,11 @@ export const handle_intelligent_update_file_in_preview = async (
       return
     }
   } finally {
-    const index =
-      panel_provider.intelligent_update_cancel_token_sources.findIndex(
-        (s) => s.source === cancel_token_source
-      )
+    const index = panel_provider.intelligent_update_abort_controllers.findIndex(
+      (s) => s.controller === abort_controller
+    )
     if (index > -1) {
-      panel_provider.intelligent_update_cancel_token_sources.splice(index, 1)
+      panel_provider.intelligent_update_abort_controllers.splice(index, 1)
     }
     panel_provider.send_message({
       command: 'UPDATE_FILE_PROGRESS',
