@@ -7,14 +7,16 @@
 .button {
   display: flex;
   align-items: center;
-  gap: 3px;
-  padding: 0 5px 0 7px;
+  padding-right: 5px;
   height: 24px;
   border: 1px solid var(--cwc-border-color-dimmed);
   border-radius: 4px;
   cursor: pointer;
   color: var(--vscode-foreground);
   width: 100%;
+  background: transparent;
+  user-select: none;
+  box-sizing: border-box;
 
   &:hover {
     border-color: var(--cwc-border-color);
@@ -24,12 +26,38 @@
     border-color: var(--cwc-border-color);
   }
 
+  &__alternate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 100%;
+    cursor: pointer;
+    text-decoration: none;
+    border-right: 1px solid var(--cwc-border-color);
+    flex-shrink: 0;
+
+    > span {
+      font-size: 15px !important;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &:hover {
+      background-color: var(--vscode-toolbar-hoverBackground);
+      text-decoration: none;
+    }
+  }
+
   &__label {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     flex-grow: 1;
     text-align: left;
+    padding-left: 7px;
   }
 
   &__icon {

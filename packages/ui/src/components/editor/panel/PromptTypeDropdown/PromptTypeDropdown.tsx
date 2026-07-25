@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
-import styles from './InlineDropdown.module.scss'
+import styles from './PromptTypeDropdown.module.scss'
 import cn from 'classnames'
 import { DropdownMenu } from '../../common/DropdownMenu'
 import { use_click_outside } from '../../../../hooks/use-click-outside'
 
-export namespace InlineDropdown {
+export namespace PromptTypeDropdown {
   export type Option<T extends string> = {
     value: T
     label: string
@@ -15,6 +15,7 @@ export namespace InlineDropdown {
     options: Option<T>[]
     selected_value: T
     on_change: (value: T) => void
+    on_alternate_click?: () => void
     max_width?: number
     menu_max_width?: number | string
     menu_max_height?: number | string
@@ -24,8 +25,8 @@ export namespace InlineDropdown {
   }
 }
 
-export const InlineDropdown = <T extends string>(
-  props: InlineDropdown.Props<T>
+export const PromptTypeDropdown = <T extends string>(
+  props: PromptTypeDropdown.Props<T>
 ) => {
   const [is_open, set_is_open] = useState(false)
   const [just_opened, set_just_opened] = useState(false)
@@ -99,12 +100,35 @@ export const InlineDropdown = <T extends string>(
       className={cn(styles.container, { [styles['button--open']]: is_open })}
       ref={container_ref}
     >
-      <button
+      <div
         className={cn(styles.button, { [styles['button--open']]: is_open })}
         onClick={handle_toggle}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            handle_toggle()
+          }
+        }}
+        role="button"
+        tabIndex={0}
         style={{ maxWidth: props.max_width }}
         title={props.title}
       >
+        {props.on_alternate_click && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation()
+              if (props.on_alternate_click) {
+                props.on_alternate_click()
+              }
+            }}
+            className={styles.button__alternate}
+            title="Toggle previous prompt type"
+          >
+            <span className={cn('codicon', 'codicon-sync')} />
+          </button>
+        )}
         <span className={styles.button__label}>
           {selected_option ? selected_option.label : 'Select an option'}
         </span>
@@ -121,7 +145,7 @@ export const InlineDropdown = <T extends string>(
             )}
           />
         )}
-      </button>
+      </div>
 
       <DropdownMenu
         anchor_ref={container_ref}

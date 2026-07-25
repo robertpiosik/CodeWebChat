@@ -2,7 +2,7 @@ import { useRef, useCallback } from 'react'
 import { MODE, Mode } from '@/views/panel/types/main-view-mode'
 import { use_is_narrow_viewport, use_is_mac } from '@shared/hooks'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
-import { InlineDropdown as UiInlineDropdown } from '@ui/components/editor/panel/InlineDropdown'
+import { PromptTypeDropdown as UiPromptTypeDropdown } from '@ui/components/editor/panel/PromptTypeDropdown'
 import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
 import styles from './Header.module.scss'
 import {
@@ -10,6 +10,7 @@ import {
   web_prompt_type_labels
 } from '../../prompt-type-labels'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
+import { use_alternate_prompt_type } from './hooks/use-alternate-prompt-type'
 import { use_translation } from '../../../../i18n/use-translation'
 
 type Props = {
@@ -32,6 +33,14 @@ export const Header: React.FC<Props> = (props) => {
   const is_mac = use_is_mac()
   const header_left_ref = useRef<HTMLDivElement>(null)
   const dropdown_container_ref = useRef<HTMLDivElement>(null)
+
+  const { handle_alternate_click, has_alternate } = use_alternate_prompt_type({
+    mode: props.mode,
+    web_prompt_type: props.web_prompt_type,
+    api_prompt_type: props.api_prompt_type,
+    on_web_prompt_type_change: props.on_web_prompt_type_change,
+    on_api_prompt_type_change: props.on_api_prompt_type_change
+  })
 
   const handle_heading_click = useCallback(() => {
     if (props.mode == MODE.WEB) {
@@ -76,7 +85,7 @@ export const Header: React.FC<Props> = (props) => {
           ref={dropdown_container_ref}
         >
           {props.mode == MODE.WEB && (
-            <UiInlineDropdown
+            <UiPromptTypeDropdown
               options={Object.entries(web_prompt_type_labels).map(
                 ([value, label]) => ({
                   value: value as WebPromptType,
@@ -86,6 +95,9 @@ export const Header: React.FC<Props> = (props) => {
               )}
               selected_value={props.web_prompt_type}
               on_change={props.on_web_prompt_type_change}
+              on_alternate_click={
+                has_alternate ? handle_alternate_click : undefined
+              }
               menu_max_height={MENU_MAX_HEIGHT}
               info={t('header.prompt-type')}
               title={
@@ -97,7 +109,7 @@ export const Header: React.FC<Props> = (props) => {
             />
           )}
           {props.mode == MODE.API && (
-            <UiInlineDropdown
+            <UiPromptTypeDropdown
               options={Object.entries(api_prompt_type_labels).map(
                 ([value, label]) => ({
                   value: value as ApiPromptType,
@@ -107,6 +119,9 @@ export const Header: React.FC<Props> = (props) => {
               )}
               selected_value={props.api_prompt_type}
               on_change={props.on_api_prompt_type_change}
+              on_alternate_click={
+                has_alternate ? handle_alternate_click : undefined
+              }
               menu_max_height={MENU_MAX_HEIGHT}
               info={is_narrow_viewport ? undefined : t('header.prompt-type')}
               title={
