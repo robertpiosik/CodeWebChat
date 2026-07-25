@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import styles from './AutoClosingModal.module.scss'
 import { Button } from '../../../common/Button'
 import { Modal, ModalIconType } from '../Modal'
@@ -13,17 +13,26 @@ type Props = {
 
 export const AutoClosingModal: React.FC<Props> = (props) => {
   const [is_filling, set_is_filling] = useState(false)
+  const on_close_ref = useRef(props.on_close)
 
   useEffect(() => {
-    set_is_filling(true)
+    on_close_ref.current = props.on_close
+  }, [props.on_close])
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      set_is_filling(true)
+    })
+
     const timeout = setTimeout(() => {
-      props.on_close()
+      on_close_ref.current()
     }, props.duration)
 
     return () => {
+      cancelAnimationFrame(frame)
       clearTimeout(timeout)
     }
-  }, [])
+  }, [props.duration])
 
   return (
     <div
