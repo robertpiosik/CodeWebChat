@@ -124,7 +124,11 @@ export const history_command = (params: {
             (c) => c.trigger != 'temporary'
           )
 
-          quick_pick.buttons = [clear_all_button, close_button]
+          if (visible_checkpoints.length > 0 || temp_checkpoint_is_valid) {
+            quick_pick.buttons = [clear_all_button, close_button]
+          } else {
+            quick_pick.buttons = [close_button]
+          }
 
           visible_checkpoints.sort((a, b) => {
             return b.timestamp - a.timestamp
@@ -297,6 +301,7 @@ export const history_command = (params: {
           }
 
           if (button === clear_all_button) {
+            notification_count++
             quick_pick.hide()
 
             const temp_checkpoint =
@@ -307,6 +312,7 @@ export const history_command = (params: {
               vscode.window.showInformationMessage(
                 t('command.history.info.nothing-to-delete')
               )
+              notification_count--
               quick_pick.show()
               return
             }
@@ -325,6 +331,8 @@ export const history_command = (params: {
               )
             }
             await refresh_and_update_view()
+            notification_count--
+            quick_pick.show()
           }
         })
 
