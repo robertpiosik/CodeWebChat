@@ -728,7 +728,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         is_open={is_invocation_dropdown_open}
                         items={[1, 2, 3].map((count) => ({
                           label: `${count}×`,
-                          checked: count == props.invocation_count,
+                          is_checked: count == props.invocation_count,
                           shortcut: is_mac ? `⌥X ${count}` : `Alt+X ${count}`,
                           on_click: () => {
                             props.on_invocation_count_change(count)

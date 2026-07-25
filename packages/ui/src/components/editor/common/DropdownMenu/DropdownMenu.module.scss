@@ -63,8 +63,11 @@
     gap: 8px;
   }
 
-  &:hover,
-  &[data-selected='true'] {
+  &[data-active='true'] {
+    background-color: var(--vscode-list-inactiveSelectionBackground);
+  }
+
+  &:hover {
     background-color: var(--vscode-list-activeSelectionBackground);
     color: var(--vscode-list-activeSelectionForeground);
   }

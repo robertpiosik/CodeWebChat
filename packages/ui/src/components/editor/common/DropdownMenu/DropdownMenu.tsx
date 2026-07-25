@@ -7,8 +7,8 @@ export namespace DropdownMenu {
     label: string
     shortcut?: string
     on_click: () => void
-    checked?: boolean
-    is_selected?: boolean
+    is_checked?: boolean
+    is_active?: boolean
   }
 
   export type Props = {
@@ -26,9 +26,6 @@ export namespace DropdownMenu {
 }
 
 export const DropdownMenu: React.FC<DropdownMenu.Props> = (props) => {
-  const [is_preselection_respected, set_is_preselection_respected] =
-    useState<boolean>(true)
-
   const dropdown_ref = useRef<HTMLDivElement>(null)
   const [anchor_style, set_anchor_style] = useState<React.CSSProperties>({})
 
@@ -75,35 +72,28 @@ export const DropdownMenu: React.FC<DropdownMenu.Props> = (props) => {
 
   if (props.anchor_ref && !props.is_open) return null
 
-  const has_any_checked = props.items.some((item) => item.checked)
+  const has_any_checked = props.items.some((item) => item.is_checked)
 
   const content = (
     <div className={styles.content}>
       {props.info && <div className={styles.header}>{props.info}</div>}
       {props.items.map((item, index) => {
-        const is_selected = item.is_selected && is_preselection_respected
-        const should_underline =
-          props.underline_non_selected_items && !is_selected
-
         return (
           <div
             key={index}
             className={styles.item}
             onClick={item.on_click}
-            data-selected={is_selected}
-            onMouseEnter={() => {
-              set_is_preselection_respected(false)
-            }}
+            data-active={item.is_active}
           >
             <div className={styles.item__left}>
               {has_any_checked && (
                 <span
                   className="codicon codicon-check"
-                  style={{ visibility: item.checked ? 'visible' : 'hidden' }}
+                  style={{ visibility: item.is_checked ? 'visible' : 'hidden' }}
                 />
               )}
               <span>
-                {should_underline ? (
+                {props.underline_non_selected_items ? (
                   <>
                     <span className={styles.underlined}>
                       {item.label.substring(0, 1)}

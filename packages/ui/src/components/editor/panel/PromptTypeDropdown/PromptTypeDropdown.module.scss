@@ -1,3 +1,12 @@
+@keyframes rotate-once {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
+  }
+}
+
 .container {
   position: absolute;
   top: 0;
@@ -8,7 +17,7 @@
   display: flex;
   align-items: center;
   height: 24px;
-  outline: 1px solid var(--cwc-border-color-dimmed);
+  border: 1px solid var(--cwc-border-color-dimmed);
   border-radius: 4px;
   color: var(--vscode-foreground);
   width: 100%;
@@ -17,11 +26,11 @@
   overflow: hidden;
 
   &:hover {
-    outline-color: var(--cwc-border-color);
+    border-color: var(--cwc-border-color);
   }
 
   &--open {
-    outline-color: var(--cwc-border-color);
+    outline-color: var(--vscode-focusBorder) !important;
   }
 
   &__alternate {
@@ -36,6 +45,12 @@
 
     > span {
       font-size: 15px !important;
+    }
+
+    &--rotating {
+      > span {
+        animation: rotate-once 0.4s ease-in-out;
+      }
     }
 
     &:focus {
@@ -74,8 +89,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     flex-grow: 1;
-    text-align: left;
-    padding-left: 7px;
+    padding-left: 8px;
   }
 
   &__icon {

@@ -30,6 +30,7 @@ export const PromptTypeDropdown = <T extends string>(
 ) => {
   const [is_open, set_is_open] = useState(false)
   const [just_opened, set_just_opened] = useState(false)
+  const [is_rotating, set_is_rotating] = useState(false)
   const container_ref = useRef<HTMLDivElement>(null)
   const opened_by_shortcut = useRef(false)
 
@@ -112,11 +113,15 @@ export const PromptTypeDropdown = <T extends string>(
               onClick={(e) => {
                 e.stopPropagation()
                 if (props.on_alternate_click) {
+                  set_is_rotating(true)
                   props.on_alternate_click()
                 }
               }}
-              className={styles.button__alternate}
+              className={cn(styles.button__alternate, {
+                [styles['button__alternate--rotating']]: is_rotating
+              })}
               title="Toggle previous prompt type"
+              onAnimationEnd={() => set_is_rotating(false)}
             >
               <span className={cn('codicon', 'codicon-sync')} />
             </button>
@@ -166,6 +171,7 @@ export const PromptTypeDropdown = <T extends string>(
           label: option.label,
           on_click: () => handle_select(option.value),
           is_selected: just_opened && option.value == props.selected_value,
+          is_active: option.value == props.selected_value,
           shortcut: option.shortcut
         }))}
         underline_non_selected_items={opened_by_shortcut.current}
