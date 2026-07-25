@@ -7,7 +7,7 @@ export const handle_get_tasks = async (
 ): Promise<void> => {
   const workspace_roots =
     panel_provider.workspace_provider.get_workspace_roots()
-  const all_data = TasksUtils.load_all(panel_provider.context)
+  const all_data = TasksUtils.load_all(panel_provider.extension_context)
 
   const tasks: Record<string, Task[]> = {}
 

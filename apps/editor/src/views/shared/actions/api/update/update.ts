@@ -9,7 +9,7 @@ import { ApiFeature } from '@/views/shared/types/api-features'
 import { t } from '@/i18n'
 
 export const update = async (params: {
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   updating_api_configuration: ApiConfiguration
   updated_api_configuration: ApiConfiguration
   origin?: 'cancel' | 'save'
@@ -17,7 +17,7 @@ export const update = async (params: {
   insertion_index?: number
   api_feature?: ApiFeature
 }): Promise<{ success: boolean; has_changes: boolean; new_id?: string }> => {
-  const providers_manager = new ModelProvidersManager(params.context)
+  const providers_manager = new ModelProvidersManager(params.extension_context)
 
   const api_configurations = await providers_manager.get_api_configurations()
 

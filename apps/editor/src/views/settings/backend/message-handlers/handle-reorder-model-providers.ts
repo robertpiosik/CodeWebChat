@@ -9,7 +9,9 @@ export const handle_reorder_model_providers = async (
   provider: SettingsProvider,
   message: ReorderModelProvidersMessage
 ): Promise<void> => {
-  const providers_manager = new ModelProvidersManager(provider.context)
+  const providers_manager = new ModelProvidersManager(
+    provider.extension_context
+  )
   const current_model_providers = await providers_manager.get_model_providers()
 
   const reordered_names = message.providers.map((p) => p.name)

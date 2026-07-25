@@ -9,7 +9,9 @@ export const handle_delete_model_provider = async (
   provider: SettingsProvider,
   message: DeleteModelProviderMessage
 ): Promise<void> => {
-  const providers_manager = new ModelProvidersManager(provider.context)
+  const providers_manager = new ModelProvidersManager(
+    provider.extension_context
+  )
   const model_provider_name_to_delete = message.provider_name
 
   const confirmation = await vscode.window.showWarningMessage(

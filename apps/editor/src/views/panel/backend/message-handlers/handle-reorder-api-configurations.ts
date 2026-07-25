@@ -7,5 +7,8 @@ export const handle_reorder_api_configurations = async (
   message: ReorderApiConfigurationsMessage
 ): Promise<void> => {
   const reordered_ids = message.configurations.map((p) => p.id)
-  await reorder({ context: panel_provider.context, reordered_ids })
+  await reorder({
+    extension_context: panel_provider.extension_context,
+    reordered_ids
+  })
 }

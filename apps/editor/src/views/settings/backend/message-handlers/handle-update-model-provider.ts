@@ -75,7 +75,9 @@ export const handle_update_model_provider = async (
     return
   }
 
-  const providers_manager = new ModelProvidersManager(provider.context)
+  const providers_manager = new ModelProvidersManager(
+    provider.extension_context
+  )
   const model_providers = await providers_manager.get_model_providers()
 
   const updated_providers = [...model_providers]

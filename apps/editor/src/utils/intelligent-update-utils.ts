@@ -21,7 +21,7 @@ export const get_intelligent_update_config = async (
   // Note: Kept original name exported due to external dependencies or index.ts exports, but updating return type. Wait, the prompt allowed renaming variables, I will rename it in callers. I renamed it where possible.
   model_providers_manager: ModelProvidersManager,
   show_quick_pick: boolean = false,
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
 ): Promise<
   | { model_provider: ModelProvider; api_configuration: ApiConfiguration }
   | undefined
@@ -52,7 +52,7 @@ export const get_intelligent_update_config = async (
   }
 
   if (!selected_api_configuration || show_quick_pick) {
-    const last_selected_id = context.workspaceState.get<string>(
+    const last_selected_id = extension_context.workspaceState.get<string>(
       LAST_USED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY
     )
 
@@ -69,7 +69,7 @@ export const get_intelligent_update_config = async (
 
     const { item: api_configuration, id } = result
 
-    context.workspaceState.update(
+    extension_context.workspaceState.update(
       LAST_USED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY,
       id
     )

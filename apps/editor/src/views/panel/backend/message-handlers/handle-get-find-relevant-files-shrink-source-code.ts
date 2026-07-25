@@ -4,10 +4,11 @@ import { FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY } from '@/constants/st
 export const handle_get_find_relevant_files_shrink_source_code = (
   panel_provider: PanelProvider
 ) => {
-  const shrink_source_code = panel_provider.context.workspaceState.get<boolean>(
-    FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
-    false
-  )
+  const shrink_source_code =
+    panel_provider.extension_context.workspaceState.get<boolean>(
+      FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
+      false
+    )
 
   panel_provider.send_message({
     command: 'FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE',

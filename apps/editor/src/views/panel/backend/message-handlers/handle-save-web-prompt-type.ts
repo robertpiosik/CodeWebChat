@@ -6,5 +6,8 @@ export const handle_save_web_prompt_type = async (
   prompt_type: WebPromptType
 ): Promise<void> => {
   panel_provider.web_prompt_type = prompt_type
-  await panel_provider.context.workspaceState.update('web-mode', prompt_type)
+  await panel_provider.extension_context.workspaceState.update(
+    'web-mode',
+    prompt_type
+  )
 }

@@ -26,7 +26,7 @@ import { PromptBuilder } from '@/utils/prompt-builder'
 const get_code_at_cursor_api_configuration = async (
   model_providers_manager: ModelProvidersManager,
   show_quick_pick: boolean = false,
-  context: vscode.ExtensionContext,
+  extension_context: vscode.ExtensionContext,
   panel_provider: PanelProvider,
   api_configuration_id?: string
 ): Promise<
@@ -59,7 +59,7 @@ const get_code_at_cursor_api_configuration = async (
       })
     }
   } else if (!show_quick_pick) {
-    const last_selected_id = context.workspaceState.get<string>(
+    const last_selected_id = extension_context.workspaceState.get<string>(
       LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
     )
     if (last_selected_id) {
@@ -78,7 +78,7 @@ const get_code_at_cursor_api_configuration = async (
   }
 
   if (!selected_api_configuration || show_quick_pick) {
-    const last_selected_id = context.workspaceState.get<string>(
+    const last_selected_id = extension_context.workspaceState.get<string>(
       LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
     )
 
@@ -99,7 +99,7 @@ const get_code_at_cursor_api_configuration = async (
 
     const { item: api_configuration, id } = result
 
-    context.workspaceState.update(
+    extension_context.workspaceState.update(
       LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
       id
     )
@@ -141,7 +141,7 @@ export const handle_code_at_cursor = async (
   message: CodeAtCursorMessage
 ): Promise<void> => {
   const model_providers_manager = new ModelProvidersManager(
-    panel_provider.context
+    panel_provider.extension_context
   )
   const completion_instructions =
     panel_provider.current_code_at_cursor_instruction
@@ -149,7 +149,7 @@ export const handle_code_at_cursor = async (
   const api_configuration_result = await get_code_at_cursor_api_configuration(
     model_providers_manager,
     message.use_quick_pick,
-    panel_provider.context,
+    panel_provider.extension_context,
     panel_provider,
     message.api_configuration_id
   )
@@ -217,7 +217,7 @@ export const handle_code_at_cursor = async (
       skill_definitions
     } = await replace_symbols({
       instruction: completion_instructions,
-      context: panel_provider.context,
+      extension_context: panel_provider.extension_context,
       workspace_provider: panel_provider.workspace_provider
     })
 

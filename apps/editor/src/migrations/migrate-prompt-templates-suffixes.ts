@@ -4,10 +4,10 @@ import { Logger } from '@shared/utils/logger'
 const MIGRATION_ID = 'prompt-templates-suffixes-migration-20260702'
 
 export async function migrate_prompt_templates_suffixes(
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
 ): Promise<void> {
   try {
-    if (context.globalState.get(MIGRATION_ID)) {
+    if (extension_context.globalState.get(MIGRATION_ID)) {
       return
     }
 
@@ -45,7 +45,7 @@ export async function migrate_prompt_templates_suffixes(
       }
     }
 
-    await context.globalState.update(MIGRATION_ID, true)
+    await extension_context.globalState.update(MIGRATION_ID, true)
     Logger.info({
       function_name: 'migrate_prompt_templates_suffixes',
       message: 'Successfully migrated prompt templates suffixes'

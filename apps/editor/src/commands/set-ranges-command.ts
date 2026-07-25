@@ -13,7 +13,7 @@ import { t } from '../i18n'
 
 export const set_ranges_command = (
   workspace_provider: WorkspaceProvider,
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
 ) => {
   return vscode.commands.registerCommand(
     'codeWebChat.setRanges',
@@ -62,10 +62,9 @@ export const set_ranges_command = (
       }
 
       // Load ranges from state
-      const state_ranges = context.workspaceState.get<Record<string, string>>(
-        RANGES_STATE_KEY,
-        {}
-      )
+      const state_ranges = extension_context.workspaceState.get<
+        Record<string, string>
+      >(RANGES_STATE_KEY, {})
 
       const file_range_value = file_ranges[relative_path]
       const state_range_value = state_ranges[state_key]
@@ -170,7 +169,10 @@ export const set_ranges_command = (
         if (state_ranges[state_key]) {
           const updated_state = { ...state_ranges }
           delete updated_state[state_key]
-          await context.workspaceState.update(RANGES_STATE_KEY, updated_state)
+          await extension_context.workspaceState.update(
+            RANGES_STATE_KEY,
+            updated_state
+          )
           changed = true
         }
 
@@ -186,7 +188,7 @@ export const set_ranges_command = (
       if (file_range_value) save_location = 'file'
       else if (state_range_value) save_location = 'state'
       else {
-        const last_location = context.workspaceState.get<
+        const last_location = extension_context.workspaceState.get<
           'file' | 'state' | undefined
         >(LAST_RANGES_SAVE_LOCATION_STATE_KEY)
 
@@ -213,7 +215,7 @@ export const set_ranges_command = (
           choice.label == t('command.ranges.quick-pick.json-file')
             ? 'file'
             : 'state'
-        await context.workspaceState.update(
+        await extension_context.workspaceState.update(
           LAST_RANGES_SAVE_LOCATION_STATE_KEY,
           save_location
         )
@@ -235,7 +237,7 @@ export const set_ranges_command = (
             if (state_ranges[state_key]) {
               const updated_state = { ...state_ranges }
               delete updated_state[state_key]
-              await context.workspaceState.update(
+              await extension_context.workspaceState.update(
                 RANGES_STATE_KEY,
                 updated_state
               )
@@ -251,7 +253,10 @@ export const set_ranges_command = (
             ...state_ranges,
             [state_key]: formatted_range
           }
-          await context.workspaceState.update(RANGES_STATE_KEY, updated_state)
+          await extension_context.workspaceState.update(
+            RANGES_STATE_KEY,
+            updated_state
+          )
 
           // Remove from file if exists
           if (file_ranges[relative_path]) {

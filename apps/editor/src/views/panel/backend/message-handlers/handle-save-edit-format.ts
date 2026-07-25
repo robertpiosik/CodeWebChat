@@ -11,21 +11,21 @@ export const handle_save_edit_format = async (
 ): Promise<void> => {
   if (message.target == 'chat') {
     panel_provider.chat_edit_format = message.edit_format
-    await panel_provider.context.workspaceState.update(
+    await panel_provider.extension_context.workspaceState.update(
       CHAT_EDIT_FORMAT_STATE_KEY,
       message.edit_format
     )
-    await panel_provider.context.globalState.update(
+    await panel_provider.extension_context.globalState.update(
       CHAT_EDIT_FORMAT_STATE_KEY,
       message.edit_format
     )
   } else if (message.target == 'api') {
     panel_provider.api_edit_format = message.edit_format
-    await panel_provider.context.workspaceState.update(
+    await panel_provider.extension_context.workspaceState.update(
       API_EDIT_FORMAT_STATE_KEY,
       message.edit_format
     )
-    await panel_provider.context.globalState.update(
+    await panel_provider.extension_context.globalState.update(
       API_EDIT_FORMAT_STATE_KEY,
       message.edit_format
     )

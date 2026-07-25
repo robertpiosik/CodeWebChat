@@ -5,7 +5,7 @@ export const handle_save_find_relevant_files_shrink_source_code = async (
   panel_provider: PanelProvider,
   shrink_source_code: boolean
 ) => {
-  await panel_provider.context.workspaceState.update(
+  await panel_provider.extension_context.workspaceState.update(
     FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
     shrink_source_code
   )

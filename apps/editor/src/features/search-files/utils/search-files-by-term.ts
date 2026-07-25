@@ -72,15 +72,32 @@ export const search_files_by_term = async (params: {
       .split(',')
       .map((k) => k.trim())
       .filter((k) => k.length > 0)
-    const regexes = keywords.map((k) => create_search_regex(k))
 
-    if (regexes.length == 0) return []
+    const positive_keywords = keywords.filter((k) => !k.startsWith('!'))
+    const negative_keywords = keywords
+      .filter((k) => k.startsWith('!'))
+      .map((k) => k.slice(1))
+
+    const positive_regexes = positive_keywords.map((k) =>
+      create_search_regex(k)
+    )
+    const negative_regexes = negative_keywords.map((k) =>
+      create_search_regex(k)
+    )
+
+    if (positive_regexes.length == 0 && negative_regexes.length == 0) return []
 
     const matches_condition = (text: string) => {
-      if (params.keywords_match_mode == 'some') {
-        return regexes.some((r) => r.test(text))
+      if (negative_regexes.some((r) => r.test(text))) {
+        return false
       }
-      return regexes.every((r) => r.test(text))
+      if (positive_regexes.length == 0) {
+        return true
+      }
+      if (params.keywords_match_mode == 'some') {
+        return positive_regexes.some((r) => r.test(text))
+      }
+      return positive_regexes.every((r) => r.test(text))
     }
 
     for (const file_path of params.files) {
@@ -106,27 +123,42 @@ export const search_files_by_term = async (params: {
     return matched_files
   }
 
-  let regexes: RegExp[] = []
+  let positive_regexes: RegExp[] = []
+  let negative_regexes: RegExp[] = []
+
   if (params.search_mode == 'keywords') {
     const keywords = params.search_term
       .split(',')
       .map((k) => k.trim())
       .filter((k) => k.length > 0)
-    regexes = keywords.map((k) => create_search_regex(k))
+
+    const positive_keywords = keywords.filter((k) => !k.startsWith('!'))
+    const negative_keywords = keywords
+      .filter((k) => k.startsWith('!'))
+      .map((k) => k.slice(1))
+
+    positive_regexes = positive_keywords.map((k) => create_search_regex(k))
+    negative_regexes = negative_keywords.map((k) => create_search_regex(k))
   } else {
-    regexes = [create_search_regex(params.search_term)]
+    positive_regexes = [create_search_regex(params.search_term)]
   }
 
-  if (regexes.length == 0) return []
+  if (positive_regexes.length == 0 && negative_regexes.length == 0) return []
 
   const matches_condition = (text: string) => {
+    if (negative_regexes.some((r) => r.test(text))) {
+      return false
+    }
+    if (positive_regexes.length == 0) {
+      return true
+    }
     if (
       params.search_mode == 'keywords' &&
       params.keywords_match_mode == 'some'
     ) {
-      return regexes.some((r) => r.test(text))
+      return positive_regexes.some((r) => r.test(text))
     }
-    return regexes.every((r) => r.test(text))
+    return positive_regexes.every((r) => r.test(text))
   }
 
   for (const file_path of params.files) {

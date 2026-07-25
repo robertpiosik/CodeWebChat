@@ -102,7 +102,7 @@ const stop_recording = async (panel_provider: PanelProvider) => {
 
     try {
       const model_providers_manager = new ModelProvidersManager(
-        panel_provider.context
+        panel_provider.extension_context
       )
       const api_configurations =
         await model_providers_manager.get_api_configurations()
@@ -116,9 +116,10 @@ const stop_recording = async (panel_provider: PanelProvider) => {
         if (api_configurations.length == 1) {
           api_configuration = api_configurations[0]
         } else {
-          const recent_id = panel_provider.context.workspaceState.get<string>(
-            LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY
-          )
+          const recent_id =
+            panel_provider.extension_context.workspaceState.get<string>(
+              LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY
+            )
 
           const result = await show_configuration_quick_pick({
             items: api_configurations,
@@ -132,7 +133,7 @@ const stop_recording = async (panel_provider: PanelProvider) => {
 
           api_configuration = result.item
 
-          panel_provider.context.workspaceState.update(
+          panel_provider.extension_context.workspaceState.update(
             LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY,
             result.id
           )
@@ -243,7 +244,7 @@ export const handle_voice_input = async (
 
   if (message.is_recording) {
     const model_providers_manager = new ModelProvidersManager(
-      panel_provider.context
+      panel_provider.extension_context
     )
     const api_configurations =
       await model_providers_manager.get_api_configurations()

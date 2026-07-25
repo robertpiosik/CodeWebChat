@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import { WorkspaceProvider } from '../../../../context/providers/workspace/workspace-provider'
+import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 
 export const is_valid_uri = (
   uri_str: string,

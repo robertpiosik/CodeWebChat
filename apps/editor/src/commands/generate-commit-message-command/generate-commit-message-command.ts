@@ -25,7 +25,7 @@ const truncate_prompt = (text: string): string => {
 }
 
 export const generate_commit_message_command = (
-  context: vscode.ExtensionContext,
+  extension_context: vscode.ExtensionContext,
   panel_provider: PanelProvider,
   workspace_provider: WorkspaceProvider
 ) => {
@@ -128,7 +128,7 @@ export const generate_commit_message_command = (
         was_empty_stage && !is_single_change_flow && !params.source_control
 
       const api_configuration_data = await get_commit_message_api_configuration(
-        context,
+        extension_context,
         show_back_button,
         force_quick_pick,
         token_count
@@ -177,7 +177,9 @@ export const generate_commit_message_command = (
 
       const workspace_root = repository.rootUri.fsPath
       const all_prompts =
-        PromptsForCommitMessagesUtils.load_all(context)[workspace_root] || []
+        PromptsForCommitMessagesUtils.load_all(extension_context)[
+          workspace_root
+        ] || []
 
       const select_prompts_setting = vscode.workspace
         .getConfiguration('codeWebChat')
@@ -306,7 +308,7 @@ export const generate_commit_message_command = (
           repository.inputBox.value = commit_message_value
           await vscode.commands.executeCommand('git.commit', repository)
           PromptsForCommitMessagesUtils.remove_committed_files({
-            context,
+            extension_context: extension_context,
             workspace_root,
             prompts: relevant_prompts.map((p) => p.prompt),
             committed_files: staged_files
@@ -315,7 +317,7 @@ export const generate_commit_message_command = (
           const subject_line = commit_message_value.split('\n')[0].trim()
           create_checkpoint({
             workspace_provider,
-            context,
+            extension_context,
             panel_provider,
             trigger: 'commit',
             description: subject_line

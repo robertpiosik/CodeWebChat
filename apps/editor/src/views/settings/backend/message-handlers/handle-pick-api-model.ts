@@ -7,7 +7,9 @@ export const handle_pick_api_model = async (
   provider: SettingsProvider,
   message: any
 ): Promise<void> => {
-  const providers_manager = new ModelProvidersManager(provider.context)
+  const providers_manager = new ModelProvidersManager(
+    provider.extension_context
+  )
   const model_fetcher = new ModelFetcher()
 
   const model = await edit_model_for_api_configuration({

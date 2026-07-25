@@ -17,7 +17,7 @@ import {
 export const get_code_at_cursor_api_configuration = async (params: {
   model_providers_manager: ModelProvidersManager
   show_quick_pick?: boolean
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   api_configuration_id?: string
   panel_provider?: PanelProvider
 }): Promise<{ model_provider: any; api_configuration: any } | undefined> => {
@@ -45,9 +45,10 @@ export const get_code_at_cursor_api_configuration = async (params: {
     if (default_api_configuration) {
       selected_api_configuration = default_api_configuration
     } else {
-      const last_selected_id = params.context.workspaceState.get<string>(
-        LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
-      )
+      const last_selected_id =
+        params.extension_context.workspaceState.get<string>(
+          LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
+        )
       if (last_selected_id) {
         selected_api_configuration =
           code_at_cursor_api_configurations.find(
@@ -64,9 +65,10 @@ export const get_code_at_cursor_api_configuration = async (params: {
   }
 
   if (!selected_api_configuration || params.show_quick_pick) {
-    const last_selected_id = params.context.workspaceState.get<string>(
-      LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
-    )
+    const last_selected_id =
+      params.extension_context.workspaceState.get<string>(
+        LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
+      )
 
     const result = await show_configuration_quick_pick({
       items: code_at_cursor_api_configurations,
@@ -81,7 +83,7 @@ export const get_code_at_cursor_api_configuration = async (params: {
 
     const { item: api_configuration, id } = result
 
-    params.context.workspaceState.update(
+    params.extension_context.workspaceState.update(
       LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
       id
     )

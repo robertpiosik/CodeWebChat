@@ -134,7 +134,10 @@ export const search_files = async (params: {
 
           const result = await prompt_for_search_term(
             initial_search_term,
-            search_mode
+            search_mode,
+            (value) => {
+              params.extension_context.workspaceState.update(state_key, value)
+            }
           )
           if (result.back) {
             if (search_mode == 'keywords' || search_mode == 'filename') {

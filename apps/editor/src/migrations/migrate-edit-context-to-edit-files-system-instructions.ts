@@ -5,10 +5,10 @@ const MIGRATION_ID =
   'edit-context-to-edit-files-system-instructions-migration-20260701'
 
 export async function migrate_edit_context_to_edit_files_system_instructions(
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
 ): Promise<void> {
   try {
-    if (context.globalState.get(MIGRATION_ID)) {
+    if (extension_context.globalState.get(MIGRATION_ID)) {
       return
     }
 
@@ -28,7 +28,7 @@ export async function migrate_edit_context_to_edit_files_system_instructions(
       )
     }
 
-    await context.globalState.update(MIGRATION_ID, true)
+    await extension_context.globalState.update(MIGRATION_ID, true)
     Logger.info({
       function_name: 'migrate_edit_context_to_edit_files_system_instructions',
       message:

@@ -4,7 +4,7 @@ import { PromptsForCommitMessagesUtils } from '../utils/prompts-for-commit-messa
 import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
 
 export const setup_git_discard_file_watcher = (
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
 ) => {
   const git_extension = vscode.extensions.getExtension('vscode.git')
   if (!git_extension) return
@@ -44,7 +44,7 @@ export const setup_git_discard_file_watcher = (
           for (const prev_change of previous_changes) {
             if (!current_changes.has(prev_change)) {
               PromptsForCommitMessagesUtils.remove_file_path({
-                context,
+                extension_context,
                 file_path: prev_change,
                 workspace_root
               })
@@ -62,8 +62,9 @@ export const setup_git_discard_file_watcher = (
 
         if (select_prompts_setting) {
           const all_prompts =
-            PromptsForCommitMessagesUtils.load_all(context)[workspace_root] ||
-            []
+            PromptsForCommitMessagesUtils.load_all(extension_context)[
+              workspace_root
+            ] || []
           const staged_files = (repo.state.indexChanges || []).map(
             (change: any) =>
               path
@@ -105,15 +106,15 @@ export const setup_git_discard_file_watcher = (
 
       for (const repo of git_api.repositories) {
         update_repo_state(repo)
-        context.subscriptions.push(
+        extension_context.subscriptions.push(
           repo.state.onDidChange(() => update_repo_state(repo))
         )
       }
 
-      context.subscriptions.push(
+      extension_context.subscriptions.push(
         git_api.onDidOpenRepository((repo: any) => {
           update_repo_state(repo)
-          context.subscriptions.push(
+          extension_context.subscriptions.push(
             repo.state.onDidChange(() => update_repo_state(repo))
           )
         })

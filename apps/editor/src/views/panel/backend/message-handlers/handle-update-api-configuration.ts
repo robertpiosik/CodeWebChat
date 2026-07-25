@@ -6,7 +6,7 @@ export const handle_update_api_configuration = async (
   message: any
 ): Promise<void> => {
   const result = await update({
-    context: provider.context,
+    extension_context: provider.extension_context,
     updating_api_configuration: message.updating_api_configuration,
     updated_api_configuration: message.updated_api_configuration,
     origin: message.origin,

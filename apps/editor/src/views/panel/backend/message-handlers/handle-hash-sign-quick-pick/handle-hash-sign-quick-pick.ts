@@ -18,7 +18,7 @@ const saved_context_label = '$(checklist) Saved context'
 const skill_label = '$(thinking) Skill'
 
 const hash_sign_quick_pick = async (params: {
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   is_for_code_at_cursor: boolean
   is_find_relevant_files: boolean
 }): Promise<string | undefined> => {
@@ -63,9 +63,10 @@ const hash_sign_quick_pick = async (params: {
     )
   }
 
-  const last_selected_symbol = params.context.workspaceState.get<string>(
-    LAST_SELECTED_SYMBOL_STATE_KEY
-  )
+  const last_selected_symbol =
+    params.extension_context.workspaceState.get<string>(
+      LAST_SELECTED_SYMBOL_STATE_KEY
+    )
   let last_selected_item: vscode.QuickPickItem | undefined = items.find(
     (item) => item.label == last_selected_symbol
   )
@@ -117,7 +118,7 @@ const hash_sign_quick_pick = async (params: {
     }
 
     last_selected_item = selected
-    await params.context.workspaceState.update(
+    await params.extension_context.workspaceState.update(
       LAST_SELECTED_SYMBOL_STATE_KEY,
       selected.label
     )
@@ -132,13 +133,16 @@ const hash_sign_quick_pick = async (params: {
         result = await handle_changes_item()
         break
       case commit_label:
-        result = await handle_commit_item(params.context, 'Commit')
+        result = await handle_commit_item(params.extension_context, 'Commit')
         break
       case context_at_commit_label:
-        result = await handle_commit_item(params.context, 'ContextAtCommit')
+        result = await handle_commit_item(
+          params.extension_context,
+          'ContextAtCommit'
+        )
         break
       case saved_context_label:
-        result = await handle_saved_context_item(params.context)
+        result = await handle_saved_context_item(params.extension_context)
         break
       case skill_label:
         result = await handle_skill_item()
@@ -157,7 +161,7 @@ const hash_sign_quick_pick = async (params: {
 
 export const handle_hash_sign_quick_pick = async (
   panel_provider: PanelProvider,
-  context: vscode.ExtensionContext,
+  extension_context: vscode.ExtensionContext,
   is_for_code_at_cursor: boolean
 ): Promise<void> => {
   const is_find_relevant_files =
@@ -167,7 +171,7 @@ export const handle_hash_sign_quick_pick = async (
       panel_provider.api_prompt_type == 'find-relevant-files')
 
   const replacement = await hash_sign_quick_pick({
-    context,
+    extension_context,
     is_for_code_at_cursor,
     is_find_relevant_files
   })

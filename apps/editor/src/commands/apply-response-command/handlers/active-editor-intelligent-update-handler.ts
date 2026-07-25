@@ -24,7 +24,7 @@ export const handle_active_editor_intelligent_update = async (params: {
   api_key: string
   api_configuration: ApiConfiguration
   chat_response: string
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   is_single_root_folder_workspace: boolean
   panel_provider?: PanelProvider
 }): Promise<OriginalFileState[] | null> => {
@@ -199,11 +199,13 @@ export const handle_active_editor_intelligent_update = async (params: {
         dictionary.error_message.ERROR_APPLYING_CHANGES(error.message)
       )
 
-      const model_providers_manager = new ModelProvidersManager(params.context)
+      const model_providers_manager = new ModelProvidersManager(
+        params.extension_context
+      )
       const api_configuration_result = await get_intelligent_update_config(
         model_providers_manager,
         true,
-        params.context
+        params.extension_context
       )
 
       if (api_configuration_result) {

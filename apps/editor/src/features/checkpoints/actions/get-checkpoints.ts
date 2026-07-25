@@ -56,10 +56,13 @@ export const remove_old_checkpoints = async (
 }
 
 export const get_checkpoints = async (
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
 ): Promise<Checkpoint[]> => {
   const checkpoints =
-    context.workspaceState.get<Checkpoint[]>(CHECKPOINTS_STATE_KEY, []) ?? []
+    extension_context.workspaceState.get<Checkpoint[]>(
+      CHECKPOINTS_STATE_KEY,
+      []
+    ) ?? []
   const valid_checkpoints: Checkpoint[] = []
   let state_updated = false
   for (const checkpoint of checkpoints) {
@@ -73,7 +76,7 @@ export const get_checkpoints = async (
   }
 
   if (state_updated) {
-    await context.workspaceState.update(
+    await extension_context.workspaceState.update(
       CHECKPOINTS_STATE_KEY,
       valid_checkpoints
     )

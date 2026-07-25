@@ -64,7 +64,7 @@ export const handle_preview_web_configuration = async (
       skill_definitions
     } = await replace_symbols({
       instruction: current_instructions,
-      context: panel_provider.context,
+      extension_context: panel_provider.extension_context,
       workspace_provider: panel_provider.workspace_provider,
       remove_images: true
     })
@@ -85,7 +85,7 @@ export const handle_preview_web_configuration = async (
     text_to_send = full_prompt
   } else if (panel_provider.web_prompt_type != 'code-at-cursor') {
     const shrink_source_code =
-      panel_provider.context.workspaceState.get<boolean>(
+      panel_provider.extension_context.workspaceState.get<boolean>(
         FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
         false
       )
@@ -103,7 +103,7 @@ export const handle_preview_web_configuration = async (
     const { instruction: processed_instructions, skill_definitions } =
       await replace_symbols({
         instruction: current_instructions,
-        context: panel_provider.context,
+        extension_context: panel_provider.extension_context,
         workspace_provider: panel_provider.workspace_provider,
         remove_images: true
       })

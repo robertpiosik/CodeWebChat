@@ -13,7 +13,9 @@ export const handle_select_default_api_configuration = async (
   provider: SettingsProvider,
   message: SelectDefaultApiConfigurationMessage
 ): Promise<void> => {
-  const providers_manager = new ModelProvidersManager(provider.context)
+  const providers_manager = new ModelProvidersManager(
+    provider.extension_context
+  )
   const api_configurations = await providers_manager.get_api_configurations()
 
   if (api_configurations.length == 0) {

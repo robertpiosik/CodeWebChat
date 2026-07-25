@@ -49,7 +49,7 @@ export class WorkspaceProvider
   readonly onDidChangeTreeData: vscode.Event<
     FileItem | undefined | null | void
   > = this._on_did_change_tree_data.event
-  private _context: vscode.ExtensionContext
+  private _extension_context: vscode.ExtensionContext
   private _workspace_roots: string[] = []
   private _workspace_names: string[] = []
 
@@ -170,9 +170,9 @@ export class WorkspaceProvider
 
   constructor(params: {
     workspace_folders: readonly vscode.WorkspaceFolder[]
-    context: vscode.ExtensionContext
+    extension_context: vscode.ExtensionContext
   }) {
-    this._context = params.context
+    this._extension_context = params.extension_context
     const valid_folders = params.workspace_folders.filter((folder) =>
       fs.existsSync(folder.uri.fsPath)
     )
@@ -181,7 +181,7 @@ export class WorkspaceProvider
     this._workspace_names = valid_folders.map((folder) => folder.name)
 
     this.onDidChangeCheckedFiles(() => this._save_checked_files_state())
-    this._token_calculator = new TokenCalculator(this, this._context)
+    this._token_calculator = new TokenCalculator(this, this._extension_context)
     this._load_ignore_patterns()
 
     this._watcher = vscode.workspace.createFileSystemWatcher('**/*')
@@ -232,11 +232,11 @@ export class WorkspaceProvider
     if (this._is_frf_mode) return
 
     const checked_paths = this.get_all_checked_paths()
-    await this._context.workspaceState.update(
+    await this._extension_context.workspaceState.update(
       CONTEXT_CHECKED_PATHS_STATE_KEY,
       checked_paths
     )
-    await this._context.workspaceState.update(
+    await this._extension_context.workspaceState.update(
       CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY,
       Object.fromEntries(this._checked_timestamps)
     )
@@ -244,10 +244,10 @@ export class WorkspaceProvider
 
   public load_checked_files_state() {
     const load = async () => {
-      const reg_paths = this._context.workspaceState.get<string[]>(
+      const reg_paths = this._extension_context.workspaceState.get<string[]>(
         CONTEXT_CHECKED_PATHS_STATE_KEY
       )
-      const reg_times = this._context.workspaceState.get<
+      const reg_times = this._extension_context.workspaceState.get<
         Record<string, number>
       >(CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY)
 
@@ -925,7 +925,7 @@ export class WorkspaceProvider
     }
 
     // Load from state
-    const state_ranges = this._context.workspaceState.get<
+    const state_ranges = this._extension_context.workspaceState.get<
       Record<string, string>
     >(RANGES_STATE_KEY, {})
     for (const [key, range] of Object.entries(state_ranges)) {

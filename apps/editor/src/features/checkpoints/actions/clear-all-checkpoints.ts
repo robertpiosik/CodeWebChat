@@ -10,10 +10,10 @@ import type { Checkpoint } from '../types'
 import { t } from '@/i18n'
 
 export const clear_all_checkpoints = async (
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
 ) => {
   const clear_task = async () => {
-    const checkpoints = await get_checkpoints(context)
+    const checkpoints = await get_checkpoints(extension_context)
     for (const checkpoint of checkpoints) {
       try {
         const checkpoint_path = get_checkpoint_path(checkpoint.timestamp)
@@ -28,7 +28,7 @@ export const clear_all_checkpoints = async (
         })
       }
     }
-    const temp_checkpoint = context.workspaceState.get<Checkpoint>(
+    const temp_checkpoint = extension_context.workspaceState.get<Checkpoint>(
       TEMPORARY_CHECKPOINT_STATE_KEY
     )
     if (temp_checkpoint) {
@@ -45,11 +45,11 @@ export const clear_all_checkpoints = async (
         })
       }
     }
-    await context.workspaceState.update(
+    await extension_context.workspaceState.update(
       TEMPORARY_CHECKPOINT_STATE_KEY,
       undefined
     )
-    await context.workspaceState.update(CHECKPOINTS_STATE_KEY, [])
+    await extension_context.workspaceState.update(CHECKPOINTS_STATE_KEY, [])
   }
   await vscode.window.withProgress(
     {

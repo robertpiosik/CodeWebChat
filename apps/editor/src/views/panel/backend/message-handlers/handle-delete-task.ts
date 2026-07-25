@@ -23,7 +23,7 @@ export const handle_delete_task = async (
   }
 
   // 1. Load and Find
-  let all_data = TasksUtils.load_all(panel_provider.context)
+  let all_data = TasksUtils.load_all(panel_provider.extension_context)
   const root_tasks = all_data[message.root] || []
   const task_info = TasksUtils.find_in_tree_with_location({
     tasks: root_tasks,
@@ -40,7 +40,10 @@ export const handle_delete_task = async (
     timestamp: message.timestamp
   })
   all_data[message.root] = new_root_tasks
-  TasksUtils.save_all({ context: panel_provider.context, tasks: all_data })
+  TasksUtils.save_all({
+    extension_context: panel_provider.extension_context,
+    tasks: all_data
+  })
   broadcast_tasks(all_data)
 
   const is_empty = (task: Task): boolean => {
@@ -60,7 +63,7 @@ export const handle_delete_task = async (
 
   if (selection == 'Undo') {
     // 4. Restore
-    all_data = TasksUtils.load_all(panel_provider.context) // Reload to get latest state
+    all_data = TasksUtils.load_all(panel_provider.extension_context) // Reload to get latest state
     const current_root_tasks = all_data[message.root] || []
 
     const result = TasksUtils.insert_in_tree({
@@ -77,7 +80,10 @@ export const handle_delete_task = async (
       all_data[message.root] = [...current_root_tasks, task_info.task]
     }
 
-    TasksUtils.save_all({ context: panel_provider.context, tasks: all_data })
+    TasksUtils.save_all({
+      extension_context: panel_provider.extension_context,
+      tasks: all_data
+    })
     broadcast_tasks(all_data)
   }
 }

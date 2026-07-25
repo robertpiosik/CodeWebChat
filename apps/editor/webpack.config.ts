@@ -4,6 +4,7 @@ import * as webpack from 'webpack'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 
 const config: ((env: any, argv: any) => webpack.Configuration)[] = [
   // Extension Configuration (Node.js environment)
@@ -61,6 +62,15 @@ const config: ((env: any, argv: any) => webpack.Configuration)[] = [
           cleanOnceBeforeBuildPatterns: ['../*.vsix'],
           dangerouslyAllowCleanPatternsOutsideProject: true,
           dry: false
+        }),
+        new ForkTsCheckerWebpackPlugin({
+          typescript: {
+            configFile: path.resolve(__dirname, 'tsconfig.json'),
+            diagnosticOptions: {
+              semantic: true,
+              syntactic: true
+            }
+          }
         }),
         new CopyWebpackPlugin({
           patterns: [

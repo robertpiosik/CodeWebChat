@@ -8,7 +8,7 @@ export const handle_return_home_and_switch_to_edit_files = async (
   panel_provider.send_message({ command: 'RETURN_HOME' })
   if (panel_provider.mode == MODE.WEB) {
     panel_provider.web_prompt_type = 'edit-files'
-    await panel_provider.context.workspaceState.update(
+    await panel_provider.extension_context.workspaceState.update(
       WEB_MODE_STATE_KEY,
       'edit-files'
     )
@@ -18,7 +18,7 @@ export const handle_return_home_and_switch_to_edit_files = async (
     })
   } else {
     panel_provider.api_prompt_type = 'edit-files'
-    await panel_provider.context.workspaceState.update(
+    await panel_provider.extension_context.workspaceState.update(
       API_MODE_STATE_KEY,
       'edit-files'
     )

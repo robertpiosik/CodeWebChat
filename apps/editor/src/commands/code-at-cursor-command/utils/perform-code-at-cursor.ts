@@ -18,20 +18,22 @@ import { PromptBuilder } from '../../../utils/prompt-builder'
 export const perform_code_at_cursor = async (params: {
   file_tree_provider: any
   open_editors_provider: any
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   with_completion_instructions: boolean
   show_quick_pick?: boolean
   completion_instructions?: string
   api_configuration_id?: string
   panel_provider?: PanelProvider
 }) => {
-  const model_providers_manager = new ModelProvidersManager(params.context)
+  const model_providers_manager = new ModelProvidersManager(
+    params.extension_context
+  )
 
   let completion_instructions: string | undefined =
     params.completion_instructions
   if (params.with_completion_instructions && !completion_instructions) {
     const last_value =
-      params.context.workspaceState.get<string>(
+      params.extension_context.workspaceState.get<string>(
         'last-completion-instructions'
       ) || ''
     completion_instructions = await vscode.window.showInputBox({
@@ -42,7 +44,7 @@ export const perform_code_at_cursor = async (params: {
 
     if (completion_instructions === undefined) return
 
-    await params.context.workspaceState.update(
+    await params.extension_context.workspaceState.update(
       'last-completion-instructions',
       completion_instructions || ''
     )
@@ -56,7 +58,7 @@ export const perform_code_at_cursor = async (params: {
       {
         model_providers_manager,
         show_quick_pick: force_show_quick_pick,
-        context: params.context,
+        extension_context: params.extension_context,
         api_configuration_id: current_api_configuration_id,
         panel_provider: params.panel_provider
       }

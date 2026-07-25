@@ -31,7 +31,7 @@ import { PromptBuilder } from '@/utils/prompt-builder'
 const get_find_relevant_files_api_configuration = async (params: {
   model_providers_manager: ModelProvidersManager
   show_quick_pick?: boolean
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   panel_provider: PanelProvider
   api_configuration_id?: string
 }): Promise<
@@ -57,7 +57,7 @@ const get_find_relevant_files_api_configuration = async (params: {
         (c) => get_api_configuration_id(c) == params.api_configuration_id
       ) || null
     if (selected_api_configuration) {
-      params.context.workspaceState.update(
+      params.extension_context.workspaceState.update(
         LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY,
         params.api_configuration_id
       )
@@ -71,9 +71,10 @@ const get_find_relevant_files_api_configuration = async (params: {
       }
     }
   } else if (!params.show_quick_pick) {
-    const last_selected_id = params.context.workspaceState.get<string>(
-      LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY
-    )
+    const last_selected_id =
+      params.extension_context.workspaceState.get<string>(
+        LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY
+      )
 
     if (last_selected_id) {
       selected_api_configuration =
@@ -84,9 +85,10 @@ const get_find_relevant_files_api_configuration = async (params: {
   }
 
   if (!selected_api_configuration || params.show_quick_pick) {
-    const last_selected_id = params.context.workspaceState.get<string>(
-      LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY
-    )
+    const last_selected_id =
+      params.extension_context.workspaceState.get<string>(
+        LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY
+      )
 
     const result = await show_configuration_quick_pick({
       items: find_relevant_files_api_configurations,
@@ -100,7 +102,7 @@ const get_find_relevant_files_api_configuration = async (params: {
 
     const { item: api_configuration, id } = result
 
-    params.context.workspaceState.update(
+    params.extension_context.workspaceState.update(
       LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY,
       id
     )
@@ -145,7 +147,7 @@ export const handle_find_relevant_files = async (
   await vscode.workspace.saveAll()
 
   const model_providers_manager = new ModelProvidersManager(
-    panel_provider.context
+    panel_provider.extension_context
   )
 
   const files_collector = new FilesCollector({
@@ -167,14 +169,15 @@ export const handle_find_relevant_files = async (
   const { instruction: processed_instructions, skill_definitions } =
     await replace_symbols({
       instruction: instructions,
-      context: panel_provider.context,
+      extension_context: panel_provider.extension_context,
       workspace_provider: panel_provider.workspace_provider
     })
 
-  const shrink_source_code = panel_provider.context.workspaceState.get<boolean>(
-    FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
-    false
-  )
+  const shrink_source_code =
+    panel_provider.extension_context.workspaceState.get<boolean>(
+      FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
+      false
+    )
 
   const collected = await files_collector.collect_files({
     shrink: shrink_source_code
@@ -198,7 +201,7 @@ export const handle_find_relevant_files = async (
       await get_find_relevant_files_api_configuration({
         model_providers_manager,
         show_quick_pick: should_show_quick_pick,
-        context: panel_provider.context,
+        extension_context: panel_provider.extension_context,
         panel_provider,
         api_configuration_id: current_api_configuration_id
       })

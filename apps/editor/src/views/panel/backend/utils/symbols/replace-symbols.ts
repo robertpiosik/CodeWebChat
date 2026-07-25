@@ -15,7 +15,7 @@ import { replace_fragment_symbol } from './fragment/replace-fragment-symbol'
 
 export interface ReplaceSymbolsParams {
   instruction: string
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   workspace_provider: WorkspaceProvider
   remove_images?: boolean
 }
@@ -56,7 +56,7 @@ export const replace_symbols = async (
   if (processed_instructions.includes('#SavedContext(')) {
     const result = await replace_saved_context_symbol({
       instruction: processed_instructions,
-      context: params.context,
+      extension_context: params.extension_context,
       workspace_provider: params.workspace_provider
     })
     processed_instructions = result.instruction

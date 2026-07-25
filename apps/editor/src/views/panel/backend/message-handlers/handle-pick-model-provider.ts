@@ -11,7 +11,9 @@ export const handle_pick_model_provider = async (
   panel_provider: PanelProvider,
   message: PickModelProviderMessage
 ): Promise<void> => {
-  const providers_manager = new ModelProvidersManager(panel_provider.context)
+  const providers_manager = new ModelProvidersManager(
+    panel_provider.extension_context
+  )
   const result = await edit_model_provider_for_api_configuration(
     providers_manager,
     message.current_model_provider_name

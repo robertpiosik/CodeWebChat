@@ -4,7 +4,9 @@ import { ModelProvidersManager } from '@/services/model-providers-manager'
 export const handle_get_model_providers = async (
   provider: SettingsProvider
 ): Promise<void> => {
-  const providers_manager = new ModelProvidersManager(provider.context)
+  const providers_manager = new ModelProvidersManager(
+    provider.extension_context
+  )
   const saved_model_providers = await providers_manager.get_model_providers()
 
   const model_providers_for_client = saved_model_providers.map((p) => {

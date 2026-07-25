@@ -22,11 +22,12 @@ export const handle_fix_all_failed_files = async (params: {
   files_to_fix: { file_path: string; workspace_name?: string }[]
   force_model_selection?: boolean
 }): Promise<void> => {
-  const original_states = params.panel_provider.context.workspaceState.get<
-    OriginalFileState[]
-  >(LAST_APPLIED_CHANGES_STATE_KEY)
+  const original_states =
+    params.panel_provider.extension_context.workspaceState.get<
+      OriginalFileState[]
+    >(LAST_APPLIED_CHANGES_STATE_KEY)
   const last_response =
-    params.panel_provider.context.workspaceState.get<string>(
+    params.panel_provider.extension_context.workspaceState.get<string>(
       LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
     )
 
@@ -57,12 +58,12 @@ export const handle_fix_all_failed_files = async (params: {
   })
 
   const model_providers_manager = new ModelProvidersManager(
-    params.panel_provider.context
+    params.panel_provider.extension_context
   )
   const api_configuration_result = await get_intelligent_update_config(
     model_providers_manager,
     params.force_model_selection ?? false,
-    params.panel_provider.context
+    params.panel_provider.extension_context
   )
   if (!api_configuration_result) return
 

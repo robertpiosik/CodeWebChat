@@ -10,17 +10,17 @@ export namespace PromptsForCommitMessagesUtils {
     files: string[]
   }
 
-  export const get_file_path = (context: vscode.ExtensionContext) => {
+  export const get_file_path = (extension_context: vscode.ExtensionContext) => {
     return path.join(
-      context.globalStorageUri.fsPath,
+      extension_context.globalStorageUri.fsPath,
       GLOBAL_PROMPTS_FOR_COMMIT_FILENAME
     )
   }
 
   export const load_all = (
-    context: vscode.ExtensionContext
+    extension_context: vscode.ExtensionContext
   ): Record<string, Prompt[]> => {
-    const file_path = get_file_path(context)
+    const file_path = get_file_path(extension_context)
     try {
       if (fs.existsSync(file_path)) {
         const content = fs.readFileSync(file_path, 'utf8')
@@ -33,7 +33,7 @@ export namespace PromptsForCommitMessagesUtils {
   }
 
   const save_all = (params: {
-    context: vscode.ExtensionContext
+    extension_context: vscode.ExtensionContext
     prompts: Record<string, Prompt[]>
   }) => {
     const filtered_prompts: Record<string, Prompt[]> = {}
@@ -44,7 +44,7 @@ export namespace PromptsForCommitMessagesUtils {
       }
     }
 
-    const file_path = get_file_path(params.context)
+    const file_path = get_file_path(params.extension_context)
     const dir_path = path.dirname(file_path)
 
     if (!fs.existsSync(dir_path)) {
@@ -63,12 +63,12 @@ export namespace PromptsForCommitMessagesUtils {
   }
 
   export const add = (params: {
-    context: vscode.ExtensionContext
+    extension_context: vscode.ExtensionContext
     workspace_root: string
     prompt: string
     files: string[]
   }) => {
-    const all_prompts = load_all(params.context)
+    const all_prompts = load_all(params.extension_context)
 
     if (!all_prompts[params.workspace_root]) {
       all_prompts[params.workspace_root] = []
@@ -81,16 +81,16 @@ export namespace PromptsForCommitMessagesUtils {
 
     all_prompts[params.workspace_root].push(new_prompt)
     save_all({
-      context: params.context,
+      extension_context: params.extension_context,
       prompts: all_prompts
     })
   }
 
   export const remove = (params: {
-    context: vscode.ExtensionContext
+    extension_context: vscode.ExtensionContext
     prompt: string
   }) => {
-    const all_prompts = load_all(params.context)
+    const all_prompts = load_all(params.extension_context)
     let changed = false
 
     for (const root in all_prompts) {
@@ -110,18 +110,18 @@ export namespace PromptsForCommitMessagesUtils {
 
     if (changed) {
       save_all({
-        context: params.context,
+        extension_context: params.extension_context,
         prompts: all_prompts
       })
     }
   }
 
   export const remove_file_path = (params: {
-    context: vscode.ExtensionContext
+    extension_context: vscode.ExtensionContext
     file_path: string
     workspace_root?: string
   }) => {
-    const all_prompts = load_all(params.context)
+    const all_prompts = load_all(params.extension_context)
     let changed = false
     const normalized_path = params.file_path.replace(/\\/g, '/')
 
@@ -155,19 +155,19 @@ export namespace PromptsForCommitMessagesUtils {
 
     if (changed) {
       save_all({
-        context: params.context,
+        extension_context: params.extension_context,
         prompts: all_prompts
       })
     }
   }
 
   export const remove_committed_files = (params: {
-    context: vscode.ExtensionContext
+    extension_context: vscode.ExtensionContext
     workspace_root: string
     prompts: string[]
     committed_files: string[]
   }) => {
-    const all_prompts = load_all(params.context)
+    const all_prompts = load_all(params.extension_context)
     if (!all_prompts[params.workspace_root]) return
 
     let changed = false
@@ -192,7 +192,7 @@ export namespace PromptsForCommitMessagesUtils {
 
     if (changed) {
       save_all({
-        context: params.context,
+        extension_context: params.extension_context,
         prompts: all_prompts
       })
     }

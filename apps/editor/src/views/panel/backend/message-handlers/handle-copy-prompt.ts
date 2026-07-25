@@ -77,7 +77,7 @@ export const handle_copy_prompt = async (params: {
       skill_definitions
     } = await replace_symbols({
       instruction: params.instructions,
-      context: params.panel_provider.context,
+      extension_context: params.panel_provider.extension_context,
       workspace_provider: params.panel_provider.workspace_provider,
       remove_images: true
     })
@@ -105,7 +105,7 @@ export const handle_copy_prompt = async (params: {
         params.panel_provider.api_prompt_type == 'find-relevant-files')
 
     const shrink_source_code =
-      params.panel_provider.context.workspaceState.get<boolean>(
+      params.panel_provider.extension_context.workspaceState.get<boolean>(
         FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
         false
       )
@@ -119,7 +119,7 @@ export const handle_copy_prompt = async (params: {
     const { instruction: processed_instructions, skill_definitions } =
       await replace_symbols({
         instruction: params.instructions,
-        context: params.panel_provider.context,
+        extension_context: params.panel_provider.extension_context,
         workspace_provider: params.panel_provider.workspace_provider,
         remove_images: true
       })

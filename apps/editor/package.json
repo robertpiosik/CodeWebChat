@@ -1239,6 +1239,7 @@
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-react": "^7.37.5",
+    "fork-ts-checker-webpack-plugin": "^9.0.2",
     "mini-css-extract-plugin": "^2.9.2",
     "sass-embedded": "^1.89.2",
     "sass-loader": "^12.6.0",

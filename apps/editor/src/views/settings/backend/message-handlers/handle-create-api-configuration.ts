@@ -8,7 +8,7 @@ export const handle_create_api_configuration = async (
   message: CreateApiConfigurationMessage
 ): Promise<void> => {
   const result = await create({
-    context: provider.context,
+    extension_context: provider.extension_context,
     create_on_top: message.create_on_top,
     insertion_index: message.insertion_index
   })

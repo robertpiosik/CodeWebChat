@@ -8,7 +8,9 @@ export const handle_pick_api_model = async (
   panel_provider: PanelProvider,
   message: PickApiModelMessage
 ): Promise<void> => {
-  const providers_manager = new ModelProvidersManager(panel_provider.context)
+  const providers_manager = new ModelProvidersManager(
+    panel_provider.extension_context
+  )
   const model_fetcher = new ModelFetcher()
 
   const temp_api_configuration = {

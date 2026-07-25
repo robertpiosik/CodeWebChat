@@ -5,7 +5,7 @@ import { LAST_SELECTED_REPOSITORY_IN_SYMBOLS_QUCK_PICK_STATE_KEY } from '@/const
 import { GIT_LOG_SINCE_DURATION } from '@/constants/values'
 
 export const handle_commit_item = async (
-  context: vscode.ExtensionContext,
+  extension_context: vscode.ExtensionContext,
   symbol: 'Commit' | 'ContextAtCommit'
 ): Promise<string | 'continue' | undefined> => {
   try {
@@ -52,7 +52,7 @@ export const handle_commit_item = async (
         quick_pick.title = 'Repositories'
         quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
-        const last_repo = context.workspaceState.get<string>(
+        const last_repo = extension_context.workspaceState.get<string>(
           LAST_SELECTED_REPOSITORY_IN_SYMBOLS_QUCK_PICK_STATE_KEY
         )
         if (last_repo) {
@@ -93,7 +93,7 @@ export const handle_commit_item = async (
 
         if (!picked_folder || picked_folder == 'back') return 'continue'
 
-        await context.workspaceState.update(
+        await extension_context.workspaceState.update(
           LAST_SELECTED_REPOSITORY_IN_SYMBOLS_QUCK_PICK_STATE_KEY,
           picked_folder.label
         )

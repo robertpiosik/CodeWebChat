@@ -14,7 +14,7 @@ export const preview_handler = async (params: {
   original_states: OriginalFileState[]
   chat_response: string
   panel_provider: PanelProvider
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   original_editor_state?: {
     file_path: string
     position: { line: number; character: number }
@@ -35,7 +35,7 @@ export const preview_handler = async (params: {
       panel_provider: params.panel_provider,
       raw_instructions: params.raw_instructions,
       chat_response: params.chat_response,
-      context: params.context,
+      extension_context: params.extension_context,
       created_at: params.created_at,
       url: params.url,
       recent_api_configuration: params.recent_api_configuration
@@ -82,7 +82,7 @@ export const preview_handler = async (params: {
         original_states: params.original_states
       })
       update_undo_button_state({
-        context: params.context,
+        extension_context: params.extension_context,
         panel_provider: params.panel_provider,
         states: null
       })
@@ -137,7 +137,7 @@ export const preview_handler = async (params: {
 
         for (const [workspace_root, files] of files_by_workspace.entries()) {
           PromptsForCommitMessagesUtils.add({
-            context: params.context,
+            extension_context: params.extension_context,
             workspace_root,
             prompt: params.raw_instructions,
             files
@@ -146,7 +146,7 @@ export const preview_handler = async (params: {
       }
 
       update_undo_button_state({
-        context: params.context,
+        extension_context: params.extension_context,
         panel_provider: params.panel_provider,
         states: accepted_states,
         applied_content: params.chat_response,
@@ -187,7 +187,7 @@ export const preview_handler = async (params: {
       return true
     } else {
       update_undo_button_state({
-        context: params.context,
+        extension_context: params.extension_context,
         panel_provider: params.panel_provider,
         states: null
       })

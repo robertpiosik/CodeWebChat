@@ -4,10 +4,10 @@ import { Logger } from '@shared/utils/logger'
 const MIGRATION_ID = 'configurations-to-api-configurations-migration-20260626'
 
 export async function migrate_configurations_to_api_configurations(
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
 ): Promise<void> {
   try {
-    if (context.globalState.get(MIGRATION_ID)) {
+    if (extension_context.globalState.get(MIGRATION_ID)) {
       return
     }
 
@@ -27,7 +27,7 @@ export async function migrate_configurations_to_api_configurations(
       )
     }
 
-    await context.globalState.update(MIGRATION_ID, true)
+    await extension_context.globalState.update(MIGRATION_ID, true)
     Logger.info({
       function_name: 'migrate_configurations_to_api_configurations',
       message: 'Successfully migrated configurations to api configurations'

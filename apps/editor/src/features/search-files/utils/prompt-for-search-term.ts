@@ -3,7 +3,8 @@ import { t } from '@/i18n'
 
 export const prompt_for_search_term = async (
   initial_search_term: string,
-  mode: 'phrase' | 'keywords' | 'filename' | 'intelligent' | 'semantic'
+  mode: 'phrase' | 'keywords' | 'filename' | 'intelligent' | 'semantic',
+  on_change?: (value: string) => void
 ): Promise<{ value: string | undefined; back?: boolean }> => {
   const close_button = {
     iconPath: new vscode.ThemeIcon('close'),
@@ -66,6 +67,9 @@ export const prompt_for_search_term = async (
         input_box.onDidChangeValue(() => {
           if (input_box.value.trim().length > 0) {
             input_box.validationMessage = undefined
+          }
+          if (on_change) {
+            on_change(input_box.value)
           }
         }),
         input_box.onDidHide(() => {

@@ -7,18 +7,18 @@ export namespace TasksUtils {
   const GLOBAL_TASKS_FILENAME = 'tasks.json'
 
   export const get_file_path = (params: {
-    context: vscode.ExtensionContext
+    extension_context: vscode.ExtensionContext
   }) => {
     return path.join(
-      params.context.globalStorageUri.fsPath,
+      params.extension_context.globalStorageUri.fsPath,
       GLOBAL_TASKS_FILENAME
     )
   }
 
   export const load_all = (
-    context: vscode.ExtensionContext
+    extension_context: vscode.ExtensionContext
   ): Record<string, Task[]> => {
-    const file_path = get_file_path({ context })
+    const file_path = get_file_path({ extension_context })
     try {
       if (fs.existsSync(file_path)) {
         const content = fs.readFileSync(file_path, 'utf8')
@@ -31,7 +31,7 @@ export namespace TasksUtils {
   }
 
   export const save_all = (params: {
-    context: vscode.ExtensionContext
+    extension_context: vscode.ExtensionContext
     tasks: Record<string, Task[]>
   }) => {
     const filtered_tasks: Record<string, Task[]> = {}
@@ -42,7 +42,9 @@ export namespace TasksUtils {
       }
     }
 
-    const file_path = get_file_path({ context: params.context })
+    const file_path = get_file_path({
+      extension_context: params.extension_context
+    })
     const dir_path = path.dirname(file_path)
 
     if (!fs.existsSync(dir_path)) {

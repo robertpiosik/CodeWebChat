@@ -28,7 +28,7 @@ export const preview = async (params: {
   panel_provider: PanelProvider
   raw_instructions?: string
   chat_response: string
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   created_at?: number
   url?: string
   recent_api_configuration?: RecentApiConfiguration

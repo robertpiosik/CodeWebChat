@@ -14,13 +14,13 @@ const normalize_base_url = (url: string): string => {
 }
 
 export const upsert_provider = async (params: {
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   model_provider_name?: string
   insertion_index?: number
   create_on_top?: boolean
   show_back_button?: boolean
 }): Promise<ModelProvider | undefined> => {
-  const providers_manager = new ModelProvidersManager(params.context)
+  const providers_manager = new ModelProvidersManager(params.extension_context)
 
   const prompt_for_name = async (params: {
     current_name: string

@@ -161,14 +161,14 @@ export const save_to_workspace_state = async (params: {
           const roots = context_to_roots.get(old_name) || []
           for (const root of roots) {
             const root_contexts = load_contexts_for_workspace({
-              context: params.extension_context,
+              extension_context: params.extension_context,
               workspace_root: root
             })
             const updated = root_contexts.map((c) =>
               c.name === old_name ? { ...c, name: trimmed_name } : c
             )
             save_contexts_for_workspace({
-              context: params.extension_context,
+              extension_context: params.extension_context,
               workspace_root: root,
               contexts: updated
             })
@@ -192,14 +192,14 @@ export const save_to_workspace_state = async (params: {
           const roots = context_to_roots.get(old_name) || []
           for (const root of roots) {
             const root_contexts = load_contexts_for_workspace({
-              context: params.extension_context,
+              extension_context: params.extension_context,
               workspace_root: root
             })
             const new_contexts = root_contexts.filter(
               (c) => c.name !== old_name
             )
             save_contexts_for_workspace({
-              context: params.extension_context,
+              extension_context: params.extension_context,
               workspace_root: root,
               contexts: new_contexts
             })
@@ -236,12 +236,12 @@ export const save_to_workspace_state = async (params: {
         const relative_paths = condensed_paths.map((p) => p.replace(/\\/g, '/'))
 
         const root_contexts = load_contexts_for_workspace({
-          context: params.extension_context,
+          extension_context: params.extension_context,
           workspace_root: root
         })
         root_contexts.unshift({ name: unique_name, paths: relative_paths })
         save_contexts_for_workspace({
-          context: params.extension_context,
+          extension_context: params.extension_context,
           workspace_root: root,
           contexts: root_contexts
         })
@@ -277,7 +277,7 @@ export const save_to_workspace_state = async (params: {
 
         for (const root of all_roots) {
           let root_contexts = load_contexts_for_workspace({
-            context: params.extension_context,
+            extension_context: params.extension_context,
             workspace_root: root
           })
           root_contexts = root_contexts.filter((c) => c.name !== context_name)
@@ -296,7 +296,7 @@ export const save_to_workspace_state = async (params: {
             root_contexts.unshift({ name: context_name, paths: relative_paths })
           }
           save_contexts_for_workspace({
-            context: params.extension_context,
+            extension_context: params.extension_context,
             workspace_root: root,
             contexts: root_contexts
           })

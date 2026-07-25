@@ -62,7 +62,7 @@ export const process_response = async (params: {
   args: ApplyResponseCommandArgs | undefined
   response: string
   response_items: ResponseItem[]
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   panel_provider: PanelProvider
   workspace_provider: WorkspaceProvider
 }): Promise<PreviewData | null> => {
@@ -100,7 +100,7 @@ export const process_response = async (params: {
           }
         })
         update_undo_button_state({
-          context: params.context,
+          extension_context: params.extension_context,
           panel_provider: params.panel_provider,
           states: augmented_states,
           applied_content: params.response,
@@ -415,7 +415,7 @@ export const process_response = async (params: {
         set_new_paths_in_original_states(all_original_states)
       await apply_file_relocations(all_original_states)
       update_undo_button_state({
-        context: params.context,
+        extension_context: params.extension_context,
         panel_provider: params.panel_provider,
         states: all_original_states,
         applied_content: params.response,
@@ -557,12 +557,12 @@ export const process_response = async (params: {
           const markdown_response_for_active_editor = `\`\`\`\n// ${file_path_for_block}\n${params.response}\n\`\`\``
 
           const model_providers_manager = new ModelProvidersManager(
-            params.context
+            params.extension_context
           )
           const api_configuration_result = await get_intelligent_update_config(
             model_providers_manager,
             false,
-            params.context
+            params.extension_context
           )
 
           if (!api_configuration_result) {
@@ -581,14 +581,14 @@ export const process_response = async (params: {
               api_key: model_provider.api_key,
               api_configuration: intelligent_update_api_configuration,
               chat_response: markdown_response_for_active_editor,
-              context: params.context,
+              extension_context: params.extension_context,
               is_single_root_folder_workspace,
               panel_provider: params.panel_provider
             })
 
           if (intelligent_update_states) {
             update_undo_button_state({
-              context: params.context,
+              extension_context: params.extension_context,
               panel_provider: params.panel_provider,
               states: intelligent_update_states,
               applied_content: markdown_response_for_active_editor,
@@ -729,7 +729,7 @@ export const process_response = async (params: {
 
     if (operation_success && final_original_states) {
       update_undo_button_state({
-        context: params.context,
+        extension_context: params.extension_context,
         panel_provider: params.panel_provider,
         states: final_original_states,
         applied_content: params.response,
@@ -742,7 +742,7 @@ export const process_response = async (params: {
       }
     } else {
       update_undo_button_state({
-        context: params.context,
+        extension_context: params.extension_context,
         panel_provider: params.panel_provider,
         states: null
       })

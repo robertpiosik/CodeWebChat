@@ -10,15 +10,14 @@ export const handle_save_component_collapsed_state = async (
   message: SaveComponentCollapsedStateMessage
 ): Promise<void> => {
   if (message.component == 'web-configurations') {
-    await panel_provider.context.globalState.update(
+    await panel_provider.extension_context.globalState.update(
       WEB_CONFIGURATIONS_COLLAPSED_STATE_KEY,
       message.is_collapsed
     )
   } else if (message.component == 'api-configurations') {
-    await panel_provider.context.globalState.update(
+    await panel_provider.extension_context.globalState.update(
       API_CONFIGURATIONS_COLLAPSED_STATE_KEY,
       message.is_collapsed
     )
   }
 }
-

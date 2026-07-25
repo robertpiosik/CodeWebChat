@@ -183,7 +183,7 @@ export const use_panel = (vscode: any) => {
     prevent_selection?: boolean
   ) => {
     set_web_mode(prompt_type)
-    if (!prevent_selection) {
+    if (!prevent_selection && prompt_type !== 'find-relevant-files') {
       set_chat_input_focus_and_select_key((k) => k + 1)
     }
     set_main_view_scroll_reset_key((k) => k + 1)
@@ -198,7 +198,7 @@ export const use_panel = (vscode: any) => {
     prevent_selection?: boolean
   ) => {
     set_api_mode(prompt_type)
-    if (!prevent_selection) {
+    if (!prevent_selection && prompt_type !== 'find-relevant-files') {
       set_chat_input_focus_and_select_key((k) => k + 1)
     }
     set_main_view_scroll_reset_key((k) => k + 1)

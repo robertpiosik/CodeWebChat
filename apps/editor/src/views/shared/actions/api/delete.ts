@@ -7,10 +7,10 @@ import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 
 export const remove = async (params: {
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   api_configuration_id: string
 }): Promise<void> => {
-  const providers_manager = new ModelProvidersManager(params.context)
+  const providers_manager = new ModelProvidersManager(params.extension_context)
 
   const original_api_configurations =
     await providers_manager.get_api_configurations()

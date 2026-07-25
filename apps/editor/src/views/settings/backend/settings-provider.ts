@@ -75,7 +75,7 @@ export class SettingsProvider {
 
   constructor(
     private readonly _extensionUri: vscode.Uri,
-    public readonly context: vscode.ExtensionContext
+    public readonly extension_context: vscode.ExtensionContext
   ) {}
 
   private _send_web_configurations() {

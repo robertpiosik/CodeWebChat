@@ -9,7 +9,7 @@ export class ApiManagerProvider implements vscode.WebviewViewProvider {
 
   constructor(
     private readonly _extensionUri: vscode.Uri,
-    public readonly context: vscode.ExtensionContext
+    public readonly extension_context: vscode.ExtensionContext
   ) {}
 
   public set_api_manager(api_manager: ApiManager) {

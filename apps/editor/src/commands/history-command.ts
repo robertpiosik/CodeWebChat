@@ -27,7 +27,7 @@ dayjs.extend(localizedFormat)
 export type { Checkpoint } from '@/features/checkpoints/types'
 
 export const history_command = (params: {
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   workspace_provider: WorkspaceProvider
   panel_provider: PanelProvider
 }): vscode.Disposable[] => {
@@ -54,7 +54,7 @@ export const history_command = (params: {
       }
       const checkpoint = await create_checkpoint({
         workspace_provider: params.workspace_provider,
-        context: params.context,
+        extension_context: params.extension_context,
         panel_provider: params.panel_provider
       })
       if (checkpoint) {
@@ -190,11 +190,12 @@ export const history_command = (params: {
 
         const refresh_and_update_view = async () => {
           quick_pick.busy = true
-          checkpoints = await get_checkpoints(params.context)
+          checkpoints = await get_checkpoints(params.extension_context)
 
-          const temp_checkpoint = params.context.workspaceState.get<Checkpoint>(
-            TEMPORARY_CHECKPOINT_STATE_KEY
-          )
+          const temp_checkpoint =
+            params.extension_context.workspaceState.get<Checkpoint>(
+              TEMPORARY_CHECKPOINT_STATE_KEY
+            )
           temp_checkpoint_is_valid = false
           if (temp_checkpoint) {
             const three_hours_in_ms = 3 * 60 * 60 * 1000
@@ -207,7 +208,7 @@ export const history_command = (params: {
                 temp_checkpoint_is_valid = true
               } catch {
                 // file doesn't exist, so we can't revert. Clean up state.
-                await params.context.workspaceState.update(
+                await params.extension_context.workspaceState.update(
                   TEMPORARY_CHECKPOINT_STATE_KEY,
                   undefined
                 )
@@ -240,7 +241,7 @@ export const history_command = (params: {
             quick_pick.hide()
             const checkpoint = await create_checkpoint({
               workspace_provider: params.workspace_provider,
-              context: params.context,
+              extension_context: params.extension_context,
               panel_provider: params.panel_provider
             })
             if (checkpoint) {
@@ -251,7 +252,7 @@ export const history_command = (params: {
           } else if (selected.id == 'revert-last') {
             quick_pick.hide()
             const temp_checkpoint =
-              params.context.workspaceState.get<Checkpoint>(
+              params.extension_context.workspaceState.get<Checkpoint>(
                 TEMPORARY_CHECKPOINT_STATE_KEY
               )
             if (!temp_checkpoint) {
@@ -264,17 +265,17 @@ export const history_command = (params: {
             await restore_checkpoint({
               checkpoint: temp_checkpoint,
               workspace_provider: params.workspace_provider,
-              context: params.context,
+              extension_context: params.extension_context,
               options: { skip_confirmation: true },
               panel_provider: params.panel_provider
             })
             // After reverting, delete the temp checkpoint and clear state.
-            await params.context.workspaceState.update(
+            await params.extension_context.workspaceState.update(
               TEMPORARY_CHECKPOINT_STATE_KEY,
               undefined
             )
             await delete_checkpoint({
-              context: params.context,
+              context: params.extension_context,
               checkpoint_to_delete: temp_checkpoint,
               panel_provider: params.panel_provider
             })
@@ -283,7 +284,7 @@ export const history_command = (params: {
             await restore_checkpoint({
               checkpoint: selected.checkpoint,
               workspace_provider: params.workspace_provider,
-              context: params.context,
+              extension_context: params.extension_context,
               panel_provider: params.panel_provider
             })
           }
@@ -299,7 +300,7 @@ export const history_command = (params: {
             quick_pick.hide()
 
             const temp_checkpoint =
-              params.context.workspaceState.get<Checkpoint>(
+              params.extension_context.workspaceState.get<Checkpoint>(
                 TEMPORARY_CHECKPOINT_STATE_KEY
               )
             if (checkpoints.length == 0 && !temp_checkpoint) {
@@ -318,7 +319,7 @@ export const history_command = (params: {
 
             if (confirmation == t('command.history.clear-all-button')) {
               active_delete_operation = null
-              await clear_all_checkpoints(params.context)
+              await clear_all_checkpoints(params.extension_context)
               vscode.window.showInformationMessage(
                 t('command.history.info.all-cleared')
               )
@@ -339,7 +340,7 @@ export const history_command = (params: {
             e.button.tooltip == t('common.unstar')
           ) {
             await toggle_checkpoint_star({
-              context: params.context,
+              context: params.extension_context,
               timestamp: item.checkpoint.timestamp,
               panel_provider: params.panel_provider
             })
@@ -372,7 +373,7 @@ export const history_command = (params: {
               )
               if (checkpoint_to_update) {
                 checkpoint_to_update.description = new_description
-                await params.context.workspaceState.update(
+                await params.extension_context.workspaceState.update(
                   CHECKPOINTS_STATE_KEY,
                   checkpoints
                 )
@@ -395,7 +396,7 @@ export const history_command = (params: {
 
           if (e.button.tooltip == t('common.delete')) {
             const was_restored = await delete_checkpoint_with_undo({
-              context: params.context,
+              context: params.extension_context,
               checkpoint: item.checkpoint,
               panel_provider: params.panel_provider,
               get_active_operation: () => active_delete_operation,

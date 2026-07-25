@@ -9,7 +9,7 @@ import { Logger } from '@shared/utils/logger'
 
 export const replace_saved_context_symbol = async (params: {
   instruction: string
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   workspace_provider: WorkspaceProvider
 }): Promise<{ instruction: string; context_definitions: string }> => {
   const regex = /#SavedContext\(([^)]+)\)/g
@@ -22,7 +22,7 @@ export const replace_saved_context_symbol = async (params: {
   }
 
   const { merged: internal_contexts } = load_and_merge_global_contexts(
-    params.context
+    params.extension_context
   )
   const { merged: file_contexts } = await load_and_merge_file_contexts()
 
@@ -48,11 +48,11 @@ export const replace_saved_context_symbol = async (params: {
       continue
     }
 
-    const paths = await resolve_context_paths(
-      saved_context,
-      params.workspace_provider.get_workspace_roots()[0] || '',
-      params.workspace_provider
-    )
+    const paths = await resolve_context_paths({
+      context: saved_context,
+      workspace_root: params.workspace_provider.get_workspace_roots()[0] || '',
+      workspace_provider: params.workspace_provider
+    })
 
     let files_xml = ''
     for (const p of paths) {

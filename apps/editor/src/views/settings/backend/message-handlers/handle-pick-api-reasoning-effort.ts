@@ -9,7 +9,9 @@ export const handle_pick_api_reasoning_effort = async (
   provider: SettingsProvider,
   message: any
 ): Promise<void> => {
-  const providers_manager = new ModelProvidersManager(provider.context)
+  const providers_manager = new ModelProvidersManager(
+    provider.extension_context
+  )
   const new_effort = await edit_reasoning_effort_for_api_config(
     message.current_effort
   )

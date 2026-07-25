@@ -12,11 +12,11 @@ import { undo_files } from '@/commands/apply-response-command/utils/file-operati
 export const handle_undo = async (
   panel_provider: PanelProvider
 ): Promise<void> => {
-  const context = panel_provider.context
-  const original_states = context.workspaceState.get<OriginalFileState[]>(
-    LAST_APPLIED_CHANGES_STATE_KEY
-  )
-  const editor_state = context.workspaceState.get<
+  const extension_context = panel_provider.extension_context
+  const original_states = extension_context.workspaceState.get<
+    OriginalFileState[]
+  >(LAST_APPLIED_CHANGES_STATE_KEY)
+  const editor_state = extension_context.workspaceState.get<
     | {
         file_path: string
         position: { line: number; character: number }
@@ -59,12 +59,15 @@ export const handle_undo = async (
       }
     }
 
-    context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
-    context.workspaceState.update(
+    extension_context.workspaceState.update(
+      LAST_APPLIED_CHANGES_STATE_KEY,
+      null
+    )
+    extension_context.workspaceState.update(
       LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
       null
     )
-    context.workspaceState.update(
+    extension_context.workspaceState.update(
       LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
       null
     )

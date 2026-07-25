@@ -180,7 +180,7 @@ export const restore_from_workspace_state = async (params: {
                   const roots = context_to_roots.get(item.context.name) || []
                   for (const root of roots) {
                     const root_contexts = load_contexts_for_workspace({
-                      context: params.extension_context,
+                      extension_context: params.extension_context,
                       workspace_root: root
                     })
                     const updated = root_contexts.map((c) =>
@@ -189,7 +189,7 @@ export const restore_from_workspace_state = async (params: {
                         : c
                     )
                     save_contexts_for_workspace({
-                      context: params.extension_context,
+                      extension_context: params.extension_context,
                       workspace_root: root,
                       contexts: updated
                     })
@@ -220,7 +220,7 @@ export const restore_from_workspace_state = async (params: {
 
               for (const root of roots) {
                 const root_contexts = load_contexts_for_workspace({
-                  context: params.extension_context,
+                  extension_context: params.extension_context,
                   workspace_root: root
                 })
                 const found = root_contexts.find(
@@ -232,7 +232,7 @@ export const restore_from_workspace_state = async (params: {
                     (c) => c.name !== deleted_context_name
                   )
                   save_contexts_for_workspace({
-                    context: params.extension_context,
+                    extension_context: params.extension_context,
                     workspace_root: root,
                     contexts: new_contexts
                   })
@@ -265,12 +265,12 @@ export const restore_from_workspace_state = async (params: {
               if (choice == 'Undo') {
                 for (const [root, saved] of snapshot.entries()) {
                   const root_contexts = load_contexts_for_workspace({
-                    context: params.extension_context,
+                    extension_context: params.extension_context,
                     workspace_root: root
                   })
                   root_contexts.unshift(saved)
                   save_contexts_for_workspace({
-                    context: params.extension_context,
+                    extension_context: params.extension_context,
                     workspace_root: root,
                     contexts: root_contexts
                   })
@@ -316,7 +316,7 @@ export const restore_from_workspace_state = async (params: {
       const roots = context_to_roots.get(context_to_apply.name) || []
       for (const root of roots) {
         const root_contexts = load_contexts_for_workspace({
-          context: params.extension_context,
+          extension_context: params.extension_context,
           workspace_root: root
         })
         const found_idx = root_contexts.findIndex(
@@ -326,7 +326,7 @@ export const restore_from_workspace_state = async (params: {
           const [moved] = root_contexts.splice(found_idx, 1)
           root_contexts.unshift(moved)
           save_contexts_for_workspace({
-            context: params.extension_context,
+            extension_context: params.extension_context,
             workspace_root: root,
             contexts: root_contexts
           })
@@ -347,7 +347,7 @@ export const restore_from_workspace_state = async (params: {
 
           for (const root of all_roots) {
             let root_contexts = load_contexts_for_workspace({
-              context: params.extension_context,
+              extension_context: params.extension_context,
               workspace_root: root
             })
             root_contexts = root_contexts.filter(
@@ -370,7 +370,7 @@ export const restore_from_workspace_state = async (params: {
               })
             }
             save_contexts_for_workspace({
-              context: params.extension_context,
+              extension_context: params.extension_context,
               workspace_root: root,
               contexts: root_contexts
             })

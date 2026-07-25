@@ -26,12 +26,13 @@ export const handle_intelligent_update_file_in_preview = async (
   const { file_path, workspace_name, force_model_selection } = message
   const file_name = path.basename(file_path)
 
-  const original_states = panel_provider.context.workspaceState.get<
+  const original_states = panel_provider.extension_context.workspaceState.get<
     OriginalFileState[]
   >(LAST_APPLIED_CHANGES_STATE_KEY)
-  const last_response = panel_provider.context.workspaceState.get<string>(
-    LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
-  )
+  const last_response =
+    panel_provider.extension_context.workspaceState.get<string>(
+      LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
+    )
 
   if (!original_states || !last_response) {
     vscode.window.showErrorMessage(
@@ -94,12 +95,12 @@ export const handle_intelligent_update_file_in_preview = async (
   }
 
   const model_providers_manager = new ModelProvidersManager(
-    panel_provider.context
+    panel_provider.extension_context
   )
   const api_configuration_result = await get_intelligent_update_config(
     model_providers_manager,
     force_model_selection ?? false,
-    panel_provider.context
+    panel_provider.extension_context
   )
   if (!api_configuration_result) return
 

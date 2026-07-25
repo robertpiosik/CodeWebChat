@@ -6,7 +6,7 @@ import { load_and_merge_file_contexts } from '@/commands/context-restoration/uti
 import { LAST_SELECTED_CONTEXT_SOURCE_IN_SYMBOLS_QUICK_PICK_STATE_KEY } from '@/constants/state-keys'
 
 export const handle_saved_context_item = async (
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
 ): Promise<string | 'continue' | undefined> => {
   try {
     const workspace_folders = vscode.workspace.workspaceFolders || []
@@ -16,7 +16,7 @@ export const handle_saved_context_item = async (
     }
 
     const { merged: internal_contexts, context_to_roots: internal_roots } =
-      load_and_merge_global_contexts(context)
+      load_and_merge_global_contexts(extension_context)
     const { merged: file_contexts, context_to_roots: file_roots } =
       await load_and_merge_file_contexts()
 
@@ -60,7 +60,7 @@ export const handle_saved_context_item = async (
         quick_pick.title = 'Context Sources'
         quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
-        const last_source = context.workspaceState.get<string>(
+        const last_source = extension_context.workspaceState.get<string>(
           LAST_SELECTED_CONTEXT_SOURCE_IN_SYMBOLS_QUICK_PICK_STATE_KEY
         )
         if (last_source) {
@@ -105,7 +105,7 @@ export const handle_saved_context_item = async (
 
         if (!selection || selection == 'back') return 'continue'
 
-        await context.workspaceState.update(
+        await extension_context.workspaceState.update(
           LAST_SELECTED_CONTEXT_SOURCE_IN_SYMBOLS_QUICK_PICK_STATE_KEY,
           selection.value
         )

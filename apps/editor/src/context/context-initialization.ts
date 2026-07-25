@@ -25,11 +25,12 @@ const round_token_count_for_badge = (count: number): number => {
 }
 
 const restore_duplicated_workspace_context = async (
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
 ) => {
-  const duplicated_context = context.globalState.get<DuplicateWorkspaceContext>(
-    DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY
-  )
+  const duplicated_context =
+    extension_context.globalState.get<DuplicateWorkspaceContext>(
+      DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY
+    )
 
   if (duplicated_context?.timestamp) {
     const now = Date.now()
@@ -51,18 +52,18 @@ const restore_duplicated_workspace_context = async (
           (value, index) => value == sorted_saved_folders[index]
         )
       if (are_workspaces_the_same) {
-        await context.workspaceState.update(
+        await extension_context.workspaceState.update(
           CONTEXT_CHECKED_PATHS_STATE_KEY,
           duplicated_context.checked_files
         )
 
-        await context.workspaceState.update(
+        await extension_context.workspaceState.update(
           CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY,
           duplicated_context.checked_files_timestamps
         )
 
         if (duplicated_context.ranges) {
-          await context.workspaceState.update(
+          await extension_context.workspaceState.update(
             RANGES_STATE_KEY,
             duplicated_context.ranges
           )
@@ -87,7 +88,7 @@ const restore_duplicated_workspace_context = async (
       }
     }
 
-    await context.globalState.update(
+    await extension_context.globalState.update(
       DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY,
       undefined
     )
@@ -95,13 +96,13 @@ const restore_duplicated_workspace_context = async (
 }
 
 export const context_initialization = async (
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
 ): Promise<{
   workspace_provider: WorkspaceProvider
   open_editors_provider: OpenEditorsProvider
   shared_context_state: SharedContextState
 }> => {
-  await restore_duplicated_workspace_context(context)
+  await restore_duplicated_workspace_context(extension_context)
 
   const workspace_folders = vscode.workspace.workspaceFolders ?? []
 
@@ -111,10 +112,10 @@ export const context_initialization = async (
 
   const workspace_provider = new WorkspaceProvider({
     workspace_folders,
-    context
+    extension_context
   })
   const selected_files_provider = new SelectedFilesProvider(workspace_provider)
-  context.subscriptions.push(selected_files_provider)
+  extension_context.subscriptions.push(selected_files_provider)
 
   const open_editors_provider = new OpenEditorsProvider({
     workspace_folders,
@@ -147,7 +148,7 @@ export const context_initialization = async (
 
   shared_context_state.set_providers(workspace_provider, open_editors_provider)
 
-  context.subscriptions.push({
+  extension_context.subscriptions.push({
     dispose: () => shared_context_state.dispose()
   })
 
@@ -190,7 +191,7 @@ export const context_initialization = async (
     }
   )
 
-  context.subscriptions.push(
+  extension_context.subscriptions.push(
     workspace_provider,
     open_editors_provider,
     workspace_view,
@@ -198,7 +199,7 @@ export const context_initialization = async (
     open_editors_view
   )
 
-  context.subscriptions.push(
+  extension_context.subscriptions.push(
     vscode.commands.registerCommand(
       'codeWebChat.expandContextFolders',
       async () => {
@@ -217,7 +218,7 @@ export const context_initialization = async (
         )
 
         register_workspace_view_handlers(selected_files_view)
-        context.subscriptions.push(selected_files_view)
+        extension_context.subscriptions.push(selected_files_view)
       }
     ),
     vscode.commands.registerCommand(
@@ -238,7 +239,7 @@ export const context_initialization = async (
         )
 
         register_workspace_view_handlers(selected_files_view)
-        context.subscriptions.push(selected_files_view)
+        extension_context.subscriptions.push(selected_files_view)
       }
     ),
     vscode.commands.registerCommand(
@@ -259,7 +260,7 @@ export const context_initialization = async (
         )
 
         register_workspace_view_handlers(workspace_view)
-        context.subscriptions.push(workspace_view)
+        extension_context.subscriptions.push(workspace_view)
       }
     ),
     vscode.commands.registerCommand('codeWebChat.clearChecks', async () => {
@@ -299,7 +300,7 @@ export const context_initialization = async (
     }
   })
 
-  context.subscriptions.push(
+  extension_context.subscriptions.push(
     workspace_provider.onDidChangeCheckedFiles(() => {
       update_view_badges()
     }),
@@ -313,7 +314,7 @@ export const context_initialization = async (
 
   // Update badge when tabs change with debouncing to avoid multiple updates
   let tab_change_timeout: NodeJS.Timeout | null = null
-  context.subscriptions.push(
+  extension_context.subscriptions.push(
     vscode.window.tabGroups.onDidChangeTabs(() => {
       if (tab_change_timeout) {
         clearTimeout(tab_change_timeout)
@@ -325,7 +326,7 @@ export const context_initialization = async (
     })
   )
 
-  context.subscriptions.push(
+  extension_context.subscriptions.push(
     vscode.workspace.onDidChangeWorkspaceFolders(async () => {
       if (vscode.workspace.workspaceFolders) {
         await workspace_provider.update_workspace_folders(
@@ -347,7 +348,7 @@ export const context_initialization = async (
     workspace_provider!.refresh()
   })
 
-  context.subscriptions.push(
+  extension_context.subscriptions.push(
     open_editors_provider.onDidChangeTreeData(() => {
       if (open_editors_provider!.is_initialized()) {
         update_view_badges()

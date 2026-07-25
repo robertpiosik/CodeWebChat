@@ -25,7 +25,7 @@ import { t } from '@/i18n'
 
 export const create_checkpoint = async (params: {
   workspace_provider: WorkspaceProvider
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   panel_provider: PanelProvider
   trigger?: CheckpointTrigger
   description?: string
@@ -46,9 +46,10 @@ export const create_checkpoint = async (params: {
       return undefined
     }
 
-    const operation_in_progress = params.context.workspaceState.get<number>(
-      CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY
-    )
+    const operation_in_progress =
+      params.extension_context.workspaceState.get<number>(
+        CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY
+      )
     if (
       operation_in_progress &&
       Date.now() - operation_in_progress < 60 * 1000
@@ -59,9 +60,10 @@ export const create_checkpoint = async (params: {
       return undefined
     }
 
-    const old_temp_checkpoint = params.context.workspaceState.get<Checkpoint>(
-      TEMPORARY_CHECKPOINT_STATE_KEY
-    )
+    const old_temp_checkpoint =
+      params.extension_context.workspaceState.get<Checkpoint>(
+        TEMPORARY_CHECKPOINT_STATE_KEY
+      )
     if (old_temp_checkpoint) {
       try {
         const checkpoint_path = get_checkpoint_path(
@@ -77,7 +79,7 @@ export const create_checkpoint = async (params: {
           data: error
         })
       }
-      await params.context.workspaceState.update(
+      await params.extension_context.workspaceState.update(
         TEMPORARY_CHECKPOINT_STATE_KEY,
         undefined
       )
@@ -91,7 +93,7 @@ export const create_checkpoint = async (params: {
     let new_checkpoint: Checkpoint | undefined
 
     const create_checkpoint_task = async () => {
-      await params.context.workspaceState.update(
+      await params.extension_context.workspaceState.update(
         CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
         Date.now()
       )
@@ -173,7 +175,7 @@ export const create_checkpoint = async (params: {
         }
       }
 
-      let checkpoints = await get_checkpoints(params.context)
+      let checkpoints = await get_checkpoints(params.extension_context)
 
       checkpoints = await remove_old_checkpoints(checkpoints)
 
@@ -215,11 +217,11 @@ export const create_checkpoint = async (params: {
       }
 
       checkpoints.unshift(checkpoint_object)
-      await params.context.workspaceState.update(
+      await params.extension_context.workspaceState.update(
         CHECKPOINTS_STATE_KEY,
         checkpoints
       )
-      await params.context.workspaceState.update(
+      await params.extension_context.workspaceState.update(
         CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
         undefined
       )
@@ -232,7 +234,7 @@ export const create_checkpoint = async (params: {
     vscode.window.showErrorMessage(
       t('feature.checkpoints.error.create-failed', { error: err.message })
     )
-    await params.context.workspaceState.update(
+    await params.extension_context.workspaceState.update(
       CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
       undefined
     )

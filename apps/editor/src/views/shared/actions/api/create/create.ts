@@ -12,13 +12,13 @@ import {
 import { t } from '@/i18n'
 
 export const create = async (params: {
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   create_on_top?: boolean
   insertion_index?: number
 }): Promise<
   { config: ApiConfiguration; insertion_index?: number } | undefined
 > => {
-  const providers_manager = new ModelProvidersManager(params.context)
+  const providers_manager = new ModelProvidersManager(params.extension_context)
   const model_fetcher = new ModelFetcher()
 
   let actual_insertion_index: number | undefined
@@ -80,7 +80,7 @@ export const create = async (params: {
 
   while (true) {
     selected_model_provider = await initial_select_model_provider(
-      params.context,
+      params.extension_context,
       providers_manager,
       selected_model_provider?.name
     )

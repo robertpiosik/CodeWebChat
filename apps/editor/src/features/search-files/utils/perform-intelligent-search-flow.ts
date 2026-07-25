@@ -28,7 +28,13 @@ export const perform_intelligent_search_flow = async (params: {
 
     const result = await prompt_for_search_term(
       initial_search_term,
-      'intelligent'
+      'intelligent',
+      (value) => {
+        params.extension_context.workspaceState.update(
+          LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY,
+          value
+        )
+      }
     )
     if (result.back) return 'back'
     if (!result.value) return undefined

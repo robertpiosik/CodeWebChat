@@ -6,7 +6,7 @@ export const handle_delete_api_configuration = async (
   message: any
 ): Promise<void> => {
   await remove({
-    context: provider.context,
+    extension_context: provider.extension_context,
     api_configuration_id: message.api_configuration_id
   })
 }

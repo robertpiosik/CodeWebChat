@@ -10,7 +10,9 @@ export const handle_set_default_api_configuration = async (
   api_configuration_id: string | null,
   type: ApiFeature
 ): Promise<void> => {
-  const providers_manager = new ModelProvidersManager(provider.context)
+  const providers_manager = new ModelProvidersManager(
+    provider.extension_context
+  )
 
   const api_configurations = await providers_manager.get_api_configurations()
   const api_configuration_to_set = api_configuration_id

@@ -35,12 +35,15 @@ export const handle_save_history = async (
   if (key) {
     const text_history: string[] = message.messages
     if (text_history.length == 0) {
-      await panel_provider.context.workspaceState.update(key, [])
+      await panel_provider.extension_context.workspaceState.update(key, [])
       return
     }
 
     const old_history =
-      panel_provider.context.workspaceState.get<HistoryEntry[]>(key, []) || []
+      panel_provider.extension_context.workspaceState.get<HistoryEntry[]>(
+        key,
+        []
+      ) || []
     const old_history_map = new Map(
       old_history.map((entry) => [entry.text, entry])
     )
@@ -69,6 +72,9 @@ export const handle_save_history = async (
       }
     }
 
-    await panel_provider.context.workspaceState.update(key, new_history)
+    await panel_provider.extension_context.workspaceState.update(
+      key,
+      new_history
+    )
   }
 }

@@ -6,10 +6,10 @@ import {
 } from '@/services/model-providers-manager'
 
 export const reorder = async (params: {
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   reordered_ids: string[]
 }): Promise<void> => {
-  const providers_manager = new ModelProvidersManager(params.context)
+  const providers_manager = new ModelProvidersManager(params.extension_context)
 
   const current_api_configurations =
     await providers_manager.get_api_configurations()

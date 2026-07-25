@@ -23,7 +23,7 @@ import { WebPromptType } from '@shared/types/prompt-types'
  * Bridges the current workspace window and websocket server that runs in a separate process.
  */
 export class WebSocketManager {
-  private context: vscode.ExtensionContext
+  private extension_context: vscode.ExtensionContext
   private port: number = DEFAULT_PORT
   private security_token: string = SECURITY_TOKENS.VSCODE
   private client: WebSocket.WebSocket | null = null
@@ -37,8 +37,8 @@ export class WebSocketManager {
   public readonly on_connection_status_change: vscode.Event<boolean> =
     this._on_connection_status_change.event
 
-  constructor(context: vscode.ExtensionContext) {
-    this.context = context
+  constructor(extension_context: vscode.ExtensionContext) {
+    this.extension_context = extension_context
     this._initialize_server()
   }
 
@@ -75,7 +75,7 @@ export class WebSocketManager {
 
   private async _start_server_process() {
     const server_script_path = path.join(
-      this.context.extensionPath,
+      this.extension_context.extensionPath,
       'out',
       'websocket-server-process.js'
     )
@@ -272,16 +272,17 @@ export class WebSocketManager {
 
     if (this.connected_browsers.length == 1) {
       const id = this.connected_browsers[0].id
-      await this.context.workspaceState.update(
+      await this.extension_context.workspaceState.update(
         LAST_SELECTED_BROWSER_ID_STATE_KEY,
         id
       )
       return id
     }
 
-    const last_selected_browser_id = this.context.workspaceState.get<number>(
-      LAST_SELECTED_BROWSER_ID_STATE_KEY
-    )
+    const last_selected_browser_id =
+      this.extension_context.workspaceState.get<number>(
+        LAST_SELECTED_BROWSER_ID_STATE_KEY
+      )
 
     const items = this.connected_browsers.map((b) => ({
       label: this._get_browser_name(b.user_agent),
@@ -328,7 +329,7 @@ export class WebSocketManager {
         quick_pick.onDidAccept(async () => {
           const selected = quick_pick.selectedItems[0]
           if (selected) {
-            await this.context.workspaceState.update(
+            await this.extension_context.workspaceState.update(
               LAST_SELECTED_BROWSER_ID_STATE_KEY,
               selected.id
             )

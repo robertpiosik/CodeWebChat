@@ -6,5 +6,8 @@ export const handle_save_api_prompt_type = async (
   prompt_type: ApiPromptType
 ): Promise<void> => {
   panel_provider.api_prompt_type = prompt_type
-  await panel_provider.context.workspaceState.update('api-mode', prompt_type)
+  await panel_provider.extension_context.workspaceState.update(
+    'api-mode',
+    prompt_type
+  )
 }

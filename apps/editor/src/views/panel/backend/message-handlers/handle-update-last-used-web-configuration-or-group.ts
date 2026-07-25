@@ -14,11 +14,14 @@ export const handle_update_last_used_web_configuration_or_group = (params: {
 
     const new_recents = name_to_save
 
-    params.panel_provider.context.workspaceState.update(
+    params.panel_provider.extension_context.workspaceState.update(
       recents_key,
       new_recents
     )
-    params.panel_provider.context.globalState.update(recents_key, new_recents)
+    params.panel_provider.extension_context.globalState.update(
+      recents_key,
+      new_recents
+    )
 
     params.panel_provider.send_message({
       command: 'SELECTED_WEB_CONFIGURATION_CHANGED',

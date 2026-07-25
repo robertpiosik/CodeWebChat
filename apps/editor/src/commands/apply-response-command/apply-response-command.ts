@@ -46,12 +46,12 @@ interface SavedTabGroups {
 }
 
 export const apply_response_command = (params: {
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   panel_provider: PanelProvider
   workspace_provider: WorkspaceProvider
   api_manager: ApiManager
 }) => {
-  params.context.subscriptions.push(
+  params.extension_context.subscriptions.push(
     vscode.workspace.registerTextDocumentContentProvider(
       CwcPreviewProvider.scheme,
       preview_document_provider
@@ -214,7 +214,7 @@ export const apply_response_command = (params: {
 
           before_checkpoint = await create_checkpoint({
             workspace_provider: params.workspace_provider,
-            context: params.context,
+            extension_context: params.extension_context,
             panel_provider: params.panel_provider,
             trigger: 'before-response-previewed',
             description: args?.raw_instructions
@@ -225,7 +225,7 @@ export const apply_response_command = (params: {
           args,
           response,
           response_items,
-          context: params.context,
+          extension_context: params.extension_context,
           panel_provider: params.panel_provider,
           workspace_provider: params.workspace_provider
         })
@@ -385,7 +385,7 @@ export const apply_response_command = (params: {
             original_states: preview_data.original_states,
             chat_response: preview_data.response,
             panel_provider: params.panel_provider,
-            context: params.context,
+            extension_context: params.extension_context,
             original_editor_state: args?.original_editor_state,
             raw_instructions: args?.raw_instructions,
             created_at: created_at_for_preview,
@@ -397,7 +397,7 @@ export const apply_response_command = (params: {
             params.api_manager.cancel_all_requests()
             if (before_checkpoint) {
               const checkpoints =
-                params.context.workspaceState.get<Checkpoint[]>(
+                params.extension_context.workspaceState.get<Checkpoint[]>(
                   CHECKPOINTS_STATE_KEY,
                   []
                 ) ?? []
@@ -429,7 +429,7 @@ export const apply_response_command = (params: {
 
                 checkpoints.sort((a, b) => b.timestamp - a.timestamp)
 
-                await params.context.workspaceState.update(
+                await params.extension_context.workspaceState.update(
                   CHECKPOINTS_STATE_KEY,
                   checkpoints
                 )
@@ -452,7 +452,7 @@ export const apply_response_command = (params: {
         in_progress = false
         if (before_checkpoint) {
           delete_checkpoint({
-            context: params.context,
+            context: params.extension_context,
             panel_provider: params.panel_provider,
             checkpoint_to_delete: before_checkpoint
           })

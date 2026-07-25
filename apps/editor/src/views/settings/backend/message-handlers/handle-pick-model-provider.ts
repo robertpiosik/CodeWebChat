@@ -10,7 +10,9 @@ export const handle_pick_model_provider = async (
   provider: SettingsProvider,
   message: any
 ): Promise<void> => {
-  const providers_manager = new ModelProvidersManager(provider.context)
+  const providers_manager = new ModelProvidersManager(
+    provider.extension_context
+  )
   const result = await edit_model_provider_for_api_configuration(
     providers_manager,
     message.current_model_provider_name

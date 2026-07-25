@@ -44,45 +44,46 @@ import { select_imported_files_command } from './commands/select-imported-files-
 import { SettingsProvider } from './views/settings/backend/settings-provider'
 import { get_current_preview_url } from './views/panel/backend/message-handlers/handle-open-website'
 
-// Store WebSocketServer instance at module level
 let websocket_server_instance: WebSocketManager | null = null
 
-export const activate = async (context: vscode.ExtensionContext) => {
+export const activate = async (extension_context: vscode.ExtensionContext) => {
   const { workspace_provider, open_editors_provider, shared_context_state } =
-    await context_initialization(context)
+    await context_initialization(extension_context)
 
-  websocket_server_instance = new WebSocketManager(context)
+  websocket_server_instance = new WebSocketManager(extension_context)
 
   const migrations = async () => {
     // 26 June 2026
-    await migrate_configurations_to_api_configurations(context)
+    await migrate_configurations_to_api_configurations(extension_context)
     // 1 July 2026
-    await migrate_edit_context_to_edit_files_system_instructions(context)
+    await migrate_edit_context_to_edit_files_system_instructions(
+      extension_context
+    )
     // 2 July 2026
-    await migrate_prompt_templates_suffixes(context)
+    await migrate_prompt_templates_suffixes(extension_context)
   }
 
   await migrations()
 
   const panel_provider = new PanelProvider({
-    extension_uri: context.extensionUri,
+    extension_uri: extension_context.extensionUri,
     workspace_provider,
     open_editors_provider,
-    context,
+    extension_context: extension_context,
     websocket_server_instance,
     shared_context_state
   })
 
   const api_manager_provider = new ApiManagerProvider(
-    context.extensionUri,
-    context
+    extension_context.extensionUri,
+    extension_context
   )
 
   const api_manager = new ApiManager(panel_provider, api_manager_provider)
 
   api_manager_provider.set_api_manager(api_manager)
 
-  context.subscriptions.push(
+  extension_context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(
       'codeWebChatView',
       panel_provider,
@@ -103,7 +104,7 @@ export const activate = async (context: vscode.ExtensionContext) => {
     ),
     reference_in_prompt_command({ panel_provider, workspace_provider }),
     apply_response_command({
-      context,
+      extension_context,
       panel_provider,
       workspace_provider,
       api_manager
@@ -111,11 +112,11 @@ export const activate = async (context: vscode.ExtensionContext) => {
     ...code_at_cursor_commands({
       file_tree_provider: workspace_provider,
       open_editors_provider,
-      context,
+      extension_context,
       panel_provider
     }),
     ...history_command({
-      context,
+      extension_context,
       workspace_provider,
       panel_provider
     })
@@ -123,9 +124,12 @@ export const activate = async (context: vscode.ExtensionContext) => {
 
   panel_provider.set_api_manager(api_manager)
 
-  const settings_provider = new SettingsProvider(context.extensionUri, context)
+  const settings_provider = new SettingsProvider(
+    extension_context.extensionUri,
+    extension_context
+  )
 
-  context.subscriptions.push(
+  extension_context.subscriptions.push(
     ...copy_markdown_commands(workspace_provider, open_editors_provider),
     ...copy_paths_commands(workspace_provider, open_editors_provider),
     open_file_from_workspace_command(open_editors_provider),
@@ -136,25 +140,25 @@ export const activate = async (context: vscode.ExtensionContext) => {
     new_folder_command(),
     save_file_selection_command({
       workspace_provider,
-      extension_context: context
+      extension_context
     }),
     restore_file_selection_command({
       workspace_provider,
-      extension_context: context,
+      extension_context,
       on_context_selected: () => {}
     }),
-    select_unstaged_files_command(workspace_provider, context),
-    select_commit_files_command(workspace_provider, context),
-    select_clipboard_paths_command(workspace_provider, context),
-    select_changed_files_command(workspace_provider, context),
+    select_unstaged_files_command(workspace_provider, extension_context),
+    select_commit_files_command(workspace_provider, extension_context),
+    select_clipboard_paths_command(workspace_provider, extension_context),
+    select_changed_files_command(workspace_provider, extension_context),
     rename_command(),
     delete_command(),
     select_workspace_file_command(workspace_provider),
-    set_ranges_command(workspace_provider, context),
-    select_imported_files_command(workspace_provider, context),
-    duplicate_workspace_command(workspace_provider, context),
-    select_referencing_files_command(workspace_provider, context),
-    ...search_files_commands(workspace_provider, context),
+    set_ranges_command(workspace_provider, extension_context),
+    select_imported_files_command(workspace_provider, extension_context),
+    duplicate_workspace_command(workspace_provider, extension_context),
+    select_referencing_files_command(workspace_provider, extension_context),
+    ...search_files_commands(workspace_provider, extension_context),
     select_definition_file_command(workspace_provider),
     open_url_command({
       command: 'codeWebChat.visitWebsite',
@@ -175,7 +179,7 @@ export const activate = async (context: vscode.ExtensionContext) => {
       }
     ),
     generate_commit_message_command(
-      context,
+      extension_context,
       panel_provider,
       workspace_provider
     ),
@@ -238,7 +242,7 @@ export const activate = async (context: vscode.ExtensionContext) => {
   commit_status_bar_item.tooltip = "Use CWC's Commit Changes API tool"
   commit_status_bar_item.command = 'codeWebChat.generateCommitMessageAndCommit'
   commit_status_bar_item.show()
-  context.subscriptions.push(commit_status_bar_item)
+  extension_context.subscriptions.push(commit_status_bar_item)
 
-  setup_git_discard_file_watcher(context)
+  setup_git_discard_file_watcher(extension_context)
 }

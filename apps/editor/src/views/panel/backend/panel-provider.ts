@@ -129,7 +129,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public readonly extension_uri: vscode.Uri
   public readonly workspace_provider: WorkspaceProvider
   public readonly open_editors_provider: OpenEditorsProvider
-  public readonly context: vscode.ExtensionContext
+  public readonly extension_context: vscode.ExtensionContext
   public readonly websocket_server_instance: WebSocketManager
   public readonly shared_context_state: SharedContextState
   public webview_view: vscode.WebviewView | undefined
@@ -245,10 +245,11 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   }
 
   public update_providers_shrink_mode() {
-    const shrink_source_code = this.context.workspaceState.get<boolean>(
-      FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
-      false
-    )
+    const shrink_source_code =
+      this.extension_context.workspaceState.get<boolean>(
+        FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
+        false
+      )
     const is_find_relevant_files =
       (this.mode == MODE.WEB &&
         this.web_prompt_type == 'find-relevant-files') ||
@@ -276,14 +277,20 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public async switch_to_edit_files() {
     if (this.mode == MODE.WEB) {
       this.web_prompt_type = 'edit-files'
-      await this.context.workspaceState.update(WEB_MODE_STATE_KEY, 'edit-files')
+      await this.extension_context.workspaceState.update(
+        WEB_MODE_STATE_KEY,
+        'edit-files'
+      )
       this.send_message({
         command: 'WEB_PROMPT_TYPE',
         prompt_type: 'edit-files'
       })
     } else {
       this.api_prompt_type = 'edit-files'
-      await this.context.workspaceState.update(API_MODE_STATE_KEY, 'edit-files')
+      await this.extension_context.workspaceState.update(
+        API_MODE_STATE_KEY,
+        'edit-files'
+      )
       this.send_message({
         command: 'API_PROMPT_TYPE',
         prompt_type: 'edit-files'
@@ -312,7 +319,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   }
 
   public async send_setup_progress() {
-    const providers_manager = new ModelProvidersManager(this.context)
+    const providers_manager = new ModelProvidersManager(this.extension_context)
     const [model_providers, configs] = await Promise.all([
       providers_manager.get_model_providers(),
       providers_manager.get_api_configurations()
@@ -339,14 +346,14 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     extension_uri: vscode.Uri
     workspace_provider: WorkspaceProvider
     open_editors_provider: OpenEditorsProvider
-    context: vscode.ExtensionContext
+    extension_context: vscode.ExtensionContext
     websocket_server_instance: WebSocketManager
     shared_context_state: SharedContextState
   }) {
     this.extension_uri = params.extension_uri
     this.workspace_provider = params.workspace_provider
     this.open_editors_provider = params.open_editors_provider
-    this.context = params.context
+    this.extension_context = params.extension_context
     this.websocket_server_instance = params.websocket_server_instance
     this.shared_context_state = params.shared_context_state
 
@@ -376,26 +383,36 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     )
 
     this.chat_edit_format =
-      this.context.workspaceState.get<EditFormat>(CHAT_EDIT_FORMAT_STATE_KEY) ??
-      this.context.globalState.get<EditFormat>(CHAT_EDIT_FORMAT_STATE_KEY) ??
+      this.extension_context.workspaceState.get<EditFormat>(
+        CHAT_EDIT_FORMAT_STATE_KEY
+      ) ??
+      this.extension_context.globalState.get<EditFormat>(
+        CHAT_EDIT_FORMAT_STATE_KEY
+      ) ??
       'whole'
     this.api_edit_format =
-      this.context.workspaceState.get<EditFormat>(API_EDIT_FORMAT_STATE_KEY) ??
-      this.context.globalState.get<EditFormat>(API_EDIT_FORMAT_STATE_KEY) ??
+      this.extension_context.workspaceState.get<EditFormat>(
+        API_EDIT_FORMAT_STATE_KEY
+      ) ??
+      this.extension_context.globalState.get<EditFormat>(
+        API_EDIT_FORMAT_STATE_KEY
+      ) ??
       'whole'
     this.mode =
-      this.context.workspaceState.get<Mode>(PANEL_MODE_STATE_KEY) ??
-      this.context.globalState.get<Mode>(PANEL_MODE_STATE_KEY) ??
+      this.extension_context.workspaceState.get<Mode>(PANEL_MODE_STATE_KEY) ??
+      this.extension_context.globalState.get<Mode>(PANEL_MODE_STATE_KEY) ??
       MODE.WEB
 
-    this.web_prompt_type = this.context.workspaceState.get<WebPromptType>(
-      WEB_MODE_STATE_KEY,
-      'edit-files'
-    )
-    this.api_prompt_type = this.context.workspaceState.get<ApiPromptType>(
-      API_MODE_STATE_KEY,
-      'edit-files'
-    )
+    this.web_prompt_type =
+      this.extension_context.workspaceState.get<WebPromptType>(
+        WEB_MODE_STATE_KEY,
+        'edit-files'
+      )
+    this.api_prompt_type =
+      this.extension_context.workspaceState.get<ApiPromptType>(
+        API_MODE_STATE_KEY,
+        'edit-files'
+      )
 
     this.update_providers_shrink_mode()
     this.update_providers_context_state()
@@ -409,7 +426,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       }
     })
 
-    this.context.subscriptions.push(
+    this.extension_context.subscriptions.push(
       vscode.workspace.onDidChangeWorkspaceFolders(() => {
         handle_get_tasks(this)
         handle_get_workspace_state(this)
@@ -482,7 +499,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       }
     })
 
-    this.context.subscriptions.push(this._config_listener)
+    this.extension_context.subscriptions.push(this._config_listener)
 
     const update_editor_state = () => {
       const active_editor = vscode.window.activeTextEditor
@@ -615,7 +632,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
   private _load_instructions(key: string): InstructionsState {
     return (
-      this.context.workspaceState.get<any>(key) || {
+      this.extension_context.workspaceState.get<any>(key) || {
         instructions: [''],
         active_index: 0
       }
@@ -776,7 +793,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'SHOW_HASH_SIGN_QUICK_PICK') {
             await handle_hash_sign_quick_pick(
               this,
-              this.context,
+              this.extension_context,
               message.is_for_code_at_cursor
             )
           } else if (message.command == 'GO_TO_FILE') {
@@ -964,8 +981,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           let selected_name: string | undefined = undefined
           const key = get_last_used_web_configuration_key(prompt_type)
           const last_selected =
-            this.context.workspaceState.get<string>(key) ??
-            this.context.globalState.get<string>(key)
+            this.extension_context.workspaceState.get<string>(key) ??
+            this.extension_context.globalState.get<string>(key)
           if (last_selected) {
             if (web_configurations_ui.some((p) => p.name == last_selected)) {
               selected_name = last_selected
@@ -975,15 +992,16 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         })
       ),
       selected_api_configuration_id_by_prompt_type: {
-        'edit-files': this.context.workspaceState.get<string>(
+        'edit-files': this.extension_context.workspaceState.get<string>(
           LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY
         ),
-        'code-at-cursor': this.context.workspaceState.get<string>(
+        'code-at-cursor': this.extension_context.workspaceState.get<string>(
           LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
         ),
-        'find-relevant-files': this.context.workspaceState.get<string>(
-          LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY
-        )
+        'find-relevant-files':
+          this.extension_context.workspaceState.get<string>(
+            LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY
+          )
       }
     })
   }

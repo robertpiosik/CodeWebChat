@@ -56,7 +56,7 @@ export const handle_send_to_browser = async (params: {
   const resolution = await resolve_web_configuration({
     panel_provider: params.panel_provider,
     web_configuration_name: params.web_configuration_name,
-    context: params.panel_provider.context,
+    extension_context: params.panel_provider.extension_context,
     show_quick_pick: params.show_quick_pick
   })
 
@@ -96,7 +96,7 @@ export const handle_send_to_browser = async (params: {
       skill_definitions
     } = await replace_symbols({
       instruction: current_instructions,
-      context: params.panel_provider.context,
+      extension_context: params.panel_provider.extension_context,
       workspace_provider: params.panel_provider.workspace_provider,
       remove_images: true
     })
@@ -138,7 +138,7 @@ export const handle_send_to_browser = async (params: {
     const additional_paths: string[] = []
 
     const shrink_source_code =
-      params.panel_provider.context.workspaceState.get<boolean>(
+      params.panel_provider.extension_context.workspaceState.get<boolean>(
         FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
         false
       )
@@ -155,7 +155,7 @@ export const handle_send_to_browser = async (params: {
     const { instruction: processed_instructions, skill_definitions } =
       await replace_symbols({
         instruction: current_instructions,
-        context: params.panel_provider.context,
+        extension_context: params.panel_provider.extension_context,
         workspace_provider: params.panel_provider.workspace_provider,
         remove_images: true
       })
@@ -227,7 +227,7 @@ export const handle_send_to_browser = async (params: {
 
 const show_web_configuration_quick_pick = async (params: {
   web_configurations: ConfigWebConfigurationFormat[]
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   prompt_type: WebPromptType
   panel_provider: PanelProvider
   get_is_web_configuration_disabled: (
@@ -236,7 +236,8 @@ const show_web_configuration_quick_pick = async (params: {
   is_in_code_at_cursor_mode: boolean
   current_instructions: string
 }): Promise<{ web_configuration_name: string | undefined } | null> => {
-  const { web_configurations, context, prompt_type, panel_provider } = params
+  const { web_configurations, extension_context, prompt_type, panel_provider } =
+    params
 
   const valid_web_configurations = web_configurations.filter((c) => c.chatbot)
 
@@ -248,8 +249,8 @@ const show_web_configuration_quick_pick = async (params: {
 
   const recents_key = get_last_used_web_configuration_key(prompt_type)
   const last_selected_name =
-    context.workspaceState.get<string>(recents_key) ??
-    context.globalState.get<string>(recents_key)
+    extension_context.workspaceState.get<string>(recents_key) ??
+    extension_context.globalState.get<string>(recents_key)
 
   const result = await show_configuration_quick_pick({
     items: valid_web_configurations,
@@ -314,7 +315,7 @@ const resolve_web_configuration = async (params: {
   panel_provider: PanelProvider
   web_configuration_name?: string
   show_quick_pick?: boolean
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
 }): Promise<{ web_configuration_name: string | undefined }> => {
   const recents_key = get_last_used_web_configuration_key(
     params.panel_provider.web_prompt_type
@@ -380,8 +381,8 @@ const resolve_web_configuration = async (params: {
   if (!params.show_quick_pick && params.web_configuration_name === undefined) {
     // Try to use last selection if "Send" button is clicked without specific preset
     const last_selected_name =
-      params.context.workspaceState.get<string>(recents_key) ??
-      params.context.globalState.get<string>(recents_key)
+      params.extension_context.workspaceState.get<string>(recents_key) ??
+      params.extension_context.globalState.get<string>(recents_key)
 
     if (last_selected_name) {
       const item = all_web_configurations.find(
@@ -401,7 +402,7 @@ const resolve_web_configuration = async (params: {
 
   const resolution = await show_web_configuration_quick_pick({
     web_configurations: all_web_configurations,
-    context: params.context,
+    extension_context: params.extension_context,
     prompt_type: params.panel_provider.web_prompt_type,
     panel_provider: params.panel_provider,
     get_is_web_configuration_disabled,

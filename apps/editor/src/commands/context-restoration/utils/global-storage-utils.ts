@@ -8,15 +8,18 @@ const GLOBAL_CONTEXTS_FILENAME = 'saved-contexts.json'
 type GlobalContextsData = Record<string, SavedContext[]>
 
 const get_global_contexts_file_path = (
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
 ): string => {
-  return path.join(context.globalStorageUri.fsPath, GLOBAL_CONTEXTS_FILENAME)
+  return path.join(
+    extension_context.globalStorageUri.fsPath,
+    GLOBAL_CONTEXTS_FILENAME
+  )
 }
 
 const load_all_global_contexts_data = (
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
 ): GlobalContextsData => {
-  const file_path = get_global_contexts_file_path(context)
+  const file_path = get_global_contexts_file_path(extension_context)
   try {
     if (fs.existsSync(file_path)) {
       const content = fs.readFileSync(file_path, 'utf8')
@@ -29,26 +32,26 @@ const load_all_global_contexts_data = (
 }
 
 export const load_contexts_for_workspace = (params: {
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   workspace_root: string
 }): SavedContext[] => {
-  const all_data = load_all_global_contexts_data(params.context)
+  const all_data = load_all_global_contexts_data(params.extension_context)
   return all_data[params.workspace_root] || []
 }
 
 export const save_contexts_for_workspace = (params: {
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   workspace_root: string
   contexts: SavedContext[]
 }) => {
-  const file_path = get_global_contexts_file_path(params.context)
+  const file_path = get_global_contexts_file_path(params.extension_context)
   const dir_path = path.dirname(file_path)
 
   if (!fs.existsSync(dir_path)) {
     fs.mkdirSync(dir_path, { recursive: true })
   }
 
-  const all_data = load_all_global_contexts_data(params.context)
+  const all_data = load_all_global_contexts_data(params.extension_context)
   all_data[params.workspace_root] = params.contexts
 
   const filtered_data: GlobalContextsData = {}
@@ -67,7 +70,7 @@ export const save_contexts_for_workspace = (params: {
 }
 
 export const load_and_merge_global_contexts = (
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
 ): { merged: SavedContext[]; context_to_roots: Map<string, string[]> } => {
   const workspace_folders = vscode.workspace.workspaceFolders || []
   const should_prefix = workspace_folders.length > 1
@@ -79,7 +82,7 @@ export const load_and_merge_global_contexts = (
   for (const folder of workspace_folders) {
     const root = folder.uri.fsPath
     const contexts = load_contexts_for_workspace({
-      context,
+      extension_context,
       workspace_root: root
     })
 

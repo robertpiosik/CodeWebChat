@@ -25,15 +25,16 @@ import { t } from '@/i18n'
 export const restore_checkpoint = async (params: {
   checkpoint: Checkpoint
   workspace_provider: WorkspaceProvider
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   panel_provider: PanelProvider
   options?: {
     skip_confirmation?: boolean
   }
 }) => {
-  const operation_in_progress = params.context.workspaceState.get<number>(
-    CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY
-  )
+  const operation_in_progress =
+    params.extension_context.workspaceState.get<number>(
+      CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY
+    )
   if (operation_in_progress && Date.now() - operation_in_progress < 60 * 1000) {
     vscode.window.showWarningMessage(
       t('feature.checkpoints.warning.operation-in-progress')
@@ -53,7 +54,7 @@ export const restore_checkpoint = async (params: {
       params.checkpoint.description
     ) {
       PromptsForCommitMessagesUtils.remove({
-        context: params.context,
+        extension_context: params.extension_context,
         prompt: params.checkpoint.description
       })
     }
@@ -95,21 +96,21 @@ export const restore_checkpoint = async (params: {
       }
 
       if (!params.options?.skip_confirmation) {
-        const checkpoints = await get_checkpoints(params.context)
+        const checkpoints = await get_checkpoints(params.extension_context)
         if (
           checkpoints.length > 0 &&
           checkpoints[0].trigger != 'before-checkpoint-restored'
         ) {
           await create_checkpoint({
             workspace_provider: params.workspace_provider,
-            context: params.context,
+            extension_context: params.extension_context,
             panel_provider: params.panel_provider,
             trigger: 'before-checkpoint-restored'
           })
         }
 
         const old_temp_checkpoint =
-          params.context.workspaceState.get<Checkpoint>(
+          params.extension_context.workspaceState.get<Checkpoint>(
             TEMPORARY_CHECKPOINT_STATE_KEY
           )
         if (old_temp_checkpoint) {
@@ -132,7 +133,7 @@ export const restore_checkpoint = async (params: {
         temp_checkpoint = await create_temporary_checkpoint(
           params.workspace_provider
         )
-        await params.context.workspaceState.update(
+        await params.extension_context.workspaceState.update(
           TEMPORARY_CHECKPOINT_STATE_KEY,
           temp_checkpoint
         )
@@ -143,7 +144,7 @@ export const restore_checkpoint = async (params: {
           error: err.message
         })
       )
-      await params.context.workspaceState.update(
+      await params.extension_context.workspaceState.update(
         TEMPORARY_CHECKPOINT_STATE_KEY,
         undefined
       )
@@ -151,7 +152,7 @@ export const restore_checkpoint = async (params: {
     }
 
     try {
-      await params.context.workspaceState.update(
+      await params.extension_context.workspaceState.update(
         CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
         Date.now()
       )
@@ -462,14 +463,14 @@ export const restore_checkpoint = async (params: {
       }
 
       if (params.checkpoint.checked_files) {
-        await params.context.workspaceState.update(
+        await params.extension_context.workspaceState.update(
           CONTEXT_CHECKED_PATHS_STATE_KEY,
           params.checkpoint.checked_files
         )
         params.workspace_provider.load_checked_files_state()
       }
 
-      await params.context.workspaceState.update(
+      await params.extension_context.workspaceState.update(
         CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
         undefined
       )
@@ -496,7 +497,7 @@ export const restore_checkpoint = async (params: {
         }
       }
     } catch (err: any) {
-      await params.context.workspaceState.update(
+      await params.extension_context.workspaceState.update(
         CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
         undefined
       )
@@ -505,11 +506,11 @@ export const restore_checkpoint = async (params: {
       )
       if (temp_checkpoint) {
         await delete_checkpoint({
-          context: params.context,
+          context: params.extension_context,
           checkpoint_to_delete: temp_checkpoint,
           panel_provider: params.panel_provider
         })
-        await params.context.workspaceState.update(
+        await params.extension_context.workspaceState.update(
           TEMPORARY_CHECKPOINT_STATE_KEY,
           undefined
         )
@@ -548,16 +549,16 @@ export const restore_checkpoint = async (params: {
       await restore_checkpoint({
         checkpoint: temp_check,
         workspace_provider: params.workspace_provider,
-        context: params.context,
+        extension_context: params.extension_context,
         panel_provider: params.panel_provider,
         options: { skip_confirmation: true }
       })
-      await params.context.workspaceState.update(
+      await params.extension_context.workspaceState.update(
         TEMPORARY_CHECKPOINT_STATE_KEY,
         undefined
       )
       await delete_checkpoint({
-        context: params.context,
+        context: params.extension_context,
         checkpoint_to_delete: temp_check,
         panel_provider: params.panel_provider
       })
