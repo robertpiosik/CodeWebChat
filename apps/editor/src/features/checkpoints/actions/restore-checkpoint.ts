@@ -506,7 +506,7 @@ export const restore_checkpoint = async (params: {
       )
       if (temp_checkpoint) {
         await delete_checkpoint({
-          context: params.extension_context,
+          extension_context: params.extension_context,
           checkpoint_to_delete: temp_checkpoint,
           panel_provider: params.panel_provider
         })
@@ -558,7 +558,7 @@ export const restore_checkpoint = async (params: {
         undefined
       )
       await delete_checkpoint({
-        context: params.extension_context,
+        extension_context: params.extension_context,
         checkpoint_to_delete: temp_check,
         panel_provider: params.panel_provider
       })

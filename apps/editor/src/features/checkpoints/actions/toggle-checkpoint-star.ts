@@ -4,12 +4,12 @@ import type { Checkpoint } from '../types'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 
 export const toggle_checkpoint_star = async (params: {
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   timestamp: number
   panel_provider: PanelProvider
 }) => {
   const checkpoints =
-    params.context.workspaceState.get<Checkpoint[]>(
+    params.extension_context.workspaceState.get<Checkpoint[]>(
       CHECKPOINTS_STATE_KEY,
       []
     ) ?? []
@@ -18,7 +18,7 @@ export const toggle_checkpoint_star = async (params: {
   )
   if (checkpoint_to_update) {
     checkpoint_to_update.is_starred = !checkpoint_to_update.is_starred
-    await params.context.workspaceState.update(
+    await params.extension_context.workspaceState.update(
       CHECKPOINTS_STATE_KEY,
       checkpoints
     )

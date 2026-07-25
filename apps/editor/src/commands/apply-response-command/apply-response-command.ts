@@ -452,7 +452,7 @@ export const apply_response_command = (params: {
         in_progress = false
         if (before_checkpoint) {
           delete_checkpoint({
-            context: params.extension_context,
+            extension_context: params.extension_context,
             panel_provider: params.panel_provider,
             checkpoint_to_delete: before_checkpoint
           })

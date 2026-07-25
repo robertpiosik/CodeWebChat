@@ -18,7 +18,7 @@ export interface CommitMessageApiConfiguration {
 }
 
 export const get_commit_message_api_configuration = async (
-  context: vscode.ExtensionContext,
+  extension_context: vscode.ExtensionContext,
   show_back_button: boolean = true,
   force_quick_pick: boolean = false,
   token_count?: number
@@ -31,7 +31,7 @@ export const get_commit_message_api_configuration = async (
   | 'back'
   | null
 > => {
-  const model_providers_manager = new ModelProvidersManager(context)
+  const model_providers_manager = new ModelProvidersManager(extension_context)
   let commit_message_api_configuration:
     | CommitMessageApiConfiguration
     | null
@@ -55,7 +55,7 @@ export const get_commit_message_api_configuration = async (
     if (api_configurations.length == 1 && !force_quick_pick) {
       commit_message_api_configuration = api_configurations[0]
     } else if (api_configurations.length >= 1) {
-      const last_selected_id = context.workspaceState.get<string>(
+      const last_selected_id = extension_context.workspaceState.get<string>(
         LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY
       )
 
@@ -77,7 +77,7 @@ export const get_commit_message_api_configuration = async (
       if (result === 'back' || !result) {
         commit_message_api_configuration = 'back'
       } else {
-        context.workspaceState.update(
+        extension_context.workspaceState.update(
           LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY,
           result.id
         )

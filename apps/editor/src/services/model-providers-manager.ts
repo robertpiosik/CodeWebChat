@@ -33,7 +33,7 @@ export class ModelProvidersManager {
   private _model_providers: ModelProvider[] = []
   private _load_promise: Promise<void>
 
-  constructor(private readonly _vscode: vscode.ExtensionContext) {
+  constructor(private readonly _extension_context: vscode.ExtensionContext) {
     this._load_promise = this._load_providers()
   }
 
@@ -48,7 +48,7 @@ export class ModelProvidersManager {
         }[]
       >('modelProviders', [])
 
-      const providers_json = await this._vscode.secrets.get(
+      const providers_json = await this._extension_context.secrets.get(
         SECRET_STORAGE_MODEL_PROVIDERS_KEY
       )
       const saved_providers_with_keys = providers_json
@@ -76,7 +76,7 @@ export class ModelProvidersManager {
   public async save_model_providers(model_providers: ModelProvider[]) {
     try {
       // Save full provider info to secret storage
-      await this._vscode.secrets.store(
+      await this._extension_context.secrets.store(
         SECRET_STORAGE_MODEL_PROVIDERS_KEY,
         JSON.stringify(model_providers)
       )

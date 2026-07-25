@@ -7,19 +7,19 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { t } from '@/i18n'
 
 export const delete_checkpoint = async (params: {
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   checkpoint_to_delete: Checkpoint
   panel_provider: PanelProvider
 }) => {
   const checkpoints =
-    params.context.workspaceState.get<Checkpoint[]>(
+    params.extension_context.workspaceState.get<Checkpoint[]>(
       CHECKPOINTS_STATE_KEY,
       []
     ) ?? []
   const updated_checkpoints = checkpoints.filter(
     (c) => c.timestamp != params.checkpoint_to_delete.timestamp
   )
-  await params.context.workspaceState.update(
+  await params.extension_context.workspaceState.update(
     CHECKPOINTS_STATE_KEY,
     updated_checkpoints
   )
@@ -46,7 +46,7 @@ export type ActiveDeleteOperation = {
 }
 
 export const delete_checkpoint_with_undo = async (params: {
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   checkpoint: Checkpoint
   panel_provider: PanelProvider
   get_active_operation: () => ActiveDeleteOperation | null
@@ -61,7 +61,7 @@ export const delete_checkpoint_with_undo = async (params: {
   }
 
   const checkpoints =
-    params.context.workspaceState.get<Checkpoint[]>(
+    params.extension_context.workspaceState.get<Checkpoint[]>(
       CHECKPOINTS_STATE_KEY,
       []
     ) ?? []
@@ -69,7 +69,7 @@ export const delete_checkpoint_with_undo = async (params: {
   const updated_checkpoints = checkpoints.filter(
     (c) => c.timestamp !== params.checkpoint.timestamp
   )
-  await params.context.workspaceState.update(
+  await params.extension_context.workspaceState.update(
     CHECKPOINTS_STATE_KEY,
     updated_checkpoints
   )
@@ -109,7 +109,7 @@ export const delete_checkpoint_with_undo = async (params: {
   ) {
     if (choice == undo_action) {
       const current_checkpoints =
-        params.context.workspaceState.get<Checkpoint[]>(
+        params.extension_context.workspaceState.get<Checkpoint[]>(
           CHECKPOINTS_STATE_KEY,
           []
         ) ?? []
@@ -117,7 +117,7 @@ export const delete_checkpoint_with_undo = async (params: {
       current_checkpoints.push(params.checkpoint)
       current_checkpoints.sort((a, b) => b.timestamp - a.timestamp)
 
-      await params.context.workspaceState.update(
+      await params.extension_context.workspaceState.update(
         CHECKPOINTS_STATE_KEY,
         current_checkpoints
       )

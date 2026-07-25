@@ -41,14 +41,14 @@ export class TokenCalculator implements vscode.Disposable {
 
   constructor(
     private _provider: IWorkspaceProvider,
-    private _context: vscode.ExtensionContext
+    private _extension_context: vscode.ExtensionContext
   ) {
     this._load_token_cache()
   }
 
   private async _load_token_cache(): Promise<void> {
     try {
-      const storage_path = this._context.globalStorageUri.fsPath
+      const storage_path = this._extension_context.globalStorageUri.fsPath
       const cache_path = path.join(storage_path, TOKEN_CACHE_FILE_NAME)
       const content = await fs.promises.readFile(cache_path, 'utf8')
       const raw_cache = JSON.parse(content)
@@ -72,7 +72,7 @@ export class TokenCalculator implements vscode.Disposable {
     }
 
     this._token_cache_update_timeout = setTimeout(async () => {
-      const storage_path = this._context.globalStorageUri.fsPath
+      const storage_path = this._extension_context.globalStorageUri.fsPath
       const cache_path = path.join(storage_path, TOKEN_CACHE_FILE_NAME)
       const current_global_cache: TokenCountsCache = {}
 

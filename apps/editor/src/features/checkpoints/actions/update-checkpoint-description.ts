@@ -4,13 +4,13 @@ import type { Checkpoint } from '../types'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 
 export const update_checkpoint_description = async (params: {
-  context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext
   timestamp: number
   description: string
   panel_provider: PanelProvider
 }) => {
   const checkpoints =
-    params.context.workspaceState.get<Checkpoint[]>(
+    params.extension_context.workspaceState.get<Checkpoint[]>(
       CHECKPOINTS_STATE_KEY,
       []
     ) ?? []
@@ -19,7 +19,7 @@ export const update_checkpoint_description = async (params: {
   )
   if (checkpoint_to_update) {
     checkpoint_to_update.description = params.description
-    await params.context.workspaceState.update(
+    await params.extension_context.workspaceState.update(
       CHECKPOINTS_STATE_KEY,
       checkpoints
     )

@@ -275,7 +275,7 @@ export const history_command = (params: {
               undefined
             )
             await delete_checkpoint({
-              context: params.extension_context,
+              extension_context: params.extension_context,
               checkpoint_to_delete: temp_checkpoint,
               panel_provider: params.panel_provider
             })
@@ -340,7 +340,7 @@ export const history_command = (params: {
             e.button.tooltip == t('common.unstar')
           ) {
             await toggle_checkpoint_star({
-              context: params.extension_context,
+              extension_context: params.extension_context,
               timestamp: item.checkpoint.timestamp,
               panel_provider: params.panel_provider
             })
@@ -396,7 +396,7 @@ export const history_command = (params: {
 
           if (e.button.tooltip == t('common.delete')) {
             const was_restored = await delete_checkpoint_with_undo({
-              context: params.extension_context,
+              extension_context: params.extension_context,
               checkpoint: item.checkpoint,
               panel_provider: params.panel_provider,
               get_active_operation: () => active_delete_operation,
