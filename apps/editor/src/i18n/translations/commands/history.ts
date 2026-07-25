@@ -415,5 +415,23 @@ export const translations = {
     cs: 'Vymazat vše',
     hu: 'Összes törlése',
     bg: 'Изчисти всички'
+  },
+  'command.history.separator.recent-checkpoints': {
+    en: 'recent checkpoints',
+    pl: 'ostatnie punkty kontrolne',
+    'zh-cn': '最近的检查点',
+    ja: '最近のチェックポイント',
+    'zh-tw': '最近的檢查點',
+    de: 'kürzliche Prüfpunkte',
+    es: 'puntos de control recientes',
+    fr: 'points de contrôle récents',
+    'pt-br': 'pontos de verificação recentes',
+    ru: 'недавние контрольные точки',
+    ko: '최근 체크포인트',
+    it: 'punti di controllo recenti',
+    tr: 'son kontrol noktaları',
+    cs: 'nedávné kontrolní body',
+    hu: 'legutóbbi ellenőrzőpontok',
+    bg: 'скорошни контролни точки'
   }
 } as const

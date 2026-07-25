@@ -215,24 +215,6 @@ export const translations = {
     hu: 'Válasszon konfigurációt {tokens} token feldolgozásához',
     bg: 'Изберете конфигурация за обработка на {tokens} токена'
   },
-  'common.separator.recently-created': {
-    en: 'recently created',
-    pl: 'ostatnio utworzone',
-    'zh-cn': '最近创建',
-    ja: '最近作成された項目',
-    'zh-tw': '最近建立',
-    de: 'kürzlich erstellt',
-    es: 'creado recientemente',
-    fr: 'récemment créé',
-    'pt-br': 'criado recentemente',
-    ru: 'недавно созданные',
-    ko: '최근 생성됨',
-    it: 'creato di recente',
-    tr: 'yeni oluşturuldu',
-    cs: 'nedávno vytvořené',
-    hu: 'nemrég létrehozva',
-    bg: 'наскоро създадени'
-  },
   'common.unstar': {
     en: 'Unstar',
     pl: 'Usuń z ulubionych',

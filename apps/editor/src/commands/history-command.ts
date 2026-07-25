@@ -134,7 +134,7 @@ export const history_command = (params: {
             ...(visible_checkpoints.length > 0
               ? [
                   {
-                    label: t('common.separator.recently-created'),
+                    label: t('command.history.separator.recent-checkpoints'),
                     kind: vscode.QuickPickItemKind.Separator
                   }
                 ]
