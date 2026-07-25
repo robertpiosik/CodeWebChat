@@ -201,7 +201,7 @@ Make your chatbot quota last longer, lower input token costs by up to 90%, and r
 
 - `Duplicate Workspace` - Open a duplicate workspace preserving context.
 
-## Build from source
+## Building from source
 
 ### Prerequisites
 
