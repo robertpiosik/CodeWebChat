@@ -20,7 +20,17 @@ export const Button: FC<Props> = (props) => {
 
   useEffect(() => {
     if (props.is_focused) {
-      button_ref.current?.focus()
+      const interval = setInterval(() => {
+        if (
+          button_ref.current &&
+          document.activeElement !== button_ref.current
+        ) {
+          button_ref.current.focus()
+        } else {
+          clearInterval(interval)
+        }
+      }, 10)
+      return () => clearInterval(interval)
     }
   }, [props.is_focused])
 
