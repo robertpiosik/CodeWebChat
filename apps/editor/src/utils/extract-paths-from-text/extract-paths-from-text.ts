@@ -40,6 +40,8 @@ export const extract_paths_from_text = (params: {
     let p = original_p
     if (p.startsWith('./')) {
       p = p.substring(2)
+    } else if (p.startsWith('/')) {
+      p = p.substring(1)
     }
 
     if (!p) continue

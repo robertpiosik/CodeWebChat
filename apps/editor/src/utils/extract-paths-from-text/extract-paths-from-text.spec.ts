@@ -84,4 +84,12 @@ Lorem ipsum.`
       'apps/editor/src/features/checkpoints/actions/restore-checkpoint.ts'
     )
   })
+
+  it('extracts paths starting with a slash', () => {
+    const text = 'Look at /src/hello.ts'
+    const workspace_files = ['src/hello.ts']
+    const result = extract_paths_from_text({ text, workspace_files })
+
+    expect(result).toContain('src/hello.ts')
+  })
 })
