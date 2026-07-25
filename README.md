@@ -24,11 +24,11 @@ Get involved! Join our [discord server](https://discord.gg/KJySXsrSX5).
 
 ## Introduction
 
-This independent project aims to provide developers with a complete, free toolkit for pair programming with AI that augments, rather than replaces, traditional coding.
+This independent project aims to provide developers a complete and free toolkit for pair programming with AI that augments, rather than replaces, traditional coding.
 
 ## Privacy
 
-CWC operates 100% on your machine—no code, prompts or usage data are collected. For transparency, all source code is public on GitHub.
+CWC operates 100% on your machine—no code, prompts or usage data are collected. For transparency, its source code is public on GitHub.
 
 ## Static context
 
