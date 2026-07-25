@@ -7,34 +7,31 @@
 .button {
   display: flex;
   align-items: center;
-  padding-right: 5px;
   height: 24px;
-  border: 1px solid var(--cwc-border-color-dimmed);
+  outline: 1px solid var(--cwc-border-color-dimmed);
   border-radius: 4px;
-  cursor: pointer;
   color: var(--vscode-foreground);
   width: 100%;
   background: transparent;
   user-select: none;
-  box-sizing: border-box;
+  overflow: hidden;
 
   &:hover {
-    border-color: var(--cwc-border-color);
+    outline-color: var(--cwc-border-color);
   }
 
   &--open {
-    border-color: var(--cwc-border-color);
+    outline-color: var(--cwc-border-color);
   }
 
   &__alternate {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
+    width: 22px;
     height: 100%;
     cursor: pointer;
     text-decoration: none;
-    border-right: 1px solid var(--cwc-border-color);
     flex-shrink: 0;
 
     > span {
@@ -48,6 +45,27 @@
     &:hover {
       background-color: var(--vscode-toolbar-hoverBackground);
       text-decoration: none;
+    }
+  }
+
+  &__separator {
+    width: 1px;
+    height: 100%;
+    background-color: var(--cwc-border-color-dimmed);
+    flex-shrink: 0;
+  }
+
+  &__trigger {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    height: 100%;
+    padding-right: 5px;
+    cursor: pointer;
+    overflow: hidden;
+
+    &:hover {
+      background-color: var(--vscode-toolbar-hoverBackground);
     }
   }
 

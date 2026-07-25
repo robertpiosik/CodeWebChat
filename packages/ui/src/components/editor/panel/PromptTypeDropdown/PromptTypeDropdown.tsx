@@ -102,49 +102,60 @@ export const PromptTypeDropdown = <T extends string>(
     >
       <div
         className={cn(styles.button, { [styles['button--open']]: is_open })}
-        onClick={handle_toggle}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault()
-            handle_toggle()
-          }
-        }}
-        role="button"
-        tabIndex={0}
         style={{ maxWidth: props.max_width }}
         title={props.title}
       >
         {props.on_alternate_click && (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation()
-              if (props.on_alternate_click) {
-                props.on_alternate_click()
-              }
-            }}
-            className={styles.button__alternate}
-            title="Toggle previous prompt type"
-          >
-            <span className={cn('codicon', 'codicon-sync')} />
-          </button>
+          <>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                if (props.on_alternate_click) {
+                  props.on_alternate_click()
+                }
+              }}
+              className={styles.button__alternate}
+              title="Toggle previous prompt type"
+            >
+              <span className={cn('codicon', 'codicon-sync')} />
+            </button>
+            <div className={styles.button__separator} />
+          </>
         )}
-        <span className={styles.button__label}>
-          {selected_option ? selected_option.label : 'Select an option'}
-        </span>
-        {is_open ? (
-          <span
-            className={cn('codicon', 'codicon-chevron-up', styles.button__icon)}
-          />
-        ) : (
-          <span
-            className={cn(
-              'codicon',
-              'codicon-chevron-down',
-              styles.button__icon
-            )}
-          />
-        )}
+        <div
+          className={styles.button__trigger}
+          onClick={handle_toggle}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              handle_toggle()
+            }
+          }}
+          role="button"
+          tabIndex={0}
+        >
+          <span className={styles.button__label}>
+            {selected_option ? selected_option.label : 'Select an option'}
+          </span>
+          {is_open ? (
+            <span
+              className={cn(
+                'codicon',
+                'codicon-chevron-up',
+                styles.button__icon
+              )}
+            />
+          ) : (
+            <span
+              className={cn(
+                'codicon',
+                'codicon-chevron-down',
+                styles.button__icon
+              )}
+            />
+          )}
+        </div>
       </div>
 
       <DropdownMenu
