@@ -28,7 +28,10 @@ export const select_clipboard_paths_command = (
           workspace_provider
         })
 
-        const valid_paths = extract_paths_from_text(text, workspace_files)
+        const valid_paths = extract_paths_from_text({
+          text,
+          workspace_files
+        })
 
         if (valid_paths.length === 0) {
           vscode.window.showInformationMessage(

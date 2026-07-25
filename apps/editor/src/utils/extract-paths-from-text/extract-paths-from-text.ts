@@ -1,18 +1,18 @@
-export const extract_paths_from_text = (
-  text: string,
+export const extract_paths_from_text = (params: {
+  text: string
   workspace_files: string[]
-): string[] => {
+}): string[] => {
   const found_paths = new Set<string>()
-  const workspace_files_set = new Set(workspace_files)
+  const workspace_files_set = new Set(params.workspace_files)
 
-  const inline_matches = text.match(/`([^`]+)`/g)
+  const inline_matches = params.text.match(/`([^`]+)`/g)
   if (inline_matches) {
     inline_matches.forEach((match) => {
       found_paths.add(match.replace(/`/g, '').trim())
     })
   }
 
-  const lines = text.split('\n')
+  const lines = params.text.split('\n')
   for (const line of lines) {
     const trimmed = line.trim()
     if (trimmed.startsWith('-') || trimmed.startsWith('*')) {
@@ -26,7 +26,7 @@ export const extract_paths_from_text = (
     }
   }
 
-  const words = text.replace(/`/g, ' ').split(/[\s,;:'"<>()[\]{}]+/)
+  const words = params.text.replace(/`/g, ' ').split(/[\s,;:'"<>()[\]{}]+/)
   for (const word of words) {
     if (word) {
       const cleaned = word.trim().replace(/[.?!]+$/, '')
@@ -34,7 +34,41 @@ export const extract_paths_from_text = (
     }
   }
 
-  return Array.from(found_paths)
-    .filter((p) => workspace_files_set.has(p))
-    .sort((a, b) => text.indexOf(a) - text.indexOf(b))
+  const matched_files_with_index = new Map<string, number>()
+
+  for (const original_p of found_paths) {
+    let p = original_p
+    if (p.startsWith('./')) {
+      p = p.substring(2)
+    }
+
+    if (!p) continue
+
+    let idx = params.text.indexOf(original_p)
+    if (idx == -1) {
+      idx = params.text.indexOf(p)
+    }
+    const safe_idx = idx != -1 ? idx : Infinity
+
+    if (workspace_files_set.has(p)) {
+      const current_idx = matched_files_with_index.get(p) ?? Infinity
+      matched_files_with_index.set(p, Math.min(current_idx, safe_idx))
+    } else {
+      for (const wf of params.workspace_files) {
+        if (wf.endsWith(`/${p}`)) {
+          const current_idx = matched_files_with_index.get(wf) ?? Infinity
+          matched_files_with_index.set(wf, Math.min(current_idx, safe_idx))
+        }
+      }
+    }
+  }
+
+  return Array.from(matched_files_with_index.keys()).sort((a, b) => {
+    const idx_a = matched_files_with_index.get(a) ?? Infinity
+    const idx_b = matched_files_with_index.get(b) ?? Infinity
+    if (idx_a == idx_b) {
+      return a.localeCompare(b)
+    }
+    return idx_a - idx_b
+  })
 }

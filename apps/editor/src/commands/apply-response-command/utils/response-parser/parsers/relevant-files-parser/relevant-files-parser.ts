@@ -20,10 +20,10 @@ export const parse_relevant_files = (params: {
     return null
   }
 
-  const valid_paths = extract_paths_from_text(
-    params.response,
-    params.workspace_files
-  )
+  const valid_paths = extract_paths_from_text({
+    text: params.response,
+    workspace_files: params.workspace_files
+  })
 
   if (valid_paths.length == 0) {
     return null
