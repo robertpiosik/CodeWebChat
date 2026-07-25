@@ -1039,14 +1039,18 @@ export class WorkspaceProvider
       })
 
       dir_entries.sort((a, b) => {
-        const a_is_dir = a.isDirectory() || a.isSymbolicLink()
-        const b_is_dir = b.isDirectory() || b.isSymbolicLink()
+        const a_is_dir = a.isDirectory()
+        const b_is_dir = b.isDirectory()
         if (a_is_dir && !b_is_dir) return -1
         if (!a_is_dir && b_is_dir) return 1
         return natural_sort(a.name, b.name)
       })
 
       for (const entry of dir_entries) {
+        if (entry.isSymbolicLink()) {
+          continue
+        }
+
         const full_path = path.join(dir_path, entry.name)
 
         // Exclude nested workspace folders from appearing in parent workspace trees
@@ -1062,20 +1066,9 @@ export class WorkspaceProvider
           const is_partially_checked =
             this._partially_checked_dirs.has(full_path)
 
-          let is_directory_for_check = entry.isDirectory()
-          if (entry.isSymbolicLink()) {
-            try {
-              is_directory_for_check = (
-                await fs.promises.stat(full_path)
-              ).isDirectory()
-            } catch {
-              // broken symlink, will be skipped later
-            }
-          }
-
           if (
             state != vscode.TreeItemCheckboxState.Checked &&
-            !(is_directory_for_check && is_partially_checked)
+            !(entry.isDirectory() && is_partially_checked)
           ) {
             continue
           }
@@ -1094,24 +1087,7 @@ export class WorkspaceProvider
         }
 
         const uri = vscode.Uri.file(full_path)
-        let is_directory = entry.isDirectory()
-        const is_symbolic_link = entry.isSymbolicLink()
-        let is_broken_link = false
-
-        if (is_symbolic_link) {
-          try {
-            const stats = await fs.promises.stat(full_path)
-            is_directory = stats.isDirectory()
-          } catch (err) {
-            // The symlink is broken
-            is_broken_link = true
-          }
-        }
-
-        if (is_broken_link) {
-          continue
-        }
-
+        const is_directory = entry.isDirectory()
         const key = full_path
 
         let checkbox_state = this._checked_items.get(key)
@@ -1151,7 +1127,7 @@ export class WorkspaceProvider
             : vscode.TreeItemCollapsibleState.None,
           is_directory,
           this._is_no_context_mode ? undefined : checkbox_state,
-          is_symbolic_link,
+          false,
           false,
           tokens.total,
           tokens.shrink,
@@ -1248,6 +1224,10 @@ export class WorkspaceProvider
       let has_non_ignored_child = false
 
       for (const entry of dir_entries) {
+        if (entry.isSymbolicLink()) {
+          continue
+        }
+
         const sibling_path = path.join(dir_path, entry.name)
 
         const file_workspace_root =
@@ -1357,6 +1337,10 @@ export class WorkspaceProvider
       })
 
       for (const entry of dir_entries) {
+        if (entry.isSymbolicLink()) {
+          continue
+        }
+
         const full_path = path.join(dir_path, entry.name)
 
         const file_workspace_root = this.get_workspace_root_for_file(full_path)
@@ -1387,21 +1371,7 @@ export class WorkspaceProvider
           this._checked_timestamps.delete(full_path)
         }
 
-        let is_directory = entry.isDirectory()
-        const is_symbolic_link = entry.isSymbolicLink()
-        let is_broken_link = false
-
-        if (is_symbolic_link) {
-          try {
-            const stats = await fs.promises.stat(full_path)
-            is_directory = stats.isDirectory()
-          } catch {
-            // The symlink is broken
-            is_broken_link = true
-          }
-        }
-
-        if (is_directory && !is_broken_link) {
+        if (entry.isDirectory()) {
           await this._update_directory_check_state(full_path, state, false)
         }
       }
@@ -1426,8 +1396,7 @@ export class WorkspaceProvider
         ([file_path, state]) =>
           state == vscode.TreeItemCheckboxState.Checked &&
           fs.existsSync(file_path) &&
-          (fs.lstatSync(file_path).isFile() ||
-            fs.lstatSync(file_path).isSymbolicLink()) &&
+          fs.lstatSync(file_path).isFile() &&
           (() => {
             const workspace_root = this.get_workspace_root_for_file(file_path)
             return workspace_root
@@ -1461,30 +1430,39 @@ export class WorkspaceProvider
     for (const file_path of file_paths) {
       if (!fs.existsSync(file_path)) continue
 
-      const workspace_root = this.get_workspace_root_for_file(file_path)
-      if (!workspace_root) continue
+      try {
+        const stats = fs.lstatSync(file_path)
+        if (stats.isSymbolicLink()) continue
 
-      const stats = fs.lstatSync(file_path)
-      const is_directory = stats.isDirectory()
+        const workspace_root = this.get_workspace_root_for_file(file_path)
+        if (!workspace_root) continue
 
-      const relative_path = path.relative(workspace_root, file_path)
-      if (
-        this.is_excluded(is_directory ? relative_path + '/' : relative_path)
-      ) {
-        continue
-      }
+        const is_directory = stats.isDirectory()
 
-      if (is_directory) {
-        this._checked_items.set(file_path, vscode.TreeItemCheckboxState.Checked)
-        await this._update_directory_check_state(
-          file_path,
-          vscode.TreeItemCheckboxState.Checked,
-          false
-        )
-      } else {
-        if (!this.is_ignored_by_patterns(file_path)) {
-          all_files_to_check.push(file_path)
+        const relative_path = path.relative(workspace_root, file_path)
+        if (
+          this.is_excluded(is_directory ? relative_path + '/' : relative_path)
+        ) {
+          continue
         }
+
+        if (is_directory) {
+          this._checked_items.set(
+            file_path,
+            vscode.TreeItemCheckboxState.Checked
+          )
+          await this._update_directory_check_state(
+            file_path,
+            vscode.TreeItemCheckboxState.Checked,
+            false
+          )
+        } else {
+          if (!this.is_ignored_by_patterns(file_path)) {
+            all_files_to_check.push(file_path)
+          }
+        }
+      } catch (e) {
+        // Ignore file access errors
       }
     }
 
@@ -1526,21 +1504,13 @@ export class WorkspaceProvider
         })
 
         for (const entry of entries) {
+          if (entry.isSymbolicLink()) continue
+
           if (entry.name == '.git' || entry.name == 'node_modules') continue
 
           const full_path = path.join(dir_path, entry.name)
 
-          let is_directory = entry.isDirectory()
-          if (entry.isSymbolicLink()) {
-            try {
-              const stats = await fs.promises.stat(full_path)
-              is_directory = stats.isDirectory()
-            } catch {
-              continue
-            }
-          }
-
-          if (is_directory) {
+          if (entry.isDirectory()) {
             await walk(full_path)
           } else if (
             ['.gitignore', '.cursorignore', '.codeiumignore'].includes(
@@ -1736,6 +1706,10 @@ export class WorkspaceProvider
         })
 
         for (const entry of entries) {
+          if (entry.isSymbolicLink()) {
+            continue
+          }
+
           const full_path = path.join(dir_path, entry.name)
 
           const file_workspace_root =
@@ -1754,24 +1728,7 @@ export class WorkspaceProvider
             continue
           }
 
-          let is_directory = entry.isDirectory()
-          const is_symbolic_link = entry.isSymbolicLink()
-          let is_broken_link = false
-
-          if (is_symbolic_link) {
-            try {
-              const stats = await fs.promises.stat(full_path)
-              is_directory = stats.isDirectory()
-            } catch {
-              is_broken_link = true
-            }
-          }
-
-          if (is_broken_link) {
-            continue
-          }
-
-          if (is_directory) {
+          if (entry.isDirectory()) {
             await walk(full_path)
           } else if (!this.is_ignored_by_patterns(full_path)) {
             files.push(full_path)

@@ -460,8 +460,7 @@ export class OpenEditorsProvider
         ([file_path, state]) =>
           state === vscode.TreeItemCheckboxState.Checked &&
           fs.existsSync(file_path) &&
-          (fs.lstatSync(file_path).isFile() ||
-            fs.lstatSync(file_path).isSymbolicLink())
+          fs.lstatSync(file_path).isFile()
       )
       .map(([path, _]) => path)
   }

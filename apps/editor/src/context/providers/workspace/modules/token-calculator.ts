@@ -426,6 +426,8 @@ export class TokenCalculator implements vscode.Disposable {
       let total_shrink_tokens = 0
 
       for (const entry of entries) {
+        if (entry.isSymbolicLink()) continue
+
         const full_path = path.join(dir_path, entry.name)
 
         const file_workspace_root =
@@ -448,31 +450,13 @@ export class TokenCalculator implements vscode.Disposable {
           continue
         }
 
-        let is_directory = entry.isDirectory()
-        const is_symbolic_link = entry.isSymbolicLink()
-        let is_broken_link = false
-
-        // Resolve symbolic link to determine if it points to a directory
-        if (is_symbolic_link) {
-          try {
-            const stats = await fs.promises.stat(full_path)
-            is_directory = stats.isDirectory()
-          } catch {
-            // The symlink is broken
-            is_broken_link = true
-          }
-        }
-
-        if (is_directory && !is_broken_link) {
-          // Recurse into subdirectory (including resolved symlinks that are directories)
+        if (entry.isDirectory()) {
+          // Recurse into subdirectory
           const counts = await this.calculate_directory_tokens(full_path)
           total_tokens += counts.total
           total_shrink_tokens += counts.shrink
-        } else if (
-          entry.isFile() ||
-          (is_symbolic_link && !is_broken_link && !is_directory)
-        ) {
-          // Add file tokens (including resolved symlinks that are files)
+        } else if (entry.isFile()) {
+          // Add file tokens
           const counts = await this.calculate_file_tokens(full_path)
           total_tokens += counts.total
           total_shrink_tokens += counts.shrink
@@ -538,6 +522,8 @@ export class TokenCalculator implements vscode.Disposable {
         withFileTypes: true
       })
       for (const entry of entries) {
+        if (entry.isSymbolicLink()) continue
+
         const full_path = path.join(dir_path, entry.name)
 
         const file_workspace_root =
@@ -559,18 +545,7 @@ export class TokenCalculator implements vscode.Disposable {
 
         const checkbox_state = this._provider.get_check_state(full_path)
 
-        let entry_is_directory = entry.isDirectory()
-        if (entry.isSymbolicLink()) {
-          try {
-            entry_is_directory = (
-              await fs.promises.stat(full_path)
-            ).isDirectory()
-          } catch {
-            continue /* broken symlink */
-          }
-        }
-
-        if (entry_is_directory) {
+        if (entry.isDirectory()) {
           if (checkbox_state === vscode.TreeItemCheckboxState.Checked) {
             const counts = await this.calculate_directory_tokens(full_path)
             selected_tokens += counts.total
@@ -581,7 +556,7 @@ export class TokenCalculator implements vscode.Disposable {
             selected_tokens += counts.total
             selected_shrink_tokens += counts.shrink
           }
-        } else {
+        } else if (entry.isFile()) {
           if (checkbox_state === vscode.TreeItemCheckboxState.Checked) {
             const counts = await this.calculate_file_tokens(full_path)
             selected_tokens += counts.total
@@ -620,7 +595,10 @@ export class TokenCalculator implements vscode.Disposable {
           continue
         }
 
-        if (fs.statSync(file_path).isFile()) {
+        const stat = fs.lstatSync(file_path)
+        if (stat.isSymbolicLink()) continue
+
+        if (stat.isFile()) {
           if (this._file_token_counts.has(file_path)) {
             result.total += this._file_token_counts.get(file_path)!
             result.shrink += this._file_shrink_token_counts.get(file_path)!
