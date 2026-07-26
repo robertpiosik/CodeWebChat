@@ -807,7 +807,7 @@
         {
           "command": "codeWebChat.setRanges",
           "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
-          "group": "2_modification@5"
+          "group": "1_modification@3"
         },
         {
           "command": "codeWebChat.revealInExplorer",
@@ -862,7 +862,7 @@
         {
           "command": "codeWebChat.setRanges",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewSelectedFiles) && viewItem == file",
-          "group": "1_modification@8"
+          "group": "1_creation@5"
         },
         {
           "command": "codeWebChat.findInFolder",
