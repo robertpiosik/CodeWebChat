@@ -98,12 +98,16 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             props.set_section_ref('section:api-calls:group:model-providers', el)
           }
         >
-          <UiGroup title={t('api-calls.model-providers.title')}>
-            {!props.providers.length && (
-              <UiNotice type="warning">
-                {t('api-calls.model-providers.notice.missing')}
-              </UiNotice>
-            )}
+          <UiGroup
+            title={t('api-calls.model-providers.title')}
+            notice_slot={
+              !props.providers.length ? (
+                <UiNotice type="warning">
+                  {t('api-calls.model-providers.notice.missing')}
+                </UiNotice>
+              ) : null
+            }
+          >
             <ModelProvidersSection
               providers={props.providers}
               on_reorder={(reordered) => {
@@ -125,12 +129,16 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             )
           }
         >
-          <UiGroup title={t('api-calls.configurations.title')}>
-            {!props.api_configurations.length && (
-              <UiNotice type="warning">
-                {t('api-calls.configurations.notice.missing')}
-              </UiNotice>
-            )}
+          <UiGroup
+            title={t('api-calls.configurations.title')}
+            notice_slot={
+              !props.api_configurations.length ? (
+                <UiNotice type="warning">
+                  {t('api-calls.configurations.notice.missing')}
+                </UiNotice>
+              ) : null
+            }
+          >
             {props.api_configurations && (
               <SortableList
                 items={props.api_configurations}
@@ -219,102 +227,88 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
           <UiGroup
             title={t('api-calls.configurations.default-configurations.title')}
           >
-            {props.api_configurations.length > 0 && (
-              <>
-                <DefaultConfigurationSelector
-                  title={t('api-calls.configurations.tool.intelligent-update')}
-                  value={props.defaults['intelligent-update'] || null}
-                  configurations={selector_configurations}
-                  on_unset={() =>
-                    props.on_set_default_api_configuration(
-                      'intelligent-update',
-                      null
-                    )
-                  }
-                  on_select={() =>
-                    props.on_select_default_api_configuration(
-                      'intelligent-update'
-                    )
-                  }
-                  translations={{
-                    select: t('api-calls.configurations.action.select-default'),
-                    unset: t('api-calls.configurations.action.unset-default')
-                  }}
-                />
-                <DefaultConfigurationSelector
-                  title={t('api-calls.configurations.tool.code-at-cursor')}
-                  value={props.defaults['code-at-cursor'] || null}
-                  configurations={selector_configurations}
-                  on_unset={() =>
-                    props.on_set_default_api_configuration(
-                      'code-at-cursor',
-                      null
-                    )
-                  }
-                  on_select={() =>
-                    props.on_select_default_api_configuration('code-at-cursor')
-                  }
-                  translations={{
-                    select: t('api-calls.configurations.action.select-default'),
-                    unset: t('api-calls.configurations.action.unset-default')
-                  }}
-                />
-                <DefaultConfigurationSelector
-                  title={t('api-calls.configurations.tool.commit-messages')}
-                  value={props.defaults['commit-messages'] || null}
-                  configurations={selector_configurations}
-                  on_unset={() =>
-                    props.on_set_default_api_configuration(
-                      'commit-messages',
-                      null
-                    )
-                  }
-                  on_select={() =>
-                    props.on_select_default_api_configuration('commit-messages')
-                  }
-                  translations={{
-                    select: t('api-calls.configurations.action.select-default'),
-                    unset: t('api-calls.configurations.action.unset-default')
-                  }}
-                />
-                <DefaultConfigurationSelector
-                  title={t('api-calls.configurations.tool.find-relevant-files')}
-                  value={props.defaults['find-relevant-files'] || null}
-                  configurations={selector_configurations}
-                  on_unset={() =>
-                    props.on_set_default_api_configuration(
-                      'find-relevant-files',
-                      null
-                    )
-                  }
-                  on_select={() =>
-                    props.on_select_default_api_configuration(
-                      'find-relevant-files'
-                    )
-                  }
-                  translations={{
-                    select: t('api-calls.configurations.action.select-default'),
-                    unset: t('api-calls.configurations.action.unset-default')
-                  }}
-                />
+            <DefaultConfigurationSelector
+              title={t('api-calls.configurations.tool.intelligent-update')}
+              value={props.defaults['intelligent-update'] || null}
+              configurations={selector_configurations}
+              on_unset={() =>
+                props.on_set_default_api_configuration(
+                  'intelligent-update',
+                  null
+                )
+              }
+              on_select={() =>
+                props.on_select_default_api_configuration('intelligent-update')
+              }
+              translations={{
+                select: t('api-calls.configurations.action.select-default'),
+                unset: t('api-calls.configurations.action.unset-default')
+              }}
+            />
+            <DefaultConfigurationSelector
+              title={t('api-calls.configurations.tool.code-at-cursor')}
+              value={props.defaults['code-at-cursor'] || null}
+              configurations={selector_configurations}
+              on_unset={() =>
+                props.on_set_default_api_configuration('code-at-cursor', null)
+              }
+              on_select={() =>
+                props.on_select_default_api_configuration('code-at-cursor')
+              }
+              translations={{
+                select: t('api-calls.configurations.action.select-default'),
+                unset: t('api-calls.configurations.action.unset-default')
+              }}
+            />
+            <DefaultConfigurationSelector
+              title={t('api-calls.configurations.tool.commit-messages')}
+              value={props.defaults['commit-messages'] || null}
+              configurations={selector_configurations}
+              on_unset={() =>
+                props.on_set_default_api_configuration('commit-messages', null)
+              }
+              on_select={() =>
+                props.on_select_default_api_configuration('commit-messages')
+              }
+              translations={{
+                select: t('api-calls.configurations.action.select-default'),
+                unset: t('api-calls.configurations.action.unset-default')
+              }}
+            />
+            <DefaultConfigurationSelector
+              title={t('api-calls.configurations.tool.find-relevant-files')}
+              value={props.defaults['find-relevant-files'] || null}
+              configurations={selector_configurations}
+              on_unset={() =>
+                props.on_set_default_api_configuration(
+                  'find-relevant-files',
+                  null
+                )
+              }
+              on_select={() =>
+                props.on_select_default_api_configuration('find-relevant-files')
+              }
+              translations={{
+                select: t('api-calls.configurations.action.select-default'),
+                unset: t('api-calls.configurations.action.unset-default')
+              }}
+            />
 
-                <DefaultConfigurationSelector
-                  title={t('api-calls.configurations.tool.voice-input')}
-                  value={props.defaults['voice-input'] || null}
-                  configurations={selector_configurations}
-                  on_unset={() =>
-                    props.on_set_default_api_configuration('voice-input', null)
-                  }
-                  on_select={() =>
-                    props.on_select_default_api_configuration('voice-input')
-                  }
-                  translations={{
-                    select: t('api-calls.configurations.action.select-default'),
-                    unset: t('api-calls.configurations.action.unset-default')
-                  }}
-                />
-              </>
-            )}
+            <DefaultConfigurationSelector
+              title={t('api-calls.configurations.tool.voice-input')}
+              value={props.defaults['voice-input'] || null}
+              configurations={selector_configurations}
+              on_unset={() =>
+                props.on_set_default_api_configuration('voice-input', null)
+              }
+              on_select={() =>
+                props.on_select_default_api_configuration('voice-input')
+              }
+              translations={{
+                select: t('api-calls.configurations.action.select-default'),
+                unset: t('api-calls.configurations.action.unset-default')
+              }}
+            />
           </UiGroup>
         </div>
 
