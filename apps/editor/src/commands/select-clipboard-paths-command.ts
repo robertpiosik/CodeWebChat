@@ -9,6 +9,7 @@ import { t } from '@/i18n'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { extract_paths_from_text } from '@/utils/extract-paths-from-text'
+import { search_files } from '@/features/search-files'
 
 export const select_clipboard_paths_command = (
   workspace_provider: WorkspaceProvider,
@@ -66,52 +67,56 @@ export const select_clipboard_paths_command = (
           return
         }
 
+        const currently_checked = workspace_provider.get_checked_files()
+        const currently_checked_set = new Set(currently_checked)
+
+        const quick_pick_items: (vscode.QuickPickItem & {
+          file_path: string
+        })[] = await Promise.all(
+          absolute_paths.map(async (file_path) => {
+            const token_count =
+              await workspace_provider.calculate_file_tokens(file_path)
+
+            const formatted_token_count = display_token_count(token_count.total)
+
+            const root =
+              workspace_provider.get_workspace_root_for_file(file_path)
+            const relative_path = root
+              ? path.relative(root, file_path)
+              : file_path
+            const dir_name = path.dirname(relative_path)
+            let display_dir = dir_name === '.' ? '' : dir_name
+
+            if (root && workspace_roots.length > 1) {
+              const workspace_name = workspace_provider.get_workspace_name(root)
+              display_dir = display_dir
+                ? `${workspace_name}/${display_dir}`
+                : workspace_name
+            }
+
+            return {
+              label: path.basename(file_path),
+              description: display_dir
+                ? `${formatted_token_count} · ${display_dir}`
+                : formatted_token_count,
+              file_path,
+              buttons: [
+                {
+                  iconPath: new vscode.ThemeIcon('go-to-file'),
+                  tooltip: t('common.go-to-file')
+                }
+              ]
+            }
+          })
+        )
+
+        let current_selected_items = quick_pick_items.filter((item) =>
+          currently_checked_set.has(item.file_path)
+        )
+        let paths_to_apply: string[] = []
+        let final_selected_paths: string[] = []
+
         while (true) {
-          const currently_checked = workspace_provider.get_checked_files()
-          const currently_checked_set = new Set(currently_checked)
-
-          const quick_pick_items = await Promise.all(
-            absolute_paths.map(async (file_path) => {
-              const token_count =
-                await workspace_provider.calculate_file_tokens(file_path)
-
-              const formatted_token_count = display_token_count(
-                token_count.total
-              )
-
-              const root =
-                workspace_provider.get_workspace_root_for_file(file_path)
-              const relative_path = root
-                ? path.relative(root, file_path)
-                : file_path
-              const dir_name = path.dirname(relative_path)
-              let display_dir = dir_name === '.' ? '' : dir_name
-
-              if (root && workspace_roots.length > 1) {
-                const workspace_name =
-                  workspace_provider.get_workspace_name(root)
-                display_dir = display_dir
-                  ? `${workspace_name}/${display_dir}`
-                  : workspace_name
-              }
-
-              return {
-                label: path.basename(file_path),
-                description: display_dir
-                  ? `${formatted_token_count} · ${display_dir}`
-                  : formatted_token_count,
-                picked: currently_checked_set.has(file_path),
-                file_path,
-                buttons: [
-                  {
-                    iconPath: new vscode.ThemeIcon('go-to-file'),
-                    tooltip: t('common.go-to-file')
-                  }
-                ]
-              }
-            })
-          )
-
           const quick_pick = vscode.window.createQuickPick<
             vscode.QuickPickItem & { file_path: string }
           >()
@@ -120,21 +125,35 @@ export const select_clipboard_paths_command = (
           quick_pick.canSelectMany = true
           quick_pick.items = quick_pick_items
           quick_pick.ignoreFocusOut = true
-          quick_pick.selectedItems = quick_pick_items.filter(
-            (item) => item.picked
-          )
-          quick_pick.buttons = [
-            { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
-          ]
+          quick_pick.selectedItems = current_selected_items
+
+          const close_button = {
+            iconPath: new vscode.ThemeIcon('close'),
+            tooltip: t('common.close')
+          }
+          const search_button = {
+            iconPath: new vscode.ThemeIcon('search'),
+            tooltip: t('feature.search-files.search-in-results')
+          }
+
+          quick_pick.buttons = [search_button, close_button]
 
           const selected_items = await new Promise<
             | readonly (vscode.QuickPickItem & { file_path: string })[]
             | undefined
+            | 'search'
           >((resolve) => {
             let is_accepted = false
 
-            quick_pick.onDidTriggerButton((_button) => {
-              quick_pick.hide()
+            quick_pick.onDidTriggerButton((button) => {
+              if (button === close_button) {
+                resolve(undefined)
+                quick_pick.hide()
+              } else if (button === search_button) {
+                current_selected_items = [...quick_pick.selectedItems]
+                resolve('search')
+                quick_pick.hide()
+              }
             })
 
             quick_pick.onDidTriggerItemButton(async (e) => {
@@ -160,13 +179,43 @@ export const select_clipboard_paths_command = (
             quick_pick.show()
           })
 
-          if (!selected_items || selected_items.length === 0) {
+          if (
+            !selected_items ||
+            (Array.isArray(selected_items) && selected_items.length === 0)
+          ) {
             return
           }
 
-          const selected_paths = selected_items.map((item) => item.file_path)
-          let paths_to_apply = selected_paths
-          let should_continue = false
+          let selected_paths: string[] = []
+
+          if (selected_items === 'search') {
+            const search_result = await search_files({
+              get_files: async () => absolute_paths,
+              workspace_provider,
+              extension_context,
+              show_back_button: true
+            })
+
+            if (search_result === 'back') {
+              continue
+            }
+
+            if (!search_result) {
+              return
+            }
+
+            selected_paths = search_result.selected_paths
+          } else {
+            selected_paths = selected_items.map((item) => item.file_path)
+          }
+
+          if (selected_paths.length === 0) {
+            return
+          }
+
+          paths_to_apply = selected_paths
+          final_selected_paths = selected_paths
+          let should_continue_main_loop = false
 
           if (currently_checked.length > 0) {
             const selected_paths_set = new Set(selected_paths)
@@ -244,7 +293,7 @@ export const select_clipboard_paths_command = (
               })
 
               if (choice === 'back') {
-                should_continue = true
+                should_continue_main_loop = true
               } else if (!choice) {
                 return
               } else {
@@ -264,28 +313,29 @@ export const select_clipboard_paths_command = (
             }
           }
 
-          if (should_continue) {
+          if (should_continue_main_loop) {
             continue
           }
 
-          Logger.info({
-            message: `Selected ${selected_paths.length} clipboard paths.`,
-            data: { paths: selected_paths }
-          })
-
-          await workspace_provider.set_checked_files(paths_to_apply)
-
-          const newly_selected_count = selected_paths.filter(
-            (p) => !currently_checked.includes(p)
-          ).length
-
-          vscode.window.showInformationMessage(
-            dictionary.information_message.ADDED_FILES_TO_CONTEXT(
-              newly_selected_count
-            )
-          )
-          return
+          break
         }
+
+        Logger.info({
+          message: `Selected ${final_selected_paths.length} clipboard paths.`,
+          data: { paths: final_selected_paths }
+        })
+
+        await workspace_provider.set_checked_files(paths_to_apply)
+
+        const newly_selected_count = final_selected_paths.filter(
+          (p) => !currently_checked.includes(p)
+        ).length
+
+        vscode.window.showInformationMessage(
+          dictionary.information_message.ADDED_FILES_TO_CONTEXT(
+            newly_selected_count
+          )
+        )
       } catch (error) {
         vscode.window.showErrorMessage(
           `Failed to select clipboard paths: ${

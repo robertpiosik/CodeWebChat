@@ -119,7 +119,6 @@ export const select_referencing_files_command = (
               cancellable: true
             },
             async (progress, token) => {
-              let processed_files = 0
               for (const uri of starting_uris) {
                 if (token.isCancellationRequested) {
                   is_cancelled = true
@@ -132,7 +131,6 @@ export const select_referencing_files_command = (
                   >('vscode.executeDocumentSymbolProvider', uri)
 
                   if (!symbols) {
-                    processed_files++
                     continue
                   }
 
@@ -183,10 +181,6 @@ export const select_referencing_files_command = (
                     }
                     const position = positions[i]
 
-                    progress.report({
-                      message: `${path.basename(uri.fsPath)} (${i + 1}/${positions.length})`
-                    })
-
                     const locations = await vscode.commands.executeCommand<
                       vscode.Location[]
                     >('vscode.executeReferenceProvider', uri, position)
@@ -216,10 +210,8 @@ export const select_referencing_files_command = (
                   })
                 }
 
-                processed_files++
                 progress.report({
-                  increment: (1 / starting_uris.length) * 100,
-                  message: `${processed_files}/${starting_uris.length}`
+                  increment: (1 / starting_uris.length) * 100
                 })
               }
             }
