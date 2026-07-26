@@ -10,7 +10,10 @@ export const prompt_for_intelligent_search_results = async (params: {
   analysis: FileAnalysisResult
   workspace_provider: WorkspaceProvider
 }): Promise<
-  { selected_paths: string[]; matched_paths: string[] } | 'back' | 'cancel'
+  | { selected_paths: string[]; matched_paths: string[] }
+  | { action: 'search_in_results'; matched_paths: string[] }
+  | 'back'
+  | 'cancel'
 > => {
   const absolute_paths: string[] = []
 
@@ -43,6 +46,10 @@ export const prompt_for_intelligent_search_results = async (params: {
   const open_file_button = {
     iconPath: new vscode.ThemeIcon('go-to-file'),
     tooltip: t('common.go-to-file')
+  }
+  const search_in_results_button = {
+    iconPath: new vscode.ThemeIcon('search'),
+    tooltip: t('feature.search-files.search-in-results')
   }
 
   const quick_pick_items = await Promise.all(
@@ -96,10 +103,17 @@ export const prompt_for_intelligent_search_results = async (params: {
 
   quick_pick.placeholder = t('feature.search-files.select-files')
   quick_pick.ignoreFocusOut = true
-  quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
+  quick_pick.buttons = [
+    vscode.QuickInputButtons.Back,
+    search_in_results_button,
+    close_button
+  ]
 
   const list_selection = await new Promise<
-    { selected_paths: string[]; matched_paths: string[] } | 'back' | 'cancel'
+    | { selected_paths: string[]; matched_paths: string[] }
+    | { action: 'search_in_results'; matched_paths: string[] }
+    | 'back'
+    | 'cancel'
   >((resolve) => {
     let is_resolved = false
 
@@ -107,6 +121,10 @@ export const prompt_for_intelligent_search_results = async (params: {
       if (button === vscode.QuickInputButtons.Back) {
         is_resolved = true
         resolve('back')
+        quick_pick.hide()
+      } else if (button === search_in_results_button) {
+        is_resolved = true
+        resolve({ action: 'search_in_results', matched_paths: unique_paths })
         quick_pick.hide()
       } else if (button === close_button) {
         is_resolved = true

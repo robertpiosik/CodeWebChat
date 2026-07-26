@@ -41,6 +41,8 @@ export const search_files = async (params: {
     return _resolved_files
   }
 
+  const local_queries: Record<string, string> = {}
+
   while (true) {
     try {
       const mode_result = await prompt_for_search_mode(
@@ -124,7 +126,15 @@ export const search_files = async (params: {
               const intelligent_result = await perform_intelligent_search_flow({
                 files,
                 workspace_provider: params.workspace_provider,
-                extension_context: params.extension_context
+                extension_context: params.extension_context,
+                show_back_button: params.show_back_button,
+                search_in_results: (matched_paths) =>
+                  search_files({
+                    get_files: async () => matched_paths,
+                    workspace_provider: params.workspace_provider,
+                    extension_context: params.extension_context,
+                    show_back_button: true
+                  })
               })
 
               if (intelligent_result == 'back') {
@@ -149,15 +159,26 @@ export const search_files = async (params: {
                   : LAST_SEARCH_FILES_SEMANTIC_QUERY_STATE_KEY
 
             const initial_search_term =
-              params.extension_context.workspaceState.get<string>(state_key) ||
-              ''
+              local_queries[state_key] !== undefined
+                ? local_queries[state_key]
+                : params.show_back_button
+                  ? ''
+                  : params.extension_context.workspaceState.get<string>(
+                      state_key
+                    ) || ''
 
             const result = await prompt_for_search_term(
               initial_search_term,
               search_mode,
               keywords_target,
               (value) => {
-                params.extension_context.workspaceState.update(state_key, value)
+                local_queries[state_key] = value
+                if (!params.show_back_button) {
+                  params.extension_context.workspaceState.update(
+                    state_key,
+                    value
+                  )
+                }
               }
             )
             if (result.back) {
@@ -169,12 +190,16 @@ export const search_files = async (params: {
               break
             }
             if (!result.value) return undefined
-            const search_term_input = result.value
 
-            await params.extension_context.workspaceState.update(
-              state_key,
-              search_term_input
-            )
+            const search_term_input = result.value
+            local_queries[state_key] = search_term_input
+
+            if (!params.show_back_button) {
+              await params.extension_context.workspaceState.update(
+                state_key,
+                search_term_input
+              )
+            }
 
             const search_term = search_term_input.trim()
             if (search_term.length == 0) return undefined
@@ -184,7 +209,13 @@ export const search_files = async (params: {
             let is_cancelled = false
             let matched_files: string[] = []
 
-            if (search_mode == 'keywords' && keywords_target == 'filenames') {
+            const is_filename_search =
+              search_mode == 'keywords' && keywords_target == 'filenames'
+            const is_small_search =
+              (search_mode == 'phrase' || search_mode == 'keywords') &&
+              files.length < 1000
+
+            if (is_filename_search || is_small_search) {
               matched_files = await search_files_by_term({
                 files,
                 search_term,
@@ -247,29 +278,24 @@ export const search_files = async (params: {
                 return undefined
               }
 
-              if (selected_items == 'intelligent') {
-                const intelligent_result =
-                  await perform_intelligent_search_flow({
-                    files: matched_files,
-                    workspace_provider: params.workspace_provider,
-                    extension_context: params.extension_context
-                  })
+              if ('action' in selected_items) {
+                const sub_search_result = await search_files({
+                  get_files: async () => selected_items.matched_paths,
+                  workspace_provider: params.workspace_provider,
+                  extension_context: params.extension_context,
+                  show_back_button: true
+                })
 
-                if (intelligent_result == 'back') {
+                if (sub_search_result === 'back') {
                   continue
                 }
-                if (!intelligent_result) return undefined
-
-                final_result = intelligent_result
-                break_outer = true
-                break_match_mode = true
-                break
-              } else {
-                final_result = selected_items
-                break_outer = true
-                break_match_mode = true
-                break
+                return sub_search_result
               }
+
+              final_result = selected_items
+              break_outer = true
+              break_match_mode = true
+              break
             }
 
             if (break_outer) break

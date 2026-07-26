@@ -13,21 +13,21 @@ export const prompt_for_search_results = async (params: {
   workspace_provider: WorkspaceProvider
 }): Promise<
   | { selected_paths: string[]; matched_paths: string[] }
+  | { action: 'search_in_results'; matched_paths: string[] }
   | undefined
   | 'back'
-  | 'intelligent'
 > => {
   const open_file_button = {
     iconPath: new vscode.ThemeIcon('go-to-file'),
     tooltip: t('common.go-to-file')
   }
-  const intelligent_search_button = {
-    iconPath: new vscode.ThemeIcon('search-sparkle'),
-    tooltip: t('feature.search-files.mode.intelligent')
-  }
   const close_button = {
     iconPath: new vscode.ThemeIcon('close'),
     tooltip: t('common.close')
+  }
+  const search_in_results_button = {
+    iconPath: new vscode.ThemeIcon('search'),
+    tooltip: t('feature.search-files.search-in-results')
   }
 
   const currently_checked = params.workspace_provider.get_checked_files()
@@ -94,15 +94,15 @@ export const prompt_for_search_results = async (params: {
   quick_pick.ignoreFocusOut = true
   quick_pick.buttons = [
     vscode.QuickInputButtons.Back,
-    intelligent_search_button,
+    search_in_results_button,
     close_button
   ]
 
   return new Promise<
     | { selected_paths: string[]; matched_paths: string[] }
+    | { action: 'search_in_results'; matched_paths: string[] }
     | undefined
     | 'back'
-    | 'intelligent'
   >((resolve) => {
     let is_accepted = false
 
@@ -110,11 +110,15 @@ export const prompt_for_search_results = async (params: {
       if (button === vscode.QuickInputButtons.Back) {
         resolve('back')
         quick_pick.hide()
+      } else if (button === search_in_results_button) {
+        is_accepted = true
+        resolve({
+          action: 'search_in_results',
+          matched_paths: params.matched_files
+        })
+        quick_pick.hide()
       } else if (button === close_button) {
         resolve(undefined)
-        quick_pick.hide()
-      } else if (button === intelligent_search_button) {
-        resolve('intelligent')
         quick_pick.hide()
       }
     })

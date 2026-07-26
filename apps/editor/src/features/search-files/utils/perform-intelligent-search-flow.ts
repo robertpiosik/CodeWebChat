@@ -17,24 +17,39 @@ export const perform_intelligent_search_flow = async (params: {
   files: string[]
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
+  search_in_results: (
+    matched_paths: string[]
+  ) => Promise<
+    { selected_paths: string[]; matched_paths: string[] } | undefined | 'back'
+  >
+  show_back_button?: boolean
 }): Promise<
   { selected_paths: string[]; matched_paths: string[] } | undefined | 'back'
 > => {
+  const local_queries: Record<string, string> = {}
+
   while (true) {
     const initial_search_term =
-      params.extension_context.workspaceState.get<string>(
-        LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY
-      ) || ''
+      local_queries[LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY] !== undefined
+        ? local_queries[LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY]
+        : params.show_back_button
+          ? ''
+          : params.extension_context.workspaceState.get<string>(
+              LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY
+            ) || ''
 
     const result = await prompt_for_search_term(
       initial_search_term,
       'intelligent',
       undefined,
       (value) => {
-        params.extension_context.workspaceState.update(
-          LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY,
-          value
-        )
+        local_queries[LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY] = value
+        if (!params.show_back_button) {
+          params.extension_context.workspaceState.update(
+            LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY,
+            value
+          )
+        }
       }
     )
     if (result.back) return 'back'
@@ -43,10 +58,13 @@ export const perform_intelligent_search_flow = async (params: {
     const search_term = result.value.trim()
     if (search_term.length == 0) return undefined
 
-    await params.extension_context.workspaceState.update(
-      LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY,
-      search_term
-    )
+    local_queries[LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY] = search_term
+    if (!params.show_back_button) {
+      await params.extension_context.workspaceState.update(
+        LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY,
+        search_term
+      )
+    }
 
     const analysis = await analyze_files({
       workspace_provider: params.workspace_provider,
@@ -143,23 +161,42 @@ export const perform_intelligent_search_flow = async (params: {
           break
         }
 
-        const apply_result = await prompt_for_intelligent_search_results({
-          extracted_files: api_result,
-          analysis,
-          workspace_provider: params.workspace_provider
-        })
+        let go_back_to_term_from_results = false
+        while (true) {
+          const apply_result = await prompt_for_intelligent_search_results({
+            extracted_files: api_result,
+            analysis,
+            workspace_provider: params.workspace_provider
+          })
 
-        if (apply_result == 'back') {
+          if (apply_result == 'back') {
+            go_back_to_term_from_results = true
+            break
+          }
+          if (apply_result == 'cancel') {
+            return undefined
+          }
+
+          if ('action' in apply_result) {
+            const sub_result = await params.search_in_results(
+              apply_result.matched_paths
+            )
+            if (sub_result === 'back') {
+              continue
+            }
+            return sub_result
+          }
+
+          final_result = apply_result
+          break_outer = true
+          break
+        }
+
+        if (break_outer) break
+        if (go_back_to_term_from_results) {
           go_back_to_term = true
           break
         }
-        if (apply_result == 'cancel') {
-          return undefined
-        }
-
-        final_result = apply_result
-        break_outer = true
-        break
       }
 
       if (break_outer) return final_result
