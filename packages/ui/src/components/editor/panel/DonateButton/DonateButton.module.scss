@@ -8,10 +8,8 @@
   border: none;
   border-radius: 5px;
   text-decoration: none;
-  color: var(--vscode-foreground);
-  height: 20px;
   gap: 4px;
-  padding: 1px 5px 1px 0;
+  padding: 2px 6px 2px 3px;
   font-size: 11px;
 
   &:hover {
@@ -21,13 +19,14 @@
   &:focus {
     outline: none;
   }
-}
 
-.icon-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  color: var(--vscode-icon-foreground);
+  &__icon {
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    > span {
+      font-size: 14px !important;
+    }
+  }
 }
