@@ -54,7 +54,7 @@ export const prompt_for_intelligent_search_results = async (params: {
   }
   const search_in_results_button = {
     iconPath: new vscode.ThemeIcon('search'),
-    tooltip: t('feature.search-files.search-in-results')
+    tooltip: t('common.search-in-results')
   }
 
   const quick_pick_items = await Promise.all(

@@ -1173,23 +1173,5 @@ export const translations = {
     cs: 'Hledat jak v obsahu, tak v názvech souborů',
     hu: 'Keresés tartalmában és fájlnevekben egyaránt',
     bg: 'Търсене както в съдържанието, така и в имената на файловете'
-  },
-  'feature.search-files.search-in-results': {
-    en: 'Search in results',
-    pl: 'Szukaj w wynikach',
-    'zh-cn': '在结果中搜索',
-    ja: '結果内を検索',
-    'zh-tw': '在結果中搜尋',
-    de: 'In den Ergebnissen suchen',
-    es: 'Buscar en los resultados',
-    fr: 'Rechercher dans les résultats',
-    'pt-br': 'Pesquisar nos resultados',
-    ru: 'Искать в результатах',
-    ko: '결과에서 검색',
-    it: 'Cerca nei risultati',
-    tr: 'Sonuçlarda ara',
-    cs: 'Hledat ve výsledcích',
-    hu: 'Keresés az eredményekben',
-    bg: 'Търсене в резултатите'
   }
 } as const

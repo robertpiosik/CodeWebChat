@@ -133,7 +133,7 @@ export const select_clipboard_paths_command = (
           }
           const search_button = {
             iconPath: new vscode.ThemeIcon('search'),
-            tooltip: t('feature.search-files.search-in-results')
+            tooltip: t('common.search-in-results')
           }
 
           quick_pick.buttons = [search_button, close_button]
