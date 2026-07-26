@@ -13,8 +13,11 @@ const exec_promise = promisify(exec)
 export const search_files_by_term = async (params: {
   files: string[]
   search_term: string
-  search_mode: 'phrase' | 'keywords' | 'filename' | 'intelligent' | 'semantic'
+  search_mode: 'phrase' | 'keywords' | 'intelligent' | 'semantic'
+  keywords_target?: 'contents' | 'filenames' | 'both'
   keywords_match_mode?: 'all' | 'some'
+  progress?: vscode.Progress<{ message?: string; increment?: number }>
+  token?: vscode.CancellationToken
 }): Promise<string[]> => {
   const matched_files: string[] = []
 
@@ -30,6 +33,7 @@ export const search_files_by_term = async (params: {
     const matched_map = new Map<string, number | undefined>()
 
     for (const folder of workspace_folders) {
+      if (params.token?.isCancellationRequested) break
       try {
         const safe_term = params.search_term.replace(/"/g, '\\"')
         const { stdout } = await exec_promise(
@@ -67,7 +71,10 @@ export const search_files_by_term = async (params: {
       .map((item) => item.file_path)
   }
 
-  if (params.search_mode == 'filename') {
+  if (
+    params.search_mode == 'keywords' &&
+    params.keywords_target == 'filenames'
+  ) {
     const keywords = params.search_term
       .split(',')
       .map((k) => k.trim())
@@ -101,6 +108,8 @@ export const search_files_by_term = async (params: {
     }
 
     for (const file_path of params.files) {
+      if (params.token?.isCancellationRequested) break
+
       try {
         const file_name = path.basename(file_path)
 
@@ -161,7 +170,16 @@ export const search_files_by_term = async (params: {
     return positive_regexes.every((r) => r.test(text))
   }
 
+  let processed = 0
   for (const file_path of params.files) {
+    if (params.token?.isCancellationRequested) break
+    processed++
+    if (processed % 50 === 0) {
+      params.progress?.report({
+        increment: (50 / params.files.length) * 100
+      })
+    }
+
     try {
       const file_name = path.basename(file_path)
 
@@ -170,13 +188,30 @@ export const search_files_by_term = async (params: {
       }
 
       const stats = await fs.promises.stat(file_path)
+      let text_to_check = ''
+
       if (stats.size > 1024 * 1024) {
-        continue
+        if (
+          params.search_mode == 'keywords' &&
+          params.keywords_target == 'both'
+        ) {
+          text_to_check = file_name
+        } else {
+          continue
+        }
+      } else {
+        const content = await fs.promises.readFile(file_path, 'utf-8')
+        if (
+          params.search_mode == 'keywords' &&
+          params.keywords_target == 'both'
+        ) {
+          text_to_check = file_name + '\n' + content
+        } else {
+          text_to_check = content
+        }
       }
 
-      const content = await fs.promises.readFile(file_path, 'utf-8')
-
-      if (matches_condition(content)) {
+      if (matches_condition(text_to_check)) {
         matched_files.push(file_path)
       }
     } catch (error) {

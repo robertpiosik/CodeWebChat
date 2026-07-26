@@ -3,7 +3,8 @@ import { t } from '@/i18n'
 
 export const prompt_for_search_term = async (
   initial_search_term: string,
-  mode: 'phrase' | 'keywords' | 'filename' | 'intelligent' | 'semantic',
+  mode: 'phrase' | 'keywords' | 'intelligent' | 'semantic',
+  keywords_target: 'contents' | 'filenames' | 'both' | undefined,
   on_change?: (value: string) => void
 ): Promise<{ value: string | undefined; back?: boolean }> => {
   const close_button = {
@@ -14,24 +15,24 @@ export const prompt_for_search_term = async (
   const input_box = vscode.window.createInputBox()
   input_box.title =
     mode == 'keywords'
-      ? t('feature.search-files.title.keywords')
-      : mode == 'filename'
+      ? keywords_target == 'filenames'
         ? t('feature.search-files.title.filename')
-        : mode == 'intelligent'
-          ? t('feature.search-files.title.intelligent')
-          : mode == 'semantic'
-            ? t('feature.search-files.title.semantic')
-            : t('feature.search-files.title.phrase')
+        : t('feature.search-files.title.keywords')
+      : mode == 'intelligent'
+        ? t('feature.search-files.title.intelligent')
+        : mode == 'semantic'
+          ? t('feature.search-files.title.semantic')
+          : t('feature.search-files.title.phrase')
   input_box.prompt =
     mode == 'keywords'
-      ? t('feature.search-files.prompt.keywords')
-      : mode == 'filename'
+      ? keywords_target == 'filenames'
         ? t('feature.search-files.prompt.filename')
-        : mode == 'intelligent'
-          ? t('feature.search-files.prompt.intelligent')
-          : mode == 'semantic'
-            ? t('feature.search-files.prompt.semantic')
-            : t('feature.search-files.prompt')
+        : t('feature.search-files.prompt.keywords')
+      : mode == 'intelligent'
+        ? t('feature.search-files.prompt.intelligent')
+        : mode == 'semantic'
+          ? t('feature.search-files.prompt.semantic')
+          : t('feature.search-files.prompt')
   input_box.placeholder = t('feature.search-files.placeholder')
   input_box.value = initial_search_term
   input_box.ignoreFocusOut = true

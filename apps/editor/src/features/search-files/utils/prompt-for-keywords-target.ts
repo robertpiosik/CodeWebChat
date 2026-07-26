@@ -1,27 +1,34 @@
 import * as vscode from 'vscode'
 import { t } from '@/i18n'
 
-export const prompt_for_filename_match_mode = async (
-  last_mode: 'all' | 'some'
-): Promise<'all' | 'some' | 'back' | undefined> => {
-  const items: (vscode.QuickPickItem & { mode: 'all' | 'some' })[] = [
+export const prompt_for_keywords_target = async (
+  last_target: 'contents' | 'filenames' | 'both'
+): Promise<'contents' | 'filenames' | 'both' | 'back' | undefined> => {
+  const items: (vscode.QuickPickItem & {
+    target: 'contents' | 'filenames' | 'both'
+  })[] = [
     {
-      label: t('feature.search-files.filename.match-mode.all'),
+      label: t('feature.search-files.keywords.target.contents'),
       description: t(
-        'feature.search-files.filename.match-mode.all-description'
+        'feature.search-files.keywords.target.contents-description'
       ),
-      mode: 'all'
+      target: 'contents'
     },
     {
-      label: t('feature.search-files.filename.match-mode.some'),
+      label: t('feature.search-files.keywords.target.filenames'),
       description: t(
-        'feature.search-files.filename.match-mode.some-description'
+        'feature.search-files.keywords.target.filenames-description'
       ),
-      mode: 'some'
+      target: 'filenames'
+    },
+    {
+      label: t('feature.search-files.keywords.target.both'),
+      description: t('feature.search-files.keywords.target.both-description'),
+      target: 'both'
     }
   ]
 
-  const active_item = items.find((i) => i.mode == last_mode) || items[0]
+  const active_item = items.find((i) => i.target == last_target) || items[0]
 
   const close_button = {
     iconPath: new vscode.ThemeIcon('close'),
@@ -29,14 +36,12 @@ export const prompt_for_filename_match_mode = async (
   }
 
   const quick_pick = vscode.window.createQuickPick<
-    vscode.QuickPickItem & { mode: 'all' | 'some' }
+    vscode.QuickPickItem & { target: 'contents' | 'filenames' | 'both' }
   >()
   quick_pick.items = items
   quick_pick.activeItems = [active_item]
-  quick_pick.title = t('feature.search-files.filename.match-mode.title')
-  quick_pick.placeholder = t(
-    'feature.search-files.filename.match-mode.placeholder'
-  )
+  quick_pick.title = t('feature.search-files.keywords.target.title')
+  quick_pick.placeholder = t('feature.search-files.keywords.target.placeholder')
   quick_pick.ignoreFocusOut = false
   quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
 
@@ -57,7 +62,7 @@ export const prompt_for_filename_match_mode = async (
       const selected = quick_pick.selectedItems[0]
       if (selected) {
         is_resolved = true
-        resolve(selected.mode)
+        resolve(selected.target)
         quick_pick.hide()
       }
     })

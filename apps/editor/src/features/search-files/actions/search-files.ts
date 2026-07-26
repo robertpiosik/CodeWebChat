@@ -7,12 +7,13 @@ import {
   LAST_SEARCH_FILES_KEYWORDS_MATCH_MODE_STATE_KEY,
   LAST_SEARCH_FILES_FILENAME_QUERY_STATE_KEY,
   LAST_SEARCH_FILES_FILENAME_MATCH_MODE_STATE_KEY,
+  LAST_SEARCH_FILES_KEYWORDS_TARGET_STATE_KEY,
   LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY,
   LAST_SEARCH_FILES_SEMANTIC_QUERY_STATE_KEY
 } from '@/constants/state-keys'
 import { prompt_for_search_mode } from '../utils/prompt-for-search-mode'
 import { prompt_for_keywords_match_mode } from '../utils/prompt-for-keywords-match-mode'
-import { prompt_for_filename_match_mode } from '../utils/prompt-for-filename-match-mode'
+import { prompt_for_keywords_target } from '../utils/prompt-for-keywords-target'
 import { prompt_for_search_term } from '../utils/prompt-for-search-term'
 import { search_files_by_term } from '../utils/search-files-by-term'
 import { prompt_for_search_results } from '../utils/prompt-for-search-results'
@@ -20,7 +21,7 @@ import { perform_intelligent_search_flow } from '../utils/perform-intelligent-se
 import { Logger } from '@shared/utils/logger'
 
 export const search_files = async (params: {
-  files: string[]
+  get_files: () => Promise<string[]>
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
   show_back_button?: boolean
@@ -29,8 +30,16 @@ export const search_files = async (params: {
 > => {
   let initial_search_mode =
     params.extension_context.workspaceState.get<
-      'phrase' | 'keywords' | 'filename' | 'intelligent' | 'semantic'
+      'phrase' | 'keywords' | 'intelligent' | 'semantic'
     >(LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY) || 'phrase'
+
+  let _resolved_files: string[] | undefined
+  const resolve_files = async () => {
+    if (!_resolved_files) {
+      _resolved_files = await params.get_files()
+    }
+    return _resolved_files
+  }
 
   while (true) {
     try {
@@ -55,151 +64,72 @@ export const search_files = async (params: {
         | undefined = undefined
 
       while (true) {
+        let keywords_target: 'contents' | 'filenames' | 'both' = 'contents'
         let keywords_match_mode: 'all' | 'some' = 'all'
 
         if (search_mode == 'keywords') {
-          const last_match_mode =
-            params.extension_context.workspaceState.get<'all' | 'some'>(
-              LAST_SEARCH_FILES_KEYWORDS_MATCH_MODE_STATE_KEY
-            ) || 'all'
+          const last_target =
+            params.extension_context.workspaceState.get<
+              'contents' | 'filenames' | 'both'
+            >(LAST_SEARCH_FILES_KEYWORDS_TARGET_STATE_KEY) || 'contents'
 
-          const match_mode_result =
-            await prompt_for_keywords_match_mode(last_match_mode)
-          if (match_mode_result == 'back') {
+          const target_result = await prompt_for_keywords_target(last_target)
+          if (target_result == 'back') {
             go_back_to_mode = true
             break
           }
-          if (!match_mode_result) return undefined
+          if (!target_result) return undefined
 
-          keywords_match_mode = match_mode_result
+          keywords_target = target_result
           await params.extension_context.workspaceState.update(
-            LAST_SEARCH_FILES_KEYWORDS_MATCH_MODE_STATE_KEY,
-            keywords_match_mode
-          )
-        } else if (search_mode == 'filename') {
-          const last_match_mode =
-            params.extension_context.workspaceState.get<'all' | 'some'>(
-              LAST_SEARCH_FILES_FILENAME_MATCH_MODE_STATE_KEY
-            ) || 'all'
-
-          const match_mode_result =
-            await prompt_for_filename_match_mode(last_match_mode)
-          if (match_mode_result == 'back') {
-            go_back_to_mode = true
-            break
-          }
-          if (!match_mode_result) return undefined
-
-          keywords_match_mode = match_mode_result
-          await params.extension_context.workspaceState.update(
-            LAST_SEARCH_FILES_FILENAME_MATCH_MODE_STATE_KEY,
-            keywords_match_mode
+            LAST_SEARCH_FILES_KEYWORDS_TARGET_STATE_KEY,
+            keywords_target
           )
         }
 
-        let go_back_to_match_mode = false
-        let break_match_mode = false
+        let go_back_to_target = false
 
         while (true) {
-          if (search_mode == 'intelligent') {
-            const intelligent_result = await perform_intelligent_search_flow({
-              files: params.files,
-              workspace_provider: params.workspace_provider,
-              extension_context: params.extension_context
-            })
+          if (search_mode == 'keywords') {
+            const last_match_mode =
+              params.extension_context.workspaceState.get<'all' | 'some'>(
+                keywords_target == 'filenames'
+                  ? LAST_SEARCH_FILES_FILENAME_MATCH_MODE_STATE_KEY
+                  : LAST_SEARCH_FILES_KEYWORDS_MATCH_MODE_STATE_KEY
+              ) || 'all'
 
-            if (intelligent_result == 'back') {
-              go_back_to_mode = true
+            const match_mode_result =
+              await prompt_for_keywords_match_mode(last_match_mode)
+            if (match_mode_result == 'back') {
+              go_back_to_target = true
               break
             }
-            if (!intelligent_result) return undefined
+            if (!match_mode_result) return undefined
 
-            final_result = intelligent_result
-            break_outer = true
-            break_match_mode = true
-            break
-          }
-
-          const state_key =
-            search_mode == 'phrase'
-              ? LAST_SEARCH_FILES_PHRASE_QUERY_STATE_KEY
-              : search_mode == 'keywords'
-                ? LAST_SEARCH_FILES_KEYWORDS_QUERY_STATE_KEY
-                : search_mode == 'semantic'
-                  ? LAST_SEARCH_FILES_SEMANTIC_QUERY_STATE_KEY
-                  : LAST_SEARCH_FILES_FILENAME_QUERY_STATE_KEY
-
-          const initial_search_term =
-            params.extension_context.workspaceState.get<string>(state_key) || ''
-
-          const result = await prompt_for_search_term(
-            initial_search_term,
-            search_mode,
-            (value) => {
-              params.extension_context.workspaceState.update(state_key, value)
-            }
-          )
-          if (result.back) {
-            if (search_mode == 'keywords' || search_mode == 'filename') {
-              go_back_to_match_mode = true
-            } else {
-              go_back_to_mode = true
-            }
-            break
-          }
-          if (!result.value) return undefined
-          const search_term_input = result.value
-
-          await params.extension_context.workspaceState.update(
-            state_key,
-            search_term_input
-          )
-
-          const search_term = search_term_input.trim()
-          if (search_term.length == 0) return undefined
-
-          const matched_files = await search_files_by_term({
-            files: params.files,
-            search_term,
-            search_mode,
-            keywords_match_mode
-          })
-
-          if (matched_files.length == 0) {
-            vscode.window.showInformationMessage(
-              t('feature.search-files.no-files')
+            keywords_match_mode = match_mode_result
+            await params.extension_context.workspaceState.update(
+              keywords_target == 'filenames'
+                ? LAST_SEARCH_FILES_FILENAME_MATCH_MODE_STATE_KEY
+                : LAST_SEARCH_FILES_KEYWORDS_MATCH_MODE_STATE_KEY,
+              keywords_match_mode
             )
-            continue
           }
 
-          let go_back_to_term = false
+          let go_back_to_match_mode = false
+          let break_match_mode = false
 
           while (true) {
-            const selected_items = await prompt_for_search_results({
-              matched_files,
-              search_term,
-              search_mode,
-              workspace_provider: params.workspace_provider
-            })
-
-            if (selected_items == 'back') {
-              go_back_to_term = true
-              break
-            }
-
-            if (!selected_items) {
-              return undefined
-            }
-
-            if (selected_items == 'intelligent') {
+            if (search_mode == 'intelligent') {
+              const files = await resolve_files()
               const intelligent_result = await perform_intelligent_search_flow({
-                files: matched_files,
+                files,
                 workspace_provider: params.workspace_provider,
                 extension_context: params.extension_context
               })
 
               if (intelligent_result == 'back') {
-                continue
+                go_back_to_mode = true
+                break
               }
               if (!intelligent_result) return undefined
 
@@ -207,23 +137,156 @@ export const search_files = async (params: {
               break_outer = true
               break_match_mode = true
               break
-            } else {
-              final_result = selected_items
-              break_outer = true
-              break_match_mode = true
+            }
+
+            const state_key =
+              search_mode == 'phrase'
+                ? LAST_SEARCH_FILES_PHRASE_QUERY_STATE_KEY
+                : search_mode == 'keywords'
+                  ? keywords_target == 'filenames'
+                    ? LAST_SEARCH_FILES_FILENAME_QUERY_STATE_KEY
+                    : LAST_SEARCH_FILES_KEYWORDS_QUERY_STATE_KEY
+                  : LAST_SEARCH_FILES_SEMANTIC_QUERY_STATE_KEY
+
+            const initial_search_term =
+              params.extension_context.workspaceState.get<string>(state_key) ||
+              ''
+
+            const result = await prompt_for_search_term(
+              initial_search_term,
+              search_mode,
+              keywords_target,
+              (value) => {
+                params.extension_context.workspaceState.update(state_key, value)
+              }
+            )
+            if (result.back) {
+              if (search_mode == 'keywords') {
+                go_back_to_match_mode = true
+              } else {
+                go_back_to_mode = true
+              }
               break
             }
+            if (!result.value) return undefined
+            const search_term_input = result.value
+
+            await params.extension_context.workspaceState.update(
+              state_key,
+              search_term_input
+            )
+
+            const search_term = search_term_input.trim()
+            if (search_term.length == 0) return undefined
+
+            const files = await resolve_files()
+
+            let is_cancelled = false
+            let matched_files: string[] = []
+
+            if (search_mode == 'keywords' && keywords_target == 'filenames') {
+              matched_files = await search_files_by_term({
+                files,
+                search_term,
+                search_mode,
+                keywords_target,
+                keywords_match_mode
+              })
+            } else {
+              matched_files = await vscode.window.withProgress(
+                {
+                  location: vscode.ProgressLocation.Notification,
+                  title: t('feature.search-files.progress.searching'),
+                  cancellable: true
+                },
+                async (progress, token) => {
+                  token.onCancellationRequested(() => {
+                    is_cancelled = true
+                  })
+                  return await search_files_by_term({
+                    files,
+                    search_term,
+                    search_mode,
+                    keywords_target,
+                    keywords_match_mode,
+                    progress,
+                    token
+                  })
+                }
+              )
+            }
+
+            if (is_cancelled) {
+              continue
+            }
+
+            if (matched_files.length == 0) {
+              vscode.window.showInformationMessage(
+                t('feature.search-files.no-files')
+              )
+              continue
+            }
+
+            let go_back_to_term = false
+
+            while (true) {
+              const selected_items = await prompt_for_search_results({
+                matched_files,
+                search_term,
+                search_mode,
+                keywords_target,
+                workspace_provider: params.workspace_provider
+              })
+
+              if (selected_items == 'back') {
+                go_back_to_term = true
+                break
+              }
+
+              if (!selected_items) {
+                return undefined
+              }
+
+              if (selected_items == 'intelligent') {
+                const intelligent_result =
+                  await perform_intelligent_search_flow({
+                    files: matched_files,
+                    workspace_provider: params.workspace_provider,
+                    extension_context: params.extension_context
+                  })
+
+                if (intelligent_result == 'back') {
+                  continue
+                }
+                if (!intelligent_result) return undefined
+
+                final_result = intelligent_result
+                break_outer = true
+                break_match_mode = true
+                break
+              } else {
+                final_result = selected_items
+                break_outer = true
+                break_match_mode = true
+                break
+              }
+            }
+
+            if (break_outer) break
+            if (go_back_to_term) continue
           }
 
           if (break_outer) break
-          if (go_back_to_term) continue
+          if (break_match_mode) break
+          if (go_back_to_match_mode) continue
+          if (go_back_to_mode) break
+          if (search_mode != 'keywords') break
         }
 
         if (break_outer) return final_result
-        if (break_match_mode) break
         if (go_back_to_mode) break
-        if (go_back_to_match_mode) continue
-        break
+        if (go_back_to_target) continue
+        if (search_mode != 'keywords') break
       }
 
       if (break_outer) return final_result

@@ -2,16 +2,10 @@ import * as vscode from 'vscode'
 import { t } from '@/i18n'
 
 export const prompt_for_search_mode = async (
-  last_mode: 'phrase' | 'keywords' | 'filename' | 'intelligent' | 'semantic',
+  last_mode: 'phrase' | 'keywords' | 'intelligent' | 'semantic',
   show_back_button?: boolean
 ): Promise<
-  | 'phrase'
-  | 'keywords'
-  | 'filename'
-  | 'intelligent'
-  | 'semantic'
-  | undefined
-  | 'back'
+  'phrase' | 'keywords' | 'intelligent' | 'semantic' | undefined | 'back'
 > => {
   const help_button: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('question'),
@@ -19,7 +13,7 @@ export const prompt_for_search_mode = async (
   }
 
   const items: (vscode.QuickPickItem & {
-    mode: 'phrase' | 'keywords' | 'filename' | 'intelligent' | 'semantic'
+    mode: 'phrase' | 'keywords' | 'intelligent' | 'semantic'
   })[] = [
     {
       label: t('feature.search-files.mode.phrase'),
@@ -30,11 +24,6 @@ export const prompt_for_search_mode = async (
       label: t('feature.search-files.mode.keywords'),
       description: t('feature.search-files.mode.keywords-description'),
       mode: 'keywords'
-    },
-    {
-      label: t('feature.search-files.mode.filename'),
-      description: t('feature.search-files.mode.filename-description'),
-      mode: 'filename'
     },
     {
       label: t('feature.search-files.mode.intelligent'),
@@ -58,7 +47,7 @@ export const prompt_for_search_mode = async (
 
   const quick_pick = vscode.window.createQuickPick<
     vscode.QuickPickItem & {
-      mode: 'phrase' | 'keywords' | 'filename' | 'intelligent' | 'semantic'
+      mode: 'phrase' | 'keywords' | 'intelligent' | 'semantic'
     }
   >()
   quick_pick.items = items

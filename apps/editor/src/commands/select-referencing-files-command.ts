@@ -374,7 +374,7 @@ export const select_referencing_files_command = (
 
           if (selected_items === 'search') {
             const search_result = await search_files({
-              files: matched_files.map((m) => m.file_path),
+              get_files: async () => matched_files.map((m) => m.file_path),
               workspace_provider,
               extension_context,
               show_back_button: true

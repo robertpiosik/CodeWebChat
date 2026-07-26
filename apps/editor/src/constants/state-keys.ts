@@ -87,6 +87,8 @@ export const LAST_SEARCH_FILES_KEYWORDS_QUERY_STATE_KEY =
   'last-search-files-keywords-query'
 export const LAST_SEARCH_FILES_KEYWORDS_MATCH_MODE_STATE_KEY =
   'last-search-files-keywords-match-mode'
+export const LAST_SEARCH_FILES_KEYWORDS_TARGET_STATE_KEY =
+  'last-search-files-keywords-target'
 export const LAST_SEARCH_FILES_FILENAME_QUERY_STATE_KEY =
   'last-search-files-filename-query'
 export const LAST_SEARCH_FILES_FILENAME_MATCH_MODE_STATE_KEY =

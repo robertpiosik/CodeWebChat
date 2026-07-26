@@ -359,7 +359,7 @@ export const select_imported_files_command = (
             }
 
             const search_result = await search_files({
-              files: paths_for_search,
+              get_files: async () => paths_for_search,
               workspace_provider,
               extension_context,
               show_back_button: true

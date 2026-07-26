@@ -32,25 +32,34 @@ export const search_files_commands = (
   const search_handler = async (item?: any) => {
     const folder_path = await get_target_folder_path(item)
 
-    let all_files: string[] = []
+    let all_files: string[] | undefined
 
-    if (folder_path) {
-      all_files = await workspace_provider.find_all_files(folder_path)
-    } else {
-      const roots = workspace_provider.get_workspace_roots()
-      for (const root of roots) {
-        const files = await workspace_provider.find_all_files(root)
-        all_files.push(...files)
+    const get_files_lazy = async () => {
+      if (all_files) return all_files
+      const files: string[] = []
+      if (folder_path) {
+        const result = await workspace_provider.find_all_files(folder_path)
+        files.push(...result)
+      } else {
+        const roots = workspace_provider.get_workspace_roots()
+        for (const root of roots) {
+          const result = await workspace_provider.find_all_files(root)
+          files.push(...result)
+        }
       }
+      all_files = files
+      return all_files
     }
 
     const result = await search_files({
-      files: all_files,
+      get_files: get_files_lazy,
       workspace_provider,
       extension_context
     })
 
     if (!result || result == 'back') return
+
+    const resolved_all_files = await get_files_lazy()
 
     const { selected_paths, matched_paths } = result
 
@@ -60,7 +69,7 @@ export const search_files_commands = (
 
     const currently_checked = workspace_provider.get_checked_files()
     const currently_checked_in_folder = currently_checked.filter((f) =>
-      all_files.includes(f)
+      resolved_all_files.includes(f)
     )
 
     let paths_to_apply: string[] = []
@@ -163,7 +172,7 @@ export const search_files_commands = (
       } else {
         paths_to_apply = [
           ...new Set([
-            ...currently_checked.filter((p) => !all_files.includes(p)),
+            ...currently_checked.filter((p) => !resolved_all_files.includes(p)),
             ...selected_paths
           ])
         ]
