@@ -52,5 +52,6 @@
   "codeWebChat.selectUnstagedFiles.title": "Geänderte Dateien auswählen...",
   "codeWebChat.selectCommitFiles.title": "Dateien aus Commit auswählen...",
   "codeWebChat.selectClipboardPaths.title": "Zwischenablage-Pfade auswählen...",
-  "codeWebChat.selectChangedFiles.title": "Geänderte Dateien auswählen..."
+  "codeWebChat.selectChangedFiles.title": "Geänderte Dateien auswählen...",
+  "codeWebChat.selectParentFolder.title": "Übergeordneten Ordner auswählen..."
 }

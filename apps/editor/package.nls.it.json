@@ -52,5 +52,6 @@
   "codeWebChat.selectUnstagedFiles.title": "Seleziona file modificati...",
   "codeWebChat.selectCommitFiles.title": "Seleziona i file da un commit...",
   "codeWebChat.selectClipboardPaths.title": "Seleziona percorsi dagli appunti...",
-  "codeWebChat.selectChangedFiles.title": "Seleziona i file modificati..."
+  "codeWebChat.selectChangedFiles.title": "Seleziona i file modificati...",
+  "codeWebChat.selectParentFolder.title": "Seleziona cartella superiore..."
 }

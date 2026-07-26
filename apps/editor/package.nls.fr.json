@@ -52,5 +52,6 @@
   "codeWebChat.selectUnstagedFiles.title": "Cocher les fichiers modifiés...",
   "codeWebChat.selectCommitFiles.title": "Cocher les fichiers d'un commit...",
   "codeWebChat.selectClipboardPaths.title": "Sélectionner les chemins du presse-papiers...",
-  "codeWebChat.selectChangedFiles.title": "Sélectionner les fichiers modifiés..."
+  "codeWebChat.selectChangedFiles.title": "Sélectionner les fichiers modifiés...",
+  "codeWebChat.selectParentFolder.title": "Sélectionner le dossier parent..."
 }

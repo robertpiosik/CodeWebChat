@@ -52,5 +52,6 @@
   "codeWebChat.selectUnstagedFiles.title": "수정된 파일 선택...",
   "codeWebChat.selectCommitFiles.title": "커밋에서 파일 선택...",
   "codeWebChat.selectClipboardPaths.title": "클립보드 경로 선택...",
-  "codeWebChat.selectChangedFiles.title": "변경된 파일 선택..."
+  "codeWebChat.selectChangedFiles.title": "변경된 파일 선택...",
+  "codeWebChat.selectParentFolder.title": "상위 폴더 선택..."
 }

@@ -52,5 +52,6 @@
   "codeWebChat.selectUnstagedFiles.title": "Módosított fájlok kijelölése...",
   "codeWebChat.selectCommitFiles.title": "Commit fájljainak kijelölése...",
   "codeWebChat.selectClipboardPaths.title": "Vágólap útvonalainak kijelölése...",
-  "codeWebChat.selectChangedFiles.title": "Módosított fájlok kiválasztása..."
+  "codeWebChat.selectChangedFiles.title": "Módosított fájlok kiválasztása...",
+  "codeWebChat.selectParentFolder.title": "Szülő mappa kiválasztása..."
 }

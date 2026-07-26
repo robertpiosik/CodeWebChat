@@ -26,6 +26,7 @@ export const search_files = async (params: {
   extension_context: vscode.ExtensionContext
   show_back_button?: boolean
   is_sub_search?: boolean
+  disable_semantic?: boolean
 }): Promise<
   { selected_paths: string[]; matched_paths: string[] } | undefined | 'back'
 > => {
@@ -49,7 +50,7 @@ export const search_files = async (params: {
       const mode_result = await prompt_for_search_mode(
         initial_search_mode,
         params.show_back_button,
-        params.is_sub_search
+        params.disable_semantic || params.is_sub_search
       )
       if (mode_result == 'back') return 'back'
       if (!mode_result) return undefined

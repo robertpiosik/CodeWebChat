@@ -9,6 +9,7 @@ import { t } from '@/i18n'
 export const show_parent_folder_quick_pick = async (params: {
   file_path: string
   workspace_provider: WorkspaceProvider
+  show_close_button?: boolean
 }): Promise<
   'added' | 'back' | 'cancel' | 'no_folders' | 'no_workspace_root'
 > => {
@@ -55,7 +56,17 @@ export const show_parent_folder_quick_pick = async (params: {
     full_path: f.full_path
   }))
   folder_quick_pick.ignoreFocusOut = false
-  folder_quick_pick.buttons = [vscode.QuickInputButtons.Back]
+
+  if (params.show_close_button) {
+    folder_quick_pick.buttons = [
+      {
+        iconPath: new vscode.ThemeIcon('close'),
+        tooltip: t('common.close')
+      }
+    ]
+  } else {
+    folder_quick_pick.buttons = [vscode.QuickInputButtons.Back]
+  }
 
   return new Promise((resolve) => {
     let folder_accepted = false
@@ -64,6 +75,8 @@ export const show_parent_folder_quick_pick = async (params: {
     folder_quick_pick.onDidTriggerButton((button) => {
       if (button === vscode.QuickInputButtons.Back) {
         go_back = true
+        folder_quick_pick.hide()
+      } else if (button.tooltip === t('common.close')) {
         folder_quick_pick.hide()
       }
     })

@@ -52,5 +52,6 @@
   "codeWebChat.selectUnstagedFiles.title": "Zaznacz zmodyfikowane pliki...",
   "codeWebChat.selectCommitFiles.title": "Zaznacz pliki z commita...",
   "codeWebChat.selectClipboardPaths.title": "Wybierz ścieżki ze schowka...",
-  "codeWebChat.selectChangedFiles.title": "Wybierz zmienione pliki..."
+  "codeWebChat.selectChangedFiles.title": "Wybierz zmienione pliki...",
+  "codeWebChat.selectParentFolder.title": "Wybierz folder nadrzędny..."
 }

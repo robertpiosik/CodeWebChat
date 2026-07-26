@@ -52,5 +52,6 @@
   "codeWebChat.selectUnstagedFiles.title": "選取修改的檔案...",
   "codeWebChat.selectCommitFiles.title": "選取提交中的檔案...",
   "codeWebChat.selectClipboardPaths.title": "選擇剪貼簿路徑...",
-  "codeWebChat.selectChangedFiles.title": "選擇更改的檔案..."
+  "codeWebChat.selectChangedFiles.title": "選擇更改的檔案...",
+  "codeWebChat.selectParentFolder.title": "選擇父資料夾..."
 }

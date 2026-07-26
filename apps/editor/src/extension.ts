@@ -37,7 +37,8 @@ import {
   select_unstaged_files_command,
   select_commit_files_command,
   select_clipboard_paths_command,
-  select_changed_files_command
+  select_changed_files_command,
+  select_parent_folder_command
 } from './commands'
 import { setup_git_discard_file_watcher } from './services/git-discard-file-watcher'
 import { select_imported_files_command } from './commands/select-imported-files-command'
@@ -151,6 +152,7 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     select_commit_files_command(workspace_provider, extension_context),
     select_clipboard_paths_command(workspace_provider, extension_context),
     select_changed_files_command(workspace_provider, extension_context),
+    select_parent_folder_command(workspace_provider),
     rename_command(),
     delete_command(),
     select_workspace_file_command(workspace_provider),

@@ -52,5 +52,6 @@
   "codeWebChat.selectUnstagedFiles.title": "Select Unstaged Files...",
   "codeWebChat.selectCommitFiles.title": "Select Files of Commit...",
   "codeWebChat.selectClipboardPaths.title": "Select Clipboard Paths...",
-  "codeWebChat.selectChangedFiles.title": "Select Changed Files..."
+  "codeWebChat.selectChangedFiles.title": "Select Changed Files...",
+  "codeWebChat.selectParentFolder.title": "Select Parent Folder..."
 }

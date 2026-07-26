@@ -52,5 +52,6 @@
   "codeWebChat.selectUnstagedFiles.title": "Маркирай променените файлове...",
   "codeWebChat.selectCommitFiles.title": "Маркирай файлове от commit...",
   "codeWebChat.selectClipboardPaths.title": "Маркирай пътищата от клипборда...",
-  "codeWebChat.selectChangedFiles.title": "Избери променени файлове..."
+  "codeWebChat.selectChangedFiles.title": "Избери променени файлове...",
+  "codeWebChat.selectParentFolder.title": "Избери родителска папка..."
 }

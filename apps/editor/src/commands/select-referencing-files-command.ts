@@ -369,7 +369,8 @@ export const select_referencing_files_command = (
               get_files: async () => matched_files.map((m) => m.file_path),
               workspace_provider,
               extension_context,
-              show_back_button: true
+              show_back_button: true,
+              disable_semantic: true
             })
 
             if (search_result === 'back') {

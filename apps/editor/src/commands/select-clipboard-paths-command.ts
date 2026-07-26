@@ -193,7 +193,8 @@ export const select_clipboard_paths_command = (
               get_files: async () => absolute_paths,
               workspace_provider,
               extension_context,
-              show_back_button: true
+              show_back_button: true,
+              disable_semantic: true
             })
 
             if (search_result === 'back') {
