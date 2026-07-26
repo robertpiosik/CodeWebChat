@@ -4,6 +4,7 @@ import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provi
 import { display_token_count } from '@/utils/display-token-count'
 import { t } from '@/i18n'
 import { create_search_regex } from './create-search-regex'
+import { show_parent_folder_quick_pick } from '@/utils/show-parent-folder-quick-pick'
 
 export const prompt_for_search_results = async (params: {
   matched_files: string[]
@@ -20,6 +21,10 @@ export const prompt_for_search_results = async (params: {
   const open_file_button = {
     iconPath: new vscode.ThemeIcon('go-to-file'),
     tooltip: t('common.go-to-file')
+  }
+  const add_parent_folder_button = {
+    iconPath: new vscode.ThemeIcon('folder'),
+    tooltip: t('common.select-parent-folder')
   }
   const close_button = {
     iconPath: new vscode.ThemeIcon('close'),
@@ -41,6 +46,7 @@ export const prompt_for_search_results = async (params: {
         : file_path
 
       const dir_name = path.dirname(relative_path)
+      const has_parent_folder = dir_name != '.'
       let display_dir = dir_name == '.' ? '' : dir_name
 
       if (
@@ -58,13 +64,19 @@ export const prompt_for_search_results = async (params: {
         await params.workspace_provider.calculate_file_tokens(file_path)
       const formatted_token_count = display_token_count(token_count.total)
 
+      const buttons: vscode.QuickInputButton[] = []
+      if (has_parent_folder) {
+        buttons.push(add_parent_folder_button)
+      }
+      buttons.push(open_file_button)
+
       return {
         label: path.basename(file_path),
         description: display_dir
           ? `${formatted_token_count} · ${display_dir}`
           : formatted_token_count,
         file_path,
-        buttons: [open_file_button]
+        buttons
       }
     })
   )
@@ -97,6 +109,8 @@ export const prompt_for_search_results = async (params: {
     search_in_results_button,
     close_button
   ]
+
+  let is_showing_folder_quick_pick = false
 
   return new Promise<
     | { selected_paths: string[]; matched_paths: string[] }
@@ -133,6 +147,7 @@ export const prompt_for_search_results = async (params: {
     })
 
     quick_pick.onDidHide(() => {
+      if (is_showing_folder_quick_pick) return
       if (!is_accepted) {
         resolve(undefined)
       }
@@ -184,6 +199,48 @@ export const prompt_for_search_results = async (params: {
               error: String(error)
             })
           )
+        }
+      } else if (e.button === add_parent_folder_button) {
+        is_showing_folder_quick_pick = true
+        quick_pick.hide()
+
+        const result = await show_parent_folder_quick_pick({
+          file_path: e.item.file_path,
+          workspace_provider: params.workspace_provider
+        })
+
+        is_showing_folder_quick_pick = false
+
+        if (
+          result === 'added' ||
+          result === 'back' ||
+          result === 'no_folders' ||
+          result === 'no_workspace_root'
+        ) {
+          const current_items = quick_pick.items
+          let current_selected = quick_pick.selectedItems
+
+          if (result === 'added') {
+            const currently_checked =
+              params.workspace_provider.get_checked_files()
+            current_selected = current_items.filter(
+              (item) =>
+                currently_checked.includes(item.file_path) ||
+                current_selected.includes(item)
+            )
+          }
+
+          quick_pick.items = [...current_items]
+          quick_pick.selectedItems = current_selected
+          quick_pick.show()
+
+          setTimeout(() => {
+            quick_pick.activeItems = [e.item]
+          }, 0)
+        } else {
+          is_accepted = true
+          resolve(undefined)
+          quick_pick.dispose()
         }
       }
     })

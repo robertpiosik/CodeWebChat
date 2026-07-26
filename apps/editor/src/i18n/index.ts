@@ -22,6 +22,7 @@ import { translations as views_shared_actions_web_pick_chatbot } from './transla
 import { translations as views_shared_actions_web_pick_model } from './translations/views/shared/actions/web/pick-model'
 import { translations as views_shared_actions_web_update } from './translations/views/shared/actions/web/update'
 import { translations as features } from './translations/features'
+import { translations as utils_show_parent_folder_quick_pick } from './translations/utils/show-parent-folder-quick-pick'
 
 export type TranslationKey = keyof typeof translations
 
@@ -48,7 +49,8 @@ const translations = {
   ...views_shared_actions_web_pick_chatbot,
   ...views_shared_actions_web_pick_model,
   ...views_shared_actions_web_update,
-  ...features
+  ...features,
+  ...utils_show_parent_folder_quick_pick
 }
 
 export const t = (

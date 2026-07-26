@@ -1,11 +1,9 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import {
-  WorkspaceProvider,
-  FileItem
-} from '../context/providers/workspace/workspace-provider'
+import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { natural_sort } from '../utils/natural-sort'
 import { t } from '../i18n'
+import { show_parent_folder_quick_pick } from '../utils/show-parent-folder-quick-pick'
 
 interface FileQuickPickItem extends vscode.QuickPickItem {
   full_path: string
@@ -110,125 +108,43 @@ export const select_workspace_file_command = (
         const item = e.item
         last_interacted_path = item.full_path
 
-        if (
-          e.button.tooltip ==
-          t('command.select-workspace-file.add-parent-folder')
-        ) {
-          const workspace_root = workspace_provider.get_workspace_root_for_file(
-            item.full_path
-          )
-
-          if (!workspace_root) return
-
-          const folders: { label: string; full_path: string }[] = []
-          let current_dir = path.dirname(item.full_path)
-
-          while (
-            current_dir.startsWith(workspace_root) &&
-            current_dir != workspace_root
-          ) {
-            const relative = path.relative(workspace_root, current_dir)
-            folders.push({
-              label: relative.replace(/\\/g, '/'),
-              full_path: current_dir
-            })
-            current_dir = path.dirname(current_dir)
-          }
-
-          if (folders.length == 0) {
-            vscode.window.showInformationMessage(
-              t('command.select-workspace-file.no-parent-folders')
-            )
-            return
-          }
-
-          const folder_quick_pick = vscode.window.createQuickPick<{
-            label: string
-            full_path: string
-          }>()
-          folder_quick_pick.title = t(
-            'command.select-workspace-file.parent-folders'
-          )
-          folder_quick_pick.placeholder = t(
-            'command.select-workspace-file.select-folder'
-          )
-          folder_quick_pick.items = folders.map((f) => ({
-            label: f.label,
-            full_path: f.full_path
-          }))
-          folder_quick_pick.ignoreFocusOut = false
-          folder_quick_pick.buttons = [vscode.QuickInputButtons.Back]
-
-          let folder_accepted = false
-          let go_back = false
-
-          folder_quick_pick.onDidTriggerButton((button) => {
-            if (button === vscode.QuickInputButtons.Back) {
-              go_back = true
-              folder_quick_pick.hide()
-            }
-          })
-
-          folder_quick_pick.onDidAccept(async () => {
-            const selected = folder_quick_pick.selectedItems[0]
-            if (selected) {
-              folder_accepted = true
-              const file_item = new FileItem(
-                path.basename(selected.full_path),
-                vscode.Uri.file(selected.full_path),
-                vscode.TreeItemCollapsibleState.Collapsed,
-                true,
-                vscode.TreeItemCheckboxState.Unchecked,
-                false,
-                false,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                undefined
-              )
-
-              await workspace_provider.update_check_state(
-                file_item,
-                vscode.TreeItemCheckboxState.Checked
-              )
-              folder_quick_pick.hide()
-              quick_pick.hide()
-            }
-          })
-
-          folder_quick_pick.onDidHide(() => {
-            folder_quick_pick.dispose()
-            is_showing_folder_quick_pick = false
-
-            if (!folder_accepted) {
-              if (go_back) {
-                if (file_items_cache.length > 0) {
-                  quick_pick.items = file_items_cache
-                }
-                quick_pick.value = last_search_query
-                quick_pick.show()
-
-                const source_item = last_interacted_path
-                  ? file_items_cache.find(
-                      (i) => i.full_path === last_interacted_path
-                    )
-                  : undefined
-
-                if (source_item) {
-                  setTimeout(() => {
-                    quick_pick.activeItems = [source_item]
-                  }, 0)
-                }
-              } else {
-                quick_pick.dispose()
-              }
-            }
-          })
-
+        if (e.button.tooltip == t('common.select-parent-folder')) {
           is_showing_folder_quick_pick = true
           quick_pick.hide()
-          folder_quick_pick.show()
+
+          const result = await show_parent_folder_quick_pick({
+            file_path: item.full_path,
+            workspace_provider
+          })
+
+          is_showing_folder_quick_pick = false
+
+          if (
+            result === 'added' ||
+            result === 'back' ||
+            result === 'no_folders' ||
+            result === 'no_workspace_root'
+          ) {
+            if (file_items_cache.length > 0) {
+              quick_pick.items = file_items_cache
+            }
+            quick_pick.value = last_search_query
+            quick_pick.show()
+
+            const source_item = last_interacted_path
+              ? file_items_cache.find(
+                  (i) => i.full_path === last_interacted_path
+                )
+              : undefined
+
+            if (source_item) {
+              setTimeout(() => {
+                quick_pick.activeItems = [source_item]
+              }, 0)
+            }
+          } else if (result === 'cancel') {
+            quick_pick.dispose()
+          }
         } else if (e.button.iconPath instanceof vscode.ThemeIcon) {
           if (e.button.iconPath.id == 'go-to-file') {
             quick_pick.activeItems = [item]
@@ -276,7 +192,7 @@ export const select_workspace_file_command = (
           if (has_parent_folder) {
             buttons.push({
               iconPath: new vscode.ThemeIcon('folder'),
-              tooltip: t('command.select-workspace-file.add-parent-folder')
+              tooltip: t('common.select-parent-folder')
             })
           }
 

@@ -1,4 +1,22 @@
 export const translations = {
+  'common.select-parent-folder': {
+    en: 'Select Parent Folder...',
+    pl: 'Wybierz folder nadrzędny...',
+    'zh-cn': '选择父文件夹...',
+    ja: '親フォルダを選択...',
+    'zh-tw': '選擇父資料夾...',
+    de: 'Übergeordneten Ordner auswählen...',
+    es: 'Seleccionar carpeta principal...',
+    fr: 'Sélectionner le dossier parent...',
+    'pt-br': 'Selecionar pasta pai...',
+    ru: 'Выбрать родительскую папку...',
+    ko: '상위 폴더 선택...',
+    it: 'Seleziona cartella principale...',
+    tr: 'Üst Klasörü Seç...',
+    cs: 'Vybrat nadřazenou složku...',
+    hu: 'Szülőmappa kiválasztása...',
+    bg: 'Изберете родителска папка...'
+  },
   'common.close': {
     en: 'Close',
     pl: 'Zamknij',
