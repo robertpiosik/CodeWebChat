@@ -3,7 +3,8 @@ import { t } from '@/i18n'
 
 export const prompt_for_search_mode = async (
   last_mode: 'phrase' | 'keywords' | 'intelligent' | 'semantic',
-  show_back_button?: boolean
+  show_back_button?: boolean,
+  disable_semantic?: boolean
 ): Promise<
   'phrase' | 'keywords' | 'intelligent' | 'semantic' | undefined | 'back'
 > => {
@@ -12,7 +13,7 @@ export const prompt_for_search_mode = async (
     tooltip: 'Semble Quickstart'
   }
 
-  const items: (vscode.QuickPickItem & {
+  let items: (vscode.QuickPickItem & {
     mode: 'phrase' | 'keywords' | 'intelligent' | 'semantic'
   })[] = [
     {
@@ -37,6 +38,10 @@ export const prompt_for_search_mode = async (
       buttons: [help_button]
     }
   ]
+
+  if (disable_semantic) {
+    items = items.filter((i) => i.mode !== 'semantic')
+  }
 
   const active_item = items.find((i) => i.mode == last_mode) || items[0]
 

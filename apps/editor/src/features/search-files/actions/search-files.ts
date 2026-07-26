@@ -25,6 +25,7 @@ export const search_files = async (params: {
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
   show_back_button?: boolean
+  is_sub_search?: boolean
 }): Promise<
   { selected_paths: string[]; matched_paths: string[] } | undefined | 'back'
 > => {
@@ -47,7 +48,8 @@ export const search_files = async (params: {
     try {
       const mode_result = await prompt_for_search_mode(
         initial_search_mode,
-        params.show_back_button
+        params.show_back_button,
+        params.is_sub_search
       )
       if (mode_result == 'back') return 'back'
       if (!mode_result) return undefined
@@ -133,7 +135,8 @@ export const search_files = async (params: {
                     get_files: async () => matched_paths,
                     workspace_provider: params.workspace_provider,
                     extension_context: params.extension_context,
-                    show_back_button: true
+                    show_back_button: true,
+                    is_sub_search: true
                   })
               })
 
@@ -283,7 +286,8 @@ export const search_files = async (params: {
                   get_files: async () => selected_items.matched_paths,
                   workspace_provider: params.workspace_provider,
                   extension_context: params.extension_context,
-                  show_back_button: true
+                  show_back_button: true,
+                  is_sub_search: true
                 })
 
                 if (sub_search_result === 'back') {
