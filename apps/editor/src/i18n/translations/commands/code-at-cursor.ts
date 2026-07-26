@@ -72,7 +72,7 @@ export const translations = {
     bg: 'Потребителят премести курсора, отмяна на заявката.'
   },
   'command.code-at-cursor.progress.title': {
-    en: 'Code at cursor',
+    en: 'Code At Cursor',
     pl: 'Kod w miejscu kursora',
     'zh-cn': '光标处的代码',
     ja: 'カーソル位置のコード',

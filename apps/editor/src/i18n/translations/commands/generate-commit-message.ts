@@ -73,7 +73,7 @@ export const translations = {
     bg: 'Промптът за commit съобщение е копиран в клипборда ({tokens} токена).'
   },
   'command.generate-commit-message.progress.title': {
-    en: 'Commit changes',
+    en: 'Commit Changes',
     pl: 'Zatwierdź zmiany',
     'zh-cn': '提交更改',
     ja: '変更をコミット',
