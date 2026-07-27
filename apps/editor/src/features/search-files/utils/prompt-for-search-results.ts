@@ -162,19 +162,7 @@ export const prompt_for_search_results = async (params: {
           const text = doc.getText()
 
           let regexes: RegExp[] = []
-          if (params.search_mode == 'keywords') {
-            if (params.keywords_target == 'filenames') {
-              regexes = []
-            } else {
-              regexes = params.search_term
-                .split(',')
-                .map((k) => k.trim())
-                .filter((k) => k.length > 0 && !k.startsWith('!'))
-                .map((k) => create_search_regex(k))
-            }
-          } else if (params.search_mode == 'semantic') {
-            regexes = []
-          } else {
+          if (params.search_mode == 'phrase') {
             regexes = [create_search_regex(params.search_term)]
           }
 
