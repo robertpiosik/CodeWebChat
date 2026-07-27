@@ -4,7 +4,6 @@ import * as fs from 'fs'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { get_all_workspace_files } from '@/context/helpers/get-all-workspace-files'
 import { display_token_count } from '@/utils/display-token-count'
-import { LAST_APPLY_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY } from '@/constants/state-keys'
 import { t } from '@/i18n'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
@@ -214,9 +213,7 @@ export const select_clipboard_paths_command = (
             return
           }
 
-          paths_to_apply = selected_paths
           final_selected_paths = selected_paths
-          let should_continue_main_loop = false
 
           if (currently_checked.length > 0) {
             const selected_paths_set = new Set(selected_paths)
@@ -230,93 +227,11 @@ export const select_clipboard_paths_command = (
               )
               return
             }
-
-            if (!is_identical) {
-              const quick_pick_options = [
-                {
-                  label: t('command.select-clipboard-paths.replace'),
-                  description: t(
-                    'command.select-clipboard-paths.replace-description'
-                  )
-                },
-                {
-                  label: t('command.select-clipboard-paths.merge'),
-                  description: t(
-                    'command.select-clipboard-paths.merge-description'
-                  )
-                }
-              ]
-
-              const last_choice_label =
-                extension_context.workspaceState.get<string>(
-                  LAST_APPLY_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY
-                )
-
-              const quick_pick_merge = vscode.window.createQuickPick()
-              quick_pick_merge.items = quick_pick_options
-              quick_pick_merge.placeholder = t(
-                'command.select-clipboard-paths.apply',
-                {
-                  count: selected_paths.length
-                }
-              )
-              quick_pick_merge.buttons = [vscode.QuickInputButtons.Back]
-
-              if (last_choice_label) {
-                const active_item = quick_pick_options.find(
-                  (opt) => opt.label === last_choice_label
-                )
-                if (active_item) {
-                  quick_pick_merge.activeItems = [active_item]
-                }
-              }
-
-              const choice = await new Promise<
-                vscode.QuickPickItem | 'back' | undefined
-              >((resolve) => {
-                let is_accepted = false
-                quick_pick_merge.onDidTriggerButton((button) => {
-                  if (button === vscode.QuickInputButtons.Back) {
-                    resolve('back')
-                    quick_pick_merge.hide()
-                  }
-                })
-                quick_pick_merge.onDidAccept(() => {
-                  is_accepted = true
-                  resolve(quick_pick_merge.selectedItems[0])
-                  quick_pick_merge.hide()
-                })
-                quick_pick_merge.onDidHide(() => {
-                  if (!is_accepted) resolve('back')
-                  quick_pick_merge.dispose()
-                })
-                quick_pick_merge.show()
-              })
-
-              if (choice === 'back') {
-                should_continue_main_loop = true
-              } else if (!choice) {
-                return
-              } else {
-                await extension_context.workspaceState.update(
-                  LAST_APPLY_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY,
-                  choice.label
-                )
-
-                if (
-                  choice.label === t('command.select-clipboard-paths.merge')
-                ) {
-                  paths_to_apply = [
-                    ...new Set([...currently_checked, ...selected_paths])
-                  ]
-                }
-              }
-            }
           }
 
-          if (should_continue_main_loop) {
-            continue
-          }
+          paths_to_apply = [
+            ...new Set([...currently_checked, ...selected_paths])
+          ]
 
           break
         }

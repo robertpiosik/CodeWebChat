@@ -6,7 +6,6 @@ import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 import { search_files } from '@/features/search-files'
-import { LAST_FIND_RELEVANT_FILES_MERGE_REPLACE_OPTION_STATE_KEY } from '@/constants/state-keys'
 
 export const get_target_folder_path = async (
   item?: any
@@ -72,8 +71,6 @@ export const search_files_commands = (
       resolved_all_files.includes(f)
     )
 
-    let paths_to_apply: string[] = []
-
     if (currently_checked_in_folder.length > 0) {
       const selected_paths_set = new Set(selected_paths)
       const is_identical =
@@ -88,98 +85,14 @@ export const search_files_commands = (
         )
         return
       }
-
-      const quick_pick_options = [
-        {
-          label: t('command.search-files.replace'),
-          description: t('command.search-files.replace-description')
-        },
-        {
-          label: t('command.search-files.merge'),
-          description: t('command.search-files.merge-description')
-        }
-      ]
-
-      const last_choice_label = extension_context.workspaceState.get<string>(
-        LAST_FIND_RELEVANT_FILES_MERGE_REPLACE_OPTION_STATE_KEY
-      )
-
-      const quick_pick_merge = vscode.window.createQuickPick()
-      quick_pick_merge.items = quick_pick_options
-      quick_pick_merge.placeholder = t(
-        'command.search-files.apply-placeholder',
-        {
-          count: selected_paths.length
-        }
-      )
-
-      const close_button = {
-        iconPath: new vscode.ThemeIcon('close'),
-        tooltip: t('common.close')
-      }
-      quick_pick_merge.buttons = [vscode.QuickInputButtons.Back, close_button]
-
-      if (last_choice_label) {
-        const active_item = quick_pick_options.find(
-          (opt) => opt.label === last_choice_label
-        )
-        if (active_item) {
-          quick_pick_merge.activeItems = [active_item]
-        }
-      }
-
-      const choice = await new Promise<
-        vscode.QuickPickItem | 'back' | undefined
-      >((resolve_choice) => {
-        let is_accepted = false
-        quick_pick_merge.onDidTriggerButton((button) => {
-          if (button === vscode.QuickInputButtons.Back) {
-            resolve_choice('back')
-            quick_pick_merge.hide()
-          } else if (button === close_button) {
-            resolve_choice(undefined)
-            quick_pick_merge.hide()
-          }
-        })
-        quick_pick_merge.onDidAccept(() => {
-          is_accepted = true
-          resolve_choice(quick_pick_merge.selectedItems[0])
-          quick_pick_merge.hide()
-        })
-        quick_pick_merge.onDidHide(() => {
-          if (!is_accepted) resolve_choice(undefined)
-          quick_pick_merge.dispose()
-        })
-        quick_pick_merge.show()
-      })
-
-      if (choice == 'back' || !choice) {
-        return
-      }
-
-      await extension_context.workspaceState.update(
-        LAST_FIND_RELEVANT_FILES_MERGE_REPLACE_OPTION_STATE_KEY,
-        choice.label
-      )
-
-      if (choice.label == t('command.search-files.merge')) {
-        paths_to_apply = [
-          ...new Set([
-            ...currently_checked.filter((p) => !unchecked_paths.includes(p)),
-            ...selected_paths
-          ])
-        ]
-      } else {
-        paths_to_apply = [
-          ...new Set([
-            ...currently_checked.filter((p) => !resolved_all_files.includes(p)),
-            ...selected_paths
-          ])
-        ]
-      }
-    } else {
-      paths_to_apply = [...new Set([...currently_checked, ...selected_paths])]
     }
+
+    const paths_to_apply = [
+      ...new Set([
+        ...currently_checked.filter((p) => !unchecked_paths.includes(p)),
+        ...selected_paths
+      ])
+    ]
 
     await workspace_provider.set_checked_files(paths_to_apply)
 

@@ -3,7 +3,6 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { execSync } from 'child_process'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
-import { LAST_APPLY_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY } from '../constants/state-keys'
 import { GIT_LOG_SINCE_DURATION } from '../constants/values'
 import { get_git_repository } from '@/utils/git-repository-utils'
 import { Logger } from '@shared/utils/logger'
@@ -304,9 +303,6 @@ export const select_commit_files_command = (
               return
             }
 
-            let paths_to_apply = selected_paths
-            let should_continue_file_loop = false
-
             if (currently_checked.length > 0) {
               const selected_paths_set = new Set(selected_paths)
               const is_identical =
@@ -319,91 +315,11 @@ export const select_commit_files_command = (
                 )
                 return
               }
-
-              if (!is_identical) {
-                const quick_pick_options = [
-                  {
-                    label: t('command.select-commit-files.replace'),
-                    description: t(
-                      'command.select-commit-files.replace-description'
-                    )
-                  },
-                  {
-                    label: t('command.select-commit-files.merge'),
-                    description: t(
-                      'command.select-commit-files.merge-description'
-                    )
-                  }
-                ]
-
-                const last_choice_label =
-                  extension_context.workspaceState.get<string>(
-                    LAST_APPLY_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY
-                  )
-
-                const quick_pick_merge = vscode.window.createQuickPick()
-                quick_pick_merge.items = quick_pick_options
-                quick_pick_merge.placeholder = t(
-                  'command.select-commit-files.apply',
-                  {
-                    hash: selected_commit.hash.substring(0, 7)
-                  }
-                )
-                quick_pick_merge.buttons = [vscode.QuickInputButtons.Back]
-
-                if (last_choice_label) {
-                  const active_item = quick_pick_options.find(
-                    (opt) => opt.label === last_choice_label
-                  )
-                  if (active_item) {
-                    quick_pick_merge.activeItems = [active_item]
-                  }
-                }
-
-                const choice = await new Promise<
-                  vscode.QuickPickItem | 'back' | undefined
-                >((resolve) => {
-                  let is_accepted = false
-                  quick_pick_merge.onDidTriggerButton((button) => {
-                    if (button === vscode.QuickInputButtons.Back) {
-                      resolve('back')
-                      quick_pick_merge.hide()
-                    }
-                  })
-                  quick_pick_merge.onDidAccept(() => {
-                    is_accepted = true
-                    resolve(quick_pick_merge.selectedItems[0])
-                    quick_pick_merge.hide()
-                  })
-                  quick_pick_merge.onDidHide(() => {
-                    if (!is_accepted) resolve('back')
-                    quick_pick_merge.dispose()
-                  })
-                  quick_pick_merge.show()
-                })
-
-                if (choice === 'back') {
-                  should_continue_file_loop = true
-                } else if (!choice) {
-                  return
-                } else {
-                  await extension_context.workspaceState.update(
-                    LAST_APPLY_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY,
-                    choice.label
-                  )
-
-                  if (choice.label == t('command.select-commit-files.merge')) {
-                    paths_to_apply = [
-                      ...new Set([...currently_checked, ...selected_paths])
-                    ]
-                  }
-                }
-              }
             }
 
-            if (should_continue_file_loop) {
-              continue
-            }
+            const paths_to_apply = [
+              ...new Set([...currently_checked, ...selected_paths])
+            ]
 
             await workspace_provider.set_checked_files(paths_to_apply)
 
