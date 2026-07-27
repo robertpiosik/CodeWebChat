@@ -378,28 +378,38 @@ export const send_llm_message = async (params: {
 
       response.data.on('error', (error: Error) => {
         if (!stream_closed) {
-          Logger.error({
-            function_name: 'send_llm_message',
-            message: 'Stream error',
-            data: error
-          })
+          if (!params.abort_signal?.aborted) {
+            Logger.error({
+              function_name: 'send_llm_message',
+              message: 'Stream error',
+              data: error
+            })
+          }
           reject(new StreamAbortError(error.message))
         }
       })
 
       response.data.on('aborted', () => {
         if (!stream_closed) {
-          Logger.warn({
-            function_name: 'send_llm_message',
-            message: 'Stream aborted'
-          })
+          if (!params.abort_signal?.aborted) {
+            Logger.warn({
+              function_name: 'send_llm_message',
+              message: 'Stream aborted'
+            })
+          }
           reject(new StreamAbortError('Stream was aborted'))
         }
       })
     })
   } catch (error) {
     if (params.abort_signal?.aborted) {
-      throw error
+      let reason = 'canceled'
+      if (typeof params.abort_signal.reason === 'string') {
+        reason = params.abort_signal.reason
+      } else if (params.abort_signal.reason instanceof Error) {
+        reason = params.abort_signal.reason.message
+      }
+      throw new axios.Cancel(reason)
     }
 
     if (axios.isCancel(error)) {

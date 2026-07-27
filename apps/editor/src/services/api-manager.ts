@@ -1,7 +1,6 @@
 import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { ApiManagerViewProvider } from '@/views/api-manager/backend/api-manager-view-provider'
 import { send_llm_message } from '@/utils/send-llm-message'
-import axios from 'axios'
 import { randomUUID, createHash } from 'crypto'
 import { Logger } from '@shared/utils/logger'
 
@@ -149,16 +148,16 @@ export class ApiManager {
       })
 
       return result
-    } catch (error) {
-      if (axios.isCancel(error)) {
+    } catch (error: any) {
+      if (abort_controller.signal.aborted) {
         throw error
-      } else {
-        Logger.error({
-          function_name: 'send_llm_message',
-          message: 'API call error',
-          data: error
-        })
       }
+
+      Logger.error({
+        function_name: 'send_llm_message',
+        message: 'API call error',
+        data: error
+      })
 
       return null
     } finally {
