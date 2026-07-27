@@ -119,8 +119,8 @@ export interface TogglePinnedWebConfigurationMessage extends BaseMessage {
   web_configuration_name: string
 }
 
-export interface SendToBrowserMessage extends BaseMessage {
-  command: 'SEND_TO_BROWSER'
+export interface AutofillMessage extends BaseMessage {
+  command: 'AUTOFILL'
   invocation_count: number
   web_configuration_name?: string
   show_quick_pick?: boolean
@@ -228,22 +228,9 @@ export interface GetModeMessage extends BaseMessage {
   command: 'GET_MODE'
 }
 
-export interface EditFilesMessage extends BaseMessage {
-  command: 'EDIT_FILES'
-  use_quick_pick: boolean
-  api_configuration_id?: string
-  invocation_count: number
-}
-
-export interface CodeAtCursorMessage extends BaseMessage {
-  command: 'CODE_AT_CURSOR'
-  use_quick_pick: boolean
-  api_configuration_id?: string
-  invocation_count: number
-}
-
-export interface FindRelevantFilesMessage extends BaseMessage {
-  command: 'FIND_RELEVANT_FILES'
+export interface MakeApiCallMessage extends BaseMessage {
+  command: 'MAKE_API_CALL'
+  prompt_type: ApiPromptType
   use_quick_pick: boolean
   api_configuration_id?: string
   invocation_count: number
@@ -566,7 +553,7 @@ export type FrontendMessage =
   | GetWebConfigurationsMessage
   | ReorderWebConfigurationsMessage
   | TogglePinnedWebConfigurationMessage
-  | SendToBrowserMessage
+  | AutofillMessage
   | CopyPromptMessage
   | RequestEditorStateMessage
   | RequestEditorSelectionStateMessage
@@ -586,10 +573,8 @@ export type FrontendMessage =
   | PickReasoningEffortMessage
   | ModeChangedMessage
   | GetModeMessage
-  | EditFilesMessage
+  | MakeApiCallMessage
   | CancelApiRequestMessage
-  | CodeAtCursorMessage
-  | FindRelevantFilesMessage
   | ShowAtSignQuickPickMessage
   | ShowHashSignQuickPickMessage
   | SaveWebPromptTypeMessage

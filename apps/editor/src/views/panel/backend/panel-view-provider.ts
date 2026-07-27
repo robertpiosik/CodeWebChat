@@ -14,7 +14,7 @@ import { token_count_emitter } from '@/context/context-initialization'
 import { EditFormat } from '@shared/types/edit-format'
 import {
   handle_copy_prompt,
-  handle_send_to_browser,
+  handle_autofill,
   handle_create_web_configuration,
   handle_update_web_configuration,
   handle_delete_web_configuration,
@@ -30,8 +30,7 @@ import {
   handle_get_instructions,
   handle_request_editor_state,
   handle_request_editor_selection_state,
-  handle_edit_files,
-  handle_code_at_cursor,
+  handle_make_api_call,
   handle_get_edit_format,
   handle_get_edit_format_instructions,
   handle_at_sign_quick_pick,
@@ -67,7 +66,6 @@ import {
   handle_save_tasks,
   handle_delete_task,
   handle_fix_all_failed_files,
-  handle_find_relevant_files,
   handle_open_external_url,
   handle_hash_sign_quick_pick,
   handle_open_file_and_select,
@@ -698,8 +696,8 @@ export class PanelViewProvider implements vscode.WebviewViewProvider {
             handle_get_connection_status(this)
           } else if (message.command == 'GET_WEB_CONFIGURATIONS') {
             this.send_web_configurations_to_webview(webview_view.webview)
-          } else if (message.command == 'SEND_TO_BROWSER') {
-            await handle_send_to_browser({
+          } else if (message.command == 'AUTOFILL') {
+            await handle_autofill({
               panel_view_provider: this,
               web_configuration_name: message.web_configuration_name,
               show_quick_pick: message.show_quick_pick,
@@ -739,12 +737,8 @@ export class PanelViewProvider implements vscode.WebviewViewProvider {
             await handle_apply_response_from_history(message)
           } else if (message.command == 'EXECUTE_COMMAND') {
             await vscode.commands.executeCommand(message.command_id)
-          } else if (message.command == 'EDIT_FILES') {
-            await handle_edit_files(this, message)
-          } else if (message.command == 'CODE_AT_CURSOR') {
-            await handle_code_at_cursor(this, message)
-          } else if (message.command == 'FIND_RELEVANT_FILES') {
-            await handle_find_relevant_files(this, message)
+          } else if (message.command == 'MAKE_API_CALL') {
+            await handle_make_api_call(this, message)
           } else if (message.command == 'SHOW_PROMPT_TEMPLATE_QUICK_PICK') {
             await handle_show_prompt_template_quick_pick(this)
           } else if (message.command == 'GET_WEB_PROMPT_TYPE') {

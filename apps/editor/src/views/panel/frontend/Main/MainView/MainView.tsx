@@ -78,14 +78,7 @@ type Props = {
   on_caret_position_change: (caret_position: number) => void
   mode: Mode
   on_mode_change: (value: Mode) => void
-  on_edit_context_click: (invocation_count: number) => void
-  on_edit_context_with_quick_pick_click: (invocation_count: number) => void
-  on_code_at_cursor_click: (invocation_count: number) => void
-  on_code_at_cursor_with_quick_pick_click: (invocation_count: number) => void
-  on_find_relevant_files_click: (invocation_count: number) => void
-  on_find_relevant_files_with_quick_pick_click: (
-    invocation_count: number
-  ) => void
+  on_make_api_call: (use_quick_pick: boolean, invocation_count: number) => void
   caret_position_to_set?: number
   on_caret_position_set?: () => void
   chat_input_focus_and_select_key: number
@@ -213,13 +206,7 @@ export const MainView: React.FC<Props> = (props) => {
     if (props.mode == MODE.WEB) {
       props.initialize_chats({ invocation_count: current_invocation_count })
     } else {
-      if (is_in_code_at_cursor_prompt_type) {
-        props.on_code_at_cursor_click(current_invocation_count)
-      } else if (is_in_find_relevant_files_prompt_type) {
-        props.on_find_relevant_files_click(current_invocation_count)
-      } else {
-        props.on_edit_context_click(current_invocation_count)
-      }
+      props.on_make_api_call(false, current_invocation_count)
     }
   }
 
@@ -230,15 +217,7 @@ export const MainView: React.FC<Props> = (props) => {
         invocation_count: current_invocation_count
       })
     } else {
-      if (is_in_code_at_cursor_prompt_type) {
-        props.on_code_at_cursor_with_quick_pick_click(current_invocation_count)
-      } else if (is_in_find_relevant_files_prompt_type) {
-        props.on_find_relevant_files_with_quick_pick_click(
-          current_invocation_count
-        )
-      } else {
-        props.on_edit_context_with_quick_pick_click(current_invocation_count)
-      }
+      props.on_make_api_call(true, current_invocation_count)
     }
   }
 

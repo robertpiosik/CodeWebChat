@@ -26,7 +26,7 @@ import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-sym
 import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
 import { PromptBuilder } from '@/utils/prompt-builder'
 
-export const handle_send_to_browser = async (params: {
+export const handle_autofill = async (params: {
   panel_view_provider: PanelViewProvider
   invocation_count: number
   web_configuration_name?: string

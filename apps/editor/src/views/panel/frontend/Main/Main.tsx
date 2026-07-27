@@ -255,7 +255,7 @@ export const Main: React.FC<Props> = (props) => {
     invocation_count: number
   }) => {
     post_message(props.vscode, {
-      command: 'SEND_TO_BROWSER',
+      command: 'AUTOFILL',
       web_configuration_name: params.web_configuration_name,
       show_quick_pick: params.show_quick_pick,
       invocation_count: params.invocation_count
@@ -421,84 +421,16 @@ export const Main: React.FC<Props> = (props) => {
     return ''
   }
 
-  const handle_edit_context_click = (invocation_count: number) => {
-    const instruction = get_current_instructions()
-
-    post_message(props.vscode, {
-      command: 'EDIT_FILES',
-      use_quick_pick: false,
-      invocation_count
-    })
-
-    update_chat_history(instruction)
-  }
-
-  const handle_edit_context_with_quick_pick_click = (
+  const handle_make_api_call = (
+    use_quick_pick: boolean,
     invocation_count: number
   ) => {
     const instruction = get_current_instructions()
 
     post_message(props.vscode, {
-      command: 'EDIT_FILES',
-      use_quick_pick: true,
-      invocation_count
-    })
-
-    update_chat_history(instruction)
-  }
-
-  const handle_code_at_cursor_click = (invocation_count: number) => {
-    const instruction = get_current_instructions()
-
-    post_message(props.vscode, {
-      command: 'CODE_AT_CURSOR',
-      use_quick_pick: false,
-      invocation_count
-    })
-
-    if (instruction.trim()) {
-      update_chat_history(instruction)
-    }
-  }
-
-  const handle_code_at_cursor_with_quick_pick_click = (
-    invocation_count: number
-  ) => {
-    const instruction = get_current_instructions()
-
-    post_message(props.vscode, {
-      command: 'CODE_AT_CURSOR',
-      use_quick_pick: true,
-      invocation_count
-    })
-
-    if (instruction.trim()) {
-      update_chat_history(instruction)
-    }
-  }
-
-  const handle_find_relevant_files_click = (invocation_count: number) => {
-    const instruction = get_current_instructions()
-
-    post_message(props.vscode, {
-      command: 'FIND_RELEVANT_FILES',
-      use_quick_pick: false,
-      invocation_count
-    })
-
-    if (instruction.trim()) {
-      update_chat_history(instruction)
-    }
-  }
-
-  const handle_find_relevant_files_with_quick_pick_click = (
-    invocation_count: number
-  ) => {
-    const instruction = get_current_instructions()
-
-    post_message(props.vscode, {
-      command: 'FIND_RELEVANT_FILES',
-      use_quick_pick: true,
+      command: 'MAKE_API_CALL',
+      prompt_type: current_prompt_type as ApiPromptType,
+      use_quick_pick,
       invocation_count
     })
 
@@ -530,28 +462,13 @@ export const Main: React.FC<Props> = (props) => {
   const handle_api_configuration_click = (id: string) => {
     const instruction = get_current_instructions()
 
-    if (props.api_prompt_type == 'edit-files') {
-      post_message(props.vscode, {
-        command: 'EDIT_FILES',
-        use_quick_pick: false,
-        api_configuration_id: id,
-        invocation_count: 1
-      })
-    } else if (props.api_prompt_type == 'code-at-cursor') {
-      post_message(props.vscode, {
-        command: 'CODE_AT_CURSOR',
-        use_quick_pick: false,
-        api_configuration_id: id,
-        invocation_count: 1
-      })
-    } else if (props.api_prompt_type == 'find-relevant-files') {
-      post_message(props.vscode, {
-        command: 'FIND_RELEVANT_FILES',
-        use_quick_pick: false,
-        api_configuration_id: id,
-        invocation_count: 1
-      })
-    }
+    post_message(props.vscode, {
+      command: 'MAKE_API_CALL',
+      prompt_type: props.api_prompt_type,
+      use_quick_pick: false,
+      api_configuration_id: id,
+      invocation_count: 1
+    })
 
     update_chat_history(instruction)
   }
@@ -674,18 +591,7 @@ export const Main: React.FC<Props> = (props) => {
       on_caret_position_change={handle_caret_position_change}
       mode={props.mode}
       on_mode_change={props.on_mode_change}
-      on_edit_context_click={handle_edit_context_click}
-      on_edit_context_with_quick_pick_click={
-        handle_edit_context_with_quick_pick_click
-      }
-      on_code_at_cursor_click={handle_code_at_cursor_click}
-      on_code_at_cursor_with_quick_pick_click={
-        handle_code_at_cursor_with_quick_pick_click
-      }
-      on_find_relevant_files_click={handle_find_relevant_files_click}
-      on_find_relevant_files_with_quick_pick_click={
-        handle_find_relevant_files_with_quick_pick_click
-      }
+      on_make_api_call={handle_make_api_call}
       caret_position_to_set={caret_position_to_set}
       on_caret_position_set={() => set_caret_position_to_set(undefined)}
       chat_input_focus_and_select_key={props.chat_input_focus_and_select_key}

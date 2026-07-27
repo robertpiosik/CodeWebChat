@@ -25,7 +25,7 @@ export class ApiManager {
     this.api_manager_view_provider.send_message(message)
   }
 
-  public async get(params: {
+  public async send_llm_message(params: {
     base_url: string
     api_key?: string
     body: any
@@ -154,7 +154,7 @@ export class ApiManager {
         throw error
       } else {
         Logger.error({
-          function_name: 'get',
+          function_name: 'send_llm_message',
           message: 'API call error',
           data: error
         })
