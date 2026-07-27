@@ -26,14 +26,13 @@ export class ApiManager {
 
   public async send_llm_message(params: {
     base_url: string
-    api_key?: string
+    api_key: string
     body: any
-    request_id?: string
     provider_name: string
     model?: string
     reasoning_effort?: string
   }): Promise<{ response: string; thoughts?: string } | null> {
-    const request_id = params.request_id || randomUUID()
+    const request_id = randomUUID()
     const abort_controller = new AbortController()
     this.abort_controllers.set(request_id, abort_controller)
 

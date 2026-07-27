@@ -33,7 +33,6 @@ import {
   map_api_configuration_to_item
 } from '@/utils/show-configuration-quick-pick'
 import { PromptBuilder } from '@/utils/prompt-builder'
-import { randomUUID } from 'crypto'
 import { ApiPromptType } from '@shared/types/prompt-types'
 import {
   EDIT_FORMAT_INSTRUCTIONS_DIFF,
@@ -417,7 +416,6 @@ export const handle_make_api_call = async (
 
     const promises = Array.from({ length: message.invocation_count }).map(
       async () => {
-        const request_id = randomUUID()
         const body: { [key: string]: any } = {
           messages,
           model: api_configuration.model,
@@ -436,7 +434,6 @@ export const handle_make_api_call = async (
               base_url: model_provider.base_url,
               api_key: model_provider.api_key,
               body,
-              request_id,
               provider_name: api_configuration.model_provider_name,
               model: api_configuration.model,
               reasoning_effort: api_configuration.reasoning_effort
