@@ -7,6 +7,7 @@ import { Logger } from '@shared/utils/logger'
 import { display_token_count } from '../utils/display-token-count'
 import { LAST_APPLY_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY } from '../constants/state-keys'
 import { t } from '@/i18n'
+import { search_files } from '@/features/search-files'
 
 export const select_unstaged_files_command = (
   workspace_provider: WorkspaceProvider,
@@ -123,18 +124,33 @@ export const select_unstaged_files_command = (
           quick_pick.selectedItems = quick_pick_items.filter(
             (item) => item.picked
           )
-          quick_pick.buttons = [
-            { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
-          ]
+
+          const search_button = {
+            iconPath: new vscode.ThemeIcon('search'),
+            tooltip: t('common.search-in-results')
+          }
+          const close_button = {
+            iconPath: new vscode.ThemeIcon('close'),
+            tooltip: t('common.close')
+          }
+
+          quick_pick.buttons = [search_button, close_button]
 
           const selected_items = await new Promise<
             | readonly (vscode.QuickPickItem & { file_path: string })[]
             | undefined
+            | 'search'
           >((resolve) => {
             let is_accepted = false
 
-            quick_pick.onDidTriggerButton((_button) => {
-              quick_pick.hide()
+            quick_pick.onDidTriggerButton((button) => {
+              if (button === search_button) {
+                resolve('search')
+                quick_pick.hide()
+              } else if (button === close_button) {
+                resolve(undefined)
+                quick_pick.hide()
+              }
             })
 
             quick_pick.onDidTriggerItemButton(async (e) => {
@@ -165,11 +181,41 @@ export const select_unstaged_files_command = (
             quick_pick.show()
           })
 
-          if (!selected_items || selected_items.length == 0) {
+          if (
+            !selected_items ||
+            (Array.isArray(selected_items) && selected_items.length === 0)
+          ) {
             return
           }
 
-          const selected_paths = selected_items.map((item) => item.file_path)
+          let selected_paths: string[] = []
+
+          if (selected_items === 'search') {
+            const search_result = await search_files({
+              get_files: async () => existing_unstaged_files,
+              workspace_provider,
+              extension_context,
+              show_back_button: true,
+              disable_semantic: true
+            })
+
+            if (search_result === 'back') {
+              continue
+            }
+
+            if (!search_result) {
+              return
+            }
+
+            selected_paths = search_result.selected_paths
+          } else {
+            selected_paths = selected_items.map((item) => item.file_path)
+          }
+
+          if (selected_paths.length === 0) {
+            return
+          }
+
           let paths_to_apply = selected_paths
           let should_continue = false
 

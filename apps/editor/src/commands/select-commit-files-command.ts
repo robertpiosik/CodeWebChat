@@ -10,6 +10,7 @@ import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 import { display_token_count } from '@/utils/display-token-count'
+import { search_files } from '@/features/search-files'
 
 export const select_commit_files_command = (
   workspace_provider: WorkspaceProvider,
@@ -207,31 +208,53 @@ export const select_commit_files_command = (
             }
             update_placeholder()
             quick_pick_files.onDidChangeSelection(update_placeholder)
-            quick_pick_files.buttons = [vscode.QuickInputButtons.Back]
+
+            const search_button = {
+              iconPath: new vscode.ThemeIcon('search'),
+              tooltip: t('common.search-in-results')
+            }
+
+            const close_button = {
+              iconPath: new vscode.ThemeIcon('close'),
+              tooltip: t('common.close')
+            }
+
+            quick_pick_files.buttons = [
+              vscode.QuickInputButtons.Back,
+              search_button,
+              close_button
+            ]
             quick_pick_files.ignoreFocusOut = true
 
             const selected_files = await new Promise<
-              any[] | 'back' | undefined
+              any[] | 'back' | undefined | 'search'
             >((resolve) => {
-              let is_accepted = false
-              let did_trigger_back = false
+              let is_resolved = false
               const disposables: vscode.Disposable[] = []
 
               disposables.push(
                 quick_pick_files.onDidTriggerButton((button) => {
                   if (button === vscode.QuickInputButtons.Back) {
-                    did_trigger_back = true
+                    is_resolved = true
                     resolve('back')
+                    quick_pick_files.hide()
+                  } else if (button === search_button) {
+                    is_resolved = true
+                    resolve('search')
+                    quick_pick_files.hide()
+                  } else if (button === close_button) {
+                    is_resolved = true
+                    resolve(undefined)
                     quick_pick_files.hide()
                   }
                 }),
                 quick_pick_files.onDidAccept(() => {
-                  is_accepted = true
+                  is_resolved = true
                   resolve(Array.from(quick_pick_files.selectedItems))
                   quick_pick_files.hide()
                 }),
                 quick_pick_files.onDidHide(() => {
-                  if (!is_accepted && !did_trigger_back) {
+                  if (!is_resolved) {
                     resolve('back')
                   }
                   disposables.forEach((d) => d.dispose())
@@ -246,11 +269,41 @@ export const select_commit_files_command = (
               break // break inner loop
             }
 
-            if (!selected_files || selected_files.length == 0) {
+            if (!selected_files) {
               return
             }
 
-            const selected_paths = selected_files.map((item) => item.file_path)
+            let selected_paths: string[] = []
+
+            if (selected_files === 'search') {
+              const search_result = await search_files({
+                get_files: async () => valid_files.map((f) => f.absolute_path),
+                workspace_provider,
+                extension_context,
+                show_back_button: true,
+                disable_semantic: true
+              })
+
+              if (search_result === 'back') {
+                continue
+              }
+
+              if (!search_result) {
+                return
+              }
+
+              selected_paths = search_result.selected_paths
+            } else {
+              if (selected_files.length == 0) {
+                return
+              }
+              selected_paths = selected_files.map((item) => item.file_path)
+            }
+
+            if (selected_paths.length == 0) {
+              return
+            }
+
             let paths_to_apply = selected_paths
             let should_continue_file_loop = false
 
