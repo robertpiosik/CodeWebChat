@@ -28,7 +28,7 @@ export const show_parent_folder_quick_pick = async (params: {
   ) {
     const relative = path.relative(workspace_root, current_dir)
     folders.push({
-      label: relative.replace(/\\/g, '/'),
+      label: relative.replace(/[\\/]/g, ' › '),
       full_path: current_dir
     })
     current_dir = path.dirname(current_dir)
