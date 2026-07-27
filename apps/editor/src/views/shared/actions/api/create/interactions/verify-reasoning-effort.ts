@@ -4,7 +4,7 @@ import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import axios from 'axios'
 
 export const verify_reasoning_effort = async (params: {
-  endpoint_url: string
+  base_url: string
   api_key?: string
   model: string
   reasoning_effort: string
@@ -36,7 +36,7 @@ export const verify_reasoning_effort = async (params: {
 
   try {
     const response = await axios.post(
-      params.endpoint_url + '/chat/completions',
+      params.base_url + '/chat/completions',
       body,
       {
         headers: {

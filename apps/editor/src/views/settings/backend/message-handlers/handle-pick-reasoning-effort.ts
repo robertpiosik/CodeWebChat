@@ -1,9 +1,9 @@
-import { SettingsProvider } from '@/views/settings/backend/settings-provider'
+import { SettingsViewProvider } from '@/views/settings/backend/settings-view-provider'
 import { PickReasoningEffortMessage } from '@/views/settings/types/messages'
 import { pick_reasoning_effort } from '@/views/shared/actions/api/pick-reasoning-effort'
 
 export const handle_pick_reasoning_effort = async (
-  settings_provider: SettingsProvider,
+  settings_provider: SettingsViewProvider,
   message: PickReasoningEffortMessage
 ): Promise<void> => {
   const result = await pick_reasoning_effort({

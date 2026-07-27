@@ -1,9 +1,9 @@
 import * as vscode from 'vscode'
-import { SettingsProvider } from '@/views/settings/backend/settings-provider'
+import { SettingsViewProvider } from '@/views/settings/backend/settings-view-provider'
 import { CHECKPOINT_DEFAULT_LIFESPAN } from '@/constants/values'
 
 export const handle_get_checkpoint_lifespan = async (
-  provider: SettingsProvider
+  provider: SettingsViewProvider
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const hours =

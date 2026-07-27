@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import axios from 'axios'
-import { make_api_request } from '@/utils/make-api-request'
+import { send_llm_message } from '@/utils/send-llm-message'
 import {
   find_relevant_files_instructions,
   find_relevant_files_format
@@ -66,8 +66,8 @@ export const fetch_relevant_files_from_api = async (
           abort_controller.abort(t('feature.search-files.cancel.user'))
         })
         progress.report({ message: t('common.progress.waiting-for-server') })
-        return await make_api_request({
-          endpoint_url: model_provider.base_url,
+        return await send_llm_message({
+          base_url: model_provider.base_url,
           api_key: model_provider.api_key,
           body,
           abort_signal: abort_controller.signal,

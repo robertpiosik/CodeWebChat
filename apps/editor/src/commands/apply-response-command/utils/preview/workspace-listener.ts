@@ -3,7 +3,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import * as crypto from 'crypto'
 import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { PreparedFile, PreviewableFile } from './types'
 import { get_diff_stats } from './diff-utils'
 import { remove_directory_if_empty } from '../file-operations'
@@ -40,13 +40,13 @@ const recalculate_history_item_totals = (item: ResponseHistoryItem) => {
     .reduce((sum, f) => sum + f.lines_removed, 0)
 }
 const update_response_history = (params: {
-  panel_provider: PanelProvider
+  panel_view_provider: PanelViewProvider
   created_at: number | undefined
   updated_file: PreviewableFile
 }) => {
   if (!params.created_at) return
 
-  const history = params.panel_provider.response_history
+  const history = params.panel_view_provider.response_history
   const item_to_update = history.find((i) => i.created_at === params.created_at)
   if (item_to_update) {
     if (!item_to_update.files) {
@@ -65,14 +65,17 @@ const update_response_history = (params: {
     }
 
     recalculate_history_item_totals(item_to_update)
-    params.panel_provider.send_message({ command: 'RESPONSE_HISTORY', history })
+    params.panel_view_provider.send_message({
+      command: 'RESPONSE_HISTORY',
+      history
+    })
   }
 }
 
 export const setup_workspace_listeners = (params: {
   prepared_files: PreparedFile[]
   original_states: OriginalFileState[]
-  panel_provider: PanelProvider
+  panel_view_provider: PanelViewProvider
   workspace_map: Map<string, string>
   default_workspace: string
   created_at?: number
@@ -125,12 +128,12 @@ export const setup_workspace_listeners = (params: {
           changed_file_in_preview.previewable_file.content = new_content
         }
         update_response_history({
-          panel_provider: params.panel_provider,
+          panel_view_provider: params.panel_view_provider,
           created_at: params.created_at,
           updated_file: changed_file_in_preview.previewable_file
         })
 
-        params.panel_provider.send_message({
+        params.panel_view_provider.send_message({
           command: 'UPDATE_FILE_IN_PREVIEW',
           file: changed_file_in_preview.previewable_file
         })
@@ -212,11 +215,11 @@ export const setup_workspace_listeners = (params: {
         params.prepared_files.push(new_prepared_file)
         create_temp_files_with_original_content([new_prepared_file])
         update_response_history({
-          panel_provider: params.panel_provider,
+          panel_view_provider: params.panel_view_provider,
           created_at: params.created_at,
           updated_file: new_prepared_file.previewable_file
         })
-        params.panel_provider.send_message({
+        params.panel_view_provider.send_message({
           command: 'UPDATE_FILE_IN_PREVIEW',
           file: new_prepared_file.previewable_file
         })
@@ -294,11 +297,11 @@ export const setup_workspace_listeners = (params: {
         params.prepared_files.push(new_prepared_file)
         create_temp_files_with_original_content([new_prepared_file])
         update_response_history({
-          panel_provider: params.panel_provider,
+          panel_view_provider: params.panel_view_provider,
           created_at: params.created_at,
           updated_file: new_prepared_file.previewable_file
         })
-        params.panel_provider.send_message({
+        params.panel_view_provider.send_message({
           command: 'UPDATE_FILE_IN_PREVIEW',
           file: new_prepared_file.previewable_file
         })
@@ -314,11 +317,11 @@ export const setup_workspace_listeners = (params: {
         deleted_file_in_preview.previewable_file.lines_removed =
           diff_stats.lines_removed
         update_response_history({
-          panel_provider: params.panel_provider,
+          panel_view_provider: params.panel_view_provider,
           created_at: params.created_at,
           updated_file: deleted_file_in_preview.previewable_file
         })
-        params.panel_provider.send_message({
+        params.panel_view_provider.send_message({
           command: 'UPDATE_FILE_IN_PREVIEW',
           file: deleted_file_in_preview.previewable_file
         })
@@ -403,13 +406,13 @@ export const setup_workspace_listeners = (params: {
         // Create temp file with the original (empty) content for diff view
         create_temp_files_with_original_content([new_prepared_file])
         update_response_history({
-          panel_provider: params.panel_provider,
+          panel_view_provider: params.panel_view_provider,
           created_at: params.created_at,
           updated_file: new_prepared_file.previewable_file
         })
 
         // Notify the panel to include this file in the preview UI
-        params.panel_provider.send_message({
+        params.panel_view_provider.send_message({
           command: 'UPDATE_FILE_IN_PREVIEW',
           file: new_prepared_file.previewable_file
         })
@@ -531,20 +534,20 @@ export const setup_workspace_listeners = (params: {
 
           // Notify UI
           update_response_history({
-            panel_provider: params.panel_provider,
+            panel_view_provider: params.panel_view_provider,
             created_at: params.created_at,
             updated_file: existing.previewable_file
           })
-          params.panel_provider.send_message({
+          params.panel_view_provider.send_message({
             command: 'UPDATE_FILE_IN_PREVIEW',
             file: existing.previewable_file
           })
           update_response_history({
-            panel_provider: params.panel_provider,
+            panel_view_provider: params.panel_view_provider,
             created_at: params.created_at,
             updated_file: deleted_prepared.previewable_file
           })
-          params.panel_provider.send_message({
+          params.panel_view_provider.send_message({
             command: 'UPDATE_FILE_IN_PREVIEW',
             file: deleted_prepared.previewable_file
           })
@@ -643,20 +646,20 @@ export const setup_workspace_listeners = (params: {
 
           // Notify UI
           update_response_history({
-            panel_provider: params.panel_provider,
+            panel_view_provider: params.panel_view_provider,
             created_at: params.created_at,
             updated_file: created_previewable
           })
-          params.panel_provider.send_message({
+          params.panel_view_provider.send_message({
             command: 'UPDATE_FILE_IN_PREVIEW',
             file: created_previewable
           })
           update_response_history({
-            panel_provider: params.panel_provider,
+            panel_view_provider: params.panel_view_provider,
             created_at: params.created_at,
             updated_file: deleted_previewable
           })
-          params.panel_provider.send_message({
+          params.panel_view_provider.send_message({
             command: 'UPDATE_FILE_IN_PREVIEW',
             file: deleted_previewable
           })
@@ -682,7 +685,7 @@ export const setup_workspace_listeners = (params: {
     if (file_to_discard.previewable_file.applied_with_intelligent_update) {
       file_to_discard.previewable_file.applied_with_intelligent_update = false
       update_response_history({
-        panel_provider: params.panel_provider,
+        panel_view_provider: params.panel_view_provider,
         created_at: params.created_at,
         updated_file: file_to_discard.previewable_file
       })
@@ -712,7 +715,7 @@ export const setup_workspace_listeners = (params: {
     file_to_toggle.previewable_file.is_checked = is_checked
 
     if (params.created_at) {
-      const history = params.panel_provider.response_history
+      const history = params.panel_view_provider.response_history
       const item_to_update = history.find(
         (i) => i.created_at === params.created_at
       )
@@ -723,7 +726,7 @@ export const setup_workspace_listeners = (params: {
         if (file_in_history) {
           file_in_history.is_checked = is_checked
           recalculate_history_item_totals(item_to_update)
-          params.panel_provider.send_message({
+          params.panel_view_provider.send_message({
             command: 'RESPONSE_HISTORY',
             history
           })
@@ -807,7 +810,7 @@ export const setup_workspace_listeners = (params: {
     if (file) {
       file.previewable_file.applied_with_intelligent_update = true
       update_response_history({
-        panel_provider: params.panel_provider,
+        panel_view_provider: params.panel_view_provider,
         created_at: params.created_at,
         updated_file: file.previewable_file
       })

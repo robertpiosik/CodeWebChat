@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import axios from 'axios'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import {
   LAST_APPLIED_CHANGES_STATE_KEY,
   LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
@@ -18,16 +18,16 @@ import { Logger } from '@shared/utils/logger'
 import { set_file_applied_with_intelligent_update } from '@/commands/apply-response-command/utils/preview'
 
 export const handle_fix_all_failed_files = async (params: {
-  panel_provider: PanelProvider
+  panel_view_provider: PanelViewProvider
   files_to_fix: { file_path: string; workspace_name?: string }[]
   force_model_selection?: boolean
 }): Promise<void> => {
   const original_states =
-    params.panel_provider.extension_context.workspaceState.get<
+    params.panel_view_provider.extension_context.workspaceState.get<
       OriginalFileState[]
     >(LAST_APPLIED_CHANGES_STATE_KEY)
   const last_response =
-    params.panel_provider.extension_context.workspaceState.get<string>(
+    params.panel_view_provider.extension_context.workspaceState.get<string>(
       LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
     )
 
@@ -58,12 +58,12 @@ export const handle_fix_all_failed_files = async (params: {
   })
 
   const model_providers_manager = new ModelProvidersManager(
-    params.panel_provider.extension_context
+    params.panel_view_provider.extension_context
   )
   const api_configuration_result = await get_intelligent_update_config(
     model_providers_manager,
     params.force_model_selection ?? false,
-    params.panel_provider.extension_context
+    params.panel_view_provider.extension_context
   )
   if (!api_configuration_result) return
 
@@ -71,8 +71,6 @@ export const handle_fix_all_failed_files = async (params: {
     model_provider: api_model_provider,
     api_configuration: intelligent_update_api_configuration
   } = api_configuration_result
-
-  const endpoint_url = api_model_provider.base_url
 
   const default_workspace_path =
     vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
@@ -140,13 +138,13 @@ export const handle_fix_all_failed_files = async (params: {
         const abort_controller = new AbortController()
         batch_abort_controllers.push(abort_controller)
 
-        params.panel_provider.intelligent_update_abort_controllers.push({
+        params.panel_view_provider.intelligent_update_abort_controllers.push({
           controller: abort_controller,
           file_path,
           workspace_name
         })
 
-        params.panel_provider.send_message({
+        params.panel_view_provider.send_message({
           command: 'UPDATE_FILE_PROGRESS',
           file_path,
           workspace_name,
@@ -155,7 +153,7 @@ export const handle_fix_all_failed_files = async (params: {
         })
 
         const on_thinking_chunk = () => {
-          params.panel_provider.send_message({
+          params.panel_view_provider.send_message({
             command: 'UPDATE_FILE_PROGRESS',
             file_path,
             workspace_name,
@@ -176,7 +174,7 @@ export const handle_fix_all_failed_files = async (params: {
             )
           }
 
-          params.panel_provider.send_message({
+          params.panel_view_provider.send_message({
             command: 'UPDATE_FILE_PROGRESS',
             file_path,
             workspace_name,
@@ -189,7 +187,7 @@ export const handle_fix_all_failed_files = async (params: {
 
         try {
           const updated_content = await process_file({
-            endpoint_url: endpoint_url,
+            base_url: api_model_provider.base_url,
             api_key: api_model_provider.api_key,
             model_provider: api_model_provider,
             model: intelligent_update_api_configuration.model,
@@ -205,7 +203,7 @@ export const handle_fix_all_failed_files = async (params: {
           })
 
           if (updated_content) {
-            params.panel_provider.send_message({
+            params.panel_view_provider.send_message({
               command: 'UPDATE_FILE_PROGRESS',
               file_path,
               workspace_name,
@@ -269,7 +267,7 @@ export const handle_fix_all_failed_files = async (params: {
             throw error
           }
         } finally {
-          params.panel_provider.send_message({
+          params.panel_view_provider.send_message({
             command: 'UPDATE_FILE_PROGRESS',
             file_path,
             workspace_name,
@@ -277,11 +275,11 @@ export const handle_fix_all_failed_files = async (params: {
           })
 
           const index =
-            params.panel_provider.intelligent_update_abort_controllers.findIndex(
+            params.panel_view_provider.intelligent_update_abort_controllers.findIndex(
               (s) => s.controller === abort_controller
             )
           if (index > -1) {
-            params.panel_provider.intelligent_update_abort_controllers.splice(
+            params.panel_view_provider.intelligent_update_abort_controllers.splice(
               index,
               1
             )
@@ -299,7 +297,7 @@ export const handle_fix_all_failed_files = async (params: {
 
     if (remaining_files.length > 0) {
       await handle_fix_all_failed_files({
-        panel_provider: params.panel_provider,
+        panel_view_provider: params.panel_view_provider,
         files_to_fix: remaining_files,
         force_model_selection: true
       })

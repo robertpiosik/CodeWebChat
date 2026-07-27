@@ -1,9 +1,9 @@
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { PickModelMessage } from '@/views/panel/types/messages'
 import { pick_model } from '@/views/shared/actions/web/pick-model'
 
 export const handle_pick_model = async (
-  panel_provider: PanelProvider,
+  panel_view_provider: PanelViewProvider,
   message: PickModelMessage
 ): Promise<void> => {
   const result = await pick_model({
@@ -11,7 +11,7 @@ export const handle_pick_model = async (
     current_model_id: message.current_model_id
   })
   if (result) {
-    panel_provider.send_message({
+    panel_view_provider.send_message({
       command: 'NEWLY_PICKED_MODEL',
       model_id: result.model_id
     })

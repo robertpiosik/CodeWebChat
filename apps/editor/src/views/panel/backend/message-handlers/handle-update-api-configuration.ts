@@ -1,8 +1,8 @@
-import { PanelProvider } from '../panel-provider'
+import { PanelViewProvider } from '../panel-view-provider'
 import { update } from '@/views/shared/actions/api/update/update'
 
 export const handle_update_api_configuration = async (
-  provider: PanelProvider,
+  provider: PanelViewProvider,
   message: any
 ): Promise<void> => {
   const result = await update({

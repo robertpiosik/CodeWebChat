@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { SettingsProvider } from '@/views/settings/backend/settings-provider'
+import { SettingsViewProvider } from '@/views/settings/backend/settings-view-provider'
 import {
   ModelProvidersManager,
   get_api_configuration_id
@@ -10,7 +10,7 @@ import { t } from '@/i18n'
 import { verify_model } from '@/views/shared/actions/api/create/interactions/verify-model'
 
 export const handle_select_default_api_configuration = async (
-  provider: SettingsProvider,
+  provider: SettingsViewProvider,
   message: SelectDefaultApiConfigurationMessage
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(

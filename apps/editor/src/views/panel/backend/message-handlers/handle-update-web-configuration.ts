@@ -1,10 +1,10 @@
 import * as vscode from 'vscode'
-import { PanelProvider } from '../panel-provider'
+import { PanelViewProvider } from '../panel-view-provider'
 import { update } from '@/views/shared/actions/web/update'
 import { t } from '@/i18n'
 
 export const handle_update_web_configuration = async (
-  provider: PanelProvider,
+  provider: PanelViewProvider,
   message: any
 ): Promise<void> => {
   if (message.is_new && message.origin === 'cancel') {

@@ -1,12 +1,12 @@
 import * as vscode from 'vscode'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { perform_code_at_cursor } from './utils/perform-code-at-cursor'
 
 export const code_at_cursor_commands = (params: {
   file_tree_provider: any
   open_editors_provider: any
   extension_context: vscode.ExtensionContext
-  panel_provider: PanelProvider
+  panel_view_provider: PanelViewProvider
 }) => {
   return [
     vscode.commands.registerCommand('codeWebChat.codeAtCursor', async () =>
@@ -36,7 +36,7 @@ export const code_at_cursor_commands = (params: {
         extension_context: params.extension_context,
         with_completion_instructions: false,
         show_quick_pick: true,
-        panel_provider: params.panel_provider
+        panel_view_provider: params.panel_view_provider
       })
     ),
     vscode.commands.registerCommand(
@@ -48,7 +48,7 @@ export const code_at_cursor_commands = (params: {
           extension_context: params.extension_context,
           with_completion_instructions: true,
           show_quick_pick: true,
-          panel_provider: params.panel_provider
+          panel_view_provider: params.panel_view_provider
         })
     )
   ]

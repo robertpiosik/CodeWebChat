@@ -3,7 +3,7 @@ import { webview_html } from '@/views/shared/utils/webview-html'
 import { ApiManager } from '@/services/api-manager'
 import { BackendMessage, FrontendMessage } from '../types/messages'
 
-export class ApiManagerProvider implements vscode.WebviewViewProvider {
+export class ApiManagerViewProvider implements vscode.WebviewViewProvider {
   public webview_view: vscode.WebviewView | undefined
   public api_manager!: ApiManager
 

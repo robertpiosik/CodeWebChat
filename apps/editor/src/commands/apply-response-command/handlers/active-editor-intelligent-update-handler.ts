@@ -12,7 +12,7 @@ import {
   ApiConfiguration,
   ModelProvidersManager
 } from '@/services/model-providers-manager'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import {
   process_file,
@@ -20,13 +20,13 @@ import {
 } from '@/utils/intelligent-update-utils'
 
 export const handle_active_editor_intelligent_update = async (params: {
-  endpoint_url: string
+  base_url: string
   api_key: string
   api_configuration: ApiConfiguration
   chat_response: string
   extension_context: vscode.ExtensionContext
   is_single_root_folder_workspace: boolean
-  panel_provider?: PanelProvider
+  panel_view_provider?: PanelViewProvider
 }): Promise<OriginalFileState[] | null> => {
   const workspace_map = new Map<string, string>()
   if (vscode.workspace.workspaceFolders) {
@@ -103,9 +103,9 @@ export const handle_active_editor_intelligent_update = async (params: {
   }
 
   const abort_controller = new AbortController()
-  if (params.panel_provider) {
-    params.panel_provider.api_call_abort_controller = abort_controller
-    params.panel_provider.send_message({
+  if (params.panel_view_provider) {
+    params.panel_view_provider.api_call_abort_controller = abort_controller
+    params.panel_view_provider.send_message({
       command: 'SHOW_PROGRESS',
       title: 'Thinking...',
       show_elapsed_time: true,
@@ -120,11 +120,11 @@ export const handle_active_editor_intelligent_update = async (params: {
     const original_content = document.getText()
 
     const updated_content = await process_file({
-      endpoint_url: params.endpoint_url,
+      base_url: params.base_url,
       api_key: params.api_key,
       model_provider: {
         name: params.api_configuration.model_provider_name,
-        base_url: params.endpoint_url,
+        base_url: params.base_url,
         api_key: params.api_key
       },
       model: params.api_configuration.model,
@@ -135,7 +135,7 @@ export const handle_active_editor_intelligent_update = async (params: {
       instruction: file_item.content,
       abort_signal: abort_controller.signal,
       on_chunk: (tokens_per_second, total_tokens) => {
-        if (params.panel_provider) {
+        if (params.panel_view_provider) {
           const estimated_total = Math.ceil(original_content.length / 4)
           let progress = 0
           if (estimated_total > 0) {
@@ -145,7 +145,7 @@ export const handle_active_editor_intelligent_update = async (params: {
             )
           }
 
-          params.panel_provider.send_message({
+          params.panel_view_provider.send_message({
             command: 'SHOW_PROGRESS',
             title: 'Receiving...',
             show_elapsed_time: true,
@@ -211,7 +211,7 @@ export const handle_active_editor_intelligent_update = async (params: {
       if (api_configuration_result) {
         return await handle_active_editor_intelligent_update({
           ...params,
-          endpoint_url: api_configuration_result.model_provider.base_url,
+          base_url: api_configuration_result.model_provider.base_url,
           api_key: api_configuration_result.model_provider.api_key,
           api_configuration: api_configuration_result.api_configuration
         })
@@ -219,11 +219,11 @@ export const handle_active_editor_intelligent_update = async (params: {
     }
     return null
   } finally {
-    if (params.panel_provider) {
-      params.panel_provider.send_message({
+    if (params.panel_view_provider) {
+      params.panel_view_provider.send_message({
         command: 'HIDE_PROGRESS'
       })
-      params.panel_provider.api_call_abort_controller = null
+      params.panel_view_provider.api_call_abort_controller = null
     }
   }
 }

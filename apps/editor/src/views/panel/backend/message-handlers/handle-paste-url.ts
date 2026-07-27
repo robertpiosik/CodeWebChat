@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { PasteUrlMessage } from '../../types/messages'
-import { PanelProvider } from '../panel-provider'
+import { PanelViewProvider } from '../panel-view-provider'
 import * as fs from 'fs'
 import {
   fetch_and_save_website,
@@ -8,7 +8,7 @@ import {
 } from '../utils/website-fetcher'
 
 export const handle_paste_url = async (
-  panel_provider: PanelProvider,
+  panel_view_provider: PanelViewProvider,
   message: PasteUrlMessage
 ) => {
   const paste_as_text = async () => {
@@ -18,7 +18,7 @@ export const handle_paste_url = async (
       'Yes'
     )
     if (selection == 'Yes') {
-      panel_provider.add_text_at_cursor_position(message.url)
+      panel_view_provider.add_text_at_cursor_position(message.url)
     }
   }
 
@@ -27,14 +27,14 @@ export const handle_paste_url = async (
     const file_path = get_website_file_path(url)
 
     if (fs.existsSync(file_path)) {
-      panel_provider.add_text_at_cursor_position(`#Website(${url})`)
+      panel_view_provider.add_text_at_cursor_position(`#Website(${url})`)
       return
     }
 
     const abort_controller = new AbortController()
-    panel_provider.api_call_abort_controller = abort_controller
+    panel_view_provider.api_call_abort_controller = abort_controller
 
-    panel_provider.send_message({
+    panel_view_provider.send_message({
       command: 'SHOW_PROGRESS',
       title: 'Fetching website...',
       show_elapsed_time: true,
@@ -45,12 +45,12 @@ export const handle_paste_url = async (
     try {
       content = await fetch_and_save_website(url, abort_controller.signal)
     } finally {
-      panel_provider.send_message({ command: 'HIDE_PROGRESS' })
-      panel_provider.api_call_abort_controller = null
+      panel_view_provider.send_message({ command: 'HIDE_PROGRESS' })
+      panel_view_provider.api_call_abort_controller = null
     }
 
     if (content) {
-      panel_provider.add_text_at_cursor_position(`#Website(${url})`)
+      panel_view_provider.add_text_at_cursor_position(`#Website(${url})`)
     } else {
       await paste_as_text()
     }

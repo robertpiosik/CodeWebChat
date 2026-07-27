@@ -10,7 +10,7 @@ import {
 } from '@/services/model-providers-manager'
 import { Logger } from '@shared/utils/logger'
 import { LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { CodeAtCursorMessage } from '@/views/panel/types/messages'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { dictionary } from '@shared/constants/dictionary'
@@ -27,7 +27,7 @@ const get_code_at_cursor_api_configuration = async (
   model_providers_manager: ModelProvidersManager,
   show_quick_pick: boolean = false,
   extension_context: vscode.ExtensionContext,
-  panel_provider: PanelProvider,
+  panel_view_provider: PanelViewProvider,
   api_configuration_id?: string
 ): Promise<
   | { model_provider: ModelProvider; api_configuration: ApiConfiguration }
@@ -51,8 +51,8 @@ const get_code_at_cursor_api_configuration = async (
       code_at_cursor_api_configurations.find(
         (c) => get_api_configuration_id(c) == api_configuration_id
       ) || null
-    if (selected_api_configuration && panel_provider) {
-      panel_provider.send_message({
+    if (selected_api_configuration && panel_view_provider) {
+      panel_view_provider.send_message({
         command: 'SELECTED_API_CONFIGURATION_CHANGED',
         prompt_type: 'code-at-cursor',
         id: api_configuration_id
@@ -89,8 +89,8 @@ const get_code_at_cursor_api_configuration = async (
       placeholder: 'Select code at cursor API configuration'
     })
 
-    if (panel_provider) {
-      panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
+    if (panel_view_provider) {
+      panel_view_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
     }
 
     if (!result || result === 'back') {
@@ -104,8 +104,8 @@ const get_code_at_cursor_api_configuration = async (
       id
     )
 
-    if (panel_provider) {
-      panel_provider.send_message({
+    if (panel_view_provider) {
+      panel_view_provider.send_message({
         command: 'SELECTED_API_CONFIGURATION_CHANGED',
         prompt_type: 'code-at-cursor',
         id: id
@@ -137,20 +137,20 @@ const get_code_at_cursor_api_configuration = async (
 }
 
 export const handle_code_at_cursor = async (
-  panel_provider: PanelProvider,
+  panel_view_provider: PanelViewProvider,
   message: CodeAtCursorMessage
 ): Promise<void> => {
   const model_providers_manager = new ModelProvidersManager(
-    panel_provider.extension_context
+    panel_view_provider.extension_context
   )
   const completion_instructions =
-    panel_provider.current_code_at_cursor_instruction
+    panel_view_provider.current_code_at_cursor_instruction
 
   const api_configuration_result = await get_code_at_cursor_api_configuration(
     model_providers_manager,
     message.use_quick_pick,
-    panel_provider.extension_context,
-    panel_provider,
+    panel_view_provider.extension_context,
+    panel_view_provider,
     message.api_configuration_id
   )
 
@@ -182,8 +182,6 @@ export const handle_code_at_cursor = async (
     })
     return
   }
-
-  const endpoint_url = model_provider.base_url
 
   const editor = vscode.window.activeTextEditor
   if (editor) {
@@ -217,13 +215,13 @@ export const handle_code_at_cursor = async (
       skill_definitions
     } = await replace_symbols({
       instruction: completion_instructions,
-      extension_context: panel_provider.extension_context,
-      workspace_provider: panel_provider.workspace_provider
+      extension_context: panel_view_provider.extension_context,
+      workspace_provider: panel_view_provider.workspace_provider
     })
 
     const files_collector = new FilesCollector({
-      workspace_provider: panel_provider.workspace_provider,
-      open_editors_provider: panel_provider.open_editors_provider
+      workspace_provider: panel_view_provider.workspace_provider,
+      open_editors_provider: panel_view_provider.open_editors_provider
     })
 
     const collected = await files_collector.collect_files()
@@ -275,8 +273,8 @@ export const handle_code_at_cursor = async (
         const request_id = randomUUID()
 
         try {
-          const result = await panel_provider.api_manager.get({
-            endpoint_url,
+          const result = await panel_view_provider.api_manager.get({
+            base_url: model_provider.base_url,
             api_key: model_provider.api_key,
             body,
             request_id,

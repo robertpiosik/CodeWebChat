@@ -1,4 +1,4 @@
-import { SettingsProvider } from '@/views/settings/backend/settings-provider'
+import { SettingsViewProvider } from '@/views/settings/backend/settings-view-provider'
 import {
   ModelProvidersManager,
   get_api_configuration_id
@@ -6,7 +6,7 @@ import {
 import { ApiFeature } from '@/views/shared/types/api-features'
 
 export const handle_set_default_api_configuration = async (
-  provider: SettingsProvider,
+  provider: SettingsViewProvider,
   api_configuration_id: string | null,
   type: ApiFeature
 ): Promise<void> => {

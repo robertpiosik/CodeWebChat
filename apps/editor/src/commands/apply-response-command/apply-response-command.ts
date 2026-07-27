@@ -6,7 +6,7 @@ import {
 } from '@/features/checkpoints/actions'
 import { FileInPreview } from '@shared/types/file-in-preview'
 import { get_checkpoint_path } from '@/features/checkpoints/utils'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { get_response_preview_promise_resolve } from './utils/preview/preview'
@@ -47,7 +47,7 @@ interface SavedTabGroups {
 
 export const apply_response_command = (params: {
   extension_context: vscode.ExtensionContext
-  panel_provider: PanelProvider
+  panel_view_provider: PanelViewProvider
   workspace_provider: WorkspaceProvider
   api_manager: ApiManager
 }) => {
@@ -104,7 +104,7 @@ export const apply_response_command = (params: {
       })
 
       if (resolve_fn) {
-        const history = params.panel_provider.response_history
+        const history = params.panel_view_provider.response_history
 
         let created_at_for_switch: number
 
@@ -120,7 +120,7 @@ export const apply_response_command = (params: {
 
           created_at_for_switch = new_item.created_at
           history.push(new_item)
-          params.panel_provider.send_message({
+          params.panel_view_provider.send_message({
             command: 'RESPONSE_HISTORY',
             history
           })
@@ -128,7 +128,7 @@ export const apply_response_command = (params: {
           created_at_for_switch = args.created_at
         }
 
-        if (params.panel_provider.preview_switch_choice_resolver) {
+        if (params.panel_view_provider.preview_switch_choice_resolver) {
           // The "switch preview" modal is already visible for a previous
           // response. The current response has been added to the history,
           // so we can just return and avoid showing a second modal.
@@ -136,10 +136,10 @@ export const apply_response_command = (params: {
         }
 
         const choice = await new Promise<'Switch' | undefined>((resolve) => {
-          params.panel_provider.preview_switch_choice_resolver = resolve
-          params.panel_provider.show_preview_ongoing_modal()
+          params.panel_view_provider.preview_switch_choice_resolver = resolve
+          params.panel_view_provider.show_preview_ongoing_modal()
         })
-        params.panel_provider.preview_switch_choice_resolver = undefined
+        params.panel_view_provider.preview_switch_choice_resolver = undefined
 
         if (choice == 'Switch') {
           args = { ...args, created_at: created_at_for_switch }
@@ -157,11 +157,11 @@ export const apply_response_command = (params: {
 
       if (args?.created_at) {
         const target_created_at = args.created_at
-        const history = params.panel_provider.response_history
+        const history = params.panel_view_provider.response_history
         const existing = history.find((i) => i.created_at === target_created_at)
         if (existing && existing.is_not_looked_at !== false) {
           existing.is_not_looked_at = false
-          params.panel_provider.send_message({
+          params.panel_view_provider.send_message({
             command: 'RESPONSE_HISTORY',
             history
           })
@@ -206,7 +206,7 @@ export const apply_response_command = (params: {
             )
 
           if (has_valid_blocks) {
-            params.panel_provider.send_message({
+            params.panel_view_provider.send_message({
               command: 'SHOW_PROGRESS',
               title: t('common.progress.preparing-preview')
             })
@@ -215,7 +215,7 @@ export const apply_response_command = (params: {
           before_checkpoint = await create_checkpoint({
             workspace_provider: params.workspace_provider,
             extension_context: params.extension_context,
-            panel_provider: params.panel_provider,
+            panel_view_provider: params.panel_view_provider,
             trigger: 'before-response-previewed',
             description: args?.raw_instructions
           })
@@ -226,12 +226,12 @@ export const apply_response_command = (params: {
           response,
           response_items,
           extension_context: params.extension_context,
-          panel_provider: params.panel_provider,
+          panel_view_provider: params.panel_view_provider,
           workspace_provider: params.workspace_provider
         })
 
         if (!preview_data) {
-          params.panel_provider.send_message({
+          params.panel_view_provider.send_message({
             command: 'HIDE_PROGRESS'
           })
         }
@@ -346,7 +346,7 @@ export const apply_response_command = (params: {
                 })
               }
             }
-            const history = params.panel_provider.response_history
+            const history = params.panel_view_provider.response_history
 
             const item_to_update =
               args?.created_at &&
@@ -372,19 +372,19 @@ export const apply_response_command = (params: {
               history.push(new_item)
             }
 
-            params.panel_provider.send_message({
+            params.panel_view_provider.send_message({
               command: 'RESPONSE_HISTORY',
               history
             })
           }
 
           const history_for_checkpoint = [
-            ...params.panel_provider.response_history
+            ...params.panel_view_provider.response_history
           ]
           const changes_accepted = await preview_handler({
             original_states: preview_data.original_states,
             chat_response: preview_data.response,
-            panel_provider: params.panel_provider,
+            panel_view_provider: params.panel_view_provider,
             extension_context: params.extension_context,
             original_editor_state: args?.original_editor_state,
             raw_instructions: args?.raw_instructions,
@@ -442,7 +442,7 @@ export const apply_response_command = (params: {
           }
         }
       } catch (err: any) {
-        params.panel_provider.send_message({
+        params.panel_view_provider.send_message({
           command: 'HIDE_PROGRESS'
         })
         vscode.window.showErrorMessage(
@@ -453,7 +453,7 @@ export const apply_response_command = (params: {
         if (before_checkpoint) {
           delete_checkpoint({
             extension_context: params.extension_context,
-            panel_provider: params.panel_provider,
+            panel_view_provider: params.panel_view_provider,
             checkpoint_to_delete: before_checkpoint
           })
         }

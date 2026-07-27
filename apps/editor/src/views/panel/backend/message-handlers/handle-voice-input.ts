@@ -1,4 +1,4 @@
-import { PanelProvider } from '../panel-provider'
+import { PanelViewProvider } from '../panel-view-provider'
 import { SetRecordingStateMessage } from '../../types/messages'
 import { spawn } from 'child_process'
 import { Logger } from '@shared/utils/logger'
@@ -9,7 +9,7 @@ import {
 import * as vscode from 'vscode'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import axios from 'axios'
-import { make_api_request } from '@/utils/make-api-request'
+import { send_llm_message } from '@/utils/send-llm-message'
 import { voice_input_instructions } from '@/constants/instructions'
 import { LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import {
@@ -20,17 +20,22 @@ import { t } from '@/i18n'
 
 const MIN_RECORDING_DURATION = 1000
 
-const start_recording = (panel_provider: PanelProvider) => {
-  panel_provider.audio_chunks = []
-  panel_provider.recording_start_time = Date.now()
+const start_recording = (panel_view_provider: PanelViewProvider) => {
+  panel_view_provider.audio_chunks = []
+  panel_view_provider.recording_start_time = Date.now()
   try {
-    panel_provider.recording_process = spawn('rec', ['-q', '-t', 'wav', '-'])
+    panel_view_provider.recording_process = spawn('rec', [
+      '-q',
+      '-t',
+      'wav',
+      '-'
+    ])
 
-    panel_provider.recording_process.stdout.on('data', (chunk: Buffer) => {
-      panel_provider.audio_chunks.push(chunk)
+    panel_view_provider.recording_process.stdout.on('data', (chunk: Buffer) => {
+      panel_view_provider.audio_chunks.push(chunk)
     })
 
-    panel_provider.recording_process.on('error', (error: any) => {
+    panel_view_provider.recording_process.on('error', (error: any) => {
       if (error.code == 'ENOENT') {
         let error_message = t(
           'views.panel.handlers.voice-input.error.sox-missing'
@@ -66,12 +71,12 @@ const start_recording = (panel_provider: PanelProvider) => {
       })
 
       // Ensure the UI state resets if recording failed to start
-      panel_provider.is_recording = false
-      panel_provider.send_message({
+      panel_view_provider.is_recording = false
+      panel_view_provider.send_message({
         command: 'RECORDING_STATE',
         is_recording: false
       })
-      panel_provider.recording_process = null
+      panel_view_provider.recording_process = null
     })
   } catch (error: any) {
     Logger.error({
@@ -82,27 +87,27 @@ const start_recording = (panel_provider: PanelProvider) => {
   }
 }
 
-const stop_recording = async (panel_provider: PanelProvider) => {
-  if (panel_provider.recording_process) {
-    panel_provider.recording_process.kill()
-    panel_provider.recording_process = null
+const stop_recording = async (panel_view_provider: PanelViewProvider) => {
+  if (panel_view_provider.recording_process) {
+    panel_view_provider.recording_process.kill()
+    panel_view_provider.recording_process = null
 
     if (
-      Date.now() - panel_provider.recording_start_time <
+      Date.now() - panel_view_provider.recording_start_time <
       MIN_RECORDING_DURATION
     ) {
-      panel_provider.audio_chunks = []
+      panel_view_provider.audio_chunks = []
       return
     }
 
-    const audio_buffer = Buffer.concat(panel_provider.audio_chunks)
+    const audio_buffer = Buffer.concat(panel_view_provider.audio_chunks)
     const base64_audio = audio_buffer.toString('base64')
 
-    panel_provider.audio_chunks = []
+    panel_view_provider.audio_chunks = []
 
     try {
       const model_providers_manager = new ModelProvidersManager(
-        panel_provider.extension_context
+        panel_view_provider.extension_context
       )
       const api_configurations =
         await model_providers_manager.get_api_configurations()
@@ -117,7 +122,7 @@ const stop_recording = async (panel_provider: PanelProvider) => {
           api_configuration = api_configurations[0]
         } else {
           const recent_id =
-            panel_provider.extension_context.workspaceState.get<string>(
+            panel_view_provider.extension_context.workspaceState.get<string>(
               LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY
             )
 
@@ -133,14 +138,14 @@ const stop_recording = async (panel_provider: PanelProvider) => {
 
           api_configuration = result.item
 
-          panel_provider.extension_context.workspaceState.update(
+          panel_view_provider.extension_context.workspaceState.update(
             LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY,
             result.id
           )
         }
       }
 
-      panel_provider.send_message({
+      panel_view_provider.send_message({
         command: 'SHOW_PROGRESS',
         title: t('views.panel.handlers.voice-input.progress.transcribing'),
         show_elapsed_time: true,
@@ -159,8 +164,6 @@ const stop_recording = async (panel_provider: PanelProvider) => {
         )
         return
       }
-
-      const endpoint_url = model_provider.base_url
 
       const body: { [key: string]: any } = {
         model: api_configuration.model,
@@ -190,24 +193,24 @@ const stop_recording = async (panel_provider: PanelProvider) => {
         reasoning_effort: api_configuration.reasoning_effort
       })
 
-      panel_provider.api_call_abort_controller = new AbortController()
+      panel_view_provider.api_call_abort_controller = new AbortController()
 
-      const result = await make_api_request({
-        endpoint_url,
+      const result = await send_llm_message({
+        base_url: model_provider.base_url,
         api_key: model_provider.api_key,
         body,
-        abort_signal: panel_provider.api_call_abort_controller.signal
+        abort_signal: panel_view_provider.api_call_abort_controller.signal
       })
 
       if (result?.response) {
         if (result.response.trim().toUpperCase() == 'INAUDIBLE') {
-          panel_provider.send_message({
+          panel_view_provider.send_message({
             command: 'SHOW_AUTO_CLOSING_MODAL',
             title: t('views.panel.handlers.voice-input.warning.inaudible'),
             type: 'warning'
           })
         } else {
-          panel_provider.add_text_at_cursor_position(result.response)
+          panel_view_provider.add_text_at_cursor_position(result.response)
         }
       }
     } catch (error: any) {
@@ -226,8 +229,8 @@ const stop_recording = async (panel_provider: PanelProvider) => {
         })
       )
     } finally {
-      panel_provider.api_call_abort_controller = null
-      panel_provider.send_message({
+      panel_view_provider.api_call_abort_controller = null
+      panel_view_provider.send_message({
         command: 'HIDE_PROGRESS'
       })
     }
@@ -235,16 +238,16 @@ const stop_recording = async (panel_provider: PanelProvider) => {
 }
 
 export const handle_voice_input = async (
-  panel_provider: PanelProvider,
+  panel_view_provider: PanelViewProvider,
   message: SetRecordingStateMessage
 ) => {
-  if (panel_provider.is_recording == message.is_recording) {
+  if (panel_view_provider.is_recording == message.is_recording) {
     return
   }
 
   if (message.is_recording) {
     const model_providers_manager = new ModelProvidersManager(
-      panel_provider.extension_context
+      panel_view_provider.extension_context
     )
     const api_configurations =
       await model_providers_manager.get_api_configurations()
@@ -257,7 +260,7 @@ export const handle_voice_input = async (
           detail: t('views.panel.handlers.voice-input.warning.no-config.detail')
         }
       )
-      panel_provider.send_message({
+      panel_view_provider.send_message({
         command: 'RECORDING_STATE',
         is_recording: false
       })
@@ -265,15 +268,15 @@ export const handle_voice_input = async (
     }
   }
 
-  panel_provider.is_recording = message.is_recording
-  panel_provider.send_message({
+  panel_view_provider.is_recording = message.is_recording
+  panel_view_provider.send_message({
     command: 'RECORDING_STATE',
-    is_recording: panel_provider.is_recording
+    is_recording: panel_view_provider.is_recording
   })
 
-  if (panel_provider.is_recording) {
-    start_recording(panel_provider)
+  if (panel_view_provider.is_recording) {
+    start_recording(panel_view_provider)
   } else {
-    await stop_recording(panel_provider)
+    await stop_recording(panel_view_provider)
   }
 }

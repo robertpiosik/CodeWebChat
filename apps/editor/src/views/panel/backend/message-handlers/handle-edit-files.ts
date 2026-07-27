@@ -13,7 +13,7 @@ import {
 } from '@/constants/state-keys'
 import { EditFormat } from '@shared/types/edit-format'
 import { ApiConfiguration } from '@/services/model-providers-manager'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { EditFilesMessage } from '@/views/panel/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
@@ -36,7 +36,7 @@ const get_edit_files_api_configuration = async (params: {
   model_providers_manager: ModelProvidersManager
   show_quick_pick?: boolean
   extension_context: vscode.ExtensionContext
-  panel_provider: PanelProvider
+  panel_view_provider: PanelViewProvider
   api_configuration_id?: string
 }): Promise<
   | { model_provider: ModelProvider; api_configuration: ApiConfiguration }
@@ -66,8 +66,8 @@ const get_edit_files_api_configuration = async (params: {
         params.api_configuration_id
       )
 
-      if (params.panel_provider) {
-        params.panel_provider.send_message({
+      if (params.panel_view_provider) {
+        params.panel_view_provider.send_message({
           command: 'SELECTED_API_CONFIGURATION_CHANGED',
           prompt_type: 'edit-files',
           id: params.api_configuration_id
@@ -100,8 +100,8 @@ const get_edit_files_api_configuration = async (params: {
       last_selected_id
     })
 
-    if (params.panel_provider) {
-      params.panel_provider.send_message({
+    if (params.panel_view_provider) {
+      params.panel_view_provider.send_message({
         command: 'FOCUS_PROMPT_FIELD'
       })
     }
@@ -117,8 +117,8 @@ const get_edit_files_api_configuration = async (params: {
       id
     )
 
-    if (params.panel_provider) {
-      params.panel_provider.send_message({
+    if (params.panel_view_provider) {
+      params.panel_view_provider.send_message({
         command: 'SELECTED_API_CONFIGURATION_CHANGED',
         prompt_type: 'edit-files',
         id: id
@@ -151,24 +151,24 @@ const get_edit_files_api_configuration = async (params: {
 }
 
 export const handle_edit_files = async (
-  panel_provider: PanelProvider,
+  panel_view_provider: PanelViewProvider,
   message: EditFilesMessage
 ): Promise<void> => {
   await vscode.workspace.saveAll()
 
   const model_providers_manager = new ModelProvidersManager(
-    panel_provider.extension_context
+    panel_view_provider.extension_context
   )
 
   const files_collector = new FilesCollector({
-    workspace_provider: panel_provider.workspace_provider,
-    open_editors_provider: panel_provider.open_editors_provider
+    workspace_provider: panel_view_provider.workspace_provider,
+    open_editors_provider: panel_view_provider.open_editors_provider
   })
 
-  const instructions = panel_provider.current_edit_files_instruction
+  const instructions = panel_view_provider.current_edit_files_instruction
 
   if (!instructions) {
-    panel_provider.send_message({
+    panel_view_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
       title: 'Instructions cannot be empty',
       type: 'warning'
@@ -179,16 +179,16 @@ export const handle_edit_files = async (
   const { instruction: processed_instructions, skill_definitions } =
     await replace_symbols({
       instruction: instructions,
-      extension_context: panel_provider.extension_context,
-      workspace_provider: panel_provider.workspace_provider
+      extension_context: panel_view_provider.extension_context,
+      workspace_provider: panel_view_provider.workspace_provider
     })
 
-  panel_provider.api_prompt_type == 'find-relevant-files'
+  panel_view_provider.api_prompt_type == 'find-relevant-files'
   const collected = await files_collector.collect_files({})
   const collected_files = collected.other_files + collected.recent_files
 
   if (!collected_files) {
-    panel_provider.send_message({
+    panel_view_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
       title: 'Context cannot be empty',
       type: 'warning'
@@ -203,8 +203,8 @@ export const handle_edit_files = async (
     const api_configuration_result = await get_edit_files_api_configuration({
       model_providers_manager,
       show_quick_pick: should_show_quick_pick,
-      extension_context: panel_provider.extension_context,
-      panel_provider,
+      extension_context: panel_view_provider.extension_context,
+      panel_view_provider: panel_view_provider,
       api_configuration_id: current_api_configuration_id
     })
 
@@ -215,13 +215,11 @@ export const handle_edit_files = async (
     const { model_provider, api_configuration: edit_files_api_configuration } =
       api_configuration_result
 
-    const endpoint_url = model_provider.base_url
-
     const edit_format =
-      panel_provider.extension_context.workspaceState.get<EditFormat>(
+      panel_view_provider.extension_context.workspaceState.get<EditFormat>(
         API_EDIT_FORMAT_STATE_KEY
       ) ??
-      panel_provider.extension_context.globalState.get<EditFormat>(
+      panel_view_provider.extension_context.globalState.get<EditFormat>(
         API_EDIT_FORMAT_STATE_KEY
       ) ??
       'whole'
@@ -299,8 +297,8 @@ export const handle_edit_files = async (
         })
 
         try {
-          const result = await panel_provider.api_manager.get({
-            endpoint_url,
+          const result = await panel_view_provider.api_manager.get({
+            base_url: model_provider.base_url,
             api_key: model_provider.api_key,
             body,
             provider_name: edit_files_api_configuration.model_provider_name,

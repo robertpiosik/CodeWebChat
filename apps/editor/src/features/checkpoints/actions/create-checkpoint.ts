@@ -19,14 +19,14 @@ import {
 } from '../utils/git-utils'
 import * as path from 'path'
 import { Logger } from '@shared/utils/logger'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
 import { t } from '@/i18n'
 
 export const create_checkpoint = async (params: {
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
-  panel_provider: PanelProvider
+  panel_view_provider: PanelViewProvider
   trigger?: CheckpointTrigger
   description?: string
 }): Promise<Checkpoint | undefined> => {
@@ -212,7 +212,7 @@ export const create_checkpoint = async (params: {
 
       if (trigger == 'manual' && !response_preview_promise_resolve) {
         checkpoint_object.response_history = [
-          ...params.panel_provider.response_history
+          ...params.panel_view_provider.response_history
         ]
       }
 

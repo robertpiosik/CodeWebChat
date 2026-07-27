@@ -1,4 +1,4 @@
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import * as vscode from 'vscode'
 import { FilesCollector } from '@/utils/files-collector'
 import {
@@ -19,22 +19,22 @@ import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-sym
 import { PromptBuilder } from '@/utils/prompt-builder'
 
 export const handle_copy_prompt = async (params: {
-  panel_provider: PanelProvider
+  panel_view_provider: PanelViewProvider
   instructions: string
   web_configuration_name?: string
 }): Promise<void> => {
   const files_collector = new FilesCollector({
-    workspace_provider: params.panel_provider.workspace_provider,
-    open_editors_provider: params.panel_provider.open_editors_provider
+    workspace_provider: params.panel_view_provider.workspace_provider,
+    open_editors_provider: params.panel_view_provider.open_editors_provider
   })
 
   const active_editor = vscode.window.activeTextEditor
 
   const is_in_code_at_cursor_prompt_type =
-    (params.panel_provider.mode == MODE.WEB &&
-      params.panel_provider.web_prompt_type == 'code-at-cursor') ||
-    (params.panel_provider.mode == MODE.API &&
-      params.panel_provider.api_prompt_type == 'code-at-cursor')
+    (params.panel_view_provider.mode == MODE.WEB &&
+      params.panel_view_provider.web_prompt_type == 'code-at-cursor') ||
+    (params.panel_view_provider.mode == MODE.API &&
+      params.panel_view_provider.api_prompt_type == 'code-at-cursor')
 
   if (
     is_in_code_at_cursor_prompt_type &&
@@ -77,8 +77,8 @@ export const handle_copy_prompt = async (params: {
       skill_definitions
     } = await replace_symbols({
       instruction: params.instructions,
-      extension_context: params.panel_provider.extension_context,
-      workspace_provider: params.panel_provider.workspace_provider,
+      extension_context: params.panel_view_provider.extension_context,
+      workspace_provider: params.panel_view_provider.workspace_provider,
       remove_images: true
     })
 
@@ -99,19 +99,19 @@ export const handle_copy_prompt = async (params: {
     vscode.env.clipboard.writeText(text.trim())
   } else if (!is_in_code_at_cursor_prompt_type) {
     const is_in_find_relevant_files_prompt_type =
-      (params.panel_provider.mode == MODE.WEB &&
-        params.panel_provider.web_prompt_type == 'find-relevant-files') ||
-      (params.panel_provider.mode == MODE.API &&
-        params.panel_provider.api_prompt_type == 'find-relevant-files')
+      (params.panel_view_provider.mode == MODE.WEB &&
+        params.panel_view_provider.web_prompt_type == 'find-relevant-files') ||
+      (params.panel_view_provider.mode == MODE.API &&
+        params.panel_view_provider.api_prompt_type == 'find-relevant-files')
 
     const shrink_source_code =
-      params.panel_provider.extension_context.workspaceState.get<boolean>(
+      params.panel_view_provider.extension_context.workspaceState.get<boolean>(
         FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
         false
       )
 
     const collected = await files_collector.collect_files({
-      no_context: params.panel_provider.web_prompt_type == 'without-files',
+      no_context: params.panel_view_provider.web_prompt_type == 'without-files',
       shrink: is_in_find_relevant_files_prompt_type && shrink_source_code
     })
     const context_text = collected.other_files + collected.recent_files
@@ -119,19 +119,19 @@ export const handle_copy_prompt = async (params: {
     const { instruction: processed_instructions, skill_definitions } =
       await replace_symbols({
         instruction: params.instructions,
-        extension_context: params.panel_provider.extension_context,
-        workspace_provider: params.panel_provider.workspace_provider,
+        extension_context: params.panel_view_provider.extension_context,
+        workspace_provider: params.panel_view_provider.workspace_provider,
         remove_images: true
       })
 
     let formatted_system_instructions = ''
     let user_instructions = processed_instructions
 
-    if (params.panel_provider.web_prompt_type == 'edit-files') {
+    if (params.panel_view_provider.web_prompt_type == 'edit-files') {
       const edit_format =
-        params.panel_provider.mode == MODE.WEB
-          ? params.panel_provider.chat_edit_format
-          : params.panel_provider.api_edit_format
+        params.panel_view_provider.mode == MODE.WEB
+          ? params.panel_view_provider.chat_edit_format
+          : params.panel_view_provider.api_edit_format
       const config = vscode.workspace.getConfiguration('codeWebChat')
       const instructions_key = {
         whole: 'editFormatInstructionsWhole',

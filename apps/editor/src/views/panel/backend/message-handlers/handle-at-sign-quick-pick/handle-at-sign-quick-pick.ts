@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import * as vscode from 'vscode'
 import * as path from 'path'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
@@ -383,31 +383,31 @@ const at_sign_quick_pick = async (params: {
 }
 
 export const handle_at_sign_quick_pick = async (
-  panel_provider: PanelProvider
+  panel_view_provider: PanelViewProvider
 ): Promise<void> => {
   const replacement = await at_sign_quick_pick({
-    workspace_provider: panel_provider.workspace_provider
+    workspace_provider: panel_view_provider.workspace_provider
   })
 
   if (!replacement) {
-    panel_provider.send_message({
+    panel_view_provider.send_message({
       command: 'FOCUS_PROMPT_FIELD'
     })
     return
   }
 
-  const current_text = panel_provider.current_instruction
+  const current_text = panel_view_provider.current_instruction
 
   const is_after_at_sign = current_text
-    .slice(0, panel_provider.caret_position)
+    .slice(0, panel_view_provider.caret_position)
     .endsWith('@')
   if (is_after_at_sign) {
-    panel_provider.add_text_at_cursor_position(replacement, 1)
+    panel_view_provider.add_text_at_cursor_position(replacement, 1)
   } else {
-    panel_provider.add_text_at_cursor_position(replacement)
+    panel_view_provider.add_text_at_cursor_position(replacement)
   }
 
-  panel_provider.send_message({
+  panel_view_provider.send_message({
     command: 'FOCUS_PROMPT_FIELD'
   })
 }

@@ -1,11 +1,11 @@
 import * as vscode from 'vscode'
-import { SettingsProvider } from '@/views/settings/backend/settings-provider'
+import { SettingsViewProvider } from '@/views/settings/backend/settings-view-provider'
 import { UpdateWebConfigurationMessage } from '@/views/settings/types/messages'
 import { update } from '@/views/shared/actions/web/update'
 import { t } from '@/i18n'
 
 export const handle_update_web_configuration = async (
-  settings_provider: SettingsProvider,
+  settings_provider: SettingsViewProvider,
   message: UpdateWebConfigurationMessage
 ): Promise<void> => {
   if (message.is_new && message.origin === 'cancel') {

@@ -1,4 +1,4 @@
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import {
   ModelProvidersManager,
   get_api_configuration_id
@@ -6,10 +6,10 @@ import {
 import { ApiConfiguration } from '@/views/panel/types/messages'
 
 export const handle_get_api_configurations = async (
-  panel_provider: PanelProvider
+  panel_view_provider: PanelViewProvider
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(
-    panel_provider.extension_context
+    panel_view_provider.extension_context
   )
 
   const api_configurations_list =
@@ -22,7 +22,7 @@ export const handle_get_api_configurations = async (
     })
   )
 
-  panel_provider.send_message({
+  panel_view_provider.send_message({
     command: 'API_CONFIGURATIONS',
     configurations
   })

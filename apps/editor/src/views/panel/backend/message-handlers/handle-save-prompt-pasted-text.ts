@@ -4,10 +4,10 @@ import * as path from 'path'
 import * as fs from 'fs'
 import * as crypto from 'crypto'
 import { SavePromptPastedTextMessage } from '../../types/messages'
-import { PanelProvider } from '../panel-provider'
+import { PanelViewProvider } from '../panel-view-provider'
 
 export const handle_save_prompt_pasted_text = async (
-  panel_provider: PanelProvider,
+  panel_view_provider: PanelViewProvider,
   message: SavePromptPastedTextMessage
 ) => {
   try {
@@ -16,7 +16,7 @@ export const handle_save_prompt_pasted_text = async (
     const file_path = path.join(os.tmpdir(), filename)
     await fs.promises.writeFile(file_path, message.text, 'utf-8')
     const token_count = Math.ceil(message.text.length / 4)
-    panel_provider.add_text_at_cursor_position(
+    panel_view_provider.add_text_at_cursor_position(
       `#PastedText(${hash}:${token_count})`
     )
   } catch (error) {

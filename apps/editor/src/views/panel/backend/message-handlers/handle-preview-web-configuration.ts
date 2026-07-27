@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { PreviewWebConfigurationMessage } from '@/views/panel/types/messages'
 import { FilesCollector } from '@/utils/files-collector'
 import { WebConfiguration } from '@shared/types/web-configuration'
@@ -20,23 +20,26 @@ import { replace_symbols } from '@/views/panel/backend/utils/symbols/replace-sym
 import { PromptBuilder } from '@/utils/prompt-builder'
 
 export const handle_preview_web_configuration = async (
-  panel_provider: PanelProvider,
+  panel_view_provider: PanelViewProvider,
   message: PreviewWebConfigurationMessage
 ): Promise<void> => {
   await vscode.workspace.saveAll()
 
   const files_collector = new FilesCollector({
-    workspace_provider: panel_provider.workspace_provider,
-    open_editors_provider: panel_provider.open_editors_provider
+    workspace_provider: panel_view_provider.workspace_provider,
+    open_editors_provider: panel_view_provider.open_editors_provider
   })
 
   const active_editor = vscode.window.activeTextEditor
   const active_path = active_editor?.document.uri.fsPath
 
   let text_to_send: string
-  const current_instructions = panel_provider.current_instruction
+  const current_instructions = panel_view_provider.current_instruction
 
-  if (panel_provider.web_prompt_type == 'code-at-cursor' && active_editor) {
+  if (
+    panel_view_provider.web_prompt_type == 'code-at-cursor' &&
+    active_editor
+  ) {
     const document = active_editor.document
     const position = active_editor.selection.active
 
@@ -64,8 +67,8 @@ export const handle_preview_web_configuration = async (
       skill_definitions
     } = await replace_symbols({
       instruction: current_instructions,
-      extension_context: panel_provider.extension_context,
-      workspace_provider: panel_provider.workspace_provider,
+      extension_context: panel_view_provider.extension_context,
+      workspace_provider: panel_view_provider.workspace_provider,
       remove_images: true
     })
 
@@ -83,18 +86,18 @@ export const handle_preview_web_configuration = async (
       system_instructions: main_instructions
     })
     text_to_send = full_prompt
-  } else if (panel_provider.web_prompt_type != 'code-at-cursor') {
+  } else if (panel_view_provider.web_prompt_type != 'code-at-cursor') {
     const shrink_source_code =
-      panel_provider.extension_context.workspaceState.get<boolean>(
+      panel_view_provider.extension_context.workspaceState.get<boolean>(
         FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
         false
       )
 
     const collected =
-      panel_provider.web_prompt_type != 'without-files'
+      panel_view_provider.web_prompt_type != 'without-files'
         ? await files_collector.collect_files({
             shrink:
-              panel_provider.web_prompt_type == 'find-relevant-files' &&
+              panel_view_provider.web_prompt_type == 'find-relevant-files' &&
               shrink_source_code
           })
         : { other_files: '', recent_files: '' }
@@ -103,33 +106,33 @@ export const handle_preview_web_configuration = async (
     const { instruction: processed_instructions, skill_definitions } =
       await replace_symbols({
         instruction: current_instructions,
-        extension_context: panel_provider.extension_context,
-        workspace_provider: panel_provider.workspace_provider,
+        extension_context: panel_view_provider.extension_context,
+        workspace_provider: panel_view_provider.workspace_provider,
         remove_images: true
       })
 
     let formatted_system_instructions = ''
     let user_instructions = processed_instructions
-    if (panel_provider.web_prompt_type == 'edit-files') {
+    if (panel_view_provider.web_prompt_type == 'edit-files') {
       const config = vscode.workspace.getConfiguration('codeWebChat')
       const instructions_key = {
         whole: 'editFormatInstructionsWhole',
         truncated: 'editFormatInstructionsTruncated',
         'search-replace': 'editFormatInstructionsSearchReplace',
         diff: 'editFormatInstructionsDiff'
-      }[panel_provider.chat_edit_format]
+      }[panel_view_provider.chat_edit_format]
       const default_instructions = {
         whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
         truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
         'search-replace': EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
         diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
-      }[panel_provider.chat_edit_format]
+      }[panel_view_provider.chat_edit_format]
       const edit_format_instructions =
         config.get<string>(instructions_key) || default_instructions
       if (edit_format_instructions) {
         formatted_system_instructions = `# System\n\n${edit_format_instructions}`
       }
-    } else if (panel_provider.web_prompt_type == 'find-relevant-files') {
+    } else if (panel_view_provider.web_prompt_type == 'find-relevant-files') {
       formatted_system_instructions = find_relevant_files_format_for_panel
 
       const config = vscode.workspace.getConfiguration('codeWebChat')
@@ -169,15 +172,17 @@ export const handle_preview_web_configuration = async (
   }
 
   const sent =
-    await panel_provider.websocket_server_instance.preview_web_configuration({
-      instruction: text_to_send,
-      web_configuration: web_configuration_for_preview,
-      prompt_type: panel_provider.web_prompt_type,
-      raw_instructions: current_instructions
-    })
+    await panel_view_provider.websocket_server_instance.preview_web_configuration(
+      {
+        instruction: text_to_send,
+        web_configuration: web_configuration_for_preview,
+        prompt_type: panel_view_provider.web_prompt_type,
+        raw_instructions: current_instructions
+      }
+    )
 
   if (sent) {
-    panel_provider.send_message({
+    panel_view_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
       title: 'Continue in the connected browser',
       type: 'success'

@@ -6,11 +6,11 @@ import {
   HistoryEntry,
   HISTORY_FIND_RELEVANT_FILES_STATE_KEY
 } from '@/constants/state-keys'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { SaveHistoryMessage } from '@/views/panel/types/messages'
 
 export const handle_save_history = async (
-  panel_provider: PanelProvider,
+  panel_view_provider: PanelViewProvider,
   message: SaveHistoryMessage
 ): Promise<void> => {
   let key: string | undefined
@@ -35,12 +35,12 @@ export const handle_save_history = async (
   if (key) {
     const text_history: string[] = message.messages
     if (text_history.length == 0) {
-      await panel_provider.extension_context.workspaceState.update(key, [])
+      await panel_view_provider.extension_context.workspaceState.update(key, [])
       return
     }
 
     const old_history =
-      panel_provider.extension_context.workspaceState.get<HistoryEntry[]>(
+      panel_view_provider.extension_context.workspaceState.get<HistoryEntry[]>(
         key,
         []
       ) || []
@@ -72,7 +72,7 @@ export const handle_save_history = async (
       }
     }
 
-    await panel_provider.extension_context.workspaceState.update(
+    await panel_view_provider.extension_context.workspaceState.update(
       key,
       new_history
     )

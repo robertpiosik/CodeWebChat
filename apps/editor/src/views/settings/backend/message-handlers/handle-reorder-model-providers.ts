@@ -1,4 +1,4 @@
-import { SettingsProvider } from '@/views/settings/backend/settings-provider'
+import { SettingsViewProvider } from '@/views/settings/backend/settings-view-provider'
 import {
   ModelProvidersManager,
   ModelProvider
@@ -6,7 +6,7 @@ import {
 import { ReorderModelProvidersMessage } from '@/views/settings/types/messages'
 
 export const handle_reorder_model_providers = async (
-  provider: SettingsProvider,
+  provider: SettingsViewProvider,
   message: ReorderModelProvidersMessage
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(

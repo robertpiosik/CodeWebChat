@@ -1,29 +1,29 @@
 import * as vscode from 'vscode'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { DeleteTaskMessage } from '@/views/panel/types/messages'
 import { Task } from '@shared/types/task'
 import { dictionary } from '@shared/constants/dictionary'
 import { TasksUtils } from '@/utils/tasks-utils'
 
 export const handle_delete_task = async (
-  panel_provider: PanelProvider,
+  panel_view_provider: PanelViewProvider,
   message: DeleteTaskMessage
 ): Promise<void> => {
   const broadcast_tasks = (all_data: Record<string, Task[]>) => {
     const workspace_roots =
-      panel_provider.workspace_provider.get_workspace_roots()
+      panel_view_provider.workspace_provider.get_workspace_roots()
     const tasks: Record<string, Task[]> = {}
     for (const root of workspace_roots) {
       tasks[root] = all_data[root] || []
     }
-    panel_provider.send_message({
+    panel_view_provider.send_message({
       command: 'TASKS',
       tasks
     })
   }
 
   // 1. Load and Find
-  let all_data = TasksUtils.load_all(panel_provider.extension_context)
+  let all_data = TasksUtils.load_all(panel_view_provider.extension_context)
   const root_tasks = all_data[message.root] || []
   const task_info = TasksUtils.find_in_tree_with_location({
     tasks: root_tasks,
@@ -41,7 +41,7 @@ export const handle_delete_task = async (
   })
   all_data[message.root] = new_root_tasks
   TasksUtils.save_all({
-    extension_context: panel_provider.extension_context,
+    extension_context: panel_view_provider.extension_context,
     tasks: all_data
   })
   broadcast_tasks(all_data)
@@ -63,7 +63,7 @@ export const handle_delete_task = async (
 
   if (selection == 'Undo') {
     // 4. Restore
-    all_data = TasksUtils.load_all(panel_provider.extension_context) // Reload to get latest state
+    all_data = TasksUtils.load_all(panel_view_provider.extension_context) // Reload to get latest state
     const current_root_tasks = all_data[message.root] || []
 
     const result = TasksUtils.insert_in_tree({
@@ -81,7 +81,7 @@ export const handle_delete_task = async (
     }
 
     TasksUtils.save_all({
-      extension_context: panel_provider.extension_context,
+      extension_context: panel_view_provider.extension_context,
       tasks: all_data
     })
     broadcast_tasks(all_data)

@@ -1,4 +1,4 @@
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import * as vscode from 'vscode'
 import { EditFormat } from '@shared/types/edit-format'
 import {
@@ -9,7 +9,7 @@ import {
 } from '@/constants/edit-format-instructions'
 
 export const handle_get_edit_format_instructions = (
-  panel_provider: PanelProvider
+  panel_view_provider: PanelViewProvider
 ) => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const instructions: Record<EditFormat, string> = {
@@ -25,7 +25,7 @@ export const handle_get_edit_format_instructions = (
     diff:
       config.get('editFormatInstructionsDiff') || EDIT_FORMAT_INSTRUCTIONS_DIFF
   }
-  panel_provider.send_message({
+  panel_view_provider.send_message({
     command: 'EDIT_FORMAT_INSTRUCTIONS',
     instructions
   })

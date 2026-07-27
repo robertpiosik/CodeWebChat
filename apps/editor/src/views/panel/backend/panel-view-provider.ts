@@ -125,7 +125,7 @@ import { SharedContextState } from '@/context/shared-context-state'
 import { webview_html } from '@/views/shared/utils/webview-html'
 import { get_selected_files } from '@/context/helpers/get-selected-files'
 
-export class PanelProvider implements vscode.WebviewViewProvider {
+export class PanelViewProvider implements vscode.WebviewViewProvider {
   public readonly extension_uri: vscode.Uri
   public readonly workspace_provider: WorkspaceProvider
   public readonly open_editors_provider: OpenEditorsProvider
@@ -700,7 +700,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             this.send_web_configurations_to_webview(webview_view.webview)
           } else if (message.command == 'SEND_TO_BROWSER') {
             await handle_send_to_browser({
-              panel_provider: this,
+              panel_view_provider: this,
               web_configuration_name: message.web_configuration_name,
               show_quick_pick: message.show_quick_pick,
               invocation_count: message.invocation_count
@@ -709,7 +709,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_preview_web_configuration(this, message)
           } else if (message.command == 'COPY_PROMPT') {
             await handle_copy_prompt({
-              panel_provider: this,
+              panel_view_provider: this,
               instructions: message.instructions,
               web_configuration_name: message.web_configuration_name
             })
@@ -851,7 +851,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_pick_reasoning_effort(this, message)
           } else if (message.command == 'UPDATE_LAST_USED_WEB_CONFIGURATION') {
             handle_update_last_used_web_configuration_or_group({
-              panel_provider: this,
+              panel_view_provider: this,
               web_configuration_name: message.web_configuration_name
             })
           } else if (message.command == 'MANAGE_API_CONFIGURATIONS') {
@@ -892,7 +892,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             handle_request_can_undo(this)
           } else if (message.command == 'FIX_ALL_FAILED_FILES') {
             await handle_fix_all_failed_files({
-              panel_provider: this,
+              panel_view_provider: this,
               files_to_fix: message.files
             })
           } else if (message.command == 'SAVE_PROMPT_IMAGE') {

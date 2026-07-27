@@ -1,4 +1,4 @@
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import {
   SaveInstructionsMessage,
   InstructionsState
@@ -12,39 +12,39 @@ import {
 } from '@/constants/state-keys'
 
 export const handle_save_instructions = async (
-  panel_provider: PanelProvider,
+  panel_view_provider: PanelViewProvider,
   message: SaveInstructionsMessage
 ): Promise<void> => {
   const { prompt_type, instruction } = message as any
   const instruction_state = instruction as InstructionsState
 
   if (prompt_type == 'ask-about-files') {
-    panel_provider.ask_about_context_instructions = instruction_state
-    await panel_provider.extension_context.workspaceState.update(
+    panel_view_provider.ask_about_context_instructions = instruction_state
+    await panel_view_provider.extension_context.workspaceState.update(
       INSTRUCTIONS_ASK_STATE_KEY,
       instruction_state
     )
   } else if (prompt_type == 'edit-files') {
-    panel_provider.edit_files_instructions = instruction_state
-    await panel_provider.extension_context.workspaceState.update(
+    panel_view_provider.edit_files_instructions = instruction_state
+    await panel_view_provider.extension_context.workspaceState.update(
       INSTRUCTIONS_EDIT_FILES_STATE_KEY,
       instruction_state
     )
   } else if (prompt_type == 'without-files') {
-    panel_provider.no_context_instructions = instruction_state
-    await panel_provider.extension_context.workspaceState.update(
+    panel_view_provider.no_context_instructions = instruction_state
+    await panel_view_provider.extension_context.workspaceState.update(
       INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
       instruction_state
     )
   } else if (prompt_type == 'code-at-cursor') {
-    panel_provider.code_at_cursor_instructions = instruction_state
-    await panel_provider.extension_context.workspaceState.update(
+    panel_view_provider.code_at_cursor_instructions = instruction_state
+    await panel_view_provider.extension_context.workspaceState.update(
       INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY,
       instruction_state
     )
   } else if (prompt_type == 'find-relevant-files') {
-    panel_provider.find_relevant_files_instructions = instruction_state
-    await panel_provider.extension_context.workspaceState.update(
+    panel_view_provider.find_relevant_files_instructions = instruction_state
+    await panel_view_provider.extension_context.workspaceState.update(
       INSTRUCTIONS_FIND_RELEVANT_FILES_STATE_KEY,
       instruction_state
     )

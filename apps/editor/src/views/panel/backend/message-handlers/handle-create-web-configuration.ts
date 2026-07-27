@@ -1,9 +1,9 @@
 import { config_web_configuration_to_ui_format } from '@/utils/web-configuration-format-converters'
-import { PanelProvider } from '../panel-provider'
+import { PanelViewProvider } from '../panel-view-provider'
 import { create } from '@/views/shared/actions/web/create'
 
 export const handle_create_web_configuration = async (
-  provider: PanelProvider,
+  provider: PanelViewProvider,
   message: any
 ): Promise<void> => {
   const result = await create({

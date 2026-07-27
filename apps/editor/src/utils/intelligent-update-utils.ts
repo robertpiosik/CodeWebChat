@@ -7,7 +7,7 @@ import {
 } from '@/services/model-providers-manager'
 import { LAST_USED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY } from '../constants/state-keys'
 import { Logger } from '@shared/utils/logger'
-import { make_api_request } from './make-api-request'
+import { send_llm_message } from './send-llm-message'
 import { cleanup_api_response } from './cleanup-api-response'
 import { intelligent_update_instructions } from '../constants/instructions'
 import { dictionary } from '@shared/constants/dictionary'
@@ -99,7 +99,7 @@ export const get_intelligent_update_config = async (
 }
 
 export const process_file = async (params: {
-  endpoint_url: string
+  base_url: string
   api_key: string
   model_provider: ModelProvider
   model: string
@@ -140,8 +140,8 @@ export const process_file = async (params: {
   })
 
   try {
-    const result = await make_api_request({
-      endpoint_url: params.endpoint_url,
+    const result = await send_llm_message({
+      base_url: params.base_url,
       api_key: params.api_key,
       body,
       abort_signal: params.abort_signal,

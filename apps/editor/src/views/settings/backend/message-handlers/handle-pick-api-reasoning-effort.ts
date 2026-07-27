@@ -1,12 +1,12 @@
 import * as vscode from 'vscode'
-import { SettingsProvider } from '../settings-provider'
+import { SettingsViewProvider } from '../settings-view-provider'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
 import { edit_reasoning_effort_for_api_config } from '@/views/shared/actions/api/update/interactions'
 import { verify_reasoning_effort } from '@/views/shared/actions/api/create/interactions'
 
 export const handle_pick_api_reasoning_effort = async (
-  provider: SettingsProvider,
+  provider: SettingsViewProvider,
   message: any
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(
@@ -34,7 +34,7 @@ export const handle_pick_api_reasoning_effort = async (
           },
           async (_progress, token) => {
             await verify_reasoning_effort({
-              endpoint_url: model_provider.base_url!,
+              base_url: model_provider.base_url!,
               api_key: model_provider.api_key,
               model: message.model,
               reasoning_effort: new_effort as string,

@@ -1,8 +1,8 @@
-import { PanelProvider } from '../panel-provider'
+import { PanelViewProvider } from '../panel-view-provider'
 import { remove } from '@/views/shared/actions/api/delete'
 
 export const handle_delete_api_configuration = async (
-  provider: PanelProvider,
+  provider: PanelViewProvider,
   message: any
 ): Promise<void> => {
   await remove({

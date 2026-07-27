@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { SettingsProvider } from '@/views/settings/backend/settings-provider'
+import { SettingsViewProvider } from '@/views/settings/backend/settings-view-provider'
 import {
   EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
   EDIT_FORMAT_INSTRUCTIONS_DIFF,
@@ -8,7 +8,7 @@ import {
 } from '@/constants/edit-format-instructions'
 
 export const handle_get_edit_format_instructions = async (
-  provider: SettingsProvider
+  provider: SettingsViewProvider
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const instructions = {

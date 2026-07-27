@@ -1,8 +1,8 @@
-import { SettingsProvider } from '@/views/settings/backend/settings-provider'
+import { SettingsViewProvider } from '@/views/settings/backend/settings-view-provider'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 
 export const handle_get_model_providers = async (
-  provider: SettingsProvider
+  provider: SettingsViewProvider
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(
     provider.extension_context

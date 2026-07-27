@@ -68,7 +68,7 @@ import {
 import { config_web_configuration_to_ui_format } from '@/utils/web-configuration-format-converters'
 import { webview_html } from '@/views/shared/utils/webview-html'
 
-export class SettingsProvider {
+export class SettingsViewProvider {
   private _webview_panel: vscode.WebviewPanel | undefined
   private _disposables: vscode.Disposable[] = []
   private _pending_section_to_show: string | undefined

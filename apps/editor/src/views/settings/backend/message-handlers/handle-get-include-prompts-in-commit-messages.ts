@@ -1,8 +1,8 @@
 import * as vscode from 'vscode'
-import { SettingsProvider } from '@/views/settings/backend/settings-provider'
+import { SettingsViewProvider } from '@/views/settings/backend/settings-view-provider'
 
 export const handle_get_include_prompts_in_commit_messages = async (
-  provider: SettingsProvider
+  provider: SettingsViewProvider
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const enabled = config.get<boolean>(

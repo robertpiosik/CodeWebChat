@@ -1,9 +1,9 @@
 import { pick_chatbot } from '@/views/shared/actions/web/pick-chatbot'
-import { SettingsProvider } from '@/views/settings/backend/settings-provider'
+import { SettingsViewProvider } from '@/views/settings/backend/settings-view-provider'
 import { PickChatbotMessage } from '@/views/settings/types/messages'
 
 export const handle_pick_chatbot = async (
-  settings_provider: SettingsProvider,
+  settings_provider: SettingsViewProvider,
   message: PickChatbotMessage
 ): Promise<void> => {
   const selected = await pick_chatbot({

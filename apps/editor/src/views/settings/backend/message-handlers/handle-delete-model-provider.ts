@@ -1,12 +1,12 @@
 import * as vscode from 'vscode'
-import { SettingsProvider } from '@/views/settings/backend/settings-provider'
+import { SettingsViewProvider } from '@/views/settings/backend/settings-view-provider'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { DeleteModelProviderMessage } from '@/views/settings/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 
 export const handle_delete_model_provider = async (
-  provider: SettingsProvider,
+  provider: SettingsViewProvider,
   message: DeleteModelProviderMessage
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(

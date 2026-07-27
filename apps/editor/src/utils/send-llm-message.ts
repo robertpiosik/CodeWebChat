@@ -68,8 +68,8 @@ class StreamAbortError extends Error {
   }
 }
 
-export const make_api_request = async (params: {
-  endpoint_url: string
+export const send_llm_message = async (params: {
+  base_url: string
   api_key?: string
   body: any
   abort_signal?: AbortSignal
@@ -115,11 +115,11 @@ export const make_api_request = async (params: {
   }
 
   try {
-    const request_url = params.endpoint_url + '/chat/completions'
+    const request_url = params.base_url + '/chat/completions'
     const request_body: any = { ...params.body, stream: true }
 
     Logger.info({
-      function_name: 'make_api_request',
+      function_name: 'send_llm_message',
       message: 'API Request Body',
       data: request_body
     })
@@ -240,7 +240,7 @@ export const make_api_request = async (params: {
         ? { ['Authorization']: `Bearer ${params.api_key}` }
         : {}),
       ['Content-Type']: 'application/json',
-      ...(params.endpoint_url == 'https://openrouter.ai/api/v1'
+      ...(params.base_url == 'https://openrouter.ai/api/v1'
         ? {
             'HTTP-Referer': 'https://codeweb.chat/',
             'X-Title': 'Code Web Chat'
@@ -274,7 +274,7 @@ export const make_api_request = async (params: {
         ) {
           attempt++
           Logger.warn({
-            function_name: 'make_api_request',
+            function_name: 'send_llm_message',
             message: `API ${status} error encountered. Retrying (${attempt}/${MAX_RETRIES}) in 1s...`,
             data: error.message
           })
@@ -301,7 +301,7 @@ export const make_api_request = async (params: {
         const current_time = Date.now()
         if (current_time - last_log_time >= 1000) {
           Logger.info({
-            function_name: 'make_api_request',
+            function_name: 'send_llm_message',
             message: 'Streaming tokens',
             data: `\n${full_response.substring(logged_content_length)}`
           })
@@ -329,7 +329,7 @@ export const make_api_request = async (params: {
             }
           } catch (error) {
             Logger.warn({
-              function_name: 'make_api_request',
+              function_name: 'send_llm_message',
               message: 'Failed to parse final buffer',
               data: error
             })
@@ -352,7 +352,7 @@ export const make_api_request = async (params: {
                 .substring(end_match.index! + end_match[0].length)
                 .trim()
               Logger.info({
-                function_name: 'make_api_request',
+                function_name: 'send_llm_message',
                 message:
                   'Detected closing tag without opening tag, stripped content before  '
               })
@@ -361,13 +361,13 @@ export const make_api_request = async (params: {
         }
 
         Logger.info({
-          function_name: 'make_api_request',
+          function_name: 'send_llm_message',
           message: 'Combined code received (full response):',
           data: full_response
         })
         if (in_think_block) {
           Logger.info({
-            function_name: 'make_api_request',
+            function_name: 'send_llm_message',
             message: 'Combined code received (for client):',
             data: content_for_client
           })
@@ -379,7 +379,7 @@ export const make_api_request = async (params: {
       response.data.on('error', (error: Error) => {
         if (!stream_closed) {
           Logger.error({
-            function_name: 'make_api_request',
+            function_name: 'send_llm_message',
             message: 'Stream error',
             data: error
           })
@@ -390,7 +390,7 @@ export const make_api_request = async (params: {
       response.data.on('aborted', () => {
         if (!stream_closed) {
           Logger.warn({
-            function_name: 'make_api_request',
+            function_name: 'send_llm_message',
             message: 'Stream aborted'
           })
           reject(new StreamAbortError('Stream was aborted'))
@@ -428,7 +428,7 @@ export const make_api_request = async (params: {
       )
     }
     Logger.error({
-      function_name: 'make_api_request',
+      function_name: 'send_llm_message',
       message: 'API request failed',
       data: error
     })

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { MODE } from '@/views/panel/types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { dictionary } from '@shared/constants/dictionary'
@@ -13,12 +13,12 @@ type PromptTemplate = {
 const ADD_NEW_TEMPLATE_LABEL = '$(add) New prompt template...'
 
 export const handle_show_prompt_template_quick_pick = async (
-  panel_provider: PanelProvider
+  panel_view_provider: PanelViewProvider
 ): Promise<void> => {
   const prompt_type: WebPromptType | ApiPromptType | undefined =
-    panel_provider.mode == MODE.WEB
-      ? panel_provider.web_prompt_type
-      : panel_provider.api_prompt_type
+    panel_view_provider.mode == MODE.WEB
+      ? panel_view_provider.web_prompt_type
+      : panel_view_provider.api_prompt_type
 
   if (!prompt_type) {
     return
@@ -328,8 +328,8 @@ export const handle_show_prompt_template_quick_pick = async (
           }
         }
 
-        panel_provider.add_text_at_cursor_position(prompt_text)
-        panel_provider.send_message({
+        panel_view_provider.add_text_at_cursor_position(prompt_text)
+        panel_view_provider.send_message({
           command: 'FOCUS_PROMPT_FIELD'
         })
       }
@@ -460,7 +460,7 @@ export const handle_show_prompt_template_quick_pick = async (
 
       is_disposed = true
       if (!is_template_accepted) {
-        panel_provider.send_message({
+        panel_view_provider.send_message({
           command: 'FOCUS_PROMPT_FIELD'
         })
       }

@@ -18,7 +18,7 @@ import {
   ActiveDeleteOperation,
   delete_checkpoint_with_undo
 } from '@/features/checkpoints/actions'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { get_checkpoint_path } from '@/features/checkpoints/utils'
 import { get_response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview/preview'
 
@@ -29,7 +29,7 @@ export type { Checkpoint } from '@/features/checkpoints/types'
 export const history_command = (params: {
   extension_context: vscode.ExtensionContext
   workspace_provider: WorkspaceProvider
-  panel_provider: PanelProvider
+  panel_view_provider: PanelViewProvider
 }): vscode.Disposable[] => {
   let active_delete_operation: ActiveDeleteOperation | null = null
 
@@ -55,7 +55,7 @@ export const history_command = (params: {
       const checkpoint = await create_checkpoint({
         workspace_provider: params.workspace_provider,
         extension_context: params.extension_context,
-        panel_provider: params.panel_provider
+        panel_view_provider: params.panel_view_provider
       })
       if (checkpoint) {
         vscode.commands.executeCommand('codeWebChat.history', {
@@ -246,7 +246,7 @@ export const history_command = (params: {
             const checkpoint = await create_checkpoint({
               workspace_provider: params.workspace_provider,
               extension_context: params.extension_context,
-              panel_provider: params.panel_provider
+              panel_view_provider: params.panel_view_provider
             })
             if (checkpoint) {
               vscode.commands.executeCommand('codeWebChat.history', {
@@ -271,7 +271,7 @@ export const history_command = (params: {
               workspace_provider: params.workspace_provider,
               extension_context: params.extension_context,
               options: { skip_confirmation: true },
-              panel_provider: params.panel_provider
+              panel_view_provider: params.panel_view_provider
             })
             // After reverting, delete the temp checkpoint and clear state.
             await params.extension_context.workspaceState.update(
@@ -281,7 +281,7 @@ export const history_command = (params: {
             await delete_checkpoint({
               extension_context: params.extension_context,
               checkpoint_to_delete: temp_checkpoint,
-              panel_provider: params.panel_provider
+              panel_view_provider: params.panel_view_provider
             })
           } else if (selected.checkpoint) {
             quick_pick.hide()
@@ -289,7 +289,7 @@ export const history_command = (params: {
               checkpoint: selected.checkpoint,
               workspace_provider: params.workspace_provider,
               extension_context: params.extension_context,
-              panel_provider: params.panel_provider
+              panel_view_provider: params.panel_view_provider
             })
           }
         })
@@ -350,7 +350,7 @@ export const history_command = (params: {
             await toggle_checkpoint_star({
               extension_context: params.extension_context,
               timestamp: item.checkpoint.timestamp,
-              panel_provider: params.panel_provider
+              panel_view_provider: params.panel_view_provider
             })
 
             await refresh_and_update_view()
@@ -406,7 +406,7 @@ export const history_command = (params: {
             const was_restored = await delete_checkpoint_with_undo({
               extension_context: params.extension_context,
               checkpoint: item.checkpoint,
-              panel_provider: params.panel_provider,
+              panel_view_provider: params.panel_view_provider,
               get_active_operation: () => active_delete_operation,
               set_active_operation: (op) => (active_delete_operation = op),
               on_did_update_checkpoints: (updated) => {

@@ -1,10 +1,10 @@
 import * as vscode from 'vscode'
-import { SettingsProvider } from '../settings-provider'
+import { SettingsViewProvider } from '../settings-view-provider'
 import { PROVIDERS } from '@/constants/providers'
 import { AddModelProviderMessage } from '@/views/settings/types/messages'
 
 export const handle_add_model_provider = async (
-  provider: SettingsProvider,
+  provider: SettingsViewProvider,
   message: AddModelProviderMessage
 ): Promise<void> => {
   const custom_label = '$(edit) Custom endpoint...'

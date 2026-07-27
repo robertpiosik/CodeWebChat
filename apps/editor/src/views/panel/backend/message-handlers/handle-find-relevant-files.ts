@@ -12,7 +12,7 @@ import {
   LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY,
   FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY
 } from '@/constants/state-keys'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { FindRelevantFilesMessage } from '@/views/panel/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
@@ -32,7 +32,7 @@ const get_find_relevant_files_api_configuration = async (params: {
   model_providers_manager: ModelProvidersManager
   show_quick_pick?: boolean
   extension_context: vscode.ExtensionContext
-  panel_provider: PanelProvider
+  panel_view_provider: PanelViewProvider
   api_configuration_id?: string
 }): Promise<
   | { model_provider: ModelProvider; api_configuration: ApiConfiguration }
@@ -62,8 +62,8 @@ const get_find_relevant_files_api_configuration = async (params: {
         params.api_configuration_id
       )
 
-      if (params.panel_provider) {
-        params.panel_provider.send_message({
+      if (params.panel_view_provider) {
+        params.panel_view_provider.send_message({
           command: 'SELECTED_API_CONFIGURATION_CHANGED',
           prompt_type: 'find-relevant-files',
           id: params.api_configuration_id
@@ -107,8 +107,8 @@ const get_find_relevant_files_api_configuration = async (params: {
       id
     )
 
-    if (params.panel_provider) {
-      params.panel_provider.send_message({
+    if (params.panel_view_provider) {
+      params.panel_view_provider.send_message({
         command: 'SELECTED_API_CONFIGURATION_CHANGED',
         prompt_type: 'find-relevant-files',
         id: id
@@ -141,24 +141,25 @@ const get_find_relevant_files_api_configuration = async (params: {
 }
 
 export const handle_find_relevant_files = async (
-  panel_provider: PanelProvider,
+  panel_view_provider: PanelViewProvider,
   message: FindRelevantFilesMessage
 ): Promise<void> => {
   await vscode.workspace.saveAll()
 
   const model_providers_manager = new ModelProvidersManager(
-    panel_provider.extension_context
+    panel_view_provider.extension_context
   )
 
   const files_collector = new FilesCollector({
-    workspace_provider: panel_provider.workspace_provider,
-    open_editors_provider: panel_provider.open_editors_provider
+    workspace_provider: panel_view_provider.workspace_provider,
+    open_editors_provider: panel_view_provider.open_editors_provider
   })
 
-  const instructions = panel_provider.current_find_relevant_files_instruction
+  const instructions =
+    panel_view_provider.current_find_relevant_files_instruction
 
   if (!instructions) {
-    panel_provider.send_message({
+    panel_view_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
       title: 'Instructions cannot be empty',
       type: 'warning'
@@ -169,12 +170,12 @@ export const handle_find_relevant_files = async (
   const { instruction: processed_instructions, skill_definitions } =
     await replace_symbols({
       instruction: instructions,
-      extension_context: panel_provider.extension_context,
-      workspace_provider: panel_provider.workspace_provider
+      extension_context: panel_view_provider.extension_context,
+      workspace_provider: panel_view_provider.workspace_provider
     })
 
   const shrink_source_code =
-    panel_provider.extension_context.workspaceState.get<boolean>(
+    panel_view_provider.extension_context.workspaceState.get<boolean>(
       FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
       false
     )
@@ -185,7 +186,7 @@ export const handle_find_relevant_files = async (
   const collected_files = collected.other_files + collected.recent_files
 
   if (!collected_files) {
-    panel_provider.send_message({
+    panel_view_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
       title: 'Context cannot be empty',
       type: 'warning'
@@ -201,8 +202,8 @@ export const handle_find_relevant_files = async (
       await get_find_relevant_files_api_configuration({
         model_providers_manager,
         show_quick_pick: should_show_quick_pick,
-        extension_context: panel_provider.extension_context,
-        panel_provider,
+        extension_context: panel_view_provider.extension_context,
+        panel_view_provider: panel_view_provider,
         api_configuration_id: current_api_configuration_id
       })
 
@@ -210,14 +211,12 @@ export const handle_find_relevant_files = async (
       return
     }
 
-    panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
+    panel_view_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
 
     const {
       model_provider,
       api_configuration: find_relevant_files_api_configuration
     } = api_configuration_result
-
-    const endpoint_url = model_provider.base_url
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const base_instructions =
@@ -259,8 +258,8 @@ export const handle_find_relevant_files = async (
     })
 
     try {
-      const result = await panel_provider.api_manager.get({
-        endpoint_url,
+      const result = await panel_view_provider.api_manager.get({
+        base_url: model_provider.base_url,
         api_key: model_provider.api_key,
         body,
         provider_name:

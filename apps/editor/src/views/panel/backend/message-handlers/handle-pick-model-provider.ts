@@ -1,4 +1,4 @@
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { PickModelProviderMessage } from '@/views/panel/types/messages'
 import {
   edit_model_provider_for_api_configuration,
@@ -8,11 +8,11 @@ import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { ModelFetcher } from '@/services/model-fetcher'
 
 export const handle_pick_model_provider = async (
-  panel_provider: PanelProvider,
+  panel_view_provider: PanelViewProvider,
   message: PickModelProviderMessage
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(
-    panel_provider.extension_context
+    panel_view_provider.extension_context
   )
   const result = await edit_model_provider_for_api_configuration(
     providers_manager,
@@ -33,11 +33,11 @@ export const handle_pick_model_provider = async (
     })
 
     if (new_model !== undefined) {
-      panel_provider.send_message({
+      panel_view_provider.send_message({
         command: 'NEWLY_PICKED_MODEL_PROVIDER',
         model_provider_name: result.model_provider_name
       })
-      panel_provider.send_message({
+      panel_view_provider.send_message({
         command: 'NEWLY_PICKED_API_MODEL',
         model_id: new_model
       })

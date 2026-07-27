@@ -1,12 +1,12 @@
 import * as vscode from 'vscode'
 import { CHECKPOINTS_STATE_KEY } from '@/constants/state-keys'
 import type { Checkpoint } from '../types'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 
 export const toggle_checkpoint_star = async (params: {
   extension_context: vscode.ExtensionContext
   timestamp: number
-  panel_provider: PanelProvider
+  panel_view_provider: PanelViewProvider
 }) => {
   const checkpoints =
     params.extension_context.workspaceState.get<Checkpoint[]>(

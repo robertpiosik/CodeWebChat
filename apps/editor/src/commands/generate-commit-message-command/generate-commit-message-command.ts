@@ -14,7 +14,7 @@ import { t } from '@/i18n'
 import axios from 'axios'
 import { PromptsForCommitMessagesUtils } from '../../utils/prompts-for-commit-messages-utils'
 import { MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE } from '@/constants/values'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { create_checkpoint } from '@/features/checkpoints/actions'
 import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
@@ -26,7 +26,7 @@ const truncate_prompt = (text: string): string => {
 
 export const generate_commit_message_command = (
   extension_context: vscode.ExtensionContext,
-  panel_provider: PanelProvider,
+  panel_view_provider: PanelViewProvider,
   workspace_provider: WorkspaceProvider
 ) => {
   const get_prompt_data = async (params: {
@@ -160,7 +160,7 @@ export const generate_commit_message_command = (
       let commit_message: string
       try {
         commit_message = await generate_commit_message_with_api({
-          endpoint_url: api_configuration_data.endpoint_url,
+          base_url: api_configuration_data.base_url,
           model_provider: api_configuration_data.model_provider,
           api_configuration: api_configuration_data.api_configuration,
           message: message_prompt
@@ -318,7 +318,7 @@ export const generate_commit_message_command = (
           create_checkpoint({
             workspace_provider,
             extension_context,
-            panel_provider,
+            panel_view_provider,
             trigger: 'commit',
             description: subject_line
           }).catch(() => {})

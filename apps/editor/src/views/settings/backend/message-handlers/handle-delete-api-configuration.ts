@@ -1,8 +1,8 @@
-import { SettingsProvider } from '../settings-provider'
+import { SettingsViewProvider } from '../settings-view-provider'
 import { remove } from '@/views/shared/actions/api/delete'
 
 export const handle_delete_api_configuration = async (
-  provider: SettingsProvider,
+  provider: SettingsViewProvider,
   message: any
 ): Promise<void> => {
   await remove({

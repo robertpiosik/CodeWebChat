@@ -4,7 +4,7 @@ import { OriginalFileState } from '../types/original-file-state'
 import { RecentApiConfiguration } from '@shared/types/response-history-item'
 import { undo_files } from './file-operations'
 import { preview } from './preview'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { update_undo_button_state } from './state-manager'
 import { PromptsForCommitMessagesUtils } from '@/utils/prompts-for-commit-messages-utils'
 
@@ -13,7 +13,7 @@ export let ongoing_preview_cleanup_promise: Promise<void> | null = null
 export const preview_handler = async (params: {
   original_states: OriginalFileState[]
   chat_response: string
-  panel_provider: PanelProvider
+  panel_view_provider: PanelViewProvider
   extension_context: vscode.ExtensionContext
   original_editor_state?: {
     file_path: string
@@ -32,7 +32,7 @@ export const preview_handler = async (params: {
   try {
     const preview_result = await preview({
       original_states: params.original_states,
-      panel_provider: params.panel_provider,
+      panel_view_provider: params.panel_view_provider,
       raw_instructions: params.raw_instructions,
       chat_response: params.chat_response,
       extension_context: params.extension_context,
@@ -43,13 +43,13 @@ export const preview_handler = async (params: {
 
     if (preview_result === null || preview_result.accepted_files.length == 0) {
       if (preview_result?.created_at) {
-        const history = params.panel_provider.response_history
+        const history = params.panel_view_provider.response_history
         const new_history = history.filter(
           (item) => item.created_at !== preview_result.created_at
         )
 
-        params.panel_provider.response_history = new_history
-        params.panel_provider.send_message({
+        params.panel_view_provider.response_history = new_history
+        params.panel_view_provider.send_message({
           command: 'RESPONSE_HISTORY',
           history: new_history
         })
@@ -83,7 +83,7 @@ export const preview_handler = async (params: {
       })
       update_undo_button_state({
         extension_context: params.extension_context,
-        panel_provider: params.panel_provider,
+        panel_view_provider: params.panel_view_provider,
         states: null
       })
       return false
@@ -105,8 +105,8 @@ export const preview_handler = async (params: {
 
     if (accepted_states.length > 0) {
       if (preview_result.created_at) {
-        params.panel_provider.response_history = []
-        params.panel_provider.send_message({
+        params.panel_view_provider.response_history = []
+        params.panel_view_provider.send_message({
           command: 'RESPONSE_HISTORY',
           history: []
         })
@@ -147,7 +147,7 @@ export const preview_handler = async (params: {
 
       update_undo_button_state({
         extension_context: params.extension_context,
-        panel_provider: params.panel_provider,
+        panel_view_provider: params.panel_view_provider,
         states: accepted_states,
         applied_content: params.chat_response,
         original_editor_state: params.original_editor_state
@@ -188,7 +188,7 @@ export const preview_handler = async (params: {
     } else {
       update_undo_button_state({
         extension_context: params.extension_context,
-        panel_provider: params.panel_provider,
+        panel_view_provider: params.panel_view_provider,
         states: null
       })
       return false

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { MODE } from '@/views/panel/types/main-view-mode'
 import { LAST_SELECTED_SYMBOL_STATE_KEY } from '@/constants/state-keys'
 import {
@@ -160,15 +160,15 @@ const hash_sign_quick_pick = async (params: {
 }
 
 export const handle_hash_sign_quick_pick = async (
-  panel_provider: PanelProvider,
+  panel_view_provider: PanelViewProvider,
   extension_context: vscode.ExtensionContext,
   is_for_code_at_cursor: boolean
 ): Promise<void> => {
   const is_find_relevant_files =
-    (panel_provider.mode == MODE.WEB &&
-      panel_provider.web_prompt_type == 'find-relevant-files') ||
-    (panel_provider.mode == MODE.API &&
-      panel_provider.api_prompt_type == 'find-relevant-files')
+    (panel_view_provider.mode == MODE.WEB &&
+      panel_view_provider.web_prompt_type == 'find-relevant-files') ||
+    (panel_view_provider.mode == MODE.API &&
+      panel_view_provider.api_prompt_type == 'find-relevant-files')
 
   const replacement = await hash_sign_quick_pick({
     extension_context,
@@ -177,24 +177,24 @@ export const handle_hash_sign_quick_pick = async (
   })
 
   if (!replacement) {
-    panel_provider.send_message({
+    panel_view_provider.send_message({
       command: 'FOCUS_PROMPT_FIELD'
     })
     return
   }
 
-  const current_text = panel_provider.current_instruction
+  const current_text = panel_view_provider.current_instruction
 
   const is_after_hash_sign = current_text
-    .slice(0, panel_provider.caret_position)
+    .slice(0, panel_view_provider.caret_position)
     .endsWith('#')
   if (is_after_hash_sign) {
-    panel_provider.add_text_at_cursor_position(replacement, 1)
+    panel_view_provider.add_text_at_cursor_position(replacement, 1)
   } else {
-    panel_provider.add_text_at_cursor_position(replacement)
+    panel_view_provider.add_text_at_cursor_position(replacement)
   }
 
-  panel_provider.send_message({
+  panel_view_provider.send_message({
     command: 'FOCUS_PROMPT_FIELD'
   })
 }

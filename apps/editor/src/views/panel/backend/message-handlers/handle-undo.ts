@@ -5,14 +5,14 @@ import {
   LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
 } from '@/constants/state-keys'
 import { dictionary } from '@shared/constants/dictionary'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
 import { undo_files } from '@/commands/apply-response-command/utils/file-operations'
 
 export const handle_undo = async (
-  panel_provider: PanelProvider
+  panel_view_provider: PanelViewProvider
 ): Promise<void> => {
-  const extension_context = panel_provider.extension_context
+  const extension_context = panel_view_provider.extension_context
   const original_states = extension_context.workspaceState.get<
     OriginalFileState[]
   >(LAST_APPLIED_CHANGES_STATE_KEY)
@@ -71,8 +71,8 @@ export const handle_undo = async (
       LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
       null
     )
-    panel_provider.set_undo_button_state(false)
-    panel_provider.send_message({
+    panel_view_provider.set_undo_button_state(false)
+    panel_view_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
       title: 'Changes undone successfully',
       type: 'success'

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { IntelligentUpdateFileInPreviewMessage } from '@/views/panel/types/messages'
 import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
 import {
@@ -20,17 +20,18 @@ import axios from 'axios'
 import { set_file_applied_with_intelligent_update } from '@/commands/apply-response-command/utils/preview'
 
 export const handle_intelligent_update_file_in_preview = async (
-  panel_provider: PanelProvider,
+  panel_view_provider: PanelViewProvider,
   message: IntelligentUpdateFileInPreviewMessage
 ): Promise<void> => {
   const { file_path, workspace_name, force_model_selection } = message
   const file_name = path.basename(file_path)
 
-  const original_states = panel_provider.extension_context.workspaceState.get<
-    OriginalFileState[]
-  >(LAST_APPLIED_CHANGES_STATE_KEY)
+  const original_states =
+    panel_view_provider.extension_context.workspaceState.get<
+      OriginalFileState[]
+    >(LAST_APPLIED_CHANGES_STATE_KEY)
   const last_response =
-    panel_provider.extension_context.workspaceState.get<string>(
+    panel_view_provider.extension_context.workspaceState.get<string>(
       LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
     )
 
@@ -95,12 +96,12 @@ export const handle_intelligent_update_file_in_preview = async (
   }
 
   const model_providers_manager = new ModelProvidersManager(
-    panel_provider.extension_context
+    panel_view_provider.extension_context
   )
   const api_configuration_result = await get_intelligent_update_config(
     model_providers_manager,
     force_model_selection ?? false,
-    panel_provider.extension_context
+    panel_view_provider.extension_context
   )
   if (!api_configuration_result) return
 
@@ -108,8 +109,6 @@ export const handle_intelligent_update_file_in_preview = async (
     model_provider: api_model_provider,
     api_configuration: intelligent_update_api_configuration
   } = api_configuration_result
-
-  const endpoint_url = api_model_provider.base_url
 
   const default_workspace_path =
     vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
@@ -127,13 +126,13 @@ export const handle_intelligent_update_file_in_preview = async (
   if (!safe_path) return
 
   const abort_controller = new AbortController()
-  panel_provider.intelligent_update_abort_controllers.push({
+  panel_view_provider.intelligent_update_abort_controllers.push({
     controller: abort_controller,
     file_path,
     workspace_name
   })
 
-  panel_provider.send_message({
+  panel_view_provider.send_message({
     command: 'UPDATE_FILE_PROGRESS',
     file_path,
     workspace_name,
@@ -142,7 +141,7 @@ export const handle_intelligent_update_file_in_preview = async (
   })
 
   const on_thinking_chunk = () => {
-    panel_provider.send_message({
+    panel_view_provider.send_message({
       command: 'UPDATE_FILE_PROGRESS',
       file_path,
       workspace_name,
@@ -164,7 +163,7 @@ export const handle_intelligent_update_file_in_preview = async (
       )
     }
 
-    panel_provider.send_message({
+    panel_view_provider.send_message({
       command: 'UPDATE_FILE_PROGRESS',
       file_path,
       workspace_name,
@@ -176,7 +175,7 @@ export const handle_intelligent_update_file_in_preview = async (
   }
 
   const content_promise = process_file({
-    endpoint_url: endpoint_url,
+    base_url: api_model_provider.base_url,
     api_key: api_model_provider.api_key,
     model_provider: api_model_provider,
     model: intelligent_update_api_configuration.model,
@@ -194,7 +193,7 @@ export const handle_intelligent_update_file_in_preview = async (
     const updated_content = await content_promise
 
     if (updated_content) {
-      panel_provider.send_message({
+      panel_view_provider.send_message({
         command: 'UPDATE_FILE_PROGRESS',
         file_path,
         workspace_name,
@@ -238,20 +237,21 @@ export const handle_intelligent_update_file_in_preview = async (
       })
       vscode.window.showErrorMessage(error.message)
 
-      await handle_intelligent_update_file_in_preview(panel_provider, {
+      await handle_intelligent_update_file_in_preview(panel_view_provider, {
         ...message,
         force_model_selection: true
       })
       return
     }
   } finally {
-    const index = panel_provider.intelligent_update_abort_controllers.findIndex(
-      (s) => s.controller === abort_controller
-    )
+    const index =
+      panel_view_provider.intelligent_update_abort_controllers.findIndex(
+        (s) => s.controller === abort_controller
+      )
     if (index > -1) {
-      panel_provider.intelligent_update_abort_controllers.splice(index, 1)
+      panel_view_provider.intelligent_update_abort_controllers.splice(index, 1)
     }
-    panel_provider.send_message({
+    panel_view_provider.send_message({
       command: 'UPDATE_FILE_PROGRESS',
       file_path,
       workspace_name,

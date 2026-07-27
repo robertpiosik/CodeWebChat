@@ -22,7 +22,7 @@ import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { get_intelligent_update_config } from '@/utils/intelligent-update-utils'
 import { handle_active_editor_intelligent_update } from './handlers/active-editor-intelligent-update-handler'
 import { handle_fast_replace } from './handlers/fast-replace-handler'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { FileInPreview } from '@shared/types/file-in-preview'
 import { update_undo_button_state } from './utils/state-manager'
 import { check_for_conflict_markers } from './utils/file-checks'
@@ -63,11 +63,11 @@ export const process_response = async (params: {
   response: string
   response_items: ResponseItem[]
   extension_context: vscode.ExtensionContext
-  panel_provider: PanelProvider
+  panel_view_provider: PanelViewProvider
   workspace_provider: WorkspaceProvider
 }): Promise<PreviewData | null> => {
   const on_progress = (progress: number) => {
-    params.panel_provider.send_message({
+    params.panel_view_provider.send_message({
       command: 'SHOW_PROGRESS',
       title: t('common.progress.preparing-preview'),
       progress
@@ -101,7 +101,7 @@ export const process_response = async (params: {
         })
         update_undo_button_state({
           extension_context: params.extension_context,
-          panel_provider: params.panel_provider,
+          panel_view_provider: params.panel_view_provider,
           states: augmented_states,
           applied_content: params.response,
           original_editor_state: params.args?.original_editor_state
@@ -203,7 +203,7 @@ export const process_response = async (params: {
 
     const created_at_for_preview = params.args?.created_at ?? Date.now()
 
-    const history = params.panel_provider.response_history
+    const history = params.panel_view_provider.response_history
     if (!params.args?.created_at) {
       const new_item = {
         response: params.response,
@@ -222,16 +222,16 @@ export const process_response = async (params: {
         existing.relevant_files = files_for_preview
       }
     }
-    params.panel_provider.send_message({
+    params.panel_view_provider.send_message({
       command: 'RESPONSE_HISTORY',
       history
     })
 
-    params.panel_provider.send_message({
+    params.panel_view_provider.send_message({
       command: 'HIDE_PROGRESS'
     })
 
-    params.panel_provider.send_message({
+    params.panel_view_provider.send_message({
       command: 'RESPONSE_PREVIEW_STARTED',
       items: items_for_preview,
       raw_instructions: params.args?.raw_instructions,
@@ -246,10 +246,13 @@ export const process_response = async (params: {
       set_response_preview_promise_resolve(undefined)
     })
 
-    params.panel_provider.send_message({ command: 'RESPONSE_PREVIEW_FINISHED' })
+    params.panel_view_provider.send_message({
+      command: 'RESPONSE_PREVIEW_FINISHED'
+    })
 
     if ('accepted_files' in decision && decision.accepted_files.length > 0) {
-      const shared_context_state = params.panel_provider.shared_context_state
+      const shared_context_state =
+        params.panel_view_provider.shared_context_state
       const was_frf = params.workspace_provider.is_frf_mode
 
       if (was_frf) {
@@ -273,20 +276,20 @@ export const process_response = async (params: {
         shared_context_state.switch_context_state(true)
       }
 
-      params.panel_provider.send_message({
+      params.panel_view_provider.send_message({
         command: 'SHOW_AUTO_CLOSING_MODAL',
         title: t('command.apply-response.relevant-files.success'),
         type: 'success'
       })
 
-      await params.panel_provider.switch_to_edit_files()
+      await params.panel_view_provider.switch_to_edit_files()
     } else if ('created_at' in decision && decision.created_at) {
-      const history = params.panel_provider.response_history
+      const history = params.panel_view_provider.response_history
       const new_history = history.filter(
         (item) => item.created_at !== created_at_for_preview
       )
-      params.panel_provider.response_history = new_history
-      params.panel_provider.send_message({
+      params.panel_view_provider.response_history = new_history
+      params.panel_view_provider.send_message({
         command: 'RESPONSE_HISTORY',
         history: new_history
       })
@@ -416,7 +419,7 @@ export const process_response = async (params: {
       await apply_file_relocations(all_original_states)
       update_undo_button_state({
         extension_context: params.extension_context,
-        panel_provider: params.panel_provider,
+        panel_view_provider: params.panel_view_provider,
         states: all_original_states,
         applied_content: params.response,
         original_editor_state: params.args?.original_editor_state
@@ -573,23 +576,23 @@ export const process_response = async (params: {
             model_provider,
             api_configuration: intelligent_update_api_configuration
           } = api_configuration_result
-          const endpoint_url = model_provider.base_url
+          const base_url = model_provider.base_url
 
           const intelligent_update_states =
             await handle_active_editor_intelligent_update({
-              endpoint_url,
+              base_url,
               api_key: model_provider.api_key,
               api_configuration: intelligent_update_api_configuration,
               chat_response: markdown_response_for_active_editor,
               extension_context: params.extension_context,
               is_single_root_folder_workspace,
-              panel_provider: params.panel_provider
+              panel_view_provider: params.panel_view_provider
             })
 
           if (intelligent_update_states) {
             update_undo_button_state({
               extension_context: params.extension_context,
-              panel_provider: params.panel_provider,
+              panel_view_provider: params.panel_view_provider,
               states: intelligent_update_states,
               applied_content: markdown_response_for_active_editor,
               original_editor_state: params.args?.original_editor_state
@@ -730,7 +733,7 @@ export const process_response = async (params: {
     if (operation_success && final_original_states) {
       update_undo_button_state({
         extension_context: params.extension_context,
-        panel_provider: params.panel_provider,
+        panel_view_provider: params.panel_view_provider,
         states: final_original_states,
         applied_content: params.response,
         original_editor_state: params.args?.original_editor_state
@@ -743,7 +746,7 @@ export const process_response = async (params: {
     } else {
       update_undo_button_state({
         extension_context: params.extension_context,
-        panel_provider: params.panel_provider,
+        panel_view_provider: params.panel_view_provider,
         states: null
       })
       Logger.info({

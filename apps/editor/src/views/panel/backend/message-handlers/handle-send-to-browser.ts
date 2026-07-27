@@ -1,4 +1,4 @@
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import * as vscode from 'vscode'
 import { FilesCollector } from '@/utils/files-collector'
 import {
@@ -27,14 +27,14 @@ import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-
 import { PromptBuilder } from '@/utils/prompt-builder'
 
 export const handle_send_to_browser = async (params: {
-  panel_provider: PanelProvider
+  panel_view_provider: PanelViewProvider
   invocation_count: number
   web_configuration_name?: string
   show_quick_pick?: boolean
 }): Promise<void> => {
   if (
-    params.panel_provider.mode == MODE.WEB &&
-    !params.panel_provider.websocket_server_instance.is_connected_with_browser()
+    params.panel_view_provider.mode == MODE.WEB &&
+    !params.panel_view_provider.websocket_server_instance.is_connected_with_browser()
   ) {
     vscode.window.showWarningMessage(
       dictionary.warning_message.BROWSER_EXTENSION_NOT_CONNECTED
@@ -43,8 +43,8 @@ export const handle_send_to_browser = async (params: {
   }
 
   const is_in_code_at_cursor_mode =
-    params.panel_provider.web_prompt_type == 'code-at-cursor'
-  const current_instructions = params.panel_provider.current_instruction
+    params.panel_view_provider.web_prompt_type == 'code-at-cursor'
+  const current_instructions = params.panel_view_provider.current_instruction
 
   const active_editor = vscode.window.activeTextEditor
 
@@ -54,9 +54,9 @@ export const handle_send_to_browser = async (params: {
   }
 
   const resolution = await resolve_web_configuration({
-    panel_provider: params.panel_provider,
+    panel_view_provider: params.panel_view_provider,
     web_configuration_name: params.web_configuration_name,
-    extension_context: params.panel_provider.extension_context,
+    extension_context: params.panel_view_provider.extension_context,
     show_quick_pick: params.show_quick_pick
   })
 
@@ -67,7 +67,7 @@ export const handle_send_to_browser = async (params: {
 
   if (params.web_configuration_name !== undefined) {
     handle_update_last_used_web_configuration_or_group({
-      panel_provider: params.panel_provider,
+      panel_view_provider: params.panel_view_provider,
       web_configuration_name: params.web_configuration_name
     })
   }
@@ -75,8 +75,8 @@ export const handle_send_to_browser = async (params: {
   await vscode.workspace.saveAll()
 
   const files_collector = new FilesCollector({
-    workspace_provider: params.panel_provider.workspace_provider,
-    open_editors_provider: params.panel_provider.open_editors_provider
+    workspace_provider: params.panel_view_provider.workspace_provider,
+    open_editors_provider: params.panel_view_provider.open_editors_provider
   })
 
   let sent = false
@@ -96,8 +96,8 @@ export const handle_send_to_browser = async (params: {
       skill_definitions
     } = await replace_symbols({
       instruction: current_instructions,
-      extension_context: params.panel_provider.extension_context,
-      workspace_provider: params.panel_provider.workspace_provider,
+      extension_context: params.panel_view_provider.extension_context,
+      workspace_provider: params.panel_view_provider.workspace_provider,
       remove_images: true
     })
 
@@ -127,27 +127,29 @@ export const handle_send_to_browser = async (params: {
     })
 
     sent =
-      await params.panel_provider.websocket_server_instance.initialize_chat({
-        text,
-        web_configuration_name: resolved_web_configuration_name,
-        raw_instructions: processed_completion_instructions,
-        prompt_type: params.panel_provider.web_prompt_type,
-        invocation_count: params.invocation_count
-      })
+      await params.panel_view_provider.websocket_server_instance.initialize_chat(
+        {
+          text,
+          web_configuration_name: resolved_web_configuration_name,
+          raw_instructions: processed_completion_instructions,
+          prompt_type: params.panel_view_provider.web_prompt_type,
+          invocation_count: params.invocation_count
+        }
+      )
   } else {
     const additional_paths: string[] = []
 
     const shrink_source_code =
-      params.panel_provider.extension_context.workspaceState.get<boolean>(
+      params.panel_view_provider.extension_context.workspaceState.get<boolean>(
         FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
         false
       )
 
     const collected = await files_collector.collect_files({
       additional_paths,
-      no_context: params.panel_provider.web_prompt_type == 'without-files',
+      no_context: params.panel_view_provider.web_prompt_type == 'without-files',
       shrink:
-        params.panel_provider.web_prompt_type == 'find-relevant-files' &&
+        params.panel_view_provider.web_prompt_type == 'find-relevant-files' &&
         shrink_source_code
     })
     const context_text = collected.other_files + collected.recent_files
@@ -155,33 +157,35 @@ export const handle_send_to_browser = async (params: {
     const { instruction: processed_instructions, skill_definitions } =
       await replace_symbols({
         instruction: current_instructions,
-        extension_context: params.panel_provider.extension_context,
-        workspace_provider: params.panel_provider.workspace_provider,
+        extension_context: params.panel_view_provider.extension_context,
+        workspace_provider: params.panel_view_provider.workspace_provider,
         remove_images: true
       })
 
     let formatted_system_instructions = ''
     let user_instructions = processed_instructions
-    if (params.panel_provider.web_prompt_type == 'edit-files') {
+    if (params.panel_view_provider.web_prompt_type == 'edit-files') {
       const config = vscode.workspace.getConfiguration('codeWebChat')
       const instructions_key = {
         whole: 'editFormatInstructionsWhole',
         truncated: 'editFormatInstructionsTruncated',
         'search-replace': 'editFormatInstructionsSearchReplace',
         diff: 'editFormatInstructionsDiff'
-      }[params.panel_provider.chat_edit_format]
+      }[params.panel_view_provider.chat_edit_format]
       const default_instructions = {
         whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
         truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
         'search-replace': EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
         diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
-      }[params.panel_provider.chat_edit_format]
+      }[params.panel_view_provider.chat_edit_format]
       const edit_format_instructions =
         config.get<string>(instructions_key) || default_instructions
       if (edit_format_instructions) {
         formatted_system_instructions = `# System\n\n${edit_format_instructions}`
       }
-    } else if (params.panel_provider.web_prompt_type == 'find-relevant-files') {
+    } else if (
+      params.panel_view_provider.web_prompt_type == 'find-relevant-files'
+    ) {
       formatted_system_instructions = find_relevant_files_format_for_panel
 
       const config = vscode.workspace.getConfiguration('codeWebChat')
@@ -199,21 +203,23 @@ export const handle_send_to_browser = async (params: {
     })
 
     sent =
-      await params.panel_provider.websocket_server_instance.initialize_chat({
-        text,
-        web_configuration_name: resolved_web_configuration_name,
-        raw_instructions: current_instructions,
-        prompt_type: params.panel_provider.web_prompt_type,
-        edit_format:
-          params.panel_provider.web_prompt_type == 'edit-files'
-            ? params.panel_provider.chat_edit_format
-            : undefined,
-        invocation_count: params.invocation_count
-      })
+      await params.panel_view_provider.websocket_server_instance.initialize_chat(
+        {
+          text,
+          web_configuration_name: resolved_web_configuration_name,
+          raw_instructions: current_instructions,
+          prompt_type: params.panel_view_provider.web_prompt_type,
+          edit_format:
+            params.panel_view_provider.web_prompt_type == 'edit-files'
+              ? params.panel_view_provider.chat_edit_format
+              : undefined,
+          invocation_count: params.invocation_count
+        }
+      )
   }
 
   if (sent) {
-    params.panel_provider.send_message({
+    params.panel_view_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
       title: 'Continue in the connected browser',
       type: 'success'
@@ -221,7 +227,7 @@ export const handle_send_to_browser = async (params: {
   }
 
   if (!params.web_configuration_name) {
-    params.panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
+    params.panel_view_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
   }
 }
 
@@ -229,15 +235,19 @@ const show_web_configuration_quick_pick = async (params: {
   web_configurations: ConfigWebConfigurationFormat[]
   extension_context: vscode.ExtensionContext
   prompt_type: WebPromptType
-  panel_provider: PanelProvider
+  panel_view_provider: PanelViewProvider
   get_is_web_configuration_disabled: (
     web_configuration: ConfigWebConfigurationFormat
   ) => boolean
   is_in_code_at_cursor_mode: boolean
   current_instructions: string
 }): Promise<{ web_configuration_name: string | undefined } | null> => {
-  const { web_configurations, extension_context, prompt_type, panel_provider } =
-    params
+  const {
+    web_configurations,
+    extension_context,
+    prompt_type,
+    panel_view_provider
+  } = params
 
   const valid_web_configurations = web_configurations.filter((c) => c.chatbot)
 
@@ -291,7 +301,7 @@ const show_web_configuration_quick_pick = async (params: {
   })
 
   if (!result || result === 'back') {
-    panel_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
+    panel_view_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
     return null
   }
 
@@ -303,7 +313,7 @@ const show_web_configuration_quick_pick = async (params: {
 
   if (web_configuration.name) {
     handle_update_last_used_web_configuration_or_group({
-      panel_provider,
+      panel_view_provider,
       web_configuration_name: web_configuration.name
     })
   }
@@ -312,13 +322,13 @@ const show_web_configuration_quick_pick = async (params: {
 }
 
 const resolve_web_configuration = async (params: {
-  panel_provider: PanelProvider
+  panel_view_provider: PanelViewProvider
   web_configuration_name?: string
   show_quick_pick?: boolean
   extension_context: vscode.ExtensionContext
 }): Promise<{ web_configuration_name: string | undefined }> => {
   const recents_key = get_last_used_web_configuration_key(
-    params.panel_provider.web_prompt_type
+    params.panel_view_provider.web_prompt_type
   )
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const all_web_configurations = config.get<ConfigWebConfigurationFormat[]>(
@@ -326,33 +336,35 @@ const resolve_web_configuration = async (params: {
     []
   )
   const is_in_code_at_cursor_mode =
-    params.panel_provider.web_prompt_type == 'code-at-cursor'
+    params.panel_view_provider.web_prompt_type == 'code-at-cursor'
 
   let current_instructions = ''
-  if (params.panel_provider.web_prompt_type == 'code-at-cursor') {
+  if (params.panel_view_provider.web_prompt_type == 'code-at-cursor') {
     current_instructions =
-      params.panel_provider.code_at_cursor_instructions.instructions[
-        params.panel_provider.code_at_cursor_instructions.active_index
+      params.panel_view_provider.code_at_cursor_instructions.instructions[
+        params.panel_view_provider.code_at_cursor_instructions.active_index
       ] || ''
-  } else if (params.panel_provider.web_prompt_type == 'ask-about-files') {
+  } else if (params.panel_view_provider.web_prompt_type == 'ask-about-files') {
     current_instructions =
-      params.panel_provider.ask_about_context_instructions.instructions[
-        params.panel_provider.ask_about_context_instructions.active_index
+      params.panel_view_provider.ask_about_context_instructions.instructions[
+        params.panel_view_provider.ask_about_context_instructions.active_index
       ] || ''
-  } else if (params.panel_provider.web_prompt_type == 'edit-files') {
+  } else if (params.panel_view_provider.web_prompt_type == 'edit-files') {
     current_instructions =
-      params.panel_provider.edit_files_instructions.instructions[
-        params.panel_provider.edit_files_instructions.active_index
+      params.panel_view_provider.edit_files_instructions.instructions[
+        params.panel_view_provider.edit_files_instructions.active_index
       ] || ''
-  } else if (params.panel_provider.web_prompt_type == 'without-files') {
+  } else if (params.panel_view_provider.web_prompt_type == 'without-files') {
     current_instructions =
-      params.panel_provider.no_context_instructions.instructions[
-        params.panel_provider.no_context_instructions.active_index
+      params.panel_view_provider.no_context_instructions.instructions[
+        params.panel_view_provider.no_context_instructions.active_index
       ] || ''
-  } else if (params.panel_provider.web_prompt_type == 'find-relevant-files') {
+  } else if (
+    params.panel_view_provider.web_prompt_type == 'find-relevant-files'
+  ) {
     current_instructions =
-      params.panel_provider.find_relevant_files_instructions.instructions[
-        params.panel_provider.find_relevant_files_instructions.active_index
+      params.panel_view_provider.find_relevant_files_instructions.instructions[
+        params.panel_view_provider.find_relevant_files_instructions.active_index
       ] || ''
   }
 
@@ -360,10 +372,10 @@ const resolve_web_configuration = async (params: {
     web_configuration: ConfigWebConfigurationFormat
   ) =>
     (web_configuration.chatbot &&
-      (!params.panel_provider.websocket_server_instance.is_connected_with_browser() ||
+      (!params.panel_view_provider.websocket_server_instance.is_connected_with_browser() ||
         (is_in_code_at_cursor_mode &&
-          (!params.panel_provider.currently_open_file_path ||
-            !!params.panel_provider.current_selection)))) ||
+          (!params.panel_view_provider.currently_open_file_path ||
+            !!params.panel_view_provider.current_selection)))) ||
     false
 
   if (params.web_configuration_name !== undefined) {
@@ -403,8 +415,8 @@ const resolve_web_configuration = async (params: {
   const resolution = await show_web_configuration_quick_pick({
     web_configurations: all_web_configurations,
     extension_context: params.extension_context,
-    prompt_type: params.panel_provider.web_prompt_type,
-    panel_provider: params.panel_provider,
+    prompt_type: params.panel_view_provider.web_prompt_type,
+    panel_view_provider: params.panel_view_provider,
     get_is_web_configuration_disabled,
     is_in_code_at_cursor_mode,
     current_instructions

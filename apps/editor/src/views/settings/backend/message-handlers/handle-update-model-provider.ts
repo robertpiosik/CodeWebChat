@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { SettingsProvider } from '../settings-provider'
+import { SettingsViewProvider } from '../settings-view-provider'
 import {
   ModelProvidersManager,
   ModelProvider
@@ -10,7 +10,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 
 export const handle_update_model_provider = async (
-  provider: SettingsProvider,
+  provider: SettingsViewProvider,
   message: UpdateModelProviderMessage
 ): Promise<void> => {
   const a = message.updating_model_provider

@@ -1,9 +1,9 @@
 import * as vscode from 'vscode'
-import { PanelProvider } from '../panel-provider'
+import { PanelViewProvider } from '../panel-view-provider'
 import { PickTasksWorkspaceMessage } from '../../types/messages'
 
 export const handle_pick_tasks_workspace = async (
-  panel_provider: PanelProvider,
+  panel_view_provider: PanelViewProvider,
   message: PickTasksWorkspaceMessage
 ) => {
   const items: vscode.QuickPickItem[] = message.roots.map((root) => ({
@@ -51,7 +51,7 @@ export const handle_pick_tasks_workspace = async (
   )
 
   if (selected && selected.description) {
-    panel_provider.send_message({
+    panel_view_provider.send_message({
       command: 'TASKS_WORKSPACE_PICKED',
       root: selected.description
     })

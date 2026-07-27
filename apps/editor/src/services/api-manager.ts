@@ -1,6 +1,6 @@
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { ApiManagerProvider } from '@/views/api-manager/backend/api-manager-provider'
-import { make_api_request } from '@/utils/make-api-request'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
+import { ApiManagerViewProvider } from '@/views/api-manager/backend/api-manager-view-provider'
+import { send_llm_message } from '@/utils/send-llm-message'
 import axios from 'axios'
 import { randomUUID, createHash } from 'crypto'
 import { Logger } from '@shared/utils/logger'
@@ -16,17 +16,17 @@ export class ApiManager {
   > = new Map()
 
   constructor(
-    private panel_provider: PanelProvider,
-    private api_manager_provider: ApiManagerProvider
+    private panel_view_provider: PanelViewProvider,
+    private api_manager_view_provider: ApiManagerViewProvider
   ) {}
 
   private broadcast_message(message: any) {
-    this.panel_provider.send_message(message)
-    this.api_manager_provider.send_message(message)
+    this.panel_view_provider.send_message(message)
+    this.api_manager_view_provider.send_message(message)
   }
 
   public async get(params: {
-    endpoint_url: string
+    base_url: string
     api_key?: string
     body: any
     request_id?: string
@@ -49,7 +49,7 @@ export class ApiManager {
       .update(JSON.stringify(body_to_hash))
       .digest('hex')
 
-    const previous_waiting = this.waiting_chain.get(params.endpoint_url)
+    const previous_waiting = this.waiting_chain.get(params.base_url)
 
     let resolve_current: () => void = () => {}
     const current_promise = new Promise<void>((resolve) => {
@@ -60,7 +60,7 @@ export class ApiManager {
     const schedule_chain_resolution = () => {
       if (is_chain_resolution_scheduled) return
 
-      const chain_entry = this.waiting_chain.get(params.endpoint_url)
+      const chain_entry = this.waiting_chain.get(params.base_url)
       if (chain_entry && chain_entry.resolve === resolve_current) {
         is_chain_resolution_scheduled = true
         setTimeout(() => {
@@ -70,7 +70,7 @@ export class ApiManager {
     }
 
     if (!previous_waiting || previous_waiting.body_hash != body_hash) {
-      this.waiting_chain.set(params.endpoint_url, {
+      this.waiting_chain.set(params.base_url, {
         promise: current_promise,
         resolve: resolve_current,
         body_hash
@@ -117,8 +117,8 @@ export class ApiManager {
         })
       }
 
-      const result = await make_api_request({
-        endpoint_url: params.endpoint_url,
+      const result = await send_llm_message({
+        base_url: params.base_url,
         api_key: params.api_key,
         body: params.body,
         abort_signal: abort_controller.signal,

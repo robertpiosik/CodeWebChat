@@ -1,12 +1,12 @@
 import * as vscode from 'vscode'
 import axios from 'axios'
 import he from 'he'
-import { make_api_request } from '../../../utils/make-api-request'
+import { send_llm_message } from '../../../utils/send-llm-message'
 import { code_at_cursor_instructions } from '../../../constants/instructions'
 import { FilesCollector } from '../../../utils/files-collector'
 import { ModelProvidersManager } from '../../../services/model-providers-manager'
 import { Logger } from '@shared/utils/logger'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { apply_reasoning_effort } from '../../../utils/apply-reasoning-effort'
 import { t } from '@/i18n'
@@ -23,7 +23,7 @@ export const perform_code_at_cursor = async (params: {
   show_quick_pick?: boolean
   completion_instructions?: string
   api_configuration_id?: string
-  panel_provider?: PanelProvider
+  panel_view_provider?: PanelViewProvider
 }) => {
   const model_providers_manager = new ModelProvidersManager(
     params.extension_context
@@ -60,7 +60,7 @@ export const perform_code_at_cursor = async (params: {
         show_quick_pick: force_show_quick_pick,
         extension_context: params.extension_context,
         api_configuration_id: current_api_configuration_id,
-        panel_provider: params.panel_provider
+        panel_view_provider: params.panel_view_provider
       }
     )
 
@@ -97,8 +97,6 @@ export const perform_code_at_cursor = async (params: {
       force_show_quick_pick = true
       continue
     }
-
-    const endpoint_url = model_provider.base_url
 
     const editor = vscode.window.activeTextEditor
     if (editor) {
@@ -194,8 +192,8 @@ export const perform_code_at_cursor = async (params: {
               message: t('common.progress.waiting-for-server')
             })
 
-            return await make_api_request({
-              endpoint_url,
+            return await send_llm_message({
+              base_url: model_provider.base_url,
               api_key: model_provider.api_key,
               body,
               abort_signal: abort_controller.signal,

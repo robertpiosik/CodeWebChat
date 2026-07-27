@@ -26,7 +26,7 @@ export const get_commit_message_api_configuration = async (
   | {
       api_configuration: CommitMessageApiConfiguration
       model_provider: any
-      endpoint_url: string
+      base_url: string
     }
   | 'back'
   | null
@@ -109,11 +109,9 @@ export const get_commit_message_api_configuration = async (
     return null
   }
 
-  const endpoint_url = model_provider.base_url
-
   return {
     api_configuration: commit_message_api_configuration,
     model_provider,
-    endpoint_url
+    base_url: model_provider.base_url
   }
 }

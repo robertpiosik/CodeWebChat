@@ -1,8 +1,8 @@
 import * as vscode from 'vscode'
 import { context_initialization } from './context/context-initialization'
-import { PanelProvider } from './views/panel/backend/panel-provider'
+import { PanelViewProvider } from './views/panel/backend/panel-view-provider'
 import { WebSocketManager } from './services/websocket-manager'
-import { ApiManagerProvider } from './views/api-manager/backend/api-manager-provider'
+import { ApiManagerViewProvider } from './views/api-manager/backend/api-manager-view-provider'
 import { ApiManager } from './services/api-manager'
 import {
   migrate_configurations_to_api_configurations,
@@ -42,7 +42,7 @@ import {
 } from './commands'
 import { setup_git_discard_file_watcher } from './services/git-discard-file-watcher'
 import { select_imported_files_command } from './commands/select-imported-files-command'
-import { SettingsProvider } from './views/settings/backend/settings-provider'
+import { SettingsViewProvider } from './views/settings/backend/settings-view-provider'
 import { get_current_preview_url } from './views/panel/backend/message-handlers/handle-open-website'
 
 let websocket_server_instance: WebSocketManager | null = null
@@ -66,7 +66,7 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
 
   await migrations()
 
-  const panel_provider = new PanelProvider({
+  const panel_view_provider = new PanelViewProvider({
     extension_uri: extension_context.extensionUri,
     workspace_provider,
     open_editors_provider,
@@ -75,19 +75,22 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     shared_context_state
   })
 
-  const api_manager_provider = new ApiManagerProvider(
+  const api_manager_view_provider = new ApiManagerViewProvider(
     extension_context.extensionUri,
     extension_context
   )
 
-  const api_manager = new ApiManager(panel_provider, api_manager_provider)
+  const api_manager = new ApiManager(
+    panel_view_provider,
+    api_manager_view_provider
+  )
 
-  api_manager_provider.set_api_manager(api_manager)
+  api_manager_view_provider.set_api_manager(api_manager)
 
   extension_context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(
       'codeWebChatView',
-      panel_provider,
+      panel_view_provider,
       {
         webviewOptions: {
           retainContextWhenHidden: true
@@ -96,17 +99,17 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     ),
     vscode.window.registerWebviewViewProvider(
       'apiManagerView',
-      api_manager_provider,
+      api_manager_view_provider,
       {
         webviewOptions: {
           retainContextWhenHidden: true
         }
       }
     ),
-    reference_in_prompt_command({ panel_provider, workspace_provider }),
+    reference_in_prompt_command({ panel_view_provider, workspace_provider }),
     apply_response_command({
       extension_context,
-      panel_provider,
+      panel_view_provider,
       workspace_provider,
       api_manager
     }),
@@ -114,18 +117,18 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
       file_tree_provider: workspace_provider,
       open_editors_provider,
       extension_context,
-      panel_provider
+      panel_view_provider
     }),
     ...history_command({
       extension_context,
       workspace_provider,
-      panel_provider
+      panel_view_provider
     })
   )
 
-  panel_provider.set_api_manager(api_manager)
+  panel_view_provider.set_api_manager(api_manager)
 
-  const settings_provider = new SettingsProvider(
+  const settings_view_provider = new SettingsViewProvider(
     extension_context.extensionUri,
     extension_context
   )
@@ -177,12 +180,12 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     vscode.commands.registerCommand(
       'codeWebChat.settings',
       (section?: string) => {
-        settings_provider.createOrShow(section)
+        settings_view_provider.createOrShow(section)
       }
     ),
     generate_commit_message_command(
       extension_context,
-      panel_provider,
+      panel_view_provider,
       workspace_provider
     ),
     vscode.commands.registerCommand(

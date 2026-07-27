@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import axios from 'axios'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
-import { make_api_request } from '@/utils/make-api-request'
+import { send_llm_message } from '@/utils/send-llm-message'
 import { display_token_count } from '@/utils/display-token-count'
 import { Logger } from '@shared/utils/logger'
 import { strip_wrapping_quotes } from './strip-wrapping-quotes'
@@ -10,7 +10,7 @@ import { t } from '@/i18n'
 import { CommitMessageApiConfiguration } from './get-commit-message-config'
 
 export const generate_commit_message_with_api = async (params: {
-  endpoint_url: string
+  base_url: string
   model_provider: ModelProvider
   api_configuration: CommitMessageApiConfiguration
   message: string
@@ -56,8 +56,8 @@ export const generate_commit_message_with_api = async (params: {
       })
 
       try {
-        const response_result = await make_api_request({
-          endpoint_url: params.endpoint_url,
+        const response_result = await send_llm_message({
+          base_url: params.base_url,
           api_key: params.model_provider.api_key,
           body,
           abort_signal: abort_controller.signal,
