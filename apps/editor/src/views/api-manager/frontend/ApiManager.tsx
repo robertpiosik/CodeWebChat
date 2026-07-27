@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Progress as UiProgress } from '@ui/components/editor/api-manager/Progress'
+import { Chats as UiChats } from '@ui/components/editor/api-manager/Chats'
 import { BackendMessage } from '../types/messages'
 
 const vscode = acquireVsCodeApi()
@@ -19,6 +20,8 @@ export const ApiManager = () => {
       }
     >
   >({})
+
+  const [chats, set_chats] = useState<{ timestamp: number }[]>([])
 
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
@@ -41,23 +44,34 @@ export const ApiManager = () => {
           delete new_state[message.id]
           return new_state
         })
+      } else if (message.command == 'CHATS') {
+        set_chats(message.chats)
       }
     }
 
     window.addEventListener('message', handle_message)
+    vscode.postMessage({ command: 'GET_CHATS' })
     return () => window.removeEventListener('message', handle_message)
   }, [])
 
-  if (Object.keys(api_manager_progress_state).length === 0) return null
-
   return (
-    <UiProgress
-      progress_items={Object.entries(api_manager_progress_state).map(
-        ([id, state]) => ({ id, ...state })
+    <>
+      {Object.keys(api_manager_progress_state).length > 0 && (
+        <UiProgress
+          progress_items={Object.entries(api_manager_progress_state).map(
+            ([id, state]) => ({ id, ...state })
+          )}
+          on_cancel={(id) =>
+            vscode.postMessage({ command: 'CANCEL_API_MANAGER_REQUEST', id })
+          }
+        />
       )}
-      on_cancel={(id) =>
-        vscode.postMessage({ command: 'CANCEL_API_MANAGER_REQUEST', id })
-      }
-    />
+      <UiChats
+        chats={chats}
+        on_delete={(timestamp) =>
+          vscode.postMessage({ command: 'DELETE_CHAT', timestamp })
+        }
+      />
+    </>
   )
 }

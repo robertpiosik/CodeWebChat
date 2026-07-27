@@ -436,7 +436,8 @@ export const handle_make_api_call = async (
               body,
               provider_name: api_configuration.model_provider_name,
               model: api_configuration.model,
-              reasoning_effort: api_configuration.reasoning_effort
+              reasoning_effort: api_configuration.reasoning_effort,
+              raw_instructions: instructions
             }
           )
 

@@ -31,6 +31,7 @@ export class ApiManager {
     provider_name: string
     model?: string
     reasoning_effort?: string
+    raw_instructions: string
   }): Promise<{ response: string; thoughts?: string } | null> {
     const request_id = randomUUID()
     const abort_controller = new AbortController()
@@ -145,6 +146,18 @@ export class ApiManager {
           })
         }
       })
+
+      if (result) {
+        this.api_manager_view_provider.add_chat({
+          timestamp: Date.now(),
+          provider_name: params.provider_name,
+          model: params.model,
+          reasoning_effort: params.reasoning_effort,
+          raw_instructions: params.raw_instructions,
+          response: result.response,
+          thoughts: result.thoughts
+        })
+      }
 
       return result
     } catch (error: any) {
