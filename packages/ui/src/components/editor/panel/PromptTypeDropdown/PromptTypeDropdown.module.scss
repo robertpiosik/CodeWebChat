@@ -30,7 +30,7 @@
   }
 
   &--open {
-    outline-color: var(--vscode-focusBorder) !important;
+    border-color: var(--vscode-focusBorder) !important;
   }
 
   &__alternate {
