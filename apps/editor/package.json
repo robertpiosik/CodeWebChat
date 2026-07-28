@@ -53,21 +53,21 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "codeWebChat",
+          "id": "activitybar",
           "title": "Code Web Chat",
           "icon": "resources/activity-bar-icon.svg"
         }
       ],
       "secondarySidebar": [
         {
-          "id": "apiManager",
-          "title": "API Manager",
+          "id": "secondarySidebar",
+          "title": "Chats",
           "icon": "resources/activity-bar-icon.svg"
         }
       ]
     },
     "views": {
-      "codeWebChat": [
+      "activitybar": [
         {
           "id": "codeWebChatViewOpenEditors",
           "name": "Open Editors",
@@ -95,10 +95,10 @@
           "initialSize": 5
         }
       ],
-      "apiManager": [
+      "secondarySidebar": [
         {
-          "id": "apiManagerView",
-          "name": "API Manager",
+          "id": "chatsView",
+          "name": "Chats",
           "type": "webview",
           "icon": "resources/activity-bar-icon.svg",
           "initialSize": 1

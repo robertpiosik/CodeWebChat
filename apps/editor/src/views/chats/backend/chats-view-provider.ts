@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import { webview_html } from '@/views/shared/utils/webview-html'
 import { ApiManager } from '@/services/api-manager'
 import { BackendMessage, FrontendMessage } from '../types/messages'
-import { API_MANAGER_VIEW_CHAT_HISTORY_STATE_KEY } from '@/constants/state-keys'
+import { CHATS_VIEW_CHAT_HISTORY_STATE_KEY } from '@/constants/state-keys'
 import { handle_delete_chat } from './message-handlers/handle-delete-chat'
 import { handle_get_chats } from './message-handlers/handle-get-chats'
 
@@ -16,7 +16,7 @@ export interface ApiChatResult {
   thoughts?: string
 }
 
-export class ApiManagerViewProvider implements vscode.WebviewViewProvider {
+export class ChatsViewProvider implements vscode.WebviewViewProvider {
   public webview_view: vscode.WebviewView | undefined
   public api_manager!: ApiManager
   public chats: ApiChatResult[] = []
@@ -27,7 +27,7 @@ export class ApiManagerViewProvider implements vscode.WebviewViewProvider {
   ) {
     this.chats =
       this.extension_context.workspaceState.get<ApiChatResult[]>(
-        API_MANAGER_VIEW_CHAT_HISTORY_STATE_KEY
+        CHATS_VIEW_CHAT_HISTORY_STATE_KEY
       ) || []
   }
 
@@ -38,7 +38,7 @@ export class ApiManagerViewProvider implements vscode.WebviewViewProvider {
   public add_chat(chat: ApiChatResult) {
     this.chats.push(chat)
     this.extension_context.workspaceState.update(
-      API_MANAGER_VIEW_CHAT_HISTORY_STATE_KEY,
+      CHATS_VIEW_CHAT_HISTORY_STATE_KEY,
       this.chats
     )
     this.send_message({
@@ -82,7 +82,7 @@ export class ApiManagerViewProvider implements vscode.WebviewViewProvider {
     return webview_html({
       webview,
       extension_uri: this._extensionUri,
-      name: 'api-manager',
+      name: 'chats',
       overflow_hidden: true
     })
   }

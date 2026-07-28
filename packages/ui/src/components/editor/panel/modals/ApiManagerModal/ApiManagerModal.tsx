@@ -53,7 +53,7 @@ export const ApiManagerModal: React.FC<Props> = (props) => {
             [styles['heading--scrolled']]: is_scrolled
           })}
         >
-          <div className={styles.heading__title}>API Manager</div>
+          <div className={styles.heading__title}>Chats</div>
           <div className={styles['heading__breathing']}>
             <span
               className={cn(

@@ -28,8 +28,7 @@ export const TEMPORARY_CHECKPOINT_STATE_KEY = 'temporary-checkpoint'
 export const CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY =
   'checkpoint-operation-in-progress'
 
-export const API_MANAGER_VIEW_CHAT_HISTORY_STATE_KEY =
-  'api-manager-chat-history'
+export const CHATS_VIEW_CHAT_HISTORY_STATE_KEY = 'chats-view-chat-history'
 
 export const DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY =
   'duplicate-workspace-context'

@@ -33,7 +33,10 @@ export const prompt_for_search_term = async (
         : mode == 'semantic'
           ? t('feature.search-files.prompt.semantic')
           : t('feature.search-files.prompt')
-  input_box.placeholder = t('feature.search-files.placeholder')
+  input_box.placeholder =
+    mode == 'keywords'
+      ? t('feature.search-files.placeholder.keywords')
+      : t('feature.search-files.placeholder')
   input_box.value = initial_search_term
   input_box.ignoreFocusOut = true
   input_box.buttons = [vscode.QuickInputButtons.Back, close_button]

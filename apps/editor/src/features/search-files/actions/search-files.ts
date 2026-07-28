@@ -213,11 +213,12 @@ export const search_files = async (params: {
             let is_cancelled = false
             let matched_files: string[] = []
 
-            const is_small_search =
-              (search_mode == 'phrase' || search_mode == 'keywords') &&
-              files.length < 1000
+            const is_fast_search =
+              (search_mode == 'keywords' && keywords_target == 'filenames') ||
+              ((search_mode == 'phrase' || search_mode == 'keywords') &&
+                files.length < 100)
 
-            if (is_small_search) {
+            if (is_fast_search) {
               matched_files = await search_files_by_term({
                 files,
                 search_term,

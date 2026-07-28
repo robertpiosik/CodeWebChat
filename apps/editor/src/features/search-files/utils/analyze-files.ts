@@ -40,7 +40,10 @@ export const analyze_files = async (params: {
           const stats = await fs.promises.stat(file_path)
           if (stats.size > 1024 * 1024) continue
 
-          const content = await fs.promises.readFile(file_path, 'utf8')
+          const buffer = await fs.promises.readFile(file_path)
+          if (buffer.includes(0)) continue
+
+          const content = buffer.toString('utf8')
           const shrunk_content = shrink_file(content, path.extname(file_path))
 
           const workspace_root =

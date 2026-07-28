@@ -1,5 +1,5 @@
 import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
-import { ApiManagerViewProvider } from '@/views/api-manager/backend/api-manager-view-provider'
+import { ChatsViewProvider } from '@/views/chats/backend/chats-view-provider'
 import { send_llm_message } from '@/utils/send-llm-message'
 import { randomUUID, createHash } from 'crypto'
 import { Logger } from '@shared/utils/logger'
@@ -16,12 +16,12 @@ export class ApiManager {
 
   constructor(
     private panel_view_provider: PanelViewProvider,
-    private api_manager_view_provider: ApiManagerViewProvider
+    private chats_view_provider: ChatsViewProvider
   ) {}
 
   private broadcast_message(message: any) {
     this.panel_view_provider.send_message(message)
-    this.api_manager_view_provider.send_message(message)
+    this.chats_view_provider.send_message(message)
   }
 
   public async send_llm_message(params: {
@@ -148,7 +148,7 @@ export class ApiManager {
       })
 
       if (result) {
-        this.api_manager_view_provider.add_chat({
+        this.chats_view_provider.add_chat({
           timestamp: Date.now(),
           provider_name: params.provider_name,
           model: params.model,

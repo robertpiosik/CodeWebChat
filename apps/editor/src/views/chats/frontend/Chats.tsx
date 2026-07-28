@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Progress as UiProgress } from '@ui/components/editor/api-manager/Progress'
-import { Chats as UiChats } from '@ui/components/editor/api-manager/Chats'
+import { Progress as UiProgress } from '@ui/components/editor/chats/Progress'
+import { Chats as UiChats } from '@ui/components/editor/chats/Chats'
 import { BackendMessage } from '../types/messages'
 
 const vscode = acquireVsCodeApi()
 
-export const ApiManager = () => {
+export const Chats = () => {
   const [api_manager_progress_state, set_api_manager_progress_state] = useState<
     Record<
       string,

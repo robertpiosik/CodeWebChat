@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import { context_initialization } from './context/context-initialization'
 import { PanelViewProvider } from './views/panel/backend/panel-view-provider'
 import { WebSocketManager } from './services/websocket-manager'
-import { ApiManagerViewProvider } from './views/api-manager/backend/api-manager-view-provider'
+import { ChatsViewProvider } from './views/chats/backend/chats-view-provider'
 import { ApiManager } from './services/api-manager'
 import {
   migrate_configurations_to_api_configurations,
@@ -75,17 +75,14 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     shared_context_state
   })
 
-  const api_manager_view_provider = new ApiManagerViewProvider(
+  const chats_view_provider = new ChatsViewProvider(
     extension_context.extensionUri,
     extension_context
   )
 
-  const api_manager = new ApiManager(
-    panel_view_provider,
-    api_manager_view_provider
-  )
+  const api_manager = new ApiManager(panel_view_provider, chats_view_provider)
 
-  api_manager_view_provider.set_api_manager(api_manager)
+  chats_view_provider.set_api_manager(api_manager)
 
   extension_context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(
@@ -98,8 +95,8 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
       }
     ),
     vscode.window.registerWebviewViewProvider(
-      'apiManagerView',
-      api_manager_view_provider,
+      'chatsView',
+      chats_view_provider,
       {
         webviewOptions: {
           retainContextWhenHidden: true
