@@ -7,8 +7,9 @@ import { create_safe_path, sanitize_file_name } from '@/utils/path-sanitizer'
 import { FileItem } from '../utils/response-parser'
 import { OriginalFileState } from '../types/original-file-state'
 import {
-  read_rename_source_file,
-  cleanup_rename_source
+  cleanup_rename_source,
+  handle_deleted_file_item,
+  get_rename_source_info
 } from '../utils/file-operations'
 import { apply_conflict_markers_to_content } from '../utils/edit-formats/conflict-markers/apply-conflict-markers-to-content'
 import { parse_conflict_segments } from '../utils/edit-formats/conflict-markers'
@@ -67,35 +68,38 @@ export const handle_conflict_markers = async (params: {
         continue
       }
 
+      if (file.is_deleted) {
+        const delete_result = await handle_deleted_file_item({
+          file,
+          safe_path,
+          workspace_root,
+          workspace_map,
+          default_workspace,
+          function_name: 'handle_conflict_markers'
+        })
+        if (delete_result.success && delete_result.original_state) {
+          original_states.push(delete_result.original_state)
+        } else {
+          failed_files.push(file)
+        }
+        continue
+      }
+
       const file_exists = fs.existsSync(safe_path)
       const has_markers =
         file.content.includes('<<<<<<<') &&
         file.content.includes('=======') &&
         file.content.includes('>>>>>>>')
 
-      let rename_source_path: string | undefined
-      let rename_source_content: string | undefined
-      let rename_source_workspace_root: string | undefined
-
-      if (file.renamed_from) {
-        let old_workspace_root = default_workspace
-        if (
-          file.renamed_from_workspace &&
-          workspace_map.has(file.renamed_from_workspace)
-        ) {
-          old_workspace_root = workspace_map.get(file.renamed_from_workspace)!
-        }
-
-        const source_info = await read_rename_source_file({
-          renamed_from: file.renamed_from,
-          workspace_root: old_workspace_root
-        })
-        if (source_info) {
-          rename_source_path = source_info.path
-          rename_source_content = source_info.content
-          rename_source_workspace_root = old_workspace_root
-        }
-      }
+      const {
+        rename_source_path,
+        rename_source_content,
+        rename_source_workspace_root
+      } = await get_rename_source_info({
+        file,
+        workspace_map,
+        default_workspace
+      })
 
       if (
         rename_source_path &&

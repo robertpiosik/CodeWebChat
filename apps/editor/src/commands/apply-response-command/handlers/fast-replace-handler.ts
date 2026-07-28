@@ -7,10 +7,9 @@ import { create_safe_path, sanitize_file_name } from '@/utils/path-sanitizer'
 import { FileItem } from '../utils/response-parser'
 import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
 import {
-  remove_directory_if_empty,
-  close_file_tabs,
-  read_rename_source_file,
-  cleanup_rename_source
+  cleanup_rename_source,
+  handle_deleted_file_item,
+  get_rename_source_info
 } from '../utils/file-operations'
 
 export const handle_fast_replace = async (params: {
@@ -109,87 +108,29 @@ export const handle_fast_replace = async (params: {
       if (!safe_path) continue
 
       if (file.is_deleted) {
-        // If the file was also renamed (moved then deleted), we need to ensure the source is deleted too.
-        if (file.renamed_from) {
-          let old_workspace_root = default_workspace
-          if (
-            file.renamed_from_workspace &&
-            workspace_map.has(file.renamed_from_workspace)
-          ) {
-            old_workspace_root = workspace_map.get(file.renamed_from_workspace)!
-          }
-
-          const source_info = await read_rename_source_file({
-            renamed_from: file.renamed_from,
-            workspace_root: old_workspace_root
-          })
-          if (source_info) {
-            await cleanup_rename_source({
-              source_path: source_info.path,
-              workspace_root: old_workspace_root
-            })
-          }
-        }
-
-        if (fs.existsSync(safe_path)) {
-          try {
-            const document = await vscode.workspace.openTextDocument(safe_path)
-            const original_content = document.getText()
-
-            await close_file_tabs(safe_path)
-
-            await vscode.workspace.fs.delete(vscode.Uri.file(safe_path))
-            await remove_directory_if_empty({
-              dir_path: path.dirname(safe_path),
-              workspace_root
-            })
-
-            original_states.push({
-              file_path: file.file_path,
-              content: original_content,
-              workspace_name: file.workspace_name,
-              file_state: 'deleted',
-              proposed_content: ''
-            })
-            Logger.info({
-              function_name: 'handle_fast_replace',
-              message: 'File deleted',
-              data: safe_path
-            })
-          } catch (error) {
-            Logger.error({
-              function_name: 'handle_fast_replace',
-              message: 'Failed to delete file',
-              data: { safe_path, error }
-            })
-          }
+        const delete_result = await handle_deleted_file_item({
+          file,
+          safe_path,
+          workspace_root,
+          workspace_map,
+          default_workspace,
+          function_name: 'handle_fast_replace'
+        })
+        if (delete_result.success && delete_result.original_state) {
+          original_states.push(delete_result.original_state)
         }
         continue
       }
 
-      let rename_source_path: string | undefined
-      let rename_source_content: string | undefined
-      let rename_source_workspace_root: string | undefined
-
-      if (file.renamed_from) {
-        let old_workspace_root = default_workspace
-        if (
-          file.renamed_from_workspace &&
-          workspace_map.has(file.renamed_from_workspace)
-        ) {
-          old_workspace_root = workspace_map.get(file.renamed_from_workspace)!
-        }
-
-        const source_info = await read_rename_source_file({
-          renamed_from: file.renamed_from,
-          workspace_root: old_workspace_root
-        })
-        if (source_info) {
-          rename_source_path = source_info.path
-          rename_source_content = source_info.content
-          rename_source_workspace_root = old_workspace_root
-        }
-      }
+      const {
+        rename_source_path,
+        rename_source_content,
+        rename_source_workspace_root
+      } = await get_rename_source_info({
+        file,
+        workspace_map,
+        default_workspace
+      })
 
       if (
         rename_source_path &&
