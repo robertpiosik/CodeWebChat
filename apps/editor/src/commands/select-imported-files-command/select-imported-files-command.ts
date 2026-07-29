@@ -47,12 +47,27 @@ export const select_imported_files_command = (
         },
         async (progress, token) => {
           const queue: vscode.Uri[] = []
+          let processed = 0
+          let total = starting_uris.length
+          let last_reported_percentage = 0
 
           for (const starting_uri of starting_uris) {
             if (token.isCancellationRequested) {
               is_cancelled = true
               break
             }
+
+            const current_percentage = Math.floor((processed / total) * 100)
+            const increment = Math.max(
+              0,
+              current_percentage - last_reported_percentage
+            )
+            last_reported_percentage += increment
+
+            progress.report({
+              increment
+            })
+
             const imports = await get_imports_for_uri(starting_uri, token)
             for (const uri_str of imports) {
               if (!visited_uris.has(uri_str)) {
@@ -63,7 +78,10 @@ export const select_imported_files_command = (
                 }
               }
             }
+            processed++
           }
+
+          total += queue.length
 
           while (queue.length > 0) {
             if (token.isCancellationRequested) {
@@ -71,6 +89,18 @@ export const select_imported_files_command = (
               break
             }
             const current_uri = queue.shift()!
+
+            const current_percentage = Math.floor((processed / total) * 100)
+            const increment = Math.max(
+              0,
+              current_percentage - last_reported_percentage
+            )
+            last_reported_percentage += increment
+
+            progress.report({
+              increment
+            })
+
             const imports = await get_imports_for_uri(current_uri, token)
             for (const uri_str of imports) {
               if (!visited_uris.has(uri_str)) {
@@ -78,9 +108,17 @@ export const select_imported_files_command = (
                 if (is_valid_uri(uri_str, workspace_provider)) {
                   recursive_uris.add(uri_str)
                   queue.push(vscode.Uri.parse(uri_str))
+                  total++
                 }
               }
             }
+            processed++
+          }
+
+          if (!is_cancelled) {
+            progress.report({
+              increment: 100 - last_reported_percentage
+            })
           }
         }
       )

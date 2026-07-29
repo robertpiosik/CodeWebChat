@@ -1,21 +1,21 @@
 export const translations = {
-  'command.select-referencing-files.searching': {
-    en: 'Searching for references...',
-    pl: 'Wyszukiwanie odwołań...',
-    'zh-cn': '正在搜索引用...',
-    ja: '参照を検索中...',
-    'zh-tw': '正在搜尋參考...',
-    de: 'Suche nach Referenzen...',
-    es: 'Buscando referencias...',
-    fr: 'Recherche de références...',
-    'pt-br': 'Procurando por referências...',
-    ru: 'Поиск ссылок...',
-    ko: '참조 검색 중...',
-    it: 'Ricerca di riferimenti in corso...',
-    tr: 'Referanslar aranıyor...',
-    cs: 'Hledání referencí...',
-    hu: 'Hivatkozások keresése...',
-    bg: 'Търсене на референции...'
+  'command.select-referencing-files.processing': {
+    en: 'Processing references...',
+    pl: 'Przetwarzanie odwołań...',
+    'zh-cn': '正在处理引用...',
+    ja: '参照を処理中...',
+    'zh-tw': '正在處理參考...',
+    de: 'Referenzen werden verarbeitet...',
+    es: 'Procesando referencias...',
+    fr: 'Traitement des références...',
+    'pt-br': 'Processando referências...',
+    ru: 'Обработка ссылок...',
+    ko: '참조 처리 중...',
+    it: 'Elaborazione dei riferimenti...',
+    tr: 'Referanslar işleniyor...',
+    cs: 'Zpracování referencí...',
+    hu: 'Hivatkozások feldolgozása...',
+    bg: 'Обработка на референциите...'
   },
   'command.select-referencing-files.no-files': {
     en: 'No references found.',
