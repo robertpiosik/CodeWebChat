@@ -6,6 +6,7 @@ import { display_token_count } from '../utils/display-token-count'
 import { t } from '../i18n'
 import { get_all_files } from './select-imported-files-command/utils/get-all-files'
 import { search_files } from '@/features/search-files'
+import { show_parent_folder_quick_pick } from '../utils/show-parent-folder-quick-pick'
 
 export const select_referencing_files_command = (
   workspace_provider: WorkspaceProvider,
@@ -53,7 +54,7 @@ export const select_referencing_files_command = (
           matched_files = await vscode.window.withProgress(
             {
               location: vscode.ProgressLocation.Window,
-              title: t('command.select-referencing-files.searching')
+              title: t('command.select-referencing-files.processing')
             },
             async () => {
               const locations = await vscode.commands.executeCommand<
@@ -115,7 +116,7 @@ export const select_referencing_files_command = (
           await vscode.window.withProgress(
             {
               location: vscode.ProgressLocation.Notification,
-              title: t('command.select-referencing-files.searching'),
+              title: t('command.select-referencing-files.processing'),
               cancellable: true
             },
             async (progress, token) => {
@@ -241,6 +242,11 @@ export const select_referencing_files_command = (
           tooltip: t('common.go-to-file')
         }
 
+        const add_parent_folder_button = {
+          iconPath: new vscode.ThemeIcon('folder'),
+          tooltip: t('common.select-parent-folder')
+        }
+
         const currently_checked = workspace_provider.get_checked_files()
 
         const quick_pick_items: (vscode.QuickPickItem & {
@@ -255,11 +261,18 @@ export const select_referencing_files_command = (
               : file_path
 
             const dir_name = path.dirname(relative_path)
+            const has_parent_folder = dir_name != '.'
             const display_dir = dir_name == '.' ? '' : dir_name
 
             const token_count =
               await workspace_provider.calculate_file_tokens(file_path)
             const formatted_token_count = display_token_count(token_count.total)
+
+            const buttons: vscode.QuickInputButton[] = []
+            if (has_parent_folder) {
+              buttons.push(add_parent_folder_button)
+            }
+            buttons.push(open_file_button)
 
             return {
               label: path.basename(file_path),
@@ -268,7 +281,7 @@ export const select_referencing_files_command = (
                 : formatted_token_count,
               file_path,
               range,
-              buttons: [open_file_button]
+              buttons
             }
           })
         )
@@ -303,6 +316,8 @@ export const select_referencing_files_command = (
           }
           quick_pick.buttons = [search_button, close_button]
 
+          let is_showing_folder_quick_pick = false
+
           const selected_items = await new Promise<
             | readonly (vscode.QuickPickItem & {
                 file_path: string
@@ -331,6 +346,7 @@ export const select_referencing_files_command = (
             })
 
             quick_pick.onDidHide(() => {
+              if (is_showing_folder_quick_pick) return
               if (!is_accepted) {
                 resolve(undefined)
               }
@@ -353,6 +369,48 @@ export const select_referencing_files_command = (
                       error: String(error)
                     })
                   )
+                }
+              } else if (e.button === add_parent_folder_button) {
+                is_showing_folder_quick_pick = true
+                quick_pick.hide()
+
+                const result = await show_parent_folder_quick_pick({
+                  file_path: e.item.file_path,
+                  workspace_provider
+                })
+
+                is_showing_folder_quick_pick = false
+
+                if (
+                  result === 'added' ||
+                  result === 'back' ||
+                  result === 'no_folders' ||
+                  result === 'no_workspace_root'
+                ) {
+                  const current_items = quick_pick.items
+                  let current_selected = quick_pick.selectedItems
+
+                  if (result === 'added') {
+                    const updated_checked =
+                      workspace_provider.get_checked_files()
+                    current_selected = current_items.filter(
+                      (item) =>
+                        updated_checked.includes(item.file_path) ||
+                        current_selected.includes(item)
+                    )
+                  }
+
+                  quick_pick.items = [...current_items]
+                  quick_pick.selectedItems = current_selected
+                  quick_pick.show()
+
+                  setTimeout(() => {
+                    quick_pick.activeItems = [e.item]
+                  }, 0)
+                } else {
+                  is_accepted = true
+                  resolve(undefined)
+                  quick_pick.dispose()
                 }
               }
             })

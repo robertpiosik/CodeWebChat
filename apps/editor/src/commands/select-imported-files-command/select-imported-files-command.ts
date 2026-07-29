@@ -10,6 +10,7 @@ import { get_all_files } from './utils/get-all-files'
 import { get_imports_for_uri } from './utils/get-imports-for-uri'
 import { t } from '@/i18n'
 import { search_files } from '@/features/search-files'
+import { show_parent_folder_quick_pick } from '@/utils/show-parent-folder-quick-pick'
 
 export const select_imported_files_command = (
   workspace_provider: WorkspaceProvider,
@@ -38,6 +39,7 @@ export const select_imported_files_command = (
       )
 
       let is_cancelled = false
+      const queue: vscode.Uri[] = []
 
       await vscode.window.withProgress(
         {
@@ -46,9 +48,8 @@ export const select_imported_files_command = (
           cancellable: true
         },
         async (progress, token) => {
-          const queue: vscode.Uri[] = []
           let processed = 0
-          let total = starting_uris.length
+          const total = starting_uris.length
           let last_reported_percentage = 0
 
           for (const starting_uri of starting_uris) {
@@ -81,40 +82,6 @@ export const select_imported_files_command = (
             processed++
           }
 
-          total += queue.length
-
-          while (queue.length > 0) {
-            if (token.isCancellationRequested) {
-              is_cancelled = true
-              break
-            }
-            const current_uri = queue.shift()!
-
-            const current_percentage = Math.floor((processed / total) * 100)
-            const increment = Math.max(
-              0,
-              current_percentage - last_reported_percentage
-            )
-            last_reported_percentage += increment
-
-            progress.report({
-              increment
-            })
-
-            const imports = await get_imports_for_uri(current_uri, token)
-            for (const uri_str of imports) {
-              if (!visited_uris.has(uri_str)) {
-                visited_uris.add(uri_str)
-                if (is_valid_uri(uri_str, workspace_provider)) {
-                  recursive_uris.add(uri_str)
-                  queue.push(vscode.Uri.parse(uri_str))
-                  total++
-                }
-              }
-            }
-            processed++
-          }
-
           if (!is_cancelled) {
             progress.report({
               increment: 100 - last_reported_percentage
@@ -127,25 +94,17 @@ export const select_imported_files_command = (
         return
       }
 
-      const valid_immediate = Array.from(immediate_uris).map((u) =>
-        vscode.Uri.parse(u)
-      )
-      const valid_recursive = Array.from(recursive_uris).map((u) =>
-        vscode.Uri.parse(u)
-      )
-
-      if (valid_immediate.length == 0 && valid_recursive.length == 0) {
-        vscode.window.showInformationMessage(
-          t('command.select-imported-files.no-files')
-        )
-        return
-      }
-
-      const currently_checked = workspace_provider.get_checked_files()
+      const initial_visited_uris = new Set(visited_uris)
+      const initial_queue = [...queue]
 
       const open_file_button = {
         iconPath: new vscode.ThemeIcon('go-to-file'),
         tooltip: t('command.select-imported-files.go-to-file')
+      }
+
+      const add_parent_folder_button = {
+        iconPath: new vscode.ThemeIcon('folder'),
+        tooltip: t('common.select-parent-folder')
       }
 
       const close_button = {
@@ -156,6 +115,11 @@ export const select_imported_files_command = (
       const search_button = {
         iconPath: new vscode.ThemeIcon('search'),
         tooltip: t('command.select-imported-files.search')
+      }
+
+      const deep_search_button = {
+        iconPath: new vscode.ThemeIcon('telescope'),
+        tooltip: t('command.select-imported-files.deep-search')
       }
 
       type ImportQuickPickItem = vscode.QuickPickItem & {
@@ -174,6 +138,7 @@ export const select_imported_files_command = (
               workspace_provider.get_workspace_root_for_file(file_path)!
             const relative_path = path.relative(workspace_root, file_path)
             const dir_name = path.dirname(relative_path)
+            const has_parent_folder = dir_name != '.'
             let display_dir = dir_name == '.' ? '' : dir_name
 
             if (workspace_provider.get_workspace_roots().length > 1) {
@@ -188,7 +153,14 @@ export const select_imported_files_command = (
               await workspace_provider.calculate_file_tokens(file_path)
             const formatted_token_count = display_token_count(token_count.total)
 
-            const is_picked = currently_checked.includes(file_path)
+            const current_checked = workspace_provider.get_checked_files()
+            const is_picked = current_checked.includes(file_path)
+
+            const buttons: vscode.QuickInputButton[] = []
+            if (has_parent_folder) {
+              buttons.push(add_parent_folder_button)
+            }
+            buttons.push(open_file_button)
 
             return {
               label: path.basename(file_path),
@@ -198,43 +170,77 @@ export const select_imported_files_command = (
               picked: is_picked,
               uri: uri,
               tokens: token_count.total,
-              buttons: [open_file_button]
+              buttons
             }
           })
         )
       }
 
-      const quick_pick_items: ImportQuickPickItem[] = []
-
-      if (valid_immediate.length > 0) {
-        quick_pick_items.push({
-          label: t('command.select-imported-files.immediate'),
-          kind: vscode.QuickPickItemKind.Separator
-        })
-        const immediate_items = await map_to_quick_pick(valid_immediate)
-        quick_pick_items.push(...immediate_items)
-      }
-
-      if (valid_recursive.length > 0) {
-        quick_pick_items.push({
-          label: t('command.select-imported-files.recursive'),
-          kind: vscode.QuickPickItemKind.Separator
-        })
-        const recursive_items = await map_to_quick_pick(valid_recursive)
-        quick_pick_items.push(...recursive_items)
-      }
-
-      let current_selected_items = quick_pick_items.filter(
-        (item) => item.picked
-      )
+      let current_selected_items: ImportQuickPickItem[] = []
       let selected_paths: string[] = []
-      const shown_paths = quick_pick_items
-        .filter(
-          (item) => item.kind !== vscode.QuickPickItemKind.Separator && item.uri
-        )
-        .map((item) => item.uri!.fsPath)
+      let shown_paths: string[] = []
+      let first_render = true
 
       while (true) {
+        const valid_immediate = Array.from(immediate_uris).map((u) =>
+          vscode.Uri.parse(u)
+        )
+        const valid_recursive = Array.from(recursive_uris).map((u) =>
+          vscode.Uri.parse(u)
+        )
+
+        if (valid_immediate.length == 0 && valid_recursive.length == 0) {
+          vscode.window.showInformationMessage(
+            t('command.select-imported-files.no-files')
+          )
+          return
+        }
+
+        const quick_pick_items: ImportQuickPickItem[] = []
+
+        if (valid_immediate.length > 0) {
+          if (valid_recursive.length > 0) {
+            quick_pick_items.push({
+              label: t('command.select-imported-files.immediate'),
+              kind: vscode.QuickPickItemKind.Separator
+            })
+          }
+          const immediate_items = await map_to_quick_pick(valid_immediate)
+          quick_pick_items.push(...immediate_items)
+        }
+
+        if (valid_recursive.length > 0) {
+          quick_pick_items.push({
+            label: t('command.select-imported-files.recursive'),
+            kind: vscode.QuickPickItemKind.Separator
+          })
+          const recursive_items = await map_to_quick_pick(valid_recursive)
+          quick_pick_items.push(...recursive_items)
+        }
+
+        if (first_render) {
+          current_selected_items = quick_pick_items.filter(
+            (item) => item.picked
+          )
+          first_render = false
+        } else {
+          const selected_uris = new Set(
+            current_selected_items
+              .filter((i) => i.uri)
+              .map((i) => i.uri!.toString())
+          )
+          current_selected_items = quick_pick_items.filter(
+            (item) => item.uri && selected_uris.has(item.uri.toString())
+          )
+        }
+
+        shown_paths = quick_pick_items
+          .filter(
+            (item) =>
+              item.kind !== vscode.QuickPickItemKind.Separator && item.uri
+          )
+          .map((item) => item.uri!.fsPath)
+
         const quick_pick = vscode.window.createQuickPick<ImportQuickPickItem>()
         quick_pick.items = quick_pick_items
         quick_pick.selectedItems = current_selected_items
@@ -263,20 +269,40 @@ export const select_imported_files_command = (
 
         quick_pick.title = t('command.select-imported-files.title')
         quick_pick.ignoreFocusOut = true
-        quick_pick.buttons = [search_button, close_button]
 
+        const buttons: vscode.QuickInputButton[] = [search_button, close_button]
+        if (queue.length > 0) {
+          buttons.unshift(deep_search_button)
+        }
+        if (valid_recursive.length > 0) {
+          buttons.unshift(vscode.QuickInputButtons.Back)
+        }
+        quick_pick.buttons = buttons
+
+        let is_showing_folder_quick_pick = false
         const selected_items = await new Promise<
-          readonly ImportQuickPickItem[] | undefined | 'search'
+          | readonly ImportQuickPickItem[]
+          | undefined
+          | 'search'
+          | 'deep_search'
+          | 'back'
         >((resolve) => {
           let is_accepted = false
 
           quick_pick.onDidTriggerButton((button) => {
-            if (button === close_button) {
+            if (button === vscode.QuickInputButtons.Back) {
+              resolve('back')
+              quick_pick.hide()
+            } else if (button === close_button) {
               resolve(undefined)
               quick_pick.hide()
             } else if (button === search_button) {
               current_selected_items = [...quick_pick.selectedItems]
               resolve('search')
+              quick_pick.hide()
+            } else if (button === deep_search_button) {
+              current_selected_items = [...quick_pick.selectedItems]
+              resolve('deep_search')
               quick_pick.hide()
             }
           })
@@ -288,6 +314,7 @@ export const select_imported_files_command = (
           })
 
           quick_pick.onDidHide(() => {
+            if (is_showing_folder_quick_pick) return
             if (!is_accepted) {
               resolve(undefined)
             }
@@ -306,6 +333,47 @@ export const select_imported_files_command = (
                   })
                 )
               }
+            } else if (e.button === add_parent_folder_button && e.item.uri) {
+              is_showing_folder_quick_pick = true
+              quick_pick.hide()
+
+              const result = await show_parent_folder_quick_pick({
+                file_path: e.item.uri.fsPath,
+                workspace_provider
+              })
+
+              is_showing_folder_quick_pick = false
+
+              if (
+                result === 'added' ||
+                result === 'back' ||
+                result === 'no_folders' ||
+                result === 'no_workspace_root'
+              ) {
+                const current_items = quick_pick.items
+                let current_selected = quick_pick.selectedItems
+
+                if (result === 'added') {
+                  const updated_checked = workspace_provider.get_checked_files()
+                  current_selected = current_items.filter(
+                    (item) =>
+                      (item.uri && updated_checked.includes(item.uri.fsPath)) ||
+                      current_selected.includes(item)
+                  )
+                }
+
+                quick_pick.items = [...current_items]
+                quick_pick.selectedItems = current_selected
+                quick_pick.show()
+
+                setTimeout(() => {
+                  quick_pick.activeItems = [e.item]
+                }, 0)
+              } else {
+                is_accepted = true
+                resolve(undefined)
+                quick_pick.dispose()
+              }
             }
           })
 
@@ -316,119 +384,90 @@ export const select_imported_files_command = (
           return
         }
 
-        if (selected_items == 'search') {
-          let should_return = false
-          let back_to_main = false
+        if (selected_items === 'back') {
+          recursive_uris.clear()
+          visited_uris.clear()
+          initial_visited_uris.forEach((u) => visited_uris.add(u))
+          queue.length = 0
+          for (const item of initial_queue) {
+            queue.push(item)
+          }
+          continue
+        }
 
-          while (true) {
-            let paths_for_search = shown_paths
+        if (selected_items === 'deep_search') {
+          is_cancelled = false
+          await vscode.window.withProgress(
+            {
+              location: vscode.ProgressLocation.Notification,
+              title: t('command.select-imported-files.processing-recursive'),
+              cancellable: true
+            },
+            async (progress, token) => {
+              let processed = 0
+              let total = queue.length
+              let last_reported_percentage = 0
 
-            if (valid_recursive.length > 0) {
-              const scope_selection = await new Promise<
-                'immediate' | 'all' | 'back' | undefined
-              >((resolve) => {
-                const scope_quick_pick = vscode.window.createQuickPick()
-                scope_quick_pick.items = [
-                  { label: t('command.select-imported-files.immediate-only') },
-                  {
-                    label: t(
-                      'command.select-imported-files.immediate-and-recursive'
-                    )
-                  }
-                ]
-                scope_quick_pick.title = t(
-                  'command.select-imported-files.search-scope'
+              while (queue.length > 0) {
+                if (token.isCancellationRequested) {
+                  is_cancelled = true
+                  break
+                }
+                const current_uri = queue.shift()!
+
+                const current_percentage = Math.floor((processed / total) * 100)
+                const increment = Math.max(
+                  0,
+                  current_percentage - last_reported_percentage
                 )
-                scope_quick_pick.ignoreFocusOut = true
-                scope_quick_pick.buttons = [
-                  vscode.QuickInputButtons.Back,
-                  close_button
-                ]
+                last_reported_percentage += increment
 
-                let is_accepted = false
-
-                scope_quick_pick.onDidTriggerButton((button) => {
-                  if (button === vscode.QuickInputButtons.Back) {
-                    resolve('back')
-                    scope_quick_pick.hide()
-                  } else if (button === close_button) {
-                    resolve(undefined)
-                    scope_quick_pick.hide()
-                  }
+                progress.report({
+                  increment
                 })
 
-                scope_quick_pick.onDidAccept(() => {
-                  is_accepted = true
-                  const selected = scope_quick_pick.selectedItems[0]?.label
-                  if (
-                    selected ===
-                    t('command.select-imported-files.immediate-only')
-                  ) {
-                    resolve('immediate')
-                  } else {
-                    resolve('all')
+                const imports = await get_imports_for_uri(current_uri, token)
+                for (const uri_str of imports) {
+                  if (!visited_uris.has(uri_str)) {
+                    visited_uris.add(uri_str)
+                    if (is_valid_uri(uri_str, workspace_provider)) {
+                      recursive_uris.add(uri_str)
+                      queue.push(vscode.Uri.parse(uri_str))
+                      total++
+                    }
                   }
-                  scope_quick_pick.hide()
+                }
+                processed++
+              }
+
+              if (!is_cancelled) {
+                progress.report({
+                  increment: 100 - last_reported_percentage
                 })
-
-                scope_quick_pick.onDidHide(() => {
-                  if (!is_accepted) {
-                    resolve(undefined)
-                  }
-                  scope_quick_pick.dispose()
-                })
-
-                scope_quick_pick.show()
-              })
-
-              if (scope_selection === undefined) {
-                should_return = true
-                break
-              }
-
-              if (scope_selection === 'back') {
-                back_to_main = true
-                break
-              }
-
-              if (scope_selection === 'immediate') {
-                paths_for_search = valid_immediate.map((u) => u.fsPath)
               }
             }
+          )
 
-            const search_result = await search_files({
-              get_files: async () => paths_for_search,
-              workspace_provider,
-              extension_context,
-              show_back_button: true
-            })
+          continue
+        }
 
-            if (search_result == 'back') {
-              if (valid_recursive.length > 0) {
-                continue
-              } else {
-                back_to_main = true
-                break
-              }
-            }
+        if (selected_items == 'search') {
+          const search_result = await search_files({
+            get_files: async () => shown_paths,
+            workspace_provider,
+            extension_context,
+            show_back_button: true
+          })
 
-            if (!search_result) {
-              should_return = true
-              break
-            }
-
-            selected_paths = search_result.selected_paths
-            break
-          }
-
-          if (should_return) {
-            return
-          }
-
-          if (back_to_main) {
+          if (search_result == 'back') {
             continue
           }
 
+          if (!search_result) {
+            return
+          }
+
+          selected_paths = search_result.selected_paths
           break
         } else {
           const valid_selected = selected_items.filter(
@@ -439,9 +478,10 @@ export const select_imported_files_command = (
         }
       }
 
+      const final_checked = workspace_provider.get_checked_files()
       const paths_to_apply = [
         ...new Set([
-          ...currently_checked.filter((p) => !shown_paths.includes(p)),
+          ...final_checked.filter((p) => !shown_paths.includes(p)),
           ...selected_paths
         ])
       ]
