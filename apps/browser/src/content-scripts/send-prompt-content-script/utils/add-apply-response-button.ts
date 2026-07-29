@@ -48,11 +48,30 @@ export function add_apply_response_button(params: {
     requestAnimationFrame(async () => {
       await params.perform_copy(params.footer)
       await new Promise((resolve) => setTimeout(resolve, 500))
+
+      let client_id = params.client_id
+      let raw_instructions = params.raw_instructions
+      let edit_format = params.edit_format
+
+      try {
+        const session_data_str = sessionStorage.getItem('cwc-session-data')
+        if (session_data_str) {
+          const session_data = JSON.parse(session_data_str)
+          if (session_data.client_id !== undefined) {
+            client_id = session_data.client_id
+            raw_instructions = session_data.raw_instructions
+            edit_format = session_data.edit_format
+          }
+        }
+      } catch (error) {
+        console.error('Error reading CWC session data', error)
+      }
+
       browser.runtime.sendMessage<Message>({
         action: 'apply-response',
-        client_id: params.client_id,
-        raw_instructions: params.raw_instructions,
-        edit_format: params.edit_format,
+        client_id,
+        raw_instructions,
+        edit_format,
         url: window.location.href
       })
     })
@@ -62,12 +81,18 @@ export function add_apply_response_button(params: {
   apply_response_button.focus({ preventScroll: true })
 }
 
+let active_observer: MutationObserver | null = null
+
 export function observe_for_responses(params: {
   chatbot_name: string
   is_generating: () => boolean
   footer_selector: string
   add_buttons?: (footer: Element) => void
 }) {
+  if (active_observer) {
+    active_observer.disconnect()
+  }
+
   let has_sent_finished_responding = true
 
   const observer = new MutationObserver(() => {
@@ -97,6 +122,8 @@ export function observe_for_responses(params: {
       params.add_buttons!(footer)
     })
   })
+
+  active_observer = observer
 
   observer.observe(document.documentElement, {
     childList: true,
