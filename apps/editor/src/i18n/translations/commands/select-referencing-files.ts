@@ -89,25 +89,6 @@ export const translations = {
     hu: 'Keresés',
     bg: 'Търсене'
   },
-
-  'command.select-referencing-files.context-updated': {
-    en: 'Context updated.',
-    pl: 'Kontekst zaktualizowany.',
-    'zh-cn': '上下文已更新。',
-    ja: 'コンテキストが更新されました。',
-    'zh-tw': '上下文已更新。',
-    de: 'Kontext aktualisiert.',
-    es: 'Contexto actualizado.',
-    fr: 'Contexte mis à jour.',
-    'pt-br': 'Contexto atualizado.',
-    ru: 'Контекст обновлен.',
-    ko: '컨텍스트가 업데이트되었습니다.',
-    it: 'Contesto aggiornato.',
-    tr: 'Bağlam güncellendi.',
-    cs: 'Kontext aktualizován.',
-    hu: 'Kontextus frissítve.',
-    bg: 'Контекстът е актуализиран.'
-  },
   'command.select-referencing-files.error-opening': {
     en: 'Error opening file: {error}',
     pl: 'Błąd otwierania pliku: {error}',

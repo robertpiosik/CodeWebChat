@@ -409,9 +409,6 @@ export const select_referencing_files_command = (
         })
 
         await workspace_provider.set_checked_files(paths_to_apply)
-        vscode.window.showInformationMessage(
-          t('command.select-referencing-files.context-updated')
-        )
       } catch (error) {
         vscode.window.showErrorMessage(
           t('command.select-referencing-files.failed', {
