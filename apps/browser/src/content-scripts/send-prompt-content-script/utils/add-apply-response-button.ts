@@ -12,7 +12,6 @@ import { show_response_ready_notification } from './show-response-ready-notifica
 export function add_apply_response_button(params: {
   client_id: number
   raw_instructions?: string
-  edit_format?: string
   footer: Element
   get_chat_turn: (footer: Element) => HTMLElement | null
   get_code_from_block?: (code_block: Element) => string | null | undefined
@@ -51,7 +50,6 @@ export function add_apply_response_button(params: {
 
       let client_id = params.client_id
       let raw_instructions = params.raw_instructions
-      let edit_format = params.edit_format
 
       try {
         const session_data_str = sessionStorage.getItem('cwc-session-data')
@@ -60,7 +58,6 @@ export function add_apply_response_button(params: {
           if (session_data.client_id !== undefined) {
             client_id = session_data.client_id
             raw_instructions = session_data.raw_instructions
-            edit_format = session_data.edit_format
           }
         }
       } catch (error) {
@@ -71,7 +68,6 @@ export function add_apply_response_button(params: {
         action: 'apply-response',
         client_id,
         raw_instructions,
-        edit_format,
         url: window.location.href
       })
     })

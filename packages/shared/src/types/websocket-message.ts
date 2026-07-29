@@ -31,7 +31,6 @@ export type InitializeChatMessage = {
   system_instructions?: string
   options?: string[]
   raw_instructions?: string
-  edit_format?: string
   prompt_type?: WebPromptType
   reuse_last_tab?: boolean
   invocation_count?: number
@@ -46,7 +45,6 @@ export type ApplyResponseMessage = {
   action: 'apply-response'
   client_id: number
   raw_instructions?: string
-  edit_format?: string
   url?: string
 }
 

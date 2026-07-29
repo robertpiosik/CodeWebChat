@@ -20,7 +20,8 @@ import { ApplyResponseCommandArgs } from '@/commands/apply-response-command/resp
 import { WebPromptType } from '@shared/types/prompt-types'
 
 /**
- * Bridges the current workspace window and websocket server that runs in a separate process.
+ * Bridges the current workspace window and a WebSockets server
+ * that runs in a separate process.
  */
 export class WebSocketManager {
   private extension_context: vscode.ExtensionContext
@@ -355,7 +356,6 @@ export class WebSocketManager {
     text: string
     web_configuration_name: string
     raw_instructions?: string
-    edit_format?: string
     prompt_type?: WebPromptType
     invocation_count: number
   }): Promise<boolean> {
@@ -449,7 +449,6 @@ export class WebSocketManager {
       options: web_configuration.options,
       client_id: this.client_id || 0, // 0 is a temporary fallback and should be removed few weeks from 28.03.25
       raw_instructions: params.raw_instructions,
-      edit_format: params.edit_format,
       prompt_type: params.prompt_type,
       reuse_last_tab,
       invocation_count: params.invocation_count

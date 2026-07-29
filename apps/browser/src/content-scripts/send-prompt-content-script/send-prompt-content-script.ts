@@ -197,7 +197,6 @@ const main = async () => {
       current_chat: Chat
       client_id: number
       raw_instructions?: string
-      edit_format?: string
       prompt_type?:
         | 'ask-about-files'
         | 'edit-files'
@@ -244,14 +243,12 @@ const main = async () => {
         JSON.stringify({
           client_id: stored_data.client_id,
           raw_instructions: stored_data.raw_instructions,
-          edit_format: stored_data.edit_format,
           inject_button
         })
       )
       chatbot.setup_observer({
         client_id: stored_data.client_id,
         raw_instructions: stored_data.raw_instructions,
-        edit_format: stored_data.edit_format,
         inject_button
       })
     } else {
@@ -266,7 +263,6 @@ const main = async () => {
           chatbot.setup_observer({
             client_id: session_data.client_id,
             raw_instructions: session_data.raw_instructions,
-            edit_format: session_data.edit_format,
             inject_button: session_data.inject_button ?? true
           })
         }

@@ -182,7 +182,6 @@ export const setup_message_listeners = () => {
             action: 'apply-response',
             client_id: message.client_id,
             raw_instructions: message.raw_instructions,
-            edit_format: message.edit_format,
             url: message.url
           } as ApplyResponseMessage)
         } else if (message.action == 'finished-responding') {

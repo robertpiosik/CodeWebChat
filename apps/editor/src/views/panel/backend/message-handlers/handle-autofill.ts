@@ -209,10 +209,6 @@ export const handle_autofill = async (params: {
           web_configuration_name: resolved_web_configuration_name,
           raw_instructions: current_instructions,
           prompt_type: params.panel_view_provider.web_prompt_type,
-          edit_format:
-            params.panel_view_provider.web_prompt_type == 'edit-files'
-              ? params.panel_view_provider.chat_edit_format
-              : undefined,
           invocation_count: params.invocation_count
         }
       )
