@@ -2,7 +2,7 @@ import styles from './RecentDonations.module.scss'
 import { useEffect, useRef, useState } from 'react'
 import cn from 'classnames'
 import { Scrollable } from '../../common/Scrollable'
-import { Fieldset } from '../Fieldset'
+import { Fieldset as UiFieldset } from '../Fieldset'
 import { TextButton } from '../../common/TextButton'
 
 const get_href_from_url_like_string = (text: string): string | null => {
@@ -152,7 +152,7 @@ export const RecentDonations: React.FC<RecentDonationsProps> = (props) => {
               'Hey there! Donating is a great way to show your support for the project. Thank you!'}
           </div>
           <div className={styles.platforms}>
-            <Fieldset
+            <UiFieldset
               is_collapsed={is_platforms_collapsed}
               label={props.translations?.platforms ?? 'Platforms'}
               on_toggle_collapsed={() =>
@@ -173,10 +173,10 @@ export const RecentDonations: React.FC<RecentDonationsProps> = (props) => {
                   </a>
                 ))}
               </div>
-            </Fieldset>
+            </UiFieldset>
           </div>
           <div className={styles.wallets}>
-            <Fieldset
+            <UiFieldset
               is_collapsed={is_wallets_collapsed}
               label={props.translations?.wallets ?? 'Wallets'}
               on_toggle_collapsed={() =>
@@ -196,7 +196,7 @@ export const RecentDonations: React.FC<RecentDonationsProps> = (props) => {
                   </div>
                 </div>
               ))}
-            </Fieldset>
+            </UiFieldset>
           </div>
 
           <div className={styles.donations}>
