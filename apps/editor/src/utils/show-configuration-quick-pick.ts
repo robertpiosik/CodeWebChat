@@ -23,9 +23,6 @@ export const map_api_configuration_to_item = (
   api_configuration: ApiConfiguration
 ) => {
   const description_parts = [api_configuration.model_provider_name]
-  if (api_configuration.temperature != null) {
-    description_parts.push(`${api_configuration.temperature}`)
-  }
   if (api_configuration.reasoning_effort) {
     description_parts.push(`${api_configuration.reasoning_effort}`)
   }

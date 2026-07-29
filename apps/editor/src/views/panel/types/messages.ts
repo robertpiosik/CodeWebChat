@@ -64,7 +64,6 @@ export type ApiConfiguration = {
   id: string
   model_provider_name: string
   model: string
-  temperature?: number
   reasoning_effort?: string
   is_pinned?: boolean
 }

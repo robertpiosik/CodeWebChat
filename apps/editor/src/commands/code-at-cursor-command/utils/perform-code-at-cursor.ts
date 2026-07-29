@@ -158,8 +158,7 @@ export const perform_code_at_cursor = async (params: {
 
       const body: { [key: string]: any } = {
         messages,
-        model: code_at_cursor_api_configuration.model,
-        temperature: code_at_cursor_api_configuration.temperature
+        model: code_at_cursor_api_configuration.model
       }
 
       apply_reasoning_effort({

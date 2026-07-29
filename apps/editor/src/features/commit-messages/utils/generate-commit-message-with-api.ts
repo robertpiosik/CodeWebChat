@@ -24,8 +24,7 @@ export const generate_commit_message_with_api = async (params: {
 
   const body = {
     messages,
-    model: params.api_configuration.model,
-    temperature: params.api_configuration.temperature
+    model: params.api_configuration.model
   }
 
   apply_reasoning_effort({

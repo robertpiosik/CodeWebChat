@@ -80,7 +80,6 @@ export const claude: Chatbot = {
       add_apply_response_button({
         client_id: params.client_id,
         raw_instructions: params.raw_instructions,
-        edit_format: params.edit_format,
         footer,
         get_chat_turn: (f) => f.closest('.group'),
         perform_copy: (f) => {

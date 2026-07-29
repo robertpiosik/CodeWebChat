@@ -103,7 +103,6 @@ export const process_file = async (params: {
   api_key: string
   model_provider: ModelProvider
   model: string
-  temperature?: number
   reasoning_effort?: string
   file_path: string
   file_content: string
@@ -129,8 +128,7 @@ export const process_file = async (params: {
 
   const body: { [key: string]: any } = {
     messages,
-    model: params.model,
-    temperature: params.temperature
+    model: params.model
   }
 
   apply_reasoning_effort({

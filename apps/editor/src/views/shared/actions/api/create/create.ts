@@ -95,8 +95,7 @@ export const create = async (params: {
 
   const api_configuration_to_add: ApiConfiguration = {
     model_provider_name: selected_model_provider.name,
-    model: selected_model,
-    temperature: undefined
+    model: selected_model
   }
 
   if (params.create_on_top) {

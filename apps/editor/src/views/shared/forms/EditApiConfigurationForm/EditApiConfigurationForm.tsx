@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import styles from './EditApiConfigurationForm.module.scss'
 import { ApiConfiguration } from '@/views/panel/types/messages'
 import { Field as UiField } from '@ui/components/editor/common/Field'
-import { Slider as UiSlider } from '@ui/components/editor/panel/Slider'
 import { BackendMessage } from '@/views/panel/types/messages'
 import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
 import { Fieldset as UiFieldset } from '@ui/components/editor/panel/Fieldset'
@@ -29,15 +28,8 @@ export const EditApiConfigurationForm: React.FC<Props> = (props) => {
     props.api_configuration.model_provider_name
   )
   const [model, set_model] = useState(props.api_configuration.model)
-  const [temperature, set_temperature] = useState(
-    props.api_configuration.temperature
-  )
   const [reasoning_effort, set_reasoning_effort] = useState(
     props.api_configuration.reasoning_effort
-  )
-
-  const [is_sampling_collapsed, set_is_sampling_collapsed] = useState(
-    props.api_configuration.temperature === undefined
   )
 
   useEffect(() => {
@@ -45,10 +37,9 @@ export const EditApiConfigurationForm: React.FC<Props> = (props) => {
       ...props.api_configuration,
       model_provider_name,
       model,
-      temperature,
       reasoning_effort
     })
-  }, [model_provider_name, model, temperature, reasoning_effort])
+  }, [model_provider_name, model, reasoning_effort])
 
   useEffect(() => {
     const handle_message = (event: MessageEvent) => {
@@ -126,36 +117,6 @@ export const EditApiConfigurationForm: React.FC<Props> = (props) => {
                   )
                 }
               }}
-            />
-          </UiField>
-        </UiFieldset>
-
-        <UiFieldset
-          label={t('edit-api-configuration-form.sampling-parameters')}
-          is_collapsed={is_sampling_collapsed}
-          on_toggle_collapsed={() =>
-            set_is_sampling_collapsed(!is_sampling_collapsed)
-          }
-        >
-          <UiField
-            label={t('edit-api-configuration-form.temperature')}
-            info={t('edit-api-configuration-form.temperature.info')}
-            action={
-              temperature !== undefined && (
-                <button
-                  className={styles.clear}
-                  onClick={() => set_temperature(undefined)}
-                >
-                  {t('edit-api-configuration-form.clear')}
-                </button>
-              )
-            }
-          >
-            <UiSlider
-              value={temperature}
-              onChange={set_temperature}
-              min={0}
-              max={2}
             />
           </UiField>
         </UiFieldset>

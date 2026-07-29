@@ -13,7 +13,6 @@ import {
 export interface CommitMessageApiConfiguration {
   model_provider_name: string
   model: string
-  temperature?: number
   reasoning_effort?: string
 }
 

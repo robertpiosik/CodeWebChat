@@ -53,9 +53,6 @@ export const update = async (params: {
     a.name == b.name &&
     a.chatbot == b.chatbot &&
     a.model == b.model &&
-    a.temperature === b.temperature &&
-    a.top_p === b.top_p &&
-    a.thinking_budget === b.thinking_budget &&
     a.reasoning_effort == b.reasoning_effort &&
     a.system_instructions == b.system_instructions &&
     JSON.stringify(a.options) == JSON.stringify(b.options) &&

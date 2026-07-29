@@ -1061,9 +1061,6 @@
               "newUrl": {
                 "type": "string"
               },
-              "thinkingBudget": {
-                "type": "number"
-              },
               "reasoningEffort": {
                 "type": "string"
               },

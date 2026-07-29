@@ -148,110 +148,6 @@ export const openrouter: Chatbot = {
 
     await close_options_modal('set_options')
   },
-  set_temperature: async (chat) => {
-    const temperature = chat.temperature
-    if (temperature === undefined) return
-    if (!(await show_options_modal('set_temperature'))) return
-    const sampling_parameters_button = Array.from(
-      document.querySelectorAll('div[role="dialog"] button')
-    ).find(
-      (button) => button.textContent?.trim() == 'Sampling Parameters'
-    ) as HTMLButtonElement
-    if (!sampling_parameters_button) {
-      report_initialization_error({
-        function_name: 'set_temperature',
-        log_message: 'Sampling parameters button not found'
-      })
-      await close_options_modal('set_temperature')
-      return
-    }
-    sampling_parameters_button.click()
-    await new Promise((r) => requestAnimationFrame(r))
-    const temperature_div = Array.from(
-      document.querySelectorAll(
-        'div[role="dialog"] div.flex.justify-between.text-sm'
-      )
-    ).find((div) => div.textContent?.trim() == 'Temperature') as HTMLElement
-    if (!temperature_div) {
-      report_initialization_error({
-        function_name: 'set_temperature',
-        log_message: 'Temperature div not found'
-      })
-      await close_options_modal('set_temperature')
-      return
-    }
-    const temperature_input = temperature_div.querySelector(
-      'input'
-    ) as HTMLInputElement
-    if (!temperature_input) {
-      report_initialization_error({
-        function_name: 'set_temperature',
-        log_message: 'Temperature input not found'
-      })
-      await close_options_modal('set_temperature')
-      return
-    }
-    temperature_input.focus()
-    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-      window.HTMLInputElement.prototype,
-      'value'
-    )?.set
-    nativeInputValueSetter?.call(temperature_input, temperature.toString())
-    temperature_input.dispatchEvent(new Event('input', { bubbles: true }))
-    temperature_input.blur()
-    await close_options_modal('set_temperature')
-  },
-  set_top_p: async (chat) => {
-    const top_p = chat.top_p
-    if (top_p === undefined) return
-    if (!(await show_options_modal('set_top_p'))) return
-    const sampling_parameters_button = Array.from(
-      document.querySelectorAll('div[role="dialog"] button')
-    ).find(
-      (button) => button.textContent?.trim() == 'Sampling Parameters'
-    ) as HTMLButtonElement
-    if (!sampling_parameters_button) {
-      report_initialization_error({
-        function_name: 'set_top_p',
-        log_message: 'Sampling parameters button not found'
-      })
-      await close_options_modal('set_top_p')
-      return
-    }
-    sampling_parameters_button.click()
-    await new Promise((r) => requestAnimationFrame(r))
-    const top_p_div = Array.from(
-      document.querySelectorAll(
-        'div[role="dialog"] div.flex.justify-between.text-sm'
-      )
-    ).find((div) => div.textContent?.trim() == 'Top P') as HTMLElement
-    if (!top_p_div) {
-      report_initialization_error({
-        function_name: 'set_top_p',
-        log_message: 'Top P div not found'
-      })
-      await close_options_modal('set_top_p')
-      return
-    }
-    const top_p_input = top_p_div.querySelector('input') as HTMLInputElement
-    if (!top_p_input) {
-      report_initialization_error({
-        function_name: 'set_top_p',
-        log_message: 'Top P input not found'
-      })
-      await close_options_modal('set_top_p')
-      return
-    }
-    top_p_input.focus()
-    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-      window.HTMLInputElement.prototype,
-      'value'
-    )?.set
-    nativeInputValueSetter?.call(top_p_input, top_p.toString())
-    top_p_input.dispatchEvent(new Event('input', { bubbles: true }))
-    top_p_input.blur()
-    await close_options_modal('set_top_p')
-  },
   set_reasoning_effort: async (chat) => {
     const reasoning_effort = chat.reasoning_effort
     if (!reasoning_effort) return
@@ -336,7 +232,6 @@ export const openrouter: Chatbot = {
       add_apply_response_button({
         client_id: params.client_id,
         raw_instructions: params.raw_instructions,
-        edit_format: params.edit_format,
         footer,
         get_chat_turn: (f) => f.closest('div[data-message-id]'),
         perform_copy: (f) => {

@@ -128,7 +128,6 @@ export const handle_active_editor_intelligent_update = async (params: {
         api_key: params.api_key
       },
       model: params.api_configuration.model,
-      temperature: params.api_configuration.temperature,
       reasoning_effort: params.api_configuration.reasoning_effort,
       file_path: target_file_path,
       file_content: original_content,

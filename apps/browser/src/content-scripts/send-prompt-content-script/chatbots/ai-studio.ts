@@ -141,22 +141,6 @@ export const ai_studio: Chatbot = {
     }
     await new Promise((r) => requestAnimationFrame(r))
   },
-  set_temperature: async (chat) => {
-    const temperature = chat.temperature
-    if (temperature === undefined) return
-    const temperature_element = document.querySelector(
-      'ms-prompt-run-settings div[data-test-id="temperatureSliderContainer"] input[inputmode="decimal"]'
-    ) as HTMLInputElement
-    if (!temperature_element) {
-      report_initialization_error({
-        function_name: 'set_temperature',
-        log_message: 'Temperature input not found'
-      })
-      return
-    }
-    temperature_element.value = temperature.toString()
-    temperature_element.dispatchEvent(new Event('change', { bubbles: true }))
-  },
   set_reasoning_effort: async (chat) => {
     const reasoning_effort = chat.reasoning_effort
     if (!reasoning_effort) return
@@ -204,105 +188,6 @@ export const ai_studio: Chatbot = {
 
     await new Promise((r) => requestAnimationFrame(r))
   },
-  set_thinking_budget: async (chat) => {
-    const thinking_budget = chat.thinking_budget
-    if (thinking_budget === undefined) {
-      const thinking_toggle = document.querySelector(
-        'mat-slide-toggle[data-test-toggle="enable-thinking"] button'
-      ) as HTMLElement
-      if (thinking_toggle?.getAttribute('aria-checked') == 'false') {
-        return
-      }
-
-      const manual_budget_toggle = document.querySelector(
-        'mat-slide-toggle[data-test-toggle="manual-budget"] button'
-      ) as HTMLElement
-      if (!manual_budget_toggle) {
-        report_initialization_error({
-          function_name: 'set_thinking_budget',
-          log_message: 'Manual budget toggle not found'
-        })
-        return
-      }
-      if (manual_budget_toggle.getAttribute('aria-checked') == 'true') {
-        manual_budget_toggle.click()
-        await new Promise((r) => requestAnimationFrame(r))
-      }
-    } else {
-      const thinking_toggle = document.querySelector(
-        'mat-slide-toggle[data-test-toggle="enable-thinking"] button'
-      ) as HTMLElement
-      if (!thinking_toggle) {
-        report_initialization_error({
-          function_name: 'set_thinking_budget',
-          log_message: 'Thinking toggle not found'
-        })
-        return
-      }
-      if (thinking_toggle.getAttribute('aria-checked') == 'false') {
-        thinking_toggle.click()
-        await new Promise((resolve) => setTimeout(resolve, 250))
-      }
-      const manual_budget_toggle = document.querySelector(
-        'mat-slide-toggle[data-test-toggle="manual-budget"] button'
-      ) as HTMLElement
-      if (!manual_budget_toggle) {
-        report_initialization_error({
-          function_name: 'set_thinking_budget',
-          log_message: 'Manual budget toggle not found'
-        })
-        return
-      }
-      if (manual_budget_toggle.getAttribute('aria-checked') == 'false') {
-        manual_budget_toggle.click()
-        await new Promise((resolve) => setTimeout(resolve, 250))
-      }
-      const budget_input = document.querySelector(
-        'div[data-test-id="user-setting-budget-animation-wrapper"] input'
-      ) as HTMLInputElement
-      if (!budget_input) {
-        report_initialization_error({
-          function_name: 'set_thinking_budget',
-          log_message: 'Budget input not found'
-        })
-        return
-      }
-      budget_input.value = thinking_budget.toString()
-      budget_input.dispatchEvent(new Event('input', { bubbles: true }))
-    }
-  },
-  set_top_p: async (chat) => {
-    const top_p = chat.top_p
-    if (top_p === undefined) return
-    const settings_items = Array.from(
-      document.querySelectorAll('div.settings-item')
-    )
-    const advanced_settings = settings_items.find((item) => {
-      const title_element = item.querySelector('p.group-title')
-      return (
-        title_element &&
-        title_element.textContent?.trim() == 'Advanced settings'
-      )
-    })
-    if (
-      advanced_settings &&
-      !advanced_settings.classList.contains('expanded')
-    ) {
-      ;(advanced_settings as HTMLElement).click()
-      await new Promise((r) => requestAnimationFrame(r))
-    }
-    const top_p_element = document.querySelector(
-      'ms-prompt-run-settings div[mattooltip="Probability threshold for top-p sampling"] input[inputmode="decimal"]'
-    ) as HTMLInputElement
-    if (!top_p_element) {
-      report_initialization_error({
-        function_name: 'set_top_p',
-        log_message: 'Top-p input not found'
-      })
-      return
-    }
-    top_p_element.value = top_p.toString()
-  },
   enter_message: async (params) => {
     const input_element = document.querySelector(
       'textarea[formcontrolname="promptText"]'
@@ -339,7 +224,6 @@ export const ai_studio: Chatbot = {
       add_apply_response_button({
         client_id: params.client_id,
         raw_instructions: params.raw_instructions,
-        edit_format: params.edit_format,
         footer,
         get_chat_turn: (f) => f.closest('ms-chat-turn'),
         perform_copy: (f) => {

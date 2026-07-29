@@ -11,7 +11,6 @@ export type ModelProvider = {
 export type ApiConfiguration = {
   model_provider_name: string
   model: string
-  temperature?: number
   reasoning_effort?: string
   is_pinned?: boolean
 }
@@ -22,7 +21,6 @@ export const get_api_configuration_id = (
   return [
     api_configuration.model_provider_name,
     api_configuration.model,
-    api_configuration.temperature,
     api_configuration.reasoning_effort ?? ''
   ]
     .filter((v) => v !== null && v !== undefined)
@@ -143,7 +141,6 @@ export class ModelProvidersManager {
         return {
           model_provider_name: sc.providerName,
           model: sc.model,
-          temperature: sc.temperature,
           reasoning_effort: sc.reasoningEffort,
           is_pinned: sc.isPinned
         }
@@ -165,8 +162,7 @@ export class ModelProvidersManager {
       )
       const new_config: any = {
         providerName: c.model_provider_name,
-        model: c.model,
-        temperature: c.temperature
+        model: c.model
       }
 
       if (old_config?.isDefaultForCodeAtCursor)
@@ -199,7 +195,6 @@ export class ModelProvidersManager {
     return (
       settings_config.providerName === api_configuration.model_provider_name &&
       settings_config.model === api_configuration.model &&
-      settings_config.temperature === api_configuration.temperature &&
       (settings_config.reasoningEffort ?? undefined) ===
         (api_configuration.reasoning_effort ?? undefined)
     )
@@ -218,7 +213,6 @@ export class ModelProvidersManager {
       const api_configuration: ApiConfiguration = {
         model_provider_name: default_config_from_settings.providerName,
         model: default_config_from_settings.model,
-        temperature: default_config_from_settings.temperature,
         reasoning_effort: default_config_from_settings.reasoningEffort,
         is_pinned: default_config_from_settings.isPinned
       }

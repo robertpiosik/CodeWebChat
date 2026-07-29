@@ -418,8 +418,7 @@ export const handle_make_api_call = async (
       async () => {
         const body: { [key: string]: any } = {
           messages,
-          model: api_configuration.model,
-          temperature: api_configuration.temperature
+          model: api_configuration.model
         }
 
         apply_reasoning_effort({

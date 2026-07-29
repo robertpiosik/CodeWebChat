@@ -191,7 +191,6 @@ export const handle_fix_all_failed_files = async (params: {
             api_key: api_model_provider.api_key,
             model_provider: api_model_provider,
             model: intelligent_update_api_configuration.model,
-            temperature: intelligent_update_api_configuration.temperature,
             reasoning_effort:
               intelligent_update_api_configuration.reasoning_effort,
             file_path: file_path,

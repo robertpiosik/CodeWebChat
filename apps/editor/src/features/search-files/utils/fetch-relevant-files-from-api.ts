@@ -42,8 +42,7 @@ export const fetch_relevant_files_from_api = async (
   const messages = [{ role: 'user', content: user_content }]
   const body: { [key: string]: any } = {
     messages,
-    model: selected_config.model,
-    temperature: selected_config.temperature
+    model: selected_config.model
   }
 
   apply_reasoning_effort({

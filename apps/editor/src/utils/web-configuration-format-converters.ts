@@ -5,9 +5,6 @@ export type ConfigWebConfigurationFormat = {
   name?: string
   chatbot?: keyof typeof CHATBOTS
   model?: string
-  temperature?: number
-  topP?: number
-  thinkingBudget?: number
   reasoningEffort?: string
   systemInstructions?: string
   options?: string[]
@@ -23,9 +20,6 @@ export const config_web_configuration_to_ui_format = (
     name: config_web_configuration.name,
     chatbot: config_web_configuration.chatbot,
     model: config_web_configuration.model,
-    temperature: config_web_configuration.temperature,
-    top_p: config_web_configuration.topP,
-    thinking_budget: config_web_configuration.thinkingBudget,
     reasoning_effort: config_web_configuration.reasoningEffort,
     system_instructions: config_web_configuration.systemInstructions,
     options: config_web_configuration.options,
@@ -42,9 +36,6 @@ export const ui_web_configuration_to_config_format = (
     name: web_configuration.name || undefined,
     chatbot: web_configuration.chatbot,
     model: web_configuration.model,
-    temperature: web_configuration.temperature,
-    topP: web_configuration.top_p,
-    thinkingBudget: web_configuration.thinking_budget,
     reasoningEffort: web_configuration.reasoning_effort,
     systemInstructions: web_configuration.system_instructions,
     options: web_configuration.options,

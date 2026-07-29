@@ -179,7 +179,6 @@ export const handle_intelligent_update_file_in_preview = async (
     api_key: api_model_provider.api_key,
     model_provider: api_model_provider,
     model: intelligent_update_api_configuration.model,
-    temperature: intelligent_update_api_configuration.temperature,
     reasoning_effort: intelligent_update_api_configuration.reasoning_effort,
     file_path: file_path,
     file_content: file_state.content,

@@ -76,7 +76,6 @@ export const update = async (params: {
       : {}),
     model_provider_name: params.updated_api_configuration.model_provider_name,
     model: params.updated_api_configuration.model,
-    temperature: params.updated_api_configuration.temperature,
     reasoning_effort: params.updated_api_configuration.reasoning_effort,
     is_pinned: params.updated_api_configuration.is_pinned
   }

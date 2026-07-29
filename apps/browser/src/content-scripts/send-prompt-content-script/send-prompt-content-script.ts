@@ -140,15 +140,6 @@ const initialize_chat = async (params: { message: string; chat: Chat }) => {
   if (chatbot?.enter_system_instructions) {
     await chatbot.enter_system_instructions(params.chat)
   }
-  if (chatbot?.set_temperature) {
-    await chatbot.set_temperature(params.chat)
-  }
-  if (chatbot?.set_top_p) {
-    await chatbot.set_top_p(params.chat)
-  }
-  if (chatbot?.set_thinking_budget) {
-    await chatbot.set_thinking_budget(params.chat)
-  }
   if (chatbot?.set_reasoning_effort) {
     await chatbot.set_reasoning_effort(params.chat)
   }

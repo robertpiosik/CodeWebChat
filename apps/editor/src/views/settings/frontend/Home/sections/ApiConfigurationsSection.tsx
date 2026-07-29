@@ -158,9 +158,6 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                   if (config.reasoning_effort) {
                     details.push(config.reasoning_effort)
                   }
-                  if (config.temperature !== undefined) {
-                    details.push(`T: ${config.temperature}`)
-                  }
 
                   return (
                     <div

@@ -72,10 +72,7 @@ const process_next_chat = async () => {
       current_chat: {
         url: current_chat_message.url,
         model: current_chat_message.model,
-        temperature: current_chat_message.temperature,
         reasoning_effort: current_chat_message.reasoning_effort,
-        thinking_budget: current_chat_message.thinking_budget,
-        top_p: current_chat_message.top_p,
         system_instructions: current_chat_message.system_instructions,
         options: current_chat_message.options
       },

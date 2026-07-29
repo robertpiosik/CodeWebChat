@@ -4,9 +4,6 @@ export type Chatbot = {
   wait_until_ready?: () => Promise<void>
   set_options?: (chat: Chat) => Promise<void>
   set_model?: (chat: Chat) => Promise<void>
-  set_temperature?: (chat: Chat) => Promise<void>
-  set_top_p?: (chat: Chat) => Promise<void>
-  set_thinking_budget?: (chat: Chat) => Promise<void>
   set_reasoning_effort?: (chat: Chat) => Promise<void>
   enter_system_instructions?: (chat: Chat) => Promise<void>
   setup_observer?: (params: {

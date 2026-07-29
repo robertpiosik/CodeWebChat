@@ -59,7 +59,6 @@ export const z_ai: Chatbot = {
       add_apply_response_button({
         client_id: params.client_id,
         raw_instructions: params.raw_instructions,
-        edit_format: params.edit_format,
         footer,
         get_chat_turn: (f) => f.parentElement!.querySelector('.chat-assistant'),
         get_code_from_block: (b) => b.querySelector('.cm-line')?.textContent,

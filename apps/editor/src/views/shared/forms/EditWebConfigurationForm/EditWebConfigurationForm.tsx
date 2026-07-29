@@ -3,7 +3,6 @@ import styles from './EditWebConfigurationForm.module.scss'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { Field as UiField } from '@ui/components/editor/common/Field'
-import { Slider as UiSlider } from '@ui/components/editor/panel/Slider'
 import { Input as UiInput } from '@ui/components/editor/common/Input'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { BackendMessage } from '@/views/panel/types/messages'
@@ -34,13 +33,6 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
 
   const [chatbot, set_chatbot] = useState(props.web_configuration.chatbot)
   const [name, set_name] = useState(props.web_configuration.name)
-  const [temperature, set_temperature] = useState(
-    props.web_configuration.temperature
-  )
-  const [top_p, set_top_p] = useState(props.web_configuration.top_p)
-  const [thinking_budget, set_thinking_budget] = useState(
-    props.web_configuration.thinking_budget
-  )
   const [reasoning_effort, set_reasoning_effort] = useState(
     props.web_configuration.reasoning_effort
   )
@@ -52,10 +44,6 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
   const [new_url, set_new_url] = useState(props.web_configuration.new_url)
   const [options, set_options] = useState<string[]>(
     props.web_configuration.options || []
-  )
-  const [is_sampling_collapsed, set_is_sampling_collapsed] = useState(
-    props.web_configuration.temperature === undefined &&
-      props.web_configuration.top_p === undefined
   )
 
   const chatbot_config = chatbot ? CHATBOTS[chatbot] : undefined
@@ -88,9 +76,6 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
     }
   }, [chatbot, new_url])
 
-  const supports_temperature = chatbot_config?.supports_custom_temperature
-  const supports_top_p = chatbot_config?.supports_custom_top_p
-  const supports_thinking_budget = chatbot_config?.supports_thinking_budget
   const supports_reasoning_effort =
     chatbot_config?.supports_reasoning_effort ||
     !!model_info?.supported_reasoning_efforts
@@ -106,11 +91,6 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
       props.on_update({
         name,
         chatbot,
-        ...(temperature !== undefined && temperature != 1
-          ? { temperature }
-          : {}),
-        ...(top_p !== undefined && top_p != 0.95 ? { top_p } : {}),
-        ...(thinking_budget !== undefined ? { thinking_budget } : {}),
         ...(reasoning_effort ? { reasoning_effort } : {}),
         ...(model ? { model } : {}),
         ...(system_instructions ? { system_instructions } : {}),
@@ -126,9 +106,6 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
     }
   }, [
     name,
-    temperature,
-    top_p,
-    thinking_budget,
     reasoning_effort,
     chatbot,
     model,
@@ -143,11 +120,6 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
     set_model(Object.keys(CHATBOTS[new_chatbot].models ?? {})[0] || undefined)
     set_port(undefined)
     set_new_url(undefined)
-    set_temperature(
-      CHATBOTS[new_chatbot].supports_custom_temperature ? 0.5 : undefined
-    )
-    set_top_p(undefined)
-    set_thinking_budget(undefined)
     set_reasoning_effort(undefined)
     if (CHATBOTS[new_chatbot].supports_system_instructions) {
       set_system_instructions(CHATBOTS[new_chatbot].default_system_instructions)
@@ -300,32 +272,6 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
             </UiField>
           )}
 
-          {supports_thinking_budget && !supports_reasoning_effort && (
-            <UiField
-              label={t('edit-web-configuration-form.thinking-budget')}
-              html_for="thinking-budget"
-              info={t('edit-web-configuration-form.thinking-budget.info')}
-            >
-              <UiInput
-                id="thinking-budget"
-                type="text"
-                value={String(thinking_budget ?? '')}
-                on_change={(value) => {
-                  const num = parseInt(value, 10)
-                  set_thinking_budget(isNaN(num) ? undefined : num)
-                }}
-                placeholder={t(
-                  'edit-web-configuration-form.thinking-budget.placeholder'
-                )}
-                on_key_down={(e) =>
-                  !/[0-9]/.test(e.key) &&
-                  e.key != 'Backspace' &&
-                  e.preventDefault()
-                }
-              />
-            </UiField>
-          )}
-
           <UiField
             label={t('edit-web-configuration-form.name')}
             html_for="name"
@@ -450,59 +396,6 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
               </div>
             </UiFieldset>
           )}
-
-        {(supports_temperature || supports_top_p) && (
-          <UiFieldset
-            label={t('edit-web-configuration-form.sampling-parameters')}
-            is_collapsed={is_sampling_collapsed}
-            on_toggle_collapsed={() =>
-              set_is_sampling_collapsed(!is_sampling_collapsed)
-            }
-          >
-            {supports_temperature && (
-              <UiField
-                label={t('edit-web-configuration-form.temperature')}
-                info={t('edit-web-configuration-form.temperature.info')}
-                action={
-                  temperature !== undefined && (
-                    <button
-                      className={styles.clear}
-                      onClick={() => set_temperature(undefined)}
-                    >
-                      {t('edit-web-configuration-form.clear')}
-                    </button>
-                  )
-                }
-              >
-                <UiSlider
-                  value={temperature}
-                  onChange={set_temperature}
-                  min={0}
-                  max={2}
-                />
-              </UiField>
-            )}
-
-            {supports_top_p && (
-              <UiField
-                label={t('edit-web-configuration-form.top-p')}
-                info={t('edit-web-configuration-form.top-p.info')}
-                action={
-                  top_p !== undefined && (
-                    <button
-                      className={styles.clear}
-                      onClick={() => set_top_p(undefined)}
-                    >
-                      {t('edit-web-configuration-form.clear')}
-                    </button>
-                  )
-                }
-              >
-                <UiSlider value={top_p} onChange={set_top_p} min={0} max={1} />
-              </UiField>
-            )}
-          </UiFieldset>
-        )}
       </div>
     </UiScrollable>
   )

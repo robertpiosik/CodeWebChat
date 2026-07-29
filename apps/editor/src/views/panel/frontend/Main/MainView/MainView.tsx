@@ -279,9 +279,6 @@ export const MainView: React.FC<Props> = (props) => {
       if (c.reasoning_effort) {
         details.push(`${c.reasoning_effort}`)
       }
-      if (c.temperature != null) {
-        details.push(`${c.temperature}`)
-      }
       return {
         id: c.id,
         title: c.model,
