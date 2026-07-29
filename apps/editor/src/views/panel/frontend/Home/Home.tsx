@@ -93,7 +93,7 @@ export const Home: React.FC<Props> = (props) => {
           <span className={styles['header__text']}>{t('header.home')}</span>
         </div>
         <UiDonateButton
-          label="Buy Me A Coffee"
+          label={t('recent-donations.buy-me-a-coffee')}
           on_click={props.on_donate_click}
         />
       </div>

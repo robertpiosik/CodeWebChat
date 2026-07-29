@@ -1,23 +1,23 @@
 import { useCallback, useEffect, useState, useRef } from 'react'
 import axios from 'axios'
 
-type Coffee = {
+type Donation = {
   support_message: string
   support_note: string
 }
 
-export const use_recent_coffees = () => {
-  const [viewing_coffees, set_viewing_coffees] = useState(false)
-  const [coffees, set_coffees] = useState<Coffee[]>([])
+export const use_recent_donations = () => {
+  const [viewing_donations, set_viewing_donations] = useState(false)
+  const [donations, set_donations] = useState<Donation[]>([])
   const [is_fetching, set_is_fetching] = useState(false)
   const [is_revalidating, set_is_revalidating] = useState(false)
   const [fetched_once, set_fetched_once] = useState(false)
   const [page, set_page] = useState(1)
   const [is_fetching_next, set_is_fetching_next] = useState(false)
   const [has_more, set_has_more] = useState(true)
-  const cached_coffees = useRef<Coffee[]>([])
+  const cached_donations = useRef<Donation[]>([])
 
-  const fetch_coffees = useCallback(async (is_revalidation = false) => {
+  const fetch_donations = useCallback(async (is_revalidation = false) => {
     try {
       if (is_revalidation) {
         set_is_revalidating(true)
@@ -30,23 +30,23 @@ export const use_recent_coffees = () => {
       )
 
       if (response.data?.data) {
-        const new_coffees = response.data.data.map((raw: any) => ({
+        const new_donations = response.data.data.map((raw: any) => ({
           support_message: raw.support_message,
           support_note: raw.support_note ?? ''
         }))
 
-        set_coffees(new_coffees)
-        cached_coffees.current = new_coffees
+        set_donations(new_donations)
+        cached_donations.current = new_donations
         set_page(2)
 
-        if (new_coffees.length < 10) {
+        if (new_donations.length < 10) {
           set_has_more(false)
         } else {
           set_has_more(true)
         }
       }
     } catch (error) {
-      console.error('Failed to fetch coffees', error)
+      console.error('Failed to fetch donations', error)
     } finally {
       if (is_revalidation) {
         set_is_revalidating(false)
@@ -58,23 +58,23 @@ export const use_recent_coffees = () => {
   }, [])
 
   useEffect(() => {
-    if (!viewing_coffees) {
+    if (!viewing_donations) {
       set_page(1)
       set_has_more(true)
       return
     }
 
     // Stale-while-revalidate strategy
-    if (fetched_once && cached_coffees.current.length > 0) {
+    if (fetched_once && cached_donations.current.length > 0) {
       // Show stale data immediately
-      set_coffees(cached_coffees.current)
+      set_donations(cached_donations.current)
       // Then revalidate in background
-      fetch_coffees(true)
+      fetch_donations(true)
     } else {
       // First time fetch
-      fetch_coffees(false)
+      fetch_donations(false)
     }
-  }, [viewing_coffees, fetch_coffees])
+  }, [viewing_donations, fetch_donations])
 
   const on_fetch_next_page = useCallback(async () => {
     if (
@@ -92,26 +92,26 @@ export const use_recent_coffees = () => {
         `https://app.buymeacoffee.com/api/creators/slug/robertpiosik/coffees?web=1&page=${page}&per_page=10`
       )
       if (response.data?.data) {
-        const new_coffees = response.data.data.map((raw: any) => ({
+        const new_donations = response.data.data.map((raw: any) => ({
           support_message: raw.support_message,
           support_note: raw.support_note ?? ''
         }))
-        if (new_coffees.length > 0) {
-          set_coffees((prev) => {
-            const updated = [...prev, ...new_coffees]
-            cached_coffees.current = updated
+        if (new_donations.length > 0) {
+          set_donations((prev) => {
+            const updated = [...prev, ...new_donations]
+            cached_donations.current = updated
             return updated
           })
           set_page((prev) => prev + 1)
         }
-        if (new_coffees.length < 10) {
+        if (new_donations.length < 10) {
           set_has_more(false)
         }
       } else {
         set_has_more(false)
       }
     } catch (error) {
-      console.error('Failed to fetch coffees', error)
+      console.error('Failed to fetch donations', error)
       set_has_more(false)
     } finally {
       set_is_fetching_next(false)
@@ -126,12 +126,12 @@ export const use_recent_coffees = () => {
   ])
 
   return {
-    viewing_coffees,
-    set_viewing_coffees,
-    coffees,
+    viewing_donations,
+    set_viewing_donations,
+    donations,
     is_fetching,
     is_revalidating,
-    coffees_fetched_once: fetched_once,
+    donations_fetched_once: fetched_once,
     on_fetch_next_page,
     has_more
   }

@@ -1,10 +1,10 @@
-import { RecentCoffees, RecentCoffeesProps } from './RecentCoffees'
+import { RecentDonations, RecentDonationsProps } from './RecentDonations'
 
 export default {
-  component: RecentCoffees
+  component: RecentDonations
 }
 
-const sample_coffees: RecentCoffeesProps['coffees'] = [
+const sample_donations: RecentDonationsProps['donations'] = [
   {
     support_message:
       '<span class="suppUsername"><a href="https://github.com/johndoe">JohnDoe</a></span> bought 2 coffees.',
@@ -22,8 +22,8 @@ const sample_coffees: RecentCoffeesProps['coffees'] = [
 
 export const Default = () => {
   return (
-    <RecentCoffees
-      coffees={sample_coffees}
+    <RecentDonations
+      donations={sample_donations}
       is_fetching={false}
       on_show_qr_code={(wallet) => console.log('Show QR code', wallet)}
       is_revalidating={false}
@@ -35,7 +35,7 @@ export const Default = () => {
 
 export const Loading = () => {
   return (
-    <RecentCoffees
+    <RecentDonations
       is_fetching={true}
       on_show_qr_code={(wallet) => console.log('Show QR code', wallet)}
       is_revalidating={false}
@@ -47,8 +47,8 @@ export const Loading = () => {
 
 export const Revalidating = () => {
   return (
-    <RecentCoffees
-      coffees={sample_coffees}
+    <RecentDonations
+      donations={sample_donations}
       on_show_qr_code={(wallet) => console.log('Show QR code', wallet)}
       is_fetching={false}
       is_revalidating={true}
