@@ -113,7 +113,7 @@ export const handle_conflict_markers = async (params: {
               original_content: rename_source_content,
               markers_content: file.content
             })
-          } else {
+          } else if (file.content != '') {
             new_content = file.content
           }
 
