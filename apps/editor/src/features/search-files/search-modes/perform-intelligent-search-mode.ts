@@ -5,15 +5,15 @@ import {
   LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY,
   LAST_FIND_RELEVANT_FILES_SHRINK_STATE_KEY
 } from '@/constants/state-keys'
-import { prompt_for_search_term } from './prompt-for-search-term'
-import { analyze_files } from './analyze-files'
-import { prompt_for_shrink_mode } from './prompt-for-shrink-mode'
-import { prompt_for_api_configuration } from './prompt-for-config'
-import { fetch_relevant_files_from_api } from './fetch-relevant-files-from-api'
-import { prompt_for_intelligent_search_results } from './prompt-for-intelligent-search-results'
+import { prompt_for_search_term } from '../utils/prompt-for-search-term'
+import { analyze_files } from '../utils/analyze-files'
+import { prompt_for_shrink_mode } from '../utils/prompt-for-shrink-mode'
+import { prompt_for_api_configuration } from '../utils/prompt-for-config'
+import { search_files_by_intelligent } from '../utils/search-files-by-intelligent'
+import { prompt_for_intelligent_search_results } from '../utils/prompt-for-intelligent-search-results'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 
-export const perform_intelligent_search_flow = async (params: {
+export const perform_intelligent_search_mode = async (params: {
   files: string[]
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
@@ -142,7 +142,7 @@ export const perform_intelligent_search_flow = async (params: {
           model_provider
         } = api_configuration_result
 
-        const api_result = await fetch_relevant_files_from_api(
+        const api_result = await search_files_by_intelligent(
           analysis.files_data,
           shrink_result as boolean,
           search_term,

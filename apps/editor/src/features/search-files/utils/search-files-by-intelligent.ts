@@ -12,7 +12,7 @@ import { FileData } from './analyze-files'
 import { ModelProvider } from '@/services/model-providers-manager'
 import { t } from '@/i18n'
 
-export const fetch_relevant_files_from_api = async (
+export const search_files_by_intelligent = async (
   files_data: FileData[],
   shrink_result: boolean,
   instructions: string,
@@ -93,7 +93,7 @@ export const fetch_relevant_files_from_api = async (
   } catch (error) {
     if (!axios.isCancel(error)) {
       Logger.error({
-        function_name: 'fetch_relevant_files_from_api',
+        function_name: 'search_files_by_intelligent',
         message: 'Error finding relevant files',
         data: error
       })

@@ -1,1 +1,1 @@
-export * from './actions/search-files'
+export * from './search-files'
