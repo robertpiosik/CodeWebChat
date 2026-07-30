@@ -356,7 +356,6 @@ export const process_response = async (params: {
       original_states: OriginalFileState[]
       diff_application_method?: 'recount' | 'search_and_replace'
     }[] = []
-    let any_patch_used_fallback = false
 
     const total_patches = patches.length
 
@@ -397,9 +396,6 @@ export const process_response = async (params: {
             diff_application_method: result.diff_application_method
           })
         }
-        if (result.diff_application_method) {
-          any_patch_used_fallback = true
-        }
       } else {
         if (result.original_states) {
           for (const state of result.original_states) {
@@ -427,26 +423,6 @@ export const process_response = async (params: {
     }
 
     if (all_original_states.length > 0) {
-      if (any_patch_used_fallback) {
-        ;(async () => {
-          const fallback_patches_count = applied_patches.filter(
-            (p) => p.diff_application_method
-          ).length
-          const fallback_files = applied_patches
-            .filter((p) => p.diff_application_method)
-            .map((p) => p.patch.file_path)
-
-          Logger.info({
-            function_name: 'process_response',
-            message: 'Patches applied with fallback method',
-            data: {
-              count: fallback_patches_count,
-              total: total_patches,
-              files: fallback_files
-            }
-          })
-        })()
-      }
       return {
         original_states: all_original_states,
         response: params.response
