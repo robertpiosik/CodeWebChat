@@ -542,6 +542,10 @@ export interface PickTasksWorkspaceMessage extends BaseMessage {
   active_root?: string
 }
 
+export interface GetIsModernUiMessage extends BaseMessage {
+  command: 'GET_IS_MODERN_UI'
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -632,6 +636,7 @@ export type FrontendMessage =
   | PickApiModelMessage
   | PickApiReasoningEffortMessage
   | PickTasksWorkspaceMessage
+  | GetIsModernUiMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -896,6 +901,11 @@ export interface TasksWorkspacePickedMessage extends BaseMessage {
   root: string
 }
 
+export interface IsModernUiMessage extends BaseMessage {
+  command: 'IS_MODERN_UI'
+  is_modern_ui: boolean
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | FocusPromptFieldMessage
@@ -951,3 +961,4 @@ export type BackendMessage =
   | StartWebConfigurationCreationMessage
   | StartApiConfigurationCreationMessage
   | TasksWorkspacePickedMessage
+  | IsModernUiMessage

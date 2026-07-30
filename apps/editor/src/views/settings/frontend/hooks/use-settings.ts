@@ -70,6 +70,9 @@ export const use_settings = (vscode: any) => {
   >(undefined)
   const [auto_run_intelligent_update, set_auto_run_intelligent_update] =
     useState<boolean | undefined>(undefined)
+  const [is_modern_ui, set_is_modern_ui] = useState<boolean | undefined>(
+    undefined
+  )
 
   useEffect(() => {
     post_message(vscode, { command: 'GET_MODEL_PROVIDERS' })
@@ -94,6 +97,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_COPY_PATHS_FORMAT' })
     post_message(vscode, { command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR' })
     post_message(vscode, { command: 'GET_AUTO_RUN_INTELLIGENT_UPDATE' })
+    post_message(vscode, { command: 'GET_IS_MODERN_UI' })
   }, [vscode])
 
   useEffect(() => {
@@ -142,6 +146,8 @@ export const use_settings = (vscode: any) => {
         set_copy_paths_format(message.value)
       } else if (message.command == 'AUTO_RUN_INTELLIGENT_UPDATE') {
         set_auto_run_intelligent_update(message.enabled)
+      } else if (message.command == 'IS_MODERN_UI') {
+        set_is_modern_ui(message.is_modern_ui)
       }
     }
 
@@ -430,6 +436,7 @@ export const use_settings = (vscode: any) => {
     clear_checks_in_workspace_behavior,
     copy_paths_format,
     auto_run_intelligent_update,
+    is_modern_ui,
     handle_reorder_providers,
     handle_add_provider,
     handle_delete_provider,

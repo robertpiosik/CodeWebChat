@@ -345,6 +345,10 @@ export interface UpdateModelProviderMessage {
   create_on_top?: boolean
 }
 
+export interface GetIsModernUiMessage {
+  command: 'GET_IS_MODERN_UI'
+}
+
 export type FrontendMessage =
   | GetModelProvidersMessage
   | ReorderModelProvidersMessage
@@ -409,6 +413,7 @@ export type FrontendMessage =
   | PickApiModelMessage
   | PickApiReasoningEffortMessage
   | UpdateModelProviderMessage
+  | GetIsModernUiMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface ModelProvidersMessage {
@@ -579,6 +584,11 @@ export interface ModelProviderUpdatedMessage {
   command: 'MODEL_PROVIDER_UPDATED'
 }
 
+export interface IsModernUiMessage {
+  command: 'IS_MODERN_UI'
+  is_modern_ui: boolean
+}
+
 export type BackendMessage =
   | ModelProvidersMessage
   | ApiConfigurationsMessage
@@ -613,3 +623,4 @@ export type BackendMessage =
   | NewlyPickedApiReasoningEffortMessage
   | StartModelProviderCreationMessage
   | ModelProviderUpdatedMessage
+  | IsModernUiMessage

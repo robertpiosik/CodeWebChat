@@ -83,6 +83,7 @@ export const Panel = () => {
     handle_tab_delete,
     handle_tabs_reorder,
     voice_input_push_to_talk,
+    is_modern_ui,
     token_count
   } = use_panel(vscode)
 
@@ -299,7 +300,7 @@ export const Panel = () => {
 
   return (
     <LayoutContext.Provider value={layout_context_value}>
-      <div className={styles.container}>
+      <div className={styles.container} data-modern-ui={is_modern_ui}>
         <div className={styles.slot}>
           <Layout>
             <div

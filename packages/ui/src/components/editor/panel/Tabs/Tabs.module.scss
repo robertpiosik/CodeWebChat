@@ -1,11 +1,15 @@
 .tabs {
   height: 25px;
-  padding: 0 10px 0 12px;
+  padding: 0 14px 0 16px;
   margin-bottom: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 14px;
+
+  :global([data-modern-ui='true']) & {
+    padding: 0 10px 0 12px;
+  }
 
   &__list {
     display: flex;

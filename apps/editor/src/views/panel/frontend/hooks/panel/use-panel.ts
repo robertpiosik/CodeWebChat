@@ -56,6 +56,7 @@ export const use_panel = (vscode: any) => {
   ] = useState<boolean>(false)
   const [voice_input_push_to_talk, set_voice_input_push_to_talk] =
     useState(false)
+  const [is_modern_ui, set_is_modern_ui] = useState(false)
 
   const handle_task_forward = (text: string) => {
     handle_instructions_change(text, 'edit-files')
@@ -155,6 +156,8 @@ export const use_panel = (vscode: any) => {
         set_voice_input_push_to_talk(message.enabled)
       } else if (message.command == 'TOKEN_COUNT_UPDATED') {
         set_token_count(message.token_count)
+      } else if (message.command == 'IS_MODERN_UI') {
+        set_is_modern_ui(message.is_modern_ui)
       }
     }
     window.addEventListener('message', handle_message)
@@ -171,7 +174,8 @@ export const use_panel = (vscode: any) => {
       { command: 'REQUEST_CAN_UNDO' },
       { command: 'GET_SETUP_PROGRESS' },
       { command: 'GET_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE' },
-      { command: 'GET_VOICE_INPUT_PUSH_TO_TALK' }
+      { command: 'GET_VOICE_INPUT_PUSH_TO_TALK' },
+      { command: 'GET_IS_MODERN_UI' }
     ]
     initial_messages.forEach((message) => post_message(vscode, message))
 
@@ -304,6 +308,7 @@ export const use_panel = (vscode: any) => {
     handle_tab_delete,
     handle_tabs_reorder,
     voice_input_push_to_talk,
+    is_modern_ui,
     token_count
   }
 }

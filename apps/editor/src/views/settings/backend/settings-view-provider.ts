@@ -91,6 +91,15 @@ export class SettingsViewProvider {
     })
   }
 
+  private _send_is_modern_ui() {
+    const config = vscode.workspace.getConfiguration('workbench')
+    const is_modern_ui = config.get<boolean>('experimental.modernUI', false)
+    this.postMessage({
+      command: 'IS_MODERN_UI',
+      is_modern_ui
+    })
+  }
+
   public createOrShow(section_to_show?: string) {
     const column = vscode.window.activeTextEditor
       ? vscode.window.activeTextEditor.viewColumn
@@ -285,6 +294,8 @@ export class SettingsViewProvider {
           await handle_pick_api_model(this, message)
         } else if (message.command == 'PICK_API_REASONING_EFFORT') {
           await handle_pick_api_reasoning_effort(this, message)
+        } else if (message.command == 'GET_IS_MODERN_UI') {
+          this._send_is_modern_ui()
         }
       },
       null,
@@ -314,6 +325,9 @@ export class SettingsViewProvider {
           void handle_get_reuse_last_tab(this)
           void handle_get_auto_run_intelligent_update(this)
           this._send_web_configurations()
+        }
+        if (e.affectsConfiguration('workbench.experimental.modernUI')) {
+          this._send_is_modern_ui()
         }
       })
     )

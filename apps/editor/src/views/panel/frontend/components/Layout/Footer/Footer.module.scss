@@ -4,8 +4,12 @@
   z-index: -1; // Makes context menu of a web configuration appear above
   display: flex;
   justify-content: space-between;
-  padding: 5px 4px 0 4px;
+  padding: 8px 12px 8px 12px;
   border-top: 1px solid var(--cwc-border-color-dimmed);
+
+  :global([data-modern-ui='true']) & {
+    padding: 5px 4px 0 4px;
+  }
 
   > div {
     display: flex;

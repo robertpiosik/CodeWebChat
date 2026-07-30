@@ -316,6 +316,15 @@ export class PanelViewProvider implements vscode.WebviewViewProvider {
     })
   }
 
+  private _send_is_modern_ui() {
+    const config = vscode.workspace.getConfiguration('workbench')
+    const is_modern_ui = config.get<boolean>('experimental.modernUI', false)
+    this.send_message({
+      command: 'IS_MODERN_UI',
+      is_modern_ui
+    })
+  }
+
   public async send_setup_progress() {
     const providers_manager = new ModelProvidersManager(this.extension_context)
     const [model_providers, configs] = await Promise.all([
@@ -482,6 +491,10 @@ export class PanelViewProvider implements vscode.WebviewViewProvider {
 
         if (event.affectsConfiguration('codeWebChat.voiceInputPushToTalk')) {
           this._send_voice_input_push_to_talk()
+        }
+
+        if (event.affectsConfiguration('workbench.experimental.modernUI')) {
+          this._send_is_modern_ui()
         }
       }
     )
@@ -920,6 +933,8 @@ export class PanelViewProvider implements vscode.WebviewViewProvider {
             )
           } else if (message.command == 'GET_VOICE_INPUT_PUSH_TO_TALK') {
             this._send_voice_input_push_to_talk()
+          } else if (message.command == 'GET_IS_MODERN_UI') {
+            this._send_is_modern_ui()
           } else if (message.command == 'PICK_TASKS_WORKSPACE') {
             await handle_pick_tasks_workspace(this, message)
           }

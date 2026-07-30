@@ -68,7 +68,8 @@ export const Settings = () => {
       settings_hook.reuse_last_tab !== undefined &&
       settings_hook.copy_paths_format !== undefined &&
       settings_hook.clear_checks_in_workspace_behavior !== undefined &&
-      settings_hook.auto_run_intelligent_update !== undefined
+      settings_hook.auto_run_intelligent_update !== undefined &&
+      settings_hook.is_modern_ui !== undefined
     )
   }, [settings_hook])
 
@@ -87,7 +88,7 @@ export const Settings = () => {
   if (!all_data_loaded) return null
 
   return (
-    <>
+    <div data-modern-ui={settings_hook.is_modern_ui}>
       <Home
         providers={settings_hook.providers!}
         api_configurations={settings_hook.api_configurations!}
@@ -315,6 +316,6 @@ export const Settings = () => {
           </UiModal.Form>
         </UiModal>
       )}
-    </>
+    </div>
   )
 }

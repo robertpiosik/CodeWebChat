@@ -11,14 +11,17 @@
 
 .item {
   display: flex;
-  padding: 1px 6px 6px 6px;
-  padding-top: 1px;
-  padding-right: 6px;
-  padding-bottom: 6px;
-  margin: 0 4px;
-  border-radius: var(--border-radius-small);
+  padding: 1px 10px 6px 10px;
   gap: 4px;
   position: relative;
+  --task-item-padding-left: 10px;
+
+  :global([data-modern-ui='true']) & {
+    padding: 1px 6px 6px 6px;
+    margin: 0 4px;
+    border-radius: var(--border-radius-small);
+    --task-item-padding-left: 6px;
+  }
 
   &:hover {
     background-color: var(--vscode-list-hoverBackground);

@@ -4,7 +4,11 @@
   justify-content: space-between;
   gap: 4px;
   width: 100%;
-  padding: 4px 10px;
+  padding: 4px 14px;
+
+  :global([data-modern-ui='true']) & {
+    padding: 4px 10px;
+  }
 
   &__left {
     display: flex;
@@ -65,8 +69,12 @@
     border-radius: 10px;
     border: 1px solid var(--cwc-border-color);
     overflow: hidden;
-    margin: 0 10px;
+    margin: 0 14px;
     z-index: 1;
+
+    :global([data-modern-ui='true']) & {
+      margin: 0 10px;
+    }
 
     > button {
       flex: 1;
@@ -106,8 +114,12 @@
   }
 
   &__empty {
-    padding: 0 12px;
+    padding: 0 16px;
     color: var(--cwc-text-color-dimmed);
+
+    :global([data-modern-ui='true']) & {
+      padding: 0 12px;
+    }
   }
 
   &__buttons {
