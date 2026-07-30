@@ -1,0 +1,7 @@
+--- a/apps/editor/src/features/search-files/index.ts
++++ b/apps/editor/src/features/search-files/index.ts
+@@ -1,3 +1,3 @@
+ 
+-export * from './actions/search-files'
++export * from './search-files'
+ 

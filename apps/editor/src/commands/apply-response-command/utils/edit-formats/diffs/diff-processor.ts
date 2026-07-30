@@ -160,6 +160,23 @@ export const apply_diff = (params: {
   let current_search_index_tracker = -1
 
   const push_block = () => {
+    while (
+      search_chunks.length > 0 &&
+      search_chunks[search_chunks.length - 1] == '~nnn' &&
+      replace_chunks.length > 0 &&
+      replace_chunks[replace_chunks.length - 1].search_index ===
+        search_chunks.length - 1
+    ) {
+      search_chunks.pop()
+      replace_chunks.pop()
+      if (
+        after_search_chunks.length > 0 &&
+        after_search_chunks[after_search_chunks.length - 1] == '~nnn'
+      ) {
+        after_search_chunks.pop()
+      }
+    }
+
     if (search_chunks.length > 0 || replace_chunks.length > 0) {
       if (current_block_has_changes) {
         search_replace_blocks.push({
@@ -255,22 +272,7 @@ export const apply_diff = (params: {
     }
   }
 
-  if (search_chunks.length > 0 || replace_chunks.length > 0) {
-    if (
-      search_chunks[search_chunks.length - 1] == '~nnn' &&
-      !inside_replace_block
-    ) {
-      search_chunks.pop()
-      replace_chunks.pop()
-      if (
-        after_search_chunks.length > 0 &&
-        after_search_chunks[after_search_chunks.length - 1] == '~nnn'
-      ) {
-        after_search_chunks.pop()
-      }
-    }
-    push_block()
-  }
+  push_block()
 
   let previous_found_index = 0
   for (let i = 0; i < search_replace_blocks.length; i++) {
