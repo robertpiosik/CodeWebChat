@@ -26,7 +26,7 @@ The variable is possibly not defined.
 Find correct replacement text for the <missing_text> symbol.`
 
 export const intelligent_update_instructions =
-  "Refactor the file according to the attached changes without explanations or any other text. Print the file in full because I have a disability which means I can't type and need to be able to just copy and paste."
+  'Refactor the file according to the attached changes without explanations or any other text. Print the file in FULL.'
 
 export const commit_message_instructions =
   "Write a brief and precise summary for the changes, limited to a single sentence. Because the summary will be used for a commit message, don't use any markdown formatting and don't include a trailing dot. Use an imperative tone to ensure clarity and focus on the primary change or purpose."
