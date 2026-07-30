@@ -69,8 +69,7 @@ strong {
 
 .simplebar-scrollbar::before {
   background-color: var(--vscode-scrollbarSlider-background);
-  width: 10px !important;
-  border-radius: 0 !important;
+  width: 8px !important;
   top: 0 !important;
   right: 0 !important;
   bottom: 0 !important;
@@ -82,5 +81,5 @@ strong {
 }
 
 .simplebar-track.simplebar-vertical {
-  width: 10px;
+  width: 8px;
 }

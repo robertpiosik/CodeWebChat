@@ -4,9 +4,7 @@
   z-index: -1; // Makes context menu of a web configuration appear above
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding-right: 12px;
-  height: 41px;
+  padding: 5px 4px 0 4px;
   border-top: 1px solid var(--cwc-border-color-dimmed);
 
   > div {
@@ -19,7 +17,6 @@
     align-items: center;
     height: 100%;
     gap: 6px;
-    padding-left: 12px;
     transition: var(--transition-duration-250) opacity
       var(--transition-timing-function);
   }

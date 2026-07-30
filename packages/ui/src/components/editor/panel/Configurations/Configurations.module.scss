@@ -13,8 +13,10 @@
     justify-content: space-between;
     align-items: center;
     gap: 4px;
-    height: var(--list-item-height);
+    height: 22px;
     padding: 0 12px;
+    margin: 0 4px;
+    border-radius: var(--border-radius-small);
 
     &:hover {
       background-color: var(--vscode-list-hoverBackground);
@@ -105,7 +107,7 @@
 
 .footer {
   display: flex;
-  padding: 10px 12px 12px 12px;
+  padding: 8px 10px 10px 10px;
 
   > button {
     flex: 1;

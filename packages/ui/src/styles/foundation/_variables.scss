@@ -1,6 +1,8 @@
 @mixin variables {
   --font-family-accent: 'Bangers', system-ui;
 
+  --border-radius-small: var(--vscode-cornerRadius-small);
+
   --disabled-opacity: 0.5;
   --dimmed-opacity: 0.7;
   --drag-handle-opacity: 0.6;
@@ -8,6 +10,4 @@
   --transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   --transition-duration-150: 0.15s;
   --transition-duration-250: 0.25s;
-
-  --list-item-height: 22px;
 }

@@ -117,7 +117,7 @@ export const Tasks: React.FC<Props> = (props) => {
         className={cn(styles.item, {
           [styles['item--forwarded']]: is_forwarded
         })}
-        style={{ paddingLeft: `${10 + params.depth * 20}px` }}
+        style={{ paddingLeft: `${6 + params.depth * 20}px` }}
       >
         {[...Array(params.depth)].map((_, i) => (
           <div
