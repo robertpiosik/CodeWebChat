@@ -84,12 +84,20 @@ export const TaskGroup: React.FC<TaskGroupProps> = (props) => {
             <div
               key={i}
               className={styles['indent-guide']}
-              style={{ left: `${19 + i * 20}px` }}
+              style={{
+                left: `calc(var(--task-item-padding-left, 10px) + 9px + ${
+                  i * 20
+                }px)`
+              }}
             />
           ))}
           <button
             className={cn(styles['add-button'], styles['add-button--add'])}
-            style={{ marginLeft: `${13 + depth * 20}px` }}
+            style={{
+              marginLeft: `calc(var(--task-item-padding-left, 10px) + 3px + ${
+                depth * 20
+              }px)`
+            }}
             title="Add task"
           />
         </div>

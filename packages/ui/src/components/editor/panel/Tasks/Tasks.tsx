@@ -127,7 +127,11 @@ export const Tasks: React.FC<Props> = (props) => {
           <div
             key={i}
             className={styles['indent-guide']}
-            style={{ left: `${19 + i * 20}px` }}
+            style={{
+              left: `calc(var(--task-item-padding-left, 10px) + 9px + ${
+                i * 20
+              }px)`
+            }}
           />
         ))}
         <div className={styles.item__left}>

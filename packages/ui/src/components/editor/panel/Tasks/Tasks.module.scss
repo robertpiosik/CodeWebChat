@@ -2,6 +2,11 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  --task-item-padding-left: 10px;
+
+  :global([data-modern-ui='true']) & {
+    --task-item-padding-left: 6px;
+  }
 }
 
 .tasks {
@@ -11,16 +16,14 @@
 
 .item {
   display: flex;
-  padding: 1px 10px 6px 10px;
+  padding: 1px 12px 6px 10px;
   gap: 4px;
   position: relative;
-  --task-item-padding-left: 10px;
 
   :global([data-modern-ui='true']) & {
     padding: 1px 6px 6px 6px;
     margin: 0 4px;
     border-radius: var(--border-radius-small);
-    --task-item-padding-left: 6px;
   }
 
   &:hover {
@@ -168,6 +171,11 @@
 .add-row {
   position: relative;
   display: flex;
+
+  :global([data-modern-ui='true']) & {
+    margin: 0 4px;
+    border-radius: var(--border-radius-small);
+  }
 
   &:hover {
     background-color: var(--vscode-list-hoverBackground);

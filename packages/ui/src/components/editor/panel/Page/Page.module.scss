@@ -24,6 +24,10 @@
 }
 
 .footer {
-  padding: 12px;
+  padding: 10px 12px;
   border-top: 1px solid var(--cwc-border-color-dimmed);
+
+  :global([data-modern-ui='true']) & {
+    padding: 10px 12px 5px 12px;
+  }
 }
