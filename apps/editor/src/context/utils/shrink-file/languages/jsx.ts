@@ -24,8 +24,14 @@ export const shrink_jsx = (content: string): string => {
           : false
 
       if (is_in_block_comment) {
+        if (!current_skipped && use_effect_start_depth === -1) {
+          processed_line += char
+        }
         if (char == '*' && next_char == '/') {
           is_in_block_comment = false
+          if (!current_skipped && use_effect_start_depth === -1) {
+            processed_line += next_char
+          }
           i += 2
         } else {
           i++
@@ -76,11 +82,17 @@ export const shrink_jsx = (content: string): string => {
       }
 
       if (char == '/' && next_char == '/') {
+        if (!current_skipped && use_effect_start_depth === -1) {
+          processed_line += line.substring(i)
+        }
         break
       }
 
       if (char == '/' && next_char == '*') {
         is_in_block_comment = true
+        if (!current_skipped && use_effect_start_depth === -1) {
+          processed_line += '/*'
+        }
         i += 2
         continue
       }

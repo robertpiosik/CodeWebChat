@@ -16,8 +16,9 @@ export const shrink_ruby = (content: string): string => {
       skip_indent_threshold = -1
     }
 
-    // 3. Strip Comments (simplified char loop to handle strings)
+    // 3. Keep comments, but track non-comment code specifically
     let processed_line = ''
+    let code_part = ''
     let in_string: string | false = false
     let i = 0
 
@@ -27,38 +28,45 @@ export const shrink_ruby = (content: string): string => {
       if (in_string) {
         if (char == '\\') {
           processed_line += char + (line[i + 1] || '')
+          code_part += char + (line[i + 1] || '')
           i += 2
           continue
         }
         if (char === in_string) {
           processed_line += in_string
+          code_part += in_string
           in_string = false
           i++
           continue
         }
         processed_line += char
+        code_part += char
         i++
       } else {
         if (char == '"' || char === "'") {
           in_string = char
           processed_line += char
+          code_part += char
           i++
           continue
         }
         if (char == '#') {
+          processed_line += line.substring(i)
           break
         }
         processed_line += char
+        code_part += char
         i++
       }
     }
 
     const trimmed = processed_line.trim()
+    const trimmed_code = code_part.trim()
     if (!trimmed) continue
 
     // 4. Check for Block Start to Strip (def)
     // We only strip 'def' methods that span multiple lines (don't end with 'end')
-    if (/^def\b/.test(trimmed) && !/\bend\s*$/.test(trimmed)) {
+    if (/^def\b/.test(trimmed_code) && !/\bend\s*$/.test(trimmed_code)) {
       result.push(processed_line)
       result.push(line.substring(0, current_indent) + '  ' + '# ...')
       skip_indent_threshold = current_indent

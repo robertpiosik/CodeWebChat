@@ -1,5 +1,11 @@
+/* Header Styles */
 header {
+  color: white; /* Inline comment */
 }
+/*
+  Layout
+  Styles
+*/
 @media (min-width: 768px) {
   header {
   }

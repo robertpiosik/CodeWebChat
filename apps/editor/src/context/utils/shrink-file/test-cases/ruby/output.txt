@@ -1,10 +1,13 @@
+# Basic Ruby Class
 class Calculator
+  # Initialize the value
   def initialize(start_value = 0)
     # ...
   end
   def add(n)
     # ...
   end
+  # A one-liner method should not be stripped in a weird way
   def value; @value; end
 end
 module MathUtils
@@ -12,6 +15,7 @@ module MathUtils
     # ...
   end
 end
+# Top level method
 def main
   # ...
 end

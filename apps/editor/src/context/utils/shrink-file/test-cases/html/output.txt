@@ -3,6 +3,7 @@
 <head>
     <title>Test</title>
     <script>
+        // JS Comment
         if (a < b) {
             console.log("<div>");
         }
@@ -11,11 +12,13 @@
         }
 </script>
     <style>
+        /* CSS Comment */
         body { color: red; }
 </style>
 </head>
 <body>
     <div class="container">
+        <!-- <p>Text</p> -->
         <span class="">Value</span>
     </div>
 </body>

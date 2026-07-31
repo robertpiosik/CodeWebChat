@@ -1,8 +1,13 @@
+// Variables
+/* Block Component */
 .block {
+  // Element
   &__element {
+    // Modifier
     &--modifier {
     }
   }
+  /* Deep nesting */
   &__footer {
     a {
       &:hover {
@@ -10,6 +15,7 @@
     }
   }
 }
+// Map definition (should ideally be stripped or kept minimal, but structural)
 $theme: (
   light: #fff,
   dark: #000

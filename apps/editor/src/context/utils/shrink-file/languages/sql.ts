@@ -13,8 +13,10 @@ export const shrink_sql = (content: string): string => {
       const next_char = line[i + 1]
 
       if (is_in_block_comment) {
+        processed_line += char
         if (char == '*' && next_char == '/') {
           is_in_block_comment = false
+          processed_line += next_char
           i += 2
         } else {
           i++
@@ -51,11 +53,13 @@ export const shrink_sql = (content: string): string => {
       }
 
       if (char == '-' && next_char == '-') {
+        processed_line += line.substring(i)
         break
       }
 
       if (char == '/' && next_char == '*') {
         is_in_block_comment = true
+        processed_line += '/*'
         i += 2
         continue
       }

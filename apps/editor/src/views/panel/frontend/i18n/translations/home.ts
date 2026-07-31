@@ -108,21 +108,21 @@ export const home = {
     bg: 'Авторско право © {year} {link}'
   },
   'home.shrink-source-code': {
-    en: 'Strip function bodies and comments',
-    pl: 'Usuń body funkcji i komentarze',
-    'zh-cn': '剥离函数体和注释',
-    ja: '関数本体とコメントを取り除く',
-    'zh-tw': '剝離函數主體和註釋',
-    de: 'Funktionskörper und Kommentare entfernen',
-    es: 'Eliminar cuerpos de funciones y comentarios',
-    fr: 'Supprimer les corps de fonction et les commentaires',
-    'pt-br': 'Remover corpos de funções e comentários',
-    ru: 'Удалить тела функций и комментарии',
-    ko: '함수 본문 및 주석 제거',
-    it: 'Rimuovi corpi di funzioni e commenti',
-    tr: 'İşlev gövdelerini ve yorumları kaldır',
-    cs: 'Odstranit těla funkcí a komentáře',
-    hu: 'Függvénytestek és megjegyzések eltávolítása',
-    bg: 'Премахване на телата на функциите и коментарите'
+    en: 'Strip function bodies',
+    pl: 'Usuń ciała funkcji',
+    'zh-cn': '剥离函数体',
+    ja: '関数本体を取り除く',
+    'zh-tw': '剝離函數主體',
+    de: 'Funktionskörper entfernen',
+    es: 'Eliminar cuerpos de funciones',
+    fr: 'Supprimer les corps de fonction',
+    'pt-br': 'Remover corpos de funções',
+    ru: 'Удалить тела функций',
+    ko: '함수 본문 제거',
+    it: 'Rimuovi corpi di funzioni',
+    tr: 'İşlev gövdelerini kaldır',
+    cs: 'Odstranit těla funkcí',
+    hu: 'Függvénytestek eltávolítása',
+    bg: 'Премахване на телата на функциите'
   }
 } as const

@@ -3,6 +3,7 @@ interface Props {
   title
 }
 export const MyComponent: React.FC<Props> = ({ title }) => {
+  // This comment goes away
   const [count, setCount]
   return (
     <div>
@@ -14,6 +15,7 @@ export const MyComponent: React.FC<Props> = ({ title }) => {
     </div>
   )
 }
+// Another component
 function Header() {
   return <header>Header</header>
 }
