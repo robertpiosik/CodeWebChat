@@ -15,8 +15,8 @@ export const save_file_selection_command = (params: {
     async () => {
       const checked_files = params.workspace_provider.get_checked_files()
       if (checked_files.length == 0) {
-        vscode.window.showWarningMessage(
-          dictionary.warning_message.NOTHING_IN_CONTEXT_TO_SAVE
+        vscode.window.showInformationMessage(
+          dictionary.information_message.NOTHING_IN_CONTEXT_TO_SAVE
         )
         return
       }

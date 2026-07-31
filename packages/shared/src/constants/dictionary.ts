@@ -6,6 +6,7 @@ export const dictionary = {
 
   information_message: {
     TASK_DELETED: 'Task deleted.',
+    NOTHING_IN_CONTEXT_TO_SAVE: 'There is nothing in your context to save.',
     ALL_CHECKED_FILES_UNCAHNGED_SINCE_COMMIT: (
       folder_name: string,
       commit_hash: string
@@ -85,7 +86,6 @@ export const dictionary = {
       'Code completions are not supported with active text selection.',
     CANNOT_REFERENCE_FILE_OUTSIDE_WORKSPACE:
       'Cannot reference file outside of the workspace.',
-    NOTHING_IN_CONTEXT_TO_SAVE: 'There is nothing in your context to save.',
     NO_OPEN_EDITORS_SELECTED: 'No open editors selected.',
     NO_EDITOR_OPEN: 'No editor is open.',
     CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITH_SELECTION:
