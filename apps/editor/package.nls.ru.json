@@ -46,6 +46,7 @@
   "codeWebChat.searchFilesFromDirectory.title": "Поиск файлов...",
   "codeWebChat.selectReferencingFilesForSelected.title": "Выбрать ссылающиеся файлы...",
   "codeWebChat.selectReferencingFiles.title": "Выбрать ссылающиеся файлы...",
+  "codeWebChat.selectImportedFilesForSelected.title": "Выбрать импортированные файлы...",
   "codeWebChat.selectDefinitionFile.title": "Выбрать файл определения",
   "codeWebChat.openInIntegratedTerminal.title": "Открыть во встроенном терминале",
   "codeWebChat.removeFolderFromWorkspace.title": "Удалить папку из рабочей области",

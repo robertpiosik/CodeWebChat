@@ -2,7 +2,6 @@ import * as vscode from 'vscode'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'
 import { t } from '../i18n'
-import { get_all_files } from './select-imported-files-command/utils/get-all-files'
 import {
   get_referencing_files_for_position,
   get_referencing_files_for_uris,
@@ -74,9 +73,8 @@ export const select_referencing_files_command = (
         }
 
         if (do_whole_file_search) {
-          const starting_uris = await get_all_files(
-            target_uri!,
-            workspace_provider
+          const starting_uris = await workspace_provider.get_all_files_for_uri(
+            target_uri!
           )
 
           if (starting_uris.length == 0) {

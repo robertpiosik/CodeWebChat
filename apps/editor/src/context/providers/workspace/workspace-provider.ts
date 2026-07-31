@@ -35,6 +35,7 @@ export interface IWorkspaceProvider {
   }
   readonly is_frf_mode: boolean
   readonly is_no_context_mode: boolean
+  get_all_files_for_uri(uri: vscode.Uri): Promise<vscode.Uri[]>
 }
 
 export class WorkspaceProvider
@@ -1745,6 +1746,48 @@ export class WorkspaceProvider
 
     await walk(root_path)
     return files
+  }
+
+  public async get_all_files_for_uri(uri: vscode.Uri): Promise<vscode.Uri[]> {
+    try {
+      const stat = await vscode.workspace.fs.stat(uri)
+      if (stat.type & vscode.FileType.File) {
+        return [uri]
+      } else if (stat.type & vscode.FileType.Directory) {
+        const results: vscode.Uri[] = []
+        const entries = await vscode.workspace.fs.readDirectory(uri)
+        for (const [name, type] of entries) {
+          const child_uri = vscode.Uri.joinPath(uri, name)
+          const file_path = child_uri.fsPath
+          const workspace_root = this.get_workspace_root_for_file(file_path)
+
+          if (workspace_root) {
+            const is_directory = !!(type & vscode.FileType.Directory)
+            const relative_path = path.relative(workspace_root, file_path)
+
+            if (
+              this.is_excluded(
+                is_directory ? relative_path + '/' : relative_path
+              )
+            ) {
+              continue
+            }
+            if (!is_directory && this.is_ignored_by_patterns(file_path)) {
+              continue
+            }
+          }
+
+          if (type & vscode.FileType.File) {
+            results.push(child_uri)
+          } else if (type & vscode.FileType.Directory) {
+            const child_files = await this.get_all_files_for_uri(child_uri)
+            results.push(...child_files)
+          }
+        }
+        return results
+      }
+    } catch {}
+    return []
   }
 
   public async update_workspace_folders(

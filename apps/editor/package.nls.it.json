@@ -46,6 +46,7 @@
   "codeWebChat.searchFilesFromDirectory.title": "Cerca file...",
   "codeWebChat.selectReferencingFilesForSelected.title": "Seleziona i file di riferimento...",
   "codeWebChat.selectReferencingFiles.title": "Seleziona i file di riferimento...",
+  "codeWebChat.selectImportedFilesForSelected.title": "Seleziona i file importati...",
   "codeWebChat.selectDefinitionFile.title": "Seleziona file di definizione",
   "codeWebChat.openInIntegratedTerminal.title": "Apri nel terminale integrato",
   "codeWebChat.removeFolderFromWorkspace.title": "Rimuovi cartella dall'area di lavoro",

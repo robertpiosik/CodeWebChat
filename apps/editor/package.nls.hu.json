@@ -46,6 +46,7 @@
   "codeWebChat.searchFilesFromDirectory.title": "Fájlok keresése...",
   "codeWebChat.selectReferencingFilesForSelected.title": "Hivatkozó fájlok kiválasztása...",
   "codeWebChat.selectReferencingFiles.title": "Hivatkozó fájlok kiválasztása...",
+  "codeWebChat.selectImportedFilesForSelected.title": "Importált fájlok kiválasztása...",
   "codeWebChat.selectDefinitionFile.title": "Definíciós fájl kiválasztása",
   "codeWebChat.openInIntegratedTerminal.title": "Megnyitás az integrált terminálban",
   "codeWebChat.removeFolderFromWorkspace.title": "Mappa eltávolítása a munkaterületről",

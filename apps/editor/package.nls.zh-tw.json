@@ -46,6 +46,7 @@
   "codeWebChat.searchFilesFromDirectory.title": "搜尋檔案...",
   "codeWebChat.selectReferencingFilesForSelected.title": "選擇參考檔案...",
   "codeWebChat.selectReferencingFiles.title": "選擇參考檔案...",
+  "codeWebChat.selectImportedFilesForSelected.title": "選擇匯入的檔案...",
   "codeWebChat.selectDefinitionFile.title": "選擇定義檔案",
   "codeWebChat.openInIntegratedTerminal.title": "在整合式終端機中開啟",
   "codeWebChat.removeFolderFromWorkspace.title": "從工作區移除資料夾",

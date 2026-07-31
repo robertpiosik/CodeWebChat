@@ -46,6 +46,7 @@
   "codeWebChat.searchFilesFromDirectory.title": "搜索文件...",
   "codeWebChat.selectReferencingFilesForSelected.title": "选择引用文件...",
   "codeWebChat.selectReferencingFiles.title": "选择引用文件...",
+  "codeWebChat.selectImportedFilesForSelected.title": "选择导入的文件...",
   "codeWebChat.selectDefinitionFile.title": "选择定义文件",
   "codeWebChat.openInIntegratedTerminal.title": "在集成终端中打开",
   "codeWebChat.removeFolderFromWorkspace.title": "从工作区移除文件夹",

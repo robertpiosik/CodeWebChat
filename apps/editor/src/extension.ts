@@ -43,6 +43,7 @@ import {
 } from './commands'
 import { setup_git_discard_file_watcher } from './services/git-discard-file-watcher'
 import { select_imported_files_command } from './commands/select-imported-files-command'
+import { select_imported_files_for_selected_command } from './commands/select-imported-files-for-selected-command'
 import { SettingsViewProvider } from './views/settings/backend/settings-view-provider'
 import { get_current_preview_url } from './views/panel/backend/message-handlers/handle-open-website'
 
@@ -161,6 +162,10 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     select_imported_files_command(workspace_provider, extension_context),
     duplicate_workspace_command(workspace_provider, extension_context),
     select_referencing_files_for_selected_command(
+      workspace_provider,
+      extension_context
+    ),
+    select_imported_files_for_selected_command(
       workspace_provider,
       extension_context
     ),

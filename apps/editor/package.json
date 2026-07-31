@@ -369,6 +369,11 @@
         "category": "Code Web Chat"
       },
       {
+        "command": "codeWebChat.selectImportedFilesForSelected",
+        "title": "%codeWebChat.selectImportedFilesForSelected.title%",
+        "category": "Code Web Chat"
+      },
+      {
         "command": "codeWebChat.selectDefinitionFile",
         "title": "%codeWebChat.selectDefinitionFile.title%",
         "category": "Code Web Chat"
@@ -581,6 +586,10 @@
           "when": "false"
         },
         {
+          "command": "codeWebChat.selectImportedFilesForSelected",
+          "when": "false"
+        },
+        {
           "command": "codeWebChat.selectImportedFiles",
           "when": "false"
         },
@@ -622,6 +631,11 @@
           "command": "codeWebChat.selectReferencingFilesForSelected",
           "when": "view == codeWebChatViewSelectedFiles",
           "group": "1_more@1"
+        },
+        {
+          "command": "codeWebChat.selectImportedFilesForSelected",
+          "when": "view == codeWebChatViewSelectedFiles",
+          "group": "1_more@2"
         },
         {
           "command": "codeWebChat.checkAll",

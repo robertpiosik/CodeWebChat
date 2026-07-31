@@ -46,6 +46,7 @@
   "codeWebChat.searchFilesFromDirectory.title": "Hledat soubory...",
   "codeWebChat.selectReferencingFilesForSelected.title": "Vybrat odkazující soubory...",
   "codeWebChat.selectReferencingFiles.title": "Vybrat odkazující soubory...",
+  "codeWebChat.selectImportedFilesForSelected.title": "Vybrat importované soubory...",
   "codeWebChat.selectDefinitionFile.title": "Vybrat soubor definice",
   "codeWebChat.openInIntegratedTerminal.title": "Otevřít v integrovaném terminálu",
   "codeWebChat.removeFolderFromWorkspace.title": "Odebrat složku z pracovního prostoru",

@@ -46,6 +46,7 @@
   "codeWebChat.searchFilesFromDirectory.title": "Търсене на файлове...",
   "codeWebChat.selectReferencingFilesForSelected.title": "Избери рефериращите файлове...",
   "codeWebChat.selectReferencingFiles.title": "Избери рефериращите файлове...",
+  "codeWebChat.selectImportedFilesForSelected.title": "Избери импортираните файлове...",
   "codeWebChat.selectDefinitionFile.title": "Изберете файл с дефиниция",
   "codeWebChat.openInIntegratedTerminal.title": "Отвори във вградения терминал",
   "codeWebChat.removeFolderFromWorkspace.title": "Премахни папката от работното пространство",
