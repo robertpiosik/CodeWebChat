@@ -1,8 +1,5 @@
 import * as vscode from 'vscode'
-import {
-  WorkspaceProvider,
-  FileItem
-} from '../context/providers/workspace/workspace-provider'
+import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { prompt_for_imported_files } from '@/features/imported-files'
 import { t } from '@/i18n'
 
@@ -12,12 +9,27 @@ export const select_imported_files_command = (
 ) => {
   return vscode.commands.registerCommand(
     'codeWebChat.selectImportedFiles',
-    async (item: FileItem) => {
-      if (!item) return
+    async (item?: any) => {
+      let target_uri: vscode.Uri | undefined
 
-      const starting_uris = await workspace_provider.get_all_files_for_uri(
-        item.resourceUri
-      )
+      if (item?.resourceUri) {
+        target_uri = item.resourceUri
+      } else if (
+        item instanceof vscode.Uri ||
+        (item && item.fsPath && item.scheme)
+      ) {
+        target_uri = item as vscode.Uri
+      } else {
+        const editor = vscode.window.activeTextEditor
+        if (editor) {
+          target_uri = editor.document.uri
+        }
+      }
+
+      if (!target_uri) return
+
+      const starting_uris =
+        await workspace_provider.get_all_files_for_uri(target_uri)
 
       if (starting_uris.length == 0) {
         vscode.window.showInformationMessage(
