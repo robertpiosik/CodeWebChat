@@ -8,7 +8,6 @@ import { use_dropdown } from './hooks/use-dropdown'
 import { use_ghost_text } from './hooks/use-ghost-text'
 import { use_drag_drop } from './hooks/use-drag-drop'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
-import { use_edit_format_compacting } from './hooks/use-edit-format-compacting'
 import { DropdownMenu } from '../../../common/DropdownMenu'
 import { use_is_mac } from '@shared/hooks'
 import { Tooltip } from './components'
@@ -21,7 +20,7 @@ import {
   get_highlighted_text
 } from '../shared/symbols'
 
-export type EditFormat = 'whole' | 'truncated' | 'diff' | 'search-replace'
+export type EditFormat = 'whole' | 'search-replace' | 'diff' | 'truncated'
 
 export type SelectionState = {
   text: string
@@ -54,7 +53,7 @@ export type PromptFieldProps = {
   last_choice_tooltip?: { name: string; details?: string }
   show_edit_format_selector?: boolean
   edit_format?: EditFormat
-  on_edit_format_change?: (format: EditFormat) => void
+  on_edit_format_change?: (format?: EditFormat) => void
   selected_files?: string[]
   currently_open_file_path?: string
   currently_open_file_text?: string
@@ -87,6 +86,20 @@ export type PromptFieldProps = {
     reference_file: string
     insert_symbol: string
     prompt_templates: string
+    edit_format: string
+    edit_format_whole: string
+    edit_format_search_replace: string
+    edit_format_diff: string
+    edit_format_truncated: string
+    placeholder_code_history: string
+    placeholder_code: string
+    placeholder_history: string
+    placeholder_default: string
+    send_with: string
+    send_with_ellipsis: string
+    copy_prompt: string
+    more_actions: string
+    send: string
   }
 }
 
@@ -100,11 +113,10 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [is_focused, set_is_focused] = useState(false)
   const [is_invocation_dropdown_open, set_is_invocation_dropdown_open] =
     useState(false)
-  const [hovered_edit_format, set_hovered_edit_format] =
-    useState<EditFormat | null>(null)
   const [is_recording_hovered, set_is_recording_hovered] = useState(false)
   const [is_invocation_count_hovered, set_is_invocation_count_hovered] =
     useState(false)
+  const [is_edit_format_hovered, set_is_edit_format_hovered] = useState(false)
   const [hovered_left_action, set_hovered_left_action] = useState<
     'at' | 'hash' | 'curly' | null
   >(null)
@@ -320,35 +332,16 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const placeholder = useMemo(() => {
     if (props.prompt_type == 'code-at-cursor') {
       if (props.chat_history.length > 0) {
-        return 'Optional instructions (⇅ for history)'
+        return props.translations.placeholder_code_history
       } else {
-        return 'Optional instructions'
+        return props.translations.placeholder_code
       }
     }
 
     return props.chat_history.length > 0
-      ? 'Type instructions (⇅ for history)'
-      : 'Type instructions'
+      ? props.translations.placeholder_history
+      : props.translations.placeholder_default
   }, [props.prompt_type, props.chat_history])
-
-  const edit_format_shortcuts: Record<EditFormat, string> = useMemo(() => {
-    const modifier = is_mac ? '⌥' : 'Alt+'
-    return {
-      whole: `(${modifier}W)`,
-      truncated: `(${modifier}T)`,
-      'search-replace': `(${modifier}S)`,
-      diff: `(${modifier}D)`
-    }
-  }, [is_mac])
-
-  const {
-    container_ref,
-    compact_step,
-    format_whole_ref,
-    format_truncated_ref,
-    format_search_replace_ref,
-    format_diff_ref
-  } = use_edit_format_compacting()
 
   useEffect(() => {
     if (props.is_recording) {
@@ -536,7 +529,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           )}
           {props.last_choice_tooltip && show_submit_tooltip && (
             <Tooltip
-              message={`Send with ${props.last_choice_tooltip.name}`}
+              message={`${props.translations.send_with} ${props.last_choice_tooltip.name}`}
               details={props.last_choice_tooltip.details}
               offset={28}
               align="right"
@@ -604,90 +597,35 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           >
             <div
               className={styles['footer__right__edit-format']}
-              ref={container_ref}
               style={{
                 display: props.show_edit_format_selector ? 'flex' : 'none'
               }}
             >
-              {(['whole', 'truncated', 'search-replace', 'diff'] as const).map(
-                (format) => {
-                  const is_compact =
-                    (format == 'search-replace' && compact_step >= 1) ||
-                    (format == 'truncated' && compact_step >= 2) ||
-                    (format == 'whole' && compact_step >= 3) ||
-                    (format == 'diff' && compact_step >= 4)
-
-                  const button_text = is_compact
-                    ? format == 'search-replace'
-                      ? 's/r'
-                      : format.charAt(0)
-                    : format == 'search-replace'
-                      ? 'search/replace'
-                      : format
-
-                  const is_selected = props.edit_format == format
-                  const should_underline = is_alt_pressed && !is_selected
-
-                  let ref = null
-                  if (format == 'whole') ref = format_whole_ref
-                  if (format == 'truncated') ref = format_truncated_ref
-                  if (format == 'search-replace')
-                    ref = format_search_replace_ref
-                  if (format == 'diff') ref = format_diff_ref
-
-                  return (
-                    <button
-                      ref={ref}
-                      key={format}
-                      className={cn(
-                        styles['footer__right__edit-format__button'],
-                        {
-                          [styles[
-                            'footer__right__edit-format__button--selected'
-                          ]]: is_selected
-                        }
-                      )}
-                      title={`Edit format instructions to include with the prompt ${edit_format_shortcuts[format]}`}
-                      onClick={() => props.on_edit_format_change?.(format)}
-                      onMouseEnter={() => set_hovered_edit_format(format)}
-                      onMouseLeave={() => set_hovered_edit_format(null)}
-                    >
-                      {is_compact && hovered_edit_format == format && (
-                        <Tooltip
-                          message={
-                            format == 'search-replace'
-                              ? 'Search and Replace'
-                              : format.charAt(0).toUpperCase() + format.slice(1)
-                          }
-                          align="center"
-                        />
-                      )}
-                      <span
-                        className={
-                          styles['footer__right__edit-format__button__spacer']
-                        }
-                      >
-                        {button_text}
-                      </span>
-                      <span
-                        className={
-                          styles['footer__right__edit-format__button__text']
-                        }
-                      >
-                        {should_underline ? (
-                          <>
-                            <span className={styles['underlined']}>
-                              {button_text.charAt(0)}
-                            </span>
-                            {button_text.substring(1)}
-                          </>
-                        ) : (
-                          button_text
-                        )}
-                      </span>
-                    </button>
-                  )
-                }
+              {props.edit_format && (
+                <div style={{ position: 'relative', display: 'flex' }}>
+                  {is_edit_format_hovered && (
+                    <Tooltip
+                      message={props.translations.edit_format}
+                      align="center"
+                    />
+                  )}
+                  <button
+                    className={styles['footer__right__edit-format__button']}
+                    onClick={() => props.on_edit_format_change?.()}
+                    onMouseEnter={() => set_is_edit_format_hovered(true)}
+                    onMouseLeave={() => set_is_edit_format_hovered(false)}
+                  >
+                    {
+                      {
+                        whole: props.translations.edit_format_whole,
+                        'search-replace':
+                          props.translations.edit_format_search_replace,
+                        diff: props.translations.edit_format_diff,
+                        truncated: props.translations.edit_format_truncated
+                      }[props.edit_format as EditFormat]
+                    }
+                  </button>
+                </div>
               )}
             </div>
 
@@ -794,7 +732,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       toggle_dropdown()
                       set_is_invocation_dropdown_open(false)
                     }}
-                    title="More actions"
+                    title={props.translations.more_actions}
                   >
                     <span
                       className={cn(
@@ -816,7 +754,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       props.is_web_mode
                         ? [
                             {
-                              label: 'Send',
+                              label: props.translations.send,
                               shortcut: is_mac ? '↩' : 'Enter',
                               on_click: () => {
                                 handle_submit({
@@ -828,12 +766,12 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                           ]
                         : []),
                       {
-                        label: 'Send with...',
+                        label: props.translations.send_with_ellipsis,
                         shortcut: is_mac ? '⌘↩' : 'Ctrl+Enter',
                         on_click: handle_select_click
                       },
                       {
-                        label: 'Copy prompt',
+                        label: props.translations.copy_prompt,
                         shortcut: is_mac ? '⌘C' : 'Ctrl+C',
                         on_click: handle_copy_click
                       },
@@ -901,7 +839,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                           e.stopPropagation()
                           props.on_copy()
                         }}
-                        title="Copy prompt"
+                        title={props.translations.copy_prompt}
                       />
                       <button
                         ref={disconnected_chevron_button_ref}
@@ -913,7 +851,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                           toggle_dropdown()
                           set_is_invocation_dropdown_open(false)
                         }}
-                        title="More actions"
+                        title={props.translations.more_actions}
                       >
                         <span
                           className={cn(

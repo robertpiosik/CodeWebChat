@@ -30,4 +30,10 @@ export const handle_save_edit_format = async (
       message.edit_format
     )
   }
+
+  panel_view_provider.send_message({
+    command: 'EDIT_FORMAT',
+    chat_edit_format: panel_view_provider.chat_edit_format,
+    api_edit_format: panel_view_provider.api_edit_format
+  })
 }

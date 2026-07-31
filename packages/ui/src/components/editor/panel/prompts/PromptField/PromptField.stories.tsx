@@ -52,7 +52,21 @@ export const Empty = () => (
       exit_voice_input: 'Exit voice input',
       reference_file: 'Reference file',
       insert_symbol: 'Insert symbol',
-      prompt_templates: 'Prompt templates'
+      prompt_templates: 'Prompt templates',
+      edit_format: 'Edit format',
+      edit_format_whole: 'Whole-File Overwrite',
+      edit_format_search_replace: 'Search & Replace',
+      edit_format_diff: 'Unified Diff',
+      edit_format_truncated: 'Ellipsis truncations',
+      placeholder_code_history: 'Optional instructions (⇅ for history)',
+      placeholder_code: 'Optional instructions',
+      placeholder_history: 'Type instructions (⇅ for history)',
+      placeholder_default: 'Type instructions',
+      send_with: 'Send with',
+      send_with_ellipsis: 'Send with...',
+      copy_prompt: 'Copy prompt',
+      more_actions: 'More actions',
+      send: 'Send'
     }}
   />
 )
@@ -104,7 +118,21 @@ export const WithText = () => (
       exit_voice_input: 'Exit voice input',
       reference_file: 'Reference file',
       insert_symbol: 'Insert symbol',
-      prompt_templates: 'Prompt templates'
+      prompt_templates: 'Prompt templates',
+      edit_format: 'Edit format',
+      edit_format_whole: 'Whole-File Overwrite',
+      edit_format_search_replace: 'Search & Replace',
+      edit_format_diff: 'Unified Diff',
+      edit_format_truncated: 'Ellipsis truncations',
+      placeholder_code_history: 'Optional instructions (⇅ for history)',
+      placeholder_code: 'Optional instructions',
+      placeholder_history: 'Type instructions (⇅ for history)',
+      placeholder_default: 'Type instructions',
+      send_with: 'Send with',
+      send_with_ellipsis: 'Send with...',
+      copy_prompt: 'Copy prompt',
+      more_actions: 'More actions',
+      send: 'Send'
     }}
   />
 )
@@ -156,7 +184,21 @@ export const LongText = () => (
       exit_voice_input: 'Exit voice input',
       reference_file: 'Reference file',
       insert_symbol: 'Insert symbol',
-      prompt_templates: 'Prompt templates'
+      prompt_templates: 'Prompt templates',
+      edit_format: 'Edit format',
+      edit_format_whole: 'Whole-File Overwrite',
+      edit_format_search_replace: 'Search & Replace',
+      edit_format_diff: 'Unified Diff',
+      edit_format_truncated: 'Ellipsis truncations',
+      placeholder_code_history: 'Optional instructions (⇅ for history)',
+      placeholder_code: 'Optional instructions',
+      placeholder_history: 'Type instructions (⇅ for history)',
+      placeholder_default: 'Type instructions',
+      send_with: 'Send with',
+      send_with_ellipsis: 'Send with...',
+      copy_prompt: 'Copy prompt',
+      more_actions: 'More actions',
+      send: 'Send'
     }}
   />
 )
@@ -208,7 +250,21 @@ export const WithPlaceholderSavedContext = () => (
       exit_voice_input: 'Exit voice input',
       reference_file: 'Reference file',
       insert_symbol: 'Insert symbol',
-      prompt_templates: 'Prompt templates'
+      prompt_templates: 'Prompt templates',
+      edit_format: 'Edit format',
+      edit_format_whole: 'Whole-File Overwrite',
+      edit_format_search_replace: 'Search & Replace',
+      edit_format_diff: 'Unified Diff',
+      edit_format_truncated: 'Ellipsis truncations',
+      placeholder_code_history: 'Optional instructions (⇅ for history)',
+      placeholder_code: 'Optional instructions',
+      placeholder_history: 'Type instructions (⇅ for history)',
+      placeholder_default: 'Type instructions',
+      send_with: 'Send with',
+      send_with_ellipsis: 'Send with...',
+      copy_prompt: 'Copy prompt',
+      more_actions: 'More actions',
+      send: 'Send'
     }}
   />
 )
@@ -266,7 +322,21 @@ export const WithPlaceholderSelection = () => (
       exit_voice_input: 'Exit voice input',
       reference_file: 'Reference file',
       insert_symbol: 'Insert symbol',
-      prompt_templates: 'Prompt templates'
+      prompt_templates: 'Prompt templates',
+      edit_format: 'Edit format',
+      edit_format_whole: 'Whole-File Overwrite',
+      edit_format_search_replace: 'Search & Replace',
+      edit_format_diff: 'Unified Diff',
+      edit_format_truncated: 'Ellipsis truncations',
+      placeholder_code_history: 'Optional instructions (⇅ for history)',
+      placeholder_code: 'Optional instructions',
+      placeholder_history: 'Type instructions (⇅ for history)',
+      placeholder_default: 'Type instructions',
+      send_with: 'Send with',
+      send_with_ellipsis: 'Send with...',
+      copy_prompt: 'Copy prompt',
+      more_actions: 'More actions',
+      send: 'Send'
     }}
   />
 )
@@ -318,7 +388,21 @@ export const WithCommit = () => (
       exit_voice_input: 'Exit voice input',
       reference_file: 'Reference file',
       insert_symbol: 'Insert symbol',
-      prompt_templates: 'Prompt templates'
+      prompt_templates: 'Prompt templates',
+      edit_format: 'Edit format',
+      edit_format_whole: 'Whole-File Overwrite',
+      edit_format_search_replace: 'Search & Replace',
+      edit_format_diff: 'Unified Diff',
+      edit_format_truncated: 'Ellipsis truncations',
+      placeholder_code_history: 'Optional instructions (⇅ for history)',
+      placeholder_code: 'Optional instructions',
+      placeholder_history: 'Type instructions (⇅ for history)',
+      placeholder_default: 'Type instructions',
+      send_with: 'Send with',
+      send_with_ellipsis: 'Send with...',
+      copy_prompt: 'Copy prompt',
+      more_actions: 'More actions',
+      send: 'Send'
     }}
   />
 )
@@ -370,7 +454,21 @@ export const WithCommitWithQuotes = () => (
       exit_voice_input: 'Exit voice input',
       reference_file: 'Reference file',
       insert_symbol: 'Insert symbol',
-      prompt_templates: 'Prompt templates'
+      prompt_templates: 'Prompt templates',
+      edit_format: 'Edit format',
+      edit_format_whole: 'Whole-File Overwrite',
+      edit_format_search_replace: 'Search & Replace',
+      edit_format_diff: 'Unified Diff',
+      edit_format_truncated: 'Ellipsis truncations',
+      placeholder_code_history: 'Optional instructions (⇅ for history)',
+      placeholder_code: 'Optional instructions',
+      placeholder_history: 'Type instructions (⇅ for history)',
+      placeholder_default: 'Type instructions',
+      send_with: 'Send with',
+      send_with_ellipsis: 'Send with...',
+      copy_prompt: 'Copy prompt',
+      more_actions: 'More actions',
+      send: 'Send'
     }}
   />
 )
@@ -421,7 +519,21 @@ export const WithContextAtCommit = () => (
       exit_voice_input: 'Exit voice input',
       reference_file: 'Reference file',
       insert_symbol: 'Insert symbol',
-      prompt_templates: 'Prompt templates'
+      prompt_templates: 'Prompt templates',
+      edit_format: 'Edit format',
+      edit_format_whole: 'Whole-File Overwrite',
+      edit_format_search_replace: 'Search & Replace',
+      edit_format_diff: 'Unified Diff',
+      edit_format_truncated: 'Ellipsis truncations',
+      placeholder_code_history: 'Optional instructions (⇅ for history)',
+      placeholder_code: 'Optional instructions',
+      placeholder_history: 'Type instructions (⇅ for history)',
+      placeholder_default: 'Type instructions',
+      send_with: 'Send with',
+      send_with_ellipsis: 'Send with...',
+      copy_prompt: 'Copy prompt',
+      more_actions: 'More actions',
+      send: 'Send'
     }}
   />
 )
@@ -448,7 +560,9 @@ export const WithEditFormatSelector = () => {
       on_curly_braces_click={() => {}}
       show_edit_format_selector={true}
       edit_format={edit_format}
-      on_edit_format_change={set_edit_format}
+      on_edit_format_change={(f) => {
+        if (f) set_edit_format(f)
+      }}
       selected_files={[]}
       invocation_count={invocation_count}
       on_invocation_count_change={set_invocation_count}
@@ -477,7 +591,21 @@ export const WithEditFormatSelector = () => {
         exit_voice_input: 'Exit voice input',
         reference_file: 'Reference file',
         insert_symbol: 'Insert symbol',
-        prompt_templates: 'Prompt templates'
+        prompt_templates: 'Prompt templates',
+        edit_format: 'Edit format',
+        edit_format_whole: 'Whole-File Overwrite',
+        edit_format_search_replace: 'Search & Replace',
+        edit_format_diff: 'Unified Diff',
+        edit_format_truncated: 'Ellipsis truncations',
+        placeholder_code_history: 'Optional instructions (⇅ for history)',
+        placeholder_code: 'Optional instructions',
+        placeholder_history: 'Type instructions (⇅ for history)',
+        placeholder_default: 'Type instructions',
+        send_with: 'Send with',
+        send_with_ellipsis: 'Send with...',
+        copy_prompt: 'Copy prompt',
+        more_actions: 'More actions',
+        send: 'Send'
       }}
     />
   )
@@ -530,7 +658,21 @@ export const WithFilePaths = () => (
       exit_voice_input: 'Exit voice input',
       reference_file: 'Reference file',
       insert_symbol: 'Insert symbol',
-      prompt_templates: 'Prompt templates'
+      prompt_templates: 'Prompt templates',
+      edit_format: 'Edit format',
+      edit_format_whole: 'Whole-File Overwrite',
+      edit_format_search_replace: 'Search & Replace',
+      edit_format_diff: 'Unified Diff',
+      edit_format_truncated: 'Ellipsis truncations',
+      placeholder_code_history: 'Optional instructions (⇅ for history)',
+      placeholder_code: 'Optional instructions',
+      placeholder_history: 'Type instructions (⇅ for history)',
+      placeholder_default: 'Type instructions',
+      send_with: 'Send with',
+      send_with_ellipsis: 'Send with...',
+      copy_prompt: 'Copy prompt',
+      more_actions: 'More actions',
+      send: 'Send'
     }}
   />
 )
@@ -610,7 +752,21 @@ export const WithTabs = () => {
         exit_voice_input: 'Exit voice input',
         reference_file: 'Reference file',
         insert_symbol: 'Insert symbol',
-        prompt_templates: 'Prompt templates'
+        prompt_templates: 'Prompt templates',
+        edit_format: 'Edit format',
+        edit_format_whole: 'Whole-File Overwrite',
+        edit_format_search_replace: 'Search & Replace',
+        edit_format_diff: 'Unified Diff',
+        edit_format_truncated: 'Ellipsis truncations',
+        placeholder_code_history: 'Optional instructions (⇅ for history)',
+        placeholder_code: 'Optional instructions',
+        placeholder_history: 'Type instructions (⇅ for history)',
+        placeholder_default: 'Type instructions',
+        send_with: 'Send with',
+        send_with_ellipsis: 'Send with...',
+        copy_prompt: 'Copy prompt',
+        more_actions: 'More actions',
+        send: 'Send'
       }}
     />
   )
@@ -661,7 +817,21 @@ export const WithWarning = () => (
       exit_voice_input: 'Exit voice input',
       reference_file: 'Reference file',
       insert_symbol: 'Insert symbol',
-      prompt_templates: 'Prompt templates'
+      prompt_templates: 'Prompt templates',
+      edit_format: 'Edit format',
+      edit_format_whole: 'Whole-File Overwrite',
+      edit_format_search_replace: 'Search & Replace',
+      edit_format_diff: 'Unified Diff',
+      edit_format_truncated: 'Ellipsis truncations',
+      placeholder_code_history: 'Optional instructions (⇅ for history)',
+      placeholder_code: 'Optional instructions',
+      placeholder_history: 'Type instructions (⇅ for history)',
+      placeholder_default: 'Type instructions',
+      send_with: 'Send with',
+      send_with_ellipsis: 'Send with...',
+      copy_prompt: 'Copy prompt',
+      more_actions: 'More actions',
+      send: 'Send'
     }}
     warning="Add a configuration"
   />

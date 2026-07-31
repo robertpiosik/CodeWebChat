@@ -207,36 +207,13 @@
       &__button {
         font-size: 11px;
         pointer-events: all;
-        position: relative;
         color: var(--vscode-foreground);
         padding: 0 2px;
+        opacity: var(--dimmed-opacity);
+        white-space: nowrap;
+        text-decoration: dotted;
 
-        &__spacer {
-          visibility: hidden;
-          font-weight: 500;
-          white-space: nowrap;
-        }
-
-        &__text {
-          position: absolute;
-          left: 0;
-          top: 0;
-          width: 100%;
-          height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: normal;
-          opacity: 0.5;
-          white-space: nowrap;
-        }
-
-        &:hover &__text {
-          opacity: 1;
-        }
-
-        &--selected &__text {
-          font-weight: 500;
+        &:hover {
           opacity: 1;
         }
       }
@@ -324,10 +301,6 @@
       }
     }
   }
-}
-
-.underlined {
-  text-decoration: underline;
 }
 
 .tabs {

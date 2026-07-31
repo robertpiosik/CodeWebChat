@@ -380,22 +380,34 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_chat_edit_format_change = (edit_format: EditFormat) => {
-    set_chat_edit_format(edit_format)
-    post_message(props.vscode, {
-      command: 'SAVE_EDIT_FORMAT',
-      target: 'chat',
-      edit_format
-    })
+  const handle_chat_edit_format_change = (format?: EditFormat) => {
+    if (format) {
+      post_message(props.vscode, {
+        command: 'SAVE_EDIT_FORMAT',
+        edit_format: format,
+        target: 'chat'
+      })
+    } else {
+      post_message(props.vscode, {
+        command: 'SELECT_EDIT_FORMAT',
+        target: 'chat'
+      })
+    }
   }
 
-  const handle_api_edit_format_change = (edit_format: EditFormat) => {
-    set_api_edit_format(edit_format)
-    post_message(props.vscode, {
-      command: 'SAVE_EDIT_FORMAT',
-      target: 'api',
-      edit_format
-    })
+  const handle_api_edit_format_change = (format?: EditFormat) => {
+    if (format) {
+      post_message(props.vscode, {
+        command: 'SAVE_EDIT_FORMAT',
+        edit_format: format,
+        target: 'api'
+      })
+    } else {
+      post_message(props.vscode, {
+        command: 'SELECT_EDIT_FORMAT',
+        target: 'api'
+      })
+    }
   }
 
   const handle_caret_position_change = (caret_position: number) => {

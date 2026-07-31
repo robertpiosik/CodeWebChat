@@ -7,6 +7,7 @@ import { translations as views_settings_handlers_open_ignore_patterns_settings }
 import { translations as views_settings_handlers_select_default_api_configuration } from './translations/views/settings/handlers/select-default-api-configuration'
 import { translations as views_panel_handlers_voice_input } from './translations/views/panel/handlers/voice-input'
 import { translations as views_panel_handlers_hash_sign } from './translations/views/panel/handlers/hash-sign'
+import { translations as views_panel_handlers_select_edit_format } from './translations/views/panel/handlers/select-edit-format'
 import { translations as views_handlers_common } from './translations/views/common/handlers/common'
 import { translations as views_shared_actions_api_create_interactions_verify_model } from './translations/views/shared/actions/api/create/interactions/verify-model'
 import { translations as views_shared_actions_api_create_interactions_initial_select_provider } from './translations/views/shared/actions/api/create/interactions/initial-select-provider'
@@ -35,6 +36,7 @@ const translations = {
   ...views_settings_handlers_select_default_api_configuration,
   ...views_panel_handlers_voice_input,
   ...views_panel_handlers_hash_sign,
+  ...views_panel_handlers_select_edit_format,
   ...views_handlers_common,
   ...views_shared_actions_api_create_interactions_verify_model,
   ...views_shared_actions_api_create_interactions_initial_select_provider,

@@ -63,8 +63,8 @@ type Props = {
   on_api_prompt_type_change: (prompt_type: ApiPromptType) => void
   chat_edit_format: EditFormat
   api_edit_format: EditFormat
-  on_chat_edit_format_change: (edit_format: EditFormat) => void
-  on_api_edit_format_change: (edit_format: EditFormat) => void
+  on_chat_edit_format_change: (format?: EditFormat) => void
+  on_api_edit_format_change: (format?: EditFormat) => void
   on_web_configurations_reorder: (
     reordered_web_configurations: WebConfiguration[]
   ) => void
@@ -411,7 +411,25 @@ export const MainView: React.FC<Props> = (props) => {
               exit_voice_input: t('prompt-field.exit-voice-input'),
               reference_file: t('prompt-field.reference-file'),
               insert_symbol: t('prompt-field.insert-symbol'),
-              prompt_templates: t('prompt-field.prompt-templates')
+              prompt_templates: t('prompt-field.prompt-templates'),
+              edit_format: t('prompt-field.edit-format'),
+              edit_format_whole: t('prompt-field.edit-format.whole'),
+              edit_format_search_replace: t(
+                'prompt-field.edit-format.search-replace'
+              ),
+              edit_format_diff: t('prompt-field.edit-format.diff'),
+              edit_format_truncated: t('prompt-field.edit-format.truncated'),
+              placeholder_code_history: t(
+                'prompt-field.placeholder.code-history'
+              ),
+              placeholder_code: t('prompt-field.placeholder.code'),
+              placeholder_history: t('prompt-field.placeholder.history'),
+              placeholder_default: t('prompt-field.placeholder.default'),
+              send_with: t('prompt-field.action.send-with'),
+              send_with_ellipsis: t('prompt-field.action.send-with-ellipsis'),
+              copy_prompt: t('prompt-field.action.copy-prompt'),
+              more_actions: t('prompt-field.action.more-actions'),
+              send: t('prompt-field.action.send')
             }}
           />
           <UiContextUtilisation

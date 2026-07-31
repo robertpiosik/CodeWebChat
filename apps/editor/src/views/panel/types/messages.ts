@@ -90,13 +90,18 @@ export interface GetEditFormat extends BaseMessage {
   command: 'GET_EDIT_FORMAT'
 }
 
+export interface SaveEditFormatMessage extends BaseMessage {
+  command: 'SAVE_EDIT_FORMAT'
+  edit_format: EditFormat
+  target: 'chat' | 'api'
+}
+
 export interface GetEditFormatInstructionsMessage extends BaseMessage {
   command: 'GET_EDIT_FORMAT_INSTRUCTIONS'
 }
 
-export interface SaveEditFormatMessage extends BaseMessage {
-  command: 'SAVE_EDIT_FORMAT'
-  edit_format: EditFormat
+export interface SelectEditFormatMessage extends BaseMessage {
+  command: 'SELECT_EDIT_FORMAT'
   target: 'chat' | 'api'
 }
 
@@ -550,8 +555,9 @@ export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
   | GetEditFormat
-  | GetEditFormatInstructionsMessage
   | SaveEditFormatMessage
+  | GetEditFormatInstructionsMessage
+  | SelectEditFormatMessage
   | GetConnectionStatusMessage
   | GetWebConfigurationsMessage
   | ReorderWebConfigurationsMessage
