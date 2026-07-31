@@ -73,19 +73,24 @@ export class ModelProvidersManager {
 
   public async save_model_providers(model_providers: ModelProvider[]) {
     try {
-      // Save full provider info to secret storage
       await this._extension_context.secrets.store(
         SECRET_STORAGE_MODEL_PROVIDERS_KEY,
         JSON.stringify(model_providers)
       )
 
-      // Save provider config to settings
       const model_provider_configs = model_providers.map((p) => {
-        return {
+        const config: {
+          name: string
+          baseUrl: string
+          extendedCache?: boolean
+        } = {
           name: p.name,
-          baseUrl: p.base_url,
-          extendedCache: p.extended_cache
+          baseUrl: p.base_url
         }
+        if (p.extended_cache) {
+          config.extendedCache = true
+        }
+        return config
       })
       const config = vscode.workspace.getConfiguration('codeWebChat')
       await config.update(

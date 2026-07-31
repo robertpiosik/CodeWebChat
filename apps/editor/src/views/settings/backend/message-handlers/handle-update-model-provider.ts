@@ -23,7 +23,7 @@ export const handle_update_model_provider = async (
       a.base_url !== b.base_url ||
       (b.api_key !== undefined && b.api_key !== '') ||
       b.is_api_key_cleared ||
-      a.extended_cache !== b.extended_cache ||
+      !!a.extended_cache !== !!b.extended_cache ||
       false
   } else if (message.is_new) {
     has_changes = true
