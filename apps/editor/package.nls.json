@@ -44,6 +44,7 @@
   "codeWebChat.setRanges.title": "Set Ranges...",
   "codeWebChat.searchFiles.title": "Search Files...",
   "codeWebChat.searchFilesFromDirectory.title": "Search Files...",
+  "codeWebChat.selectReferencingFilesForSelected.title": "Select Referencing Files...",
   "codeWebChat.selectReferencingFiles.title": "Select Referencing Files...",
   "codeWebChat.selectDefinitionFile.title": "Select Definition File",
   "codeWebChat.openInIntegratedTerminal.title": "Open in Integrated Terminal",

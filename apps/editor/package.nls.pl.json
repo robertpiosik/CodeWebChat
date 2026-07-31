@@ -44,6 +44,7 @@
   "codeWebChat.setRanges.title": "Ustaw zakresy...",
   "codeWebChat.searchFiles.title": "Szukaj plików...",
   "codeWebChat.searchFilesFromDirectory.title": "Szukaj plików...",
+  "codeWebChat.selectReferencingFilesForSelected.title": "Wybierz pliki odwołujące się...",
   "codeWebChat.selectReferencingFiles.title": "Wybierz pliki odwołujące się...",
   "codeWebChat.selectDefinitionFile.title": "Wybierz plik definicji",
   "codeWebChat.openInIntegratedTerminal.title": "Otwórz w zintegrowanym terminalu",

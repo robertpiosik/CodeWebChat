@@ -44,6 +44,7 @@
   "codeWebChat.setRanges.title": "Nastavit rozsahy...",
   "codeWebChat.searchFiles.title": "Hledat soubory...",
   "codeWebChat.searchFilesFromDirectory.title": "Hledat soubory...",
+  "codeWebChat.selectReferencingFilesForSelected.title": "Vybrat odkazující soubory...",
   "codeWebChat.selectReferencingFiles.title": "Vybrat odkazující soubory...",
   "codeWebChat.selectDefinitionFile.title": "Vybrat soubor definice",
   "codeWebChat.openInIntegratedTerminal.title": "Otevřít v integrovaném terminálu",

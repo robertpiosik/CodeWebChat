@@ -33,6 +33,7 @@ import {
   set_ranges_command,
   search_files_commands,
   select_referencing_files_command,
+  select_referencing_files_for_selected_command,
   select_definition_file_command,
   select_unstaged_files_command,
   select_commit_files_command,
@@ -159,6 +160,10 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     set_ranges_command(workspace_provider, extension_context),
     select_imported_files_command(workspace_provider, extension_context),
     duplicate_workspace_command(workspace_provider, extension_context),
+    select_referencing_files_for_selected_command(
+      workspace_provider,
+      extension_context
+    ),
     select_referencing_files_command(workspace_provider, extension_context),
     ...search_files_commands(workspace_provider, extension_context),
     select_definition_file_command(workspace_provider),

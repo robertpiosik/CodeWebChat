@@ -44,6 +44,7 @@
   "codeWebChat.setRanges.title": "Tartományok beállítása...",
   "codeWebChat.searchFiles.title": "Fájlok keresése...",
   "codeWebChat.searchFilesFromDirectory.title": "Fájlok keresése...",
+  "codeWebChat.selectReferencingFilesForSelected.title": "Hivatkozó fájlok kiválasztása...",
   "codeWebChat.selectReferencingFiles.title": "Hivatkozó fájlok kiválasztása...",
   "codeWebChat.selectDefinitionFile.title": "Definíciós fájl kiválasztása",
   "codeWebChat.openInIntegratedTerminal.title": "Megnyitás az integrált terminálban",

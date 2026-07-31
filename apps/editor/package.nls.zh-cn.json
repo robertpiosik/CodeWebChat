@@ -44,6 +44,7 @@
   "codeWebChat.setRanges.title": "设置范围...",
   "codeWebChat.searchFiles.title": "搜索文件...",
   "codeWebChat.searchFilesFromDirectory.title": "搜索文件...",
+  "codeWebChat.selectReferencingFilesForSelected.title": "选择引用文件...",
   "codeWebChat.selectReferencingFiles.title": "选择引用文件...",
   "codeWebChat.selectDefinitionFile.title": "选择定义文件",
   "codeWebChat.openInIntegratedTerminal.title": "在集成终端中打开",

@@ -364,6 +364,11 @@
         "category": "Code Web Chat"
       },
       {
+        "command": "codeWebChat.selectReferencingFilesForSelected",
+        "title": "%codeWebChat.selectReferencingFilesForSelected.title%",
+        "category": "Code Web Chat"
+      },
+      {
         "command": "codeWebChat.selectDefinitionFile",
         "title": "%codeWebChat.selectDefinitionFile.title%",
         "category": "Code Web Chat"
@@ -612,6 +617,11 @@
           "command": "codeWebChat.collapseContextFolders",
           "when": "view == codeWebChatViewSelectedFiles",
           "group": "navigation@4"
+        },
+        {
+          "command": "codeWebChat.selectReferencingFilesForSelected",
+          "when": "view == codeWebChatViewSelectedFiles",
+          "group": "1_more@1"
         },
         {
           "command": "codeWebChat.checkAll",

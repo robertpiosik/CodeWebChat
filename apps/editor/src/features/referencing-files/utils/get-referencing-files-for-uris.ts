@@ -1,0 +1,108 @@
+import * as vscode from 'vscode'
+import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
+import { Logger } from '@shared/utils/logger'
+
+export const get_referencing_files_for_uris = async (params: {
+  uris: vscode.Uri[]
+  workspace_provider: WorkspaceProvider
+  ignore_paths: string[]
+  progress: vscode.Progress<{ message?: string; increment?: number }>
+  token: vscode.CancellationToken
+}): Promise<{ file_path: string; range: vscode.Range }[]> => {
+  const file_map = new Map<string, vscode.Range>()
+
+  for (const uri of params.uris) {
+    if (params.token.isCancellationRequested) {
+      break
+    }
+
+    try {
+      const symbols = await vscode.commands.executeCommand<
+        vscode.DocumentSymbol[] | vscode.SymbolInformation[]
+      >('vscode.executeDocumentSymbolProvider', uri)
+
+      if (!symbols) {
+        continue
+      }
+
+      const positions: vscode.Position[] = []
+      const top_level_containers = new Set<string>()
+
+      const traverse = (syms: any[]) => {
+        for (const sym of syms) {
+          if (sym.selectionRange) {
+            positions.push(sym.selectionRange.start)
+            const is_container =
+              sym.kind === vscode.SymbolKind.Module ||
+              sym.kind === vscode.SymbolKind.Namespace ||
+              sym.kind === vscode.SymbolKind.Package
+
+            if (is_container && sym.children && sym.children.length > 0) {
+              traverse(sym.children)
+            }
+          } else if (sym.location) {
+            const is_container =
+              sym.kind === vscode.SymbolKind.Module ||
+              sym.kind === vscode.SymbolKind.Namespace ||
+              sym.kind === vscode.SymbolKind.Package
+
+            if (is_container) {
+              top_level_containers.add(sym.name)
+            }
+
+            if (
+              !sym.containerName ||
+              top_level_containers.has(sym.containerName)
+            ) {
+              positions.push(sym.location.range.start)
+            }
+          }
+        }
+      }
+      traverse(symbols)
+
+      for (let i = 0; i < positions.length; i++) {
+        if (params.token.isCancellationRequested) {
+          break
+        }
+        const position = positions[i]
+
+        const locations = await vscode.commands.executeCommand<
+          vscode.Location[]
+        >('vscode.executeReferenceProvider', uri, position)
+
+        if (locations) {
+          locations.forEach((loc) => {
+            const file_path = loc.uri.fsPath
+            if (params.ignore_paths.includes(file_path)) return
+            if (
+              params.workspace_provider.get_workspace_root_for_file(
+                file_path
+              ) &&
+              !params.workspace_provider.is_ignored_by_patterns(file_path)
+            ) {
+              if (!file_map.has(file_path)) {
+                file_map.set(file_path, loc.range)
+              }
+            }
+          })
+        }
+      }
+    } catch (err) {
+      Logger.error({
+        function_name: 'get_referencing_files_for_uris',
+        message: `Error processing symbols for ${uri.fsPath}`,
+        data: err
+      })
+    }
+
+    params.progress.report({
+      increment: (1 / params.uris.length) * 100
+    })
+  }
+
+  return Array.from(file_map.entries()).map(([file_path, range]) => ({
+    file_path,
+    range
+  }))
+}
