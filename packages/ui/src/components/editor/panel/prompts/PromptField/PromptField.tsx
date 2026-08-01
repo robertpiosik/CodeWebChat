@@ -602,7 +602,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               }}
             >
               {props.edit_format && (
-                <div style={{ position: 'relative', display: 'flex' }}>
+                <div
+                  style={{ position: 'relative', display: 'flex', minWidth: 0 }}
+                >
                   {is_edit_format_hovered && (
                     <Tooltip
                       message={props.translations.edit_format}

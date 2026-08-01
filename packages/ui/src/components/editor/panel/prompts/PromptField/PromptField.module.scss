@@ -160,13 +160,11 @@
   gap: 5px;
   justify-content: space-between;
   position: relative;
-
-  > div {
-    flex-shrink: 0;
-  }
+  min-width: 0;
 
   &__left {
     display: flex;
+    flex-shrink: 0;
 
     &__button {
       --size: 20px;
@@ -197,12 +195,14 @@
     justify-content: flex-end;
     gap: 5px;
     pointer-events: none;
+    min-width: 0;
 
     &__edit-format {
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: flex-end;
+      min-width: 0;
 
       &__button {
         font-size: 11px;
@@ -212,6 +212,8 @@
         opacity: var(--dimmed-opacity);
         white-space: nowrap;
         text-decoration: dotted;
+        overflow: hidden;
+        text-overflow: ellipsis;
 
         &:hover {
           opacity: 1;
@@ -224,6 +226,7 @@
       pointer-events: all;
       display: flex;
       align-items: center;
+      flex-shrink: 0;
 
       &__button {
         font-size: 11px !important;
@@ -238,6 +241,7 @@
       pointer-events: all;
       position: relative;
       border-radius: 5px;
+      flex-shrink: 0;
 
       &:hover {
         background-color: var(--vscode-toolbar-hoverBackground);
