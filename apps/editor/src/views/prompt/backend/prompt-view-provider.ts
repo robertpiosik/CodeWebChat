@@ -83,7 +83,8 @@ import {
   handle_get_find_relevant_files_shrink_source_code,
   handle_save_find_relevant_files_shrink_source_code,
   handle_return_home_and_switch_to_edit_files,
-  handle_pick_tasks_workspace
+  handle_pick_tasks_workspace,
+  handle_get_token_count
 } from './message-handlers'
 import { handle_update_api_configuration } from './message-handlers/handle-update-api-configuration'
 import { handle_pick_model_provider } from './message-handlers/handle-pick-model-provider'
@@ -934,6 +935,8 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             this._send_is_modern_ui()
           } else if (message.command == 'PICK_TASKS_WORKSPACE') {
             await handle_pick_tasks_workspace(this, message)
+          } else if (message.command == 'GET_TOKEN_COUNT') {
+            await handle_get_token_count(this)
           }
         } catch (error: any) {
           Logger.error({

@@ -549,6 +549,10 @@ export interface GetIsModernUiMessage extends BaseMessage {
   command: 'GET_IS_MODERN_UI'
 }
 
+export interface GetTokenCountMessage extends BaseMessage {
+  command: 'GET_TOKEN_COUNT'
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -641,6 +645,7 @@ export type FrontendMessage =
   | PickApiReasoningEffortMessage
   | PickTasksWorkspaceMessage
   | GetIsModernUiMessage
+  | GetTokenCountMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {

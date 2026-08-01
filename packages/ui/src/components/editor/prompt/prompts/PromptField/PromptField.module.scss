@@ -214,6 +214,9 @@
         text-decoration: dotted;
         overflow: hidden;
         text-overflow: ellipsis;
+        text-decoration: underline dotted;
+        text-underline-offset: 4px;
+        overflow: visible;
 
         &:hover {
           opacity: 1;

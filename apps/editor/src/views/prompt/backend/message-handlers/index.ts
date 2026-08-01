@@ -70,3 +70,5 @@ export * from './handle-save-find-relevant-files-shrink-source-code'
 export * from './handle-update-last-used-web-configuration-or-group'
 export * from './handle-return-home-and-switch-to-edit-files'
 export * from './handle-pick-tasks-workspace'
+
+export * from './handle-get-token-count'
