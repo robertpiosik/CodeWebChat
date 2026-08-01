@@ -17,6 +17,24 @@ export const translations = {
     hu: 'Teljes fájl felülírása',
     bg: 'Презаписване на целия файл'
   },
+  'views.panel.handlers.select-edit-format.items.whole.description': {
+    en: 'Output file contents in full',
+    pl: 'Wypisz pełną zawartość pliku',
+    'zh-cn': '完整输出文件内容',
+    ja: 'ファイルの内容をすべて出力する',
+    'zh-tw': '完整輸出檔案內容',
+    de: 'Dateiinhalt vollständig ausgeben',
+    es: 'Mostrar el contenido completo del archivo',
+    fr: 'Afficher le contenu du fichier en entier',
+    'pt-br': 'Exibir o conteúdo do arquivo na íntegra',
+    ru: 'Вывод содержимого файла целиком',
+    ko: '전체 파일 내용 출력',
+    it: 'Output completo del contenuto del file',
+    tr: 'Dosya içeriğini tam olarak çıkar',
+    cs: 'Vypsat celý obsah souboru',
+    hu: 'A fájl teljes tartalmának megjelenítése',
+    bg: 'Извеждане на пълното съдържание на файла'
+  },
   'views.panel.handlers.select-edit-format.items.search-replace': {
     en: 'Search & Replace',
     pl: 'Wyszukaj i zamień',
@@ -34,6 +52,26 @@ export const translations = {
     cs: 'Hledat a nahradit',
     hu: 'Keresés és csere',
     bg: 'Търсене и заместване'
+  },
+  'views.panel.handlers.select-edit-format.items.search-replace.description': {
+    en: 'Isolate changed blocks with delimiters <<<<<<< SEARCH, =======, >>>>>>> REPLACE',
+    pl: 'Wydziel zmienione bloki za pomocą ograniczników <<<<<<< SEARCH, =======, >>>>>>> REPLACE',
+    'zh-cn': '使用分隔符 <<<<<<< SEARCH, =======, >>>>>>> REPLACE 隔离更改的块',
+    ja: '変更されたブロックを区切り文字 <<<<<<< SEARCH, =======, >>>>>>> REPLACE で分離する',
+    'zh-tw':
+      '使用分隔符 <<<<<<< SEARCH, =======, >>>>>>> REPLACE 隔離更改的區塊',
+    de: 'Geänderte Blöcke mit Trennzeichen <<<<<<< SEARCH, =======, >>>>>>> REPLACE isolieren',
+    es: 'Aislar los bloques cambiados con delimitadores <<<<<<< SEARCH, =======, >>>>>>> REPLACE',
+    fr: 'Isoler les blocs modifiés avec les délimiteurs <<<<<<< SEARCH, =======, >>>>>>> REPLACE',
+    'pt-br':
+      'Isolar blocos alterados com delimitadores <<<<<<< SEARCH, =======, >>>>>>> REPLACE',
+    ru: 'Изолировать измененные блоки с помощью разделителей <<<<<<< SEARCH, =======, >>>>>>> REPLACE',
+    ko: '<<<<<<< SEARCH, =======, >>>>>>> REPLACE 구분 기호를 사용하여 변경된 블록 격리',
+    it: 'Isola i blocchi modificati con i delimitatori <<<<<<< SEARCH, =======, >>>>>>> REPLACE',
+    tr: 'Değiştirilen blokları <<<<<<< SEARCH, =======, >>>>>>> REPLACE sınırlayıcılarıyla ayır',
+    cs: 'Izolovat změněné bloky pomocí oddělovačů <<<<<<< SEARCH, =======, >>>>>>> REPLACE',
+    hu: 'Módosított blokkok elkülönítése <<<<<<< SEARCH, =======, >>>>>>> REPLACE elválasztókkal',
+    bg: 'Изолиране на променените блокове с разделители <<<<<<< SEARCH, =======, >>>>>>> REPLACE'
   },
   'views.panel.handlers.select-edit-format.items.diff': {
     en: 'Unified Diff',
@@ -53,6 +91,25 @@ export const translations = {
     hu: 'Egyesített Diff',
     bg: 'Обединен Diff (Unified Diff)'
   },
+  'views.panel.handlers.select-edit-format.items.diff.description': {
+    en: 'Represent changes line-by-line using deletion - and addition + markers',
+    pl: 'Przedstaw zmiany wiersz po wierszu za pomocą znaczników usunięcia - i dodania +',
+    'zh-cn': '使用删除 - 和添加 + 标记逐行表示更改',
+    ja: '削除 - と追加 + マーカーを使用して、変更を1行ずつ表す',
+    'zh-tw': '使用刪除 - 和新增 + 標記逐行表示更改',
+    de: 'Änderungen Zeile für Zeile mit Lösch- (-) und Hinzufüge-Markierungen (+) darstellen',
+    es: 'Representar cambios línea por línea usando marcadores de eliminación - y adición +',
+    fr: "Représenter les modifications ligne par ligne en utilisant les marqueurs de suppression - et d'ajout +",
+    'pt-br':
+      'Representar alterações linha por linha usando marcadores de exclusão - e adição +',
+    ru: 'Представлять изменения построчно, используя маркеры удаления - и добавления +',
+    ko: '삭제 - 및 추가 + 마커를 사용하여 줄 단위로 변경 사항 표시',
+    it: 'Rappresenta le modifiche riga per riga utilizzando i marcatori di eliminazione - e aggiunta +',
+    tr: 'Değişiklikleri silme - ve ekleme + işaretlerini kullanarak satır satır temsil et',
+    cs: 'Představovat změny řádek po řádku pomocí značek pro odstranění - a přidání +',
+    hu: 'Változások soronkénti megjelenítése törlés - és hozzáadás + jelölőkkel',
+    bg: 'Представяне на промените ред по ред чрез маркери за изтриване - и добавяне +'
+  },
   'views.panel.handlers.select-edit-format.items.truncated': {
     en: 'Ellipsis truncations',
     pl: 'Skrócenie za pomocą wielokropka',
@@ -70,6 +127,24 @@ export const translations = {
     cs: 'Zkrácení výpustkou',
     hu: 'Csonkítás ellipszissel',
     bg: 'Съкращения с многоточие'
+  },
+  'views.panel.handlers.select-edit-format.items.truncated.description': {
+    en: 'Use ellipsis truncations for unchanged parts',
+    pl: 'Użyj skrócenia wielokropkiem dla niezmienionych fragmetów',
+    'zh-cn': '对未更改的部分使用省略号截断',
+    ja: '変更されていない部分には省略記号を使用する',
+    'zh-tw': '對未更改的部分使用省略號截斷',
+    de: 'Auslassungspunkte für unveränderte Teile verwenden',
+    es: 'Usar truncamiento con elipsis para las partes sin cambios',
+    fr: 'Utiliser des points de suspension pour les parties non modifiées',
+    'pt-br': 'Usar truncamento por elipse para partes não alteradas',
+    ru: 'Использовать усечение с многоточием для неизмененных частей',
+    ko: '변경되지 않은 부분에 줄임표 자르기 사용',
+    it: 'Usa i troncamenti con ellissi per le parti non modificate',
+    tr: 'Değişmeyen kısımlar için üç nokta ile kesilmeleri kullanın',
+    cs: 'Použít zkrácení výpustkou pro nezměněné části',
+    hu: 'Csonkítás ellipszissel a változatlan részekhez',
+    bg: 'Използване на съкращения с многоточие за непроменените части'
   },
   'views.panel.handlers.select-edit-format.placeholder': {
     en: 'Select edit format',

@@ -12,21 +12,38 @@ export const handle_select_edit_format = async (
   panel_view_provider: PanelViewProvider,
   message: SelectEditFormatMessage
 ): Promise<void> => {
+  const current_format =
+    message.target == 'chat'
+      ? panel_view_provider.chat_edit_format
+      : panel_view_provider.api_edit_format
+
   const items: (vscode.QuickPickItem & { value: EditFormat })[] = [
     {
       label: t('views.panel.handlers.select-edit-format.items.whole'),
+      detail: t(
+        'views.panel.handlers.select-edit-format.items.whole.description'
+      ),
       value: 'whole'
     },
     {
       label: t('views.panel.handlers.select-edit-format.items.search-replace'),
+      detail: t(
+        'views.panel.handlers.select-edit-format.items.search-replace.description'
+      ),
       value: 'search-replace'
     },
     {
       label: t('views.panel.handlers.select-edit-format.items.diff'),
+      detail: t(
+        'views.panel.handlers.select-edit-format.items.diff.description'
+      ),
       value: 'diff'
     },
     {
       label: t('views.panel.handlers.select-edit-format.items.truncated'),
+      detail: t(
+        'views.panel.handlers.select-edit-format.items.truncated.description'
+      ),
       value: 'truncated'
     }
   ]
@@ -35,6 +52,7 @@ export const handle_select_edit_format = async (
     vscode.QuickPickItem & { value: EditFormat }
   >()
   quick_pick.items = items
+  quick_pick.activeItems = items.filter((item) => item.value == current_format)
   quick_pick.placeholder = t(
     'views.panel.handlers.select-edit-format.placeholder'
   )
