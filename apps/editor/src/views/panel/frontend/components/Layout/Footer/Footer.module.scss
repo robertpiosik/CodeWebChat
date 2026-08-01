@@ -1,5 +1,4 @@
 .footer {
-  --button-size: 24px;
   position: relative;
   z-index: -1; // Makes context menu of a web configuration appear above
   display: flex;
@@ -18,64 +17,5 @@
 
   &__left {
     display: flex;
-  }
-
-  &__icon-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: var(--button-size);
-    width: var(--button-size);
-    border-radius: 4px;
-
-    > svg {
-      flex-shrink: 0;
-      width: 16px;
-      height: 16px;
-    }
-
-    &--discord {
-      background-color: #5765f2;
-
-      > svg {
-        fill: white;
-      }
-
-      &:hover {
-        background-color: color-mix(in srgb, #5765f2, white 10%);
-      }
-    }
-  }
-
-  &__action-button {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-    gap: 4px;
-    height: var(--button-size);
-    padding: 0 6px 0 3px;
-    border-radius: 4px;
-
-    &:hover:not(:disabled) {
-      background-color: var(--vscode-toolbar-hoverBackground);
-    }
-
-    &:disabled {
-      opacity: var(--disabled-opacity);
-    }
-
-    &__text {
-      display: inline;
-    }
-
-    &--compact &__text {
-      display: none;
-    }
-
-    &--compact {
-      padding: 0;
-      width: var(--button-size);
-      justify-content: center;
-    }
   }
 }

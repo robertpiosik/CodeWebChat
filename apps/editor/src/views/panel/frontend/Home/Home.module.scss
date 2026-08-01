@@ -16,6 +16,12 @@
     gap: 4px;
   }
 
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
   &__home {
     display: flex;
     align-items: center;

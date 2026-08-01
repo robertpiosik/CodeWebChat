@@ -88,7 +88,7 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
 
   extension_context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(
-      'codeWebChatView',
+      'promptView',
       panel_view_provider,
       {
         webviewOptions: {

@@ -1,12 +1,15 @@
 import { useState, useEffect, useContext, useRef, useLayoutEffect } from 'react'
-import cn from 'classnames'
-import { Icon as UiIcon } from '@ui/components/editor/common/Icon'
 import styles from './Footer.module.scss'
-import { use_compacting } from '@shared/hooks'
+import { use_compacting, use_compact_order } from '@shared/hooks'
 import { LayoutContext } from '../../../contexts/LayoutContext'
 import { use_translation } from '../../../i18n/use-translation'
+import { CompactableActionButton } from '@ui/components/editor/panel/CompactableActionButton'
 
-export const Footer: React.FC = () => {
+type Props = {
+  on_history_click?: () => void
+}
+
+export const Footer: React.FC<Props> = (props) => {
   const {
     can_undo,
     on_apply_click,
@@ -16,10 +19,20 @@ export const Footer: React.FC = () => {
 
   const { t } = use_translation()
 
+  const history_label = t('footer.action.history')
+  const undo_label = t('footer.action.undo')
+  const apply_label = t('footer.action.apply-from-clipboard')
+
+  const compact_order = use_compact_order([
+    history_label,
+    undo_label,
+    apply_label
+  ])
+
   const [is_apply_disabled_temporarily, set_is_apply_disabled_temporarily] =
     useState(false)
 
-  const { container_ref, compact_step, report_width } = use_compacting(2)
+  const { container_ref, compact_step, report_width } = use_compacting(3)
   const left_ref = useRef<HTMLDivElement>(null)
   const right_ref = useRef<HTMLDivElement>(null)
 
@@ -54,57 +67,32 @@ export const Footer: React.FC = () => {
     <>
       <div className={styles.footer} ref={container_ref}>
         <div ref={left_ref} className={styles.footer__left}>
-          <a
-            className={cn(
-              styles['footer__icon-button'],
-              styles['footer__icon-button--discord']
-            )}
-            href="https://discord.gg/KJySXsrSX5"
-            title={t('footer.get-involved')}
-          >
-            <UiIcon variant="DISCORD" />
-          </a>
+          <CompactableActionButton
+            is_compact={compact_step >= compact_order[0]}
+            on_click={props.on_history_click}
+            title={t('footer.history-title')}
+            codicon="history"
+            label={history_label}
+          />
+          <CompactableActionButton
+            is_compact={compact_step >= compact_order[1]}
+            on_click={on_undo_click}
+            title={t('footer.undo-title')}
+            disabled={!can_undo}
+            codicon="discard"
+            label={undo_label}
+          />
         </div>
 
         <div ref={right_ref}>
-          <button
-            className={cn(styles['footer__action-button'], {
-              [styles['footer__action-button--compact']]: compact_step >= 1
-            })}
-            onClick={on_undo_click}
-            title={t('footer.undo-title')}
-            disabled={!can_undo}
-          >
-            <span
-              className={cn(
-                styles['footer__action-button__icon'],
-                'codicon',
-                'codicon-discard'
-              )}
-            />
-            <span className={styles['footer__action-button__text']}>
-              {t('footer.action.undo')}
-            </span>
-          </button>
-          <button
-            className={cn(styles['footer__action-button'], {
-              [styles['footer__action-button--compact']]: compact_step >= 2
-            })}
-            onClick={handle_apply_click}
+          <CompactableActionButton
+            is_compact={compact_step >= compact_order[2]}
+            on_click={handle_apply_click}
             title={t('footer.apply-title')}
             disabled={is_apply_disabled_temporarily}
-          >
-            <span
-              className={cn(
-                styles['footer__action-button__icon'],
-                'codicon',
-                'codicon-clippy'
-              )}
-            />
-            <span className={styles['footer__action-button__text']}>
-              {t('footer.action.apply-from-clipboard')}
-            </span>
-          </button>
+            codicon="clippy"
+            label={apply_label}
+          />
         </div>
       </div>
     </>

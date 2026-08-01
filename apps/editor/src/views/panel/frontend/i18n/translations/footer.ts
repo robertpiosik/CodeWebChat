@@ -92,5 +92,41 @@ export const footer = {
     cs: 'Zpět',
     hu: 'Visszavonás',
     bg: 'Отмяна'
+  },
+  'footer.action.history': {
+    en: 'History',
+    pl: 'Historia',
+    'zh-cn': '历史',
+    ja: '履歴',
+    'zh-tw': '歷史',
+    de: 'Verlauf',
+    es: 'Historial',
+    fr: 'Historique',
+    'pt-br': 'Histórico',
+    ru: 'История',
+    ko: '기록',
+    it: 'Cronologia',
+    tr: 'Geçmiş',
+    cs: 'Historie',
+    hu: 'Előzmények',
+    bg: 'История'
+  },
+  'footer.history-title': {
+    en: 'Restore or create a checkpoint',
+    pl: 'Przywróć lub utwórz punkt kontrolny',
+    'zh-cn': '恢复或创建检查点',
+    ja: 'チェックポイントを復元または作成する',
+    'zh-tw': '恢復或創建檢查點',
+    de: 'Einen Prüfpunkt wiederherstellen oder erstellen',
+    es: 'Restaurar o crear un punto de control',
+    fr: 'Restaurer ou créer un point de contrôle',
+    'pt-br': 'Restaurar ou criar um ponto de verificação',
+    ru: 'Восстановить или создать контрольную точку',
+    ko: '체크포인트 복원 또는 생성',
+    it: 'Ripristina o crea un checkpoint',
+    tr: 'Bir kontrol noktası geri yükle veya oluştur',
+    cs: 'Obnovit nebo vytvořit kontrolní bod',
+    hu: 'Ellenőrzőpont visszaállítása vagy létrehozása',
+    bg: 'Възстановете или създайте контролна точка'
   }
 } as const

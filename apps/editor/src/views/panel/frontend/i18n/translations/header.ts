@@ -17,24 +17,6 @@ export const header = {
     hu: 'Szia!',
     bg: 'Здравей'
   },
-  'header.settings': {
-    en: 'Settings',
-    pl: 'Ustawienia',
-    'zh-cn': '设置',
-    ja: '設定',
-    'zh-tw': '設定',
-    de: 'Einstellungen',
-    es: 'Configuración',
-    fr: 'Paramètres',
-    'pt-br': 'Configurações',
-    ru: 'Настройки',
-    ko: '설정',
-    it: 'Impostazioni',
-    tr: 'Ayarlar',
-    cs: 'Nastavení',
-    hu: 'Beállítások',
-    bg: 'Настройки'
-  },
   'header.prompt-type': {
     en: 'Prompt types',
     pl: 'Typy promptu',
@@ -52,5 +34,23 @@ export const header = {
     cs: 'Typy promptů',
     hu: 'Prompt típusok',
     bg: 'Типове промптове'
+  },
+  'header.buy-me-a-coffee': {
+    en: 'Buy Me A Coffee',
+    pl: 'Postaw autorowi kawę',
+    'zh-cn': '请我喝杯咖啡',
+    ja: 'コーヒーをおごる',
+    'zh-tw': '請我喝杯咖啡',
+    de: 'Kauf mir einen Kaffee',
+    es: 'Invítame a un café',
+    fr: 'Offrez-moi un café',
+    'pt-br': 'Pague-me um café',
+    ru: 'Угостить кофе',
+    ko: '커피 한 잔 사주기',
+    it: 'Offrimi un caffè',
+    tr: 'Bana Bir Kahve Ismarla',
+    cs: 'Kup mi kávu',
+    hu: 'Vegyél nekem egy kávét',
+    bg: 'Купи ми кафе'
   }
 } as const

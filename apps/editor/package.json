@@ -88,8 +88,8 @@
           "initialSize": 3
         },
         {
-          "id": "codeWebChatView",
-          "name": "Code Web Chat",
+          "id": "promptView",
+          "name": "Prompt",
           "type": "webview",
           "icon": "resources/activity-bar-icon.svg",
           "initialSize": 5
@@ -745,28 +745,23 @@
           "group": "navigation@6"
         },
         {
-          "command": "codeWebChat.history",
-          "when": "view == codeWebChatView",
-          "group": "navigation@1"
-        },
-        {
           "command": "codeWebChat.settings",
-          "when": "view == codeWebChatView",
+          "when": "view == promptView",
           "group": "navigation@2"
         },
         {
           "command": "codeWebChat.visitWebsite",
-          "when": "view == codeWebChatView",
+          "when": "view == promptView",
           "group": "1_more@1"
         },
         {
           "command": "codeWebChat.openRepository",
-          "when": "view == codeWebChatView",
+          "when": "view == promptView",
           "group": "1_more@2"
         },
         {
           "command": "codeWebChat.followOnX",
-          "when": "view == codeWebChatView",
+          "when": "view == promptView",
           "group": "1_more@3"
         }
       ],

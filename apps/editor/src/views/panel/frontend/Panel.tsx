@@ -242,6 +242,13 @@ export const Panel = () => {
     })
   }
 
+  const handle_history_click = () => {
+    post_message(vscode, {
+      command: 'EXECUTE_COMMAND',
+      command_id: 'codeWebChat.history'
+    })
+  }
+
   const handle_undo_click = () => {
     post_message(vscode, {
       command: 'UNDO'
@@ -306,7 +313,7 @@ export const Panel = () => {
     <LayoutContext.Provider value={layout_context_value}>
       <div className={styles.container} data-modern-ui={is_modern_ui}>
         <div className={styles.slot}>
-          <Layout>
+          <Layout on_history_click={handle_history_click}>
             <div
               className={cn(styles.content, {
                 [styles['content--hidden']]: active_view != 'main'

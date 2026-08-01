@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import styles from './Home.module.scss'
 import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
 import { Tabs as UiTabs } from '@ui/components/editor/panel/Tabs'
@@ -11,10 +11,11 @@ import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Separator as UiSeparator } from '@ui/components/editor/panel/Separator'
 import { Translation, use_translation } from '../i18n/use-translation'
 import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
-import { DonateButton as UiDonateButton } from '@ui/components/editor/panel/DonateButton'
+import { CompactableActionButton } from '@ui/components/editor/panel/CompactableActionButton'
 import { Tasks as UiTasks } from '@ui/components/editor/panel/Tasks'
 import { use_tasks } from './hooks/use-tasks'
 import { use_sticky_mode } from './hooks/use-sticky-mode'
+import { use_compacting, use_compact_order } from '@shared/hooks'
 
 type Props = {
   vscode: any
@@ -62,6 +63,25 @@ export const Home: React.FC<Props> = (props) => {
       ? active_workspace_root
       : roots[0]
 
+  const { container_ref, compact_step, report_width } = use_compacting(2)
+  const left_ref = useRef<HTMLDivElement>(null)
+  const right_ref = useRef<HTMLDivElement>(null)
+
+  const discord_label = 'Discord'
+  const coffee_label = t('header.buy-me-a-coffee')
+
+  const compact_order = use_compact_order([discord_label, coffee_label])
+
+  useLayoutEffect(() => {
+    if (left_ref.current && right_ref.current) {
+      const width =
+        left_ref.current.getBoundingClientRect().width +
+        right_ref.current.getBoundingClientRect().width +
+        8
+      report_width(width, compact_step)
+    }
+  }, [compact_step, report_width])
+
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
@@ -86,17 +106,27 @@ export const Home: React.FC<Props> = (props) => {
 
   return (
     <>
-      <div className={styles.header}>
-        <div className={styles['header__left']}>
+      <div className={styles.header} ref={container_ref}>
+        <div className={styles['header__left']} ref={left_ref}>
           <div className={styles['header__home']}>
             <span className="codicon codicon-home" />
           </div>
           <span className={styles['header__text']}>{t('header.home')}</span>
         </div>
-        <UiDonateButton
-          label={t('recent-donations.buy-me-a-coffee')}
-          on_click={props.on_donate_click}
-        />
+        <div className={styles['header__right']} ref={right_ref}>
+          <CompactableActionButton
+            label={discord_label}
+            href="https://discord.gg/KJySXsrSX5"
+            icon="DISCORD"
+            is_compact={compact_step >= compact_order[0]}
+          />
+          <CompactableActionButton
+            label={coffee_label}
+            on_click={props.on_donate_click}
+            codicon="coffee"
+            is_compact={compact_step >= compact_order[1]}
+          />
+        </div>
       </div>
 
       <UiScrollable on_scroll={handle_scroll} top_shadow>
