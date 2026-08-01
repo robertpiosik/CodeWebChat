@@ -453,8 +453,12 @@
           "group": "1_action@4"
         },
         {
-          "command": "codeWebChat.selectDefinitionFile",
+          "command": "codeWebChat.selectReferencingFiles",
           "group": "1_action@7"
+        },
+        {
+          "command": "codeWebChat.selectDefinitionFile",
+          "group": "1_action@8"
         }
       ],
       "commandPalette": [
