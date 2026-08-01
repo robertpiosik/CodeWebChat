@@ -92,9 +92,8 @@ import { handle_pick_api_reasoning_effort } from './message-handlers/handle-pick
 import { handle_select_edit_format } from './message-handlers/handle-select-edit-format'
 import { SelectionState } from '../types/messages'
 import {
-  API_EDIT_FORMAT_STATE_KEY,
+  EDIT_FORMAT_STATE_KEY,
   API_MODE_STATE_KEY,
-  CHAT_EDIT_FORMAT_STATE_KEY,
   INSTRUCTIONS_ASK_STATE_KEY,
   INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY,
   INSTRUCTIONS_FIND_RELEVANT_FILES_STATE_KEY,
@@ -157,8 +156,7 @@ export class PanelViewProvider implements vscode.WebviewViewProvider {
     active_index: 0
   }
   public web_prompt_type: WebPromptType
-  public chat_edit_format: EditFormat
-  public api_edit_format: EditFormat
+  public edit_format: EditFormat
   public api_prompt_type: ApiPromptType
   public mode: Mode = MODE.WEB
   public intelligent_update_abort_controllers: {
@@ -390,20 +388,12 @@ export class PanelViewProvider implements vscode.WebviewViewProvider {
       INSTRUCTIONS_FIND_RELEVANT_FILES_STATE_KEY
     )
 
-    this.chat_edit_format =
+    this.edit_format =
       this.extension_context.workspaceState.get<EditFormat>(
-        CHAT_EDIT_FORMAT_STATE_KEY
+        EDIT_FORMAT_STATE_KEY
       ) ??
       this.extension_context.globalState.get<EditFormat>(
-        CHAT_EDIT_FORMAT_STATE_KEY
-      ) ??
-      'whole'
-    this.api_edit_format =
-      this.extension_context.workspaceState.get<EditFormat>(
-        API_EDIT_FORMAT_STATE_KEY
-      ) ??
-      this.extension_context.globalState.get<EditFormat>(
-        API_EDIT_FORMAT_STATE_KEY
+        EDIT_FORMAT_STATE_KEY
       ) ??
       'whole'
     this.mode =

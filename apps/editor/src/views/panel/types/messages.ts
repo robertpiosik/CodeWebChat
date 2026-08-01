@@ -93,7 +93,6 @@ export interface GetEditFormat extends BaseMessage {
 export interface SaveEditFormatMessage extends BaseMessage {
   command: 'SAVE_EDIT_FORMAT'
   edit_format: EditFormat
-  target: 'chat' | 'api'
 }
 
 export interface GetEditFormatInstructionsMessage extends BaseMessage {
@@ -102,7 +101,6 @@ export interface GetEditFormatInstructionsMessage extends BaseMessage {
 
 export interface SelectEditFormatMessage extends BaseMessage {
   command: 'SELECT_EDIT_FORMAT'
-  target: 'chat' | 'api'
 }
 
 export interface GetConnectionStatusMessage extends BaseMessage {
@@ -662,8 +660,7 @@ export interface ConnectionStatusMessage extends BaseMessage {
 
 export interface EditFormatMessage extends BaseMessage {
   command: 'EDIT_FORMAT'
-  chat_edit_format: EditFormat
-  api_edit_format: EditFormat
+  edit_format: EditFormat
 }
 
 export interface EditFormatInstructionsMessage extends BaseMessage {

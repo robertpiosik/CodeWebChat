@@ -128,10 +128,7 @@ export const handle_copy_prompt = async (params: {
     let user_instructions = processed_instructions
 
     if (params.panel_view_provider.web_prompt_type == 'edit-files') {
-      const edit_format =
-        params.panel_view_provider.mode == MODE.WEB
-          ? params.panel_view_provider.chat_edit_format
-          : params.panel_view_provider.api_edit_format
+      const edit_format = params.panel_view_provider.edit_format
       const config = vscode.workspace.getConfiguration('codeWebChat')
       const instructions_key = {
         whole: 'editFormatInstructionsWhole',

@@ -9,7 +9,6 @@ import {
 } from '@/services/model-providers-manager'
 import axios from 'axios'
 import {
-  API_EDIT_FORMAT_STATE_KEY,
   LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY,
   LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
   LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY,
@@ -305,14 +304,7 @@ export const handle_make_api_call = async (
     let user_content = ''
 
     if (prompt_type == 'edit-files') {
-      edit_format =
-        panel_view_provider.extension_context.workspaceState.get<EditFormat>(
-          API_EDIT_FORMAT_STATE_KEY
-        ) ??
-        panel_view_provider.extension_context.globalState.get<EditFormat>(
-          API_EDIT_FORMAT_STATE_KEY
-        ) ??
-        'whole'
+      edit_format = panel_view_provider.edit_format
       const config = vscode.workspace.getConfiguration('codeWebChat')
       const instructions_key = {
         whole: 'editFormatInstructionsWhole',

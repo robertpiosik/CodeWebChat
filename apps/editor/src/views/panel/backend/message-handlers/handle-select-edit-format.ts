@@ -1,8 +1,5 @@
 import * as vscode from 'vscode'
-import {
-  API_EDIT_FORMAT_STATE_KEY,
-  CHAT_EDIT_FORMAT_STATE_KEY
-} from '@/constants/state-keys'
+import { EDIT_FORMAT_STATE_KEY } from '@/constants/state-keys'
 import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
 import { SelectEditFormatMessage } from '@/views/panel/types/messages'
 import { EditFormat } from '@shared/types/edit-format'
@@ -10,12 +7,9 @@ import { t } from '@/i18n'
 
 export const handle_select_edit_format = async (
   panel_view_provider: PanelViewProvider,
-  message: SelectEditFormatMessage
+  _: SelectEditFormatMessage
 ): Promise<void> => {
-  const current_format =
-    message.target == 'chat'
-      ? panel_view_provider.chat_edit_format
-      : panel_view_provider.api_edit_format
+  const current_format = panel_view_provider.edit_format
 
   const items: (vscode.QuickPickItem & { value: EditFormat })[] = [
     {
@@ -82,31 +76,18 @@ export const handle_select_edit_format = async (
     return
   }
 
-  if (message.target == 'chat') {
-    panel_view_provider.chat_edit_format = selection.value
-    await panel_view_provider.extension_context.workspaceState.update(
-      CHAT_EDIT_FORMAT_STATE_KEY,
-      selection.value
-    )
-    await panel_view_provider.extension_context.globalState.update(
-      CHAT_EDIT_FORMAT_STATE_KEY,
-      selection.value
-    )
-  } else if (message.target == 'api') {
-    panel_view_provider.api_edit_format = selection.value
-    await panel_view_provider.extension_context.workspaceState.update(
-      API_EDIT_FORMAT_STATE_KEY,
-      selection.value
-    )
-    await panel_view_provider.extension_context.globalState.update(
-      API_EDIT_FORMAT_STATE_KEY,
-      selection.value
-    )
-  }
+  panel_view_provider.edit_format = selection.value
+  await panel_view_provider.extension_context.workspaceState.update(
+    EDIT_FORMAT_STATE_KEY,
+    selection.value
+  )
+  await panel_view_provider.extension_context.globalState.update(
+    EDIT_FORMAT_STATE_KEY,
+    selection.value
+  )
 
   panel_view_provider.send_message({
     command: 'EDIT_FORMAT',
-    chat_edit_format: panel_view_provider.chat_edit_format,
-    api_edit_format: panel_view_provider.api_edit_format
+    edit_format: panel_view_provider.edit_format
   })
 }

@@ -33,8 +33,7 @@ export const CHATS_VIEW_CHAT_HISTORY_STATE_KEY = 'chats-view-chat-history'
 export const DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY =
   'duplicate-workspace-context'
 
-export const CHAT_EDIT_FORMAT_STATE_KEY = 'chat-edit-format'
-export const API_EDIT_FORMAT_STATE_KEY = 'api-edit-format'
+export const EDIT_FORMAT_STATE_KEY = 'edit-format'
 export const WEB_MODE_STATE_KEY = 'web-mode'
 export const API_MODE_STATE_KEY = 'api-mode'
 export const PANEL_MODE_STATE_KEY = 'panel-mode'

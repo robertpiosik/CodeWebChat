@@ -109,8 +109,7 @@ export const Main: React.FC<Props> = (props) => {
     useState<string[]>()
   const [find_relevant_files_history, set_find_relevant_files_history] =
     useState<string[]>()
-  const [chat_edit_format, set_chat_edit_format] = useState<EditFormat>()
-  const [api_edit_format, set_api_edit_format] = useState<EditFormat>()
+  const [edit_format, set_edit_format] = useState<EditFormat>()
   const [caret_position_to_set, set_caret_position_to_set] = useState<
     number | undefined
   >()
@@ -156,8 +155,7 @@ export const Main: React.FC<Props> = (props) => {
             set_caret_position_to_set(message.caret_position)
           break
         case 'EDIT_FORMAT':
-          set_chat_edit_format(message.chat_edit_format)
-          set_api_edit_format(message.api_edit_format)
+          set_edit_format(message.edit_format)
           break
         case 'SELECTED_WEB_CONFIGURATION_CHANGED':
           set_selected_web_configuration_name_by_mode((prev) => ({
@@ -381,32 +379,15 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_chat_edit_format_change = (format?: EditFormat) => {
+  const handle_edit_format_change = (format?: EditFormat) => {
     if (format) {
       post_message(props.vscode, {
         command: 'SAVE_EDIT_FORMAT',
-        edit_format: format,
-        target: 'chat'
+        edit_format: format
       })
     } else {
       post_message(props.vscode, {
-        command: 'SELECT_EDIT_FORMAT',
-        target: 'chat'
-      })
-    }
-  }
-
-  const handle_api_edit_format_change = (format?: EditFormat) => {
-    if (format) {
-      post_message(props.vscode, {
-        command: 'SAVE_EDIT_FORMAT',
-        edit_format: format,
-        target: 'api'
-      })
-    } else {
-      post_message(props.vscode, {
-        command: 'SELECT_EDIT_FORMAT',
-        target: 'api'
+        command: 'SELECT_EDIT_FORMAT'
       })
     }
   }
@@ -537,8 +518,7 @@ export const Main: React.FC<Props> = (props) => {
     find_relevant_files_history === undefined ||
     is_in_code_at_cursor_mode === undefined ||
     instructions === undefined ||
-    chat_edit_format === undefined ||
-    api_edit_format === undefined
+    edit_format === undefined
   ) {
     return <></>
   }
@@ -582,10 +562,8 @@ export const Main: React.FC<Props> = (props) => {
       context_size_warning_threshold={props.context_size_warning_threshold}
       on_web_prompt_type_change={props.on_web_prompt_type_change}
       on_api_prompt_type_change={props.on_api_prompt_type_change}
-      chat_edit_format={chat_edit_format}
-      api_edit_format={api_edit_format}
-      on_chat_edit_format_change={handle_chat_edit_format_change}
-      on_api_edit_format_change={handle_api_edit_format_change}
+      edit_format={edit_format}
+      on_edit_format_change={handle_edit_format_change}
       on_web_configurations_reorder={handle_web_configurations_reorder}
       on_web_configuration_edit={handle_web_configuration_edit}
       on_delete_web_configuration={handle_delete_web_configuration}

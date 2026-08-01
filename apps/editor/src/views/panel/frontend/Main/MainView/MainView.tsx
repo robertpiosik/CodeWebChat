@@ -61,10 +61,8 @@ type Props = {
   api_prompt_type: ApiPromptType
   on_web_prompt_type_change: (prompt_type: WebPromptType) => void
   on_api_prompt_type_change: (prompt_type: ApiPromptType) => void
-  chat_edit_format: EditFormat
-  api_edit_format: EditFormat
-  on_chat_edit_format_change: (format?: EditFormat) => void
-  on_api_edit_format_change: (format?: EditFormat) => void
+  edit_format: EditFormat
+  on_edit_format_change: (format?: EditFormat) => void
   on_web_configurations_reorder: (
     reordered_web_configurations: WebConfiguration[]
   ) => void
@@ -373,16 +371,8 @@ export const MainView: React.FC<Props> = (props) => {
             focus_key={props.chat_input_focus_key}
             last_choice_tooltip={last_choice_tooltip}
             show_edit_format_selector={show_edit_format_selector}
-            edit_format={
-              props.mode == MODE.WEB
-                ? props.chat_edit_format
-                : props.api_edit_format
-            }
-            on_edit_format_change={
-              props.mode == MODE.WEB
-                ? props.on_chat_edit_format_change
-                : props.on_api_edit_format_change
-            }
+            edit_format={props.edit_format}
+            on_edit_format_change={props.on_edit_format_change}
             selected_files={props.selected_files}
             on_go_to_file={props.on_go_to_file}
             on_pasted_lines_click={props.on_pasted_lines_click}

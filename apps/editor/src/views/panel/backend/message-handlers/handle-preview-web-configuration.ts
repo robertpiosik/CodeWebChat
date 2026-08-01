@@ -120,13 +120,13 @@ export const handle_preview_web_configuration = async (
         truncated: 'editFormatInstructionsTruncated',
         'search-replace': 'editFormatInstructionsSearchReplace',
         diff: 'editFormatInstructionsDiff'
-      }[panel_view_provider.chat_edit_format]
+      }[panel_view_provider.edit_format]
       const default_instructions = {
         whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
         truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
         'search-replace': EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
         diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
-      }[panel_view_provider.chat_edit_format]
+      }[panel_view_provider.edit_format]
       const edit_format_instructions =
         config.get<string>(instructions_key) || default_instructions
       if (edit_format_instructions) {
