@@ -150,6 +150,10 @@ export const Panel = () => {
     address: string
   }>()
 
+  const [api_calls_modal_height, set_api_calls_modal_height] = useState(0)
+  const bottom_spacer_height =
+    api_calls_modal_height > 0 ? api_calls_modal_height + 16 : 0
+
   const { viewing_donations, set_viewing_donations, ...donations_state } =
     use_recent_donations()
 
@@ -309,6 +313,7 @@ export const Panel = () => {
               })}
             >
               <Main
+                bottom_spacer_height={bottom_spacer_height}
                 scroll_reset_key={main_view_scroll_reset_key}
                 are_keyboard_shortcuts_disabled={
                   are_keyboard_shortcuts_disabled
@@ -431,6 +436,7 @@ export const Panel = () => {
               })}
             >
               <Home
+                bottom_spacer_height={bottom_spacer_height}
                 vscode={vscode}
                 is_active={active_view == 'home'}
                 is_connected={is_connected}
@@ -599,6 +605,7 @@ export const Panel = () => {
                   id
                 })
               }}
+              on_height_change={set_api_calls_modal_height}
             />
           </div>
         )}

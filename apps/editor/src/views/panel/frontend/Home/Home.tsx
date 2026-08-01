@@ -32,6 +32,7 @@ type Props = {
   is_setup_complete: boolean
   is_connected: boolean
   on_donate_click: () => void
+  bottom_spacer_height?: number
 }
 
 export const Home: React.FC<Props> = (props) => {
@@ -246,19 +247,35 @@ export const Home: React.FC<Props> = (props) => {
             )}
           </div>
 
-          <div className={styles.bottom}>
-            <div className={styles.bottom__links}>
-              <div>{props.version}</div>
-              <div>
-                <Translation
-                  id="home.footer.copyright"
-                  components={{
-                    year: new Date().getFullYear().toString(),
-                    link: <a href="https://x.com/robertpiosik">Robert Piosik</a>
-                  }}
-                />
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              width: '100%'
+            }}
+          >
+            <div className={styles.bottom}>
+              <div className={styles.bottom__links}>
+                <div>{props.version}</div>
+                <div>
+                  <Translation
+                    id="home.footer.copyright"
+                    components={{
+                      year: new Date().getFullYear().toString(),
+                      link: (
+                        <a href="https://x.com/robertpiosik">Robert Piosik</a>
+                      )
+                    }}
+                  />
+                </div>
               </div>
             </div>
+            {props.bottom_spacer_height !== undefined &&
+              props.bottom_spacer_height > 0 && (
+                <div
+                  style={{ height: props.bottom_spacer_height, flexShrink: 0 }}
+                />
+              )}
           </div>
         </div>
       </UiScrollable>

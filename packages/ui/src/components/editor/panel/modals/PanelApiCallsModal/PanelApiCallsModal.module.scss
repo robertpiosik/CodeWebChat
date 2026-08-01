@@ -7,11 +7,11 @@
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
-  padding: 0 12px 48px 8px;
+  padding: 0 12px 49px 0;
   pointer-events: none;
 
   :global([data-modern-ui='true']) & {
-    padding: 0 10px 38px 8px;
+    padding: 0 10px 38px 0;
   }
 }
 
@@ -38,7 +38,7 @@
   border: 1px solid var(--vscode-editorWidget-border);
   box-shadow: 0 3px 6px var(--vscode-widget-shadow);
   width: 100%;
-  max-width: min(260px, 70vw);
+  max-width: min(260px, 60vw);
   overflow: hidden;
   animation: slideIn var(--transition-duration-250)
     var(--transition-timing-function);

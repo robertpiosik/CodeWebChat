@@ -118,6 +118,7 @@ type Props = {
   on_tab_delete: (index: number) => void
   on_tabs_reorder: (new_order: number[]) => void
   voice_input_push_to_talk: boolean
+  bottom_spacer_height?: number
 }
 
 const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
@@ -522,6 +523,12 @@ export const MainView: React.FC<Props> = (props) => {
             />
           </>
         )}
+        {props.bottom_spacer_height !== undefined &&
+          props.bottom_spacer_height > 0 && (
+            <div
+              style={{ height: props.bottom_spacer_height, flexShrink: 0 }}
+            />
+          )}
       </UiScrollable>
     </>
   )

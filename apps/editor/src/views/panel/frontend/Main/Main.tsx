@@ -84,6 +84,7 @@ type Props = {
   missing_web_configuration?: boolean
   voice_input_push_to_talk: boolean
   token_count: number
+  bottom_spacer_height?: number
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -648,6 +649,7 @@ export const Main: React.FC<Props> = (props) => {
       on_tab_delete={props.on_tab_delete}
       on_tabs_reorder={props.on_tabs_reorder}
       voice_input_push_to_talk={props.voice_input_push_to_talk}
+      bottom_spacer_height={props.bottom_spacer_height}
     />
   )
 }
