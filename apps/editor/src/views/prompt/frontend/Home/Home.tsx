@@ -163,14 +163,18 @@ export const Home: React.FC<Props> = (props) => {
               ref={mode_ref}
             >
               <UiModeButton
-                pre={props.is_connected ? 'Autofill' : 'Copy for'}
-                label="Chatbots"
+                pre={
+                  props.is_connected
+                    ? t('home.mode.autofill')
+                    : t('home.mode.copy-prompt')
+                }
+                label={t('home.mode.chatbots')}
                 on_click={props.on_chatbots_click}
                 is_compact={is_mode_sticky}
               />
               <UiModeButton
-                pre="Make"
-                label="API calls"
+                pre={t('home.mode.make')}
+                label={t('home.mode.api-calls')}
                 on_click={props.on_api_calls_click}
                 is_compact={is_mode_sticky}
               />

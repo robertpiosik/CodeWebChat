@@ -18,6 +18,8 @@
   flex-direction: column;
   padding: 0 12px;
   height: 80px;
+  max-width: 100%;
+  overflow: hidden;
 
   &--compact {
     height: 36px;
@@ -46,6 +48,10 @@
     font-size: 22px;
     line-height: 1.2;
     letter-spacing: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
   }
 
   &__label-char {
