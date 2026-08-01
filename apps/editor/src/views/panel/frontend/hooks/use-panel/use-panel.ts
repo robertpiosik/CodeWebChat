@@ -3,11 +3,11 @@ import {
   BackendMessage,
   FrontendMessage,
   SetupProgress
-} from '../../types/messages'
-import { Mode, MODE } from '../../types/main-view-mode'
+} from '../../../types/messages'
+import { Mode, MODE } from '../../../types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
-import { post_message } from '../utils/post-message'
-import { use_instructions } from './use-instructions'
+import { post_message } from '../../utils/post-message'
+import { use_instructions } from './hooks/use-instructions'
 
 export const use_panel = (vscode: any) => {
   const [active_view, set_active_view] = useState<'home' | 'main'>('home')
