@@ -6,6 +6,7 @@ import { prompt_field } from './prompt-field'
 import { recent_donations } from './recent-donations'
 
 import { footer } from './footer'
+import { modals } from './modals'
 
 export const translations = {
   ...header,
@@ -14,5 +15,6 @@ export const translations = {
   ...actions,
   ...prompt_field,
   ...recent_donations,
-  ...footer
+  ...footer,
+  ...modals
 }

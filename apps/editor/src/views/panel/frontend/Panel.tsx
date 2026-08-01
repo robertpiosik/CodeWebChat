@@ -739,13 +739,8 @@ export const Panel = () => {
         {is_preview_ongoing_modal_visible && (
           <div className={styles.slot}>
             <UiModal
-              title="New response received"
-              content_slot={
-                <div>
-                  Would you like to switch to the new response? You can do it
-                  later by going back or rejecting.
-                </div>
-              }
+              title={t('modals.new-response-title')}
+              content_slot={<div>{t('modals.new-response-content')}</div>}
               on_background_click={() => {
                 set_is_preview_ongoing_modal_visible(false)
                 post_message(vscode, {
