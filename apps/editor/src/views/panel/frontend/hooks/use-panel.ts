@@ -3,10 +3,10 @@ import {
   BackendMessage,
   FrontendMessage,
   SetupProgress
-} from '../../../types/messages'
-import { Mode, MODE } from '../../../types/main-view-mode'
+} from '../../types/messages'
+import { Mode, MODE } from '../../types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
-import { post_message } from '../../utils/post-message'
+import { post_message } from '../utils/post-message'
 import { use_instructions } from './use-instructions'
 
 export const use_panel = (vscode: any) => {

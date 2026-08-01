@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { WebConfiguration } from '@shared/types/web-configuration'
-import { BackendMessage } from '../../../types/messages'
-import { post_message } from '../../utils/post-message'
+import { BackendMessage } from '../../types/messages'
+import { post_message } from '../utils/post-message'
 
 export const use_web_configuration_editing = (vscode: any) => {
   const [updating_web_configuration, set_updating_web_configuration] =

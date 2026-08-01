@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import { BackendMessage, InstructionsState } from '../../../types/messages'
-import { post_message } from '../../utils/post-message'
-import { Mode, MODE } from '../../../types/main-view-mode'
+import { BackendMessage, InstructionsState } from '../../types/messages'
+import { post_message } from '../utils/post-message'
+import { Mode, MODE } from '../../types/main-view-mode'
 import { WebPromptType, ApiPromptType } from '@shared/types/prompt-types'
 
 export const use_instructions = (

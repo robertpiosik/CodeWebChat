@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { ApiConfiguration, BackendMessage } from '../../../types/messages'
-import { post_message } from '../../utils/post-message'
+import { ApiConfiguration, BackendMessage } from '../../types/messages'
+import { post_message } from '../utils/post-message'
 import { ApiFeature } from '@/views/shared/types/api-features'
 
 export const use_api_configuration_editing = (vscode: any) => {
