@@ -12,7 +12,7 @@ import {
   get_rename_source_info
 } from '../utils/file-operations'
 import { apply_conflict_markers_to_content } from '../utils/edit-formats/conflict-markers/apply-conflict-markers-to-content'
-import { parse_conflict_segments } from '../utils/edit-formats/conflict-markers'
+import { parse_conflict_segments } from '../utils/edit-formats/conflict-markers/parse-conflict-segments'
 
 export const handle_conflict_markers = async (params: {
   files: FileItem[]
@@ -111,7 +111,7 @@ export const handle_conflict_markers = async (params: {
           if (has_markers) {
             new_content = apply_conflict_markers_to_content({
               original_content: rename_source_content,
-              markers_content: file.content
+              segments: parse_conflict_segments(file.content)
             })
           } else if (file.content != '') {
             new_content = file.content
@@ -149,7 +149,7 @@ export const handle_conflict_markers = async (params: {
           const original_content = document.getText()
           const current_content = apply_conflict_markers_to_content({
             original_content,
-            markers_content: file.content
+            segments: parse_conflict_segments(file.content)
           })
 
           if (current_content !== original_content) {

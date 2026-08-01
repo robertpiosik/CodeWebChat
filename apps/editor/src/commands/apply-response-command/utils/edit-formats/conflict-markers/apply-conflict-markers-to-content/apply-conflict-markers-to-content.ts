@@ -1,4 +1,4 @@
-import { parse_conflict_segments } from '../parse-conflict-segments'
+import { Segment } from '../types'
 
 const escape_reg_exp = (string: string) => {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -6,11 +6,11 @@ const escape_reg_exp = (string: string) => {
 
 export const apply_conflict_markers_to_content = (params: {
   original_content: string
-  markers_content: string
+  segments: Segment[]
 }): string => {
   const line_ending = params.original_content.includes('\r\n') ? '\r\n' : '\n'
   let current_content = params.original_content
-  const segments = parse_conflict_segments(params.markers_content)
+  const segments = params.segments
   let cursor = 0
 
   const MAX_CONTEXT_LINES = 5

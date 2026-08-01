@@ -1,0 +1,17 @@
+<<<<<<< SEARCH
+Content under the first title.
+
+======================
+Second Top-Level Title
+======================
+
+Content under the second title.
+=======
+Content under the first title.
+
+=======================
+Another Different Title
+=======================
+
+Content under the new title section.
+>>>>>>> REPLACE

@@ -14,7 +14,7 @@ export const parse_conflict_segments = (content: string): Segment[] => {
 
   for (const line of lines) {
     const trimmed = line.trim()
-    if (trimmed.startsWith('<<<<<<<')) {
+    if (trimmed == '<<<<<<<' || trimmed.startsWith('<<<<<<< ')) {
       if (state == 'NORMAL') {
         if (current_lines.length > 0) {
           segments.push({ type: 'common', lines: [...current_lines] })
@@ -30,7 +30,7 @@ export const parse_conflict_segments = (content: string): Segment[] => {
       continue
     }
 
-    if (trimmed.startsWith('=======')) {
+    if (trimmed == '=======' || trimmed.startsWith('======= ')) {
       if (state == 'ORIGINAL') {
         state = 'UPDATED'
       } else if (state == 'NORMAL') {
@@ -41,7 +41,7 @@ export const parse_conflict_segments = (content: string): Segment[] => {
       continue
     }
 
-    if (trimmed.startsWith('>>>>>>>')) {
+    if (trimmed == '>>>>>>>' || trimmed.startsWith('>>>>>>> ')) {
       if (state == 'UPDATED' || state == 'ORIGINAL') {
         segments.push({
           type: 'conflict',

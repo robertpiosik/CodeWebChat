@@ -1,1 +1,1 @@
-export * from './parse-conflict-segments'
+export * from './types'
