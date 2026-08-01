@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { PanelApiCallsModal } from './PanelApiCallsModal'
+import { OngoingApiCallsModal } from './OngoingApiCallsModal'
 
 export default {
-  component: PanelApiCallsModal
+  component: OngoingApiCallsModal
 }
 
 export const Default = () => {
@@ -20,7 +20,7 @@ export const Default = () => {
   }
 
   return items.length > 0 ? (
-    <PanelApiCallsModal progress_items={items} on_cancel={handle_cancel} />
+    <OngoingApiCallsModal progress_items={items} on_cancel={handle_cancel} />
   ) : (
     <button
       onClick={() =>
@@ -150,7 +150,7 @@ export const MultipleItems = () => {
   }
 
   return items.length > 0 ? (
-    <PanelApiCallsModal progress_items={items} on_cancel={handle_cancel} />
+    <OngoingApiCallsModal progress_items={items} on_cancel={handle_cancel} />
   ) : (
     <button onClick={() => set_items(initial_items)}>Reset</button>
   )

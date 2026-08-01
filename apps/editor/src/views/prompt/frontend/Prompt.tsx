@@ -12,7 +12,7 @@ import { post_message } from './utils/post-message'
 import { ResponsePreview as UiResponsePreview } from '@ui/components/editor/prompt/ResponsePreview'
 import { Modal as UiModal } from '@ui/components/editor/prompt/modals/Modal'
 import { ProgressModal as UiProgressModal } from '@ui/components/editor/prompt/modals/ProgressModal'
-import { PanelApiCallsModal as UiPanelApiCallsModal } from '@ui/components/editor/prompt/modals/PanelApiCallsModal'
+import { OngoingApiCallsModal as UiOngoingApiCallsModal } from '@ui/components/editor/prompt/modals/OngoingApiCallsModal'
 import { QRCodeModal as UiQRCodeModal } from '@ui/components/editor/prompt/modals/QRCodeModal'
 import { AutoClosingModal as UiAutoClosingModal } from '@ui/components/editor/prompt/modals/AutoClosingModal'
 import { use_panel } from './hooks/use-prompt'
@@ -138,7 +138,7 @@ export const Prompt = () => {
   const {
     progress_state,
     set_progress_state,
-    api_manager_progress_state,
+    prompt_view_api_calls_manager_progress_state,
     auto_closing_modal_data,
     set_auto_closing_modal_data,
     is_preview_ongoing_modal_visible,
@@ -600,15 +600,16 @@ export const Prompt = () => {
           </div>
         )}
 
-        {Object.keys(api_manager_progress_state).length > 0 && (
+        {Object.keys(prompt_view_api_calls_manager_progress_state).length >
+          0 && (
           <div className={styles.slot}>
-            <UiPanelApiCallsModal
-              progress_items={Object.entries(api_manager_progress_state).map(
-                ([id, state]) => ({ id, ...state })
-              )}
+            <UiOngoingApiCallsModal
+              progress_items={Object.entries(
+                prompt_view_api_calls_manager_progress_state
+              ).map(([id, state]) => ({ id, ...state }))}
               on_cancel={(id) => {
                 post_message(vscode, {
-                  command: 'CANCEL_API_MANAGER_REQUEST',
+                  command: 'CANCEL_PROMPT_VIEW_API_CALLS_MANAGER_REQUEST',
                   id
                 })
               }}

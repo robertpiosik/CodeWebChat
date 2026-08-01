@@ -3,7 +3,7 @@ import { context_initialization } from './context/context-initialization'
 import { PromptViewProvider } from './views/prompt/backend/prompt-view-provider'
 import { WebSocketManager } from './services/websocket-manager'
 import { ChatsViewProvider } from './views/chats/backend/chats-view-provider'
-import { ApiManager } from './services/api-manager'
+import { PromptViewApiCallsManager } from './services/prompt-view-api-calls-manager'
 import {
   migrate_configurations_to_api_configurations,
   migrate_edit_context_to_edit_files_system_instructions,
@@ -82,9 +82,14 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     extension_context
   )
 
-  const api_manager = new ApiManager(prompt_view_provider, chats_view_provider)
+  const prompt_view_api_calls_manager = new PromptViewApiCallsManager(
+    prompt_view_provider,
+    chats_view_provider
+  )
 
-  chats_view_provider.set_api_manager(api_manager)
+  chats_view_provider.set_prompt_view_api_calls_manager(
+    prompt_view_api_calls_manager
+  )
 
   extension_context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(
@@ -110,7 +115,7 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
       extension_context,
       prompt_view_provider,
       workspace_provider,
-      api_manager
+      prompt_view_api_calls_manager
     }),
     ...code_at_cursor_commands({
       file_tree_provider: workspace_provider,
@@ -125,7 +130,9 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     })
   )
 
-  prompt_view_provider.set_api_manager(api_manager)
+  prompt_view_provider.set_prompt_view_api_calls_manager(
+    prompt_view_api_calls_manager
+  )
 
   const settings_view_provider = new SettingsViewProvider(
     extension_context.extensionUri,

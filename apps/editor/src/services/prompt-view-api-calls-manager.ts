@@ -6,7 +6,7 @@ import { Logger } from '@shared/utils/logger'
 
 const CHAIN_RESOLUTION_DELAY_MS = 5000
 
-export class ApiManager {
+export class PromptViewApiCallsManager {
   private abort_controllers: Map<string, AbortController> = new Map()
   private next_allowed_finish_time = 0
   private waiting_chain: Map<
@@ -81,7 +81,7 @@ export class ApiManager {
         previous_waiting && previous_waiting.body_hash == body_hash
 
       this.broadcast_message({
-        command: 'SHOW_API_MANAGER_PROGRESS',
+        command: 'SHOW_PROMPT_VIEW_API_CALLS_MANAGER_PROGRESS',
         id: request_id,
         status: is_queued ? 'Queued...' : 'Waiting for server...',
         provider_name: params.provider_name,
@@ -107,7 +107,7 @@ export class ApiManager {
         await Promise.race([previous_waiting.promise, abort_promise])
 
         this.broadcast_message({
-          command: 'SHOW_API_MANAGER_PROGRESS',
+          command: 'SHOW_PROMPT_VIEW_API_CALLS_MANAGER_PROGRESS',
           id: request_id,
           status: 'Waiting for server...',
           provider_name: params.provider_name,
@@ -124,7 +124,7 @@ export class ApiManager {
         on_thinking_chunk: () => {
           schedule_chain_resolution()
           this.broadcast_message({
-            command: 'SHOW_API_MANAGER_PROGRESS',
+            command: 'SHOW_PROMPT_VIEW_API_CALLS_MANAGER_PROGRESS',
             id: request_id,
             status: 'Thinking...',
             provider_name: params.provider_name,
@@ -135,7 +135,7 @@ export class ApiManager {
         on_chunk: (tokens_per_second, total_tokens) => {
           schedule_chain_resolution()
           this.broadcast_message({
-            command: 'SHOW_API_MANAGER_PROGRESS',
+            command: 'SHOW_PROMPT_VIEW_API_CALLS_MANAGER_PROGRESS',
             id: request_id,
             status: 'Receiving...',
             tokens_per_second,
@@ -178,7 +178,7 @@ export class ApiManager {
       }
 
       this.broadcast_message({
-        command: 'HIDE_API_MANAGER_PROGRESS',
+        command: 'HIDE_PROMPT_VIEW_API_CALLS_MANAGER_PROGRESS',
         id: request_id
       })
       this.abort_controllers.delete(request_id)

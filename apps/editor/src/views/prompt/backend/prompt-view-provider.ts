@@ -7,7 +7,7 @@ import {
   BackendMessage,
   InstructionsState
 } from '../types/messages'
-import { ApiManager } from '@/services/api-manager'
+import { PromptViewApiCallsManager } from '@/services/prompt-view-api-calls-manager'
 import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { token_count_emitter } from '@/context/context-initialization'
@@ -166,7 +166,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     workspace_name?: string
   }[] = []
   public api_call_abort_controller: AbortController | null = null
-  public api_manager!: ApiManager
+  public prompt_view_api_calls_manager!: PromptViewApiCallsManager
   public response_history: ResponseHistoryItem[] = []
   public message_listeners: ((message: BackendMessage) => void)[] = []
 
@@ -238,8 +238,10 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     | ((choice: 'Switch' | undefined) => void)
     | undefined = undefined
 
-  public set_api_manager(api_manager: ApiManager) {
-    this.api_manager = api_manager
+  public set_prompt_view_api_calls_manager(
+    prompt_view_api_calls_manager: PromptViewApiCallsManager
+  ) {
+    this.prompt_view_api_calls_manager = prompt_view_api_calls_manager
   }
 
   public update_providers_shrink_mode() {
@@ -757,8 +759,10 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
               this.api_call_abort_controller.abort('Cancelled by user.')
               this.api_call_abort_controller = null
             }
-          } else if (message.command == 'CANCEL_API_MANAGER_REQUEST') {
-            this.api_manager.cancel_api_call(message.id)
+          } else if (
+            message.command == 'CANCEL_PROMPT_VIEW_API_CALLS_MANAGER_REQUEST'
+          ) {
+            this.prompt_view_api_calls_manager.cancel_api_call(message.id)
           } else if (message.command == 'GET_API_CONFIGURATIONS') {
             await handle_get_api_configurations(this)
           } else if (message.command == 'REORDER_API_CONFIGURATIONS') {

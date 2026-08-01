@@ -22,7 +22,7 @@ import {
 } from './response-processor'
 import { CHECKPOINTS_STATE_KEY } from '@/constants/state-keys'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
-import { ApiManager } from '@/services/api-manager'
+import { PromptViewApiCallsManager } from '@/services/prompt-view-api-calls-manager'
 import { t } from '@/i18n'
 import {
   preview_document_provider,
@@ -49,7 +49,7 @@ export const apply_response_command = (params: {
   extension_context: vscode.ExtensionContext
   prompt_view_provider: PromptViewProvider
   workspace_provider: WorkspaceProvider
-  api_manager: ApiManager
+  prompt_view_api_calls_manager: PromptViewApiCallsManager
 }) => {
   params.extension_context.subscriptions.push(
     vscode.workspace.registerTextDocumentContentProvider(
@@ -394,7 +394,7 @@ export const apply_response_command = (params: {
           })
 
           if (changes_accepted) {
-            params.api_manager.cancel_all_requests()
+            params.prompt_view_api_calls_manager.cancel_all_requests()
             if (before_checkpoint) {
               const checkpoints =
                 params.extension_context.workspaceState.get<Checkpoint[]>(

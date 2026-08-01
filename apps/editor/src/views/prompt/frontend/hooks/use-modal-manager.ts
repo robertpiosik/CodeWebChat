@@ -11,15 +11,18 @@ export const use_modal_manager = () => {
     delay_visibility?: boolean
   }>()
 
-  const [api_manager_progress_state, set_api_manager_progress_state] = useState<
+  const [
+    prompt_view_api_calls_manager_progress_state,
+    set_prompt_view_api_calls_manager_progress_state
+  ] = useState<
     Record<
       string,
       {
         status: string
+        provider_name: string
         tokens_per_second?: number
         total_tokens?: number
         cancellable?: boolean
-        provider_name: string
         model?: string
         reasoning_effort?: string
       }
@@ -54,8 +57,10 @@ export const use_modal_manager = () => {
         })
       } else if (message.command == 'HIDE_PROGRESS') {
         set_progress_state(undefined)
-      } else if (message.command == 'SHOW_API_MANAGER_PROGRESS') {
-        set_api_manager_progress_state((prev) => ({
+      } else if (
+        message.command == 'SHOW_PROMPT_VIEW_API_CALLS_MANAGER_PROGRESS'
+      ) {
+        set_prompt_view_api_calls_manager_progress_state((prev) => ({
           ...prev,
           [message.id]: {
             status: message.status,
@@ -66,8 +71,10 @@ export const use_modal_manager = () => {
             reasoning_effort: message.reasoning_effort
           }
         }))
-      } else if (message.command == 'HIDE_API_MANAGER_PROGRESS') {
-        set_api_manager_progress_state((prev) => {
+      } else if (
+        message.command == 'HIDE_PROMPT_VIEW_API_CALLS_MANAGER_PROGRESS'
+      ) {
+        set_prompt_view_api_calls_manager_progress_state((prev) => {
           const new_state = { ...prev }
           delete new_state[message.id]
           return new_state
@@ -92,7 +99,7 @@ export const use_modal_manager = () => {
   return {
     progress_state,
     set_progress_state,
-    api_manager_progress_state,
+    prompt_view_api_calls_manager_progress_state,
     auto_closing_modal_data,
     set_auto_closing_modal_data,
     is_preview_ongoing_modal_visible,

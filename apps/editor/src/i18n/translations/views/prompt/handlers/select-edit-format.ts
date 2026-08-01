@@ -54,7 +54,7 @@ export const translations = {
     bg: 'Търсене и заместване'
   },
   'views.prompt.handlers.select-edit-format.items.search-replace.description': {
-    en: 'Isolate changed blocks with delimiters <<<<<<< SEARCH, =======, >>>>>>> REPLACE',
+    en: 'Isolate changed blocks with <<<<<<< SEARCH, =======, >>>>>>> REPLACE delimiters',
     pl: 'Wydziel zmienione bloki za pomocą ograniczników <<<<<<< SEARCH, =======, >>>>>>> REPLACE',
     'zh-cn': '使用分隔符 <<<<<<< SEARCH, =======, >>>>>>> REPLACE 隔离更改的块',
     ja: '変更されたブロックを区切り文字 <<<<<<< SEARCH, =======, >>>>>>> REPLACE で分離する',

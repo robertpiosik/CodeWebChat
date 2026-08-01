@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { Scrollable } from '../../../common/Scrollable'
 import { use_progress_times } from '../../../../../hooks/use-progress-times'
-import styles from './PanelApiCallsModal.module.scss'
+import styles from './OngoingApiCallsModal.module.scss'
 
 type Props = {
   progress_items: {
@@ -25,7 +25,7 @@ const format_tokens = (tokens: number): string => {
   return rounded.toString()
 }
 
-export const PanelApiCallsModal: React.FC<Props> = (props) => {
+export const OngoingApiCallsModal: React.FC<Props> = (props) => {
   const { start_times, now } = use_progress_times(props.progress_items)
   const [window_width, set_window_width] = useState(window.innerWidth)
   const container_ref = useRef<HTMLDivElement>(null)

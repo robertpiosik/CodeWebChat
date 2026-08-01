@@ -15,9 +15,9 @@ import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { ApiFeature } from '@/views/shared/types/api-features'
 import {
   BaseMessage,
-  CancelApiManagerRequestMessage,
-  ShowApiManagerProgressMessage,
-  HideApiManagerProgressMessage
+  CancelPromptViewApiCallsManagerRequestMessage,
+  ShowPromptViewApiCallsManagerProgressMessage,
+  HidePromptViewApiCallsManagerProgressMessage
 } from '@/views/shared/types/messages'
 
 export type { BaseMessage }
@@ -589,7 +589,7 @@ export type FrontendMessage =
   | ShowAtSignQuickPickMessage
   | ShowHashSignQuickPickMessage
   | SaveWebPromptTypeMessage
-  | CancelApiManagerRequestMessage
+  | CancelPromptViewApiCallsManagerRequestMessage
   | GetWebPromptTypeMessage
   | GetApiPromptTypeMessage
   | SaveApiPromptTypeMessage
@@ -947,8 +947,8 @@ export type BackendMessage =
   | SelectedApiConfigurationChangedMessage
   | ShowProgressMessage
   | HideProgressMessage
-  | ShowApiManagerProgressMessage
-  | HideApiManagerProgressMessage
+  | ShowPromptViewApiCallsManagerProgressMessage
+  | HidePromptViewApiCallsManagerProgressMessage
   | ShowAutoClosingModalMessage
   | ShowNeverClosingModalMessage
   | UpdateFileInPreviewMessage

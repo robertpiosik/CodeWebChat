@@ -423,15 +423,17 @@ export const handle_make_api_call = async (
 
         try {
           const result =
-            await prompt_view_provider.api_manager.send_llm_message({
-              base_url: model_provider.base_url,
-              api_key: model_provider.api_key,
-              body,
-              provider_name: api_configuration.model_provider_name,
-              model: api_configuration.model,
-              reasoning_effort: api_configuration.reasoning_effort,
-              raw_instructions: instructions
-            })
+            await prompt_view_provider.prompt_view_api_calls_manager.send_llm_message(
+              {
+                base_url: model_provider.base_url,
+                api_key: model_provider.api_key,
+                body,
+                provider_name: api_configuration.model_provider_name,
+                model: api_configuration.model,
+                reasoning_effort: api_configuration.reasoning_effort,
+                raw_instructions: instructions
+              }
+            )
 
           if (result) {
             const recent_api_configuration = {

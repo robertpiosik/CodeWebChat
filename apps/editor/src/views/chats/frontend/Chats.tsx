@@ -6,7 +6,10 @@ import { BackendMessage } from '../types/messages'
 const vscode = acquireVsCodeApi()
 
 export const Chats = () => {
-  const [api_manager_progress_state, set_api_manager_progress_state] = useState<
+  const [
+    prompt_view_api_calls_manager_progress_state,
+    set_prompt_view_api_calls_manager_progress_state
+  ] = useState<
     Record<
       string,
       {
@@ -26,8 +29,8 @@ export const Chats = () => {
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
-      if (message.command === 'SHOW_API_MANAGER_PROGRESS') {
-        set_api_manager_progress_state((prev) => ({
+      if (message.command === 'SHOW_PROMPT_VIEW_API_CALLS_MANAGER_PROGRESS') {
+        set_prompt_view_api_calls_manager_progress_state((prev) => ({
           ...prev,
           [message.id]: {
             status: message.status,
@@ -38,8 +41,10 @@ export const Chats = () => {
             reasoning_effort: message.reasoning_effort
           }
         }))
-      } else if (message.command === 'HIDE_API_MANAGER_PROGRESS') {
-        set_api_manager_progress_state((prev) => {
+      } else if (
+        message.command === 'HIDE_PROMPT_VIEW_API_CALLS_MANAGER_PROGRESS'
+      ) {
+        set_prompt_view_api_calls_manager_progress_state((prev) => {
           const new_state = { ...prev }
           delete new_state[message.id]
           return new_state
@@ -56,13 +61,16 @@ export const Chats = () => {
 
   return (
     <>
-      {Object.keys(api_manager_progress_state).length > 0 && (
+      {Object.keys(prompt_view_api_calls_manager_progress_state).length > 0 && (
         <UiProgress
-          progress_items={Object.entries(api_manager_progress_state).map(
-            ([id, state]) => ({ id, ...state })
-          )}
+          progress_items={Object.entries(
+            prompt_view_api_calls_manager_progress_state
+          ).map(([id, state]) => ({ id, ...state }))}
           on_cancel={(id) =>
-            vscode.postMessage({ command: 'CANCEL_API_MANAGER_REQUEST', id })
+            vscode.postMessage({
+              command: 'CANCEL_PROMPT_VIEW_API_CALLS_MANAGER_REQUEST',
+              id
+            })
           }
         />
       )}

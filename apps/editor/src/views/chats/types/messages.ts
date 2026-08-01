@@ -1,7 +1,7 @@
 import {
-  CancelApiManagerRequestMessage,
-  ShowApiManagerProgressMessage,
-  HideApiManagerProgressMessage
+  CancelPromptViewApiCallsManagerRequestMessage,
+  ShowPromptViewApiCallsManagerProgressMessage,
+  HidePromptViewApiCallsManagerProgressMessage
 } from '@/views/shared/types/messages'
 
 export type GetChatsMessage = {
@@ -19,11 +19,11 @@ export type ChatsMessage = {
 }
 
 export type FrontendMessage =
-  | CancelApiManagerRequestMessage
+  | CancelPromptViewApiCallsManagerRequestMessage
   | GetChatsMessage
   | DeleteChatMessage
 
 export type BackendMessage =
-  | ShowApiManagerProgressMessage
-  | HideApiManagerProgressMessage
+  | ShowPromptViewApiCallsManagerProgressMessage
+  | HidePromptViewApiCallsManagerProgressMessage
   | ChatsMessage

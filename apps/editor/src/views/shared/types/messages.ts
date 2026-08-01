@@ -2,13 +2,13 @@ export interface BaseMessage {
   command: string
 }
 
-export interface CancelApiManagerRequestMessage extends BaseMessage {
-  command: 'CANCEL_API_MANAGER_REQUEST'
+export interface CancelPromptViewApiCallsManagerRequestMessage extends BaseMessage {
+  command: 'CANCEL_PROMPT_VIEW_API_CALLS_MANAGER_REQUEST'
   id: string
 }
 
-export interface ShowApiManagerProgressMessage extends BaseMessage {
-  command: 'SHOW_API_MANAGER_PROGRESS'
+export interface ShowPromptViewApiCallsManagerProgressMessage extends BaseMessage {
+  command: 'SHOW_PROMPT_VIEW_API_CALLS_MANAGER_PROGRESS'
   id: string
   status: string
   tokens_per_second?: number
@@ -18,7 +18,7 @@ export interface ShowApiManagerProgressMessage extends BaseMessage {
   reasoning_effort?: string
 }
 
-export interface HideApiManagerProgressMessage extends BaseMessage {
-  command: 'HIDE_API_MANAGER_PROGRESS'
+export interface HidePromptViewApiCallsManagerProgressMessage extends BaseMessage {
+  command: 'HIDE_PROMPT_VIEW_API_CALLS_MANAGER_PROGRESS'
   id: string
 }
