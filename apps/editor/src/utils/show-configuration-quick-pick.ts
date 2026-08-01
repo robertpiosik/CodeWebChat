@@ -79,7 +79,7 @@ export const show_configuration_quick_pick = async <T>(
     }
   }
 
-  items.push(...unpinned.map((c) => map_to_quick_pick_item(c.config)))
+  items.push(...mapped_configs.map((c) => map_to_quick_pick_item(c.config)))
 
   const quick_pick = vscode.window.createQuickPick<PickItem>()
   quick_pick.items = items
