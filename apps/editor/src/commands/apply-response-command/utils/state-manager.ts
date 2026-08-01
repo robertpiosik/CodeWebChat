@@ -5,11 +5,11 @@ import {
   LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
 } from '@/constants/state-keys'
 import { OriginalFileState } from '../types/original-file-state'
-import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
+import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 
 export const update_undo_button_state = (params: {
   extension_context: vscode.ExtensionContext
-  panel_view_provider: PanelViewProvider
+  prompt_view_provider: PromptViewProvider
   states: OriginalFileState[] | null
   applied_content?: string | null
   original_editor_state?: {
@@ -30,7 +30,7 @@ export const update_undo_button_state = (params: {
       LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
       params.original_editor_state
     )
-    params.panel_view_provider.set_undo_button_state(true)
+    params.prompt_view_provider.set_undo_button_state(true)
   } else {
     params.extension_context.workspaceState.update(
       LAST_APPLIED_CHANGES_STATE_KEY,
@@ -44,6 +44,6 @@ export const update_undo_button_state = (params: {
       LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
       null
     )
-    params.panel_view_provider.set_undo_button_state(false)
+    params.prompt_view_provider.set_undo_button_state(false)
   }
 }

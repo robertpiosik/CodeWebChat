@@ -36,7 +36,7 @@ export const DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY =
 export const EDIT_FORMAT_STATE_KEY = 'edit-format'
 export const WEB_MODE_STATE_KEY = 'web-mode'
 export const API_MODE_STATE_KEY = 'api-mode'
-export const PANEL_MODE_STATE_KEY = 'panel-mode'
+export const PROMPT_VIEW_MODE_STATE_KEY = 'prompt-view-mode'
 
 export const INSTRUCTIONS_EDIT_FILES_STATE_KEY = 'instructions-edit-files'
 export const INSTRUCTIONS_ASK_STATE_KEY = 'instructions-ask'

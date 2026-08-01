@@ -19,14 +19,14 @@ import {
 } from '../utils/git-utils'
 import * as path from 'path'
 import { Logger } from '@shared/utils/logger'
-import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
+import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
 import { t } from '@/i18n'
 
 export const create_checkpoint = async (params: {
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
-  panel_view_provider: PanelViewProvider
+  prompt_view_provider: PromptViewProvider
   trigger?: CheckpointTrigger
   description?: string
 }): Promise<Checkpoint | undefined> => {
@@ -212,7 +212,7 @@ export const create_checkpoint = async (params: {
 
       if (trigger == 'manual' && !response_preview_promise_resolve) {
         checkpoint_object.response_history = [
-          ...params.panel_view_provider.response_history
+          ...params.prompt_view_provider.response_history
         ]
       }
 
@@ -228,7 +228,15 @@ export const create_checkpoint = async (params: {
       new_checkpoint = checkpoint_object
     }
 
-    await create_checkpoint_task()
+    await vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: t('feature.checkpoints.progress.creating'),
+        cancellable: false
+      },
+      create_checkpoint_task
+    )
+
     return new_checkpoint
   } catch (err: any) {
     vscode.window.showErrorMessage(

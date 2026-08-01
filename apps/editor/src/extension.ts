@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { context_initialization } from './context/context-initialization'
-import { PanelViewProvider } from './views/panel/backend/panel-view-provider'
+import { PromptViewProvider } from './views/prompt/backend/prompt-view-provider'
 import { WebSocketManager } from './services/websocket-manager'
 import { ChatsViewProvider } from './views/chats/backend/chats-view-provider'
 import { ApiManager } from './services/api-manager'
@@ -45,7 +45,7 @@ import { setup_git_discard_file_watcher } from './services/git-discard-file-watc
 import { select_imported_files_command } from './commands/select-imported-files-command'
 import { select_imported_files_for_selected_command } from './commands/select-imported-files-for-selected-command'
 import { SettingsViewProvider } from './views/settings/backend/settings-view-provider'
-import { get_current_preview_url } from './views/panel/backend/message-handlers/handle-open-website'
+import { get_current_preview_url } from './views/prompt/backend/message-handlers/handle-open-website'
 
 let websocket_server_instance: WebSocketManager | null = null
 
@@ -68,7 +68,7 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
 
   await migrations()
 
-  const panel_view_provider = new PanelViewProvider({
+  const prompt_view_provider = new PromptViewProvider({
     extension_uri: extension_context.extensionUri,
     workspace_provider,
     open_editors_provider,
@@ -82,14 +82,14 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     extension_context
   )
 
-  const api_manager = new ApiManager(panel_view_provider, chats_view_provider)
+  const api_manager = new ApiManager(prompt_view_provider, chats_view_provider)
 
   chats_view_provider.set_api_manager(api_manager)
 
   extension_context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(
       'promptView',
-      panel_view_provider,
+      prompt_view_provider,
       {
         webviewOptions: {
           retainContextWhenHidden: true
@@ -105,10 +105,10 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
         }
       }
     ),
-    reference_in_prompt_command({ panel_view_provider, workspace_provider }),
+    reference_in_prompt_command({ prompt_view_provider, workspace_provider }),
     apply_response_command({
       extension_context,
-      panel_view_provider,
+      prompt_view_provider,
       workspace_provider,
       api_manager
     }),
@@ -116,16 +116,16 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
       file_tree_provider: workspace_provider,
       open_editors_provider,
       extension_context,
-      panel_view_provider
+      prompt_view_provider
     }),
     ...history_command({
       extension_context,
       workspace_provider,
-      panel_view_provider
+      prompt_view_provider
     })
   )
 
-  panel_view_provider.set_api_manager(api_manager)
+  prompt_view_provider.set_api_manager(api_manager)
 
   const settings_view_provider = new SettingsViewProvider(
     extension_context.extensionUri,
@@ -192,7 +192,7 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     ),
     generate_commit_message_command(
       extension_context,
-      panel_view_provider,
+      prompt_view_provider,
       workspace_provider
     ),
     vscode.commands.registerCommand(

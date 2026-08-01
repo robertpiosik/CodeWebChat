@@ -1,0 +1,88 @@
+import * as vscode from 'vscode'
+import {
+  LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
+  LAST_APPLIED_CHANGES_STATE_KEY,
+  LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
+} from '@/constants/state-keys'
+import { dictionary } from '@shared/constants/dictionary'
+import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
+import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
+import { undo_files } from '@/commands/apply-response-command/utils/file-operations'
+
+export const handle_undo = async (
+  prompt_view_provider: PromptViewProvider
+): Promise<void> => {
+  const extension_context = prompt_view_provider.extension_context
+  const original_states = extension_context.workspaceState.get<
+    OriginalFileState[]
+  >(LAST_APPLIED_CHANGES_STATE_KEY)
+  const editor_state = extension_context.workspaceState.get<
+    | {
+        file_path: string
+        position: { line: number; character: number }
+      }
+    | undefined
+  >(LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY)
+
+  if (!original_states || original_states.length == 0) {
+    vscode.window.showInformationMessage(
+      dictionary.information_message.NO_RECENT_CHANGES_TO_UNDO
+    )
+    return
+  }
+
+  try {
+    const success = await undo_files({ original_states })
+
+    if (!success) {
+      return
+    }
+
+    if (editor_state) {
+      try {
+        const uri = vscode.Uri.file(editor_state.file_path)
+        const document = await vscode.workspace.openTextDocument(uri)
+        const editor = await vscode.window.showTextDocument(document, {
+          preview: false
+        })
+        const position = new vscode.Position(
+          editor_state.position.line,
+          editor_state.position.character
+        )
+        editor.selection = new vscode.Selection(position, position)
+        editor.revealRange(
+          new vscode.Range(position, position),
+          vscode.TextEditorRevealType.InCenter
+        )
+      } catch (error) {
+        console.error('Error restoring editor state:', error)
+      }
+    }
+
+    extension_context.workspaceState.update(
+      LAST_APPLIED_CHANGES_STATE_KEY,
+      null
+    )
+    extension_context.workspaceState.update(
+      LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
+      null
+    )
+    extension_context.workspaceState.update(
+      LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
+      null
+    )
+    prompt_view_provider.set_undo_button_state(false)
+    prompt_view_provider.send_message({
+      command: 'SHOW_AUTO_CLOSING_MODAL',
+      title: 'Changes undone successfully',
+      type: 'success'
+    })
+  } catch (error: any) {
+    console.error('Error during undo:', error)
+    vscode.window.showErrorMessage(
+      dictionary.error_message.FAILED_TO_UNDO_CHANGES(
+        error.message || 'Unknown error'
+      )
+    )
+  }
+}

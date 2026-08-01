@@ -1,13 +1,13 @@
 import * as vscode from 'vscode'
 import { CHECKPOINTS_STATE_KEY } from '@/constants/state-keys'
 import type { Checkpoint } from '../types'
-import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
+import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 
 export const update_checkpoint_description = async (params: {
   extension_context: vscode.ExtensionContext
   timestamp: number
   description: string
-  panel_view_provider: PanelViewProvider
+  prompt_view_provider: PromptViewProvider
 }) => {
   const checkpoints =
     params.extension_context.workspaceState.get<Checkpoint[]>(

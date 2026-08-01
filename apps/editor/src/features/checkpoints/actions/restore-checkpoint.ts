@@ -16,7 +16,7 @@ import { get_checkpoints } from './get-checkpoints'
 import { sync_workspace_from_dir } from './sync-workspace-from-dir'
 import { get_checkpoint_path, sync_directory } from '../utils'
 import { Logger } from '@shared/utils/logger'
-import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
+import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
 import { ongoing_preview_cleanup_promise } from '@/commands/apply-response-command/utils/preview-handler'
 import { get_git_info } from '../utils/git-utils'
@@ -26,7 +26,7 @@ export const restore_checkpoint = async (params: {
   checkpoint: Checkpoint
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
-  panel_view_provider: PanelViewProvider
+  prompt_view_provider: PromptViewProvider
   options?: {
     skip_confirmation?: boolean
   }
@@ -104,7 +104,7 @@ export const restore_checkpoint = async (params: {
           await create_checkpoint({
             workspace_provider: params.workspace_provider,
             extension_context: params.extension_context,
-            panel_view_provider: params.panel_view_provider,
+            prompt_view_provider: params.prompt_view_provider,
             trigger: 'before-checkpoint-restored'
           })
         }
@@ -419,15 +419,15 @@ export const restore_checkpoint = async (params: {
       }
 
       if (params.checkpoint.response_history) {
-        params.panel_view_provider.response_history =
+        params.prompt_view_provider.response_history =
           params.checkpoint.response_history
-        params.panel_view_provider.send_message({
+        params.prompt_view_provider.send_message({
           command: 'RESPONSE_HISTORY',
           history: params.checkpoint.response_history
         })
       } else {
-        params.panel_view_provider.response_history = []
-        params.panel_view_provider.send_message({
+        params.prompt_view_provider.response_history = []
+        params.prompt_view_provider.send_message({
           command: 'RESPONSE_HISTORY',
           history: []
         })
@@ -508,7 +508,7 @@ export const restore_checkpoint = async (params: {
         await delete_checkpoint({
           extension_context: params.extension_context,
           checkpoint_to_delete: temp_checkpoint,
-          panel_view_provider: params.panel_view_provider
+          prompt_view_provider: params.prompt_view_provider
         })
         await params.extension_context.workspaceState.update(
           TEMPORARY_CHECKPOINT_STATE_KEY,
@@ -550,7 +550,7 @@ export const restore_checkpoint = async (params: {
         checkpoint: temp_check,
         workspace_provider: params.workspace_provider,
         extension_context: params.extension_context,
-        panel_view_provider: params.panel_view_provider,
+        prompt_view_provider: params.prompt_view_provider,
         options: { skip_confirmation: true }
       })
       await params.extension_context.workspaceState.update(
@@ -560,7 +560,7 @@ export const restore_checkpoint = async (params: {
       await delete_checkpoint({
         extension_context: params.extension_context,
         checkpoint_to_delete: temp_check,
-        panel_view_provider: params.panel_view_provider
+        prompt_view_provider: params.prompt_view_provider
       })
     }
   } else {

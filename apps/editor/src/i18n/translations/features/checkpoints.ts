@@ -263,7 +263,7 @@ export const translations = {
     pl: 'Usunięto punkt kontrolny.',
     'zh-cn': '已删除检查点。',
     ja: 'チェックポイントを削除しました。',
-    'zh-tw': '已刪除檢查點。',
+    'zh-tw': '已刪除檢查点。',
     de: 'Prüfpunkt gelöscht.',
     es: 'Punto de control eliminado.',
     fr: 'Point de contrôle supprimé.',
@@ -312,5 +312,23 @@ export const translations = {
     cs: 'Nelze vzít zpět. Byl smazán jiný kontrolní bod.',
     hu: 'Nem sikerült visszavonni. Egy másik ellenőrzőpont törölve lett.',
     bg: 'Не може да бъде отменено. Изтрита е друга контролна точка.'
+  },
+  'feature.checkpoints.progress.creating': {
+    en: 'Creating checkpoint...',
+    pl: 'Tworzenie punktu kontrolnego...',
+    'zh-cn': '正在创建检查点...',
+    ja: 'チェックポイントを作成しています...',
+    'zh-tw': '正在建立檢查點...',
+    de: 'Erstelle Prüfpunkt...',
+    es: 'Creando punto de control...',
+    fr: 'Création du point de contrôle...',
+    'pt-br': 'Criando ponto de verificação...',
+    ru: 'Создание контрольной точки...',
+    ko: '체크포인트 생성 중...',
+    it: 'Creazione del punto di controllo...',
+    tr: 'Kontrol noktası oluşturuluyor...',
+    cs: 'Vytváření kontrolního bodu...',
+    hu: 'Ellenőrzőpont létrehozása...',
+    bg: 'Създаване на контролна точка...'
   }
 } as const

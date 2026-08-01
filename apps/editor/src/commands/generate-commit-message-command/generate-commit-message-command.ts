@@ -14,7 +14,7 @@ import { t } from '@/i18n'
 import axios from 'axios'
 import { PromptsForCommitMessagesUtils } from '../../utils/prompts-for-commit-messages-utils'
 import { MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE } from '@/constants/values'
-import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
+import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { create_checkpoint } from '@/features/checkpoints/actions'
 import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
@@ -26,7 +26,7 @@ const truncate_prompt = (text: string): string => {
 
 export const generate_commit_message_command = (
   extension_context: vscode.ExtensionContext,
-  panel_view_provider: PanelViewProvider,
+  prompt_view_provider: PromptViewProvider,
   workspace_provider: WorkspaceProvider
 ) => {
   const get_prompt_data = async (params: {
@@ -318,7 +318,7 @@ export const generate_commit_message_command = (
           create_checkpoint({
             workspace_provider,
             extension_context,
-            panel_view_provider,
+            prompt_view_provider,
             trigger: 'commit',
             description: subject_line
           }).catch(() => {})

@@ -12,7 +12,7 @@ import {
   ApiConfiguration,
   ModelProvidersManager
 } from '@/services/model-providers-manager'
-import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
+import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import {
   process_file,
@@ -26,7 +26,7 @@ export const handle_active_editor_intelligent_update = async (params: {
   chat_response: string
   extension_context: vscode.ExtensionContext
   is_single_root_folder_workspace: boolean
-  panel_view_provider?: PanelViewProvider
+  prompt_view_provider?: PromptViewProvider
 }): Promise<OriginalFileState[] | null> => {
   const workspace_map = new Map<string, string>()
   if (vscode.workspace.workspaceFolders) {
@@ -103,9 +103,9 @@ export const handle_active_editor_intelligent_update = async (params: {
   }
 
   const abort_controller = new AbortController()
-  if (params.panel_view_provider) {
-    params.panel_view_provider.api_call_abort_controller = abort_controller
-    params.panel_view_provider.send_message({
+  if (params.prompt_view_provider) {
+    params.prompt_view_provider.api_call_abort_controller = abort_controller
+    params.prompt_view_provider.send_message({
       command: 'SHOW_PROGRESS',
       title: 'Thinking...',
       show_elapsed_time: true,
@@ -134,7 +134,7 @@ export const handle_active_editor_intelligent_update = async (params: {
       instruction: file_item.content,
       abort_signal: abort_controller.signal,
       on_chunk: (tokens_per_second, total_tokens) => {
-        if (params.panel_view_provider) {
+        if (params.prompt_view_provider) {
           const estimated_total = Math.ceil(original_content.length / 4)
           let progress = 0
           if (estimated_total > 0) {
@@ -144,7 +144,7 @@ export const handle_active_editor_intelligent_update = async (params: {
             )
           }
 
-          params.panel_view_provider.send_message({
+          params.prompt_view_provider.send_message({
             command: 'SHOW_PROGRESS',
             title: 'Receiving...',
             show_elapsed_time: true,
@@ -218,11 +218,11 @@ export const handle_active_editor_intelligent_update = async (params: {
     }
     return null
   } finally {
-    if (params.panel_view_provider) {
-      params.panel_view_provider.send_message({
+    if (params.prompt_view_provider) {
+      params.prompt_view_provider.send_message({
         command: 'HIDE_PROGRESS'
       })
-      params.panel_view_provider.api_call_abort_controller = null
+      params.prompt_view_provider.api_call_abort_controller = null
     }
   }
 }

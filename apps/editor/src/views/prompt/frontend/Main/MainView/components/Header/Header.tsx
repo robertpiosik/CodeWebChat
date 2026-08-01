@@ -1,0 +1,139 @@
+import { useRef, useCallback } from 'react'
+import { MODE, Mode } from '@/views/prompt/types/main-view-mode'
+import { use_is_narrow_viewport, use_is_mac } from '@shared/hooks'
+import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
+import { PromptTypeDropdown as UiPromptTypeDropdown } from '@ui/components/editor/prompt/PromptTypeDropdown'
+import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
+import styles from './Header.module.scss'
+import {
+  api_prompt_type_labels,
+  web_prompt_type_labels
+} from '../../prompt-type-labels'
+import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
+import { use_alternate_prompt_type } from './hooks/use-alternate-prompt-type'
+import { use_translation } from '../../../../i18n/use-translation'
+
+type Props = {
+  mode: Mode
+  on_mode_change: (value: Mode) => void
+  on_show_home: () => void
+  web_prompt_type: WebPromptType
+  api_prompt_type: ApiPromptType
+  on_web_prompt_type_change: (prompt_type: WebPromptType) => void
+  on_api_prompt_type_change: (prompt_type: ApiPromptType) => void
+  are_keyboard_shortcuts_disabled: boolean
+}
+
+const MENU_MAX_HEIGHT = 'calc(100vh - 38px)'
+
+export const Header: React.FC<Props> = (props) => {
+  const { t } = use_translation()
+  const header_ref = useRef<HTMLDivElement>(null)
+  const is_narrow_viewport = use_is_narrow_viewport(290)
+  const is_mac = use_is_mac()
+  const header_left_ref = useRef<HTMLDivElement>(null)
+  const dropdown_container_ref = useRef<HTMLDivElement>(null)
+
+  const { handle_alternate_click, has_alternate } = use_alternate_prompt_type({
+    mode: props.mode,
+    web_prompt_type: props.web_prompt_type,
+    api_prompt_type: props.api_prompt_type,
+    on_web_prompt_type_change: props.on_web_prompt_type_change,
+    on_api_prompt_type_change: props.on_api_prompt_type_change
+  })
+
+  const handle_heading_click = useCallback(() => {
+    if (props.mode == MODE.WEB) {
+      props.on_mode_change(MODE.API)
+    } else {
+      props.on_mode_change(MODE.WEB)
+    }
+  }, [props.mode, props.on_mode_change])
+
+  const { is_alt_pressed } = use_keyboard_shortcuts({
+    mode: props.mode,
+    handle_heading_click,
+    on_web_prompt_type_change: props.on_web_prompt_type_change,
+    on_api_prompt_type_change: props.on_api_prompt_type_change,
+    on_show_home: props.on_show_home,
+    is_disabled: props.are_keyboard_shortcuts_disabled
+  })
+
+  return (
+    <div className={styles.header} ref={header_ref}>
+      <div className={styles.header__left} ref={header_left_ref}>
+        <UiIconButton
+          codicon_icon="chevron-left"
+          on_click={props.on_show_home}
+          title="Return (Esc)"
+        />
+        <button
+          className={styles['header__left__toggler']}
+          onClick={handle_heading_click}
+          title={`Change mode (${is_mac ? '⌥Esc' : 'Alt+Esc'})`}
+        >
+          <span>{props.mode == MODE.WEB ? MODE.WEB : MODE.API}</span>
+          {is_alt_pressed && (
+            <span className={styles['header__left__toggler__esc']}>esc</span>
+          )}
+        </button>
+      </div>
+
+      <div className={styles.header__right}>
+        <div
+          className={styles.header__right__dropdown}
+          ref={dropdown_container_ref}
+        >
+          {props.mode == MODE.WEB && (
+            <UiPromptTypeDropdown
+              options={Object.entries(web_prompt_type_labels).map(
+                ([value, label]) => ({
+                  value: value as WebPromptType,
+                  label,
+                  shortcut: `${is_mac ? '⇧⌥' : 'Shift+Alt+'}${label.charAt(0)}`
+                })
+              )}
+              selected_value={props.web_prompt_type}
+              on_change={props.on_web_prompt_type_change}
+              on_alternate_click={
+                has_alternate ? handle_alternate_click : undefined
+              }
+              menu_max_height={MENU_MAX_HEIGHT}
+              info={t('header.prompt-type')}
+              title={
+                is_mac
+                  ? 'Change prompt type (⇧⌥)'
+                  : 'Change prompt type (Shift+Alt)'
+              }
+              match_button_width
+            />
+          )}
+          {props.mode == MODE.API && (
+            <UiPromptTypeDropdown
+              options={Object.entries(api_prompt_type_labels).map(
+                ([value, label]) => ({
+                  value: value as ApiPromptType,
+                  label,
+                  shortcut: `${is_mac ? '⇧⌥' : 'Shift+Alt+'}${label.charAt(0)}`
+                })
+              )}
+              selected_value={props.api_prompt_type}
+              on_change={props.on_api_prompt_type_change}
+              on_alternate_click={
+                has_alternate ? handle_alternate_click : undefined
+              }
+              menu_max_height={MENU_MAX_HEIGHT}
+              info={is_narrow_viewport ? undefined : t('header.prompt-type')}
+              title={
+                is_mac
+                  ? 'Change prompt type (⇧⌥)'
+                  : 'Change prompt type (Shift+Alt)'
+              }
+              match_button_width
+            />
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}

@@ -105,7 +105,7 @@ const config: ((env: any, argv: any) => webpack.Configuration)[] = [
       mode: isProduction ? 'production' : 'development',
       target: 'web',
       entry: {
-        panel: './src/views/panel/frontend/App.tsx',
+        prompt: './src/views/prompt/frontend/App.tsx',
         settings: './src/views/settings/frontend/App.tsx',
         chats: './src/views/chats/frontend/App.tsx'
       },

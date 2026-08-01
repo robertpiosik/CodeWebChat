@@ -1,4 +1,4 @@
-import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
+import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { ChatsViewProvider } from '@/views/chats/backend/chats-view-provider'
 import { send_llm_message } from '@/utils/send-llm-message'
 import { randomUUID, createHash } from 'crypto'
@@ -15,12 +15,12 @@ export class ApiManager {
   > = new Map()
 
   constructor(
-    private panel_view_provider: PanelViewProvider,
+    private prompt_view_provider: PromptViewProvider,
     private chats_view_provider: ChatsViewProvider
   ) {}
 
   private broadcast_message(message: any) {
-    this.panel_view_provider.send_message(message)
+    this.prompt_view_provider.send_message(message)
     this.chats_view_provider.send_message(message)
   }
 

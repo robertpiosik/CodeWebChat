@@ -2,16 +2,16 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { dictionary } from '@shared/constants/dictionary'
-import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
+import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 
 export const reference_in_prompt_command = (params: {
-  panel_view_provider: PanelViewProvider | undefined
+  prompt_view_provider: PromptViewProvider | undefined
   workspace_provider: WorkspaceProvider | undefined
 }) => {
   return vscode.commands.registerCommand(
     'codeWebChat.referenceInPrompt',
     async (uri?: any) => {
-      if (!params.panel_view_provider || !params.workspace_provider) {
+      if (!params.prompt_view_provider || !params.workspace_provider) {
         return
       }
 
@@ -49,9 +49,9 @@ export const reference_in_prompt_command = (params: {
 
       const reference_text = `\`${relative_path}\``
 
-      params.panel_view_provider.add_text_at_cursor_position(reference_text)
+      params.prompt_view_provider.add_text_at_cursor_position(reference_text)
 
-      params.panel_view_provider.send_message({
+      params.prompt_view_provider.send_message({
         command: 'FOCUS_PROMPT_FIELD'
       })
     }

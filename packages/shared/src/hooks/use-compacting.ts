@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 
 export const use_compacting = (max_compact_step = 4) => {
   const container_ref = useRef<HTMLDivElement>(null)
@@ -8,7 +8,7 @@ export const use_compacting = (max_compact_step = 4) => {
   const report_width = useCallback((width: number, step: number) => {
     set_thresholds((prev) => {
       // Round up and add 1px buffer to account for subpixel rendering differences
-      const threshold = Math.ceil(width) + 1
+      const threshold = Math.ceil(width) + 10
       if (prev[step] == threshold) return prev
       return { ...prev, [step]: threshold }
     })
@@ -50,21 +50,4 @@ export const use_compacting = (max_compact_step = 4) => {
     compact_step,
     report_width
   }
-}
-
-export const use_compact_order = (labels: string[]) => {
-  return useMemo(() => {
-    const sorted = labels
-      .map((label, index) => ({ length: label.length, index }))
-      .sort((a, b) => {
-        if (a.length === b.length) return a.index - b.index
-        return a.length - b.length
-      })
-
-    const steps = new Array(labels.length).fill(0)
-    sorted.forEach((item, index) => {
-      steps[item.index] = index + 1
-    })
-    return steps
-  }, [labels.join('\0')])
 }

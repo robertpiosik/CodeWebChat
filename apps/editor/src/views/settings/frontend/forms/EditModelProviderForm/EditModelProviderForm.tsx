@@ -4,7 +4,7 @@ import { Provider } from '@/views/settings/types/messages'
 import { Field as UiField } from '@ui/components/editor/common/Field'
 import { Input as UiInput } from '@ui/components/editor/common/Input'
 import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
-import { Fieldset as UiFieldset } from '@ui/components/editor/panel/Fieldset'
+import { Fieldset as UiFieldset } from '@ui/components/editor/prompt/Fieldset'
 import { Toggler as UiToggler } from '@ui/components/editor/common/Toggler'
 import { use_translation } from '../../i18n/use-translation'
 

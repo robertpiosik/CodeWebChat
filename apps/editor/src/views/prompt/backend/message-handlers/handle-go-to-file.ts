@@ -1,0 +1,76 @@
+import * as vscode from 'vscode'
+import { GoToFileMessage } from '@/views/prompt/types/messages'
+import { Logger } from '@shared/utils/logger'
+import { dictionary } from '@shared/constants/dictionary'
+
+export const handle_go_to_file = async (
+  message: GoToFileMessage
+): Promise<void> => {
+  const { file_path } = message
+  const workspace_folders = vscode.workspace.workspaceFolders
+  if (!workspace_folders) {
+    Logger.warn({
+      function_name: 'handle_go_to_file',
+      message: 'No workspace folders open'
+    })
+    return
+  }
+
+  let target_workspace: vscode.WorkspaceFolder | undefined
+  let relative_file_path = file_path
+
+  if (workspace_folders.length > 1) {
+    for (const folder of workspace_folders) {
+      if (file_path.startsWith(`${folder.name}/`)) {
+        target_workspace = folder
+        relative_file_path = file_path.substring(folder.name.length + 1)
+        break
+      }
+    }
+  }
+
+  if (!target_workspace) {
+    if (workspace_folders.length == 1) {
+      target_workspace = workspace_folders[0]
+    } else {
+      for (const folder of workspace_folders) {
+        const potential_uri = vscode.Uri.joinPath(folder.uri, file_path)
+        try {
+          await vscode.workspace.fs.stat(potential_uri)
+          target_workspace = folder
+          break
+        } catch {
+          // file not in this workspace folder
+        }
+      }
+    }
+  }
+
+  if (!target_workspace) {
+    Logger.error({
+      function_name: 'handle_go_to_file',
+      message: `Workspace not found for file: ${file_path}`,
+      data: { file_path }
+    })
+    vscode.window.showErrorMessage(
+      dictionary.error_message.WORKSPACE_NOT_FOUND_FOR_FILE(file_path)
+    )
+    return
+  }
+
+  const file_uri = vscode.Uri.joinPath(target_workspace.uri, relative_file_path)
+
+  try {
+    const document = await vscode.workspace.openTextDocument(file_uri)
+    await vscode.window.showTextDocument(document, { preview: false })
+  } catch (error) {
+    Logger.error({
+      function_name: 'handle_go_to_file',
+      message: `Could not open file: ${file_path}`,
+      data: { error, file_uri: file_uri.toString() }
+    })
+    vscode.window.showErrorMessage(
+      dictionary.error_message.COULD_NOT_OPEN_FILE(file_path)
+    )
+  }
+}

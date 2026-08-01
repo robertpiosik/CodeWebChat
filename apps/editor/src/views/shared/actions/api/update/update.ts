@@ -4,7 +4,7 @@ import {
   ModelProvidersManager,
   get_api_configuration_id
 } from '@/services/model-providers-manager'
-import { ApiConfiguration } from '@/views/panel/types/messages'
+import { ApiConfiguration } from '@/views/prompt/types/messages'
 import { ApiFeature } from '@/views/shared/types/api-features'
 import { t } from '@/i18n'
 

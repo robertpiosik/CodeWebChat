@@ -3,13 +3,13 @@ import { CHECKPOINTS_STATE_KEY } from '@/constants/state-keys'
 import type { Checkpoint } from '../types'
 import { get_checkpoint_path } from '../utils'
 import { Logger } from '@shared/utils/logger'
-import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
+import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { t } from '@/i18n'
 
 export const delete_checkpoint = async (params: {
   extension_context: vscode.ExtensionContext
   checkpoint_to_delete: Checkpoint
-  panel_view_provider: PanelViewProvider
+  prompt_view_provider: PromptViewProvider
 }) => {
   const checkpoints =
     params.extension_context.workspaceState.get<Checkpoint[]>(
@@ -48,7 +48,7 @@ export type ActiveDeleteOperation = {
 export const delete_checkpoint_with_undo = async (params: {
   extension_context: vscode.ExtensionContext
   checkpoint: Checkpoint
-  panel_view_provider: PanelViewProvider
+  prompt_view_provider: PromptViewProvider
   get_active_operation: () => ActiveDeleteOperation | null
   set_active_operation: (op: ActiveDeleteOperation | null) => void
   on_did_update_checkpoints?: (checkpoints: Checkpoint[]) => void

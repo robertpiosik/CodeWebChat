@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { dictionary } from '@shared/constants/dictionary'
-import { PanelViewProvider } from '@/views/panel/backend/panel-view-provider'
+import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
 import { RecentApiConfiguration } from '@shared/types/response-history-item'
 import { setup_workspace_listeners } from './workspace-listener'
@@ -25,7 +25,7 @@ export { set_file_applied_with_intelligent_update } from './workspace-listener'
 
 export const preview = async (params: {
   original_states: OriginalFileState[]
-  panel_view_provider: PanelViewProvider
+  prompt_view_provider: PromptViewProvider
   raw_instructions?: string
   chat_response: string
   extension_context: vscode.ExtensionContext
@@ -136,11 +136,11 @@ export const preview = async (params: {
       false
     )
 
-    if (params.panel_view_provider) {
-      params.panel_view_provider.send_message({
+    if (params.prompt_view_provider) {
+      params.prompt_view_provider.send_message({
         command: 'HIDE_PROGRESS'
       })
-      params.panel_view_provider.send_message({
+      params.prompt_view_provider.send_message({
         command: 'RESPONSE_PREVIEW_STARTED',
         items: items_for_preview,
         raw_instructions: params.raw_instructions,
@@ -158,7 +158,7 @@ export const preview = async (params: {
     listener_disposer = setup_workspace_listeners({
       prepared_files,
       original_states: params.original_states,
-      panel_view_provider: params.panel_view_provider,
+      prompt_view_provider: params.prompt_view_provider,
       workspace_map,
       default_workspace,
       created_at: params.created_at
@@ -306,9 +306,9 @@ export const preview = async (params: {
     await close_preview_diff_editors(prepared_files)
     cleanup_temp_files(prepared_files)
 
-    if (params.panel_view_provider) {
-      params.panel_view_provider.cancel_all_intelligent_updates()
-      params.panel_view_provider.send_message({
+    if (params.prompt_view_provider) {
+      params.prompt_view_provider.cancel_all_intelligent_updates()
+      params.prompt_view_provider.send_message({
         command: 'RESPONSE_PREVIEW_FINISHED'
       })
     }
