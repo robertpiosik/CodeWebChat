@@ -23,14 +23,9 @@ export const TextItem: FC<Props> = (props) => {
           codicon_icon={props.is_expanded ? 'chevron-down' : 'chevron-right'}
         />
         <div className={styles.header__line} />
-        <span className={styles.header__tokens}>
-          {Math.floor(props.content.length * 0.25) || 1}
-        </span>
       </div>
       {props.is_expanded && (
-        <div
-          className={styles.text}
-        >
+        <div className={styles.text}>
           <ReactMarkdown>{props.content}</ReactMarkdown>
           <div
             className={styles.text__collapse}

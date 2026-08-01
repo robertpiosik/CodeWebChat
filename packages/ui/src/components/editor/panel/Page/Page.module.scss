@@ -13,6 +13,10 @@
   margin: 6px 12px;
   position: relative;
 
+  :global([data-modern-ui='true']) & {
+    margin: 6px 10px;
+  }
+
   &__title {
     position: absolute;
     left: 50%;
@@ -28,6 +32,6 @@
   border-top: 1px solid var(--cwc-border-color-dimmed);
 
   :global([data-modern-ui='true']) & {
-    padding: 10px 12px 5px 12px;
+    padding: 10px 10px 5px 10px;
   }
 }

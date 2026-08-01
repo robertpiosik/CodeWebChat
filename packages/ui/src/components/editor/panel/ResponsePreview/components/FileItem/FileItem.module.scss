@@ -36,6 +36,10 @@
   border-radius: 8px;
   cursor: pointer;
 
+  :global([data-modern-ui='true']) & {
+    margin: 0 10px;
+  }
+
   &:hover {
     background-color: var(--vscode-list-hoverBackground);
     border-color: var(--cwc-border-color);

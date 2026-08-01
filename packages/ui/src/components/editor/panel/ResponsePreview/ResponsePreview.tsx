@@ -61,6 +61,7 @@ export const ResponsePreview: FC<Props> = (props) => {
   )
   const [is_fixing_all, set_is_fixing_all] = useState(false)
   const [has_attempted_auto_fix, set_has_attempted_auto_fix] = useState(false)
+  const [instructions_expanded, set_instructions_expanded] = useState(false)
   const scroll_top_ref = useRef(0)
   const scrollable_ref = useRef<any>(null)
 
@@ -228,9 +229,20 @@ export const ResponsePreview: FC<Props> = (props) => {
           <div
             className={cn(
               styles.instructions,
-              get_instructions_font_size_class(simplified_instructions)
+              get_instructions_font_size_class(simplified_instructions),
+              {
+                [styles['instructions--expanded']]: instructions_expanded
+              }
             )}
             title={props.raw_instructions}
+            onClick={() => {
+              if (
+                typeof window !== 'undefined' &&
+                window.getSelection()?.toString()
+              )
+                return
+              set_instructions_expanded(!instructions_expanded)
+            }}
           >
             {simplified_instructions}
           </div>
