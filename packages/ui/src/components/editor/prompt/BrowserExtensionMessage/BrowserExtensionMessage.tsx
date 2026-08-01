@@ -1,32 +1,13 @@
-import { useLayoutEffect, useRef } from 'react'
-
 import { use_compacting } from '@shared/hooks/use-compacting'
 import styles from './BrowserExtensionMessage.module.scss'
 
 export const BrowserExtensionMessage: React.FC = () => {
-  const { container_ref, compact_step, report_width } = use_compacting(2)
-  const links_ref = useRef<HTMLDivElement>(null)
-
-  useLayoutEffect(() => {
-    if (links_ref.current) {
-      let width = 0
-      const children = links_ref.current.children
-      for (let i = 0; i < children.length; i++) {
-        const child = children[i] as HTMLElement
-        const style = getComputedStyle(child)
-        width +=
-          child.getBoundingClientRect().width +
-          parseFloat(style.marginLeft) +
-          parseFloat(style.marginRight)
-      }
-      report_width(width, compact_step)
-    }
-  }, [compact_step, report_width])
+  const { container_ref, compact_step } = use_compacting()
 
   return (
     <div ref={container_ref} className={styles.container}>
       <div className={styles.heading}>Enable autofill in chatbots</div>
-      <div ref={links_ref} className={styles.links}>
+      <div className={styles.links}>
         <a href="https://chromewebstore.google.com/detail/autofill-for-code-web-chat/ljookipcanaglfaocjbgdicfbdhhjffp">
           {compact_step >= 2 ? 'Chrome' : 'Chrome Web Store'}
         </a>

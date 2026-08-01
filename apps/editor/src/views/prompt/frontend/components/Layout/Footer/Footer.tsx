@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef, useLayoutEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import styles from './Footer.module.scss'
 import { use_compacting } from '@shared/hooks'
 import { LayoutContext } from '../../../contexts/LayoutContext'
@@ -26,19 +26,7 @@ export const Footer: React.FC<Props> = (props) => {
   const [is_apply_disabled_temporarily, set_is_apply_disabled_temporarily] =
     useState(false)
 
-  const { container_ref, compact_step, report_width } = use_compacting(3)
-  const left_ref = useRef<HTMLDivElement>(null)
-  const right_ref = useRef<HTMLDivElement>(null)
-
-  useLayoutEffect(() => {
-    if (left_ref.current && right_ref.current) {
-      const width =
-        left_ref.current.getBoundingClientRect().width +
-        right_ref.current.getBoundingClientRect().width +
-        6
-      report_width(width, compact_step)
-    }
-  }, [compact_step, report_width])
+  const { container_ref, compact_step } = use_compacting()
 
   useEffect(() => {
     set_is_apply_disabled_temporarily(false)
@@ -60,7 +48,7 @@ export const Footer: React.FC<Props> = (props) => {
   return (
     <>
       <div className={styles.footer} ref={container_ref}>
-        <div ref={left_ref} className={styles.footer__left}>
+        <div className={styles.footer__left}>
           <CompactableActionButton
             is_compact={compact_step >= 2}
             on_click={props.on_history_click}
@@ -78,7 +66,7 @@ export const Footer: React.FC<Props> = (props) => {
           />
         </div>
 
-        <div ref={right_ref}>
+        <div>
           <CompactableActionButton
             is_compact={compact_step >= 3}
             on_click={handle_apply_click}
