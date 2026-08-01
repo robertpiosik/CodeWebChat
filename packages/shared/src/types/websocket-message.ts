@@ -47,8 +47,18 @@ export type ClientIdAssignmentMessage = {
   client_id: number
 }
 
+export type PingMessage = {
+  action: 'ping'
+}
+
+export type PongMessage = {
+  action: 'pong'
+}
+
 export type WebSocketMessage =
   | InitializeChatMessage
   | BrowserConnectionStatusMessage
   | ClientIdAssignmentMessage
   | ApplyResponseMessage
+  | PingMessage
+  | PongMessage

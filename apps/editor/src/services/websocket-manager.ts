@@ -5,6 +5,7 @@ import * as http from 'http'
 import * as path from 'path'
 import * as net from 'net'
 import {
+  ApplyResponseMessage,
   ConnectedBrowser,
   InitializeChatMessage,
   WebSocketMessage
@@ -184,6 +185,14 @@ export class WebSocketManager {
     this.client.on('message', async (data) => {
       try {
         const message = JSON.parse(data.toString()) as WebSocketMessage
+
+        if (message.action === 'ping') {
+          if (this.client?.readyState === WebSocket.WebSocket.OPEN) {
+            this.client.send(JSON.stringify({ action: 'pong' }))
+          }
+          return
+        }
+
         Logger.info({
           function_name: '_connect_as_client',
           message: 'Incoming WS message',
@@ -200,9 +209,10 @@ export class WebSocketManager {
           message.action == 'apply-response' ||
           (message.action as any) == 'apply-chat-response' // Backward compatibility 20.07.26
         ) {
+          const apply_msg = message as ApplyResponseMessage
           vscode.commands.executeCommand('codeWebChat.applyResponse', {
-            raw_instructions: message.raw_instructions,
-            url: message.url
+            raw_instructions: apply_msg.raw_instructions,
+            url: apply_msg.url
           } as ApplyResponseCommandArgs)
         }
       } catch (error) {

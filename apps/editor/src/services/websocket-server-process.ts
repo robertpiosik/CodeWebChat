@@ -5,16 +5,31 @@ const WebSocket = require('ws')
 
 import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
 
+const is_version_gte = (v: string, target: string) => {
+  if (v === 'unknown') return false
+  const vParts = v.split('.').map(Number)
+  const tParts = target.split('.').map(Number)
+  for (let i = 0; i < Math.max(vParts.length, tParts.length); i++) {
+    const p1 = vParts[i] || 0
+    const p2 = tParts[i] || 0
+    if (p1 > p2) return true
+    if (p1 < p2) return false
+  }
+  return true
+}
+
 interface BrowserClient {
   ws: WebSocket
   version: string
   id: number
   user_agent: string
+  is_alive: boolean
 }
 
 interface VSCodeClient {
   ws: WebSocket
   client_id: number
+  is_alive: boolean
 }
 
 class WebSocketServer {
@@ -88,7 +103,7 @@ class WebSocketServer {
 
     this.connections.add(ws)
 
-    ws.on('message', (message: any) => this._handle_message(message))
+    ws.on('message', (message: any) => this._handle_message(message, ws))
     ws.on('close', () => this._handle_disconnection(ws, is_browser_client))
   }
 
@@ -99,7 +114,13 @@ class WebSocketServer {
     this.browser_client_counter++
     const id = this.browser_client_counter
 
-    const client: BrowserClient = { ws, version, id, user_agent }
+    const client: BrowserClient = {
+      ws,
+      version,
+      id,
+      user_agent,
+      is_alive: true
+    }
     this.browser_clients.set(id, client)
 
     this._notify_vscode_clients()
@@ -108,7 +129,7 @@ class WebSocketServer {
 
   private _handle_vscode_connection(ws: WebSocket) {
     const client_id = this._generate_client_id()
-    this.vscode_clients.set(client_id, { ws, client_id })
+    this.vscode_clients.set(client_id, { ws, client_id, is_alive: true })
 
     ws.send(
       JSON.stringify({
@@ -136,9 +157,30 @@ class WebSocketServer {
     }
   }
 
-  private _handle_message(message: any) {
+  private _handle_message(message: any, ws: any) {
     const msg_string = message.toString()
-    const msg_data = JSON.parse(msg_string)
+    let msg_data
+    try {
+      msg_data = JSON.parse(msg_string)
+    } catch {
+      return
+    }
+
+    if (msg_data.action === 'pong') {
+      for (const client of this.browser_clients.values()) {
+        if (client.ws === ws) {
+          client.is_alive = true
+          return
+        }
+      }
+      for (const client of this.vscode_clients.values()) {
+        if (client.ws === ws) {
+          client.is_alive = true
+          return
+        }
+      }
+      return
+    }
 
     if (msg_data.action == 'initialize-chat') {
       if (msg_data.target_browser_id) {
@@ -231,12 +273,26 @@ class WebSocketServer {
     const ping_message = JSON.stringify({ action: 'ping' })
 
     for (const client of this.browser_clients.values()) {
+      const expects_pong = is_version_gte(client.version, '2026.7.2')
+
+      if (expects_pong) {
+        if (!client.is_alive) {
+          ;(client.ws as any).terminate()
+          continue
+        }
+        client.is_alive = false
+      }
       if (client.ws.readyState === WebSocket.OPEN) {
         client.ws.send(ping_message)
       }
     }
 
     for (const client of this.vscode_clients.values()) {
+      if (!client.is_alive) {
+        ;(client.ws as any).terminate()
+        continue
+      }
+      client.is_alive = false
       if (client.ws.readyState == WebSocket.OPEN) {
         client.ws.send(ping_message)
       }

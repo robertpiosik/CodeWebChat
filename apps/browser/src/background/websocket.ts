@@ -27,8 +27,11 @@ export const check_and_recover_connection = () => {
     }
   }
 
-  if (!is_reconnecting && websocket?.readyState !== WebSocket.OPEN &&
-      websocket?.readyState !== WebSocket.CONNECTING) {
+  if (
+    !is_reconnecting &&
+    websocket?.readyState !== WebSocket.OPEN &&
+    websocket?.readyState !== WebSocket.CONNECTING
+  ) {
     connect_websocket()
   }
 }
@@ -70,8 +73,11 @@ export const connect_websocket = async (): Promise<void> => {
 
     websocket.onmessage = async (event) => {
       const message = JSON.parse(event.data)
-      if (message.action === 'ping') {
+      if (message.action == 'ping') {
         last_ping_timestamp = Date.now()
+        if (websocket?.readyState == WebSocket.OPEN) {
+          websocket.send(JSON.stringify({ action: 'pong' }))
+        }
         return
       }
       console.debug(message)
