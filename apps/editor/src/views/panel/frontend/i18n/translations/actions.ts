@@ -160,41 +160,5 @@ export const actions = {
     cs: 'Použít',
     hu: 'Alkalmaz',
     bg: 'Приложи'
-  },
-  'action.apply-from-clipboard': {
-    en: 'Apply from Clipboard',
-    pl: 'Integruj ze schowka',
-    'zh-cn': '从剪贴板应用',
-    ja: 'クリップボードから適用',
-    'zh-tw': '從剪貼簿應用',
-    de: 'Aus Zwischenablage anwenden',
-    es: 'Aplicar desde el portapapeles',
-    fr: 'Appliquer depuis le presse-papiers',
-    'pt-br': 'Aplicar da área de transferência',
-    ru: 'Применить из буфера обмена',
-    ko: '클립보드에서 적용',
-    it: 'Applica dagli appunti',
-    tr: 'Panodan Uygula',
-    cs: 'Použít ze schránky',
-    hu: 'Alkalmazás vágólapról',
-    bg: 'Приложи от клипборда'
-  },
-  'action.undo': {
-    en: 'Undo',
-    pl: 'Cofnij',
-    'zh-cn': '撤销',
-    ja: '元に戻す',
-    'zh-tw': '復原',
-    de: 'Rückgängig',
-    es: 'Deshacer',
-    fr: 'Annuler',
-    'pt-br': 'Desfazer',
-    ru: 'Отменить',
-    ko: '실행 취소',
-    it: 'Annulla',
-    tr: 'Geri Al',
-    cs: 'Zpět',
-    hu: 'Visszavonás',
-    bg: 'Отмяна'
   }
 } as const

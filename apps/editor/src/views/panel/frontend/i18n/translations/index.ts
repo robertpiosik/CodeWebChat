@@ -5,11 +5,14 @@ import { actions } from './actions'
 import { prompt_field } from './prompt-field'
 import { recent_donations } from './recent-donations'
 
+import { footer } from './footer'
+
 export const translations = {
   ...header,
   ...home,
   ...configurations,
   ...actions,
   ...prompt_field,
-  ...recent_donations
+  ...recent_donations,
+  ...footer
 }

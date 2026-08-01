@@ -70,12 +70,11 @@
     flex-shrink: 0;
     gap: 4px;
     height: var(--button-size);
-    padding: 0 7px 0 4px;
+    padding: 0 6px 0 3px;
     border-radius: 4px;
-    border: 1px solid var(--cwc-border-color);
 
     &:hover:not(:disabled) {
-      border-color: var(--cwc-border-color-hover);
+      background-color: var(--vscode-toolbar-hoverBackground);
     }
 
     &:disabled {

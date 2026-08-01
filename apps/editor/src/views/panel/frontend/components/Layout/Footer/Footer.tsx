@@ -19,7 +19,7 @@ export const Footer: React.FC = () => {
   const [is_apply_disabled_temporarily, set_is_apply_disabled_temporarily] =
     useState(false)
 
-  const { container_ref, compact_step, report_width } = use_compacting(4)
+  const { container_ref, compact_step, report_width } = use_compacting(2)
   const left_ref = useRef<HTMLDivElement>(null)
   const right_ref = useRef<HTMLDivElement>(null)
 
@@ -60,7 +60,7 @@ export const Footer: React.FC = () => {
               styles['footer__icon-button--discord']
             )}
             href="https://discord.gg/KJySXsrSX5"
-            title="Get involved"
+            title={t('footer.get-involved')}
           >
             <UiIcon variant="DISCORD" />
           </a>
@@ -69,33 +69,10 @@ export const Footer: React.FC = () => {
         <div ref={right_ref}>
           <button
             className={cn(styles['footer__action-button'], {
-              [styles['footer__action-button--compact']]: compact_step >= 4
-            })}
-            onClick={handle_apply_click}
-            title={'Integrate copied chat response or a single code block'}
-            disabled={is_apply_disabled_temporarily}
-          >
-            <span
-              className={cn(
-                styles['footer__action-button__icon'],
-                'codicon',
-                'codicon-clippy'
-              )}
-            />
-            <span className={styles['footer__action-button__text']}>
-              {compact_step == 0
-                ? t('action.apply-from-clipboard')
-                : t('action.apply')}
-            </span>
-          </button>
-          <button
-            className={cn(styles['footer__action-button'], {
-              [styles['footer__action-button--compact']]: compact_step >= 3
+              [styles['footer__action-button--compact']]: compact_step >= 1
             })}
             onClick={on_undo_click}
-            title={
-              'Restore saved state of the codebase after chat/API response integration'
-            }
+            title={t('footer.undo-title')}
             disabled={!can_undo}
           >
             <span
@@ -106,7 +83,26 @@ export const Footer: React.FC = () => {
               )}
             />
             <span className={styles['footer__action-button__text']}>
-              {t('action.undo')}
+              {t('footer.action.undo')}
+            </span>
+          </button>
+          <button
+            className={cn(styles['footer__action-button'], {
+              [styles['footer__action-button--compact']]: compact_step >= 2
+            })}
+            onClick={handle_apply_click}
+            title={t('footer.apply-title')}
+            disabled={is_apply_disabled_temporarily}
+          >
+            <span
+              className={cn(
+                styles['footer__action-button__icon'],
+                'codicon',
+                'codicon-clippy'
+              )}
+            />
+            <span className={styles['footer__action-button__text']}>
+              {t('footer.action.apply-from-clipboard')}
             </span>
           </button>
         </div>
