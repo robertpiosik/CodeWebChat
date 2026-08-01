@@ -13,16 +13,11 @@
 
   > div {
     display: flex;
-    gap: 6px;
+    gap: 4px;
   }
 
   &__left {
     display: flex;
-    align-items: center;
-    height: 100%;
-    gap: 6px;
-    transition: var(--transition-duration-250) opacity
-      var(--transition-timing-function);
   }
 
   &__icon-button {
@@ -37,18 +32,6 @@
       flex-shrink: 0;
       width: 16px;
       height: 16px;
-    }
-
-    &--reddit {
-      background-color: #ff4500;
-
-      > svg {
-        fill: white;
-      }
-
-      &:hover {
-        background-color: color-mix(in srgb, #ff4500, white 10%);
-      }
     }
 
     &--discord {
