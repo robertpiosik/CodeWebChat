@@ -9,6 +9,10 @@
   justify-content: flex-end;
   padding: 0 12px 48px 8px;
   pointer-events: none;
+
+  :global([data-modern-ui='true']) & {
+    padding: 0 10px 38px 8px;
+  }
 }
 
 @keyframes slideIn {
@@ -32,72 +36,12 @@
   color: var(--vscode-editorWidget-foreground);
   background-color: var(--vscode-editorWidget-background);
   border: 1px solid var(--vscode-editorWidget-border);
-  box-shadow: 0 4px 10px var(--vscode-widget-shadow);
+  box-shadow: 0 3px 6px var(--vscode-widget-shadow);
   width: 100%;
   max-width: min(260px, 70vw);
   overflow: hidden;
   animation: slideIn var(--transition-duration-250)
     var(--transition-timing-function);
-}
-
-.heading {
-  display: flex;
-  justify-content: space-between;
-  font-weight: 500;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  padding: 0 8px;
-  height: 28px;
-  background-image: linear-gradient(
-    to right,
-    var(--cwc-bg-secondary),
-    var(--cwc-bg-secondary)
-  );
-  background-repeat: no-repeat;
-  background-size: 0% 100%;
-  animation: breathe-background 10s infinite linear;
-
-  > div {
-    transform: translateY(2px);
-    transition: transform var(--transition-duration-250)
-      var(--transition-timing-function);
-  }
-
-  &__title {
-    color: var(--vscode-textLink-foreground);
-  }
-
-  &--scrolled > div {
-    transform: translateY(1px);
-  }
-
-  &__breathing {
-    position: relative;
-    color: var(--cwc-text-color-dimmed);
-    width: 60px;
-    height: 100%;
-
-    &__text {
-      position: absolute;
-      top: 0;
-      right: 0;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      opacity: 0; // Hidden by default
-
-      &--inhale {
-        animation: inhale-text 10s infinite linear;
-      }
-
-      &--exhale {
-        animation: exhale-text 10s infinite linear;
-      }
-    }
-  }
 }
 
 .requests-container {
@@ -211,59 +155,5 @@
 
   &:nth-child(odd) &__close {
     background: transparent;
-  }
-}
-
-@keyframes breathe-background {
-  0% {
-    background-size: 0% 100%;
-  }
-  50% {
-    background-size: 100% 100%;
-  }
-  100% {
-    background-size: 0% 100%;
-  }
-}
-
-@keyframes inhale-text {
-  0% {
-    opacity: 0;
-    letter-spacing: 0px;
-  }
-  5% {
-    opacity: 1;
-  }
-  45% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-    letter-spacing: 2px;
-  }
-  100% {
-    opacity: 0;
-    letter-spacing: 2px;
-  }
-}
-
-@keyframes exhale-text {
-  0% {
-    opacity: 0;
-    letter-spacing: 2px;
-  }
-  50% {
-    opacity: 0;
-    letter-spacing: 2px;
-  }
-  55% {
-    opacity: 1;
-  }
-  95% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    letter-spacing: 0px;
   }
 }

@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { ApiManagerModal } from './ApiManagerModal'
+import { PanelApiCallsModal } from './PanelApiCallsModal'
 
 export default {
-  component: ApiManagerModal
+  component: PanelApiCallsModal
 }
 
 export const Default = () => {
@@ -20,7 +20,7 @@ export const Default = () => {
   }
 
   return items.length > 0 ? (
-    <ApiManagerModal progress_items={items} on_cancel={handle_cancel} />
+    <PanelApiCallsModal progress_items={items} on_cancel={handle_cancel} />
   ) : (
     <button
       onClick={() =>
@@ -150,7 +150,7 @@ export const MultipleItems = () => {
   }
 
   return items.length > 0 ? (
-    <ApiManagerModal progress_items={items} on_cancel={handle_cancel} />
+    <PanelApiCallsModal progress_items={items} on_cancel={handle_cancel} />
   ) : (
     <button onClick={() => set_items(initial_items)}>Reset</button>
   )

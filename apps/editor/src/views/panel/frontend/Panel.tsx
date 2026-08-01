@@ -12,7 +12,7 @@ import { post_message } from './utils/post-message'
 import { ResponsePreview as UiResponsePreview } from '@ui/components/editor/panel/ResponsePreview'
 import { Modal as UiModal } from '@ui/components/editor/panel/modals/Modal'
 import { ProgressModal as UiProgressModal } from '@ui/components/editor/panel/modals/ProgressModal'
-import { ApiManagerModal as UiApiManagerModal } from '@ui/components/editor/panel/modals/ApiManagerModal'
+import { PanelApiCallsModal as UiPanelApiCallsModal } from '@ui/components/editor/panel/modals/PanelApiCallsModal'
 import { QRCodeModal as UiQRCodeModal } from '@ui/components/editor/panel/modals/QRCodeModal'
 import { AutoClosingModal as UiAutoClosingModal } from '@ui/components/editor/panel/modals/AutoClosingModal'
 import { use_panel } from './hooks/use-panel'
@@ -589,7 +589,7 @@ export const Panel = () => {
 
         {Object.keys(api_manager_progress_state).length > 0 && (
           <div className={styles.slot}>
-            <UiApiManagerModal
+            <UiPanelApiCallsModal
               progress_items={Object.entries(api_manager_progress_state).map(
                 ([id, state]) => ({ id, ...state })
               )}

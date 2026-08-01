@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
-import cn from 'classnames'
 import { Scrollable } from '../../../common/Scrollable'
 import { use_progress_times } from '../../../../../hooks/use-progress-times'
-import styles from './ApiManagerModal.module.scss'
+import styles from './PanelApiCallsModal.module.scss'
 
 type Props = {
   progress_items: {
@@ -25,9 +24,8 @@ const format_tokens = (tokens: number): string => {
   return rounded.toString()
 }
 
-export const ApiManagerModal: React.FC<Props> = (props) => {
+export const PanelApiCallsModal: React.FC<Props> = (props) => {
   const { start_times, now } = use_progress_times(props.progress_items)
-  const [is_scrolled, set_is_scrolled] = useState(false)
   const [window_width, set_window_width] = useState(window.innerWidth)
 
   useEffect(() => {
@@ -48,36 +46,7 @@ export const ApiManagerModal: React.FC<Props> = (props) => {
       }}
     >
       <div className={styles.container}>
-        <div
-          className={cn(styles.heading, {
-            [styles['heading--scrolled']]: is_scrolled
-          })}
-        >
-          <div className={styles.heading__title}>Chats</div>
-          <div className={styles['heading__breathing']}>
-            <span
-              className={cn(
-                styles['heading__breathing__text'],
-                styles['heading__breathing__text--inhale']
-              )}
-            >
-              INHALE
-            </span>
-            <span
-              className={cn(
-                styles['heading__breathing__text'],
-                styles['heading__breathing__text--exhale']
-              )}
-            >
-              EXHALE
-            </span>
-          </div>
-        </div>
-        <Scrollable
-          top_shadow
-          max_height="25vh"
-          on_scrolled_change={set_is_scrolled}
-        >
+        <Scrollable top_shadow max_height="40vh">
           <div className={styles['requests-container']}>
             {props.progress_items.map((item) => {
               const item_start_time = start_times[item.id]
