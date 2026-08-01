@@ -10,10 +10,12 @@ export const handle_select_edit_format = async (
   _: SelectEditFormatMessage
 ): Promise<void> => {
   const current_format = panel_view_provider.edit_format
+  const is_mac = process.platform == 'darwin'
 
   const items: (vscode.QuickPickItem & { value: EditFormat })[] = [
     {
       label: t('views.panel.handlers.select-edit-format.items.whole'),
+      description: is_mac ? '⌥W' : 'Alt+W',
       detail: t(
         'views.panel.handlers.select-edit-format.items.whole.description'
       ),
@@ -21,6 +23,7 @@ export const handle_select_edit_format = async (
     },
     {
       label: t('views.panel.handlers.select-edit-format.items.search-replace'),
+      description: is_mac ? '⌥S' : 'Alt+S',
       detail: t(
         'views.panel.handlers.select-edit-format.items.search-replace.description'
       ),
@@ -28,6 +31,7 @@ export const handle_select_edit_format = async (
     },
     {
       label: t('views.panel.handlers.select-edit-format.items.diff'),
+      description: is_mac ? '⌥D' : 'Alt+D',
       detail: t(
         'views.panel.handlers.select-edit-format.items.diff.description'
       ),
@@ -35,6 +39,7 @@ export const handle_select_edit_format = async (
     },
     {
       label: t('views.panel.handlers.select-edit-format.items.truncated'),
+      description: is_mac ? '⌥T' : 'Alt+T',
       detail: t(
         'views.panel.handlers.select-edit-format.items.truncated.description'
       ),
