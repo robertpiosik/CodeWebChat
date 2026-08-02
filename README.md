@@ -85,7 +85,7 @@ _TAB completions from SOTA reasoning models._
 # Files
 [full contents of selected files with paths]
 
-## File: `[active file]`
+- File: `[active file]`
 ```
 [code before cursor]<missing_text>[prompt]</missing_text>[code after cursor]
 ```
