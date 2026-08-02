@@ -72,24 +72,22 @@ export const translations = {
     bg: 'Търсене и заместване'
   },
   'views.prompt.handlers.select-edit-format.items.search-replace.description': {
-    en: 'Isolate changed blocks with <<<<<<< SEARCH, =======, >>>>>>> REPLACE delimiters',
-    pl: 'Wydziel zmienione bloki za pomocą ograniczników <<<<<<< SEARCH, =======, >>>>>>> REPLACE',
-    'zh-cn': '使用分隔符 <<<<<<< SEARCH, =======, >>>>>>> REPLACE 隔离更改的块',
-    ja: '変更されたブロックを区切り文字 <<<<<<< SEARCH, =======, >>>>>>> REPLACE で分離する',
-    'zh-tw':
-      '使用分隔符 <<<<<<< SEARCH, =======, >>>>>>> REPLACE 隔離更改的區塊',
-    de: 'Geänderte Blöcke mit Trennzeichen <<<<<<< SEARCH, =======, >>>>>>> REPLACE isolieren',
-    es: 'Aislar los bloques cambiados con delimitadores <<<<<<< SEARCH, =======, >>>>>>> REPLACE',
-    fr: 'Isoler les blocs modifiés avec les délimiteurs <<<<<<< SEARCH, =======, >>>>>>> REPLACE',
-    'pt-br':
-      'Isolar blocos alterados com delimitadores <<<<<<< SEARCH, =======, >>>>>>> REPLACE',
-    ru: 'Изолировать измененные блоки с помощью разделителей <<<<<<< SEARCH, =======, >>>>>>> REPLACE',
-    ko: '<<<<<<< SEARCH, =======, >>>>>>> REPLACE 구분 기호를 사용하여 변경된 블록 격리',
-    it: 'Isola i blocchi modificati con i delimitatori <<<<<<< SEARCH, =======, >>>>>>> REPLACE',
-    tr: 'Değiştirilen blokları <<<<<<< SEARCH, =======, >>>>>>> REPLACE sınırlayıcılarıyla ayır',
-    cs: 'Izolovat změněné bloky pomocí oddělovačů <<<<<<< SEARCH, =======, >>>>>>> REPLACE',
-    hu: 'Módosított blokkok elkülönítése <<<<<<< SEARCH, =======, >>>>>>> REPLACE elválasztókkal',
-    bg: 'Изолиране на променените блокове с разделители <<<<<<< SEARCH, =======, >>>>>>> REPLACE'
+    en: 'Show changed blocks with SEARCH/REPLACE delimiters',
+    pl: 'Pokaż zmienione fragmentu kodu w blokach SEARCH/REPLACE',
+    'zh-cn': '使用 SEARCH/REPLACE 分隔符显示更改的块',
+    ja: 'SEARCH/REPLACE デリミタを使用して変更されたブロックを表示',
+    'zh-tw': '使用 SEARCH/REPLACE 分隔符顯示更改的區塊',
+    de: 'Geänderte Blöcke mit SEARCH/REPLACE-Trennzeichen anzeigen',
+    es: 'Mostrar bloques modificados con delimitadores SEARCH/REPLACE',
+    fr: 'Afficher les blocs modifiés avec les délimiteurs SEARCH/REPLACE',
+    'pt-br': 'Mostrar blocos alterados com delimitadores SEARCH/REPLACE',
+    ru: 'Показывать измененные блоки с разделителями SEARCH/REPLACE',
+    ko: 'SEARCH/REPLACE 구분 기호로 변경된 블록 표시',
+    it: 'Mostra i blocchi modificati con i delimitatori SEARCH/REPLACE',
+    tr: 'Değiştirilen blokları SEARCH/REPLACE sınırlayıcılarıyla göster',
+    cs: 'Zobrazit změněné bloky s oddělovači SEARCH/REPLACE',
+    hu: 'Módosított blokkok megjelenítése SEARCH/REPLACE határolókkal',
+    bg: 'Показване на променените блокове с разделители SEARCH/REPLACE'
   },
   'views.prompt.handlers.select-edit-format.items.search-replace.hint': {
     en: 'general purpose',
