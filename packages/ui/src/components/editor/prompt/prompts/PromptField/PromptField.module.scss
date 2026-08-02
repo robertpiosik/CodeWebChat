@@ -208,15 +208,14 @@
         font-size: 11px;
         pointer-events: all;
         color: var(--vscode-foreground);
-        padding: 0 2px;
+        padding: 5px 2px;
+        margin: -5px 0;
         opacity: var(--dimmed-opacity);
         white-space: nowrap;
-        text-decoration: dotted;
         overflow: hidden;
         text-overflow: ellipsis;
         text-decoration: underline dotted;
         text-underline-offset: 4px;
-        overflow: visible;
 
         &:hover {
           opacity: 1;
