@@ -6,7 +6,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import { create_safe_path, sanitize_file_name } from '@/utils/path-sanitizer'
 import { FileItem } from '../utils/response-parser'
 import { OriginalFileState } from '../types/original-file-state'
-import { process_truncated_content } from '../utils/edit-formats/truncations'
+import { process_truncated_content } from '../../../utils/edit-formats/truncations'
 import {
   cleanup_rename_source,
   handle_deleted_file_item,

@@ -28,7 +28,7 @@ import { handle_truncated_edit } from './handlers/truncated-handler'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { natural_sort } from '@/utils/natural-sort'
 import { t } from '@/i18n'
-import { is_truncation_line } from './utils/edit-formats/truncations'
+import { is_truncation_line } from '../../utils/edit-formats/truncations'
 import {
   RelevantFileInPreview,
   ItemInPreview

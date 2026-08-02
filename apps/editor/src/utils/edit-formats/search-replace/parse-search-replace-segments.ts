@@ -1,8 +1,12 @@
 export type Segment =
   | { type: 'common'; lines: string[] }
-  | { type: 'conflict'; original_lines: string[]; updated_lines: string[] }
+  | {
+      type: 'search_replace'
+      original_lines: string[]
+      updated_lines: string[]
+    }
 
-export const parse_conflict_segments = (content: string): Segment[] => {
+export const parse_search_replace_segments = (content: string): Segment[] => {
   const lines = content.replace(/\r\n/g, '\n').split('\n')
   const segments: Segment[] = []
   let current_lines: string[] = []
@@ -44,7 +48,7 @@ export const parse_conflict_segments = (content: string): Segment[] => {
     if (trimmed == '>>>>>>>' || trimmed.startsWith('>>>>>>> ')) {
       if (state == 'UPDATED' || state == 'ORIGINAL') {
         segments.push({
-          type: 'conflict',
+          type: 'search_replace',
           original_lines: original_buffer,
           updated_lines: state == 'UPDATED' ? updated_buffer : []
         })

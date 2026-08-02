@@ -101,9 +101,9 @@ export class FilesCollector {
           }
 
           if (is_binary) {
-            collected_text += `### File: \`${display_path}\`\n\nBinary file\n\n`
+            collected_text += `## File: \`${display_path}\`\n\nBinary file\n\n`
           } else {
-            collected_text += `### File: \`${display_path}\`\n\n\`\`\`\n${content}\n\`\`\`\n\n`
+            collected_text += `## File: \`${display_path}\`\n\n\`\`\`\n${content}\n\`\`\`\n\n`
           }
         } catch (error) {
           console.error(`Error reading file ${file_path}:`, error)

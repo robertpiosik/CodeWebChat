@@ -11,8 +11,8 @@ import {
   handle_deleted_file_item,
   get_rename_source_info
 } from '../utils/file-operations'
-import { apply_conflict_markers_to_content } from '../utils/edit-formats/conflict-markers/apply-conflict-markers-to-content'
-import { parse_conflict_segments } from '../utils/edit-formats/conflict-markers/parse-conflict-segments'
+import { apply_search_replace_to_content } from '../../../utils/edit-formats/search-replace/apply-search-replace-to-content'
+import { parse_search_replace_segments } from '../../../utils/edit-formats/search-replace/parse-search-replace-segments'
 
 export const handle_search_replace = async (params: {
   files: FileItem[]
@@ -109,9 +109,9 @@ export const handle_search_replace = async (params: {
         try {
           let new_content = rename_source_content
           if (has_markers) {
-            new_content = apply_conflict_markers_to_content({
+            new_content = apply_search_replace_to_content({
               original_content: rename_source_content,
-              segments: parse_conflict_segments(file.content)
+              segments: parse_search_replace_segments(file.content)
             })
           } else if (file.content != '') {
             new_content = file.content
@@ -147,9 +147,9 @@ export const handle_search_replace = async (params: {
         try {
           const document = await vscode.workspace.openTextDocument(safe_path)
           const original_content = document.getText()
-          const current_content = apply_conflict_markers_to_content({
+          const current_content = apply_search_replace_to_content({
             original_content,
-            segments: parse_conflict_segments(file.content)
+            segments: parse_search_replace_segments(file.content)
           })
 
           if (current_content !== original_content) {
@@ -169,13 +169,13 @@ export const handle_search_replace = async (params: {
 
           Logger.info({
             function_name: 'handle_search_replace',
-            message: 'Applied conflict markers edit to file',
+            message: 'Applied search replace edit to file',
             data: safe_path
           })
         } catch (error: any) {
           Logger.error({
             function_name: 'handle_search_replace',
-            message: 'Failed to apply conflict markers edit',
+            message: 'Failed to apply search replace edit',
             data: { file_path: safe_path, error }
           })
           failed_files.push(file)
@@ -189,7 +189,7 @@ export const handle_search_replace = async (params: {
 
           let content_to_write = file.content
           if (has_markers) {
-            const segments = parse_conflict_segments(file.content)
+            const segments = parse_search_replace_segments(file.content)
             content_to_write = segments
               .map((s) =>
                 s.type == 'common'
@@ -257,7 +257,7 @@ export const handle_search_replace = async (params: {
   } catch (error: any) {
     Logger.error({
       function_name: 'handle_search_replace',
-      message: 'Error during conflict markers edit',
+      message: 'Error during search replace edit',
       data: error
     })
     vscode.window.showErrorMessage(

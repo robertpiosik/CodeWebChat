@@ -4,7 +4,7 @@ const escape_reg_exp = (string: string) => {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
-export const apply_conflict_markers_to_content = (params: {
+export const apply_search_replace_to_content = (params: {
   original_content: string
   segments: Segment[]
 }): string => {
@@ -17,7 +17,7 @@ export const apply_conflict_markers_to_content = (params: {
 
   for (let i = 0; i < segments.length; i++) {
     const segment = segments[i]
-    if (segment.type !== 'conflict') continue
+    if (segment.type !== 'search_replace') continue
 
     const prev = i > 0 ? segments[i - 1] : undefined
     const next = i < segments.length - 1 ? segments[i + 1] : undefined
@@ -74,7 +74,7 @@ export const apply_conflict_markers_to_content = (params: {
       ]
       const search_text = all_search_lines.join('\n')
       throw new Error(
-        `Could not find content to replace for conflict marker. Context:\n${search_text.slice(
+        `Could not find content to replace for search replace block. Context:\n${search_text.slice(
           0,
           100
         )}...`

@@ -6,9 +6,9 @@ export namespace PromptBuilder {
   }): string => {
     const display_path = params.filepath.replace(/\\/g, '/')
     if (params.is_binary || params.content === undefined) {
-      return `### File: \`${display_path}\`\n\nBinary file\n\n`
+      return `## File: \`${display_path}\`\n\nBinary file\n\n`
     }
-    return `### File: \`${display_path}\`\n\n\`\`\`\n${params.content}\n\`\`\`\n\n`
+    return `## File: \`${display_path}\`\n\n\`\`\`\n${params.content}\n\`\`\`\n\n`
   }
 
   export const build_diff_file_context = (params: {

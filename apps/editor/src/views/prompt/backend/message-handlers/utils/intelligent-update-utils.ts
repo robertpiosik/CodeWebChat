@@ -9,13 +9,18 @@ import { LAST_USED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY } from '@/constants/st
 import { Logger } from '@shared/utils/logger'
 import { send_llm_message } from '@/utils/send-llm-message'
 import { cleanup_api_response } from '@/utils/cleanup-api-response'
-import { intelligent_update_instructions } from '@/constants/instructions'
+import {
+  intelligent_update_task_instructions,
+  intelligent_update_edit_format_instructions
+} from '@/constants/instructions'
 import { dictionary } from '@shared/constants/dictionary'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import {
   show_configuration_quick_pick,
   map_api_configuration_to_item
 } from '@/utils/show-configuration-quick-pick'
+import { apply_search_replace_to_content } from '@/utils/edit-formats/search-replace/apply-search-replace-to-content'
+import { parse_search_replace_segments } from '@/utils/edit-formats/search-replace/parse-search-replace-segments'
 
 export const get_intelligent_update_config = async (
   model_providers_manager: ModelProvidersManager,
@@ -115,8 +120,7 @@ export const process_file = async (params: {
     message: 'start',
     data: { file_path: params.file_path }
   })
-  const file_content_block = `<file>\n<![CDATA[\n${params.file_content}\n]]>\n</file>`
-  const content = `${file_content_block}\n${intelligent_update_instructions}\n<![CDATA[\n${params.instruction}\n]]>`
+  const content = `# Task\n\n${intelligent_update_task_instructions}\n\n# File\n\n${params.file_content}\n\n# System\n\n${intelligent_update_edit_format_instructions}\n\n# Task\n\n${intelligent_update_task_instructions}\n\n# Changes\n\n${params.instruction}`
 
   const messages = [
     {
@@ -160,15 +164,28 @@ export const process_file = async (params: {
     const cleaned_content = cleanup_api_response({
       content: refactored_content
     })
+
+    let final_content = cleaned_content
+    if (
+      cleaned_content.includes('<<<<<<<') &&
+      cleaned_content.includes('=======') &&
+      cleaned_content.includes('>>>>>>>')
+    ) {
+      final_content = apply_search_replace_to_content({
+        original_content: params.file_content,
+        segments: parse_search_replace_segments(cleaned_content)
+      })
+    }
+
     Logger.info({
       function_name: 'process_file',
       message: 'API response received and cleaned',
       data: {
         file_path: params.file_path,
-        response_length: cleaned_content?.length
+        response_length: final_content?.length
       }
     })
-    return cleaned_content
+    return final_content
   } catch (error: any) {
     if (axios.isCancel(error)) {
       Logger.info({
