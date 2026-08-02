@@ -11,7 +11,8 @@ import { send_llm_message } from '@/utils/send-llm-message'
 import { cleanup_api_response } from '@/utils/cleanup-api-response'
 import {
   intelligent_update_task_instructions,
-  intelligent_update_edit_format_instructions
+  intelligent_update_edit_format_instructions,
+  intelligent_update_fallback_edit_format_instructions
 } from '@/constants/instructions'
 import { dictionary } from '@shared/constants/dictionary'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
@@ -112,15 +113,28 @@ export const process_file = async (params: {
   file_content: string
   instruction: string
   abort_signal?: AbortSignal
-  on_chunk?: (tokens_per_second: number, total_tokens: number) => void
+  on_chunk?: (
+    tokens_per_second: number,
+    total_tokens: number,
+    using_fallback: boolean
+  ) => void
   on_thinking_chunk?: (text: string) => void
+  use_fallback_edit_format?: boolean
 }): Promise<string> => {
   Logger.info({
     function_name: 'process_file',
     message: 'start',
-    data: { file_path: params.file_path }
+    data: {
+      file_path: params.file_path,
+      use_fallback_format: params.use_fallback_edit_format
+    }
   })
-  const content = `# Task\n\n${intelligent_update_task_instructions}\n\n# File\n\n${params.file_content}\n\n# Output formatting\n\n${intelligent_update_edit_format_instructions}\n\n# Task\n\n${intelligent_update_task_instructions}\n\n# Changes\n\n${params.instruction}`
+
+  const edit_format_instructions = params.use_fallback_edit_format
+    ? intelligent_update_fallback_edit_format_instructions
+    : intelligent_update_edit_format_instructions
+
+  const content = `# Task\n\n${intelligent_update_task_instructions}\n\n# File\n\n${params.file_content}\n\n# Output formatting\n\n${edit_format_instructions}\n\n# Task\n\n${intelligent_update_task_instructions}\n\n# Changes\n\n${params.instruction}`
 
   const messages = [
     {
@@ -146,7 +160,14 @@ export const process_file = async (params: {
       api_key: params.api_key,
       body,
       abort_signal: params.abort_signal,
-      on_chunk: params.on_chunk,
+      on_chunk: params.on_chunk
+        ? (tokens_per_second, total_tokens) =>
+            params.on_chunk!(
+              tokens_per_second,
+              total_tokens,
+              !!params.use_fallback_edit_format
+            )
+        : undefined,
       on_thinking_chunk: params.on_thinking_chunk,
       rethrow_error: true
     })
@@ -166,15 +187,27 @@ export const process_file = async (params: {
     })
 
     let final_content = cleaned_content
-    if (
-      cleaned_content.includes('<<<<<<<') &&
-      cleaned_content.includes('=======') &&
-      cleaned_content.includes('>>>>>>>')
-    ) {
-      final_content = apply_search_replace_to_content({
-        original_content: params.file_content,
-        segments: parse_search_replace_segments(cleaned_content)
-      })
+    if (!params.use_fallback_edit_format) {
+      try {
+        final_content = apply_search_replace_to_content({
+          original_content: params.file_content,
+          segments: parse_search_replace_segments(cleaned_content)
+        })
+      } catch (error: any) {
+        Logger.warn({
+          function_name: 'process_file',
+          message:
+            'Failed to apply search-replace blocks, retrying with fallback edit format',
+          data: { error, file_path: params.file_path }
+        })
+
+        if (!params.abort_signal?.aborted) {
+          return await process_file({
+            ...params,
+            use_fallback_edit_format: true
+          })
+        }
+      }
     }
 
     Logger.info({

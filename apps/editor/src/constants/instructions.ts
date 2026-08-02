@@ -28,7 +28,7 @@ Find correct replacement text for the <missing_text> symbol.`
 export const intelligent_update_task_instructions =
   'Refactor the file according to the attached changes without explanations or any other text.'
 
-export const intelligent_update_edit_format_instructions = `Output a markdown code block showing the original and updated code snippets with Git-style merge conflict syntax. Example:
+export const intelligent_update_edit_format_instructions = `Print a markdown code block showing the original and updated code snippets with Git-style merge conflict syntax. Example:
 
 \`\`\`python
 <<<<<<< SEARCH
@@ -44,6 +44,8 @@ WISHES = "Have a nice day!"
    print(WISHES)
 >>>>>>> REPLACE
 \`\`\``
+
+export const intelligent_update_fallback_edit_format_instructions = `Print the updated file in FULL.`
 
 export const commit_message_instructions =
   "Write a brief and precise summary for the changes, limited to a single sentence. Because the summary will be used for a commit message, don't use any markdown formatting and don't include a trailing dot. Use an imperative tone to ensure clarity and focus on the primary change or purpose."
