@@ -14,7 +14,7 @@ import {
 import { apply_conflict_markers_to_content } from '../utils/edit-formats/conflict-markers/apply-conflict-markers-to-content'
 import { parse_conflict_segments } from '../utils/edit-formats/conflict-markers/parse-conflict-segments'
 
-export const handle_conflict_markers = async (params: {
+export const handle_search_replace = async (params: {
   files: FileItem[]
   on_progress: (progress: number) => void
 }): Promise<{
@@ -23,7 +23,7 @@ export const handle_conflict_markers = async (params: {
   failed_files?: FileItem[]
 }> => {
   Logger.info({
-    function_name: 'handle_conflict_markers',
+    function_name: 'handle_search_replace',
     message: 'start',
     data: { file_count: params.files.length }
   })
@@ -61,7 +61,7 @@ export const handle_conflict_markers = async (params: {
 
       if (!safe_path) {
         Logger.warn({
-          function_name: 'handle_conflict_markers',
+          function_name: 'handle_search_replace',
           message: 'Unsafe file path detected',
           data: file.file_path
         })
@@ -75,7 +75,7 @@ export const handle_conflict_markers = async (params: {
           workspace_root,
           workspace_map,
           default_workspace,
-          function_name: 'handle_conflict_markers'
+          function_name: 'handle_search_replace'
         })
         if (delete_result.success && delete_result.original_state) {
           original_states.push(delete_result.original_state)
@@ -168,13 +168,13 @@ export const handle_conflict_markers = async (params: {
           })
 
           Logger.info({
-            function_name: 'handle_conflict_markers',
+            function_name: 'handle_search_replace',
             message: 'Applied conflict markers edit to file',
             data: safe_path
           })
         } catch (error: any) {
           Logger.error({
-            function_name: 'handle_conflict_markers',
+            function_name: 'handle_search_replace',
             message: 'Failed to apply conflict markers edit',
             data: { file_path: safe_path, error }
           })
@@ -244,7 +244,7 @@ export const handle_conflict_markers = async (params: {
           })
         } catch (error: any) {
           Logger.error({
-            function_name: 'handle_conflict_markers',
+            function_name: 'handle_search_replace',
             message: 'Error replacing file content (fallback)',
             data: { error, file_path: safe_path }
           })
@@ -256,7 +256,7 @@ export const handle_conflict_markers = async (params: {
     return { success: true, original_states, failed_files }
   } catch (error: any) {
     Logger.error({
-      function_name: 'handle_conflict_markers',
+      function_name: 'handle_search_replace',
       message: 'Error during conflict markers edit',
       data: error
     })

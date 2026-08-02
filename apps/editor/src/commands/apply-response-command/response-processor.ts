@@ -26,7 +26,7 @@ import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { FileInPreview } from '@shared/types/file-in-preview'
 import { update_undo_button_state } from './utils/state-manager'
 import { check_for_conflict_markers } from './utils/file-checks'
-import { handle_conflict_markers } from './handlers/conflict-markers-handler'
+import { handle_search_replace } from './handlers/search-replace-handler'
 import { handle_truncated_edit } from './handlers/truncated-handler'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { natural_sort } from '@/utils/natural-sort'
@@ -665,7 +665,7 @@ export const process_response = async (params: {
         data: { success: result.success }
       })
     } else if (selected_mode_label == 'Conflict markers') {
-      const result = await handle_conflict_markers({ files, on_progress })
+      const result = await handle_search_replace({ files, on_progress })
 
       const successful_states = result.original_states || []
       const failed_files: FileItem[] = result.failed_files || []
