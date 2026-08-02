@@ -1,8 +1,8 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import { process_truncated_content } from './process-truncation'
+import { process_truncations } from './truncations-processor'
 
-describe('process_truncated_content', () => {
+describe('truncations-processor', () => {
   const load_test_case_file = (test_case: string, filename: string): string => {
     return fs.readFileSync(
       path.join(__dirname, 'test-cases', test_case, filename),
@@ -15,7 +15,7 @@ describe('process_truncated_content', () => {
     const truncated_text = load_test_case_file(test_case, 'truncated.txt')
     const expected_text = load_test_case_file(test_case, 'expected.txt')
 
-    const result = process_truncated_content(truncated_text, original_text)
+    const result = process_truncations(truncated_text, original_text)
     expect(result).toBe(expected_text)
   }
 

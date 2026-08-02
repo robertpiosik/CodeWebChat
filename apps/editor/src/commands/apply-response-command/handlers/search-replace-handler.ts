@@ -11,8 +11,8 @@ import {
   handle_deleted_file_item,
   get_rename_source_info
 } from '../utils/file-operations'
-import { apply_search_replace_to_content } from '../../../utils/edit-formats/search-replace/apply-search-replace-to-content'
-import { parse_search_replace_segments } from '../../../utils/edit-formats/search-replace/parse-search-replace-segments'
+import { apply_search_replace_to_content } from '../../../utils/changes-integration/search-replace-processor/apply-search-replace-to-content'
+import { parse_search_replace_segments } from '../../../utils/changes-integration/search-replace-processor/parse-search-replace-segments'
 
 export const handle_search_replace = async (params: {
   files: FileItem[]

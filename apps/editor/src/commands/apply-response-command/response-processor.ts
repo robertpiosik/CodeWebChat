@@ -28,13 +28,13 @@ import { handle_truncated_edit } from './handlers/truncated-handler'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { natural_sort } from '@/utils/natural-sort'
 import { t } from '@/i18n'
-import { is_truncation_line } from '../../utils/edit-formats/truncations'
 import {
   RelevantFileInPreview,
   ItemInPreview
 } from '@shared/types/file-in-preview'
 import { PreviewDecision } from './utils/preview/types'
 import { set_response_preview_promise_resolve } from './utils/preview/preview'
+import { is_truncation_line } from '@/utils/changes-integration/truncations-processor/utils/is-truncation-line'
 
 export type PreviewData = {
   original_states: OriginalFileState[]

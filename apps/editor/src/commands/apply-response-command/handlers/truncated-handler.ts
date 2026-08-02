@@ -6,7 +6,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import { create_safe_path, sanitize_file_name } from '@/utils/path-sanitizer'
 import { FileItem } from '../utils/response-parser'
 import { OriginalFileState } from '../types/original-file-state'
-import { process_truncated_content } from '../../../utils/edit-formats/truncations'
+import { process_truncations } from '../../../utils/changes-integration/truncations-processor'
 import {
   cleanup_rename_source,
   handle_deleted_file_item,
@@ -100,7 +100,7 @@ export const handle_truncated_edit = async (params: {
       rename_source_workspace_root
     ) {
       try {
-        const new_content = process_truncated_content(
+        const new_content = process_truncations(
           file.content,
           rename_source_content
         )
@@ -153,7 +153,7 @@ export const handle_truncated_edit = async (params: {
           await fs.promises.mkdir(directory, { recursive: true })
         }
 
-        const new_content = process_truncated_content(file.content, '')
+        const new_content = process_truncations(file.content, '')
 
         await fs.promises.writeFile(safe_path, new_content, 'utf8')
 
@@ -179,10 +179,7 @@ export const handle_truncated_edit = async (params: {
     try {
       const document = await vscode.workspace.openTextDocument(safe_path)
       const original_content = document.getText()
-      const new_content = process_truncated_content(
-        file.content,
-        original_content
-      )
+      const new_content = process_truncations(file.content, original_content)
 
       const directory = path.dirname(safe_path)
       if (!fs.existsSync(directory)) {

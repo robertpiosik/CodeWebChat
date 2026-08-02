@@ -1,19 +1,7 @@
-/*
- * Matches lines like:
- * // ...
- * # ...
- * <!-- ...
- * ; ...
- * " ...
- * ' ...
- * {/* ...
- * /* ...
- */
-const TRUNCATION_REGEX = /^\s*(\/\/|#|<!--|;|"|'|\{\/\*|\/\*)\s*\.{3,}.*\s*$/
+import { find_line_sequence } from './utils/find-line-sequence'
+import { is_truncation_line } from './utils/is-truncation-line'
 
-export const is_truncation_line = (line: string) => TRUNCATION_REGEX.test(line)
-
-export const process_truncated_content = (
+export const process_truncations = (
   new_text: string,
   original_text: string
 ): string => {
@@ -44,10 +32,9 @@ export const process_truncated_content = (
   for (let i = 0; i < blocks.length; i++) {
     const block = blocks[i]
 
-    if (block.type === 'code') {
+    if (block.type == 'code') {
       output_lines.push(...block.lines)
 
-      // Try to sync with original to handle replacements (context consumption)
       const search_window_size = 10
       const suffix_lines = block.lines.slice(-search_window_size)
 
@@ -56,11 +43,11 @@ export const process_truncated_content = (
 
       for (let len = suffix_lines.length; len >= 1; len--) {
         const sub_suffix = suffix_lines.slice(suffix_lines.length - len)
-        const idx = find_line_sequence(
-          original_lines,
-          sub_suffix,
-          current_original_idx
-        )
+        const idx = find_line_sequence({
+          lines: original_lines,
+          sequence: sub_suffix,
+          start_idx: current_original_idx
+        })
         if (idx !== -1) {
           found_match = true
           match_end_idx = idx + len
@@ -72,7 +59,6 @@ export const process_truncated_content = (
         current_original_idx = match_end_idx
       }
     } else {
-      // Truncation block
       let fill_end_idx = original_lines.length
 
       if (i + 1 < blocks.length) {
@@ -83,11 +69,11 @@ export const process_truncated_content = (
 
           for (let len = prefix_lines.length; len >= 1; len--) {
             const sub_prefix = prefix_lines.slice(0, len)
-            const idx = find_line_sequence(
-              original_lines,
-              sub_prefix,
-              current_original_idx
-            )
+            const idx = find_line_sequence({
+              lines: original_lines,
+              sequence: sub_prefix,
+              start_idx: current_original_idx
+            })
             if (idx !== -1) {
               fill_end_idx = idx
               found_next = true
@@ -117,36 +103,4 @@ export const process_truncated_content = (
   }
 
   return result
-}
-
-const find_line_sequence = (
-  lines: string[],
-  sequence: string[],
-  start_idx: number
-): number => {
-  if (sequence.length == 0) return -1
-  if (start_idx >= lines.length) return -1
-
-  for (let i = start_idx; i <= lines.length - sequence.length; i++) {
-    let match = true
-    for (let j = 0; j < sequence.length; j++) {
-      if (lines[i + j] !== sequence[j]) {
-        match = false
-        break
-      }
-    }
-    if (match) return i
-  }
-
-  for (let i = start_idx; i <= lines.length - sequence.length; i++) {
-    let match = true
-    for (let j = 0; j < sequence.length; j++) {
-      if (lines[i + j].trim() !== sequence[j].trim()) {
-        match = false
-        break
-      }
-    }
-    if (match) return i
-  }
-  return -1
 }

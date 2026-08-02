@@ -20,8 +20,8 @@ import {
   show_configuration_quick_pick,
   map_api_configuration_to_item
 } from '@/utils/show-configuration-quick-pick'
-import { apply_search_replace_to_content } from '@/utils/edit-formats/search-replace/apply-search-replace-to-content'
-import { parse_search_replace_segments } from '@/utils/edit-formats/search-replace/parse-search-replace-segments'
+import { apply_search_replace_to_content } from '@/utils/changes-integration/search-replace-processor/apply-search-replace-to-content'
+import { parse_search_replace_segments } from '@/utils/changes-integration/search-replace-processor/parse-search-replace-segments'
 
 export const get_intelligent_update_config = async (
   model_providers_manager: ModelProvidersManager,
