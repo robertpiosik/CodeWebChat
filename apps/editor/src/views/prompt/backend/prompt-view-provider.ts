@@ -42,7 +42,7 @@ import {
   handle_get_mode,
   handle_get_workspace_state,
   handle_get_version,
-  handle_show_prompt_template_quick_pick,
+  handle_prompt_template_quick_pick,
   handle_get_api_configurations,
   handle_reorder_api_configurations,
   handle_toggle_pinned_api_configuration,
@@ -751,7 +751,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'MAKE_API_CALL') {
             await handle_make_api_call(this, message)
           } else if (message.command == 'SHOW_PROMPT_TEMPLATE_QUICK_PICK') {
-            await handle_show_prompt_template_quick_pick(this)
+            await handle_prompt_template_quick_pick(this)
           } else if (message.command == 'GET_WEB_PROMPT_TYPE') {
             handle_get_web_prompt_type(this)
           } else if (message.command == 'CANCEL_API_REQUEST') {
