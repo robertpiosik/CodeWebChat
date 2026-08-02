@@ -5,6 +5,7 @@
   justify-content: space-between;
   padding: 8px 12px 8px 12px;
   border-top: 1px solid var(--cwc-border-color-dimmed);
+  gap: 4px;
 
   :global([data-modern-ui='true']) & {
     padding: 5px 4px 0 4px;
