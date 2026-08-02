@@ -65,12 +65,12 @@ export const Header: React.FC<Props> = (props) => {
         <UiIconButton
           codicon_icon="chevron-left"
           on_click={props.on_show_home}
-          title="Return (Esc)"
+          title={`${t('header.return')} (Esc)`}
         />
         <button
           className={styles['header__left__toggler']}
           onClick={handle_heading_click}
-          title={`Change mode (${is_mac ? '⌥Esc' : 'Alt+Esc'})`}
+          title={`${t('header.change-mode')} (${is_mac ? '⌥Esc' : 'Alt+Esc'})`}
         >
           <span>{props.mode == MODE.WEB ? MODE.WEB : MODE.API}</span>
           {is_alt_pressed && (
@@ -100,11 +100,9 @@ export const Header: React.FC<Props> = (props) => {
               }
               menu_max_height={MENU_MAX_HEIGHT}
               info={t('header.prompt-type')}
-              title={
-                is_mac
-                  ? 'Change prompt type (⇧⌥)'
-                  : 'Change prompt type (Shift+Alt)'
-              }
+              title={`${t('header.change-prompt-type')} (${
+                is_mac ? '⇧⌥' : 'Shift+Alt'
+              })`}
               match_button_width
             />
           )}
@@ -124,11 +122,9 @@ export const Header: React.FC<Props> = (props) => {
               }
               menu_max_height={MENU_MAX_HEIGHT}
               info={is_narrow_viewport ? undefined : t('header.prompt-type')}
-              title={
-                is_mac
-                  ? 'Change prompt type (⇧⌥)'
-                  : 'Change prompt type (Shift+Alt)'
-              }
+              title={`${t('header.change-prompt-type')} (${
+                is_mac ? '⇧⌥' : 'Shift+Alt'
+              })`}
               match_button_width
             />
           )}

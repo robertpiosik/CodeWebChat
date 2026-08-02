@@ -66,12 +66,6 @@ export const use_keyboard_shortcuts = (
         if (format && props.edit_format !== format) {
           pending_edit_format_ref.current = format
           update_alt_pressed(false)
-          setTimeout(() => {
-            if (pending_edit_format_ref.current === format) {
-              pending_edit_format_ref.current = null
-              set_is_alt_pressed(is_alt_pressed_raw_ref.current)
-            }
-          }, 100)
         } else {
           update_alt_pressed(false)
         }
