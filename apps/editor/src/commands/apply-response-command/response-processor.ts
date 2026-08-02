@@ -18,9 +18,6 @@ import {
   sanitize_patch_content
 } from './handlers/diff-handler'
 import { apply_file_relocations } from './utils/file-operations'
-import { ModelProvidersManager } from '@/services/model-providers-manager'
-import { get_intelligent_update_config } from '@/utils/intelligent-update-utils'
-import { handle_active_editor_intelligent_update } from './handlers/active-editor-intelligent-update-handler'
 import { handle_fast_replace } from './handlers/fast-replace-handler'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { FileInPreview } from '@shared/types/file-in-preview'
@@ -114,9 +111,6 @@ export const process_response = async (params: {
       return null
     }
   }
-
-  const is_single_root_folder_workspace =
-    vscode.workspace.workspaceFolders?.length == 1
 
   if (params.response_items.some((item) => item.type == 'relevant-files')) {
     const current_checked_files =
@@ -513,80 +507,9 @@ export const process_response = async (params: {
     )
 
     if (files.length == 0) {
-      const editor = vscode.window.activeTextEditor
-
-      if (editor) {
-        const choice = await vscode.window.showWarningMessage(
-          t('command.apply-response.warning.no-code-blocks.title'),
-          {
-            modal: true,
-            detail: t('command.apply-response.warning.no-code-blocks.detail')
-          },
-          t('command.apply-response.warning.no-code-blocks.action')
-        )
-
-        if (
-          choice == t('command.apply-response.warning.no-code-blocks.action')
-        ) {
-          const document = editor.document
-          const file_path_for_block = vscode.workspace
-            .asRelativePath(document.uri, !is_single_root_folder_workspace)
-            .replace(/\\/g, '/')
-
-          const markdown_response_for_active_editor = `\`\`\`\n// ${file_path_for_block}\n${params.response}\n\`\`\``
-
-          const model_providers_manager = new ModelProvidersManager(
-            params.extension_context
-          )
-          const api_configuration_result = await get_intelligent_update_config(
-            model_providers_manager,
-            false,
-            params.extension_context
-          )
-
-          if (!api_configuration_result) {
-            return null
-          }
-
-          const {
-            model_provider,
-            api_configuration: intelligent_update_api_configuration
-          } = api_configuration_result
-          const base_url = model_provider.base_url
-
-          const intelligent_update_states =
-            await handle_active_editor_intelligent_update({
-              base_url,
-              api_key: model_provider.api_key,
-              api_configuration: intelligent_update_api_configuration,
-              chat_response: markdown_response_for_active_editor,
-              extension_context: params.extension_context,
-              is_single_root_folder_workspace,
-              prompt_view_provider: params.prompt_view_provider
-            })
-
-          if (intelligent_update_states) {
-            update_undo_button_state({
-              extension_context: params.extension_context,
-              prompt_view_provider: params.prompt_view_provider,
-              states: intelligent_update_states,
-              applied_content: markdown_response_for_active_editor,
-              original_editor_state: params.args?.original_editor_state
-            })
-
-            return {
-              original_states: intelligent_update_states,
-              response: markdown_response_for_active_editor
-            }
-          }
-          return null
-        }
-      } else {
-        vscode.window.showInformationMessage(
-          dictionary.information_message.NO_ACTIVE_EDITOR_FOUND
-        )
-      }
-
+      vscode.window.showErrorMessage(
+        t('command.apply-response.error.no-valid-response')
+      )
       return null
     }
 

@@ -12,7 +12,7 @@ import { ModelProvidersManager } from '@/services/model-providers-manager'
 import {
   get_intelligent_update_config,
   process_file
-} from '@/utils/intelligent-update-utils'
+} from './utils/intelligent-update-utils'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { Logger } from '@shared/utils/logger'
 import { set_file_applied_with_intelligent_update } from '@/commands/apply-response-command/utils/preview'

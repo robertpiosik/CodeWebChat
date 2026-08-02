@@ -210,15 +210,15 @@ export const apply_response_command = (params: {
               command: 'SHOW_PROGRESS',
               title: t('common.progress.preparing-preview')
             })
-          }
 
-          before_checkpoint = await create_checkpoint({
-            workspace_provider: params.workspace_provider,
-            extension_context: params.extension_context,
-            prompt_view_provider: params.prompt_view_provider,
-            trigger: 'before-response-previewed',
-            description: args?.raw_instructions
-          })
+            before_checkpoint = await create_checkpoint({
+              workspace_provider: params.workspace_provider,
+              extension_context: params.extension_context,
+              prompt_view_provider: params.prompt_view_provider,
+              trigger: 'before-response-previewed',
+              description: args?.raw_instructions
+            })
+          }
         }
 
         const preview_data = await process_response({

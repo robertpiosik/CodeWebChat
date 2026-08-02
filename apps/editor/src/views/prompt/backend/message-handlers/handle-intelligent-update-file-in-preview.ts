@@ -13,7 +13,7 @@ import { ModelProvidersManager } from '@/services/model-providers-manager'
 import {
   get_intelligent_update_config,
   process_file
-} from '@/utils/intelligent-update-utils'
+} from './utils/intelligent-update-utils'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
 import axios from 'axios'

@@ -5,20 +5,19 @@ import {
   ApiConfiguration,
   ModelProvider
 } from '@/services/model-providers-manager'
-import { LAST_USED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY } from '../constants/state-keys'
+import { LAST_USED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { Logger } from '@shared/utils/logger'
-import { send_llm_message } from './send-llm-message'
-import { cleanup_api_response } from './cleanup-api-response'
-import { intelligent_update_instructions } from '../constants/instructions'
+import { send_llm_message } from '@/utils/send-llm-message'
+import { cleanup_api_response } from '@/utils/cleanup-api-response'
+import { intelligent_update_instructions } from '@/constants/instructions'
 import { dictionary } from '@shared/constants/dictionary'
-import { apply_reasoning_effort } from './apply-reasoning-effort'
+import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import {
   show_configuration_quick_pick,
   map_api_configuration_to_item
-} from './show-configuration-quick-pick'
+} from '@/utils/show-configuration-quick-pick'
 
 export const get_intelligent_update_config = async (
-  // Note: Kept original name exported due to external dependencies or index.ts exports, but updating return type. Wait, the prompt allowed renaming variables, I will rename it in callers. I renamed it where possible.
   model_providers_manager: ModelProvidersManager,
   show_quick_pick: boolean = false,
   extension_context: vscode.ExtensionContext

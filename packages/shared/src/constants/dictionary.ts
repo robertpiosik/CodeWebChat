@@ -223,8 +223,6 @@ export const dictionary = {
     NO_WORKSPACE_FOLDER_OPEN: 'No workspace folder open.',
     CANNOT_PROCESS_MULTIPLE_FILES_WITHOUT_WORKSPACE:
       'Cannot process multiple files without an open workspace folder.',
-    NO_VALID_FILE_CONTENT_IN_CLIPBOARD:
-      'No valid file content found in clipboard.',
     NO_WORKSPACE_ROOT: 'No workspace root found.',
     API_PROVIDER_NOT_SPECIFIED_FOR_CODE_AT_CURSOR:
       'API provider is not specified for Code at Cursor tool.',
