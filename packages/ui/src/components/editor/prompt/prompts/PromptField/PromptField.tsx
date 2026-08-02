@@ -608,16 +608,91 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   {is_edit_format_hovered && (
                     <Tooltip
                       message={props.translations.edit_format}
+                      details={is_mac ? '⌥' : 'Alt'}
                       align="center"
                     />
                   )}
                   <button
-                    className={styles['footer__right__edit-format__button']}
+                    className={cn(
+                      styles['footer__right__edit-format__button'],
+                      {
+                        [styles[
+                          'footer__right__edit-format__button--alt-pressed'
+                        ]]: is_alt_pressed
+                      }
+                    )}
                     onClick={() => props.on_edit_format_change?.()}
                     onMouseEnter={() => set_is_edit_format_hovered(true)}
                     onMouseLeave={() => set_is_edit_format_hovered(false)}
                   >
-                    {
+                    {is_alt_pressed ? (
+                      <span
+                        className={
+                          styles['footer__right__edit-format__shortcuts']
+                        }
+                      >
+                        <span
+                          className={cn(
+                            styles['footer__right__edit-format__shortcut'],
+                            {
+                              [styles[
+                                'footer__right__edit-format__shortcut--active'
+                              ]]: props.edit_format == 'whole',
+                              [styles[
+                                'footer__right__edit-format__shortcut--inactive'
+                              ]]: props.edit_format != 'whole'
+                            }
+                          )}
+                        >
+                          W
+                        </span>
+                        <span
+                          className={cn(
+                            styles['footer__right__edit-format__shortcut'],
+                            {
+                              [styles[
+                                'footer__right__edit-format__shortcut--active'
+                              ]]: props.edit_format == 'search-replace',
+                              [styles[
+                                'footer__right__edit-format__shortcut--inactive'
+                              ]]: props.edit_format != 'search-replace'
+                            }
+                          )}
+                        >
+                          S
+                        </span>
+                        <span
+                          className={cn(
+                            styles['footer__right__edit-format__shortcut'],
+                            {
+                              [styles[
+                                'footer__right__edit-format__shortcut--active'
+                              ]]: props.edit_format == 'diff',
+                              [styles[
+                                'footer__right__edit-format__shortcut--inactive'
+                              ]]: props.edit_format != 'diff'
+                            }
+                          )}
+                        >
+                          D
+                        </span>
+                        <span
+                          className={cn(
+                            styles['footer__right__edit-format__shortcut'],
+                            {
+                              [styles[
+                                'footer__right__edit-format__shortcut--active'
+                              ]]: props.edit_format == 'truncated',
+                              [styles[
+                                'footer__right__edit-format__shortcut--inactive'
+                              ]]: props.edit_format != 'truncated'
+                            }
+                          )}
+                        >
+                          T
+                        </span>
+                      </span>
+                    ) : (
                       {
                         whole: props.translations.edit_format_whole,
                         'search-replace':
@@ -625,7 +700,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         diff: props.translations.edit_format_diff,
                         truncated: props.translations.edit_format_truncated
                       }[props.edit_format as EditFormat]
-                    }
+                    )}
                   </button>
                 </div>
               )}

@@ -221,6 +221,38 @@
         &:hover {
           opacity: 1;
         }
+
+        &--alt-pressed {
+          text-decoration: none;
+          opacity: 1;
+        }
+      }
+
+      &__shortcuts {
+        display: flex;
+        gap: 3px;
+        align-items: center;
+      }
+
+      &__shortcut {
+        text-decoration: none;
+        display: flex;
+        justify-content: center;
+        padding: 1px 0;
+        width: 16px;
+        font-size: 10px;
+
+        &--active {
+          text-decoration: underline dotted;
+          text-underline-offset: 4px;
+        }
+
+        &--inactive {
+          background-color: var(--vscode-sideBar-background);
+          color: var(--vscode-foreground);
+          border: 1px solid var(--cwc-border-color-dimmed);
+          border-radius: 4px;
+        }
       }
     }
 
