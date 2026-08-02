@@ -328,7 +328,15 @@ export const handle_show_prompt_template_quick_pick = async (
           }
         }
 
-        prompt_view_provider.add_text_at_cursor_position(prompt_text)
+        const current_text = prompt_view_provider.current_instruction
+        const is_after_slash = current_text
+          .slice(0, prompt_view_provider.caret_position)
+          .endsWith('/')
+        if (is_after_slash) {
+          prompt_view_provider.add_text_at_cursor_position(prompt_text, 1)
+        } else {
+          prompt_view_provider.add_text_at_cursor_position(prompt_text)
+        }
         prompt_view_provider.send_message({
           command: 'FOCUS_PROMPT_FIELD'
         })

@@ -44,7 +44,7 @@ export type PromptFieldProps = {
   is_web_mode: boolean
   on_at_sign_click: () => void
   on_hash_sign_click: () => void
-  on_curly_braces_click: () => void
+  on_slash_click: () => void
   send_with_shift_enter?: boolean
   caret_position_to_set?: number
   on_caret_position_set?: () => void
@@ -118,7 +118,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     useState(false)
   const [is_edit_format_hovered, set_is_edit_format_hovered] = useState(false)
   const [hovered_left_action, set_hovered_left_action] = useState<
-    'at' | 'hash' | 'curly' | null
+    'at' | 'hash' | 'slash' | null
   >(null)
 
   const [tab_items, set_tab_items] = useState<{ id: string }[]>([])
@@ -520,7 +520,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               offset={28}
             />
           )}
-          {hovered_left_action == 'curly' && (
+          {hovered_left_action == 'slash' && (
             <Tooltip
               message={props.translations.prompt_templates}
               align="left"
@@ -580,12 +580,12 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               <Icon variant="HASH_SIGN" />
             </button>
             <button
-              onClick={props.on_curly_braces_click}
+              onClick={props.on_slash_click}
               className={cn(styles['footer__left__button'])}
-              onMouseEnter={() => set_hovered_left_action('curly')}
+              onMouseEnter={() => set_hovered_left_action('slash')}
               onMouseLeave={() => set_hovered_left_action(null)}
             >
-              <Icon variant="CURLY_BRACES" />
+              <Icon variant="SLASH" />
             </button>
             <span className={styles.icon}></span>
           </div>

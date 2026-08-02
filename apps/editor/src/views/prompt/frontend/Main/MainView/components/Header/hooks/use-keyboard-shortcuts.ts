@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { use_is_mac } from '@shared/hooks'
 import { MODE, Mode } from '@/views/prompt/types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
@@ -7,33 +7,37 @@ import {
   web_prompt_type_labels
 } from '../../../prompt-type-labels'
 
-type UseKeyboardShortcutsParams = {
+export const use_keyboard_shortcuts = (params: {
   mode: Mode
   handle_heading_click: () => void
   on_web_prompt_type_change: (prompt_type: WebPromptType) => void
   on_api_prompt_type_change: (prompt_type: ApiPromptType) => void
   on_show_home: () => void
   is_disabled: boolean
-}
-
-export const use_keyboard_shortcuts = ({
-  mode,
-  handle_heading_click,
-  on_web_prompt_type_change,
-  on_api_prompt_type_change,
-  on_show_home,
-  is_disabled
-}: UseKeyboardShortcutsParams) => {
+}) => {
   const is_mac = use_is_mac()
   const [is_alt_pressed, set_is_alt_pressed] = useState(false)
+  const alt_interrupted_ref = useRef(false)
 
   useEffect(() => {
     const handle_key_down = (event: KeyboardEvent) => {
-      set_is_alt_pressed(
-        event.altKey && !event.shiftKey && !event.ctrlKey && !event.metaKey
-      )
+      if (
+        event.key == 'Alt' &&
+        !event.shiftKey &&
+        !event.ctrlKey &&
+        !event.metaKey
+      ) {
+        if (!alt_interrupted_ref.current) {
+          set_is_alt_pressed(true)
+        }
+      } else {
+        if (event.altKey) {
+          alt_interrupted_ref.current = true
+        }
+        set_is_alt_pressed(false)
+      }
 
-      if (is_disabled) return
+      if (params.is_disabled) return
 
       if (
         event.key == 'Escape' &&
@@ -42,7 +46,7 @@ export const use_keyboard_shortcuts = ({
         !event.altKey &&
         !event.shiftKey
       ) {
-        on_show_home()
+        params.on_show_home()
       } else if (
         event.key == 'Escape' &&
         event.altKey &&
@@ -51,25 +55,35 @@ export const use_keyboard_shortcuts = ({
         !event.shiftKey
       ) {
         event.preventDefault()
-        handle_heading_click()
+        params.handle_heading_click()
       }
     }
 
     const handle_key_up = (event: KeyboardEvent) => {
+      if (!event.altKey) {
+        alt_interrupted_ref.current = false
+      } else if (event.key != 'Alt') {
+        alt_interrupted_ref.current = true
+      }
       set_is_alt_pressed(
-        event.altKey && !event.shiftKey && !event.ctrlKey && !event.metaKey
+        event.altKey &&
+          !alt_interrupted_ref.current &&
+          !event.shiftKey &&
+          !event.ctrlKey &&
+          !event.metaKey
       )
     }
 
     const handle_blur = () => {
       set_is_alt_pressed(false)
+      alt_interrupted_ref.current = false
     }
 
     const handle_mouse_up = (event: MouseEvent) => {
-      if (is_disabled) return
+      if (params.is_disabled) return
 
       if (event.button == 3) {
-        on_show_home()
+        params.on_show_home()
       }
     }
 
@@ -84,11 +98,16 @@ export const use_keyboard_shortcuts = ({
       window.removeEventListener('blur', handle_blur)
       window.removeEventListener('mouseup', handle_mouse_up)
     }
-  }, [is_disabled, on_show_home, is_mac, handle_heading_click])
+  }, [
+    params.is_disabled,
+    params.on_show_home,
+    is_mac,
+    params.handle_heading_click
+  ])
 
   useEffect(() => {
     const handle_key_down = (event: KeyboardEvent) => {
-      if (is_disabled) return
+      if (params.is_disabled) return
 
       if (!event.altKey || !event.shiftKey || event.metaKey || event.ctrlKey) {
         return
@@ -100,18 +119,18 @@ export const use_keyboard_shortcuts = ({
 
       const key = event.code.replace('Key', '').toLowerCase()
 
-      if (mode == MODE.WEB) {
+      if (params.mode == MODE.WEB) {
         for (const [value, label] of Object.entries(web_prompt_type_labels)) {
           if (label.toLowerCase().startsWith(key)) {
-            on_web_prompt_type_change(value as WebPromptType)
+            params.on_web_prompt_type_change(value as WebPromptType)
             event.preventDefault()
             return
           }
         }
-      } else if (mode == MODE.API) {
+      } else if (params.mode == MODE.API) {
         for (const [value, label] of Object.entries(api_prompt_type_labels)) {
           if (label.toLowerCase().startsWith(key)) {
-            on_api_prompt_type_change(value as ApiPromptType)
+            params.on_api_prompt_type_change(value as ApiPromptType)
             event.preventDefault()
             return
           }
@@ -124,7 +143,12 @@ export const use_keyboard_shortcuts = ({
     return () => {
       window.removeEventListener('keydown', handle_key_down)
     }
-  }, [mode, on_web_prompt_type_change, on_api_prompt_type_change, is_disabled])
+  }, [
+    params.mode,
+    params.on_web_prompt_type_change,
+    params.on_api_prompt_type_change,
+    params.is_disabled
+  ])
 
   return { is_alt_pressed }
 }

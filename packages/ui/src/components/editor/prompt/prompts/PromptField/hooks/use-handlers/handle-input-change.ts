@@ -50,6 +50,17 @@ export const create_handle_input_change =
       if (is_at_start || is_after_whitespace) {
         props.on_hash_sign_click()
       }
+    } else if (char_before_caret == '/') {
+      const is_at_start = caret_position == 1
+      let is_after_whitespace = false
+      if (caret_position > 1) {
+        const char_before_slash = new_display_value.charAt(caret_position - 2)
+        is_after_whitespace = /\s/.test(char_before_slash)
+      }
+
+      if (is_at_start || is_after_whitespace) {
+        props.on_slash_click()
+      }
     }
 
     state.set_history_index(-1)

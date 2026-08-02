@@ -444,7 +444,7 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_curly_braces_click = () => {
+  const handle_slash_click = () => {
     post_message(props.vscode, {
       command: 'SHOW_PROMPT_TEMPLATE_QUICK_PICK'
     })
@@ -548,7 +548,7 @@ export const Main: React.FC<Props> = (props) => {
       on_create_api_configuration={handle_create_api_configuration}
       on_at_sign_click={handle_at_sign_click}
       on_hash_sign_click={handle_hash_sign_click}
-      on_curly_braces_click={handle_curly_braces_click}
+      on_slash_click={handle_slash_click}
       is_connected={props.is_connected}
       web_configurations={all_web_configurations || []}
       on_create_web_configuration={handle_create_web_configuration}

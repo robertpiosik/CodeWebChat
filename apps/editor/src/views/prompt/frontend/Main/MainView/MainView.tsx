@@ -36,7 +36,7 @@ type Props = {
   ) => void
   on_at_sign_click: (search_value?: string) => void
   on_hash_sign_click: () => void
-  on_curly_braces_click: () => void
+  on_slash_click: () => void
   on_quick_action_click: (command: string) => void
   is_connected: boolean
   web_configurations: WebConfiguration[]
@@ -352,7 +352,7 @@ export const MainView: React.FC<Props> = (props) => {
             on_copy={props.copy_to_clipboard}
             on_at_sign_click={props.on_at_sign_click}
             on_hash_sign_click={props.on_hash_sign_click}
-            on_curly_braces_click={props.on_curly_braces_click}
+            on_slash_click={props.on_slash_click}
             is_web_mode={props.mode == MODE.WEB}
             is_connected={props.is_connected}
             prompt_type={

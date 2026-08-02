@@ -6,7 +6,7 @@ import Claude from '../../../../assets/icons/claude.svg'
 import CodeWebChatLogo from '../../../../assets/icons/code-web-chat-logo.svg'
 import CodeWebChatText from '../../../../assets/icons/code-web-chat-text.svg'
 import Copilot from '../../../../assets/icons/copilot.svg'
-import CurlyBraces from '../../../../assets/icons/curly-braces.svg'
+import Slash from '../../../../assets/icons/slash.svg'
 import DeepSeek from '../../../../assets/icons/deepseek.svg'
 import GithubCopilot from '../../../../assets/icons/github-copilot.svg'
 import DiscordLogo from '../../../../assets/icons/discord-logo.svg'
@@ -35,7 +35,7 @@ export namespace Icon {
     | 'CODE_WEB_CHAT_LOGO'
     | 'CODE_WEB_CHAT_TEXT'
     | 'COPILOT'
-    | 'CURLY_BRACES'
+    | 'SLASH'
     | 'DEEPSEEK'
     | 'DISCORD'
     | 'DOUBAO'
@@ -86,8 +86,8 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
     case 'COPILOT':
       icon = <Copilot />
       break
-    case 'CURLY_BRACES':
-      icon = <CurlyBraces />
+    case 'SLASH':
+      icon = <Slash />
       break
     case 'DEEPSEEK':
       icon = <DeepSeek />
