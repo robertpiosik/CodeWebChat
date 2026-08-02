@@ -120,7 +120,7 @@ export const process_file = async (params: {
     message: 'start',
     data: { file_path: params.file_path }
   })
-  const content = `# Task\n\n${intelligent_update_task_instructions}\n\n# File\n\n${params.file_content}\n\n# System\n\n${intelligent_update_edit_format_instructions}\n\n# Task\n\n${intelligent_update_task_instructions}\n\n# Changes\n\n${params.instruction}`
+  const content = `# Task\n\n${intelligent_update_task_instructions}\n\n# File\n\n${params.file_content}\n\n# Output formatting\n\n${intelligent_update_edit_format_instructions}\n\n# Task\n\n${intelligent_update_task_instructions}\n\n# Changes\n\n${params.instruction}`
 
   const messages = [
     {

@@ -325,7 +325,7 @@ export const handle_make_api_call = async (
 
       let formatted_system_instructions = ''
       if (edit_format_instructions) {
-        formatted_system_instructions = `# System\n\n${edit_format_instructions}`
+        formatted_system_instructions = `# Output formatting\n\n${edit_format_instructions}`
       }
 
       system_instructions =

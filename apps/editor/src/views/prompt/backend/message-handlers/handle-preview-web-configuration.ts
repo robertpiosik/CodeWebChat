@@ -130,7 +130,7 @@ export const handle_preview_web_configuration = async (
       const edit_format_instructions =
         config.get<string>(instructions_key) || default_instructions
       if (edit_format_instructions) {
-        formatted_system_instructions = `# System\n\n${edit_format_instructions}`
+        formatted_system_instructions = `# Output formatting\n\n${edit_format_instructions}`
       }
     } else if (prompt_view_provider.web_prompt_type == 'find-relevant-files') {
       formatted_system_instructions = find_relevant_files_format_for_prompt_view

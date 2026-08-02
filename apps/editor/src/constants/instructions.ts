@@ -5,7 +5,7 @@ export const code_at_cursor_instructions_for_prompt_view = (params: {
   file_path: string
   row: number
   column: number
-}) => `# System
+}) => `# Output formatting
 
 Your response must begin with a markdown heading identifying the file and the cursor position, followed by a markdown code block containing the replacement text, followed by a brief explanation. The heading must be: "### Code at cursor: \`${
   params.file_path
@@ -51,7 +51,7 @@ export const commit_message_instructions =
 export const find_relevant_files_instructions =
   'Find a complete set of files relevant to the following query. Include the primary files as well as any structural files.'
 
-export const find_relevant_files_format = `# System
+export const find_relevant_files_format = `# Output formatting
 
 Your response must contain paths of relevant files enclosed in "relevant-files" and "file-path" XML tags. Don't send anything else. Example:
 
@@ -61,7 +61,7 @@ Your response must contain paths of relevant files enclosed in "relevant-files" 
 <file-path>src/welcome.ts</file-path>
 </relevant-files>`
 
-export const find_relevant_files_format_for_prompt_view = `# System
+export const find_relevant_files_format_for_prompt_view = `# Output formatting
 
 Your response must begin with "**Relevant files:**", then list paths one under another, followed by a brief explanation. Example:
 

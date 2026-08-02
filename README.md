@@ -50,7 +50,7 @@ _Accurate and fast multi-file edits in a single response._
 # Files
 [full contents of selected files with paths]
 
-# System
+# Output formatting
 [edit format instructions (~250 tokens)]
 
 ---
@@ -104,7 +104,7 @@ _Select files relevant to a natural language query._
 # Files
 [broad file selection]
 
-# System
+# Output formatting
 [response format instructions]
 
 ---

@@ -146,7 +146,7 @@ export const handle_copy_prompt = async (params: {
       const edit_format_instructions =
         config.get<string>(instructions_key) || default_instructions
       if (edit_format_instructions) {
-        formatted_system_instructions = `# System\n\n${edit_format_instructions}`
+        formatted_system_instructions = `# Output formatting\n\n${edit_format_instructions}`
       }
     } else if (is_in_find_relevant_files_prompt_type) {
       formatted_system_instructions = find_relevant_files_format_for_prompt_view

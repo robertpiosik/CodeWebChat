@@ -182,7 +182,7 @@ export const handle_autofill = async (params: {
       const edit_format_instructions =
         config.get<string>(instructions_key) || default_instructions
       if (edit_format_instructions) {
-        formatted_system_instructions = `# System\n\n${edit_format_instructions}`
+        formatted_system_instructions = `# Output formatting\n\n${edit_format_instructions}`
       }
     } else if (
       params.prompt_view_provider.web_prompt_type == 'find-relevant-files'
