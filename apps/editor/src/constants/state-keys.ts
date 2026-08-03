@@ -108,6 +108,8 @@ export const LAST_FIND_RELEVANT_FILES_QUERY_STATE_KEY =
 export const LAST_FIND_RELEVANT_FILES_SHRINK_STATE_KEY =
   'last-find-relevant-files-shrink'
 
+export const LAST_ATTACH_ASCII_TREE_STATE_KEY = 'last-attach-ascii-tree'
+
 export type DuplicateWorkspaceContext = {
   checked_files: string[]
   checked_files_timestamps: Record<string, number>

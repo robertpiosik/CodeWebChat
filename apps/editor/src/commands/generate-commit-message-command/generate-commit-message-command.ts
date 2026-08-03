@@ -19,6 +19,7 @@ import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provi
 import { create_checkpoint } from '@/features/checkpoints/actions'
 import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
 import { generate_ascii_tree } from '../../utils/ascii-tree'
+import { LAST_ATTACH_ASCII_TREE_STATE_KEY } from '@/constants/state-keys'
 
 const truncate_prompt = (text: string): string => {
   if (text.length <= MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE) return text
@@ -195,7 +196,7 @@ export const generate_commit_message_command = (
 
       const get_tree_text_if_applicable = async (
         selected_prompts: typeof relevant_prompts
-      ): Promise<string | undefined> => {
+      ): Promise<string | undefined | 'back'> => {
         const selected_files_set = new Set<string>()
         for (const p of selected_prompts) {
           for (const f of p.selected_files || []) {
@@ -216,15 +217,71 @@ export const generate_commit_message_command = (
         if (attach_tree_setting == 'always') {
           attach_tree = true
         } else if (attach_tree_setting == 'ask') {
-          const answer = await vscode.window.showQuickPick(['Yes', 'No'], {
-            title:
-              'Attach ASCII file tree of the selected files to the commit message?',
-            ignoreFocusOut: true
-          })
-          if (answer === undefined) {
-            return undefined
+          const attach_label = t(
+            'command.generate-commit-message.attach-ascii-tree.attach'
+          )
+          const skip_label = t(
+            'command.generate-commit-message.attach-ascii-tree.skip'
+          )
+
+          const last_selected = extension_context.workspaceState.get<string>(
+            LAST_ATTACH_ASCII_TREE_STATE_KEY,
+            attach_label
+          )
+
+          const answer = await new Promise<string | undefined | 'back'>(
+            (resolve) => {
+              const quick_pick = vscode.window.createQuickPick()
+              quick_pick.items = [
+                { label: attach_label },
+                { label: skip_label }
+              ]
+              quick_pick.activeItems = [
+                quick_pick.items.find((i) => i.label == last_selected) ||
+                  quick_pick.items[0]
+              ]
+              quick_pick.title = t(
+                'command.generate-commit-message.attach-ascii-tree.title'
+              )
+              quick_pick.ignoreFocusOut = true
+              quick_pick.buttons = [vscode.QuickInputButtons.Back]
+
+              let is_resolved = false
+
+              quick_pick.onDidTriggerButton((button) => {
+                if (button === vscode.QuickInputButtons.Back) {
+                  is_resolved = true
+                  resolve('back')
+                  quick_pick.hide()
+                }
+              })
+
+              quick_pick.onDidAccept(() => {
+                is_resolved = true
+                resolve(quick_pick.selectedItems[0]?.label)
+                quick_pick.hide()
+              })
+
+              quick_pick.onDidHide(() => {
+                if (!is_resolved) {
+                  resolve(undefined)
+                }
+                quick_pick.dispose()
+              })
+
+              quick_pick.show()
+            }
+          )
+
+          if (answer === undefined || answer === 'back') {
+            return answer
           }
-          attach_tree = answer == 'Yes'
+
+          await extension_context.workspaceState.update(
+            LAST_ATTACH_ASCII_TREE_STATE_KEY,
+            answer
+          )
+          attach_tree = answer == attach_label
         }
 
         if (attach_tree) {
@@ -237,158 +294,199 @@ export const generate_commit_message_command = (
         return ''
       }
 
-      if (params.should_commit) {
-        const edited_message = await new Promise<string | 'back' | undefined>(
-          (resolve) => {
-            const input_box = vscode.window.createInputBox()
-            input_box.value = commit_message
-            input_box.title = t('command.generate-commit-message.input.title')
-            input_box.prompt = t('command.generate-commit-message.input.prompt')
-            input_box.ignoreFocusOut = true
+      let final_edited_message = commit_message
+      let selected_prompts = select_prompts_setting ? relevant_prompts : []
+      let tree_text = ''
 
-            const accept_button = {
-              iconPath: new vscode.ThemeIcon('check'),
-              tooltip: t('command.generate-commit-message.input.accept')
-            }
+      let step: 'edit_message' | 'select_prompts' | 'attach_tree' | 'finish' =
+        params.should_commit ? 'edit_message' : 'attach_tree'
+      let is_cancelled = false
+      let go_back = false
 
-            input_box.buttons = [accept_button, vscode.QuickInputButtons.Back]
+      while (step !== 'finish') {
+        if (step === 'edit_message') {
+          const edited = await new Promise<string | 'back' | undefined>(
+            (resolve) => {
+              const input_box = vscode.window.createInputBox()
+              input_box.value = final_edited_message
+              input_box.title = t('command.generate-commit-message.input.title')
+              input_box.prompt = t(
+                'command.generate-commit-message.input.prompt'
+              )
+              input_box.ignoreFocusOut = true
 
-            let is_resolved = false
+              const accept_button = {
+                iconPath: new vscode.ThemeIcon('check'),
+                tooltip: t('command.generate-commit-message.input.accept')
+              }
 
-            input_box.onDidTriggerButton((button) => {
-              if (
-                button.tooltip ==
-                t('command.generate-commit-message.input.accept')
-              ) {
+              input_box.buttons = [accept_button, vscode.QuickInputButtons.Back]
+
+              let is_resolved = false
+
+              input_box.onDidTriggerButton((button) => {
+                if (
+                  button.tooltip ==
+                  t('command.generate-commit-message.input.accept')
+                ) {
+                  is_resolved = true
+                  resolve(input_box.value)
+                  input_box.hide()
+                } else if (button === vscode.QuickInputButtons.Back) {
+                  is_resolved = true
+                  resolve('back')
+                  input_box.hide()
+                }
+              })
+
+              input_box.onDidAccept(() => {
                 is_resolved = true
                 resolve(input_box.value)
                 input_box.hide()
-              } else if (button === vscode.QuickInputButtons.Back) {
+              })
+
+              input_box.onDidHide(() => {
+                if (!is_resolved) {
+                  resolve(undefined)
+                }
+                input_box.dispose()
+              })
+
+              input_box.show()
+            }
+          )
+
+          if (edited === 'back') {
+            go_back = true
+            break
+          } else if (edited === undefined) {
+            is_cancelled = true
+            break
+          } else {
+            final_edited_message = edited
+            step =
+              relevant_prompts.length > 0 ? 'select_prompts' : 'attach_tree'
+          }
+        } else if (step === 'select_prompts') {
+          const picked = await new Promise<
+            typeof relevant_prompts | undefined | 'back'
+          >((resolve) => {
+            const quick_pick = vscode.window.createQuickPick<
+              vscode.QuickPickItem & { prompt: (typeof relevant_prompts)[0] }
+            >()
+            quick_pick.items = relevant_prompts.map((p) => ({
+              label: simplify_prompt_symbols({ prompt: p.prompt }),
+              prompt: p
+            }))
+            quick_pick.selectedItems = quick_pick.items.filter((i) =>
+              selected_prompts.includes(i.prompt)
+            )
+            quick_pick.canSelectMany = true
+            quick_pick.title = 'Accepted Prompts'
+            quick_pick.placeholder =
+              'Choose accepted prompts to include in the commit message'
+            quick_pick.ignoreFocusOut = true
+            quick_pick.buttons = [vscode.QuickInputButtons.Back]
+
+            let is_resolved = false
+
+            quick_pick.onDidTriggerButton((button) => {
+              if (button === vscode.QuickInputButtons.Back) {
                 is_resolved = true
                 resolve('back')
-                input_box.hide()
-              }
-            })
-
-            input_box.onDidAccept(() => {
-              is_resolved = true
-              resolve(input_box.value)
-              input_box.hide()
-            })
-
-            input_box.onDidHide(() => {
-              if (!is_resolved) {
-                resolve('back')
-              }
-              input_box.dispose()
-            })
-
-            input_box.show()
-          }
-        )
-
-        if (edited_message == 'back') {
-          force_quick_pick = true
-          continue
-        }
-
-        if (edited_message) {
-          let selected_prompts = select_prompts_setting ? relevant_prompts : []
-
-          if (relevant_prompts.length > 0) {
-            const picked = await new Promise<
-              typeof relevant_prompts | undefined
-            >((resolve) => {
-              const quick_pick = vscode.window.createQuickPick()
-              quick_pick.items = relevant_prompts.map((p) => ({
-                label: simplify_prompt_symbols({ prompt: p.prompt }),
-                prompt: p
-              }))
-              quick_pick.selectedItems = select_prompts_setting
-                ? quick_pick.items
-                : []
-              quick_pick.canSelectMany = true
-              quick_pick.title = 'Accepted Prompts'
-              quick_pick.placeholder =
-                'Choose accepted prompts to include in the commit message'
-              quick_pick.ignoreFocusOut = true
-
-              quick_pick.onDidAccept(() => {
-                resolve(quick_pick.selectedItems.map((i: any) => i.prompt))
                 quick_pick.hide()
-              })
-
-              quick_pick.onDidHide(() => {
-                resolve(undefined)
-                quick_pick.dispose()
-              })
-
-              quick_pick.show()
+              }
             })
 
-            if (picked === undefined) {
-              if (was_empty_stage) {
-                await vscode.commands.executeCommand(
-                  'git.unstageAll',
-                  repository
-                )
+            quick_pick.onDidAccept(() => {
+              is_resolved = true
+              resolve(quick_pick.selectedItems.map((i) => i.prompt))
+              quick_pick.hide()
+            })
+
+            quick_pick.onDidHide(() => {
+              if (!is_resolved) {
+                resolve(undefined)
               }
-              break
-            }
-            selected_prompts = picked
-          }
+              quick_pick.dispose()
+            })
 
-          const tree_text = await get_tree_text_if_applicable(selected_prompts)
-          if (tree_text === undefined) {
-            if (was_empty_stage) {
-              await vscode.commands.executeCommand('git.unstageAll', repository)
-            }
-            break
-          }
-
-          const selected_prompts_text =
-            selected_prompts.length > 0
-              ? '\n\n' +
-                selected_prompts
-                  .map(
-                    (p) =>
-                      `- ${truncate_prompt(simplify_prompt_symbols({ prompt: p.prompt }))}`
-                  )
-                  .join('\n')
-              : ''
-
-          const commit_message_value =
-            edited_message + selected_prompts_text + tree_text
-          repository.inputBox.value = commit_message_value
-          await vscode.commands.executeCommand('git.commit', repository)
-          PromptsForCommitMessagesUtils.remove_committed_files({
-            extension_context: extension_context,
-            workspace_root,
-            prompts: relevant_prompts.map((p) => p.prompt),
-            committed_files: staged_files
+            quick_pick.show()
           })
 
-          const subject_line = commit_message_value.split('\n')[0].trim()
-          create_checkpoint({
-            workspace_provider,
-            extension_context,
-            prompt_view_provider,
-            trigger: 'commit',
-            description: subject_line
-          }).catch(() => {})
-        } else if (was_empty_stage) {
+          if (picked === 'back') {
+            step = 'edit_message'
+          } else if (picked === undefined) {
+            is_cancelled = true
+            break
+          } else {
+            selected_prompts = picked
+            step = 'attach_tree'
+          }
+        } else if (step === 'attach_tree') {
+          const result = await get_tree_text_if_applicable(selected_prompts)
+          if (result === 'back') {
+            if (params.should_commit) {
+              step =
+                relevant_prompts.length > 0 ? 'select_prompts' : 'edit_message'
+            } else {
+              go_back = true
+              break
+            }
+          } else if (result === undefined) {
+            is_cancelled = true
+            break
+          } else {
+            tree_text = result
+            step = 'finish'
+          }
+        }
+      }
+
+      if (go_back) {
+        force_quick_pick = true
+        continue
+      }
+
+      if (is_cancelled) {
+        if (was_empty_stage) {
           await vscode.commands.executeCommand('git.unstageAll', repository)
         }
-      } else {
-        const selected_prompts = select_prompts_setting ? relevant_prompts : []
-        const tree_text = await get_tree_text_if_applicable(selected_prompts)
-        if (tree_text === undefined) {
-          if (was_empty_stage) {
-            await vscode.commands.executeCommand('git.unstageAll', repository)
-          }
-          break
-        }
+        break
+      }
 
+      if (params.should_commit) {
+        const selected_prompts_text =
+          selected_prompts.length > 0
+            ? '\n\n' +
+              selected_prompts
+                .map(
+                  (p) =>
+                    `- ${truncate_prompt(simplify_prompt_symbols({ prompt: p.prompt }))}`
+                )
+                .join('\n')
+            : ''
+
+        const commit_message_value =
+          final_edited_message + selected_prompts_text + tree_text
+        repository.inputBox.value = commit_message_value
+        await vscode.commands.executeCommand('git.commit', repository)
+        PromptsForCommitMessagesUtils.remove_committed_files({
+          extension_context: extension_context,
+          workspace_root,
+          prompts: relevant_prompts.map((p) => p.prompt),
+          committed_files: staged_files
+        })
+
+        const subject_line = commit_message_value.split('\n')[0].trim()
+        create_checkpoint({
+          workspace_provider,
+          extension_context,
+          prompt_view_provider,
+          trigger: 'commit',
+          description: subject_line
+        }).catch(() => {})
+      } else {
         const prompts_text =
           selected_prompts.length > 0
             ? '\n\n' +
@@ -399,7 +497,8 @@ export const generate_commit_message_command = (
                 )
                 .join('\n')
             : ''
-        repository.inputBox.value = commit_message + prompts_text + tree_text
+        repository.inputBox.value =
+          final_edited_message + prompts_text + tree_text
       }
 
       break
