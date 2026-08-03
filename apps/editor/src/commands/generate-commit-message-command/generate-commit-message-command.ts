@@ -243,6 +243,9 @@ export const generate_commit_message_command = (
               quick_pick.title = t(
                 'command.generate-commit-message.attach-ascii-tree.title'
               )
+              quick_pick.placeholder = t(
+                'command.generate-commit-message.attach-ascii-tree.placeholder'
+              )
               quick_pick.ignoreFocusOut = true
               quick_pick.buttons = [vscode.QuickInputButtons.Back]
 

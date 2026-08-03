@@ -215,5 +215,24 @@ export const translations = {
     cs: 'Strom souborů ASCII',
     hu: 'ASCII fájlfa',
     bg: 'ASCII дърво на файловете'
+  },
+  'command.generate-commit-message.attach-ascii-tree.placeholder': {
+    en: 'Attach an ASCII file tree of the context files to the commit message?',
+    pl: 'Dołączyć drzewo plików ASCII plików kontekstowych do wiadomości commita?',
+    'zh-cn': '是否将上下文文件的 ASCII 文件树附加到提交信息中？',
+    ja: 'コンテキストファイルの ASCII ファイルツリーをコミットメッセージに添付しますか？',
+    'zh-tw': '是否將上下文檔案的 ASCII 檔案樹附加到提交訊息中？',
+    de: 'Möchten Sie einen ASCII-Dateibaum der Kontextdateien an die Commit-Nachricht anhängen?',
+    es: '¿Adjuntar un árbol de archivos ASCII de los archivos de contexto al mensaje de commit?',
+    fr: 'Joindre une arborescence de fichiers ASCII des fichiers de contexte au message de commit ?',
+    'pt-br':
+      'Anexar uma árvore de arquivos ASCII dos arquivos de contexto à mensagem de commit?',
+    ru: 'Прикрепить ASCII дерево контекстных файлов к сообщению коммита?',
+    ko: '컨텍스트 파일의 ASCII 파일 트리를 커밋 메시지에 첨부하시겠습니까?',
+    it: 'Allegare un albero dei file ASCII dei file di contesto al messaggio di commit?',
+    tr: 'Bağlam dosyalarının ASCII dosya ağacı işleme mesajına eklensin mi?',
+    cs: 'Připojit strom souborů ASCII kontextových souborů ke zprávě commitu?',
+    hu: 'Csatoljon egy ASCII fájlfát a kontextusfájlokról a commit üzenethez?',
+    bg: 'Да се прикачи ли ASCII дърво на контекстните файлове към commit съобщението?'
   }
 } as const
