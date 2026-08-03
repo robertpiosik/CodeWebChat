@@ -1,4 +1,4 @@
-import { extract_paths_from_ascii_tree } from '../ascii-tree'
+import { AsciiTree } from '../ascii-tree'
 
 export const extract_paths_from_text = (params: {
   text: string
@@ -14,7 +14,7 @@ export const extract_paths_from_text = (params: {
     })
   }
 
-  const ascii_paths = extract_paths_from_ascii_tree(params.text)
+  const ascii_paths = AsciiTree.extract_paths(params.text)
   ascii_paths.forEach((p) => found_paths.add(p))
 
   const lines = params.text.split('\n')

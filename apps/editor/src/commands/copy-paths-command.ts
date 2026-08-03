@@ -4,7 +4,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import { t } from '../i18n'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { OpenEditorsProvider } from '../context/providers/open-editors/open-editors-provider'
-import { generate_ascii_tree } from '../utils/ascii-tree'
+import { AsciiTree } from '../utils/ascii-tree'
 
 const format_paths = (files: string[]) => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
@@ -35,7 +35,7 @@ const format_paths = (files: string[]) => {
   })
 
   if (format == 'ascii-tree') {
-    return generate_ascii_tree(display_paths)
+    return AsciiTree.generate(display_paths)
   } else if (format == 'comma-separated') {
     return display_paths.map((display_path) => `\`${display_path}\``).join(', ')
   }

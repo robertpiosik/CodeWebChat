@@ -10,7 +10,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 import { display_token_count } from '@/utils/display-token-count'
 import { search_files } from '@/features/search-files'
-import { extract_paths_from_ascii_tree } from '@/utils/ascii-tree'
+import { AsciiTree } from '@/utils/ascii-tree'
 
 export const select_commit_files_command = (
   workspace_provider: WorkspaceProvider,
@@ -132,7 +132,7 @@ export const select_commit_files_command = (
 
           const files = new Set<string>()
 
-          const ascii_paths = extract_paths_from_ascii_tree(files_output)
+          const ascii_paths = AsciiTree.extract_paths(files_output)
           ascii_paths.forEach((p) => files.add(p))
 
           const lines = files_output.split('\n')

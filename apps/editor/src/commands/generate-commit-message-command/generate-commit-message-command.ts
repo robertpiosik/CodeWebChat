@@ -18,7 +18,7 @@ import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { create_checkpoint } from '@/features/checkpoints/actions'
 import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
-import { generate_ascii_tree } from '../../utils/ascii-tree'
+import { AsciiTree } from '../../utils/ascii-tree'
 import { LAST_ATTACH_ASCII_TREE_STATE_KEY } from '@/constants/state-keys'
 
 const truncate_prompt = (text: string): string => {
@@ -288,7 +288,7 @@ export const generate_commit_message_command = (
           const display_paths = selected_files_to_attach.map((p) =>
             vscode.workspace.asRelativePath(p).replace(/\\/g, '/')
           )
-          return '\n\n' + generate_ascii_tree(display_paths)
+          return '\n\n' + AsciiTree.generate(display_paths)
         }
 
         return ''
