@@ -10,6 +10,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 import { display_token_count } from '@/utils/display-token-count'
 import { search_files } from '@/features/search-files'
+import { extract_paths_from_ascii_tree } from '@/utils/ascii-tree'
 
 export const select_commit_files_command = (
   workspace_provider: WorkspaceProvider,
@@ -113,7 +114,7 @@ export const select_commit_files_command = (
           last_selected_commit_hash = selected_commit.hash
 
           const files_output = execSync(
-            `git show --name-only --pretty="" ${selected_commit.hash}`,
+            `git show --name-only --pretty="format:%B" ${selected_commit.hash}`,
             {
               cwd: repository.rootUri.fsPath,
               encoding: 'utf-8'
@@ -129,12 +130,20 @@ export const select_commit_files_command = (
             continue
           }
 
-          const files = files_output
-            .split('\n')
-            .map((f) => f.trim())
-            .filter((f) => f.length > 0)
+          const files = new Set<string>()
 
-          const valid_files = files
+          const ascii_paths = extract_paths_from_ascii_tree(files_output)
+          ascii_paths.forEach((p) => files.add(p))
+
+          const lines = files_output.split('\n')
+          for (const line of lines) {
+            const trimmed = line.trim()
+            if (trimmed.length > 0) {
+              files.add(trimmed)
+            }
+          }
+
+          const valid_files = Array.from(files)
             .map((f) => {
               const absolute_path = path.join(repository.rootUri.fsPath, f)
               return {
