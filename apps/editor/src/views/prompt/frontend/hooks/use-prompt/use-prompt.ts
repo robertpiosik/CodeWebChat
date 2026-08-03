@@ -58,12 +58,6 @@ export const use_prompt = (vscode: any) => {
     useState(false)
   const [is_modern_ui, set_is_modern_ui] = useState(false)
 
-  const handle_task_forward = (text: string) => {
-    handle_instructions_change(text, 'edit-files')
-    set_active_view('main')
-    set_main_view_scroll_reset_key((k) => k + 1)
-  }
-
   const handle_paste_image = (content_base64: string) => {
     post_message(vscode, {
       command: 'SAVE_PROMPT_IMAGE',
@@ -213,19 +207,21 @@ export const use_prompt = (vscode: any) => {
     })
   }
 
-  const handle_mode_change = (new_mode: Mode) => {
+  const handle_mode_change = (new_mode: Mode, sync_prompt_type?: boolean) => {
     if (mode == new_mode) return
 
-    if (new_mode == MODE.API && web_prompt_type) {
-      if (
-        web_prompt_type == 'edit-files' ||
-        web_prompt_type == 'code-at-cursor' ||
-        web_prompt_type == 'find-relevant-files'
-      ) {
-        handle_api_prompt_type_change(web_prompt_type, true)
+    if (sync_prompt_type) {
+      if (new_mode == MODE.API && web_prompt_type) {
+        if (
+          web_prompt_type == 'edit-files' ||
+          web_prompt_type == 'code-at-cursor' ||
+          web_prompt_type == 'find-relevant-files'
+        ) {
+          handle_api_prompt_type_change(web_prompt_type, true)
+        }
+      } else if (new_mode == MODE.WEB && api_prompt_type) {
+        handle_web_prompt_type_change(api_prompt_type, true)
       }
-    } else if (new_mode == MODE.WEB && api_prompt_type) {
-      handle_web_prompt_type_change(api_prompt_type, true)
     }
 
     set_mode(new_mode)
@@ -287,7 +283,6 @@ export const use_prompt = (vscode: any) => {
     web_configurations_collapsed,
     send_with_shift_enter,
     api_configurations_collapsed,
-    handle_task_forward,
     handle_instructions_change,
     handle_web_prompt_type_change,
     handle_api_prompt_type_change,

@@ -1,7 +1,7 @@
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { get_last_used_web_configuration_key } from '@/constants/state-keys'
 
-export const handle_update_last_used_web_configuration_or_group = (params: {
+export const handle_update_last_used_web_configuration = (params: {
   prompt_view_provider: PromptViewProvider
   web_configuration_name?: string
 }) => {

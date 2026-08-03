@@ -67,7 +67,6 @@ export const Prompt = () => {
     handle_mode_change,
     handle_web_configurations_collapsed_change,
     handle_api_configurations_collapsed_change,
-    handle_task_forward,
     handle_paste_image,
     handle_open_image,
     handle_paste_long_text,
@@ -375,7 +374,9 @@ export const Prompt = () => {
                 mode={mode}
                 web_prompt_type={web_prompt_type}
                 api_prompt_type={api_prompt_type}
-                on_mode_change={handle_mode_change}
+                on_mode_change={(new_mode) =>
+                  handle_mode_change(new_mode, true)
+                }
                 currently_open_file_path={currently_open_file_path}
                 current_selection={current_selection}
                 on_web_prompt_type_change={handle_web_prompt_type_change}
@@ -452,14 +453,12 @@ export const Prompt = () => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
                   handle_mode_change(MODE.WEB)
-                  handle_web_prompt_type_change('edit-files', true)
                   set_chat_input_focus_key((k) => k + 1)
                 }}
                 on_api_calls_click={() => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
                   handle_mode_change(MODE.API)
-                  handle_api_prompt_type_change('edit-files', true)
                   set_chat_input_focus_key((k) => k + 1)
                 }}
                 version={version}
@@ -476,7 +475,6 @@ export const Prompt = () => {
                 on_response_history_item_remove={
                   handle_remove_response_history_item
                 }
-                on_task_forward={handle_task_forward}
                 is_setup_complete={is_setup_complete}
                 on_donate_click={() => set_viewing_donations(true)}
               />

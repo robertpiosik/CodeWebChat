@@ -933,6 +933,11 @@
           "scope": "resource",
           "default": true
         },
+        "codeWebChat.synchronizeEditFormatBetweenModes": {
+          "type": "boolean",
+          "scope": "resource",
+          "default": true
+        },
         "codeWebChat.voiceInputPushToTalk": {
           "type": "boolean",
           "scope": "resource"

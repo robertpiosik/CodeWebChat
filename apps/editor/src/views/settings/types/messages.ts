@@ -68,6 +68,15 @@ export interface UpdateCommitMessageInstructionsMessage {
   instructions: string
 }
 
+export interface GetSynchronizeEditFormatBetweenModesMessage {
+  command: 'GET_SYNCHRONIZE_EDIT_FORMAT_BETWEEN_MODES'
+}
+
+export interface UpdateSynchronizeEditFormatBetweenModesMessage {
+  command: 'UPDATE_SYNCHRONIZE_EDIT_FORMAT_BETWEEN_MODES'
+  enabled: boolean
+}
+
 export interface GetSelectAllPromptsInCommitMessagesByDefaultMessage {
   command: 'GET_SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
 }
@@ -359,6 +368,8 @@ export type FrontendMessage =
   | SelectDefaultApiConfigurationMessage
   | GetCommitMessageInstructionsMessage
   | UpdateCommitMessageInstructionsMessage
+  | GetSynchronizeEditFormatBetweenModesMessage
+  | UpdateSynchronizeEditFormatBetweenModesMessage
   | GetSelectAllPromptsInCommitMessagesByDefaultMessage
   | UpdateSelectAllPromptsInCommitMessagesByDefaultMessage
   | GetEditFilesSystemInstructionsMessage
@@ -430,6 +441,11 @@ export interface ApiConfigurationsMessage {
 export interface CommitMessageInstructionsMessage {
   command: 'COMMIT_MESSAGE_INSTRUCTIONS'
   instructions: string
+}
+
+export interface SynchronizeEditFormatBetweenModesMessage {
+  command: 'SYNCHRONIZE_EDIT_FORMAT_BETWEEN_MODES'
+  enabled: boolean
 }
 
 export interface SelectAllPromptsInCommitMessagesByDefaultMessage {
@@ -593,6 +609,7 @@ export type BackendMessage =
   | ModelProvidersMessage
   | ApiConfigurationsMessage
   | CommitMessageInstructionsMessage
+  | SynchronizeEditFormatBetweenModesMessage
   | SelectAllPromptsInCommitMessagesByDefaultMessage
   | EditFilesSystemInstructionsMessage
   | FindRelevantFilesInstructionsMessage

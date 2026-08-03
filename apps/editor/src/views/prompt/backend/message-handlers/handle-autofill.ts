@@ -21,7 +21,7 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
-import { handle_update_last_used_web_configuration_or_group } from './handle-update-last-used-web-configuration-or-group'
+import { handle_update_last_used_web_configuration } from './handle-update-last-used-web-configuration'
 import { replace_symbols } from '@/views/prompt/backend/utils/symbols/replace-symbols'
 import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
 import { PromptBuilder } from '@/utils/prompt-builder'
@@ -66,7 +66,7 @@ export const handle_autofill = async (params: {
   const resolved_web_configuration_name = resolution.web_configuration_name
 
   if (params.web_configuration_name !== undefined) {
-    handle_update_last_used_web_configuration_or_group({
+    handle_update_last_used_web_configuration({
       prompt_view_provider: params.prompt_view_provider,
       web_configuration_name: params.web_configuration_name
     })
@@ -309,7 +309,7 @@ const show_web_configuration_quick_pick = async (params: {
   }
 
   if (web_configuration.name) {
-    handle_update_last_used_web_configuration_or_group({
+    handle_update_last_used_web_configuration({
       prompt_view_provider,
       web_configuration_name: web_configuration.name
     })

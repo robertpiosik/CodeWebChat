@@ -20,7 +20,6 @@ type Props = {
   on_change: (task: Task) => void
   on_add: () => void
   on_add_subtask?: (parent_task: Task) => void
-  on_forward: (text: string) => void
   on_delete: (created_at: number) => void
   placeholder: string
 }
@@ -59,9 +58,6 @@ export const Tasks: React.FC<Props> = (props) => {
     null
   )
   const [editing_initial_text, set_editing_initial_text] = useState<string>('')
-  const [forwarded_timestamp, set_forwarded_timestamp] = useState<
-    number | null
-  >(null)
   const [copied_timestamp, set_copied_timestamp] = useState<number | null>(null)
   const prevent_edit_ref = useRef(false)
 
@@ -106,7 +102,6 @@ export const Tasks: React.FC<Props> = (props) => {
   }) => {
     const is_editing = editing_timestamp == params.task.created_at
     const has_children = params.task.children && params.task.children.length > 0
-    const is_forwarded = forwarded_timestamp == params.task.created_at
 
     const checked_children_count = has_children
       ? params.task.children!.filter((child) => child.is_checked).length
@@ -114,9 +109,7 @@ export const Tasks: React.FC<Props> = (props) => {
 
     return (
       <div
-        className={cn(styles.item, {
-          [styles['item--forwarded']]: is_forwarded
-        })}
+        className={styles.item}
         style={{
           paddingLeft: `calc(var(--task-item-padding-left, 10px) + ${
             params.depth * 20
@@ -189,20 +182,6 @@ export const Tasks: React.FC<Props> = (props) => {
                 [styles['item__actions--visible']]: is_editing
               })}
             >
-              {params.task.text && (
-                <IconButton
-                  codicon_icon="forward"
-                  on_mouse_down={
-                    is_editing ? (e) => e.preventDefault() : undefined
-                  }
-                  on_click={(e) => {
-                    e.stopPropagation()
-                    props.on_forward(params.task.text)
-                    set_forwarded_timestamp(params.task.created_at)
-                  }}
-                  title="Use"
-                />
-              )}
               {params.task.text && (
                 <IconButton
                   codicon_icon={

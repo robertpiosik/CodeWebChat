@@ -34,6 +34,7 @@ export const DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY =
   'duplicate-workspace-context'
 
 export const EDIT_FORMAT_STATE_KEY = 'edit-format'
+export const get_edit_format_state_key = (mode: string) => `edit-format-${mode}`
 export const WEB_MODE_STATE_KEY = 'web-mode'
 export const API_MODE_STATE_KEY = 'api-mode'
 export const PROMPT_VIEW_MODE_STATE_KEY = 'prompt-view-mode'

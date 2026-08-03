@@ -29,7 +29,6 @@ type Props = {
   selected_history_item_created_at?: number
   on_selected_history_item_change: (created_at: number) => void
   on_response_history_item_remove: (created_at: number) => void
-  on_task_forward: (text: string) => void
   is_setup_complete: boolean
   is_connected: boolean
   on_donate_click: () => void
@@ -256,9 +255,6 @@ export const Home: React.FC<Props> = (props) => {
                     }}
                     on_delete={(timestamp) => {
                       handle_delete(active_root, timestamp)
-                    }}
-                    on_forward={(text) => {
-                      props.on_task_forward(text)
                     }}
                     placeholder={t('home.tasks.placeholder')}
                   />

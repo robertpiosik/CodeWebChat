@@ -23,6 +23,10 @@ export const use_settings = (vscode: any) => {
   const [commit_message_instructions, set_commit_message_instructions] =
     useState<string | undefined>(undefined)
   const [
+    synchronize_edit_format_between_modes,
+    set_synchronize_edit_format_between_modes
+  ] = useState<boolean | undefined>(undefined)
+  const [
     select_all_prompts_in_commit_messages_by_default,
     set_select_all_prompts_in_commit_messages_by_default
   ] = useState<boolean | undefined>(undefined)
@@ -84,6 +88,9 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, {
       command: 'GET_SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
     })
+    post_message(vscode, {
+      command: 'GET_SYNCHRONIZE_EDIT_FORMAT_BETWEEN_MODES'
+    })
     post_message(vscode, { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' })
     post_message(vscode, { command: 'GET_LIMIT_SEMANTIC_SEARCH_RESULTS' })
     post_message(vscode, { command: 'GET_EDIT_FORMAT_INSTRUCTIONS' })
@@ -116,6 +123,8 @@ export const use_settings = (vscode: any) => {
         set_find_relevant_files_instructions(message.instructions)
       } else if (message.command == 'COMMIT_MESSAGE_INSTRUCTIONS') {
         set_commit_message_instructions(message.instructions)
+      } else if (message.command == 'SYNCHRONIZE_EDIT_FORMAT_BETWEEN_MODES') {
+        set_synchronize_edit_format_between_modes(message.enabled)
       } else if (
         message.command == 'SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
       ) {
@@ -261,6 +270,16 @@ export const use_settings = (vscode: any) => {
       command: 'UPDATE_COMMIT_MESSAGE_INSTRUCTIONS',
       instructions
     })
+
+  const handle_synchronize_edit_format_between_modes_change = (
+    enabled: boolean
+  ) => {
+    set_synchronize_edit_format_between_modes(enabled)
+    post_message(vscode, {
+      command: 'UPDATE_SYNCHRONIZE_EDIT_FORMAT_BETWEEN_MODES',
+      enabled
+    })
+  }
 
   const handle_select_all_prompts_in_commit_messages_by_default_change = (
     enabled: boolean
@@ -419,6 +438,7 @@ export const use_settings = (vscode: any) => {
     web_configurations,
     set_web_configurations,
     defaults,
+    synchronize_edit_format_between_modes,
     commit_message_instructions,
     select_all_prompts_in_commit_messages_by_default,
     edit_files_system_instructions,
@@ -448,6 +468,7 @@ export const use_settings = (vscode: any) => {
     handle_reorder_web_configurations,
     handle_add_web_configuration,
     handle_delete_web_configuration,
+    handle_synchronize_edit_format_between_modes_change,
     handle_commit_instructions_change,
     handle_select_all_prompts_in_commit_messages_by_default_change,
     handle_edit_files_system_instructions_change,

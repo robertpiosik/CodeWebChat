@@ -54,6 +54,7 @@ export const Settings = () => {
       settings_hook.edit_files_system_instructions !== undefined &&
       settings_hook.find_relevant_files_instructions !== undefined &&
       settings_hook.commit_message_instructions !== undefined &&
+      settings_hook.synchronize_edit_format_between_modes !== undefined &&
       settings_hook.select_all_prompts_in_commit_messages_by_default !==
         undefined &&
       settings_hook.context_size_warning_threshold !== undefined &&
@@ -105,6 +106,9 @@ export const Settings = () => {
         limit_semantic_search_results={
           settings_hook.limit_semantic_search_results!
         }
+        synchronize_edit_format_between_modes={
+          settings_hook.synchronize_edit_format_between_modes!
+        }
         select_all_prompts_in_commit_messages_by_default={
           settings_hook.select_all_prompts_in_commit_messages_by_default!
         }
@@ -129,6 +133,9 @@ export const Settings = () => {
         auto_run_intelligent_update={settings_hook.auto_run_intelligent_update!}
         set_providers={settings_hook.set_providers}
         set_api_configurations={settings_hook.set_api_configurations}
+        on_synchronize_edit_format_between_modes_change={
+          settings_hook.handle_synchronize_edit_format_between_modes_change
+        }
         on_context_size_warning_threshold_change={
           settings_hook.handle_context_size_warning_threshold_change
         }

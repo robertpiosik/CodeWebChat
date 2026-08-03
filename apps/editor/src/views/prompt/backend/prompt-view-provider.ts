@@ -79,10 +79,10 @@ import {
   handle_cancel_intelligent_update_file_in_preview,
   handle_create_api_configuration,
   handle_delete_api_configuration,
-  handle_update_last_used_web_configuration_or_group,
+  handle_update_last_used_web_configuration,
   handle_get_find_relevant_files_shrink_source_code,
   handle_save_find_relevant_files_shrink_source_code,
-  handle_return_home_and_switch_to_edit_files,
+  handle_request_return_home,
   handle_pick_tasks_workspace,
   handle_get_token_count
 } from './message-handlers'
@@ -94,6 +94,7 @@ import { handle_select_edit_format } from './message-handlers/handle-select-edit
 import { SelectionState } from '../types/messages'
 import {
   EDIT_FORMAT_STATE_KEY,
+  get_edit_format_state_key,
   API_MODE_STATE_KEY,
   INSTRUCTIONS_ASK_STATE_KEY,
   INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY,
@@ -157,9 +158,22 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     active_index: 0
   }
   public web_prompt_type: WebPromptType
-  public edit_format: EditFormat
+  public web_edit_format: EditFormat
+  public api_edit_format: EditFormat
   public api_prompt_type: ApiPromptType
   public mode: Mode = MODE.WEB
+
+  public get edit_format(): EditFormat {
+    return this.mode == MODE.WEB ? this.web_edit_format : this.api_edit_format
+  }
+
+  public set edit_format(value: EditFormat) {
+    if (this.mode == MODE.WEB) {
+      this.web_edit_format = value
+    } else {
+      this.api_edit_format = value
+    }
+  }
   public intelligent_update_abort_controllers: {
     controller: AbortController
     file_path: string
@@ -391,7 +405,13 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       INSTRUCTIONS_FIND_RELEVANT_FILES_STATE_KEY
     )
 
-    this.edit_format =
+    this.web_edit_format =
+      this.extension_context.workspaceState.get<EditFormat>(
+        get_edit_format_state_key(MODE.WEB)
+      ) ??
+      this.extension_context.globalState.get<EditFormat>(
+        get_edit_format_state_key(MODE.WEB)
+      ) ??
       this.extension_context.workspaceState.get<EditFormat>(
         EDIT_FORMAT_STATE_KEY
       ) ??
@@ -399,6 +419,22 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
         EDIT_FORMAT_STATE_KEY
       ) ??
       'whole'
+
+    this.api_edit_format =
+      this.extension_context.workspaceState.get<EditFormat>(
+        get_edit_format_state_key(MODE.API)
+      ) ??
+      this.extension_context.globalState.get<EditFormat>(
+        get_edit_format_state_key(MODE.API)
+      ) ??
+      this.extension_context.workspaceState.get<EditFormat>(
+        EDIT_FORMAT_STATE_KEY
+      ) ??
+      this.extension_context.globalState.get<EditFormat>(
+        EDIT_FORMAT_STATE_KEY
+      ) ??
+      'whole'
+
     this.mode =
       this.extension_context.workspaceState.get<Mode>(
         PROMPT_VIEW_MODE_STATE_KEY
@@ -859,7 +895,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'PICK_REASONING_EFFORT') {
             await handle_pick_reasoning_effort(this, message)
           } else if (message.command == 'UPDATE_LAST_USED_WEB_CONFIGURATION') {
-            handle_update_last_used_web_configuration_or_group({
+            handle_update_last_used_web_configuration({
               prompt_view_provider: this,
               web_configuration_name: message.web_configuration_name
             })
@@ -921,7 +957,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'GET_SETUP_PROGRESS') {
             await this.send_setup_progress()
           } else if (message.command == 'REQUEST_RETURN_HOME') {
-            await handle_return_home_and_switch_to_edit_files(this)
+            await handle_request_return_home(this)
           } else if (
             message.command == 'GET_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE'
           ) {

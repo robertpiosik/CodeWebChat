@@ -113,6 +113,7 @@ type Props = {
   edit_files_system_instructions: string
   find_relevant_files_instructions: string
   commit_message_instructions: string
+  synchronize_edit_format_between_modes: boolean
   select_all_prompts_in_commit_messages_by_default: boolean
   context_size_warning_threshold: number
   limit_semantic_search_results: number
@@ -134,6 +135,7 @@ type Props = {
     threshold: number | undefined
   ) => void
   on_limit_semantic_search_results_change: (limit: number | undefined) => void
+  on_synchronize_edit_format_between_modes_change: (enabled: boolean) => void
   on_commit_instructions_change: (instructions: string) => void
   on_select_all_prompts_in_commit_messages_by_default_change: (
     enabled: boolean
@@ -399,6 +401,12 @@ export const Home: React.FC<Props> = (props) => {
           limit_semantic_search_results={props.limit_semantic_search_results}
           on_limit_semantic_search_results_change={
             props.on_limit_semantic_search_results_change
+          }
+          synchronize_edit_format_between_modes={
+            props.synchronize_edit_format_between_modes
+          }
+          on_synchronize_edit_format_between_modes_change={
+            props.on_synchronize_edit_format_between_modes_change
           }
           send_with_shift_enter={props.send_with_shift_enter}
           on_send_with_shift_enter_change={

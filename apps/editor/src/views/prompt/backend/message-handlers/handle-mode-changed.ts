@@ -6,4 +6,8 @@ export const handle_mode_changed = (
   message: ModeChangedMessage
 ): void => {
   prompt_view_provider.mode = message.mode
+  prompt_view_provider.send_message({
+    command: 'EDIT_FORMAT',
+    edit_format: prompt_view_provider.edit_format
+  })
 }
