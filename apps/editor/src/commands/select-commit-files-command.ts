@@ -302,14 +302,11 @@ export const select_commit_files_command = (
 
               selected_paths = search_result.selected_paths
             } else {
-              if (selected_files.length == 0) {
-                return
-              }
               selected_paths = selected_files.map((item) => item.file_path)
             }
 
             if (selected_paths.length == 0) {
-              return
+              break
             }
 
             if (currently_checked.length > 0) {
@@ -322,7 +319,7 @@ export const select_commit_files_command = (
                 vscode.window.showInformationMessage(
                   dictionary.information_message.CONTEXT_ALREADY_SET
                 )
-                return
+                break
               }
             }
 
@@ -337,7 +334,8 @@ export const select_commit_files_command = (
                 paths_to_apply.length
               )
             )
-            return
+
+            break
           }
         }
       } catch (error) {
