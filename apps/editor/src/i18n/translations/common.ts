@@ -304,5 +304,23 @@ export const translations = {
     cs: 'Hledat ve výsledcích',
     hu: 'Keresés az eredményekben',
     bg: 'Търсене в резултатите'
+  },
+  'common.next': {
+    en: 'Next',
+    pl: 'Dalej',
+    'zh-cn': '下一步',
+    ja: '次へ',
+    'zh-tw': '下一步',
+    de: 'Weiter',
+    es: 'Siguiente',
+    fr: 'Suivant',
+    'pt-br': 'Próximo',
+    ru: 'Далее',
+    ko: '다음',
+    it: 'Avanti',
+    tr: 'İleri',
+    cs: 'Další',
+    hu: 'Következő',
+    bg: 'Напред'
   }
 } as const

@@ -273,7 +273,7 @@ export const generate_commit_message_command = (
             }
           )
 
-          if (answer === undefined || answer === 'back') {
+          if (answer === undefined || answer == 'back') {
             return answer
           }
 
@@ -303,8 +303,8 @@ export const generate_commit_message_command = (
       let is_cancelled = false
       let go_back = false
 
-      while (step !== 'finish') {
-        if (step === 'edit_message') {
+      while (step != 'finish') {
+        if (step == 'edit_message') {
           const edited = await new Promise<string | 'back' | undefined>(
             (resolve) => {
               const input_box = vscode.window.createInputBox()
@@ -315,22 +315,37 @@ export const generate_commit_message_command = (
               )
               input_box.ignoreFocusOut = true
 
+              const has_more_steps = relevant_prompts.length > 0
               const accept_button = {
-                iconPath: new vscode.ThemeIcon('check'),
-                tooltip: t('command.generate-commit-message.input.accept')
+                iconPath: new vscode.ThemeIcon(
+                  has_more_steps ? 'arrow-right' : 'check'
+                ),
+                tooltip: has_more_steps
+                  ? t('common.next')
+                  : t('command.generate-commit-message.input.accept')
               }
 
-              input_box.buttons = [accept_button, vscode.QuickInputButtons.Back]
+              const close_button = {
+                iconPath: new vscode.ThemeIcon('close'),
+                tooltip: t('common.close')
+              }
+
+              input_box.buttons = [
+                accept_button,
+                close_button,
+                vscode.QuickInputButtons.Back
+              ]
 
               let is_resolved = false
 
               input_box.onDidTriggerButton((button) => {
-                if (
-                  button.tooltip ==
-                  t('command.generate-commit-message.input.accept')
-                ) {
+                if (button === accept_button) {
                   is_resolved = true
                   resolve(input_box.value)
+                  input_box.hide()
+                } else if (button === close_button) {
+                  is_resolved = true
+                  resolve(undefined)
                   input_box.hide()
                 } else if (button === vscode.QuickInputButtons.Back) {
                   is_resolved = true
@@ -356,7 +371,7 @@ export const generate_commit_message_command = (
             }
           )
 
-          if (edited === 'back') {
+          if (edited == 'back') {
             go_back = true
             break
           } else if (edited === undefined) {
@@ -367,7 +382,7 @@ export const generate_commit_message_command = (
             step =
               relevant_prompts.length > 0 ? 'select_prompts' : 'attach_tree'
           }
-        } else if (step === 'select_prompts') {
+        } else if (step == 'select_prompts') {
           const picked = await new Promise<
             typeof relevant_prompts | undefined | 'back'
           >((resolve) => {
@@ -414,7 +429,7 @@ export const generate_commit_message_command = (
             quick_pick.show()
           })
 
-          if (picked === 'back') {
+          if (picked == 'back') {
             step = 'edit_message'
           } else if (picked === undefined) {
             is_cancelled = true
@@ -423,9 +438,9 @@ export const generate_commit_message_command = (
             selected_prompts = picked
             step = 'attach_tree'
           }
-        } else if (step === 'attach_tree') {
+        } else if (step == 'attach_tree') {
           const result = await get_tree_text_if_applicable(selected_prompts)
-          if (result === 'back') {
+          if (result == 'back') {
             if (params.should_commit) {
               step =
                 relevant_prompts.length > 0 ? 'select_prompts' : 'edit_message'
