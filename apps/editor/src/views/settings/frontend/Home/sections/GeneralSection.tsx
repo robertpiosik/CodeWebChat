@@ -369,18 +369,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
         >
           <UiGroup title={t('general.prompt-field.title')}>
             <UiItem
-              title={t('general.synchronize-edit-format.title')}
-              description={t('general.synchronize-edit-format.description')}
-              slot_right={
-                <UiToggler
-                  is_on={props.synchronize_edit_format_between_modes}
-                  on_toggle={
-                    props.on_synchronize_edit_format_between_modes_change
-                  }
-                />
-              }
-            />
-            <UiItem
               title={t('general.context-size-warning-threshold.title')}
               description={t(
                 'general.context-size-warning-threshold.description'
@@ -406,6 +394,18 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 <UiToggler
                   is_on={props.send_with_shift_enter}
                   on_toggle={props.on_send_with_shift_enter_change}
+                />
+              }
+            />
+            <UiItem
+              title={t('general.synchronize-edit-format.title')}
+              description={t('general.synchronize-edit-format.description')}
+              slot_right={
+                <UiToggler
+                  is_on={props.synchronize_edit_format_between_modes}
+                  on_toggle={
+                    props.on_synchronize_edit_format_between_modes_change
+                  }
                 />
               }
             />

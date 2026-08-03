@@ -638,25 +638,23 @@ export const translations = {
     bg: 'Синхронизиране на формат за редактиране между режимите'
   },
   'general.synchronize-edit-format.description': {
-    en: 'When changing the edit format in API or Web mode, the other mode will automatically use the same edit format.',
-    pl: 'Podczas zmiany formatu edycji w trybie API lub Web, drugi tryb automatycznie użyje tego samego formatu edycji.',
-    'zh-cn':
-      '在 API 或 Web 模式中更改编辑格式时，另一种模式将自动使用相同的编辑格式。',
-    ja: 'APIモードまたはWebモードで編集フォーマットを変更すると、もう一方のモードも自動的に同じ編集フォーマットを使用します。',
-    'zh-tw':
-      '在 API 或 Web 模式中更改編輯格式時，另一種模式將自動使用相同的編輯格式。',
-    de: 'Wenn das Bearbeitungsformat im API- oder Web-Modus geändert wird, verwendet der andere Modus automatisch dasselbe Bearbeitungsformat.',
-    es: 'Al cambiar el formato de edición en el modo API o Web, el otro modo utilizará automáticamente el mismo formato de edición.',
-    fr: "Lors de la modification du format d'édition en mode API ou Web, l'autre mode utilisera automatiquement le même format d'édition.",
+    en: 'Makes the selected edit format shared between modes.',
+    pl: 'Sprawia, że wybrany format edycji jest współdzielony między trybami.',
+    'zh-cn': '使选定的编辑格式在模式之间共享。',
+    ja: '選択した編集フォーマットをモード間で共有します。',
+    'zh-tw': '使選定的編輯格式在模式之間共享。',
+    de: 'Teilt das ausgewählte Bearbeitungsformat zwischen den Modi.',
+    es: 'Hace que el formato de edición seleccionado se comparta entre los modos.',
+    fr: "Partage le format d'édition sélectionné entre les modes.",
     'pt-br':
-      'Ao alterar o formato de edição no modo API ou Web, o outro modo usará automaticamente o mesmo formato de edição.',
-    ru: 'При изменении формата редактирования в режиме API или Web, другой режим автоматически будет использовать тот же формат редактирования.',
-    ko: 'API 또는 웹 모드에서 편집 형식을 변경하면 다른 모드에서도 자동으로 동일한 편집 형식을 사용합니다.',
-    it: "Quando si cambia il formato di modifica in modalità API o Web, l'altra modalità utilizzerà automaticamente lo stesso formato di modifica.",
-    tr: 'API veya Web modunda düzenleme formatı değiştirildiğinde, diğer mod otomatik olarak aynı düzenleme formatını kullanacaktır.',
-    cs: 'Při změně formátu úprav v režimu API nebo Web bude druhý režim automaticky používat stejný formát úprav.',
-    hu: 'Amikor megváltoztatja a szerkesztési formátumot API vagy Web módban, a másik mód automatikusan ugyanazt a szerkesztési formátumot fogja használni.',
-    bg: 'При промяна на формата за редактиране в API или Web режим, другият режим автоматично ще използва същия формат за редактиране.'
+      'Torna o formato de edição selecionado compartilhado entre os modos.',
+    ru: 'Делает выбранный формат редактирования общим для всех режимов.',
+    ko: '선택한 편집 형식을 모드 간에 공유하도록 합니다.',
+    it: 'Rende il formato di modifica selezionato condiviso tra le modalità.',
+    tr: 'Seçilen düzenleme formatının modlar arasında paylaşılmasını sağlar.',
+    cs: 'Nastaví vybraný formát úprav jako sdílený mezi režimy.',
+    hu: 'A kiválasztott szerkesztési formátumot megosztottá teszi a módok között.',
+    bg: 'Прави избрания формат за редактиране споделен между режимите.'
   },
   'general.prompt-field.title': {
     en: 'Prompt Field',
