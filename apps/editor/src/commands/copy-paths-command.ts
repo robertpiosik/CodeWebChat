@@ -4,38 +4,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import { t } from '../i18n'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { OpenEditorsProvider } from '../context/providers/open-editors/open-editors-provider'
-
-interface TreeNode {
-  [key: string]: TreeNode
-}
-
-const build_tree = (paths: string[]): TreeNode => {
-  const root: TreeNode = {}
-  for (const path of paths) {
-    const parts = path.split('/')
-    let current = root
-    for (const part of parts) {
-      if (!current[part]) {
-        current[part] = {}
-      }
-      current = current[part]
-    }
-  }
-  return root
-}
-
-const print_tree = (node: TreeNode, prefix = ''): string[] => {
-  const keys = Object.keys(node).sort()
-  const lines: string[] = []
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i]
-    const is_last = i == keys.length - 1
-    lines.push(`${prefix}${is_last ? '└── ' : '├── '}${key}`)
-    const child_prefix = prefix + (is_last ? '    ' : '│   ')
-    lines.push(...print_tree(node[key], child_prefix))
-  }
-  return lines
-}
+import { generate_ascii_tree } from '../utils/ascii-tree'
 
 const format_paths = (files: string[]) => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
@@ -66,8 +35,7 @@ const format_paths = (files: string[]) => {
   })
 
   if (format == 'ascii-tree') {
-    const root = build_tree(display_paths)
-    return print_tree(root).join('\n')
+    return generate_ascii_tree(display_paths)
   } else if (format == 'comma-separated') {
     return display_paths.map((display_path) => `\`${display_path}\``).join(', ')
   }

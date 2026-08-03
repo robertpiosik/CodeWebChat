@@ -8,6 +8,7 @@ export namespace PromptsForCommitMessagesUtils {
   export type Prompt = {
     prompt: string
     files: string[]
+    selected_files: string[]
   }
 
   export const get_file_path = (extension_context: vscode.ExtensionContext) => {
@@ -67,6 +68,7 @@ export namespace PromptsForCommitMessagesUtils {
     workspace_root: string
     prompt: string
     files: string[]
+    selected_files: string[]
   }) => {
     const all_prompts = load_all(params.extension_context)
 
@@ -80,10 +82,14 @@ export namespace PromptsForCommitMessagesUtils {
 
     if (existing) {
       existing.files = Array.from(new Set([...existing.files, ...params.files]))
+      existing.selected_files = Array.from(
+        new Set([...(existing.selected_files || []), ...params.selected_files])
+      )
     } else {
       const new_prompt: Prompt = {
         files: params.files,
-        prompt: params.prompt
+        prompt: params.prompt,
+        selected_files: params.selected_files
       }
       all_prompts[params.workspace_root].push(new_prompt)
     }

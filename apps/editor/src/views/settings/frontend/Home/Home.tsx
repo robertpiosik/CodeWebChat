@@ -114,6 +114,7 @@ type Props = {
   find_relevant_files_instructions: string
   commit_message_instructions: string
   synchronize_edit_format_between_modes: boolean
+  attach_ascii_tree_of_context: 'ask' | 'always' | 'never'
   select_all_prompts_in_commit_messages_by_default: boolean
   context_size_warning_threshold: number
   limit_semantic_search_results: number
@@ -137,6 +138,9 @@ type Props = {
   on_limit_semantic_search_results_change: (limit: number | undefined) => void
   on_synchronize_edit_format_between_modes_change: (enabled: boolean) => void
   on_commit_instructions_change: (instructions: string) => void
+  on_attach_ascii_tree_of_context_change: (
+    value: 'ask' | 'always' | 'never'
+  ) => void
   on_select_all_prompts_in_commit_messages_by_default_change: (
     enabled: boolean
   ) => void
@@ -442,6 +446,10 @@ export const Home: React.FC<Props> = (props) => {
             props.on_open_allow_patterns_settings
           }
           on_open_keybindings={props.on_open_keybindings}
+          attach_ascii_tree_of_context={props.attach_ascii_tree_of_context}
+          on_attach_ascii_tree_of_context_change={
+            props.on_attach_ascii_tree_of_context_change
+          }
           select_all_prompts_in_commit_messages_by_default={
             props.select_all_prompts_in_commit_messages_by_default
           }

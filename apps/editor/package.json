@@ -928,6 +928,16 @@
           "type": "string",
           "scope": "resource"
         },
+        "codeWebChat.attachAsciiTreeOfContext": {
+          "type": "string",
+          "scope": "resource",
+          "enum": [
+            "ask",
+            "always",
+            "never"
+          ],
+          "default": "ask"
+        },
         "codeWebChat.selectAllPromptsInCommitMessagesByDefault": {
           "type": "boolean",
           "scope": "resource",

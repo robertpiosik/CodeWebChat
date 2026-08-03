@@ -385,6 +385,7 @@ export const apply_response_command = (params: {
             original_states: preview_data.original_states,
             chat_response: preview_data.response,
             prompt_view_provider: params.prompt_view_provider,
+            workspace_provider: params.workspace_provider,
             extension_context: params.extension_context,
             original_editor_state: args?.original_editor_state,
             raw_instructions: args?.raw_instructions,

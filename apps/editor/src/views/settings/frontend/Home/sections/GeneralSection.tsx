@@ -58,6 +58,10 @@ type Props = {
   on_open_allow_patterns_settings: () => void
   on_open_keybindings: (search?: string) => void
   set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void
+  attach_ascii_tree_of_context: 'ask' | 'always' | 'never'
+  on_attach_ascii_tree_of_context_change: (
+    value: 'ask' | 'always' | 'never'
+  ) => void
   select_all_prompts_in_commit_messages_by_default: boolean
   on_select_all_prompts_in_commit_messages_by_default_change: (
     enabled: boolean
@@ -456,6 +460,32 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           }
         >
           <UiGroup title={t('general.commit-messages.title')}>
+            <UiItem
+              title={t('general.attach-ascii-tree-of-context.title')}
+              description={t(
+                'general.attach-ascii-tree-of-context.description'
+              )}
+              slot_right={
+                <UiDropdown
+                  options={[
+                    {
+                      value: 'ask',
+                      label: t('general.attach-ascii-tree-of-context.ask')
+                    },
+                    {
+                      value: 'always',
+                      label: t('general.attach-ascii-tree-of-context.always')
+                    },
+                    {
+                      value: 'never',
+                      label: t('general.attach-ascii-tree-of-context.never')
+                    }
+                  ]}
+                  value={props.attach_ascii_tree_of_context}
+                  onChange={props.on_attach_ascii_tree_of_context_change}
+                />
+              }
+            />
             <UiItem
               title={t(
                 'general.select-all-prompts-in-commit-messages-by-default.title'

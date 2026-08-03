@@ -18,6 +18,7 @@ import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { create_checkpoint } from '@/features/checkpoints/actions'
 import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
+import { generate_ascii_tree } from '../../utils/ascii-tree'
 
 const truncate_prompt = (text: string): string => {
   if (text.length <= MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE) return text
@@ -192,6 +193,50 @@ export const generate_commit_message_command = (
             index == self.findIndex((sp) => sp.prompt == p.prompt)
         )
 
+      const get_tree_text_if_applicable = async (
+        selected_prompts: typeof relevant_prompts
+      ): Promise<string | undefined> => {
+        const selected_files_set = new Set<string>()
+        for (const p of selected_prompts) {
+          for (const f of p.selected_files || []) {
+            selected_files_set.add(f)
+          }
+        }
+        const selected_files_to_attach = Array.from(selected_files_set)
+
+        if (selected_files_to_attach.length == 0) {
+          return ''
+        }
+
+        const attach_tree_setting = vscode.workspace
+          .getConfiguration('codeWebChat')
+          .get<string>('attachAsciiTreeOfContext', 'ask')
+
+        let attach_tree = false
+        if (attach_tree_setting == 'always') {
+          attach_tree = true
+        } else if (attach_tree_setting == 'ask') {
+          const answer = await vscode.window.showQuickPick(['Yes', 'No'], {
+            title:
+              'Attach ASCII file tree of the selected files to the commit message?',
+            ignoreFocusOut: true
+          })
+          if (answer === undefined) {
+            return undefined
+          }
+          attach_tree = answer == 'Yes'
+        }
+
+        if (attach_tree) {
+          const display_paths = selected_files_to_attach.map((p) =>
+            vscode.workspace.asRelativePath(p).replace(/\\/g, '/')
+          )
+          return '\n\n' + generate_ascii_tree(display_paths)
+        }
+
+        return ''
+      }
+
       if (params.should_commit) {
         const edited_message = await new Promise<string | 'back' | undefined>(
           (resolve) => {
@@ -293,6 +338,14 @@ export const generate_commit_message_command = (
             selected_prompts = picked
           }
 
+          const tree_text = await get_tree_text_if_applicable(selected_prompts)
+          if (tree_text === undefined) {
+            if (was_empty_stage) {
+              await vscode.commands.executeCommand('git.unstageAll', repository)
+            }
+            break
+          }
+
           const selected_prompts_text =
             selected_prompts.length > 0
               ? '\n\n' +
@@ -304,7 +357,8 @@ export const generate_commit_message_command = (
                   .join('\n')
               : ''
 
-          const commit_message_value = edited_message + selected_prompts_text
+          const commit_message_value =
+            edited_message + selected_prompts_text + tree_text
           repository.inputBox.value = commit_message_value
           await vscode.commands.executeCommand('git.commit', repository)
           PromptsForCommitMessagesUtils.remove_committed_files({
@@ -326,17 +380,26 @@ export const generate_commit_message_command = (
           await vscode.commands.executeCommand('git.unstageAll', repository)
         }
       } else {
+        const selected_prompts = select_prompts_setting ? relevant_prompts : []
+        const tree_text = await get_tree_text_if_applicable(selected_prompts)
+        if (tree_text === undefined) {
+          if (was_empty_stage) {
+            await vscode.commands.executeCommand('git.unstageAll', repository)
+          }
+          break
+        }
+
         const prompts_text =
-          select_prompts_setting && relevant_prompts.length > 0
+          selected_prompts.length > 0
             ? '\n\n' +
-              relevant_prompts
+              selected_prompts
                 .map(
                   (p) =>
                     `- ${truncate_prompt(simplify_prompt_symbols({ prompt: p.prompt }))}`
                 )
                 .join('\n')
             : ''
-        repository.inputBox.value = commit_message + prompts_text
+        repository.inputBox.value = commit_message + prompts_text + tree_text
       }
 
       break

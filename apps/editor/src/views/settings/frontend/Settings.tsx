@@ -55,6 +55,7 @@ export const Settings = () => {
       settings_hook.find_relevant_files_instructions !== undefined &&
       settings_hook.commit_message_instructions !== undefined &&
       settings_hook.synchronize_edit_format_between_modes !== undefined &&
+      settings_hook.attach_ascii_tree_of_context !== undefined &&
       settings_hook.select_all_prompts_in_commit_messages_by_default !==
         undefined &&
       settings_hook.context_size_warning_threshold !== undefined &&
@@ -109,6 +110,9 @@ export const Settings = () => {
         synchronize_edit_format_between_modes={
           settings_hook.synchronize_edit_format_between_modes!
         }
+        attach_ascii_tree_of_context={
+          settings_hook.attach_ascii_tree_of_context!
+        }
         select_all_prompts_in_commit_messages_by_default={
           settings_hook.select_all_prompts_in_commit_messages_by_default!
         }
@@ -144,6 +148,9 @@ export const Settings = () => {
         }
         on_commit_instructions_change={
           settings_hook.handle_commit_instructions_change
+        }
+        on_attach_ascii_tree_of_context_change={
+          settings_hook.handle_attach_ascii_tree_of_context_change
         }
         on_select_all_prompts_in_commit_messages_by_default_change={
           settings_hook.handle_select_all_prompts_in_commit_messages_by_default_change

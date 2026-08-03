@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import * as path from 'path'
 import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '../types/original-file-state'
 import { RecentApiConfiguration } from '@shared/types/response-history-item'
@@ -7,6 +8,7 @@ import { preview } from './preview'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { update_undo_button_state } from './state-manager'
 import { PromptsForCommitMessagesUtils } from '@/utils/prompts-for-commit-messages-utils'
+import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 
 export let ongoing_preview_cleanup_promise: Promise<void> | null = null
 
@@ -14,6 +16,7 @@ export const preview_handler = async (params: {
   original_states: OriginalFileState[]
   chat_response: string
   prompt_view_provider: PromptViewProvider
+  workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
   original_editor_state?: {
     file_path: string
@@ -135,12 +138,30 @@ export const preview_handler = async (params: {
           }
         }
 
+        const selected_files_by_workspace = new Map<string, string[]>()
+        const checked_files = params.workspace_provider.get_checked_files()
+        for (const file of checked_files) {
+          const workspace_root =
+            params.workspace_provider.get_workspace_root_for_file(file)
+          if (workspace_root) {
+            const relative_path = path
+              .relative(workspace_root, file)
+              .replace(/\\/g, '/')
+            const current_selected =
+              selected_files_by_workspace.get(workspace_root) || []
+            current_selected.push(relative_path)
+            selected_files_by_workspace.set(workspace_root, current_selected)
+          }
+        }
+
         for (const [workspace_root, files] of files_by_workspace.entries()) {
           PromptsForCommitMessagesUtils.add({
             extension_context: params.extension_context,
             workspace_root,
             prompt: params.raw_instructions,
-            files
+            files,
+            selected_files:
+              selected_files_by_workspace.get(workspace_root) || []
           })
         }
       }
