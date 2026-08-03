@@ -5,8 +5,7 @@ import {
   LAST_SEARCH_FILES_KEYWORDS_TARGET_STATE_KEY,
   LAST_SEARCH_FILES_KEYWORDS_MATCH_MODE_STATE_KEY,
   LAST_SEARCH_FILES_FILENAME_MATCH_MODE_STATE_KEY,
-  LAST_SEARCH_FILES_KEYWORDS_QUERY_STATE_KEY,
-  LAST_SEARCH_FILES_FILENAME_QUERY_STATE_KEY
+  LAST_SEARCH_FILES_KEYWORDS_QUERY_STATE_KEY
 } from '@/constants/state-keys'
 import { prompt_for_keywords_target } from '../utils/prompt-for-keywords-target'
 import { prompt_for_keywords_match_mode } from '../utils/prompt-for-keywords-match-mode'
@@ -30,98 +29,93 @@ export const perform_keywords_search_mode = async (params: {
   const local_queries: Record<string, string> = {}
 
   while (true) {
-    const last_target =
-      params.extension_context.workspaceState.get<
-        'contents' | 'filenames' | 'both'
-      >(LAST_SEARCH_FILES_KEYWORDS_TARGET_STATE_KEY) || 'contents'
+    const state_key = LAST_SEARCH_FILES_KEYWORDS_QUERY_STATE_KEY
 
-    const target_result = await prompt_for_keywords_target(last_target)
-    if (target_result == 'back') {
-      return 'back'
-    }
-    if (!target_result) return undefined
+    const initial_search_term =
+      local_queries[state_key] !== undefined
+        ? local_queries[state_key]
+        : params.show_back_button
+          ? ''
+          : params.extension_context.workspaceState.get<string>(state_key) || ''
 
-    const keywords_target = target_result
-    await params.extension_context.workspaceState.update(
-      LAST_SEARCH_FILES_KEYWORDS_TARGET_STATE_KEY,
-      keywords_target
+    const result = await prompt_for_search_term(
+      initial_search_term,
+      'keywords',
+      undefined,
+      (value) => {
+        local_queries[state_key] = value
+        if (!params.show_back_button) {
+          params.extension_context.workspaceState.update(state_key, value)
+        }
+      }
     )
 
-    let go_back_to_target = false
+    if (result.back) {
+      return 'back'
+    }
+    if (!result.value) return undefined
+
+    const search_term_input = result.value
+    local_queries[state_key] = search_term_input
+
+    if (!params.show_back_button) {
+      await params.extension_context.workspaceState.update(
+        state_key,
+        search_term_input
+      )
+    }
+
+    const search_term = search_term_input.trim()
+    if (search_term.length == 0) return undefined
+
+    let go_back_to_term = false
 
     while (true) {
-      const match_mode_key =
-        keywords_target == 'filenames'
-          ? LAST_SEARCH_FILES_FILENAME_MATCH_MODE_STATE_KEY
-          : LAST_SEARCH_FILES_KEYWORDS_MATCH_MODE_STATE_KEY
+      const last_target =
+        params.extension_context.workspaceState.get<
+          'contents' | 'filenames' | 'both'
+        >(LAST_SEARCH_FILES_KEYWORDS_TARGET_STATE_KEY) || 'contents'
 
-      const last_match_mode =
-        params.extension_context.workspaceState.get<'all' | 'some'>(
-          match_mode_key
-        ) || 'all'
-
-      const match_mode_result =
-        await prompt_for_keywords_match_mode(last_match_mode)
-
-      if (match_mode_result == 'back') {
-        go_back_to_target = true
+      const target_result = await prompt_for_keywords_target(last_target)
+      if (target_result == 'back') {
+        go_back_to_term = true
         break
       }
-      if (!match_mode_result) return undefined
+      if (!target_result) return undefined
 
-      const keywords_match_mode = match_mode_result
+      const keywords_target = target_result
       await params.extension_context.workspaceState.update(
-        match_mode_key,
-        keywords_match_mode
+        LAST_SEARCH_FILES_KEYWORDS_TARGET_STATE_KEY,
+        keywords_target
       )
 
-      let go_back_to_match_mode = false
+      let go_back_to_target = false
 
       while (true) {
-        const state_key =
+        const match_mode_key =
           keywords_target == 'filenames'
-            ? LAST_SEARCH_FILES_FILENAME_QUERY_STATE_KEY
-            : LAST_SEARCH_FILES_KEYWORDS_QUERY_STATE_KEY
+            ? LAST_SEARCH_FILES_FILENAME_MATCH_MODE_STATE_KEY
+            : LAST_SEARCH_FILES_KEYWORDS_MATCH_MODE_STATE_KEY
 
-        const initial_search_term =
-          local_queries[state_key] !== undefined
-            ? local_queries[state_key]
-            : params.show_back_button
-              ? ''
-              : params.extension_context.workspaceState.get<string>(
-                  state_key
-                ) || ''
+        const last_match_mode =
+          params.extension_context.workspaceState.get<'all' | 'some'>(
+            match_mode_key
+          ) || 'all'
 
-        const result = await prompt_for_search_term(
-          initial_search_term,
-          'keywords',
-          keywords_target,
-          (value) => {
-            local_queries[state_key] = value
-            if (!params.show_back_button) {
-              params.extension_context.workspaceState.update(state_key, value)
-            }
-          }
-        )
+        const match_mode_result =
+          await prompt_for_keywords_match_mode(last_match_mode)
 
-        if (result.back) {
-          go_back_to_match_mode = true
+        if (match_mode_result == 'back') {
+          go_back_to_target = true
           break
         }
-        if (!result.value) return undefined
+        if (!match_mode_result) return undefined
 
-        const search_term_input = result.value
-        local_queries[state_key] = search_term_input
-
-        if (!params.show_back_button) {
-          await params.extension_context.workspaceState.update(
-            state_key,
-            search_term_input
-          )
-        }
-
-        const search_term = search_term_input.trim()
-        if (search_term.length == 0) return undefined
+        const keywords_match_mode = match_mode_result
+        await params.extension_context.workspaceState.update(
+          match_mode_key,
+          keywords_match_mode
+        )
 
         const files = await params.resolve_files()
 
@@ -172,7 +166,7 @@ export const perform_keywords_search_mode = async (params: {
           continue
         }
 
-        let go_back_to_term = false
+        let go_back_to_match_mode = false
 
         while (true) {
           const selected_items = await prompt_for_search_results({
@@ -184,7 +178,7 @@ export const perform_keywords_search_mode = async (params: {
           })
 
           if (selected_items == 'back') {
-            go_back_to_term = true
+            go_back_to_match_mode = true
             break
           }
 
@@ -206,15 +200,15 @@ export const perform_keywords_search_mode = async (params: {
           return selected_items
         }
 
-        if (go_back_to_term) continue
+        if (go_back_to_match_mode) continue
         break
       }
 
-      if (go_back_to_match_mode) continue
+      if (go_back_to_target) continue
       break
     }
 
-    if (go_back_to_target) continue
+    if (go_back_to_term) continue
     break
   }
 
