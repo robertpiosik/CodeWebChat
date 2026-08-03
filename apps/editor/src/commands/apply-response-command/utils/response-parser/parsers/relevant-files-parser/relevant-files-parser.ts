@@ -10,12 +10,8 @@ export const parse_relevant_files = (params: {
   workspace_files: string[]
 }): RelevantFilesItem | null => {
   if (
-    params.response.includes('- File:') ||
-    params.response.includes('### Created file:') ||
-    params.response.includes('### Updated file:') ||
-    params.response.includes('### Deleted file:') ||
-    params.response.includes('### Renamed file:') ||
-    params.response.includes('### Code at cursor:')
+    params.response.includes('```') &&
+    !params.response.includes('**Relevant files:**')
   ) {
     return null
   }
