@@ -12,6 +12,8 @@ export const extract_paths_from_text = (params: {
     })
   }
 
+  let tree_stack: { level: number; name: string }[] = []
+
   const lines = params.text.split('\n')
   for (const line of lines) {
     const trimmed = line.trim()
@@ -23,6 +25,39 @@ export const extract_paths_from_text = (params: {
       if (path_str) {
         found_paths.add(path_str.replace(/[.?!]+$/, ''))
       }
+    }
+
+    // ASCII tree extraction
+    const idx1 = line.indexOf('├── ')
+    const idx2 = line.indexOf('└── ')
+    const idx =
+      idx1 !== -1 && idx2 !== -1 ? Math.min(idx1, idx2) : Math.max(idx1, idx2)
+
+    if (idx !== -1) {
+      const prefix = line.substring(0, idx)
+      if (/^[│\s]*$/.test(prefix)) {
+        let name = line.substring(idx + 4).trim()
+        if (name.startsWith('`') && name.endsWith('`')) {
+          name = name.substring(1, name.length - 1).trim()
+        }
+        const level = prefix.length
+
+        while (
+          tree_stack.length > 0 &&
+          tree_stack[tree_stack.length - 1].level >= level
+        ) {
+          tree_stack.pop()
+        }
+
+        tree_stack.push({ level, name })
+
+        const full_path = tree_stack.map((n) => n.name).join('/')
+        found_paths.add(full_path.replace(/[.?!]+$/, ''))
+      } else {
+        tree_stack = []
+      }
+    } else {
+      tree_stack = []
     }
   }
 
@@ -55,13 +90,6 @@ export const extract_paths_from_text = (params: {
     if (workspace_files_set.has(p)) {
       const current_idx = matched_files_with_index.get(p) ?? Infinity
       matched_files_with_index.set(p, Math.min(current_idx, safe_idx))
-    } else {
-      for (const wf of params.workspace_files) {
-        if (wf.endsWith(`/${p}`)) {
-          const current_idx = matched_files_with_index.get(wf) ?? Infinity
-          matched_files_with_index.set(wf, Math.min(current_idx, safe_idx))
-        }
-      }
     }
   }
 
