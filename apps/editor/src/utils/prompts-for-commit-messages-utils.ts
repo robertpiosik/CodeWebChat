@@ -74,12 +74,20 @@ export namespace PromptsForCommitMessagesUtils {
       all_prompts[params.workspace_root] = []
     }
 
-    const new_prompt: Prompt = {
-      files: params.files,
-      prompt: params.prompt
+    const existing = all_prompts[params.workspace_root].find(
+      (p) => p.prompt == params.prompt
+    )
+
+    if (existing) {
+      existing.files = Array.from(new Set([...existing.files, ...params.files]))
+    } else {
+      const new_prompt: Prompt = {
+        files: params.files,
+        prompt: params.prompt
+      }
+      all_prompts[params.workspace_root].push(new_prompt)
     }
 
-    all_prompts[params.workspace_root].push(new_prompt)
     save_all({
       extension_context: params.extension_context,
       prompts: all_prompts
