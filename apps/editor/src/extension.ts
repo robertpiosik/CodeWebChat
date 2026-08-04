@@ -118,7 +118,7 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
       prompt_view_api_calls_manager
     }),
     ...code_at_cursor_commands({
-      file_tree_provider: workspace_provider,
+      workspace_provider,
       open_editors_provider,
       extension_context,
       prompt_view_provider

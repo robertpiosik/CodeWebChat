@@ -4,6 +4,7 @@ export const show_ghost_text = async (params: {
   editor: vscode.TextEditor
   position: vscode.Position
   ghost_text: string
+  command?: vscode.Command
 }) => {
   const document = params.editor.document
   const controller = vscode.languages.registerInlineCompletionItemProvider(
@@ -18,7 +19,8 @@ export const show_ghost_text = async (params: {
           return [
             new vscode.InlineCompletionItem(
               params.ghost_text,
-              new vscode.Range(params.position, params.position)
+              new vscode.Range(params.position, params.position),
+              params.command
             )
           ]
         }

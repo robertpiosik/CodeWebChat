@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import axios from 'axios'
+import * as path from 'path'
 import he from 'he'
 import { send_llm_message } from '../../../utils/send-llm-message'
 import { code_at_cursor_instructions } from '../../../constants/instructions'
@@ -14,10 +15,12 @@ import { build_user_content } from '../../../utils/build-user-content'
 import { get_code_at_cursor_api_configuration } from './get-code-at-cursor-config'
 import { show_ghost_text } from './show-ghost-text'
 import { PromptBuilder } from '../../../utils/prompt-builder'
+import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
+import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
 
 export const perform_code_at_cursor = async (params: {
-  file_tree_provider: any
-  open_editors_provider: any
+  workspace_provider: WorkspaceProvider
+  open_editors_provider: OpenEditorsProvider
   extension_context: vscode.ExtensionContext
   with_completion_instructions: boolean
   show_quick_pick?: boolean
@@ -123,7 +126,7 @@ export const perform_code_at_cursor = async (params: {
       )
 
       const files_collector = new FilesCollector({
-        workspace_provider: params.file_tree_provider,
+        workspace_provider: params.workspace_provider,
         open_editors_provider: params.open_editors_provider
       })
 
@@ -217,10 +220,48 @@ export const perform_code_at_cursor = async (params: {
               .replace(/\]\]>/g, '')
               .trim()
 
+            const active_file_path = editor.document.uri.fsPath
+            const workspace_root =
+              params.workspace_provider.get_workspace_root_for_file(
+                active_file_path
+              )
+            const selected_files: string[] = []
+
+            if (workspace_root) {
+              const checked_files =
+                params.workspace_provider.get_checked_files()
+              for (const file of checked_files) {
+                const file_workspace_root =
+                  params.workspace_provider.get_workspace_root_for_file(file)
+                if (file_workspace_root === workspace_root) {
+                  const relative_path = path
+                    .relative(workspace_root, file)
+                    .replace(/\\/g, '/')
+                  selected_files.push(relative_path)
+                }
+              }
+            }
+
             await show_ghost_text({
               editor,
               position,
-              ghost_text: decoded_completion
+              ghost_text: decoded_completion,
+              command: workspace_root
+                ? {
+                    title: 'Code at Cursor Accepted',
+                    command: 'codeWebChat.internal.codeAtCursorAccepted',
+                    arguments: [
+                      {
+                        workspace_root,
+                        prompt:
+                          completion_instructions ||
+                          'Code at cursor completion',
+                        file_path: active_file_path,
+                        selected_files
+                      }
+                    ]
+                  }
+                : undefined
             })
           }
           break
