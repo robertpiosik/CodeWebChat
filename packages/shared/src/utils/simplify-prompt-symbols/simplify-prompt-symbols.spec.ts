@@ -44,13 +44,6 @@ describe('simplify_prompt_symbols', () => {
     expect(simplify_prompt_symbols({ prompt })).toBe('Check [Commit]')
   })
 
-  it('should replace #ContextAtCommit', () => {
-    const prompt = 'Check #ContextAtCommit(repo:hash "message")'
-    expect(simplify_prompt_symbols({ prompt })).toBe(
-      'Check [Context at commit]'
-    )
-  })
-
   it('should replace #Skill', () => {
     const prompt = 'Run #Skill(agent:repo:skill)'
     expect(simplify_prompt_symbols({ prompt })).toBe('Run [Skill]')

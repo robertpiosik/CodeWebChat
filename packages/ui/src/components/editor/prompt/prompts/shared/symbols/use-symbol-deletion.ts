@@ -80,21 +80,6 @@ export const use_symbol_deletion = (params: {
       if (start_index != -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
-    } else if (symbol_type == 'contextatcommit-symbol') {
-      const repo_name = symbol_element.dataset.repoName
-      const commit_hash = symbol_element.dataset.commitHash
-      const commit_message = symbol_element.dataset.commitMessage
-      if (!repo_name || !commit_hash || commit_message === undefined) return
-
-      const search_pattern = `#ContextAtCommit(${repo_name}:${commit_hash} "${commit_message.replace(
-        /"/g,
-        '\\\\"'
-      )}")`
-      const start_index = params.value.indexOf(search_pattern)
-
-      if (start_index != -1) {
-        apply_symbol_deletion(start_index, start_index + search_pattern.length)
-      }
     } else if (symbol_type == 'skill-symbol') {
       const agent = symbol_element.dataset.agent
       const repo = symbol_element.dataset.repo
@@ -279,7 +264,7 @@ export const use_symbol_deletion = (params: {
   ): boolean => {
     const text_before_cursor = params.value.substring(0, raw_pos)
     const match = text_before_cursor.match(
-      /#(?:Commit|ContextAtCommit)\([^:]+:[^\s"]+ "(?:\\.|[^"\\])*"\)$/
+      /#Commit\([^:]+:[^\s"]+ "(?:\\.|[^"\\])*"\)$/
     )
 
     if (match) {
@@ -414,10 +399,7 @@ export const use_symbol_deletion = (params: {
       return handle_selection_symbol_deletion(raw_pos, context_file_paths)
     }
 
-    if (
-      deletion_params.el.dataset.type == 'commit-symbol' ||
-      deletion_params.el.dataset.type == 'contextatcommit-symbol'
-    ) {
+    if (deletion_params.el.dataset.type == 'commit-symbol') {
       return handle_commit_symbol_deletion(raw_pos, context_file_paths)
     }
 
@@ -512,7 +494,6 @@ export const use_symbol_deletion = (params: {
           parent.dataset.type == 'selection-symbol' ||
           parent.dataset.type == 'saved-context-symbol' ||
           parent.dataset.type == 'commit-symbol' ||
-          parent.dataset.type == 'contextatcommit-symbol' ||
           parent.dataset.type == 'pasted-lines-symbol' ||
           parent.dataset.type == 'skill-symbol' ||
           parent.dataset.type == 'image-symbol' ||
@@ -542,7 +523,6 @@ export const use_symbol_deletion = (params: {
         el.dataset.type == 'selection-symbol' ||
         el.dataset.type == 'saved-context-symbol' ||
         el.dataset.type == 'commit-symbol' ||
-        el.dataset.type == 'contextatcommit-symbol' ||
         el.dataset.type == 'pasted-lines-symbol' ||
         el.dataset.type == 'skill-symbol' ||
         el.dataset.type == 'image-symbol' ||

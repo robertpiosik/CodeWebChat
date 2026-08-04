@@ -70,23 +70,6 @@ export const reconstruct_raw_value_from_node = (node: Node): string => {
           '\\"'
         )}")${suffix}`
       }
-    } else if (el.dataset.type == 'contextatcommit-symbol') {
-      const repo_name = el.dataset.repoName
-      const commit_hash = el.dataset.commitHash
-      const commit_message = el.dataset.commitMessage
-      if (!repo_name || !commit_hash || commit_message === undefined) {
-        return ''
-      }
-      const short_hash = commit_hash.substring(0, 7)
-      const index = inner_content.indexOf(short_hash)
-      if (index != -1) {
-        const prefix = inner_content.substring(0, index)
-        const suffix = inner_content.substring(index + short_hash.length)
-        return `${prefix}#ContextAtCommit(${repo_name}:${commit_hash} "${commit_message.replace(
-          /"/g,
-          '\\"'
-        )}")${suffix}`
-      }
     } else if (el.dataset.type == 'pasted-lines-symbol') {
       const path = el.dataset.path
       const content = el.dataset.content

@@ -6,7 +6,7 @@ import { GIT_LOG_SINCE_DURATION } from '@/constants/values'
 
 export const handle_commit_item = async (
   extension_context: vscode.ExtensionContext,
-  symbol: 'Commit' | 'ContextAtCommit'
+  symbol: 'Commit'
 ): Promise<string | 'continue' | undefined> => {
   try {
     const workspace_folders = vscode.workspace.workspaceFolders

@@ -17,10 +17,6 @@ export const simplify_prompt_symbols = (params: { prompt: string }): string => {
     /#Commit\([^:]+:[^\s"]+ "(?:\\.|[^"\\])*"\)/g,
     '[Commit]'
   )
-  simplified = simplified.replace(
-    /#ContextAtCommit\([^:]+:[^\s"]+ "(?:\\.|[^"\\])*"\)/g,
-    '[Context at commit]'
-  )
   simplified = simplified.replace(/#Skill\([^)]+\)/g, '[Skill]')
   simplified = simplified.replace(/#Image\([a-fA-F0-9]+\)/g, '[Image]')
   simplified = simplified.replace(

@@ -2,8 +2,7 @@ import * as vscode from 'vscode'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import {
   replace_changes_symbol,
-  replace_commit_symbol,
-  replace_context_at_commit_symbol
+  replace_commit_symbol
 } from './git/replace-git-symbols'
 import { replace_saved_context_symbol } from './saved-context/replace-saved-context-symbol'
 import { replace_selection_symbol } from './selection/replace-selection-symbol'
@@ -44,13 +43,6 @@ export const replace_symbols = async (
     })
     processed_instructions = result.instruction
     skill_definitions += result.commit_definitions
-  }
-
-  if (processed_instructions.includes('#ContextAtCommit(')) {
-    processed_instructions = await replace_context_at_commit_symbol({
-      instruction: processed_instructions,
-      workspace_provider: params.workspace_provider
-    })
   }
 
   if (processed_instructions.includes('#SavedContext(')) {

@@ -13,7 +13,6 @@ import {
 const selection_label = '$(list-flat) Selection'
 const changes_label = '$(git-pull-request-draft) Changes'
 const commit_label = '$(git-commit) Commit'
-const context_at_commit_label = '$(history) Context at commit'
 const saved_context_label = '$(checklist) Saved context'
 const skill_label = '$(thinking) Skill'
 
@@ -36,10 +35,6 @@ const hash_sign_quick_pick = async (params: {
       description: 'Diff from a specific commit'
     },
     {
-      label: context_at_commit_label,
-      description: 'Older versions of the currently selected files'
-    },
-    {
       label: saved_context_label,
       description: 'Files from the workspace'
     },
@@ -56,11 +51,7 @@ const hash_sign_quick_pick = async (params: {
   ]
 
   if (params.is_find_relevant_files) {
-    items = items.filter(
-      (item) =>
-        item.label !== context_at_commit_label &&
-        item.label !== saved_context_label
-    )
+    items = items.filter((item) => item.label !== saved_context_label)
   }
 
   const last_selected_symbol =
@@ -134,12 +125,6 @@ const hash_sign_quick_pick = async (params: {
         break
       case commit_label:
         result = await handle_commit_item(params.extension_context, 'Commit')
-        break
-      case context_at_commit_label:
-        result = await handle_commit_item(
-          params.extension_context,
-          'ContextAtCommit'
-        )
         break
       case saved_context_label:
         result = await handle_saved_context_item(params.extension_context)
