@@ -209,6 +209,17 @@ export const generate_commit_message_command = (
           return ''
         }
 
+        const all_files_touched = selected_files_to_attach.every((f) => {
+          const rel_path = vscode.workspace
+            .asRelativePath(f)
+            .replace(/\\/g, '/')
+          return staged_files.includes(rel_path) || staged_files.includes(f)
+        })
+
+        if (all_files_touched) {
+          return ''
+        }
+
         const attach_tree_setting = vscode.workspace
           .getConfiguration('codeWebChat')
           .get<string>('attachAsciiTreeOfContext', 'ask')
@@ -302,7 +313,11 @@ export const generate_commit_message_command = (
       let tree_text = ''
 
       let step: 'edit_message' | 'select_prompts' | 'attach_tree' | 'finish' =
-        params.should_commit ? 'edit_message' : 'attach_tree'
+        params.should_commit
+          ? 'edit_message'
+          : relevant_prompts.length > 0
+            ? 'select_prompts'
+            : 'attach_tree'
       let is_cancelled = false
       let go_back = false
 
@@ -433,7 +448,12 @@ export const generate_commit_message_command = (
           })
 
           if (picked == 'back') {
-            step = 'edit_message'
+            if (params.should_commit) {
+              step = 'edit_message'
+            } else {
+              go_back = true
+              break
+            }
           } else if (picked === undefined) {
             is_cancelled = true
             break
@@ -444,9 +464,10 @@ export const generate_commit_message_command = (
         } else if (step == 'attach_tree') {
           const result = await get_tree_text_if_applicable(selected_prompts)
           if (result == 'back') {
-            if (params.should_commit) {
-              step =
-                relevant_prompts.length > 0 ? 'select_prompts' : 'edit_message'
+            if (relevant_prompts.length > 0) {
+              step = 'select_prompts'
+            } else if (params.should_commit) {
+              step = 'edit_message'
             } else {
               go_back = true
               break
