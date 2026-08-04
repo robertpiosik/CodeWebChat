@@ -14,7 +14,7 @@ import { IconButton as UiIconButton } from '@ui/components/editor/common/IconBut
 import { CompactableActionButton } from '@ui/components/editor/prompt/CompactableActionButton'
 import { Tasks as UiTasks } from '@ui/components/editor/prompt/Tasks'
 import { use_tasks } from './hooks/use-tasks'
-import { use_sticky_mode } from './hooks/use-sticky-mode'
+import { use_has_scrolled_past_mode_button } from './hooks/use-has-scrolled-past-mode-button'
 import { use_compacting } from '@shared/hooks'
 
 type Props = {
@@ -39,13 +39,11 @@ export const Home: React.FC<Props> = (props) => {
   const { t } = use_translation()
   const [active_workspace_root, set_active_workspace_root] = useState<string>()
   const {
-    is_mode_sticky,
-    is_hiding,
-    is_animating_in,
+    has_scrolled_past_mode_button,
     responses_ref,
     mode_ref,
     handle_scroll
-  } = use_sticky_mode(props.is_active)
+  } = use_has_scrolled_past_mode_button(props.is_active)
 
   const {
     tasks,
@@ -91,35 +89,62 @@ export const Home: React.FC<Props> = (props) => {
 
   return (
     <>
-      <div className={styles.header} ref={container_ref}>
-        <div className={styles['header__left']}>
-          <div className={styles['header__home']}>
-            <span className="codicon codicon-home" />
+      <div className={styles.header}>
+        <div
+          className={cn(styles.header__normal, {
+            [styles['header__normal--hidden']]: has_scrolled_past_mode_button
+          })}
+          ref={container_ref}
+        >
+          <div className={styles['header__left']}>
+            <div className={styles['header__home']}>
+              <span className="codicon codicon-home" />
+            </div>
+            <span className={styles['header__text']}>CWC</span>
           </div>
-          <span className={styles['header__text']}>CWC</span>
+          <div className={styles['header__right']}>
+            <CompactableActionButton
+              label={discord_label}
+              href="https://discord.gg/KJySXsrSX5"
+              icon="DISCORD"
+              is_compact={compact_step >= 1}
+            />
+            <CompactableActionButton
+              label={coffee_label}
+              on_click={props.on_donate_click}
+              codicon="coffee"
+              is_compact={compact_step >= 2}
+            />
+          </div>
         </div>
-        <div className={styles['header__right']}>
-          <CompactableActionButton
-            label={discord_label}
-            href="https://discord.gg/KJySXsrSX5"
-            icon="DISCORD"
-            is_compact={compact_step >= 1}
+
+        <div
+          className={cn(styles.header__modes, {
+            [styles['header__modes--visible']]: has_scrolled_past_mode_button
+          })}
+        >
+          <UiModeButton
+            pre={
+              props.is_connected
+                ? t('home.mode.autofill')
+                : t('home.mode.copy-prompt')
+            }
+            label={t('home.mode.chatbots')}
+            on_click={props.on_chatbots_click}
+            is_compact
           />
-          <CompactableActionButton
-            label={coffee_label}
-            on_click={props.on_donate_click}
-            codicon="coffee"
-            is_compact={compact_step >= 2}
+          <div className={styles['header__modes-divider']} />
+          <UiModeButton
+            pre={t('home.mode.make')}
+            label={t('home.mode.api-calls')}
+            on_click={props.on_api_calls_click}
+            is_compact
           />
         </div>
       </div>
 
       <UiScrollable on_scroll={handle_scroll} top_shadow>
-        <div
-          className={cn(styles.content, {
-            [styles['content--sticky']]: is_mode_sticky
-          })}
-        >
+        <div className={styles.content}>
           <div className={styles.inner}>
             {props.response_history.length > 0 && (
               <div className={styles.inner__responses} ref={responses_ref}>
@@ -141,14 +166,7 @@ export const Home: React.FC<Props> = (props) => {
               </div>
             )}
 
-            <div
-              className={cn(styles.inner__mode, {
-                [styles['inner__mode--sticky']]: is_mode_sticky,
-                [styles['inner__mode--animating-in']]: is_animating_in,
-                [styles['inner__mode--hiding']]: is_hiding
-              })}
-              ref={mode_ref}
-            >
+            <div className={styles.inner__mode} ref={mode_ref}>
               <UiModeButton
                 pre={
                   props.is_connected
@@ -157,13 +175,11 @@ export const Home: React.FC<Props> = (props) => {
                 }
                 label={t('home.mode.chatbots')}
                 on_click={props.on_chatbots_click}
-                is_compact={is_mode_sticky}
               />
               <UiModeButton
                 pre={t('home.mode.make')}
                 label={t('home.mode.api-calls')}
                 on_click={props.on_api_calls_click}
-                is_compact={is_mode_sticky}
               />
             </div>
 
@@ -190,17 +206,15 @@ export const Home: React.FC<Props> = (props) => {
                         title={t('home.folder')}
                       >
                         <span
-                          style={{
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap'
-                          }}
+                          className={styles['inner__workspace-dropdown-text']}
                         >
                           {active_root?.split(/[\\/]/).pop() || active_root}
                         </span>
                         <span
-                          className="codicon codicon-unfold"
-                          style={{ fontSize: '12px', flexShrink: 0 }}
+                          className={cn(
+                            'codicon codicon-unfold',
+                            styles['inner__workspace-dropdown-icon']
+                          )}
                         />
                       </div>
                     </div>
@@ -263,13 +277,7 @@ export const Home: React.FC<Props> = (props) => {
             )}
           </div>
 
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              width: '100%'
-            }}
-          >
+          <div className={styles['bottom-wrapper']}>
             <div className={styles.bottom}>
               <div className={styles.bottom__links}>
                 <div>{props.version}</div>
@@ -289,7 +297,8 @@ export const Home: React.FC<Props> = (props) => {
             {props.bottom_spacer_height !== undefined &&
               props.bottom_spacer_height > 0 && (
                 <div
-                  style={{ height: props.bottom_spacer_height, flexShrink: 0 }}
+                  className={styles['bottom-spacer']}
+                  style={{ height: props.bottom_spacer_height }}
                 />
               )}
           </div>

@@ -20,9 +20,10 @@
   height: 80px;
   max-width: 100%;
   overflow: hidden;
+  flex: 1;
 
   &--compact {
-    height: 36px;
+    height: 100%;
     gap: 8px;
 
     .button__pre {
@@ -30,7 +31,7 @@
     }
 
     .button__label {
-      font-size: 18px;
+      font-size: 15px;
     }
   }
 

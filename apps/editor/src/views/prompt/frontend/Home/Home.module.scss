@@ -1,13 +1,32 @@
 .header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  --height: 32px;
+  position: relative;
   width: 100%;
-  padding: 4px 12px;
+  height: var(--height);
 
-  :global([data-modern-ui='true']) & {
-    padding: 4px 10px;
+  &__normal {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 12px;
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      transform var(--transition-duration-250) var(--transition-timing-function),
+      opacity var(--transition-duration-250) var(--transition-timing-function);
+
+    :global([data-modern-ui='true']) & {
+      padding: 0 10px;
+    }
+
+    &--hidden {
+      opacity: 0;
+      transform: translateY(-15px);
+      pointer-events: none;
+    }
   }
 
   &__left {
@@ -43,6 +62,34 @@
     letter-spacing: 1px;
     padding-top: 1px;
   }
+
+  &__modes {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transform: translateY(15px);
+    transition:
+      transform var(--transition-duration-250) var(--transition-timing-function),
+      opacity var(--transition-duration-250) var(--transition-timing-function);
+    pointer-events: none;
+
+    &--visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    &-divider {
+      width: 1px;
+      height: 16px;
+      background-color: var(--cwc-border-color-dimmed);
+    }
+  }
 }
 
 .content {
@@ -53,10 +100,6 @@
   gap: 20px;
   height: 100%;
   padding-top: 4px;
-
-  &--sticky {
-    margin-top: 44px;
-  }
 }
 
 .inner {
@@ -96,26 +139,6 @@
       height: 35px;
       background-color: var(--cwc-border-color-dimmed);
       pointer-events: none;
-    }
-
-    &--sticky {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      position: sticky;
-      top: 10px;
-
-      &::after {
-        height: 20px;
-      }
-    }
-
-    &--animating-in {
-      animation: stickyFadeIn var(--transition-duration-250)
-        var(--transition-timing-function);
-    }
-
-    &--hiding {
-      animation: stickyFadeOut var(--transition-duration-250)
-        var(--transition-timing-function) forwards;
     }
   }
 
@@ -159,6 +182,17 @@
         color: var(--vscode-icon-foreground);
       }
     }
+
+    &-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &-icon {
+      font-size: 12px;
+      flex-shrink: 0;
+    }
   }
 
   &__tasks {
@@ -189,24 +223,12 @@
   }
 }
 
-@keyframes stickyFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.bottom-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
-@keyframes stickyFadeOut {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-15px);
-  }
+.bottom-spacer {
+  flex-shrink: 0;
 }
