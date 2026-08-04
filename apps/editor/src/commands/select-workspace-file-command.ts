@@ -35,6 +35,7 @@ export const select_workspace_file_command = (
           (resolve) => {
             const quick_pick = vscode.window.createQuickPick()
             quick_pick.items = items
+            quick_pick.activeItems = []
             quick_pick.placeholder = t(
               'command.select-workspace-file.select-workspace'
             )
@@ -127,6 +128,7 @@ export const select_workspace_file_command = (
           ) {
             if (file_items_cache.length > 0) {
               quick_pick.items = file_items_cache
+              quick_pick.activeItems = []
             }
             quick_pick.value = last_search_query
             quick_pick.show()
@@ -217,6 +219,7 @@ export const select_workspace_file_command = (
 
         file_items_cache = items
         quick_pick.items = items
+        quick_pick.activeItems = []
         quick_pick.busy = false
 
         if (last_interacted_path) {
@@ -241,7 +244,8 @@ export const select_workspace_file_command = (
                 selected.full_path
               ])
             }
-            quick_pick.hide()
+
+            quick_pick.activeItems = [selected]
           }
         })
 
