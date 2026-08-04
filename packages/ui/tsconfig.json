@@ -20,11 +20,19 @@
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@shared/*": ["../shared/src/*"]
+      "@/*": ["./src/*", "../../apps/editor/src/*"],
+      "@shared/*": ["../shared/src/*"],
+      "@ui/*": ["./src/*"]
     },
     "outDir": "dist"
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "../shared/src/*.ts",
+    "../shared/src/*.tsx",
+    "../../apps/editor/src/**/*.ts",
+    "../../apps/editor/src/**/*.tsx"
+  ],
   "exclude": ["node_modules", "dist"]
 }
