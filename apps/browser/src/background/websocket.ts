@@ -17,7 +17,6 @@ export const check_server_health = async (): Promise<boolean> => {
 
 export const check_and_recover_connection = () => {
   if (websocket?.readyState === WebSocket.OPEN) {
-    // Server sends ping every 10s. If we missed pings (e.g., system slept), connection is a zombie.
     if (Date.now() - last_ping_timestamp > 20000) {
       console.warn(
         'WebSocket connection is stale (no recent pings). Force reconnecting...'
@@ -52,7 +51,6 @@ export const connect_websocket = async (): Promise<void> => {
     const is_healthy = await check_server_health()
     if (!is_healthy) {
       console.debug('Server health check failed, retrying in 5 seconds...')
-      // Let the periodic alarm drive the next retry — setTimeout is unreliable in service workers
       is_reconnecting = false
       return
     }
@@ -61,22 +59,25 @@ export const connect_websocket = async (): Promise<void> => {
     const version = manifest.version
     const user_agent = navigator.userAgent
 
-    websocket = new WebSocket(
+    const ws = new WebSocket(
       `ws://localhost:${DEFAULT_PORT}?token=${SECURITY_TOKENS.BROWSERS}&version=${version}&user_agent=${encodeURIComponent(user_agent)}`
     )
+    websocket = ws
 
-    websocket.onopen = () => {
+    ws.onopen = () => {
+      if (websocket !== ws) return
       console.log('Connected with the VS Code!')
       is_reconnecting = false
       last_ping_timestamp = Date.now()
     }
 
-    websocket.onmessage = async (event) => {
+    ws.onmessage = async (event) => {
+      if (websocket !== ws) return
       const message = JSON.parse(event.data)
       if (message.action == 'ping') {
         last_ping_timestamp = Date.now()
-        if (websocket?.readyState == WebSocket.OPEN) {
-          websocket.send(JSON.stringify({ action: 'pong' }))
+        if (ws.readyState == WebSocket.OPEN) {
+          ws.send(JSON.stringify({ action: 'pong' }))
         }
         return
       }
@@ -84,16 +85,20 @@ export const connect_websocket = async (): Promise<void> => {
       handle_messages(message as WebSocketMessage)
     }
 
-    websocket.onclose = () => {
+    ws.onclose = () => {
       console.log('Disconnected from VS Code, attempting to reconnect...')
-      websocket = null
+      if (websocket === ws) {
+        websocket = null
+      }
       is_reconnecting = false
       // Reconnect attempt will be driven by the next alarm tick
     }
 
-    websocket.onerror = () => {
+    ws.onerror = () => {
+      if (websocket === ws) {
+        websocket = null
+      }
       is_reconnecting = false
-      websocket = null
     }
   } catch {
     is_reconnecting = false
