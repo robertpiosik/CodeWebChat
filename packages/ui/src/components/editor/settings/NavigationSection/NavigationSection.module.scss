@@ -1,0 +1,14 @@
+.container {
+  opacity: var(--dimmed-opacity);
+  transition: opacity var(--transition-duration-250);
+  display: flex;
+  flex-direction: column;
+
+  &--active {
+    opacity: 1;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+}

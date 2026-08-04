@@ -8,15 +8,12 @@
   color: var(--vscode-foreground);
   text-decoration: none;
   cursor: pointer;
-  transition:
-    background-color var(--transition-duration-150),
-    opacity var(--transition-duration-250);
+  transition: background-color var(--transition-duration-150);
 
   font-size: 13px;
   height: 26px;
   padding-left: 20px;
   position: relative;
-  opacity: var(--dimmed-opacity);
 
   &:hover {
     background-color: var(--cwc-bg-tertiary);
@@ -34,13 +31,8 @@
     opacity: 0.2;
   }
 
-  &--parent-active {
-    opacity: 1;
-  }
-
   &--active {
     background-color: var(--cwc-bg-secondary);
-    opacity: 1;
 
     &:hover {
       background-color: var(--cwc-bg-secondary);

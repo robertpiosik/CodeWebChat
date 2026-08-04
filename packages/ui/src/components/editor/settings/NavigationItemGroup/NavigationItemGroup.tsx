@@ -6,7 +6,6 @@ type Props = {
   href: string
   on_click: (e: React.MouseEvent<HTMLAnchorElement>) => void
   is_active: boolean
-  is_parent_active?: boolean
   has_warning?: boolean
   is_last?: boolean
 }
@@ -16,7 +15,6 @@ export const NavigationItemGroup: React.FC<Props> = (props) => {
     <a
       href={props.href}
       className={cn(styles.container, {
-        [styles['container--parent-active']]: props.is_parent_active,
         [styles['container--active']]: props.is_active,
         [styles['container--last']]: props.is_last
       })}

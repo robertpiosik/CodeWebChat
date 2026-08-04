@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { Layout as UiLayout } from '@ui/components/editor/settings/Layout'
+import { NavigationSection as UiNavigationSection } from '@ui/components/editor/settings/NavigationSection'
 import { NavigationItemSection as UiNavigationItemSection } from '@ui/components/editor/settings/NavigationItemSection'
 import { NavigationItemGroup as UiNavigationItemGroup } from '@ui/components/editor/settings/NavigationItemGroup'
 import { ApiConfigurationsSection } from './sections/ApiConfigurationsSection'
@@ -353,47 +354,50 @@ export const Home: React.FC<Props> = (props) => {
       <UiLayout
         ref={scroll_container_ref}
         title={t('sections.settings')}
-        sidebar={NAV_ITEMS_CONFIG.map((item, i) => {
-          let current_parent: NavItem | null = null
-          for (let j = i; j >= 0; j--) {
+        sidebar={(() => {
+          const sections: {
+            parent: NavConfigItem
+            groups: NavConfigItem[]
+          }[] = []
+
+          for (const item of NAV_ITEMS_CONFIG) {
             if (
-              NAV_ITEMS_CONFIG[j].id.startsWith('section:') &&
-              !NAV_ITEMS_CONFIG[j].id.includes(':group:')
+              item.id.startsWith('section:') &&
+              !item.id.includes(':group:')
             ) {
-              current_parent = NAV_ITEMS_CONFIG[j].id
-              break
+              sections.push({ parent: item, groups: [] })
+            } else if (sections.length > 0) {
+              sections[sections.length - 1].groups.push(item)
             }
           }
-          const is_parent_active =
-            current_parent === active_nav_item_id ||
-            current_parent === active_parent_id
 
-          if (item.id.includes(':group:')) {
+          return sections.map((section, i) => {
+            const is_section_active =
+              section.parent.id === active_nav_item_id ||
+              section.parent.id === active_parent_id
+
             return (
-              <UiNavigationItemGroup
-                key={i}
-                href={`#${item.id}`}
-                label={t(item.label)}
-                is_active={item.id == active_nav_item_id}
-                is_parent_active={is_parent_active}
-                has_warning={get_has_warning(item.id)}
-                on_click={(e) => handle_nav_click(e, item.id)}
-                is_last={!NAV_ITEMS_CONFIG[i + 1]?.id.includes(':group:')}
-              />
+              <UiNavigationSection key={i} is_active={is_section_active}>
+                <UiNavigationItemSection
+                  label={t(section.parent.label)}
+                  is_active={is_section_active}
+                  has_warning={get_has_warning(section.parent.id)}
+                />
+                {section.groups.map((group, j) => (
+                  <UiNavigationItemGroup
+                    key={j}
+                    href={`#${group.id}`}
+                    label={t(group.label)}
+                    is_active={group.id === active_nav_item_id}
+                    has_warning={get_has_warning(group.id)}
+                    on_click={(e) => handle_nav_click(e, group.id)}
+                    is_last={j === section.groups.length - 1}
+                  />
+                ))}
+              </UiNavigationSection>
             )
-          }
-
-          return (
-            <UiNavigationItemSection
-              key={i}
-              label={t(item.label)}
-              is_active={
-                item.id == active_nav_item_id || item.id == active_parent_id
-              }
-              has_warning={get_has_warning(item.id)}
-            />
-          )
-        })}
+          })
+        })()}
       >
         <GeneralSection
           ref={(el) => set_section_ref('section:general', el)}
