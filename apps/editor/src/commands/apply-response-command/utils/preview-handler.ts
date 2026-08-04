@@ -115,55 +115,52 @@ export const preview_handler = async (params: {
         })
       }
 
-      if (params.raw_instructions) {
-        const workspace_map = new Map<string, string>()
-        vscode.workspace.workspaceFolders?.forEach((folder) => {
-          workspace_map.set(folder.name, folder.uri.fsPath)
+      const workspace_map = new Map<string, string>()
+      vscode.workspace.workspaceFolders?.forEach((folder) => {
+        workspace_map.set(folder.name, folder.uri.fsPath)
+      })
+      const default_workspace =
+        vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
+
+      const files_by_workspace = new Map<string, string[]>()
+      for (const state of accepted_states) {
+        let workspace_root = default_workspace
+        if (state.workspace_name && workspace_map.has(state.workspace_name)) {
+          workspace_root = workspace_map.get(state.workspace_name)!
+        }
+        if (workspace_root) {
+          const current_files = files_by_workspace.get(workspace_root) || []
+          if (!current_files.includes(state.file_path)) {
+            current_files.push(state.file_path)
+          }
+          files_by_workspace.set(workspace_root, current_files)
+        }
+      }
+
+      const selected_files_by_workspace = new Map<string, string[]>()
+      const checked_files = params.workspace_provider.get_checked_files()
+      for (const file of checked_files) {
+        const workspace_root =
+          params.workspace_provider.get_workspace_root_for_file(file)
+        if (workspace_root) {
+          const relative_path = path
+            .relative(workspace_root, file)
+            .replace(/\\/g, '/')
+          const current_selected =
+            selected_files_by_workspace.get(workspace_root) || []
+          current_selected.push(relative_path)
+          selected_files_by_workspace.set(workspace_root, current_selected)
+        }
+      }
+
+      for (const [workspace_root, files] of files_by_workspace.entries()) {
+        PromptsForCommitMessagesUtils.add({
+          extension_context: params.extension_context,
+          workspace_root,
+          prompt: params.raw_instructions || '',
+          files,
+          selected_files: selected_files_by_workspace.get(workspace_root) || []
         })
-        const default_workspace =
-          vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
-
-        const files_by_workspace = new Map<string, string[]>()
-        for (const state of accepted_states) {
-          let workspace_root = default_workspace
-          if (state.workspace_name && workspace_map.has(state.workspace_name)) {
-            workspace_root = workspace_map.get(state.workspace_name)!
-          }
-          if (workspace_root) {
-            const current_files = files_by_workspace.get(workspace_root) || []
-            if (!current_files.includes(state.file_path)) {
-              current_files.push(state.file_path)
-            }
-            files_by_workspace.set(workspace_root, current_files)
-          }
-        }
-
-        const selected_files_by_workspace = new Map<string, string[]>()
-        const checked_files = params.workspace_provider.get_checked_files()
-        for (const file of checked_files) {
-          const workspace_root =
-            params.workspace_provider.get_workspace_root_for_file(file)
-          if (workspace_root) {
-            const relative_path = path
-              .relative(workspace_root, file)
-              .replace(/\\/g, '/')
-            const current_selected =
-              selected_files_by_workspace.get(workspace_root) || []
-            current_selected.push(relative_path)
-            selected_files_by_workspace.set(workspace_root, current_selected)
-          }
-        }
-
-        for (const [workspace_root, files] of files_by_workspace.entries()) {
-          PromptsForCommitMessagesUtils.add({
-            extension_context: params.extension_context,
-            workspace_root,
-            prompt: params.raw_instructions,
-            files,
-            selected_files:
-              selected_files_by_workspace.get(workspace_root) || []
-          })
-        }
       }
 
       update_undo_button_state({
