@@ -47,21 +47,26 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
 
   const selected_option = props.options.find((opt) => opt.value == props.value)
 
-  const handle_click_outside = (event: MouseEvent) => {
-    if (
-      dropdown_ref.current &&
-      !dropdown_ref.current.contains(event.target as Node)
-    ) {
-      set_is_open(false)
-    }
-  }
-
   useEffect(() => {
+    if (!is_open) return
+
+    const handle_click_outside = (event: MouseEvent | Event) => {
+      if (
+        dropdown_ref.current &&
+        !dropdown_ref.current.contains(event.target as Node)
+      ) {
+        set_is_open(false)
+      }
+    }
+
     document.addEventListener('mousedown', handle_click_outside)
+    document.addEventListener('scroll', handle_click_outside, true)
+
     return () => {
       document.removeEventListener('mousedown', handle_click_outside)
+      document.removeEventListener('scroll', handle_click_outside, true)
     }
-  }, [])
+  }, [is_open])
 
   const menu_items: DropdownMenu.Item[] = props.options.map((option) => ({
     label: option.label,
