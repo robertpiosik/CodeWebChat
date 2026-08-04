@@ -54,6 +54,13 @@
   flex: 1;
   overflow: hidden;
   display: flex;
+  :global([data-modern-ui='true']) & {
+    :global {
+      .simplebar-track.simplebar-vertical {
+        margin: 4px 0;
+      }
+    }
+  }
 
   &__inner {
     display: flex;
