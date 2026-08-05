@@ -3,15 +3,16 @@ import { WorkspaceProvider } from '../../../context/providers/workspace/workspac
 import { SavedContext } from '@/types/context'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
-import { select_context_paths } from '../utils/select-context-paths'
 import {
+  select_context_paths,
   load_and_merge_global_contexts,
   save_contexts_for_workspace,
-  load_contexts_for_workspace
-} from '../utils/global-storage-utils'
-import { group_files_by_workspace, condense_paths } from '../utils/path-utils'
+  load_contexts_for_workspace,
+  group_files_by_workspace,
+  condense_paths,
+  create_context_description
+} from '@/features/context-restoration'
 import { t } from '@/i18n'
-import { create_context_description } from '../utils/create-context-description'
 
 let active_deletion_timestamp: number | undefined
 

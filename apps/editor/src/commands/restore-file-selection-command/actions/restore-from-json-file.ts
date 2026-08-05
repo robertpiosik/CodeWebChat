@@ -5,16 +5,17 @@ import { WorkspaceProvider } from '../../../context/providers/workspace/workspac
 import { SavedContext } from '@/types/context'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
-import { select_context_paths } from '../utils/select-context-paths'
-import { load_and_merge_file_contexts } from '../utils/file-contexts'
 import {
+  select_context_paths,
+  load_and_merge_file_contexts,
   save_contexts_to_file,
   get_contexts_file_path,
-  load_contexts_from_file
-} from '../utils/context-file-utils'
-import { group_files_by_workspace, condense_paths } from '../utils/path-utils'
+  load_contexts_from_file,
+  group_files_by_workspace,
+  condense_paths,
+  create_context_description
+} from '@/features/context-restoration'
 import { t } from '@/i18n'
-import { create_context_description } from '../utils/create-context-description'
 
 export const restore_from_json_file = async (params: {
   workspace_provider: WorkspaceProvider

@@ -1,8 +1,8 @@
 import * as vscode from 'vscode'
-import { WorkspaceProvider } from '../../../context/providers/workspace/workspace-provider'
-import { select_context_source } from '../utils/source-selector'
-import { restore_from_workspace_state } from './restore-from-workspace-state'
-import { restore_from_json_file } from './restore-from-json-file'
+import { WorkspaceProvider } from '../../context/providers/workspace/workspace-provider'
+import { select_context_source } from '@/features/context-restoration'
+import { restore_from_workspace_state } from './actions/restore-from-workspace-state'
+import { restore_from_json_file } from './actions/restore-from-json-file'
 import { t } from '@/i18n'
 
 export const restore_file_selection_command = (params: {

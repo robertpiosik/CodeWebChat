@@ -1,8 +1,8 @@
 import * as vscode from 'vscode'
-import { WorkspaceProvider } from '../../../context/providers/workspace/workspace-provider'
-import { select_context_source } from '../utils/source-selector'
-import { save_to_workspace_state } from './save-to-workspace-state'
-import { save_to_json_file } from './save-to-json-file'
+import { WorkspaceProvider } from '../../context/providers/workspace/workspace-provider'
+import { select_context_source } from '@/features/context-restoration'
+import { save_to_workspace_state } from './actions/save-to-workspace-state'
+import { save_to_json_file } from './actions/save-to-json-file'
 import { t } from '@/i18n'
 import { dictionary } from '@shared/constants/dictionary'
 

@@ -2,9 +2,11 @@ import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
-import { resolve_context_paths } from '@/commands/context-restoration/utils/resolve-context-paths'
-import { load_and_merge_global_contexts } from '@/commands/context-restoration/utils/global-storage-utils'
-import { load_and_merge_file_contexts } from '@/commands/context-restoration/utils/file-contexts'
+import {
+  resolve_context_paths,
+  load_and_merge_global_contexts,
+  load_and_merge_file_contexts
+} from '@/features/context-restoration'
 import { Logger } from '@shared/utils/logger'
 
 export const replace_saved_context_symbol = async (params: {

@@ -2,19 +2,20 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
 import { WorkspaceProvider } from '../../../context/providers/workspace/workspace-provider'
-import { load_and_merge_file_contexts } from '../utils/file-contexts'
 import {
+  load_and_merge_file_contexts,
   get_contexts_file_path,
   load_contexts_from_file,
   save_contexts_to_file,
-  resolve_unique_context_name
-} from '../utils/context-file-utils'
-import { group_files_by_workspace, condense_paths } from '../utils/path-utils'
-import { ask_for_new_context_name } from '../utils/ask-for-new-context-name'
+  resolve_unique_context_name,
+  group_files_by_workspace,
+  condense_paths,
+  ask_for_new_context_name,
+  create_context_description
+} from '@/features/context-restoration'
 import { SavedContext } from '@/types/context'
 import { t } from '@/i18n'
 import { dictionary } from '@shared/constants/dictionary'
-import { create_context_description } from '../utils/create-context-description'
 
 export const save_to_json_file = async (params: {
   workspace_provider: WorkspaceProvider

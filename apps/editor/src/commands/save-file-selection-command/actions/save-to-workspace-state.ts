@@ -3,14 +3,15 @@ import { WorkspaceProvider } from '../../../context/providers/workspace/workspac
 import {
   load_and_merge_global_contexts,
   save_contexts_for_workspace,
-  load_contexts_for_workspace
-} from '../utils/global-storage-utils'
-import { group_files_by_workspace, condense_paths } from '../utils/path-utils'
-import { ask_for_new_context_name } from '../utils/ask-for-new-context-name'
-import { resolve_unique_context_name } from '../utils/context-file-utils'
+  load_contexts_for_workspace,
+  group_files_by_workspace,
+  condense_paths,
+  ask_for_new_context_name,
+  resolve_unique_context_name,
+  create_context_description
+} from '@/features/context-restoration'
 import { t } from '@/i18n'
 import { dictionary } from '@shared/constants/dictionary'
-import { create_context_description } from '../utils/create-context-description'
 
 export const save_to_workspace_state = async (params: {
   workspace_provider: WorkspaceProvider
