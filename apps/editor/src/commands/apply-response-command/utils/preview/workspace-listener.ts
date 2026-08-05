@@ -85,14 +85,27 @@ export const setup_workspace_listeners = (params: {
   const file_will_delete_listener = vscode.workspace.onWillDeleteFiles(
     (event) => {
       const promise = (async () => {
+        const process_uri = async (uri: vscode.Uri) => {
+          try {
+            const stat = await vscode.workspace.fs.stat(uri)
+            if (stat.type === vscode.FileType.Directory) {
+              const entries = await vscode.workspace.fs.readDirectory(uri)
+              for (const [name] of entries) {
+                await process_uri(vscode.Uri.joinPath(uri, name))
+              }
+            } else {
+              const contentBytes = await vscode.workspace.fs.readFile(uri)
+              const content = Buffer.from(contentBytes).toString('utf8')
+              deleted_files_content_cache.set(uri.fsPath, content)
+            }
+          } catch (e) {
+            // Ignore
+          }
+        }
+
         for (const uri of event.files) {
           if (uri.scheme != 'file') continue
-          try {
-            const content = (await vscode.workspace.fs.readFile(uri)).toString()
-            deleted_files_content_cache.set(uri.fsPath, content)
-          } catch (e) {
-            // Ignore, e.g. for directories
-          }
+          await process_uri(uri)
         }
       })()
       event.waitUntil(promise)
@@ -227,9 +240,35 @@ export const setup_workspace_listeners = (params: {
     })
 
   const file_delete_listener = vscode.workspace.onDidDeleteFiles((event) => {
+    const uris_to_process: vscode.Uri[] = []
+
     for (const uri of event.files) {
       if (uri.scheme != 'file') continue
 
+      let found_in_cache = false
+      if (deleted_files_content_cache.has(uri.fsPath)) {
+        uris_to_process.push(uri)
+        found_in_cache = true
+      }
+
+      const prefix = uri.fsPath + path.sep
+      for (const cached_path of deleted_files_content_cache.keys()) {
+        if (cached_path.startsWith(prefix)) {
+          uris_to_process.push(vscode.Uri.file(cached_path))
+          found_in_cache = true
+        }
+      }
+
+      if (!found_in_cache) {
+        uris_to_process.push(uri)
+      }
+    }
+
+    const unique_uris = Array.from(
+      new Set(uris_to_process.map((u) => u.fsPath))
+    ).map((p) => vscode.Uri.file(p))
+
+    for (const uri of unique_uris) {
       const deleted_file_path = uri.fsPath
       const deleted_file_in_preview = params.prepared_files.find(
         (pf) => pf.sanitized_path == deleted_file_path
