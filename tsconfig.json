@@ -3,6 +3,10 @@
     "module": "commonjs",
     "target": "es6",
     "esModuleInterop": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["apps/editor/src/*"],
+      "@shared/*": ["packages/shared/src/*"]
+    }
   }
 }
