@@ -2,8 +2,7 @@ import * as vscode from 'vscode'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
-
-import { PromptsForCommitMessagesUtils } from '@/utils/prompts-for-commit-messages-utils'
+import { CommitMessageDetails } from '@/utils/commit-message-details'
 import { perform_code_at_cursor } from './utils/perform-code-at-cursor'
 
 export const code_at_cursor_commands = (params: {
@@ -21,7 +20,7 @@ export const code_at_cursor_commands = (params: {
         file_path: string
         selected_files: string[]
       }) => {
-        PromptsForCommitMessagesUtils.add({
+        CommitMessageDetails.add({
           extension_context: params.extension_context,
           workspace_root: args.workspace_root,
           prompt: args.prompt,

@@ -6,7 +6,7 @@ import {
 } from '@/features/commit-messages'
 import { t } from '@/i18n'
 import axios from 'axios'
-import { PromptsForCommitMessagesUtils } from '../../../utils/prompts-for-commit-messages-utils'
+import { CommitMessageDetails } from '../../../utils/commit-message-details'
 import { MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE } from '@/constants/values'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
@@ -109,9 +109,8 @@ export const run_generate_action = async (params: {
 
     const workspace_root = repository.rootUri.fsPath
     const all_prompts =
-      PromptsForCommitMessagesUtils.load_all(params.extension_context)[
-        workspace_root
-      ] || []
+      CommitMessageDetails.load_all(params.extension_context)[workspace_root] ||
+      []
 
     const select_prompts_setting = vscode.workspace
       .getConfiguration('codeWebChat')
@@ -433,7 +432,7 @@ export const run_generate_action = async (params: {
         final_edited_message + selected_prompts_text + tree_text
       repository.inputBox.value = commit_message_value
       await vscode.commands.executeCommand('git.commit', repository)
-      PromptsForCommitMessagesUtils.remove_committed_files({
+      CommitMessageDetails.remove_committed_files({
         extension_context: params.extension_context,
         workspace_root,
         prompts: relevant_prompts.map((p) => p.prompt),

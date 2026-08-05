@@ -2,8 +2,8 @@ import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
 
-export namespace PromptsForCommitMessagesUtils {
-  const GLOBAL_PROMPTS_FOR_COMMIT_FILENAME = 'prompts-for-commit.json'
+export namespace CommitMessageDetails {
+  const COMMIT_MESSAGE_DETAILS_FILENAME = 'commit-message-details.json'
 
   export type Prompt = {
     prompt: string
@@ -14,7 +14,7 @@ export namespace PromptsForCommitMessagesUtils {
   export const get_file_path = (extension_context: vscode.ExtensionContext) => {
     return path.join(
       extension_context.globalStorageUri.fsPath,
-      GLOBAL_PROMPTS_FOR_COMMIT_FILENAME
+      COMMIT_MESSAGE_DETAILS_FILENAME
     )
   }
 

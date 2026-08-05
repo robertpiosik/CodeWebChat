@@ -7,7 +7,8 @@ import { PromptViewApiCallsManager } from './services/prompt-view-api-calls-mana
 import {
   migrate_configurations_to_api_configurations,
   migrate_edit_context_to_edit_files_system_instructions,
-  migrate_prompt_templates_suffixes
+  migrate_prompt_templates_suffixes,
+  migrate_commit_message_details_filename
 } from './migrations'
 import {
   apply_response_command,
@@ -64,6 +65,8 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     )
     // 2 July 2026
     await migrate_prompt_templates_suffixes(extension_context)
+    // 5 August 2026
+    await migrate_commit_message_details_filename(extension_context)
   }
 
   await migrations()

@@ -7,7 +7,7 @@ import { undo_files } from './file-operations'
 import { preview } from './preview'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { update_undo_button_state } from './state-manager'
-import { PromptsForCommitMessagesUtils } from '@/utils/prompts-for-commit-messages-utils'
+import { CommitMessageDetails } from '@/utils/commit-message-details'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 
 export let ongoing_preview_cleanup_promise: Promise<void> | null = null
@@ -154,7 +154,7 @@ export const preview_handler = async (params: {
       }
 
       for (const [workspace_root, files] of files_by_workspace.entries()) {
-        PromptsForCommitMessagesUtils.add({
+        CommitMessageDetails.add({
           extension_context: params.extension_context,
           workspace_root,
           prompt: params.raw_instructions || '',

@@ -20,7 +20,7 @@ import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
 import { ongoing_preview_cleanup_promise } from '@/commands/apply-response-command/utils/preview-handler'
 import { get_git_info } from '../utils/git-utils'
-import { PromptsForCommitMessagesUtils } from '@/utils/prompts-for-commit-messages-utils'
+import { CommitMessageDetails } from '@/utils/commit-message-details'
 import { t } from '@/i18n'
 export const restore_checkpoint = async (params: {
   checkpoint: Checkpoint
@@ -53,7 +53,7 @@ export const restore_checkpoint = async (params: {
       params.checkpoint.trigger == 'response-accepted' &&
       params.checkpoint.description
     ) {
-      PromptsForCommitMessagesUtils.remove({
+      CommitMessageDetails.remove({
         extension_context: params.extension_context,
         prompt: params.checkpoint.description
       })

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import { PromptsForCommitMessagesUtils } from '../utils/prompts-for-commit-messages-utils'
+import { CommitMessageDetails } from '../utils/commit-message-details'
 
 export const setup_git_discard_file_watcher = (
   extension_context: vscode.ExtensionContext
@@ -41,7 +41,7 @@ export const setup_git_discard_file_watcher = (
         if (previous_changes) {
           for (const prev_change of previous_changes) {
             if (!current_changes.has(prev_change)) {
-              PromptsForCommitMessagesUtils.remove_file_path({
+              CommitMessageDetails.remove_file_path({
                 extension_context,
                 file_path: prev_change,
                 workspace_root
