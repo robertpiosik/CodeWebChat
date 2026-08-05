@@ -49,7 +49,6 @@ export const select_referencing_files_command = (
         }
 
         let do_whole_file_search = true
-        const current_file_path = target_uri.fsPath
 
         if (should_check_position && target_position) {
           matched_files = await vscode.window.withProgress(
@@ -62,7 +61,7 @@ export const select_referencing_files_command = (
                 uri: target_uri!,
                 position: target_position!,
                 workspace_provider,
-                ignore_paths: [current_file_path]
+                ignore_paths: []
               })
             }
           )
@@ -99,7 +98,7 @@ export const select_referencing_files_command = (
               return await get_referencing_files_for_uris({
                 uris: starting_uris,
                 workspace_provider,
-                ignore_paths: [current_file_path],
+                ignore_paths: [],
                 progress,
                 token
               })
