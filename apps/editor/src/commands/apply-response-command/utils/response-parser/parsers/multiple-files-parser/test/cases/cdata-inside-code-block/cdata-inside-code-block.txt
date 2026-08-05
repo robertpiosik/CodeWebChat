@@ -1,6 +1,0 @@
-```typescript
-// src/index.ts
-<![CDATA[
-console.log("hello")
-]]>
-```

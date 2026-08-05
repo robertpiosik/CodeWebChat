@@ -1,18 +1,3 @@
-export const strip_markdown_code_block = (content: string): string => {
-  const trimmed = content.trim()
-  const lines = trimmed.split('\n')
-
-  if (
-    lines.length >= 2 &&
-    lines[0].trim().startsWith('```') &&
-    lines[lines.length - 1].trim() == '```'
-  ) {
-    return lines.slice(1, -1).join('\n')
-  }
-
-  return trimmed
-}
-
 export const process_conflict_markers = (content: string): string => {
   const lines = content.split('\n')
   const result_lines: string[] = []

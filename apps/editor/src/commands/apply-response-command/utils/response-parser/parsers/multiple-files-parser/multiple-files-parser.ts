@@ -1,29 +1,15 @@
 import { extract_path_from_line_of_code } from '@shared/utils/extract-path-from-line-of-code'
 import { FileItem, TextItem, InlineFileItem } from '../../response-parser'
-import { parse_file_content_only } from '../file-content-only-parser'
 import {
-  extract_file_path_from_xml,
   extract_and_set_workspace_path,
   create_or_update_file_item,
-  flush_text_block,
-  process_conflict_markers,
-  strip_markdown_code_block
+  flush_text_block
 } from './helpers'
 
 export const parse_multiple_files = (params: {
   response: string
   is_single_root_folder_workspace: boolean
 }): (FileItem | TextItem | InlineFileItem)[] => {
-  const file_content_result = parse_file_content_only(params)
-  if (file_content_result) {
-    if (file_content_result.type == 'file') {
-      file_content_result.content = process_conflict_markers(
-        file_content_result.content
-      )
-    }
-    return [file_content_result]
-  }
-
   const results: (FileItem | TextItem | InlineFileItem)[] = []
   const file_ref_map = new Map<string, FileItem>()
   let current_text_block = ''
@@ -33,11 +19,7 @@ export const parse_multiple_files = (params: {
   let renamed_from_workspace: string | undefined = undefined
   let current_file_name = ''
   let current_content = ''
-  let is_first_content_line = false
   let current_workspace_name: string | undefined = undefined
-  let xml_file_mode = false
-  let top_level_xml_file_mode = false
-  let in_cdata = false
   let backtick_nesting_level = 0
   let last_seen_file_path_comment: string | null = null
   let last_seen_file_path_was_header = false
@@ -46,8 +28,6 @@ export const parse_multiple_files = (params: {
   let current_block_mode: 'overwrite' | 'append' = 'overwrite'
   let is_markdown_container_block = false
   let current_language = ''
-  let current_xml_tag: string | null = null
-  let current_file_name_was_comment = false
 
   const lines = params.response.split('\n')
 
@@ -61,20 +41,7 @@ export const parse_multiple_files = (params: {
 
         current_block_mode = 'overwrite'
 
-        const extracted_filename = before_backticks.trim()
-          ? extract_path_from_line_of_code(before_backticks)
-          : null
-
-        if (extracted_filename) {
-          last_seen_file_path_comment = extracted_filename
-          last_seen_file_path_was_header = false
-          last_seen_header_was_persistent = false
-          header_path_already_used = false
-        }
-
-        if (!extracted_filename) {
-          current_text_block += before_backticks
-        }
+        current_text_block += before_backticks
 
         flush_text_block({
           text_block: current_text_block,
@@ -84,50 +51,6 @@ export const parse_multiple_files = (params: {
 
         const after_backticks = line.substring(backtick_index + 3).trim()
         current_language = after_backticks.split(/[:\s{]/)[0]
-        if (after_backticks) {
-          const name_match = after_backticks.match(
-            /(?:path|name)=(?:"([^"]+)"|'([^']+)'|(\S+))/
-          )
-          if (name_match) {
-            const path = name_match[1] || name_match[2] || name_match[3]
-            if (path) {
-              last_seen_file_path_comment = path
-              last_seen_file_path_was_header = false
-              header_path_already_used = false
-            }
-          } else {
-            const parts = after_backticks.split(':')
-            if (parts.length > 1) {
-              const potential_path = parts.slice(1).join(':').trim()
-              if (
-                potential_path.includes('/') ||
-                potential_path.includes('\\') ||
-                potential_path.includes('.')
-              ) {
-                last_seen_file_path_comment = potential_path
-                last_seen_file_path_was_header = false
-                header_path_already_used = false
-              }
-            } else {
-              let extracted_filename: string | null = null
-              const lang_and_path = after_backticks.split(/\s+/)
-              if (lang_and_path.length > 1) {
-                const potential_path_part = lang_and_path.slice(1).join(' ')
-                extracted_filename =
-                  extract_path_from_line_of_code(potential_path_part)
-              }
-              if (!extracted_filename) {
-                extracted_filename =
-                  extract_path_from_line_of_code(after_backticks)
-              }
-              if (extracted_filename) {
-                last_seen_file_path_comment = extracted_filename
-                last_seen_file_path_was_header = false
-                header_path_already_used = false
-              }
-            }
-          }
-        }
 
         state = 'CONTENT'
         backtick_nesting_level = 1
@@ -144,7 +67,6 @@ export const parse_multiple_files = (params: {
           if (workspace_name) {
             current_workspace_name = workspace_name
           }
-          current_file_name_was_comment = false
 
           if (last_seen_file_path_was_header) {
             if (header_path_already_used && !last_seen_header_was_persistent) {
@@ -190,38 +112,8 @@ export const parse_multiple_files = (params: {
           }
         }
         current_content = ''
-        is_first_content_line = true
-        xml_file_mode = false
-        top_level_xml_file_mode = false
-        in_cdata = false
         is_markdown_container_block = false
         continue
-      } else if (line.trim().startsWith('<')) {
-        const xml_info = extract_file_path_from_xml(line)
-        if (xml_info) {
-          flush_text_block({
-            text_block: current_text_block,
-            results
-          })
-          current_text_block = ''
-
-          state = 'CONTENT'
-          current_xml_tag = xml_info.tagName
-          top_level_xml_file_mode = true
-          const { workspace_name, relative_path } =
-            extract_and_set_workspace_path({
-              raw_file_path: xml_info.path,
-              is_single_root_folder_workspace:
-                params.is_single_root_folder_workspace
-            })
-          current_file_name = relative_path
-          if (workspace_name) {
-            current_workspace_name = workspace_name
-          }
-          current_content = ''
-          last_seen_file_path_comment = null
-          continue
-        }
       }
 
       const renamed_file_match = line
@@ -321,17 +213,6 @@ export const parse_multiple_files = (params: {
             extracted_filename = cleaned
           }
         }
-        const trimmed = line.trim()
-        if (trimmed.startsWith('<!--') && trimmed.endsWith('-->')) {
-          const potential_path = trimmed.slice(4, -3).trim()
-          if (
-            potential_path.includes('/') ||
-            potential_path.includes('\\') ||
-            potential_path.includes('.')
-          ) {
-            extracted_filename = potential_path
-          }
-        }
       }
       if (!extracted_filename) {
         const match = line.match(/`([^`]+)`/)
@@ -357,10 +238,7 @@ export const parse_multiple_files = (params: {
               const is_comment_or_header =
                 trimmed_line.startsWith('#') ||
                 trimmed_line.startsWith('//') ||
-                trimmed_line.startsWith('/*') ||
-                trimmed_line.startsWith('*') ||
-                trimmed_line.startsWith('--') ||
-                trimmed_line.startsWith('<!--')
+                trimmed_line.startsWith('--')
               let is_followed_by_code_block = false
               for (let j = i + 1; j < lines.length; j++) {
                 const next_line = lines[j].trim()
@@ -460,103 +338,23 @@ export const parse_multiple_files = (params: {
         }
       }
     } else if (state == 'CONTENT') {
-      if (top_level_xml_file_mode) {
-        if (line.trim().startsWith(`</${current_xml_tag}>`)) {
-          const final_content = strip_markdown_code_block(current_content)
-
-          state = 'TEXT'
-
-          create_or_update_file_item({
-            file_name: current_file_name,
-            content: final_content,
-            workspace_name: current_workspace_name,
-            file_ref_map,
-            results,
-            mode: current_block_mode,
-            renamed_from: renamed_from_path,
-            renamed_from_workspace
-          })
-
-          renamed_from_path = undefined
-          renamed_from_workspace = undefined
-          current_file_name = ''
-          current_content = ''
-          current_workspace_name = undefined
-          top_level_xml_file_mode = false
-          in_cdata = false
-          current_xml_tag = null
-        } else if (line.trim().startsWith('<![CDATA[')) {
-          in_cdata = true
-        } else if (in_cdata && line.trim().includes(']]>')) {
-          in_cdata = false
-        } else {
-          const trimmed_current_content = current_content.trim()
-          if (
-            trimmed_current_content.startsWith('```') &&
-            trimmed_current_content.endsWith('```') &&
-            line.trim() != ''
-          ) {
-            const final_content = strip_markdown_code_block(
-              trimmed_current_content
-            )
-
-            state = 'TEXT'
-
-            create_or_update_file_item({
-              file_name: current_file_name,
-              content: final_content,
-              workspace_name: current_workspace_name,
-              file_ref_map,
-              results,
-              mode: current_block_mode,
-              renamed_from: renamed_from_path,
-              renamed_from_workspace
-            })
-
-            renamed_from_path = undefined
-            renamed_from_workspace = undefined
-            current_file_name = ''
-            current_content = ''
-            current_workspace_name = undefined
-            top_level_xml_file_mode = false
-            in_cdata = false
-            current_xml_tag = null
-            i-- // Reprocess current line in TEXT mode
-          } else {
-            current_content += (current_content ? '\n' : '') + line
-          }
-        }
-        continue
-      }
-
       const trimmed_line = line.trim()
 
       if (trimmed_line.startsWith('```') && trimmed_line != '```') {
         if (
           backtick_nesting_level == 1 &&
           current_file_name &&
-          current_content.trim() == '' &&
-          !current_file_name_was_comment &&
-          !xml_file_mode
+          current_content.trim() == ''
         ) {
           state = 'TEXT'
           last_seen_file_path_comment = current_file_name
           current_file_name = ''
           current_content = ''
-          is_first_content_line = false
           current_workspace_name = undefined
-          xml_file_mode = false
-          in_cdata = false
           i--
           continue
         }
 
-        if (
-          backtick_nesting_level == 1 &&
-          (current_language == 'markdown' || current_language == 'md')
-        ) {
-          is_first_content_line = true
-        }
         backtick_nesting_level++
         if (
           (current_language == 'markdown' || current_language == 'md') &&
@@ -616,12 +414,6 @@ export const parse_multiple_files = (params: {
 
         if (should_close) {
           backtick_nesting_level--
-          if (
-            backtick_nesting_level == 1 &&
-            (current_language == 'markdown' || current_language == 'md')
-          ) {
-            is_first_content_line = true
-          }
         } else {
           backtick_nesting_level++
         }
@@ -689,168 +481,11 @@ export const parse_multiple_files = (params: {
 
         current_file_name = ''
         current_content = ''
-        is_first_content_line = false
         current_workspace_name = undefined
-        xml_file_mode = false
-        in_cdata = false
         if (last_backticks_index != -1) {
           current_text_block = line.substring(last_backticks_index + 3)
         }
       } else {
-        if (is_first_content_line && line.trim().startsWith('<')) {
-          const xml_info = extract_file_path_from_xml(line)
-          if (xml_info) {
-            const { workspace_name, relative_path } =
-              extract_and_set_workspace_path({
-                raw_file_path: xml_info.path,
-                is_single_root_folder_workspace:
-                  params.is_single_root_folder_workspace
-              })
-            current_file_name = relative_path
-            if (workspace_name) {
-              current_workspace_name = workspace_name
-            }
-            xml_file_mode = true
-            current_xml_tag = xml_info.tagName
-            is_first_content_line = false
-            current_file_name_was_comment = true
-            continue
-          }
-        }
-
-        if (
-          is_first_content_line &&
-          !xml_file_mode &&
-          !last_seen_file_path_was_header
-        ) {
-          const trimmed_line = line.trim()
-          let extracted_filename: string | null = null
-
-          if (trimmed_line.startsWith('#')) {
-            const html_comment_match = trimmed_line.match(
-              /<!--\s*(?:file:\/?)?(.*?)\s*-->/
-            )
-            if (html_comment_match) {
-              const potential_path = html_comment_match[1].trim()
-              if (
-                potential_path.includes('/') ||
-                potential_path.includes('\\') ||
-                potential_path.includes('.')
-              ) {
-                extracted_filename = potential_path
-              }
-            }
-          }
-
-          if (extracted_filename) {
-            const { workspace_name, relative_path } =
-              extract_and_set_workspace_path({
-                raw_file_path: extracted_filename,
-                is_single_root_folder_workspace:
-                  params.is_single_root_folder_workspace
-              })
-            current_file_name = relative_path
-            if (workspace_name) {
-              current_workspace_name = workspace_name
-            }
-
-            is_first_content_line = false
-            current_file_name_was_comment = true
-            continue
-          }
-
-          if (trimmed_line.startsWith('<?php')) {
-            if (current_content) {
-              current_content += '\n' + line
-            } else {
-              current_content = line
-            }
-            continue
-          }
-
-          const is_comment =
-            trimmed_line.startsWith('//') ||
-            trimmed_line.startsWith('#') ||
-            trimmed_line.startsWith('/*') ||
-            trimmed_line.startsWith('*') ||
-            trimmed_line.startsWith('--') ||
-            trimmed_line.startsWith('<!--')
-
-          if (is_comment) {
-            extracted_filename = extract_path_from_line_of_code(line)
-          } else {
-            const potential_path = trimmed_line.replace(/\\/g, '/')
-            const last_segment = potential_path.split('/').pop()
-            if (
-              last_segment?.includes('.') &&
-              !last_segment?.endsWith('.') &&
-              /^[a-zA-Z0-9_./@-]+$/.test(potential_path)
-            ) {
-              extracted_filename = trimmed_line
-            }
-          }
-
-          if (extracted_filename) {
-            if (current_language == 'markdown' || current_language == 'md') {
-              if (current_file_name) {
-                const cleaned_content = current_content.trim()
-                create_or_update_file_item({
-                  file_name: current_file_name,
-                  content: cleaned_content,
-                  workspace_name: current_workspace_name,
-                  file_ref_map,
-                  results,
-                  mode: current_block_mode,
-                  renamed_from: renamed_from_path,
-                  renamed_from_workspace
-                })
-              }
-              current_content = ''
-            }
-
-            const { workspace_name, relative_path } =
-              extract_and_set_workspace_path({
-                raw_file_path: extracted_filename,
-                is_single_root_folder_workspace:
-                  params.is_single_root_folder_workspace
-              })
-            current_file_name = relative_path
-            current_file_name_was_comment = is_comment
-            if (
-              backtick_nesting_level > 1 &&
-              (current_language == 'markdown' || current_language == 'md')
-            ) {
-              current_content = ''
-            }
-
-            if (workspace_name) {
-              current_workspace_name = workspace_name
-            }
-
-            is_first_content_line = false
-            current_block_mode = 'overwrite'
-            continue
-          }
-        }
-
-        if (line.trim().startsWith('<![CDATA[')) {
-          in_cdata = true
-          continue
-        }
-
-        if (in_cdata && line.trim().includes(']]>')) {
-          in_cdata = false
-          continue
-        }
-
-        if (
-          xml_file_mode &&
-          !in_cdata &&
-          line.trim() == `</${current_xml_tag}>`
-        ) {
-          continue
-        }
-
         const lang_is_markdown =
           current_language == 'markdown' || current_language == 'md'
 
@@ -878,28 +513,14 @@ export const parse_multiple_files = (params: {
             }
           }
         }
-
-        if (
-          is_first_content_line &&
-          line.trim() != '' &&
-          !line.trim().startsWith('```')
-        ) {
-          is_first_content_line = false
-        }
       }
     }
   }
 
   if (state == 'CONTENT' && current_file_name) {
-    let cleaned_content = current_content
-
-    if (top_level_xml_file_mode) {
-      cleaned_content = strip_markdown_code_block(current_content)
-    }
-
     create_or_update_file_item({
       file_name: current_file_name,
-      content: cleaned_content,
+      content: current_content,
       workspace_name: current_workspace_name,
       file_ref_map,
       results,

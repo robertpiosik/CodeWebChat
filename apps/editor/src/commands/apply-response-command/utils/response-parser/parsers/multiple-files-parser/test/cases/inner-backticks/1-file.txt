@@ -1,4 +1,0 @@
-```text
-Lorem ipsum.
-```
-console.log('outer');

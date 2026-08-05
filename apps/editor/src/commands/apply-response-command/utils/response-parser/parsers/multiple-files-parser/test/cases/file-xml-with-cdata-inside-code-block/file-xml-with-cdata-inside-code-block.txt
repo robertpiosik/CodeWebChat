@@ -1,7 +1,0 @@
-```typescript
-<file path="src/index.ts">
-<![CDATA[
-console.log("hello")
-]]>
-</file>
-```
