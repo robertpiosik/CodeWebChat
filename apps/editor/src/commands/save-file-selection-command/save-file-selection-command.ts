@@ -28,7 +28,7 @@ export const save_file_selection_command = (params: {
 
         const { source } = await select_context_source({
           extension_context: params.extension_context,
-          title: t('command.context-restoration.destination.title'),
+          title: t('command.save-file-selection.destination.title'),
           mode: 'save'
         })
 

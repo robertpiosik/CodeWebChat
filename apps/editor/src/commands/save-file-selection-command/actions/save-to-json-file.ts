@@ -24,16 +24,16 @@ export const save_to_json_file = async (params: {
   let { merged: file_contexts, context_to_roots } =
     await load_and_merge_file_contexts()
   const LABEL_SAVE_NEW_CONTEXT = t(
-    'command.context-restoration.save-new-context.label'
+    'command.save-file-selection.save-new-context.label'
   )
 
   const edit_button = {
     iconPath: new vscode.ThemeIcon('edit'),
-    tooltip: t('command.context-restoration.action.rename')
+    tooltip: t('command.save-file-selection.action.rename')
   }
   const delete_button = {
     iconPath: new vscode.ThemeIcon('trash'),
-    tooltip: t('command.context-restoration.action.delete')
+    tooltip: t('command.save-file-selection.action.delete')
   }
 
   let name_to_highlight: string | undefined
@@ -44,7 +44,7 @@ export const save_to_json_file = async (params: {
 
     if (file_contexts.length > 0) {
       items.push({
-        label: t('command.context-restoration.entries-az'),
+        label: t('command.save-file-selection.entries-az'),
         kind: vscode.QuickPickItemKind.Separator
       })
       for (const context of file_contexts) {
@@ -65,8 +65,8 @@ export const save_to_json_file = async (params: {
     }
 
     const quick_pick = vscode.window.createQuickPick<any>()
-    quick_pick.title = t('command.context-restoration.select-saved.title')
-    quick_pick.placeholder = t('command.context-restoration.save.placeholder')
+    quick_pick.title = t('command.save-file-selection.select-saved.title')
+    quick_pick.placeholder = t('command.save-file-selection.save.placeholder')
     quick_pick.items = items
     quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
@@ -116,8 +116,8 @@ export const save_to_json_file = async (params: {
 
       if (selection.triggeredButton === edit_button) {
         const input_box = vscode.window.createInputBox()
-        input_box.title = t('command.context-restoration.rename.title')
-        input_box.prompt = t('command.context-restoration.rename.prompt')
+        input_box.title = t('command.save-file-selection.rename.title')
+        input_box.prompt = t('command.save-file-selection.rename.prompt')
         input_box.value = old_name
         const new_name = await new Promise<string | undefined>((resolve) => {
           let accepted = false
@@ -126,7 +126,7 @@ export const save_to_json_file = async (params: {
             const trimmed = value.trim()
             if (!trimmed) {
               input_box.validationMessage = t(
-                'command.context-restoration.rename.empty'
+                'command.save-file-selection.rename.empty'
               )
               return false
             }
@@ -136,7 +136,7 @@ export const save_to_json_file = async (params: {
               )
             ) {
               input_box.validationMessage = t(
-                'command.context-restoration.rename.exists'
+                'command.save-file-selection.rename.exists'
               )
               return false
             }
@@ -183,12 +183,12 @@ export const save_to_json_file = async (params: {
           new_name && new_name != old_name ? new_name : old_name
       } else if (selection.triggeredButton === delete_button) {
         const choice = await vscode.window.showInformationMessage(
-          t('command.context-restoration.delete.prompt', { name: old_name }),
+          t('command.save-file-selection.delete.prompt', { name: old_name }),
           { modal: true },
-          t('command.context-restoration.delete.action')
+          t('command.save-file-selection.delete.action')
         )
 
-        if (choice == t('command.context-restoration.delete.action')) {
+        if (choice == t('command.save-file-selection.delete.action')) {
           const roots_to_update = context_to_roots.get(old_name) || []
           for (const root of roots_to_update) {
             const p = get_contexts_file_path(root)
@@ -257,14 +257,14 @@ export const save_to_json_file = async (params: {
     if (selection.context) {
       const context_name = selection.context.name
       const choice = await vscode.window.showWarningMessage(
-        t('command.context-restoration.overwrite.prompt', {
+        t('command.save-file-selection.overwrite.prompt', {
           name: context_name
         }),
         { modal: true },
-        t('command.context-restoration.overwrite.action')
+        t('command.save-file-selection.overwrite.action')
       )
 
-      if (choice === t('command.context-restoration.overwrite.action')) {
+      if (choice === t('command.save-file-selection.overwrite.action')) {
         const current_roots = context_to_roots.get(context_name) || []
         const all_roots = new Set([
           ...current_roots,

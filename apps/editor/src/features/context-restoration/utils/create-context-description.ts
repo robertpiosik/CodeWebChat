@@ -27,7 +27,7 @@ export const create_context_description = async (params: {
   const total_tokens = token_counts.reduce((acc, tc) => acc + tc.total, 0)
   const formatted_tokens = display_token_count(total_tokens)
 
-  let description = `${resolved_paths.length} file${resolved_paths.length == 1 ? '' : 's'} · ${formatted_tokens}`
+  let description = `${formatted_tokens} (${resolved_paths.length} file${resolved_paths.length == 1 ? '' : 's'})`
 
   const is_multi_root = (vscode.workspace.workspaceFolders || []).length > 1
   if (params.roots.length > 0 && (params.roots.length > 1 || is_multi_root)) {

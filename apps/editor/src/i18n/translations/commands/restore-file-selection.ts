@@ -1,41 +1,5 @@
 export const translations = {
-  'command.context-restoration.sources.workspace-state': {
-    en: 'Workspace state',
-    pl: 'Stan obszaru roboczego',
-    'zh-cn': '工作区状态',
-    ja: 'ワークスペースの状態',
-    'zh-tw': '工作區狀態',
-    de: 'Workspace-Status',
-    es: 'Estado del espacio de trabajo',
-    fr: "État de l'espace de travail",
-    'pt-br': 'Estado do espaço de trabalho',
-    ru: 'Состояние рабочей области',
-    ko: '작업 영역 상태',
-    it: "Stato dell'area di lavoro",
-    tr: 'Çalışma alanı durumu',
-    cs: 'Stav pracovního prostoru',
-    hu: 'Munkaterület állapota',
-    bg: 'Състояние на работното пространство'
-  },
-  'command.context-restoration.sources.json-file': {
-    en: 'JSON file',
-    pl: 'Plik JSON',
-    'zh-cn': 'JSON 文件',
-    ja: 'JSON ファイル',
-    'zh-tw': 'JSON 檔案',
-    de: 'JSON-Datei',
-    es: 'Archivo JSON',
-    fr: 'Fichier JSON',
-    'pt-br': 'Arquivo JSON',
-    ru: 'JSON файл',
-    ko: 'JSON 파일',
-    it: 'File JSON',
-    tr: 'JSON dosyası',
-    cs: 'Soubor JSON',
-    hu: 'JSON fájl',
-    bg: 'JSON файл'
-  },
-  'command.context-restoration.sources.unstaged-files': {
+  'command.restore-file-selection.sources.unstaged-files': {
     en: 'Unstaged files',
     pl: 'Nieprzygotowane pliki',
     'zh-cn': '未暂存的文件',
@@ -53,7 +17,7 @@ export const translations = {
     hu: 'Nem előkészített fájlok',
     bg: 'Неиндексирани файлове'
   },
-  'command.context-restoration.sources.commit-files': {
+  'command.restore-file-selection.sources.commit-files': {
     en: 'Files of a commit...',
     pl: 'Pliki z commita...',
     'zh-cn': '提交的文件...',
@@ -71,25 +35,7 @@ export const translations = {
     hu: 'Egy commit fájljai...',
     bg: 'Файлове от commit...'
   },
-  'command.context-restoration.destination.title': {
-    en: 'Destination',
-    pl: 'Miejsce docelowe',
-    'zh-cn': '目标',
-    ja: '宛先',
-    'zh-tw': '目標',
-    de: 'Ziel',
-    es: 'Destino',
-    fr: 'Destination',
-    'pt-br': 'Destino',
-    ru: 'Место назначения',
-    ko: '대상',
-    it: 'Destinazione',
-    tr: 'Hedef',
-    cs: 'Cíl',
-    hu: 'Cél',
-    bg: 'Дестинация'
-  },
-  'command.context-restoration.source.title': {
+  'command.restore-file-selection.source.title': {
     en: 'Source',
     pl: 'Źródło',
     'zh-cn': '来源',
@@ -107,61 +53,7 @@ export const translations = {
     hu: 'Forrás',
     bg: 'Източник'
   },
-  'command.context-restoration.sources.placeholder': {
-    en: 'Select option',
-    pl: 'Wybierz opcję',
-    'zh-cn': '选择选项',
-    ja: 'オプションを選択',
-    'zh-tw': '選擇選項',
-    de: 'Option auswählen',
-    es: 'Seleccionar opción',
-    fr: 'Sélectionner une option',
-    'pt-br': 'Selecionar opção',
-    ru: 'Выберите опцию',
-    ko: '옵션 선택',
-    it: 'Seleziona opzione',
-    tr: 'Seçenek belirle',
-    cs: 'Vyberte možnost',
-    hu: 'Válasszon opciót',
-    bg: 'Изберете опция'
-  },
-  'command.context-restoration.action.open-json': {
-    en: 'Open contexts.json',
-    pl: 'Otwórz contexts.json',
-    'zh-cn': '打开 contexts.json',
-    ja: 'contexts.json を開く',
-    'zh-tw': '打開 contexts.json',
-    de: 'contexts.json öffnen',
-    es: 'Abrir contexts.json',
-    fr: 'Ouvrir contexts.json',
-    'pt-br': 'Abrir contexts.json',
-    ru: 'Открыть contexts.json',
-    ko: 'contexts.json 열기',
-    it: 'Apri contexts.json',
-    tr: "contexts.json'u aç",
-    cs: 'Otevřít contexts.json',
-    hu: 'contexts.json megnyitása',
-    bg: 'Отваряне на contexts.json'
-  },
-  'command.context-restoration.save-new-context.label': {
-    en: '$(add) Save new context...',
-    pl: '$(add) Zapisz nowy kontekst...',
-    'zh-cn': '$(add) 保存新上下文...',
-    ja: '$(add) 新しいコンテキストを保存...',
-    'zh-tw': '$(add) 儲存新上下文...',
-    de: '$(add) Neuen Kontext speichern...',
-    es: '$(add) Guardar nuevo contexto...',
-    fr: '$(add) Enregistrer un nouveau contexte...',
-    'pt-br': '$(add) Salvar novo contexto...',
-    ru: '$(add) Сохранить новый контекст...',
-    ko: '$(add) 새 컨텍스트 저장...',
-    it: '$(add) Salva nuovo contesto...',
-    tr: '$(add) Yeni bağlamı kaydet...',
-    cs: '$(add) Uložit nový kontext...',
-    hu: '$(add) Új kontextus mentése...',
-    bg: '$(add) Запазване на нов контекст...'
-  },
-  'command.context-restoration.recent-entries': {
+  'command.restore-file-selection.recent-entries': {
     en: 'recent entries',
     pl: 'ostatnie wpisy',
     'zh-cn': '最近的条目',
@@ -179,7 +71,7 @@ export const translations = {
     hu: 'legutóbbi bejegyzések',
     bg: 'скорошни записи'
   },
-  'command.context-restoration.entries-az': {
+  'command.restore-file-selection.entries-az': {
     en: 'entries (A-Z)',
     pl: 'wpisy (A-Z)',
     'zh-cn': '条目 (A-Z)',
@@ -197,7 +89,7 @@ export const translations = {
     hu: 'bejegyzések (A-Z)',
     bg: 'записи (А-Я)'
   },
-  'command.context-restoration.action.rename': {
+  'command.restore-file-selection.action.rename': {
     en: 'Rename',
     pl: 'Zmień nazwę',
     'zh-cn': '重命名',
@@ -215,7 +107,7 @@ export const translations = {
     hu: 'Átnevezés',
     bg: 'Преименуване'
   },
-  'command.context-restoration.action.delete': {
+  'command.restore-file-selection.action.delete': {
     en: 'Delete',
     pl: 'Usuń',
     'zh-cn': '删除',
@@ -233,7 +125,7 @@ export const translations = {
     hu: 'Törlés',
     bg: 'Изтриване'
   },
-  'command.context-restoration.select-saved.title': {
+  'command.restore-file-selection.select-saved.title': {
     en: 'Saved Entries',
     pl: 'Zapisane wpisy',
     'zh-cn': '已保存的条目',
@@ -251,7 +143,7 @@ export const translations = {
     hu: 'Mentett bejegyzések',
     bg: 'Запазени записи'
   },
-  'command.context-restoration.select-saved.workspace': {
+  'command.restore-file-selection.select-saved.workspace': {
     en: 'Saved contexts (from workspace state)',
     pl: 'Wybierz zapisany kontekst (ze stanu obszaru roboczego)',
     'zh-cn': '选择已保存的上下文 (来自工作区状态)',
@@ -269,7 +161,7 @@ export const translations = {
     hu: 'Mentett kontextus kiválasztása (a munkaterület állapotából)',
     bg: 'Изберете запазен контекст (от състоянието на работното пространство)'
   },
-  'command.context-restoration.select-saved.file': {
+  'command.restore-file-selection.select-saved.file': {
     en: 'Saved contexts (from .vscode/contexts.json)',
     pl: 'Wybierz zapisany kontekst (z .vscode/contexts.json)',
     'zh-cn': '选择已保存的上下文 (来自 .vscode/contexts.json)',
@@ -287,7 +179,7 @@ export const translations = {
     hu: 'Mentett kontextus kiválasztása (.vscode/contexts.json-ból)',
     bg: 'Изберете запазен контекст (от .vscode/contexts.json)'
   },
-  'command.context-restoration.rename.title': {
+  'command.restore-file-selection.rename.title': {
     en: 'Rename Context',
     pl: 'Zmień nazwę kontekstu',
     'zh-cn': '重命名上下文',
@@ -305,7 +197,7 @@ export const translations = {
     hu: 'Kontextus átnevezése',
     bg: 'Преименуване на контекста'
   },
-  'command.context-restoration.rename.prompt': {
+  'command.restore-file-selection.rename.prompt': {
     en: 'Enter new name for context.',
     pl: 'Wprowadź nową nazwę dla kontekstu.',
     'zh-cn': '输入上下文的新名称。',
@@ -323,7 +215,7 @@ export const translations = {
     hu: 'Adja meg a kontextus új nevét.',
     bg: 'Въведете ново име за контекста.'
   },
-  'command.context-restoration.rename.empty': {
+  'command.restore-file-selection.rename.empty': {
     en: 'Name cannot be empty',
     pl: 'Nazwa nie może być pusta',
     'zh-cn': '名称不能为空',
@@ -341,7 +233,7 @@ export const translations = {
     hu: 'A név nem lehet üres',
     bg: 'Името не може да бъде празно'
   },
-  'command.context-restoration.rename.exists': {
+  'command.restore-file-selection.rename.exists': {
     en: 'A context with this name already exists',
     pl: 'Kontekst o tej nazwie już istnieje',
     'zh-cn': '已存在同名上下文',
@@ -359,43 +251,7 @@ export const translations = {
     hu: 'Már létezik ilyen nevű kontextus',
     bg: 'Вече съществува контекст с това име'
   },
-  'command.context-restoration.undo.failed': {
-    en: 'Could not undo as another context was deleted.',
-    pl: 'Nie udało się cofnąć, ponieważ usunięto inny kontekst.',
-    'zh-cn': '无法撤销，因为已删除了另一个上下文。',
-    ja: '別のコンテキストが削除されたため、元に戻せませんでした。',
-    'zh-tw': '無法撤銷，因為已刪除了另一個上下文。',
-    de: 'Rückgängig machen nicht möglich, da ein anderer Kontext gelöscht wurde.',
-    es: 'No se pudo deshacer porque se eliminó otro contexto.',
-    fr: "Impossible d'annuler car un autre contexte a été supprimé.",
-    'pt-br': 'Não foi possível desfazer porque outro contexto foi excluído.',
-    ru: 'Невозможно отменить, так как был удален другой контекст.',
-    ko: '다른 컨텍스트가 삭제되어 실행을 취소할 수 없습니다.',
-    it: 'Impossibile annullare poiché è stato eliminato un altro contesto.',
-    tr: 'Başka bir bağlam silindiği için geri alınamadı.',
-    cs: 'Nelze vrátit zpět, protože byl smazán jiný kontext.',
-    hu: 'Nem sikerült visszavonni, mert egy másik kontextust töröltek.',
-    bg: 'Отмяната е невъзможна, тъй като беше изтрит друг контекст.'
-  },
-  'command.context-restoration.select-folder': {
-    en: 'Select workspace folder',
-    pl: 'Wybierz folder obszaru roboczego',
-    'zh-cn': '选择工作区文件夹',
-    ja: 'ワークスペースフォルダを選択',
-    'zh-tw': '選擇工作區資料夾',
-    de: 'Arbeitsbereich-Ordner auswählen',
-    es: 'Seleccionar carpeta del espacio de trabajo',
-    fr: "Sélectionner le dossier de l'espace de travail",
-    'pt-br': 'Selecione a pasta do espaço de trabalho',
-    ru: 'Выберите папку рабочей области',
-    ko: '작업 영역 폴더 선택',
-    it: 'Seleziona cartella area di lavoro',
-    tr: 'Çalışma alanı klasörünü seçin',
-    cs: 'Vyberte složku pracovního prostoru',
-    hu: 'Munkaterület mappa kiválasztása',
-    bg: 'Изберете папка на работното пространство'
-  },
-  'command.context-restoration.delete.prompt': {
+  'command.restore-file-selection.delete.prompt': {
     en: 'Delete context "{name}"?',
     pl: 'Usunąć kontekst "{name}"?',
     'zh-cn': '删除上下文“{name}”？',
@@ -413,25 +269,7 @@ export const translations = {
     hu: 'Törli a(z) "{name}" kontextust?',
     bg: 'Изтриване на контекст "{name}"?'
   },
-  'command.context-restoration.no-saved': {
-    en: 'No saved contexts found.',
-    pl: 'Nie znaleziono zapisanych kontekstów.',
-    'zh-cn': '未找到已保存的上下文。',
-    ja: '保存されたコンテキストが見つかりません。',
-    'zh-tw': '未找到已儲存的上下文。',
-    de: 'Keine gespeicherten Kontexte gefunden.',
-    es: 'No se encontraron contextos guardados.',
-    fr: 'Aucun contexte enregistré trouvé.',
-    'pt-br': 'Nenhum contexto salvo encontrado.',
-    ru: 'Сохраненные контексты не найдены.',
-    ko: '저장된 컨텍스트를 찾을 수 없습니다.',
-    it: 'Nessun contesto salvato trovato.',
-    tr: 'Kaydedilmiş bağlam bulunamadı.',
-    cs: 'Nebyly nalezeny žádné uložené kontexty.',
-    hu: 'Nem találhatók mentett kontextusok.',
-    bg: 'Не са намерени запазени контексти.'
-  },
-  'command.context-restoration.delete.action': {
+  'command.restore-file-selection.delete.action': {
     en: 'Delete',
     pl: 'Usuń',
     'zh-cn': '删除',
@@ -449,7 +287,25 @@ export const translations = {
     hu: 'Törlés',
     bg: 'Изтриване'
   },
-  'command.context-restoration.unstaged.title': {
+  'command.restore-file-selection.undo.failed': {
+    en: 'Could not undo as another context was deleted.',
+    pl: 'Nie udało się cofnąć, ponieważ usunięto inny kontekst.',
+    'zh-cn': '无法撤销，因为已删除了另一个上下文。',
+    ja: '別のコンテキストが削除されたため、元に戻せませんでした。',
+    'zh-tw': '無法撤銷，因為已刪除了另一個上下文。',
+    de: 'Rückgängig machen nicht möglich, da ein anderer Kontext gelöscht wurde.',
+    es: 'No se pudo deshacer porque se eliminó otro contexto.',
+    fr: "Impossible d'annuler car un autre contexte a été supprimé.",
+    'pt-br': 'Não foi possível desfazer porque outro contexto foi excluído.',
+    ru: 'Невозможно отменить, так как был удален другой контекст.',
+    ko: '다른 컨텍스트가 삭제되어 실행을 취소할 수 없습니다.',
+    it: 'Impossibile annullare poiché è stato eliminato un altro contesto.',
+    tr: 'Başka bir bağlam silindiği için geri alınamadı.',
+    cs: 'Nelze vrátit zpět, protože byl smazán jiný kontext.',
+    hu: 'Nem sikerült visszavonni, mert egy másik kontextust töröltek.',
+    bg: 'Отмяната е невъзможна, тъй като беше изтрит друг контекст.'
+  },
+  'command.restore-file-selection.unstaged.title': {
     en: 'Unstaged Files',
     pl: 'Nieprzygotowane pliki',
     'zh-cn': '未暂存文件',
@@ -467,7 +323,7 @@ export const translations = {
     hu: 'Nem előkészített fájlok',
     bg: 'Неиндексирани файлове'
   },
-  'command.context-restoration.unstaged.include': {
+  'command.restore-file-selection.unstaged.include': {
     en: 'Select files to include',
     pl: 'Wybierz pliki do włączenia',
     'zh-cn': '选择要包含的文件',
@@ -485,7 +341,7 @@ export const translations = {
     hu: 'Válassza ki a belefoglalandó fájlokat',
     bg: 'Изберете файлове за включване'
   },
-  'command.context-restoration.unstaged.apply': {
+  'command.restore-file-selection.unstaged.apply': {
     en: 'How would you like to apply the {count} selected files?',
     pl: 'W jaki sposób chcesz zastosować {count} zaznaczonych plików?',
     'zh-cn': '您希望如何应用选定的 {count} 个文件？',
@@ -502,103 +358,5 @@ export const translations = {
     cs: 'Jak byste chtěli aplikovat {count} vybraných souborů?',
     hu: 'Hogyan szeretné alkalmazni a(z) {count} kiválasztott fájlt?',
     bg: 'Как искате да приложите избраните {count} файла?'
-  },
-  'command.context-restoration.ask-name.prompt': {
-    en: 'Enter a name for this context',
-    pl: 'Wprowadź nazwę dla tego kontekstu',
-    'zh-cn': '输入此上下文的名称',
-    ja: 'このコンテキストの名前を入力してください',
-    'zh-tw': '輸入此上下文的名稱',
-    de: 'Geben Sie einen Namen für diesen Kontext ein',
-    es: 'Introduzca un nombre para este contexto',
-    fr: 'Entrez un nom pour ce contexte',
-    'pt-br': 'Digite um nome para este contexto',
-    ru: 'Введите имя для этого контекста',
-    ko: '이 컨텍스트의 이름을 입력하세요',
-    it: 'Inserisci un nome per questo contesto',
-    tr: 'Bu bağlam için bir ad girin',
-    cs: 'Zadejte název pro tento kontext',
-    hu: 'Adjon meg egy nevet ehhez a kontextushoz',
-    bg: 'Въведете име за този контекст'
-  },
-  'command.context-restoration.ask-name.placeholder': {
-    en: 'e.g., Backend API Context',
-    pl: 'np. Backend API Context',
-    'zh-cn': '例如：后端 API 上下文',
-    ja: '例: バックエンド API コンテキスト',
-    'zh-tw': '例如：後端 API 上下文',
-    de: 'z.B., Backend-API-Kontext',
-    es: 'p. ej., Contexto de API Backend',
-    fr: "ex. : Contexte de l'API Backend",
-    'pt-br': 'ex., Contexto de API de Backend',
-    ru: 'напр., Контекст API бэкенда',
-    ko: '예: 백엔드 API 컨텍스트',
-    it: 'es. Contesto API Backend',
-    tr: 'örn., Backend API Bağlamı',
-    cs: 'např., Backend API kontext',
-    hu: 'pl. Backend API kontextus',
-    bg: 'напр., Backend API Context'
-  },
-  'command.context-restoration.ask-name.empty': {
-    en: 'Context name cannot be empty.',
-    pl: 'Nazwa kontekstu nie może być pusta.',
-    'zh-cn': '上下文名称不能为空。',
-    ja: 'コンテキスト名を空にすることはできません。',
-    'zh-tw': '上下文名稱不能為空。',
-    de: 'Der Kontextname darf nicht leer sein.',
-    es: 'El nombre del contexto no puede estar vacío.',
-    fr: 'Le nom du contexte ne peut pas être vide.',
-    'pt-br': 'O nome do contexto não pode ficar vazio.',
-    ru: 'Имя контекста не может быть пустым.',
-    ko: '컨텍스트 이름은 비워둘 수 없습니다.',
-    it: 'Il nome del contesto non può essere vuoto.',
-    tr: 'Bağlam adı boş olamaz.',
-    cs: 'Název kontextu nesmí být prázdný.',
-    hu: 'A kontextus neve nem lehet üres.',
-    bg: 'Името на контекста не може да бъде празно.'
-  },
-  'command.context-restoration.ask-name.title': {
-    en: 'New Entry',
-    pl: 'Nowy wpis',
-    'zh-cn': '新条目',
-    ja: '新規エントリ',
-    'zh-tw': '新項目',
-    de: 'Neuer Eintrag',
-    es: 'Nueva entrada',
-    fr: 'Nouvelle entrée',
-    'pt-br': 'Nova entrada',
-    ru: 'Новая запись',
-    ko: '새 항목',
-    it: 'Nuova voce',
-    tr: 'Yeni Giriş',
-    cs: 'Nový záznam',
-    hu: 'Új bejegyzés',
-    bg: 'Нов запис'
-  },
-  'command.context-restoration.save.placeholder': {
-    en: 'Select a context to overwrite or create a new one',
-    pl: 'Wybierz kontekst do nadpisania lub utwórz nowy',
-    'zh-cn': '选择一个要覆盖的上下文或创建一个新的',
-    ja: '上書きするコンテキストを選択するか、新しく作成します',
-    'zh-tw': '選擇一個要覆寫的上下文或建立一個新的',
-    de: 'Wählen Sie einen Kontext zum Überschreiben oder Erstellen eines neuen',
-    es: 'Seleccione un contexto para sobrescribir o crear uno nuevo',
-    fr: 'Sélectionnez un contexte à écraser ou créez-en un nouveau',
-    'pt-br': 'Selecione um contexto para sobrescrever ou criar um novo',
-    ru: 'Выберите контекст для перезаписи или создайте новый',
-    ko: '덮어쓸 컨텍스트를 선택하거나 새 컨텍스트를 만드세요',
-    it: 'Seleziona un contesto da sovrascrivere o creane uno nuovo',
-    tr: 'Üzerine yazılacak bir bağlam seçin veya yeni bir tane oluşturun',
-    cs: 'Vyberte kontext k přepsání nebo vytvořte nový',
-    hu: 'Válasszon kontextust a felülíráshoz vagy hozzon létre egy újat',
-    bg: 'Изберете контекст за презаписване или създайте нов'
-  },
-  'command.context-restoration.overwrite.prompt': {
-    en: 'Overwrite context "{name}"?',
-    pl: 'Nadpisać kontekst "{name}"?'
-  },
-  'command.context-restoration.overwrite.action': {
-    en: 'Overwrite',
-    pl: 'Nadpisz'
   }
 } as const

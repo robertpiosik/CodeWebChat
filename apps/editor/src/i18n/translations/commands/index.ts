@@ -1,7 +1,8 @@
 import { translations as generate_commit_message } from './generate-commit-message'
 import { translations as code_at_cursor } from './code-at-cursor'
 import { translations as apply_response } from './apply-response'
-import { translations as context_restoration } from './context-restoration'
+import { translations as restore_file_selection } from './restore-file-selection'
+import { translations as save_file_selection } from './save-file-selection'
 import { translations as select_workspace_file } from './select-workspace-file'
 import { translations as select_definition_file } from './select-definition-file'
 import { translations as select_referencing_files } from './select-referencing-files'
@@ -22,7 +23,8 @@ export const translations = {
   ...generate_commit_message,
   ...code_at_cursor,
   ...apply_response,
-  ...context_restoration,
+  ...restore_file_selection,
+  ...save_file_selection,
   ...select_workspace_file,
   ...select_definition_file,
   ...select_referencing_files,

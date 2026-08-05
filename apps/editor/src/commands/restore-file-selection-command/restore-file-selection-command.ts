@@ -20,7 +20,7 @@ export const restore_file_selection_command = (params: {
 
         const { source, skipped_menu } = await select_context_source({
           extension_context: params.extension_context,
-          title: t('command.context-restoration.source.title'),
+          title: t('command.restore-file-selection.source.title'),
           mode: 'restore'
         })
 
