@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import styles from './Home.module.scss'
 import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
 import { Tabs as UiTabs } from '@ui/components/editor/prompt/Tabs'
@@ -9,6 +9,7 @@ import { BackendMessage } from '@/views/prompt/types/messages'
 import { Responses as UiResponses } from '@ui/components/editor/prompt/Responses'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Separator as UiSeparator } from '@ui/components/editor/prompt/Separator'
+import { AsciiArtEffect } from '@ui/components/editor/common/AsciiArtEffect'
 import { Translation, use_translation } from '../i18n/use-translation'
 import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
 import { CompactableActionButton } from '@ui/components/editor/prompt/CompactableActionButton'
@@ -61,6 +62,8 @@ export const Home: React.FC<Props> = (props) => {
       : roots[0]
 
   const { container_ref, compact_step } = use_compacting()
+
+  const header_modes_ref = useRef<HTMLDivElement>(null)
 
   const discord_label = 'Discord'
   const coffee_label = t('header.buy-me-a-coffee')
@@ -119,10 +122,12 @@ export const Home: React.FC<Props> = (props) => {
         </div>
 
         <div
+          ref={header_modes_ref}
           className={cn(styles.header__modes, {
             [styles['header__modes--visible']]: has_scrolled_past_mode_button
           })}
         >
+          <AsciiArtEffect />
           <UiModeButton
             pre={
               props.is_connected
@@ -167,6 +172,7 @@ export const Home: React.FC<Props> = (props) => {
             )}
 
             <div className={styles.inner__mode} ref={mode_ref}>
+              <AsciiArtEffect />
               <UiModeButton
                 pre={
                   props.is_connected

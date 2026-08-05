@@ -9,6 +9,7 @@ import { use_ghost_text } from './hooks/use-ghost-text'
 import { use_drag_drop } from './hooks/use-drag-drop'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 import { DropdownMenu } from '../../../common/DropdownMenu'
+import { AsciiArtEffect } from '../../../common/AsciiArtEffect'
 import { use_is_mac } from '@shared/hooks'
 import { Tooltip } from './components'
 import { use_click_outside } from '../../../../../hooks/use-click-outside'
@@ -122,6 +123,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   >(null)
 
   const [tab_items, set_tab_items] = useState<{ id: string }[]>([])
+
+  const container_inner_ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     set_tab_items((prev) => {
@@ -365,6 +368,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
       ) : null}
 
       <div
+        ref={container_inner_ref}
         className={cn(styles.container__inner, {
           [styles['container__inner--disabled']]: !!props.warning,
           [styles['container__inner--selecting']]: is_text_selecting
@@ -372,6 +376,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         onKeyDown={handle_container_key_down}
         onClick={() => !props.warning && input_ref.current?.focus()}
       >
+        {!props.value && <AsciiArtEffect />}
         <div className={styles['input-wrapper']}>
           {props.tabs_count > 1 ? (
             <ReactSortable
