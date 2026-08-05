@@ -193,11 +193,11 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 
 ### Actions
 
-- `Apply from Clipboard` - Apply a chat response to the codebase.
+- `Apply from Clipboard` - Integrate LLM response.
 
 ### Misc
 
-- `Duplicate Workspace` - Open a duplicate workspace preserving context.
+- `Duplicate Workspace` - Copy the extension's state in a new window.
 
 ## Building from source
 
