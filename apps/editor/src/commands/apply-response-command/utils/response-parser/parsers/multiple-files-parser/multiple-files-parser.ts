@@ -1,10 +1,8 @@
 import { extract_path_from_line_of_code } from '@shared/utils/extract-path-from-line-of-code'
 import { FileItem, TextItem, InlineFileItem } from '../../response-parser'
-import {
-  extract_and_set_workspace_path,
-  create_or_update_file_item,
-  flush_text_block
-} from './helpers'
+import { create_or_update_file_item } from './helpers/create-or-update-file-item'
+import { flush_text_block } from './helpers/flush-text-block'
+import { extract_and_set_workspace_path } from './helpers/extract-and-set-workspace-path'
 
 export const parse_multiple_files = (params: {
   response: string

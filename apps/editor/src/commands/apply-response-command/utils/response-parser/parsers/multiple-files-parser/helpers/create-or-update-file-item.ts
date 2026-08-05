@@ -1,5 +1,5 @@
 import { FileItem, TextItem, InlineFileItem } from '../../../response-parser'
-import { process_conflict_markers } from './text-processing'
+import { process_conflict_markers } from './process-conflict-markers'
 
 export const create_or_update_file_item = (params: {
   file_name: string
@@ -92,20 +92,4 @@ export const create_or_update_file_item = (params: {
     params.file_ref_map.set(file_key, new_file)
     params.results.push(new_file)
   }
-}
-
-export const flush_text_block = (params: {
-  text_block: string
-  results: (FileItem | TextItem | InlineFileItem)[]
-}) => {
-  if (!params.text_block.trim()) {
-    return
-  }
-
-  const content =
-    params.results.length == 0
-      ? params.text_block.trim()
-      : params.text_block.trimEnd()
-
-  params.results.push({ type: 'text', content })
 }
