@@ -39,7 +39,6 @@
   "codeWebChat.createNewCheckpoint.title": "Utwórz nowy punkt kontrolny",
   "codeWebChat.settings.title": "Ustawienia",
   "codeWebChat.generateCommitMessage.title": "Wygeneruj wiadomość commita z CWC",
-  "codeWebChat.copyCommitMessagePrompt.title": "Kopiuj prompt commita",
   "codeWebChat.generateCommitMessageAndCommit.title": "Zatwierdź zmiany",
   "codeWebChat.setRanges.title": "Ustaw zakresy...",
   "codeWebChat.searchFiles.title": "Szukaj plików...",

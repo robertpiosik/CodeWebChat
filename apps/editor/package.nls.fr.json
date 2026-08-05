@@ -39,7 +39,6 @@
   "codeWebChat.createNewCheckpoint.title": "Créer un nouveau point de contrôle",
   "codeWebChat.settings.title": "Paramètres",
   "codeWebChat.generateCommitMessage.title": "Générer un message de commit avec CWC",
-  "codeWebChat.copyCommitMessagePrompt.title": "Copiar le prompt du message de commit",
   "codeWebChat.generateCommitMessageAndCommit.title": "Valider les modifications",
   "codeWebChat.setRanges.title": "Définir les plages...",
   "codeWebChat.searchFiles.title": "Rechercher des fichiers...",
