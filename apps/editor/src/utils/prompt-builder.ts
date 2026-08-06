@@ -81,8 +81,7 @@ export namespace PromptBuilder {
     }
 
     const has_system = !!params.system_instructions
-    const has_user = !!params.user_instructions
-    const separator = params.separator !== false && has_system && has_user
+    const separator = params.separator !== false && has_system
 
     if (params.system_instructions) {
       const sys = params.system_instructions.trimEnd()
@@ -90,8 +89,11 @@ export namespace PromptBuilder {
         part2 += `${sys}\n`
         full_prompt += `${sys}\n`
         if (separator) {
-          part2 += `\n---\n\n`
+          part2 += `\n---\n`
           full_prompt += `\n---\n\n`
+          if (params.user_instructions) {
+            part2 += `\n`
+          }
         } else {
           part2 += `\n\n`
           full_prompt += `\n\n`
