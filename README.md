@@ -177,15 +177,15 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 
 ### Copy
 
-- `Copy Markdown` - Copy contents of selected files to the clipboard.
-- `Copy Markdown of Open Editors` - Copy contents of open editors to the clipboard.
-- `Copy Paths` - Copy paths of selected files to the clipboard.
-- `Copy Paths of Open Editors` - Copy paths of open editors to the clipboard.
+- `Copy Markdown` - Copy contents of selected files.
+- `Copy Markdown of Open Editors` - Copy contents of open editors.
+- `Copy Paths` - Copy paths of selected files.
+- `Copy Paths of Open Editors` - Copy paths of open editors.
 
 ### Commit messages
 
 - `Commit Changes` - Generate commit message in your preferred style and commit.
-- `Copy Commit Message Prompt` - Copy the prompt for generating a commit message to the clipboard.
+- `Copy Commit Message Prompt` - Copy the prompt for generating a commit message.
 - `Apply Commit Message from Clipboard` - Apply a generated commit message from the clipboard.
 
 ### History
