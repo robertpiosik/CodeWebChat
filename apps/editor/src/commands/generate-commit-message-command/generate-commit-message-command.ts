@@ -78,10 +78,24 @@ export const generate_commit_message_command = (
     }
   )
 
+  const apply_from_clipboard_palette_command = vscode.commands.registerCommand(
+    'codeWebChat.applyCommitMessageFromClipboardPalette',
+    async () => {
+      await run_generate_action({
+        should_commit: true,
+        from_clipboard: true,
+        extension_context,
+        prompt_view_provider,
+        workspace_provider
+      })
+    }
+  )
+
   return vscode.Disposable.from(
     generate_command,
     generate_and_commit_command,
     copy_command,
-    apply_from_clipboard_command
+    apply_from_clipboard_command,
+    apply_from_clipboard_palette_command
   )
 }

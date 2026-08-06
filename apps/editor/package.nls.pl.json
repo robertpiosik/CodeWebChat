@@ -41,6 +41,7 @@
   "codeWebChat.generateCommitMessage.title": "Wygeneruj wiadomość commita z CWC",
   "codeWebChat.copyCommitMessagePrompt.title": "Kopiuj prompt commita",
   "codeWebChat.applyCommitMessageFromClipboard.title": "Zastosuj ze schowka",
+  "codeWebChat.applyCommitMessageFromClipboardPalette.title": "Zastosuj wiadomość commita ze schowka",
   "codeWebChat.generateCommitMessageAndCommit.title": "Zatwierdź zmiany",
   "codeWebChat.setRanges.title": "Ustaw zakresy...",
   "codeWebChat.searchFiles.title": "Szukaj plików...",

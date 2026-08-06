@@ -41,6 +41,7 @@
   "codeWebChat.generateCommitMessage.title": "Generovat zprávu commitu pomocí CWC",
   "codeWebChat.copyCommitMessagePrompt.title": "Kopírovat prompt zprávy commitu",
   "codeWebChat.applyCommitMessageFromClipboard.title": "Použít ze schránky",
+  "codeWebChat.applyCommitMessageFromClipboardPalette.title": "Použít zprávu commitu ze schránky",
   "codeWebChat.generateCommitMessageAndCommit.title": "Potvrdit změny",
   "codeWebChat.setRanges.title": "Nastavit rozsahy...",
   "codeWebChat.searchFiles.title": "Hledat soubory...",
