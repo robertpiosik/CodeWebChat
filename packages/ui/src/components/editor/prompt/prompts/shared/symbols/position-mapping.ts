@@ -52,15 +52,20 @@ export const map_display_pos_to_raw_pos = (params: {
       is_replacement_match = true
     } else if (fragment_symbol) {
       if (
-        fragment_content.startsWith('\n<![CDATA[\n') &&
-        fragment_content.endsWith('\n]]>\n')
+        fragment_content.startsWith('\n```\n') &&
+        fragment_content.endsWith('\n```\n')
       ) {
-        fragment_content = fragment_content.slice(11, -5)
+        fragment_content = fragment_content.slice(5, -5)
       } else if (
-        fragment_content.startsWith('<![CDATA[') &&
-        fragment_content.endsWith(']]>')
+        fragment_content.startsWith('```\n') &&
+        fragment_content.endsWith('\n```')
       ) {
-        fragment_content = fragment_content.slice(9, -3)
+        fragment_content = fragment_content.slice(4, -4)
+      } else if (
+        fragment_content.startsWith('```') &&
+        fragment_content.endsWith('```')
+      ) {
+        fragment_content = fragment_content.slice(3, -3)
       } else if (
         fragment_content.startsWith('\n') &&
         fragment_content.endsWith('\n')
@@ -187,15 +192,20 @@ export const map_raw_pos_to_display_pos = (params: {
       is_replacement_match = true
     } else if (fragment_symbol) {
       if (
-        fragment_content.startsWith('\n<![CDATA[\n') &&
-        fragment_content.endsWith('\n]]>\n')
+        fragment_content.startsWith('\n```\n') &&
+        fragment_content.endsWith('\n```\n')
       ) {
-        fragment_content = fragment_content.slice(11, -5)
+        fragment_content = fragment_content.slice(5, -5)
       } else if (
-        fragment_content.startsWith('<![CDATA[') &&
-        fragment_content.endsWith(']]>')
+        fragment_content.startsWith('```\n') &&
+        fragment_content.endsWith('\n```')
       ) {
-        fragment_content = fragment_content.slice(9, -3)
+        fragment_content = fragment_content.slice(4, -4)
+      } else if (
+        fragment_content.startsWith('```') &&
+        fragment_content.endsWith('```')
+      ) {
+        fragment_content = fragment_content.slice(3, -3)
       } else if (
         fragment_content.startsWith('\n') &&
         fragment_content.endsWith('\n')

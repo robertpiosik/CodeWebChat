@@ -6,15 +6,20 @@ export const replace_fragment_symbol = (instruction: string): string => {
     let clean_content = content
 
     if (
-      clean_content.startsWith('\n<![CDATA[\n') &&
-      clean_content.endsWith('\n]]>\n')
+      clean_content.startsWith('\n```\n') &&
+      clean_content.endsWith('\n```\n')
     ) {
-      clean_content = clean_content.slice(11, -5)
+      clean_content = clean_content.slice(5, -5)
     } else if (
-      clean_content.startsWith('<![CDATA[') &&
-      clean_content.endsWith(']]>')
+      clean_content.startsWith('```\n') &&
+      clean_content.endsWith('\n```')
     ) {
-      clean_content = clean_content.slice(9, -3)
+      clean_content = clean_content.slice(4, -4)
+    } else if (
+      clean_content.startsWith('```') &&
+      clean_content.endsWith('```')
+    ) {
+      clean_content = clean_content.slice(3, -3)
     } else if (clean_content.startsWith('\n') && clean_content.endsWith('\n')) {
       clean_content = clean_content.slice(1, -1)
     }

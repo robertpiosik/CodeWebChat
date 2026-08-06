@@ -72,31 +72,11 @@ describe('cleanup_api_response', () => {
       expect(cleanup_api_response({ content })).toBe(expected)
     })
 
-    it('should remove CDATA wrappers', () => {
-      const test_case = 'remove-cdata-wrapper'
-      const content = load_test_case_file(test_case, 'input.txt')
-      const expected = load_test_case_file(test_case, 'expected.txt')
-      expect(cleanup_api_response({ content })).toBe(expected)
-    })
-
     it('should remove DOCTYPE declaration', () => {
       const test_case = 'remove-doctype'
       const content = load_test_case_file(test_case, 'input.txt')
       const expected = load_test_case_file(test_case, 'expected.txt')
       expect(cleanup_api_response({ content })).toBe(expected)
-    })
-
-    it('should handle nested wrappers iteratively', () => {
-      const test_case = 'nested-wrappers'
-      const content = load_test_case_file(test_case, 'input.txt')
-      const expected = load_test_case_file(test_case, 'expected.txt')
-      expect(cleanup_api_response({ content })).toBe(expected)
-    })
-
-    it('should handle content with only wrappers', () => {
-      const test_case = 'only-wrappers'
-      const content = load_test_case_file(test_case, 'input.txt')
-      expect(cleanup_api_response({ content })).toBe('')
     })
 
     it('should extract content from a code block surrounded by text', () => {

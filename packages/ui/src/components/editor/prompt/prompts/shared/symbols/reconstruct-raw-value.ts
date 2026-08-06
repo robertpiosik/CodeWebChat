@@ -83,8 +83,8 @@ export const reconstruct_raw_value_from_node = (node: Node): string => {
 
       const is_multiline = content.includes('\n')
       const formatted_content = is_multiline
-        ? `\n<![CDATA[\n${content}\n]]>\n`
-        : `<![CDATA[${content}]]>`
+        ? `\n\`\`\`\n${content}\n\`\`\`\n`
+        : `\`\`\`${content}\`\`\``
       const line_count = is_multiline ? content.split('\n').length : 1
       const lines_text = line_count === 1 ? 'line' : 'lines'
       const label = `Pasted ${line_count} ${lines_text}`

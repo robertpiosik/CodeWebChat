@@ -67,7 +67,7 @@ export namespace CommitMessageDetails {
   export const add = (params: {
     extension_context: vscode.ExtensionContext
     workspace_root: string
-    prompt: string
+    prompt?: string
     files: string[]
     selected_files: string[]
   }) => {
@@ -77,7 +77,9 @@ export namespace CommitMessageDetails {
       all_prompts[params.workspace_root] = []
     }
 
-    const simplified_prompt = simplify_prompt_symbols({ prompt: params.prompt })
+    const simplified_prompt = simplify_prompt_symbols({
+      prompt: params.prompt || ''
+    })
 
     const existing = all_prompts[params.workspace_root].find(
       (p) => p.prompt == simplified_prompt

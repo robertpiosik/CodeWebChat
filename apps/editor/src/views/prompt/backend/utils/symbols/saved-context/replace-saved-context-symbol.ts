@@ -67,7 +67,7 @@ export const replace_saved_context_symbol = async (params: {
           files_xml += `<file path="${relative_path.replace(
             /\\/g,
             '/'
-          )}">\n<![CDATA[\n${content}\n]]>\n</file>\n`
+          )}">\n\`\`\`\n${content}\n\`\`\`\n</file>\n`
         }
       } catch (error) {
         Logger.warn({

@@ -22,7 +22,7 @@ export const search_files_by_intelligent = async (
   let xml_files = `<files>\n`
   for (const file of files_data) {
     const content_to_use = shrink_result ? file.shrunk_content : file.content
-    xml_files += `<file path="${file.display_path}">\n<![CDATA[\n${content_to_use}\n]]>\n</file>\n`
+    xml_files += `<file path="${file.display_path}">\n\`\`\`\n${content_to_use}\n\`\`\`\n</file>\n`
   }
   xml_files += `</files>`
 

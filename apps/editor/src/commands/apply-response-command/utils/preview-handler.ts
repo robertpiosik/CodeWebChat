@@ -157,7 +157,7 @@ export const preview_handler = async (params: {
         CommitMessageDetails.add({
           extension_context: params.extension_context,
           workspace_root,
-          prompt: params.raw_instructions || '',
+          prompt: params.raw_instructions,
           files,
           selected_files: selected_files_by_workspace.get(workspace_root) || []
         })

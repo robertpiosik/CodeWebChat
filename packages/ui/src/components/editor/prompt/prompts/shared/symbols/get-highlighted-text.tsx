@@ -88,13 +88,12 @@ export const get_highlighted_text = (params: {
         const end = fragment_match[3]
         let content = fragment_match[4]
 
-        if (
-          content.startsWith('\n<![CDATA[\n') &&
-          content.endsWith('\n]]>\n')
-        ) {
-          content = content.slice(11, -5)
-        } else if (content.startsWith('<![CDATA[') && content.endsWith(']]>')) {
-          content = content.slice(9, -3)
+        if (content.startsWith('\n```\n') && content.endsWith('\n```\n')) {
+          content = content.slice(5, -5)
+        } else if (content.startsWith('```\n') && content.endsWith('\n```')) {
+          content = content.slice(4, -4)
+        } else if (content.startsWith('```') && content.endsWith('```')) {
+          content = content.slice(3, -3)
         } else if (content.startsWith('\n') && content.endsWith('\n')) {
           content = content.slice(1, -1)
         }

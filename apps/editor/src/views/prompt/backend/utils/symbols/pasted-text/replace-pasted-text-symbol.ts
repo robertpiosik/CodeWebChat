@@ -42,7 +42,7 @@ export const replace_pasted_text_symbol = async (params: {
     result_string += params.instruction.slice(last_index, match.index)
 
     if (replacement.success && replacement.content) {
-      result_string += `\n<![CDATA[\n${replacement.content}\n]]>\n`
+      result_string += `\n\`\`\`\n${replacement.content}\n\`\`\`\n`
     } else {
       result_string += match[0]
     }

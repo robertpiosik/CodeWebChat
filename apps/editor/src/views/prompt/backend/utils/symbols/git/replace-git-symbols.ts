@@ -1,9 +1,6 @@
 import * as vscode from 'vscode'
 import { execSync } from 'child_process'
-import * as fs from 'fs'
-import * as path from 'path'
 import { get_git_repository } from '@/utils/git-repository-utils'
-import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 
@@ -119,9 +116,9 @@ const build_changes_xml = (
         )
       }
 
-      changes_content += `<![CDATA[\n${full_file_diff}\n]]>\n`
+      changes_content += `\`\`\`\n${full_file_diff}\n\`\`\`\n`
       if (file_content) {
-        changes_content += `<![CDATA[\n${file_content}\n]]>\n`
+        changes_content += `\`\`\`\n${file_content}\n\`\`\`\n`
       }
       changes_content += `</file>\n`
     }
@@ -388,9 +385,9 @@ const build_commit_changes_xml = (
         )
       }
 
-      changes_content += `<![CDATA[\n${full_file_diff}\n]]>\n`
+      changes_content += `\`\`\`\n${full_file_diff}\n\`\`\`\n`
       if (file_content) {
-        changes_content += `<![CDATA[\n${file_content}\n]]>\n`
+        changes_content += `\`\`\`\n${file_content}\n\`\`\`\n`
       }
       changes_content += `</file>\n`
     }

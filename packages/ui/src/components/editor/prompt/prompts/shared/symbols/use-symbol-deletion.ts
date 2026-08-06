@@ -105,8 +105,8 @@ export const use_symbol_deletion = (params: {
 
       const is_multiline = content.includes('\n')
       const formatted_content = is_multiline
-        ? `\n<![CDATA[\n${content}\n]]>\n`
-        : `<![CDATA[${content}]]>`
+        ? `\n\`\`\`\n${content}\n\`\`\`\n`
+        : `\`\`\`${content}\`\`\``
 
       const search_pattern_new = `<fragment ${attributes}>${formatted_content}</fragment>`
       const search_pattern_old = `<fragment ${attributes}>\n${content}\n</fragment>`

@@ -64,7 +64,7 @@ export const replace_skill_symbol = async (params: {
               const relative_path = path
                 .relative(skill.path, file_path)
                 .replace(/\\/g, '/')
-              skill_content += `<file path="${relative_path}">\n<![CDATA[\n${content}\n]]>\n</file>\n`
+              skill_content += `<file path="${relative_path}">\n\`\`\`\n${content}\n\`\`\`\n</file>\n`
             }
           }
         }

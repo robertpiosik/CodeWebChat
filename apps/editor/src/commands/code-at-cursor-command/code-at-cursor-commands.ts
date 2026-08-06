@@ -16,7 +16,7 @@ export const code_at_cursor_commands = (params: {
       'codeWebChat.internal.codeAtCursorAccepted',
       async (args: {
         workspace_root: string
-        prompt: string
+        prompt?: string
         file_path: string
         selected_files: string[]
       }) => {

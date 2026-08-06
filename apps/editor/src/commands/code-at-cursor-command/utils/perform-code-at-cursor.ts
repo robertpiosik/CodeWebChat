@@ -215,10 +215,34 @@ export const perform_code_at_cursor = async (params: {
           )
           if (match && match[1]) {
             let decoded_completion = he.decode(match[1].trim())
-            decoded_completion = decoded_completion
-              .replace(/<!\[CDATA\[/g, '')
-              .replace(/\]\]>/g, '')
-              .trim()
+
+            if (decoded_completion.startsWith('```')) {
+              const first_newline = decoded_completion.indexOf('\n')
+              if (first_newline !== -1) {
+                decoded_completion = decoded_completion.substring(
+                  first_newline + 1
+                )
+              }
+            }
+            if (decoded_completion.endsWith('```')) {
+              const last_newline = decoded_completion.lastIndexOf('\n')
+              if (
+                last_newline !== -1 &&
+                last_newline > decoded_completion.indexOf('\n')
+              ) {
+                decoded_completion = decoded_completion.substring(
+                  0,
+                  last_newline
+                )
+              } else {
+                decoded_completion = decoded_completion.substring(
+                  0,
+                  decoded_completion.length - 3
+                )
+              }
+            }
+
+            decoded_completion = decoded_completion.trim()
 
             const active_file_path = editor.document.uri.fsPath
             const workspace_root =
@@ -253,9 +277,7 @@ export const perform_code_at_cursor = async (params: {
                     arguments: [
                       {
                         workspace_root,
-                        prompt:
-                          completion_instructions ||
-                          'Code at cursor completion',
+                        prompt: completion_instructions,
                         file_path: active_file_path,
                         selected_files
                       }

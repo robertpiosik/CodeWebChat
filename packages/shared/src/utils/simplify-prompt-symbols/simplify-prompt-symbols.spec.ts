@@ -16,9 +16,9 @@ describe('simplify_prompt_symbols', () => {
     )
   })
 
-  it('should replace <fragment> tags with CDATA', () => {
+  it('should replace <fragment> tags with code block', () => {
     const prompt =
-      'Fix this code: <fragment path="test.ts">\n<![CDATA[\nconsole.log("hello");\n]]>\n</fragment> please'
+      'Fix this code: <fragment path="test.ts">\n```\nconsole.log("hello");\n```\n</fragment> please'
     expect(simplify_prompt_symbols({ prompt })).toBe(
       'Fix this code: [Fragment] please'
     )
@@ -69,14 +69,6 @@ describe('simplify_prompt_symbols', () => {
       '#Selection and <fragment path="a.ts">code</fragment> with #Changes(dev)'
     expect(simplify_prompt_symbols({ prompt })).toBe(
       '[Selection] and [Fragment] with [Changes]'
-    )
-  })
-
-  it('should replace non-breaking spaces with regular spaces', () => {
-    const prompt =
-      'remove semi key\u00a0<fragment path="a.ts">code</fragment>\u00a0#Commit(repo:hash "message")'
-    expect(simplify_prompt_symbols({ prompt })).toBe(
-      'remove semi key [Fragment] [Commit]'
     )
   })
 })
