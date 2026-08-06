@@ -1,6 +1,6 @@
 const intro = `Whenever showing a new, updated, renamed, or deleted file, provide a brief explanation, then print the path in a markdown heading (e.g. ### New file: \`src/examples/hello.py\`, ### Updated file: \`src/examples/hello.py\`, ### Renamed file: \`src/examples/hello.py\` (old) \`src/welcome.py\` (new), ### Deleted file: \`src/examples/hello.py\`)`
 
-export const EDIT_FORMAT_INSTRUCTIONS_WHOLE = `${intro}, followed by a markdown code block with the file's FULL contents. Example:
+export const EDIT_FORMAT_INSTRUCTIONS_WHOLE = `${intro}, followed by a markdown code block with the file's FULL (from cover to cover) contents. Example:
 Updated the greeting text.
 
 ### Updated file: \`src/examples/hello.py\`

@@ -40,6 +40,7 @@
   "codeWebChat.settings.title": "Configuración",
   "codeWebChat.generateCommitMessage.title": "Generar mensaje de commit con CWC",
   "codeWebChat.copyCommitMessagePrompt.title": "Copiar prompt del mensaje de commit",
+  "codeWebChat.applyCommitMessageFromClipboard.title": "Aplicar desde el portapapeles",
   "codeWebChat.generateCommitMessageAndCommit.title": "Hacer commit de los cambios",
   "codeWebChat.setRanges.title": "Establecer rangos...",
   "codeWebChat.searchFiles.title": "Buscar archivos...",

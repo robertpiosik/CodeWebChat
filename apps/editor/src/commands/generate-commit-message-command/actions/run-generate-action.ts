@@ -2,7 +2,8 @@ import * as vscode from 'vscode'
 import { get_repository_for_commit } from '../../../utils/git-repository-utils'
 import {
   get_commit_message_api_configuration,
-  generate_commit_message_with_api
+  generate_commit_message_with_api,
+  strip_wrapping_quotes
 } from '@/features/commit-messages'
 import { t } from '@/i18n'
 import axios from 'axios'
@@ -23,6 +24,7 @@ const truncate_prompt = (text: string): string => {
 export const run_generate_action = async (params: {
   should_commit: boolean
   source_control?: vscode.SourceControl
+  from_clipboard?: boolean
   extension_context: vscode.ExtensionContext
   prompt_view_provider: PromptViewProvider
   workspace_provider: WorkspaceProvider
@@ -55,54 +57,61 @@ export const run_generate_action = async (params: {
       was_empty_stage = true
     }
 
-    const show_back_button =
-      was_empty_stage && !is_single_change_flow && !params.source_control
-
-    const api_configuration_data = await get_commit_message_api_configuration(
-      params.extension_context,
-      show_back_button,
-      force_quick_pick,
-      token_count
-    )
-
-    force_quick_pick = false
-
-    if (api_configuration_data == 'back') {
-      if (was_empty_stage) {
-        if (!show_back_button) {
-          await vscode.commands.executeCommand('git.unstageAll', repository)
-          return
-        }
-
-        await vscode.commands.executeCommand('git.unstageAll', repository)
-        files_staged_by_action = false
-        continue
-      }
-      return
-    }
-
-    if (!api_configuration_data) {
-      if (was_empty_stage) {
-        await vscode.commands.executeCommand('git.unstageAll', repository)
-      }
-      return
-    }
-
     let commit_message: string
-    try {
-      commit_message = await generate_commit_message_with_api({
-        base_url: api_configuration_data.base_url,
-        model_provider: api_configuration_data.model_provider,
-        api_configuration: api_configuration_data.api_configuration,
-        message: message_prompt
-      })
-    } catch (error) {
-      if (axios.isCancel(error)) {
-        force_quick_pick = true
-        continue
-      } else {
-        force_quick_pick = true
-        continue
+
+    if (params.from_clipboard) {
+      commit_message = (await vscode.env.clipboard.readText()) || ''
+      commit_message = strip_wrapping_quotes(commit_message)
+      commit_message = commit_message.replace(/[<>`$()]/g, '')
+    } else {
+      const show_back_button =
+        was_empty_stage && !is_single_change_flow && !params.source_control
+
+      const api_configuration_data = await get_commit_message_api_configuration(
+        params.extension_context,
+        show_back_button,
+        force_quick_pick,
+        token_count
+      )
+
+      force_quick_pick = false
+
+      if (api_configuration_data == 'back') {
+        if (was_empty_stage) {
+          if (!show_back_button) {
+            await vscode.commands.executeCommand('git.unstageAll', repository)
+            return
+          }
+
+          await vscode.commands.executeCommand('git.unstageAll', repository)
+          files_staged_by_action = false
+          continue
+        }
+        return
+      }
+
+      if (!api_configuration_data) {
+        if (was_empty_stage) {
+          await vscode.commands.executeCommand('git.unstageAll', repository)
+        }
+        return
+      }
+
+      try {
+        commit_message = await generate_commit_message_with_api({
+          base_url: api_configuration_data.base_url,
+          model_provider: api_configuration_data.model_provider,
+          api_configuration: api_configuration_data.api_configuration,
+          message: message_prompt
+        })
+      } catch (error) {
+        if (axios.isCancel(error)) {
+          force_quick_pick = true
+          continue
+        } else {
+          force_quick_pick = true
+          continue
+        }
       }
     }
 
@@ -182,7 +191,13 @@ export const run_generate_action = async (params: {
               'command.generate-commit-message.attach-ascii-tree.placeholder'
             )
             quick_pick.ignoreFocusOut = true
-            quick_pick.buttons = [vscode.QuickInputButtons.Back]
+            const is_first_step =
+              params.from_clipboard &&
+              !params.should_commit &&
+              relevant_prompts.length == 0
+            quick_pick.buttons = [
+              ...(is_first_step ? [] : [vscode.QuickInputButtons.Back])
+            ]
 
             let is_resolved = false
 
@@ -273,7 +288,7 @@ export const run_generate_action = async (params: {
             input_box.buttons = [
               accept_button,
               close_button,
-              vscode.QuickInputButtons.Back
+              ...(params.from_clipboard ? [] : [vscode.QuickInputButtons.Back])
             ]
 
             let is_resolved = false
@@ -340,7 +355,10 @@ export const run_generate_action = async (params: {
           quick_pick.placeholder =
             'Choose accepted prompts to include in the commit message'
           quick_pick.ignoreFocusOut = true
-          quick_pick.buttons = [vscode.QuickInputButtons.Back]
+          const is_first_step = params.from_clipboard && !params.should_commit
+          quick_pick.buttons = [
+            ...(is_first_step ? [] : [vscode.QuickInputButtons.Back])
+          ]
 
           let is_resolved = false
 
@@ -404,6 +422,12 @@ export const run_generate_action = async (params: {
     }
 
     if (go_back) {
+      if (params.from_clipboard) {
+        if (was_empty_stage) {
+          await vscode.commands.executeCommand('git.unstageAll', repository)
+        }
+        break
+      }
       force_quick_pick = true
       continue
     }

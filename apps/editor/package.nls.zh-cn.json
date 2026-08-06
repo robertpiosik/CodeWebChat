@@ -40,6 +40,7 @@
   "codeWebChat.settings.title": "设置",
   "codeWebChat.generateCommitMessage.title": "使用 CWC 生成提交信息",
   "codeWebChat.copyCommitMessagePrompt.title": "复制提交信息提示词",
+  "codeWebChat.applyCommitMessageFromClipboard.title": "从剪贴板应用",
   "codeWebChat.generateCommitMessageAndCommit.title": "提交更改",
   "codeWebChat.setRanges.title": "设置范围...",
   "codeWebChat.searchFiles.title": "搜索文件...",

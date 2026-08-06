@@ -40,6 +40,7 @@
   "codeWebChat.settings.title": "Настройки",
   "codeWebChat.generateCommitMessage.title": "Генерирай commit съобщение с CWC",
   "codeWebChat.copyCommitMessagePrompt.title": "Копирай промпт за commit",
+  "codeWebChat.applyCommitMessageFromClipboard.title": "Приложи от клипборда",
   "codeWebChat.generateCommitMessageAndCommit.title": "Потвърди промените",
   "codeWebChat.setRanges.title": "Задай диапазони...",
   "codeWebChat.searchFiles.title": "Търсене на файлове...",

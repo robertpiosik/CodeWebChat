@@ -40,6 +40,7 @@
   "codeWebChat.settings.title": "設定",
   "codeWebChat.generateCommitMessage.title": "CWCでコミットメッセージを生成",
   "codeWebChat.copyCommitMessagePrompt.title": "コミットメッセージのプロンプトをコピー",
+  "codeWebChat.applyCommitMessageFromClipboard.title": "クリップボードから適用",
   "codeWebChat.generateCommitMessageAndCommit.title": "変更をコミット",
   "codeWebChat.setRanges.title": "範囲を設定...",
   "codeWebChat.searchFiles.title": "ファイルを検索...",
