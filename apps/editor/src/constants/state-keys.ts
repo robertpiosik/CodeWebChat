@@ -109,6 +109,7 @@ export const LAST_FIND_RELEVANT_FILES_SHRINK_STATE_KEY =
   'last-find-relevant-files-shrink'
 
 export const LAST_ATTACH_ASCII_TREE_STATE_KEY = 'last-attach-ascii-tree'
+export const LAST_COPY_PATHS_FORMAT_STATE_KEY = 'last-copy-paths-format'
 
 export type DuplicateWorkspaceContext = {
   checked_files: string[]

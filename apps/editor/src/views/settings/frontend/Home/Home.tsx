@@ -128,7 +128,7 @@ type Props = {
   checkpoint_lifespan: number
   edit_format_instructions: EditFormatInstructions
   clear_checks_in_workspace_behavior: 'ignore-open-editors' | 'uncheck-all'
-  copy_paths_format: 'bullet-list' | 'comma-separated' | 'ascii-tree'
+  copy_paths_format: 'ask' | 'bullet-list' | 'comma-separated' | 'ascii-tree'
   auto_run_intelligent_update: boolean
   set_providers: (providers: Provider[]) => void
   set_api_configurations: (configurations: ApiConfiguration[]) => void
@@ -161,7 +161,7 @@ type Props = {
     value: 'ignore-open-editors' | 'uncheck-all'
   ) => void
   on_copy_paths_format_change: (
-    value: 'bullet-list' | 'comma-separated' | 'ascii-tree'
+    value: 'ask' | 'bullet-list' | 'comma-separated' | 'ascii-tree'
   ) => void
   on_auto_run_intelligent_update_change: (enabled: boolean) => void
   on_open_keybindings: (search?: string) => void

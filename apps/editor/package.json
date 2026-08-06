@@ -994,11 +994,12 @@
           "type": "string",
           "scope": "resource",
           "enum": [
+            "ask",
             "bullet-list",
             "comma-separated",
             "ascii-tree"
           ],
-          "default": "bullet-list"
+          "default": "ask"
         },
         "codeWebChat.sendWithShiftEnter": {
           "type": "boolean",

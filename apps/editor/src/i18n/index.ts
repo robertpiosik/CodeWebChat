@@ -1,7 +1,6 @@
 import * as vscode from 'vscode'
 import { translations as commands } from './translations/commands'
 import { translations as common } from './translations/common'
-import { translations as commands_copy_context } from './translations/commands/copy-context'
 import { translations as views_settings_handlers_open_allow_patterns_settings } from './translations/views/settings/handlers/open-allow-patterns-settings'
 import { translations as views_settings_handlers_open_ignore_patterns_settings } from './translations/views/settings/handlers/open-ignore-patterns-settings'
 import { translations as views_settings_handlers_select_default_api_configuration } from './translations/views/settings/handlers/select-default-api-configuration'
@@ -29,7 +28,6 @@ export type TranslationKey = keyof typeof translations
 
 const translations = {
   ...commands,
-  ...commands_copy_context,
   ...common,
   ...views_settings_handlers_open_allow_patterns_settings,
   ...views_settings_handlers_open_ignore_patterns_settings,

@@ -18,6 +18,7 @@ import { translations as select_changed_files } from './select-changed-files'
 import { translations as history } from './history'
 import { translations as select_clipboard_paths } from './select-clipboard-paths'
 import { translations as select_imported_files } from './select-imported-files'
+import { translations as copy_paths } from './copy-paths'
 
 export const translations = {
   ...generate_commit_message,
@@ -39,5 +40,6 @@ export const translations = {
   ...select_changed_files,
   ...history,
   ...select_clipboard_paths,
-  ...select_imported_files
+  ...select_imported_files,
+  ...copy_paths
 }

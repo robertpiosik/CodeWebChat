@@ -177,10 +177,10 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 
 ### Copy
 
-- `Copy Markdown` - Copy contents of selected files.
-- `Copy Markdown of Open Editors` - Copy contents of open editors.
-- `Copy Paths` - Copy paths of selected files.
-- `Copy Paths of Open Editors` - Copy paths of open editors.
+- `Copy Markdown` - Copy contents of the current file selection.
+- `Copy Markdown of Open Editors` - Copy contents of file selection in open editors.
+- `Copy Paths` - Copy paths of the current file selection.
+- `Copy Paths of Open Editors` - Copy paths of file selection in open editors.
 
 ### Commit messages
 

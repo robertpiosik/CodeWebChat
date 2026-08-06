@@ -144,7 +144,11 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
 
   extension_context.subscriptions.push(
     ...copy_markdown_commands(workspace_provider, open_editors_provider),
-    ...copy_paths_commands(workspace_provider, open_editors_provider),
+    ...copy_paths_commands(
+      workspace_provider,
+      open_editors_provider,
+      extension_context
+    ),
     open_file_from_workspace_command(open_editors_provider),
     close_editor_command(),
     close_all_editors_command(),

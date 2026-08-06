@@ -33,9 +33,7 @@ export const copy_markdown_commands = (
       }
 
       if (context_text == '') {
-        vscode.window.showWarningMessage(
-          t('command.copy-context.warning.no-files-selected')
-        )
+        vscode.window.showWarningMessage(t('common.warning.no-files-selected'))
         return
       }
 

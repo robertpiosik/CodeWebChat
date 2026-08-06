@@ -234,7 +234,7 @@ export interface GetCopyPathsFormatMessage {
 
 export interface UpdateCopyPathsFormatMessage {
   command: 'UPDATE_COPY_PATHS_FORMAT'
-  value: 'bullet-list' | 'comma-separated' | 'ascii-tree'
+  value: 'ask' | 'bullet-list' | 'comma-separated' | 'ascii-tree'
 }
 
 export interface GetAutoRunIntelligentUpdateMessage {
@@ -536,7 +536,7 @@ export interface ClearChecksInWorkspaceBehaviorMessage {
 
 export interface CopyPathsFormatMessage {
   command: 'COPY_PATHS_FORMAT'
-  value: 'bullet-list' | 'comma-separated' | 'ascii-tree'
+  value: 'ask' | 'bullet-list' | 'comma-separated' | 'ascii-tree'
 }
 
 export interface ShowSectionMessage {

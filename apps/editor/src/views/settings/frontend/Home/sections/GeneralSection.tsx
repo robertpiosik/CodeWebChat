@@ -46,9 +46,9 @@ type Props = {
   on_clear_checks_in_workspace_behavior_change: (
     value: ClearChecksBehavior
   ) => void
-  copy_paths_format: 'bullet-list' | 'comma-separated' | 'ascii-tree'
+  copy_paths_format: 'ask' | 'bullet-list' | 'comma-separated' | 'ascii-tree'
   on_copy_paths_format_change: (
-    value: 'bullet-list' | 'comma-separated' | 'ascii-tree'
+    value: 'ask' | 'bullet-list' | 'comma-separated' | 'ascii-tree'
   ) => void
   on_edit_format_instructions_change: (
     instructions: EditFormatInstructions
@@ -287,6 +287,10 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               slot_right={
                 <UiDropdown
                   options={[
+                    {
+                      value: 'ask',
+                      label: t('general.copy-paths-format.ask')
+                    },
                     {
                       value: 'bullet-list',
                       label: t('general.copy-paths-format.bullet-list')

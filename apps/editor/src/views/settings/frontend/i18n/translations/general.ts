@@ -633,6 +633,24 @@ export const translations = {
     hu: 'Útvonalak Másolásának Formátuma',
     bg: 'Формат за копиране на пътища'
   },
+  'general.copy-paths-format.ask': {
+    en: 'Ask',
+    pl: 'Pytaj',
+    'zh-cn': '询问',
+    ja: '尋ねる',
+    'zh-tw': '詢問',
+    de: 'Fragen',
+    es: 'Preguntar',
+    fr: 'Demander',
+    'pt-br': 'Perguntar',
+    ru: 'Спрашивать',
+    ko: '묻기',
+    it: 'Chiedi',
+    tr: 'Sor',
+    cs: 'Zeptat se',
+    hu: 'Kérdezés',
+    bg: 'Попитай'
+  },
   'general.copy-paths-format.description': {
     en: 'Output format of copied paths.',
     pl: 'Format tekstowy skopiowanych ścieżek.',
