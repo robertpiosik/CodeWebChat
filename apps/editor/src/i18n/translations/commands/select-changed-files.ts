@@ -126,21 +126,21 @@ export const translations = {
     bg: 'Изберете файлове за добавяне към контекста'
   },
   'command.select-changed-files.files-modified': {
-    en: 'Files modified compared to {branch}',
-    pl: 'Pliki zmodyfikowane w porównaniu do {branch}',
-    'zh-cn': '与 {branch} 相比修改的文件',
-    ja: '{branch} と比較して変更されたファイル',
-    'zh-tw': '與 {branch} 相比修改的檔案',
-    de: 'Geänderte Dateien im Vergleich zu {branch}',
-    es: 'Archivos modificados en comparación con {branch}',
-    fr: 'Fichiers modifiés par rapport à {branch}',
-    'pt-br': 'Arquivos modificados em comparação a {branch}',
-    ru: 'Файлы, измененные по сравнению с {branch}',
-    ko: '{branch} 브랜치와 비교하여 수정된 파일',
-    it: 'File modificati rispetto a {branch}',
-    tr: '{branch} dalına göre değiştirilen dosyalar',
-    cs: 'Soubory změněné ve srovnání s {branch}',
-    hu: 'Módosított fájlok ehhez képest: {branch}',
-    bg: 'Файлове, модифицирани в сравнение с {branch}'
+    en: 'Modified Files',
+    pl: 'Zmodyfikowane pliki',
+    'zh-cn': '修改的文件',
+    ja: '変更されたファイル',
+    'zh-tw': '修改的檔案',
+    de: 'Geänderte Dateien',
+    es: 'Archivos modificados',
+    fr: 'Fichiers modifiés',
+    'pt-br': 'Arquivos modificados',
+    ru: 'Измененные файлы',
+    ko: '수정된 파일',
+    it: 'File modificati',
+    tr: 'Değiştirilen dosyalar',
+    cs: 'Změněné soubory',
+    hu: 'Módosított fájlok',
+    bg: 'Модифицирани файлове'
   }
 } as const

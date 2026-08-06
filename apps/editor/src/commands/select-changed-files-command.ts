@@ -203,10 +203,7 @@ export const select_changed_files_command = (
             quick_pick_files.items = file_items
             quick_pick_files.selectedItems = file_items.filter((i) => i.picked)
             quick_pick_files.title = t(
-              'command.select-changed-files.files-modified',
-              {
-                branch: selected_branch.name
-              }
+              'command.select-changed-files.files-modified'
             )
 
             const update_placeholder = () => {
