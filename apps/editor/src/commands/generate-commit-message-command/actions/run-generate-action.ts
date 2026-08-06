@@ -11,7 +11,6 @@ import { MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE } from '@/constants/values'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { create_checkpoint } from '@/features/checkpoints/actions'
-import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
 import { AsciiTree } from '../../../utils/ascii-tree'
 import { LAST_ATTACH_ASCII_TREE_STATE_KEY } from '@/constants/state-keys'
 import { get_prompt_data } from './get-prompt-data'
@@ -330,7 +329,7 @@ export const run_generate_action = async (params: {
             vscode.QuickPickItem & { prompt: (typeof relevant_prompts)[0] }
           >()
           quick_pick.items = relevant_prompts.map((p) => ({
-            label: simplify_prompt_symbols({ prompt: p.prompt }),
+            label: p.prompt,
             prompt: p
           }))
           quick_pick.selectedItems = quick_pick.items.filter((i) =>
@@ -421,10 +420,7 @@ export const run_generate_action = async (params: {
         selected_prompts.length > 0
           ? '\n\n' +
             selected_prompts
-              .map(
-                (p) =>
-                  `- ${truncate_prompt(simplify_prompt_symbols({ prompt: p.prompt }))}`
-              )
+              .map((p) => `- ${truncate_prompt(p.prompt)}`)
               .join('\n')
           : ''
 
@@ -452,10 +448,7 @@ export const run_generate_action = async (params: {
         selected_prompts.length > 0
           ? '\n\n' +
             selected_prompts
-              .map(
-                (p) =>
-                  `- ${truncate_prompt(simplify_prompt_symbols({ prompt: p.prompt }))}`
-              )
+              .map((p) => `- ${truncate_prompt(p.prompt)}`)
               .join('\n')
           : ''
       repository.inputBox.value =

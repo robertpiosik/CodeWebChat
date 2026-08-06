@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
+import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
 
 export namespace CommitMessageDetails {
   const COMMIT_MESSAGE_DETAILS_FILENAME = 'commit-message-details.json'
@@ -76,8 +77,10 @@ export namespace CommitMessageDetails {
       all_prompts[params.workspace_root] = []
     }
 
+    const simplified_prompt = simplify_prompt_symbols({ prompt: params.prompt })
+
     const existing = all_prompts[params.workspace_root].find(
-      (p) => p.prompt == params.prompt
+      (p) => p.prompt == simplified_prompt
     )
 
     if (existing) {
@@ -88,7 +91,7 @@ export namespace CommitMessageDetails {
     } else {
       const new_prompt: Prompt = {
         files: params.files,
-        prompt: params.prompt,
+        prompt: simplified_prompt,
         selected_files: params.selected_files
       }
       all_prompts[params.workspace_root].push(new_prompt)
@@ -106,11 +109,12 @@ export namespace CommitMessageDetails {
   }) => {
     const all_prompts = load_all(params.extension_context)
     let changed = false
+    const simplified_prompt = simplify_prompt_symbols({ prompt: params.prompt })
 
     for (const root in all_prompts) {
       const initial_count = all_prompts[root].length
       all_prompts[root] = all_prompts[root].filter(
-        (p) => p.prompt != params.prompt
+        (p) => p.prompt != simplified_prompt
       )
 
       if (all_prompts[root].length != initial_count) {

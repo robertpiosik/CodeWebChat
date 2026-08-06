@@ -25,5 +25,7 @@ export const simplify_prompt_symbols = (params: { prompt: string }): string => {
   )
   simplified = simplified.replace(/#Website\([^)]+\)/g, '[Website]')
 
+  simplified = simplified.replace(/\u00a0/g, ' ')
+
   return simplified
 }

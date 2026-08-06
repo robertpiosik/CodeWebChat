@@ -71,4 +71,12 @@ describe('simplify_prompt_symbols', () => {
       '[Selection] and [Fragment] with [Changes]'
     )
   })
+
+  it('should replace non-breaking spaces with regular spaces', () => {
+    const prompt =
+      'remove semi key\u00a0<fragment path="a.ts">code</fragment>\u00a0#Commit(repo:hash "message")'
+    expect(simplify_prompt_symbols({ prompt })).toBe(
+      'remove semi key [Fragment] [Commit]'
+    )
+  })
 })
