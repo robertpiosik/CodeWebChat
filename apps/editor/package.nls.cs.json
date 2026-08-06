@@ -39,6 +39,7 @@
   "codeWebChat.createNewCheckpoint.title": "Vytvořit nový kontrolní bod",
   "codeWebChat.settings.title": "Nastavení",
   "codeWebChat.generateCommitMessage.title": "Generovat zprávu commitu pomocí CWC",
+  "codeWebChat.copyCommitMessagePrompt.title": "Kopírovat prompt zprávy commitu",
   "codeWebChat.generateCommitMessageAndCommit.title": "Potvrdit změny",
   "codeWebChat.setRanges.title": "Nastavit rozsahy...",
   "codeWebChat.searchFiles.title": "Hledat soubory...",

@@ -39,6 +39,7 @@
   "codeWebChat.createNewCheckpoint.title": "Create New Checkpoint",
   "codeWebChat.settings.title": "Settings",
   "codeWebChat.generateCommitMessage.title": "Generate Commit Message with CWC",
+  "codeWebChat.copyCommitMessagePrompt.title": "Copy Commit Message Prompt",
   "codeWebChat.generateCommitMessageAndCommit.title": "Commit Changes",
   "codeWebChat.setRanges.title": "Set Ranges...",
   "codeWebChat.searchFiles.title": "Search Files...",

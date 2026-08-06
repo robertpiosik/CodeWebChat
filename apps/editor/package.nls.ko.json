@@ -39,6 +39,7 @@
   "codeWebChat.createNewCheckpoint.title": "새 체크포인트 만들기",
   "codeWebChat.settings.title": "설정",
   "codeWebChat.generateCommitMessage.title": "CWC로 커밋 메시지 생성",
+  "codeWebChat.copyCommitMessagePrompt.title": "커밋 메시지 프롬프트 복사",
   "codeWebChat.generateCommitMessageAndCommit.title": "변경 사항 커밋",
   "codeWebChat.setRanges.title": "범위 설정...",
   "codeWebChat.searchFiles.title": "파일 검색...",

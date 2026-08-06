@@ -39,6 +39,7 @@
   "codeWebChat.createNewCheckpoint.title": "Создать новую контрольную точку",
   "codeWebChat.settings.title": "Настройки",
   "codeWebChat.generateCommitMessage.title": "Сгенерировать сообщение коммита с CWC",
+  "codeWebChat.copyCommitMessagePrompt.title": "Копировать промпт сообщения коммита",
   "codeWebChat.generateCommitMessageAndCommit.title": "Зафиксировать изменения",
   "codeWebChat.setRanges.title": "Установить диапазоны...",
   "codeWebChat.searchFiles.title": "Поиск файлов...",

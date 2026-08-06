@@ -39,6 +39,7 @@
   "codeWebChat.createNewCheckpoint.title": "Új ellenőrzőpont létrehozása",
   "codeWebChat.settings.title": "Beállítások",
   "codeWebChat.generateCommitMessage.title": "Commit üzenet generálása CWC-vel",
+  "codeWebChat.copyCommitMessagePrompt.title": "Commit üzenet prompt másolása",
   "codeWebChat.generateCommitMessageAndCommit.title": "Változások commitálása",
   "codeWebChat.setRanges.title": "Tartományok beállítása...",
   "codeWebChat.searchFiles.title": "Fájlok keresése...",

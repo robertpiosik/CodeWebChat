@@ -39,6 +39,7 @@
   "codeWebChat.createNewCheckpoint.title": "创建新检查点",
   "codeWebChat.settings.title": "设置",
   "codeWebChat.generateCommitMessage.title": "使用 CWC 生成提交信息",
+  "codeWebChat.copyCommitMessagePrompt.title": "复制提交信息提示词",
   "codeWebChat.generateCommitMessageAndCommit.title": "提交更改",
   "codeWebChat.setRanges.title": "设置范围...",
   "codeWebChat.searchFiles.title": "搜索文件...",
