@@ -788,6 +788,7 @@ export const Prompt = () => {
           <div className={styles.slot}>
             <UiProgressModal
               title={progress_state.title}
+              subtitle={progress_state.subtitle}
               progress={progress_state.progress}
               tokens_per_second={progress_state.tokens_per_second}
               show_elapsed_time={progress_state.show_elapsed_time}

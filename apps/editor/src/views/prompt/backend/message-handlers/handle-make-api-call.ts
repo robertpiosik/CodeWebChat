@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import { t } from '@/i18n'
 import { FilesCollector } from '@/utils/files-collector'
 import { Logger } from '@shared/utils/logger'
 import {
@@ -33,6 +34,7 @@ import {
 } from '@/utils/show-configuration-quick-pick'
 import { PromptBuilder } from '@/utils/prompt-builder'
 import { ApiPromptType } from '@shared/types/prompt-types'
+import { send_llm_message } from '@/utils/send-llm-message'
 import {
   EDIT_FORMAT_INSTRUCTIONS_DIFF,
   EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
@@ -130,7 +132,9 @@ const get_api_configuration = async (params: {
       last_selected_id,
       placeholder:
         params.prompt_type == 'code-at-cursor'
-          ? 'Select code at cursor API configuration'
+          ? t(
+              'views.prompt.handlers.make-api-call.select-code-at-cursor-api-configuration'
+            )
           : undefined
     })
 
@@ -202,7 +206,9 @@ export const handle_make_api_call = async (
   if (!instructions && prompt_type != 'code-at-cursor') {
     prompt_view_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
-      title: 'Instructions cannot be empty',
+      title: t(
+        'views.prompt.handlers.make-api-call.instructions-cannot-be-empty'
+      ),
       type: 'warning'
     })
     return
@@ -236,7 +242,7 @@ export const handle_make_api_call = async (
   if (!collected_files && prompt_type != 'code-at-cursor') {
     prompt_view_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
-      title: 'Context cannot be empty',
+      title: t('views.prompt.handlers.make-api-call.context-cannot-be-empty'),
       type: 'warning'
     })
     return
@@ -422,18 +428,69 @@ export const handle_make_api_call = async (
         })
 
         try {
-          const result =
-            await prompt_view_provider.prompt_view_api_calls_manager.send_llm_message(
-              {
+          let result: { response: string; thoughts?: string } | null = null
+
+          if (prompt_type == 'find-relevant-files') {
+            prompt_view_provider.api_call_abort_controller =
+              new AbortController()
+            prompt_view_provider.send_message({
+              command: 'SHOW_PROGRESS',
+              title: t(
+                'views.prompt.handlers.make-api-call.intelligent-search'
+              ),
+              subtitle: t('views.common.handlers.common.waiting-for-server'),
+              cancellable: true,
+              show_elapsed_time: true
+            })
+
+            try {
+              result = await send_llm_message({
                 base_url: model_provider.base_url,
                 api_key: model_provider.api_key,
                 body,
-                provider_name: api_configuration.model_provider_name,
-                model: api_configuration.model,
-                reasoning_effort: api_configuration.reasoning_effort,
-                raw_instructions: instructions
-              }
-            )
+                abort_signal:
+                  prompt_view_provider.api_call_abort_controller.signal,
+                on_thinking_chunk: () => {
+                  prompt_view_provider.send_message({
+                    command: 'SHOW_PROGRESS',
+                    title: t(
+                      'views.prompt.handlers.make-api-call.intelligent-search'
+                    ),
+                    subtitle: t('views.common.handlers.common.thinking'),
+                    cancellable: true,
+                    show_elapsed_time: true
+                  })
+                },
+                on_chunk: () => {
+                  prompt_view_provider.send_message({
+                    command: 'SHOW_PROGRESS',
+                    title: t(
+                      'views.prompt.handlers.make-api-call.intelligent-search'
+                    ),
+                    subtitle: t('views.common.handlers.common.receiving'),
+                    cancellable: true,
+                    show_elapsed_time: true
+                  })
+                }
+              })
+            } finally {
+              prompt_view_provider.api_call_abort_controller = null
+              prompt_view_provider.send_message({ command: 'HIDE_PROGRESS' })
+            }
+          } else {
+            result =
+              await prompt_view_provider.prompt_view_api_calls_manager.send_llm_message(
+                {
+                  base_url: model_provider.base_url,
+                  api_key: model_provider.api_key,
+                  body,
+                  provider_name: api_configuration.model_provider_name,
+                  model: api_configuration.model,
+                  reasoning_effort: api_configuration.reasoning_effort,
+                  raw_instructions: instructions
+                }
+              )
+          }
 
           if (result) {
             const recent_api_configuration = {
@@ -491,7 +548,9 @@ export const handle_make_api_call = async (
             if (prompt_type == 'code-at-cursor')
               err_msg = dictionary.error_message.CODE_COMPLETION_ERROR
             else if (prompt_type == 'find-relevant-files')
-              err_msg = 'Find relevant files error. See console for details.'
+              err_msg = t(
+                'views.prompt.handlers.make-api-call.find-intelligent-search-error'
+              )
             vscode.window.showErrorMessage(err_msg)
             error_occurred = true
           }

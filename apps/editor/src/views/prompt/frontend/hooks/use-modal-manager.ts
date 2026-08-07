@@ -4,6 +4,7 @@ import { BackendMessage } from '../../types/messages'
 export const use_modal_manager = () => {
   const [progress_state, set_progress_state] = useState<{
     title: string
+    subtitle?: string
     progress?: number
     tokens_per_second?: number
     cancellable?: boolean
@@ -49,6 +50,7 @@ export const use_modal_manager = () => {
       if (message.command == 'SHOW_PROGRESS') {
         set_progress_state({
           title: message.title,
+          subtitle: message.subtitle,
           progress: message.progress,
           tokens_per_second: message.tokens_per_second,
           cancellable: message.cancellable ?? false,

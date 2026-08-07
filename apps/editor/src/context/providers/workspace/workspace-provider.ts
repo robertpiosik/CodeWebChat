@@ -156,13 +156,8 @@ export class WorkspaceProvider
 
   public switch_context_state(is_frf: boolean) {
     if (this._is_frf_mode == is_frf) return
-    this._is_frf_mode = is_frf
 
-    if (is_frf) {
-      this._checked_items.clear()
-      this._checked_timestamps.clear()
-      this._partially_checked_dirs.clear()
-    }
+    this._is_frf_mode = is_frf
 
     this._token_calculator.clear_selected_counts()
     this.refresh()

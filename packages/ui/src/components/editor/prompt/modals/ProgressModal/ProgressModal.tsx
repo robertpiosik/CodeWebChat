@@ -5,6 +5,7 @@ import { Modal } from '../Modal'
 
 type Props = {
   title: string
+  subtitle?: string
   on_cancel?: () => void
   progress?: number
   tokens_per_second?: number
@@ -53,6 +54,9 @@ export const ProgressModal: React.FC<Props> = (props) => {
         show_elapsed_time={props.show_elapsed_time}
         content_slot={
           <div className={styles.content}>
+            {props.subtitle && (
+              <div className={styles.subtitle}>{props.subtitle}</div>
+            )}
             {props.tokens_per_second !== undefined && (
               <div className={styles['tokens-per-second']}>
                 {format_tokens_per_second(props.tokens_per_second)} tokens/s

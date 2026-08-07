@@ -812,6 +812,7 @@ export interface FocusPromptFieldMessage extends BaseMessage {
 export interface ShowProgressMessage extends BaseMessage {
   command: 'SHOW_PROGRESS'
   title: string
+  subtitle?: string
   progress?: number
   tokens_per_second?: number
   cancellable?: boolean
