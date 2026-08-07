@@ -149,7 +149,7 @@ export const process_response = async (params: {
               )
             }
 
-            let is_checked = true
+            let is_checked = current_checked_files.includes(absolute_path)
             if (params.args?.relevant_files) {
               const history_file = params.args.relevant_files.find(
                 (f) =>
