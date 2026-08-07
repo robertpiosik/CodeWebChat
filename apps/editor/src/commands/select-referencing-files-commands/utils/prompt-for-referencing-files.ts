@@ -74,8 +74,8 @@ export const prompt_for_referencing_files = async (params: {
     quick_pick.items = quick_pick_items
     quick_pick.selectedItems = current_selected_items
     quick_pick.canSelectMany = true
-    quick_pick.placeholder = t('feature.referencing-files.select-files')
-    quick_pick.title = t('feature.referencing-files.referencing-files')
+    quick_pick.placeholder = t('command.select-referencing-files.select-files')
+    quick_pick.title = t('command.select-referencing-files.referencing-files')
     quick_pick.ignoreFocusOut = true
 
     const close_button = {
@@ -84,7 +84,7 @@ export const prompt_for_referencing_files = async (params: {
     }
     const search_button = {
       iconPath: new vscode.ThemeIcon('search'),
-      tooltip: t('feature.referencing-files.search')
+      tooltip: t('command.select-referencing-files.search')
     }
     quick_pick.buttons = [search_button, close_button]
 
@@ -137,7 +137,7 @@ export const prompt_for_referencing_files = async (params: {
             })
           } catch (error) {
             vscode.window.showErrorMessage(
-              t('feature.referencing-files.error-opening', {
+              t('command.select-referencing-files.error-opening', {
                 error: String(error)
               })
             )
