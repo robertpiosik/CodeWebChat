@@ -236,22 +236,22 @@ export const translations = {
     bg: 'Да се прикачи ли ASCII дърво на контекстните файлове към commit съобщението?'
   },
   'command.generate-commit-message.action-quick-pick.title': {
-    en: 'Commit Message Action',
-    pl: 'Akcja wiadomości commita',
+    en: 'Commit Message Actions',
+    pl: 'Akcje wiadomości commita',
     'zh-cn': '提交信息操作',
     ja: 'コミットメッセージのアクション',
     'zh-tw': '提交訊息動作',
-    de: 'Commit-Nachricht-Aktion',
-    es: 'Acción del mensaje de commit',
-    fr: 'Action de message de commit',
-    'pt-br': 'Ação de Mensagem de Commit',
-    ru: 'Действие сообщения коммита',
+    de: 'Commit-Nachrichten-Aktionen',
+    es: 'Acciones de mensaje de commit',
+    fr: 'Actions de message de commit',
+    'pt-br': 'Ações da mensagem de commit',
+    ru: 'Действия с сообщением коммита',
     ko: '커밋 메시지 작업',
-    it: 'Azione del messaggio di commit',
-    tr: 'İşleme Mesajı Eylemi',
+    it: 'Azioni del messaggio di commit',
+    tr: 'İşleme Mesajı Eylemleri',
     cs: 'Akce zprávy commitu',
-    hu: 'Commit üzenet művelet',
-    bg: 'Действие за commit съобщение'
+    hu: 'Commit üzenet műveletek',
+    bg: 'Действия с commit съобщение'
   },
   'command.generate-commit-message.action-quick-pick.placeholder': {
     en: 'Choose how to proceed',
@@ -326,7 +326,7 @@ export const translations = {
     bg: 'Въведете ръчно'
   },
   'command.generate-commit-message.action.copy-prompt': {
-    en: 'Copy Prompt',
+    en: 'Copy prompt',
     pl: 'Skopiuj prompt',
     'zh-cn': '复制提示',
     ja: 'プロンプトをコピー',
@@ -334,13 +334,13 @@ export const translations = {
     de: 'Prompt kopieren',
     es: 'Copiar prompt',
     fr: 'Copier le prompt',
-    'pt-br': 'Copiar Prompt',
+    'pt-br': 'Copiar prompt',
     ru: 'Скопировать промпт',
     ko: '프롬프트 복사',
-    it: 'Copia Prompt',
-    tr: 'İstemi Kopyala',
-    cs: 'Zkopírovat prompt',
+    it: 'Copia prompt',
+    tr: 'İstemi kopyala',
+    cs: 'Kopírovat prompt',
     hu: 'Prompt másolása',
-    bg: 'Копирай промпта'
+    bg: 'Копиране на промпт'
   }
 } as const
