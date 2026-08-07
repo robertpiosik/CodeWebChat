@@ -4,7 +4,7 @@ import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provi
 import { run_generate_action } from './actions/run-generate-action'
 import { WebSocketManager } from '@/services/websocket-manager'
 
-export const generate_commit_message_command = (
+export const generate_commit_message_commands = (
   extension_context: vscode.ExtensionContext,
   prompt_view_provider: PromptViewProvider,
   workspace_provider: WorkspaceProvider,

@@ -30,7 +30,7 @@ import {
   delete_command,
   reference_in_prompt_command,
   open_url_command,
-  generate_commit_message_command,
+  generate_commit_message_commands,
   set_ranges_command,
   search_files_commands,
   select_referencing_files_command,
@@ -204,7 +204,7 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
         settings_view_provider.createOrShow(section)
       }
     ),
-    generate_commit_message_command(
+    generate_commit_message_commands(
       extension_context,
       prompt_view_provider,
       workspace_provider,
