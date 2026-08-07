@@ -202,8 +202,6 @@ export const process_response = async (params: {
         title: t('command.apply-response.relevant-files.success'),
         type: 'success'
       })
-
-      await params.prompt_view_provider.switch_to_edit_files()
     }
 
     return null

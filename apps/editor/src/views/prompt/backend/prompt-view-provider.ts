@@ -288,32 +288,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     this.open_editors_provider.set_no_context_mode(is_no_context)
   }
 
-  public async switch_to_edit_files() {
-    if (this.mode == MODE.WEB) {
-      this.web_prompt_type = 'edit-files'
-      await this.extension_context.workspaceState.update(
-        WEB_MODE_STATE_KEY,
-        'edit-files'
-      )
-      this.send_message({
-        command: 'WEB_PROMPT_TYPE',
-        prompt_type: 'edit-files'
-      })
-    } else {
-      this.api_prompt_type = 'edit-files'
-      await this.extension_context.workspaceState.update(
-        API_MODE_STATE_KEY,
-        'edit-files'
-      )
-      this.send_message({
-        command: 'API_PROMPT_TYPE',
-        prompt_type: 'edit-files'
-      })
-    }
-    this.update_providers_shrink_mode()
-    this.update_providers_context_state()
-  }
-
   private _send_send_with_shift_enter() {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const enabled = config.get<boolean>('sendWithShiftEnter', false)
