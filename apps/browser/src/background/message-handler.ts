@@ -78,7 +78,8 @@ const process_next_chat = async () => {
       },
       client_id: current_chat_message.client_id,
       raw_instructions: current_chat_message.raw_instructions,
-      prompt_type: current_chat_message.prompt_type
+      prompt_type: current_chat_message.prompt_type,
+      is_for_commit_message: current_chat_message.is_for_commit_message
     }
   })
 

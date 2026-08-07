@@ -68,6 +68,8 @@ export const LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY =
   'last-used-edit-files-config-id'
 export const LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY =
   'last-used-commit-messages-config-id'
+export const LAST_USED_COMMIT_MESSAGE_ACTION_STATE_KEY =
+  'last-used-commit-message-action'
 export const LAST_USED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY =
   'last-used-intelligent-update-config-id'
 export const LAST_USED_VOICE_INPUT_CONFIG_ID_STATE_KEY =

@@ -185,7 +185,6 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 ### Commit messages
 
 - `Commit Changes` - Generate commit message in your preferred style and commit.
-- `Copy Commit Message Prompt` - Copy the prompt for generating a commit message.
 - `Apply Commit Message from Clipboard` - Apply a generated commit message from the clipboard.
 
 ### History

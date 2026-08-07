@@ -3,7 +3,7 @@ import {
   prepare_staged_changes,
   GitRepository
 } from '../../../utils/git-repository-utils'
-import { build_commit_message_prompt } from '@/features/commit-messages'
+import { build_commit_message_prompt } from '../utils/build-commit-message-prompt'
 
 export const get_prompt_data = async (params: {
   repository: GitRepository

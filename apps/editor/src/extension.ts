@@ -207,7 +207,8 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     generate_commit_message_command(
       extension_context,
       prompt_view_provider,
-      workspace_provider
+      workspace_provider,
+      websocket_server_instance
     ),
     vscode.commands.registerCommand(
       'codeWebChat.openWebsitePreviewUrl',

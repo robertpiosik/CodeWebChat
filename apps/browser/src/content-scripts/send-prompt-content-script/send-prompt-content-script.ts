@@ -194,6 +194,7 @@ const main = async () => {
         | 'code-at-cursor'
         | 'find-relevant-files'
         | 'without-files'
+      is_for_commit_message?: boolean
     }
 
     if (!stored_data) {
@@ -227,7 +228,8 @@ const main = async () => {
       const inject_button =
         stored_data.prompt_type == 'edit-files' ||
         stored_data.prompt_type == 'code-at-cursor' ||
-        stored_data.prompt_type == 'find-relevant-files'
+        stored_data.prompt_type == 'find-relevant-files' ||
+        !!stored_data.is_for_commit_message
 
       sessionStorage.setItem(
         session_data_key,

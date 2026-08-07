@@ -368,6 +368,7 @@ export class WebSocketManager {
     raw_instructions?: string
     prompt_type?: WebPromptType
     invocation_count: number
+    is_for_commit_message?: boolean
   }): Promise<boolean> {
     if (!this.has_connected_browsers) {
       throw new Error('Does not have connected browsers.')
@@ -458,7 +459,8 @@ export class WebSocketManager {
       raw_instructions: params.raw_instructions,
       prompt_type: params.prompt_type,
       reuse_last_tab,
-      invocation_count: params.invocation_count
+      invocation_count: params.invocation_count,
+      is_for_commit_message: params.is_for_commit_message
     }
 
     Logger.info({

@@ -39,8 +39,6 @@
   "codeWebChat.createNewCheckpoint.title": "建立新檢查點",
   "codeWebChat.settings.title": "設定",
   "codeWebChat.generateCommitMessage.title": "使用 CWC 產生提交訊息",
-  "codeWebChat.copyCommitMessagePrompt.title": "複製提交訊息提示詞",
-  "codeWebChat.applyCommitMessageFromClipboard.title": "從剪貼簿套用",
   "codeWebChat.applyCommitMessageFromClipboardPalette.title": "從剪貼簿套用提交訊息",
   "codeWebChat.generateCommitMessageAndCommit.title": "提交變更",
   "codeWebChat.setRanges.title": "設定範圍...",

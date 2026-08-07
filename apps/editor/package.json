@@ -323,18 +323,6 @@
         "icon": "$(sparkle)"
       },
       {
-        "command": "codeWebChat.copyCommitMessagePrompt",
-        "title": "%codeWebChat.copyCommitMessagePrompt.title%",
-        "category": "Code Web Chat",
-        "icon": "$(copy)"
-      },
-      {
-        "command": "codeWebChat.applyCommitMessageFromClipboard",
-        "title": "%codeWebChat.applyCommitMessageFromClipboard.title%",
-        "category": "Code Web Chat",
-        "icon": "$(clippy)"
-      },
-      {
         "command": "codeWebChat.applyCommitMessageFromClipboardPalette",
         "title": "%codeWebChat.applyCommitMessageFromClipboardPalette.title%",
         "category": "Code Web Chat"
@@ -566,10 +554,6 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.applyCommitMessageFromClipboard",
-          "when": "false"
-        },
-        {
           "command": "codeWebChat.visitWebsite",
           "when": "false"
         },
@@ -784,16 +768,6 @@
         {
           "command": "codeWebChat.generateCommitMessage",
           "group": "navigation@1",
-          "when": "scmProvider == git"
-        },
-        {
-          "command": "codeWebChat.copyCommitMessagePrompt",
-          "group": "navigation@2",
-          "when": "scmProvider == git"
-        },
-        {
-          "command": "codeWebChat.applyCommitMessageFromClipboard",
-          "group": "navigation@3",
           "when": "scmProvider == git"
         }
       ],

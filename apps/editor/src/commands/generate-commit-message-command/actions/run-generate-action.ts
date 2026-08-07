@@ -1,10 +1,8 @@
 import * as vscode from 'vscode'
 import { get_repository_for_commit } from '../../../utils/git-repository-utils'
-import {
-  get_commit_message_api_configuration,
-  generate_commit_message_with_api,
-  strip_wrapping_quotes
-} from '@/features/commit-messages'
+import { get_commit_message_api_configuration } from '../utils/get-commit-message-config'
+import { generate_commit_message_with_api } from '../utils/generate-commit-message-with-api'
+import { strip_wrapping_quotes } from '../utils/strip-wrapping-quotes'
 import { t } from '@/i18n'
 import axios from 'axios'
 import { CommitMessageDetails } from '../../../utils/commit-message-details'
@@ -13,8 +11,17 @@ import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { create_checkpoint } from '@/features/checkpoints/actions'
 import { AsciiTree } from '../../../utils/ascii-tree'
-import { LAST_ATTACH_ASCII_TREE_STATE_KEY } from '@/constants/state-keys'
+import {
+  LAST_ATTACH_ASCII_TREE_STATE_KEY,
+  get_last_used_web_configuration_key,
+  LAST_USED_COMMIT_MESSAGE_ACTION_STATE_KEY
+} from '@/constants/state-keys'
 import { get_prompt_data } from './get-prompt-data'
+import { display_token_count } from '@/utils/display-token-count'
+import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
+import { CHATBOTS } from '@shared/constants/chatbots'
+import { dictionary } from '@shared/constants/dictionary'
+import { WebSocketManager } from '@/services/websocket-manager'
 
 const truncate_prompt = (text: string): string => {
   if (text.length <= MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE) return text
@@ -28,6 +35,7 @@ export const run_generate_action = async (params: {
   extension_context: vscode.ExtensionContext
   prompt_view_provider: PromptViewProvider
   workspace_provider: WorkspaceProvider
+  websocket_manager: WebSocketManager
 }) => {
   let files_staged_by_action = false
   let is_single_change_flow = false
@@ -67,16 +75,97 @@ export const run_generate_action = async (params: {
       const show_back_button =
         was_empty_stage && !is_single_change_flow && !params.source_control
 
-      const api_configuration_data = await get_commit_message_api_configuration(
-        params.extension_context,
-        show_back_button,
-        force_quick_pick,
-        token_count
+      const action_make_api = t(
+        'command.generate-commit-message.action.make-api-call'
+      )
+      const action_autofill_in_chatbot = t(
+        'command.generate-commit-message.action.autofill-in-chatbot'
+      )
+      const action_enter_manually = t(
+        'command.generate-commit-message.action.enter-manually'
+      )
+      const action_copy_prompt = t(
+        'command.generate-commit-message.action.copy-prompt'
       )
 
-      force_quick_pick = false
+      const action = await new Promise<string | undefined | 'back'>(
+        (resolve) => {
+          const quick_pick = vscode.window.createQuickPick<
+            vscode.QuickPickItem & { id: string }
+          >()
+          quick_pick.items = [
+            { label: action_make_api, id: 'make-api' },
+            ...(params.websocket_manager.is_connected_with_browser()
+              ? [{ label: action_autofill_in_chatbot, id: 'autofill' }]
+              : []),
+            { label: action_enter_manually, id: 'manual' },
+            { label: action_copy_prompt, id: 'copy' }
+          ]
 
-      if (api_configuration_data == 'back') {
+          const last_action_id =
+            params.extension_context.workspaceState.get<string>(
+              LAST_USED_COMMIT_MESSAGE_ACTION_STATE_KEY
+            )
+
+          const active_item = last_action_id
+            ? quick_pick.items.find((i) => i.id === last_action_id)
+            : undefined
+
+          if (active_item) {
+            quick_pick.activeItems = [active_item]
+          } else {
+            quick_pick.activeItems = []
+          }
+
+          quick_pick.title = t(
+            'command.generate-commit-message.action-quick-pick.title'
+          )
+          quick_pick.placeholder = t(
+            'command.generate-commit-message.action-quick-pick.placeholder'
+          )
+
+          const close_button = {
+            iconPath: new vscode.ThemeIcon('close'),
+            tooltip: t('common.close')
+          }
+
+          quick_pick.buttons = [
+            ...(show_back_button ? [vscode.QuickInputButtons.Back] : []),
+            close_button
+          ]
+
+          let is_resolved = false
+
+          quick_pick.onDidTriggerButton((button) => {
+            if (button === vscode.QuickInputButtons.Back) {
+              is_resolved = true
+              resolve('back')
+              quick_pick.hide()
+            } else if (button === close_button) {
+              is_resolved = true
+              resolve(undefined)
+              quick_pick.hide()
+            }
+          })
+
+          quick_pick.onDidAccept(() => {
+            is_resolved = true
+            resolve(quick_pick.selectedItems[0]?.id)
+            quick_pick.hide()
+          })
+
+          quick_pick.onDidHide(() => {
+            if (!is_resolved) {
+              resolve(undefined)
+            }
+            quick_pick.dispose()
+          })
+
+          quick_pick.show()
+        }
+      )
+
+      if (action === 'back') {
         if (was_empty_stage) {
           if (!show_back_button) {
             await vscode.commands.executeCommand('git.unstageAll', repository)
@@ -90,27 +179,179 @@ export const run_generate_action = async (params: {
         return
       }
 
-      if (!api_configuration_data) {
+      if (!action) {
         if (was_empty_stage) {
           await vscode.commands.executeCommand('git.unstageAll', repository)
         }
         return
       }
 
-      try {
-        commit_message = await generate_commit_message_with_api({
-          base_url: api_configuration_data.base_url,
-          model_provider: api_configuration_data.model_provider,
-          api_configuration: api_configuration_data.api_configuration,
-          message: message_prompt
-        })
-      } catch (error) {
-        if (axios.isCancel(error)) {
+      params.extension_context.workspaceState.update(
+        LAST_USED_COMMIT_MESSAGE_ACTION_STATE_KEY,
+        action
+      )
+
+      if (action === 'copy') {
+        await vscode.env.clipboard.writeText(message_prompt)
+        vscode.window.showInformationMessage(
+          t('command.generate-commit-message.copied', {
+            tokens: display_token_count(token_count)
+          })
+        )
+        if (was_empty_stage) {
+          await vscode.commands.executeCommand('git.unstageAll', repository)
+        }
+        return
+      }
+
+      if (action === 'autofill') {
+        if (!params.websocket_manager.is_connected_with_browser()) {
+          vscode.window.showWarningMessage(
+            dictionary.warning_message.BROWSER_EXTENSION_NOT_CONNECTED
+          )
           force_quick_pick = true
           continue
+        }
+
+        const config = vscode.workspace.getConfiguration('codeWebChat')
+        const all_web_configurations = config.get<any[]>(
+          'webConfigurations',
+          []
+        )
+        const valid_web_configurations = all_web_configurations.filter(
+          (c) => c.chatbot
+        )
+
+        if (valid_web_configurations.length == 0) {
+          vscode.commands.executeCommand('codeWebChat.settings')
+          vscode.window.showInformationMessage('No configurations found.')
+          force_quick_pick = true
+          continue
+        }
+
+        let selected_web_configuration_name: string | undefined
+
+        if (valid_web_configurations.length == 1) {
+          selected_web_configuration_name = valid_web_configurations[0].name
         } else {
-          force_quick_pick = true
+          const recents_key =
+            get_last_used_web_configuration_key('commit-message')
+          const last_selected_name =
+            params.extension_context.workspaceState.get<string>(recents_key) ??
+            params.extension_context.globalState.get<string>(recents_key)
+
+          const result = await show_configuration_quick_pick({
+            items: valid_web_configurations,
+            map_item: (web_configuration) => {
+              const is_unnamed =
+                !web_configuration.name ||
+                /^\(\d+\)$/.test(web_configuration.name.trim())
+              const chatbot_models =
+                CHATBOTS[web_configuration.chatbot as keyof typeof CHATBOTS]
+                  ?.models
+              const model = web_configuration.model
+                ? chatbot_models?.[web_configuration.model]?.label ||
+                  web_configuration.model
+                : ''
+              const details: string[] = []
+              if (!is_unnamed && web_configuration.chatbot)
+                details.push(web_configuration.chatbot)
+              if (model) details.push(model)
+              if (web_configuration.reasoningEffort)
+                details.push(web_configuration.reasoningEffort)
+              return {
+                label: `${is_unnamed ? web_configuration.chatbot! : web_configuration.name!.replace(/\s*\(\d+\)$/, '')}`,
+                description: details.join(' · '),
+                id: web_configuration.name || '',
+                is_pinned: web_configuration.isPinned
+              }
+            },
+            last_selected_id: last_selected_name,
+            show_back_button: true
+          })
+
+          if (result === 'back') {
+            force_quick_pick = true
+            continue
+          } else if (!result) {
+            if (was_empty_stage) {
+              await vscode.commands.executeCommand('git.unstageAll', repository)
+            }
+            return
+          }
+          selected_web_configuration_name = result.item.name
+
+          if (selected_web_configuration_name) {
+            params.extension_context.workspaceState.update(
+              recents_key,
+              selected_web_configuration_name
+            )
+            params.extension_context.globalState.update(
+              recents_key,
+              selected_web_configuration_name
+            )
+          }
+        }
+
+        if (selected_web_configuration_name) {
+          const sent = await params.websocket_manager.initialize_chat({
+            text: message_prompt,
+            web_configuration_name: selected_web_configuration_name,
+            invocation_count: 1,
+            is_for_commit_message: true
+          })
+          if (sent) {
+            vscode.window.showInformationMessage(
+              'Continue in the connected browser'
+            )
+          }
+        }
+
+        if (was_empty_stage) {
+          await vscode.commands.executeCommand('git.unstageAll', repository)
+        }
+        return
+      }
+
+      if (action === 'manual') {
+        commit_message = ''
+      } else {
+        const api_configuration_data =
+          await get_commit_message_api_configuration(
+            params.extension_context,
+            true,
+            force_quick_pick,
+            token_count
+          )
+
+        force_quick_pick = false
+
+        if (api_configuration_data == 'back') {
           continue
+        }
+
+        if (!api_configuration_data) {
+          if (was_empty_stage) {
+            await vscode.commands.executeCommand('git.unstageAll', repository)
+          }
+          return
+        }
+
+        try {
+          commit_message = await generate_commit_message_with_api({
+            base_url: api_configuration_data.base_url,
+            model_provider: api_configuration_data.model_provider,
+            api_configuration: api_configuration_data.api_configuration,
+            message: message_prompt
+          })
+        } catch (error) {
+          if (axios.isCancel(error)) {
+            force_quick_pick = true
+            continue
+          } else {
+            force_quick_pick = true
+            continue
+          }
         }
       }
     }
