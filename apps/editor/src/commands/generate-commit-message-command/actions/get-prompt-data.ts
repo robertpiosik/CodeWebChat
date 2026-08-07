@@ -22,7 +22,7 @@ export const get_prompt_data = async (params: {
     selection_state: params.selection_state
   })
   if (!diff) return null
-  const message_prompt = await build_commit_message_prompt(
+  const { api_prompt, chatbot_prompt } = await build_commit_message_prompt(
     diff,
     params.repository
   )
@@ -61,7 +61,8 @@ export const get_prompt_data = async (params: {
   return {
     repository: params.repository,
     was_empty_stage,
-    message_prompt,
+    api_prompt,
+    chatbot_prompt,
     is_single_change,
     staged_files: diff_file_paths
   }

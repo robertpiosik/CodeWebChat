@@ -52,11 +52,11 @@ export const run_generate_action = async (params: {
       selection_state
     })
     if (!data) return
-    const { message_prompt, is_single_change, staged_files } = data
+    const { api_prompt, chatbot_prompt, is_single_change, staged_files } = data
     let { was_empty_stage } = data
 
     // token count for the prompt, used in the config UI
-    const token_count = Math.ceil(message_prompt.length / 4)
+    const token_count = Math.ceil(api_prompt.length / 4)
 
     if (was_empty_stage) {
       files_staged_by_action = true
@@ -192,7 +192,7 @@ export const run_generate_action = async (params: {
       )
 
       if (action === 'copy') {
-        await vscode.env.clipboard.writeText(message_prompt)
+        await vscode.env.clipboard.writeText(chatbot_prompt)
         vscode.window.showInformationMessage(
           t('command.generate-commit-message.copied', {
             tokens: display_token_count(token_count)
@@ -295,7 +295,7 @@ export const run_generate_action = async (params: {
 
         if (selected_web_configuration_name) {
           const sent = await params.websocket_manager.initialize_chat({
-            text: message_prompt,
+            text: chatbot_prompt,
             web_configuration_name: selected_web_configuration_name,
             invocation_count: 1,
             is_for_commit_message: true
@@ -342,7 +342,7 @@ export const run_generate_action = async (params: {
             base_url: api_configuration_data.base_url,
             model_provider: api_configuration_data.model_provider,
             api_configuration: api_configuration_data.api_configuration,
-            message: message_prompt
+            message: api_prompt
           })
         } catch (error) {
           if (axios.isCancel(error)) {

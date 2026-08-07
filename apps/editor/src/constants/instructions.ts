@@ -50,9 +50,7 @@ export const intelligent_update_fallback_edit_format_instructions = `Print the u
 export const commit_message_instructions =
   "Write a brief and precise summary for the changes, limited to a single sentence. Because the summary will be used for a commit message, don't use any markdown formatting and don't include a trailing dot. Use an imperative tone to ensure clarity and focus on the primary change or purpose."
 
-export const commit_message_format = `# Output formatting
-
-Your response must begin with "**Commit message:**", then proceed with the message. Example:
+export const commit_message_format = `Your response must begin with "**Commit message:**", then proceed with the message. Example:
 
 **Commit message:** Bump version to 1.0.1`
 

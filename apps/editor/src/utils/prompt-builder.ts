@@ -22,14 +22,14 @@ export namespace PromptBuilder {
     const display_path = params.filepath.replace(/\\/g, '/')
 
     if (params.status == 'created') {
-      result += `### New file: \`${display_path}\`\n\n`
+      result += `- New file: \`${display_path}\`\n\n`
     } else if (params.status == 'deleted') {
-      result += `### Deleted file: \`${display_path}\`\n\n`
+      result += `- Deleted file: \`${display_path}\`\n\n`
     } else if (params.status == 'renamed' && params.old_filepath) {
       const old_display_path = params.old_filepath.replace(/\\/g, '/')
-      result += `### Renamed file: \`${old_display_path}\` (old) \`${display_path}\` (new)\n\n`
+      result += `- Renamed file: \`${old_display_path}\` (old) \`${display_path}\` (new)\n\n`
     } else {
-      result += `### Updated file: \`${display_path}\`\n\n`
+      result += `- Updated file: \`${display_path}\`\n\n`
     }
 
     if (params.diff_content?.trimEnd()) {

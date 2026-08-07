@@ -1,5 +1,8 @@
 import * as vscode from 'vscode'
-import { commit_message_instructions } from '@/constants/instructions'
+import {
+  commit_message_instructions,
+  commit_message_format
+} from '@/constants/instructions'
 import type { GitRepository } from '@/utils/git-repository-utils'
 import { MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE } from '@/constants/values'
 import { PromptBuilder } from '@/utils/prompt-builder'
@@ -7,7 +10,7 @@ import { PromptBuilder } from '@/utils/prompt-builder'
 export const build_commit_message_prompt = async (
   diff: string,
   repository: GitRepository
-): Promise<string> => {
+): Promise<{ api_prompt: string; chatbot_prompt: string }> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const instructions = config.get<string>('commitMessageInstructions')
   const commit_message_prompt = instructions || commit_message_instructions
@@ -124,5 +127,8 @@ export const build_commit_message_prompt = async (
     }
   }
 
-  return `${commit_message_prompt}\n\n---\n\n${changes_content}---\n\n${commit_message_prompt}`
+  const api_prompt = `# Task\n\n${commit_message_prompt}\n\n# Files\n\n${changes_content}\n\n# Task\n\n${commit_message_prompt}`
+  const chatbot_prompt = `# Task\n\n${commit_message_prompt}\n\n# Output formatting\n\n${commit_message_format}\n\n# Files\n\n${changes_content}\n\n# Output formatting\n\n${commit_message_format}\n\n# Task\n\n${commit_message_prompt}`
+
+  return { api_prompt, chatbot_prompt }
 }
