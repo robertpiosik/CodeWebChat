@@ -28,7 +28,6 @@ import { handle_truncated_edit } from './handlers/truncated-handler'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { natural_sort } from '@/utils/natural-sort'
 import { t } from '@/i18n'
-import { RelevantFileInPreview } from '@shared/types/file-in-preview'
 import { is_truncation_line } from '@/utils/changes-integration/truncations-processor/utils/is-truncation-line'
 
 export type PreviewData = {
@@ -44,7 +43,6 @@ export type ApplyResponseCommandArgs = {
     position: { line: number; character: number }
   }
   files_with_content?: FileInPreview[]
-  relevant_files?: RelevantFileInPreview[]
   created_at?: number
   url?: string
   recent_api_configuration?: RecentApiConfiguration
@@ -113,7 +111,11 @@ export const process_response = async (params: {
 
     const workspace_roots = params.workspace_provider.get_workspace_roots()
 
-    const files_for_preview: RelevantFileInPreview[] = []
+    const files_for_preview: {
+      file_path: string
+      absolute_path: string
+      is_checked: boolean
+    }[] = []
 
     for (const item of params.response_items) {
       if (item.type == 'relevant-files') {
@@ -122,7 +124,11 @@ export const process_response = async (params: {
           relevant_files_item.file_paths
         )
 
-        const local_files: RelevantFileInPreview[] = []
+        const local_files: {
+          file_path: string
+          absolute_path: string
+          is_checked: boolean
+        }[] = []
 
         for (const rel_path of Array.from(all_paths_to_process)) {
           let absolute_path: string | undefined
@@ -137,37 +143,12 @@ export const process_response = async (params: {
           }
 
           if (absolute_path && matched_workspace_root) {
-            const count =
-              await params.workspace_provider.calculate_file_tokens(
-                absolute_path
-              )
-
-            let workspace_name: string | undefined
-            if (workspace_roots.length > 1) {
-              workspace_name = params.workspace_provider.get_workspace_name(
-                matched_workspace_root
-              )
-            }
-
-            let is_checked = current_checked_files.includes(absolute_path)
-            if (params.args?.relevant_files) {
-              const history_file = params.args.relevant_files.find(
-                (f) =>
-                  f.file_path === rel_path &&
-                  f.workspace_name === workspace_name
-              )
-              if (history_file) {
-                is_checked = history_file.is_checked
-              }
-            }
+            const is_checked = current_checked_files.includes(absolute_path)
 
             local_files.push({
-              type: 'relevant-file',
               file_path: rel_path,
               absolute_path: absolute_path,
-              workspace_name,
-              is_checked,
-              token_count: count.total
+              is_checked
             })
           }
         }

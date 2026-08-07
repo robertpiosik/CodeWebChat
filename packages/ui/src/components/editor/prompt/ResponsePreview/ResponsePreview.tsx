@@ -1,19 +1,10 @@
 import { FC, useRef, useState, useMemo, useEffect } from 'react'
-import {
-  FileInPreview,
-  RelevantFileInPreview,
-  ItemInPreview
-} from '@shared/types/file-in-preview'
+import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
 import { RecentApiConfiguration } from '@shared/types/response-history-item'
 import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
 import cn from 'classnames'
 import styles from './ResponsePreview.module.scss'
-import {
-  TextItem,
-  InlineFileItem,
-  FileItem,
-  RelevantFileItem
-} from './components'
+import { TextItem, InlineFileItem, FileItem } from './components'
 import { Scrollable } from '../../common/Scrollable'
 
 type Props = {
@@ -101,10 +92,7 @@ export const ResponsePreview: FC<Props> = (props) => {
   }
 
   const files_in_preview = useMemo(
-    () =>
-      props.items.filter(
-        (i) => i.type == 'file' || i.type == 'relevant-file'
-      ) as (FileInPreview | RelevantFileInPreview)[],
+    () => props.items.filter((i) => i.type == 'file') as FileInPreview[],
     [props.items]
   )
 
@@ -388,31 +376,6 @@ export const ResponsePreview: FC<Props> = (props) => {
                     props.on_cancel_intelligent_update({
                       file_path: file.file_path,
                       workspace_name: file.workspace_name
-                    })
-                  }
-                  on_go_to_file={() =>
-                    props.on_go_to_file({
-                      file_path: file.file_path,
-                      workspace_name: file.workspace_name
-                    })
-                  }
-                />
-              )
-            } else if (item.type == 'relevant-file') {
-              const file = item
-              return (
-                <RelevantFileItem
-                  key={index}
-                  file={file}
-                  is_selected={index === last_clicked_file_index}
-                  has_multiple_workspaces={props.has_multiple_workspaces}
-                  total_files_count={files_in_preview.length}
-                  on_click={() => {}}
-                  on_toggle={(checked) =>
-                    props.on_toggle_file({
-                      file_path: file.file_path,
-                      workspace_name: file.workspace_name,
-                      is_checked: checked
                     })
                   }
                   on_go_to_file={() =>

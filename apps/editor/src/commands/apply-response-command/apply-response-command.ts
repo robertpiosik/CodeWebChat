@@ -210,7 +210,6 @@ export const apply_response_command = (params: {
 
           const has_valid_blocks =
             (args?.files_with_content && args.files_with_content.length > 0) ||
-            (args?.relevant_files && args.relevant_files.length > 0) ||
             response_items.some(
               (item) =>
                 item.type == 'file' ||

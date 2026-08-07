@@ -260,7 +260,6 @@ export const Prompt = () => {
       response: item.response,
       raw_instructions: item.raw_instructions,
       files: item.files,
-      relevant_files: item.relevant_files,
       created_at: item.created_at,
       url: item.url,
       recent_api_configuration: item.recent_api_configuration
@@ -653,9 +652,7 @@ export const Prompt = () => {
                   }}
                   on_accept={() => {
                     const accepted_files = items_in_preview.filter(
-                      (f) =>
-                        (f.type == 'file' || f.type == 'relevant-file') &&
-                        f.is_checked
+                      (f) => f.type == 'file' && f.is_checked
                     ) as any
                     set_response_history([])
                     set_selected_history_item_created_at(undefined)
@@ -667,9 +664,7 @@ export const Prompt = () => {
                   }}
                   is_accept_disabled={
                     items_in_preview.filter(
-                      (f) =>
-                        (f.type == 'file' || f.type == 'relevant-file') &&
-                        f.is_checked
+                      (f) => f.type == 'file' && f.is_checked
                     ).length == 0 ||
                     items_in_preview.some(
                       (f) => f.type == 'file' && f.is_applying
@@ -700,7 +695,7 @@ export const Prompt = () => {
                 on_toggle_file={(file) => {
                   set_items_in_preview((current_items) =>
                     current_items?.map((f) =>
-                      (f.type == 'file' || f.type == 'relevant-file') &&
+                      f.type == 'file' &&
                       f.file_path == file.file_path &&
                       f.workspace_name == file.workspace_name
                         ? { ...f, is_checked: file.is_checked }

@@ -695,7 +695,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
 
   public show_preview_ongoing_modal() {
     const items_without_files_count = this.response_history.filter(
-      (item) => item.files === undefined && item.relevant_files === undefined
+      (item) => item.files === undefined
     ).length
 
     if (items_without_files_count > 1) {
@@ -850,27 +850,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'FOCUS_ON_FILE_IN_PREVIEW') {
             handle_focus_on_file_in_preview(message)
           } else if (message.command == 'TOGGLE_FILE_IN_PREVIEW') {
-            const item = this.response_history.find((i) =>
-              i.relevant_files?.some(
-                (f) =>
-                  f.file_path == message.file_path &&
-                  f.workspace_name == message.workspace_name
-              )
-            )
-            if (item && item.relevant_files) {
-              const file = item.relevant_files.find(
-                (f) =>
-                  f.file_path == message.file_path &&
-                  f.workspace_name == message.workspace_name
-              )
-              if (file && file.type == 'relevant-file') {
-                file.is_checked = message.is_checked
-                this.send_message({
-                  command: 'RESPONSE_HISTORY',
-                  history: this.response_history
-                })
-              }
-            }
             await handle_toggle_file_in_preview(message)
           } else if (message.command == 'DISCARD_USER_CHANGES_IN_PREVIEW') {
             await handle_discard_user_changes_in_preview(message)

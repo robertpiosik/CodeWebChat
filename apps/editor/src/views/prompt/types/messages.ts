@@ -1,9 +1,5 @@
 import { EditFormat } from '@shared/types/edit-format'
-import {
-  FileInPreview,
-  RelevantFileInPreview,
-  ItemInPreview
-} from '@shared/types/file-in-preview'
+import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
 import {
   ResponseHistoryItem,
   RecentApiConfiguration
@@ -294,7 +290,7 @@ export interface RequestCurrentlyOpenFileTextMessage extends BaseMessage {
 
 export interface ResponsePreviewMessage extends BaseMessage {
   command: 'RESPONSE_PREVIEW'
-  files: (FileInPreview | RelevantFileInPreview)[]
+  files: FileInPreview[]
   created_at?: number
 }
 
@@ -378,7 +374,6 @@ export interface ApplyResponseFromHistoryMessage extends BaseMessage {
   response: string
   raw_instructions?: string
   files?: FileInPreview[]
-  relevant_files?: RelevantFileInPreview[]
   created_at: number
   url?: string
   recent_api_configuration?: RecentApiConfiguration
