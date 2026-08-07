@@ -6,6 +6,7 @@ import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 import { search_files } from '@/features/search-files'
+import { prompt_for_provided_results } from '@/features/search-files/utils/prompt-for-provided-results'
 
 export const get_target_folder_path = async (
   item?: any
@@ -129,6 +130,37 @@ export const search_files_commands = (
     vscode.commands.registerCommand(
       'codeWebChat.searchFilesFromFile',
       (item: any) => search_handler(item)
+    ),
+    vscode.commands.registerCommand(
+      'codeWebChat.internal.searchFilesWithResults',
+      async (files: { path: string; checked: boolean }[]) => {
+        while (true) {
+          const result = await prompt_for_provided_results({
+            files,
+            workspace_provider
+          })
+
+          if (!result) return undefined
+
+          if ('action' in result) {
+            const sub_search_result = await search_files({
+              get_files: async () => result.matched_paths,
+              workspace_provider,
+              extension_context,
+              show_back_button: true,
+              is_sub_search: true
+            })
+
+            if (sub_search_result === 'back') {
+              continue
+            }
+
+            return sub_search_result
+          }
+
+          return result
+        }
+      }
     )
   ]
 }

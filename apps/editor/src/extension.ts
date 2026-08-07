@@ -33,13 +33,13 @@ import {
   generate_commit_message_commands,
   set_ranges_command,
   search_files_commands,
-  select_referencing_files_commands,
   select_definition_file_command,
   select_unstaged_files_command,
   select_commit_files_command,
   select_clipboard_paths_command,
   select_changed_files_command,
-  select_parent_folder_command
+  select_parent_folder_command,
+  select_referencing_files_commands
 } from './commands'
 import { setup_git_discard_file_watcher } from './services/git-discard-file-watcher'
 import { select_imported_files_command } from './commands/select-imported-files-command'
@@ -178,7 +178,7 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
       workspace_provider,
       extension_context
     ),
-    ...select_referencing_files_commands(workspace_provider, extension_context),
+    // ...select_referencing_files_commands(workspace_provider, extension_context),
     ...search_files_commands(workspace_provider, extension_context),
     select_definition_file_command(workspace_provider),
     open_url_command({

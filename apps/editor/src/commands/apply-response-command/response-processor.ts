@@ -28,12 +28,7 @@ import { handle_truncated_edit } from './handlers/truncated-handler'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { natural_sort } from '@/utils/natural-sort'
 import { t } from '@/i18n'
-import {
-  RelevantFileInPreview,
-  ItemInPreview
-} from '@shared/types/file-in-preview'
-import { PreviewDecision } from './utils/preview/types'
-import { set_response_preview_promise_resolve } from './utils/preview/preview'
+import { RelevantFileInPreview } from '@shared/types/file-in-preview'
 import { is_truncation_line } from '@/utils/changes-integration/truncations-processor/utils/is-truncation-line'
 
 export type PreviewData = {
@@ -119,7 +114,6 @@ export const process_response = async (params: {
     const workspace_roots = params.workspace_provider.get_workspace_roots()
 
     const files_for_preview: RelevantFileInPreview[] = []
-    const items_for_preview: ItemInPreview[] = []
 
     for (const item of params.response_items) {
       if (item.type == 'relevant-files') {
@@ -180,71 +174,24 @@ export const process_response = async (params: {
 
         local_files.sort((a, b) => natural_sort(a.file_path, b.file_path))
         files_for_preview.push(...local_files)
-        items_for_preview.push(...local_files)
-      } else if (item.type == 'text') {
-        items_for_preview.push({
-          type: 'text',
-          content: item.content
-        })
-      } else if (item.type == 'inline-file') {
-        items_for_preview.push({
-          type: 'inline-file',
-          content: item.content,
-          language: item.language
-        })
       }
     }
-
-    const created_at_for_preview = params.args?.created_at ?? Date.now()
-
-    const history = params.prompt_view_provider.response_history
-    if (!params.args?.created_at) {
-      const new_item = {
-        response: params.response,
-        raw_instructions: params.args?.raw_instructions,
-        created_at: created_at_for_preview,
-        relevant_files: files_for_preview,
-        url: params.args?.url,
-        recent_api_configuration: params.args?.recent_api_configuration
-      }
-      history.push(new_item)
-    } else {
-      const existing = history.find(
-        (i) => i.created_at === params.args!.created_at
-      )
-      if (existing) {
-        existing.relevant_files = files_for_preview
-      }
-    }
-    params.prompt_view_provider.send_message({
-      command: 'RESPONSE_HISTORY',
-      history
-    })
 
     params.prompt_view_provider.send_message({
       command: 'HIDE_PROGRESS'
     })
 
-    params.prompt_view_provider.send_message({
-      command: 'RESPONSE_PREVIEW_STARTED',
-      items: items_for_preview,
-      raw_instructions: params.args?.raw_instructions,
-      created_at: created_at_for_preview,
-      url: params.args?.url,
-      recent_api_configuration: params.args?.recent_api_configuration
-    })
+    const decision = await vscode.commands.executeCommand<
+      { selected_paths: string[]; matched_paths: string[] } | undefined
+    >(
+      'codeWebChat.internal.searchFilesWithResults',
+      files_for_preview.map((f) => ({
+        path: f.absolute_path,
+        checked: f.is_checked
+      }))
+    )
 
-    const decision = await new Promise<PreviewDecision>((resolve) => {
-      set_response_preview_promise_resolve(resolve)
-    }).finally(() => {
-      set_response_preview_promise_resolve(undefined)
-    })
-
-    params.prompt_view_provider.send_message({
-      command: 'RESPONSE_PREVIEW_FINISHED'
-    })
-
-    if ('accepted_files' in decision && decision.accepted_files.length > 0) {
+    if (decision) {
       const shared_context_state =
         params.prompt_view_provider.shared_context_state
       const was_frf = params.workspace_provider.is_frf_mode
@@ -253,9 +200,8 @@ export const process_response = async (params: {
         shared_context_state.switch_context_state(false)
       }
 
-      const accepted_files = decision.accepted_files as RelevantFileInPreview[]
-      const presented_files = files_for_preview.map((f) => f.absolute_path!)
-      const selected_files = accepted_files.map((f) => f.absolute_path!)
+      const selected_files = decision.selected_paths
+      const presented_files = decision.matched_paths
 
       const filtered_current_files = current_checked_files.filter(
         (f) => !presented_files.includes(f)
@@ -277,16 +223,6 @@ export const process_response = async (params: {
       })
 
       await params.prompt_view_provider.switch_to_edit_files()
-    } else if ('created_at' in decision && decision.created_at) {
-      const history = params.prompt_view_provider.response_history
-      const new_history = history.filter(
-        (item) => item.created_at !== created_at_for_preview
-      )
-      params.prompt_view_provider.response_history = new_history
-      params.prompt_view_provider.send_message({
-        command: 'RESPONSE_HISTORY',
-        history: new_history
-      })
     }
 
     return null

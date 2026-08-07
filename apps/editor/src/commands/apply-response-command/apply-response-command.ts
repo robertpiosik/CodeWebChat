@@ -115,7 +115,11 @@ export const apply_response_command = (params: {
         workspace_files
       })
 
-      if (resolve_fn) {
+      const is_relevant_files = response_items.some(
+        (i) => i.type == 'relevant-files'
+      )
+
+      if (resolve_fn && !is_relevant_files) {
         const history = params.prompt_view_provider.response_history
 
         let created_at_for_switch: number
@@ -184,9 +188,6 @@ export const apply_response_command = (params: {
       let saved_tab_groups: SavedTabGroups | undefined
 
       try {
-        const is_relevant_files = response_items.some(
-          (i) => i.type == 'relevant-files'
-        )
         if (!is_relevant_files) {
           // Save current tab groups before entering preview
           saved_tab_groups = {
