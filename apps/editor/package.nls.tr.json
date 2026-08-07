@@ -39,7 +39,6 @@
   "codeWebChat.createNewCheckpoint.title": "Yeni Kontrol Noktası Oluştur",
   "codeWebChat.settings.title": "Ayarlar",
   "codeWebChat.generateCommitMessage.title": "CWC ile İşleme (Commit) Mesajı Oluştur",
-  "codeWebChat.applyCommitMessageFromClipboardPalette.title": "Panodan İşleme (Commit) Mesajını Uygula",
   "codeWebChat.generateCommitMessageAndCommit.title": "Değişiklikleri İşle (Commit)",
   "codeWebChat.setRanges.title": "Aralıkları Ayarla...",
   "codeWebChat.searchFiles.title": "Dosyaları ara...",

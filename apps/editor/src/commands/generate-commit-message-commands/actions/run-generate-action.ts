@@ -2,7 +2,6 @@ import * as vscode from 'vscode'
 import { get_repository_for_commit } from '../../../utils/git-repository-utils'
 import { get_commit_message_api_configuration } from '../utils/get-commit-message-config'
 import { generate_commit_message_with_api } from '../utils/generate-commit-message-with-api'
-import { strip_wrapping_quotes } from '../utils/strip-wrapping-quotes'
 import { t } from '@/i18n'
 import axios from 'axios'
 import { CommitMessageDetails } from '../../../utils/commit-message-details'
@@ -31,11 +30,11 @@ const truncate_prompt = (text: string): string => {
 export const run_generate_action = async (params: {
   should_commit: boolean
   source_control?: vscode.SourceControl
-  from_clipboard?: boolean
   extension_context: vscode.ExtensionContext
   prompt_view_provider: PromptViewProvider
   workspace_provider: WorkspaceProvider
   websocket_manager: WebSocketManager
+  provided_text?: string
 }) => {
   let files_staged_by_action = false
   let is_single_change_flow = false
@@ -67,10 +66,8 @@ export const run_generate_action = async (params: {
 
     let commit_message: string
 
-    if (params.from_clipboard) {
-      commit_message = (await vscode.env.clipboard.readText()) || ''
-      commit_message = strip_wrapping_quotes(commit_message)
-      commit_message = commit_message.replace(/[<>`$()]/g, '')
+    if (params.provided_text !== undefined) {
+      commit_message = params.provided_text
     } else {
       const show_back_button =
         was_empty_stage && !is_single_change_flow && !params.source_control
@@ -373,7 +370,8 @@ export const run_generate_action = async (params: {
       )
 
     const get_tree_text_if_applicable = async (
-      selected_prompts: typeof relevant_prompts
+      selected_prompts: typeof relevant_prompts,
+      show_back_button: boolean
     ): Promise<string | undefined | 'back'> => {
       const selected_files_set = new Set<string>()
       for (const p of selected_prompts) {
@@ -432,13 +430,9 @@ export const run_generate_action = async (params: {
               'command.generate-commit-message.attach-ascii-tree.placeholder'
             )
             quick_pick.ignoreFocusOut = true
-            const is_first_step =
-              params.from_clipboard &&
-              !params.should_commit &&
-              relevant_prompts.length == 0
-            quick_pick.buttons = [
-              ...(is_first_step ? [] : [vscode.QuickInputButtons.Back])
-            ]
+            quick_pick.buttons = show_back_button
+              ? [vscode.QuickInputButtons.Back]
+              : []
 
             let is_resolved = false
 
@@ -529,7 +523,9 @@ export const run_generate_action = async (params: {
             input_box.buttons = [
               accept_button,
               close_button,
-              ...(params.from_clipboard ? [] : [vscode.QuickInputButtons.Back])
+              ...(params.provided_text !== undefined
+                ? []
+                : [vscode.QuickInputButtons.Back])
             ]
 
             let is_resolved = false
@@ -596,9 +592,10 @@ export const run_generate_action = async (params: {
           quick_pick.placeholder =
             'Choose accepted prompts to include in the commit message'
           quick_pick.ignoreFocusOut = true
-          const is_first_step = params.from_clipboard && !params.should_commit
           quick_pick.buttons = [
-            ...(is_first_step ? [] : [vscode.QuickInputButtons.Back])
+            ...(params.provided_text !== undefined && !params.should_commit
+              ? []
+              : [vscode.QuickInputButtons.Back])
           ]
 
           let is_resolved = false
@@ -642,7 +639,14 @@ export const run_generate_action = async (params: {
           step = 'attach_tree'
         }
       } else if (step == 'attach_tree') {
-        const result = await get_tree_text_if_applicable(selected_prompts)
+        const can_go_back_in_wizard =
+          relevant_prompts.length > 0 || params.should_commit
+        const show_back_button =
+          params.provided_text === undefined || can_go_back_in_wizard
+        const result = await get_tree_text_if_applicable(
+          selected_prompts,
+          show_back_button
+        )
         if (result == 'back') {
           if (relevant_prompts.length > 0) {
             step = 'select_prompts'
@@ -663,12 +667,6 @@ export const run_generate_action = async (params: {
     }
 
     if (go_back) {
-      if (params.from_clipboard) {
-        if (was_empty_stage) {
-          await vscode.commands.executeCommand('git.unstageAll', repository)
-        }
-        break
-      }
       force_quick_pick = true
       continue
     }

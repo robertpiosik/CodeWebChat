@@ -84,6 +84,18 @@ export const apply_response_command = (params: {
         return
       }
 
+      if (response.trim().startsWith('**Commit message:**')) {
+        const commit_message = response
+          .trim()
+          .substring('**Commit message:**'.length)
+          .trim()
+        await vscode.commands.executeCommand(
+          'codeWebChat.internal.generateCommitMessageWithProvidedTextAndCommit',
+          commit_message
+        )
+        return
+      }
+
       const resolve_fn = get_response_preview_promise_resolve()
 
       if (in_progress && !resolve_fn) {

@@ -38,23 +38,24 @@ export const generate_commit_message_commands = (
     }
   )
 
-  const apply_from_clipboard_palette_command = vscode.commands.registerCommand(
-    'codeWebChat.applyCommitMessageFromClipboardPalette',
-    async () => {
-      await run_generate_action({
-        should_commit: true,
-        from_clipboard: true,
-        extension_context,
-        prompt_view_provider,
-        workspace_provider,
-        websocket_manager
-      })
-    }
-  )
+  const generate_with_provided_text_and_commit_command =
+    vscode.commands.registerCommand(
+      'codeWebChat.internal.generateCommitMessageWithProvidedTextAndCommit',
+      async (text?: string) => {
+        await run_generate_action({
+          should_commit: true,
+          extension_context,
+          prompt_view_provider,
+          workspace_provider,
+          websocket_manager,
+          provided_text: text
+        })
+      }
+    )
 
   return vscode.Disposable.from(
     generate_command,
     generate_and_commit_command,
-    apply_from_clipboard_palette_command
+    generate_with_provided_text_and_commit_command
   )
 }

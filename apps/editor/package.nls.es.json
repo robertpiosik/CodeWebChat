@@ -39,7 +39,6 @@
   "codeWebChat.createNewCheckpoint.title": "Crear nuevo punto de control",
   "codeWebChat.settings.title": "Configuración",
   "codeWebChat.generateCommitMessage.title": "Generar mensaje de commit con CWC",
-  "codeWebChat.applyCommitMessageFromClipboardPalette.title": "Aplicar mensaje de commit desde el portapapeles",
   "codeWebChat.generateCommitMessageAndCommit.title": "Hacer commit de los cambios",
   "codeWebChat.setRanges.title": "Establecer rangos...",
   "codeWebChat.searchFiles.title": "Buscar archivos...",

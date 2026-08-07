@@ -39,7 +39,6 @@
   "codeWebChat.createNewCheckpoint.title": "Criar Novo Checkpoint",
   "codeWebChat.settings.title": "Configurações",
   "codeWebChat.generateCommitMessage.title": "Gerar Mensagem de Commit com CWC",
-  "codeWebChat.applyCommitMessageFromClipboardPalette.title": "Aplicar Mensagem de Commit da Área de Transferência",
   "codeWebChat.generateCommitMessageAndCommit.title": "Fazer Commit das Alterações",
   "codeWebChat.setRanges.title": "Definir Intervalos...",
   "codeWebChat.searchFiles.title": "Pesquisar arquivos...",

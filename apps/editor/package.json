@@ -323,11 +323,6 @@
         "icon": "$(sparkle)"
       },
       {
-        "command": "codeWebChat.applyCommitMessageFromClipboardPalette",
-        "title": "%codeWebChat.applyCommitMessageFromClipboardPalette.title%",
-        "category": "Code Web Chat"
-      },
-      {
         "command": "codeWebChat.generateCommitMessageAndCommit",
         "title": "%codeWebChat.generateCommitMessageAndCommit.title%",
         "category": "Code Web Chat"
