@@ -178,7 +178,7 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
       workspace_provider,
       extension_context
     ),
-    // ...select_referencing_files_commands(workspace_provider, extension_context),
+    ...select_referencing_files_commands(workspace_provider, extension_context),
     ...search_files_commands(workspace_provider, extension_context),
     select_definition_file_command(workspace_provider),
     open_url_command({
