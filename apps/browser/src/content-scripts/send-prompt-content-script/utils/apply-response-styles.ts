@@ -9,6 +9,16 @@ export const apply_response_button_style = (button: HTMLButtonElement) => {
   button.style.alignItems = 'center'
   button.style.outline = 'none'
 
+  button.addEventListener('focus', () => {
+    button.style.outline = '2px solid rgba(251, 177, 0, 0.5)'
+    button.style.outlineOffset = '2px'
+  })
+
+  button.addEventListener('blur', () => {
+    button.style.outline = 'none'
+    button.style.outlineOffset = '0px'
+  })
+
   const svg = button.querySelector('svg')
   if (svg) {
     svg.style.height = '13px'
