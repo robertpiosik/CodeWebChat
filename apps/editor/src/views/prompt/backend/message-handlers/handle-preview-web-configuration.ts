@@ -173,7 +173,10 @@ export const handle_preview_web_configuration = async (
       {
         instruction: text_to_send,
         web_configuration: web_configuration_for_preview,
-        prompt_type: prompt_view_provider.web_prompt_type,
+        inject_apply_response_button:
+          prompt_view_provider.web_prompt_type == 'edit-files' ||
+          prompt_view_provider.web_prompt_type == 'code-at-cursor' ||
+          prompt_view_provider.web_prompt_type == 'find-relevant-files',
         raw_instructions: current_instructions
       }
     )

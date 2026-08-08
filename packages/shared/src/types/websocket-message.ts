@@ -25,10 +25,9 @@ export type InitializeChatMessage = {
   system_instructions?: string
   options?: string[]
   raw_instructions?: string
-  prompt_type?: WebPromptType
   reuse_last_tab?: boolean
   invocation_count?: number
-  is_for_commit_message?: boolean
+  inject_apply_response_button?: boolean
 }
 
 export type BrowserConnectionStatusMessage = {

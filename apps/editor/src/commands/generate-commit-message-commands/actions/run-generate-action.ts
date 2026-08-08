@@ -295,7 +295,7 @@ export const run_generate_action = async (params: {
             text: chatbot_prompt,
             web_configuration_name: selected_web_configuration_name,
             invocation_count: 1,
-            is_for_commit_message: true
+            inject_apply_response_button: true
           })
           if (sent) {
             vscode.window.showInformationMessage(

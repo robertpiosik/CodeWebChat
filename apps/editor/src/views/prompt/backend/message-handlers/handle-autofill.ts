@@ -132,8 +132,8 @@ export const handle_autofill = async (params: {
           text,
           web_configuration_name: resolved_web_configuration_name,
           raw_instructions: processed_completion_instructions,
-          prompt_type: params.prompt_view_provider.web_prompt_type,
-          invocation_count: params.invocation_count
+          invocation_count: params.invocation_count,
+          inject_apply_response_button: true
         }
       )
   } else {
@@ -203,14 +203,18 @@ export const handle_autofill = async (params: {
       user_instructions
     })
 
+    const prompt_type = params.prompt_view_provider.web_prompt_type
+    const inject_apply_response_button =
+      prompt_type == 'edit-files' || prompt_type == 'find-relevant-files'
+
     sent =
       await params.prompt_view_provider.websocket_server_instance.initialize_chat(
         {
           text,
           web_configuration_name: resolved_web_configuration_name,
           raw_instructions: current_instructions,
-          prompt_type: params.prompt_view_provider.web_prompt_type,
-          invocation_count: params.invocation_count
+          invocation_count: params.invocation_count,
+          inject_apply_response_button
         }
       )
   }

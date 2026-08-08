@@ -18,7 +18,6 @@ import { WebConfiguration } from '@shared/types/web-configuration'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 import { LAST_SELECTED_BROWSER_ID_STATE_KEY } from '@/constants/state-keys'
 import { ApplyResponseCommandArgs } from '@/commands/apply-response-command/response-processor'
-import { WebPromptType } from '@shared/types/prompt-types'
 
 /**
  * Bridges the current workspace window and a WebSockets server
@@ -366,9 +365,8 @@ export class WebSocketManager {
     text: string
     web_configuration_name: string
     raw_instructions?: string
-    prompt_type?: WebPromptType
     invocation_count: number
-    is_for_commit_message?: boolean
+    inject_apply_response_button?: boolean
   }): Promise<boolean> {
     if (!this.has_connected_browsers) {
       throw new Error('Does not have connected browsers.')
@@ -457,10 +455,9 @@ export class WebSocketManager {
       options: web_configuration.options,
       client_id: this.client_id || 0, // 0 is a temporary fallback and should be removed few weeks from 28.03.25
       raw_instructions: params.raw_instructions,
-      prompt_type: params.prompt_type,
       reuse_last_tab,
       invocation_count: params.invocation_count,
-      is_for_commit_message: params.is_for_commit_message
+      inject_apply_response_button: params.inject_apply_response_button
     }
 
     Logger.info({
@@ -478,7 +475,7 @@ export class WebSocketManager {
     instruction: string
     web_configuration: WebConfiguration
     raw_instructions: string
-    prompt_type?: WebPromptType
+    inject_apply_response_button?: boolean
   }): Promise<boolean> {
     if (!this.has_connected_browsers) {
       throw new Error('Does not have connected browsers.')
@@ -563,8 +560,8 @@ export class WebSocketManager {
       options: params.web_configuration.options,
       client_id: this.client_id || 0, // 0 is a temporary fallback and should be removed few weeks from 28.03.25
       raw_instructions: params.raw_instructions,
-      prompt_type: params.prompt_type,
-      reuse_last_tab
+      reuse_last_tab,
+      inject_apply_response_button: params.inject_apply_response_button
     }
 
     Logger.info({

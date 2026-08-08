@@ -188,13 +188,7 @@ const main = async () => {
       current_chat: Chat
       client_id: number
       raw_instructions?: string
-      prompt_type?:
-        | 'ask-about-files'
-        | 'edit-files'
-        | 'code-at-cursor'
-        | 'find-relevant-files'
-        | 'without-files'
-      is_for_commit_message?: boolean
+      inject_apply_response_button?: boolean
     }
 
     if (!stored_data) {
@@ -225,11 +219,7 @@ const main = async () => {
     await browser.storage.local.remove(storage_key)
 
     if (chatbot?.setup_observer) {
-      const inject_button =
-        stored_data.prompt_type == 'edit-files' ||
-        stored_data.prompt_type == 'code-at-cursor' ||
-        stored_data.prompt_type == 'find-relevant-files' ||
-        !!stored_data.is_for_commit_message
+      const inject_button = stored_data.inject_apply_response_button ?? false
 
       sessionStorage.setItem(
         session_data_key,
