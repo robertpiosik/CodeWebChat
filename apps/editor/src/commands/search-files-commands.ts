@@ -102,21 +102,7 @@ export const search_files_commands = (
       data: { paths: selected_paths, folder: folder_path }
     })
 
-    const newly_selected_count = selected_paths.filter(
-      (p) => !currently_checked.includes(p)
-    ).length
-
-    if (newly_selected_count > 0) {
-      vscode.window.showInformationMessage(
-        dictionary.information_message.ADDED_FILES_TO_CONTEXT(
-          newly_selected_count
-        )
-      )
-    } else {
-      vscode.window.showInformationMessage(
-        t('command.search-files.success.added')
-      )
-    }
+    vscode.window.showInformationMessage(t('common.success.context-updated'))
   }
 
   return [

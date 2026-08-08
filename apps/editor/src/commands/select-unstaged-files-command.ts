@@ -242,14 +242,8 @@ export const select_unstaged_files_command = (
 
           await workspace_provider.set_checked_files(paths_to_apply)
 
-          const newly_selected_count = selected_paths.filter(
-            (p) => !currently_checked.includes(p)
-          ).length
-
           vscode.window.showInformationMessage(
-            dictionary.information_message.ADDED_FILES_TO_CONTEXT(
-              newly_selected_count
-            )
+            t('common.success.context-updated')
           )
           return
         }

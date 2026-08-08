@@ -16,23 +16,5 @@ export const translations = {
     cs: 'Nebyla vybrána žádná složka.',
     hu: 'Nincs mappa kiválasztva.',
     bg: 'Не е избрана папка.'
-  },
-  'command.search-files.success.added': {
-    en: 'Context has been updated.',
-    pl: 'Kontekst został zaktualizowany.',
-    'zh-cn': '上下文已更新。',
-    ja: 'コンテキストが更新されました。',
-    'zh-tw': '上下文已更新。',
-    de: 'Kontext wurde aktualisiert.',
-    es: 'El contexto ha sido actualizado.',
-    fr: 'Le contexte a été mis à jour.',
-    'pt-br': 'O contexto foi atualizado.',
-    ru: 'Контекст был обновлен.',
-    ko: '컨텍스트가 업데이트되었습니다.',
-    it: 'Il contesto è stato aggiornato.',
-    tr: 'Bağlam güncellendi.',
-    cs: 'Kontext byl aktualizován.',
-    hu: 'A kontextus frissítve lett.',
-    bg: 'Контекстът е актуализиран.'
   }
 } as const

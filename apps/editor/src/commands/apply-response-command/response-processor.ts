@@ -197,9 +197,7 @@ export const process_response = async (params: {
         shared_context_state.switch_context_state(true)
       }
 
-      vscode.window.showInformationMessage(
-        t('command.apply-response.relevant-files.success')
-      )
+      vscode.window.showInformationMessage(t('common.success.context-updated'))
     }
 
     return null
