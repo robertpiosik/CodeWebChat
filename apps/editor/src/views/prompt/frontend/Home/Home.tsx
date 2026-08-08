@@ -127,7 +127,6 @@ export const Home: React.FC<Props> = (props) => {
             [styles['header__modes--visible']]: has_scrolled_past_mode_button
           })}
         >
-          <AsciiArtEffect />
           <UiModeButton
             pre={
               props.is_connected
