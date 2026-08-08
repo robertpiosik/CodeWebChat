@@ -197,11 +197,9 @@ export const process_response = async (params: {
         shared_context_state.switch_context_state(true)
       }
 
-      params.prompt_view_provider.send_message({
-        command: 'SHOW_AUTO_CLOSING_MODAL',
-        title: t('command.apply-response.relevant-files.success'),
-        type: 'success'
-      })
+      vscode.window.showInformationMessage(
+        t('command.apply-response.relevant-files.success')
+      )
     }
 
     return null
