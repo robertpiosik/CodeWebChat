@@ -1,6 +1,5 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import { dictionary } from '@shared/constants/dictionary'
 import { PromptBuilder } from '../utils/prompt-builder'
 import { is_binary_file } from '../utils/is-binary'
 import { FilesCollector } from '../utils/files-collector'
@@ -27,7 +26,9 @@ export const copy_markdown_commands = (
       } catch (error: any) {
         console.error('Error collecting files:', error)
         vscode.window.showErrorMessage(
-          dictionary.error_message.ERROR_COLLECTING_FILES(error.message)
+          t('command.copy-markdown.error.collecting-files', {
+            message: error.message
+          })
         )
         return
       }
@@ -41,7 +42,7 @@ export const copy_markdown_commands = (
         PromptBuilder.build_prompt({ context_text }).full_prompt + '\n'
       await vscode.env.clipboard.writeText(context_text)
       vscode.window.showInformationMessage(
-        dictionary.information_message.CONTEXT_COPIED_TO_CLIPBOARD
+        t('command.copy-markdown.info.context-copied')
       )
     }),
 
@@ -53,7 +54,7 @@ export const copy_markdown_commands = (
 
         if (checked_files.length == 0) {
           vscode.window.showWarningMessage(
-            dictionary.warning_message.NO_OPEN_EDITORS_SELECTED
+            t('command.copy-markdown.warning.no-open-editors')
           )
           return
         }
@@ -107,10 +108,10 @@ export const copy_markdown_commands = (
             })
           } catch (error: any) {
             vscode.window.showErrorMessage(
-              dictionary.error_message.ERROR_READING_FILE(
-                file_path,
-                error.message
-              )
+              t('command.copy-markdown.error.reading-file', {
+                filePath: file_path,
+                message: error.message
+              })
             )
           }
         }
@@ -121,8 +122,7 @@ export const copy_markdown_commands = (
           PromptBuilder.build_prompt({ context_text }).full_prompt + '\n'
         await vscode.env.clipboard.writeText(context_text)
         vscode.window.showInformationMessage(
-          dictionary.information_message
-            .CONTEXT_FROM_OPEN_EDITORS_COPIED_TO_CLIPBOARD
+          t('command.copy-markdown.info.context-from-editors-copied')
         )
       }
     )

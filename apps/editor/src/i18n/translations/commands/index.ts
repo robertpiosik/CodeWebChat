@@ -19,6 +19,7 @@ import { translations as history } from './history'
 import { translations as select_clipboard_paths } from './select-clipboard-paths'
 import { translations as select_imported_files } from './select-imported-files'
 import { translations as copy_paths } from './copy-paths'
+import { translations as copy_markdown } from './copy-markdown'
 
 export const translations = {
   ...generate_commit_message,
@@ -41,5 +42,6 @@ export const translations = {
   ...history,
   ...select_clipboard_paths,
   ...select_imported_files,
-  ...copy_paths
+  ...copy_paths,
+  ...copy_markdown
 }

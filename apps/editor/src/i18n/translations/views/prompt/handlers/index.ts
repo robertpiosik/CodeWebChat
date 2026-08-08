@@ -4,6 +4,7 @@ import { translations as intelligent_update } from './intelligent-update'
 import { translations as make_api_call } from './make-api-call'
 import { translations as select_edit_format } from './select-edit-format'
 import { translations as voice_input } from './voice-input'
+import { translations as copy_prompt } from './copy-prompt'
 
 export const translations = {
   ...delete_task,
@@ -11,5 +12,6 @@ export const translations = {
   ...intelligent_update,
   ...make_api_call,
   ...select_edit_format,
-  ...voice_input
+  ...voice_input,
+  ...copy_prompt
 }

@@ -395,5 +395,23 @@ export const translations = {
     cs: 'Poskytovatel API pro vybranou konfiguraci nástroje API nebyl nalezen.',
     hu: 'A kiválasztott API-eszközkonfiguráció API-szolgáltatója nem található.',
     bg: 'API доставчикът за избраната конфигурация на API инструмента не е намерен.'
+  },
+  'common.info.copied-to-clipboard': {
+    en: 'Message copied to the clipboard.',
+    pl: 'Wiadomość skopiowana do schowka.',
+    'zh-cn': '消息已复制到剪贴板。',
+    ja: 'メッセージがクリップボードにコピーされました。',
+    'zh-tw': '訊息已複製到剪貼簿。',
+    de: 'Nachricht in die Zwischenablage kopiert.',
+    es: 'Mensaje copiado al portapapeles.',
+    fr: 'Message copié dans le presse-papiers.',
+    'pt-br': 'Mensagem copiada para a área de transferência.',
+    ru: 'Сообщение скопировано в буфер обмена.',
+    ko: '메시지가 클립보드에 복사되었습니다.',
+    it: 'Messaggio copiato negli appunti.',
+    tr: 'Mesaj panoya kopyalandı.',
+    cs: 'Zpráva zkopírována do schránky.',
+    hu: 'Üzenet a vágólapra másolva.',
+    bg: 'Съобщението е копирано в клипборда.'
   }
 } as const

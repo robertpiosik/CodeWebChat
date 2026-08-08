@@ -7,7 +7,6 @@ import {
   find_relevant_files_format_for_prompt_view
 } from '@/constants/instructions'
 import { MODE } from '@/views/prompt/types/main-view-mode'
-import { dictionary } from '@shared/constants/dictionary'
 import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
@@ -17,6 +16,7 @@ import {
 import { FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY } from '@/constants/state-keys'
 import { replace_symbols } from '@/views/prompt/backend/utils/symbols/replace-symbols'
 import { PromptBuilder } from '@/utils/prompt-builder'
+import { t } from '@/i18n'
 
 export const handle_copy_prompt = async (params: {
   prompt_view_provider: PromptViewProvider
@@ -42,8 +42,9 @@ export const handle_copy_prompt = async (params: {
     !active_editor.selection.isEmpty
   ) {
     vscode.window.showWarningMessage(
-      dictionary.warning_message
-        .CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITH_SELECTION
+      t(
+        'views.prompt.handlers.copy-prompt.warning.code-completion-with-selection'
+      )
     )
     return
   }
@@ -168,13 +169,12 @@ export const handle_copy_prompt = async (params: {
     vscode.env.clipboard.writeText(text.trim())
   } else {
     vscode.window.showWarningMessage(
-      dictionary.warning_message
-        .CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITHOUT_EDITOR
+      t(
+        'views.prompt.handlers.copy-prompt.warning.code-completion-without-editor'
+      )
     )
     return
   }
 
-  vscode.window.showInformationMessage(
-    dictionary.information_message.COPIED_TO_CLIPBOARD
-  )
+  vscode.window.showInformationMessage(t('common.info.copied-to-clipboard'))
 }
