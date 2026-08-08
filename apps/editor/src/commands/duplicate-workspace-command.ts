@@ -16,9 +16,6 @@ export const duplicate_workspace_command = (
     async () => {
       const export_state = workspace_provider.get_export_state()
 
-      const checked_files = export_state.regular.checked_files
-      const checked_files_timestamps = export_state.regular.checked_timestamps
-
       const workspace_root_folders =
         vscode.workspace.workspaceFolders?.map((folder) => folder.uri.fsPath) ??
         []
@@ -43,8 +40,10 @@ export const duplicate_workspace_command = (
           RANGES_STATE_KEY
         )
       const context_to_save: DuplicateWorkspaceContext = {
-        checked_files,
-        checked_files_timestamps,
+        checked_files: export_state.regular.checked_files,
+        checked_files_timestamps: export_state.regular.checked_timestamps,
+        frf_checked_files: export_state.frf.checked_files,
+        frf_checked_files_timestamps: export_state.frf.checked_timestamps,
         workspace_root_folders,
         timestamp: Date.now(),
         open_editors,

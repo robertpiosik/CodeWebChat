@@ -5,6 +5,8 @@ import ignore, { Ignore } from 'ignore'
 import {
   CONTEXT_CHECKED_PATHS_STATE_KEY,
   CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY,
+  CONTEXT_FRF_CHECKED_PATHS_STATE_KEY,
+  CONTEXT_FRF_CHECKED_TIMESTAMPS_STATE_KEY,
   RANGES_STATE_KEY
 } from '@/constants/state-keys'
 import { IGNORED_LOCK_FILES } from '@/constants/ignored-lock-files'
@@ -225,9 +227,20 @@ export class WorkspaceProvider
   }
 
   private async _save_checked_files_state(): Promise<void> {
-    if (this._is_frf_mode) return
-
     const checked_paths = this.get_all_checked_paths()
+
+    if (this._is_frf_mode) {
+      await this._extension_context.workspaceState.update(
+        CONTEXT_FRF_CHECKED_PATHS_STATE_KEY,
+        checked_paths
+      )
+      await this._extension_context.workspaceState.update(
+        CONTEXT_FRF_CHECKED_TIMESTAMPS_STATE_KEY,
+        Object.fromEntries(this._checked_timestamps)
+      )
+      return
+    }
+
     await this._extension_context.workspaceState.update(
       CONTEXT_CHECKED_PATHS_STATE_KEY,
       checked_paths
@@ -247,6 +260,13 @@ export class WorkspaceProvider
         Record<string, number>
       >(CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY)
 
+      const frf_paths = this._extension_context.workspaceState.get<string[]>(
+        CONTEXT_FRF_CHECKED_PATHS_STATE_KEY
+      )
+      const frf_times = this._extension_context.workspaceState.get<
+        Record<string, number>
+      >(CONTEXT_FRF_CHECKED_TIMESTAMPS_STATE_KEY)
+
       await this.gitignore_initialization
       const prev_mode = this._is_frf_mode
 
@@ -255,6 +275,14 @@ export class WorkspaceProvider
         await this.set_checked_files(
           reg_paths,
           reg_times ? new Map(Object.entries(reg_times)) : undefined
+        )
+      }
+
+      this._is_frf_mode = true
+      if (frf_paths && frf_paths.length > 0) {
+        await this.set_checked_files(
+          frf_paths,
+          frf_times ? new Map(Object.entries(frf_times)) : undefined
         )
       }
 
