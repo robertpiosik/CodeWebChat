@@ -26,7 +26,7 @@ The variable is possibly not defined.
 Find correct replacement text for the <missing_text> symbol.`
 
 export const intelligent_update_task_instructions =
-  'Refactor the file according to the attached changes without explanations or any other text.'
+  "Edit the file according to the attached changes which have formatting issues but are correct in principle. Don't provide explanations or any other text."
 
 export const intelligent_update_edit_format_instructions = `Print a markdown code block showing the original and updated code snippets with Git-style merge conflict syntax. Example:
 
