@@ -1,6 +1,5 @@
 export const dictionary = {
   information_message: {
-    TASK_DELETED: 'Task deleted.',
     NOTHING_IN_CONTEXT_TO_SAVE: 'There is nothing in your context to save.',
     ALL_CHECKED_FILES_UNCAHNGED_SINCE_COMMIT: (
       folder_name: string,

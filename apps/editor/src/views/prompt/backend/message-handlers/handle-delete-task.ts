@@ -2,8 +2,8 @@ import * as vscode from 'vscode'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { DeleteTaskMessage } from '@/views/prompt/types/messages'
 import { Task } from '@shared/types/task'
-import { dictionary } from '@shared/constants/dictionary'
 import { TasksUtils } from '@/utils/tasks-utils'
+import { t } from '@/i18n'
 
 export const handle_delete_task = async (
   prompt_view_provider: PromptViewProvider,
@@ -22,7 +22,6 @@ export const handle_delete_task = async (
     })
   }
 
-  // 1. Load and Find
   let all_data = TasksUtils.load_all(prompt_view_provider.extension_context)
   const root_tasks = all_data[message.root] || []
   const task_info = TasksUtils.find_in_tree_with_location({
@@ -34,7 +33,6 @@ export const handle_delete_task = async (
     return
   }
 
-  // 2. Delete
   const new_root_tasks = TasksUtils.delete_from_tree({
     tasks: root_tasks,
     timestamp: message.timestamp
@@ -55,15 +53,13 @@ export const handle_delete_task = async (
     return
   }
 
-  // 3. Undo prompt
   const selection = await vscode.window.showInformationMessage(
-    dictionary.information_message.TASK_DELETED,
-    'Undo'
+    t('views.prompt.handlers.delete-task.task-deleted'),
+    t('common.undo')
   )
 
-  if (selection == 'Undo') {
-    // 4. Restore
-    all_data = TasksUtils.load_all(prompt_view_provider.extension_context) // Reload to get latest state
+  if (selection == t('common.undo')) {
+    all_data = TasksUtils.load_all(prompt_view_provider.extension_context)
     const current_root_tasks = all_data[message.root] || []
 
     const result = TasksUtils.insert_in_tree({
@@ -76,7 +72,6 @@ export const handle_delete_task = async (
     if (result.success) {
       all_data[message.root] = result.tasks
     } else {
-      // Parent not found, insert at root
       all_data[message.root] = [...current_root_tasks, task_info.task]
     }
 
