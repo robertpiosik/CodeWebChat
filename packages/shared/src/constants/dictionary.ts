@@ -1,9 +1,4 @@
 export const dictionary = {
-  api_call: {
-    WAITING_FOR_RESPONSE: 'Waiting for response...',
-    THINKING: 'Thinking...'
-  },
-
   information_message: {
     TASK_DELETED: 'Task deleted.',
     NOTHING_IN_CONTEXT_TO_SAVE: 'There is nothing in your context to save.',

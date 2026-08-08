@@ -438,7 +438,7 @@ export const handle_make_api_call = async (
               title: t(
                 'views.prompt.handlers.make-api-call.intelligent-search'
               ),
-              subtitle: t('views.common.handlers.common.waiting-for-server'),
+              subtitle: t('common.progress.waiting-for-server'),
               cancellable: true,
               show_elapsed_time: true
             })
@@ -456,7 +456,7 @@ export const handle_make_api_call = async (
                     title: t(
                       'views.prompt.handlers.make-api-call.intelligent-search'
                     ),
-                    subtitle: t('views.common.handlers.common.thinking'),
+                    subtitle: t('common.progress.thinking'),
                     cancellable: true,
                     show_elapsed_time: true
                   })
@@ -467,7 +467,7 @@ export const handle_make_api_call = async (
                     title: t(
                       'views.prompt.handlers.make-api-call.intelligent-search'
                     ),
-                    subtitle: t('views.common.handlers.common.receiving'),
+                    subtitle: t('common.progress.receiving'),
                     cancellable: true,
                     show_elapsed_time: true
                   })
