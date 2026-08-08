@@ -376,5 +376,24 @@ export const translations = {
     cs: 'Zpět',
     hu: 'Visszavonás',
     bg: 'Отмяна'
+  },
+  'common.error.api-provider-not-found': {
+    en: 'API provider for the selected API tool configuration was not found.',
+    pl: 'Nie znaleziono dostawcy API dla wybranej konfiguracji narzędzia API.',
+    'zh-cn': '未找到所选 API 工具配置的 API 提供商。',
+    ja: '選択されたAPIツール設定のAPIプロバイダーが見つかりませんでした。',
+    'zh-tw': '未找到所選 API 工具設定的 API 供應商。',
+    de: 'API-Anbieter für die ausgewählte API-Tool-Konfiguration wurde nicht gefunden.',
+    es: 'No se encontró el proveedor de API para la configuración de herramienta API seleccionada.',
+    fr: "Le fournisseur d'API pour la configuration d'outil API sélectionnée est introuvable.",
+    'pt-br':
+      'Provedor de API para a configuração de ferramenta API selecionada não encontrado.',
+    ru: 'API-провайдер для выбранной конфигурации инструмента API не найден.',
+    ko: '선택한 API 도구 구성에 대한 API 공급자를 찾을 수 없습니다.',
+    it: 'Provider API per la configurazione dello strumento API selezionata non trovato.',
+    tr: 'Seçilen API aracı yapılandırması için API sağlayıcısı bulunamadı.',
+    cs: 'Poskytovatel API pro vybranou konfiguraci nástroje API nebyl nalezen.',
+    hu: 'A kiválasztott API-eszközkonfiguráció API-szolgáltatója nem található.',
+    bg: 'API доставчикът за избраната конфигурация на API инструмента не е намерен.'
   }
 } as const

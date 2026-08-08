@@ -4,7 +4,6 @@ import { select_context_source } from '@/features/context-restoration'
 import { save_to_workspace_state } from './actions/save-to-workspace-state'
 import { save_to_json_file } from './actions/save-to-json-file'
 import { t } from '@/i18n'
-import { dictionary } from '@shared/constants/dictionary'
 
 export const save_file_selection_command = (params: {
   workspace_provider: WorkspaceProvider
@@ -16,7 +15,7 @@ export const save_file_selection_command = (params: {
       const checked_files = params.workspace_provider.get_checked_files()
       if (checked_files.length == 0) {
         vscode.window.showInformationMessage(
-          dictionary.information_message.NOTHING_IN_CONTEXT_TO_SAVE
+          t('command.save-file-selection.nothing-in-context-to-save')
         )
         return
       }

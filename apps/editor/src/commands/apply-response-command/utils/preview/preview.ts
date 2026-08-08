@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { dictionary } from '@shared/constants/dictionary'
+import { t } from '@/i18n'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
 import { RecentApiConfiguration } from '@shared/types/response-history-item'
@@ -43,7 +43,7 @@ export const preview = async (params: {
 } | null> => {
   if (!vscode.workspace.workspaceFolders?.length) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.NO_WORKSPACE_FOLDER_OPEN
+      t('command.apply-response.error.no-workspace-folder')
     )
     return null
   }

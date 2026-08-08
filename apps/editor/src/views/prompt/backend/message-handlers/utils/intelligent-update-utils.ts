@@ -14,7 +14,7 @@ import {
   intelligent_update_edit_format_instructions,
   intelligent_update_fallback_edit_format_instructions
 } from '@/constants/instructions'
-import { dictionary } from '@shared/constants/dictionary'
+import { t } from '@/i18n'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import {
   show_configuration_quick_pick,
@@ -37,7 +37,7 @@ export const get_intelligent_update_config = async (
   if (intelligent_update_api_configurations.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
-      dictionary.information_message.NO_INTELLIGENT_UPDATE_CONFIGURATIONS_FOUND
+      t('views.prompt.handlers.intelligent-update.no-configurations-found')
     )
     return
   }
@@ -87,9 +87,7 @@ export const get_intelligent_update_config = async (
   )
 
   if (!model_provider) {
-    vscode.window.showErrorMessage(
-      dictionary.error_message.API_PROVIDER_FOR_CONFIG_NOT_FOUND
-    )
+    vscode.window.showErrorMessage(t('common.error.api-provider-not-found'))
     Logger.warn({
       function_name: 'get_intelligent_update_config',
       message: 'API provider not found for Intelligent Update API tool.'

@@ -2,8 +2,8 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
 import { create_safe_path, sanitize_file_name } from '@/utils/path-sanitizer'
-import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
+import { t } from '@/i18n'
 import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
 import { FileItem } from './response-parser'
 
@@ -230,7 +230,7 @@ export const create_file_if_needed = async (params: {
     vscode.workspace.workspaceFolders.length == 0
   ) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.NO_WORKSPACE_FOLDER_OPEN
+      t('command.apply-response.error.no-workspace-folder')
     )
     Logger.warn({
       function_name: 'create_file_if_needed',
@@ -263,7 +263,9 @@ export const create_file_if_needed = async (params: {
 
   if (!safe_path) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.INVALID_FILE_PATH_TRAVERSAL(params.file_path)
+      t('command.apply-response.error.invalid-file-path-traversal', {
+        path: params.file_path
+      })
     )
     Logger.error({
       function_name: 'create_file_if_needed',
@@ -290,9 +292,9 @@ export const create_file_if_needed = async (params: {
         data: { directory: directory_uri.fsPath, error }
       })
       vscode.window.showErrorMessage(
-        dictionary.error_message.FAILED_TO_CREATE_DIRECTORY(
-          directory_uri.fsPath
-        )
+        t('command.apply-response.error.failed-to-create-directory', {
+          path: directory_uri.fsPath
+        })
       )
       return false
     }
@@ -316,7 +318,9 @@ export const create_file_if_needed = async (params: {
       data: { safe_path, error }
     })
     vscode.window.showErrorMessage(
-      dictionary.error_message.FAILED_TO_WRITE_FILE(safe_path)
+      t('command.apply-response.error.failed-to-write-file', {
+        path: safe_path
+      })
     )
   }
   return false
@@ -485,7 +489,7 @@ export const undo_files = async (params: {
       vscode.workspace.workspaceFolders.length == 0
     ) {
       vscode.window.showErrorMessage(
-        dictionary.error_message.NO_WORKSPACE_FOLDER_OPEN
+        t('command.apply-response.error.no-workspace-folder')
       )
       Logger.warn({
         function_name: 'undo_files',
@@ -575,7 +579,9 @@ export const undo_files = async (params: {
               data: { error: err, file_path: state.file_path }
             })
             vscode.window.showWarningMessage(
-              dictionary.warning_message.COULD_NOT_DELETE_FILE(state.file_path)
+              t('command.apply-response.warning.could-not-delete-file', {
+                path: state.file_path
+              })
             )
           }
         }
@@ -633,9 +639,9 @@ export const undo_files = async (params: {
               data: { error: err, file_path: state.file_path }
             })
             vscode.window.showWarningMessage(
-              dictionary.warning_message.COULD_NOT_RECREATE_FILE(
-                state.file_path
-              )
+              t('command.apply-response.warning.could-not-recreate-file', {
+                path: state.file_path
+              })
             )
           }
         } else {
@@ -682,9 +688,9 @@ export const undo_files = async (params: {
             })
             console.error(`Error undoing file ${state.file_path}:`, err)
             vscode.window.showWarningMessage(
-              dictionary.warning_message.COULD_NOT_UNDO_FILE_MAYBE_CLOSED(
-                state.file_path
-              )
+              t('command.apply-response.warning.could-not-undo-file', {
+                path: state.file_path
+              })
             )
           }
         }
@@ -704,9 +710,9 @@ export const undo_files = async (params: {
     })
     console.error('Error during undo:', error)
     vscode.window.showErrorMessage(
-      dictionary.error_message.FAILED_TO_UNDO_CHANGES(
-        error.message || 'Unknown error'
-      )
+      t('command.apply-response.error.failed-to-undo', {
+        msg: error.message || 'Unknown error'
+      })
     )
     return false
   }

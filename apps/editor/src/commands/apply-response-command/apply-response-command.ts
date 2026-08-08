@@ -7,7 +7,6 @@ import {
 import { FileInPreview } from '@shared/types/file-in-preview'
 import { get_checkpoint_path } from '@/features/checkpoints/utils'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
-import { dictionary } from '@shared/constants/dictionary'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { get_response_preview_promise_resolve } from './utils/preview/preview'
 import { get_diff_stats } from './utils/preview/diff-utils'
@@ -63,7 +62,7 @@ export const apply_response_command = (params: {
     async (args?: ApplyResponseCommandArgs) => {
       if (!vscode.workspace.workspaceFolders?.length) {
         vscode.window.showErrorMessage(
-          dictionary.error_message.NO_WORKSPACE_FOLDER_OPEN
+          t('command.apply-response.error.no-workspace-folder')
         )
         return
       }
@@ -73,13 +72,13 @@ export const apply_response_command = (params: {
         response = await vscode.env.clipboard.readText()
         if (!response) {
           vscode.window.showInformationMessage(
-            dictionary.information_message.CLIPBOARD_IS_EMPTY
+            t('command.apply-response.info.clipboard-empty')
           )
           return
         }
       } else if (!response) {
         vscode.window.showErrorMessage(
-          dictionary.error_message.RESPONSE_TEXT_MISSING
+          t('command.apply-response.error.response-missing')
         )
         return
       }
@@ -459,7 +458,9 @@ export const apply_response_command = (params: {
           command: 'HIDE_PROGRESS'
         })
         vscode.window.showErrorMessage(
-          dictionary.error_message.APPLYING_CHANGES_GENERIC_ERROR(err.message)
+          t('command.apply-response.error.applying-changes', {
+            msg: err.message
+          })
         )
       } finally {
         in_progress = false

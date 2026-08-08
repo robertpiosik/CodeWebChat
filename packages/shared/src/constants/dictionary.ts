@@ -1,14 +1,5 @@
 export const dictionary = {
   information_message: {
-    NOTHING_IN_CONTEXT_TO_SAVE: 'There is nothing in your context to save.',
-    ALL_CHECKED_FILES_UNCAHNGED_SINCE_COMMIT: (
-      folder_name: string,
-      commit_hash: string
-    ) =>
-      `All checked files in "${folder_name}" are unchanged since commit ${commit_hash}.`,
-    NO_INTELLIGENT_UPDATE_CONFIGURATIONS_FOUND:
-      'No "Intelligent Update" configurations found. Please add one in settings.',
-    NO_ACTIVE_EDITOR_FOUND: 'No active editor found.',
     CLIPBOARD_IS_EMPTY: 'Clipboard is empty.',
     COPIED_TO_CLIPBOARD: 'Message copied to the clipboard.',
     NO_SAVED_CONTEXTS_IN_WORKSPACE_STATE:
@@ -114,8 +105,6 @@ export const dictionary = {
   },
 
   error_message: {
-    API_PROVIDER_FOR_CONFIG_NOT_FOUND:
-      'API provider for the selected API tool configuration was not found.',
     FILE_NOT_FOUND: (file_path: string) => `File not found: ${file_path}.`,
     INVALID_POSITION_FOR_CODE_COMPLETION: (file_path: string) =>
       `Invalid position for code completion in ${file_path}.`,
@@ -210,8 +199,6 @@ export const dictionary = {
       `Base URL not found for provider ${name}.`,
     MODEL_PROVIDER_NOT_FOUND_BY_NAME: (name: string) =>
       `Model provider "${name}" not found.`,
-    API_PROVIDER_NOT_FOUND:
-      'API provider for the selected API tool configuration was not found.',
     NO_WORKSPACE_FOLDER_OPEN: 'No workspace folder open.',
     CANNOT_PROCESS_MULTIPLE_FILES_WITHOUT_WORKSPACE:
       'Cannot process multiple files without an open workspace folder.',

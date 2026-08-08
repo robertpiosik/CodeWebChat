@@ -167,9 +167,7 @@ const get_api_configuration = async (params: {
     )
 
   if (!model_provider) {
-    vscode.window.showErrorMessage(
-      dictionary.error_message.API_PROVIDER_NOT_FOUND
-    )
+    vscode.window.showErrorMessage(t('common.error.api-provider-not-found'))
     Logger.warn({
       function_name: 'get_api_configuration',
       message: `API provider not found for ${params.prompt_type} tool.`

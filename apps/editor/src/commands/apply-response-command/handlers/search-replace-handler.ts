@@ -2,8 +2,8 @@ import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
 import { Logger } from '@shared/utils/logger'
-import { dictionary } from '@shared/constants/dictionary'
 import { create_safe_path, sanitize_file_name } from '@/utils/path-sanitizer'
+import { t } from '@/i18n'
 import { FileItem } from '../utils/response-parser'
 import { OriginalFileState } from '../types/original-file-state'
 import {
@@ -33,7 +33,7 @@ export const handle_search_replace = async (params: {
       vscode.workspace.workspaceFolders.length == 0
     ) {
       vscode.window.showErrorMessage(
-        dictionary.error_message.NO_WORKSPACE_FOLDER_OPEN
+        t('command.apply-response.error.no-workspace-folder')
       )
       return { success: false }
     }
@@ -261,9 +261,9 @@ export const handle_search_replace = async (params: {
       data: error
     })
     vscode.window.showErrorMessage(
-      dictionary.error_message.ERROR_APPLYING_CHANGES(
-        error.message || 'Unknown error'
-      )
+      t('command.apply-response.error.applying-changes', {
+        msg: error.message || 'Unknown error'
+      })
     )
     return { success: false }
   }

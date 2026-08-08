@@ -1,4 +1,22 @@
 export const translations = {
+  'command.save-file-selection.nothing-in-context-to-save': {
+    en: 'There is nothing in your context to save.',
+    pl: 'Nie ma nic w kontekście do zapisania.',
+    'zh-cn': '上下文中没有要保存的内容。',
+    ja: 'コンテキストに保存するものがありません。',
+    'zh-tw': '上下文中沒有要儲存的內容。',
+    de: 'Es gibt nichts im Kontext zu speichern.',
+    es: 'No hay nada en el contexto para guardar.',
+    fr: "Il n'y a rien dans votre contexte à enregistrer.",
+    'pt-br': 'Não há nada no seu contexto para salvar.',
+    ru: 'В вашем контексте нечего сохранять.',
+    ko: '컨텍스트에 저장할 내용이 없습니다.',
+    it: "Non c'è nulla nel contesto da salvare.",
+    tr: 'Bağlamınızda kaydedilecek bir şey yok.',
+    cs: 'V kontextu není nic k uložení.',
+    hu: 'Nincs semmi a kontextusban, amit menteni lehetne.',
+    bg: 'Няма нищо за запазване в контекста.'
+  },
   'command.save-file-selection.destination.title': {
     en: 'Destination',
     pl: 'Miejsce docelowe',

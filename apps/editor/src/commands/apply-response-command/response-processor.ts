@@ -11,7 +11,6 @@ import {
   ResponseItem
 } from './utils/response-parser'
 import { create_safe_path } from '@/utils/path-sanitizer'
-import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import {
   apply_git_patch,
@@ -355,7 +354,9 @@ export const process_response = async (params: {
       const safe_path = create_safe_path(workspace_root, completion.file_path)
       if (!safe_path || !fs.existsSync(safe_path)) {
         vscode.window.showErrorMessage(
-          dictionary.error_message.FILE_NOT_FOUND(completion.file_path)
+          t('command.apply-response.error.file-not-found', {
+            path: completion.file_path
+          })
         )
         Logger.warn({
           function_name: 'process_response',
@@ -377,9 +378,9 @@ export const process_response = async (params: {
         char_index > document.lineAt(line_index).text.length
       ) {
         vscode.window.showErrorMessage(
-          dictionary.error_message.INVALID_POSITION_FOR_CODE_COMPLETION(
-            completion.file_path
-          )
+          t('command.apply-response.error.invalid-position', {
+            path: completion.file_path
+          })
         )
         return null
       }
