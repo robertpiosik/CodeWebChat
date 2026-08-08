@@ -211,7 +211,7 @@ export const gemini: Chatbot = {
       return
     }
 
-    input_element.innerText = params.message
+    input_element.textContent = params.message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
     input_element.focus()
   },
