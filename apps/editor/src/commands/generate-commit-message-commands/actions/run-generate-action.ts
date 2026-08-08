@@ -368,6 +368,7 @@ export const run_generate_action = async (params: {
         (p, index, self) =>
           index == self.findIndex((sp) => sp.prompt == p.prompt)
       )
+      .filter((p) => p.prompt.trim() != '')
 
     const get_tree_text_if_applicable = async (
       selected_prompts: typeof relevant_prompts,
