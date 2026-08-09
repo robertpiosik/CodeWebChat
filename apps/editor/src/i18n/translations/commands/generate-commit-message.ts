@@ -342,5 +342,24 @@ export const translations = {
     cs: 'Kopírovat prompt',
     hu: 'Prompt másolása',
     bg: 'Копиране на промпт'
+  },
+  'command.generate-commit-message.disabled-during-preview': {
+    en: 'Commit message generation is disabled during response preview.',
+    pl: 'Generowanie wiadomości commita jest wyłączone podczas podglądu odpowiedzi.',
+    'zh-cn': '在响应预览期间，生成提交信息功能已禁用。',
+    ja: '応答プレビュー中は、コミットメッセージの生成が無効になります。',
+    'zh-tw': '在回應預覽期間，產生提交訊息功能已停用。',
+    de: 'Die Erstellung von Commit-Nachrichten ist während der Antwortvorschau deaktiviert.',
+    es: 'La generación de mensajes de confirmación está deshabilitada durante la vista previa de la respuesta.',
+    fr: "La génération de message de commit est désactivée pendant l'aperçu de la réponse.",
+    'pt-br':
+      'A geração de mensagem de commit está desativada durante a visualização da resposta.',
+    ru: 'Генерация сообщения коммита отключена во время предпросмотра ответа.',
+    ko: '응답 미리보기 중에는 커밋 메시지 생성이 비활성화됩니다.',
+    it: "La generazione del messaggio di commit è disabilitata durante l'anteprima della risposta.",
+    tr: 'Yanıt önizlemesi sırasında işleme mesajı oluşturma devre dışı bırakılır.',
+    cs: 'Generování zprávy commitu je během náhledu odpovědi zakázáno.',
+    hu: 'A commit üzenet generálása a válasz előnézete alatt le van tiltva.',
+    bg: 'Генерирането на commit съобщение е деактивирано по време на преглед на отговора.'
   }
 } as const

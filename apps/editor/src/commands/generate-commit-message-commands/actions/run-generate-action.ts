@@ -22,6 +22,7 @@ import { CHATBOTS } from '@shared/constants/chatbots'
 import { dictionary } from '@shared/constants/dictionary'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
+import { get_response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview/preview'
 
 const truncate_prompt = (text: string): string => {
   if (text.length <= MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE) return text
@@ -37,6 +38,13 @@ export const run_generate_action = async (params: {
   websocket_manager: WebSocketManager
   provided_text?: string
 }) => {
+  if (get_response_preview_promise_resolve()) {
+    vscode.window.showWarningMessage(
+      t('command.generate-commit-message.disabled-during-preview')
+    )
+    return
+  }
+
   let files_staged_by_action = false
   let is_single_change_flow = false
   let force_quick_pick = false
