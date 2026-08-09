@@ -304,7 +304,7 @@ export const save_to_workspace_state = async (params: {
         }
 
         vscode.window.showInformationMessage(
-          dictionary.information_message.CONTEXT_UPDATED_SUCCESSFULLY
+          t('command.save-file-selection.success.context-updated')
         )
 
         const reloaded = load_and_merge_global_contexts(

@@ -359,6 +359,24 @@ export const translations = {
     hu: 'A kontextus frissítve lett.',
     bg: 'Контекстът е актуализиран.'
   },
+  'common.info.context-already-set': {
+    en: 'Context already set.',
+    pl: 'Kontekst już ustawiony.',
+    'zh-cn': '上下文已设置。',
+    ja: 'コンテキストはすでに設定されています。',
+    'zh-tw': '上下文已設定。',
+    de: 'Kontext bereits gesetzt.',
+    es: 'Contexto ya establecido.',
+    fr: 'Contexte déjà défini.',
+    'pt-br': 'Contexto já definido.',
+    ru: 'Контекст уже установлен.',
+    ko: '컨텍스트가 이미 설정되었습니다.',
+    it: 'Contesto già impostato.',
+    tr: 'Bağlam zaten ayarlandı.',
+    cs: 'Kontext je již nastaven.',
+    hu: 'A kontextus már be van állítva.',
+    bg: 'Контекстът вече е зададен.'
+  },
   'common.undo': {
     en: 'Undo',
     pl: 'Cofnij',

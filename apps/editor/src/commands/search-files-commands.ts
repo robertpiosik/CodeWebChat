@@ -3,7 +3,6 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'
-import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 import { search_files } from '@/features/search-files'
 import { prompt_for_provided_results } from '@/features/search-files/utils/prompt-for-provided-results'
@@ -82,7 +81,7 @@ export const search_files_commands = (
 
       if (is_identical) {
         vscode.window.showInformationMessage(
-          dictionary.information_message.CONTEXT_ALREADY_SET
+          t('common.info.context-already-set')
         )
         return
       }

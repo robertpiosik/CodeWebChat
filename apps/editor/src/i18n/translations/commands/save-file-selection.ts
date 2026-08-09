@@ -304,5 +304,23 @@ export const translations = {
     cs: 'Přepsat',
     hu: 'Felülírás',
     bg: 'Презаписване'
+  },
+  'command.save-file-selection.success.context-updated': {
+    en: 'Updated successfully.',
+    pl: 'Zaktualizowano pomyślnie.',
+    'zh-cn': '更新成功。',
+    ja: '正常に更新されました。',
+    'zh-tw': '更新成功。',
+    de: 'Erfolgreich aktualisiert.',
+    es: 'Actualizado correctamente.',
+    fr: 'Mis à jour avec succès.',
+    'pt-br': 'Atualizado com sucesso.',
+    ru: 'Успешно обновлено.',
+    ko: '성공적으로 업데이트되었습니다.',
+    it: 'Aggiornato con successo.',
+    tr: 'Başarıyla güncellendi.',
+    cs: 'Úspěšně aktualizováno.',
+    hu: 'Sikeresen frissítve.',
+    bg: 'Успешно актуализирано.'
   }
 } as const

@@ -1,12 +1,5 @@
 export const dictionary = {
   information_message: {
-    NO_RECENT_CHANGES_TO_UNDO:
-      'No recent changes found to undo or changes were already undone.',
-    CONTEXT_COPIED_TO_CLIPBOARD: 'Context copied to clipboard.',
-    CONTEXT_FROM_OPEN_EDITORS_COPIED_TO_CLIPBOARD:
-      'Context from open editors copied to clipboard.',
-    CONTEXT_ALREADY_SET: 'Context already set.',
-    CONTEXT_UPDATED_SUCCESSFULLY: 'Updated successfully.',
     NO_SAVED_CONTEXTS_FOUND: 'No saved contexts found.',
     NO_CHANGES_TO_COMMIT: 'No changes to commit.',
     MODELS_ROUTE_NOT_FOUND: (provider_name: string) =>

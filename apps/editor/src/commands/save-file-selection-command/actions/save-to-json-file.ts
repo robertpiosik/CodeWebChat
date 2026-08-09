@@ -297,7 +297,7 @@ export const save_to_json_file = async (params: {
         }
 
         vscode.window.showInformationMessage(
-          dictionary.information_message.CONTEXT_UPDATED_SUCCESSFULLY
+          t('command.save-file-selection.success.context-updated')
         )
 
         const reloaded = await load_and_merge_file_contexts()

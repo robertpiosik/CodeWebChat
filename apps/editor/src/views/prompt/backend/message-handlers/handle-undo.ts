@@ -5,6 +5,7 @@ import {
   LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
 } from '@/constants/state-keys'
 import { dictionary } from '@shared/constants/dictionary'
+import { t } from '@/i18n'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { OriginalFileState } from '@/commands/apply-response-command/types/original-file-state'
 import { undo_files } from '@/commands/apply-response-command/utils/file-operations'
@@ -26,7 +27,7 @@ export const handle_undo = async (
 
   if (!original_states || original_states.length == 0) {
     vscode.window.showInformationMessage(
-      dictionary.information_message.NO_RECENT_CHANGES_TO_UNDO
+      t('views.prompt.handlers.handle-undo.no-recent-changes-to-undo')
     )
     return
   }

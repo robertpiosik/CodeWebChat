@@ -6,7 +6,6 @@ import { get_all_workspace_files } from '@/context/helpers/get-all-workspace-fil
 import { display_token_count } from '@/utils/display-token-count'
 import { t } from '@/i18n'
 import { Logger } from '@shared/utils/logger'
-import { dictionary } from '@shared/constants/dictionary'
 import { extract_paths_from_text } from '@/utils/extract-paths-from-text'
 import { search_files } from '@/features/search-files'
 
@@ -223,7 +222,7 @@ export const select_clipboard_paths_command = (
 
             if (is_identical) {
               vscode.window.showInformationMessage(
-                dictionary.information_message.CONTEXT_ALREADY_SET
+                t('common.info.context-already-set')
               )
               return
             }

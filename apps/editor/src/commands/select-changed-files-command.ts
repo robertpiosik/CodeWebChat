@@ -325,7 +325,7 @@ export const select_changed_files_command = (
 
               if (is_identical) {
                 vscode.window.showInformationMessage(
-                  dictionary.information_message.CONTEXT_ALREADY_SET
+                  t('common.info.context-already-set')
                 )
                 return
               }
