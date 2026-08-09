@@ -34,5 +34,24 @@ export const translations = {
     cs: 'V repozitáři nebyly nalezeny žádné další větve k porovnání.',
     hu: 'Nem találhatók más ágak a tárolóban az összehasonlításhoz.',
     bg: 'Няма намерени други клонове в хранилището за сравнение.'
-  }
+  },
+  'views.prompt.handlers.hash-sign.saved-context-symbol.no-saved-contexts-found':
+    {
+      en: 'No saved contexts found.',
+      pl: 'Nie znaleziono zapisanych kontekstów.',
+      'zh-cn': '未找到保存的上下文。',
+      ja: '保存されたコンテキストが見つかりません。',
+      'zh-tw': '未找到儲存的上下文。',
+      de: 'Keine gespeicherten Kontexte gefunden.',
+      es: 'No se encontraron contextos guardados.',
+      fr: 'Aucun contexte enregistré trouvé.',
+      'pt-br': 'Nenhum contexto salvo encontrado.',
+      ru: 'Сохраненные контексты не найдены.',
+      ko: '저장된 컨텍스트를 찾을 수 없습니다.',
+      it: 'Nessun contesto salvato trovato.',
+      tr: 'Kaydedilmiş bağlam bulunamadı.',
+      cs: 'Nebyly nalezeny žádné uložené kontexty.',
+      hu: 'Nem találhatók mentett kontextusok.',
+      bg: 'Няма намерени запазени контексти.'
+    }
 } as const

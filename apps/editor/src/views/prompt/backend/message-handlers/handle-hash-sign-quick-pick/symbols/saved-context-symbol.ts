@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import { dictionary } from '@shared/constants/dictionary'
+import { t } from '@/i18n'
 import {
   load_and_merge_global_contexts,
   load_and_merge_file_contexts
@@ -46,7 +47,9 @@ export const handle_saved_context_item = async (
 
     if (source_options.length == 0) {
       vscode.window.showInformationMessage(
-        dictionary.information_message.NO_SAVED_CONTEXTS_FOUND
+        t(
+          'views.prompt.handlers.hash-sign.saved-context-symbol.no-saved-contexts-found'
+        )
       )
       return 'continue'
     }

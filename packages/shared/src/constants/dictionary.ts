@@ -1,6 +1,5 @@
 export const dictionary = {
   information_message: {
-    NO_SAVED_CONTEXTS_FOUND: 'No saved contexts found.',
     NO_CHANGES_TO_COMMIT: 'No changes to commit.',
     MODELS_ROUTE_NOT_FOUND: (provider_name: string) =>
       `The '/models' route was not found for ${provider_name}. This might mean the provider does not support listing models.`,
