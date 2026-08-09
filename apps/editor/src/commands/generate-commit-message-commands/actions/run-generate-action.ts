@@ -105,13 +105,13 @@ export const run_generate_action = async (params: {
             )
 
           const active_item = last_action_id
-            ? quick_pick.items.find((i) => i.id === last_action_id)
+            ? quick_pick.items.find((i) => i.id == last_action_id)
             : undefined
 
           if (active_item) {
             quick_pick.activeItems = [active_item]
-          } else {
-            quick_pick.activeItems = []
+          } else if (quick_pick.items.length > 0) {
+            quick_pick.activeItems = [quick_pick.items[0]]
           }
 
           quick_pick.title = t(

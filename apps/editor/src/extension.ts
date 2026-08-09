@@ -46,6 +46,7 @@ import { select_imported_files_command } from './commands/select-imported-files-
 import { select_imported_files_for_selected_command } from './commands/select-imported-files-for-selected-command'
 import { SettingsViewProvider } from './views/settings/backend/settings-view-provider'
 import { get_current_preview_url } from './views/prompt/backend/message-handlers/handle-open-website'
+import { t } from '@/i18n'
 
 let websocket_server_instance: WebSocketManager | null = null
 
@@ -261,7 +262,7 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     1000
   )
   commit_status_bar_item.text = '$(git-commit) Commit Changes'
-  commit_status_bar_item.tooltip = "Use CWC's Commit Changes API tool"
+  commit_status_bar_item.tooltip = t('misc.commit-status-bar.tooltip')
   commit_status_bar_item.command = 'codeWebChat.generateCommitMessageAndCommit'
   commit_status_bar_item.show()
   extension_context.subscriptions.push(commit_status_bar_item)
