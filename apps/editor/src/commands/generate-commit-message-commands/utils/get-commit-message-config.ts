@@ -70,7 +70,7 @@ export const get_commit_message_api_configuration = async (
         show_back_button
       })
 
-      if (result === 'back' || !result) {
+      if (result == 'back' || !result) {
         commit_message_api_configuration = 'back'
       } else {
         extension_context.workspaceState.update(
@@ -82,7 +82,7 @@ export const get_commit_message_api_configuration = async (
     }
   }
 
-  if (commit_message_api_configuration === 'back') {
+  if (commit_message_api_configuration == 'back') {
     return 'back'
   }
 

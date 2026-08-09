@@ -21,6 +21,7 @@ import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { dictionary } from '@shared/constants/dictionary'
 import { WebSocketManager } from '@/services/websocket-manager'
+import { ModelProvidersManager } from '@/services/model-providers-manager'
 
 const truncate_prompt = (text: string): string => {
   if (text.length <= MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE) return text
@@ -85,13 +86,22 @@ export const run_generate_action = async (params: {
         'command.generate-commit-message.action.copy-prompt'
       )
 
+      const model_providers_manager = new ModelProvidersManager(
+        params.extension_context
+      )
+      const api_configurations =
+        await model_providers_manager.get_api_configurations()
+      const has_api_configurations = api_configurations.length > 0
+
       const action = await new Promise<string | undefined | 'back'>(
         (resolve) => {
           const quick_pick = vscode.window.createQuickPick<
             vscode.QuickPickItem & { id: string }
           >()
           quick_pick.items = [
-            { label: action_make_api, id: 'make-api' },
+            ...(has_api_configurations
+              ? [{ label: action_make_api, id: 'make-api' }]
+              : []),
             ...(params.websocket_manager.is_connected_with_browser()
               ? [{ label: action_autofill_in_chatbot, id: 'autofill' }]
               : []),
@@ -162,7 +172,7 @@ export const run_generate_action = async (params: {
         }
       )
 
-      if (action === 'back') {
+      if (action == 'back') {
         if (was_empty_stage) {
           if (!show_back_button) {
             await vscode.commands.executeCommand('git.unstageAll', repository)
@@ -188,7 +198,7 @@ export const run_generate_action = async (params: {
         action
       )
 
-      if (action === 'copy') {
+      if (action == 'copy') {
         await vscode.env.clipboard.writeText(chatbot_prompt)
         vscode.window.showInformationMessage(
           t('command.generate-commit-message.copied', {
@@ -201,7 +211,7 @@ export const run_generate_action = async (params: {
         return
       }
 
-      if (action === 'autofill') {
+      if (action == 'autofill') {
         if (!params.websocket_manager.is_connected_with_browser()) {
           vscode.window.showWarningMessage(
             dictionary.warning_message.BROWSER_EXTENSION_NOT_CONNECTED
@@ -267,7 +277,7 @@ export const run_generate_action = async (params: {
             show_back_button: true
           })
 
-          if (result === 'back') {
+          if (result == 'back') {
             force_quick_pick = true
             continue
           } else if (!result) {
@@ -310,8 +320,8 @@ export const run_generate_action = async (params: {
         return
       }
 
-      if (action === 'manual') {
-        commit_message = ''
+      if (action == 'manual') {
+        commit_message = await vscode.env.clipboard.readText()
       } else {
         const api_configuration_data =
           await get_commit_message_api_configuration(
