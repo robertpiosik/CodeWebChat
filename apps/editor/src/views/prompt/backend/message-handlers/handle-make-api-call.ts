@@ -66,17 +66,7 @@ const get_api_configuration = async (params: {
 
   if (api_configurations.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
-    let message =
-      dictionary.information_message.NO_EDIT_FILES_CONFIGURATIONS_FOUND
-    if (params.prompt_type == 'code-at-cursor') {
-      message =
-        dictionary.information_message.NO_CODE_AT_CURSOR_CONFIGURATIONS_FOUND
-    } else if (params.prompt_type == 'find-relevant-files') {
-      message =
-        dictionary.information_message
-          .NO_FIND_RELEVANT_FILES_CONFIGURATIONS_FOUND
-    }
-    vscode.window.showInformationMessage(message)
+    vscode.window.showInformationMessage(t('common.no-configurations-found'))
     return
   }
 

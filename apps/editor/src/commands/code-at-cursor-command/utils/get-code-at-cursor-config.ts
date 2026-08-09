@@ -7,7 +7,6 @@ import {
 import { Logger } from '@shared/utils/logger'
 import { LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
-import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 import {
   show_configuration_quick_pick,
@@ -26,9 +25,7 @@ export const get_code_at_cursor_api_configuration = async (params: {
 
   if (code_at_cursor_api_configurations.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
-    vscode.window.showInformationMessage(
-      dictionary.information_message.NO_CODE_AT_CURSOR_CONFIGURATIONS_FOUND
-    )
+    vscode.window.showInformationMessage(t('common.no-configurations-found'))
     return
   }
 

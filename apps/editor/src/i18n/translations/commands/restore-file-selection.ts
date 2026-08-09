@@ -358,5 +358,23 @@ export const translations = {
     cs: 'Jak byste chtěli aplikovat {count} vybraných souborů?',
     hu: 'Hogyan szeretné alkalmazni a(z) {count} kiválasztott fájlt?',
     bg: 'Как искате да приложите избраните {count} файла?'
+  },
+  'command.restore-file-selection.delete.empty-state': {
+    en: 'No saved contexts remaining in the Workspace State.',
+    pl: 'Brak zapisanych kontekstów w stanie obszaru roboczego.',
+    'zh-cn': '工作区状态中没有剩余的已保存上下文。',
+    ja: 'ワークスペースのステータスに保存されたコンテキストがありません。',
+    'zh-tw': '工作區狀態中沒有剩餘的已儲存上下文。',
+    de: 'Keine gespeicherten Kontexte mehr im Workspace-Status.',
+    es: 'No quedan contextos guardados en el estado del espacio de trabajo.',
+    fr: "Aucun contexte enregistré restant dans l'état de l'espace de travail.",
+    'pt-br': 'Nenhum contexto salvo restante no estado do espaço de trabalho.',
+    ru: 'В состоянии рабочей области больше нет сохраненных контекстов.',
+    ko: '작업 영역 상태에 저장된 컨텍스트가 없습니다.',
+    it: "Nessun contesto salvato rimanente nello stato dell'area di lavoro.",
+    tr: 'Çalışma alanı durumunda kaydedilmiş bağlam kalmadı.',
+    cs: 'Ve stavu pracovního prostoru nezbyly žádné uložené kontexty.',
+    hu: 'Nem maradt mentett kontextus a munkaterület állapotában.',
+    bg: 'Няма останали запазени контексти в състоянието на работното пространство.'
   }
 } as const

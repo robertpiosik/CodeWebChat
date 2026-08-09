@@ -292,8 +292,7 @@ export const restore_from_workspace_state = async (params: {
 
               if (internal_contexts.length == 0) {
                 await vscode.window.showInformationMessage(
-                  dictionary.information_message
-                    .NO_SAVED_CONTEXTS_IN_WORKSPACE_STATE
+                  t('command.restore-file-selection.delete.empty-state')
                 )
                 go_back_after_delete = true
                 quick_pick.hide()

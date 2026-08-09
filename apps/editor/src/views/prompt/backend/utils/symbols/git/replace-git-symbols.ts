@@ -3,6 +3,7 @@ import { execSync } from 'child_process'
 import { get_git_repository } from '@/utils/git-repository-utils'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
+import { t } from '@/i18n'
 
 const patch_diff_paths = (
   diff_text: string,
@@ -442,7 +443,10 @@ export const replace_commit_symbol = async (params: {
 
       if (!diff || diff.length == 0) {
         vscode.window.showInformationMessage(
-          dictionary.information_message.COMMIT_SEEMS_EMPTY(commit_hash)
+          t(
+            'views.prompt.handlers.utils.symbols.git.replace-git-symbols.commit-seems-empty',
+            { commit_hash }
+          )
         )
         result_instruction = result_instruction.replace(full_match, '')
         continue

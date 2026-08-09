@@ -36,9 +36,7 @@ export const get_intelligent_update_config = async (
 
   if (intelligent_update_api_configurations.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
-    vscode.window.showInformationMessage(
-      t('views.prompt.handlers.intelligent-update.no-configurations-found')
-    )
+    vscode.window.showInformationMessage(t('common.no-configurations-found'))
     return
   }
 

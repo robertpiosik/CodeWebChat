@@ -1,6 +1,5 @@
 import * as vscode from 'vscode'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
-import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { display_token_count } from '@/utils/display-token-count'
 import { LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
@@ -45,9 +44,7 @@ export const get_commit_message_api_configuration = async (
 
     if (api_configurations.length == 0) {
       vscode.commands.executeCommand('codeWebChat.settings')
-      vscode.window.showInformationMessage(
-        dictionary.information_message.NO_COMMIT_MESSAGES_CONFIGURATIONS_FOUND
-      )
+      vscode.window.showInformationMessage(t('common.no-configurations-found'))
       return null
     }
 

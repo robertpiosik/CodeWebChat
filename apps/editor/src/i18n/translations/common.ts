@@ -413,5 +413,24 @@ export const translations = {
     cs: 'Zpráva zkopírována do schránky.',
     hu: 'Üzenet a vágólapra másolva.',
     bg: 'Съобщението е копирано в клипборда.'
+  },
+  'common.no-configurations-found': {
+    en: 'No configurations for API calls found. Add in settings.',
+    pl: 'Nie znaleziono konfiguracji dla wywołań API. Dodaj w ustawieniach.',
+    'zh-cn': '未找到 API 调用的配置。请在设置中添加。',
+    ja: 'API 呼び出しの設定が見つかりません。設定で追加してください。',
+    'zh-tw': '未找到 API 呼叫的設定。請在設定中新增。',
+    de: 'Keine Konfigurationen für API-Aufrufe gefunden. In den Einstellungen hinzufügen.',
+    es: 'No se encontraron configuraciones para llamadas API. Añadir en ajustes.',
+    fr: 'Aucune configuration pour les appels API trouvée. Ajouter dans les paramètres.',
+    'pt-br':
+      'Nenhuma configuração para chamadas de API encontrada. Adicione nas configurações.',
+    ru: 'Конфигурации для вызовов API не найдены. Добавьте в настройках.',
+    ko: 'API 호출을 위한 구성을 찾을 수 없습니다. 설정에서 추가하세요.',
+    it: 'Nessuna configurazione per le chiamate API trovata. Aggiungi nelle impostazioni.',
+    tr: 'API çağrıları için yapılandırma bulunamadı. Ayarlardan ekleyin.',
+    cs: 'Nebyly nalezeny žádné konfigurace pro volání API. Přidejte v nastavení.',
+    hu: 'Nem találhatók API hívási konfigurációk. Adja hozzá a beállításokban.',
+    bg: 'Не са намерени конфигурации за API извиквания. Добавете в настройките.'
   }
 } as const

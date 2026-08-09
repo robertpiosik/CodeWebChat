@@ -1,13 +1,5 @@
 export const dictionary = {
   information_message: {
-    NO_SAVED_CONTEXTS_IN_WORKSPACE_STATE:
-      'No saved contexts remaining in the Workspace State.',
-    COMMIT_SEEMS_EMPTY: (commit_hash: string) =>
-      `Commit ${commit_hash} seems empty.`,
-    NO_CODE_AT_CURSOR_CONFIGURATIONS_FOUND:
-      'No "Code at Cursor" configurations found. Please add one in settings.',
-    NO_FIND_RELEVANT_FILES_CONFIGURATIONS_FOUND:
-      'No "Find Relevant Files" configurations found. Please add one in settings.',
     NO_RECENT_CHANGES_TO_UNDO:
       'No recent changes found to undo or changes were already undone.',
     CONTEXT_COPIED_TO_CLIPBOARD: 'Context copied to clipboard.',
@@ -16,8 +8,6 @@ export const dictionary = {
     CONTEXT_ALREADY_SET: 'Context already set.',
     CONTEXT_UPDATED_SUCCESSFULLY: 'Updated successfully.',
     NO_SAVED_CONTEXTS_FOUND: 'No saved contexts found.',
-    NO_COMMIT_MESSAGES_CONFIGURATIONS_FOUND:
-      'No "Commit Messages" configurations found. Please add one in settings.',
     NO_CHANGES_TO_COMMIT: 'No changes to commit.',
     MODELS_ROUTE_NOT_FOUND: (provider_name: string) =>
       `The '/models' route was not found for ${provider_name}. This might mean the provider does not support listing models.`,
@@ -37,8 +27,6 @@ export const dictionary = {
       commit_hash: string
     ) =>
       `No checked files in the "${folder_name}" repository for commit ${commit_hash}.`,
-    NO_EDIT_FILES_CONFIGURATIONS_FOUND:
-      'No "Edit Files" configurations found. Please add one in settings.',
     NO_TEXT_SELECTED_FOR_SELECTION_PLACEHOLDER:
       'No text selected for #Selection placeholder.',
     RESTORED_CONTEXT: (context_name: string) =>
