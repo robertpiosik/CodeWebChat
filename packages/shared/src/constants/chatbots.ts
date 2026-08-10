@@ -112,7 +112,9 @@ export const CHATBOTS = {
   } as Chatbot,
   HuggingChat: {
     url: 'https://huggingface.co/chat/',
-    supports_user_provided_model: true
+    supports_user_provided_model: true,
+    supports_reasoning_effort: true,
+    supported_reasoning_efforts: ['Low', 'Medium', 'High']
   } as Chatbot,
   Kimi: {
     url: 'https://www.kimi.com/'

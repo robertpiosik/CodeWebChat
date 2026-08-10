@@ -9,6 +9,83 @@ export const hugging_chat: Chatbot = {
   wait_until_ready: async () => {
     await new Promise((resolve) => setTimeout(resolve, 500))
   },
+  set_reasoning_effort: async (chat) => {
+    const effort_button = document.querySelector(
+      'button[aria-label="Select thinking effort"]'
+    ) as HTMLButtonElement
+
+    if (!effort_button) {
+      if (chat.reasoning_effort) {
+        report_initialization_error({
+          function_name: 'hugging_chat.set_reasoning_effort',
+          log_message: 'Thinking effort button not found'
+        })
+      }
+      return
+    }
+
+    const reasoning_effort = chat.reasoning_effort || 'default'
+
+    if (
+      effort_button.textContent
+        ?.trim()
+        .toLowerCase()
+        .includes(reasoning_effort.toLowerCase())
+    ) {
+      return
+    }
+
+    effort_button.click()
+    await new Promise((r) => requestAnimationFrame(r))
+
+    const menu = await new Promise<Element | null>((resolve) => {
+      let attempts = 0
+      const check = () => {
+        attempts++
+        const el = document.querySelector('div[data-dropdown-menu-content]')
+        if (el) {
+          resolve(el)
+        } else if (attempts > 50) {
+          resolve(null)
+        } else {
+          setTimeout(check, 100)
+        }
+      }
+      check()
+    })
+
+    if (!menu) {
+      report_initialization_error({
+        function_name: 'hugging_chat.set_reasoning_effort',
+        log_message: 'Reasoning effort menu not found'
+      })
+      return
+    }
+
+    const options = Array.from(menu.querySelectorAll('div[role="menuitem"]'))
+    let found = false
+    for (const option of options) {
+      if (
+        option.textContent?.trim().toLowerCase() ==
+        reasoning_effort.toLowerCase()
+      ) {
+        ;(option as HTMLElement).click()
+        found = true
+        break
+      }
+    }
+
+    if (!found) {
+      report_initialization_error({
+        function_name: 'hugging_chat.set_reasoning_effort',
+        log_message: `Reasoning effort option "${reasoning_effort}" not found`
+      })
+      document.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
+      )
+    }
+    await new Promise((resolve) => setTimeout(resolve, 250))
+  },
   set_model: async (chat) => {
     const model = chat.model
     if (!model) return
