@@ -1,0 +1,5 @@
+--- /dev/null
++++ b/src/index.ts
+@@ -1,2 +1,2 @@
+-
++console.log("new message")

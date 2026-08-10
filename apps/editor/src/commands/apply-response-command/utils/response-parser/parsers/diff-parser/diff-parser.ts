@@ -95,7 +95,7 @@ const process_collected_patch_lines = (params: {
         is_single_root_folder_workspace: params.is_single_root
       })
     patch.new_file_path = new_relative
-    if (new_workspace && new_workspace !== workspace_name) {
+    if (new_workspace && new_workspace != workspace_name) {
       patch.new_workspace_name = new_workspace
     }
   }
@@ -307,7 +307,7 @@ const process_text_for_file_operations = (params: {
       }
       if (
         new_info.workspace_name &&
-        new_info.workspace_name !== old_info.workspace_name
+        new_info.workspace_name != old_info.workspace_name
       ) {
         patch.new_workspace_name = new_info.workspace_name
       }
@@ -705,7 +705,7 @@ const merge_diffs_per_file = (items: DiffParserItem[]): DiffParserItem[] => {
         )
 
         const existing_is_new_file = existing_lines.some(
-          (l) => l === '--- /dev/null'
+          (l) => l == '--- /dev/null'
         )
         const incoming_is_modification =
           !item.content.includes('--- /dev/null') && item.content.includes('@@')
@@ -817,10 +817,33 @@ const build_patch_content = (params: {
       let to_line: string | undefined
       let diff_git_line: string | undefined
 
+      const is_new_file_based_on_empty =
+        formatted_body_lines.length > 0 &&
+        formatted_body_lines.some((line) => line.startsWith('+')) &&
+        formatted_body_lines.some((line) => line.trim() == '-') &&
+        formatted_body_lines.every(
+          (line) =>
+            line.startsWith('+') ||
+            line.startsWith('@@') ||
+            line.trim() == '-' ||
+            line == '\\ No newline at end of file'
+        ) &&
+        formatted_body_lines.some(
+          (line) => line.startsWith('@@ -1') || line.startsWith('@@ -0')
+        )
+
       for (const line of header_lines) {
-        if (line.startsWith('--- ')) from_line = line
-        if (line.startsWith('+++ ')) to_line = line
-        if (line.startsWith('diff --git ')) diff_git_line = line
+        if (line.startsWith('--- ')) {
+          from_line = is_new_file_based_on_empty ? '--- /dev/null' : line
+        } else if (line.startsWith('+++ ')) {
+          to_line = line
+        } else if (line.startsWith('diff --git ')) {
+          diff_git_line = line
+        }
+      }
+
+      if (is_new_file_based_on_empty && !from_line) {
+        from_line = '--- /dev/null'
       }
 
       const final_header: string[] = []
