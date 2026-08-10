@@ -102,7 +102,6 @@ export const copy_squashed_commit_details_command = (): vscode.Disposable => {
 
         let log_output = ''
         try {
-          // Parse subject (%s) and body (%b) separated by null bytes to split cleanly
           log_output = execSync(
             `git log ${selected_branch.name}..HEAD --pretty=format:"%s%n%b%n%x00"`,
             {
@@ -154,41 +153,10 @@ export const copy_squashed_commit_details_command = (): vscode.Disposable => {
 
         const final_bullets = Array.from(bullets).join('\n')
 
-        let diff_output = ''
-        try {
-          diff_output = execSync(
-            `git diff --name-only ${selected_branch.name}...HEAD`,
-            {
-              cwd: repository.rootUri.fsPath,
-              encoding: 'utf-8'
-            }
-          )
-            .toString()
-            .trim()
-        } catch (e) {
-          try {
-            diff_output = execSync(
-              `git diff --name-only ${selected_branch.name}..HEAD`,
-              {
-                cwd: repository.rootUri.fsPath,
-                encoding: 'utf-8'
-              }
-            )
-              .toString()
-              .trim()
-          } catch (e2) {
-            // Ignore if both fail
-          }
-        }
-
-        const files = diff_output
-          .split('\n')
-          .map((l) => l.trim())
-          .filter((l) => l.length > 0)
-
+        const extracted_paths = AsciiTree.extract_paths(log_output)
         let tree_text = ''
-        if (files.length > 0) {
-          tree_text = AsciiTree.generate(files)
+        if (extracted_paths.length > 0) {
+          tree_text = AsciiTree.generate(extracted_paths)
         }
 
         const final_text = `${final_bullets}${tree_text ? '\n\n' + tree_text : ''}`
