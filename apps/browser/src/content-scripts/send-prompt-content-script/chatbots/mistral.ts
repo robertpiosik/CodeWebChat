@@ -21,10 +21,9 @@ export const mistral: Chatbot = {
   },
   set_options: async (chat) => {
     const options = chat.options
-    if (!options) return
 
     if (
-      options.includes('incognito') &&
+      options?.includes('incognito') &&
       !window.location.pathname.includes('/incognito')
     ) {
       const incognito_button = document.querySelector(
@@ -41,11 +40,11 @@ export const mistral: Chatbot = {
       }
     }
 
-    const think_button_icon_path = document.querySelector(
-      'path[d="M9 18h6"]'
+    const mode_toggler_icon_path = document.querySelector(
+      'form path[d="M16 10.5L12 14.5L8 10.5"]'
     ) as SVGPathElement
 
-    if (!think_button_icon_path) {
+    if (!mode_toggler_icon_path) {
       report_initialization_error({
         function_name: 'set_options',
         log_message: 'Think button icon not found'
@@ -53,11 +52,11 @@ export const mistral: Chatbot = {
       return
     }
 
-    const think_button = think_button_icon_path.closest(
+    const mode_toggler = mode_toggler_icon_path.closest(
       'button'
     ) as HTMLButtonElement
 
-    if (!think_button) {
+    if (!mode_toggler) {
       report_initialization_error({
         function_name: 'set_options',
         log_message: 'Think button not found'
@@ -65,12 +64,33 @@ export const mistral: Chatbot = {
       return
     }
 
-    const should_be_on = options.includes('think')
-    const is_on = think_button.getAttribute('data-state') == 'on'
+    mode_toggler.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true }))
+    await new Promise((resolve) => requestAnimationFrame(resolve))
 
-    if (should_be_on != is_on) {
-      think_button.click()
-      await new Promise((r) => requestAnimationFrame(r))
+    const menuitems = document.querySelectorAll('div[role="menuitem"]')
+
+    if (options?.includes('think')) {
+      const think_item = menuitems[1] as HTMLElement
+      if (think_item) {
+        think_item.click()
+        await new Promise((resolve) => requestAnimationFrame(resolve))
+      } else {
+        report_initialization_error({
+          function_name: 'set_options',
+          log_message: 'Think menu item not found'
+        })
+      }
+    } else {
+      const fast_item = menuitems[0] as HTMLElement
+      if (fast_item) {
+        fast_item.click()
+        await new Promise((resolve) => requestAnimationFrame(resolve))
+      } else {
+        report_initialization_error({
+          function_name: 'set_options',
+          log_message: 'Fast menu item not found'
+        })
+      }
     }
   },
   enter_message: async (params) => {
@@ -95,13 +115,10 @@ export const mistral: Chatbot = {
         client_id: params.client_id,
         raw_instructions: params.raw_instructions,
         footer,
-        get_chat_turn: (f) =>
-          f.parentElement?.parentElement?.querySelector(
-            'div[data-message-part-type="answer"]'
-          ) as HTMLElement,
+        get_chat_turn: (f) => f.parentElement!.parentElement!,
         perform_copy: (f) => {
           const copy_button = f.querySelector(
-            'button:last-child'
+            'button:nth-child(6)'
           ) as HTMLElement
           if (!copy_button) {
             report_initialization_error({
@@ -124,7 +141,7 @@ export const mistral: Chatbot = {
     }
 
     const footer_selector =
-      'div[data-message-author-role="assistant"] > div:last-child > div:last-child > div:last-child'
+      'div[data-message-author-role="assistant"] > div + div > div:last-child > div:first-child'
 
     requestAnimationFrame(() => {
       observe_for_responses({
