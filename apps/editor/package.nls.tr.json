@@ -38,7 +38,7 @@
   "codeWebChat.findInFolder.title": "Klasörde Bul...",
   "codeWebChat.createNewCheckpoint.title": "Yeni Kontrol Noktası Oluştur",
   "codeWebChat.settings.title": "Ayarlar",
-  "codeWebChat.generateCommitMessage.title": "CWC ile İşleme (Commit) Mesajı Oluştur",
+  "codeWebChat.generateCommitMessage.title": "CWC: İşleme (Commit) Mesajı Oluştur",
   "codeWebChat.generateCommitMessageAndCommit.title": "Değişiklikleri İşle (Commit)",
   "codeWebChat.setRanges.title": "Aralıkları Ayarla...",
   "codeWebChat.searchFiles.title": "Dosyaları ara...",
@@ -54,5 +54,6 @@
   "codeWebChat.selectCommitFiles.title": "Bir İşlemeden (Commit) Dosyaları Seç...",
   "codeWebChat.selectClipboardPaths.title": "Panodaki Yolları Seç...",
   "codeWebChat.selectChangedFiles.title": "Değiştirilmiş Dosyaları Seç...",
-  "codeWebChat.selectParentFolder.title": "Üst Klasörü Seç..."
+  "codeWebChat.selectParentFolder.title": "Üst Klasörü Seç...",
+  "codeWebChat.copySquashedCommitDetails.title": "CWC: Sıkıştırılmış Commit Ayrıntılarını Kopyala"
 }

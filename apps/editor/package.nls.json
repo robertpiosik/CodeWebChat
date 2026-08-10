@@ -38,7 +38,7 @@
   "codeWebChat.findInFolder.title": "Find in Folder...",
   "codeWebChat.createNewCheckpoint.title": "Create New Checkpoint",
   "codeWebChat.settings.title": "Settings",
-  "codeWebChat.generateCommitMessage.title": "Generate Commit Message with CWC",
+  "codeWebChat.generateCommitMessage.title": "CWC: Generate Commit Message",
   "codeWebChat.generateCommitMessageAndCommit.title": "Commit Changes",
   "codeWebChat.setRanges.title": "Set Ranges...",
   "codeWebChat.searchFiles.title": "Search Files...",
@@ -54,5 +54,6 @@
   "codeWebChat.selectCommitFiles.title": "Select Files of Commit...",
   "codeWebChat.selectClipboardPaths.title": "Select Clipboard Paths...",
   "codeWebChat.selectChangedFiles.title": "Select Changed Files...",
-  "codeWebChat.selectParentFolder.title": "Select Parent Folder..."
+  "codeWebChat.selectParentFolder.title": "Select Parent Folder...",
+  "codeWebChat.copySquashedCommitDetails.title": "CWC: Copy Squashed Commit Details"
 }

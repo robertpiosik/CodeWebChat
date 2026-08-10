@@ -38,7 +38,7 @@
   "codeWebChat.findInFolder.title": "在文件夹中查找...",
   "codeWebChat.createNewCheckpoint.title": "创建新检查点",
   "codeWebChat.settings.title": "设置",
-  "codeWebChat.generateCommitMessage.title": "使用 CWC 生成提交信息",
+  "codeWebChat.generateCommitMessage.title": "CWC: 生成提交信息",
   "codeWebChat.generateCommitMessageAndCommit.title": "提交更改",
   "codeWebChat.setRanges.title": "设置范围...",
   "codeWebChat.searchFiles.title": "搜索文件...",
@@ -54,5 +54,6 @@
   "codeWebChat.selectCommitFiles.title": "选中提交中的文件...",
   "codeWebChat.selectClipboardPaths.title": "选择剪贴板路径...",
   "codeWebChat.selectChangedFiles.title": "选择更改的文件...",
-  "codeWebChat.selectParentFolder.title": "选择父文件夹..."
+  "codeWebChat.selectParentFolder.title": "选择父文件夹...",
+  "codeWebChat.copySquashedCommitDetails.title": "CWC: 复制合并的提交详细信息"
 }

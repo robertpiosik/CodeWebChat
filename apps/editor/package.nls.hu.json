@@ -38,7 +38,7 @@
   "codeWebChat.findInFolder.title": "Keresés a mappában...",
   "codeWebChat.createNewCheckpoint.title": "Új ellenőrzőpont létrehozása",
   "codeWebChat.settings.title": "Beállítások",
-  "codeWebChat.generateCommitMessage.title": "Commit üzenet generálása CWC-vel",
+  "codeWebChat.generateCommitMessage.title": "CWC: Commit üzenet generálása",
   "codeWebChat.generateCommitMessageAndCommit.title": "Változások commitálása",
   "codeWebChat.setRanges.title": "Tartományok beállítása...",
   "codeWebChat.searchFiles.title": "Fájlok keresése...",
@@ -54,5 +54,6 @@
   "codeWebChat.selectCommitFiles.title": "Commit fájljainak kijelölése...",
   "codeWebChat.selectClipboardPaths.title": "Vágólap útvonalainak kijelölése...",
   "codeWebChat.selectChangedFiles.title": "Módosított fájlok kiválasztása...",
-  "codeWebChat.selectParentFolder.title": "Szülő mappa kiválasztása..."
+  "codeWebChat.selectParentFolder.title": "Szülő mappa kiválasztása...",
+  "codeWebChat.copySquashedCommitDetails.title": "CWC: Egyesített commit részletek másolása"
 }

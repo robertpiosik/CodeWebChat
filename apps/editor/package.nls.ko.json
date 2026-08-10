@@ -38,7 +38,7 @@
   "codeWebChat.findInFolder.title": "폴더에서 찾기...",
   "codeWebChat.createNewCheckpoint.title": "새 체크포인트 만들기",
   "codeWebChat.settings.title": "설정",
-  "codeWebChat.generateCommitMessage.title": "CWC로 커밋 메시지 생성",
+  "codeWebChat.generateCommitMessage.title": "CWC: 커밋 메시지 생성",
   "codeWebChat.generateCommitMessageAndCommit.title": "변경 사항 커밋",
   "codeWebChat.setRanges.title": "범위 설정...",
   "codeWebChat.searchFiles.title": "파일 검색...",
@@ -54,5 +54,6 @@
   "codeWebChat.selectCommitFiles.title": "커밋에서 파일 선택...",
   "codeWebChat.selectClipboardPaths.title": "클립보드 경로 선택...",
   "codeWebChat.selectChangedFiles.title": "변경된 파일 선택...",
-  "codeWebChat.selectParentFolder.title": "상위 폴더 선택..."
+  "codeWebChat.selectParentFolder.title": "상위 폴더 선택...",
+  "codeWebChat.copySquashedCommitDetails.title": "CWC: 스쿼시된 커밋 세부 정보 복사"
 }

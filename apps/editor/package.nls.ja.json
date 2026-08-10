@@ -38,7 +38,7 @@
   "codeWebChat.findInFolder.title": "フォルダー内を検索...",
   "codeWebChat.createNewCheckpoint.title": "新しいチェックポイントを作成",
   "codeWebChat.settings.title": "設定",
-  "codeWebChat.generateCommitMessage.title": "CWCでコミットメッセージを生成",
+  "codeWebChat.generateCommitMessage.title": "CWC: コミットメッセージを生成",
   "codeWebChat.generateCommitMessageAndCommit.title": "変更をコミット",
   "codeWebChat.setRanges.title": "範囲を設定...",
   "codeWebChat.searchFiles.title": "ファイルを検索...",
@@ -54,5 +54,6 @@
   "codeWebChat.selectCommitFiles.title": "コミットからのファイルを選択...",
   "codeWebChat.selectClipboardPaths.title": "クリップボードのパスを選択...",
   "codeWebChat.selectChangedFiles.title": "変更されたファイルを選択...",
-  "codeWebChat.selectParentFolder.title": "親フォルダーを選択..."
+  "codeWebChat.selectParentFolder.title": "親フォルダーを選択...",
+  "codeWebChat.copySquashedCommitDetails.title": "CWC: スカッシュされたコミットの詳細をコピー"
 }

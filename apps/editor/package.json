@@ -414,6 +414,12 @@
         "command": "codeWebChat.selectParentFolder",
         "title": "%codeWebChat.selectParentFolder.title%",
         "category": "Code Web Chat"
+      },
+      {
+        "command": "codeWebChat.copySquashedCommitDetails",
+        "title": "%codeWebChat.copySquashedCommitDetails.title%",
+        "category": "Code Web Chat",
+        "icon": "$(copy)"
       }
     ],
     "submenus": [
@@ -763,6 +769,11 @@
         {
           "command": "codeWebChat.generateCommitMessage",
           "group": "navigation@1",
+          "when": "scmProvider == git"
+        },
+        {
+          "command": "codeWebChat.copySquashedCommitDetails",
+          "group": "navigation@2",
           "when": "scmProvider == git"
         }
       ],

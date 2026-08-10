@@ -38,7 +38,7 @@
   "codeWebChat.findInFolder.title": "Localizar na Pasta...",
   "codeWebChat.createNewCheckpoint.title": "Criar Novo Checkpoint",
   "codeWebChat.settings.title": "Configurações",
-  "codeWebChat.generateCommitMessage.title": "Gerar Mensagem de Commit com CWC",
+  "codeWebChat.generateCommitMessage.title": "CWC: Gerar Mensagem de Commit",
   "codeWebChat.generateCommitMessageAndCommit.title": "Fazer Commit das Alterações",
   "codeWebChat.setRanges.title": "Definir Intervalos...",
   "codeWebChat.searchFiles.title": "Pesquisar arquivos...",
@@ -54,5 +54,6 @@
   "codeWebChat.selectCommitFiles.title": "Marcar Arquivos de um Commit...",
   "codeWebChat.selectClipboardPaths.title": "Selecionar caminhos da área de transferência...",
   "codeWebChat.selectChangedFiles.title": "Selecionar arquivos alterados...",
-  "codeWebChat.selectParentFolder.title": "Selecionar Pasta Pai..."
+  "codeWebChat.selectParentFolder.title": "Selecionar Pasta Pai...",
+  "codeWebChat.copySquashedCommitDetails.title": "CWC: Copiar detalhes dos commits agrupados"
 }

@@ -38,7 +38,7 @@
   "codeWebChat.findInFolder.title": "Найти в папке...",
   "codeWebChat.createNewCheckpoint.title": "Создать новую контрольную точку",
   "codeWebChat.settings.title": "Настройки",
-  "codeWebChat.generateCommitMessage.title": "Сгенерировать сообщение коммита с CWC",
+  "codeWebChat.generateCommitMessage.title": "CWC: Сгенерировать сообщение коммита",
   "codeWebChat.generateCommitMessageAndCommit.title": "Зафиксировать изменения",
   "codeWebChat.setRanges.title": "Установить диапазоны...",
   "codeWebChat.searchFiles.title": "Поиск файлов...",
@@ -54,5 +54,6 @@
   "codeWebChat.selectCommitFiles.title": "Отметить файлы из коммита...",
   "codeWebChat.selectClipboardPaths.title": "Выбрать пути из буфера обмена...",
   "codeWebChat.selectChangedFiles.title": "Выбрать измененные файлы...",
-  "codeWebChat.selectParentFolder.title": "Выбрать родительскую папку..."
+  "codeWebChat.selectParentFolder.title": "Выбрать родительскую папку...",
+  "codeWebChat.copySquashedCommitDetails.title": "CWC: Копировать сведения об объединенных коммитах"
 }
