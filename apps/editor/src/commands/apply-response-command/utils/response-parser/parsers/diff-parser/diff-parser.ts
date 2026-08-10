@@ -7,7 +7,6 @@ import {
 } from '../../response-parser'
 import {
   normalize_path,
-  is_valid_file_path,
   find_file_path_before_block,
   remove_path_line_from_text_block,
   normalize_header_line,
@@ -113,11 +112,9 @@ const convert_code_block_to_new_file_diff = (params: {
     return null
   }
 
-  const path_regex = /(?:(?:\/\/|#|--|<!--)\s*)?([\w./\\-]+)/
   const xml_path_regex = /<([\w-]+)\s+path=(?:["']([^"']+)["']|([^>\s]+))/
 
   let file_path: string | undefined = params.file_path_hint
-  let path_line_index = -1
   let content_lines: string[] = []
 
   const first_line = params.lines.length > 0 ? params.lines[0].trim() : ''
@@ -168,38 +165,6 @@ const convert_code_block_to_new_file_diff = (params: {
         }
         continue
       }
-
-      const match = line.match(path_regex)
-
-      if (match && match[1]) {
-        const potential_path = match[1]
-
-        if (is_valid_file_path(potential_path)) {
-          const rest_of_line = line
-            .substring(line.indexOf(potential_path) + potential_path.length)
-            .trim()
-          // e.g. `25:5` for line and column, or `-->` for html comments
-          const is_just_path_and_location = /^(?:\d+:\d+)?\s*(-->)?\s*$/.test(
-            rest_of_line
-          )
-
-          if (is_just_path_and_location) {
-            if (params.file_path_hint) {
-              if (
-                normalize_path(potential_path) ==
-                normalize_path(params.file_path_hint)
-              ) {
-                path_line_index = i
-              }
-              break
-            }
-
-            file_path = normalize_path(potential_path)
-            path_line_index = i
-            break
-          }
-        }
-      }
     }
   }
 
@@ -207,9 +172,7 @@ const convert_code_block_to_new_file_diff = (params: {
     file_path = params.file_path_hint
   }
 
-  if (path_line_index != -1) {
-    content_lines = params.lines.filter((_, index) => index != path_line_index)
-  } else if (file_path && content_lines.length == 0) {
+  if (file_path && content_lines.length == 0) {
     content_lines = params.lines
   }
 
