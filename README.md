@@ -13,8 +13,6 @@
 
 Free and privacy-fist toolkit for AI coding with static context. **Start in VS Code (Cursor, Antigravity, VSCodium, etc.), then continue in ChatGPT, Gemini, Claude, etc.** or _Bring Your Own Key_ and stay in the editor!
 
-Get involved! Join our [discord server](https://discord.gg/KJySXsrSX5).
-
 > [!TIP]
 > Elevate your workflow with smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)).
 

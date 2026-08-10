@@ -11,7 +11,7 @@ import { translations as set_ranges } from './set-ranges'
 import { translations as new_file } from './new-file'
 import { translations as new_folder } from './new-folder'
 import { translations as rename } from './rename'
-import { translations as rate } from './rate'
+import { translations as rate_extension } from './rate-extension'
 import { translations as select_unstaged_files } from './select-unstaged-files'
 import { translations as select_commit_files } from './select-commit-files'
 import { translations as select_changed_files } from './select-changed-files'
@@ -36,7 +36,7 @@ export const translations = {
   ...new_file,
   ...new_folder,
   ...rename,
-  ...rate,
+  ...rate_extension,
   ...select_unstaged_files,
   ...select_commit_files,
   ...select_changed_files,

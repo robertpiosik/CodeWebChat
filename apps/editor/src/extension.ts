@@ -40,7 +40,8 @@ import {
   select_changed_files_command,
   select_parent_folder_command,
   select_referencing_files_commands,
-  copy_squashed_commit_details_command
+  copy_squashed_commit_details_command,
+  rate_extension_command
 } from './commands'
 import { setup_git_discard_file_watcher } from './services/git-discard-file-watcher'
 import { select_imported_files_command } from './commands/select-imported-files-command'
@@ -188,6 +189,7 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
       command: 'codeWebChat.visitWebsite',
       url: 'https://codeweb.chat/'
     }),
+    rate_extension_command(),
     open_url_command({
       command: 'codeWebChat.openRepository',
       url: 'https://github.com/robertpiosik/CodeWebChat'
