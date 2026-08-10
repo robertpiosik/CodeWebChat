@@ -136,10 +136,6 @@ export const open_webui: Chatbot = {
         client_id: params.client_id,
         raw_instructions: params.raw_instructions,
         footer,
-        get_chat_turn: (f) =>
-          f.parentElement?.querySelector(
-            '#response-content-container'
-          ) as HTMLElement,
         get_code_from_block: (b) => b.querySelector('.cm-line')?.textContent,
         perform_copy: (f) => {
           const copy_button = f.querySelector(

@@ -84,7 +84,6 @@ export const chatgpt: Chatbot = {
         client_id: params.client_id,
         raw_instructions: params.raw_instructions,
         footer,
-        get_chat_turn: (f) => f.closest('.agent-turn'),
         perform_copy: (f) => {
           const copy_button = f.querySelector(
             'button[data-testid="copy-turn-action-button"]'

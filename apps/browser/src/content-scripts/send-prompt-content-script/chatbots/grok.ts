@@ -61,7 +61,6 @@ export const grok: Chatbot = {
         client_id: params.client_id,
         raw_instructions: params.raw_instructions,
         footer,
-        get_chat_turn: (f) => f.closest('.items-start'),
         perform_copy: (f) => {
           const copy_button = f.querySelector(
             'button:first-child'

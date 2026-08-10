@@ -1,5 +1,4 @@
 import { Message } from '@/types/messages'
-import { Logger } from '@shared/utils/logger'
 import browser from 'webextension-polyfill'
 import { apply_response_icon } from '../constants/apply-response-icon'
 import { apply_response_button_title } from '../constants/dictionary'
@@ -13,7 +12,6 @@ export function add_apply_response_button(params: {
   client_id: number
   raw_instructions?: string
   footer: Element
-  get_chat_turn: (footer: Element) => HTMLElement | null
   get_code_from_block?: (code_block: Element) => string | null | undefined
   perform_copy: (footer: Element) => void | Promise<void>
   insert_button: (footer: Element, button: HTMLButtonElement) => void
@@ -24,16 +22,6 @@ export function add_apply_response_button(params: {
   )
 
   if (existing_apply_response_button) return
-
-  const chat_turn = params.get_chat_turn(params.footer)
-  if (!chat_turn) {
-    Logger.error({
-      function_name: 'add_apply_response_button',
-      message: 'Chat turn container not found',
-      data: params.footer
-    })
-    return
-  }
 
   const apply_response_button = document.createElement('button')
   apply_response_button.innerHTML = apply_response_icon

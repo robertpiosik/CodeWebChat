@@ -41,7 +41,6 @@ export const yuanbao: Chatbot = {
         client_id: params.client_id,
         raw_instructions: params.raw_instructions,
         footer,
-        get_chat_turn: (f) => f.closest('.agent-chat__bubble__content'),
         perform_copy: (f) => {
           const copy_button = f.querySelector(
             '.agent-chat__toolbar__copy'

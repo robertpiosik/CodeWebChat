@@ -47,8 +47,6 @@ export const meta: Chatbot = {
         client_id: params.client_id,
         raw_instructions: params.raw_instructions,
         footer,
-        get_chat_turn: (f) =>
-          f.closest('div[data-testid="assistant-message"]') as HTMLElement,
         perform_copy: (f) => {
           const copy_button = f.querySelector(
             'div:nth-child(3) > button'

@@ -38,10 +38,6 @@ export const arena: Chatbot = {
         client_id: params.client_id,
         raw_instructions: params.raw_instructions,
         footer,
-        get_chat_turn: (f) =>
-          f
-            .closest('.bg-surface-primary')
-            ?.querySelector('div.prose') as HTMLElement,
         perform_copy: (f) => {
           const copy_button = f.querySelector(
             'button:has([d="M15 9V4.6C15 4.26863 14.7314 4 14.4 4H4.6C4.26863 4 4 4.26863 4 4.6V14.4C4 14.7314 4.26863 15 4.6 15H9"])'

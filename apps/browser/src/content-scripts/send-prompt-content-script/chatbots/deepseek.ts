@@ -109,10 +109,6 @@ export const deepseek: Chatbot = {
         client_id: params.client_id,
         raw_instructions: params.raw_instructions,
         footer,
-        get_chat_turn: (f) =>
-          f.parentElement?.parentElement?.querySelector(
-            '.ds-markdown'
-          ) as HTMLElement,
         perform_copy: (f) => {
           const copy_button = f.querySelector(
             'div[role="button"]'

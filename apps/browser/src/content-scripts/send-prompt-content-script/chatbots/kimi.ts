@@ -45,7 +45,6 @@ export const kimi: Chatbot = {
         client_id: params.client_id,
         raw_instructions: params.raw_instructions,
         footer,
-        get_chat_turn: (f) => f.closest('.segment-content'),
         perform_copy: (f) => {
           const copy_button = f.querySelector(
             '.segment-assistant-actions-content > div:first-child'

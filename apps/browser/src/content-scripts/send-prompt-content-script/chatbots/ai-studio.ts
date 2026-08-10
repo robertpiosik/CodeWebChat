@@ -225,7 +225,6 @@ export const ai_studio: Chatbot = {
         client_id: params.client_id,
         raw_instructions: params.raw_instructions,
         footer,
-        get_chat_turn: (f) => f.closest('ms-chat-turn'),
         perform_copy: (f) => {
           const chat_turn_container = f.closest('.chat-turn-container')
           if (!chat_turn_container) {

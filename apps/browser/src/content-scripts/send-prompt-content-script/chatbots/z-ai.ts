@@ -60,7 +60,6 @@ export const z_ai: Chatbot = {
         client_id: params.client_id,
         raw_instructions: params.raw_instructions,
         footer,
-        get_chat_turn: (f) => f.parentElement!.querySelector('.chat-assistant'),
         get_code_from_block: (b) => b.querySelector('.cm-line')?.textContent,
         perform_copy: (f) => {
           const copy_button = f.querySelector('button.copy-response-button')
