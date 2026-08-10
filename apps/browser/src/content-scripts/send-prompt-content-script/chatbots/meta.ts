@@ -6,23 +6,6 @@ import {
 import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const meta: Chatbot = {
-  wait_until_ready: async () => {
-    await new Promise((resolve) => {
-      const check_for_element = () => {
-        if (
-          document.querySelector(
-            'div[contenteditable="true"][data-testid="composer-input"]'
-          )
-        ) {
-          resolve(null)
-        } else {
-          setTimeout(check_for_element, 100)
-        }
-      }
-      check_for_element()
-    })
-    await new Promise((resolve) => setTimeout(resolve, 500))
-  },
   enter_message: async (params) => {
     const input_element = document.querySelector(
       'div[contenteditable="true"][data-testid="composer-input"]'
@@ -36,14 +19,27 @@ export const meta: Chatbot = {
       return
     }
 
-    input_element.dispatchEvent(
-      new InputEvent('input', {
-        bubbles: true,
-        cancelable: true,
-        inputType: 'insertText',
-        data: params.message
-      })
-    )
+    const dispatch_input = () => {
+      input_element.dispatchEvent(
+        new InputEvent('input', {
+          bubbles: true,
+          cancelable: true,
+          inputType: 'insertText',
+          data: params.message
+        })
+      )
+    }
+
+    dispatch_input()
+
+    const send_button = document.querySelector(
+      'button[data-testid="composer-send-button"]'
+    ) as HTMLButtonElement
+
+    if (send_button && send_button.disabled) {
+      await new Promise((resolve) => setTimeout(resolve, 100))
+      dispatch_input()
+    }
   },
   setup_observer: (params) => {
     const add_buttons = (footer: Element) => {
