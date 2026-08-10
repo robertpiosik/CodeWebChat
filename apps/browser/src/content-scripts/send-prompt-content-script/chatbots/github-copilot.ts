@@ -42,7 +42,7 @@ export const github_copilot: Chatbot = {
         get_chat_turn: (f) => f.closest('div.message-container') as HTMLElement,
         perform_copy: (f) => {
           const copy_button = f.querySelector(
-            'button:nth-child(5)'
+            'button:nth-of-type(3)'
           ) as HTMLElement
           if (!copy_button) {
             report_initialization_error({

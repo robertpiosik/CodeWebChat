@@ -18,7 +18,6 @@ export const grok: Chatbot = {
       }
       check_for_element()
     })
-    await new Promise((r) => setTimeout(r, 500))
   },
   set_options: async (chat) => {
     const options = chat.options
@@ -52,7 +51,7 @@ export const grok: Chatbot = {
       return
     }
 
-    input_element.textContent = params.message
+    input_element.innerText = params.message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
     input_element.focus()
   },
@@ -65,7 +64,7 @@ export const grok: Chatbot = {
         get_chat_turn: (f) => f.closest('.items-start'),
         perform_copy: (f) => {
           const copy_button = f.querySelector(
-            'button:nth-child(4)'
+            'button:first-child'
           ) as HTMLElement
           if (!copy_button) {
             report_initialization_error({
