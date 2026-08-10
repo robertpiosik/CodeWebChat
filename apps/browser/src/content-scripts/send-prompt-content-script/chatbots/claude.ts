@@ -10,19 +10,24 @@ export const claude: Chatbot = {
   wait_until_ready: async () => {
     await new Promise((resolve) => {
       const check_for_element = () => {
-        if (
-          document.querySelector(
-            'div[contenteditable="true"]'
-          ) as HTMLDivElement
-        ) {
-          resolve(null)
-        } else {
-          setTimeout(check_for_element, 100)
+        const input_element = document.querySelector(
+          'div[contenteditable=true]'
+        ) as HTMLElement
+
+        if (input_element) {
+          input_element.innerText = ' '
+          input_element.dispatchEvent(new Event('input', { bubbles: true }))
+
+          if (input_element.innerText == ' ') {
+            resolve(null)
+            return
+          }
         }
+
+        setTimeout(check_for_element, 100)
       }
       check_for_element()
     })
-    await new Promise((resolve) => setTimeout(resolve, 1000))
   },
   set_options: async (chat) => {
     const options = chat.options

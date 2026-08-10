@@ -19,8 +19,6 @@ export const chatgpt: Chatbot = {
           input_element.dispatchEvent(new Event('input', { bubbles: true }))
 
           if (input_element.innerText == ' ') {
-            input_element.innerText = ''
-            input_element.dispatchEvent(new Event('input', { bubbles: true }))
             resolve(null)
             return
           }
