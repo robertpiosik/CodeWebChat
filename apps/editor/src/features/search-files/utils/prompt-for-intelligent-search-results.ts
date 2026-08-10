@@ -1,10 +1,12 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
-import { display_token_count } from '@/utils/display-token-count'
 import { FileAnalysisResult } from './analyze-files'
 import { t } from '@/i18n'
 import { show_parent_folder_quick_pick } from '@/utils/show-parent-folder-quick-pick'
+import { group_quick_pick_items } from './group-quick-pick-items'
+import { map_files_to_quick_pick_items } from './map-files-to-quick-pick-items'
+import { handle_parent_folder_result } from './handle-parent-folder-result'
 
 export const prompt_for_intelligent_search_results = async (params: {
   extracted_files: string[]
@@ -60,74 +62,19 @@ export const prompt_for_intelligent_search_results = async (params: {
   const is_multi_root =
     params.workspace_provider.get_workspace_roots().length > 1
 
-  const mapped_items = await Promise.all(
-    unique_paths.map(async (file_path) => {
-      const workspace_root =
-        params.workspace_provider.get_workspace_root_for_file(file_path)
-      const relative_path = workspace_root
-        ? path.relative(workspace_root, file_path)
-        : file_path
-      const dir_name = path.dirname(relative_path)
-      const has_parent_folder = dir_name != '.'
-      const display_dir = dir_name == '.' ? '' : dir_name
+  const mapped_items = await map_files_to_quick_pick_items({
+    files: unique_paths.map((path) => ({ path })),
+    is_multi_root,
+    workspace_provider: params.workspace_provider,
+    open_file_button,
+    add_parent_folder_button
+  })
 
-      let workspace_name = ''
-      if (workspace_root && is_multi_root) {
-        workspace_name =
-          params.workspace_provider.get_workspace_name(workspace_root)
-      }
-
-      const token_count =
-        await params.workspace_provider.calculate_file_tokens(file_path)
-      const formatted_token_count = display_token_count(token_count.total)
-
-      const buttons: vscode.QuickInputButton[] = []
-      if (has_parent_folder) {
-        buttons.push(add_parent_folder_button)
-      }
-      buttons.push(open_file_button)
-
-      return {
-        label: path.basename(file_path),
-        description: display_dir
-          ? `${formatted_token_count} · ${display_dir}`
-          : formatted_token_count,
-        file_path,
-        workspace_name,
-        buttons
-      }
-    })
-  )
-
-  const quick_pick_items: (vscode.QuickPickItem & { file_path?: string })[] = []
-
-  if (is_multi_root) {
-    const grouped = new Map<string, typeof mapped_items>()
-    for (const item of mapped_items) {
-      const ws = item.workspace_name
-      if (!ws) continue
-      if (!grouped.has(ws)) grouped.set(ws, [])
-      grouped.get(ws)!.push(item)
-    }
-
-    const ordered_workspaces = params.workspace_provider
-      .get_workspace_roots()
-      .map((root) => params.workspace_provider.get_workspace_name(root))
-
-    const unique_ordered_workspaces = Array.from(new Set(ordered_workspaces))
-
-    for (const ws of unique_ordered_workspaces) {
-      if (grouped.has(ws)) {
-        quick_pick_items.push({
-          label: ws,
-          kind: vscode.QuickPickItemKind.Separator
-        })
-        quick_pick_items.push(...grouped.get(ws)!)
-      }
-    }
-  } else {
-    quick_pick_items.push(...mapped_items)
-  }
+  const quick_pick_items = group_quick_pick_items({
+    mapped_items,
+    is_multi_root,
+    workspace_provider: params.workspace_provider
+  }) as (vscode.QuickPickItem & { file_path?: string })[]
 
   const currently_checked = params.workspace_provider.get_checked_files()
 
@@ -211,38 +158,16 @@ export const prompt_for_intelligent_search_results = async (params: {
 
         is_showing_folder_quick_pick = false
 
-        if (
-          result === 'added' ||
-          result === 'back' ||
-          result === 'no_folders' ||
-          result === 'no_workspace_root'
-        ) {
-          const current_items = quick_pick.items
-          let current_selected = quick_pick.selectedItems
-
-          if (result === 'added') {
-            const currently_checked =
-              params.workspace_provider.get_checked_files()
-            current_selected = current_items.filter(
-              (item) =>
-                (item.file_path &&
-                  currently_checked.includes(item.file_path)) ||
-                current_selected.includes(item)
-            )
+        handle_parent_folder_result({
+          result,
+          quick_pick,
+          workspace_provider: params.workspace_provider,
+          item: e.item,
+          on_cancel: () => {
+            is_resolved = true
+            resolve('cancel')
           }
-
-          quick_pick.items = [...current_items]
-          quick_pick.selectedItems = current_selected
-          quick_pick.show()
-
-          setTimeout(() => {
-            quick_pick.activeItems = [e.item]
-          }, 0)
-        } else {
-          is_resolved = true
-          resolve('cancel')
-          quick_pick.dispose()
-        }
+        })
       }
     })
 
