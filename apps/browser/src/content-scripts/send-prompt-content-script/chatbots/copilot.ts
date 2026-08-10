@@ -41,7 +41,7 @@ export const copilot: Chatbot = {
         get_chat_turn: (f) => f.closest('div[data-content="ai-message"]'),
         perform_copy: (f) => {
           const copy_button = f.querySelector(
-            'button[data-testid="copy-message-button"]'
+            'button[data-testid="copy-ai-message-button"]'
           ) as HTMLElement
           if (!copy_button) {
             report_initialization_error({

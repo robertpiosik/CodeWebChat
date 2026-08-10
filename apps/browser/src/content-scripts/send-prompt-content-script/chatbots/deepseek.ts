@@ -7,49 +7,72 @@ import {
 import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const deepseek: Chatbot = {
+  set_model: async (chat) => {
+    const model = chat.model
+    if (!model) return
+
+    let target_type = ''
+    if (model == 'expert') {
+      target_type = 'expert'
+    } else if (model == 'instant') {
+      target_type = 'default'
+    } else if (model == 'vision') {
+      target_type = 'vision'
+    }
+
+    if (target_type) {
+      const model_radio = document.querySelector(
+        `div[data-model-type="${target_type}"]`
+      ) as HTMLElement
+      if (model_radio) {
+        const is_checked = model_radio.getAttribute('aria-checked') == 'true'
+        if (!is_checked) {
+          model_radio.click()
+          await new Promise((r) => requestAnimationFrame(r))
+        }
+      } else {
+        report_initialization_error({
+          function_name: 'set_model',
+          log_message: `Model radio button for "${model}" not found`
+        })
+      }
+    }
+  },
   set_options: async (chat) => {
     const deep_think_button = Array.from(
-      document.querySelectorAll('div[role="button"]')
+      document.querySelectorAll('div.ds-toggle-button')
     ).find(
       (button) =>
         button.textContent == 'DeepThink' || button.textContent == '深度思考'
     ) as HTMLButtonElement
-    if (!deep_think_button) {
-      report_initialization_error({
-        function_name: 'set_options',
-        log_message: 'DeepThink button not found'
-      })
-      return
-    }
 
     const search_button = Array.from(
-      document.querySelectorAll('div[role="button"]')
+      document.querySelectorAll('div.ds-toggle-button')
     ).find(
       (button) =>
         button.textContent == 'Search' || button.textContent == '联网搜索'
     ) as HTMLButtonElement
-    if (!search_button) {
-      report_initialization_error({
-        function_name: 'set_options',
-        log_message: 'Search button not found'
-      })
-      return
+
+    if (deep_think_button) {
+      const deep_think_button_style = window.getComputedStyle(deep_think_button)
+      if (
+        deep_think_button_style.getPropertyValue('color') !=
+          'rgb(15, 17, 21)' &&
+        deep_think_button_style.getPropertyValue('color') !=
+          'rgb(249, 250, 251)'
+      ) {
+        deep_think_button.click()
+      }
     }
 
-    const deep_think_button_style = window.getComputedStyle(deep_think_button)
-    if (
-      deep_think_button_style.getPropertyValue('color') != 'rgb(15, 17, 21)' &&
-      deep_think_button_style.getPropertyValue('color') != 'rgb(249, 250, 251)'
-    ) {
-      deep_think_button.click()
-    }
-
-    const search_button_style = window.getComputedStyle(search_button)
-    if (
-      search_button_style.getPropertyValue('color') != 'rgb(15, 17, 21)' &&
-      search_button_style.getPropertyValue('color') != 'rgb(249, 250, 251)'
-    ) {
-      search_button.click()
+    if (search_button) {
+      const search_button_style = window.getComputedStyle(search_button)
+      if (
+        search_button_style.getPropertyValue('color') != 'rgb(15, 17, 21)' &&
+        search_button_style.getPropertyValue('color') != 'rgb(249, 250, 251)'
+      ) {
+        search_button.click()
+      }
     }
 
     await new Promise((r) => requestAnimationFrame(r))
@@ -59,9 +82,9 @@ export const deepseek: Chatbot = {
     const supported_options = CHATBOTS.DeepSeek.supported_options
     for (const option of options) {
       if (option == 'deep-think' && supported_options?.['deep-think']) {
-        deep_think_button.click()
+        deep_think_button?.click()
       } else if (option == 'search' && supported_options?.search) {
-        search_button.click()
+        search_button?.click()
       }
     }
     await new Promise((r) => requestAnimationFrame(r))
@@ -128,7 +151,7 @@ export const deepseek: Chatbot = {
           ) && !textarea.value
         )
       },
-      footer_selector: 'div.ds-message + div + div > div.ds-flex',
+      footer_selector: 'div.ds-message + div > div.ds-flex',
       add_buttons: params.inject_button ? add_buttons : undefined
     })
   }
