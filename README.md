@@ -185,7 +185,7 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 ### Commit messages
 
 - `Commit Changes` - Generate commit message in your preferred style and commit.
-- `Apply Commit Message from Clipboard` - Apply a generated commit message from the clipboard.
+- `Apply Commit Message from Clipboard` - Trigger `Commit Changes` flow with the copied text.
 - `Copy Squashed Commit Details` - Copy squashed prompts and context ASCII trees between HEAD and a selected branch.
 
 ### History
