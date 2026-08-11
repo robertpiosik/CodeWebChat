@@ -1,6 +1,6 @@
 export const translations = {
   'common.reasoning-effort-info': {
-    en: 'Controls how much computational time the model allocates to unpack your intent, break down complex logic, verify its assumptions, and self-correct.',
+    en: 'Controls how much computational time the model allocates to unpack intent, break down complex logic, verify its assumptions, and self-correct.',
     pl: 'Kontroluje, ile czasu obliczeniowego model przeznacza na rozpakowanie twoich intencji, rozbicie złożonej logiki, weryfikację swoich założeń i samokorektę.',
     'zh-cn':
       '控制模型分配多少计算时间来解析您的意图、分解复杂逻辑、验证其假设并进行自我纠正。',

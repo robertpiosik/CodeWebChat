@@ -4,6 +4,7 @@ import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
 import { edit_reasoning_effort_for_api_config } from '@/views/shared/actions/api/update/interactions'
 import { verify_reasoning_effort } from '@/views/shared/actions/api/create/interactions'
+import { t } from '@/i18n'
 
 export const handle_pick_api_reasoning_effort = async (
   provider: SettingsViewProvider,
@@ -29,7 +30,9 @@ export const handle_pick_api_reasoning_effort = async (
         await vscode.window.withProgress(
           {
             location: vscode.ProgressLocation.Notification,
-            title: 'Checking reasoning effort validity...',
+            title: t(
+              'views.settings.handlers.handle-pick-api-reasoning-effort.checking-support'
+            ),
             cancellable: true
           },
           async (_progress, token) => {

@@ -37,22 +37,59 @@ export const translations = {
       bg: 'Изберете модел'
     },
   'views.shared.actions.api.create.interactions.initial-select-model.prompt': {
-    en: 'Could not fetch models. Please enter a model name (ID).',
-    pl: 'Nie udało się pobrać modeli. Wprowadź nazwę modelu (ID).',
-    'zh-cn': '无法获取模型。请输入模型名称（ID）。',
-    ja: 'モデルを取得できませんでした。モデル名（ID）を入力してください。',
-    'zh-tw': '無法獲取模型。請輸入模型名稱（ID）。',
-    de: 'Konnte Modelle nicht abrufen. Bitte gib einen Modellnamen (ID) ein.',
-    es: 'No se pudieron obtener los modelos. Por favor, introduce un nombre de modelo (ID).',
-    fr: 'Impossible de récupérer les modèles. Veuillez entrer un nom de modèle (ID).',
-    'pt-br':
-      'Não foi possível buscar modelos. Por favor, insira um nome de modelo (ID).',
-    ru: 'Не удалось получить модели. Пожалуйста, введите имя модели (ID).',
-    ko: '모델을 가져올 수 없습니다. 모델 이름(ID)을 입력하세요.',
-    it: 'Impossibile recuperare i modelli. Inserisci un nome del modello (ID).',
-    tr: 'Modeller alınamadı. Lütfen bir model adı (KİMLİĞİ) girin.',
-    cs: 'Nepodařilo se načíst modely. Zadejte prosím název modelu (ID).',
-    hu: 'Nem sikerült letölteni a modelleket. Kérjük, adja meg a modell nevét (ID).',
-    bg: 'Не успя да извлече модели. Моля, въведете име на модел (ID).'
-  }
+    en: 'Enter a model name (ID)',
+    pl: 'Wprowadź nazwę modelu (ID)',
+    'zh-cn': '输入模型名称 (ID)',
+    ja: 'モデル名 (ID) を入力してください',
+    'zh-tw': '輸入模型名稱 (ID)',
+    de: 'Geben Sie einen Modellnamen (ID) ein',
+    es: 'Ingrese el nombre de un modelo (ID)',
+    fr: 'Entrez un nom de modèle (ID)',
+    'pt-br': 'Insira um nome de modelo (ID)',
+    ru: 'Введите имя модели (ID)',
+    ko: '모델 이름 (ID) 입력',
+    it: 'Inserisci il nome di un modello (ID)',
+    tr: 'Bir model adı (ID) girin',
+    cs: 'Zadejte název modelu (ID)',
+    hu: 'Adja meg a modell nevét (ID)',
+    bg: 'Въведете име на модел (ID)'
+  },
+  'views.shared.actions.api.create.interactions.initial-select-model.enter-manually':
+    {
+      en: 'Enter manually',
+      pl: 'Wprowadź ręcznie',
+      'zh-cn': '手动输入',
+      ja: '手動で入力',
+      'zh-tw': '手動輸入',
+      de: 'Manuell eingeben',
+      es: 'Introducir manualmente',
+      fr: 'Entrer manuellement',
+      'pt-br': 'Inserir manualmente',
+      ru: 'Ввести вручную',
+      ko: '수동으로 입력',
+      it: 'Inserisci manualmente',
+      tr: 'Manuel olarak girin',
+      cs: 'Zadat ručně',
+      hu: 'Manuális megadás',
+      bg: 'Въведете ръчно'
+    },
+  'views.shared.actions.api.create.interactions.initial-select-model.fetching-models':
+    {
+      en: 'Fetching models...',
+      pl: 'Pobieranie modeli...',
+      'zh-cn': '正在获取模型...',
+      ja: 'モデルを取得しています...',
+      'zh-tw': '正在獲取模型...',
+      de: 'Modelle werden abgerufen...',
+      es: 'Obteniendo modelos...',
+      fr: 'Récupération des modèles...',
+      'pt-br': 'Buscando modelos...',
+      ru: 'Получение моделей...',
+      ko: '모델을 가져오는 중...',
+      it: 'Recupero modelli in corso...',
+      tr: 'Modeller getiriliyor...',
+      cs: 'Načítání modelů...',
+      hu: 'Modellek lekérése...',
+      bg: 'Извличане на модели...'
+    }
 } as const

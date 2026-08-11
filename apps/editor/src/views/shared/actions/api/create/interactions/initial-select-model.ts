@@ -23,67 +23,104 @@ export const initial_select_model = async (
         `Base URL not found for model provider ${model_provider.name}`
       )
 
-    const models = await model_fetcher.get_models({
-      base_url,
-      api_key: model_provider.api_key
-    })
+    const models = await vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: t(
+          'views.shared.actions.api.create.interactions.initial-select-model.fetching-models'
+        ),
+        cancellable: false
+      },
+      async () => {
+        return await model_fetcher.get_models({
+          base_url: base_url as string,
+          api_key: model_provider.api_key
+        })
+      }
+    )
 
     if (models.length > 0) {
-      const model_items = models.map((model) => ({
-        label: model.name || model.id,
-        description: model.name ? model.id : undefined,
-        detail: model.description
-      }))
+      const manual_entry_item: vscode.QuickPickItem = {
+        label: `$(add) ${t(
+          'views.shared.actions.api.create.interactions.initial-select-model.enter-manually'
+        )}`,
+        alwaysShow: true
+      }
+
+      const separator_item: vscode.QuickPickItem = {
+        label: '',
+        kind: vscode.QuickPickItemKind.Separator
+      }
+
+      const model_items: vscode.QuickPickItem[] = [
+        manual_entry_item,
+        separator_item,
+        ...models.map((model) => ({
+          label: model.name || model.id,
+          description: model.name ? model.id : undefined,
+          detail: model.description
+        }))
+      ]
 
       let last_selected_model_id: string | undefined
 
       while (true) {
-        const selected_model = await new Promise<string | undefined>(
-          (resolve) => {
-            const quick_pick = vscode.window.createQuickPick()
-            quick_pick.items = model_items
-            quick_pick.title = t(
-              'views.shared.actions.api.create.interactions.initial-select-model.title'
-            )
-            quick_pick.placeholder = t(
-              'views.shared.actions.api.create.interactions.initial-select-model.placeholder'
-            )
-            quick_pick.buttons = [vscode.QuickInputButtons.Back]
+        const selected_model_item = await new Promise<
+          vscode.QuickPickItem | undefined
+        >((resolve) => {
+          const quick_pick =
+            vscode.window.createQuickPick<vscode.QuickPickItem>()
+          quick_pick.items = model_items
+          quick_pick.title = t(
+            'views.shared.actions.api.create.interactions.initial-select-model.title'
+          )
+          quick_pick.placeholder = t(
+            'views.shared.actions.api.create.interactions.initial-select-model.placeholder'
+          )
+          quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
-            if (last_selected_model_id) {
-              const active = model_items.find(
-                (item) =>
-                  (item.description || item.label) === last_selected_model_id
-              )
-              if (active) quick_pick.activeItems = [active]
-            }
-
-            let accepted = false
-            const disposables: vscode.Disposable[] = []
-
-            disposables.push(
-              quick_pick.onDidAccept(() => {
-                accepted = true
-                const selected = quick_pick.selectedItems[0]
-                resolve(selected.description || selected.label)
-                quick_pick.hide()
-              }),
-              quick_pick.onDidTriggerButton((button) => {
-                if (button === vscode.QuickInputButtons.Back) {
-                  quick_pick.hide()
-                }
-              }),
-              quick_pick.onDidHide(() => {
-                if (!accepted) resolve(undefined)
-                disposables.forEach((d) => d.dispose())
-                quick_pick.dispose()
-              })
+          if (last_selected_model_id) {
+            const active = model_items.find(
+              (item) =>
+                item !== separator_item &&
+                item !== manual_entry_item &&
+                (item.description || item.label) === last_selected_model_id
             )
-            quick_pick.show()
+            if (active) quick_pick.activeItems = [active]
           }
-        )
 
-        if (!selected_model) return undefined
+          let accepted = false
+          const disposables: vscode.Disposable[] = []
+
+          disposables.push(
+            quick_pick.onDidAccept(() => {
+              accepted = true
+              resolve(quick_pick.selectedItems[0])
+              quick_pick.hide()
+            }),
+            quick_pick.onDidTriggerButton((button) => {
+              if (button === vscode.QuickInputButtons.Back) {
+                quick_pick.hide()
+              }
+            }),
+            quick_pick.onDidHide(() => {
+              if (!accepted) resolve(undefined)
+              disposables.forEach((d) => d.dispose())
+              quick_pick.dispose()
+            })
+          )
+          quick_pick.show()
+        })
+
+        if (!selected_model_item) return undefined
+
+        if (selected_model_item === manual_entry_item) {
+          break
+        }
+
+        const selected_model = (
+          selected_model_item.description || selected_model_item.label
+        ).trim()
 
         last_selected_model_id = selected_model
 

@@ -42,26 +42,53 @@ export const edit_model_for_api_configuration = async (params: {
   }
 
   try {
-    const models = await params.model_fetcher.get_models({
-      base_url,
-      api_key: model_provider_from_manager.api_key
-    })
+    const models = await vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: t(
+          'views.shared.actions.api.create.interactions.initial-select-model.fetching-models'
+        ),
+        cancellable: false
+      },
+      async () => {
+        return await params.model_fetcher.get_models({
+          base_url,
+          api_key: model_provider_from_manager.api_key
+        })
+      }
+    )
 
     if (models.length > 0) {
-      const model_items = models.map((model) => ({
-        label: model.name || model.id,
-        description: model.name ? model.id : undefined,
-        detail: model.description
-      }))
+      const manual_entry_item: vscode.QuickPickItem = {
+        label: `$(add) ${t(
+          'views.shared.actions.api.create.interactions.initial-select-model.enter-manually'
+        )}`,
+        alwaysShow: true
+      }
+
+      const separator_item: vscode.QuickPickItem = {
+        label: '',
+        kind: vscode.QuickPickItemKind.Separator
+      }
+
+      const model_items: vscode.QuickPickItem[] = [
+        manual_entry_item,
+        separator_item,
+        ...models.map((model) => ({
+          label: model.name || model.id,
+          description: model.name ? model.id : undefined,
+          detail: model.description
+        }))
+      ]
 
       let last_selected_model_id = params.api_configuration.model
 
       while (true) {
         const selected_model_item = await new Promise<
-          (typeof model_items)[0] | undefined
+          vscode.QuickPickItem | undefined
         >((resolve) => {
           const quick_pick =
-            vscode.window.createQuickPick<(typeof model_items)[0]>()
+            vscode.window.createQuickPick<vscode.QuickPickItem>()
           quick_pick.items = model_items
           quick_pick.title = t(
             'views.shared.actions.api.create.interactions.initial-select-model.title'
@@ -77,6 +104,8 @@ export const edit_model_for_api_configuration = async (params: {
           if (last_selected_model_id) {
             const active = model_items.find(
               (item) =>
+                item !== separator_item &&
+                item !== manual_entry_item &&
                 (item.description || item.label) === last_selected_model_id
             )
             if (active) quick_pick.activeItems = [active]
@@ -105,6 +134,10 @@ export const edit_model_for_api_configuration = async (params: {
         })
 
         if (!selected_model_item) return undefined
+
+        if (selected_model_item === manual_entry_item) {
+          break
+        }
 
         const model = (
           selected_model_item.description || selected_model_item.label
