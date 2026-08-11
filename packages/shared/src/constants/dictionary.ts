@@ -1,6 +1,5 @@
 export const dictionary = {
   information_message: {
-    NO_CHANGES_TO_COMMIT: 'No changes to commit.',
     MODELS_ROUTE_NOT_FOUND: (provider_name: string) =>
       `The '/models' route was not found for ${provider_name}. This might mean the provider does not support listing models.`,
     MODELS_ROUTE_NOT_FOUND_MANUAL_ENTRY: (provider_name: string) =>
@@ -133,7 +132,6 @@ export const dictionary = {
     NO_WORKSPACE_FOLDERS_FOUND: 'No workspace folders found.',
     FAILED_TO_GET_GIT_BRANCHES:
       'Failed to get Git branches. Make sure you are in a Git repository.',
-    GIT_EXTENSION_NOT_FOUND: 'Git extension not found.',
     NO_GIT_REPOSITORY_FOUND: 'No Git repository found.',
     RESPONSE_TEXT_MISSING: 'Response text to apply is missing.',
     API_RATE_LIMIT_EXCEEDED: 'API request failed. Rate limit exceeded.',

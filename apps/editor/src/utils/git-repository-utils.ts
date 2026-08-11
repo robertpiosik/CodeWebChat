@@ -24,9 +24,7 @@ export type GitRepository = {
 const get_all_git_repositories = (): GitRepository[] | null => {
   const git_extension = vscode.extensions.getExtension('vscode.git')
   if (!git_extension) {
-    vscode.window.showErrorMessage(
-      dictionary.error_message.GIT_EXTENSION_NOT_FOUND
-    )
+    vscode.window.showErrorMessage(t('common.error.git-integration-missing'))
     return null
   }
 
@@ -109,7 +107,7 @@ export const get_repository_for_commit = async (
 
   if (repositories_with_changes.length == 0) {
     vscode.window.showInformationMessage(
-      dictionary.information_message.NO_CHANGES_TO_COMMIT
+      t('utils.git-repository-utils.nothing-to-commit')
     )
     return null
   }
@@ -367,7 +365,7 @@ export const prepare_staged_changes = async (params: {
 
   if (!diff || diff.length == 0) {
     vscode.window.showInformationMessage(
-      dictionary.information_message.NO_CHANGES_TO_COMMIT
+      t('utils.git-repository-utils.nothing-to-commit')
     )
     return null
   }

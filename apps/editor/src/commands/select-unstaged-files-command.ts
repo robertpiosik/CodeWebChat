@@ -20,7 +20,7 @@ export const select_unstaged_files_command = (
           vscode.extensions.getExtension('vscode.git')?.exports
         if (!git_extension) {
           vscode.window.showErrorMessage(
-            dictionary.error_message.GIT_EXTENSION_NOT_FOUND
+            t('common.error.git-integration-missing')
           )
           return
         }

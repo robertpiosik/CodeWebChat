@@ -395,6 +395,24 @@ export const translations = {
     hu: 'Visszavonás',
     bg: 'Отмяна'
   },
+  'common.error.git-integration-missing': {
+    en: "Editor's Git integration hasn't loaded yet.",
+    pl: 'Integracja Gita w edytorze jeszcze się nie załadowała.',
+    'zh-cn': '编辑器的 Git 集成尚未加载。',
+    ja: 'エディタの Git 統合がまだ読み込まれていません。',
+    'zh-tw': '編輯器的 Git 整合尚未載入。',
+    de: 'Die Git-Integration des Editors wurde noch nicht geladen.',
+    es: 'La integración de Git del editor aún no se ha cargado.',
+    fr: "L'intégration Git de l'éditeur n'a pas encore été chargée.",
+    'pt-br': 'A integração do Git do editor ainda não foi carregada.',
+    ru: 'Интеграция Git редактора еще не загружена.',
+    ko: '편집기의 Git 통합이 아직 로드되지 않았습니다.',
+    it: "L'integrazione Git dell'editor non è ancora stata caricata.",
+    tr: 'Düzenleyicinin Git entegrasyonu henüz yüklenmedi.',
+    cs: 'Integrace Gitu v editoru ještě nebyla načtena.',
+    hu: 'A szerkesztő Git-integrációja még nem töltött be.',
+    bg: 'Git интеграцията на редактора все още не е заредена.'
+  },
   'common.error.api-provider-not-found': {
     en: 'API provider for the selected API tool configuration was not found.',
     pl: 'Nie znaleziono dostawcy API dla wybranej konfiguracji narzędzia API.',
