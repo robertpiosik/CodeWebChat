@@ -38,6 +38,9 @@ export const PROVIDERS = {
   'LM Studio': {
     base_url: 'http://localhost:1234/v1'
   },
+  Meta: {
+    base_url: 'https://api.meta.ai/v1'
+  },
   Mistral: {
     base_url: 'https://api.mistral.ai/v1'
   },

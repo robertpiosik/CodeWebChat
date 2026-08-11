@@ -239,9 +239,7 @@ export const EditWebConfigurationForm: React.FC<Props> = (props) => {
               html_for="reasoning-effort"
               info={
                 chatbot == 'OpenRouter'
-                  ? t(
-                      'edit-web-configuration-form.reasoning-effort.info.openrouter'
-                    )
+                  ? `${t('edit-web-configuration-form.reasoning-effort.info')} ${t('edit-web-configuration-form.reasoning-effort.requires-reasoning-model')}`
                   : t('edit-web-configuration-form.reasoning-effort.info')
               }
               action={
