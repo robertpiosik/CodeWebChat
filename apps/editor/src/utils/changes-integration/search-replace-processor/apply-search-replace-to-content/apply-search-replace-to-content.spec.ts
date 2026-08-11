@@ -55,6 +55,10 @@ describe('search-replace-parser', () => {
       run_test_case('whitespace-issues')
     })
 
+    it('handles trailing whitespace correctly without deleting it', () => {
+      run_test_case('trailing-whitespace')
+    })
+
     it('handles rst syntax correctly', () => {
       run_test_case('rst-syntax')
     })

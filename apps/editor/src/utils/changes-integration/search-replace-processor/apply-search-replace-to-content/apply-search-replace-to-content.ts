@@ -36,14 +36,14 @@ export const apply_search_replace_to_content = (params: {
     const clean_original = clean_lines(segment.original_lines)
     const clean_context_after = clean_lines(context_after)
 
-    const SEPARATOR = '(?:\\r?\\n[ \\t]*){1,5}'
+    const SEPARATOR = '(?:[ \\t]*\\r?\\n){1,5}'
 
     const build_block_pattern = (lines: string[]) => {
       return lines
         .map((line) => {
           const trimmed = line.trim()
           const escaped = escape_reg_exp(trimmed)
-          return `[ \\t]*${escaped}[ \\t]*`
+          return `[ \\t]*${escaped}`
         })
         .join(SEPARATOR)
     }
