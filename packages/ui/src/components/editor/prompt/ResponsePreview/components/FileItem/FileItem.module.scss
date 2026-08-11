@@ -47,6 +47,10 @@
     .file__actions {
       display: flex;
     }
+
+    .file__line-numbers {
+      display: none;
+    }
   }
 
   &--selected {

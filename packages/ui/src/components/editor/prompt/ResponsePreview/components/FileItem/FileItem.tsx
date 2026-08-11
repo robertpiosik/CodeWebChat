@@ -164,6 +164,18 @@ export const FileItem: FC<Props> = (props) => {
             render_apply_progress()
           ) : (
             <>
+              <div className={styles['file__line-numbers']}>
+                {props.file.file_state != 'deleted' && (
+                  <span className={styles['file__line-numbers__added']}>
+                    +{props.file.lines_added}
+                  </span>
+                )}
+                {props.file.file_state != 'new' && (
+                  <span className={styles['file__line-numbers__removed']}>
+                    -{props.file.lines_removed}
+                  </span>
+                )}
+              </div>
               <div className={styles['file__actions']}>
                 {props.file.content !== undefined &&
                   props.file.proposed_content !== undefined &&
@@ -209,18 +221,6 @@ export const FileItem: FC<Props> = (props) => {
                       props.on_go_to_file()
                     }}
                   />
-                )}
-              </div>
-              <div className={styles['file__line-numbers']}>
-                {props.file.file_state != 'deleted' && (
-                  <span className={styles['file__line-numbers__added']}>
-                    +{props.file.lines_added}
-                  </span>
-                )}
-                {props.file.file_state != 'new' && (
-                  <span className={styles['file__line-numbers__removed']}>
-                    -{props.file.lines_removed}
-                  </span>
                 )}
               </div>
             </>
