@@ -56,5 +56,5 @@
   "codeWebChat.selectClipboardPaths.title": "Zwischenablage-Pfade auswählen...",
   "codeWebChat.selectChangedFiles.title": "Geänderte Dateien auswählen...",
   "codeWebChat.selectParentFolder.title": "Übergeordneten Ordner auswählen...",
-  "codeWebChat.copySquashedCommitDetails.title": "CWC: Details der zusammengefassten Commits kopieren"
+  "codeWebChat.copyMergeCommitDetails.title": "CWC: Details der zusammengefassten Commits kopieren"
 }

@@ -56,5 +56,5 @@
   "codeWebChat.selectClipboardPaths.title": "Маркирай пътищата от клипборда...",
   "codeWebChat.selectChangedFiles.title": "Избери променени файлове...",
   "codeWebChat.selectParentFolder.title": "Избери родителска папка...",
-  "codeWebChat.copySquashedCommitDetails.title": "CWC: Копиране на детайлите на обединените къмити"
+  "codeWebChat.copyMergeCommitDetails.title": "CWC: Копиране на детайлите на обединените къмити"
 }

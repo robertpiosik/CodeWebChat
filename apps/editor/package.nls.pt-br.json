@@ -56,5 +56,5 @@
   "codeWebChat.selectClipboardPaths.title": "Selecionar caminhos da área de transferência...",
   "codeWebChat.selectChangedFiles.title": "Selecionar arquivos alterados...",
   "codeWebChat.selectParentFolder.title": "Selecionar Pasta Pai...",
-  "codeWebChat.copySquashedCommitDetails.title": "CWC: Copiar detalhes dos commits agrupados"
+  "codeWebChat.copyMergeCommitDetails.title": "CWC: Copiar detalhes dos commits agrupados"
 }

@@ -56,5 +56,5 @@
   "codeWebChat.selectClipboardPaths.title": "Vybrat cesty ze schránky...",
   "codeWebChat.selectChangedFiles.title": "Vybrat změněné soubory...",
   "codeWebChat.selectParentFolder.title": "Vybrat nadřazenou složku...",
-  "codeWebChat.copySquashedCommitDetails.title": "CWC: Kopírovat podrobnosti sloučených commitů"
+  "codeWebChat.copyMergeCommitDetails.title": "CWC: Kopírovat podrobnosti sloučených commitů"
 }

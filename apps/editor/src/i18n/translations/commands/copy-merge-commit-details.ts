@@ -1,5 +1,5 @@
 export const translations = {
-  'command.copy-squashed-commit-details.no-branches': {
+  'command.copy-merge-commit-details.no-branches': {
     en: 'No branches found in the repository.',
     pl: 'Brak gałęzi w repozytorium.',
     'zh-cn': '未在存储库中找到分支。',
@@ -17,7 +17,7 @@ export const translations = {
     hu: 'Nem találhatók ágak a tárolóban.',
     bg: 'Няма намерени клонове в хранилището.'
   },
-  'command.copy-squashed-commit-details.title': {
+  'command.copy-merge-commit-details.title': {
     en: 'Branches',
     pl: 'Gałęzie',
     'zh-cn': '分支',
@@ -35,7 +35,7 @@ export const translations = {
     hu: 'Ágak',
     bg: 'Клонове'
   },
-  'command.copy-squashed-commit-details.select': {
+  'command.copy-merge-commit-details.select': {
     en: 'Select a branch to compare with',
     pl: 'Wybierz gałąź do porównania',
     'zh-cn': '选择一个分支进行比较',
@@ -53,7 +53,7 @@ export const translations = {
     hu: 'Válasszon egy ágat az összehasonlításhoz',
     bg: 'Изберете клон за сравнение'
   },
-  'command.copy-squashed-commit-details.no-other-branches': {
+  'command.copy-merge-commit-details.no-other-branches': {
     en: 'No other branches found in the repository to compare with.',
     pl: 'Nie znaleziono innych gałęzi w repozytorium do porównania.',
     'zh-cn': '未在存储库中找到其他可供比较的分支。',
@@ -71,7 +71,7 @@ export const translations = {
     hu: 'Nem találhatók más ágak a tárolóban az összehasonlításhoz.',
     bg: 'Няма намерени други клонове в хранилището за сравнение.'
   },
-  'command.copy-squashed-commit-details.no-commits': {
+  'command.copy-merge-commit-details.no-commits': {
     en: 'No commits found between HEAD and the selected branch.',
     pl: 'Nie znaleziono commitów pomiędzy HEAD a wybraną gałęzią.',
     'zh-cn': '在 HEAD 和所选分支之间没有找到提交。',
@@ -89,8 +89,8 @@ export const translations = {
     hu: 'Nem találhatók commitok a HEAD és a kiválasztott ág között.',
     bg: 'Не са намерени къмити между HEAD и избрания клон.'
   },
-  'command.copy-squashed-commit-details.copied': {
-    en: 'Squashed commit details copied to clipboard.',
+  'command.copy-merge-commit-details.copied': {
+    en: 'Merge commit details copied to clipboard.',
     pl: 'Szczegóły złączonych commitów skopiowano do schowka.',
     'zh-cn': '合并的提交详细信息已复制到剪贴板。',
     ja: 'スカッシュされたコミットの詳細がクリップボードにコピーされました。',

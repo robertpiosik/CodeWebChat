@@ -5,9 +5,9 @@ import { Logger } from '@shared/utils/logger'
 import { t } from '@/i18n'
 import { AsciiTree } from '@/utils/ascii-tree'
 
-export const copy_squashed_commit_details_command = (): vscode.Disposable => {
+export const copy_merge_commit_details_command = (): vscode.Disposable => {
   return vscode.commands.registerCommand(
-    'codeWebChat.copySquashedCommitDetails',
+    'codeWebChat.copyMergeCommitDetails',
     async () => {
       try {
         const repository = await get_git_repository()
@@ -29,7 +29,7 @@ export const copy_squashed_commit_details_command = (): vscode.Disposable => {
 
         if (!branches_output) {
           vscode.window.showInformationMessage(
-            t('command.copy-squashed-commit-details.no-branches')
+            t('command.copy-merge-commit-details.no-branches')
           )
           return
         }
@@ -48,7 +48,7 @@ export const copy_squashed_commit_details_command = (): vscode.Disposable => {
 
         if (branches.length === 0) {
           vscode.window.showInformationMessage(
-            t('command.copy-squashed-commit-details.no-other-branches')
+            t('command.copy-merge-commit-details.no-other-branches')
           )
           return
         }
@@ -56,11 +56,9 @@ export const copy_squashed_commit_details_command = (): vscode.Disposable => {
         const quick_pick = vscode.window.createQuickPick<
           vscode.QuickPickItem & { name: string }
         >()
-        quick_pick.title = t('command.copy-squashed-commit-details.title')
+        quick_pick.title = t('command.copy-merge-commit-details.title')
         quick_pick.items = branches
-        quick_pick.placeholder = t(
-          'command.copy-squashed-commit-details.select'
-        )
+        quick_pick.placeholder = t('command.copy-merge-commit-details.select')
         quick_pick.matchOnDetail = true
         quick_pick.buttons = [
           {
@@ -118,7 +116,7 @@ export const copy_squashed_commit_details_command = (): vscode.Disposable => {
 
         if (!log_output) {
           vscode.window.showInformationMessage(
-            t('command.copy-squashed-commit-details.no-commits')
+            t('command.copy-merge-commit-details.no-commits')
           )
           return
         }
@@ -163,17 +161,17 @@ export const copy_squashed_commit_details_command = (): vscode.Disposable => {
 
         await vscode.env.clipboard.writeText(final_text)
         vscode.window.showInformationMessage(
-          t('command.copy-squashed-commit-details.copied')
+          t('command.copy-merge-commit-details.copied')
         )
       } catch (error) {
         vscode.window.showErrorMessage(
-          `Failed to copy squashed commit details: ${
+          `Failed to copy merge commit details: ${
             error instanceof Error ? error.message : String(error)
           }`
         )
         Logger.error({
-          function_name: 'copy_squashed_commit_details_command',
-          message: 'Error handling copy squashed commit details command',
+          function_name: 'copy_merge_commit_details_command',
+          message: 'Error handling copy merge commit details command',
           data: error
         })
       }

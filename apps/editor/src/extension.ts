@@ -40,7 +40,7 @@ import {
   select_changed_files_command,
   select_parent_folder_command,
   select_referencing_files_commands,
-  copy_squashed_commit_details_command,
+  copy_merge_commit_details_command,
   rate_extension_command
 } from './commands'
 import { setup_git_discard_file_watcher } from './services/git-discard-file-watcher'
@@ -177,7 +177,7 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     set_ranges_command(workspace_provider, extension_context),
     select_imported_files_command(workspace_provider, extension_context),
     duplicate_workspace_command(workspace_provider, extension_context),
-    copy_squashed_commit_details_command(),
+    copy_merge_commit_details_command(),
     select_imported_files_for_selected_command(
       workspace_provider,
       extension_context

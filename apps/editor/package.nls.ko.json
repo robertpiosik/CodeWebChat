@@ -56,5 +56,5 @@
   "codeWebChat.selectClipboardPaths.title": "클립보드 경로 선택...",
   "codeWebChat.selectChangedFiles.title": "변경된 파일 선택...",
   "codeWebChat.selectParentFolder.title": "상위 폴더 선택...",
-  "codeWebChat.copySquashedCommitDetails.title": "CWC: 스쿼시된 커밋 세부 정보 복사"
+  "codeWebChat.copyMergeCommitDetails.title": "CWC: 병합된 커밋 세부 정보 복사"
 }

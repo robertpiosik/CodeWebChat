@@ -56,5 +56,5 @@
   "codeWebChat.selectClipboardPaths.title": "Select Clipboard Paths...",
   "codeWebChat.selectChangedFiles.title": "Select Changed Files...",
   "codeWebChat.selectParentFolder.title": "Select Parent Folder...",
-  "codeWebChat.copySquashedCommitDetails.title": "CWC: Copy Squashed Commit Details"
+  "codeWebChat.copyMergeCommitDetails.title": "CWC: Copy Merge Commit Details"
 }

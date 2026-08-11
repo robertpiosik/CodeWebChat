@@ -56,5 +56,5 @@
   "codeWebChat.selectClipboardPaths.title": "選擇剪貼簿路徑...",
   "codeWebChat.selectChangedFiles.title": "選擇更改的檔案...",
   "codeWebChat.selectParentFolder.title": "選擇父資料夾...",
-  "codeWebChat.copySquashedCommitDetails.title": "CWC: 複製合併的提交詳細資訊"
+  "codeWebChat.copyMergeCommitDetails.title": "CWC: 複製合併的提交詳細資訊"
 }

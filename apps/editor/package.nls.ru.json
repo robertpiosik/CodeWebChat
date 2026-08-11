@@ -56,5 +56,5 @@
   "codeWebChat.selectClipboardPaths.title": "Выбрать пути из буфера обмена...",
   "codeWebChat.selectChangedFiles.title": "Выбрать измененные файлы...",
   "codeWebChat.selectParentFolder.title": "Выбрать родительскую папку...",
-  "codeWebChat.copySquashedCommitDetails.title": "CWC: Копировать сведения об объединенных коммитах"
+  "codeWebChat.copyMergeCommitDetails.title": "CWC: Копировать сведения об объединенных коммитах"
 }

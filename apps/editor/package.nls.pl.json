@@ -56,5 +56,5 @@
   "codeWebChat.selectClipboardPaths.title": "Wybierz ścieżki ze schowka...",
   "codeWebChat.selectChangedFiles.title": "Wybierz zmienione pliki...",
   "codeWebChat.selectParentFolder.title": "Wybierz folder nadrzędny...",
-  "codeWebChat.copySquashedCommitDetails.title": "CWC: Kopiuj szczegóły złączonych commitów"
+  "codeWebChat.copyMergeCommitDetails.title": "CWC: Kopiuj szczegóły złączonych commitów"
 }

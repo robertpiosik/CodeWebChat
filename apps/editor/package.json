@@ -421,8 +421,8 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.copySquashedCommitDetails",
-        "title": "%codeWebChat.copySquashedCommitDetails.title%",
+        "command": "codeWebChat.copyMergeCommitDetails",
+        "title": "%codeWebChat.copyMergeCommitDetails.title%",
         "category": "Code Web Chat",
         "icon": "$(copy)"
       }
@@ -786,7 +786,7 @@
           "when": "scmProvider == git"
         },
         {
-          "command": "codeWebChat.copySquashedCommitDetails",
+          "command": "codeWebChat.copyMergeCommitDetails",
           "group": "navigation@2",
           "when": "scmProvider == git"
         }

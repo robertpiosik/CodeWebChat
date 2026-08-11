@@ -56,5 +56,5 @@
   "codeWebChat.selectClipboardPaths.title": "Seleccionar rutas del portapapeles...",
   "codeWebChat.selectChangedFiles.title": "Seleccionar archivos cambiados...",
   "codeWebChat.selectParentFolder.title": "Seleccionar carpeta principal...",
-  "codeWebChat.copySquashedCommitDetails.title": "CWC: Copiar detalles de commits agrupados"
+  "codeWebChat.copyMergeCommitDetails.title": "CWC: Copiar detalles de commits agrupados"
 }
