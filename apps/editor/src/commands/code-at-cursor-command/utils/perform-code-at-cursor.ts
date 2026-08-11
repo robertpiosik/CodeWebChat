@@ -210,11 +210,22 @@ export const perform_code_at_cursor = async (params: {
         )
 
         if (completion_result) {
-          const match = completion_result.response.match(
-            /<replacement>([\s\S]*?)<\/replacement>/i
-          )
-          if (match && match[1]) {
-            let decoded_completion = he.decode(match[1].trim())
+          const response_text = completion_result.response
+          const start_match = response_text.match(/<replacement>/i)
+
+          if (start_match) {
+            const content_start = start_match.index! + start_match[0].length
+            const remaining_text = response_text.substring(content_start)
+            const end_match = remaining_text.match(/<\/replacement>/i)
+
+            let extracted_content = ''
+            if (end_match) {
+              extracted_content = remaining_text.substring(0, end_match.index)
+            } else {
+              extracted_content = remaining_text
+            }
+
+            let decoded_completion = he.decode(extracted_content.trim())
 
             if (decoded_completion.startsWith('```')) {
               const first_newline = decoded_completion.indexOf('\n')

@@ -336,28 +336,33 @@ export const send_llm_message = async (params: {
           }
         }
 
-        const thoughts_match = full_response.match(
-          /<(?:think|thought)>([\s\S]*?)<\/(?:think|thought)>/
-        )
-        let thoughts = thoughts_match ? thoughts_match[1].trim() : undefined
+        let thoughts: string | undefined = undefined
         let final_content = content_for_client
 
-        if (!thoughts_match) {
-          const end_match = full_response.match(/<\/(?:think|thought)>/)
-          if (end_match) {
-            const start_match = full_response.match(/<(?:think|thought)>/)
-            if (!start_match) {
-              thoughts = full_response.substring(0, end_match.index).trim()
-              final_content = full_response
-                .substring(end_match.index! + end_match[0].length)
-                .trim()
-              Logger.info({
-                function_name: 'send_llm_message',
-                message:
-                  'Detected closing tag without opening tag, stripped content before  '
-              })
-            }
-          }
+        const start_match = full_response.match(/<(?:think|thought)>/)
+        const end_match = full_response.match(/<\/(?:think|thought)>/)
+
+        if (start_match && end_match && end_match.index! > start_match.index!) {
+          const content_start = start_match.index! + start_match[0].length
+          thoughts = full_response
+            .substring(content_start, end_match.index!)
+            .trim()
+        } else if (start_match && !end_match) {
+          const content_start = start_match.index! + start_match[0].length
+          thoughts = full_response.substring(content_start).trim()
+        } else if (
+          end_match &&
+          (!start_match || start_match.index! > end_match.index!)
+        ) {
+          thoughts = full_response.substring(0, end_match.index!).trim()
+          final_content = full_response
+            .substring(end_match.index! + end_match[0].length)
+            .trim()
+          Logger.info({
+            function_name: 'send_llm_message',
+            message:
+              'Detected closing tag without opening tag (or before opening tag), stripped content before'
+          })
         }
 
         Logger.info({
