@@ -173,16 +173,17 @@ export const edit_model_for_api_configuration = async (params: {
       error.message == MODELS_ROUTE_NOT_FOUND_ERROR
     ) {
       vscode.window.showInformationMessage(
-        dictionary.information_message.MODELS_ROUTE_NOT_FOUND_MANUAL_ENTRY(
-          params.api_configuration.model_provider_name
+        t(
+          'views.shared.actions.api.update.interactions.edit-model-for-api-config.info.models-route-not-found-manual-entry',
+          { provider_name: params.api_configuration.model_provider_name }
         ),
         { modal: true }
       )
     } else {
       vscode.window.showErrorMessage(
-        dictionary.error_message.FAILED_TO_FETCH_MODELS(
-          error instanceof Error ? error.message : String(error)
-        )
+        t('views.shared.actions.api.common.error.failed-to-fetch-models', {
+          message: error instanceof Error ? error.message : String(error)
+        })
       )
     }
   }

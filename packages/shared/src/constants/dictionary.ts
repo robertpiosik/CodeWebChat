@@ -2,8 +2,6 @@ export const dictionary = {
   information_message: {
     MODELS_ROUTE_NOT_FOUND: (provider_name: string) =>
       `The '/models' route was not found for ${provider_name}. This might mean the provider does not support listing models.`,
-    MODELS_ROUTE_NOT_FOUND_MANUAL_ENTRY: (provider_name: string) =>
-      `The '/models' route was not found for ${provider_name}. This might mean the provider does not support listing models. You can enter model name manually.`,
     NAMED_TEMPLATE_DELETED: (template_name: string) =>
       `Template "${template_name}" has been deleted.`,
     NO_CHANGES_FOUND_BETWEEN_BRANCHES: (branch_name: string) =>
@@ -169,8 +167,6 @@ export const dictionary = {
       `Could not update ${item_type}: Original ${item_type} "${name}" not found.`,
     ERROR_HANDLING_MESSAGE: (message: string) =>
       `Error handling message: ${message}.`,
-    FAILED_TO_FETCH_MODELS: (message: string) =>
-      `Failed to fetch models: ${message}.`,
     BASE_URL_NOT_FOUND_FOR_PROVIDER: (name: string) =>
       `Base URL not found for provider ${name}.`,
     MODEL_PROVIDER_NOT_FOUND_BY_NAME: (name: string) =>

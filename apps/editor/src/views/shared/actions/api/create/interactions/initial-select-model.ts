@@ -153,9 +153,9 @@ export const initial_select_model = async (
       )
     } else {
       vscode.window.showErrorMessage(
-        dictionary.error_message.FAILED_TO_FETCH_MODELS(
-          error instanceof Error ? error.message : String(error)
-        )
+        t('views.shared.actions.api.common.error.failed-to-fetch-models', {
+          message: error instanceof Error ? error.message : String(error)
+        })
       )
     }
   }
