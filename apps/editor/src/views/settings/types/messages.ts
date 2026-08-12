@@ -228,15 +228,6 @@ export interface UpdateClearChecksInWorkspaceBehaviorMessage {
   value: 'ignore-open-editors' | 'uncheck-all'
 }
 
-export interface GetCopyPathsFormatMessage {
-  command: 'GET_COPY_PATHS_FORMAT'
-}
-
-export interface UpdateCopyPathsFormatMessage {
-  command: 'UPDATE_COPY_PATHS_FORMAT'
-  value: 'ask' | 'bullet-list' | 'comma-separated' | 'ascii-tree'
-}
-
 export interface GetAutoRunIntelligentUpdateMessage {
   command: 'GET_AUTO_RUN_INTELLIGENT_UPDATE'
 }
@@ -410,8 +401,6 @@ export type FrontendMessage =
   | UpdateReuseLastTabMessage
   | GetClearChecksInWorkspaceBehaviorMessage
   | UpdateClearChecksInWorkspaceBehaviorMessage
-  | GetCopyPathsFormatMessage
-  | UpdateCopyPathsFormatMessage
   | OpenEditorSettingsMessage
   | OpenIgnorePatternsSettingsMessage
   | OpenAllowPatternsSettingsMessage
@@ -534,11 +523,6 @@ export interface ClearChecksInWorkspaceBehaviorMessage {
   value: 'ignore-open-editors' | 'uncheck-all'
 }
 
-export interface CopyPathsFormatMessage {
-  command: 'COPY_PATHS_FORMAT'
-  value: 'ask' | 'bullet-list' | 'comma-separated' | 'ascii-tree'
-}
-
 export interface ShowSectionMessage {
   command: 'SHOW_SECTION'
   section: string
@@ -641,7 +625,6 @@ export type BackendMessage =
   | CheckNewFilesMessage
   | ReuseLastTabMessage
   | ClearChecksInWorkspaceBehaviorMessage
-  | CopyPathsFormatMessage
   | ShowSectionMessage
   | AutoRunIntelligentUpdateMessage
   | WebConfigurationsMessage

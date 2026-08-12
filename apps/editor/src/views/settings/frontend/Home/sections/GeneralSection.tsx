@@ -46,10 +46,6 @@ type Props = {
   on_clear_checks_in_workspace_behavior_change: (
     value: ClearChecksBehavior
   ) => void
-  copy_paths_format: 'ask' | 'bullet-list' | 'comma-separated' | 'ascii-tree'
-  on_copy_paths_format_change: (
-    value: 'ask' | 'bullet-list' | 'comma-separated' | 'ascii-tree'
-  ) => void
   on_edit_format_instructions_change: (
     instructions: EditFormatInstructions
   ) => void
@@ -278,34 +274,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                   ]}
                   value={props.clear_checks_in_workspace_behavior}
                   onChange={props.on_clear_checks_in_workspace_behavior_change}
-                />
-              }
-            />
-            <UiItem
-              title={t('general.copy-paths-format.title')}
-              description={t('general.copy-paths-format.description')}
-              slot_right={
-                <UiDropdown
-                  options={[
-                    {
-                      value: 'ask',
-                      label: t('general.copy-paths-format.ask')
-                    },
-                    {
-                      value: 'bullet-list',
-                      label: t('general.copy-paths-format.bullet-list')
-                    },
-                    {
-                      value: 'comma-separated',
-                      label: t('general.copy-paths-format.comma-separated')
-                    },
-                    {
-                      value: 'ascii-tree',
-                      label: t('general.copy-paths-format.ascii-tree')
-                    }
-                  ]}
-                  value={props.copy_paths_format}
-                  onChange={props.on_copy_paths_format_change}
                 />
               }
             />

@@ -984,17 +984,6 @@
           "default": true,
           "scope": "resource"
         },
-        "codeWebChat.copyPathsFormat": {
-          "type": "string",
-          "scope": "resource",
-          "enum": [
-            "ask",
-            "bullet-list",
-            "comma-separated",
-            "ascii-tree"
-          ],
-          "default": "ask"
-        },
         "codeWebChat.sendWithShiftEnter": {
           "type": "boolean",
           "scope": "resource",

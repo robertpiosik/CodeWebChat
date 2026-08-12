@@ -43,15 +43,6 @@ const format_paths = (files: string[], format: Format) => {
 const resolve_format = async (
   extension_context: vscode.ExtensionContext
 ): Promise<Format | undefined> => {
-  const config = vscode.workspace.getConfiguration('codeWebChat')
-  const configured_format = config.get<
-    'ask' | 'bullet-list' | 'comma-separated' | 'ascii-tree'
-  >('copyPathsFormat', 'ask')
-
-  if (configured_format != 'ask') {
-    return configured_format as Format
-  }
-
   const last_format = extension_context.globalState.get<Format>(
     LAST_COPY_PATHS_FORMAT_STATE_KEY
   )
@@ -77,7 +68,6 @@ const resolve_format = async (
   quick_pick.title = t('command.copy-paths.title')
   quick_pick.placeholder = t('command.copy-paths.placeholder')
   quick_pick.items = options
-  quick_pick.ignoreFocusOut = true
 
   if (last_format) {
     const last_option = options.find((o) => o.value === last_format)
