@@ -126,12 +126,10 @@ export const perform_code_at_cursor = async (params: {
         )
       )
 
-      const files_collector = new FilesCollector({
+      const collected = await FilesCollector.collect_files({
         workspace_provider: params.workspace_provider,
         open_editors_provider: params.open_editors_provider
       })
-
-      const collected = await files_collector.collect_files()
 
       const { part1, part2 } = PromptBuilder.build_prompt({
         other_files: collected.other_files,

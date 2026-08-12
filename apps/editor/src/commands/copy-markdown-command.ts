@@ -11,17 +11,15 @@ export const copy_markdown_commands = (
   workspace_provider: WorkspaceProvider,
   open_editors_provider: OpenEditorsProvider
 ) => {
-  const files_collector = new FilesCollector({
-    workspace_provider,
-    open_editors_provider
-  })
-
   return [
     vscode.commands.registerCommand('codeWebChat.copyMarkdown', async () => {
       let context_text = ''
 
       try {
-        const collected = await files_collector.collect_files()
+        const collected = await FilesCollector.collect_files({
+          workspace_provider,
+          open_editors_provider
+        })
         context_text = collected.other_files + collected.recent_files
       } catch (error: any) {
         console.error('Error collecting files:', error)

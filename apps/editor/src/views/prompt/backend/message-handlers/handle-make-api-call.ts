@@ -209,11 +209,6 @@ export const handle_make_api_call = async (
       workspace_provider: prompt_view_provider.workspace_provider
     })
 
-  const files_collector = new FilesCollector({
-    workspace_provider: prompt_view_provider.workspace_provider,
-    open_editors_provider: prompt_view_provider.open_editors_provider
-  })
-
   const shrink_source_code =
     prompt_type == 'find-relevant-files'
       ? prompt_view_provider.extension_context.workspaceState.get<boolean>(
@@ -222,7 +217,9 @@ export const handle_make_api_call = async (
         )
       : false
 
-  const collected = await files_collector.collect_files({
+  const collected = await FilesCollector.collect_files({
+    workspace_provider: prompt_view_provider.workspace_provider,
+    open_editors_provider: prompt_view_provider.open_editors_provider,
     shrink: shrink_source_code
   })
   const collected_files = collected.other_files + collected.recent_files

@@ -7,41 +7,30 @@ import { shrink_file } from '../context/utils/shrink-file/shrink-file'
 import { is_binary_file } from './is-binary'
 import { normalize_path } from './normalize-path'
 
-export class FilesCollector {
-  private workspace_provider: WorkspaceProvider
-  private open_editors_provider?: OpenEditorsProvider
-  private workspace_roots: string[] = []
-
-  constructor(params: {
+export namespace FilesCollector {
+  export const collect_files = async (params: {
     workspace_provider: WorkspaceProvider
     open_editors_provider?: OpenEditorsProvider
-  }) {
-    this.workspace_provider = params.workspace_provider
-    this.open_editors_provider = params.open_editors_provider
-
-    this.workspace_roots = this.workspace_provider.get_workspace_roots()
-  }
-
-  async collect_files(params?: {
     additional_paths?: string[]
     no_context?: boolean
     shrink?: boolean
-  }): Promise<{ other_files: string; recent_files: string }> {
-    const additional_paths = (params?.additional_paths ?? []).map((p) => {
-      if (this.workspace_roots.length > 0) {
-        return path.join(this.workspace_roots[0], p)
+  }): Promise<{ other_files: string; recent_files: string }> => {
+    const workspace_roots = params.workspace_provider.get_workspace_roots()
+    const additional_paths = (params.additional_paths ?? []).map((p) => {
+      if (workspace_roots.length > 0) {
+        return path.join(workspace_roots[0], p)
       }
       return p
     })
 
     const context_files_list: string[] = []
 
-    if (params?.no_context) {
+    if (params.no_context) {
       context_files_list.push(...additional_paths)
     } else {
-      const workspace_files = this.workspace_provider.get_checked_files()
+      const workspace_files = params.workspace_provider.get_checked_files()
       const open_editor_files =
-        this.open_editors_provider?.get_checked_files() || []
+        params.open_editors_provider?.get_checked_files() || []
       context_files_list.push(
         ...workspace_files,
         ...open_editor_files,
@@ -53,7 +42,8 @@ export class FilesCollector {
 
     // Sort context files based on modification time and selection timestamp
     const { other_files: other_paths, recent_files: recent_paths } =
-      this.sort_context_files({
+      sort_context_files({
+        workspace_provider: params.workspace_provider,
         files: context_files
       })
 
@@ -72,20 +62,21 @@ export class FilesCollector {
           let content = is_binary ? 'Binary file' : buffer.toString('utf8')
 
           if (!is_binary) {
-            const range = this.workspace_provider.get_range(file_path)
+            const range = params.workspace_provider.get_range(file_path)
             if (range) {
-              content = this.workspace_provider.apply_range_to_content(
+              content = params.workspace_provider.apply_range_to_content(
                 content,
                 range
               )
             }
 
-            if (params?.shrink) {
+            if (params.shrink) {
               content = shrink_file(content, path.extname(file_path))
             }
           }
 
-          const workspace_root = this._get_workspace_root_for_file(file_path)
+          const workspace_root =
+            params.workspace_provider.get_workspace_root_for_file(file_path)
 
           let display_path = normalize_path(file_path)
           if (workspace_root) {
@@ -94,9 +85,9 @@ export class FilesCollector {
             )
 
             display_path = relative_path
-            if (this.workspace_roots.length > 1) {
+            if (workspace_roots.length > 1) {
               const workspace_name =
-                this.workspace_provider.get_workspace_name(workspace_root)
+                params.workspace_provider.get_workspace_name(workspace_root)
               display_path = `${workspace_name}/${relative_path}`
             }
           }
@@ -120,14 +111,13 @@ export class FilesCollector {
     }
   }
 
-  private _get_workspace_root_for_file(file_path: string): string | undefined {
-    return this.workspace_provider.get_workspace_root_for_file(file_path)
-  }
-
-  public sort_context_files(params: { files: string[] }): {
+  export const sort_context_files = (params: {
+    workspace_provider: WorkspaceProvider
+    files: string[]
+  }): {
     other_files: string[]
     recent_files: string[]
-  } {
+  } => {
     const recently_modified: Array<{ path: string; mtime: number }> = []
     const older_files: Array<{ path: string; timestamp: number }> = []
     const now = Date.now()
@@ -141,7 +131,7 @@ export class FilesCollector {
 
         const mtime = stats.mtimeMs
         const selection_timestamp =
-          this.workspace_provider.get_selection_timestamp(file_path) ?? now
+          params.workspace_provider.get_selection_timestamp(file_path) ?? now
 
         if (now - mtime < ONE_AND_HALF_HOURS) {
           recently_modified.push({ path: file_path, mtime })

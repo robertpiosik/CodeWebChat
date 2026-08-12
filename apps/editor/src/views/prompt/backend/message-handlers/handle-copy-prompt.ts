@@ -22,11 +22,6 @@ export const handle_copy_prompt = async (params: {
   instructions: string
   web_configuration_name?: string
 }): Promise<void> => {
-  const files_collector = new FilesCollector({
-    workspace_provider: params.prompt_view_provider.workspace_provider,
-    open_editors_provider: params.prompt_view_provider.open_editors_provider
-  })
-
   const active_editor = vscode.window.activeTextEditor
 
   const is_in_code_at_cursor_prompt_type =
@@ -57,7 +52,10 @@ export const handle_copy_prompt = async (params: {
       new vscode.Range(position, document.positionAt(document.getText().length))
     )
 
-    const collected = await files_collector.collect_files()
+    const collected = await FilesCollector.collect_files({
+      workspace_provider: params.prompt_view_provider.workspace_provider,
+      open_editors_provider: params.prompt_view_provider.open_editors_provider
+    })
     const context_text = collected.other_files + collected.recent_files
 
     const workspace_folder = vscode.workspace.workspaceFolders?.[0].uri.fsPath
@@ -104,7 +102,9 @@ export const handle_copy_prompt = async (params: {
         false
       )
 
-    const collected = await files_collector.collect_files({
+    const collected = await FilesCollector.collect_files({
+      workspace_provider: params.prompt_view_provider.workspace_provider,
+      open_editors_provider: params.prompt_view_provider.open_editors_provider,
       no_context: params.prompt_view_provider.prompt_type == 'without-files',
       shrink: is_in_find_relevant_files_prompt_type && shrink_source_code
     })

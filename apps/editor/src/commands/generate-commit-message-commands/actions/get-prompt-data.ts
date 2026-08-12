@@ -91,15 +91,12 @@ export const get_prompt_data = async (params: {
 
   const context_files = Array.from(context_files_set)
 
-  const files_collector = new FilesCollector({
-    workspace_provider: params.workspace_provider
-  })
-
   const absolute_context_files = context_files.map((f) =>
     path.join(workspace_root, f)
   )
 
-  const sorted_files = files_collector.sort_context_files({
+  const sorted_files = FilesCollector.sort_context_files({
+    workspace_provider: params.workspace_provider,
     files: absolute_context_files
   })
 

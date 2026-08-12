@@ -74,11 +74,6 @@ export const handle_autofill = async (params: {
 
   await vscode.workspace.saveAll()
 
-  const files_collector = new FilesCollector({
-    workspace_provider: params.prompt_view_provider.workspace_provider,
-    open_editors_provider: params.prompt_view_provider.open_editors_provider
-  })
-
   let sent = false
 
   if (is_in_code_at_cursor_mode) {
@@ -101,7 +96,10 @@ export const handle_autofill = async (params: {
       remove_images: true
     })
 
-    const collected = await files_collector.collect_files()
+    const collected = await FilesCollector.collect_files({
+      workspace_provider: params.prompt_view_provider.workspace_provider,
+      open_editors_provider: params.prompt_view_provider.open_editors_provider
+    })
     const context_text = collected.other_files + collected.recent_files
 
     const relative_path = vscode.workspace.asRelativePath(document.uri)
@@ -145,7 +143,9 @@ export const handle_autofill = async (params: {
         false
       )
 
-    const collected = await files_collector.collect_files({
+    const collected = await FilesCollector.collect_files({
+      workspace_provider: params.prompt_view_provider.workspace_provider,
+      open_editors_provider: params.prompt_view_provider.open_editors_provider,
       additional_paths,
       no_context:
         params.prompt_view_provider.web_prompt_type == 'without-files',

@@ -25,11 +25,6 @@ export const handle_preview_web_configuration = async (
 ): Promise<void> => {
   await vscode.workspace.saveAll()
 
-  const files_collector = new FilesCollector({
-    workspace_provider: prompt_view_provider.workspace_provider,
-    open_editors_provider: prompt_view_provider.open_editors_provider
-  })
-
   const active_editor = vscode.window.activeTextEditor
   const active_path = active_editor?.document.uri.fsPath
 
@@ -50,7 +45,10 @@ export const handle_preview_web_configuration = async (
       new vscode.Range(position, document.positionAt(document.getText().length))
     )
 
-    const collected = await files_collector.collect_files()
+    const collected = await FilesCollector.collect_files({
+      workspace_provider: prompt_view_provider.workspace_provider,
+      open_editors_provider: prompt_view_provider.open_editors_provider
+    })
     const context_text = collected.other_files + collected.recent_files
 
     const workspace_folder = vscode.workspace.workspaceFolders?.[0].uri.fsPath
@@ -95,7 +93,9 @@ export const handle_preview_web_configuration = async (
 
     const collected =
       prompt_view_provider.web_prompt_type != 'without-files'
-        ? await files_collector.collect_files({
+        ? await FilesCollector.collect_files({
+            workspace_provider: prompt_view_provider.workspace_provider,
+            open_editors_provider: prompt_view_provider.open_editors_provider,
             shrink:
               prompt_view_provider.web_prompt_type == 'find-relevant-files' &&
               shrink_source_code
