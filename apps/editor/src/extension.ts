@@ -166,24 +166,53 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
       extension_context,
       on_context_selected: () => {}
     }),
-    select_unstaged_files_command(workspace_provider, extension_context),
-    select_commit_files_command(workspace_provider, extension_context),
-    select_clipboard_paths_command(workspace_provider, extension_context),
-    select_changed_files_command(workspace_provider, extension_context),
+    select_unstaged_files_command(
+      workspace_provider,
+      extension_context,
+      websocket_server_instance
+    ),
+    select_commit_files_command(
+      workspace_provider,
+      extension_context,
+      websocket_server_instance
+    ),
+    select_clipboard_paths_command(
+      workspace_provider,
+      extension_context,
+      websocket_server_instance
+    ),
+    select_changed_files_command(
+      workspace_provider,
+      extension_context,
+      websocket_server_instance
+    ),
     select_parent_folder_command(workspace_provider),
     rename_command(),
     delete_command(),
     select_workspace_file_command(workspace_provider),
     set_ranges_command(workspace_provider, extension_context),
-    select_imported_files_command(workspace_provider, extension_context),
+    select_imported_files_command(
+      workspace_provider,
+      extension_context,
+      websocket_server_instance
+    ),
     duplicate_workspace_command(workspace_provider, extension_context),
     copy_merge_commit_details_command(),
     select_imported_files_for_selected_command(
       workspace_provider,
-      extension_context
+      extension_context,
+      websocket_server_instance
     ),
-    ...select_referencing_files_commands(workspace_provider, extension_context),
-    ...search_files_commands(workspace_provider, extension_context),
+    ...select_referencing_files_commands(
+      workspace_provider,
+      extension_context,
+      websocket_server_instance
+    ),
+    ...search_files_commands(
+      workspace_provider,
+      extension_context,
+      websocket_server_instance
+    ),
     select_definition_file_command(workspace_provider),
     open_url_command({
       command: 'codeWebChat.visitWebsite',

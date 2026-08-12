@@ -9,10 +9,12 @@ import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 import { display_token_count } from '@/utils/display-token-count'
 import { search_files } from '@/features/search-files'
+import { WebSocketManager } from '@/services/websocket-manager'
 
 export const select_changed_files_command = (
   workspace_provider: WorkspaceProvider,
-  extension_context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext,
+  websocket_manager: WebSocketManager
 ): vscode.Disposable => {
   return vscode.commands.registerCommand(
     'codeWebChat.selectChangedFiles',
@@ -293,6 +295,7 @@ export const select_changed_files_command = (
                 get_files: async () => valid_files.map((f) => f.absolute_path),
                 workspace_provider,
                 extension_context,
+                websocket_manager,
                 show_back_button: true,
                 disable_semantic: true
               })

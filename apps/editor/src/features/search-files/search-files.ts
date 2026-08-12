@@ -8,11 +8,13 @@ import { perform_keywords_search_mode } from './search-modes/perform-keywords-se
 import { perform_semantic_search_mode } from './search-modes/perform-semantic-search-mode'
 import { perform_intelligent_search_mode } from './search-modes/perform-intelligent-search-mode'
 import { Logger } from '@shared/utils/logger'
+import { WebSocketManager } from '@/services/websocket-manager'
 
 export const search_files = async (params: {
   get_files: () => Promise<string[]>
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
+  websocket_manager: WebSocketManager
   show_back_button?: boolean
   is_sub_search?: boolean
   disable_semantic?: boolean
@@ -37,6 +39,7 @@ export const search_files = async (params: {
       get_files: async () => matched_paths,
       workspace_provider: params.workspace_provider,
       extension_context: params.extension_context,
+      websocket_manager: params.websocket_manager,
       show_back_button: true,
       is_sub_search: true
     })
@@ -86,6 +89,7 @@ export const search_files = async (params: {
           files,
           workspace_provider: params.workspace_provider,
           extension_context: params.extension_context,
+          websocket_manager: params.websocket_manager,
           show_back_button: params.show_back_button,
           search_in_results
         })

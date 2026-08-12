@@ -8,10 +8,12 @@ import { t } from '@/i18n'
 import { Logger } from '@shared/utils/logger'
 import { extract_paths_from_text } from '@/utils/extract-paths-from-text'
 import { search_files } from '@/features/search-files'
+import { WebSocketManager } from '@/services/websocket-manager'
 
 export const select_clipboard_paths_command = (
   workspace_provider: WorkspaceProvider,
-  extension_context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext,
+  websocket_manager: WebSocketManager
 ) => {
   return vscode.commands.registerCommand(
     'codeWebChat.selectClipboardPaths',
@@ -280,6 +282,7 @@ export const select_clipboard_paths_command = (
                   get_files: async () => absolute_paths,
                   workspace_provider,
                   extension_context,
+                  websocket_manager,
                   show_back_button: true,
                   disable_semantic: true
                 })

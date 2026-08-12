@@ -7,15 +7,22 @@ import { get_imports_for_uri } from './get-imports-for-uri'
 import { t } from '@/i18n'
 import { search_files } from '@/features/search-files'
 import { show_parent_folder_quick_pick } from '@/utils/show-parent-folder-quick-pick'
+import { WebSocketManager } from '@/services/websocket-manager'
 
 export const prompt_for_imported_files = async (params: {
   starting_uris: vscode.Uri[]
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
+  websocket_manager: WebSocketManager
 }): Promise<
   { selected_paths: string[]; shown_paths: string[] } | undefined
 > => {
-  const { starting_uris, workspace_provider, extension_context } = params
+  const {
+    starting_uris,
+    workspace_provider,
+    extension_context,
+    websocket_manager
+  } = params
 
   const immediate_uris = new Set<string>()
   const recursive_uris = new Set<string>()
@@ -432,6 +439,7 @@ export const prompt_for_imported_files = async (params: {
         get_files: async () => shown_paths,
         workspace_provider,
         extension_context,
+        websocket_manager,
         show_back_button: true
       })
 

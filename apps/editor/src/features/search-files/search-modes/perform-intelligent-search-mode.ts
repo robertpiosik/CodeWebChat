@@ -3,7 +3,9 @@ import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provi
 import { t } from '@/i18n'
 import {
   LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY,
-  LAST_FIND_RELEVANT_FILES_SHRINK_STATE_KEY
+  LAST_FIND_RELEVANT_FILES_SHRINK_STATE_KEY,
+  LAST_USED_INTELLIGENT_SEARCH_ACTION_STATE_KEY,
+  get_last_used_web_configuration_key
 } from '@/constants/state-keys'
 import { prompt_for_search_term } from '../utils/prompt-for-search-term'
 import { analyze_files } from '../utils/analyze-files'
@@ -12,11 +14,20 @@ import { prompt_for_api_configuration } from '../utils/prompt-for-config'
 import { search_files_by_intelligent } from '../utils/search-files-by-intelligent'
 import { prompt_for_intelligent_search_results } from '../utils/prompt-for-intelligent-search-results'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
+import { WebSocketManager } from '@/services/websocket-manager'
+import { display_token_count } from '@/utils/display-token-count'
+import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
+import { CHATBOTS } from '@shared/constants/chatbots'
+import {
+  find_relevant_files_instructions,
+  find_relevant_files_format_for_prompt_view
+} from '@/constants/instructions'
 
 export const perform_intelligent_search_mode = async (params: {
   files: string[]
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
+  websocket_manager: WebSocketManager
   search_in_results: (
     matched_paths: string[]
   ) => Promise<
@@ -96,112 +107,346 @@ export const perform_intelligent_search_mode = async (params: {
         shrink_result
       )
 
-      const model_providers_manager = new ModelProvidersManager(
-        params.extension_context
-      )
-      const api_configurations =
-        await model_providers_manager.get_api_configurations()
-
-      if (api_configurations.length == 0) {
-        vscode.commands.executeCommand('codeWebChat.settings')
-        vscode.window.showInformationMessage(
-          t('feature.search-files.error.no-configs')
-        )
-        return undefined
-      }
-
       let go_back_to_shrink = false
-      let force_prompt = false
-      let break_outer = false
-      let final_result:
-        | { selected_paths: string[]; matched_paths: string[] }
-        | undefined = undefined
 
       while (true) {
-        const tokens_to_process = shrink_result
-          ? analysis.shrink_tokens
-          : analysis.full_tokens
-        const api_configuration_result = await prompt_for_api_configuration({
-          model_providers_manager,
-          extension_context: params.extension_context,
-          api_configurations,
-          tokens_to_process,
-          force_prompt
-        })
+        const model_providers_manager = new ModelProvidersManager(
+          params.extension_context
+        )
+        const api_configurations =
+          await model_providers_manager.get_api_configurations()
 
-        force_prompt = false
+        const has_api_configurations = api_configurations.length > 0
 
-        if (api_configuration_result == 'back') {
+        const action = await new Promise<string | undefined | 'back'>(
+          (resolve) => {
+            const quick_pick = vscode.window.createQuickPick<
+              vscode.QuickPickItem & { id: string }
+            >()
+            quick_pick.items = [
+              ...(has_api_configurations
+                ? [
+                    {
+                      label: t(
+                        'command.generate-commit-message.action.make-api-call'
+                      ),
+                      id: 'make-api'
+                    }
+                  ]
+                : []),
+              ...(params.websocket_manager.is_connected_with_browser()
+                ? [
+                    {
+                      label: t(
+                        'command.generate-commit-message.action.autofill-in-chatbot'
+                      ),
+                      id: 'autofill'
+                    }
+                  ]
+                : []),
+              {
+                label: t('command.generate-commit-message.action.copy-prompt'),
+                id: 'copy'
+              }
+            ]
+
+            const last_action_id =
+              params.extension_context.workspaceState.get<string>(
+                LAST_USED_INTELLIGENT_SEARCH_ACTION_STATE_KEY
+              )
+
+            const active_item = last_action_id
+              ? quick_pick.items.find((i) => i.id == last_action_id)
+              : undefined
+
+            if (active_item) {
+              quick_pick.activeItems = [active_item]
+            } else if (quick_pick.items.length > 0) {
+              quick_pick.activeItems = [quick_pick.items[0]]
+            }
+
+            quick_pick.title = t('feature.search-files.title.intelligent')
+            quick_pick.placeholder = t(
+              'command.generate-commit-message.action-quick-pick.placeholder'
+            )
+
+            const close_button = {
+              iconPath: new vscode.ThemeIcon('close'),
+              tooltip: t('common.close')
+            }
+
+            quick_pick.buttons = [vscode.QuickInputButtons.Back, close_button]
+
+            let is_resolved = false
+
+            quick_pick.onDidTriggerButton((button) => {
+              if (button === vscode.QuickInputButtons.Back) {
+                is_resolved = true
+                resolve('back')
+                quick_pick.hide()
+              } else if (button === close_button) {
+                is_resolved = true
+                resolve(undefined)
+                quick_pick.hide()
+              }
+            })
+
+            quick_pick.onDidAccept(() => {
+              is_resolved = true
+              resolve(quick_pick.selectedItems[0]?.id)
+              quick_pick.hide()
+            })
+
+            quick_pick.onDidHide(() => {
+              if (!is_resolved) {
+                resolve(undefined)
+              }
+              quick_pick.dispose()
+            })
+
+            quick_pick.show()
+          }
+        )
+
+        if (action == 'back') {
           go_back_to_shrink = true
           break
         }
-        if (api_configuration_result == 'cancel') return undefined
+        if (!action) return undefined
 
-        const {
-          api_configuration: selected_api_configuration,
-          model_provider
-        } = api_configuration_result
-
-        const api_result = await search_files_by_intelligent(
-          analysis.files_data,
-          shrink_result as boolean,
-          search_term,
-          model_provider,
-          selected_api_configuration
+        params.extension_context.workspaceState.update(
+          LAST_USED_INTELLIGENT_SEARCH_ACTION_STATE_KEY,
+          action
         )
 
-        if (api_result == 'cancel') return undefined
-        if (api_result == 'error') {
-          force_prompt = true
-          continue
-        }
-        if (api_result == 'error_no_files') {
-          vscode.window.showWarningMessage(t('feature.search-files.no-files'))
-          go_back_to_term = true
-          break
-        }
+        let go_back_to_action = false
 
-        let go_back_to_term_from_results = false
-        while (true) {
-          const apply_result = await prompt_for_intelligent_search_results({
-            extracted_files: api_result,
-            analysis,
-            workspace_provider: params.workspace_provider
-          })
-
-          if (apply_result == 'back') {
-            go_back_to_term_from_results = true
-            break
+        if (action == 'copy' || action == 'autofill') {
+          let md_files = ''
+          for (const file of analysis.files_data) {
+            const content_to_use = shrink_result
+              ? file.shrunk_content
+              : file.content
+            md_files += `- File: \`${file.display_path}\`\n\n\`\`\`\n${content_to_use}\n\`\`\`\n\n`
           }
-          if (apply_result == 'cancel') {
+
+          const config = vscode.workspace.getConfiguration('codeWebChat')
+          const base_instructions =
+            config.get<string>('findRelevantFilesInstructions') ||
+            find_relevant_files_instructions
+
+          const chatbot_prompt = `# Task\n\n${base_instructions}\n\n${search_term}\n\n${find_relevant_files_format_for_prompt_view}\n\n# Files\n\n${md_files}${find_relevant_files_format_for_prompt_view}\n\n# Task\n\n${base_instructions}\n\n${search_term}`
+
+          if (action == 'copy') {
+            await vscode.env.clipboard.writeText(chatbot_prompt)
+            const token_count = shrink_result
+              ? analysis.shrink_tokens
+              : analysis.full_tokens
+            vscode.window.showInformationMessage(
+              t('command.generate-commit-message.copied', {
+                tokens: display_token_count(token_count)
+              })
+            )
             return undefined
           }
 
-          if ('action' in apply_result) {
-            const sub_result = await params.search_in_results(
-              apply_result.matched_paths
+          if (action == 'autofill') {
+            const all_web_configurations = config.get<any[]>(
+              'webConfigurations',
+              []
             )
-            if (sub_result === 'back') {
+            const valid_web_configurations = all_web_configurations.filter(
+              (c) => c.chatbot
+            )
+
+            if (valid_web_configurations.length == 0) {
+              vscode.commands.executeCommand('codeWebChat.settings')
+              vscode.window.showInformationMessage('No configurations found.')
+              go_back_to_action = true
               continue
             }
-            return sub_result
+
+            let selected_web_configuration_name: string | undefined
+
+            if (valid_web_configurations.length == 1) {
+              selected_web_configuration_name = valid_web_configurations[0].name
+            } else {
+              const recents_key = get_last_used_web_configuration_key(
+                'find-relevant-files'
+              )
+              const last_selected_name =
+                params.extension_context.workspaceState.get<string>(
+                  recents_key
+                ) ??
+                params.extension_context.globalState.get<string>(recents_key)
+
+              const result = await show_configuration_quick_pick({
+                items: valid_web_configurations,
+                map_item: (web_configuration) => {
+                  const is_unnamed =
+                    !web_configuration.name ||
+                    /^\(\d+\)$/.test(web_configuration.name.trim())
+                  const chatbot_models =
+                    CHATBOTS[web_configuration.chatbot as keyof typeof CHATBOTS]
+                      ?.models
+                  const model = web_configuration.model
+                    ? chatbot_models?.[web_configuration.model]?.label ||
+                      web_configuration.model
+                    : ''
+                  const details: string[] = []
+                  if (!is_unnamed && web_configuration.chatbot)
+                    details.push(web_configuration.chatbot)
+                  if (model) details.push(model)
+                  if (web_configuration.reasoningEffort)
+                    details.push(web_configuration.reasoningEffort)
+                  return {
+                    label: `${is_unnamed ? web_configuration.chatbot! : web_configuration.name!.replace(/\s*\(\d+\)$/, '')}`,
+                    description: details.join(' · '),
+                    id: web_configuration.name || '',
+                    is_pinned: web_configuration.isPinned
+                  }
+                },
+                last_selected_id: last_selected_name,
+                show_back_button: true
+              })
+
+              if (result == 'back') {
+                go_back_to_action = true
+                continue
+              } else if (!result) {
+                return undefined
+              }
+              selected_web_configuration_name = result.item.name
+
+              if (selected_web_configuration_name) {
+                params.extension_context.workspaceState.update(
+                  recents_key,
+                  selected_web_configuration_name
+                )
+                params.extension_context.globalState.update(
+                  recents_key,
+                  selected_web_configuration_name
+                )
+              }
+            }
+
+            if (selected_web_configuration_name) {
+              const sent = await params.websocket_manager.initialize_chat({
+                text: chatbot_prompt,
+                web_configuration_name: selected_web_configuration_name,
+                invocation_count: 1
+              })
+              if (sent) {
+                vscode.window.showInformationMessage(
+                  'Continue in the connected browser'
+                )
+              }
+            }
+
+            return undefined
           }
-
-          final_result = apply_result
-          break_outer = true
-          break
         }
 
-        if (break_outer) break
-        if (go_back_to_term_from_results) {
-          go_back_to_term = true
-          break
+        if (action == 'make-api') {
+          let force_prompt = false
+          let break_outer = false
+          let final_result:
+            | { selected_paths: string[]; matched_paths: string[] }
+            | undefined = undefined
+
+          while (true) {
+            const tokens_to_process = shrink_result
+              ? analysis.shrink_tokens
+              : analysis.full_tokens
+            const api_configuration_result = await prompt_for_api_configuration(
+              {
+                model_providers_manager,
+                extension_context: params.extension_context,
+                api_configurations,
+                tokens_to_process,
+                force_prompt
+              }
+            )
+
+            force_prompt = false
+
+            if (api_configuration_result == 'back') {
+              go_back_to_action = true
+              break
+            }
+            if (api_configuration_result == 'cancel') return undefined
+
+            const {
+              api_configuration: selected_api_configuration,
+              model_provider
+            } = api_configuration_result
+
+            const api_result = await search_files_by_intelligent(
+              analysis.files_data,
+              shrink_result as boolean,
+              search_term,
+              model_provider,
+              selected_api_configuration
+            )
+
+            if (api_result == 'cancel') return undefined
+            if (api_result == 'error') {
+              force_prompt = true
+              continue
+            }
+            if (api_result == 'error_no_files') {
+              vscode.window.showWarningMessage(
+                t('feature.search-files.no-files')
+              )
+              go_back_to_term = true
+              break
+            }
+
+            let go_back_to_term_from_results = false
+            while (true) {
+              const apply_result = await prompt_for_intelligent_search_results({
+                extracted_files: api_result,
+                analysis,
+                workspace_provider: params.workspace_provider
+              })
+
+              if (apply_result == 'back') {
+                go_back_to_term_from_results = true
+                break
+              }
+              if (apply_result == 'cancel') {
+                return undefined
+              }
+
+              if ('action' in apply_result) {
+                const sub_result = await params.search_in_results(
+                  apply_result.matched_paths
+                )
+                if (sub_result === 'back') {
+                  continue
+                }
+                return sub_result
+              }
+
+              final_result = apply_result
+              break_outer = true
+              break
+            }
+
+            if (break_outer) return final_result
+            if (go_back_to_term_from_results) {
+              go_back_to_term = true
+              break
+            }
+          }
         }
+
+        if (go_back_to_term) break
+        if (go_back_to_action) continue
       }
 
-      if (break_outer) return final_result
-      if (go_back_to_shrink) continue
       if (go_back_to_term) break
+      if (go_back_to_shrink) continue
     }
 
     if (go_back_to_term) continue

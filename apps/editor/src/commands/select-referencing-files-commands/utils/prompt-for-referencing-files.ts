@@ -5,11 +5,13 @@ import { display_token_count } from '@/utils/display-token-count'
 import { t } from '@/i18n'
 import { show_parent_folder_quick_pick } from '@/utils/show-parent-folder-quick-pick'
 import { search_files } from '@/features/search-files'
+import { WebSocketManager } from '@/services/websocket-manager'
 
 export const prompt_for_referencing_files = async (params: {
   matched_files: { file_path: string; range: vscode.Range }[]
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
+  websocket_manager: WebSocketManager
 }): Promise<string[] | undefined> => {
   const matched_files = params.matched_files
   let selected_paths: string[] = []
@@ -199,6 +201,7 @@ export const prompt_for_referencing_files = async (params: {
         get_files: async () => matched_files.map((m) => m.file_path),
         workspace_provider: params.workspace_provider,
         extension_context: params.extension_context,
+        websocket_manager: params.websocket_manager,
         show_back_button: true,
         disable_semantic: true
       })

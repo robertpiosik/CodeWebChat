@@ -2,10 +2,12 @@ import * as vscode from 'vscode'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { prompt_for_imported_files } from '@/features/imported-files'
 import { t } from '@/i18n'
+import { WebSocketManager } from '@/services/websocket-manager'
 
 export const select_imported_files_command = (
   workspace_provider: WorkspaceProvider,
-  extension_context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext,
+  websocket_manager: WebSocketManager
 ) => {
   return vscode.commands.registerCommand(
     'codeWebChat.selectImportedFiles',
@@ -41,7 +43,8 @@ export const select_imported_files_command = (
       const result = await prompt_for_imported_files({
         starting_uris,
         workspace_provider,
-        extension_context
+        extension_context,
+        websocket_manager
       })
 
       if (result) {

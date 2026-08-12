@@ -5,6 +5,7 @@ import { WorkspaceProvider } from '../context/providers/workspace/workspace-prov
 import { Logger } from '@shared/utils/logger'
 import { t } from '@/i18n'
 import { search_files } from '@/features/search-files'
+import { WebSocketManager } from '@/services/websocket-manager'
 import { prompt_for_provided_results } from '@/features/search-files/utils/prompt-for-provided-results'
 
 export const get_target_folder_path = async (
@@ -26,7 +27,8 @@ export const get_target_folder_path = async (
 
 export const search_files_commands = (
   workspace_provider: WorkspaceProvider,
-  extension_context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext,
+  websocket_manager: WebSocketManager
 ) => {
   const search_handler = async (item?: any) => {
     const folder_path = await get_target_folder_path(item)
@@ -53,7 +55,8 @@ export const search_files_commands = (
     const result = await search_files({
       get_files: get_files_lazy,
       workspace_provider,
-      extension_context
+      extension_context,
+      websocket_manager
     })
 
     if (!result || result == 'back') return
@@ -132,6 +135,7 @@ export const search_files_commands = (
               get_files: async () => result.matched_paths,
               workspace_provider,
               extension_context,
+              websocket_manager,
               show_back_button: true,
               is_sub_search: true
             })

@@ -7,10 +7,12 @@ import { Logger } from '@shared/utils/logger'
 import { display_token_count } from '../utils/display-token-count'
 import { t } from '@/i18n'
 import { search_files } from '@/features/search-files'
+import { WebSocketManager } from '@/services/websocket-manager'
 
 export const select_unstaged_files_command = (
   workspace_provider: WorkspaceProvider,
-  extension_context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext,
+  websocket_manager: WebSocketManager
 ): vscode.Disposable => {
   return vscode.commands.registerCommand(
     'codeWebChat.selectUnstagedFiles',
@@ -194,6 +196,7 @@ export const select_unstaged_files_command = (
               get_files: async () => existing_unstaged_files,
               workspace_provider,
               extension_context,
+              websocket_manager,
               show_back_button: true,
               disable_semantic: true
             })

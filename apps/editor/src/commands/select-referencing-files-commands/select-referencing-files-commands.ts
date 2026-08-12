@@ -5,11 +5,13 @@ import { t } from '../../i18n'
 import { get_referencing_files_for_position } from './utils/get-referencing-files-for-position'
 import { get_referencing_files_for_uris } from './utils/get-referencing-files-for-uris'
 import { prompt_for_referencing_files } from './utils/prompt-for-referencing-files'
+import { WebSocketManager } from '@/services/websocket-manager'
 
 const handle_reference_selection = async (params: {
   matched_files: { file_path: string; range: vscode.Range }[]
   workspace_provider: WorkspaceProvider
   extension_context: vscode.ExtensionContext
+  websocket_manager: WebSocketManager
 }) => {
   const { matched_files, workspace_provider, extension_context } = params
 
@@ -23,7 +25,8 @@ const handle_reference_selection = async (params: {
   const selected_paths = await prompt_for_referencing_files({
     matched_files,
     workspace_provider,
-    extension_context
+    extension_context,
+    websocket_manager: params.websocket_manager
   })
 
   if (!selected_paths) {
@@ -54,7 +57,8 @@ const handle_reference_selection = async (params: {
 
 export const select_referencing_files_commands = (
   workspace_provider: WorkspaceProvider,
-  extension_context: vscode.ExtensionContext
+  extension_context: vscode.ExtensionContext,
+  websocket_manager: WebSocketManager
 ) => {
   const select_referencing_files_command = vscode.commands.registerCommand(
     'codeWebChat.selectReferencingFiles',
@@ -176,7 +180,8 @@ export const select_referencing_files_commands = (
         await handle_reference_selection({
           matched_files,
           workspace_provider,
-          extension_context
+          extension_context,
+          websocket_manager
         })
       } catch (error) {
         vscode.window.showErrorMessage(
@@ -239,7 +244,8 @@ export const select_referencing_files_commands = (
           await handle_reference_selection({
             matched_files,
             workspace_provider,
-            extension_context
+            extension_context,
+            websocket_manager
           })
         } catch (error) {
           vscode.window.showErrorMessage(
