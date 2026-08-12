@@ -62,7 +62,7 @@ export const show_configuration_quick_pick = async <T>(
     }
   }
 
-  const items: PickItem[] = []
+  const items_with_duplicates: PickItem[] = []
 
   const mapped_configs = configurations.map((c) => ({
     config: c,
@@ -72,17 +72,31 @@ export const show_configuration_quick_pick = async <T>(
   const unpinned = mapped_configs.filter((c) => !c.mapped.is_pinned)
 
   if (pinned.length > 0) {
-    items.push({ label: 'pinned', kind: vscode.QuickPickItemKind.Separator })
-    items.push(...pinned.map((c) => map_to_quick_pick_item(c.config)))
+    items_with_duplicates.push({
+      label: 'pinned',
+      kind: vscode.QuickPickItemKind.Separator
+    })
+    items_with_duplicates.push(
+      ...pinned.map((c) => map_to_quick_pick_item(c.config))
+    )
     if (unpinned.length > 0) {
-      items.push({ label: 'all', kind: vscode.QuickPickItemKind.Separator })
+      items_with_duplicates.push({
+        label: 'all',
+        kind: vscode.QuickPickItemKind.Separator
+      })
     }
   }
 
-  items.push(...mapped_configs.map((c) => map_to_quick_pick_item(c.config)))
+  items_with_duplicates.push(
+    ...mapped_configs.map((c) => map_to_quick_pick_item(c.config))
+  )
+
+  const items_without_duplicates = mapped_configs.map((c) =>
+    map_to_quick_pick_item(c.config)
+  )
 
   const quick_pick = vscode.window.createQuickPick<PickItem>()
-  quick_pick.items = items
+  quick_pick.items = items_with_duplicates
   quick_pick.title = title
   quick_pick.placeholder = placeholder
   quick_pick.matchOnDescription = true
@@ -98,11 +112,13 @@ export const show_configuration_quick_pick = async <T>(
     quick_pick.buttons = [close_button]
   }
 
-  const last_selected_item = items.find((item) => item.id === last_selected_id)
+  const last_selected_item = items_with_duplicates.find(
+    (item) => item.id === last_selected_id
+  )
   if (last_selected_item) {
     quick_pick.activeItems = [last_selected_item]
-  } else if (items.length > 0) {
-    const first_selectable = items.find(
+  } else if (items_with_duplicates.length > 0) {
+    const first_selectable = items_with_duplicates.find(
       (i) => i.kind !== vscode.QuickPickItemKind.Separator
     )
     if (first_selectable) {
@@ -113,6 +129,14 @@ export const show_configuration_quick_pick = async <T>(
   return new Promise<{ item: T; id: string } | 'back' | undefined>(
     (resolve) => {
       let resolved = false
+
+      quick_pick.onDidChangeValue((value) => {
+        if (value) {
+          quick_pick.items = items_without_duplicates
+        } else {
+          quick_pick.items = items_with_duplicates
+        }
+      })
 
       quick_pick.onDidTriggerButton((button) => {
         if (button === vscode.QuickInputButtons.Back) {
