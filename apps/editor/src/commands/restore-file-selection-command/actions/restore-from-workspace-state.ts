@@ -13,6 +13,7 @@ import {
   create_context_description
 } from '@/features/context-restoration'
 import { t } from '@/i18n'
+import { normalize_path } from '@/utils/normalize-path'
 
 let active_deletion_timestamp: number | undefined
 
@@ -363,9 +364,7 @@ export const restore_from_workspace_state = async (params: {
                 workspace_root: root,
                 workspace_provider: params.workspace_provider
               })
-              const relative_paths = condensed_paths.map((p) =>
-                p.replace(/\\/g, '/')
-              )
+              const relative_paths = condensed_paths.map(normalize_path)
               root_contexts.unshift({
                 name: context_to_apply.name,
                 paths: relative_paths

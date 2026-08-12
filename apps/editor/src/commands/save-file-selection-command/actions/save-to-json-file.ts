@@ -16,6 +16,7 @@ import {
 import { SavedContext } from '@/types/context'
 import { t } from '@/i18n'
 import { dictionary } from '@shared/constants/dictionary'
+import { normalize_path } from '@/utils/normalize-path'
 
 export const save_to_json_file = async (params: {
   workspace_provider: WorkspaceProvider
@@ -230,7 +231,7 @@ export const save_to_json_file = async (params: {
           workspace_root: root,
           workspace_provider: params.workspace_provider
         })
-        const relative_paths = condensed_paths.map((p) => p.replace(/\\/g, '/'))
+        const relative_paths = condensed_paths.map(normalize_path)
 
         const new_context: SavedContext = {
           name: unique_name,
@@ -289,7 +290,7 @@ export const save_to_json_file = async (params: {
                 workspace_root: root,
                 workspace_provider: params.workspace_provider
               })
-              relative_paths = condensed_paths.map((p) => p.replace(/\\/g, '/'))
+              relative_paths = condensed_paths.map(normalize_path)
             }
             contexts.unshift({ name: context_name, paths: relative_paths })
           }

@@ -10,6 +10,7 @@ import {
   LAST_RANGES_SAVE_LOCATION_STATE_KEY
 } from '../constants/state-keys'
 import { t } from '../i18n'
+import { normalize_path } from '../utils/normalize-path'
 
 export const set_ranges_command = (
   workspace_provider: WorkspaceProvider,
@@ -39,7 +40,7 @@ export const set_ranges_command = (
       )
 
       const get_path_key_for_state = () => {
-        const rel_path_unix = relative_path.replace(/\\/g, '/')
+        const rel_path_unix = normalize_path(relative_path)
         if (workspace_folders.length > 1) {
           return `${workspace_folder.name}:${rel_path_unix}`
         }

@@ -124,6 +124,7 @@ import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { SharedContextState } from '@/context/shared-context-state'
 import { webview_html } from '@/views/shared/utils/webview-html'
 import { get_selected_files } from '@/context/helpers/get-selected-files'
+import { normalize_path } from '@/utils/normalize-path'
 
 export class PromptViewProvider implements vscode.WebviewViewProvider {
   public readonly extension_uri: vscode.Uri
@@ -530,9 +531,9 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           this.workspace_provider.get_workspace_root_for_file(current_file_path)
 
         if (workspace_root) {
-          const relative_path = path
-            .relative(workspace_root, current_file_path)
-            .replace(/\\/g, '/')
+          const relative_path = normalize_path(
+            path.relative(workspace_root, current_file_path)
+          )
 
           const workspace_roots = this.workspace_provider.get_workspace_roots()
           if (workspace_roots.length > 1) {
@@ -543,7 +544,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             display_path = relative_path
           }
         } else {
-          display_path = current_file_path.replace(/\\/g, '/')
+          display_path = normalize_path(current_file_path)
         }
       }
 

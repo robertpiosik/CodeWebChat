@@ -1,5 +1,6 @@
 import * as path from 'path'
 import { WorkspaceProvider } from '../providers/workspace/workspace-provider'
+import { normalize_path } from '@/utils/normalize-path'
 
 export const get_all_workspace_files = async (params: {
   workspace_provider: WorkspaceProvider
@@ -15,12 +16,12 @@ export const get_all_workspace_files = async (params: {
       const workspace_root =
         params.workspace_provider.get_workspace_root_for_file(file_path)
       if (!workspace_root) {
-        file_paths.push(file_path.replace(/\\/g, '/'))
+        file_paths.push(normalize_path(file_path))
         continue
       }
-      const relative_path = path
-        .relative(workspace_root, file_path)
-        .replace(/\\/g, '/')
+      const relative_path = normalize_path(
+        path.relative(workspace_root, file_path)
+      )
 
       if (is_multi_root) {
         const workspace_name =

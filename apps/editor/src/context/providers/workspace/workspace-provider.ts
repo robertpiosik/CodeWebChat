@@ -15,6 +15,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { display_token_count } from '@/utils/display-token-count'
 import { TokenCalculator } from './modules/token-calculator'
+import { normalize_path } from '@/utils/normalize-path'
 
 export interface IWorkspaceProvider {
   get_workspace_roots(): string[]
@@ -1561,9 +1562,9 @@ export class WorkspaceProvider
       const workspace_root = this.get_workspace_root_for_file(gitignore_path)
       if (!workspace_root) continue
 
-      const relative_gitignore_path = path
-        .relative(workspace_root, path.dirname(gitignore_path))
-        .replace(/\\/g, '/')
+      const relative_gitignore_path = normalize_path(
+        path.relative(workspace_root, path.dirname(gitignore_path))
+      )
 
       try {
         const gitignore_content = fs.readFileSync(gitignore_path, 'utf-8')

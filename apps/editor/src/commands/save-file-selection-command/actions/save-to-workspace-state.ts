@@ -12,6 +12,7 @@ import {
 } from '@/features/context-restoration'
 import { t } from '@/i18n'
 import { dictionary } from '@shared/constants/dictionary'
+import { normalize_path } from '@/utils/normalize-path'
 
 export const save_to_workspace_state = async (params: {
   workspace_provider: WorkspaceProvider
@@ -234,7 +235,7 @@ export const save_to_workspace_state = async (params: {
           workspace_root: root,
           workspace_provider: params.workspace_provider
         })
-        const relative_paths = condensed_paths.map((p) => p.replace(/\\/g, '/'))
+        const relative_paths = condensed_paths.map(normalize_path)
 
         const root_contexts = load_contexts_for_workspace({
           extension_context: params.extension_context,
@@ -292,7 +293,7 @@ export const save_to_workspace_state = async (params: {
                 workspace_root: root,
                 workspace_provider: params.workspace_provider
               })
-              relative_paths = condensed_paths.map((p) => p.replace(/\\/g, '/'))
+              relative_paths = condensed_paths.map(normalize_path)
             }
             root_contexts.unshift({ name: context_name, paths: relative_paths })
           }

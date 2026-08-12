@@ -9,7 +9,8 @@ import { PromptBuilder } from '@/utils/prompt-builder'
 
 export const build_commit_message_prompt = async (
   diff: string,
-  repository: GitRepository
+  repository: GitRepository,
+  context_files: string[] = []
 ): Promise<{ api_prompt: string; chatbot_prompt: string }> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const instructions = config.get<string>('commitMessageInstructions')
@@ -18,6 +19,8 @@ export const build_commit_message_prompt = async (
   const file_diffs = diff.split(/^diff --git /m).filter((d) => d.trim() != '')
 
   let changes_content = ''
+  let context_content = ''
+
   for (const file_diff_content of file_diffs) {
     const full_file_diff = 'diff --git ' + file_diff_content
     const lines = full_file_diff.split('\n')
@@ -95,7 +98,6 @@ export const build_commit_message_prompt = async (
         }
       }
 
-      let file_content_to_pass = undefined
       if (!is_deleted && file_path && !is_binary) {
         try {
           let full_content = ''
@@ -111,7 +113,11 @@ export const build_commit_message_prompt = async (
           if (full_content && !full_content.includes('\0')) {
             const full_content_tokens = Math.ceil(full_content.length / 4)
             if (full_content_tokens <= MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE) {
-              file_content_to_pass = full_content
+              context_content += PromptBuilder.build_file_context({
+                filepath: file_path,
+                content: full_content,
+                is_binary: false
+              })
             }
           }
         } catch (err) {}
@@ -121,14 +127,43 @@ export const build_commit_message_prompt = async (
         status,
         filepath: file_path,
         old_filepath: old_path_attr,
-        diff_content: final_diff_content,
-        full_content: file_content_to_pass
+        diff_content: final_diff_content
       })
     }
   }
 
-  const api_prompt = `# Task\n\n${commit_message_prompt}\n\n# Files\n\n${changes_content}\n\n# Task\n\n${commit_message_prompt}`
-  const chatbot_prompt = `# Task\n\n${commit_message_prompt}\n\n# Output formatting\n\n${commit_message_format}\n\n# Files\n\n${changes_content}\n\n# Output formatting\n\n${commit_message_format}\n\n# Task\n\n${commit_message_prompt}`
+  for (const file_path of context_files) {
+    try {
+      const uri = vscode.Uri.joinPath(repository.rootUri, file_path)
+      const content_uint8 = await vscode.workspace.fs.readFile(uri)
+      if (!content_uint8.includes(0)) {
+        const full_content = Buffer.from(content_uint8).toString('utf8')
+        const full_content_tokens = Math.ceil(full_content.length / 4)
+        if (full_content_tokens <= MAX_FILE_TOKENS_FOR_COMMIT_MESSAGE) {
+          context_content += PromptBuilder.build_file_context({
+            filepath: file_path,
+            content: full_content,
+            is_binary: false
+          })
+        }
+      }
+    } catch (err) {}
+  }
+
+  let prompt_sections = ''
+
+  if (context_content.trimEnd()) {
+    prompt_sections += `# Files\n\n${context_content.trimEnd()}\n\n`
+  }
+
+  if (changes_content.trimEnd()) {
+    prompt_sections += `# Changes\n\n${changes_content.trimEnd()}\n\n`
+  }
+
+  prompt_sections = prompt_sections.trimEnd()
+
+  const api_prompt = `${prompt_sections}\n\n# Task\n\n${commit_message_prompt}`
+  const chatbot_prompt = `${prompt_sections}\n\n# Output formatting\n\n${commit_message_format}\n\n# Task\n\n${commit_message_prompt}`
 
   return { api_prompt, chatbot_prompt }
 }

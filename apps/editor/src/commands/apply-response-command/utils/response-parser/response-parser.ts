@@ -4,6 +4,7 @@ import {
   parse_multiple_files,
   parse_relevant_files
 } from './parsers'
+import { normalize_path } from '@/utils/normalize-path'
 
 export type FileItem = {
   type: 'file'
@@ -61,7 +62,7 @@ export const extract_workspace_and_path = (params: {
   raw_file_path: string
   is_single_root_folder_workspace: boolean
 }): { workspace_name?: string; relative_path: string } => {
-  let file_path = params.raw_file_path.replace(/\\/g, '/')
+  let file_path = normalize_path(params.raw_file_path)
   if (file_path.startsWith('/')) {
     file_path = file_path.substring(1)
   }

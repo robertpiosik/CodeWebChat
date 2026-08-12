@@ -6,6 +6,7 @@ import { Logger } from '@shared/utils/logger'
 import type { IWorkspaceProvider } from '../workspace-provider'
 import { shrink_file } from '@/context/utils/shrink-file'
 import { is_binary_file } from '@/utils/is-binary'
+import { normalize_path } from '@/utils/normalize-path'
 
 type TokenData = [number, number, number]
 
@@ -273,9 +274,9 @@ export class TokenCalculator implements vscode.Disposable {
       try {
         const stats = await fs.promises.stat(file_path)
         mtime = Math.floor(stats.mtimeMs)
-        const relative_path = path
-          .relative(workspace_root, file_path)
-          .replace(/\\/g, '/')
+        const relative_path = normalize_path(
+          path.relative(workspace_root, file_path)
+        )
 
         const cached_file =
           this._token_cache[workspace_root]?.files?.[relative_path]
@@ -316,11 +317,11 @@ export class TokenCalculator implements vscode.Disposable {
       }
 
       const wrap_content = (text: string) => {
-        let display_path = file_path.replace(/\\/g, '/')
+        let display_path = normalize_path(file_path)
         if (workspace_root) {
-          const relative_path = path
-            .relative(workspace_root, file_path)
-            .replace(/\\/g, '/')
+          const relative_path = normalize_path(
+            path.relative(workspace_root, file_path)
+          )
           if (this._provider.get_workspace_roots().length > 1) {
             const workspace_name =
               this._provider.get_workspace_name(workspace_root)
@@ -357,9 +358,9 @@ export class TokenCalculator implements vscode.Disposable {
           }
         }
 
-        const relative_path = path
-          .relative(workspace_root, file_path)
-          .replace(/\\/g, '/')
+        const relative_path = normalize_path(
+          path.relative(workspace_root, file_path)
+        )
 
         this._token_cache[workspace_root].files[relative_path] = [
           mtime,

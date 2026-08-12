@@ -9,6 +9,7 @@ import { get_diff_stats } from './diff-utils'
 import { remove_directory_if_empty } from '../file-operations'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { create_temp_files_with_original_content } from './temp-file-manager'
+import { normalize_path } from '@/utils/normalize-path'
 
 export let toggle_file_preview_state:
   | ((file: {
@@ -165,9 +166,9 @@ export const setup_workspace_listeners = (params: {
         }
 
         const new_content = doc.getText()
-        const relative_path = vscode.workspace
-          .asRelativePath(doc.uri, false)
-          .replace(/\\/g, '/')
+        const relative_path = normalize_path(
+          vscode.workspace.asRelativePath(doc.uri, false)
+        )
 
         let original_content = ''
         let is_new = false
@@ -285,9 +286,9 @@ export const setup_workspace_listeners = (params: {
         }
 
         const new_content = ''
-        const relative_path = vscode.workspace
-          .asRelativePath(uri, false)
-          .replace(/\\/g, '/')
+        const relative_path = normalize_path(
+          vscode.workspace.asRelativePath(uri, false)
+        )
 
         const original_content_for_undo =
           deleted_files_content_cache.get(uri.fsPath) ?? ''
@@ -392,9 +393,9 @@ export const setup_workspace_listeners = (params: {
           new_content = ''
         }
 
-        const relative_path = vscode.workspace
-          .asRelativePath(uri, false)
-          .replace(/\\/g, '/')
+        const relative_path = normalize_path(
+          vscode.workspace.asRelativePath(uri, false)
+        )
 
         const original_content = ''
         const is_new = true
@@ -480,12 +481,12 @@ export const setup_workspace_listeners = (params: {
           continue
         }
 
-        const old_relative = vscode.workspace
-          .asRelativePath(oldUri, false)
-          .replace(/\\/g, '/')
-        const new_relative = vscode.workspace
-          .asRelativePath(newUri, false)
-          .replace(/\\/g, '/')
+        const old_relative = normalize_path(
+          vscode.workspace.asRelativePath(oldUri, false)
+        )
+        const new_relative = normalize_path(
+          vscode.workspace.asRelativePath(newUri, false)
+        )
 
         // Find existing tracked file by old path
         const existing = params.prepared_files.find(

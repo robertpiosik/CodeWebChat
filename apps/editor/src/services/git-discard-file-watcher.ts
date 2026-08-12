@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import { CommitMessageDetails } from '../utils/commit-message-details'
+import { normalize_path } from '../utils/normalize-path'
 
 export const setup_git_discard_file_watcher = (
   extension_context: vscode.ExtensionContext
@@ -29,9 +30,9 @@ export const setup_git_discard_file_watcher = (
 
         for (const change of all_changes) {
           if (change.uri) {
-            const relative_path = path
-              .relative(workspace_root, change.uri.fsPath)
-              .replace(/\\/g, '/')
+            const relative_path = normalize_path(
+              path.relative(workspace_root, change.uri.fsPath)
+            )
             current_changes.add(relative_path)
           }
         }

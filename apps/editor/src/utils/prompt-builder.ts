@@ -1,14 +1,17 @@
+import { normalize_path } from './normalize-path'
+
 export namespace PromptBuilder {
   export const build_file_context = (params: {
     filepath: string
     content?: string
     is_binary?: boolean
   }): string => {
-    const display_path = params.filepath.replace(/\\/g, '/')
+    const display_path = normalize_path(params.filepath)
     if (params.is_binary || params.content === undefined) {
       return `- File: \`${display_path}\`\n\nBinary file\n\n`
     }
-    return `- File: \`${display_path}\`\n\n\`\`\`\n${params.content}\n\`\`\`\n\n`
+    const backticks = params.content.includes('```') ? '````' : '```'
+    return `- File: \`${display_path}\`\n\n${backticks}\n${params.content}\n${backticks}\n\n`
   }
 
   export const build_diff_file_context = (params: {
@@ -19,25 +22,29 @@ export namespace PromptBuilder {
     full_content?: string
   }): string => {
     let result = ''
-    const display_path = params.filepath.replace(/\\/g, '/')
+    const display_path = normalize_path(params.filepath)
 
     if (params.status == 'created') {
       result += `- New file: \`${display_path}\`\n\n`
     } else if (params.status == 'deleted') {
       result += `- Deleted file: \`${display_path}\`\n\n`
     } else if (params.status == 'renamed' && params.old_filepath) {
-      const old_display_path = params.old_filepath.replace(/\\/g, '/')
+      const old_display_path = normalize_path(params.old_filepath)
       result += `- Renamed file: \`${old_display_path}\` (old) \`${display_path}\` (new)\n\n`
     } else {
       result += `- Updated file: \`${display_path}\`\n\n`
     }
 
     if (params.diff_content?.trimEnd()) {
-      result += `\`\`\`diff\n${params.diff_content.trimEnd()}\n\`\`\`\n\n`
+      const diff_content = params.diff_content.trimEnd()
+      const backticks = diff_content.includes('```') ? '````' : '```'
+      result += `${backticks}diff\n${diff_content}\n${backticks}\n\n`
     }
 
     if (params.full_content?.trimEnd()) {
-      result += `\`\`\`\n${params.full_content.trimEnd()}\n\`\`\`\n\n`
+      const full_content = params.full_content.trimEnd()
+      const backticks = full_content.includes('```') ? '````' : '```'
+      result += `${backticks}\n${full_content}\n${backticks}\n\n`
     }
 
     return result

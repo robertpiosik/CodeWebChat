@@ -6,7 +6,6 @@ import {
   extract_workspace_and_path
 } from '../../response-parser'
 import {
-  normalize_path,
   find_file_path_before_block,
   remove_path_line_from_text_block,
   normalize_header_line,
@@ -14,6 +13,7 @@ import {
   find_patch_start_index,
   format_hunk_headers
 } from './helpers'
+import { normalize_path } from '@/utils/normalize-path'
 
 type DiffParserItem = DiffItem | TextItem | InlineFileItem
 

@@ -9,6 +9,7 @@ import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { update_undo_button_state } from './state-manager'
 import { CommitMessageDetails } from '@/utils/commit-message-details'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
+import { normalize_path } from '@/utils/normalize-path'
 
 export let ongoing_preview_cleanup_promise: Promise<void> | null = null
 
@@ -143,9 +144,9 @@ export const preview_handler = async (params: {
         const workspace_root =
           params.workspace_provider.get_workspace_root_for_file(file)
         if (workspace_root) {
-          const relative_path = path
-            .relative(workspace_root, file)
-            .replace(/\\/g, '/')
+          const relative_path = path.isAbsolute(file)
+            ? normalize_path(path.relative(workspace_root, file))
+            : normalize_path(file)
           const current_selected =
             selected_files_by_workspace.get(workspace_root) || []
           current_selected.push(relative_path)

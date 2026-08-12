@@ -5,6 +5,7 @@ import { natural_sort } from '@/utils/natural-sort'
 import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
 import { shrink_file } from '../context/utils/shrink-file/shrink-file'
 import { is_binary_file } from './is-binary'
+import { normalize_path } from './normalize-path'
 
 export class FilesCollector {
   private workspace_provider: WorkspaceProvider
@@ -52,7 +53,7 @@ export class FilesCollector {
 
     // Sort context files based on modification time and selection timestamp
     const { other_files: other_paths, recent_files: recent_paths } =
-      this._sort_context_files({
+      this.sort_context_files({
         files: context_files
       })
 
@@ -86,11 +87,11 @@ export class FilesCollector {
 
           const workspace_root = this._get_workspace_root_for_file(file_path)
 
-          let display_path = file_path.replace(/\\/g, '/')
+          let display_path = normalize_path(file_path)
           if (workspace_root) {
-            const relative_path = path
-              .relative(workspace_root, file_path)
-              .replace(/\\/g, '/')
+            const relative_path = normalize_path(
+              path.relative(workspace_root, file_path)
+            )
 
             display_path = relative_path
             if (this.workspace_roots.length > 1) {
@@ -103,7 +104,8 @@ export class FilesCollector {
           if (is_binary) {
             collected_text += `- File: \`${display_path}\`\n\nBinary file\n\n`
           } else {
-            collected_text += `- File: \`${display_path}\`\n\n\`\`\`\n${content}\n\`\`\`\n\n`
+            const backticks = content.includes('```') ? '````' : '```'
+            collected_text += `- File: \`${display_path}\`\n\n${backticks}\n${content}\n${backticks}\n\n`
           }
         } catch (error) {
           console.error(`Error reading file ${file_path}:`, error)
@@ -122,7 +124,7 @@ export class FilesCollector {
     return this.workspace_provider.get_workspace_root_for_file(file_path)
   }
 
-  private _sort_context_files(params: { files: string[] }): {
+  public sort_context_files(params: { files: string[] }): {
     other_files: string[]
     recent_files: string[]
   } {

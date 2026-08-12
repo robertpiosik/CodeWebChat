@@ -1,11 +1,11 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import { dictionary } from '@shared/constants/dictionary'
 import { t } from '../i18n'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { OpenEditorsProvider } from '../context/providers/open-editors/open-editors-provider'
 import { AsciiTree } from '../utils/ascii-tree'
 import { LAST_COPY_PATHS_FORMAT_STATE_KEY } from '../constants/state-keys'
+import { normalize_path } from '../utils/normalize-path'
 
 type Format = 'bullet-list' | 'comma-separated' | 'ascii-tree'
 
@@ -28,7 +28,7 @@ const format_paths = (files: string[], format: Format) => {
       display_path = vscode.workspace.asRelativePath(file_path)
     }
 
-    return display_path.replace(/\\/g, '/')
+    return normalize_path(display_path)
   })
 
   if (format == 'ascii-tree') {

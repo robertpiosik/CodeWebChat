@@ -16,6 +16,7 @@ import {
   create_context_description
 } from '@/features/context-restoration'
 import { t } from '@/i18n'
+import { normalize_path } from '@/utils/normalize-path'
 
 export const restore_from_json_file = async (params: {
   workspace_provider: WorkspaceProvider
@@ -266,9 +267,7 @@ export const restore_from_json_file = async (params: {
                   workspace_root: root,
                   workspace_provider: params.workspace_provider
                 })
-                const relative_paths = condensed_paths.map((p) =>
-                  p.replace(/\\/g, '/')
-                )
+                const relative_paths = condensed_paths.map(normalize_path)
                 contexts.unshift({
                   name: selection.context.name,
                   paths: relative_paths

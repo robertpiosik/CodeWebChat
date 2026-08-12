@@ -4,6 +4,7 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { natural_sort } from '@/utils/natural-sort'
+import { normalize_path } from '@/utils/normalize-path'
 
 type QuickPickItem = vscode.QuickPickItem & {
   label: string
@@ -200,7 +201,7 @@ const at_sign_quick_pick = async (params: {
         relative_path = path.relative(root, p)
       }
     }
-    return relative_path.replace(/\\/g, '/')
+    return normalize_path(relative_path)
   }
 
   const checked_paths = params.workspace_provider.get_all_checked_paths()

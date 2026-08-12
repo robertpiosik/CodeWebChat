@@ -5,6 +5,7 @@ import {
   agents,
   discover_skills
 } from '../../../message-handlers/handle-hash-sign-quick-pick/symbols/skill-symbol'
+import { normalize_path } from '@/utils/normalize-path'
 
 export const replace_skill_symbol = async (params: {
   instruction: string
@@ -61,9 +62,9 @@ export const replace_skill_symbol = async (params: {
               if (lower_name == 'readme.md' || lower_name.startsWith('license'))
                 continue
               const content = fs.readFileSync(file_path, 'utf-8')
-              const relative_path = path
-                .relative(skill.path, file_path)
-                .replace(/\\/g, '/')
+              const relative_path = normalize_path(
+                path.relative(skill.path, file_path)
+              )
               skill_content += `<file path="${relative_path}">\n\`\`\`\n${content}\n\`\`\`\n</file>\n`
             }
           }

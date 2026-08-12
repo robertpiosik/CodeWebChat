@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import * as path from 'path'
 import { get_repository_for_commit } from '../../../utils/git-repository-utils'
 import { get_commit_message_api_configuration } from '../utils/get-commit-message-config'
 import { generate_commit_message_with_api } from '../utils/generate-commit-message-with-api'
@@ -23,6 +24,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { get_response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
+import { normalize_path } from '@/utils/normalize-path'
 
 const truncate_prompt = (text: string): string => {
   if (text.length <= MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE) return text
@@ -57,7 +59,9 @@ export const run_generate_action = async (params: {
     const data = await get_prompt_data({
       repository,
       stage_all_if_none_staged: !!params.source_control,
-      selection_state
+      selection_state,
+      extension_context: params.extension_context,
+      workspace_provider: params.workspace_provider
     })
     if (!data) return
     const { api_prompt, chatbot_prompt, is_single_change, staged_files } = data
@@ -381,7 +385,14 @@ export const run_generate_action = async (params: {
       .get<boolean>('selectAllPromptsInCommitMessagesByDefault', true)
 
     const relevant_prompts = all_prompts
-      .filter((p) => p.files.some((file) => staged_files.includes(file)))
+      .filter((p) =>
+        p.files.some((file) => {
+          const rel_path = path.isAbsolute(file)
+            ? normalize_path(path.relative(workspace_root, file))
+            : normalize_path(file)
+          return staged_files.includes(rel_path) || staged_files.includes(file)
+        })
+      )
       .filter(
         (p, index, self) =>
           index == self.findIndex((sp) => sp.prompt == p.prompt)
@@ -405,7 +416,7 @@ export const run_generate_action = async (params: {
       }
 
       const all_files_touched = selected_files_to_attach.every((f) => {
-        const rel_path = vscode.workspace.asRelativePath(f).replace(/\\/g, '/')
+        const rel_path = normalize_path(vscode.workspace.asRelativePath(f))
         return staged_files.includes(rel_path) || staged_files.includes(f)
       })
 
@@ -493,7 +504,7 @@ export const run_generate_action = async (params: {
 
       if (attach_tree) {
         const display_paths = selected_files_to_attach.map((p) =>
-          vscode.workspace.asRelativePath(p).replace(/\\/g, '/')
+          normalize_path(vscode.workspace.asRelativePath(p))
         )
         return '\n\n' + AsciiTree.generate(display_paths)
       }

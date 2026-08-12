@@ -17,6 +17,7 @@ import { show_ghost_text } from './show-ghost-text'
 import { PromptBuilder } from '../../../utils/prompt-builder'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
+import { normalize_path } from '@/utils/normalize-path'
 
 export const perform_code_at_cursor = async (params: {
   workspace_provider: WorkspaceProvider
@@ -269,9 +270,9 @@ export const perform_code_at_cursor = async (params: {
                 const file_workspace_root =
                   params.workspace_provider.get_workspace_root_for_file(file)
                 if (file_workspace_root === workspace_root) {
-                  const relative_path = path
-                    .relative(workspace_root, file)
-                    .replace(/\\/g, '/')
+                  const relative_path = normalize_path(
+                    path.relative(workspace_root, file)
+                  )
                   selected_files.push(relative_path)
                 }
               }

@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
 import { simplify_prompt_symbols } from '@shared/utils/simplify-prompt-symbols'
+import { normalize_path } from './normalize-path'
 
 export namespace CommitMessageDetails {
   const COMMIT_MESSAGE_DETAILS_FILENAME = 'commit-message-details.json'
@@ -81,20 +82,28 @@ export namespace CommitMessageDetails {
       prompt: params.prompt || ''
     })
 
+    const normalize = (f: string) =>
+      path.isAbsolute(f)
+        ? normalize_path(path.relative(params.workspace_root, f))
+        : normalize_path(f)
+
+    const files_to_add = params.files.map(normalize)
+    const selected_files_to_add = params.selected_files.map(normalize)
+
     const existing = all_prompts[params.workspace_root].find(
       (p) => p.prompt == simplified_prompt
     )
 
     if (existing) {
-      existing.files = Array.from(new Set([...existing.files, ...params.files]))
+      existing.files = Array.from(new Set([...existing.files, ...files_to_add]))
       existing.selected_files = Array.from(
-        new Set([...(existing.selected_files || []), ...params.selected_files])
+        new Set([...(existing.selected_files || []), ...selected_files_to_add])
       )
     } else {
       const new_prompt: Prompt = {
-        files: params.files,
+        files: files_to_add,
         prompt: simplified_prompt,
-        selected_files: params.selected_files
+        selected_files: selected_files_to_add
       }
       all_prompts[params.workspace_root].push(new_prompt)
     }
@@ -143,7 +152,6 @@ export namespace CommitMessageDetails {
   }) => {
     const all_prompts = load_all(params.extension_context)
     let changed = false
-    const normalized_path = params.file_path.replace(/\\/g, '/')
 
     const roots = params.workspace_root
       ? [params.workspace_root]
@@ -152,13 +160,35 @@ export namespace CommitMessageDetails {
     for (const root of roots) {
       if (!all_prompts[root]) continue
 
+      const normalized_path = path.isAbsolute(params.file_path)
+        ? normalize_path(path.relative(root, params.file_path))
+        : normalize_path(params.file_path)
+
       const initial_count = all_prompts[root].length
       all_prompts[root] = all_prompts[root]
         .map((p) => {
-          const filtered_files = p.files.filter((f) => f != normalized_path)
-          if (filtered_files.length != p.files.length) {
+          const filter_fn = (f: string) => {
+            const rel_path = path.isAbsolute(f)
+              ? normalize_path(path.relative(root, f))
+              : normalize_path(f)
+            return rel_path != normalized_path
+          }
+
+          const filtered_files = p.files.filter(filter_fn)
+          const filtered_selected_files = (p.selected_files || []).filter(
+            filter_fn
+          )
+
+          if (
+            filtered_files.length != p.files.length ||
+            filtered_selected_files.length != (p.selected_files || []).length
+          ) {
             changed = true
-            return { ...p, files: filtered_files }
+            return {
+              ...p,
+              files: filtered_files,
+              selected_files: filtered_selected_files
+            }
           }
           return p
         })
@@ -191,16 +221,41 @@ export namespace CommitMessageDetails {
     if (!all_prompts[params.workspace_root]) return
 
     let changed = false
-    const committed_set = new Set(params.committed_files)
+    const committed_set = new Set(
+      params.committed_files.map((f) =>
+        path.isAbsolute(f)
+          ? normalize_path(path.relative(params.workspace_root, f))
+          : normalize_path(f)
+      )
+    )
     const prompt_set = new Set(params.prompts)
 
     all_prompts[params.workspace_root] = all_prompts[params.workspace_root]
       .map((p) => {
         if (!prompt_set.has(p.prompt)) return p
-        const filtered_files = p.files.filter((f) => !committed_set.has(f))
-        if (filtered_files.length != p.files.length) {
+
+        const filter_fn = (f: string) => {
+          const rel_path = path.isAbsolute(f)
+            ? normalize_path(path.relative(params.workspace_root, f))
+            : normalize_path(f)
+          return !committed_set.has(rel_path)
+        }
+
+        const filtered_files = p.files.filter(filter_fn)
+        const filtered_selected_files = (p.selected_files || []).filter(
+          filter_fn
+        )
+
+        if (
+          filtered_files.length != p.files.length ||
+          filtered_selected_files.length != (p.selected_files || []).length
+        ) {
           changed = true
-          return { ...p, files: filtered_files }
+          return {
+            ...p,
+            files: filtered_files,
+            selected_files: filtered_selected_files
+          }
         }
         return p
       })

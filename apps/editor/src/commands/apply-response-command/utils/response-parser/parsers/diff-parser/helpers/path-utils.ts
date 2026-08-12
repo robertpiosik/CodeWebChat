@@ -1,9 +1,5 @@
 import { extract_path_from_line_of_code } from '@shared/utils/extract-path-from-line-of-code'
 
-export const normalize_path = (path: string): string => {
-  return path.trim().replace(/\\/g, '/')
-}
-
 export const strip_quotes = (path: string): string => {
   const trimmed = path.trim()
   if (trimmed.startsWith('"') && trimmed.endsWith('"')) {

@@ -1,4 +1,5 @@
 import * as path from 'path'
+import { normalize_path } from './normalize-path'
 
 /**
  * Sanitizes a file or folder name to prevent path traversal attacks
@@ -16,7 +17,7 @@ export const sanitize_file_name = (name: string): string => {
   sanitized = sanitized.replace(/^[/\\]+/, '')
 
   // Convert Windows-style backslashes to forward slashes for consistency
-  sanitized = sanitized.replace(/\\/g, '/')
+  sanitized = normalize_path(sanitized)
 
   // Return the sanitized name, preserving valid path segments
   return sanitized
