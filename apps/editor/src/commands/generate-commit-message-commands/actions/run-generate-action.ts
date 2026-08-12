@@ -22,7 +22,7 @@ import { CHATBOTS } from '@shared/constants/chatbots'
 import { dictionary } from '@shared/constants/dictionary'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
-import { get_response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview/preview'
+import { get_response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
 
 const truncate_prompt = (text: string): string => {
   if (text.length <= MAX_PROMPT_CHARS_IN_COMMIT_MESSAGE) return text

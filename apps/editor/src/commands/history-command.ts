@@ -20,7 +20,7 @@ import {
 } from '@/features/checkpoints/actions'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { get_checkpoint_path } from '@/features/checkpoints/utils'
-import { get_response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview/preview'
+import { get_response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
 
 dayjs.extend(localizedFormat)
 

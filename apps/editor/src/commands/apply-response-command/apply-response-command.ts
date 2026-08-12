@@ -8,7 +8,7 @@ import { FileInPreview } from '@shared/types/file-in-preview'
 import { get_checkpoint_path } from '@/features/checkpoints/utils'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
-import { get_response_preview_promise_resolve } from './utils/preview/preview'
+import { get_response_preview_promise_resolve } from './utils/preview'
 import { get_diff_stats } from './utils/preview/diff-utils'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import {
