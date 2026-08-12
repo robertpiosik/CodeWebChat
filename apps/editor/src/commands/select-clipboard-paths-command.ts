@@ -346,12 +346,6 @@ export const select_clipboard_paths_command = (
         }
 
         if (has_updates) {
-          const unique_final_selected = [...new Set(final_selected_paths)]
-          Logger.info({
-            message: `Selected ${unique_final_selected.length} clipboard paths.`,
-            data: { paths: unique_final_selected }
-          })
-
           await workspace_provider.set_checked_files(accumulated_checked)
 
           vscode.window.showInformationMessage(

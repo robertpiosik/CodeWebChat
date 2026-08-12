@@ -129,11 +129,25 @@ export const process_response = async (params: {
           is_checked: boolean
         }[] = []
 
+        const is_multi_root = workspace_roots.length > 1
+
         for (const rel_path of Array.from(all_paths_to_process)) {
           let absolute_path: string | undefined
           let matched_workspace_root: string | undefined
+
           for (const root of workspace_roots) {
-            const potential = path.join(root, rel_path)
+            let potential_rel_path = rel_path
+
+            if (is_multi_root) {
+              const workspace_name =
+                params.workspace_provider.get_workspace_name(root)
+              const prefix = `${workspace_name}/`
+              if (rel_path.startsWith(prefix)) {
+                potential_rel_path = rel_path.substring(prefix.length)
+              }
+            }
+
+            const potential = path.join(root, potential_rel_path)
             if (fs.existsSync(potential)) {
               absolute_path = potential
               matched_workspace_root = root
