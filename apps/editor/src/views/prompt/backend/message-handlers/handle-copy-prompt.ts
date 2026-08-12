@@ -6,7 +6,6 @@ import {
   find_relevant_files_instructions,
   find_relevant_files_format_for_prompt_view
 } from '@/constants/instructions'
-import { MODE } from '@/views/prompt/types/main-view-mode'
 import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
@@ -31,10 +30,7 @@ export const handle_copy_prompt = async (params: {
   const active_editor = vscode.window.activeTextEditor
 
   const is_in_code_at_cursor_prompt_type =
-    (params.prompt_view_provider.mode == MODE.WEB &&
-      params.prompt_view_provider.web_prompt_type == 'code-at-cursor') ||
-    (params.prompt_view_provider.mode == MODE.API &&
-      params.prompt_view_provider.api_prompt_type == 'code-at-cursor')
+    params.prompt_view_provider.prompt_type == 'code-at-cursor'
 
   if (
     is_in_code_at_cursor_prompt_type &&
@@ -100,10 +96,7 @@ export const handle_copy_prompt = async (params: {
     vscode.env.clipboard.writeText(text.trim())
   } else if (!is_in_code_at_cursor_prompt_type) {
     const is_in_find_relevant_files_prompt_type =
-      (params.prompt_view_provider.mode == MODE.WEB &&
-        params.prompt_view_provider.web_prompt_type == 'find-relevant-files') ||
-      (params.prompt_view_provider.mode == MODE.API &&
-        params.prompt_view_provider.api_prompt_type == 'find-relevant-files')
+      params.prompt_view_provider.prompt_type == 'find-relevant-files'
 
     const shrink_source_code =
       params.prompt_view_provider.extension_context.workspaceState.get<boolean>(
@@ -112,8 +105,7 @@ export const handle_copy_prompt = async (params: {
       )
 
     const collected = await files_collector.collect_files({
-      no_context:
-        params.prompt_view_provider.web_prompt_type == 'without-files',
+      no_context: params.prompt_view_provider.prompt_type == 'without-files',
       shrink: is_in_find_relevant_files_prompt_type && shrink_source_code
     })
     const context_text = collected.other_files + collected.recent_files
@@ -129,7 +121,7 @@ export const handle_copy_prompt = async (params: {
     let formatted_system_instructions = ''
     let user_instructions = processed_instructions
 
-    if (params.prompt_view_provider.web_prompt_type == 'edit-files') {
+    if (params.prompt_view_provider.prompt_type == 'edit-files') {
       const edit_format = params.prompt_view_provider.edit_format
       const config = vscode.workspace.getConfiguration('codeWebChat')
       const instructions_key = {
