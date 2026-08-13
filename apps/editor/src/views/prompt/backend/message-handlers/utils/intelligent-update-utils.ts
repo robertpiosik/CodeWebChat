@@ -20,8 +20,7 @@ import {
   show_configuration_quick_pick,
   map_api_configuration_to_item
 } from '@/utils/show-configuration-quick-pick'
-import { apply_search_replace_to_content } from '@/utils/changes-integration/search-replace-processor/apply-search-replace-to-content'
-import { parse_search_replace_segments } from '@/utils/changes-integration/search-replace-processor/parse-search-replace-segments'
+import { apply_diff } from '@/utils/changes-integration/diff-processor'
 
 export const get_intelligent_update_config = async (
   model_providers_manager: ModelProvidersManager,
@@ -185,15 +184,20 @@ export const process_file = async (params: {
     let final_content = cleaned_content
     if (!params.use_fallback_edit_format) {
       try {
-        final_content = apply_search_replace_to_content({
-          original_content: params.file_content,
-          segments: parse_search_replace_segments(cleaned_content)
+        const ext = params.file_path.split('.').pop()?.toLowerCase()
+        const use_strict_whitespace =
+          ext == 'py' || ext == 'yaml' || ext == 'yml'
+
+        final_content = apply_diff({
+          original_code: params.file_content,
+          diff_patch: cleaned_content,
+          use_strict_whitespace
         })
       } catch (error: any) {
         Logger.warn({
           function_name: 'process_file',
           message:
-            'Failed to apply search-replace blocks, retrying with fallback edit format',
+            'Failed to apply diff patch, retrying with fallback edit format',
           data: { error, file_path: params.file_path }
         })
 
