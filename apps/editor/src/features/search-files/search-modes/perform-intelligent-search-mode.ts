@@ -235,7 +235,7 @@ export const perform_intelligent_search_mode = async (params: {
             config.get<string>('findRelevantFilesInstructions') ||
             find_relevant_files_instructions
 
-          const chatbot_prompt = `# Task\n\n${base_instructions}\n\n${search_term}\n\n${find_relevant_files_format_for_prompt_view}\n\n# Files\n\n${md_files}${find_relevant_files_format_for_prompt_view}\n\n# Task\n\n${base_instructions}\n\n${search_term}`
+          const chatbot_prompt = `# Files\n\n${md_files}# Task\n\n${base_instructions}\n\n${search_term}\n\n${find_relevant_files_format_for_prompt_view}`
 
           if (action == 'copy') {
             await vscode.env.clipboard.writeText(chatbot_prompt)
