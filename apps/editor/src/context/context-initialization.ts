@@ -177,7 +177,6 @@ export const context_initialization = async (
       }
     })
 
-    // Fix for issue when the collapsed item has some of its children selected
     view.onDidCollapseElement(() => {
       workspace_provider!.refresh()
     })
@@ -328,7 +327,6 @@ export const context_initialization = async (
     })
   )
 
-  // Update badge when tabs change with debouncing to avoid multiple updates
   let tab_change_timeout: NodeJS.Timeout | null = null
   extension_context.subscriptions.push(
     vscode.window.tabGroups.onDidChangeTabs(() => {
@@ -372,10 +370,9 @@ export const context_initialization = async (
     })
   )
 
-  // Also schedule a delayed update for initial badge display
   setTimeout(() => {
     update_view_badges()
-  }, 1000) // Wait for 1 second to ensure VS Code has fully loaded
+  }, 1000)
 
   return {
     workspace_provider,

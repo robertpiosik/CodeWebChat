@@ -1,5 +1,4 @@
 export const shrink_css = (content: string): string => {
-  // Split by newline to process line by line, handling both LF and CRLF
   const lines = content.split(/\r?\n/)
   const result: string[] = []
   let is_in_block_comment = false
@@ -46,7 +45,6 @@ export const shrink_css = (content: string): string => {
         continue
       }
 
-      // Support // for SCSS/LESS, though not standard CSS
       if (char == '/' && next_char == '/') {
         processed_line += line.substring(i)
         break
@@ -63,13 +61,8 @@ export const shrink_css = (content: string): string => {
       i++
     }
 
-    // We trim the line to actually "shrink" the file.
     const trimmed = processed_line.trim()
     if (trimmed) {
-      // Filter Logic:
-      // 1. Keep lines that preserve structure (containing { or })
-      // 2. Strip lines that look like properties/variables (contain : or = and end in ;)
-      //    Also strip SCSS/LESS at-rules that function as properties (@include, @extend, etc.)
       const has_structure = /[{}]/.test(trimmed)
       const is_property = /([:=].*|@(?:include|extend|apply).*);$/.test(trimmed)
 

@@ -25,13 +25,11 @@ export const shrink_sql = (content: string): string => {
       }
 
       if (is_in_string) {
-        // specific SQL escape: double quote to escape quote (e.g. 'Don''t')
         if (char === is_in_string && next_char === is_in_string) {
           processed_line += char + next_char
           i += 2
           continue
         }
-        // Backslash escape (common dialect support)
         if (char == '\\') {
           processed_line += char + (next_char || '')
           i += 2

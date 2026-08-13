@@ -23,8 +23,6 @@ type TokenCountsCache = {
   }
 }
 
-const SHOW_COUNTING_NOTIFICATION_DELAY_MS = 3000
-
 const TOKEN_CACHE_FILE_NAME = 'token-counts-cache.json'
 
 export class TokenCalculator implements vscode.Disposable {
@@ -39,6 +37,12 @@ export class TokenCalculator implements vscode.Disposable {
   private _session_cache: TokenCountsCache = {}
   private _token_cache_update_timeout: NodeJS.Timeout | null = null
   private _has_token_counts_cache_updated_once = false
+
+  private _progress_stack: {
+    progress: vscode.Progress<{ message?: string; increment?: number }>
+    total_files: number
+    processed_files: number
+  }[] = []
 
   constructor(
     private _provider: IWorkspaceProvider,
@@ -89,9 +93,7 @@ export class TokenCalculator implements vscode.Disposable {
             files: this._flatten_tree(raw_cache[root].files || {})
           }
         }
-      } catch {
-        // Cache file might not exist yet or be corrupt
-      }
+      } catch {}
 
       for (const root of this._provider.get_workspace_roots()) {
         if (this._session_cache[root]) {
@@ -105,7 +107,6 @@ export class TokenCalculator implements vscode.Disposable {
         }
       }
 
-      // Prune workspaces that no longer exist or were updated more than 3 months ago
       const three_months_ago = Date.now() - 90 * 24 * 60 * 60 * 1000
       for (const root in current_global_cache) {
         if (
@@ -164,34 +165,126 @@ export class TokenCalculator implements vscode.Disposable {
     this._update_token_counts_cache()
   }
 
-  public async with_token_counting_notification<T>(
-    task: () => Promise<T>
-  ): Promise<T> {
-    let notification_stopper: any = null
-
-    const timer = setTimeout(() => {
-      vscode.window.withProgress(
-        {
-          location: vscode.ProgressLocation.Notification,
-          title: dictionary.information_message.CRUNCHING_TOKEN_COUNTS,
-          cancellable: false
-        },
-        async (_progress) => {
-          return new Promise<void>((resolve) => {
-            notification_stopper = resolve
-          })
-        }
-      )
-    }, SHOW_COUNTING_NOTIFICATION_DELAY_MS)
-
-    try {
-      const result = await task()
-
-      return result
-    } finally {
-      clearTimeout(timer)
-      notification_stopper?.()
+  private _report_progress() {
+    for (const state of this._progress_stack) {
+      if (state.total_files > 0) {
+        state.processed_files++
+        const increment = (1 / state.total_files) * 100
+        state.progress.report({ increment })
+      }
     }
+  }
+
+  private async _count_uncached_files_in_dir(
+    dir_path: string
+  ): Promise<number> {
+    if (
+      this._directory_token_counts.has(dir_path) &&
+      this._directory_shrink_token_counts.has(dir_path)
+    ) {
+      return 0
+    }
+
+    let count = 0
+    try {
+      const workspace_root =
+        this._provider.get_workspace_root_for_file(dir_path)
+      if (!workspace_root) return 0
+
+      const relative_dir_path = path.relative(workspace_root, dir_path)
+      if (
+        this._provider.is_excluded(
+          relative_dir_path ? relative_dir_path + '/' : relative_dir_path
+        )
+      ) {
+        return 0
+      }
+
+      const entries = await fs.promises.readdir(dir_path, {
+        withFileTypes: true
+      })
+      for (const entry of entries) {
+        if (entry.isSymbolicLink()) continue
+
+        const full_path = path.join(dir_path, entry.name)
+
+        const file_workspace_root =
+          this._provider.get_workspace_root_for_file(full_path)
+        if (file_workspace_root && file_workspace_root !== workspace_root) {
+          continue
+        }
+
+        const relative_path = path.relative(workspace_root, full_path)
+        if (
+          this._provider.is_excluded(
+            entry.isDirectory() ? relative_path + '/' : relative_path
+          )
+        ) {
+          continue
+        }
+
+        if (this._provider.is_ignored_by_patterns(full_path)) {
+          continue
+        }
+
+        if (entry.isDirectory()) {
+          count += await this._count_uncached_files_in_dir(full_path)
+        } else if (entry.isFile()) {
+          if (
+            !this._file_token_counts.has(full_path) ||
+            !this._file_shrink_token_counts.has(full_path)
+          ) {
+            count++
+          }
+        }
+      }
+    } catch {}
+    return count
+  }
+
+  public async with_token_counting_notification<T>(params: {
+    dir_path?: string
+    roots?: string[]
+    task: () => Promise<T>
+  }): Promise<T> {
+    let total_uncached = 0
+
+    if (params.dir_path) {
+      total_uncached = await this._count_uncached_files_in_dir(params.dir_path)
+    } else if (params.roots) {
+      for (const root of params.roots) {
+        total_uncached += await this._count_uncached_files_in_dir(root)
+      }
+    }
+
+    if (total_uncached === 0) {
+      return params.task()
+    }
+
+    return vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: dictionary.information_message.CRUNCHING_TOKEN_COUNTS,
+        cancellable: false
+      },
+      async (progress) => {
+        const progress_state = {
+          progress,
+          total_files: total_uncached,
+          processed_files: 0
+        }
+        this._progress_stack.push(progress_state)
+
+        try {
+          return await params.task()
+        } finally {
+          const index = this._progress_stack.indexOf(progress_state)
+          if (index !== -1) {
+            this._progress_stack.splice(index, 1)
+          }
+        }
+      }
+    )
   }
 
   public invalidate_token_counts_for_file(changed_file_path: string) {
@@ -299,11 +392,10 @@ export class TokenCalculator implements vscode.Disposable {
             tokens,
             shrink_tokens
           )
+          this._report_progress()
           return { total: tokens, shrink: shrink_tokens }
         }
-      } catch {
-        // Continue to calculate if stat fails
-      }
+      } catch {}
     }
 
     try {
@@ -378,6 +470,7 @@ export class TokenCalculator implements vscode.Disposable {
         )
       }
 
+      this._report_progress()
       return { total: token_count, shrink: shrink_token_count }
     } catch (error) {
       Logger.error({
@@ -385,6 +478,7 @@ export class TokenCalculator implements vscode.Disposable {
         message: `Error calculating tokens for ${file_path}`,
         data: error
       })
+      this._report_progress()
       return { total: 0, shrink: 0 }
     }
   }
@@ -452,12 +546,10 @@ export class TokenCalculator implements vscode.Disposable {
         }
 
         if (entry.isDirectory()) {
-          // Recurse into subdirectory
           const counts = await this.calculate_directory_tokens(full_path)
           total_tokens += counts.total
           total_shrink_tokens += counts.shrink
         } else if (entry.isFile()) {
-          // Add file tokens
           const counts = await this.calculate_file_tokens(full_path)
           total_tokens += counts.total
           total_shrink_tokens += counts.shrink
@@ -585,40 +677,86 @@ export class TokenCalculator implements vscode.Disposable {
     exclude_file_path?: string
   }): Promise<{ total: number; shrink: number }> {
     const checked_files = this._provider.get_checked_files()
-    const result = { total: 0, shrink: 0 }
 
+    let total_uncached = 0
     for (const file_path of checked_files) {
+      if (options?.exclude_file_path && file_path == options.exclude_file_path)
+        continue
       try {
-        if (
-          options?.exclude_file_path &&
-          file_path == options.exclude_file_path
-        ) {
-          continue
-        }
-
         const stat = fs.lstatSync(file_path)
-        if (stat.isSymbolicLink()) continue
-
-        if (stat.isFile()) {
-          if (this._file_token_counts.has(file_path)) {
-            result.total += this._file_token_counts.get(file_path)!
-            result.shrink += this._file_shrink_token_counts.get(file_path)!
-          } else {
-            const count = await this.calculate_file_tokens(file_path)
-            result.total += count.total
-            result.shrink += count.shrink
-          }
+        if (stat.isSymbolicLink() || stat.isDirectory()) continue
+        if (
+          !this._file_token_counts.has(file_path) ||
+          !this._file_shrink_token_counts.has(file_path)
+        ) {
+          total_uncached++
         }
-      } catch (error) {
-        Logger.error({
-          function_name: 'get_checked_files_token_count',
-          message: `Error accessing file ${file_path} for token count`,
-          data: error
-        })
-      }
+      } catch {}
     }
 
-    return result
+    const task = async () => {
+      const result = { total: 0, shrink: 0 }
+      for (const file_path of checked_files) {
+        try {
+          if (
+            options?.exclude_file_path &&
+            file_path == options.exclude_file_path
+          ) {
+            continue
+          }
+
+          const stat = fs.lstatSync(file_path)
+          if (stat.isSymbolicLink()) continue
+
+          if (stat.isFile()) {
+            if (this._file_token_counts.has(file_path)) {
+              result.total += this._file_token_counts.get(file_path)!
+              result.shrink += this._file_shrink_token_counts.get(file_path)!
+            } else {
+              const count = await this.calculate_file_tokens(file_path)
+              result.total += count.total
+              result.shrink += count.shrink
+            }
+          }
+        } catch (error) {
+          Logger.error({
+            function_name: 'get_checked_files_token_count',
+            message: `Error accessing file ${file_path} for token count`,
+            data: error
+          })
+        }
+      }
+      return result
+    }
+
+    if (total_uncached === 0) {
+      return task()
+    }
+
+    return vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: dictionary.information_message.CRUNCHING_TOKEN_COUNTS,
+        cancellable: false
+      },
+      async (progress) => {
+        const progress_state = {
+          progress,
+          total_files: total_uncached,
+          processed_files: 0
+        }
+        this._progress_stack.push(progress_state)
+
+        try {
+          return await task()
+        } finally {
+          const index = this._progress_stack.indexOf(progress_state)
+          if (index !== -1) {
+            this._progress_stack.splice(index, 1)
+          }
+        }
+      }
+    )
   }
 
   public dispose() {

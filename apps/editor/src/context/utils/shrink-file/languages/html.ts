@@ -5,8 +5,6 @@ export const shrink_html = (content: string): string => {
   const scripts: { open: string; content: string }[] = []
   const styles: { open: string; content: string }[] = []
 
-  // 1. Extract and mask Scripts
-  // We use a placeholder to preserve the location while we process the rest of the HTML
   let processed = content.replace(
     /(<script\b[^>]*>)([\s\S]*?)(<\/script>)/gi,
     (match, open, inner) => {
@@ -15,7 +13,6 @@ export const shrink_html = (content: string): string => {
     }
   )
 
-  // 2. Extract and mask Styles
   processed = processed.replace(
     /(<style\b[^>]*>)([\s\S]*?)(<\/style>)/gi,
     (match, open, inner) => {
@@ -24,7 +21,6 @@ export const shrink_html = (content: string): string => {
     }
   )
 
-  // 3. Shrink HTML Lines (Trim and remove empty lines)
   const lines = processed.split(/\r?\n/)
   const shrunk_lines: string[] = []
   for (const line of lines) {
@@ -35,18 +31,14 @@ export const shrink_html = (content: string): string => {
   }
   processed = shrunk_lines.join('\n')
 
-  // 4. Restore Scripts
   processed = processed.replace(/___SCRIPT_(\d+)___/g, (_, idx) => {
     const { open, content } = scripts[parseInt(idx)]
-    // Treat as C-style but do NOT strip bodies
     const shrunk = shrink_c_style(content).trimEnd()
     return `${open}\n${shrunk}\n</script>`
   })
 
-  // 5. Restore Styles
   processed = processed.replace(/___STYLE_(\d+)___/g, (_, idx) => {
     const { open, content } = styles[parseInt(idx)]
-    // Shrink CSS (strips bodies/properties usually)
     const shrunk = shrink_css(content).trimEnd()
     return `${open}\n${shrunk}\n</style>`
   })

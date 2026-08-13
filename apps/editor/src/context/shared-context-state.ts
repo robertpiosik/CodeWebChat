@@ -122,7 +122,6 @@ export class SharedContextState {
       }
     })
 
-    // Initialize with a synchronization after a small delay to ensure both providers are ready
     setTimeout(() => {
       if (!this._is_initialized) {
         this.synchronize_state()
@@ -226,13 +225,11 @@ export class SharedContextState {
       } else if (this._synchronizing_provider == 'openEditors') {
         const open_editor_paths_set = new Set(open_editor_paths)
 
-        // Preserve checked state for files that are not open in editors
         const preserved_workspace_checked_files =
           workspace_checked_files.filter(
             (file) => !open_editor_paths_set.has(file)
           )
 
-        // Combine with checked files from open editors
         const new_workspace_checked_files = [
           ...preserved_workspace_checked_files,
           ...open_editors_checked_files
@@ -241,9 +238,7 @@ export class SharedContextState {
         await this._workspace_provider.set_checked_files(
           new_workspace_checked_files
         )
-      }
-      // If no specific provider triggered the sync, do a full sync
-      else {
+      } else {
         for (const file of open_editor_paths) {
           const is_checked_in_workspace =
             this.is_file_checked_in_workspace(file)
@@ -281,7 +276,6 @@ export class SharedContextState {
     }
   }
 
-  // Check if file is checked in workspace, considering parent directories
   private is_file_checked_in_workspace(file_path: string): boolean {
     if (!this._workspace_provider) return false
 
@@ -330,7 +324,6 @@ export class SharedContextState {
       ? vscode.TreeItemCheckboxState.Checked
       : vscode.TreeItemCheckboxState.Unchecked
 
-    // Create a fake FileItem with just enough properties for updateCheckState
     const fake_item: FileItem = {
       resourceUri: vscode.Uri.file(file_path),
       label: path.basename(file_path),
@@ -383,7 +376,6 @@ export class SharedContextState {
     await this._workspace_provider.update_check_state(fake_item, state)
   }
 
-  // Update the merged set of checked files by recalculating from both providers
   private update_checked_files_set() {
     if (!this._workspace_provider || !this._open_editors_provider) return
 

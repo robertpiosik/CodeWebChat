@@ -4,11 +4,9 @@ export const shrink_python = (content: string): string => {
   let skip_indent_threshold = -1
 
   for (const line of lines) {
-    // 1. Calculate Indentation
     const match = line.match(/^\s*/)
     const current_indent = match ? match[0].length : 0
 
-    // 2. Handle Skipping (Body Stripping)
     if (skip_indent_threshold !== -1) {
       if (current_indent > skip_indent_threshold) {
         continue
@@ -16,7 +14,6 @@ export const shrink_python = (content: string): string => {
       skip_indent_threshold = -1
     }
 
-    // 3. Keep comments, but track non-comment code specifically
     let processed_line = ''
     let code_part = ''
     let in_string: string | false = false
@@ -32,7 +29,6 @@ export const shrink_python = (content: string): string => {
           i += 2
           continue
         }
-        // Check for end of string (handling triple quotes)
         if (
           char === in_string[0] &&
           (in_string.length == 1 ||
@@ -70,9 +66,7 @@ export const shrink_python = (content: string): string => {
     const trimmed_code = code_part.trim()
     if (!trimmed) continue
 
-    // 4. Check for Block Start to Strip
     if (trimmed_code.endsWith(':')) {
-      // Keep 'class', strip others (def, if, while, etc.)
       const is_keeper = /^class\s/.test(trimmed_code)
       if (!is_keeper) {
         result.push(processed_line)

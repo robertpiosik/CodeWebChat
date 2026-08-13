@@ -101,8 +101,6 @@ export class OpenEditorsProvider
       }
     )
 
-    // Initial auto-check of all open editors
-    // We'll use setTimeout to ensure VS Code has fully loaded editors
     setTimeout(() => {
       this._initialized = true
       this._on_did_change_tree_data.fire()
@@ -417,7 +415,6 @@ export class OpenEditorsProvider
   }
 
   clear_checks() {
-    // Instead of clearing the map, explicitly set each open editor to unchecked
     const open_files = this._get_open_editors()
 
     for (const uri of open_files) {
