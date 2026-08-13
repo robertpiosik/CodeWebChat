@@ -33,7 +33,6 @@ export const dictionary = {
       `${count} file${count == 1 ? '' : 's'} remain${
         count == 1 ? 's' : ''
       } checked.`,
-    CRUNCHING_TOKEN_COUNTS: 'Please wait, crunching token counts...',
     TEMPLATE_RESTORED: 'Template has been restored.',
     UNNAMED_TEMPLATE_DELETED: 'Unnamed template has been deleted.'
   },

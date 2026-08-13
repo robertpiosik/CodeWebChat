@@ -1,8 +1,8 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
-import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
+import { t } from '@/i18n'
 import type { IWorkspaceProvider } from '../workspace-provider'
 import { shrink_file } from '@/context/utils/shrink-file'
 import { is_binary_file } from '@/utils/is-binary'
@@ -264,7 +264,7 @@ export class TokenCalculator implements vscode.Disposable {
     return vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: dictionary.information_message.CRUNCHING_TOKEN_COUNTS,
+        title: t('context.crunching-token-counts'),
         cancellable: false
       },
       async (progress) => {
@@ -736,7 +736,7 @@ export class TokenCalculator implements vscode.Disposable {
     return vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: dictionary.information_message.CRUNCHING_TOKEN_COUNTS,
+        title: t('context.crunching-token-counts'),
         cancellable: false
       },
       async (progress) => {
