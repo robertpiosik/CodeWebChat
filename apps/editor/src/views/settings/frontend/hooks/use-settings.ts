@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import {
   BackendMessage,
-  EditFormatInstructions,
   ApiConfiguration,
   Provider
 } from '@/views/settings/types/messages'
@@ -42,9 +41,6 @@ export const use_settings = (vscode: any) => {
     useState<number>()
   const [limit_semantic_search_results, set_limit_semantic_search_results] =
     useState<number>()
-  const [edit_format_instructions, set_edit_format_instructions] = useState<
-    EditFormatInstructions | undefined
-  >(undefined)
   const [
     are_automatic_checkpoints_disabled,
     set_are_automatic_checkpoints_disabled
@@ -95,7 +91,6 @@ export const use_settings = (vscode: any) => {
     })
     post_message(vscode, { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' })
     post_message(vscode, { command: 'GET_LIMIT_SEMANTIC_SEARCH_RESULTS' })
-    post_message(vscode, { command: 'GET_EDIT_FORMAT_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_ARE_AUTOMATIC_CHECKPOINTS_DISABLED' })
     post_message(vscode, { command: 'GET_CHECKPOINT_LIFESPAN' })
     post_message(vscode, { command: 'GET_GEMINI_USER_ID' })
@@ -136,8 +131,6 @@ export const use_settings = (vscode: any) => {
         set_context_size_warning_threshold(message.threshold)
       } else if (message.command == 'LIMIT_SEMANTIC_SEARCH_RESULTS') {
         set_limit_semantic_search_results(message.limit)
-      } else if (message.command == 'EDIT_FORMAT_INSTRUCTIONS') {
-        set_edit_format_instructions(message.instructions)
       } else if (message.command == 'ARE_AUTOMATIC_CHECKPOINTS_DISABLED') {
         set_are_automatic_checkpoints_disabled(message.disabled)
       } else if (message.command == 'CHECKPOINT_LIFESPAN') {
@@ -341,14 +334,6 @@ export const use_settings = (vscode: any) => {
       limit: limit ?? null
     })
 
-  const handle_edit_format_instructions_change = (
-    instructions: EditFormatInstructions
-  ) =>
-    post_message(vscode, {
-      command: 'UPDATE_EDIT_FORMAT_INSTRUCTIONS',
-      instructions
-    })
-
   const handle_automatic_checkpoints_toggle = (disabled: boolean) => {
     set_are_automatic_checkpoints_disabled(disabled)
     post_message(vscode, {
@@ -447,7 +432,6 @@ export const use_settings = (vscode: any) => {
     find_relevant_files_instructions,
     context_size_warning_threshold,
     limit_semantic_search_results,
-    edit_format_instructions,
     are_automatic_checkpoints_disabled,
     checkpoint_lifespan,
     gemini_user_id,
@@ -480,7 +464,6 @@ export const use_settings = (vscode: any) => {
     handle_open_allow_patterns_settings,
     handle_context_size_warning_threshold_change,
     handle_limit_semantic_search_results_change,
-    handle_edit_format_instructions_change,
     handle_automatic_checkpoints_toggle,
     handle_checkpoint_lifespan_change,
     handle_gemini_user_id_change,

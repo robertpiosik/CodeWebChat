@@ -166,21 +166,12 @@ export const handle_autofill = async (params: {
     let formatted_system_instructions = ''
     let user_instructions = processed_instructions
     if (params.prompt_view_provider.web_prompt_type == 'edit-files') {
-      const config = vscode.workspace.getConfiguration('codeWebChat')
-      const instructions_key = {
-        whole: 'editFormatInstructionsWhole',
-        truncated: 'editFormatInstructionsTruncated',
-        'search-replace': 'editFormatInstructionsSearchReplace',
-        diff: 'editFormatInstructionsDiff'
-      }[params.prompt_view_provider.edit_format]
-      const default_instructions = {
+      const edit_format_instructions = {
         whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
         truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
         'search-replace': EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
         diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
       }[params.prompt_view_provider.edit_format]
-      const edit_format_instructions =
-        config.get<string>(instructions_key) || default_instructions
       if (edit_format_instructions) {
         formatted_system_instructions = `# Output formatting\n\n${edit_format_instructions}`
       }

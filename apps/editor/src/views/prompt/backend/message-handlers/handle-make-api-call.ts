@@ -298,21 +298,12 @@ export const handle_make_api_call = async (
 
     if (prompt_type == 'edit-files') {
       edit_format = prompt_view_provider.edit_format
-      const config = vscode.workspace.getConfiguration('codeWebChat')
-      const instructions_key = {
-        whole: 'editFormatInstructionsWhole',
-        truncated: 'editFormatInstructionsTruncated',
-        diff: 'editFormatInstructionsDiff',
-        'search-replace': 'editFormatInstructionsSearchReplace'
-      }[edit_format]
-      const default_instructions = {
+      const edit_format_instructions = {
         whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
         truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
         diff: EDIT_FORMAT_INSTRUCTIONS_DIFF,
         'search-replace': EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE
       }[edit_format]
-      const edit_format_instructions =
-        config.get<string>(instructions_key) || default_instructions
 
       let formatted_system_instructions = ''
       if (edit_format_instructions) {

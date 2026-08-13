@@ -458,18 +458,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
         }
 
         if (
-          event.affectsConfiguration(
-            'codeWebChat.editFormatInstructionsWhole'
-          ) ||
-          event.affectsConfiguration(
-            'codeWebChat.editFormatInstructionsTruncated'
-          ) ||
-          event.affectsConfiguration('codeWebChat.editFormatInstructionsDiff')
-        ) {
-          handle_get_edit_format_instructions(this)
-        }
-
-        if (
           event.affectsConfiguration('codeWebChat.contextSizeWarningThreshold')
         ) {
           this._send_context_size_warning_threshold()

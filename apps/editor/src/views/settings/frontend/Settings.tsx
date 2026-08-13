@@ -60,7 +60,6 @@ export const Settings = () => {
         undefined &&
       settings_hook.context_size_warning_threshold !== undefined &&
       settings_hook.limit_semantic_search_results !== undefined &&
-      settings_hook.edit_format_instructions !== undefined &&
       settings_hook.are_automatic_checkpoints_disabled !== undefined &&
       settings_hook.checkpoint_lifespan !== undefined &&
       settings_hook.gemini_user_id !== undefined &&
@@ -116,7 +115,6 @@ export const Settings = () => {
           settings_hook.select_all_prompts_in_commit_messages_by_default!
         }
         commit_message_instructions={settings_hook.commit_message_instructions!}
-        edit_format_instructions={settings_hook.edit_format_instructions!}
         are_automatic_checkpoints_disabled={
           settings_hook.are_automatic_checkpoints_disabled!
         }
@@ -155,9 +153,6 @@ export const Settings = () => {
         }
         on_find_relevant_files_instructions_change={
           settings_hook.handle_find_relevant_files_instructions_change
-        }
-        on_edit_format_instructions_change={
-          settings_hook.handle_edit_format_instructions_change
         }
         on_automatic_checkpoints_toggle={
           settings_hook.handle_automatic_checkpoints_toggle

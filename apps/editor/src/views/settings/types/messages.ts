@@ -16,13 +16,6 @@ export type ApiConfiguration = {
   is_pinned?: boolean
 }
 
-export type EditFormatInstructions = {
-  whole: string
-  truncated: string
-  search_replace: string
-  diff: string
-}
-
 // === FROM FRONTEND TO BACKEND ===
 export interface GetModelProvidersMessage {
   command: 'GET_MODEL_PROVIDERS'
@@ -111,15 +104,6 @@ export interface GetEditFilesSystemInstructionsMessage {
 export interface UpdateEditFilesSystemInstructionsMessage {
   command: 'UPDATE_EDIT_FILES_SYSTEM_INSTRUCTIONS'
   instructions: string
-}
-
-export interface GetEditFormatInstructionsMessage {
-  command: 'GET_EDIT_FORMAT_INSTRUCTIONS'
-}
-
-export interface UpdateEditFormatInstructionsMessage {
-  command: 'UPDATE_EDIT_FORMAT_INSTRUCTIONS'
-  instructions: EditFormatInstructions
 }
 
 export interface SettingsUiReadyMessage {
@@ -378,8 +362,6 @@ export type FrontendMessage =
   | GetFindRelevantFilesInstructionsMessage
   | UpdateFindRelevantFilesInstructionsMessage
   | UpdateEditFilesSystemInstructionsMessage
-  | GetEditFormatInstructionsMessage
-  | UpdateEditFormatInstructionsMessage
   | SettingsUiReadyMessage
   | GetContextSizeWarningThresholdMessage
   | UpdateContextSizeWarningThresholdMessage
@@ -466,11 +448,6 @@ export interface EditFilesSystemInstructionsMessage {
 export interface FindRelevantFilesInstructionsMessage {
   command: 'FIND_RELEVANT_FILES_INSTRUCTIONS'
   instructions: string
-}
-
-export interface EditFormatInstructionsMessage {
-  command: 'EDIT_FORMAT_INSTRUCTIONS'
-  instructions: EditFormatInstructions
 }
 
 export interface ContextSizeWarningThresholdMessage {
@@ -614,7 +591,6 @@ export type BackendMessage =
   | SelectAllPromptsInCommitMessagesByDefaultMessage
   | EditFilesSystemInstructionsMessage
   | FindRelevantFilesInstructionsMessage
-  | EditFormatInstructionsMessage
   | ContextSizeWarningThresholdMessage
   | LimitSemanticSearchResultsMessage
   | AreAutomaticCheckpointsDisabledMessage

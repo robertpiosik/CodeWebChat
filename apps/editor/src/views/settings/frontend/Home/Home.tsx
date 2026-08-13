@@ -4,11 +4,7 @@ import { NavigationSection as UiNavigationSection } from '@ui/components/editor/
 import { NavigationItemSection as UiNavigationItemSection } from '@ui/components/editor/settings/NavigationItemSection'
 import { NavigationItemGroup as UiNavigationItemGroup } from '@ui/components/editor/settings/NavigationItemGroup'
 import { ApiConfigurationsSection } from './sections/ApiConfigurationsSection'
-import {
-  ApiConfiguration,
-  Provider,
-  EditFormatInstructions
-} from '@/views/settings/types/messages'
+import { ApiConfiguration, Provider } from '@/views/settings/types/messages'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { GeneralSection } from './sections/GeneralSection'
 import { ApiFeature } from '@/views/shared/types/api-features'
@@ -26,7 +22,6 @@ export type NavItem =
   | 'section:general:group:prompt-field'
   | 'section:general:group:history'
   | 'section:general:group:commit-messages'
-  | 'section:general:group:edit-format'
   | 'section:chatbots'
   | 'section:chatbots:group:web-configurations'
   | 'section:chatbots:group:chatbots-other'
@@ -63,10 +58,6 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   {
     id: 'section:general:group:commit-messages',
     label: 'general.commit-messages.title'
-  },
-  {
-    id: 'section:general:group:edit-format',
-    label: 'general.edit-formats.title'
   },
   {
     id: 'section:chatbots',
@@ -126,7 +117,6 @@ type Props = {
   reuse_last_tab: boolean
   are_automatic_checkpoints_disabled: boolean
   checkpoint_lifespan: number
-  edit_format_instructions: EditFormatInstructions
   clear_checks_in_workspace_behavior: 'ignore-open-editors' | 'uncheck-all'
   auto_run_intelligent_update: boolean
   set_providers: (providers: Provider[]) => void
@@ -143,9 +133,6 @@ type Props = {
   ) => void
   on_select_all_prompts_in_commit_messages_by_default_change: (
     enabled: boolean
-  ) => void
-  on_edit_format_instructions_change: (
-    instructions: EditFormatInstructions
   ) => void
   on_edit_files_system_instructions_change: (instructions: string) => void
   on_find_relevant_files_instructions_change: (instructions: string) => void
@@ -205,7 +192,6 @@ export const Home: React.FC<Props> = (props) => {
     'section:general:group:prompt-field': null,
     'section:general:group:history': null,
     'section:general:group:commit-messages': null,
-    'section:general:group:edit-format': null,
     'section:chatbots': null,
     'section:chatbots:group:web-configurations': null,
     'section:chatbots:group:chatbots-other': null,
@@ -423,10 +409,6 @@ export const Home: React.FC<Props> = (props) => {
           }
           on_clear_checks_in_workspace_behavior_change={
             props.on_clear_checks_in_workspace_behavior_change
-          }
-          edit_format_instructions={props.edit_format_instructions}
-          on_edit_format_instructions_change={
-            props.on_edit_format_instructions_change
           }
           are_automatic_checkpoints_disabled={
             props.are_automatic_checkpoints_disabled

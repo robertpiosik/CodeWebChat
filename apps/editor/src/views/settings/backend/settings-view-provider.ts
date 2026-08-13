@@ -17,7 +17,6 @@ import {
   handle_get_context_size_warning_threshold,
   handle_get_limit_semantic_search_results,
   handle_get_edit_files_system_instructions,
-  handle_get_edit_format_instructions,
   handle_get_gemini_user_id,
   handle_get_ai_studio_user_id,
   handle_get_model_providers,
@@ -37,7 +36,6 @@ import {
   handle_get_synchronize_edit_format_between_modes,
   handle_update_synchronize_edit_format_between_modes,
   handle_update_edit_files_system_instructions,
-  handle_update_edit_format_instructions,
   handle_update_gemini_user_id,
   handle_update_context_size_warning_threshold,
   handle_update_limit_semantic_search_results,
@@ -182,10 +180,6 @@ export class SettingsViewProvider {
           await handle_get_edit_files_system_instructions(this)
         } else if (message.command == 'UPDATE_EDIT_FILES_SYSTEM_INSTRUCTIONS') {
           await handle_update_edit_files_system_instructions(message)
-        } else if (message.command == 'GET_EDIT_FORMAT_INSTRUCTIONS') {
-          await handle_get_edit_format_instructions(this)
-        } else if (message.command == 'UPDATE_EDIT_FORMAT_INSTRUCTIONS') {
-          await handle_update_edit_format_instructions(message)
         } else if (message.command == 'GET_COMMIT_MESSAGE_INSTRUCTIONS') {
           await handle_get_commit_message_instructions(this)
         } else if (message.command == 'UPDATE_COMMIT_MESSAGE_INSTRUCTIONS') {
@@ -319,7 +313,6 @@ export class SettingsViewProvider {
           void handle_get_api_configurations(this)
           void handle_get_edit_files_system_instructions(this)
           void handle_get_find_relevant_files_instructions(this)
-          void handle_get_edit_format_instructions(this)
           void handle_get_context_size_warning_threshold(this)
           void handle_get_limit_semantic_search_results(this)
           void handle_get_commit_message_instructions(this)

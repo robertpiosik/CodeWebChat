@@ -7,18 +7,11 @@ import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
 import { Section as UiSection } from '@ui/components/editor/settings/Section'
 import { TextButton as UiTextButton } from '@ui/components/editor/common/TextButton'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
-import { EditFormatInstructions } from '@/views/settings/types/messages'
 import {
   CHECKPOINT_DEFAULT_LIFESPAN,
   DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD,
   LIMIT_SEMANTIC_SEARCH_RESULTS
 } from '@/constants/values'
-import {
-  EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
-  EDIT_FORMAT_INSTRUCTIONS_DIFF,
-  EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
-  EDIT_FORMAT_INSTRUCTIONS_WHOLE
-} from '@/constants/edit-format-instructions'
 import { use_translation } from '../../i18n/use-translation'
 import { NavItem } from '../Home'
 
@@ -38,16 +31,12 @@ type Props = {
   on_check_new_files_change: (enabled: boolean) => void
   on_checkpoint_lifespan_change: (hours: number | undefined) => void
   clear_checks_in_workspace_behavior: ClearChecksBehavior
-  edit_format_instructions: EditFormatInstructions
   on_context_size_warning_threshold_change: (
     threshold: number | undefined
   ) => void
   on_limit_semantic_search_results_change: (limit: number | undefined) => void
   on_clear_checks_in_workspace_behavior_change: (
     value: ClearChecksBehavior
-  ) => void
-  on_edit_format_instructions_change: (
-    instructions: EditFormatInstructions
   ) => void
   on_open_editor_settings: () => void
   on_open_ignore_patterns_settings: () => void
@@ -83,12 +72,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
     const [limit_semantic_search_results, set_limit_semantic_search_results] =
       useState<number>()
     const [checkpoint_lifespan, set_checkpoint_lifespan] = useState<number>()
-    const [instructions, set_instructions] = useState<EditFormatInstructions>({
-      whole: '',
-      truncated: '',
-      search_replace: '',
-      diff: ''
-    })
 
     useEffect(() => {
       set_context_size_warning_threshold(props.context_size_warning_threshold)
@@ -101,12 +84,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
     useEffect(() => {
       set_checkpoint_lifespan(props.checkpoint_lifespan)
     }, [props.checkpoint_lifespan])
-
-    useEffect(() => {
-      if (props.edit_format_instructions) {
-        set_instructions(props.edit_format_instructions)
-      }
-    }, [props.edit_format_instructions])
 
     const handle_context_size_warning_threshold_blur = () => {
       if (
@@ -142,44 +119,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
         props.on_checkpoint_lifespan_change(undefined)
         set_checkpoint_lifespan(CHECKPOINT_DEFAULT_LIFESPAN)
       }
-    }
-
-    const handle_instructions_blur = () => {
-      props.on_edit_format_instructions_change(instructions)
-
-      set_instructions((prev) => ({
-        whole:
-          prev.whole == '' &&
-          props.edit_format_instructions.whole == EDIT_FORMAT_INSTRUCTIONS_WHOLE
-            ? EDIT_FORMAT_INSTRUCTIONS_WHOLE
-            : prev.whole,
-        truncated:
-          prev.truncated == '' &&
-          props.edit_format_instructions.truncated ==
-            EDIT_FORMAT_INSTRUCTIONS_TRUNCATED
-            ? EDIT_FORMAT_INSTRUCTIONS_TRUNCATED
-            : prev.truncated,
-        search_replace:
-          prev.search_replace == '' &&
-          props.edit_format_instructions.search_replace ==
-            EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE
-            ? EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE
-            : prev.search_replace,
-        diff:
-          prev.diff == '' &&
-          props.edit_format_instructions.diff == EDIT_FORMAT_INSTRUCTIONS_DIFF
-            ? EDIT_FORMAT_INSTRUCTIONS_DIFF
-            : prev.diff
-      }))
-    }
-
-    const handle_reset_instruction = (
-      key: keyof EditFormatInstructions,
-      default_value: string
-    ) => {
-      const new_instructions = { ...instructions, [key]: default_value }
-      set_instructions(new_instructions)
-      props.on_edit_format_instructions_change(new_instructions)
     }
 
     return (
@@ -496,149 +435,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 }
                 action_title={t('general.action.restore-default')}
                 on_action_click={props.on_restore_commit_instructions}
-              />
-            </UiItem>
-          </UiGroup>
-        </div>
-
-        <div
-          ref={(el) =>
-            props.set_section_ref('section:general:group:edit-format', el)
-          }
-        >
-          <UiGroup title={t('general.edit-formats.title')}>
-            <UiItem
-              title={t('general.edit-format.whole.title')}
-              description={t('general.edit-format.whole.description')}
-              is_toggleable
-              translations={{
-                expand: t('common.expand'),
-                collapse: t('common.collapse')
-              }}
-            >
-              <UiTextarea
-                value={instructions.whole}
-                min_rows={3}
-                on_change={(value) =>
-                  set_instructions((prev) => ({ ...prev, whole: value }))
-                }
-                on_blur={handle_instructions_blur}
-                action_icon={
-                  instructions.whole != '' &&
-                  instructions.whole != EDIT_FORMAT_INSTRUCTIONS_WHOLE
-                    ? 'discard'
-                    : undefined
-                }
-                action_title={t('general.action.restore-default')}
-                on_action_click={() =>
-                  handle_reset_instruction(
-                    'whole',
-                    EDIT_FORMAT_INSTRUCTIONS_WHOLE
-                  )
-                }
-              />
-            </UiItem>
-
-            <UiItem
-              title={t('general.edit-format.truncated.title')}
-              description={t('general.edit-format.truncated.description')}
-              is_toggleable
-              translations={{
-                expand: t('common.expand'),
-                collapse: t('common.collapse')
-              }}
-            >
-              <UiTextarea
-                value={instructions.truncated}
-                min_rows={3}
-                on_change={(value) =>
-                  set_instructions((prev) => ({
-                    ...prev,
-                    truncated: value
-                  }))
-                }
-                on_blur={handle_instructions_blur}
-                action_icon={
-                  instructions.truncated != '' &&
-                  instructions.truncated != EDIT_FORMAT_INSTRUCTIONS_TRUNCATED
-                    ? 'discard'
-                    : undefined
-                }
-                action_title={t('general.action.restore-default')}
-                on_action_click={() =>
-                  handle_reset_instruction(
-                    'truncated',
-                    EDIT_FORMAT_INSTRUCTIONS_TRUNCATED
-                  )
-                }
-              />
-            </UiItem>
-
-            <UiItem
-              title={t('general.edit-format.search-replace.title')}
-              description={t('general.edit-format.search-replace.description')}
-              is_toggleable
-              translations={{
-                expand: t('common.expand'),
-                collapse: t('common.collapse')
-              }}
-            >
-              <UiTextarea
-                value={instructions.search_replace}
-                min_rows={3}
-                on_change={(value) =>
-                  set_instructions((prev) => ({
-                    ...prev,
-                    search_replace: value
-                  }))
-                }
-                on_blur={handle_instructions_blur}
-                action_icon={
-                  instructions.search_replace != '' &&
-                  instructions.search_replace !=
-                    EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE
-                    ? 'discard'
-                    : undefined
-                }
-                action_title={t('general.action.restore-default')}
-                on_action_click={() =>
-                  handle_reset_instruction(
-                    'search_replace',
-                    EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE
-                  )
-                }
-              />
-            </UiItem>
-
-            <UiItem
-              title={t('general.edit-format.diff.title')}
-              description={t('general.edit-format.diff.description')}
-              is_toggleable
-              translations={{
-                expand: t('common.expand'),
-                collapse: t('common.collapse')
-              }}
-            >
-              <UiTextarea
-                value={instructions.diff}
-                min_rows={3}
-                on_change={(value) =>
-                  set_instructions((prev) => ({ ...prev, diff: value }))
-                }
-                on_blur={handle_instructions_blur}
-                action_icon={
-                  instructions.diff != '' &&
-                  instructions.diff != EDIT_FORMAT_INSTRUCTIONS_DIFF
-                    ? 'discard'
-                    : undefined
-                }
-                action_title={t('general.action.restore-default')}
-                on_action_click={() =>
-                  handle_reset_instruction(
-                    'diff',
-                    EDIT_FORMAT_INSTRUCTIONS_DIFF
-                  )
-                }
               />
             </UiItem>
           </UiGroup>

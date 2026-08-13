@@ -1017,22 +1017,6 @@
             "type": "string"
           }
         },
-        "codeWebChat.editFormatInstructionsWhole": {
-          "type": "string",
-          "scope": "resource"
-        },
-        "codeWebChat.editFormatInstructionsTruncated": {
-          "type": "string",
-          "scope": "resource"
-        },
-        "codeWebChat.editFormatInstructionsSearchReplace": {
-          "type": "string",
-          "scope": "resource"
-        },
-        "codeWebChat.editFormatInstructionsDiff": {
-          "type": "string",
-          "scope": "resource"
-        },
         "codeWebChat.findRelevantFilesInstructions": {
           "type": "string",
           "scope": "resource"
