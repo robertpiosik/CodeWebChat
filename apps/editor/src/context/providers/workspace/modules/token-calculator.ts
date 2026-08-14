@@ -37,6 +37,7 @@ export class TokenCalculator implements vscode.Disposable {
   private _session_cache: TokenCountsCache = {}
   private _token_cache_update_timeout: NodeJS.Timeout | null = null
   private _has_token_counts_cache_updated_once = false
+  private _notified_roots: Set<string> = new Set()
 
   private _progress_stack: {
     progress: vscode.Progress<{ message?: string; increment?: number }>
@@ -248,16 +249,28 @@ export class TokenCalculator implements vscode.Disposable {
     task: () => Promise<T>
   }): Promise<T> {
     let total_uncached = 0
+    let should_notify = false
 
     if (params.dir_path) {
       total_uncached = await this._count_uncached_files_in_dir(params.dir_path)
+      const workspace_roots = this._provider.get_workspace_roots()
+      if (workspace_roots.includes(params.dir_path)) {
+        if (!this._notified_roots.has(params.dir_path)) {
+          should_notify = true
+          this._notified_roots.add(params.dir_path)
+        }
+      }
     } else if (params.roots) {
       for (const root of params.roots) {
         total_uncached += await this._count_uncached_files_in_dir(root)
+        if (!this._notified_roots.has(root)) {
+          should_notify = true
+          this._notified_roots.add(root)
+        }
       }
     }
 
-    if (total_uncached === 0) {
+    if (total_uncached === 0 || !should_notify) {
       return params.task()
     }
 
@@ -678,85 +691,38 @@ export class TokenCalculator implements vscode.Disposable {
   }): Promise<{ total: number; shrink: number }> {
     const checked_files = this._provider.get_checked_files()
 
-    let total_uncached = 0
+    const result = { total: 0, shrink: 0 }
     for (const file_path of checked_files) {
-      if (options?.exclude_file_path && file_path == options.exclude_file_path)
-        continue
       try {
-        const stat = fs.lstatSync(file_path)
-        if (stat.isSymbolicLink() || stat.isDirectory()) continue
         if (
-          !this._file_token_counts.has(file_path) ||
-          !this._file_shrink_token_counts.has(file_path)
+          options?.exclude_file_path &&
+          file_path == options.exclude_file_path
         ) {
-          total_uncached++
+          continue
         }
-      } catch {}
-    }
 
-    const task = async () => {
-      const result = { total: 0, shrink: 0 }
-      for (const file_path of checked_files) {
-        try {
-          if (
-            options?.exclude_file_path &&
-            file_path == options.exclude_file_path
-          ) {
-            continue
+        const stat = fs.lstatSync(file_path)
+        if (stat.isSymbolicLink()) continue
+
+        if (stat.isFile()) {
+          if (this._file_token_counts.has(file_path)) {
+            result.total += this._file_token_counts.get(file_path)!
+            result.shrink += this._file_shrink_token_counts.get(file_path)!
+          } else {
+            const count = await this.calculate_file_tokens(file_path)
+            result.total += count.total
+            result.shrink += count.shrink
           }
-
-          const stat = fs.lstatSync(file_path)
-          if (stat.isSymbolicLink()) continue
-
-          if (stat.isFile()) {
-            if (this._file_token_counts.has(file_path)) {
-              result.total += this._file_token_counts.get(file_path)!
-              result.shrink += this._file_shrink_token_counts.get(file_path)!
-            } else {
-              const count = await this.calculate_file_tokens(file_path)
-              result.total += count.total
-              result.shrink += count.shrink
-            }
-          }
-        } catch (error) {
-          Logger.error({
-            function_name: 'get_checked_files_token_count',
-            message: `Error accessing file ${file_path} for token count`,
-            data: error
-          })
         }
+      } catch (error) {
+        Logger.error({
+          function_name: 'get_checked_files_token_count',
+          message: `Error accessing file ${file_path} for token count`,
+          data: error
+        })
       }
-      return result
     }
-
-    if (total_uncached === 0) {
-      return task()
-    }
-
-    return vscode.window.withProgress(
-      {
-        location: vscode.ProgressLocation.Notification,
-        title: t('context.crunching-token-counts'),
-        cancellable: false
-      },
-      async (progress) => {
-        const progress_state = {
-          progress,
-          total_files: total_uncached,
-          processed_files: 0
-        }
-        this._progress_stack.push(progress_state)
-
-        try {
-          return await task()
-        } finally {
-          const index = this._progress_stack.indexOf(progress_state)
-          if (index !== -1) {
-            this._progress_stack.splice(index, 1)
-          }
-        }
-      }
-    )
+    return result
   }
 
   public dispose() {
