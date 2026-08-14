@@ -57,11 +57,27 @@ export const select_commit_files_command = (
             }
           })
 
+          const ahead_of_branch_item = {
+            label: `$(git-branch) ${t('command.select-commit-files.ahead-of-branch')}`,
+            detail: '',
+            description: '',
+            hash: 'ahead-of-branch'
+          }
+
+          const separator_item: vscode.QuickPickItem & { hash: string } = {
+            label: '',
+            kind: vscode.QuickPickItemKind.Separator,
+            hash: 'separator'
+          }
+
           const quick_pick = vscode.window.createQuickPick<
             vscode.QuickPickItem & { hash: string }
           >()
           quick_pick.title = t('command.select-commit-files.title')
-          quick_pick.items = commits
+
+          const all_items = [ahead_of_branch_item, separator_item, ...commits]
+          quick_pick.items = all_items
+
           quick_pick.placeholder = t('command.select-commit-files.select')
           quick_pick.matchOnDetail = true
           quick_pick.buttons = [
@@ -69,7 +85,7 @@ export const select_commit_files_command = (
           ]
 
           if (last_selected_commit_hash) {
-            const active_item = commits.find(
+            const active_item = quick_pick.items.find(
               (c) => c.hash === last_selected_commit_hash
             )
             if (active_item) {
@@ -84,6 +100,13 @@ export const select_commit_files_command = (
             const disposables: vscode.Disposable[] = []
 
             disposables.push(
+              quick_pick.onDidChangeValue((value) => {
+                if (value.trim().length > 0) {
+                  quick_pick.items = commits
+                } else {
+                  quick_pick.items = all_items
+                }
+              }),
               quick_pick.onDidTriggerButton((button) => {
                 if (button === vscode.QuickInputButtons.Back) {
                   resolve('back')
@@ -115,230 +138,381 @@ export const select_commit_files_command = (
 
           last_selected_commit_hash = selected_commit.hash
 
-          const files_output = execSync(
-            `git show --name-only --pretty="format:%B" ${selected_commit.hash}`,
-            {
-              cwd: repository.rootUri.fsPath,
-              encoding: 'utf-8'
-            }
-          )
-            .toString()
-            .trim()
-
-          if (!files_output) {
-            vscode.window.showInformationMessage(
-              t('command.select-commit-files.no-modified')
-            )
-            continue
-          }
-
-          const files = new Set<string>()
-
-          const ascii_paths = AsciiTree.extract_paths(files_output)
-          ascii_paths.forEach((p) => files.add(p))
-
-          const lines = files_output.split('\n')
-          for (const line of lines) {
-            const trimmed = line.trim()
-            if (trimmed.length > 0) {
-              files.add(trimmed)
-            }
-          }
-
-          const valid_files = Array.from(files)
-            .map((f) => {
-              const absolute_path = path.join(repository.rootUri.fsPath, f)
-              return {
-                relative_path: f,
-                absolute_path,
-                exists:
-                  fs.existsSync(absolute_path) &&
-                  fs.statSync(absolute_path).isFile()
-              }
-            })
-            .filter((f) => f.exists)
-
-          if (valid_files.length == 0) {
-            vscode.window.showInformationMessage(
-              t('command.select-commit-files.no-valid')
-            )
-            continue
-          }
-
-          // Inner loop for file selection
           while (true) {
-            const currently_checked = workspace_provider.get_checked_files()
-            const currently_checked_set = new Set(currently_checked)
+            let files_output = ''
+            const title_hash = selected_commit.hash.substring(0, 7)
+            let is_ahead_of_branch = false
+            let branch_name = ''
 
-            const file_items = await Promise.all(
-              valid_files.map(async (f) => {
-                const token_count =
-                  await workspace_provider.calculate_file_tokens(
-                    f.absolute_path
-                  )
-                const formatted_token_count = display_token_count(
-                  token_count.total
-                )
-                const dir_name = path.dirname(f.relative_path)
-                const display_dir = dir_name == '.' ? '' : dir_name
-
-                return {
-                  label: path.basename(f.relative_path),
-                  description: display_dir
-                    ? `${formatted_token_count} · ${display_dir}`
-                    : formatted_token_count,
-                  picked: currently_checked_set.has(f.absolute_path),
-                  file_path: f.absolute_path,
-                  token_count: token_count.total
-                }
-              })
-            )
-
-            const quick_pick_files = vscode.window.createQuickPick<any>()
-            quick_pick_files.canSelectMany = true
-            quick_pick_files.items = file_items
-            quick_pick_files.selectedItems = file_items.filter((i) => i.picked)
-            quick_pick_files.title = t(
-              'command.select-commit-files.files-modified',
-              {
-                hash: selected_commit.hash.substring(0, 7)
-              }
-            )
-
-            const update_placeholder = () => {
-              const total = quick_pick_files.selectedItems.reduce(
-                (sum: number, item: any) => sum + item.token_count,
-                0
-              )
-              const total_text =
-                total > 0
-                  ? ` (totalling ${display_token_count(total)} tokens)`
-                  : ''
-              quick_pick_files.placeholder = `${t('command.select-commit-files.select-files')}${total_text}`
-            }
-            update_placeholder()
-            quick_pick_files.onDidChangeSelection(update_placeholder)
-
-            const search_button = {
-              iconPath: new vscode.ThemeIcon('search'),
-              tooltip: t('common.search-in-results')
-            }
-
-            const close_button = {
-              iconPath: new vscode.ThemeIcon('close'),
-              tooltip: t('common.close')
-            }
-
-            quick_pick_files.buttons = [
-              vscode.QuickInputButtons.Back,
-              search_button,
-              close_button
-            ]
-            quick_pick_files.ignoreFocusOut = true
-
-            const selected_files = await new Promise<
-              any[] | 'back' | undefined | 'search'
-            >((resolve) => {
-              let is_resolved = false
-              const disposables: vscode.Disposable[] = []
-
-              disposables.push(
-                quick_pick_files.onDidTriggerButton((button) => {
-                  if (button === vscode.QuickInputButtons.Back) {
-                    is_resolved = true
-                    resolve('back')
-                    quick_pick_files.hide()
-                  } else if (button === search_button) {
-                    is_resolved = true
-                    resolve('search')
-                    quick_pick_files.hide()
-                  } else if (button === close_button) {
-                    is_resolved = true
-                    resolve(undefined)
-                    quick_pick_files.hide()
-                  }
-                }),
-                quick_pick_files.onDidAccept(() => {
-                  is_resolved = true
-                  resolve(Array.from(quick_pick_files.selectedItems))
-                  quick_pick_files.hide()
-                }),
-                quick_pick_files.onDidHide(() => {
-                  if (!is_resolved) {
-                    resolve('back')
-                  }
-                  disposables.forEach((d) => d.dispose())
-                  quick_pick_files.dispose()
+            if (selected_commit.hash == 'ahead-of-branch') {
+              let branches_output: string = ''
+              try {
+                branches_output = execSync(`git branch --sort=-committerdate`, {
+                  cwd: repository.rootUri.fsPath,
+                  encoding: 'utf-8'
                 })
-              )
-
-              quick_pick_files.show()
-            })
-
-            if (selected_files == 'back') {
-              break // break inner loop
-            }
-
-            if (!selected_files) {
-              return
-            }
-
-            let selected_paths: string[] = []
-
-            if (selected_files === 'search') {
-              const search_result = await search_files({
-                get_files: async () => valid_files.map((f) => f.absolute_path),
-                workspace_provider,
-                extension_context,
-                websocket_manager,
-                show_back_button: true,
-                disable_semantic: true
-              })
-
-              if (search_result === 'back') {
-                continue
+                  .toString()
+                  .trim()
+              } catch (e) {
+                // ignore empty output
               }
 
-              if (!search_result) {
+              const branches = branches_output
+                .split('\n')
+                .filter((line) => !line.startsWith('* '))
+                .map((line) => {
+                  const name = line.trim()
+                  return {
+                    label: name,
+                    name
+                  }
+                })
+                .filter((b) => b.name.length > 0)
+
+              if (branches.length === 0) {
+                vscode.window.showInformationMessage(
+                  t('command.select-commit-files.no-other-branches')
+                )
+                break // back to commit selection
+              }
+
+              const branch_qp = vscode.window.createQuickPick<
+                vscode.QuickPickItem & { name: string }
+              >()
+              branch_qp.title = t('command.select-commit-files.branches')
+              branch_qp.items = branches
+              branch_qp.placeholder = t(
+                'command.select-commit-files.select-branch'
+              )
+              branch_qp.buttons = [
+                vscode.QuickInputButtons.Back,
+                { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
+              ]
+
+              const selected_branch = await new Promise<
+                (vscode.QuickPickItem & { name: string }) | 'back' | undefined
+              >((resolve) => {
+                let is_accepted = false
+                const disposables: vscode.Disposable[] = []
+
+                disposables.push(
+                  branch_qp.onDidTriggerButton((button) => {
+                    if (button === vscode.QuickInputButtons.Back) {
+                      resolve('back')
+                      branch_qp.hide()
+                    } else {
+                      resolve(undefined)
+                      branch_qp.hide()
+                    }
+                  }),
+                  branch_qp.onDidAccept(() => {
+                    is_accepted = true
+                    resolve(branch_qp.selectedItems[0])
+                    branch_qp.hide()
+                  }),
+                  branch_qp.onDidHide(() => {
+                    if (!is_accepted) {
+                      resolve('back')
+                    }
+                    disposables.forEach((d) => d.dispose())
+                    branch_qp.dispose()
+                  })
+                )
+                branch_qp.show()
+              })
+
+              if (selected_branch === 'back') {
+                break // back to commit selection
+              }
+
+              if (!selected_branch) {
                 return
               }
 
-              selected_paths = search_result.selected_paths
-            } else {
-              selected_paths = selected_files.map((item) => item.file_path)
-            }
-
-            if (selected_paths.length == 0) {
-              break
-            }
-
-            if (currently_checked.length > 0) {
-              const selected_paths_set = new Set(selected_paths)
-              const is_identical =
-                currently_checked.length == selected_paths_set.size &&
-                currently_checked.every((file) => selected_paths_set.has(file))
-
-              if (is_identical) {
-                vscode.window.showInformationMessage(
-                  t('common.info.context-already-set')
+              try {
+                files_output = execSync(
+                  `git log ${selected_branch.name}..HEAD --name-only --pretty="format:%B"`,
+                  {
+                    cwd: repository.rootUri.fsPath,
+                    encoding: 'utf-8'
+                  }
                 )
-                break
+                  .toString()
+                  .trim()
+              } catch (e) {
+                // ignore
+              }
+
+              is_ahead_of_branch = true
+              branch_name = selected_branch.name
+
+              if (!files_output) {
+                vscode.window.showInformationMessage(
+                  t('command.select-commit-files.no-modified')
+                )
+                continue // retry branch selection
+              }
+            } else {
+              try {
+                files_output = execSync(
+                  `git show --name-only --pretty="format:%B" ${selected_commit.hash}`,
+                  {
+                    cwd: repository.rootUri.fsPath,
+                    encoding: 'utf-8'
+                  }
+                )
+                  .toString()
+                  .trim()
+              } catch (e) {
+                // ignore
+              }
+
+              if (!files_output) {
+                vscode.window.showInformationMessage(
+                  t('command.select-commit-files.no-modified')
+                )
+                break // back to commit selection
               }
             }
 
-            const paths_to_apply = [
-              ...new Set([...currently_checked, ...selected_paths])
-            ]
+            const files = new Set<string>()
 
-            await workspace_provider.set_checked_files(paths_to_apply)
+            const ascii_paths = AsciiTree.extract_paths(files_output)
+            ascii_paths.forEach((p) => files.add(p))
 
-            vscode.window.showInformationMessage(
-              dictionary.information_message.SELECTED_FILES(
-                paths_to_apply.length
+            const lines = files_output.split('\n')
+            for (const line of lines) {
+              const trimmed = line.trim()
+              if (trimmed.length > 0) {
+                files.add(trimmed)
+              }
+            }
+
+            const valid_files = Array.from(files)
+              .map((f) => {
+                const absolute_path = path.join(repository.rootUri.fsPath, f)
+                return {
+                  relative_path: f,
+                  absolute_path,
+                  exists:
+                    fs.existsSync(absolute_path) &&
+                    fs.statSync(absolute_path).isFile()
+                }
+              })
+              .filter((f) => f.exists)
+
+            if (valid_files.length === 0) {
+              vscode.window.showInformationMessage(
+                t('command.select-commit-files.no-valid')
               )
-            )
+              if (is_ahead_of_branch) {
+                continue // retry branch selection
+              } else {
+                break // back to commit selection
+              }
+            }
 
-            break
+            let file_action: 'back' | 'finished' = 'finished'
+
+            // Inner loop for file selection
+            while (true) {
+              const currently_checked = workspace_provider.get_checked_files()
+              const currently_checked_set = new Set(currently_checked)
+
+              const file_items = await Promise.all(
+                valid_files.map(async (f) => {
+                  const token_count =
+                    await workspace_provider.calculate_file_tokens(
+                      f.absolute_path
+                    )
+                  const formatted_token_count = display_token_count(
+                    token_count.total
+                  )
+                  const dir_name = path.dirname(f.relative_path)
+                  const display_dir = dir_name === '.' ? '' : dir_name
+
+                  return {
+                    label: path.basename(f.relative_path),
+                    description: display_dir
+                      ? `${formatted_token_count} · ${display_dir}`
+                      : formatted_token_count,
+                    picked: currently_checked_set.has(f.absolute_path),
+                    file_path: f.absolute_path,
+                    token_count: token_count.total
+                  }
+                })
+              )
+
+              const quick_pick_files = vscode.window.createQuickPick<any>()
+              quick_pick_files.canSelectMany = true
+              quick_pick_files.items = file_items
+              quick_pick_files.selectedItems = file_items.filter(
+                (i) => i.picked
+              )
+              quick_pick_files.title = is_ahead_of_branch
+                ? t('command.select-commit-files.files-ahead-of-branch', {
+                    branch: branch_name
+                  })
+                : t('command.select-commit-files.files-modified', {
+                    hash: title_hash
+                  })
+
+              const update_placeholder = () => {
+                const total = quick_pick_files.selectedItems.reduce(
+                  (sum: number, item: any) => sum + item.token_count,
+                  0
+                )
+                const total_text =
+                  total > 0
+                    ? ` (totalling ${display_token_count(total)} tokens)`
+                    : ''
+                quick_pick_files.placeholder = `${t(
+                  'command.select-commit-files.select-files'
+                )}${total_text}`
+              }
+              update_placeholder()
+              quick_pick_files.onDidChangeSelection(update_placeholder)
+
+              const search_button = {
+                iconPath: new vscode.ThemeIcon('search'),
+                tooltip: t('common.search-in-results')
+              }
+
+              const close_button = {
+                iconPath: new vscode.ThemeIcon('close'),
+                tooltip: t('common.close')
+              }
+
+              quick_pick_files.buttons = [
+                vscode.QuickInputButtons.Back,
+                search_button,
+                close_button
+              ]
+              quick_pick_files.ignoreFocusOut = true
+
+              const selected_files = await new Promise<
+                any[] | 'back' | undefined | 'search'
+              >((resolve) => {
+                let is_resolved = false
+                const disposables: vscode.Disposable[] = []
+
+                disposables.push(
+                  quick_pick_files.onDidTriggerButton((button) => {
+                    if (button === vscode.QuickInputButtons.Back) {
+                      is_resolved = true
+                      resolve('back')
+                      quick_pick_files.hide()
+                    } else if (button === search_button) {
+                      is_resolved = true
+                      resolve('search')
+                      quick_pick_files.hide()
+                    } else if (button === close_button) {
+                      is_resolved = true
+                      resolve(undefined)
+                      quick_pick_files.hide()
+                    }
+                  }),
+                  quick_pick_files.onDidAccept(() => {
+                    is_resolved = true
+                    resolve(Array.from(quick_pick_files.selectedItems))
+                    quick_pick_files.hide()
+                  }),
+                  quick_pick_files.onDidHide(() => {
+                    if (!is_resolved) {
+                      resolve('back')
+                    }
+                    disposables.forEach((d) => d.dispose())
+                    quick_pick_files.dispose()
+                  })
+                )
+
+                quick_pick_files.show()
+              })
+
+              if (selected_files === 'back') {
+                file_action = 'back'
+                break // break inner loop
+              }
+
+              if (!selected_files) {
+                return
+              }
+
+              let selected_paths: string[] = []
+
+              if (selected_files === 'search') {
+                const search_result = await search_files({
+                  get_files: async () =>
+                    valid_files.map((f) => f.absolute_path),
+                  workspace_provider,
+                  extension_context,
+                  websocket_manager,
+                  show_back_button: true,
+                  disable_semantic: true
+                })
+
+                if (search_result === 'back') {
+                  continue
+                }
+
+                if (!search_result) {
+                  return
+                }
+
+                selected_paths = search_result.selected_paths
+              } else {
+                selected_paths = selected_files.map((item) => item.file_path)
+              }
+
+              if (selected_paths.length === 0) {
+                file_action = 'finished'
+                break
+              }
+
+              if (currently_checked.length > 0) {
+                const selected_paths_set = new Set(selected_paths)
+                const is_identical =
+                  currently_checked.length === selected_paths_set.size &&
+                  currently_checked.every((file) =>
+                    selected_paths_set.has(file)
+                  )
+
+                if (is_identical) {
+                  vscode.window.showInformationMessage(
+                    t('common.info.context-already-set')
+                  )
+                  file_action = 'finished'
+                  break
+                }
+              }
+
+              const paths_to_apply = [
+                ...new Set([...currently_checked, ...selected_paths])
+              ]
+
+              await workspace_provider.set_checked_files(paths_to_apply)
+
+              vscode.window.showInformationMessage(
+                dictionary.information_message.SELECTED_FILES(
+                  paths_to_apply.length
+                )
+              )
+
+              file_action = 'finished'
+              break
+            }
+
+            if (file_action === 'back') {
+              if (is_ahead_of_branch) {
+                continue // go back to branch selection
+              } else {
+                break // go back to commit selection
+              }
+            }
+
+            if (file_action === 'finished') {
+              break // go back to commit selection
+            }
           }
         }
       } catch (error) {
