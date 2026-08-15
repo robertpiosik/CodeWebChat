@@ -129,7 +129,7 @@ export const process_file = async (params: {
     ? intelligent_update_fallback_edit_format_instructions
     : intelligent_update_edit_format_instructions
 
-  const content = `# Task\n\n${intelligent_update_task_instructions}\n\n# File\n\n${params.file_content}\n\n# Output formatting\n\n${edit_format_instructions}\n\n# Task\n\n${intelligent_update_task_instructions}\n\n# Changes\n\n${params.instruction}`
+  const content = `# File\n\n${params.file_content}\n\n# Output formatting\n\n${edit_format_instructions}\n\n# Task\n\n${intelligent_update_task_instructions}\n\n# Changes\n\n${params.instruction}`
 
   const messages = [
     {
