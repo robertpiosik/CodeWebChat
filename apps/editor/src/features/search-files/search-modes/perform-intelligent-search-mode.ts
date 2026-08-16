@@ -334,7 +334,8 @@ export const perform_intelligent_search_mode = async (params: {
               const sent = await params.websocket_manager.initialize_chat({
                 text: chatbot_prompt,
                 web_configuration_name: selected_web_configuration_name,
-                invocation_count: 1
+                invocation_count: 1,
+                inject_apply_response_button: true
               })
               if (sent) {
                 vscode.window.showInformationMessage(
