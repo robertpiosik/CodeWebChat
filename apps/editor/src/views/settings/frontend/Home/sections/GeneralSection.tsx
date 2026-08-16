@@ -14,8 +14,8 @@ import {
 } from '@/constants/values'
 import { use_translation } from '../../i18n/use-translation'
 import { NavItem } from '../Home'
-import { PromptTemplates } from '@ui/components/editor/settings/PromptTemplates'
-import { PromptTemplate } from '@/views/settings/types/messages'
+import { Templates } from '@ui/components/editor/settings/Templates'
+import { Template } from '@/views/settings/types/messages'
 
 type ClearChecksBehavior = 'ignore-open-editors' | 'uncheck-all'
 
@@ -64,8 +64,8 @@ type Props = {
   default_find_relevant_instructions: string
   on_restore_find_relevant_instructions: () => void
   on_open_external_url: (url: string) => void
-  templates: Record<string, PromptTemplate[]>
-  on_update_templates: (key: string, templates: PromptTemplate[]) => void
+  templates: Record<string, Template[]>
+  on_update_templates: (key: string, templates: Template[]) => void
   on_edit_template: (key: string, index: number) => void
   on_add_template: (key: string, params?: { insertion_index?: number }) => void
 }
@@ -297,7 +297,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 collapse: t('common.collapse')
               }}
             >
-              <PromptTemplates
+              <Templates
                 templates={props.templates}
                 on_reorder={(key, templates) =>
                   props.on_update_templates(key, templates)

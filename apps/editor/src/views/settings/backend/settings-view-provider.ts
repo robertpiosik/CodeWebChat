@@ -163,11 +163,11 @@ export class SettingsViewProvider {
           await handle_delete_model_provider(this, message)
         } else if (message.command == 'UPDATE_MODEL_PROVIDER') {
           await handle_update_model_provider(this, message)
-        } else if (message.command == 'GET_PROMPT_TEMPLATES') {
+        } else if (message.command == 'GET_TEMPLATES') {
           await handle_get_templates(this)
-        } else if (message.command == 'UPDATE_PROMPT_TEMPLATES') {
+        } else if (message.command == 'UPDATE_TEMPLATES') {
           await handle_update_templates(message)
-        } else if (message.command == 'CREATE_PROMPT_TEMPLATE') {
+        } else if (message.command == 'CREATE_TEMPLATE') {
           await handle_create_template(this, message)
         } else if (message.command == 'GET_API_CONFIGURATIONS') {
           await handle_get_api_configurations(this)

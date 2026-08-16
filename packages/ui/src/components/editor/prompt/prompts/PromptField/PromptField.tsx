@@ -85,7 +85,7 @@ export type PromptFieldProps = {
     exit_voice_input: string
     reference_file: string
     insert_symbol: string
-    prompt_templates: string
+    templates: string
     edit_format: string
     edit_format_whole: string
     edit_format_search_replace: string
@@ -525,7 +525,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           )}
           {hovered_left_action == 'slash' && (
             <Tooltip
-              message={props.translations.prompt_templates}
+              message={props.translations.templates}
               align="left"
               offset={48}
             />

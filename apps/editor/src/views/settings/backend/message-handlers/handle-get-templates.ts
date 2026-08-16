@@ -6,7 +6,7 @@ export const handle_get_templates = async (
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   provider.postMessage({
-    command: 'PROMPT_TEMPLATES',
+    command: 'TEMPLATES',
     templates: {
       templatesForEditFiles: config.get('templatesForEditFiles', []),
       templatesForAskAboutFiles: config.get('templatesForAskAboutFiles', []),

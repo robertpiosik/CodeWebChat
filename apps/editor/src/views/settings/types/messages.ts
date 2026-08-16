@@ -334,23 +334,23 @@ export interface UpdateModelProviderMessage {
   insertion_index?: number
 }
 
-export type PromptTemplate = {
+export type Template = {
   name?: string
   template: string
 }
 
-export interface GetPromptTemplatesMessage {
-  command: 'GET_PROMPT_TEMPLATES'
+export interface GetTemplatesMessage {
+  command: 'GET_TEMPLATES'
 }
 
-export interface UpdatePromptTemplatesMessage {
-  command: 'UPDATE_PROMPT_TEMPLATES'
+export interface UpdateTemplatesMessage {
+  command: 'UPDATE_TEMPLATES'
   templates_key: string
-  templates: PromptTemplate[]
+  templates: Template[]
 }
 
-export interface CreatePromptTemplateMessage {
-  command: 'CREATE_PROMPT_TEMPLATE'
+export interface CreateTemplateMessage {
+  command: 'CREATE_TEMPLATE'
   templates_key: string
   insertion_index?: number
 }
@@ -424,9 +424,9 @@ export type FrontendMessage =
   | PickApiReasoningEffortMessage
   | UpdateModelProviderMessage
   | GetIsModernUiMessage
-  | GetPromptTemplatesMessage
-  | UpdatePromptTemplatesMessage
-  | CreatePromptTemplateMessage
+  | GetTemplatesMessage
+  | UpdateTemplatesMessage
+  | CreateTemplateMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface ModelProvidersMessage {
@@ -601,15 +601,15 @@ export interface IsModernUiMessage {
   is_modern_ui: boolean
 }
 
-export interface PromptTemplatesMessage {
-  command: 'PROMPT_TEMPLATES'
-  templates: Record<string, PromptTemplate[]>
+export interface TemplatesMessage {
+  command: 'TEMPLATES'
+  templates: Record<string, Template[]>
 }
 
-export interface StartPromptTemplateCreationMessage {
-  command: 'START_PROMPT_TEMPLATE_CREATION'
+export interface StartTemplateCreationMessage {
+  command: 'START_TEMPLATE_CREATION'
   templates_key: string
-  template: PromptTemplate
+  template: Template
   insertion_index?: number
 }
 
@@ -648,5 +648,5 @@ export type BackendMessage =
   | StartModelProviderCreationMessage
   | ModelProviderUpdatedMessage
   | IsModernUiMessage
-  | PromptTemplatesMessage
-  | StartPromptTemplateCreationMessage
+  | TemplatesMessage
+  | StartTemplateCreationMessage

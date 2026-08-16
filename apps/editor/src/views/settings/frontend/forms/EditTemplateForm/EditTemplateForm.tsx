@@ -6,11 +6,11 @@ import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
 import { Fieldset as UiFieldset } from '@ui/components/editor/prompt/Fieldset'
 import { use_translation } from '../../i18n/use-translation'
-import { PromptTemplate } from '@/views/settings/types/messages'
+import { Template } from '@/views/settings/types/messages'
 
 type Props = {
-  template: PromptTemplate
-  on_update: (draft: PromptTemplate) => void
+  template: Template
+  on_update: (draft: Template) => void
 }
 
 export const EditTemplateForm: React.FC<Props> = (props) => {

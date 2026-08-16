@@ -1,8 +1,8 @@
 import * as vscode from 'vscode'
-import { UpdatePromptTemplatesMessage } from '@/views/settings/types/messages'
+import { UpdateTemplatesMessage } from '@/views/settings/types/messages'
 
 export const handle_update_templates = async (
-  message: UpdatePromptTemplatesMessage
+  message: UpdateTemplatesMessage
 ): Promise<void> => {
   await vscode.workspace
     .getConfiguration('codeWebChat')

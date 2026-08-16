@@ -7,7 +7,7 @@ import { ApiConfigurationsSection } from './sections/ApiConfigurationsSection'
 import {
   ApiConfiguration,
   Provider,
-  PromptTemplate
+  Template
 } from '@/views/settings/types/messages'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { GeneralSection } from './sections/GeneralSection'
@@ -123,13 +123,10 @@ type Props = {
   checkpoint_lifespan: number
   clear_checks_in_workspace_behavior: 'ignore-open-editors' | 'uncheck-all'
   auto_run_intelligent_update: boolean
-  prompt_templates: Record<string, PromptTemplate[]>
-  on_update_prompt_templates: (key: string, templates: PromptTemplate[]) => void
-  on_edit_prompt_template: (key: string, index: number) => void
-  on_add_prompt_template: (
-    key: string,
-    params?: { insertion_index?: number }
-  ) => void
+  templates: Record<string, Template[]>
+  on_update_templates: (key: string, templates: Template[]) => void
+  on_edit_template: (key: string, index: number) => void
+  on_add_template: (key: string, params?: { insertion_index?: number }) => void
   set_providers: (providers: Provider[]) => void
   set_api_configurations: (configurations: ApiConfiguration[]) => void
   set_web_configurations: (configurations: WebConfiguration[]) => void
@@ -485,10 +482,10 @@ export const Home: React.FC<Props> = (props) => {
             )
           }}
           on_open_external_url={props.on_open_external_url}
-          templates={props.prompt_templates}
-          on_update_templates={props.on_update_prompt_templates}
-          on_edit_template={props.on_edit_prompt_template}
-          on_add_template={props.on_add_prompt_template}
+          templates={props.templates}
+          on_update_templates={props.on_update_templates}
+          on_edit_template={props.on_edit_template}
+          on_add_template={props.on_add_template}
         />
 
         <WebConfigurationsSection

@@ -749,7 +749,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await vscode.commands.executeCommand(message.command_id)
           } else if (message.command == 'MAKE_API_CALL') {
             await handle_make_api_call(this, message)
-          } else if (message.command == 'SHOW_PROMPT_TEMPLATE_QUICK_PICK') {
+          } else if (message.command == 'SHOW_TEMPLATE_QUICK_PICK') {
             await handle_template_quick_pick(this)
           } else if (message.command == 'GET_WEB_PROMPT_TYPE') {
             handle_get_web_prompt_type(this)

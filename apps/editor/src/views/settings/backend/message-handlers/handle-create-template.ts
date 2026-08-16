@@ -1,11 +1,11 @@
 import * as vscode from 'vscode'
-import { CreatePromptTemplateMessage } from '@/views/settings/types/messages'
+import { CreateTemplateMessage } from '@/views/settings/types/messages'
 import { SettingsViewProvider } from '../settings-view-provider'
 import { t } from '@/i18n'
 
 export const handle_create_template = async (
   provider: SettingsViewProvider,
-  message: CreatePromptTemplateMessage
+  message: CreateTemplateMessage
 ): Promise<void> => {
   let insertion_index: number | undefined
 
@@ -71,7 +71,7 @@ export const handle_create_template = async (
   }
 
   provider.postMessage({
-    command: 'START_PROMPT_TEMPLATE_CREATION',
+    command: 'START_TEMPLATE_CREATION',
     templates_key: message.templates_key,
     template: { template: '' },
     insertion_index

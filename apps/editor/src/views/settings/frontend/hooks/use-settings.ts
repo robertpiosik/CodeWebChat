@@ -3,7 +3,7 @@ import {
   BackendMessage,
   ApiConfiguration,
   Provider,
-  PromptTemplate
+  Template
 } from '@/views/settings/types/messages'
 import { ApiFeature } from '@/views/shared/types/api-features'
 import { post_message } from '../utils/post-message'
@@ -73,8 +73,8 @@ export const use_settings = (vscode: any) => {
   const [is_modern_ui, set_is_modern_ui] = useState<boolean | undefined>(
     undefined
   )
-  const [prompt_templates, set_prompt_templates] = useState<
-    Record<string, PromptTemplate[]> | undefined
+  const [templates, set_templates] = useState<
+    Record<string, Template[]> | undefined
   >(undefined)
 
   useEffect(() => {
@@ -105,7 +105,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR' })
     post_message(vscode, { command: 'GET_AUTO_RUN_INTELLIGENT_UPDATE' })
     post_message(vscode, { command: 'GET_IS_MODERN_UI' })
-    post_message(vscode, { command: 'GET_PROMPT_TEMPLATES' })
+    post_message(vscode, { command: 'GET_TEMPLATES' })
   }, [vscode])
 
   useEffect(() => {
@@ -156,8 +156,8 @@ export const use_settings = (vscode: any) => {
         set_auto_run_intelligent_update(message.enabled)
       } else if (message.command == 'IS_MODERN_UI') {
         set_is_modern_ui(message.is_modern_ui)
-      } else if (message.command == 'PROMPT_TEMPLATES') {
-        set_prompt_templates(message.templates)
+      } else if (message.command == 'TEMPLATES') {
+        set_templates(message.templates)
       }
     }
 
@@ -415,29 +415,33 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_add_prompt_template = (
+  const handle_add_template = (
     key: string,
     params?: { insertion_index?: number }
   ) => {
     post_message(vscode, {
-      command: 'CREATE_PROMPT_TEMPLATE',
+      command: 'CREATE_TEMPLATE',
       templates_key: key,
       insertion_index: params?.insertion_index
     })
   }
 
-  const handle_update_prompt_templates = (
+  const handle_update_templates = (
     templates_key: string,
-    templates: PromptTemplate[]
+    templates: Template[]
   ) => {
-    if (prompt_templates) {
-      set_prompt_templates({
-        ...prompt_templates,
-        [templates_key]: templates
-      })
+    if (templates) {
+      set_templates((prev) =>
+        prev
+          ? {
+              ...prev,
+              [templates_key]: templates
+            }
+          : prev
+      )
     }
     post_message(vscode, {
-      command: 'UPDATE_PROMPT_TEMPLATES',
+      command: 'UPDATE_TEMPLATES',
       templates_key,
       templates
     })
@@ -502,8 +506,8 @@ export const use_settings = (vscode: any) => {
     handle_auto_run_intelligent_update_change,
     handle_open_keybindings,
     handle_open_external_url,
-    prompt_templates,
-    handle_update_prompt_templates,
-    handle_add_prompt_template
+    templates,
+    handle_update_templates,
+    handle_add_template
   }
 }

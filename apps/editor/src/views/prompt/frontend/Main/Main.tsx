@@ -440,7 +440,7 @@ export const Main: React.FC<Props> = (props) => {
 
   const handle_slash_click = () => {
     post_message(props.vscode, {
-      command: 'SHOW_PROMPT_TEMPLATE_QUICK_PICK'
+      command: 'SHOW_TEMPLATE_QUICK_PICK'
     })
   }
 

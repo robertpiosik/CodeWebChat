@@ -1,11 +1,11 @@
 import { ReactSortable } from 'react-sortablejs'
-import styles from './PromptTemplates.module.scss'
+import styles from './Templates.module.scss'
 import cn from 'classnames'
 import { IconButton } from '../../common/IconButton'
 import { Notice } from '../Notice'
 import { useState } from 'react'
 
-export namespace PromptTemplates {
+export namespace Templates {
   export type Template = {
     name?: string
     template: string
@@ -30,7 +30,7 @@ export namespace PromptTemplates {
   }
 }
 
-export const PromptTemplates: React.FC<PromptTemplates.Props> = (props) => {
+export const Templates: React.FC<Templates.Props> = (props) => {
   const [expanded_keys, set_expanded_keys] = useState<Record<string, boolean>>(
     {}
   )

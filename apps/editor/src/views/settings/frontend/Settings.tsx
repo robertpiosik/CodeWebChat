@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { use_settings } from './hooks/use-settings'
 import { post_message } from './utils/post-message'
-import { BackendMessage, PromptTemplate } from '../types/messages'
+import { BackendMessage, Template } from '../types/messages'
 import { Home, NavItem } from './Home/Home'
 import { use_web_configuration_editing } from './hooks/use-web-configuration-editing'
 import { use_api_configuration_editing } from './hooks/use-api-configuration-editing'
@@ -46,37 +46,38 @@ export const Settings = () => {
   const [scroll_to_section_on_load, set_scroll_to_section_on_load] =
     useState<NavItem>()
 
-  const [updating_prompt_template, set_updating_prompt_template] = useState<{
+  const [updating_template, set_updating_template] = useState<{
     key: string
     index?: number
     insertion_index?: number
-    template: PromptTemplate
+    template: Template
   } | null>(null)
-  const [updated_prompt_template, set_updated_prompt_template] =
-    useState<PromptTemplate | null>(null)
+  const [updated_template, set_updated_template] = useState<Template | null>(
+    null
+  )
 
-  const edit_prompt_template_cancel_handler = () => {
-    set_updating_prompt_template(null)
-    set_updated_prompt_template(null)
+  const edit_template_cancel_handler = () => {
+    set_updating_template(null)
+    set_updated_template(null)
   }
 
-  const edit_prompt_template_save_handler = () => {
-    if (updating_prompt_template && updated_prompt_template) {
-      const { key, index, insertion_index } = updating_prompt_template
-      const templates = [...(settings_hook.prompt_templates?.[key] || [])]
+  const edit_template_save_handler = () => {
+    if (updating_template && updated_template) {
+      const { key, index, insertion_index } = updating_template
+      const templates = [...(settings_hook.templates?.[key] || [])]
 
       if (index !== undefined) {
-        templates[index] = updated_prompt_template
+        templates[index] = updated_template
       } else if (insertion_index !== undefined) {
-        templates.splice(insertion_index, 0, updated_prompt_template)
+        templates.splice(insertion_index, 0, updated_template)
       } else {
-        templates.push(updated_prompt_template)
+        templates.push(updated_template)
       }
 
-      settings_hook.handle_update_prompt_templates(key, templates)
+      settings_hook.handle_update_templates(key, templates)
     }
-    set_updating_prompt_template(null)
-    set_updated_prompt_template(null)
+    set_updating_template(null)
+    set_updated_template(null)
   }
 
   const all_data_loaded = useMemo(() => {
@@ -104,7 +105,7 @@ export const Settings = () => {
       settings_hook.clear_checks_in_workspace_behavior !== undefined &&
       settings_hook.auto_run_intelligent_update !== undefined &&
       settings_hook.is_modern_ui !== undefined &&
-      settings_hook.prompt_templates !== undefined
+      settings_hook.templates !== undefined
     )
   }, [settings_hook])
 
@@ -114,13 +115,13 @@ export const Settings = () => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       if (event.data.command == 'SHOW_SECTION') {
         set_scroll_to_section_on_load(event.data.section as NavItem)
-      } else if (event.data.command == 'START_PROMPT_TEMPLATE_CREATION') {
-        set_updating_prompt_template({
+      } else if (event.data.command == 'START_TEMPLATE_CREATION') {
+        set_updating_template({
           key: event.data.templates_key,
           insertion_index: event.data.insertion_index,
           template: event.data.template
         })
-        set_updated_prompt_template(event.data.template)
+        set_updated_template(event.data.template)
       }
     }
     window.addEventListener('message', handle_message)
@@ -170,18 +171,16 @@ export const Settings = () => {
           settings_hook.clear_checks_in_workspace_behavior!
         }
         auto_run_intelligent_update={settings_hook.auto_run_intelligent_update!}
-        prompt_templates={settings_hook.prompt_templates!}
-        on_update_prompt_templates={
-          settings_hook.handle_update_prompt_templates
-        }
-        on_edit_prompt_template={(key, index) => {
-          const template = settings_hook.prompt_templates?.[key]?.[index]
+        templates={settings_hook.templates!}
+        on_update_templates={settings_hook.handle_update_templates}
+        on_edit_template={(key, index) => {
+          const template = settings_hook.templates?.[key]?.[index]
           if (template) {
-            set_updating_prompt_template({ key, index, template })
-            set_updated_prompt_template(template)
+            set_updating_template({ key, index, template })
+            set_updated_template(template)
           }
         }}
-        on_add_prompt_template={settings_hook.handle_add_prompt_template}
+        on_add_template={settings_hook.handle_add_template}
         set_providers={settings_hook.set_providers}
         set_api_configurations={settings_hook.set_api_configurations}
         on_synchronize_edit_format_between_modes_change={
@@ -374,20 +373,20 @@ export const Settings = () => {
           </UiModal.Form>
         </UiModal>
       )}
-      {updating_prompt_template && (
-        <UiModal on_close={edit_prompt_template_cancel_handler}>
+      {updating_template && (
+        <UiModal on_close={edit_template_cancel_handler}>
           <UiModal.Form
             title={
-              updating_prompt_template.index !== undefined
+              updating_template.index !== undefined
                 ? 'Edit Template'
                 : 'Add Template'
             }
-            on_save={edit_prompt_template_save_handler}
-            on_cancel={edit_prompt_template_cancel_handler}
+            on_save={edit_template_save_handler}
+            on_cancel={edit_template_cancel_handler}
           >
             <EditTemplateForm
-              template={updating_prompt_template.template}
-              on_update={set_updated_prompt_template}
+              template={updating_template.template}
+              on_update={set_updated_template}
             />
           </UiModal.Form>
         </UiModal>
