@@ -1088,24 +1088,6 @@ export const translations = {
     hu: 'Kezelje az egyes prompttípusok sablonjait.',
     bg: 'Управлявайте шаблони за всеки тип промпт.'
   },
-  'general.templates.empty-notice': {
-    en: 'No templates for this type.',
-    pl: 'Brak szablonów dla tego typu.',
-    'zh-cn': '该类型没有模板。',
-    ja: 'このタイプのテンプレートはありません。',
-    'zh-tw': '該類型沒有模板。',
-    de: 'Keine Vorlagen für diesen Typ.',
-    es: 'No hay plantillas para este tipo.',
-    fr: 'Aucun modèle pour ce type.',
-    'pt-br': 'Nenhum modelo para este tipo.',
-    ru: 'Нет шаблонов для этого типа.',
-    ko: '이 유형에 대한 템플릿이 없습니다.',
-    it: 'Nessun modello per questo tipo.',
-    tr: 'Bu tür için şablon yok.',
-    cs: 'Žádné šablony pro tento typ.',
-    hu: 'Nincsenek sablonok ehhez a típushoz.',
-    bg: 'Няма шаблони за този тип.'
-  },
   'general.templates.item': {
     en: 'template',
     pl: 'szablon',

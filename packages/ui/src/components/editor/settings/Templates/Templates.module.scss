@@ -11,8 +11,10 @@
   border-radius: 6px;
   overflow: hidden;
 
-  &:hover {
-    border-color: var(--cwc-border-color-hover);
+  &--expanded {
+    .group__header {
+      background-color: var(--cwc-bg-tertiary);
+    }
   }
 
   &__header {
@@ -24,8 +26,8 @@
     cursor: pointer;
     user-select: none;
 
-    + div {
-      margin-top: -8px;
+    &:hover {
+      background-color: var(--cwc-bg-tertiary);
     }
   }
 
@@ -44,7 +46,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  --row-height: 32px;
+  --row-height: 40px;
 }
 
 .header {
@@ -101,12 +103,6 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-
-  &__detail {
-    margin-left: 0.5em;
-    opacity: 0.7;
-    font-size: 0.9em;
-  }
 }
 
 .drag-handle {

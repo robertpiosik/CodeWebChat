@@ -2,7 +2,6 @@ import { ReactSortable } from 'react-sortablejs'
 import styles from './Templates.module.scss'
 import cn from 'classnames'
 import { IconButton } from '../../common/IconButton'
-import { Notice } from '../Notice'
 import { useState } from 'react'
 
 export namespace Templates {
@@ -15,17 +14,16 @@ export namespace Templates {
     templates: Record<string, Template[]>
     on_reorder: (key: string, templates: Template[]) => void
     on_delete: (key: string, index: number) => void
-    on_edit?: (key: string, index: number) => void
-    on_add?: (key: string, params?: { insertion_index?: number }) => void
+    on_edit: (key: string, index: number) => void
+    on_add: (key: string, params?: { insertion_index?: number }) => void
     translations: {
       item_text: string
       items_text: string
-      items_text_many?: string
+      items_text_many: string
       types: Record<string, string>
-      empty_notice: string
-      expand?: string
-      collapse?: string
-      add_new?: string
+      expand: string
+      collapse: string
+      add_new: string
     }
   }
 }
@@ -50,31 +48,26 @@ export const Templates: React.FC<Templates.Props> = (props) => {
           {(() => {
             if (count === 1) return props.translations.item_text
 
-            if (props.translations.items_text_many) {
-              const last_digit = count % 10
-              const last_two_digits = count % 100
-              const is_few =
-                last_digit >= 2 &&
-                last_digit <= 4 &&
-                (last_two_digits < 12 || last_two_digits > 14)
-              return is_few
-                ? props.translations.items_text
-                : props.translations.items_text_many
-            }
-            return props.translations.items_text
+            const last_digit = count % 10
+            const last_two_digits = count % 100
+            const is_few =
+              last_digit >= 2 &&
+              last_digit <= 4 &&
+              (last_two_digits < 12 || last_two_digits > 14)
+            return is_few
+              ? props.translations.items_text
+              : props.translations.items_text_many
           })()}
         </div>
       </div>
-      {props.on_add && (
-        <IconButton
-          codicon_icon="add"
-          title={props.translations.add_new || 'Add new...'}
-          on_click={(e) => {
-            e.stopPropagation()
-            props.on_add?.(key)
-          }}
-        />
-      )}
+      <IconButton
+        codicon_icon="add"
+        title={props.translations.add_new}
+        on_click={(e) => {
+          e.stopPropagation()
+          props.on_add(key)
+        }}
+      />
     </div>
   )
 
@@ -107,8 +100,8 @@ export const Templates: React.FC<Templates.Props> = (props) => {
                 codicon_icon={is_expanded ? 'chevron-up' : 'chevron-down'}
                 title={
                   is_expanded
-                    ? props.translations.collapse || 'Collapse'
-                    : props.translations.expand || 'Expand'
+                    ? props.translations.collapse
+                    : props.translations.expand
                 }
                 on_click={(e) => {
                   e.stopPropagation()
@@ -121,13 +114,7 @@ export const Templates: React.FC<Templates.Props> = (props) => {
               <div className={styles.group__content}>
                 <div className={styles.container}>
                   {render_header(sortable_items.length, key, true)}
-                  {sortable_items.length === 0 ? (
-                    <div style={{ padding: '12px' }}>
-                      <Notice type="info">
-                        {props.translations.empty_notice}
-                      </Notice>
-                    </div>
-                  ) : (
+                  {sortable_items.length > 0 && (
                     <>
                       <div className={styles.list}>
                         <ReactSortable
@@ -166,13 +153,6 @@ export const Templates: React.FC<Templates.Props> = (props) => {
                               <div className={styles.row__content}>
                                 <div className={styles['item-text']}>
                                   <span>{item.name || 'Unnamed'}</span>
-                                  {item.template && (
-                                    <span
-                                      className={styles['item-text__detail']}
-                                    >
-                                      {item.template}
-                                    </span>
-                                  )}
                                 </div>
                               </div>
                               <div className={styles['col-actions']}>
@@ -181,7 +161,7 @@ export const Templates: React.FC<Templates.Props> = (props) => {
                                   title="Insert"
                                   on_click={(e) => {
                                     e.stopPropagation()
-                                    props.on_add?.(key, {
+                                    props.on_add(key, {
                                       insertion_index: index
                                     })
                                   }}

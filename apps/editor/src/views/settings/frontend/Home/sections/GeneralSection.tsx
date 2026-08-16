@@ -313,7 +313,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                   item_text: t('general.templates.item'),
                   items_text: t('general.templates.items'),
                   items_text_many: t('general.templates.items-many'),
-                  empty_notice: t('general.templates.empty-notice'),
                   expand: t('common.expand'),
                   collapse: t('common.collapse'),
                   add_new: t('action.add-new'),
