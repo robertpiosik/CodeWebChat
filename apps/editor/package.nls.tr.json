@@ -52,7 +52,7 @@
   "codeWebChat.removeFolderFromWorkspace.title": "Klasörü Çalışma Alanından Kaldır",
   "codeWebChat.openWebsitePreviewUrl.title": "URL'yi Tarayıcıda Aç",
   "codeWebChat.selectUnstagedFiles.title": "Değiştirilen Dosyaları Seç...",
-  "codeWebChat.selectCommitFiles.title": "Bir İşlemeden (Commit) Dosyaları Seç...",
+  "codeWebChat.selectFilesOfCommit.title": "Bir İşlemeden (Commit) Dosyaları Seç...",
   "codeWebChat.selectClipboardPaths.title": "Panodaki Yolları Seç...",
   "codeWebChat.selectChangedFiles.title": "Değiştirilmiş Dosyaları Seç...",
   "codeWebChat.selectParentFolder.title": "Üst Klasörü Seç...",

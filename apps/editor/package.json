@@ -406,8 +406,8 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.selectCommitFiles",
-        "title": "%codeWebChat.selectCommitFiles.title%",
+        "command": "codeWebChat.selectFilesOfCommit",
+        "title": "%codeWebChat.selectFilesOfCommit.title%",
         "category": "Code Web Chat"
       },
       {
@@ -709,7 +709,7 @@
           "group": "3_more@3"
         },
         {
-          "command": "codeWebChat.selectCommitFiles",
+          "command": "codeWebChat.selectFilesOfCommit",
           "when": "view == codeWebChatViewWorkspace",
           "group": "3_more@4"
         },

@@ -52,7 +52,7 @@
   "codeWebChat.removeFolderFromWorkspace.title": "Remover Pasta do Espaço de Trabalho",
   "codeWebChat.openWebsitePreviewUrl.title": "Abrir URL no Navegador",
   "codeWebChat.selectUnstagedFiles.title": "Marcar Arquivos Modificados...",
-  "codeWebChat.selectCommitFiles.title": "Marcar Arquivos de um Commit...",
+  "codeWebChat.selectFilesOfCommit.title": "Marcar Arquivos de um Commit...",
   "codeWebChat.selectClipboardPaths.title": "Selecionar caminhos da área de transferência...",
   "codeWebChat.selectChangedFiles.title": "Selecionar arquivos alterados...",
   "codeWebChat.selectParentFolder.title": "Selecionar Pasta Pai...",

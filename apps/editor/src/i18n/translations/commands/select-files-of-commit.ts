@@ -1,5 +1,5 @@
 export const translations = {
-  'command.select-commit-files.no-commits': {
+  'command.select-files-of-commit.no-commits': {
     en: 'No commits found in the repository.',
     pl: 'Brak commitów w repozytorium.',
     'zh-cn': '未在存储库中找到提交。',
@@ -17,7 +17,7 @@ export const translations = {
     hu: 'Nem találhatók commitok a tárolóban.',
     bg: 'Няма намерени къмити в хранилището.'
   },
-  'command.select-commit-files.title': {
+  'command.select-files-of-commit.title': {
     en: 'Commits',
     pl: 'Commity',
     'zh-cn': '提交',
@@ -35,7 +35,7 @@ export const translations = {
     hu: 'Commitok',
     bg: 'Къмити'
   },
-  'command.select-commit-files.select': {
+  'command.select-files-of-commit.select': {
     en: 'Select a commit to load modified files from',
     pl: 'Wybierz commit, z którego załadować zmodyfikowane pliki',
     'zh-cn': '选择一个提交以加载修改的文件',
@@ -53,7 +53,7 @@ export const translations = {
     hu: 'Válasszon egy commitot a módosított fájlok betöltéséhez',
     bg: 'Изберете commit за зареждане на модифицирани файлове'
   },
-  'command.select-commit-files.ahead-of-branch': {
+  'command.select-files-of-commit.ahead-of-branch': {
     en: 'All commits ahead of a branch...',
     pl: 'Wszystkie commity przed gałęzią...',
     'zh-cn': '分支超前的所有提交...',
@@ -71,7 +71,7 @@ export const translations = {
     hu: 'Az ág előtti összes commit...',
     bg: 'Всички къмити пред клон...'
   },
-  'command.select-commit-files.branches': {
+  'command.select-files-of-commit.branches': {
     en: 'Branches',
     pl: 'Gałęzie',
     'zh-cn': '分支',
@@ -89,7 +89,7 @@ export const translations = {
     hu: 'Ágak',
     bg: 'Клонове'
   },
-  'command.select-commit-files.select-branch': {
+  'command.select-files-of-commit.select-branch': {
     en: 'Select a branch to compare with',
     pl: 'Wybierz gałąź do porównania',
     'zh-cn': '选择一个分支进行比较',
@@ -107,7 +107,7 @@ export const translations = {
     hu: 'Válasszon egy ágat az összehasonlításhoz',
     bg: 'Изберете клон за сравнение'
   },
-  'command.select-commit-files.no-other-branches': {
+  'command.select-files-of-commit.no-other-branches': {
     en: 'No other branches found in the repository.',
     pl: 'Nie znaleziono innych gałęzi w repozytorium.',
     'zh-cn': '未在存储库中找到其他分支。',
@@ -125,7 +125,7 @@ export const translations = {
     hu: 'Nem találhatók más ágak a tárolóban.',
     bg: 'Няма намерени други клонове в хранилището.'
   },
-  'command.select-commit-files.no-modified': {
+  'command.select-files-of-commit.no-modified': {
     en: 'No files modified in this commit.',
     pl: 'Brak zmodyfikowanych plików w tym commicie.',
     'zh-cn': '此提交未修改任何文件。',
@@ -143,7 +143,7 @@ export const translations = {
     hu: 'Ebben a commitban nincsenek módosított fájlok.',
     bg: 'Няма модифицирани файлове в този commit.'
   },
-  'command.select-commit-files.no-valid': {
+  'command.select-files-of-commit.no-valid': {
     en: 'No valid existing files found from this commit.',
     pl: 'Brak prawidłowych istniejących plików z tego commita.',
     'zh-cn': '在此提交中未找到有效的现有文件。',
@@ -161,7 +161,7 @@ export const translations = {
     hu: 'Nem találhatók érvényes létező fájlok ebből a commitból.',
     bg: 'Не са намерени валидни съществуващи файлове от този commit.'
   },
-  'command.select-commit-files.select-files': {
+  'command.select-files-of-commit.select-files': {
     en: 'Select files to add to context',
     pl: 'Wybierz pliki do dodania do kontekstu',
     'zh-cn': '选择要添加到上下文的文件',
@@ -179,25 +179,25 @@ export const translations = {
     hu: 'Válasszon fájlokat a kontextushoz adáshoz',
     bg: 'Изберете файлове за добавяне към контекста'
   },
-  'command.select-commit-files.files-modified': {
-    en: 'Files modified in {hash}',
-    pl: 'Pliki zmodyfikowane w {hash}',
-    'zh-cn': '在 {hash} 中修改的文件',
-    ja: '{hash} で変更されたファイル',
-    'zh-tw': '在 {hash} 中修改的檔案',
-    de: 'Geänderte Dateien in {hash}',
-    es: 'Archivos modificados en {hash}',
-    fr: 'Fichiers modifiés dans {hash}',
-    'pt-br': 'Arquivos modificados em {hash}',
-    ru: 'Файлы, измененные в {hash}',
-    ko: '{hash}에 수정된 파일',
-    it: 'File modificati in {hash}',
-    tr: '{hash} içinde değiştirilen dosyalar',
-    cs: 'Soubory změněné v {hash}',
-    hu: 'A(z) {hash} commitban módosított fájlok',
-    bg: 'Файлове, модифицирани в {hash}'
+  'command.select-files-of-commit.files-modified': {
+    en: 'Files of commit',
+    pl: 'Pliki commita',
+    'zh-cn': '提交的文件',
+    ja: 'コミットのファイル',
+    'zh-tw': '提交的檔案',
+    de: 'Dateien des Commits',
+    es: 'Archivos del commit',
+    fr: 'Fichiers du commit',
+    'pt-br': 'Arquivos do commit',
+    ru: 'Файлы коммита',
+    ko: '커밋의 파일',
+    it: 'File del commit',
+    tr: 'İşlemenin dosyaları',
+    cs: 'Soubory commitu',
+    hu: 'A commit fájljai',
+    bg: 'Файлове на къмита'
   },
-  'command.select-commit-files.files-ahead-of-branch': {
+  'command.select-files-of-commit.files-ahead-of-branch': {
     en: 'Files of commits ahead of {branch}',
     pl: 'Pliki z commitów przed gałęzią {branch}',
     'zh-cn': '{branch} 分支超前的提交文件',
@@ -214,5 +214,41 @@ export const translations = {
     cs: 'Soubory commitů před větví {branch}',
     hu: 'A(z) {branch} ág előtti commitok fájljai',
     bg: 'Файлове на къмити пред клон {branch}'
+  },
+  'command.select-files-of-commit.committed-files': {
+    en: 'committed files',
+    pl: 'zatwierdzone pliki',
+    'zh-cn': '已提交的文件',
+    ja: 'コミットされたファイル',
+    'zh-tw': '已提交的檔案',
+    de: 'bestätigte dateien',
+    es: 'archivos confirmados',
+    fr: 'fichiers commités',
+    'pt-br': 'arquivos confirmados',
+    ru: 'зафиксированные файлы',
+    ko: '커밋된 파일',
+    it: 'file committati',
+    tr: 'kaydedilmiş dosyalar',
+    cs: 'potvrzené soubory',
+    hu: 'commitált fájlok',
+    bg: 'къмитнати файлове'
+  },
+  'command.select-files-of-commit.context-files': {
+    en: 'context files',
+    pl: 'pliki kontekstowe',
+    'zh-cn': '上下文文件',
+    ja: 'コンテキストファイル',
+    'zh-tw': '上下文檔案',
+    de: 'kontextdateien',
+    es: 'archivos de contexto',
+    fr: 'fichiers de contexte',
+    'pt-br': 'arquivos de contexto',
+    ru: 'файлы контекста',
+    ko: '컨텍스트 파일',
+    it: 'file di contesto',
+    tr: 'bağlam dosyaları',
+    cs: 'kontextové soubory',
+    hu: 'kontextus fájlok',
+    bg: 'контекстни файлове'
   }
 } as const

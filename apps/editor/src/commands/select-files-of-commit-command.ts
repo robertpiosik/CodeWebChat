@@ -12,14 +12,15 @@ import { display_token_count } from '@/utils/display-token-count'
 import { search_files } from '@/features/search-files'
 import { AsciiTree } from '@/utils/ascii-tree'
 import { WebSocketManager } from '@/services/websocket-manager'
+import { show_parent_folder_quick_pick } from '@/utils/show-parent-folder-quick-pick'
 
-export const select_commit_files_command = (
+export const select_files_of_commit_command = (
   workspace_provider: WorkspaceProvider,
   extension_context: vscode.ExtensionContext,
   websocket_manager: WebSocketManager
 ): vscode.Disposable => {
   return vscode.commands.registerCommand(
-    'codeWebChat.selectCommitFiles',
+    'codeWebChat.selectFilesOfCommit',
     async () => {
       try {
         const repository = await get_git_repository()
@@ -42,7 +43,7 @@ export const select_commit_files_command = (
 
           if (!log_output) {
             vscode.window.showInformationMessage(
-              t('command.select-commit-files.no-commits')
+              t('command.select-files-of-commit.no-commits')
             )
             return
           }
@@ -58,7 +59,7 @@ export const select_commit_files_command = (
           })
 
           const ahead_of_branch_item = {
-            label: `$(git-branch) ${t('command.select-commit-files.ahead-of-branch')}`,
+            label: `$(git-branch) ${t('command.select-files-of-commit.ahead-of-branch')}`,
             detail: '',
             description: '',
             hash: 'ahead-of-branch'
@@ -73,12 +74,12 @@ export const select_commit_files_command = (
           const quick_pick = vscode.window.createQuickPick<
             vscode.QuickPickItem & { hash: string }
           >()
-          quick_pick.title = t('command.select-commit-files.title')
+          quick_pick.title = t('command.select-files-of-commit.title')
 
           const all_items = [ahead_of_branch_item, separator_item, ...commits]
           quick_pick.items = all_items
 
-          quick_pick.placeholder = t('command.select-commit-files.select')
+          quick_pick.placeholder = t('command.select-files-of-commit.select')
           quick_pick.matchOnDetail = true
           quick_pick.buttons = [
             { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
@@ -140,7 +141,6 @@ export const select_commit_files_command = (
 
           while (true) {
             let files_output = ''
-            const title_hash = selected_commit.hash.substring(0, 7)
             let is_ahead_of_branch = false
             let branch_name = ''
 
@@ -171,7 +171,7 @@ export const select_commit_files_command = (
 
               if (branches.length === 0) {
                 vscode.window.showInformationMessage(
-                  t('command.select-commit-files.no-other-branches')
+                  t('command.select-files-of-commit.no-other-branches')
                 )
                 break // back to commit selection
               }
@@ -179,10 +179,10 @@ export const select_commit_files_command = (
               const branch_qp = vscode.window.createQuickPick<
                 vscode.QuickPickItem & { name: string }
               >()
-              branch_qp.title = t('command.select-commit-files.branches')
+              branch_qp.title = t('command.select-files-of-commit.branches')
               branch_qp.items = branches
               branch_qp.placeholder = t(
-                'command.select-commit-files.select-branch'
+                'command.select-files-of-commit.select-branch'
               )
               branch_qp.buttons = [
                 vscode.QuickInputButtons.Back,
@@ -248,7 +248,7 @@ export const select_commit_files_command = (
 
               if (!files_output) {
                 vscode.window.showInformationMessage(
-                  t('command.select-commit-files.no-modified')
+                  t('command.select-files-of-commit.no-modified')
                 )
                 continue // retry branch selection
               }
@@ -269,41 +269,52 @@ export const select_commit_files_command = (
 
               if (!files_output) {
                 vscode.window.showInformationMessage(
-                  t('command.select-commit-files.no-modified')
+                  t('command.select-files-of-commit.no-modified')
                 )
                 break // back to commit selection
               }
             }
 
-            const files = new Set<string>()
-
-            const ascii_paths = AsciiTree.extract_paths(files_output)
-            ascii_paths.forEach((p) => files.add(p))
-
+            const normal_files_set = new Set<string>()
             const lines = files_output.split('\n')
             for (const line of lines) {
               const trimmed = line.trim()
               if (trimmed.length > 0) {
-                files.add(trimmed)
+                normal_files_set.add(trimmed)
               }
             }
 
-            const valid_files = Array.from(files)
-              .map((f) => {
-                const absolute_path = path.join(repository.rootUri.fsPath, f)
-                return {
-                  relative_path: f,
-                  absolute_path,
-                  exists:
-                    fs.existsSync(absolute_path) &&
-                    fs.statSync(absolute_path).isFile()
-                }
-              })
-              .filter((f) => f.exists)
+            const ascii_files_set = new Set<string>()
+            const ascii_paths = AsciiTree.extract_paths(files_output)
+            ascii_paths.forEach((p) => {
+              if (!normal_files_set.has(p)) {
+                ascii_files_set.add(p)
+              }
+            })
+
+            const process_files = (file_set: Set<string>) => {
+              return Array.from(file_set)
+                .map((f) => {
+                  const absolute_path = path.join(repository.rootUri.fsPath, f)
+                  return {
+                    relative_path: f,
+                    absolute_path,
+                    exists:
+                      fs.existsSync(absolute_path) &&
+                      fs.statSync(absolute_path).isFile()
+                  }
+                })
+                .filter((f) => f.exists)
+            }
+
+            const valid_normal_files = process_files(normal_files_set)
+            const valid_ascii_files = process_files(ascii_files_set)
+
+            const valid_files = [...valid_normal_files, ...valid_ascii_files]
 
             if (valid_files.length === 0) {
               vscode.window.showInformationMessage(
-                t('command.select-commit-files.no-valid')
+                t('command.select-files-of-commit.no-valid')
               )
               if (is_ahead_of_branch) {
                 continue // retry branch selection
@@ -319,29 +330,70 @@ export const select_commit_files_command = (
               const currently_checked = workspace_provider.get_checked_files()
               const currently_checked_set = new Set(currently_checked)
 
-              const file_items = await Promise.all(
-                valid_files.map(async (f) => {
-                  const token_count =
-                    await workspace_provider.calculate_file_tokens(
-                      f.absolute_path
+              const create_items = async (files: typeof valid_normal_files) => {
+                return await Promise.all(
+                  files.map(async (f) => {
+                    const token_count =
+                      await workspace_provider.calculate_file_tokens(
+                        f.absolute_path
+                      )
+                    const formatted_token_count = display_token_count(
+                      token_count.total
                     )
-                  const formatted_token_count = display_token_count(
-                    token_count.total
-                  )
-                  const dir_name = path.dirname(f.relative_path)
-                  const display_dir = dir_name === '.' ? '' : dir_name
+                    const dir_name = path.dirname(f.relative_path)
+                    const display_dir = dir_name === '.' ? '' : dir_name
+                    const has_parent_folder = dir_name !== '.'
 
-                  return {
-                    label: path.basename(f.relative_path),
-                    description: display_dir
-                      ? `${formatted_token_count} · ${display_dir}`
-                      : formatted_token_count,
-                    picked: currently_checked_set.has(f.absolute_path),
-                    file_path: f.absolute_path,
-                    token_count: token_count.total
-                  }
+                    const buttons: vscode.QuickInputButton[] = []
+
+                    if (has_parent_folder) {
+                      buttons.push({
+                        iconPath: new vscode.ThemeIcon('folder'),
+                        tooltip: t('common.select-parent-folder')
+                      })
+                    }
+
+                    buttons.push({
+                      iconPath: new vscode.ThemeIcon('go-to-file'),
+                      tooltip: t('common.go-to-file')
+                    })
+
+                    return {
+                      label: path.basename(f.relative_path),
+                      description: display_dir
+                        ? `${formatted_token_count} · ${display_dir}`
+                        : formatted_token_count,
+                      picked: currently_checked_set.has(f.absolute_path),
+                      file_path: f.absolute_path,
+                      token_count: token_count.total,
+                      buttons
+                    }
+                  })
+                )
+              }
+
+              const normal_items = await create_items(valid_normal_files)
+              const ascii_items = await create_items(valid_ascii_files)
+
+              const file_items: any[] = []
+              if (normal_items.length > 0) {
+                file_items.push({
+                  label: t('command.select-files-of-commit.committed-files'),
+                  kind: vscode.QuickPickItemKind.Separator
                 })
-              )
+                file_items.push(...normal_items)
+              }
+
+              if (ascii_items.length > 0) {
+                file_items.push({
+                  label:
+                    normal_items.length > 0
+                      ? t('command.select-files-of-commit.context-files')
+                      : t('command.select-files-of-commit.committed-files'),
+                  kind: vscode.QuickPickItemKind.Separator
+                })
+                file_items.push(...ascii_items)
+              }
 
               const quick_pick_files = vscode.window.createQuickPick<any>()
               quick_pick_files.canSelectMany = true
@@ -350,12 +402,10 @@ export const select_commit_files_command = (
                 (i) => i.picked
               )
               quick_pick_files.title = is_ahead_of_branch
-                ? t('command.select-commit-files.files-ahead-of-branch', {
+                ? t('command.select-files-of-commit.files-ahead-of-branch', {
                     branch: branch_name
                   })
-                : t('command.select-commit-files.files-modified', {
-                    hash: title_hash
-                  })
+                : t('command.select-files-of-commit.files-modified')
 
               const update_placeholder = () => {
                 const total = quick_pick_files.selectedItems.reduce(
@@ -367,7 +417,7 @@ export const select_commit_files_command = (
                     ? ` (totalling ${display_token_count(total)} tokens)`
                     : ''
                 quick_pick_files.placeholder = `${t(
-                  'command.select-commit-files.select-files'
+                  'command.select-files-of-commit.select-files'
                 )}${total_text}`
               }
               update_placeholder()
@@ -389,6 +439,8 @@ export const select_commit_files_command = (
                 close_button
               ]
               quick_pick_files.ignoreFocusOut = true
+
+              let is_showing_folder_quick_pick = false
 
               const selected_files = await new Promise<
                 any[] | 'back' | undefined | 'search'
@@ -412,12 +464,64 @@ export const select_commit_files_command = (
                       quick_pick_files.hide()
                     }
                   }),
+                  quick_pick_files.onDidTriggerItemButton(async (e) => {
+                    if (e.button.tooltip === t('common.go-to-file')) {
+                      const uri = vscode.Uri.file(e.item.file_path)
+                      vscode.window.showTextDocument(uri, { preview: true })
+                    } else if (
+                      e.button.tooltip === t('common.select-parent-folder')
+                    ) {
+                      is_showing_folder_quick_pick = true
+                      quick_pick_files.hide()
+
+                      const result = await show_parent_folder_quick_pick({
+                        file_path: e.item.file_path,
+                        workspace_provider
+                      })
+
+                      is_showing_folder_quick_pick = false
+
+                      if (
+                        result === 'added' ||
+                        result === 'back' ||
+                        result === 'no_folders' ||
+                        result === 'no_workspace_root'
+                      ) {
+                        const current_items = quick_pick_files.items
+                        let current_selected = quick_pick_files.selectedItems
+
+                        if (result === 'added') {
+                          const updated_checked =
+                            workspace_provider.get_checked_files()
+                          current_selected = current_items.filter(
+                            (item: any) =>
+                              (item.file_path &&
+                                updated_checked.includes(item.file_path)) ||
+                              current_selected.includes(item)
+                          )
+                        }
+
+                        quick_pick_files.items = [...current_items]
+                        quick_pick_files.selectedItems = current_selected
+                        quick_pick_files.show()
+
+                        setTimeout(() => {
+                          quick_pick_files.activeItems = [e.item]
+                        }, 0)
+                      } else {
+                        is_resolved = true
+                        resolve(undefined)
+                        quick_pick_files.dispose()
+                      }
+                    }
+                  }),
                   quick_pick_files.onDidAccept(() => {
                     is_resolved = true
                     resolve(Array.from(quick_pick_files.selectedItems))
                     quick_pick_files.hide()
                   }),
                   quick_pick_files.onDidHide(() => {
+                    if (is_showing_folder_quick_pick) return
                     if (!is_resolved) {
                       resolve('back')
                     }
@@ -522,8 +626,8 @@ export const select_commit_files_command = (
           }`
         )
         Logger.error({
-          function_name: 'select_commit_files_command',
-          message: 'Error handling commit files command',
+          function_name: 'select_files_of_commit_command',
+          message: 'Error handling files of commit command',
           data: error
         })
       }
