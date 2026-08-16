@@ -1,5 +1,5 @@
 export const translations = {
-  'views.settings.handlers.handle-create-prompt-template.placement-above': {
+  'views.settings.handlers.handle-create-template.placement-above': {
     en: 'Insert a new template above',
     pl: 'Wstaw nowy szablon promptu powyżej',
     'zh-cn': '在上方插入新的提示词模板',
@@ -17,7 +17,7 @@ export const translations = {
     hu: 'Új prompt sablon beszúrása fölé',
     bg: 'Вмъкване на нов шаблон за промпт отгоре'
   },
-  'views.settings.handlers.handle-create-prompt-template.placement-below': {
+  'views.settings.handlers.handle-create-template.placement-below': {
     en: 'Insert a new template below',
     pl: 'Wstaw nowy szablon promptu poniżej',
     'zh-cn': '在下方插入新的提示词模板',
@@ -35,7 +35,7 @@ export const translations = {
     hu: 'Új prompt sablon beszúrása alá',
     bg: 'Вмъкване на нов шаблон за промпт отдолу'
   },
-  'views.settings.handlers.handle-create-prompt-template.title': {
+  'views.settings.handlers.handle-create-template.title': {
     en: 'Create Template',
     pl: 'Utwórz szablon promptu',
     'zh-cn': '创建提示词模板',
@@ -53,7 +53,7 @@ export const translations = {
     hu: 'Prompt sablon létrehozása',
     bg: 'Създаване на шаблон за промпт'
   },
-  'views.settings.handlers.handle-create-prompt-template.placeholder': {
+  'views.settings.handlers.handle-create-template.placeholder': {
     en: 'Select where to insert the new template',
     pl: 'Wybierz miejsce wstawienia nowego szablonu',
     'zh-cn': '选择在何处插入新模板',

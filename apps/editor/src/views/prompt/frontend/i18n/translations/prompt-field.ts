@@ -89,7 +89,7 @@ export const prompt_field = {
     hu: 'Szimbólum beszúrása',
     bg: 'Вмъкване на символ'
   },
-  'prompt-field.prompt-templates': {
+  'prompt-field.templates': {
     en: 'Templates',
     pl: 'Szablony promptów',
     'zh-cn': '提示模板',

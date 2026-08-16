@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { UpdatePromptTemplatesMessage } from '@/views/settings/types/messages'
 
-export const handle_update_prompt_templates = async (
+export const handle_update_templates = async (
   message: UpdatePromptTemplatesMessage
 ): Promise<void> => {
   await vscode.workspace

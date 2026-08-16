@@ -485,10 +485,10 @@ export const Home: React.FC<Props> = (props) => {
             )
           }}
           on_open_external_url={props.on_open_external_url}
-          prompt_templates={props.prompt_templates}
-          on_update_prompt_templates={props.on_update_prompt_templates}
-          on_edit_prompt_template={props.on_edit_prompt_template}
-          on_add_prompt_template={props.on_add_prompt_template}
+          templates={props.prompt_templates}
+          on_update_templates={props.on_update_prompt_templates}
+          on_edit_template={props.on_edit_prompt_template}
+          on_add_template={props.on_add_prompt_template}
         />
 
         <WebConfigurationsSection

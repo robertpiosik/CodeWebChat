@@ -64,9 +64,9 @@ import {
   handle_pick_api_reasoning_effort,
   handle_get_find_relevant_files_instructions,
   handle_update_find_relevant_files_instructions,
-  handle_get_prompt_templates,
-  handle_update_prompt_templates,
-  handle_create_prompt_template
+  handle_get_templates,
+  handle_update_templates,
+  handle_create_template
 } from './message-handlers'
 import { config_web_configuration_to_ui_format } from '@/utils/web-configuration-format-converters'
 import { webview_html } from '@/views/shared/utils/webview-html'
@@ -164,11 +164,11 @@ export class SettingsViewProvider {
         } else if (message.command == 'UPDATE_MODEL_PROVIDER') {
           await handle_update_model_provider(this, message)
         } else if (message.command == 'GET_PROMPT_TEMPLATES') {
-          await handle_get_prompt_templates(this)
+          await handle_get_templates(this)
         } else if (message.command == 'UPDATE_PROMPT_TEMPLATES') {
-          await handle_update_prompt_templates(message)
+          await handle_update_templates(message)
         } else if (message.command == 'CREATE_PROMPT_TEMPLATE') {
-          await handle_create_prompt_template(this, message)
+          await handle_create_template(this, message)
         } else if (message.command == 'GET_API_CONFIGURATIONS') {
           await handle_get_api_configurations(this)
         } else if (message.command == 'GET_FIND_RELEVANT_FILES_INSTRUCTIONS') {
@@ -337,7 +337,7 @@ export class SettingsViewProvider {
           void handle_get_check_new_files(this)
           void handle_get_reuse_last_tab(this)
           void handle_get_auto_run_intelligent_update(this)
-          void handle_get_prompt_templates(this)
+          void handle_get_templates(this)
           this._send_web_configurations()
         }
         if (e.affectsConfiguration('workbench.experimental.modernUI')) {

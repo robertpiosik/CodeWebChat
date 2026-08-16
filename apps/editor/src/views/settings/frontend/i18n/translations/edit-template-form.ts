@@ -1,5 +1,5 @@
 export const translations = {
-  'edit-prompt-template-form.name.label': {
+  'edit-template-form.name.label': {
     en: 'Name',
     pl: 'Nazwa',
     'zh-cn': '名称',
@@ -17,7 +17,7 @@ export const translations = {
     hu: 'Név',
     bg: 'Име'
   },
-  'edit-prompt-template-form.name.placeholder': {
+  'edit-template-form.name.placeholder': {
     en: 'E.g., Refactor Function',
     pl: 'Np. Refaktoryzuj funkcję',
     'zh-cn': '例如，重构功能',
@@ -35,7 +35,7 @@ export const translations = {
     hu: 'Pl., Függvény refaktorálása',
     bg: 'Напр., Рефакториране на функция'
   },
-  'edit-prompt-template-form.template.label': {
+  'edit-template-form.template.label': {
     en: 'Template',
     pl: 'Szablon',
     'zh-cn': '模板',
@@ -53,7 +53,7 @@ export const translations = {
     hu: 'Sablon',
     bg: 'Шаблон'
   },
-  'edit-prompt-template-form.template.placeholder': {
+  'edit-template-form.template.placeholder': {
     en: 'E.g., Rewrite {function name} without redundant comments',
     pl: 'Np. Przepisz {nazwa funkcji} bez zbędnych komentarzy',
     'zh-cn': '例如，重写 {function name} 而不使用多余的注释',

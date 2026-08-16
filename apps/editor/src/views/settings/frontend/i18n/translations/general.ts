@@ -1070,7 +1070,7 @@ export const translations = {
     hu: 'Sablonok',
     bg: 'Шаблони'
   },
-  'general.prompt-templates.description': {
+  'general.templates.description': {
     en: 'Manage templates of each prompt type.',
     pl: 'Zarządzaj szablonami dla każdego typu promptu.',
     'zh-cn': '管理每种提示类型的模板。',
@@ -1088,7 +1088,7 @@ export const translations = {
     hu: 'Kezelje az egyes prompttípusok sablonjait.',
     bg: 'Управлявайте шаблони за всеки тип промпт.'
   },
-  'general.prompt-templates.empty-notice': {
+  'general.templates.empty-notice': {
     en: 'No templates for this type.',
     pl: 'Brak szablonów dla tego typu.',
     'zh-cn': '该类型没有模板。',
@@ -1106,7 +1106,7 @@ export const translations = {
     hu: 'Nincsenek sablonok ehhez a típushoz.',
     bg: 'Няма шаблони за този тип.'
   },
-  'general.prompt-templates.item': {
+  'general.templates.item': {
     en: 'template',
     pl: 'szablon',
     'zh-cn': '模板',
@@ -1124,7 +1124,7 @@ export const translations = {
     hu: 'sablon',
     bg: 'шаблон'
   },
-  'general.prompt-templates.items': {
+  'general.templates.items': {
     en: 'templates',
     pl: 'szablony',
     'zh-cn': '模板',
@@ -1142,7 +1142,7 @@ export const translations = {
     hu: 'sablonok',
     bg: 'шаблони'
   },
-  'general.prompt-templates.items-many': {
+  'general.templates.items-many': {
     en: 'templates',
     pl: 'szablonów',
     'zh-cn': '模板',
@@ -1160,7 +1160,7 @@ export const translations = {
     hu: 'sablon',
     bg: 'шаблона'
   },
-  'general.prompt-templates.types.templatesForAskAboutFiles': {
+  'general.templates.types.templatesForAskAboutFiles': {
     en: 'Ask About Files',
     pl: 'Zapytaj o pliki',
     'zh-cn': '询问关于文件',
@@ -1178,7 +1178,7 @@ export const translations = {
     hu: 'Kérdezz fájlokról',
     bg: 'Попитай за файлове'
   },
-  'general.prompt-templates.types.templatesForEditFiles': {
+  'general.templates.types.templatesForEditFiles': {
     en: 'Edit Files',
     pl: 'Edytuj pliki',
     'zh-cn': '编辑文件',
@@ -1196,7 +1196,7 @@ export const translations = {
     hu: 'Fájlok szerkesztése',
     bg: 'Редактиране на файлове'
   },
-  'general.prompt-templates.types.templatesForCodeAtCursor': {
+  'general.templates.types.templatesForCodeAtCursor': {
     en: 'Code at Cursor',
     pl: 'Kod przy kursorze',
     'zh-cn': '光标处的代码',
@@ -1214,7 +1214,7 @@ export const translations = {
     hu: 'Kód a kurzornál',
     bg: 'Код при курсора'
   },
-  'general.prompt-templates.types.templatesForWithoutFiles': {
+  'general.templates.types.templatesForWithoutFiles': {
     en: 'Without Files',
     pl: 'Bez plików',
     'zh-cn': '没有文件',
@@ -1232,7 +1232,7 @@ export const translations = {
     hu: 'Fájlok Nélkül',
     bg: 'Без файлове'
   },
-  'general.prompt-templates.types.templatesForFindRelevantFiles': {
+  'general.templates.types.templatesForFindRelevantFiles': {
     en: 'Find Relevant Files',
     pl: 'Znajdź powiązane pliki',
     'zh-cn': '查找相关文件',

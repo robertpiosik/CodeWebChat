@@ -10,7 +10,7 @@ import { Modal as UiModal } from '@ui/components/editor/settings/Modal'
 import { EditWebConfigurationForm } from '@/views/shared/forms/EditWebConfigurationForm'
 import { EditApiConfigurationForm } from '@/views/shared/forms/EditApiConfigurationForm'
 import { EditModelProviderForm } from './forms/EditModelProviderForm'
-import { EditPromptTemplateForm } from './forms/EditPromptTemplateForm'
+import { EditTemplateForm } from './forms/EditTemplateForm'
 
 const vscode = acquireVsCodeApi()
 
@@ -385,7 +385,7 @@ export const Settings = () => {
             on_save={edit_prompt_template_save_handler}
             on_cancel={edit_prompt_template_cancel_handler}
           >
-            <EditPromptTemplateForm
+            <EditTemplateForm
               template={updating_prompt_template.template}
               on_update={set_updated_prompt_template}
             />

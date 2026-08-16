@@ -64,13 +64,10 @@ type Props = {
   default_find_relevant_instructions: string
   on_restore_find_relevant_instructions: () => void
   on_open_external_url: (url: string) => void
-  prompt_templates: Record<string, PromptTemplate[]>
-  on_update_prompt_templates: (key: string, templates: PromptTemplate[]) => void
-  on_edit_prompt_template: (key: string, index: number) => void
-  on_add_prompt_template: (
-    key: string,
-    params?: { insertion_index?: number }
-  ) => void
+  templates: Record<string, PromptTemplate[]>
+  on_update_templates: (key: string, templates: PromptTemplate[]) => void
+  on_edit_template: (key: string, index: number) => void
+  on_add_template: (key: string, params?: { insertion_index?: number }) => void
 }
 
 export const GeneralSection = forwardRef<HTMLDivElement, Props>(
@@ -294,47 +291,47 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           <UiGroup title={t('general.prompt-field.title')}>
             <UiItem
               title={t('general.templates.title')}
-              description={t('general.prompt-templates.description')}
+              description={t('general.templates.description')}
               translations={{
                 expand: t('common.expand'),
                 collapse: t('common.collapse')
               }}
             >
               <PromptTemplates
-                templates={props.prompt_templates}
+                templates={props.templates}
                 on_reorder={(key, templates) =>
-                  props.on_update_prompt_templates(key, templates)
+                  props.on_update_templates(key, templates)
                 }
                 on_delete={(key, index) => {
-                  const templates = props.prompt_templates[key] || []
+                  const templates = props.templates[key] || []
                   const new_templates = templates.filter((_, i) => i !== index)
-                  props.on_update_prompt_templates(key, new_templates)
+                  props.on_update_templates(key, new_templates)
                 }}
-                on_edit={props.on_edit_prompt_template}
-                on_add={props.on_add_prompt_template}
+                on_edit={props.on_edit_template}
+                on_add={props.on_add_template}
                 translations={{
-                  item_text: t('general.prompt-templates.item'),
-                  items_text: t('general.prompt-templates.items'),
-                  items_text_many: t('general.prompt-templates.items-many'),
-                  empty_notice: t('general.prompt-templates.empty-notice'),
+                  item_text: t('general.templates.item'),
+                  items_text: t('general.templates.items'),
+                  items_text_many: t('general.templates.items-many'),
+                  empty_notice: t('general.templates.empty-notice'),
                   expand: t('common.expand'),
                   collapse: t('common.collapse'),
                   add_new: t('action.add-new'),
                   types: {
                     templatesForEditFiles: t(
-                      'general.prompt-templates.types.templatesForEditFiles'
+                      'general.templates.types.templatesForEditFiles'
                     ),
                     templatesForAskAboutFiles: t(
-                      'general.prompt-templates.types.templatesForAskAboutFiles'
+                      'general.templates.types.templatesForAskAboutFiles'
                     ),
                     templatesForCodeAtCursor: t(
-                      'general.prompt-templates.types.templatesForCodeAtCursor'
+                      'general.templates.types.templatesForCodeAtCursor'
                     ),
                     templatesForFindRelevantFiles: t(
-                      'general.prompt-templates.types.templatesForFindRelevantFiles'
+                      'general.templates.types.templatesForFindRelevantFiles'
                     ),
                     templatesForWithoutFiles: t(
-                      'general.prompt-templates.types.templatesForWithoutFiles'
+                      'general.templates.types.templatesForWithoutFiles'
                     )
                   }
                 }}

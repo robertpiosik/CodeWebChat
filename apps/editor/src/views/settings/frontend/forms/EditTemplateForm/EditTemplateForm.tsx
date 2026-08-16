@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import styles from './EditPromptTemplateForm.module.scss'
+import styles from './EditTemplateForm.module.scss'
 import { Field as UiField } from '@ui/components/editor/common/Field'
 import { Input as UiInput } from '@ui/components/editor/common/Input'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
@@ -13,7 +13,7 @@ type Props = {
   on_update: (draft: PromptTemplate) => void
 }
 
-export const EditPromptTemplateForm: React.FC<Props> = (props) => {
+export const EditTemplateForm: React.FC<Props> = (props) => {
   const { t } = use_translation()
   const [name, set_name] = useState(props.template.name || '')
   const [template, set_template] = useState(props.template.template)
@@ -29,21 +29,18 @@ export const EditPromptTemplateForm: React.FC<Props> = (props) => {
     <UiScrollable top_shadow>
       <div className={styles.form}>
         <UiFieldset>
-          <UiField
-            label={t('edit-prompt-template-form.name.label')}
-            html_for="name"
-          >
+          <UiField label={t('edit-template-form.name.label')} html_for="name">
             <UiInput
               id="name"
               type="text"
               value={name}
               on_change={set_name}
-              placeholder={t('edit-prompt-template-form.name.placeholder')}
+              placeholder={t('edit-template-form.name.placeholder')}
             />
           </UiField>
 
           <UiField
-            label={t('edit-prompt-template-form.template.label')}
+            label={t('edit-template-form.template.label')}
             html_for="template"
           >
             <UiTextarea
@@ -51,7 +48,7 @@ export const EditPromptTemplateForm: React.FC<Props> = (props) => {
               value={template}
               min_rows={3}
               on_change={set_template}
-              placeholder={t('edit-prompt-template-form.template.placeholder')}
+              placeholder={t('edit-template-form.template.placeholder')}
             />
           </UiField>
         </UiFieldset>

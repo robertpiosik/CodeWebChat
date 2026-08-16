@@ -3,7 +3,7 @@ import { CreatePromptTemplateMessage } from '@/views/settings/types/messages'
 import { SettingsViewProvider } from '../settings-view-provider'
 import { t } from '@/i18n'
 
-export const handle_create_prompt_template = async (
+export const handle_create_template = async (
   provider: SettingsViewProvider,
   message: CreatePromptTemplateMessage
 ): Promise<void> => {
@@ -16,20 +16,20 @@ export const handle_create_prompt_template = async (
         quick_pick.items = [
           {
             label: t(
-              'views.settings.handlers.handle-create-prompt-template.placement-above'
+              'views.settings.handlers.handle-create-template.placement-above'
             )
           },
           {
             label: t(
-              'views.settings.handlers.handle-create-prompt-template.placement-below'
+              'views.settings.handlers.handle-create-template.placement-below'
             )
           }
         ]
         quick_pick.title = t(
-          'views.settings.handlers.handle-create-prompt-template.title'
+          'views.settings.handlers.handle-create-template.title'
         )
         quick_pick.placeholder = t(
-          'views.settings.handlers.handle-create-prompt-template.placeholder'
+          'views.settings.handlers.handle-create-template.placeholder'
         )
         quick_pick.buttons = [
           {
@@ -65,7 +65,7 @@ export const handle_create_prompt_template = async (
 
     insertion_index =
       position_quick_pick ==
-      t('views.settings.handlers.handle-create-prompt-template.placement-above')
+      t('views.settings.handlers.handle-create-template.placement-above')
         ? message.insertion_index
         : message.insertion_index + 1
   }

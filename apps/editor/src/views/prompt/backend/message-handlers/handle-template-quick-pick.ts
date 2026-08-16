@@ -5,14 +5,14 @@ import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 
-type PromptTemplate = {
+type Template = {
   name?: string
   template: string
 }
 
 const ADD_NEW_TEMPLATE_LABEL = '$(add) New template...'
 
-export const handle_prompt_template_quick_pick = async (
+export const handle_template_quick_pick = async (
   prompt_view_provider: PromptViewProvider
 ): Promise<void> => {
   const prompt_type: WebPromptType | ApiPromptType | undefined =
@@ -24,35 +24,34 @@ export const handle_prompt_template_quick_pick = async (
     return
   }
 
-  let prompt_templates_key: string | undefined
+  let templates_key: string | undefined
   switch (prompt_type) {
     case 'ask-about-files':
-      prompt_templates_key = 'templatesForAskAboutFiles'
+      templates_key = 'templatesForAskAboutFiles'
       break
     case 'edit-files':
-      prompt_templates_key = 'templatesForEditFiles'
+      templates_key = 'templatesForEditFiles'
       break
     case 'code-at-cursor':
-      prompt_templates_key = 'templatesForCodeAtCursor'
+      templates_key = 'templatesForCodeAtCursor'
       break
     case 'without-files':
-      prompt_templates_key = 'templatesForWithoutFiles'
+      templates_key = 'templatesForWithoutFiles'
       break
     case 'find-relevant-files':
-      prompt_templates_key = 'templatesForFindRelevantFiles'
+      templates_key = 'templatesForFindRelevantFiles'
       break
   }
 
-  if (!prompt_templates_key) return
+  if (!templates_key) return
 
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  let prompt_templates =
-    config.get<PromptTemplate[]>(prompt_templates_key, []) || []
+  let templates = config.get<Template[]>(templates_key, []) || []
 
   let is_editing_template = false
 
   const templates_quick_pick = vscode.window.createQuickPick<
-    vscode.QuickPickItem & { template?: PromptTemplate; index?: number }
+    vscode.QuickPickItem & { template?: Template; index?: number }
   >()
   templates_quick_pick.matchOnDetail = true
   templates_quick_pick.title = 'Templates'
@@ -71,11 +70,11 @@ export const handle_prompt_template_quick_pick = async (
   }
 
   const create_template_items = (
-    templates: PromptTemplate[],
+    current_templates: Template[],
     search_value?: string
   ) => {
     const items: (vscode.QuickPickItem & {
-      template?: PromptTemplate
+      template?: Template
       index?: number
     })[] = []
 
@@ -85,7 +84,7 @@ export const handle_prompt_template_quick_pick = async (
       })
     }
 
-    if (templates.length > 0) {
+    if (current_templates.length > 0) {
       if (!search_value) {
         items.push({
           label: t('common.separator.recently-used'),
@@ -93,7 +92,7 @@ export const handle_prompt_template_quick_pick = async (
         })
       }
       items.push(
-        ...templates.map((template, index) => {
+        ...current_templates.map((template, index) => {
           const buttons = [edit_button, delete_button]
 
           return {
@@ -110,16 +109,16 @@ export const handle_prompt_template_quick_pick = async (
   }
 
   const edit_template = async (
-    template: PromptTemplate,
+    template: Template,
     title: string
   ): Promise<{
-    updated_template: PromptTemplate | null
+    updated_template: Template | null
     cancelled_entirely: boolean
   }> => {
     const NAME_LABEL = 'Name'
     const TEMPLATE_LABEL = 'Template'
 
-    const create_edit_options = (current_template: PromptTemplate) => {
+    const create_edit_options = (current_template: Template) => {
       return [
         {
           label: NAME_LABEL,
@@ -172,7 +171,7 @@ export const handle_prompt_template_quick_pick = async (
 
             let next_template_state = template
             if (new_name !== undefined) {
-              const updated_template: PromptTemplate = { ...template }
+              const updated_template: Template = { ...template }
               if (new_name.trim()) {
                 updated_template.name = new_name.trim()
               } else {
@@ -195,7 +194,7 @@ export const handle_prompt_template_quick_pick = async (
 
             let next_template_state = template
             if (new_template_text !== undefined && new_template_text.trim()) {
-              const updated_template: PromptTemplate = {
+              const updated_template: Template = {
                 ...template,
                 template: new_template_text.trim()
               }
@@ -217,7 +216,7 @@ export const handle_prompt_template_quick_pick = async (
     })
   }
 
-  templates_quick_pick.items = create_template_items(prompt_templates)
+  templates_quick_pick.items = create_template_items(templates)
 
   const first_template_item = templates_quick_pick.items.find((i) => i.template)
   if (first_template_item) {
@@ -252,15 +251,15 @@ export const handle_prompt_template_quick_pick = async (
           is_disposed = true
         } else {
           if (updated_template?.template.trim()) {
-            prompt_templates.push(updated_template)
+            templates.push(updated_template)
             await config.update(
-              prompt_templates_key,
-              prompt_templates,
+              templates_key,
+              templates,
               vscode.ConfigurationTarget.Global
             )
           }
           templates_quick_pick.items = create_template_items(
-            prompt_templates,
+            templates,
             templates_quick_pick.value
           )
           if (!is_disposed) {
@@ -279,14 +278,11 @@ export const handle_prompt_template_quick_pick = async (
 
         // Move the selected template to the top of the list for easier access next time
         if (selected_template.index > 0) {
-          const [movedTemplate] = prompt_templates.splice(
-            selected_template.index,
-            1
-          )
-          prompt_templates.unshift(movedTemplate)
+          const [movedTemplate] = templates.splice(selected_template.index, 1)
+          templates.unshift(movedTemplate)
           await config.update(
-            prompt_templates_key,
-            prompt_templates,
+            templates_key,
+            templates,
             vscode.ConfigurationTarget.Global
           )
         }
@@ -389,7 +385,7 @@ export const handle_prompt_template_quick_pick = async (
           if (go_back_to_templates) {
             is_entering_variables = false
             templates_quick_pick.items = create_template_items(
-              prompt_templates,
+              templates,
               templates_quick_pick.value
             )
 
@@ -447,14 +443,11 @@ export const handle_prompt_template_quick_pick = async (
       }
     }),
     templates_quick_pick.onDidChangeValue((value) => {
-      templates_quick_pick.items = create_template_items(
-        prompt_templates,
-        value
-      )
+      templates_quick_pick.items = create_template_items(templates, value)
     }),
     templates_quick_pick.onDidTriggerItemButton(async (event) => {
       const item = event.item as vscode.QuickPickItem & {
-        template: PromptTemplate
+        template: Template
         index: number
       }
 
@@ -470,10 +463,10 @@ export const handle_prompt_template_quick_pick = async (
           is_disposed = true
         } else {
           if (updated_template) {
-            prompt_templates[item.index] = updated_template
+            templates[item.index] = updated_template
             await config.update(
-              prompt_templates_key,
-              prompt_templates,
+              templates_key,
+              templates,
               vscode.ConfigurationTarget.Global
             )
           }
@@ -481,7 +474,7 @@ export const handle_prompt_template_quick_pick = async (
           // User clicked 'Back' from the edit quick pick, or successfully edited and returned to it.
           // We need to re-show the main templates_quick_pick.
           templates_quick_pick.items = create_template_items(
-            prompt_templates,
+            templates,
             templates_quick_pick.value
           )
           // Highlight the item that was just edited
@@ -500,21 +493,21 @@ export const handle_prompt_template_quick_pick = async (
         const template_to_delete = item.template
         const template_name = template_to_delete.name || 'Unnamed'
         const is_unnamed = !template_to_delete.name
-        const deleted_template = prompt_templates[item.index]
+        const deleted_template = templates[item.index]
         const original_index = item.index
 
-        const updated_templates = prompt_templates.filter(
+        const updated_templates = templates.filter(
           (_, index) => index !== item.index
         )
 
         await config.update(
-          prompt_templates_key,
+          templates_key,
           updated_templates,
           vscode.ConfigurationTarget.Global
         )
-        prompt_templates = updated_templates
+        templates = updated_templates
         templates_quick_pick.items = create_template_items(
-          prompt_templates,
+          templates,
           templates_quick_pick.value
         )
 
@@ -530,14 +523,14 @@ export const handle_prompt_template_quick_pick = async (
           .then(async (undo_result) => {
             notification_count--
             if (undo_result === undo_button_text && deleted_template) {
-              prompt_templates.splice(original_index, 0, deleted_template)
+              templates.splice(original_index, 0, deleted_template)
               await config.update(
-                prompt_templates_key,
-                prompt_templates,
+                templates_key,
+                templates,
                 vscode.ConfigurationTarget.Global
               )
               templates_quick_pick.items = create_template_items(
-                prompt_templates,
+                templates,
                 templates_quick_pick.value
               )
 
