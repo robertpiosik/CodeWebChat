@@ -43,86 +43,9 @@
   }
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  --row-height: 40px;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: var(--row-height);
-  padding: 0 12px;
-
-  &__left {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-
-    &__amount {
-      font-weight: 500;
-    }
-  }
-}
-
-.list {
-  display: flex;
-  flex-direction: column;
-  border-top: 1px solid var(--cwc-bg-secondary);
-  border-bottom: 1px solid var(--cwc-bg-secondary);
-
-  &:has(.row:nth-child(even):last-child) {
-    border-bottom: none;
-  }
-}
-
-.row {
-  display: flex;
-  align-items: center;
-  height: var(--row-height);
-  gap: 12px;
-  padding: 0 12px;
-
-  &:nth-child(even) {
-    background-color: var(--cwc-bg-tertiary);
-  }
-
-  &__content {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    gap: 8px;
-  }
-}
-
 .item-text {
   flex: 1;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-}
-
-.drag-handle {
-  cursor: grab;
-  opacity: var(--drag-handle-opacity);
-
-  &:active {
-    cursor: grabbing;
-  }
-}
-
-.col-drag {
-  padding: 4px;
-  display: flex;
-  align-items: center;
-  height: 100%;
-}
-
-.col-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
 }

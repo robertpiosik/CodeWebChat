@@ -1,8 +1,8 @@
-import { ReactSortable } from 'react-sortablejs'
 import styles from './Templates.module.scss'
 import cn from 'classnames'
 import { IconButton } from '../../common/IconButton'
 import { useState } from 'react'
+import { SortableList } from '../SortableList'
 
 export namespace Templates {
   export type Template = {
@@ -39,37 +39,6 @@ export const Templates: React.FC<Templates.Props> = (props) => {
       [key]: !prev[key]
     }))
   }
-
-  const render_header = (count: number, key: string, is_top: boolean) => (
-    <div className={styles.header}>
-      <div className={styles['header__left']}>
-        <div className={styles['header__left__amount']}>
-          {count}{' '}
-          {(() => {
-            if (count === 1) return props.translations.item_text
-
-            const last_digit = count % 10
-            const last_two_digits = count % 100
-            const is_few =
-              last_digit >= 2 &&
-              last_digit <= 4 &&
-              (last_two_digits < 12 || last_two_digits > 14)
-            return is_few
-              ? props.translations.items_text
-              : props.translations.items_text_many
-          })()}
-        </div>
-      </div>
-      <IconButton
-        codicon_icon="add"
-        title={props.translations.add_new}
-        on_click={(e) => {
-          e.stopPropagation()
-          props.on_add(key)
-        }}
-      />
-    </div>
-  )
 
   return (
     <div className={styles.groups}>
@@ -112,85 +81,58 @@ export const Templates: React.FC<Templates.Props> = (props) => {
 
             {is_expanded && (
               <div className={styles.group__content}>
-                <div className={styles.container}>
-                  {render_header(sortable_items.length, key, true)}
-                  {sortable_items.length > 0 && (
+                <SortableList
+                  items={sortable_items}
+                  on_reorder={(new_list) => {
+                    props.on_reorder(
+                      key,
+                      new_list.map((i) => ({
+                        name: i.name,
+                        template: i.template
+                      }))
+                    )
+                  }}
+                  on_add={(params) => props.on_add(key, params)}
+                  translations={{
+                    add_title: props.translations.add_new,
+                    item_text: props.translations.item_text,
+                    items_text: props.translations.items_text,
+                    items_text_many: props.translations.items_text_many
+                  }}
+                  render_content={(item) => (
+                    <div className={styles['item-text']}>
+                      <span>{item.name || 'Unnamed'}</span>
+                    </div>
+                  )}
+                  render_actions={(item, index) => (
                     <>
-                      <div className={styles.list}>
-                        <ReactSortable
-                          list={sortable_items}
-                          setList={(new_list) => {
-                            const has_order_changed =
-                              new_list.length != sortable_items.length ||
-                              new_list.some(
-                                (item, index) =>
-                                  item.id != sortable_items[index].id
-                              )
-
-                            if (has_order_changed) {
-                              props.on_reorder(
-                                key,
-                                new_list.map((i) => ({
-                                  name: i.name,
-                                  template: i.template
-                                }))
-                              )
-                            }
-                          }}
-                          tag="div"
-                          animation={150}
-                        >
-                          {sortable_items.map((item, index) => (
-                            <div key={item.id} className={styles.row}>
-                              <div
-                                className={cn(
-                                  styles['drag-handle'],
-                                  styles['col-drag']
-                                )}
-                              >
-                                <span className="codicon codicon-gripper" />
-                              </div>
-                              <div className={styles.row__content}>
-                                <div className={styles['item-text']}>
-                                  <span>{item.name || 'Unnamed'}</span>
-                                </div>
-                              </div>
-                              <div className={styles['col-actions']}>
-                                <IconButton
-                                  codicon_icon="insert"
-                                  title="Insert"
-                                  on_click={(e) => {
-                                    e.stopPropagation()
-                                    props.on_add(key, {
-                                      insertion_index: index
-                                    })
-                                  }}
-                                />
-                                <IconButton
-                                  codicon_icon="edit"
-                                  title="Edit"
-                                  on_click={(e) => {
-                                    e.stopPropagation()
-                                    props.on_edit?.(key, item.original_index)
-                                  }}
-                                />
-                                <IconButton
-                                  codicon_icon="trash"
-                                  title="Delete"
-                                  on_click={(e) => {
-                                    e.stopPropagation()
-                                    props.on_delete(key, item.original_index)
-                                  }}
-                                />
-                              </div>
-                            </div>
-                          ))}
-                        </ReactSortable>
-                      </div>
-                      {render_header(sortable_items.length, key, false)}
+                      <IconButton
+                        codicon_icon="insert"
+                        title="Insert"
+                        on_click={(e) => {
+                          e.stopPropagation()
+                          props.on_add(key, { insertion_index: index })
+                        }}
+                      />
+                      <IconButton
+                        codicon_icon="edit"
+                        title="Edit"
+                        on_click={(e) => {
+                          e.stopPropagation()
+                          props.on_edit(key, item.original_index)
+                        }}
+                      />
+                      <IconButton
+                        codicon_icon="trash"
+                        title="Delete"
+                        on_click={(e) => {
+                          e.stopPropagation()
+                          props.on_delete(key, item.original_index)
+                        }}
+                      />
                     </>
                   )}
-                </div>
+                />
               </div>
             )}
           </div>
