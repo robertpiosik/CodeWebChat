@@ -163,7 +163,6 @@ export interface GetContextSizeWarningThresholdMessage extends BaseMessage {
 
 export interface CreateWebConfigurationMessage extends BaseMessage {
   command: 'CREATE_WEB_CONFIGURATION'
-  placement?: 'top' | 'bottom'
   reference_index?: number
 }
 
@@ -441,7 +440,6 @@ export interface OpenWebsiteMessage extends BaseMessage {
 export interface CreateApiConfigurationMessage extends BaseMessage {
   command: 'CREATE_API_CONFIGURATION'
   api_feature: ApiFeature
-  create_on_top?: boolean
   insertion_index?: number
 }
 

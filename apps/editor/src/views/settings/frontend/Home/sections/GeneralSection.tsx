@@ -14,6 +14,8 @@ import {
 } from '@/constants/values'
 import { use_translation } from '../../i18n/use-translation'
 import { NavItem } from '../Home'
+import { PromptTemplates } from '@ui/components/editor/settings/PromptTemplates'
+import { PromptTemplate } from '@/views/settings/types/messages'
 
 type ClearChecksBehavior = 'ignore-open-editors' | 'uncheck-all'
 
@@ -62,6 +64,13 @@ type Props = {
   default_find_relevant_instructions: string
   on_restore_find_relevant_instructions: () => void
   on_open_external_url: (url: string) => void
+  prompt_templates: Record<string, PromptTemplate[]>
+  on_update_prompt_templates: (key: string, templates: PromptTemplate[]) => void
+  on_edit_prompt_template: (key: string, index: number) => void
+  on_add_prompt_template: (
+    key: string,
+    params?: { insertion_index?: number }
+  ) => void
 }
 
 export const GeneralSection = forwardRef<HTMLDivElement, Props>(
@@ -283,6 +292,54 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           }
         >
           <UiGroup title={t('general.prompt-field.title')}>
+            <UiItem
+              title={t('general.templates.title')}
+              description={t('general.prompt-templates.description')}
+              translations={{
+                expand: t('common.expand'),
+                collapse: t('common.collapse')
+              }}
+            >
+              <PromptTemplates
+                templates={props.prompt_templates}
+                on_reorder={(key, templates) =>
+                  props.on_update_prompt_templates(key, templates)
+                }
+                on_delete={(key, index) => {
+                  const templates = props.prompt_templates[key] || []
+                  const new_templates = templates.filter((_, i) => i !== index)
+                  props.on_update_prompt_templates(key, new_templates)
+                }}
+                on_edit={props.on_edit_prompt_template}
+                on_add={props.on_add_prompt_template}
+                translations={{
+                  item_text: t('general.prompt-templates.item'),
+                  items_text: t('general.prompt-templates.items'),
+                  items_text_many: t('general.prompt-templates.items-many'),
+                  empty_notice: t('general.prompt-templates.empty-notice'),
+                  expand: t('common.expand'),
+                  collapse: t('common.collapse'),
+                  add_new: t('action.add-new'),
+                  types: {
+                    templatesForEditFiles: t(
+                      'general.prompt-templates.types.templatesForEditFiles'
+                    ),
+                    templatesForAskAboutFiles: t(
+                      'general.prompt-templates.types.templatesForAskAboutFiles'
+                    ),
+                    templatesForCodeAtCursor: t(
+                      'general.prompt-templates.types.templatesForCodeAtCursor'
+                    ),
+                    templatesForFindRelevantFiles: t(
+                      'general.prompt-templates.types.templatesForFindRelevantFiles'
+                    ),
+                    templatesForWithoutFiles: t(
+                      'general.prompt-templates.types.templatesForWithoutFiles'
+                    )
+                  }
+                }}
+              />
+            </UiItem>
             <UiItem
               title={t('general.context-size-warning-threshold.title')}
               description={t(

@@ -13,9 +13,6 @@ export const use_model_provider_editing = (vscode: any) => {
   const [is_new_model_provider, set_is_new_model_provider] = useState(false)
   const [model_provider_insertion_index, set_model_provider_insertion_index] =
     useState<number>()
-  const [model_provider_create_on_top, set_model_provider_create_on_top] =
-    useState<boolean>()
-
   useEffect(() => {
     const handle_message = (event: MessageEvent) => {
       const message = event.data
@@ -23,7 +20,6 @@ export const use_model_provider_editing = (vscode: any) => {
         set_is_new_model_provider(true)
         set_updating_model_provider({ provider: message.provider })
         set_model_provider_insertion_index(message.insertion_index)
-        set_model_provider_create_on_top(message.create_on_top)
       } else if (message.command == 'MODEL_PROVIDER_UPDATED') {
         set_updating_model_provider(null)
         set_updated_model_provider(null)
@@ -43,8 +39,7 @@ export const use_model_provider_editing = (vscode: any) => {
         provider: updated_model_provider,
         origin: 'cancel',
         is_new: is_new_model_provider,
-        insertion_index: model_provider_insertion_index,
-        create_on_top: model_provider_create_on_top
+        insertion_index: model_provider_insertion_index
       })
     } else {
       set_updating_model_provider(null)
@@ -56,8 +51,7 @@ export const use_model_provider_editing = (vscode: any) => {
     updating_model_provider,
     updated_model_provider,
     is_new_model_provider,
-    model_provider_insertion_index,
-    model_provider_create_on_top
+    model_provider_insertion_index
   ])
 
   const edit_model_provider_save_handler = useCallback(() => {
@@ -69,8 +63,7 @@ export const use_model_provider_editing = (vscode: any) => {
         provider: updated_model_provider,
         origin: 'save',
         is_new: is_new_model_provider,
-        insertion_index: model_provider_insertion_index,
-        create_on_top: model_provider_create_on_top
+        insertion_index: model_provider_insertion_index
       })
     }
   }, [
@@ -78,8 +71,7 @@ export const use_model_provider_editing = (vscode: any) => {
     updating_model_provider,
     updated_model_provider,
     is_new_model_provider,
-    model_provider_insertion_index,
-    model_provider_create_on_top
+    model_provider_insertion_index
   ])
 
   return {

@@ -1079,7 +1079,7 @@
             }
           }
         },
-        "codeWebChat.promptTemplatesForAskAboutFiles": {
+        "codeWebChat.templatesForAskAboutFiles": {
           "type": "array",
           "scope": "resource",
           "items": {
@@ -1097,7 +1097,7 @@
             ]
           }
         },
-        "codeWebChat.promptTemplatesForEditFiles": {
+        "codeWebChat.templatesForEditFiles": {
           "type": "array",
           "scope": "resource",
           "items": {
@@ -1115,7 +1115,7 @@
             ]
           }
         },
-        "codeWebChat.promptTemplatesForCodeAtCursor": {
+        "codeWebChat.templatesForCodeAtCursor": {
           "type": "array",
           "scope": "resource",
           "items": {
@@ -1133,7 +1133,7 @@
             ]
           }
         },
-        "codeWebChat.promptTemplatesForWithoutFiles": {
+        "codeWebChat.templatesForWithoutFiles": {
           "type": "array",
           "scope": "resource",
           "items": {
@@ -1151,7 +1151,7 @@
             ]
           }
         },
-        "codeWebChat.promptTemplatesForFindRelevantFiles": {
+        "codeWebChat.templatesForFindRelevantFiles": {
           "type": "array",
           "scope": "resource",
           "items": {

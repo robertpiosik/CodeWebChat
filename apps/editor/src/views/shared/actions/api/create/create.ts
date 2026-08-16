@@ -13,7 +13,6 @@ import { t } from '@/i18n'
 
 export const create = async (params: {
   extension_context: vscode.ExtensionContext
-  create_on_top?: boolean
   insertion_index?: number
 }): Promise<
   { config: ApiConfiguration; insertion_index?: number } | undefined
@@ -96,10 +95,6 @@ export const create = async (params: {
   const api_configuration_to_add: ApiConfiguration = {
     model_provider_name: selected_model_provider.name,
     model: selected_model
-  }
-
-  if (params.create_on_top) {
-    actual_insertion_index = 0
   }
 
   return {

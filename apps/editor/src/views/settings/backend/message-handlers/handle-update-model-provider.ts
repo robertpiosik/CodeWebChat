@@ -140,9 +140,7 @@ export const handle_update_model_provider = async (
       updated_providers.map((p) => p.name)
     )
 
-    if (message.create_on_top) {
-      updated_providers.unshift(working_provider)
-    } else if (message.insertion_index !== undefined) {
+    if (message.insertion_index !== undefined) {
       updated_providers.splice(message.insertion_index, 0, working_provider)
     } else {
       updated_providers.push(working_provider)

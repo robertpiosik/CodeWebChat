@@ -81,7 +81,6 @@ export const handle_add_model_provider = async (
       api_key_mask: '',
       extended_cache: undefined
     },
-    insertion_index: message.insertion_index,
-    create_on_top: message.create_on_top
+    insertion_index: message.insertion_index
   })
 }

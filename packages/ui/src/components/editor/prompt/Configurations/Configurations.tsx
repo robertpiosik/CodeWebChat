@@ -21,10 +21,7 @@ export namespace Configurations {
     on_reorder: (configurations: Configuration[]) => void
     on_toggle_pinned: (id: string) => void
     selected_configuration_id?: string
-    on_create: (params?: {
-      create_on_top?: boolean
-      insertion_index?: number
-    }) => void
+    on_create: (params?: { insertion_index?: number }) => void
     on_edit: (id: string) => void
     on_delete: (id: string) => void
     disable_invocation?: boolean
@@ -170,7 +167,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
             codicon_icon="add"
             on_click={(e) => {
               e.stopPropagation()
-              props.on_create({ create_on_top: true })
+              props.on_create({})
             }}
             title={props.translations.add_new}
           />

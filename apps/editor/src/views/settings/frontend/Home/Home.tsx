@@ -4,7 +4,11 @@ import { NavigationSection as UiNavigationSection } from '@ui/components/editor/
 import { NavigationItemSection as UiNavigationItemSection } from '@ui/components/editor/settings/NavigationItemSection'
 import { NavigationItemGroup as UiNavigationItemGroup } from '@ui/components/editor/settings/NavigationItemGroup'
 import { ApiConfigurationsSection } from './sections/ApiConfigurationsSection'
-import { ApiConfiguration, Provider } from '@/views/settings/types/messages'
+import {
+  ApiConfiguration,
+  Provider,
+  PromptTemplate
+} from '@/views/settings/types/messages'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { GeneralSection } from './sections/GeneralSection'
 import { ApiFeature } from '@/views/shared/types/api-features'
@@ -119,6 +123,13 @@ type Props = {
   checkpoint_lifespan: number
   clear_checks_in_workspace_behavior: 'ignore-open-editors' | 'uncheck-all'
   auto_run_intelligent_update: boolean
+  prompt_templates: Record<string, PromptTemplate[]>
+  on_update_prompt_templates: (key: string, templates: PromptTemplate[]) => void
+  on_edit_prompt_template: (key: string, index: number) => void
+  on_add_prompt_template: (
+    key: string,
+    params?: { insertion_index?: number }
+  ) => void
   set_providers: (providers: Provider[]) => void
   set_api_configurations: (configurations: ApiConfiguration[]) => void
   set_web_configurations: (configurations: WebConfiguration[]) => void
@@ -151,10 +162,7 @@ type Props = {
   on_open_editor_settings: () => void
   on_open_ignore_patterns_settings: () => void
   on_open_allow_patterns_settings: () => void
-  on_add_provider: (params?: {
-    insertion_index?: number
-    create_on_top?: boolean
-  }) => void
+  on_add_provider: (params?: { insertion_index?: number }) => void
   on_delete_provider: (provider_name: string) => void
   on_edit_provider: (provider_name: string) => void
   on_reorder_providers: (reordered_providers: Provider[]) => void
@@ -164,17 +172,11 @@ type Props = {
   ) => void
   on_select_default_api_configuration: (api_feature: ApiFeature) => void
   on_reorder_api_configurations: (reordered: ApiConfiguration[]) => void
-  on_add_api_configuration: (params?: {
-    insertion_index?: number
-    create_on_top?: boolean
-  }) => void
+  on_add_api_configuration: (params?: { insertion_index?: number }) => void
   on_edit_api_configuration: (id: string) => void
   on_delete_api_configuration: (id: string) => void
   on_reorder_web_configurations: (reordered: WebConfiguration[]) => void
-  on_add_web_configuration: (params?: {
-    insertion_index?: number
-    create_on_top?: boolean
-  }) => void
+  on_add_web_configuration: (params?: { insertion_index?: number }) => void
   on_edit_web_configuration: (id: string) => void
   on_delete_web_configuration: (name: string) => void
   on_open_external_url: (url: string) => void
@@ -483,6 +485,10 @@ export const Home: React.FC<Props> = (props) => {
             )
           }}
           on_open_external_url={props.on_open_external_url}
+          prompt_templates={props.prompt_templates}
+          on_update_prompt_templates={props.on_update_prompt_templates}
+          on_edit_prompt_template={props.on_edit_prompt_template}
+          on_add_prompt_template={props.on_add_prompt_template}
         />
 
         <WebConfigurationsSection

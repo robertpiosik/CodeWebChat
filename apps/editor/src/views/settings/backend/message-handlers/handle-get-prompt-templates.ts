@@ -1,0 +1,21 @@
+import * as vscode from 'vscode'
+import { SettingsViewProvider } from '@/views/settings/backend/settings-view-provider'
+
+export const handle_get_prompt_templates = async (
+  provider: SettingsViewProvider
+): Promise<void> => {
+  const config = vscode.workspace.getConfiguration('codeWebChat')
+  provider.postMessage({
+    command: 'PROMPT_TEMPLATES',
+    templates: {
+      templatesForEditFiles: config.get('templatesForEditFiles', []),
+      templatesForAskAboutFiles: config.get('templatesForAskAboutFiles', []),
+      templatesForCodeAtCursor: config.get('templatesForCodeAtCursor', []),
+      templatesForFindRelevantFiles: config.get(
+        'templatesForFindRelevantFiles',
+        []
+      ),
+      templatesForWithoutFiles: config.get('templatesForWithoutFiles', [])
+    }
+  })
+}

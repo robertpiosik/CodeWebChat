@@ -8,7 +8,8 @@ import {
   migrate_configurations_to_api_configurations,
   migrate_edit_context_to_edit_files_system_instructions,
   migrate_prompt_templates_suffixes,
-  migrate_commit_message_details_filename
+  migrate_commit_message_details_filename,
+  migrate_prompt_templates_to_templates
 } from './migrations'
 import {
   apply_response_command,
@@ -68,6 +69,8 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     await migrate_prompt_templates_suffixes(extension_context)
     // 5 August 2026
     await migrate_commit_message_details_filename(extension_context)
+    // 16 August 2026
+    await migrate_prompt_templates_to_templates(extension_context)
   }
 
   await migrations()

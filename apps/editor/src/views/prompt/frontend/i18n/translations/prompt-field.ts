@@ -90,7 +90,7 @@ export const prompt_field = {
     bg: 'Вмъкване на символ'
   },
   'prompt-field.prompt-templates': {
-    en: 'Prompt templates',
+    en: 'Templates',
     pl: 'Szablony promptów',
     'zh-cn': '提示模板',
     ja: 'プロンプトテンプレート',

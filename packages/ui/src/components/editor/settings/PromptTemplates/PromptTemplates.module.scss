@@ -1,0 +1,132 @@
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--cwc-border-color-dimmed);
+  border-radius: 6px;
+  overflow: hidden;
+
+  &:hover {
+    border-color: var(--cwc-border-color-hover);
+  }
+
+  &__header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    cursor: pointer;
+    user-select: none;
+
+    + div {
+      margin-top: -8px;
+    }
+  }
+
+  &__title {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  --row-height: 32px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--row-height);
+  padding: 0 12px;
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    &__amount {
+      font-weight: 500;
+    }
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--cwc-bg-secondary);
+  border-bottom: 1px solid var(--cwc-bg-secondary);
+
+  &:has(.row:nth-child(even):last-child) {
+    border-bottom: none;
+  }
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  height: var(--row-height);
+  gap: 12px;
+  padding: 0 12px;
+
+  &:nth-child(even) {
+    background-color: var(--cwc-bg-tertiary);
+  }
+
+  &__content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    gap: 8px;
+  }
+}
+
+.item-text {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  &__detail {
+    margin-left: 0.5em;
+    opacity: 0.7;
+    font-size: 0.9em;
+  }
+}
+
+.drag-handle {
+  cursor: grab;
+  opacity: var(--drag-handle-opacity);
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.col-drag {
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.col-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}

@@ -8,7 +8,6 @@ export const handle_create_web_configuration = async (
   message: CreateWebConfigurationMessage
 ): Promise<void> => {
   const result = await create({
-    placement: message.create_on_top ? 'top' : 'bottom',
     reference_index: message.insertion_index
   })
 

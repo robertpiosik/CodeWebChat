@@ -301,13 +301,11 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const handle_create_api_configuration = (params?: {
-    create_on_top?: boolean
     insertion_index?: number
   }) => {
     post_message(props.vscode, {
       command: 'CREATE_API_CONFIGURATION',
       api_feature: props.api_prompt_type as any,
-      create_on_top: params?.create_on_top,
       insertion_index: params?.insertion_index
     })
   }
@@ -354,13 +352,9 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_create_web_configuration = (
-    placement?: 'top' | 'bottom',
-    reference_index?: number
-  ) => {
+  const handle_create_web_configuration = (reference_index?: number) => {
     post_message(props.vscode, {
       command: 'CREATE_WEB_CONFIGURATION',
-      placement,
       reference_index
     })
   }

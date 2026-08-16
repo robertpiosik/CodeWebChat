@@ -9,7 +9,6 @@ export const handle_create_api_configuration = async (
 ): Promise<void> => {
   const result = await create({
     extension_context: provider.extension_context,
-    create_on_top: message.create_on_top,
     insertion_index: message.insertion_index
   })
 

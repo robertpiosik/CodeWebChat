@@ -18,10 +18,8 @@ export namespace SortableList {
   export type Props<T extends Item> = {
     items: T[]
     on_reorder: (items: T[]) => void
-    on_add: (params?: {
-      insertion_index?: number
-      create_on_top?: boolean
-    }) => void
+    on_add?: (params?: { insertion_index?: number }) => void
+    hide_add_button?: boolean
     render_content: (item: T, index: number) => React.ReactNode
     render_actions?: (item: T, index: number) => React.ReactNode
     header_extra?: React.ReactNode
@@ -71,13 +69,13 @@ export function SortableList<T extends SortableList.Item>(
         </div>
         {props.header_extra}
       </div>
-      <IconButton
-        codicon_icon="add"
-        title={props.translations.add_title}
-        on_click={() =>
-          props.on_add(is_top ? { create_on_top: true } : undefined)
-        }
-      />
+      {!props.hide_add_button && props.on_add && (
+        <IconButton
+          codicon_icon="add"
+          title={props.translations.add_title}
+          on_click={() => props.on_add?.()}
+        />
+      )}
     </div>
   )
 

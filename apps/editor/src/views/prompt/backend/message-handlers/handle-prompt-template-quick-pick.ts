@@ -10,7 +10,7 @@ type PromptTemplate = {
   template: string
 }
 
-const ADD_NEW_TEMPLATE_LABEL = '$(add) New prompt template...'
+const ADD_NEW_TEMPLATE_LABEL = '$(add) New template...'
 
 export const handle_prompt_template_quick_pick = async (
   prompt_view_provider: PromptViewProvider
@@ -27,19 +27,19 @@ export const handle_prompt_template_quick_pick = async (
   let prompt_templates_key: string | undefined
   switch (prompt_type) {
     case 'ask-about-files':
-      prompt_templates_key = 'promptTemplatesForAskAboutFiles'
+      prompt_templates_key = 'templatesForAskAboutFiles'
       break
     case 'edit-files':
-      prompt_templates_key = 'promptTemplatesForEditFiles'
+      prompt_templates_key = 'templatesForEditFiles'
       break
     case 'code-at-cursor':
-      prompt_templates_key = 'promptTemplatesForCodeAtCursor'
+      prompt_templates_key = 'templatesForCodeAtCursor'
       break
     case 'without-files':
-      prompt_templates_key = 'promptTemplatesForWithoutFiles'
+      prompt_templates_key = 'templatesForWithoutFiles'
       break
     case 'find-relevant-files':
-      prompt_templates_key = 'promptTemplatesForFindRelevantFiles'
+      prompt_templates_key = 'templatesForFindRelevantFiles'
       break
   }
 
@@ -55,9 +55,8 @@ export const handle_prompt_template_quick_pick = async (
     vscode.QuickPickItem & { template?: PromptTemplate; index?: number }
   >()
   templates_quick_pick.matchOnDetail = true
-  templates_quick_pick.title = 'Prompt Templates'
-  templates_quick_pick.placeholder =
-    'Select a prompt template or create a new one'
+  templates_quick_pick.title = 'Templates'
+  templates_quick_pick.placeholder = 'Select a template or create a new one'
   templates_quick_pick.buttons = [
     { iconPath: new vscode.ThemeIcon('close'), tooltip: t('common.close') }
   ]
@@ -188,7 +187,7 @@ export const handle_prompt_template_quick_pick = async (
           } else if (selected.label == TEMPLATE_LABEL) {
             const new_template_text = await vscode.window.showInputBox({
               title,
-              prompt: 'Enter the prompt template',
+              prompt: 'Enter the template',
               value: template.template,
               placeHolder:
                 'E.g., Rewrite {function name} without redundant comments'
@@ -253,7 +252,7 @@ export const handle_prompt_template_quick_pick = async (
           is_disposed = true
         } else {
           if (updated_template?.template.trim()) {
-            prompt_templates.unshift(updated_template)
+            prompt_templates.push(updated_template)
             await config.update(
               prompt_templates_key,
               prompt_templates,

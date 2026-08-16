@@ -17,7 +17,6 @@ export const upsert_provider = async (params: {
   extension_context: vscode.ExtensionContext
   model_provider_name?: string
   insertion_index?: number
-  create_on_top?: boolean
   show_back_button?: boolean
 }): Promise<ModelProvider | undefined> => {
   const providers_manager = new ModelProvidersManager(params.extension_context)
@@ -656,9 +655,7 @@ export const upsert_provider = async (params: {
       })
     }
   } else {
-    if (params.create_on_top) {
-      updated_model_providers.unshift(working_model_provider)
-    } else if (actual_insertion_index !== undefined) {
+    if (actual_insertion_index !== undefined) {
       updated_model_providers.splice(
         actual_insertion_index,
         0,

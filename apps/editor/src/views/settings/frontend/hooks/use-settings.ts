@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import {
   BackendMessage,
   ApiConfiguration,
-  Provider
+  Provider,
+  PromptTemplate
 } from '@/views/settings/types/messages'
 import { ApiFeature } from '@/views/shared/types/api-features'
 import { post_message } from '../utils/post-message'
@@ -72,6 +73,9 @@ export const use_settings = (vscode: any) => {
   const [is_modern_ui, set_is_modern_ui] = useState<boolean | undefined>(
     undefined
   )
+  const [prompt_templates, set_prompt_templates] = useState<
+    Record<string, PromptTemplate[]> | undefined
+  >(undefined)
 
   useEffect(() => {
     post_message(vscode, { command: 'GET_MODEL_PROVIDERS' })
@@ -101,6 +105,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR' })
     post_message(vscode, { command: 'GET_AUTO_RUN_INTELLIGENT_UPDATE' })
     post_message(vscode, { command: 'GET_IS_MODERN_UI' })
+    post_message(vscode, { command: 'GET_PROMPT_TEMPLATES' })
   }, [vscode])
 
   useEffect(() => {
@@ -151,6 +156,8 @@ export const use_settings = (vscode: any) => {
         set_auto_run_intelligent_update(message.enabled)
       } else if (message.command == 'IS_MODERN_UI') {
         set_is_modern_ui(message.is_modern_ui)
+      } else if (message.command == 'PROMPT_TEMPLATES') {
+        set_prompt_templates(message.templates)
       }
     }
 
@@ -169,14 +176,10 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_add_provider = (params?: {
-    insertion_index?: number
-    create_on_top?: boolean
-  }) => {
+  const handle_add_provider = (params?: { insertion_index?: number }) => {
     post_message(vscode, {
       command: 'ADD_MODEL_PROVIDER',
-      insertion_index: params?.insertion_index,
-      create_on_top: params?.create_on_top
+      insertion_index: params?.insertion_index
     })
   }
 
@@ -218,12 +221,10 @@ export const use_settings = (vscode: any) => {
 
   const handle_add_api_configuration = (params?: {
     insertion_index?: number
-    create_on_top?: boolean
   }) => {
     post_message(vscode, {
       command: 'CREATE_API_CONFIGURATION',
-      insertion_index: params?.insertion_index,
-      create_on_top: params?.create_on_top
+      insertion_index: params?.insertion_index
     })
   }
 
@@ -243,12 +244,10 @@ export const use_settings = (vscode: any) => {
 
   const handle_add_web_configuration = (params?: {
     insertion_index?: number
-    create_on_top?: boolean
   }) => {
     post_message(vscode, {
       command: 'CREATE_WEB_CONFIGURATION',
-      insertion_index: params?.insertion_index,
-      create_on_top: params?.create_on_top
+      insertion_index: params?.insertion_index
     })
   }
 
@@ -416,6 +415,34 @@ export const use_settings = (vscode: any) => {
     })
   }
 
+  const handle_add_prompt_template = (
+    key: string,
+    params?: { insertion_index?: number }
+  ) => {
+    post_message(vscode, {
+      command: 'CREATE_PROMPT_TEMPLATE',
+      templates_key: key,
+      insertion_index: params?.insertion_index
+    })
+  }
+
+  const handle_update_prompt_templates = (
+    templates_key: string,
+    templates: PromptTemplate[]
+  ) => {
+    if (prompt_templates) {
+      set_prompt_templates({
+        ...prompt_templates,
+        [templates_key]: templates
+      })
+    }
+    post_message(vscode, {
+      command: 'UPDATE_PROMPT_TEMPLATES',
+      templates_key,
+      templates
+    })
+  }
+
   return {
     providers,
     set_providers,
@@ -474,6 +501,9 @@ export const use_settings = (vscode: any) => {
     handle_clear_checks_in_workspace_behavior_change,
     handle_auto_run_intelligent_update_change,
     handle_open_keybindings,
-    handle_open_external_url
+    handle_open_external_url,
+    prompt_templates,
+    handle_update_prompt_templates,
+    handle_add_prompt_template
   }
 }

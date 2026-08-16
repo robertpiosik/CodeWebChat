@@ -5,7 +5,6 @@ import { generate_unique_name } from '@/views/shared/utils/generate-unique-name'
 import { t } from '@/i18n'
 
 export const create = async (params: {
-  placement?: 'top' | 'bottom'
   reference_index?: number
 }): Promise<
   { config: ConfigWebConfigurationFormat; insertion_index?: number } | undefined
@@ -65,8 +64,6 @@ export const create = async (params: {
       t('views.shared.actions.web.create.placement-above')
         ? params.reference_index
         : params.reference_index + 1
-  } else if (params.placement == 'top') {
-    insertion_index = 0
   }
 
   const selected_chatbot = await new Promise<keyof typeof CHATBOTS | undefined>(

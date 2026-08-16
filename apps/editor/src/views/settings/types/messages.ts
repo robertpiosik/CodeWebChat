@@ -29,7 +29,6 @@ export interface ReorderModelProvidersMessage {
 export interface AddModelProviderMessage {
   command: 'ADD_MODEL_PROVIDER'
   insertion_index?: number
-  create_on_top?: boolean
 }
 
 export interface DeleteModelProviderMessage {
@@ -247,7 +246,6 @@ export interface CreateWebConfigurationMessage {
   command: 'CREATE_WEB_CONFIGURATION'
   web_configuration_id?: string
   insertion_index?: number
-  create_on_top?: boolean
 }
 
 export interface PickModelMessage {
@@ -279,7 +277,6 @@ export interface UpdateWebConfigurationMessage {
 export interface CreateApiConfigurationMessage {
   command: 'CREATE_API_CONFIGURATION'
   api_feature?: ApiFeature
-  create_on_top?: boolean
   insertion_index?: number
 }
 
@@ -335,7 +332,27 @@ export interface UpdateModelProviderMessage {
   origin?: 'cancel' | 'save'
   is_new?: boolean
   insertion_index?: number
-  create_on_top?: boolean
+}
+
+export type PromptTemplate = {
+  name?: string
+  template: string
+}
+
+export interface GetPromptTemplatesMessage {
+  command: 'GET_PROMPT_TEMPLATES'
+}
+
+export interface UpdatePromptTemplatesMessage {
+  command: 'UPDATE_PROMPT_TEMPLATES'
+  templates_key: string
+  templates: PromptTemplate[]
+}
+
+export interface CreatePromptTemplateMessage {
+  command: 'CREATE_PROMPT_TEMPLATE'
+  templates_key: string
+  insertion_index?: number
 }
 
 export interface GetIsModernUiMessage {
@@ -407,6 +424,9 @@ export type FrontendMessage =
   | PickApiReasoningEffortMessage
   | UpdateModelProviderMessage
   | GetIsModernUiMessage
+  | GetPromptTemplatesMessage
+  | UpdatePromptTemplatesMessage
+  | CreatePromptTemplateMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface ModelProvidersMessage {
@@ -570,7 +590,6 @@ export interface StartModelProviderCreationMessage {
   command: 'START_MODEL_PROVIDER_CREATION'
   provider: Provider
   insertion_index?: number
-  create_on_top?: boolean
 }
 
 export interface ModelProviderUpdatedMessage {
@@ -580,6 +599,18 @@ export interface ModelProviderUpdatedMessage {
 export interface IsModernUiMessage {
   command: 'IS_MODERN_UI'
   is_modern_ui: boolean
+}
+
+export interface PromptTemplatesMessage {
+  command: 'PROMPT_TEMPLATES'
+  templates: Record<string, PromptTemplate[]>
+}
+
+export interface StartPromptTemplateCreationMessage {
+  command: 'START_PROMPT_TEMPLATE_CREATION'
+  templates_key: string
+  template: PromptTemplate
+  insertion_index?: number
 }
 
 export type BackendMessage =
@@ -617,3 +648,5 @@ export type BackendMessage =
   | StartModelProviderCreationMessage
   | ModelProviderUpdatedMessage
   | IsModernUiMessage
+  | PromptTemplatesMessage
+  | StartPromptTemplateCreationMessage
