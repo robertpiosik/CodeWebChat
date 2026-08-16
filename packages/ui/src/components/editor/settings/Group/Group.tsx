@@ -25,7 +25,7 @@ export const Group: React.FC<Props> = (props) => {
       {props.notice_slot ? (
         <div className={styles.notice}>{props.notice_slot}</div>
       ) : null}
-      <div>{props.children}</div>
+      <div className={styles.content}>{props.children}</div>
     </div>
   )
 }
