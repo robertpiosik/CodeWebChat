@@ -54,7 +54,6 @@
   "codeWebChat.selectUnstagedFiles.title": "Marcar Arquivos Modificados...",
   "codeWebChat.selectFilesOfCommit.title": "Marcar Arquivos de um Commit...",
   "codeWebChat.selectClipboardPaths.title": "Selecionar caminhos da área de transferência...",
-  "codeWebChat.selectChangedFiles.title": "Selecionar arquivos alterados...",
   "codeWebChat.selectParentFolder.title": "Selecionar Pasta Pai...",
   "codeWebChat.copyMergeCommitDetails.title": "CWC: Copiar detalhes dos commits agrupados"
 }

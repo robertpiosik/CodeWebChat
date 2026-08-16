@@ -54,7 +54,6 @@
   "codeWebChat.selectUnstagedFiles.title": "Marcar archivos modificados...",
   "codeWebChat.selectFilesOfCommit.title": "Marcar archivos de un commit...",
   "codeWebChat.selectClipboardPaths.title": "Seleccionar rutas del portapapeles...",
-  "codeWebChat.selectChangedFiles.title": "Seleccionar archivos cambiados...",
   "codeWebChat.selectParentFolder.title": "Seleccionar carpeta principal...",
   "codeWebChat.copyMergeCommitDetails.title": "CWC: Copiar detalles de commits agrupados"
 }

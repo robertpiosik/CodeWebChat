@@ -37,7 +37,6 @@ import {
   select_unstaged_files_command,
   select_files_of_commit_command,
   select_clipboard_paths_command,
-  select_changed_files_command,
   select_parent_folder_command,
   select_referencing_files_commands,
   copy_merge_commit_details_command,
@@ -177,11 +176,6 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
       websocket_server_instance
     ),
     select_clipboard_paths_command(
-      workspace_provider,
-      extension_context,
-      websocket_server_instance
-    ),
-    select_changed_files_command(
       workspace_provider,
       extension_context,
       websocket_server_instance

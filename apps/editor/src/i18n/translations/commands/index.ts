@@ -14,7 +14,6 @@ import { translations as rename } from './rename'
 import { translations as rate_extension } from './rate-extension'
 import { translations as select_unstaged_files } from './select-unstaged-files'
 import { translations as select_files_of_commit } from './select-files-of-commit'
-import { translations as select_changed_files } from './select-changed-files'
 import { translations as history } from './history'
 import { translations as select_clipboard_paths } from './select-clipboard-paths'
 import { translations as select_imported_files } from './select-imported-files'
@@ -39,7 +38,6 @@ export const translations = {
   ...rate_extension,
   ...select_unstaged_files,
   ...select_files_of_commit,
-  ...select_changed_files,
   ...history,
   ...select_clipboard_paths,
   ...select_imported_files,

@@ -54,7 +54,6 @@
   "codeWebChat.selectUnstagedFiles.title": "选中修改的文件...",
   "codeWebChat.selectFilesOfCommit.title": "选中提交中的文件...",
   "codeWebChat.selectClipboardPaths.title": "选择剪贴板路径...",
-  "codeWebChat.selectChangedFiles.title": "选择更改的文件...",
   "codeWebChat.selectParentFolder.title": "选择父文件夹...",
   "codeWebChat.copyMergeCommitDetails.title": "CWC: 复制合并的提交详细信息"
 }

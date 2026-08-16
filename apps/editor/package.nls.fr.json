@@ -54,7 +54,6 @@
   "codeWebChat.selectUnstagedFiles.title": "Cocher les fichiers modifiés...",
   "codeWebChat.selectFilesOfCommit.title": "Cocher les fichiers d'un commit...",
   "codeWebChat.selectClipboardPaths.title": "Sélectionner les chemins du presse-papiers...",
-  "codeWebChat.selectChangedFiles.title": "Sélectionner les fichiers modifiés...",
   "codeWebChat.selectParentFolder.title": "Sélectionner le dossier parent...",
   "codeWebChat.copyMergeCommitDetails.title": "CWC: Copier les détails des commits fusionnés"
 }

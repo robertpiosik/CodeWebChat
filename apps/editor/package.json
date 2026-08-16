@@ -411,11 +411,6 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.selectChangedFiles",
-        "title": "%codeWebChat.selectChangedFiles.title%",
-        "category": "Code Web Chat"
-      },
-      {
         "command": "codeWebChat.selectParentFolder",
         "title": "%codeWebChat.selectParentFolder.title%",
         "category": "Code Web Chat"
@@ -712,11 +707,6 @@
           "command": "codeWebChat.selectFilesOfCommit",
           "when": "view == codeWebChatViewWorkspace",
           "group": "3_more@4"
-        },
-        {
-          "command": "codeWebChat.selectChangedFiles",
-          "when": "view == codeWebChatViewWorkspace",
-          "group": "3_more@5"
         },
         {
           "command": "codeWebChat.duplicateWorkspace",

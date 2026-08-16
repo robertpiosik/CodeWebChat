@@ -54,7 +54,6 @@
   "codeWebChat.selectUnstagedFiles.title": "Отметить измененные файлы...",
   "codeWebChat.selectFilesOfCommit.title": "Отметить файлы из коммита...",
   "codeWebChat.selectClipboardPaths.title": "Выбрать пути из буфера обмена...",
-  "codeWebChat.selectChangedFiles.title": "Выбрать измененные файлы...",
   "codeWebChat.selectParentFolder.title": "Выбрать родительскую папку...",
   "codeWebChat.copyMergeCommitDetails.title": "CWC: Копировать сведения об объединенных коммитах"
 }
