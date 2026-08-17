@@ -9,12 +9,20 @@ import { map_files_to_quick_pick_items } from './map-files-to-quick-pick-items'
 import { handle_parent_folder_result } from './handle-parent-folder-result'
 
 export const prompt_for_intelligent_search_results = async (params: {
+  files: string[]
   extracted_files: string[]
   analysis: FileAnalysisResult
   workspace_provider: WorkspaceProvider
+  restored_selected_paths?: string[]
+  restored_unmatched_paths?: string[]
 }): Promise<
   | { selected_paths: string[]; matched_paths: string[]; title: string }
-  | { action: 'search_in_results'; matched_paths: string[] }
+  | {
+      action: 'search-in-results'
+      matched_paths: string[]
+      selected_paths: string[]
+      unmatched_paths: string[]
+    }
   | 'back'
   | 'cancel'
 > => {
@@ -62,6 +70,14 @@ export const prompt_for_intelligent_search_results = async (params: {
   const is_multi_root =
     params.workspace_provider.get_workspace_roots().length > 1
 
+  const currently_checked = params.workspace_provider.get_checked_files()
+
+  const unmatched_checked_files =
+    params.restored_unmatched_paths ??
+    params.files.filter(
+      (f) => currently_checked.includes(f) && !unique_paths.includes(f)
+    )
+
   const mapped_items = await map_files_to_quick_pick_items({
     files: unique_paths.map((path) => ({ path })),
     is_multi_root,
@@ -76,15 +92,42 @@ export const prompt_for_intelligent_search_results = async (params: {
     workspace_provider: params.workspace_provider
   }) as (vscode.QuickPickItem & { file_path?: string })[]
 
-  const currently_checked = params.workspace_provider.get_checked_files()
+  if (unmatched_checked_files.length > 0) {
+    const mapped_unmatched_items = await map_files_to_quick_pick_items({
+      files: unmatched_checked_files.map((path) => ({ path })),
+      is_multi_root,
+      workspace_provider: params.workspace_provider,
+      open_file_button,
+      add_parent_folder_button
+    })
+
+    const unmatched_quick_pick_items = group_quick_pick_items({
+      mapped_items: mapped_unmatched_items,
+      is_multi_root,
+      workspace_provider: params.workspace_provider
+    }) as (vscode.QuickPickItem & { file_path?: string })[]
+
+    quick_pick_items.push({
+      label: t('feature.search-files.results.unmatched'),
+      kind: vscode.QuickPickItemKind.Separator
+    })
+    quick_pick_items.push(...unmatched_quick_pick_items)
+  }
 
   const quick_pick = vscode.window.createQuickPick<
     vscode.QuickPickItem & { file_path?: string }
   >()
   quick_pick.items = quick_pick_items
-  quick_pick.selectedItems = quick_pick_items.filter(
-    (item) => item.file_path && currently_checked.includes(item.file_path)
-  )
+  quick_pick.selectedItems = quick_pick_items.filter((item) => {
+    if (!item.file_path) return false
+    if (params.restored_selected_paths) {
+      return params.restored_selected_paths.includes(item.file_path)
+    }
+    return (
+      currently_checked.includes(item.file_path) &&
+      !unmatched_checked_files.includes(item.file_path)
+    )
+  })
   quick_pick.canSelectMany = true
 
   const title = t('feature.search-files.results.intelligent')
@@ -102,7 +145,12 @@ export const prompt_for_intelligent_search_results = async (params: {
 
   const list_selection = await new Promise<
     | { selected_paths: string[]; matched_paths: string[]; title: string }
-    | { action: 'search_in_results'; matched_paths: string[] }
+    | {
+        action: 'search-in-results'
+        matched_paths: string[]
+        selected_paths: string[]
+        unmatched_paths: string[]
+      }
     | 'back'
     | 'cancel'
   >((resolve) => {
@@ -115,7 +163,14 @@ export const prompt_for_intelligent_search_results = async (params: {
         quick_pick.hide()
       } else if (button === search_in_results_button) {
         is_resolved = true
-        resolve({ action: 'search_in_results', matched_paths: unique_paths })
+        resolve({
+          action: 'search-in-results',
+          matched_paths: [...unique_paths, ...unmatched_checked_files],
+          selected_paths: quick_pick.selectedItems
+            .map((item) => item.file_path)
+            .filter((p): p is string => p !== undefined),
+          unmatched_paths: unmatched_checked_files
+        })
         quick_pick.hide()
       } else if (button === close_button) {
         is_resolved = true
@@ -130,7 +185,7 @@ export const prompt_for_intelligent_search_results = async (params: {
         selected_paths: quick_pick.selectedItems
           .map((item) => item.file_path)
           .filter((p): p is string => p !== undefined),
-        matched_paths: unique_paths,
+        matched_paths: [...unique_paths, ...unmatched_checked_files],
         title
       })
       quick_pick.hide()

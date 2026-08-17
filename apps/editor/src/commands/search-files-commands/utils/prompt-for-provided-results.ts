@@ -2,16 +2,21 @@ import * as vscode from 'vscode'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { t } from '@/i18n'
 import { show_parent_folder_quick_pick } from '@/utils/show-parent-folder-quick-pick'
-import { group_quick_pick_items } from './group-quick-pick-items'
-import { map_files_to_quick_pick_items } from './map-files-to-quick-pick-items'
-import { handle_parent_folder_result } from './handle-parent-folder-result'
+import { group_quick_pick_items } from '@/features/search-files/utils/group-quick-pick-items'
+import { map_files_to_quick_pick_items } from '@/features/search-files/utils/map-files-to-quick-pick-items'
+import { handle_parent_folder_result } from '@/features/search-files/utils/handle-parent-folder-result'
 
 export const prompt_for_provided_results = async (params: {
   files: { path: string; checked: boolean }[]
   workspace_provider: WorkspaceProvider
+  restored_selected_paths?: string[]
 }): Promise<
   | { selected_paths: string[]; matched_paths: string[]; title: string }
-  | { action: 'search_in_results'; matched_paths: string[] }
+  | {
+      action: 'search-in-results'
+      matched_paths: string[]
+      selected_paths: string[]
+    }
   | undefined
 > => {
   const open_file_button = {
@@ -55,7 +60,13 @@ export const prompt_for_provided_results = async (params: {
     vscode.QuickPickItem & { file_path?: string; checked?: boolean }
   >()
   quick_pick.items = quick_pick_items
-  quick_pick.selectedItems = quick_pick_items.filter((item) => item.checked)
+  quick_pick.selectedItems = quick_pick_items.filter((item) => {
+    if (!item.file_path) return false
+    if (params.restored_selected_paths) {
+      return params.restored_selected_paths.includes(item.file_path)
+    }
+    return item.checked
+  })
   quick_pick.canSelectMany = true
   quick_pick.matchOnDescription = true
   quick_pick.placeholder = t('feature.search-files.select-files')
@@ -70,7 +81,11 @@ export const prompt_for_provided_results = async (params: {
 
   return new Promise<
     | { selected_paths: string[]; matched_paths: string[]; title: string }
-    | { action: 'search_in_results'; matched_paths: string[] }
+    | {
+        action: 'search-in-results'
+        matched_paths: string[]
+        selected_paths: string[]
+      }
     | undefined
   >((resolve) => {
     let is_accepted = false
@@ -79,8 +94,11 @@ export const prompt_for_provided_results = async (params: {
       if (button === search_in_results_button) {
         is_accepted = true
         resolve({
-          action: 'search_in_results',
-          matched_paths: params.files.map((f) => f.path)
+          action: 'search-in-results',
+          matched_paths: params.files.map((f) => f.path),
+          selected_paths: quick_pick.selectedItems
+            .map((item) => item.file_path)
+            .filter((p): p is string => p !== undefined)
         })
         quick_pick.hide()
       } else if (button === close_button) {

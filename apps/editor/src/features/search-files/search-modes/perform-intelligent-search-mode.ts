@@ -412,11 +412,17 @@ export const perform_intelligent_search_mode = async (params: {
             }
 
             let go_back_to_term_from_results = false
+            let restored_selected_paths: string[] | undefined = undefined
+            let restored_unmatched_paths: string[] | undefined = undefined
+
             while (true) {
               const apply_result = await prompt_for_intelligent_search_results({
+                files: params.files,
                 extracted_files: api_result,
                 analysis,
-                workspace_provider: params.workspace_provider
+                workspace_provider: params.workspace_provider,
+                restored_selected_paths,
+                restored_unmatched_paths
               })
 
               if (apply_result == 'back') {
@@ -432,6 +438,8 @@ export const perform_intelligent_search_mode = async (params: {
                   apply_result.matched_paths
                 )
                 if (sub_result === 'back') {
+                  restored_selected_paths = apply_result.selected_paths
+                  restored_unmatched_paths = apply_result.unmatched_paths
                   continue
                 }
                 return sub_result

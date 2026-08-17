@@ -28,9 +28,6 @@ import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provi
 import { natural_sort } from '@/utils/natural-sort'
 import { t } from '@/i18n'
 import { is_truncation_line } from '@/utils/changes-integration/truncations-processor/utils/is-truncation-line'
-import { prompt_for_merge_or_replace } from '@/features/search-files/utils/prompt-for-merge-or-replace'
-import { search_files } from '@/features/search-files'
-import { prompt_for_provided_results } from '@/features/search-files/utils/prompt-for-provided-results'
 import { WebSocketManager } from '@/services/websocket-manager'
 
 export type PreviewData = {
@@ -182,81 +179,14 @@ export const process_response = async (params: {
       command: 'HIDE_PROGRESS'
     })
 
-    let decision:
-      | { selected_paths: string[]; matched_paths: string[]; title?: string }
-      | undefined = undefined
-
     const files_to_prompt = files_for_preview.map((f) => ({
       path: f.absolute_path,
       checked: f.is_checked
     }))
 
-    while (true) {
-      const result = await prompt_for_provided_results({
-        files: files_to_prompt,
-        workspace_provider: params.workspace_provider
-      })
-
-      if (!result) {
-        break
-      }
-
-      if ('action' in result) {
-        const sub_search_result = await search_files({
-          get_files: async () => result.matched_paths,
-          workspace_provider: params.workspace_provider,
-          extension_context: params.extension_context,
-          websocket_manager: params.websocket_manager,
-          show_back_button: true,
-          is_sub_search: true
-        })
-
-        if (sub_search_result === 'back') {
-          continue
-        }
-
-        decision = sub_search_result
-        break
-      }
-
-      decision = result
-      break
-    }
-
-    if (decision) {
-      console.log('decision', decision)
-      const selected_files = decision.selected_paths
-      const presented_files = decision.matched_paths
-
-      let paths_to_apply: string[] = []
-
-      if (current_checked_files.length > 0) {
-        const action = await prompt_for_merge_or_replace({
-          extension_context: params.extension_context,
-          title: decision.title
-        })
-
-        if (!action) return null
-
-        if (action === 'merge') {
-          const filtered_current_files = current_checked_files.filter(
-            (f) => !presented_files.includes(f)
-          )
-
-          paths_to_apply = Array.from(
-            new Set([...filtered_current_files, ...selected_files])
-          )
-        } else {
-          paths_to_apply = selected_files
-        }
-      } else {
-        paths_to_apply = selected_files
-      }
-
-      await params.workspace_provider.set_checked_files(paths_to_apply)
-
-      vscode.window.showInformationMessage(t('common.success.context-updated'))
-    }
+    await vscode.commands.executeCommand('codeWebChat.searchFiles', undefined, {
+      provided_files: files_to_prompt
+    })
 
     return null
   } else if (params.response_items.some((item) => item.type == 'diff')) {

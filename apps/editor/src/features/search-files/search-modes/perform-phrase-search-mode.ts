@@ -109,13 +109,18 @@ export const perform_phrase_search_mode = async (params: {
     }
 
     let go_back_to_term = false
+    let restored_selected_paths: string[] | undefined = undefined
+    let restored_unmatched_paths: string[] | undefined = undefined
 
     while (true) {
       const selected_items = await prompt_for_search_results({
+        files,
         matched_files,
         search_term,
         search_mode: 'phrase',
-        workspace_provider: params.workspace_provider
+        workspace_provider: params.workspace_provider,
+        restored_selected_paths,
+        restored_unmatched_paths
       })
 
       if (selected_items == 'back') {
@@ -133,6 +138,8 @@ export const perform_phrase_search_mode = async (params: {
         )
 
         if (sub_search_result === 'back') {
+          restored_selected_paths = selected_items.selected_paths
+          restored_unmatched_paths = selected_items.unmatched_paths
           continue
         }
         return sub_search_result
