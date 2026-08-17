@@ -12,8 +12,6 @@ export const CONTEXT_CHECKED_PATHS_STATE_KEY = 'context-checked-paths'
 export const CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY = 'context-checked-timestamps'
 export const LAST_APPLY_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY =
   'last-apply-context-merge-replace-option'
-export const LAST_FIND_RELEVANT_FILES_MERGE_REPLACE_OPTION_STATE_KEY =
-  'last-find-relevant-files-merge-replace-option'
 export const LAST_SEARCH_FILES_MERGE_REPLACE_OPTION_STATE_KEY =
   'last-search-files-merge-replace-option'
 export const LAST_REFACTOR_INSTRUCTION_SOURCE_STATE_KEY =
@@ -46,8 +44,6 @@ export const INSTRUCTIONS_ASK_STATE_KEY = 'instructions-ask'
 export const INSTRUCTIONS_NO_CONTEXT_STATE_KEY = 'instructions-no-context'
 export const INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY =
   'instructions-code-at-cursor'
-export const INSTRUCTIONS_FIND_RELEVANT_FILES_STATE_KEY =
-  'instructions-find-relevant-files'
 
 export const ARE_TASKS_COLLAPSED_STATE_KEY = 'are-tasks-collapsed'
 export const ARE_CHECKPOINTS_COLLAPSED_STATE_KEY = 'are-checkpoints-collapsed'
@@ -55,8 +51,6 @@ export const ARE_CHECKPOINTS_COLLAPSED_STATE_KEY = 'are-checkpoints-collapsed'
 export const HISTORY_ASK_ABOUT_FILES_STATE_KEY = 'history-ask-about-files'
 export const HISTORY_EDIT_FILES_STATE_KEY = 'history-edit-files'
 export const HISTORY_CODE_AT_CURSOR_STATE_KEY = 'history-code-at-cursor'
-export const HISTORY_FIND_RELEVANT_FILES_STATE_KEY =
-  'history-find-relevant-files'
 export const HISTORY_WITHOUT_FILES_STATE_KEY = 'history-without-files'
 
 export const FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY =
@@ -112,8 +106,6 @@ export const LAST_SEARCH_FILES_SEMANTIC_QUERY_STATE_KEY =
 export const LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY =
   'last-search-files-for-context-mode'
 
-export const LAST_FIND_RELEVANT_FILES_QUERY_STATE_KEY =
-  'last-find-relevant-files-query'
 export const LAST_FIND_RELEVANT_FILES_SHRINK_STATE_KEY =
   'last-find-relevant-files-shrink'
 

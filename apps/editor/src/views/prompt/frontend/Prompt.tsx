@@ -49,7 +49,6 @@ export const Prompt = () => {
     edit_files_instructions,
     no_context_instructions,
     code_at_cursor_instructions,
-    find_relevant_files_instructions,
     mode,
     web_prompt_type,
     api_prompt_type,
@@ -74,8 +73,6 @@ export const Prompt = () => {
     handle_paste_url,
     is_recording,
     handle_set_recording_state,
-    find_relevant_files_shrink_source_code,
-    handle_find_relevant_files_shrink_source_code_change,
     is_setup_complete,
     handle_tab_change,
     handle_new_tab,
@@ -162,7 +159,6 @@ export const Prompt = () => {
     no_context_instructions === undefined ||
     !version ||
     code_at_cursor_instructions === undefined ||
-    find_relevant_files_instructions === undefined ||
     mode === undefined ||
     web_prompt_type === undefined ||
     is_connected === undefined ||
@@ -204,8 +200,6 @@ export const Prompt = () => {
       state = edit_files_instructions
     } else if (prompt_type == 'without-files') {
       state = no_context_instructions
-    } else if (prompt_type == 'find-relevant-files') {
-      state = find_relevant_files_instructions
     }
 
     if (!state) return ''
@@ -219,8 +213,6 @@ export const Prompt = () => {
     if (prompt_type == 'edit-files') return edit_files_instructions
     if (prompt_type == 'without-files') return no_context_instructions
     if (prompt_type == 'code-at-cursor') return code_at_cursor_instructions
-    if (prompt_type == 'find-relevant-files')
-      return find_relevant_files_instructions
     return undefined
   }
 
@@ -364,11 +356,6 @@ export const Prompt = () => {
                     code_at_cursor_instructions.active_index
                   ] || ''
                 }
-                find_relevant_files_instructions={
-                  find_relevant_files_instructions.instructions[
-                    find_relevant_files_instructions.active_index
-                  ] || ''
-                }
                 set_instructions={handle_instructions_change}
                 mode={mode}
                 web_prompt_type={web_prompt_type}
@@ -420,12 +407,6 @@ export const Prompt = () => {
                 is_recording={is_recording}
                 on_recording_started={() => handle_set_recording_state(true)}
                 on_recording_finished={() => handle_set_recording_state(false)}
-                find_relevant_files_shrink_source_code={
-                  find_relevant_files_shrink_source_code
-                }
-                on_find_relevant_files_shrink_source_code_change={
-                  handle_find_relevant_files_shrink_source_code_change
-                }
                 is_setup_complete={is_setup_complete}
                 tabs_count={current_state?.instructions.length ?? 0}
                 active_tab_index={current_state?.active_index ?? 0}

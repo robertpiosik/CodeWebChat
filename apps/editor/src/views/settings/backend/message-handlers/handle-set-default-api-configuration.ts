@@ -33,10 +33,6 @@ export const handle_set_default_api_configuration = async (
     await providers_manager.set_default_commit_messages_api_configuration(
       api_configuration_to_set
     )
-  } else if (type == 'find-relevant-files') {
-    await providers_manager.set_default_find_relevant_files_api_configuration(
-      api_configuration_to_set
-    )
   } else if (type == 'voice-input') {
     await providers_manager.set_default_voice_input_api_configuration(
       api_configuration_to_set

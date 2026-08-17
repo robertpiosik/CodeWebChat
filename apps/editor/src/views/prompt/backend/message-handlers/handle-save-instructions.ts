@@ -7,8 +7,7 @@ import {
   INSTRUCTIONS_ASK_STATE_KEY,
   INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY,
   INSTRUCTIONS_EDIT_FILES_STATE_KEY,
-  INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
-  INSTRUCTIONS_FIND_RELEVANT_FILES_STATE_KEY
+  INSTRUCTIONS_NO_CONTEXT_STATE_KEY
 } from '@/constants/state-keys'
 
 export const handle_save_instructions = async (
@@ -40,12 +39,6 @@ export const handle_save_instructions = async (
     prompt_view_provider.code_at_cursor_instructions = instruction_state
     await prompt_view_provider.extension_context.workspaceState.update(
       INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY,
-      instruction_state
-    )
-  } else if (prompt_type == 'find-relevant-files') {
-    prompt_view_provider.find_relevant_files_instructions = instruction_state
-    await prompt_view_provider.extension_context.workspaceState.update(
-      INSTRUCTIONS_FIND_RELEVANT_FILES_STATE_KEY,
       instruction_state
     )
   } else {

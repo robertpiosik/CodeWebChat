@@ -17,7 +17,6 @@ import { Header } from './components/Header'
 import { use_invocation_counts } from './hooks/use-invocation-counts'
 import { SelectionState } from '@/views/prompt/types/messages'
 import { use_translation } from '../../i18n/use-translation'
-import { Checkbox as UiCheckbox } from '@ui/components/editor/common/Checkbox'
 import { Icon } from '@ui/components/editor/common/Icon'
 import { CHATBOTS } from '@shared/constants/chatbots'
 
@@ -100,8 +99,6 @@ type Props = {
   is_recording: boolean
   on_recording_started: () => void
   on_recording_finished: () => void
-  find_relevant_files_shrink_source_code: boolean
-  on_find_relevant_files_shrink_source_code_change: (shrink: boolean) => void
   is_setup_complete: boolean
   tabs_count: number
   active_tab_index: number
@@ -150,11 +147,6 @@ export const MainView: React.FC<Props> = (props) => {
     (props.mode == MODE.WEB && props.web_prompt_type == 'code-at-cursor') ||
     (props.mode == MODE.API && props.api_prompt_type == 'code-at-cursor')
 
-  const is_in_find_relevant_files_prompt_type =
-    (props.mode == MODE.WEB &&
-      props.web_prompt_type == 'find-relevant-files') ||
-    (props.mode == MODE.API && props.api_prompt_type == 'find-relevant-files')
-
   const show_edit_format_selector =
     (props.mode == MODE.WEB && props.web_prompt_type == 'edit-files') ||
     (props.mode == MODE.API && props.api_prompt_type == 'edit-files')
@@ -176,9 +168,7 @@ export const MainView: React.FC<Props> = (props) => {
   ) {
     warning = 'Open a file'
   } else if (
-    (is_in_edit_context_prompt_type ||
-      is_in_find_relevant_files_prompt_type ||
-      is_in_ask_about_context_prompt_type) &&
+    (is_in_edit_context_prompt_type || is_in_ask_about_context_prompt_type) &&
     props.token_count == 0
   ) {
     warning = 'Select files'
@@ -294,19 +284,6 @@ export const MainView: React.FC<Props> = (props) => {
       />
       <UiScrollable scroll_to_top_key={props.scroll_reset_key} top_shadow>
         <UiSeparator height={4} />
-
-        {is_in_find_relevant_files_prompt_type && (
-          <div className={styles['shrink-source-code-checkbox']}>
-            <UiCheckbox
-              checked={props.find_relevant_files_shrink_source_code}
-              on_change={props.on_find_relevant_files_shrink_source_code_change}
-              id="shrink-source-code"
-            />
-            <label htmlFor="shrink-source-code">
-              {t('home.shrink-source-code')}
-            </label>
-          </div>
-        )}
 
         {!props.is_connected &&
           props.mode == MODE.WEB &&

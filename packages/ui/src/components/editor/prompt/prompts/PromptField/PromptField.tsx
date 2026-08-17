@@ -713,49 +713,42 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               {(!props.is_web_mode ||
                 (props.is_web_mode && props.is_connected)) && (
                 <>
-                  {!(
-                    props.prompt_type == 'find-relevant-files' &&
-                    !props.is_web_mode
-                  ) && (
-                    <div
-                      className={styles['footer__right__invocation-count']}
-                      ref={invocation_container_ref}
+                  <div
+                    className={styles['footer__right__invocation-count']}
+                    ref={invocation_container_ref}
+                  >
+                    <button
+                      ref={invocation_button_ref}
+                      className={cn(
+                        styles['footer__right__submit__button'],
+                        styles['footer__right__invocation-count__button']
+                      )}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        set_is_invocation_dropdown_open((prev) => !prev)
+                        close_dropdown()
+                      }}
+                      onMouseEnter={() => set_is_invocation_count_hovered(true)}
+                      onMouseLeave={() =>
+                        set_is_invocation_count_hovered(false)
+                      }
                     >
-                      <button
-                        ref={invocation_button_ref}
-                        className={cn(
-                          styles['footer__right__submit__button'],
-                          styles['footer__right__invocation-count__button']
-                        )}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          set_is_invocation_dropdown_open((prev) => !prev)
-                          close_dropdown()
-                        }}
-                        onMouseEnter={() =>
-                          set_is_invocation_count_hovered(true)
+                      {props.invocation_count}×
+                    </button>
+                    <DropdownMenu
+                      anchor_ref={invocation_button_ref}
+                      is_open={is_invocation_dropdown_open}
+                      items={[1, 2, 3].map((count) => ({
+                        label: `${count}×`,
+                        is_checked: count == props.invocation_count,
+                        shortcut: is_mac ? `⌥X ${count}` : `Alt+X ${count}`,
+                        on_click: () => {
+                          props.on_invocation_count_change(count)
+                          set_is_invocation_dropdown_open(false)
                         }
-                        onMouseLeave={() =>
-                          set_is_invocation_count_hovered(false)
-                        }
-                      >
-                        {props.invocation_count}×
-                      </button>
-                      <DropdownMenu
-                        anchor_ref={invocation_button_ref}
-                        is_open={is_invocation_dropdown_open}
-                        items={[1, 2, 3].map((count) => ({
-                          label: `${count}×`,
-                          is_checked: count == props.invocation_count,
-                          shortcut: is_mac ? `⌥X ${count}` : `Alt+X ${count}`,
-                          on_click: () => {
-                            props.on_invocation_count_change(count)
-                            set_is_invocation_dropdown_open(false)
-                          }
-                        }))}
-                      />
-                    </div>
-                  )}
+                      }))}
+                    />
+                  </div>
                   {props.is_recording ? (
                     <button
                       className={cn(

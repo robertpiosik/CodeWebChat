@@ -10,12 +10,7 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
-import {
-  code_at_cursor_instructions_for_prompt_view,
-  find_relevant_files_instructions,
-  find_relevant_files_format_for_prompt_view
-} from '@/constants/instructions'
-import { FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY } from '@/constants/state-keys'
+import { code_at_cursor_instructions_for_prompt_view } from '@/constants/instructions'
 import { replace_symbols } from '@/views/prompt/backend/utils/symbols/replace-symbols'
 import { PromptBuilder } from '@/utils/prompt-builder'
 
@@ -85,20 +80,11 @@ export const handle_preview_web_configuration = async (
     })
     text_to_send = full_prompt
   } else if (prompt_view_provider.web_prompt_type != 'code-at-cursor') {
-    const shrink_source_code =
-      prompt_view_provider.extension_context.workspaceState.get<boolean>(
-        FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
-        false
-      )
-
     const collected =
       prompt_view_provider.web_prompt_type != 'without-files'
         ? await FilesCollector.collect_files({
             workspace_provider: prompt_view_provider.workspace_provider,
-            open_editors_provider: prompt_view_provider.open_editors_provider,
-            shrink:
-              prompt_view_provider.web_prompt_type == 'find-relevant-files' &&
-              shrink_source_code
+            open_editors_provider: prompt_view_provider.open_editors_provider
           })
         : { other_files: '', recent_files: '' }
     const context_text = collected.other_files + collected.recent_files
@@ -112,7 +98,7 @@ export const handle_preview_web_configuration = async (
       })
 
     let formatted_system_instructions = ''
-    let user_instructions = processed_instructions
+    const user_instructions = processed_instructions
     if (prompt_view_provider.web_prompt_type == 'edit-files') {
       const edit_format_instructions = {
         whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
@@ -123,14 +109,6 @@ export const handle_preview_web_configuration = async (
       if (edit_format_instructions) {
         formatted_system_instructions = `# Output formatting\n\n${edit_format_instructions}`
       }
-    } else if (prompt_view_provider.web_prompt_type == 'find-relevant-files') {
-      formatted_system_instructions = find_relevant_files_format_for_prompt_view
-
-      const config = vscode.workspace.getConfiguration('codeWebChat')
-      const base_instructions =
-        config.get<string>('findRelevantFilesInstructions') ||
-        find_relevant_files_instructions
-      user_instructions = `${base_instructions}\n\n${processed_instructions}`
     }
 
     const { full_prompt: built_prompt } = PromptBuilder.build_prompt({
@@ -166,8 +144,7 @@ export const handle_preview_web_configuration = async (
         web_configuration: web_configuration_for_preview,
         inject_apply_response_button:
           prompt_view_provider.web_prompt_type == 'edit-files' ||
-          prompt_view_provider.web_prompt_type == 'code-at-cursor' ||
-          prompt_view_provider.web_prompt_type == 'find-relevant-files',
+          prompt_view_provider.web_prompt_type == 'code-at-cursor',
         raw_instructions: current_instructions
       }
     )

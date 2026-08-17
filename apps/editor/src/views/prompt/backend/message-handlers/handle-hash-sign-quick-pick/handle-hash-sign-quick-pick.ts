@@ -1,6 +1,5 @@
 import * as vscode from 'vscode'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
-import { MODE } from '@/views/prompt/types/main-view-mode'
 import { LAST_SELECTED_SYMBOL_STATE_KEY } from '@/constants/state-keys'
 import {
   handle_selection_item,
@@ -19,9 +18,8 @@ const skill_label = '$(thinking) Skill'
 const hash_sign_quick_pick = async (params: {
   extension_context: vscode.ExtensionContext
   is_for_code_at_cursor: boolean
-  is_find_relevant_files: boolean
 }): Promise<string | undefined> => {
-  let items: vscode.QuickPickItem[] = [
+  const items: vscode.QuickPickItem[] = [
     {
       label: selection_label,
       description: 'Text selection from the active editor'
@@ -49,10 +47,6 @@ const hash_sign_quick_pick = async (params: {
       ]
     }
   ]
-
-  if (params.is_find_relevant_files) {
-    items = items.filter((item) => item.label !== saved_context_label)
-  }
 
   const last_selected_symbol =
     params.extension_context.workspaceState.get<string>(
@@ -149,16 +143,9 @@ export const handle_hash_sign_quick_pick = async (
   extension_context: vscode.ExtensionContext,
   is_for_code_at_cursor: boolean
 ): Promise<void> => {
-  const is_find_relevant_files =
-    (prompt_view_provider.mode == MODE.WEB &&
-      prompt_view_provider.web_prompt_type == 'find-relevant-files') ||
-    (prompt_view_provider.mode == MODE.API &&
-      prompt_view_provider.api_prompt_type == 'find-relevant-files')
-
   const replacement = await hash_sign_quick_pick({
     extension_context,
-    is_for_code_at_cursor,
-    is_find_relevant_files
+    is_for_code_at_cursor
   })
 
   if (!replacement) {

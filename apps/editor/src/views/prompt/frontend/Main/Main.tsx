@@ -32,7 +32,6 @@ type Props = {
   edit_instructions: string
   no_context_instructions: string
   code_at_cursor_instructions: string
-  find_relevant_files_instructions: string
   set_instructions: (
     value: string,
     prompt_type:
@@ -40,7 +39,6 @@ type Props = {
       | 'edit-files'
       | 'without-files'
       | 'code-at-cursor'
-      | 'find-relevant-files'
   ) => void
   mode: Mode
   web_prompt_type: WebPromptType
@@ -73,8 +71,6 @@ type Props = {
   on_recording_started: () => void
   on_recording_finished: () => void
   is_setup_complete: boolean
-  find_relevant_files_shrink_source_code: boolean
-  on_find_relevant_files_shrink_source_code_change: (shrink: boolean) => void
   tabs_count: number
   active_tab_index: number
   on_tab_change: (index: number) => void
@@ -106,8 +102,6 @@ export const Main: React.FC<Props> = (props) => {
   const [without_files_history, set_without_files_history] =
     useState<string[]>()
   const [code_at_cursor_history, set_code_at_cursor_history] =
-    useState<string[]>()
-  const [find_relevant_files_history, set_find_relevant_files_history] =
     useState<string[]>()
   const [edit_format, set_edit_format] = useState<EditFormat>()
   const [caret_position_to_set, set_caret_position_to_set] = useState<
@@ -145,7 +139,6 @@ export const Main: React.FC<Props> = (props) => {
           set_edit_files_history(message.edit_files || [])
           set_without_files_history(message.without_files || [])
           set_code_at_cursor_history(message.code_at_cursor || [])
-          set_find_relevant_files_history(message.find_relevant_files || [])
           break
         case 'INSTRUCTIONS':
           if (
@@ -211,9 +204,6 @@ export const Main: React.FC<Props> = (props) => {
     } else if (current_prompt_type == 'code-at-cursor') {
       history = code_at_cursor_history
       set_history = set_code_at_cursor_history
-    } else if (current_prompt_type == 'find-relevant-files') {
-      history = find_relevant_files_history
-      set_history = set_find_relevant_files_history
     } else {
       return
     }
@@ -396,8 +386,6 @@ export const Main: React.FC<Props> = (props) => {
   const get_current_instructions = () => {
     if (is_in_code_at_cursor_mode) {
       return props.code_at_cursor_instructions
-    } else if (current_prompt_type == 'find-relevant-files') {
-      return props.find_relevant_files_instructions
     }
     if (current_prompt_type == 'ask-about-files') return props.ask_instructions
     if (current_prompt_type == 'edit-files') return props.edit_instructions
@@ -481,9 +469,7 @@ export const Main: React.FC<Props> = (props) => {
           ? props.no_context_instructions
           : current_prompt_type == 'code-at-cursor'
             ? props.code_at_cursor_instructions
-            : current_prompt_type == 'find-relevant-files'
-              ? props.find_relevant_files_instructions
-              : ''
+            : ''
 
   const set_instructions = (value: string) => {
     props.set_instructions(value, current_prompt_type)
@@ -498,8 +484,6 @@ export const Main: React.FC<Props> = (props) => {
     current_history = without_files_history
   } else if (current_prompt_type == 'code-at-cursor') {
     current_history = code_at_cursor_history
-  } else if (current_prompt_type == 'find-relevant-files') {
-    current_history = find_relevant_files_history
   }
 
   if (
@@ -509,7 +493,6 @@ export const Main: React.FC<Props> = (props) => {
     edit_files_history === undefined ||
     without_files_history === undefined ||
     code_at_cursor_history === undefined ||
-    find_relevant_files_history === undefined ||
     is_in_code_at_cursor_mode === undefined ||
     instructions === undefined ||
     edit_format === undefined
@@ -607,12 +590,6 @@ export const Main: React.FC<Props> = (props) => {
       is_recording={props.is_recording}
       on_recording_started={props.on_recording_started}
       on_recording_finished={props.on_recording_finished}
-      find_relevant_files_shrink_source_code={
-        props.find_relevant_files_shrink_source_code
-      }
-      on_find_relevant_files_shrink_source_code_change={
-        props.on_find_relevant_files_shrink_source_code_change
-      }
       is_setup_complete={props.is_setup_complete}
       tabs_count={props.tabs_count}
       active_tab_index={props.active_tab_index}

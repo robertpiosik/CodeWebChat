@@ -1,18 +1,13 @@
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import * as vscode from 'vscode'
 import { FilesCollector } from '@/utils/files-collector'
-import {
-  code_at_cursor_instructions_for_prompt_view,
-  find_relevant_files_instructions,
-  find_relevant_files_format_for_prompt_view
-} from '@/constants/instructions'
+import { code_at_cursor_instructions_for_prompt_view } from '@/constants/instructions'
 import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
   EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
-import { FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY } from '@/constants/state-keys'
 import { replace_symbols } from '@/views/prompt/backend/utils/symbols/replace-symbols'
 import { PromptBuilder } from '@/utils/prompt-builder'
 import { t } from '@/i18n'
@@ -93,20 +88,10 @@ export const handle_copy_prompt = async (params: {
 
     vscode.env.clipboard.writeText(text.trim())
   } else if (!is_in_code_at_cursor_prompt_type) {
-    const is_in_find_relevant_files_prompt_type =
-      params.prompt_view_provider.prompt_type == 'find-relevant-files'
-
-    const shrink_source_code =
-      params.prompt_view_provider.extension_context.workspaceState.get<boolean>(
-        FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
-        false
-      )
-
     const collected = await FilesCollector.collect_files({
       workspace_provider: params.prompt_view_provider.workspace_provider,
       open_editors_provider: params.prompt_view_provider.open_editors_provider,
-      no_context: params.prompt_view_provider.prompt_type == 'without-files',
-      shrink: is_in_find_relevant_files_prompt_type && shrink_source_code
+      no_context: params.prompt_view_provider.prompt_type == 'without-files'
     })
     const context_text = collected.other_files + collected.recent_files
 
@@ -119,7 +104,7 @@ export const handle_copy_prompt = async (params: {
       })
 
     let formatted_system_instructions = ''
-    let user_instructions = processed_instructions
+    const user_instructions = processed_instructions
 
     if (params.prompt_view_provider.prompt_type == 'edit-files') {
       const edit_format = params.prompt_view_provider.edit_format
@@ -132,14 +117,6 @@ export const handle_copy_prompt = async (params: {
       if (edit_format_instructions) {
         formatted_system_instructions = `# Output formatting\n\n${edit_format_instructions}`
       }
-    } else if (is_in_find_relevant_files_prompt_type) {
-      formatted_system_instructions = find_relevant_files_format_for_prompt_view
-
-      const config = vscode.workspace.getConfiguration('codeWebChat')
-      const base_instructions =
-        config.get<string>('findRelevantFilesInstructions') ||
-        find_relevant_files_instructions
-      user_instructions = `${base_instructions}\n\n${processed_instructions}`
     }
 
     const { full_prompt: text } = PromptBuilder.build_prompt({

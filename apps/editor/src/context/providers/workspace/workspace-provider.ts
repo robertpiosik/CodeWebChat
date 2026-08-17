@@ -28,13 +28,9 @@ export interface IWorkspaceProvider {
   get_checked_files(): string[]
   get_selection_timestamp(path: string): number | undefined
   get_export_state(): {
-    regular: {
-      checked_files: string[]
-      checked_timestamps: Record<string, number>
-    }
-    frf: { checked_files: string[]; checked_timestamps: Record<string, number> }
+    checked_files: string[]
+    checked_timestamps: Record<string, number>
   }
-  readonly is_frf_mode: boolean
   readonly is_no_context_mode: boolean
   get_all_files_for_uri(uri: vscode.Uri): Promise<vscode.Uri[]>
 }
@@ -55,53 +51,13 @@ export class WorkspaceProvider
   private _workspace_roots: string[] = []
   private _workspace_names: string[] = []
 
-  private _regular_state = {
-    checked_items: new Map<string, vscode.TreeItemCheckboxState>(),
-    checked_timestamps: new Map<string, number>(),
-    partially_checked_dirs: new Set<string>()
-  }
-  private _frf_state = {
-    checked_items: new Map<string, vscode.TreeItemCheckboxState>(),
-    checked_timestamps: new Map<string, number>(),
-    partially_checked_dirs: new Set<string>()
-  }
-  private _is_frf_mode: boolean = false
+  private _checked_items = new Map<string, vscode.TreeItemCheckboxState>()
+  private _checked_timestamps = new Map<string, number>()
+  private _partially_checked_dirs = new Set<string>()
   private _is_no_context_mode: boolean = false
-
-  public get is_frf_mode(): boolean {
-    return this._is_frf_mode
-  }
 
   public get is_no_context_mode(): boolean {
     return this._is_no_context_mode
-  }
-
-  private get _checked_items() {
-    return this._is_frf_mode
-      ? this._frf_state.checked_items
-      : this._regular_state.checked_items
-  }
-  private set _checked_items(val) {
-    if (this._is_frf_mode) this._frf_state.checked_items = val
-    else this._regular_state.checked_items = val
-  }
-  private get _checked_timestamps() {
-    return this._is_frf_mode
-      ? this._frf_state.checked_timestamps
-      : this._regular_state.checked_timestamps
-  }
-  private set _checked_timestamps(val) {
-    if (this._is_frf_mode) this._frf_state.checked_timestamps = val
-    else this._regular_state.checked_timestamps = val
-  }
-  private get _partially_checked_dirs() {
-    return this._is_frf_mode
-      ? this._frf_state.partially_checked_dirs
-      : this._regular_state.partially_checked_dirs
-  }
-  private set _partially_checked_dirs(val) {
-    if (this._is_frf_mode) this._frf_state.partially_checked_dirs = val
-    else this._regular_state.partially_checked_dirs = val
   }
 
   private _combined_gitignore = ignore()
@@ -123,7 +79,6 @@ export class WorkspaceProvider
   private _file_workspace_map: Map<string, string> = new Map()
   public gitignore_initialization: Promise<void>
   public ranges_initialization: Promise<void>
-  public use_shrink_token_count: boolean = false
   private _selected_files_view_collapsible_state: vscode.TreeItemCollapsibleState =
     vscode.TreeItemCollapsibleState.Expanded
   private _workspace_view_collapsible_state: vscode.TreeItemCollapsibleState =
@@ -145,23 +100,6 @@ export class WorkspaceProvider
     if (this._is_no_context_mode == is_no_context) return
     this._is_no_context_mode = is_no_context
     this.refresh()
-  }
-
-  public set_use_shrink_token_count(use_shrink: boolean) {
-    if (this.use_shrink_token_count != use_shrink) {
-      this.use_shrink_token_count = use_shrink
-      this.refresh()
-    }
-  }
-
-  public switch_context_state(is_frf: boolean) {
-    if (this._is_frf_mode == is_frf) return
-
-    this._is_frf_mode = is_frf
-
-    this._token_calculator.clear_selected_counts()
-    this.refresh()
-    this._dispatch_change_events()
   }
 
   constructor(params: {
@@ -225,24 +163,6 @@ export class WorkspaceProvider
   }
 
   private async _save_checked_files_state(): Promise<void> {
-    const checked_paths = this.get_all_checked_paths()
-
-    if (this._is_frf_mode) {
-      // await this._extension_context.workspaceState.update(
-      //   CONTEXT_FRF_CHECKED_PATHS_STATE_KEY,
-      //   checked_paths
-      // )
-      // await this._extension_context.workspaceState.update(
-      //   CONTEXT_FRF_CHECKED_TIMESTAMPS_STATE_KEY,
-      //   Object.fromEntries(this._checked_timestamps)
-      // )
-      return
-    }
-
-    await this._extension_context.workspaceState.update(
-      CONTEXT_CHECKED_PATHS_STATE_KEY,
-      checked_paths
-    )
     await this._extension_context.workspaceState.update(
       CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY,
       Object.fromEntries(this._checked_timestamps)
@@ -258,55 +178,24 @@ export class WorkspaceProvider
         Record<string, number>
       >(CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY)
 
-      // const frf_paths = this._extension_context.workspaceState.get<string[]>(
-      //   CONTEXT_FRF_CHECKED_PATHS_STATE_KEY
-      // )
-      // const frf_times = this._extension_context.workspaceState.get<
-      //   Record<string, number>
-      // >(CONTEXT_FRF_CHECKED_TIMESTAMPS_STATE_KEY)
-
       await this.gitignore_initialization
-      const prev_mode = this._is_frf_mode
 
-      this._is_frf_mode = false
       if (reg_paths && reg_paths.length > 0) {
         await this.set_checked_files(
           reg_paths,
           reg_times ? new Map(Object.entries(reg_times)) : undefined
         )
       }
-
-      this._is_frf_mode = true
-      // if (frf_paths && frf_paths.length > 0) {
-      //   await this.set_checked_files(
-      //     frf_paths,
-      //     frf_times ? new Map(Object.entries(frf_times)) : undefined
-      //   )
-      // }
-
-      this._is_frf_mode = prev_mode
     }
     load()
   }
 
   public get_export_state() {
     return {
-      regular: {
-        checked_files: Array.from(this._regular_state.checked_items.entries())
-          .filter(([, state]) => state == vscode.TreeItemCheckboxState.Checked)
-          .map(([path]) => path),
-        checked_timestamps: Object.fromEntries(
-          this._regular_state.checked_timestamps
-        )
-      },
-      frf: {
-        checked_files: Array.from(this._frf_state.checked_items.entries())
-          .filter(([, state]) => state == vscode.TreeItemCheckboxState.Checked)
-          .map(([path]) => path),
-        checked_timestamps: Object.fromEntries(
-          this._frf_state.checked_timestamps
-        )
-      }
+      checked_files: Array.from(this._checked_items.entries())
+        .filter(([, state]) => state == vscode.TreeItemCheckboxState.Checked)
+        .map(([path]) => path),
+      checked_timestamps: Object.fromEntries(this._checked_timestamps)
     }
   }
 
@@ -700,12 +589,8 @@ export class WorkspaceProvider
 
     element.checkboxState = checkbox_state
 
-    const total_token_count = this.use_shrink_token_count
-      ? element.shrinkTokenCount
-      : element.tokenCount
-    const selected_token_count = this.use_shrink_token_count
-      ? element.selectedShrinkTokenCount
-      : element.selectedTokenCount
+    const total_token_count = element.tokenCount
+    const selected_token_count = element.selectedTokenCount
 
     const formatted_total =
       total_token_count !== undefined && total_token_count > 0

@@ -127,10 +127,6 @@ export const update = async (params: {
       await providers_manager.set_default_intelligent_update_api_configuration(
         new_config as any
       )
-    } else if (params.api_feature == 'find-relevant-files') {
-      await providers_manager.set_default_find_relevant_files_api_configuration(
-        new_config as any
-      )
     } else if (params.api_feature == 'voice-input') {
       await providers_manager.set_default_voice_input_api_configuration(
         new_config as any

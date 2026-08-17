@@ -4,7 +4,6 @@ export const web_prompt_type_labels: Record<WebPromptType, string> = {
   'edit-files': 'Edit files',
   'ask-about-files': 'Ask about files',
   'code-at-cursor': 'Code at cursor',
-  'find-relevant-files': 'Find relevant files',
   'without-files': 'Without files'
 }
 export const WEB_PROMPT_TYPES = Object.keys(
@@ -13,8 +12,7 @@ export const WEB_PROMPT_TYPES = Object.keys(
 
 export const api_prompt_type_labels: Record<ApiPromptType, string> = {
   'edit-files': 'Edit files',
-  'code-at-cursor': 'Code at cursor',
-  'find-relevant-files': 'Find relevant files'
+  'code-at-cursor': 'Code at cursor'
 }
 export const API_PROMPT_TYPES = Object.keys(
   api_prompt_type_labels

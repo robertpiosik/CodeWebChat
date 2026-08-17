@@ -80,8 +80,6 @@ import {
   handle_create_api_configuration,
   handle_delete_api_configuration,
   handle_update_last_used_web_configuration,
-  handle_get_find_relevant_files_shrink_source_code,
-  handle_save_find_relevant_files_shrink_source_code,
   handle_request_return_home,
   handle_pick_tasks_workspace,
   handle_get_token_count
@@ -98,16 +96,13 @@ import {
   API_MODE_STATE_KEY,
   INSTRUCTIONS_ASK_STATE_KEY,
   INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY,
-  INSTRUCTIONS_FIND_RELEVANT_FILES_STATE_KEY,
   INSTRUCTIONS_EDIT_FILES_STATE_KEY,
   INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
   PROMPT_VIEW_MODE_STATE_KEY,
   WEB_MODE_STATE_KEY,
   LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
-  LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY,
   LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY,
-  get_last_used_web_configuration_key,
-  FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY
+  get_last_used_web_configuration_key
 } from '@/constants/state-keys'
 import {
   config_web_configuration_to_ui_format,
@@ -151,10 +146,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     active_index: 0
   }
   public code_at_cursor_instructions: InstructionsState = {
-    instructions: [''],
-    active_index: 0
-  }
-  public find_relevant_files_instructions: InstructionsState = {
     instructions: [''],
     active_index: 0
   }
@@ -223,14 +214,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     )
   }
 
-  public get current_find_relevant_files_instruction(): string {
-    return (
-      this.find_relevant_files_instructions.instructions[
-        this.find_relevant_files_instructions.active_index
-      ] || ''
-    )
-  }
-
   public get prompt_type(): WebPromptType | ApiPromptType {
     return this.mode == MODE.WEB ? this.web_prompt_type : this.api_prompt_type
   }
@@ -240,8 +223,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     if (type == 'ask-about-files') return this.ask_about_context_instructions
     if (type == 'edit-files') return this.edit_files_instructions
     if (type == 'without-files') return this.no_context_instructions
-    if (type == 'code-at-cursor') return this.code_at_cursor_instructions
-    return this.find_relevant_files_instructions
+    return this.code_at_cursor_instructions
   }
 
   public get current_instruction(): string {
@@ -259,31 +241,9 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     this.prompt_view_api_calls_manager = prompt_view_api_calls_manager
   }
 
-  public update_providers_shrink_mode() {
-    const shrink_source_code =
-      this.extension_context.workspaceState.get<boolean>(
-        FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
-        false
-      )
-    const is_find_relevant_files =
-      (this.mode == MODE.WEB &&
-        this.web_prompt_type == 'find-relevant-files') ||
-      (this.mode == MODE.API && this.api_prompt_type == 'find-relevant-files')
-    const use_shrink = is_find_relevant_files && shrink_source_code
-    this.workspace_provider.set_use_shrink_token_count(use_shrink)
-    this.open_editors_provider.set_use_shrink_token_count(use_shrink)
-  }
-
   public update_providers_context_state() {
-    const is_find_relevant_files =
-      (this.mode == MODE.WEB &&
-        this.web_prompt_type == 'find-relevant-files') ||
-      (this.mode == MODE.API && this.api_prompt_type == 'find-relevant-files')
-
     const is_no_context =
       this.mode == MODE.WEB && this.web_prompt_type == 'without-files'
-
-    this.shared_context_state.switch_context_state(is_find_relevant_files)
 
     this.workspace_provider.set_no_context_mode(is_no_context)
     this.open_editors_provider.set_no_context_mode(is_no_context)
@@ -376,9 +336,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     this.code_at_cursor_instructions = this._load_instructions(
       INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY
     )
-    this.find_relevant_files_instructions = this._load_instructions(
-      INSTRUCTIONS_FIND_RELEVANT_FILES_STATE_KEY
-    )
 
     this.web_edit_format =
       this.extension_context.workspaceState.get<EditFormat>(
@@ -430,7 +387,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
         'edit-files'
       )
 
-    this.update_providers_shrink_mode()
     this.update_providers_context_state()
 
     vscode.window.onDidChangeWindowState(async (e) => {
@@ -770,13 +726,11 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await handle_toggle_pinned_api_configuration(this, message)
           } else if (message.command == 'SAVE_WEB_PROMPT_TYPE') {
             await handle_save_web_prompt_type(this, message.prompt_type)
-            this.update_providers_shrink_mode()
             this.update_providers_context_state()
           } else if (message.command == 'GET_API_PROMPT_TYPE') {
             handle_get_api_prompt_type(this)
           } else if (message.command == 'SAVE_API_PROMPT_TYPE') {
             await handle_save_api_prompt_type(this, message.prompt_type)
-            this.update_providers_shrink_mode()
             this.update_providers_context_state()
           } else if (message.command == 'GET_EDIT_FORMAT_INSTRUCTIONS') {
             handle_get_edit_format_instructions(this)
@@ -790,7 +744,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             this.caret_position = message.caret_position
           } else if (message.command == 'MODE_CHANGED') {
             handle_mode_changed(this, message)
-            this.update_providers_shrink_mode()
             this.update_providers_context_state()
           } else if (message.command == 'GET_MODE') {
             handle_get_mode(this)
@@ -900,17 +853,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await this.send_setup_progress()
           } else if (message.command == 'REQUEST_RETURN_HOME') {
             await handle_request_return_home(this)
-          } else if (
-            message.command == 'GET_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE'
-          ) {
-            handle_get_find_relevant_files_shrink_source_code(this)
-          } else if (
-            message.command == 'SAVE_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE'
-          ) {
-            await handle_save_find_relevant_files_shrink_source_code(
-              this,
-              message.shrink_source_code
-            )
           } else if (message.command == 'GET_VOICE_INPUT_PUSH_TO_TALK') {
             this._send_voice_input_push_to_talk()
           } else if (message.command == 'GET_IS_MODERN_UI') {
@@ -958,7 +900,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
 
     const web_prompt_types: WebPromptType[] = [
       'ask-about-files',
-      'find-relevant-files',
       'edit-files',
       'code-at-cursor',
       'without-files'
@@ -988,11 +929,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
         ),
         'code-at-cursor': this.extension_context.workspaceState.get<string>(
           LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
-        ),
-        'find-relevant-files':
-          this.extension_context.workspaceState.get<string>(
-            LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY
-          )
+        )
       }
     })
   }
@@ -1050,7 +987,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       edit_files: this.edit_files_instructions,
       no_context: this.no_context_instructions,
       code_at_cursor: this.code_at_cursor_instructions,
-      find_relevant_files: this.find_relevant_files_instructions,
       caret_position: this.caret_position
     })
   }

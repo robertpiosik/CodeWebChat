@@ -11,20 +11,14 @@ import {
 import axios from 'axios'
 import {
   LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY,
-  LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
-  LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY,
-  FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY
+  LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
 } from '@/constants/state-keys'
 import { EditFormat } from '@shared/types/edit-format'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { MakeApiCallMessage } from '@/views/prompt/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
-import {
-  code_at_cursor_instructions_for_prompt_view,
-  find_relevant_files_instructions,
-  find_relevant_files_format_for_prompt_view
-} from '@/constants/instructions'
+import { code_at_cursor_instructions_for_prompt_view } from '@/constants/instructions'
 import { default_system_instructions } from '@shared/constants/default-system-instructions'
 import { build_user_content } from '@/utils/build-user-content'
 import { replace_symbols } from '@/views/prompt/backend/utils/symbols/replace-symbols'
@@ -34,7 +28,6 @@ import {
 } from '@/utils/show-configuration-quick-pick'
 import { PromptBuilder } from '@/utils/prompt-builder'
 import { ApiPromptType } from '@shared/types/prompt-types'
-import { send_llm_message } from '@/utils/send-llm-message'
 import {
   EDIT_FORMAT_INSTRUCTIONS_DIFF,
   EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
@@ -45,8 +38,6 @@ import {
 const get_last_used_config_id_key = (prompt_type: ApiPromptType) => {
   if (prompt_type == 'code-at-cursor')
     return LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
-  if (prompt_type == 'find-relevant-files')
-    return LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY
   return LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY
 }
 
@@ -187,8 +178,6 @@ export const handle_make_api_call = async (
     instructions = prompt_view_provider.current_edit_files_instruction
   } else if (prompt_type == 'code-at-cursor') {
     instructions = prompt_view_provider.current_code_at_cursor_instruction
-  } else if (prompt_type == 'find-relevant-files') {
-    instructions = prompt_view_provider.current_find_relevant_files_instruction
   }
 
   if (!instructions && prompt_type != 'code-at-cursor') {
@@ -209,18 +198,9 @@ export const handle_make_api_call = async (
       workspace_provider: prompt_view_provider.workspace_provider
     })
 
-  const shrink_source_code =
-    prompt_type == 'find-relevant-files'
-      ? prompt_view_provider.extension_context.workspaceState.get<boolean>(
-          FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
-          false
-        )
-      : false
-
   const collected = await FilesCollector.collect_files({
     workspace_provider: prompt_view_provider.workspace_provider,
-    open_editors_provider: prompt_view_provider.open_editors_provider,
-    shrink: shrink_source_code
+    open_editors_provider: prompt_view_provider.open_editors_provider
   })
   const collected_files = collected.other_files + collected.recent_files
 
@@ -324,25 +304,6 @@ export const handle_make_api_call = async (
         user_instructions: processed_instructions
       })
       user_content = build_user_content({ model_provider, part1, part2 })
-    } else if (prompt_type == 'find-relevant-files') {
-      const config = vscode.workspace.getConfiguration('codeWebChat')
-      const base_instructions =
-        config.get<string>('findRelevantFilesInstructions') ||
-        find_relevant_files_instructions
-
-      const { part1, part2 } = PromptBuilder.build_prompt({
-        other_files: collected.other_files,
-        recent_files: collected.recent_files,
-        skill_definitions,
-        system_instructions: find_relevant_files_format_for_prompt_view,
-        user_instructions: `${base_instructions}\n\n${processed_instructions}`
-      })
-      user_content = build_user_content({
-        model_provider,
-        part1,
-        part2,
-        disable_cache: true
-      })
     } else if (prompt_type == 'code-at-cursor') {
       const document = editor!.document
       const position = editor!.selection.active
@@ -406,67 +367,18 @@ export const handle_make_api_call = async (
         try {
           let result: { response: string; thoughts?: string } | null = null
 
-          if (prompt_type == 'find-relevant-files') {
-            prompt_view_provider.api_call_abort_controller =
-              new AbortController()
-            prompt_view_provider.send_message({
-              command: 'SHOW_PROGRESS',
-              title: t(
-                'views.prompt.handlers.make-api-call.intelligent-search'
-              ),
-              subtitle: t('common.progress.waiting-for-server'),
-              cancellable: true,
-              show_elapsed_time: true
-            })
-
-            try {
-              result = await send_llm_message({
+          result =
+            await prompt_view_provider.prompt_view_api_calls_manager.send_llm_message(
+              {
                 base_url: model_provider.base_url,
                 api_key: model_provider.api_key,
                 body,
-                abort_signal:
-                  prompt_view_provider.api_call_abort_controller.signal,
-                on_thinking_chunk: () => {
-                  prompt_view_provider.send_message({
-                    command: 'SHOW_PROGRESS',
-                    title: t(
-                      'views.prompt.handlers.make-api-call.intelligent-search'
-                    ),
-                    subtitle: t('common.progress.thinking'),
-                    cancellable: true,
-                    show_elapsed_time: true
-                  })
-                },
-                on_chunk: () => {
-                  prompt_view_provider.send_message({
-                    command: 'SHOW_PROGRESS',
-                    title: t(
-                      'views.prompt.handlers.make-api-call.intelligent-search'
-                    ),
-                    subtitle: t('common.progress.receiving'),
-                    cancellable: true,
-                    show_elapsed_time: true
-                  })
-                }
-              })
-            } finally {
-              prompt_view_provider.api_call_abort_controller = null
-              prompt_view_provider.send_message({ command: 'HIDE_PROGRESS' })
-            }
-          } else {
-            result =
-              await prompt_view_provider.prompt_view_api_calls_manager.send_llm_message(
-                {
-                  base_url: model_provider.base_url,
-                  api_key: model_provider.api_key,
-                  body,
-                  provider_name: api_configuration.model_provider_name,
-                  model: api_configuration.model,
-                  reasoning_effort: api_configuration.reasoning_effort,
-                  raw_instructions: instructions
-                }
-              )
-          }
+                provider_name: api_configuration.model_provider_name,
+                model: api_configuration.model,
+                reasoning_effort: api_configuration.reasoning_effort,
+                raw_instructions: instructions
+              }
+            )
 
           if (result) {
             const recent_api_configuration = {
@@ -480,12 +392,6 @@ export const handle_make_api_call = async (
                 response: result.response,
                 raw_instructions: instructions,
                 edit_format,
-                recent_api_configuration
-              })
-            } else if (prompt_type == 'find-relevant-files') {
-              vscode.commands.executeCommand('codeWebChat.applyResponse', {
-                response: result.response,
-                raw_instructions: instructions,
                 recent_api_configuration
               })
             } else if (prompt_type == 'code-at-cursor') {
@@ -523,10 +429,6 @@ export const handle_make_api_call = async (
             let err_msg = dictionary.error_message.EDIT_FILES_ERROR
             if (prompt_type == 'code-at-cursor')
               err_msg = dictionary.error_message.CODE_COMPLETION_ERROR
-            else if (prompt_type == 'find-relevant-files')
-              err_msg = t(
-                'views.prompt.handlers.make-api-call.find-intelligent-search-error'
-              )
             vscode.window.showErrorMessage(err_msg)
             error_occurred = true
           }

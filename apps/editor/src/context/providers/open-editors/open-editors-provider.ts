@@ -17,21 +17,7 @@ export class OpenEditorsProvider
   > = this._on_did_change_tree_data.event
 
   private _workspace_roots: string[] = []
-  private _regular_checked_items = new Map<
-    string,
-    vscode.TreeItemCheckboxState
-  >()
-  private _frf_checked_items = new Map<string, vscode.TreeItemCheckboxState>()
-  private _is_frf_mode = false
-  private get _checked_items() {
-    return this._is_frf_mode
-      ? this._frf_checked_items
-      : this._regular_checked_items
-  }
-  private set _checked_items(val) {
-    if (this._is_frf_mode) this._frf_checked_items = val
-    else this._regular_checked_items = val
-  }
+  private _checked_items = new Map<string, vscode.TreeItemCheckboxState>()
   private _tab_change_handler: vscode.Disposable
   private _workspace_change_handler: vscode.Disposable
   private _initialized: boolean = false
@@ -43,28 +29,12 @@ export class OpenEditorsProvider
   private _shared_context_state: SharedContextState
   private _config_change_handler: vscode.Disposable
   private _workspace_provider: WorkspaceProvider
-  private _use_shrink_token_count: boolean = false
   private _is_no_context_mode = false
-
-  public set_use_shrink_token_count(use_shrink: boolean) {
-    if (this._use_shrink_token_count != use_shrink) {
-      this._use_shrink_token_count = use_shrink
-      this.refresh()
-    }
-  }
 
   public set_no_context_mode(is_no_context: boolean) {
     if (this._is_no_context_mode == is_no_context) return
     this._is_no_context_mode = is_no_context
     this.refresh()
-  }
-
-  public switch_context_state(is_frf: boolean) {
-    if (this._is_frf_mode == is_frf) return
-    this._is_frf_mode = is_frf
-
-    this.refresh()
-    this._dispatch_change_events()
   }
 
   constructor(params: {
@@ -248,9 +218,7 @@ export class OpenEditorsProvider
 
     element.checkboxState = checkbox_state
 
-    const token_count = this._use_shrink_token_count
-      ? element.shrinkTokenCount
-      : element.tokenCount
+    const token_count = element.tokenCount
 
     let final_description = element.description || ''
 

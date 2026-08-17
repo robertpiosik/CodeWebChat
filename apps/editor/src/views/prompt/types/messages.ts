@@ -78,7 +78,6 @@ export interface SaveInstructionsMessage extends BaseMessage {
     | 'ask-about-files'
     | 'edit-files'
     | 'code-at-cursor'
-    | 'find-relevant-files'
     | 'without-files'
 }
 
@@ -153,7 +152,6 @@ export interface SaveHistoryMessage extends BaseMessage {
     | 'ask-about-files'
     | 'edit-files'
     | 'code-at-cursor'
-    | 'find-relevant-files'
     | 'without-files'
 }
 
@@ -478,15 +476,6 @@ export interface SetRecordingStateMessage extends BaseMessage {
   is_recording: boolean
 }
 
-export interface GetFindRelevantFilesShrinkSourceCodeMessage extends BaseMessage {
-  command: 'GET_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE'
-}
-
-export interface SaveFindRelevantFilesShrinkSourceCodeMessage extends BaseMessage {
-  command: 'SAVE_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE'
-  shrink_source_code: boolean
-}
-
 export interface GetSetupProgressMessage extends BaseMessage {
   command: 'GET_SETUP_PROGRESS'
 }
@@ -627,8 +616,6 @@ export type FrontendMessage =
   | PasteUrlMessage
   | OpenWebsiteMessage
   | SetRecordingStateMessage
-  | GetFindRelevantFilesShrinkSourceCodeMessage
-  | SaveFindRelevantFilesShrinkSourceCodeMessage
   | GetSetupProgressMessage
   | RequestReturnHomeMessage
   | GetVoiceInputPushToTalkMessage
@@ -647,7 +634,6 @@ export interface InstructionsMessage extends BaseMessage {
   edit_files: InstructionsState
   no_context: InstructionsState
   code_at_cursor: InstructionsState
-  find_relevant_files: InstructionsState
   caret_position?: number
 }
 
@@ -696,7 +682,6 @@ export interface ChatHistoryMessage extends BaseMessage {
   edit_files: string[]
   without_files: string[]
   code_at_cursor: string[]
-  find_relevant_files: string[]
 }
 
 export interface ResponseHistoryMessage extends BaseMessage {
@@ -860,11 +845,6 @@ export interface TasksMessage extends BaseMessage {
   tasks: Record<string, Task[]>
 }
 
-export interface FindRelevantFilesShrinkSourceCodeMessage extends BaseMessage {
-  command: 'FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE'
-  shrink_source_code: boolean
-}
-
 export interface RecordingStateMessage extends BaseMessage {
   command: 'RECORDING_STATE'
   is_recording: boolean
@@ -952,7 +932,6 @@ export type BackendMessage =
   | TasksMessage
   | UpdateFileProgressMessage
   | RecordingStateMessage
-  | FindRelevantFilesShrinkSourceCodeMessage
   | SetupProgressMessage
   | ReturnHomeMessage
   | VoiceInputPushToTalkMessage

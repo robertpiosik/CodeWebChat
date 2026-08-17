@@ -1,6 +1,5 @@
 import * as vscode from 'vscode'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
-import { SharedContextState } from '../context/shared-context-state'
 import {
   EDIT_FORMAT_STATE_KEY,
   DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY,
@@ -10,14 +9,12 @@ import {
 
 export const duplicate_workspace_command = (
   workspace_provider: WorkspaceProvider,
-  shared_context_state: SharedContextState,
   extension_context: vscode.ExtensionContext
 ) => {
   return vscode.commands.registerCommand(
     'codeWebChat.duplicateWorkspace',
     async () => {
       const export_state = workspace_provider.get_export_state()
-      const checked_files = shared_context_state.get_checked_files()
 
       const workspace_root_folders =
         vscode.workspace.workspaceFolders?.map((folder) => folder.uri.fsPath) ??
@@ -43,8 +40,8 @@ export const duplicate_workspace_command = (
           RANGES_STATE_KEY
         )
       const context_to_save: DuplicateWorkspaceContext = {
-        checked_files,
-        checked_files_timestamps: export_state.regular.checked_timestamps,
+        checked_files: export_state.checked_files,
+        checked_files_timestamps: export_state.checked_timestamps,
         workspace_root_folders,
         timestamp: Date.now(),
         open_editors,

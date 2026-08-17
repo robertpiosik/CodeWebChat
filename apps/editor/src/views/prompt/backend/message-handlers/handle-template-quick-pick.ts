@@ -36,9 +36,6 @@ export const handle_template_quick_pick = async (
     case 'without-files':
       templates_key = 'templatesForWithoutFiles'
       break
-    case 'find-relevant-files':
-      templates_key = 'templatesForFindRelevantFiles'
-      break
   }
 
   if (!templates_key) return

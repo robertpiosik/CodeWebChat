@@ -32,7 +32,6 @@ export const use_prompt = (vscode: any) => {
     edit_files_instructions,
     no_context_instructions,
     code_at_cursor_instructions,
-    find_relevant_files_instructions,
     handle_instructions_change,
     handle_tab_change,
     handle_new_tab,
@@ -50,10 +49,6 @@ export const use_prompt = (vscode: any) => {
     useState(false)
   const [is_recording, set_is_recording] = useState(false)
   const [setup_progress, set_setup_progress] = useState<SetupProgress>()
-  const [
-    find_relevant_files_shrink_source_code,
-    set_find_relevant_files_shrink_source_code
-  ] = useState<boolean>(false)
   const [voice_input_push_to_talk, set_voice_input_push_to_talk] =
     useState(false)
   const [is_modern_ui, set_is_modern_ui] = useState(false)
@@ -100,16 +95,6 @@ export const use_prompt = (vscode: any) => {
     })
   }
 
-  const handle_find_relevant_files_shrink_source_code_change = (
-    shrink_source_code: boolean
-  ) => {
-    set_find_relevant_files_shrink_source_code(shrink_source_code)
-    post_message(vscode, {
-      command: 'SAVE_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE',
-      shrink_source_code
-    })
-  }
-
   useEffect(() => {
     const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
@@ -142,8 +127,6 @@ export const use_prompt = (vscode: any) => {
         set_is_recording(message.is_recording)
       } else if (message.command == 'SETUP_PROGRESS') {
         set_setup_progress(message.setup_progress)
-      } else if (message.command == 'FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE') {
-        set_find_relevant_files_shrink_source_code(message.shrink_source_code)
       } else if (message.command == 'RETURN_HOME') {
         set_active_view('home')
       } else if (message.command == 'VOICE_INPUT_PUSH_TO_TALK') {
@@ -167,7 +150,6 @@ export const use_prompt = (vscode: any) => {
       { command: 'GET_COLLAPSED_STATES' },
       { command: 'REQUEST_CAN_UNDO' },
       { command: 'GET_SETUP_PROGRESS' },
-      { command: 'GET_FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE' },
       { command: 'GET_VOICE_INPUT_PUSH_TO_TALK' },
       { command: 'GET_IS_MODERN_UI' },
       { command: 'GET_TOKEN_COUNT' }
@@ -182,7 +164,7 @@ export const use_prompt = (vscode: any) => {
     prevent_selection?: boolean
   ) => {
     set_web_mode(prompt_type)
-    if (!prevent_selection && prompt_type !== 'find-relevant-files') {
+    if (!prevent_selection) {
       set_chat_input_focus_and_select_key((k) => k + 1)
     }
     set_main_view_scroll_reset_key((k) => k + 1)
@@ -197,7 +179,7 @@ export const use_prompt = (vscode: any) => {
     prevent_selection?: boolean
   ) => {
     set_api_mode(prompt_type)
-    if (!prevent_selection && prompt_type !== 'find-relevant-files') {
+    if (!prevent_selection) {
       set_chat_input_focus_and_select_key((k) => k + 1)
     }
     set_main_view_scroll_reset_key((k) => k + 1)
@@ -214,8 +196,7 @@ export const use_prompt = (vscode: any) => {
       if (new_mode == MODE.API && web_prompt_type) {
         if (
           web_prompt_type == 'edit-files' ||
-          web_prompt_type == 'code-at-cursor' ||
-          web_prompt_type == 'find-relevant-files'
+          web_prompt_type == 'code-at-cursor'
         ) {
           handle_api_prompt_type_change(web_prompt_type, true)
         }
@@ -271,7 +252,6 @@ export const use_prompt = (vscode: any) => {
     edit_files_instructions,
     no_context_instructions,
     code_at_cursor_instructions,
-    find_relevant_files_instructions,
     mode,
     web_prompt_type,
     api_prompt_type,
@@ -297,8 +277,6 @@ export const use_prompt = (vscode: any) => {
     is_recording,
     handle_set_recording_state,
     is_setup_complete,
-    find_relevant_files_shrink_source_code,
-    handle_find_relevant_files_shrink_source_code_change,
     handle_tab_change,
     handle_new_tab,
     handle_tab_delete,

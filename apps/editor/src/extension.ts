@@ -194,11 +194,7 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
       extension_context,
       websocket_server_instance
     ),
-    duplicate_workspace_command(
-      workspace_provider,
-      shared_context_state,
-      extension_context
-    ),
+    duplicate_workspace_command(workspace_provider, extension_context),
     copy_merge_commit_details_command(),
     select_imported_files_for_selected_command(
       workspace_provider,

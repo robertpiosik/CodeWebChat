@@ -1,15 +1,8 @@
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import * as vscode from 'vscode'
 import { FilesCollector } from '@/utils/files-collector'
-import {
-  code_at_cursor_instructions_for_prompt_view,
-  find_relevant_files_instructions,
-  find_relevant_files_format_for_prompt_view
-} from '@/constants/instructions'
-import {
-  get_last_used_web_configuration_key,
-  FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY
-} from '@/constants/state-keys'
+import { code_at_cursor_instructions_for_prompt_view } from '@/constants/instructions'
+import { get_last_used_web_configuration_key } from '@/constants/state-keys'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 import { MODE } from '@/views/prompt/types/main-view-mode'
 import { WebPromptType } from '@shared/types/prompt-types'
@@ -137,21 +130,11 @@ export const handle_autofill = async (params: {
   } else {
     const additional_paths: string[] = []
 
-    const shrink_source_code =
-      params.prompt_view_provider.extension_context.workspaceState.get<boolean>(
-        FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY,
-        false
-      )
-
     const collected = await FilesCollector.collect_files({
       workspace_provider: params.prompt_view_provider.workspace_provider,
       open_editors_provider: params.prompt_view_provider.open_editors_provider,
       additional_paths,
-      no_context:
-        params.prompt_view_provider.web_prompt_type == 'without-files',
-      shrink:
-        params.prompt_view_provider.web_prompt_type == 'find-relevant-files' &&
-        shrink_source_code
+      no_context: params.prompt_view_provider.web_prompt_type == 'without-files'
     })
     const context_text = collected.other_files + collected.recent_files
 
@@ -164,7 +147,7 @@ export const handle_autofill = async (params: {
       })
 
     let formatted_system_instructions = ''
-    let user_instructions = processed_instructions
+    const user_instructions = processed_instructions
     if (params.prompt_view_provider.web_prompt_type == 'edit-files') {
       const edit_format_instructions = {
         whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
@@ -175,16 +158,6 @@ export const handle_autofill = async (params: {
       if (edit_format_instructions) {
         formatted_system_instructions = `# Output formatting\n\n${edit_format_instructions}`
       }
-    } else if (
-      params.prompt_view_provider.web_prompt_type == 'find-relevant-files'
-    ) {
-      formatted_system_instructions = find_relevant_files_format_for_prompt_view
-
-      const config = vscode.workspace.getConfiguration('codeWebChat')
-      const base_instructions =
-        config.get<string>('findRelevantFilesInstructions') ||
-        find_relevant_files_instructions
-      user_instructions = `${base_instructions}\n\n${processed_instructions}`
     }
 
     const { full_prompt: text } = PromptBuilder.build_prompt({
@@ -195,8 +168,7 @@ export const handle_autofill = async (params: {
     })
 
     const prompt_type = params.prompt_view_provider.web_prompt_type
-    const inject_apply_response_button =
-      prompt_type == 'edit-files' || prompt_type == 'find-relevant-files'
+    const inject_apply_response_button = prompt_type == 'edit-files'
 
     sent =
       await params.prompt_view_provider.websocket_server_instance.initialize_chat(
@@ -350,14 +322,6 @@ const resolve_web_configuration = async (params: {
     current_instructions =
       params.prompt_view_provider.no_context_instructions.instructions[
         params.prompt_view_provider.no_context_instructions.active_index
-      ] || ''
-  } else if (
-    params.prompt_view_provider.web_prompt_type == 'find-relevant-files'
-  ) {
-    current_instructions =
-      params.prompt_view_provider.find_relevant_files_instructions.instructions[
-        params.prompt_view_provider.find_relevant_files_instructions
-          .active_index
       ] || ''
   }
 
