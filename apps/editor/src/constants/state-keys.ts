@@ -17,6 +17,8 @@ export const LAST_APPLY_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY =
   'last-apply-context-merge-replace-option'
 export const LAST_FIND_RELEVANT_FILES_MERGE_REPLACE_OPTION_STATE_KEY =
   'last-find-relevant-files-merge-replace-option'
+export const LAST_SEARCH_FILES_MERGE_REPLACE_OPTION_STATE_KEY =
+  'last-search-files-merge-replace-option'
 export const LAST_REFACTOR_INSTRUCTION_SOURCE_STATE_KEY =
   'last-refactor-instruction-source'
 export const LAST_REFACTOR_INSTRUCTION_STATE_KEY = 'last-refactor-instruction'

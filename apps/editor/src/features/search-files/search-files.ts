@@ -19,7 +19,9 @@ export const search_files = async (params: {
   is_sub_search?: boolean
   disable_semantic?: boolean
 }): Promise<
-  { selected_paths: string[]; matched_paths: string[] } | undefined | 'back'
+  | { selected_paths: string[]; matched_paths: string[]; title: string }
+  | undefined
+  | 'back'
 > => {
   let initial_search_mode =
     params.extension_context.workspaceState.get<
@@ -65,7 +67,7 @@ export const search_files = async (params: {
       )
 
       let flow_result:
-        | { selected_paths: string[]; matched_paths: string[] }
+        | { selected_paths: string[]; matched_paths: string[]; title: string }
         | undefined
         | 'back' = undefined
 

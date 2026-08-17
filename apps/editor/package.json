@@ -344,6 +344,12 @@
         "icon": "$(search)"
       },
       {
+        "command": "codeWebChat.searchSelectedFiles",
+        "title": "%codeWebChat.searchSelectedFiles.title%",
+        "category": "Code Web Chat",
+        "icon": "$(search)"
+      },
+      {
         "command": "codeWebChat.searchFilesFromDirectory",
         "title": "%codeWebChat.searchFilesFromDirectory.title%",
         "category": "Code Web Chat"
@@ -627,6 +633,11 @@
           "command": "codeWebChat.collapseContextFolders",
           "when": "view == codeWebChatViewSelectedFiles",
           "group": "navigation@4"
+        },
+        {
+          "command": "codeWebChat.searchSelectedFiles",
+          "when": "view == codeWebChatViewSelectedFiles",
+          "group": "navigation@5"
         },
         {
           "command": "codeWebChat.selectReferencingFilesForSelected",

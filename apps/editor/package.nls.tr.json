@@ -43,6 +43,7 @@
   "codeWebChat.generateCommitMessageAndCommit.title": "Değişiklikleri İşle (Commit)",
   "codeWebChat.setRanges.title": "Aralıkları Ayarla...",
   "codeWebChat.searchFiles.title": "Dosyaları ara...",
+  "codeWebChat.searchSelectedFiles.title": "Seçili dosyalarda ara...",
   "codeWebChat.searchFilesFromDirectory.title": "Dosyaları ara...",
   "codeWebChat.selectReferencingFilesForSelected.title": "Referans Veren Dosyaları Seç...",
   "codeWebChat.selectReferencingFiles.title": "Referans Veren Dosyaları Seç...",

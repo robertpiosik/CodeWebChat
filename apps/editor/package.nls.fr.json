@@ -43,6 +43,7 @@
   "codeWebChat.generateCommitMessageAndCommit.title": "Valider les modifications",
   "codeWebChat.setRanges.title": "Définir les plages...",
   "codeWebChat.searchFiles.title": "Rechercher des fichiers...",
+  "codeWebChat.searchSelectedFiles.title": "Rechercher dans les fichiers sélectionnés...",
   "codeWebChat.searchFilesFromDirectory.title": "Rechercher des fichiers...",
   "codeWebChat.selectReferencingFilesForSelected.title": "Sélectionner les fichiers de référence...",
   "codeWebChat.selectReferencingFiles.title": "Sélectionner les fichiers de référence...",

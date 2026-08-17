@@ -43,6 +43,7 @@
   "codeWebChat.generateCommitMessageAndCommit.title": "Hacer commit de los cambios",
   "codeWebChat.setRanges.title": "Establecer rangos...",
   "codeWebChat.searchFiles.title": "Buscar archivos...",
+  "codeWebChat.searchSelectedFiles.title": "Buscar en los archivos seleccionados...",
   "codeWebChat.searchFilesFromDirectory.title": "Buscar archivos...",
   "codeWebChat.selectReferencingFilesForSelected.title": "Seleccionar archivos que referencian...",
   "codeWebChat.selectReferencingFiles.title": "Seleccionar archivos que referencian...",

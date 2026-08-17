@@ -43,6 +43,7 @@
   "codeWebChat.generateCommitMessageAndCommit.title": "提交更改",
   "codeWebChat.setRanges.title": "设置范围...",
   "codeWebChat.searchFiles.title": "搜索文件...",
+  "codeWebChat.searchSelectedFiles.title": "在选中的文件中搜索...",
   "codeWebChat.searchFilesFromDirectory.title": "搜索文件...",
   "codeWebChat.selectReferencingFilesForSelected.title": "选择引用文件...",
   "codeWebChat.selectReferencingFiles.title": "选择引用文件...",

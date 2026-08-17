@@ -14,10 +14,14 @@ export const perform_phrase_search_mode = async (params: {
   search_in_results: (
     matched_paths: string[]
   ) => Promise<
-    { selected_paths: string[]; matched_paths: string[] } | undefined | 'back'
+    | { selected_paths: string[]; matched_paths: string[]; title: string }
+    | undefined
+    | 'back'
   >
 }): Promise<
-  { selected_paths: string[]; matched_paths: string[] } | undefined | 'back'
+  | { selected_paths: string[]; matched_paths: string[]; title: string }
+  | undefined
+  | 'back'
 > => {
   const local_queries: Record<string, string> = {}
 

@@ -10,7 +10,7 @@ export const prompt_for_provided_results = async (params: {
   files: { path: string; checked: boolean }[]
   workspace_provider: WorkspaceProvider
 }): Promise<
-  | { selected_paths: string[]; matched_paths: string[] }
+  | { selected_paths: string[]; matched_paths: string[]; title: string }
   | { action: 'search_in_results'; matched_paths: string[] }
   | undefined
 > => {
@@ -59,7 +59,9 @@ export const prompt_for_provided_results = async (params: {
   quick_pick.canSelectMany = true
   quick_pick.matchOnDescription = true
   quick_pick.placeholder = t('feature.search-files.select-files')
-  quick_pick.title = t('feature.search-files.results.intelligent')
+
+  const title = t('feature.search-files.results.intelligent')
+  quick_pick.title = title
 
   quick_pick.ignoreFocusOut = true
   quick_pick.buttons = [search_in_results_button, close_button]
@@ -67,7 +69,7 @@ export const prompt_for_provided_results = async (params: {
   let is_showing_folder_quick_pick = false
 
   return new Promise<
-    | { selected_paths: string[]; matched_paths: string[] }
+    | { selected_paths: string[]; matched_paths: string[]; title: string }
     | { action: 'search_in_results'; matched_paths: string[] }
     | undefined
   >((resolve) => {
@@ -93,7 +95,8 @@ export const prompt_for_provided_results = async (params: {
         selected_paths: quick_pick.selectedItems
           .map((item) => item.file_path)
           .filter((p): p is string => p !== undefined),
-        matched_paths: params.files.map((f) => f.path)
+        matched_paths: params.files.map((f) => f.path),
+        title
       })
       quick_pick.hide()
     })

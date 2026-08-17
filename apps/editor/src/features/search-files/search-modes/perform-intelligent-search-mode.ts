@@ -31,11 +31,15 @@ export const perform_intelligent_search_mode = async (params: {
   search_in_results: (
     matched_paths: string[]
   ) => Promise<
-    { selected_paths: string[]; matched_paths: string[] } | undefined | 'back'
+    | { selected_paths: string[]; matched_paths: string[]; title: string }
+    | undefined
+    | 'back'
   >
   show_back_button?: boolean
 }): Promise<
-  { selected_paths: string[]; matched_paths: string[] } | undefined | 'back'
+  | { selected_paths: string[]; matched_paths: string[]; title: string }
+  | undefined
+  | 'back'
 > => {
   const local_queries: Record<string, string> = {}
 
@@ -352,7 +356,11 @@ export const perform_intelligent_search_mode = async (params: {
           let force_prompt = false
           let break_outer = false
           let final_result:
-            | { selected_paths: string[]; matched_paths: string[] }
+            | {
+                selected_paths: string[]
+                matched_paths: string[]
+                title: string
+              }
             | undefined = undefined
 
           while (true) {

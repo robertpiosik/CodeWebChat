@@ -43,6 +43,7 @@
   "codeWebChat.generateCommitMessageAndCommit.title": "Потвърди промените",
   "codeWebChat.setRanges.title": "Задай диапазони...",
   "codeWebChat.searchFiles.title": "Търсене на файлове...",
+  "codeWebChat.searchSelectedFiles.title": "Търсене в избраните файлове...",
   "codeWebChat.searchFilesFromDirectory.title": "Търсене на файлове...",
   "codeWebChat.selectReferencingFilesForSelected.title": "Избери рефериращите файлове...",
   "codeWebChat.selectReferencingFiles.title": "Избери рефериращите файлове...",
