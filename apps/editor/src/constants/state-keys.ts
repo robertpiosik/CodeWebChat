@@ -88,6 +88,9 @@ export const API_CONFIGURATIONS_COLLAPSED_STATE_KEY =
 export const get_last_used_web_configuration_key = (web_prompt_type: string) =>
   `last-used-web-configuration-${web_prompt_type}`
 
+export const get_last_used_template_key = (prompt_type: string) =>
+  `last-used-template-${prompt_type}`
+
 export const LAST_SELECTED_BROWSER_ID_STATE_KEY = 'last-selected-browser-id'
 
 export const LAST_SEARCH_FILES_PHRASE_QUERY_STATE_KEY =

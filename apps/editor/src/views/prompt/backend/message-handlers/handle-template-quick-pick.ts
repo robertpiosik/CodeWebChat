@@ -1,16 +1,14 @@
 import * as vscode from 'vscode'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { MODE } from '@/views/prompt/types/main-view-mode'
+import { get_last_used_template_key } from '@/constants/state-keys'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
-import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
 
 type Template = {
   name?: string
   template: string
 }
-
-const ADD_NEW_TEMPLATE_LABEL = '$(add) New template...'
 
 export const handle_template_quick_pick = async (
   prompt_view_provider: PromptViewProvider
@@ -46,59 +44,36 @@ export const handle_template_quick_pick = async (
   if (!templates_key) return
 
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  let templates = config.get<Template[]>(templates_key, []) || []
-
-  let is_editing_template = false
+  const templates = config.get<Template[]>(templates_key, []) || []
 
   const templates_quick_pick = vscode.window.createQuickPick<
     vscode.QuickPickItem & { template?: Template; index?: number }
   >()
-  templates_quick_pick.matchOnDetail = true
   templates_quick_pick.title = 'Templates'
-  templates_quick_pick.placeholder = 'Select a template or create a new one'
+  templates_quick_pick.placeholder = 'Select a template'
   templates_quick_pick.buttons = [
     { iconPath: new vscode.ThemeIcon('close'), tooltip: t('common.close') }
   ]
 
-  const edit_button = {
-    iconPath: new vscode.ThemeIcon('edit'),
-    tooltip: 'Edit template'
-  }
-  const delete_button = {
-    iconPath: new vscode.ThemeIcon('trash'),
-    tooltip: 'Delete template'
-  }
+  const get_template_id = (t: Template) => t.name || t.template
+  const recents_key = get_last_used_template_key(prompt_type)
+  const last_used_id =
+    prompt_view_provider.extension_context.workspaceState.get<string>(
+      recents_key
+    ) ??
+    prompt_view_provider.extension_context.globalState.get<string>(recents_key)
 
-  const create_template_items = (
-    current_templates: Template[],
-    search_value?: string
-  ) => {
+  const create_template_items = (current_templates: Template[]) => {
     const items: (vscode.QuickPickItem & {
       template?: Template
       index?: number
     })[] = []
 
-    if (!search_value) {
-      items.push({
-        label: ADD_NEW_TEMPLATE_LABEL
-      })
-    }
-
     if (current_templates.length > 0) {
-      if (!search_value) {
-        items.push({
-          label: t('common.separator.recently-used'),
-          kind: vscode.QuickPickItemKind.Separator
-        })
-      }
       items.push(
         ...current_templates.map((template, index) => {
-          const buttons = [edit_button, delete_button]
-
           return {
             label: template.name || 'Unnamed',
-            detail: template.template,
-            buttons,
             template,
             index
           }
@@ -108,124 +83,19 @@ export const handle_template_quick_pick = async (
     return items
   }
 
-  const edit_template = async (
-    template: Template,
-    title: string
-  ): Promise<{
-    updated_template: Template | null
-    cancelled_entirely: boolean
-  }> => {
-    const NAME_LABEL = 'Name'
-    const TEMPLATE_LABEL = 'Template'
-
-    const create_edit_options = (current_template: Template) => {
-      return [
-        {
-          label: NAME_LABEL,
-          detail: current_template.name
-        },
-        {
-          label: TEMPLATE_LABEL,
-          description: !current_template.template ? 'required' : undefined,
-          detail: current_template.template
-        }
-      ]
-    }
-
-    const edit_quick_pick = vscode.window.createQuickPick()
-    edit_quick_pick.items = create_edit_options(template)
-    edit_quick_pick.title = title
-    edit_quick_pick.placeholder = 'Select what to edit'
-    edit_quick_pick.buttons = [vscode.QuickInputButtons.Back]
-
-    return new Promise((resolve) => {
-      let is_accepted = false
-      let did_trigger_back = false
-      const edit_disposables: vscode.Disposable[] = []
-
-      edit_disposables.push(
-        edit_quick_pick.onDidTriggerButton((button) => {
-          if (button === vscode.QuickInputButtons.Back) {
-            did_trigger_back = true
-            edit_quick_pick.hide()
-            resolve({ updated_template: template, cancelled_entirely: false })
-          }
-        }),
-        edit_quick_pick.onDidAccept(async () => {
-          is_accepted = true
-          const selected = edit_quick_pick.selectedItems[0]
-          if (!selected) {
-            edit_quick_pick.hide()
-            resolve({ updated_template: template, cancelled_entirely: false })
-            return
-          }
-
-          edit_quick_pick.hide()
-
-          if (selected.label == NAME_LABEL) {
-            const new_name = await vscode.window.showInputBox({
-              title,
-              prompt: 'Enter a name for the template',
-              value: template.name
-            })
-
-            let next_template_state = template
-            if (new_name !== undefined) {
-              const updated_template: Template = { ...template }
-              if (new_name.trim()) {
-                updated_template.name = new_name.trim()
-              } else {
-                delete updated_template.name
-              }
-
-              next_template_state = updated_template
-            }
-
-            const result = await edit_template(next_template_state, title)
-            resolve(result)
-          } else if (selected.label == TEMPLATE_LABEL) {
-            const new_template_text = await vscode.window.showInputBox({
-              title,
-              prompt: 'Enter the template',
-              value: template.template,
-              placeHolder:
-                'E.g., Rewrite {function name} without redundant comments'
-            })
-
-            let next_template_state = template
-            if (new_template_text !== undefined && new_template_text.trim()) {
-              const updated_template: Template = {
-                ...template,
-                template: new_template_text.trim()
-              }
-              next_template_state = updated_template
-            }
-
-            const result = await edit_template(next_template_state, title)
-            resolve(result)
-          }
-        }),
-        edit_quick_pick.onDidHide(() => {
-          if (!is_accepted && !did_trigger_back) {
-            resolve({ updated_template: template, cancelled_entirely: false })
-          }
-          edit_disposables.forEach((d) => d.dispose())
-        })
-      )
-      edit_quick_pick.show()
-    })
-  }
-
   templates_quick_pick.items = create_template_items(templates)
 
-  const first_template_item = templates_quick_pick.items.find((i) => i.template)
-  if (first_template_item) {
-    templates_quick_pick.activeItems = [first_template_item]
+  let active_item = templates_quick_pick.items.find(
+    (i) => i.template && get_template_id(i.template) === last_used_id
+  )
+  if (!active_item) {
+    active_item = templates_quick_pick.items.find((i) => i.template)
+  }
+  if (active_item) {
+    templates_quick_pick.activeItems = [active_item]
   }
 
   const disposables: vscode.Disposable[] = []
-  let is_disposed = false
-  let notification_count = 0
   let is_template_accepted = false
   let is_entering_variables = false
 
@@ -239,53 +109,22 @@ export const handle_template_quick_pick = async (
         return
       }
 
-      if (selected_template.label == ADD_NEW_TEMPLATE_LABEL) {
-        is_editing_template = true
-        const { updated_template, cancelled_entirely } = await edit_template(
-          { template: '' },
-          'New Template'
-        )
-
-        if (cancelled_entirely) {
-          templates_quick_pick.hide()
-          is_disposed = true
-        } else {
-          if (updated_template?.template.trim()) {
-            templates.push(updated_template)
-            await config.update(
-              templates_key,
-              templates,
-              vscode.ConfigurationTarget.Global
-            )
-          }
-          templates_quick_pick.items = create_template_items(
-            templates,
-            templates_quick_pick.value
-          )
-          if (!is_disposed) {
-            templates_quick_pick.show()
-          }
-        }
-
-        is_editing_template = false
-      } else if (
+      if (
         'template' in selected_template &&
         selected_template.template &&
         typeof selected_template.index == 'number'
       ) {
+        prompt_view_provider.extension_context.workspaceState.update(
+          recents_key,
+          get_template_id(selected_template.template)
+        )
+        prompt_view_provider.extension_context.globalState.update(
+          recents_key,
+          get_template_id(selected_template.template)
+        )
+
         is_entering_variables = true
         templates_quick_pick.hide()
-
-        // Move the selected template to the top of the list for easier access next time
-        if (selected_template.index > 0) {
-          const [movedTemplate] = templates.splice(selected_template.index, 1)
-          templates.unshift(movedTemplate)
-          await config.update(
-            templates_key,
-            templates,
-            vscode.ConfigurationTarget.Global
-          )
-        }
 
         let prompt_text = selected_template.template.template
 
@@ -374,7 +213,6 @@ export const handle_template_quick_pick = async (
 
           if (cancelled) {
             is_entering_variables = false
-            is_disposed = true
             prompt_view_provider.send_message({
               command: 'FOCUS_PROMPT_FIELD'
             })
@@ -384,10 +222,7 @@ export const handle_template_quick_pick = async (
 
           if (go_back_to_templates) {
             is_entering_variables = false
-            templates_quick_pick.items = create_template_items(
-              templates,
-              templates_quick_pick.value
-            )
+            templates_quick_pick.items = create_template_items(templates)
 
             const attempted_item = templates_quick_pick.items.find(
               (i) => i.template === selected_template.template
@@ -425,7 +260,6 @@ export const handle_template_quick_pick = async (
 
         is_entering_variables = false
         is_template_accepted = true
-        is_disposed = true
 
         const current_text = prompt_view_provider.current_instruction
         const is_after_slash = current_text
@@ -442,133 +276,14 @@ export const handle_template_quick_pick = async (
         disposables.forEach((d) => d.dispose())
       }
     }),
-    templates_quick_pick.onDidChangeValue((value) => {
-      templates_quick_pick.items = create_template_items(templates, value)
-    }),
-    templates_quick_pick.onDidTriggerItemButton(async (event) => {
-      const item = event.item as vscode.QuickPickItem & {
-        template: Template
-        index: number
-      }
-
-      if (event.button === edit_button) {
-        is_editing_template = true
-        const { updated_template, cancelled_entirely } = await edit_template(
-          item.template,
-          'Edit Template'
-        )
-
-        if (cancelled_entirely) {
-          templates_quick_pick.hide()
-          is_disposed = true
-        } else {
-          if (updated_template) {
-            templates[item.index] = updated_template
-            await config.update(
-              templates_key,
-              templates,
-              vscode.ConfigurationTarget.Global
-            )
-          }
-
-          // User clicked 'Back' from the edit quick pick, or successfully edited and returned to it.
-          // We need to re-show the main templates_quick_pick.
-          templates_quick_pick.items = create_template_items(
-            templates,
-            templates_quick_pick.value
-          )
-          // Highlight the item that was just edited
-          const edited_item = templates_quick_pick.items.find(
-            (i) => i.index === item.index
-          )
-          if (edited_item) {
-            templates_quick_pick.activeItems = [edited_item]
-          }
-          if (!is_disposed) {
-            templates_quick_pick.show()
-          }
-        }
-        is_editing_template = false
-      } else if (event.button === delete_button) {
-        const template_to_delete = item.template
-        const template_name = template_to_delete.name || 'Unnamed'
-        const is_unnamed = !template_to_delete.name
-        const deleted_template = templates[item.index]
-        const original_index = item.index
-
-        const updated_templates = templates.filter(
-          (_, index) => index !== item.index
-        )
-
-        await config.update(
-          templates_key,
-          updated_templates,
-          vscode.ConfigurationTarget.Global
-        )
-        templates = updated_templates
-        templates_quick_pick.items = create_template_items(
-          templates,
-          templates_quick_pick.value
-        )
-
-        // Handle undo asynchronously without blocking the UI
-        const undo_button_text = 'Undo'
-        notification_count++
-        const deletion_message = is_unnamed
-          ? dictionary.information_message.UNNAMED_TEMPLATE_DELETED
-          : dictionary.information_message.NAMED_TEMPLATE_DELETED(template_name)
-
-        vscode.window
-          .showInformationMessage(deletion_message, undo_button_text)
-          .then(async (undo_result) => {
-            notification_count--
-            if (undo_result === undo_button_text && deleted_template) {
-              templates.splice(original_index, 0, deleted_template)
-              await config.update(
-                templates_key,
-                templates,
-                vscode.ConfigurationTarget.Global
-              )
-              templates_quick_pick.items = create_template_items(
-                templates,
-                templates_quick_pick.value
-              )
-
-              notification_count++
-              vscode.window
-                .showInformationMessage(
-                  dictionary.information_message.TEMPLATE_RESTORED
-                )
-                .then(() => {
-                  notification_count--
-                })
-
-              if (!is_disposed) {
-                templates_quick_pick.show()
-              }
-            } else {
-              // User dismissed or didn't click undo, re-show the templates list
-              if (!is_disposed) {
-                templates_quick_pick.show()
-              }
-            }
-          })
-      }
+    templates_quick_pick.onDidChangeValue(() => {
+      templates_quick_pick.items = create_template_items(templates)
     }),
     templates_quick_pick.onDidHide(() => {
-      if (
-        is_editing_template ||
-        notification_count > 0 ||
-        is_entering_variables
-      ) {
-        // We are editing a template, which involves showing input boxes that hide the quick pick.
-        // Or we are showing a dialog (warning/info message) which also hides the quick pick.
-        // Or we are filling out variables for the template which hides the quick pick.
-        // We don't want to dispose of everything in these cases.
+      if (is_entering_variables) {
         return
       }
 
-      is_disposed = true
       if (!is_template_accepted) {
         prompt_view_provider.send_message({
           command: 'FOCUS_PROMPT_FIELD'
