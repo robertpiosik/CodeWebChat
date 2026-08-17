@@ -167,16 +167,16 @@
         "icon": "$(twitter)"
       },
       {
-        "command": "codeWebChat.saveFileSelection",
-        "title": "%codeWebChat.saveFileSelection.title%",
-        "category": "Code Web Chat",
-        "icon": "$(save)"
-      },
-      {
         "command": "codeWebChat.restoreFileSelection",
         "title": "%codeWebChat.restoreFileSelection.title%",
         "category": "Code Web Chat",
-        "icon": "$(history)"
+        "icon": "$(unarchive)"
+      },
+      {
+        "command": "codeWebChat.saveFileSelection",
+        "title": "%codeWebChat.saveFileSelection.title%",
+        "category": "Code Web Chat",
+        "icon": "$(archive)"
       },
       {
         "command": "codeWebChat.checkAll",
@@ -616,34 +616,54 @@
           "group": "navigation@1"
         },
         {
-          "command": "codeWebChat.redoSelection",
-          "when": "view == codeWebChatViewSelectedFiles",
-          "group": "navigation@2"
-        },
-        {
           "command": "codeWebChat.searchSelectedFiles",
           "when": "view == codeWebChatViewSelectedFiles",
           "group": "navigation@3"
         },
         {
-          "command": "codeWebChat.expandContextFolders",
+          "command": "codeWebChat.restoreFileSelection",
           "when": "view == codeWebChatViewSelectedFiles",
           "group": "navigation@4"
         },
         {
-          "command": "codeWebChat.collapseContextFolders",
+          "command": "codeWebChat.saveFileSelection",
           "when": "view == codeWebChatViewSelectedFiles",
           "group": "navigation@5"
         },
         {
-          "command": "codeWebChat.selectReferencingFilesForSelected",
+          "command": "codeWebChat.expandContextFolders",
+          "when": "view == codeWebChatViewSelectedFiles",
+          "group": "navigation@6"
+        },
+        {
+          "command": "codeWebChat.collapseContextFolders",
+          "when": "view == codeWebChatViewSelectedFiles",
+          "group": "navigation@7"
+        },
+        {
+          "command": "codeWebChat.copyMarkdown",
           "when": "view == codeWebChatViewSelectedFiles",
           "group": "1_more@1"
         },
         {
-          "command": "codeWebChat.selectImportedFilesForSelected",
+          "command": "codeWebChat.copyPaths",
           "when": "view == codeWebChatViewSelectedFiles",
           "group": "1_more@2"
+        },
+        {
+          "command": "codeWebChat.selectReferencingFilesForSelected",
+          "when": "view == codeWebChatViewSelectedFiles",
+          "group": "2_more@1"
+        },
+        {
+          "command": "codeWebChat.selectImportedFilesForSelected",
+          "when": "view == codeWebChatViewSelectedFiles",
+          "group": "2_more@2"
+        },
+        {
+          "command": "codeWebChat.redoSelection",
+          "when": "view == codeWebChatViewSelectedFiles",
+          "group": "3_more@1"
         },
         {
           "command": "codeWebChat.checkAll",
@@ -656,19 +676,9 @@
           "group": "navigation@2"
         },
         {
-          "command": "codeWebChat.copyMarkdown",
-          "when": "view == codeWebChatViewWorkspace",
-          "group": "2_more@1"
-        },
-        {
           "command": "codeWebChat.searchFiles",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@5"
-        },
-        {
-          "command": "codeWebChat.copyPaths",
-          "when": "view == codeWebChatViewWorkspace",
-          "group": "2_more@2"
         },
         {
           "command": "codeWebChat.newFile",
@@ -684,16 +694,6 @@
           "command": "codeWebChat.collapseWorkspaceFolders",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@9"
-        },
-        {
-          "command": "codeWebChat.saveFileSelection",
-          "when": "view == codeWebChatViewWorkspace",
-          "group": "1_more@1"
-        },
-        {
-          "command": "codeWebChat.restoreFileSelection",
-          "when": "view == codeWebChatViewWorkspace",
-          "group": "1_more@2"
         },
         {
           "command": "codeWebChat.selectWorkspaceFile",
