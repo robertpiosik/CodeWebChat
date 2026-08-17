@@ -6,8 +6,7 @@ import { Logger } from '@shared/utils/logger'
 import { t } from '@/i18n'
 import { search_files } from '@/features/search-files'
 import { WebSocketManager } from '@/services/websocket-manager'
-import { prompt_for_provided_results } from '@/features/search-files/utils/prompt-for-provided-results'
-import { LAST_SEARCH_FILES_MERGE_REPLACE_OPTION_STATE_KEY } from '@/constants/state-keys'
+import { prompt_for_merge_or_replace } from '@/features/search-files/utils/prompt-for-merge-or-replace'
 
 export const get_target_folder_path = async (
   item?: any
@@ -68,71 +67,14 @@ export const search_files_commands = (
       if (
         params.result.selected_paths.length < params.result.matched_paths.length
       ) {
-        const last_action = extension_context.workspaceState.get<string>(
-          LAST_SEARCH_FILES_MERGE_REPLACE_OPTION_STATE_KEY
-        )
-
-        const action = await new Promise<{ value: string } | undefined>(
-          (resolve) => {
-            const quick_pick = vscode.window.createQuickPick<{
-              label: string
-              description: string
-              value: string
-            }>()
-            const items = [
-              {
-                label: t('command.search-files.action.merge'),
-                description: t('command.search-files.action.merge-description'),
-                value: 'merge'
-              },
-              {
-                label: t('command.search-files.action.replace'),
-                description: t(
-                  'command.search-files.action.replace-description'
-                ),
-                value: 'replace'
-              }
-            ]
-            quick_pick.items = items
-            const active_item =
-              items.find((i) => i.value === last_action) || items[0]
-            quick_pick.activeItems = [active_item]
-            quick_pick.title = params.result.title
-            quick_pick.placeholder = t(
-              'command.search-files.action.merge-or-replace-placeholder'
-            )
-            quick_pick.ignoreFocusOut = true
-
-            let is_resolved = false
-
-            quick_pick.onDidAccept(() => {
-              const selected = quick_pick.selectedItems[0]
-              if (selected) {
-                is_resolved = true
-                resolve({ value: selected.value })
-                quick_pick.hide()
-              }
-            })
-
-            quick_pick.onDidHide(() => {
-              if (!is_resolved) {
-                resolve(undefined)
-              }
-              quick_pick.dispose()
-            })
-
-            quick_pick.show()
-          }
-        )
+        const action = await prompt_for_merge_or_replace({
+          extension_context,
+          title: params.result.title
+        })
 
         if (!action) return undefined
 
-        await extension_context.workspaceState.update(
-          LAST_SEARCH_FILES_MERGE_REPLACE_OPTION_STATE_KEY,
-          action.value
-        )
-
-        if (action.value === 'merge') {
+        if (action === 'merge') {
           paths_to_apply = [
             ...new Set([
               ...currently_checked.filter(
@@ -255,38 +197,6 @@ export const search_files_commands = (
     vscode.commands.registerCommand(
       'codeWebChat.searchFilesFromFile',
       (item: any) => search_handler(item)
-    ),
-    vscode.commands.registerCommand(
-      'codeWebChat.internal.searchFilesWithResults',
-      async (files: { path: string; checked: boolean }[]) => {
-        while (true) {
-          const result = await prompt_for_provided_results({
-            files,
-            workspace_provider
-          })
-
-          if (!result) return undefined
-
-          if ('action' in result) {
-            const sub_search_result = await search_files({
-              get_files: async () => result.matched_paths,
-              workspace_provider,
-              extension_context,
-              websocket_manager,
-              show_back_button: true,
-              is_sub_search: true
-            })
-
-            if (sub_search_result === 'back') {
-              continue
-            }
-
-            return sub_search_result
-          }
-
-          return result
-        }
-      }
     )
   ]
 }

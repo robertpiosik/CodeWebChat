@@ -625,17 +625,17 @@
           "group": "navigation@2"
         },
         {
-          "command": "codeWebChat.expandContextFolders",
+          "command": "codeWebChat.searchSelectedFiles",
           "when": "view == codeWebChatViewSelectedFiles",
           "group": "navigation@3"
         },
         {
-          "command": "codeWebChat.collapseContextFolders",
+          "command": "codeWebChat.expandContextFolders",
           "when": "view == codeWebChatViewSelectedFiles",
           "group": "navigation@4"
         },
         {
-          "command": "codeWebChat.searchSelectedFiles",
+          "command": "codeWebChat.collapseContextFolders",
           "when": "view == codeWebChatViewSelectedFiles",
           "group": "navigation@5"
         },

@@ -9,8 +9,6 @@ import { EventEmitter } from 'events'
 import {
   CONTEXT_CHECKED_PATHS_STATE_KEY,
   CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY,
-  CONTEXT_FRF_CHECKED_PATHS_STATE_KEY,
-  CONTEXT_FRF_CHECKED_TIMESTAMPS_STATE_KEY,
   DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY,
   RANGES_STATE_KEY,
   type DuplicateWorkspaceContext
@@ -63,20 +61,6 @@ const restore_duplicated_workspace_context = async (
           CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY,
           duplicated_context.checked_files_timestamps
         )
-
-        if (duplicated_context.frf_checked_files) {
-          await extension_context.workspaceState.update(
-            CONTEXT_FRF_CHECKED_PATHS_STATE_KEY,
-            duplicated_context.frf_checked_files
-          )
-        }
-
-        if (duplicated_context.frf_checked_files_timestamps) {
-          await extension_context.workspaceState.update(
-            CONTEXT_FRF_CHECKED_TIMESTAMPS_STATE_KEY,
-            duplicated_context.frf_checked_files_timestamps
-          )
-        }
 
         if (duplicated_context.ranges) {
           await extension_context.workspaceState.update(

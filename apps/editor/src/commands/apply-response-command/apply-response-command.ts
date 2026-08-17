@@ -30,6 +30,7 @@ import {
 import { get_all_workspace_files } from '@/context/helpers/get-all-workspace-files'
 import { parse_response } from './utils/response-parser'
 import { Checkpoint } from '@/features/checkpoints/types'
+import { WebSocketManager } from '@/services/websocket-manager'
 
 let in_progress = false
 
@@ -49,6 +50,7 @@ export const apply_response_command = (params: {
   prompt_view_provider: PromptViewProvider
   workspace_provider: WorkspaceProvider
   prompt_view_api_calls_manager: PromptViewApiCallsManager
+  websocket_manager: WebSocketManager
 }) => {
   params.extension_context.subscriptions.push(
     vscode.workspace.registerTextDocumentContentProvider(
@@ -238,7 +240,8 @@ export const apply_response_command = (params: {
           response_items,
           extension_context: params.extension_context,
           prompt_view_provider: params.prompt_view_provider,
-          workspace_provider: params.workspace_provider
+          workspace_provider: params.workspace_provider,
+          websocket_manager: params.websocket_manager
         })
 
         if (!preview_data) {

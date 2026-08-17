@@ -122,7 +122,8 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
       extension_context,
       prompt_view_provider,
       workspace_provider,
-      prompt_view_api_calls_manager
+      prompt_view_api_calls_manager,
+      websocket_manager: websocket_server_instance!
     }),
     ...code_at_cursor_commands({
       workspace_provider,
