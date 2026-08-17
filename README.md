@@ -164,27 +164,30 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 
 ### Context
 
-- `Save File Selection...` - Save the current context.
-- `Restore File Selection...` - Restore a saved context.
+- `Save File Selection` - Save the current context.
+- `Restore File Selection` - Restore a saved context.
 - `Select Workspace File...` - Select a file from the workspace.
 - `Search Files...` - Select files based on a search query.
+- `Search in Selected Files...` - Search within currently selected files.
 - `Select Clipboard Paths...` - Select files based on paths in your clipboard.
 - `Select Unstaged Files...` - Select files with unstaged changes.
 - `Select Files of Commit...` - Select files modified in a specific commit.
-- `Select Changed Files...` - Select changed files compared to a branch.
+- `Select Referencing Files...` - Select files referencing the active or selected items.
+- `Select Imported Files...` - Select files imported by the active or selected items.
+- `Select Parent Folder...` - Select the parent directory of a file.
 
 ### Copy
 
 - `Copy Markdown` - Copy contents of the current file selection.
 - `Copy Markdown of Open Editors` - Copy contents of file selection in open editors.
-- `Copy Paths` - Copy paths of the current file selection.
-- `Copy Paths of Open Editors` - Copy paths of file selection in open editors.
+- `Copy Paths...` - Copy paths of the current file selection.
+- `Copy Paths of Open Editors...` - Copy paths of file selection in open editors.
 
 ### Commit messages
 
 - `Commit Changes` - Generate commit message in your preferred style and commit.
-- `Apply Commit Message from Clipboard` - Trigger `Commit Changes` flow with the copied text.
-- `Copy Merge Commit Details` - Copy consolidated prompts and context ASCII trees of all commits between HEAD and a selected branch.
+- `CWC: Generate Commit Message` - Generate a commit message into the SCM input.
+- `CWC: Copy Merge Commit Details` - Copy consolidated prompts and context ASCII trees of all commits between HEAD and a selected branch.
 
 ### History
 
@@ -193,7 +196,9 @@ Install the [browser extension](https://github.com/robertpiosik/CodeWebChat/tree
 
 ### Actions
 
-- `Apply from Clipboard` - Integrate LLM response.
+- `Apply Chat Response` - Integrate LLM response.
+- `Reference in Prompt` - Reference the selected file in the prompt view.
+- `Set Ranges...` - Restrict context to specific line ranges.
 
 ### Misc
 

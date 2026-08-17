@@ -589,15 +589,11 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.selectReferencingFiles",
+          "command": "codeWebChat.selectReferencingFilesForSelected",
           "when": "false"
         },
         {
           "command": "codeWebChat.selectImportedFilesForSelected",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.selectImportedFiles",
           "when": "false"
         },
         {

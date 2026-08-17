@@ -231,25 +231,7 @@ export const prompt_for_imported_files = async (params: {
     quick_pick.selectedItems = current_selected_items
     quick_pick.canSelectMany = true
     quick_pick.matchOnDescription = true
-
-    const update_placeholder = () => {
-      const total = quick_pick.selectedItems.reduce(
-        (sum, item) => sum + (item.tokens || 0),
-        0
-      )
-
-      if (total > 0) {
-        quick_pick.placeholder = t(
-          'feature.imported-files.placeholder-tokens',
-          { tokens: display_token_count(total) }
-        )
-      } else {
-        quick_pick.placeholder = t('feature.imported-files.placeholder')
-      }
-    }
-    update_placeholder()
-    quick_pick.onDidChangeSelection(update_placeholder)
-
+    quick_pick.placeholder = t('feature.imported-files.placeholder')
     quick_pick.title = t('feature.imported-files.title')
     quick_pick.ignoreFocusOut = true
 
