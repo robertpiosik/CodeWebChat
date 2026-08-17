@@ -2,8 +2,8 @@ import * as vscode from 'vscode'
 import axios from 'axios'
 import { send_llm_message } from '@/utils/send-llm-message'
 import {
-  find_relevant_files_instructions,
-  find_relevant_files_format
+  intelligent_file_search_instructions,
+  intelligent_file_search_format
 } from '@/constants/instructions'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { build_user_content } from '@/utils/build-user-content'
@@ -28,10 +28,10 @@ export const search_files_by_intelligent = async (
 
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const base_instructions =
-    config.get<string>('findRelevantFilesInstructions') ||
-    find_relevant_files_instructions
+    config.get<string>('intelligentFileSearchInstructions') ||
+    intelligent_file_search_instructions
 
-  const part2 = `${find_relevant_files_format}\n\n${base_instructions}\n\n${instructions}`
+  const part2 = `${intelligent_file_search_format}\n\n${base_instructions}\n\n${instructions}`
   const user_content = build_user_content({
     model_provider,
     part1: xml_files,

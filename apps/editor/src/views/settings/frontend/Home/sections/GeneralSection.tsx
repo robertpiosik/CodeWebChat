@@ -58,11 +58,11 @@ type Props = {
   on_commit_instructions_blur: () => void
   default_commit_instructions: string
   on_restore_commit_instructions: () => void
-  find_relevant_instructions: string
-  set_find_relevant_instructions: (instructions: string) => void
-  on_find_relevant_instructions_blur: () => void
-  default_find_relevant_instructions: string
-  on_restore_find_relevant_instructions: () => void
+  intelligent_file_search_instructions: string
+  set_intelligent_file_search_instructions: (instructions: string) => void
+  on_intelligent_file_search_instructions_blur: () => void
+  default_intelligent_file_search_instructions: string
+  on_restore_intelligent_file_search_instructions: () => void
   on_open_external_url: (url: string) => void
   templates: Record<string, Template[]>
   on_update_templates: (key: string, templates: Template[]) => void
@@ -223,9 +223,9 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               }
             />
             <UiItem
-              title={t('general.find-relevant-files-instructions.title')}
+              title={t('general.intelligent-file-search-instructions.title')}
               description={t(
-                'general.find-relevant-files-instructions.description'
+                'general.intelligent-file-search-instructions.description'
               )}
               is_toggleable
               translations={{
@@ -234,18 +234,20 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               }}
             >
               <UiTextarea
-                value={props.find_relevant_instructions}
+                value={props.intelligent_file_search_instructions}
                 min_rows={3}
-                on_change={props.set_find_relevant_instructions}
-                on_blur={props.on_find_relevant_instructions_blur}
+                on_change={props.set_intelligent_file_search_instructions}
+                on_blur={props.on_intelligent_file_search_instructions_blur}
                 action_icon={
-                  props.find_relevant_instructions !=
-                  props.default_find_relevant_instructions
+                  props.intelligent_file_search_instructions !=
+                  props.default_intelligent_file_search_instructions
                     ? 'discard'
                     : undefined
                 }
                 action_title={t('general.action.restore-default')}
-                on_action_click={props.on_restore_find_relevant_instructions}
+                on_action_click={
+                  props.on_restore_intelligent_file_search_instructions
+                }
               />
             </UiItem>
             <UiItem
@@ -325,9 +327,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                     ),
                     templatesForCodeAtCursor: t(
                       'general.templates.types.templatesForCodeAtCursor'
-                    ),
-                    templatesForFindRelevantFiles: t(
-                      'general.templates.types.templatesForFindRelevantFiles'
                     ),
                     templatesForWithoutFiles: t(
                       'general.templates.types.templatesForWithoutFiles'

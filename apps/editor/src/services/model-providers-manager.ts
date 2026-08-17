@@ -172,8 +172,8 @@ export class ModelProvidersManager {
 
       if (old_config?.isDefaultForCodeAtCursor)
         new_config.isDefaultForCodeAtCursor = true
-      if (old_config?.isDefaultForFindRelevantFiles)
-        new_config.isDefaultForFindRelevantFiles = true
+      if (old_config?.isDefaultForIntelligentFileSearch)
+        new_config.isDefaultForIntelligentFileSearch = true
       if (old_config?.isDefaultForIntelligentUpdate)
         new_config.isDefaultForIntelligentUpdate = true
       if (old_config?.isDefaultForCommitMessages)
@@ -310,20 +310,20 @@ export class ModelProvidersManager {
     )
   }
 
-  public async get_default_find_relevant_files_api_configuration(): Promise<
+  public async get_default_intelligent_file_search_api_configuration(): Promise<
     ApiConfiguration | undefined
   > {
     await this._load_promise
     return this._get_default_api_configuration_from_settings(
-      'isDefaultForFindRelevantFiles'
+      'isDefaultForIntelligentFileSearch'
     )
   }
 
-  public async set_default_find_relevant_files_api_configuration(
+  public async set_default_intelligent_file_search_api_configuration(
     api_configuration: ApiConfiguration | null
   ) {
     await this._set_default_api_configuration_in_settings(
-      'isDefaultForFindRelevantFiles',
+      'isDefaultForIntelligentFileSearch',
       api_configuration
     )
   }

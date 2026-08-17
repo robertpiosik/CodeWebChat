@@ -15,7 +15,7 @@ import { ApiFeature } from '@/views/shared/types/api-features'
 import { use_translation, TranslationKey } from '../i18n/use-translation'
 import { WebConfigurationsSection } from './sections/WebConfigurationsSection'
 import { commit_message_instructions as default_commit_message_instructions } from '@/constants/instructions'
-import { find_relevant_files_instructions as default_find_relevant_files_instructions } from '@/constants/instructions'
+import { intelligent_file_search_instructions as default_intelligent_file_search_instructions } from '@/constants/instructions'
 import { default_system_instructions } from '@shared/constants/default-system-instructions'
 import { GROUP_TITLE_HEIGHT, SECTION_HEADER_HEIGHT } from '@ui/constants/sizes'
 
@@ -107,7 +107,7 @@ type Props = {
   web_configurations: WebConfiguration[]
   defaults: Record<ApiFeature, string | null>
   edit_files_system_instructions: string
-  find_relevant_files_instructions: string
+  intelligent_file_search_instructions: string
   commit_message_instructions: string
   synchronize_edit_format_between_modes: boolean
   attach_ascii_tree_of_context: 'ask' | 'always' | 'never'
@@ -143,7 +143,7 @@ type Props = {
     enabled: boolean
   ) => void
   on_edit_files_system_instructions_change: (instructions: string) => void
-  on_find_relevant_files_instructions_change: (instructions: string) => void
+  on_intelligent_file_search_instructions_change: (instructions: string) => void
   on_automatic_checkpoints_toggle: (disabled: boolean) => void
   on_checkpoint_lifespan_change: (hours: number | undefined) => void
   on_gemini_user_id_change: (id: number | null) => void
@@ -210,8 +210,10 @@ export const Home: React.FC<Props> = (props) => {
   )
 
   const [commit_instructions, set_commit_instructions] = useState('')
-  const [find_relevant_instructions, set_find_relevant_instructions] =
-    useState('')
+  const [
+    intelligent_file_search_instructions,
+    set_intelligent_file_search_instructions
+  ] = useState('')
   const [edit_files_instructions, set_edit_files_instructions] = useState('')
 
   const get_has_warning = (id: NavItem): boolean => {
@@ -281,8 +283,10 @@ export const Home: React.FC<Props> = (props) => {
   }, [props.commit_message_instructions])
 
   useEffect(() => {
-    set_find_relevant_instructions(props.find_relevant_files_instructions || '')
-  }, [props.find_relevant_files_instructions])
+    set_intelligent_file_search_instructions(
+      props.intelligent_file_search_instructions || ''
+    )
+  }, [props.intelligent_file_search_instructions])
 
   useEffect(() => {
     set_edit_files_instructions(props.edit_files_system_instructions || '')
@@ -454,31 +458,35 @@ export const Home: React.FC<Props> = (props) => {
               default_commit_message_instructions
             )
           }}
-          find_relevant_instructions={find_relevant_instructions}
-          set_find_relevant_instructions={set_find_relevant_instructions}
-          on_find_relevant_instructions_blur={() => {
-            props.on_find_relevant_files_instructions_change(
-              find_relevant_instructions
+          intelligent_file_search_instructions={
+            intelligent_file_search_instructions
+          }
+          set_intelligent_file_search_instructions={
+            set_intelligent_file_search_instructions
+          }
+          on_intelligent_file_search_instructions_blur={() => {
+            props.on_intelligent_file_search_instructions_change(
+              intelligent_file_search_instructions
             )
             if (
-              find_relevant_instructions == '' &&
-              props.find_relevant_files_instructions ==
-                default_find_relevant_files_instructions
+              intelligent_file_search_instructions == '' &&
+              props.intelligent_file_search_instructions ==
+                default_intelligent_file_search_instructions
             ) {
-              set_find_relevant_instructions(
-                default_find_relevant_files_instructions
+              set_intelligent_file_search_instructions(
+                default_intelligent_file_search_instructions
               )
             }
           }}
-          default_find_relevant_instructions={
-            default_find_relevant_files_instructions
+          default_intelligent_file_search_instructions={
+            default_intelligent_file_search_instructions
           }
-          on_restore_find_relevant_instructions={() => {
-            set_find_relevant_instructions(
-              default_find_relevant_files_instructions
+          on_restore_intelligent_file_search_instructions={() => {
+            set_intelligent_file_search_instructions(
+              default_intelligent_file_search_instructions
             )
-            props.on_find_relevant_files_instructions_change(
-              default_find_relevant_files_instructions
+            props.on_intelligent_file_search_instructions_change(
+              default_intelligent_file_search_instructions
             )
           }}
           on_open_external_url={props.on_open_external_url}

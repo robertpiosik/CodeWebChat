@@ -5,7 +5,7 @@ import {
   ApiConfiguration,
   ModelProvider
 } from '@/services/model-providers-manager'
-import { LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
+import { LAST_USED_INTELLIGENT_FILE_SEARCH_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { display_token_count } from '@/utils/display-token-count'
 import { t } from '@/i18n'
 import {
@@ -33,7 +33,7 @@ export const prompt_for_api_configuration = async (params: {
 
   if (!params.force_prompt) {
     const default_api_configuration =
-      await params.model_providers_manager.get_default_find_relevant_files_api_configuration()
+      await params.model_providers_manager.get_default_intelligent_file_search_api_configuration()
 
     if (default_api_configuration) {
       selected_api_configuration = default_api_configuration
@@ -47,7 +47,7 @@ export const prompt_for_api_configuration = async (params: {
   if (!selected_api_configuration) {
     const last_selected_id =
       params.extension_context.workspaceState.get<string>(
-        LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY
+        LAST_USED_INTELLIGENT_FILE_SEARCH_CONFIG_ID_STATE_KEY
       )
 
     const placeholder = t('common.config.placeholder-with-tokens', {
@@ -70,7 +70,7 @@ export const prompt_for_api_configuration = async (params: {
   if (selected_api_configuration) {
     const selected_id = get_api_configuration_id(selected_api_configuration)
     await params.extension_context.workspaceState.update(
-      LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY,
+      LAST_USED_INTELLIGENT_FILE_SEARCH_CONFIG_ID_STATE_KEY,
       selected_id
     )
   }

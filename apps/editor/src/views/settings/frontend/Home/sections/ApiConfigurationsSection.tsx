@@ -267,17 +267,19 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
               }}
             />
             <DefaultConfigurationSelector
-              title={t('api-calls.configurations.tool.find-relevant-files')}
-              value={props.defaults['find-relevant-files'] || null}
+              title={t('api-calls.configurations.tool.intelligent-file-search')}
+              value={props.defaults['intelligent-file-search'] || null}
               configurations={selector_configurations}
               on_unset={() =>
                 props.on_set_default_api_configuration(
-                  'find-relevant-files',
+                  'intelligent-file-search',
                   null
                 )
               }
               on_select={() =>
-                props.on_select_default_api_configuration('find-relevant-files')
+                props.on_select_default_api_configuration(
+                  'intelligent-file-search'
+                )
               }
               translations={{
                 select: t('api-calls.configurations.action.select-default'),

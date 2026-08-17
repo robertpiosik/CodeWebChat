@@ -87,12 +87,12 @@ export interface UpdateSelectAllPromptsInCommitMessagesByDefaultMessage {
   enabled: boolean
 }
 
-export interface GetFindRelevantFilesInstructionsMessage {
-  command: 'GET_FIND_RELEVANT_FILES_INSTRUCTIONS'
+export interface GetIntelligentFileSearchInstructionsMessage {
+  command: 'GET_INTELLIGENT_FILE_SEARCH_INSTRUCTIONS'
 }
 
-export interface UpdateFindRelevantFilesInstructionsMessage {
-  command: 'UPDATE_FIND_RELEVANT_FILES_INSTRUCTIONS'
+export interface UpdateIntelligentFileSearchInstructionsMessage {
+  command: 'UPDATE_INTELLIGENT_FILE_SEARCH_INSTRUCTIONS'
   instructions: string
 }
 
@@ -376,8 +376,8 @@ export type FrontendMessage =
   | GetSelectAllPromptsInCommitMessagesByDefaultMessage
   | UpdateSelectAllPromptsInCommitMessagesByDefaultMessage
   | GetEditFilesSystemInstructionsMessage
-  | GetFindRelevantFilesInstructionsMessage
-  | UpdateFindRelevantFilesInstructionsMessage
+  | GetIntelligentFileSearchInstructionsMessage
+  | UpdateIntelligentFileSearchInstructionsMessage
   | UpdateEditFilesSystemInstructionsMessage
   | SettingsUiReadyMessage
   | GetContextSizeWarningThresholdMessage
@@ -465,8 +465,8 @@ export interface EditFilesSystemInstructionsMessage {
   instructions: string
 }
 
-export interface FindRelevantFilesInstructionsMessage {
-  command: 'FIND_RELEVANT_FILES_INSTRUCTIONS'
+export interface IntelligentFileSearchInstructionsMessage {
+  command: 'INTELLIGENT_FILE_SEARCH_INSTRUCTIONS'
   instructions: string
 }
 
@@ -621,7 +621,7 @@ export type BackendMessage =
   | AttachAsciiTreeOfContextMessage
   | SelectAllPromptsInCommitMessagesByDefaultMessage
   | EditFilesSystemInstructionsMessage
-  | FindRelevantFilesInstructionsMessage
+  | IntelligentFileSearchInstructionsMessage
   | ContextSizeWarningThresholdMessage
   | LimitSemanticSearchResultsMessage
   | AreAutomaticCheckpointsDisabledMessage

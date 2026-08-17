@@ -3,5 +3,5 @@ export type ApiFeature =
   | 'code-at-cursor'
   | 'commit-messages'
   | 'intelligent-update'
-  | 'find-relevant-files'
+  | 'intelligent-file-search'
   | 'voice-input'

@@ -53,13 +53,13 @@ export const HISTORY_EDIT_FILES_STATE_KEY = 'history-edit-files'
 export const HISTORY_CODE_AT_CURSOR_STATE_KEY = 'history-code-at-cursor'
 export const HISTORY_WITHOUT_FILES_STATE_KEY = 'history-without-files'
 
-export const FIND_RELEVANT_FILES_SHRINK_SOURCE_CODE_STATE_KEY =
-  'find-relevant-files-shrink-source-code'
+export const INTELLIGENT_FILE_SEARCH_SHRINK_SOURCE_CODE_STATE_KEY =
+  'intelligent-file-search-shrink-source-code'
 
 export const LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY =
   'last-used-code-at-cursor-config-id'
-export const LAST_USED_FIND_RELEVANT_FILES_CONFIG_ID_STATE_KEY =
-  'last-used-find-relevant-files-config-id'
+export const LAST_USED_INTELLIGENT_FILE_SEARCH_CONFIG_ID_STATE_KEY =
+  'last-used-intelligent-file-search-config-id'
 export const LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY =
   'last-used-edit-files-config-id'
 export const LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY =
@@ -106,8 +106,8 @@ export const LAST_SEARCH_FILES_SEMANTIC_QUERY_STATE_KEY =
 export const LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY =
   'last-search-files-for-context-mode'
 
-export const LAST_FIND_RELEVANT_FILES_SHRINK_STATE_KEY =
-  'last-find-relevant-files-shrink'
+export const LAST_INTELLIGENT_FILE_SEARCH_SHRINK_STATE_KEY =
+  'last-intelligent-file-search-shrink'
 
 export const LAST_ATTACH_ASCII_TREE_STATE_KEY = 'last-attach-ascii-tree'
 export const LAST_COPY_PATHS_FORMAT_STATE_KEY = 'last-copy-paths-format'

@@ -3,7 +3,7 @@ import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provi
 import { t } from '@/i18n'
 import {
   LAST_SEARCH_FILES_INTELLIGENT_QUERY_STATE_KEY,
-  LAST_FIND_RELEVANT_FILES_SHRINK_STATE_KEY,
+  LAST_INTELLIGENT_FILE_SEARCH_SHRINK_STATE_KEY,
   LAST_USED_INTELLIGENT_SEARCH_ACTION_STATE_KEY,
   get_last_used_web_configuration_key
 } from '@/constants/state-keys'
@@ -19,8 +19,8 @@ import { display_token_count } from '@/utils/display-token-count'
 import { show_configuration_quick_pick } from '@/utils/show-configuration-quick-pick'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import {
-  find_relevant_files_instructions,
-  find_relevant_files_format_for_prompt_view
+  intelligent_file_search_instructions,
+  intelligent_file_search_format_for_prompt_view
 } from '@/constants/instructions'
 
 export const perform_intelligent_search_mode = async (params: {
@@ -91,7 +91,7 @@ export const perform_intelligent_search_mode = async (params: {
     while (true) {
       const should_shrink =
         params.extension_context.workspaceState.get<boolean>(
-          LAST_FIND_RELEVANT_FILES_SHRINK_STATE_KEY,
+          LAST_INTELLIGENT_FILE_SEARCH_SHRINK_STATE_KEY,
           false
         )
       const shrink_result = await prompt_for_shrink_mode({
@@ -107,7 +107,7 @@ export const perform_intelligent_search_mode = async (params: {
       if (shrink_result == 'cancel') return undefined
 
       await params.extension_context.workspaceState.update(
-        LAST_FIND_RELEVANT_FILES_SHRINK_STATE_KEY,
+        LAST_INTELLIGENT_FILE_SEARCH_SHRINK_STATE_KEY,
         shrink_result
       )
 
@@ -236,10 +236,10 @@ export const perform_intelligent_search_mode = async (params: {
 
           const config = vscode.workspace.getConfiguration('codeWebChat')
           const base_instructions =
-            config.get<string>('findRelevantFilesInstructions') ||
-            find_relevant_files_instructions
+            config.get<string>('intelligentFileSearchInstructions') ||
+            intelligent_file_search_instructions
 
-          const chatbot_prompt = `# Files\n\n${md_files}# Task\n\n${base_instructions}\n\n${search_term}\n\n${find_relevant_files_format_for_prompt_view}`
+          const chatbot_prompt = `# Files\n\n${md_files}# Task\n\n${base_instructions}\n\n${search_term}\n\n${intelligent_file_search_format_for_prompt_view}`
 
           if (action == 'copy') {
             await vscode.env.clipboard.writeText(chatbot_prompt)
@@ -276,7 +276,7 @@ export const perform_intelligent_search_mode = async (params: {
               selected_web_configuration_name = valid_web_configurations[0].name
             } else {
               const recents_key = get_last_used_web_configuration_key(
-                'find-relevant-files'
+                'intelligent-file-search'
               )
               const last_selected_name =
                 params.extension_context.workspaceState.get<string>(

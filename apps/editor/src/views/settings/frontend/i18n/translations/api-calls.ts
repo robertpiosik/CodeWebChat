@@ -487,7 +487,7 @@ export const translations = {
     hu: 'Commit Üzenetek',
     bg: 'Съобщения за commit'
   },
-  'api-calls.configurations.tool.find-relevant-files': {
+  'api-calls.configurations.tool.intelligent-file-search': {
     en: 'Intelligent File Search',
     pl: 'Inteligentne wyszukiwanie plików',
     'zh-cn': '智能文件搜索',

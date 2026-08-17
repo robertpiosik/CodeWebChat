@@ -11,10 +11,6 @@ export const handle_get_templates = async (
       templatesForEditFiles: config.get('templatesForEditFiles', []),
       templatesForAskAboutFiles: config.get('templatesForAskAboutFiles', []),
       templatesForCodeAtCursor: config.get('templatesForCodeAtCursor', []),
-      templatesForFindRelevantFiles: config.get(
-        'templatesForFindRelevantFiles',
-        []
-      ),
       templatesForWithoutFiles: config.get('templatesForWithoutFiles', [])
     }
   })

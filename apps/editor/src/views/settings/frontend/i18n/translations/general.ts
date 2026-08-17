@@ -942,25 +942,25 @@ export const translations = {
     hu: 'Kontextus',
     bg: 'Контекст'
   },
-  'general.find-relevant-files-instructions.title': {
-    en: 'Find Relevant Files Instructions',
-    pl: 'Instrukcje znajdowania powiązanych plików',
-    'zh-cn': '查找相关文件的说明',
-    ja: '関連ファイルの検索手順',
-    'zh-tw': '尋找相關檔案的說明',
-    de: 'Anweisungen zum Finden relevanter Dateien',
-    es: 'Instrucciones para encontrar archivos relevantes',
-    fr: 'Instructions pour trouver des fichiers pertinents',
-    'pt-br': 'Instruções para encontrar arquivos relevantes',
-    ru: 'Инструкции по поиску соответствующих файлов',
-    ko: '관련 파일 찾기 지침',
-    it: 'Istruzioni per trovare file pertinenti',
-    tr: 'İlgili Dosyaları Bulma Talimatları',
-    cs: 'Pokyny pro nalezení relevantních souborů',
-    hu: 'Utasítások a releváns fájlok megtalálásához',
-    bg: 'Инструкции за намиране на съответни файлове'
+  'general.intelligent-file-search-instructions.title': {
+    en: 'Intelligent File Search Instructions',
+    pl: 'Instrukcje inteligentnego wyszukiwania plików',
+    'zh-cn': '智能文件搜索说明',
+    ja: 'インテリジェントファイル検索の指示',
+    'zh-tw': '智慧檔案搜尋說明',
+    de: 'Anweisungen zur intelligenten Dateisuche',
+    es: 'Instrucciones de búsqueda inteligente de archivos',
+    fr: 'Instructions de recherche intelligente de fichiers',
+    'pt-br': 'Instruções de pesquisa inteligente de arquivos',
+    ru: 'Инструкции для умного поиска файлов',
+    ko: '지능형 파일 검색 지침',
+    it: 'Istruzioni per la ricerca intelligente dei file',
+    tr: 'Akıllı Dosya Arama Talimatları',
+    cs: 'Pokyny pro inteligentní vyhledávání souborů',
+    hu: 'Intelligens fájlkeresési utasítások',
+    bg: 'Инструкции за интелигентно търсене на файлове'
   },
-  'general.find-relevant-files-instructions.description': {
+  'general.intelligent-file-search-instructions.description': {
     en: 'Specify a prefix instruction for the intelligent file search.',
     pl: 'Określ instrukcję początkową dla inteligentnego wyszukiwania plików.',
     'zh-cn': '为智能文件搜索指定前缀指令。',
@@ -1213,23 +1213,5 @@ export const translations = {
     cs: 'Bez souborů',
     hu: 'Fájlok Nélkül',
     bg: 'Без файлове'
-  },
-  'general.templates.types.templatesForFindRelevantFiles': {
-    en: 'Find Relevant Files',
-    pl: 'Znajdź powiązane pliki',
-    'zh-cn': '查找相关文件',
-    ja: '関連ファイルを見つける',
-    'zh-tw': '查找相關文件',
-    de: 'Relevante Dateien finden',
-    es: 'Buscar archivos relevantes',
-    fr: 'Trouver des fichiers pertinents',
-    'pt-br': 'Encontrar arquivos relevantes',
-    ru: 'Найти релевантные файлы',
-    ko: '관련 파일 찾기',
-    it: 'Trova file rilevanti',
-    tr: 'İlgili Dosyaları Bul',
-    cs: 'Najít relevantní soubory',
-    hu: 'Kapcsolódó fájlok keresése',
-    bg: 'Намери свързани файлове'
   }
 } as const

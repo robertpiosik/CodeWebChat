@@ -47,7 +47,7 @@ export const WithProgress = () => {
 
   return visible ? (
     <ProgressModal
-      title="Finding relevant files..."
+      title="Example"
       subtitle="Receiving..."
       progress={progress}
       tokens_per_second={250}

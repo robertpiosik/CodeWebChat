@@ -1018,7 +1018,7 @@
             "type": "string"
           }
         },
-        "codeWebChat.findRelevantFilesInstructions": {
+        "codeWebChat.intelligentFileSearchInstructions": {
           "type": "string",
           "scope": "resource"
         },
@@ -1162,24 +1162,6 @@
             ]
           }
         },
-        "codeWebChat.templatesForFindRelevantFiles": {
-          "type": "array",
-          "scope": "resource",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "template": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "template"
-            ]
-          }
-        },
         "codeWebChat.modelProviders": {
           "type": "array",
           "scope": "resource",
@@ -1226,7 +1208,7 @@
               "isDefaultForCodeAtCursor": {
                 "type": "boolean"
               },
-              "isDefaultForFindRelevantFiles": {
+              "isDefaultForIntelligentFileSearch": {
                 "type": "boolean"
               },
               "isDefaultForIntelligentUpdate": {
