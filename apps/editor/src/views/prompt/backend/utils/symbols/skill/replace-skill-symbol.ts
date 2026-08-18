@@ -18,7 +18,17 @@ export const replace_skill_symbol = async (params: {
     regex,
     (_, agent_name, _repo_id, skill_name) => {
       const key = `${agent_name}:${skill_name}`
-      const reference = `<skill name="${skill_name}" />`
+
+      const formatted_skill_name = skill_name
+        .replace(/-/g, ' ')
+        .replace(/^./, (c: string) => c.toUpperCase())
+
+      const link_hash = formatted_skill_name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '')
+
+      const reference = `[${formatted_skill_name}](#${link_hash})`
 
       if (processed_skills.has(key)) {
         return reference
@@ -46,7 +56,7 @@ export const replace_skill_symbol = async (params: {
 
       processed_skills.add(key)
 
-      let skill_content = `<skill name="${skill_name}">\n`
+      let skill_content = `# ${formatted_skill_name}\n\n`
 
       try {
         const collect_files = (dir_path: string) => {
@@ -61,11 +71,21 @@ export const replace_skill_symbol = async (params: {
               const lower_name = file_name.toLowerCase()
               if (lower_name == 'readme.md' || lower_name.startsWith('license'))
                 continue
-              const content = fs.readFileSync(file_path, 'utf-8')
+              let content = fs.readFileSync(file_path, 'utf-8')
+
+              content = content.replace(
+                /^---\s*\r?\n[\s\S]*?\r?\n---\s*(?:\r?\n|$)/,
+                ''
+              )
+
               const relative_path = normalize_path(
                 path.relative(skill.path, file_path)
               )
-              skill_content += `<file path="${relative_path}">\n\`\`\`\n${content}\n\`\`\`\n</file>\n`
+              const backticks = content.includes('```') ? '````' : '```'
+              skill_content += `- File: \`${relative_path.replace(
+                /\\/g,
+                '/'
+              )}\`\n\n${backticks}\n${content}\n${backticks}\n\n`
             }
           }
         }
@@ -79,8 +99,7 @@ export const replace_skill_symbol = async (params: {
         return ''
       }
 
-      skill_content += `</skill>`
-      skill_definitions += skill_content + '\n'
+      skill_definitions += skill_content
 
       return reference
     }
