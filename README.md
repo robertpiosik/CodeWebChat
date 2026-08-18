@@ -46,7 +46,7 @@ _Accurate and fast multi-file edits in a single response._
 [full contents of selected files with paths]
 
 # Output formatting
-[edit format instructions (~250 tokens)]
+[edit format instructions]
 
 ---
 
