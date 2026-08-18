@@ -375,10 +375,6 @@ export const run_generate_action = async (params: {
               vscode.window.showErrorMessage(
                 t('command.generate-commit-message.error.empty-response')
               )
-            } else {
-              vscode.window.showErrorMessage(
-                t('command.generate-commit-message.error.request-failed')
-              )
             }
             force_quick_pick = true
             continue
