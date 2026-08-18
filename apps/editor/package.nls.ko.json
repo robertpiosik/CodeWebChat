@@ -45,6 +45,7 @@
   "codeWebChat.searchFiles.title": "파일 검색...",
   "codeWebChat.searchSelectedFiles.title": "선택한 파일에서 검색...",
   "codeWebChat.searchFilesFromDirectory.title": "파일 검색...",
+  "codeWebChat.searchSelectedFilesFromDirectory.title": "선택한 파일에서 검색...",
   "codeWebChat.selectReferencingFilesForSelected.title": "참조하는 파일 선택...",
   "codeWebChat.selectReferencingFiles.title": "참조하는 파일 선택...",
   "codeWebChat.selectImportedFilesForSelected.title": "가져온 파일 선택...",

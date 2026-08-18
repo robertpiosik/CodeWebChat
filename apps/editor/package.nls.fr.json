@@ -45,6 +45,7 @@
   "codeWebChat.searchFiles.title": "Rechercher des fichiers...",
   "codeWebChat.searchSelectedFiles.title": "Rechercher dans les fichiers sélectionnés...",
   "codeWebChat.searchFilesFromDirectory.title": "Rechercher des fichiers...",
+  "codeWebChat.searchSelectedFilesFromDirectory.title": "Rechercher dans les fichiers sélectionnés...",
   "codeWebChat.selectReferencingFilesForSelected.title": "Sélectionner les fichiers de référence...",
   "codeWebChat.selectReferencingFiles.title": "Sélectionner les fichiers de référence...",
   "codeWebChat.selectImportedFilesForSelected.title": "Sélectionner les fichiers importés...",

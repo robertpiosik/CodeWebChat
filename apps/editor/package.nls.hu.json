@@ -45,6 +45,7 @@
   "codeWebChat.searchFiles.title": "Fájlok keresése...",
   "codeWebChat.searchSelectedFiles.title": "Keresés a kiválasztott fájlokban...",
   "codeWebChat.searchFilesFromDirectory.title": "Fájlok keresése...",
+  "codeWebChat.searchSelectedFilesFromDirectory.title": "Keresés a kiválasztott fájlokban...",
   "codeWebChat.selectReferencingFilesForSelected.title": "Hivatkozó fájlok kiválasztása...",
   "codeWebChat.selectReferencingFiles.title": "Hivatkozó fájlok kiválasztása...",
   "codeWebChat.selectImportedFilesForSelected.title": "Importált fájlok kiválasztása...",

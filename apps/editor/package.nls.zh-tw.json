@@ -45,6 +45,7 @@
   "codeWebChat.searchFiles.title": "搜尋檔案...",
   "codeWebChat.searchSelectedFiles.title": "在選取的檔案中搜尋...",
   "codeWebChat.searchFilesFromDirectory.title": "搜尋檔案...",
+  "codeWebChat.searchSelectedFilesFromDirectory.title": "在選取的檔案中搜尋...",
   "codeWebChat.selectReferencingFilesForSelected.title": "選擇參考檔案...",
   "codeWebChat.selectReferencingFiles.title": "選擇參考檔案...",
   "codeWebChat.selectImportedFilesForSelected.title": "選擇匯入的檔案...",

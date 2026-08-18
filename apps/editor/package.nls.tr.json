@@ -45,6 +45,7 @@
   "codeWebChat.searchFiles.title": "Dosyaları ara...",
   "codeWebChat.searchSelectedFiles.title": "Seçili dosyalarda ara...",
   "codeWebChat.searchFilesFromDirectory.title": "Dosyaları ara...",
+  "codeWebChat.searchSelectedFilesFromDirectory.title": "Seçili dosyalarda ara...",
   "codeWebChat.selectReferencingFilesForSelected.title": "Referans Veren Dosyaları Seç...",
   "codeWebChat.selectReferencingFiles.title": "Referans Veren Dosyaları Seç...",
   "codeWebChat.selectImportedFilesForSelected.title": "İçe Aktarılan Dosyaları Seç...",

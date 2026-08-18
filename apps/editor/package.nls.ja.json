@@ -45,6 +45,7 @@
   "codeWebChat.searchFiles.title": "ファイルを検索...",
   "codeWebChat.searchSelectedFiles.title": "選択したファイル内を検索...",
   "codeWebChat.searchFilesFromDirectory.title": "ファイルを検索...",
+  "codeWebChat.searchSelectedFilesFromDirectory.title": "選択したファイル内を検索...",
   "codeWebChat.selectReferencingFilesForSelected.title": "参照しているファイルを選択...",
   "codeWebChat.selectReferencingFiles.title": "参照しているファイルを選択...",
   "codeWebChat.selectImportedFilesForSelected.title": "インポートされたファイルを選択...",

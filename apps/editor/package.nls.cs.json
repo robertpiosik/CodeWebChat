@@ -45,6 +45,7 @@
   "codeWebChat.searchFiles.title": "Hledat soubory...",
   "codeWebChat.searchSelectedFiles.title": "Hledat ve vybraných souborech...",
   "codeWebChat.searchFilesFromDirectory.title": "Hledat soubory...",
+  "codeWebChat.searchSelectedFilesFromDirectory.title": "Hledat ve vybraných souborech...",
   "codeWebChat.selectReferencingFilesForSelected.title": "Vybrat odkazující soubory...",
   "codeWebChat.selectReferencingFiles.title": "Vybrat odkazující soubory...",
   "codeWebChat.selectImportedFilesForSelected.title": "Vybrat importované soubory...",
