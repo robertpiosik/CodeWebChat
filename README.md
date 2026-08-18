@@ -43,14 +43,17 @@ _Accurate and fast multi-file edits in a single response._
 
 ```
 # Files
-[full contents of selected files with paths]
+
+[SELECTED FILES]
 
 # Output formatting
-[edit format instructions]
+Whenever showing a new, updated, renamed, or deleted file, provide a brief explanation, then print the path in a markdown heading (e.g. ### New file: `src/examples/hello.py`, ### Updated file: `src/examples/hello.py`, ### Renamed file: `src/examples/hello.py` (old) `src/welcome.py` (new), ### Deleted file: `src/examples/hello.py`), followed by a markdown code block showing the original and updated code snippets with Git-style merge conflict syntax. Example:
+
+[EXAMPLE]
 
 ---
 
-[prompt]
+[PROMPT]
 ```
 
 </details>
@@ -58,15 +61,16 @@ _Accurate and fast multi-file edits in a single response._
 <details>
 <summary><strong>Ask about files</strong></summary>
 
-_Get help with whatever you're up to._
+_Plan features or get explanations._
 
 ```
 # Files
-[full contents of selected files with paths]
+
+[SELECTED FILES]
 
 ---
 
-[prompt]
+[PROMPT]
 ```
 
 </details>
@@ -74,18 +78,28 @@ _Get help with whatever you're up to._
 <details>
 <summary><strong>Code at cursor</strong></summary>
 
-_TAB completions from SOTA reasoning models._
+_Quality TAB completions from SOTA reasoning models._
 
 ````
 # Files
-[full contents of selected files with paths]
 
-- File: `[active file]`
+[SELECTED FILES]
+
+- File `[ACTIVE FILE PATH]`:
+
 ```
-[code before cursor]<missing_text>[prompt]</missing_text>[code after cursor]
+[PREFIX]<missing_text>[PROMPT]</missing_text>[SUFFIX]
 ```
 
-[instructions for the missing text]
+# Output formatting
+
+Your response must begin with a markdown heading identifying the file and the cursor position, followed by a markdown code block containing the replacement text, followed by a brief explanation. The heading must be: "### Code at cursor: `[ACTIVE FILE PATH]` (ROW:COL)". Always refer to the symbol "<missing_text>" as "cursor position" and "replacement" as "completion". Example:
+
+[EXAMPLE]
+
+---
+
+Find correct replacement text for the <missing_text> symbol.
 ````
 
 </details>
