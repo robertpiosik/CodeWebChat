@@ -22,7 +22,7 @@ Free and privacy-fist toolkit for AI coding with static context. **Start in VS C
 
 ## Introduction
 
-This independent project aims to provide developers a complete and free toolkit for pair programming with AI that augments, rather than replaces, traditional coding.
+This independent project aims to provide developers a complete and free toolkit for pair programming with AI that augments, rather than replaces, traditional coding. It's static context design activates judgement at the very beginning of the development process, enabling controlled, quality outputs.
 
 ## Privacy
 
