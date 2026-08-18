@@ -361,5 +361,42 @@ export const translations = {
     cs: 'Generování zprávy commitu je během náhledu odpovědi zakázáno.',
     hu: 'A commit üzenet generálása a válasz előnézete alatt le van tiltva.',
     bg: 'Генерирането на commit съобщение е деактивирано по време на преглед на отговора.'
+  },
+  'command.generate-commit-message.error.empty-response': {
+    en: 'API request returned an empty response.',
+    pl: 'Żądanie API zwróciło pustą odpowiedź.',
+    'zh-cn': 'API 请求返回了空响应。',
+    ja: 'API リクエストが空のレスポンスを返しました。',
+    'zh-tw': 'API 請求回傳了空回應。',
+    de: 'API-Anfrage gab eine leere Antwort zurück.',
+    es: 'La solicitud API devolvió una respuesta vacía.',
+    fr: 'La requête API a renvoyé une réponse vide.',
+    'pt-br': 'A solicitação de API retornou uma resposta vazia.',
+    ru: 'API-запрос вернул пустой ответ.',
+    ko: 'API 요청이 빈 응답을 반환했습니다.',
+    it: 'La richiesta API ha restituito una risposta vuota.',
+    tr: 'API isteği boş bir yanıt döndürdü.',
+    cs: 'Požadavek API vrátil prázdnou odpověď.',
+    hu: 'Az API kérés üres választ adott vissza.',
+    bg: 'API заявката върна празен отговор.'
+  },
+  'command.generate-commit-message.error.request-failed': {
+    en: 'API request failed. Check the logs for more details.',
+    pl: 'Żądanie API nie powiodło się. Sprawdź logi, aby uzyskać więcej informacji.',
+    'zh-cn': 'API 请求失败。请检查日志了解更多详细信息。',
+    ja: 'API リクエストが失敗しました。詳細についてはログを確認してください。',
+    'zh-tw': 'API 請求失敗。請檢查日誌以獲取更多詳細資訊。',
+    de: 'API-Anfrage fehlgeschlagen. Überprüfen Sie die Protokolle auf weitere Details.',
+    es: 'La solicitud API falló. Consulta los registros para más detalles.',
+    fr: 'La requête API a échoué. Consultez les journaux pour plus de détails.',
+    'pt-br':
+      'Falha na solicitação de API. Verifique os logs para mais detalhes.',
+    ru: 'Сбой API-запроса. Проверьте журналы для получения дополнительных сведений.',
+    ko: 'API 요청에 실패했습니다. 자세한 내용은 로그를 확인하세요.',
+    it: 'Richiesta API non riuscita. Controlla i log per ulteriori dettagli.',
+    tr: 'API isteği başarısız oldu. Daha fazla detay için günlükleri (log) kontrol edin.',
+    cs: 'Požadavek API selhal. Zkontrolujte protokoly pro více podrobností.',
+    hu: 'Az API kérés sikertelen volt. További részletekért ellenőrizze a naplókat.',
+    bg: 'API заявката беше неуспешна. Проверете регистрационните файлове за повече подробности.'
   }
 } as const

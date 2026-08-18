@@ -363,11 +363,23 @@ export const run_generate_action = async (params: {
             api_configuration: api_configuration_data.api_configuration,
             message: api_prompt
           })
-        } catch (error) {
-          if (axios.isCancel(error)) {
+        } catch (error: any) {
+          if (
+            axios.isCancel(error) ||
+            error?.message == 'Operation cancelled by user'
+          ) {
             force_quick_pick = true
             continue
           } else {
+            if (error?.message == 'API request returned an empty response') {
+              vscode.window.showErrorMessage(
+                t('command.generate-commit-message.error.empty-response')
+              )
+            } else {
+              vscode.window.showErrorMessage(
+                t('command.generate-commit-message.error.request-failed')
+              )
+            }
             force_quick_pick = true
             continue
           }
