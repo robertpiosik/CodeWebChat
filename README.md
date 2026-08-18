@@ -22,19 +22,19 @@ Free and privacy-fist toolkit for AI coding with static context. **Start in VS C
 
 ## Introduction
 
-This independent project aims to provide developers a complete and free toolkit for pair programming with AI that augments, rather than replaces, traditional coding.
+**CWC** provides developers with a complete and free toolkit for pair programming with AI that augments, rather than replaces, traditional coding.
 
 ## Privacy
 
-CWC operates 100% on your machine—no code, prompts or usage data are collected.
+**CWC** operates 100% on your machine—no code, prompts or usage data are collected.
 
 ## Static context
 
-To make AI coding fast, accurate and cost-efficient, CWC relies on static context. This means all task-relevant files are sent together with instructions in a unified message, so the model has everything it needs from the start, without a single tool call. Activate judgement at the very beginning of the development process, for controlled, quality outputs!
+**CWC** constructs unified prompts with all relevant files and instructions, so the model has everything it needs from the start. Steer the model with examples, focus its attention on specific area of the codebase, and make simple instructions just work!
 
 ## Prompt types
 
-CWC constructs simple, markdown-formatted prompts for common use-cases you can copy and paste into chatbot of choice or send directly from the editor via an API call.
+**CWC** helps with all common use-cases like multi-file editing, planning, generating code at cursor or commit messages.
 
 <details>
 <summary><strong>Edit files</strong> (click to expand)</summary>
