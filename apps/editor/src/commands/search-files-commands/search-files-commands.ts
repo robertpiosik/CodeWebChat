@@ -292,7 +292,19 @@ export const search_files_commands = (
           is_search_in_selected?: boolean
           folder_path?: string
         }
-      ) => search_handler(item, options)
+      ) => {
+        let actual_options = options
+        if (
+          item &&
+          !item.resourceUri &&
+          (item.provided_files !== undefined ||
+            item.is_search_in_selected !== undefined ||
+            item.folder_path !== undefined)
+        ) {
+          actual_options = item
+        }
+        return search_handler(undefined, actual_options)
+      }
     ),
     vscode.commands.registerCommand('codeWebChat.searchSelectedFiles', () =>
       search_selected_files_handler()
