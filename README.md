@@ -22,15 +22,15 @@ Free and privacy-fist toolkit for AI coding with static context. **Start in VS C
 
 ## Introduction
 
-This independent project aims to provide developers a complete and free toolkit for pair programming with AI that augments, rather than replaces, traditional coding. It's static context design activates judgement at the very beginning of the development process, enabling controlled, quality outputs.
+This independent project aims to provide developers a complete and free toolkit for pair programming with AI that augments, rather than replaces, traditional coding.
 
 ## Privacy
 
-CWC operates 100% on your machine—no code, prompts or usage data are collected. For transparency, its source code is public on GitHub.
+CWC operates 100% on your machine—no code, prompts or usage data are collected.
 
 ## Static context
 
-To make AI coding fast, accurate and cost-efficient, CWC relies on static context. This means all task-relevant files are sent together with instructions in a unified message, so the model has everything it needs from the start, without a single tool call.
+To make AI coding fast, accurate and cost-efficient, CWC relies on static context. This means all task-relevant files are sent together with instructions in a unified message, so the model has everything it needs from the start, without a single tool call. Activate judgement at the very beginning of the development process, for controlled, quality outputs!
 
 ## Prompt types
 
