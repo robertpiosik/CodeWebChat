@@ -1,15 +1,15 @@
 import { extract_paths_from_text } from '@/utils/extract-paths-from-text'
 
-type RelevantFilesItem = {
-  type: 'relevant-files'
+type IntelligentFileSearchResultsItem = {
+  type: 'intelligent-file-search-results'
   file_paths: string[]
 }
 
-export const parse_relevant_files = (params: {
+export const parse_intelligent_file_search_results = (params: {
   response: string
   workspace_files: string[]
-}): RelevantFilesItem | null => {
-  if (!params.response.startsWith('**Relevant files:**')) {
+}): IntelligentFileSearchResultsItem | null => {
+  if (!params.response.startsWith('**Intelligent file search results:**')) {
     return null
   }
 
@@ -23,7 +23,7 @@ export const parse_relevant_files = (params: {
   }
 
   return {
-    type: 'relevant-files',
+    type: 'intelligent-file-search-results',
     file_paths: valid_paths
   }
 }

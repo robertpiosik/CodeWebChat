@@ -59,19 +59,19 @@ export const intelligent_file_search_instructions =
 
 export const intelligent_file_search_format = `# Output formatting
 
-Your response must contain paths of relevant files enclosed in "relevant-files" and "file-path" XML tags. Don't send anything else. Example:
+Your response must contain paths of relevant files enclosed in "intelligent-file-search-results" and "file-path" XML tags. Don't send anything else. Example:
 
-<relevant-files>
+<intelligent-file-search-results>
 <file-path>src/index.ts</file-path>
 <file-path>src/hello.ts</file-path>
 <file-path>src/welcome.ts</file-path>
-</relevant-files>`
+</intelligent-file-search-results>`
 
 export const intelligent_file_search_format_for_prompt_view = `# Output formatting
 
-Your response must begin with "**Relevant files:**", then list paths one under another, followed by a brief explanation. Example:
+Your response must begin with "**Intelligent file search results:**", then list paths one under another, followed by a brief explanation. Example:
 
-**Relevant files:**
+**Intelligent file search results:**
 
 - \`src/index.ts\`
 - \`src/hello.ts\`

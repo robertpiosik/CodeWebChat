@@ -2,7 +2,7 @@ import { extract_paths_from_text } from './extract-paths-from-text'
 
 describe('extract_paths_from_text', () => {
   it('extracts paths from a bullet list', () => {
-    const text = `**Relevant files:**
+    const text = `**Intelligent file search results:**
 
 * \`src/hello.ts\`
 - src/welcome.ts

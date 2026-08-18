@@ -1,6 +1,6 @@
 export const translations = {
-  'command.apply-response.relevant-files.title': {
-    en: 'Relevant Files',
+  'command.apply-response.intelligent-search-results.title': {
+    en: 'Intelligent File Search Results',
     pl: 'Pasujące pliki',
     'zh-cn': '相关文件',
     ja: '関連ファイル',
@@ -17,7 +17,7 @@ export const translations = {
     hu: 'Releváns fájlok',
     bg: 'Съответни файлове'
   },
-  'command.apply-response.relevant-files.placeholder': {
+  'command.apply-response.intelligent-search-results.placeholder': {
     en: 'Confirm files to include in context',
     pl: 'Wybierz pliki do zaznaczenia w kontekście',
     'zh-cn': '确认要包含在上下文中的文件',

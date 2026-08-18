@@ -116,11 +116,11 @@ export const apply_response_command = (params: {
         workspace_files
       })
 
-      const is_relevant_files = response_items.some(
-        (i) => i.type == 'relevant-files'
+      const is_intelligent_file_search_results = response_items.some(
+        (i) => i.type == 'intelligent-file-search-results'
       )
 
-      if (resolve_fn && !is_relevant_files) {
+      if (resolve_fn && !is_intelligent_file_search_results) {
         const history = params.prompt_view_provider.response_history
 
         let created_at_for_switch: number
@@ -189,7 +189,7 @@ export const apply_response_command = (params: {
       let saved_tab_groups: SavedTabGroups | undefined
 
       try {
-        if (!is_relevant_files) {
+        if (!is_intelligent_file_search_results) {
           // Save current tab groups before entering preview
           saved_tab_groups = {
             editors: [],

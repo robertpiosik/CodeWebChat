@@ -7,7 +7,7 @@ import { handle_restore_preview } from './handlers/restore-preview-handler'
 import {
   FileItem,
   DiffItem,
-  RelevantFilesItem,
+  IntelligentFileSearchResultsItem,
   ResponseItem
 } from './utils/response-parser'
 import { create_safe_path } from '@/utils/path-sanitizer'
@@ -106,7 +106,11 @@ export const process_response = async (params: {
     }
   }
 
-  if (params.response_items.some((item) => item.type == 'relevant-files')) {
+  if (
+    params.response_items.some(
+      (item) => item.type == 'intelligent-file-search-results'
+    )
+  ) {
     const shared_context_state =
       params.prompt_view_provider.shared_context_state
 
@@ -121,10 +125,10 @@ export const process_response = async (params: {
     }[] = []
 
     for (const item of params.response_items) {
-      if (item.type == 'relevant-files') {
-        const relevant_files_item = item as RelevantFilesItem
+      if (item.type == 'intelligent-file-search-results') {
+        const search_results_item = item as IntelligentFileSearchResultsItem
         const all_paths_to_process = new Set<string>(
-          relevant_files_item.file_paths
+          search_results_item.file_paths
         )
 
         const local_files: {

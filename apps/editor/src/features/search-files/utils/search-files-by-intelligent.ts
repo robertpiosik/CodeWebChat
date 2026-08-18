@@ -80,7 +80,7 @@ export const search_files_by_intelligent = async (
 
     if (completion_result) {
       const match = completion_result.response.match(
-        /<relevant-files>([\s\S]*?)<\/relevant-files>/
+        /<intelligent-file-search-results>([\s\S]*?)<\/intelligent-file-search-results>/
       )
       const extracted_files: string[] = []
       if (match && match[1]) {
@@ -94,7 +94,7 @@ export const search_files_by_intelligent = async (
     if (!axios.isCancel(error)) {
       Logger.error({
         function_name: 'search_files_by_intelligent',
-        message: 'Error finding relevant files',
+        message: 'Error finding intelligent file search results',
         data: error
       })
       vscode.window.showErrorMessage(t('feature.search-files.error.finding'))

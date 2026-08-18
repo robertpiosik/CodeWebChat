@@ -2,7 +2,7 @@ import {
   extract_diffs,
   parse_code_at_cursor,
   parse_multiple_files,
-  parse_relevant_files
+  parse_intelligent_file_search_results
 } from './parsers'
 import { normalize_path } from '@/utils/normalize-path'
 
@@ -34,8 +34,8 @@ export type CodeAtCursorItem = {
   workspace_name?: string
 }
 
-export type RelevantFilesItem = {
-  type: 'relevant-files'
+export type IntelligentFileSearchResultsItem = {
+  type: 'intelligent-file-search-results'
   file_paths: string[]
 }
 
@@ -56,7 +56,7 @@ export type ResponseItem =
   | CodeAtCursorItem
   | TextItem
   | InlineFileItem
-  | RelevantFilesItem
+  | IntelligentFileSearchResultsItem
 
 export const extract_workspace_and_path = (params: {
   raw_file_path: string
@@ -87,13 +87,13 @@ export const parse_response = (params: {
     params.is_single_root_folder_workspace ?? true
 
   if (params.workspace_files) {
-    const relevant_files = parse_relevant_files({
+    const search_results = parse_intelligent_file_search_results({
       response: params.response,
       workspace_files: params.workspace_files
     })
 
-    if (relevant_files) {
-      return [relevant_files]
+    if (search_results) {
+      return [search_results]
     }
   }
 
