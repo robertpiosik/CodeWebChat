@@ -30,14 +30,11 @@ CWC operates 100% on your machine—no code, prompts or usage data are collected
 
 ## Static context
 
-To make AI coding as fast, accurate and cost-efficient as possible, CWC relies on static context. This means all task-relevant files are sent together with the prompt in a unified message, so the model has everything it needs from the start, without a single tool call.
-
-> [!TIP]
-> Get help with relevant file selection using keywords, symbol-references or _Find Relevant Files_ [prompt type](#prompt-types).
+To make AI coding fast, accurate and cost-efficient, CWC relies on static context. This means all task-relevant files are sent together with instructions in a unified message, so the model has everything it needs from the start, without a single tool call.
 
 ## Prompt types
 
-At its core, CWC constructs simple, markdown-formatted prompts for common use-cases (click to expand) you can copy and paste into chatbot of choice or send directly from the editor via an API call.
+CWC constructs simple, markdown-formatted prompts for common use-cases (click to expand) you can copy and paste into chatbot of choice or send directly from the editor via an API call.
 
 <details>
 <summary><strong>Edit files</strong></summary>
@@ -90,26 +87,6 @@ _TAB completions from SOTA reasoning models._
 
 [instructions for the missing text]
 ````
-
-</details>
-
-<details>
-<summary><strong>Find relevant files</strong></summary>
-
-_Select files relevant to a natural language query._
-
-```
-# Files
-[broad file selection]
-
-# Output formatting
-[response format instructions]
-
----
-
-Find a complete set of files relevant to the following query. Include the primary files as well as any structural files.
-[prompt]
-```
 
 </details>
 
