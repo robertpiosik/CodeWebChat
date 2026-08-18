@@ -15,6 +15,7 @@ export const prompt_for_intelligent_search_results = async (params: {
   workspace_provider: WorkspaceProvider
   restored_selected_paths?: string[]
   restored_unmatched_paths?: string[]
+  is_search_in_selected?: boolean
 }): Promise<
   | { selected_paths: string[]; matched_paths: string[]; title: string }
   | {
@@ -74,9 +75,11 @@ export const prompt_for_intelligent_search_results = async (params: {
 
   const unmatched_checked_files =
     params.restored_unmatched_paths ??
-    params.files.filter(
-      (f) => currently_checked.includes(f) && !unique_paths.includes(f)
-    )
+    (params.is_search_in_selected
+      ? params.files.filter(
+          (f) => currently_checked.includes(f) && !unique_paths.includes(f)
+        )
+      : [])
 
   const mapped_items = await map_files_to_quick_pick_items({
     files: unique_paths.map((path) => ({ path })),

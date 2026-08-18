@@ -18,6 +18,7 @@ export const search_files = async (params: {
   show_back_button?: boolean
   is_sub_search?: boolean
   disable_semantic?: boolean
+  is_search_in_selected?: boolean
 }): Promise<
   | { selected_paths: string[]; matched_paths: string[]; title: string }
   | undefined
@@ -43,7 +44,8 @@ export const search_files = async (params: {
       extension_context: params.extension_context,
       websocket_manager: params.websocket_manager,
       show_back_button: true,
-      is_sub_search: true
+      is_sub_search: true,
+      is_search_in_selected: params.is_search_in_selected
     })
   }
 
@@ -76,7 +78,8 @@ export const search_files = async (params: {
         workspace_provider: params.workspace_provider,
         extension_context: params.extension_context,
         show_back_button: params.show_back_button,
-        search_in_results
+        search_in_results,
+        is_search_in_selected: params.is_search_in_selected
       }
 
       if (search_mode == 'phrase') {
@@ -93,7 +96,8 @@ export const search_files = async (params: {
           extension_context: params.extension_context,
           websocket_manager: params.websocket_manager,
           show_back_button: params.show_back_button,
-          search_in_results
+          search_in_results,
+          is_search_in_selected: params.is_search_in_selected
         })
       }
 

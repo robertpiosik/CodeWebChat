@@ -36,6 +36,7 @@ export const perform_intelligent_search_mode = async (params: {
     | 'back'
   >
   show_back_button?: boolean
+  is_search_in_selected?: boolean
 }): Promise<
   | { selected_paths: string[]; matched_paths: string[]; title: string }
   | undefined
@@ -422,7 +423,8 @@ export const perform_intelligent_search_mode = async (params: {
                 analysis,
                 workspace_provider: params.workspace_provider,
                 restored_selected_paths,
-                restored_unmatched_paths
+                restored_unmatched_paths,
+                is_search_in_selected: params.is_search_in_selected
               })
 
               if (apply_result == 'back') {

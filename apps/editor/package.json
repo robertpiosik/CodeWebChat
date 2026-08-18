@@ -355,8 +355,8 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.searchFilesFromFile",
-        "title": "%codeWebChat.searchFiles.title%",
+        "command": "codeWebChat.searchSelectedFilesFromDirectory",
+        "title": "%codeWebChat.searchSelectedFilesFromDirectory.title%",
         "category": "Code Web Chat"
       },
       {
@@ -581,7 +581,7 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.searchFilesFromFile",
+          "command": "codeWebChat.searchSelectedFilesFromDirectory",
           "when": "false"
         },
         {
@@ -868,7 +868,12 @@
         },
         {
           "command": "codeWebChat.searchFilesFromDirectory",
-          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewSelectedFiles) && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
+          "when": "view == codeWebChatViewWorkspace && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
+          "group": "1_modification@4"
+        },
+        {
+          "command": "codeWebChat.searchSelectedFilesFromDirectory",
+          "when": "view == codeWebChatViewSelectedFiles && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
           "group": "1_modification@4"
         },
         {

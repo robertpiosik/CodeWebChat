@@ -18,6 +18,7 @@ export const perform_semantic_search_mode = async (params: {
     | undefined
     | 'back'
   >
+  is_search_in_selected?: boolean
 }): Promise<
   | { selected_paths: string[]; matched_paths: string[]; title: string }
   | undefined
@@ -112,7 +113,8 @@ export const perform_semantic_search_mode = async (params: {
         search_mode: 'semantic',
         workspace_provider: params.workspace_provider,
         restored_selected_paths,
-        restored_unmatched_paths
+        restored_unmatched_paths,
+        is_search_in_selected: params.is_search_in_selected
       })
 
       if (selected_items == 'back') {

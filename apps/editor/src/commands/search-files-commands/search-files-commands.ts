@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import * as path from 'path'
 import { WorkspaceProvider } from '../../context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'
 import { t } from '@/i18n'
@@ -73,39 +74,22 @@ export const search_files_commands = (
         paths_to_apply = [...params.result.selected_paths]
       }
     } else if (params.is_search_in_selected) {
-      if (
-        params.result.selected_paths.length < params.result.matched_paths.length
-      ) {
-        const action = all_listed_were_selected ? 'replace' : 'merge'
-
-        if (action === 'merge') {
-          paths_to_apply = [
-            ...new Set([
-              ...currently_checked.filter(
-                (p) => !params.result.matched_paths.includes(p)
-              ),
-              ...params.result.selected_paths
-            ])
-          ]
-        } else {
-          paths_to_apply = [...params.result.selected_paths]
-        }
-      } else {
-        paths_to_apply = [...params.result.selected_paths]
-      }
-    } else {
-      let files_to_remove = unchecked_paths
-
-      if (params.folder_path) {
-        const unmatched_in_folder = params.resolved_all_files.filter(
-          (f) => !params.result.matched_paths.includes(f)
-        )
-        files_to_remove = [...unchecked_paths, ...unmatched_in_folder]
-      }
+      const searched_but_not_selected = params.resolved_all_files.filter(
+        (f) => !params.result.selected_paths.includes(f)
+      )
 
       paths_to_apply = [
         ...new Set([
-          ...currently_checked.filter((p) => !files_to_remove.includes(p)),
+          ...currently_checked.filter(
+            (p) => !searched_but_not_selected.includes(p)
+          ),
+          ...params.result.selected_paths
+        ])
+      ]
+    } else {
+      paths_to_apply = [
+        ...new Set([
+          ...currently_checked.filter((p) => !unchecked_paths.includes(p)),
           ...params.result.selected_paths
         ])
       ]
@@ -219,13 +203,27 @@ export const search_files_commands = (
     }
   }
 
-  const search_selected_files_handler = async () => {
+  const search_selected_files_handler = async (item?: any) => {
     const currently_checked = workspace_provider.get_checked_files()
     if (currently_checked.length === 0) {
       return
     }
 
-    const get_files_lazy = async () => currently_checked
+    const folder_path = await get_target_folder_path(item)
+
+    let files_to_search = currently_checked
+    if (folder_path) {
+      files_to_search = currently_checked.filter((f) => {
+        const relative = path.relative(folder_path, f)
+        return !relative.startsWith('..') && !path.isAbsolute(relative)
+      })
+    }
+
+    if (files_to_search.length === 0) {
+      return
+    }
+
+    const get_files_lazy = async () => files_to_search
 
     while (true) {
       const result = await search_files({
@@ -233,7 +231,8 @@ export const search_files_commands = (
         workspace_provider,
         extension_context,
         websocket_manager,
-        disable_semantic: true
+        disable_semantic: true,
+        is_search_in_selected: true
       })
 
       if (!result || result == 'back') return
@@ -243,6 +242,7 @@ export const search_files_commands = (
       await process_search_result({
         result,
         resolved_all_files,
+        folder_path,
         is_search_in_selected: true
       })
 
@@ -262,11 +262,11 @@ export const search_files_commands = (
       search_selected_files_handler()
     ),
     vscode.commands.registerCommand(
-      'codeWebChat.searchFilesFromDirectory',
-      (item: any) => search_handler(item)
+      'codeWebChat.searchSelectedFilesFromDirectory',
+      (item: any) => search_selected_files_handler(item)
     ),
     vscode.commands.registerCommand(
-      'codeWebChat.searchFilesFromFile',
+      'codeWebChat.searchFilesFromDirectory',
       (item: any) => search_handler(item)
     )
   ]

@@ -1045,7 +1045,7 @@ export const translations = {
     bg: 'Търсене както в съдържанието, така и в имената на файловете'
   },
   'feature.search-files.results.unmatched': {
-    en: 'Unmatched Selected Files',
+    en: 'unmatched Selected Files',
     pl: 'Niedopasowane wybrane pliki',
     'zh-cn': '未匹配的选定文件',
     ja: '一致しない選択されたファイル',
