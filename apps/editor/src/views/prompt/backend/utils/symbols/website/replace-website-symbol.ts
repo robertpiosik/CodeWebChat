@@ -50,10 +50,10 @@ export const replace_website_symbol = async (params: {
     const match = matches[i]
     const replacement = replacements[i]
 
-    result_string += params.instruction.slice(last_index, match.index)
+    result_string += params.instruction.slice(last_index, match.index).trim()
 
     if (replacement.success && replacement.content) {
-      result_string += `\n\`\`\`\n${replacement.content}\n\`\`\`\n`
+      result_string += `\n\n---\n\n${replacement.content}\n\n---\n\n`
     } else {
       result_string += match[0]
     }
