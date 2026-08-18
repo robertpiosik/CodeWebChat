@@ -67,11 +67,15 @@ Your response must contain paths of relevant files enclosed in "intelligent-file
 <file-path>src/welcome.ts</file-path>
 </intelligent-file-search-results>`
 
-export const intelligent_file_search_format_for_prompt_view = `# Output formatting
+export const intelligent_file_search_format_for_prompt_view = (
+  metadata?: string
+) => `# Output formatting
 
-Your response must begin with "**Intelligent file search results:**", then list paths one under another, followed by a brief explanation. Example:
+Your response must begin with "**Intelligent file search results${
+  metadata || ''
+}:**", then list paths one under another, followed by a brief explanation. Example:
 
-**Intelligent file search results:**
+**Intelligent file search results${metadata || ''}:**
 
 - \`src/index.ts\`
 - \`src/hello.ts\`

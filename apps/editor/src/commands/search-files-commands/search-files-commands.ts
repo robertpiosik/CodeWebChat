@@ -54,7 +54,20 @@ export const search_files_commands = (
       currently_checked.includes(file)
     )
 
-    if (params.is_provided_files) {
+    if (params.is_search_in_selected) {
+      const searched_but_not_selected = params.resolved_all_files.filter(
+        (f) => !params.result.selected_paths.includes(f)
+      )
+
+      paths_to_apply = [
+        ...new Set([
+          ...currently_checked.filter(
+            (p) => !searched_but_not_selected.includes(p)
+          ),
+          ...params.result.selected_paths
+        ])
+      ]
+    } else if (params.is_provided_files) {
       if (currently_checked.length > 0) {
         const action = all_listed_were_selected ? 'replace' : 'merge'
 
@@ -73,19 +86,6 @@ export const search_files_commands = (
       } else {
         paths_to_apply = [...params.result.selected_paths]
       }
-    } else if (params.is_search_in_selected) {
-      const searched_but_not_selected = params.resolved_all_files.filter(
-        (f) => !params.result.selected_paths.includes(f)
-      )
-
-      paths_to_apply = [
-        ...new Set([
-          ...currently_checked.filter(
-            (p) => !searched_but_not_selected.includes(p)
-          ),
-          ...params.result.selected_paths
-        ])
-      ]
     } else {
       paths_to_apply = [
         ...new Set([
@@ -109,6 +109,8 @@ export const search_files_commands = (
     item?: any,
     options?: {
       provided_files?: { path: string; checked: boolean }[]
+      is_search_in_selected?: boolean
+      folder_path?: string
     }
   ) => {
     if (options?.provided_files) {
@@ -152,10 +154,38 @@ export const search_files_commands = (
         break
       }
 
+      let resolved_all_files: string[] = []
+
+      if (options.is_search_in_selected) {
+        const currently_checked = workspace_provider.get_checked_files()
+        if (options.folder_path) {
+          resolved_all_files = currently_checked.filter((f) => {
+            const relative = path.relative(options.folder_path!, f)
+            return !relative.startsWith('..') && !path.isAbsolute(relative)
+          })
+        } else {
+          resolved_all_files = currently_checked
+        }
+      } else {
+        if (options.folder_path) {
+          resolved_all_files = await workspace_provider.find_all_files(
+            options.folder_path
+          )
+        } else {
+          const roots = workspace_provider.get_workspace_roots()
+          for (const root of roots) {
+            const result = await workspace_provider.find_all_files(root)
+            resolved_all_files.push(...result)
+          }
+        }
+      }
+
       await process_search_result({
         result: decision,
-        resolved_all_files: options.provided_files.map((f) => f.path),
-        is_provided_files: true
+        resolved_all_files,
+        is_provided_files: true,
+        is_search_in_selected: options.is_search_in_selected,
+        folder_path: options.folder_path
       })
       return
     }
@@ -186,7 +216,8 @@ export const search_files_commands = (
         get_files: get_files_lazy,
         workspace_provider,
         extension_context,
-        websocket_manager
+        websocket_manager,
+        folder_path
       })
 
       if (!result || result == 'back') return
@@ -232,7 +263,8 @@ export const search_files_commands = (
         extension_context,
         websocket_manager,
         disable_semantic: true,
-        is_search_in_selected: true
+        is_search_in_selected: true,
+        folder_path
       })
 
       if (!result || result == 'back') return
@@ -255,7 +287,11 @@ export const search_files_commands = (
       'codeWebChat.searchFiles',
       (
         item?: any,
-        options?: { provided_files?: { path: string; checked: boolean }[] }
+        options?: {
+          provided_files?: { path: string; checked: boolean }[]
+          is_search_in_selected?: boolean
+          folder_path?: string
+        }
       ) => search_handler(item, options)
     ),
     vscode.commands.registerCommand('codeWebChat.searchSelectedFiles', () =>

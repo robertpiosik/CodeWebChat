@@ -188,8 +188,44 @@ export const process_response = async (params: {
       checked: f.is_checked
     }))
 
+    const search_results_item = params.response_items.find(
+      (item) => item.type == 'intelligent-file-search-results'
+    ) as IntelligentFileSearchResultsItem
+
+    let resolved_folder_path: string | undefined = undefined
+    if (search_results_item.folder_path) {
+      const is_multi_root = workspace_roots.length > 1
+      if (search_results_item.folder_path === '.') {
+        resolved_folder_path = workspace_roots[0]
+      } else if (is_multi_root) {
+        const first_sep = search_results_item.folder_path.indexOf('/')
+        const ws_name =
+          first_sep > -1
+            ? search_results_item.folder_path.substring(0, first_sep)
+            : search_results_item.folder_path
+        const rel_path =
+          first_sep > -1
+            ? search_results_item.folder_path.substring(first_sep + 1)
+            : ''
+
+        for (const root of workspace_roots) {
+          if (params.workspace_provider.get_workspace_name(root) === ws_name) {
+            resolved_folder_path = rel_path ? path.join(root, rel_path) : root
+            break
+          }
+        }
+      } else {
+        resolved_folder_path = path.join(
+          workspace_roots[0],
+          search_results_item.folder_path
+        )
+      }
+    }
+
     await vscode.commands.executeCommand('codeWebChat.searchFiles', undefined, {
-      provided_files: files_to_prompt
+      provided_files: files_to_prompt,
+      is_search_in_selected: search_results_item.is_search_in_selected,
+      folder_path: resolved_folder_path
     })
 
     return null

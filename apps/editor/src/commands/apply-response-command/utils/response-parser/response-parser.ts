@@ -37,6 +37,8 @@ export type CodeAtCursorItem = {
 export type IntelligentFileSearchResultsItem = {
   type: 'intelligent-file-search-results'
   file_paths: string[]
+  is_search_in_selected?: boolean
+  folder_path?: string
 }
 
 export type TextItem = {

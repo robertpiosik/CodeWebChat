@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import * as path from 'path'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { t } from '@/i18n'
 import {
@@ -37,6 +38,7 @@ export const perform_intelligent_search_mode = async (params: {
   >
   show_back_button?: boolean
   is_search_in_selected?: boolean
+  folder_path?: string
 }): Promise<
   | { selected_paths: string[]; matched_paths: string[]; title: string }
   | undefined
@@ -240,7 +242,40 @@ export const perform_intelligent_search_mode = async (params: {
             config.get<string>('intelligentFileSearchInstructions') ||
             intelligent_file_search_instructions
 
-          const chatbot_prompt = `# Files\n\n${md_files}# Task\n\n${base_instructions}\n\n${search_term}\n\n${intelligent_file_search_format_for_prompt_view}`
+          let display_folder_path = params.folder_path
+          if (params.folder_path) {
+            const root = params.workspace_provider.get_workspace_root_for_file(
+              params.folder_path
+            )
+            if (root) {
+              const rel = path
+                .relative(root, params.folder_path)
+                .replace(/\\/g, '/')
+              if (params.workspace_provider.get_workspace_roots().length > 1) {
+                const ws_name =
+                  params.workspace_provider.get_workspace_name(root)
+                display_folder_path = rel ? `${ws_name}/${rel}` : ws_name
+              } else {
+                display_folder_path = rel || '.'
+              }
+            }
+          }
+
+          let metadata = ''
+          if (params.is_search_in_selected) {
+            if (display_folder_path) {
+              metadata = ` for selected files in folder \`${display_folder_path}\``
+            } else {
+              metadata = ` for selected files`
+            }
+          } else if (display_folder_path) {
+            metadata = ` for folder \`${display_folder_path}\``
+          }
+
+          const format_instructions =
+            intelligent_file_search_format_for_prompt_view(metadata)
+
+          const chatbot_prompt = `# Files\n\n${md_files}# Task\n\n${base_instructions}\n\n${search_term}\n\n${format_instructions}`
 
           if (action == 'copy') {
             await vscode.env.clipboard.writeText(chatbot_prompt)

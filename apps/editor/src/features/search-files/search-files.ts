@@ -19,6 +19,7 @@ export const search_files = async (params: {
   is_sub_search?: boolean
   disable_semantic?: boolean
   is_search_in_selected?: boolean
+  folder_path?: string
 }): Promise<
   | { selected_paths: string[]; matched_paths: string[]; title: string }
   | undefined
@@ -45,7 +46,8 @@ export const search_files = async (params: {
       websocket_manager: params.websocket_manager,
       show_back_button: true,
       is_sub_search: true,
-      is_search_in_selected: params.is_search_in_selected
+      is_search_in_selected: params.is_search_in_selected,
+      folder_path: params.folder_path
     })
   }
 
@@ -97,7 +99,8 @@ export const search_files = async (params: {
           websocket_manager: params.websocket_manager,
           show_back_button: params.show_back_button,
           search_in_results,
-          is_search_in_selected: params.is_search_in_selected
+          is_search_in_selected: params.is_search_in_selected,
+          folder_path: params.folder_path
         })
       }
 
