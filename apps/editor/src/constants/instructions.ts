@@ -26,21 +26,23 @@ The variable is possibly not defined.
 Find correct replacement text for the <missing_text> symbol.`
 
 export const intelligent_update_task_instructions =
-  'Formatting issues in the attached changes prevent us from applying them. Please edit the file correctly without adding explanations or extra text.'
+  'Apply the attached changes to the file without explanations or any other text.'
 
-export const intelligent_update_edit_format_instructions = `Respond strictly with a single markdown code block containing a standard unified diff patch. Example:
+export const intelligent_update_edit_format_instructions = `Respond strictly with a single markdown code block showing the original and updated code snippets with Git-style merge conflict syntax. Example:
 
-\`\`\`diff
---- a/example.py
-+++ b/example.py
-@@ -1,5 +1,5 @@
--GREETING = "Welcome everyone!"
-+WISHES = "Have a nice day!"
-
--def show_greeting():
--   print(GREETING)
-+def show_wishes():
-+   print(WISHES)
+\`\`\`python
+<<<<<<< SEARCH
+GREETING = "Welcome everyone!"
+=======
+WISHES = "Have a nice day!"
+>>>>>>> REPLACE
+<<<<<<< SEARCH
+def show_greeting():
+   print(GREETING)
+=======
+def show_wishes():
+   print(WISHES)
+>>>>>>> REPLACE
 \`\`\``
 
 export const intelligent_update_fallback_edit_format_instructions = `Print the updated file in FULL (from cover to cover).`

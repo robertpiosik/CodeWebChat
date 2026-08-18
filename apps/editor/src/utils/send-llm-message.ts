@@ -184,7 +184,7 @@ export const send_llm_message = async (params: {
           }
 
           const is_think_prefix =
-            '<tool_call>'.startsWith(trimmed_response) ||
+            '<think>'.startsWith(trimmed_response) ||
             '<thought>'.startsWith(trimmed_response)
 
           if (!is_think_prefix) {
