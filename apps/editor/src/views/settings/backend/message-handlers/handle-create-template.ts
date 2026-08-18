@@ -15,14 +15,10 @@ export const handle_create_template = async (
         const quick_pick = vscode.window.createQuickPick()
         quick_pick.items = [
           {
-            label: t(
-              'views.settings.handlers.handle-create-template.placement-above'
-            )
+            label: t('common.placement-above')
           },
           {
-            label: t(
-              'views.settings.handlers.handle-create-template.placement-below'
-            )
+            label: t('common.placement-below')
           }
         ]
         quick_pick.title = t(
@@ -64,8 +60,7 @@ export const handle_create_template = async (
     if (!position_quick_pick) return
 
     insertion_index =
-      position_quick_pick ==
-      t('views.settings.handlers.handle-create-template.placement-above')
+      position_quick_pick == t('common.placement-above')
         ? message.insertion_index
         : message.insertion_index + 1
   }

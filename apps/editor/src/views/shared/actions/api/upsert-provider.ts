@@ -349,10 +349,10 @@ export const upsert_provider = async (params: {
         const quick_pick = vscode.window.createQuickPick()
         quick_pick.items = [
           {
-            label: t('views.shared.actions.api.upsert-provider.placement.above')
+            label: t('common.placement-above')
           },
           {
-            label: t('views.shared.actions.api.upsert-provider.placement.below')
+            label: t('common.placement-below')
           }
         ]
         quick_pick.title = t(
@@ -393,8 +393,7 @@ export const upsert_provider = async (params: {
     if (!position_quick_pick) return
 
     actual_insertion_index =
-      position_quick_pick ==
-      t('views.shared.actions.api.upsert-provider.placement.above')
+      position_quick_pick == t('common.placement-above')
         ? params.insertion_index
         : params.insertion_index + 1
   }

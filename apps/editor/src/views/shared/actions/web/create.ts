@@ -20,8 +20,8 @@ export const create = async (params: {
       (resolve) => {
         const quick_pick = vscode.window.createQuickPick()
         quick_pick.items = [
-          { label: t('views.shared.actions.web.create.placement-above') },
-          { label: t('views.shared.actions.web.create.placement-below') }
+          { label: t('common.placement-above') },
+          { label: t('common.placement-below') }
         ]
         quick_pick.title = t('views.shared.actions.web.create.title')
         quick_pick.placeholder = t(
@@ -60,8 +60,7 @@ export const create = async (params: {
     if (!position_quick_pick) return undefined
 
     insertion_index =
-      position_quick_pick ==
-      t('views.shared.actions.web.create.placement-above')
+      position_quick_pick == t('common.placement-above')
         ? params.reference_index
         : params.reference_index + 1
   }
