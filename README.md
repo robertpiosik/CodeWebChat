@@ -11,7 +11,7 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> 
 </p>
 
-Free and privacy-fist toolkit for AI coding with static context. **Start in VS Code (Cursor, Antigravity, VSCodium, etc.), then continue in ChatGPT, Gemini, Claude, etc.** or _Bring Your Own Key_ and stay in the editor!
+**CWC** is a free and privacy-fist toolkit for AI coding with static context. **Start in VS Code (Cursor, Antigravity, VSCodium, etc.), then continue in ChatGPT, Gemini, Claude, etc.** or _Bring Your Own Key_ and stay in the editor!
 
 > [!TIP]
 > Elevate your workflow with smart workspaces (called [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [gems](https://gemini.google/pl/overview/gems), or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)).
@@ -106,7 +106,7 @@ Find correct replacement text for the <missing_text> symbol.
 
 ## Prompt caching
 
-CWC orders context files by modification and selection recency. This, combined with instructions placement at the message's very end effecively utilizes [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) across tasks.
+**CWC** orders context files by modification and selection recency. This, combined with instructions placement at the message's very end effecively utilizes [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching) across tasks.
 
 ## Enabling autofill
 
