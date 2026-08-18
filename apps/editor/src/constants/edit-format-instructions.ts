@@ -1,9 +1,9 @@
-const intro = `Whenever showing a new, updated, renamed, or deleted file, provide a brief explanation, then print the path in a markdown heading (e.g. ### New file: \`src/examples/hello.py\`, ### Updated file: \`src/examples/hello.py\`, ### Renamed file: \`src/examples/hello.py\` (old) \`src/welcome.py\` (new), ### Deleted file: \`src/examples/hello.py\`)`
+const intro = `Whenever showing a new, updated, renamed, or deleted file, provide a brief explanation, then print the path in a markdown heading (e.g. - New file: \`src/examples/hello.py\`, - Updated file: \`src/examples/hello.py\`, - Renamed file: \`src/examples/hello.py\` (old) \`src/welcome.py\` (new), - Deleted file: \`src/examples/hello.py\`)`
 
 export const EDIT_FORMAT_INSTRUCTIONS_WHOLE = `${intro}, followed by a markdown code block with the file's FULL (from cover to cover) contents. Example:
 Updated the greeting text.
 
-### Updated file: \`src/examples/hello.py\`
+- Updated file: \`src/examples/hello.py\`
 
 \`\`\`python
 GREETING = "Hello, World!"
@@ -14,7 +14,7 @@ def show_greeting():
 
 Created a simple calculator with addition and subtraction.
 
-### Created file: \`src/examples/calculator.py\`
+- Created file: \`src/examples/calculator.py\`
 
 \`\`\`python
 def add(a, b):
@@ -24,14 +24,14 @@ def subtract(a, b):
   return a - b
 \`\`\`
 
-### Deleted file: \`src/examples/weekdays.py\`
+- Deleted file: \`src/examples/weekdays.py\`
 
-### Renamed file: \`src/examples/math_utils.py\` (old) \`src/examples/calculator.py\` (new)`
+- Renamed file: \`src/examples/math_utils.py\` (old) \`src/examples/calculator.py\` (new)`
 
 export const EDIT_FORMAT_INSTRUCTIONS_TRUNCATED = `${intro}, followed by a markdown code block with file's contents. As a space saving measure, truncate blocks like unchanged function bodies (code inside {}) by replacing with ellipsis comments. Example:
 Updated the greeting text.
 
-### Updated file: \`src/examples/hello.js\`
+- Updated file: \`src/examples/hello.js\`
 
 \`\`\`javascript
 const DURATION = 5;
@@ -48,7 +48,7 @@ function showGreeting() {
 
 Updated the purpose text.
 
-### Updated file: \`src/README.md\`
+- Updated file: \`src/README.md\`
 
 \`\`\`markdown
 ## Purpose
@@ -66,7 +66,7 @@ Greet user saying "Hello, World!", for a duration of 5 seconds.
 
 Created a simple calculator with addition and subtraction.
 
-### Created file: \`src/examples/calculator.js\`
+- Created file: \`src/examples/calculator.js\`
 
 \`\`\`javascript
 function add(a, b) {
@@ -78,14 +78,14 @@ function subtract(a, b) {
 }
 \`\`\`
 
-### Deleted file: \`src/examples/weekdays.js\`
+- Deleted file: \`src/examples/weekdays.js\`
 
-### Renamed file: \`src/examples/math-tools.js\` (old) \`src/examples/calculator.js\` (new)`
+- Renamed file: \`src/examples/math-tools.js\` (old) \`src/examples/calculator.js\` (new)`
 
 export const EDIT_FORMAT_INSTRUCTIONS_DIFF = `${intro}, followed by a unified diff within a markdown code block. Example:
 Updated the greeting text.
 
-### Updated file: \`src/examples/hello.py\`
+- Updated file: \`src/examples/hello.py\`
 
 \`\`\`diff
 --- a/src/examples/hello.py
@@ -101,7 +101,7 @@ Updated the greeting text.
 
 Created a simple calculator with addition and subtraction.
 
-### Created file: \`src/examples/calculator.py\`
+- Created file: \`src/examples/calculator.py\`
 
 \`\`\`python
 def add(a, b):
@@ -111,14 +111,14 @@ def subtract(a, b):
   return a - b
 \`\`\`
 
-### Deleted file: \`src/examples/weekdays.py\`
+- Deleted file: \`src/examples/weekdays.py\`
 
-### Renamed file: \`src/examples/math_utils.py\` (old) \`src/examples/calculator.py\` (new)`
+- Renamed file: \`src/examples/math_utils.py\` (old) \`src/examples/calculator.py\` (new)`
 
 export const EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE = `${intro}, followed by a markdown code block showing the original and updated code snippets with Git-style merge conflict syntax. Example:
 Changed greeting to wishes.
 
-### Updated file: \`src/examples/hello.py\`
+- Updated file: \`src/examples/hello.py\`
 
 \`\`\`python
 <<<<<<< SEARCH
@@ -137,7 +137,7 @@ WISHES = "Have a nice day!"
 
 Created a simple calculator with addition and subtraction.
 
-### Created file: \`src/examples/calculator.py\`
+- Created file: \`src/examples/calculator.py\`
 
 \`\`\`python
 def add(a, b):
@@ -147,6 +147,6 @@ def subtract(a, b):
   return a - b
 \`\`\`
 
-### Deleted file: \`src/examples/weekdays.py\`
+- Deleted file: \`src/examples/weekdays.py\`
 
-### Renamed file: \`src/examples/math_utils.py\` (old) \`src/examples/calculator.py\` (new)`
+- Renamed file: \`src/examples/math_utils.py\` (old) \`src/examples/calculator.py\` (new)`

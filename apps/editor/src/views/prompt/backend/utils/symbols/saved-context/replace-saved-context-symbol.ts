@@ -40,13 +40,20 @@ export const replace_saved_context_symbol = async (params: {
       context_name = quoted_match[1]
     }
 
+    const escaped_match = full_match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const replacement_regex = new RegExp(`\\s*${escaped_match}\\s*`, 'g')
+
+    if (!result_instruction.match(replacement_regex)) {
+      continue
+    }
+
     const saved_context = all_contexts.find((c) => c.name === context_name)
 
     if (!saved_context) {
       vscode.window.showWarningMessage(
         `Saved context "${context_name}" not found.`
       )
-      result_instruction = result_instruction.replace(full_match, '')
+      result_instruction = result_instruction.replace(replacement_regex, ' ')
       continue
     }
 
@@ -56,7 +63,7 @@ export const replace_saved_context_symbol = async (params: {
       workspace_provider: params.workspace_provider
     })
 
-    let files_xml = ''
+    let files_markdown = ''
     for (const p of paths) {
       try {
         if (fs.existsSync(p) && fs.statSync(p).isFile()) {
@@ -64,10 +71,11 @@ export const replace_saved_context_symbol = async (params: {
           const root = params.workspace_provider.get_workspace_root_for_file(p)
           const relative_path = root ? path.relative(root, p) : p
 
-          files_xml += `<file path="${relative_path.replace(
+          const backticks = content.includes('```') ? '````' : '```'
+          files_markdown += `- File: \`${relative_path.replace(
             /\\/g,
             '/'
-          )}">\n\`\`\`\n${content}\n\`\`\`\n</file>\n`
+          )}\`\n\n${backticks}\n${content}\n${backticks}\n\n`
         }
       } catch (error) {
         Logger.warn({
@@ -78,13 +86,17 @@ export const replace_saved_context_symbol = async (params: {
       }
     }
 
-    if (files_xml) {
-      context_definitions += `<context name="${context_name}">\n${files_xml}</context>\n`
+    if (files_markdown) {
+      context_definitions += `# ${context_name}\n\n${files_markdown}`
     }
 
+    const link_hash = context_name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '')
     result_instruction = result_instruction.replace(
-      full_match,
-      () => `<context name="${context_name}" />`
+      replacement_regex,
+      ` [${context_name}](#${link_hash}) `
     )
   }
 

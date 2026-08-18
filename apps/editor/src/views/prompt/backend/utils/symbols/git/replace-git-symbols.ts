@@ -41,10 +41,11 @@ const patch_diff_paths = (
   return lines.join('\n')
 }
 
-const build_changes_xml = (
+const build_changes_markdown = (
   diff: string,
   cwd: string,
   diff_base: string,
+  branch_name: string,
   path_prefix?: string
 ): string => {
   // Split diff into per-file sections. Each section starts with 'diff --git '.
@@ -85,7 +86,7 @@ const build_changes_xml = (
         ? `${path_prefix}/${file_path}`
         : file_path
 
-      changes_content += `<file path="${display_path}">\n`
+      changes_content += `- File: \`${display_path}\`\n\n`
 
       let file_content = ''
       try {
@@ -100,7 +101,7 @@ const build_changes_xml = (
         // In this case, the original content is correctly an empty string.
         if (!is_deleted) {
           Logger.warn({
-            function_name: 'build_changes_xml',
+            function_name: 'build_changes_markdown',
             message: `Could not get file content from git base ${diff_base} for path ${file_path}. Assuming it's a new file.`,
             data: e
           })
@@ -117,15 +118,16 @@ const build_changes_xml = (
         )
       }
 
-      changes_content += `\`\`\`\n${full_file_diff}\n\`\`\`\n`
+      changes_content += `\`\`\`\n${full_file_diff}\n\`\`\`\n\n`
       if (file_content) {
-        changes_content += `\`\`\`\n${file_content}\n\`\`\`\n`
+        changes_content += `\`\`\`\n${file_content}\n\`\`\`\n\n`
       }
-      changes_content += `</file>\n`
     }
   }
 
-  return changes_content ? `<changes>\n${changes_content}</changes>\n` : ''
+  return changes_content
+    ? `# Diff with ${branch_name}\n\n${changes_content}`
+    : ''
 }
 
 export const replace_changes_symbol = async (params: {
@@ -215,16 +217,21 @@ export const replace_changes_symbol = async (params: {
           continue
         }
 
-        const replacement_text = build_changes_xml(
+        const replacement_text = build_changes_markdown(
           diff,
           target_folder.uri.fsPath,
           diff_base,
+          branch_name,
           workspace_folders.length > 1 ? folder_name : undefined
         )
         changes_definitions += replacement_text
+        const link_hash = `diff-with-${branch_name
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '')}`
         result_instruction = result_instruction.replace(
           replacement_regex,
-          ` <changes branch="${branch_spec}" /> `
+          ` [Diff with ${branch_name}](#${link_hash}) `
         )
       } catch (error) {
         vscode.window.showErrorMessage(
@@ -284,15 +291,20 @@ export const replace_changes_symbol = async (params: {
           continue
         }
 
-        const replacement_text = build_changes_xml(
+        const replacement_text = build_changes_markdown(
           diff,
           repository.rootUri.fsPath,
-          diff_base
+          diff_base,
+          branch_name
         )
         changes_definitions += replacement_text
+        const link_hash = `diff-with-${branch_name
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '')}`
         result_instruction = result_instruction.replace(
           replacement_regex,
-          ` <changes branch="${branch_spec}" /> `
+          ` [Diff with ${branch_name}](#${link_hash}) `
         )
       } catch (error) {
         vscode.window.showErrorMessage(
@@ -313,11 +325,10 @@ export const replace_changes_symbol = async (params: {
   return { instruction: result_instruction, changes_definitions }
 }
 
-const build_commit_changes_xml = (
+const build_commit_changes_markdown = (
   diff: string,
   cwd: string,
   commit_hash: string,
-  commit_message?: string,
   path_prefix?: string
 ): string => {
   const file_diffs = diff.split(/^diff --git /m).filter((d) => d.trim() != '')
@@ -354,27 +365,28 @@ const build_commit_changes_xml = (
     }
 
     if (file_path) {
+      const display_path = path_prefix
+        ? `${path_prefix}/${file_path}`
+        : file_path
+
+      changes_content += `- File: \`${display_path}\`\n\n`
+
       let file_content = ''
       if (!is_deleted) {
         try {
           file_content = execSync(`git show ${commit_hash}:"./${file_path}"`, {
             cwd,
-            encoding: 'utf-8'
+            encoding: 'utf-8',
+            stdio: ['pipe', 'pipe', 'ignore']
           })
         } catch (e) {
           Logger.error({
-            function_name: 'build_commit_changes_xml',
+            function_name: 'build_commit_changes_markdown',
             message: `Could not read file for diff from commit: ${file_path}`,
             data: e
           })
         }
       }
-
-      const display_path = path_prefix
-        ? `${path_prefix}/${file_path}`
-        : file_path
-
-      changes_content += `<file path="${display_path}">\n`
 
       if (path_prefix) {
         full_file_diff = patch_diff_paths(
@@ -386,17 +398,17 @@ const build_commit_changes_xml = (
         )
       }
 
-      changes_content += `\`\`\`\n${full_file_diff}\n\`\`\`\n`
+      changes_content += `\`\`\`\n${full_file_diff}\n\`\`\`\n\n`
       if (file_content) {
-        changes_content += `\`\`\`\n${file_content}\n\`\`\`\n`
+        changes_content += `\`\`\`\n${file_content}\n\`\`\`\n\n`
       }
-      changes_content += `</file>\n`
     }
   }
 
   if (changes_content) {
-    const safe_message = (commit_message || '').replace(/"/g, '&quot;')
-    return `<commit message="${safe_message}">\n${changes_content}</commit>\n`
+    const short_hash = commit_hash.substring(0, 7)
+    const title_text = `Commit ${short_hash}`
+    return `# ${title_text}\n\n${changes_content}`
   }
   return ''
 }
@@ -452,22 +464,29 @@ export const replace_commit_symbol = async (params: {
         continue
       }
 
-      const replacement_text = build_commit_changes_xml(
+      const replacement_text = build_commit_changes_markdown(
         diff,
         target_folder.uri.fsPath,
         commit_hash,
-        commit_message,
         workspace_folders.length > 1 ? folder_name : undefined
       )
       commit_definitions += replacement_text
 
-      const safe_message = (commit_message || '').replace(/"/g, '&quot;')
+      const short_hash = commit_hash.substring(0, 7)
+      const header_text = `Commit ${short_hash}`
+      const title_text = commit_message
+        ? `Commit ${short_hash} (${commit_message})`
+        : `Commit ${short_hash}`
+      const link_hash = header_text
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '')
 
       result_instruction = result_instruction.replace(
         new RegExp(
           `\\s*${full_match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`
         ),
-        ` <commit message="${safe_message}" /> `
+        ` [${title_text}](#${link_hash}) `
       )
     } catch (error) {
       vscode.window.showErrorMessage(
