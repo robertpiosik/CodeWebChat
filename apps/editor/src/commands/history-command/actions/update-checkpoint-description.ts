@@ -1,11 +1,12 @@
 import * as vscode from 'vscode'
 import { CHECKPOINTS_STATE_KEY } from '@/constants/state-keys'
-import type { Checkpoint } from '../types'
+import type { Checkpoint } from '@/features/checkpoints/types'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 
-export const toggle_checkpoint_star = async (params: {
+export const update_checkpoint_description = async (params: {
   extension_context: vscode.ExtensionContext
   timestamp: number
+  description: string
   prompt_view_provider: PromptViewProvider
 }) => {
   const checkpoints =
@@ -17,7 +18,7 @@ export const toggle_checkpoint_star = async (params: {
     (c) => c.timestamp == params.timestamp
   )
   if (checkpoint_to_update) {
-    checkpoint_to_update.is_starred = !checkpoint_to_update.is_starred
+    checkpoint_to_update.description = params.description
     await params.extension_context.workspaceState.update(
       CHECKPOINTS_STATE_KEY,
       checkpoints

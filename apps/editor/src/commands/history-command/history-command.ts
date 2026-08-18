@@ -2,22 +2,24 @@ import * as vscode from 'vscode'
 import {
   CHECKPOINTS_STATE_KEY,
   TEMPORARY_CHECKPOINT_STATE_KEY
-} from '../constants/state-keys'
-import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
+} from '../../constants/state-keys'
+import { WorkspaceProvider } from '../../context/providers/workspace/workspace-provider'
 import dayjs from 'dayjs'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
 import { t } from '@/i18n'
 import type { Checkpoint } from '@/features/checkpoints/types'
 import {
   create_checkpoint,
-  clear_all_checkpoints,
   delete_checkpoint,
-  get_checkpoints,
-  restore_checkpoint,
-  toggle_checkpoint_star,
+  get_checkpoints
+} from '@/features/checkpoints/actions'
+import { clear_all_checkpoints } from './actions/clear-all-checkpoints'
+import { restore_checkpoint } from './actions/restore-checkpoint'
+import { toggle_checkpoint_pin } from './actions/toggle-checkpoint-pin'
+import {
   ActiveDeleteOperation,
   delete_checkpoint_with_undo
-} from '@/features/checkpoints/actions'
+} from './actions/delete-checkpoint-with-undo'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { get_checkpoint_path } from '@/features/checkpoints/utils'
 import { get_response_preview_promise_resolve } from '@/commands/apply-response-command/utils/preview'
@@ -134,52 +136,66 @@ export const history_command = (params: {
             return b.timestamp - a.timestamp
           })
 
+          const map_checkpoint_to_item = (c: Checkpoint) => {
+            const label_text = t(`command.history.trigger.${c.trigger}` as any)
+            return {
+              id: c.timestamp.toString(),
+              label: label_text,
+              description: dayjs(c.timestamp).format('LT'),
+              detail: c.description,
+              checkpoint: c,
+              buttons: [
+                {
+                  iconPath: new vscode.ThemeIcon(
+                    c.is_pinned ? 'pinned' : 'pin'
+                  ),
+                  tooltip: c.is_pinned
+                    ? t('command.history.unpin')
+                    : t('command.history.pin')
+                },
+                ...(c.trigger == 'manual'
+                  ? [
+                      {
+                        iconPath: new vscode.ThemeIcon('edit'),
+                        tooltip: t('command.history.edit-description')
+                      }
+                    ]
+                  : []),
+                {
+                  iconPath: new vscode.ThemeIcon('trash'),
+                  tooltip: t('common.delete')
+                }
+              ]
+            }
+          }
+
+          const pinned_checkpoints = visible_checkpoints.filter(
+            (c) => c.is_pinned
+          )
+
           const checkpoint_items = [
+            ...(pinned_checkpoints.length > 0
+              ? [
+                  {
+                    label: t('command.history.separator.pinned'),
+                    kind: vscode.QuickPickItemKind.Separator
+                  },
+                  ...pinned_checkpoints.map(map_checkpoint_to_item)
+                ]
+              : []),
             ...(visible_checkpoints.length > 0
               ? [
                   {
-                    label: t('command.history.separator.recent-checkpoints'),
+                    label: t('command.history.separator.recent'),
                     kind: vscode.QuickPickItemKind.Separator
-                  }
-                ]
-              : []),
-            ...visible_checkpoints.map((c, index) => {
-              const labelText = t(`command.history.trigger.${c.trigger}` as any)
-              return {
-                id: c.timestamp.toString(),
-                label: c.is_starred ? `$(star-full) ${labelText}` : labelText,
-                description: dayjs(c.timestamp).format('LT'),
-                detail: c.description,
-                checkpoint: c,
-                index,
-                buttons: [
-                  {
-                    iconPath: new vscode.ThemeIcon(
-                      c.is_starred ? 'star-full' : 'star-empty'
-                    ),
-                    tooltip: c.is_starred
-                      ? t('common.unstar')
-                      : t('common.star')
                   },
-                  ...(c.trigger == 'manual'
-                    ? [
-                        {
-                          iconPath: new vscode.ThemeIcon('edit'),
-                          tooltip: t('command.history.edit-description')
-                        }
-                      ]
-                    : []),
-                  {
-                    iconPath: new vscode.ThemeIcon('trash'),
-                    tooltip: t('common.delete')
-                  }
+                  ...visible_checkpoints.map(map_checkpoint_to_item)
                 ]
-              }
-            })
+              : [])
           ]
 
           if (quick_pick.value) {
-            quick_pick.items = checkpoint_items
+            quick_pick.items = visible_checkpoints.map(map_checkpoint_to_item)
           } else {
             quick_pick.items = [
               {
@@ -308,7 +324,7 @@ export const history_command = (params: {
               params.extension_context.workspaceState.get<Checkpoint>(
                 TEMPORARY_CHECKPOINT_STATE_KEY
               )
-            if (checkpoints.length == 0 && !temp_checkpoint) {
+            if (!checkpoints.some((c) => !c.is_pinned) && !temp_checkpoint) {
               vscode.window.showInformationMessage(
                 t('command.history.info.nothing-to-delete')
               )
@@ -344,10 +360,10 @@ export const history_command = (params: {
           if (!item.checkpoint) return
 
           if (
-            e.button.tooltip == t('common.star') ||
-            e.button.tooltip == t('common.unstar')
+            e.button.tooltip == t('command.history.pin') ||
+            e.button.tooltip == t('command.history.unpin')
           ) {
-            await toggle_checkpoint_star({
+            await toggle_checkpoint_pin({
               extension_context: params.extension_context,
               timestamp: item.checkpoint.timestamp,
               prompt_view_provider: params.prompt_view_provider

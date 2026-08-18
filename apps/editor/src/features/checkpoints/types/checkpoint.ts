@@ -25,7 +25,7 @@ export interface Checkpoint {
   timestamp: number
   trigger: CheckpointTrigger
   description?: string
-  is_starred?: boolean
+  is_pinned?: boolean
   git_data?: Record<string, GitCheckpointData> // folder name -> git data
   uses_git?: boolean
   response_history?: ResponseHistoryItem[]

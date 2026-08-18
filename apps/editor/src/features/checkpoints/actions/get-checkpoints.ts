@@ -19,17 +19,19 @@ export const remove_old_checkpoints = async (
   const checkpoints_to_keep: Checkpoint[] = []
   const checkpoints_to_remove: Checkpoint[] = []
 
+  let unpinned_kept = 0
+
   for (const checkpoint of checkpoints) {
-    if (checkpoint.timestamp < cutoff_time) {
+    if (checkpoint.is_pinned) {
+      checkpoints_to_keep.push(checkpoint)
+    } else if (checkpoint.timestamp < cutoff_time) {
+      checkpoints_to_remove.push(checkpoint)
+    } else if (unpinned_kept >= 99) {
       checkpoints_to_remove.push(checkpoint)
     } else {
       checkpoints_to_keep.push(checkpoint)
+      unpinned_kept++
     }
-  }
-
-  if (checkpoints_to_keep.length >= 100) {
-    const overflow = checkpoints_to_keep.splice(99)
-    checkpoints_to_remove.push(...overflow)
   }
 
   for (const checkpoint of checkpoints_to_remove) {

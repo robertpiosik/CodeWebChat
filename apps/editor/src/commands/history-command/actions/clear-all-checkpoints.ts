@@ -3,10 +3,10 @@ import {
   CHECKPOINTS_STATE_KEY,
   TEMPORARY_CHECKPOINT_STATE_KEY
 } from '@/constants/state-keys'
-import { get_checkpoint_path } from '../utils'
-import { get_checkpoints } from './get-checkpoints'
+import { get_checkpoint_path } from '@/features/checkpoints/utils'
+import { get_checkpoints } from '@/features/checkpoints/actions'
 import { Logger } from '@shared/utils/logger'
-import type { Checkpoint } from '../types'
+import type { Checkpoint } from '@/features/checkpoints/types'
 import { t } from '@/i18n'
 
 export const clear_all_checkpoints = async (
@@ -14,7 +14,13 @@ export const clear_all_checkpoints = async (
 ) => {
   const clear_task = async () => {
     const checkpoints = await get_checkpoints(extension_context)
+    const checkpoints_to_keep: Checkpoint[] = []
+
     for (const checkpoint of checkpoints) {
+      if (checkpoint.is_pinned) {
+        checkpoints_to_keep.push(checkpoint)
+        continue
+      }
       try {
         const checkpoint_path = get_checkpoint_path(checkpoint.timestamp)
         await vscode.workspace.fs.delete(vscode.Uri.file(checkpoint_path), {
@@ -49,12 +55,15 @@ export const clear_all_checkpoints = async (
       TEMPORARY_CHECKPOINT_STATE_KEY,
       undefined
     )
-    await extension_context.workspaceState.update(CHECKPOINTS_STATE_KEY, [])
+    await extension_context.workspaceState.update(
+      CHECKPOINTS_STATE_KEY,
+      checkpoints_to_keep
+    )
   }
   await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: t('feature.checkpoints.progress.clearing-all'),
+      title: t('command.history.progress.clearing-all'),
       cancellable: false
     },
     clear_task

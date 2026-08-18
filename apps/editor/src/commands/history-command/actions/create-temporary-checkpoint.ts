@@ -1,12 +1,15 @@
 import * as vscode from 'vscode'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
-import type { Checkpoint, CheckpointTab } from '../types'
-import { copy_optimised_recursively, get_checkpoint_path } from '../utils'
+import type { Checkpoint, CheckpointTab } from '@/features/checkpoints/types'
+import {
+  copy_optimised_recursively,
+  get_checkpoint_path
+} from '@/features/checkpoints/utils'
 import {
   get_git_diff,
   get_git_info,
   is_git_repository
-} from '../utils/git-utils'
+} from '@/features/checkpoints/utils/git-utils'
 import * as path from 'path'
 import { Logger } from '@shared/utils/logger'
 

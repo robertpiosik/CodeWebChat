@@ -6,7 +6,7 @@ import * as fs from 'fs/promises'
 import * as os from 'os'
 import * as path from 'path'
 
-const execAsync = (command: string, options: any): Promise<string> => {
+const exec_async = (command: string, options: any): Promise<string> => {
   return new Promise((resolve, reject) => {
     exec(command, options, (error, stdout, stderr) => {
       if (error) {
@@ -32,14 +32,14 @@ export const get_git_info = async (
 ): Promise<GitInfo | null> => {
   try {
     const branch = (
-      await execAsync('git rev-parse --abbrev-ref HEAD', {
+      await exec_async('git rev-parse --abbrev-ref HEAD', {
         cwd: workspace_folder.uri.fsPath,
         encoding: 'utf8'
       })
     ).trim()
 
     const commit_hash = (
-      await execAsync('git rev-parse HEAD', {
+      await exec_async('git rev-parse HEAD', {
         cwd: workspace_folder.uri.fsPath,
         encoding: 'utf8'
       })
@@ -62,7 +62,7 @@ export const get_git_diff = async (
     const cwd = workspace_folder.uri.fsPath
     const tmp_dir = os.tmpdir()
 
-    const tracked_files_output = await execAsync(
+    const tracked_files_output = await exec_async(
       'git diff -z --name-only HEAD',
       {
         cwd,
@@ -74,7 +74,7 @@ export const get_git_diff = async (
       .split('\0')
       .filter((f) => f.length > 0)
 
-    const untracked_files_output = await execAsync(
+    const untracked_files_output = await exec_async(
       'git ls-files -z --others --exclude-standard',
       {
         cwd,
@@ -124,7 +124,7 @@ export const get_git_diff = async (
           ? `git diff --no-index --binary /dev/null "${file}"`
           : `git diff --binary HEAD -- "${file}"`
 
-        diff_chunk = await execAsync(cmd, {
+        diff_chunk = await exec_async(cmd, {
           cwd,
           encoding: 'utf8',
           maxBuffer: 50 * 1024 * 1024
@@ -166,7 +166,7 @@ export const is_git_repository = async (
   workspace_folder: vscode.WorkspaceFolder
 ): Promise<boolean> => {
   try {
-    await execAsync('git rev-parse --git-dir', {
+    await exec_async('git rev-parse --git-dir', {
       cwd: workspace_folder.uri.fsPath
     })
     return true
