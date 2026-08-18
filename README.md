@@ -30,7 +30,7 @@ Free and privacy-fist toolkit for AI coding with static context. **Start in VS C
 
 ## Static context
 
-**CWC** constructs unified prompts with all relevant files and instructions, so the model has everything it needs from the start. Steer the model with examples, focus its attention on specific area of the codebase, and make simple instructions just work!
+**CWC** constructs unified prompts with all relevant files and instructions, so the model has everything it needs from the start. Steer it with examples, focus its attention on specific area of the codebase, and make simple instructions just work!
 
 ## Prompt types
 
