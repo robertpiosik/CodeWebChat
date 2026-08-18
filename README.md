@@ -34,10 +34,10 @@ To make AI coding fast, accurate and cost-efficient, CWC relies on static contex
 
 ## Prompt types
 
-CWC constructs simple, markdown-formatted prompts for common use-cases (click to expand) you can copy and paste into chatbot of choice or send directly from the editor via an API call.
+CWC constructs simple, markdown-formatted prompts for common use-cases you can copy and paste into chatbot of choice or send directly from the editor via an API call.
 
 <details>
-<summary><strong>Edit files</strong></summary>
+<summary><strong>Edit files</strong> (click to expand)</summary>
 
 _Accurate and fast multi-file edits in a single response._
 
