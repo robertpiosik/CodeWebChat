@@ -97,30 +97,40 @@ export const perform_keywords_search_mode = async (params: {
       let go_back_to_target = false
 
       while (true) {
-        const match_mode_key =
-          keywords_target == 'filenames'
-            ? LAST_SEARCH_FILES_FILENAME_MATCH_MODE_STATE_KEY
-            : LAST_SEARCH_FILES_KEYWORDS_MATCH_MODE_STATE_KEY
+        const keywords = (
+          search_term.match(/(?:-?"[^"]*")|(?:-?[^\s,]+)/g) || []
+        ).filter((k) => k.length > 0)
 
-        const last_match_mode =
-          params.extension_context.workspaceState.get<'all' | 'some'>(
-            match_mode_key
-          ) || 'all'
+        const positive_keywords = keywords.filter((k) => !k.startsWith('-'))
 
-        const match_mode_result =
-          await prompt_for_keywords_match_mode(last_match_mode)
+        let keywords_match_mode: 'all' | 'some' = 'all'
 
-        if (match_mode_result == 'back') {
-          go_back_to_target = true
-          break
+        if (positive_keywords.length > 1) {
+          const match_mode_key =
+            keywords_target == 'filenames'
+              ? LAST_SEARCH_FILES_FILENAME_MATCH_MODE_STATE_KEY
+              : LAST_SEARCH_FILES_KEYWORDS_MATCH_MODE_STATE_KEY
+
+          const last_match_mode =
+            params.extension_context.workspaceState.get<'all' | 'some'>(
+              match_mode_key
+            ) || 'all'
+
+          const match_mode_result =
+            await prompt_for_keywords_match_mode(last_match_mode)
+
+          if (match_mode_result == 'back') {
+            go_back_to_target = true
+            break
+          }
+          if (!match_mode_result) return undefined
+
+          keywords_match_mode = match_mode_result
+          await params.extension_context.workspaceState.update(
+            match_mode_key,
+            keywords_match_mode
+          )
         }
-        if (!match_mode_result) return undefined
-
-        const keywords_match_mode = match_mode_result
-        await params.extension_context.workspaceState.update(
-          match_mode_key,
-          keywords_match_mode
-        )
 
         const files = await params.resolve_files()
 
@@ -213,7 +223,13 @@ export const perform_keywords_search_mode = async (params: {
           return selected_items
         }
 
-        if (go_back_to_match_mode) continue
+        if (go_back_to_match_mode) {
+          if (positive_keywords.length <= 1) {
+            go_back_to_target = true
+            break
+          }
+          continue
+        }
         break
       }
 
