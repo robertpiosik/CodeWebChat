@@ -39,7 +39,7 @@ Free and privacy-fist toolkit for AI coding with static context. **Start in VS C
 <details>
 <summary><strong>Edit files</strong> (click to expand)</summary>
 
-_Accurate and fast multi-file edits in a single response._
+_Implement new features, fix bugs and refactor code across many files._
 
 ```
 # Files
