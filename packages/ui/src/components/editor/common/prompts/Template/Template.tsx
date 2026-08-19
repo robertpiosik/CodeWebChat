@@ -6,7 +6,7 @@ import {
   useMemo
 } from 'react'
 import styles from './Template.module.scss'
-import { Icon } from '../../../common/Icon'
+import { Icon } from '../../Icon'
 import {
   get_highlighted_text,
   reconstruct_raw_value_from_node,

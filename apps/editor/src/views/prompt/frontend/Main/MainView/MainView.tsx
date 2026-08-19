@@ -1,6 +1,6 @@
 import styles from './MainView.module.scss'
 import { Configurations as UiConfigurations } from '@ui/components/editor/prompt/Configurations'
-import { PromptField as UiPromptField } from '@ui/components/editor/prompt/prompts/PromptField'
+import { PromptField as UiPromptField } from '@ui/components/editor/common/prompts/PromptField'
 import { Separator as UiSeparator } from '@ui/components/editor/prompt/Separator'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { Responses as UiResponses } from '@ui/components/editor/prompt/Responses'
