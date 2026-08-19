@@ -108,10 +108,12 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
         title={t('chatbots.title')}
         subtitle={t('chatbots.subtitle')}
       >
-        <UiNotice type="info">{t('chatbots.notice')}</UiNotice>
-        {props.web_configurations.length == 0 && (
-          <UiNotice type="warning">{t('chatbots.notice.missing')}</UiNotice>
-        )}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <UiNotice type="info">{t('chatbots.notice')}</UiNotice>
+          {props.web_configurations.length == 0 && (
+            <UiNotice type="warning">{t('chatbots.notice.missing')}</UiNotice>
+          )}
+        </div>
         <div
           ref={(el) =>
             props.set_section_ref(

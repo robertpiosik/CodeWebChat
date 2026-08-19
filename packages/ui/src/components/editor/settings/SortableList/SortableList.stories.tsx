@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { SortableList } from './SortableList'
 import { Radio } from '../../common/Radio'
 import { IconButton } from '../../common/IconButton'
-import { TextButton } from '../../common/TextButton'
 
 export default {
   component: SortableList
@@ -43,16 +42,11 @@ const initial_configurations: Configuration[] = [
 
 export const Configurations = () => {
   const [configurations, set_configurations] = useState(initial_configurations)
-  const has_default = configurations.some((c) => c.is_default)
 
   const handle_set_default = (id: string) => {
     set_configurations(
       configurations.map((c) => ({ ...c, is_default: c.id == id }))
     )
-  }
-
-  const handle_unset_default = () => {
-    set_configurations(configurations.map((c) => ({ ...c, is_default: false })))
   }
 
   return (
@@ -74,14 +68,6 @@ export const Configurations = () => {
           item_text: 'config',
           items_text: 'configs'
         }}
-        header_extra={
-          has_default ? (
-            <>
-              <span>·</span>
-              <TextButton on_click={handle_unset_default}>Unset</TextButton>
-            </>
-          ) : undefined
-        }
         render_content={(config) => (
           <>
             <Radio
