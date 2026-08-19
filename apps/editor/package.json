@@ -1,8 +1,8 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
-  "description": "CWC is a free and privacy-fist toolkit for AI coding with static context.",
-  "version": "2026.8.43",
+  "description": "AI coding with static context (CWC)",
+  "version": "2026.8.44",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
