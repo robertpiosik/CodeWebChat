@@ -14,10 +14,13 @@ export const remove = async (params: {
 
   const original_api_configurations =
     await providers_manager.get_api_configurations()
-  const api_config_to_delete = original_api_configurations.find(
+  const deleted_index = original_api_configurations.findIndex(
     (c) => get_api_configuration_id(c) === params.api_configuration_id
   )
-  if (!api_config_to_delete) return
+
+  if (deleted_index === -1) return
+
+  const api_config_to_delete = original_api_configurations[deleted_index]
 
   const delete_button = t('common.delete')
   const confirmation = await vscode.window.showWarningMessage(
@@ -40,4 +43,17 @@ export const remove = async (params: {
     (c) => get_api_configuration_id(c) !== params.api_configuration_id
   )
   await providers_manager.save_api_configurations(updated_api_configurations)
+
+  const undo_action = t('views.shared.actions.api.delete.undo')
+  const choice = await vscode.window.showInformationMessage(
+    t('views.shared.actions.api.delete.deleted'),
+    undo_action
+  )
+
+  if (choice === undo_action) {
+    const current_api_configurations =
+      await providers_manager.get_api_configurations()
+    current_api_configurations.splice(deleted_index, 0, api_config_to_delete)
+    await providers_manager.save_api_configurations(current_api_configurations)
+  }
 }

@@ -127,6 +127,7 @@ type Props = {
   on_update_templates: (key: string, templates: Template[]) => void
   on_edit_template: (key: string, index: number) => void
   on_add_template: (key: string, params?: { insertion_index?: number }) => void
+  on_delete_template: (key: string, index: number) => void
   set_providers: (providers: Provider[]) => void
   set_api_configurations: (configurations: ApiConfiguration[]) => void
   set_web_configurations: (configurations: WebConfiguration[]) => void
@@ -494,6 +495,7 @@ export const Home: React.FC<Props> = (props) => {
           on_update_templates={props.on_update_templates}
           on_edit_template={props.on_edit_template}
           on_add_template={props.on_add_template}
+          on_delete_template={props.on_delete_template}
         />
 
         <WebConfigurationsSection

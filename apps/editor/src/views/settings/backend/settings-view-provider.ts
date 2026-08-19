@@ -66,7 +66,8 @@ import {
   handle_update_intelligent_file_search_instructions,
   handle_get_templates,
   handle_update_templates,
-  handle_create_template
+  handle_create_template,
+  handle_delete_template
 } from './message-handlers'
 import { config_web_configuration_to_ui_format } from '@/utils/web-configuration-format-converters'
 import { webview_html } from '@/views/shared/utils/webview-html'
@@ -169,6 +170,8 @@ export class SettingsViewProvider {
           await handle_update_templates(message)
         } else if (message.command == 'CREATE_TEMPLATE') {
           await handle_create_template(this, message)
+        } else if (message.command == 'DELETE_TEMPLATE') {
+          await handle_delete_template(this, message)
         } else if (message.command == 'GET_API_CONFIGURATIONS') {
           await handle_get_api_configurations(this)
         } else if (

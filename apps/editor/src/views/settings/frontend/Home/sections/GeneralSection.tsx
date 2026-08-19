@@ -68,6 +68,7 @@ type Props = {
   on_update_templates: (key: string, templates: Template[]) => void
   on_edit_template: (key: string, index: number) => void
   on_add_template: (key: string, params?: { insertion_index?: number }) => void
+  on_delete_template: (key: string, index: number) => void
 }
 
 export const GeneralSection = forwardRef<HTMLDivElement, Props>(
@@ -304,11 +305,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 on_reorder={(key, templates) =>
                   props.on_update_templates(key, templates)
                 }
-                on_delete={(key, index) => {
-                  const templates = props.templates[key] || []
-                  const new_templates = templates.filter((_, i) => i !== index)
-                  props.on_update_templates(key, new_templates)
-                }}
+                on_delete={props.on_delete_template}
                 on_edit={props.on_edit_template}
                 on_add={props.on_add_template}
                 translations={{

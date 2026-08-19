@@ -51,6 +51,27 @@ export const remove = async (params: { name: string }): Promise<void> => {
       updated_web_configurations,
       vscode.ConfigurationTarget.Global
     )
+
+    const undo_action = t('views.shared.actions.web.delete.undo')
+    const choice = await vscode.window.showInformationMessage(
+      t('views.shared.actions.web.delete.deleted'),
+      undo_action
+    )
+
+    if (choice === undo_action) {
+      const current_config = vscode.workspace.getConfiguration('codeWebChat')
+      const current_web_configs =
+        current_config.get<ConfigWebConfigurationFormat[]>(
+          'webConfigurations',
+          []
+        ) || []
+      current_web_configs.splice(index, 0, item_to_delete)
+      await current_config.update(
+        'webConfigurations',
+        current_web_configs,
+        vscode.ConfigurationTarget.Global
+      )
+    }
   } catch (error) {
     vscode.window.showErrorMessage(
       dictionary.error_message.FAILED_TO_DELETE_ITEM('web configuration', error)

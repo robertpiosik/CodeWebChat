@@ -355,6 +355,12 @@ export interface CreateTemplateMessage {
   insertion_index?: number
 }
 
+export interface DeleteTemplateMessage {
+  command: 'DELETE_TEMPLATE'
+  templates_key: string
+  index: number
+}
+
 export interface GetIsModernUiMessage {
   command: 'GET_IS_MODERN_UI'
 }
@@ -427,6 +433,7 @@ export type FrontendMessage =
   | GetTemplatesMessage
   | UpdateTemplatesMessage
   | CreateTemplateMessage
+  | DeleteTemplateMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface ModelProvidersMessage {

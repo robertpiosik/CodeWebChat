@@ -428,6 +428,14 @@ export const use_settings = (vscode: any) => {
     })
   }
 
+  const handle_delete_template = (key: string, index: number) => {
+    post_message(vscode, {
+      command: 'DELETE_TEMPLATE',
+      templates_key: key,
+      index
+    })
+  }
+
   const handle_update_templates = (
     templates_key: string,
     templates: Template[]
@@ -510,6 +518,7 @@ export const use_settings = (vscode: any) => {
     handle_open_external_url,
     templates,
     handle_update_templates,
-    handle_add_template
+    handle_add_template,
+    handle_delete_template
   }
 }

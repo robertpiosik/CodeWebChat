@@ -30,8 +30,33 @@ export const handle_delete_model_provider = async (
   }
 
   const original_model_providers = await providers_manager.get_model_providers()
+  const deleted_provider_index = original_model_providers.findIndex(
+    (p) => p.name == model_provider_name_to_delete
+  )
+
+  if (deleted_provider_index === -1) {
+    return
+  }
+
+  const deleted_provider = original_model_providers[deleted_provider_index]
+
   const updated_model_providers = original_model_providers.filter(
     (p) => p.name != model_provider_name_to_delete
   )
   await providers_manager.save_model_providers(updated_model_providers)
+
+  const undo_action = t(
+    'views.settings.handlers.handle-delete-model-provider.undo'
+  )
+  const choice = await vscode.window.showInformationMessage(
+    t('views.settings.handlers.handle-delete-model-provider.deleted'),
+    undo_action
+  )
+
+  if (choice === undo_action) {
+    const current_model_providers =
+      await providers_manager.get_model_providers()
+    current_model_providers.splice(deleted_provider_index, 0, deleted_provider)
+    await providers_manager.save_model_providers(current_model_providers)
+  }
 }

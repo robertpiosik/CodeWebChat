@@ -16,5 +16,41 @@ export const translations = {
     cs: 'Bez názvu',
     hu: 'Névtelen',
     bg: 'Без име'
+  },
+  'views.shared.actions.web.delete.deleted': {
+    en: 'Web configuration deleted.',
+    pl: 'Konfiguracja sieci Web usunięta.',
+    'zh-cn': 'Web 配置已删除。',
+    ja: 'Web構成が削除されました。',
+    'zh-tw': 'Web 配置已刪除。',
+    de: 'Web-Konfiguration gelöscht.',
+    es: 'Configuración web eliminada.',
+    fr: 'Configuration web supprimée.',
+    'pt-br': 'Configuração web excluída.',
+    ru: 'Веб-конфигурация удалена.',
+    ko: '웹 구성이 삭제되었습니다.',
+    it: 'Configurazione web eliminata.',
+    tr: 'Web yapılandırması silindi.',
+    cs: 'Webová konfigurace smazána.',
+    hu: 'Webes konfiguráció törölve.',
+    bg: 'Уеб конфигурацията е изтрита.'
+  },
+  'views.shared.actions.web.delete.undo': {
+    en: 'Undo',
+    pl: 'Cofnij',
+    'zh-cn': '撤销',
+    ja: '元に戻す',
+    'zh-tw': '復原',
+    de: 'Rückgängig machen',
+    es: 'Deshacer',
+    fr: 'Annuler',
+    'pt-br': 'Desfazer',
+    ru: 'Отменить',
+    ko: '실행 취소',
+    it: 'Annulla',
+    tr: 'Geri Al',
+    cs: 'Zpět',
+    hu: 'Visszavonás',
+    bg: 'Отмяна'
   }
 } as const

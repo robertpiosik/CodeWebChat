@@ -181,6 +181,7 @@ export const Settings = () => {
           }
         }}
         on_add_template={settings_hook.handle_add_template}
+        on_delete_template={settings_hook.handle_delete_template}
         set_providers={settings_hook.set_providers}
         set_api_configurations={settings_hook.set_api_configurations}
         on_synchronize_edit_format_between_modes_change={
