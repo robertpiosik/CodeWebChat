@@ -9,7 +9,8 @@ export const handle_create_api_configuration = async (
 ): Promise<void> => {
   const result = await create({
     extension_context: provider.extension_context,
-    insertion_index: message.insertion_index
+    insertion_index: message.insertion_index,
+    exact_insertion: message.exact_insertion
   })
 
   if (result) {

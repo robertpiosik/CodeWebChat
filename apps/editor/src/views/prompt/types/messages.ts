@@ -162,6 +162,7 @@ export interface GetContextSizeWarningThresholdMessage extends BaseMessage {
 export interface CreateWebConfigurationMessage extends BaseMessage {
   command: 'CREATE_WEB_CONFIGURATION'
   reference_index?: number
+  exact_insertion?: boolean
 }
 
 export interface UpdateWebConfigurationMessage extends BaseMessage {
@@ -439,6 +440,7 @@ export interface CreateApiConfigurationMessage extends BaseMessage {
   command: 'CREATE_API_CONFIGURATION'
   api_feature: ApiFeature
   insertion_index?: number
+  exact_insertion?: boolean
 }
 
 export interface DeleteApiConfigurationMessage extends BaseMessage {

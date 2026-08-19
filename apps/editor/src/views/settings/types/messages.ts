@@ -29,6 +29,7 @@ export interface ReorderModelProvidersMessage {
 export interface AddModelProviderMessage {
   command: 'ADD_MODEL_PROVIDER'
   insertion_index?: number
+  exact_insertion?: boolean
 }
 
 export interface DeleteModelProviderMessage {
@@ -246,6 +247,7 @@ export interface CreateWebConfigurationMessage {
   command: 'CREATE_WEB_CONFIGURATION'
   web_configuration_id?: string
   insertion_index?: number
+  exact_insertion?: boolean
 }
 
 export interface PickModelMessage {
@@ -278,6 +280,7 @@ export interface CreateApiConfigurationMessage {
   command: 'CREATE_API_CONFIGURATION'
   api_feature?: ApiFeature
   insertion_index?: number
+  exact_insertion?: boolean
 }
 
 export interface UpdateApiConfigurationMessage {
@@ -353,6 +356,7 @@ export interface CreateTemplateMessage {
   command: 'CREATE_TEMPLATE'
   templates_key: string
   insertion_index?: number
+  exact_insertion?: boolean
 }
 
 export interface DeleteTemplateMessage {

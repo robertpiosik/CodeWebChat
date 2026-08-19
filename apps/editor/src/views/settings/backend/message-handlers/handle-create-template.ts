@@ -7,9 +7,9 @@ export const handle_create_template = async (
   provider: SettingsViewProvider,
   message: CreateTemplateMessage
 ): Promise<void> => {
-  let insertion_index: number | undefined
+  let insertion_index: number | undefined = message.insertion_index
 
-  if (message.insertion_index !== undefined) {
+  if (message.insertion_index !== undefined && !message.exact_insertion) {
     const position_quick_pick = await new Promise<string | undefined>(
       (resolve) => {
         const quick_pick = vscode.window.createQuickPick()

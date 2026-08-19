@@ -126,7 +126,10 @@ type Props = {
   templates: Record<string, Template[]>
   on_update_templates: (key: string, templates: Template[]) => void
   on_edit_template: (key: string, index: number) => void
-  on_add_template: (key: string, params?: { insertion_index?: number }) => void
+  on_add_template: (
+    key: string,
+    params?: { insertion_index?: number; exact_insertion?: boolean }
+  ) => void
   on_delete_template: (key: string, index: number) => void
   set_providers: (providers: Provider[]) => void
   set_api_configurations: (configurations: ApiConfiguration[]) => void
@@ -160,7 +163,10 @@ type Props = {
   on_open_editor_settings: () => void
   on_open_ignore_patterns_settings: () => void
   on_open_allow_patterns_settings: () => void
-  on_add_provider: (params?: { insertion_index?: number }) => void
+  on_add_provider: (params?: {
+    insertion_index?: number
+    exact_insertion?: boolean
+  }) => void
   on_delete_provider: (provider_name: string) => void
   on_edit_provider: (provider_name: string) => void
   on_reorder_providers: (reordered_providers: Provider[]) => void
@@ -170,11 +176,17 @@ type Props = {
   ) => void
   on_select_default_api_configuration: (api_feature: ApiFeature) => void
   on_reorder_api_configurations: (reordered: ApiConfiguration[]) => void
-  on_add_api_configuration: (params?: { insertion_index?: number }) => void
+  on_add_api_configuration: (params?: {
+    insertion_index?: number
+    exact_insertion?: boolean
+  }) => void
   on_edit_api_configuration: (id: string) => void
   on_delete_api_configuration: (id: string) => void
   on_reorder_web_configurations: (reordered: WebConfiguration[]) => void
-  on_add_web_configuration: (params?: { insertion_index?: number }) => void
+  on_add_web_configuration: (params?: {
+    insertion_index?: number
+    exact_insertion?: boolean
+  }) => void
   on_edit_web_configuration: (id: string) => void
   on_delete_web_configuration: (name: string) => void
   on_open_external_url: (url: string) => void

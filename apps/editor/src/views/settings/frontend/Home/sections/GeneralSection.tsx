@@ -67,7 +67,10 @@ type Props = {
   templates: Record<string, Template[]>
   on_update_templates: (key: string, templates: Template[]) => void
   on_edit_template: (key: string, index: number) => void
-  on_add_template: (key: string, params?: { insertion_index?: number }) => void
+  on_add_template: (
+    key: string,
+    params?: { insertion_index?: number; exact_insertion?: boolean }
+  ) => void
   on_delete_template: (key: string, index: number) => void
 }
 

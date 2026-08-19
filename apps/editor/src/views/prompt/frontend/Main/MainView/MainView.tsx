@@ -29,7 +29,10 @@ type Props = {
   }) => void
   copy_to_clipboard: (web_configuration_name?: string) => void
   on_show_home: () => void
-  on_create_web_configuration: (reference_index?: number) => void
+  on_create_web_configuration: (params?: {
+    insertion_index?: number
+    exact_insertion?: boolean
+  }) => void
   on_at_sign_click: (search_value?: string) => void
   on_hash_sign_click: () => void
   on_slash_click: () => void
@@ -44,7 +47,10 @@ type Props = {
   on_toggle_pinned_api_configuration: (id: string) => void
   on_edit_api_configuration: (id: string) => void
   on_delete_api_configuration: (id: string) => void
-  on_create_api_configuration: (params?: { insertion_index?: number }) => void
+  on_create_api_configuration: (params?: {
+    insertion_index?: number
+    exact_insertion?: boolean
+  }) => void
   currently_open_file_path?: string
   current_selection?: SelectionState | null
   chat_history: string[]
@@ -410,7 +416,7 @@ export const MainView: React.FC<Props> = (props) => {
               configurations={web_configurations}
               disable_invocation={!!warning || !props.is_connected}
               on_create={(params) => {
-                props.on_create_web_configuration(params?.insertion_index)
+                props.on_create_web_configuration(params)
               }}
               on_configuration_click={(id) => {
                 props.initialize_chats({

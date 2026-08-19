@@ -21,11 +21,17 @@ type Props = {
   set_providers: (providers: Provider[]) => void
   set_api_configurations: (configurations: ApiConfiguration[]) => void
   on_reorder_providers: (reordered: Provider[]) => void
-  on_add_provider: (params?: { insertion_index?: number }) => void
+  on_add_provider: (params?: {
+    insertion_index?: number
+    exact_insertion?: boolean
+  }) => void
   on_delete_provider: (provider_name: string) => void
   on_edit_provider: (provider_name: string) => void
   on_reorder_api_configurations: (reordered: ApiConfiguration[]) => void
-  on_add_api_configuration: (params?: { insertion_index?: number }) => void
+  on_add_api_configuration: (params?: {
+    insertion_index?: number
+    exact_insertion?: boolean
+  }) => void
   on_delete_api_configuration: (id: string) => void
   on_edit_api_configuration: (id: string) => void
   on_set_default_api_configuration: (

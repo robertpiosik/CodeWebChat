@@ -6,7 +6,10 @@ import { use_translation } from '../../i18n/use-translation'
 type ModelProvidersSectionProps = {
   providers: Provider[] | undefined
   on_reorder: (reordered_providers: Provider[]) => void
-  on_add_provider: (params?: { insertion_index?: number }) => void
+  on_add_provider: (params?: {
+    insertion_index?: number
+    exact_insertion?: boolean
+  }) => void
   on_delete_provider: (provider_name: string) => void
   on_edit_provider: (provider_name: string) => void
 }

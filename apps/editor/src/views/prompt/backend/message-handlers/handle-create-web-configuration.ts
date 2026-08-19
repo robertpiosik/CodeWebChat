@@ -7,7 +7,8 @@ export const handle_create_web_configuration = async (
   message: any
 ): Promise<void> => {
   const result = await create({
-    reference_index: message.reference_index
+    reference_index: message.reference_index,
+    exact_insertion: message.exact_insertion
   })
 
   if (result) {

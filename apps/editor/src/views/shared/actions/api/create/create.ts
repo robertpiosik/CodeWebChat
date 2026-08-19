@@ -14,15 +14,16 @@ import { t } from '@/i18n'
 export const create = async (params: {
   extension_context: vscode.ExtensionContext
   insertion_index?: number
+  exact_insertion?: boolean
 }): Promise<
   { config: ApiConfiguration; insertion_index?: number } | undefined
 > => {
   const providers_manager = new ModelProvidersManager(params.extension_context)
   const model_fetcher = new ModelFetcher()
 
-  let actual_insertion_index: number | undefined
+  let actual_insertion_index: number | undefined = params.insertion_index
 
-  if (params.insertion_index !== undefined) {
+  if (params.insertion_index !== undefined && !params.exact_insertion) {
     const position_quick_pick = await new Promise<string | undefined>(
       (resolve) => {
         const quick_pick = vscode.window.createQuickPick()

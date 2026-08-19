@@ -15,7 +15,10 @@ export namespace Templates {
     on_reorder: (key: string, templates: Template[]) => void
     on_delete: (key: string, index: number) => void
     on_edit: (key: string, index: number) => void
-    on_add: (key: string, params?: { insertion_index?: number }) => void
+    on_add: (
+      key: string,
+      params?: { insertion_index?: number; exact_insertion?: boolean }
+    ) => void
     translations: {
       item_text: string
       items_text: string

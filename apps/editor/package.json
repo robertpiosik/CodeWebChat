@@ -1232,7 +1232,7 @@
     }
   },
   "devDependencies": {
-    "@babel/core": "^7.27.7",
+    "@babel/core": "^7.29.7",
     "@babel/preset-env": "^7.27.2",
     "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1",
@@ -1262,7 +1262,7 @@
     "ts-node": "^10.9.2",
     "ts-loader": "^9.5.2",
     "typed-css-modules": "^0.9.1",
-    "webpack": "^5.99.9",
+    "webpack": "^5.109.2",
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
@@ -1275,9 +1275,9 @@
     "bufferutil": "^4.0.9",
     "classnames": "^2.5.1",
     "dayjs": "^1.11.10",
-    "diff": "^8.0.2",
-    "dompurify": "^3.2.7",
-    "glob": "^11.0.3",
+    "diff": "^8.0.4",
+    "dompurify": "^3.4.14",
+    "glob": "^11.1.0",
     "he": "^1.2.0",
     "ignore": "^6.0.2",
     "jsdom": "^24.0.0",
@@ -1289,6 +1289,6 @@
     "simplebar-react": "^3.3.1",
     "ui": "workspace:*",
     "utf-8-validate": "^6.0.5",
-    "ws": "^8.18.3"
+    "ws": "^8.21.3"
   }
 }

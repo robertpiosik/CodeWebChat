@@ -18,7 +18,10 @@ export namespace SortableList {
   export type Props<T extends Item> = {
     items: T[]
     on_reorder: (items: T[]) => void
-    on_add: (params?: { insertion_index?: number }) => void
+    on_add: (params?: {
+      insertion_index?: number
+      exact_insertion?: boolean
+    }) => void
     hide_add_button?: boolean
     render_content: (item: T, index: number) => React.ReactNode
     render_actions?: (item: T, index: number) => React.ReactNode
@@ -72,7 +75,9 @@ export function SortableList<T extends SortableList.Item>(
           codicon_icon="add"
           title={props.translations.add_title}
           on_click={() =>
-            props.on_add(is_top ? { insertion_index: 0 } : undefined)
+            props.on_add(
+              is_top ? { insertion_index: 0, exact_insertion: true } : undefined
+            )
           }
         />
       )}

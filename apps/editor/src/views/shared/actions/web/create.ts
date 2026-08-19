@@ -6,6 +6,7 @@ import { t } from '@/i18n'
 
 export const create = async (params: {
   reference_index?: number
+  exact_insertion?: boolean
 }): Promise<
   { config: ConfigWebConfigurationFormat; insertion_index?: number } | undefined
 > => {
@@ -13,9 +14,9 @@ export const create = async (params: {
   const current_web_configurations =
     config.get<ConfigWebConfigurationFormat[]>('webConfigurations', []) || []
 
-  let insertion_index: number | undefined
+  let insertion_index: number | undefined = params.reference_index
 
-  if (params.reference_index !== undefined) {
+  if (params.reference_index !== undefined && !params.exact_insertion) {
     const position_quick_pick = await new Promise<string | undefined>(
       (resolve) => {
         const quick_pick = vscode.window.createQuickPick()

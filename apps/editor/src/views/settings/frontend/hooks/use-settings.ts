@@ -178,10 +178,14 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_add_provider = (params?: { insertion_index?: number }) => {
+  const handle_add_provider = (params?: {
+    insertion_index?: number
+    exact_insertion?: boolean
+  }) => {
     post_message(vscode, {
       command: 'ADD_MODEL_PROVIDER',
-      insertion_index: params?.insertion_index
+      insertion_index: params?.insertion_index,
+      exact_insertion: params?.exact_insertion
     })
   }
 
@@ -223,10 +227,12 @@ export const use_settings = (vscode: any) => {
 
   const handle_add_api_configuration = (params?: {
     insertion_index?: number
+    exact_insertion?: boolean
   }) => {
     post_message(vscode, {
       command: 'CREATE_API_CONFIGURATION',
-      insertion_index: params?.insertion_index
+      insertion_index: params?.insertion_index,
+      exact_insertion: params?.exact_insertion
     })
   }
 
@@ -246,10 +252,12 @@ export const use_settings = (vscode: any) => {
 
   const handle_add_web_configuration = (params?: {
     insertion_index?: number
+    exact_insertion?: boolean
   }) => {
     post_message(vscode, {
       command: 'CREATE_WEB_CONFIGURATION',
-      insertion_index: params?.insertion_index
+      insertion_index: params?.insertion_index,
+      exact_insertion: params?.exact_insertion
     })
   }
 
@@ -419,12 +427,13 @@ export const use_settings = (vscode: any) => {
 
   const handle_add_template = (
     key: string,
-    params?: { insertion_index?: number }
+    params?: { insertion_index?: number; exact_insertion?: boolean }
   ) => {
     post_message(vscode, {
       command: 'CREATE_TEMPLATE',
       templates_key: key,
-      insertion_index: params?.insertion_index
+      insertion_index: params?.insertion_index,
+      exact_insertion: params?.exact_insertion
     })
   }
 

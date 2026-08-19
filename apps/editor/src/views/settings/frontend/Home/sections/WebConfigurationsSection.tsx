@@ -17,7 +17,10 @@ type Props = {
   web_configurations: WebConfiguration[]
   set_web_configurations: (configurations: WebConfiguration[]) => void
   on_reorder_web_configurations: (reordered: WebConfiguration[]) => void
-  on_add_web_configuration: (params?: { insertion_index?: number }) => void
+  on_add_web_configuration: (params?: {
+    insertion_index?: number
+    exact_insertion?: boolean
+  }) => void
   on_edit_web_configuration: (id: string) => void
   on_delete_web_configuration: (name: string) => void
   set_section_ref: (id: NavItem, el: HTMLDivElement | null) => void

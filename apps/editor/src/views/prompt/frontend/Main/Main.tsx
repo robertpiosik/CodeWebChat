@@ -292,11 +292,13 @@ export const Main: React.FC<Props> = (props) => {
 
   const handle_create_api_configuration = (params?: {
     insertion_index?: number
+    exact_insertion?: boolean
   }) => {
     post_message(props.vscode, {
       command: 'CREATE_API_CONFIGURATION',
       api_feature: props.api_prompt_type as any,
-      insertion_index: params?.insertion_index
+      insertion_index: params?.insertion_index,
+      exact_insertion: params?.exact_insertion
     })
   }
 
@@ -342,10 +344,14 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_create_web_configuration = (reference_index?: number) => {
+  const handle_create_web_configuration = (params?: {
+    insertion_index?: number
+    exact_insertion?: boolean
+  }) => {
     post_message(props.vscode, {
       command: 'CREATE_WEB_CONFIGURATION',
-      reference_index
+      reference_index: params?.insertion_index,
+      exact_insertion: params?.exact_insertion
     })
   }
 
