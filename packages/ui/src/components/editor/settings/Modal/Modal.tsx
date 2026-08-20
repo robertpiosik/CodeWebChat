@@ -9,11 +9,8 @@ export type ModalProps = {
 
 const ModalRoot: React.FC<ModalProps> = ({ children, on_close }) => {
   return (
-    <div
-      className={styles.overlay}
-      onClick={on_close}
-    >
-      <div onClick={(e) => e.stopPropagation()} className={styles.inner}>
+    <div className={styles.overlay} onMouseDown={on_close}>
+      <div onMouseDown={(e) => e.stopPropagation()} className={styles.inner}>
         {children}
       </div>
     </div>
