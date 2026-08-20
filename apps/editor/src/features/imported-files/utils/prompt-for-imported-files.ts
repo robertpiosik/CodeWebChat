@@ -435,8 +435,11 @@ export const prompt_for_imported_files = async (params: {
     }
 
     if (selected_items == 'search') {
+      const selected_uris = current_selected_items
+        .filter((i) => i.uri)
+        .map((i) => i.uri!.fsPath)
       const search_result = await search_files({
-        get_files: async () => shown_paths,
+        get_files: async () => selected_uris,
         workspace_provider,
         extension_context,
         websocket_manager,

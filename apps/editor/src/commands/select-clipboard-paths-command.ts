@@ -262,7 +262,7 @@ export const select_clipboard_paths_command = (
               }
               const search_button = {
                 iconPath: new vscode.ThemeIcon('search'),
-                tooltip: t('common.search-in-results')
+                tooltip: t('common.search-in-selected-results')
               }
 
               quick_pick.buttons = [
@@ -339,7 +339,8 @@ export const select_clipboard_paths_command = (
 
               if (selected_items === 'search') {
                 const search_result = await search_files({
-                  get_files: async () => absolute_paths,
+                  get_files: async () =>
+                    current_selected_items.map((i) => i.file_path),
                   workspace_provider,
                   extension_context,
                   websocket_manager,

@@ -149,7 +149,7 @@ export const select_unstaged_files_command = (
 
           const search_button = {
             iconPath: new vscode.ThemeIcon('search'),
-            tooltip: t('common.search-in-results')
+            tooltip: t('common.search-in-selected-results')
           }
           const close_button = {
             iconPath: new vscode.ThemeIcon('close'),
@@ -157,6 +157,10 @@ export const select_unstaged_files_command = (
           }
 
           quick_pick.buttons = [search_button, close_button]
+
+          let current_selected_items: readonly (vscode.QuickPickItem & {
+            file_path: string
+          })[] = []
 
           const selected_items = await new Promise<
             | readonly (vscode.QuickPickItem & { file_path: string })[]
@@ -167,6 +171,7 @@ export const select_unstaged_files_command = (
 
             quick_pick.onDidTriggerButton((button) => {
               if (button === search_button) {
+                current_selected_items = [...quick_pick.selectedItems]
                 resolve('search')
                 quick_pick.hide()
               } else if (button === close_button) {
@@ -214,7 +219,8 @@ export const select_unstaged_files_command = (
 
           if (selected_items === 'search') {
             const search_result = await search_files({
-              get_files: async () => existing_unstaged_files,
+              get_files: async () =>
+                current_selected_items.map((i) => i.file_path),
               workspace_provider,
               extension_context,
               websocket_manager,

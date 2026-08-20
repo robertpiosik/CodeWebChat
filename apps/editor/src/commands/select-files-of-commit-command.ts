@@ -429,7 +429,7 @@ export const select_files_of_commit_command = (
 
               const search_button = {
                 iconPath: new vscode.ThemeIcon('search'),
-                tooltip: t('common.search-in-results')
+                tooltip: t('common.search-in-selected-results')
               }
 
               const close_button = {
@@ -445,6 +445,7 @@ export const select_files_of_commit_command = (
               quick_pick_files.ignoreFocusOut = true
 
               let is_showing_folder_quick_pick = false
+              let current_selected_items: any[] = []
 
               const selected_files = await new Promise<
                 any[] | 'back' | undefined | 'search'
@@ -460,6 +461,9 @@ export const select_files_of_commit_command = (
                       quick_pick_files.hide()
                     } else if (button === search_button) {
                       is_resolved = true
+                      current_selected_items = [
+                        ...quick_pick_files.selectedItems
+                      ]
                       resolve('search')
                       quick_pick_files.hide()
                     } else if (button === close_button) {
@@ -551,7 +555,7 @@ export const select_files_of_commit_command = (
               if (selected_files === 'search') {
                 const search_result = await search_files({
                   get_files: async () =>
-                    valid_files.map((f) => f.absolute_path),
+                    current_selected_items.map((i) => i.file_path),
                   workspace_provider,
                   extension_context,
                   websocket_manager,

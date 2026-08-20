@@ -34,7 +34,7 @@ export const prompt_for_provided_results = async (params: {
   }
   const search_in_results_button = {
     iconPath: new vscode.ThemeIcon('search'),
-    tooltip: t('common.search-in-results')
+    tooltip: t('common.search-in-selected-results')
   }
 
   const is_multi_root =
@@ -111,12 +111,13 @@ export const prompt_for_provided_results = async (params: {
     quick_pick.onDidTriggerButton((button) => {
       if (button === search_in_results_button) {
         is_accepted = true
+        const selected = quick_pick.selectedItems
+          .map((item) => item.file_path)
+          .filter((p): p is string => p !== undefined)
         resolve({
           action: 'search-in-results',
-          matched_paths: params.files.map((f) => f.path),
-          selected_paths: quick_pick.selectedItems
-            .map((item) => item.file_path)
-            .filter((p): p is string => p !== undefined)
+          matched_paths: selected,
+          selected_paths: selected
         })
         quick_pick.hide()
       } else if (button === close_button) {

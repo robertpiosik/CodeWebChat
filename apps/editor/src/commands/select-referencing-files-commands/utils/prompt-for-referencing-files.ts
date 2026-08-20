@@ -216,7 +216,7 @@ export const prompt_for_referencing_files = async (params: {
 
     if (selected_items === 'search') {
       const search_result = await search_files({
-        get_files: async () => matched_files.map((m) => m.file_path),
+        get_files: async () => current_selected_items.map((i) => i.file_path),
         workspace_provider: params.workspace_provider,
         extension_context: params.extension_context,
         websocket_manager: params.websocket_manager,

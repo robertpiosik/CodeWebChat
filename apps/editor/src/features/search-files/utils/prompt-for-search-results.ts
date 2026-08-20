@@ -43,7 +43,7 @@ export const prompt_for_search_results = async (params: {
   }
   const search_in_results_button = {
     iconPath: new vscode.ThemeIcon('search'),
-    tooltip: t('common.search-in-results')
+    tooltip: t('common.search-in-selected-results')
   }
 
   const currently_checked = params.workspace_provider.get_checked_files()
@@ -169,12 +169,13 @@ export const prompt_for_search_results = async (params: {
         quick_pick.hide()
       } else if (button === search_in_results_button) {
         is_accepted = true
+        const selected = quick_pick.selectedItems
+          .map((item) => item.file_path)
+          .filter((p): p is string => p !== undefined)
         resolve({
           action: 'search-in-results',
-          matched_paths: [...params.matched_files, ...unmatched_checked_files],
-          selected_paths: quick_pick.selectedItems
-            .map((item) => item.file_path)
-            .filter((p): p is string => p !== undefined),
+          matched_paths: selected,
+          selected_paths: selected,
           unmatched_paths: unmatched_checked_files
         })
         quick_pick.hide()
