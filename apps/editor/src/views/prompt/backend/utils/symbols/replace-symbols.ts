@@ -37,7 +37,10 @@ export const replace_symbols = async (
     skill_definitions += result.changes_definitions
   }
 
-  if (processed_instructions.includes('#Commit(')) {
+  if (
+    processed_instructions.includes('#Commit(') ||
+    processed_instructions.includes('#CommitMessage(')
+  ) {
     const result = await replace_commit_symbol({
       instruction: processed_instructions
     })

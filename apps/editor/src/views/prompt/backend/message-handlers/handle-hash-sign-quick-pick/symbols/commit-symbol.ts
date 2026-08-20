@@ -1,12 +1,14 @@
 import * as vscode from 'vscode'
 import { execSync } from 'child_process'
 import { dictionary } from '@shared/constants/dictionary'
-import { LAST_SELECTED_REPOSITORY_IN_SYMBOLS_QUCK_PICK_STATE_KEY } from '@/constants/state-keys'
+import {
+  LAST_SELECTED_REPOSITORY_IN_SYMBOLS_QUCK_PICK_STATE_KEY,
+  LAST_SELECTED_COMMIT_REFERENCE_ACTION_STATE_KEY
+} from '@/constants/state-keys'
 import { GIT_LOG_SINCE_DURATION } from '@/constants/values'
 
 export const handle_commit_item = async (
-  extension_context: vscode.ExtensionContext,
-  symbol: 'Commit'
+  extension_context: vscode.ExtensionContext
 ): Promise<string | 'continue' | undefined> => {
   try {
     const workspace_folders = vscode.workspace.workspaceFolders
@@ -136,54 +138,131 @@ export const handle_commit_item = async (
         }
       }
 
-      const quick_pick = vscode.window.createQuickPick()
-      quick_pick.items = commit_items
-      quick_pick.placeholder = 'Select a commit to reference'
-      quick_pick.title = 'Commits'
-      quick_pick.buttons = [vscode.QuickInputButtons.Back]
-      quick_pick.matchOnDetail = true
+      let go_back_to_folders = false
 
-      const selected_commit = await new Promise<
-        vscode.QuickPickItem | 'back' | undefined
-      >((resolve) => {
-        let is_accepted = false
-        let did_trigger_back = false
-        const disposables: vscode.Disposable[] = []
+      while (true) {
+        const quick_pick = vscode.window.createQuickPick()
+        quick_pick.items = commit_items
+        quick_pick.placeholder = 'Select a commit to reference'
+        quick_pick.title = 'Commits'
+        quick_pick.buttons = [vscode.QuickInputButtons.Back]
+        quick_pick.matchOnDetail = true
 
-        disposables.push(
-          quick_pick.onDidTriggerButton((button) => {
-            if (button === vscode.QuickInputButtons.Back) {
-              did_trigger_back = true
+        const selected_commit = await new Promise<
+          vscode.QuickPickItem | 'back' | undefined
+        >((resolve) => {
+          let is_accepted = false
+          let did_trigger_back = false
+          const disposables: vscode.Disposable[] = []
+
+          disposables.push(
+            quick_pick.onDidTriggerButton((button) => {
+              if (button === vscode.QuickInputButtons.Back) {
+                did_trigger_back = true
+                quick_pick.hide()
+                resolve('back')
+              }
+            }),
+            quick_pick.onDidAccept(() => {
+              is_accepted = true
+              resolve(quick_pick.selectedItems[0])
               quick_pick.hide()
-              resolve('back')
-            }
-          }),
-          quick_pick.onDidAccept(() => {
-            is_accepted = true
-            resolve(quick_pick.selectedItems[0])
-            quick_pick.hide()
-          }),
-          quick_pick.onDidHide(() => {
-            if (!is_accepted && !did_trigger_back) {
-              resolve(undefined)
-            }
-            disposables.forEach((d) => d.dispose())
-            quick_pick.dispose()
-          })
-        )
-        quick_pick.show()
-      })
+            }),
+            quick_pick.onDidHide(() => {
+              if (!is_accepted && !did_trigger_back) {
+                resolve(undefined)
+              }
+              disposables.forEach((d) => d.dispose())
+              quick_pick.dispose()
+            })
+          )
+          quick_pick.show()
+        })
 
-      if (!selected_commit || selected_commit == 'back') {
-        if (git_folders.length > 1) {
+        if (!selected_commit || selected_commit == 'back') {
+          if (git_folders.length > 1) {
+            go_back_to_folders = true
+            break
+          }
+          return 'continue'
+        }
+
+        const action_quick_pick = vscode.window.createQuickPick()
+        const action_items = [
+          {
+            label: 'Diff with commit message'
+          },
+          {
+            label: 'Commit message only'
+          }
+        ]
+        action_quick_pick.items = action_items
+        action_quick_pick.placeholder = 'Select what to include'
+        action_quick_pick.title = 'Commit Reference Options'
+        action_quick_pick.buttons = [vscode.QuickInputButtons.Back]
+
+        const last_action = extension_context.workspaceState.get<string>(
+          LAST_SELECTED_COMMIT_REFERENCE_ACTION_STATE_KEY
+        )
+        if (last_action) {
+          const active = action_items.find((item) => item.label === last_action)
+          if (active) action_quick_pick.activeItems = [active]
+        }
+
+        const selected_action = await new Promise<
+          vscode.QuickPickItem | 'back' | undefined
+        >((resolve) => {
+          let is_accepted = false
+          let did_trigger_back = false
+          const disposables: vscode.Disposable[] = []
+
+          disposables.push(
+            action_quick_pick.onDidTriggerButton((button) => {
+              if (button === vscode.QuickInputButtons.Back) {
+                did_trigger_back = true
+                action_quick_pick.hide()
+                resolve('back')
+              }
+            }),
+            action_quick_pick.onDidAccept(() => {
+              is_accepted = true
+              resolve(action_quick_pick.selectedItems[0])
+              action_quick_pick.hide()
+            }),
+            action_quick_pick.onDidHide(() => {
+              if (!is_accepted && !did_trigger_back) {
+                resolve(undefined)
+              }
+              disposables.forEach((d) => d.dispose())
+              action_quick_pick.dispose()
+            })
+          )
+          action_quick_pick.show()
+        })
+
+        if (selected_action == 'back') {
           continue
         }
-        return 'continue'
-      }
 
-      if (selected_commit) {
+        if (!selected_action) {
+          return 'continue'
+        }
+
+        await extension_context.workspaceState.update(
+          LAST_SELECTED_COMMIT_REFERENCE_ACTION_STATE_KEY,
+          selected_action.label
+        )
+
+        const symbol =
+          selected_action.label === 'Commit message only'
+            ? 'CommitMessage'
+            : 'Commit'
         const message = (selected_commit.detail || '').replace(/"/g, '\\"')
         return `#${symbol}(${selected_folder.name}:${selected_commit.label} "${message}")`
+      }
+
+      if (go_back_to_folders) {
+        continue
       }
 
       return 'continue'

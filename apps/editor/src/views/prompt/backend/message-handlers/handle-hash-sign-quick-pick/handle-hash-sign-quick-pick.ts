@@ -30,7 +30,7 @@ const hash_sign_quick_pick = async (params: {
     },
     {
       label: commit_label,
-      description: 'Diff from a specific commit'
+      description: 'Changes from a specific commit'
     },
     {
       label: saved_context_label,
@@ -118,7 +118,7 @@ const hash_sign_quick_pick = async (params: {
         result = await handle_changes_item()
         break
       case commit_label:
-        result = await handle_commit_item(params.extension_context, 'Commit')
+        result = await handle_commit_item(params.extension_context)
         break
       case saved_context_label:
         result = await handle_saved_context_item(params.extension_context)

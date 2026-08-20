@@ -428,7 +428,8 @@ const build_commit_changes_markdown = (
 export const replace_commit_symbol = async (params: {
   instruction: string
 }): Promise<{ instruction: string; commit_definitions: string }> => {
-  const regex = /#Commit\(([^:]+):([a-fA-F0-9]+)\s*(?:"((?:[^"\\]|\\.)*)")?\)/g
+  const regex =
+    /#(Commit|CommitMessage)\(([^:]+):([a-fA-F0-9]+)\s*(?:"((?:[^"\\]|\\.)*)")?\)/g
 
   let result_instruction = params.instruction
   let commit_definitions = ''
@@ -444,9 +445,10 @@ export const replace_commit_symbol = async (params: {
 
   for (const match of matches) {
     const full_match = match[0]
-    const folder_name = match[1]
-    const commit_hash = match[2]
-    const commit_message = match[3]?.replace(/\\(.)/g, '$1')
+    const symbol_type = match[1]
+    const folder_name = match[2]
+    const commit_hash = match[3]
+    const commit_message = match[4]?.replace(/\\(.)/g, '$1')
 
     const target_folder = workspace_folders.find(
       (folder) => folder.name === folder_name
@@ -460,21 +462,7 @@ export const replace_commit_symbol = async (params: {
     }
 
     try {
-      const diff = execSync(`git show ${commit_hash}`, {
-        cwd: target_folder.uri.fsPath,
-        encoding: 'utf-8'
-      }).toString()
-
-      if (!diff || diff.length == 0) {
-        vscode.window.showInformationMessage(
-          t(
-            'views.prompt.handlers.utils.symbols.git.replace-git-symbols.commit-seems-empty',
-            { commit_hash }
-          )
-        )
-        result_instruction = result_instruction.replace(full_match, '')
-        continue
-      }
+      let replacement_text = ''
 
       let commit_message_body = ''
       try {
@@ -491,15 +479,6 @@ export const replace_commit_symbol = async (params: {
         })
       }
 
-      const replacement_text = build_commit_changes_markdown(
-        diff,
-        target_folder.uri.fsPath,
-        commit_hash,
-        workspace_folders.length > 1 ? folder_name : undefined,
-        commit_message_body
-      )
-      commit_definitions += replacement_text
-
       const short_hash = commit_hash.substring(0, 7)
       const header_text = `Commit ${short_hash}`
       const title_text = commit_message
@@ -510,12 +489,52 @@ export const replace_commit_symbol = async (params: {
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-|-$/g, '')
 
-      result_instruction = result_instruction.replace(
-        new RegExp(
-          `\\s*${full_match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`
-        ),
-        ` [${title_text}](#${link_hash}) `
-      )
+      if (symbol_type === 'Commit') {
+        const diff = execSync(`git show ${commit_hash}`, {
+          cwd: target_folder.uri.fsPath,
+          encoding: 'utf-8'
+        }).toString()
+
+        if (!diff || diff.length == 0) {
+          vscode.window.showInformationMessage(
+            t(
+              'views.prompt.handlers.utils.symbols.git.replace-git-symbols.commit-seems-empty',
+              { commit_hash }
+            )
+          )
+          result_instruction = result_instruction.replace(full_match, '')
+          continue
+        }
+
+        replacement_text = build_commit_changes_markdown(
+          diff,
+          target_folder.uri.fsPath,
+          commit_hash,
+          workspace_folders.length > 1 ? folder_name : undefined,
+          commit_message_body
+        )
+      } else {
+        if (commit_message_body) {
+          replacement_text = `---\n\n${commit_message_body}\n\n---\n\n`
+        }
+      }
+
+      if (symbol_type === 'Commit') {
+        commit_definitions += replacement_text
+        result_instruction = result_instruction.replace(
+          new RegExp(
+            `\\s*${full_match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`
+          ),
+          ` [${title_text}](#${link_hash}) `
+        )
+      } else {
+        result_instruction = result_instruction.replace(
+          new RegExp(
+            `\\s*${full_match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`
+          ),
+          `\n\n${replacement_text}`
+        )
+      }
     } catch (error) {
       vscode.window.showErrorMessage(
         dictionary.error_message.FAILED_TO_GET_DIFF_FOR_COMMIT(commit_hash)

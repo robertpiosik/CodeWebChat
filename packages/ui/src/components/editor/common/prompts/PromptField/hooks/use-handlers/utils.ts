@@ -10,7 +10,7 @@ export const get_symbol_ranges = (params: {
 }): { start: number; end: number }[] => {
   const ranges: { start: number; end: number }[] = []
   const regex =
-    /`([^`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "(?:\\.|[^"\\])*"\))|(#Commit\([^:]+:[^\s"]+ "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>[\s\S]*?<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
+    /`([^`]+)`|(#Changes\([^)]+\))|(#Selection)|(#SavedContext\((?:WorkspaceState|JSON) "(?:\\.|[^"\\])*"\))|(#(?:Commit|CommitMessage)\([^:]+:[^\s"]+ "(?:\\.|[^"\\])*"\))|(<fragment path="[^"]+"(?: [^>]+)?>[\s\S]*?<\/fragment>)|(#Skill\([^)]+\))|(#Image\([a-fA-F0-9]+\))|(#PastedText\([a-fA-F0-9]+:\d+\))|(#Website\([^)]+\))/g
 
   let match
   while ((match = regex.exec(params.text)) !== null) {

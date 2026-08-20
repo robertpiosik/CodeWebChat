@@ -146,7 +146,8 @@
     content: '\ebdb';
   }
 
-  &--commit &__icon::before {
+  &--commit &__icon::before,
+  &--commitmessage &__icon::before {
     content: '\eafc';
   }
 

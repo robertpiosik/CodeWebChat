@@ -22,6 +22,8 @@ export const LAST_SELECTED_CONTEXT_SOURCE_IN_SYMBOLS_QUICK_PICK_STATE_KEY =
   'last-selected-context-source-in-symbols-quick-pick'
 export const LAST_SELECTED_REPOSITORY_IN_SYMBOLS_QUCK_PICK_STATE_KEY =
   'last-selected-repository-in-symbols-quick-pick'
+export const LAST_SELECTED_COMMIT_REFERENCE_ACTION_STATE_KEY =
+  'last-selected-commit-reference-action'
 
 export const CHECKPOINTS_STATE_KEY = 'checkpoints'
 export const TEMPORARY_CHECKPOINT_STATE_KEY = 'temporary-checkpoint'

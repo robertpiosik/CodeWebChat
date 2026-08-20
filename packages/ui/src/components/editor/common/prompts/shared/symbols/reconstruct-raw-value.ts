@@ -53,7 +53,10 @@ export const reconstruct_raw_value_from_node = (node: Node): string => {
         const suffix = inner_content.substring(index + expected_text.length)
         return `${prefix}#Selection${suffix}`
       }
-    } else if (el.dataset.type == 'commit-symbol') {
+    } else if (
+      el.dataset.type == 'commit-symbol' ||
+      el.dataset.type == 'commitmessage-symbol'
+    ) {
       const repo_name = el.dataset.repoName
       const commit_hash = el.dataset.commitHash
       const commit_message = el.dataset.commitMessage
@@ -65,7 +68,9 @@ export const reconstruct_raw_value_from_node = (node: Node): string => {
       if (index != -1) {
         const prefix = inner_content.substring(0, index)
         const suffix = inner_content.substring(index + short_hash.length)
-        return `${prefix}#Commit(${repo_name}:${commit_hash} "${commit_message.replace(
+        const symbolName =
+          el.dataset.type == 'commit-symbol' ? 'Commit' : 'CommitMessage'
+        return `${prefix}#${symbolName}(${repo_name}:${commit_hash} "${commit_message.replace(
           /"/g,
           '\\"'
         )}")${suffix}`

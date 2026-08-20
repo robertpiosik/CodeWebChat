@@ -58,7 +58,8 @@ export const get_highlighted_text = (params: {
   const saved_context_regex_part =
     '#SavedContext\\((?:WorkspaceState|JSON) "(?:\\\\.|[^"\\\\])*"\\)'
 
-  const commit_regex_part = '#Commit\\([^:]+:[^\\s"]+ "(?:\\\\.|[^"\\\\])*"\\)'
+  const commit_regex_part =
+    '#(?:Commit|CommitMessage)\\([^:]+:[^\\s"]+ "(?:\\\\.|[^"\\\\])*"\\)'
 
   const fragment_regex_part =
     '<fragment path="[^"]+"(?: [^>]+)?>[\\s\\S]*?<\\/fragment>'
@@ -176,13 +177,13 @@ export const get_highlighted_text = (params: {
         )}"</span></span>`
       }
       const commit_match = part.match(
-        /^#Commit\(([^:]+):([^\s"]+) "((?:\\.|[^"\\])*)"\)$/
+        /^#(Commit|CommitMessage)\(([^:]+):([^\s"]+) "((?:\\.|[^"\\])*)"\)$/
       )
       if (part && commit_match) {
-        const symbol = 'Commit'
-        const repo_name = commit_match[1]
-        const commit_hash = commit_match[2]
-        const commit_message = commit_match[3].replace(/\\"/g, '"')
+        const symbol = commit_match[1]
+        const repo_name = commit_match[2]
+        const commit_hash = commit_match[3]
+        const commit_message = commit_match[4].replace(/\\"/g, '"')
         const short_hash = commit_hash.substring(0, 7)
         return `<span class="${cn(
           styles['symbol'],
