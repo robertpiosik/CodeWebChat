@@ -7,6 +7,7 @@ import { translations as copy_prompt } from './copy-prompt'
 import { translations as handle_undo } from './handle-undo'
 import { translations as utils } from './utils'
 import { translations as handle_pick_api_reasoning_effort } from './handle-pick-api-reasoning-effort'
+import { translations as handle_template_quick_pick } from './handle-template-quick-pick'
 
 export const translations = {
   ...delete_task,
@@ -17,5 +18,6 @@ export const translations = {
   ...copy_prompt,
   ...handle_undo,
   ...utils,
-  ...handle_pick_api_reasoning_effort
+  ...handle_pick_api_reasoning_effort,
+  ...handle_template_quick_pick
 }

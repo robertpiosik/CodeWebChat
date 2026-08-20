@@ -43,6 +43,24 @@ export const handle_template_quick_pick = async (
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const templates = config.get<Template[]>(templates_key, []) || []
 
+  if (!templates.length) {
+    prompt_view_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
+    const selection = await vscode.window.showInformationMessage(
+      t('views.prompt.handlers.handle-template-quick-pick.no-templates-found'),
+      t('views.prompt.handlers.handle-template-quick-pick.open-settings')
+    )
+    if (
+      selection ==
+      t('views.prompt.handlers.handle-template-quick-pick.open-settings')
+    ) {
+      vscode.commands.executeCommand(
+        'codeWebChat.settings',
+        'section:general:group:prompt-field'
+      )
+    }
+    return
+  }
+
   const templates_quick_pick = vscode.window.createQuickPick<
     vscode.QuickPickItem & { template?: Template; index?: number }
   >()
