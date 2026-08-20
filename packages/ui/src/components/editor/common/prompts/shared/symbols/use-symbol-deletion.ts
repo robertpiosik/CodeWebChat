@@ -23,6 +23,35 @@ export const use_symbol_deletion = (params: {
     params.on_delete(new_value, new_raw_cursor_pos)
   }
 
+  const get_start_index = (
+    symbol_element: HTMLElement,
+    search_pattern: string
+  ): number => {
+    if (params.input_ref.current) {
+      const pre_node_range = document.createRange()
+      pre_node_range.selectNodeContents(params.input_ref.current)
+      pre_node_range.setEndBefore(symbol_element)
+      const display_pos = pre_node_range.toString().length
+
+      const raw_pos = map_display_pos_to_raw_pos({
+        display_pos,
+        raw_text: params.value,
+        context_file_paths: params.context_file_paths
+      })
+
+      if (params.value.startsWith(search_pattern, raw_pos)) {
+        return raw_pos
+      }
+
+      const start = Math.max(0, raw_pos - 10)
+      const possible_index = params.value.indexOf(search_pattern, start)
+      if (possible_index !== -1 && possible_index <= raw_pos + 10) {
+        return possible_index
+      }
+    }
+    return params.value.indexOf(search_pattern)
+  }
+
   const handle_symbol_deletion_by_click = (symbol_element: HTMLElement) => {
     const symbol_type = symbol_element.dataset.type
     if (symbol_type == 'file-symbol') {
@@ -30,7 +59,7 @@ export const use_symbol_deletion = (params: {
       if (!file_path || !params.context_file_paths?.includes(file_path)) return
 
       const search_pattern = `\`${file_path}\``
-      const start_index = params.value.indexOf(search_pattern)
+      const start_index = get_start_index(symbol_element, search_pattern)
 
       if (start_index != -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
@@ -40,7 +69,7 @@ export const use_symbol_deletion = (params: {
       if (!branch_name) return
 
       const search_pattern = `#Changes(${branch_name})`
-      const start_index = params.value.indexOf(search_pattern)
+      const start_index = get_start_index(symbol_element, search_pattern)
 
       if (start_index != -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
@@ -53,21 +82,21 @@ export const use_symbol_deletion = (params: {
       const search_pattern = `#SavedContext(${context_type} "${context_name
         .replace(/\\/g, '\\\\')
         .replace(/"/g, '\\"')}")`
-      const start_index = params.value.indexOf(search_pattern)
+      const start_index = get_start_index(symbol_element, search_pattern)
 
       if (start_index != -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
     } else if (symbol_type == 'selection-symbol') {
       const search_pattern = '#Selection'
-      const start_index = params.value.indexOf(search_pattern)
+      const start_index = get_start_index(symbol_element, search_pattern)
 
       if (start_index != -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
     } else if (symbol_type == 'clipboard-paths-symbol') {
       const search_pattern = '#ClipboardPaths'
-      const start_index = params.value.indexOf(search_pattern)
+      const start_index = get_start_index(symbol_element, search_pattern)
 
       if (start_index != -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
@@ -87,7 +116,7 @@ export const use_symbol_deletion = (params: {
         /"/g,
         '\\\\"'
       )}")`
-      const start_index = params.value.indexOf(search_pattern)
+      const start_index = get_start_index(symbol_element, search_pattern)
 
       if (start_index != -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
@@ -99,7 +128,7 @@ export const use_symbol_deletion = (params: {
       if (!agent || !repo || !skillName) return
 
       const search_pattern = `#Skill(${agent}:${repo}:${skillName})`
-      const start_index = params.value.indexOf(search_pattern)
+      const start_index = get_start_index(symbol_element, search_pattern)
 
       if (start_index != -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
@@ -124,11 +153,11 @@ export const use_symbol_deletion = (params: {
       const search_pattern_old = `<fragment ${attributes}>\n${content}\n</fragment>`
 
       let search_pattern = search_pattern_new
-      let start_index = params.value.indexOf(search_pattern)
+      let start_index = get_start_index(symbol_element, search_pattern)
 
       if (start_index == -1) {
         search_pattern = search_pattern_old
-        start_index = params.value.indexOf(search_pattern)
+        start_index = get_start_index(symbol_element, search_pattern)
       }
 
       if (start_index != -1) {
@@ -139,7 +168,7 @@ export const use_symbol_deletion = (params: {
       if (!hash) return
 
       const search_pattern = `#Image(${hash})`
-      const start_index = params.value.indexOf(search_pattern)
+      const start_index = get_start_index(symbol_element, search_pattern)
 
       if (start_index != -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
@@ -150,7 +179,7 @@ export const use_symbol_deletion = (params: {
       if (!hash || !token_count) return
 
       const search_pattern = `#PastedText(${hash}:${token_count})`
-      const start_index = params.value.indexOf(search_pattern)
+      const start_index = get_start_index(symbol_element, search_pattern)
 
       if (start_index != -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
@@ -160,7 +189,7 @@ export const use_symbol_deletion = (params: {
       if (!url) return
 
       const search_pattern = `#Website(${url})`
-      const start_index = params.value.indexOf(search_pattern)
+      const start_index = get_start_index(symbol_element, search_pattern)
 
       if (start_index != -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
@@ -170,7 +199,7 @@ export const use_symbol_deletion = (params: {
       if (!url) return
 
       const search_pattern = `#Url(${url})`
-      const start_index = params.value.indexOf(search_pattern)
+      const start_index = get_start_index(symbol_element, search_pattern)
 
       if (start_index != -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
