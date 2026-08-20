@@ -71,11 +71,11 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
       <UiSection
         ref={ref}
         title={t('api-calls.title')}
-        subtitle={t('api-calls.configurations.subtitle')}
+        subtitle={t('api-calls.subtitle')}
       >
         <UiNotice type="info">
           <Translation
-            id="api-calls.model-providers.notice.credentials"
+            id="api-calls.notice.credentials"
             components={{
               link: (
                 <a
@@ -219,11 +219,11 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             props.set_section_ref('section:api-calls:group:api-defaults', el)
           }
         >
-          <UiGroup
-            title={t('api-calls.configurations.default-configurations.title')}
-          >
+          <UiGroup title={t('api-calls.default-configurations.title')}>
             <DefaultConfigurationSelector
-              title={t('api-calls.configurations.tool.intelligent-update')}
+              title={t(
+                'api-calls.default-configurations.tool.intelligent-update'
+              )}
               value={props.defaults['intelligent-update'] || null}
               configurations={selector_configurations}
               on_unset={() =>
@@ -241,7 +241,7 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
               }}
             />
             <DefaultConfigurationSelector
-              title={t('api-calls.configurations.tool.code-at-cursor')}
+              title={t('api-calls.default-configurations.tool.code-at-cursor')}
               value={props.defaults['code-at-cursor'] || null}
               configurations={selector_configurations}
               on_unset={() =>
@@ -256,7 +256,7 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
               }}
             />
             <DefaultConfigurationSelector
-              title={t('api-calls.configurations.tool.commit-messages')}
+              title={t('api-calls.default-configurations.tool.commit-messages')}
               value={props.defaults['commit-messages'] || null}
               configurations={selector_configurations}
               on_unset={() =>
@@ -271,7 +271,9 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
               }}
             />
             <DefaultConfigurationSelector
-              title={t('api-calls.configurations.tool.intelligent-file-search')}
+              title={t(
+                'api-calls.default-configurations.tool.intelligent-file-search'
+              )}
               value={props.defaults['intelligent-file-search'] || null}
               configurations={selector_configurations}
               on_unset={() =>
@@ -292,7 +294,7 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             />
 
             <DefaultConfigurationSelector
-              title={t('api-calls.configurations.tool.voice-input')}
+              title={t('api-calls.default-configurations.tool.voice-input')}
               value={props.defaults['voice-input'] || null}
               configurations={selector_configurations}
               on_unset={() =>
@@ -314,13 +316,11 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             props.set_section_ref('section:api-calls:group:api-behavior', el)
           }
         >
-          <UiGroup title={t('api-calls.configurations.behavior.title')}>
+          <UiGroup title={t('api-calls.behavior.title')}>
             <UiItem
-              title={t(
-                'api-calls.configurations.intelligent-update.auto-run.title'
-              )}
+              title={t('api-calls.behavior.intelligent-update.auto-run.title')}
               description={t(
-                'api-calls.configurations.intelligent-update.auto-run.description'
+                'api-calls.behavior.intelligent-update.auto-run.description'
               )}
               slot_right={
                 <UiToggler
@@ -340,16 +340,11 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             )
           }
         >
-          <UiGroup
-            title={t('api-calls.configurations.system-instructions.title')}
-            is_last
-          >
+          <UiGroup title={t('api-calls.system-instructions.title')} is_last>
             <UiItem
-              title={t(
-                'api-calls.configurations.edit-files-system-instructions.title'
-              )}
+              title={t('api-calls.system-instructions.edit-files.title')}
               description={t(
-                'api-calls.configurations.edit-files-system-instructions.description'
+                'api-calls.system-instructions.edit-files.description'
               )}
               is_toggleable
               translations={{

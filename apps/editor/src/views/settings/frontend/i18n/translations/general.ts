@@ -35,7 +35,7 @@ export const translations = {
     hu: 'Megnyitás...',
     bg: 'Отваряне...'
   },
-  'general.open-editor-settings.title': {
+  'general.open-links.open-editor-settings.title': {
     en: 'Open Editor Settings',
     pl: 'Otwórz ustawienia edytora',
     'zh-cn': '打开编辑器设置',
@@ -53,7 +53,7 @@ export const translations = {
     hu: 'Szerkesztő Beállításainak Megnyitása',
     bg: 'Отваряне на настройки на редактора'
   },
-  'general.open-editor-settings.description': {
+  'general.open-links.open-editor-settings.description': {
     en: 'For general editor settings, visit the Editor Settings Page.',
     pl: 'Aby uzyskać ogólne ustawienia edytora, odwiedź stronę ustawień edytora.',
     'zh-cn': '有关常规编辑器设置，请访问编辑器设置页面。',
@@ -72,7 +72,7 @@ export const translations = {
     hu: 'Az általános beállításokhoz látogassa meg a Beállítások oldalt.',
     bg: 'За общи настройки посетете страницата с настройки.'
   },
-  'general.open-editor-settings.action': {
+  'general.open-links.open-editor-settings.action': {
     en: 'Open Editor Settings',
     pl: 'Otwórz ustawienia edytora',
     'zh-cn': '打开编辑器设置',
@@ -90,7 +90,7 @@ export const translations = {
     hu: 'Szerkesztő Beállításainak Megnyitása',
     bg: 'Отваряне на настройки на редактора'
   },
-  'general.ignore-patterns.title': {
+  'general.open-links.ignore-patterns.title': {
     en: 'Ignore Patterns',
     pl: 'Wzorce ignorowania',
     'zh-cn': '忽略模式',
@@ -108,7 +108,7 @@ export const translations = {
     hu: 'Mellőzendő Minták',
     bg: 'Шаблони за игнориране'
   },
-  'general.ignore-patterns.description': {
+  'general.open-links.ignore-patterns.description': {
     en: "Glob patterns that you don't want to place in .gitignore files.",
     pl: 'Wzorce glob, których nie chcesz umieszczać w plikach .gitignore.',
     'zh-cn': '您不想放在 .gitignore 文件中的 Glob 模式。',
@@ -126,7 +126,7 @@ export const translations = {
     hu: 'Glob minták, amiket nem akar .gitignore fájlokba tenni.',
     bg: 'Glob шаблони, които не искате в .gitignore.'
   },
-  'general.ignore-patterns.action': {
+  'general.open-links.ignore-patterns.action': {
     en: 'Open Settings File',
     pl: 'Otwórz plik ustawień',
     'zh-cn': '打开设置文件',
@@ -144,7 +144,7 @@ export const translations = {
     hu: 'Beállításfájl Megnyitása',
     bg: 'Отваряне на файла с настройки'
   },
-  'general.allow-patterns.title': {
+  'general.open-links.allow-patterns.title': {
     en: 'Allow Patterns',
     pl: 'Wzorce zezwalania',
     'zh-cn': '允许模式',
@@ -162,7 +162,7 @@ export const translations = {
     hu: 'Engedélyezett Minták',
     bg: 'Разрешени шаблони'
   },
-  'general.allow-patterns.description': {
+  'general.open-links.allow-patterns.description': {
     en: 'Glob patterns that you want to include despite being ignored by .gitignore.',
     pl: 'Wzorce glob, które chcesz dołączyć mimo ignorowania przez .gitignore.',
     'zh-cn': '尽管被 .gitignore 忽略，您仍希望包含的 Glob 模式。',
@@ -181,7 +181,7 @@ export const translations = {
     hu: 'Glob minták, amiket be akar vonni a .gitignore ellenére.',
     bg: 'Glob шаблони за включване въпреки .gitignore.'
   },
-  'general.allow-patterns.action': {
+  'general.open-links.allow-patterns.action': {
     en: 'Open Settings File',
     pl: 'Otwórz plik ustawień',
     'zh-cn': '打开设置文件',
@@ -199,7 +199,7 @@ export const translations = {
     hu: 'Beállításfájl Megnyitása',
     bg: 'Отваряне на файла с настройки'
   },
-  'general.context-size-warning-threshold.title': {
+  'general.prompt-field.context-size-warning-threshold.title': {
     en: 'Context Size Warning Threshold',
     pl: 'Próg ostrzeżenia o rozmiarze kontekstu',
     'zh-cn': '上下文大小警告阈值',
@@ -217,7 +217,7 @@ export const translations = {
     hu: 'Kontextus Méret Figyelmeztetési Küszöb',
     bg: 'Праг за предупреждение за размер на контекст'
   },
-  'general.context-size-warning-threshold.description': {
+  'general.prompt-field.context-size-warning-threshold.description': {
     en: 'A virtual context size limit.',
     pl: 'Wirtualny limit rozmiaru kontekstu.',
     'zh-cn': '虚拟上下文大小限制。',
@@ -235,7 +235,7 @@ export const translations = {
     hu: 'Egy virtuális kontextusméret-korlát.',
     bg: 'Виртуален лимит за размер на контекста.'
   },
-  'general.check-new-files.title': {
+  'general.context.check-new-files.title': {
     en: 'Check New Files',
     pl: 'Sprawdź nowe pliki',
     'zh-cn': '检查新文件',
@@ -253,7 +253,7 @@ export const translations = {
     hu: 'Új Fájlok Ellenőrzése',
     bg: 'Проверка на нови файлове'
   },
-  'general.check-new-files.description': {
+  'general.context.check-new-files.description': {
     en: 'Automatically include newly created files in context.',
     pl: 'Automatycznie uwzględniaj nowo utworzone pliki w kontekście.',
     'zh-cn': '自动将新创建的文件包含在上下文中。',
@@ -271,7 +271,7 @@ export const translations = {
     hu: 'Új fájlok automatikus bevonása a kontextusba.',
     bg: 'Автоматично включване на нови файлове в контекста.'
   },
-  'general.send-with-shift-enter.title': {
+  'general.prompt-field.send-with-shift-enter.title': {
     en: 'Send with Shift+Enter',
     pl: 'Wyślij za pomocą Shift+Enter',
     'zh-cn': '使用 Shift+Enter 发送',
@@ -289,7 +289,7 @@ export const translations = {
     hu: 'Küldés Shift+Enterrel',
     bg: 'Изпращане с Shift+Enter'
   },
-  'general.send-with-shift-enter.description': {
+  'general.prompt-field.send-with-shift-enter.description': {
     en: 'Use Shift+Enter to send messages and Enter to insert a new line.',
     pl: 'Użyj Shift+Enter, aby wysłać wiadomość, a Enter, aby wstawić nowy wiersz.',
     'zh-cn': '使用 Shift+Enter 发送消息，使用 Enter 插入新行。',
@@ -325,7 +325,7 @@ export const translations = {
     hu: 'Commit Üzenetek',
     bg: 'Съобщения за commit'
   },
-  'general.attach-ascii-tree-of-context.title': {
+  'general.commit-messages.attach-ascii-tree-of-context.title': {
     en: 'Attach ASCII Tree of Context',
     pl: 'Dołącz drzewo ASCII kontekstu',
     'zh-cn': '附加上下文的 ASCII 树',
@@ -343,7 +343,7 @@ export const translations = {
     hu: 'Kontextus ASCII fájlfájának csatolása',
     bg: 'Прикачете ASCII дърво на контекста'
   },
-  'general.attach-ascii-tree-of-context.description': {
+  'general.commit-messages.attach-ascii-tree-of-context.description': {
     en: 'Behavior in the commit generation flow.',
     pl: 'Zachowanie w procesie generowania commitów.',
     'zh-cn': '提交生成流程中的行为。',
@@ -361,7 +361,7 @@ export const translations = {
     hu: 'Viselkedés a commit generálási folyamatban.',
     bg: 'Поведение в процеса на генериране на commit.'
   },
-  'general.attach-ascii-tree-of-context.ask': {
+  'general.commit-messages.attach-ascii-tree-of-context.ask': {
     en: 'Ask',
     pl: 'Pytaj',
     'zh-cn': '询问',
@@ -379,7 +379,7 @@ export const translations = {
     hu: 'Kérdezés',
     bg: 'Попитай'
   },
-  'general.attach-ascii-tree-of-context.always': {
+  'general.commit-messages.attach-ascii-tree-of-context.always': {
     en: 'Always',
     pl: 'Zawsze',
     'zh-cn': '总是',
@@ -397,7 +397,7 @@ export const translations = {
     hu: 'Mindig',
     bg: 'Винаги'
   },
-  'general.attach-ascii-tree-of-context.never': {
+  'general.commit-messages.attach-ascii-tree-of-context.never': {
     en: 'Never',
     pl: 'Nigdy',
     'zh-cn': '从不',
@@ -415,43 +415,46 @@ export const translations = {
     hu: 'Soha',
     bg: 'Никога'
   },
-  'general.select-all-prompts-in-commit-messages-by-default.title': {
-    en: 'Select All Prompts by Default',
-    pl: 'Domyślnie wybieraj wszystkie prompty',
-    'zh-cn': '默认选择所有提示',
-    ja: 'デフォルトですべてのプロンプトを選択',
-    'zh-tw': '預設選擇所有提示',
-    de: 'Standardmäßig alle Prompts auswählen',
-    es: 'Seleccionar todos los prompts por defecto',
-    fr: 'Sélectionner tous les prompts par défaut',
-    'pt-br': 'Selecionar todos os prompts por padrão',
-    ru: 'Выбирать все промпты по умолчанию',
-    ko: '기본적으로 모든 프롬프트 선택',
-    it: 'Seleziona tutti i prompt per impostazione predefinita',
-    tr: 'Varsayılan olarak tüm istemleri seç',
-    cs: 'Ve výchozím nastavení vybrat všechny prompty',
-    hu: 'Minden prompt kiválasztása alapértelmezés szerint',
-    bg: 'Избор на всички промптове по подразбиране'
-  },
-  'general.select-all-prompts-in-commit-messages-by-default.description': {
-    en: 'Determines whether checkboxes are checked from the start.',
-    pl: 'Określa, czy checkboxy są zaznaczone od samego początku.',
-    'zh-cn': '决定复选框是否从一开始就被选中。',
-    ja: '最初からチェックボックスがオンになっているかどうかを決定します。',
-    'zh-tw': '決定核取方塊是否從一開始就被選取。',
-    de: 'Legt fest, ob Kontrollkästchen von Anfang an aktiviert sind.',
-    es: 'Determina si las casillas de verificación están marcadas desde el principio.',
-    fr: 'Détermine si les cases à cocher sont cochées dès le début.',
-    'pt-br': 'Determina se as caixas de seleção estão marcadas desde o início.',
-    ru: 'Определяет, установлены ли флажки с самого начала.',
-    ko: '처음부터 확인란이 선택되어 있는지 여부를 결정합니다.',
-    it: "Determina se le caselle di controllo sono selezionate dall'inizio.",
-    tr: 'Onay kutularının baştan işaretli olup olmadığını belirler.',
-    cs: 'Určuje, zda jsou zaškrtávací políčka od začátku zaškrtnutá.',
-    hu: 'Meghatározza, hogy a jelölőnégyzetek kezdettől fogva be vannak-e jelölve.',
-    bg: 'Определя дали квадратчетата за отметка са отметнати от самото начало.'
-  },
-  'general.commit-message-instructions.title': {
+  'general.commit-messages.select-all-prompts-in-commit-messages-by-default.title':
+    {
+      en: 'Select All Prompts by Default',
+      pl: 'Domyślnie wybieraj wszystkie prompty',
+      'zh-cn': '默认选择所有提示',
+      ja: 'デフォルトですべてのプロンプトを選択',
+      'zh-tw': '預設選擇所有提示',
+      de: 'Standardmäßig alle Prompts auswählen',
+      es: 'Seleccionar todos los prompts por defecto',
+      fr: 'Sélectionner tous les prompts par défaut',
+      'pt-br': 'Selecionar todos os prompts por padrão',
+      ru: 'Выбирать все промпты по умолчанию',
+      ko: '기본적으로 모든 프롬프트 선택',
+      it: 'Seleziona tutti i prompt per impostazione predefinita',
+      tr: 'Varsayılan olarak tüm istemleri seç',
+      cs: 'Ve výchozím nastavení vybrat všechny prompty',
+      hu: 'Minden prompt kiválasztása alapértelmezés szerint',
+      bg: 'Избор на всички промптове по подразбиране'
+    },
+  'general.commit-messages.select-all-prompts-in-commit-messages-by-default.description':
+    {
+      en: 'Determines whether checkboxes are checked from the start.',
+      pl: 'Określa, czy checkboxy są zaznaczone od samego początku.',
+      'zh-cn': '决定复选框是否从一开始就被选中。',
+      ja: '最初からチェックボックスがオンになっているかどうかを決定します。',
+      'zh-tw': '決定核取方塊是否從一開始就被選取。',
+      de: 'Legt fest, ob Kontrollkästchen von Anfang an aktiviert sind.',
+      es: 'Determina si las casillas de verificación están marcadas desde el principio.',
+      fr: 'Détermine si les cases à cocher sont cochées dès le début.',
+      'pt-br':
+        'Determina se as caixas de seleção estão marcadas desde o início.',
+      ru: 'Определяет, установлены ли флажки с самого начала.',
+      ko: '처음부터 확인란이 선택되어 있는지 여부를 결정합니다.',
+      it: "Determina se le caselle di controllo sono selezionate dall'inizio.",
+      tr: 'Onay kutularının baştan işaretli olup olmadığını belirler.',
+      cs: 'Určuje, zda jsou zaškrtávací políčka od začátku zaškrtnutá.',
+      hu: 'Meghatározza, hogy a jelölőnégyzetek kezdettől fogva be vannak-e jelölve.',
+      bg: 'Определя дали квадратчетата за отметка са отметнати от самото начало.'
+    },
+  'general.commit-messages.commit-message-instructions.title': {
     en: 'Commit Message Instructions',
     pl: 'Instrukcje wiadomości commitu',
     'zh-cn': '提交信息说明',
@@ -469,7 +472,7 @@ export const translations = {
     hu: 'Commit Üzenet Utasítások',
     bg: 'Инструкции за съобщения за commit'
   },
-  'general.commit-message-instructions.description': {
+  'general.commit-messages.commit-message-instructions.description': {
     en: 'Describe style and conventions (e.g. Conventional Commits, gitmoji).',
     pl: 'Opisz styl i konwencje (np. Conventional Commits, gitmoji).',
     'zh-cn': '描述样式和规范（例如 Conventional Commits、gitmoji）。',
@@ -488,7 +491,7 @@ export const translations = {
     hu: 'Írja le a stílust és a konvenciókat (pl. Conventional Commits, gitmoji).',
     bg: 'Опишете стила и конвенциите (напр. Conventional Commits, gitmoji).'
   },
-  'general.clear-checks-in-workspace-behavior.title': {
+  'general.context.clear-checks-in-workspace-behavior.title': {
     en: 'Clear Checks in Workspace Behavior',
     pl: 'Zachowanie czyszczenia zaznaczeń w obszarze roboczym',
     'zh-cn': '工作区中“清除检查”的行为',
@@ -506,7 +509,7 @@ export const translations = {
     hu: 'Kijelölés Törlése a Munkaterületen',
     bg: 'Поведение при изчистване на избора'
   },
-  'general.clear-checks-in-workspace-behavior.description': {
+  'general.context.clear-checks-in-workspace-behavior.description': {
     en: "Behavior of the 'Clear Checks' button in the Workspace view.",
     pl: "Zachowanie przycisku 'Wyczyść zaznaczenia' w widoku obszaru roboczego.",
     'zh-cn': '工作区视图中“清除检查”按钮的行为。',
@@ -525,7 +528,7 @@ export const translations = {
     hu: "A 'Kijelölés Törlése' gomb viselkedése.",
     bg: "Поведение на бутона 'Изчистване' в работното пространство."
   },
-  'general.clear-checks.ignore-open-editors': {
+  'general.context.clear-checks.ignore-open-editors': {
     en: 'Ignore Open Editors',
     pl: 'Ignoruj otwarte edytory',
     'zh-cn': '忽略打开的编辑器',
@@ -543,7 +546,7 @@ export const translations = {
     hu: 'Nyitott Szerkesztők Figyelmen Kívül Hagyása',
     bg: 'Игнориране на отворени редактори'
   },
-  'general.clear-checks.uncheck-all': {
+  'general.context.clear-checks.uncheck-all': {
     en: 'Uncheck All',
     pl: 'Odznacz wszystko',
     'zh-cn': '取消全选',
@@ -561,7 +564,7 @@ export const translations = {
     hu: 'Minden Kijelölés Törlése',
     bg: 'Размаркиране на всички'
   },
-  'general.synchronize-edit-format.title': {
+  'general.prompt-field.synchronize-edit-format.title': {
     en: 'Synchronize Edit Format Between Modes',
     pl: 'Synchronizuj format edycji między trybami',
     'zh-cn': '在模式之间同步编辑格式',
@@ -579,7 +582,7 @@ export const translations = {
     hu: 'Szerkesztési formátum szinkronizálása a módok között',
     bg: 'Синхронизиране на формат за редактиране между режимите'
   },
-  'general.synchronize-edit-format.description': {
+  'general.prompt-field.synchronize-edit-format.description': {
     en: 'Makes the selected edit format shared between modes.',
     pl: 'Sprawia, że wybrany format edycji jest współdzielony między trybami.',
     'zh-cn': '使选定的编辑格式在模式之间共享。',
@@ -634,7 +637,7 @@ export const translations = {
     hu: 'Előzmények',
     bg: 'История'
   },
-  'general.automatic-checkpoints.title': {
+  'general.history.automatic-checkpoints.title': {
     en: 'Automatic Checkpoints',
     pl: 'Automatyczne punkty kontrolne',
     'zh-cn': '自动检查点',
@@ -652,7 +655,7 @@ export const translations = {
     hu: 'Automatikus Ellenőrzőpontok',
     bg: 'Автоматични контролни точки'
   },
-  'general.automatic-checkpoints.description': {
+  'general.history.automatic-checkpoints.description': {
     en: 'A checkpoint will be created whenever a response is accepted or changes committed.',
     pl: 'Punkt kontrolny zostanie utworzony po zaakceptowaniu odpowiedzi lub zatwierdzeniu zmian.',
     'zh-cn': '每当接受响应或提交更改时，都会创建一个检查点。',
@@ -671,7 +674,7 @@ export const translations = {
     hu: 'Ellenőrzőpont jön létre válasz elfogadásakor vagy commitnál.',
     bg: 'Създава се контролна точка при приемане на отговор.'
   },
-  'general.checkpoint-lifespan.title': {
+  'general.history.checkpoint-lifespan.title': {
     en: 'Checkpoint Lifespan',
     pl: 'Czas życia punktów kontrolnych',
     'zh-cn': '检查点生命周期',
@@ -689,7 +692,7 @@ export const translations = {
     hu: 'Ellenőrzőpontok Élettartama',
     bg: 'Продължителност на контролните точки'
   },
-  'general.checkpoint-lifespan.description': {
+  'general.history.checkpoint-lifespan.description': {
     en: 'The lifespan of checkpoints in hours. Checkpoints older than this will be automatically deleted.',
     pl: 'Czas życia punktów kontrolnych w godzinach. Starsze zostaną automatycznie usunięte.',
     'zh-cn': '检查点的生命周期（小时）。早于此时间的检查点将被自动删除。',
@@ -726,7 +729,7 @@ export const translations = {
     hu: 'Szerkesztési formátumok',
     bg: 'Формати за редактиране'
   },
-  'general.edit-format.whole.title': {
+  'general.edit-formats.whole.title': {
     en: 'Whole',
     pl: 'Całość',
     'zh-cn': '全部',
@@ -744,7 +747,7 @@ export const translations = {
     hu: 'Teljes',
     bg: 'Цялостен'
   },
-  'general.edit-format.whole.description': {
+  'general.edit-formats.whole.description': {
     en: "Instructions for generating code in 'whole' edit format.",
     pl: "Instrukcje generowania kodu w formacie edycji 'całość'.",
     'zh-cn': '以“全部”编辑格式生成代码的说明。',
@@ -762,7 +765,7 @@ export const translations = {
     hu: "Utasítások kód generálásához 'teljes' formátumban.",
     bg: "Инструкции за генериране на код във формат 'цялостен'."
   },
-  'general.edit-format.truncated.title': {
+  'general.edit-formats.truncated.title': {
     en: 'Truncated',
     pl: 'Skrócony',
     'zh-cn': '截断',
@@ -780,7 +783,7 @@ export const translations = {
     hu: 'Csonkított',
     bg: 'Съкратен'
   },
-  'general.edit-format.truncated.description': {
+  'general.edit-formats.truncated.description': {
     en: "Instructions for generating code in 'truncated' edit format.",
     pl: "Instrukcje generowania kodu w formacie edycji 'skrócony'.",
     'zh-cn': '以“截断”编辑格式生成代码的说明。',
@@ -798,7 +801,7 @@ export const translations = {
     hu: "Utasítások kód generálásához 'csonkított' formátumban.",
     bg: "Инструкции за генериране на код във формат 'съкратен'."
   },
-  'general.edit-format.search-replace.title': {
+  'general.edit-formats.search-replace.title': {
     en: 'Search and Replace',
     pl: 'Wyszukaj i zamień',
     'zh-cn': '搜索和替换',
@@ -816,7 +819,7 @@ export const translations = {
     hu: 'Keresés és Csere',
     bg: 'Търсене и заместване'
   },
-  'general.edit-format.search-replace.description': {
+  'general.edit-formats.search-replace.description': {
     en: "Instructions for generating code in 'search/replace' edit format.",
     pl: "Instrukcje generowania kodu w formacie edycji 'wyszukaj/zamień'.",
     'zh-cn': '以“搜索/替换”编辑格式生成代码的说明。',
@@ -834,7 +837,7 @@ export const translations = {
     hu: "Utasítások kód generálásához 'keresés/csere' formátumban.",
     bg: "Инструкции за генериране на код във формат 'търсене/заместване'."
   },
-  'general.edit-format.diff.title': {
+  'general.edit-formats.diff.title': {
     en: 'Diff',
     pl: 'Diff',
     'zh-cn': '差异 (Diff)',
@@ -852,7 +855,7 @@ export const translations = {
     hu: 'Diff',
     bg: 'Diff'
   },
-  'general.edit-format.diff.description': {
+  'general.edit-formats.diff.description': {
     en: "Instructions for generating code in 'diff' edit format.",
     pl: "Instrukcje generowania kodu w formacie edycji 'diff'.",
     'zh-cn': '以“差异”编辑格式生成代码的说明。',
@@ -888,7 +891,7 @@ export const translations = {
     hu: 'Kontextus',
     bg: 'Контекст'
   },
-  'general.intelligent-file-search-instructions.title': {
+  'general.context.intelligent-file-search-instructions.title': {
     en: 'Intelligent File Search Instructions',
     pl: 'Instrukcje inteligentnego wyszukiwania plików',
     'zh-cn': '智能文件搜索说明',
@@ -906,7 +909,7 @@ export const translations = {
     hu: 'Intelligens fájlkeresési utasítások',
     bg: 'Инструкции за интелигентно търсене на файлове'
   },
-  'general.intelligent-file-search-instructions.description': {
+  'general.context.intelligent-file-search-instructions.description': {
     en: 'Specify a prefix instruction for the intelligent file search.',
     pl: 'Określ instrukcję początkową dla inteligentnego wyszukiwania plików.',
     'zh-cn': '为智能文件搜索指定前缀指令。',
@@ -943,7 +946,7 @@ export const translations = {
     hu: 'Alapértelmezett visszaállítása',
     bg: 'Възстановяване по подразбиране'
   },
-  'general.code-at-cursor.keyboard-shortcut.title': {
+  'general.open-links.code-at-cursor.keyboard-shortcut.title': {
     en: 'Code at Cursor Shortcuts',
     pl: 'Skróty klawiaturowe uzupełniania',
     'zh-cn': '光标处代码快捷键',
@@ -961,7 +964,7 @@ export const translations = {
     hu: 'Kód a kurzornál billentyűparancsok',
     bg: 'Клавишни комбинации за код на курсора'
   },
-  'general.code-at-cursor.keyboard-shortcut.description': {
+  'general.open-links.code-at-cursor.keyboard-shortcut.description': {
     en: 'Setup keyboard shortcuts for triggering autocompletion.',
     pl: 'Skonfiguruj skróty klawiaturowe do wyzwalania autouzupełniania.',
     'zh-cn': '设置触发自动补全的键盘快捷键。',
@@ -980,7 +983,7 @@ export const translations = {
     hu: 'Billentyűparancsok beállítása az automatikus kiegészítés elindításához.',
     bg: 'Настройване на клавишни комбинации за задействане на автоматично довършване.'
   },
-  'general.code-at-cursor.keyboard-shortcut.action': {
+  'general.open-links.code-at-cursor.keyboard-shortcut.action': {
     en: 'Open Keyboard Shortcuts',
     pl: 'Otwórz skróty klawiaturowe',
     'zh-cn': '打开键盘快捷键',
@@ -998,7 +1001,7 @@ export const translations = {
     hu: 'Billentyűparancsok Megnyitása',
     bg: 'Отваряне на клавишни комбинации'
   },
-  'general.templates.title': {
+  'general.prompt-field.templates.title': {
     en: 'Templates',
     pl: 'Szablony',
     'zh-cn': '模板',
@@ -1016,7 +1019,7 @@ export const translations = {
     hu: 'Sablonok',
     bg: 'Шаблони'
   },
-  'general.templates.description': {
+  'general.prompt-field.templates.description': {
     en: 'Manage templates of each prompt type.',
     pl: 'Zarządzaj szablonami dla każdego typu promptu.',
     'zh-cn': '管理每种提示类型的模板。',
@@ -1034,7 +1037,7 @@ export const translations = {
     hu: 'Kezelje az egyes prompttípusok sablonjait.',
     bg: 'Управлявайте шаблони за всеки тип промпт.'
   },
-  'general.templates.item': {
+  'general.prompt-field.templates.item': {
     en: 'template',
     pl: 'szablon',
     'zh-cn': '模板',
@@ -1052,7 +1055,7 @@ export const translations = {
     hu: 'sablon',
     bg: 'шаблон'
   },
-  'general.templates.items': {
+  'general.prompt-field.templates.items': {
     en: 'templates',
     pl: 'szablony',
     'zh-cn': '模板',
@@ -1070,7 +1073,7 @@ export const translations = {
     hu: 'sablonok',
     bg: 'шаблони'
   },
-  'general.templates.items-many': {
+  'general.prompt-field.templates.items-many': {
     en: 'templates',
     pl: 'szablonów',
     'zh-cn': '模板',
@@ -1088,7 +1091,7 @@ export const translations = {
     hu: 'sablon',
     bg: 'шаблона'
   },
-  'general.templates.types.templatesForAskAboutFiles': {
+  'general.prompt-field.templates.types.templatesForAskAboutFiles': {
     en: 'Ask About Files',
     pl: 'Zapytaj o pliki',
     'zh-cn': '询问关于文件',
@@ -1106,7 +1109,7 @@ export const translations = {
     hu: 'Kérdezz fájlokról',
     bg: 'Попитай за файлове'
   },
-  'general.templates.types.templatesForEditFiles': {
+  'general.prompt-field.templates.types.templatesForEditFiles': {
     en: 'Edit Files',
     pl: 'Edytuj pliki',
     'zh-cn': '编辑文件',
@@ -1124,7 +1127,7 @@ export const translations = {
     hu: 'Fájlok szerkesztése',
     bg: 'Редактиране на файлове'
   },
-  'general.templates.types.templatesForCodeAtCursor': {
+  'general.prompt-field.templates.types.templatesForCodeAtCursor': {
     en: 'Code at Cursor',
     pl: 'Kod przy kursorze',
     'zh-cn': '光标处的代码',
@@ -1142,7 +1145,7 @@ export const translations = {
     hu: 'Kód a kurzornál',
     bg: 'Код при курсора'
   },
-  'general.templates.types.templatesForWithoutFiles': {
+  'general.prompt-field.templates.types.templatesForWithoutFiles': {
     en: 'Without Files',
     pl: 'Bez plików',
     'zh-cn': '没有文件',

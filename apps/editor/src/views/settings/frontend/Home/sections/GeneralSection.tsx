@@ -124,36 +124,40 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
         >
           <UiGroup title={t('general.open-links.title')}>
             <UiItem
-              title={t('general.open-editor-settings.title')}
-              description={t('general.open-editor-settings.description')}
+              title={t('general.open-links.open-editor-settings.title')}
+              description={t(
+                'general.open-links.open-editor-settings.description'
+              )}
               slot_right={
                 <UiTextButton on_click={props.on_open_editor_settings}>
-                  {t('general.open-editor-settings.action')}
+                  {t('general.open-links.open-editor-settings.action')}
                 </UiTextButton>
               }
             />
             <UiItem
-              title={t('general.ignore-patterns.title')}
-              description={t('general.ignore-patterns.description')}
+              title={t('general.open-links.ignore-patterns.title')}
+              description={t('general.open-links.ignore-patterns.description')}
               slot_right={
                 <UiTextButton on_click={props.on_open_ignore_patterns_settings}>
-                  {t('general.ignore-patterns.action')}
+                  {t('general.open-links.ignore-patterns.action')}
                 </UiTextButton>
               }
             />
             <UiItem
-              title={t('general.allow-patterns.title')}
-              description={t('general.allow-patterns.description')}
+              title={t('general.open-links.allow-patterns.title')}
+              description={t('general.open-links.allow-patterns.description')}
               slot_right={
                 <UiTextButton on_click={props.on_open_allow_patterns_settings}>
-                  {t('general.allow-patterns.action')}
+                  {t('general.open-links.allow-patterns.action')}
                 </UiTextButton>
               }
             />
             <UiItem
-              title={t('general.code-at-cursor.keyboard-shortcut.title')}
+              title={t(
+                'general.open-links.code-at-cursor.keyboard-shortcut.title'
+              )}
               description={t(
-                'general.code-at-cursor.keyboard-shortcut.description'
+                'general.open-links.code-at-cursor.keyboard-shortcut.description'
               )}
               slot_right={
                 <UiTextButton
@@ -161,7 +165,9 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                     props.on_open_keybindings('codeWebChat.codeAtCursor')
                   }
                 >
-                  {t('general.code-at-cursor.keyboard-shortcut.action')}
+                  {t(
+                    'general.open-links.code-at-cursor.keyboard-shortcut.action'
+                  )}
                 </UiTextButton>
               }
             />
@@ -175,8 +181,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
         >
           <UiGroup title={t('general.context.title')}>
             <UiItem
-              title={t('general.check-new-files.title')}
-              description={t('general.check-new-files.description')}
+              title={t('general.context.check-new-files.title')}
+              description={t('general.context.check-new-files.description')}
               slot_right={
                 <UiToggler
                   is_on={props.check_new_files}
@@ -185,20 +191,24 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               }
             />
             <UiItem
-              title={t('general.clear-checks-in-workspace-behavior.title')}
+              title={t(
+                'general.context.clear-checks-in-workspace-behavior.title'
+              )}
               description={t(
-                'general.clear-checks-in-workspace-behavior.description'
+                'general.context.clear-checks-in-workspace-behavior.description'
               )}
               slot_right={
                 <UiDropdown
                   options={[
                     {
                       value: 'ignore-open-editors',
-                      label: t('general.clear-checks.ignore-open-editors')
+                      label: t(
+                        'general.context.clear-checks.ignore-open-editors'
+                      )
                     },
                     {
                       value: 'uncheck-all',
-                      label: t('general.clear-checks.uncheck-all')
+                      label: t('general.context.clear-checks.uncheck-all')
                     }
                   ]}
                   value={props.clear_checks_in_workspace_behavior}
@@ -207,9 +217,11 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               }
             />
             <UiItem
-              title={t('general.intelligent-file-search-instructions.title')}
+              title={t(
+                'general.context.intelligent-file-search-instructions.title'
+              )}
               description={t(
-                'general.intelligent-file-search-instructions.description'
+                'general.context.intelligent-file-search-instructions.description'
               )}
               is_toggleable
               translations={{
@@ -244,8 +256,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
         >
           <UiGroup title={t('general.prompt-field.title')}>
             <UiItem
-              title={t('general.templates.title')}
-              description={t('general.templates.description')}
+              title={t('general.prompt-field.templates.title')}
+              description={t('general.prompt-field.templates.description')}
               translations={{
                 expand: t('common.expand'),
                 collapse: t('common.collapse')
@@ -260,33 +272,37 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 on_edit={props.on_edit_template}
                 on_add={props.on_add_template}
                 translations={{
-                  item_text: t('general.templates.item'),
-                  items_text: t('general.templates.items'),
-                  items_text_many: t('general.templates.items-many'),
+                  item_text: t('general.prompt-field.templates.item'),
+                  items_text: t('general.prompt-field.templates.items'),
+                  items_text_many: t(
+                    'general.prompt-field.templates.items-many'
+                  ),
                   expand: t('common.expand'),
                   collapse: t('common.collapse'),
                   add_new: t('action.add-new'),
                   types: {
                     templatesForEditFiles: t(
-                      'general.templates.types.templatesForEditFiles'
+                      'general.prompt-field.templates.types.templatesForEditFiles'
                     ),
                     templatesForAskAboutFiles: t(
-                      'general.templates.types.templatesForAskAboutFiles'
+                      'general.prompt-field.templates.types.templatesForAskAboutFiles'
                     ),
                     templatesForCodeAtCursor: t(
-                      'general.templates.types.templatesForCodeAtCursor'
+                      'general.prompt-field.templates.types.templatesForCodeAtCursor'
                     ),
                     templatesForWithoutFiles: t(
-                      'general.templates.types.templatesForWithoutFiles'
+                      'general.prompt-field.templates.types.templatesForWithoutFiles'
                     )
                   }
                 }}
               />
             </UiItem>
             <UiItem
-              title={t('general.context-size-warning-threshold.title')}
+              title={t(
+                'general.prompt-field.context-size-warning-threshold.title'
+              )}
               description={t(
-                'general.context-size-warning-threshold.description'
+                'general.prompt-field.context-size-warning-threshold.description'
               )}
               slot_right={
                 <UiInput
@@ -303,8 +319,10 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               }
             />
             <UiItem
-              title={t('general.send-with-shift-enter.title')}
-              description={t('general.send-with-shift-enter.description')}
+              title={t('general.prompt-field.send-with-shift-enter.title')}
+              description={t(
+                'general.prompt-field.send-with-shift-enter.description'
+              )}
               slot_right={
                 <UiToggler
                   is_on={props.send_with_shift_enter}
@@ -313,8 +331,10 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               }
             />
             <UiItem
-              title={t('general.synchronize-edit-format.title')}
-              description={t('general.synchronize-edit-format.description')}
+              title={t('general.prompt-field.synchronize-edit-format.title')}
+              description={t(
+                'general.prompt-field.synchronize-edit-format.description'
+              )}
               slot_right={
                 <UiToggler
                   is_on={props.synchronize_edit_format_between_modes}
@@ -334,8 +354,10 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
         >
           <UiGroup title={t('general.history.title')}>
             <UiItem
-              title={t('general.automatic-checkpoints.title')}
-              description={t('general.automatic-checkpoints.description')}
+              title={t('general.history.automatic-checkpoints.title')}
+              description={t(
+                'general.history.automatic-checkpoints.description'
+              )}
               slot_right={
                 <UiToggler
                   is_on={!props.are_automatic_checkpoints_disabled}
@@ -346,8 +368,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               }
             />
             <UiItem
-              title={t('general.checkpoint-lifespan.title')}
-              description={t('general.checkpoint-lifespan.description')}
+              title={t('general.history.checkpoint-lifespan.title')}
+              description={t('general.history.checkpoint-lifespan.description')}
               slot_right={
                 <UiInput
                   type="number"
@@ -372,24 +394,32 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
         >
           <UiGroup title={t('general.commit-messages.title')}>
             <UiItem
-              title={t('general.attach-ascii-tree-of-context.title')}
+              title={t(
+                'general.commit-messages.attach-ascii-tree-of-context.title'
+              )}
               description={t(
-                'general.attach-ascii-tree-of-context.description'
+                'general.commit-messages.attach-ascii-tree-of-context.description'
               )}
               slot_right={
                 <UiDropdown
                   options={[
                     {
                       value: 'ask',
-                      label: t('general.attach-ascii-tree-of-context.ask')
+                      label: t(
+                        'general.commit-messages.attach-ascii-tree-of-context.ask'
+                      )
                     },
                     {
                       value: 'always',
-                      label: t('general.attach-ascii-tree-of-context.always')
+                      label: t(
+                        'general.commit-messages.attach-ascii-tree-of-context.always'
+                      )
                     },
                     {
                       value: 'never',
-                      label: t('general.attach-ascii-tree-of-context.never')
+                      label: t(
+                        'general.commit-messages.attach-ascii-tree-of-context.never'
+                      )
                     }
                   ]}
                   value={props.attach_ascii_tree_of_context}
@@ -399,10 +429,10 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             />
             <UiItem
               title={t(
-                'general.select-all-prompts-in-commit-messages-by-default.title'
+                'general.commit-messages.select-all-prompts-in-commit-messages-by-default.title'
               )}
               description={t(
-                'general.select-all-prompts-in-commit-messages-by-default.description'
+                'general.commit-messages.select-all-prompts-in-commit-messages-by-default.description'
               )}
               slot_right={
                 <UiToggler
@@ -414,8 +444,12 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               }
             />
             <UiItem
-              title={t('general.commit-message-instructions.title')}
-              description={t('general.commit-message-instructions.description')}
+              title={t(
+                'general.commit-messages.commit-message-instructions.title'
+              )}
+              description={t(
+                'general.commit-messages.commit-message-instructions.description'
+              )}
               is_toggleable
               translations={{
                 expand: t('common.expand'),

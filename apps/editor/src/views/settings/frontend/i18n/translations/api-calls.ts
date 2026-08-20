@@ -54,7 +54,7 @@ export const translations = {
     hu: 'Beállítás előre definiált végpontokból vagy egyedi hozzáadása.',
     bg: 'Настройка от предефинирани крайни точки или добавяне на персонализирана.'
   },
-  'api-calls.model-providers.notice.credentials': {
+  'api-calls.notice.credentials': {
     en: 'Credentials are stored securely in the {link} on your machine.',
     pl: 'Dane uwierzytelniające są bezpiecznie przechowywane w {link} na twoim komputerze.',
     'zh-cn': '凭据安全地存储在您机器上的 {link} 中。',
@@ -199,7 +199,7 @@ export const translations = {
     hu: 'Konfigurációk',
     bg: 'Конфигурации'
   },
-  'api-calls.configurations.subtitle': {
+  'api-calls.subtitle': {
     en: 'Send prompts from within the editor.',
     pl: 'Wysyłaj prompty z poziomu edytora.',
     'zh-cn': '在编辑器内发送提示。',
@@ -397,7 +397,7 @@ export const translations = {
     hu: 'konfigurációk',
     bg: 'конфигурации'
   },
-  'api-calls.configurations.default-configurations.title': {
+  'api-calls.default-configurations.title': {
     en: 'Defaults',
     pl: 'Domyślne',
     'zh-cn': '默认',
@@ -415,7 +415,7 @@ export const translations = {
     hu: 'Alapértelmezettek',
     bg: 'По подразбиране'
   },
-  'api-calls.configurations.tool.code-at-cursor': {
+  'api-calls.default-configurations.tool.code-at-cursor': {
     en: 'Code at Cursor',
     pl: 'Autouzupełnianie',
     'zh-cn': '自动补全',
@@ -433,7 +433,7 @@ export const translations = {
     hu: 'Automatikus kiegészítés',
     bg: 'Автодопълване'
   },
-  'api-calls.configurations.tool.intelligent-update': {
+  'api-calls.default-configurations.tool.intelligent-update': {
     en: 'Intelligent Update',
     pl: 'Inteligentna integracja',
     'zh-cn': '智能更新',
@@ -451,7 +451,7 @@ export const translations = {
     hu: 'Intelligens Frissítés',
     bg: 'Интелигентно актуализиране'
   },
-  'api-calls.configurations.tool.commit-messages': {
+  'api-calls.default-configurations.tool.commit-messages': {
     en: 'Commit Messages',
     pl: 'Wiadomości commitów',
     'zh-cn': '提交信息',
@@ -469,7 +469,7 @@ export const translations = {
     hu: 'Commit Üzenetek',
     bg: 'Съобщения за commit'
   },
-  'api-calls.configurations.tool.intelligent-file-search': {
+  'api-calls.default-configurations.tool.intelligent-file-search': {
     en: 'Intelligent File Search',
     pl: 'Inteligentne wyszukiwanie plików',
     'zh-cn': '智能文件搜索',
@@ -487,7 +487,7 @@ export const translations = {
     hu: 'Intelligens fájlkeresés',
     bg: 'Интелигентно търсене на файлове'
   },
-  'api-calls.configurations.tool.voice-input': {
+  'api-calls.default-configurations.tool.voice-input': {
     en: 'Voice Input',
     pl: 'Wprowadzanie głosowe',
     'zh-cn': '语音输入',
@@ -505,7 +505,7 @@ export const translations = {
     hu: 'Hangbemenet',
     bg: 'Гласово въвеждане'
   },
-  'api-calls.configurations.intelligent-update.auto-run.title': {
+  'api-calls.behavior.intelligent-update.auto-run.title': {
     en: 'Auto-Run Intelligent Update',
     pl: 'Automatycznie uruchom inteligentną integrację',
     'zh-cn': '自动运行智能更新',
@@ -523,7 +523,7 @@ export const translations = {
     hu: 'Intelligens Frissítés Automatikus Futtatása',
     bg: 'Автоматично стартиране на интелигентно актуализиране'
   },
-  'api-calls.configurations.intelligent-update.auto-run.description': {
+  'api-calls.behavior.intelligent-update.auto-run.description': {
     en: 'Use the default configuration to integrate failed files immediately.',
     pl: 'Użyj domyślnej konfiguracji, aby natychmiast zintegrować pliki.',
     'zh-cn': '使用默认配置立即集成失败的文件。',
@@ -542,7 +542,7 @@ export const translations = {
     hu: 'Alapértelmezett konfiguráció a hibás fájlok azonnali integrálásához.',
     bg: 'Използване на конфигурация по подразбиране за интегриране.'
   },
-  'api-calls.configurations.behavior.title': {
+  'api-calls.behavior.title': {
     en: 'Behavior',
     pl: 'Zachowanie',
     'zh-cn': '行为',
@@ -560,7 +560,7 @@ export const translations = {
     hu: 'Viselkedés',
     bg: 'Поведение'
   },
-  'api-calls.configurations.system-instructions.title': {
+  'api-calls.system-instructions.title': {
     en: 'System Instructions',
     pl: 'Instrukcje systemowe',
     'zh-cn': '系统指令',
@@ -578,7 +578,7 @@ export const translations = {
     hu: 'Rendszer Utasítások',
     bg: 'Системни инструкции'
   },
-  'api-calls.configurations.edit-files-system-instructions.title': {
+  'api-calls.system-instructions.edit-files.title': {
     en: 'Edit Files',
     pl: 'Edytuj pliki',
     'zh-cn': '编辑文件',
@@ -596,7 +596,7 @@ export const translations = {
     hu: 'Fájlok szerkesztése',
     bg: 'Редактиране на файлове'
   },
-  'api-calls.configurations.edit-files-system-instructions.description': {
+  'api-calls.system-instructions.edit-files.description': {
     en: "Tone and style instructions for the model when using the 'Edit Files' prompt type with API calls.",
     pl: 'Instrukcje dotyczące tonu i stylu dla modelu przy użyciu typu promptu Edycji Plików z zapytaniami API.',
     'zh-cn': '使用编辑上下文提示类型进行 API 调用时，模型的语气和样式说明。',

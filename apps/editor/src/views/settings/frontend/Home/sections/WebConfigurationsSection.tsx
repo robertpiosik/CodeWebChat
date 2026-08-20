@@ -146,9 +146,9 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                 on_add={props.on_add_web_configuration}
                 translations={{
                   add_title: t('action.add-new'),
-                  item_text: t('chatbots.item'),
-                  items_text: t('chatbots.items'),
-                  items_text_many: t('chatbots.items-many')
+                  item_text: t('chatbots.configurations.item'),
+                  items_text: t('chatbots.configurations.items'),
+                  items_text_many: t('chatbots.configurations.items-many')
                 }}
                 render_content={(config) => {
                   const is_unnamed =
@@ -228,7 +228,7 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                   <>
                     <IconButton
                       codicon_icon="insert"
-                      title={t('chatbots.action.insert')}
+                      title={t('chatbots.configurations.action.insert')}
                       on_click={() =>
                         props.on_add_web_configuration({
                           insertion_index: index
@@ -237,14 +237,14 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
                     />
                     <IconButton
                       codicon_icon="edit"
-                      title={t('chatbots.action.edit')}
+                      title={t('chatbots.configurations.action.edit')}
                       on_click={() =>
                         props.on_edit_web_configuration(config.id)
                       }
                     />
                     <IconButton
                       codicon_icon="trash"
-                      title={t('chatbots.action.delete')}
+                      title={t('chatbots.configurations.action.delete')}
                       on_click={(e) => {
                         e.stopPropagation()
                         props.on_delete_web_configuration(config.id)
@@ -256,8 +256,10 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             )}
             {has_gemini && (
               <UiItem
-                title={t('chatbots.gemini-user-id.title')}
-                description={t('chatbots.gemini-user-id.description')}
+                title={t('chatbots.configurations.gemini-user-id.title')}
+                description={t(
+                  'chatbots.configurations.gemini-user-id.description'
+                )}
                 slot_right={
                   <UiInput
                     type="number"
@@ -271,8 +273,10 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             )}
             {has_ai_studio && (
               <UiItem
-                title={t('chatbots.ai-studio-user-id.title')}
-                description={t('chatbots.ai-studio-user-id.description')}
+                title={t('chatbots.configurations.ai-studio-user-id.title')}
+                description={t(
+                  'chatbots.configurations.ai-studio-user-id.description'
+                )}
                 slot_right={
                   <UiInput
                     type="number"
@@ -293,8 +297,8 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
         >
           <UiGroup title={t('chatbots.behavior.title')}>
             <UiItem
-              title={t('chatbots.reuse-last-tab.title')}
-              description={t('chatbots.reuse-last-tab.description')}
+              title={t('chatbots.behavior.reuse-last-tab.title')}
+              description={t('chatbots.behavior.reuse-last-tab.description')}
               slot_right={
                 <UiToggler
                   is_on={props.reuse_last_tab}

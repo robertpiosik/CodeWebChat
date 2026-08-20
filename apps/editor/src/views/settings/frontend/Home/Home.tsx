@@ -89,15 +89,15 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   },
   {
     id: 'section:api-calls:group:api-defaults',
-    label: 'api-calls.configurations.default-configurations.title'
+    label: 'api-calls.default-configurations.title'
   },
   {
     id: 'section:api-calls:group:api-behavior',
-    label: 'api-calls.configurations.behavior.title'
+    label: 'api-calls.behavior.title'
   },
   {
     id: 'section:api-calls:group:system-instructions',
-    label: 'api-calls.configurations.system-instructions.title'
+    label: 'api-calls.system-instructions.title'
   }
 ]
 
