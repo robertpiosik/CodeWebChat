@@ -379,7 +379,7 @@ export const MainView: React.FC<Props> = (props) => {
               exit_voice_input: t('prompt-field.exit-voice-input'),
               reference_file: t('prompt-field.reference-file'),
               insert_symbol: t('prompt-field.insert-symbol'),
-              templates: t('prompt-field.templates'),
+              use_template: t('prompt-field.use-template'),
               edit_format: t('prompt-field.edit-format'),
               edit_format_whole: t('prompt-field.edit-format.whole'),
               edit_format_search_replace: t(
