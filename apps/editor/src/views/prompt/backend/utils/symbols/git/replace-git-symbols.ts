@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import { execSync } from 'child_process'
 import { get_git_repository } from '@/utils/git-repository-utils'
+import { AsciiTree } from '@/utils/ascii-tree/ascii-tree'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { t } from '@/i18n'
@@ -329,7 +330,8 @@ const build_commit_changes_markdown = (
   diff: string,
   cwd: string,
   commit_hash: string,
-  path_prefix?: string
+  path_prefix?: string,
+  commit_message?: string
 ): string => {
   const file_diffs = diff.split(/^diff --git /m).filter((d) => d.trim() != '')
 
@@ -408,7 +410,8 @@ const build_commit_changes_markdown = (
   if (changes_content) {
     const short_hash = commit_hash.substring(0, 7)
     const title_text = `Commit ${short_hash}`
-    return `# ${title_text}\n\n${changes_content}`
+    const msg_text = commit_message ? `${commit_message}\n\n` : ''
+    return `# ${title_text}\n\n${msg_text}${changes_content}`
   }
   return ''
 }
@@ -464,11 +467,27 @@ export const replace_commit_symbol = async (params: {
         continue
       }
 
+      let commit_message_body = ''
+      try {
+        const raw_msg = execSync(`git show -s --format=%B ${commit_hash}`, {
+          cwd: target_folder.uri.fsPath,
+          encoding: 'utf-8'
+        }).toString()
+        commit_message_body = AsciiTree.strip_from_text(raw_msg)
+      } catch (error) {
+        Logger.warn({
+          function_name: 'replace_commit_symbol',
+          message: `Failed to read commit message for ${commit_hash}`,
+          data: error
+        })
+      }
+
       const replacement_text = build_commit_changes_markdown(
         diff,
         target_folder.uri.fsPath,
         commit_hash,
-        workspace_folders.length > 1 ? folder_name : undefined
+        workspace_folders.length > 1 ? folder_name : undefined,
+        commit_message_body
       )
       commit_definitions += replacement_text
 

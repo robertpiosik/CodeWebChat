@@ -47,4 +47,32 @@ export namespace AsciiTree {
 
     return Array.from(found_paths)
   }
+
+  export const strip_from_text = (text: string): string => {
+    const lines = text.split(/\r?\n/)
+    const result: string[] = []
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i]
+      const idx1 = line.indexOf('├── ')
+      const idx2 = line.indexOf('└── ')
+      const idx =
+        idx1 != -1 && idx2 != -1 ? Math.min(idx1, idx2) : Math.max(idx1, idx2)
+
+      if (idx != -1) {
+        const prefix = line.substring(0, idx)
+        if (/^[│\s]*$/.test(prefix)) {
+          continue
+        }
+      } else if (/^[│\s]+$/.test(line)) {
+        continue
+      }
+
+      result.push(line)
+    }
+
+    let cleaned = result.join('\n')
+    cleaned = cleaned.replace(/```[a-zA-Z]*\s*```/g, '')
+    return cleaned.replace(/\n{3,}/g, '\n\n').trim()
+  }
 }
