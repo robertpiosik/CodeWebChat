@@ -99,7 +99,7 @@ export const perform_keywords_search_mode = async (params: {
       while (true) {
         const keywords = (
           search_term.match(/(?:-?"[^"]*")|(?:-?[^\s,]+)/g) || []
-        ).filter((k) => k.length > 0)
+        ).filter((k) => k.length > 0 && k != '-' && k != '""' && k != '-""')
 
         const positive_keywords = keywords.filter((k) => !k.startsWith('-'))
 
@@ -171,6 +171,10 @@ export const perform_keywords_search_mode = async (params: {
         }
 
         if (is_cancelled) {
+          if (positive_keywords.length <= 1) {
+            go_back_to_target = true
+            break
+          }
           continue
         }
 
@@ -178,6 +182,10 @@ export const perform_keywords_search_mode = async (params: {
           vscode.window.showInformationMessage(
             t('feature.search-files.no-files')
           )
+          if (positive_keywords.length <= 1) {
+            go_back_to_target = true
+            break
+          }
           continue
         }
 
