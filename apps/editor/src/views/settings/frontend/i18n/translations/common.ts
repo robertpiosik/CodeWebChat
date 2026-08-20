@@ -34,5 +34,23 @@ export const translations = {
     cs: 'Sbalit',
     hu: 'Összecsukás',
     bg: 'Свиване'
+  },
+  'common.notice.missing': {
+    en: 'Missing configuration.',
+    pl: 'Brak konfiguracji.',
+    'zh-cn': '缺少配置。',
+    ja: '設定が不足しています。',
+    'zh-tw': '缺少設定。',
+    de: 'Fehlende Konfiguration.',
+    es: 'Configuración faltante.',
+    fr: 'Configuration manquante.',
+    'pt-br': 'Configuração ausente.',
+    ru: 'Отсутствует конфигурация.',
+    ko: '구성이 누락되었습니다.',
+    it: 'Configurazione mancante.',
+    tr: 'Eksik yapılandırma.',
+    cs: 'Chybějící konfigurace.',
+    hu: 'Hiányzó konfiguráció.',
+    bg: 'Липсваща конфигурация.'
   }
 } as const

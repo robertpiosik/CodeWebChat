@@ -113,9 +113,6 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           <UiNotice type="info">{t('chatbots.notice')}</UiNotice>
-          {props.web_configurations.length == 0 && (
-            <UiNotice type="warning">{t('chatbots.notice.missing')}</UiNotice>
-          )}
         </div>
         <div
           ref={(el) =>
@@ -125,7 +122,14 @@ export const WebConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             )
           }
         >
-          <UiGroup title={t('chatbots.configurations.title')}>
+          <UiGroup
+            title={t('chatbots.configurations.title')}
+            notice_slot={
+              !props.web_configurations.length ? (
+                <UiNotice type="warning">{t('common.notice.missing')}</UiNotice>
+              ) : null
+            }
+          >
             {props.web_configurations && (
               <SortableList
                 items={props.web_configurations.map((c, index) => ({

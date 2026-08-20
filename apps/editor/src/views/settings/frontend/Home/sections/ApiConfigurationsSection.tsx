@@ -133,9 +133,7 @@ export const ApiConfigurationsSection = forwardRef<HTMLDivElement, Props>(
             title={t('api-calls.configurations.title')}
             notice_slot={
               !props.api_configurations.length ? (
-                <UiNotice type="warning">
-                  {t('api-calls.configurations.notice.missing')}
-                </UiNotice>
+                <UiNotice type="warning">{t('common.notice.missing')}</UiNotice>
               ) : null
             }
           >

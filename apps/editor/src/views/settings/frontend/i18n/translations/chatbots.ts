@@ -72,24 +72,6 @@ export const translations = {
     hu: 'A böngészővel való kommunikáció helyi WebSocketeket használ.',
     bg: 'Комуникацията с браузъра използва локални WebSocket.'
   },
-  'chatbots.notice.missing': {
-    en: 'No web configurations have been added yet.',
-    pl: 'Nie dodano jeszcze żadnych konfiguracji webowych.',
-    'zh-cn': '尚未添加网络配置。',
-    ja: 'Web 設定はまだ追加されていません。',
-    'zh-tw': '尚未新增網路設定。',
-    de: 'Es wurden noch keine Webkonfigurationen hinzugefügt.',
-    es: 'Aún no se han añadido configuraciones web.',
-    fr: 'Aucune configuration web n’a encore été ajoutée.',
-    'pt-br': 'Nenhuma configuração web foi adicionada ainda.',
-    ru: 'Веб-конфигурации пока не добавлены.',
-    ko: '아직 웹 구성을 추가하지 않았습니다.',
-    it: 'Nessuna configurazione web è stata ancora aggiunta.',
-    tr: 'Henüz hiçbir web yapılandırması eklenmedi.',
-    cs: 'Zatím nebyly přidány žádné webové konfigurace.',
-    hu: 'Még nincsenek hozzáadva webes konfigurációk.',
-    bg: 'Все още няма добавени уеб конфигурации.'
-  },
   'chatbots.action.insert': {
     en: 'Insert a new configuration below/above',
     pl: 'Wstaw nową konfigurację poniżej/powyżej',
