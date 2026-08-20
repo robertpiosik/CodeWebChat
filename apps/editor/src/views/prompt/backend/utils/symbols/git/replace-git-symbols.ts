@@ -410,7 +410,16 @@ const build_commit_changes_markdown = (
   if (changes_content) {
     const short_hash = commit_hash.substring(0, 7)
     const title_text = `Commit ${short_hash}`
-    const msg_text = commit_message ? `${commit_message}\n\n` : ''
+    let msg_text = ''
+    if (commit_message) {
+      const trimmed = commit_message.trim()
+      if (trimmed) {
+        const lines = trimmed.split('\n')
+        const first_line = `**${lines[0].trim()}**`
+        const rest = lines.slice(1).join('\n')
+        msg_text = `${rest ? `${first_line}\n${rest}` : first_line}\n\n`
+      }
+    }
     return `# ${title_text}\n\n${msg_text}${changes_content}`
   }
   return ''
