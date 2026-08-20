@@ -113,7 +113,6 @@ type Props = {
   attach_ascii_tree_of_context: 'ask' | 'always' | 'never'
   select_all_prompts_in_commit_messages_by_default: boolean
   context_size_warning_threshold: number
-  limit_semantic_search_results: number
   gemini_user_id: number | null
   ai_studio_user_id: number | null
   send_with_shift_enter: boolean
@@ -137,7 +136,6 @@ type Props = {
   on_context_size_warning_threshold_change: (
     threshold: number | undefined
   ) => void
-  on_limit_semantic_search_results_change: (limit: number | undefined) => void
   on_synchronize_edit_format_between_modes_change: (enabled: boolean) => void
   on_commit_instructions_change: (instructions: string) => void
   on_attach_ascii_tree_of_context_change: (
@@ -403,10 +401,6 @@ export const Home: React.FC<Props> = (props) => {
           context_size_warning_threshold={props.context_size_warning_threshold}
           on_context_size_warning_threshold_change={
             props.on_context_size_warning_threshold_change
-          }
-          limit_semantic_search_results={props.limit_semantic_search_results}
-          on_limit_semantic_search_results_change={
-            props.on_limit_semantic_search_results_change
           }
           synchronize_edit_format_between_modes={
             props.synchronize_edit_format_between_modes

@@ -40,8 +40,6 @@ export const use_settings = (vscode: any) => {
   ] = useState<string | undefined>(undefined)
   const [context_size_warning_threshold, set_context_size_warning_threshold] =
     useState<number>()
-  const [limit_semantic_search_results, set_limit_semantic_search_results] =
-    useState<number>()
   const [
     are_automatic_checkpoints_disabled,
     set_are_automatic_checkpoints_disabled
@@ -96,7 +94,6 @@ export const use_settings = (vscode: any) => {
       command: 'GET_SYNCHRONIZE_EDIT_FORMAT_BETWEEN_MODES'
     })
     post_message(vscode, { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' })
-    post_message(vscode, { command: 'GET_LIMIT_SEMANTIC_SEARCH_RESULTS' })
     post_message(vscode, { command: 'GET_ARE_AUTOMATIC_CHECKPOINTS_DISABLED' })
     post_message(vscode, { command: 'GET_CHECKPOINT_LIFESPAN' })
     post_message(vscode, { command: 'GET_GEMINI_USER_ID' })
@@ -136,8 +133,6 @@ export const use_settings = (vscode: any) => {
         set_select_all_prompts_in_commit_messages_by_default(message.enabled)
       } else if (message.command == 'CONTEXT_SIZE_WARNING_THRESHOLD') {
         set_context_size_warning_threshold(message.threshold)
-      } else if (message.command == 'LIMIT_SEMANTIC_SEARCH_RESULTS') {
-        set_limit_semantic_search_results(message.limit)
       } else if (message.command == 'ARE_AUTOMATIC_CHECKPOINTS_DISABLED') {
         set_are_automatic_checkpoints_disabled(message.disabled)
       } else if (message.command == 'CHECKPOINT_LIFESPAN') {
@@ -335,14 +330,6 @@ export const use_settings = (vscode: any) => {
       threshold: threshold ?? null
     })
 
-  const handle_limit_semantic_search_results_change = (
-    limit: number | undefined
-  ) =>
-    post_message(vscode, {
-      command: 'UPDATE_LIMIT_SEMANTIC_SEARCH_RESULTS',
-      limit: limit ?? null
-    })
-
   const handle_automatic_checkpoints_toggle = (disabled: boolean) => {
     set_are_automatic_checkpoints_disabled(disabled)
     post_message(vscode, {
@@ -481,7 +468,6 @@ export const use_settings = (vscode: any) => {
     edit_files_system_instructions,
     intelligent_file_search_instructions,
     context_size_warning_threshold,
-    limit_semantic_search_results,
     are_automatic_checkpoints_disabled,
     checkpoint_lifespan,
     gemini_user_id,
@@ -513,7 +499,6 @@ export const use_settings = (vscode: any) => {
     handle_open_ignore_patterns_settings,
     handle_open_allow_patterns_settings,
     handle_context_size_warning_threshold_change,
-    handle_limit_semantic_search_results_change,
     handle_automatic_checkpoints_toggle,
     handle_checkpoint_lifespan_change,
     handle_gemini_user_id_change,

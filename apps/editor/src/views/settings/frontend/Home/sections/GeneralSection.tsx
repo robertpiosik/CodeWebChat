@@ -9,8 +9,7 @@ import { TextButton as UiTextButton } from '@ui/components/editor/common/TextBut
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
 import {
   CHECKPOINT_DEFAULT_LIFESPAN,
-  DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD,
-  LIMIT_SEMANTIC_SEARCH_RESULTS
+  DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD
 } from '@/constants/values'
 import { use_translation } from '../../i18n/use-translation'
 import { NavItem } from '../Home'
@@ -21,7 +20,6 @@ type ClearChecksBehavior = 'ignore-open-editors' | 'uncheck-all'
 
 type Props = {
   context_size_warning_threshold: number
-  limit_semantic_search_results: number
   are_automatic_checkpoints_disabled: boolean
   synchronize_edit_format_between_modes: boolean
   send_with_shift_enter: boolean
@@ -36,7 +34,6 @@ type Props = {
   on_context_size_warning_threshold_change: (
     threshold: number | undefined
   ) => void
-  on_limit_semantic_search_results_change: (limit: number | undefined) => void
   on_clear_checks_in_workspace_behavior_change: (
     value: ClearChecksBehavior
   ) => void
@@ -79,17 +76,11 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
     const { t } = use_translation()
     const [context_size_warning_threshold, set_context_size_warning_threshold] =
       useState<number>()
-    const [limit_semantic_search_results, set_limit_semantic_search_results] =
-      useState<number>()
     const [checkpoint_lifespan, set_checkpoint_lifespan] = useState<number>()
 
     useEffect(() => {
       set_context_size_warning_threshold(props.context_size_warning_threshold)
     }, [props.context_size_warning_threshold])
-
-    useEffect(() => {
-      set_limit_semantic_search_results(props.limit_semantic_search_results)
-    }, [props.limit_semantic_search_results])
 
     useEffect(() => {
       set_checkpoint_lifespan(props.checkpoint_lifespan)
@@ -108,17 +99,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
         set_context_size_warning_threshold(
           DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD
         )
-      }
-    }
-
-    const handle_limit_semantic_search_results_blur = () => {
-      if (limit_semantic_search_results && limit_semantic_search_results > 0) {
-        props.on_limit_semantic_search_results_change(
-          limit_semantic_search_results
-        )
-      } else {
-        props.on_limit_semantic_search_results_change(undefined)
-        set_limit_semantic_search_results(LIMIT_SEMANTIC_SEARCH_RESULTS)
       }
     }
 
@@ -254,38 +234,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 }
               />
             </UiItem>
-            <UiItem
-              title={t('general.limit-semantic-search-results.title')}
-              description={
-                <>
-                  {t('general.limit-semantic-search-results.description')}{' '}
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      props.on_open_external_url(
-                        'https://github.com/MinishLab/semble#cli'
-                      )
-                    }}
-                  >
-                    {t('general.limit-semantic-search-results.learn-more')}
-                  </a>
-                </>
-              }
-              slot_right={
-                <UiInput
-                  type="number"
-                  value={limit_semantic_search_results?.toString() ?? ''}
-                  on_change={(val) =>
-                    set_limit_semantic_search_results(
-                      val == '' ? undefined : parseInt(val, 10)
-                    )
-                  }
-                  on_blur={handle_limit_semantic_search_results_blur}
-                  max_width={100}
-                />
-              }
-            />
           </UiGroup>
         </div>
 
