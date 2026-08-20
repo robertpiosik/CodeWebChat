@@ -65,6 +65,13 @@ export const use_symbol_deletion = (params: {
       if (start_index != -1) {
         apply_symbol_deletion(start_index, start_index + search_pattern.length)
       }
+    } else if (symbol_type == 'clipboard-paths-symbol') {
+      const search_pattern = '#ClipboardPaths'
+      const start_index = params.value.indexOf(search_pattern)
+
+      if (start_index != -1) {
+        apply_symbol_deletion(start_index, start_index + search_pattern.length)
+      }
     } else if (
       symbol_type == 'commit-symbol' ||
       symbol_type == 'commitmessage-symbol'
@@ -263,6 +270,25 @@ export const use_symbol_deletion = (params: {
     return false
   }
 
+  const handle_clipboard_paths_symbol_deletion = (
+    raw_pos: number,
+    context_file_paths: string[]
+  ): boolean => {
+    const text_before_cursor = params.value.substring(0, raw_pos)
+    const match = text_before_cursor.match(/#ClipboardPaths$/)
+
+    if (match) {
+      const start_of_match = raw_pos - match[0].length
+      const new_value =
+        params.value.substring(0, start_of_match) +
+        params.value.substring(raw_pos)
+      const new_raw_cursor_pos = start_of_match
+      params.on_delete(new_value, new_raw_cursor_pos)
+      return true
+    }
+    return false
+  }
+
   const handle_commit_symbol_deletion = (
     raw_pos: number,
     context_file_paths: string[]
@@ -404,6 +430,10 @@ export const use_symbol_deletion = (params: {
       return handle_selection_symbol_deletion(raw_pos, context_file_paths)
     }
 
+    if (deletion_params.el.dataset.type == 'clipboard-paths-symbol') {
+      return handle_clipboard_paths_symbol_deletion(raw_pos, context_file_paths)
+    }
+
     if (
       deletion_params.el.dataset.type == 'commit-symbol' ||
       deletion_params.el.dataset.type == 'commitmessage-symbol'
@@ -507,7 +537,8 @@ export const use_symbol_deletion = (params: {
           parent.dataset.type == 'skill-symbol' ||
           parent.dataset.type == 'image-symbol' ||
           parent.dataset.type == 'pasted-text-symbol' ||
-          parent.dataset.type == 'website-symbol'
+          parent.dataset.type == 'website-symbol' ||
+          parent.dataset.type == 'clipboard-paths-symbol'
         ) {
           const range_after = document.createRange()
           range_after.selectNodeContents(parent)
@@ -537,7 +568,8 @@ export const use_symbol_deletion = (params: {
         el.dataset.type == 'skill-symbol' ||
         el.dataset.type == 'image-symbol' ||
         el.dataset.type == 'pasted-text-symbol' ||
-        el.dataset.type == 'website-symbol'
+        el.dataset.type == 'website-symbol' ||
+        el.dataset.type == 'clipboard-paths-symbol'
       ) {
         const display_pos = get_caret_position_from_div(
           params.input_ref.current

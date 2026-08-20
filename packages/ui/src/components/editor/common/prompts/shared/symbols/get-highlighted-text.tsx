@@ -71,9 +71,10 @@ export const get_highlighted_text = (params: {
   const website_regex_part = '#Website\\([^)]+\\)'
 
   const pasted_text_regex_part = '#PastedText\\([a-fA-F0-9]+:\\d+\\)'
+  const clipboard_paths_regex_part = '#ClipboardPaths'
 
   const regex = new RegExp(
-    `(${fragment_regex_part}|#Selection|#Changes\\([^)]+\\)|${saved_context_regex_part}|${commit_regex_part}|${skill_regex_part}|${image_regex_part}|${pasted_text_regex_part}|${website_regex_part})`,
+    `(${fragment_regex_part}|#Selection|#Changes\\([^)]+\\)|${saved_context_regex_part}|${commit_regex_part}|${skill_regex_part}|${image_regex_part}|${pasted_text_regex_part}|${website_regex_part}|${clipboard_paths_regex_part})`,
     'g'
   )
   const parts = params.text.split(regex)
@@ -139,6 +140,17 @@ export const get_highlighted_text = (params: {
         }" data-role="symbol-icon"></span><span class="${
           styles['symbol__text']
         }" data-role="symbol-text">Selection</span></span>`
+      }
+      if (part == '#ClipboardPaths') {
+        const className = cn(
+          styles['symbol'],
+          styles['symbol--clipboard-paths']
+        )
+        return `<span class="${className}" data-type="clipboard-paths-symbol" title="Clipboard paths"><span class="${
+          styles['symbol__icon']
+        }" data-role="symbol-icon"></span><span class="${
+          styles['symbol__text']
+        }" data-role="symbol-text">Clipboard paths</span></span>`
       }
       if (part && /^#Changes\([^)]+\)$/.test(part)) {
         const branch_name = part.slice(9, -1)

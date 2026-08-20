@@ -110,14 +110,53 @@ export const select_clipboard_paths_command = (
               absolute_paths: ws.absolute_paths
             }))
 
-            const selected_workspace = await vscode.window.showQuickPick(
-              quick_pick_items,
-              {
-                title: t('command.select-clipboard-paths.title'),
-                placeHolder: 'Select workspace for clipboard paths',
-                ignoreFocusOut: true
+            const quick_pick = vscode.window.createQuickPick<
+              vscode.QuickPickItem & {
+                root: string
+                absolute_paths: string[]
               }
-            )
+            >()
+            quick_pick.title = 'Workspaces'
+            quick_pick.placeholder = 'Select workspace for clipboard paths'
+            quick_pick.items = quick_pick_items
+
+            const close_button = {
+              iconPath: new vscode.ThemeIcon('close'),
+              tooltip: t('common.close')
+            }
+            quick_pick.buttons = [close_button]
+
+            const selected_workspace = await new Promise<
+              | (vscode.QuickPickItem & {
+                  root: string
+                  absolute_paths: string[]
+                })
+              | undefined
+            >((resolve) => {
+              let is_accepted = false
+
+              quick_pick.onDidTriggerButton((button) => {
+                if (button === close_button) {
+                  resolve(undefined)
+                  quick_pick.hide()
+                }
+              })
+
+              quick_pick.onDidAccept(() => {
+                is_accepted = true
+                resolve(quick_pick.selectedItems[0])
+                quick_pick.hide()
+              })
+
+              quick_pick.onDidHide(() => {
+                if (!is_accepted) {
+                  resolve(undefined)
+                }
+                quick_pick.dispose()
+              })
+
+              quick_pick.show()
+            })
 
             if (!selected_workspace) {
               current_step = 'finish'

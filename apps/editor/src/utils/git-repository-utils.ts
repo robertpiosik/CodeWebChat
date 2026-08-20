@@ -69,8 +69,43 @@ export const get_git_repository = async (
     }
   })
 
-  const selected = await vscode.window.showQuickPick(picks, {
-    placeHolder: t('command.generate-commit-message.select-repository')
+  const quick_pick = vscode.window.createQuickPick<
+    vscode.QuickPickItem & { repository: GitRepository }
+  >()
+  quick_pick.title = 'Workspaces'
+  quick_pick.placeholder = t(
+    'command.generate-commit-message.select-repository'
+  )
+  quick_pick.items = picks
+  quick_pick.buttons = [
+    { iconPath: new vscode.ThemeIcon('close'), tooltip: t('common.close') }
+  ]
+
+  const selected = await new Promise<
+    (vscode.QuickPickItem & { repository: GitRepository }) | undefined
+  >((resolve) => {
+    let is_accepted = false
+    const disposables: vscode.Disposable[] = []
+
+    disposables.push(
+      quick_pick.onDidTriggerButton(() => {
+        resolve(undefined)
+        quick_pick.hide()
+      }),
+      quick_pick.onDidAccept(() => {
+        is_accepted = true
+        resolve(quick_pick.selectedItems[0])
+        quick_pick.hide()
+      }),
+      quick_pick.onDidHide(() => {
+        if (!is_accepted) {
+          resolve(undefined)
+        }
+        disposables.forEach((d) => d.dispose())
+        quick_pick.dispose()
+      })
+    )
+    quick_pick.show()
   })
 
   if (!selected) {
@@ -125,8 +160,43 @@ export const get_repository_for_commit = async (
     }
   })
 
-  const selected = await vscode.window.showQuickPick(picks, {
-    placeHolder: t('command.generate-commit-message.select-repository')
+  const quick_pick = vscode.window.createQuickPick<
+    vscode.QuickPickItem & { repository: GitRepository }
+  >()
+  quick_pick.title = 'Workspaces'
+  quick_pick.placeholder = t(
+    'command.generate-commit-message.select-repository'
+  )
+  quick_pick.items = picks
+  quick_pick.buttons = [
+    { iconPath: new vscode.ThemeIcon('close'), tooltip: t('common.close') }
+  ]
+
+  const selected = await new Promise<
+    (vscode.QuickPickItem & { repository: GitRepository }) | undefined
+  >((resolve) => {
+    let is_accepted = false
+    const disposables: vscode.Disposable[] = []
+
+    disposables.push(
+      quick_pick.onDidTriggerButton(() => {
+        resolve(undefined)
+        quick_pick.hide()
+      }),
+      quick_pick.onDidAccept(() => {
+        is_accepted = true
+        resolve(quick_pick.selectedItems[0])
+        quick_pick.hide()
+      }),
+      quick_pick.onDidHide(() => {
+        if (!is_accepted) {
+          resolve(undefined)
+        }
+        disposables.forEach((d) => d.dispose())
+        quick_pick.dispose()
+      })
+    )
+    quick_pick.show()
   })
 
   if (!selected) {

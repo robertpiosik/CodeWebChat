@@ -6,6 +6,7 @@ import {
   LAST_SELECTED_COMMIT_REFERENCE_ACTION_STATE_KEY
 } from '@/constants/state-keys'
 import { GIT_LOG_SINCE_DURATION } from '@/constants/values'
+import { t } from '@/i18n'
 
 export const handle_commit_item = async (
   extension_context: vscode.ExtensionContext
@@ -34,7 +35,7 @@ export const handle_commit_item = async (
 
     if (git_folders.length == 0) {
       vscode.window.showErrorMessage(
-        'No Git repository found in the workspace.'
+        t('views.prompt.handlers.hash-sign.commit-symbol.no-git-repo')
       )
       return undefined
     }
@@ -119,7 +120,10 @@ export const handle_commit_item = async (
 
       if (!log_output.trim()) {
         vscode.window.showErrorMessage(
-          `No git commits found in "${selected_folder.name}".`
+          t('views.prompt.handlers.hash-sign.commit-symbol.no-commits').replace(
+            '{0}',
+            selected_folder.name
+          )
         )
         if (git_folders.length > 1) {
           continue
@@ -269,7 +273,7 @@ export const handle_commit_item = async (
     }
   } catch (error) {
     vscode.window.showErrorMessage(
-      'Failed to get git commits. Please ensure git is installed.'
+      t('views.prompt.handlers.hash-sign.commit-symbol.failed-to-get-commits')
     )
     return 'continue'
   }

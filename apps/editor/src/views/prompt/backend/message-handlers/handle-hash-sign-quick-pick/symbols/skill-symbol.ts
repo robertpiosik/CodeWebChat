@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
 import * as os from 'os'
+import { t } from '@/i18n'
 
 const home = os.homedir()
 
@@ -249,7 +250,7 @@ export const handle_skill_item = async (): Promise<
 
   if (detected_agents.length == 0) {
     vscode.window.showInformationMessage(
-      'No supported agents with skills detected.'
+      t('views.prompt.handlers.hash-sign.skill-symbol.no-agents')
     )
     return 'continue'
   }
@@ -325,7 +326,10 @@ export const handle_skill_item = async (): Promise<
 
     if (skills.length == 0) {
       vscode.window.showInformationMessage(
-        `No skills found for ${agent.display_name}.`
+        t('views.prompt.handlers.hash-sign.skill-symbol.no-skills').replace(
+          '{0}',
+          agent.display_name
+        )
       )
       continue
     }

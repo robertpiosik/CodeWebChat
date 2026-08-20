@@ -53,6 +53,14 @@ export const reconstruct_raw_value_from_node = (node: Node): string => {
         const suffix = inner_content.substring(index + expected_text.length)
         return `${prefix}#Selection${suffix}`
       }
+    } else if (el.dataset.type == 'clipboard-paths-symbol') {
+      const expected_text = 'Clipboard paths'
+      const index = inner_content.indexOf(expected_text)
+      if (index != -1) {
+        const prefix = inner_content.substring(0, index)
+        const suffix = inner_content.substring(index + expected_text.length)
+        return `${prefix}#ClipboardPaths${suffix}`
+      }
     } else if (
       el.dataset.type == 'commit-symbol' ||
       el.dataset.type == 'commitmessage-symbol'

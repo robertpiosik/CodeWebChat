@@ -217,7 +217,7 @@ export const handle_saved_context_item = async (
     }
   } catch (error) {
     vscode.window.showErrorMessage(
-      'Failed to load saved contexts. Please check your configuration.'
+      t('views.prompt.handlers.hash-sign.saved-context-symbol.failed-to-load')
     )
     return 'continue'
   }

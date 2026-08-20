@@ -11,6 +11,7 @@ import { replace_image_symbol } from './image/replace-image-symbol'
 import { replace_pasted_text_symbol } from './pasted-text/replace-pasted-text-symbol'
 import { replace_website_symbol } from './website/replace-website-symbol'
 import { replace_fragment_symbol } from './fragment/replace-fragment-symbol'
+import { replace_clipboard_paths_symbol } from './clipboard-paths/replace-clipboard-paths-symbol'
 
 export interface ReplaceSymbolsParams {
   instruction: string
@@ -56,6 +57,15 @@ export const replace_symbols = async (
     })
     processed_instructions = result.instruction
     skill_definitions += result.context_definitions
+  }
+
+  if (processed_instructions.includes('#ClipboardPaths')) {
+    const result = await replace_clipboard_paths_symbol({
+      instruction: processed_instructions,
+      workspace_provider: params.workspace_provider
+    })
+    processed_instructions = result.instruction
+    skill_definitions += result.additional_files_definitions
   }
 
   if (processed_instructions.includes('#Skill(')) {

@@ -6,7 +6,8 @@ import {
   handle_changes_item,
   handle_commit_item,
   handle_saved_context_item,
-  handle_skill_item
+  handle_skill_item,
+  handle_clipboard_paths_item
 } from './symbols'
 
 const selection_label = '$(list-flat) Selection'
@@ -14,6 +15,7 @@ const changes_label = '$(git-pull-request-draft) Changes'
 const commit_label = '$(git-commit) Commit'
 const saved_context_label = '$(checklist) Saved context'
 const skill_label = '$(thinking) Skill'
+const clipboard_paths_label = '$(clippy) Clipboard paths'
 
 const hash_sign_quick_pick = async (params: {
   extension_context: vscode.ExtensionContext
@@ -38,13 +40,17 @@ const hash_sign_quick_pick = async (params: {
     },
     {
       label: skill_label,
-      description: 'Reference an installed skill',
+      description: 'Files of a selected skill',
       buttons: [
         {
           iconPath: new vscode.ThemeIcon('globe'),
           tooltip: 'Discover skills at skills.sh'
         }
       ]
+    },
+    {
+      label: clipboard_paths_label,
+      description: 'Files matching paths found in the clipboard'
     }
   ]
 
@@ -125,6 +131,9 @@ const hash_sign_quick_pick = async (params: {
         break
       case skill_label:
         result = await handle_skill_item()
+        break
+      case clipboard_paths_label:
+        result = await handle_clipboard_paths_item()
         break
       default:
         continue
