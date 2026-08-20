@@ -405,10 +405,14 @@ export const create_handle_key_down = (
   const handle_enter_key = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (props.send_with_shift_enter && e.shiftKey) {
       e.preventDefault()
-      handle_submit(e)
+      if (!e.repeat) {
+        handle_submit(e)
+      }
     } else if (!props.send_with_shift_enter && !e.shiftKey) {
       e.preventDefault()
-      handle_submit(e)
+      if (!e.repeat) {
+        handle_submit(e)
+      }
     } else {
       e.preventDefault()
       const selection = window.getSelection()
