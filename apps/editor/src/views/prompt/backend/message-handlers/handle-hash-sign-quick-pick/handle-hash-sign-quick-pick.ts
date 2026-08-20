@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import { t } from '@/i18n'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { LAST_SELECTED_SYMBOL_STATE_KEY } from '@/constants/state-keys'
 import {
@@ -10,12 +11,12 @@ import {
   handle_clipboard_paths_item
 } from './symbols'
 
-const selection_label = '$(list-flat) Selection'
-const changes_label = '$(git-pull-request-draft) Changes'
-const commit_label = '$(git-commit) Commit'
-const saved_context_label = '$(checklist) Saved context'
-const skill_label = '$(thinking) Skill'
-const clipboard_paths_label = '$(clippy) Clipboard paths'
+const selection_label = `$(list-flat) ${t('views.prompt.handlers.hash-sign.quick-pick.selection.label')}`
+const changes_label = `$(git-pull-request-draft) ${t('views.prompt.handlers.hash-sign.quick-pick.changes.label')}`
+const commit_label = `$(git-commit) ${t('views.prompt.handlers.hash-sign.quick-pick.commit.label')}`
+const saved_context_label = `$(checklist) ${t('views.prompt.handlers.hash-sign.quick-pick.saved-context.label')}`
+const skill_label = `$(thinking) ${t('views.prompt.handlers.hash-sign.quick-pick.skill.label')}`
+const clipboard_paths_label = `$(clippy) ${t('views.prompt.handlers.hash-sign.quick-pick.clipboard-paths.label')}`
 
 const hash_sign_quick_pick = async (params: {
   extension_context: vscode.ExtensionContext
@@ -24,33 +25,45 @@ const hash_sign_quick_pick = async (params: {
   const items: vscode.QuickPickItem[] = [
     {
       label: selection_label,
-      description: 'Text selection from the active editor'
+      description: t(
+        'views.prompt.handlers.hash-sign.quick-pick.selection.description'
+      )
     },
     {
       label: changes_label,
-      description: 'Diff with the selected branch'
+      description: t(
+        'views.prompt.handlers.hash-sign.quick-pick.changes.description'
+      )
     },
     {
       label: commit_label,
-      description: 'Changes from a specific commit'
+      description: t(
+        'views.prompt.handlers.hash-sign.quick-pick.commit.description'
+      )
     },
     {
       label: saved_context_label,
-      description: 'Files from the workspace'
+      description: t(
+        'views.prompt.handlers.hash-sign.quick-pick.saved-context.description'
+      )
     },
     {
       label: skill_label,
-      description: 'Files of a selected skill',
+      description: t(
+        'views.prompt.handlers.hash-sign.quick-pick.skill.description'
+      ),
       buttons: [
         {
           iconPath: new vscode.ThemeIcon('globe'),
-          tooltip: 'Discover skills at skills.sh'
+          tooltip: t('views.prompt.handlers.hash-sign.quick-pick.skill.tooltip')
         }
       ]
     },
     {
       label: clipboard_paths_label,
-      description: 'Files matching paths found in the clipboard'
+      description: t(
+        'views.prompt.handlers.hash-sign.quick-pick.clipboard-paths.description'
+      )
     }
   ]
 
@@ -65,11 +78,16 @@ const hash_sign_quick_pick = async (params: {
   while (true) {
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = items
-    quick_pick.placeholder = 'Select symbol to insert'
+    quick_pick.placeholder = t(
+      'views.prompt.handlers.hash-sign.quick-pick.placeholder'
+    )
     quick_pick.matchOnDescription = true
-    quick_pick.title = 'Symbols'
+    quick_pick.title = t('views.prompt.handlers.hash-sign.quick-pick.title')
     quick_pick.buttons = [
-      { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
+      {
+        iconPath: new vscode.ThemeIcon('close'),
+        tooltip: t('views.prompt.handlers.hash-sign.quick-pick.close')
+      }
     ]
 
     if (last_selected_item) {
