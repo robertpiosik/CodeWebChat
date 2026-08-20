@@ -82,7 +82,7 @@ export const replace_skill_symbol = async (params: {
                 path.relative(skill.path, file_path)
               )
               const backticks = content.includes('```') ? '````' : '```'
-              skill_content += `- File: \`${relative_path.replace(
+              skill_content += `### File: \`${relative_path.replace(
                 /\\/g,
                 '/'
               )}\`\n\n${backticks}\n${content}\n${backticks}\n\n`

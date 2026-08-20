@@ -87,7 +87,7 @@ const build_changes_markdown = (
         ? `${path_prefix}/${file_path}`
         : file_path
 
-      changes_content += `- File: \`${display_path}\`\n\n`
+      changes_content += `### File: \`${display_path}\`\n\n`
 
       let file_content = ''
       try {
@@ -371,7 +371,7 @@ const build_commit_changes_markdown = (
         ? `${path_prefix}/${file_path}`
         : file_path
 
-      changes_content += `- File: \`${display_path}\`\n\n`
+      changes_content += `### File: \`${display_path}\`\n\n`
 
       let file_content = ''
       if (!is_deleted) {

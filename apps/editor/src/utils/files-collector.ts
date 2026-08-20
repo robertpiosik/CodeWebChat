@@ -93,10 +93,10 @@ export namespace FilesCollector {
           }
 
           if (is_binary) {
-            collected_text += `- File: \`${display_path}\`\n\nBinary file\n\n`
+            collected_text += `### File: \`${display_path}\`\n\nBinary file\n\n`
           } else {
             const backticks = content.includes('```') ? '````' : '```'
-            collected_text += `- File: \`${display_path}\`\n\n${backticks}\n${content}\n${backticks}\n\n`
+            collected_text += `### File: \`${display_path}\`\n\n${backticks}\n${content}\n${backticks}\n\n`
           }
         } catch (error) {
           console.error(`Error reading file ${file_path}:`, error)

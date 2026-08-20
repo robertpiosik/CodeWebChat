@@ -72,7 +72,7 @@ export const replace_saved_context_symbol = async (params: {
           const relative_path = root ? path.relative(root, p) : p
 
           const backticks = content.includes('```') ? '````' : '```'
-          files_markdown += `- File: \`${relative_path.replace(
+          files_markdown += `### File: \`${relative_path.replace(
             /\\/g,
             '/'
           )}\`\n\n${backticks}\n${content}\n${backticks}\n\n`

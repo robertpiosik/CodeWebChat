@@ -8,10 +8,10 @@ export namespace PromptBuilder {
   }): string => {
     const display_path = normalize_path(params.filepath)
     if (params.is_binary || params.content === undefined) {
-      return `- File: \`${display_path}\`\n\nBinary file\n\n`
+      return `### File: \`${display_path}\`\n\nBinary file\n\n`
     }
     const backticks = params.content.includes('```') ? '````' : '```'
-    return `- File: \`${display_path}\`\n\n${backticks}\n${params.content}\n${backticks}\n\n`
+    return `### File: \`${display_path}\`\n\n${backticks}\n${params.content}\n${backticks}\n\n`
   }
 
   export const build_diff_file_context = (params: {
@@ -25,14 +25,14 @@ export namespace PromptBuilder {
     const display_path = normalize_path(params.filepath)
 
     if (params.status == 'created') {
-      result += `- New file: \`${display_path}\`\n\n`
+      result += `### New file: \`${display_path}\`\n\n`
     } else if (params.status == 'deleted') {
-      result += `- Deleted file: \`${display_path}\`\n\n`
+      result += `### Deleted file: \`${display_path}\`\n\n`
     } else if (params.status == 'renamed' && params.old_filepath) {
       const old_display_path = normalize_path(params.old_filepath)
-      result += `- Renamed file: \`${old_display_path}\` (old) \`${display_path}\` (new)\n\n`
+      result += `### Renamed file: \`${old_display_path}\` (old) \`${display_path}\` (new)\n\n`
     } else {
-      result += `- Updated file: \`${display_path}\`\n\n`
+      result += `### Updated file: \`${display_path}\`\n\n`
     }
 
     if (params.diff_content?.trimEnd()) {

@@ -437,9 +437,9 @@ export class TokenCalculator implements vscode.Disposable {
         }
 
         if (is_binary) {
-          return `- File: \`${display_path}\`\n\nBinary file\n\n`
+          return `### File: \`${display_path}\`\n\nBinary file\n\n`
         } else {
-          return `- File: \`${display_path}\`\n\n\`\`\`\n${text}\n\`\`\`\n\n`
+          return `### File: \`${display_path}\`\n\n\`\`\`\n${text}\n\`\`\`\n\n`
         }
       }
 

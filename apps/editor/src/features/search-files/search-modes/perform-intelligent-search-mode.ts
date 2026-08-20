@@ -234,7 +234,7 @@ export const perform_intelligent_search_mode = async (params: {
             const content_to_use = shrink_result
               ? file.shrunk_content
               : file.content
-            md_files += `- File: \`${file.display_path}\`\n\n\`\`\`\n${content_to_use}\n\`\`\`\n\n`
+            md_files += `### File: \`${file.display_path}\`\n\n\`\`\`\n${content_to_use}\n\`\`\`\n\n`
           }
 
           const config = vscode.workspace.getConfiguration('codeWebChat')
