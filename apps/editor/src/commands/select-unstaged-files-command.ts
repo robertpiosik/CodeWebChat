@@ -98,6 +98,7 @@ export const select_unstaged_files_command = (
                   : formatted_token_count,
                 picked: currently_checked_set.has(file_path),
                 file_path,
+                token_count: token_count.total,
                 buttons: [
                   {
                     iconPath: new vscode.ThemeIcon(
@@ -117,14 +118,34 @@ export const select_unstaged_files_command = (
           const quick_pick = vscode.window.createQuickPick<
             vscode.QuickPickItem & { file_path: string }
           >()
+
           quick_pick.title = t('command.select-unstaged-files.title')
-          quick_pick.placeholder = t('command.select-unstaged-files.include')
+
+          const base_placeholder = t('command.select-unstaged-files.include')
+
+          const update_title = () => {
+            const total = quick_pick.selectedItems.reduce(
+              (sum, item) => sum + ((item as any).token_count || 0),
+              0
+            )
+            const total_text =
+              total > 0
+                ? ` (${t('common.totalling-tokens', {
+                    tokens: display_token_count(total)
+                  })})`
+                : ''
+            quick_pick.placeholder = `${base_placeholder}${total_text}`
+          }
+
           quick_pick.canSelectMany = true
           quick_pick.items = quick_pick_items
           quick_pick.ignoreFocusOut = true
           quick_pick.selectedItems = quick_pick_items.filter(
             (item) => item.picked
           )
+
+          update_title()
+          quick_pick.onDidChangeSelection(update_title)
 
           const search_button = {
             iconPath: new vscode.ThemeIcon('search'),
@@ -197,8 +218,7 @@ export const select_unstaged_files_command = (
               workspace_provider,
               extension_context,
               websocket_manager,
-              show_back_button: true,
-              disable_semantic: true
+              show_back_button: true
             })
 
             if (search_result === 'back') {

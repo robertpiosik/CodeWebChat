@@ -407,21 +407,25 @@ export const select_files_of_commit_command = (
                   })
                 : t('command.select-files-of-commit.files-modified')
 
-              const update_placeholder = () => {
+              const base_placeholder = t(
+                'command.select-files-of-commit.select-files'
+              )
+
+              const update_title = () => {
                 const total = quick_pick_files.selectedItems.reduce(
                   (sum: number, item: any) => sum + item.token_count,
                   0
                 )
                 const total_text =
                   total > 0
-                    ? ` (totalling ${display_token_count(total)} tokens)`
+                    ? ` (${t('common.totalling-tokens', {
+                        tokens: display_token_count(total)
+                      })})`
                     : ''
-                quick_pick_files.placeholder = `${t(
-                  'command.select-files-of-commit.select-files'
-                )}${total_text}`
+                quick_pick_files.placeholder = `${base_placeholder}${total_text}`
               }
-              update_placeholder()
-              quick_pick_files.onDidChangeSelection(update_placeholder)
+              update_title()
+              quick_pick_files.onDidChangeSelection(update_title)
 
               const search_button = {
                 iconPath: new vscode.ThemeIcon('search'),
@@ -551,8 +555,7 @@ export const select_files_of_commit_command = (
                   workspace_provider,
                   extension_context,
                   websocket_manager,
-                  show_back_button: true,
-                  disable_semantic: true
+                  show_back_button: true
                 })
 
                 if (search_result === 'back') {

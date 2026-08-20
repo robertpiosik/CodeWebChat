@@ -53,6 +53,7 @@ export const map_files_to_quick_pick_items = async <
           : formatted_token_count,
         file_path,
         workspace_name,
+        token_count: token_count.total,
         buttons
       }
     })

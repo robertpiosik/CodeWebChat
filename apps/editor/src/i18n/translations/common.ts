@@ -269,6 +269,24 @@ export const translations = {
     hu: 'Válasszon konfigurációt {tokens} token feldolgozásához',
     bg: 'Изберете конфигурация за обработка на {tokens} токена'
   },
+  'common.totalling-tokens': {
+    en: 'totalling {tokens} tokens',
+    pl: 'łącznie {tokens} tokenów',
+    'zh-cn': '共计 {tokens} 个 token',
+    ja: '合計 {tokens} トークン',
+    'zh-tw': '共計 {tokens} 個 token',
+    de: 'insgesamt {tokens} Tokens',
+    es: 'total de {tokens} tokens',
+    fr: 'totalisant {tokens} tokens',
+    'pt-br': 'totalizando {tokens} tokens',
+    ru: 'всего {tokens} токенов',
+    ko: '총 {tokens} 토큰',
+    it: 'per un totale di {tokens} token',
+    tr: 'toplam {tokens} token',
+    cs: 'celkem {tokens} tokenů',
+    hu: 'összesen {tokens} token',
+    bg: 'общо {tokens} токена'
+  },
   'common.unstar': {
     en: 'Unstar',
     pl: 'Usuń z ulubionych',

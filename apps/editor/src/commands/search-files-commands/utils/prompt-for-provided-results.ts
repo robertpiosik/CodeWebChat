@@ -5,6 +5,7 @@ import { show_parent_folder_quick_pick } from '@/utils/show-parent-folder-quick-
 import { group_quick_pick_items } from '@/features/search-files/utils/group-quick-pick-items'
 import { map_files_to_quick_pick_items } from '@/features/search-files/utils/map-files-to-quick-pick-items'
 import { handle_parent_folder_result } from '@/features/search-files/utils/handle-parent-folder-result'
+import { display_token_count } from '@/utils/display-token-count'
 
 export const prompt_for_provided_results = async (params: {
   files: { path: string; checked: boolean }[]
@@ -69,10 +70,27 @@ export const prompt_for_provided_results = async (params: {
   })
   quick_pick.canSelectMany = true
   quick_pick.matchOnDescription = true
-  quick_pick.placeholder = t('feature.search-files.select-files')
+  const base_title = t('feature.search-files.results.intelligent')
+  quick_pick.title = base_title
 
-  const title = t('feature.search-files.results.intelligent')
-  quick_pick.title = title
+  const base_placeholder = t('feature.search-files.select-files')
+
+  const update_title = () => {
+    const total = quick_pick.selectedItems.reduce(
+      (sum, item) => sum + ((item as any).token_count || 0),
+      0
+    )
+    const total_text =
+      total > 0
+        ? ` (${t('common.totalling-tokens', {
+            tokens: display_token_count(total)
+          })})`
+        : ''
+    quick_pick.placeholder = `${base_placeholder}${total_text}`
+  }
+
+  update_title()
+  quick_pick.onDidChangeSelection(update_title)
 
   quick_pick.ignoreFocusOut = true
   quick_pick.buttons = [search_in_results_button, close_button]
@@ -114,7 +132,7 @@ export const prompt_for_provided_results = async (params: {
           .map((item) => item.file_path)
           .filter((p): p is string => p !== undefined),
         matched_paths: params.files.map((f) => f.path),
-        title
+        title: base_title
       })
       quick_pick.hide()
     })

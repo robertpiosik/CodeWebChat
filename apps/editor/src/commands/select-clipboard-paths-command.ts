@@ -206,6 +206,7 @@ export const select_clipboard_paths_command = (
                     ? `${formatted_token_count} · ${display_dir}`
                     : formatted_token_count,
                   file_path,
+                  token_count: token_count.total,
                   buttons: [
                     {
                       iconPath: new vscode.ThemeIcon('go-to-file'),
@@ -226,14 +227,34 @@ export const select_clipboard_paths_command = (
               const quick_pick = vscode.window.createQuickPick<
                 vscode.QuickPickItem & { file_path: string }
               >()
+
               quick_pick.title = t('command.select-clipboard-paths.title')
-              quick_pick.placeholder = t(
+
+              const base_placeholder = t(
                 'command.select-clipboard-paths.include'
               )
+
+              const update_title = () => {
+                const total = quick_pick.selectedItems.reduce(
+                  (sum, item) => sum + ((item as any).token_count || 0),
+                  0
+                )
+                const total_text =
+                  total > 0
+                    ? ` (${t('common.totalling-tokens', {
+                        tokens: display_token_count(total)
+                      })})`
+                    : ''
+                quick_pick.placeholder = `${base_placeholder}${total_text}`
+              }
+
               quick_pick.canSelectMany = true
               quick_pick.items = quick_pick_items
               quick_pick.ignoreFocusOut = true
               quick_pick.selectedItems = current_selected_items
+
+              update_title()
+              quick_pick.onDidChangeSelection(update_title)
 
               const close_button = {
                 iconPath: new vscode.ThemeIcon('close'),
@@ -322,8 +343,7 @@ export const select_clipboard_paths_command = (
                   workspace_provider,
                   extension_context,
                   websocket_manager,
-                  show_back_button: true,
-                  disable_semantic: true
+                  show_back_button: true
                 })
 
                 if (search_result === 'back') {

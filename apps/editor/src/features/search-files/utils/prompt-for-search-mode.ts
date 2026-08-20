@@ -2,19 +2,11 @@ import * as vscode from 'vscode'
 import { t } from '@/i18n'
 
 export const prompt_for_search_mode = async (
-  last_mode: 'phrase' | 'keywords' | 'intelligent' | 'semantic',
-  show_back_button?: boolean,
-  disable_semantic?: boolean
-): Promise<
-  'phrase' | 'keywords' | 'intelligent' | 'semantic' | undefined | 'back'
-> => {
-  const help_button: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('question'),
-    tooltip: 'Semble Quickstart'
-  }
-
-  let items: (vscode.QuickPickItem & {
-    mode: 'phrase' | 'keywords' | 'intelligent' | 'semantic'
+  last_mode: 'phrase' | 'keywords' | 'intelligent',
+  show_back_button?: boolean
+): Promise<'phrase' | 'keywords' | 'intelligent' | undefined | 'back'> => {
+  const items: (vscode.QuickPickItem & {
+    mode: 'phrase' | 'keywords' | 'intelligent'
   })[] = [
     {
       label: t('feature.search-files.mode.phrase'),
@@ -30,18 +22,8 @@ export const prompt_for_search_mode = async (
       label: t('feature.search-files.mode.intelligent'),
       description: t('feature.search-files.mode.intelligent-description'),
       mode: 'intelligent'
-    },
-    {
-      label: t('feature.search-files.mode.semantic'),
-      description: t('feature.search-files.mode.semantic-description'),
-      mode: 'semantic',
-      buttons: [help_button]
     }
   ]
-
-  if (disable_semantic) {
-    items = items.filter((i) => i.mode !== 'semantic')
-  }
 
   const active_item = items.find((i) => i.mode == last_mode) || items[0]
 
@@ -52,7 +34,7 @@ export const prompt_for_search_mode = async (
 
   const quick_pick = vscode.window.createQuickPick<
     vscode.QuickPickItem & {
-      mode: 'phrase' | 'keywords' | 'intelligent' | 'semantic'
+      mode: 'phrase' | 'keywords' | 'intelligent'
     }
   >()
   quick_pick.items = items
@@ -77,14 +59,6 @@ export const prompt_for_search_mode = async (
       } else if (button === close_button) {
         resolve(undefined)
         quick_pick.hide()
-      }
-    })
-
-    quick_pick.onDidTriggerItemButton((e) => {
-      if (e.button === help_button) {
-        vscode.env.openExternal(
-          vscode.Uri.parse('https://github.com/MinishLab/semble#quickstart')
-        )
       }
     })
 

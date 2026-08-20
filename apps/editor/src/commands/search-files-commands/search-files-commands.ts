@@ -262,7 +262,6 @@ export const search_files_commands = (
         workspace_provider,
         extension_context,
         websocket_manager,
-        disable_semantic: true,
         is_search_in_selected: true,
         folder_path
       })

@@ -5,7 +5,6 @@ import { LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY } from '@/constants/state-
 import { prompt_for_search_mode } from './utils/prompt-for-search-mode'
 import { perform_phrase_search_mode } from './search-modes/perform-phrase-search-mode'
 import { perform_keywords_search_mode } from './search-modes/perform-keywords-search-mode'
-import { perform_semantic_search_mode } from './search-modes/perform-semantic-search-mode'
 import { perform_intelligent_search_mode } from './search-modes/perform-intelligent-search-mode'
 import { Logger } from '@shared/utils/logger'
 import { WebSocketManager } from '@/services/websocket-manager'
@@ -17,7 +16,6 @@ export const search_files = async (params: {
   websocket_manager: WebSocketManager
   show_back_button?: boolean
   is_sub_search?: boolean
-  disable_semantic?: boolean
   is_search_in_selected?: boolean
   folder_path?: string
 }): Promise<
@@ -27,7 +25,7 @@ export const search_files = async (params: {
 > => {
   let initial_search_mode =
     params.extension_context.workspaceState.get<
-      'phrase' | 'keywords' | 'intelligent' | 'semantic'
+      'phrase' | 'keywords' | 'intelligent'
     >(LAST_SEARCH_FILES_FOR_CONTEXT_MODE_STATE_KEY) || 'phrase'
 
   let _resolved_files: string[] | undefined
@@ -55,8 +53,7 @@ export const search_files = async (params: {
     try {
       const mode_result = await prompt_for_search_mode(
         initial_search_mode,
-        params.show_back_button,
-        params.disable_semantic || params.is_sub_search
+        params.show_back_button
       )
 
       if (mode_result == 'back') return 'back'
@@ -88,8 +85,6 @@ export const search_files = async (params: {
         flow_result = await perform_phrase_search_mode(flow_params)
       } else if (search_mode == 'keywords') {
         flow_result = await perform_keywords_search_mode(flow_params)
-      } else if (search_mode == 'semantic') {
-        flow_result = await perform_semantic_search_mode(flow_params)
       } else if (search_mode == 'intelligent') {
         const files = await resolve_files()
         flow_result = await perform_intelligent_search_mode({

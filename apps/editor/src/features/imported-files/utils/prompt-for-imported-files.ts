@@ -159,6 +159,7 @@ export const prompt_for_imported_files = async (params: {
             : formatted_token_count,
           picked: is_picked,
           uri: uri,
+          token_count: token_count.total,
           tokens: token_count.total,
           buttons
         }
@@ -231,8 +232,25 @@ export const prompt_for_imported_files = async (params: {
     quick_pick.selectedItems = current_selected_items
     quick_pick.canSelectMany = true
     quick_pick.matchOnDescription = true
-    quick_pick.placeholder = t('feature.imported-files.placeholder')
     quick_pick.title = t('feature.imported-files.title')
+
+    const base_placeholder = t('feature.imported-files.placeholder')
+    const update_title = () => {
+      const total = quick_pick.selectedItems.reduce(
+        (sum, item) => sum + ((item as any).token_count || 0),
+        0
+      )
+      const total_text =
+        total > 0
+          ? ` (${t('common.totalling-tokens', {
+              tokens: display_token_count(total)
+            })})`
+          : ''
+      quick_pick.placeholder = `${base_placeholder}${total_text}`
+    }
+    update_title()
+    quick_pick.onDidChangeSelection(update_title)
+
     quick_pick.ignoreFocusOut = true
 
     const buttons: vscode.QuickInputButton[] = [search_button, close_button]
@@ -422,8 +440,7 @@ export const prompt_for_imported_files = async (params: {
         workspace_provider,
         extension_context,
         websocket_manager,
-        show_back_button: true,
-        disable_semantic: true
+        show_back_button: true
       })
 
       if (search_result == 'back') {
