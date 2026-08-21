@@ -21,6 +21,7 @@ export const get_prompt_data = async (params: {
   workspace_provider: WorkspaceProvider
   files_staged_by_action?: boolean
   is_single_change_flow?: boolean
+  skip_context_prompt?: boolean
 }) => {
   await vscode.workspace.saveAll()
   await params.repository.status()
@@ -120,7 +121,7 @@ export const get_prompt_data = async (params: {
   let chatbot_prompt = ''
   let was_context_prompt_shown = false
 
-  if (ordered_context_files.length > 0) {
+  if (ordered_context_files.length > 0 && !params.skip_context_prompt) {
     const setting = vscode.workspace
       .getConfiguration('codeWebChat')
       .get<string>('useContextFilesInCommitMessagePrompt', 'ask')

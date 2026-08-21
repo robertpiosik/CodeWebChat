@@ -65,7 +65,8 @@ export const run_generate_action = async (params: {
       files_staged_by_action,
       is_single_change_flow: files_staged_by_action
         ? is_single_change_flow
-        : undefined
+        : undefined,
+      skip_context_prompt: params.provided_text !== undefined
     })
 
     if (data === 'back') {
