@@ -89,7 +89,7 @@ export const search_files_by_intelligent = async (
       }
       return extracted_files.length == 0 ? 'error_no_files' : extracted_files
     }
-    return 'cancel'
+    return 'error'
   } catch (error) {
     if (!axios.isCancel(error)) {
       Logger.error({
@@ -98,7 +98,8 @@ export const search_files_by_intelligent = async (
         data: error
       })
       vscode.window.showErrorMessage(t('feature.search-files.error.finding'))
+      return 'error'
     }
-    return 'error'
+    return 'cancel'
   }
 }
