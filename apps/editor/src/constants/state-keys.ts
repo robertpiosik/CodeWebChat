@@ -112,6 +112,7 @@ export const LAST_INTELLIGENT_FILE_SEARCH_SHRINK_STATE_KEY =
   'last-intelligent-file-search-shrink'
 
 export const LAST_ATTACH_ASCII_TREE_STATE_KEY = 'last-attach-ascii-tree'
+export const LAST_USE_CONTEXT_FILES_STATE_KEY = 'last-use-context-files'
 export const LAST_COPY_PATHS_FORMAT_STATE_KEY = 'last-copy-paths-format'
 
 export type DuplicateWorkspaceContext = {

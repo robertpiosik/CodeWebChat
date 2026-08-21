@@ -29,6 +29,10 @@ export const use_settings = (vscode: any) => {
   const [attach_ascii_tree_of_context, set_attach_ascii_tree_of_context] =
     useState<'ask' | 'always' | 'never' | undefined>(undefined)
   const [
+    use_context_files_in_commit_message_prompt,
+    set_use_context_files_in_commit_message_prompt
+  ] = useState<'ask' | 'always' | 'never' | undefined>(undefined)
+  const [
     select_all_prompts_in_commit_messages_by_default,
     set_select_all_prompts_in_commit_messages_by_default
   ] = useState<boolean | undefined>(undefined)
@@ -88,6 +92,9 @@ export const use_settings = (vscode: any) => {
       command: 'GET_ATTACH_ASCII_TREE_OF_CONTEXT'
     })
     post_message(vscode, {
+      command: 'GET_USE_CONTEXT_FILES_IN_COMMIT_MESSAGE_PROMPT'
+    })
+    post_message(vscode, {
       command: 'GET_SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
     })
     post_message(vscode, {
@@ -127,6 +134,10 @@ export const use_settings = (vscode: any) => {
         set_synchronize_edit_format_between_modes(message.enabled)
       } else if (message.command == 'ATTACH_ASCII_TREE_OF_CONTEXT') {
         set_attach_ascii_tree_of_context(message.value)
+      } else if (
+        message.command == 'USE_CONTEXT_FILES_IN_COMMIT_MESSAGE_PROMPT'
+      ) {
+        set_use_context_files_in_commit_message_prompt(message.value)
       } else if (
         message.command == 'SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
       ) {
@@ -285,6 +296,16 @@ export const use_settings = (vscode: any) => {
     set_attach_ascii_tree_of_context(value)
     post_message(vscode, {
       command: 'UPDATE_ATTACH_ASCII_TREE_OF_CONTEXT',
+      value
+    })
+  }
+
+  const handle_use_context_files_in_commit_message_prompt_change = (
+    value: 'ask' | 'always' | 'never'
+  ) => {
+    set_use_context_files_in_commit_message_prompt(value)
+    post_message(vscode, {
+      command: 'UPDATE_USE_CONTEXT_FILES_IN_COMMIT_MESSAGE_PROMPT',
       value
     })
   }
@@ -464,6 +485,7 @@ export const use_settings = (vscode: any) => {
     synchronize_edit_format_between_modes,
     commit_message_instructions,
     attach_ascii_tree_of_context,
+    use_context_files_in_commit_message_prompt,
     select_all_prompts_in_commit_messages_by_default,
     edit_files_system_instructions,
     intelligent_file_search_instructions,
@@ -492,6 +514,7 @@ export const use_settings = (vscode: any) => {
     handle_synchronize_edit_format_between_modes_change,
     handle_commit_instructions_change,
     handle_attach_ascii_tree_of_context_change,
+    handle_use_context_files_in_commit_message_prompt_change,
     handle_select_all_prompts_in_commit_messages_by_default_change,
     handle_edit_files_system_instructions_change,
     handle_intelligent_file_search_instructions_change,

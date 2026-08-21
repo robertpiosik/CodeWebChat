@@ -50,9 +50,12 @@ export const prompt_for_api_configuration = async (params: {
         LAST_USED_INTELLIGENT_FILE_SEARCH_CONFIG_ID_STATE_KEY
       )
 
-    const placeholder = t('common.config.placeholder-with-tokens', {
-      tokens: display_token_count(params.tokens_to_process)
-    })
+    const placeholder = t(
+      'command.search-files.config.placeholder-with-tokens',
+      {
+        tokens: display_token_count(params.tokens_to_process)
+      }
+    )
 
     const result = await show_configuration_quick_pick({
       items: params.api_configurations,

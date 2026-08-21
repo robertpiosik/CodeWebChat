@@ -13,6 +13,7 @@ import {
   handle_get_api_configurations,
   handle_get_commit_message_instructions,
   handle_get_attach_ascii_tree_of_context,
+  handle_get_use_context_files_in_commit_message_prompt,
   handle_get_include_prompts_in_commit_messages,
   handle_get_context_size_warning_threshold,
   handle_get_edit_files_system_instructions,
@@ -31,6 +32,7 @@ import {
   handle_update_are_automatic_checkpoints_disabled,
   handle_update_commit_message_instructions,
   handle_update_attach_ascii_tree_of_context,
+  handle_update_use_context_files_in_commit_message_prompt,
   handle_update_include_prompts_in_commit_messages,
   handle_get_synchronize_edit_format_between_modes,
   handle_update_synchronize_edit_format_between_modes,
@@ -201,6 +203,16 @@ export class SettingsViewProvider {
         } else if (message.command == 'UPDATE_ATTACH_ASCII_TREE_OF_CONTEXT') {
           await handle_update_attach_ascii_tree_of_context(message)
         } else if (
+          message.command == 'GET_USE_CONTEXT_FILES_IN_COMMIT_MESSAGE_PROMPT'
+        ) {
+          await handle_get_use_context_files_in_commit_message_prompt(this)
+        } else if (
+          message.command == 'UPDATE_USE_CONTEXT_FILES_IN_COMMIT_MESSAGE_PROMPT'
+        ) {
+          await handle_update_use_context_files_in_commit_message_prompt(
+            message
+          )
+        } else if (
           message.command ==
           'GET_SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
         ) {
@@ -324,6 +336,7 @@ export class SettingsViewProvider {
           void handle_get_context_size_warning_threshold(this)
           void handle_get_commit_message_instructions(this)
           void handle_get_attach_ascii_tree_of_context(this)
+          void handle_get_use_context_files_in_commit_message_prompt(this)
           void handle_get_include_prompts_in_commit_messages(this)
           void handle_get_synchronize_edit_format_between_modes(this)
           void handle_get_clear_checks_in_workspace_behavior(this)

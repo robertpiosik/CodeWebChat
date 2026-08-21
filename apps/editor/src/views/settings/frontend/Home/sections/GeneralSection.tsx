@@ -46,6 +46,10 @@ type Props = {
   on_attach_ascii_tree_of_context_change: (
     value: 'ask' | 'always' | 'never'
   ) => void
+  use_context_files_in_commit_message_prompt: 'ask' | 'always' | 'never'
+  on_use_context_files_in_commit_message_prompt_change: (
+    value: 'ask' | 'always' | 'never'
+  ) => void
   select_all_prompts_in_commit_messages_by_default: boolean
   on_select_all_prompts_in_commit_messages_by_default_change: (
     enabled: boolean
@@ -395,6 +399,70 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           <UiGroup title={t('general.commit-messages.title')}>
             <UiItem
               title={t(
+                'general.commit-messages.commit-message-instructions.title'
+              )}
+              description={t(
+                'general.commit-messages.commit-message-instructions.description'
+              )}
+              is_toggleable
+              translations={{
+                expand: t('common.expand'),
+                collapse: t('common.collapse')
+              }}
+            >
+              <UiTextarea
+                value={props.commit_instructions}
+                min_rows={3}
+                on_change={props.set_commit_instructions}
+                on_blur={props.on_commit_instructions_blur}
+                action_icon={
+                  props.commit_instructions !==
+                  props.default_commit_instructions
+                    ? 'discard'
+                    : undefined
+                }
+                action_title={t('general.action.restore-default')}
+                on_action_click={props.on_restore_commit_instructions}
+              />
+            </UiItem>
+            <UiItem
+              title={t(
+                'general.commit-messages.use-context-files-in-commit-message-prompt.title'
+              )}
+              description={t(
+                'general.commit-messages.use-context-files-in-commit-message-prompt.description'
+              )}
+              slot_right={
+                <UiDropdown
+                  options={[
+                    {
+                      value: 'ask',
+                      label: t(
+                        'general.commit-messages.use-context-files-in-commit-message-prompt.ask'
+                      )
+                    },
+                    {
+                      value: 'always',
+                      label: t(
+                        'general.commit-messages.use-context-files-in-commit-message-prompt.always'
+                      )
+                    },
+                    {
+                      value: 'never',
+                      label: t(
+                        'general.commit-messages.use-context-files-in-commit-message-prompt.never'
+                      )
+                    }
+                  ]}
+                  value={props.use_context_files_in_commit_message_prompt}
+                  onChange={
+                    props.on_use_context_files_in_commit_message_prompt_change
+                  }
+                />
+              }
+            />
+            <UiItem
+              title={t(
                 'general.commit-messages.attach-ascii-tree-of-context.title'
               )}
               description={t(
@@ -443,34 +511,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 />
               }
             />
-            <UiItem
-              title={t(
-                'general.commit-messages.commit-message-instructions.title'
-              )}
-              description={t(
-                'general.commit-messages.commit-message-instructions.description'
-              )}
-              is_toggleable
-              translations={{
-                expand: t('common.expand'),
-                collapse: t('common.collapse')
-              }}
-            >
-              <UiTextarea
-                value={props.commit_instructions}
-                min_rows={3}
-                on_change={props.set_commit_instructions}
-                on_blur={props.on_commit_instructions_blur}
-                action_icon={
-                  props.commit_instructions !==
-                  props.default_commit_instructions
-                    ? 'discard'
-                    : undefined
-                }
-                action_title={t('general.action.restore-default')}
-                on_action_click={props.on_restore_commit_instructions}
-              />
-            </UiItem>
           </UiGroup>
         </div>
       </UiSection>

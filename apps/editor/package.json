@@ -950,6 +950,16 @@
           ],
           "default": "ask"
         },
+        "codeWebChat.useContextFilesInCommitMessagePrompt": {
+          "type": "string",
+          "scope": "resource",
+          "enum": [
+            "ask",
+            "always",
+            "never"
+          ],
+          "default": "ask"
+        },
         "codeWebChat.selectAllPromptsInCommitMessagesByDefault": {
           "type": "boolean",
           "scope": "resource",

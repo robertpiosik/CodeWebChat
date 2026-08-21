@@ -1,7 +1,6 @@
 import * as vscode from 'vscode'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { Logger } from '@shared/utils/logger'
-import { display_token_count } from '@/utils/display-token-count'
 import { LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { t } from '@/i18n'
 import {
@@ -18,8 +17,7 @@ export interface CommitMessageApiConfiguration {
 export const get_commit_message_api_configuration = async (
   extension_context: vscode.ExtensionContext,
   show_back_button: boolean = true,
-  force_quick_pick: boolean = false,
-  token_count?: number
+  force_quick_pick: boolean = false
 ): Promise<
   | {
       api_configuration: CommitMessageApiConfiguration
@@ -55,12 +53,7 @@ export const get_commit_message_api_configuration = async (
         LAST_USED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY
       )
 
-      const placeholder =
-        token_count != null
-          ? t('common.config.placeholder-with-tokens', {
-              tokens: display_token_count(token_count)
-            })
-          : t('common.config.placeholder')
+      const placeholder = t('common.config.placeholder')
 
       const result = await show_configuration_quick_pick({
         items: api_configurations,

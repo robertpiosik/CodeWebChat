@@ -79,6 +79,15 @@ export interface UpdateAttachAsciiTreeOfContextMessage {
   value: 'ask' | 'always' | 'never'
 }
 
+export interface GetUseContextFilesInCommitMessagePromptMessage {
+  command: 'GET_USE_CONTEXT_FILES_IN_COMMIT_MESSAGE_PROMPT'
+}
+
+export interface UpdateUseContextFilesInCommitMessagePromptMessage {
+  command: 'UPDATE_USE_CONTEXT_FILES_IN_COMMIT_MESSAGE_PROMPT'
+  value: 'ask' | 'always' | 'never'
+}
+
 export interface GetSelectAllPromptsInCommitMessagesByDefaultMessage {
   command: 'GET_SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
 }
@@ -374,6 +383,8 @@ export type FrontendMessage =
   | UpdateSynchronizeEditFormatBetweenModesMessage
   | GetAttachAsciiTreeOfContextMessage
   | UpdateAttachAsciiTreeOfContextMessage
+  | GetUseContextFilesInCommitMessagePromptMessage
+  | UpdateUseContextFilesInCommitMessagePromptMessage
   | GetSelectAllPromptsInCommitMessagesByDefaultMessage
   | UpdateSelectAllPromptsInCommitMessagesByDefaultMessage
   | GetEditFilesSystemInstructionsMessage
@@ -452,6 +463,11 @@ export interface SynchronizeEditFormatBetweenModesMessage {
 
 export interface AttachAsciiTreeOfContextMessage {
   command: 'ATTACH_ASCII_TREE_OF_CONTEXT'
+  value: 'ask' | 'always' | 'never'
+}
+
+export interface UseContextFilesInCommitMessagePromptMessage {
+  command: 'USE_CONTEXT_FILES_IN_COMMIT_MESSAGE_PROMPT'
   value: 'ask' | 'always' | 'never'
 }
 
@@ -614,6 +630,7 @@ export type BackendMessage =
   | CommitMessageInstructionsMessage
   | SynchronizeEditFormatBetweenModesMessage
   | AttachAsciiTreeOfContextMessage
+  | UseContextFilesInCommitMessagePromptMessage
   | SelectAllPromptsInCommitMessagesByDefaultMessage
   | EditFilesSystemInstructionsMessage
   | IntelligentFileSearchInstructionsMessage

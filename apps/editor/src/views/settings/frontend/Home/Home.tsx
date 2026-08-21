@@ -111,6 +111,7 @@ type Props = {
   commit_message_instructions: string
   synchronize_edit_format_between_modes: boolean
   attach_ascii_tree_of_context: 'ask' | 'always' | 'never'
+  use_context_files_in_commit_message_prompt: 'ask' | 'always' | 'never'
   select_all_prompts_in_commit_messages_by_default: boolean
   context_size_warning_threshold: number
   gemini_user_id: number | null
@@ -139,6 +140,9 @@ type Props = {
   on_synchronize_edit_format_between_modes_change: (enabled: boolean) => void
   on_commit_instructions_change: (instructions: string) => void
   on_attach_ascii_tree_of_context_change: (
+    value: 'ask' | 'always' | 'never'
+  ) => void
+  on_use_context_files_in_commit_message_prompt_change: (
     value: 'ask' | 'always' | 'never'
   ) => void
   on_select_all_prompts_in_commit_messages_by_default_change: (
@@ -439,6 +443,12 @@ export const Home: React.FC<Props> = (props) => {
           attach_ascii_tree_of_context={props.attach_ascii_tree_of_context}
           on_attach_ascii_tree_of_context_change={
             props.on_attach_ascii_tree_of_context_change
+          }
+          use_context_files_in_commit_message_prompt={
+            props.use_context_files_in_commit_message_prompt
+          }
+          on_use_context_files_in_commit_message_prompt_change={
+            props.on_use_context_files_in_commit_message_prompt_change
           }
           select_all_prompts_in_commit_messages_by_default={
             props.select_all_prompts_in_commit_messages_by_default
