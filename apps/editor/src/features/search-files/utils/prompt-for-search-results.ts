@@ -168,10 +168,18 @@ export const prompt_for_search_results = async (params: {
         resolve('back')
         quick_pick.hide()
       } else if (button === search_in_results_button) {
-        is_accepted = true
         const selected = quick_pick.selectedItems
           .map((item) => item.file_path)
           .filter((p): p is string => p !== undefined)
+
+        if (selected.length == 0) {
+          vscode.window.showInformationMessage(
+            t('feature.search-files.info.no-files-selected')
+          )
+          return
+        }
+
+        is_accepted = true
         resolve({
           action: 'search-in-results',
           matched_paths: selected,

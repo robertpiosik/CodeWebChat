@@ -954,7 +954,7 @@ export const translations = {
     bg: 'Търсене както в съдържанието, така и в имената на файловете'
   },
   'feature.search-files.results.unmatched': {
-    en: 'unmatched Selected Files',
+    en: 'unmatched selected files',
     pl: 'Niedopasowane wybrane pliki',
     'zh-cn': '未匹配的选定文件',
     ja: '一致しない選択されたファイル',
@@ -970,5 +970,23 @@ export const translations = {
     cs: 'Neodpovídající vybrané soubory',
     hu: 'Nem egyező kiválasztott fájlok',
     bg: 'Несъвпадащи избрани файлове'
+  },
+  'feature.search-files.info.no-files-selected': {
+    en: 'Please select results search in.',
+    pl: 'Proszę wybrać wyniki do przeszukania.',
+    'zh-cn': '请选择要搜索的结果。',
+    ja: '検索する結果を選択してください。',
+    'zh-tw': '請選擇要搜尋的結果。',
+    de: 'Bitte wählen Sie Ergebnisse für die Suche aus.',
+    es: 'Por favor, seleccione los resultados en los que buscar.',
+    fr: 'Veuillez sélectionner les résultats dans lesquels rechercher.',
+    'pt-br': 'Por favor, selecione os resultados para pesquisar.',
+    ru: 'Пожалуйста, выберите результаты для поиска.',
+    ko: '검색할 결과를 선택하세요.',
+    it: 'Seleziona i risultati in cui cercare.',
+    tr: 'Lütfen arama yapılacak sonuçları seçin.',
+    cs: 'Vyberte výsledky, ve kterých chcete hledat.',
+    hu: 'Kérjük, válassza ki a keresendő eredményeket.',
+    bg: 'Моля, изберете резултати, в които да търсите.'
   }
 } as const
