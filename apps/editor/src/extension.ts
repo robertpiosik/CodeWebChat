@@ -128,8 +128,7 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     ...code_at_cursor_commands({
       workspace_provider,
       open_editors_provider,
-      extension_context,
-      prompt_view_provider
+      extension_context
     }),
     ...history_command({
       extension_context,

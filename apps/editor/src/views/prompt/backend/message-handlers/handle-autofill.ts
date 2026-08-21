@@ -1,7 +1,6 @@
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import * as vscode from 'vscode'
 import { FilesCollector } from '@/utils/files-collector'
-import { code_at_cursor_instructions_for_prompt_view } from '@/constants/instructions'
 import { get_last_used_web_configuration_key } from '@/constants/state-keys'
 import { ConfigWebConfigurationFormat } from '@/utils/web-configuration-format-converters'
 import { MODE } from '@/views/prompt/types/main-view-mode'
@@ -35,16 +34,7 @@ export const handle_autofill = async (params: {
     return
   }
 
-  const is_in_code_at_cursor_mode =
-    params.prompt_view_provider.web_prompt_type == 'code-at-cursor'
   const current_instructions = params.prompt_view_provider.current_instruction
-
-  const active_editor = vscode.window.activeTextEditor
-
-  if (is_in_code_at_cursor_mode && !active_editor) {
-    vscode.window.showWarningMessage(dictionary.warning_message.NO_EDITOR_OPEN)
-    return
-  }
 
   const resolution = await resolve_web_configuration({
     prompt_view_provider: params.prompt_view_provider,
@@ -69,118 +59,58 @@ export const handle_autofill = async (params: {
 
   let sent = false
 
-  if (is_in_code_at_cursor_mode) {
-    const document = active_editor!.document
-    const position = active_editor!.selection.active
+  const additional_paths: string[] = []
 
-    const text_before_cursor = document.getText(
-      new vscode.Range(new vscode.Position(0, 0), position)
-    )
-    const text_after_cursor = document.getText(
-      new vscode.Range(position, document.positionAt(document.getText().length))
-    )
-    const {
-      instruction: processed_completion_instructions,
-      skill_definitions
-    } = await replace_symbols({
+  const collected = await FilesCollector.collect_files({
+    workspace_provider: params.prompt_view_provider.workspace_provider,
+    open_editors_provider: params.prompt_view_provider.open_editors_provider,
+    additional_paths,
+    no_context: params.prompt_view_provider.web_prompt_type == 'without-files'
+  })
+  const context_text = collected.other_files + collected.recent_files
+
+  const { instruction: processed_instructions, skill_definitions } =
+    await replace_symbols({
       instruction: current_instructions,
       extension_context: params.prompt_view_provider.extension_context,
       workspace_provider: params.prompt_view_provider.workspace_provider,
       remove_images: true
     })
 
-    const collected = await FilesCollector.collect_files({
-      workspace_provider: params.prompt_view_provider.workspace_provider,
-      open_editors_provider: params.prompt_view_provider.open_editors_provider
-    })
-    const context_text = collected.other_files + collected.recent_files
-
-    const relative_path = vscode.workspace.asRelativePath(document.uri)
-
-    const main_instructions = code_at_cursor_instructions_for_prompt_view({
-      file_path: relative_path,
-      row: position.line,
-      column: position.character
-    })
-
-    const { full_prompt: text } = PromptBuilder.build_prompt({
-      context_text,
-      active_file: {
-        filepath: relative_path,
-        content: `${text_before_cursor}${
-          processed_completion_instructions
-            ? `<missing_text>${processed_completion_instructions}</missing_text>`
-            : '<missing_text>'
-        }${text_after_cursor}`
-      },
-      skill_definitions,
-      system_instructions: main_instructions
-    })
-
-    sent =
-      await params.prompt_view_provider.websocket_server_instance.initialize_chat(
-        {
-          text,
-          web_configuration_name: resolved_web_configuration_name,
-          raw_instructions: processed_completion_instructions,
-          invocation_count: params.invocation_count,
-          inject_apply_response_button: true
-        }
-      )
-  } else {
-    const additional_paths: string[] = []
-
-    const collected = await FilesCollector.collect_files({
-      workspace_provider: params.prompt_view_provider.workspace_provider,
-      open_editors_provider: params.prompt_view_provider.open_editors_provider,
-      additional_paths,
-      no_context: params.prompt_view_provider.web_prompt_type == 'without-files'
-    })
-    const context_text = collected.other_files + collected.recent_files
-
-    const { instruction: processed_instructions, skill_definitions } =
-      await replace_symbols({
-        instruction: current_instructions,
-        extension_context: params.prompt_view_provider.extension_context,
-        workspace_provider: params.prompt_view_provider.workspace_provider,
-        remove_images: true
-      })
-
-    let formatted_system_instructions = ''
-    const user_instructions = processed_instructions
-    if (params.prompt_view_provider.web_prompt_type == 'edit-files') {
-      const edit_format_instructions = {
-        whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
-        truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
-        'search-replace': EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
-        diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
-      }[params.prompt_view_provider.edit_format]
-      if (edit_format_instructions) {
-        formatted_system_instructions = `# Output formatting\n\n${edit_format_instructions}`
-      }
+  let formatted_system_instructions = ''
+  const user_instructions = processed_instructions
+  if (params.prompt_view_provider.web_prompt_type == 'edit-files') {
+    const edit_format_instructions = {
+      whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
+      truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
+      'search-replace': EDIT_FORMAT_INSTRUCTIONS_SEARCH_REPLACE,
+      diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
+    }[params.prompt_view_provider.edit_format]
+    if (edit_format_instructions) {
+      formatted_system_instructions = `# Output formatting\n\n${edit_format_instructions}`
     }
-
-    const { full_prompt: text } = PromptBuilder.build_prompt({
-      context_text,
-      skill_definitions,
-      system_instructions: formatted_system_instructions,
-      user_instructions
-    })
-
-    const prompt_type = params.prompt_view_provider.web_prompt_type
-    const inject_apply_response_button = prompt_type == 'edit-files'
-
-    sent =
-      await params.prompt_view_provider.websocket_server_instance.initialize_chat(
-        {
-          text,
-          web_configuration_name: resolved_web_configuration_name,
-          raw_instructions: current_instructions,
-          invocation_count: params.invocation_count,
-          inject_apply_response_button
-        }
-      )
   }
+
+  const { full_prompt: text } = PromptBuilder.build_prompt({
+    context_text,
+    skill_definitions,
+    system_instructions: formatted_system_instructions,
+    user_instructions
+  })
+
+  const prompt_type = params.prompt_view_provider.web_prompt_type
+  const inject_apply_response_button = prompt_type == 'edit-files'
+
+  sent =
+    await params.prompt_view_provider.websocket_server_instance.initialize_chat(
+      {
+        text,
+        web_configuration_name: resolved_web_configuration_name,
+        raw_instructions: current_instructions,
+        invocation_count: params.invocation_count,
+        inject_apply_response_button
+      }
+    )
 
   if (sent) {
     params.prompt_view_provider.send_message({
@@ -203,7 +133,6 @@ const show_web_configuration_quick_pick = async (params: {
   get_is_web_configuration_disabled: (
     web_configuration: ConfigWebConfigurationFormat
   ) => boolean
-  is_in_code_at_cursor_mode: boolean
   current_instructions: string
 }): Promise<{ web_configuration_name: string | undefined } | null> => {
   const {
@@ -299,16 +228,8 @@ const resolve_web_configuration = async (params: {
     'webConfigurations',
     []
   )
-  const is_in_code_at_cursor_mode =
-    params.prompt_view_provider.web_prompt_type == 'code-at-cursor'
-
   let current_instructions = ''
-  if (params.prompt_view_provider.web_prompt_type == 'code-at-cursor') {
-    current_instructions =
-      params.prompt_view_provider.code_at_cursor_instructions.instructions[
-        params.prompt_view_provider.code_at_cursor_instructions.active_index
-      ] || ''
-  } else if (params.prompt_view_provider.web_prompt_type == 'ask-about-files') {
+  if (params.prompt_view_provider.web_prompt_type == 'ask-about-files') {
     current_instructions =
       params.prompt_view_provider.ask_about_context_instructions.instructions[
         params.prompt_view_provider.ask_about_context_instructions.active_index
@@ -329,10 +250,7 @@ const resolve_web_configuration = async (params: {
     web_configuration: ConfigWebConfigurationFormat
   ) =>
     (web_configuration.chatbot &&
-      (!params.prompt_view_provider.websocket_server_instance.is_connected_with_browser() ||
-        (is_in_code_at_cursor_mode &&
-          (!params.prompt_view_provider.currently_open_file_path ||
-            !!params.prompt_view_provider.current_selection)))) ||
+      !params.prompt_view_provider.websocket_server_instance.is_connected_with_browser()) ||
     false
 
   if (params.web_configuration_name !== undefined) {
@@ -375,7 +293,6 @@ const resolve_web_configuration = async (params: {
     prompt_type: params.prompt_view_provider.web_prompt_type,
     prompt_view_provider: params.prompt_view_provider,
     get_is_web_configuration_disabled,
-    is_in_code_at_cursor_mode,
     current_instructions
   })
 

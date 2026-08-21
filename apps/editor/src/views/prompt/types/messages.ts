@@ -74,11 +74,7 @@ export interface GetInstructionsMessage extends BaseMessage {
 export interface SaveInstructionsMessage extends BaseMessage {
   command: 'SAVE_INSTRUCTIONS'
   instruction: InstructionsState
-  prompt_type:
-    | 'ask-about-files'
-    | 'edit-files'
-    | 'code-at-cursor'
-    | 'without-files'
+  prompt_type: 'ask-about-files' | 'edit-files' | 'without-files'
 }
 
 export interface GetEditFormat extends BaseMessage {
@@ -148,11 +144,7 @@ export interface GetResponseHistoryMessage extends BaseMessage {
 export interface SaveHistoryMessage extends BaseMessage {
   command: 'SAVE_HISTORY'
   messages: string[]
-  prompt_type:
-    | 'ask-about-files'
-    | 'edit-files'
-    | 'code-at-cursor'
-    | 'without-files'
+  prompt_type: 'ask-about-files' | 'edit-files' | 'without-files'
 }
 
 export interface GetContextSizeWarningThresholdMessage extends BaseMessage {
@@ -234,12 +226,10 @@ export interface MakeApiCallMessage extends BaseMessage {
 
 export interface ShowAtSignQuickPickMessage extends BaseMessage {
   command: 'SHOW_AT_SIGN_QUICK_PICK'
-  is_for_code_at_cursor: boolean
 }
 
 export interface ShowHashSignQuickPickMessage extends BaseMessage {
   command: 'SHOW_HASH_SIGN_QUICK_PICK'
-  is_for_code_at_cursor: boolean
 }
 
 export interface CancelApiRequestMessage extends BaseMessage {
@@ -635,7 +625,6 @@ export interface InstructionsMessage extends BaseMessage {
   ask_about_context: InstructionsState
   edit_files: InstructionsState
   no_context: InstructionsState
-  code_at_cursor: InstructionsState
   caret_position?: number
 }
 
@@ -683,7 +672,6 @@ export interface ChatHistoryMessage extends BaseMessage {
   ask_about_files: string[]
   edit_files: string[]
   without_files: string[]
-  code_at_cursor: string[]
 }
 
 export interface ResponseHistoryMessage extends BaseMessage {

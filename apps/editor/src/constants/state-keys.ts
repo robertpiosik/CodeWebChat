@@ -52,7 +52,6 @@ export const ARE_CHECKPOINTS_COLLAPSED_STATE_KEY = 'are-checkpoints-collapsed'
 
 export const HISTORY_ASK_ABOUT_FILES_STATE_KEY = 'history-ask-about-files'
 export const HISTORY_EDIT_FILES_STATE_KEY = 'history-edit-files'
-export const HISTORY_CODE_AT_CURSOR_STATE_KEY = 'history-code-at-cursor'
 export const HISTORY_WITHOUT_FILES_STATE_KEY = 'history-without-files'
 
 export const INTELLIGENT_FILE_SEARCH_SHRINK_SOURCE_CODE_STATE_KEY =

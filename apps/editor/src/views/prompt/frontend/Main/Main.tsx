@@ -31,14 +31,9 @@ type Props = {
   ask_instructions: string
   edit_instructions: string
   no_context_instructions: string
-  code_at_cursor_instructions: string
   set_instructions: (
     value: string,
-    prompt_type:
-      | 'ask-about-files'
-      | 'edit-files'
-      | 'without-files'
-      | 'code-at-cursor'
+    prompt_type: 'ask-about-files' | 'edit-files' | 'without-files'
   ) => void
   mode: Mode
   web_prompt_type: WebPromptType
@@ -101,16 +96,10 @@ export const Main: React.FC<Props> = (props) => {
   const [edit_files_history, set_edit_files_history] = useState<string[]>()
   const [without_files_history, set_without_files_history] =
     useState<string[]>()
-  const [code_at_cursor_history, set_code_at_cursor_history] =
-    useState<string[]>()
   const [edit_format, set_edit_format] = useState<EditFormat>()
   const [caret_position_to_set, set_caret_position_to_set] = useState<
     number | undefined
   >()
-
-  const is_in_code_at_cursor_mode =
-    (props.mode == MODE.WEB && props.web_prompt_type == 'code-at-cursor') ||
-    (props.mode == MODE.API && props.api_prompt_type == 'code-at-cursor')
 
   useEffect(() => {
     const handle_message = async (event: MessageEvent) => {
@@ -138,7 +127,6 @@ export const Main: React.FC<Props> = (props) => {
           set_ask_about_files_history(message.ask_about_files || [])
           set_edit_files_history(message.edit_files || [])
           set_without_files_history(message.without_files || [])
-          set_code_at_cursor_history(message.code_at_cursor || [])
           break
         case 'INSTRUCTIONS':
           if (
@@ -201,9 +189,6 @@ export const Main: React.FC<Props> = (props) => {
     } else if (current_prompt_type == 'without-files') {
       history = without_files_history
       set_history = set_without_files_history
-    } else if (current_prompt_type == 'code-at-cursor') {
-      history = code_at_cursor_history
-      set_history = set_code_at_cursor_history
     } else {
       return
     }
@@ -390,9 +375,6 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const get_current_instructions = () => {
-    if (is_in_code_at_cursor_mode) {
-      return props.code_at_cursor_instructions
-    }
     if (current_prompt_type == 'ask-about-files') return props.ask_instructions
     if (current_prompt_type == 'edit-files') return props.edit_instructions
     if (current_prompt_type == 'without-files')
@@ -420,15 +402,13 @@ export const Main: React.FC<Props> = (props) => {
 
   const handle_at_sign_click = () => {
     post_message(props.vscode, {
-      command: 'SHOW_AT_SIGN_QUICK_PICK',
-      is_for_code_at_cursor: is_in_code_at_cursor_mode
+      command: 'SHOW_AT_SIGN_QUICK_PICK'
     })
   }
 
   const handle_hash_sign_click = () => {
     post_message(props.vscode, {
-      command: 'SHOW_HASH_SIGN_QUICK_PICK',
-      is_for_code_at_cursor: is_in_code_at_cursor_mode
+      command: 'SHOW_HASH_SIGN_QUICK_PICK'
     })
   }
 
@@ -473,9 +453,7 @@ export const Main: React.FC<Props> = (props) => {
         ? props.edit_instructions
         : current_prompt_type == 'without-files'
           ? props.no_context_instructions
-          : current_prompt_type == 'code-at-cursor'
-            ? props.code_at_cursor_instructions
-            : ''
+          : ''
 
   const set_instructions = (value: string) => {
     props.set_instructions(value, current_prompt_type)
@@ -488,8 +466,6 @@ export const Main: React.FC<Props> = (props) => {
     current_history = edit_files_history
   } else if (current_prompt_type == 'without-files') {
     current_history = without_files_history
-  } else if (current_prompt_type == 'code-at-cursor') {
-    current_history = code_at_cursor_history
   }
 
   if (
@@ -498,8 +474,6 @@ export const Main: React.FC<Props> = (props) => {
     ask_about_files_history === undefined ||
     edit_files_history === undefined ||
     without_files_history === undefined ||
-    code_at_cursor_history === undefined ||
-    is_in_code_at_cursor_mode === undefined ||
     instructions === undefined ||
     edit_format === undefined
   ) {

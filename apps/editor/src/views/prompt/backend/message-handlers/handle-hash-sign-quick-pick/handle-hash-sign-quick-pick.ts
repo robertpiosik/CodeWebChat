@@ -20,7 +20,6 @@ const clipboard_paths_label = `$(clippy) ${t('views.prompt.handlers.hash-sign.qu
 
 const hash_sign_quick_pick = async (params: {
   extension_context: vscode.ExtensionContext
-  is_for_code_at_cursor: boolean
 }): Promise<string | undefined> => {
   const items: vscode.QuickPickItem[] = [
     {
@@ -167,12 +166,10 @@ const hash_sign_quick_pick = async (params: {
 
 export const handle_hash_sign_quick_pick = async (
   prompt_view_provider: PromptViewProvider,
-  extension_context: vscode.ExtensionContext,
-  is_for_code_at_cursor: boolean
+  extension_context: vscode.ExtensionContext
 ): Promise<void> => {
   const replacement = await hash_sign_quick_pick({
-    extension_context,
-    is_for_code_at_cursor
+    extension_context
   })
 
   if (!replacement) {

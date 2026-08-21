@@ -1,5 +1,4 @@
 import * as vscode from 'vscode'
-import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
 import { CommitMessageDetails } from '@/utils/commit-message-details'
@@ -9,7 +8,6 @@ export const code_at_cursor_commands = (params: {
   workspace_provider: WorkspaceProvider
   open_editors_provider: OpenEditorsProvider
   extension_context: vscode.ExtensionContext
-  prompt_view_provider: PromptViewProvider
 }) => {
   return [
     vscode.commands.registerCommand(
@@ -55,8 +53,7 @@ export const code_at_cursor_commands = (params: {
         open_editors_provider: params.open_editors_provider,
         extension_context: params.extension_context,
         with_completion_instructions: false,
-        show_quick_pick: true,
-        prompt_view_provider: params.prompt_view_provider
+        show_quick_pick: true
       })
     ),
     vscode.commands.registerCommand(
@@ -67,8 +64,7 @@ export const code_at_cursor_commands = (params: {
           open_editors_provider: params.open_editors_provider,
           extension_context: params.extension_context,
           with_completion_instructions: true,
-          show_quick_pick: true,
-          prompt_view_provider: params.prompt_view_provider
+          show_quick_pick: true
         })
     )
   ]

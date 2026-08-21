@@ -95,12 +95,10 @@ import {
   get_edit_format_state_key,
   API_MODE_STATE_KEY,
   INSTRUCTIONS_ASK_STATE_KEY,
-  INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY,
   INSTRUCTIONS_EDIT_FILES_STATE_KEY,
   INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
   PROMPT_VIEW_MODE_STATE_KEY,
   WEB_MODE_STATE_KEY,
-  LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
   LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY,
   get_last_used_web_configuration_key
 } from '@/constants/state-keys'
@@ -142,10 +140,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     active_index: 0
   }
   public no_context_instructions: InstructionsState = {
-    instructions: [''],
-    active_index: 0
-  }
-  public code_at_cursor_instructions: InstructionsState = {
     instructions: [''],
     active_index: 0
   }
@@ -206,14 +200,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     )
   }
 
-  public get current_code_at_cursor_instruction(): string {
-    return (
-      this.code_at_cursor_instructions.instructions[
-        this.code_at_cursor_instructions.active_index
-      ] || ''
-    )
-  }
-
   public get prompt_type(): WebPromptType | ApiPromptType {
     return this.mode == MODE.WEB ? this.web_prompt_type : this.api_prompt_type
   }
@@ -223,7 +209,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     if (type == 'ask-about-files') return this.ask_about_context_instructions
     if (type == 'edit-files') return this.edit_files_instructions
     if (type == 'without-files') return this.no_context_instructions
-    return this.code_at_cursor_instructions
+    return this.edit_files_instructions
   }
 
   public get current_instruction(): string {
@@ -332,9 +318,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     )
     this.no_context_instructions = this._load_instructions(
       INSTRUCTIONS_NO_CONTEXT_STATE_KEY
-    )
-    this.code_at_cursor_instructions = this._load_instructions(
-      INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY
     )
 
     this.web_edit_format =
@@ -752,11 +735,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'SHOW_AT_SIGN_QUICK_PICK') {
             await handle_at_sign_quick_pick(this)
           } else if (message.command == 'SHOW_HASH_SIGN_QUICK_PICK') {
-            await handle_hash_sign_quick_pick(
-              this,
-              this.extension_context,
-              message.is_for_code_at_cursor
-            )
+            await handle_hash_sign_quick_pick(this, this.extension_context)
           } else if (message.command == 'GO_TO_FILE') {
             handle_go_to_file(message)
           } else if (message.command == 'OPEN_FILE_AND_SELECT') {
@@ -901,7 +880,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     const web_prompt_types: WebPromptType[] = [
       'ask-about-files',
       'edit-files',
-      'code-at-cursor',
       'without-files'
     ]
 
@@ -926,9 +904,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       selected_api_configuration_id_by_prompt_type: {
         'edit-files': this.extension_context.workspaceState.get<string>(
           LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY
-        ),
-        'code-at-cursor': this.extension_context.workspaceState.get<string>(
-          LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
         )
       }
     })
@@ -986,7 +961,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       ask_about_context: this.ask_about_context_instructions,
       edit_files: this.edit_files_instructions,
       no_context: this.no_context_instructions,
-      code_at_cursor: this.code_at_cursor_instructions,
       caret_position: this.caret_position
     })
   }

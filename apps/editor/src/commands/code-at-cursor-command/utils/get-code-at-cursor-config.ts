@@ -6,7 +6,6 @@ import {
 } from '../../../services/model-providers-manager'
 import { Logger } from '@shared/utils/logger'
 import { LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
-import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { t } from '@/i18n'
 import {
   show_configuration_quick_pick,
@@ -18,7 +17,6 @@ export const get_code_at_cursor_api_configuration = async (params: {
   show_quick_pick?: boolean
   extension_context: vscode.ExtensionContext
   api_configuration_id?: string
-  prompt_view_provider?: PromptViewProvider
 }): Promise<{ model_provider: any; api_configuration: any } | undefined> => {
   const code_at_cursor_api_configurations =
     await params.model_providers_manager.get_api_configurations()
@@ -84,14 +82,6 @@ export const get_code_at_cursor_api_configuration = async (params: {
       LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY,
       id
     )
-
-    if (params.prompt_view_provider) {
-      params.prompt_view_provider.send_message({
-        command: 'SELECTED_API_CONFIGURATION_CHANGED',
-        prompt_type: 'code-at-cursor',
-        id: id
-      })
-    }
 
     selected_api_configuration = api_configuration
   }

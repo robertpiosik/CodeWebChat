@@ -1217,24 +1217,6 @@ export const translations = {
     hu: 'Fájlok szerkesztése',
     bg: 'Редактиране на файлове'
   },
-  'general.prompt-field.templates.types.templatesForCodeAtCursor': {
-    en: 'Code at Cursor',
-    pl: 'Kod przy kursorze',
-    'zh-cn': '光标处的代码',
-    ja: 'カーソル位置のコード',
-    'zh-tw': '游標處的代碼',
-    de: 'Code am Cursor',
-    es: 'Código en el cursor',
-    fr: 'Code au curseur',
-    'pt-br': 'Código no cursor',
-    ru: 'Код под курсором',
-    ko: '커서 위치의 코드',
-    it: 'Codice al cursore',
-    tr: 'İmleçteki Kod',
-    cs: 'Kód na kurzoru',
-    hu: 'Kód a kurzornál',
-    bg: 'Код при курсора'
-  },
   'general.prompt-field.templates.types.templatesForWithoutFiles': {
     en: 'Without Files',
     pl: 'Bez plików',

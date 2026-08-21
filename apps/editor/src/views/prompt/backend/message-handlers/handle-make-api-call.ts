@@ -9,16 +9,12 @@ import {
   ApiConfiguration
 } from '@/services/model-providers-manager'
 import axios from 'axios'
-import {
-  LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY,
-  LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
-} from '@/constants/state-keys'
+import { LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { EditFormat } from '@shared/types/edit-format'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { MakeApiCallMessage } from '@/views/prompt/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
-import { code_at_cursor_instructions_for_prompt_view } from '@/constants/instructions'
 import { default_system_instructions } from '@shared/constants/default-system-instructions'
 import { build_user_content } from '@/utils/build-user-content'
 import { replace_symbols } from '@/views/prompt/backend/utils/symbols/replace-symbols'
@@ -35,9 +31,7 @@ import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE
 } from '@/constants/edit-format-instructions'
 
-const get_last_used_config_id_key = (prompt_type: ApiPromptType) => {
-  if (prompt_type == 'code-at-cursor')
-    return LAST_USED_CODE_AT_CURSOR_CONFIG_ID_STATE_KEY
+const get_last_used_config_id_key = () => {
   return LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY
 }
 
@@ -61,7 +55,7 @@ const get_api_configuration = async (params: {
     return
   }
 
-  const last_used_key = get_last_used_config_id_key(params.prompt_type)
+  const last_used_key = get_last_used_config_id_key()
   let selected_api_configuration: ApiConfiguration | null = null
 
   if (params.api_configuration_id !== undefined) {
@@ -93,14 +87,6 @@ const get_api_configuration = async (params: {
           (c) => get_api_configuration_id(c) == last_selected_id
         ) || null
     }
-
-    if (
-      !selected_api_configuration &&
-      params.prompt_type == 'code-at-cursor' &&
-      api_configurations.length > 0
-    ) {
-      selected_api_configuration = api_configurations[0]
-    }
   }
 
   if (!selected_api_configuration || params.show_quick_pick) {
@@ -110,13 +96,7 @@ const get_api_configuration = async (params: {
     const result = await show_configuration_quick_pick({
       items: api_configurations,
       map_item: map_api_configuration_to_item,
-      last_selected_id,
-      placeholder:
-        params.prompt_type == 'code-at-cursor'
-          ? t(
-              'views.prompt.handlers.make-api-call.select-code-at-cursor-api-configuration'
-            )
-          : undefined
+      last_selected_id
     })
 
     if (params.prompt_view_provider) {
@@ -176,11 +156,9 @@ export const handle_make_api_call = async (
   let instructions = ''
   if (prompt_type == 'edit-files') {
     instructions = prompt_view_provider.current_edit_files_instruction
-  } else if (prompt_type == 'code-at-cursor') {
-    instructions = prompt_view_provider.current_code_at_cursor_instruction
   }
 
-  if (!instructions && prompt_type != 'code-at-cursor') {
+  if (!instructions) {
     prompt_view_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
       title: t(
@@ -204,29 +182,13 @@ export const handle_make_api_call = async (
   })
   const collected_files = collected.other_files + collected.recent_files
 
-  if (!collected_files && prompt_type != 'code-at-cursor') {
+  if (!collected_files) {
     prompt_view_provider.send_message({
       command: 'SHOW_AUTO_CLOSING_MODAL',
       title: t('views.prompt.handlers.make-api-call.context-cannot-be-empty'),
       type: 'warning'
     })
     return
-  }
-
-  const editor = vscode.window.activeTextEditor
-  if (prompt_type == 'code-at-cursor') {
-    if (!editor) {
-      vscode.window.showWarningMessage(
-        dictionary.warning_message.NO_EDITOR_OPEN
-      )
-      return
-    }
-    if (!editor.selection.isEmpty) {
-      vscode.window.showWarningMessage(
-        dictionary.warning_message.CODE_AT_CURSOR_NO_SELECTION
-      )
-      return
-    }
   }
 
   let current_api_configuration_id = message.api_configuration_id
@@ -249,28 +211,6 @@ export const handle_make_api_call = async (
     prompt_view_provider.send_message({ command: 'FOCUS_PROMPT_FIELD' })
 
     const { model_provider, api_configuration } = api_configuration_result
-
-    if (prompt_type == 'code-at-cursor') {
-      if (!api_configuration.model_provider_name) {
-        vscode.window.showErrorMessage(
-          dictionary.error_message.API_PROVIDER_NOT_SPECIFIED_FOR_CODE_AT_CURSOR
-        )
-        Logger.warn({
-          function_name: 'handle_make_api_call',
-          message: 'API provider is not specified for Code at Cursor tool.'
-        })
-        return
-      } else if (!api_configuration.model) {
-        vscode.window.showErrorMessage(
-          dictionary.error_message.MODEL_NOT_SPECIFIED_FOR_CODE_AT_CURSOR
-        )
-        Logger.warn({
-          function_name: 'handle_make_api_call',
-          message: 'Model is not specified for Code at Cursor tool.'
-        })
-        return
-      }
-    }
 
     let edit_format: EditFormat = 'whole'
     let system_instructions = ''
@@ -302,41 +242,6 @@ export const handle_make_api_call = async (
         skill_definitions,
         system_instructions: formatted_system_instructions,
         user_instructions: processed_instructions
-      })
-      user_content = build_user_content({ model_provider, part1, part2 })
-    } else if (prompt_type == 'code-at-cursor') {
-      const document = editor!.document
-      const position = editor!.selection.active
-
-      const text_before_cursor = document.getText(
-        new vscode.Range(new vscode.Position(0, 0), position)
-      )
-      const text_after_cursor = document.getText(
-        new vscode.Range(
-          position,
-          document.positionAt(document.getText().length)
-        )
-      )
-      const relative_path = vscode.workspace.asRelativePath(document.uri)
-      const main_instructions = code_at_cursor_instructions_for_prompt_view({
-        file_path: relative_path,
-        row: position.line,
-        column: position.character
-      })
-
-      const { part1, part2 } = PromptBuilder.build_prompt({
-        other_files: collected.other_files,
-        recent_files: collected.recent_files,
-        active_file: {
-          filepath: relative_path,
-          content: `${text_before_cursor}${
-            processed_instructions
-              ? `<missing_text>${processed_instructions}</missing_text>`
-              : '<missing_text>'
-          }${text_after_cursor}`
-        },
-        skill_definitions,
-        system_instructions: main_instructions
       })
       user_content = build_user_content({ model_provider, part1, part2 })
     }
@@ -394,24 +299,6 @@ export const handle_make_api_call = async (
                 edit_format,
                 recent_api_configuration
               })
-            } else if (prompt_type == 'code-at-cursor') {
-              const document = editor!.document
-              const position = editor!.selection.active
-              await vscode.commands.executeCommand(
-                'codeWebChat.applyResponse',
-                {
-                  response: result.response,
-                  raw_instructions: processed_instructions,
-                  original_editor_state: {
-                    file_path: document.uri.fsPath,
-                    position: {
-                      line: position.line,
-                      character: position.character
-                    }
-                  },
-                  recent_api_configuration
-                }
-              )
             }
             return true
           }
@@ -426,9 +313,7 @@ export const handle_make_api_call = async (
             data: error
           })
           if (!error_occurred) {
-            let err_msg = dictionary.error_message.EDIT_FILES_ERROR
-            if (prompt_type == 'code-at-cursor')
-              err_msg = dictionary.error_message.CODE_COMPLETION_ERROR
+            const err_msg = dictionary.error_message.EDIT_FILES_ERROR
             vscode.window.showErrorMessage(err_msg)
             error_occurred = true
           }

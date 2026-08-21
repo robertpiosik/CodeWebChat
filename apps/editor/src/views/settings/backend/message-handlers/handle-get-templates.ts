@@ -10,7 +10,6 @@ export const handle_get_templates = async (
     templates: {
       templatesForEditFiles: config.get('templatesForEditFiles', []),
       templatesForAskAboutFiles: config.get('templatesForAskAboutFiles', []),
-      templatesForCodeAtCursor: config.get('templatesForCodeAtCursor', []),
       templatesForWithoutFiles: config.get('templatesForWithoutFiles', [])
     }
   })

@@ -7,7 +7,6 @@ export const handle_get_instructions = (
     command: 'INSTRUCTIONS',
     ask_about_context: prompt_view_provider.ask_about_context_instructions,
     edit_files: prompt_view_provider.edit_files_instructions,
-    no_context: prompt_view_provider.no_context_instructions,
-    code_at_cursor: prompt_view_provider.code_at_cursor_instructions
+    no_context: prompt_view_provider.no_context_instructions
   })
 }

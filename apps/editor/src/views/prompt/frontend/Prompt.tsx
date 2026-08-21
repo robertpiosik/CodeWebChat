@@ -48,7 +48,6 @@ export const Prompt = () => {
     ask_about_context_instructions,
     edit_files_instructions,
     no_context_instructions,
-    code_at_cursor_instructions,
     mode,
     web_prompt_type,
     api_prompt_type,
@@ -158,7 +157,6 @@ export const Prompt = () => {
     edit_files_instructions === undefined ||
     no_context_instructions === undefined ||
     !version ||
-    code_at_cursor_instructions === undefined ||
     mode === undefined ||
     web_prompt_type === undefined ||
     is_connected === undefined ||
@@ -182,16 +180,9 @@ export const Prompt = () => {
     )
   }
 
-  const is_for_code_at_cursor =
-    (mode == MODE.WEB && web_prompt_type == 'code-at-cursor') ||
-    (mode == MODE.API && api_prompt_type == 'code-at-cursor')
-
   const get_current_instructions = () => {
     let state: { instructions: string[]; active_index: number } | undefined
 
-    if (is_for_code_at_cursor && code_at_cursor_instructions) {
-      state = code_at_cursor_instructions
-    }
     const prompt_type = mode == MODE.WEB ? web_prompt_type : api_prompt_type
 
     if (prompt_type == 'ask-about-files') {
@@ -212,19 +203,14 @@ export const Prompt = () => {
     if (prompt_type == 'ask-about-files') return ask_about_context_instructions
     if (prompt_type == 'edit-files') return edit_files_instructions
     if (prompt_type == 'without-files') return no_context_instructions
-    if (prompt_type == 'code-at-cursor') return code_at_cursor_instructions
     return undefined
   }
 
   const has_instructions = !!get_current_instructions().trim()
   const is_preview_disabled =
     !is_connected ||
-    (!has_instructions && web_prompt_type != 'code-at-cursor') ||
-    (web_prompt_type == 'code-at-cursor' &&
-      (!currently_open_file_path || !!current_selection)) ||
-    (web_prompt_type != 'code-at-cursor' &&
-      web_prompt_type != 'without-files' &&
-      token_count == 0)
+    !has_instructions ||
+    (web_prompt_type != 'without-files' && token_count == 0)
 
   const handle_apply_click = () => {
     post_message(vscode, {
@@ -349,11 +335,6 @@ export const Prompt = () => {
                 no_context_instructions={
                   no_context_instructions.instructions[
                     no_context_instructions.active_index
-                  ] || ''
-                }
-                code_at_cursor_instructions={
-                  code_at_cursor_instructions.instructions[
-                    code_at_cursor_instructions.active_index
                   ] || ''
                 }
                 set_instructions={handle_instructions_change}

@@ -291,9 +291,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                     templatesForAskAboutFiles: t(
                       'general.prompt-field.templates.types.templatesForAskAboutFiles'
                     ),
-                    templatesForCodeAtCursor: t(
-                      'general.prompt-field.templates.types.templatesForCodeAtCursor'
-                    ),
                     templatesForWithoutFiles: t(
                       'general.prompt-field.templates.types.templatesForWithoutFiles'
                     )

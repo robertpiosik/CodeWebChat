@@ -31,7 +31,6 @@ export const use_prompt = (vscode: any) => {
     ask_about_context_instructions,
     edit_files_instructions,
     no_context_instructions,
-    code_at_cursor_instructions,
     handle_instructions_change,
     handle_tab_change,
     handle_new_tab,
@@ -194,10 +193,7 @@ export const use_prompt = (vscode: any) => {
 
     if (sync_prompt_type) {
       if (new_mode == MODE.API && web_prompt_type) {
-        if (
-          web_prompt_type == 'edit-files' ||
-          web_prompt_type == 'code-at-cursor'
-        ) {
+        if (web_prompt_type == 'edit-files') {
           handle_api_prompt_type_change(web_prompt_type, true)
         }
       } else if (new_mode == MODE.WEB && api_prompt_type) {
@@ -251,7 +247,6 @@ export const use_prompt = (vscode: any) => {
     ask_about_context_instructions,
     edit_files_instructions,
     no_context_instructions,
-    code_at_cursor_instructions,
     mode,
     web_prompt_type,
     api_prompt_type,

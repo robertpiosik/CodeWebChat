@@ -18,16 +18,10 @@ export const use_instructions = (
   const [no_context_instructions, set_no_context_instructions] = useState<
     InstructionsState | undefined
   >()
-  const [code_at_cursor_instructions, set_code_at_cursor_instructions] =
-    useState<InstructionsState | undefined>(undefined)
 
   const handle_instructions_change = (
     value: string,
-    prompt_type:
-      | 'ask-about-files'
-      | 'edit-files'
-      | 'without-files'
-      | 'code-at-cursor'
+    prompt_type: 'ask-about-files' | 'edit-files' | 'without-files'
   ) => {
     const update_state = (
       current_state: InstructionsState | undefined,
@@ -59,8 +53,6 @@ export const use_instructions = (
       update_state(edit_files_instructions, set_edit_files_instructions)
     } else if (prompt_type == 'without-files') {
       update_state(no_context_instructions, set_no_context_instructions)
-    } else if (prompt_type == 'code-at-cursor') {
-      update_state(code_at_cursor_instructions, set_code_at_cursor_instructions)
     }
   }
 
@@ -90,8 +82,6 @@ export const use_instructions = (
       update(edit_files_instructions, set_edit_files_instructions)
     } else if (prompt_type == 'without-files') {
       update(no_context_instructions, set_no_context_instructions)
-    } else if (prompt_type == 'code-at-cursor') {
-      update(code_at_cursor_instructions, set_code_at_cursor_instructions)
     }
   }
 
@@ -124,8 +114,6 @@ export const use_instructions = (
       update(edit_files_instructions, set_edit_files_instructions)
     } else if (prompt_type == 'without-files') {
       update(no_context_instructions, set_no_context_instructions)
-    } else if (prompt_type == 'code-at-cursor') {
-      update(code_at_cursor_instructions, set_code_at_cursor_instructions)
     }
   }
 
@@ -166,8 +154,6 @@ export const use_instructions = (
       update(edit_files_instructions, set_edit_files_instructions)
     } else if (prompt_type == 'without-files') {
       update(no_context_instructions, set_no_context_instructions)
-    } else if (prompt_type == 'code-at-cursor') {
-      update(code_at_cursor_instructions, set_code_at_cursor_instructions)
     }
   }
 
@@ -204,8 +190,6 @@ export const use_instructions = (
       update(edit_files_instructions, set_edit_files_instructions)
     } else if (prompt_type == 'without-files') {
       update(no_context_instructions, set_no_context_instructions)
-    } else if (prompt_type == 'code-at-cursor') {
-      update(code_at_cursor_instructions, set_code_at_cursor_instructions)
     }
   }
 
@@ -216,7 +200,6 @@ export const use_instructions = (
         set_ask_about_context_instructions(message.ask_about_context)
         set_edit_files_instructions(message.edit_files)
         set_no_context_instructions(message.no_context)
-        set_code_at_cursor_instructions(message.code_at_cursor)
       }
     }
 
@@ -229,7 +212,6 @@ export const use_instructions = (
     ask_about_context_instructions,
     edit_files_instructions,
     no_context_instructions,
-    code_at_cursor_instructions,
     handle_instructions_change,
     handle_tab_change,
     handle_new_tab,

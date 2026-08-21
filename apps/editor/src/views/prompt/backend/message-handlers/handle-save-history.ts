@@ -1,6 +1,5 @@
 import {
   HISTORY_ASK_ABOUT_FILES_STATE_KEY,
-  HISTORY_CODE_AT_CURSOR_STATE_KEY,
   HISTORY_EDIT_FILES_STATE_KEY,
   HISTORY_WITHOUT_FILES_STATE_KEY,
   HistoryEntry
@@ -23,9 +22,6 @@ export const handle_save_history = async (
       break
     case 'without-files':
       key = HISTORY_WITHOUT_FILES_STATE_KEY
-      break
-    case 'code-at-cursor':
-      key = HISTORY_CODE_AT_CURSOR_STATE_KEY
       break
   }
   if (key) {

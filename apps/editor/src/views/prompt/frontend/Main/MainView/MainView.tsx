@@ -149,10 +149,6 @@ export const MainView: React.FC<Props> = (props) => {
   const is_in_ask_about_context_prompt_type =
     props.mode == MODE.WEB && props.web_prompt_type == 'ask-about-files'
 
-  const is_in_code_at_cursor_prompt_type =
-    (props.mode == MODE.WEB && props.web_prompt_type == 'code-at-cursor') ||
-    (props.mode == MODE.API && props.api_prompt_type == 'code-at-cursor')
-
   const show_edit_format_selector =
     (props.mode == MODE.WEB && props.web_prompt_type == 'edit-files') ||
     (props.mode == MODE.API && props.api_prompt_type == 'edit-files')
@@ -166,13 +162,6 @@ export const MainView: React.FC<Props> = (props) => {
     (props.mode == MODE.WEB && props.web_configurations.length == 0)
   ) {
     warning = 'Add a configuration'
-  } else if (!!props.current_selection && is_in_code_at_cursor_prompt_type) {
-    warning = 'Remove text selection'
-  } else if (
-    is_in_code_at_cursor_prompt_type &&
-    !props.currently_open_file_path
-  ) {
-    warning = 'Open a file'
   } else if (
     (is_in_edit_context_prompt_type || is_in_ask_about_context_prompt_type) &&
     props.token_count == 0
@@ -339,7 +328,6 @@ export const MainView: React.FC<Props> = (props) => {
             }
             current_selection={props.current_selection}
             send_with_shift_enter={props.send_with_shift_enter}
-            currently_open_file_path={props.currently_open_file_path}
             currently_open_file_text={props.currently_open_file_text}
             on_caret_position_change={props.on_caret_position_change}
             caret_position_to_set={props.caret_position_to_set}

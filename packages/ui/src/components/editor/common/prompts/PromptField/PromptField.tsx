@@ -155,7 +155,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     const has_submit_button =
       (!props.is_web_mode || (props.is_web_mode && props.is_connected)) &&
       !props.is_recording &&
-      (!!props.value || props.prompt_type === 'code-at-cursor')
+      !!props.value
 
     if (!has_submit_button) {
       set_show_submit_tooltip(false)
@@ -169,11 +169,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   ])
 
   useEffect(() => {
-    const has_mic_button =
-      props.is_web_mode && !props.is_connected
-        ? props.is_recording || !props.value
-        : props.is_recording ||
-          (!props.value && props.prompt_type !== 'code-at-cursor')
+    const has_mic_button = props.is_recording || !props.value
 
     if (!has_mic_button) {
       set_is_recording_hovered(false)
@@ -332,14 +328,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   ])
 
   const placeholder = useMemo(() => {
-    if (props.prompt_type == 'code-at-cursor') {
-      if (props.chat_history.length > 0) {
-        return props.translations.placeholder_code_history
-      } else {
-        return props.translations.placeholder_code
-      }
-    }
-
     return props.chat_history.length > 0
       ? props.translations.placeholder_history
       : props.translations.placeholder_default
@@ -767,7 +755,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       onMouseEnter={() => set_is_recording_hovered(true)}
                       onMouseLeave={() => set_is_recording_hovered(false)}
                     />
-                  ) : !props.value && props.prompt_type != 'code-at-cursor' ? (
+                  ) : !props.value ? (
                     <button
                       className={cn(
                         styles['footer__right__submit__button'],
@@ -822,9 +810,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                     anchor_ref={chevron_button_ref}
                     is_open={is_dropdown_open}
                     items={[
-                      ...(!props.value &&
-                      props.prompt_type != 'code-at-cursor' &&
-                      props.is_web_mode
+                      ...(!props.value && props.is_web_mode
                         ? [
                             {
                               label: props.translations.send,
@@ -848,7 +834,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         shortcut: is_mac ? '⌘C' : 'Ctrl+C',
                         on_click: handle_copy_click
                       },
-                      ...(props.value || props.prompt_type == 'code-at-cursor'
+                      ...(props.value
                         ? [
                             {
                               label: props.translations.voice_input,

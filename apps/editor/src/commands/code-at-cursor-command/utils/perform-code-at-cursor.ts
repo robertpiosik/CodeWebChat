@@ -7,7 +7,6 @@ import { code_at_cursor_instructions } from '../../../constants/instructions'
 import { FilesCollector } from '../../../utils/files-collector'
 import { ModelProvidersManager } from '../../../services/model-providers-manager'
 import { Logger } from '@shared/utils/logger'
-import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { apply_reasoning_effort } from '../../../utils/apply-reasoning-effort'
 import { t } from '@/i18n'
@@ -27,7 +26,6 @@ export const perform_code_at_cursor = async (params: {
   show_quick_pick?: boolean
   completion_instructions?: string
   api_configuration_id?: string
-  prompt_view_provider?: PromptViewProvider
 }) => {
   const model_providers_manager = new ModelProvidersManager(
     params.extension_context
@@ -63,8 +61,7 @@ export const perform_code_at_cursor = async (params: {
         model_providers_manager,
         show_quick_pick: force_show_quick_pick,
         extension_context: params.extension_context,
-        api_configuration_id: current_api_configuration_id,
-        prompt_view_provider: params.prompt_view_provider
+        api_configuration_id: current_api_configuration_id
       }
     )
 

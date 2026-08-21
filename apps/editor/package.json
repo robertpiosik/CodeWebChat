@@ -1133,24 +1133,6 @@
             ]
           }
         },
-        "codeWebChat.templatesForCodeAtCursor": {
-          "type": "array",
-          "scope": "resource",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "template": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "template"
-            ]
-          }
-        },
         "codeWebChat.templatesForWithoutFiles": {
           "type": "array",
           "scope": "resource",
