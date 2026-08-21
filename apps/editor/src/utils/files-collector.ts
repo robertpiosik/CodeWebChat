@@ -12,7 +12,6 @@ export namespace FilesCollector {
     workspace_provider: WorkspaceProvider
     open_editors_provider?: OpenEditorsProvider
     additional_paths?: string[]
-    no_context?: boolean
     shrink?: boolean
   }): Promise<{ other_files: string; recent_files: string }> => {
     const workspace_roots = params.workspace_provider.get_workspace_roots()
@@ -25,18 +24,14 @@ export namespace FilesCollector {
 
     const context_files_list: string[] = []
 
-    if (params.no_context) {
-      context_files_list.push(...additional_paths)
-    } else {
-      const workspace_files = params.workspace_provider.get_checked_files()
-      const open_editor_files =
-        params.open_editors_provider?.get_checked_files() || []
-      context_files_list.push(
-        ...workspace_files,
-        ...open_editor_files,
-        ...additional_paths
-      )
-    }
+    const workspace_files = params.workspace_provider.get_checked_files()
+    const open_editor_files =
+      params.open_editors_provider?.get_checked_files() || []
+    context_files_list.push(
+      ...workspace_files,
+      ...open_editor_files,
+      ...additional_paths
+    )
 
     const context_files = [...new Set(context_files_list)]
 

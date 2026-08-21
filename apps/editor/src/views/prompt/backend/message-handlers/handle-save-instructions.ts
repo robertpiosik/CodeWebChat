@@ -5,8 +5,7 @@ import {
 } from '@/views/prompt/types/messages'
 import {
   INSTRUCTIONS_ASK_STATE_KEY,
-  INSTRUCTIONS_EDIT_FILES_STATE_KEY,
-  INSTRUCTIONS_NO_CONTEXT_STATE_KEY
+  INSTRUCTIONS_EDIT_FILES_STATE_KEY
 } from '@/constants/state-keys'
 
 export const handle_save_instructions = async (
@@ -26,12 +25,6 @@ export const handle_save_instructions = async (
     prompt_view_provider.edit_files_instructions = instruction_state
     await prompt_view_provider.extension_context.workspaceState.update(
       INSTRUCTIONS_EDIT_FILES_STATE_KEY,
-      instruction_state
-    )
-  } else if (prompt_type == 'without-files') {
-    prompt_view_provider.no_context_instructions = instruction_state
-    await prompt_view_provider.extension_context.workspaceState.update(
-      INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
       instruction_state
     )
   } else {

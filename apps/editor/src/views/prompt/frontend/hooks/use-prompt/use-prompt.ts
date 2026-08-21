@@ -30,7 +30,6 @@ export const use_prompt = (vscode: any) => {
   const {
     ask_about_context_instructions,
     edit_files_instructions,
-    no_context_instructions,
     handle_instructions_change,
     handle_tab_change,
     handle_new_tab,
@@ -246,7 +245,6 @@ export const use_prompt = (vscode: any) => {
     is_connected,
     ask_about_context_instructions,
     edit_files_instructions,
-    no_context_instructions,
     mode,
     web_prompt_type,
     api_prompt_type,

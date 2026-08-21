@@ -64,8 +64,7 @@ export const handle_autofill = async (params: {
   const collected = await FilesCollector.collect_files({
     workspace_provider: params.prompt_view_provider.workspace_provider,
     open_editors_provider: params.prompt_view_provider.open_editors_provider,
-    additional_paths,
-    no_context: params.prompt_view_provider.web_prompt_type == 'without-files'
+    additional_paths
   })
   const context_text = collected.other_files + collected.recent_files
 
@@ -238,11 +237,6 @@ const resolve_web_configuration = async (params: {
     current_instructions =
       params.prompt_view_provider.edit_files_instructions.instructions[
         params.prompt_view_provider.edit_files_instructions.active_index
-      ] || ''
-  } else if (params.prompt_view_provider.web_prompt_type == 'without-files') {
-    current_instructions =
-      params.prompt_view_provider.no_context_instructions.instructions[
-        params.prompt_view_provider.no_context_instructions.active_index
       ] || ''
   }
 

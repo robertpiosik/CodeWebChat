@@ -29,13 +29,6 @@ export class OpenEditorsProvider
   private _shared_context_state: SharedContextState
   private _config_change_handler: vscode.Disposable
   private _workspace_provider: WorkspaceProvider
-  private _is_no_context_mode = false
-
-  public set_no_context_mode(is_no_context: boolean) {
-    if (this._is_no_context_mode == is_no_context) return
-    this._is_no_context_mode = is_no_context
-    this.refresh()
-  }
 
   constructor(params: {
     workspace_folders: readonly vscode.WorkspaceFolder[]
@@ -210,11 +203,9 @@ export class OpenEditorsProvider
   getTreeItem(element: FileItem): vscode.TreeItem {
     const key = element.resourceUri.fsPath
     const is_ignored = this._is_file_ignored(key)
-    const checkbox_state =
-      this._is_no_context_mode || is_ignored
-        ? undefined
-        : (this._checked_items.get(key) ??
-          vscode.TreeItemCheckboxState.Unchecked)
+    const checkbox_state = is_ignored
+      ? undefined
+      : (this._checked_items.get(key) ?? vscode.TreeItemCheckboxState.Unchecked)
 
     element.checkboxState = checkbox_state
 
@@ -328,7 +319,7 @@ export class OpenEditorsProvider
         file_uri,
         vscode.TreeItemCollapsibleState.None,
         false,
-        this._is_no_context_mode || is_ignored ? undefined : checkbox_state,
+        is_ignored ? undefined : checkbox_state,
         false,
         true,
         tokens?.total,

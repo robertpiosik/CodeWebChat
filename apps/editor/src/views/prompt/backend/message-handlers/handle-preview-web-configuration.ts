@@ -20,13 +20,10 @@ export const handle_preview_web_configuration = async (
 
   const current_instructions = prompt_view_provider.current_instruction
 
-  const collected =
-    prompt_view_provider.web_prompt_type != 'without-files'
-      ? await FilesCollector.collect_files({
-          workspace_provider: prompt_view_provider.workspace_provider,
-          open_editors_provider: prompt_view_provider.open_editors_provider
-        })
-      : { other_files: '', recent_files: '' }
+  const collected = await FilesCollector.collect_files({
+    workspace_provider: prompt_view_provider.workspace_provider,
+    open_editors_provider: prompt_view_provider.open_editors_provider
+  })
   const context_text = collected.other_files + collected.recent_files
 
   const { instruction: processed_instructions, skill_definitions } =

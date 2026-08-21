@@ -1,7 +1,6 @@
 import {
   HISTORY_ASK_ABOUT_FILES_STATE_KEY,
   HISTORY_EDIT_FILES_STATE_KEY,
-  HISTORY_WITHOUT_FILES_STATE_KEY,
   HistoryEntry
 } from '@/constants/state-keys'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
@@ -19,9 +18,6 @@ export const handle_save_history = async (
       break
     case 'edit-files':
       key = HISTORY_EDIT_FILES_STATE_KEY
-      break
-    case 'without-files':
-      key = HISTORY_WITHOUT_FILES_STATE_KEY
       break
   }
   if (key) {

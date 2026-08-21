@@ -18,8 +18,7 @@ export const handle_copy_prompt = async (params: {
 }): Promise<void> => {
   const collected = await FilesCollector.collect_files({
     workspace_provider: params.prompt_view_provider.workspace_provider,
-    open_editors_provider: params.prompt_view_provider.open_editors_provider,
-    no_context: params.prompt_view_provider.prompt_type == 'without-files'
+    open_editors_provider: params.prompt_view_provider.open_editors_provider
   })
   const context_text = collected.other_files + collected.recent_files
 

@@ -30,10 +30,9 @@ type Props = {
   is_connected: boolean
   ask_instructions: string
   edit_instructions: string
-  no_context_instructions: string
   set_instructions: (
     value: string,
-    prompt_type: 'ask-about-files' | 'edit-files' | 'without-files'
+    prompt_type: 'ask-about-files' | 'edit-files'
   ) => void
   mode: Mode
   web_prompt_type: WebPromptType
@@ -94,8 +93,6 @@ export const Main: React.FC<Props> = (props) => {
   const [ask_about_files_history, set_ask_about_files_history] =
     useState<string[]>()
   const [edit_files_history, set_edit_files_history] = useState<string[]>()
-  const [without_files_history, set_without_files_history] =
-    useState<string[]>()
   const [edit_format, set_edit_format] = useState<EditFormat>()
   const [caret_position_to_set, set_caret_position_to_set] = useState<
     number | undefined
@@ -126,7 +123,6 @@ export const Main: React.FC<Props> = (props) => {
         case 'CHAT_HISTORY':
           set_ask_about_files_history(message.ask_about_files || [])
           set_edit_files_history(message.edit_files || [])
-          set_without_files_history(message.without_files || [])
           break
         case 'INSTRUCTIONS':
           if (
@@ -186,9 +182,6 @@ export const Main: React.FC<Props> = (props) => {
     } else if (current_prompt_type == 'edit-files') {
       history = edit_files_history
       set_history = set_edit_files_history
-    } else if (current_prompt_type == 'without-files') {
-      history = without_files_history
-      set_history = set_without_files_history
     } else {
       return
     }
@@ -377,8 +370,6 @@ export const Main: React.FC<Props> = (props) => {
   const get_current_instructions = () => {
     if (current_prompt_type == 'ask-about-files') return props.ask_instructions
     if (current_prompt_type == 'edit-files') return props.edit_instructions
-    if (current_prompt_type == 'without-files')
-      return props.no_context_instructions
     return ''
   }
 
@@ -451,9 +442,7 @@ export const Main: React.FC<Props> = (props) => {
       ? props.ask_instructions
       : current_prompt_type == 'edit-files'
         ? props.edit_instructions
-        : current_prompt_type == 'without-files'
-          ? props.no_context_instructions
-          : ''
+        : ''
 
   const set_instructions = (value: string) => {
     props.set_instructions(value, current_prompt_type)
@@ -464,8 +453,6 @@ export const Main: React.FC<Props> = (props) => {
     current_history = ask_about_files_history
   } else if (current_prompt_type == 'edit-files') {
     current_history = edit_files_history
-  } else if (current_prompt_type == 'without-files') {
-    current_history = without_files_history
   }
 
   if (
@@ -473,7 +460,6 @@ export const Main: React.FC<Props> = (props) => {
     all_api_configurations === undefined ||
     ask_about_files_history === undefined ||
     edit_files_history === undefined ||
-    without_files_history === undefined ||
     instructions === undefined ||
     edit_format === undefined
   ) {

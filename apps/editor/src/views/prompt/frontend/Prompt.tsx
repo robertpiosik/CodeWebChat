@@ -47,7 +47,6 @@ export const Prompt = () => {
     is_connected,
     ask_about_context_instructions,
     edit_files_instructions,
-    no_context_instructions,
     mode,
     web_prompt_type,
     api_prompt_type,
@@ -155,7 +154,6 @@ export const Prompt = () => {
   if (
     ask_about_context_instructions === undefined ||
     edit_files_instructions === undefined ||
-    no_context_instructions === undefined ||
     !version ||
     mode === undefined ||
     web_prompt_type === undefined ||
@@ -189,8 +187,6 @@ export const Prompt = () => {
       state = ask_about_context_instructions
     } else if (prompt_type == 'edit-files') {
       state = edit_files_instructions
-    } else if (prompt_type == 'without-files') {
-      state = no_context_instructions
     }
 
     if (!state) return ''
@@ -202,15 +198,12 @@ export const Prompt = () => {
     const prompt_type = mode == MODE.WEB ? web_prompt_type : api_prompt_type
     if (prompt_type == 'ask-about-files') return ask_about_context_instructions
     if (prompt_type == 'edit-files') return edit_files_instructions
-    if (prompt_type == 'without-files') return no_context_instructions
     return undefined
   }
 
   const has_instructions = !!get_current_instructions().trim()
   const is_preview_disabled =
-    !is_connected ||
-    !has_instructions ||
-    (web_prompt_type != 'without-files' && token_count == 0)
+    !is_connected || !has_instructions || token_count == 0
 
   const handle_apply_click = () => {
     post_message(vscode, {
@@ -330,11 +323,6 @@ export const Prompt = () => {
                 edit_instructions={
                   edit_files_instructions.instructions[
                     edit_files_instructions.active_index
-                  ] || ''
-                }
-                no_context_instructions={
-                  no_context_instructions.instructions[
-                    no_context_instructions.active_index
                   ] || ''
                 }
                 set_instructions={handle_instructions_change}

@@ -15,13 +15,10 @@ export const use_instructions = (
   const [edit_files_instructions, set_edit_files_instructions] = useState<
     InstructionsState | undefined
   >()
-  const [no_context_instructions, set_no_context_instructions] = useState<
-    InstructionsState | undefined
-  >()
 
   const handle_instructions_change = (
     value: string,
-    prompt_type: 'ask-about-files' | 'edit-files' | 'without-files'
+    prompt_type: 'ask-about-files' | 'edit-files'
   ) => {
     const update_state = (
       current_state: InstructionsState | undefined,
@@ -51,8 +48,6 @@ export const use_instructions = (
       )
     } else if (prompt_type == 'edit-files') {
       update_state(edit_files_instructions, set_edit_files_instructions)
-    } else if (prompt_type == 'without-files') {
-      update_state(no_context_instructions, set_no_context_instructions)
     }
   }
 
@@ -80,8 +75,6 @@ export const use_instructions = (
       update(ask_about_context_instructions, set_ask_about_context_instructions)
     } else if (prompt_type == 'edit-files') {
       update(edit_files_instructions, set_edit_files_instructions)
-    } else if (prompt_type == 'without-files') {
-      update(no_context_instructions, set_no_context_instructions)
     }
   }
 
@@ -112,8 +105,6 @@ export const use_instructions = (
       update(ask_about_context_instructions, set_ask_about_context_instructions)
     } else if (prompt_type == 'edit-files') {
       update(edit_files_instructions, set_edit_files_instructions)
-    } else if (prompt_type == 'without-files') {
-      update(no_context_instructions, set_no_context_instructions)
     }
   }
 
@@ -152,8 +143,6 @@ export const use_instructions = (
       update(ask_about_context_instructions, set_ask_about_context_instructions)
     } else if (prompt_type == 'edit-files') {
       update(edit_files_instructions, set_edit_files_instructions)
-    } else if (prompt_type == 'without-files') {
-      update(no_context_instructions, set_no_context_instructions)
     }
   }
 
@@ -188,8 +177,6 @@ export const use_instructions = (
       update(ask_about_context_instructions, set_ask_about_context_instructions)
     } else if (prompt_type == 'edit-files') {
       update(edit_files_instructions, set_edit_files_instructions)
-    } else if (prompt_type == 'without-files') {
-      update(no_context_instructions, set_no_context_instructions)
     }
   }
 
@@ -199,7 +186,6 @@ export const use_instructions = (
       if (message.command == 'INSTRUCTIONS') {
         set_ask_about_context_instructions(message.ask_about_context)
         set_edit_files_instructions(message.edit_files)
-        set_no_context_instructions(message.no_context)
       }
     }
 
@@ -211,7 +197,6 @@ export const use_instructions = (
   return {
     ask_about_context_instructions,
     edit_files_instructions,
-    no_context_instructions,
     handle_instructions_change,
     handle_tab_change,
     handle_new_tab,

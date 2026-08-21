@@ -31,7 +31,6 @@ export interface IWorkspaceProvider {
     checked_files: string[]
     checked_timestamps: Record<string, number>
   }
-  readonly is_no_context_mode: boolean
   get_all_files_for_uri(uri: vscode.Uri): Promise<vscode.Uri[]>
 }
 
@@ -54,11 +53,6 @@ export class WorkspaceProvider
   private _checked_items = new Map<string, vscode.TreeItemCheckboxState>()
   private _checked_timestamps = new Map<string, number>()
   private _partially_checked_dirs = new Set<string>()
-  private _is_no_context_mode: boolean = false
-
-  public get is_no_context_mode(): boolean {
-    return this._is_no_context_mode
-  }
 
   private _combined_gitignore = ignore()
   private _user_ignore_patterns: Ignore = ignore()
@@ -94,12 +88,6 @@ export class WorkspaceProvider
     state: vscode.TreeItemCollapsibleState
   ) {
     this._workspace_view_collapsible_state = state
-  }
-
-  public set_no_context_mode(is_no_context: boolean) {
-    if (this._is_no_context_mode == is_no_context) return
-    this._is_no_context_mode = is_no_context
-    this.refresh()
   }
 
   constructor(params: {
@@ -583,9 +571,8 @@ export class WorkspaceProvider
 
   async getTreeItem(element: FileItem): Promise<vscode.TreeItem> {
     const key = element.resourceUri.fsPath
-    const checkbox_state = this._is_no_context_mode
-      ? undefined
-      : (this._checked_items.get(key) ?? vscode.TreeItemCheckboxState.Unchecked)
+    const checkbox_state =
+      this._checked_items.get(key) ?? vscode.TreeItemCheckboxState.Unchecked
 
     element.checkboxState = checkbox_state
 
@@ -598,9 +585,7 @@ export class WorkspaceProvider
         : undefined
 
     const formatted_selected =
-      selected_token_count !== undefined &&
-      selected_token_count > 0 &&
-      !this._is_no_context_mode
+      selected_token_count !== undefined && selected_token_count > 0
         ? display_token_count(selected_token_count)
         : undefined
 
@@ -711,10 +696,6 @@ export class WorkspaceProvider
     await this.gitignore_initialization
     await this.ranges_initialization
 
-    if (this._is_no_context_mode) {
-      return []
-    }
-
     if (element) {
       const dir_path = element.resourceUri.fsPath
       if (element.isDirectory) {
@@ -791,10 +772,8 @@ export class WorkspaceProvider
             ? this._selected_files_view_collapsible_state
             : this._workspace_view_collapsible_state,
           true,
-          this._is_no_context_mode
-            ? undefined
-            : (this._checked_items.get(root) ??
-                vscode.TreeItemCheckboxState.Unchecked),
+          this._checked_items.get(root) ??
+            vscode.TreeItemCheckboxState.Unchecked,
           false,
           false,
           total_tokens.total,
@@ -1031,7 +1010,7 @@ export class WorkspaceProvider
               : this._workspace_view_collapsible_state
             : vscode.TreeItemCollapsibleState.None,
           is_directory,
-          this._is_no_context_mode ? undefined : checkbox_state,
+          checkbox_state,
           false,
           false,
           tokens.total,

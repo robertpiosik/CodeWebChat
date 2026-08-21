@@ -30,9 +30,6 @@ export const handle_template_quick_pick = async (
     case 'edit-files':
       templates_key = 'templatesForEditFiles'
       break
-    case 'without-files':
-      templates_key = 'templatesForWithoutFiles'
-      break
   }
 
   if (!templates_key) return

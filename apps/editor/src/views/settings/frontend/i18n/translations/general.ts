@@ -1216,23 +1216,5 @@ export const translations = {
     cs: 'Upravit soubory',
     hu: 'Fájlok szerkesztése',
     bg: 'Редактиране на файлове'
-  },
-  'general.prompt-field.templates.types.templatesForWithoutFiles': {
-    en: 'Without Files',
-    pl: 'Bez plików',
-    'zh-cn': '没有文件',
-    ja: 'ファイルなし',
-    'zh-tw': '沒有文件',
-    de: 'Ohne Dateien',
-    es: 'Sin archivos',
-    fr: 'Sans fichiers',
-    'pt-br': 'Sem arquivos',
-    ru: 'Без файлов',
-    ko: '파일 없음',
-    it: 'Senza file',
-    tr: 'Dosyalar Olmadan',
-    cs: 'Bez souborů',
-    hu: 'Fájlok Nélkül',
-    bg: 'Без файлове'
   }
 } as const

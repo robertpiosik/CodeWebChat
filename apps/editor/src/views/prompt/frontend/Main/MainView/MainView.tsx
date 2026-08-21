@@ -153,9 +153,6 @@ export const MainView: React.FC<Props> = (props) => {
     (props.mode == MODE.WEB && props.web_prompt_type == 'edit-files') ||
     (props.mode == MODE.API && props.api_prompt_type == 'edit-files')
 
-  const is_in_no_context_prompt_type =
-    props.mode == MODE.WEB && props.web_prompt_type == 'without-files'
-
   let warning: string | undefined
   if (
     (props.mode == MODE.API && props.api_configurations.length == 0) ||
@@ -393,7 +390,7 @@ export const MainView: React.FC<Props> = (props) => {
             context_size_warning_threshold={
               props.context_size_warning_threshold
             }
-            is_context_disabled={is_in_no_context_prompt_type}
+            is_context_disabled={false}
           />
         </div>
 

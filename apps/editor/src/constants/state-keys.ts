@@ -43,7 +43,6 @@ export const PROMPT_VIEW_MODE_STATE_KEY = 'prompt-view-mode'
 
 export const INSTRUCTIONS_EDIT_FILES_STATE_KEY = 'instructions-edit-files'
 export const INSTRUCTIONS_ASK_STATE_KEY = 'instructions-ask'
-export const INSTRUCTIONS_NO_CONTEXT_STATE_KEY = 'instructions-no-context'
 export const INSTRUCTIONS_CODE_AT_CURSOR_STATE_KEY =
   'instructions-code-at-cursor'
 
@@ -52,7 +51,6 @@ export const ARE_CHECKPOINTS_COLLAPSED_STATE_KEY = 'are-checkpoints-collapsed'
 
 export const HISTORY_ASK_ABOUT_FILES_STATE_KEY = 'history-ask-about-files'
 export const HISTORY_EDIT_FILES_STATE_KEY = 'history-edit-files'
-export const HISTORY_WITHOUT_FILES_STATE_KEY = 'history-without-files'
 
 export const INTELLIGENT_FILE_SEARCH_SHRINK_SOURCE_CODE_STATE_KEY =
   'intelligent-file-search-shrink-source-code'

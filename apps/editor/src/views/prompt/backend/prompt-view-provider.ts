@@ -96,7 +96,6 @@ import {
   API_MODE_STATE_KEY,
   INSTRUCTIONS_ASK_STATE_KEY,
   INSTRUCTIONS_EDIT_FILES_STATE_KEY,
-  INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
   PROMPT_VIEW_MODE_STATE_KEY,
   WEB_MODE_STATE_KEY,
   LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY,
@@ -136,10 +135,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     active_index: 0
   }
   public edit_files_instructions: InstructionsState = {
-    instructions: [''],
-    active_index: 0
-  }
-  public no_context_instructions: InstructionsState = {
     instructions: [''],
     active_index: 0
   }
@@ -192,14 +187,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     )
   }
 
-  public get current_no_context_instruction(): string {
-    return (
-      this.no_context_instructions.instructions[
-        this.no_context_instructions.active_index
-      ] || ''
-    )
-  }
-
   public get prompt_type(): WebPromptType | ApiPromptType {
     return this.mode == MODE.WEB ? this.web_prompt_type : this.api_prompt_type
   }
@@ -208,7 +195,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     const type = this.prompt_type
     if (type == 'ask-about-files') return this.ask_about_context_instructions
     if (type == 'edit-files') return this.edit_files_instructions
-    if (type == 'without-files') return this.no_context_instructions
     return this.edit_files_instructions
   }
 
@@ -225,14 +211,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     prompt_view_api_calls_manager: PromptViewApiCallsManager
   ) {
     this.prompt_view_api_calls_manager = prompt_view_api_calls_manager
-  }
-
-  public update_providers_context_state() {
-    const is_no_context =
-      this.mode == MODE.WEB && this.web_prompt_type == 'without-files'
-
-    this.workspace_provider.set_no_context_mode(is_no_context)
-    this.open_editors_provider.set_no_context_mode(is_no_context)
   }
 
   private _send_send_with_shift_enter() {
@@ -316,9 +294,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
     this.ask_about_context_instructions = this._load_instructions(
       INSTRUCTIONS_ASK_STATE_KEY
     )
-    this.no_context_instructions = this._load_instructions(
-      INSTRUCTIONS_NO_CONTEXT_STATE_KEY
-    )
 
     this.web_edit_format =
       this.extension_context.workspaceState.get<EditFormat>(
@@ -369,8 +344,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
         API_MODE_STATE_KEY,
         'edit-files'
       )
-
-    this.update_providers_context_state()
 
     this.extension_context.subscriptions.push(
       vscode.window.onDidChangeWindowState(async (e) => {
@@ -720,12 +693,10 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await handle_toggle_pinned_api_configuration(this, message)
           } else if (message.command == 'SAVE_WEB_PROMPT_TYPE') {
             await handle_save_web_prompt_type(this, message.prompt_type)
-            this.update_providers_context_state()
           } else if (message.command == 'GET_API_PROMPT_TYPE') {
             handle_get_api_prompt_type(this)
           } else if (message.command == 'SAVE_API_PROMPT_TYPE') {
             await handle_save_api_prompt_type(this, message.prompt_type)
-            this.update_providers_context_state()
           } else if (message.command == 'GET_EDIT_FORMAT_INSTRUCTIONS') {
             handle_get_edit_format_instructions(this)
           } else if (message.command == 'GET_EDIT_FORMAT') {
@@ -738,7 +709,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             this.caret_position = message.caret_position
           } else if (message.command == 'MODE_CHANGED') {
             handle_mode_changed(this, message)
-            this.update_providers_context_state()
           } else if (message.command == 'GET_MODE') {
             handle_get_mode(this)
           } else if (message.command == 'GET_VERSION') {
@@ -888,11 +858,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
         return config_web_configuration_to_ui_format({ ...config, model })
       })
 
-    const web_prompt_types: WebPromptType[] = [
-      'ask-about-files',
-      'edit-files',
-      'without-files'
-    ]
+    const web_prompt_types: WebPromptType[] = ['ask-about-files', 'edit-files']
 
     this.send_message({
       command: 'WEB_CONFIGURATIONS',
@@ -971,7 +937,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       command: 'INSTRUCTIONS',
       ask_about_context: this.ask_about_context_instructions,
       edit_files: this.edit_files_instructions,
-      no_context: this.no_context_instructions,
       caret_position: this.caret_position
     })
   }
