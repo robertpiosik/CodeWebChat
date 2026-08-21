@@ -372,14 +372,16 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
 
     this.update_providers_context_state()
 
-    vscode.window.onDidChangeWindowState(async (e) => {
-      if (e.focused) {
-        this.send_message({
-          command: 'RESET_APPLY_BUTTON_TEMPORARY_DISABLED_STATE'
-        })
-        handle_get_tasks(this)
-      }
-    })
+    this.extension_context.subscriptions.push(
+      vscode.window.onDidChangeWindowState(async (e) => {
+        if (e.focused) {
+          this.send_message({
+            command: 'RESET_APPLY_BUTTON_TEMPORARY_DISABLED_STATE'
+          })
+          handle_get_tasks(this)
+        }
+      })
+    )
 
     this.extension_context.subscriptions.push(
       vscode.workspace.onDidChangeWorkspaceFolders(() => {
@@ -487,38 +489,43 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       this.send_currently_open_file_text()
     }
 
-    vscode.window.onDidChangeActiveTextEditor(() =>
-      setTimeout(update_editor_state, 100)
+    this.extension_context.subscriptions.push(
+      vscode.window.onDidChangeActiveTextEditor(() =>
+        setTimeout(update_editor_state, 100)
+      )
     )
     update_editor_state()
 
-    vscode.window.onDidChangeTextEditorSelection((event) => {
-      const selection = event.textEditor.selection
-      let new_selection: SelectionState | null = null
+    this.extension_context.subscriptions.push(
+      vscode.window.onDidChangeTextEditorSelection((event) => {
+        const selection = event.textEditor.selection
+        let new_selection: SelectionState | null = null
 
-      if (!selection.isEmpty) {
-        new_selection = {
-          text: event.textEditor.document.getText(selection),
-          start_line: selection.start.line + 1,
-          start_col: selection.start.character + 1,
-          end_line: selection.end.line + 1,
-          end_col: selection.end.character + 1
+        if (!selection.isEmpty) {
+          new_selection = {
+            text: event.textEditor.document.getText(selection),
+            start_line: selection.start.line + 1,
+            start_col: selection.start.character + 1,
+            end_line: selection.end.line + 1,
+            end_col: selection.end.character + 1
+          }
         }
-      }
 
-      const has_changed =
-        (this.current_selection?.text ?? null) !== (new_selection?.text ?? null)
+        const has_changed =
+          (this.current_selection?.text ?? null) !==
+          (new_selection?.text ?? null)
 
-      if (has_changed) {
-        this.current_selection = new_selection
-        if (this.webview_view) {
-          this.send_message({
-            command: 'EDITOR_SELECTION_CHANGED',
-            current_selection: new_selection
-          })
+        if (has_changed) {
+          this.current_selection = new_selection
+          if (this.webview_view) {
+            this.send_message({
+              command: 'EDITOR_SELECTION_CHANGED',
+              current_selection: new_selection
+            })
+          }
         }
-      }
-    })
+      })
+    )
 
     const update_selection_state = () => {
       const active_text_editor = vscode.window.activeTextEditor
@@ -544,19 +551,23 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
       }
     }
 
-    vscode.window.onDidChangeActiveTextEditor(() =>
-      setTimeout(update_selection_state, 100)
+    this.extension_context.subscriptions.push(
+      vscode.window.onDidChangeActiveTextEditor(() =>
+        setTimeout(update_selection_state, 100)
+      )
     )
     update_selection_state()
 
-    vscode.workspace.onDidChangeTextDocument((event) => {
-      if (
-        vscode.window.activeTextEditor &&
-        event.document === vscode.window.activeTextEditor.document
-      ) {
-        this.send_currently_open_file_text()
-      }
-    })
+    this.extension_context.subscriptions.push(
+      vscode.workspace.onDidChangeTextDocument((event) => {
+        if (
+          vscode.window.activeTextEditor &&
+          event.document === vscode.window.activeTextEditor.document
+        ) {
+          this.send_currently_open_file_text()
+        }
+      })
+    )
   }
 
   public cancel_all_intelligent_updates() {
