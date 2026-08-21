@@ -9,19 +9,13 @@ import { LAST_USED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY } from '@/constants/st
 import { Logger } from '@shared/utils/logger'
 import { send_llm_message } from '@/utils/send-llm-message'
 import { cleanup_api_response } from '@/utils/cleanup-api-response'
-import {
-  intelligent_update_task_instructions,
-  intelligent_update_edit_format_instructions,
-  intelligent_update_fallback_edit_format_instructions
-} from '@/constants/instructions'
+import { intelligent_update_task_instructions } from '@/constants/instructions'
 import { t } from '@/i18n'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import {
   show_configuration_quick_pick,
   map_api_configuration_to_item
 } from '@/utils/show-configuration-quick-pick'
-import { apply_search_replace_to_content } from '@/utils/changes-integration/search-replace-processor/apply-search-replace-to-content/apply-search-replace-to-content'
-import { parse_search_replace_segments } from '@/utils/changes-integration/search-replace-processor/parse-search-replace-segments'
 
 export const get_intelligent_update_config = async (
   model_providers_manager: ModelProvidersManager,
@@ -109,28 +103,18 @@ export const process_file = async (params: {
   file_content: string
   instruction: string
   abort_signal?: AbortSignal
-  on_chunk?: (
-    tokens_per_second: number,
-    total_tokens: number,
-    using_fallback: boolean
-  ) => void
+  on_chunk?: (tokens_per_second: number, total_tokens: number) => void
   on_thinking_chunk?: (text: string) => void
-  use_fallback_edit_format?: boolean
 }): Promise<string> => {
   Logger.info({
     function_name: 'process_file',
     message: 'start',
     data: {
-      file_path: params.file_path,
-      use_fallback_format: params.use_fallback_edit_format
+      file_path: params.file_path
     }
   })
 
-  const edit_format_instructions = params.use_fallback_edit_format
-    ? intelligent_update_fallback_edit_format_instructions
-    : intelligent_update_edit_format_instructions
-
-  const content = `# File\n\n${params.file_content}\n\n# Output formatting\n\n${edit_format_instructions}\n\n# Task\n\n${intelligent_update_task_instructions}\n\n# Changes\n\n${params.instruction}`
+  const content = `# File\n\n${params.file_content}\n\n# Task\n\n${intelligent_update_task_instructions}\n\n# Changes\n\n${params.instruction}`
 
   const messages = [
     {
@@ -156,14 +140,7 @@ export const process_file = async (params: {
       api_key: params.api_key,
       body,
       abort_signal: params.abort_signal,
-      on_chunk: params.on_chunk
-        ? (tokens_per_second, total_tokens) =>
-            params.on_chunk!(
-              tokens_per_second,
-              total_tokens,
-              !!params.use_fallback_edit_format
-            )
-        : undefined,
+      on_chunk: params.on_chunk,
       on_thinking_chunk: params.on_thinking_chunk,
       rethrow_error: true
     })
@@ -182,30 +159,7 @@ export const process_file = async (params: {
       content: refactored_content
     })
 
-    let final_content = cleaned_content
-    if (!params.use_fallback_edit_format) {
-      try {
-        const segments = parse_search_replace_segments(cleaned_content)
-        final_content = apply_search_replace_to_content({
-          original_content: params.file_content,
-          segments
-        })
-      } catch (error: any) {
-        Logger.warn({
-          function_name: 'process_file',
-          message:
-            'Failed to apply search replace block, retrying with fallback edit format',
-          data: { error, file_path: params.file_path }
-        })
-
-        if (!params.abort_signal?.aborted) {
-          return await process_file({
-            ...params,
-            use_fallback_edit_format: true
-          })
-        }
-      }
-    }
+    const final_content = cleaned_content
 
     Logger.info({
       function_name: 'process_file',

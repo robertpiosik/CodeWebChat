@@ -165,13 +165,9 @@ export const handle_fix_all_failed_files = async (params: {
         const original_file_size = file_state.content.length
         const estimated_total_tokens = Math.ceil(original_file_size / 4)
 
-        const on_chunk = (
-          tokens_per_second: number,
-          total_tokens: number,
-          using_fallback: boolean
-        ) => {
+        const on_chunk = (tokens_per_second: number, total_tokens: number) => {
           let progress: number | undefined
-          if (using_fallback && estimated_total_tokens > 0) {
+          if (estimated_total_tokens > 0) {
             progress = Math.min(
               Math.round((total_tokens / estimated_total_tokens) * 100),
               100
