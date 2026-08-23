@@ -1,6 +1,5 @@
 .button {
   --button-size: 24px;
-
   display: flex;
   align-items: center;
   flex-shrink: 0;
@@ -8,11 +7,7 @@
   height: var(--button-size);
   padding: 0 6px 0 3px;
   border-radius: 4px;
-  background: none;
-  border: none;
   color: inherit;
-  cursor: pointer;
-  text-decoration: none;
 
   &:hover:not(:disabled) {
     background-color: var(--vscode-toolbar-hoverBackground);

@@ -1,20 +1,3 @@
-.container {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  pointer-events: none;
-
-  > div {
-    pointer-events: all;
-  }
-}
-
-.content {
-  display: flex;
-  flex-direction: column;
-}
-
 .chat-input-container {
   display: flex;
   flex-direction: column;
@@ -26,40 +9,7 @@
   }
 }
 
-.edit-format {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 6px 12px 0 12px;
-
-  > span {
-    font-size: 12px;
-    color: var(--cwc-text-color-dimmed);
-  }
-}
-
 .browser-extension-message {
   padding: 0 16px;
   position: relative;
-}
-
-.shrink-source-code-checkbox {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0 16px 8px 16px;
-
-  :global([data-modern-ui='true']) & {
-    padding: 0 12px 8px 16px;
-  }
-
-  label {
-    font-size: 12px;
-    color: var(--cwc-text-color-dimmed);
-    cursor: pointer;
-    user-select: none;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
 }

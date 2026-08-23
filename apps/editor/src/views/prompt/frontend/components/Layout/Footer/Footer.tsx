@@ -46,37 +46,35 @@ export const Footer: React.FC<Props> = (props) => {
   }
 
   return (
-    <>
-      <div className={styles.footer} ref={container_ref}>
-        <div className={styles.footer__left}>
-          <CompactableActionButton
-            is_compact={compact_step >= 2}
-            on_click={props.on_history_click}
-            title={t('footer.history-title')}
-            codicon="history"
-            label={history_label}
-          />
-          <CompactableActionButton
-            is_compact={compact_step >= 1}
-            on_click={on_undo_click}
-            title={t('footer.undo-title')}
-            disabled={!can_undo}
-            codicon="discard"
-            label={undo_label}
-          />
-        </div>
-
-        <div>
-          <CompactableActionButton
-            is_compact={compact_step >= 3}
-            on_click={handle_apply_click}
-            title={t('footer.apply-title')}
-            disabled={is_apply_disabled_temporarily}
-            codicon="clippy"
-            label={apply_label}
-          />
-        </div>
+    <div className={styles.footer} ref={container_ref}>
+      <div className={styles.footer__left}>
+        <CompactableActionButton
+          is_compact={compact_step >= 2}
+          on_click={props.on_history_click}
+          title={t('footer.history-title')}
+          codicon="history"
+          label={history_label}
+        />
+        <CompactableActionButton
+          is_compact={compact_step >= 1}
+          on_click={on_undo_click}
+          title={t('footer.undo-title')}
+          disabled={!can_undo}
+          codicon="discard"
+          label={undo_label}
+        />
       </div>
-    </>
+
+      <div>
+        <CompactableActionButton
+          is_compact={compact_step >= 3}
+          on_click={handle_apply_click}
+          title={t('footer.apply-title')}
+          disabled={is_apply_disabled_temporarily}
+          codicon="clippy"
+          label={apply_label}
+        />
+      </div>
+    </div>
   )
 }

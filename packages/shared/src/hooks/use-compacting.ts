@@ -4,6 +4,7 @@ export const use_compacting = () => {
   const container_ref = useRef<HTMLDivElement>(null)
   const [compact_step, set_compact_step] = useState(0)
   const [thresholds, set_thresholds] = useState<Record<number, number>>({})
+  const [trigger_measure, set_trigger_measure] = useState(0)
 
   useLayoutEffect(() => {
     if (!container_ref.current) return
@@ -26,17 +27,26 @@ export const use_compacting = () => {
     container.style.flexShrink = original_flex_shrink
     container.style.transition = original_transition
 
+    if (width == 0) return
+
     set_thresholds((prev) => {
       const threshold = Math.ceil(width)
       if (prev[compact_step] == threshold) return prev
       return { ...prev, [compact_step]: threshold }
     })
-  }, [compact_step])
+  }, [compact_step, trigger_measure])
 
   useEffect(() => {
     const observer = new ResizeObserver((entries) => {
       const container = entries[0].target as HTMLElement
       const width = container.getBoundingClientRect().width
+
+      if (width == 0) return
+
+      if (thresholds[compact_step] === undefined) {
+        set_trigger_measure((t) => t + 1)
+        return
+      }
 
       for (let i = 0; i < compact_step; i++) {
         if (thresholds[i] !== undefined && width >= thresholds[i]) {

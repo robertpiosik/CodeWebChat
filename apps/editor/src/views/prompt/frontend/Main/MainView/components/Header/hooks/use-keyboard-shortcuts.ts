@@ -2,10 +2,6 @@ import { useEffect, useState, useRef } from 'react'
 import { use_is_mac } from '@shared/hooks'
 import { MODE, Mode } from '@/views/prompt/types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
-import {
-  api_prompt_type_labels,
-  web_prompt_type_labels
-} from '../../../prompt-type-labels'
 
 export const use_keyboard_shortcuts = (params: {
   mode: Mode
@@ -140,32 +136,24 @@ export const use_keyboard_shortcuts = (params: {
     const handle_key_down = (event: KeyboardEvent) => {
       if (params.is_disabled) return
 
-      if (!event.altKey || !event.shiftKey || event.metaKey || event.ctrlKey) {
+      if (!event.altKey || event.shiftKey || event.metaKey || event.ctrlKey) {
         return
       }
 
-      if (!event.code.startsWith('Key')) {
+      if (event.code == 'KeyE') {
+        event.preventDefault()
+
+        if (params.mode == MODE.API) {
+          params.on_api_prompt_type_change('edit-files')
+        } else {
+          params.on_web_prompt_type_change('edit-files')
+        }
         return
       }
 
-      const key = event.code.replace('Key', '').toLowerCase()
-
-      if (params.mode == MODE.WEB) {
-        for (const [value, label] of Object.entries(web_prompt_type_labels)) {
-          if (label.toLowerCase().startsWith(key)) {
-            params.on_web_prompt_type_change(value as WebPromptType)
-            event.preventDefault()
-            return
-          }
-        }
-      } else if (params.mode == MODE.API) {
-        for (const [value, label] of Object.entries(api_prompt_type_labels)) {
-          if (label.toLowerCase().startsWith(key)) {
-            params.on_api_prompt_type_change(value as ApiPromptType)
-            event.preventDefault()
-            return
-          }
-        }
+      if (event.code == 'KeyA' && params.mode == MODE.WEB) {
+        event.preventDefault()
+        params.on_web_prompt_type_change('ask-about-files')
       }
     }
 
