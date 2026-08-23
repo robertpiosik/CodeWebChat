@@ -53,7 +53,6 @@ export const Prompt = () => {
     chat_input_focus_key,
     set_chat_input_focus_key,
     chat_input_focus_and_select_key,
-    context_size_warning_threshold,
     can_undo,
     send_with_shift_enter,
     handle_instructions_change,
@@ -156,8 +155,7 @@ export const Prompt = () => {
     is_connected === undefined ||
     api_prompt_type === undefined ||
     current_selection === undefined ||
-    workspace_folder_count === undefined ||
-    context_size_warning_threshold === undefined
+    workspace_folder_count === undefined
   ) {
     return null
   }
@@ -349,7 +347,6 @@ export const Prompt = () => {
                   chat_input_focus_and_select_key
                 }
                 chat_input_focus_key={chat_input_focus_key}
-                context_size_warning_threshold={context_size_warning_threshold}
                 selected_files={selected_files}
                 send_with_shift_enter={send_with_shift_enter}
                 on_pasted_lines_click={handle_pasted_lines_click}

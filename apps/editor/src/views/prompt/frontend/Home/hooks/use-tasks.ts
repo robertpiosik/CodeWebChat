@@ -100,19 +100,14 @@ export const use_tasks = (vscode: any) => {
     )
   }
 
-  const handle_add = (
-    root: string,
-    root_tasks: Task[],
-    placement: 'top' | 'bottom' = 'bottom'
-  ) => {
+  const handle_add = (root: string, root_tasks: Task[]) => {
     const new_task: Task = {
       text: '',
       is_checked: false,
       created_at: Date.now(),
       children: []
     }
-    const new_list =
-      placement == 'top' ? [new_task, ...root_tasks] : [...root_tasks, new_task]
+    const new_list = [...root_tasks, new_task]
     handle_tasks_change(root, new_list)
   }
 

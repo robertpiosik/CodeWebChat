@@ -44,7 +44,6 @@ type Props = {
   current_selection?: SelectionState | null
   chat_input_focus_and_select_key: number
   chat_input_focus_key: number
-  context_size_warning_threshold: number
   selected_files: string[]
   send_with_shift_enter: boolean
   currently_open_file_text?: string
@@ -498,7 +497,6 @@ export const Main: React.FC<Props> = (props) => {
       token_count={props.token_count}
       web_prompt_type={props.web_prompt_type}
       api_prompt_type={props.api_prompt_type}
-      context_size_warning_threshold={props.context_size_warning_threshold}
       on_web_prompt_type_change={props.on_web_prompt_type_change}
       on_api_prompt_type_change={props.on_api_prompt_type_change}
       edit_format={edit_format}

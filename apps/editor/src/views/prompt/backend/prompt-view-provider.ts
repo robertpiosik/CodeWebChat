@@ -109,7 +109,6 @@ import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Logger } from '@shared/utils/logger'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { dictionary } from '@shared/constants/dictionary'
-import { DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD } from '@/constants/values'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { SharedContextState } from '@/context/shared-context-state'
 import { webview_html } from '@/views/shared/utils/webview-html'
@@ -367,12 +366,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
         if (!this.webview_view) return
         if (event.affectsConfiguration('codeWebChat.webConfigurations')) {
           this.send_web_configurations_to_webview(this.webview_view.webview)
-        }
-
-        if (
-          event.affectsConfiguration('codeWebChat.contextSizeWarningThreshold')
-        ) {
-          this._send_context_size_warning_threshold()
         }
 
         if (event.affectsConfiguration('codeWebChat.apiConfigurations')) {
@@ -642,8 +635,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             handle_request_editor_state(this)
           } else if (message.command == 'REQUEST_EDITOR_SELECTION_STATE') {
             handle_request_editor_selection_state(this)
-          } else if (message.command == 'GET_CONTEXT_SIZE_WARNING_THRESHOLD') {
-            this._send_context_size_warning_threshold()
           } else if (message.command == 'REQUEST_CURRENTLY_OPEN_FILE_TEXT') {
             this.send_currently_open_file_text()
           } else if (message.command == 'REORDER_WEB_CONFIGURATIONS') {
@@ -873,18 +864,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           LAST_USED_EDIT_FILES_CONFIG_ID_STATE_KEY
         )
       }
-    })
-  }
-
-  private _send_context_size_warning_threshold() {
-    if (!this.webview_view) return
-    const config = vscode.workspace.getConfiguration('codeWebChat')
-    const threshold =
-      config.get<number>('contextSizeWarningThreshold') ||
-      DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD
-    this.send_message({
-      command: 'CONTEXT_SIZE_WARNING_THRESHOLD',
-      threshold
     })
   }
 

@@ -15,7 +15,6 @@ import {
   handle_get_attach_ascii_tree_of_context,
   handle_get_use_context_files_in_commit_message_prompt,
   handle_get_include_prompts_in_commit_messages,
-  handle_get_context_size_warning_threshold,
   handle_get_edit_files_system_instructions,
   handle_get_gemini_user_id,
   handle_get_ai_studio_user_id,
@@ -38,7 +37,6 @@ import {
   handle_update_synchronize_edit_format_between_modes,
   handle_update_edit_files_system_instructions,
   handle_update_gemini_user_id,
-  handle_update_context_size_warning_threshold,
   handle_update_ai_studio_user_id,
   handle_update_send_with_shift_enter,
   handle_update_reuse_last_tab,
@@ -230,10 +228,6 @@ export class SettingsViewProvider {
           'UPDATE_SELECT_ALL_PROMPTS_IN_COMMIT_MESSAGES_BY_DEFAULT'
         ) {
           await handle_update_include_prompts_in_commit_messages(message)
-        } else if (message.command == 'GET_CONTEXT_SIZE_WARNING_THRESHOLD') {
-          await handle_get_context_size_warning_threshold(this)
-        } else if (message.command == 'UPDATE_CONTEXT_SIZE_WARNING_THRESHOLD') {
-          await handle_update_context_size_warning_threshold(message)
         } else if (
           message.command == 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
         ) {
@@ -333,7 +327,6 @@ export class SettingsViewProvider {
           void handle_get_api_configurations(this)
           void handle_get_edit_files_system_instructions(this)
           void handle_get_intelligent_file_search_instructions(this)
-          void handle_get_context_size_warning_threshold(this)
           void handle_get_commit_message_instructions(this)
           void handle_get_attach_ascii_tree_of_context(this)
           void handle_get_use_context_files_in_commit_message_prompt(this)

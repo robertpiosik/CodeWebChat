@@ -11,7 +11,6 @@ import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Separator as UiSeparator } from '@ui/components/editor/prompt/Separator'
 import { AsciiArtEffect } from '@ui/components/editor/prompt/AsciiArtEffect'
 import { Translation, use_translation } from '../i18n/use-translation'
-import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
 import { CompactableActionButton } from '@ui/components/editor/prompt/CompactableActionButton'
 import { Tasks as UiTasks } from '@ui/components/editor/prompt/Tasks'
 import { use_tasks } from './hooks/use-tasks'
@@ -224,21 +223,11 @@ export const Home: React.FC<Props> = (props) => {
                       </div>
                     </div>
                   )}
-                  {roots.length > 0 && (
-                    <UiIconButton
-                      codicon_icon="add"
-                      title={t('home.tasks.add')}
-                      on_click={(e) => {
-                        e.stopPropagation()
-                        if (active_root) {
-                          handle_add(active_root, tasks[active_root], 'top')
-                        }
-                      }}
-                    />
-                  )}
                 </>
               }
             />
+
+            <UiSeparator height={6} />
 
             {roots.length == 0 && (
               <div className={styles.inner__empty}>{t('home.tasks.empty')}</div>

@@ -147,10 +147,6 @@ export interface SaveHistoryMessage extends BaseMessage {
   prompt_type: 'ask-about-files' | 'edit-files'
 }
 
-export interface GetContextSizeWarningThresholdMessage extends BaseMessage {
-  command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD'
-}
-
 export interface CreateWebConfigurationMessage extends BaseMessage {
   command: 'CREATE_WEB_CONFIGURATION'
   reference_index?: number
@@ -535,7 +531,6 @@ export type FrontendMessage =
   | GetHistoryMessage
   | GetResponseHistoryMessage
   | SaveHistoryMessage
-  | GetContextSizeWarningThresholdMessage
   | CreateWebConfigurationMessage
   | UpdateWebConfigurationMessage
   | DeleteWebConfigurationMessage
@@ -668,11 +663,6 @@ export interface ResponseHistoryMessage extends BaseMessage {
 export interface TokenCountMessage extends BaseMessage {
   command: 'TOKEN_COUNT_UPDATED'
   token_count: number
-}
-
-export interface ContextSizeWarningThresholdMessage extends BaseMessage {
-  command: 'CONTEXT_SIZE_WARNING_THRESHOLD'
-  threshold: number
 }
 
 export interface WebConfigurationUpdatedMessage extends BaseMessage {
@@ -871,7 +861,6 @@ export type BackendMessage =
   | ChatHistoryMessage
   | ResponseHistoryMessage
   | TokenCountMessage
-  | ContextSizeWarningThresholdMessage
   | WebConfigurationUpdatedMessage
   | NewlyPickedModelMessage
   | NewlyPickedChatbotMessage

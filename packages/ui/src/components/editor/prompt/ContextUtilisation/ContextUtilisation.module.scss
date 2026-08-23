@@ -11,22 +11,3 @@
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
-
-.bar {
-  flex: 1;
-  height: 3px;
-  background-color: var(--cwc-bg-secondary);
-  border-radius: 999px;
-  overflow: hidden;
-
-  &__progress {
-    height: 100%;
-    background-color: var(--vscode-button-background);
-    border-top-right-radius: 999px;
-    border-bottom-right-radius: 999px;
-
-    &--warning {
-      background-color: var(--vscode-editorWarning-foreground);
-    }
-  }
-}

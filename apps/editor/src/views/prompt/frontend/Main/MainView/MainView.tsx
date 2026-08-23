@@ -56,7 +56,6 @@ type Props = {
   current_selection?: SelectionState | null
   chat_history: string[]
   token_count: number
-  context_size_warning_threshold: number
   web_prompt_type: WebPromptType
   api_prompt_type: ApiPromptType
   on_web_prompt_type_change: (prompt_type: WebPromptType) => void
@@ -383,9 +382,6 @@ export const MainView: React.FC<Props> = (props) => {
           />
           <UiContextUtilisation
             current_context_size={props.token_count}
-            context_size_warning_threshold={
-              props.context_size_warning_threshold
-            }
             is_context_disabled={false}
           />
         </div>
@@ -394,14 +390,16 @@ export const MainView: React.FC<Props> = (props) => {
 
         <UiTabs
           tabs={[
-            { id: 'chatbots', label: t('home.mode.chatbots') },
-            { id: 'api-calls', label: t('home.mode.api-calls') }
+            { id: 'web', label: 'WEB' },
+            { id: 'api', label: 'API' }
           ]}
-          active_tab={props.mode == MODE.WEB ? 'chatbots' : 'api-calls'}
+          active_tab={props.mode == MODE.WEB ? 'web' : 'api'}
           on_tab_change={(id) =>
-            props.on_mode_change(id == 'chatbots' ? MODE.WEB : MODE.API)
+            props.on_mode_change(id == 'web' ? MODE.WEB : MODE.API)
           }
         />
+
+        <UiSeparator height={6} />
 
         {props.mode == MODE.WEB && (
           <UiConfigurations

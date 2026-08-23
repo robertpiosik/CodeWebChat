@@ -1,61 +1,53 @@
 .tabs {
-  height: 25px;
-  padding: 0 12px 0 14px;
-  margin-bottom: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 14px;
+  border-bottom: 1px solid var(--vscode-menu-separatorBackground);
+  padding: 0 12px;
 
   :global([data-modern-ui='true']) & {
-    padding: 0 10px 0 12px;
+    margin: 0 8px;
+    padding: 0 2px;
   }
 
   &__list {
     display: flex;
     align-items: center;
-    gap: 12px;
-    height: 100%;
+    gap: 4px;
   }
 
   &__tab {
-    appearance: none;
-    background: transparent;
-    border: none;
-    padding: 0;
-    margin: 0;
-    height: 100%;
+    font-family: var(--font-family-accent);
+    font-size: 16px;
+    padding: 4px 10px 2px 10px;
+    letter-spacing: 1px;
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
     display: flex;
     align-items: center;
-    font-size: 11px;
-    text-transform: uppercase;
+    text-transform: none;
     color: var(--cwc-text-color-dimmed);
-    cursor: pointer;
-    position: relative;
 
     &:hover {
       color: var(--cwc-text-color);
     }
 
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 1px;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background-color: transparent;
-    }
-
-    &:focus {
-      outline: none;
-    }
-
     &--active {
       color: var(--cwc-text-color);
+      border-color: var(--vscode-menu-separatorBackground);
+      position: relative;
 
       &::after {
-        background-color: var(--vscode-button-background);
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -1px;
+        height: 1px;
+        background: var(--vscode-sideBar-background);
       }
     }
   }

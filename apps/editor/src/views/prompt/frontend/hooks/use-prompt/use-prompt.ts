@@ -37,8 +37,6 @@ export const use_prompt = (vscode: any) => {
     handle_tabs_reorder
   } = use_instructions(vscode, mode, web_prompt_type, api_prompt_type)
 
-  const [context_size_warning_threshold, set_context_size_warning_threshold] =
-    useState<number>()
   const [can_undo, set_can_undo] = useState<boolean>(false)
   const [send_with_shift_enter, set_send_with_shift_enter] = useState(false)
   const [is_recording, set_is_recording] = useState(false)
@@ -110,8 +108,6 @@ export const use_prompt = (vscode: any) => {
         message.command == 'RESET_APPLY_BUTTON_TEMPORARY_DISABLED_STATE'
       ) {
         set_apply_button_enabling_trigger_count((c) => c + 1)
-      } else if (message.command == 'CONTEXT_SIZE_WARNING_THRESHOLD') {
-        set_context_size_warning_threshold(message.threshold)
       } else if (message.command == 'CAN_UNDO_CHANGED') {
         set_can_undo(message.can_undo)
       } else if (message.command == 'RECORDING_STATE') {
@@ -136,7 +132,6 @@ export const use_prompt = (vscode: any) => {
       { command: 'GET_WEB_PROMPT_TYPE' },
       { command: 'GET_API_PROMPT_TYPE' },
       { command: 'GET_CONNECTION_STATUS' },
-      { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' },
       { command: 'GET_SEND_WITH_SHIFT_ENTER' },
       { command: 'REQUEST_CAN_UNDO' },
       { command: 'GET_SETUP_PROGRESS' },
@@ -221,7 +216,6 @@ export const use_prompt = (vscode: any) => {
     chat_input_focus_key,
     set_chat_input_focus_key,
     chat_input_focus_and_select_key,
-    context_size_warning_threshold,
     can_undo,
     send_with_shift_enter,
     handle_instructions_change,

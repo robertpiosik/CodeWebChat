@@ -113,7 +113,6 @@ type Props = {
   attach_ascii_tree_of_context: 'ask' | 'always' | 'never'
   use_context_files_in_commit_message_prompt: 'ask' | 'always' | 'never'
   select_all_prompts_in_commit_messages_by_default: boolean
-  context_size_warning_threshold: number
   gemini_user_id: number | null
   ai_studio_user_id: number | null
   send_with_shift_enter: boolean
@@ -134,9 +133,6 @@ type Props = {
   set_providers: (providers: Provider[]) => void
   set_api_configurations: (configurations: ApiConfiguration[]) => void
   set_web_configurations: (configurations: WebConfiguration[]) => void
-  on_context_size_warning_threshold_change: (
-    threshold: number | undefined
-  ) => void
   on_synchronize_edit_format_between_modes_change: (enabled: boolean) => void
   on_commit_instructions_change: (instructions: string) => void
   on_attach_ascii_tree_of_context_change: (
@@ -402,10 +398,6 @@ export const Home: React.FC<Props> = (props) => {
         <GeneralSection
           ref={(el) => set_section_ref('section:general', el)}
           set_section_ref={set_section_ref}
-          context_size_warning_threshold={props.context_size_warning_threshold}
-          on_context_size_warning_threshold_change={
-            props.on_context_size_warning_threshold_change
-          }
           synchronize_edit_format_between_modes={
             props.synchronize_edit_format_between_modes
           }

@@ -7,10 +7,7 @@ import { Group as UiGroup } from '@ui/components/editor/settings/Group/Group'
 import { Section as UiSection } from '@ui/components/editor/settings/Section'
 import { TextButton as UiTextButton } from '@ui/components/editor/common/TextButton'
 import { Textarea as UiTextarea } from '@ui/components/editor/common/Textarea'
-import {
-  CHECKPOINT_DEFAULT_LIFESPAN,
-  DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD
-} from '@/constants/values'
+import { CHECKPOINT_DEFAULT_LIFESPAN } from '@/constants/values'
 import { use_translation } from '../../i18n/use-translation'
 import { NavItem } from '../Home'
 import { Templates } from '@ui/components/editor/settings/Templates'
@@ -19,7 +16,6 @@ import { Template } from '@/views/settings/types/messages'
 type ClearChecksBehavior = 'ignore-open-editors' | 'uncheck-all'
 
 type Props = {
-  context_size_warning_threshold: number
   are_automatic_checkpoints_disabled: boolean
   synchronize_edit_format_between_modes: boolean
   send_with_shift_enter: boolean
@@ -31,9 +27,6 @@ type Props = {
   on_check_new_files_change: (enabled: boolean) => void
   on_checkpoint_lifespan_change: (hours: number | undefined) => void
   clear_checks_in_workspace_behavior: ClearChecksBehavior
-  on_context_size_warning_threshold_change: (
-    threshold: number | undefined
-  ) => void
   on_clear_checks_in_workspace_behavior_change: (
     value: ClearChecksBehavior
   ) => void
@@ -78,33 +71,11 @@ type Props = {
 export const GeneralSection = forwardRef<HTMLDivElement, Props>(
   (props, ref) => {
     const { t } = use_translation()
-    const [context_size_warning_threshold, set_context_size_warning_threshold] =
-      useState<number>()
     const [checkpoint_lifespan, set_checkpoint_lifespan] = useState<number>()
-
-    useEffect(() => {
-      set_context_size_warning_threshold(props.context_size_warning_threshold)
-    }, [props.context_size_warning_threshold])
 
     useEffect(() => {
       set_checkpoint_lifespan(props.checkpoint_lifespan)
     }, [props.checkpoint_lifespan])
-
-    const handle_context_size_warning_threshold_blur = () => {
-      if (
-        context_size_warning_threshold &&
-        context_size_warning_threshold > 0
-      ) {
-        props.on_context_size_warning_threshold_change(
-          context_size_warning_threshold
-        )
-      } else {
-        props.on_context_size_warning_threshold_change(undefined)
-        set_context_size_warning_threshold(
-          DEFAULT_CONTEXT_SIZE_WARNING_THRESHOLD
-        )
-      }
-    }
 
     const handle_checkpoint_lifespan_blur = () => {
       if (checkpoint_lifespan && checkpoint_lifespan > 0) {
@@ -295,27 +266,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 }}
               />
             </UiItem>
-            <UiItem
-              title={t(
-                'general.prompt-field.context-size-warning-threshold.title'
-              )}
-              description={t(
-                'general.prompt-field.context-size-warning-threshold.description'
-              )}
-              slot_right={
-                <UiInput
-                  type="number"
-                  value={context_size_warning_threshold?.toString() ?? ''}
-                  on_change={(val) =>
-                    set_context_size_warning_threshold(
-                      val == '' ? undefined : parseInt(val, 10)
-                    )
-                  }
-                  on_blur={handle_context_size_warning_threshold_blur}
-                  max_width={100}
-                />
-              }
-            />
             <UiItem
               title={t('general.prompt-field.send-with-shift-enter.title')}
               description={t(

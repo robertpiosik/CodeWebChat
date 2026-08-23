@@ -131,15 +131,6 @@ export interface OpenAllowPatternsSettingsMessage {
   command: 'OPEN_ALLOW_PATTERNS_SETTINGS'
 }
 
-export interface GetContextSizeWarningThresholdMessage {
-  command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD'
-}
-
-export interface UpdateContextSizeWarningThresholdMessage {
-  command: 'UPDATE_CONTEXT_SIZE_WARNING_THRESHOLD'
-  threshold: number | null
-}
-
 export interface GetAreAutomaticCheckpointsDisabledMessage {
   command: 'GET_ARE_AUTOMATIC_CHECKPOINTS_DISABLED'
 }
@@ -392,8 +383,6 @@ export type FrontendMessage =
   | UpdateIntelligentFileSearchInstructionsMessage
   | UpdateEditFilesSystemInstructionsMessage
   | SettingsUiReadyMessage
-  | GetContextSizeWarningThresholdMessage
-  | UpdateContextSizeWarningThresholdMessage
   | GetAreAutomaticCheckpointsDisabledMessage
   | UpdateAreAutomaticCheckpointsDisabledMessage
   | GetCheckpointLifespanMessage
@@ -484,11 +473,6 @@ export interface EditFilesSystemInstructionsMessage {
 export interface IntelligentFileSearchInstructionsMessage {
   command: 'INTELLIGENT_FILE_SEARCH_INSTRUCTIONS'
   instructions: string
-}
-
-export interface ContextSizeWarningThresholdMessage {
-  command: 'CONTEXT_SIZE_WARNING_THRESHOLD'
-  threshold: number
 }
 
 export interface AreAutomaticCheckpointsDisabledMessage {
@@ -634,7 +618,6 @@ export type BackendMessage =
   | SelectAllPromptsInCommitMessagesByDefaultMessage
   | EditFilesSystemInstructionsMessage
   | IntelligentFileSearchInstructionsMessage
-  | ContextSizeWarningThresholdMessage
   | AreAutomaticCheckpointsDisabledMessage
   | CheckpointLifespanMessage
   | GeminiUserIdMessage

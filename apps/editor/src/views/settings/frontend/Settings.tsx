@@ -94,7 +94,6 @@ export const Settings = () => {
       settings_hook.use_context_files_in_commit_message_prompt !== undefined &&
       settings_hook.select_all_prompts_in_commit_messages_by_default !==
         undefined &&
-      settings_hook.context_size_warning_threshold !== undefined &&
       settings_hook.are_automatic_checkpoints_disabled !== undefined &&
       settings_hook.checkpoint_lifespan !== undefined &&
       settings_hook.gemini_user_id !== undefined &&
@@ -142,9 +141,6 @@ export const Settings = () => {
         intelligent_file_search_instructions={
           settings_hook.intelligent_file_search_instructions!
         }
-        context_size_warning_threshold={
-          settings_hook.context_size_warning_threshold!
-        }
         synchronize_edit_format_between_modes={
           settings_hook.synchronize_edit_format_between_modes!
         }
@@ -186,9 +182,6 @@ export const Settings = () => {
         set_api_configurations={settings_hook.set_api_configurations}
         on_synchronize_edit_format_between_modes_change={
           settings_hook.handle_synchronize_edit_format_between_modes_change
-        }
-        on_context_size_warning_threshold_change={
-          settings_hook.handle_context_size_warning_threshold_change
         }
         on_commit_instructions_change={
           settings_hook.handle_commit_instructions_change
