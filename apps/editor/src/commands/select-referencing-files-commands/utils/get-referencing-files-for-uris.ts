@@ -17,49 +17,57 @@ export const get_referencing_files_for_uris = async (params: {
     }
 
     try {
-      const symbols = await vscode.commands.executeCommand<
-        vscode.DocumentSymbol[] | vscode.SymbolInformation[]
-      >('vscode.executeDocumentSymbolProvider', uri)
-
-      if (!symbols) {
-        continue
-      }
-
       const positions: vscode.Position[] = []
-      const top_level_containers = new Set<string>()
 
-      const traverse = (syms: any[]) => {
-        for (const sym of syms) {
-          if (sym.selectionRange) {
-            positions.push(sym.selectionRange.start)
-            const is_container =
-              sym.kind === vscode.SymbolKind.Module ||
-              sym.kind === vscode.SymbolKind.Namespace ||
-              sym.kind === vscode.SymbolKind.Package
+      const is_unsupported_for_symbol_search =
+        /\.(css|scss|sass|less|styl|json|yaml|yml|md|html|xml)$/i.test(
+          uri.fsPath
+        )
 
-            if (is_container && sym.children && sym.children.length > 0) {
-              traverse(sym.children)
-            }
-          } else if (sym.location) {
-            const is_container =
-              sym.kind === vscode.SymbolKind.Module ||
-              sym.kind === vscode.SymbolKind.Namespace ||
-              sym.kind === vscode.SymbolKind.Package
+      if (is_unsupported_for_symbol_search) {
+        positions.push(new vscode.Position(0, 0))
+      } else {
+        const symbols = await vscode.commands.executeCommand<
+          vscode.DocumentSymbol[] | vscode.SymbolInformation[]
+        >('vscode.executeDocumentSymbolProvider', uri)
 
-            if (is_container) {
-              top_level_containers.add(sym.name)
-            }
+        if (symbols) {
+          const top_level_containers = new Set<string>()
 
-            if (
-              !sym.containerName ||
-              top_level_containers.has(sym.containerName)
-            ) {
-              positions.push(sym.location.range.start)
+          const traverse = (syms: any[]) => {
+            for (const sym of syms) {
+              if (sym.selectionRange) {
+                positions.push(sym.selectionRange.start)
+                const is_container =
+                  sym.kind === vscode.SymbolKind.Module ||
+                  sym.kind === vscode.SymbolKind.Namespace ||
+                  sym.kind === vscode.SymbolKind.Package
+
+                if (is_container && sym.children && sym.children.length > 0) {
+                  traverse(sym.children)
+                }
+              } else if (sym.location) {
+                const is_container =
+                  sym.kind === vscode.SymbolKind.Module ||
+                  sym.kind === vscode.SymbolKind.Namespace ||
+                  sym.kind === vscode.SymbolKind.Package
+
+                if (is_container) {
+                  top_level_containers.add(sym.name)
+                }
+
+                if (
+                  !sym.containerName ||
+                  top_level_containers.has(sym.containerName)
+                ) {
+                  positions.push(sym.location.range.start)
+                }
+              }
             }
           }
+          traverse(symbols)
         }
       }
-      traverse(symbols)
 
       for (let i = 0; i < positions.length; i++) {
         if (params.token.isCancellationRequested) {
