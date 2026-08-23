@@ -355,10 +355,6 @@ const at_sign_quick_pick = async (params: {
       if (browsed_item == 'back') {
         continue // Go back to the main quick pick
       } else if (browsed_item) {
-        await add_to_context_if_needed(
-          params.workspace_provider,
-          browsed_item.absolute_path
-        )
         selected_path_item = browsed_item
         break
       } else {
