@@ -4,7 +4,7 @@
     transform: translateY(0);
   }
   25% {
-    transform: translateY(-2px);
+    transform: translateY(-4px);
   }
   75% {
     transform: translateY(0);
@@ -26,10 +26,6 @@
     height: 100%;
     gap: 8px;
 
-    .button__pre {
-      display: none;
-    }
-
     .button__label {
       font-size: 18px;
     }
@@ -46,21 +42,12 @@
 
   &__label {
     font-family: var(--font-family-accent);
-    font-size: 22px;
-    line-height: 1.2;
-    letter-spacing: 1px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
+    font-size: 32px;
+    letter-spacing: 1.5px;
   }
 
   &__label-char {
     display: inline-block;
     position: relative;
-  }
-
-  &__pre {
-    opacity: var(--dimmed-opacity);
   }
 }

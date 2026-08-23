@@ -3,7 +3,6 @@ import cn from 'classnames'
 
 type Props = {
   label: string
-  pre: React.ReactNode
   on_click: () => void
   is_compact?: boolean
 }
@@ -16,7 +15,6 @@ export const ModeButton: React.FC<Props> = (props) => {
       })}
       onClick={props.on_click}
     >
-      <div className={styles['button__pre']}>{props.pre}</div>
       <div className={styles['button__label']}>
         {props.label.split('').map((char, index) => (
           <span

@@ -16,6 +16,7 @@ import { Tasks as UiTasks } from '@ui/components/editor/prompt/Tasks'
 import { use_tasks } from './hooks/use-tasks'
 import { use_has_scrolled_past_mode_button } from './hooks/use-has-scrolled-past-mode-button'
 import { use_compacting } from '@shared/hooks'
+import { MODE } from '@/views/prompt/types/main-view-mode'
 
 type Props = {
   vscode: any
@@ -127,19 +128,13 @@ export const Home: React.FC<Props> = (props) => {
           })}
         >
           <UiModeButton
-            pre={
-              props.is_connected
-                ? t('home.mode.autofill')
-                : t('home.mode.copy-prompt')
-            }
-            label={t('home.mode.chatbots')}
+            label={MODE.WEB}
             on_click={props.on_chatbots_click}
             is_compact
           />
           <div className={styles['header__modes-divider']} />
           <UiModeButton
-            pre={t('home.mode.make')}
-            label={t('home.mode.api-calls')}
+            label={MODE.API}
             on_click={props.on_api_calls_click}
             is_compact
           />
@@ -171,20 +166,8 @@ export const Home: React.FC<Props> = (props) => {
 
             <div className={styles.inner__mode} ref={mode_ref}>
               <AsciiArtEffect />
-              <UiModeButton
-                pre={
-                  props.is_connected
-                    ? t('home.mode.autofill')
-                    : t('home.mode.copy-prompt')
-                }
-                label={t('home.mode.chatbots')}
-                on_click={props.on_chatbots_click}
-              />
-              <UiModeButton
-                pre={t('home.mode.make')}
-                label={t('home.mode.api-calls')}
-                on_click={props.on_api_calls_click}
-              />
+              <UiModeButton label={MODE.WEB} on_click={props.on_chatbots_click} />
+              <UiModeButton label={MODE.API} on_click={props.on_api_calls_click} />
             </div>
 
             <UiSeparator height={8} />

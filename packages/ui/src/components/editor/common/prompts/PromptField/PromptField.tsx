@@ -101,6 +101,7 @@ export type PromptFieldProps = {
     copy_prompt: string
     more_actions: string
     send: string
+    tokens_in_context: string
   }
 }
 
@@ -584,7 +585,10 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               onMouseLeave={() => set_is_token_count_hovered(false)}
             >
               {is_token_count_hovered && (
-                <Tooltip message="Tokens in context" align="center" />
+                <Tooltip
+                  message={props.translations.tokens_in_context}
+                  align="center"
+                />
               )}
               <span className={styles['footer__right__token-count']}>
                 {props.token_count < 1000

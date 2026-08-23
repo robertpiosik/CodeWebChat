@@ -45,8 +45,8 @@ export const Header: React.FC<Props> = (props) => {
           title={`${t('header.return')} (Esc)`}
         />
         <UiModeToggler
-          mode={props.mode == MODE.WEB ? 'Chatbots' : 'API Calls'}
-          alt_mode={props.mode == MODE.WEB ? 'API Calls' : 'Chatbots'}
+          mode={props.mode == MODE.WEB ? MODE.WEB : MODE.API}
+          alt_mode={props.mode == MODE.WEB ? MODE.API : MODE.WEB}
           is_alt_pressed={is_alt_pressed}
           on_toggle={() =>
             props.on_mode_change(

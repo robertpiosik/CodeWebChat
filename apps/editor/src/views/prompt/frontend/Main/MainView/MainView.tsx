@@ -377,7 +377,8 @@ export const MainView: React.FC<Props> = (props) => {
               send_with_ellipsis: t('prompt-field.action.send-with-ellipsis'),
               copy_prompt: t('prompt-field.action.copy-prompt'),
               more_actions: t('prompt-field.action.more-actions'),
-              send: t('prompt-field.action.send')
+              send: t('prompt-field.action.send'),
+              tokens_in_context: t('prompt-field.tokens-in-context')
             }}
           />
         </div>

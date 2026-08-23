@@ -66,7 +66,8 @@ export const Empty = () => (
       send_with_ellipsis: 'Send with...',
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
-      send: 'Send'
+      send: 'Send',
+      tokens_in_context: 'Tokens in context'
     }}
   />
 )
@@ -132,7 +133,8 @@ export const WithText = () => (
       send_with_ellipsis: 'Send with...',
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
-      send: 'Send'
+      send: 'Send',
+      tokens_in_context: 'Tokens in context'
     }}
   />
 )
@@ -198,7 +200,8 @@ export const LongText = () => (
       send_with_ellipsis: 'Send with...',
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
-      send: 'Send'
+      send: 'Send',
+      tokens_in_context: 'Tokens in context'
     }}
   />
 )
@@ -264,7 +267,8 @@ export const WithPlaceholderSavedContext = () => (
       send_with_ellipsis: 'Send with...',
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
-      send: 'Send'
+      send: 'Send',
+      tokens_in_context: 'Tokens in context'
     }}
   />
 )
@@ -336,7 +340,8 @@ export const WithPlaceholderSelection = () => (
       send_with_ellipsis: 'Send with...',
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
-      send: 'Send'
+      send: 'Send',
+      tokens_in_context: 'Tokens in context'
     }}
   />
 )
@@ -402,7 +407,8 @@ export const WithCommit = () => (
       send_with_ellipsis: 'Send with...',
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
-      send: 'Send'
+      send: 'Send',
+      tokens_in_context: 'Tokens in context'
     }}
   />
 )
@@ -468,7 +474,8 @@ export const WithCommitWithQuotes = () => (
       send_with_ellipsis: 'Send with...',
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
-      send: 'Send'
+      send: 'Send',
+      tokens_in_context: 'Tokens in context'
     }}
   />
 )
@@ -539,7 +546,8 @@ export const WithEditFormatSelector = () => {
         send_with_ellipsis: 'Send with...',
         copy_prompt: 'Copy prompt',
         more_actions: 'More actions',
-        send: 'Send'
+        send: 'Send',
+        tokens_in_context: 'Tokens in context'
       }}
     />
   )
@@ -606,7 +614,8 @@ export const WithFilePaths = () => (
       send_with_ellipsis: 'Send with...',
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
-      send: 'Send'
+      send: 'Send',
+      tokens_in_context: 'Tokens in context'
     }}
   />
 )
@@ -700,7 +709,8 @@ export const WithTabs = () => {
         send_with_ellipsis: 'Send with...',
         copy_prompt: 'Copy prompt',
         more_actions: 'More actions',
-        send: 'Send'
+        send: 'Send',
+        tokens_in_context: 'Tokens in context'
       }}
     />
   )
@@ -765,7 +775,8 @@ export const WithWarning = () => (
       send_with_ellipsis: 'Send with...',
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
-      send: 'Send'
+      send: 'Send',
+      tokens_in_context: 'Tokens in context'
     }}
     warning="Add a configuration"
   />
