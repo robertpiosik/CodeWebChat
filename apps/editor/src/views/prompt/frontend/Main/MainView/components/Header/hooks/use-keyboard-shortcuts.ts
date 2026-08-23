@@ -1,52 +1,25 @@
 import { useEffect, useState, useRef } from 'react'
-import { use_is_mac } from '@shared/hooks'
 import { MODE, Mode } from '@/views/prompt/types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 
 export const use_keyboard_shortcuts = (params: {
   mode: Mode
-  handle_heading_click: () => void
   on_web_prompt_type_change: (prompt_type: WebPromptType) => void
   on_api_prompt_type_change: (prompt_type: ApiPromptType) => void
   on_show_home: () => void
   is_disabled: boolean
 }) => {
-  const is_mac = use_is_mac()
   const [is_alt_pressed, set_is_alt_pressed] = useState(false)
   const alt_interrupted_ref = useRef(false)
   const is_alt_pressed_raw_ref = useRef(false)
-  const pending_mode_ref = useRef<Mode | null>(null)
 
   const update_alt_pressed = (val: boolean) => {
     is_alt_pressed_raw_ref.current = val
-    if (pending_mode_ref.current) {
-      if (val) set_is_alt_pressed(true)
-    } else {
-      set_is_alt_pressed(val)
-    }
+    set_is_alt_pressed(val)
   }
 
   useEffect(() => {
-    if (pending_mode_ref.current === params.mode) {
-      pending_mode_ref.current = null
-      set_is_alt_pressed(is_alt_pressed_raw_ref.current)
-    }
-  }, [params.mode])
-
-  useEffect(() => {
     const handle_key_down = (event: KeyboardEvent) => {
-      let next_mode: Mode | undefined
-
-      if (
-        event.key == 'Escape' &&
-        event.altKey &&
-        !event.metaKey &&
-        !event.ctrlKey &&
-        !event.shiftKey
-      ) {
-        next_mode = params.mode === MODE.WEB ? MODE.API : MODE.WEB
-      }
-
       if (
         event.key == 'Alt' &&
         !event.shiftKey &&
@@ -61,12 +34,7 @@ export const use_keyboard_shortcuts = (params: {
           alt_interrupted_ref.current = true
         }
 
-        if (next_mode && params.mode !== next_mode) {
-          pending_mode_ref.current = next_mode
-          update_alt_pressed(false)
-        } else {
-          update_alt_pressed(false)
-        }
+        update_alt_pressed(false)
       }
 
       if (params.is_disabled) return
@@ -79,9 +47,6 @@ export const use_keyboard_shortcuts = (params: {
         !event.shiftKey
       ) {
         params.on_show_home()
-      } else if (next_mode) {
-        event.preventDefault()
-        params.handle_heading_click()
       }
     }
 
@@ -124,13 +89,7 @@ export const use_keyboard_shortcuts = (params: {
       window.removeEventListener('blur', handle_blur)
       window.removeEventListener('mouseup', handle_mouse_up)
     }
-  }, [
-    params.is_disabled,
-    params.on_show_home,
-    is_mac,
-    params.handle_heading_click,
-    params.mode
-  ])
+  }, [params.is_disabled, params.on_show_home])
 
   useEffect(() => {
     const handle_key_down = (event: KeyboardEvent) => {

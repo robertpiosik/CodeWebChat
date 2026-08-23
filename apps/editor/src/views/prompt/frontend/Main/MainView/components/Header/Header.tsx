@@ -1,9 +1,7 @@
-import { useCallback } from 'react'
 import { MODE, Mode } from '@/views/prompt/types/main-view-mode'
-import { use_compacting, use_is_mac } from '@shared/hooks'
+import { use_compacting } from '@shared/hooks'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { PromptTypeButton as UiPromptTypeButton } from '@ui/components/editor/prompt/PromptTypeButton'
-import { ModeToggler } from '@ui/components/editor/prompt/ModeToggler'
 import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
 import styles from './Header.module.scss'
 import {
@@ -15,7 +13,6 @@ import { use_translation } from '@/views/prompt/frontend/i18n/use-translation'
 
 type Props = {
   mode: Mode
-  on_mode_change: (value: Mode) => void
   on_show_home: () => void
   web_prompt_type: WebPromptType
   api_prompt_type: ApiPromptType
@@ -26,20 +23,10 @@ type Props = {
 
 export const Header: React.FC<Props> = (props) => {
   const { t } = use_translation()
-  const is_mac = use_is_mac()
   const { container_ref, compact_step } = use_compacting()
-
-  const handle_heading_click = useCallback(() => {
-    if (props.mode == MODE.WEB) {
-      props.on_mode_change(MODE.API)
-    } else {
-      props.on_mode_change(MODE.WEB)
-    }
-  }, [props.mode, props.on_mode_change])
 
   const { is_alt_pressed } = use_keyboard_shortcuts({
     mode: props.mode,
-    handle_heading_click,
     on_web_prompt_type_change: props.on_web_prompt_type_change,
     on_api_prompt_type_change: props.on_api_prompt_type_change,
     on_show_home: props.on_show_home,
@@ -96,16 +83,6 @@ export const Header: React.FC<Props> = (props) => {
             on_click={() => props.on_api_prompt_type_change('edit-files')}
           />
         )}
-      </div>
-
-      <div className={styles.header__right}>
-        <ModeToggler
-          mode={props.mode == MODE.WEB ? 'Chatbots' : 'API calls'}
-          alt_mode={props.mode == MODE.WEB ? 'API calls' : 'Chatbots'}
-          title={`${t('header.change-mode')} (${is_mac ? '⌥Esc' : 'Alt+Esc'})`}
-          is_alt_pressed={is_alt_pressed}
-          on_toggle={handle_heading_click}
-        />
       </div>
     </div>
   )

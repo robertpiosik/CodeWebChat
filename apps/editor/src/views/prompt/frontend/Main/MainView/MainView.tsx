@@ -1,5 +1,6 @@
 import styles from './MainView.module.scss'
 import { Configurations as UiConfigurations } from '@ui/components/editor/prompt/Configurations'
+import { Tabs as UiTabs } from '@ui/components/editor/prompt/Tabs'
 import { PromptField as UiPromptField } from '@ui/components/editor/common/prompts/PromptField'
 import { Separator as UiSeparator } from '@ui/components/editor/prompt/Separator'
 import { WebConfiguration } from '@shared/types/web-configuration'
@@ -262,7 +263,6 @@ export const MainView: React.FC<Props> = (props) => {
     <>
       <Header
         mode={props.mode}
-        on_mode_change={props.on_mode_change}
         on_show_home={props.on_show_home}
         web_prompt_type={props.web_prompt_type}
         on_web_prompt_type_change={props.on_web_prompt_type_change}
@@ -390,77 +390,84 @@ export const MainView: React.FC<Props> = (props) => {
           />
         </div>
 
+        <UiSeparator height={6} />
+
+        <UiTabs
+          tabs={[
+            { id: 'chatbots', label: t('home.mode.chatbots') },
+            { id: 'api-calls', label: t('home.mode.api-calls') }
+          ]}
+          active_tab={props.mode == MODE.WEB ? 'chatbots' : 'api-calls'}
+          on_tab_change={(id) =>
+            props.on_mode_change(id == 'chatbots' ? MODE.WEB : MODE.API)
+          }
+        />
+
         {props.mode == MODE.WEB && (
-          <>
-            <UiSeparator height={6} />
-            <UiConfigurations
-              configurations={web_configurations}
-              disable_invocation={!!warning || !props.is_connected}
-              on_create={(params) => {
-                props.on_create_web_configuration(params)
-              }}
-              on_configuration_click={(id) => {
-                props.initialize_chats({
-                  web_configuration_name: id,
-                  show_quick_pick: false,
-                  invocation_count: current_invocation_count
-                })
-              }}
-              on_edit={(id) => props.on_web_configuration_edit(id)}
-              on_reorder={(reordered) => {
-                const new_web_configurations = reordered.map((c) => {
-                  return props.web_configurations.find(
-                    (p, i) => (p.name ?? `unnamed-${i}`) == c.id
-                  )!
-                })
-                props.on_web_configurations_reorder(new_web_configurations)
-              }}
-              on_delete={(id) => {
-                props.on_delete_web_configuration(id)
-              }}
-              on_toggle_pinned={(id) => {
-                props.on_toggle_web_configuration_pinned(id)
-              }}
-              selected_configuration_id={props.selected_web_configuration_name}
-              translations={{
-                empty: t('configurations.empty'),
-                add_new: t('action.add-new'),
-                pin: t('action.pin'),
-                unpin: t('action.unpin'),
-                insert: t('action.insert-configuration'),
-                edit: t('action.edit'),
-                delete: t('action.delete')
-              }}
-            />
-          </>
+          <UiConfigurations
+            configurations={web_configurations}
+            disable_invocation={!!warning || !props.is_connected}
+            on_create={(params) => {
+              props.on_create_web_configuration(params)
+            }}
+            on_configuration_click={(id) => {
+              props.initialize_chats({
+                web_configuration_name: id,
+                show_quick_pick: false,
+                invocation_count: current_invocation_count
+              })
+            }}
+            on_edit={(id) => props.on_web_configuration_edit(id)}
+            on_reorder={(reordered) => {
+              const new_web_configurations = reordered.map((c) => {
+                return props.web_configurations.find(
+                  (p, i) => (p.name ?? `unnamed-${i}`) == c.id
+                )!
+              })
+              props.on_web_configurations_reorder(new_web_configurations)
+            }}
+            on_delete={(id) => {
+              props.on_delete_web_configuration(id)
+            }}
+            on_toggle_pinned={(id) => {
+              props.on_toggle_web_configuration_pinned(id)
+            }}
+            selected_configuration_id={props.selected_web_configuration_name}
+            translations={{
+              empty: t('configurations.empty'),
+              add_new: t('action.add-new'),
+              pin: t('action.pin'),
+              unpin: t('action.unpin'),
+              insert: t('action.insert-configuration'),
+              edit: t('action.edit'),
+              delete: t('action.delete')
+            }}
+          />
         )}
 
         {props.mode == MODE.API && (
-          <>
-            <UiSeparator height={6} />
-            <UiConfigurations
-              configurations={api_configurations_ui}
-              disable_invocation={!!warning}
-              on_configuration_click={props.on_api_configuration_click}
-              on_reorder={(reordered) =>
-                props.on_api_configurations_reorder(reordered)
-              }
-              on_toggle_pinned={props.on_toggle_pinned_api_configuration}
-              on_edit={props.on_edit_api_configuration}
-              on_delete={props.on_delete_api_configuration}
-              selected_configuration_id={props.selected_api_configuration_id}
-              on_create={props.on_create_api_configuration}
-              translations={{
-                empty: t('configurations.empty'),
-                add_new: t('action.add-new'),
-                pin: t('action.pin'),
-                unpin: t('action.unpin'),
-                insert: t('action.insert-configuration'),
-                edit: t('action.edit'),
-                delete: t('action.delete')
-              }}
-            />
-          </>
+          <UiConfigurations
+            configurations={api_configurations_ui}
+            disable_invocation={!!warning}
+            on_configuration_click={props.on_api_configuration_click}
+            on_reorder={(reordered) =>
+              props.on_api_configurations_reorder(reordered)
+            }
+            on_toggle_pinned={props.on_toggle_pinned_api_configuration}
+            on_edit={props.on_edit_api_configuration}
+            on_delete={props.on_delete_api_configuration}
+            selected_configuration_id={props.selected_api_configuration_id}
+            on_create={props.on_create_api_configuration}
+            translations={{
+              empty: t('configurations.empty'),
+              add_new: t('action.add-new'),
+              pin: t('action.pin'),
+              unpin: t('action.unpin'),
+              insert: t('action.insert-configuration'),
+              edit: t('action.edit'),
+              delete: t('action.delete')
+            }}
+          />
         )}
         {props.bottom_spacer_height !== undefined &&
           props.bottom_spacer_height > 0 && (
