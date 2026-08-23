@@ -1,8 +1,9 @@
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { MODE, Mode } from '@/views/prompt/types/main-view-mode'
 import { use_compacting, use_is_mac } from '@shared/hooks'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { PromptTypeButton as UiPromptTypeButton } from '@ui/components/editor/prompt/PromptTypeButton'
+import { ModeToggler } from '@ui/components/editor/prompt/ModeToggler'
 import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
 import styles from './Header.module.scss'
 import {
@@ -28,21 +29,7 @@ export const Header: React.FC<Props> = (props) => {
   const is_mac = use_is_mac()
   const { container_ref, compact_step } = use_compacting()
 
-  const [is_hovered, set_is_hovered] = useState(false)
-  const [just_clicked, set_just_clicked] = useState(false)
-
-  const handle_mouse_enter = useCallback(() => {
-    set_is_hovered(true)
-    set_just_clicked(false)
-  }, [])
-
-  const handle_mouse_leave = useCallback(() => {
-    set_is_hovered(false)
-    set_just_clicked(false)
-  }, [])
-
   const handle_heading_click = useCallback(() => {
-    set_just_clicked(true)
     if (props.mode == MODE.WEB) {
       props.on_mode_change(MODE.API)
     } else {
@@ -112,35 +99,13 @@ export const Header: React.FC<Props> = (props) => {
       </div>
 
       <div className={styles.header__right}>
-        <button
-          className={styles['header__right__toggler']}
-          onClick={handle_heading_click}
-          onMouseEnter={handle_mouse_enter}
-          onMouseLeave={handle_mouse_leave}
+        <ModeToggler
+          mode={props.mode == MODE.WEB ? MODE.WEB : MODE.API}
+          alt_mode={props.mode == MODE.WEB ? MODE.API : MODE.WEB}
           title={`${t('header.change-mode')} (${is_mac ? '⌥Esc' : 'Alt+Esc'})`}
-        >
-          <div
-            className={`${styles['header__right__toggler__wrapper']} ${
-              is_hovered && !just_clicked
-                ? styles['header__right__toggler__wrapper--hover']
-                : ''
-            } ${
-              just_clicked
-                ? styles['header__right__toggler__wrapper--no-transition']
-                : ''
-            }`}
-          >
-            <span className={styles['header__right__toggler__label']}>
-              {props.mode == MODE.WEB ? MODE.WEB : MODE.API}
-            </span>
-            <span className={styles['header__right__toggler__label']}>
-              {props.mode == MODE.WEB ? MODE.API : MODE.WEB}
-            </span>
-          </div>
-          {is_alt_pressed && (
-            <span className={styles['header__right__toggler__esc']}>esc</span>
-          )}
-        </button>
+          is_alt_pressed={is_alt_pressed}
+          on_toggle={handle_heading_click}
+        />
       </div>
     </div>
   )

@@ -1,0 +1,91 @@
+.toggler {
+  font-family: var(--font-family-accent);
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 32px;
+  border-radius: 5px;
+  --padding: 6px;
+  padding: 1px var(--padding) 0 var(--padding);
+  margin: 0 calc(var(--padding) * -1);
+  line-height: 1;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+  border: none;
+  color: var(--vscode-foreground);
+
+  &:focus {
+    outline: none;
+  }
+
+  &__wrapper {
+    display: grid;
+    grid-template-areas: 'overlap';
+    align-items: center;
+    justify-items: center;
+    height: 100%;
+    width: 100%;
+    flex-shrink: 0;
+
+    &--hover {
+      > span:first-child {
+        transform: translateY(-100%);
+        opacity: 0;
+      }
+      > span:last-child {
+        transform: translateY(0);
+        opacity: var(--dimmed-opacity);
+      }
+    }
+
+    &--no-transition {
+      > span {
+        transition: none !important;
+      }
+    }
+  }
+
+  &__label {
+    grid-area: overlap;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 100%;
+    padding-right: 1px;
+    transition:
+      transform var(--transition-duration-250) var(--transition-timing-function),
+      opacity var(--transition-duration-250) var(--transition-timing-function);
+
+    &:first-child {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    &:last-child {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+  }
+
+  &__esc {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--vscode-sideBar-background);
+    color: var(--vscode-foreground);
+    border: 1px solid var(--cwc-border-color-dimmed);
+    padding: 2px 4px 3px 4px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-family: var(--vscode-font-family);
+    letter-spacing: normal;
+  }
+}

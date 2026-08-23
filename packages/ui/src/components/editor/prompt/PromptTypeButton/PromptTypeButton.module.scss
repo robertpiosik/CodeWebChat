@@ -13,20 +13,8 @@
   flex-shrink: 0;
   position: relative;
 
-  &:not(&--active) {
-    .button__icon,
-    .button__label {
-      opacity: var(--dimmed-opacity);
-    }
-  }
-
   &:hover {
     background-color: var(--vscode-toolbar-hoverBackground);
-
-    .button__icon,
-    .button__label {
-      opacity: 1;
-    }
   }
 
   &:focus-visible {
@@ -89,8 +77,7 @@
 
   &__label {
     font-family: var(--font-family-accent);
-    font-weight: 500;
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1;
     letter-spacing: 1px;
     padding-top: 2px;
