@@ -65,7 +65,7 @@ export const select_imported_files_commands = (
       async () => {
         const checked_files = workspace_provider.get_checked_files()
 
-        if (checked_files.length === 0) {
+        if (checked_files.length == 0) {
           vscode.window.showInformationMessage(
             t('command.select-imported-files.no-valid-files')
           )

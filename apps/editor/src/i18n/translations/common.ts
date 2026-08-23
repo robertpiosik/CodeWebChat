@@ -504,5 +504,23 @@ export const translations = {
     cs: 'Nebyly nalezeny žádné konfigurace pro volání API. Přidejte v nastavení.',
     hu: 'Nem találhatók API hívási konfigurációk. Adja hozzá a beállításokban.',
     bg: 'Не са намерени конфигурации за API извиквания. Добавете в настройките.'
+  },
+  'common.info.select-files-to-search': {
+    en: 'Please select files to search.',
+    pl: 'Proszę wybrać pliki do przeszukania.',
+    'zh-cn': '请选择要搜索的文件。',
+    ja: '検索するファイルを選択してください。',
+    'zh-tw': '請選擇要搜尋的檔案。',
+    de: 'Bitte wählen Sie Dateien für die Suche aus.',
+    es: 'Por favor, seleccione los archivos para buscar.',
+    fr: 'Veuillez sélectionner les fichiers à rechercher.',
+    'pt-br': 'Por favor, selecione os arquivos para pesquisar.',
+    ru: 'Пожалуйста, выберите файлы для поиска.',
+    ko: '검색할 파일을 선택하세요.',
+    it: 'Seleziona i file da cercare.',
+    tr: 'Lütfen aranacak dosyaları seçin.',
+    cs: 'Vyberte soubory, ve kterých chcete hledat.',
+    hu: 'Kérjük, válassza ki a keresendő fájlokat.',
+    bg: 'Моля, изберете файлове за търсене.'
   }
 } as const

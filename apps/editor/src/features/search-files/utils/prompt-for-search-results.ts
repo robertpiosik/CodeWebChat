@@ -174,7 +174,7 @@ export const prompt_for_search_results = async (params: {
 
         if (selected.length == 0) {
           vscode.window.showInformationMessage(
-            t('feature.search-files.info.no-files-selected')
+            t('common.info.select-files-to-search')
           )
           return
         }

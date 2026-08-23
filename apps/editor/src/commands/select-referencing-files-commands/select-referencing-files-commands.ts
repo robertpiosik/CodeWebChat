@@ -205,7 +205,7 @@ export const select_referencing_files_commands = (
         try {
           const checked_files = workspace_provider.get_checked_files()
 
-          if (checked_files.length === 0) {
+          if (checked_files.length == 0) {
             vscode.window.showInformationMessage(
               t('command.select-referencing-files.no-files')
             )
