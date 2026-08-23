@@ -8,6 +8,7 @@ export namespace PromptTypeButton {
     icon: string
     is_compact?: boolean
     is_active?: boolean
+    active_color?: 'blue' | 'orange'
     keycap_char?: string
     on_click?: () => void
   }
@@ -18,7 +19,11 @@ export const PromptTypeButton: FC<PromptTypeButton.Props> = (props) => {
     <button
       className={cn(styles.button, {
         [styles['button--active']]: props.is_active,
-        [styles['button--compact']]: props.is_compact
+        [styles['button--compact']]: props.is_compact,
+        [styles['button--blue']]:
+          props.is_active && props.active_color == 'blue',
+        [styles['button--orange']]:
+          props.is_active && props.active_color == 'orange'
       })}
       onClick={props.on_click}
       type="button"

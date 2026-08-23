@@ -103,7 +103,7 @@ export const Home: React.FC<Props> = (props) => {
             <div className={styles['header__home']}>
               <span className="codicon codicon-home" />
             </div>
-            <span className={styles['header__text']}>CWC</span>
+            <span className={styles['header__text']}>CODE WEB CHAT</span>
           </div>
           <div className={styles['header__right']}>
             <CompactableActionButton

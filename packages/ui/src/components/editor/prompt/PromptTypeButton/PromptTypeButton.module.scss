@@ -36,6 +36,37 @@
 
   &--active {
     border-color: var(--vscode-focusBorder) !important;
+
+    .button__icon,
+    .button__label {
+      opacity: 1;
+    }
+
+    &.button--blue {
+      background-color: var(--cwc-bg-blue);
+
+      .button__icon,
+      .button__label {
+        color: var(--cwc-text-color-blue);
+      }
+
+      &:hover {
+        background-color: var(--cwc-bg-blue);
+      }
+    }
+
+    &.button--orange {
+      background-color: var(--cwc-bg-orange);
+
+      .button__icon,
+      .button__label {
+        color: var(--cwc-text-color-orange);
+      }
+
+      &:hover {
+        background-color: var(--cwc-bg-orange);
+      }
+    }
   }
 
   &--compact {
@@ -63,6 +94,7 @@
     line-height: 1;
     letter-spacing: 1px;
     padding-top: 2px;
+    padding-right: 1px;
     overflow: hidden;
     text-overflow: ellipsis;
   }

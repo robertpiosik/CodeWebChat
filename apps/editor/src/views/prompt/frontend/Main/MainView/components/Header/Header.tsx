@@ -68,11 +68,12 @@ export const Header: React.FC<Props> = (props) => {
           title={`${t('header.return')} (Esc)`}
         />
         {props.mode == MODE.WEB && (
-          <div className={styles['header__left__prompt-types']}>
+          <>
             <UiPromptTypeButton
               label={web_prompt_type_labels['edit-files']}
               icon="edit-sparkle"
               is_active={props.web_prompt_type == 'edit-files'}
+              active_color="blue"
               is_compact={
                 props.web_prompt_type == 'edit-files'
                   ? compact_step >= 2
@@ -85,6 +86,7 @@ export const Header: React.FC<Props> = (props) => {
               label={web_prompt_type_labels['ask-about-files']}
               icon="chat-sparkle"
               is_active={props.web_prompt_type == 'ask-about-files'}
+              active_color="orange"
               is_compact={
                 props.web_prompt_type == 'ask-about-files'
                   ? compact_step >= 2
@@ -95,18 +97,17 @@ export const Header: React.FC<Props> = (props) => {
                 props.on_web_prompt_type_change('ask-about-files')
               }
             />
-          </div>
+          </>
         )}
         {props.mode == MODE.API && (
-          <div className={styles['header__left__prompt-types']}>
-            <UiPromptTypeButton
-              label={api_prompt_type_labels['edit-files']}
-              icon="edit-sparkle"
-              is_active={props.api_prompt_type == 'edit-files'}
-              is_compact={compact_step >= 1}
-              on_click={() => props.on_api_prompt_type_change('edit-files')}
-            />
-          </div>
+          <UiPromptTypeButton
+            label={api_prompt_type_labels['edit-files']}
+            icon="edit-sparkle"
+            is_active={props.api_prompt_type == 'edit-files'}
+            active_color="blue"
+            is_compact={compact_step >= 1}
+            on_click={() => props.on_api_prompt_type_change('edit-files')}
+          />
         )}
       </div>
 

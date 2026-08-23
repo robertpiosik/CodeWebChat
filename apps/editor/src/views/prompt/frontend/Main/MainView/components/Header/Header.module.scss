@@ -15,12 +15,7 @@
     display: flex;
     align-items: center;
     padding: 4px 0;
-
-    &__prompt-types {
-      display: flex;
-      align-items: center;
-      gap: 0;
-    }
+    gap: 2px;
   }
 
   &__right {
@@ -85,6 +80,7 @@
         white-space: nowrap;
         overflow: hidden;
         max-width: 100%;
+        padding-right: 1px;
         transition:
           transform var(--transition-duration-250)
             var(--transition-timing-function),
