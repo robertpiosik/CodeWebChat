@@ -56,9 +56,7 @@ import {
   handle_discard_user_changes_in_preview,
   handle_intelligent_update_file_in_preview,
   handle_response_preview,
-  handle_get_collapsed_states,
   handle_manage_api_configurations,
-  handle_save_component_collapsed_state,
   handle_undo,
   handle_request_can_undo,
   handle_preview_generated_code,
@@ -390,10 +388,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
           setup_progress_keys.some((key) => event.affectsConfiguration(key))
         ) {
           this.send_setup_progress()
-        }
-
-        if (event.affectsConfiguration('codeWebChat.areCheckpointsCollapsed')) {
-          handle_get_collapsed_states(this)
         }
 
         if (event.affectsConfiguration('codeWebChat.sendWithShiftEnter')) {
@@ -756,10 +750,6 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             })
           } else if (message.command == 'MANAGE_API_CONFIGURATIONS') {
             await handle_manage_api_configurations()
-          } else if (message.command == 'GET_COLLAPSED_STATES') {
-            handle_get_collapsed_states(this)
-          } else if (message.command == 'SAVE_COMPONENT_COLLAPSED_STATE') {
-            await handle_save_component_collapsed_state(this, message)
           } else if (message.command == 'PREVIEW_SWITCH_CHOICE') {
             if (this.preview_switch_choice_resolver) {
               this.preview_switch_choice_resolver(message.choice)

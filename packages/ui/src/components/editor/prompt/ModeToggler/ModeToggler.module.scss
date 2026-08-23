@@ -1,6 +1,5 @@
 .toggler {
-  font-family: var(--font-family-accent);
-  font-size: 16px;
+  font-size: 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -11,7 +10,6 @@
   padding: 1px var(--padding) 0 var(--padding);
   margin: 0 calc(var(--padding) * -1);
   line-height: 1;
-  letter-spacing: 1px;
   position: relative;
   overflow: hidden;
   background: transparent;

@@ -100,8 +100,8 @@ export const Header: React.FC<Props> = (props) => {
 
       <div className={styles.header__right}>
         <ModeToggler
-          mode={props.mode == MODE.WEB ? MODE.WEB : MODE.API}
-          alt_mode={props.mode == MODE.WEB ? MODE.API : MODE.WEB}
+          mode={props.mode == MODE.WEB ? 'Chatbots' : 'API calls'}
+          alt_mode={props.mode == MODE.WEB ? 'API calls' : 'Chatbots'}
           title={`${t('header.change-mode')} (${is_mac ? '⌥Esc' : 'Alt+Esc'})`}
           is_alt_pressed={is_alt_pressed}
           on_toggle={handle_heading_click}

@@ -3,7 +3,6 @@ import cn from 'classnames'
 import { ReactSortable } from 'react-sortablejs'
 import { IconButton } from '../../common/IconButton'
 import { Button } from '../../common/Button'
-import { ListHeader } from '../ListHeader'
 import { Icon } from '../../common/Icon'
 
 export namespace Configurations {
@@ -28,10 +27,7 @@ export namespace Configurations {
     on_edit: (id: string) => void
     on_delete: (id: string) => void
     disable_invocation?: boolean
-    is_collapsed: boolean
-    on_toggle_collapsed: (is_collapsed: boolean) => void
     translations: {
-      title: string
       empty: string
       add_new: string
       pin: string
@@ -149,66 +145,48 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
   return (
     <div className={styles.container}>
       {pinned_configurations.length > 0 && (
-        <div className={styles.configurations}>
-          {pinned_configurations.map((i) =>
-            render_configuration_item(
-              i,
-              true,
-              props.configurations.findIndex((c) => c.id === i.id)
-            )
-          )}
-        </div>
-      )}
-      <ListHeader
-        title={props.translations.title}
-        is_collapsed={props.is_collapsed}
-        on_toggle_collapsed={() =>
-          props.on_toggle_collapsed(!props.is_collapsed)
-        }
-        actions={
-          <IconButton
-            codicon_icon="add"
-            on_click={(e) => {
-              e.stopPropagation()
-              props.on_create({ insertion_index: 0, exact_insertion: true })
-            }}
-            title={props.translations.add_new}
-          />
-        }
-      />
-      {!props.is_collapsed && (
         <>
           <div className={styles.configurations}>
-            {props.configurations.length == 0 && (
-              <div className={styles.empty}>{props.translations.empty}</div>
+            {pinned_configurations.map((i) =>
+              render_configuration_item(
+                i,
+                true,
+                props.configurations.findIndex((c) => c.id === i.id)
+              )
             )}
-            <ReactSortable
-              list={props.configurations}
-              setList={(new_state) => {
-                const has_order_changed =
-                  new_state.length != props.configurations.length ||
-                  new_state.some(
-                    (item, index) => item.id != props.configurations[index].id
-                  )
-
-                if (has_order_changed) {
-                  props.on_reorder(new_state)
-                }
-              }}
-              animation={150}
-            >
-              {props.configurations.map((i, index) =>
-                render_configuration_item(i, false, index)
-              )}
-            </ReactSortable>
           </div>
-          <div className={styles.footer}>
-            <Button on_click={() => props.on_create && props.on_create({})}>
-              {props.translations.add_new}
-            </Button>
-          </div>
+          <div className={styles.separator} />
         </>
       )}
+      <div className={styles.configurations}>
+        {props.configurations.length == 0 && (
+          <div className={styles.empty}>{props.translations.empty}</div>
+        )}
+        <ReactSortable
+          list={props.configurations}
+          setList={(new_state) => {
+            const has_order_changed =
+              new_state.length != props.configurations.length ||
+              new_state.some(
+                (item, index) => item.id != props.configurations[index].id
+              )
+
+            if (has_order_changed) {
+              props.on_reorder(new_state)
+            }
+          }}
+          animation={150}
+        >
+          {props.configurations.map((i, index) =>
+            render_configuration_item(i, false, index)
+          )}
+        </ReactSortable>
+      </div>
+      <div className={styles.footer}>
+        <Button on_click={() => props.on_create && props.on_create({})}>
+          {props.translations.add_new}
+        </Button>
+      </div>
     </div>
   )
 }

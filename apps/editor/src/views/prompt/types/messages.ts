@@ -367,16 +367,6 @@ export interface ApplyResponseFromHistoryMessage extends BaseMessage {
   recent_api_configuration?: RecentApiConfiguration
 }
 
-export interface GetCollapsedStatesMessage extends BaseMessage {
-  command: 'GET_COLLAPSED_STATES'
-}
-
-export interface SaveComponentCollapsedStateMessage extends BaseMessage {
-  command: 'SAVE_COMPONENT_COLLAPSED_STATE'
-  component: 'web-configurations' | 'api-configurations'
-  is_collapsed: boolean
-}
-
 export interface RemoveResponseHistoryItemMessage extends BaseMessage {
   command: 'REMOVE_RESPONSE_HISTORY_ITEM'
   created_at: number
@@ -588,8 +578,6 @@ export type FrontendMessage =
   | ManageApiConfigurationsMessage
   | UndoMessage
   | ApplyResponseFromHistoryMessage
-  | GetCollapsedStatesMessage
-  | SaveComponentCollapsedStateMessage
   | RemoveResponseHistoryItemMessage
   | RequestCanUndoMessage
   | PreviewSwitchChoiceMessage
@@ -813,12 +801,6 @@ export interface UpdateFileInPreviewMessage extends BaseMessage {
   file: FileInPreview
 }
 
-export interface CollapsedStatesMessage extends BaseMessage {
-  command: 'COLLAPSED_STATES'
-  web_configurations_collapsed: boolean
-  api_configurations_collapsed: boolean
-}
-
 export interface CurrentlyOpenFileTextMessage extends BaseMessage {
   command: 'CURRENTLY_OPEN_FILE_TEXT'
   text?: string
@@ -914,7 +896,6 @@ export type BackendMessage =
   | ShowAutoClosingModalMessage
   | ShowNeverClosingModalMessage
   | UpdateFileInPreviewMessage
-  | CollapsedStatesMessage
   | CurrentlyOpenFileTextMessage
   | ShowPreviewOngoingModalMessage
   | TasksMessage

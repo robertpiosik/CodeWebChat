@@ -104,6 +104,15 @@
   }
 }
 
+.separator {
+  height: 1px;
+  background-color: var(--vscode-menu-separatorBackground);
+
+  :global([data-modern-ui='true']) & {
+    margin: 0 8px;
+  }
+}
+
 .empty {
   padding: 0 16px 0 38px;
   color: var(--cwc-text-color-dimmed);

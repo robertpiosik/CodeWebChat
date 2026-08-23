@@ -55,15 +55,11 @@ export const Prompt = () => {
     chat_input_focus_and_select_key,
     context_size_warning_threshold,
     can_undo,
-    web_configurations_collapsed,
     send_with_shift_enter,
-    api_configurations_collapsed,
     handle_instructions_change,
     handle_web_prompt_type_change,
     handle_api_prompt_type_change,
     handle_mode_change,
-    handle_web_configurations_collapsed_change,
-    handle_api_configurations_collapsed_change,
     handle_paste_image,
     handle_open_image,
     handle_paste_long_text,
@@ -355,15 +351,7 @@ export const Prompt = () => {
                 chat_input_focus_key={chat_input_focus_key}
                 context_size_warning_threshold={context_size_warning_threshold}
                 selected_files={selected_files}
-                web_configurations_collapsed={web_configurations_collapsed}
                 send_with_shift_enter={send_with_shift_enter}
-                on_web_configurations_collapsed_change={
-                  handle_web_configurations_collapsed_change
-                }
-                api_configurations_collapsed={api_configurations_collapsed}
-                on_api_configurations_collapsed_change={
-                  handle_api_configurations_collapsed_change
-                }
                 on_pasted_lines_click={handle_pasted_lines_click}
                 currently_open_file_text={currently_open_file_text}
                 on_open_url={handle_open_url}

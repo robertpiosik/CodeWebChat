@@ -46,11 +46,7 @@ type Props = {
   chat_input_focus_key: number
   context_size_warning_threshold: number
   selected_files: string[]
-  web_configurations_collapsed: boolean
-  on_web_configurations_collapsed_change: (is_collapsed: boolean) => void
   send_with_shift_enter: boolean
-  api_configurations_collapsed: boolean
-  on_api_configurations_collapsed_change: (is_collapsed: boolean) => void
   currently_open_file_text?: string
   on_pasted_lines_click: (path: string, start?: string, end?: string) => void
   are_keyboard_shortcuts_disabled: boolean
@@ -533,15 +529,7 @@ export const Main: React.FC<Props> = (props) => {
       on_selected_history_item_change={props.on_selected_history_item_change}
       on_response_history_item_remove={props.on_response_history_item_remove}
       selected_files={props.selected_files}
-      web_configurations_collapsed={props.web_configurations_collapsed}
       send_with_shift_enter={props.send_with_shift_enter}
-      on_web_configurations_collapsed_change={
-        props.on_web_configurations_collapsed_change
-      }
-      api_configurations_collapsed={props.api_configurations_collapsed}
-      on_api_configurations_collapsed_change={
-        props.on_api_configurations_collapsed_change
-      }
       on_go_to_file={handle_go_to_file}
       on_pasted_lines_click={props.on_pasted_lines_click}
       currently_open_file_text={props.currently_open_file_text}

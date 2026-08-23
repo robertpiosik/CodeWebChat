@@ -46,7 +46,6 @@ const presets: Configurations.Configuration[] = [
 ]
 
 const mock_translations = {
-  title: 'Configurations',
   empty: 'No configurations created yet.',
   add_new: 'Add New',
   pin: 'Pin',
@@ -79,10 +78,6 @@ export const Default = () => {
       on_reorder={(configs) => {
         console.log('on_reorder', configs)
       }}
-      is_collapsed={false}
-      on_toggle_collapsed={(is_collapsed) => {
-        console.log('on_toggle_collapsed', is_collapsed)
-      }}
       translations={mock_translations}
     />
   )
@@ -110,13 +105,8 @@ export const Presets = () => {
       on_reorder={(configs) => {
         console.log('on_reorder', configs)
       }}
-      is_collapsed={false}
-      on_toggle_collapsed={(is_collapsed) => {
-        console.log('on_toggle_collapsed', is_collapsed)
-      }}
       translations={{
         ...mock_translations,
-        title: 'Presets',
         empty: 'No presets created yet.'
       }}
     />
@@ -143,10 +133,6 @@ export const Empty = () => (
     }}
     on_reorder={(configs) => {
       console.log('on_reorder', configs)
-    }}
-    is_collapsed={false}
-    on_toggle_collapsed={(is_collapsed) => {
-      console.log('on_toggle_collapsed', is_collapsed)
     }}
     translations={mock_translations}
   />

@@ -40,11 +40,7 @@ export const use_prompt = (vscode: any) => {
   const [context_size_warning_threshold, set_context_size_warning_threshold] =
     useState<number>()
   const [can_undo, set_can_undo] = useState<boolean>(false)
-  const [web_configurations_collapsed, set_web_configurations_collapsed] =
-    useState(false)
   const [send_with_shift_enter, set_send_with_shift_enter] = useState(false)
-  const [api_configurations_collapsed, set_api_configurations_collapsed] =
-    useState(false)
   const [is_recording, set_is_recording] = useState(false)
   const [setup_progress, set_setup_progress] = useState<SetupProgress>()
   const [voice_input_push_to_talk, set_voice_input_push_to_talk] =
@@ -106,9 +102,6 @@ export const use_prompt = (vscode: any) => {
         set_web_mode(message.prompt_type)
       } else if (message.command == 'API_PROMPT_TYPE') {
         set_api_mode(message.prompt_type)
-      } else if (message.command == 'COLLAPSED_STATES') {
-        set_web_configurations_collapsed(message.web_configurations_collapsed)
-        set_api_configurations_collapsed(message.api_configurations_collapsed)
       } else if (message.command == 'SEND_WITH_SHIFT_ENTER') {
         set_send_with_shift_enter(message.enabled)
       } else if (message.command == 'FOCUS_PROMPT_FIELD') {
@@ -145,7 +138,6 @@ export const use_prompt = (vscode: any) => {
       { command: 'GET_CONNECTION_STATUS' },
       { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' },
       { command: 'GET_SEND_WITH_SHIFT_ENTER' },
-      { command: 'GET_COLLAPSED_STATES' },
       { command: 'REQUEST_CAN_UNDO' },
       { command: 'GET_SETUP_PROGRESS' },
       { command: 'GET_VOICE_INPUT_PUSH_TO_TALK' },
@@ -209,28 +201,6 @@ export const use_prompt = (vscode: any) => {
     })
   }
 
-  const handle_web_configurations_collapsed_change = (
-    is_collapsed: boolean
-  ) => {
-    set_web_configurations_collapsed(is_collapsed)
-    post_message(vscode, {
-      command: 'SAVE_COMPONENT_COLLAPSED_STATE',
-      component: 'web-configurations',
-      is_collapsed
-    })
-  }
-
-  const handle_api_configurations_collapsed_change = (
-    is_collapsed: boolean
-  ) => {
-    set_api_configurations_collapsed(is_collapsed)
-    post_message(vscode, {
-      command: 'SAVE_COMPONENT_COLLAPSED_STATE',
-      component: 'api-configurations',
-      is_collapsed
-    })
-  }
-
   const is_setup_complete = setup_progress
     ? Object.values(setup_progress).every((v) => v)
     : true
@@ -253,15 +223,11 @@ export const use_prompt = (vscode: any) => {
     chat_input_focus_and_select_key,
     context_size_warning_threshold,
     can_undo,
-    web_configurations_collapsed,
     send_with_shift_enter,
-    api_configurations_collapsed,
     handle_instructions_change,
     handle_web_prompt_type_change,
     handle_api_prompt_type_change,
     handle_mode_change,
-    handle_web_configurations_collapsed_change,
-    handle_api_configurations_collapsed_change,
     handle_paste_image,
     handle_open_image,
     handle_paste_long_text,

@@ -86,11 +86,7 @@ type Props = {
   on_selected_history_item_change: (created_at: number) => void
   on_response_history_item_remove: (created_at: number) => void
   selected_files: string[]
-  web_configurations_collapsed: boolean
-  on_web_configurations_collapsed_change: (is_collapsed: boolean) => void
   send_with_shift_enter: boolean
-  api_configurations_collapsed: boolean
-  on_api_configurations_collapsed_change: (is_collapsed: boolean) => void
   currently_open_file_text?: string
   on_go_to_file: (file_path: string) => void
   on_pasted_lines_click: (path: string, start?: string, end?: string) => void
@@ -426,10 +422,7 @@ export const MainView: React.FC<Props> = (props) => {
                 props.on_toggle_web_configuration_pinned(id)
               }}
               selected_configuration_id={props.selected_web_configuration_name}
-              is_collapsed={props.web_configurations_collapsed}
-              on_toggle_collapsed={props.on_web_configurations_collapsed_change}
               translations={{
-                title: t('configurations.title'),
                 empty: t('configurations.empty'),
                 add_new: t('action.add-new'),
                 pin: t('action.pin'),
@@ -457,10 +450,7 @@ export const MainView: React.FC<Props> = (props) => {
               on_delete={props.on_delete_api_configuration}
               selected_configuration_id={props.selected_api_configuration_id}
               on_create={props.on_create_api_configuration}
-              is_collapsed={props.api_configurations_collapsed}
-              on_toggle_collapsed={props.on_api_configurations_collapsed_change}
               translations={{
-                title: t('configurations.title'),
                 empty: t('configurations.empty'),
                 add_new: t('action.add-new'),
                 pin: t('action.pin'),

@@ -1,22 +1,4 @@
 export const configurations = {
-  'configurations.title': {
-    en: 'Configurations',
-    pl: 'Konfiguracje',
-    'zh-cn': '配置',
-    ja: '設定',
-    'zh-tw': '設定',
-    de: 'Konfigurationen',
-    es: 'Configuraciones',
-    fr: 'Configurations',
-    'pt-br': 'Configurações',
-    ru: 'Конфигурации',
-    ko: '구성',
-    it: 'Configurazioni',
-    tr: 'Yapılandırmalar',
-    cs: 'Konfigurace',
-    hu: 'Konfigurációk',
-    bg: 'Конфигурации'
-  },
   'configurations.empty': {
     en: 'No configurations created yet.',
     pl: 'Nie utworzono jeszcze żadnych konfiguracji.',
