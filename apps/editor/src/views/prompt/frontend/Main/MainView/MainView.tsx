@@ -1,6 +1,5 @@
 import styles from './MainView.module.scss'
 import { Configurations as UiConfigurations } from '@ui/components/editor/prompt/Configurations'
-import { Tabs as UiTabs } from '@ui/components/editor/prompt/Tabs'
 import { PromptField as UiPromptField } from '@ui/components/editor/common/prompts/PromptField'
 import { Separator as UiSeparator } from '@ui/components/editor/prompt/Separator'
 import { WebConfiguration } from '@shared/types/web-configuration'
@@ -13,7 +12,6 @@ import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrolla
 import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/components/editor/prompt/BrowserExtensionMessage'
 import { ApiConfiguration } from '@/views/prompt/types/messages'
 import { use_last_choice_tooltip } from './hooks/use-last-choice-tooltip'
-import { ContextUtilisation as UiContextUtilisation } from '@ui/components/editor/prompt/ContextUtilisation'
 import { Header } from './components/Header'
 import { use_invocation_counts } from './hooks/use-invocation-counts'
 import { SelectionState } from '@/views/prompt/types/messages'
@@ -262,6 +260,7 @@ export const MainView: React.FC<Props> = (props) => {
     <>
       <Header
         mode={props.mode}
+        on_mode_change={props.on_mode_change}
         on_show_home={props.on_show_home}
         web_prompt_type={props.web_prompt_type}
         on_web_prompt_type_change={props.on_web_prompt_type_change}
@@ -353,6 +352,7 @@ export const MainView: React.FC<Props> = (props) => {
             on_tabs_reorder={props.on_tabs_reorder}
             warning={warning}
             voice_input_push_to_talk={props.voice_input_push_to_talk}
+            token_count={props.token_count}
             translations={{
               invocation_count: t('prompt-field.invocation-count'),
               voice_input: t('prompt-field.voice-input'),
@@ -380,26 +380,9 @@ export const MainView: React.FC<Props> = (props) => {
               send: t('prompt-field.action.send')
             }}
           />
-          <UiContextUtilisation
-            current_context_size={props.token_count}
-            is_context_disabled={false}
-          />
         </div>
 
-        <UiSeparator height={6} />
-
-        <UiTabs
-          tabs={[
-            { id: 'web', label: 'WEB' },
-            { id: 'api', label: 'API' }
-          ]}
-          active_tab={props.mode == MODE.WEB ? 'web' : 'api'}
-          on_tab_change={(id) =>
-            props.on_mode_change(id == 'web' ? MODE.WEB : MODE.API)
-          }
-        />
-
-        <UiSeparator height={6} />
+        <UiSeparator height={10} />
 
         {props.mode == MODE.WEB && (
           <UiConfigurations

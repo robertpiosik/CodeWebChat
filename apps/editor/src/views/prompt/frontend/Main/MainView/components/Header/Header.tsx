@@ -3,6 +3,7 @@ import { use_compacting } from '@shared/hooks'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { PromptTypeButton as UiPromptTypeButton } from '@ui/components/editor/prompt/PromptTypeButton'
 import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
+import { ModeToggler as UiModeToggler } from '@ui/components/editor/prompt/ModeToggler'
 import styles from './Header.module.scss'
 import {
   api_prompt_type_labels,
@@ -13,6 +14,7 @@ import { use_translation } from '@/views/prompt/frontend/i18n/use-translation'
 
 type Props = {
   mode: Mode
+  on_mode_change: (mode: Mode) => void
   on_show_home: () => void
   web_prompt_type: WebPromptType
   api_prompt_type: ApiPromptType
@@ -27,6 +29,7 @@ export const Header: React.FC<Props> = (props) => {
 
   const { is_alt_pressed } = use_keyboard_shortcuts({
     mode: props.mode,
+    on_mode_change: props.on_mode_change,
     on_web_prompt_type_change: props.on_web_prompt_type_change,
     on_api_prompt_type_change: props.on_api_prompt_type_change,
     on_show_home: props.on_show_home,
@@ -41,8 +44,18 @@ export const Header: React.FC<Props> = (props) => {
           on_click={props.on_show_home}
           title={`${t('header.return')} (Esc)`}
         />
+        <UiModeToggler
+          mode={props.mode == MODE.WEB ? 'Chatbots' : 'API Calls'}
+          alt_mode={props.mode == MODE.WEB ? 'API Calls' : 'Chatbots'}
+          is_alt_pressed={is_alt_pressed}
+          on_toggle={() =>
+            props.on_mode_change(
+              props.mode == MODE.WEB ? MODE.API : MODE.WEB
+            )
+          }
+        />
         {props.mode == MODE.WEB && (
-          <>
+          <div className={styles['header__prompt-types']}>
             <UiPromptTypeButton
               label={web_prompt_type_labels['edit-files']}
               icon="edit-sparkle"
@@ -71,7 +84,7 @@ export const Header: React.FC<Props> = (props) => {
                 props.on_web_prompt_type_change('ask-about-files')
               }
             />
-          </>
+          </div>
         )}
         {props.mode == MODE.API && (
           <UiPromptTypeButton

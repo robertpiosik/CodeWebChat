@@ -4,6 +4,7 @@ import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 
 export const use_keyboard_shortcuts = (params: {
   mode: Mode
+  on_mode_change: (mode: Mode) => void
   on_web_prompt_type_change: (prompt_type: WebPromptType) => void
   on_api_prompt_type_change: (prompt_type: ApiPromptType) => void
   on_show_home: () => void
@@ -113,6 +114,14 @@ export const use_keyboard_shortcuts = (params: {
       if (event.code == 'KeyA' && params.mode == MODE.WEB) {
         event.preventDefault()
         params.on_web_prompt_type_change('ask-about-files')
+        return
+      }
+
+      if (event.code == 'Escape') {
+        event.preventDefault()
+        params.on_mode_change(
+          params.mode == MODE.WEB ? MODE.API : MODE.WEB
+        )
       }
     }
 
@@ -123,6 +132,7 @@ export const use_keyboard_shortcuts = (params: {
     }
   }, [
     params.mode,
+    params.on_mode_change,
     params.on_web_prompt_type_change,
     params.on_api_prompt_type_change,
     params.is_disabled

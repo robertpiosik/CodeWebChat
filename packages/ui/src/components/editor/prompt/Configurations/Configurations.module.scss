@@ -107,9 +107,10 @@
 .separator {
   height: 1px;
   background-color: var(--vscode-menu-separatorBackground);
+  margin: 4px 0;
 
   :global([data-modern-ui='true']) & {
-    margin: 0 8px;
+    margin: 4px 8px;
   }
 }
 

@@ -157,7 +157,7 @@
 .footer {
   display: flex;
   padding: 6px 10px 6px 6px;
-  gap: 5px;
+  gap: 2px;
   justify-content: space-between;
   position: relative;
   min-width: 0;
@@ -197,15 +197,42 @@
     pointer-events: none;
     min-width: 0;
 
-    &__edit-format {
+    &__details {
+      display: none;
       flex: 1;
-      display: flex;
       align-items: center;
       justify-content: flex-end;
       min-width: 0;
+      font-size: 11px;
+      gap: 3px;
+      pointer-events: all;
+
+      &--visible {
+        display: flex;
+      }
+
+      &__edit-format-wrapper {
+        position: relative;
+        display: flex;
+        min-width: 0;
+      }
+
+      &__token-count {
+        font-size: inherit;
+        color: var(--cwc-text-color-dimmed);
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+        pointer-events: auto;
+      }
+
+      &__separator {
+        font-size: inherit;
+        color: var(--cwc-text-color-dimmed);
+        padding: 0 4px;
+      }
 
       &__button {
-        font-size: 11px;
+        font-size: inherit;
         pointer-events: all;
         color: var(--vscode-foreground);
         padding: 5px 2px;
@@ -347,6 +374,10 @@
   flex-wrap: wrap;
   user-select: none;
   margin: 2px 1px 0 -2px;
+  position: relative;
+    z-index: 2;
+    margin: 7px 1px 0 5px;
+
 
   &__tab {
     height: 15px;

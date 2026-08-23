@@ -15,6 +15,12 @@
     display: flex;
     align-items: center;
     padding: 4px 0;
+    gap: 6px;
+  }
+
+  &__prompt-types {
+    display: flex;
+    align-items: center;
     gap: 2px;
   }
 }
