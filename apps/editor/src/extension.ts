@@ -40,12 +40,11 @@ import {
   select_clipboard_paths_command,
   select_parent_folder_command,
   select_referencing_files_commands,
+  select_imported_files_commands,
   copy_merge_commit_details_command,
   rate_extension_command
 } from './commands'
 import { setup_git_discard_file_watcher } from './services/git-discard-file-watcher'
-import { select_imported_files_command } from './commands/select-imported-files-command'
-import { select_imported_files_for_selected_command } from './commands/select-imported-files-for-selected-command'
 import { SettingsViewProvider } from './views/settings/backend/settings-view-provider'
 import { get_current_preview_url } from './views/prompt/backend/message-handlers/handle-open-website'
 import { t } from '@/i18n'
@@ -188,18 +187,13 @@ export const activate = async (extension_context: vscode.ExtensionContext) => {
     delete_command(),
     select_workspace_file_command(workspace_provider),
     set_ranges_command(workspace_provider, extension_context),
-    select_imported_files_command(
+    ...select_imported_files_commands(
       workspace_provider,
       extension_context,
       websocket_server_instance
     ),
     duplicate_workspace_command(workspace_provider, extension_context),
     copy_merge_commit_details_command(),
-    select_imported_files_for_selected_command(
-      workspace_provider,
-      extension_context,
-      websocket_server_instance
-    ),
     ...select_referencing_files_commands(
       workspace_provider,
       extension_context,

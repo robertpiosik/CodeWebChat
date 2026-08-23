@@ -113,12 +113,20 @@ export const get_imports_for_uri = async (
             new vscode.Position(i, offset + Math.floor(inc_match[1].length / 2))
           )
         }
-      } else if (['.cs', '.java'].includes(ext)) {
+      } else if (['.cs', '.java', '.kt'].includes(ext)) {
         const regex =
           ext == '.cs'
             ? /^\s*using\s+([a-zA-Z0-9_.]+)\s*;/
-            : /^\s*import\s+([a-zA-Z0-9_.*]+)\s*;/
+            : /^\s*import\s+([a-zA-Z0-9_.*]+)\s*;?/
         const match = line.match(regex)
+        if (match) {
+          const offset = line.indexOf(match[1], match.index)
+          positions_to_check.push(
+            new vscode.Position(i, offset + Math.floor(match[1].length / 2))
+          )
+        }
+      } else if (ext == '.swift') {
+        const match = line.match(/^\s*import\s+([a-zA-Z0-9_.]+)/)
         if (match) {
           const offset = line.indexOf(match[1], match.index)
           positions_to_check.push(
@@ -181,6 +189,16 @@ export const get_imports_for_uri = async (
                 )
               )
             }
+          }
+        }
+      } else if (ext == '.dart') {
+        if (/^\s*(?:import|export|part)\b/.test(line)) {
+          const match = line.match(/['"]([^'"]+)['"]/)
+          if (match) {
+            const offset = line.indexOf(match[1], match.index)
+            positions_to_check.push(
+              new vscode.Position(i, offset + Math.floor(match[1].length / 2))
+            )
           }
         }
       } else {

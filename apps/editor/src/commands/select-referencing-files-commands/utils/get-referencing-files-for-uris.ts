@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'
+import { get_imports_for_uri } from '@/utils/get-imports-for-uri'
 
 export const get_referencing_files_for_uris = async (params: {
   uris: vscode.Uri[]
@@ -10,6 +11,7 @@ export const get_referencing_files_for_uris = async (params: {
   token: vscode.CancellationToken
 }): Promise<{ file_path: string; range: vscode.Range }[]> => {
   const file_map = new Map<string, vscode.Range>()
+  const cached_imports = new Map<string, string[]>()
 
   for (const uri of params.uris) {
     if (params.token.isCancellationRequested) {
@@ -80,9 +82,9 @@ export const get_referencing_files_for_uris = async (params: {
         >('vscode.executeReferenceProvider', uri, position)
 
         if (locations) {
-          locations.forEach((loc) => {
+          for (const loc of locations) {
             const file_path = loc.uri.fsPath
-            if (params.ignore_paths.includes(file_path)) return
+            if (params.ignore_paths.includes(file_path)) continue
             if (
               params.workspace_provider.get_workspace_root_for_file(
                 file_path
@@ -90,10 +92,18 @@ export const get_referencing_files_for_uris = async (params: {
               !params.workspace_provider.is_ignored_by_patterns(file_path)
             ) {
               if (!file_map.has(file_path)) {
-                file_map.set(file_path, loc.range)
+                let imports = cached_imports.get(file_path)
+                if (!imports) {
+                  imports = await get_imports_for_uri(loc.uri, params.token)
+                  cached_imports.set(file_path, imports)
+                }
+
+                if (imports.includes(uri.toString())) {
+                  file_map.set(file_path, loc.range)
+                }
               }
             }
-          })
+          }
         }
       }
     } catch (err) {
