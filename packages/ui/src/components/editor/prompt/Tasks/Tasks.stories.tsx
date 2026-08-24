@@ -151,7 +151,10 @@ export const Default = () => {
         on_add={handle_add}
         on_add_subtask={handle_add_subtask}
         on_delete={handle_delete}
-        placeholder="Click to add text..."
+        translations={{
+          placeholder: 'Click to add text...',
+          add_new: 'Add new...'
+        }}
       />
     </div>
   )
@@ -178,7 +181,10 @@ export const NoReorder = () => {
         on_add={() => {}}
         on_add_subtask={() => {}}
         on_delete={() => {}}
-        placeholder="Click to add text..."
+        translations={{
+          placeholder: 'Click to add text...',
+          add_new: 'Add new...'
+        }}
       />
     </div>
   )

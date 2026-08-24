@@ -61,7 +61,7 @@ export const Home: React.FC<Props> = (props) => {
   const active_root =
     active_workspace_root && roots.includes(active_workspace_root)
       ? active_workspace_root
-      : roots[0]
+      : roots[0] || active_workspace_root || ''
 
   const { container_ref, compact_step } = use_compacting()
 
@@ -277,46 +277,38 @@ export const Home: React.FC<Props> = (props) => {
 
             <UiSeparator height={4} />
 
-            {roots.length == 0 && (
-              <div className={styles.inner__empty}>{t('home.tasks.empty')}</div>
-            )}
-            {active_root && (
-              <div className={styles.inner__tasks}>
-                {tasks[active_root].length == 0 ? (
-                  <div className={styles.inner__empty}>
-                    {t('home.tasks.empty')}
-                  </div>
-                ) : (
-                  <UiTasks
-                    tasks={tasks[active_root]}
-                    on_reorder={(new_tasks) =>
-                      handle_reorder(active_root, new_tasks)
-                    }
-                    on_change={(updated_task) => {
-                      handle_change(
-                        active_root,
-                        tasks[active_root],
-                        updated_task
-                      )
-                    }}
-                    on_add={() => {
-                      handle_add(active_root, tasks[active_root])
-                    }}
-                    on_add_subtask={(parent_task) => {
-                      handle_add_subtask(
-                        active_root,
-                        tasks[active_root],
-                        parent_task
-                      )
-                    }}
-                    on_delete={(timestamp) => {
-                      handle_delete(active_root, timestamp)
-                    }}
-                    placeholder={t('home.tasks.placeholder')}
-                  />
-                )}
-              </div>
-            )}
+            <div className={styles.inner__tasks}>
+              <UiTasks
+                tasks={tasks[active_root] || []}
+                on_reorder={(new_tasks) =>
+                  handle_reorder(active_root, new_tasks)
+                }
+                on_change={(updated_task) => {
+                  handle_change(
+                    active_root,
+                    tasks[active_root] || [],
+                    updated_task
+                  )
+                }}
+                on_add={() => {
+                  handle_add(active_root, tasks[active_root] || [])
+                }}
+                on_add_subtask={(parent_task) => {
+                  handle_add_subtask(
+                    active_root,
+                    tasks[active_root] || [],
+                    parent_task
+                  )
+                }}
+                on_delete={(timestamp) => {
+                  handle_delete(active_root, timestamp)
+                }}
+                translations={{
+                  placeholder: t('home.tasks.placeholder'),
+                  add_new: t('home.tasks.add-new')
+                }}
+              />
+            </div>
           </div>
 
           <div className={styles['bottom-wrapper']}>

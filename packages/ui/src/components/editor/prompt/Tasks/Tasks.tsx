@@ -14,14 +14,19 @@ import { use_auto_focus_new_task } from './hooks/use-auto-focus-new-task'
 
 dayjs.extend(relativeTime)
 
-type Props = {
-  tasks: Task[]
-  on_reorder: (tasks: Task[]) => void
-  on_change: (task: Task) => void
-  on_add: () => void
-  on_add_subtask?: (parent_task: Task) => void
-  on_delete: (created_at: number) => void
-  placeholder: string
+export namespace Tasks {
+  export type Props = {
+    tasks: Task[]
+    on_reorder: (tasks: Task[]) => void
+    on_change: (task: Task) => void
+    on_add: () => void
+    on_add_subtask?: (parent_task: Task) => void
+    on_delete: (created_at: number) => void
+    translations: {
+      placeholder: string
+      add_new: string
+    }
+  }
 }
 
 const add_ids = (tasks: Task[]): SortableTask[] => {
@@ -51,7 +56,7 @@ const get_structure_signature = (tasks: Task[]): string => {
     .join(',')
 }
 
-export const Tasks: React.FC<Props> = (props) => {
+export const Tasks: React.FC<Tasks.Props> = (props) => {
   use_periodic_re_render(60 * 1000)
   use_dayjs_locale()
   const [editing_timestamp, set_editing_timestamp] = useState<number | null>(
@@ -277,7 +282,7 @@ export const Tasks: React.FC<Props> = (props) => {
                 handle_set_editing(params.task.created_at, params.task.text)
               }}
             >
-              {params.task.text || props.placeholder}
+              {params.task.text || props.translations.placeholder}
             </div>
           )}
         </div>
@@ -294,6 +299,7 @@ export const Tasks: React.FC<Props> = (props) => {
         className={styles.tasks}
         on_add={props.on_add}
         get_on_add_subtask={(parent) => () => props.on_add_subtask?.(parent)}
+        add_text={props.translations.add_new}
       />
     </div>
   )

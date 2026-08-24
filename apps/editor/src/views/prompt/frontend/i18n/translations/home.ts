@@ -17,24 +17,6 @@ export const home = {
     hu: 'Feladatok',
     bg: 'Задачи'
   },
-  'home.tasks.empty': {
-    en: 'No tasks created yet.',
-    pl: 'Nie utworzono jeszcze żadnych zadań.',
-    'zh-cn': '尚未创建任务。',
-    ja: 'まだタスクは作成されていません。',
-    'zh-tw': '尚未建立任務。',
-    de: 'Noch keine Aufgaben erstellt.',
-    es: 'Aún no se han creado tareas.',
-    fr: 'Aucune tâche créée pour le moment.',
-    'pt-br': 'Nenhuma tarefa criada ainda.',
-    ru: 'Задачи еще не созданы.',
-    ko: '아직 생성된 작업이 없습니다.',
-    it: 'Nessuna attività ancora creata.',
-    tr: 'Henüz görev oluşturulmadı.',
-    cs: 'Zatím nebyly vytvořeny žádné úkoly.',
-    hu: 'Még nincsenek feladatok létrehozva.',
-    bg: 'Все още няма създадени задачи.'
-  },
   'home.tasks.add': {
     en: 'Add Task',
     pl: 'Dodaj zadanie',
@@ -52,6 +34,24 @@ export const home = {
     cs: 'Přidat úkol',
     hu: 'Feladat hozzáadása',
     bg: 'Добавяне на задача'
+  },
+  'home.tasks.add-new': {
+    en: 'Add new...',
+    pl: 'Dodaj nowe...',
+    'zh-cn': '添加新...',
+    ja: '新しく追加...',
+    'zh-tw': '新增...',
+    de: 'Neu hinzufügen...',
+    es: 'Añadir nuevo...',
+    fr: 'Ajouter nouveau...',
+    'pt-br': 'Adicionar novo...',
+    ru: 'Добавить новое...',
+    ko: '새로 추가...',
+    it: 'Aggiungi nuovo...',
+    tr: 'Yeni ekle...',
+    cs: 'Přidat nové...',
+    hu: 'Új hozzáadása...',
+    bg: 'Добавяне на ново...'
   },
   'home.tasks.placeholder': {
     en: 'Click to add text...',

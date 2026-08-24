@@ -167,6 +167,8 @@
 .add-row {
   position: relative;
   display: flex;
+  align-items: center;
+  cursor: pointer;
 
   :global([data-modern-ui='true']) & {
     margin: 0 4px;
@@ -195,4 +197,10 @@
     var(--cwc-border-color-dimmed)
   );
   pointer-events: none;
+}
+
+.add-text {
+  color: var(--cwc-text-color-dimmed);
+  margin-left: 6px;
+  user-select: none;
 }

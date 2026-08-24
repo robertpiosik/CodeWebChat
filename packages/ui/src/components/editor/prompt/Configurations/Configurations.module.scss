@@ -115,11 +115,11 @@
 }
 
 .empty {
-  padding: 0 16px 0 38px;
+  padding: 0 16px;
   color: var(--cwc-text-color-dimmed);
 
   :global([data-modern-ui='true']) & {
-    padding: 0 12px 0 34px;
+    padding: 0 12px;
   }
 }
 

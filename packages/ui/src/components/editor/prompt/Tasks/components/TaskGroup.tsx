@@ -22,6 +22,7 @@ type TaskGroupProps = {
   get_on_add_subtask?: (parent: Task) => () => void
   parent_checked?: boolean
   depth?: number
+  add_text?: string
 }
 
 export const TaskGroup: React.FC<TaskGroupProps> = (props) => {
@@ -72,6 +73,7 @@ export const TaskGroup: React.FC<TaskGroupProps> = (props) => {
                     get_on_add_subtask={props.get_on_add_subtask}
                     parent_checked={is_visually_checked}
                     depth={depth + 1}
+                    add_text={props.add_text}
                   />
                 )}
             </div>
@@ -98,8 +100,11 @@ export const TaskGroup: React.FC<TaskGroupProps> = (props) => {
                 depth * 20
               }px)`
             }}
-            title="Add task"
+            title={props.add_text || 'Add task'}
           />
+          {props.add_text && (
+            <span className={styles['add-text']}>{props.add_text}</span>
+          )}
         </div>
       )}
     </>
