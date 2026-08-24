@@ -194,7 +194,7 @@ export const replace_changes_symbol = async (params: {
         let diff_base: string
         if (current_branch == branch_name) {
           // If comparing to same branch, use merge-base to show changes since branch point
-          diff_base = execSync(`git merge-base HEAD origin/${branch_name}`, {
+          diff_base = execSync(`git merge-base HEAD ${branch_name}`, {
             cwd: target_folder.uri.fsPath
           })
             .toString()
@@ -269,7 +269,7 @@ export const replace_changes_symbol = async (params: {
         let diff_base: string
         if (current_branch == branch_name) {
           // If comparing to same branch, use merge-base to show changes since branch point
-          diff_base = execSync(`git merge-base HEAD origin/${branch_name}`, {
+          diff_base = execSync(`git merge-base HEAD ${branch_name}`, {
             cwd: repository.rootUri.fsPath
           })
             .toString()

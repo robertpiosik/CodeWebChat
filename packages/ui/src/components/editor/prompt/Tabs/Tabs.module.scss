@@ -30,13 +30,22 @@
     align-items: center;
     text-transform: none;
     color: var(--cwc-text-color-dimmed);
+    cursor: pointer;
+    white-space: nowrap;
+    user-select: none;
 
     &:hover {
       color: var(--cwc-text-color);
     }
 
+    &:focus-visible {
+      outline: 1px solid var(--vscode-focusBorder);
+      outline-offset: -1px;
+    }
+
     &--active {
-      color: var(--cwc-text-color);
+      color: var(--cwc-text-color-blue);
+      background-color: var(--cwc-bg-blue);
       border-color: var(--vscode-menu-separatorBackground);
       position: relative;
 
@@ -47,7 +56,12 @@
         right: 0;
         bottom: -1px;
         height: 1px;
-        background: var(--vscode-sideBar-background);
+        background: var(--cwc-bg-blue);
+      }
+
+      &:hover {
+        background-color: var(--cwc-bg-blue);
+        color: var(--cwc-text-color-blue);
       }
     }
   }
