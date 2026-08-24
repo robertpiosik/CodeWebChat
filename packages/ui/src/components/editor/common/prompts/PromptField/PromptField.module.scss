@@ -274,14 +274,14 @@
       &__button {
         position: relative;
         font-family: var(--font-family-accent);
+        color: var(--cwc-text-color-dimmed);
         letter-spacing: 1px;
         font-size: 16px;
         padding: 0 4px;
       }
 
       &__label {
-        line-height: 1;
-        padding-top: 2px;
+        padding-top: 1px;
       }
     }
 
@@ -295,6 +295,10 @@
 
       &:hover {
         background-color: var(--vscode-toolbar-hoverBackground);
+
+        .footer__right__mode-switch__button {
+          color: var(--cwc-text-color);
+        }
       }
 
       &__button {
