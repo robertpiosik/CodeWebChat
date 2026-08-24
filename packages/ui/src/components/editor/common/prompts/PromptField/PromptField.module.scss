@@ -199,7 +199,6 @@
 
     &__details {
       display: none;
-      flex: 1;
       align-items: center;
       justify-content: flex-end;
       min-width: 0;
@@ -217,22 +216,17 @@
         min-width: 0;
       }
 
-      &__token-count {
-        font-size: inherit;
-        color: var(--cwc-text-color-dimmed);
-        white-space: nowrap;
-        font-variant-numeric: tabular-nums;
-        pointer-events: auto;
+      &__token-count-wrapper {
+        position: relative;
       }
 
-      &__separator {
-        font-size: inherit;
+      &__token-count {
         color: var(--cwc-text-color-dimmed);
-        padding: 0 4px;
+        font-variant-numeric: tabular-nums;
+        cursor: default;
       }
 
       &__button {
-        font-size: inherit;
         pointer-events: all;
         color: var(--vscode-foreground);
         padding: 5px 2px;

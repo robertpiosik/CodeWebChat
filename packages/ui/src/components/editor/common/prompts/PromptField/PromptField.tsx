@@ -573,14 +573,11 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             props.token_count > 0 &&
             props.show_edit_format_selector &&
             props.edit_format && (
-              <span className={styles['footer__right__separator']}>·</span>
+              <span>·</span>
             )}
           {props.token_count !== undefined && props.token_count > 0 && (
             <span
-              style={{
-                position: 'relative',
-                display: 'inline-flex'
-              }}
+              className={styles['footer__right__details__token-count-wrapper']}
               onMouseEnter={() => set_is_token_count_hovered(true)}
               onMouseLeave={() => set_is_token_count_hovered(false)}
             >
@@ -590,7 +587,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   align="center"
                 />
               )}
-              <span className={styles['footer__right__token-count']}>
+              <span className={styles['footer__right__details__token-count']}>
                 {props.token_count < 1000
                   ? props.token_count.toString()
                   : Math.floor(props.token_count / 1000).toString() + 'K'}

@@ -22,7 +22,6 @@
     font-size: 16px;
     padding: 4px 10px 2px 10px;
     letter-spacing: 1px;
-    border: 1px solid transparent;
     border-bottom: none;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
@@ -46,7 +45,6 @@
     &--active {
       color: var(--cwc-text-color-blue);
       background-color: var(--cwc-bg-blue);
-      border-color: var(--vscode-menu-separatorBackground);
       position: relative;
 
       &::after {
