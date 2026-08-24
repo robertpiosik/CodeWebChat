@@ -47,7 +47,7 @@ export const Empty = () => (
     on_tab_delete={() => {}}
     translations={{
       voice_input: 'Voice input',
-      exit_voice_input: 'Exit voice input',
+      stop_recording: 'Stop recording',
       reference_file: 'Reference file',
       insert_symbol: 'Insert symbol',
       use_template: 'Use template',
@@ -112,7 +112,7 @@ export const WithText = () => (
     on_tab_delete={() => {}}
     translations={{
       voice_input: 'Voice input',
-      exit_voice_input: 'Exit voice input',
+      stop_recording: 'Stop recording',
       reference_file: 'Reference file',
       insert_symbol: 'Insert symbol',
       use_template: 'Use template',
@@ -177,7 +177,7 @@ export const LongText = () => (
     on_tab_delete={() => {}}
     translations={{
       voice_input: 'Voice input',
-      exit_voice_input: 'Exit voice input',
+      stop_recording: 'Stop recording',
       reference_file: 'Reference file',
       insert_symbol: 'Insert symbol',
       use_template: 'Use template',
@@ -242,7 +242,7 @@ export const WithPlaceholderSavedContext = () => (
     on_tab_delete={() => {}}
     translations={{
       voice_input: 'Voice input',
-      exit_voice_input: 'Exit voice input',
+      stop_recording: 'Stop recording',
       reference_file: 'Reference file',
       insert_symbol: 'Insert symbol',
       use_template: 'Use template',
@@ -313,7 +313,7 @@ export const WithPlaceholderSelection = () => (
     on_tab_delete={() => {}}
     translations={{
       voice_input: 'Voice input',
-      exit_voice_input: 'Exit voice input',
+      stop_recording: 'Stop recording',
       reference_file: 'Reference file',
       insert_symbol: 'Insert symbol',
       use_template: 'Use template',
@@ -378,7 +378,7 @@ export const WithCommit = () => (
     on_tab_delete={() => {}}
     translations={{
       voice_input: 'Voice input',
-      exit_voice_input: 'Exit voice input',
+      stop_recording: 'Stop recording',
       reference_file: 'Reference file',
       insert_symbol: 'Insert symbol',
       use_template: 'Use template',
@@ -443,7 +443,7 @@ export const WithCommitWithQuotes = () => (
     on_tab_delete={() => {}}
     translations={{
       voice_input: 'Voice input',
-      exit_voice_input: 'Exit voice input',
+      stop_recording: 'Stop recording',
       reference_file: 'Reference file',
       insert_symbol: 'Insert symbol',
       use_template: 'Use template',
@@ -514,7 +514,7 @@ export const WithEditFormatSelector = () => {
       on_tab_delete={() => {}}
       translations={{
         voice_input: 'Voice input',
-        exit_voice_input: 'Exit voice input',
+        stop_recording: 'Stop recording',
         reference_file: 'Reference file',
         insert_symbol: 'Insert symbol',
         use_template: 'Use template',
@@ -580,7 +580,7 @@ export const WithFilePaths = () => (
     on_tab_delete={() => {}}
     translations={{
       voice_input: 'Voice input',
-      exit_voice_input: 'Exit voice input',
+      stop_recording: 'Stop recording',
       reference_file: 'Reference file',
       insert_symbol: 'Insert symbol',
       use_template: 'Use template',
@@ -673,7 +673,7 @@ export const WithTabs = () => {
       on_tab_delete={handle_tab_delete}
       translations={{
         voice_input: 'Voice input',
-        exit_voice_input: 'Exit voice input',
+        stop_recording: 'Stop recording',
         reference_file: 'Reference file',
         insert_symbol: 'Insert symbol',
         use_template: 'Use template',
@@ -737,7 +737,7 @@ export const WithWarning = () => (
     on_tab_delete={() => {}}
     translations={{
       voice_input: 'Voice input',
-      exit_voice_input: 'Exit voice input',
+      stop_recording: 'Stop recording',
       reference_file: 'Reference file',
       insert_symbol: 'Insert symbol',
       use_template: 'Use template',

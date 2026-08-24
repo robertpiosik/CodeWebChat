@@ -330,7 +330,7 @@ export const MainView: React.FC<Props> = (props) => {
             token_count={props.token_count}
             translations={{
               voice_input: t('prompt-field.voice-input'),
-              exit_voice_input: t('prompt-field.exit-voice-input'),
+              stop_recording: t('prompt-field.stop-recording'),
               reference_file: t('prompt-field.reference-file'),
               insert_symbol: t('prompt-field.insert-symbol'),
               use_template: t('prompt-field.use-template'),

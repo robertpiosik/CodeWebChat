@@ -84,7 +84,7 @@ export type PromptFieldProps = {
   on_mode_change: (mode: Mode) => void
   translations: {
     voice_input: string
-    exit_voice_input: string
+    stop_recording: string
     reference_file: string
     insert_symbol: string
     use_template: string
@@ -385,7 +385,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         <Tooltip
           message={
             props.is_recording
-              ? props.translations.exit_voice_input
+              ? props.translations.stop_recording
               : props.translations.voice_input
           }
           details={is_mac ? '⇧⌘Space' : 'Ctrl+Shift+Space'}
@@ -569,7 +569,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   align="center"
                 />
               )}
-              <KeycapWrapper char={is_alt_pressed ? 'esc' : undefined}>
+              <KeycapWrapper char={is_alt_pressed ? 'ESC' : undefined}>
                 <button
                   className={cn(
                     styles['footer__right__submit__button'],
