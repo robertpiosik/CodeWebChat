@@ -104,7 +104,7 @@ import {
   ConfigWebConfigurationFormat
 } from '@/utils/web-configuration-format-converters'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { MODE, Mode } from '../types/main-view-mode'
+import { MODE, Mode } from '@shared/types/mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Logger } from '@shared/utils/logger'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { MainView } from './MainView'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { EditFormat } from '@shared/types/edit-format'
-import { MODE, Mode } from '@/views/prompt/types/main-view-mode'
+import { MODE, Mode } from '@shared/types/mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import {
   BackendMessage,

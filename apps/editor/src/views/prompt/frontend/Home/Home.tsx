@@ -17,7 +17,7 @@ import { Tasks as UiTasks } from '@ui/components/editor/prompt/Tasks'
 import { use_tasks } from './hooks/use-tasks'
 import { use_has_scrolled_past_mode_button } from './hooks/use-has-scrolled-past-mode-button'
 import { use_compacting } from '@shared/hooks'
-import { MODE } from '@/views/prompt/types/main-view-mode'
+import { MODE } from '@shared/types/mode'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 
 type Props = {

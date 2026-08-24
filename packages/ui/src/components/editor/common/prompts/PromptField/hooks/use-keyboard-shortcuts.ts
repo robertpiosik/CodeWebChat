@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import type { PromptFieldProps, EditFormat } from '../PromptField'
+import { MODE } from '@shared/types/mode'
 
 export const use_keyboard_shortcuts = (
   props: PromptFieldProps
@@ -30,6 +31,14 @@ export const use_keyboard_shortcuts = (
     const handle_key_down = (e: KeyboardEvent) => {
       let format: EditFormat | undefined
       if (e.altKey && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
+        if (e.code == 'Escape') {
+          e.preventDefault()
+          if (props.on_mode_change) {
+            props.on_mode_change(props.mode == MODE.WEB ? MODE.API : MODE.WEB)
+          }
+          return
+        }
+
         if (props.show_edit_format_selector && props.on_edit_format_change) {
           switch (e.code) {
             case 'KeyW':

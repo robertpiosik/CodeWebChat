@@ -6,7 +6,7 @@ import { WebConfiguration } from '@shared/types/web-configuration'
 import { Responses as UiResponses } from '@ui/components/editor/prompt/Responses'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { EditFormat } from '@shared/types/edit-format'
-import { MODE, Mode } from '@/views/prompt/types/main-view-mode'
+import { MODE, Mode } from '@shared/types/mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
 import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/components/editor/prompt/BrowserExtensionMessage'
@@ -235,7 +235,6 @@ export const MainView: React.FC<Props> = (props) => {
     <>
       <Header
         mode={props.mode}
-        on_mode_change={props.on_mode_change}
         on_show_home={props.on_show_home}
         web_prompt_type={props.web_prompt_type}
         on_web_prompt_type_change={props.on_web_prompt_type_change}
@@ -310,6 +309,8 @@ export const MainView: React.FC<Props> = (props) => {
             on_pasted_lines_click={props.on_pasted_lines_click}
             on_open_url={props.on_open_url}
             on_open_website={props.on_open_website}
+            mode={props.mode}
+            on_mode_change={(mode) => props.on_mode_change(mode)}
             on_paste_image={props.on_paste_image}
             on_open_image={props.on_open_image}
             on_paste_long_text={props.on_paste_long_text}
@@ -351,7 +352,8 @@ export const MainView: React.FC<Props> = (props) => {
               copy_prompt: t('prompt-field.action.copy-prompt'),
               more_actions: t('prompt-field.action.more-actions'),
               send: t('prompt-field.action.send'),
-              tokens_in_context: t('prompt-field.tokens-in-context')
+              tokens_in_context: t('prompt-field.tokens-in-context'),
+              mode: t('prompt-field.mode')
             }}
           />
         </div>

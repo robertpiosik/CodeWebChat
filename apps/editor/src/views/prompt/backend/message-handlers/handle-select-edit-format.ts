@@ -4,7 +4,7 @@ import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { SelectEditFormatMessage } from '@/views/prompt/types/messages'
 import { EditFormat } from '@shared/types/edit-format'
 import { t } from '@/i18n'
-import { MODE } from '@/views/prompt/types/main-view-mode'
+import { MODE } from '@shared/types/mode'
 
 export const handle_select_edit_format = async (
   prompt_view_provider: PromptViewProvider,

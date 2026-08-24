@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import { get_edit_format_state_key } from '@/constants/state-keys'
 import { PromptViewProvider } from '@/views/prompt/backend/prompt-view-provider'
 import { SaveEditFormatMessage } from '@/views/prompt/types/messages'
-import { MODE } from '@/views/prompt/types/main-view-mode'
+import { MODE } from '@shared/types/mode'
 
 export const handle_save_edit_format = async (
   prompt_view_provider: PromptViewProvider,

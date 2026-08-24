@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { MODE, Mode } from '@/views/prompt/types/main-view-mode'
+import { MODE, Mode } from '@shared/types/mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 
 type Params = {

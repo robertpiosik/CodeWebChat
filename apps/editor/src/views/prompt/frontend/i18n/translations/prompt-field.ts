@@ -358,5 +358,23 @@ export const prompt_field = {
     cs: 'Tokeny v kontextu',
     hu: 'Tokenek a kontextusban',
     bg: 'Токени в контекста'
+  },
+  'prompt-field.mode': {
+    en: 'Mode',
+    pl: 'Tryb',
+    'zh-cn': '模式',
+    ja: 'モード',
+    'zh-tw': '模式',
+    de: 'Modus',
+    es: 'Modo',
+    fr: 'Mode',
+    'pt-br': 'Modo',
+    ru: 'Режим',
+    ko: '모드',
+    it: 'Modalità',
+    tr: 'Mod',
+    cs: 'Režim',
+    hu: 'Mód',
+    bg: 'Режим'
   }
 } as const

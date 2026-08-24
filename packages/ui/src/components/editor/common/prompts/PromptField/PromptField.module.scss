@@ -248,31 +248,40 @@
         }
       }
 
-      &__shortcuts {
+      &__keycaps {
         display: flex;
-        gap: 3px;
+        gap: 6px;
         align-items: center;
       }
 
-      &__shortcut {
+      &__keycap {
         text-decoration: none;
         display: flex;
         justify-content: center;
-        padding: 1px 0;
-        width: 16px;
+        padding: 1px 3px;
         font-size: 10px;
 
         &--active {
           text-decoration: underline dotted;
           text-underline-offset: 4px;
         }
+      }
+    }
 
-        &--inactive {
-          background-color: var(--vscode-sideBar-background);
-          color: var(--vscode-foreground);
-          border: 1px solid var(--cwc-border-color-dimmed);
-          border-radius: 4px;
-        }
+    &__mode-switch {
+      position: relative;
+
+      &__button {
+        position: relative;
+        font-family: var(--font-family-accent);
+        letter-spacing: 1px;
+        font-size: 16px;
+        padding: 0 4px;
+      }
+
+      &__label {
+        line-height: 1;
+        padding-top: 2px;
       }
     }
 
@@ -355,9 +364,8 @@
   user-select: none;
   margin: 2px 1px 0 -2px;
   position: relative;
-    z-index: 2;
-    margin: 7px 1px 0 5px;
-
+  z-index: 2;
+  margin: 7px 1px 0 5px;
 
   &__tab {
     height: 15px;

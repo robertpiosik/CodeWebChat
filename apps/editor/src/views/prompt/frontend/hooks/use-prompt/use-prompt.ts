@@ -4,7 +4,7 @@ import {
   FrontendMessage,
   SetupProgress
 } from '../../../types/messages'
-import { Mode, MODE } from '../../../types/main-view-mode'
+import { Mode, MODE } from '@shared/types/mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { post_message } from '../../utils/post-message'
 import { use_instructions } from './hooks/use-instructions'

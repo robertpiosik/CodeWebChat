@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { PromptField, type EditFormat } from './PromptField'
+import { MODE } from '@shared/types/mode'
 
 export default {
   component: PromptField
@@ -18,6 +19,8 @@ export const Empty = () => (
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
+    mode={MODE.API}
+    on_mode_change={(mode) => console.log('Mode changed:', mode)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
@@ -62,7 +65,8 @@ export const Empty = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context'
+      tokens_in_context: 'Tokens in context',
+      mode: 'Mode'
     }}
   />
 )
@@ -80,6 +84,8 @@ export const WithText = () => (
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
+    mode="api"
+    on_mode_change={(mode) => console.log('Mode changed:', mode)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
@@ -124,7 +130,8 @@ export const WithText = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context'
+      tokens_in_context: 'Tokens in context',
+      mode: 'Mode'
     }}
   />
 )
@@ -142,6 +149,8 @@ export const LongText = () => (
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
+    mode="api"
+    on_mode_change={(mode) => console.log('Mode changed:', mode)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
@@ -186,7 +195,8 @@ export const LongText = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context'
+      tokens_in_context: 'Tokens in context',
+      mode: 'Mode'
     }}
   />
 )
@@ -203,6 +213,8 @@ export const WithPlaceholderSavedContext = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
+    mode="api"
+    on_mode_change={(mode) => console.log('Mode changed:', mode)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     is_web_mode={false}
@@ -248,7 +260,8 @@ export const WithPlaceholderSavedContext = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context'
+      tokens_in_context: 'Tokens in context',
+      mode: 'Mode'
     }}
   />
 )
@@ -271,6 +284,8 @@ export const WithPlaceholderSelection = () => (
     }}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
+    mode="api"
+    on_mode_change={(mode) => console.log('Mode changed:', mode)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     is_web_mode={false}
@@ -316,7 +331,8 @@ export const WithPlaceholderSelection = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context'
+      tokens_in_context: 'Tokens in context',
+      mode: 'Mode'
     }}
   />
 )
@@ -333,6 +349,8 @@ export const WithCommit = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
+    mode="api"
+    on_mode_change={(mode) => console.log('Mode changed:', mode)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     is_web_mode={false}
@@ -378,7 +396,8 @@ export const WithCommit = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context'
+      tokens_in_context: 'Tokens in context',
+      mode: 'Mode'
     }}
   />
 )
@@ -395,6 +414,8 @@ export const WithCommitWithQuotes = () => (
     current_selection={null}
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
+    mode="api"
+    on_mode_change={(mode) => console.log('Mode changed:', mode)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     is_web_mode={false}
@@ -440,7 +461,8 @@ export const WithCommitWithQuotes = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context'
+      tokens_in_context: 'Tokens in context',
+      mode: 'Mode'
     }}
   />
 )
@@ -459,6 +481,8 @@ export const WithEditFormatSelector = () => {
       currently_open_file_path="/path/to/file"
       on_caret_position_change={(pos) => console.log('Caret position:', pos)}
       is_web_mode={false}
+      mode="api"
+      on_mode_change={(mode) => console.log('Mode changed:', mode)}
       on_at_sign_click={() => console.log('@ clicked')}
       on_hash_sign_click={() => console.log('# clicked')}
       on_submit_with_control={() => console.log('Submitted with control')}
@@ -508,7 +532,8 @@ export const WithEditFormatSelector = () => {
         copy_prompt: 'Copy prompt',
         more_actions: 'More actions',
         send: 'Send',
-        tokens_in_context: 'Tokens in context'
+        tokens_in_context: 'Tokens in context',
+        mode: 'Mode'
       }}
     />
   )
@@ -527,6 +552,8 @@ export const WithFilePaths = () => (
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
+    mode="api"
+    on_mode_change={(mode) => console.log('Mode changed:', mode)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
@@ -571,7 +598,8 @@ export const WithFilePaths = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context'
+      tokens_in_context: 'Tokens in context',
+      mode: 'Mode'
     }}
   />
 )
@@ -617,6 +645,8 @@ export const WithTabs = () => {
       currently_open_file_path="/path/to/file"
       on_caret_position_change={(pos) => console.log('Caret position:', pos)}
       is_web_mode={false}
+      mode="api"
+      on_mode_change={(mode) => console.log('Mode changed:', mode)}
       on_at_sign_click={() => console.log('@ clicked')}
       on_hash_sign_click={() => console.log('# clicked')}
       on_submit_with_control={() => console.log('Submitted with control')}
@@ -661,7 +691,8 @@ export const WithTabs = () => {
         copy_prompt: 'Copy prompt',
         more_actions: 'More actions',
         send: 'Send',
-        tokens_in_context: 'Tokens in context'
+        tokens_in_context: 'Tokens in context',
+        mode: 'Mode'
       }}
     />
   )
@@ -680,6 +711,8 @@ export const WithWarning = () => (
     currently_open_file_path="/path/to/file"
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={true}
+    mode="web"
+    on_mode_change={(mode) => console.log('Mode changed:', mode)}
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
@@ -722,7 +755,8 @@ export const WithWarning = () => (
       copy_prompt: 'Copy prompt',
       more_actions: 'More actions',
       send: 'Send',
-      tokens_in_context: 'Tokens in context'
+      tokens_in_context: 'Tokens in context',
+      mode: 'Mode'
     }}
     warning="Add a configuration"
   />

@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { MODE, Mode } from '@/views/prompt/types/main-view-mode'
+import { MODE, Mode } from '@shared/types/mode'
 import { ApiConfiguration } from '@/views/prompt/types/messages'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { WebConfiguration } from '@shared/types/web-configuration'

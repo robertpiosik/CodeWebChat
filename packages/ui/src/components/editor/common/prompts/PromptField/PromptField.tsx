@@ -11,8 +11,9 @@ import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 import { DropdownMenu } from '../../DropdownMenu'
 import { use_is_mac } from '@shared/hooks'
 import { Tooltip } from './components'
-import { use_click_outside } from '../../../../../hooks/use-click-outside'
+import { KeycapWrapper } from '../../../prompt/KeycapWrapper'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
+import { MODE, Mode } from '@shared/types/mode'
 import {
   get_caret_position_from_div,
   set_caret_position_for_div,
@@ -79,6 +80,8 @@ export type PromptFieldProps = {
   voice_input_push_to_talk?: boolean
   token_count?: number
   is_copy_only?: boolean
+  mode: Mode
+  on_mode_change: (mode: Mode) => void
   translations: {
     voice_input: string
     exit_voice_input: string
@@ -100,6 +103,7 @@ export type PromptFieldProps = {
     more_actions: string
     send: string
     tokens_in_context: string
+    mode: string
   }
 }
 
@@ -114,6 +118,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [is_recording_hovered, set_is_recording_hovered] = useState(false)
   const [is_edit_format_hovered, set_is_edit_format_hovered] = useState(false)
   const [is_token_count_hovered, set_is_token_count_hovered] = useState(false)
+  const [is_mode_switch_hovered, set_is_mode_switch_hovered] = useState(false)
   const [hovered_left_action, set_hovered_left_action] = useState<
     'at' | 'hash' | 'slash' | null
   >(null)
@@ -142,7 +147,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
   useEffect(() => {
     const has_submit_button =
-      (!props.is_copy_only && (!props.is_web_mode || (props.is_web_mode && props.is_connected))) &&
+      !props.is_copy_only &&
+      (!props.is_web_mode || (props.is_web_mode && props.is_connected)) &&
       !props.is_recording &&
       !!props.value
 
@@ -180,11 +186,10 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         selection.removeAllRanges()
       }
     }
-  }, [props.warning  ])
+  }, [props.warning])
 
-  const { is_alt_pressed, handle_container_key_down } = use_keyboard_shortcuts(
-    props
-  )
+  const { is_alt_pressed, handle_container_key_down } =
+    use_keyboard_shortcuts(props)
 
   const {
     is_dropdown_open,
@@ -384,7 +389,11 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               : props.translations.voice_input
           }
           details={is_mac ? '⇧⌘Space' : 'Ctrl+Shift+Space'}
-          offset={props.is_copy_only || (props.is_web_mode && !props.is_connected) ? 12 : 28}
+          offset={
+            props.is_copy_only || (props.is_web_mode && !props.is_connected)
+              ? 12
+              : 28
+          }
           align="right"
         />
       )}
@@ -437,9 +446,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         >
           {props.show_edit_format_selector && props.edit_format && (
             <div
-              className={
-                styles['footer__right__details__edit-format-wrapper']
-              }
+              className={styles['footer__right__details__edit-format-wrapper']}
             >
               {is_edit_format_hovered && (
                 <Tooltip
@@ -449,84 +456,72 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                 />
               )}
               <button
-                className={cn(
-                  styles['footer__right__details__button'],
-                  {
-                    [styles[
-                      'footer__right__details__button--alt-pressed'
-                    ]]: is_alt_pressed
-                  }
-                )}
+                className={cn(styles['footer__right__details__button'], {
+                  [styles['footer__right__details__button--alt-pressed']]:
+                    is_alt_pressed
+                })}
                 onClick={() => props.on_edit_format_change?.()}
                 onMouseEnter={() => set_is_edit_format_hovered(true)}
                 onMouseLeave={() => set_is_edit_format_hovered(false)}
               >
                 {is_alt_pressed ? (
-                  <span
-                    className={
-                      styles['footer__right__details__shortcuts']
-                    }
-                  >
-                    <span
-                      className={cn(
-                        styles['footer__right__details__shortcut'],
-                        {
-                          [styles[
-                            'footer__right__details__shortcut--active'
-                          ]]: props.edit_format == 'whole',
-                          [styles[
-                            'footer__right__details__shortcut--inactive'
-                          ]]: props.edit_format != 'whole'
-                        }
-                      )}
-                    >
-                      W
-                    </span>
-                    <span
-                      className={cn(
-                        styles['footer__right__details__shortcut'],
-                        {
-                          [styles[
-                            'footer__right__details__shortcut--active'
-                          ]]: props.edit_format == 'search-replace',
-                          [styles[
-                            'footer__right__details__shortcut--inactive'
-                          ]]: props.edit_format != 'search-replace'
-                        }
-                      )}
-                    >
-                      S
-                    </span>
-                    <span
-                      className={cn(
-                        styles['footer__right__details__shortcut'],
-                        {
-                          [styles[
-                            'footer__right__details__shortcut--active'
-                          ]]: props.edit_format == 'diff',
-                          [styles[
-                            'footer__right__details__shortcut--inactive'
-                          ]]: props.edit_format != 'diff'
-                        }
-                      )}
-                    >
-                      D
-                    </span>
-                    <span
-                      className={cn(
-                        styles['footer__right__details__shortcut'],
-                        {
-                          [styles[
-                            'footer__right__details__shortcut--active'
-                          ]]: props.edit_format == 'truncated',
-                          [styles[
-                            'footer__right__details__shortcut--inactive'
-                          ]]: props.edit_format != 'truncated'
-                        }
-                      )}
-                    >
-                      T
-                    </span>
+                  <span className={styles['footer__right__details__keycaps']}>
+                    <KeycapWrapper char={props.edit_format != 'whole' ? 'W' : undefined}>
+                      <span
+                        className={cn(
+                          styles['footer__right__details__keycap'],
+                          {
+                            [styles['footer__right__details__keycap--active']]:
+                              props.edit_format == 'whole'
+                          }
+                        )}
+                        style={{ visibility: props.edit_format != 'whole' ? 'hidden' : undefined }}
+                      >
+                        W
+                      </span>
+                    </KeycapWrapper>
+                    <KeycapWrapper char={props.edit_format != 'search-replace' ? 'S' : undefined}>
+                      <span
+                        className={cn(
+                          styles['footer__right__details__keycap'],
+                          {
+                            [styles['footer__right__details__keycap--active']]:
+                              props.edit_format == 'search-replace'
+                          }
+                        )}
+                        style={{ visibility: props.edit_format != 'search-replace' ? 'hidden' : undefined }}
+                      >
+                        S
+                      </span>
+                    </KeycapWrapper>
+                    <KeycapWrapper char={props.edit_format != 'diff' ? 'D' : undefined}>
+                      <span
+                        className={cn(
+                          styles['footer__right__details__keycap'],
+                          {
+                            [styles['footer__right__details__keycap--active']]:
+                              props.edit_format == 'diff'
+                          }
+                        )}
+                        style={{ visibility: props.edit_format != 'diff' ? 'hidden' : undefined }}
+                      >
+                        D
+                      </span>
+                    </KeycapWrapper>
+                    <KeycapWrapper char={props.edit_format != 'truncated' ? 'T' : undefined}>
+                      <span
+                        className={cn(
+                          styles['footer__right__details__keycap'],
+                          {
+                            [styles['footer__right__details__keycap--active']]:
+                              props.edit_format == 'truncated'
+                          }
+                        )}
+                        style={{ visibility: props.edit_format != 'truncated' ? 'hidden' : undefined }}
+                      >
+                        T
+                      </span>
+                    </KeycapWrapper>
                   </span>
                 ) : (
                   {
@@ -543,9 +538,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           {props.token_count !== undefined &&
             props.token_count > 0 &&
             props.show_edit_format_selector &&
-            props.edit_format && (
-              <span>·</span>
-            )}
+            props.edit_format && <span>·</span>}
           {props.token_count !== undefined && props.token_count > 0 && (
             <span
               className={styles['footer__right__details__token-count-wrapper']}
@@ -568,122 +561,154 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         </div>
 
         <div className={styles['footer__right__submit']} ref={dropdown_ref}>
-          {(!props.is_copy_only && (!props.is_web_mode ||
-            (props.is_web_mode && props.is_connected))) && (
-            <>
-              {props.is_recording ? (
-                <button
-                  className={cn(
-                    styles['footer__right__submit__button'],
-                    styles['footer__right__submit__button--submit'],
-                    styles['footer__right__submit__button--recording'],
-                    'codicon',
-                    is_recording_hovered
-                      ? 'codicon-debug-stop'
-                      : 'codicon-mic-filled'
-                  )}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    props.on_recording_finished()
-                  }}
-                  onMouseEnter={() => set_is_recording_hovered(true)}
-                  onMouseLeave={() => set_is_recording_hovered(false)}
-                />
-              ) : !props.value ? (
-                <button
-                  className={cn(
-                    styles['footer__right__submit__button'],
-                    styles['footer__right__submit__button--submit'],
-                    'codicon',
-                    'codicon-mic'
-                  )}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    props.on_recording_started()
-                  }}
-                  onMouseEnter={() => set_is_recording_hovered(true)}
-                  onMouseLeave={() => set_is_recording_hovered(false)}
-                />
-              ) : (
-                <button
-                  className={cn(
-                    styles['footer__right__submit__button'],
-                    styles['footer__right__submit__button--submit'],
-                    'codicon',
-                    'codicon-send'
-                  )}
-                  onClick={handle_submit}
-                  onMouseEnter={() => set_show_submit_tooltip(true)}
-                  onMouseLeave={() => set_show_submit_tooltip(false)}
+          {props.mode && props.on_mode_change && (
+            <div className={styles['footer__right__mode-switch']}>
+              {is_mode_switch_hovered && (
+                <Tooltip
+                  message={props.translations.mode}
+                  align="center"
                 />
               )}
-              <button
-                ref={chevron_button_ref}
-                className={cn(
-                  styles['footer__right__submit__button'],
-                  styles['footer__right__submit__button--chevron']
-                )}
-                onClick={() => {
-                  toggle_dropdown()
-                }}
-                title={props.translations.more_actions}
-              >
-                <span
+              <KeycapWrapper char={is_alt_pressed ? 'esc' : undefined}>
+                <button
                   className={cn(
-                    {
-                      [styles['footer__right__submit__button--toggled']]:
-                        is_dropdown_open
-                    },
-                    'codicon',
-                    'codicon-chevron-down'
+                    styles['footer__right__submit__button'],
+                    styles['footer__right__mode-switch__button']
                   )}
-                />
-              </button>
-              <DropdownMenu
-                anchor_ref={chevron_button_ref}
-                is_open={is_dropdown_open}
-                items={[
-                  ...(!props.value && props.is_web_mode
-                    ? [
-                        {
-                          label: props.translations.send,
-                          shortcut: is_mac ? '↩' : 'Enter',
-                          on_click: () => {
-                            handle_submit({
-                              stopPropagation: () => {}
-                            } as any)
-                            close_dropdown()
-                          }
-                        }
-                      ]
-                    : []),
-                  {
-                    label: props.translations.send_with_ellipsis,
-                    shortcut: is_mac ? '⌘↩' : 'Ctrl+Enter',
-                    on_click: handle_select_click
-                  },
-                  {
-                    label: props.translations.copy_prompt,
-                    shortcut: is_mac ? '⌘C' : 'Ctrl+C',
-                    on_click: handle_copy_click
-                  },
-                  ...(props.value
-                    ? [
-                        {
-                          label: props.translations.voice_input,
-                          shortcut: is_mac ? '⇧⌘Space' : 'Ctrl+Shift+Space',
-                          on_click: () => {
-                            props.on_recording_started()
-                            close_dropdown()
-                          }
-                        }
-                      ]
-                    : [])
-                ]}
-              />
-            </>
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    props.on_mode_change!(
+                      props.mode == MODE.WEB ? MODE.API : MODE.WEB
+                    )
+                  }}
+                  onMouseEnter={() => set_is_mode_switch_hovered(true)}
+                  onMouseLeave={() => set_is_mode_switch_hovered(false)}
+                >
+                  <span className={styles['footer__right__mode-switch__label']}>
+                    {props.mode == MODE.WEB ? 'WEB' : 'API'}
+                  </span>
+                </button>
+              </KeycapWrapper>
+            </div>
           )}
-          {(props.is_copy_only || (props.is_web_mode && !props.is_connected)) && (
+          {!props.is_copy_only &&
+            (!props.is_web_mode ||
+              (props.is_web_mode && props.is_connected)) && (
+              <>
+                {props.is_recording ? (
+                  <button
+                    className={cn(
+                      styles['footer__right__submit__button'],
+                      styles['footer__right__submit__button--submit'],
+                      styles['footer__right__submit__button--recording'],
+                      'codicon',
+                      is_recording_hovered
+                        ? 'codicon-debug-stop'
+                        : 'codicon-mic-filled'
+                    )}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      props.on_recording_finished()
+                    }}
+                    onMouseEnter={() => set_is_recording_hovered(true)}
+                    onMouseLeave={() => set_is_recording_hovered(false)}
+                  />
+                ) : !props.value ? (
+                  <button
+                    className={cn(
+                      styles['footer__right__submit__button'],
+                      styles['footer__right__submit__button--submit'],
+                      'codicon',
+                      'codicon-mic'
+                    )}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      props.on_recording_started()
+                    }}
+                    onMouseEnter={() => set_is_recording_hovered(true)}
+                    onMouseLeave={() => set_is_recording_hovered(false)}
+                  />
+                ) : (
+                  <button
+                    className={cn(
+                      styles['footer__right__submit__button'],
+                      styles['footer__right__submit__button--submit'],
+                      'codicon',
+                      'codicon-send'
+                    )}
+                    onClick={handle_submit}
+                    onMouseEnter={() => set_show_submit_tooltip(true)}
+                    onMouseLeave={() => set_show_submit_tooltip(false)}
+                  />
+                )}
+                <button
+                  ref={chevron_button_ref}
+                  className={cn(
+                    styles['footer__right__submit__button'],
+                    styles['footer__right__submit__button--chevron']
+                  )}
+                  onClick={() => {
+                    toggle_dropdown()
+                  }}
+                  title={props.translations.more_actions}
+                >
+                  <span
+                    className={cn(
+                      {
+                        [styles['footer__right__submit__button--toggled']]:
+                          is_dropdown_open
+                      },
+                      'codicon',
+                      'codicon-chevron-down'
+                    )}
+                  />
+                </button>
+                <DropdownMenu
+                  anchor_ref={chevron_button_ref}
+                  is_open={is_dropdown_open}
+                  items={[
+                    ...(!props.value && props.is_web_mode
+                      ? [
+                          {
+                            label: props.translations.send,
+                            shortcut: is_mac ? '↩' : 'Enter',
+                            on_click: () => {
+                              handle_submit({
+                                stopPropagation: () => {}
+                              } as any)
+                              close_dropdown()
+                            }
+                          }
+                        ]
+                      : []),
+                    {
+                      label: props.translations.send_with_ellipsis,
+                      shortcut: is_mac ? '⌘↩' : 'Ctrl+Enter',
+                      on_click: handle_select_click
+                    },
+                    {
+                      label: props.translations.copy_prompt,
+                      shortcut: is_mac ? '⌘C' : 'Ctrl+C',
+                      on_click: handle_copy_click
+                    },
+                    ...(props.value
+                      ? [
+                          {
+                            label: props.translations.voice_input,
+                            shortcut: is_mac ? '⇧⌘Space' : 'Ctrl+Shift+Space',
+                            on_click: () => {
+                              props.on_recording_started()
+                              close_dropdown()
+                            }
+                          }
+                        ]
+                      : [])
+                  ]}
+                />
+              </>
+            )}
+          {(props.is_copy_only ||
+            (props.is_web_mode && !props.is_connected)) && (
             <>
               {props.is_recording ? (
                 <button
@@ -747,9 +772,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                     <span
                       className={cn(
                         {
-                          [styles[
-                            'footer__right__submit__button--toggled'
-                          ]]: is_dropdown_open
+                          [styles['footer__right__submit__button--toggled']]:
+                            is_dropdown_open
                         },
                         'codicon',
                         'codicon-chevron-down'
@@ -839,9 +863,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               />
             </ReactSortable>
           ) : props.tabs_count === 1 ? (
-            <div
-              className={styles.tabs}
-            >
+            <div className={styles.tabs}>
               <div
                 className={cn(styles.tabs__tab, styles['tabs__tab--new'])}
                 onClick={(e) => {

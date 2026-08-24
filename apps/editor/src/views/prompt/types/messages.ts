@@ -6,7 +6,6 @@ import {
 } from '@shared/types/response-history-item'
 import { WebConfiguration } from '@shared/types/web-configuration'
 import { Task } from '@shared/types/task'
-import { Mode } from './main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { ApiFeature } from '@/views/shared/types/api-features'
 import {
@@ -15,6 +14,7 @@ import {
   ShowPromptViewApiCallsManagerProgressMessage,
   HidePromptViewApiCallsManagerProgressMessage
 } from '@/views/shared/types/messages'
+import { Mode } from '@shared/types/mode'
 
 export type { BaseMessage }
 
