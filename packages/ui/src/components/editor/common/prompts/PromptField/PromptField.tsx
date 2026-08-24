@@ -80,6 +80,7 @@ export type PromptFieldProps = {
   warning?: string
   voice_input_push_to_talk?: boolean
   token_count?: number
+  is_copy_only?: boolean
   translations: {
     invocation_count: string
     voice_input: string
@@ -156,7 +157,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
   useEffect(() => {
     const has_submit_button =
-      (!props.is_web_mode || (props.is_web_mode && props.is_connected)) &&
+      (!props.is_copy_only && (!props.is_web_mode || (props.is_web_mode && props.is_connected))) &&
       !props.is_recording &&
       !!props.value
 
@@ -168,7 +169,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     props.is_recording,
     props.is_web_mode,
     props.is_connected,
-    props.prompt_type
+    props.prompt_type,
+    props.is_copy_only
   ])
 
   useEffect(() => {
@@ -413,7 +415,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               : props.translations.voice_input
           }
           details={is_mac ? '⇧⌘Space' : 'Ctrl+Shift+Space'}
-          offset={props.is_web_mode && !props.is_connected ? 12 : 28}
+          offset={props.is_copy_only || (props.is_web_mode && !props.is_connected) ? 12 : 28}
           align="right"
         />
       )}
@@ -597,8 +599,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         </div>
 
         <div className={styles['footer__right__submit']} ref={dropdown_ref}>
-          {(!props.is_web_mode ||
-            (props.is_web_mode && props.is_connected)) && (
+          {(!props.is_copy_only && (!props.is_web_mode ||
+            (props.is_web_mode && props.is_connected))) && (
             <>
               <div
                 className={styles['footer__right__invocation-count']}
@@ -749,7 +751,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               />
             </>
           )}
-          {props.is_web_mode && !props.is_connected && (
+          {(props.is_copy_only || (props.is_web_mode && !props.is_connected)) && (
             <>
               {props.is_recording ? (
                 <button

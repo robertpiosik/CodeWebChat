@@ -136,28 +136,13 @@ const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
 export const MainView: React.FC<Props> = (props) => {
   const { t } = use_translation()
 
-  const is_in_edit_context_prompt_type =
-    (props.mode == MODE.WEB && props.web_prompt_type == 'edit-files') ||
-    (props.mode == MODE.API && props.api_prompt_type == 'edit-files')
-
-  const is_in_ask_about_context_prompt_type =
-    props.mode == MODE.WEB && props.web_prompt_type == 'ask-about-files'
-
   const show_edit_format_selector =
     (props.mode == MODE.WEB && props.web_prompt_type == 'edit-files') ||
     (props.mode == MODE.API && props.api_prompt_type == 'edit-files')
 
   let warning: string | undefined
-  if (
-    (props.mode == MODE.API && props.api_configurations.length == 0) ||
-    (props.mode == MODE.WEB && props.web_configurations.length == 0)
-  ) {
+  if (props.mode == MODE.API && props.api_configurations.length == 0) {
     warning = 'Add a configuration'
-  } else if (
-    (is_in_edit_context_prompt_type || is_in_ask_about_context_prompt_type) &&
-    props.token_count == 0
-  ) {
-    warning = 'Select files'
   }
 
   const { current_invocation_count, handle_invocation_count_change } =
@@ -301,6 +286,7 @@ export const MainView: React.FC<Props> = (props) => {
 
         <div className={styles['chat-input-container']}>
           <UiPromptField
+            is_copy_only={props.mode == MODE.WEB && props.web_configurations.length == 0}
             value={props.instructions}
             chat_history={props.chat_history}
             on_change={handle_input_change}

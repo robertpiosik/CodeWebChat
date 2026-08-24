@@ -185,22 +185,21 @@ export const translations = {
     bg: 'Не е намерена конфигурация'
   },
   'views.prompt.handlers.voice-input.warning.no-config.detail': {
-    en: 'Add a "Voice Input" configuration in settings to use this feature.',
-    pl: 'Dodaj konfigurację "Wprowadzanie głosowe" w ustawieniach, aby użyć tej funkcji.',
-    'zh-cn': '在设置中添加“语音输入”配置以使用此功能。',
-    ja: 'この機能を使用するには、設定で「音声入力」設定を追加してください。',
-    'zh-tw': '在設定中新增「語音輸入」配置以使用此功能。',
-    de: 'Fügen Sie eine "Spracheingabe"-Konfiguration in den Einstellungen hinzu, um diese Funktion zu nutzen.',
-    es: 'Agregue una configuración de "Entrada de voz" en la configuración para usar esta función.',
-    fr: 'Ajoutez une configuration "Saisie vocale" dans les paramètres pour utiliser cette fonctionnalité.',
-    'pt-br':
-      'Adicione uma configuração de "Entrada de Voz" nas configurações para usar este recurso.',
-    ru: 'Добавьте конфигурацию "Голосовой ввод" в настройках для использования этой функции.',
-    ko: '이 기능을 사용하려면 설정에서 "음성 입력" 구성을 추가하세요.',
-    it: 'Aggiungi una configurazione "Input vocale" nelle impostazioni per utilizzare questa funzione.',
-    tr: 'Bu özelliği kullanmak için ayarlara bir "Ses Girişi" yapılandırması ekleyin.',
-    cs: 'Chcete-li tuto funkci používat, přidejte v nastavení konfiguraci "Hlasový vstup".',
-    hu: 'Ennek a funkciónak a használatához adjon hozzá egy "Hangbemenet" konfigurációt a beállításokban.',
-    bg: 'Добавете конфигурация "Гласов вход" в настройките, за да използвате тази функция.'
+    en: 'No API configurations found. Add one to use this feature.',
+    pl: 'Nie znaleziono konfiguracji API. Dodaj jedną, aby korzystać z tej funkcji.',
+    'zh-cn': '未找到 API 配置。添加一个以使用此功能。',
+    ja: 'API設定が見つかりません。この機能を使用するには設定を追加してください。',
+    'zh-tw': '找不到 API 配置。新增一個以使用此功能。',
+    de: 'Keine API-Konfigurationen gefunden. Fügen Sie eine hinzu, um diese Funktion zu nutzen.',
+    es: 'No se encontraron configuraciones de API. Añade una para usar esta función.',
+    fr: 'Aucune configuration d\'API trouvée. Ajoutez-en une pour utiliser cette fonctionnalité.',
+    'pt-br': 'Nenhuma configuração de API encontrada. Adicione uma para usar este recurso.',
+    ru: 'Конфигурации API не найдены. Добавьте одну, чтобы использовать эту функцию.',
+    ko: 'API 구성을 찾을 수 없습니다. 이 기능을 사용하려면 하나를 추가하세요.',
+    it: 'Nessuna configurazione API trovata. Aggiungine una per usare questa funzione.',
+    tr: 'API yapılandırması bulunamadı. Bu özelliği kullanmak için bir tane ekleyin.',
+    cs: 'Nebyly nalezeny žádné konfigurace API. Přidejte jednu, abyste mohli tuto funkci používat.',
+    hu: 'Nem találhatók API konfigurációk. Adjon hozzá egyet a funkció használatához.',
+    bg: 'Не са намерени API конфигурации. Добавете една, за да използвате тази функция.'
   }
 } as const
