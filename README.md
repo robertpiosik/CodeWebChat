@@ -11,7 +11,7 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> 
 </p>
 
-<p style="text-align:center"><strong>CWC</strong> is a free and privacy-fist toolkit for AI coding with static context.</p>
+<p align="center"><strong>CWC</strong> is a free and privacy-fist toolkit for AI coding with static context.</p>
 
 <br/>
 
