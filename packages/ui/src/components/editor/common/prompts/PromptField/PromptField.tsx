@@ -585,7 +585,15 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   onMouseLeave={() => set_is_mode_switch_hovered(false)}
                 >
                   <span className={styles['footer__right__mode-switch__label']}>
-                    {props.mode == MODE.WEB ? 'WEB' : 'API'}
+                    {(props.mode == MODE.WEB ? 'WEB' : 'API').split('').map((char, index) => (
+                      <span
+                        key={index}
+                        className={styles['footer__right__mode-switch__label-char']}
+                        style={{ animationDelay: `${index * 0.05}s` }}
+                      >
+                        {char}
+                      </span>
+                    ))}
                   </span>
                 </button>
               </KeycapWrapper>

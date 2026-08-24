@@ -1,29 +1,3 @@
-@keyframes wave {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  25% {
-    transform: translateY(-4px);
-  }
-  75% {
-    transform: translateY(0);
-  }
-}
-
-@keyframes small-wave {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  25% {
-    transform: translateY(-2px);
-  }
-  75% {
-    transform: translateY(0);
-  }
-}
-
 .button {
   display: flex;
   align-items: center;
@@ -67,5 +41,31 @@
   &__label-char {
     display: inline-block;
     position: relative;
+  }
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-4px);
+  }
+  75% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes small-wave {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-2px);
+  }
+  75% {
+    transform: translateY(0);
   }
 }

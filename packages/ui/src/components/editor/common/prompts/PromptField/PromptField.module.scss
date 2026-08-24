@@ -1,3 +1,5 @@
+
+
 .container {
   --padding: 5px 7px;
   position: relative;
@@ -278,10 +280,21 @@
         letter-spacing: 1px;
         font-size: 16px;
         padding: 0 4px;
+
+        &:hover {
+          .footer__right__mode-switch__label-char {
+            animation: mode-switch-wave 0.5s ease-in-out;
+          }
+        }
       }
 
       &__label {
         padding-top: 1px;
+      }
+
+      &__label-char {
+        display: inline-block;
+        position: relative;
       }
     }
 
@@ -422,5 +435,18 @@
         font-size: 11px;
       }
     }
+  }
+}
+
+@keyframes mode-switch-wave {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-1.5px);
+  }
+  75% {
+    transform: translateY(0);
   }
 }
