@@ -124,17 +124,17 @@ export const prompt_for_referencing_files = async (params: {
         if (button === close_button) {
           resolve(undefined)
           quick_pick.hide()
-      } else if (button === search_button) {
-        current_selected_items = [...quick_pick.selectedItems]
-        if (current_selected_items.length == 0) {
-          vscode.window.showInformationMessage(
-            t('common.info.select-files-to-search')
-          )
-          return
+        } else if (button === search_button) {
+          current_selected_items = [...quick_pick.selectedItems]
+          if (current_selected_items.length == 0) {
+            vscode.window.showInformationMessage(
+              t('common.info.select-files-to-search')
+            )
+            return
+          }
+          resolve('search')
+          quick_pick.hide()
         }
-        resolve('search')
-        quick_pick.hide()
-      }
       })
 
       quick_pick.onDidAccept(() => {

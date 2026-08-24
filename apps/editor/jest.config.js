@@ -8,4 +8,4 @@ module.exports = {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@shared/(.*)$': '<rootDir>/../../packages/shared/src/$1'
   }
-};
+}

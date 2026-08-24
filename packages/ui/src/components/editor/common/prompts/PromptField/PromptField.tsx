@@ -466,7 +466,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               >
                 {is_alt_pressed ? (
                   <span className={styles['footer__right__details__keycaps']}>
-                    <KeycapWrapper char={props.edit_format != 'whole' ? 'W' : undefined}>
+                    <KeycapWrapper
+                      char={props.edit_format != 'whole' ? 'W' : undefined}
+                    >
                       <span
                         className={cn(
                           styles['footer__right__details__keycap'],
@@ -475,12 +477,19 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                               props.edit_format == 'whole'
                           }
                         )}
-                        style={{ visibility: props.edit_format != 'whole' ? 'hidden' : undefined }}
+                        style={{
+                          visibility:
+                            props.edit_format != 'whole' ? 'hidden' : undefined
+                        }}
                       >
                         W
                       </span>
                     </KeycapWrapper>
-                    <KeycapWrapper char={props.edit_format != 'search-replace' ? 'S' : undefined}>
+                    <KeycapWrapper
+                      char={
+                        props.edit_format != 'search-replace' ? 'S' : undefined
+                      }
+                    >
                       <span
                         className={cn(
                           styles['footer__right__details__keycap'],
@@ -489,12 +498,19 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                               props.edit_format == 'search-replace'
                           }
                         )}
-                        style={{ visibility: props.edit_format != 'search-replace' ? 'hidden' : undefined }}
+                        style={{
+                          visibility:
+                            props.edit_format != 'search-replace'
+                              ? 'hidden'
+                              : undefined
+                        }}
                       >
                         S
                       </span>
                     </KeycapWrapper>
-                    <KeycapWrapper char={props.edit_format != 'diff' ? 'D' : undefined}>
+                    <KeycapWrapper
+                      char={props.edit_format != 'diff' ? 'D' : undefined}
+                    >
                       <span
                         className={cn(
                           styles['footer__right__details__keycap'],
@@ -503,12 +519,17 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                               props.edit_format == 'diff'
                           }
                         )}
-                        style={{ visibility: props.edit_format != 'diff' ? 'hidden' : undefined }}
+                        style={{
+                          visibility:
+                            props.edit_format != 'diff' ? 'hidden' : undefined
+                        }}
                       >
                         D
                       </span>
                     </KeycapWrapper>
-                    <KeycapWrapper char={props.edit_format != 'truncated' ? 'T' : undefined}>
+                    <KeycapWrapper
+                      char={props.edit_format != 'truncated' ? 'T' : undefined}
+                    >
                       <span
                         className={cn(
                           styles['footer__right__details__keycap'],
@@ -517,7 +538,12 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                               props.edit_format == 'truncated'
                           }
                         )}
-                        style={{ visibility: props.edit_format != 'truncated' ? 'hidden' : undefined }}
+                        style={{
+                          visibility:
+                            props.edit_format != 'truncated'
+                              ? 'hidden'
+                              : undefined
+                        }}
                       >
                         T
                       </span>
@@ -564,10 +590,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           {props.mode && props.on_mode_change && (
             <div className={styles['footer__right__mode-switch']}>
               {is_mode_switch_hovered && (
-                <Tooltip
-                  message={props.translations.mode}
-                  align="center"
-                />
+                <Tooltip message={props.translations.mode} align="center" />
               )}
               <KeycapWrapper char={is_alt_pressed ? 'ESC' : undefined}>
                 <button
@@ -585,15 +608,19 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   onMouseLeave={() => set_is_mode_switch_hovered(false)}
                 >
                   <span className={styles['footer__right__mode-switch__label']}>
-                    {(props.mode == MODE.WEB ? 'WEB' : 'API').split('').map((char, index) => (
-                      <span
-                        key={index}
-                        className={styles['footer__right__mode-switch__label-char']}
-                        style={{ animationDelay: `${index * 0.05}s` }}
-                      >
-                        {char}
-                      </span>
-                    ))}
+                    {(props.mode == MODE.WEB ? 'WEB' : 'API')
+                      .split('')
+                      .map((char, index) => (
+                        <span
+                          key={index}
+                          className={
+                            styles['footer__right__mode-switch__label-char']
+                          }
+                          style={{ animationDelay: `${index * 0.05}s` }}
+                        >
+                          {char}
+                        </span>
+                      ))}
                   </span>
                 </button>
               </KeycapWrapper>

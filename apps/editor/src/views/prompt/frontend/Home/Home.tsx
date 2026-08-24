@@ -221,15 +221,21 @@ export const Home: React.FC<Props> = (props) => {
 
             <div className={styles.inner__mode} ref={mode_ref}>
               <AsciiArtEffect />
-              <UiKeycapWrapper char={is_alt_pressed ? '1' : undefined} full_width>
-                <UiModeButton 
-                  label={MODE.WEB} 
+              <UiKeycapWrapper
+                char={is_alt_pressed ? '1' : undefined}
+                full_width
+              >
+                <UiModeButton
+                  label={MODE.WEB}
                   on_click={props.on_chatbots_click}
                 />
               </UiKeycapWrapper>
-              <UiKeycapWrapper char={is_alt_pressed ? '2' : undefined} full_width>
-                <UiModeButton 
-                  label={MODE.API} 
+              <UiKeycapWrapper
+                char={is_alt_pressed ? '2' : undefined}
+                full_width
+              >
+                <UiModeButton
+                  label={MODE.API}
                   on_click={props.on_api_calls_click}
                 />
               </UiKeycapWrapper>

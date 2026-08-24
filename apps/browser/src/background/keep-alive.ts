@@ -3,7 +3,6 @@ import { check_and_recover_connection } from './websocket'
 const ALARM_NAME = 'keep-alive'
 const ALARM_PERIOD_MINUTES = 0.5 // fires every 30 seconds
 
-
 export const setup_keep_alive = () => {
   if (!browser.browserAction) {
     const ensure_alarm = () => {
@@ -24,7 +23,6 @@ export const setup_keep_alive = () => {
       if (alarm.name === ALARM_NAME) {
         check_and_recover_connection()
       }
-
     })
   }
 }

@@ -366,9 +366,7 @@ export const Main: React.FC<Props> = (props) => {
     return ''
   }
 
-  const handle_make_api_call = (
-    use_quick_pick: boolean
-  ) => {
+  const handle_make_api_call = (use_quick_pick: boolean) => {
     const instruction = get_current_instructions()
 
     post_message(props.vscode, {

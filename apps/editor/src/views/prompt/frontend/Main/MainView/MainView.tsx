@@ -275,7 +275,9 @@ export const MainView: React.FC<Props> = (props) => {
 
         <div className={styles['chat-input-container']}>
           <UiPromptField
-            is_copy_only={props.mode == MODE.WEB && props.web_configurations.length == 0}
+            is_copy_only={
+              props.mode == MODE.WEB && props.web_configurations.length == 0
+            }
             value={props.instructions}
             chat_history={props.chat_history}
             on_change={handle_input_change}

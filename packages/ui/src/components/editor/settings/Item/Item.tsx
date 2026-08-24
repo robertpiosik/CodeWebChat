@@ -26,9 +26,11 @@ export const Item: React.FC<Props> = (props) => {
     >
       <div
         className={cn(styles.main, {
-          [styles['main--toggleable']]: props.is_toggleable,
+          [styles['main--toggleable']]: props.is_toggleable
         })}
-        onClick={props.is_toggleable ? () => set_is_expanded(!is_expanded) : undefined}
+        onClick={
+          props.is_toggleable ? () => set_is_expanded(!is_expanded) : undefined
+        }
       >
         <div className={styles.content}>
           <div className={styles.title}>{props.title}</div>
@@ -47,7 +49,11 @@ export const Item: React.FC<Props> = (props) => {
             {props.is_toggleable && (
               <IconButton
                 codicon_icon={is_expanded ? 'chevron-up' : 'chevron-down'}
-                title={is_expanded ? props.translations?.collapse : props.translations?.expand}
+                title={
+                  is_expanded
+                    ? props.translations?.collapse
+                    : props.translations?.expand
+                }
               />
             )}
           </div>
@@ -59,4 +65,3 @@ export const Item: React.FC<Props> = (props) => {
     </div>
   )
 }
-

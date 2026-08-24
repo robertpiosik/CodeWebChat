@@ -1,4 +1,7 @@
-import { ApiConfiguration, ModelProvider } from '@/services/model-providers-manager'
+import {
+  ApiConfiguration,
+  ModelProvider
+} from '@/services/model-providers-manager'
 
 export const apply_reasoning_effort = (params: {
   body: { [key: string]: any }

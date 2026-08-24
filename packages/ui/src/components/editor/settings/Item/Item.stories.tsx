@@ -50,4 +50,3 @@ export const Toggleable: Story = {
     children: <div>Advanced content goes here</div>
   }
 }
-

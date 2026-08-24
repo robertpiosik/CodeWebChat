@@ -2,22 +2,73 @@ import * as path from 'path'
 
 const BINARY_EXTENSIONS = new Set([
   // Images
-  '.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.ico', '.tiff', '.svgz',
+  '.png',
+  '.jpg',
+  '.jpeg',
+  '.gif',
+  '.webp',
+  '.bmp',
+  '.ico',
+  '.tiff',
+  '.svgz',
   // Documents
-  '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.pages', '.numbers', '.key',
+  '.pdf',
+  '.doc',
+  '.docx',
+  '.xls',
+  '.xlsx',
+  '.ppt',
+  '.pptx',
+  '.pages',
+  '.numbers',
+  '.key',
   // Archives
-  '.zip', '.tar', '.gz', '.rar', '.7z', '.bz2', '.xz', '.iso',
+  '.zip',
+  '.tar',
+  '.gz',
+  '.rar',
+  '.7z',
+  '.bz2',
+  '.xz',
+  '.iso',
   // Audio/Video
-  '.mp3', '.mp4', '.wav', '.avi', '.mkv', '.mov', '.webm', '.ogg', '.flac',
+  '.mp3',
+  '.mp4',
+  '.wav',
+  '.avi',
+  '.mkv',
+  '.mov',
+  '.webm',
+  '.ogg',
+  '.flac',
   // Fonts
-  '.ttf', '.otf', '.woff', '.woff2', '.eot',
+  '.ttf',
+  '.otf',
+  '.woff',
+  '.woff2',
+  '.eot',
   // Executables/Compiled
-  '.exe', '.dll', '.so', '.dylib', '.bin', '.dat', '.class', '.pyc', '.o', '.a', '.lib',
+  '.exe',
+  '.dll',
+  '.so',
+  '.dylib',
+  '.bin',
+  '.dat',
+  '.class',
+  '.pyc',
+  '.o',
+  '.a',
+  '.lib',
   // Databases and others
-  '.sqlite', '.sqlite3', '.db'
+  '.sqlite',
+  '.sqlite3',
+  '.db'
 ])
 
-export const is_binary_file = (file_path: string, buffer?: Uint8Array): boolean => {
+export const is_binary_file = (
+  file_path: string,
+  buffer?: Uint8Array
+): boolean => {
   const base = path.basename(file_path).toLowerCase()
   if (base == '.ds_store') return true
 

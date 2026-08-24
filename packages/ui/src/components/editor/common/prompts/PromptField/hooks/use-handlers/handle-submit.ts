@@ -9,7 +9,7 @@ export const create_handle_submit =
     with_control?: boolean
   ) => {
     e.stopPropagation()
-    
+
     if (props.is_copy_only) {
       props.on_copy()
     } else {

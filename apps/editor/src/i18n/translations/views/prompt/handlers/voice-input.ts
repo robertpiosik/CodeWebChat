@@ -192,8 +192,9 @@ export const translations = {
     'zh-tw': '找不到 API 配置。新增一個以使用此功能。',
     de: 'Keine API-Konfigurationen gefunden. Fügen Sie eine hinzu, um diese Funktion zu nutzen.',
     es: 'No se encontraron configuraciones de API. Añade una para usar esta función.',
-    fr: 'Aucune configuration d\'API trouvée. Ajoutez-en une pour utiliser cette fonctionnalité.',
-    'pt-br': 'Nenhuma configuração de API encontrada. Adicione uma para usar este recurso.',
+    fr: "Aucune configuration d'API trouvée. Ajoutez-en une pour utiliser cette fonctionnalité.",
+    'pt-br':
+      'Nenhuma configuração de API encontrada. Adicione uma para usar este recurso.',
     ru: 'Конфигурации API не найдены. Добавьте одну, чтобы использовать эту функцию.',
     ko: 'API 구성을 찾을 수 없습니다. 이 기능을 사용하려면 하나를 추가하세요.',
     it: 'Nessuna configurazione API trovata. Aggiungine una per usare questa funzione.',
