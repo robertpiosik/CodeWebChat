@@ -2,11 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import type { PromptFieldProps, EditFormat } from '../PromptField'
 
 export const use_keyboard_shortcuts = (
-  props: PromptFieldProps,
-  params: {
-    on_toggle_invocation_dropdown?: () => void
-    is_invocation_dropdown_open?: boolean
-  }
+  props: PromptFieldProps
 ) => {
   const [is_alt_pressed, set_is_alt_pressed] = useState(false)
   const is_alt_pressed_raw_ref = useRef(false)
@@ -28,8 +24,6 @@ export const use_keyboard_shortcuts = (
     }
   }, [props.edit_format])
 
-  const is_alt_x_down_ref = useRef(false)
-  const has_set_count_during_alt_x_ref = useRef(false)
   const alt_interrupted_ref = useRef(false)
 
   useEffect(() => {
@@ -71,60 +65,6 @@ export const use_keyboard_shortcuts = (
         }
       }
 
-      if (
-        params.on_toggle_invocation_dropdown &&
-        e.code == 'KeyX' &&
-        e.altKey &&
-        !e.shiftKey &&
-        !e.ctrlKey &&
-        !e.metaKey
-      ) {
-        e.preventDefault()
-        if (!e.repeat) {
-          is_alt_x_down_ref.current = true
-          has_set_count_during_alt_x_ref.current = false
-        }
-        return
-      }
-
-      if (
-        (params.is_invocation_dropdown_open || is_alt_x_down_ref.current) &&
-        props.on_invocation_count_change &&
-        !e.ctrlKey &&
-        !e.metaKey &&
-        !e.shiftKey
-      ) {
-        let count = 0
-        switch (e.code) {
-          case 'Digit1':
-            count = 1
-            break
-          case 'Digit2':
-            count = 2
-            break
-          case 'Digit3':
-            count = 3
-            break
-        }
-
-        if (count > 0) {
-          e.preventDefault()
-          if (!e.repeat) {
-            props.on_invocation_count_change(count)
-            if (is_alt_x_down_ref.current) {
-              has_set_count_during_alt_x_ref.current = true
-            }
-            if (
-              params.is_invocation_dropdown_open &&
-              params.on_toggle_invocation_dropdown
-            ) {
-              params.on_toggle_invocation_dropdown()
-            }
-          }
-          return
-        }
-      }
-
       if (format) {
         e.preventDefault()
         props.on_edit_format_change!(format)
@@ -144,14 +84,9 @@ export const use_keyboard_shortcuts = (
           !e.ctrlKey &&
           !e.metaKey
       )
-
-      if (e.code == 'KeyX' && is_alt_x_down_ref.current) {
-        is_alt_x_down_ref.current = false
-      }
     }
     const handle_blur = () => {
       update_alt_pressed(false)
-      is_alt_x_down_ref.current = false
       alt_interrupted_ref.current = false
     }
     window.addEventListener('keydown', handle_key_down)
@@ -165,10 +100,7 @@ export const use_keyboard_shortcuts = (
   }, [
     props.show_edit_format_selector,
     props.on_edit_format_change,
-    props.on_invocation_count_change,
-    props.edit_format,
-    params.on_toggle_invocation_dropdown,
-    params.is_invocation_dropdown_open
+    props.edit_format
   ])
 
   const handle_container_key_down = (

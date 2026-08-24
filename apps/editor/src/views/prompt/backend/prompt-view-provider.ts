@@ -620,8 +620,7 @@ export class PromptViewProvider implements vscode.WebviewViewProvider {
             await handle_autofill({
               prompt_view_provider: this,
               web_configuration_name: message.web_configuration_name,
-              show_quick_pick: message.show_quick_pick,
-              invocation_count: message.invocation_count
+              show_quick_pick: message.show_quick_pick
             })
           } else if (message.command == 'PREVIEW_WEB_CONFIGURATION') {
             await handle_preview_web_configuration(this, message)

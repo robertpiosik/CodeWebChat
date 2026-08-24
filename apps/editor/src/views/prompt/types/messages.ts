@@ -114,7 +114,6 @@ export interface TogglePinnedWebConfigurationMessage extends BaseMessage {
 
 export interface AutofillMessage extends BaseMessage {
   command: 'AUTOFILL'
-  invocation_count: number
   web_configuration_name?: string
   show_quick_pick?: boolean
 }
@@ -217,7 +216,6 @@ export interface MakeApiCallMessage extends BaseMessage {
   prompt_type: ApiPromptType
   use_quick_pick: boolean
   api_configuration_id?: string
-  invocation_count: number
 }
 
 export interface ShowAtSignQuickPickMessage extends BaseMessage {

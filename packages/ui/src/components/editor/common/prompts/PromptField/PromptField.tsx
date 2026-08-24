@@ -57,8 +57,6 @@ export type PromptFieldProps = {
   selected_files?: string[]
   currently_open_file_path?: string
   currently_open_file_text?: string
-  invocation_count: number
-  on_invocation_count_change: (count: number) => void
   on_go_to_file: (file_path: string) => void
   on_pasted_lines_click: (path: string, start?: string, end?: string) => void
   on_open_url: (url: string) => void
@@ -82,7 +80,6 @@ export type PromptFieldProps = {
   token_count?: number
   is_copy_only?: boolean
   translations: {
-    invocation_count: string
     voice_input: string
     exit_voice_input: string
     reference_file: string
@@ -114,11 +111,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [show_submit_tooltip, set_show_submit_tooltip] = useState(false)
   const [is_text_selecting, set_is_text_selecting] = useState(false)
   const [is_focused, set_is_focused] = useState(false)
-  const [is_invocation_dropdown_open, set_is_invocation_dropdown_open] =
-    useState(false)
   const [is_recording_hovered, set_is_recording_hovered] = useState(false)
-  const [is_invocation_count_hovered, set_is_invocation_count_hovered] =
-    useState(false)
   const [is_edit_format_hovered, set_is_edit_format_hovered] = useState(false)
   const [is_token_count_hovered, set_is_token_count_hovered] = useState(false)
   const [hovered_left_action, set_hovered_left_action] = useState<
@@ -144,16 +137,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     })
   }, [props.tabs_count])
 
-  const invocation_button_ref = useRef<HTMLButtonElement>(null)
   const chevron_button_ref = useRef<HTMLButtonElement>(null)
   const disconnected_chevron_button_ref = useRef<HTMLButtonElement>(null)
-  const invocation_container_ref = useRef<HTMLDivElement>(null)
-
-  use_click_outside(
-    invocation_container_ref,
-    useCallback(() => set_is_invocation_dropdown_open(false), []),
-    is_invocation_dropdown_open
-  )
 
   useEffect(() => {
     const has_submit_button =
@@ -195,18 +180,10 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         selection.removeAllRanges()
       }
     }
-  }, [props.warning])
-
-  const toggle_invocation_dropdown = useCallback(() => {
-    set_is_invocation_dropdown_open((prev) => !prev)
-  }, [])
+  }, [props.warning  ])
 
   const { is_alt_pressed, handle_container_key_down } = use_keyboard_shortcuts(
-    props,
-    {
-      is_invocation_dropdown_open,
-      on_toggle_invocation_dropdown: toggle_invocation_dropdown
-    }
+    props
   )
 
   const {
@@ -396,14 +373,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           message={`${props.translations.send_with} ${props.last_choice_tooltip.name}`}
           details={props.last_choice_tooltip.details}
           offset={28}
-          align="right"
-        />
-      )}
-      {is_invocation_count_hovered && !is_invocation_dropdown_open && (
-        <Tooltip
-          message={props.translations.invocation_count}
-          details={is_mac ? '⌥X 1-3' : 'Alt+X 1-3'}
-          offset={48}
           align="right"
         />
       )}
@@ -602,42 +571,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           {(!props.is_copy_only && (!props.is_web_mode ||
             (props.is_web_mode && props.is_connected))) && (
             <>
-              <div
-                className={styles['footer__right__invocation-count']}
-                ref={invocation_container_ref}
-              >
-                <button
-                  ref={invocation_button_ref}
-                  className={cn(
-                    styles['footer__right__submit__button'],
-                    styles['footer__right__invocation-count__button']
-                  )}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    set_is_invocation_dropdown_open((prev) => !prev)
-                    close_dropdown()
-                  }}
-                  onMouseEnter={() => set_is_invocation_count_hovered(true)}
-                  onMouseLeave={() =>
-                    set_is_invocation_count_hovered(false)
-                  }
-                >
-                  {props.invocation_count}×
-                </button>
-                <DropdownMenu
-                  anchor_ref={invocation_button_ref}
-                  is_open={is_invocation_dropdown_open}
-                  items={[1, 2, 3].map((count) => ({
-                    label: `${count}×`,
-                    is_checked: count == props.invocation_count,
-                    shortcut: is_mac ? `⌥X ${count}` : `Alt+X ${count}`,
-                    on_click: () => {
-                      props.on_invocation_count_change(count)
-                      set_is_invocation_dropdown_open(false)
-                    }
-                  }))}
-                />
-              </div>
               {props.is_recording ? (
                 <button
                   className={cn(
@@ -692,7 +625,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                 )}
                 onClick={() => {
                   toggle_dropdown()
-                  set_is_invocation_dropdown_open(false)
                 }}
                 title={props.translations.more_actions}
               >
@@ -809,7 +741,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                     )}
                     onClick={() => {
                       toggle_dropdown()
-                      set_is_invocation_dropdown_open(false)
                     }}
                     title={props.translations.more_actions}
                   >

@@ -23,10 +23,6 @@ export const Empty = () => (
     on_submit_with_control={() => console.log('Submitted with control')}
     selected_files={[]}
     on_slash_click={() => {}}
-    invocation_count={1}
-    on_invocation_count_change={(count) =>
-      console.log('Invocation count changed:', count)
-    }
     on_go_to_file={(path) => console.log('Go to file:', path)}
     on_pasted_lines_click={(path, start, end) =>
       console.log('Pasted lines clicked:', path, start, end)
@@ -47,7 +43,6 @@ export const Empty = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     translations={{
-      invocation_count: 'Invocation count',
       voice_input: 'Voice input',
       exit_voice_input: 'Exit voice input',
       reference_file: 'Reference file',
@@ -90,10 +85,6 @@ export const WithText = () => (
     on_submit_with_control={() => console.log('Submitted with control')}
     selected_files={[]}
     on_slash_click={() => {}}
-    invocation_count={1}
-    on_invocation_count_change={(count) =>
-      console.log('Invocation count changed:', count)
-    }
     on_go_to_file={(path) => console.log('Go to file:', path)}
     on_pasted_lines_click={(path, start, end) =>
       console.log('Pasted lines clicked:', path, start, end)
@@ -114,7 +105,6 @@ export const WithText = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     translations={{
-      invocation_count: 'Invocation count',
       voice_input: 'Voice input',
       exit_voice_input: 'Exit voice input',
       reference_file: 'Reference file',
@@ -157,10 +147,6 @@ export const LongText = () => (
     on_submit_with_control={() => console.log('Submitted with control')}
     selected_files={[]}
     on_slash_click={() => {}}
-    invocation_count={1}
-    on_invocation_count_change={(count) =>
-      console.log('Invocation count changed:', count)
-    }
     on_go_to_file={(path) => console.log('Go to file:', path)}
     on_pasted_lines_click={(path, start, end) =>
       console.log('Pasted lines clicked:', path, start, end)
@@ -181,7 +167,6 @@ export const LongText = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     translations={{
-      invocation_count: 'Invocation count',
       voice_input: 'Voice input',
       exit_voice_input: 'Exit voice input',
       reference_file: 'Reference file',
@@ -223,10 +208,6 @@ export const WithPlaceholderSavedContext = () => (
     is_web_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     selected_files={[]}
-    invocation_count={1}
-    on_invocation_count_change={(count) =>
-      console.log('Invocation count changed:', count)
-    }
     on_go_to_file={(path) => console.log('Go to file:', path)}
     on_slash_click={() => {}}
     on_pasted_lines_click={(path, start, end) =>
@@ -248,7 +229,6 @@ export const WithPlaceholderSavedContext = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     translations={{
-      invocation_count: 'Invocation count',
       voice_input: 'Voice input',
       exit_voice_input: 'Exit voice input',
       reference_file: 'Reference file',
@@ -296,10 +276,6 @@ export const WithPlaceholderSelection = () => (
     is_web_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     selected_files={[]}
-    invocation_count={1}
-    on_invocation_count_change={(count) =>
-      console.log('Invocation count changed:', count)
-    }
     on_go_to_file={(path) => console.log('Go to file:', path)}
     on_slash_click={() => {}}
     on_pasted_lines_click={(path, start, end) =>
@@ -321,7 +297,6 @@ export const WithPlaceholderSelection = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     translations={{
-      invocation_count: 'Invocation count',
       voice_input: 'Voice input',
       exit_voice_input: 'Exit voice input',
       reference_file: 'Reference file',
@@ -363,10 +338,6 @@ export const WithCommit = () => (
     is_web_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     selected_files={[]}
-    invocation_count={1}
-    on_invocation_count_change={(count) =>
-      console.log('Invocation count changed:', count)
-    }
     on_go_to_file={(path) => console.log('Go to file:', path)}
     on_slash_click={() => {}}
     on_pasted_lines_click={(path, start, end) =>
@@ -388,7 +359,6 @@ export const WithCommit = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     translations={{
-      invocation_count: 'Invocation count',
       voice_input: 'Voice input',
       exit_voice_input: 'Exit voice input',
       reference_file: 'Reference file',
@@ -430,10 +400,6 @@ export const WithCommitWithQuotes = () => (
     is_web_mode={false}
     on_submit_with_control={() => console.log('Submitted with control')}
     selected_files={[]}
-    invocation_count={1}
-    on_invocation_count_change={(count) =>
-      console.log('Invocation count changed:', count)
-    }
     on_go_to_file={(path) => console.log('Go to file:', path)}
     on_slash_click={() => {}}
     on_pasted_lines_click={(path, start, end) =>
@@ -455,7 +421,6 @@ export const WithCommitWithQuotes = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     translations={{
-      invocation_count: 'Invocation count',
       voice_input: 'Voice input',
       exit_voice_input: 'Exit voice input',
       reference_file: 'Reference file',
@@ -481,7 +446,6 @@ export const WithCommitWithQuotes = () => (
 )
 export const WithEditFormatSelector = () => {
   const [edit_format, set_edit_format] = useState<EditFormat>('diff')
-  const [invocation_count, set_invocation_count] = useState(1)
   return (
     <PromptField
       value="Hello, this is a sample message"
@@ -505,8 +469,6 @@ export const WithEditFormatSelector = () => {
         if (f) set_edit_format(f)
       }}
       selected_files={[]}
-      invocation_count={invocation_count}
-      on_invocation_count_change={set_invocation_count}
       on_go_to_file={(path) => console.log('Go to file:', path)}
       on_pasted_lines_click={(path, start, end) =>
         console.log('Pasted lines clicked:', path, start, end)
@@ -527,7 +489,6 @@ export const WithEditFormatSelector = () => {
       on_new_tab={() => {}}
       on_tab_delete={() => {}}
       translations={{
-        invocation_count: 'Invocation count',
         voice_input: 'Voice input',
         exit_voice_input: 'Exit voice input',
         reference_file: 'Reference file',
@@ -572,10 +533,6 @@ export const WithFilePaths = () => (
     on_slash_click={() => {}}
     on_go_to_file={(path) => console.log('Go to file:', path)}
     selected_files={['path/to/my/file.ts']}
-    invocation_count={1}
-    on_invocation_count_change={(count) =>
-      console.log('Invocation count changed:', count)
-    }
     on_pasted_lines_click={(path, start, end) =>
       console.log('Pasted lines clicked:', path, start, end)
     }
@@ -595,7 +552,6 @@ export const WithFilePaths = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     translations={{
-      invocation_count: 'Invocation count',
       voice_input: 'Voice input',
       exit_voice_input: 'Exit voice input',
       reference_file: 'Reference file',
@@ -667,10 +623,6 @@ export const WithTabs = () => {
       on_slash_click={() => {}}
       on_go_to_file={(path) => console.log('Go to file:', path)}
       selected_files={['path/to/my/file.ts']}
-      invocation_count={1}
-      on_invocation_count_change={(count) =>
-        console.log('Invocation count changed:', count)
-      }
       on_pasted_lines_click={(path, start, end) =>
         console.log('Pasted lines clicked:', path, start, end)
       }
@@ -690,7 +642,6 @@ export const WithTabs = () => {
       on_new_tab={handle_new_tab}
       on_tab_delete={handle_tab_delete}
       translations={{
-        invocation_count: 'Invocation count',
         voice_input: 'Voice input',
         exit_voice_input: 'Exit voice input',
         reference_file: 'Reference file',
@@ -734,10 +685,6 @@ export const WithWarning = () => (
     on_submit_with_control={() => console.log('Submitted with control')}
     selected_files={[]}
     on_slash_click={() => {}}
-    invocation_count={1}
-    on_invocation_count_change={(count) =>
-      console.log('Invocation count changed:', count)
-    }
     on_go_to_file={(path) => console.log('Go to file:', path)}
     on_pasted_lines_click={() => {}}
     on_open_url={() => {}}
@@ -756,7 +703,6 @@ export const WithWarning = () => (
     on_new_tab={() => {}}
     on_tab_delete={() => {}}
     translations={{
-      invocation_count: 'Invocation count',
       voice_input: 'Voice input',
       exit_voice_input: 'Exit voice input',
       reference_file: 'Reference file',

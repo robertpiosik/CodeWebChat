@@ -26,7 +26,6 @@ export type InitializeChatMessage = {
   options?: string[]
   raw_instructions?: string
   reuse_last_tab?: boolean
-  invocation_count?: number
   inject_apply_response_button?: boolean
 }
 

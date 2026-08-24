@@ -13,7 +13,6 @@ import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/compon
 import { ApiConfiguration } from '@/views/prompt/types/messages'
 import { use_last_choice_tooltip } from './hooks/use-last-choice-tooltip'
 import { Header } from './components/Header'
-import { use_invocation_counts } from './hooks/use-invocation-counts'
 import { SelectionState } from '@/views/prompt/types/messages'
 import { use_translation } from '../../i18n/use-translation'
 import { Icon } from '@ui/components/editor/common/Icon'
@@ -24,7 +23,6 @@ type Props = {
   initialize_chats: (params: {
     web_configuration_name?: string
     show_quick_pick?: boolean
-    invocation_count: number
   }) => void
   copy_to_clipboard: (web_configuration_name?: string) => void
   on_show_home: () => void
@@ -73,7 +71,7 @@ type Props = {
   on_caret_position_change: (caret_position: number) => void
   mode: Mode
   on_mode_change: (value: Mode) => void
-  on_make_api_call: (use_quick_pick: boolean, invocation_count: number) => void
+  on_make_api_call: (use_quick_pick: boolean) => void
   caret_position_to_set?: number
   on_caret_position_set?: () => void
   chat_input_focus_and_select_key: number
@@ -145,33 +143,25 @@ export const MainView: React.FC<Props> = (props) => {
     warning = 'Add a configuration'
   }
 
-  const { current_invocation_count, handle_invocation_count_change } =
-    use_invocation_counts({
-      mode: props.mode,
-      web_prompt_type: props.web_prompt_type,
-      api_prompt_type: props.api_prompt_type
-    })
-
   const handle_input_change = (value: string) => {
     props.set_instructions(value)
   }
 
   const handle_submit = async () => {
     if (props.mode == MODE.WEB) {
-      props.initialize_chats({ invocation_count: current_invocation_count })
+      props.initialize_chats({})
     } else {
-      props.on_make_api_call(false, current_invocation_count)
+      props.on_make_api_call(false)
     }
   }
 
   const handle_submit_with_control = async () => {
     if (props.mode == MODE.WEB) {
       props.initialize_chats({
-        show_quick_pick: true,
-        invocation_count: current_invocation_count
+        show_quick_pick: true
       })
     } else {
-      props.on_make_api_call(true, current_invocation_count)
+      props.on_make_api_call(true)
     }
   }
 
@@ -320,8 +310,6 @@ export const MainView: React.FC<Props> = (props) => {
             on_pasted_lines_click={props.on_pasted_lines_click}
             on_open_url={props.on_open_url}
             on_open_website={props.on_open_website}
-            invocation_count={current_invocation_count}
-            on_invocation_count_change={handle_invocation_count_change}
             on_paste_image={props.on_paste_image}
             on_open_image={props.on_open_image}
             on_paste_long_text={props.on_paste_long_text}
@@ -340,7 +328,6 @@ export const MainView: React.FC<Props> = (props) => {
             voice_input_push_to_talk={props.voice_input_push_to_talk}
             token_count={props.token_count}
             translations={{
-              invocation_count: t('prompt-field.invocation-count'),
               voice_input: t('prompt-field.voice-input'),
               exit_voice_input: t('prompt-field.exit-voice-input'),
               reference_file: t('prompt-field.reference-file'),
@@ -381,8 +368,7 @@ export const MainView: React.FC<Props> = (props) => {
             on_configuration_click={(id) => {
               props.initialize_chats({
                 web_configuration_name: id,
-                show_quick_pick: false,
-                invocation_count: current_invocation_count
+                show_quick_pick: false
               })
             }}
             on_edit={(id) => props.on_web_configuration_edit(id)}

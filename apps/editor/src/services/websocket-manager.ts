@@ -365,7 +365,6 @@ export class WebSocketManager {
     text: string
     web_configuration_name: string
     raw_instructions?: string
-    invocation_count: number
     inject_apply_response_button?: boolean
   }): Promise<boolean> {
     if (!this.has_connected_browsers) {
@@ -377,10 +376,7 @@ export class WebSocketManager {
       config.get<ConfigWebConfigurationFormat[]>('webConfigurations') ?? []
     const gemini_user_id = config.get<number | null>('geminiUserId')
     const ai_studio_user_id = config.get<number | null>('aiStudioUserId')
-    const reuse_last_tab =
-      params.invocation_count > 1
-        ? false
-        : config.get<boolean>('reuseLastTab', false)
+    const reuse_last_tab = config.get<boolean>('reuseLastTab', false)
 
     const target_browser_id = await this._select_browser()
     if (target_browser_id === undefined) {
@@ -456,7 +452,6 @@ export class WebSocketManager {
       client_id: this.client_id || 0, // 0 is a temporary fallback and should be removed few weeks from 28.03.25
       raw_instructions: params.raw_instructions,
       reuse_last_tab,
-      invocation_count: params.invocation_count,
       inject_apply_response_button: params.inject_apply_response_button
     }
 

@@ -357,7 +357,6 @@ export const run_generate_action = async (params: {
             const sent = await params.websocket_manager.initialize_chat({
               text: chatbot_prompt,
               web_configuration_name: selected_web_configuration_name,
-              invocation_count: 1,
               inject_apply_response_button: true
             })
             if (sent) {

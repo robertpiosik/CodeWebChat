@@ -20,7 +20,6 @@ import { PromptBuilder } from '@/utils/prompt-builder'
 
 export const handle_autofill = async (params: {
   prompt_view_provider: PromptViewProvider
-  invocation_count: number
   web_configuration_name?: string
   show_quick_pick?: boolean
 }): Promise<void> => {
@@ -106,7 +105,6 @@ export const handle_autofill = async (params: {
         text,
         web_configuration_name: resolved_web_configuration_name,
         raw_instructions: current_instructions,
-        invocation_count: params.invocation_count,
         inject_apply_response_button
       }
     )

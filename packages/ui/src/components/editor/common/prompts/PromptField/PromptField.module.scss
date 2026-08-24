@@ -276,20 +276,6 @@
       }
     }
 
-    &__invocation-count {
-      position: relative;
-      pointer-events: all;
-      display: flex;
-      align-items: center;
-      flex-shrink: 0;
-
-      &__button {
-        font-size: 11px !important;
-        padding: 0 4px !important;
-        font-variant-numeric: tabular-nums;
-      }
-    }
-
     &__submit {
       display: flex;
       align-items: center;

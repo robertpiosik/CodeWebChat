@@ -1,22 +1,4 @@
 export const prompt_field = {
-  'prompt-field.invocation-count': {
-    en: 'Invocation count',
-    pl: 'Liczba wywołań',
-    'zh-cn': '调用次数',
-    ja: '呼び出し回数',
-    'zh-tw': '呼叫次數',
-    de: 'Aufrufanzahl',
-    es: 'Conteo de invocaciones',
-    fr: "Nombre d'appels",
-    'pt-br': 'Contagem de invocações',
-    ru: 'Количество вызовов',
-    ko: '호출 횟수',
-    it: 'Conteggio chiamate',
-    tr: 'Çağrı sayısı',
-    cs: 'Počet volání',
-    hu: 'Hívások száma',
-    bg: 'Брой извиквания'
-  },
   'prompt-field.voice-input': {
     en: 'Voice input',
     pl: 'Wprowadzanie głosowe',

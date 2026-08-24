@@ -214,13 +214,11 @@ export const Main: React.FC<Props> = (props) => {
   const handle_initialize_chats = (params: {
     web_configuration_name?: string
     show_quick_pick?: boolean
-    invocation_count: number
   }) => {
     post_message(props.vscode, {
       command: 'AUTOFILL',
       web_configuration_name: params.web_configuration_name,
-      show_quick_pick: params.show_quick_pick,
-      invocation_count: params.invocation_count
+      show_quick_pick: params.show_quick_pick
     })
 
     update_chat_history(instructions)
@@ -369,16 +367,14 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const handle_make_api_call = (
-    use_quick_pick: boolean,
-    invocation_count: number
+    use_quick_pick: boolean
   ) => {
     const instruction = get_current_instructions()
 
     post_message(props.vscode, {
       command: 'MAKE_API_CALL',
       prompt_type: current_prompt_type as ApiPromptType,
-      use_quick_pick,
-      invocation_count
+      use_quick_pick
     })
 
     if (instruction.trim()) {
@@ -411,8 +407,7 @@ export const Main: React.FC<Props> = (props) => {
       command: 'MAKE_API_CALL',
       prompt_type: props.api_prompt_type,
       use_quick_pick: false,
-      api_configuration_id: id,
-      invocation_count: 1
+      api_configuration_id: id
     })
 
     update_chat_history(instruction)

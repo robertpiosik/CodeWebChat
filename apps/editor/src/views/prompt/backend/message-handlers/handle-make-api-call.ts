@@ -254,84 +254,69 @@ export const handle_make_api_call = async (
     ]
 
     let error_occurred = false
-    let was_cancelled = false
 
-    const promises = Array.from({ length: message.invocation_count }).map(
-      async () => {
-        const body: { [key: string]: any } = {
-          messages,
-          model: api_configuration.model
-        }
+    const body: { [key: string]: any } = {
+      messages,
+      model: api_configuration.model
+    }
 
-        apply_reasoning_effort({
-          body,
-          model_provider,
+    apply_reasoning_effort({
+      body,
+      model_provider,
+      reasoning_effort: api_configuration.reasoning_effort
+    })
+
+    try {
+      let result: { response: string; thoughts?: string } | null = null
+
+      result =
+        await prompt_view_provider.prompt_view_api_calls_manager.send_llm_message(
+          {
+            base_url: model_provider.base_url,
+            api_key: model_provider.api_key,
+            body,
+            provider_name: api_configuration.model_provider_name,
+            model: api_configuration.model,
+            reasoning_effort: api_configuration.reasoning_effort,
+            raw_instructions: instructions
+          }
+        )
+
+      if (result) {
+        const recent_api_configuration = {
+          model_provider: api_configuration.model_provider_name,
+          model: api_configuration.model,
           reasoning_effort: api_configuration.reasoning_effort
-        })
-
-        try {
-          let result: { response: string; thoughts?: string } | null = null
-
-          result =
-            await prompt_view_provider.prompt_view_api_calls_manager.send_llm_message(
-              {
-                base_url: model_provider.base_url,
-                api_key: model_provider.api_key,
-                body,
-                provider_name: api_configuration.model_provider_name,
-                model: api_configuration.model,
-                reasoning_effort: api_configuration.reasoning_effort,
-                raw_instructions: instructions
-              }
-            )
-
-          if (result) {
-            const recent_api_configuration = {
-              model_provider: api_configuration.model_provider_name,
-              model: api_configuration.model,
-              reasoning_effort: api_configuration.reasoning_effort
-            }
-
-            if (prompt_type == 'edit-files') {
-              vscode.commands.executeCommand('codeWebChat.applyResponse', {
-                response: result.response,
-                raw_instructions: instructions,
-                edit_format,
-                recent_api_configuration
-              })
-            }
-            return true
-          }
-        } catch (error) {
-          if (axios.isCancel(error)) {
-            was_cancelled = true
-            return false
-          }
-          Logger.error({
-            function_name: 'handle_make_api_call',
-            message: `${prompt_type} task error`,
-            data: error
-          })
-          if (!error_occurred) {
-            const err_msg = dictionary.error_message.EDIT_FILES_ERROR
-            vscode.window.showErrorMessage(err_msg)
-            error_occurred = true
-          }
-          return false
         }
-        return false
+
+        if (prompt_type == 'edit-files') {
+          vscode.commands.executeCommand('codeWebChat.applyResponse', {
+            response: result.response,
+            raw_instructions: instructions,
+            edit_format,
+            recent_api_configuration
+          })
+        }
+        return
+      } else {
+        should_show_quick_pick = true
+        current_api_configuration_id = undefined
       }
-    )
-
-    const results = await Promise.all(promises)
-
-    if (error_occurred || was_cancelled) return
-
-    if (results.some((r) => r)) {
+    } catch (error) {
+      if (axios.isCancel(error)) {
+        return
+      }
+      Logger.error({
+        function_name: 'handle_make_api_call',
+        message: `${prompt_type} task error`,
+        data: error
+      })
+      if (!error_occurred) {
+        const err_msg = dictionary.error_message.EDIT_FILES_ERROR
+        vscode.window.showErrorMessage(err_msg)
+        error_occurred = true
+      }
       return
-    } else {
-      should_show_quick_pick = true
-      current_api_configuration_id = undefined
     }
   }
 }

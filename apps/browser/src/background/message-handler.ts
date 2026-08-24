@@ -14,6 +14,8 @@ interface ChatQueueItem {
 
 const chat_queue: ChatQueueItem[] = []
 let is_processing = false
+let is_waiting_for_focus = false
+let is_first_focus_for_queue = true
 let last_opened_tab_id: number | undefined
 let is_finished_responding = false
 
@@ -49,11 +51,24 @@ const generate_alphanumeric_id = async (
   throw new Error('Unable to generate a unique ID after maximum attempts')
 }
 
+const check_browser_focus = async (): Promise<boolean> => {
+  const windows = await browser.windows.getAll()
+  return windows.some((win) => win.focused)
+}
+
 const process_next_chat = async () => {
   if (chat_queue.length == 0 || !is_processing) {
     is_processing = false
     return
   }
+
+  const has_focus = await check_browser_focus()
+  if (!has_focus) {
+    is_waiting_for_focus = true
+    return
+  }
+
+  is_first_focus_for_queue = false
 
   const current_queue_item = chat_queue[0]
 
@@ -145,6 +160,7 @@ const process_next_chat = async () => {
 const start_processing = async () => {
   if (!is_processing && chat_queue.length > 0) {
     is_processing = true
+    is_first_focus_for_queue = true
     await process_next_chat()
   }
 }
@@ -152,10 +168,7 @@ const start_processing = async () => {
 const handle_initialize_chat_message = async (
   message: InitializeChatMessage
 ) => {
-  const count = message.invocation_count || 1
-  for (let i = 0; i < count; i++) {
-    chat_queue.push({ message })
-  }
+  chat_queue.push({ message })
   await start_processing()
 }
 
@@ -170,6 +183,22 @@ const handle_chat_initialized = async () => {
 }
 
 export const setup_message_listeners = () => {
+  browser.windows.onFocusChanged.addListener((window_id) => {
+    if (window_id !== browser.windows.WINDOW_ID_NONE) {
+      if (is_waiting_for_focus) {
+        is_waiting_for_focus = false
+        if (is_first_focus_for_queue) {
+          is_first_focus_for_queue = false
+          process_next_chat()
+        } else {
+          setTimeout(() => {
+            process_next_chat()
+          }, 2000)
+        }
+      }
+    }
+  })
+
   browser.runtime.onMessage.addListener(
     (message: any, sender: any, _: any): any => {
       if (is_message(message)) {
