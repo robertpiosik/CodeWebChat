@@ -42,6 +42,20 @@ const patch_diff_paths = (
   return lines.join('\n')
 }
 
+const clean_git_diff = (diff_text: string): string => {
+  return diff_text
+    .split('\n')
+    .filter(
+      (line) =>
+        !line.startsWith('index ') &&
+        !line.startsWith('new file mode ') &&
+        !line.startsWith('deleted file mode ') &&
+        !line.startsWith('old mode ') &&
+        !line.startsWith('new mode ')
+    )
+    .join('\n')
+}
+
 const build_changes_markdown = (
   diff: string,
   cwd: string,
@@ -118,6 +132,8 @@ const build_changes_markdown = (
           new_path
         )
       }
+
+      full_file_diff = clean_git_diff(full_file_diff)
 
       changes_content += `\`\`\`\n${full_file_diff}\n\`\`\`\n\n`
       if (file_content) {
@@ -399,6 +415,8 @@ const build_commit_changes_markdown = (
           new_path
         )
       }
+
+      full_file_diff = clean_git_diff(full_file_diff)
 
       changes_content += `\`\`\`\n${full_file_diff}\n\`\`\`\n\n`
       if (file_content) {
