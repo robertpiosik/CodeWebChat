@@ -2,8 +2,8 @@ import { MODE, Mode } from '@/views/prompt/types/main-view-mode'
 import { use_compacting } from '@shared/hooks'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { PromptTypeButton as UiPromptTypeButton } from '@ui/components/editor/prompt/PromptTypeButton'
+import { KeycapWrapper as UiKeycapWrapper } from '@ui/components/editor/prompt/KeycapWrapper'
 import { IconButton as UiIconButton } from '@ui/components/editor/common/IconButton'
-import { ModeToggler as UiModeToggler } from '@ui/components/editor/prompt/ModeToggler'
 import styles from './Header.module.scss'
 import {
   api_prompt_type_labels,
@@ -39,52 +39,50 @@ export const Header: React.FC<Props> = (props) => {
   return (
     <div className={styles.header} ref={container_ref}>
       <div className={styles.header__left}>
-        <UiIconButton
-          codicon_icon="chevron-left"
-          on_click={props.on_show_home}
-          title={`${t('header.return')} (Esc)`}
-        />
-        <UiModeToggler
-          mode={props.mode == MODE.WEB ? MODE.WEB : MODE.API}
-          alt_mode={props.mode == MODE.WEB ? MODE.API : MODE.WEB}
-          is_alt_pressed={is_alt_pressed}
-          on_toggle={() =>
-            props.on_mode_change(
-              props.mode == MODE.WEB ? MODE.API : MODE.WEB
-            )
+        <UiKeycapWrapper
+          char={
+            is_alt_pressed ? (props.mode == MODE.API ? '1' : '2') : undefined
           }
-        />
+        >
+          <UiIconButton
+            codicon_icon="chevron-left"
+            on_click={props.on_show_home}
+            title={`${t('header.return')} (Esc)`}
+          />
+        </UiKeycapWrapper>
         {props.mode == MODE.WEB && (
-          <div className={styles['header__prompt-types']}>
-            <UiPromptTypeButton
-              label={web_prompt_type_labels['edit-files']}
-              icon="edit-sparkle"
-              is_active={props.web_prompt_type == 'edit-files'}
-              active_color="blue"
-              is_compact={
-                props.web_prompt_type == 'edit-files'
-                  ? compact_step >= 2
-                  : compact_step >= 1
-              }
-              keycap_char={is_alt_pressed ? 'E' : undefined}
-              on_click={() => props.on_web_prompt_type_change('edit-files')}
-            />
-            <UiPromptTypeButton
-              label={web_prompt_type_labels['ask-about-files']}
-              icon="chat-sparkle"
-              is_active={props.web_prompt_type == 'ask-about-files'}
-              active_color="orange"
-              is_compact={
-                props.web_prompt_type == 'ask-about-files'
-                  ? compact_step >= 2
-                  : compact_step >= 1
-              }
-              keycap_char={is_alt_pressed ? 'A' : undefined}
-              on_click={() =>
-                props.on_web_prompt_type_change('ask-about-files')
-              }
-            />
-          </div>
+          <>
+            <UiKeycapWrapper char={is_alt_pressed ? 'E' : undefined}>
+              <UiPromptTypeButton
+                label={web_prompt_type_labels['edit-files']}
+                icon="edit-sparkle"
+                is_active={props.web_prompt_type == 'edit-files'}
+                active_color="blue"
+                is_compact={
+                  props.web_prompt_type == 'edit-files'
+                    ? compact_step >= 2
+                    : compact_step >= 1
+                }
+                on_click={() => props.on_web_prompt_type_change('edit-files')}
+              />
+            </UiKeycapWrapper>
+            <UiKeycapWrapper char={is_alt_pressed ? 'A' : undefined}>
+              <UiPromptTypeButton
+                label={web_prompt_type_labels['ask-about-files']}
+                icon="chat-sparkle"
+                is_active={props.web_prompt_type == 'ask-about-files'}
+                active_color="orange"
+                is_compact={
+                  props.web_prompt_type == 'ask-about-files'
+                    ? compact_step >= 2
+                    : compact_step >= 1
+                }
+                on_click={() =>
+                  props.on_web_prompt_type_change('ask-about-files')
+                }
+              />
+            </UiKeycapWrapper>
+          </>
         )}
         {props.mode == MODE.API && (
           <UiPromptTypeButton

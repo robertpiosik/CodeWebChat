@@ -57,12 +57,3 @@ export const Compact = () => (
     on_click={() => console.log('Clicked')}
   />
 )
-
-export const WithKeycap = () => (
-  <PromptTypeButton
-    label="Run Prompt"
-    icon="play"
-    keycap_char="E"
-    on_click={() => console.log('Clicked')}
-  />
-)

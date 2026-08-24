@@ -85,20 +85,4 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-
-  &__keycap {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: var(--vscode-sideBar-background);
-    color: var(--vscode-foreground);
-    border: 1px solid var(--cwc-border-color-dimmed);
-    padding: 2px 4px 3px 4px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-family: var(--vscode-font-family);
-    line-height: 1;
-    pointer-events: none;
-  }
 }

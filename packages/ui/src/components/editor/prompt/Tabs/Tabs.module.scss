@@ -3,12 +3,10 @@
   justify-content: space-between;
   align-items: center;
   gap: 14px;
-  border-bottom: 1px solid var(--vscode-menu-separatorBackground);
-  padding: 0 12px;
+  padding: 0 12px 0 30px;
 
   :global([data-modern-ui='true']) & {
-    margin: 0 8px;
-    padding: 0 2px;
+    padding: 0 10px 0 28px;
   }
 
   &__list {
@@ -20,11 +18,8 @@
   &__tab {
     font-family: var(--font-family-accent);
     font-size: 16px;
-    padding: 4px 10px 2px 10px;
+    padding: 0 6px;
     letter-spacing: 1px;
-    border-bottom: none;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
     display: flex;
     align-items: center;
     text-transform: none;
@@ -43,24 +38,7 @@
     }
 
     &--active {
-      color: var(--cwc-text-color-blue);
-      background-color: var(--cwc-bg-blue);
-      position: relative;
-
-      &::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: -1px;
-        height: 1px;
-        background: var(--cwc-bg-blue);
-      }
-
-      &:hover {
-        background-color: var(--cwc-bg-blue);
-        color: var(--cwc-text-color-blue);
-      }
+      color: var(--cwc-text-color);
     }
   }
 

@@ -117,11 +117,14 @@ export const use_keyboard_shortcuts = (params: {
         return
       }
 
-      if (event.code == 'Escape') {
+      if (event.code == 'Digit1' && params.mode == MODE.API) {
         event.preventDefault()
-        params.on_mode_change(
-          params.mode == MODE.WEB ? MODE.API : MODE.WEB
-        )
+        params.on_mode_change(MODE.WEB)
+      }
+
+      if (event.code == 'Digit2' && params.mode == MODE.WEB) {
+        event.preventDefault()
+        params.on_mode_change(MODE.API)
       }
     }
 

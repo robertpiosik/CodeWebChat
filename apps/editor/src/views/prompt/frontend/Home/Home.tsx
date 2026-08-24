@@ -3,6 +3,7 @@ import styles from './Home.module.scss'
 import { Scrollable as UiScrollable } from '@ui/components/editor/common/Scrollable'
 import { Tabs as UiTabs } from '@ui/components/editor/prompt/Tabs'
 import { ModeButton as UiModeButton } from '@ui/components/editor/prompt/ModeButton'
+import { KeycapWrapper as UiKeycapWrapper } from '@ui/components/editor/prompt/KeycapWrapper'
 import cn from 'classnames'
 import { post_message } from '../utils/post-message'
 import { BackendMessage } from '@/views/prompt/types/messages'
@@ -17,6 +18,7 @@ import { use_tasks } from './hooks/use-tasks'
 import { use_has_scrolled_past_mode_button } from './hooks/use-has-scrolled-past-mode-button'
 import { use_compacting } from '@shared/hooks'
 import { MODE } from '@/views/prompt/types/main-view-mode'
+import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 
 type Props = {
   vscode: any
@@ -65,6 +67,9 @@ export const Home: React.FC<Props> = (props) => {
 
   const header_modes_ref = useRef<HTMLDivElement>(null)
 
+  const [is_alt_pressed, set_is_alt_pressed] = useState(false)
+  const alt_interrupted_ref = useRef(false)
+
   const discord_label = 'Discord'
   const coffee_label = t('header.buy-me-a-coffee')
 
@@ -80,15 +85,61 @@ export const Home: React.FC<Props> = (props) => {
   }, [])
 
   useEffect(() => {
-    const handle_mouse_up = (event: MouseEvent) => {
-      if (props.is_active && event.button == 4) {
-        props.on_go_forward()
+    const handle_key_down = (event: KeyboardEvent) => {
+      if (
+        event.key == 'Alt' &&
+        !event.shiftKey &&
+        !event.ctrlKey &&
+        !event.metaKey
+      ) {
+        if (!alt_interrupted_ref.current) {
+          set_is_alt_pressed(true)
+        }
+      } else {
+        if (event.altKey) {
+          alt_interrupted_ref.current = true
+        }
+        set_is_alt_pressed(false)
       }
     }
 
-    window.addEventListener('mouseup', handle_mouse_up)
-    return () => window.removeEventListener('mouseup', handle_mouse_up)
-  }, [props.is_active, props.on_go_forward])
+    const handle_key_up = (event: KeyboardEvent) => {
+      if (!event.altKey) {
+        alt_interrupted_ref.current = false
+      } else if (event.key != 'Alt') {
+        alt_interrupted_ref.current = true
+      }
+      set_is_alt_pressed(
+        event.altKey &&
+          !alt_interrupted_ref.current &&
+          !event.shiftKey &&
+          !event.ctrlKey &&
+          !event.metaKey
+      )
+    }
+
+    const handle_blur = () => {
+      set_is_alt_pressed(false)
+      alt_interrupted_ref.current = false
+    }
+
+    window.addEventListener('keydown', handle_key_down)
+    window.addEventListener('keyup', handle_key_up)
+    window.addEventListener('blur', handle_blur)
+
+    return () => {
+      window.removeEventListener('keydown', handle_key_down)
+      window.removeEventListener('keyup', handle_key_up)
+      window.removeEventListener('blur', handle_blur)
+    }
+  }, [])
+
+  use_keyboard_shortcuts({
+    is_active: props.is_active,
+    on_go_forward: props.on_go_forward,
+    on_chatbots_click: props.on_chatbots_click,
+    on_api_calls_click: props.on_api_calls_click
+  })
 
   return (
     <>
@@ -127,17 +178,21 @@ export const Home: React.FC<Props> = (props) => {
             [styles['header__modes--visible']]: has_scrolled_past_mode_button
           })}
         >
-          <UiModeButton
-            label={MODE.WEB}
-            on_click={props.on_chatbots_click}
-            is_compact
-          />
+          <UiKeycapWrapper char={is_alt_pressed ? '1' : undefined} full_width>
+            <UiModeButton
+              label={MODE.WEB}
+              on_click={props.on_chatbots_click}
+              is_compact
+            />
+          </UiKeycapWrapper>
           <div className={styles['header__modes-divider']} />
-          <UiModeButton
-            label={MODE.API}
-            on_click={props.on_api_calls_click}
-            is_compact
-          />
+          <UiKeycapWrapper char={is_alt_pressed ? '2' : undefined} full_width>
+            <UiModeButton
+              label={MODE.API}
+              on_click={props.on_api_calls_click}
+              is_compact
+            />
+          </UiKeycapWrapper>
         </div>
       </div>
 
@@ -166,11 +221,21 @@ export const Home: React.FC<Props> = (props) => {
 
             <div className={styles.inner__mode} ref={mode_ref}>
               <AsciiArtEffect />
-              <UiModeButton label={MODE.WEB} on_click={props.on_chatbots_click} />
-              <UiModeButton label={MODE.API} on_click={props.on_api_calls_click} />
+              <UiKeycapWrapper char={is_alt_pressed ? '1' : undefined} full_width>
+                <UiModeButton 
+                  label={MODE.WEB} 
+                  on_click={props.on_chatbots_click}
+                />
+              </UiKeycapWrapper>
+              <UiKeycapWrapper char={is_alt_pressed ? '2' : undefined} full_width>
+                <UiModeButton 
+                  label={MODE.API} 
+                  on_click={props.on_api_calls_click}
+                />
+              </UiKeycapWrapper>
             </div>
 
-            <UiSeparator height={8} />
+            <UiSeparator height={12} />
 
             <UiTabs
               tabs={[{ id: 'tasks', label: t('home.tasks') }]}
@@ -210,7 +275,7 @@ export const Home: React.FC<Props> = (props) => {
               }
             />
 
-            <UiSeparator height={6} />
+            <UiSeparator height={4} />
 
             {roots.length == 0 && (
               <div className={styles.inner__empty}>{t('home.tasks.empty')}</div>

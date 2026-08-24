@@ -11,6 +11,19 @@
   }
 }
 
+@keyframes small-wave {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-2px);
+  }
+  75% {
+    transform: translateY(0);
+  }
+}
+
 .button {
   display: flex;
   align-items: center;
@@ -18,9 +31,10 @@
   flex-direction: column;
   padding: 0 12px;
   height: 80px;
-  max-width: 100%;
+  width: 100%;
   overflow: hidden;
   flex: 1;
+  position: relative;
 
   &--compact {
     height: 100%;
@@ -38,6 +52,10 @@
     .button__label-char {
       animation: wave 0.5s ease-in-out;
     }
+  }
+
+  &--compact:hover .button__label-char {
+    animation-name: small-wave;
   }
 
   &__label {

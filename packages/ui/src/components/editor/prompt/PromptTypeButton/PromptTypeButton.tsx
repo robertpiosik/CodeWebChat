@@ -9,7 +9,6 @@ export namespace PromptTypeButton {
     is_compact?: boolean
     is_active?: boolean
     active_color?: 'blue' | 'orange'
-    keycap_char?: string
     on_click?: () => void
   }
 }
@@ -33,9 +32,6 @@ export const PromptTypeButton: FC<PromptTypeButton.Props> = (props) => {
         className={cn('codicon', `codicon-${props.icon}`, styles.button__icon)}
       />
       <span className={styles.button__label}>{props.label}</span>
-      {props.keycap_char && (
-        <span className={styles.button__keycap}>{props.keycap_char}</span>
-      )}
     </button>
   )
 }
