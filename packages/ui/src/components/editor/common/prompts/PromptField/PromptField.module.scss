@@ -274,7 +274,6 @@
       &__button {
         position: relative;
         @include accent-font;
-        color: var(--cwc-text-color-dimmed);
         font-size: 16px;
         padding: 0 4px;
 
@@ -305,10 +304,6 @@
 
       &:hover {
         background-color: var(--vscode-toolbar-hoverBackground);
-
-        .footer__right__mode-switch__button {
-          color: var(--cwc-text-color);
-        }
       }
 
       &__button {
