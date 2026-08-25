@@ -56,19 +56,6 @@
       }
     }
 
-    &.button--green {
-      background-color: var(--cwc-bg-green);
-
-      .button__icon,
-      .button__label {
-        color: var(--cwc-text-color-green);
-      }
-
-      &:hover {
-        background-color: var(--cwc-bg-green);
-      }
-    }
-
     &.button--red {
       background-color: var(--cwc-bg-red);
 

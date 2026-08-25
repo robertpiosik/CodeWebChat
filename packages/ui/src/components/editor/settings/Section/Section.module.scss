@@ -56,11 +56,10 @@
   }
 
   &__title {
+    @include accent-font;
     margin: 0;
     font-size: 24px;
-    @include accent-font;
     white-space: nowrap;
-    color: var(--vscode-textLink-foreground);
     overflow: hidden;
     text-overflow: ellipsis;
   }

@@ -1144,41 +1144,5 @@ export const translations = {
     cs: 'šablon',
     hu: 'sablon',
     bg: 'шаблона'
-  },
-  'general.prompt-field.templates.types.templatesForAskAboutFiles': {
-    en: 'Ask About Files',
-    pl: 'Zapytaj o pliki',
-    'zh-cn': '询问关于文件',
-    ja: 'ファイルについて尋ねる',
-    'zh-tw': '詢問關於文件',
-    de: 'Nach Dateien fragen',
-    es: 'Preguntar sobre archivos',
-    fr: 'Demander à propos des fichiers',
-    'pt-br': 'Perguntar sobre arquivos',
-    ru: 'Спросить о файлах',
-    ko: '파일에 대해 물어보기',
-    it: 'Chiedi sui file',
-    tr: 'Dosyalar Hakkında Sor',
-    cs: 'Zeptat se na soubory',
-    hu: 'Kérdezz fájlokról',
-    bg: 'Попитай за файлове'
-  },
-  'general.prompt-field.templates.types.templatesForEditFiles': {
-    en: 'Edit Files',
-    pl: 'Edytuj pliki',
-    'zh-cn': '编辑文件',
-    ja: 'ファイルを編集',
-    'zh-tw': '編輯文件',
-    de: 'Dateien bearbeiten',
-    es: 'Editar archivos',
-    fr: 'Modifier des fichiers',
-    'pt-br': 'Editar arquivos',
-    ru: 'Редактировать файлы',
-    ko: '파일 편집',
-    it: 'Modifica file',
-    tr: 'Dosyaları Düzenle',
-    cs: 'Upravit soubory',
-    hu: 'Fájlok szerkesztése',
-    bg: 'Редактиране на файлове'
   }
 } as const

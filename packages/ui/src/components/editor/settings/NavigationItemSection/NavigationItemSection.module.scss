@@ -4,12 +4,9 @@
   justify-content: space-between;
   gap: 8px;
   padding: 0 8px;
-  border-radius: 4px;
   font-size: 18px;
   @include accent-font;
-  color: var(--vscode-textLink-foreground);
   height: 32px;
-  transition: background-color 0.1s;
 }
 
 .label {

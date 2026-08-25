@@ -1,7 +1,8 @@
-.groups {
+.container {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 100%;
 }
 
 .group {
@@ -14,6 +15,48 @@
   &--expanded {
     .group__header {
       background-color: var(--cwc-bg-tertiary);
+    }
+  }
+
+  &--accent-blue {
+    border-color: var(--cwc-bg-blue);
+    .group__header {
+      background-color: var(--cwc-bg-blue);
+      .group__icon,
+      .group__label {
+        color: var(--cwc-text-color-blue);
+      }
+      &:hover {
+        background-color: var(--cwc-bg-blue);
+      }
+    }
+  }
+
+  &--accent-orange {
+    border-color: var(--cwc-bg-orange);
+    .group__header {
+      background-color: var(--cwc-bg-orange);
+      .group__icon,
+      .group__label {
+        color: var(--cwc-text-color-orange);
+      }
+      &:hover {
+        background-color: var(--cwc-bg-orange);
+      }
+    }
+  }
+
+  &--accent-red {
+    border-color: var(--cwc-bg-red);
+    .group__header {
+      background-color: var(--cwc-bg-red);
+      .group__icon,
+      .group__label {
+        color: var(--cwc-text-color-red);
+      }
+      &:hover {
+        background-color: var(--cwc-bg-red);
+      }
     }
   }
 
@@ -32,8 +75,21 @@
   }
 
   &__title {
-    font-size: 13px;
-    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__label {
+    @include accent-font;
+    font-size: 16px;
+    line-height: 1;
+    padding-top: 2px;
+    padding-right: 1px;
+  }
+
+  &__icon {
+    font-size: 14px;
   }
 
   &__content {

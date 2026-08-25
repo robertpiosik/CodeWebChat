@@ -233,13 +233,24 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             <UiItem
               title={t('general.prompt-field.templates.title')}
               description={t('general.prompt-field.templates.description')}
-              translations={{
-                expand: t('common.expand'),
-                collapse: t('common.collapse')
-              }}
             >
               <Templates
-                templates={props.templates}
+                templates={[
+                  {
+                    key: 'templatesForEditFiles',
+                    label: 'Edit',
+                    icon: 'edit-sparkle',
+                    accent_color: 'blue',
+                    items: props.templates.templatesForEditFiles || []
+                  },
+                  {
+                    key: 'templatesForAskAboutFiles',
+                    label: 'Ask',
+                    icon: 'chat-sparkle',
+                    accent_color: 'orange',
+                    items: props.templates.templatesForAskAboutFiles || []
+                  }
+                ]}
                 on_reorder={(key, templates) =>
                   props.on_update_templates(key, templates)
                 }
@@ -254,15 +265,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                   ),
                   expand: t('common.expand'),
                   collapse: t('common.collapse'),
-                  add_new: t('action.add-new'),
-                  types: {
-                    templatesForEditFiles: t(
-                      'general.prompt-field.templates.types.templatesForEditFiles'
-                    ),
-                    templatesForAskAboutFiles: t(
-                      'general.prompt-field.templates.types.templatesForAskAboutFiles'
-                    )
-                  }
+                  add_new: t('action.add-new')
                 }}
               />
             </UiItem>

@@ -11,7 +11,13 @@ export namespace Templates {
   }
 
   export type Props = {
-    templates: Record<string, Template[]>
+    templates: {
+      key: string
+      label: string
+      icon?: string
+      accent_color?: 'blue' | 'orange' | 'red'
+      items: Template[]
+    }[]
     on_reorder: (key: string, templates: Template[]) => void
     on_delete: (key: string, index: number) => void
     on_edit: (key: string, index: number) => void
@@ -23,7 +29,6 @@ export namespace Templates {
       item_text: string
       items_text: string
       items_text_many: string
-      types: Record<string, string>
       expand: string
       collapse: string
       add_new: string
@@ -32,33 +37,32 @@ export namespace Templates {
 }
 
 export const Templates: React.FC<Templates.Props> = (props) => {
-  const [expanded_keys, set_expanded_keys] = useState<Record<string, boolean>>(
-    {}
-  )
+  const [expanded_keys, set_expanded_keys] = useState<string[]>([])
 
   const toggle_expanded = (key: string) => {
-    set_expanded_keys((prev) => ({
-      ...prev,
-      [key]: !prev[key]
-    }))
+    set_expanded_keys((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+    )
   }
 
   return (
-    <div className={styles.groups}>
-      {Object.entries(props.templates).map(([key, templates]) => {
-        const sortable_items = templates.map((t, index) => ({
+    <div className={styles.container}>
+      {props.templates.map(({ key, label, icon, accent_color, items }) => {
+        const is_expanded = expanded_keys.includes(key)
+        const sortable_items = items.map((t, index) => ({
           id: `${index}-${t.name}-${t.template}`,
           original_index: index,
           ...t
         }))
-        const is_expanded = !!expanded_keys[key]
 
         return (
           <div
             key={key}
             className={cn(styles.group, {
               [styles['group--expanded']]: is_expanded,
-              [styles['group--hoverable']]: !is_expanded
+              [styles['group--hoverable']]: !is_expanded,
+              [styles[`group--accent-${accent_color}`]]:
+                accent_color && is_expanded
             })}
           >
             <div
@@ -66,7 +70,16 @@ export const Templates: React.FC<Templates.Props> = (props) => {
               onClick={() => toggle_expanded(key)}
             >
               <div className={styles.group__title}>
-                {props.translations.types[key] || key}
+                {icon && (
+                  <span
+                    className={cn(
+                      'codicon',
+                      `codicon-${icon}`,
+                      styles.group__icon
+                    )}
+                  />
+                )}
+                <span className={styles.group__label}>{label}</span>
               </div>
               <IconButton
                 codicon_icon={is_expanded ? 'chevron-up' : 'chevron-down'}
