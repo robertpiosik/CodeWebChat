@@ -3,22 +3,25 @@
   justify-content: space-between;
   align-items: center;
   gap: 14px;
-  padding: 0 12px 0 30px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--cwc-border-color);
 
   :global([data-modern-ui='true']) & {
-    padding: 0 10px 0 28px;
+    margin: 0 8px;
+    padding: 0 2px;
   }
 
   &__list {
     display: flex;
     align-items: center;
     gap: 4px;
+    margin-bottom: -1px;
   }
 
   &__tab {
     font-family: var(--font-family-accent);
     font-size: 16px;
-    padding: 0 6px;
+    padding: 5px 9px 0 9px;
     letter-spacing: 1px;
     display: flex;
     align-items: center;
@@ -27,6 +30,8 @@
     cursor: pointer;
     white-space: nowrap;
     user-select: none;
+    border: 1px solid transparent;
+    border-radius: 6px 6px 0 0;
 
     &:hover {
       color: var(--cwc-text-color);
@@ -39,6 +44,9 @@
 
     &--active {
       color: var(--cwc-text-color);
+      border-color: var(--cwc-border-color);
+      border-bottom-color: transparent;
+      background-color: var(--vscode-sideBar-background);
     }
   }
 
